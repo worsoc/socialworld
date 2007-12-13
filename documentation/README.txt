@@ -4,4 +4,4 @@ This is the documentational part of the project.
 
 Test by André
 
-Greatz! 
+Best Regards by Olli! 
