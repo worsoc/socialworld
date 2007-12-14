@@ -1,0 +1,19 @@
+####### kdevelop will overwrite this part!!! (begin)##########
+bin_PROGRAMS = psbws
+
+## INCLUDES were found outside kdevelop specific part
+
+psbws_SOURCES = psbws_attributechanger.cpp sm_vektormathematik.cpp sm_suchbaum.cpp sm_schlangenelement.cpp sm_schlange.cpp sm_prioritaetsschlangenelement.cpp sm_prioritaetsschlange.cpp sm_prioritaetselement.cpp sm_listenelement.cpp sm_liste.cpp sm_keystring.cpp sm_keyint.cpp sm_kettemitkopf.cpp sm_kette.cpp sm_kellerelement.cpp sm_keller.cpp sm_indexliste.cpp sm_hashtabelle.cpp sm_baumknoten.cpp psbws_zeitpunktliste.cpp psbws_zauber.cpp psbws_vogel.cpp psbws_tier.cpp psbws_strauch.cpp psbws_simulationsobjekt.cpp psbws_simulation.cpp psbws_saeugetier.cpp psbws_reptil.cpp psbws_reaktion_api_manager.cpp psbws_reaktion_api_event_32.cpp psbws_reaktion_api.cpp psbws_position.cpp psbws_pilz.cpp psbws_pflanze.cpp psbws_person.cpp PSBWS_Objekt_Manager.cpp psbws_inventar.cpp psbws_halm.cpp psbws_gott.cpp psbws_gegenstand.cpp psbws_fortbewegungsart.cpp psbws_fisch.cpp psbws_eventmaster.cpp psbws_event.cpp psbws_blume.cpp psbws_baum.cpp PSBWS_Auswirkung_API_Manager.cpp psbws_auswirkung_api_event_32.cpp psbws_auswirkung_api.cpp psbws_attribute.cpp psbws_api.cpp psbws_aktionsschlange.cpp psbws_aktionscode.cpp psbws_aktion.cpp psbws_aberglaube.cpp main.cpp 
+psbws_LDADD   = 
+
+SUBDIRS = docs 
+
+EXTRA_DIST = main.cpp psbws_aberglaube.cpp psbws_aberglaube.h psbws_aktion.cpp psbws_aktion.h psbws_aktionscode.cpp psbws_aktionscode.h psbws_aktionsschlange.cpp psbws_aktionsschlange.h psbws_api.cpp psbws_api.h psbws_attribute.cpp psbws_attribute.h psbws_auswirkung_api.cpp psbws_auswirkung_api_event_32.cpp psbws_auswirkung_api_event_32.h psbws_auswirkung_api.h PSBWS_Auswirkung_API_Manager.cpp PSBWS_Auswirkung_API_Manager.h psbws_baum.cpp psbws_baum.h psbws_blume.cpp psbws_blume.h psbws_classes.h psbws_event.cpp psbws_event.h psbws_eventmaster.cpp psbws_eventmaster.h psbws_fisch.cpp psbws_fisch.h psbws_fortbewegungsart.cpp psbws_fortbewegungsart.h psbws_gegenstand.cpp psbws_gegenstand.h psbws_gott.cpp psbws_gott.h psbws_halm.cpp psbws_halm.h psbws_inventar.cpp psbws_inventar.h PSBWS_Objekt_Manager.cpp PSBWS_Objekt_Manager.h psbws_person.cpp psbws_person.h psbws_pflanze.cpp psbws_pflanze.h psbws_pilz.cpp psbws_pilz.h psbws_position.cpp psbws_position.h psbws_reaktion_api.cpp psbws_reaktion_api_event_32.cpp psbws_reaktion_api_event_32.h psbws_reaktion_api.h psbws_reaktion_api_manager.cpp psbws_reaktion_api_manager.h psbws_reptil.cpp psbws_reptil.h psbws_saeugetier.cpp psbws_saeugetier.h psbws_simulation.cpp psbws_simulation.h psbws_simulationsobjekt.cpp psbws_simulationsobjekt.h psbws_stimmung.h psbws_strauch.cpp psbws_strauch.h psbws_tier.cpp psbws_tier.h psbws_types.h psbws_vogel.cpp psbws_vogel.h psbws_zauber.cpp psbws_zauber.h psbws_zeitpunktliste.cpp psbws_zeitpunktliste.h sm_baumknoten.cpp sm_baumknoten.h sm_hashtabelle.cpp sm_hashtabelle.h sm_indexliste.cpp sm_indexliste.h sm_keller.cpp sm_kellerelement.cpp sm_kellerelement.h sm_keller.h sm_kette.cpp sm_kette.h sm_kettemitkopf.cpp sm_kettemitkopf.h sm_keyint.cpp sm_keyint.h sm_keystring.cpp sm_keystring.h sm_liste.cpp sm_liste.h sm_listenelement.cpp sm_listenelement.h sm_prioritaetselement.cpp sm_prioritaetselement.h sm_prioritaetsschlange.cpp sm_prioritaetsschlange.h sm_prioritaetsschlangenelement.cpp sm_prioritaetsschlangenelement.h sm_schlange.cpp sm_schlange.h sm_schlangenelement.cpp sm_schlangenelement.h sm_suchbaum.cpp sm_suchbaum.h sm_vektormathematik.cpp sm_vektormathematik.h psbws_tweltkoordinaten.h psbws_number_types.h psbws_attributechanger.cpp psbws_attributechanger.h 
+
+####### kdevelop will overwrite this part!!! (end)############
+# set the include path found by configure
+INCLUDES= $(all_includes)
+ 
+# the library search path.
+psbws_LDFLAGS = $(all_libraries) 
+                                                                                
