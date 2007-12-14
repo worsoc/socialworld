@@ -6,7 +6,7 @@
 
 #include "PSBWS_Objekt_Manager.h"
 #include "psbws_simulation.h"
-#include "psbws_auswirkung_api_manager.h"
+#include "PSBWS_Auswirkung_API_Manager.h"
 #include "psbws_reaktion_api_manager.h"
 #include "psbws_aktionscode.h"
 

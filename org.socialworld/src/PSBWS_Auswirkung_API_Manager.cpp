@@ -2,8 +2,8 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "PSBWS_Auswirkung_API.h"
-#include "PSBWS_Auswirkung_API_Event_32.h"
+#include "psbws_auswirkung_api.h"
+#include "psbws_auswirkung_api_event_32.h"
 #include "PSBWS_Auswirkung_API_Manager.h"
 
 
