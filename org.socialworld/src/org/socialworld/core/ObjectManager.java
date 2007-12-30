@@ -14,10 +14,6 @@ public class ObjectManager {
 
 	Simulation	simulation;
 	
-	Simulation	getSimulation() {
-		return simulation;
-	}
-	
 	private ObjectManager() {
 		  simulation = new Simulation();
 	}
@@ -33,6 +29,10 @@ public class ObjectManager {
 		return manager;
 	}
 	
+	public Simulation	getSimulation() {
+		return simulation;
+	}
+
 	public EventMaster getEventMaster() {
 		return simulation.getEventMaster();
 	}
