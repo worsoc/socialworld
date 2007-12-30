@@ -1,12 +1,16 @@
-/**
- * 
- */
 package org.socialworld.objects;
 
-/**
- * @author Mathias Sikos (tyloesand)
- *
- */
-public class God {
+public class God extends SimulationObject {
+
+	public God() {
+		super();
+	}
+	
+	@Override
+	public void determineInfluence(SimulationEvent simualationEvent) {
+		
+	}
+	
+	
 
 }
