@@ -11,7 +11,7 @@ package org.socialworld.objects;
 public class Human extends Mammal {
 
 	public Human() {
-		super ();
+		super();
 	}
 
 }
