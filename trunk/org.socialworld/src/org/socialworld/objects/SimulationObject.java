@@ -7,12 +7,13 @@ import org.socialworld.core.ActionHandler;
 import org.socialworld.core.ObjectManager;
 
 /**
+ * Every simulatable object is inherited by the abstract class SimulationObject. 
  * @author Mathias Sikos (tyloesand)
  * 
  */
 public abstract class SimulationObject {
 
-
+	protected ObjectManager objectManager;
 	protected Position position;
 
 	protected SimulationEvent releasedEvent;
@@ -24,12 +25,11 @@ public abstract class SimulationObject {
 	// STR_AttributeCalculatorMatrix* mSTRa_attributeCalculatorMatrix;
 
 	/**
-	 * The constructor creates an simulation object with identification number.
+	 * The constructor creates an simulation object.
 	 * 
-	 * @param objectNumber -
-	 *            identification number
 	 */
 	public SimulationObject() {
+		objectManager = ObjectManager.getObjectManager();
 	}
 
 	/**
