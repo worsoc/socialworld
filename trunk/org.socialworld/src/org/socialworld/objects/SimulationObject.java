@@ -10,6 +10,24 @@ import org.socialworld.core.ActionHandler;
  * 
  */
 public abstract class SimulationObject {
+
+	private long objectNumber;
+	// PSBWS_Object_Manager* mP_objectManager;
+
+	protected Position position;
+
+	protected SimulationEvent releasedEvent;
+
+	// ************* ACTION HANDLING
+	// *********************************************/
+	protected ActionHandler actionHandler;
+
+	// /************* ATTRIBUTE HANDLING
+	// ******************************************/
+	// TUChar mu_effectType_event[256];
+	// TUChar mu_reactionType_event[256];
+	// STR_AttributeCalculatorMatrix* mSTRa_attributeCalculatorMatrix;
+
 	/**
 	 * the constructor creates an simulation object with identification number.
 	 * 
@@ -28,9 +46,6 @@ public abstract class SimulationObject {
 	public long getObjectNumber() {
 		return objectNumber;
 	}
-
-	// /************* EVENT HANDLING
-	// **********************************************/
 
 	/**
 	 * the method returns the reference to the event released by the object
@@ -64,9 +79,6 @@ public abstract class SimulationObject {
 	 */
 	public abstract void determineInfluence(SimulationEvent simualationEvent);
 
-	// ************* POSITION HANDLING
-	// *******************************************/
-
 	/**
 	 * the method returns the object's position
 	 * 
@@ -76,45 +88,39 @@ public abstract class SimulationObject {
 		return null;
 	}
 
+	/**
+	 * the method sets the x value of object's position
+	 * 
+	 * @param posX
+	 */
 	public void setPositionX(double posX) {
 
 	}
 
+	/**
+	 * the method sets the y value of object's position
+	 * 
+	 * @param posY
+	 */
 	public void setPositionY(double posY) {
 
 	}
 
+	/**
+	 * the method sets the z value of object's position
+	 * 
+	 * @param posZ
+	 */
 	public void setPositionZ(double posZ) {
 
 	}
 
-	// ************* ACTION HANDLING
-	// *********************************************/
+	/**
+	 * the method returns the reference to object's action handler
+	 * @return actionHandler
+	 */
 	public ActionHandler getActionHandler() {
 		return null;
 	}
-
-	// ************* INITIALIZATION
-	// **********************************************/
-	private long objectNumber;
-	// PSBWS_Object_Manager* mP_objectManager;
-
-	// ************* POSITION HANDLING
-	// *******************************************/
-	protected Position position;
-
-	// ************* EVENT HANDLING
-	// **********************************************/
-	protected SimulationEvent releasedEvent;
-
-	// ************* ACTION HANDLING
-	// *********************************************/
-	protected ActionHandler actionHandler;
-
-	// /************* ATTRIBUTE HANDLING
-	// ******************************************/
-	// TUChar mu_effectType_event[256];
-	// TUChar mu_reactionType_event[256];
-	// STR_AttributeCalculatorMatrix* mSTRa_attributeCalculatorMatrix;
 
 }
