@@ -12,7 +12,6 @@ import org.socialworld.core.ObjectManager;
  */
 public abstract class SimulationObject {
 
-	private long objectNumber;
 
 	protected Position position;
 
@@ -30,17 +29,7 @@ public abstract class SimulationObject {
 	 * @param objectNumber -
 	 *            identification number
 	 */
-	public SimulationObject(long objectNumber) {
-		this.objectNumber = objectNumber;
-	}
-
-	/**
-	 * The method returns the object's identification number.
-	 * 
-	 * @return objectNumber
-	 */
-	public long getObjectNumber() {
-		return objectNumber;
+	public SimulationObject() {
 	}
 
 	/**
