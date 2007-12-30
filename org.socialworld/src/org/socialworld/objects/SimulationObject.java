@@ -4,6 +4,7 @@
 package org.socialworld.objects;
 
 import org.socialworld.core.ActionHandler;
+import org.socialworld.core.ObjectManager;
 
 /**
  * @author Mathias Sikos
