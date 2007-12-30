@@ -12,34 +12,29 @@ import org.socialworld.core.ActionHandler;
 public abstract class SimulationObject {
 
 	private long objectNumber;
-	// PSBWS_Object_Manager* mP_objectManager;
 
 	protected Position position;
 
 	protected SimulationEvent releasedEvent;
 
-	// ************* ACTION HANDLING
-	// *********************************************/
 	protected ActionHandler actionHandler;
 
-	// /************* ATTRIBUTE HANDLING
-	// ******************************************/
 	// TUChar mu_effectType_event[256];
 	// TUChar mu_reactionType_event[256];
 	// STR_AttributeCalculatorMatrix* mSTRa_attributeCalculatorMatrix;
 
 	/**
-	 * the constructor creates an simulation object with identification number.
+	 * The constructor creates an simulation object with identification number.
 	 * 
-	 * @param objectNumber
-	 *            ... identification number
+	 * @param objectNumber -
+	 *            identification number
 	 */
 	public SimulationObject(long objectNumber) {
 		this.objectNumber = objectNumber;
 	}
 
 	/**
-	 * the method returns the object's identification number
+	 * The method returns the object's identification number.
 	 * 
 	 * @return objectNumber
 	 */
@@ -48,7 +43,7 @@ public abstract class SimulationObject {
 	}
 
 	/**
-	 * the method returns the reference to the event released by the object
+	 * The method returns the reference to the event released by the object.
 	 * 
 	 * @return releasedEvent
 	 */
@@ -57,7 +52,7 @@ public abstract class SimulationObject {
 	}
 
 	/**
-	 * the method sets the event released by the object.
+	 * The method sets the event released by the object.
 	 * 
 	 * @param simualationEvent
 	 */
@@ -65,22 +60,22 @@ public abstract class SimulationObject {
 	}
 
 	/**
-	 * the method deletes the reference of the event released by the object.
+	 * The method deletes the reference of the event released by the object.
 	 */
 	public void deleteEvent() {
 	}
 
 	/**
-	 * the method determines the influence of an event. It calculates how the
+	 * The method determines the influence of an event. It calculates how the
 	 * event changes the attributes of the simulation object.
 	 * 
-	 * @param simualationEvent
-	 *            ... the event influencing the simulation object
+	 * @param simualationEvent -
+	 *            the event influencing the simulation object
 	 */
 	public abstract void determineInfluence(SimulationEvent simualationEvent);
 
 	/**
-	 * the method returns the object's position
+	 * The method returns the object's position.
 	 * 
 	 * @return position
 	 */
@@ -89,7 +84,7 @@ public abstract class SimulationObject {
 	}
 
 	/**
-	 * the method sets the x value of object's position
+	 * The method sets the x value of object's position.
 	 * 
 	 * @param posX
 	 */
@@ -98,7 +93,7 @@ public abstract class SimulationObject {
 	}
 
 	/**
-	 * the method sets the y value of object's position
+	 * The method sets the y value of object's position.
 	 * 
 	 * @param posY
 	 */
@@ -107,7 +102,7 @@ public abstract class SimulationObject {
 	}
 
 	/**
-	 * the method sets the z value of object's position
+	 * The method sets the z value of object's position.
 	 * 
 	 * @param posZ
 	 */
@@ -116,7 +111,8 @@ public abstract class SimulationObject {
 	}
 
 	/**
-	 * the method returns the reference to object's action handler
+	 * The method returns the reference to object's action handler.
+	 * 
 	 * @return actionHandler
 	 */
 	public ActionHandler getActionHandler() {
