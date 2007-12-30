@@ -4,7 +4,7 @@
 package org.socialworld;
 
 /**
- * @author mathias
+ * @author Mathias Sikos
  *
  */
 public class SocialWorld {
