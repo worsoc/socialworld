@@ -1,16 +1,15 @@
 package org.socialworld.objects;
 
-
 public class Item extends SimulationObject {
 
-	public Item() {
-		super ();
-	}
+    public Item() {
+	super();
+    }
 
-	@Override
-	public void determineInfluence(SimulationEvent simualationEvent) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void determineInfluence(SimulationEvent simualationEvent) {
+	// TODO Auto-generated method stub
+
+    }
 
 }
