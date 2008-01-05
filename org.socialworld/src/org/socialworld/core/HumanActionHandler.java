@@ -4,13 +4,14 @@
 package org.socialworld.core;
 
 import org.socialworld.objects.Human;
+import org.socialworld.objects.MoveType;
 
 /**
  * @author Mathias Sikos (tyloesand)
  * 
  */
 public class HumanActionHandler extends ActionHandler {
-
+    
     public HumanActionHandler(Human simulationObject) {
 	super(simulationObject);
     }
@@ -30,47 +31,54 @@ public class HumanActionHandler extends ActionHandler {
      * with special implementation of the action.
      */
     public void do_action() {
-	int type;
+	
+	ActionType type;
 	type = actualAction.getType();
 
 	switch (type) {
-	case 1:
+	case useFastItem:
 	    useFastItem();
 	    return;
-	case 2:
+	case touch:
 	    touch();
 	    return;
-	case 3:
+	case wakeUp:
 	    sleep(false);
 	    return;
-	case 4:
+	case sleep:
 	    sleep(true);
 	    return;
-	case 5:
-	    changeMoveType();
+	case walk:
+	    changeMoveType(MoveType.walk);
 	    return;
-	case 6:
+	case run :
+	    changeMoveType(MoveType.run);
+	    return;
+	case jump:
+	    changeMoveType(MoveType.jump);
+	    return;
+	case kick:
 	    kick();
 	    return;
-	case 7:
+	case controlHandManually:
 	    controlHandManually();
 	    return;
-	case 8:
+	case spell:
 	    spell();
 	    return;
-	case 9:
+	case useWeaponNot:
 	    useWeapon(false);
 	    return;
-	case 10:
+	case useWeapon:
 	    useWeapon(true);
 	    return;
-	case 11:
+	case move:
 	    move();
 	    return;
-	case 12:
+	case say:
 	    say();
 	    return;
-	case 13:
+	case useItem:
 	    useItem();
 	    return;
 	default:
@@ -131,10 +139,10 @@ public class HumanActionHandler extends ActionHandler {
      * The method holds the implementation of changing the move type. ( for
      * example changing from walking to running)
      */
-    private void changeMoveType() {
+    private void changeMoveType(MoveType moveType) {
 	if (object instanceof Human) {
 	    Human human = (Human) object;
-	    human.getMoveType().setType(getActualAction().getType());
+	    human.setMoveType(moveType);
 	}
     }
 

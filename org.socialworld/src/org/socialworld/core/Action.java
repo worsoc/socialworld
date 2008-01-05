@@ -12,7 +12,7 @@ import org.socialworld.objects.SimulationObject;
  */
 public class Action {
 
-    private int type;
+    private ActionType type;
     private int priority;
     private SimulationObject target;
     private Direction direction;
@@ -26,7 +26,7 @@ public class Action {
      * 
      * @return type
      */
-    public int getType() {
+    public ActionType getType() {
 	return type;
     }
 
@@ -34,7 +34,7 @@ public class Action {
      * @param type
      *                the type to set
      */
-    public void setType(int type) {
+    public void setType(ActionType type) {
 	this.type = type;
     }
 
