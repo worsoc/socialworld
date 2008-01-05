@@ -15,12 +15,20 @@ import org.socialworld.objects.SimulationObject;
  */
 public abstract class ActionHandler {
 
-	private List<Action> actionQueue;
-	private Action actualAction;
+	protected SimulationObject object;
+	protected List<Action> actionQueue;
+	protected Action actualAction;
 
 	public ActionHandler(SimulationObject simulationObject) {
 		actualAction = null;
 		actionQueue = new ArrayList<Action>();
+	}
+
+	/**
+	 * @return the actualAction
+	 */
+	public Action getActualAction() {
+		return actualAction;
 	}
 
 	/**
