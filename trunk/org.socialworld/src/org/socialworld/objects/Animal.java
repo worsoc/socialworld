@@ -10,8 +10,24 @@ package org.socialworld.objects;
  */
  public class Animal extends SimulationObject {
 
+	protected MoveType moveType;
+	
 	public Animal() {
 		super ();
+	}
+
+	/**
+	 * @return the moveType
+	 */
+	public MoveType getMoveType() {
+		return moveType;
+	}
+
+	/**
+	 * @param moveType the moveType to set
+	 */
+	public void setMoveType(MoveType moveType) {
+		this.moveType = moveType;
 	}
 
 	/* (non-Javadoc)
@@ -19,7 +35,6 @@ package org.socialworld.objects;
 	 */
 	@Override
 	public void determineInfluence(SimulationEvent simualationEvent) {
-		// TODO Auto-generated method stub
 
 	}
 
