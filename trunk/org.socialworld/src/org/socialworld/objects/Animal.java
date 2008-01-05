@@ -6,36 +6,39 @@ package org.socialworld.objects;
 /**
  * 
  * @author Mathias Sikos (tyloesand)
- *
+ * 
  */
- public class Animal extends SimulationObject {
+public class Animal extends SimulationObject {
 
-	protected MoveType moveType;
-	
-	public Animal() {
-		super ();
-	}
+    protected MoveType moveType;
 
-	/**
-	 * @return the moveType
-	 */
-	public MoveType getMoveType() {
-		return moveType;
-	}
+    public Animal() {
+	super();
+    }
 
-	/**
-	 * @param moveType the moveType to set
-	 */
-	public void setMoveType(MoveType moveType) {
-		this.moveType = moveType;
-	}
+    /**
+     * @return the moveType
+     */
+    public MoveType getMoveType() {
+	return moveType;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.socialworld.objects.SimulationObject#determineInfluence(org.socialworld.objects.SimulationEvent)
-	 */
-	@Override
-	public void determineInfluence(SimulationEvent simualationEvent) {
+    /**
+     * @param moveType
+     *                the moveType to set
+     */
+    public void setMoveType(MoveType moveType) {
+	this.moveType = moveType;
+    }
 
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.socialworld.objects.SimulationObject#determineInfluence(org.socialworld.objects.SimulationEvent)
+     */
+    @Override
+    public void determineInfluence(SimulationEvent simualationEvent) {
+
+    }
 
 }
