@@ -3,6 +3,7 @@
  */
 package org.socialworld.core;
 
+import org.socialworld.objects.ActionMode;
 import org.socialworld.objects.Direction;
 import org.socialworld.objects.SimulationObject;
 
@@ -16,7 +17,7 @@ public class Action {
     private int priority;
     private SimulationObject target;
     private Direction direction;
-    private int mode;
+    private ActionMode mode;
     private double intensity;
 
     private double remainedDuration;
@@ -88,7 +89,7 @@ public class Action {
     /**
      * @return the mode
      */
-    public int getMode() {
+    public ActionMode getMode() {
 	return mode;
     }
 
@@ -96,7 +97,7 @@ public class Action {
      * @param mode
      *                the mode to set
      */
-    public void setMode(int mode) {
+    public void setMode(ActionMode mode) {
 	this.mode = mode;
     }
 
