@@ -5,6 +5,9 @@ package org.socialworld.core;
 
 import org.socialworld.objects.ActionMode;
 import org.socialworld.objects.Human;
+import org.socialworld.objects.Item;
+import org.socialworld.objects.SimulationObject;
+import org.socialworld.objects.Weapon;
 
 /**
  * @author Mathias Sikos (tyloesand)
@@ -57,8 +60,11 @@ public class HumanActionHandler extends ActionHandler {
 		case spell:
 			spell();
 			return;
-		case useWeapon:
-			useWeapon();
+		case useWeaponLeft:
+			useWeapon(ActionMode.weaponLeftHand);
+			return;
+		case useWeaponRight:
+			useWeapon(ActionMode.weaponRightHand);
 			return;
 		case move:
 			move();
@@ -78,6 +84,10 @@ public class HumanActionHandler extends ActionHandler {
 	 * The method holds the implementation of using items.
 	 */
 	private void useItem() {
+		if (actualAction.getTarget() instanceof Item) {
+			Item item = (Item) actualAction.getTarget();
+			item.use(actualAction.getMode(), object);
+		}
 
 	}
 
@@ -98,16 +108,33 @@ public class HumanActionHandler extends ActionHandler {
 	/**
 	 * The method holds the implementation of using a weapon.
 	 */
-	private void useWeapon() {
-		ActionMode mode;
-		mode = actualAction.getMode();
+	private void useWeapon(ActionMode hand) {
 
-		switch (mode) {
-		case weaponLeftHand:
-			break;
-		case weaponRightHand:
-			break;
-		default:
+		if (object instanceof Human) {
+			Human human = (Human) object;
+			Weapon weapon = null;
+			switch (hand) {
+			case weaponLeftHand:
+				SimulationObject leftHand;
+				leftHand = human.getInventory().getLeftHandWeapon();
+				if (leftHand != null)
+					weapon = (Weapon) leftHand;
+				else
+					return;
+				break;
+			case weaponRightHand:
+				SimulationObject rightHand;
+				rightHand = human.getInventory().getRightHandWeapon();
+				if (rightHand != null)
+					weapon = (Weapon) rightHand;
+				else
+					return;
+				break;
+			default:
+				return;
+			}
+
+			weapon.use(actualAction.getMode(), object);
 		}
 
 	}
