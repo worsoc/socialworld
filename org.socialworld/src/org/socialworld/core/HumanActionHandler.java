@@ -3,170 +3,178 @@
  */
 package org.socialworld.core;
 
+import org.socialworld.objects.ActionMode;
 import org.socialworld.objects.Human;
-import org.socialworld.objects.MoveType;
 
 /**
  * @author Mathias Sikos (tyloesand)
  * 
  */
 public class HumanActionHandler extends ActionHandler {
-    
-    public HumanActionHandler(Human simulationObject) {
-	super(simulationObject);
-    }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.socialworld.core.ActionHandler#doAction()
-     */
-    @Override
-    public void doAction() {
-
-    }
-
-    /**
-     * Depending on the action type the method calls the according procedure
-     * with special implementation of the action.
-     */
-    public void do_action() {
-	
-	ActionType type;
-	type = actualAction.getType();
-
-	switch (type) {
-	case useFastItem:
-	    useFastItem();
-	    return;
-	case touch:
-	    touch();
-	    return;
-	case wakeUp:
-	    sleep(false);
-	    return;
-	case sleep:
-	    sleep(true);
-	    return;
-	case walk:
-	    changeMoveType(MoveType.walk);
-	    return;
-	case run :
-	    changeMoveType(MoveType.run);
-	    return;
-	case jump:
-	    changeMoveType(MoveType.jump);
-	    return;
-	case kick:
-	    kick();
-	    return;
-	case controlHandManually:
-	    controlHandManually();
-	    return;
-	case spell:
-	    spell();
-	    return;
-	case useWeaponNot:
-	    useWeapon(false);
-	    return;
-	case useWeapon:
-	    useWeapon(true);
-	    return;
-	case move:
-	    move();
-	    return;
-	case say:
-	    say();
-	    return;
-	case useItem:
-	    useItem();
-	    return;
-	default:
-	    return;
+	public HumanActionHandler(Human simulationObject) {
+		super(simulationObject);
 	}
-    }
 
-    /**
-     * The method holds the implementation of using items.
-     */
-    private void useItem() {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.socialworld.core.ActionHandler#doAction()
+	 */
+	@Override
+	public void doAction() {
 
-    }
-
-    /**
-     * The method holds the implementation of speech.
-     */
-    private void say() {
-
-    }
-
-    /**
-     * The method holds the implementation of moving.
-     */
-    private void move() {
-
-    }
-
-    /**
-     * The method holds the implementation of using a weapon.
-     */
-    private void useWeapon(boolean useRightHand) {
-
-    }
-
-    /**
-     * The method holds the implementation of using magic spells.
-     */
-    private void spell() {
-
-    }
-
-    /**
-     * The method holds the implementation of using magic spells.
-     */
-    private void controlHandManually() {
-
-    }
-
-    /**
-     * The method holds the implementation of kicking.
-     */
-    private void kick() {
-
-    }
-
-    /**
-     * The method holds the implementation of changing the move type. ( for
-     * example changing from walking to running)
-     */
-    private void changeMoveType(MoveType moveType) {
-	if (object instanceof Human) {
-	    Human human = (Human) object;
-	    human.setMoveType(moveType);
 	}
-    }
 
-    /**
-     * The method holds the implementation of sleep.
-     */
-    private void sleep(boolean intentional) {
+	/**
+	 * Depending on the action type the method calls the according procedure
+	 * with special implementation of the action.
+	 */
+	public void do_action() {
 
-    }
+		ActionType type;
+		type = actualAction.getType();
 
-    /**
-     * The method holds the implementation of touching an object.
-     */
-    private void touch() {
+		switch (type) {
+		case useFastItem:
+			useFastItem();
+			return;
+		case touch:
+			touch();
+			return;
+		case sleep:
+			sleep();
+			return;
+		case changeMove:
+			changeMove();
+			return;
+		case kick:
+			kick();
+			return;
+		case controlHandManually:
+			controlHandManually();
+			return;
+		case spell:
+			spell();
+			return;
+		case useWeapon:
+			useWeapon();
+			return;
+		case move:
+			move();
+			return;
+		case say:
+			say();
+			return;
+		case useItem:
+			useItem();
+			return;
+		default:
+			return;
+		}
+	}
 
-    }
+	/**
+	 * The method holds the implementation of using items.
+	 */
+	private void useItem() {
 
-    /**
-     * The method holds the implementation of using an item which is well
-     * positioned in the object's inventory. (for example a knife at the belt)
-     */
-    private void useFastItem() {
+	}
 
-    }
+	/**
+	 * The method holds the implementation of speech.
+	 */
+	private void say() {
+
+	}
+
+	/**
+	 * The method holds the implementation of moving.
+	 */
+	private void move() {
+
+	}
+
+	/**
+	 * The method holds the implementation of using a weapon.
+	 */
+	private void useWeapon() {
+		ActionMode mode;
+		mode = actualAction.getMode();
+
+		switch (mode) {
+		case weaponLeftHand:
+			break;
+		case weaponRightHand:
+			break;
+		default:
+		}
+
+	}
+
+	/**
+	 * The method holds the implementation of using magic spells.
+	 */
+	private void spell() {
+
+	}
+
+	/**
+	 * The method holds the implementation of using magic spells.
+	 */
+	private void controlHandManually() {
+
+	}
+
+	/**
+	 * The method holds the implementation of kicking.
+	 */
+	private void kick() {
+
+	}
+
+	/**
+	 * The method holds the implementation of changing the move type. ( for
+	 * example changing from walking to running)
+	 */
+	private void changeMove() {
+		if (object instanceof Human) {
+			Human human = (Human) object;
+			human.getMove().setMode(actualAction.getMode());
+		}
+	}
+
+	/**
+	 * The method holds the implementation of sleep.
+	 */
+	private void sleep() {
+		ActionMode mode;
+		mode = actualAction.getMode();
+
+		switch (mode) {
+		case sleepIntentioned:
+			break;
+		case sleepCaused:
+			break;
+		default:
+		}
+
+	}
+
+	/**
+	 * The method holds the implementation of touching an object.
+	 */
+	private void touch() {
+
+	}
+
+	/**
+	 * The method holds the implementation of using an item which is well
+	 * positioned in the object's inventory. (for example a knife at the belt)
+	 */
+	private void useFastItem() {
+
+	}
 }
 
 // /****************************************************************************

@@ -10,25 +10,25 @@ package org.socialworld.objects;
  */
 public class Animal extends SimulationObject {
 
-    protected MoveType moveType;
+    protected Move move;
 
     public Animal() {
 	super();
     }
 
     /**
-     * @return the moveType
+     * @return the Move
      */
-    public MoveType getMoveType() {
-	return moveType;
+    public Move getMove() {
+	return move;
     }
 
     /**
-     * @param moveType
-     *                the moveType to set
+     * @param Move
+     *                the Move to set
      */
-    public void setMoveType(MoveType moveType) {
-	this.moveType = moveType;
+    public void setMove(Move move) {
+	this.move = move;
     }
 
     /*
