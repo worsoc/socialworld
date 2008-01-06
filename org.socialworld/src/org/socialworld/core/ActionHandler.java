@@ -15,78 +15,78 @@ import org.socialworld.objects.SimulationObject;
  */
 public abstract class ActionHandler {
 
-    protected SimulationObject object;
-    protected List<Action> actionQueue;
-    protected Action actualAction;
+	protected SimulationObject object;
+	protected List<Action> actionQueue;
+	protected Action actualAction;
 
-    public ActionHandler(SimulationObject simulationObject) {
-	actualAction = null;
-	actionQueue = new ArrayList<Action>();
-    }
-
-    /**
-     * @return the actualAction
-     */
-    public Action getActualAction() {
-	return actualAction;
-    }
-
-    /**
-     * The method releases the event according to the action. So the action
-     * effects on other simulation objects.
-     */
-    public abstract void doAction();
-
-    /**
-     * 
-     * The method gets an action element from action list and calls the
-     * implementation of the virtual method doAction.
-     */
-    public void doActualAction() {
-	Action action;
-	action = this.actionQueue.get(0);
-
-	if (actualAction.getRemainedDuration() == 0)
-	    actualAction = action;
-	else if (actualAction.getPriority() < action.getPriority())
-	    actualAction = action;
-
-	if (actualAction == null) {
-	    actualAction.lowerRemainedDuration(1);
-	    doAction();
+	public ActionHandler(SimulationObject simulationObject) {
+		actualAction = null;
+		actionQueue = new ArrayList<Action>();
 	}
 
-    }
+	/**
+	 * @return the actualAction
+	 */
+	public Action getActualAction() {
+		return actualAction;
+	}
 
-    /**
-     * The method inserts an action element into the action list of a simulation
-     * object.
-     * 
-     * @param action
-     */
-    public void insertAction(Action action) {
-	actionQueue.add(action);
-    }
+	/**
+	 * The method releases the event according to the action. So the action
+	 * effects on other simulation objects.
+	 */
+	public abstract void doAction();
 
-    /**
-     * The methods creates a new action element and inserts it into the action
-     * list.
-     */
-    public void newAction() {
-	Action action;
-	action = new Action();
+	/**
+	 * 
+	 * The method gets an action element from action list and calls the
+	 * implementation of the virtual method doAction.
+	 */
+	public void doActualAction() {
+		Action action;
+		action = this.actionQueue.get(0);
 
-	insertAction(action);
-    }
+		if (actualAction.getRemainedDuration() == 0)
+			actualAction = action;
+		else if (actualAction.getPriority() < action.getPriority())
+			actualAction = action;
 
-    /**
-     * The methods changes an existing action element in the action list.
-     * 
-     * @param action
-     */
-    public void changeAction(Action action) {
+		if (actualAction == null) {
+			actualAction.lowerRemainedDuration(1);
+			doAction();
+		}
 
-    }
+	}
+
+	/**
+	 * The method inserts an action element into the action list of a simulation
+	 * object.
+	 * 
+	 * @param action
+	 */
+	public void insertAction(Action action) {
+		actionQueue.add(action);
+	}
+
+	/**
+	 * The methods creates a new action element and inserts it into the action
+	 * list.
+	 */
+	public void newAction() {
+		Action action;
+		action = new Action();
+
+		insertAction(action);
+	}
+
+	/**
+	 * The methods changes an existing action element in the action list.
+	 * 
+	 * @param action
+	 */
+	public void changeAction(Action action) {
+
+	}
 }
 
 // /****************************************************************************
