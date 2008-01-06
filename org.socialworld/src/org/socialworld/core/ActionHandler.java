@@ -13,7 +13,7 @@ import org.socialworld.objects.SimulationObject;
  * 
  * @author Mathias Sikos
  */
-public abstract class ActionHandler {
+public class ActionHandler {
 
 	protected SimulationObject object;
 	protected List<Action> actionQueue;
@@ -22,6 +22,7 @@ public abstract class ActionHandler {
 	public ActionHandler(SimulationObject simulationObject) {
 		actualAction = null;
 		actionQueue = new ArrayList<Action>();
+		this.object = simulationObject;
 	}
 
 	/**
@@ -32,15 +33,9 @@ public abstract class ActionHandler {
 	}
 
 	/**
-	 * The method releases the event according to the action. So the action
-	 * effects on other simulation objects.
-	 */
-	public abstract void doAction();
-
-	/**
 	 * 
-	 * The method gets an action element from action list and calls the
-	 * implementation of the virtual method doAction.
+	 * The method gets an action element from action list and lets the according
+	 * object do the action.
 	 */
 	public void doActualAction() {
 		Action action;
@@ -53,7 +48,7 @@ public abstract class ActionHandler {
 
 		if (actualAction == null) {
 			actualAction.lowerRemainedDuration(1);
-			doAction();
+			object.doAction(actualAction);
 		}
 
 	}

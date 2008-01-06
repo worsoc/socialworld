@@ -1,5 +1,7 @@
 package org.socialworld.objects;
 
+import org.socialworld.core.Action;
+
 public class Item extends SimulationObject {
 
 	public Item() {
@@ -20,62 +22,68 @@ public class Item extends SimulationObject {
 	 * @param user
 	 *            the user
 	 */
-	public void use(ActionMode mode, SimulationObject user) {
+	public void use(Action action, SimulationObject user) {
+		ActionMode mode = action.getMode();
 
 		switch (mode) {
 		case examineItem:
-			examineItem(user);
+			examineItem(action, user);
 			break;
 		case takeItem:
-			takeItem(user);
+			takeItem(action, user);
 			break;
 		case useExternItem:
-			useInternItem(user);
+			useInternItem(action, user);
 			break;
 		case useInternItem:
-			useInternItem(user);
+			useInternItem(action, user);
 			break;
 		case collectItem:
-			collectItem(user);
+			collectItem(action, user);
 			break;
 		case switchItemToLeftHand:
-			switchItemToLeftHand(user);
+			switchItemToLeftHand(action, user);
 			break;
 		case useTwoItems:
-			useTwoItems(user);
+			useTwoItems(action, user);
 			break;
 		case dropItem:
-			dropItem(user);
+			dropItem(action, user);
 			break;
 		default:
 		}
 	}
 
-	private void examineItem(SimulationObject user) {
+	private void examineItem(Action action, SimulationObject user) {
 
 	}
 
-	private void takeItem(SimulationObject user) {
+	private void takeItem(Action action, SimulationObject user) {
 
 	}
 
-	private void useInternItem(SimulationObject user) {
+	private void useInternItem(Action action, SimulationObject user) {
 
 	}
 
-	private void collectItem(SimulationObject user) {
+	private void collectItem(Action action, SimulationObject user) {
 
 	}
 
-	private void switchItemToLeftHand(SimulationObject user) {
+	private void switchItemToLeftHand(Action action, SimulationObject user) {
 
 	}
 
-	private void useTwoItems(SimulationObject user) {
+	private void useTwoItems(Action action, SimulationObject user) {
 
 	}
 
-	private void dropItem(SimulationObject user) {
+	private void dropItem(Action action, SimulationObject user) {
+
+	}
+
+	@Override
+	public void doAction(Action action) {
 
 	}
 }
