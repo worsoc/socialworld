@@ -33,24 +33,31 @@ public class ActionHandler {
 	}
 
 	/**
-	 * 
 	 * The method gets an action element from action list and lets the according
 	 * object do the action.
 	 */
 	public void doActualAction() {
+		// TODO (circlesmiler) Muss die Action danach nicht aus der Liste
+		// rausgenommen werden?
+		// Und wenn man die rausnimmt, rutscht dann die nÃ¤chste nach? ich glaub,
+		// es gibt noch nen besseren Zugriff auf's Array:
+		// ==>
+
 		Action action;
-		action = this.actionQueue.get(0);
+		action = actionQueue.iterator().next();
+
+		// Action action;
+		// action = this.actionQueue.get(0);
 
 		if (actualAction.getRemainedDuration() == 0)
 			actualAction = action;
 		else if (actualAction.getPriority() < action.getPriority())
 			actualAction = action;
 
-		if (actualAction == null) {
+		if (actualAction != null) {
 			actualAction.lowerRemainedDuration(1);
 			object.doAction(actualAction);
 		}
-
 	}
 
 	/**
@@ -80,7 +87,9 @@ public class ActionHandler {
 	 * @param action
 	 */
 	public void changeAction(Action action) {
-
+		// FIXME Es macht keinen Sinn, wenn man nur eine Action Ã¼bergibt. Das
+		// funktioniert so nicht. Oder wird da nur die erste Action geÃ¤ndert???
+		// Welche Action soll denn geÃ¤ndert werden? (circlesmiler)
 	}
 }
 
@@ -143,12 +152,12 @@ public class ActionHandler {
 // {
 // STR_ActionElement* lT_actionTmp = mP_actions->get_element();
 // if (mT_actualAction->u_duration_remained == 0) // Aktion abgelaufen ?
-// mT_actualAction = lT_actionTmp; // dann in Liste weiter zur nächsten Aktion
+// mT_actualAction = lT_actionTmp; // dann in Liste weiter zur nï¿½chsten Aktion
 // else // sonst, wenn priorisierte Aktion zu diesem
 // { // Zeitpunkt ebenfalls dran ist
 // if (mT_actualAction->u_priority < lT_actionTmp->u_priority)
 // mT_actualAction = lT_actionTmp;
-// } // Rest der alten Aktion wird danach ausgeführt
+// } // Rest der alten Aktion wird danach ausgefï¿½hrt
 // if (mT_actualAction)
 // {
 // mT_actualAction->u_duration_remained -= 1; // Zaehler der (nun) aktuellen
@@ -164,7 +173,7 @@ public class ActionHandler {
 // {
 // STR_ActionElement* lT_newElement;
 // lT_newElement = new STR_ActionElement; // dann ein neues erstellen
-// lT_newElement->u_actionCode = au_code; // übergebene Werte an entsprechender
+// lT_newElement->u_actionCode = au_code; // ï¿½bergebene Werte an entsprechender
 // lT_newElement->u_time_min = au_time; // Stelle eintagen
 // lT_newElement->u_time_max = au_time + au_valid;
 // lT_newElement->u_priority = au_priority; // Dauer und Restzeit bei neuen El.

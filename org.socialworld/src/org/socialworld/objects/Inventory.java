@@ -59,7 +59,7 @@ public class Inventory {
 	}
 
 	/**
-	 * The method returns the right hand item iff it is an instance of Weapon
+	 * The method returns the right hand item if it is an instance of Weapon
 	 * 
 	 * @return the rightHand
 	 */
