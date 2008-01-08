@@ -22,24 +22,21 @@ public class Item extends SimulationObject {
 	 * @param user
 	 *            the user
 	 */
-	public void use(Action action, SimulationObject user) {
+	public void handle(Action action, SimulationObject user) {
 		ActionMode mode = action.getMode();
 
 		switch (mode) {
 		case examineItem:
-			examineItem(action, user);
+			examine(action, user);
 			break;
 		case takeItem:
-			takeItem(action, user);
+			take(action, user);
 			break;
-		case useExternItem:
-			useInternItem(action, user);
-			break;
-		case useInternItem:
-			useInternItem(action, user);
+		case useItem:
+			use(action, user);
 			break;
 		case collectItem:
-			collectItem(action, user);
+			collect(action, user);
 			break;
 		case switchItemToLeftHand:
 			switchItemToLeftHand(action, user);
@@ -48,25 +45,26 @@ public class Item extends SimulationObject {
 			useTwoItems(action, user);
 			break;
 		case dropItem:
-			dropItem(action, user);
+			drop(action, user);
 			break;
 		default:
+
 		}
 	}
 
-	private void examineItem(Action action, SimulationObject user) {
+	private void use(Action action, SimulationObject user) {
 
 	}
 
-	private void takeItem(Action action, SimulationObject user) {
+	private void examine(Action action, SimulationObject user) {
 
 	}
 
-	private void useInternItem(Action action, SimulationObject user) {
+	private void take(Action action, SimulationObject user) {
 
 	}
 
-	private void collectItem(Action action, SimulationObject user) {
+	private void collect(Action action, SimulationObject user) {
 
 	}
 
@@ -78,7 +76,7 @@ public class Item extends SimulationObject {
 
 	}
 
-	private void dropItem(Action action, SimulationObject user) {
+	private void drop(Action action, SimulationObject user) {
 
 	}
 
