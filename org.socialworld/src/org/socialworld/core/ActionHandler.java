@@ -37,17 +37,10 @@ public class ActionHandler {
 	 * object do the action.
 	 */
 	public void doActualAction() {
-		// TODO (circlesmiler) Muss die Action danach nicht aus der Liste
-		// rausgenommen werden?
-		// Und wenn man die rausnimmt, rutscht dann die nächste nach? ich glaub,
-		// es gibt noch nen besseren Zugriff auf's Array:
-		// ==>
-
+		// TODO (tyloesand): das Action Element muss dann auch aus der Liste
+		// entfernt werden
 		Action action;
 		action = actionQueue.iterator().next();
-
-		// Action action;
-		// action = this.actionQueue.get(0);
 
 		if (actualAction.getRemainedDuration() == 0)
 			actualAction = action;
@@ -90,6 +83,12 @@ public class ActionHandler {
 		// FIXME Es macht keinen Sinn, wenn man nur eine Action übergibt. Das
 		// funktioniert so nicht. Oder wird da nur die erste Action geändert???
 		// Welche Action soll denn geändert werden? (circlesmiler)
+
+		// hier wird noch ein 2. Action Element als Parameter �bergeben werden.
+		// das erste wird durchs 2. ersetzt.
+		// habs aber erstmal offen gelassen, kann ja nicht an mehreren Fronten
+		// k�mpfen
+		// den Hinweis lassen wir hier mal stehen
 	}
 }
 
@@ -173,7 +172,8 @@ public class ActionHandler {
 // {
 // STR_ActionElement* lT_newElement;
 // lT_newElement = new STR_ActionElement; // dann ein neues erstellen
-// lT_newElement->u_actionCode = au_code; // �bergebene Werte an entsprechender
+// lT_newElement->u_actionCode = au_code; // �bergebene Werte an
+// entsprechender
 // lT_newElement->u_time_min = au_time; // Stelle eintagen
 // lT_newElement->u_time_max = au_time + au_valid;
 // lT_newElement->u_priority = au_priority; // Dauer und Restzeit bei neuen El.

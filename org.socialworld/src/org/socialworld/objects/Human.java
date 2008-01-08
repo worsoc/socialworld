@@ -28,9 +28,6 @@ public class Human extends Mammal {
 		type = action.getType();
 
 		switch (type) {
-		case useFastItem:
-			useFastItem(action);
-			return;
 		case touch:
 			touch(action);
 			return;
@@ -61,15 +58,15 @@ public class Human extends Mammal {
 		case say:
 			say(action);
 			return;
-		case useItem:
-			useItem(action);
+		case handleItem:
+			handleItem(action);
 			return;
 		default:
 			return;
 		}
 	}
 
-	protected void useItem(Action action) {
+	protected void handleItem(Action action) {
 
 	}
 
@@ -78,11 +75,19 @@ public class Human extends Mammal {
 	}
 
 	protected void useWeaponRight(Action action) {
-
+		SimulationObject rightHand = inventory.getRightHand();
+		if (rightHand != null) {
+			Weapon weapon = (Weapon) rightHand;
+			weapon.handle(action, this);
+		}
 	}
 
 	protected void useWeaponLeft(Action action) {
-
+		SimulationObject leftHand = inventory.getLeftHand();
+		if (leftHand != null) {
+			Weapon weapon = (Weapon) leftHand;
+			weapon.handle(action, this);
+		}
 	}
 
 	protected void spell(Action action) {
@@ -97,9 +102,6 @@ public class Human extends Mammal {
 
 	}
 
-	protected void useFastItem(Action action) {
-
-	}
 
 	/**
 	 * @return the inventory

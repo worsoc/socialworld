@@ -14,7 +14,7 @@ public enum ActionMode {
 
 	weaponRightHand, weaponLeftHand,
 
-	examineItem, takeItem, useExternItem, useInternItem, 
+	examineItem, takeItem, useItem, 
 	collectItem, switchItemToLeftHand, useTwoItems, dropItem
 
 }
