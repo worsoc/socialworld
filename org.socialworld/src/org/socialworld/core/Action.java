@@ -6,6 +6,7 @@ package org.socialworld.core;
 import org.socialworld.objects.ActionMode;
 import org.socialworld.objects.Direction;
 import org.socialworld.objects.SimulationObject;
+import org.socialworld.objects.Time;
 
 /**
  * @author Mathias Sikos (tyloesand)
@@ -14,12 +15,14 @@ import org.socialworld.objects.SimulationObject;
 public class Action {
 
 	private ActionType type;
+	private Time minTime;
+	private Time maxTime;
 	private int priority;
 	private SimulationObject target;
 	private Direction direction;
 	private ActionMode mode;
 	private double intensity;
-
+	private double duration;
 	private double remainedDuration;
 
 	/**
@@ -37,6 +40,36 @@ public class Action {
 	 */
 	public void setType(ActionType type) {
 		this.type = type;
+	}
+
+	/**
+	 * @return the time
+	 */
+	public Time getMinTime() {
+		return minTime;
+	}
+
+	/**
+	 * @param time
+	 *            the time to set
+	 */
+	public void setMinTime(Time time) {
+		this.minTime = time;
+	}
+
+	/**
+	 * @return the time
+	 */
+	public Time getMaxTime() {
+		return maxTime;
+	}
+
+	/**
+	 * @param time
+	 *            the time to set
+	 */
+	public void setMaxTime(Time time) {
+		this.maxTime = time;
 	}
 
 	/**
@@ -114,6 +147,21 @@ public class Action {
 	 */
 	public void setIntensity(double intensity) {
 		this.intensity = intensity;
+	}
+
+	/**
+	 * @return the duration
+	 */
+	public double getDuration() {
+		return duration;
+	}
+
+	/**
+	 * @param duration
+	 *            the duration to set
+	 */
+	public void setDuration(double duration) {
+		this.duration = duration;
 	}
 
 	/**
