@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.objects.SimulationObject;
+import org.socialworld.objects.Time;
 
 /**
  * Manages the actions of an {@link SimulationObject}.
@@ -67,10 +68,17 @@ public class ActionHandler {
 	 * The methods creates a new action element and inserts it into the action
 	 * list.
 	 */
-	public void newAction() {
+	public void newAction(ActionType type, Time minTime, Time maxTime,
+			int priority, double duration) {
 		Action action;
 		action = new Action();
 
+		action.setType(type);
+		action.setMinTime(minTime);
+		action.setMaxTime(maxTime);
+		action.setPriority(priority);
+		action.setDuration(duration);
+		
 		insertAction(action);
 	}
 
