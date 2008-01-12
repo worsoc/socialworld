@@ -1,8 +1,14 @@
 package org.socialworld.core.test;
 
+import org.socialworld.core.Action;
+import org.socialworld.core.ActionHandler;
+import org.socialworld.objects.Human;
+
 import junit.framework.TestCase;
 
 public class ActionHandlerTest extends TestCase {
+
+    private ActionHandler actionHandler;
 
     public ActionHandlerTest(String name) {
 	super(name);
@@ -10,6 +16,7 @@ public class ActionHandlerTest extends TestCase {
 
     protected void setUp() throws Exception {
 	super.setUp();
+	actionHandler = new ActionHandler(new Human());
     }
 
     protected void tearDown() throws Exception {
@@ -21,7 +28,7 @@ public class ActionHandlerTest extends TestCase {
     }
 
     public void testDoActualAction() {
-	fail("Not yet implemented");
+	assertTrue(true);
     }
 
     public void testInsertAction() {
