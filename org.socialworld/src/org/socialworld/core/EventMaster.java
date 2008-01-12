@@ -9,4 +9,6 @@ package org.socialworld.core;
  */
 public class EventMaster {
 
+    // TODO Muss noch implementiert werden
+    
 }

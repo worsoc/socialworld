@@ -9,65 +9,67 @@ package org.socialworld.objects;
  */
 public class Inventory {
 
-	protected SimulationObject leftHand;
-	protected SimulationObject rightHand;
+    protected SimulationObject leftHand;
+    protected SimulationObject rightHand;
 
-	public Inventory() {
+    public Inventory() {
 
+    }
+
+    /**
+     * @return the leftHand
+     */
+    public SimulationObject getLeftHand() {
+	return this.leftHand;
+    }
+
+    /**
+     * @param leftHand
+     *                the leftHand to set
+     */
+    public void setLeftHand(final SimulationObject leftHand) {
+	this.leftHand = leftHand;
+    }
+
+    /**
+     * @return the rightHand
+     */
+    public SimulationObject getRightHand() {
+	return this.rightHand;
+    }
+
+    /**
+     * @param rightHand
+     *                the rightHand to set
+     */
+    public void setRightHand(final SimulationObject rightHand) {
+	this.rightHand = rightHand;
+    }
+
+    /**
+     * The method returns the left hand item iff it is an instance of Weapon
+     * 
+     * @return the leftHand
+     */
+    public SimulationObject getLeftHandWeapon() {
+	if (this.leftHand instanceof Weapon) {
+	    return this.leftHand;
+	} else {
+	    return null;
 	}
+    }
 
-	/**
-	 * @return the leftHand
-	 */
-	public SimulationObject getLeftHand() {
-		return leftHand;
+    /**
+     * The method returns the right hand item if it is an instance of Weapon
+     * 
+     * @return the rightHand
+     */
+    public SimulationObject getRightHandWeapon() {
+	if (this.rightHand instanceof Weapon) {
+	    return this.rightHand;
+	} else {
+	    return null;
 	}
-
-	/**
-	 * @param leftHand
-	 *            the leftHand to set
-	 */
-	public void setLeftHand(SimulationObject leftHand) {
-		this.leftHand = leftHand;
-	}
-
-	/**
-	 * @return the rightHand
-	 */
-	public SimulationObject getRightHand() {
-		return rightHand;
-	}
-
-	/**
-	 * @param rightHand
-	 *            the rightHand to set
-	 */
-	public void setRightHand(SimulationObject rightHand) {
-		this.rightHand = rightHand;
-	}
-
-	/**
-	 * The method returns the left hand item iff it is an instance of Weapon
-	 * 
-	 * @return the leftHand
-	 */
-	public SimulationObject getLeftHandWeapon() {
-		if (leftHand instanceof Weapon)
-			return leftHand;
-		else
-			return null;
-	}
-
-	/**
-	 * The method returns the right hand item if it is an instance of Weapon
-	 * 
-	 * @return the rightHand
-	 */
-	public SimulationObject getRightHandWeapon() {
-		if (rightHand instanceof Weapon)
-			return rightHand;
-		else
-			return null;
-	}
+    }
 
 }

@@ -12,348 +12,272 @@ import org.socialworld.objects.Time;
  * @author Mathias Sikos (tyloesand)
  * 
  */
-public class SearchActionDescription {
+public class SearchActionDescription extends AbstractAction {
 
-	private ActionType type;
-	private ActionMode mode;
-	private Time minTime;
-	private Time maxTime;
-	private int priority;
-	private SimulationObject target;
-	private Direction direction;
-	private double intensity;
-	private double duration;
-	private double remainedDuration;
+    private boolean searchByType;
+    private boolean searchByMode;
+    private boolean searchByMinTime;
+    private boolean searchByMaxTime;
+    private boolean searchByPriority;
+    private boolean searchByTarget;
+    private boolean searchByDirection;
+    private boolean searchByIntensity;
+    private boolean searchByDuration;
+    private boolean searchByRemainedDuration;
 
-	private boolean searchByType;
-	private boolean searchByMode;
-	private boolean searchByMinTime;
-	private boolean searchByMaxTime;
-	private boolean searchByPriority;
-	private boolean searchByTarget;
-	private boolean searchByDirection;
-	private boolean searchByIntensity;
-	private boolean searchByDuration;
-	private boolean searchByRemainedDuration;
+    public SearchActionDescription() {
+	super();
+	this.searchByType = false;
+	this.searchByMode = false;
+	this.searchByMinTime = false;
+	this.searchByMaxTime = false;
+	this.searchByPriority = false;
+	this.searchByTarget = false;
+	this.searchByDirection = false;
+	this.searchByIntensity = false;
+	this.searchByDuration = false;
+	this.searchByRemainedDuration = false;
+    }
 
-	public SearchActionDescription() {
-		searchByType = false;
-		searchByMode = false;
-		searchByMinTime = false;
-		searchByMaxTime = false;
-		searchByPriority = false;
-		searchByTarget = false;
-		searchByDirection = false;
-		searchByIntensity = false;
-		searchByDuration = false;
-		searchByRemainedDuration = false;
+    /**
+     * @param type
+     *                the type to set
+     */
+    @Override
+    public void setType(final ActionType type) {
+	this.type = type;
+	this.searchByType = true;
+    }
+
+    /**
+     * @param mode
+     *                the mode to set
+     */
+    @Override
+    public void setMode(final ActionMode mode) {
+	this.mode = mode;
+	this.searchByMode = true;
+    }
+
+    /**
+     * @param time
+     *                the time to set
+     */
+    @Override
+    public void setMinTime(final Time time) {
+	this.minTime = time;
+	this.searchByMinTime = true;
+    }
+
+    /**
+     * @param time
+     *                the time to set
+     */
+    @Override
+    public void setMaxTime(final Time time) {
+	this.maxTime = time;
+	this.searchByMaxTime = true;
+    }
+
+    /**
+     * @param priority
+     *                the priority to set
+     */
+    @Override
+    public void setPriority(final int priority) {
+	this.priority = priority;
+	this.searchByPriority = true;
+    }
+
+    /**
+     * @param target
+     *                the target to set
+     */
+    @Override
+    public void setTarget(final SimulationObject target) {
+	this.target = target;
+	this.searchByTarget = true;
+    }
+
+    /**
+     * @param direction
+     *                the direction to set
+     */
+    @Override
+    public void setDirection(final Direction direction) {
+	this.direction = direction;
+	this.searchByDirection = true;
+    }
+
+    /**
+     * @param intensity
+     *                the intensity to set
+     */
+    @Override
+    public void setIntensity(final double intensity) {
+	this.intensity = intensity;
+	this.searchByIntensity = true;
+    }
+
+    /**
+     * @param duration
+     *                the duration to set
+     */
+    @Override
+    public void setDuration(final double duration) {
+	this.duration = duration;
+	this.searchByDuration = true;
+    }
+
+    /**
+     * @param remainedDuration
+     *                the remainedDuration to set
+     */
+    @Override
+    public void setRemainedDuration(final double remainedDuration) {
+	this.remainedDuration = remainedDuration;
+	this.searchByRemainedDuration = true;
+    }
+
+    /**
+     * The methods sets the flag, whether an action attribute is used by search
+     * 
+     * @param flag
+     */
+    public void setSearchFlag(final ActionDescriptionFlag flag) {
+	switch (flag) {
+	case searchByType:
+	    this.searchByType = true;
+	    break;
+	case searchByMode:
+	    this.searchByMode = true;
+	    break;
+	case searchByMinTime:
+	    this.searchByMinTime = true;
+	    break;
+	case searchByMaxTime:
+	    this.searchByMaxTime = true;
+	    break;
+	case searchByPriority:
+	    this.searchByPriority = true;
+	    break;
+	case searchByTarget:
+	    this.searchByTarget = true;
+	    break;
+	case searchByDirection:
+	    this.searchByDirection = true;
+	    break;
+	case searchByIntensity:
+	    this.searchByIntensity = true;
+	    break;
+	case searchByDuration:
+	    this.searchByDuration = true;
+	    break;
+	case searchByRemainedDuration:
+	    this.searchByRemainedDuration = true;
+	    break;
+
+	case dontSearchByType:
+	    this.searchByType = false;
+	    break;
+	case dontSearchByMode:
+	    this.searchByMode = false;
+	    break;
+	case dontSearchByMinTime:
+	    this.searchByMinTime = false;
+	    break;
+	case dontSearchByMaxTime:
+	    this.searchByMaxTime = false;
+	    break;
+	case dontSearchByPriority:
+	    this.searchByPriority = false;
+	    break;
+	case dontSearchByTarget:
+	    this.searchByTarget = false;
+	    break;
+	case dontSearchByDirection:
+	    this.searchByDirection = false;
+	    break;
+	case dontSearchByIntensity:
+	    this.searchByIntensity = false;
+	    break;
+	case dontSearchByDuration:
+	    this.searchByDuration = false;
+	    break;
+	case dontSearchByRemainedDuration:
+	    this.searchByRemainedDuration = false;
+	    break;
+	default:
 	}
+    }
 
-	/**
-	 * The methods returns the action type.
-	 * 
-	 * @return type
-	 */
-	public ActionType getType() {
-		return type;
-	}
+    /**
+     * @return the searchByType
+     */
+    public boolean isSearchByType() {
+	return this.searchByType;
+    }
 
-	/**
-	 * @param type
-	 *            the type to set
-	 */
-	public void setType(ActionType type) {
-		this.type = type;
-		searchByType = true;
-	}
+    /**
+     * @return the searchByMode
+     */
+    public boolean isSearchByMode() {
+	return this.searchByMode;
+    }
 
-	/**
-	 * @return the mode
-	 */
-	public ActionMode getMode() {
-		return mode;
-	}
+    /**
+     * @return the searchByMinTime
+     */
+    public boolean isSearchByMinTime() {
+	return this.searchByMinTime;
+    }
 
-	/**
-	 * @param mode
-	 *            the mode to set
-	 */
-	public void setMode(ActionMode mode) {
-		this.mode = mode;
-		searchByMode = true;
-	}
+    /**
+     * @return the searchByMaxTime
+     */
+    public boolean isSearchByMaxTime() {
+	return this.searchByMaxTime;
+    }
 
-	/**
-	 * @return the time
-	 */
-	public Time getMinTime() {
-		return minTime;
-	}
+    /**
+     * @return the searchByPriority
+     */
+    public boolean isSearchByPriority() {
+	return this.searchByPriority;
+    }
 
-	/**
-	 * @param time
-	 *            the time to set
-	 */
-	public void setMinTime(Time time) {
-		this.minTime = time;
-		searchByMinTime = true;
-	}
+    /**
+     * @return the searchByTarget
+     */
+    public boolean isSearchByTarget() {
+	return this.searchByTarget;
+    }
 
-	/**
-	 * @return the time
-	 */
-	public Time getMaxTime() {
-		return maxTime;
-	}
+    /**
+     * @return the searchByDirection
+     */
+    public boolean isSearchByDirection() {
+	return this.searchByDirection;
+    }
 
-	/**
-	 * @param time
-	 *            the time to set
-	 */
-	public void setMaxTime(Time time) {
-		this.maxTime = time;
-		searchByMaxTime = true;
-	}
+    /**
+     * @return the searchByIntensity
+     */
+    public boolean isSearchByIntensity() {
+	return this.searchByIntensity;
+    }
 
-	/**
-	 * The methods returns the action's priority.
-	 * 
-	 * @return priority
-	 */
-	public int getPriority() {
-		return priority;
-	}
+    /**
+     * @return the searchByDuration
+     */
+    public boolean isSearchByDuration() {
+	return this.searchByDuration;
+    }
 
-	/**
-	 * @param priority
-	 *            the priority to set
-	 */
-	public void setPriority(int priority) {
-		this.priority = priority;
-		searchByPriority = true;
-	}
-
-	/**
-	 * @return the target
-	 */
-	public SimulationObject getTarget() {
-		return target;
-	}
-
-	/**
-	 * @param target
-	 *            the target to set
-	 */
-	public void setTarget(SimulationObject target) {
-		this.target = target;
-		searchByTarget = true;
-	}
-
-	/**
-	 * @return the direction
-	 */
-	public Direction getDirection() {
-		return direction;
-	}
-
-	/**
-	 * @param direction
-	 *            the direction to set
-	 */
-	public void setDirection(Direction direction) {
-		this.direction = direction;
-		searchByDirection = true;
-	}
-
-	/**
-	 * @return the intensity
-	 */
-	public double getIntensity() {
-		return intensity;
-	}
-
-	/**
-	 * @param intensity
-	 *            the intensity to set
-	 */
-	public void setIntensity(double intensity) {
-		this.intensity = intensity;
-		searchByIntensity = true;
-	}
-
-	/**
-	 * @return the duration
-	 */
-	public double getDuration() {
-		return duration;
-	}
-
-	/**
-	 * @param duration
-	 *            the duration to set
-	 */
-	public void setDuration(double duration) {
-		this.duration = duration;
-		searchByDuration = true;
-	}
-
-	/**
-	 * The methods returns the action's remained duration.
-	 * 
-	 * @return remainedDuration
-	 */
-	public double getRemainedDuration() {
-		return remainedDuration;
-	}
-
-	/**
-	 * @param remainedDuration
-	 *            the remainedDuration to set
-	 */
-	public void setRemainedDuration(double remainedDuration) {
-		this.remainedDuration = remainedDuration;
-		searchByRemainedDuration = true;
-	}
-
-	/**
-	 * The methods sets the flag, whether an action attribute is used by search
-	 * 
-	 * @param flag
-	 */
-	public void setSearchFlag(ActionDescriptionFlag flag) {
-		switch (flag) {
-		case searchByType:
-			searchByType = true;
-			break;
-		case searchByMode:
-			searchByMode = true;
-			break;
-		case searchByMinTime:
-			searchByMinTime = true;
-			break;
-		case searchByMaxTime:
-			searchByMaxTime = true;
-			break;
-		case searchByPriority:
-			searchByPriority = true;
-			break;
-		case searchByTarget:
-			searchByTarget = true;
-			break;
-		case searchByDirection:
-			searchByDirection = true;
-			break;
-		case searchByIntensity:
-			searchByIntensity = true;
-			break;
-		case searchByDuration:
-			searchByDuration = true;
-			break;
-		case searchByRemainedDuration:
-			searchByRemainedDuration = true;
-			break;
-
-		case dontSearchByType:
-			searchByType = false;
-			break;
-		case dontSearchByMode:
-			searchByMode = false;
-			break;
-		case dontSearchByMinTime:
-			searchByMinTime = false;
-			break;
-		case dontSearchByMaxTime:
-			searchByMaxTime = false;
-			break;
-		case dontSearchByPriority:
-			searchByPriority = false;
-			break;
-		case dontSearchByTarget:
-			searchByTarget = false;
-			break;
-		case dontSearchByDirection:
-			searchByDirection = false;
-			break;
-		case dontSearchByIntensity:
-			searchByIntensity = false;
-			break;
-		case dontSearchByDuration:
-			searchByDuration = false;
-			break;
-		case dontSearchByRemainedDuration:
-			searchByRemainedDuration = false;
-			break;
-		default:
-		}
-	}
-
-	/**
-	 * @return the searchByType
-	 */
-	public boolean isSearchByType() {
-		return searchByType;
-	}
-
-	/**
-	 * @return the searchByMode
-	 */
-	public boolean isSearchByMode() {
-		return searchByMode;
-	}
-
-	/**
-	 * @return the searchByMinTime
-	 */
-	public boolean isSearchByMinTime() {
-		return searchByMinTime;
-	}
-
-	/**
-	 * @return the searchByMaxTime
-	 */
-	public boolean isSearchByMaxTime() {
-		return searchByMaxTime;
-	}
-
-	/**
-	 * @return the searchByPriority
-	 */
-	public boolean isSearchByPriority() {
-		return searchByPriority;
-	}
-
-	/**
-	 * @return the searchByTarget
-	 */
-	public boolean isSearchByTarget() {
-		return searchByTarget;
-	}
-
-	/**
-	 * @return the searchByDirection
-	 */
-	public boolean isSearchByDirection() {
-		return searchByDirection;
-	}
-
-	/**
-	 * @return the searchByIntensity
-	 */
-	public boolean isSearchByIntensity() {
-		return searchByIntensity;
-	}
-
-	/**
-	 * @return the searchByDuration
-	 */
-	public boolean isSearchByDuration() {
-		return searchByDuration;
-	}
-
-	/**
-	 * @return the searchByRemainedDuration
-	 */
-	public boolean isSearchByRemainedDuration() {
-		return searchByRemainedDuration;
-	}
+    /**
+     * @return the searchByRemainedDuration
+     */
+    public boolean isSearchByRemainedDuration() {
+	return this.searchByRemainedDuration;
+    }
 }
