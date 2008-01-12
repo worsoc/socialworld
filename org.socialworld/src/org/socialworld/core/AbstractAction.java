@@ -178,4 +178,9 @@ public abstract class AbstractAction {
 	this.remainedDuration = remainedDuration;
     }
 
+    @Override
+    public String toString() {
+	return this.type.toString() + " -> " + this.target.toString(); //$NON-NLS-1$
+    }
+
 }
