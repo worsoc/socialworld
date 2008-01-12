@@ -8,13 +8,12 @@ package org.socialworld.objects;
  * 
  */
 public enum ActionMode {
-	run, walk, jump,
+    run, walk, jump,
 
-	sleepIntentioned, sleepCaused,
+    sleepIntentioned, sleepCaused,
 
-	weaponRightHand, weaponLeftHand,
+    weaponRightHand, weaponLeftHand,
 
-	examineItem, takeItem, useItem, 
-	collectItem, switchItemToLeftHand, useTwoItems, dropItem
+    examineItem, takeItem, useItem, collectItem, switchItemToLeftHand, useTwoItems, dropItem
 
 }

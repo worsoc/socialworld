@@ -18,134 +18,155 @@ import org.socialworld.objects.Time;
  */
 public class ActionHandler {
 
-	protected SimulationObject object;
-	protected List<Action> actionQueue;
-	protected Action actualAction;
+    protected SimulationObject object;
+    protected List<Action> actionQueue;
+    protected Action actualAction;
 
-	public ActionHandler(SimulationObject simulationObject) {
-		actualAction = null;
-		actionQueue = new ArrayList<Action>();
-		this.object = simulationObject;
+    public ActionHandler(final SimulationObject simulationObject) {
+	this.actualAction = null;
+	this.actionQueue = new ArrayList<Action>();
+	this.object = simulationObject;
+    }
+
+    /**
+     * @return the actualAction
+     */
+    public Action getActualAction() {
+	return this.actualAction;
+    }
+
+    /**
+     * The method gets an action element from action list and lets the according
+     * object do the action.
+     */
+    public void doActualAction() {
+	// TODO (tyloesand): das Action Element muss dann auch aus der Liste
+	// entfernt werden
+	Action action;
+	action = this.actionQueue.iterator().next();
+
+	if (this.actualAction.getRemainedDuration() == 0) {
+	    this.actualAction = action;
+	} else if (this.actualAction.getPriority() < action.getPriority()) {
+	    this.actualAction = action;
 	}
 
-	/**
-	 * @return the actualAction
-	 */
-	public Action getActualAction() {
-		return actualAction;
+	if (this.actualAction != null) {
+	    this.actualAction.lowerRemainedDuration(1);
+	    this.object.doAction(this.actualAction);
 	}
+    }
 
-	/**
-	 * The method gets an action element from action list and lets the according
-	 * object do the action.
-	 */
-	public void doActualAction() {
-		// TODO (tyloesand): das Action Element muss dann auch aus der Liste
-		// entfernt werden
-		Action action;
-		action = actionQueue.iterator().next();
+    /**
+     * The method inserts an action element into the action list of a simulation
+     * object.
+     * 
+     * @param action
+     */
+    public void insertAction(final Action action) {
+	this.actionQueue.add(action);
+    }
 
-		if (actualAction.getRemainedDuration() == 0)
-			actualAction = action;
-		else if (actualAction.getPriority() < action.getPriority())
-			actualAction = action;
+    /**
+     * The methods creates a new action element and inserts it into the action
+     * list.
+     */
+    public void newAction(final ActionType type, final ActionMode mode,
+	    final SimulationObject target, final Direction direction,
+	    final double intensity, final Time minTime, final Time maxTime,
+	    final int priority, final double duration) {
+	// FIXME tyloesand: Es ist wohl besser, das Aktionselement außerhalb zu
+	// füllen
+	// und dann nur das neue Aktionselement zu übergeben
+	// dann reicht insertAction und die Funktion newAction ist überflüssig
+	// Diskussionsbedarf
 
-		if (actualAction != null) {
-			actualAction.lowerRemainedDuration(1);
-			object.doAction(actualAction);
+	Action action;
+	action = new Action();
+
+	action.setType(type);
+	action.setMode(mode);
+	action.setTarget(target);
+	action.setDirection(direction);
+	action.setIntensity(intensity);
+	action.setMinTime(minTime);
+	action.setMaxTime(maxTime);
+	action.setPriority(priority);
+	action.setDuration(duration);
+
+	insertAction(action);
+    }
+
+    /**
+     * The methods search for an action element that meets the properties of an
+     * action description. The description holds information for what attributes
+     * list is searched. If all given search attributes are found in one action
+     * element the action element will be returned.
+     * 
+     * @param actionDescription
+     *                (search criteria)
+     * @return action element that meets the search criteria
+     */
+    public Action findAction(final SearchActionDescription actionDescription) {
+	// TODO Iteration und Abbruch am Ende
+	Action action;
+	while (true) {
+	    action = this.actionQueue.iterator().next();
+	    if (action == null) {
+		break;
+	    }
+
+	    if (actionDescription.isSearchByType()) {
+		if (action.getType() != actionDescription.getType()) {
+		    continue;
 		}
-	}
-
-	/**
-	 * The method inserts an action element into the action list of a simulation
-	 * object.
-	 * 
-	 * @param action
-	 */
-	public void insertAction(Action action) {
-		actionQueue.add(action);
-	}
-
-	/**
-	 * The methods creates a new action element and inserts it into the action
-	 * list.
-	 */
-	public void newAction(ActionType type, ActionMode mode,
-			SimulationObject target, Direction direction, double intensity,
-			Time minTime, Time maxTime, int priority, double duration) {
-		// FIXME tyloesand: Es ist wohl besser, das Aktionselement außerhalb zu
-		// füllen
-		// und dann nur das neue Aktionselement zu übergeben
-		// dann reicht insertAction und die Funktion newAction ist überflüssig
-		// Diskussionsbedarf
-
-		Action action;
-		action = new Action();
-
-		action.setType(type);
-		action.setMode(mode);
-		action.setTarget(target);
-		action.setDirection(direction);
-		action.setIntensity(intensity);
-		action.setMinTime(minTime);
-		action.setMaxTime(maxTime);
-		action.setPriority(priority);
-		action.setDuration(duration);
-
-		insertAction(action);
-	}
-
-	/**
-	 * The methods search for an action leement that meets the properties of an
-	 * action description. The description holds information for what attributes
-	 * list is searched. If all given search attributes are found in one action
-	 * element the action element will be returned.
-	 * 
-	 * @param actionDescription
-	 *            (search criteria)
-	 * @return action element that meets the search criteria
-	 */
-	public Action findAction(SearchActionDescription actionDescription) {
-		// TODO Iteration und Abbruch am Ende
-		Action action;
-		while (true) {
-			action = actionQueue.iterator().next();
-			if (action == null)
-				break;
-
-			if (actionDescription.isSearchByType())
-				if (action.getType() != actionDescription.getType())
-					continue;
-			if (actionDescription.isSearchByMode())
-				if (action.getMode() != actionDescription.getMode())
-					continue;
-			if (actionDescription.isSearchByTarget())
-				if (action.getTarget() != actionDescription.getTarget())
-					continue;
-			if (actionDescription.isSearchByIntensity())
-				if (action.getIntensity() != actionDescription.getIntensity())
-					continue;
-			if (actionDescription.isSearchByPriority())
-				if (action.getPriority() != actionDescription.getPriority())
-					continue;
-			if (actionDescription.isSearchByMinTime())
-				if (action.getMinTime() != actionDescription.getMinTime())
-					continue;
-			if (actionDescription.isSearchByMaxTime())
-				if (action.getMaxTime() != actionDescription.getMaxTime())
-					continue;
-			if (actionDescription.isSearchByDirection())
-				if (action.getDirection() != actionDescription.getDirection())
-					continue;
-			if (actionDescription.isSearchByDuration())
-				if (action.getDuration() != actionDescription.getDuration())
-					continue;
-
-			return action;
+	    }
+	    if (actionDescription.isSearchByMode()) {
+		if (action.getMode() != actionDescription.getMode()) {
+		    continue;
 		}
+	    }
+	    if (actionDescription.isSearchByTarget()) {
+		if (action.getTarget() != actionDescription.getTarget()) {
+		    continue;
+		}
+	    }
+	    if (actionDescription.isSearchByIntensity()) {
+		if (action.getIntensity() != actionDescription.getIntensity()) {
+		    continue;
+		}
+	    }
+	    if (actionDescription.isSearchByPriority()) {
+		if (action.getPriority() != actionDescription.getPriority()) {
+		    continue;
+		}
+	    }
+	    if (actionDescription.isSearchByMinTime()) {
+		if (action.getMinTime() != actionDescription.getMinTime()) {
+		    continue;
+		}
+	    }
+	    if (actionDescription.isSearchByMaxTime()) {
+		if (action.getMaxTime() != actionDescription.getMaxTime()) {
+		    continue;
+		}
+	    }
+	    if (actionDescription.isSearchByDirection()) {
+		if (action.getDirection() != actionDescription.getDirection()) {
+		    continue;
+		}
+	    }
+	    if (actionDescription.isSearchByDuration()) {
+		if (action.getDuration() != actionDescription.getDuration()) {
+		    continue;
+		}
+	    }
 
-		return action;
+	    return action;
 	}
+
+	return action;
+    }
 }
 
 // /****************************************************************************

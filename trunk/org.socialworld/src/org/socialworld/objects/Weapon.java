@@ -11,16 +11,17 @@ import org.socialworld.core.Action;
  */
 public class Weapon extends Item {
 
-	public Weapon() {
-		super();
-	}
+    public Weapon() {
+	super();
+    }
 
-	public void handle(Action action, SimulationObject user) {
-		ActionMode mode = action.getMode();
+    @Override
+    public void handle(final Action action, final SimulationObject user) {
+	final ActionMode mode = action.getMode();
 
-		switch (mode) {
-		default:
-			super.handle(action, user);
-		}
+	switch (mode) {
+	default:
+	    super.handle(action, user);
 	}
+    }
 }

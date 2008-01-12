@@ -9,33 +9,33 @@ package org.socialworld.core;
  */
 public class ObjectManager {
 
-	private static ObjectManager manager = null;
+    private static ObjectManager manager = null;
 
-	Simulation simulation;
+    Simulation simulation;
 
-	private ObjectManager() {
-		simulation = new Simulation();
+    private ObjectManager() {
+	this.simulation = new Simulation();
+    }
+
+    /**
+     * Returns the {@link ObjectManager} instance.
+     * 
+     * @return {@link ObjectManager} instance
+     */
+    public static ObjectManager getObjectManager() {
+	if (manager == null) {
+	    manager = new ObjectManager();
 	}
+	return manager;
+    }
 
-	/**
-	 * Returns the {@link ObjectManager} instance.
-	 * 
-	 * @return {@link ObjectManager} instance
-	 */
-	public static ObjectManager getObjectManager() {
-		if (manager == null) {
-			manager = new ObjectManager();
-		}
-		return manager;
-	}
+    public Simulation getSimulation() {
+	return this.simulation;
+    }
 
-	public Simulation getSimulation() {
-		return simulation;
-	}
-
-	public EventMaster getEventMaster() {
-		return simulation.getEventMaster();
-	}
+    public EventMaster getEventMaster() {
+	return this.simulation.getEventMaster();
+    }
 
 }
 
