@@ -6,6 +6,8 @@ package org.socialworld.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.objects.ActionMode;
+import org.socialworld.objects.Direction;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.Time;
 
@@ -68,35 +70,81 @@ public class ActionHandler {
 	 * The methods creates a new action element and inserts it into the action
 	 * list.
 	 */
-	public void newAction(ActionType type, Time minTime, Time maxTime,
-			int priority, double duration) {
+	public void newAction(ActionType type, ActionMode mode,
+			SimulationObject target, Direction direction, double intensity,
+			Time minTime, Time maxTime, int priority, double duration) {
+		// FIXME tyloesand: Es ist wohl besser, das Aktionselement außerhalb zu
+		// füllen
+		// und dann nur das neue Aktionselement zu übergeben
+		// dann reicht insertAction und die Funktion newAction ist überflüssig
+		// Diskussionsbedarf
+
 		Action action;
 		action = new Action();
 
 		action.setType(type);
+		action.setMode(mode);
+		action.setTarget(target);
+		action.setDirection(direction);
+		action.setIntensity(intensity);
 		action.setMinTime(minTime);
 		action.setMaxTime(maxTime);
 		action.setPriority(priority);
 		action.setDuration(duration);
-		
+
 		insertAction(action);
 	}
 
 	/**
-	 * The methods changes an existing action element in the action list.
+	 * The methods search for an action leement that meets the properties of an
+	 * action description. The description holds information for what attributes
+	 * list is searched. If all given search attributes are found in one action
+	 * element the action element will be returned.
 	 * 
-	 * @param action
+	 * @param actionDescription
+	 *            (search criteria)
+	 * @return action element that meets the search criteria
 	 */
-	public void changeAction(Action action) {
-		// FIXME Es macht keinen Sinn, wenn man nur eine Action Ã¼bergibt. Das
-		// funktioniert so nicht. Oder wird da nur die erste Action geÃ¤ndert???
-		// Welche Action soll denn geÃ¤ndert werden? (circlesmiler)
+	public Action findAction(SearchActionDescription actionDescription) {
+		// TODO Iteration und Abbruch am Ende
+		Action action;
+		while (true) {
+			action = actionQueue.iterator().next();
+			if (action == null)
+				break;
 
-		// hier wird noch ein 2. Action Element als Parameter übergeben werden.
-		// das erste wird durchs 2. ersetzt.
-		// habs aber erstmal offen gelassen, kann ja nicht an mehreren Fronten
-		// kämpfen
-		// den Hinweis lassen wir hier mal stehen
+			if (actionDescription.isSearchByType())
+				if (action.getType() != actionDescription.getType())
+					continue;
+			if (actionDescription.isSearchByMode())
+				if (action.getMode() != actionDescription.getMode())
+					continue;
+			if (actionDescription.isSearchByTarget())
+				if (action.getTarget() != actionDescription.getTarget())
+					continue;
+			if (actionDescription.isSearchByIntensity())
+				if (action.getIntensity() != actionDescription.getIntensity())
+					continue;
+			if (actionDescription.isSearchByPriority())
+				if (action.getPriority() != actionDescription.getPriority())
+					continue;
+			if (actionDescription.isSearchByMinTime())
+				if (action.getMinTime() != actionDescription.getMinTime())
+					continue;
+			if (actionDescription.isSearchByMaxTime())
+				if (action.getMaxTime() != actionDescription.getMaxTime())
+					continue;
+			if (actionDescription.isSearchByDirection())
+				if (action.getDirection() != actionDescription.getDirection())
+					continue;
+			if (actionDescription.isSearchByDuration())
+				if (action.getDuration() != actionDescription.getDuration())
+					continue;
+
+			return action;
+		}
+
+		return action;
 	}
 }
 
