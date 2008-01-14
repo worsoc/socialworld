@@ -3,8 +3,12 @@
  */
 package org.socialworld.objects;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+
 import org.socialworld.core.Action;
 import org.socialworld.core.ActionHandler;
+import org.socialworld.core.Event;
 import org.socialworld.core.ObjectManager;
 
 /**
@@ -15,106 +19,122 @@ import org.socialworld.core.ObjectManager;
  */
 public abstract class SimulationObject {
 
-    protected ObjectManager objectManager;
-    protected Position position;
+	protected PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(
+			this);
 
-    protected SimulationEvent releasedEvent;
+	protected ObjectManager objectManager;
+	protected Position position;
 
-    protected ActionHandler actionHandler;
+	protected Event releasedEvent;
 
-    // TUChar mu_effectType_event[256];
-    // TUChar mu_reactionType_event[256];
-    // STR_AttributeCalculatorMatrix* mSTRa_attributeCalculatorMatrix;
+	protected ActionHandler actionHandler;
 
-    /**
-     * The constructor creates an simulation object.
-     * 
-     */
-    public SimulationObject() {
-	this.objectManager = ObjectManager.getObjectManager();
-    }
+	// TUChar mu_effectType_event[256];
+	// TUChar mu_reactionType_event[256];
+	// STR_AttributeCalculatorMatrix* mSTRa_attributeCalculatorMatrix;
 
-    /**
-     * The method lets an simulation object do an action.
-     * 
-     * @param action
-     */
-    public abstract void doAction(Action action);
+	/**
+	 * The constructor creates an simulation object.
+	 * 
+	 */
+	public SimulationObject() {
+		this.objectManager = ObjectManager.getObjectManager();
+	}
 
-    /**
-     * The method returns the reference to the event released by the object.
-     * 
-     * @return releasedEvent
-     */
-    public SimulationEvent getEvent() {
-	return null;
-    }
+	/**
+	 * The method lets an simulation object do an action.
+	 * 
+	 * @param action
+	 */
+	public abstract void doAction(Action action);
 
-    /**
-     * The method sets the event released by the object.
-     * 
-     * @param simualationEvent
-     */
-    public void setEvent(final SimulationEvent simualationEvent) {
-    }
+	/**
+	 * The method returns the reference to the event released by the object.
+	 * 
+	 * @return releasedEvent
+	 */
+	public Event getEvent() {
+		return null;
+	}
 
-    /**
-     * The method deletes the reference of the event released by the object.
-     */
-    public void deleteEvent() {
-    }
+	/**
+	 * The method sets the event released by the object.
+	 * 
+	 * @param simualationEvent
+	 */
+	public void setEvent(final Event simualationEvent) {
+	}
 
-    /**
-     * The method determines the influence of an event. It calculates how the
-     * event changes the attributes of the simulation object.
-     * 
-     * @param simualationEvent -
-     *                the event influencing the simulation object
-     */
-    public abstract void determineInfluence(SimulationEvent simualationEvent);
+	/**
+	 * The method deletes the reference of the event released by the object.
+	 */
+	public void deleteEvent() {
+	}
 
-    /**
-     * The method returns the object's position.
-     * 
-     * @return position
-     */
-    public Position getPosition() {
-	return null;
-    }
+	/**
+	 * The method determines the influence of an event. It calculates how the
+	 * event changes the attributes of the simulation object.
+	 * 
+	 * @param simualationEvent -
+	 *            the event influencing the simulation object
+	 */
+	public abstract void determineInfluence(Event simualationEvent);
 
-    /**
-     * The method sets the x value of object's position.
-     * 
-     * @param posX
-     */
-    public void setPositionX(final double posX) {
+	public void addPropertyChangeListener(String propertyName,
+			PropertyChangeListener listener) {
+		propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
+	}
 
-    }
+	public void removePropertyChangeListener(String propertyName,
+			PropertyChangeListener listener) {
+		propertyChangeSupport.removePropertyChangeListener(propertyName,
+				listener);
+	}
 
-    /**
-     * The method sets the y value of object's position.
-     * 
-     * @param posY
-     */
-    public void setPositionY(final double posY) {
+	/**
+	 * The method returns the object's position.
+	 * 
+	 * @return position
+	 */
+	public Position getPosition() {
+		return null;
+	}
 
-    }
+	/**
+	 * The method sets the x value of object's position.
+	 * 
+	 * @param posX
+	 */
+	public void setPositionX(final double posX) {
+		double oldPosX = this.position.getPosX();
+		this.position.setPosX(posX);
+		propertyChangeSupport.firePropertyChange("positionX", oldPosX, posX);
+	}
 
-    /**
-     * The method sets the z value of object's position.
-     * 
-     * @param posZ
-     */
-    public void setPositionZ(final double posZ) {
+	/**
+	 * The method sets the y value of object's position.
+	 * 
+	 * @param posY
+	 */
+	public void setPositionY(final double posY) {
 
-    }
+	}
 
-    /**
-     * The method returns the reference to object's action handler.
-     * 
-     * @return actionHandler
-     */
-    public ActionHandler getActionHandler() {
-	return null;
-    }
+	/**
+	 * The method sets the z value of object's position.
+	 * 
+	 * @param posZ
+	 */
+	public void setPositionZ(final double posZ) {
+
+	}
+
+	/**
+	 * The method returns the reference to object's action handler.
+	 * 
+	 * @return actionHandler
+	 */
+	public ActionHandler getActionHandler() {
+		return null;
+	}
 }

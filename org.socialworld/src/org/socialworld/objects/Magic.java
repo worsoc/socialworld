@@ -4,6 +4,7 @@
 package org.socialworld.objects;
 
 import org.socialworld.core.Action;
+import org.socialworld.core.Event;
 
 /**
  * @author Mathias Sikos (tyloesand)
@@ -21,7 +22,7 @@ public class Magic extends SimulationObject {
      * @see org.socialworld.objects.SimulationObject#determineInfluence(org.socialworld.objects.SimulationEvent)
      */
     @Override
-    public void determineInfluence(final SimulationEvent simualationEvent) {
+    public void determineInfluence(final Event simualationEvent) {
 	// TODO Auto-generated method stub
 
     }

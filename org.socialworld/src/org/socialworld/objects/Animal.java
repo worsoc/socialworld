@@ -5,6 +5,7 @@ package org.socialworld.objects;
 
 import org.socialworld.core.Action;
 import org.socialworld.core.ActionType;
+import org.socialworld.core.Event;
 
 /**
  * 
@@ -111,7 +112,7 @@ public class Animal extends SimulationObject {
      * @see org.socialworld.objects.SimulationObject#determineInfluence(org.socialworld.objects.SimulationEvent)
      */
     @Override
-    public void determineInfluence(final SimulationEvent simualationEvent) {
+    public void determineInfluence(final Event simualationEvent) {
 
     }
 

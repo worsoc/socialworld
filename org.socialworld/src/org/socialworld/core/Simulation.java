@@ -30,7 +30,8 @@ public class Simulation {
     private List<Magic> magics;
 
     public Simulation() {
-	this.eventMaster = new EventMaster();
+	this.eventMaster = EventMaster.getEventMaster();
+	this.eventMaster.start();
 
 	this.gods = new ArrayList<God>();
 	this.humans = new ArrayList<Human>();

@@ -1,6 +1,7 @@
 package org.socialworld.objects;
 
 import org.socialworld.core.Action;
+import org.socialworld.core.Event;
 
 public class God extends SimulationObject {
 
@@ -9,7 +10,7 @@ public class God extends SimulationObject {
     }
 
     @Override
-    public void determineInfluence(final SimulationEvent simualationEvent) {
+    public void determineInfluence(final Event simualationEvent) {
 	// TODO Implement method
     }
 
