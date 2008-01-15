@@ -3,40 +3,47 @@
  */
 package org.socialworld.core;
 
+import java.util.List;
+
+import org.socialworld.objects.Human;
+
 /**
  * @author Andre Schade
  * 
  */
 public class ObjectManager {
 
-    private static ObjectManager manager = null;
+	private static ObjectManager manager = null;
 
-    Simulation simulation;
+	Simulation simulation;
 
-    private ObjectManager() {
-	this.simulation = new Simulation();
-    }
-
-    /**
-     * Returns the {@link ObjectManager} instance.
-     * 
-     * @return {@link ObjectManager} instance
-     */
-    public static ObjectManager getObjectManager() {
-	if (manager == null) {
-	    manager = new ObjectManager();
+	private ObjectManager() {
+		this.simulation = new Simulation();
 	}
-	return manager;
-    }
 
-    public Simulation getSimulation() {
-	return this.simulation;
-    }
+	/**
+	 * Returns the {@link ObjectManager} instance.
+	 * 
+	 * @return {@link ObjectManager} instance
+	 */
+	public static ObjectManager getObjectManager() {
+		if (manager == null) {
+			manager = new ObjectManager();
+		}
+		return manager;
+	}
 
-    public EventMaster getEventMaster() {
-	return this.simulation.getEventMaster();
-    }
+	public Simulation getSimulation() {
+		return this.simulation;
+	}
 
+	public EventMaster getEventMaster() {
+		return this.simulation.getEventMaster();
+	}
+
+	public List<Human> getHumans() {
+		return this.simulation.getHumans();
+	}
 }
 
 // class PSBWS_Object_Manager
