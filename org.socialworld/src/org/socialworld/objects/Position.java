@@ -36,4 +36,26 @@ public class Position {
 	public void setPosZ(double posZ) {
 		this.posZ = posZ;
 	}
+
+	/**
+	 * The method calculates the distance between two point vectors.
+	 * 
+	 * @param position
+	 * @return the distance
+	 */
+	public double getDistance(Position position) {
+		// TODO calculation
+		return 0;
+	}
+
+	/**
+	 * The method calculates the direction between two point vectors.
+	 * 
+	 * @param position
+	 * @return the direction
+	 */
+	public Direction getDirection(Position position) {
+		// TODO calculation
+		return null;
+	}
 }
