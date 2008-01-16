@@ -92,10 +92,10 @@ public class EventMaster extends Thread {
 
 		// TODO (tyloesand) Tangensberechnung einbauen
 		// angleTangensEffect = tan(event.getEffectAngle() * 3.14 / 180);
-		angleTangensEffect = event.getEffectAngle() * 3.14 / 180;
+		angleTangensEffect = Math.tan(event.getEffectAngle() * 3.14 / 180);
 
 		// TODO (tyloesand) Optimierung Finden Kandidaten
-		// und dann nicht nur über Humans
+		// und dann nicht nur ï¿½ber Humans
 		candidate = ObjectManager.getObjectManager().getHumans().iterator()
 				.next();
 		while (true) {
