@@ -25,7 +25,7 @@ public class EventMaster extends Thread {
 	private List<SimulationObject> candidates;
 	private Event event;
 
-	private double angleTangensEffect;
+	private double tangentOfEffectAngle;
 
 	/**
 	 * Private Constructor. (Singleton)
@@ -90,9 +90,7 @@ public class EventMaster extends Thread {
 	private void determineCandidates() {
 		SimulationObject candidate;
 
-		// TODO (tyloesand) Tangensberechnung einbauen
-		// angleTangensEffect = tan(event.getEffectAngle() * 3.14 / 180);
-		angleTangensEffect = Math.tan(event.getEffectAngle() * 3.14 / 180);
+		tangentOfEffectAngle = Math.tan(Math.toRadians(event.getEffectAngle() ));
 
 		// TODO (tyloesand) Optimierung Finden Kandidaten
 		// und dann nicht nur �ber Humans
