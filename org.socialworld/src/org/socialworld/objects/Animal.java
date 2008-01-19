@@ -16,10 +16,20 @@ public class Animal extends SimulationObject {
 
     protected Move move;
 
+    protected AttributeArray attributes;
+    
     public Animal() {
 	super();
     }
 
+	public void setAttribute(int attributeIndex, byte attributeValue) {
+		attributes.setAttribute(attributeIndex,  attributeValue);
+	}
+
+	public void setAttribute(Attribute attributeName, byte attributeValue) {
+		attributes.setAttribute(attributeName, attributeValue);
+	}
+    
     /**
      * Depending on the action type the method calls the according procedure
      * with special implementation of the action.
