@@ -7,55 +7,56 @@ package org.socialworld.objects;
  * @author Mathias Sikos
  * 
  */
-public class Position {
+public class Position extends Vector {
 
-	private double posX;
-	private double posY;
-	private double posZ;
-
-	public double getPosX() {
-		return posX;
+	public Position() {
+		super();
 	}
 
-	public void setPosX(double posX) {
-		this.posX = posX;
-	}
-
-	public double getPosY() {
-		return posY;
-	}
-
-	public void setPosY(double posY) {
-		this.posY = posY;
-	}
-
-	public double getPosZ() {
-		return posZ;
-	}
-
-	public void setPosZ(double posZ) {
-		this.posZ = posZ;
+	public Position(double x, double y, double z) {
+		super(x, y, z);
 	}
 
 	/**
 	 * The method calculates the distance between two point vectors.
 	 * 
 	 * @param position
-	 * @return the distance
+	 *            (a vector (x,y,z) )
+	 * @return the distance = square root(x²+y²+z²)
 	 */
 	public double getDistance(Position position) {
-		// TODO calculation
-		return 0;
+		Vector vectorBetweenPoints;
+		double distance;
+
+		vectorBetweenPoints = getDifference(position);
+		distance = vectorBetweenPoints.getLength();
+
+		// TODO (tyloesand): vectorBetweenPoints löschen
+		return distance;
 	}
 
 	/**
-	 * The method calculates the direction between two point vectors.
+	 * The method calculates the direction between two point vectors. The result
+	 * vector has the direction from parameter position to this position.
 	 * 
 	 * @param position
 	 * @return the direction
 	 */
 	public Direction getDirection(Position position) {
-		// TODO calculation
-		return null;
+		// TODO (tyloesand): getDifference der Klasse Vector nutzen
+		// und aus Vector eine Direction machen
+
+		double deltaX;
+		double deltaY;
+		double deltaZ;
+
+		Direction direction;
+
+		deltaX = this.x - position.getX();
+		deltaY = this.y - position.getY();
+		deltaZ = this.z - position.getZ();
+
+		direction = new Direction(deltaX, deltaY, deltaZ);
+		return direction;
 	}
 }

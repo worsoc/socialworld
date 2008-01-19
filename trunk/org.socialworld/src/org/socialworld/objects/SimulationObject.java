@@ -106,8 +106,8 @@ public abstract class SimulationObject {
 	 * @param posX
 	 */
 	public void setPositionX(final double posX) {
-		double oldPosX = this.position.getPosX();
-		this.position.setPosX(posX);
+		double oldPosX = this.position.getX();
+		this.position.setX(posX);
 		propertyChangeSupport.firePropertyChange("positionX", oldPosX, posX);
 	}
 
