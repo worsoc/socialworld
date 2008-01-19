@@ -46,17 +46,18 @@ public class Position extends Vector {
 		// TODO (tyloesand): getDifference der Klasse Vector nutzen
 		// und aus Vector eine Direction machen
 
-		double deltaX;
-		double deltaY;
-		double deltaZ;
+//		double deltaX;
+//		double deltaY;
+//		double deltaZ;
 
 		Direction direction;
 
-		deltaX = this.x - position.getX();
-		deltaY = this.y - position.getY();
-		deltaZ = this.z - position.getZ();
+//		deltaX = this.x - position.getX();
+//		deltaY = this.y - position.getY();
+//		deltaZ = this.z - position.getZ();
 
-		direction = new Direction(deltaX, deltaY, deltaZ);
+//		direction = new Direction(deltaX, deltaY, deltaZ);
+		direction = (Direction) super.getDifference(position);
 		return direction;
 	}
 }
