@@ -6,6 +6,7 @@ package org.socialworld.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.ListModel;
 import org.socialworld.attributes.Inventory;
 import org.socialworld.attributes.Position;
 import org.socialworld.objects.God;
@@ -34,7 +35,7 @@ public class Simulation {
 		this.eventMaster.start();
 
 		this.gods = new ArrayList<God>();
-		this.humans = new ArrayList<Human>();
+		this.humans = new ListModel<Human>();
 		
 		this.positions = new ArrayList<Position>();
 		this.items = new ArrayList<Item>();

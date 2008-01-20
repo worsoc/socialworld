@@ -6,5 +6,6 @@ Bundle-Version: 1.0.0
 Bundle-Activator: org.socialworld.simpleclient.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.socialworld
+ org.socialworld,
+ org.socialworld.tools
 Eclipse-LazyStart: true

@@ -1,12 +1,11 @@
 package org.socialworld.simpleclient.views;
 
-import java.util.ArrayList;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 
-import org.eclipse.core.runtime.Assert;
-import org.eclipse.jface.viewers.IContentProvider;
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
@@ -14,18 +13,25 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
+import org.socialworld.IModel;
+import org.socialworld.ListModel;
 import org.socialworld.core.ObjectManager;
+import org.socialworld.core.Simulation;
 import org.socialworld.objects.Human;
+import org.socialworld.simpleclient.Activator;
 
 public class View extends ViewPart {
 	public static final String ID = "org.socialworld.simpleclient.view";
+	
+	private static final Logger logger = Logger.getLogger(View.class);
 
 	private TableViewer viewer;
+
+	protected Simulation simulation;
 
 	/**
 	 * The content provider class is responsible for providing objects to the
@@ -35,6 +41,8 @@ public class View extends ViewPart {
 	 * example).
 	 */
 	class ViewContentProvider implements IStructuredContentProvider {
+		
+		private PropertyChangeListener listener;
 
 		/*
 		 * (non-Javadoc)
@@ -50,8 +58,29 @@ public class View extends ViewPart {
 		 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
 		 *      java.lang.Object, java.lang.Object)
 		 */
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-			viewer.refresh();
+		public void inputChanged(final Viewer viewer, Object oldInput,
+				Object newInput) {
+			if (listener != null) {
+				listener = new PropertyChangeListener() {
+
+					public void propertyChange(PropertyChangeEvent evt) {
+						viewer.refresh();
+					}
+
+				};
+			}
+
+			if (newInput instanceof IModel) {
+				IModel model = (IModel) newInput;
+				model.addPropertyChangeListener(
+						ListModel.KEY_LIST_CHANGE_PROPERTY, listener);
+			}
+
+			if (oldInput instanceof IModel) {
+				IModel model = (IModel) oldInput;
+				model.removePropertyChangeListener(
+						ListModel.KEY_LIST_CHANGE_PROPERTY, listener);
+			}
 		}
 
 		/*
@@ -62,7 +91,7 @@ public class View extends ViewPart {
 		public Object[] getElements(Object inputElement) {
 			if (inputElement instanceof List) {
 				List humanList = (List) inputElement;
-				return humanList.toArray();					
+				return humanList.toArray();
 			}
 			return null;
 		}
@@ -71,7 +100,7 @@ public class View extends ViewPart {
 
 	class ViewLabelProvider extends LabelProvider implements
 			ITableLabelProvider {
-		
+
 		public String getColumnText(Object obj, int index) {
 			if (obj instanceof Human) {
 				Human human = (Human) obj;
@@ -99,13 +128,28 @@ public class View extends ViewPart {
 		column.setText("Name");
 		column.setWidth(100);
 		
+//		parent.getDisplay().asyncExec(new Runnable() {
+//
+//			public void run() {
+//				simulation = ObjectManager.getObjectManager().getSimulation();
+//			}
+//
+//		});
+
 		viewer.setContentProvider(new ViewContentProvider());
 		viewer.setLabelProvider(new ViewLabelProvider());
-		List<Human> humans = new ArrayList<Human>();
+		
+		List<Human> humans = new ListModel<Human>();
 		humans.add(new Human());
 		humans.add(new Human());
 		humans.add(new Human());
-		viewer.setInput(humans);		
+		
+//		List<Human> humans = Activator.getDefault().getSimulation().getHumans();
+		
+		logger.debug("Set input to viewer: " + humans);
+		viewer.setInput(humans);
+		
+		humans.add(new Human());
 	}
 
 	/**
