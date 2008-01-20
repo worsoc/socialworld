@@ -13,6 +13,10 @@ public class Vector {
 	protected double y;
 	protected double z;
 
+	// FIXME (circlesmiler) Anstatt die Länge jedesmal beim Setzen von X, Y oder
+	// Z neu zu berechnen, wäre es besser das Attribut "length" einfach
+	// wegzulassen und in der Methode getLength die Berechnung der Länge
+	// durchzuführen.
 	protected double length;
 
 	public Vector() {

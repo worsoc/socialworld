@@ -5,8 +5,10 @@ package org.socialworld;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.socialworld.core.ObjectManager;
 import org.socialworld.objects.Human;
 
 /**
@@ -23,15 +25,15 @@ public class SocialWorld {
 	public static void main(String[] args) {
 		logger.info("Start main method of SocialWorld");
 		
-		Human human = new Human();
-		human.addPropertyChangeListener("stulle", new PropertyChangeListener() {
+		ObjectManager objectManager = ObjectManager.getObjectManager();
+		List<Human> humans = objectManager.getHumans();
+		humans.add(new Human());
+		humans.add(new Human());
+		humans.add(new Human());
 		
-			public void propertyChange(PropertyChangeEvent evt) {
-				// TODO Auto-generated method stub
+		System.out.println("Humans: " + humans);
 		
-			}
-		
-		} );
+		logger.info("End main method of SocialWorld");
 	}
 
 }

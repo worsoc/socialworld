@@ -3,9 +3,8 @@
  */
 package org.socialworld.objects;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 
+import org.socialworld.Model;
 import org.socialworld.attributes.Position;
 import org.socialworld.core.Action;
 import org.socialworld.core.ActionHandler;
@@ -18,10 +17,7 @@ import org.socialworld.core.ObjectManager;
  * @author Mathias Sikos (tyloesand)
  * 
  */
-public abstract class SimulationObject {
-
-	protected PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(
-			this);
+public abstract class SimulationObject extends Model {
 
 	protected ObjectManager objectManager;
 	protected Position position;
@@ -81,17 +77,6 @@ public abstract class SimulationObject {
 	 */
 	public abstract void determineInfluence(Event simualationEvent);
 
-	public void addPropertyChangeListener(String propertyName,
-			PropertyChangeListener listener) {
-		propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
-	}
-
-	public void removePropertyChangeListener(String propertyName,
-			PropertyChangeListener listener) {
-		propertyChangeSupport.removePropertyChangeListener(propertyName,
-				listener);
-	}
-
 	/**
 	 * The method returns the object's position.
 	 * 
@@ -109,7 +94,7 @@ public abstract class SimulationObject {
 	public void setPositionX(final double posX) {
 		double oldPosX = this.position.getX();
 		this.position.setX(posX);
-		propertyChangeSupport.firePropertyChange("positionX", oldPosX, posX);
+		firePropertyChange("posX", oldPosX, posX);
 	}
 
 	/**

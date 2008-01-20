@@ -61,6 +61,14 @@
                toolbarPath="mainGroup"
                tooltip="Starts the simulation">
          </action>
+         <action
+               class="org.socialworld.simpleclient.actions.AddHumanAction"
+               id="org.socialworld.simpleclient.addHuman"
+               label="&amp;Add human"
+               menubarPath="SimulationMenu/mainGroup"
+               toolbarPath="mainGroup"
+               tooltip="Add a human object to the human list.">
+         </action>
       </actionSet>
    </extension>
 

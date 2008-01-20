@@ -26,6 +26,7 @@ public class EventMaster extends Thread {
 	private Event event;
 
 	private double tangentOfEffectAngle;
+	private boolean isRunning;
 
 	/**
 	 * Private Constructor. (Singleton)
@@ -43,6 +44,10 @@ public class EventMaster extends Thread {
 		}
 		return eventMaster;
 	}
+	
+	public void stopEventMaster() {
+		isRunning = false;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -52,7 +57,7 @@ public class EventMaster extends Thread {
 	@Override
 	public void run() {
 		int sleepTime = 10;
-		while (true) {
+		while (isRunning) {
 			calculateNextEvent();
 			if (eventQueue.isEmpty())
 				sleepTime = 100;
