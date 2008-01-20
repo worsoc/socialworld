@@ -8,14 +8,14 @@ package org.socialworld.attributes;
  *
  */
 public enum Attribute {
-	mood(1),
-	courage(2),
-	morals(3),
-	materialism(4),
-	tiredness(5),
-	curiosity(6),
-	spirituality(7),
-	hunger(8);
+	mood(0),
+	courage(1),
+	morals(2),
+	materialism(3),
+	tiredness(4),
+	curiosity(5),
+	spirituality(6),
+	hunger(7);
 	
 	public static final int NUMBER_OF_ATTRIBUTES = 8;
 	

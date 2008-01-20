@@ -33,7 +33,6 @@ public class Position extends Vector {
 		vectorBetweenPoints = getDifference(position);
 		distance = vectorBetweenPoints.getLength();
 
-		// TODO (tyloesand): vectorBetweenPoints löschen
 		return distance;
 	}
 

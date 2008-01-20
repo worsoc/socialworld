@@ -27,11 +27,11 @@ public class Animal extends SimulationObject {
     }
 
 	public void setAttribute(int attributeIndex, byte attributeValue) {
-		attributes.setAttribute(attributeIndex,  attributeValue);
+		attributes.set(attributeIndex,  attributeValue);
 	}
 
 	public void setAttribute(Attribute attributeName, byte attributeValue) {
-		attributes.setAttribute(attributeName, attributeValue);
+		attributes.set(attributeName, attributeValue);
 	}
     
     /**
