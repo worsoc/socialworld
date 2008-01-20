@@ -34,7 +34,7 @@ public class EventMaster extends Thread {
 		// TODO Auto-generated constructor stub
 
 		candidates = new ArrayList<SimulationObject>();
-
+		eventQueue = new PriorityQueue<Event>();
 	}
 
 	public static EventMaster getEventMaster() {
@@ -73,7 +73,9 @@ public class EventMaster extends Thread {
 	 */
 	private void calculateNextEvent() {
 		// Liefert Kopf und entfernt Element aus Liste
-		Event event = this.eventQueue.poll();
+		if (!eventQueue.isEmpty()) {
+			Event event = this.eventQueue.poll();
+		}
 		// TODO Eventauswirkungen implentieren
 	}
 

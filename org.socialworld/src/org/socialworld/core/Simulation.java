@@ -21,84 +21,89 @@ import org.socialworld.objects.Position;
  */
 public class Simulation {
 
-    private final EventMaster eventMaster;
-    private final List<God> gods;
-    private final List<Human> humans;
-    private final List<Item> items;
-    private final List<Inventory> inventories;
-    private final List<Position> positions;
-    private List<Magic> magics;
+	private final EventMaster eventMaster;
+	private final List<God> gods;
+	private final List<Human> humans;
+	private final List<Item> items;
+	private final List<Inventory> inventories;
+	private final List<Position> positions;
+	private List<Magic> magics;
 
-    public Simulation() {
-	this.eventMaster = EventMaster.getEventMaster();
-	this.eventMaster.start();
+	public Simulation() {
+		this.eventMaster = EventMaster.getEventMaster();
+		this.eventMaster.start();
 
-	this.gods = new ArrayList<God>();
-	this.humans = new ArrayList<Human>();
-	this.positions = new ArrayList<Position>();
-	this.items = new ArrayList<Item>();
-	this.inventories = new ArrayList<Inventory>();
-    }
+		this.gods = new ArrayList<God>();
+		this.humans = new ArrayList<Human>();
+		
+		humans.add(new Human());
+		humans.add(new Human());
+		humans.add(new Human());
+		
+		this.positions = new ArrayList<Position>();
+		this.items = new ArrayList<Item>();
+		this.inventories = new ArrayList<Inventory>();
+	}
 
-    public void startSimulation() {
-	// TODO Muss noch implementiert werden
-    }
+	public void startSimulation() {
+		// TODO Muss noch implementiert werden
+	}
 
-    public EventMaster getEventMaster() {
-	return this.eventMaster;
-    }
+	public EventMaster getEventMaster() {
+		return this.eventMaster;
+	}
 
-    /**
-     * The method returns a list of gods
-     * 
-     * @return
-     */
-    public List<God> getGods() {
-	return this.gods;
-    }
+	/**
+	 * The method returns a list of gods
+	 * 
+	 * @return
+	 */
+	public List<God> getGods() {
+		return this.gods;
+	}
 
-    /**
-     * The method returns a list of humans
-     * 
-     * @return
-     */
-    public List<Human> getHumans() {
-	return this.humans;
-    }
+	/**
+	 * The method returns a list of humans
+	 * 
+	 * @return
+	 */
+	public List<Human> getHumans() {
+		return this.humans;
+	}
 
-    /**
-     * The method returns a list of items
-     * 
-     * @return
-     */
-    public List<Item> getItems() {
-	return this.items;
-    }
+	/**
+	 * The method returns a list of items
+	 * 
+	 * @return
+	 */
+	public List<Item> getItems() {
+		return this.items;
+	}
 
-    /**
-     * The method returns a list of inventories
-     * 
-     * @return
-     */
-    public List<Inventory> getInventories() {
-	return this.inventories;
-    }
+	/**
+	 * The method returns a list of inventories
+	 * 
+	 * @return
+	 */
+	public List<Inventory> getInventories() {
+		return this.inventories;
+	}
 
-    /**
-     * The method returns a list of positions
-     * 
-     * @return
-     */
-    public List<Position> getPositions() {
-	return this.positions;
-    }
+	/**
+	 * The method returns a list of positions
+	 * 
+	 * @return
+	 */
+	public List<Position> getPositions() {
+		return this.positions;
+	}
 
-    /**
-     * The method returns a list of magics
-     * 
-     * @return
-     */
-    public List<Magic> getMagics() {
-	return this.magics;
-    }
+	/**
+	 * The method returns a list of magics
+	 * 
+	 * @return
+	 */
+	public List<Magic> getMagics() {
+		return this.magics;
+	}
 }
