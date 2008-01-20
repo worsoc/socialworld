@@ -1,5 +1,6 @@
 package org.socialworld.simpleclient.views;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
@@ -95,13 +96,19 @@ public class View extends ViewPart {
 		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL
 				| SWT.V_SCROLL);
 		Table table = viewer.getTable();
+		table.setHeaderVisible(true);
+		table.setLinesVisible(true);
 		TableColumn column = new TableColumn(table, SWT.BORDER);
 		column.setText("Name");
 		column.setWidth(100);
 		
 		viewer.setContentProvider(new ViewContentProvider());
 		viewer.setLabelProvider(new ViewLabelProvider());
-		viewer.setInput(ObjectManager.getObjectManager().getHumans());		
+		List<Human> humans = new ArrayList<Human>();
+		humans.add(new Human());
+		humans.add(new Human());
+		humans.add(new Human());
+		viewer.setInput(humans);		
 	}
 
 	/**
