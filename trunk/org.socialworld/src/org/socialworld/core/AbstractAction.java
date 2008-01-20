@@ -1,9 +1,10 @@
 package org.socialworld.core;
 
-import org.socialworld.objects.ActionMode;
-import org.socialworld.objects.Direction;
+import org.socialworld.attributes.ActionMode;
+import org.socialworld.attributes.ActionType;
+import org.socialworld.attributes.Direction;
+import org.socialworld.attributes.Time;
 import org.socialworld.objects.SimulationObject;
-import org.socialworld.objects.Time;
 
 public abstract class AbstractAction {
 

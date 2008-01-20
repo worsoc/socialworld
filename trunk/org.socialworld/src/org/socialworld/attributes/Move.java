@@ -1,7 +1,8 @@
 /**
  * 
  */
-package org.socialworld.objects;
+package org.socialworld.attributes;
+
 
 /**
  * @author Mathias Sikos (tyloesand)

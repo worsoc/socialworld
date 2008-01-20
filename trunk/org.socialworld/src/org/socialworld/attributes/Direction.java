@@ -1,7 +1,9 @@
 /**
  * 
  */
-package org.socialworld.objects;
+package org.socialworld.attributes;
+
+import org.socialworld.calculation.Vector;
 
 /**
  * @author Mathias Sikos (tyloesand)

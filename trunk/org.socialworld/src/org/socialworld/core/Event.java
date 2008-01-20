@@ -3,10 +3,10 @@
  */
 package org.socialworld.core;
 
-import org.socialworld.objects.Direction;
-import org.socialworld.objects.Position;
+import org.socialworld.attributes.Direction;
+import org.socialworld.attributes.Position;
+import org.socialworld.attributes.Time;
 import org.socialworld.objects.SimulationObject;
-import org.socialworld.objects.Time;
 
 /**
  * @author andre

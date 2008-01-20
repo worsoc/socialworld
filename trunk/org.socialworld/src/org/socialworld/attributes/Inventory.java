@@ -1,7 +1,10 @@
 /**
  * 
  */
-package org.socialworld.objects;
+package org.socialworld.attributes;
+
+import org.socialworld.objects.SimulationObject;
+import org.socialworld.objects.Weapon;
 
 /**
  * @author Mathias Sikos (tyloesand)

@@ -3,8 +3,9 @@
  */
 package org.socialworld.objects;
 
+import org.socialworld.attributes.ActionType;
+import org.socialworld.attributes.Inventory;
 import org.socialworld.core.Action;
-import org.socialworld.core.ActionType;
 
 /**
  * @author Mathias Sikos (tyloesand)

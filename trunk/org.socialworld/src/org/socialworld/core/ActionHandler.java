@@ -6,10 +6,11 @@ package org.socialworld.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.socialworld.objects.ActionMode;
-import org.socialworld.objects.Direction;
+import org.socialworld.attributes.ActionMode;
+import org.socialworld.attributes.ActionType;
+import org.socialworld.attributes.Direction;
+import org.socialworld.attributes.Time;
 import org.socialworld.objects.SimulationObject;
-import org.socialworld.objects.Time;
 
 /**
  * Manages the actions of an {@link SimulationObject}.
