@@ -36,10 +36,6 @@ public class Simulation {
 		this.gods = new ArrayList<God>();
 		this.humans = new ArrayList<Human>();
 		
-		humans.add(new Human());
-		humans.add(new Human());
-		humans.add(new Human());
-		
 		this.positions = new ArrayList<Position>();
 		this.items = new ArrayList<Item>();
 		this.inventories = new ArrayList<Inventory>();
