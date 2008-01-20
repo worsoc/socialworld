@@ -6,12 +6,12 @@ package org.socialworld.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.attributes.Inventory;
+import org.socialworld.attributes.Position;
 import org.socialworld.objects.God;
 import org.socialworld.objects.Human;
-import org.socialworld.objects.Inventory;
 import org.socialworld.objects.Item;
 import org.socialworld.objects.Magic;
-import org.socialworld.objects.Position;
 
 /**
  * The class Simulation holds all simulation objects and runs the simulation

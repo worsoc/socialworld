@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.socialworld.core;
+package org.socialworld.attributes;
 
 public enum ActionType {
 	touch, sleep, changeMove, kick, controlHandManually, spell,

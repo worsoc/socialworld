@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.socialworld.objects;
+package org.socialworld.calculation;
 
 /**
  * @author Mathias Sikos (tyloesand)

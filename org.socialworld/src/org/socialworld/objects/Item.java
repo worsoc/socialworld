@@ -1,5 +1,6 @@
 package org.socialworld.objects;
 
+import org.socialworld.attributes.ActionMode;
 import org.socialworld.core.Action;
 import org.socialworld.core.Event;
 

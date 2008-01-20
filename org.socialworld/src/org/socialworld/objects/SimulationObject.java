@@ -6,6 +6,7 @@ package org.socialworld.objects;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
+import org.socialworld.attributes.Position;
 import org.socialworld.core.Action;
 import org.socialworld.core.ActionHandler;
 import org.socialworld.core.Event;

@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.PriorityQueue;
 
 import org.apache.log4j.Logger;
-import org.socialworld.objects.Direction;
-import org.socialworld.objects.Position;
+import org.socialworld.attributes.Direction;
+import org.socialworld.attributes.Position;
 import org.socialworld.objects.SimulationObject;
 
 /**

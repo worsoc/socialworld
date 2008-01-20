@@ -3,8 +3,12 @@
  */
 package org.socialworld.objects;
 
+import org.socialworld.attributes.ActionMode;
+import org.socialworld.attributes.ActionType;
+import org.socialworld.attributes.Attribute;
+import org.socialworld.attributes.AttributeArray;
+import org.socialworld.attributes.Move;
 import org.socialworld.core.Action;
-import org.socialworld.core.ActionType;
 import org.socialworld.core.Event;
 
 /**

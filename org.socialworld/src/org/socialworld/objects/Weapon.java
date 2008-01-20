@@ -3,6 +3,7 @@
  */
 package org.socialworld.objects;
 
+import org.socialworld.attributes.ActionMode;
 import org.socialworld.core.Action;
 
 /**
