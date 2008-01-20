@@ -18,13 +18,16 @@ public class AttributeArray {
 		attributes = new byte[numberOfAttributes];
 	}
 
-	public void setAttribute(int attributeIndex, byte attributeValue) {
+	public void set(int attributeIndex, byte attributeValue) {
 		attributes[attributeIndex] = attributeValue;
 	}
 
-	public void setAttribute(Attribute attributeName, byte attributeValue) {
+	public void set(Attribute attributeName, byte attributeValue) {
 		int attributeIndex = attributeName.getIndex();
 		attributes[attributeIndex] = attributeValue;
 	}
 	
+	public byte get(int attibuteIndex) {
+		return attributes[attibuteIndex];
+	}
 }
