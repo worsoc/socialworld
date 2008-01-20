@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+   <extension
+         id="application"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run
+               class="org.socialworld.simpleclient.SocialWorldClient">
+         </run>
+      </application>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            name="Perspective"
+            class="org.socialworld.simpleclient.Perspective"
+            id="org.socialworld.simpleclient.perspective">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            name="View"
+            class="org.socialworld.simpleclient.views.View"
+            id="org.socialworld.simpleclient.view">
+      </view>
+   </extension>
+   <extension
+         id="SocialWorldClient"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.socialworld.simpleclient.application"
+            name="SocialWorld Client">
+         <property
+               name="appName"
+               value="SocialWorld Client">
+         </property>
+      </product>
+   </extension>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="org.socialworld.simpleclient.simulationActionSet"
+            label="Simulation Action Set"
+            visible="true">
+         <menu
+               id="SimulationMenu"
+               label="&amp;Simulation">
+            <separator
+                  name="sampleGroup">
+            </separator>
+         </menu>
+         <action
+               class="org.socialworld.simpleclient.actions.StartSimulationAction"
+               icon="icons/sample.gif"
+               id="org.socialworld.simpleclient.startSimulation.StartSimulationAction"
+               label="&amp;Start simulation"
+               menubarPath="SimulationMenu/mainGroup"
+               toolbarPath="mainGroup"
+               tooltip="Starts the simulation">
+         </action>
+      </actionSet>
+   </extension>
+
+</plugin>
