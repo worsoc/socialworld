@@ -13,12 +13,6 @@ public class Vector {
 	protected double y;
 	protected double z;
 
-	// FIXME (circlesmiler) Anstatt die Länge jedesmal beim Setzen von X, Y oder
-	// Z neu zu berechnen, wäre es besser das Attribut "length" einfach
-	// wegzulassen und in der Methode getLength die Berechnung der Länge
-	// durchzuführen.
-	protected double length;
-
 	public Vector() {
 
 	}
@@ -27,17 +21,8 @@ public class Vector {
 		this.x = x;
 		this.y = y;
 		this.z = z;
-
-		calculateLength();
 	}
 
-	private void calculateLength() {
-		double xQuad = x * x;
-		double yQuad = y * y;
-		double zQuad = z * z;
-
-		this.length = Math.sqrt(xQuad + yQuad + zQuad);
-	}
 
 	/**
 	 * @return the x
@@ -52,7 +37,6 @@ public class Vector {
 	 */
 	public void setX(double x) {
 		this.x = x;
-		calculateLength();
 	}
 
 	/**
@@ -68,7 +52,6 @@ public class Vector {
 	 */
 	public void setY(double y) {
 		this.y = y;
-		calculateLength();
 	}
 
 	/**
@@ -84,10 +67,17 @@ public class Vector {
 	 */
 	public void setZ(double z) {
 		this.z = z;
-		calculateLength();
 	}
 
 	public double getLength() {
+		double length;
+		
+		double xQuad = x * x;
+		double yQuad = y * y;
+		double zQuad = z * z;
+
+		length = Math.sqrt(xQuad + yQuad + zQuad);
+		
 		return length;
 	}
 
