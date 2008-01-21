@@ -11,7 +11,7 @@ public class Item extends SimulationObject {
     }
 
     @Override
-    public void determineInfluence(final Event simualationEvent) {
+    public void changeByEvent(final Event event) {
 
     }
 

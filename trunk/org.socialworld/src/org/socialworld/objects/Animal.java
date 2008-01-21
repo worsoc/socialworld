@@ -120,14 +120,12 @@ public class Animal extends SimulationObject {
 	this.move = move;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.socialworld.objects.SimulationObject#determineInfluence(org.socialworld.objects.SimulationEvent)
-     */
-    @Override
-    public void determineInfluence(final Event simualationEvent) {
 
+    public void changeByEvent(final Event event) {
+    	
+    	
     }
-
+    public void reactToEvent(final Event event) {
+    	
+    }
 }

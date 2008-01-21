@@ -10,7 +10,7 @@ public class God extends SimulationObject {
     }
 
     @Override
-    public void determineInfluence(final Event simualationEvent) {
+    public void changeByEvent(final Event event) {
 	// TODO Implement method
     }
 

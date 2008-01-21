@@ -75,7 +75,7 @@ public abstract class SimulationObject extends Model {
 	 * @param simualationEvent -
 	 *            the event influencing the simulation object
 	 */
-	public abstract void determineInfluence(Event simualationEvent);
+	public abstract void changeByEvent(final Event simualationEvent);
 
 	/**
 	 * The method returns the object's position.
