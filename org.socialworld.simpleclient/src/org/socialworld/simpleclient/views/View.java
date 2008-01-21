@@ -13,7 +13,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.part.ViewPart;
@@ -22,11 +21,10 @@ import org.socialworld.ListModel;
 import org.socialworld.core.ObjectManager;
 import org.socialworld.core.Simulation;
 import org.socialworld.objects.Human;
-import org.socialworld.simpleclient.Activator;
 
 public class View extends ViewPart {
 	public static final String ID = "org.socialworld.simpleclient.view";
-	
+
 	private static final Logger logger = Logger.getLogger(View.class);
 
 	private TableViewer viewer;
@@ -41,16 +39,20 @@ public class View extends ViewPart {
 	 * example).
 	 */
 	class ViewContentProvider implements IStructuredContentProvider {
-		
-		private PropertyChangeListener listener;
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
-		 */
-		public void dispose() {
-		}
+		private PropertyChangeListener listener = new PropertyChangeListener() {
+
+			public void propertyChange(PropertyChangeEvent evt) {
+				viewer.getControl().getDisplay().syncExec(new Runnable() {
+
+					@Override
+					public void run() {
+						viewer.refresh();
+					}
+
+				});
+			}
+		};
 
 		/*
 		 * (non-Javadoc)
@@ -60,15 +62,6 @@ public class View extends ViewPart {
 		 */
 		public void inputChanged(final Viewer viewer, Object oldInput,
 				Object newInput) {
-			if (listener != null) {
-				listener = new PropertyChangeListener() {
-
-					public void propertyChange(PropertyChangeEvent evt) {
-						viewer.refresh();
-					}
-
-				};
-			}
 
 			if (newInput instanceof IModel) {
 				IModel model = (IModel) newInput;
@@ -96,6 +89,13 @@ public class View extends ViewPart {
 			return null;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
+		 */
+		public void dispose() {
+		}
 	}
 
 	class ViewLabelProvider extends LabelProvider implements
@@ -118,6 +118,7 @@ public class View extends ViewPart {
 	 * This is a callback that will allow us to create the viewer and initialize
 	 * it.
 	 */
+	@Override
 	public void createPartControl(Composite parent) {
 		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL
 				| SWT.V_SCROLL);
@@ -128,33 +129,29 @@ public class View extends ViewPart {
 		column.setText("Name");
 		column.setWidth(100);
 		
-//		parent.getDisplay().asyncExec(new Runnable() {
-//
-//			public void run() {
-//				simulation = ObjectManager.getObjectManager().getSimulation();
-//			}
-//
-//		});
+		logger.debug("get simulation object");
+		simulation = ObjectManager.getObjectManager().getSimulation();
 
 		viewer.setContentProvider(new ViewContentProvider());
 		viewer.setLabelProvider(new ViewLabelProvider());
-		
-		List<Human> humans = new ListModel<Human>();
-		humans.add(new Human());
-		humans.add(new Human());
-		humans.add(new Human());
-		
-//		List<Human> humans = Activator.getDefault().getSimulation().getHumans();
-		
+
+		// List<Human> humans = new ListModel<Human>();
+		// humans.add(new Human());
+		// humans.add(new Human());
+		// humans.add(new Human());
+
+		List<Human> humans = simulation.getHumans();
+
 		logger.debug("Set input to viewer: " + humans);
 		viewer.setInput(humans);
-		
+
 		humans.add(new Human());
 	}
 
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
+	@Override
 	public void setFocus() {
 		viewer.getControl().setFocus();
 	}

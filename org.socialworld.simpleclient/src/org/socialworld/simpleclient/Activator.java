@@ -1,11 +1,8 @@
 package org.socialworld.simpleclient;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-import org.socialworld.core.ObjectManager;
-import org.socialworld.core.Simulation;
 
 /**
  * The activator class controls the plug-in life cycle

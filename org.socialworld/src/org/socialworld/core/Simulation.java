@@ -6,6 +6,7 @@ package org.socialworld.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.socialworld.ListModel;
 import org.socialworld.attributes.Inventory;
 import org.socialworld.attributes.Position;
@@ -21,6 +22,8 @@ import org.socialworld.objects.Magic;
  * 
  */
 public class Simulation {
+	
+	private static final Logger logger = Logger.getLogger(Simulation.class);
 
 	private final EventMaster eventMaster;
 	private final List<God> gods;
@@ -31,6 +34,7 @@ public class Simulation {
 	private List<Magic> magics;
 
 	public Simulation() {
+		logger.debug("create simulation object");
 		this.eventMaster = EventMaster.getEventMaster();
 		this.eventMaster.start();
 

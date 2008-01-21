@@ -5,6 +5,7 @@ package org.socialworld.core;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.socialworld.objects.Human;
 
 /**
@@ -12,12 +13,15 @@ import org.socialworld.objects.Human;
  * 
  */
 public class ObjectManager {
+	
+	private static final Logger logger = Logger.getLogger(ObjectManager.class.getName());
 
 	private static ObjectManager manager = null;
 
 	Simulation simulation;
 
 	private ObjectManager() {
+		logger.debug("create simulation object");
 		this.simulation = new Simulation();
 	}
 
