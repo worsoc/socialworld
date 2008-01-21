@@ -19,6 +19,7 @@ import org.socialworld.objects.SimulationObject;
 public class EventMaster extends Thread {
 
 	private static final Logger logger = Logger.getLogger(EventMaster.class);
+
 	private static EventMaster eventMaster;
 	private PriorityQueue<Event> eventQueue;
 
