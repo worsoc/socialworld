@@ -22,7 +22,7 @@ public class Magic extends SimulationObject {
      * @see org.socialworld.objects.SimulationObject#determineInfluence(org.socialworld.objects.SimulationEvent)
      */
     @Override
-    public void determineInfluence(final Event simualationEvent) {
+    public void changeByEvent(final Event event) {
 	// TODO Auto-generated method stub
 
     }
