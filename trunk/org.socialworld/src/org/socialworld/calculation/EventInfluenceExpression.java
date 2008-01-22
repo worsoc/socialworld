@@ -19,6 +19,7 @@ public class EventInfluenceExpression {
 	EventInfluenceExpression expressionForTrue;
 	EventInfluenceExpression expressionForFalse;
 	
+	
 	public void setTrueExpression(EventInfluenceExpression expressionForTrue) {
 		this.expressionForTrue = expressionForTrue;
 	}
@@ -45,7 +46,22 @@ public class EventInfluenceExpression {
 				if (operandValue != this.constant)
 					conditionIsTrue = true;
 				break;
-			// TODO (tyloesand): add further expressions	
+			case less:
+				if (operandValue < this.constant)
+					conditionIsTrue = true;
+				break;
+			case lessEqual:
+				if (operandValue <= this.constant)
+					conditionIsTrue = true;
+				break;
+			case greaterEqual:
+				if (operandValue >= this.constant)
+					conditionIsTrue = true;
+				break;
+			case greater:
+				if (operandValue > this.constant)
+					conditionIsTrue = true;
+				break;
 			}
 			
 			if (conditionIsTrue) 

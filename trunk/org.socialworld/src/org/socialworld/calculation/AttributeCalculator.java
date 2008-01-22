@@ -14,6 +14,8 @@ public class AttributeCalculator {
 
 	private static AttributeCalculator calculator;
 
+	private Object locker;
+	
 	private AttributeArray attributes;
 	private AttributeCalculatorMatrix matrix;
 
@@ -22,7 +24,9 @@ public class AttributeCalculator {
 	private int numberOfAttributes;
 
 	private AttributeCalculator() {
+		locker = null;
 		this.numberOfAttributes = Attribute.NUMBER_OF_ATTRIBUTES;
+		attributes = new AttributeArray();
 		attributesNew = new float[numberOfAttributes];
 		clearAttributes();
 	}
@@ -35,9 +39,44 @@ public class AttributeCalculator {
 	}
 
 
-	public void changeAttributes(AttributeArray attributes,
-			AttributeCalculatorMatrix matrix) {
-		this.attributes = attributes;
+	public void lockCalculator(Object user) {
+		if (this.locker == null) {
+			this.locker = user;
+		}
+	}
+
+	public void releaseCalculator(Object user) {
+		if (this.locker == user) {
+			this.locker = null;
+		}
+	}
+	
+	public void setAttributes(AttributeArray attributes, Object user) {
+		int index;
+		if (this.locker == user) {
+			for (index = 0 ; index < numberOfAttributes; index++) {
+				this.attributes.set(index, attributes.get(index));
+			}
+		}
+	}
+	
+	public void fetchAttributes(AttributeArray attributes) {
+		int index;
+		for (index = 0 ; index < numberOfAttributes; index++) {
+			attributes.set(index, this.attributes.get(index));
+		}
+	}
+	
+	public void modifyAttribute(
+			Attribute targetAttribute,
+			EventInfluenceExpression exression) {
+		
+		
+		this.attributes.set(targetAttribute, 
+			exression.evaluateExpression(this.attributes, targetAttribute));
+	}
+	
+	public void changeAttributes(AttributeCalculatorMatrix matrix) {
 		this.matrix = matrix;
 		changeAttributes();
 	}
@@ -90,7 +129,7 @@ public class AttributeCalculator {
 		result = checkEpsilon();
 
 		for (row = 0; row < this.numberOfAttributes; row++) {
-			attributes.set(row, (byte) (attributesNew[row] + 0.5));
+			this.attributes.set(row, (byte) (attributesNew[row] + 0.5));
 		}
 
 		clearAttributes();
