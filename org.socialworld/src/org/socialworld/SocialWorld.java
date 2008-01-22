@@ -25,7 +25,7 @@ public class SocialWorld {
 	public static void main(String[] args) {
 		logger.info("Start main method of SocialWorld");
 		
-		ObjectManager objectManager = ObjectManager.getObjectManager();
+		ObjectManager objectManager = ObjectManager.getCurrent();
 		List<Human> humans = objectManager.getHumans();
 		humans.add(new Human());
 		humans.add(new Human());

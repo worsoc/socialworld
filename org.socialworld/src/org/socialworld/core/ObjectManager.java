@@ -30,7 +30,7 @@ public class ObjectManager {
 	 * 
 	 * @return {@link ObjectManager} instance
 	 */
-	public static ObjectManager getObjectManager() {
+	public static ObjectManager getCurrent() {
 		if (manager == null) {
 			manager = new ObjectManager();
 		}

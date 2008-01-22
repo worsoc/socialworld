@@ -29,8 +29,6 @@ public class View extends ViewPart {
 
 	private TableViewer viewer;
 
-	protected Simulation simulation;
-
 	/**
 	 * The content provider class is responsible for providing objects to the
 	 * view. It can wrap existing objects in adapters or simply return objects
@@ -47,6 +45,7 @@ public class View extends ViewPart {
 
 					@Override
 					public void run() {
+						viewer.setInput(ObjectManager.getCurrent().getHumans());
 						viewer.refresh();
 					}
 
@@ -130,7 +129,6 @@ public class View extends ViewPart {
 		column.setWidth(100);
 		
 		logger.debug("get simulation object");
-		simulation = ObjectManager.getObjectManager().getSimulation();
 
 		viewer.setContentProvider(new ViewContentProvider());
 		viewer.setLabelProvider(new ViewLabelProvider());
@@ -140,12 +138,10 @@ public class View extends ViewPart {
 		// humans.add(new Human());
 		// humans.add(new Human());
 
-		List<Human> humans = simulation.getHumans();
+		List<Human> humans = ObjectManager.getCurrent().getHumans();
 
 		logger.debug("Set input to viewer: " + humans);
 		viewer.setInput(humans);
-
-		humans.add(new Human());
 	}
 
 	/**

@@ -35,7 +35,7 @@ public abstract class SimulationObject extends Model {
 	 * 
 	 */
 	public SimulationObject() {
-		this.objectManager = ObjectManager.getObjectManager();
+		this.objectManager = ObjectManager.getCurrent();
 	}
 
 	/**

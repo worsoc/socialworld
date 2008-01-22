@@ -31,8 +31,9 @@ public class ListModel<E> extends Model implements List<E> {
 	 * @see java.util.List#add(java.lang.Object)
 	 */
 	public boolean add(E e) {
+		boolean bool = list.add(e);
 		firePropertyChange(KEY_LIST_CHANGE_PROPERTY, null, list);
-		return list.add(e);
+		return bool;
 	}
 
 	/*
@@ -41,8 +42,8 @@ public class ListModel<E> extends Model implements List<E> {
 	 * @see java.util.List#add(int, java.lang.Object)
 	 */
 	public void add(int index, E element) {
-		firePropertyChange(KEY_LIST_CHANGE_PROPERTY, null, list);
 		list.add(index, element);
+		firePropertyChange(KEY_LIST_CHANGE_PROPERTY, null, list);
 	}
 
 	/*
@@ -51,8 +52,9 @@ public class ListModel<E> extends Model implements List<E> {
 	 * @see java.util.List#addAll(java.util.Collection)
 	 */
 	public boolean addAll(Collection<? extends E> c) {
+		boolean bool = list.addAll(c);
 		firePropertyChange(KEY_LIST_CHANGE_PROPERTY, null, list);
-		return list.addAll(c);
+		return bool;
 	}
 
 	/*
@@ -61,8 +63,9 @@ public class ListModel<E> extends Model implements List<E> {
 	 * @see java.util.List#addAll(int, java.util.Collection)
 	 */
 	public boolean addAll(int index, Collection<? extends E> c) {
+		boolean bool = list.addAll(index, c);
 		firePropertyChange(KEY_LIST_CHANGE_PROPERTY, null, list);
-		return list.addAll(index, c);
+		return bool;
 	}
 
 	/*
@@ -71,8 +74,8 @@ public class ListModel<E> extends Model implements List<E> {
 	 * @see java.util.List#clear()
 	 */
 	public void clear() {
-		firePropertyChange(KEY_LIST_CHANGE_PROPERTY, null, list);
 		list.clear();
+		firePropertyChange(KEY_LIST_CHANGE_PROPERTY, null, list);
 	}
 
 	/*
@@ -162,8 +165,9 @@ public class ListModel<E> extends Model implements List<E> {
 	 * @see java.util.List#remove(java.lang.Object)
 	 */
 	public boolean remove(Object o) {
+		boolean bool = list.remove(o);
 		firePropertyChange(KEY_LIST_CHANGE_PROPERTY, null, list);
-		return list.remove(o);
+		return bool;
 	}
 
 	/*
@@ -172,8 +176,9 @@ public class ListModel<E> extends Model implements List<E> {
 	 * @see java.util.List#remove(int)
 	 */
 	public E remove(int index) {
+		E obj = list.remove(index);
 		firePropertyChange(KEY_LIST_CHANGE_PROPERTY, null, list);
-		return list.remove(index);
+		return obj;
 	}
 
 	/*
@@ -182,8 +187,9 @@ public class ListModel<E> extends Model implements List<E> {
 	 * @see java.util.List#removeAll(java.util.Collection)
 	 */
 	public boolean removeAll(Collection<?> c) {
+		boolean removeAll = list.removeAll(c);
 		firePropertyChange(KEY_LIST_CHANGE_PROPERTY, null, list);
-		return list.removeAll(c);
+		return removeAll;
 	}
 
 	/*
@@ -192,8 +198,9 @@ public class ListModel<E> extends Model implements List<E> {
 	 * @see java.util.List#retainAll(java.util.Collection)
 	 */
 	public boolean retainAll(Collection<?> c) {
+		boolean bool = list.retainAll(c);
 		firePropertyChange(KEY_LIST_CHANGE_PROPERTY, null, list);
-		return list.retainAll(c);
+		return bool;
 	}
 
 	/*
@@ -202,8 +209,9 @@ public class ListModel<E> extends Model implements List<E> {
 	 * @see java.util.List#set(int, java.lang.Object)
 	 */
 	public E set(int index, E element) {
+		E obj = list.set(index, element);
 		firePropertyChange(KEY_LIST_CHANGE_PROPERTY, null, list);
-		return list.set(index, element);
+		return obj;
 	}
 
 	/*

@@ -102,7 +102,7 @@ public class EventMaster extends Thread {
 
 		// TODO (tyloesand) Optimierung Finden Kandidaten
 		// und dann nicht nur �ber Humans
-		candidate = ObjectManager.getObjectManager().getHumans().iterator()
+		candidate = ObjectManager.getCurrent().getHumans().iterator()
 				.next();
 		while (true) {
 			if (decideEffective(candidate)) {

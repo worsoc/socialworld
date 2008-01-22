@@ -7,6 +7,8 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.socialworld.core.ObjectManager;
+import org.socialworld.core.Simulation;
 import org.socialworld.objects.Human;
 import org.socialworld.simpleclient.Activator;
 
@@ -30,9 +32,9 @@ public class AddHumanAction implements IWorkbenchWindowActionDelegate {
 	public void run(IAction action) {
 		Human human = new Human();
 		logger.debug("Add new human object to human list: " + human);
-//		List<Human> humans = Activator.getDefault().getSimulation().getHumans();
-//		humans.add(human);
-//		logger.debug("Human list: " + humans);
+		List<Human> humans = ObjectManager.getCurrent().getHumans();
+		humans.add(human);
+		logger.debug("Human list: " + humans);
 	}
 
 	@Override
