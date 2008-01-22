@@ -33,7 +33,6 @@ public class EventMaster extends Thread {
 	 * Private Constructor. (Singleton)
 	 */
 	private EventMaster() {
-		// TODO Auto-generated constructor stub
 
 		candidates = new ArrayList<SimulationObject>();
 		eventQueue = new PriorityQueue<Event>();
@@ -80,9 +79,12 @@ public class EventMaster extends Thread {
 	private void calculateNextEvent() {
 		// Liefert Kopf und entfernt Element aus Liste
 		if (!eventQueue.isEmpty()) {
-			Event event = this.eventQueue.poll();
+			this.event = this.eventQueue.poll();
+			if (this.event != null) {
+				determineCandidates();
+				determineInfluence();
+			}
 		}
-		// TODO Eventauswirkungen implentieren
 	}
 
 	/**
@@ -124,7 +126,7 @@ public class EventMaster extends Thread {
 		if (distance <= event.getEffectDistance()) {
 			direction = position.getDirection(event.getPosition());
 			tangent = direction.getAngleTangent(event.getDirection());
-			return (tangent <= event.getEffectAngle());
+			return (tangent <= tangentOfEffectAngle);
 		}
 		return false;
 	}
@@ -133,6 +135,7 @@ public class EventMaster extends Thread {
 		SimulationObject candidate;
 		candidate = this.candidates.iterator().next();
 		while (candidate != null) {
+			candidate.changeByEvent(this.event);
 			// FIXME folgender Aufruf muss angepasst werden!!!
 //			candidate.determineInfluence(this.event);
 			candidate = this.candidates.iterator().next();
