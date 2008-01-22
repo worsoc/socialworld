@@ -6,6 +6,8 @@ package org.socialworld;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
+import org.apache.log4j.Logger;
+
 /**
  * This is a wrapper class for the property change support.
  * <p>
@@ -16,6 +18,8 @@ import java.beans.PropertyChangeSupport;
  * @author André Schade (circlesmiler)
  */
 public class Model implements IModel {
+	
+	private static final Logger logger = Logger.getLogger(Model.class);
 
 	// FIXME (circlesmiler) Falls jemandem ein besserer Name für die Klasse
 	// einfällt, dann bitte einfach den Namen anpassen.
@@ -63,6 +67,10 @@ public class Model implements IModel {
 	 */
 	public void firePropertyChange(String propertyName, Object oldValue,
 			Object newValue) {
+		logger.debug("fire property change event:");
+		logger.debug("   property key: " + propertyName);
+		logger.debug("      old value: " + oldValue);
+		logger.debug("      new value: " + newValue);
 		propertyChangeSupport.firePropertyChange(propertyName, oldValue,
 				newValue);
 	}
