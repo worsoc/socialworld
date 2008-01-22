@@ -136,8 +136,6 @@ public class EventMaster extends Thread {
 		candidate = this.candidates.iterator().next();
 		while (candidate != null) {
 			candidate.changeByEvent(this.event);
-			// FIXME folgender Aufruf muss angepasst werden!!!
-//			candidate.determineInfluence(this.event);
 			candidate = this.candidates.iterator().next();
 		}
 	}
