@@ -6,17 +6,21 @@ package org.socialworld.calculation;
 import org.socialworld.attributes.Attribute;
 
 /**
- * @author Mathias Sikos (tyloesand)
- *
+ * @author Mathias Sikos (tyloesand) An attribute calculation matrix holds the
+ *         information how to compute attribute values. It holds calculation
+ *         functions, shares and offsets for every attribute dependent to all
+ *         attributes. Access to functions, shares and offset is given by set
+ *         and get methods which have the matrix row and matrix column as
+ *         parameters.
  */
 public class AttributeCalculatorMatrix {
 
 	private int functions[];
 	private float shares[];
 	private byte offsets[];
-	
+
 	public AttributeCalculatorMatrix() {
-		
+
 	}
 
 	/**
@@ -28,7 +32,8 @@ public class AttributeCalculatorMatrix {
 	}
 
 	/**
-	 * @param function the function to set
+	 * @param function
+	 *            the function to set
 	 */
 	public void setFunction(int row, int column, int function) {
 		int matrixIndex = row * Attribute.NUMBER_OF_ATTRIBUTES + column;
@@ -44,7 +49,8 @@ public class AttributeCalculatorMatrix {
 	}
 
 	/**
-	 * @param share the share to set
+	 * @param share
+	 *            the share to set
 	 */
 	public void setShare(int row, int column, float share) {
 		int matrixIndex = row * Attribute.NUMBER_OF_ATTRIBUTES + column;
@@ -60,12 +66,12 @@ public class AttributeCalculatorMatrix {
 	}
 
 	/**
-	 * @param offset the offset to set
+	 * @param offset
+	 *            the offset to set
 	 */
 	public void setOffset(int row, int column, byte offset) {
 		int matrixIndex = row * Attribute.NUMBER_OF_ATTRIBUTES + column;
 		this.offsets[matrixIndex] = offset;
 	}
-	
-	
+
 }
