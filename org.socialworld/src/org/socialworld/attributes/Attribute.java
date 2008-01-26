@@ -18,6 +18,7 @@ public enum Attribute {
 	hunger(7);
 	
 	public static final int NUMBER_OF_ATTRIBUTES = 8;
+	public static final byte ATTRIBUTE_RANGE = 100;
 	
 	private int arrayIndex;
 
