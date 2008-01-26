@@ -4,8 +4,8 @@
 package org.socialworld.calculation;
 
 /**
- * @author Mathias Sikos (tyloesand)
- * 
+ * @author Mathias Sikos (tyloesand) The class is the base for all simulation
+ *         position and directions. The vector has 3 dimensions.
  */
 public class Vector {
 
@@ -22,7 +22,6 @@ public class Vector {
 		this.y = y;
 		this.z = z;
 	}
-
 
 	/**
 	 * @return the x
@@ -69,15 +68,20 @@ public class Vector {
 		this.z = z;
 	}
 
+	/**
+	 * The method calculates the vector's length.
+	 * 
+	 * @return the length
+	 */
 	public double getLength() {
 		double length;
-		
+
 		double xQuad = x * x;
 		double yQuad = y * y;
 		double zQuad = z * z;
 
 		length = Math.sqrt(xQuad + yQuad + zQuad);
-		
+
 		return length;
 	}
 

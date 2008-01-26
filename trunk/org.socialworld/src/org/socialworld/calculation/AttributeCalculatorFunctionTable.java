@@ -6,34 +6,40 @@ package org.socialworld.calculation;
 import org.socialworld.attributes.Attribute;
 
 /**
- * @author Mathias Sikos (tyloesand)
- * 
+ * @author Mathias Sikos (tyloesand) The class implements the attribute
+ *         calculation function as a table. The attribute value is interpreted
+ *         as table's index.
  */
 public class AttributeCalculatorFunctionTable extends
 		AttributeCalculatorFunction {
 
-	private byte attributes[];
+	private byte values[];
 
-	private int numberOfAttributes = Attribute.NUMBER_OF_ATTRIBUTES;
+	private byte range = Attribute.ATTRIBUTE_RANGE;
 
 	public AttributeCalculatorFunctionTable() {
-		attributes = new byte[numberOfAttributes];
+		values = new byte[range + 1];
 	}
 
-	public byte get(int index) {
-		return attributes[index];
-	}
-
-	public byte calculate(byte offset, int row, int column, byte attributeValue) {
+	/**
+	 * The method interprets the function as a table. The attribute value is
+	 * understood as the index of a table and table's value at the index is the
+	 * function value. Furthermore an offset is added.
+	 */
+	public byte calculate(byte attributeValue, byte offset) {
 		int result;
-		int matrixIndex;
 
-		matrixIndex = row * this.numberOfAttributes + column;
+		if (attributeValue > range)
+			attributeValue = range;
+		if (attributeValue < 0)
+			attributeValue = 0;
 
-		result = attributes[matrixIndex] + offset;
-		
-		if (result > 100) result = 100;
-		if (result < 0) result = 0;
+		result = values[attributeValue] + offset;
+
+		if (result > 100)
+			result = 100;
+		if (result < 0)
+			result = 0;
 		return (byte) result;
 	}
 
