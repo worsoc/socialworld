@@ -16,19 +16,16 @@ public class AddHumanAction implements IWorkbenchWindowActionDelegate {
 	
 	private static final Logger logger = Logger.getLogger(AddHumanAction.class);
 
-	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
 	public void init(IWorkbenchWindow window) {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
 	public void run(IAction action) {
 		Human human = new Human();
 		logger.debug("Add new human object to human list: " + human);
@@ -37,7 +34,6 @@ public class AddHumanAction implements IWorkbenchWindowActionDelegate {
 		logger.debug("Human list: " + humans);
 	}
 
-	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		// TODO Auto-generated method stub
 
