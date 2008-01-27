@@ -9,8 +9,14 @@ import org.socialworld.attributes.Time;
 import org.socialworld.objects.SimulationObject;
 
 /**
- * @author andre
+ * The class collects the properties of an simulation event. A simulation event
+ * is released by simulation objects and effects on simulation objects
+ * {@link SimulationObject}. An event has a priority (by that an event queue is
+ * ordered), an simulation object that causes the event, the release time, the
+ * position, the direction, the strength and distanced and ranges where the
+ * event has effects to other objects.
  * 
+ * @author Andre Schade (circlesmiler), Mathias Sikos (tyloesand)
  */
 public class Event implements Comparable<Event> {
 
@@ -170,7 +176,8 @@ public class Event implements Comparable<Event> {
 	}
 
 	/**
-	 * @return the maxDistance
+	 * @return the maxDistance (the distance where the event is able to be
+	 *         perceived)
 	 */
 	public float getMaxDistance() {
 		return maxDistance;
@@ -178,14 +185,14 @@ public class Event implements Comparable<Event> {
 
 	/**
 	 * @param maxDistance
-	 *            the maxDistance to set
+	 *            the distance where the event is able to be perceived
 	 */
 	public void setMaxDistance(float maxDistance) {
 		this.maxDistance = maxDistance;
 	}
 
 	/**
-	 * @return the maxSee
+	 * @return the maxSee (the distance where the event is able to be seen)
 	 */
 	public float getMaxSee() {
 		return maxSee;
@@ -193,14 +200,14 @@ public class Event implements Comparable<Event> {
 
 	/**
 	 * @param maxSee
-	 *            the maxSee to set
+	 *            the distance where the event is able to be seen
 	 */
 	public void setMaxSee(float maxSee) {
 		this.maxSee = maxSee;
 	}
 
 	/**
-	 * @return the maxHear
+	 * @return the maxHear (the distance where the event is able to be heard)
 	 */
 	public float getMaxHear() {
 		return maxHear;
@@ -208,14 +215,14 @@ public class Event implements Comparable<Event> {
 
 	/**
 	 * @param maxHear
-	 *            the maxHear to set
+	 *            the distance where the event is able to be heard
 	 */
 	public void setMaxHear(float maxHear) {
 		this.maxHear = maxHear;
 	}
 
 	/**
-	 * @return the maxSmell
+	 * @return the maxSmell (the distance where the event is able to be smelled)
 	 */
 	public float getMaxSmell() {
 		return maxSmell;
@@ -223,7 +230,7 @@ public class Event implements Comparable<Event> {
 
 	/**
 	 * @param maxSmell
-	 *            the maxSmell to set
+	 *            the distance where the event is able to be smelled
 	 */
 	public void setMaxSmell(float maxSmell) {
 		this.maxSmell = maxSmell;
