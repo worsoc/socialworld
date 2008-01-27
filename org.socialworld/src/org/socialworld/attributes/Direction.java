@@ -6,8 +6,11 @@ package org.socialworld.attributes;
 import org.socialworld.calculation.Vector;
 
 /**
- * @author Mathias Sikos (tyloesand)
- * 
+ * @author Mathias Sikos (tyloesand) The class implements a vector's
+ *         interpretation as a direction. It is needed for moves of simulation
+ *         objects or calculation what a simulation object can see. Furthermore
+ *         every event has a range of directions that specifies what objects are
+ *         affected by the event.
  */
 public class Direction extends Vector {
 
@@ -20,15 +23,15 @@ public class Direction extends Vector {
 	}
 
 	/**
-	 * The method calculates the tangent of the angle between two vectors. 
-	 * The formula is: tan = (|a| - |b|) / ( |a - b| )
+	 * The method calculates the tangent of the angle between two vectors. The
+	 * formula is: tan = (|a| - |b|) / ( |a - b| )
 	 * 
 	 * @param direction
 	 * @return the tangent
 	 */
 	public double getAngleTangent(Direction b) {
 		Direction a = this;
-		
+
 		double divident = a.getLength() - b.getLength();
 		double divisor = a.getDifference(b).getLength();
 		if (divisor == 0)
