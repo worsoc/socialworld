@@ -4,9 +4,11 @@
 package org.socialworld.attributes;
 
 /**
- * @author Mathias Sikos (tyloesand) The enumeration holds all specialization
- *         modes of an action type. So there are (for example) modes for the
- *         action type changeMove and for the action type handleItem
+ * The enumeration holds all specialization modes of an action type. So there
+ * are (for example) modes for the action type changeMove and for the action
+ * type handleItem.
+ * 
+ * @author Mathias Sikos (tyloesand)
  */
 public enum ActionMode {
 	run, walk, jump,

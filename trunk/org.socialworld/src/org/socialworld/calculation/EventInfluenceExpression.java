@@ -7,7 +7,7 @@ import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.AttributeArray;
 
 /**
- * @author Mathias Sikos (tyloesand) The class is an implementation of an
+ * The class is an implementation of an
  *         expression. The expression is part of a term that consists of
  *         mathematical comparisons and mathematical operations which are
  *         executed dependent to the evaluation result of the comparison. An
@@ -17,6 +17,8 @@ import org.socialworld.attributes.AttributeArray;
  *         constant. If the expression is a comparison there are given two
  *         further expressions for the boolean evaluation result of the
  *         comparison. So a expression evaluates an expression recursively.
+
+ * @author Mathias Sikos (tyloesand)
  */
 public class EventInfluenceExpression {
 	ExpressionFunction function;

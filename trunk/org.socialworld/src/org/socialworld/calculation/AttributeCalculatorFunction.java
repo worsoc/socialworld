@@ -4,11 +4,13 @@
 package org.socialworld.calculation;
 
 /**
- * @author Mathias Sikos (tyloesand) The abstract class
- *         AttributeCalculatorFunction is the base class for all calculation
- *         functions. Every inherited class must override the method calculate.
+ * The abstract class AttributeCalculatorFunction is the base class for all
+ * calculation functions. Every inherited class must override the method
+ * calculate.
+ * 
+ * @author Mathias Sikos (tyloesand)
  */
-public abstract class AttributeCalculatorFunction {
+	public abstract class AttributeCalculatorFunction {
 	AttributeCalculatorFunction() {
 
 	}

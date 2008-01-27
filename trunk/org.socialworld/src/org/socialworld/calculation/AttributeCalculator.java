@@ -7,15 +7,16 @@ import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.AttributeArray;
 
 /**
- * @author Mathias Sikos (tyloesand) Because of being a singleton there exists
+ * Because of being a singleton there exists
  *         only one instance of the class. The object access is controlled by a
  *         semaphore. Only the owner of the semaphore can use the object. After
  *         locking the calculation object the user object gives an attribute
  *         array to the calculator. Then there can be a lot of calculations on
  *         that attribute array. If no further calculation is necessary the user
- *         object gets back the new atribute values. Finally the user releases
+ *         object gets back the new attribute values. Finally the user releases
  *         the calculator. So an other object can take the semaphore and use the
  *         calculation object.
+ * @author Mathias Sikos (tyloesand) 
  */
 public class AttributeCalculator {
 

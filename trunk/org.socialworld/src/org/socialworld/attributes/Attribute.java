@@ -4,9 +4,10 @@
 package org.socialworld.attributes;
 
 /**
- * @author Mathias Sikos (tyloesand) The enumeration holds all attribute names
- *         and collects an index for every attribute. So an attribute is
- *         addressable in arrays.
+ * The enumeration holds all attribute names and collects an index for every
+ * attribute. So an attribute is addressable in arrays.
+ * 
+ * @author Mathias Sikos (tyloesand)
  */
 public enum Attribute {
 	mood(0), courage(1), morals(2), materialism(3), tiredness(4),

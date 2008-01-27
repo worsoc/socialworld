@@ -6,12 +6,13 @@ package org.socialworld.calculation;
 import org.socialworld.attributes.Attribute;
 
 /**
- * @author Mathias Sikos (tyloesand) An attribute calculation matrix holds the
+ *  An attribute calculation matrix holds the
  *         information how to compute attribute values. It holds calculation
  *         functions, shares and offsets for every attribute dependent to all
  *         attributes. Access to functions, shares and offset is given by set
  *         and get methods which have the matrix row and matrix column as
  *         parameters.
+ * @author Mathias Sikos (tyloesand)
  */
 public class AttributeCalculatorMatrix {
 

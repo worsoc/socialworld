@@ -4,9 +4,10 @@
 package org.socialworld.attributes;
 
 /**
- * @author Mathias Sikos (tyloesand) The class collects information about a
+ * The class collects information about a
  *         simulation object's movements. A move has an action mode (here it is
  *         a move mode).
+ * @author Mathias Sikos (tyloesand) 
  */
 public class Move {
 	private ActionMode mode;

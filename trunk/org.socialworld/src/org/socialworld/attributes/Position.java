@@ -6,10 +6,11 @@ package org.socialworld.attributes;
 import org.socialworld.calculation.Vector;
 
 /**
- * @author Mathias Sikos The class implements a vector's
+ * The class implements a vector's
  *         interpretation as a position. It is needed for locating simulation
  *         objects or calculation the distance between simulation objects.
- * 
+
+ * @author Mathias Sikos (tyloesand)  
  */
 public class Position extends Vector {
 

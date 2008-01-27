@@ -4,8 +4,10 @@
 package org.socialworld.calculation;
 
 /**
- * @author Mathias Sikos (tyloesand) The enumeration holds all operators that
+ *  The enumeration holds all operators that
  *         can be used in mathematical comparisons.
+
+ * @author Mathias Sikos (tyloesand) 
  */
 public enum ConditionOperator {
 	equal, notEqual, less, lessEqual, greaterEqual, greater

@@ -6,11 +6,12 @@ package org.socialworld.attributes;
 import org.socialworld.calculation.Vector;
 
 /**
- * @author Mathias Sikos (tyloesand) The class implements a vector's
+ * The class implements a vector's
  *         interpretation as a direction. It is needed for moves of simulation
  *         objects or calculation what a simulation object can see. Furthermore
  *         every event has a range of directions that specifies what objects are
  *         affected by the event.
+ * @author Mathias Sikos (tyloesand) 
  */
 public class Direction extends Vector {
 

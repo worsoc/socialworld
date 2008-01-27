@@ -7,9 +7,11 @@ import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.Weapon;
 
 /**
- * @author Mathias Sikos (tyloesand) The class collects all informations about a
+ * The class collects all informations about a
  *         simulation object's inventory. There are set methods for manipulating
  *         the inventory and get methods for access to object's items.
+
+ * @author Mathias Sikos (tyloesand)
  */
 public class Inventory {
 
