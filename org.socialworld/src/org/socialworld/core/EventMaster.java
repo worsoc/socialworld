@@ -13,20 +13,44 @@ import org.socialworld.attributes.Position;
 import org.socialworld.objects.SimulationObject;
 
 /**
- * @author Mathias Sikos (tyloesand)
+ * The event master is a singleton thread that decides what event's influence
+ * should be calculated. this decision is made by fetching the first element
+ * with highest priority. For that event the simulation objects, who may be
+ * affected by the event, will be found. For these simulation objects the
+ * effects (attribute changes) and reactions are calculated.
  * 
+ * @author Mathias Sikos (tyloesand)
  */
 public class EventMaster extends Thread {
 
 	private static final Logger logger = Logger.getLogger(EventMaster.class);
 
 	private static EventMaster eventMaster;
+
+	/**
+	 * a queue of events ordered by event's priority
+	 */
 	private PriorityQueue<Event> eventQueue;
 
+	/**
+	 * a list of simulation objects which may be affected by the event
+	 */
 	private List<SimulationObject> candidates;
+
+	/**
+	 * the actually analysed event
+	 */
 	private Event event;
 
+	/**
+	 * the tangent of the angle that describes the range where the event has
+	 * effects.
+	 */
 	private double tangentOfEffectAngle;
+
+	/**
+	 * says whether the thread is running or not
+	 */
 	private boolean isRunning;
 
 	/**
@@ -38,13 +62,19 @@ public class EventMaster extends Thread {
 		eventQueue = new PriorityQueue<Event>();
 	}
 
+	/**
+	 * returns the only one event master instance
+	 */
 	public static EventMaster getEventMaster() {
 		if (eventMaster == null) {
 			eventMaster = new EventMaster();
 		}
 		return eventMaster;
 	}
-	
+
+	/**
+	 * the method stops the event processing
+	 */
 	public void stopEventMaster() {
 		isRunning = false;
 	}
@@ -100,12 +130,11 @@ public class EventMaster extends Thread {
 	private void determineCandidates() {
 		SimulationObject candidate;
 
-		tangentOfEffectAngle = Math.tan(Math.toRadians(event.getEffectAngle() ));
+		tangentOfEffectAngle = Math.tan(Math.toRadians(event.getEffectAngle()));
 
 		// TODO (tyloesand) Optimierung Finden Kandidaten
 		// und dann nicht nur �ber Humans
-		candidate = ObjectManager.getCurrent().getHumans().iterator()
-				.next();
+		candidate = ObjectManager.getCurrent().getHumans().iterator().next();
 		while (true) {
 			if (decideEffective(candidate)) {
 				candidates.add(candidate);
@@ -113,6 +142,16 @@ public class EventMaster extends Thread {
 		}
 	}
 
+	/**
+	 * The method calculates whether a candidate {@link SumulationObject} is
+	 * near enough to the event so that the event could effect to the candidate
+	 * object.
+	 * 
+	 * @param candidate
+	 *            a simulation object that may be affected by the event
+	 * @return true if the event has effects to the candidate and false if there
+	 *         are no effects
+	 */
 	private boolean decideEffective(SimulationObject candidate) {
 		Position position;
 		Direction direction;
@@ -131,6 +170,9 @@ public class EventMaster extends Thread {
 		return false;
 	}
 
+	/**
+	 * The method lets all candidates calculate the event's effect.
+	 */
 	private void determineInfluence() {
 		SimulationObject candidate;
 		candidate = this.candidates.iterator().next();
@@ -140,47 +182,3 @@ public class EventMaster extends Thread {
 		}
 	}
 }
-
-// class PSBWS_EventMaster
-// {
-// public:
-// PSBWS_EventMaster(PSBWS_Object_Manager*, TNatural);
-// ~PSBWS_EventMaster();
-//
-// int fill_eventQueue();
-// int insert_event(PSBWS_Event*);
-// int handle_events();
-// PSBWS_Event* create_event(TEVC, long int, int, int, int, int,
-// TONR, TUChar au_intensity = 0, int ai_relX = 0, int ai_relY = 0, int ai_relZ
-// = 0,
-// float af_dirX = 0, float af_dirY = 0, float af_dirZ = 0,
-// TNatural au_distance_effect = 0, TUChar au_angle_effect = 0);
-//
-// private:
-//
-// int determine_candidates();
-// int determine_influence();
-//
-// bool decide_effective(TONR uONr);
-// bool decide_time_remains();
-//
-// PSBWS_Event* mP_event; // aktuell betrachtetes Ereignis
-// TNatural mu_posX_event;
-// TNatural mu_posY_event;
-// TNatural mu_posZ_event;
-// float mf_dirX_event;
-// float mf_dirY_event;
-// float mf_dirZ_event;
-// TNatural mu_distance_effect;
-// double md_angleTangens_effect;
-//
-// TNatural mu_number_events;
-// TNatural mu_minNumber_events;
-//
-// SM_PrioritaetsSchlange<PSBWS_Event>* mSM_events;
-// SM_Schlange<STR_Candidate>* mSM_candidates;
-//
-// PSBWS_Object_Manager* mP_objectManager;
-// SM_VektorMathematik* mSM_vector;
-//
-// };
