@@ -6,9 +6,10 @@ package org.socialworld.calculation;
 import org.socialworld.attributes.Attribute;
 
 /**
- * @author Mathias Sikos (tyloesand) The class implements the attribute
+ * The class implements the attribute
  *         calculation function as a table. The attribute value is interpreted
  *         as table's index.
+ * @author Mathias Sikos (tyloesand) 
  */
 public class AttributeCalculatorFunctionTable extends
 		AttributeCalculatorFunction {

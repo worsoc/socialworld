@@ -22,6 +22,9 @@ import org.socialworld.objects.Magic;
  * 
  */
 public class Simulation {
+	// TODO (tyloesand) hier ist noch viel zu tun:
+	// - Überdenken, welche Listen
+	// - Überdenken Start EventMaster
 	
 	private static final Logger logger = Logger.getLogger(Simulation.class);
 
@@ -40,7 +43,7 @@ public class Simulation {
 
 		this.gods = new ArrayList<God>();
 		this.humans = new ListModel<Human>();
-		
+
 		this.positions = new ArrayList<Position>();
 		this.items = new ArrayList<Item>();
 		this.inventories = new ArrayList<Inventory>();

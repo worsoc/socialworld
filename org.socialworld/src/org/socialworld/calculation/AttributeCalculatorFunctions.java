@@ -7,8 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Mathias Sikos (tyloesand) The class holds all attribute calculation
+ * The class holds all attribute calculation
  *         functions.
+ * @author Mathias Sikos (tyloesand) 
  */
 public class AttributeCalculatorFunctions {
 

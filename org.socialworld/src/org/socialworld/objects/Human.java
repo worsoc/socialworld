@@ -8,6 +8,13 @@ import org.socialworld.attributes.Inventory;
 import org.socialworld.core.Action;
 
 /**
+ * A human is described in most details. It is the most important simulation
+ * object. The simulation of a human is the main target of the game. A human has
+ * an attribute array that describes his inner state. There are values for
+ * courage, spirituality and morals for example. There is a detailed
+ * differentiation of action handling an event influence. A human is the only
+ * simulation object that has an inventory. So it can carry items and use them.
+ * 
  * @author Mathias Sikos (tyloesand)
  * 
  */

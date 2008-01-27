@@ -4,9 +4,10 @@
 package org.socialworld.attributes;
 
 /**
- * @author Mathias Sikos (tyloesand) The class implements an attribute array. It
+ * The class implements an attribute array. It
  *         has an byte array for the value of every attribute and set and get
  *         methods to manipulate and assign the values.
+ * @author Mathias Sikos (tyloesand) 
  */
 public class AttributeArray {
 	private int numberOfAttributes;

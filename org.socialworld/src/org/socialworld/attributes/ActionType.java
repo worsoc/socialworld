@@ -4,8 +4,8 @@
 package org.socialworld.attributes;
 
 /**
- * 
- * @author Mathias Sikos (tyloesand) The enumeration collects all action types.
+ * The enumeration collects all action types.
+ * @author Mathias Sikos (tyloesand) 
  */
 public enum ActionType {
 	touch, sleep, changeMove, kick, controlHandManually, spell,

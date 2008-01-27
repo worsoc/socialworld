@@ -4,8 +4,9 @@
 package org.socialworld.calculation;
 
 /**
- * @author Mathias Sikos (tyloesand) The class is the base for all simulation
+ * The class is the base for all simulation
  *         position and directions. The vector has 3 dimensions.
+ * @author Mathias Sikos (tyloesand) 
  */
 public class Vector {
 
