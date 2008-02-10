@@ -22,133 +22,127 @@ import org.socialworld.core.ObjectManager;
 import org.socialworld.objects.Human;
 
 public class View extends ViewPart {
-    public static final String ID = "org.socialworld.simpleclient.view";
+	public static final String ID = "org.socialworld.simpleclient.view";
 
-    private static final Logger logger = Logger.getLogger(View.class);
+	private static final Logger logger = Logger.getLogger(View.class);
 
-    private TableViewer viewer;
+	private TableViewer viewer;
 
-    /**
-     * The content provider class is responsible for providing objects to the
-     * view. It can wrap existing objects in adapters or simply return objects
-     * as-is. These objects may be sensitive to the current input of the view,
-     * or ignore it and always show the same content (like Task List, for
-     * example).
-     */
-    class ViewContentProvider implements IStructuredContentProvider {
-
-	private final PropertyChangeListener listener = new PropertyChangeListener() {
-
-	    public void propertyChange(PropertyChangeEvent evt) {
-		View.this.viewer.getControl().getDisplay().syncExec(
-			new Runnable() {
-
-			    public void run() {
-				View.this.viewer.setInput(ObjectManager
-					.getCurrent().getHumans());
-				View.this.viewer.refresh();
-			    }
-
-			});
-	    }
-	};
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
-	 *      java.lang.Object, java.lang.Object)
+	/**
+	 * The content provider class is responsible for providing objects to the
+	 * view. It can wrap existing objects in adapters or simply return objects
+	 * as-is. These objects may be sensitive to the current input of the view,
+	 * or ignore it and always show the same content (like Task List, for
+	 * example).
 	 */
-	public void inputChanged(final Viewer viewer, final Object oldInput,
-		final Object newInput) {
+	class ViewContentProvider implements IStructuredContentProvider {
 
-	    if (newInput instanceof IModel) {
-		final IModel model = (IModel) newInput;
-		model.addPropertyChangeListener(
-			ListModel.KEY_LIST_CHANGE_PROPERTY, this.listener);
-	    }
+		private final PropertyChangeListener listener = new PropertyChangeListener() {
 
-	    if (oldInput instanceof IModel) {
-		final IModel model = (IModel) oldInput;
-		model.removePropertyChangeListener(
-			ListModel.KEY_LIST_CHANGE_PROPERTY, this.listener);
-	    }
+			public void propertyChange(PropertyChangeEvent evt) {
+				View.this.viewer.getControl().getDisplay().syncExec(
+						new Runnable() {
+
+							public void run() {
+								View.this.viewer.setInput(ObjectManager
+										.getCurrent().getHumans());
+								View.this.viewer.refresh();
+							}
+
+						});
+			}
+		};
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
+		 *      java.lang.Object, java.lang.Object)
+		 */
+		public void inputChanged(final Viewer viewer, final Object oldInput,
+				final Object newInput) {
+
+			if (newInput instanceof IModel) {
+				final IModel model = (IModel) newInput;
+				model.addPropertyChangeListener(
+						ListModel.KEY_LIST_CHANGE_PROPERTY, this.listener);
+			}
+
+			if (oldInput instanceof IModel) {
+				final IModel model = (IModel) oldInput;
+				model.removePropertyChangeListener(
+						ListModel.KEY_LIST_CHANGE_PROPERTY, this.listener);
+			}
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
+		 */
+		@SuppressWarnings("unchecked")
+		public Object[] getElements(final Object inputElement) {
+			if (inputElement instanceof List) {
+				final List humanList = (List<Human>) inputElement;
+				return humanList.toArray();
+			}
+			return null;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
+		 */
+		public void dispose() {
+		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
+	class ViewLabelProvider extends LabelProvider implements
+			ITableLabelProvider {
+
+		public String getColumnText(final Object obj, final int index) {
+			if (obj instanceof Human) {
+				final Human human = (Human) obj;
+				return human.toString();
+			}
+			return "---";
+		}
+
+		public Image getColumnImage(final Object obj, final int index) {
+			return null;
+		}
+	}
+
+	/**
+	 * This is a callback that will allow us to create the viewer and initialize
+	 * it.
 	 */
-	public Object[] getElements(final Object inputElement) {
-	    if (inputElement instanceof List) {
-		final List humanList = (List) inputElement;
-		return humanList.toArray();
-	    }
-	    return null;
+	public void createPartControl(final Composite parent) {
+		this.viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL
+				| SWT.V_SCROLL);
+		final Table table = this.viewer.getTable();
+		table.setHeaderVisible(true);
+		table.setLinesVisible(true);
+		final TableColumn column = new TableColumn(table, SWT.BORDER);
+		column.setText("Name");
+		column.setWidth(100);
+
+		logger.debug("get simulation object");
+
+		this.viewer.setContentProvider(new ViewContentProvider());
+		this.viewer.setLabelProvider(new ViewLabelProvider());
+
+		final List<Human> humans = ObjectManager.getCurrent().getHumans();
+
+		logger.debug("Set input to viewer: " + humans);
+		this.viewer.setInput(humans);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
+	/**
+	 * Passing the focus request to the viewer's control.
 	 */
-	public void dispose() {
+	public void setFocus() {
+		this.viewer.getControl().setFocus();
 	}
-    }
-
-    class ViewLabelProvider extends LabelProvider implements
-	    ITableLabelProvider {
-
-	public String getColumnText(final Object obj, final int index) {
-	    if (obj instanceof Human) {
-		final Human human = (Human) obj;
-		return human.toString();
-	    }
-	    return "---";
-	}
-
-	public Image getColumnImage(final Object obj, final int index) {
-	    return null;
-	}
-    }
-
-    /**
-     * This is a callback that will allow us to create the viewer and initialize
-     * it.
-     */
-    @Override
-    public void createPartControl(final Composite parent) {
-	this.viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL
-		| SWT.V_SCROLL);
-	final Table table = this.viewer.getTable();
-	table.setHeaderVisible(true);
-	table.setLinesVisible(true);
-	final TableColumn column = new TableColumn(table, SWT.BORDER);
-	column.setText("Name");
-	column.setWidth(100);
-
-	logger.debug("get simulation object");
-
-	this.viewer.setContentProvider(new ViewContentProvider());
-	this.viewer.setLabelProvider(new ViewLabelProvider());
-
-	// List<Human> humans = new ListModel<Human>();
-	// humans.add(new Human());
-	// humans.add(new Human());
-	// humans.add(new Human());
-
-	final List<Human> humans = ObjectManager.getCurrent().getHumans();
-
-	logger.debug("Set input to viewer: " + humans);
-	this.viewer.setInput(humans);
-    }
-
-    /**
-     * Passing the focus request to the viewer's control.
-     */
-    @Override
-    public void setFocus() {
-	this.viewer.getControl().setFocus();
-    }
 }

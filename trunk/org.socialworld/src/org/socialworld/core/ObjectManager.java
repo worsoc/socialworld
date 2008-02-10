@@ -9,9 +9,10 @@ import org.apache.log4j.Logger;
 import org.socialworld.objects.Human;
 
 /**
- * @author Andre Schade (circlesmiler) The singleton object manager collects
- *         references to other central objects. There are references to the
- *         {@link Simulation} and to the {@link EventMaster}.
+ * The singleton object manager collects references to other central objects.
+ * There are references to the {@link Simulation} and to the {@link EventMaster}.
+ * 
+ * @author Andre Schade (circlesmiler)
  */
 public class ObjectManager {
 

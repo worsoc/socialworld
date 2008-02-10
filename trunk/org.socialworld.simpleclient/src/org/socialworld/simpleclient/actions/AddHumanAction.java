@@ -8,9 +8,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.socialworld.core.ObjectManager;
-import org.socialworld.core.Simulation;
 import org.socialworld.objects.Human;
-import org.socialworld.simpleclient.Activator;
 
 public class AddHumanAction implements IWorkbenchWindowActionDelegate {
 	
