@@ -1,10 +1,9 @@
 package org.socialworld.core.test;
 
-import org.socialworld.core.Action;
+import junit.framework.TestCase;
+
 import org.socialworld.core.ActionHandler;
 import org.socialworld.objects.Human;
-
-import junit.framework.TestCase;
 
 public class ActionHandlerTest extends TestCase {
 
