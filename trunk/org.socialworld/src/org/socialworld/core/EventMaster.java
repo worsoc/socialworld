@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.PriorityQueue;
 
 import org.apache.log4j.Logger;
+import org.socialworld.SocialWorld;
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
 import org.socialworld.objects.SimulationObject;
@@ -24,8 +25,6 @@ import org.socialworld.objects.SimulationObject;
 public class EventMaster extends Thread {
 
 	private static final Logger logger = Logger.getLogger(EventMaster.class);
-
-	private static EventMaster eventMaster;
 
 	/**
 	 * a queue of events ordered by event's priority
@@ -56,20 +55,10 @@ public class EventMaster extends Thread {
 	/**
 	 * Private Constructor. (Singleton)
 	 */
-	private EventMaster() {
+	public EventMaster() {
 
 		candidates = new ArrayList<SimulationObject>();
 		eventQueue = new PriorityQueue<Event>();
-	}
-
-	/**
-	 * returns the only one event master instance
-	 */
-	public static EventMaster getEventMaster() {
-		if (eventMaster == null) {
-			eventMaster = new EventMaster();
-		}
-		return eventMaster;
 	}
 
 	/**
@@ -134,7 +123,8 @@ public class EventMaster extends Thread {
 
 		// TODO (tyloesand) Optimierung Finden Kandidaten
 		// und dann nicht nur �ber Humans
-		candidate = ObjectManager.getCurrent().getHumans().iterator().next();
+		Simulation simulation = SocialWorld.getCurrent().getSimulation();
+		candidate = simulation.getHumans().iterator().next();
 		while (true) {
 			if (decideEffective(candidate)) {
 				candidates.add(candidate);
@@ -148,7 +138,7 @@ public class EventMaster extends Thread {
 	 * object.
 	 * 
 	 * @param candidate
-	 *            a simulation object that may be affected by the event
+	 *            a simulat :ion object that may be affected by the event
 	 * @return true if the event has effects to the candidate and false if there
 	 *         are no effects
 	 */

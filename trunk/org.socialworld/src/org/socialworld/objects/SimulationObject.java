@@ -19,7 +19,6 @@ import org.socialworld.core.ObjectManager;
  */
 public abstract class SimulationObject extends Model {
 
-	protected ObjectManager objectManager;
 	protected Position position;
 
 	protected Event releasedEvent;
@@ -35,7 +34,6 @@ public abstract class SimulationObject extends Model {
 	 * 
 	 */
 	public SimulationObject() {
-		this.objectManager = ObjectManager.getCurrent();
 	}
 
 	/**

@@ -18,7 +18,9 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.part.ViewPart;
 import org.socialworld.IModel;
 import org.socialworld.ListModel;
+import org.socialworld.SocialWorld;
 import org.socialworld.core.ObjectManager;
+import org.socialworld.core.Simulation;
 import org.socialworld.objects.Human;
 
 public class View extends ViewPart {
@@ -44,8 +46,8 @@ public class View extends ViewPart {
 						new Runnable() {
 
 							public void run() {
-								View.this.viewer.setInput(ObjectManager
-										.getCurrent().getHumans());
+								Simulation simulation = SocialWorld.getCurrent().getSimulation();
+								View.this.viewer.setInput(simulation.getHumans());
 								View.this.viewer.refresh();
 							}
 
@@ -132,8 +134,9 @@ public class View extends ViewPart {
 
 		this.viewer.setContentProvider(new ViewContentProvider());
 		this.viewer.setLabelProvider(new ViewLabelProvider());
-
-		final List<Human> humans = ObjectManager.getCurrent().getHumans();
+		
+		Simulation simulation = SocialWorld.getCurrent().getSimulation();
+		final List<Human> humans = simulation.getHumans();
 
 		logger.debug("Set input to viewer: " + humans);
 		this.viewer.setInput(humans);
