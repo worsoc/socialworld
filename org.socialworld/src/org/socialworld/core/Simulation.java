@@ -23,8 +23,8 @@ import org.socialworld.objects.Magic;
  */
 public class Simulation {
 	// TODO (tyloesand) hier ist noch viel zu tun:
-	// - Überdenken, welche Listen
-	// - Überdenken Start EventMaster
+	// - ï¿½berdenken, welche Listen
+	// - ï¿½berdenken Start EventMaster
 	
 	private static final Logger logger = Logger.getLogger(Simulation.class);
 
@@ -36,10 +36,13 @@ public class Simulation {
 	private final List<Position> positions;
 	private List<Magic> magics;
 
+	private ObjectManager objectManager;
+
 	public Simulation() {
 		logger.debug("create simulation object");
-		this.eventMaster = EventMaster.getEventMaster();
-		this.eventMaster.start();
+		this.eventMaster = new EventMaster();
+		
+		this.objectManager = new ObjectManager(this);
 
 		this.gods = new ArrayList<God>();
 		this.humans = new ListModel<Human>();
@@ -50,11 +53,15 @@ public class Simulation {
 	}
 
 	public void startSimulation() {
-		// TODO Muss noch implementiert werden
+		this.eventMaster.start();
 	}
 
 	public EventMaster getEventMaster() {
 		return this.eventMaster;
+	}
+	
+	public ObjectManager getObjectManager() {
+		return this.objectManager;
 	}
 
 	/**
