@@ -9,7 +9,6 @@ import org.socialworld.attributes.Position;
 import org.socialworld.core.Action;
 import org.socialworld.core.ActionHandler;
 import org.socialworld.core.Event;
-import org.socialworld.core.ObjectManager;
 
 /**
  * Every simulatable object is inherited by the abstract class SimulationObject.
