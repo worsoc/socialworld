@@ -8,7 +8,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.socialworld.SocialWorld;
-import org.socialworld.core.ObjectManager;
 import org.socialworld.core.Simulation;
 import org.socialworld.objects.Human;
 

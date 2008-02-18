@@ -19,7 +19,6 @@ import org.eclipse.ui.part.ViewPart;
 import org.socialworld.IModel;
 import org.socialworld.ListModel;
 import org.socialworld.SocialWorld;
-import org.socialworld.core.ObjectManager;
 import org.socialworld.core.Simulation;
 import org.socialworld.objects.Human;
 

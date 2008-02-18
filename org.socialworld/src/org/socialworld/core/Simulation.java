@@ -36,13 +36,9 @@ public class Simulation {
 	private final List<Position> positions;
 	private List<Magic> magics;
 
-	private ObjectManager objectManager;
-
 	public Simulation() {
 		logger.debug("create simulation object");
 		this.eventMaster = new EventMaster();
-		
-		this.objectManager = new ObjectManager(this);
 
 		this.gods = new ArrayList<God>();
 		this.humans = new ListModel<Human>();
@@ -58,10 +54,6 @@ public class Simulation {
 
 	public EventMaster getEventMaster() {
 		return this.eventMaster;
-	}
-	
-	public ObjectManager getObjectManager() {
-		return this.objectManager;
 	}
 
 	/**

@@ -6,11 +6,10 @@ package org.socialworld;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.socialworld.core.ObjectManager;
-import org.socialworld.core.Simulation;
-import org.socialworld.objects.Human;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.socialworld.core.Simulation;
+import org.socialworld.objects.Human;
 
 /**
  * @author Mathias Sikos (tyloesand)
@@ -32,7 +31,7 @@ public class SocialWorld implements BundleActivator {
 	simulation = new Simulation();
 	simulation.startSimulation();
 	
-	List<Human> humans = simulation.getObjectManager().getHumans();
+	List<Human> humans = simulation.getHumans();
 	humans.add(new Human());
 	humans.add(new Human());
 	humans.add(new Human());
