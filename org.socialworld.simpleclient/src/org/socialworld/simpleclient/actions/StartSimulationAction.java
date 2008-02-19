@@ -5,6 +5,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.socialworld.SocialWorld;
 
 /**
  * Our sample action implements workbench action delegate.
@@ -32,6 +33,7 @@ public class StartSimulationAction implements IWorkbenchWindowActionDelegate {
 	 * @see IWorkbenchWindowActionDelegate#run
 	 */
 	public void run(IAction action) {
+		SocialWorld.getCurrent().getSimulation().startSimulation();
 		MessageDialog.openInformation(
 			window.getShell(),
 			"Simpleclient Plug-in",

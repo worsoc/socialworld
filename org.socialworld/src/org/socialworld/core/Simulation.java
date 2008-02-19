@@ -51,6 +51,10 @@ public class Simulation {
 	public void startSimulation() {
 		this.eventMaster.start();
 	}
+	
+	public void stopSimulation() {
+		this.eventMaster.stopEventMaster();
+	}
 
 	public EventMaster getEventMaster() {
 		return this.eventMaster;
