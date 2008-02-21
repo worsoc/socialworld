@@ -41,12 +41,10 @@ public class View extends ViewPart {
 		private final PropertyChangeListener listener = new PropertyChangeListener() {
 
 			public void propertyChange(PropertyChangeEvent evt) {
-				View.this.viewer.getControl().getDisplay().syncExec(
+				View.this.viewer.getControl().getDisplay().asyncExec(
 						new Runnable() {
 
 							public void run() {
-								Simulation simulation = SocialWorld.getCurrent().getSimulation();
-								View.this.viewer.setInput(simulation.getHumans());
 								View.this.viewer.refresh();
 							}
 
