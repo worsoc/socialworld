@@ -23,8 +23,8 @@ import org.socialworld.objects.Magic;
  */
 public class Simulation {
 	// TODO (tyloesand) hier ist noch viel zu tun:
-	// - �berdenken, welche Listen
-	// - �berdenken Start EventMaster
+	// - ueberdenken, welche Listen
+	// - ueberdenken Start EventMaster
 	
 	private static final Logger logger = Logger.getLogger(Simulation.class);
 
