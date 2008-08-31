@@ -10,6 +10,8 @@ import org.socialworld.attributes.AttributeArray;
 import org.socialworld.attributes.Move;
 import org.socialworld.core.Action;
 import org.socialworld.core.Event;
+import org.socialworld.calculation.EventInfluenceDescription;
+import org.socialworld.calculation.EventInfluenceAssignment;
 
 /**
  * An animal is a simulation object with extensions to express the living kind.
@@ -21,10 +23,6 @@ public class Animal extends SimulationObject {
 
 	protected Move move;
 
-	// FIXME (tyloesand) Überdenken, ob bereits ein Animal diese Attributarray
-	// haben soll, oder ob das nur für Menschen Sinn macht.
-	// bei Tieren ist wohl nur Hunger von Bedeutung,
-	// den kann man dann auch andersa bbilden
 	protected AttributeArray attributes;
 
 	public Animal() {
@@ -125,10 +123,32 @@ public class Animal extends SimulationObject {
 		this.move = move;
 	}
 
-	public void changeByEvent(final Event event) {
 
+	/**
+	 * The method lets calculate how an event changes an object's state.
+	 * 
+	 * @param event
+	 *            the event that effects to the object
+	 */
+	public void changeByEvent(final Event event) {
+		EventInfluenceDescription eventInfluenceDescription;
+		int eventType;
+		int eventInfluenceType;
+		
+		eventType = event.getEventType();
+		eventInfluenceType = this.influenceTypeByEventType[eventType];
+		
+		eventInfluenceDescription = 
+			EventInfluenceAssignment.getInstance().getEventInfluenceDescription(
+				eventType, eventInfluenceType	);
 	}
 
+	/**
+	 * The method lets calculate how an object reacts to an event.
+	 * 
+	 * @param event
+	 *            the event that the object reacts to
+	 */
 	public void reactToEvent(final Event event) {
 
 	}
