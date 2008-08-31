@@ -125,4 +125,5 @@ public class Human extends Mammal {
 	public void setInventory(final Inventory inventory) {
 		this.inventory = inventory;
 	}
+
 }
