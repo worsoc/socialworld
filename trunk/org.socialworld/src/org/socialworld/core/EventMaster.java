@@ -47,6 +47,17 @@ public class EventMaster extends Thread {
 	 */
 	private double tangentOfEffectAngle;
 
+	
+	/**
+	 * the event's position
+	 */
+	private Position eventPosition;
+	
+	/**
+	 * the direction how the event has effects.
+	 */
+	private Direction eventDirection;
+	
 	/**
 	 * says whether the thread is running or not
 	 */
@@ -98,8 +109,7 @@ public class EventMaster extends Thread {
 	private void calculateNextEvent() {
 		// Liefert Kopf und entfernt Element aus Liste
 		if (!eventQueue.isEmpty()) {
-			this.event = this.eventQueue.poll();
-			if (this.event != null) {
+			if ( loadEvent( this.eventQueue.poll() ) == true ) {
 				determineCandidates();
 				determineInfluence();
 			}
@@ -116,31 +126,44 @@ public class EventMaster extends Thread {
 		eventQueue.add(event);
 	}
 
+	private boolean loadEvent(Event event) {
+		if (event == null) return false;
+		
+		this.event = event;
+		
+		tangentOfEffectAngle = Math.tan(Math.toRadians(event.getEffectAngle()));
+		eventPosition = event.getPosition();
+		eventDirection = event.getDirection();
+		
+		return true;
+	}
 	private void determineCandidates() {
 		SimulationObject candidate;
-
-		tangentOfEffectAngle = Math.tan(Math.toRadians(event.getEffectAngle()));
+		
 
 		// TODO (tyloesand) Optimierung Finden Kandidaten
-		// und dann nicht nur �ber Humans
+		// und dann nicht nur ueber Humans
 		Simulation simulation = SocialWorld.getCurrent().getSimulation();
-		candidate = simulation.getHumans().iterator().next();
 		while (true) {
-			if (decideEffective(candidate)) {
-				candidates.add(candidate);
+			if (simulation.getHumans().iterator().hasNext() ) {
+				candidate = simulation.getHumans().iterator().next();
+				if (decideEffective(candidate)) {
+					candidates.add(candidate);
+				}
 			}
+			else return;
 		}
 	}
 
 	/**
-	 * The method calculates whether a candidate {@link SumulationObject} is
+	 * The method calculates whether a candidate {@link SimulationObject} is
 	 * near enough to the event so that the event could effect to the candidate
 	 * object.
 	 * 
 	 * @param candidate
-	 *            a simulat :ion object that may be affected by the event
-	 * @return true if the event has effects to the candidate and false if there
-	 *         are no effects
+	 *            a simulation object that may be affected by the event
+	 * @return true if the event has effects to the candidate and
+	 * 		 false if there are no effects
 	 */
 	private boolean decideEffective(SimulationObject candidate) {
 		Position position;
@@ -150,12 +173,12 @@ public class EventMaster extends Thread {
 
 		position = candidate.getPosition();
 
-		distance = position.getDistance(event.getPosition());
+		distance = position.getDistance(this.eventPosition);
 
-		if (distance <= event.getEffectDistance()) {
-			direction = position.getDirection(event.getPosition());
-			tangent = direction.getAngleTangent(event.getDirection());
-			return (tangent <= tangentOfEffectAngle);
+		if (distance <= this.event.getEffectDistance()) {
+			direction = position.getDirection(this.eventPosition);
+			tangent = direction.getAngleTangent(this.eventDirection);
+			return (tangent <= this.tangentOfEffectAngle);
 		}
 		return false;
 	}
@@ -165,10 +188,10 @@ public class EventMaster extends Thread {
 	 */
 	private void determineInfluence() {
 		SimulationObject candidate;
-		candidate = this.candidates.iterator().next();
-		while (candidate != null) {
-			candidate.changeByEvent(this.event);
+
+		while (this.candidates.iterator().hasNext()) {
 			candidate = this.candidates.iterator().next();
+			candidate.changeByEvent(this.event);
 		}
 	}
 }
