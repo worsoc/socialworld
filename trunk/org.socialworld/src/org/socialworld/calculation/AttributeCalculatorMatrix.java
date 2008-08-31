@@ -19,7 +19,8 @@ public class AttributeCalculatorMatrix {
 	private int functions[];
 	private float shares[];
 	private byte offsets[];
-
+	private CalculationInputType inputTypes[];
+	
 	public AttributeCalculatorMatrix() {
 
 	}
@@ -75,4 +76,20 @@ public class AttributeCalculatorMatrix {
 		this.offsets[matrixIndex] = offset;
 	}
 
+	/**
+	 * @return the input type of the calculation function
+	 */
+	public CalculationInputType getInputType(int row, int column) {
+		int matrixIndex = row * Attribute.NUMBER_OF_ATTRIBUTES + column;
+		return inputTypes[matrixIndex];
+	}
+
+	/**
+	 * @param input type
+	 *            the input type to set
+	 */
+	public void setInputType(int row, int column, CalculationInputType inputType) {
+		int matrixIndex = row * Attribute.NUMBER_OF_ATTRIBUTES + column;
+		this.inputTypes[matrixIndex] = inputType;
+	}	
 }
