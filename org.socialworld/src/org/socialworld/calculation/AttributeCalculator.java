@@ -179,30 +179,38 @@ public class AttributeCalculator {
 	private boolean calculateAttributes() {
 
 		boolean result;
-		int column, row;
+		int 	column;
+		int		row;
 
-		byte attributeValue;
-		int functionIndex;
-		byte offset;
-		float share;
+		byte 	attributeValue;
+		byte 	attributeChangeValue;
+		
+		byte 	inputValue;
+		int 	functionIndex;
+		byte 	offset;
+		float 	share;
 
 		AttributeCalculatorFunction function;
+		CalculationInputType 		inputType;
 
 		float change;
 
 		for (row = 0; row < this.numberOfAttributes; row++) {
 
-			attributeValue = this.attributes.get(row);
+			attributeValue 			= this.attributes.get(row);
+			attributeChangeValue 	= this.attributes.getDifference(row);
 
 			for (column = 0; column < this.numberOfAttributes; column++) {
 
 				functionIndex = this.matrix.getFunction(row, column);
+				inputType = this.matrix.getInputType(row, column);
 				share = this.matrix.getShare(row, column);
 				offset = this.matrix.getOffset(row, column);
 
 				function = AttributeCalculatorFunctions.get(functionIndex);
+				inputValue = getInputValue(inputType, attributeValue, attributeChangeValue);
 
-				change = share * function.calculate(attributeValue, offset);
+				change = share * function.calculate(inputValue) + offset;
 
 				if (change != 0)
 					attributesNew[column] += change;
@@ -251,4 +259,18 @@ public class AttributeCalculator {
 		}
 
 	}
+
+	private byte getInputValue(CalculationInputType type, byte attributeValue,
+					byte attributeChangeValue) {
+		switch (type) {
+		case NewAttributeValue:
+			return attributeValue;
+		case AttributeChange:
+			return attributeChangeValue;
+		case OldAttributeValue:
+			return (byte)(attributeValue - attributeChangeValue);
+		}
+		return 0;
+	}
 }
+

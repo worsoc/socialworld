@@ -23,19 +23,19 @@ public class AttributeCalculatorFunctionTable extends
 	}
 
 	/**
-	 * The method interprets the function as a table. The attribute value is
+	 * The method interprets the function as a table. The input value is
 	 * understood as the index of a table and table's value at the index is the
-	 * function value. Furthermore an offset is added.
+	 * function value.
 	 */
-	public byte calculate(byte attributeValue, byte offset) {
+	public byte calculate(byte inputValue) {
 		int result;
 
-		if (attributeValue > range)
-			attributeValue = range;
-		if (attributeValue < 0)
-			attributeValue = 0;
+		if (inputValue > range)
+			inputValue = range;
+		if (inputValue < 0)
+			inputValue = 0;
 
-		result = values[attributeValue] + offset;
+		result = values[inputValue];
 
 		if (result > 100)
 			result = 100;
