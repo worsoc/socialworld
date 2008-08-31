@@ -18,13 +18,16 @@ import org.socialworld.core.Event;
  */
 public abstract class SimulationObject extends Model {
 
-	protected Position position;
+	protected	long 			objectID;
+	
+	protected 	Position 		position;
 
-	protected Event releasedEvent;
+	protected 	Event 			releasedEvent;
 
-	protected ActionHandler actionHandler;
+	protected 	ActionHandler 	actionHandler;
 
-	// TUChar mu_effectType_event[256];
+	protected	int				influenceTypeByEventType[];
+
 	// TUChar mu_reactionType_event[256];
 	// STR_AttributeCalculatorMatrix* mSTRa_attributeCalculatorMatrix;
 
@@ -33,6 +36,7 @@ public abstract class SimulationObject extends Model {
 	 * 
 	 */
 	public SimulationObject() {
+		loadInfluenceType();
 	}
 
 	/**
@@ -119,5 +123,12 @@ public abstract class SimulationObject extends Model {
 	 */
 	public ActionHandler getActionHandler() {
 		return null;
+	}
+	
+	/**
+	 * The method loads the array of influence types for all event types.
+	 */
+	private void loadInfluenceType() {
+		
 	}
 }
