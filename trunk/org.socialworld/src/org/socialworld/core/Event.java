@@ -20,6 +20,8 @@ import org.socialworld.objects.SimulationObject;
  */
 public class Event implements Comparable<Event> {
 
+	private int		eventType;		
+	
 	private byte priority;
 	private SimulationObject causer;
 	private Time time;
@@ -47,12 +49,27 @@ public class Event implements Comparable<Event> {
 	 * 
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
-	public int compareTo(Event o) {
-		if (this.priority < o.getPriority())
+	public int compareTo(Event event) {
+		if (this.priority < event.getPriority())
 			return -1;
-		if (this.priority > o.getPriority())
+		if (this.priority > event.getPriority())
 			return 1;
 		return 0;
+	}
+
+	/**
+	 * @return the event type
+	 */
+	public int getEventType() {
+		return eventType;
+	}
+
+	/**
+	 * @param eventType
+	 *            the number of the event type to set
+	 */
+	public void setEventType(int eventType) {
+		this.eventType = eventType;
 	}
 
 	/**
