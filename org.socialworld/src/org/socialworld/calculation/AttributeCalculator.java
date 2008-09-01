@@ -39,6 +39,13 @@ public class AttributeCalculator {
 	 */
 	private AttributeCalculatorMatrix matrix;
 
+	
+	/**
+	 * a description that holds the information
+	 *  how an event effects to the attribute array.
+	 */
+	private EventInfluenceDescription eventInfluence;
+	
 	/**
 	 * a help attribute array that is used for calculation loops
 	 */
@@ -76,11 +83,16 @@ public class AttributeCalculator {
 	 * 
 	 * @param user
 	 *            the locking object / the user of the attribute calculator
+	 * @return  AttributeCalculatorReturnCode         
 	 */
-	public void lockCalculator(Object user) {
+	public AttributeCalculatorReturnCode lockCalculator(Object user) {
 		if (this.locker == null) {
 			this.locker = user;
+			return AttributeCalculatorReturnCode.success;
 		}
+		if (this.locker == user) 
+			return AttributeCalculatorReturnCode.lockedByUser;
+		return AttributeCalculatorReturnCode.lockedByAnotherUser;
 	}
 
 	/**
@@ -89,11 +101,16 @@ public class AttributeCalculator {
 	 * 
 	 * @param user
 	 *            the locking object / the user of the attribute calculator
+	 * @return  AttributeCalculatorReturnCode          
 	 */
-	public void releaseCalculator(Object user) {
+	public AttributeCalculatorReturnCode releaseCalculator(Object user) {
 		if (this.locker == user) {
 			this.locker = null;
+			return AttributeCalculatorReturnCode.success;
 		}
+		if (this.locker == null)
+			return AttributeCalculatorReturnCode.notLockedByAnyone;
+		return AttributeCalculatorReturnCode.lockedByAnotherUser;
 	}
 
 	/**
@@ -102,14 +119,20 @@ public class AttributeCalculator {
 	 * 
 	 * @param attributes
 	 * @param user
+	 * @return  AttributeCalculatorReturnCode
 	 */
-	public void setAttributes(AttributeArray attributes, Object user) {
+	public AttributeCalculatorReturnCode setAttributes(
+			AttributeArray attributes, Object user) {
 		int index;
 		if (this.locker == user) {
 			for (index = 0; index < numberOfAttributes; index++) {
 				this.attributes.set(index, attributes.get(index));
 			}
+			return AttributeCalculatorReturnCode.success;
 		}
+		if (this.locker == null)
+			return AttributeCalculatorReturnCode.notLockedByAnyone;
+		return AttributeCalculatorReturnCode.lockedByAnotherUser;
 	}
 
 	/**
@@ -117,14 +140,54 @@ public class AttributeCalculator {
 	 * array.
 	 * 
 	 * @param attributes
+	 * @param user
+	 * @return  AttributeCalculatorReturnCode
 	 */
-	public void fetchAttributes(AttributeArray attributes) {
+	public AttributeCalculatorReturnCode fetchAttributes(
+			AttributeArray attributes, Object user) {
 		int index;
-		for (index = 0; index < numberOfAttributes; index++) {
-			attributes.set(index, this.attributes.get(index));
+		if (this.locker == user) {
+			for (index = 0; index < numberOfAttributes; index++) {
+				attributes.set(index, this.attributes.get(index));
+			}
+			return AttributeCalculatorReturnCode.success;
 		}
+		if (this.locker == null)
+			return AttributeCalculatorReturnCode.notLockedByAnyone;
+		return AttributeCalculatorReturnCode.lockedByAnotherUser;
 	}
 
+	/**
+	 * The method sets the event influence description to an instance variable
+	 * and starts the calculation.
+	 * 
+	 * @param eventInfluence
+	 *            the informations how an event effects to the attributes.
+	 * @param user
+	 * @return  AttributeCalculatorReturnCode           
+	 */
+	public AttributeCalculatorReturnCode changeAttributes(
+			EventInfluenceDescription eventInfluence, Object user) {
+		if (this.locker == user) {
+			this.eventInfluence = eventInfluence;
+			modifyAttributes();
+			return AttributeCalculatorReturnCode.success;
+		}
+		if (this.locker == null)
+			return AttributeCalculatorReturnCode.notLockedByAnyone;
+		return AttributeCalculatorReturnCode.lockedByAnotherUser;
+	}
+
+	// TODO (tyloesand) expression in Abhaengigkeit des Attributes ???
+	private void modifyAttributes() {
+		EventInfluenceExpression exression;
+		int index;
+		
+		for (index = 0; index < this.numberOfAttributes; index++) {
+			exression = this.eventInfluence.expression;
+			modifyAttribute(index, exression);
+		}
+	}
 	/**
 	 * The method calculates the change of an attribute by an event.
 	 * 
@@ -132,12 +195,12 @@ public class AttributeCalculator {
 	 *            the attribute to modify
 	 * @param exression
 	 *            the informations how the event changes the attribute
+	 *           
 	 */
-	public void modifyAttribute(Attribute targetAttribute,
+	private void modifyAttribute(int attributeIndex,
 			EventInfluenceExpression exression) {
-
-		this.attributes.set(targetAttribute, exression.evaluateExpression(
-				this.attributes, targetAttribute));
+			this.attributes.set(attributeIndex, exression.evaluateExpression(
+				this.attributes, attributeIndex));
 	}
 
 	/**
@@ -146,10 +209,19 @@ public class AttributeCalculator {
 	 * 
 	 * @param matrix
 	 *            the informations how the attributes influence each other.
+	 * @param user
+	 * @return  AttributeCalculatorReturnCode           
 	 */
-	public void changeAttributes(AttributeCalculatorMatrix matrix) {
-		this.matrix = matrix;
-		changeAttributes();
+	public AttributeCalculatorReturnCode changeAttributes(
+			AttributeCalculatorMatrix matrix, Object user) {
+		if (this.locker == user) {
+			this.matrix = matrix;
+			changeAttributes();
+			return AttributeCalculatorReturnCode.success;
+		}
+		if (this.locker == null)
+			return AttributeCalculatorReturnCode.notLockedByAnyone;
+		return AttributeCalculatorReturnCode.lockedByAnotherUser;
 	}
 
 	/**
