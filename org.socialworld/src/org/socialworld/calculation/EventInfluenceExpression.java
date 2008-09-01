@@ -23,7 +23,7 @@ import org.socialworld.attributes.AttributeArray;
 public class EventInfluenceExpression {
 	ExpressionFunction function;
 	ConditionOperator operator;
-	Attribute attribute;
+	int attributeIndex;
 	double constant;
 
 	EventInfluenceExpression expressionForTrue;
@@ -47,14 +47,14 @@ public class EventInfluenceExpression {
 	 * the attribute range.
 	 */
 	public byte evaluateExpression(AttributeArray attributeArray,
-			Attribute targetAttribute) {
+			int targetAttributeIndex) {
 		double result;
 		byte operandValue;
 		boolean conditionIsTrue = false;
 
 		switch (this.function) {
 		case condition:
-			operandValue = attributeArray.get(attribute.getIndex());
+			operandValue = attributeArray.get(this.attributeIndex);
 
 			switch (this.operator) {
 			case equal:
@@ -85,25 +85,25 @@ public class EventInfluenceExpression {
 
 			if (conditionIsTrue)
 				result = expressionForTrue.evaluateExpression(attributeArray,
-						targetAttribute);
+						targetAttributeIndex);
 			else
 				result = expressionForFalse.evaluateExpression(attributeArray,
-						targetAttribute);
+						targetAttributeIndex);
 
 			break;
 		case addition:
-			result = attributeArray.get(targetAttribute.getIndex());
+			result = attributeArray.get(targetAttributeIndex);
 			result += this.constant;
 			break;
 		case multiplication:
-			result = attributeArray.get(targetAttribute.getIndex());
+			result = attributeArray.get(targetAttributeIndex);
 			result *= this.constant;
 			break;
 		case replacement:
 			result = this.constant;
 			break;
 		default:
-			result = attributeArray.get(targetAttribute.getIndex());
+			result = attributeArray.get(targetAttributeIndex);
 		}
 
 		result += 0.5;
