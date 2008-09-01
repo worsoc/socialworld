@@ -10,8 +10,10 @@ import org.socialworld.attributes.AttributeArray;
 import org.socialworld.attributes.Move;
 import org.socialworld.core.Action;
 import org.socialworld.core.Event;
+import org.socialworld.calculation.AttributeCalculator;
 import org.socialworld.calculation.EventInfluenceDescription;
 import org.socialworld.calculation.EventInfluenceAssignment;
+import org.socialworld.calculation.AttributeCalculatorReturnCode;
 
 /**
  * An animal is a simulation object with extensions to express the living kind.
@@ -131,6 +133,7 @@ public class Animal extends SimulationObject {
 	 *            the event that effects to the object
 	 */
 	public void changeByEvent(final Event event) {
+		AttributeCalculatorReturnCode returnCode;
 		EventInfluenceDescription eventInfluenceDescription;
 		int eventType;
 		int eventInfluenceType;
@@ -141,6 +144,17 @@ public class Animal extends SimulationObject {
 		eventInfluenceDescription = 
 			EventInfluenceAssignment.getInstance().getEventInfluenceDescription(
 				eventType, eventInfluenceType	);
+		
+		//FIXME (tyloesand) Java-OR eintragen ;)
+		returnCode = AttributeCalculator.getInstance().lockCalculator(this);
+		if ( returnCode == 	AttributeCalculatorReturnCode.success /*OR
+			 returnCode == 	AttributeCalculatorReturnCode.lockedByUser */ ) {
+			AttributeCalculator.getInstance().changeAttributes(
+				eventInfluenceDescription, this);
+		}
+		else {
+		// TODO (tyloesand) Fehlerfall
+		}	
 	}
 
 	/**
