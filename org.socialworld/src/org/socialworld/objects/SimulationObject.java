@@ -27,8 +27,8 @@ public abstract class SimulationObject extends Model {
 	protected 	ActionHandler 	actionHandler;
 
 	protected	int				influenceTypeByEventType[];
+	protected	int				reactionTypeByEventType[];
 
-	// TUChar mu_reactionType_event[256];
 	// STR_AttributeCalculatorMatrix* mSTRa_attributeCalculatorMatrix;
 
 	/**
@@ -37,6 +37,7 @@ public abstract class SimulationObject extends Model {
 	 */
 	public SimulationObject() {
 		loadInfluenceType();
+		loadReactionType();
 	}
 
 	/**
@@ -131,4 +132,15 @@ public abstract class SimulationObject extends Model {
 	private void loadInfluenceType() {
 		
 	}
+
+	/**
+	 * The method loads the array of reaction types for all event types.
+	 */
+	private void loadReactionType() {
+		
+	}
+	
+	public int getReactionType(int eventType) {
+	 return reactionTypeByEventType[eventType];
+	} 
 }

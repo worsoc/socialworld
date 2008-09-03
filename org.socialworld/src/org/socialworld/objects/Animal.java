@@ -9,11 +9,13 @@ import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.attributes.Move;
 import org.socialworld.core.Action;
+import org.socialworld.core.ActionCreator;
 import org.socialworld.core.Event;
+import org.socialworld.core.SemaphoreReturnCode;
 import org.socialworld.calculation.AttributeCalculator;
 import org.socialworld.calculation.EventInfluenceDescription;
 import org.socialworld.calculation.EventInfluenceAssignment;
-import org.socialworld.calculation.AttributeCalculatorReturnCode;
+
 
 /**
  * An animal is a simulation object with extensions to express the living kind.
@@ -133,7 +135,7 @@ public class Animal extends SimulationObject {
 	 *            the event that effects to the object
 	 */
 	public void changeByEvent(final Event event) {
-		AttributeCalculatorReturnCode returnCode;
+		SemaphoreReturnCode returnCode;
 		EventInfluenceDescription eventInfluenceDescription;
 		int eventType;
 		int eventInfluenceType;
@@ -145,12 +147,16 @@ public class Animal extends SimulationObject {
 			EventInfluenceAssignment.getInstance().getEventInfluenceDescription(
 				eventType, eventInfluenceType	);
 		
-		//FIXME (tyloesand) Java-OR eintragen ;)
-		returnCode = AttributeCalculator.getInstance().lockCalculator(this);
-		if ( returnCode == 	AttributeCalculatorReturnCode.success /*OR
-			 returnCode == 	AttributeCalculatorReturnCode.lockedByUser */ ) {
+		returnCode = AttributeCalculator.getInstance().lockBy(this);
+		if ( returnCode == 	SemaphoreReturnCode.success ||
+			 returnCode == 	SemaphoreReturnCode.lockedByUser  ) {
+			AttributeCalculator.getInstance().setAttributes(
+					this.attributes, this);
 			AttributeCalculator.getInstance().changeAttributes(
 				eventInfluenceDescription, this);
+			AttributeCalculator.getInstance().fetchAttributes(
+					this.attributes, this);
+			returnCode = AttributeCalculator.getInstance().releaseBy(this);
 		}
 		else {
 		// TODO (tyloesand) Fehlerfall
@@ -164,6 +170,19 @@ public class Animal extends SimulationObject {
 	 *            the event that the object reacts to
 	 */
 	public void reactToEvent(final Event event) {
-
+		SemaphoreReturnCode returnCode;
+		returnCode = ActionCreator.getInstance().lockBy(this);
+		if ( returnCode == 	SemaphoreReturnCode.success ||
+			 returnCode == 	SemaphoreReturnCode.lockedByUser  ) {
+			ActionCreator.getInstance().createAction(
+				this, event, this);
+			returnCode = ActionCreator.getInstance().releaseBy(this);
+		}
+		else {
+		// TODO (tyloesand) Fehlerfall
+		}	
+		
 	}
+	
+
 }
