@@ -10,10 +10,7 @@ import org.apache.log4j.Logger;
 import org.socialworld.ListModel;
 import org.socialworld.attributes.Inventory;
 import org.socialworld.attributes.Position;
-import org.socialworld.objects.God;
-import org.socialworld.objects.Human;
-import org.socialworld.objects.Item;
-import org.socialworld.objects.Magic;
+import org.socialworld.objects.*;
 
 /**
  * The class Simulation holds all simulation objects and runs the simulation
@@ -34,15 +31,23 @@ public class Simulation {
 	private final List<Item> items;
 	private final List<Inventory> inventories;
 	private final List<Position> positions;
-	private List<Magic> magics;
+	private final List<Magic> magics;
+	private final List<Animal> animals;
+	
+	private final List<SimulationObject> simulationObjects;
 
 	public Simulation() {
 		logger.debug("create simulation object");
 		this.eventMaster = new EventMaster();
 
+		this.simulationObjects = new ListModel<SimulationObject>();
+		
 		this.gods = new ArrayList<God>();
 		this.humans = new ListModel<Human>();
+		this.animals = new ListModel<Animal>();
 
+		this.magics = new ArrayList<Magic>();
+		
 		this.positions = new ArrayList<Position>();
 		this.items = new ArrayList<Item>();
 		this.inventories = new ArrayList<Inventory>();
@@ -60,6 +65,34 @@ public class Simulation {
 		return this.eventMaster;
 	}
 
+	
+	public SimulationObject createSimulationObject(
+			SimulationObjectType simulationObjectType) {
+		SimulationObject object;
+		// TODO (tyloesand) weitere Objekttypen hinzufügen
+		switch (simulationObjectType) {
+		case animal:
+			object = new Animal();
+			this.animals.add((Animal)object);
+			break;
+		case human:
+			object = new Human();
+			this.humans.add((Human)object);
+			break;
+		case god:
+			object = new God();
+			this.gods.add((God)object);
+			break;
+		case item:
+			object = new Item();
+			this.items.add((Item)object);
+			break;
+		default:
+			object = null;
+		}
+		if (object != null) this.simulationObjects.add(object);
+		return object;
+	}
 	/**
 	 * The method returns a list of gods
 	 * 

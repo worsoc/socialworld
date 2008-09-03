@@ -5,6 +5,8 @@ package org.socialworld.calculation;
 
 import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.AttributeArray;
+import org.socialworld.core.SemaphoreReturnCode;
+import org.socialworld.core.Semaphore;
 
 /**
  * Because of being a singleton there exists
@@ -18,14 +20,9 @@ import org.socialworld.attributes.AttributeArray;
  *         calculation object.
  * @author Mathias Sikos (tyloesand) 
  */
-public class AttributeCalculator {
+public class AttributeCalculator extends Semaphore{
 
 	private static AttributeCalculator calculator;
-
-	/**
-	 * the object that holds the semaphore an so can use the calculator
-	 */
-	private Object locker;
 
 	/**
 	 * the attribute array that is set by the user and is got back to the user
@@ -77,41 +74,6 @@ public class AttributeCalculator {
 		return calculator;
 	}
 
-	/**
-	 * The method locks the calculator. The calculator can be locked if and only
-	 * if there is no other locking object.
-	 * 
-	 * @param user
-	 *            the locking object / the user of the attribute calculator
-	 * @return  AttributeCalculatorReturnCode         
-	 */
-	public AttributeCalculatorReturnCode lockCalculator(Object user) {
-		if (this.locker == null) {
-			this.locker = user;
-			return AttributeCalculatorReturnCode.success;
-		}
-		if (this.locker == user) 
-			return AttributeCalculatorReturnCode.lockedByUser;
-		return AttributeCalculatorReturnCode.lockedByAnotherUser;
-	}
-
-	/**
-	 * The method releases the calculator. The calculator can be released by the
-	 * locking object only.
-	 * 
-	 * @param user
-	 *            the locking object / the user of the attribute calculator
-	 * @return  AttributeCalculatorReturnCode          
-	 */
-	public AttributeCalculatorReturnCode releaseCalculator(Object user) {
-		if (this.locker == user) {
-			this.locker = null;
-			return AttributeCalculatorReturnCode.success;
-		}
-		if (this.locker == null)
-			return AttributeCalculatorReturnCode.notLockedByAnyone;
-		return AttributeCalculatorReturnCode.lockedByAnotherUser;
-	}
 
 	/**
 	 * The method sets the attribute array of an object (if and only if the
@@ -119,20 +81,20 @@ public class AttributeCalculator {
 	 * 
 	 * @param attributes
 	 * @param user
-	 * @return  AttributeCalculatorReturnCode
+	 * @return  SemaphoreReturnCode
 	 */
-	public AttributeCalculatorReturnCode setAttributes(
+	public SemaphoreReturnCode setAttributes(
 			AttributeArray attributes, Object user) {
 		int index;
 		if (this.locker == user) {
 			for (index = 0; index < numberOfAttributes; index++) {
 				this.attributes.set(index, attributes.get(index));
 			}
-			return AttributeCalculatorReturnCode.success;
+			return SemaphoreReturnCode.success;
 		}
 		if (this.locker == null)
-			return AttributeCalculatorReturnCode.notLockedByAnyone;
-		return AttributeCalculatorReturnCode.lockedByAnotherUser;
+			return SemaphoreReturnCode.notLockedByAnyone;
+		return SemaphoreReturnCode.lockedByAnotherUser;
 	}
 
 	/**
@@ -141,20 +103,20 @@ public class AttributeCalculator {
 	 * 
 	 * @param attributes
 	 * @param user
-	 * @return  AttributeCalculatorReturnCode
+	 * @return  SemaphoreReturnCode
 	 */
-	public AttributeCalculatorReturnCode fetchAttributes(
+	public SemaphoreReturnCode fetchAttributes(
 			AttributeArray attributes, Object user) {
 		int index;
 		if (this.locker == user) {
 			for (index = 0; index < numberOfAttributes; index++) {
 				attributes.set(index, this.attributes.get(index));
 			}
-			return AttributeCalculatorReturnCode.success;
+			return SemaphoreReturnCode.success;
 		}
 		if (this.locker == null)
-			return AttributeCalculatorReturnCode.notLockedByAnyone;
-		return AttributeCalculatorReturnCode.lockedByAnotherUser;
+			return SemaphoreReturnCode.notLockedByAnyone;
+		return SemaphoreReturnCode.lockedByAnotherUser;
 	}
 
 	/**
@@ -164,18 +126,18 @@ public class AttributeCalculator {
 	 * @param eventInfluence
 	 *            the informations how an event effects to the attributes.
 	 * @param user
-	 * @return  AttributeCalculatorReturnCode           
+	 * @return  SemaphoreReturnCode           
 	 */
-	public AttributeCalculatorReturnCode changeAttributes(
+	public SemaphoreReturnCode changeAttributes(
 			EventInfluenceDescription eventInfluence, Object user) {
 		if (this.locker == user) {
 			this.eventInfluence = eventInfluence;
 			modifyAttributes();
-			return AttributeCalculatorReturnCode.success;
+			return SemaphoreReturnCode.success;
 		}
 		if (this.locker == null)
-			return AttributeCalculatorReturnCode.notLockedByAnyone;
-		return AttributeCalculatorReturnCode.lockedByAnotherUser;
+			return SemaphoreReturnCode.notLockedByAnyone;
+		return SemaphoreReturnCode.lockedByAnotherUser;
 	}
 
 	// TODO (tyloesand) expression in Abhaengigkeit des Attributes ???
@@ -210,18 +172,18 @@ public class AttributeCalculator {
 	 * @param matrix
 	 *            the informations how the attributes influence each other.
 	 * @param user
-	 * @return  AttributeCalculatorReturnCode           
+	 * @return  SemaphoreReturnCode           
 	 */
-	public AttributeCalculatorReturnCode changeAttributes(
+	public SemaphoreReturnCode changeAttributes(
 			AttributeCalculatorMatrix matrix, Object user) {
 		if (this.locker == user) {
 			this.matrix = matrix;
 			changeAttributes();
-			return AttributeCalculatorReturnCode.success;
+			return SemaphoreReturnCode.success;
 		}
 		if (this.locker == null)
-			return AttributeCalculatorReturnCode.notLockedByAnyone;
-		return AttributeCalculatorReturnCode.lockedByAnotherUser;
+			return SemaphoreReturnCode.notLockedByAnyone;
+		return SemaphoreReturnCode.lockedByAnotherUser;
 	}
 
 	/**
