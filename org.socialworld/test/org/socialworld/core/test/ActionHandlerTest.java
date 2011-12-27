@@ -12,7 +12,7 @@ public class ActionHandlerTest extends TestCase {
 	public ActionHandlerTest(String name) {
 		super(name);
 		
-		// test
+		//  test
 	}
 
 	protected void setUp() throws Exception {
