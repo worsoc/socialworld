@@ -140,14 +140,18 @@ public class AttributeCalculator extends Semaphore{
 		return SemaphoreReturnCode.lockedByAnotherUser;
 	}
 
-	// TODO (tyloesand) expression in Abhaengigkeit des Attributes ???
+	/**
+	 * The method calculates an event caused change of an attribute array.
+	 * The event description was set to an instance variable by public function changeAttributes(...
+	 *           
+	 */
 	private void modifyAttributes() {
-		EventInfluenceExpression exression;
+		EventInfluenceExpression expression;
 		int index;
 		
+		expression = this.eventInfluence.expression;
 		for (index = 0; index < this.numberOfAttributes; index++) {
-			exression = this.eventInfluence.expression;
-			modifyAttribute(index, exression);
+			modifyAttribute(index, expression);
 		}
 	}
 	/**
@@ -160,8 +164,8 @@ public class AttributeCalculator extends Semaphore{
 	 *           
 	 */
 	private void modifyAttribute(int attributeIndex,
-			EventInfluenceExpression exression) {
-			this.attributes.set(attributeIndex, exression.evaluateExpression(
+			EventInfluenceExpression expression) {
+			this.attributes.set(attributeIndex, expression.evaluateExpression(
 				this.attributes, attributeIndex));
 	}
 
@@ -178,7 +182,7 @@ public class AttributeCalculator extends Semaphore{
 			AttributeCalculatorMatrix matrix, Object user) {
 		if (this.locker == user) {
 			this.matrix = matrix;
-			changeAttributes();
+			calculateAttributes();
 			return SemaphoreReturnCode.success;
 		}
 		if (this.locker == null)
@@ -186,22 +190,6 @@ public class AttributeCalculator extends Semaphore{
 		return SemaphoreReturnCode.lockedByAnotherUser;
 	}
 
-	/**
-	 * The method calculates the change of all attributes. The change
-	 * information of a matrix is evaluated as often as necessary. The
-	 * calculation stops when for all attributes the changes are in a range of
-	 * +/- 1.
-	 * 
-	 * @param matrix
-	 */
-	private void changeAttributes() {
-		boolean repeatCalculation;
-
-		do {
-			repeatCalculation = calculateAttributes();
-		} while (repeatCalculation);
-
-	}
 
 	/**
 	 * The method calculates the attribute changes. For every matrix element the
@@ -212,7 +200,6 @@ public class AttributeCalculator extends Semaphore{
 	 */
 	private boolean calculateAttributes() {
 
-		boolean result;
 		int 	column;
 		int		row;
 
@@ -252,15 +239,16 @@ public class AttributeCalculator extends Semaphore{
 			}
 		}
 
-		result = checkEpsilon();
-
+		// rounding the attribute values to integer values
+		// writing them from help array to main array
 		for (row = 0; row < this.numberOfAttributes; row++) {
 			this.attributes.set(row, (byte) (attributesNew[row] + 0.5));
 		}
 
+		// clearing the help array
 		clearAttributes();
 
-		return result;
+		return true;
 
 	}
 
