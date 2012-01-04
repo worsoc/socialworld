@@ -18,8 +18,6 @@ import java.util.ListIterator;
  */
 public class ListModel<E> extends Model implements List<E> {
 
-	// FIXME (circlesmiler) Falls jemandem ein besserer Name für die Klasse
-	// einfällt, dann bitte einfach den Namen anpassen.
 
 	public static final String KEY_LIST_CHANGE_PROPERTY = "list_change_property";
 
