@@ -12,6 +12,7 @@ import org.socialworld.SocialWorld;
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
 import org.socialworld.objects.SimulationObject;
+import org.socialworld.objects.SimulationObjectType;
 
 /**
  * The event master is a singleton thread that decides what event's influence
@@ -145,8 +146,8 @@ public class EventMaster extends Thread {
 		// und dann nicht nur ueber Humans
 		Simulation simulation = SocialWorld.getCurrent().getSimulation();
 		while (true) {
-			if (simulation.getHumans().iterator().hasNext() ) {
-				candidate = simulation.getHumans().iterator().next();
+			if (simulation.hasNext(SimulationObjectType.human) ) {
+				candidate = simulation.next(SimulationObjectType.human);
 				if (decideEffective(candidate)) {
 					candidates.add(candidate);
 				}
