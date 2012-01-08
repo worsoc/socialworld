@@ -34,8 +34,9 @@ public class EventReactionAssignment {
 			int eventType,	int reactionType) {
 		EventReactionDescription eventReactionDescription;
 		// TODO (tyloesand) eventReactionDescription mit Wert belegen 
-		//return eventReactionDescription;
-		return null;
+		eventReactionDescription = null;
+		
+		return eventReactionDescription;
 	}
 
 }

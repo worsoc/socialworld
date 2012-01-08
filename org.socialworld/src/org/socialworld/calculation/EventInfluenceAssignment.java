@@ -36,7 +36,7 @@ public class EventInfluenceAssignment {
 			int eventType,	int influenceType) {
 		EventInfluenceDescription eventInfluenceDescription;
 		// TODO (tyloesand) eventInfluenceDescription mit Wert belegen 
-		//return eventInfluenceDescription;
-		return null;
+		eventInfluenceDescription= null;
+		return eventInfluenceDescription;
 	}
 }
