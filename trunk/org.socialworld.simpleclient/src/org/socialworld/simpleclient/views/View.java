@@ -133,7 +133,8 @@ public class View extends ViewPart {
 		this.viewer.setLabelProvider(new ViewLabelProvider());
 		
 		Simulation simulation = SocialWorld.getCurrent().getSimulation();
-		final List<Human> humans = simulation.getHumans();
+		// only for test visualize we use an public access to simulation's object master
+		final List<Human> humans = simulation.getObjectMaster().getHumans();
 
 		logger.debug("Set input to viewer: " + humans);
 		this.viewer.setInput(humans);
