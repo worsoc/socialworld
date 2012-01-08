@@ -256,10 +256,10 @@ public class AttributeCalculator extends Semaphore{
 	 * The method checks whether the calculation loop continues. The calculation
 	 * loop stops if for every attribute the value changes by less than 1.
 	 * 
-	 * @return true if the calculation loop continues and false if teh
+	 * @return true if the calculation loop continues and false if the
 	 *         calculation loop stops
 	 */
-	private boolean checkEpsilon() {
+/*	private boolean checkEpsilon() {
 		int row = 0;
 
 		while ((attributesNew[row] + 1) > (float) this.attributes.get(row)
@@ -270,7 +270,7 @@ public class AttributeCalculator extends Semaphore{
 		}
 		return true;
 	}
-
+*/
 	/**
 	 * The method clears the help attribute array.
 	 */
