@@ -23,8 +23,10 @@ public enum Attribute {
 	 * The constant holds the informations about the range of values. The range
 	 * of values is from 0 to the constant's value.
 	 */
-	public static final byte ATTRIBUTE_RANGE = 100;
-
+	public static final byte ATTRIBUTE_RANGE = 99;
+	// !!! if the constant ATTRIBUTE_RANGE is changed the following methods have to be conformed :
+	// - AttributeCalculatorFunctionTable.initialize()
+	
 	private int arrayIndex;
 
 	private Attribute(int index) {
