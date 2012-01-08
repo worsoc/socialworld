@@ -43,6 +43,12 @@ public class Simulation {
  * and is called by the class constructor
  */
 	private void simulateSocialWorld() {
+		// objectID = 0 because there aren't any objects
+		// all objects must be created for testing the simulation
+		// until now there is no data source for simulation objects
+		this.objectMaster.createSimulationObject(SimulationObjectType.human, 0);
+		this.objectMaster.createSimulationObject(SimulationObjectType.human, 0);
+		this.objectMaster.createSimulationObject(SimulationObjectType.human, 0);
 		
 	}
 	
@@ -58,6 +64,10 @@ public class Simulation {
 		return this.eventMaster;
 	}
 
+	// for test visualizes there is a public access to the object master
+	public ObjectMaster getObjectMaster() {
+		return this.objectMaster;
+	}
 	
 	public SimulationObject createSimulationObject(
 			SimulationObjectType simulationObjectType, long objectID) {
