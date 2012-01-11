@@ -34,6 +34,22 @@ public class AttributeCalculatorMatrix {
 	}
 
 	/**
+	 * This method sets all attribute calculation functions (its numbers) at one time
+	 * We assume that the quantity of array entries is equal to the quantity of matrix elements.
+	 * @param functions
+	 *            the function to set
+	 */
+	public void setFunctions( int functions[]) {
+		this.functions = functions;
+	}
+	
+	/**
+	 * This method sets an attribute calculation function (its number)
+	 *  for one row and one column of the matrix
+	 * @param row
+	 * 			the row of the attribute calculation matrix
+	 * @param column
+	 * 			the column of the attribute calculation matrix
 	 * @param function
 	 *            the function to set
 	 */
@@ -50,6 +66,16 @@ public class AttributeCalculatorMatrix {
 		return shares[matrixIndex];
 	}
 
+	/**
+	 * This method sets all shares of the calculation matrix  at one time
+	 * We assume that the quantity of array entries is equal to the quantity of matrix elements.
+	 * @param shares
+	 *            the shares to set
+	 */
+	public void setShares( float shares[]) {
+		this.shares = shares;
+	}
+	
 	/**
 	 * @param share
 	 *            the share to set
