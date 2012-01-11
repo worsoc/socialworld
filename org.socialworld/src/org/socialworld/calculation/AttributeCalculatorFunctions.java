@@ -45,12 +45,12 @@ public class AttributeCalculatorFunctions {
 		// !!! the order of creation and adding must be conform to the order of enumeration AttributeCalculatorFunctionTableType
 		// because the function array index has to match to the int value that belongs to the AttributeCalculatorFunctionTableType
 
-		// add identical function 
-		function = new AttributeCalculatorFunctionTable(AttributeCalculatorFunctionTableType.identical);
+		// add horizontal_min function 
+		function = new AttributeCalculatorFunctionTable(AttributeCalculatorFunctionTableType.horizontal_min);
 		functions.add(function);
 
-		// add positive_raise function 
-		function = new AttributeCalculatorFunctionTable(AttributeCalculatorFunctionTableType.positive_raise);
+		// add identical function 
+		function = new AttributeCalculatorFunctionTable(AttributeCalculatorFunctionTableType.identical);
 		functions.add(function);
 
 		// add negative_raise function 
@@ -73,13 +73,13 @@ public class AttributeCalculatorFunctions {
 		function = new AttributeCalculatorFunctionTable(AttributeCalculatorFunctionTableType.u_mirrored);
 		functions.add(function);
 
-		// add horizontal_min function 
-		function = new AttributeCalculatorFunctionTable(AttributeCalculatorFunctionTableType.horizontal_min);
-		functions.add(function);
-		
 		// add horizontal_max function 
 		function = new AttributeCalculatorFunctionTable(AttributeCalculatorFunctionTableType.horizontal_max);
 		functions.add(function);
-		
+
+		// add positive_raise function 
+		function = new AttributeCalculatorFunctionTable(AttributeCalculatorFunctionTableType.positive_raise);
+		functions.add(function);
+
 	}
 }

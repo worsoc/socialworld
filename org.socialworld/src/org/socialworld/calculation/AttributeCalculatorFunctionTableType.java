@@ -2,8 +2,8 @@ package org.socialworld.calculation;
 
 
 public enum AttributeCalculatorFunctionTableType {
-	identical(0), positive_raise(1), negative_raise(2), 
-	v(3), v_mirrored(4), u(5), u_mirrored(6), horizontal_min(7), horizontal_max(8);
+	horizontal_min(0), identical(1), negative_raise(2), 
+	v(3), v_mirrored(4), u(5), u_mirrored(6), horizontal_max(7), positive_raise(8);
 	
 	/**
 	 * The constant holds the informations how many attributes are simulated.
