@@ -21,6 +21,7 @@ public class AttributeCalculatorMatrix {
 	private byte offsets[];
 	private CalculationInputType inputTypes[];
 	
+
 	public AttributeCalculatorMatrix() {
 
 	}
@@ -117,5 +118,9 @@ public class AttributeCalculatorMatrix {
 	public void setInputType(int row, int column, CalculationInputType inputType) {
 		int matrixIndex = row * Attribute.NUMBER_OF_ATTRIBUTES + column;
 		this.inputTypes[matrixIndex] = inputType;
-	}	
+	}
+	
+	public boolean isWithOffset() {
+		return this.offsets.length > 0;
+	}
 }
