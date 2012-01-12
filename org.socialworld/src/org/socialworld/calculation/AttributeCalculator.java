@@ -170,8 +170,90 @@ public class AttributeCalculator extends Semaphore{
 	}
 
 	/**
+	 * The method sets a simple attribute calculation matrix (without offsets and input type Attribute)
+	 *  to an instance variable and starts a simple calculation.
+	 *  The calculation of attributes only depends on 
+	 *  - the current attribute values( a function on the current value) and
+	 *  - shares
+	 * Both is given by the matrix parameter
+	 *  There is only one calculation run.
+	 * 
+	 * @param matrix
+	 *            the informations how the attributes influence each other.
+	 * @param user
+	 * @return  SemaphoreReturnCode           
+	 */
+	public SemaphoreReturnCode refreshAttributes(
+			AttributeCalculatorMatrix matrix, Object user) {
+		if (this.locker == user) {
+			this.matrix = matrix;
+			calculateAttributesSimply();
+			return SemaphoreReturnCode.success;
+		}
+		if (this.locker == null)
+			return SemaphoreReturnCode.notLockedByAnyone;
+		return SemaphoreReturnCode.lockedByAnotherUser;
+	}
+
+	/**
+	 * The method calculates the attribute changes on a simple way..
+	 *  The attribute calculation only uses shares and functions on attributes.
+	 *  The function's input values are the current attribute values.
+	 * 
+	 * @return true if the calculation is not finished and false if the
+	 *         calculation stops.
+	 */
+	private void calculateAttributesSimply() {
+
+		int 	column;
+		int		row;
+
+		byte 	attributeValue;
+		
+		int 	functionIndex;
+		float 	share;
+
+		AttributeCalculatorFunction function;
+
+		float change;
+
+		for (row = 0; row < this.numberOfAttributes; row++) {
+
+			attributeValue 			= this.attributes.get(row);
+
+			for (column = 0; column < this.numberOfAttributes; column++) {
+
+				functionIndex = this.matrix.getFunction(row, column);
+				share = this.matrix.getShare(row, column);
+				function = AttributeCalculatorFunctions.get(functionIndex);
+
+				change = share * function.calculate(attributeValue);
+
+				if (change != 0)
+					attributesNew[column] += change;
+
+			}
+		}
+
+		// rounding the attribute values to integer values
+		// writing them from help array to main array
+		for (row = 0; row < this.numberOfAttributes; row++) {
+			this.attributes.set(row, (byte) (attributesNew[row] + 0.5));
+		}
+
+		// clearing the help array
+		clearAttributes();
+
+	}
+	
+	/**
 	 * The method sets the attribute calculation matrix to an instance variable
 	 * and starts the calculation.
+	 *  The attribute calculation may use shares , functions on attributes and offsets.
+	 *  The function's input values are 
+	 *  - the current attribute values,
+	 *  - the last attribute value or 
+	 *  - the difference between current and last attribute value.
 	 * 
 	 * @param matrix
 	 *            the informations how the attributes influence each other.
@@ -182,7 +264,10 @@ public class AttributeCalculator extends Semaphore{
 			AttributeCalculatorMatrix matrix, Object user) {
 		if (this.locker == user) {
 			this.matrix = matrix;
-			calculateAttributes();
+			if (this.matrix.isWithOffset() )
+				calculateAttributesByMatrixWithOffset();
+			else 
+				calculateAttributesByMatrix();
 			return SemaphoreReturnCode.success;
 		}
 		if (this.locker == null)
@@ -194,11 +279,80 @@ public class AttributeCalculator extends Semaphore{
 	/**
 	 * The method calculates the attribute changes. For every matrix element the
 	 * influence is evaluated and the change is set to the influenced attribute.
+	 * The calculation is described by a matrix that holds, shares and functions.
+	 * Furthermore an input type defines whether the input value is
+	 * - the current attribute value,
+	 * - the difference to the last attribute value or
+	 * - the last attribute value
 	 * 
 	 * @return true if the calculation is not finished and false if the
 	 *         calculation stops.
 	 */
-	private boolean calculateAttributes() {
+	private boolean calculateAttributesByMatrix() {
+
+		int 	column;
+		int		row;
+
+		byte 	attributeValue;
+		byte 	attributeChangeValue;
+		
+		byte 	inputValue;
+		int 	functionIndex;
+		float 	share;
+
+		AttributeCalculatorFunction function;
+		CalculationInputType 		inputType;
+
+		float change;
+
+		for (row = 0; row < this.numberOfAttributes; row++) {
+
+			attributeValue 			= this.attributes.get(row);
+			attributeChangeValue 	= this.attributes.getDifference(row);
+
+			for (column = 0; column < this.numberOfAttributes; column++) {
+
+				functionIndex = this.matrix.getFunction(row, column);
+				inputType = this.matrix.getInputType(row, column);
+				share = this.matrix.getShare(row, column);
+
+				function = AttributeCalculatorFunctions.get(functionIndex);
+				inputValue = getInputValue(inputType, attributeValue, attributeChangeValue);
+
+				change = share * function.calculate(inputValue);
+
+				if (change != 0)
+					attributesNew[column] += change;
+
+			}
+		}
+
+		// rounding the attribute values to integer values
+		// writing them from help array to main array
+		for (row = 0; row < this.numberOfAttributes; row++) {
+			this.attributes.set(row, (byte) (attributesNew[row] + 0.5));
+		}
+
+		// clearing the help array
+		clearAttributes();
+
+		return true;
+
+	}
+
+	/**
+	 * The method calculates the attribute changes. For every matrix element the
+	 * influence is evaluated and the change is set to the influenced attribute.
+	 * The calculation is described by a matrix that holds, shares, functions and offsets.
+	 * Furthermore an input type defines whether the input value is
+	 * - the current attribute value,
+	 * - the difference to the last attribute value or
+	 * - the last attribute value
+	 * 
+	 * @return true if the calculation is not finished and false if the
+	 *         calculation stops.
+	 */
+	private boolean calculateAttributesByMatrixWithOffset() {
 
 		int 	column;
 		int		row;
