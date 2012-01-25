@@ -33,17 +33,25 @@ public class ActionCreator extends Semaphore {
 			Event event,
 			Object user) {
 		
-		EventReactionDescription eventReactionDescription;
-		int eventType;
-		int eventReactionType;
+		if (this.locker == user) {
+			EventReactionDescription eventReactionDescription;
+			int eventType;
+			int eventReactionType;
+			
+			eventType = event.getEventType();
+			eventReactionType = actor.getReactionType(eventType);
+
+			eventReactionDescription = 
+				EventReactionAssignment.getInstance().getEventReactionDescription(
+					eventType, eventReactionType	);
+			
+			return SemaphoreReturnCode.success;
+		}
+		if (this.locker == null)
+			return SemaphoreReturnCode.notLockedByAnyone;
+		return SemaphoreReturnCode.lockedByAnotherUser;
 		
-		eventType = event.getEventType();
-		eventReactionType = actor.getReactionType(eventType);
+		
 
-		eventReactionDescription = 
-			EventReactionAssignment.getInstance().getEventReactionDescription(
-				eventType, eventReactionType	);
-
-		return SemaphoreReturnCode.success;
 	}
 }
