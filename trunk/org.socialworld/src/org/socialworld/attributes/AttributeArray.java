@@ -30,6 +30,15 @@ public class AttributeArray {
 		differences = new byte[numberOfAttributes];
 	}
 
+	public AttributeArray(byte[] array) {
+		numberOfAttributes = Attribute.NUMBER_OF_ATTRIBUTES;
+		attributes 	= new byte[numberOfAttributes];
+		differences = new byte[numberOfAttributes];
+		if (array.length == numberOfAttributes ) {
+			attributes = array;
+			for (byte i = 0; i < numberOfAttributes; i++ ) differences[i] = 0;
+		}
+	}
 	/**
 	 * The method sets an attribute value. The attribute is addressed by the
 	 * attribute index.
