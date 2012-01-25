@@ -20,14 +20,27 @@ public class AttributeCalculatorMatrixPool {
 		initialize();
 	}
 	
-	public AttributeCalculatorMatrixPool getInstance() {
+	public static AttributeCalculatorMatrixPool getInstance() {
 		if (instance == null) {
 			instance = new AttributeCalculatorMatrixPool();
 		}
 		return instance;
 	}
 	
+	public AttributeCalculatorMatrix getMatrix(int index) {
+		if (matrixs.size() >= index) 
+			return matrixs.get(index);
+		else {
+			matrixs.add(createMatrix());
+			return matrixs.get(matrixs.size());
+		}
+	}
+	
 	private void initialize() {
+		matrixs.add(createMatrix());
+		matrixs.add(createMatrix());
+		matrixs.add(createMatrix());
+		matrixs.add(createMatrix());
 		matrixs.add(createMatrix());
 	}
 	
@@ -67,9 +80,18 @@ public class AttributeCalculatorMatrixPool {
 		int count = matrixs.size();
 		
 		switch (count) {
-		case 1: functions = functions2;
-		case 2: functions = functions3;
-		default: functions = functions1;
+		case 1:
+			functions = functions2;
+			logger.debug("getFunctionArray() returns functions2");
+			break;
+		case 2:
+			functions = functions3;
+			logger.debug("getFunctionArray() returns functions3");
+			break;
+		default: 
+			functions = functions1;
+			logger.debug("getFunctionArray() returns functions1");
+			break;
 		}
 		return functions;
 	}
@@ -85,30 +107,41 @@ public class AttributeCalculatorMatrixPool {
 				   (float)0.03, (float) 0.03, (float) 0.03, (float) 0.03, (float) 0.03, (float) 0.79, (float) 0.03, (float) 0.03,
 				   (float)0.05, (float) 0.00, (float) 0.05, (float) 0.05, (float) 0.00, (float) 0.00, (float) 0.79, (float) 0.06,
 				   (float)0.08, (float) 0.00, (float) 0.00, (float) 0.05, (float) 0.00, (float) 0.08, (float) 0.00, (float) 0.79};
+	 	// just for test
 		float[] shares2 =
-				  {(float)0.79, (float) 0.03, (float) 0.02, (float) 0.00, (float) 0.05, (float) 0.04, (float) 0.02, (float) 0.05,
+				  {(float)0.79, (float) 0.03, (float) 0.03, (float) 0.00, (float) 0.04, (float) 0.03, (float) 0.04, (float) 0.04,
 				   (float)0.03, (float) 0.79, (float) 0.03, (float) 0.03, (float) 0.03, (float) 0.03, (float) 0.03, (float) 0.03,
-				   (float)0.05, (float) 0.00, (float) 0.79, (float) 0.05, (float) 0.00, (float) 0.00, (float) 0.05, (float) 0.06,
-				   (float)0.03, (float) 0.00, (float) 0.06, (float) 0.79, (float) 0.00, (float) 0.00, (float) 0.07, (float) 0.05,
-				   (float)0.07, (float) 0.02, (float) 0.00, (float) 0.02, (float) 0.79, (float) 0.03, (float) 0.00, (float) 0.07,
+				   (float)0.04, (float) 0.00, (float) 0.79, (float) 0.06, (float) 0.00, (float) 0.00, (float) 0.04, (float) 0.07,
+				   (float)0.05, (float) 0.00, (float) 0.06, (float) 0.79, (float) 0.00, (float) 0.00, (float) 0.05, (float) 0.05,
+				   (float)0.05, (float) 0.04, (float) 0.00, (float) 0.04, (float) 0.79, (float) 0.04, (float) 0.00, (float) 0.04,
 				   (float)0.03, (float) 0.03, (float) 0.03, (float) 0.03, (float) 0.03, (float) 0.79, (float) 0.03, (float) 0.03,
 				   (float)0.05, (float) 0.00, (float) 0.05, (float) 0.05, (float) 0.00, (float) 0.00, (float) 0.79, (float) 0.06,
-				   (float)0.08, (float) 0.00, (float) 0.00, (float) 0.05, (float) 0.00, (float) 0.08, (float) 0.00, (float) 0.79};
+				   (float)0.07, (float) 0.00, (float) 0.00, (float) 0.07, (float) 0.00, (float) 0.07, (float) 0.00, (float) 0.79};
+	 	// just for test
 		float[] shares3 =
-				  {(float)0.79, (float) 0.03, (float) 0.02, (float) 0.00, (float) 0.05, (float) 0.04, (float) 0.02, (float) 0.05,
-				   (float)0.03, (float) 0.79, (float) 0.03, (float) 0.03, (float) 0.03, (float) 0.03, (float) 0.03, (float) 0.03,
-				   (float)0.05, (float) 0.00, (float) 0.79, (float) 0.05, (float) 0.00, (float) 0.00, (float) 0.05, (float) 0.06,
-				   (float)0.03, (float) 0.00, (float) 0.06, (float) 0.79, (float) 0.00, (float) 0.00, (float) 0.07, (float) 0.05,
-				   (float)0.07, (float) 0.02, (float) 0.00, (float) 0.02, (float) 0.79, (float) 0.03, (float) 0.00, (float) 0.07,
-				   (float)0.03, (float) 0.03, (float) 0.03, (float) 0.03, (float) 0.03, (float) 0.79, (float) 0.03, (float) 0.03,
-				   (float)0.05, (float) 0.00, (float) 0.05, (float) 0.05, (float) 0.00, (float) 0.00, (float) 0.79, (float) 0.06,
-				   (float)0.08, (float) 0.00, (float) 0.00, (float) 0.05, (float) 0.00, (float) 0.08, (float) 0.00, (float) 0.79};
+				  {(float)0.79, (float) 0.01, (float) 0.02, (float) 0.00, (float) 0.03, (float) 0.04, (float) 0.06, (float) 0.05,
+				   (float)0.00, (float) 0.79, (float) 0.01, (float) 0.02, (float) 0.03, (float) 0.04, (float) 0.05, (float) 0.06,
+				   (float)0.01, (float) 0.00, (float) 0.79, (float) 0.03, (float) 0.02, (float) 0.04, (float) 0.05, (float) 0.06,
+				   (float)0.03, (float) 0.01, (float) 0.06, (float) 0.79, (float) 0.00, (float) 0.02, (float) 0.04, (float) 0.05,
+				   (float)0.05, (float) 0.06, (float) 0.04, (float) 0.02, (float) 0.79, (float) 0.03, (float) 0.00, (float) 0.01,
+				   (float)0.00, (float) 0.01, (float) 0.02, (float) 0.03, (float) 0.04, (float) 0.79, (float) 0.05, (float) 0.06,
+				   (float)0.01, (float) 0.00, (float) 0.02, (float) 0.05, (float) 0.03, (float) 0.04, (float) 0.79, (float) 0.06,
+				   (float)0.06, (float) 0.05, (float) 0.04, (float) 0.03, (float) 0.02, (float) 0.01, (float) 0.00, (float) 0.79};
 		int count = matrixs.size();
 		
 		switch (count) {
-		case 1: shares = shares2;
-		case 2: shares = shares3;
-		default: shares = shares1;
+		case 1: 
+			shares = shares2;
+			logger.debug("getShareArray() returns shares2");
+			break;
+		case 2: 
+			shares = shares3;
+			logger.debug("getShareArray() returns shares3");
+			break;
+		default: 
+			shares = shares1;
+			logger.debug("getShareArray() returns shares1");
+			break;
 		}
 		return shares;
 	}
