@@ -1,6 +1,5 @@
 package org.socialworld.simpleclient.actions;
 
-import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.IAction;
