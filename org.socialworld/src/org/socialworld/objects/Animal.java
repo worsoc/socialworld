@@ -13,6 +13,7 @@ import org.socialworld.core.ActionCreator;
 import org.socialworld.core.Event;
 import org.socialworld.core.SemaphoreReturnCode;
 import org.socialworld.calculation.AttributeCalculator;
+import org.socialworld.calculation.AttributeCalculatorMatrix;
 import org.socialworld.calculation.EventInfluenceDescription;
 import org.socialworld.calculation.EventInfluenceAssignment;
 
@@ -29,6 +30,8 @@ public class Animal extends SimulationObject {
 
 	protected AttributeArray attributes;
 
+	protected AttributeCalculatorMatrix attributeCalculatorMatrix;
+	
 	public Animal() {
 		super();
 	}
@@ -41,6 +44,17 @@ public class Animal extends SimulationObject {
 		attributes.set(attributeName, attributeValue);
 	}
 
+	public void setAttributes(AttributeArray array) {
+		attributes = array;
+	}
+	
+	public void setMatrix(AttributeCalculatorMatrix matrix) {
+		attributeCalculatorMatrix  = matrix;
+	}
+	
+	public AttributeCalculatorMatrix getMatrix() {
+		return attributeCalculatorMatrix;
+	}
 	/**
 	 * Depending on the action type the method calls the according procedure
 	 * with special implementation of the action.
