@@ -69,6 +69,23 @@
                toolbarPath="mainGroup"
                tooltip="Add a human object to the human list.">
          </action>
+         <action
+               class="org.socialworld.simpleclient.actions.KillHumanAction"
+               id="org.socialworld.simpleclient.KillHuman"
+               label="&amp;Kill Human"
+               menubarPath="SimulationMenu/mainGroup"
+               style="push"
+               tooltip="removes a human objectfrom the human list.">
+         </action>
+         <action
+               class="org.socialworld.simpleclient.actions.ReleaseEventAction"
+               id="org.socialworld.simpleclient.releaseEvent"
+               label="&amp;Release Event"
+               menubarPath="SimulationMenu/mainGroup"
+               style="push"
+               toolbarPath="mainGroup"
+               tooltip="release an event">
+         </action>
       </actionSet>
    </extension>
 
