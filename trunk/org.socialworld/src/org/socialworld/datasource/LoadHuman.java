@@ -5,6 +5,7 @@ package org.socialworld.datasource;
 
 import org.socialworld.objects.*;
 import org.socialworld.datasource.LoadSimulationObjects;
+import org.socialworld.datasource.AttributeCalculatorMatrixPool;
 
 /**
  * Because of being a singleton there exists
@@ -48,7 +49,21 @@ public class LoadHuman extends LoadSimulationObjects {
 	public Human getObject(long objectID) {
 		
 		Human createdHuman = new Human();
+		if (objectID == 0) {
+			createdHuman.setMatrix(	
+					AttributeCalculatorMatrixPool.getInstance().getMatrix(mapObjectIDtoMatrixIndex(objectID)));
+			createdHuman.setAttributes(
+					AttributeArrayPool.getInstance().getArray(mapObjectIDtoAttributesIndex(objectID)));
+		}
 		return createdHuman;
+	}
+
+	private int mapObjectIDtoMatrixIndex(long objectID) {
+		return (int) objectID;
+	}
+
+	private int mapObjectIDtoAttributesIndex(long objectID) {
+		return (int) objectID;
 	}
 
 }
