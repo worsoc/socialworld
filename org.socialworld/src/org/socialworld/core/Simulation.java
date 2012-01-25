@@ -46,9 +46,9 @@ public class Simulation {
 		// objectID = 0 because there aren't any objects
 		// all objects must be created for testing the simulation
 		// until now there is no data source for simulation objects
-		this.objectMaster.createSimulationObject(SimulationObjectType.human, 0);
-		this.objectMaster.createSimulationObject(SimulationObjectType.human, 0);
-		this.objectMaster.createSimulationObject(SimulationObjectType.human, 0);
+		//this.objectMaster.createSimulationObject(SimulationObjectType.human, 0);
+		//this.objectMaster.createSimulationObject(SimulationObjectType.human, 0);
+		//this.objectMaster.createSimulationObject(SimulationObjectType.human, 0);
 		
 	}
 	

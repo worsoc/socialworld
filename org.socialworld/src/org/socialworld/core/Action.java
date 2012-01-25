@@ -46,7 +46,7 @@ public class Action extends AbstractAction {
 	}
 	
 	/**
-	 * The methods decrements the attribute remainedDuration. That means, an
+	 * The method decrements the attribute remainedDuration. That means, an
 	 * action needs less time to complete.
 	 * 
 	 * @param decrement
@@ -56,7 +56,7 @@ public class Action extends AbstractAction {
 	}
 
 	/**
-	 * The methods increments the attribute remainedDuration. That means, an
+	 * The method increments the attribute remainedDuration. That means, an
 	 * action needs more time to complete.
 	 * 
 	 * @param increment
