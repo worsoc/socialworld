@@ -1,13 +1,16 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Socialworld
-Bundle-SymbolicName: org.socialworld
+Bundle-SymbolicName: org.socialworld;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-ClassPath: socialworld.jar
 Export-Package: 
  org.socialworld,
+ org.socialworld.attributes,
+ org.socialworld.calculation,
  org.socialworld.core;uses:="org.socialworld.attributes,org.socialworld.objects",
  org.socialworld.core.test;uses:="junit.framework",
+ org.socialworld.datasource,
  org.socialworld.objects;uses:="org.socialworld.attributes,org.socialworld,org.socialworld.core"
 Eclipse-LazyStart: true
 Require-Bundle: org.socialworld.tools,
