@@ -55,8 +55,9 @@ public class View extends ViewPart {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
-		 *      java.lang.Object, java.lang.Object)
+		 * @see
+		 * org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse
+		 * .jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 		 */
 		public void inputChanged(final Viewer viewer, final Object oldInput,
 				final Object newInput) {
@@ -77,7 +78,9 @@ public class View extends ViewPart {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
+		 * @see
+		 * org.eclipse.jface.viewers.IStructuredContentProvider#getElements(
+		 * java.lang.Object)
 		 */
 		@SuppressWarnings("unchecked")
 		public Object[] getElements(final Object inputElement) {
@@ -103,7 +106,15 @@ public class View extends ViewPart {
 		public String getColumnText(final Object obj, final int index) {
 			if (obj instanceof Human) {
 				final Human human = (Human) obj;
-				return human.toString();
+				switch (index) {
+				case 0:
+					return human.toString();
+				case 1:
+					return "Position";
+				default:
+					return "IRGENDWAS";
+				}
+
 			}
 			return "---";
 		}
@@ -123,17 +134,24 @@ public class View extends ViewPart {
 		final Table table = this.viewer.getTable();
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
-		final TableColumn column = new TableColumn(table, SWT.BORDER);
-		column.setText("Name");
-		column.setWidth(100);
+		final TableColumn columnName = new TableColumn(table, SWT.BORDER);
+		columnName.setText("Name");
+		columnName.setWidth(100);
+		final TableColumn columnPosition = new TableColumn(table, SWT.BORDER);
+		columnPosition.setText("Position");
+		columnPosition.setWidth(100);
+		final TableColumn columnIrgendwas = new TableColumn(table, SWT.BORDER);
+		columnIrgendwas.setText("Irgendwas");
+		columnIrgendwas.setWidth(100);
 
 		logger.debug("get simulation object");
 
 		this.viewer.setContentProvider(new ViewContentProvider());
 		this.viewer.setLabelProvider(new ViewLabelProvider());
-		
+
 		Simulation simulation = SocialWorld.getCurrent().getSimulation();
-		// only for test visualize we use an public access to simulation's object master
+		// only for test visualize we use an public access to simulation's
+		// object master
 		final List<Human> humans = simulation.getObjectMaster().getHumans();
 
 		logger.debug("Set input to viewer: " + humans);
