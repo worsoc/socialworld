@@ -73,6 +73,12 @@ public class AttributeCalculator extends Semaphore{
 		}
 		return calculator;
 	}
+	
+	public synchronized void calculateAll(String input, String object) {
+		synchronized (this) {
+			// Berechne
+		}
+	}
 
 
 	/**
