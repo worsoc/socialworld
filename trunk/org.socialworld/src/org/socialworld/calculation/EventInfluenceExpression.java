@@ -49,7 +49,7 @@ public class EventInfluenceExpression {
 	public byte evaluateExpression(AttributeArray attributeArray,
 			int targetAttributeIndex) {
 		double result;
-		byte operandValue;
+		int operandValue;
 		boolean conditionIsTrue = false;
 
 		switch (this.function) {

@@ -42,18 +42,18 @@ public class AttributeArrayPool {
 	}
 	
 	private AttributeArray createArray() {
-		byte[] array;
+		int[] array;
 		array = getArray();
 		AttributeArray attributes = new AttributeArray(array);
 		
 		return attributes;
 	}
 	
-	private byte[] getArray() {
-		byte[] array;
-		byte[] array1 = {50,50,50,50,50,50,50,50};
-		byte[] array2 = {40,60,30,50,60,50,30,70};
-		byte[] array3 = {40,42,44,46,50,54,56,58};
+	private int[] getArray() {
+		int[] array;
+		int[] array1 = {50,50,50,50,50,50,50,50};
+		int[] array2 = {40,60,30,50,60,50,30,70};
+		int[] array3 = {40,42,44,46,50,54,56,58};
 		
 		int count = attributes.size();
 		

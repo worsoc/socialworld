@@ -17,9 +17,9 @@ public class AttributeCalculatorFunctionTable extends
 		AttributeCalculatorFunction {
 
 	private AttributeCalculatorFunctionTableType acftType;
-	private byte values[];
+	private int values[];
 
-	private byte range = Attribute.ATTRIBUTE_RANGE;
+	private int range = Attribute.ATTRIBUTE_RANGE;
 
 	public AttributeCalculatorFunctionTable(AttributeCalculatorFunctionTableType type) {
 		acftType = type;
@@ -32,7 +32,7 @@ public class AttributeCalculatorFunctionTable extends
 	 * understood as the index of a table and table's value at the index is the
 	 * function value.
 	 */
-	public byte calculate(byte inputValue) {
+	public int calculate(int inputValue) {
 		int result;
 
 		if (inputValue > range)
@@ -58,38 +58,38 @@ public class AttributeCalculatorFunctionTable extends
 			result = range;
 		if (result < 0)
 			result = 0;
-		return (byte) result;
+		return (int) result;
 	}
 	
 	private void initialize() {
 		switch (acftType) {
 		case negative_raise:
-			values = new byte[range + 1];
-		    for(byte i=0; i < range; i++)
-		    	values[i] =  (byte) (range - i);  
+			values = new int[range + 1];
+		    for(int i=0; i < range; i++)
+		    	values[i] =   (range - i);  
 			break;
 		case v:
-			values = new byte[range + 1];
-		    for(byte i=0; i <= range/2; i++)
-		    	values[i] =  (byte) (range - 2 * i);  
-		    for(byte i=(byte)(range/2 + 1); i <= range; i++)
-		    	values[i] =  (byte) ( 2 * i - range);  
+			values = new int[range + 1];
+		    for(int i=0; i <= range/2; i++)
+		    	values[i] =   (range - 2 * i);  
+		    for(int i=(int)(range/2 + 1); i <= range; i++)
+		    	values[i] =   ( 2 * i - range);  
 			break;
 		case v_mirrored:
-			values = new byte[range + 1];
-		    for(byte i=0; i <= range/2; i++)
-		    	values[i] =  (byte) (2 * i);  
-		    for(byte i=(byte)(range/2 + 1); i <= range; i++)
-		    	values[i] =  (byte) (2 * (range - i) );  
+			values = new int[range + 1];
+		    for(int i=0; i <= range/2; i++)
+		    	values[i] =   (2 * i);  
+		    for(int i=(int)(range/2 + 1); i <= range; i++)
+		    	values[i] =   (2 * (range - i) );  
 			break;
 		case u:
-			values = new byte[range + 1];
+			values = new int[range + 1];
 			values[0] = 99; values[1] = 89; values[2] = 80; values[3] = 71; values[4] = 63;
 			values[5] = 55; values[6] = 48; values[7] = 41; values[8] = 35; values[9] = 29;
 			values[10] = 24; values[11] = 19; values[12] = 15; values[13] = 11; values[14] = 8;
 			values[15] = 5; values[16] = 3; values[17] = 1; 
 
-		    for(byte i=18; i <= 81; i++)
+		    for(int i=18; i <= 81; i++)
 		    	values[i] =  0;  
 			
 			values[99] = 99; values[98] = 89; values[97] = 80; values[96] = 71; values[95] = 63;
@@ -99,13 +99,13 @@ public class AttributeCalculatorFunctionTable extends
 
 			break;
 		case u_mirrored:
-			values = new byte[range + 1];
+			values = new int[range + 1];
 			values[0] = 0; values[1] = 10; values[2] = 19; values[3] = 28; values[4] = 36;
 			values[5] = 44; values[6] = 51; values[7] = 58; values[8] = 64; values[9] = 70;
 			values[10] = 75; values[11] = 80; values[12] = 84; values[13] = 88; values[14] = 91;
 			values[15] = 94; values[16] = 96; values[17] = 98; 
 
-		    for(byte i=18; i <= 81; i++)
+		    for(int i=18; i <= 81; i++)
 		    	values[i] =  range;  
 			
 			values[99] = 0; values[98] = 10; values[97] = 19; values[96] = 28; values[95] = 36;

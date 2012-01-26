@@ -17,26 +17,26 @@ public class AttributeArray {
 	/**
 	 * an array for every attribute value.
 	 */
-	private byte attributes[];
+	private int attributes[];
 
 	/**
 	 * an array for every attribute's value change.
 	 */
-	private byte differences[];
+	private int differences[];
 	                         
 	public AttributeArray() {
 		numberOfAttributes = Attribute.NUMBER_OF_ATTRIBUTES;
-		attributes 	= new byte[numberOfAttributes];
-		differences = new byte[numberOfAttributes];
+		attributes 	= new int[numberOfAttributes];
+		differences = new int[numberOfAttributes];
 	}
 
-	public AttributeArray(byte[] array) {
+	public AttributeArray(int[] array) {
 		numberOfAttributes = Attribute.NUMBER_OF_ATTRIBUTES;
-		attributes 	= new byte[numberOfAttributes];
-		differences = new byte[numberOfAttributes];
+		attributes 	= new int[numberOfAttributes];
+		differences = new int[numberOfAttributes];
 		if (array.length == numberOfAttributes ) {
 			attributes = array;
-			for (byte i = 0; i < numberOfAttributes; i++ ) differences[i] = 0;
+			for (int i = 0; i < numberOfAttributes; i++ ) differences[i] = 0;
 		}
 	}
 	/**
@@ -46,8 +46,8 @@ public class AttributeArray {
 	 * @param attributeIndex
 	 * @param attributeValue
 	 */
-	public void set(int attributeIndex, byte attributeValue) {
-		differences[attributeIndex] = (byte)(attributeValue - attributes[attributeIndex]);
+	public void set(int attributeIndex, int attributeValue) {
+		differences[attributeIndex] = (attributeValue - attributes[attributeIndex]);
 		attributes[attributeIndex] 	= attributeValue;
 	}
 
@@ -58,9 +58,9 @@ public class AttributeArray {
 	 * @param attributeName
 	 * @param attributeValue
 	 */
-	public void set(Attribute attributeName, byte attributeValue) {
+	public void set(Attribute attributeName, int attributeValue) {
 		int attributeIndex = attributeName.getIndex();
-		differences[attributeIndex] = (byte)(attributeValue - attributes[attributeIndex]);
+		differences[attributeIndex] = (attributeValue - attributes[attributeIndex]);
 		attributes[attributeIndex] = attributeValue;
 	}
 
@@ -72,7 +72,7 @@ public class AttributeArray {
 	 *            attribute array index
 	 * @return attribute value
 	 */
-	public byte get(int attibuteIndex) {
+	public int get(int attibuteIndex) {
 		return attributes[attibuteIndex];
 	}
 
@@ -85,7 +85,7 @@ public class AttributeArray {
 	 *            attribute array index
 	 * @return last attribute's value change 
 	 */
-	public byte getDifference(int attibuteIndex) {
+	public int getDifference(int attibuteIndex) {
 	return differences[attibuteIndex];
 	}
 }
