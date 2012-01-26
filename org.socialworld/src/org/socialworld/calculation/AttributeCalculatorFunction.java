@@ -27,5 +27,5 @@ package org.socialworld.calculation;
 	 * 				f(x)
 	 * 				the calculation result
 	 */
-	public abstract byte calculate(byte inputValue);
+	public abstract int calculate(int inputValue);
 }

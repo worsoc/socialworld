@@ -18,7 +18,7 @@ public class AttributeCalculatorMatrix {
 
 	private int functions[];
 	private float shares[];
-	private byte offsets[];
+	private int offsets[];
 	private CalculationInputType inputTypes[];
 	
 
@@ -89,7 +89,7 @@ public class AttributeCalculatorMatrix {
 	/**
 	 * @return the offset
 	 */
-	public byte getOffset(int row, int column) {
+	public int getOffset(int row, int column) {
 		int matrixIndex = row * Attribute.NUMBER_OF_ATTRIBUTES + column;
 		return offsets[matrixIndex];
 	}
@@ -98,7 +98,7 @@ public class AttributeCalculatorMatrix {
 	 * @param offset
 	 *            the offset to set
 	 */
-	public void setOffset(int row, int column, byte offset) {
+	public void setOffset(int row, int column, int offset) {
 		int matrixIndex = row * Attribute.NUMBER_OF_ATTRIBUTES + column;
 		this.offsets[matrixIndex] = offset;
 	}

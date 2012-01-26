@@ -214,7 +214,7 @@ public class AttributeCalculator extends Semaphore{
 		int 	column;
 		int		row;
 
-		byte 	attributeValue;
+		int 	attributeValue;
 		
 		int 	functionIndex;
 		float 	share;
@@ -244,7 +244,7 @@ public class AttributeCalculator extends Semaphore{
 		// rounding the attribute values to integer values
 		// writing them from help array to main array
 		for (row = 0; row < this.numberOfAttributes; row++) {
-			this.attributes.set(row, (byte) (attributesNew[row] + 0.5));
+			this.attributes.set(row, (int) (attributesNew[row] + 0.5));
 		}
 
 		// clearing the help array
@@ -299,10 +299,10 @@ public class AttributeCalculator extends Semaphore{
 		int 	column;
 		int		row;
 
-		byte 	attributeValue;
-		byte 	attributeChangeValue;
+		int 	attributeValue;
+		int 	attributeChangeValue;
 		
-		byte 	inputValue;
+		int 	inputValue;
 		int 	functionIndex;
 		float 	share;
 
@@ -336,7 +336,7 @@ public class AttributeCalculator extends Semaphore{
 		// rounding the attribute values to integer values
 		// writing them from help array to main array
 		for (row = 0; row < this.numberOfAttributes; row++) {
-			this.attributes.set(row, (byte) (attributesNew[row] + 0.5));
+			this.attributes.set(row, (int) (attributesNew[row] + 0.5));
 		}
 
 		// clearing the help array
@@ -363,12 +363,12 @@ public class AttributeCalculator extends Semaphore{
 		int 	column;
 		int		row;
 
-		byte 	attributeValue;
-		byte 	attributeChangeValue;
+		int 	attributeValue;
+		int 	attributeChangeValue;
 		
-		byte 	inputValue;
+		int 	inputValue;
 		int 	functionIndex;
-		byte 	offset;
+		int 	offset;
 		float 	share;
 
 		AttributeCalculatorFunction function;
@@ -402,7 +402,7 @@ public class AttributeCalculator extends Semaphore{
 		// rounding the attribute values to integer values
 		// writing them from help array to main array
 		for (row = 0; row < this.numberOfAttributes; row++) {
-			this.attributes.set(row, (byte) (attributesNew[row] + 0.5));
+			this.attributes.set(row, (int) (attributesNew[row] + 0.5));
 		}
 
 		// clearing the help array
@@ -442,15 +442,15 @@ public class AttributeCalculator extends Semaphore{
 
 	}
 
-	private byte getInputValue(CalculationInputType type, byte attributeValue,
-					byte attributeChangeValue) {
+	private int getInputValue(CalculationInputType type, int attributeValue,
+					int attributeChangeValue) {
 		switch (type) {
 		case NewAttributeValue:
 			return attributeValue;
 		case AttributeChange:
 			return attributeChangeValue;
 		case OldAttributeValue:
-			return (byte)(attributeValue - attributeChangeValue);
+			return (attributeValue - attributeChangeValue);
 		}
 		return 0;
 	}
