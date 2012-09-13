@@ -86,6 +86,15 @@
                toolbarPath="mainGroup"
                tooltip="release an event">
          </action>
+         <action
+               class="org.socialworld.simpleclient.actions.StopSimulationAction"
+               id="org.socialworld.simpleclient.stopSimulation.stopSimulationAction"
+               label="Stop simulation"
+               menubarPath="SimulationMenu/mainGroup"
+               style="push"
+               toolbarPath="mainGroup"
+               tooltip="stops thr simulation">
+         </action>
       </actionSet>
    </extension>
 
