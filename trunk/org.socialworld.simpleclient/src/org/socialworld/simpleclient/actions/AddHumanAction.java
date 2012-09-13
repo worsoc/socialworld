@@ -28,7 +28,7 @@ public class AddHumanAction implements IWorkbenchWindowActionDelegate {
 	public void run(IAction action) {
 		Human human;
 		Simulation simulation = SocialWorld.getCurrent().getSimulation();
-		// objectID = 0 meens that an new human is created
+		// objectID = 0 means that a new human is created
 		// it doesn't exist in any data source yet
 		human = (Human) simulation.createSimulationObject(SimulationObjectType.human, 0);
 		logger.debug("Added new human object to human list: " + human);
