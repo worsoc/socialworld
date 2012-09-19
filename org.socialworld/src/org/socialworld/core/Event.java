@@ -37,6 +37,8 @@ public class Event implements Comparable<Event> {
 	private float maxHear;
 	private float maxSmell;
 
+	public static final int MAX_EVENT_TYPE = 256;
+
 	/**
 	 * Constructor
 	 */
