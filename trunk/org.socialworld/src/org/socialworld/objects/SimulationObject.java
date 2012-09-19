@@ -29,7 +29,7 @@ public abstract class SimulationObject extends Model {
 	protected	int				influenceTypeByEventType[];
 	protected	int				reactionTypeByEventType[];
 
-	// STR_AttributeCalculatorMatrix* mSTRa_attributeCalculatorMatrix;
+	public static final int MAX_EVENT_INFLUENCE_TYPE = 256;
 
 	/**
 	 * The constructor creates an simulation object.
