@@ -1,5 +1,7 @@
 package org.socialworld.calculation;
 
+import org.socialworld.datasource.EventInfluenceDescriptionPool;
+
 
 public class EventInfluenceAssignment {
 
@@ -28,15 +30,15 @@ public class EventInfluenceAssignment {
 	 * The method gets back the description how the event effects to the object.
 	 * The description depends on the event type and the type of the influence to the object
 	 * 
-	 * @param eventTyp
+	 * @param eventType
 	 * @param influenceType	 
 	 * @return EventInfluenceDescription
 	 */
 	public EventInfluenceDescription getEventInfluenceDescription(
 			int eventType,	int influenceType) {
 		EventInfluenceDescription eventInfluenceDescription;
-		// TODO (tyloesand) eventInfluenceDescription mit Wert belegen 
-		eventInfluenceDescription= null;
+		eventInfluenceDescription = 
+			EventInfluenceDescriptionPool.getInstance().getDescription(eventType, influenceType);
 		return eventInfluenceDescription;
 	}
 }
