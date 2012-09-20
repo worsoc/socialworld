@@ -1,5 +1,7 @@
 package org.socialworld.calculation;
 
+import org.socialworld.datasource.EventReactionDescriptionPool;
+
 public class EventReactionAssignment {
 	private static EventReactionAssignment eventReactionAssignment;
 	
@@ -26,15 +28,15 @@ public class EventReactionAssignment {
 	 * The method gets back the description how an object reacts to the event.
 	 * The description depends on the event type and the object' reaction type.
 	 * 
-	 * @param eventTyp
-	 * @param influenceType	 
+	 * @param eventType
+	 * @param reactionType	 
 	 * @return EventReactionDescription
 	 */
 	public EventReactionDescription getEventReactionDescription(
 			int eventType,	int reactionType) {
 		EventReactionDescription eventReactionDescription;
-		// TODO (tyloesand) eventReactionDescription mit Wert belegen 
-		eventReactionDescription = null;
+		eventReactionDescription = 
+			EventReactionDescriptionPool.getInstance().getDescription(eventType, reactionType);
 		
 		return eventReactionDescription;
 	}
