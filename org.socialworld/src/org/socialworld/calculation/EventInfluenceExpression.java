@@ -20,12 +20,14 @@ import org.socialworld.attributes.AttributeArray;
 
  * @author Mathias Sikos (tyloesand)
  */
-public class EventInfluenceExpression {
-	ExpressionFunction function;
+public class EventInfluenceExpression extends Expression {
+/*	ExpressionFunction function;
 	ConditionOperator operator;
-	int attributeIndex;
-	double constant;
+	*/
+	int targetAttributeIndex;
+	double result;
 
+	/*
 	EventInfluenceExpression expressionForTrue;
 	EventInfluenceExpression expressionForFalse;
 
@@ -36,17 +38,50 @@ public class EventInfluenceExpression {
 	public void setFalseExpression(EventInfluenceExpression expressionForFalse) {
 		this.expressionForTrue = expressionForFalse;
 	}
+*/
+	
+	protected  void addition(AttributeArray attributeArray) {
+		result = attributeArray.get(targetAttributeIndex);
+		result += this.constant;
+	}
 
+	protected  void multiplication(AttributeArray attributeArray) {
+		result = attributeArray.get(targetAttributeIndex);
+		result *= this.constant;
+	}
+
+	protected  void replacement( ) {
+		result = this.constant;
+	}
+
+	protected  void defaultFunction(AttributeArray attributeArray) {
+		result = attributeArray.get(targetAttributeIndex);
+	}
+
+		
 	/**
-	 * The method evaluates the expression. If the expression is a comparison
-	 * the comparison is evaluated. If the comparison result is evaluated to
-	 * true the true-expression is called recursively. In other case the
-	 * false-expression is called recursively. If the expression is an addition,
-	 * a multiplication or a replacement the attribute value is changed by the
-	 * according operation. Finally it is checked that the result value is in
-	 * the attribute range.
+	 * The method evaluates the expression by calling the parent method evaluateFunction().
+	 * The method evaluateFunction() calls the implementation of calculation functions.
+	 * Finally the new attribute value is returned.
 	 */
 	public byte evaluateExpression(AttributeArray attributeArray,
+			int targetAttributeIndex) {
+		this.targetAttributeIndex = targetAttributeIndex;
+		
+		evaluateFunction(attributeArray);
+		
+		result += 0.5;
+
+		if (result > Attribute.ATTRIBUTE_RANGE)
+			return Attribute.ATTRIBUTE_RANGE;
+		if (result < 0)
+			return 0;
+		
+		return (byte) result;
+	}
+	
+/*	
+	public byte _evaluateExpression(AttributeArray attributeArray,
 			int targetAttributeIndex) {
 		double result;
 		int operandValue;
@@ -115,4 +150,5 @@ public class EventInfluenceExpression {
 
 		return (byte) result;
 	}
+	*/
 }
