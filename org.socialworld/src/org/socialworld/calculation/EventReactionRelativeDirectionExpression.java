@@ -2,30 +2,49 @@ package org.socialworld.calculation;
 
 import org.socialworld.attributes.AttributeArray;
 
+
 public class EventReactionRelativeDirectionExpression extends Expression {
 
+	Vector relativeDirection;
+	
+	Vector constant;
+	double scalar;
+	
+	Vector result;
+	
 	@Override
-	protected void addition(AttributeArray attributeArray) {
-		// TODO Auto-generated method stub
+	protected void addition( ) {
+		relativeDirection.add(constant);
+	}
+
+	@Override
+	protected void defaultFunction( ) {
+		result = relativeDirection;
 
 	}
 
 	@Override
-	protected void defaultFunction(AttributeArray attributeArray) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	protected void multiplication(AttributeArray attributeArray) {
-		// TODO Auto-generated method stub
+	protected void multiplication( ) {
+		relativeDirection.multiplicate(scalar);
 
 	}
 
 	@Override
 	protected void replacement() {
-		// TODO Auto-generated method stub
-
+		result = constant;
 	}
 
+	/**
+	 * The method evaluates the expression by calling the parent method evaluateFunction().
+	 * The method evaluateFunction() finally calculates the reactions's relativedirection 
+	 * by calling calculation methods.
+	 */
+	public Vector evaluateExpression(AttributeArray attributeArray, Vector relativeDirection) {
+		
+		this.relativeDirection = relativeDirection;
+		
+		evaluateFunction(attributeArray);
+		return result;
+	}	
+	
 }

@@ -24,6 +24,8 @@ public class EventInfluenceExpression extends Expression {
 /*	ExpressionFunction function;
 	ConditionOperator operator;
 	*/
+	
+	AttributeArray attributeArray;
 	int targetAttributeIndex;
 	double result;
 
@@ -40,13 +42,13 @@ public class EventInfluenceExpression extends Expression {
 	}
 */
 	
-	protected  void addition(AttributeArray attributeArray) {
-		result = attributeArray.get(targetAttributeIndex);
+	protected  void addition() {
+		result = this.attributeArray.get(targetAttributeIndex);
 		result += this.constant;
 	}
 
-	protected  void multiplication(AttributeArray attributeArray) {
-		result = attributeArray.get(targetAttributeIndex);
+	protected  void multiplication() {
+		result = this.attributeArray.get(targetAttributeIndex);
 		result *= this.constant;
 	}
 
@@ -54,8 +56,8 @@ public class EventInfluenceExpression extends Expression {
 		result = this.constant;
 	}
 
-	protected  void defaultFunction(AttributeArray attributeArray) {
-		result = attributeArray.get(targetAttributeIndex);
+	protected  void defaultFunction() {
+		result = this.attributeArray.get(targetAttributeIndex);
 	}
 
 		
@@ -66,6 +68,7 @@ public class EventInfluenceExpression extends Expression {
 	 */
 	public byte evaluateExpression(AttributeArray attributeArray,
 			int targetAttributeIndex) {
+		this.attributeArray = attributeArray;
 		this.targetAttributeIndex = targetAttributeIndex;
 		
 		evaluateFunction(attributeArray);
