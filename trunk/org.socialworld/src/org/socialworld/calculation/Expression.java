@@ -33,10 +33,10 @@ public abstract class Expression {
 		this.expressionForTrue = expressionForFalse;
 	}
 
-	protected abstract void addition(AttributeArray attributeArray);
-	protected abstract void multiplication(AttributeArray attributeArray);
+	protected abstract void addition();
+	protected abstract void multiplication();
 	protected abstract void replacement();
-	protected abstract void defaultFunction(AttributeArray attributeArray);
+	protected abstract void defaultFunction();
 
 	/**
 	 * The method evaluates the expression function. 
@@ -89,16 +89,16 @@ public abstract class Expression {
 
 			break;
 		case addition:
-			addition(attributeArray);
+			addition();
 			break;
 		case multiplication:
-			multiplication(attributeArray);
+			multiplication();
 			break;
 		case replacement:
 			replacement();
 			break;
 		default:
-			defaultFunction(attributeArray);
+			defaultFunction();
 		}
 
 
