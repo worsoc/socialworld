@@ -2,30 +2,47 @@ package org.socialworld.calculation;
 
 import org.socialworld.attributes.AttributeArray;
 
+
 public class EventReactionDelayExpression extends Expression {
 
+	int delay;
+	
+	int constant;
+	int result;
+	
 	@Override
-	protected void addition(AttributeArray attributeArray) {
-		// TODO Auto-generated method stub
+	protected void addition( ) {
+		result = delay + constant;
+	}
+
+	@Override
+	protected void defaultFunction( ) {
+		result = delay;
 
 	}
 
 	@Override
-	protected void defaultFunction(AttributeArray attributeArray) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	protected void multiplication(AttributeArray attributeArray) {
-		// TODO Auto-generated method stub
+	protected void multiplication( ) {
+		result = delay * constant;
 
 	}
 
 	@Override
 	protected void replacement() {
-		// TODO Auto-generated method stub
+		result = constant;
 
 	}
 
+	/**
+	 * The method evaluates the expression by calling the parent method evaluateFunction().
+	 * The method evaluateFunction() finally calculates the reaction's delay
+	 * by calling the calculation methods.
+	 */
+	public int evaluateExpression(AttributeArray attributeArray, int delay) {
+		
+		this.delay = delay;
+		
+		evaluateFunction(attributeArray);
+		return result;
+	}
 }
