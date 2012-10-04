@@ -108,6 +108,31 @@ public class Vector {
 		return direction;
 	}
 
+	
+	/**
+	 * The method calculates the addition by a second vector.
+	 * 
+	 * @param xyz
+	 */
+	public void add (Vector xyz) {
+		this.x = this.x + xyz.getX();
+		this.y = this.y + xyz.getY();
+		this.z = this.z + xyz.getZ();
+		
+	}
+	/**
+	 * The method calculates the scalar multiplication.
+	 * 
+	 * @param scalar
+	 */
+	public void multiplicate (double scalar) {
+		this.x = this.x * scalar;
+		this.y = this.y * scalar;
+		this.z = this.z * scalar;
+		
+	}
+	
+	
 	@Override
 	public String toString() {
 		return "( " + this.x + ", " + this.y + ", " + this.z + " )";
