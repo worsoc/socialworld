@@ -48,6 +48,11 @@ public class Animal extends SimulationObject {
 		attributes = array;
 	}
 	
+	
+	public AttributeArray getAttributes() {
+		return attributes;
+	}
+	
 	public void setMatrix(AttributeCalculatorMatrix matrix) {
 		attributeCalculatorMatrix  = matrix;
 	}
