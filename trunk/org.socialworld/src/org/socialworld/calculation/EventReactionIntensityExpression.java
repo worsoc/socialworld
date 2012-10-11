@@ -45,4 +45,18 @@ public class EventReactionIntensityExpression extends Expression {
 		evaluateFunction(attributeArray);
 		return result;
 	}
+	
+	/**
+	 * The method evaluates the expression by calling the parent method evaluateFunction().
+	 * The method evaluateFunction() finally calculates the reaction's intensity
+	 * by calling the calculation methods.
+	 */
+	public double evaluateExpression(AttributeArray attributeArray) {
+		
+		this.intensity = 0;
+		
+		evaluateFunction(attributeArray);
+		return result;
+	}
+
 }

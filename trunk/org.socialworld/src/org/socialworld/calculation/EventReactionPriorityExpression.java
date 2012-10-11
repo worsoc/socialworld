@@ -45,4 +45,17 @@ public class EventReactionPriorityExpression extends Expression {
 		evaluateFunction(attributeArray);
 		return result;
 	}
+	
+	/**
+	 * The method evaluates the expression by calling the parent method evaluateFunction().
+	 * The method evaluateFunction() finally calculates the reaction's priority
+	 * by calling the calculation methods.
+	 */
+	public int evaluateExpression(AttributeArray attributeArray) {
+		
+		this.priority = 0;
+		
+		evaluateFunction(attributeArray);
+		return result;
+	}
 }
