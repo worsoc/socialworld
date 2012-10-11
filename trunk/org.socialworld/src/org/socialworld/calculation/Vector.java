@@ -125,17 +125,36 @@ public class Vector {
 	 * 
 	 * @param scalar
 	 */
-	public void multiplicate (double scalar) {
+	public void multiply (double scalar) {
 		this.x = this.x * scalar;
 		this.y = this.y * scalar;
 		this.z = this.z * scalar;
 		
 	}
 	
+	/**
+	 * The method multiplies the vector by another vector.
+	 *  In this calculation every single value is multiplied by the corresponding single value.
+	 *  The result is a vector again.
+	 *  (x1,y1,z1) * (x2,y2,z2) = (x1*x2, y1*y2, z1*z2)
+	 * 
+	 * @param relativeVector
+	 */
+	public void multiply (Vector relativeVector) {
+		this.x = this.x * relativeVector.x;
+		this.y = this.y * relativeVector.y;
+		this.z = this.z * relativeVector.z;
+		
+	}
 	
 	@Override
 	public String toString() {
 		return "( " + this.x + ", " + this.y + ", " + this.z + " )";
 	}
 
+	public void reset() {
+		this.x = 0;
+		this.y = 0;
+		this.z = 0;
+	}
 }
