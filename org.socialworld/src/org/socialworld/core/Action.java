@@ -32,7 +32,7 @@ public class Action extends AbstractAction {
 	public Action(final ActionType type, final ActionMode mode,
 			final SimulationObject target, final Direction direction,
 			final double intensity, final Time minTime, final Time maxTime,
-			final int priority, final double duration) {
+			final int priority, final long duration) {
 		this.setType(type);
 		this.setMode(mode);
 		this.setTarget(target);
@@ -51,7 +51,7 @@ public class Action extends AbstractAction {
 	 * 
 	 * @param decrement
 	 */
-	public void lowerRemainedDuration(final double decrement) {
+	public void lowerRemainedDuration(final long decrement) {
 		this.remainedDuration -= decrement;
 	}
 
@@ -61,7 +61,7 @@ public class Action extends AbstractAction {
 	 * 
 	 * @param increment
 	 */
-	public void raiseRemainedDuration(final double increment) {
+	public void raiseRemainedDuration(final long increment) {
 		this.remainedDuration += increment;
 	}
 }
