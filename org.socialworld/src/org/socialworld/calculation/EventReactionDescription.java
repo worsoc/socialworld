@@ -19,7 +19,7 @@ public class EventReactionDescription {
 	public EventReactionRelativeDirectionExpression getRelativeDirectionExpression() { return relativeDirectionExpression;}
 	public EventReactionModeExpression getActionModeExpression() { return actionModeExpression;}
 	public EventReactionTypeExpression getActionTypeExpression() { return actionTypeExpression;}
-	public EventReactionIntensityExpression getintensityExpression() { return intensityExpression;}
+	public EventReactionIntensityExpression getIntensityExpression() { return intensityExpression;}
 	public EventReactionDurationExpression getDurationExpression() { return durationExpression;}
 	
 }

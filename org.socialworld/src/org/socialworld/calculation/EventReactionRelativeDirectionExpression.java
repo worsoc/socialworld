@@ -25,7 +25,7 @@ public class EventReactionRelativeDirectionExpression extends Expression {
 
 	@Override
 	protected void multiplication( ) {
-		relativeDirection.multiplicate(scalar);
+		relativeDirection.multiply(scalar);
 
 	}
 
@@ -36,12 +36,28 @@ public class EventReactionRelativeDirectionExpression extends Expression {
 
 	/**
 	 * The method evaluates the expression by calling the parent method evaluateFunction().
-	 * The method evaluateFunction() finally calculates the reactions's relativedirection 
+	 * The method evaluateFunction() finally calculates the reactions's relative direction 
 	 * by calling calculation methods.
 	 */
 	public Vector evaluateExpression(AttributeArray attributeArray, Vector relativeDirection) {
 		
 		this.relativeDirection = relativeDirection;
+		
+		evaluateFunction(attributeArray);
+		return result;
+	}	
+
+	/**
+	 * The method evaluates the expression by calling the parent method evaluateFunction().
+	 * The method evaluateFunction() finally calculates the reactions's relative direction 
+	 * by calling calculation methods.
+	 */
+	public Vector evaluateExpression(AttributeArray attributeArray) {
+		
+		if (this.relativeDirection == null)
+			this.relativeDirection = new Vector(0,0,0);
+		else
+			this.relativeDirection.reset();
 		
 		evaluateFunction(attributeArray);
 		return result;
