@@ -31,6 +31,10 @@ public class Time {
 		separate();
 	}
 
+	public long getTotalMilliseconds() {
+		return this.totalMilliseconds;
+	}
+	
 	private void separate() {
 		long rest;
 		
