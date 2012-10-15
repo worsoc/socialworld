@@ -5,6 +5,7 @@ package org.socialworld.core;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 import org.apache.log4j.Logger;
 import org.socialworld.ListModel;
@@ -33,6 +34,15 @@ public class ObjectMaster {
 
 	private final LoadHuman humanCreator;
 	
+	
+	private  ListIterator<God> godsIterator;
+	private  ListIterator<Human> humansIterator;
+	private  ListIterator<Item> itemsIterator;
+//	private  ListIterator<Inventory> inventorysIterator;
+//	private  ListIterator<Position> positionsIterator;
+//	private  ListIterator<Magic> magicsIterator;
+	private  ListIterator<Animal> animalsIterator;
+	
 	public ObjectMaster() {
 		logger.debug("create ObjectMaster");
 
@@ -43,13 +53,12 @@ public class ObjectMaster {
 		this.gods = new ArrayList<God>();
 		this.humans = new ListModel<Human>();
 		this.animals = new ListModel<Animal>();
-
 		this.magics = new ArrayList<Magic>();
-		
 		this.positions = new ArrayList<Position>();
 		this.items = new ArrayList<Item>();
 		this.inventories = new ArrayList<Inventory>();
 		
+		resetIterators();
 	}	
 	
 	public SimulationObject createSimulationObject(
@@ -84,13 +93,13 @@ public class ObjectMaster {
 
 		switch (simulationObjectType) {
 		case animal:
-			return this.animals.iterator().hasNext();
+			return this.animalsIterator.hasNext();
 		case human:
-			return this.humans.iterator().hasNext();
+			return this.humansIterator.hasNext();
 		case god:
-			return this.gods.iterator().hasNext();
+			return this.godsIterator.hasNext();
 		case item:
-			return this.items.iterator().hasNext();
+			return this.itemsIterator.hasNext();
 		default:
 			return this.simulationObjects.iterator().hasNext();
 		}		
@@ -167,4 +176,16 @@ public class ObjectMaster {
 	public List<Magic> getMagics() {
 		return this.magics;
 	}	
+	
+	public void resetIterators() {
+		this.godsIterator = this.gods.listIterator();
+		this.humansIterator = this.humans.listIterator();
+		this.animalsIterator = this.animals.listIterator();
+//		this.magicsIterator = this.magics.listIterator();
+//		this.positionsIterator = this.positions.listIterator();
+		this.itemsIterator = this.items.listIterator();
+//		this.inventorysIterator = this.inventories.listIterator();
+
+	}
+	
 }

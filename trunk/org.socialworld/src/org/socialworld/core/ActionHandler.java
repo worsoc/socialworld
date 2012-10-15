@@ -3,8 +3,11 @@
  */
 package org.socialworld.core;
 
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Iterator;
+import java.util.ListIterator;
 
 import org.socialworld.objects.SimulationObject;
 
@@ -13,7 +16,7 @@ import org.socialworld.objects.SimulationObject;
  * 
  * @author Mathias Sikos (tyloesand)
  */
-public class ActionHandler extends Thread {
+public class ActionHandler  {
 
 	/**
 	 * the simulation object whose actions are manged
@@ -35,20 +38,6 @@ public class ActionHandler extends Thread {
 		this.object = simulationObject;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Thread#run()
-	 */
-	@Override
-	public void run() {
-		while (true) {
-			// TODO ActionQueue abarbeiten.
-			// FIXME (tyloesand) Der ActionHandler ist kein thread, da es zu
-			// jedem Simulationsobjekt einen eigenen Actionhandler gibt. das
-			// wäre zu viele threads!!!
-		}
-	}
 
 	/**
 	 * @return the actualAction
@@ -58,20 +47,26 @@ public class ActionHandler extends Thread {
 	}
 
 	/**
-	 * The method gets an action element from action list and lets the according
+	 * The method gets the first action element from action list and lets the according
 	 * object execute the action.
 	 */
 	public void doActualAction() {
-		// TODO (tyloesand): das Action Element muss dann auch aus der Liste
-		// entfernt werden
 		Action action;
-		action = this.actionQueue.iterator().next();
-
-		if (this.actualAction.getRemainedDuration() == 0) {
-			this.actualAction = action;
-		} else if (this.actualAction.getPriority() < action.getPriority()) {
-			this.actualAction = action;
-		}
+		Iterator<Action> iterator;
+		
+		iterator = this.actionQueue.iterator();
+		if (iterator.hasNext())		
+			action = iterator.next();
+		else
+			return;
+		
+		if (this.actualAction != null) 
+			if (this.actualAction.getRemainedDuration() == 0) 
+				this.actionQueue.remove(this.actualAction);
+		
+		
+		this.actualAction = action;
+		
 
 		if (this.actualAction != null) {
 			this.actualAction.lowerRemainedDuration(1);
@@ -80,13 +75,66 @@ public class ActionHandler extends Thread {
 	}
 
 	/**
-	 * The method inserts an action element into the action list of a simulation
+	 * The method adds an action element to the action list of a simulation
 	 * object.
+	 *  Therefore it compares the new action element to the priority and time of the list's actions
+	 *  and inserts the new action elements according to the action list's order
 	 * 
-	 * @param action
+	 * @param newAction
 	 */
-	public void insertAction(final Action action) {
-		this.actionQueue.add(action);
+	public void insertAction(final Action newAction) {
+		
+		long minTimeInMilliseconds;
+		long maxTimeInMilliseconds;
+		int priority;
+		long duration;
+		
+		Action listedAction;
+		
+		ListIterator<Action> iterator;
+		int currentIndex;
+		
+		if (newAction == null ) return;
+		
+		iterator = this.actionQueue.listIterator();
+		
+		minTimeInMilliseconds = newAction.getMinTime().getTotalMilliseconds();
+		maxTimeInMilliseconds = newAction.getMaxTime().getTotalMilliseconds();
+		priority = newAction.getPriority();
+		duration = newAction.getDuration();
+		
+		while (iterator.hasNext()) {
+			currentIndex = iterator.nextIndex() ;
+			listedAction = iterator.next();
+			
+			if ( listedAction.getPriority() < priority ) 
+				if ( (listedAction.getMaxTime().getTotalMilliseconds() + listedAction.getRemainedDuration()) <
+						minTimeInMilliseconds )
+					continue;
+				else
+					;
+			else if ( listedAction.getPriority() == priority ) 
+				if ( (listedAction.getMaxTime().getTotalMilliseconds() + listedAction.getRemainedDuration()) <
+						maxTimeInMilliseconds )
+					continue;
+				else
+					if (currentIndex == 1) 
+						if (this.actionQueue.indexOf(this.actualAction) == 1)
+							continue;
+			else // if ( listedAction.getPriority() > priority )
+				if ( listedAction.getMinTime().getTotalMilliseconds()  <=
+						( maxTimeInMilliseconds + duration ) )
+					continue;
+				else
+					if (currentIndex == 1) 
+						if (this.actionQueue.indexOf(this.actualAction) == 1)
+							continue;
+
+			this.actionQueue.add(currentIndex, newAction);
+			return;
+		}
+		this.actionQueue.add(newAction);
+		
 	}
 
 	/**
@@ -100,10 +148,16 @@ public class ActionHandler extends Thread {
 	 * @return action element that meets the search criteria
 	 */
 	public Action findAction(final SearchActionDescription actionDescription) {
-		// TODO Iteration und Abbruch am Ende
 		Action action;
-		while (true) {
-			action = this.actionQueue.iterator().next();
+		Action noAction;
+		Iterator<Action> iterator;
+
+		noAction = null;
+		
+		iterator = this.actionQueue.iterator();
+		
+		while (iterator.hasNext()) {
+			action = iterator.next();
 			if (action == null) {
 				break;
 			}
@@ -157,6 +211,6 @@ public class ActionHandler extends Thread {
 			return action;
 		}
 
-		return action;
+		return noAction;
 	}
 }
