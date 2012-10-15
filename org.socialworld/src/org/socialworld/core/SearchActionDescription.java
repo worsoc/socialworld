@@ -130,7 +130,7 @@ public class SearchActionDescription extends AbstractAction {
 	 *            the duration to set
 	 */
 	@Override
-	public void setDuration(final double duration) {
+	public void setDuration(final long duration) {
 		this.duration = duration;
 		this.searchByDuration = true;
 	}
@@ -140,7 +140,7 @@ public class SearchActionDescription extends AbstractAction {
 	 *            the remainedDuration to set
 	 */
 	@Override
-	public void setRemainedDuration(final double remainedDuration) {
+	public void setRemainedDuration(final long remainedDuration) {
 		this.remainedDuration = remainedDuration;
 		this.searchByRemainedDuration = true;
 	}

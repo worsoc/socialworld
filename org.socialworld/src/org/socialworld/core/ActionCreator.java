@@ -36,10 +36,15 @@ public class ActionCreator extends Semaphore {
 		return creator;
 	}
 
+	/**
+	 * The method creates a new action as a reaction to an event.
+	 * The creation is saved by semaphore.
+	 *  So only the object, that locked the action creator, can create the reaction object.	  
+	 */
 	public SemaphoreReturnCode createAction(
-			Animal actor,
-			Event event,
-			Object user) {
+			final Animal actor,
+			final Event event,
+			final Object user) {
 		
 		if (this.locker == user) {
 			
@@ -55,8 +60,29 @@ public class ActionCreator extends Semaphore {
 
 	}
 	
-	private void createReaction(Event event,
-			Animal actor) {
+	
+	/**
+	 * If the caller is the owner of the semaphore (that means the owner of the action object),
+	 * the method returns the last created action object.
+	 * In other cases it returns null.
+	 * 
+	 * It is assumed, that the caller locks the semaphore 
+	 * and that the method createAction() has been called before the method getAction() is called().
+	 */
+	public Action getAction(final Object user) {
+		if (this.locker == user) 
+			return this.action;
+		else
+			return null;
+	}
+	
+	/**
+	 * The method creates a new action as a reaction to an event.
+	 * Therefore an according event reaction description is used to set the (re)action properties.
+	 * 
+	 */
+	private void createReaction(final Event event,	final Animal actor) {
+		
 		EventReactionDescription eventReactionDescription;
 		int eventType;
 		int eventReactionType;

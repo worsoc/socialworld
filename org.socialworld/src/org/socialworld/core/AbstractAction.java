@@ -24,8 +24,8 @@ public abstract class AbstractAction {
 	protected Direction direction;
 	protected ActionMode mode;
 	protected double intensity;
-	protected double duration;
-	protected double remainedDuration;
+	protected long duration;
+	protected long remainedDuration;
 
 	public AbstractAction() {
 		super();
@@ -158,7 +158,7 @@ public abstract class AbstractAction {
 	/**
 	 * @return the duration
 	 */
-	public double getDuration() {
+	public long getDuration() {
 		return this.duration;
 	}
 
@@ -166,7 +166,7 @@ public abstract class AbstractAction {
 	 * @param duration
 	 *            the duration to set
 	 */
-	public void setDuration(final double duration) {
+	public void setDuration(final long duration) {
 		this.duration = duration;
 	}
 
@@ -175,7 +175,7 @@ public abstract class AbstractAction {
 	 * 
 	 * @return remainedDuration
 	 */
-	public double getRemainedDuration() {
+	public long getRemainedDuration() {
 		return this.remainedDuration;
 	}
 
@@ -183,7 +183,7 @@ public abstract class AbstractAction {
 	 * @param remainedDuration
 	 *            the remainedDuration to set
 	 */
-	public void setRemainedDuration(final double remainedDuration) {
+	public void setRemainedDuration(final long remainedDuration) {
 		this.remainedDuration = remainedDuration;
 	}
 
