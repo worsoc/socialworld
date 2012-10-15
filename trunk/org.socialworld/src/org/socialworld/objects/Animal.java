@@ -190,16 +190,24 @@ public class Animal extends SimulationObject {
 	 */
 	public void reactToEvent(final Event event) {
 		SemaphoreReturnCode returnCode;
-		returnCode = ActionCreator.getInstance().lockBy(this);
+		ActionCreator creator;
+		Action reaction;
+		
+		creator = ActionCreator.getInstance();
+		returnCode = creator.lockBy(this);
 		if ( returnCode == 	SemaphoreReturnCode.success ||
 			 returnCode == 	SemaphoreReturnCode.lockedByUser  ) {
-			ActionCreator.getInstance().createAction(
+			creator.createAction(
 				this, event, this);
-			returnCode = ActionCreator.getInstance().releaseBy(this);
+			reaction = creator.getAction(this);
+			returnCode = creator.releaseBy(this);
 		}
 		else {
 		// TODO (tyloesand) Fehlerfall
+			reaction = null;
 		}	
+		
+		actionHandler.insertAction(reaction);
 		
 	}
 	
