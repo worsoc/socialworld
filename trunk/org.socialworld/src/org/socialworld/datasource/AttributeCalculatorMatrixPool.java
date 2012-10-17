@@ -82,15 +82,12 @@ public class AttributeCalculatorMatrixPool {
 		switch (count) {
 		case 1:
 			functions = functions2;
-			logger.debug("getFunctionArray() returns functions2");
 			break;
 		case 2:
 			functions = functions3;
-			logger.debug("getFunctionArray() returns functions3");
 			break;
 		default: 
 			functions = functions1;
-			logger.debug("getFunctionArray() returns functions1");
 			break;
 		}
 		return functions;
@@ -132,15 +129,12 @@ public class AttributeCalculatorMatrixPool {
 		switch (count) {
 		case 1: 
 			shares = shares2;
-			logger.debug("getShareArray() returns shares2");
 			break;
 		case 2: 
 			shares = shares3;
-			logger.debug("getShareArray() returns shares3");
 			break;
 		default: 
 			shares = shares1;
-			logger.debug("getShareArray() returns shares1");
 			break;
 		}
 		return shares;
