@@ -22,6 +22,11 @@ public class Item extends SimulationObject {
 	public void changeByEvent(final Event event) {
 
 	}
+	
+	public void reactToEvent(final Event event) {
+		
+	}
+
 
 	/**
 	 * The method implements the use of an item by an user. The kind of use is

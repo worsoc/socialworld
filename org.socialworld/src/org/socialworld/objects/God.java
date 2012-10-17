@@ -21,6 +21,10 @@ public class God extends SimulationObject {
 		// TODO Implement method
 	}
 
+	public void reactToEvent(final Event event) {
+		
+	}
+
 	@Override
 	public void doAction(final Action action) {
 

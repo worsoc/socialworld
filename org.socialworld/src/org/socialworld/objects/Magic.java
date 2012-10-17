@@ -31,6 +31,10 @@ public class Magic extends SimulationObject {
 
 	}
 
+	public void reactToEvent(final Event event) {
+		
+	}
+
 	@Override
 	public void doAction(final Action action) {
 		// TODO Auto-generated method stub

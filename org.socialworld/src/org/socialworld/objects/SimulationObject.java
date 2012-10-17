@@ -4,6 +4,7 @@
 package org.socialworld.objects;
 
 
+import org.apache.log4j.Logger;
 import org.socialworld.Model;
 import org.socialworld.attributes.Position;
 import org.socialworld.core.Action;
@@ -17,6 +18,7 @@ import org.socialworld.core.Event;
  * 
  */
 public abstract class SimulationObject extends Model {
+	protected static final Logger logger = Logger.getLogger(SimulationObject.class);
 
 	protected	long 			objectID;
 	
@@ -78,6 +80,15 @@ public abstract class SimulationObject extends Model {
 	 *            the event influencing the simulation object
 	 */
 	public abstract void changeByEvent(final Event simualationEvent);
+
+	/**
+	 * The method determines the reaction to an event.
+	 * It creates an action object and inserts it into the action handler list.
+	 * 
+	 * @param simualationEvent -
+	 *            the event influencing the simulation object
+	 */
+	public abstract void reactToEvent(final Event simualationEvent);
 
 	/**
 	 * The method returns the object's position.
