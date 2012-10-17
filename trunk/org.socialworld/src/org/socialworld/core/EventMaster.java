@@ -6,6 +6,8 @@ package org.socialworld.core;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.ListIterator;
+
 
 import org.apache.log4j.Logger;
 import org.socialworld.SocialWorld;
@@ -77,6 +79,7 @@ public class EventMaster extends Thread {
 	 * the method stops the event processing
 	 */
 	public void stopEventMaster() {
+		logger.debug("EventMaster.stopEventMaster");
 		isRunning = false;
 	}
 
@@ -87,6 +90,7 @@ public class EventMaster extends Thread {
 	 */
 	@Override
 	public void run() {
+		logger.debug("EventMaster.run");
 		int sleepTime = 10;
 		while (isRunning) {
 			calculateNextEvent();
@@ -108,7 +112,8 @@ public class EventMaster extends Thread {
 	 * Calculates the influences of the event to other simulation objects.
 	 */
 	private void calculateNextEvent() {
-		// Liefert Kopf und entfernt Element aus Liste
+		logger.debug("calculateNextEvent");
+
 		if (!eventQueue.isEmpty()) {
 			if ( loadEvent( this.eventQueue.poll() ) == true ) {
 				determineCandidates();
@@ -141,6 +146,7 @@ public class EventMaster extends Thread {
 	private void determineCandidates() {
 		SimulationObject candidate;
 		
+		logger.debug("determineCandidates");
 
 		// TODO (tyloesand) Optimierung Finden Kandidaten
 		// und dann nicht nur ueber Humans
@@ -189,10 +195,14 @@ public class EventMaster extends Thread {
 	 */
 	private void determineInfluence() {
 		SimulationObject candidate;
-
-		while (this.candidates.iterator().hasNext()) {
-			candidate = this.candidates.iterator().next();
+		ListIterator<SimulationObject> iterator;
+		
+		iterator = this.candidates.listIterator();
+		while (iterator.hasNext()) {
+			candidate = iterator.next();
 			candidate.changeByEvent(this.event);
+			candidate.reactToEvent(this.event);
+			iterator.remove();
 		}
 	}
 }
