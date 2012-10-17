@@ -26,7 +26,25 @@ public class AttributeCalculatorMatrix {
 
 	}
 
-	/**
+	public AttributeCalculatorMatrix(AttributeCalculatorMatrix original) {
+		int count;
+		count = original.length();
+		this.functions = new int[count];
+		for (int i = 0; i < count; i++) this.functions[i] = original.getFunction(i);
+		this.shares = new float[count];
+		for (int i = 0; i < count; i++) this.shares[i] = original.getShare(i);
+		if (original.isWithOffset()) {
+			this.offsets = new int[count];
+			for (int i = 0; i < count; i++) this.offsets[i] = original.getOffset(i);
+		}	
+	}
+	
+	public int length() {
+		return functions.length;
+	}
+
+	/** 
+	 * 
 	 * @return the function
 	 */
 	public int getFunction(int row, int column) {
@@ -123,4 +141,29 @@ public class AttributeCalculatorMatrix {
 	public boolean isWithOffset() {
 		return this.offsets.length > 0;
 	}
+	
+	/** 
+	 * 
+	 * @return the function
+	 */
+	public int getFunction(int matrixIndex) {
+		return functions[matrixIndex];
+	}
+
+	/** 
+	 * 
+	 * @return the share
+	 */
+	public float getShare(int matrixIndex) {
+		return shares[matrixIndex];
+	}
+
+	/** 
+	 * 
+	 * @return the offset
+	 */
+	public int getOffset(int matrixIndex) {
+		return offsets[matrixIndex];
+	}
+
 }
