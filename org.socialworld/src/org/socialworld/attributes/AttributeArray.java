@@ -39,6 +39,19 @@ public class AttributeArray {
 			for (int i = 0; i < numberOfAttributes; i++ ) differences[i] = 0;
 		}
 	}
+	
+	
+	public AttributeArray(AttributeArray original) {
+		numberOfAttributes = Attribute.NUMBER_OF_ATTRIBUTES;
+		attributes 	= new int[numberOfAttributes];
+		differences = new int[numberOfAttributes];
+		if (original.attributes.length == numberOfAttributes ) {
+			for (int i = 0; i < numberOfAttributes; i++ ) {
+				differences[i] = 0;
+				attributes[i] = original.attributes[i];
+			}
+		}
+	}
 	/**
 	 * The method sets an attribute value. The attribute is addressed by the
 	 * attribute index.
