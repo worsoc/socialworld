@@ -50,7 +50,7 @@ public class Animal extends SimulationObject {
 	
 	
 	public AttributeArray getAttributes() {
-		return attributes;
+		return new AttributeArray(attributes);
 	}
 	
 	public void setMatrix(AttributeCalculatorMatrix matrix) {
@@ -58,8 +58,9 @@ public class Animal extends SimulationObject {
 	}
 	
 	public AttributeCalculatorMatrix getMatrix() {
-		return attributeCalculatorMatrix;
+		return new AttributeCalculatorMatrix(attributeCalculatorMatrix);
 	}
+	
 	/**
 	 * Depending on the action type the method calls the according procedure
 	 * with special implementation of the action.
@@ -180,6 +181,8 @@ public class Animal extends SimulationObject {
 		else {
 		// TODO (tyloesand) Fehlerfall
 		}	
+		
+		
 	}
 
 	/**
@@ -192,7 +195,9 @@ public class Animal extends SimulationObject {
 		SemaphoreReturnCode returnCode;
 		ActionCreator creator;
 		Action reaction;
-		
+
+		logger.debug("reactToEvent");
+
 		creator = ActionCreator.getInstance();
 		returnCode = creator.lockBy(this);
 		if ( returnCode == 	SemaphoreReturnCode.success ||

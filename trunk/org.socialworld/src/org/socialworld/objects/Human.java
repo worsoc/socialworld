@@ -111,12 +111,6 @@ public class Human extends Mammal {
 
 	}
 
-	/**
-	 * @return the inventory
-	 */
-	public Inventory getInventory() {
-		return this.inventory;
-	}
 
 	/**
 	 * @param inventory
