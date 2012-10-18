@@ -24,7 +24,6 @@ public class LoadHuman extends LoadSimulationObjects {
 	 * constructor.
 	 */
 	private LoadHuman() {
-		logger.debug("create LoadHuman");
 
 	}
 
@@ -49,21 +48,20 @@ public class LoadHuman extends LoadSimulationObjects {
 	public Human getObject(long objectID) {
 		
 		Human createdHuman = new Human();
-		if (objectID == 0) {
-			createdHuman.setMatrix(	
+		createdHuman.setObjectID(objectID);
+		createdHuman.setMatrix(	
 					AttributeCalculatorMatrixPool.getInstance().getMatrix(mapObjectIDtoMatrixIndex(objectID)));
-			createdHuman.setAttributes(
+		createdHuman.setAttributes(
 					AttributeArrayPool.getInstance().getArray(mapObjectIDtoAttributesIndex(objectID)));
-		}
 		return createdHuman;
 	}
 
 	private int mapObjectIDtoMatrixIndex(long objectID) {
-		return (int) objectID;
+		return (int) objectID - 1;
 	}
 
 	private int mapObjectIDtoAttributesIndex(long objectID) {
-		return (int) objectID;
+		return (int) objectID - 1;
 	}
 
 }
