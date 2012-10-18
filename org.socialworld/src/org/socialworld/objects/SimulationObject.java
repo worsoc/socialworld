@@ -40,8 +40,14 @@ public abstract class SimulationObject extends Model {
 	public SimulationObject() {
 		loadInfluenceType();
 		loadReactionType();
+		
+		this.position = new Position( 0,0,0);
 	}
 
+	public void setObjectID(long objectID) {
+		this.objectID = objectID;	
+	}
+	
 	/**
 	 * The method lets an simulation object do an action.
 	 * 
@@ -96,9 +102,14 @@ public abstract class SimulationObject extends Model {
 	 * @return position
 	 */
 	public Position getPosition() {
-		return null;
+		return this.position;
 	}
 
+	
+	public void setPosition (Position pos) {
+		this.position = pos;
+	}
+	
 	/**
 	 * The method sets the x value of object's position.
 	 * 
@@ -116,6 +127,7 @@ public abstract class SimulationObject extends Model {
 	 * @param posY
 	 */
 	public void setPositionY(final double posY) {
+		this.position.setX(posY);
 
 	}
 
@@ -125,6 +137,7 @@ public abstract class SimulationObject extends Model {
 	 * @param posZ
 	 */
 	public void setPositionZ(final double posZ) {
+		this.position.setZ(posZ);
 
 	}
 
@@ -154,4 +167,8 @@ public abstract class SimulationObject extends Model {
 	public int getReactionType(int eventType) {
 	 return reactionTypeByEventType[eventType];
 	} 
+	
+	public String toString() {
+		return "" + objectID;
+	}
 }

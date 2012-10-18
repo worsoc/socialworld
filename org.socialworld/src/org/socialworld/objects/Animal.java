@@ -34,6 +34,7 @@ public class Animal extends SimulationObject {
 	
 	public Animal() {
 		super();
+		attributes = new AttributeArray();
 	}
 
 	public void setAttribute(int attributeIndex, byte attributeValue) {
