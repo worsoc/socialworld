@@ -110,9 +110,9 @@ public class View extends ViewPart {
 				case 0:
 					return human.toString();
 				case 1:
-					return "Position";
+					return human.getPosition().toString();
 				default:
-					return "IRGENDWAS";
+					return human.getAttributes().toString();
 				}
 
 			}
@@ -135,14 +135,14 @@ public class View extends ViewPart {
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		final TableColumn columnName = new TableColumn(table, SWT.BORDER);
-		columnName.setText("Name");
+		columnName.setText("ObjectID");
 		columnName.setWidth(100);
 		final TableColumn columnPosition = new TableColumn(table, SWT.BORDER);
 		columnPosition.setText("Position");
 		columnPosition.setWidth(100);
 		final TableColumn columnIrgendwas = new TableColumn(table, SWT.BORDER);
-		columnIrgendwas.setText("Irgendwas");
-		columnIrgendwas.setWidth(100);
+		columnIrgendwas.setText("AttributArray");
+		columnIrgendwas.setWidth(800);
 
 		logger.debug("get simulation object");
 
