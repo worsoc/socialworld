@@ -28,6 +28,10 @@ public class AttributeArray {
 		numberOfAttributes = Attribute.NUMBER_OF_ATTRIBUTES;
 		attributes 	= new int[numberOfAttributes];
 		differences = new int[numberOfAttributes];
+		for (int i = 0; i < numberOfAttributes; i++ ) {
+			attributes[i] = 0;
+			differences[i] = 0;
+		}
 	}
 
 	public AttributeArray(int[] array) {
@@ -100,5 +104,17 @@ public class AttributeArray {
 	 */
 	public int getDifference(int attibuteIndex) {
 	return differences[attibuteIndex];
+	}
+	
+	
+	public String toString() {
+		String returnValue = "("; 
+		
+		int numberOfAttributes = attributes.length ;
+		for (int i = 0; i < numberOfAttributes - 1; i++ ) 
+			returnValue = returnValue + attributes[i] + ", ";
+		returnValue = returnValue + attributes[numberOfAttributes - 1] + ")";
+		return returnValue;
+		
 	}
 }

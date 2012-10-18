@@ -63,4 +63,5 @@ public class Position extends Vector {
 		direction = new Direction(deltaX, deltaY, deltaZ);
 		return direction;
 	}
+	
 }
