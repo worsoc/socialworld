@@ -7,8 +7,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.socialworld.SocialWorld;
 import org.socialworld.core.Simulation;
-import org.socialworld.objects.Human;
-import org.socialworld.objects.SimulationObjectType;
 
 public class KillHumanAction implements IWorkbenchWindowActionDelegate {
 
@@ -16,33 +14,25 @@ public class KillHumanAction implements IWorkbenchWindowActionDelegate {
 	
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void init(IWorkbenchWindow window) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void run(IAction action) {
-		// TODO Auto-generated method stub
-		Human human;
 		Simulation simulation = SocialWorld.getCurrent().getSimulation();
-		// objectID = 0 meens that an new human is created
-		// it doesn't exist in any data source yet
-		human = (Human) simulation.createSimulationObject(SimulationObjectType.human, 0);
-		logger.debug("Added new human object to human list: " + human);
 		// only for test visualize we use an access to the human list
+		simulation.getObjectMaster().getHumans().remove(simulation.getObjectMaster().getHumans().size() - 1);
 		logger.debug("Human list: " + simulation.getObjectMaster().getHumans() );
 
 	}
 
 	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
-		// TODO Auto-generated method stub
 
 	}
 
