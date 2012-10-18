@@ -28,16 +28,21 @@ public class AttributeArrayPool {
 	}
 	
 	public AttributeArray getArray(int index) {
-		if (attributes.size() >= index) 
+		if (attributes.size() > index ) 
 			return attributes.get(index);
 		else {
 			attributes.add(createArray());
-			return attributes.get(attributes.size());
+			return attributes.get(attributes.size() - 1);
 		}
 		
 	}
 
 	private void initialize() {
+		attributes.add(createArray());
+		attributes.add(createArray());
+		attributes.add(createArray());
+		attributes.add(createArray());
+		attributes.add(createArray());
 		attributes.add(createArray());
 	}
 	
