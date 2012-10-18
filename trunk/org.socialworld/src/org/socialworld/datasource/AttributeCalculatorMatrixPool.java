@@ -28,15 +28,16 @@ public class AttributeCalculatorMatrixPool {
 	}
 	
 	public AttributeCalculatorMatrix getMatrix(int index) {
-		if (matrixs.size() >= index) 
+		if (matrixs.size() > index ) 
 			return matrixs.get(index);
 		else {
 			matrixs.add(createMatrix());
-			return matrixs.get(matrixs.size());
+			return matrixs.get(matrixs.size()-1);
 		}
 	}
 	
 	private void initialize() {
+		matrixs.add(createMatrix());
 		matrixs.add(createMatrix());
 		matrixs.add(createMatrix());
 		matrixs.add(createMatrix());
