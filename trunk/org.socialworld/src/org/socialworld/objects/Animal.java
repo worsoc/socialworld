@@ -5,7 +5,6 @@ package org.socialworld.objects;
 
 import org.socialworld.attributes.ActionMode;
 import org.socialworld.attributes.ActionType;
-import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.attributes.Move;
 import org.socialworld.core.Action;
@@ -37,16 +36,9 @@ public class Animal extends SimulationObject {
 		attributes = new AttributeArray();
 	}
 
-	public void setAttribute(int attributeIndex, byte attributeValue) {
-		attributes.set(attributeIndex, attributeValue);
-	}
 
-	public void setAttribute(Attribute attributeName, byte attributeValue) {
-		attributes.set(attributeName, attributeValue);
-	}
-
-	public void setAttributes(AttributeArray array) {
-		attributes = array;
+	void setAttributes(AttributeArray array, WriteAccessToAnimal guard) {
+		if (this.guard == guard ) attributes = array;
 	}
 	
 	
@@ -54,8 +46,8 @@ public class Animal extends SimulationObject {
 		return new AttributeArray(attributes);
 	}
 	
-	public void setMatrix(AttributeCalculatorMatrix matrix) {
-		attributeCalculatorMatrix  = matrix;
+	void setMatrix(AttributeCalculatorMatrix matrix,  WriteAccessToAnimal guard) {
+		if (this.guard == guard ) attributeCalculatorMatrix  = matrix;
 	}
 	
 	public AttributeCalculatorMatrix getMatrix() {

@@ -18,12 +18,20 @@ import org.socialworld.core.Action;
  * @author Mathias Sikos (tyloesand)
  * 
  */
-public class Human extends Mammal {
+ public class Human extends Mammal {
 
 	protected Inventory inventory;
 
 	public Human() {
 		super();
+	}
+
+	/**
+	 * @param inventory
+	 *            the inventory to set
+	 */
+	void setInventory(final Inventory inventory, WriteAccessToHuman guard) {
+		if (this.guard == guard ) this.inventory = inventory;
 	}
 
 	/**
@@ -112,12 +120,5 @@ public class Human extends Mammal {
 	}
 
 
-	/**
-	 * @param inventory
-	 *            the inventory to set
-	 */
-	public void setInventory(final Inventory inventory) {
-		this.inventory = inventory;
-	}
 
 }
