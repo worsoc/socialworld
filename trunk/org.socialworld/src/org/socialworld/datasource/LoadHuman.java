@@ -4,7 +4,8 @@
 package org.socialworld.datasource;
 
 import org.socialworld.objects.*;
-import org.socialworld.datasource.LoadSimulationObjects;
+import org.socialworld.attributes.Position;
+import org.socialworld.datasource.LoadAnimal;
 import org.socialworld.datasource.AttributeCalculatorMatrixPool;
 
 /**
@@ -15,7 +16,7 @@ import org.socialworld.datasource.AttributeCalculatorMatrixPool;
  *         and put to a new created instance of class Human
  * @author Mathias Sikos (tyloesand) 
  */
-public class LoadHuman extends LoadSimulationObjects {
+public class LoadHuman extends LoadAnimal implements IHumanWrite {
 	
 	private static LoadHuman instance;
 
@@ -39,6 +40,8 @@ public class LoadHuman extends LoadSimulationObjects {
 		return instance;
 	}
 	
+
+	
 	/**
 	 * The method creates an instance of class Human.
 	 * 
@@ -48,11 +51,34 @@ public class LoadHuman extends LoadSimulationObjects {
 	public Human getObject(long objectID) {
 		
 		Human createdHuman = new Human();
-		createdHuman.setObjectID(objectID);
-		createdHuman.setMatrix(	
-					AttributeCalculatorMatrixPool.getInstance().getMatrix(mapObjectIDtoMatrixIndex(objectID)));
-		createdHuman.setAttributes(
-					AttributeArrayPool.getInstance().getArray(mapObjectIDtoAttributesIndex(objectID)));
+		WriteAccessToHuman human = new WriteAccessToHuman(createdHuman);
+		
+		human.setObjectID(objectID, this);
+		human.setMatrix(	
+					AttributeCalculatorMatrixPool.getInstance().getMatrix(mapObjectIDtoMatrixIndex(objectID)),
+					this);
+		human.setAttributes(
+					AttributeArrayPool.getInstance().getArray(mapObjectIDtoAttributesIndex(objectID)),
+					this);
+		
+		// TODO (tyloesand) only for testing, must be deleted
+		// find a solution for assign positions
+		// (not this following provisional one)
+		switch ((int)objectID) {
+		case 1: 
+			human.setPosition(new Position(100,100,0) , this);
+			break;
+		case 2: 
+			human.setPosition(new Position(100,110,0), this);
+			break;
+		case 3: 
+			human.setPosition(new Position(400,400,0), this);
+			break;
+		default:
+			human.setPosition(new Position(3 * (int)objectID, - 2 * (int) objectID , (int) objectID), this);
+			break;
+	}
+
 		return createdHuman;
 	}
 
