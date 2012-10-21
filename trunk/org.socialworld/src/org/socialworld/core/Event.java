@@ -22,7 +22,7 @@ public class Event implements Comparable<Event> {
 
 	private int		eventType;		
 	
-	private byte priority;
+	private int priority;
 	private SimulationObject causer;
 	private Time time;
 	private Position position;
@@ -36,13 +36,41 @@ public class Event implements Comparable<Event> {
 	private float maxSee;
 	private float maxHear;
 	private float maxSmell;
+	private float maxFeel;
 
 	public static final int MAX_EVENT_TYPE = 256;
 
 	/**
 	 * Constructor
 	 */
-	public Event(byte priority) {
+	public Event(int eventType, int priority, SimulationObject causer, Time time, Position position,
+			Direction direction, int strength, 
+			float effectDistance, float effectAngle,
+			float maxDistance, float maxSee, float maxHear, float maxSmell, float maxFeel) {
+		
+		this.eventType = eventType;		
+		
+		this.priority = priority;
+		this.causer = causer;
+		this.time = time;
+		this.position = position;
+		this.direction = direction;
+
+		this.strength = strength;
+
+		this.effectDistance = effectDistance;
+		this.effectAngle = effectAngle;
+		this. maxDistance = maxDistance;
+		this.maxSee = maxSee;
+		this.maxHear = maxHear;
+		this.maxSmell = maxSmell;
+		this.maxFeel = maxFeel;
+	}	
+
+	/**
+	 * Constructor
+	 */
+	public Event(int priority) {
 		this.priority = priority;
 	}
 
@@ -85,7 +113,7 @@ public class Event implements Comparable<Event> {
 	 * @param priority
 	 *            the priority to set
 	 */
-	public void setPriority(byte priority) {
+	public void setPriority(int priority) {
 		this.priority = priority;
 	}
 
@@ -253,6 +281,21 @@ public class Event implements Comparable<Event> {
 	 */
 	public void setMaxSmell(float maxSmell) {
 		this.maxSmell = maxSmell;
+	}
+
+	/**
+	 * @return the maxFeel (the distance where the event is able to be felt)
+	 */
+	public float getMaxFeel() {
+		return maxFeel;
+	}
+
+	/**
+	 * @param maxFeel
+	 *            the distance where the event is able to be felt
+	 */
+	public void setMaxFeel(float maxFeel) {
+		this.maxFeel = maxFeel;
 	}
 
 }
