@@ -9,8 +9,6 @@ import java.util.ListIterator;
 
 import org.apache.log4j.Logger;
 import org.socialworld.ListModel;
-import org.socialworld.attributes.Inventory;
-import org.socialworld.attributes.Position;
 import org.socialworld.objects.*;
 import org.socialworld.datasource.*;
 
@@ -25,8 +23,6 @@ public class ObjectMaster {
 	private final List<God> gods;
 	private final List<Human> humans;
 	private final List<Item> items;
-	private final List<Inventory> inventories;
-	private final List<Position> positions;
 	private final List<Magic> magics;
 	private final List<Animal> animals;
 	
@@ -34,14 +30,15 @@ public class ObjectMaster {
 
 	private final LoadHuman humanCreator;
 	
+	private long maxObjectID = 0;
 	
 	private  ListIterator<God> godsIterator;
 	private  ListIterator<Human> humansIterator;
 	private  ListIterator<Item> itemsIterator;
-//	private  ListIterator<Inventory> inventorysIterator;
-//	private  ListIterator<Position> positionsIterator;
 //	private  ListIterator<Magic> magicsIterator;
 	private  ListIterator<Animal> animalsIterator;
+	
+	private  ListIterator<SimulationObject> objectsIterator;
 	
 	public ObjectMaster() {
 		logger.debug("create ObjectMaster");
@@ -54,9 +51,7 @@ public class ObjectMaster {
 		this.humans = new ListModel<Human>();
 		this.animals = new ListModel<Animal>();
 		this.magics = new ArrayList<Magic>();
-		this.positions = new ArrayList<Position>();
 		this.items = new ArrayList<Item>();
-		this.inventories = new ArrayList<Inventory>();
 		
 		resetIterators();
 	}	
@@ -64,6 +59,11 @@ public class ObjectMaster {
 	public SimulationObject createSimulationObject(
 			SimulationObjectType simulationObjectType, long objectID) {
 		SimulationObject object;
+		
+		if (objectID == 0) {
+			maxObjectID = maxObjectID + 1;
+			objectID = maxObjectID;
+		}
 		// TODO (tyloesand) weitere Objekttypen hinzufügen
 		switch (simulationObjectType) {
 		case animal:
@@ -101,30 +101,29 @@ public class ObjectMaster {
 		case item:
 			return this.itemsIterator.hasNext();
 		default:
-			return this.simulationObjects.iterator().hasNext();
+			return this.objectsIterator.hasNext();
 		}		
 		
 	}
 	
 	public SimulationObject next(SimulationObjectType simulationObjectType) {
-
 		switch (simulationObjectType) {
 		case animal:
-			return this.animals.iterator().next();
+			return this.animalsIterator.next();
 		case human:
-			return this.humans.iterator().next();
+			return this.humansIterator.next();
 		case god:
-			return this.gods.iterator().next();
+			return this.godsIterator.next();
 		case item:
-			return this.items.iterator().next();
+			return this.itemsIterator.next();
 		default:
-			return this.simulationObjects.iterator().next();
+			return this.objectsIterator.next();
 		}		
 		
 	}
 	
 	/**
-	 * The method returns a list of gods
+	 * The method returns the list of gods
 	 * 
 	 * @return
 	 */
@@ -133,7 +132,7 @@ public class ObjectMaster {
 	}
 
 	/**
-	 * The method returns a list of humans
+	 * The method returns the list of humans
 	 * 
 	 * @return
 	 */
@@ -142,7 +141,7 @@ public class ObjectMaster {
 	}
 
 	/**
-	 * The method returns a list of items
+	 * The method returns the list of items
 	 * 
 	 * @return
 	 */
@@ -150,23 +149,6 @@ public class ObjectMaster {
 		return this.items;
 	}
 
-	/**
-	 * The method returns a list of inventories
-	 * 
-	 * @return
-	 */
-	public List<Inventory> getInventories() {
-		return this.inventories;
-	}
-
-	/**
-	 * The method returns a list of positions
-	 * 
-	 * @return
-	 */
-	public List<Position> getPositions() {
-		return this.positions;
-	}
 
 	/**
 	 * The method returns a list of magics
