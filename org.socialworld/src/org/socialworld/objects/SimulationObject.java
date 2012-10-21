@@ -20,11 +20,11 @@ import org.socialworld.core.Event;
 public abstract class SimulationObject extends Model {
 	protected static final Logger logger = Logger.getLogger(SimulationObject.class);
 
+	protected	WriteAccessToSimulationObject guard;
 	protected	long 			objectID;
 	
 	protected 	Position 		position;
 
-	protected 	Event 			releasedEvent;
 
 	protected 	ActionHandler 	actionHandler;
 
@@ -38,16 +38,27 @@ public abstract class SimulationObject extends Model {
 	 * 
 	 */
 	public SimulationObject() {
+		this.guard = null;
+		this.actionHandler = new ActionHandler(this);
+		this.position = new Position( 0,0,0);
+		
 		loadInfluenceType();
 		loadReactionType();
-		
-		this.position = new Position( 0,0,0);
+
 	}
 
-	public void setObjectID(long objectID) {
-		this.objectID = objectID;	
+	void setWriteAccess(WriteAccessToSimulationObject guard) {
+		if (this.guard == null)  this.guard = guard;
 	}
 	
+	void setObjectID(long objectID, WriteAccessToSimulationObject guard) {
+		if (this.guard == guard ) this.objectID = objectID;	
+	}
+
+	void setPosition (Position pos, WriteAccessToSimulationObject guard) {
+		if (this.guard == guard) this.position = pos;
+	}
+
 	/**
 	 * The method lets an simulation object do an action.
 	 * 
@@ -55,28 +66,6 @@ public abstract class SimulationObject extends Model {
 	 */
 	public abstract void doAction(Action action);
 
-	/**
-	 * The method returns the reference to the event released by the object.
-	 * 
-	 * @return releasedEvent
-	 */
-	public Event getEvent() {
-		return null;
-	}
-
-	/**
-	 * The method sets the event released by the object.
-	 * 
-	 * @param simualationEvent
-	 */
-	public void setEvent(final Event simualationEvent) {
-	}
-
-	/**
-	 * The method deletes the reference of the event released by the object.
-	 */
-	public void deleteEvent() {
-	}
 
 	/**
 	 * The method determines the influence of an event. It calculates how the
@@ -102,13 +91,10 @@ public abstract class SimulationObject extends Model {
 	 * @return position
 	 */
 	public Position getPosition() {
-		return this.position;
+		return new Position(position);
 	}
 
 	
-	public void setPosition (Position pos) {
-		this.position = pos;
-	}
 	
 	/**
 	 * The method sets the x value of object's position.
