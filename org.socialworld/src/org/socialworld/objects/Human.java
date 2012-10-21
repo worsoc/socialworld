@@ -93,18 +93,28 @@ import org.socialworld.core.Action;
 
 	protected void useWeaponRight(final Action action) {
 		final SimulationObject rightHand = this.inventory.getRightHand();
-		if (rightHand != null) {
-			final Weapon weapon = (Weapon) rightHand;
-			weapon.handle(action, this);
-		}
+		if (rightHand != null ) 
+			if (rightHand instanceof Weapon){
+				final Weapon weapon = (Weapon) rightHand;
+				weapon.handle(action, this);
+			}
+			else if (rightHand instanceof Item) {
+				final Item item = (Item) rightHand;
+				item.handle(action, this);
+			}
 	}
 
 	protected void useWeaponLeft(final Action action) {
 		final SimulationObject leftHand = this.inventory.getLeftHand();
-		if (leftHand != null) {
-			final Weapon weapon = (Weapon) leftHand;
-			weapon.handle(action, this);
-		}
+		if (leftHand != null ) 
+			if (leftHand instanceof Weapon){
+				final Weapon weapon = (Weapon) leftHand;
+				weapon.handle(action, this);
+			}
+			else if (leftHand instanceof Item) {
+				final Item item = (Item) leftHand;
+				item.handle(action, this);
+			}
 	}
 
 	protected void spell(final Action action) {
