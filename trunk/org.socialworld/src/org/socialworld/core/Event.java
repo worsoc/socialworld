@@ -45,8 +45,7 @@ public class Event implements Comparable<Event> {
 	 */
 	public Event(int eventType, int priority, SimulationObject causer, Time time, Position position,
 			Direction direction, int strength, 
-			float effectDistance, float effectAngle,
-			float maxDistance, float maxSee, float maxHear, float maxSmell, float maxFeel) {
+			float effectDistance, float effectAngle) {
 		
 		this.eventType = eventType;		
 		
@@ -60,11 +59,8 @@ public class Event implements Comparable<Event> {
 
 		this.effectDistance = effectDistance;
 		this.effectAngle = effectAngle;
-		this. maxDistance = maxDistance;
-		this.maxSee = maxSee;
-		this.maxHear = maxHear;
-		this.maxSmell = maxSmell;
-		this.maxFeel = maxFeel;
+		
+		setDistancesOfNotice();
 	}	
 
 	/**
@@ -72,6 +68,15 @@ public class Event implements Comparable<Event> {
 	 */
 	public Event(int priority) {
 		this.priority = priority;
+	}
+
+	private void setDistancesOfNotice( ) {
+		this. maxDistance = 100;
+		this.maxSee = 100;
+		this.maxHear = 100;
+		this.maxSmell = 2;
+		this.maxFeel = 1;
+		
 	}
 
 	/*
