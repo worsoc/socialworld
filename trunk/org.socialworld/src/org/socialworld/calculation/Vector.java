@@ -18,6 +18,12 @@ public class Vector {
 
 	}
 
+	public Vector (Vector original) {
+		this.x = original.getX();
+		this.y = original.getY();
+		this.z = original.getZ();
+	}
+	
 	public Vector(double x, double y, double z) {
 		this.x = x;
 		this.y = y;
