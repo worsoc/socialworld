@@ -19,7 +19,7 @@ public class Position extends Vector {
 	}
 
 	public Position(Position original) {
-		super(original.getX(), original.getY(), original.getZ());
+		super(original);
 	}
 	
 	public Position(double x, double y, double z) {
