@@ -1,17 +1,13 @@
 package org.socialworld.core;
 
-import org.socialworld.attributes.ActionMode;
-import org.socialworld.attributes.ActionType;
-import org.socialworld.attributes.Position;
-import org.socialworld.attributes.Direction;
-import org.socialworld.attributes.Time;
-//import org.socialworld.calculation.ActionEventMapping;
-import org.socialworld.calculation.ActionEventMappingDescription;
 import org.socialworld.objects.SimulationObject;
+import org.socialworld.calculation.ActionEventMapping;
 
 public class EventCreator extends Semaphore {
 
 	private static EventCreator creator;
+	private ActionEventMapping mapping;
+	private Event event;
 	
 	/**
 	 * Because of being a singleton the instance is created in a private
@@ -19,12 +15,13 @@ public class EventCreator extends Semaphore {
 	 */
 	private EventCreator() {
 		locker = null;
+		mapping = ActionEventMapping.getInstance();
 	}
 	
 	/**
-	 * The method gets back the only instance of the ActionCreator.
+	 * The method gets back the only instance of the EventCreator.
 	 * 
-	 * @return singleton object of ActionCreator
+	 * @return singleton object of EventCreator
 	 */
 	public static EventCreator getInstance() {
 		if (creator == null) {
@@ -32,7 +29,21 @@ public class EventCreator extends Semaphore {
 		}
 		return creator;
 	}
-	
+
+	/**
+	 * If the caller is the owner of the semaphore (that means the owner of the event object),
+	 * the method returns the last created event object.
+	 * In other cases it returns null.
+	 * 
+	 * It is assumed, that the caller locks the semaphore 
+	 * and that the method createEvent() has been called before the method getEvent() is called().
+	 */
+	public Event getEvent(final Object user) {
+		if (this.locker == user) 
+			return this.event;
+		else
+			return null;
+	}	
 	/**
 	 * The method creates a new event for an action.
 	 * The creation is saved by semaphore.
@@ -60,35 +71,8 @@ public class EventCreator extends Semaphore {
 	 * 
 	 */
 	private void createEvent(final Action action,	final SimulationObject actor) {
-		// TODO (tyloesand) implement the action event mapping
-		ActionEventMappingDescription mappingDescription;
-		ActionType actionType;
-		ActionMode actionMode;
-	
-		
-		Event event;
-		
-		int eventType = 1;
-		SimulationObject causer;
-		Direction direction;
-		int strength;
-		Time time;
-		int priority;
-		Position position;
-		
-		
-		actionType = action.getType();
-		actionMode = action.getMode();
-
-		strength = (int) action.getIntensity();
-		priority = action.getPriority();
-		position = actor.getPosition();
-		direction = action.getDirection();
-		causer = actor;
-		time = new Time();
-		event = new Event( eventType,  priority,  causer,  time,  position,
-				 direction,  strength, 
-				 0,  0,
-				 0,  0,  0,  0,  0);
+		event = mapping.createEvent(action, actor);
 	}
+	
+	
 }
