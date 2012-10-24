@@ -19,6 +19,10 @@ public class Direction extends Vector {
 
 	}
 
+	public Direction (Direction original) {
+		super(original);
+	}
+	
 	public Direction(double x, double y, double z) {
 		super(x, y, z);
 	}
