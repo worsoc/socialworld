@@ -74,12 +74,6 @@ public class AttributeCalculator extends Semaphore{
 		return calculator;
 	}
 	
-	public synchronized void calculateAll(String input, String object) {
-		synchronized (this) {
-			// Berechne
-		}
-	}
-
 
 	/**
 	 * The method sets the attribute array of an object (if and only if the
@@ -147,32 +141,32 @@ public class AttributeCalculator extends Semaphore{
 	}
 
 	/**
-	 * The method calculates an event caused change of an attribute array.
-	 * The event description was set to an instance variable by public function changeAttributes(...
-	 *           
-	 */
-	private void modifyAttributes() {
-		EventInfluenceExpression expression;
-		int index;
-		
-		expression = this.eventInfluence.expression;
-		for (index = 0; index < this.numberOfAttributes; index++) {
-			modifyAttribute(index, expression);
-		}
-	}
-	/**
-	 * The method calculates the change of an attribute by an event.
+	 * The method sets the attribute calculation matrix to an instance variable
+	 * and starts the calculation.
+	 *  The attribute calculation may use shares , functions on attributes and offsets.
+	 *  The function's input values are 
+	 *  - the current attribute values,
+	 *  - the last attribute value or 
+	 *  - the difference between current and last attribute value.
 	 * 
-	 * @param targetAttribute
-	 *            the attribute to modify
-	 * @param exression
-	 *            the informations how the event changes the attribute
-	 *           
+	 * @param matrix
+	 *            the informations how the attributes influence each other.
+	 * @param user
+	 * @return  SemaphoreReturnCode           
 	 */
-	private void modifyAttribute(int attributeIndex,
-			EventInfluenceExpression expression) {
-			this.attributes.set(attributeIndex, expression.evaluateExpression(
-				this.attributes, attributeIndex));
+	public SemaphoreReturnCode changeAttributes(
+			AttributeCalculatorMatrix matrix, Object user) {
+		if (this.locker == user) {
+			this.matrix = matrix;
+			if (this.matrix.isWithOffset() )
+				calculateAttributesByMatrixWithOffset();
+			else 
+				calculateAttributesByMatrix();
+			return SemaphoreReturnCode.success;
+		}
+		if (this.locker == null)
+			return SemaphoreReturnCode.notLockedByAnyone;
+		return SemaphoreReturnCode.lockedByAnotherUser;
 	}
 
 	/**
@@ -200,6 +194,37 @@ public class AttributeCalculator extends Semaphore{
 			return SemaphoreReturnCode.notLockedByAnyone;
 		return SemaphoreReturnCode.lockedByAnotherUser;
 	}
+
+	/**
+	 * The method calculates an event caused change of an attribute array.
+	 * The event description was set to an instance variable by public function changeAttributes(...
+	 *           
+	 */
+	private void modifyAttributes() {
+		EventInfluenceExpression expression;
+		int index;
+		
+		expression = this.eventInfluence.expression;
+		for (index = 0; index < this.numberOfAttributes; index++) {
+			modifyAttribute(index, expression);
+		}
+	}
+	
+	/**
+	 * The method calculates the change of an attribute by an event.
+	 * 
+	 * @param targetAttribute
+	 *            the attribute to modify
+	 * @param exression
+	 *            the informations how the event changes the attribute
+	 *           
+	 */
+	private void modifyAttribute(int attributeIndex,
+			EventInfluenceExpression expression) {
+			this.attributes.set(attributeIndex, expression.evaluateExpression(
+				this.attributes, attributeIndex));
+	}
+
 
 	/**
 	 * The method calculates the attribute changes on a simple way..
@@ -252,34 +277,6 @@ public class AttributeCalculator extends Semaphore{
 
 	}
 	
-	/**
-	 * The method sets the attribute calculation matrix to an instance variable
-	 * and starts the calculation.
-	 *  The attribute calculation may use shares , functions on attributes and offsets.
-	 *  The function's input values are 
-	 *  - the current attribute values,
-	 *  - the last attribute value or 
-	 *  - the difference between current and last attribute value.
-	 * 
-	 * @param matrix
-	 *            the informations how the attributes influence each other.
-	 * @param user
-	 * @return  SemaphoreReturnCode           
-	 */
-	public SemaphoreReturnCode changeAttributes(
-			AttributeCalculatorMatrix matrix, Object user) {
-		if (this.locker == user) {
-			this.matrix = matrix;
-			if (this.matrix.isWithOffset() )
-				calculateAttributesByMatrixWithOffset();
-			else 
-				calculateAttributesByMatrix();
-			return SemaphoreReturnCode.success;
-		}
-		if (this.locker == null)
-			return SemaphoreReturnCode.notLockedByAnyone;
-		return SemaphoreReturnCode.lockedByAnotherUser;
-	}
 
 
 	/**
