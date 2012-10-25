@@ -26,11 +26,17 @@ public abstract class AbstractAction {
 	protected double intensity;
 	protected long duration;
 	protected long remainedDuration;
-
+	protected int done;
+	
 	public AbstractAction() {
 		super();
+		done = 0;
 	}
 
+	public int isDone() {
+		return done;
+	}
+	
 	/**
 	 * The methods returns the action type.
 	 * 
