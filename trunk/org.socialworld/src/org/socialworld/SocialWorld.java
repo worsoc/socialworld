@@ -26,7 +26,7 @@ public class SocialWorld implements BundleActivator {
 		logger.info("Start bundle " + PLUGIN_ID);
 
 		currentObject = this;
-		simulation = new Simulation();
+		simulation = Simulation.getInstance();
 	}
 
 	public void stop(BundleContext context) throws Exception {
