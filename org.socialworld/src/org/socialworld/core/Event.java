@@ -303,4 +303,7 @@ public class Event implements Comparable<Event> {
 		this.maxFeel = maxFeel;
 	}
 
+	public String toString() {
+		return this.eventType + " , " + this.position.toString();
+	}
 }
