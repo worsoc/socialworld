@@ -5,24 +5,10 @@ package org.socialworld.calculation;
 
 import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.AttributeArray;
-import org.socialworld.core.SemaphoreReturnCode;
-import org.socialworld.core.Semaphore;
 
-/**
- * Because of being a singleton there exists
- *         only one instance of the class. The object access is controlled by a
- *         semaphore. Only the owner of the semaphore can use the object. After
- *         locking the calculation object the user object gives an attribute
- *         array to the calculator. Then there can be a lot of calculations on
- *         that attribute array. If no further calculation is necessary the user
- *         object gets back the new attribute values. Finally the user releases
- *         the calculator. So an other object can take the semaphore and use the
- *         calculation object.
- * @author Mathias Sikos (tyloesand) 
- */
-public class AttributeCalculator extends Semaphore{
 
-	private static AttributeCalculator calculator;
+public class AttributeCalculator {
+
 
 	/**
 	 * the attribute array that is set by the user and is got back to the user
@@ -50,51 +36,25 @@ public class AttributeCalculator extends Semaphore{
 
 	private int numberOfAttributes;
 
-	/**
-	 * Because of being a singleton the instance is created in a private
-	 * constructor.
-	 */
-	private AttributeCalculator() {
-		locker = null;
+	public AttributeCalculator() {
 		this.numberOfAttributes = Attribute.NUMBER_OF_ATTRIBUTES;
 		attributes = new AttributeArray();
 		attributesNew = new float[numberOfAttributes];
 		clearAttributes();
 	}
 
-	/**
-	 * The method gets back the only instance of the AttributeCalculator.
-	 * 
-	 * @return singleton object of AttributeCalculator
-	 */
-	public static AttributeCalculator getInstance() {
-		if (calculator == null) {
-			calculator = new AttributeCalculator();
-		}
-		return calculator;
-	}
-	
 
 	/**
-	 * The method sets the attribute array of an object (if and only if the
-	 * object is owner of the semaphore).
+	 * The method sets the attribute array of an object 
 	 * 
 	 * @param attributes
-	 * @param user
-	 * @return  SemaphoreReturnCode
 	 */
-	public SemaphoreReturnCode setAttributes(
-			AttributeArray attributes, Object user) {
+	public void setAttributes(
+			AttributeArray attributes) {
 		int index;
-		if (this.locker == user) {
-			for (index = 0; index < numberOfAttributes; index++) {
+		for (index = 0; index < numberOfAttributes; index++) {
 				this.attributes.set(index, attributes.get(index));
-			}
-			return SemaphoreReturnCode.success;
 		}
-		if (this.locker == null)
-			return SemaphoreReturnCode.notLockedByAnyone;
-		return SemaphoreReturnCode.lockedByAnotherUser;
 	}
 
 	/**
@@ -103,20 +63,12 @@ public class AttributeCalculator extends Semaphore{
 	 * 
 	 * @param attributes
 	 * @param user
-	 * @return  SemaphoreReturnCode
 	 */
-	public SemaphoreReturnCode fetchAttributes(
-			AttributeArray attributes, Object user) {
+	public void fetchAttributes(AttributeArray attributes) {
 		int index;
-		if (this.locker == user) {
-			for (index = 0; index < numberOfAttributes; index++) {
+		for (index = 0; index < numberOfAttributes; index++) {
 				attributes.set(index, this.attributes.get(index));
-			}
-			return SemaphoreReturnCode.success;
 		}
-		if (this.locker == null)
-			return SemaphoreReturnCode.notLockedByAnyone;
-		return SemaphoreReturnCode.lockedByAnotherUser;
 	}
 
 	/**
@@ -125,19 +77,10 @@ public class AttributeCalculator extends Semaphore{
 	 * 
 	 * @param eventInfluence
 	 *            the informations how an event effects to the attributes.
-	 * @param user
-	 * @return  SemaphoreReturnCode           
 	 */
-	public SemaphoreReturnCode changeAttributes(
-			EventInfluenceDescription eventInfluence, Object user) {
-		if (this.locker == user) {
-			this.eventInfluence = eventInfluence;
-			modifyAttributes();
-			return SemaphoreReturnCode.success;
-		}
-		if (this.locker == null)
-			return SemaphoreReturnCode.notLockedByAnyone;
-		return SemaphoreReturnCode.lockedByAnotherUser;
+	public void changeAttributes(EventInfluenceDescription eventInfluence) {
+		this.eventInfluence = eventInfluence;
+		modifyAttributes();
 	}
 
 	/**
@@ -151,22 +94,13 @@ public class AttributeCalculator extends Semaphore{
 	 * 
 	 * @param matrix
 	 *            the informations how the attributes influence each other.
-	 * @param user
-	 * @return  SemaphoreReturnCode           
 	 */
-	public SemaphoreReturnCode changeAttributes(
-			AttributeCalculatorMatrix matrix, Object user) {
-		if (this.locker == user) {
-			this.matrix = matrix;
-			if (this.matrix.isWithOffset() )
-				calculateAttributesByMatrixWithOffset();
-			else 
-				calculateAttributesByMatrix();
-			return SemaphoreReturnCode.success;
-		}
-		if (this.locker == null)
-			return SemaphoreReturnCode.notLockedByAnyone;
-		return SemaphoreReturnCode.lockedByAnotherUser;
+	public void changeAttributes(AttributeCalculatorMatrix matrix) {
+		this.matrix = matrix;
+		if (this.matrix.isWithOffset() )
+			calculateAttributesByMatrixWithOffset();
+		else 
+			calculateAttributesByMatrix();
 	}
 
 	/**
@@ -180,19 +114,10 @@ public class AttributeCalculator extends Semaphore{
 	 * 
 	 * @param matrix
 	 *            the informations how the attributes influence each other.
-	 * @param user
-	 * @return  SemaphoreReturnCode           
 	 */
-	public SemaphoreReturnCode refreshAttributes(
-			AttributeCalculatorMatrix matrix, Object user) {
-		if (this.locker == user) {
-			this.matrix = matrix;
-			calculateAttributesSimply();
-			return SemaphoreReturnCode.success;
-		}
-		if (this.locker == null)
-			return SemaphoreReturnCode.notLockedByAnyone;
-		return SemaphoreReturnCode.lockedByAnotherUser;
+	public void refreshAttributes(AttributeCalculatorMatrix matrix) {
+		this.matrix = matrix;
+		calculateAttributesSimply();
 	}
 
 	/**
