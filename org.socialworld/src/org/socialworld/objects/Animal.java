@@ -8,10 +8,7 @@ import org.socialworld.attributes.ActionType;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.attributes.Move;
 import org.socialworld.core.Action;
-import org.socialworld.core.ActionCreator;
 import org.socialworld.core.Event;
-import org.socialworld.core.SemaphoreReturnCode;
-import org.socialworld.calculation.AttributeCalculator;
 import org.socialworld.calculation.AttributeCalculatorMatrix;
 import org.socialworld.calculation.EventInfluenceDescription;
 import org.socialworld.calculation.EventInfluenceAssignment;
@@ -62,24 +59,32 @@ public class Animal extends SimulationObject {
 	public void doAction(final Action action) {
 
 		ActionType type;
+		Event event;
+		int actionDone = 0;
+		
 		type = action.getType();
 
 		switch (type) {
 		case sleep:
-			sleep(action);
-			return;
+			actionDone = sleep(action);
+			break;
 		case changeMove:
-			changeMove(action);
-			return;
+			actionDone = changeMove(action);
+			break;
 		case kick:
-			kick(action);
-			return;
+			actionDone = kick(action);
+			break;
 		case move:
-			move(action);
-			return;
+			actionDone = move(action);
+			break;
 		case say:
+			break;
 		default:
-			return;
+			break;
+		}
+		if (actionDone > 0) {
+			event = mapActionToEvent(action);
+			simulation.getEventMaster().addEvent(event);
 		}
 	}
 
@@ -88,8 +93,9 @@ public class Animal extends SimulationObject {
 	 * 
 	 * @param action
 	 */
-	protected void changeMove(final Action action) {
+	protected int changeMove(final Action action) {
 		this.move.setMode(action.getMode());
+		return action.isDone();
 	}
 
 	/**
@@ -97,7 +103,8 @@ public class Animal extends SimulationObject {
 	 * 
 	 * @param action
 	 */
-	protected void move(final Action action) {
+	protected int move(final Action action) {
+		return action.isDone();
 	}
 
 	/**
@@ -105,7 +112,8 @@ public class Animal extends SimulationObject {
 	 * 
 	 * @param action
 	 */
-	protected void kick(final Action action) {
+	protected int kick(final Action action) {
+		return action.isDone();
 	}
 
 	/**
@@ -113,7 +121,7 @@ public class Animal extends SimulationObject {
 	 * 
 	 * @param action
 	 */
-	protected void sleep(final Action action) {
+	protected int sleep(final Action action) {
 		final ActionMode mode = action.getMode();
 
 		switch (mode) {
@@ -123,6 +131,7 @@ public class Animal extends SimulationObject {
 			break;
 		default:
 		}
+		return action.isDone();
 	}
 
 	/**
@@ -148,7 +157,6 @@ public class Animal extends SimulationObject {
 	 *            the event that effects to the object
 	 */
 	public void changeByEvent(final Event event) {
-		SemaphoreReturnCode returnCode;
 		EventInfluenceDescription eventInfluenceDescription;
 		int eventType;
 		int eventInfluenceType;
@@ -160,20 +168,9 @@ public class Animal extends SimulationObject {
 			EventInfluenceAssignment.getInstance().getEventInfluenceDescription(
 				eventType, eventInfluenceType	);
 		
-		returnCode = AttributeCalculator.getInstance().lockBy(this);
-		if ( returnCode == 	SemaphoreReturnCode.success ||
-			 returnCode == 	SemaphoreReturnCode.lockedByUser  ) {
-			AttributeCalculator.getInstance().setAttributes(
-					this.attributes, this);
-			AttributeCalculator.getInstance().changeAttributes(
-				eventInfluenceDescription, this);
-			AttributeCalculator.getInstance().fetchAttributes(
-					this.attributes, this);
-			returnCode = AttributeCalculator.getInstance().releaseBy(this);
-		}
-		else {
-		// TODO (tyloesand) Fehlerfall
-		}	
+		attributeCalculator.setAttributes(this.attributes);
+		attributeCalculator.changeAttributes(eventInfluenceDescription);
+		attributeCalculator.fetchAttributes(this.attributes);
 		
 		
 	}
@@ -185,25 +182,11 @@ public class Animal extends SimulationObject {
 	 *            the event that the object reacts to
 	 */
 	public void reactToEvent(final Event event) {
-		SemaphoreReturnCode returnCode;
-		ActionCreator creator;
 		Action reaction;
 
 		logger.debug("reactToEvent");
 
-		creator = ActionCreator.getInstance();
-		returnCode = creator.lockBy(this);
-		if ( returnCode == 	SemaphoreReturnCode.success ||
-			 returnCode == 	SemaphoreReturnCode.lockedByUser  ) {
-			creator.createAction(
-				this, event, this);
-			reaction = creator.getAction(this);
-			returnCode = creator.releaseBy(this);
-		}
-		else {
-		// TODO (tyloesand) Fehlerfall
-			reaction = null;
-		}	
+		reaction =	actionCreator.createAction(	this, event);
 		
 		actionHandler.insertAction(reaction);
 		
