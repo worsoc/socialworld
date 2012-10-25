@@ -6,23 +6,27 @@ package org.socialworld.core;
 import org.apache.log4j.Logger;
 import org.socialworld.objects.*;
 
+
+
 /**
  * The class Simulation holds all simulation objects and runs the simulation
  * 
  * @author Mathias Sikos (tyloesand)
  * 
  */
-public class Simulation {
+public class Simulation implements IHumanWrite{
 	// TODO (tyloesand) hier ist noch viel zu tun:
 	// - ueberdenken, welche Listen
 	// - ueberdenken Start EventMaster
 	
 	private static final Logger logger = Logger.getLogger(Simulation.class);
 
+	private static Simulation instance;
+	
 	private final EventMaster eventMaster;
 	private final ObjectMaster objectMaster;
 
-	public Simulation() {
+	private Simulation() {
 		logger.debug("create simulation object");
 		this.eventMaster = new EventMaster();
 		this.objectMaster = new ObjectMaster();
@@ -38,17 +42,35 @@ public class Simulation {
 		stopSimulation();
 	}
 	
+	/**
+	 * The method gets back the only instance of the Simulation.
+	 * 
+	 * @return singleton object of Simulation
+	 */
+	public static Simulation getInstance() {
+		if (instance == null) {
+			instance = new Simulation();
+		}
+		return instance;
+		
+	}
+	
 /** This method visualizes the actual state of developing
  * Therefore it is implemented as private procedure 
  * and is called by the class constructor
  */
 	private void simulateSocialWorld() {
-		// objectID = 0 because there aren't any objects
+		//  index = 0 means that the object is new and isn't saved to any data source
+		// the object master will assign the objectID.
 		// all objects must be created for testing the simulation
 		// until now there is no data source for simulation objects
 		this.objectMaster.createSimulationObject(SimulationObjectType.human, 0);
 		this.objectMaster.createSimulationObject(SimulationObjectType.human, 0);
 		this.objectMaster.createSimulationObject(SimulationObjectType.human, 0);
+		this.objectMaster.createSimulationObject(SimulationObjectType.human, 0);
+		this.objectMaster.createSimulationObject(SimulationObjectType.human, 0);
+		
+
 		
 	}
 	
