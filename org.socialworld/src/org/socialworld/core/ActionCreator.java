@@ -11,70 +11,29 @@ import org.socialworld.calculation.EventReactionAssignment;
 import org.socialworld.calculation.EventReactionDescription;
 import org.socialworld.calculation.Vector;
 
-public class ActionCreator extends Semaphore {
+public class ActionCreator  {
 
-	private static ActionCreator creator;
 	Action action;
 	
-	/**
-	 * Because of being a singleton the instance is created in a private
-	 * constructor.
-	 */
-	private ActionCreator() {
-		locker = null;
+	public ActionCreator() {
 	}
 
-	/**
-	 * The method gets back the only instance of the ActionCreator.
-	 * 
-	 * @return singleton object of ActionCreator
-	 */
-	public static ActionCreator getInstance() {
-		if (creator == null) {
-			creator = new ActionCreator();
-		}
-		return creator;
-	}
 
 	/**
 	 * The method creates a new action as a reaction to an event.
-	 * The creation is saved by semaphore.
-	 *  So only the object, that locked the action creator, can create the reaction object.	  
 	 */
-	public SemaphoreReturnCode createAction(
+	public Action createAction(
 			final Animal actor,
-			final Event event,
-			final Object user) {
+			final Event event) {
 		
-		if (this.locker == user) {
+			action = null;
 			
 			createReaction(event, actor);
 			
-			return SemaphoreReturnCode.success;
-		}
-		if (this.locker == null)
-			return SemaphoreReturnCode.notLockedByAnyone;
-		return SemaphoreReturnCode.lockedByAnotherUser;
-		
-		
-
+			return action;
 	}
 	
 	
-	/**
-	 * If the caller is the owner of the semaphore (that means the owner of the action object),
-	 * the method returns the last created action object.
-	 * In other cases it returns null.
-	 * 
-	 * It is assumed, that the caller locks the semaphore 
-	 * and that the method createAction() has been called before the method getAction() is called().
-	 */
-	public Action getAction(final Object user) {
-		if (this.locker == user) 
-			return this.action;
-		else
-			return null;
-	}
 	
 	/**
 	 * The method creates a new action as a reaction to an event.
@@ -108,6 +67,9 @@ public class ActionCreator extends Semaphore {
 			EventReactionAssignment.getInstance().getEventReactionDescription(
 				eventType, eventReactionType	);
 		
+		// gets a copy of the actor's attribute array
+		// because it is needed only for reading
+		// isn't allowed to be changed
 		attributeArray = actor.getAttributes();
 		
 		actionType = eventReactionDescription.getActionTypeExpression().evaluateExpression(
@@ -133,5 +95,7 @@ public class ActionCreator extends Semaphore {
 		
 		action = new Action(actionType , actionMode , target,  direction,
 				 intensity,  minTime,  maxTime,	 priority,  duration);
+		
+		
 	}
 }
