@@ -8,8 +8,12 @@ import org.apache.log4j.Logger;
 import org.socialworld.Model;
 import org.socialworld.attributes.Position;
 import org.socialworld.core.Action;
+import org.socialworld.core.EventCreator;
+import org.socialworld.core.ActionCreator;
 import org.socialworld.core.ActionHandler;
 import org.socialworld.core.Event;
+import org.socialworld.core.Simulation;
+import org.socialworld.calculation.AttributeCalculator;
 
 /**
  * Every simulatable object is inherited by the abstract class SimulationObject.
@@ -21,13 +25,17 @@ public abstract class SimulationObject extends Model {
 	protected static final Logger logger = Logger.getLogger(SimulationObject.class);
 
 	protected	WriteAccessToSimulationObject guard;
-	protected	long 			objectID;
+	private		long 			objectID;
+	protected   Simulation  	simulation;
 	
 	protected 	Position 		position;
 
 
 	protected 	ActionHandler 	actionHandler;
-
+	protected 	EventCreator 	eventCreator;
+	protected 	ActionCreator 	actionCreator;
+	protected	AttributeCalculator attributeCalculator;
+	
 	protected	int				influenceTypeByEventType[];
 	protected	int				reactionTypeByEventType[];
 
@@ -39,7 +47,14 @@ public abstract class SimulationObject extends Model {
 	 */
 	public SimulationObject() {
 		this.guard = null;
+		
+		this.simulation = Simulation.getInstance();
+		
 		this.actionHandler = new ActionHandler(this);
+		this.eventCreator = new EventCreator();
+		this.actionCreator = new ActionCreator();
+		this.attributeCalculator = new AttributeCalculator();
+
 		this.position = new Position( 0,0,0);
 		
 		loadInfluenceType();
@@ -59,6 +74,10 @@ public abstract class SimulationObject extends Model {
 		if (this.guard == guard) this.position = pos;
 	}
 
+	public void setAction(Action newAction, WriteAccessToSimulationObject guard) {
+		if (this.guard == guard) actionHandler.insertAction(newAction);
+	}
+
 	/**
 	 * The method lets an simulation object do an action.
 	 * 
@@ -67,6 +86,12 @@ public abstract class SimulationObject extends Model {
 	public abstract void doAction(Action action);
 
 
+	public Event mapActionToEvent(Action action) {
+		Event event;
+		event = eventCreator.createEvent(this, action);
+		return event;
+	}
+	
 	/**
 	 * The method determines the influence of an event. It calculates how the
 	 * event changes the attributes of the simulation object.
@@ -153,6 +178,10 @@ public abstract class SimulationObject extends Model {
 	public int getReactionType(int eventType) {
 	 return reactionTypeByEventType[eventType];
 	} 
+	
+	public long getObjectID() {
+		return objectID;
+	}
 	
 	public String toString() {
 		return "" + objectID;
