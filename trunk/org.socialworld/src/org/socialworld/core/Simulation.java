@@ -27,19 +27,11 @@ public class Simulation implements IHumanWrite{
 	private final ObjectMaster objectMaster;
 
 	private Simulation() {
+		
 		logger.debug("create simulation object");
 		this.eventMaster = new EventMaster();
 		this.objectMaster = new ObjectMaster();
 
-		
-		// for testing the method is called here
-		startSimulation();
-		
-		// for testing the method is called here
-		simulateSocialWorld();
-		
-		// for testing the method is called here
-		stopSimulation();
 	}
 	
 	/**
@@ -55,24 +47,6 @@ public class Simulation implements IHumanWrite{
 		
 	}
 	
-/** This method visualizes the actual state of developing
- * Therefore it is implemented as private procedure 
- * and is called by the class constructor
- */
-	private void simulateSocialWorld() {
-		//  index = 0 means that the object is new and isn't saved to any data source
-		// the object master will assign the objectID.
-		// all objects must be created for testing the simulation
-		// until now there is no data source for simulation objects
-		this.objectMaster.createSimulationObject(SimulationObjectType.human, 0);
-		this.objectMaster.createSimulationObject(SimulationObjectType.human, 0);
-		this.objectMaster.createSimulationObject(SimulationObjectType.human, 0);
-		this.objectMaster.createSimulationObject(SimulationObjectType.human, 0);
-		this.objectMaster.createSimulationObject(SimulationObjectType.human, 0);
-		
-
-		
-	}
 	
 	public void startSimulation() {
 		this.eventMaster.start();
