@@ -8,6 +8,8 @@ import org.socialworld.attributes.Position;
 import org.socialworld.datasource.LoadAnimal;
 import org.socialworld.datasource.AttributeCalculatorMatrixPool;
 
+import org.socialworld.SimpleClientActionHandler;
+
 /**
  * Because of being a singleton there exists
  *         only one instance of the class. 
@@ -77,7 +79,8 @@ public class LoadHuman extends LoadAnimal implements IHumanWrite {
 		default:
 			human.setPosition(new Position(3 * (int)objectID, - 2 * (int) objectID , (int) objectID), this);
 			break;
-	}
+		}
+		SimpleClientActionHandler.getInstance().setHumanWrite((int)objectID, human);
 
 		return createdHuman;
 	}
