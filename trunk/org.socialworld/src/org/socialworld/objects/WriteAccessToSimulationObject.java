@@ -10,6 +10,10 @@ public class WriteAccessToSimulationObject {
 		object.setWriteAccess(this);
 	}
 	
+	public SimulationObject getObject() {
+		return this.object;
+	}
+	
 	public void setObjectID(long objectID, Object caller) {
 		if (caller instanceof ISimulationObjectWrite) object.setObjectID(objectID, this);
 	}
