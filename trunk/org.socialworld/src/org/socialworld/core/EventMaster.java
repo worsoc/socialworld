@@ -17,7 +17,7 @@ import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.SimulationObjectType;
 
 /**
- * The event master is a singleton thread that decides what event's influence
+ * The event master is a thread that decides what event's influence
  * should be calculated. this decision is made by fetching the first element
  * with highest priority. For that event the simulation objects, who may be
  * affected by the event, will be found. For these simulation objects the
@@ -67,7 +67,7 @@ public class EventMaster extends Thread {
 	private boolean isRunning;
 
 	/**
-	 * Private Constructor. (Singleton)
+	 * public Constructor. 
 	 */
 	public EventMaster() {
 
