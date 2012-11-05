@@ -16,7 +16,7 @@ import org.socialworld.core.Simulation;
 import org.socialworld.calculation.AttributeCalculator;
 
 /**
- * Every simulatable object is inherited by the abstract class SimulationObject.
+ * Every simulation object (actor in the simulation) is inherited by the abstract class SimulationObject.
  * 
  * @author Mathias Sikos (tyloesand)
  * 
@@ -42,7 +42,7 @@ public abstract class SimulationObject extends Model {
 	public static final int MAX_EVENT_INFLUENCE_TYPE = 256;
 
 	/**
-	 * The constructor creates an simulation object.
+	 * The constructor creates a simulation object.
 	 * 
 	 */
 	public SimulationObject() {
@@ -62,6 +62,15 @@ public abstract class SimulationObject extends Model {
 
 	}
 
+	/**
+	 * The method sets write access to a guard.
+	 * This guard can manipulate the object's state by calling methods.
+	 * Only the guard has access to object manipulation methods.
+	 * There is only one guard for a simulation object.
+	 * So a guard can only be set if no guard has been set yet.
+	 * 
+	 * @param guard
+	 */
 	void setWriteAccess(WriteAccessToSimulationObject guard) {
 		if (this.guard == null)  this.guard = guard;
 	}
@@ -75,17 +84,26 @@ public abstract class SimulationObject extends Model {
 	}
 
 	public void setAction(Action newAction, WriteAccessToSimulationObject guard) {
-		if (this.guard == guard) actionHandler.insertAction(newAction);
+
+		if (this.guard == guard) {
+			logger.debug("Mensch " + objectID + " trägt Aktion " + newAction.toString() + " in Liste ein");
+			actionHandler.insertAction(newAction);
+		}
 	}
 
 	/**
-	 * The method lets an simulation object do an action.
+	 * The method lets a simulation object do an action.
 	 * 
 	 * @param action
 	 */
 	public abstract void doAction(Action action);
 
 
+	/**
+	 * The method creates an event for a simulation object's action.
+	 * 
+	 * @param action
+	 */
 	public Event mapActionToEvent(Action action) {
 		Event event;
 		event = eventCreator.createEvent(this, action);
@@ -127,9 +145,9 @@ public abstract class SimulationObject extends Model {
 	 * @param posX
 	 */
 	public void setPositionX(final double posX) {
-		double oldPosX = this.position.getX();
+		//double oldPosX = this.position.getX();
 		this.position.setX(posX);
-		firePropertyChange("posX", oldPosX, posX);
+		//firePropertyChange("posX", oldPosX, posX);
 	}
 
 	/**
