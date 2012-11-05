@@ -15,7 +15,12 @@ import org.socialworld.objects.SimulationObject;
  * @author Mathias Sikos (tyloesand)
  */
 public abstract class AbstractAction {
-
+	public static final int MAX_ACTION_PRIORITY = 256;
+	
+	// must be in byte range
+	// because there is used a byte variable for index
+	public static final int MAX_ACTION_WAIT_SECONDS = 60;
+	
 	protected ActionType type;
 	protected Time minTime;
 	protected Time maxTime;
