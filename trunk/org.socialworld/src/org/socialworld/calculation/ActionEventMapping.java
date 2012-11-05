@@ -28,12 +28,21 @@ public class ActionEventMapping {
 	}
 	
 	public Event createEvent(final Action action,	final SimulationObject actor) {
+		Event event;
+		
+		// just for testing:
+		if (actor.getObjectID() == 1) {
+			event = new Event(1,  10,  actor,  new Time(1500),  new Position(100,105,0),
+				 new Direction(0,1,0),  10, 
+				 10,  45);
+			return event;
+		}
+		
 		// TODO (tyloesand) implement the action event mapping 
 		// and the event property calculation (in private methods, see below)
 		ActionType actionType;
 		ActionMode actionMode;
 		
-		Event event;
 		
 		int eventType;
 		SimulationObject causer;
