@@ -22,6 +22,12 @@ public class SocialWorld implements BundleActivator {
 
 	private Simulation simulation;
 
+/*	private SocialWorld() {
+		super();
+		simulation = Simulation.getInstance();
+		
+	}
+*/	
 	public void start(BundleContext context) throws Exception {
 		logger.info("Start bundle " + PLUGIN_ID);
 
@@ -37,6 +43,9 @@ public class SocialWorld implements BundleActivator {
 	}
 
 	public static SocialWorld getCurrent() {
+		if (currentObject == null) {
+			currentObject = new SocialWorld();
+		}
 		return currentObject;
 	}
 
