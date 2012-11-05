@@ -18,60 +18,98 @@ import org.socialworld.objects.SimulationObject;
  */
 public class ActionHandler  {
 
+	public static final int ACTIONHANDLER_RETURN_ACTIONDONE = 0;
+	public static final int ACTIONHANDLER_RETURN_ACTIONISGOINGON = 1;
+	public static final int ACTIONHANDLER_RETURN_ACTIONYETEXECUTED = 2;
+	public static final int ACTIONHANDLER_RETURN_NOACTION = -1;
+
 	/**
-	 * the simulation object whose actions are manged
+	 * the simulation object whose actions are managed
 	 */
-	protected SimulationObject object;
+	private SimulationObject object;
+
 	/**
-	 * the queue where all object's actions are inserted (orderer by action's
+	 * the list where all object's actions are inserted (ordered by action's
 	 * time and priority)
 	 */
-	protected List<Action> actionQueue;
+	private List<Action> actionList;
+
 	/**
 	 * the action that actually is handled (executed).
 	 */
-	protected Action actualAction;
+	private Action actualAction;
 
+	/**
+	 * the action that has been executed at last.
+	 * needed for decision whether 2 (or more) actions belong together (linked actions) 
+	 */
+	private Action lastExecutedAction;
+
+	/**
+	 * the second of the actual minute.
+	 *  it is used for decision whether this action handler has yet executed an action within the actual time step
+	 */
+	private byte secondOfTheActualMinute;
+	
+	
+	/**
+	 * the latest time (in milliseconds) when the actual action's execution should start (later it would become invalid)
+	 * 
+	 */
+	private long latestExecutionTime;
+	
 	public ActionHandler(final SimulationObject simulationObject) {
 		this.actualAction = null;
-		this.actionQueue = new ArrayList<Action>();
+		this.actionList = new ArrayList<Action>();
 		this.object = simulationObject;
 	}
 
 
-	/**
-	 * @return the actualAction
-	 */
-	public Action getActualAction() {
-		return this.actualAction;
-	}
 
 	/**
 	 * The method gets the first action element from action list and lets the according
 	 * object execute the action.
+	 * 
+	 * @param secondOfTheActualMinute
+	 * 
+	 * @return int (code for execution state)
 	 */
-	public void doActualAction() {
+	public int doActualAction(byte actualSecond ) {
 		Action action;
-		Iterator<Action> iterator;
 		
-		iterator = this.actionQueue.iterator();
-		if (iterator.hasNext())		
-			action = iterator.next();
+		
+		if (this.actionList.size() > 0)		
+			action = this.actionList.get(1);
 		else
-			return;
-		
-		if (this.actualAction != null) 
-			if (this.actualAction.getRemainedDuration() == 0) 
-				this.actionQueue.remove(this.actualAction);
-		
+			return ACTIONHANDLER_RETURN_NOACTION;
+
+		// if there has been executed an action in the actual time step
+		// then determine, whether there are linked action
+		// if there are no linked actions return without execution of a further action
+		if (actualSecond == this.secondOfTheActualMinute) {
+			if (action == this.lastExecutedAction.getLinkedAction() )
+				;
+			else	return ACTIONHANDLER_RETURN_ACTIONYETEXECUTED;
+		}
 		
 		this.actualAction = action;
-		
 
+		// execute the actual action
 		if (this.actualAction != null) {
-			this.actualAction.lowerRemainedDuration(1);
 			this.object.doAction(this.actualAction);
+			// if the actual action is executed completely
+			// then assign it to the last executed action member
+			// and remove it from the list
+			if (this.actualAction.getRemainedDuration() == 0) {
+				this.lastExecutedAction = this.actualAction;
+				this.actionList.remove(this.actualAction);
+				return ACTIONHANDLER_RETURN_ACTIONDONE;
+			}
+			else
+				return ACTIONHANDLER_RETURN_ACTIONISGOINGON;
 		}
+		return ACTIONHANDLER_RETURN_NOACTION;
+
 	}
 
 	/**
@@ -96,7 +134,7 @@ public class ActionHandler  {
 		
 		if (newAction == null ) return;
 		
-		iterator = this.actionQueue.listIterator();
+		iterator = this.actionList.listIterator();
 		
 		minTimeInMilliseconds = newAction.getMinTime().getTotalMilliseconds();
 		maxTimeInMilliseconds = newAction.getMaxTime().getTotalMilliseconds();
@@ -119,7 +157,7 @@ public class ActionHandler  {
 					continue;
 				else
 					if (currentIndex == 1) 
-						if (this.actionQueue.indexOf(this.actualAction) == 1)
+						if (this.actionList.indexOf(this.actualAction) == 1)
 							continue;
 			else // if ( listedAction.getPriority() > priority )
 				if ( listedAction.getMinTime().getTotalMilliseconds()  <=
@@ -127,13 +165,21 @@ public class ActionHandler  {
 					continue;
 				else
 					if (currentIndex == 1) 
-						if (this.actionQueue.indexOf(this.actualAction) == 1)
+						if (this.actionList.indexOf(this.actualAction) == 1)
 							continue;
 
-			this.actionQueue.add(currentIndex, newAction);
+			// insert the new action element at the determined position (index)
+			this.actionList.add(currentIndex, newAction);
+			
+			// if the new action element is inserted at start (that means rated as best (execute as first))
+			// the action handler reports itself to the action master
+			if (currentIndex == 1) {
+				latestExecutionTime = maxTimeInMilliseconds;
+				ActionMaster.getInstance().reportBetterAction(this, latestExecutionTime, priority);
+			}
 			return;
 		}
-		this.actionQueue.add(newAction);
+		this.actionList.add(newAction);
 		
 	}
 
@@ -154,7 +200,7 @@ public class ActionHandler  {
 
 		noAction = null;
 		
-		iterator = this.actionQueue.iterator();
+		iterator = this.actionList.iterator();
 		
 		while (iterator.hasNext()) {
 			action = iterator.next();

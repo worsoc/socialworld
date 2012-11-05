@@ -17,6 +17,8 @@ import org.socialworld.objects.SimulationObject;
  */
 public class Action extends AbstractAction {
 
+	private Action linkedAction;
+	
 /**
  * The constructor creates an action object with its attributes.
  * @param type
@@ -43,6 +45,7 @@ public class Action extends AbstractAction {
 		this.setPriority(priority);
 		this.setDuration(duration);
 
+		this.linkedAction = null;
 	}
 	
 	/**
@@ -63,5 +66,24 @@ public class Action extends AbstractAction {
 	 */
 	public void raiseRemainedDuration(final long increment) {
 		this.remainedDuration += increment;
+	}
+	
+	/**
+	 * The method sets the linked action.
+	 * 
+	 * @param linked action
+	 */
+	public void setLinkedAction (Action linkedAction) {
+		this.linkedAction = linkedAction;
+	}
+	
+	/**
+	 * The method returns the linked action.
+	 * It is null if there is no linked action.
+	 * 
+	 * @return linked action
+	 */
+	public Action getLinkedAction() {
+		return linkedAction;
 	}
 }
