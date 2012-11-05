@@ -34,6 +34,10 @@ public class Time {
 	public long getTotalMilliseconds() {
 		return this.totalMilliseconds;
 	}
+
+	public byte getSecond() {
+		return this.seconds;
+	}
 	
 	private void separate() {
 		long rest;
@@ -57,6 +61,7 @@ public class Time {
 	}
 	
 	private long now() { 
+		// TODO (tyloesand) implement a function that returns a long for the actual time
 		return 0;
 	}
 
