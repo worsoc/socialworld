@@ -51,6 +51,7 @@ public class ActionMaster {
 	private int[][] indexBySecondAndPiority;
 	private  List<ActionHandler> actionHandlersNow;
 	private  ListIterator<ActionHandler> handlersIterator;
+	private int[] minPriorityBySecond;
 
 	// queue for all action handlers  (list (a))
 	// it is iterated from first to last element and starts at the first element again 	
@@ -81,6 +82,11 @@ public class ActionMaster {
 		}
 		
 		indexBySecondAndPiority = new int[Action.MAX_ACTION_WAIT_SECONDS][Action.MAX_ACTION_PRIORITY];
+		minPriorityBySecond = new int[Action.MAX_ACTION_WAIT_SECONDS];
+
+		for (int i = 1; i < Action.MAX_ACTION_WAIT_SECONDS; i++) {
+			minPriorityBySecond[i] = Action.MAX_ACTION_PRIORITY;
+		}
 
 		actionHandlersNow = reportedActionHandlers.get(0);
 		handlersIterator = actionHandlersNow.listIterator();
@@ -201,9 +207,12 @@ public class ActionMaster {
 		
 		// because an element has been inserted other elements' index has to be increased
 		// (only the elements that are listed behind the inserted one, that are the elements with lower priority)
-		for (int i = 1; i < priority; i++) {
+		for (int i = minPriorityBySecond[second]; i < priority; i++) {
 			indexBySecondAndPiority[second][i]++;
 		}
+		
+		// if there is a lower priority than before then change the start value for index shifting after insertion
+		if (priority < minPriorityBySecond[second]) minPriorityBySecond[second] = priority;
 		
 		return ACTIONMASTER_RETURN_INSERTED;
 	}
@@ -227,6 +236,9 @@ public class ActionMaster {
 	public void nextSecond() {
 		ActualTime time;
 		
+		// reset the start value (for index shifting after insertion) for the last second
+		minPriorityBySecond[secondOfTheActualMinute] = Action.MAX_ACTION_PRIORITY;
+
 		// if the iterator for the continue list points to the end the pointer is set to the list's start
 		if (continueHandlersIterator.nextIndex() == continueActionHandlers.size() )
 			continueHandlersIterator = continueActionHandlers.listIterator();
