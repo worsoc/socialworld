@@ -1,15 +1,15 @@
 package org.socialworld.core;
 
 import org.socialworld.objects.SimulationObject;
-import org.socialworld.calculation.ActionEventMapping;
+import org.socialworld.calculation.Action2EventMapping;
 
 public class EventCreator  {
 
-	private ActionEventMapping mapping;
+	private Action2EventMapping mapping;
 	private Event event;
 	
 	public EventCreator() {
-		mapping = ActionEventMapping.getInstance();
+		mapping = Action2EventMapping.getInstance();
 	}
 	
 
