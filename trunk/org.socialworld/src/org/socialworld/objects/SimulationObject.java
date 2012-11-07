@@ -38,7 +38,8 @@ public abstract class SimulationObject extends Model {
 	
 	protected	int				influenceTypeByEventType[];
 	protected	int				reactionTypeByEventType[];
-
+	protected   int				state2ActionType;
+	
 	public static final int MAX_EVENT_INFLUENCE_TYPE = 256;
 
 	/**
@@ -196,7 +197,11 @@ public abstract class SimulationObject extends Model {
 	public int getReactionType(int eventType) {
 	 return reactionTypeByEventType[eventType];
 	} 
-	
+
+	public int getState2ActionType() {
+		 return state2ActionType;
+		} 
+
 	public long getObjectID() {
 		return objectID;
 	}
