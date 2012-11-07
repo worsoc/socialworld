@@ -1,5 +1,4 @@
 package org.socialworld.calculation;
-
 import org.socialworld.attributes.ActionMode;
 import org.socialworld.attributes.ActionType;
 import org.socialworld.attributes.Direction;
@@ -9,21 +8,20 @@ import org.socialworld.core.Action;
 import org.socialworld.core.Event;
 import org.socialworld.objects.SimulationObject;
 
-public class ActionEventMapping {
-
-	private static ActionEventMapping mapping;
+public class Action2EventMapping {
+	private static Action2EventMapping mapping;
 	
-	private ActionEventMapping() {
+	private Action2EventMapping() {
 		
 	}
 	
 	/**
-	 * The method gets back the only instance of the ActionEventMapping.
+	 * The method gets back the only instance of the Action2EventMapping.
 	 * 
-	 * @return singleton object of ActionEventMapping
+	 * @return singleton object of Action2EventMapping
 	 */
-	public static ActionEventMapping getInstance() {
-		if (mapping == null) mapping = new ActionEventMapping();
+	public static Action2EventMapping getInstance() {
+		if (mapping == null) mapping = new Action2EventMapping();
 		return mapping;
 	}
 	

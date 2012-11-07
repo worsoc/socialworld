@@ -1,47 +1,45 @@
 package org.socialworld.calculation;
-
-import org.socialworld.attributes.ActionType;
+import org.socialworld.attributes.ActionMode;
 import org.socialworld.attributes.AttributeArray;
 
-public class EventReactionTypeExpression extends Expression {
 
-	ActionType type;
-	ActionType result;
+public class ActionModeExpression extends Expression {
+
+	ActionMode mode;
+	ActionMode result;
 	
 	@Override
-	// not used
 	protected void addition( ) {
-		defaultFunction( );
+		defaultFunction();
+
 	}
 
 	@Override
 	protected void defaultFunction( ) {
-		result = type;	
-
+		result = mode;
 	}
 
 	@Override
-	// not used
 	protected void multiplication( ) {
-		defaultFunction( );
+		defaultFunction();
 
 	}
 
 	@Override
-	// not used
 	protected void replacement() {
-		defaultFunction( );
+		defaultFunction();
 
 	}
 
 	/**
 	 * The method evaluates the expression by calling the parent method evaluateFunction().
-	 * The method evaluateFunction() finally sets the reaction's ActionType 
+	 * The method evaluateFunction() finally sets the reaction's ActionMode 
 	 * by calling the method defaultFunction().
 	 */
-	public ActionType evaluateExpression(AttributeArray attributeArray) {
+	public ActionMode evaluateExpression(AttributeArray attributeArray) {
 		
 		evaluateFunction(attributeArray);
 		return result;
 	}	
+
 }

@@ -1,29 +1,27 @@
 package org.socialworld.calculation;
-
 import org.socialworld.attributes.AttributeArray;
 
+public class ActionIntensityExpression extends Expression {
 
-public class EventReactionDurationExpression extends Expression {
-
-	long duration;
+	double intensity;
 	
-	long constant;
-	long result;
+	double constant;
+	double result;
 	
 	@Override
 	protected void addition( ) {
-		result = duration + constant;
+		result = intensity + constant;
 	}
 
 	@Override
 	protected void defaultFunction( ) {
-		result = duration;
+		result = intensity;
 
 	}
 
 	@Override
 	protected void multiplication( ) {
-		result = duration * constant;
+		result = intensity * constant;
 
 	}
 
@@ -35,12 +33,12 @@ public class EventReactionDurationExpression extends Expression {
 
 	/**
 	 * The method evaluates the expression by calling the parent method evaluateFunction().
-	 * The method evaluateFunction() finally calculates the reaction's duration
+	 * The method evaluateFunction() finally calculates the reaction's intensity
 	 * by calling the calculation methods.
 	 */
-	public long evaluateExpression(AttributeArray attributeArray, long duration) {
+	public double evaluateExpression(AttributeArray attributeArray, double intensity) {
 		
-		this.duration = duration;
+		this.intensity = intensity;
 		
 		evaluateFunction(attributeArray);
 		return result;
@@ -48,14 +46,15 @@ public class EventReactionDurationExpression extends Expression {
 	
 	/**
 	 * The method evaluates the expression by calling the parent method evaluateFunction().
-	 * The method evaluateFunction() finally calculates the reaction's duration
+	 * The method evaluateFunction() finally calculates the reaction's intensity
 	 * by calling the calculation methods.
 	 */
-	public long evaluateExpression(AttributeArray attributeArray) {
+	public double evaluateExpression(AttributeArray attributeArray) {
 		
-		this.duration = 0;
+		this.intensity = 0;
 		
 		evaluateFunction(attributeArray);
 		return result;
 	}
+
 }
