@@ -11,7 +11,8 @@ package org.socialworld.attributes;
  */
 public class Move {
 	private ActionMode mode;
-
+	private Direction direction;
+	
 	public Move() {
 		this.mode = ActionMode.walk;
 	}
@@ -31,4 +32,19 @@ public class Move {
 		this.mode = mode;
 	}
 
+	/**
+	 * @return the direction
+	 */
+	public Direction getDirection() {
+		return this.direction;
+	}
+
+	/**
+	 * @param direction
+	 *            the direction to set
+	 */
+	public void setDirection(final Direction direction) {
+		this.direction = direction;
+	}
+	
 }
