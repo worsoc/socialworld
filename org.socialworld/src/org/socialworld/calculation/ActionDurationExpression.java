@@ -1,29 +1,26 @@
 package org.socialworld.calculation;
-
 import org.socialworld.attributes.AttributeArray;
 
-
-public class EventReactionPriorityExpression extends Expression {
-
-	int priority;
+public class ActionDurationExpression extends Expression {
+	long duration;
 	
-	int constant;
-	int result;
+	long constant;
+	long result;
 	
 	@Override
 	protected void addition( ) {
-		result = priority + constant;
+		result = duration + constant;
 	}
 
 	@Override
 	protected void defaultFunction( ) {
-		result = priority;
+		result = duration;
 
 	}
 
 	@Override
 	protected void multiplication( ) {
-		result = priority * constant;
+		result = duration * constant;
 
 	}
 
@@ -35,12 +32,12 @@ public class EventReactionPriorityExpression extends Expression {
 
 	/**
 	 * The method evaluates the expression by calling the parent method evaluateFunction().
-	 * The method evaluateFunction() finally calculates the reaction's priority
+	 * The method evaluateFunction() finally calculates the reaction's duration
 	 * by calling the calculation methods.
 	 */
-	public int evaluateExpression(AttributeArray attributeArray, int priority) {
+	public long evaluateExpression(AttributeArray attributeArray, long duration) {
 		
-		this.priority = priority;
+		this.duration = duration;
 		
 		evaluateFunction(attributeArray);
 		return result;
@@ -48,14 +45,15 @@ public class EventReactionPriorityExpression extends Expression {
 	
 	/**
 	 * The method evaluates the expression by calling the parent method evaluateFunction().
-	 * The method evaluateFunction() finally calculates the reaction's priority
+	 * The method evaluateFunction() finally calculates the reaction's duration
 	 * by calling the calculation methods.
 	 */
-	public int evaluateExpression(AttributeArray attributeArray) {
+	public long evaluateExpression(AttributeArray attributeArray) {
 		
-		this.priority = 0;
+		this.duration = 0;
 		
 		evaluateFunction(attributeArray);
 		return result;
 	}
+
 }

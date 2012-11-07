@@ -1,9 +1,7 @@
 package org.socialworld.calculation;
-
 import org.socialworld.attributes.AttributeArray;
 
-
-public class EventReactionDelayExpression extends Expression {
+public class ActionDelayExpression extends Expression {
 
 	int delay;
 	
@@ -45,4 +43,5 @@ public class EventReactionDelayExpression extends Expression {
 		evaluateFunction(attributeArray);
 		return result;
 	}
+
 }

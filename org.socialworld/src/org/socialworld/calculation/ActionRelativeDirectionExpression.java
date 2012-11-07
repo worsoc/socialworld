@@ -1,9 +1,7 @@
 package org.socialworld.calculation;
-
 import org.socialworld.attributes.AttributeArray;
 
-
-public class EventReactionRelativeDirectionExpression extends Expression {
+public class ActionRelativeDirectionExpression extends Expression {
 
 	Vector relativeDirection;
 	
@@ -62,5 +60,5 @@ public class EventReactionRelativeDirectionExpression extends Expression {
 		evaluateFunction(attributeArray);
 		return result;
 	}	
-	
+
 }
