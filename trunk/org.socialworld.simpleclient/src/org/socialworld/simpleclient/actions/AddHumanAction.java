@@ -16,12 +16,12 @@ public class AddHumanAction implements IWorkbenchWindowActionDelegate {
 	private static final Logger logger = Logger.getLogger(AddHumanAction.class);
 
 	public void dispose() {
-		// TODO Auto-generated method stub
+		//  Auto-generated method stub
 
 	}
 
 	public void init(IWorkbenchWindow window) {
-		// TODO Auto-generated method stub
+		//  Auto-generated method stub
 
 	}
 
@@ -37,7 +37,7 @@ public class AddHumanAction implements IWorkbenchWindowActionDelegate {
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
-		// TODO Auto-generated method stub
+		//  Auto-generated method stub
 
 	}
 
