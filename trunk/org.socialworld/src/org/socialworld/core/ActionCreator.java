@@ -27,12 +27,14 @@ public class ActionCreator  {
 	 * @param: actor
 	 * @param: event
 	 */
-	public Action createAction(	final Animal actor,	final Event event) {
+	public Action createAction(	final SimulationObject actor,	final Event event) {
 		
 			action = null;
-			
-			createReaction(event, actor);
-			
+			if (actor instanceof Animal) 
+				createAnimalReaction(event, (Animal) actor);
+			else
+				createReaction(event,  actor);
+				
 			return action;
 	}
 	
@@ -41,12 +43,14 @@ public class ActionCreator  {
 	 *
 	 * @param: actor
 	 */
-	public Action createAction(	final Animal actor) {
+	public Action createAction(	final SimulationObject actor) {
 		
 			action = null;
 			
-			createReaction(actor);
-			
+			if (actor instanceof Animal) 
+				createAnimalReaction( (Animal) actor);
+			else
+				createReaction(actor);
 			return action;
 	}
 	
@@ -55,10 +59,10 @@ public class ActionCreator  {
 	 * The method creates a new action as a reaction to an event.
 	 * Therefore an according event reaction description is used to set the (re)action properties.
 	 * 
-	 * @param: actor
 	 * @param: event
+	 * @param: actor
 	 */
-	private void createReaction(final Event event,	final Animal actor) {
+	private void createAnimalReaction(final Event event,	final Animal actor) {
 		
 		EventReactionDescription eventReactionDescription;
 		int eventType;
@@ -114,6 +118,16 @@ public class ActionCreator  {
 		action = new Action(actionType , actionMode , target,  direction,
 				 intensity,  minTime,  maxTime,	 priority,  duration);
 	}
+
+	/**
+	 * The method creates a new action as a reaction to an event.
+	 * 
+	 * @param: event
+	 * @param: actor
+	 */
+	private void createReaction(final Event event,	final SimulationObject actor) {
+
+	}
 	
 	/**
 	 * The method creates a new action as a consequence of a simulation object's state.
@@ -121,7 +135,7 @@ public class ActionCreator  {
 	 * 
 	 * @param: actor
 	 */
-	private void createReaction(final Animal actor) {
+	private void createAnimalReaction(final Animal actor) {
 
 		State2ActionDescription state2ActionDescription;
 		AttributeArray attributeArray;
@@ -174,4 +188,14 @@ public class ActionCreator  {
 
 	}
 
+	/**
+	 * The method creates a new action as a consequence of a simulation object's state.
+	 * The action depends on the object's attributes.
+	 * 
+	 * @param: actor
+	 */
+	private void createReaction(final SimulationObject actor) {
+
+	}
+	
 }
