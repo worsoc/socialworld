@@ -19,7 +19,7 @@ import java.beans.PropertyChangeSupport;
 public class Model implements IModel {
 	
 
-	// FIXME (circlesmiler) Falls jemandem ein besserer Name für die Klasse
+	//  (circlesmiler) Falls jemandem ein besserer Name für die Klasse
 	// einfällt, dann bitte einfach den Namen anpassen.
 
 	private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(

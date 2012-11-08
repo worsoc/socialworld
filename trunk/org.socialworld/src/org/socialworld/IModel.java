@@ -15,7 +15,7 @@ import java.beans.PropertyChangeListener;
  */
 public interface IModel {
 	
-	// FIXME (circlesmiler) Falls jemandem ein besserer Name für die Klasse
+	//  (circlesmiler) Falls jemandem ein besserer Name für die Klasse
 	// einfällt, dann bitte einfach den Namen anpassen.
 
     /**
