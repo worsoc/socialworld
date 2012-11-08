@@ -10,13 +10,13 @@ public class ChooseHuman2Action implements IWorkbenchWindowActionDelegate {
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
+		//  Auto-generated method stub
 
 	}
 
 	@Override
 	public void init(IWorkbenchWindow window) {
-		// TODO Auto-generated method stub
+		//  Auto-generated method stub
 
 	}
 
@@ -31,7 +31,7 @@ public class ChooseHuman2Action implements IWorkbenchWindowActionDelegate {
 
 	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
-		// TODO Auto-generated method stub
+		//  Auto-generated method stub
 
 	}
 
