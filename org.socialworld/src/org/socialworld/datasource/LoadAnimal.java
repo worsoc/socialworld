@@ -7,7 +7,7 @@ public class LoadAnimal extends LoadSimulationObjects implements IAnimalWrite {
 
 	@Override
 	public Animal getObject(long objectID) {
-		// TODO Auto-generated method stub
+		// TODO implement how to get an animal object by objectID
 		return null;
 	}
 

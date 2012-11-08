@@ -15,7 +15,7 @@ import org.socialworld.core.Event;
  * 
  */
 public class Magic extends SimulationObject {
-
+// TODO implement Magic class functionality
 	public Magic() {
 		super();
 	}
@@ -27,7 +27,6 @@ public class Magic extends SimulationObject {
 	 */
 	@Override
 	public void changeByEvent(final Event event) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -37,7 +36,6 @@ public class Magic extends SimulationObject {
 
 	@Override
 	public void doAction(final Action action) {
-		// TODO Auto-generated method stub
 
 	}
 
