@@ -13,7 +13,6 @@ import org.socialworld.core.ActionCreator;
 import org.socialworld.core.ActionHandler;
 import org.socialworld.core.Event;
 import org.socialworld.core.Simulation;
-import org.socialworld.calculation.AttributeCalculator;
 
 /**
  * Every simulation object (actor in the simulation) is inherited by the abstract class SimulationObject.
@@ -34,7 +33,6 @@ public abstract class SimulationObject extends Model {
 	protected 	ActionHandler 	actionHandler;
 	protected 	EventCreator 	eventCreator;
 	protected 	ActionCreator 	actionCreator;
-	protected	AttributeCalculator attributeCalculator;
 	
 	protected	int				influenceTypeByEventType[];
 	protected	int				reactionTypeByEventType[];
@@ -54,7 +52,6 @@ public abstract class SimulationObject extends Model {
 		this.actionHandler = new ActionHandler(this);
 		this.eventCreator = new EventCreator();
 		this.actionCreator = new ActionCreator();
-		this.attributeCalculator = new AttributeCalculator();
 
 		this.position = new Position( 0,0,0);
 		
