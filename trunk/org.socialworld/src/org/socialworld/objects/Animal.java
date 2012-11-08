@@ -9,6 +9,7 @@ import org.socialworld.attributes.AttributeArray;
 import org.socialworld.attributes.Move;
 import org.socialworld.core.Action;
 import org.socialworld.core.Event;
+import org.socialworld.calculation.AttributeCalculator;
 import org.socialworld.calculation.AttributeCalculatorMatrix;
 import org.socialworld.calculation.EventInfluenceDescription;
 import org.socialworld.calculation.EventInfluenceAssignment;
@@ -25,12 +26,13 @@ public class Animal extends SimulationObject {
 	protected Move move;
 
 	protected AttributeArray attributes;
-
+	protected AttributeCalculator attributeCalculator;
 	protected AttributeCalculatorMatrix attributeCalculatorMatrix;
 	
 	public Animal() {
 		super();
 		attributes = new AttributeArray();
+		this.attributeCalculator = new AttributeCalculator();
 	}
 
 
