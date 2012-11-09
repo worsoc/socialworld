@@ -74,6 +74,15 @@
                toolbarPath="mainGroup"
                tooltip="release an event">
          </action>
+         <action
+               class="org.socialworld.simpleclient.actions.NextTimeStepAction"
+               id="org.socialworld.simpleclient.nextTimeStep"
+               label="&amp;weiter"
+               menubarPath="SimulationMenu/mainGroup"
+               style="push"
+               toolbarPath="mainGroup"
+               tooltip="nächste Zeiteinheit">
+         </action>
       </actionSet>
       <actionSet
             id="org.socialworld.simpleclient.MenschwahlActionSet"
