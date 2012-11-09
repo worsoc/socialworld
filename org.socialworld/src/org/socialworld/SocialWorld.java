@@ -29,7 +29,7 @@ public class SocialWorld implements BundleActivator {
 	}
 */	
 	public void start(BundleContext context) throws Exception {
-		logger.info("Start bundle " + PLUGIN_ID);
+		if (Simulation.WITH_LOGGING == 1 ) logger.info("Start bundle " + PLUGIN_ID);
 
 		currentObject = this;
 		simulation = Simulation.getInstance();

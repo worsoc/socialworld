@@ -61,8 +61,7 @@ public class Time {
 	}
 	
 	private long now() { 
-		// TODO (tyloesand) implement a function that returns a long for the actual time
-		return 0;
+		return System.currentTimeMillis();
 	}
 
 }
