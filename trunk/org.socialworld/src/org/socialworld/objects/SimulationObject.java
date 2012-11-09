@@ -84,7 +84,7 @@ public abstract class SimulationObject extends Model {
 	public void setAction(Action newAction, WriteAccessToSimulationObject guard) {
 
 		if (this.guard == guard) {
-			logger.debug("Mensch " + objectID + " trägt Aktion " + newAction.toString() + " in Liste ein");
+			if (Simulation.WITH_LOGGING == 1 ) logger.debug("Mensch " + objectID + " trägt Aktion " + newAction.toString() + " in Liste ein");
 			actionHandler.insertAction(newAction);
 		}
 	}

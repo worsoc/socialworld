@@ -18,19 +18,24 @@ public class Simulation implements IHumanWrite{
 	// TODO (tyloesand) hier ist noch viel zu tun:
 	// - ueberdenken, welche Listen
 	// - ueberdenken Start EventMaster
-	
+	// - EventMaster und ObjectMaster als Singleton
+	public static final int WITH_LOGGING = 1;
+	public static final int WITH_ERROR_LOGGING = 1;
 	private static final Logger logger = Logger.getLogger(Simulation.class);
 
 	private static Simulation instance;
 	
 	private final EventMaster eventMaster;
 	private final ObjectMaster objectMaster;
-
+	private final ActionMaster actionMaster;
+	
 	private Simulation() {
 		
-		logger.debug("create simulation object");
+		if (WITH_LOGGING == 1 ) logger.debug("create simulation object");
+		
 		this.eventMaster = new EventMaster();
 		this.objectMaster = new ObjectMaster();
+		this.actionMaster = ActionMaster.getInstance();
 
 	}
 	
@@ -60,6 +65,10 @@ public class Simulation implements IHumanWrite{
 		return this.eventMaster;
 	}
 
+	public void nextTimeStep() {
+		actionMaster.nextSecond();
+	}
+	
 	// for test visualizes there is a public access to the object master
 	public ObjectMaster getObjectMaster() {
 		return this.objectMaster;

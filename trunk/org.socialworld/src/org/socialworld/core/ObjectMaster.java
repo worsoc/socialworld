@@ -41,7 +41,7 @@ public class ObjectMaster {
 	private  ListIterator<SimulationObject> objectsIterator;
 	
 	public ObjectMaster() {
-		logger.debug("create ObjectMaster");
+		if (Simulation.WITH_LOGGING == 1 ) logger.debug("create ObjectMaster");
 
 		this.humanCreator = LoadHuman.getInstance();
 		

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.apache.log4j.Logger;
 import org.socialworld.attributes.ActualTime;
 
 
@@ -31,6 +32,7 @@ import org.socialworld.attributes.ActualTime;
  * @author Mathias Sikos (tyloesand)
  */
 public class ActionMaster {
+	private static final Logger logger = Logger.getLogger(ActionMaster.class);
 	
 	// a reported action handler is rejected because its best action element's execution time is too far in the future
 	public static final int ACTIONMASTER_RETURN_REJECT_TOOMUCHWAIT = 1;
@@ -249,6 +251,8 @@ public class ActionMaster {
 		
 		actionHandlersNow = reportedActionHandlers.get(secondOfTheActualMinute);
 		handlersIterator = actionHandlersNow.listIterator();
+
+		if (Simulation.WITH_LOGGING == 1 )logger.debug(time.toString());
 
 	}
 }

@@ -79,7 +79,7 @@ public class EventMaster extends Thread {
 	 * the method stops the event processing
 	 */
 	public void stopEventMaster() {
-		logger.debug("EventMaster.stopEventMaster");
+		if (Simulation.WITH_LOGGING == 1 )		logger.debug("EventMaster.stopEventMaster");
 		isRunning = false;
 	}
 
@@ -90,7 +90,7 @@ public class EventMaster extends Thread {
 	 */
 	@Override
 	public void run() {
-		logger.debug("EventMaster.run");
+		if (Simulation.WITH_LOGGING == 1 )		logger.debug("EventMaster.run");
 		int sleepTime = 10;
 		while (isRunning) {
 			calculateNextEvent();
@@ -101,8 +101,8 @@ public class EventMaster extends Thread {
 			try {
 				sleep(sleepTime);
 			} catch (InterruptedException e) {
-				logger.error(e.getMessage());
-				logger.error(e.getStackTrace());
+				if (Simulation.WITH_ERROR_LOGGING == 1 ) logger.error(e.getMessage());
+				if (Simulation.WITH_ERROR_LOGGING == 1 ) logger.error(e.getStackTrace());
 				e.printStackTrace();
 			}
 		}
@@ -112,7 +112,7 @@ public class EventMaster extends Thread {
 	 * Calculates the influences of the event to other simulation objects.
 	 */
 	private void calculateNextEvent() {
-		logger.debug("calculateNextEvent");
+		if (Simulation.WITH_LOGGING == 1 )	logger.debug("calculateNextEvent");
 
 		if (!eventQueue.isEmpty()) {
 			if ( loadEvent( this.eventQueue.poll() ) == true ) {
@@ -146,7 +146,7 @@ public class EventMaster extends Thread {
 	private void determineCandidates() {
 		SimulationObject candidate;
 		
-		logger.debug("determineCandidates");
+		if (Simulation.WITH_LOGGING == 1 )	logger.debug("determineCandidates");
 
 		// TODO (tyloesand) Optimierung Finden Kandidaten
 		// und dann nicht nur ueber Humans
