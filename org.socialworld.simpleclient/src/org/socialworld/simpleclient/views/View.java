@@ -144,7 +144,7 @@ public class View extends ViewPart {
 		columnIrgendwas.setText("AttributArray");
 		columnIrgendwas.setWidth(800);
 
-		logger.debug("get simulation object");
+		if (Simulation.WITH_LOGGING == 1 ) logger.debug("get simulation object");
 
 		this.viewer.setContentProvider(new ViewContentProvider());
 		this.viewer.setLabelProvider(new ViewLabelProvider());
@@ -154,7 +154,7 @@ public class View extends ViewPart {
 		// object master
 		final List<Human> humans = simulation.getObjectMaster().getHumans();
 
-		logger.debug("Set input to viewer: " + humans);
+		if (Simulation.WITH_LOGGING == 1 ) logger.debug("Set input to viewer: " + humans);
 		this.viewer.setInput(humans);
 	}
 
