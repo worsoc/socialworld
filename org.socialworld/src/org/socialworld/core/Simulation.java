@@ -68,7 +68,11 @@ public class Simulation implements IHumanWrite{
 	public void nextTimeStep() {
 		actionMaster.nextSecond();
 	}
-	
+
+	public void nextAction() {
+		actionMaster.executeAction();
+	}
+
 	// for test visualizes there is a public access to the object master
 	public ObjectMaster getObjectMaster() {
 		return this.objectMaster;
