@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Iterator;
 import java.util.ListIterator;
 
+import org.apache.log4j.Logger;
 import org.socialworld.objects.SimulationObject;
 
 /**
@@ -17,6 +18,7 @@ import org.socialworld.objects.SimulationObject;
  * @author Mathias Sikos (tyloesand)
  */
 public class ActionHandler  {
+	private static final Logger logger = Logger.getLogger(ActionHandler.class);
 
 	public static final int ACTIONHANDLER_RETURN_ACTIONDONE = 0;
 	public static final int ACTIONHANDLER_RETURN_ACTIONISGOINGON = 1;
@@ -62,6 +64,9 @@ public class ActionHandler  {
 		this.actualAction = null;
 		this.actionList = new ArrayList<Action>();
 		this.object = simulationObject;
+		
+		// the new created action handler is added to the action master
+		ActionMaster.getInstance().addActionHandler(this);
 	}
 
 
@@ -77,6 +82,7 @@ public class ActionHandler  {
 	public int doActualAction(byte actualSecond ) {
 		Action action;
 		
+		if (Simulation.WITH_LOGGING == 1 )logger.debug("Aufruf doActualAction");
 		
 		if (this.actionList.size() > 0)		
 			action = this.actionList.get(1);
@@ -121,65 +127,77 @@ public class ActionHandler  {
 	 * @param newAction
 	 */
 	public void insertAction(final Action newAction) {
+		if (Simulation.WITH_LOGGING == 1 )logger.debug("Aufruf insertAction");
 		
 		long minTimeInMilliseconds;
 		long maxTimeInMilliseconds;
 		int priority;
 		long duration;
+		boolean added = false;
 		
 		Action listedAction;
 		
 		ListIterator<Action> iterator;
-		int currentIndex;
+		int currentIndex = 0;
 		
 		if (newAction == null ) return;
 		
-		iterator = this.actionList.listIterator();
 		
 		minTimeInMilliseconds = newAction.getMinTime().getTotalMilliseconds();
 		maxTimeInMilliseconds = newAction.getMaxTime().getTotalMilliseconds();
 		priority = newAction.getPriority();
 		duration = newAction.getDuration();
 		
-		while (iterator.hasNext()) {
-			currentIndex = iterator.nextIndex() ;
-			listedAction = iterator.next();
-			
-			if ( listedAction.getPriority() < priority ) 
-				if ( (listedAction.getMaxTime().getTotalMilliseconds() + listedAction.getRemainedDuration()) <
-						minTimeInMilliseconds )
-					continue;
-				else
-					;
-			else if ( listedAction.getPriority() == priority ) 
-				if ( (listedAction.getMaxTime().getTotalMilliseconds() + listedAction.getRemainedDuration()) <
-						maxTimeInMilliseconds )
-					continue;
-				else
-					if (currentIndex == 1) 
-						if (this.actionList.indexOf(this.actualAction) == 1)
-							continue;
-			else // if ( listedAction.getPriority() > priority )
-				if ( listedAction.getMinTime().getTotalMilliseconds()  <=
-						( maxTimeInMilliseconds + duration ) )
-					continue;
-				else
-					if (currentIndex == 1) 
-						if (this.actionList.indexOf(this.actualAction) == 1)
-							continue;
+		if (this.actionList.size() > 0) {
+			iterator = this.actionList.listIterator();
+			while (iterator.hasNext()) {
+				currentIndex = iterator.nextIndex() ;
+				listedAction = iterator.next();
+				
+				if ( listedAction.getPriority() < priority ) 
+					if ( (listedAction.getMaxTime().getTotalMilliseconds() + listedAction.getRemainedDuration()) <
+							minTimeInMilliseconds )
+						continue;
+					else
+						;
+				else if ( listedAction.getPriority() == priority ) 
+					if ( (listedAction.getMaxTime().getTotalMilliseconds() + listedAction.getRemainedDuration()) <
+							maxTimeInMilliseconds )
+						continue;
+					else
+						if (currentIndex == 1) 
+							if (this.actionList.indexOf(this.actualAction) == 1)
+								continue;
+				else // if ( listedAction.getPriority() > priority )
+					if ( listedAction.getMinTime().getTotalMilliseconds()  <=
+							( maxTimeInMilliseconds + duration ) )
+						continue;
+					else
+						if (currentIndex == 1) 
+							if (this.actionList.indexOf(this.actualAction) == 1)
+								continue;
+	
+				// insert the new action element at the determined position (index)
+				this.actionList.add(currentIndex, newAction);
+				added = true;
 
-			// insert the new action element at the determined position (index)
-			this.actionList.add(currentIndex, newAction);
+			}  // end while
 			
-			// if the new action element is inserted at start (that means rated as best (execute as first))
-			// the action handler reports itself to the action master
-			if (currentIndex == 1) {
-				latestExecutionTime = maxTimeInMilliseconds;
-				ActionMaster.getInstance().reportBetterAction(this, latestExecutionTime, priority);
-			}
-			return;
+		}  // end (if size > 0)
+
+		// the action element is appended to the end of the list
+		if (added == false) {
+			currentIndex++;
+			this.actionList.add(newAction);
+			added = true;
 		}
-		this.actionList.add(newAction);
+
+		// if the new action element is inserted at start (that means rated as best (execute as first))
+		// the action handler reports itself to the action master
+		if (currentIndex == 1) {
+			latestExecutionTime = maxTimeInMilliseconds;
+			ActionMaster.getInstance().reportBetterAction(this, latestExecutionTime, priority);
+		}
 		
 	}
 
