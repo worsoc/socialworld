@@ -3,18 +3,15 @@ package org.socialworld.datasource;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.socialworld.attributes.AttributeArray;
 
 public class AttributeArrayPool {
 
-	private static final Logger logger = Logger.getLogger(AttributeArrayPool.class);
 	private static AttributeArrayPool instance;
 	
 	private static List<AttributeArray> attributes;
 	
 	private AttributeArrayPool () {
-		logger.debug("create AttributeArrayPool");
 		attributes = new ArrayList<AttributeArray> ();
 
 		initialize();
@@ -65,15 +62,12 @@ public class AttributeArrayPool {
 		switch (count) {
 		case 1: 
 			array = array2;
-			logger.debug("getArray() returns array2");
 			break;
 		case 2: 
 			array = array3;
-			logger.debug("getArray() returns array3");
 			break;
 		default: 
 			array = array1;
-			logger.debug("getArray() returns array1");
 			break;
 		}
 		return array;

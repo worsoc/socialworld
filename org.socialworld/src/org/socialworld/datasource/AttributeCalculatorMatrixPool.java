@@ -3,18 +3,15 @@ package org.socialworld.datasource;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.socialworld.calculation.AttributeCalculatorMatrix;
 
 public class AttributeCalculatorMatrixPool {
 
-	private static final Logger logger = Logger.getLogger(AttributeCalculatorMatrixPool.class);
 	private static AttributeCalculatorMatrixPool instance;
 	
 	private static List<AttributeCalculatorMatrix> matrixs;
 	
 	private AttributeCalculatorMatrixPool () {
-		logger.debug("create AttributeCalculatorMatrixPool");
 		matrixs = new ArrayList<AttributeCalculatorMatrix> ();
 
 		initialize();
