@@ -49,11 +49,12 @@ public class ActionMaster {
 	// priority list for reported action handlers (list (b))
 	// it is iterated one time from first to last element
 	// after a complete iteration the list is cleared an will be filled by new reported action handler elements
-	private List<List<ActionHandler>> reportedActionHandlers;
+	private ArrayList<List<ActionHandler>> reportedActionHandlers;
 	private int[][] indexBySecondAndPiority;
 	private  List<ActionHandler> actionHandlersNow;
 	private  ListIterator<ActionHandler> handlersIterator;
 	private int[] minPriorityBySecond;
+	private boolean iterationPriorityListIsRunning = false;
 
 	// queue for all action handlers  (list (a))
 	// it is iterated from first to last element and starts at the first element again 	
@@ -65,6 +66,7 @@ public class ActionMaster {
 	// the actual time step (measured in seconds per minute)
 	// is associated to the priority list for reported action handlers
 	private byte secondOfTheActualMinute;
+	
 	
 	/**
 	 *  the constructor creates the lists.
@@ -133,7 +135,9 @@ public class ActionMaster {
 		ActionHandler handler;
 		boolean handlerFromPriorityList = false;
 		boolean handlerFromContinueList = false;
-		
+
+		if (Simulation.WITH_LOGGING == 1 )logger.debug("Aufruf executeAction");
+
 		// if there is a further action handler in continue list this action handler is chosen to execute its action.
 		if (continueHandlersIterator.hasNext()) {
 			handler = continueHandlersIterator.next();
@@ -160,7 +164,9 @@ public class ActionMaster {
 			if (handlerFromContinueList)	continueHandlersIterator.remove();
 			break;
 		case ActionHandler.ACTIONHANDLER_RETURN_ACTIONISGOINGON:
-			if (handlerFromPriorityList) continueHandlersIterator.add(handler);
+			if (handlerFromPriorityList) continueActionHandlers.add(handler);
+			// because of iterating the priority list, there mustn't be reseted the continue list iterator
+			// It will be reseted if the next iteration process of continue list starts
 			break;
 		case ActionHandler.ACTIONHANDLER_RETURN_NOACTION:
 			if (handlerFromContinueList)	continueHandlersIterator.remove();
@@ -184,7 +190,8 @@ public class ActionMaster {
 			ActionHandler handler, long timeInMilliseconds, int priority) {
 
 		int indexPrio;
-		byte second;
+		int iteratorIndex;
+		int second;
 		long waitMilliseconds;
 		long waitSeconds;
 		
@@ -201,11 +208,21 @@ public class ActionMaster {
 		// with the help of the two dimensional int array
 		// (that holds the starting indexes for every second and every priority)
 		// the insert position into the priority list for reported action handlers is determined
-		second = (byte) (waitSeconds % Action.MAX_ACTION_WAIT_SECONDS);
+		second = (int) waitSeconds % Action.MAX_ACTION_WAIT_SECONDS;
 		indexPrio = indexBySecondAndPiority[second][priority];
+
 		
 		// insert the reported action handler at the determined position
 		reportedActionHandlers.get(second).add(indexPrio, handler);
+		
+		// if there is an insertion into second-0-list while iterating  second-0-list
+		// the iterator must be initialized ("pointing" to the element that was marked as next element before the insertion)
+		if (second == 0 && iterationPriorityListIsRunning == true) {
+			iteratorIndex = handlersIterator.nextIndex();
+			if (indexPrio <= iteratorIndex) iteratorIndex++;
+			handlersIterator = actionHandlersNow.listIterator(iteratorIndex);
+		}
+		
 		
 		// because an element has been inserted other elements' index has to be increased
 		// (only the elements that are listed behind the inserted one, that are the elements with lower priority)
@@ -225,7 +242,11 @@ public class ActionMaster {
 	 * @param handler
 	 */
 	public void addActionHandler(ActionHandler handler) {
+		int nextIndex;
+		
+		nextIndex = allHandlersIterator.nextIndex();
 		allActionHandlers.add(handler);
+		allHandlersIterator = allActionHandlers.listIterator(nextIndex);
 	}
 	
 	/**

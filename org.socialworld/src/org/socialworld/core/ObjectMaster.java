@@ -69,23 +69,30 @@ public class ObjectMaster {
 		case animal:
 			object = new Animal();
 			this.animals.add((Animal)object);
+			animalsIterator = animals.listIterator(animalsIterator.nextIndex());
 			break;
 		case human:
 			object = this.humanCreator.getObject(objectID);
 			this.humans.add((Human)object);
+			humansIterator = humans.listIterator(humansIterator.nextIndex());
 			break;
 		case god:
 			object = new God();
 			this.gods.add((God)object);
+			godsIterator = gods.listIterator(godsIterator.nextIndex());
 			break;
 		case item:
 			object = new Item();
 			this.items.add((Item)object);
+			itemsIterator = items.listIterator(itemsIterator.nextIndex());
 			break;
 		default:
 			object = null;
 		}
-		if (object != null) this.simulationObjects.add(object);
+		if (object != null) {
+			this.simulationObjects.add(object);
+			objectsIterator = simulationObjects.listIterator(objectsIterator.nextIndex());
+		}
 		return object;
 	}
 	
