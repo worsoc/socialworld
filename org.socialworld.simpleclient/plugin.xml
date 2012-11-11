@@ -83,6 +83,15 @@
                toolbarPath="mainGroup"
                tooltip="nächste Zeiteinheit">
          </action>
+         <action
+               class="org.socialworld.simpleclient.actions.ExecuteActionAction"
+               id="org.socialworld.simpleclient.executeAction"
+               label="Aktion"
+               menubarPath="SimulationMenu/mainGroup"
+               style="push"
+               toolbarPath="mainGroup"
+               tooltip="nächste Aktion ausführen">
+         </action>
       </actionSet>
       <actionSet
             id="org.socialworld.simpleclient.MenschwahlActionSet"
