@@ -274,6 +274,9 @@ public class ActionMaster {
 		handlersIterator = actionHandlersNow.listIterator();
 
 		if (Simulation.WITH_LOGGING == 1 )logger.debug(time.toString());
+		
+		//TODO (tyloesand) there must be a call to "all" ActionHandler.reset() somewhere 
+		// if  the counting of seconds starts with 0
 
 	}
 }

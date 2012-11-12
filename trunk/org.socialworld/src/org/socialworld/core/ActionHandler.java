@@ -51,7 +51,7 @@ public class ActionHandler  {
 	 * the second of the actual minute.
 	 *  it is used for decision whether this action handler has yet executed an action within the actual time step
 	 */
-	private byte secondOfTheActualMinute;
+	private byte secondOfTheActualMinute = Action.MAX_ACTION_WAIT_SECONDS;
 	
 	
 	/**
@@ -85,7 +85,7 @@ public class ActionHandler  {
 		if (Simulation.WITH_LOGGING == 1 )logger.debug("Aufruf doActualAction");
 		
 		if (this.actionList.size() > 0)		
-			action = this.actionList.get(1);
+			action = this.actionList.get(0);
 		else
 			return ACTIONHANDLER_RETURN_NOACTION;
 
@@ -103,6 +103,7 @@ public class ActionHandler  {
 		// execute the actual action
 		if (this.actualAction != null) {
 			this.object.doAction(this.actualAction);
+			this.secondOfTheActualMinute = actualSecond;
 			// if the actual action is executed completely
 			// then assign it to the last executed action member
 			// and remove it from the list
@@ -118,6 +119,15 @@ public class ActionHandler  {
 
 	}
 
+	/**
+	 * The method resets the state of the action handler.
+	 * the property secondOfTheActualMinute is set to MAX_ACTION_WAIT_SECONDS
+	 */
+	public void reset() {
+		// this value for second is never reached because the real maximum is one less
+		secondOfTheActualMinute = Action.MAX_ACTION_WAIT_SECONDS;
+	}
+	
 	/**
 	 * The method adds an action element to the action list of a simulation
 	 * object.
