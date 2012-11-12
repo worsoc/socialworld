@@ -64,4 +64,7 @@ public class Time {
 		return System.currentTimeMillis();
 	}
 
+	public String toString() {
+		return "" +(this.days) + " " + this.hours + ":" + this.minutes + ":" + this.seconds + "." + this.milliseconds;
+	}
 }
