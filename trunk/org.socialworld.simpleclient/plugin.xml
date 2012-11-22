@@ -92,6 +92,24 @@
                toolbarPath="mainGroup"
                tooltip="nächste Aktion ausführen">
          </action>
+         <action
+               class="org.socialworld.simpleclient.actions.RunEventMasterAction"
+               id="org.socialworld.simpleclient.StartSimulation"
+               label="Simuliere"
+               menubarPath="SimulationMenu/mainGroup"
+               style="push"
+               toolbarPath="mainGroup"
+               tooltip="Simulation laufen lassen">
+         </action>
+         <action
+               class="org.socialworld.simpleclient.actions.StopEventMasterAction"
+               id="org.socialworld.simpleclient.StopSimulation"
+               label="Unterbrechung"
+               menubarPath="SimulationMenu/mainGroup"
+               style="push"
+               toolbarPath="mainGroup"
+               tooltip="Simulation anhalten">
+         </action>
       </actionSet>
       <actionSet
             id="org.socialworld.simpleclient.MenschwahlActionSet"
