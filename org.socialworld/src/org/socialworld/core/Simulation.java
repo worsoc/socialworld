@@ -54,7 +54,7 @@ public class Simulation implements IHumanWrite{
 	
 	
 	public void startSimulation() {
-		this.eventMaster.start();
+		this.eventMaster.startEventMaster();
 	}
 	
 	public void stopSimulation() {
