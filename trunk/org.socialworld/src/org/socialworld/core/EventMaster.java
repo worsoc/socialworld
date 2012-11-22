@@ -83,6 +83,15 @@ public class EventMaster extends Thread {
 		isRunning = false;
 	}
 
+	/**
+	 * the method starts the event processing
+	 */
+	public void startEventMaster() {
+		if (Simulation.WITH_LOGGING == 1 )		logger.debug("EventMaster.startEventMaster");
+		isRunning = true;
+		this.start();
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -106,6 +115,7 @@ public class EventMaster extends Thread {
 				e.printStackTrace();
 			}
 		}
+		if (Simulation.WITH_LOGGING == 1 )		logger.debug("EventMaster stops");
 	}
 
 	/**
