@@ -44,6 +44,7 @@ public class Action extends AbstractAction {
 		this.setMaxTime(maxTime);
 		this.setPriority(priority);
 		this.setDuration(duration);
+		this.setRemainedDuration(duration);
 
 		this.linkedAction = null;
 	}
@@ -56,6 +57,8 @@ public class Action extends AbstractAction {
 	 */
 	public void lowerRemainedDuration(final long decrement) {
 		this.remainedDuration -= decrement;
+		
+		if (this.remainedDuration <= 0) done = 1;
 	}
 
 	/**
