@@ -39,59 +39,62 @@ import org.socialworld.core.Action;
 	 * with special implementation of the action.
 	 */
 	@Override
-	public void doAction(final Action action) {
+	protected int doAction(final ActionType type, final Action action) {
 
-		ActionType type;
-		type = action.getType();
+		int actionDone = 0;
 
 		switch (type) {
 		case touch:
-			touch(action);
-			return;
+			actionDone = touch(action);
+			break;
 		case sleep:
-			sleep(action);
-			return;
+			actionDone = sleep(action);
+			break;
 		case changeMove:
-			changeMove(action);
-			return;
+			actionDone = changeMove(action);
+			break;
 		case kick:
-			kick(action);
-			return;
+			actionDone = kick(action);
+			break;
 		case controlHandManually:
-			controlHandManually(action);
-			return;
+			actionDone = controlHandManually(action);
+			break;
 		case spell:
-			spell(action);
-			return;
+			actionDone = spell(action);
+			break;
 		case useWeaponLeft:
-			useWeaponLeft(action);
-			return;
+			actionDone = useWeaponLeft(action);
+			break;
 		case useWeaponRight:
-			useWeaponRight(action);
-			return;
+			actionDone = useWeaponRight(action);
+			break;
 		case move:
-			move(action);
-			return;
+			actionDone = move(action);
+			break;
 		case say:
-			say(action);
-			return;
+			actionDone = say(action);
+			break;
 		case handleItem:
-			handleItem(action);
-			return;
+			actionDone = handleItem(action);
+			break;
 		default:
-			return;
+			actionDone = super.doAction(type,  action);
+			break;
 		}
+		return actionDone;
 	}
 
-	protected void handleItem(final Action action) {
+	protected int handleItem(final Action action) {
+		return action.isDone();
 
 	}
 
-	protected void say(final Action action) {
+	protected int say(final Action action) {
+		return action.isDone();
 
 	}
 
-	protected void useWeaponRight(final Action action) {
+	protected int useWeaponRight(final Action action) {
 		final SimulationObject rightHand = this.inventory.getRightHand();
 		if (rightHand != null ) 
 			if (rightHand instanceof Weapon){
@@ -102,9 +105,11 @@ import org.socialworld.core.Action;
 				final Item item = (Item) rightHand;
 				item.handle(action, this);
 			}
+		return action.isDone();
+		
 	}
 
-	protected void useWeaponLeft(final Action action) {
+	protected int useWeaponLeft(final Action action) {
 		final SimulationObject leftHand = this.inventory.getLeftHand();
 		if (leftHand != null ) 
 			if (leftHand instanceof Weapon){
@@ -115,17 +120,21 @@ import org.socialworld.core.Action;
 				final Item item = (Item) leftHand;
 				item.handle(action, this);
 			}
+		return action.isDone();
 	}
 
-	protected void spell(final Action action) {
+	protected int spell(final Action action) {
+		return action.isDone();
 
 	}
 
-	protected void controlHandManually(final Action action) {
+	protected int controlHandManually(final Action action) {
+		return action.isDone();
 
 	}
 
-	protected void touch(final Action action) {
+	protected int touch(final Action action) {
+		return action.isDone();
 
 	}
 

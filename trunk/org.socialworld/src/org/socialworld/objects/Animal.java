@@ -58,14 +58,10 @@ public class Animal extends SimulationObject {
 	 * with special implementation of the action.
 	 */
 	@Override
-	public void doAction(final Action action) {
+	protected int doAction(final ActionType type, final Action action) {
 
-		ActionType type;
-		Event event;
 		int actionDone = 0;
 		
-		type = action.getType();
-
 		switch (type) {
 		case sleep:
 			actionDone = sleep(action);
@@ -84,10 +80,7 @@ public class Animal extends SimulationObject {
 		default:
 			break;
 		}
-		if (actionDone > 0) {
-			event = mapActionToEvent(action);
-			simulation.getEventMaster().addEvent(event);
-		}
+		return actionDone;
 	}
 
 	/**
@@ -106,6 +99,8 @@ public class Animal extends SimulationObject {
 	 * @param action
 	 */
 	protected int move(final Action action) {
+		// TODO implement the method 
+		action.lowerRemainedDuration(1000);
 		return action.isDone();
 	}
 
