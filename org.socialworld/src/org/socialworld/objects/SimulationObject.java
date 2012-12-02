@@ -6,6 +6,7 @@ package org.socialworld.objects;
 
 import org.apache.log4j.Logger;
 import org.socialworld.Model;
+import org.socialworld.attributes.ActionType;
 import org.socialworld.attributes.Position;
 import org.socialworld.core.Action;
 import org.socialworld.core.EventCreator;
@@ -94,9 +95,23 @@ public abstract class SimulationObject extends Model {
 	 * 
 	 * @param action
 	 */
-	public abstract void doAction(Action action);
+	public void doAction(Action action) {
+		ActionType type;
+		Event event;
+		int actionDone;
+		
+		type = action.getType();
 
+		actionDone = doAction(type, action);
+		if (actionDone > 0) {
+			event = mapActionToEvent(action);
+			simulation.getEventMaster().addEvent(event);
+		}
+		
+	}
 
+	protected abstract int doAction(ActionType type, Action action);
+	
 	/**
 	 * The method creates an event for a simulation object's action.
 	 * 
@@ -181,14 +196,16 @@ public abstract class SimulationObject extends Model {
 	 * The method loads the array of influence types for all event types.
 	 */
 	private void loadInfluenceType() {
-		
+		// TODO implement the method
+		// influenceTypeByEventType = ???
 	}
 
 	/**
 	 * The method loads the array of reaction types for all event types.
 	 */
 	private void loadReactionType() {
-		
+		// TODO implement the method
+		// reactionTypeByEventType = ???
 	}
 	
 	public int getReactionType(int eventType) {

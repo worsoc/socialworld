@@ -1,6 +1,7 @@
 package org.socialworld.objects;
 
 import org.socialworld.attributes.ActionMode;
+import org.socialworld.attributes.ActionType;
 import org.socialworld.core.Action;
 import org.socialworld.core.Event;
 
@@ -97,7 +98,7 @@ public class Item extends SimulationObject {
 	}
 
 	@Override
-	public void doAction(final Action action) {
-		// empty because an item doesn't execute actions
+	protected int doAction(final ActionType type, final Action action) {
+		return action.isDone();
 	}
 }

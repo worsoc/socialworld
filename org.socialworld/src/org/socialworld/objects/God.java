@@ -2,6 +2,7 @@ package org.socialworld.objects;
 
 import org.socialworld.core.Action;
 import org.socialworld.core.Event;
+import org.socialworld.attributes.ActionType;
 
 /**
  * The God is an special simulation object that is responsible for global
@@ -26,7 +27,7 @@ public class God extends SimulationObject {
 	}
 
 	@Override
-	public void doAction(final Action action) {
-
+	protected int doAction(final ActionType type, final Action action) {
+		return action.isDone();
 	}
 }
