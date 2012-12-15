@@ -122,7 +122,6 @@ public class EventMaster extends Thread {
 	 * Calculates the influences of the event to other simulation objects.
 	 */
 	private void calculateNextEvent() {
-		if (Simulation.WITH_LOGGING == 1 )	logger.debug("calculateNextEvent");
 
 		if (!eventQueue.isEmpty()) {
 			if ( loadEvent( this.eventQueue.poll() ) == true ) {
