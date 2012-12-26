@@ -17,6 +17,8 @@ public enum ActionMode {
 
 	weaponRightHand, weaponLeftHand,
 
-	examineItem, takeItem, useItem, collectItem, switchItemToLeftHand, useTwoItems, dropItem
+	examineItem, takeItem, useItem, collectItem, switchItemToLeftHand, useTwoItems, dropItem,
+	
+	say, scream, whisper
 
 }
