@@ -4,7 +4,7 @@ import org.socialworld.attributes.AttributeArray;
 
 public class ActionTypeExpression extends Expression {
 
-	ActionType type;
+	ActionType type = ActionType.say;
 	ActionType result;
 	
 	@Override
