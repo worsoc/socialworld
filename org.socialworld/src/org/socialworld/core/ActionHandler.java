@@ -160,7 +160,7 @@ public class ActionHandler  {
 		
 		if (this.actionList.size() > 0) {
 			iterator = this.actionList.listIterator();
-			while (iterator.hasNext()) {
+			while (iterator.hasNext() && added == false) {
 				currentIndex = iterator.nextIndex() ;
 				listedAction = iterator.next();
 				
