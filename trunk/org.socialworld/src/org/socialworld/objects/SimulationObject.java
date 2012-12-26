@@ -14,6 +14,8 @@ import org.socialworld.core.ActionCreator;
 import org.socialworld.core.ActionHandler;
 import org.socialworld.core.Event;
 import org.socialworld.core.Simulation;
+import org.socialworld.datasource.InfluenceTypePool;
+import org.socialworld.datasource.ReactionTypePool;
 
 /**
  * Every simulation object (actor in the simulation) is inherited by the abstract class SimulationObject.
@@ -196,16 +198,14 @@ public abstract class SimulationObject extends Model {
 	 * The method loads the array of influence types for all event types.
 	 */
 	private void loadInfluenceType() {
-		// TODO implement the method
-		// influenceTypeByEventType = ???
+		 influenceTypeByEventType = InfluenceTypePool.getInstance().getInfluenceTypes(objectID);
 	}
 
 	/**
 	 * The method loads the array of reaction types for all event types.
 	 */
 	private void loadReactionType() {
-		// TODO implement the method
-		// reactionTypeByEventType = ???
+		reactionTypeByEventType = ReactionTypePool.getInstance().getReactionTypes(objectID);
 	}
 	
 	public int getReactionType(int eventType) {
