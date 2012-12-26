@@ -174,6 +174,7 @@ public class ObjectMaster {
 //		this.positionsIterator = this.positions.listIterator();
 		this.itemsIterator = this.items.listIterator();
 //		this.inventorysIterator = this.inventories.listIterator();
+		this.objectsIterator = this.simulationObjects.listIterator();
 
 	}
 	
