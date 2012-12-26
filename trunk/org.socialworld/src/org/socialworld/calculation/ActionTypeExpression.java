@@ -20,6 +20,12 @@ public class ActionTypeExpression extends Expression {
 	}
 
 	@Override
+	protected void identity( ) {
+		result = type;	
+
+	}
+
+	@Override
 	// not used
 	protected void multiplication( ) {
 		defaultFunction( );

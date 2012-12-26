@@ -20,6 +20,12 @@ public class ActionDelayExpression extends Expression {
 	}
 
 	@Override
+	protected void identity( ) {
+		result = delay;
+
+	}
+
+	@Override
 	protected void multiplication( ) {
 		result = delay * constant;
 

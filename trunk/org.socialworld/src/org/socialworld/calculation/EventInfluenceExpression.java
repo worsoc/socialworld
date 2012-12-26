@@ -42,6 +42,15 @@ public class EventInfluenceExpression extends Expression {
 	}
 */
 	
+	/**
+	 * The constructor initializes the expression as the identity function
+	 */
+	/*public EventInfluenceExpression() {
+		
+		function = ExpressionFunction.identity;
+
+	}*/
+	
 	protected  void addition() {
 		result = this.attributeArray.get(targetAttributeIndex);
 		result += this.constant;
@@ -56,6 +65,10 @@ public class EventInfluenceExpression extends Expression {
 		result = this.constant;
 	}
 
+	protected  void identity() {
+		result = this.attributeArray.get(targetAttributeIndex);
+	}
+	
 	protected  void defaultFunction() {
 		result = this.attributeArray.get(targetAttributeIndex);
 	}

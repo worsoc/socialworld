@@ -20,6 +20,12 @@ public class ActionPriorityExpression extends Expression {
 	}
 
 	@Override
+	protected void identity( ) {
+		result = priority;
+
+	}
+
+	@Override
 	protected void multiplication( ) {
 		result = priority * constant;
 

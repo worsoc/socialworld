@@ -19,6 +19,12 @@ public class ActionDurationExpression extends Expression {
 	}
 
 	@Override
+	protected void identity( ) {
+		result = duration;
+
+	}
+	
+	@Override
 	protected void multiplication( ) {
 		result = duration * constant;
 

@@ -25,6 +25,11 @@ public abstract class Expression {
 	Expression expressionForTrue;
 	Expression expressionForFalse;
 
+	
+	public Expression() {
+		function = ExpressionFunction.identity;
+	}
+	
 	public void setTrueExpression(Expression expressionForTrue) {
 		this.expressionForTrue = expressionForTrue;
 	}
@@ -36,6 +41,7 @@ public abstract class Expression {
 	protected abstract void addition();
 	protected abstract void multiplication();
 	protected abstract void replacement();
+	protected abstract void identity();
 	protected abstract void defaultFunction();
 
 	/**
@@ -96,6 +102,9 @@ public abstract class Expression {
 			break;
 		case replacement:
 			replacement();
+			break;
+		case identity:
+			identity();
 			break;
 		default:
 			defaultFunction();

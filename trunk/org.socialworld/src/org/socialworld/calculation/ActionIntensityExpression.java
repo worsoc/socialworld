@@ -20,6 +20,12 @@ public class ActionIntensityExpression extends Expression {
 	}
 
 	@Override
+	protected void identity( ) {
+		result = intensity;
+
+	}
+	
+	@Override
 	protected void multiplication( ) {
 		result = intensity * constant;
 
