@@ -1,7 +1,6 @@
 package org.socialworld.datasource;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.socialworld.calculation.EventReactionDescription;
@@ -12,7 +11,7 @@ public class EventReactionDescriptionPool {
 	private static final Logger logger = Logger.getLogger(EventReactionDescriptionPool.class);
 	private static EventReactionDescriptionPool instance;
 	
-	private static List<EventReactionDescription> descriptions;
+	private static ArrayList<EventReactionDescription> descriptions;
 	
 	private EventReactionDescriptionPool () {
 		logger.debug("create EventReactionDescriptionPool");
@@ -30,6 +29,9 @@ public class EventReactionDescriptionPool {
 	
 	public EventReactionDescription getDescription(int eventType,	int reactionType) {
 		int index;
+		int countFill;
+		int maxFill;
+
 		EventReactionDescription description;
 		
 		index = eventType * Event.MAX_EVENT_TYPE + reactionType;
@@ -38,12 +40,17 @@ public class EventReactionDescriptionPool {
 			description = descriptions.get(index);
 			if (description == null) {
 				description = createDescription(eventType, reactionType);
-				descriptions.add(index, description);
+				descriptions.set(index, description);
 			}
 		}	
 		else {
+			maxFill = index - descriptions.size();
+			for ( countFill=1; countFill <= maxFill; countFill++) {
+				description = null;
+				descriptions.add(description);
+			}
 			description = createDescription(eventType, reactionType);
-			descriptions.add(index, description);
+			descriptions.add(description);
 		}
 		return description;
 	}

@@ -1,7 +1,6 @@
 package org.socialworld.datasource;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.socialworld.calculation.EventInfluenceDescription;
@@ -12,7 +11,7 @@ public class EventInfluenceDescriptionPool {
 	private static final Logger logger = Logger.getLogger(EventInfluenceDescriptionPool.class);
 	private static EventInfluenceDescriptionPool instance;
 	
-	private static List<EventInfluenceDescription> descriptions;
+	private static ArrayList<EventInfluenceDescription> descriptions;
 	
 	private EventInfluenceDescriptionPool () {
 		logger.debug("create EventInfluenceDescriptionPool");
@@ -30,20 +29,29 @@ public class EventInfluenceDescriptionPool {
 	
 	public EventInfluenceDescription getDescription(int eventType,	int influenceType) {
 		int index;
+		int countFill;
+		int maxFill;
+		
 		EventInfluenceDescription description;
 		
 		index = eventType * Event.MAX_EVENT_TYPE + influenceType;
 		
-		if (descriptions.size() >= index) {
+		if (descriptions.size() > index) {
 			description = descriptions.get(index);
 			if (description == null) {
 				description = createDescription(eventType, influenceType);
-				descriptions.add(index, description);
+				descriptions.set(index, description);
 			}
 		}	
 		else {
+			maxFill = index - descriptions.size();
+			for ( countFill=1; countFill <= maxFill; countFill++) {
+				description = null;
+				descriptions.add(description);
+			}
+			
 			description = createDescription(eventType, influenceType);
-			descriptions.add(index, description);
+			descriptions.add(description);
 		}
 		return description;
 	}
@@ -52,10 +60,17 @@ public class EventInfluenceDescriptionPool {
 	}
 	
 
+	
 	private EventInfluenceDescription createDescription(int eventType,	int influenceType) {
 		EventInfluenceDescription description = new	EventInfluenceDescription();
 		
 		return description;
 	}
 
+/*	private EventInfluenceDescription createDummyDescription(){
+		EventInfluenceDescription description = new	EventInfluenceDescription();
+		
+		return description;
+	}
+*/
 }
