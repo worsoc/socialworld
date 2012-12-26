@@ -22,6 +22,12 @@ public class ActionRelativeDirectionExpression extends Expression {
 	}
 
 	@Override
+	protected void identity( ) {
+		result = relativeDirection;
+
+	}
+
+	@Override
 	protected void multiplication( ) {
 		relativeDirection.multiply(scalar);
 

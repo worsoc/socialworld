@@ -20,6 +20,11 @@ public class ActionModeExpression extends Expression {
 	}
 
 	@Override
+	protected void identity( ) {
+		result = mode;
+	}
+
+	@Override
 	protected void multiplication( ) {
 		defaultFunction();
 
