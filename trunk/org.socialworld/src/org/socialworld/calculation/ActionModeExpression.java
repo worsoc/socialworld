@@ -5,7 +5,7 @@ import org.socialworld.attributes.AttributeArray;
 
 public class ActionModeExpression extends Expression {
 
-	ActionMode mode;
+	ActionMode mode = ActionMode.whisper;
 	ActionMode result;
 	
 	@Override
