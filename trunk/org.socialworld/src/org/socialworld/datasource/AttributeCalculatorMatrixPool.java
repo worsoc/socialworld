@@ -1,5 +1,9 @@
 package org.socialworld.datasource;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.LineNumberReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,12 +38,15 @@ public class AttributeCalculatorMatrixPool {
 	}
 	
 	private void initialize() {
+		
+		initializeFromFile();
+		/*
 		matrixs.add(createMatrix());
 		matrixs.add(createMatrix());
 		matrixs.add(createMatrix());
 		matrixs.add(createMatrix());
 		matrixs.add(createMatrix());
-		matrixs.add(createMatrix());
+		matrixs.add(createMatrix());*/
 	}
 	
 	private AttributeCalculatorMatrix createMatrix () {
@@ -137,4 +144,69 @@ public class AttributeCalculatorMatrixPool {
 		}
 		return shares;
 	}
+	
+	private void initializeFromFile() {
+		
+		try
+		{
+			String line;
+			String values[];
+			int matrixIndex;
+			int functions[] = new int[64];
+			float shares[] = new float[64];
+			
+			AttributeCalculatorMatrix matrix;
+			
+			
+			File input = new File("C:/Users/Mathias/workspace/socialworld/data/hmn_swacm.txt");
+			FileReader in = new FileReader(input);
+			LineNumberReader lnr = new LineNumberReader(in);
+	
+			while ((line = lnr.readLine()) != null)
+			{
+				if (line.startsWith("<functions>"))
+				{
+					
+					line = line.substring(11);
+					line = line.replace("</functions>", "");
+					line = line.trim();
+					values = line.split(",");
+					for (matrixIndex = 0; matrixIndex < 64; matrixIndex++){
+						functions[matrixIndex] = Integer.parseInt(values[matrixIndex]);
+					}
+				}
+				
+
+				if (line.startsWith("<shares>"))
+				{
+					
+					line = line.substring(8);
+					line = line.replace("</shares>", "");
+					line = line.trim();
+					values = line.split(",");
+					for (matrixIndex = 0; matrixIndex < 64; matrixIndex++){
+						shares[matrixIndex] = Float.parseFloat(values[matrixIndex]);
+					}
+				}
+				
+				if (line.startsWith("<matrix>")) {
+				}
+
+				if (line.startsWith("</matrix>")) {
+					matrix = new AttributeCalculatorMatrix();
+					matrix.setFunctions( functions);
+					matrix.setShares( shares );
+					matrixs.add(matrix);
+				}
+
+			}
+			lnr.close();
+		}
+		catch (IOException e)
+		{
+			System.out.println("Fehler beim Lesen der Datei");
+			e.printStackTrace();
+		}
+	}
+
 }
