@@ -2,7 +2,7 @@ package org.socialworld.datasource;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.io.*;
 import org.socialworld.attributes.AttributeArray;
 
 public class AttributeArrayPool {
@@ -35,6 +35,9 @@ public class AttributeArrayPool {
 	}
 
 	private void initialize() {
+		
+		initializeFromFile();
+		
 		attributes.add(createArray());
 		attributes.add(createArray());
 		attributes.add(createArray());
@@ -72,5 +75,48 @@ public class AttributeArrayPool {
 		}
 		return array;
 	
+	}
+	
+	private void initializeFromFile() {
+		
+		try
+		{
+			String line;
+			String values[];
+			int attribIndex;
+			int array[];
+			
+			array =new int[8];
+			
+			// TODO auf zentral abgelegte Datei zugreifen
+			//File input = new File(new URI("https://sourceforge.net/projects/socialworld/files/hmn_swa.txt"));
+			
+			FileReader in = new FileReader("C:/Users/Mathias/workspace/socialworld/data/hmn_swa.txt");
+			//FileReader in = new FileReader(input);
+			LineNumberReader lnr = new LineNumberReader(in);
+	
+			while ((line = lnr.readLine()) != null)
+			{
+				if (line.startsWith("("))
+				{
+					line = line.substring(1);
+					line = line.replace(")", "");
+					line = line.trim();
+					
+					values = line.split(",");
+					for (attribIndex = 0; attribIndex < 8; attribIndex++){
+						array[attribIndex] = Integer.parseInt(values[attribIndex]);
+					}
+					attributes.add(new AttributeArray(array));
+					
+				}
+			}
+			lnr.close();
+		}
+		catch (IOException e)
+		{
+			System.out.println("Fehler beim Lesen der Datei");
+			e.printStackTrace();
+		}
 	}
 }
