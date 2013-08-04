@@ -3,6 +3,7 @@ package org.socialworld.datasource;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.*;
+import java.net.URL;
 import org.socialworld.attributes.AttributeArray;
 
 public class AttributeArrayPool {
@@ -88,12 +89,14 @@ public class AttributeArrayPool {
 			
 			array =new int[8];
 			
-			// TODO auf zentral abgelegte Datei zugreifen
-			//File input = new File(new URI("https://sourceforge.net/projects/socialworld/files/hmn_swa.txt"));
-			
-			FileReader in = new FileReader("C:/Users/Mathias/workspace/socialworld/data/hmn_swa.txt");
+
+			InputStream input = new URL("http://sourceforge.net/projects/socialworld/files/hmn_swa.txt").openStream();
+			LineNumberReader lnr
+			   = new LineNumberReader(new InputStreamReader(input));
+
+			//FileReader in = new FileReader("C:/Users/Mathias/workspace/socialworld/data/hmn_swa.txt");
 			//FileReader in = new FileReader(input);
-			LineNumberReader lnr = new LineNumberReader(in);
+			//LineNumberReader lnr = new LineNumberReader(in);
 	
 			while ((line = lnr.readLine()) != null)
 			{
