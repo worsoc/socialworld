@@ -157,7 +157,7 @@ public class AttributeCalculatorMatrixPool {
 			
 			AttributeCalculatorMatrix matrix;
 			
-			
+			// TODO auf zentral abgelegte Datei zugreifen
 			File input = new File("C:/Users/Mathias/workspace/socialworld/data/hmn_swacm.txt");
 			FileReader in = new FileReader(input);
 			LineNumberReader lnr = new LineNumberReader(in);
