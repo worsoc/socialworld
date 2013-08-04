@@ -5,12 +5,11 @@ public class ActionPriorityExpression extends Expression {
 
 	int priority;
 	
-	int constant;
 	int result;
 	
 	@Override
 	protected void addition( ) {
-		result = priority + constant;
+		result = priority + (int) constant;
 	}
 
 	@Override
@@ -27,13 +26,13 @@ public class ActionPriorityExpression extends Expression {
 
 	@Override
 	protected void multiplication( ) {
-		result = priority * constant;
+		result = priority * (int) constant;
 
 	}
 
 	@Override
 	protected void replacement() {
-		result = constant;
+		result = (int) constant;
 
 	}
 
