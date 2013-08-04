@@ -39,8 +39,10 @@ public class AttributeArray {
 		attributes 	= new int[numberOfAttributes];
 		differences = new int[numberOfAttributes];
 		if (array.length == numberOfAttributes ) {
-			attributes = array;
-			for (int i = 0; i < numberOfAttributes; i++ ) differences[i] = 0;
+			for (int i = 0; i < numberOfAttributes; i++ ) {
+				attributes[i] = array[i];
+				differences[i] = 0;
+			}
 		}
 	}
 	
