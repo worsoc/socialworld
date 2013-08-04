@@ -1,9 +1,7 @@
 package org.socialworld.datasource;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.LineNumberReader;
+import java.io.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +47,73 @@ public class AttributeCalculatorMatrixPool {
 		matrixs.add(createMatrix());*/
 	}
 	
+	private void initializeFromFile() {
+		
+		try
+		{
+			String line;
+			String values[];
+			int matrixIndex;
+			int functions[] = new int[64];
+			float shares[] = new float[64];
+			
+			AttributeCalculatorMatrix matrix;
+	
+			InputStream input = new URL("http://sourceforge.net/projects/socialworld/files/hmn_swacm.txt").openStream();
+			LineNumberReader lnr
+			   = new LineNumberReader(new InputStreamReader(input));
+
+			//File input = new File("C:/Users/Mathias/workspace/socialworld/data/hmn_swacm.txt");
+			//FileReader in = new FileReader(input);
+			//LineNumberReader lnr = new LineNumberReader(in);
+	
+			while ((line = lnr.readLine()) != null)
+			{
+				if (line.startsWith("<functions>"))
+				{
+					
+					line = line.substring(11);
+					line = line.replace("</functions>", "");
+					line = line.trim();
+					values = line.split(",");
+					for (matrixIndex = 0; matrixIndex < 64; matrixIndex++){
+						functions[matrixIndex] = Integer.parseInt(values[matrixIndex]);
+					}
+				}
+				
+
+				if (line.startsWith("<shares>"))
+				{
+					
+					line = line.substring(8);
+					line = line.replace("</shares>", "");
+					line = line.trim();
+					values = line.split(",");
+					for (matrixIndex = 0; matrixIndex < 64; matrixIndex++){
+						shares[matrixIndex] = Float.parseFloat(values[matrixIndex]);
+					}
+				}
+				
+				if (line.startsWith("<matrix>")) {
+				}
+
+				if (line.startsWith("</matrix>")) {
+					matrix = new AttributeCalculatorMatrix();
+					matrix.setFunctions( functions);
+					matrix.setShares( shares );
+					matrixs.add(matrix);
+				}
+
+			}
+			lnr.close();
+		}
+		catch (IOException e)
+		{
+			System.out.println("Fehler beim Lesen der Datei");
+			e.printStackTrace();
+		}
+	}
+
 	private AttributeCalculatorMatrix createMatrix () {
 		AttributeCalculatorMatrix matrix = new AttributeCalculatorMatrix();
 		matrix.setFunctions( getFunctionArray() );
@@ -145,68 +210,5 @@ public class AttributeCalculatorMatrixPool {
 		return shares;
 	}
 	
-	private void initializeFromFile() {
-		
-		try
-		{
-			String line;
-			String values[];
-			int matrixIndex;
-			int functions[] = new int[64];
-			float shares[] = new float[64];
-			
-			AttributeCalculatorMatrix matrix;
-			
-			// TODO auf zentral abgelegte Datei zugreifen
-			File input = new File("C:/Users/Mathias/workspace/socialworld/data/hmn_swacm.txt");
-			FileReader in = new FileReader(input);
-			LineNumberReader lnr = new LineNumberReader(in);
 	
-			while ((line = lnr.readLine()) != null)
-			{
-				if (line.startsWith("<functions>"))
-				{
-					
-					line = line.substring(11);
-					line = line.replace("</functions>", "");
-					line = line.trim();
-					values = line.split(",");
-					for (matrixIndex = 0; matrixIndex < 64; matrixIndex++){
-						functions[matrixIndex] = Integer.parseInt(values[matrixIndex]);
-					}
-				}
-				
-
-				if (line.startsWith("<shares>"))
-				{
-					
-					line = line.substring(8);
-					line = line.replace("</shares>", "");
-					line = line.trim();
-					values = line.split(",");
-					for (matrixIndex = 0; matrixIndex < 64; matrixIndex++){
-						shares[matrixIndex] = Float.parseFloat(values[matrixIndex]);
-					}
-				}
-				
-				if (line.startsWith("<matrix>")) {
-				}
-
-				if (line.startsWith("</matrix>")) {
-					matrix = new AttributeCalculatorMatrix();
-					matrix.setFunctions( functions);
-					matrix.setShares( shares );
-					matrixs.add(matrix);
-				}
-
-			}
-			lnr.close();
-		}
-		catch (IOException e)
-		{
-			System.out.println("Fehler beim Lesen der Datei");
-			e.printStackTrace();
-		}
-	}
-
 }
