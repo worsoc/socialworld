@@ -43,6 +43,8 @@ public abstract class Expression {
 	protected abstract void replacement();
 	protected abstract void identity();
 	protected abstract void defaultFunction();
+	
+	protected abstract void evaluateSubExpression(AttributeArray attributeArray, boolean conditionIsTrue);
 
 	/**
 	 * The method evaluates the expression function. 
@@ -88,11 +90,8 @@ public abstract class Expression {
 				break;
 			}
 
-			if (conditionIsTrue)
-				expressionForTrue.evaluateFunction(attributeArray);
-			else
-				expressionForFalse.evaluateFunction(attributeArray);
-
+			evaluateSubExpression(attributeArray, conditionIsTrue);
+			
 			break;
 		case addition:
 			addition();

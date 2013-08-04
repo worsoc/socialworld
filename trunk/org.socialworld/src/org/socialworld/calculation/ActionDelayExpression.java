@@ -7,6 +7,19 @@ public class ActionDelayExpression extends Expression {
 	int result;
 	
 	@Override
+	protected void evaluateSubExpression(AttributeArray attributeArray, boolean conditionIsTrue) {
+	
+		ActionDelayExpression expression;
+		
+		if (conditionIsTrue)
+				expression = (ActionDelayExpression) expressionForTrue;
+			else
+				expression = (ActionDelayExpression) expressionForFalse;
+			
+			result = expression.evaluateExpression(attributeArray, delay);
+	}
+	
+	@Override
 	protected void addition( ) {
 		result = delay + (int) constant;
 	}

@@ -6,7 +6,20 @@ public class ActionIntensityExpression extends Expression {
 	double intensity;
 	
 	double result;
+
+	@Override
+	protected void evaluateSubExpression(AttributeArray attributeArray, boolean conditionIsTrue) {
 	
+		ActionIntensityExpression expression;
+		
+		if (conditionIsTrue)
+				expression = (ActionIntensityExpression) expressionForTrue;
+			else
+				expression = (ActionIntensityExpression) expressionForFalse;
+			
+			result = expression.evaluateExpression(attributeArray, intensity);
+	}
+
 	@Override
 	protected void addition( ) {
 		result = intensity + constant;

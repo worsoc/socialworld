@@ -7,7 +7,20 @@ public class ActionModeExpression extends Expression {
 
 	ActionMode mode = ActionMode.whisper;
 	ActionMode result;
+
+	@Override
+	protected void evaluateSubExpression(AttributeArray attributeArray, boolean conditionIsTrue) {
 	
+		ActionModeExpression expression;
+		
+		if (conditionIsTrue)
+				expression = (ActionModeExpression) expressionForTrue;
+			else
+				expression = (ActionModeExpression) expressionForFalse;
+			
+			result = expression.evaluateExpression(attributeArray);
+	}
+
 	@Override
 	protected void addition( ) {
 		defaultFunction();
