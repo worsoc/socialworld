@@ -5,7 +5,6 @@ public class ActionIntensityExpression extends Expression {
 
 	double intensity;
 	
-	double constant;
 	double result;
 	
 	@Override

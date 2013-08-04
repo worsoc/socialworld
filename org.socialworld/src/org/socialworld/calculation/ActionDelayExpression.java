@@ -3,14 +3,12 @@ import org.socialworld.attributes.AttributeArray;
 
 public class ActionDelayExpression extends Expression {
 
-	int delay;
-	
-	int constant;
+	int delay;	
 	int result;
 	
 	@Override
 	protected void addition( ) {
-		result = delay + constant;
+		result = delay + (int) constant;
 	}
 
 	@Override
@@ -27,13 +25,13 @@ public class ActionDelayExpression extends Expression {
 
 	@Override
 	protected void multiplication( ) {
-		result = delay * constant;
+		result = delay * (int) constant;
 
 	}
 
 	@Override
 	protected void replacement() {
-		result = constant;
+		result = (int) constant;
 
 	}
 

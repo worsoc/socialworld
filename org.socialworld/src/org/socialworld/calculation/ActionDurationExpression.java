@@ -4,12 +4,11 @@ import org.socialworld.attributes.AttributeArray;
 public class ActionDurationExpression extends Expression {
 	long duration;
 	
-	long constant;
 	long result;
 	
 	@Override
 	protected void addition( ) {
-		result = duration + constant;
+		result = duration + (long) constant;
 	}
 
 	@Override
@@ -26,13 +25,13 @@ public class ActionDurationExpression extends Expression {
 	
 	@Override
 	protected void multiplication( ) {
-		result = duration * constant;
+		result = duration * (long) constant;
 
 	}
 
 	@Override
 	protected void replacement() {
-		result = constant;
+		result = (long) constant;
 
 	}
 
