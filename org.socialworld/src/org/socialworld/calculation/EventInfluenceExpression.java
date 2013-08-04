@@ -21,36 +21,28 @@ import org.socialworld.attributes.AttributeArray;
  * @author Mathias Sikos (tyloesand)
  */
 public class EventInfluenceExpression extends Expression {
-/*	ExpressionFunction function;
-	ConditionOperator operator;
-	*/
+
 	
 	AttributeArray attributeArray;
 	int targetAttributeIndex;
 	double result;
 
-	/*
-	EventInfluenceExpression expressionForTrue;
-	EventInfluenceExpression expressionForFalse;
 
-	public void setTrueExpression(EventInfluenceExpression expressionForTrue) {
-		this.expressionForTrue = expressionForTrue;
-	}
 
-	public void setFalseExpression(EventInfluenceExpression expressionForFalse) {
-		this.expressionForTrue = expressionForFalse;
-	}
-*/
 	
-	/**
-	 * The constructor initializes the expression as the identity function
-	 */
-	/*public EventInfluenceExpression() {
+	@Override
+	protected void evaluateSubExpression(AttributeArray attributeArray, boolean conditionIsTrue) {
+	
+		EventInfluenceExpression expression;
 		
-		function = ExpressionFunction.identity;
+		if (conditionIsTrue)
+				expression = (EventInfluenceExpression) expressionForTrue;
+			else
+				expression = (EventInfluenceExpression) expressionForFalse;
+			
+			result = expression.evaluateExpression(attributeArray, targetAttributeIndex);
+	}
 
-	}*/
-	
 	protected  void addition() {
 		result = this.attributeArray.get(targetAttributeIndex);
 		result += this.constant;
@@ -96,75 +88,5 @@ public class EventInfluenceExpression extends Expression {
 		return (byte) result;
 	}
 	
-/*	
-	public byte _evaluateExpression(AttributeArray attributeArray,
-			int targetAttributeIndex) {
-		double result;
-		int operandValue;
-		boolean conditionIsTrue = false;
 
-		switch (this.function) {
-		case condition:
-			operandValue = attributeArray.get(this.attributeIndex);
-
-			switch (this.operator) {
-			case equal:
-				if (operandValue == this.constant)
-					conditionIsTrue = true;
-				break;
-			case notEqual:
-				if (operandValue != this.constant)
-					conditionIsTrue = true;
-				break;
-			case less:
-				if (operandValue < this.constant)
-					conditionIsTrue = true;
-				break;
-			case lessEqual:
-				if (operandValue <= this.constant)
-					conditionIsTrue = true;
-				break;
-			case greaterEqual:
-				if (operandValue >= this.constant)
-					conditionIsTrue = true;
-				break;
-			case greater:
-				if (operandValue > this.constant)
-					conditionIsTrue = true;
-				break;
-			}
-
-			if (conditionIsTrue)
-				result = expressionForTrue.evaluateExpression(attributeArray,
-						targetAttributeIndex);
-			else
-				result = expressionForFalse.evaluateExpression(attributeArray,
-						targetAttributeIndex);
-
-			break;
-		case addition:
-			result = attributeArray.get(targetAttributeIndex);
-			result += this.constant;
-			break;
-		case multiplication:
-			result = attributeArray.get(targetAttributeIndex);
-			result *= this.constant;
-			break;
-		case replacement:
-			result = this.constant;
-			break;
-		default:
-			result = attributeArray.get(targetAttributeIndex);
-		}
-
-		result += 0.5;
-
-		if (result > Attribute.ATTRIBUTE_RANGE)
-			return Attribute.ATTRIBUTE_RANGE;
-		if (result < 0)
-			return 0;
-
-		return (byte) result;
-	}
-	*/
 }

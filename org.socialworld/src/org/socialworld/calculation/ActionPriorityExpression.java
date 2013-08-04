@@ -6,7 +6,20 @@ public class ActionPriorityExpression extends Expression {
 	int priority;
 	
 	int result;
+
+	@Override
+	protected void evaluateSubExpression(AttributeArray attributeArray, boolean conditionIsTrue) {
 	
+		ActionPriorityExpression expression;
+		
+		if (conditionIsTrue)
+				expression = (ActionPriorityExpression) expressionForTrue;
+			else
+				expression = (ActionPriorityExpression) expressionForFalse;
+			
+			result = expression.evaluateExpression(attributeArray,priority);
+	}
+
 	@Override
 	protected void addition( ) {
 		result = priority + (int) constant;

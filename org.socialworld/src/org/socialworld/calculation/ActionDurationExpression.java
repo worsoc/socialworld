@@ -5,7 +5,20 @@ public class ActionDurationExpression extends Expression {
 	long duration;
 	
 	long result;
+
+	@Override
+	protected void evaluateSubExpression(AttributeArray attributeArray, boolean conditionIsTrue) {
 	
+		ActionDurationExpression expression;
+		
+		if (conditionIsTrue)
+				expression = (ActionDurationExpression) expressionForTrue;
+			else
+				expression = (ActionDurationExpression) expressionForFalse;
+			
+			result = expression.evaluateExpression(attributeArray, duration);
+	}
+
 	@Override
 	protected void addition( ) {
 		result = duration + (long) constant;

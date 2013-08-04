@@ -9,7 +9,20 @@ public class ActionRelativeDirectionExpression extends Expression {
 	double scalar;
 	
 	Vector result;
+
+	@Override
+	protected void evaluateSubExpression(AttributeArray attributeArray, boolean conditionIsTrue) {
 	
+		ActionRelativeDirectionExpression expression;
+		
+		if (conditionIsTrue)
+				expression = (ActionRelativeDirectionExpression) expressionForTrue;
+			else
+				expression = (ActionRelativeDirectionExpression) expressionForFalse;
+			
+			result = expression.evaluateExpression(attributeArray, relativeDirection);
+	}
+
 	@Override
 	protected void addition( ) {
 		relativeDirection.add(constant);
