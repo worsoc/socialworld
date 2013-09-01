@@ -5,11 +5,14 @@ public class ActionRelativeDirectionExpression extends Expression {
 
 	Vector relativeDirection;
 	
-	Vector constant;
-	double scalar;
+	Vector vector;
 	
 	Vector result;
 
+	public void setVector (Vector vector) {
+		this.vector = vector;
+	}
+	
 	@Override
 	protected void evaluateSubExpression(AttributeArray attributeArray, boolean conditionIsTrue) {
 	
@@ -25,7 +28,7 @@ public class ActionRelativeDirectionExpression extends Expression {
 
 	@Override
 	protected void addition( ) {
-		relativeDirection.add(constant);
+		relativeDirection.add(vector);
 	}
 
 	@Override
@@ -42,13 +45,13 @@ public class ActionRelativeDirectionExpression extends Expression {
 
 	@Override
 	protected void multiplication( ) {
-		relativeDirection.multiply(scalar);
+		relativeDirection.multiply(constant);
 
 	}
 
 	@Override
 	protected void replacement() {
-		result = constant;
+		result = vector;
 	}
 
 	/**

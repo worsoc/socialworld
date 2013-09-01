@@ -8,6 +8,10 @@ public class ActionModeExpression extends Expression {
 	ActionMode mode = ActionMode.whisper;
 	ActionMode result;
 
+	public void setMode (ActionMode mode) {
+		this.mode = mode;
+	}
+	
 	@Override
 	protected void evaluateSubExpression(AttributeArray attributeArray, boolean conditionIsTrue) {
 	
