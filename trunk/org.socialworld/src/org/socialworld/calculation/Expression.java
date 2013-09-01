@@ -16,20 +16,72 @@ import org.socialworld.attributes.AttributeArray;
  * @author Mathias Sikos (tyloesand)
  */
 public abstract class Expression {
+	long ID;
+	
 	ExpressionFunction function;
 	ConditionOperator operator;
 
 	int attributeIndex;
-	double constant;
+	float constant;
 
 	Expression expressionForTrue;
 	Expression expressionForFalse;
-
+	long IDTrue;
+	long IDFalse;
 	
 	public Expression() {
 		function = ExpressionFunction.identity;
 	}
 	
+	public void setID(long ID) {
+		this.ID = ID;
+	}
+
+	public void setID(String ID) {
+		this.ID = (long) Float.parseFloat(ID);
+	}
+
+	public void setIDTrue(long ID) {
+		this.IDTrue = ID;
+	}
+
+	public void setIDTrue(String ID) {
+		this.IDTrue = (long) Float.parseFloat(ID);
+	}
+	
+	public void setIDFalse(long ID) {
+		this.IDFalse = ID;
+	}
+
+	public void setIDFalse(String ID) {
+		this.IDFalse = (long) Float.parseFloat(ID);
+	}
+
+
+	public void setFunction(ExpressionFunction function) {
+		this.function = function;
+	}
+
+	public void setOperator(ConditionOperator operator) {
+		this.operator = operator;
+	}
+
+	public void setConstant(float constant) {
+		this.constant = constant;
+	}
+
+	public void setConstant(String constant) {
+		this.constant = Float.parseFloat(constant);
+	}
+
+	public void setAttributeIndex(int index) {
+		this.attributeIndex = index;
+	}
+
+	public void setAttributeIndex(String index) {
+		this.attributeIndex = (int) Float.parseFloat(index);
+	}
+
 	public void setTrueExpression(Expression expressionForTrue) {
 		this.expressionForTrue = expressionForTrue;
 	}
