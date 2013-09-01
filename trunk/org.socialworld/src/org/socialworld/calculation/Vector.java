@@ -30,6 +30,23 @@ public class Vector {
 		this.z = z;
 	}
 
+	public Vector(String vector) {
+		
+		String tmp;
+		String values[];
+		
+		tmp = vector;
+		tmp = tmp.replace(" ", "");
+		tmp = tmp.substring(1);
+		tmp = tmp.replace(")", "");
+		
+		values = tmp.split(",");
+		
+		this.x = Float.parseFloat(values[0]);
+		this.y = Float.parseFloat(values[1]);
+		this.z = Float.parseFloat(values[2]);
+	}
+	
 	/**
 	 * @return the x
 	 */
