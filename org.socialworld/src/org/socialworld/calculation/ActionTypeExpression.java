@@ -7,6 +7,10 @@ public class ActionTypeExpression extends Expression {
 	ActionType type = ActionType.say;
 	ActionType result;
 
+	public void setType (ActionType type) {
+		this.type = type;
+	}
+
 	@Override
 	protected void evaluateSubExpression(AttributeArray attributeArray, boolean conditionIsTrue) {
 	
