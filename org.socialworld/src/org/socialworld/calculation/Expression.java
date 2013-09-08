@@ -16,7 +16,7 @@ import org.socialworld.attributes.AttributeArray;
  * @author Mathias Sikos (tyloesand)
  */
 public abstract class Expression {
-	long ID;
+	int ID;
 	
 	ExpressionFunction function;
 	ConditionOperator operator;
@@ -26,37 +26,42 @@ public abstract class Expression {
 
 	Expression expressionForTrue;
 	Expression expressionForFalse;
-	long IDTrue;
-	long IDFalse;
+	int IDTrue;
+	int IDFalse;
 	
 	public Expression() {
 		function = ExpressionFunction.identity;
 	}
 	
-	public void setID(long ID) {
+	public void setID(int ID) {
 		this.ID = ID;
 	}
 
 	public void setID(String ID) {
-		this.ID = (long) Float.parseFloat(ID);
+		this.ID = (int) Float.parseFloat(ID);
 	}
 
-	public void setIDTrue(long ID) {
+	public int getID() {return ID; };
+
+	public void setIDTrue(int ID) {
 		this.IDTrue = ID;
 	}
 
 	public void setIDTrue(String ID) {
-		this.IDTrue = (long) Float.parseFloat(ID);
+		this.IDTrue = (int) Float.parseFloat(ID);
 	}
 	
-	public void setIDFalse(long ID) {
+	public int getIDTrue() {return IDTrue; };
+	
+	public void setIDFalse(int ID) {
 		this.IDFalse = ID;
 	}
 
 	public void setIDFalse(String ID) {
-		this.IDFalse = (long) Float.parseFloat(ID);
+		this.IDFalse = (int) Float.parseFloat(ID);
 	}
 
+	public int getIDFalse() {return IDFalse; };
 
 	public void setFunction(ExpressionFunction function) {
 		this.function = function;
