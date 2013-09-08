@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 import org.apache.log4j.Logger;
 import org.socialworld.calculation.*;
@@ -69,17 +70,26 @@ public class EventReactionDescriptionPool {
 	private void initializeFromFile() {
 		
 		ArrayList<Expression> expressions;
+		ListIterator<Expression> iterator;
+		Expression expression;
+		Expression expressionDummy;
+		
+		int ID;
+		int IDTrue;
+		int IDFalse;
 		
 		logger.debug("create temporary expression list");
 		expressions = new ArrayList<Expression> ();
 
+		expressionDummy = new ActionDelayExpression();
+		expressionDummy.setID(0);
 		
 		try
 		{
 			String line;
 			
 			// temporary initialized with ActionDelayExpression
-			Expression expression = new ActionDelayExpression();
+			expression = new ActionDelayExpression();
 	
 			InputStream input = new URL("http://sourceforge.net/projects/socialworld/files/hmn_swerd.txt").openStream();
 			LineNumberReader lnr
@@ -298,7 +308,11 @@ public class EventReactionDescriptionPool {
 				}
 
 				if (line.startsWith("</ActionTypeExp>")) {
-					expressions.add(expression);
+					ID = expression.getID();
+					while (ID > expressions.size()) {
+						expressions.add(expressionDummy);
+					}
+					expressions.set(ID - 1, expression);
 					continue;
 				}
 
@@ -309,6 +323,24 @@ public class EventReactionDescriptionPool {
 		{
 			System.out.println("Fehler beim Lesen der Datei");
 			e.printStackTrace();
+		}
+		
+		iterator = expressions.listIterator();
+		
+		while (iterator.hasNext()) {
+			expression = iterator.next();
+			
+			if (expression.getID() > 0 ) {
+				IDTrue = expression.getIDTrue();
+				IDFalse = expression.getIDFalse();
+				
+				if (IDTrue > 0) {
+					expression.setTrueExpression(expressions.get(IDTrue - 1));
+				}
+				if (IDFalse > 0) {
+					expression.setFalseExpression(expressions.get(IDFalse - 1));
+				}
+			}
 		}
 	}
 
