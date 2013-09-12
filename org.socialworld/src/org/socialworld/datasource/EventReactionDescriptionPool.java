@@ -20,10 +20,12 @@ public class EventReactionDescriptionPool {
 	private static EventReactionDescriptionPool instance;
 	
 	private static ArrayList<EventReactionDescription> descriptions;
+	private static ArrayList<Expression> expressions;
 	
 	private EventReactionDescriptionPool () {
 		logger.debug("create EventReactionDescriptionPool");
 		descriptions = new ArrayList<EventReactionDescription> ();
+		expressions = new ArrayList<Expression> ();
 
 		initialize();
 	}
@@ -69,27 +71,28 @@ public class EventReactionDescriptionPool {
 	
 	private void initializeFromFile() {
 		
-		ArrayList<Expression> expressions;
 		ListIterator<Expression> iterator;
 		Expression expression;
 		Expression expressionDummy;
 		
-		int ID;
+		EventReactionDescription erd;
+		
 		int IDTrue;
 		int IDFalse;
 		
-		logger.debug("create temporary expression list");
-		expressions = new ArrayList<Expression> ();
 
 		expressionDummy = new ActionDelayExpression();
 		expressionDummy.setID(0);
+
+		// temporary initialized with ActionDelayExpression
+		// expression and erd must be initialized
+		expression = new ActionDelayExpression();
+		erd = new EventReactionDescription();
 		
 		try
 		{
 			String line;
 			
-			// temporary initialized with ActionDelayExpression
-			expression = new ActionDelayExpression();
 	
 			InputStream input = new URL("http://sourceforge.net/projects/socialworld/files/hmn_swerd.txt").openStream();
 			LineNumberReader lnr
@@ -99,6 +102,17 @@ public class EventReactionDescriptionPool {
 			while ((line = lnr.readLine()) != null)
 			{
 
+				if (line.startsWith("<ERD>")) {
+					erd = new EventReactionDescription();
+					continue;
+				}
+
+				if (line.startsWith("</ERD>")) {
+					// TODO add at index for event type and reaction type
+					descriptions.add(erd);
+					continue;
+				}
+				
 				if (line.startsWith("<ID>")) {
 					line = line.substring(4);
 					line = line.replace("</ID>", "");
@@ -179,7 +193,8 @@ public class EventReactionDescriptionPool {
 				}
 
 				if (line.startsWith("</ActionDelayExp>")) {
-					expressions.add(expression);
+					addExpression(expression, expressionDummy);
+					erd.setDelayExpression((ActionDelayExpression) expression);
 					continue;
 				}
 
@@ -189,7 +204,8 @@ public class EventReactionDescriptionPool {
 				}
 
 				if (line.startsWith("</ActionDurationExp>")) {
-					expressions.add(expression);
+					addExpression(expression, expressionDummy);
+					erd.setDurationExpression((ActionDurationExpression) expression);
 					continue;
 				}
 
@@ -199,7 +215,8 @@ public class EventReactionDescriptionPool {
 				}
 
 				if (line.startsWith("</ActionIntensityExp>")) {
-					expressions.add(expression);
+					addExpression(expression, expressionDummy);
+					erd.setIntensityExpression((ActionIntensityExpression) expression);
 					continue;
 				}
 
@@ -240,7 +257,8 @@ public class EventReactionDescriptionPool {
 				}
 				
 				if (line.startsWith("</ActionModeExp>")) {
-					expressions.add(expression);
+					addExpression(expression, expressionDummy);
+					erd.setActionModeExpression((ActionModeExpression) expression);
 					continue;
 				}
 
@@ -250,7 +268,8 @@ public class EventReactionDescriptionPool {
 				}
 
 				if (line.startsWith("</ActionPriorityExp>")) {
-					expressions.add(expression);
+					addExpression(expression, expressionDummy);
+					erd.setPriorityExpression((ActionPriorityExpression) expression);
 					continue;
 				}
 
@@ -273,7 +292,8 @@ public class EventReactionDescriptionPool {
 				}
 
 				if (line.startsWith("</ActionRelDirExp>")) {
-					expressions.add(expression);
+					addExpression(expression, expressionDummy);
+					erd.setRelativeDirectionExpression((ActionRelativeDirectionExpression) expression);
 					continue;
 				}
 
@@ -308,12 +328,9 @@ public class EventReactionDescriptionPool {
 				}
 
 				if (line.startsWith("</ActionTypeExp>")) {
-					ID = expression.getID();
-					while (ID > expressions.size()) {
-						expressions.add(expressionDummy);
-					}
-					expressions.set(ID - 1, expression);
-					continue;
+					addExpression(expression, expressionDummy);
+					erd.setActionTypeExpression((ActionTypeExpression) expression);
+				continue;
 				}
 
 			}
@@ -344,6 +361,16 @@ public class EventReactionDescriptionPool {
 		}
 	}
 
+	private void addExpression(Expression expression, Expression expressionDummy) {
+		int ID;
+	
+		ID = expression.getID();
+		while (ID > expressions.size()) {
+			expressions.add(expressionDummy);
+		}
+		expressions.set(ID - 1, expression);
+	}
+	
 	private EventReactionDescription createDescription(int eventType,	int reactionType) {
 		EventReactionDescription description = new	EventReactionDescription();
 		
