@@ -92,7 +92,7 @@ public abstract class Expression {
 	}
 
 	public void setFalseExpression(Expression expressionForFalse) {
-		this.expressionForTrue = expressionForFalse;
+		this.expressionForFalse = expressionForFalse;
 	}
 
 	protected abstract void addition();
