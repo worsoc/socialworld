@@ -143,11 +143,11 @@ public class EventReactionDescriptionPool {
 					line = line.replace("</Fct>", "");
 					line = line.trim();
 					switch(line) {
-						case "condition":  expression.setFunction(ExpressionFunction.condition);
-						case "addition":  expression.setFunction(ExpressionFunction.addition);
-						case "multiplication":  expression.setFunction(ExpressionFunction.multiplication);
-						case "replacement":  expression.setFunction(ExpressionFunction.replacement);
-						case "identity":  expression.setFunction(ExpressionFunction.identity);
+						case "condition":  expression.setFunction(ExpressionFunction.condition);break;
+						case "addition":  expression.setFunction(ExpressionFunction.addition);break;
+						case "multiplication":  expression.setFunction(ExpressionFunction.multiplication);break;
+						case "replacement":  expression.setFunction(ExpressionFunction.replacement);break;
+						case "identity":  expression.setFunction(ExpressionFunction.identity);break;
 					}
 					continue;
 				}
@@ -158,12 +158,12 @@ public class EventReactionDescriptionPool {
 					line = line.replace("</Op>", "");
 					line = line.trim();
 					switch(line) {
-						case "equal":  expression.setOperator(ConditionOperator.equal);
-						case "notEqual":  expression.setOperator(ConditionOperator.notEqual);
-						case "less":  expression.setOperator(ConditionOperator.less);
-						case "lessEqual":  expression.setOperator(ConditionOperator.lessEqual);
-						case "greaterEqual":  expression.setOperator(ConditionOperator.greaterEqual);
-						case "greater":  expression.setOperator(ConditionOperator.greater);
+						case "equal":  expression.setOperator(ConditionOperator.equal);break;
+						case "notEqual":  expression.setOperator(ConditionOperator.notEqual);break;
+						case "less":  expression.setOperator(ConditionOperator.less);break;
+						case "lessEqual":  expression.setOperator(ConditionOperator.lessEqual);break;
+						case "greaterEqual":  expression.setOperator(ConditionOperator.greaterEqual);break;
+						case "greater":  expression.setOperator(ConditionOperator.greater);break;
 					}
 					continue;
 				}
@@ -235,23 +235,23 @@ public class EventReactionDescriptionPool {
 					line = line.replace("</Mode>", "");
 					line = line.trim();
 					switch(line) {
-						case "run":  tmp.setMode(ActionMode.run);
-						case "walk":  tmp.setMode(ActionMode.walk);
-						case "jump":  tmp.setMode(ActionMode.jump);
-						case "sleepIntentioned":  tmp.setMode(ActionMode.sleepIntentioned);
-						case "sleepCaused":  tmp.setMode(ActionMode.sleepCaused);
-						case "weaponRightHand":  tmp.setMode(ActionMode.weaponRightHand);
-						case "weaponLeftHand":  tmp.setMode(ActionMode.weaponLeftHand);
-						case "examineItem":  tmp.setMode(ActionMode.examineItem);
-						case "takeItem":  tmp.setMode(ActionMode.takeItem);
-						case "useItem":  tmp.setMode(ActionMode.useItem);
-						case "collectItem":  tmp.setMode(ActionMode.collectItem);
-						case "switchItemToLeftHand":  tmp.setMode(ActionMode.switchItemToLeftHand);
-						case "useTwoItems":  tmp.setMode(ActionMode.useTwoItems);
-						case "dropItem":  tmp.setMode(ActionMode.dropItem);
-						case "say":  tmp.setMode(ActionMode.say);
-						case "scream":  tmp.setMode(ActionMode.scream);
-						case "whisper":  tmp.setMode(ActionMode.whisper);
+						case "run":  tmp.setMode(ActionMode.run);break;
+						case "walk":  tmp.setMode(ActionMode.walk);break;
+						case "jump":  tmp.setMode(ActionMode.jump);break;
+						case "sleepIntentioned":  tmp.setMode(ActionMode.sleepIntentioned);break;
+						case "sleepCaused":  tmp.setMode(ActionMode.sleepCaused);break;
+						case "weaponRightHand":  tmp.setMode(ActionMode.weaponRightHand);break;
+						case "weaponLeftHand":  tmp.setMode(ActionMode.weaponLeftHand);break;
+						case "examineItem":  tmp.setMode(ActionMode.examineItem);break;
+						case "takeItem":  tmp.setMode(ActionMode.takeItem);break;
+						case "useItem":  tmp.setMode(ActionMode.useItem);break;
+						case "collectItem":  tmp.setMode(ActionMode.collectItem);break;
+						case "switchItemToLeftHand":  tmp.setMode(ActionMode.switchItemToLeftHand);break;
+						case "useTwoItems":  tmp.setMode(ActionMode.useTwoItems);break;
+						case "dropItem":  tmp.setMode(ActionMode.dropItem);break;
+						case "say":  tmp.setMode(ActionMode.say);break;
+						case "scream":  tmp.setMode(ActionMode.scream);break;
+						case "whisper":  tmp.setMode(ActionMode.whisper);break;
 					}
 					continue;
 				}
@@ -312,17 +312,17 @@ public class EventReactionDescriptionPool {
 					line = line.replace("</Type>", "");
 					line = line.trim();
 					switch(line) {
-						case "touch":  tmp.setType(ActionType.touch);
-						case "sleep":  tmp.setType(ActionType.sleep);
-						case "changeMove":  tmp.setType(ActionType.changeMove);
-						case "kick":  tmp.setType(ActionType.kick);
-						case "controlHandManually":  tmp.setType(ActionType.controlHandManually);
-						case "spell":  tmp.setType(ActionType.spell);
-						case "useWeaponLeft":  tmp.setType(ActionType.useWeaponLeft);
-						case "useWeaponRight":  tmp.setType(ActionType.useWeaponRight);
-						case "move":  tmp.setType(ActionType.move);
-						case "say":  tmp.setType(ActionType.say);
-						case "handleItem":  tmp.setType(ActionType.handleItem);
+						case "touch":  tmp.setType(ActionType.touch);break;
+						case "sleep":  tmp.setType(ActionType.sleep);break;
+						case "changeMove":  tmp.setType(ActionType.changeMove);break;
+						case "kick":  tmp.setType(ActionType.kick);break;
+						case "controlHandManually":  tmp.setType(ActionType.controlHandManually);break;
+						case "spell":  tmp.setType(ActionType.spell);break;
+						case "useWeaponLeft":  tmp.setType(ActionType.useWeaponLeft);break;
+						case "useWeaponRight":  tmp.setType(ActionType.useWeaponRight);break;
+						case "move":  tmp.setType(ActionType.move);break;
+						case "say":  tmp.setType(ActionType.say);break;
+						case "handleItem":  tmp.setType(ActionType.handleItem);break;
 					}
 					continue;
 				}
