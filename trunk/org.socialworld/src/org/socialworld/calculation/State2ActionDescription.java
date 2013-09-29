@@ -22,5 +22,19 @@ public class State2ActionDescription {
 		public ActionIntensityExpression getIntensityExpression() { return intensityExpression;}
 		public ActionDurationExpression getDurationExpression() { return durationExpression;}
 		
+		public void setDelayExpression( ActionDelayExpression delayExpression) {
+			this.delayExpression = delayExpression;}
+		public void setPriorityExpression( ActionPriorityExpression priorityExpression) {
+			this.priorityExpression = priorityExpression;}
+		public void setRelativeDirectionExpression( ActionRelativeDirectionExpression relativeDirectionExpression){
+			this.relativeDirectionExpression = relativeDirectionExpression;}
+		public void setActionModeExpression( ActionModeExpression actionModeExpression) {
+			this.actionModeExpression = actionModeExpression;}
+		public void setActionTypeExpression( ActionTypeExpression actionTypeExpression) {
+			this.actionTypeExpression = actionTypeExpression;}
+		public void setIntensityExpression( ActionIntensityExpression intensityExpression){
+			this.intensityExpression = intensityExpression;}
+		public void setDurationExpression( ActionDurationExpression durationExpression) {
+			this.durationExpression = durationExpression;}
 
 }
