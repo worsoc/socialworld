@@ -1,0 +1,28 @@
+use of class AttributeArrayPool:
+	- LoadHuman.getObject() { ... human.setAttributes()...}
+	
+use of class AttributeCalculatorMatrixPool:
+	- LoadHuman.getObject() { ... human.setMatrix()...}
+
+use of EventInfluenceDescriptionPool:
+	- EventInfluenceAssignment.getEventInfluenceDescription()
+	
+use of EventPool:
+	- (simpleclient.actions !) ReleaseEventAction.run() { ... EventPool.getInstance().getEvent(1); ... }
+	
+use of class EventReactionDescriptionPool:
+	- EventReactionAssignment.getEventReactionDescription()
+
+use of InfluenceTypePool:
+	- SimulationObject.loadInfluenceType(){influenceTypeByEventType = InfluenceTypePool.getInstance().getInfluenceTypes(objectID);}
+
+use of ReactionTypePool:
+	- SimulationObject.loadReactionType(){reactionTypeByEventType = ReactionTypePool.getInstance().getReactionTypes(objectID);}
+	 
+use of class LoadHuman:
+	- ObjectMaster's member: humanCreator
+	- ObjectMaster constructor
+	- ObjectMaster.createSimulationObject() { ...this.humanCreator.getObject(objectID) ...}
+	
+use of State2ActionDescriptionPool:
+	- State2ActionAssignment.getState2ActionDescription() 
