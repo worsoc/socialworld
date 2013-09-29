@@ -109,7 +109,7 @@ public class EventPool {
 			String line;
 			
 	
-			InputStream input = new URL("http://sourceforge.net/projects/socialworld/files/hmn_sweid.txt").openStream();
+			InputStream input = new URL("http://sourceforge.net/projects/socialworld/files/events.txt").openStream();
 			LineNumberReader lnr
 			   = new LineNumberReader(new InputStreamReader(input));
 	
