@@ -3,19 +3,24 @@ package org.socialworld.datasource;
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.socialworld.calculation.AttributeCalculatorMatrix;
 
 public class AttributeCalculatorMatrixPool {
+	public static final int CAPACITY_ACMP_ARRAY = 100;
 
 	private static AttributeCalculatorMatrixPool instance;
 	
-	private static List<AttributeCalculatorMatrix> matrixs;
+	private static ArrayList<AttributeCalculatorMatrix> matrixsForPositiveIndex;
+	private static ArrayList<AttributeCalculatorMatrix> matrixsForNegativeIndex;
 	
 	private AttributeCalculatorMatrixPool () {
-		matrixs = new ArrayList<AttributeCalculatorMatrix> ();
+		matrixsForPositiveIndex = new ArrayList<AttributeCalculatorMatrix> ();
+		matrixsForPositiveIndex.ensureCapacity(CAPACITY_ACMP_ARRAY);
 
+		matrixsForNegativeIndex = new ArrayList<AttributeCalculatorMatrix> ();
+		matrixsForNegativeIndex.ensureCapacity(CAPACITY_ACMP_ARRAY);
+		
 		initialize();
 	}
 	
@@ -27,24 +32,21 @@ public class AttributeCalculatorMatrixPool {
 	}
 	
 	public AttributeCalculatorMatrix getMatrix(int index) {
-		if (matrixs.size() > index ) 
-			return matrixs.get(index);
+		if (index >= 0)
+			if (matrixsForPositiveIndex.size() > index ) 
+				return matrixsForPositiveIndex.get(index);
+			else return null;
 		else {
-			matrixs.add(createMatrix());
-			return matrixs.get(matrixs.size()-1);
-		}
+			index = index * -1;
+			if (matrixsForNegativeIndex.size() > index ) 
+				return matrixsForNegativeIndex.get(index);
+			else return null;
+		}	
 	}
 	
 	private void initialize() {
 		
 		initializeFromFile();
-		/*
-		matrixs.add(createMatrix());
-		matrixs.add(createMatrix());
-		matrixs.add(createMatrix());
-		matrixs.add(createMatrix());
-		matrixs.add(createMatrix());
-		matrixs.add(createMatrix());*/
 	}
 	
 	private void initializeFromFile() {
@@ -57,18 +59,30 @@ public class AttributeCalculatorMatrixPool {
 			int functions[] = new int[64];
 			float shares[] = new float[64];
 			
+			int index = 0;
+			float deviation = 0;
+			int vorzeichen = 1;
+			int count = 0;
+			
 			AttributeCalculatorMatrix matrix;
 	
 			InputStream input = new URL("http://sourceforge.net/projects/socialworld/files/hmn_swacm.txt").openStream();
 			LineNumberReader lnr
 			   = new LineNumberReader(new InputStreamReader(input));
 
-			//File input = new File("C:/Users/Mathias/workspace/socialworld/data/hmn_swacm.txt");
-			//FileReader in = new FileReader(input);
-			//LineNumberReader lnr = new LineNumberReader(in);
-	
 			while ((line = lnr.readLine()) != null)
 			{
+				if (line.startsWith("["))
+				{
+					
+					line = line.substring(1);
+					line = line.replace("]", "");
+					line = line.trim();
+					
+					deviation = Float.parseFloat(line);
+					
+				}
+				
 				if (line.startsWith("<functions>"))
 				{
 					
@@ -101,7 +115,38 @@ public class AttributeCalculatorMatrixPool {
 					matrix = new AttributeCalculatorMatrix();
 					matrix.setFunctions( functions);
 					matrix.setShares( shares );
-					matrixs.add(matrix);
+					
+					index = (int) deviation;
+					vorzeichen = 1;
+					count = 0;
+					// find the nearest free index
+					// but only CAPACITY_ACMP_ARRAY tries
+					if (index >= 0) {
+						while (count < CAPACITY_ACMP_ARRAY) 
+							if (index < CAPACITY_ACMP_ARRAY && index >= 0 && matrixsForPositiveIndex.get(index) == null ) {
+								matrixsForPositiveIndex.set(index, matrix);
+								break;
+							}
+							else {
+								count++;
+								index = index + vorzeichen * count;
+								vorzeichen = vorzeichen * -1;
+							}
+					}
+					else {
+						index = index * -1;
+						while (count < CAPACITY_ACMP_ARRAY) 
+							if (index < CAPACITY_ACMP_ARRAY && index > 0 && matrixsForNegativeIndex.get(index) == null ) {
+								matrixsForNegativeIndex.set(index, matrix);
+								break;
+							}
+							else {
+								count++;
+								index = index + vorzeichen * count;
+								vorzeichen = vorzeichen * -1;
+							}
+					}	
+					
 				}
 
 			}
@@ -114,15 +159,8 @@ public class AttributeCalculatorMatrixPool {
 		}
 	}
 
-	private AttributeCalculatorMatrix createMatrix () {
-		AttributeCalculatorMatrix matrix = new AttributeCalculatorMatrix();
-		matrix.setFunctions( getFunctionArray() );
-		matrix.setShares( getShareArray() );
-		return matrix;
-	}
-	
-	private int[] getFunctionArray() {
-		int[] functions;
+
+/*	
 		int[] functions1 = {1,1,2,0,2,4,4,2,
 							3,1,3,3,2,1,3,4,
 							1,0,1,2,0,0,1,2,
@@ -147,24 +185,7 @@ public class AttributeCalculatorMatrixPool {
 							1,1,3,3,2,1,5,1,
 							5,0,1,2,0,0,1,1,
 							1,0,0,2,0,1,0,1};
-		int count = matrixs.size();
-		
-		switch (count) {
-		case 1:
-			functions = functions2;
-			break;
-		case 2:
-			functions = functions3;
-			break;
-		default: 
-			functions = functions1;
-			break;
-		}
-		return functions;
-	}
-	
-	private float[] getShareArray() {
-		float[] shares;
+
 		float[] shares1 = 
 				  {(float)0.79, (float) 0.03, (float) 0.02, (float) 0.00, (float) 0.05, (float) 0.04, (float) 0.02, (float) 0.05,
 				   (float)0.03, (float) 0.79, (float) 0.03, (float) 0.03, (float) 0.03, (float) 0.03, (float) 0.03, (float) 0.03,
@@ -194,21 +215,6 @@ public class AttributeCalculatorMatrixPool {
 				   (float)0.00, (float) 0.01, (float) 0.02, (float) 0.03, (float) 0.04, (float) 0.79, (float) 0.05, (float) 0.06,
 				   (float)0.01, (float) 0.00, (float) 0.02, (float) 0.05, (float) 0.03, (float) 0.04, (float) 0.79, (float) 0.06,
 				   (float)0.06, (float) 0.05, (float) 0.04, (float) 0.03, (float) 0.02, (float) 0.01, (float) 0.00, (float) 0.79};
-		int count = matrixs.size();
-		
-		switch (count) {
-		case 1: 
-			shares = shares2;
-			break;
-		case 2: 
-			shares = shares3;
-			break;
-		default: 
-			shares = shares1;
-			break;
-		}
-		return shares;
-	}
-	
+*/
 	
 }

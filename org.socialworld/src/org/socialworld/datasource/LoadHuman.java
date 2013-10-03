@@ -3,6 +3,8 @@
  */
 package org.socialworld.datasource;
 
+import java.util.Random;
+
 import org.socialworld.objects.*;
 import org.socialworld.attributes.Position;
 import org.socialworld.datasource.LoadAnimal;
@@ -21,13 +23,14 @@ import org.socialworld.SimpleClientActionHandler;
 public class LoadHuman extends LoadAnimal implements IHumanWrite {
 	
 	private static LoadHuman instance;
+	private Random random;
 
 	/**
 	 * Because of being a singleton the instance is created in a private
 	 * constructor.
 	 */
 	private LoadHuman() {
-
+		random = new Random();
 	}
 
 	/**
@@ -38,6 +41,7 @@ public class LoadHuman extends LoadAnimal implements IHumanWrite {
 	public static LoadHuman getInstance() {
 		if (instance == null) {
 			instance = new LoadHuman();
+			
 		}
 		return instance;
 	}
@@ -52,15 +56,23 @@ public class LoadHuman extends LoadAnimal implements IHumanWrite {
 	 */
 	public Human getObject(long objectID) {
 		
+		double gauss_value;
+		int indexACMP;
+		int indexAAP;
+		
+		gauss_value = random.nextGaussian();
+		indexACMP = mapGaussToIndex(gauss_value, AttributeCalculatorMatrixPool.CAPACITY_ACMP_ARRAY);
+		indexAAP = mapGaussToIndex(gauss_value, AttributeArrayPool.CAPACITY_AAP_ARRAY);
+		
 		Human createdHuman = new Human();
 		WriteAccessToHuman human = new WriteAccessToHuman(createdHuman);
 		
 		human.setObjectID(objectID, this);
 		human.setMatrix(	
-					AttributeCalculatorMatrixPool.getInstance().getMatrix(mapObjectIDtoMatrixIndex(objectID)),
+					AttributeCalculatorMatrixPool.getInstance().getMatrix(indexACMP),
 					this);
 		human.setAttributes(
-					AttributeArrayPool.getInstance().getArray(mapObjectIDtoAttributesIndex(objectID)),
+					AttributeArrayPool.getInstance().getArray(indexAAP),
 					this);
 		
 		// TODO (tyloesand) only for testing, must be deleted
@@ -85,12 +97,5 @@ public class LoadHuman extends LoadAnimal implements IHumanWrite {
 		return createdHuman;
 	}
 
-	private int mapObjectIDtoMatrixIndex(long objectID) {
-		return (int) objectID - 1;
-	}
-
-	private int mapObjectIDtoAttributesIndex(long objectID) {
-		return (int) objectID - 1;
-	}
 
 }
