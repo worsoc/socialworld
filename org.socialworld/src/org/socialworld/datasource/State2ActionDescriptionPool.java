@@ -50,21 +50,11 @@ public class State2ActionDescriptionPool {
 	
 	public State2ActionDescription getDescription(int state2ActionType ) {
 		int index;
-		State2ActionDescription description;
+		State2ActionDescription description = null;
 		
 		index = state2ActionType ;
 		
-		if (descriptions.size() >= index) {
-			description = descriptions.get(index);
-			if (description == null) {
-				description = createDescription(state2ActionType);
-				descriptions.add(index, description);
-			}
-		}	
-		else {
-			description = createDescription(state2ActionType);
-			descriptions.add(index, description);
-		}
+		if (descriptions.size() >= index) 			description = descriptions.get(index);
 		return description;
 	}
 
@@ -375,12 +365,6 @@ public class State2ActionDescriptionPool {
 		expressions.set(ID - 1, expression);
 	}
 	
-
-	private State2ActionDescription createDescription(int state2ActionType) {
-		State2ActionDescription description = new	State2ActionDescription();
-		
-		return description;
-	}
 
 
 }
