@@ -25,5 +25,11 @@ public abstract class LoadSimulationObjects implements ISimulationObjectWrite {
 
 	public abstract SimulationObject getObject(long objectID) ;
 	
-
+	protected int mapGaussToIndex(double gaussValue, int arrayCapacity) {
+		double factor;
+		int result;
+		factor = arrayCapacity / 4;
+		result = (int) (gaussValue * factor);
+		return result;
+	}
 }

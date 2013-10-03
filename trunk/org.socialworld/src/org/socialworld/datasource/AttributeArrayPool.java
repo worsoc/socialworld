@@ -1,20 +1,26 @@
 package org.socialworld.datasource;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.io.*;
 import java.net.URL;
 import org.socialworld.attributes.AttributeArray;
 
 public class AttributeArrayPool {
 
+	public static final int CAPACITY_AAP_ARRAY = 100;
+
 	private static AttributeArrayPool instance;
 	
-	private static List<AttributeArray> attributes;
+	private static ArrayList<AttributeArray> attributesForPositiveIndex;
+	private static ArrayList<AttributeArray> attributesForNegativeIndex;
 	
 	private AttributeArrayPool () {
-		attributes = new ArrayList<AttributeArray> ();
+		attributesForPositiveIndex = new ArrayList<AttributeArray> ();
+		attributesForPositiveIndex.ensureCapacity(CAPACITY_AAP_ARRAY);
 
+		attributesForNegativeIndex = new ArrayList<AttributeArray> ();
+		attributesForNegativeIndex.ensureCapacity(CAPACITY_AAP_ARRAY);
+		
 		initialize();
 	}
 	
@@ -26,12 +32,16 @@ public class AttributeArrayPool {
 	}
 	
 	public AttributeArray getArray(int index) {
-		if (attributes.size() > index ) 
-			return attributes.get(index);
+		if (index >= 0)
+			if (attributesForPositiveIndex.size() > index ) 
+				return attributesForPositiveIndex.get(index);
+			else return null;
 		else {
-			attributes.add(createArray());
-			return attributes.get(attributes.size() - 1);
-		}
+			index = index * -1;
+			if (attributesForNegativeIndex.size() > index ) 
+				return attributesForNegativeIndex.get(index);
+			else return null;
+		}	
 		
 	}
 
@@ -39,44 +49,10 @@ public class AttributeArrayPool {
 		
 		initializeFromFile();
 		
-		attributes.add(createArray());
-		attributes.add(createArray());
-		attributes.add(createArray());
-		attributes.add(createArray());
-		attributes.add(createArray());
-		attributes.add(createArray());
+
 	}
 	
-	private AttributeArray createArray() {
-		int[] array;
-		array = getArray();
-		AttributeArray attributes = new AttributeArray(array);
-		
-		return attributes;
-	}
 	
-	private int[] getArray() {
-		int[] array;
-		int[] array1 = {50,50,50,50,50,50,50,50};
-		int[] array2 = {40,60,30,50,60,50,30,70};
-		int[] array3 = {40,42,44,46,50,54,56,58};
-		
-		int count = attributes.size();
-		
-		switch (count) {
-		case 1: 
-			array = array2;
-			break;
-		case 2: 
-			array = array3;
-			break;
-		default: 
-			array = array1;
-			break;
-		}
-		return array;
-	
-	}
 	
 	private void initializeFromFile() {
 		
@@ -87,19 +63,30 @@ public class AttributeArrayPool {
 			int attribIndex;
 			int array[];
 			
-			array =new int[8];
+			int index = 0;
+			float deviation = 0;
+			int vorzeichen = 1;
+			int count = 0;
+			
+			array = new int[8];
 			
 
 			InputStream input = new URL("http://sourceforge.net/projects/socialworld/files/hmn_swa.txt").openStream();
 			LineNumberReader lnr
 			   = new LineNumberReader(new InputStreamReader(input));
 
-			//FileReader in = new FileReader("C:/Users/Mathias/workspace/socialworld/data/hmn_swa.txt");
-			//FileReader in = new FileReader(input);
-			//LineNumberReader lnr = new LineNumberReader(in);
 	
 			while ((line = lnr.readLine()) != null)
 			{
+				if (line.startsWith("["))
+				{
+					line = line.substring(1);
+					line = line.replace("]", "");
+					line = line.trim();
+					
+					deviation = Float.parseFloat(line);
+				}
+				
 				if (line.startsWith("("))
 				{
 					line = line.substring(1);
@@ -110,7 +97,38 @@ public class AttributeArrayPool {
 					for (attribIndex = 0; attribIndex < 8; attribIndex++){
 						array[attribIndex] = Integer.parseInt(values[attribIndex]);
 					}
-					attributes.add(new AttributeArray(array));
+					
+					index = (int) deviation;
+					vorzeichen = 1;
+					count = 0;
+					// find the nearest free index
+					// but only CAPACITY_AAP_ARRAY tries
+					if (index >= 0) {
+						while (count < CAPACITY_AAP_ARRAY) 
+							if (index < CAPACITY_AAP_ARRAY && index >= 0 && attributesForPositiveIndex.get(index) == null ) {
+								attributesForPositiveIndex.set(index, new AttributeArray(array));
+								break;
+							}
+							else {
+								count++;
+								index = index + vorzeichen * count;
+								vorzeichen = vorzeichen * -1;
+							}
+					}
+					else {
+						index = index * -1;
+						while (count < CAPACITY_AAP_ARRAY) 
+							if (index < CAPACITY_AAP_ARRAY && index > 0 && attributesForNegativeIndex.get(index) == null ) {
+								attributesForNegativeIndex.set(index, new AttributeArray(array));
+								break;
+							}
+							else {
+								count++;
+								index = index + vorzeichen * count;
+								vorzeichen = vorzeichen * -1;
+							}
+					}	
+					
 					
 				}
 			}
