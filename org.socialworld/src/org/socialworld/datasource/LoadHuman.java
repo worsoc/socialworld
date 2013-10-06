@@ -9,7 +9,6 @@ import org.socialworld.objects.*;
 import org.socialworld.attributes.Position;
 import org.socialworld.datasource.LoadAnimal;
 import org.socialworld.datasource.AttributeCalculatorMatrixPool;
-
 import org.socialworld.SimpleClientActionHandler;
 
 /**
@@ -59,10 +58,17 @@ public class LoadHuman extends LoadAnimal implements IHumanWrite {
 		double gauss_value;
 		int indexACMP;
 		int indexAAP;
+		int indexITP; 
+		int indexRTP; 
+		int indexS2AP; 
 		
 		gauss_value = random.nextGaussian();
 		indexACMP = mapGaussToIndex(gauss_value, AttributeCalculatorMatrixPool.CAPACITY_ACMP_ARRAY);
 		indexAAP = mapGaussToIndex(gauss_value, AttributeArrayPool.CAPACITY_AAP_ARRAY);
+		indexITP = mapGaussToIndex(gauss_value, InfluenceTypePool.CAPACITY_ITP_ARRAY);
+		indexRTP = mapGaussToIndex(gauss_value, ReactionTypePool.CAPACITY_RTP_ARRAY);
+		indexS2AP = mapGaussToIndex(gauss_value, State2ActionTypePool.CAPACITY_S2AP_ARRAY);
+		
 		
 		Human createdHuman = new Human();
 		WriteAccessToHuman human = new WriteAccessToHuman(createdHuman);
@@ -74,6 +80,9 @@ public class LoadHuman extends LoadAnimal implements IHumanWrite {
 		human.setAttributes(
 					AttributeArrayPool.getInstance().getArray(indexAAP),
 					this);
+		human.setInfluenceTypes(InfluenceTypePool.getInstance().getInfluenceTypes(indexITP), this);
+		human.setReactionTypes(ReactionTypePool.getInstance().getReactionTypes(indexRTP), this);
+		human.setState2ActionType(State2ActionTypePool.getInstance().getState2ActionType(indexS2AP), this);
 		
 		// TODO (tyloesand) only for testing, must be deleted
 		// find a solution for assign positions
