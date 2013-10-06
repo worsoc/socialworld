@@ -10,6 +10,9 @@ public class EventReactionDescription {
 	protected ActionIntensityExpression intensityExpression;
 	protected ActionDurationExpression durationExpression;
 	
+	protected int eventType;
+	protected int reactionType;
+
 	public EventReactionDescription() {
 
 		delayExpression = new ActionDelayExpression();
@@ -44,5 +47,13 @@ public class EventReactionDescription {
 		this.intensityExpression = intensityExpression;}
 	public void setDurationExpression( ActionDurationExpression durationExpression) {
 		this.durationExpression = durationExpression;}
+
+	public void setEventType(int eventType ) {
+		this.eventType =  eventType;
+	}
+	
+	public void setReactionType(int reactionType ) {
+		this.reactionType =  reactionType;
+	}	
 
 }
