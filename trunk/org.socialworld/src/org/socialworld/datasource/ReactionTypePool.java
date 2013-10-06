@@ -3,8 +3,16 @@ package org.socialworld.datasource;
 import org.socialworld.core.Event;
 
 public class ReactionTypePool {
+	public static final int CAPACITY_RTP_ARRAY = 100;
+
 	private static ReactionTypePool instance;
-	
+
+	private static int[] reactionTypes;
+
+	private ReactionTypePool() {
+		reactionTypes = new int[CAPACITY_RTP_ARRAY * Event.MAX_EVENT_TYPE];
+	}
+
 	public static ReactionTypePool getInstance() {
 		if (instance == null) {
 			instance = new ReactionTypePool();
@@ -12,23 +20,18 @@ public class ReactionTypePool {
 		return instance;
 	}
 
-	public int[] getReactionTypes(long objectID) {
+	public int[] getReactionTypes(int indexByGauss) {
 		int types[];
-		int type;
+		int index;
 		
 		types = new int[Event.MAX_EVENT_TYPE];
 		
 		for (int eventType = 0; eventType < Event.MAX_EVENT_TYPE; eventType++){
-			type = mapObjectIDToReactionType(eventType, objectID);
-			types[eventType] = type;
+			index = indexByGauss * Event.MAX_EVENT_TYPE  + eventType;
+			types[eventType] = reactionTypes[index];
 		}
 		return types;
 	}
 	
-	private int mapObjectIDToReactionType(int eventType, long objectID) {
-		// TODO implement mapping
-		int type;
-		type = (int) objectID;
-		return type;
-	}
+
 }
