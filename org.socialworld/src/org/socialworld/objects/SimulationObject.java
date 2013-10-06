@@ -14,8 +14,6 @@ import org.socialworld.core.ActionCreator;
 import org.socialworld.core.ActionHandler;
 import org.socialworld.core.Event;
 import org.socialworld.core.Simulation;
-import org.socialworld.datasource.InfluenceTypePool;
-import org.socialworld.datasource.ReactionTypePool;
 
 /**
  * Every simulation object (actor in the simulation) is inherited by the abstract class SimulationObject.
@@ -43,6 +41,7 @@ public abstract class SimulationObject extends Model {
 	
 	public static final int MAX_EVENT_INFLUENCE_TYPE = 256;
 	public static final int MAX_EVENT_REACTION_TYPE = 256;
+	public static final int MAX_STATE_2_ACTION_TYPE = 256;
 
 	/**
 	 * The constructor creates a simulation object.
@@ -59,8 +58,6 @@ public abstract class SimulationObject extends Model {
 
 		this.position = new Position( 0,0,0);
 		
-		loadInfluenceType();
-		loadReactionType();
 
 	}
 
@@ -93,6 +90,18 @@ public abstract class SimulationObject extends Model {
 		}
 	}
 
+	void setInfluenceTypes (int types[], WriteAccessToSimulationObject guard) {
+		if (this.guard == guard) this.influenceTypeByEventType = types;
+	}
+
+	void setReactionTypes (int types[], WriteAccessToSimulationObject guard) {
+		if (this.guard == guard) this.reactionTypeByEventType = types;
+	}
+
+	void setState2ActionType (int type, WriteAccessToSimulationObject guard) {
+		if (this.guard == guard) this.state2ActionType = type;
+	}
+	
 	/**
 	 * The method lets a simulation object do an action.
 	 * 
@@ -198,16 +207,10 @@ public abstract class SimulationObject extends Model {
 	/**
 	 * The method loads the array of influence types for all event types.
 	 */
-	private void loadInfluenceType() {
-		 influenceTypeByEventType = InfluenceTypePool.getInstance().getInfluenceTypes(objectID);
-	}
 
 	/**
 	 * The method loads the array of reaction types for all event types.
 	 */
-	private void loadReactionType() {
-		reactionTypeByEventType = ReactionTypePool.getInstance().getReactionTypes(objectID);
-	}
 	
 	public int getReactionType(int eventType) {
 	 return reactionTypeByEventType[eventType];
