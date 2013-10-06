@@ -13,6 +13,7 @@ import org.socialworld.calculation.*;
 import org.socialworld.attributes.ActionMode;
 import org.socialworld.attributes.ActionType;
 import org.socialworld.core.Event;
+import org.socialworld.objects.SimulationObject;
 
 public class EventReactionDescriptionPool {
 
@@ -27,6 +28,8 @@ public class EventReactionDescriptionPool {
 		descriptions = new ArrayList<EventReactionDescription> ();
 		expressions = new ArrayList<Expression> ();
 
+		descriptions.ensureCapacity(Event.MAX_EVENT_TYPE * SimulationObject.MAX_EVENT_REACTION_TYPE);
+		
 		initialize();
 	}
 	
@@ -56,16 +59,16 @@ public class EventReactionDescriptionPool {
 		
 		ListIterator<Expression> iterator;
 		Expression expression;
-		Expression expressionDummy;
 		
 		EventReactionDescription erd;
 		
 		int IDTrue;
 		int IDFalse;
 		
-
-		expressionDummy = new ActionDelayExpression();
-		expressionDummy.setID(0);
+		int index;
+		int eventType = 0;
+		int reactionType = 0;
+		
 
 		// temporary initialized with ActionDelayExpression
 		// expression and erd must be initialized
@@ -91,8 +94,8 @@ public class EventReactionDescriptionPool {
 				}
 
 				if (line.startsWith("</ERD>")) {
-					// TODO add at index for event type and reaction type
-					descriptions.add(erd);
+					index = eventType * Event.MAX_EVENT_TYPE + reactionType;
+					descriptions.set(index, erd);
 					continue;
 				}
 				
@@ -176,7 +179,7 @@ public class EventReactionDescriptionPool {
 				}
 
 				if (line.startsWith("</ActionDelayExp>")) {
-					addExpression(expression, expressionDummy);
+					addExpression(expression);
 					erd.setDelayExpression((ActionDelayExpression) expression);
 					continue;
 				}
@@ -187,7 +190,7 @@ public class EventReactionDescriptionPool {
 				}
 
 				if (line.startsWith("</ActionDurationExp>")) {
-					addExpression(expression, expressionDummy);
+					addExpression(expression);
 					erd.setDurationExpression((ActionDurationExpression) expression);
 					continue;
 				}
@@ -198,7 +201,7 @@ public class EventReactionDescriptionPool {
 				}
 
 				if (line.startsWith("</ActionIntensityExp>")) {
-					addExpression(expression, expressionDummy);
+					addExpression(expression);
 					erd.setIntensityExpression((ActionIntensityExpression) expression);
 					continue;
 				}
@@ -240,7 +243,7 @@ public class EventReactionDescriptionPool {
 				}
 				
 				if (line.startsWith("</ActionModeExp>")) {
-					addExpression(expression, expressionDummy);
+					addExpression(expression);
 					erd.setActionModeExpression((ActionModeExpression) expression);
 					continue;
 				}
@@ -251,7 +254,7 @@ public class EventReactionDescriptionPool {
 				}
 
 				if (line.startsWith("</ActionPriorityExp>")) {
-					addExpression(expression, expressionDummy);
+					addExpression(expression);
 					erd.setPriorityExpression((ActionPriorityExpression) expression);
 					continue;
 				}
@@ -275,7 +278,7 @@ public class EventReactionDescriptionPool {
 				}
 
 				if (line.startsWith("</ActionRelDirExp>")) {
-					addExpression(expression, expressionDummy);
+					addExpression(expression);
 					erd.setRelativeDirectionExpression((ActionRelativeDirectionExpression) expression);
 					continue;
 				}
@@ -311,9 +314,29 @@ public class EventReactionDescriptionPool {
 				}
 
 				if (line.startsWith("</ActionTypeExp>")) {
-					addExpression(expression, expressionDummy);
+					addExpression(expression);
 					erd.setActionTypeExpression((ActionTypeExpression) expression);
 				continue;
+				}
+
+				if (line.startsWith("<EventType>"))
+				{
+					line = line.substring(11);
+					line = line.replace("</EventType>", "");
+					line = line.trim();
+					eventType = (int) Float.parseFloat(line);
+					erd.setEventType(eventType);
+					continue;
+				}
+
+				if (line.startsWith("<ReactionType>"))
+				{
+					line = line.substring(14);
+					line = line.replace("</ReactionType>", "");
+					line = line.trim();
+					reactionType = (int) Float.parseFloat(line);
+					erd.setReactionType(reactionType);
+					continue;
 				}
 
 			}
@@ -330,7 +353,7 @@ public class EventReactionDescriptionPool {
 		while (iterator.hasNext()) {
 			expression = iterator.next();
 			
-			if (expression.getID() > 0 ) {
+			if (expression != null && expression.getID() > 0 ) {
 				IDTrue = expression.getIDTrue();
 				IDFalse = expression.getIDFalse();
 				
@@ -344,12 +367,12 @@ public class EventReactionDescriptionPool {
 		}
 	}
 
-	private void addExpression(Expression expression, Expression expressionDummy) {
+	private void addExpression(Expression expression) {
 		int ID;
 	
 		ID = expression.getID();
-		while (ID > expressions.size()) {
-			expressions.add(expressionDummy);
+		if (ID > expressions.size()) {
+			expressions.ensureCapacity(ID);
 		}
 		expressions.set(ID - 1, expression);
 	}
