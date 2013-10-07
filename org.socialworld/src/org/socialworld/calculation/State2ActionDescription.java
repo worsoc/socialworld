@@ -10,6 +10,8 @@ public class State2ActionDescription {
 		protected ActionIntensityExpression intensityExpression;
 		protected ActionDurationExpression durationExpression;
 		
+		protected int state2ActionType;
+
 		public State2ActionDescription() {
 
 		}
@@ -37,4 +39,7 @@ public class State2ActionDescription {
 		public void setDurationExpression( ActionDurationExpression durationExpression) {
 			this.durationExpression = durationExpression;}
 
+		public void setState2ActionType(int s2AType ) {
+			this.state2ActionType =  s2AType;
+		}
 }
