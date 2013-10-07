@@ -23,7 +23,6 @@ import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.ExpressionFunction;
 import org.socialworld.calculation.State2ActionDescription;
 import org.socialworld.calculation.Vector;
-import org.socialworld.objects.SimulationObject;
 
 public class State2ActionDescriptionPool {
 	
@@ -39,7 +38,7 @@ public class State2ActionDescriptionPool {
 		descriptions = new ArrayList<State2ActionDescription> ();
 		expressions = new ArrayList<Expression> ();
 
-		descriptions.ensureCapacity(SimulationObject.MAX_STATE_2_ACTION_TYPE);
+		descriptions.ensureCapacity(State2ActionTypePool.CAPACITY_S2AP_ARRAY);
 
 		initialize();
 	}

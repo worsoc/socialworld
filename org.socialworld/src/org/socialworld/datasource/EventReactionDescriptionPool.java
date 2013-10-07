@@ -13,7 +13,6 @@ import org.socialworld.calculation.*;
 import org.socialworld.attributes.ActionMode;
 import org.socialworld.attributes.ActionType;
 import org.socialworld.core.Event;
-import org.socialworld.objects.SimulationObject;
 
 public class EventReactionDescriptionPool {
 
@@ -28,7 +27,7 @@ public class EventReactionDescriptionPool {
 		descriptions = new ArrayList<EventReactionDescription> ();
 		expressions = new ArrayList<Expression> ();
 
-		descriptions.ensureCapacity(Event.MAX_EVENT_TYPE * SimulationObject.MAX_EVENT_REACTION_TYPE);
+		descriptions.ensureCapacity(Event.MAX_EVENT_TYPE * ReactionTypePool.CAPACITY_RTP_ARRAY);
 		
 		initialize();
 	}

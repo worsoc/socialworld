@@ -16,7 +16,6 @@ import org.socialworld.calculation.ExpressionFunction;
 import org.socialworld.calculation.ConditionOperator;
 
 import org.socialworld.core.Event;
-import org.socialworld.objects.SimulationObject;
 
 public class EventInfluenceDescriptionPool {
 
@@ -31,7 +30,7 @@ public class EventInfluenceDescriptionPool {
 		descriptions = new ArrayList<EventInfluenceDescription> ();
 		expressions = new ArrayList<EventInfluenceExpression> ();
 
-		descriptions.ensureCapacity(Event.MAX_EVENT_TYPE * SimulationObject.MAX_EVENT_INFLUENCE_TYPE);
+		descriptions.ensureCapacity(Event.MAX_EVENT_TYPE * InfluenceTypePool.CAPACITY_ITP_ARRAY);
 		
 		initialize();
 	}
