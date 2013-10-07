@@ -23,11 +23,11 @@ import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.ExpressionFunction;
 import org.socialworld.calculation.State2ActionDescription;
 import org.socialworld.calculation.Vector;
+import org.socialworld.objects.SimulationObject;
 
 public class State2ActionDescriptionPool {
 	
-	//public final int MAX_STATE_2_ACTION_TYPE = 16;
-	
+
 	private static final Logger logger = Logger.getLogger(State2ActionDescriptionPool.class);
 	private static State2ActionDescriptionPool instance;
 	
@@ -37,6 +37,9 @@ public class State2ActionDescriptionPool {
 	private State2ActionDescriptionPool () {
 		logger.debug("create State2ActionDescriptionPool");
 		descriptions = new ArrayList<State2ActionDescription> ();
+		expressions = new ArrayList<Expression> ();
+
+		descriptions.ensureCapacity(SimulationObject.MAX_STATE_2_ACTION_TYPE);
 
 		initialize();
 	}
@@ -67,7 +70,6 @@ public class State2ActionDescriptionPool {
 		
 		ListIterator<Expression> iterator;
 		Expression expression;
-		Expression expressionDummy;
 		
 		State2ActionDescription s2ad;
 		
@@ -75,8 +77,8 @@ public class State2ActionDescriptionPool {
 		int IDFalse;
 		
 
-		expressionDummy = new ActionDelayExpression();
-		expressionDummy.setID(0);
+		int index;
+		int state2ActionType = 0;
 
 		// temporary initialized with ActionDelayExpression
 		// expression and s2ad must be initialized
@@ -96,14 +98,14 @@ public class State2ActionDescriptionPool {
 			while ((line = lnr.readLine()) != null)
 			{
 
-				if (line.startsWith("<ERD>")) {
+				if (line.startsWith("<S2AD>")) {
 					s2ad = new State2ActionDescription();
 					continue;
 				}
 
-				if (line.startsWith("</ERD>")) {
-					// TODO add at index for event type and reaction type
-					descriptions.add(s2ad);
+				if (line.startsWith("</S2AD>")) {
+					index = state2ActionType;
+					descriptions.set(index, s2ad);
 					continue;
 				}
 				
@@ -187,7 +189,7 @@ public class State2ActionDescriptionPool {
 				}
 
 				if (line.startsWith("</ActionDelayExp>")) {
-					addExpression(expression, expressionDummy);
+					addExpression(expression);
 					s2ad.setDelayExpression((ActionDelayExpression) expression);
 					continue;
 				}
@@ -198,7 +200,7 @@ public class State2ActionDescriptionPool {
 				}
 
 				if (line.startsWith("</ActionDurationExp>")) {
-					addExpression(expression, expressionDummy);
+					addExpression(expression);
 					s2ad.setDurationExpression((ActionDurationExpression) expression);
 					continue;
 				}
@@ -209,7 +211,7 @@ public class State2ActionDescriptionPool {
 				}
 
 				if (line.startsWith("</ActionIntensityExp>")) {
-					addExpression(expression, expressionDummy);
+					addExpression(expression);
 					s2ad.setIntensityExpression((ActionIntensityExpression) expression);
 					continue;
 				}
@@ -251,7 +253,7 @@ public class State2ActionDescriptionPool {
 				}
 				
 				if (line.startsWith("</ActionModeExp>")) {
-					addExpression(expression, expressionDummy);
+					addExpression(expression);
 					s2ad.setActionModeExpression((ActionModeExpression) expression);
 					continue;
 				}
@@ -262,7 +264,7 @@ public class State2ActionDescriptionPool {
 				}
 
 				if (line.startsWith("</ActionPriorityExp>")) {
-					addExpression(expression, expressionDummy);
+					addExpression(expression);
 					s2ad.setPriorityExpression((ActionPriorityExpression) expression);
 					continue;
 				}
@@ -286,7 +288,7 @@ public class State2ActionDescriptionPool {
 				}
 
 				if (line.startsWith("</ActionRelDirExp>")) {
-					addExpression(expression, expressionDummy);
+					addExpression(expression);
 					s2ad.setRelativeDirectionExpression((ActionRelativeDirectionExpression) expression);
 					continue;
 				}
@@ -322,10 +324,21 @@ public class State2ActionDescriptionPool {
 				}
 
 				if (line.startsWith("</ActionTypeExp>")) {
-					addExpression(expression, expressionDummy);
+					addExpression(expression);
 					s2ad.setActionTypeExpression((ActionTypeExpression) expression);
 				continue;
 				}
+				
+				if (line.startsWith("<S2AType>"))
+				{
+					line = line.substring(9);
+					line = line.replace("</S2AType>", "");
+					line = line.trim();
+					state2ActionType = (int) Float.parseFloat(line);
+					s2ad.setState2ActionType(state2ActionType);
+					continue;
+				}
+
 
 			}
 			lnr.close();
@@ -355,12 +368,12 @@ public class State2ActionDescriptionPool {
 		}
 	}
 
-	private void addExpression(Expression expression, Expression expressionDummy) {
+	private void addExpression(Expression expression) {
 		int ID;
 	
 		ID = expression.getID();
-		while (ID > expressions.size()) {
-			expressions.add(expressionDummy);
+		if (ID > expressions.size()) {
+			expressions.ensureCapacity(ID);
 		}
 		expressions.set(ID - 1, expression);
 	}
