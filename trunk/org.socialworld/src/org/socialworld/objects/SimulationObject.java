@@ -39,9 +39,6 @@ public abstract class SimulationObject extends Model {
 	protected	int				reactionTypeByEventType[];
 	protected   int				state2ActionType;
 	
-	public static final int MAX_EVENT_INFLUENCE_TYPE = 256;
-	public static final int MAX_EVENT_REACTION_TYPE = 256;
-	public static final int MAX_STATE_2_ACTION_TYPE = 256;
 
 	/**
 	 * The constructor creates a simulation object.
