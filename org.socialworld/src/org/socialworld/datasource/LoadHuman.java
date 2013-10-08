@@ -6,7 +6,6 @@ package org.socialworld.datasource;
 import java.util.Random;
 
 import org.socialworld.objects.*;
-import org.socialworld.attributes.Position;
 import org.socialworld.datasource.LoadAnimal;
 import org.socialworld.datasource.AttributeCalculatorMatrixPool;
 import org.socialworld.SimpleClientActionHandler;
@@ -61,6 +60,7 @@ public class LoadHuman extends LoadAnimal implements IHumanWrite {
 		int indexITP; 
 		int indexRTP; 
 		int indexS2AP; 
+		int indexPosition;
 		
 		gauss_value = random.nextGaussian();
 		indexACMP = mapGaussToIndex(gauss_value, AttributeCalculatorMatrixPool.CAPACITY_ACMP_ARRAY);
@@ -68,7 +68,7 @@ public class LoadHuman extends LoadAnimal implements IHumanWrite {
 		indexITP = mapGaussToIndex(gauss_value, InfluenceTypePool.CAPACITY_ITP_ARRAY);
 		indexRTP = mapGaussToIndex(gauss_value, ReactionTypePool.CAPACITY_RTP_ARRAY);
 		indexS2AP = mapGaussToIndex(gauss_value, State2ActionTypePool.CAPACITY_S2AP_ARRAY);
-		
+		indexPosition = mapGaussToIndex(gauss_value, PositionPool.CAPACITY_PosP_ARRAY);
 		
 		Human createdHuman = new Human();
 		WriteAccessToHuman human = new WriteAccessToHuman(createdHuman);
@@ -83,24 +83,8 @@ public class LoadHuman extends LoadAnimal implements IHumanWrite {
 		human.setInfluenceTypes(InfluenceTypePool.getInstance().getInfluenceTypes(indexITP), this);
 		human.setReactionTypes(ReactionTypePool.getInstance().getReactionTypes(indexRTP), this);
 		human.setState2ActionType(State2ActionTypePool.getInstance().getState2ActionType(indexS2AP), this);
-		
-		// TODO (tyloesand) only for testing, must be deleted
-		// find a solution for assign positions
-		// (not this following provisional one)
-		switch ((int)objectID) {
-		case 1: 
-			human.setPosition(new Position(100,100,0) , this);
-			break;
-		case 2: 
-			human.setPosition(new Position(100,110,0), this);
-			break;
-		case 3: 
-			human.setPosition(new Position(400,400,0), this);
-			break;
-		default:
-			human.setPosition(new Position(3 * (int)objectID, - 2 * (int) objectID , (int) objectID), this);
-			break;
-		}
+		human.setPosition(PositionPool.getInstance().getPosition(indexPosition), this);
+
 		SimpleClientActionHandler.getInstance().setHumanWrite((int)objectID, human);
 
 		return createdHuman;
