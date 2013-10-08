@@ -3,6 +3,8 @@ package org.socialworld.datasource;
 import java.util.ArrayList;
 import java.io.*;
 import java.net.URL;
+
+import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.AttributeArray;
 
 public class AttributeArrayPool {
@@ -68,7 +70,7 @@ public class AttributeArrayPool {
 			int vorzeichen = 1;
 			int count = 0;
 			
-			array = new int[8];
+			array = new int[Attribute.NUMBER_OF_ATTRIBUTES];
 			
 
 			InputStream input = new URL("http://sourceforge.net/projects/socialworld/files/hmn_swa.txt").openStream();
@@ -94,7 +96,7 @@ public class AttributeArrayPool {
 					line = line.trim();
 					
 					values = line.split(",");
-					for (attribIndex = 0; attribIndex < 8; attribIndex++){
+					for (attribIndex = 0; attribIndex < Attribute.NUMBER_OF_ATTRIBUTES; attribIndex++){
 						array[attribIndex] = Integer.parseInt(values[attribIndex]);
 					}
 					
