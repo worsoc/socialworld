@@ -3,11 +3,8 @@
  */
 package org.socialworld.datasource;
 
-import java.util.Random;
-
 import org.socialworld.objects.*;
 import org.socialworld.datasource.LoadAnimal;
-import org.socialworld.datasource.AttributeCalculatorMatrixPool;
 import org.socialworld.SimpleClientActionHandler;
 
 /**
@@ -21,14 +18,12 @@ import org.socialworld.SimpleClientActionHandler;
 public class LoadHuman extends LoadAnimal implements IHumanWrite {
 	
 	private static LoadHuman instance;
-	private Random random;
 
 	/**
 	 * Because of being a singleton the instance is created in a private
 	 * constructor.
 	 */
 	private LoadHuman() {
-		random = new Random();
 	}
 
 	/**
@@ -52,6 +47,31 @@ public class LoadHuman extends LoadAnimal implements IHumanWrite {
 	 * @param objectID
 	 * @return  Human
 	 */
+	public Human getObject(long objectID) {
+		double gauss_value;
+	
+		Human createdHuman = new Human();
+		WriteAccessToHuman human = new WriteAccessToHuman(createdHuman);
+
+		gauss_value = random.nextGaussian();
+	
+		initObject(human, objectID, gauss_value);	
+
+		SimpleClientActionHandler.getInstance().setHumanWrite((int)objectID, human);
+
+		return createdHuman;
+	}
+
+	protected void initObject(WriteAccessToHuman object, long objectID, double gauss_value) {
+		super.initObject(object, objectID, gauss_value);
+
+	}
+
+}
+
+
+/* save
+ * 
 	public Human getObject(long objectID) {
 		
 		double gauss_value;
@@ -89,6 +109,5 @@ public class LoadHuman extends LoadAnimal implements IHumanWrite {
 
 		return createdHuman;
 	}
-
-
-}
+ * 
+ */
