@@ -51,20 +51,7 @@ public class Position extends Vector {
 	 * @return the direction
 	 */
 	public Direction getDirection(Position position) {
-		// TODO (tyloesand): getDifference der Klasse Vector nutzen
-		// und aus Vector eine Direction machen
-
-		double deltaX;
-		double deltaY;
-		double deltaZ;
-
-		Direction direction;
-
-		deltaX = this.x - position.getX();
-		deltaY = this.y - position.getY();
-		deltaZ = this.z - position.getZ();
-
-		direction = new Direction(deltaX, deltaY, deltaZ);
+		Direction direction = new Direction(getDifference(position));
 		return direction;
 	}
 	
