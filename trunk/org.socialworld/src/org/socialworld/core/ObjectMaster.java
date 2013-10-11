@@ -28,8 +28,6 @@ public class ObjectMaster {
 	
 	private final List<SimulationObject> simulationObjects;
 
-	private final LoadHuman humanCreator;
-	
 	private long maxObjectID = 0;
 	
 	private  ListIterator<God> godsIterator;
@@ -43,9 +41,7 @@ public class ObjectMaster {
 	public ObjectMaster() {
 		if (Simulation.WITH_LOGGING == 1 ) logger.debug("create ObjectMaster");
 
-		this.humanCreator = LoadHuman.getInstance();
-		
-		this.simulationObjects = new ListModel<SimulationObject>();
+		this.simulationObjects = new ArrayList<SimulationObject>();
 		
 		this.gods = new ArrayList<God>();
 		this.humans = new ListModel<Human>();
@@ -56,23 +52,28 @@ public class ObjectMaster {
 		resetIterators();
 	}	
 	
+	public SimulationObject getSimulationObject(long objectID) {
+		return this.simulationObjects.get((int)objectID);
+	}
+	
 	public SimulationObject createSimulationObject(
-			SimulationObjectType simulationObjectType, long objectID) {
+			SimulationObjectType simulationObjectType) {
 		SimulationObject object;
+		// TODO (tyloesand) objectID with type long
+		int objectID;
 		
-		if (objectID == 0) {
-			maxObjectID = maxObjectID + 1;
-			objectID = maxObjectID;
-		}
+		maxObjectID = maxObjectID + 1;
+		objectID = (int) maxObjectID;
+		
 		// TODO (tyloesand) weitere Objekttypen hinzufügen
 		switch (simulationObjectType) {
 		case animal:
-			object = new Animal();
+			object = LoadAnimal.getInstance().getObject(objectID);
 			this.animals.add((Animal)object);
 			animalsIterator = animals.listIterator(animalsIterator.nextIndex());
 			break;
 		case human:
-			object = this.humanCreator.getObject(objectID);
+			object = LoadHuman.getInstance().getObject(objectID);
 			this.humans.add((Human)object);
 			humansIterator = humans.listIterator(humansIterator.nextIndex());
 			break;
@@ -90,7 +91,7 @@ public class ObjectMaster {
 			object = null;
 		}
 		if (object != null) {
-			this.simulationObjects.add(object);
+			this.simulationObjects.set(objectID, object);
 			objectsIterator = simulationObjects.listIterator(objectsIterator.nextIndex());
 		}
 		return object;
