@@ -6,11 +6,27 @@ import org.socialworld.objects.WriteAccessToAnimal;
 
 public class LoadAnimal extends LoadSimulationObjects implements IAnimalWrite {
 
+	private static LoadAnimal instance;
+	
 	protected LoadAnimal() {
 	}
 
+	/**
+	 * The method gets back the only instance of the LoadAnimal.
+	 * 
+	 * @return singleton object of LoadHuman
+	 */
+	public static LoadAnimal getInstance() {
+		if (instance == null) {
+			instance = new LoadAnimal();
+			
+		}
+		return instance;
+	}
+	
+
 	@Override
-	public Animal getObject(long objectID) {
+	public  Animal getObject(long objectID) {
 		double gauss_value;
 		
 		Animal createdAnimal = new Animal();
