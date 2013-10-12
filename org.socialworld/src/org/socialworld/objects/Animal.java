@@ -99,7 +99,6 @@ public class Animal extends SimulationObject {
 	 * @param action
 	 */
 	protected int move(final Action action) {
-		// TODO implement the method 
 		action.lowerRemainedDuration(1000);
 		return action.isDone();
 	}
