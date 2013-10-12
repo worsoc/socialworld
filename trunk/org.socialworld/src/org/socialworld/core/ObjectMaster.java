@@ -28,7 +28,7 @@ public class ObjectMaster {
 	
 	private final List<SimulationObject> simulationObjects;
 
-	private long maxObjectID = 0;
+	private int maxObjectID = 0;
 	
 	private  ListIterator<God> godsIterator;
 	private  ListIterator<Human> humansIterator;
@@ -52,18 +52,17 @@ public class ObjectMaster {
 		resetIterators();
 	}	
 	
-	public SimulationObject getSimulationObject(long objectID) {
-		return this.simulationObjects.get((int)objectID);
+	public SimulationObject getSimulationObject(int objectID) {
+		return this.simulationObjects.get(objectID);
 	}
 	
 	public SimulationObject createSimulationObject(
 			SimulationObjectType simulationObjectType) {
 		SimulationObject object;
-		// TODO (tyloesand) objectID with type long
 		int objectID;
 		
 		maxObjectID = maxObjectID + 1;
-		objectID = (int) maxObjectID;
+		objectID =  maxObjectID;
 		
 		// TODO (tyloesand) weitere Objekttypen hinzufügen
 		switch (simulationObjectType) {

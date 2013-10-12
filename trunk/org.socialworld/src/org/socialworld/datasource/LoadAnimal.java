@@ -26,7 +26,7 @@ public class LoadAnimal extends LoadSimulationObjects implements IAnimalWrite {
 	
 
 	@Override
-	public  Animal getObject(long objectID) {
+	public  Animal getObject(int objectID) {
 		double gauss_value;
 		
 		Animal createdAnimal = new Animal();
@@ -39,7 +39,7 @@ public class LoadAnimal extends LoadSimulationObjects implements IAnimalWrite {
 		return createdAnimal;
 	}
 
-	protected void initObject(WriteAccessToAnimal object, long objectID, double gauss_value) {
+	protected void initObject(WriteAccessToAnimal object, int objectID, double gauss_value) {
 		int indexACMP;
 		int indexAAP;
 

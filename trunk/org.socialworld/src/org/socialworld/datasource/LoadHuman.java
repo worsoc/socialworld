@@ -47,7 +47,7 @@ public class LoadHuman extends LoadAnimal implements IHumanWrite {
 	 * @param objectID
 	 * @return  Human
 	 */
-	public Human getObject(long objectID) {
+	public Human getObject(int objectID) {
 		double gauss_value;
 	
 		Human createdHuman = new Human();
@@ -57,12 +57,12 @@ public class LoadHuman extends LoadAnimal implements IHumanWrite {
 	
 		initObject(human, objectID, gauss_value);	
 
-		SimpleClientActionHandler.getInstance().setHumanWrite((int)objectID, human);
+		SimpleClientActionHandler.getInstance().setHumanWrite(objectID, human);
 
 		return createdHuman;
 	}
 
-	protected void initObject(WriteAccessToHuman object, long objectID, double gauss_value) {
+	protected void initObject(WriteAccessToHuman object, int objectID, double gauss_value) {
 		super.initObject(object, objectID, gauss_value);
 
 	}
