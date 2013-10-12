@@ -83,7 +83,7 @@ public class Simulation implements IHumanWrite{
 		return this.objectMaster.createSimulationObject(simulationObjectType);
 	}
 
-	public SimulationObject getSimulationObject(long objectID) {
+	public SimulationObject getSimulationObject(int objectID) {
 		return this.objectMaster.getSimulationObject(objectID);
 	}
 	

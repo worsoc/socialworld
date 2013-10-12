@@ -27,7 +27,7 @@ public abstract class LoadSimulationObjects implements ISimulationObjectWrite {
 		random = new Random();
 	}
 
-	public abstract SimulationObject getObject(long objectID) ;
+	public abstract SimulationObject getObject(int objectID) ;
 	
 	protected int mapGaussToIndex(double gaussValue, int arrayCapacity) {
 		double factor;
@@ -37,7 +37,7 @@ public abstract class LoadSimulationObjects implements ISimulationObjectWrite {
 		return result;
 	}
 	
-	protected void initObject(WriteAccessToSimulationObject object, long objectID, double gauss_value) {
+	protected void initObject(WriteAccessToSimulationObject object, int objectID, double gauss_value) {
 		int indexITP; 
 		int indexRTP; 
 		int indexS2AP; 
