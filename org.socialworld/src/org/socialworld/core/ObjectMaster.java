@@ -34,7 +34,7 @@ public class ObjectMaster {
 	private  ListIterator<God> godsIterator;
 	private  ListIterator<Human> humansIterator;
 	private  ListIterator<Item> itemsIterator;
-//	private  ListIterator<Magic> magicsIterator;
+	private  ListIterator<Magic> magicsIterator;
 	private  ListIterator<Animal> animalsIterator;
 	
 	private  ListIterator<SimulationObject> objectsIterator;
@@ -84,7 +84,7 @@ public class ObjectMaster {
 			humansIterator = humans.listIterator(humansIterator.nextIndex());
 			break;
 		case god:
-			object = new God();
+			object = LoadGod.getInstance().getObject(objectID);
 			this.gods.add((God)object);
 			godsIterator = gods.listIterator(godsIterator.nextIndex());
 			break;
@@ -92,6 +92,11 @@ public class ObjectMaster {
 			object = LoadItem.getInstance().getObject(objectID);
 			this.items.add((Item)object);
 			itemsIterator = items.listIterator(itemsIterator.nextIndex());
+			break;
+		case magic:
+			object = LoadMagic.getInstance().getObject(objectID);
+			this.magics.add((Magic)object);
+			magicsIterator = magics.listIterator(magicsIterator.nextIndex());
 			break;
 		default:
 			object = null;
@@ -114,6 +119,8 @@ public class ObjectMaster {
 			return this.godsIterator.hasNext();
 		case item:
 			return this.itemsIterator.hasNext();
+		case magic:
+			return this.magicsIterator.hasNext();
 		default:
 			return this.objectsIterator.hasNext();
 		}		
@@ -130,6 +137,8 @@ public class ObjectMaster {
 			return this.godsIterator.next();
 		case item:
 			return this.itemsIterator.next();
+		case magic:
+			return this.magicsIterator.next();
 		default:
 			return this.objectsIterator.next();
 		}		
@@ -177,7 +186,7 @@ public class ObjectMaster {
 		this.godsIterator = this.gods.listIterator();
 		this.humansIterator = this.humans.listIterator();
 		this.animalsIterator = this.animals.listIterator();
-//		this.magicsIterator = this.magics.listIterator();
+		this.magicsIterator = this.magics.listIterator();
 //		this.positionsIterator = this.positions.listIterator();
 		this.itemsIterator = this.items.listIterator();
 //		this.inventorysIterator = this.inventories.listIterator();
