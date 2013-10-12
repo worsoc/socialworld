@@ -3,7 +3,6 @@
  */
 package org.socialworld.core;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -20,6 +19,8 @@ public class ObjectMaster {
 
 	private static final Logger logger = Logger.getLogger(ObjectMaster.class);
 
+	private static ObjectMaster instance;
+	
 	private final List<God> gods;
 	private final List<Human> humans;
 	private final List<Item> items;
@@ -38,20 +39,26 @@ public class ObjectMaster {
 	
 	private  ListIterator<SimulationObject> objectsIterator;
 	
-	public ObjectMaster() {
+	private ObjectMaster() {
 		if (Simulation.WITH_LOGGING == 1 ) logger.debug("create ObjectMaster");
 
-		this.simulationObjects = new ArrayList<SimulationObject>();
+		this.simulationObjects = new ListModel<SimulationObject>();
 		
-		this.gods = new ArrayList<God>();
+		this.gods = new ListModel<God>();
 		this.humans = new ListModel<Human>();
 		this.animals = new ListModel<Animal>();
-		this.magics = new ArrayList<Magic>();
-		this.items = new ArrayList<Item>();
+		this.magics = new ListModel<Magic>();
+		this.items = new ListModel<Item>();
 		
 		resetIterators();
 	}	
 	
+	public static ObjectMaster getInstance() {
+		if (instance == null) {
+			instance = new ObjectMaster();
+		}
+		return instance;
+	}
 	public SimulationObject getSimulationObject(int objectID) {
 		return this.simulationObjects.get(objectID);
 	}
@@ -82,7 +89,7 @@ public class ObjectMaster {
 			godsIterator = gods.listIterator(godsIterator.nextIndex());
 			break;
 		case item:
-			object = new Item();
+			object = LoadItem.getInstance().getObject(objectID);
 			this.items.add((Item)object);
 			itemsIterator = items.listIterator(itemsIterator.nextIndex());
 			break;
