@@ -29,6 +29,7 @@ public class EventMaster extends Thread {
 
 	private static final Logger logger = Logger.getLogger(EventMaster.class);
 
+	private static EventMaster instance;
 	/**
 	 * a queue of events ordered by event's priority
 	 */
@@ -69,12 +70,19 @@ public class EventMaster extends Thread {
 	/**
 	 * public Constructor. 
 	 */
-	public EventMaster() {
+	private EventMaster() {
 
 		candidates = new ArrayList<SimulationObject>();
 		eventQueue = new PriorityQueue<Event>();
 	}
 
+	public static EventMaster getInstance() {
+		if (instance == null) {
+			instance = new EventMaster();
+		}
+		return instance;
+	}
+	
 	/**
 	 * the method stops the event processing
 	 */

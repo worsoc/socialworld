@@ -15,10 +15,6 @@ import org.socialworld.objects.*;
  * 
  */
 public class Simulation implements IHumanWrite{
-	// TODO (tyloesand) hier ist noch viel zu tun:
-	// - ueberdenken, welche Listen
-	// - ueberdenken Start EventMaster
-	// - EventMaster und ObjectMaster als Singleton
 	public static final int WITH_LOGGING = 1;
 	public static final int WITH_ERROR_LOGGING = 1;
 	private static final Logger logger = Logger.getLogger(Simulation.class);
@@ -33,8 +29,8 @@ public class Simulation implements IHumanWrite{
 		
 		if (WITH_LOGGING == 1 ) logger.debug("create simulation object");
 		
-		this.eventMaster = new EventMaster();
-		this.objectMaster = new ObjectMaster();
+		this.eventMaster = EventMaster.getInstance();
+		this.objectMaster = ObjectMaster.getInstance();
 		this.actionMaster = ActionMaster.getInstance();
 
 	}
