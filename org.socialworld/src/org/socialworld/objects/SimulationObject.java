@@ -9,6 +9,7 @@ import org.socialworld.Model;
 import org.socialworld.attributes.ActionType;
 import org.socialworld.attributes.Position;
 import org.socialworld.core.Action;
+import org.socialworld.core.ChangedProperty;
 import org.socialworld.core.EventCreator;
 import org.socialworld.core.ActionCreator;
 import org.socialworld.core.ActionHandler;
@@ -25,10 +26,10 @@ public abstract class SimulationObject extends Model {
 	protected static final Logger logger = Logger.getLogger(SimulationObject.class);
 
 	protected	WriteAccessToSimulationObject guard;
-	private		long 			objectID;
+	private		int 			objectID;
 	protected   Simulation  	simulation;
 	
-	protected 	Position 		position;
+	private 	Position 		position;
 
 
 	protected 	ActionHandler 	actionHandler;
@@ -71,12 +72,15 @@ public abstract class SimulationObject extends Model {
 		if (this.guard == null)  this.guard = guard;
 	}
 	
-	void setObjectID(long objectID, WriteAccessToSimulationObject guard) {
+	void setObjectID(int objectID, WriteAccessToSimulationObject guard) {
 		if (this.guard == guard ) this.objectID = objectID;	
 	}
 
 	void setPosition (Position pos, WriteAccessToSimulationObject guard) {
-		if (this.guard == guard) this.position = pos;
+		if (this.guard == guard) {
+			this.position = pos;
+			simulation.propertyChanged(this, ChangedProperty.position);
+		}
 	}
 
 	public void setAction(Action newAction, WriteAccessToSimulationObject guard) {
@@ -161,36 +165,6 @@ public abstract class SimulationObject extends Model {
 
 	
 	
-	/**
-	 * The method sets the x value of object's position.
-	 * 
-	 * @param posX
-	 */
-	public void setPositionX(final double posX) {
-		//double oldPosX = this.position.getX();
-		this.position.setX(posX);
-		//firePropertyChange("posX", oldPosX, posX);
-	}
-
-	/**
-	 * The method sets the y value of object's position.
-	 * 
-	 * @param posY
-	 */
-	public void setPositionY(final double posY) {
-		this.position.setX(posY);
-
-	}
-
-	/**
-	 * The method sets the z value of object's position.
-	 * 
-	 * @param posZ
-	 */
-	public void setPositionZ(final double posZ) {
-		this.position.setZ(posZ);
-
-	}
 
 	/**
 	 * The method returns the reference to object's action handler.
@@ -217,7 +191,7 @@ public abstract class SimulationObject extends Model {
 		 return state2ActionType;
 		} 
 
-	public long getObjectID() {
+	public int getObjectID() {
 		return objectID;
 	}
 	
