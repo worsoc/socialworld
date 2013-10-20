@@ -165,17 +165,11 @@ public class EventMaster extends Thread {
 		
 		if (Simulation.WITH_LOGGING == 1 )	logger.debug("determineCandidates");
 
-		// TODO (tyloesand) Optimierung Finden Kandidaten
-		// und dann nicht nur ueber Humans
 		Simulation simulation = SocialWorld.getCurrent().getSimulation();
-		while (true) {
-			if (simulation.hasNext(SimulationObjectType.human) ) {
-				candidate = simulation.next(SimulationObjectType.human);
-				if (decideEffective(candidate)) {
-					candidates.add(candidate);
-				}
-			}
-			else return;
+		candidate = simulation.getFirstByPosition(this.eventPosition );
+		while (candidate != null) {
+			if (decideEffective(candidate) == true) 	candidates.add(candidate);
+			candidate = simulation.getNextByPosition();
 		}
 	}
 

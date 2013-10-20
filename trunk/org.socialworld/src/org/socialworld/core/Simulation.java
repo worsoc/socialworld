@@ -6,6 +6,7 @@ package org.socialworld.core;
 import org.apache.log4j.Logger;
 import org.socialworld.objects.*;
 
+import org.socialworld.attributes.Position;
 
 
 /**
@@ -24,6 +25,7 @@ public class Simulation implements IHumanWrite{
 	private final EventMaster eventMaster;
 	private final ObjectMaster objectMaster;
 	private final ActionMaster actionMaster;
+	private final ObjectByPositionSearch searchByPosition;
 	
 	private Simulation() {
 		
@@ -32,7 +34,7 @@ public class Simulation implements IHumanWrite{
 		this.eventMaster = EventMaster.getInstance();
 		this.objectMaster = ObjectMaster.getInstance();
 		this.actionMaster = ActionMaster.getInstance();
-
+		this.searchByPosition = new ObjectByPositionSearch();
 	}
 	
 	/**
@@ -91,4 +93,24 @@ public class Simulation implements IHumanWrite{
 		return this.objectMaster.next(objectType);
 	}
 	
+	public SimulationObject getFirstByPosition(Position position) {
+		this.searchByPosition.findNearestObject(position.getX(), position.getY());
+		return getNextByPosition();
+	}
+	
+	public SimulationObject getNextByPosition() {
+		int objectID;
+		objectID = this.searchByPosition.getNextObjectID();
+		return this.objectMaster.getSimulationObject(objectID);
+	}
+	
+	public void propertyChanged(SimulationObject changedObject, ChangedProperty property) {
+		switch (property){
+			case position: positionChanged(changedObject);
+		}
+	}
+	
+	private void positionChanged(SimulationObject changedObject) {
+		this.searchByPosition.changePosition(changedObject);
+	}
 }
