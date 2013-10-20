@@ -22,7 +22,7 @@ public class Position extends Vector {
 		super(original);
 	}
 	
-	public Position(double x, double y, double z) {
+	public Position(int x, int y, int z) {
 		super(x, y, z);
 	}
 
@@ -54,5 +54,9 @@ public class Position extends Vector {
 		Direction direction = new Direction(getDifference(position));
 		return direction;
 	}
+	
+	public int get_X() { return (int) super.getX(); }
+	public int get_Y() { return (int) super.getY(); }
+	public int get_Z() { return (int) super.getZ(); }
 	
 }
