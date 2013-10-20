@@ -89,7 +89,7 @@ public class State2ActionDescriptionPool {
 			String line;
 			
 	
-			InputStream input = new URL("http://sourceforge.net/projects/socialworld/files/hmn_sws2ad.txt").openStream();
+			InputStream input = new URL("http://sourceforge.net/projects/socialworld/files/hmn_s2ad.swp.txt").openStream();
 			LineNumberReader lnr
 			   = new LineNumberReader(new InputStreamReader(input));
 

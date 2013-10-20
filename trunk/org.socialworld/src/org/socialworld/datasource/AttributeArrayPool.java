@@ -73,7 +73,7 @@ public class AttributeArrayPool {
 			array = new int[Attribute.NUMBER_OF_ATTRIBUTES];
 			
 
-			InputStream input = new URL("http://sourceforge.net/projects/socialworld/files/hmn_swa.txt").openStream();
+			InputStream input = new URL("http://sourceforge.net/projects/socialworld/files/hmn_attributes.swp.txt").openStream();
 			LineNumberReader lnr
 			   = new LineNumberReader(new InputStreamReader(input));
 
