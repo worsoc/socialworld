@@ -53,7 +53,7 @@ public class PositionPool {
 		{
 			String line;
 			String values[];
-			double array[];
+			int array[];
 			
 			int index = 0;
 			float deviation = 0;
@@ -62,7 +62,7 @@ public class PositionPool {
 			
 			int i;
 
-			array = new double[3];
+			array = new int[3];
 			
 			InputStream input = new URL("http://sourceforge.net/projects/socialworld/files/hmn_positions.txt").openStream();
 			LineNumberReader lnr
@@ -88,7 +88,7 @@ public class PositionPool {
 					
 					values = line.split(",");
 					for (i = 0; i < 3; i++){
-						array[i] = Float.parseFloat(values[i]);
+						array[i] = Integer.parseInt(values[i]);
 					}
 					
 					index = (int) deviation;
