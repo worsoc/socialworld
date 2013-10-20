@@ -64,7 +64,7 @@ public class PositionPool {
 
 			array = new int[3];
 			
-			InputStream input = new URL("http://sourceforge.net/projects/socialworld/files/hmn_positions.txt").openStream();
+			InputStream input = new URL("http://sourceforge.net/projects/socialworld/files/hmn_positions.swp.txt").openStream();
 			LineNumberReader lnr
 			   = new LineNumberReader(new InputStreamReader(input));
 

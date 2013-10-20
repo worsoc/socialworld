@@ -6,10 +6,12 @@ public class InfluenceTypePool {
 
 	private static InfluenceTypePool instance;
 	
-	private static int[] influenceTypes;
+	private static int[] influenceTypesForPositiveIndex;
+	private static int[] influenceTypesForNegativeIndex;
 	
 	private InfluenceTypePool() {
-		influenceTypes = new int[CAPACITY_ITP_ARRAY * Event.MAX_EVENT_TYPE];
+		influenceTypesForPositiveIndex = new int[(CAPACITY_ITP_ARRAY + 1) * Event.MAX_EVENT_TYPE];
+		influenceTypesForNegativeIndex = new int[(CAPACITY_ITP_ARRAY + 1) * Event.MAX_EVENT_TYPE];
 	}
 	
 	public static InfluenceTypePool getInstance() {
@@ -25,10 +27,20 @@ public class InfluenceTypePool {
 		
 		types = new int[Event.MAX_EVENT_TYPE];
 		
-		for (int eventType = 0; eventType < Event.MAX_EVENT_TYPE; eventType++){
-			index = indexByGauss * Event.MAX_EVENT_TYPE  + eventType;
-			types[eventType] = influenceTypes[index];
-		}
+		
+		if (indexByGauss >= 0)
+			for (int eventType = 0; eventType < Event.MAX_EVENT_TYPE; eventType++){
+				index = indexByGauss * Event.MAX_EVENT_TYPE  + eventType;
+				types[eventType] = influenceTypesForPositiveIndex[index];
+			}
+		else {
+			indexByGauss = indexByGauss * -1;
+			for (int eventType = 0; eventType < Event.MAX_EVENT_TYPE; eventType++){
+				index = indexByGauss * Event.MAX_EVENT_TYPE  + eventType;
+				types[eventType] = influenceTypesForNegativeIndex[index];
+			}
+		}	
+
 		return types;
 	}
 	

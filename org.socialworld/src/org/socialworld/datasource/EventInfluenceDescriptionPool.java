@@ -84,7 +84,7 @@ public class EventInfluenceDescriptionPool {
 			String line;
 			
 	
-			InputStream input = new URL("http://sourceforge.net/projects/socialworld/files/hmn_sweid.txt").openStream();
+			InputStream input = new URL("http://sourceforge.net/projects/socialworld/files/hmn_eid.swp.txt").openStream();
 			LineNumberReader lnr
 			   = new LineNumberReader(new InputStreamReader(input));
 

@@ -66,7 +66,7 @@ public class AttributeCalculatorMatrixPool {
 			
 			AttributeCalculatorMatrix matrix;
 	
-			InputStream input = new URL("http://sourceforge.net/projects/socialworld/files/hmn_swacm.txt").openStream();
+			InputStream input = new URL("http://sourceforge.net/projects/socialworld/files/hmn_acm.swp.txt").openStream();
 			LineNumberReader lnr
 			   = new LineNumberReader(new InputStreamReader(input));
 

@@ -7,10 +7,12 @@ public class State2ActionTypePool {
 
 	private static State2ActionTypePool instance;
 	
-	private static int[] state2ActionTypes;
+	private static int[] state2ActionTypesForPositiveIndex;
+	private static int[] state2ActionTypesForNegativeIndex;
 	
 	private State2ActionTypePool() {
-		state2ActionTypes = new int[CAPACITY_S2AP_ARRAY];
+		state2ActionTypesForPositiveIndex = new int[CAPACITY_S2AP_ARRAY];
+		state2ActionTypesForNegativeIndex = new int[CAPACITY_S2AP_ARRAY];
 	}
 	
 	public static State2ActionTypePool getInstance() {
@@ -21,7 +23,12 @@ public class State2ActionTypePool {
 	}
 
 	public int getState2ActionType(int index) {
-		return state2ActionTypes[index];
+		if (index >= 0)
+				return state2ActionTypesForPositiveIndex[index];
+		else {
+			index = index * -1;
+			return state2ActionTypesForNegativeIndex[index];
+		}	
 		
 	}
 	

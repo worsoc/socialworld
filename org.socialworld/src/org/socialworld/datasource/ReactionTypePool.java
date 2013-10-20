@@ -7,10 +7,12 @@ public class ReactionTypePool {
 
 	private static ReactionTypePool instance;
 
-	private static int[] reactionTypes;
+	private static int[] reactionTypesForPositiveIndex;
+	private static int[] reactionTypesForNegativeIndex;
 
 	private ReactionTypePool() {
-		reactionTypes = new int[CAPACITY_RTP_ARRAY * Event.MAX_EVENT_TYPE];
+		reactionTypesForPositiveIndex = new int[(CAPACITY_RTP_ARRAY + 1) * Event.MAX_EVENT_TYPE];
+		reactionTypesForNegativeIndex = new int[(CAPACITY_RTP_ARRAY + 1) * Event.MAX_EVENT_TYPE];
 	}
 
 	public static ReactionTypePool getInstance() {
@@ -25,11 +27,20 @@ public class ReactionTypePool {
 		int index;
 		
 		types = new int[Event.MAX_EVENT_TYPE];
+	
+		if (indexByGauss >= 0)
+			for (int eventType = 0; eventType < Event.MAX_EVENT_TYPE; eventType++){
+				index = indexByGauss * Event.MAX_EVENT_TYPE  + eventType;
+				types[eventType] = reactionTypesForPositiveIndex[index];
+			}
+		else {
+			indexByGauss = indexByGauss * -1;
+			for (int eventType = 0; eventType < Event.MAX_EVENT_TYPE; eventType++){
+				index = indexByGauss * Event.MAX_EVENT_TYPE  + eventType;
+				types[eventType] = reactionTypesForNegativeIndex[index];
+			}
+		}	
 		
-		for (int eventType = 0; eventType < Event.MAX_EVENT_TYPE; eventType++){
-			index = indexByGauss * Event.MAX_EVENT_TYPE  + eventType;
-			types[eventType] = reactionTypes[index];
-		}
 		return types;
 	}
 	
