@@ -26,9 +26,21 @@ public class SimulationObjectArray {
 	
 	public void increaseCapacity(int increase)  {
 		int newCapacity;
-		
 		newCapacity = this.capacity + increase;
-		
 		ensureCapacity(newCapacity);
+	}
+
+	public void set(int index, SimulationObject object) {
+		if (index >= this.capacity) ensureCapacity(index + 1);
+		array[index] = object;
+	}
+	
+	public SimulationObject get(int index){
+		if (index < this.capacity) return array[index];
+		else return null;
+	}
+	
+	public void delete(int index) {
+		if (index < this.capacity) array[index] = null;
 	}
 }
