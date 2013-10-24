@@ -19,9 +19,16 @@ public class Vector {
 	}
 
 	public Vector (Vector original) {
-		this.x = original.getX();
-		this.y = original.getY();
-		this.z = original.getZ();
+		if (original != null) {
+			this.x = original.getX();
+			this.y = original.getY();
+			this.z = original.getZ();
+		}
+		else {
+			this.x = 0;
+			this.y = 0;
+			this.z = 0;
+		}
 	}
 	
 	public Vector(double x, double y, double z) {
