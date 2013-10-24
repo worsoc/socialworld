@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.net.URL;
-import java.util.ArrayList;
 
 import org.socialworld.attributes.Position;
 
@@ -14,15 +13,18 @@ public class PositionPool {
 
 	private static PositionPool instance;
 	
-	private static ArrayList<Position> positionsForPositiveIndex;
-	private static ArrayList<Position> positionsForNegativeIndex;
+	private static Position positionsForPositiveIndex[];
+	private static int capacityForPositiveIndex;
+	private static Position positionsForNegativeIndex[];
+	private static int capacityForNegativeIndex;
 
 	private PositionPool () {
-		positionsForPositiveIndex = new ArrayList<Position> ();
-		positionsForPositiveIndex.ensureCapacity(CAPACITY_PosP_ARRAY);
+		positionsForPositiveIndex = new Position[CAPACITY_PosP_ARRAY];
+		capacityForPositiveIndex = CAPACITY_PosP_ARRAY;
 
-		positionsForNegativeIndex = new ArrayList<Position> ();
-		positionsForNegativeIndex.ensureCapacity(CAPACITY_PosP_ARRAY);
+		positionsForNegativeIndex = new Position[CAPACITY_PosP_ARRAY];
+		capacityForNegativeIndex = CAPACITY_PosP_ARRAY;
+		
 		
 		initializeFromFile();
 	}
@@ -36,13 +38,13 @@ public class PositionPool {
 
 	public Position getPosition(int index) {
 		if (index >= 0)
-			if (positionsForPositiveIndex.size() > index ) 
-				return positionsForPositiveIndex.get(index);
+			if (capacityForPositiveIndex > index ) 
+				return positionsForPositiveIndex[index];
 			else return null;
 		else {
 			index = index * -1;
-			if (positionsForNegativeIndex.size() > index ) 
-				return positionsForNegativeIndex.get(index);
+			if (capacityForNegativeIndex > index ) 
+				return positionsForNegativeIndex[index];
 			else return null;
 		}	
 	}
@@ -98,8 +100,8 @@ public class PositionPool {
 					// but only CAPACITY_PosP_ARRAY tries
 					if (index >= 0) {
 						while (count < CAPACITY_PosP_ARRAY) 
-							if (index < CAPACITY_PosP_ARRAY && index >= 0 && positionsForPositiveIndex.get(index) == null ) {
-								positionsForPositiveIndex.set(index, new Position(array[1], array[2], array[3]));
+							if (index < capacityForPositiveIndex && index >= 0 && positionsForPositiveIndex[index] == null ) {
+								positionsForPositiveIndex[index] = new Position(array[0], array[1], array[2]);
 								break;
 							}
 							else {
@@ -111,8 +113,8 @@ public class PositionPool {
 					else {
 						index = index * -1;
 						while (count < CAPACITY_PosP_ARRAY) 
-							if (index < CAPACITY_PosP_ARRAY && index > 0 && positionsForNegativeIndex.get(index) == null ) {
-								positionsForNegativeIndex.set(index, new Position(array[1], array[2], array[3]));
+							if (index < capacityForNegativeIndex && index > 0 && positionsForNegativeIndex[index] == null ) {
+								positionsForNegativeIndex[index] = new Position(array[0], array[1], array[2]);
 								break;
 							}
 							else {
