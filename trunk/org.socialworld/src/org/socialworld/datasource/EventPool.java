@@ -5,22 +5,23 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.socialworld.core.Event;
 import org.socialworld.attributes.*;
 
 public class EventPool {
+	private static final int EVENT_ARRAY_INCREASE = 100;
 	private static final Logger logger = Logger.getLogger(EventPool.class);
 	private static EventPool instance;
 	
-	private static List<Event> events;
+	private static Event events[];
+	private int size = 0;
+	private int nextFree = 0;
 	
 	private EventPool () {
 		logger.debug("create EventPool");
-		events = new ArrayList<Event> ();
+		events = new Event[size];
 
 		initialize();
 	}
@@ -33,31 +34,25 @@ public class EventPool {
 	}
 	
 	public Event getEvent(int index) {
-		if (events.size() >= index) 
-			return events.get(index);
-		else {
-			events.add(createEvent());
-			return events.get(events.size());
-		}
-		
+		if (size > index) 	return events[index];
+		else return null;
 	}
 	
 	private void initialize() {
+		
+		addEvent(0,createEvent(1));
+		addEvent(1, createEvent(2));
+		addEvent(2, createEvent(3));
+		nextFree = 3;
+		
 		initializeFromFile();
 	}
 
-	private Event createEvent() {
-		
-		return getEvent();
-	}
-
-	private Event getEvent() {
+	private Event createEvent(int number) {
 		byte priority = 1;
 		Event event = new Event(priority);
 
-		int count = events.size();
-
-		switch (count) {
+		switch (number) {
 		case 1:
 			event.setDirection(new Direction(1,2,3));
 			event.setEffectAngle(30);
@@ -82,6 +77,7 @@ public class EventPool {
 			return event;
 		}
 	}
+
 	
 
 
@@ -137,7 +133,8 @@ public class EventPool {
 					event = new Event(eventType, priority, strength, 
 							 effectDistance,  effectAngle,
 							 maxDistance,  maxSee,  maxHear,  maxSmell,  maxFeel);
-					events.add(event);
+					addEvent(nextFree, event);
+					nextFree = nextFree + 1;
 					continue;
 				}
 				
@@ -254,4 +251,17 @@ public class EventPool {
 		
 	}
 
+	private void addEvent(int index, Event event) {
+		Event newEvents[];
+		int newSize;
+		
+		if (index >= size) {
+			newSize = index + EVENT_ARRAY_INCREASE;
+			newEvents = new Event[newSize];
+			for (int i = 0; i < size; i++) newEvents[i] = events[i];
+			events = newEvents;
+			size = newSize;
+		}
+		events[index] = event;
+	}
 }

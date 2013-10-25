@@ -2,7 +2,6 @@ package org.socialworld.datasource;
 
 import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
 
 import org.socialworld.calculation.AttributeCalculatorMatrix;
 
@@ -11,15 +10,12 @@ public class AttributeCalculatorMatrixPool {
 
 	private static AttributeCalculatorMatrixPool instance;
 	
-	private static ArrayList<AttributeCalculatorMatrix> matrixsForPositiveIndex;
-	private static ArrayList<AttributeCalculatorMatrix> matrixsForNegativeIndex;
+	private static AttributeCalculatorMatrix matrixsForPositiveIndex[];
+	private static AttributeCalculatorMatrix matrixsForNegativeIndex[];
 	
 	private AttributeCalculatorMatrixPool () {
-		matrixsForPositiveIndex = new ArrayList<AttributeCalculatorMatrix> ();
-		matrixsForPositiveIndex.ensureCapacity(CAPACITY_ACMP_ARRAY);
-
-		matrixsForNegativeIndex = new ArrayList<AttributeCalculatorMatrix> ();
-		matrixsForNegativeIndex.ensureCapacity(CAPACITY_ACMP_ARRAY);
+		matrixsForPositiveIndex = new AttributeCalculatorMatrix[CAPACITY_ACMP_ARRAY];
+		matrixsForNegativeIndex = new AttributeCalculatorMatrix[CAPACITY_ACMP_ARRAY];
 		
 		initialize();
 	}
@@ -33,13 +29,13 @@ public class AttributeCalculatorMatrixPool {
 	
 	public AttributeCalculatorMatrix getMatrix(int index) {
 		if (index >= 0)
-			if (matrixsForPositiveIndex.size() > index ) 
-				return matrixsForPositiveIndex.get(index);
+			if (CAPACITY_ACMP_ARRAY > index ) 
+				return matrixsForPositiveIndex[index];
 			else return null;
 		else {
 			index = index * -1;
-			if (matrixsForNegativeIndex.size() > index ) 
-				return matrixsForNegativeIndex.get(index);
+			if (CAPACITY_ACMP_ARRAY > index ) 
+				return matrixsForNegativeIndex[index];
 			else return null;
 		}	
 	}
@@ -123,8 +119,8 @@ public class AttributeCalculatorMatrixPool {
 					// but only CAPACITY_ACMP_ARRAY tries
 					if (index >= 0) {
 						while (count < CAPACITY_ACMP_ARRAY) 
-							if (index < CAPACITY_ACMP_ARRAY && index >= 0 && matrixsForPositiveIndex.get(index) == null ) {
-								matrixsForPositiveIndex.set(index, matrix);
+							if (index < CAPACITY_ACMP_ARRAY && index >= 0 && matrixsForPositiveIndex[index] == null ) {
+								matrixsForPositiveIndex[index] = matrix;
 								break;
 							}
 							else {
@@ -136,8 +132,8 @@ public class AttributeCalculatorMatrixPool {
 					else {
 						index = index * -1;
 						while (count < CAPACITY_ACMP_ARRAY) 
-							if (index < CAPACITY_ACMP_ARRAY && index > 0 && matrixsForNegativeIndex.get(index) == null ) {
-								matrixsForNegativeIndex.set(index, matrix);
+							if (index < CAPACITY_ACMP_ARRAY && index > 0 && matrixsForNegativeIndex[index] == null ) {
+								matrixsForNegativeIndex[index] = matrix;
 								break;
 							}
 							else {
