@@ -7,9 +7,11 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.apache.log4j.Logger;
-import org.socialworld.ListModel;
 import org.socialworld.objects.*;
 import org.socialworld.datasource.*;
+
+import org.socialworld.collections.ListModel;
+import org.socialworld.collections.SimulationObjectArray;
 
 /**
  * @author Mathias Sikos (tyloesand)
@@ -18,7 +20,8 @@ import org.socialworld.datasource.*;
 public class ObjectMaster {
 
 	private static final Logger logger = Logger.getLogger(ObjectMaster.class);
-
+	private static final int SIMULATION_OBJECTS_START_CAPACITY = 1000;
+	
 	private static ObjectMaster instance;
 	
 	private final List<God> gods;
@@ -27,7 +30,7 @@ public class ObjectMaster {
 	private final List<Magic> magics;
 	private final List<Animal> animals;
 	
-	private final List<SimulationObject> simulationObjects;
+	private final SimulationObjectArray simulationObjects;
 
 	private int maxObjectID = 0;
 	
@@ -37,12 +40,11 @@ public class ObjectMaster {
 	private  ListIterator<Magic> magicsIterator;
 	private  ListIterator<Animal> animalsIterator;
 	
-	private  ListIterator<SimulationObject> objectsIterator;
 	
 	private ObjectMaster() {
 		if (Simulation.WITH_LOGGING == 1 ) logger.debug("create ObjectMaster");
 
-		this.simulationObjects = new ListModel<SimulationObject>();
+		this.simulationObjects = new SimulationObjectArray(SIMULATION_OBJECTS_START_CAPACITY);
 		
 		this.gods = new ListModel<God>();
 		this.humans = new ListModel<Human>();
@@ -103,7 +105,6 @@ public class ObjectMaster {
 		}
 		if (object != null) {
 			this.simulationObjects.set(objectID, object);
-			objectsIterator = simulationObjects.listIterator(objectsIterator.nextIndex());
 		}
 		return object;
 	}
@@ -122,7 +123,7 @@ public class ObjectMaster {
 		case magic:
 			return this.magicsIterator.hasNext();
 		default:
-			return this.objectsIterator.hasNext();
+			return false;
 		}		
 		
 	}
@@ -140,7 +141,7 @@ public class ObjectMaster {
 		case magic:
 			return this.magicsIterator.next();
 		default:
-			return this.objectsIterator.next();
+			return null;
 		}		
 		
 	}
@@ -190,7 +191,6 @@ public class ObjectMaster {
 //		this.positionsIterator = this.positions.listIterator();
 		this.itemsIterator = this.items.listIterator();
 //		this.inventorysIterator = this.inventories.listIterator();
-		this.objectsIterator = this.simulationObjects.listIterator();
 
 	}
 	

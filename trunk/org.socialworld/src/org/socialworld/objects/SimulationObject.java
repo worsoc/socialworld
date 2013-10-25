@@ -160,7 +160,8 @@ public abstract class SimulationObject extends Model {
 	 * @return position
 	 */
 	public Position getPosition() {
-		return new Position(position);
+		if (position == null) return null;
+		else return new Position(position);
 	}
 
 	

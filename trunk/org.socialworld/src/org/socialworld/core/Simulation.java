@@ -7,6 +7,8 @@ import org.apache.log4j.Logger;
 import org.socialworld.objects.*;
 
 import org.socialworld.attributes.Position;
+import org.socialworld.collections.ObjectByPositionSearch;
+
 
 
 /**
@@ -16,8 +18,8 @@ import org.socialworld.attributes.Position;
  * 
  */
 public class Simulation implements IHumanWrite{
-	public static final int WITH_LOGGING = 1;
-	public static final int WITH_ERROR_LOGGING = 1;
+	public static  int WITH_LOGGING = 1;
+	public static  int WITH_ERROR_LOGGING = 1;
 	private static final Logger logger = Logger.getLogger(Simulation.class);
 
 	private static Simulation instance;
@@ -34,7 +36,7 @@ public class Simulation implements IHumanWrite{
 		this.eventMaster = EventMaster.getInstance();
 		this.objectMaster = ObjectMaster.getInstance();
 		this.actionMaster = ActionMaster.getInstance();
-		this.searchByPosition = new ObjectByPositionSearch();
+		this.searchByPosition = new ObjectByPositionSearch(1);
 	}
 	
 	/**
