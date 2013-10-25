@@ -42,6 +42,7 @@ public class Animal extends SimulationObject {
 	
 	
 	public AttributeArray getAttributes() {
+		if (attributes == null) return null;
 		return new AttributeArray(attributes);
 	}
 	

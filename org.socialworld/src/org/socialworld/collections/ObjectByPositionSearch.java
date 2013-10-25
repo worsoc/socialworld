@@ -1,7 +1,5 @@
 package org.socialworld.collections;
 
-import java.util.ArrayList;
-
 import org.socialworld.objects.SimulationObject;
 
 /**
@@ -23,13 +21,13 @@ public class ObjectByPositionSearch {
 	private ObjectByPositionSearchNode root;
 	private ObjectByPositionSearchNode found;
 	
-	private final ArrayList<ObjectByPositionSearchNode> allNodesByObjectID;
+	private ObjectByPositionSearchNode allNodesByObjectID[];
 	private int size;
 	
-	public ObjectByPositionSearch () {
+	public ObjectByPositionSearch (int capacity) {
 		root = null;
-		this.allNodesByObjectID = new ArrayList<ObjectByPositionSearchNode>();
-		size = this.allNodesByObjectID.size();
+		this.allNodesByObjectID = new ObjectByPositionSearchNode[capacity];
+		size = capacity;
 	}
 	
 	public void removeObject(SimulationObject object) {
@@ -40,13 +38,16 @@ public class ObjectByPositionSearch {
 		int oldChildNr;
 
 		objectID = object.getObjectID();
-		node = this.allNodesByObjectID.get(objectID);
-		if (node != null) {
-			oldParent = node.getParent();
-			oldChildNr = node.getChildNr();
-			
-			oldParent.clearChild(oldChildNr);
-			this.allNodesByObjectID.set(objectID, null);
+		
+		if (objectID < size){
+			node = this.allNodesByObjectID[objectID];
+			if (node != null) {
+				oldParent = node.getParent();
+				oldChildNr = node.getChildNr();
+				
+				oldParent.clearChild(oldChildNr);
+				this.allNodesByObjectID[objectID] = null;
+			}
 		}
 	}
 	
@@ -56,17 +57,17 @@ public class ObjectByPositionSearch {
 		int x;
 		int y;
 		
+		// if there is no position, no object is added to the position search tree
+		if (object.getPosition() == null) return;
+		
 		objectID = object.getObjectID();
 		x = object.getPosition().get_X();
 		y = object.getPosition().get_Y();
 		
 		newNode = addNode(objectID, x, y);
 		
-		if (size <= objectID) {
-			this.allNodesByObjectID.ensureCapacity(objectID + 1000);
-			size = this.allNodesByObjectID.size();
-		}
-		this.allNodesByObjectID.set(objectID, newNode);
+		if (size <= objectID) 	ensureCapacity(objectID + 1000);
+		this.allNodesByObjectID[objectID] = newNode;
 	}
 	
 	public void changePosition(SimulationObject object) {
@@ -176,4 +177,16 @@ public class ObjectByPositionSearch {
 		else return last;
 	}
 	
+	private void ensureCapacity(int newCapacity) {
+		ObjectByPositionSearchNode newAllNodesByObjectID[];
+		int index;
+		
+		if (newCapacity > size) {
+			newAllNodesByObjectID = new ObjectByPositionSearchNode[newCapacity];
+			for (index = 0; index < size; index++)
+				newAllNodesByObjectID[index] = this.allNodesByObjectID[index];
+			this.allNodesByObjectID = newAllNodesByObjectID;
+			size = newCapacity;
+		}
+	}
 }

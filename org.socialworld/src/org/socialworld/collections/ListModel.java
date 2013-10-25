@@ -1,13 +1,15 @@
 /**
  * 
  */
-package org.socialworld;
+package org.socialworld.collections;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+
+import org.socialworld.Model;
 
 /**
  * This is a wrapper class to an {@link ArrayList} object. When the list
