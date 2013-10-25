@@ -1,6 +1,5 @@
 package org.socialworld.datasource;
 
-import java.util.ArrayList;
 import java.io.*;
 import java.net.URL;
 
@@ -13,15 +12,12 @@ public class AttributeArrayPool {
 
 	private static AttributeArrayPool instance;
 	
-	private static ArrayList<AttributeArray> attributesForPositiveIndex;
-	private static ArrayList<AttributeArray> attributesForNegativeIndex;
+	private static AttributeArray attributesForPositiveIndex[];
+	private static AttributeArray attributesForNegativeIndex[];
 	
 	private AttributeArrayPool () {
-		attributesForPositiveIndex = new ArrayList<AttributeArray> ();
-		attributesForPositiveIndex.ensureCapacity(CAPACITY_AAP_ARRAY);
-
-		attributesForNegativeIndex = new ArrayList<AttributeArray> ();
-		attributesForNegativeIndex.ensureCapacity(CAPACITY_AAP_ARRAY);
+		attributesForPositiveIndex = new AttributeArray[CAPACITY_AAP_ARRAY];
+		attributesForNegativeIndex = new AttributeArray[CAPACITY_AAP_ARRAY];
 		
 		initialize();
 	}
@@ -35,13 +31,13 @@ public class AttributeArrayPool {
 	
 	public AttributeArray getArray(int index) {
 		if (index >= 0)
-			if (attributesForPositiveIndex.size() > index ) 
-				return attributesForPositiveIndex.get(index);
+			if (CAPACITY_AAP_ARRAY > index ) 
+				return attributesForPositiveIndex[index];
 			else return null;
 		else {
 			index = index * -1;
-			if (attributesForNegativeIndex.size() > index ) 
-				return attributesForNegativeIndex.get(index);
+			if (CAPACITY_AAP_ARRAY > index ) 
+				return attributesForNegativeIndex[index];
 			else return null;
 		}	
 		
@@ -107,8 +103,8 @@ public class AttributeArrayPool {
 					// but only CAPACITY_AAP_ARRAY tries
 					if (index >= 0) {
 						while (count < CAPACITY_AAP_ARRAY) 
-							if (index < CAPACITY_AAP_ARRAY && index >= 0 && attributesForPositiveIndex.get(index) == null ) {
-								attributesForPositiveIndex.set(index, new AttributeArray(array));
+							if (index < CAPACITY_AAP_ARRAY && index >= 0 && attributesForPositiveIndex[index] == null ) {
+								attributesForPositiveIndex[index] = new AttributeArray(array);
 								break;
 							}
 							else {
@@ -120,8 +116,8 @@ public class AttributeArrayPool {
 					else {
 						index = index * -1;
 						while (count < CAPACITY_AAP_ARRAY) 
-							if (index < CAPACITY_AAP_ARRAY && index > 0 && attributesForNegativeIndex.get(index) == null ) {
-								attributesForNegativeIndex.set(index, new AttributeArray(array));
+							if (index < CAPACITY_AAP_ARRAY && index > 0 && attributesForNegativeIndex[index] == null ) {
+								attributesForNegativeIndex[index] = new AttributeArray(array);
 								break;
 							}
 							else {

@@ -5,10 +5,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.ListIterator;
-
-import org.apache.log4j.Logger;
 
 import org.socialworld.calculation.EventInfluenceExpression;
 import org.socialworld.calculation.EventInfluenceDescription;
@@ -17,20 +13,17 @@ import org.socialworld.calculation.ConditionOperator;
 
 import org.socialworld.core.Event;
 
-public class EventInfluenceDescriptionPool {
+public class EventInfluenceDescriptionPool extends DescriptionPool {
 
-	private static final Logger logger = Logger.getLogger(EventInfluenceDescriptionPool.class);
 	private static EventInfluenceDescriptionPool instance;
 	
-	private static ArrayList<EventInfluenceDescription> descriptions;
-	private static ArrayList<EventInfluenceExpression> expressions;
+	private static EventInfluenceDescription descriptions[];
 	
 	private EventInfluenceDescriptionPool () {
-		logger.debug("create EventInfluenceDescriptionPool");
-		descriptions = new ArrayList<EventInfluenceDescription> ();
-		expressions = new ArrayList<EventInfluenceExpression> ();
-
-		descriptions.ensureCapacity(Event.MAX_EVENT_TYPE * InfluenceTypePool.CAPACITY_ITP_ARRAY);
+		
+		sizeDescriptionsArray = Event.MAX_EVENT_TYPE * InfluenceTypePool.CAPACITY_ITP_ARRAY;
+		descriptions = new EventInfluenceDescription[sizeDescriptionsArray];
+		
 		
 		initialize();
 	}
@@ -49,25 +42,22 @@ public class EventInfluenceDescriptionPool {
 		
 		index = eventType * Event.MAX_EVENT_TYPE + influenceType;
 		
-		if (descriptions.size() > index) {
-			description = descriptions.get(index);
+		if (sizeDescriptionsArray > index) {
+			description = descriptions[index];
 		}	
 		return description;
 	}
 
-	private void initialize() {
+	protected void initialize() {
 		initializeFromFile();
 	}
 	
 	private void initializeFromFile() {
 		
-		ListIterator<EventInfluenceExpression> iterator;
 		EventInfluenceExpression expression;
 		
 		EventInfluenceDescription eid;
 		
-		int IDTrue;
-		int IDFalse;
 		
 		int index;
 		int eventType = 0;
@@ -99,7 +89,7 @@ public class EventInfluenceDescriptionPool {
 
 				if (line.startsWith("</EID>")) {
 					index = eventType * Event.MAX_EVENT_TYPE + influenceType;
-					descriptions.set(index, eid);
+					descriptions[index] = eid;
 					continue;
 				}
 				
@@ -219,35 +209,8 @@ public class EventInfluenceDescriptionPool {
 			e.printStackTrace();
 		}
 		
-		iterator = expressions.listIterator();
-		
-		while (iterator.hasNext()) {
-			expression = iterator.next();
-			
-			if (expression != null && expression.getID() > 0 ) {
-				IDTrue = expression.getIDTrue();
-				IDFalse = expression.getIDFalse();
-				
-				if (IDTrue > 0) {
-					expression.setTrueExpression(expressions.get(IDTrue - 1));
-				}
-				if (IDFalse > 0) {
-					expression.setFalseExpression(expressions.get(IDFalse - 1));
-				}
-			}
-		}
+		setTrueAndFalseExpressions();
 	}
-
-	private void addExpression(EventInfluenceExpression expression) {
-		int ID;
-	
-		ID = expression.getID();
-		if (ID > expressions.size()) {
-			expressions.ensureCapacity(ID);
-		}
-		expressions.set(ID - 1, expression);
-	}
-	
 
 
 }

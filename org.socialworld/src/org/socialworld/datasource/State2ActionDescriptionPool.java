@@ -5,10 +5,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.ListIterator;
 
-import org.apache.log4j.Logger;
 import org.socialworld.attributes.ActionMode;
 import org.socialworld.attributes.ActionType;
 import org.socialworld.calculation.ActionDelayExpression;
@@ -24,23 +21,29 @@ import org.socialworld.calculation.ExpressionFunction;
 import org.socialworld.calculation.State2ActionDescription;
 import org.socialworld.calculation.Vector;
 
-public class State2ActionDescriptionPool {
+public class State2ActionDescriptionPool extends DescriptionPool {
 	
 
-	private static final Logger logger = Logger.getLogger(State2ActionDescriptionPool.class);
 	private static State2ActionDescriptionPool instance;
 	
-	private static ArrayList<State2ActionDescription> descriptions;
+	private State2ActionDescription descriptions[];
+/*	int sizeDescriptionsArray;
+
 	private static ArrayList<Expression> expressions;
-	
+	int sizeExpressionsArray;
+*/	
 	private State2ActionDescriptionPool () {
-		logger.debug("create State2ActionDescriptionPool");
-		descriptions = new ArrayList<State2ActionDescription> ();
+		
+		sizeDescriptionsArray = State2ActionTypePool.CAPACITY_S2AP_ARRAY;
+		descriptions = new State2ActionDescription[sizeDescriptionsArray];
+		
+		/*
 		expressions = new ArrayList<Expression> ();
+		sizeExpressionsArray = 0;
 
-		descriptions.ensureCapacity(State2ActionTypePool.CAPACITY_S2AP_ARRAY);
-
+		*/
 		initialize();
+		
 	}
 	
 	public static State2ActionDescriptionPool getInstance() {
@@ -56,24 +59,24 @@ public class State2ActionDescriptionPool {
 		
 		index = state2ActionType ;
 		
-		if (descriptions.size() >= index) 			description = descriptions.get(index);
+		if (sizeDescriptionsArray > index) 	description = descriptions[index];
 		return description;
 	}
 
-	private void initialize() {
+	protected void initialize() {
 		initializeFromFile();
 	}
 	
 
 	private void initializeFromFile() {
 		
-		ListIterator<Expression> iterator;
+//		ListIterator<Expression> iterator;
 		Expression expression;
 		
 		State2ActionDescription s2ad;
 		
-		int IDTrue;
-		int IDFalse;
+//		int IDTrue;
+//		int IDFalse;
 		
 
 		int index;
@@ -104,7 +107,7 @@ public class State2ActionDescriptionPool {
 
 				if (line.startsWith("</S2AD>")) {
 					index = state2ActionType;
-					descriptions.set(index, s2ad);
+					descriptions[index] = s2ad;
 					continue;
 				}
 				
@@ -347,7 +350,7 @@ public class State2ActionDescriptionPool {
 			System.out.println("Fehler beim Lesen der Datei");
 			e.printStackTrace();
 		}
-		
+/*		
 		iterator = expressions.listIterator();
 		
 		while (iterator.hasNext()) {
@@ -365,18 +368,26 @@ public class State2ActionDescriptionPool {
 				}
 			}
 		}
+*/		
+		setTrueAndFalseExpressions();
 	}
-
+/*
 	private void addExpression(Expression expression) {
 		int ID;
 	
 		ID = expression.getID();
-		if (ID > expressions.size()) {
-			expressions.ensureCapacity(ID);
-		}
+		if (ID > sizeExpressionsArray) ensureCapacity(ID);
+		
 		expressions.set(ID - 1, expression);
 	}
 	
-
+	private void ensureCapacity(int capacity) {
+		if (capacity > sizeExpressionsArray) {
+			for (int i = 1; i <= capacity - sizeExpressionsArray; i++)
+				expressions.add(null);
+			sizeExpressionsArray = capacity;
+		}
+	}
+*/
 
 }

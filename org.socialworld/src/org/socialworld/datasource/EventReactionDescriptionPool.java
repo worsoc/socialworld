@@ -5,30 +5,23 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.ListIterator;
 
-import org.apache.log4j.Logger;
 import org.socialworld.calculation.*;
 import org.socialworld.attributes.ActionMode;
 import org.socialworld.attributes.ActionType;
 import org.socialworld.core.Event;
 
-public class EventReactionDescriptionPool {
+public class EventReactionDescriptionPool extends DescriptionPool {
 
-	private static final Logger logger = Logger.getLogger(EventReactionDescriptionPool.class);
 	private static EventReactionDescriptionPool instance;
 	
-	private static ArrayList<EventReactionDescription> descriptions;
-	private static ArrayList<Expression> expressions;
+	private static EventReactionDescription descriptions[];
 	
 	private EventReactionDescriptionPool () {
-		logger.debug("create EventReactionDescriptionPool");
-		descriptions = new ArrayList<EventReactionDescription> ();
-		expressions = new ArrayList<Expression> ();
-
-		descriptions.ensureCapacity(Event.MAX_EVENT_TYPE * ReactionTypePool.CAPACITY_RTP_ARRAY);
 		
+		sizeDescriptionsArray = Event.MAX_EVENT_TYPE * ReactionTypePool.CAPACITY_RTP_ARRAY;
+		descriptions = new EventReactionDescription[sizeDescriptionsArray];
+
 		initialize();
 	}
 	
@@ -46,23 +39,19 @@ public class EventReactionDescriptionPool {
 		
 		index = eventType * Event.MAX_EVENT_TYPE + reactionType;
 		
-		if (descriptions.size() >= index) 			description = descriptions.get(index);
+		if (sizeDescriptionsArray > index) 			description = descriptions[index];
 		return description;
 	}
 
-	private void initialize() {
+	protected void initialize() {
 		initializeFromFile();
 	}
 	
 	private void initializeFromFile() {
 		
-		ListIterator<Expression> iterator;
 		Expression expression;
 		
 		EventReactionDescription erd;
-		
-		int IDTrue;
-		int IDFalse;
 		
 		int index;
 		int eventType = 0;
@@ -94,7 +83,7 @@ public class EventReactionDescriptionPool {
 
 				if (line.startsWith("</ERD>")) {
 					index = eventType * Event.MAX_EVENT_TYPE + reactionType;
-					descriptions.set(index, erd);
+					descriptions[index]= erd;
 					continue;
 				}
 				
@@ -347,34 +336,7 @@ public class EventReactionDescriptionPool {
 			e.printStackTrace();
 		}
 		
-		iterator = expressions.listIterator();
-		
-		while (iterator.hasNext()) {
-			expression = iterator.next();
-			
-			if (expression != null && expression.getID() > 0 ) {
-				IDTrue = expression.getIDTrue();
-				IDFalse = expression.getIDFalse();
-				
-				if (IDTrue > 0) {
-					expression.setTrueExpression(expressions.get(IDTrue - 1));
-				}
-				if (IDFalse > 0) {
-					expression.setFalseExpression(expressions.get(IDFalse - 1));
-				}
-			}
-		}
+		setTrueAndFalseExpressions();
 	}
-
-	private void addExpression(Expression expression) {
-		int ID;
-	
-		ID = expression.getID();
-		if (ID > expressions.size()) {
-			expressions.ensureCapacity(ID);
-		}
-		expressions.set(ID - 1, expression);
-	}
-	
 
 }

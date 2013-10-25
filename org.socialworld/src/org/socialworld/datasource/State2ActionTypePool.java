@@ -24,10 +24,12 @@ public class State2ActionTypePool {
 
 	public int getState2ActionType(int index) {
 		if (index >= 0)
-				return state2ActionTypesForPositiveIndex[index];
+			if (CAPACITY_S2AP_ARRAY > index)	return state2ActionTypesForPositiveIndex[index];
+			else return 0;
 		else {
 			index = index * -1;
-			return state2ActionTypesForNegativeIndex[index];
+			if (CAPACITY_S2AP_ARRAY > index)	return state2ActionTypesForNegativeIndex[index];
+			else return 0;
 		}	
 		
 	}
