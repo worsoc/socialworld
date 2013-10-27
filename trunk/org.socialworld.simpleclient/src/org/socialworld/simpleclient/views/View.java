@@ -110,8 +110,10 @@ public class View extends ViewPart {
 				case 0:
 					return human.toString();
 				case 1:
-					return human.getPosition().toString();
+					if (human.getPosition() == null) return "keine Position";
+					else return human.getPosition().toString();
 				default:
+					if (human.getAttributes() == null) return "keine Attribute";
 					return human.getAttributes().toString();
 				}
 
