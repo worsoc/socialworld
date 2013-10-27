@@ -58,7 +58,7 @@ public class PositionPool {
 			int array[];
 			
 			int index = 0;
-			float deviation = 0;
+			float deviation = 1;
 			int vorzeichen = 1;
 			int count = 0;
 			
@@ -66,7 +66,7 @@ public class PositionPool {
 
 			array = new int[3];
 			
-			InputStream input = new URL("http://sourceforge.net/projects/socialworld/files/hmn_positions.swp.txt").openStream();
+			InputStream input = new URL("http://sourceforge.net/projects/socialworld/files/hmn_positions.swp").openStream();
 			LineNumberReader lnr
 			   = new LineNumberReader(new InputStreamReader(input));
 
@@ -93,7 +93,8 @@ public class PositionPool {
 						array[i] = Integer.parseInt(values[i]);
 					}
 					
-					index = (int) deviation;
+					deviation = deviation * -1 * 1+1/10;
+					index = (int) (deviation * CAPACITY_PosP_ARRAY);
 					vorzeichen = 1;
 					count = 0;
 					// find the nearest free index
