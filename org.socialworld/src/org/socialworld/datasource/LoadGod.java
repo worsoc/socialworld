@@ -22,14 +22,12 @@ public class LoadGod extends LoadSimulationObjects {
 
 	@Override
 	public God getObject(int objectID) {
-		double gauss_value;
 		
 		God createdGod = new God();
 		WriteAccessToSimulationObject god = new WriteAccessToSimulationObject(createdGod);
 		
-		gauss_value = random.nextGaussian();
 
-		initObject(god, objectID, gauss_value);	
+		initObject(god, objectID);	
 		
 		return createdGod;
 	}

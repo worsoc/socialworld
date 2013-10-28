@@ -22,14 +22,12 @@ public class LoadItem extends LoadSimulationObjects {
 
 	@Override
 	public Item getObject(int objectID) {
-		double gauss_value;
 		
 		Item createdItem = new Item();
 		WriteAccessToSimulationObject item = new WriteAccessToSimulationObject(createdItem);
 		
-		gauss_value = random.nextGaussian();
 
-		initObject(item, objectID, gauss_value);	
+		initObject(item, objectID);	
 		
 		return createdItem;
 	}
