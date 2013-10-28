@@ -9,7 +9,7 @@ import java.net.URL;
 import org.socialworld.attributes.Position;
 
 public class PositionPool {
-	public static final int CAPACITY_PosP_ARRAY = 100;
+	public static final int CAPACITY_PosP_ARRAY = 10;
 
 	private static PositionPool instance;
 	
@@ -58,7 +58,6 @@ public class PositionPool {
 			int array[];
 			
 			int index = 0;
-			float deviation = 1;
 			int vorzeichen = 1;
 			int count = 0;
 			
@@ -73,19 +72,12 @@ public class PositionPool {
 	
 			while ((line = lnr.readLine()) != null)
 			{
-				if (line.startsWith("["))
-				{
-					line = line.substring(1);
-					line = line.replace("]", "");
-					line = line.trim();
-					
-					deviation = Float.parseFloat(line);
-				}
 				
 				if (line.startsWith("("))
 				{
 					line = line.substring(1);
 					line = line.replace(")", "");
+					line = line.replace(" ", "");
 					line = line.trim();
 					
 					values = line.split(",");
@@ -93,36 +85,18 @@ public class PositionPool {
 						array[i] = Integer.parseInt(values[i]);
 					}
 					
-					deviation = deviation * -1 * 1+1/10;
-					index = (int) (deviation * CAPACITY_PosP_ARRAY);
-					vorzeichen = 1;
-					count = 0;
-					// find the nearest free index
-					// but only CAPACITY_PosP_ARRAY tries
-					if (index >= 0) {
-						while (count < CAPACITY_PosP_ARRAY) 
-							if (index < capacityForPositiveIndex && index >= 0 && positionsForPositiveIndex[index] == null ) {
+					index = index + vorzeichen * count;
+					count++;
+					vorzeichen = vorzeichen * -1;
+					if (index >= 0) 
+							if (index < capacityForPositiveIndex && positionsForPositiveIndex[index] == null ) 
 								positionsForPositiveIndex[index] = new Position(array[0], array[1], array[2]);
-								break;
-							}
-							else {
-								count++;
-								index = index + vorzeichen * count;
-								vorzeichen = vorzeichen * -1;
-							}
-					}
+							else ;
 					else {
 						index = index * -1;
-						while (count < CAPACITY_PosP_ARRAY) 
-							if (index < capacityForNegativeIndex && index > 0 && positionsForNegativeIndex[index] == null ) {
+						if (index < capacityForNegativeIndex &&  positionsForNegativeIndex[index] == null ) 
 								positionsForNegativeIndex[index] = new Position(array[0], array[1], array[2]);
-								break;
-							}
-							else {
-								count++;
-								index = index + vorzeichen * count;
-								vorzeichen = vorzeichen * -1;
-							}
+						index = index * -1;
 					}	
 					
 					

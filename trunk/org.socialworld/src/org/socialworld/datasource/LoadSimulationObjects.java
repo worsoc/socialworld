@@ -37,24 +37,30 @@ public abstract class LoadSimulationObjects implements ISimulationObjectWrite {
 		return result;
 	}
 	
-	protected void initObject(WriteAccessToSimulationObject object, int objectID, double gauss_value) {
+
+	protected void initObject(WriteAccessToSimulationObject object, int objectID) {
 		int indexITP; 
 		int indexRTP; 
 		int indexS2AP; 
 		int indexPosition;
-
+		double gauss_value;
+		
 		object.setObjectID(objectID, this);
 	
+		gauss_value = random.nextGaussian();
 		indexITP = mapGaussToIndex(gauss_value, InfluenceTypePool.CAPACITY_ITP_ARRAY);
 		object.setInfluenceTypes(InfluenceTypePool.getInstance().getInfluenceTypes(indexITP), this);
 
+		gauss_value = random.nextGaussian();
 		indexRTP = mapGaussToIndex(gauss_value, ReactionTypePool.CAPACITY_RTP_ARRAY);
 		object.setReactionTypes(ReactionTypePool.getInstance().getReactionTypes(indexRTP), this);
 
+		gauss_value = random.nextGaussian();
 		indexS2AP = mapGaussToIndex(gauss_value, State2ActionTypePool.CAPACITY_S2AP_ARRAY);
 		object.setState2ActionType(State2ActionTypePool.getInstance().getState2ActionType(indexS2AP), this);
 
-		indexPosition = mapGaussToIndex(gauss_value, PositionPool.CAPACITY_PosP_ARRAY);
+		indexPosition = random.nextInt(PositionPool.CAPACITY_PosP_ARRAY);
+		if (random.nextBoolean() == false) indexPosition = indexPosition * -1;
 		object.setPosition(PositionPool.getInstance().getPosition(indexPosition), this);
 
 	}

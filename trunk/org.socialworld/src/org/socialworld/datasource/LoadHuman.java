@@ -48,22 +48,20 @@ public class LoadHuman extends LoadAnimal implements IHumanWrite {
 	 * @return  Human
 	 */
 	public Human getObject(int objectID) {
-		double gauss_value;
 	
 		Human createdHuman = new Human();
 		WriteAccessToHuman human = new WriteAccessToHuman(createdHuman);
 
-		gauss_value = random.nextGaussian();
 	
-		initObject(human, objectID, gauss_value);	
+		initObject(human, objectID);	
 
 		SimpleClientActionHandler.getInstance().setHumanWrite(objectID, human);
 
 		return createdHuman;
 	}
 
-	protected void initObject(WriteAccessToHuman object, int objectID, double gauss_value) {
-		super.initObject(object, objectID, gauss_value);
+	protected void initObject(WriteAccessToHuman object, int objectID) {
+		super.initObject(object, objectID);
 
 	}
 

@@ -22,14 +22,12 @@ public class LoadMagic extends LoadSimulationObjects {
 
 	@Override
 	public Magic getObject(int objectID) {
-		double gauss_value;
 		
 		Magic createdMagic = new Magic();
 		WriteAccessToSimulationObject magic = new WriteAccessToSimulationObject(createdMagic);
 		
-		gauss_value = random.nextGaussian();
 
-		initObject(magic, objectID, gauss_value);	
+		initObject(magic, objectID);	
 		
 		return createdMagic;
 	}

@@ -27,25 +27,25 @@ public class LoadAnimal extends LoadSimulationObjects implements IAnimalWrite {
 
 	@Override
 	public  Animal getObject(int objectID) {
-		double gauss_value;
 		
 		Animal createdAnimal = new Animal();
 		WriteAccessToAnimal animal = new WriteAccessToAnimal(createdAnimal);
 		
-		gauss_value = random.nextGaussian();
-
-		initObject(animal, objectID, gauss_value);	
+		initObject(animal, objectID);	
 		
 		return createdAnimal;
 	}
 
-	protected void initObject(WriteAccessToAnimal object, int objectID, double gauss_value) {
+	protected void initObject(WriteAccessToAnimal object, int objectID) {
 		int indexACMP;
 		int indexAAP;
+		double gauss_value;
 
-		super.initObject(object, objectID, gauss_value);
+		super.initObject(object, objectID);
 
+		gauss_value = random.nextGaussian();
 		indexACMP = mapGaussToIndex(gauss_value, AttributeCalculatorMatrixPool.CAPACITY_ACMP_ARRAY);
+		gauss_value = random.nextGaussian();
 		indexAAP = mapGaussToIndex(gauss_value, AttributeArrayPool.CAPACITY_AAP_ARRAY);
 
 		object.setMatrix(	
