@@ -25,7 +25,7 @@ public class ObjectByPositionSearch {
 	private int size;
 	
 	public ObjectByPositionSearch (int capacity) {
-		root = null;
+		root = new ObjectByPositionSearchNode(null, 0, 0, 0, null,null,null,null);;
 		this.allNodesByObjectID = new ObjectByPositionSearchNode[capacity];
 		size = capacity;
 	}
@@ -163,12 +163,13 @@ public class ObjectByPositionSearch {
 		ObjectByPositionSearchNode last;
 		ObjectByPositionSearchNode next;
 		
-		if (root == null) return null;
 		
 		last = null;
 		next = root.getNode(findX, findY);
-		
-		while (last != next) {
+
+		if (next == null) return root;
+
+		while (last != next && next != null) {
 			last = next;
 			next = next.getNode(findX, findY);
 		}
