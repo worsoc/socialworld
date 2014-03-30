@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class SpeechRecognition {
 	private ArrayList<String> wordList;
 	private ArrayList<SpeechRecognitionFunction> functionList; //according to the word list above
+	private int[] wordIDList; //according to the word list above
 	private int indexWordList;
 	
 	private PunctuationMark finalPunctuationMark;
@@ -90,10 +91,12 @@ public class SpeechRecognition {
 		word = wordList.get(indexWordList);
 		if (word == "have" || word == "has" || word == "had") {
 			functionList.set(indexWordList, SpeechRecognitionFunction.firstAuxVerb);
+			wordIDList[indexWordList] = 0;
 			indexWordList++;
 			word = wordList.get(indexWordList); 
 			if (word == "been"){
 				functionList.set(indexWordList, SpeechRecognitionFunction.secondAuxVerb_be);
+				wordIDList[indexWordList] = 0;
 				indexWordList++;
 				isOK = pastParticipleOK(function);
 			}
@@ -104,6 +107,7 @@ public class SpeechRecognition {
 			word = wordList.get(indexWordList);
 			if (word == "be") {
 				functionList.set(indexWordList, SpeechRecognitionFunction.secondAuxVerb_be);
+				wordIDList[indexWordList] = 0;
 				indexWordList++;
 				isOK = pastParticipleOK(function);
 			}
@@ -129,6 +133,7 @@ public class SpeechRecognition {
 		{
 			if ( word == "been" ) {
 				functionList.set(indexWordList, SpeechRecognitionFunction.secondAuxVerb_be);
+				wordIDList[indexWordList] = 0;
 				indexWordList++;
 				isOK = pastParticipleOK(function);
 			}
@@ -141,6 +146,7 @@ public class SpeechRecognition {
 				 if ( word == "be" )
 				 {
 					functionList.set(indexWordList, SpeechRecognitionFunction.secondAuxVerb_be);
+					wordIDList[indexWordList] = 0;
 					indexWordList++;
 					isOK = pastParticipleOK(function);
 				 }
@@ -165,6 +171,7 @@ public class SpeechRecognition {
 		word = wordList.get(indexWordList);
 		if (word == "the") {
 			functionList.set(indexWordList, function);
+			wordIDList[indexWordList] = 0;
 			indexWordList++;
 			isOK = nounOK(function);
 		}
@@ -184,6 +191,7 @@ public class SpeechRecognition {
 		isOK = (allWords.checkExistsWord(word) == type);
 		if (isOK) {
 			functionList.set(indexWordList, function);
+			wordIDList[indexWordList] = allWords.getWordID();
 			indexWordList++;
 		}
 		
@@ -236,6 +244,7 @@ public class SpeechRecognition {
 		}
 		if (isOK) {
 			functionList.set(indexWordList, function);
+			wordIDList[indexWordList] = 0;
 			indexWordList++;
 		}
 		return isOK;
@@ -289,10 +298,12 @@ public class SpeechRecognition {
 			word = wordList.get(indexWordList);
 			if (word == "going") {
 				functionList.set(indexWordList, SpeechRecognitionFunction.secondAuxVerb_goingto);
+				wordIDList[indexWordList] = 0;
 				indexWordList++;
 				word = wordList.get(indexWordList);
 				if (word == "to") {
 					functionList.set(indexWordList, SpeechRecognitionFunction.secondAuxVerb_goingto);
+					wordIDList[indexWordList] = 0;
 					indexWordList++;
 					isOK = true;
 				}
@@ -329,6 +340,7 @@ public class SpeechRecognition {
 		word = wordList.get(indexWordList);
 		if (word == "the") {
 			functionList.set(indexWordList, function);
+			wordIDList[indexWordList] = 0;
 			indexWordList++;
 			isOK = true;
 		}
