@@ -10,11 +10,21 @@ public class WordSearchTree {
 	
 	public WordType checkExistsWord(String word) {
 		currentNode = root;
-		if (checkWord(word)) return currentNode.getType();
+		if (checkWord(word) > 0) return currentNode.getType();
 		else return null;
 	}
 	
-	private boolean checkWord(String word) {
+	public int getWordID(String word) {
+		currentNode = root;
+		if (checkWord(word) > 0) return currentNode.getID();
+		else return 0;
+	}
+
+	public int getWordID() {
+		return currentNode.getID();
+	}
+
+	private int checkWord(String word) {
 		char firstLetter;
 		String letters;
 		int count;
@@ -22,7 +32,7 @@ public class WordSearchTree {
 		
 		WordSearchTreeNode nodeWithFirstLetter;
 		
-		if (currentNode.getIsLeaf() && word.length() == 0 )return true; // node is leaf -> tree contains the word
+		if (currentNode.getIsLeaf() && word.length() == 0 )return currentNode.getID(); // node is leaf -> tree contains the word
 		else {
 			firstLetter  = word.charAt(0);
 			nodeWithFirstLetter = currentNode.getChild(firstLetter);
@@ -36,7 +46,7 @@ public class WordSearchTree {
 							
 						}
 						else // the node's letters don't match the search word letters -> tree doesn't contain the word
-							return false; 
+							return 0; 
 					}
 					// the node's letters match the search word
 					// -> continue search at child node with the rest of the search word
@@ -45,10 +55,10 @@ public class WordSearchTree {
 					return checkWord(word);
 				}
 				else // there are more letters for the node than in the search word -> tree doesn't contain the word
-					return false;	
+					return 0;	
 			}
 			else // edge for the first letter doesn't exist -> tree doesn't contain the word
-				return false;	
+				return 0;	
 		}
 	}
 	

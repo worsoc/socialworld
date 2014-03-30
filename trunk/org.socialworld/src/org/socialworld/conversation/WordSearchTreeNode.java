@@ -8,6 +8,11 @@ public class WordSearchTreeNode {
 	private boolean isLeaf;
 	private  WordSearchTreeNode nextNodes[];
 	private WordType wordType;
+	private int wordID;
+	
+	public WordSearchTreeNode() {
+		wordID = 0;
+	}
 	
 	protected WordSearchTreeNode getChild(int index) {
 		if (nextNodes.length > index) return nextNodes[index];
@@ -69,5 +74,9 @@ public class WordSearchTreeNode {
 		nextNodes = new WordSearchTreeNode[count];
 		isLeaf = false;
 		countEdges = count;
+	}
+	
+	protected int getID() {
+		return wordID;
 	}
 }
