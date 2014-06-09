@@ -3,69 +3,65 @@ package org.socialworld.knowledge;
 public class Knowledge {
 	final int MAXIMUM_KNOWLEDGE_CAPACITY = 100;
 	
-	private int wordIDs[];
-	private int wordAccessCount[];
+	private int subjectWordID;
 	
-	private KnowledgeColour colour[];
-	private KnowledgeLocation location[];
-	private KnowledgeLocationByPreposition locationByPreposition[];
-	private KnowledgeMaterial material[];
-
-
+	private KnowledgeFact facts[];
+	private KnowledgeSource source[];
+	
+	private int itemAccessCount[];
+	
+	private boolean itemIsValid[];
+	private int validItemCount;
+	
 	public Knowledge() {
-		wordIDs = new int[MAXIMUM_KNOWLEDGE_CAPACITY];
+		facts = new KnowledgeFact[MAXIMUM_KNOWLEDGE_CAPACITY];
+		source = new KnowledgeSource[MAXIMUM_KNOWLEDGE_CAPACITY];
 		
-		colour = new KnowledgeColour[MAXIMUM_KNOWLEDGE_CAPACITY];
-		location = new KnowledgeLocation[MAXIMUM_KNOWLEDGE_CAPACITY];
-		locationByPreposition = new KnowledgeLocationByPreposition[MAXIMUM_KNOWLEDGE_CAPACITY];
-		material = new KnowledgeMaterial[MAXIMUM_KNOWLEDGE_CAPACITY];
+		itemAccessCount = new int[MAXIMUM_KNOWLEDGE_CAPACITY];
+		itemIsValid = new boolean[MAXIMUM_KNOWLEDGE_CAPACITY];
 	}
 	
-	public KnowledgeColour getKnowledgeColour(int index) {
+	public int getSubject() {
+		return subjectWordID;
+	}
+
+	public void setSubject(int subjectWordID) {
+		if (validItemCount == 0)		this.subjectWordID = subjectWordID;
+	}
+	
+	public KnowledgeFact getFact(int index) {
 		if ((index >= 0) & (index < MAXIMUM_KNOWLEDGE_CAPACITY) )
-			return colour[index];
+			return facts[index];
 		else
 			return null;
 	}
 
-	public KnowledgeLocation getKnowledgeLocation(int index) {
+	public KnowledgeSource getSource(int index) {
 		if ((index >= 0) & (index < MAXIMUM_KNOWLEDGE_CAPACITY) )
-			return location[index];
+			return source[index];
 		else
 			return null;
 	}
 	
-	public KnowledgeLocationByPreposition getKnowledgeLocationByPreposition(int index) {
-		if ((index >= 0) & (index < MAXIMUM_KNOWLEDGE_CAPACITY) )
-			return locationByPreposition[index];
-		else
-			return null;
-	}
-
-	public KnowledgeMaterial getKnowledgeMaterial(int index) {
-		if ((index >= 0) & (index < MAXIMUM_KNOWLEDGE_CAPACITY) )
-			return material[index];
-		else
-			return null;
-	}
-
-
-	public int findWord(int word) {
+	
+	
+	public int findFact(boolean trueFindValue_falseFindCriterion, int wordValue) {
 		int[] empty = {};
 		
-		return findWord(word, empty);
+		return findFact(trueFindValue_falseFindCriterion, wordValue, empty);
 	}
 	
 	
-	public int findWord(int word, int[] butNotIDs) {
+	public int findFact(boolean trueFindValue_falseFindCriterion, int wordValue, int[] butNotIDs) {
 		int id;
 		int  foundID = -1;
 		int mostFrequent = 0;
 		boolean ignoreID = false;
 		
 		for (id=0;id < MAXIMUM_KNOWLEDGE_CAPACITY; id++) {
-			if (wordIDs[id] == word) {
-				if (wordAccessCount[id] > mostFrequent) {
+			if ( ( trueFindValue_falseFindCriterion && facts[id].getValue().getWordID() == wordValue) ||
+				 ( !trueFindValue_falseFindCriterion && facts[id].getCriterion().getWordID() == wordValue) )	{
+				if (itemAccessCount[id] > mostFrequent) {
 					
 					ignoreID = false;
 					for(int i=0; i < butNotIDs.length; i++) {
@@ -74,7 +70,7 @@ public class Knowledge {
 					
 					if (ignoreID == false) {
 						foundID = id;
-						mostFrequent = wordAccessCount[id];
+						mostFrequent = itemAccessCount[id];
 
 					}
 				}
@@ -85,27 +81,44 @@ public class Knowledge {
 		
 	}
 	
-	public void addWord(int word) {
-		int 	nextKnowledgeWordID;
+	
+	public void removeItem(int id) {
+		if (this.itemIsValid[id]) {
+			this.itemIsValid[id] = false;
+			this.itemAccessCount[id] = 0;
+			validItemCount--;
+		}
+	}
+	
+	public void addItem(KnowledgeFact fact, KnowledgeSource source) {
+		int 	replacableID;
 		
-		nextKnowledgeWordID = getKnowledgeWordID();
+		replacableID = getID();
 		
-		wordIDs[nextKnowledgeWordID] = word;
-		wordAccessCount[nextKnowledgeWordID] = 1;
+		this.facts[replacableID] = fact;
+		this.source[replacableID] = source;
+		
+		this.itemAccessCount[replacableID] = 2;
+		
+		if (this.itemIsValid[replacableID] == false) {
+			this.validItemCount++;
+			this.itemIsValid[replacableID] = true;
+		}
+		
 		
 	}
 	
-	private int getKnowledgeWordID() {
-		int 	nextKnowledgeWordID;
+	private int getID() {
+		int id;
 		int i;
 		
-		nextKnowledgeWordID = 0;
+		id = 0;
 		for (i=0;i < MAXIMUM_KNOWLEDGE_CAPACITY; i++) {
-			if (wordAccessCount[i] < wordAccessCount[nextKnowledgeWordID]) {
-				nextKnowledgeWordID = i;
+			if (itemAccessCount[i] < itemAccessCount[id]) {
+				id = i;
 			}
 		}
 		
-		return nextKnowledgeWordID ;
+		return id ;
 	}
 }
