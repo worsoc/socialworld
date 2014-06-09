@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.apache.log4j.Logger;
+import org.socialworld.ListModel;
 import org.socialworld.objects.*;
 import org.socialworld.datasource.*;
 
-import org.socialworld.collections.ListModel;
 import org.socialworld.collections.SimulationObjectArray;
 
 /**
