@@ -5,6 +5,7 @@ package org.socialworld.objects;
 
 import org.socialworld.attributes.ActionType;
 import org.socialworld.attributes.Inventory;
+import org.socialworld.knowledge.KnowledgePool;
 import org.socialworld.core.Action;
 
 /**
@@ -21,7 +22,8 @@ import org.socialworld.core.Action;
  public class Human extends Mammal {
 
 	protected Inventory inventory;
-
+	protected KnowledgePool knowledge;
+	
 	public Human() {
 		super();
 	}
