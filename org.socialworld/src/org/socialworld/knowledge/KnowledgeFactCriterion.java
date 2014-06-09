@@ -1,7 +1,5 @@
 package org.socialworld.knowledge;
 
-import org.socialworld.attributes.Attribute;
-
 public enum KnowledgeFactCriterion {
 	colour(0), material(1);
 
