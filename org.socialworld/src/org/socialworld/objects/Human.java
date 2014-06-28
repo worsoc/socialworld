@@ -5,7 +5,10 @@ package org.socialworld.objects;
 
 import org.socialworld.attributes.ActionType;
 import org.socialworld.attributes.Inventory;
+import org.socialworld.knowledge.AcquaintancePool;
 import org.socialworld.knowledge.KnowledgePool;
+import org.socialworld.knowledge.KnowledgeSource;
+import org.socialworld.knowledge.KnowledgeSourceType;
 import org.socialworld.core.Action;
 
 /**
@@ -20,12 +23,16 @@ import org.socialworld.core.Action;
  * 
  */
  public class Human extends Mammal {
-
+	 
 	protected Inventory inventory;
 	protected KnowledgePool knowledge;
+	protected AcquaintancePool acquaintance;
+	
+	private String lastSaidSentence;
 	
 	public Human() {
 		super();
+		
 	}
 
 	/**
@@ -79,6 +86,8 @@ import org.socialworld.core.Action;
 		case handleItem:
 			actionDone = handleItem(action);
 			break;
+		case listenTo:
+			actionDone = listenTo(action);
 		default:
 			actionDone = super.doAction(type,  action);
 			break;
@@ -140,6 +149,31 @@ import org.socialworld.core.Action;
 
 	}
 
+	protected int listenTo(final Action action) {
+		final SimulationObject target = action.getTarget();
+		
 
+		if (target instanceof Human) {
 
+			final Human human = (Human) target;
+			String sentence;
+			KnowledgeSource source;
+			
+			sentence = human.getLastSaidSentence();
+			
+			source = new KnowledgeSource();
+			source.setSourceType( KnowledgeSourceType.heardOf);
+			// get the acquaintance of target human (null if the there isn't an acquaintance of target human)
+			source.setOrigin(acquaintance.getAcquaintance(human));
+			
+			knowledge.addFactsFromSentence(sentence, source);
+		}
+		
+		return action.isDone();
+	}
+
+	protected String getLastSaidSentence() {
+		return lastSaidSentence;
+	}
+	
 }
