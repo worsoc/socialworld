@@ -11,4 +11,11 @@ public class KnowledgeFact {
 	protected KnowledgeFactCriterion getCriterion() {
 		return criterion;
 	}
+	
+	protected int compare (KnowledgeFact factB) {
+		if (this == factB) 
+			return 1;
+		else
+			return 0;
+	}
 }
