@@ -2,6 +2,7 @@ package org.socialworld.conversation;
 
 import java.io.IOException;
 import java.io.LineNumberReader;
+import org.socialworld.knowledge.KnowledgeFactCriterion;
 
 public class WordSearchTree {
 	private WordSearchTreeNode root;
@@ -24,6 +25,14 @@ public class WordSearchTree {
 		return currentNode.getID();
 	}
 
+	public KnowledgeFactCriterion getKnowledgeFactCriterion() {
+		return currentNode.getKnowledgeFactCriterion();
+	}
+
+	public boolean isAllowedAsKnowledgeSubject() {
+		return currentNode.isAllowedAsKnowledgeSubject();
+	}
+	
 	private int checkWord(String word) {
 		char firstLetter;
 		String letters;
