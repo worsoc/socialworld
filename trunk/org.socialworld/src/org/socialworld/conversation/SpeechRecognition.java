@@ -1,12 +1,21 @@
 package org.socialworld.conversation;
 
 import java.util.ArrayList;
+import org.socialworld.knowledge.KnowledgeFactCriterion;
+import org.socialworld.knowledge.KnowledgeFact;
+import org.socialworld.knowledge.KnowledgeFactPool;
 
 public class SpeechRecognition {
 	private ArrayList<String> wordList;
-	private ArrayList<SpeechRecognitionFunction> functionList; //according to the word list above
 	private int[] wordIDList; //according to the word list above
+
+	private ArrayList<SpeechRecognitionFunction> functionList; //according to the word list above
+	private ArrayList<KnowledgeFactCriterion> kfcList; //according to the word list above
+	private boolean[] allowedAsKnowledgeSubject;	//according to the word list above
+	
 	private int indexWordList;
+	private int startSearchForCriterion = 0;
+	private int lastSubjectWordID;
 	
 	private PunctuationMark finalPunctuationMark;
 	private WordSearchTree allWords;
@@ -21,6 +30,71 @@ public class SpeechRecognition {
 		if (checkCorrectness()){
 			
 		}
+	}
+	
+	public void resetLastSubject() {
+		lastSubjectWordID = -1;
+	}
+
+	public void resetIndexSearchCriterion() {
+		startSearchForCriterion = 0;
+	}
+
+	public int getSubject() {
+		int valueWordID = -1;
+		
+		for (int index = 0; index < wordList.size(); index++) {
+			if (functionList.get(index) == SpeechRecognitionFunction.subject) {
+				// if the sentence's subject is NOT a knowledge subject (see WordSearchtreeNode) too,
+				// return the subject from a previous sentence
+				// because the actual sentence belongs to the knowledge subject of a previous sentence
+				
+				// for example (in both sentences the knowledge subject is "boy"):
+				// 1. "The boy has black hair."
+				// 2. "He is 15 years old."
+				
+				if (allowedAsKnowledgeSubject[index])	valueWordID = wordIDList[index];
+				index = wordList.size();
+			}
+		}
+		
+		if (valueWordID == -1) valueWordID = lastSubjectWordID;
+		return valueWordID;
+	}
+	
+	public KnowledgeFact getNextFact() {
+		KnowledgeFact fact = null;
+		KnowledgeFactCriterion criterion = null;
+		SpeechRecognitionFunction function = null;
+		
+		int valueWordID = -1;
+		
+		boolean found = false;
+		
+		for (int index = startSearchForCriterion; index < wordList.size(); index++) {
+			if (kfcList.get(index) != null) {
+				criterion = kfcList.get(index);
+				function = functionList.get(index);
+				
+				found = true;
+				startSearchForCriterion = index + 1;
+				index = wordList.size();
+			}
+		}
+		
+		if (found) {
+			found = false;
+			for (int index = 0; index < wordList.size(); index++) {
+				if (functionList.get(index) == function) {
+					valueWordID = wordIDList[index];
+					found = true;
+					index = wordList.size();
+				}
+			}
+			fact = KnowledgeFactPool.getInstance().find( criterion, valueWordID);
+		}
+		
+		return fact;
 	}
 	
 	private void divideIntoParts(String sentence)  {
@@ -191,6 +265,7 @@ public class SpeechRecognition {
 		isOK = (allWords.checkExistsWord(word) == type);
 		if (isOK) {
 			functionList.set(indexWordList, function);
+			kfcList.set(indexWordList, allWords.getKnowledgeFactCriterion());
 			wordIDList[indexWordList] = allWords.getWordID();
 			indexWordList++;
 		}
@@ -203,7 +278,7 @@ public class SpeechRecognition {
 	}
 
 	private boolean nounOK(SpeechRecognitionFunction function) {
-		return wordOK(function, WordType.noun);
+		return  wordOK(function, WordType.noun);
 	}
 	
 	private boolean pronounOK(SpeechRecognitionFunction function) {

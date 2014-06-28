@@ -1,4 +1,5 @@
 package org.socialworld.conversation;
+import org.socialworld.knowledge.KnowledgeFactCriterion;
 
 
 public class WordSearchTreeNode {
@@ -9,9 +10,12 @@ public class WordSearchTreeNode {
 	private  WordSearchTreeNode nextNodes[];
 	private WordType wordType;
 	private int wordID;
+	private KnowledgeFactCriterion kfc;
+	private boolean allowedAsKnowledgeSubject = false;
 	
 	public WordSearchTreeNode() {
 		wordID = 0;
+		kfc = null;
 	}
 	
 	protected WordSearchTreeNode getChild(int index) {
@@ -79,4 +83,21 @@ public class WordSearchTreeNode {
 	protected int getID() {
 		return wordID;
 	}
+	
+	protected void setKnowledgeFactCriterion(KnowledgeFactCriterion kfc ) {
+		this.kfc = kfc;
+	}
+	
+	protected KnowledgeFactCriterion getKnowledgeFactCriterion() {
+		return kfc;
+	}
+	
+	protected void allowAsKnowledgeSubject() {
+		this.allowedAsKnowledgeSubject = true;
+	}
+	
+	protected boolean isAllowedAsKnowledgeSubject() {
+		return this.allowedAsKnowledgeSubject;
+	}
+
 }
