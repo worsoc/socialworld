@@ -266,6 +266,7 @@ public class SpeechRecognition {
 		if (isOK) {
 			functionList.set(indexWordList, function);
 			kfcList.set(indexWordList, allWords.getKnowledgeFactCriterion());
+			allowedAsKnowledgeSubject[indexWordList] = allWords.isAllowedAsKnowledgeSubject();
 			wordIDList[indexWordList] = allWords.getWordID();
 			indexWordList++;
 		}
