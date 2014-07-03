@@ -1,9 +1,10 @@
 package org.socialworld.knowledge;
+import org.socialworld.conversation.Word;
 
 public class Knowledge {
 	final int MAXIMUM_KNOWLEDGE_CAPACITY = 100;
 	
-	private int subjectWordID;
+	private Word subject;
 	
 	private KnowledgeFact facts[];
 	private KnowledgeSource source[];
@@ -24,7 +25,7 @@ public class Knowledge {
 	protected int compareTo(Knowledge knowledgeB) {
 		int countEqual = 0;
 	
-		if (subjectWordID == knowledgeB.getSubject()) {
+		if (subject == knowledgeB.getSubject()) {
 			for (int i = 0; i < MAXIMUM_KNOWLEDGE_CAPACITY; i++) {
 				if (itemIsValid[i]) {
 					for (int j = 0; j < MAXIMUM_KNOWLEDGE_CAPACITY; j++) {
@@ -59,11 +60,11 @@ public class Knowledge {
 	}
 	
 	protected boolean isValid() {
-		return (subjectWordID > 0);
+		return (subject != null);
 	}
 	
-	protected int getSubject() {
-		return subjectWordID;
+	protected Word getSubject() {
+		return subject;
 	}
 
 	protected int countValidItems() {
@@ -74,8 +75,8 @@ public class Knowledge {
 		return itemIsValid[index];
 	}
 	
-	protected void setSubject(int subjectWordID) {
-		if (validItemCount == 0)		this.subjectWordID = subjectWordID;
+	protected void setSubject(Word subject) {
+		if (validItemCount == 0)		this.subject = subject;
 	}
 	
 	protected KnowledgeFact getFact(int index) {
@@ -94,22 +95,22 @@ public class Knowledge {
 	
 	
 	
-	protected int findFact(boolean trueFindValue_falseFindCriterion, int wordValue) {
+	protected int findFact(boolean trueFindValue_falseFindCriterion, Word wordValue) {
 		int[] empty = {};
 		
 		return findFact(trueFindValue_falseFindCriterion, wordValue, empty);
 	}
 	
 	
-	protected int findFact(boolean trueFindValue_falseFindCriterion, int wordValue, int[] butNotIndexs) {
+	protected int findFact(boolean trueFindValue_falseFindCriterion, Word wordValue, int[] butNotIndexs) {
 		int index;
 		int  foundIndex = -1;
 		int mostFrequent = 0;
 		boolean ignoreIndex = false;
 		
 		for (index=0;index < MAXIMUM_KNOWLEDGE_CAPACITY; index++) {
-			if ( ( trueFindValue_falseFindCriterion && facts[index].getValue().getWordID() == wordValue) ||
-				 ( !trueFindValue_falseFindCriterion && facts[index].getCriterion().getWordID() == wordValue) )	{
+			if ( ( trueFindValue_falseFindCriterion && facts[index].getValue().getWord() == wordValue) ||
+				 ( !trueFindValue_falseFindCriterion && facts[index].getCriterion().getWordID() == wordValue.getWordID()) )	{
 				if (itemAccessCount[index] > mostFrequent) {
 					
 					ignoreIndex = false;

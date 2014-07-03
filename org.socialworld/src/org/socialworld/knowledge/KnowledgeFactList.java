@@ -1,6 +1,7 @@
 package org.socialworld.knowledge;
 
 import java.util.ArrayList;
+import org.socialworld.conversation.Word;
 
 public class KnowledgeFactList  {
 	
@@ -10,7 +11,7 @@ public class KnowledgeFactList  {
 		factSearchList = new ArrayList<KnowledgeFact>();
 	}
 	
-	public KnowledgeFact find(int  valueWordID) {
+	public KnowledgeFact find(Word  value) {
 		KnowledgeFact fact;
 		KnowledgeFact temp;
 		
@@ -26,7 +27,7 @@ public class KnowledgeFactList  {
 		{
 			fact = factSearchList.get(index);
 			index++;
-			found =  ( fact.getValue().getWordID() == valueWordID );
+			found =  ( fact.getValue().getWord() == value );
 		}
 		while( found  | (index == count) );
 		
