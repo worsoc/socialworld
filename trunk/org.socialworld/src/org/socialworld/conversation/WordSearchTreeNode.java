@@ -1,22 +1,14 @@
 package org.socialworld.conversation;
-import org.socialworld.knowledge.KnowledgeFactCriterion;
 
 
 public class WordSearchTreeNode {
+	private Word word;
 	private String letters;
 	private char  firstLetter;
 	private int countEdges;
 	private boolean isLeaf;
 	private  WordSearchTreeNode nextNodes[];
-	private WordType wordType;
-	private int wordID;
-	private KnowledgeFactCriterion kfc;
-	private boolean allowedAsKnowledgeSubject = false;
 	
-	public WordSearchTreeNode() {
-		wordID = 0;
-		kfc = null;
-	}
 	
 	protected WordSearchTreeNode getChild(int index) {
 		if (nextNodes.length > index) return nextNodes[index];
@@ -39,13 +31,7 @@ public class WordSearchTreeNode {
 		return result;
 	}
 	
-	protected WordType getType() {
-		return wordType;
-	}
 	
-	protected void setType(WordType type) {
-		this.wordType = type;
-	}
 	
 	protected char getFirstLetter() {
 		return firstLetter;
@@ -80,24 +66,10 @@ public class WordSearchTreeNode {
 		countEdges = count;
 	}
 	
-	protected int getID() {
-		return wordID;
+	protected Word getWord() {
+		return word;
 	}
 	
-	protected void setKnowledgeFactCriterion(KnowledgeFactCriterion kfc ) {
-		this.kfc = kfc;
-	}
 	
-	protected KnowledgeFactCriterion getKnowledgeFactCriterion() {
-		return kfc;
-	}
-	
-	protected void allowAsKnowledgeSubject() {
-		this.allowedAsKnowledgeSubject = true;
-	}
-	
-	protected boolean isAllowedAsKnowledgeSubject() {
-		return this.allowedAsKnowledgeSubject;
-	}
 
 }
