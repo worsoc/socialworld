@@ -2,38 +2,23 @@ package org.socialworld.conversation;
 
 import java.io.IOException;
 import java.io.LineNumberReader;
-import org.socialworld.knowledge.KnowledgeFactCriterion;
 
 public class WordSearchTree {
 	private WordSearchTreeNode root;
 	private WordSearchTreeNode currentNode;
 	
 	
-	public WordType checkExistsWord(String word) {
+	public Word findAndGetWord(String word) {
 		currentNode = root;
-		if (checkWord(word) > 0) return currentNode.getType();
-		else return null;
+		return checkWord(word);
 	}
 	
-	public int getWordID(String word) {
-		currentNode = root;
-		if (checkWord(word) > 0) return currentNode.getID();
-		else return 0;
+	public Word getWord() {
+		return currentNode.getWord();
 	}
 
-	public int getWordID() {
-		return currentNode.getID();
-	}
-
-	public KnowledgeFactCriterion getKnowledgeFactCriterion() {
-		return currentNode.getKnowledgeFactCriterion();
-	}
-
-	public boolean isAllowedAsKnowledgeSubject() {
-		return currentNode.isAllowedAsKnowledgeSubject();
-	}
 	
-	private int checkWord(String word) {
+	private Word checkWord(String word) {
 		char firstLetter;
 		String letters;
 		int count;
@@ -41,7 +26,7 @@ public class WordSearchTree {
 		
 		WordSearchTreeNode nodeWithFirstLetter;
 		
-		if (currentNode.getIsLeaf() && word.length() == 0 )return currentNode.getID(); // node is leaf -> tree contains the word
+		if (currentNode.getIsLeaf() && word.length() == 0 )return currentNode.getWord(); // node is leaf -> tree contains the word
 		else {
 			firstLetter  = word.charAt(0);
 			nodeWithFirstLetter = currentNode.getChild(firstLetter);
@@ -55,7 +40,7 @@ public class WordSearchTree {
 							
 						}
 						else // the node's letters don't match the search word letters -> tree doesn't contain the word
-							return 0; 
+							return null; 
 					}
 					// the node's letters match the search word
 					// -> continue search at child node with the rest of the search word
@@ -64,10 +49,10 @@ public class WordSearchTree {
 					return checkWord(word);
 				}
 				else // there are more letters for the node than in the search word -> tree doesn't contain the word
-					return 0;	
+					return null;	
 			}
 			else // edge for the first letter doesn't exist -> tree doesn't contain the word
-				return 0;	
+				return null;	
 		}
 	}
 	

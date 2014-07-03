@@ -7,44 +7,48 @@ import org.socialworld.knowledge.KnowledgeFactPool;
 
 public class SpeechRecognition {
 	private ArrayList<String> wordList;
-	private int[] wordIDList; //according to the word list above
-
-	private ArrayList<SpeechRecognitionFunction> functionList; //according to the word list above
-	private ArrayList<KnowledgeFactCriterion> kfcList; //according to the word list above
-	private boolean[] allowedAsKnowledgeSubject;	//according to the word list above
+	private Word[] foundWordList; //according to the word list above
+	private SpeechRecognitionFunction[] functionList; //according to the word list above
 	
 	private int indexWordList;
 	private int startSearchForCriterion = 0;
-	private int lastSubjectWordID;
+	private Word lastSubject;
 	
 	private PunctuationMark finalPunctuationMark;
 	private WordSearchTree allWords;
 	
 	public SpeechRecognition() {
 		allWords = new WordSearchTree();
+		lastSubject= null;
+		
 	}
 	
 	
 	public void analyseSentence(String sentence) {
-		divideIntoParts(sentence);
+		int count;
+		
+		count = divideIntoParts(sentence);
+		
+		foundWordList = new Word[count];
+		functionList = new SpeechRecognitionFunction[count];
 		if (checkCorrectness()){
 			
 		}
 	}
 	
 	public void resetLastSubject() {
-		lastSubjectWordID = -1;
+		lastSubject = null;
 	}
 
 	public void resetIndexSearchCriterion() {
 		startSearchForCriterion = 0;
 	}
 
-	public int getSubject() {
-		int valueWordID = -1;
+	public Word getSubject() {
+		Word word = null;
 		
 		for (int index = 0; index < wordList.size(); index++) {
-			if (functionList.get(index) == SpeechRecognitionFunction.subject) {
+			if (functionList[index] == SpeechRecognitionFunction.subject) {
 				// if the sentence's subject is NOT a knowledge subject (see WordSearchtreeNode) too,
 				// return the subject from a previous sentence
 				// because the actual sentence belongs to the knowledge subject of a previous sentence
@@ -53,28 +57,30 @@ public class SpeechRecognition {
 				// 1. "The boy has black hair."
 				// 2. "He is 15 years old."
 				
-				if (allowedAsKnowledgeSubject[index])	valueWordID = wordIDList[index];
+				if (foundWordList[index].isAllowedAsKnowledgeSubject())	word = foundWordList[index];
 				index = wordList.size();
 			}
 		}
 		
-		if (valueWordID == -1) valueWordID = lastSubjectWordID;
-		return valueWordID;
+		if (word == null) word = lastSubject;
+		return word;
 	}
 	
 	public KnowledgeFact getNextFact() {
 		KnowledgeFact fact = null;
 		KnowledgeFactCriterion criterion = null;
+		KnowledgeFactCriterion tmpCriterion = null;
 		SpeechRecognitionFunction function = null;
 		
-		int valueWordID = -1;
+		Word word = null;
 		
 		boolean found = false;
 		
 		for (int index = startSearchForCriterion; index < wordList.size(); index++) {
-			if (kfcList.get(index) != null) {
-				criterion = kfcList.get(index);
-				function = functionList.get(index);
+			tmpCriterion = foundWordList[index].getKnowledgeFactCriterion();
+			if (tmpCriterion != null) {
+				criterion = tmpCriterion;
+				function = functionList[index];
 				
 				found = true;
 				startSearchForCriterion = index + 1;
@@ -85,19 +91,19 @@ public class SpeechRecognition {
 		if (found) {
 			found = false;
 			for (int index = 0; index < wordList.size(); index++) {
-				if (functionList.get(index) == function) {
-					valueWordID = wordIDList[index];
+				if (functionList[index] == function) {
+					word = foundWordList[index];
 					found = true;
 					index = wordList.size();
 				}
 			}
-			fact = KnowledgeFactPool.getInstance().find( criterion, valueWordID);
+			fact = KnowledgeFactPool.getInstance().find( criterion, word);
 		}
 		
 		return fact;
 	}
 	
-	private void divideIntoParts(String sentence)  {
+	private int divideIntoParts(String sentence)  {
 		String words[];
 		
 		sentence.replaceAll(",", " , ");
@@ -106,6 +112,8 @@ public class SpeechRecognition {
 		writeWordsToList(words);
 		
 		setFinalPunctuationMark(words[words.length - 1]);
+		
+		return words.length;
 	}
 
 	private boolean checkCorrectness() {
@@ -164,13 +172,13 @@ public class SpeechRecognition {
 		
 		word = wordList.get(indexWordList);
 		if (word == "have" || word == "has" || word == "had") {
-			functionList.set(indexWordList, SpeechRecognitionFunction.firstAuxVerb);
-			wordIDList[indexWordList] = 0;
+			functionList[indexWordList] = SpeechRecognitionFunction.firstAuxVerb;
+			foundWordList[indexWordList] = null;
 			indexWordList++;
 			word = wordList.get(indexWordList); 
 			if (word == "been"){
-				functionList.set(indexWordList, SpeechRecognitionFunction.secondAuxVerb_be);
-				wordIDList[indexWordList] = 0;
+				functionList[indexWordList] = SpeechRecognitionFunction.secondAuxVerb_be;
+				foundWordList[indexWordList] = null;
 				indexWordList++;
 				isOK = pastParticipleOK(function);
 			}
@@ -180,8 +188,8 @@ public class SpeechRecognition {
 		else if (auxiliaryOK() != null)  {
 			word = wordList.get(indexWordList);
 			if (word == "be") {
-				functionList.set(indexWordList, SpeechRecognitionFunction.secondAuxVerb_be);
-				wordIDList[indexWordList] = 0;
+				functionList[indexWordList] = SpeechRecognitionFunction.secondAuxVerb_be;
+				foundWordList[indexWordList] = null;
 				indexWordList++;
 				isOK = pastParticipleOK(function);
 			}
@@ -206,8 +214,8 @@ public class SpeechRecognition {
 		if ( (aux == Auxiliary.have) || (aux == Auxiliary.has) || (aux == Auxiliary.had) )
 		{
 			if ( word == "been" ) {
-				functionList.set(indexWordList, SpeechRecognitionFunction.secondAuxVerb_be);
-				wordIDList[indexWordList] = 0;
+				functionList[indexWordList] = SpeechRecognitionFunction.secondAuxVerb_be;
+				foundWordList[indexWordList] = null;
 				indexWordList++;
 				isOK = pastParticipleOK(function);
 			}
@@ -219,8 +227,8 @@ public class SpeechRecognition {
 			 {
 				 if ( word == "be" )
 				 {
-					functionList.set(indexWordList, SpeechRecognitionFunction.secondAuxVerb_be);
-					wordIDList[indexWordList] = 0;
+					functionList[indexWordList] = SpeechRecognitionFunction.secondAuxVerb_be;
+					foundWordList[indexWordList] = null;
 					indexWordList++;
 					isOK = pastParticipleOK(function);
 				 }
@@ -244,8 +252,8 @@ public class SpeechRecognition {
 
 		word = wordList.get(indexWordList);
 		if (word == "the") {
-			functionList.set(indexWordList, function);
-			wordIDList[indexWordList] = 0;
+			functionList[indexWordList] = function;
+			foundWordList[indexWordList] = null;
 			indexWordList++;
 			isOK = nounOK(function);
 		}
@@ -259,15 +267,15 @@ public class SpeechRecognition {
 	private boolean wordOK(SpeechRecognitionFunction function, WordType type) {
 		boolean isOK = false;
 		String word;
+		Word foundWord;
 		
 		word = wordList.get(indexWordList);
-		
-		isOK = (allWords.checkExistsWord(word) == type);
+		foundWord = allWords.findAndGetWord(word);
+		isOK = (foundWord.getType() == type);
 		if (isOK) {
-			functionList.set(indexWordList, function);
-			kfcList.set(indexWordList, allWords.getKnowledgeFactCriterion());
-			allowedAsKnowledgeSubject[indexWordList] = allWords.isAllowedAsKnowledgeSubject();
-			wordIDList[indexWordList] = allWords.getWordID();
+			functionList[indexWordList] = function;
+			
+			foundWordList[indexWordList] = foundWord;
 			indexWordList++;
 		}
 		
@@ -319,8 +327,8 @@ public class SpeechRecognition {
 		default: isOK = false;
 		}
 		if (isOK) {
-			functionList.set(indexWordList, function);
-			wordIDList[indexWordList] = 0;
+			functionList[indexWordList] = function;
+			foundWordList[indexWordList] = null;
 			indexWordList++;
 		}
 		return isOK;
@@ -336,29 +344,29 @@ public class SpeechRecognition {
 		word = wordList.get(indexWordList);
 		
 		switch (word) {
-		case "will": functionList.set(indexWordList, SpeechRecognitionFunction.firstAuxVerb);
+		case "will": functionList[indexWordList] = SpeechRecognitionFunction.firstAuxVerb;
 				indexWordList++; return Auxiliary.will;
-		case "would": functionList.set(indexWordList, SpeechRecognitionFunction.firstAuxVerb);
+		case "would": functionList[indexWordList] = SpeechRecognitionFunction.firstAuxVerb;
 				indexWordList++; return Auxiliary.would;
-		case "can": functionList.set(indexWordList, SpeechRecognitionFunction.firstAuxVerb);
+		case "can": functionList[indexWordList] = SpeechRecognitionFunction.firstAuxVerb;
 				indexWordList++; return Auxiliary.can;
-		case "could": functionList.set(indexWordList, SpeechRecognitionFunction.firstAuxVerb);
+		case "could": functionList[indexWordList] = SpeechRecognitionFunction.firstAuxVerb;
 				indexWordList++; return Auxiliary.could;
-		case "do": functionList.set(indexWordList, SpeechRecognitionFunction.firstAuxVerb);
+		case "do": functionList[indexWordList] = SpeechRecognitionFunction.firstAuxVerb;
 				indexWordList++; return Auxiliary.do_;
-		case "does": functionList.set(indexWordList, SpeechRecognitionFunction.firstAuxVerb);
+		case "does": functionList[indexWordList] = SpeechRecognitionFunction.firstAuxVerb;
 				indexWordList++; return Auxiliary.does;
-		case "did": functionList.set(indexWordList, SpeechRecognitionFunction.firstAuxVerb);
+		case "did": functionList[indexWordList] = SpeechRecognitionFunction.firstAuxVerb;
 				indexWordList++; return Auxiliary.did;
-		case "have": functionList.set(indexWordList, SpeechRecognitionFunction.firstAuxVerb);
+		case "have": functionList[indexWordList] = SpeechRecognitionFunction.firstAuxVerb;
 				indexWordList++; return Auxiliary.have;
-		case "has": functionList.set(indexWordList, SpeechRecognitionFunction.firstAuxVerb);
+		case "has": functionList[indexWordList] = SpeechRecognitionFunction.firstAuxVerb;
 				indexWordList++; return Auxiliary.has;
-		case "had": functionList.set(indexWordList, SpeechRecognitionFunction.firstAuxVerb);
+		case "had": functionList[indexWordList] = SpeechRecognitionFunction.firstAuxVerb;
 				indexWordList++; return Auxiliary.had;
-		case "shall": functionList.set(indexWordList, SpeechRecognitionFunction.firstAuxVerb);
+		case "shall": functionList[indexWordList] = SpeechRecognitionFunction.firstAuxVerb;
 				indexWordList++; return Auxiliary.shall;
-		case "should": functionList.set(indexWordList, SpeechRecognitionFunction.firstAuxVerb);
+		case "should": functionList[indexWordList] = SpeechRecognitionFunction.firstAuxVerb;
 				indexWordList++; return Auxiliary.should;
 		}
 		return null;
@@ -373,13 +381,13 @@ public class SpeechRecognition {
 		if (beOK(SpeechRecognitionFunction.secondAuxVerb_goingto)) {
 			word = wordList.get(indexWordList);
 			if (word == "going") {
-				functionList.set(indexWordList, SpeechRecognitionFunction.secondAuxVerb_goingto);
-				wordIDList[indexWordList] = 0;
+				functionList[indexWordList] = SpeechRecognitionFunction.secondAuxVerb_goingto;
+				foundWordList[indexWordList] = null;
 				indexWordList++;
 				word = wordList.get(indexWordList);
 				if (word == "to") {
-					functionList.set(indexWordList, SpeechRecognitionFunction.secondAuxVerb_goingto);
-					wordIDList[indexWordList] = 0;
+					functionList[indexWordList] = SpeechRecognitionFunction.secondAuxVerb_goingto;
+					foundWordList[indexWordList] = null;
 					indexWordList++;
 					isOK = true;
 				}
@@ -415,8 +423,8 @@ public class SpeechRecognition {
 		
 		word = wordList.get(indexWordList);
 		if (word == "the") {
-			functionList.set(indexWordList, function);
-			wordIDList[indexWordList] = 0;
+			functionList[indexWordList] = function;
+			foundWordList[indexWordList] = null;
 			indexWordList++;
 			isOK = true;
 		}
