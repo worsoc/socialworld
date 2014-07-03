@@ -1,4 +1,5 @@
 package org.socialworld.knowledge;
+import org.socialworld.conversation.Word;
 
 
 public class KnowledgeFactPool {
@@ -22,10 +23,10 @@ public class KnowledgeFactPool {
 		return instance;
 	}
 	
-	public KnowledgeFact find(KnowledgeFactCriterion criterion, int valueWordID) {
+	public KnowledgeFact find(KnowledgeFactCriterion criterion, Word value) {
 		KnowledgeFact fact;
 		
-		fact = factListsByCriterion[criterion.getIndex()].find(valueWordID);
+		fact = factListsByCriterion[criterion.getIndex()].find(value);
 		
 		return fact;
 	}

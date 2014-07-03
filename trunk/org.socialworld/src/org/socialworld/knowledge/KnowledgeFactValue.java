@@ -1,9 +1,10 @@
 package org.socialworld.knowledge;
+import org.socialworld.conversation.Word;
 
 public class KnowledgeFactValue {
-	private int valueWordID;
+	private Word value;
 	
-	protected int getWordID() {
-		return valueWordID;
+	protected Word getWord() {
+		return value;
 	}
 }

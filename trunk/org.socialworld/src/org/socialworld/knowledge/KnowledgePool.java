@@ -1,5 +1,6 @@
 package org.socialworld.knowledge;
 import org.socialworld.conversation.SpeechRecognition;
+import org.socialworld.conversation.Word;
 
 public class KnowledgePool {
 
@@ -34,7 +35,7 @@ public class KnowledgePool {
 	}
 
 	public void addFactsFromSentence(String sentence, KnowledgeSource source) {
-		int subjectWordID;
+		Word subject;
 		KnowledgeFact fact;
 		
 		int countFacts = 0;
@@ -44,7 +45,7 @@ public class KnowledgePool {
 		speechRecognition.analyseSentence(sentence);
 		speechRecognition.resetIndexSearchCriterion();
 		
-		subjectWordID = speechRecognition.getSubject();
+		subject = speechRecognition.getSubject();
 		
 		do
 		{
@@ -52,7 +53,7 @@ public class KnowledgePool {
 			if (fact != null) {
 				countFacts++;
 				if (countFacts == 1)
-					knowledgeIndex = addNewKnowledge(subjectWordID, fact, source);
+					knowledgeIndex = addNewKnowledge(subject, fact, source);
 				else
 					addToKnowledge(knowledgeIndex, fact, source);
 				
@@ -94,13 +95,13 @@ public class KnowledgePool {
 		next_combine_index = next_combine_index % MAXIMUM_KNOWLEDGE_POOL_CAPACITY;
 	}
 	
-	private int addNewKnowledge(int subjectWordID, KnowledgeFact fact, KnowledgeSource source) {
+	private int addNewKnowledge(Word subject, KnowledgeFact fact, KnowledgeSource source) {
 		Knowledge knowledge;
 		int index;
 		
 		knowledge = new Knowledge();
 		
-		knowledge.setSubject(subjectWordID);
+		knowledge.setSubject(subject);
 		knowledge.addItem(fact, source);
 		
 		index = indexForNewEntry();
@@ -116,13 +117,13 @@ public class KnowledgePool {
 		}
 	}
 	
-	public int findSubject(int word) {
+	public int findSubject(Word word) {
 		int[] empty = {};
 		
 		return findSubject(word, empty);
 	}
 	
-	public int findSubject(int word, int[] butNotIndexs) {
+	public int findSubject(Word word, int[] butNotIndexs) {
 		int index;
 		int  foundIndex = -1;
 		int mostFrequent = 0;
@@ -177,16 +178,16 @@ public class KnowledgePool {
 	}
 	
 	
-	public KnowledgeFact getFact(KnowledgeFactCriterion criterion, int valueWordID, int[] butNotIndexs) {
+	public KnowledgeFact getFact(KnowledgeFactCriterion criterion, Word value, int[] butNotIndexs) {
 		
-		findFact( criterion,  valueWordID, butNotIndexs);
+		findFact( criterion,  value, butNotIndexs);
 		if (this.foundKnowledgeIndex >= 0 & this.foundFactIndex >= 0)
 			return getFact(this.foundKnowledgeIndex, this.foundFactIndex);
 		else
 			return null;
 	}
 	
-	private void findFact(KnowledgeFactCriterion criterion, int valueWordID, int[] butNotIndexs) {
+	private void findFact(KnowledgeFactCriterion criterion, Word value, int[] butNotIndexs) {
 		int factIndex = -1;
 		int index;
 		int  foundIndex = -1;
@@ -200,7 +201,7 @@ public class KnowledgePool {
 			}
 			
 			if (ignoreIndex == false) {
-				factIndex = knowledgeList[index].findFact(true, valueWordID);
+				factIndex = knowledgeList[index].findFact(true, value);
 				if (factIndex >= 0 )  
 					if (knowledgeList[index].getFact(factIndex).getCriterion() == criterion)	foundIndex = index;
 			}
