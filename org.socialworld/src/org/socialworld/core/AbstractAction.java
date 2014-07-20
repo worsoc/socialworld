@@ -31,14 +31,18 @@ public abstract class AbstractAction {
 	protected double intensity;
 	protected long duration;
 	protected long remainedDuration;
-	protected int done;
+	protected boolean done;
 	
 	public AbstractAction() {
 		super();
-		done = 0;
+		done = false;
 	}
 
-	public int isDone() {
+	public void setDone() {
+		done = true;
+	}
+	
+	public boolean isDone() {
 		return done;
 	}
 	
