@@ -8,6 +8,7 @@ package org.socialworld.attributes;
  * @author Mathias Sikos (tyloesand) 
  */
 public enum ActionType {
+	ignore,
 	touch, sleep, changeMove, kick, controlHandManually, spell,
-	useWeaponLeft, useWeaponRight, move, say, handleItem, listenTo, understand
+	useWeaponLeft, useWeaponRight, move, say, handleItem, hear
 }

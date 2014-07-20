@@ -11,6 +11,8 @@ package org.socialworld.attributes;
  * @author Mathias Sikos (tyloesand)
  */
 public enum ActionMode {
+	
+	
 	run, walk, jump,
 
 	sleepIntentioned, sleepCaused,
@@ -19,6 +21,8 @@ public enum ActionMode {
 
 	examineItem, takeItem, useItem, collectItem, switchItemToLeftHand, useTwoItems, dropItem,
 	
-	say, scream, whisper
+	say, scream, whisper, answer, ask,
+	
+	listenTo, understand
 
 }
