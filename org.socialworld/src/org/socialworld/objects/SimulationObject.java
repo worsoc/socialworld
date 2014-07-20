@@ -111,19 +111,20 @@ public abstract class SimulationObject extends Model {
 	public void doAction(Action action) {
 		ActionType type;
 		Event event;
-		int actionDone;
+		boolean actionDone;
 		
 		type = action.getType();
 
-		actionDone = doAction(type, action);
-		if (actionDone > 0) {
+		doAction(type, action);
+		actionDone = action.isDone();
+		if (actionDone) {
 			event = mapActionToEvent(action);
 			simulation.getEventMaster().addEvent(event);
 		}
 		
 	}
 
-	protected abstract int doAction(ActionType type, Action action);
+	protected abstract void doAction(ActionType type, Action action);
 	
 	/**
 	 * The method creates an event for a simulation object's action.
