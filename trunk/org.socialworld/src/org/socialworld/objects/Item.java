@@ -98,7 +98,6 @@ public class Item extends SimulationObject {
 	}
 
 	@Override
-	protected int doAction(final ActionType type, final Action action) {
-		return action.isDone();
+	protected void doAction(final ActionType type, final Action action) {
 	}
 }

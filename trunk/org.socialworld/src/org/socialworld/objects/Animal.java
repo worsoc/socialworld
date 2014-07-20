@@ -59,29 +59,27 @@ public class Animal extends SimulationObject {
 	 * with special implementation of the action.
 	 */
 	@Override
-	protected int doAction(final ActionType type, final Action action) {
+	protected void doAction(final ActionType type, final Action action) {
 
-		int actionDone = 0;
 		
 		switch (type) {
 		case sleep:
-			actionDone = sleep(action);
+			 sleep(action);
 			break;
 		case changeMove:
-			actionDone = changeMove(action);
+			 changeMove(action);
 			break;
 		case kick:
-			actionDone = kick(action);
+			 kick(action);
 			break;
 		case move:
-			actionDone = move(action);
+			 move(action);
 			break;
 		case say:
 			break;
 		default:
 			break;
 		}
-		return actionDone;
 	}
 
 	/**
@@ -89,9 +87,8 @@ public class Animal extends SimulationObject {
 	 * 
 	 * @param action
 	 */
-	protected int changeMove(final Action action) {
+	protected void changeMove(final Action action) {
 		this.move.setMode(action.getMode());
-		return action.isDone();
 	}
 
 	/**
@@ -99,9 +96,8 @@ public class Animal extends SimulationObject {
 	 * 
 	 * @param action
 	 */
-	protected int move(final Action action) {
+	protected void move(final Action action) {
 		action.lowerRemainedDuration(1000);
-		return action.isDone();
 	}
 
 	/**
@@ -109,8 +105,7 @@ public class Animal extends SimulationObject {
 	 * 
 	 * @param action
 	 */
-	protected int kick(final Action action) {
-		return action.isDone();
+	protected void kick(final Action action) {
 	}
 
 	/**
@@ -118,7 +113,7 @@ public class Animal extends SimulationObject {
 	 * 
 	 * @param action
 	 */
-	protected int sleep(final Action action) {
+	protected void sleep(final Action action) {
 		final ActionMode mode = action.getMode();
 
 		switch (mode) {
@@ -128,7 +123,6 @@ public class Animal extends SimulationObject {
 			break;
 		default:
 		}
-		return action.isDone();
 	}
 
 	/**

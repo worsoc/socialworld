@@ -9,7 +9,10 @@ import org.socialworld.knowledge.AcquaintancePool;
 import org.socialworld.knowledge.KnowledgePool;
 import org.socialworld.knowledge.KnowledgeSource;
 import org.socialworld.knowledge.KnowledgeSourceType;
+import org.socialworld.conversation.Talk;
 import org.socialworld.core.Action;
+import java.util.ArrayList;
+import java.util.ListIterator;
 
 /**
  * A human is described in most details. It is the most important simulation
@@ -28,10 +31,12 @@ import org.socialworld.core.Action;
 	protected KnowledgePool knowledge;
 	protected AcquaintancePool acquaintance;
 	
+	private ArrayList<Talk> talks;
 	private String lastSaidSentence;
 	
 	public Human() {
 		super();
+		talks = new ArrayList<Talk>();
 		
 	}
 
@@ -48,64 +53,64 @@ import org.socialworld.core.Action;
 	 * with special implementation of the action.
 	 */
 	@Override
-	protected int doAction(final ActionType type, final Action action) {
+	protected void doAction(final ActionType type, final Action action) {
 
-		int actionDone = 0;
 
 		switch (type) {
 		case touch:
-			actionDone = touch(action);
+			 touch(action);
 			break;
 		case sleep:
-			actionDone = sleep(action);
+			 sleep(action);
 			break;
 		case changeMove:
-			actionDone = changeMove(action);
+			 changeMove(action);
 			break;
 		case kick:
-			actionDone = kick(action);
+			 kick(action);
 			break;
 		case controlHandManually:
-			actionDone = controlHandManually(action);
+			 controlHandManually(action);
 			break;
 		case spell:
-			actionDone = spell(action);
+			 spell(action);
 			break;
 		case useWeaponLeft:
-			actionDone = useWeaponLeft(action);
+			 useWeaponLeft(action);
 			break;
 		case useWeaponRight:
-			actionDone = useWeaponRight(action);
+			 useWeaponRight(action);
 			break;
 		case move:
-			actionDone = move(action);
+			 move(action);
 			break;
 		case say:
-			actionDone = say(action);
+			 say(action);
 			break;
 		case handleItem:
-			actionDone = handleItem(action);
+			 handleItem(action);
 			break;
 		case listenTo:
-			actionDone = listenTo(action);
+			 listenTo(action);
+		case understand:
+			 understand(action);
 		default:
-			actionDone = super.doAction(type,  action);
+			 super.doAction(type,  action);
 			break;
 		}
-		return actionDone;
 	}
 
-	protected int handleItem(final Action action) {
-		return action.isDone();
+	protected void handleItem(final Action action) {
 
-	}
-
-	protected int say(final Action action) {
-		return action.isDone();
 
 	}
 
-	protected int useWeaponRight(final Action action) {
+	protected void say(final Action action) {
+
+
+	}
+
+	protected void useWeaponRight(final Action action) {
 		final SimulationObject rightHand = this.inventory.getRightHand();
 		if (rightHand != null ) 
 			if (rightHand instanceof Weapon){
@@ -116,11 +121,11 @@ import org.socialworld.core.Action;
 				final Item item = (Item) rightHand;
 				item.handle(action, this);
 			}
-		return action.isDone();
+
 		
 	}
 
-	protected int useWeaponLeft(final Action action) {
+	protected void useWeaponLeft(final Action action) {
 		final SimulationObject leftHand = this.inventory.getLeftHand();
 		if (leftHand != null ) 
 			if (leftHand instanceof Weapon){
@@ -131,49 +136,109 @@ import org.socialworld.core.Action;
 				final Item item = (Item) leftHand;
 				item.handle(action, this);
 			}
-		return action.isDone();
-	}
-
-	protected int spell(final Action action) {
-		return action.isDone();
 
 	}
 
-	protected int controlHandManually(final Action action) {
-		return action.isDone();
+	protected void spell(final Action action) {
+
 
 	}
 
-	protected int touch(final Action action) {
-		return action.isDone();
+	protected void controlHandManually(final Action action) {
+
 
 	}
 
-	protected int listenTo(final Action action) {
+	protected void touch(final Action action) {
+
+
+	}
+
+	protected void listenTo(final Action action) {
 		final SimulationObject target = action.getTarget();
+		Action actionUnderstand;
 		
-
 		if (target instanceof Human) {
 
 			final Human human = (Human) target;
 			String sentence;
-			KnowledgeSource source;
 			
 			sentence = human.getLastSaidSentence();
+			addSentence(sentence, false, human);
 			
+			actionUnderstand = new Action(action);
+			actionUnderstand.setType(ActionType.understand);
+			actionHandler.insertAction(actionUnderstand);
+		}
+		
+
+	}
+
+	protected void understand(final Action action) {
+		final Human human = (Human) action.getTarget();
+		KnowledgeSource source;
+		String sentence;
+
+		sentence = getSentence(human);
+		if (sentence != null) {
 			source = new KnowledgeSource();
 			source.setSourceType( KnowledgeSourceType.heardOf);
 			// get the acquaintance of target human (null if the there isn't an acquaintance of target human)
 			source.setOrigin(acquaintance.getAcquaintance(human));
-			
 			knowledge.addFactsFromSentence(sentence, source);
 		}
-		
-		return action.isDone();
-	}
 
+	}
+	
 	protected String getLastSaidSentence() {
 		return lastSaidSentence;
+	}
+	
+	protected void addSentence(String sentence, boolean asPlannedSentence, Human partner) {
+		ListIterator<Talk> iterator ;
+		Talk talk;
+		
+		iterator = talks.listIterator();
+		
+		if (partner == null) {
+			
+			if (asPlannedSentence)
+				talks.get(0).addAPlannedSentence(sentence);
+			else
+				talks.get(0).addPartnersSentence(sentence);
+		}
+		else while (iterator.hasNext()) {
+			talk = iterator.next();
+			if (talk.getPartner() == partner) {
+				if (asPlannedSentence)
+					talk.addAPlannedSentence(sentence);
+				else
+					talk.addPartnersSentence(sentence);
+				break;	
+			}
+		}
+	}
+	
+	protected String getSentence(Human partner) {
+		ListIterator<Talk> iterator ;
+		Talk talk;
+		String sentence = null;
+		
+		iterator = talks.listIterator();
+		
+		if (partner == null) {
+			
+			sentence = talks.get(0).getPartnersSentence();
+		}
+		else while (iterator.hasNext()) {
+			talk = iterator.next();
+			if (talk.getPartner() == partner) {
+				sentence =	talk.getPartnersSentence();
+				if (sentence == null) iterator.remove();
+				break;
+			}
+		}
+		return sentence;
 	}
 	
 }
