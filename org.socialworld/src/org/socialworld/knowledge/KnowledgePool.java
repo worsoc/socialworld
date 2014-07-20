@@ -63,6 +63,11 @@ public class KnowledgePool {
 		
 	}
 	
+	public String getAnswerForQuestion(String question){
+		// TODO
+		return null;
+	}
+	
 	public void combine() {
 		Knowledge knowledgeA;
 		Knowledge knowledgeB;
