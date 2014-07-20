@@ -4,12 +4,15 @@
 package org.socialworld.objects;
 
 import org.socialworld.attributes.ActionType;
+import org.socialworld.attributes.ActionMode;
 import org.socialworld.attributes.Inventory;
 import org.socialworld.knowledge.AcquaintancePool;
 import org.socialworld.knowledge.KnowledgePool;
 import org.socialworld.knowledge.KnowledgeSource;
 import org.socialworld.knowledge.KnowledgeSourceType;
 import org.socialworld.conversation.Talk;
+import org.socialworld.conversation.TalkSentenceType;
+import org.socialworld.conversation.PunctuationMark;
 import org.socialworld.core.Action;
 import java.util.ArrayList;
 import java.util.ListIterator;
@@ -90,10 +93,8 @@ import java.util.ListIterator;
 		case handleItem:
 			 handleItem(action);
 			break;
-		case listenTo:
-			 listenTo(action);
-		case understand:
-			 understand(action);
+		case hear:
+			 hear(action);
 		default:
 			 super.doAction(type,  action);
 			break;
@@ -105,10 +106,6 @@ import java.util.ListIterator;
 
 	}
 
-	protected void say(final Action action) {
-
-
-	}
 
 	protected void useWeaponRight(final Action action) {
 		final SimulationObject rightHand = this.inventory.getRightHand();
@@ -154,39 +151,88 @@ import java.util.ListIterator;
 
 	}
 
-	protected void listenTo(final Action action) {
-		final SimulationObject target = action.getTarget();
-		Action actionUnderstand;
-		
-		if (target instanceof Human) {
+	protected void say(final Action action) {
+		ActionMode mode = action.getMode();
+		Action followingAction = null;
+		final Human human = (Human) action.getTarget();
+		String question;
 
-			final Human human = (Human) target;
-			String sentence;
+		switch (mode) {
+			case answer:
+				String answer;
 			
-			sentence = human.getLastSaidSentence();
-			addSentence(sentence, false, human);
+				question = getSentence(human, TalkSentenceType.partnersQuestion);
+				if (question != null) {
+					followingAction = new Action(action);
+					// TODO
+					answer = knowledge.getAnswerForQuestion(question);
+					addSentence(answer, TalkSentenceType.myPlannedSentence, human);
+					// TODO the mode depends on intensity
+					followingAction.setMode(ActionMode.say);
+				}
+			case ask:
 			
-			actionUnderstand = new Action(action);
-			actionUnderstand.setType(ActionType.understand);
-			actionHandler.insertAction(actionUnderstand);
+				question = getSentence(human, TalkSentenceType.myPlannedQuestion);
+				if (question != null) {
+				}
+			default:
 		}
+		actionHandler.insertAction(followingAction);
+
+	}
+	
+	protected void hear(final Action action) {
+		ActionMode mode = action.getMode();
+		
+		switch (mode) {
+			case  listenTo:
+				final SimulationObject target = action.getTarget();
+				Action followingAction;
+				
+				if (target instanceof Human) {
+
+					final Human human = (Human) target;
+					String sentence;
+					PunctuationMark punctuationMark;
+					
+					sentence = human.getLastSaidSentence();
+					punctuationMark = addPartnersSentence(sentence, human);
+					
+					followingAction = new Action(action);
+					switch (punctuationMark) {
+						case dot:
+							followingAction.setMode(ActionMode.understand);
+						case question:
+							followingAction.setType(ActionType.say);
+							followingAction.setMode(ActionMode.answer);
+						default:
+							followingAction.setType(ActionType.ignore);
+
+					}
+					actionHandler.insertAction(followingAction);
+				}
+				
+			case understand:
+				final Human human = (Human) action.getTarget();
+				KnowledgeSource source;
+				String sentence;
+
+				sentence = getSentence(human, TalkSentenceType.partnersSentence);
+				if (sentence != null) {
+					source = new KnowledgeSource();
+					source.setSourceType( KnowledgeSourceType.heardOf);
+					// get the acquaintance of target human (null if the there isn't an acquaintance of target human)
+					source.setOrigin(acquaintance.getAcquaintance(human));
+					knowledge.addFactsFromSentence(sentence, source);
+				}
+			default:
+		}
+		
 		
 
 	}
 
 	protected void understand(final Action action) {
-		final Human human = (Human) action.getTarget();
-		KnowledgeSource source;
-		String sentence;
-
-		sentence = getSentence(human);
-		if (sentence != null) {
-			source = new KnowledgeSource();
-			source.setSourceType( KnowledgeSourceType.heardOf);
-			// get the acquaintance of target human (null if the there isn't an acquaintance of target human)
-			source.setOrigin(acquaintance.getAcquaintance(human));
-			knowledge.addFactsFromSentence(sentence, source);
-		}
 
 	}
 	
@@ -194,51 +240,65 @@ import java.util.ListIterator;
 		return lastSaidSentence;
 	}
 	
-	protected void addSentence(String sentence, boolean asPlannedSentence, Human partner) {
+	protected PunctuationMark addPartnersSentence(String sentence, Human partner) {
+		PunctuationMark returnValue = null;
+		TalkSentenceType type;
+		
+		returnValue = talks.get(0).getPunctuationMark(sentence);
+		
+		switch (returnValue) {
+		case dot: 
+			type = TalkSentenceType.partnersSentence;
+		case question: 
+			type = TalkSentenceType.partnersQuestion;
+		default:
+			type = TalkSentenceType.partnersUnknownType;
+		}
+		addSentence(sentence, type, partner);
+		
+		return returnValue;
+	}
+
+	protected void addSentence(String sentence, TalkSentenceType type, Human partner) {
 		ListIterator<Talk> iterator ;
 		Talk talk;
 		
 		iterator = talks.listIterator();
 		
+		
 		if (partner == null) {
 			
-			if (asPlannedSentence)
-				talks.get(0).addAPlannedSentence(sentence);
-			else
-				talks.get(0).addPartnersSentence(sentence);
+				talks.get(0).addSentence(sentence, type);
 		}
 		else while (iterator.hasNext()) {
 			talk = iterator.next();
 			if (talk.getPartner() == partner) {
-				if (asPlannedSentence)
-					talk.addAPlannedSentence(sentence);
-				else
-					talk.addPartnersSentence(sentence);
-				break;	
+				talk.addSentence(sentence, type);
 			}
 		}
 	}
 	
-	protected String getSentence(Human partner) {
+	protected String getSentence(Human partner, TalkSentenceType type) {
 		ListIterator<Talk> iterator ;
 		Talk talk;
 		String sentence = null;
 		
 		iterator = talks.listIterator();
 		
-		if (partner == null) {
+		if (partner == null) 
 			
-			sentence = talks.get(0).getPartnersSentence();
-		}
+			sentence = talks.get(0).getSentence(type);		
+		
 		else while (iterator.hasNext()) {
 			talk = iterator.next();
 			if (talk.getPartner() == partner) {
-				sentence =	talk.getPartnersSentence();
+				sentence = talk.getSentence(type);		
 				if (sentence == null) iterator.remove();
 				break;
 			}
 		}
 		return sentence;
 	}
+
 	
 }
