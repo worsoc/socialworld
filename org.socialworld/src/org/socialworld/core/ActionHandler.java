@@ -11,6 +11,7 @@ import java.util.ListIterator;
 
 import org.apache.log4j.Logger;
 import org.socialworld.objects.SimulationObject;
+import org.socialworld.attributes.ActionType;
 
 /**
  * Manages the actions of an {@link SimulationObject}.
@@ -151,6 +152,7 @@ public class ActionHandler  {
 		int currentIndex = 0;
 		
 		if (newAction == null ) return;
+		if (newAction.type == ActionType.ignore ) return;
 		
 		
 		minTimeInMilliseconds = newAction.getMinTime().getTotalMilliseconds();
