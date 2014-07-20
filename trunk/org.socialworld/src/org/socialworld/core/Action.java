@@ -49,6 +49,19 @@ public class Action extends AbstractAction {
 		this.linkedAction = null;
 	}
 	
+	public Action(Action original) {
+		this.type = original.type;
+		this.mode = original.mode;
+		this.target = original.target;
+		this.direction = original.direction;
+		this.intensity =original.intensity;
+		this.minTime = original.minTime;
+		this.maxTime = original.maxTime;
+		this.priority = original.priority;
+		this.duration = original.duration;
+	}
+	
+	
 	/**
 	 * The method decrements the attribute remainedDuration. That means, an
 	 * action needs less time to complete.
@@ -58,7 +71,7 @@ public class Action extends AbstractAction {
 	public void lowerRemainedDuration(final long decrement) {
 		this.remainedDuration -= decrement;
 		
-		if (this.remainedDuration <= 0) done = 1;
+		if (this.remainedDuration <= 0) done = true;
 	}
 
 	/**
