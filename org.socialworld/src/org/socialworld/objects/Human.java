@@ -10,6 +10,7 @@ import org.socialworld.knowledge.AcquaintancePool;
 import org.socialworld.knowledge.KnowledgePool;
 import org.socialworld.knowledge.KnowledgeSource;
 import org.socialworld.knowledge.KnowledgeSourceType;
+import org.socialworld.knowledge.Answer;
 import org.socialworld.conversation.Talk;
 import org.socialworld.conversation.TalkSentenceType;
 import org.socialworld.conversation.PunctuationMark;
@@ -156,17 +157,17 @@ import java.util.ListIterator;
 		Action followingAction = null;
 		final Human human = (Human) action.getTarget();
 		String question;
-
+		
 		switch (mode) {
 			case answer:
-				String answer;
+				Answer answer;
 			
 				question = getSentence(human, TalkSentenceType.partnersQuestion);
 				if (question != null) {
 					followingAction = new Action(action);
 					// TODO
 					answer = knowledge.getAnswerForQuestion(question);
-					addSentence(answer, TalkSentenceType.myPlannedSentence, human);
+					addAnswer(answer,  human);
 					// TODO the mode depends on intensity
 					followingAction.setMode(ActionMode.say);
 				}
@@ -259,23 +260,23 @@ import java.util.ListIterator;
 		return returnValue;
 	}
 
+	protected void addAnswer(Answer answer,  Human partner) {
+		
+		Talk talk;
+		String sentence;
+		
+		talk = getTalk(partner);
+		
+		sentence = talk.makeAnswerSentence(answer);
+		talk.addSentence(sentence, TalkSentenceType.myPlannedSentence);
+	}
+
 	protected void addSentence(String sentence, TalkSentenceType type, Human partner) {
-		ListIterator<Talk> iterator ;
 		Talk talk;
 		
-		iterator = talks.listIterator();
+		talk = getTalk(partner);
 		
-		
-		if (partner == null) {
-			
-				talks.get(0).addSentence(sentence, type);
-		}
-		else while (iterator.hasNext()) {
-			talk = iterator.next();
-			if (talk.getPartner() == partner) {
-				talk.addSentence(sentence, type);
-			}
-		}
+		talk.addSentence(sentence, type);
 	}
 	
 	protected String getSentence(Human partner, TalkSentenceType type) {
@@ -300,5 +301,23 @@ import java.util.ListIterator;
 		return sentence;
 	}
 
-	
+	private Talk getTalk(Human partner) {
+		ListIterator<Talk> iterator ;
+		Talk talk;
+		
+		iterator = talks.listIterator();
+		
+		
+		if (partner == null) {
+			
+				return talks.get(0);
+		}
+		else while (iterator.hasNext()) {
+			talk = iterator.next();
+			if (talk.getPartner() == partner) {
+				return talk;
+			}
+		}
+		return  talks.get(0);
+	}
 }
