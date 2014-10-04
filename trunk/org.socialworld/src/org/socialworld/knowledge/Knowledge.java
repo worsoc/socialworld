@@ -93,44 +93,49 @@ public class Knowledge {
 			return null;
 	}
 	
-	
-	
-	protected int findFact(boolean trueFindValue_falseFindCriterion, Word wordValue) {
-		int[] empty = {};
-		
-		return findFact(trueFindValue_falseFindCriterion, wordValue, empty);
-	}
-	
-	
-	protected int findFact(boolean trueFindValue_falseFindCriterion, Word wordValue, int[] butNotIndexs) {
+	protected int[] findFactsForCriterion(KnowledgeFactCriterion criterion) {
+		int result_tmp[] = new int[MAXIMUM_KNOWLEDGE_CAPACITY];
+		int result[];
+		int count = 0;
 		int index;
-		int  foundIndex = -1;
-		int mostFrequent = 0;
-		boolean ignoreIndex = false;
 		
 		for (index=0;index < MAXIMUM_KNOWLEDGE_CAPACITY; index++) {
-			if ( ( trueFindValue_falseFindCriterion && facts[index].getValue().getWord() == wordValue) ||
-				 ( !trueFindValue_falseFindCriterion && facts[index].getCriterion().getWordID() == wordValue.getWordID()) )	{
-				if (itemAccessCount[index] > mostFrequent) {
+			if (   facts[index].getCriterion() == criterion) 	{
 					
-					ignoreIndex = false;
-					for(int i=0; i < butNotIndexs.length; i++) {
-						if (index == butNotIndexs[i]) ignoreIndex = true;
-					}
-					
-					if (ignoreIndex == false) {
-						foundIndex = index;
-						mostFrequent = itemAccessCount[index];
-
-					}
-				}
+				result_tmp[count] = index;
+				count++;
 			}
 		}
-
-		return foundIndex;
 		
+		result = new int[ count];
+		for (index = 0; index < count; index++) {
+			result[index] = result_tmp[index];
+		}
+		return result;
 	}
+
 	
+	protected int[] findFactsForValue(Word value) {
+		int result_tmp[] = new int[MAXIMUM_KNOWLEDGE_CAPACITY];
+		int result[];
+		int count = 0;
+		int index;
+		
+		for (index=0;index < MAXIMUM_KNOWLEDGE_CAPACITY; index++) {
+			if (   facts[index].getValue().getWord() == value) 	{
+					
+				result_tmp[count] = index;
+				count++;
+			}
+		}
+		
+		result = new int[ count];
+		for (index = 0; index < count; index++) {
+			result[index] = result_tmp[index];
+		}
+		return result;
+	}
+
 	
 	protected void removeItem(int index) {
 		if (this.itemIsValid[index]) {
