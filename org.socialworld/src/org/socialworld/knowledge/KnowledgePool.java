@@ -17,8 +17,6 @@ public class KnowledgePool {
 	
 	private double allowCombinePercent = 0.75;   // between 0 and 1 (0% - 100%)
 	
-	private int foundKnowledgeIndex;
-	private int foundFactIndex;
 
 	private SpeechRecognition speechRecognition;
 	
@@ -63,9 +61,54 @@ public class KnowledgePool {
 		
 	}
 	
-	public String getAnswerForQuestion(String question){
-		// TODO
-		return null;
+	public Answer getAnswerForQuestion(String question){
+		Word subject;
+		int indexesForSubject[];
+		int indexesForCriterion[];
+		int countKnowledges = 0;
+		int indexKnowledge;
+		int countFacts = 0;
+		int indexFact;
+		KnowledgeFact fact;
+		KnowledgeSource source;
+		Knowledge knowledge;
+		KnowledgeFactCriterion criterion = null;
+		
+		Answer answer;
+		boolean withAnswer = false;
+		
+		speechRecognition.analyseSentence(question);
+		speechRecognition.resetIndexSearchCriterion();
+
+		subject = speechRecognition.getSubject();
+		criterion = speechRecognition.getCriterion();
+		
+		indexesForSubject = findAllKnowledgesForSubject(subject);
+		countKnowledges = indexesForSubject.length;
+		
+		answer = new Answer();
+		
+		for (indexKnowledge = 0;indexKnowledge < countKnowledges; indexKnowledge++) {
+			
+			knowledge = getKnowledge(indexesForSubject[indexKnowledge]);
+			indexesForCriterion = knowledge.findFactsForCriterion(criterion);
+			countFacts = indexesForCriterion.length;
+			
+			if (countFacts > 0) { 
+				answer.setSubject(subject);
+				withAnswer = true;
+			}
+			
+			for (indexFact = 0;indexFact < countFacts; indexKnowledge++) {
+				fact = knowledge.getFact(indexFact);
+				source = knowledge.getSource(indexFact);
+				
+				answer.addItem(fact, source);
+			}
+		}
+
+		if (withAnswer) return answer;
+		else return null;
 	}
 	
 	public void combine() {
@@ -122,39 +165,54 @@ public class KnowledgePool {
 		}
 	}
 	
-	public int findSubject(Word word) {
-		int[] empty = {};
-		
-		return findSubject(word, empty);
-	}
-	
-	public int findSubject(Word word, int[] butNotIndexs) {
+	public int findMostFrequentKnowledgeForSubject(Word word) {
 		int index;
 		int  foundIndex = -1;
 		int mostFrequent = 0;
-		boolean ignoreIndex = false;
 		
 		for (index=0;index < MAXIMUM_KNOWLEDGE_POOL_CAPACITY; index++) {
 			if (knowledgeList[index].getSubject() == word) {
 				if (accessCount[index] > mostFrequent) {
 					
-					ignoreIndex = false;
-					for(int i=0; i < butNotIndexs.length; i++) {
-						if (index == butNotIndexs[i]) ignoreIndex = true;
-					}
-					
-					if (ignoreIndex == false) {
 						foundIndex = index;
 						mostFrequent = accessCount[index];
 
-					}
 				}
 			}
 		}
-
+		
 		return foundIndex;
+	}
+	
+	public int[] findAllKnowledgesForSubject(Word word) {
+		int result_tmp[] = new int[MAXIMUM_KNOWLEDGE_POOL_CAPACITY];
+		int result[];
+		int count = 0;
+		int index;
+		
+		
+		for (index=0;index < MAXIMUM_KNOWLEDGE_POOL_CAPACITY; index++) {
+			if (  knowledgeList[index].getSubject() == word) 	{
+					
+				result_tmp[count] = index;
+				count++;
+			}
+		}
+
+
+
+		result = new int[ count];
+		for (index = 0; index < count; index++) {
+			result[index] = result_tmp[index];
+		}
+		return result;
+
+		
 		
 	}
+	
+	
+	
 	
 	public Knowledge getKnowledge(int index) {
 		if ( index >= 0 & index < MAXIMUM_KNOWLEDGE_POOL_CAPACITY) {
@@ -183,39 +241,7 @@ public class KnowledgePool {
 	}
 	
 	
-	public KnowledgeFact getFact(KnowledgeFactCriterion criterion, Word value, int[] butNotIndexs) {
-		
-		findFact( criterion,  value, butNotIndexs);
-		if (this.foundKnowledgeIndex >= 0 & this.foundFactIndex >= 0)
-			return getFact(this.foundKnowledgeIndex, this.foundFactIndex);
-		else
-			return null;
-	}
 	
-	private void findFact(KnowledgeFactCriterion criterion, Word value, int[] butNotIndexs) {
-		int factIndex = -1;
-		int index;
-		int  foundIndex = -1;
-		boolean ignoreIndex = false;
-		
-		for (index=0; index < MAXIMUM_KNOWLEDGE_POOL_CAPACITY; index++) {
-			
-			ignoreIndex = false;
-			for (int i=0; i < butNotIndexs.length; i++) {
-				if (index == butNotIndexs[i]) ignoreIndex = true;
-			}
-			
-			if (ignoreIndex == false) {
-				factIndex = knowledgeList[index].findFact(true, value);
-				if (factIndex >= 0 )  
-					if (knowledgeList[index].getFact(factIndex).getCriterion() == criterion)	foundIndex = index;
-			}
-		}
-
-		foundKnowledgeIndex = foundIndex;
-		foundFactIndex = factIndex;
-		
-	}
 	
 
 	
