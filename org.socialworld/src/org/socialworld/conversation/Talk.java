@@ -1,9 +1,12 @@
 package org.socialworld.conversation;
+import org.socialworld.knowledge.KnowledgeFactCriterion;
+import org.socialworld.knowledge.Answer;
 import org.socialworld.objects.Human;
 import java.util.ArrayList;
 
 public class Talk {
 	private Human partner;
+	private SentenceMaker sentenceMaker;
 	private ArrayList<String> partnersSentences;
 	private ArrayList<String> partnersQuestions;
 	private ArrayList<String> myPlannedSentences;
@@ -16,6 +19,23 @@ public class Talk {
 		myPlannedQuestions = new ArrayList<String>();
 	}
 	
+	public String makeAnswerSentence(Answer answer) {
+		String sentence;
+		
+		Word subject;
+		KnowledgeFactCriterion criterion;
+		Word value;
+		
+		
+	// TODO
+		subject = answer.getAnswerSubject();
+		criterion = answer.getAnswerCriterion(0);
+		value = answer.getAnswerValue(0);
+		
+		sentence = sentenceMaker.getStatementSentenceForFact(subject, criterion, value);
+		
+		return sentence;
+	}
 	
 	public void addSentence(String sentence, TalkSentenceType type) {
 		switch (type) {
