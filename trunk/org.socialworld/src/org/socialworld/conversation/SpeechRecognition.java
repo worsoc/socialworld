@@ -66,38 +66,37 @@ public class SpeechRecognition {
 		return word;
 	}
 	
-	public KnowledgeFact getNextFact() {
-		KnowledgeFact fact = null;
+	public KnowledgeFactCriterion getCriterion() {
 		KnowledgeFactCriterion criterion = null;
 		KnowledgeFactCriterion tmpCriterion = null;
-		SpeechRecognitionFunction function = null;
-		
-		Word word = null;
-		
-		boolean found = false;
-		
 		for (int index = startSearchForCriterion; index < wordList.size(); index++) {
 			tmpCriterion = foundWordList[index].getKnowledgeFactCriterion();
 			if (tmpCriterion != null) {
 				criterion = tmpCriterion;
-				function = functionList[index];
-				
-				found = true;
-				startSearchForCriterion = index + 1;
-				index = wordList.size();
+				indexWordList = index;
+				break;
 			}
 		}
+		return criterion;
+	}
+	
+	public KnowledgeFact getNextFact() {
+		KnowledgeFact fact = null;
+		KnowledgeFactCriterion criterion = null;
+		SpeechRecognitionFunction function = null;
+		Word word = null;
 		
-		if (found) {
-			found = false;
+		criterion = getCriterion();
+		
+		if (criterion != null) {
+			function = functionList[indexWordList];
 			for (int index = 0; index < wordList.size(); index++) {
 				if (functionList[index] == function) {
 					word = foundWordList[index];
-					found = true;
-					index = wordList.size();
+					break;
 				}
 			}
-			fact = KnowledgeFactPool.getInstance().find( criterion, word);
+			if (word != null)	fact = KnowledgeFactPool.getInstance().find( criterion, word);
 		}
 		
 		return fact;
