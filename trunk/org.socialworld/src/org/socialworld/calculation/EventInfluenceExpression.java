@@ -3,7 +3,6 @@
  */
 package org.socialworld.calculation;
 
-import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.AttributeArray;
 
 /**
@@ -80,8 +79,8 @@ public class EventInfluenceExpression extends Expression {
 		
 		result += 0.5;
 
-		if (result > Attribute.ATTRIBUTE_RANGE)
-			return Attribute.ATTRIBUTE_RANGE;
+		if (result > AttributeArray.ATTRIBUTE_RANGE)
+			return AttributeArray.ATTRIBUTE_RANGE;
 		if (result < 0)
 			return 0;
 		

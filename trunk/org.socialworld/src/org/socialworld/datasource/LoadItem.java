@@ -32,4 +32,8 @@ public class LoadItem extends LoadSimulationObjects {
 		return createdItem;
 	}
 
+	protected void selectAllForID(int ObjectID){
+		
+	}
+
 }

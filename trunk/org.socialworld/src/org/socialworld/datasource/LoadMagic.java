@@ -32,4 +32,8 @@ public class LoadMagic extends LoadSimulationObjects {
 		return createdMagic;
 	}
 
+	protected void selectAllForID(int ObjectID){
+		
+	}
+
 }

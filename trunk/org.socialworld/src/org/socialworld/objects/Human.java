@@ -3,10 +3,13 @@
  */
 package org.socialworld.objects;
 
+import org.socialworld.attributes.AttributeArray;
 import org.socialworld.attributes.ActionType;
 import org.socialworld.attributes.ActionMode;
 import org.socialworld.attributes.Inventory;
+import org.socialworld.knowledge.AcquaintanceAttribute;
 import org.socialworld.knowledge.AcquaintancePool;
+import org.socialworld.knowledge.Acquaintance;
 import org.socialworld.knowledge.KnowledgePool;
 import org.socialworld.knowledge.KnowledgeSource;
 import org.socialworld.knowledge.KnowledgeSourceType;
@@ -165,8 +168,8 @@ import java.util.ListIterator;
 				question = getSentence(human, TalkSentenceType.partnersQuestion);
 				if (question != null) {
 					followingAction = new Action(action);
-					// TODO
 					answer = knowledge.getAnswerForQuestion(question);
+					manipulateAnswer(answer, human);
 					addAnswer(answer,  human);
 					// TODO the mode depends on intensity
 					followingAction.setMode(ActionMode.say);
@@ -301,6 +304,21 @@ import java.util.ListIterator;
 		return sentence;
 	}
 
+	private void manipulateAnswer(Answer answer, Human partner) {
+		
+		Acquaintance acquaintance;
+		acquaintance = this.acquaintance.getAcquaintance(partner);
+		
+		// TODO
+		// more complex, please
+		// here only an example for an easy decision
+		if (acquaintance.isAttributeValueLessThan(AcquaintanceAttribute.sympathy, AttributeArray.VALUE_MIDDLE) ) 
+			answer.reduceToFactWithMinAccessCount();
+		else if (acquaintance.isAttributeValueGreaterThan(AcquaintanceAttribute.sympathy, AttributeArray.VALUE_MIDDLE) ) 
+			answer.sortBySource();
+		else answer.reduceToFactWithMaxAccessCount();
+	}
+	
 	private Talk getTalk(Human partner) {
 		ListIterator<Talk> iterator ;
 		Talk talk;

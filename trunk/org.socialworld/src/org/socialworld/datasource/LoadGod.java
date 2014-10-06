@@ -1,5 +1,11 @@
 package org.socialworld.datasource;
 
+/*import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;*/
+import java.sql.*;
+
 import org.socialworld.objects.God;
 import org.socialworld.objects.WriteAccessToSimulationObject;
 
@@ -32,4 +38,18 @@ public class LoadGod extends LoadSimulationObjects {
 		return createdGod;
 	}
 
+	protected void selectAllForID(int ObjectID){
+		
+	}
+	
+	public void createTable() throws Exception {
+		Connection  connection;
+		Class.forName("org.mariadb.jdbc.Driver");
+		connection = DriverManager.getConnection("jdbc:mariadb://localhost:3306/test1", "root", "Aragorn");
+		Statement stmt;
+		stmt = connection.createStatement();
+		stmt.executeUpdate("CREATE TABLE a (id int not null primary key, value varchar(20))");
+		stmt.close();
+		connection.close();
+	}
 }

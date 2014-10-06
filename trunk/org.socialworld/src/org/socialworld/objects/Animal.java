@@ -5,6 +5,7 @@ package org.socialworld.objects;
 
 import org.socialworld.attributes.ActionMode;
 import org.socialworld.attributes.ActionType;
+import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.attributes.Move;
 import org.socialworld.core.Action;
@@ -31,8 +32,8 @@ public class Animal extends SimulationObject {
 	
 	public Animal() {
 		super();
-		attributes = new AttributeArray();
-		this.attributeCalculator = new AttributeCalculator();
+		attributes = new AttributeArray(Attribute.NUMBER_OF_ATTRIBUTES);
+		this.attributeCalculator = new AttributeCalculator(Attribute.NUMBER_OF_ATTRIBUTES);
 	}
 
 
@@ -51,7 +52,7 @@ public class Animal extends SimulationObject {
 	}
 	
 	public AttributeCalculatorMatrix getMatrix() {
-		return new AttributeCalculatorMatrix(attributeCalculatorMatrix);
+		return new AttributeCalculatorMatrix(attributeCalculatorMatrix, Attribute.NUMBER_OF_ATTRIBUTES);
 	}
 	
 	/**
