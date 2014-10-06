@@ -14,12 +14,18 @@ public class Knowledge {
 	private boolean itemIsValid[];
 	private int validItemCount;
 	
+	private int itemCount = 0;
+	
 	public Knowledge() {
 		facts = new KnowledgeFact[MAXIMUM_KNOWLEDGE_CAPACITY];
 		source = new KnowledgeSource[MAXIMUM_KNOWLEDGE_CAPACITY];
 		
 		itemAccessCount = new int[MAXIMUM_KNOWLEDGE_CAPACITY];
 		itemIsValid = new boolean[MAXIMUM_KNOWLEDGE_CAPACITY];
+	}
+	
+	protected int count() {
+		return itemCount;
 	}
 	
 	protected int compareTo(Knowledge knowledgeB) {
@@ -100,11 +106,12 @@ public class Knowledge {
 		int index;
 		
 		for (index=0;index < MAXIMUM_KNOWLEDGE_CAPACITY; index++) {
-			if (   facts[index].getCriterion() == criterion) 	{
-					
-				result_tmp[count] = index;
-				count++;
-			}
+			if (itemIsValid[index]) 
+				if (   facts[index].getCriterion() == criterion) 	{
+						
+					result_tmp[count] = index;
+					count++;
+				}
 		}
 		
 		result = new int[ count];
@@ -122,11 +129,12 @@ public class Knowledge {
 		int index;
 		
 		for (index=0;index < MAXIMUM_KNOWLEDGE_CAPACITY; index++) {
-			if (   facts[index].getValue().getWord() == value) 	{
-					
-				result_tmp[count] = index;
-				count++;
-			}
+			if (itemIsValid[index]) 
+				if (   facts[index].getValue().getWord() == value) 	{
+						
+					result_tmp[count] = index;
+					count++;
+				}
 		}
 		
 		result = new int[ count];
@@ -138,6 +146,9 @@ public class Knowledge {
 
 	
 	protected void removeItem(int index) {
+		
+		if (index == itemCount-1) itemCount--;
+		
 		if (this.itemIsValid[index]) {
 			this.itemIsValid[index] = false;
 			this.itemAccessCount[index] = 0;
@@ -148,7 +159,9 @@ public class Knowledge {
 	protected void addItem(KnowledgeFact fact, KnowledgeSource source) {
 		int 	replacableIndex;
 		
-		replacableIndex = getIndex();
+		replacableIndex = getReplacableIndex();
+		
+		if (replacableIndex  == itemCount) itemCount++;
 		
 		this.facts[replacableIndex] = fact;
 		this.source[replacableIndex] = source;
@@ -163,15 +176,61 @@ public class Knowledge {
 		
 	}
 	
-	private int getIndex() {
+	protected int getIndexForValidWithMaxAccessCount() {
+		int index;
+		int result;
+		
+		result = getIndexForFirstValid();
+		if (result == -1) return -1;
+	
+		for (index = result + 1; index < itemCount; index++) {
+			if (itemIsValid[index] == true) {
+			 if (itemAccessCount[result] < itemAccessCount[index]) 	result = index;
+			}
+		}
+		return result;
+	}
+	
+	protected int getIndexForValidWithMinAccessCount() {
+		int index;
+		int result;
+	
+		result = getIndexForFirstValid();
+		if (result == -1) return -1;
+
+		for (index = result + 1; index < itemCount; index++) {
+			if (itemIsValid[index] == true) {
+			 if (itemAccessCount[result] > itemAccessCount[index]) 	result = index;
+			}
+		}
+		return result;
+	}
+
+	protected int getIndexForFirstValid() {
+		int index;
+	
+		for (index = 0; index < itemCount; index++) {
+			if (itemIsValid[index] == true)			  	return index;
+		}
+		return -1;
+		
+	}
+	
+	private int getReplacableIndex() {
+		int count;
 		int index;
 		int i;
 		
+		if (itemCount == MAXIMUM_KNOWLEDGE_CAPACITY )
+			count = itemCount;		
+		else
+			count = itemCount + 1;
+		
 		index = 0;
-		for (i=0; i < MAXIMUM_KNOWLEDGE_CAPACITY; i++) {
+		for (i=0; i < count; i++) {
 			if (itemIsValid[i] == false) {
 				index = i;
-				i = MAXIMUM_KNOWLEDGE_CAPACITY;
+				return index;
 			}
 			else if (itemAccessCount[i] < itemAccessCount[index]) 	index = i;
 			

@@ -3,7 +3,6 @@
  */
 package org.socialworld.calculation;
 
-import org.socialworld.attributes.Attribute;
 
 /**
  *  An attribute calculation matrix holds the
@@ -15,18 +14,20 @@ import org.socialworld.attributes.Attribute;
  * @author Mathias Sikos (tyloesand)
  */
 public class AttributeCalculatorMatrix {
-
+	private int numberOfAttributes;
+	
 	private int functions[];
 	private float shares[];
 	private int offsets[];
 	private CalculationInputType inputTypes[];
 	
 
-	public AttributeCalculatorMatrix() {
-
+	public AttributeCalculatorMatrix(int numberOfAttributes) {
+			this.numberOfAttributes = numberOfAttributes;
 	}
 
-	public AttributeCalculatorMatrix(AttributeCalculatorMatrix original) {
+	public AttributeCalculatorMatrix(AttributeCalculatorMatrix original, int numberOfAttributes) {
+		this.numberOfAttributes = numberOfAttributes;
 		int count;
 		count = original.length();
 		this.functions = new int[count];
@@ -48,7 +49,7 @@ public class AttributeCalculatorMatrix {
 	 * @return the function
 	 */
 	public int getFunction(int row, int column) {
-		int matrixIndex = row * Attribute.NUMBER_OF_ATTRIBUTES + column;
+		int matrixIndex = row * numberOfAttributes + column;
 		return functions[matrixIndex];
 	}
 
@@ -73,7 +74,7 @@ public class AttributeCalculatorMatrix {
 	 *            the function to set
 	 */
 	public void setFunction(int row, int column, int function) {
-		int matrixIndex = row * Attribute.NUMBER_OF_ATTRIBUTES + column;
+		int matrixIndex = row * numberOfAttributes + column;
 		this.functions[matrixIndex] = function;
 	}
 
@@ -81,7 +82,7 @@ public class AttributeCalculatorMatrix {
 	 * @return the share
 	 */
 	public float getShare(int row, int column) {
-		int matrixIndex = row * Attribute.NUMBER_OF_ATTRIBUTES + column;
+		int matrixIndex = row * numberOfAttributes + column;
 		return shares[matrixIndex];
 	}
 
@@ -100,7 +101,7 @@ public class AttributeCalculatorMatrix {
 	 *            the share to set
 	 */
 	public void setShare(int row, int column, float share) {
-		int matrixIndex = row * Attribute.NUMBER_OF_ATTRIBUTES + column;
+		int matrixIndex = row * numberOfAttributes + column;
 		this.shares[matrixIndex] = share;
 	}
 
@@ -108,7 +109,7 @@ public class AttributeCalculatorMatrix {
 	 * @return the offset
 	 */
 	public int getOffset(int row, int column) {
-		int matrixIndex = row * Attribute.NUMBER_OF_ATTRIBUTES + column;
+		int matrixIndex = row * numberOfAttributes + column;
 		return offsets[matrixIndex];
 	}
 
@@ -117,7 +118,7 @@ public class AttributeCalculatorMatrix {
 	 *            the offset to set
 	 */
 	public void setOffset(int row, int column, int offset) {
-		int matrixIndex = row * Attribute.NUMBER_OF_ATTRIBUTES + column;
+		int matrixIndex = row * numberOfAttributes + column;
 		this.offsets[matrixIndex] = offset;
 	}
 
@@ -125,7 +126,7 @@ public class AttributeCalculatorMatrix {
 	 * @return the input type of the calculation function
 	 */
 	public CalculationInputType getInputType(int row, int column) {
-		int matrixIndex = row * Attribute.NUMBER_OF_ATTRIBUTES + column;
+		int matrixIndex = row * numberOfAttributes + column;
 		return inputTypes[matrixIndex];
 	}
 
@@ -134,7 +135,7 @@ public class AttributeCalculatorMatrix {
 	 *            the input type to set
 	 */
 	public void setInputType(int row, int column, CalculationInputType inputType) {
-		int matrixIndex = row * Attribute.NUMBER_OF_ATTRIBUTES + column;
+		int matrixIndex = row * numberOfAttributes + column;
 		this.inputTypes[matrixIndex] = inputType;
 	}
 	

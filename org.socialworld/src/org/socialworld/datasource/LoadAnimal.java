@@ -36,6 +36,10 @@ public class LoadAnimal extends LoadSimulationObjects implements IAnimalWrite {
 		return createdAnimal;
 	}
 
+	protected void selectAllForID(int ObjectID){
+		
+	}
+	
 	protected void initObject(WriteAccessToAnimal object, int objectID) {
 		int indexACMP;
 		int indexAAP;

@@ -28,9 +28,10 @@ public class Talk {
 		
 		
 	// TODO
+		answer.resetIndex();
 		subject = answer.getAnswerSubject();
-		criterion = answer.getAnswerCriterion(0);
-		value = answer.getAnswerValue(0);
+		criterion = answer.getAnswerCriterion();
+		value = answer.getAnswerValue();
 		
 		sentence = sentenceMaker.getStatementSentenceForFact(subject, criterion, value);
 		

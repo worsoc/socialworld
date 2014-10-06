@@ -12,6 +12,15 @@ package org.socialworld.attributes;
  * @author Mathias Sikos (tyloesand) 
  */
 public class AttributeArray {
+	/**
+	 * The constant holds the informations about the range of values. The range
+	 * of values is from 0 to the constant's value.
+	 */
+	public static final byte ATTRIBUTE_RANGE = 99;
+	// !!! if the constant ATTRIBUTE_RANGE is changed the following methods have to be conformed :
+	// - AttributeCalculatorFunctionTable.initialize()
+	public static final byte VALUE_MIDDLE = 50;
+	
 	private int numberOfAttributes;
 
 	/**
@@ -24,8 +33,8 @@ public class AttributeArray {
 	 */
 	private int differences[];
 	                         
-	public AttributeArray() {
-		numberOfAttributes = Attribute.NUMBER_OF_ATTRIBUTES;
+	public AttributeArray(int numberOfAttributes) {
+		this.numberOfAttributes = numberOfAttributes;
 		attributes 	= new int[numberOfAttributes];
 		differences = new int[numberOfAttributes];
 		for (int i = 0; i < numberOfAttributes; i++ ) {
@@ -35,27 +44,25 @@ public class AttributeArray {
 	}
 
 	public AttributeArray(int[] array) {
-		numberOfAttributes = Attribute.NUMBER_OF_ATTRIBUTES;
+		numberOfAttributes = array.length;
 		attributes 	= new int[numberOfAttributes];
 		differences = new int[numberOfAttributes];
-		if (array.length == numberOfAttributes ) {
-			for (int i = 0; i < numberOfAttributes; i++ ) {
-				attributes[i] = array[i];
-				differences[i] = 0;
-			}
+		
+		for (int i = 0; i < numberOfAttributes; i++ ) {
+			attributes[i] = array[i];
+			differences[i] = 0;
 		}
 	}
 	
 	
 	public AttributeArray(AttributeArray original) {
-		numberOfAttributes = Attribute.NUMBER_OF_ATTRIBUTES;
+		numberOfAttributes = original.length();
 		attributes 	= new int[numberOfAttributes];
 		differences = new int[numberOfAttributes];
-		if (original.attributes.length == numberOfAttributes ) {
-			for (int i = 0; i < numberOfAttributes; i++ ) {
-				differences[i] = 0;
-				attributes[i] = original.attributes[i];
-			}
+		
+		for (int i = 0; i < numberOfAttributes; i++ ) {
+			differences[i] = 0;
+			attributes[i] = original.attributes[i];
 		}
 	}
 	/**
@@ -109,10 +116,13 @@ public class AttributeArray {
 	}
 	
 	
+	public int length() {
+		return numberOfAttributes;
+	}
+	
 	public String toString() {
 		String returnValue = "("; 
 		
-		int numberOfAttributes = attributes.length ;
 		for (int i = 0; i < numberOfAttributes - 1; i++ ) 
 			returnValue = returnValue + attributes[i] + ", ";
 		returnValue = returnValue + attributes[numberOfAttributes - 1] + ")";

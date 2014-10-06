@@ -65,6 +65,10 @@ public class LoadHuman extends LoadAnimal implements IHumanWrite {
 
 	}
 
+	public void selectAll() {
+		
+	}
+	
 }
 
 

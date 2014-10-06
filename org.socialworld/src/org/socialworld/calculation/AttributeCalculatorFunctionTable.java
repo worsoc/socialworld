@@ -3,7 +3,8 @@
  */
 package org.socialworld.calculation;
 
-import org.socialworld.attributes.Attribute;
+import org.socialworld.attributes.AttributeArray;
+
 
 /**
  * The class implements the calculation function as a table.
@@ -19,11 +20,11 @@ public class AttributeCalculatorFunctionTable extends
 	private AttributeCalculatorFunctionTableType acftType;
 	private int values[];
 
-	private int range = Attribute.ATTRIBUTE_RANGE;
+	private int range;
 
 	public AttributeCalculatorFunctionTable(AttributeCalculatorFunctionTableType type) {
-		acftType = type;
-		
+		this.acftType = type;
+		this.range = AttributeArray.ATTRIBUTE_RANGE;
 		initialize();
 	}
 
@@ -82,7 +83,7 @@ public class AttributeCalculatorFunctionTable extends
 		    for(int i=(int)(range/2 + 1); i <= range; i++)
 		    	values[i] =   (2 * (range - i) );  
 			break;
-		case u:
+		case u:			// assumption: range = 100
 			values = new int[range + 1];
 			values[0] = 99; values[1] = 89; values[2] = 80; values[3] = 71; values[4] = 63;
 			values[5] = 55; values[6] = 48; values[7] = 41; values[8] = 35; values[9] = 29;
@@ -98,7 +99,7 @@ public class AttributeCalculatorFunctionTable extends
 			values[84] = 5; values[83] = 3; values[82] = 1; 
 
 			break;
-		case u_mirrored:
+		case u_mirrored:    // assumption: range = 100
 			values = new int[range + 1];
 			values[0] = 0; values[1] = 10; values[2] = 19; values[3] = 28; values[4] = 36;
 			values[5] = 44; values[6] = 51; values[7] = 58; values[8] = 64; values[9] = 70;

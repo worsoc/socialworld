@@ -1,28 +1,25 @@
-/**
- * 
- */
-package org.socialworld.attributes;
+package org.socialworld.knowledge;
+
 
 /**
- * The enumeration holds all attribute names and collects an index for every
+ * The enumeration holds all acquaintance attribute names and collects an index for every
  * attribute. So an attribute is addressable in arrays.
  * 
  * @author Mathias Sikos (tyloesand)
  */
-public enum Attribute {
-	mood(0), courage(1), morals(2), materialism(3), tiredness(4),
-	curiosity(5), spirituality(6), hunger(7);
-
+public enum AcquaintanceAttribute {
+	friendship(0), love(1), sympathy(2), responsibility(3), respect(4), trust(5), obedience(6);
+	
 	/**
 	 * The constant holds the informations how many attributes are simulated.
 	 * The constant is used for iteration about all attributes and for creation
 	 * of attribute arrays.
 	 */
 	public static final int NUMBER_OF_ATTRIBUTES = 8;
-	
+
 	private int arrayIndex;
 
-	private Attribute(int index) {
+	private AcquaintanceAttribute(int index) {
 		this.arrayIndex = index;
 	}
 
@@ -43,10 +40,11 @@ public enum Attribute {
 	 *            attribute index
 	 * @return attribute name
 	 */
-	public Attribute getAttributeName(int arrayIndex) {
-		for (Attribute attribute : Attribute.values())
+	public AcquaintanceAttribute getAttributeName(int arrayIndex) {
+		for (AcquaintanceAttribute attribute : AcquaintanceAttribute.values())
 			if (attribute.arrayIndex == arrayIndex)
 				return attribute;
 		return null;
 	}
+
 }

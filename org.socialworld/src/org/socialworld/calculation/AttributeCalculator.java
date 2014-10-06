@@ -3,7 +3,6 @@
  */
 package org.socialworld.calculation;
 
-import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.AttributeArray;
 
 
@@ -29,18 +28,12 @@ public class AttributeCalculator {
 	 */
 	private EventInfluenceDescription eventInfluence;
 	
-	/**
-	 * a help attribute array that is used for calculation loops
-	 */
-	private float attributesNew[];
 
 	private int numberOfAttributes;
 
-	public AttributeCalculator() {
-		this.numberOfAttributes = Attribute.NUMBER_OF_ATTRIBUTES;
-		attributes = new AttributeArray();
-		attributesNew = new float[numberOfAttributes];
-		clearAttributes();
+	public AttributeCalculator(int numberOfAttributes) {
+		this.numberOfAttributes = numberOfAttributes;
+		attributes = new AttributeArray(this.numberOfAttributes);
 	}
 
 
@@ -160,7 +153,7 @@ public class AttributeCalculator {
 	 *         calculation stops.
 	 */
 	private void calculateAttributesSimply() {
-
+		float 	attributesNew[];
 		int 	column;
 		int		row;
 
@@ -173,6 +166,9 @@ public class AttributeCalculator {
 
 		float change;
 
+		attributesNew = new float[this.numberOfAttributes];
+
+		
 		for (row = 0; row < this.numberOfAttributes; row++) {
 
 			attributeValue 			= this.attributes.get(row);
@@ -197,8 +193,6 @@ public class AttributeCalculator {
 			this.attributes.set(row, (int) (attributesNew[row] + 0.5));
 		}
 
-		// clearing the help array
-		clearAttributes();
 
 	}
 	
@@ -217,7 +211,7 @@ public class AttributeCalculator {
 	 *         calculation stops.
 	 */
 	private boolean calculateAttributesByMatrix() {
-
+		float	attributesNew[];
 		int 	column;
 		int		row;
 
@@ -232,6 +226,8 @@ public class AttributeCalculator {
 		CalculationInputType 		inputType;
 
 		float change;
+
+		attributesNew = new float[this.numberOfAttributes];
 
 		for (row = 0; row < this.numberOfAttributes; row++) {
 
@@ -261,8 +257,6 @@ public class AttributeCalculator {
 			this.attributes.set(row, (int) (attributesNew[row] + 0.5));
 		}
 
-		// clearing the help array
-		clearAttributes();
 
 		return true;
 
@@ -281,7 +275,7 @@ public class AttributeCalculator {
 	 *         calculation stops.
 	 */
 	private boolean calculateAttributesByMatrixWithOffset() {
-
+		float   attributesNew[];
 		int 	column;
 		int		row;
 
@@ -297,6 +291,8 @@ public class AttributeCalculator {
 		CalculationInputType 		inputType;
 
 		float change;
+
+		attributesNew = new float[this.numberOfAttributes];
 
 		for (row = 0; row < this.numberOfAttributes; row++) {
 
@@ -327,9 +323,6 @@ public class AttributeCalculator {
 			this.attributes.set(row, (int) (attributesNew[row] + 0.5));
 		}
 
-		// clearing the help array
-		clearAttributes();
-
 		return true;
 
 	}
@@ -353,16 +346,6 @@ public class AttributeCalculator {
 		return true;
 	}
 */
-	/**
-	 * The method clears the help attribute array.
-	 */
-	private void clearAttributes() {
-		int row;
-		for (row = 0; row < this.numberOfAttributes; row++) {
-			attributesNew[row] = 0;
-		}
-
-	}
 
 	private int getInputValue(CalculationInputType type, int attributeValue,
 					int attributeChangeValue) {

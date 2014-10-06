@@ -3,6 +3,7 @@ package org.socialworld.datasource;
 import java.io.*;
 import java.net.URL;
 
+import org.socialworld.attributes.Attribute;
 import org.socialworld.calculation.AttributeCalculatorMatrix;
 
 public class AttributeCalculatorMatrixPool {
@@ -13,9 +14,14 @@ public class AttributeCalculatorMatrixPool {
 	private static AttributeCalculatorMatrix matrixsForPositiveIndex[];
 	private static AttributeCalculatorMatrix matrixsForNegativeIndex[];
 	
+	private int numberOfAttributes;
+	
 	private AttributeCalculatorMatrixPool () {
 		matrixsForPositiveIndex = new AttributeCalculatorMatrix[CAPACITY_ACMP_ARRAY];
 		matrixsForNegativeIndex = new AttributeCalculatorMatrix[CAPACITY_ACMP_ARRAY];
+		
+		// TODO: must work for differnt numbers
+		numberOfAttributes = Attribute.NUMBER_OF_ATTRIBUTES;
 		
 		initialize();
 	}
@@ -108,7 +114,7 @@ public class AttributeCalculatorMatrixPool {
 				}
 
 				if (line.startsWith("</matrix>")) {
-					matrix = new AttributeCalculatorMatrix();
+					matrix = new AttributeCalculatorMatrix(numberOfAttributes);
 					matrix.setFunctions( functions);
 					matrix.setShares( shares );
 					

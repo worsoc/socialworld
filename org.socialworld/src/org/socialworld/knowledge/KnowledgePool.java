@@ -93,15 +93,14 @@ public class KnowledgePool {
 			knowledge = getKnowledge(indexesForSubject[indexKnowledge]);
 			indexesForCriterion = knowledge.findFactsForCriterion(criterion);
 			countFacts = indexesForCriterion.length;
-			
 			if (countFacts > 0) { 
 				answer.setSubject(subject);
 				withAnswer = true;
 			}
 			
-			for (indexFact = 0;indexFact < countFacts; indexKnowledge++) {
-				fact = knowledge.getFact(indexFact);
-				source = knowledge.getSource(indexFact);
+			for (indexFact = 0;indexFact < countFacts; indexFact++) {
+				fact = knowledge.getFact(indexesForCriterion[indexFact]);
+				source = knowledge.getSource(indexesForCriterion[indexFact]);
 				
 				answer.addItem(fact, source);
 			}
