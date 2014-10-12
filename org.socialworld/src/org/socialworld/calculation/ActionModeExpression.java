@@ -1,30 +1,12 @@
 package org.socialworld.calculation;
 import org.socialworld.attributes.ActionMode;
-import org.socialworld.attributes.AttributeArray;
+import org.socialworld.attributes.ActionType;
 
 
 public class ActionModeExpression extends Expression {
 
-	ActionMode mode = ActionMode.whisper;
-	ActionMode result;
 
-	public void setMode (ActionMode mode) {
-		this.mode = mode;
-	}
-	
-	@Override
-	protected void evaluateSubExpression(AttributeArray attributeArray, boolean conditionIsTrue) {
-	
-		ActionModeExpression expression;
-		
-		if (conditionIsTrue)
-				expression = (ActionModeExpression) expressionForTrue;
-			else
-				expression = (ActionModeExpression) expressionForFalse;
-			
-			result = expression.evaluateExpression(attributeArray);
-	}
-
+	// not used
 	@Override
 	protected void addition( ) {
 		defaultFunction();
@@ -33,14 +15,15 @@ public class ActionModeExpression extends Expression {
 
 	@Override
 	protected void defaultFunction( ) {
-		result = mode;
+		result = (ActionMode) value;
 	}
 
 	@Override
 	protected void identity( ) {
-		result = mode;
+		result = (ActionMode) value;
 	}
 
+	// not used
 	@Override
 	protected void multiplication( ) {
 		defaultFunction();
@@ -49,19 +32,9 @@ public class ActionModeExpression extends Expression {
 
 	@Override
 	protected void replacement() {
-		defaultFunction();
+		result = (ActionType) constant;
 
 	}
 
-	/**
-	 * The method evaluates the expression by calling the parent method evaluateFunction().
-	 * The method evaluateFunction() finally sets the reaction's ActionMode 
-	 * by calling the method defaultFunction().
-	 */
-	public ActionMode evaluateExpression(AttributeArray attributeArray) {
-		
-		evaluateFunction(attributeArray);
-		return result;
-	}	
-
+	
 }

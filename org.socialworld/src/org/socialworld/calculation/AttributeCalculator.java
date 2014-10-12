@@ -139,8 +139,8 @@ public class AttributeCalculator {
 	 */
 	private void modifyAttribute(int attributeIndex,
 			EventInfluenceExpression expression) {
-			this.attributes.set(attributeIndex, expression.evaluateExpression(
-				this.attributes, attributeIndex));
+			this.attributes.set(attributeIndex, (int) expression.evaluateExpression(
+				this.attributes, this.attributes.get( attributeIndex)));
 	}
 
 
