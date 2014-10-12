@@ -22,46 +22,25 @@ import org.socialworld.attributes.AttributeArray;
 public class EventInfluenceExpression extends Expression {
 
 	
-	AttributeArray attributeArray;
-	int targetAttributeIndex;
-	double result;
-
-
-
-	
-	@Override
-	protected void evaluateSubExpression(AttributeArray attributeArray, boolean conditionIsTrue) {
-	
-		EventInfluenceExpression expression;
-		
-		if (conditionIsTrue)
-				expression = (EventInfluenceExpression) expressionForTrue;
-			else
-				expression = (EventInfluenceExpression) expressionForFalse;
-			
-			result = expression.evaluateExpression(attributeArray, targetAttributeIndex);
-	}
 
 	protected  void addition() {
-		result = this.attributeArray.get(targetAttributeIndex);
-		result += this.constant;
+		result = (int) value + (int) constant;
 	}
 
 	protected  void multiplication() {
-		result = this.attributeArray.get(targetAttributeIndex);
-		result *= this.constant;
+		result = (int) value * (int) constant;
 	}
 
 	protected  void replacement( ) {
-		result = this.constant;
+		result = (int) constant;
 	}
 
 	protected  void identity() {
-		result = this.attributeArray.get(targetAttributeIndex);
+		result = (int) value;
 	}
 	
 	protected  void defaultFunction() {
-		result = this.attributeArray.get(targetAttributeIndex);
+		result = (int) value;
 	}
 
 		
@@ -70,21 +49,19 @@ public class EventInfluenceExpression extends Expression {
 	 * The method evaluateFunction() calls the implementation of calculation functions.
 	 * Finally the new attribute value is returned.
 	 */
-	public byte evaluateExpression(AttributeArray attributeArray,
-			int targetAttributeIndex) {
-		this.attributeArray = attributeArray;
-		this.targetAttributeIndex = targetAttributeIndex;
+	public Object evaluateExpression(AttributeArray attributeArray, Object value) {
+		int tmp;
+		tmp = (int) super.evaluateExpression(attributeArray, value);
 		
-		evaluateFunction(attributeArray);
 		
-		result += 0.5;
+		tmp += 0.5;
 
-		if (result > AttributeArray.ATTRIBUTE_RANGE)
+		if (tmp > AttributeArray.ATTRIBUTE_RANGE)
 			return AttributeArray.ATTRIBUTE_RANGE;
-		if (result < 0)
+		if (tmp < 0)
 			return 0;
 		
-		return (byte) result;
+		return tmp;
 	}
 	
 

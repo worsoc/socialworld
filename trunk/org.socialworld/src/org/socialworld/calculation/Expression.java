@@ -22,8 +22,11 @@ public abstract class Expression {
 	ConditionOperator operator;
 
 	int attributeIndex;
-	float constant;
-
+	
+	Object value;
+	Object constant;
+	Object result;
+	
 	Expression expressionForTrue;
 	Expression expressionForFalse;
 	int IDTrue;
@@ -32,6 +35,7 @@ public abstract class Expression {
 	public Expression() {
 		function = ExpressionFunction.identity;
 	}
+	
 	
 	public void setID(int ID) {
 		this.ID = ID;
@@ -71,13 +75,10 @@ public abstract class Expression {
 		this.operator = operator;
 	}
 
-	public void setConstant(float constant) {
+	public void setConstant(Object constant) {
 		this.constant = constant;
 	}
 
-	public void setConstant(String constant) {
-		this.constant = Float.parseFloat(constant);
-	}
 
 	public void setAttributeIndex(int index) {
 		this.attributeIndex = index;
@@ -95,13 +96,53 @@ public abstract class Expression {
 		this.expressionForFalse = expressionForFalse;
 	}
 
+	public void setValue(Object value) {
+		this.value = value;
+	}
+
+	protected Object getValue() {
+		return value;
+	}
+	
 	protected abstract void addition();
 	protected abstract void multiplication();
 	protected abstract void replacement();
 	protected abstract void identity();
 	protected abstract void defaultFunction();
 	
-	protected abstract void evaluateSubExpression(AttributeArray attributeArray, boolean conditionIsTrue);
+	//protected abstract void evaluateSubExpression(AttributeArray attributeArray, boolean conditionIsTrue);
+	protected void evaluateSubExpression(AttributeArray attributeArray, boolean conditionIsTrue) {
+	
+		
+		if (conditionIsTrue)
+			result =  expressionForTrue.evaluateExpression(attributeArray,  value);
+		else
+			result = expressionForFalse.evaluateExpression(attributeArray,  value);
+	}
+
+	/**
+	 * The method evaluates the expression by calling the  method evaluateFunction().
+	 * The method evaluateFunction() finally calculates the reaction's concrete property
+	 * by calling the concrete calculation methods.
+	 */
+	public Object evaluateExpression(AttributeArray attributeArray, Object value) {
+		
+		this.value = value;
+		
+		evaluateFunction(attributeArray);
+		return result;
+	}
+
+	/**
+	 * The method evaluates the expression by calling the parent method evaluateFunction().
+	 * The method evaluateFunction() finally calculates the reaction's duration
+	 * by calling the calculation methods.
+	 */
+	public Object evaluateExpression(AttributeArray attributeArray) {
+		
+		evaluateFunction(attributeArray);
+		return result;
+	}
 
 	/**
 	 * The method evaluates the expression function. 
@@ -122,27 +163,27 @@ public abstract class Expression {
 
 			switch (this.operator) {
 			case equal:
-				if (operandValue == this.constant)
+				if (operandValue == (int) this.constant)
 					conditionIsTrue = true;
 				break;
 			case notEqual:
-				if (operandValue != this.constant)
+				if (operandValue != (int) this.constant)
 					conditionIsTrue = true;
 				break;
 			case less:
-				if (operandValue < this.constant)
+				if (operandValue < (int) this.constant)
 					conditionIsTrue = true;
 				break;
 			case lessEqual:
-				if (operandValue <= this.constant)
+				if (operandValue <= (int) this.constant)
 					conditionIsTrue = true;
 				break;
 			case greaterEqual:
-				if (operandValue >= this.constant)
+				if (operandValue >= (int) this.constant)
 					conditionIsTrue = true;
 				break;
 			case greater:
-				if (operandValue > this.constant)
+				if (operandValue > (int) this.constant)
 					conditionIsTrue = true;
 				break;
 			}

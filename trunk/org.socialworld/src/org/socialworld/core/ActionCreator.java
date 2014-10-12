@@ -94,17 +94,17 @@ public class ActionCreator  {
 		// isn't allowed to be changed
 		attributeArray = actor.getAttributes();
 		
-		actionType = eventReactionDescription.getActionTypeExpression().evaluateExpression(
+		actionType = (ActionType) eventReactionDescription.getActionTypeExpression().evaluateExpression(
 						attributeArray);
-		actionMode = eventReactionDescription.getActionModeExpression().evaluateExpression(
+		actionMode = (ActionMode) eventReactionDescription.getActionModeExpression().evaluateExpression(
 				attributeArray);
-		relativeDirection = eventReactionDescription.getRelativeDirectionExpression().evaluateExpression(
+		relativeDirection = (Vector) eventReactionDescription.getRelativeDirectionExpression().evaluateExpression(
 				attributeArray);
-		intensity = eventReactionDescription.getIntensityExpression().evaluateExpression(
+		intensity = (double) eventReactionDescription.getIntensityExpression().evaluateExpression(
 				attributeArray );
-		priority = eventReactionDescription.getPriorityExpression().evaluateExpression(
+		priority = (int) eventReactionDescription.getPriorityExpression().evaluateExpression(
 				attributeArray );
-		duration = eventReactionDescription.getDurationExpression().evaluateExpression(
+		duration = (long) eventReactionDescription.getDurationExpression().evaluateExpression(
 				attributeArray );
 		
 		direction = event.getDirection();
@@ -162,17 +162,17 @@ public class ActionCreator  {
 		// isn't allowed to be changed
 		attributeArray = actor.getAttributes();
 
-		actionType = state2ActionDescription.getActionTypeExpression().evaluateExpression(
+		actionType = (ActionType) state2ActionDescription.getActionTypeExpression().evaluateExpression(
 				attributeArray);
-		actionMode = state2ActionDescription.getActionModeExpression().evaluateExpression(
+		actionMode = (ActionMode) state2ActionDescription.getActionModeExpression().evaluateExpression(
 				attributeArray);
-		relativeDirection = state2ActionDescription.getRelativeDirectionExpression().evaluateExpression(
+		relativeDirection = (Vector) state2ActionDescription.getRelativeDirectionExpression().evaluateExpression(
 				attributeArray);
-		intensity = state2ActionDescription.getIntensityExpression().evaluateExpression(
+		intensity = (double) state2ActionDescription.getIntensityExpression().evaluateExpression(
 				attributeArray );
-		priority = state2ActionDescription.getPriorityExpression().evaluateExpression(
+		priority = (int) state2ActionDescription.getPriorityExpression().evaluateExpression(
 				attributeArray );
-		duration = state2ActionDescription.getDurationExpression().evaluateExpression(
+		duration = (long) state2ActionDescription.getDurationExpression().evaluateExpression(
 				attributeArray );
 
 		direction = actor.getMove().getDirection();

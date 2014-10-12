@@ -171,6 +171,7 @@ public class State2ActionDescriptionPool extends DescriptionPool {
 					line = line.substring(7);
 					line = line.replace("</Const>", "");
 					line = line.trim();
+					// TODO cast line from String to concrete datatype
 					expression.setConstant(line);
 					continue;
 				}
@@ -233,23 +234,23 @@ public class State2ActionDescriptionPool extends DescriptionPool {
 					line = line.replace("</Mode>", "");
 					line = line.trim();
 					switch(line) {
-						case "run":  tmp.setMode(ActionMode.run);break;
-						case "walk":  tmp.setMode(ActionMode.walk);break;
-						case "jump":  tmp.setMode(ActionMode.jump);break;
-						case "sleepIntentioned":  tmp.setMode(ActionMode.sleepIntentioned);break;
-						case "sleepCaused":  tmp.setMode(ActionMode.sleepCaused);break;
-						case "weaponRightHand":  tmp.setMode(ActionMode.weaponRightHand);break;
-						case "weaponLeftHand":  tmp.setMode(ActionMode.weaponLeftHand);break;
-						case "examineItem":  tmp.setMode(ActionMode.examineItem);break;
-						case "takeItem":  tmp.setMode(ActionMode.takeItem);break;
-						case "useItem":  tmp.setMode(ActionMode.useItem);break;
-						case "collectItem":  tmp.setMode(ActionMode.collectItem);break;
-						case "switchItemToLeftHand":  tmp.setMode(ActionMode.switchItemToLeftHand);break;
-						case "useTwoItems":  tmp.setMode(ActionMode.useTwoItems);break;
-						case "dropItem":  tmp.setMode(ActionMode.dropItem);break;
-						case "say":  tmp.setMode(ActionMode.say);break;
-						case "scream":  tmp.setMode(ActionMode.scream);break;
-						case "whisper":  tmp.setMode(ActionMode.whisper);break;
+						case "run":  tmp.setValue(ActionMode.run);break;
+						case "walk":  tmp.setValue(ActionMode.walk);break;
+						case "jump":  tmp.setValue(ActionMode.jump);break;
+						case "sleepIntentioned":  tmp.setValue(ActionMode.sleepIntentioned);break;
+						case "sleepCaused":  tmp.setValue(ActionMode.sleepCaused);break;
+						case "weaponRightHand":  tmp.setValue(ActionMode.weaponRightHand);break;
+						case "weaponLeftHand":  tmp.setValue(ActionMode.weaponLeftHand);break;
+						case "examineItem":  tmp.setValue(ActionMode.examineItem);break;
+						case "takeItem":  tmp.setValue(ActionMode.takeItem);break;
+						case "useItem":  tmp.setValue(ActionMode.useItem);break;
+						case "collectItem":  tmp.setValue(ActionMode.collectItem);break;
+						case "switchItemToLeftHand":  tmp.setValue(ActionMode.switchItemToLeftHand);break;
+						case "useTwoItems":  tmp.setValue(ActionMode.useTwoItems);break;
+						case "dropItem":  tmp.setValue(ActionMode.dropItem);break;
+						case "say":  tmp.setValue(ActionMode.say);break;
+						case "scream":  tmp.setValue(ActionMode.scream);break;
+						case "whisper":  tmp.setValue(ActionMode.whisper);break;
 					}
 					continue;
 				}
@@ -285,7 +286,7 @@ public class State2ActionDescriptionPool extends DescriptionPool {
 					line = line.substring(8);
 					line = line.replace("</Vector>", "");
 					line = line.trim();
-					tmp.setVector(new Vector(line));
+					tmp.setValue(new Vector(line));
 					continue;
 				}
 
@@ -310,17 +311,17 @@ public class State2ActionDescriptionPool extends DescriptionPool {
 					line = line.replace("</Type>", "");
 					line = line.trim();
 					switch(line) {
-						case "touch":  tmp.setType(ActionType.touch);break;
-						case "sleep":  tmp.setType(ActionType.sleep);break;
-						case "changeMove":  tmp.setType(ActionType.changeMove);break;
-						case "kick":  tmp.setType(ActionType.kick);break;
-						case "controlHandManually":  tmp.setType(ActionType.controlHandManually);break;
-						case "spell":  tmp.setType(ActionType.spell);break;
-						case "useWeaponLeft":  tmp.setType(ActionType.useWeaponLeft);break;
-						case "useWeaponRight":  tmp.setType(ActionType.useWeaponRight);break;
-						case "move":  tmp.setType(ActionType.move);break;
-						case "say":  tmp.setType(ActionType.say);break;
-						case "handleItem":  tmp.setType(ActionType.handleItem);break;
+						case "touch":  tmp.setValue(ActionType.touch);break;
+						case "sleep":  tmp.setValue(ActionType.sleep);break;
+						case "changeMove":  tmp.setValue(ActionType.changeMove);break;
+						case "kick":  tmp.setValue(ActionType.kick);break;
+						case "controlHandManually":  tmp.setValue(ActionType.controlHandManually);break;
+						case "spell":  tmp.setValue(ActionType.spell);break;
+						case "useWeaponLeft":  tmp.setValue(ActionType.useWeaponLeft);break;
+						case "useWeaponRight":  tmp.setValue(ActionType.useWeaponRight);break;
+						case "move":  tmp.setValue(ActionType.move);break;
+						case "say":  tmp.setValue(ActionType.say);break;
+						case "handleItem":  tmp.setValue(ActionType.handleItem);break;
 					}
 					continue;
 				}
