@@ -119,7 +119,7 @@ public class AttributeCalculator {
 	 *           
 	 */
 	private void modifyAttributes() {
-		EventInfluenceExpression expression;
+		Expression expression;
 		int index;
 		
 		expression = this.eventInfluence.expression;
@@ -138,9 +138,14 @@ public class AttributeCalculator {
 	 *           
 	 */
 	private void modifyAttribute(int attributeIndex,
-			EventInfluenceExpression expression) {
-			this.attributes.set(attributeIndex, (int) expression.evaluateExpression(
-				this.attributes, this.attributes.get( attributeIndex)));
+			Expression expression) {
+		//TODO
+		Argument[] arguments;
+		arguments = new Argument[1];
+		arguments[0] = new Argument(ArgumentType.attributeArray, this.attributes);
+		
+		this.attributes.set(attributeIndex, 
+				(int) expression.evaluateExpression(arguments).getValueCopy());
 	}
 
 

@@ -15,57 +15,48 @@ import org.socialworld.attributes.AttributeArray;
 
  * @author Mathias Sikos (tyloesand)
  */
-public abstract class Expression {
+public class Expression {
 	int ID;
 	
 	ExpressionFunction function;
 	ConditionOperator operator;
 
-	int attributeIndex;
 	
-	Object value;
-	Object constant;
-	Object result;
+	Value value;
 	
-	Expression expressionForTrue;
-	Expression expressionForFalse;
-	int IDTrue;
-	int IDFalse;
+	Expression expression1;
+	Expression expression2;
+	Expression expression3;
 	
-	public Expression() {
-		function = ExpressionFunction.identity;
-	}
+	int ID_Exp1;
+	int ID_Exp2;
+	int ID_Exp3;
 	
+	private Calculation calculation;
 	
-	public void setID(int ID) {
-		this.ID = ID;
-	}
 
-	public void setID(String ID) {
-		this.ID = (int) Float.parseFloat(ID);
+	public Expression() {
+		calculation = Calculation.getInstance();
 	}
+	
+	
+	public void setID(int ID) {		this.ID = ID;	}
+
+	public void setID(String ID) {		this.ID = (int) Float.parseFloat(ID);	}
 
 	public int getID() {return ID; };
 
-	public void setIDTrue(int ID) {
-		this.IDTrue = ID;
-	}
+	public void set_ID_Exp2(int ID) {		this.ID_Exp2 = ID;	}
 
-	public void setIDTrue(String ID) {
-		this.IDTrue = (int) Float.parseFloat(ID);
-	}
+	public void set_ID_Exp2(String ID) {		this.ID_Exp2 = (int) Float.parseFloat(ID);	}
 	
-	public int getIDTrue() {return IDTrue; };
+	public int get_ID_Exp2() {return ID_Exp2; };
 	
-	public void setIDFalse(int ID) {
-		this.IDFalse = ID;
-	}
+	public void set_ID_Exp3(int ID) {		this.ID_Exp3 = ID;	}
 
-	public void setIDFalse(String ID) {
-		this.IDFalse = (int) Float.parseFloat(ID);
-	}
+	public void set_ID_Exp3(String ID) {		this.ID_Exp3 = (int) Float.parseFloat(ID);	}
 
-	public int getIDFalse() {return IDFalse; };
+	public int get_ID_Exp3() {return ID_Exp3; };
 
 	public void setFunction(ExpressionFunction function) {
 		this.function = function;
@@ -75,138 +66,129 @@ public abstract class Expression {
 		this.operator = operator;
 	}
 
-	public void setConstant(Object constant) {
-		this.constant = constant;
+
+
+
+	
+	public void setExpression1(Expression expression) {
+		this.expression1 = expression;
+	}
+	
+	public void setExpression2(Expression expression) {
+		this.expression2 = expression;
 	}
 
-
-	public void setAttributeIndex(int index) {
-		this.attributeIndex = index;
+	public void setExpression3(Expression expression) {
+		this.expression3 = expression;
 	}
 
-	public void setAttributeIndex(String index) {
-		this.attributeIndex = (int) Float.parseFloat(index);
-	}
-
+	
 	public void setTrueExpression(Expression expressionForTrue) {
-		this.expressionForTrue = expressionForTrue;
+		setExpression2(expressionForTrue);
 	}
 
 	public void setFalseExpression(Expression expressionForFalse) {
-		this.expressionForFalse = expressionForFalse;
+		setExpression3(expressionForFalse);
 	}
 
-	public void setValue(Object value) {
+	public void setValue(Value value) {
 		this.value = value;
 	}
 
-	protected Object getValue() {
+	protected Value getValue() {
 		return value;
 	}
 	
-	protected abstract void addition();
-	protected abstract void multiplication();
-	protected abstract void replacement();
-	protected abstract void identity();
-	protected abstract void defaultFunction();
-	
-	//protected abstract void evaluateSubExpression(AttributeArray attributeArray, boolean conditionIsTrue);
-	protected void evaluateSubExpression(AttributeArray attributeArray, boolean conditionIsTrue) {
-	
 		
-		if (conditionIsTrue)
-			result =  expressionForTrue.evaluateExpression(attributeArray,  value);
-		else
-			result = expressionForFalse.evaluateExpression(attributeArray,  value);
-	}
+
 
 	/**
-	 * The method evaluates the expression by calling the  method evaluateFunction().
-	 * The method evaluateFunction() finally calculates the reaction's concrete property
-	 * by calling the concrete calculation methods.
 	 */
-	public Object evaluateExpression(AttributeArray attributeArray, Object value) {
+	Value evaluateExpression(Argument[] arguments) {
+		Value tmp;
 		
-		this.value = value;
-		
-		evaluateFunction(attributeArray);
-		return result;
-	}
-
-	/**
-	 * The method evaluates the expression by calling the parent method evaluateFunction().
-	 * The method evaluateFunction() finally calculates the reaction's duration
-	 * by calling the calculation methods.
-	 */
-	public Object evaluateExpression(AttributeArray attributeArray) {
-		
-		evaluateFunction(attributeArray);
-		return result;
-	}
-
-	/**
-	 * The method evaluates the expression function. 
-	 * If the expression function is a comparison
-	 * the comparison is evaluated. If the comparison result is evaluated to
-	 * true the true-expression is called recursively. In other case the
-	 * false-expression is called recursively. If the expression is an addition,
-	 * a multiplication or a replacement the attribute value is changed by the
-	 * according operation. 
-	 */
-	protected void evaluateFunction(AttributeArray attributeArray) {
-		int operandValue;
-		boolean conditionIsTrue = false;
-
 		switch (this.function) {
-		case condition:
-			operandValue = attributeArray.get(this.attributeIndex);
-
-			switch (this.operator) {
-			case equal:
-				if (operandValue == (int) this.constant)
-					conditionIsTrue = true;
-				break;
-			case notEqual:
-				if (operandValue != (int) this.constant)
-					conditionIsTrue = true;
-				break;
-			case less:
-				if (operandValue < (int) this.constant)
-					conditionIsTrue = true;
-				break;
-			case lessEqual:
-				if (operandValue <= (int) this.constant)
-					conditionIsTrue = true;
-				break;
-			case greaterEqual:
-				if (operandValue >= (int) this.constant)
-					conditionIsTrue = true;
-				break;
-			case greater:
-				if (operandValue > (int) this.constant)
-					conditionIsTrue = true;
-				break;
-			}
-
-			evaluateSubExpression(attributeArray, conditionIsTrue);
+		case value:
+			return calculation.copy(value);
 			
-			break;
+		case attributeValue:
+			AttributeArray attributeArray;
+			attributeArray = (AttributeArray) get( arguments, ArgumentType.attributeArray, 1);
+			return calculation.createValue(
+				Type.integer,
+				attributeArray.get( (int) value.getValueCopy()));
+				
+		case branching:
+			tmp = expression1.evaluateExpression(arguments);
+			if (tmp.isTrue()  ) 
+				tmp =  expression2.evaluateExpression(arguments);
+			else
+				tmp = expression3.evaluateExpression(arguments);
+			return tmp;
+			
+		case condition:
+			
+			switch (operator) {
+			case or:
+				return calculation.or(
+						expression1.evaluateExpression(arguments) ,
+						expression2.evaluateExpression(arguments)   );
+			case and:
+				return calculation.and(
+						expression1.evaluateExpression(arguments) ,
+						expression2.evaluateExpression(arguments)   );
+			default:
+				return calculation.createValue(Type.bool,  false);
+			}
+			
+			
+		case comparison :
+			return calculation.compare(
+						expression1.evaluateExpression(arguments) ,
+						expression2.evaluateExpression(arguments)   );
+			
+			
+			
 		case addition:
-			addition();
-			break;
+			return calculation.addition(
+					expression1.evaluateExpression(arguments) ,
+					expression2.evaluateExpression(arguments)   );
+			
 		case multiplication:
-			multiplication();
-			break;
+			return calculation.multiplication(
+					expression1.evaluateExpression(arguments) ,
+					expression2.evaluateExpression(arguments)   );
+			
 		case replacement:
-			replacement();
-			break;
-		case identity:
-			identity();
-			break;
+			//TODO
+			
+			return calculation.getNothing();
+			
+			
 		default:
-			defaultFunction();
+			return calculation.getNothing();
 		}
+		
 
 
+	}
+	
+
+	private Object get(Argument[] arguments, ArgumentType type, int wantedOccurence) {
+		int argumentsCount;
+		int occurence;
+		
+		argumentsCount = arguments.length;
+		occurence = 0;
+		
+		for (int index = 0; index < argumentsCount; index++) {
+			if (arguments[index].getType() == type) {
+				occurence++;
+				if (occurence == wantedOccurence) {
+					return arguments[index].getArgument();
+				}
+			}
+		}
+		return null;
 	}
 }

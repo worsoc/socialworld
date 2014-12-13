@@ -1,7 +1,9 @@
-package org.socialworld.core;
+package org.socialworld.calculation;
 
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.calculation.Action2EventMapping;
+import org.socialworld.core.Action;
+import org.socialworld.core.Event;
 
 public class EventCreator  {
 

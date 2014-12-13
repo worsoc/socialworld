@@ -51,8 +51,8 @@ public abstract class DescriptionPool {
 			expression = iterator.next();
 			
 			if (expression.getID() > 0 ) {
-				IDTrue = expression.getIDTrue();
-				IDFalse = expression.getIDFalse();
+				IDTrue = expression.get_ID_Exp2();
+				IDFalse = expression.get_ID_Exp3();
 				
 				if (IDTrue > 0) {
 					expression.setTrueExpression(expressions.get(IDTrue - 1));
