@@ -1,25 +1,6 @@
 package org.socialworld.datasource;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.net.URL;
-
-import org.socialworld.attributes.ActionMode;
-import org.socialworld.attributes.ActionType;
-import org.socialworld.calculation.ActionDelayExpression;
-import org.socialworld.calculation.ActionDurationExpression;
-import org.socialworld.calculation.ActionIntensityExpression;
-import org.socialworld.calculation.ActionModeExpression;
-import org.socialworld.calculation.ActionPriorityExpression;
-import org.socialworld.calculation.ActionRelativeDirectionExpression;
-import org.socialworld.calculation.ActionTypeExpression;
-import org.socialworld.calculation.ConditionOperator;
-import org.socialworld.calculation.Expression;
-import org.socialworld.calculation.ExpressionFunction;
 import org.socialworld.calculation.State2ActionDescription;
-import org.socialworld.calculation.Vector;
 
 public class State2ActionDescriptionPool extends DescriptionPool {
 	
@@ -64,10 +45,11 @@ public class State2ActionDescriptionPool extends DescriptionPool {
 	}
 
 	protected void initialize() {
-		initializeFromFile();
 	}
 	
 
+	
+	/*
 	private void initializeFromFile() {
 		
 //		ListIterator<Expression> iterator;
@@ -82,9 +64,9 @@ public class State2ActionDescriptionPool extends DescriptionPool {
 		int index;
 		int state2ActionType = 0;
 
-		// temporary initialized with ActionDelayExpression
+		// temporary initialized with Expression
 		// expression and s2ad must be initialized
-		expression = new ActionDelayExpression();
+		expression = new Expression();
 		s2ad = new State2ActionDescription();
 		
 		try
@@ -123,7 +105,7 @@ public class State2ActionDescriptionPool extends DescriptionPool {
 					line = line.substring(8);
 					line = line.replace("</IDTrue>", "");
 					line = line.trim();
-					expression.setIDTrue(line);
+					expression.set_ID_Exp2(line);
 					continue;
 				}
 
@@ -131,7 +113,7 @@ public class State2ActionDescriptionPool extends DescriptionPool {
 					line = line.substring(9);
 					line = line.replace("</IDFalse>", "");
 					line = line.trim();
-					expression.setIDFalse(line);
+					expression.set_ID_Exp3(line);
 					continue;
 				}
 
@@ -145,7 +127,6 @@ public class State2ActionDescriptionPool extends DescriptionPool {
 						case "addition":  expression.setFunction(ExpressionFunction.addition);break;
 						case "multiplication":  expression.setFunction(ExpressionFunction.multiplication);break;
 						case "replacement":  expression.setFunction(ExpressionFunction.replacement);break;
-						case "identity":  expression.setFunction(ExpressionFunction.identity);break;
 					}
 					continue;
 				}
@@ -171,64 +152,55 @@ public class State2ActionDescriptionPool extends DescriptionPool {
 					line = line.substring(7);
 					line = line.replace("</Const>", "");
 					line = line.trim();
-					// TODO cast line from String to concrete datatype
-					expression.setConstant(line);
+					//expression.setValue(line);
 					continue;
 				}
 
-				if (line.startsWith("<AttrId>"))
-				{
-					line = line.substring(8);
-					line = line.replace("</AttrId>", "");
-					line = line.trim();
-					expression.setAttributeIndex(line);
-					continue;
-				}
 
 
 				if (line.startsWith("<ActionDelayExp>")) {
-					expression = new ActionDelayExpression();
+					expression = new Expression();
 					continue;
 				}
 
 				if (line.startsWith("</ActionDelayExp>")) {
 					addExpression(expression);
-					s2ad.setDelayExpression((ActionDelayExpression) expression);
+					s2ad.setDelayExpression( expression);
 					continue;
 				}
 
 				if (line.startsWith("<ActionDurationExp>")) {
-					expression = new ActionDurationExpression();
+					expression = new Expression();
 					continue;
 				}
 
 				if (line.startsWith("</ActionDurationExp>")) {
 					addExpression(expression);
-					s2ad.setDurationExpression((ActionDurationExpression) expression);
+					s2ad.setDurationExpression( expression);
 					continue;
 				}
 
 				if (line.startsWith("<ActionIntensityExp>")) {
-					expression = new ActionIntensityExpression();
+					expression = new Expression();
 					continue;
 				}
 
 				if (line.startsWith("</ActionIntensityExp>")) {
 					addExpression(expression);
-					s2ad.setIntensityExpression((ActionIntensityExpression) expression);
+					s2ad.setIntensityExpression( expression);
 					continue;
 				}
 
 				if (line.startsWith("<ActionModeExp>")) {
-					expression = new ActionModeExpression();
+					expression = new Expression();
 					continue;
 				}
 				
 				if (line.startsWith("<Mode>"))
 				{
-					ActionModeExpression tmp;
+					Expression tmp;
 					
-					tmp = (ActionModeExpression) expression;
+					tmp =  expression;
 					
 					line = line.substring(6);
 					line = line.replace("</Mode>", "");
@@ -257,60 +229,60 @@ public class State2ActionDescriptionPool extends DescriptionPool {
 				
 				if (line.startsWith("</ActionModeExp>")) {
 					addExpression(expression);
-					s2ad.setActionModeExpression((ActionModeExpression) expression);
+					s2ad.setActionModeExpression( expression);
 					continue;
 				}
 
 				if (line.startsWith("<ActionPriorityExp>")) {
-					expression = new ActionPriorityExpression();
+					expression = new Expression();
 					continue;
 				}
 
 				if (line.startsWith("</ActionPriorityExp>")) {
 					addExpression(expression);
-					s2ad.setPriorityExpression((ActionPriorityExpression) expression);
+					s2ad.setPriorityExpression( expression);
 					continue;
 				}
 
 				if (line.startsWith("<ActionRelDirExp>")) {
-					expression = new ActionRelativeDirectionExpression();
+					expression = new Expression();
 					continue;
 				}
 
 				if (line.startsWith("<Vector>"))
 				{
-					ActionRelativeDirectionExpression tmp;
+					Expression tmp;
 					
-					tmp = (ActionRelativeDirectionExpression) expression;
+					tmp =  expression;
 					
 					line = line.substring(8);
 					line = line.replace("</Vector>", "");
 					line = line.trim();
-					tmp.setValue(new Vector(line));
+					//tmp.setValue(new Vector(line));
 					continue;
 				}
 
 				if (line.startsWith("</ActionRelDirExp>")) {
 					addExpression(expression);
-					s2ad.setRelativeDirectionExpression((ActionRelativeDirectionExpression) expression);
+					s2ad.setRelativeDirectionExpression( expression);
 					continue;
 				}
 
 				if (line.startsWith("<ActionTypeExp>")) {
-					expression = new ActionTypeExpression();
+					expression = new Expression();
 					continue;
 				}
 				
 				if (line.startsWith("<Type>"))
 				{
-					ActionTypeExpression tmp;
+					Expression tmp;
 					
-					tmp = (ActionTypeExpression) expression;
+					tmp =  expression;
 					
 					line = line.substring(6);
 					line = line.replace("</Type>", "");
 					line = line.trim();
-					switch(line) {
+/*					switch(line) {
 						case "touch":  tmp.setValue(ActionType.touch);break;
 						case "sleep":  tmp.setValue(ActionType.sleep);break;
 						case "changeMove":  tmp.setValue(ActionType.changeMove);break;
@@ -328,7 +300,7 @@ public class State2ActionDescriptionPool extends DescriptionPool {
 
 				if (line.startsWith("</ActionTypeExp>")) {
 					addExpression(expression);
-					s2ad.setActionTypeExpression((ActionTypeExpression) expression);
+					s2ad.setActionTypeExpression( expression);
 				continue;
 				}
 				
@@ -351,7 +323,7 @@ public class State2ActionDescriptionPool extends DescriptionPool {
 			System.out.println("Fehler beim Lesen der Datei");
 			e.printStackTrace();
 		}
-/*		
+		
 		iterator = expressions.listIterator();
 		
 		while (iterator.hasNext()) {
@@ -369,9 +341,11 @@ public class State2ActionDescriptionPool extends DescriptionPool {
 				}
 			}
 		}
-*/		
+		
 		setTrueAndFalseExpressions();
 	}
+*/
+
 /*
 	private void addExpression(Expression expression) {
 		int ID;

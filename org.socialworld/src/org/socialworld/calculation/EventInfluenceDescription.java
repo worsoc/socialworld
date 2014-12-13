@@ -11,15 +11,15 @@ package org.socialworld.calculation;
  */
 public class EventInfluenceDescription {
 
-	protected EventInfluenceExpression expression;
+	protected Expression expression;
 	protected int eventType;
 	protected int influenceType;
 	
 	public EventInfluenceDescription() {
-		expression = new EventInfluenceExpression();
+		expression = new Expression();
 	}
 	
-	public void setExpression(EventInfluenceExpression expression) {
+	public void setExpression(Expression expression) {
 		this.expression = expression;
 	}
 	

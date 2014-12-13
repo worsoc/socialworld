@@ -10,11 +10,11 @@ import org.socialworld.attributes.ActionType;
 import org.socialworld.attributes.Position;
 import org.socialworld.core.Action;
 import org.socialworld.core.ChangedProperty;
-import org.socialworld.core.EventCreator;
-import org.socialworld.core.ActionCreator;
 import org.socialworld.core.ActionHandler;
 import org.socialworld.core.Event;
 import org.socialworld.core.Simulation;
+import org.socialworld.calculation.ActionCreator;
+import org.socialworld.calculation.EventCreator;
 
 /**
  * Every simulation object (actor in the simulation) is inherited by the abstract class SimulationObject.

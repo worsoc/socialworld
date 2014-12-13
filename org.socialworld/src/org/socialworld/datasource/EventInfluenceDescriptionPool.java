@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.net.URL;
 
-import org.socialworld.calculation.EventInfluenceExpression;
+import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.EventInfluenceDescription;
 import org.socialworld.calculation.ExpressionFunction;
 import org.socialworld.calculation.ConditionOperator;
@@ -54,7 +54,7 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 	
 	private void initializeFromFile() {
 		
-		EventInfluenceExpression expression;
+		Expression expression;
 		
 		EventInfluenceDescription eid;
 		
@@ -64,9 +64,9 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 		int influenceType = 0;
 		
 
-		// temporary initialized with ActionDelayExpression
+		// temporary initialized with Expression
 		// expression and eid must be initialized
-		expression = new EventInfluenceExpression();
+		expression = new Expression();
 		eid = new EventInfluenceDescription();
 		
 		try
@@ -105,7 +105,7 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 					line = line.substring(8);
 					line = line.replace("</IDTrue>", "");
 					line = line.trim();
-					expression.setIDTrue(line);
+					expression.set_ID_Exp2(line);
 					continue;
 				}
 
@@ -113,7 +113,7 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 					line = line.substring(9);
 					line = line.replace("</IDFalse>", "");
 					line = line.trim();
-					expression.setIDFalse(line);
+					expression.set_ID_Exp3(line);
 					continue;
 				}
 
@@ -127,7 +127,6 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 						case "addition":  expression.setFunction(ExpressionFunction.addition);break;
 						case "multiplication":  expression.setFunction(ExpressionFunction.multiplication);break;
 						case "replacement":  expression.setFunction(ExpressionFunction.replacement);break;
-						case "identity":  expression.setFunction(ExpressionFunction.identity);break;
 					}
 					continue;
 				}
@@ -153,22 +152,15 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 					line = line.substring(7);
 					line = line.replace("</Const>", "");
 					line = line.trim();
-					expression.setConstant(line);
+					// TODO or not
+					//expression.setValue(line);
 					continue;
 				}
 
-				if (line.startsWith("<AttrId>"))
-				{
-					line = line.substring(8);
-					line = line.replace("</AttrId>", "");
-					line = line.trim();
-					expression.setAttributeIndex(line);
-					continue;
-				}
 
 
 				if (line.startsWith("<EventInfluenceExp>")) {
-					expression = new EventInfluenceExpression();
+					expression = new Expression();
 					continue;
 				}
 
