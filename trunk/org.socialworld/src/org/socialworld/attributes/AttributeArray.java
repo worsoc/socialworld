@@ -91,6 +91,17 @@ public class AttributeArray {
 	}
 
 	/**
+	 * The method sets all attribute values. 
+	 * 
+	 * @param attributeArray
+	 */
+	public void set(AttributeArray attributeArray) {
+		for (int i = 0; i < numberOfAttributes; i++ ) {
+			set(i, attributeArray.get(i));
+		}
+	}
+
+	/**
 	 * The method returns an attribute value. The attribute is addressed by the
 	 * attribute's index.
 	 * 

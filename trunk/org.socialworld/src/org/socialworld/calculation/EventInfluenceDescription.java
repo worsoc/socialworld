@@ -11,24 +11,16 @@ package org.socialworld.calculation;
  */
 public class EventInfluenceDescription {
 
-	protected Expression expression;
-	protected int eventType;
-	protected int influenceType;
+	protected FunctionByExpression f_eventInfluence;
 	
-	public EventInfluenceDescription() {
-		expression = new Expression();
+	public EventInfluenceDescription(Expression startExpression) {
+		f_eventInfluence = new FunctionByExpression(startExpression);
 	}
 	
-	public void setExpression(Expression expression) {
-		this.expression = expression;
+	public FunctionByExpression getFunctionEventInfluence() {
+		return f_eventInfluence;
 	}
-	
-	public void setEventType(int eventType ) {
-		this.eventType =  eventType;
-	}
-	
-	public void setInfluenceType(int influenceType ) {
-		this.influenceType =  influenceType;
-	}	
+
+
 
 }

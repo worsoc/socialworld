@@ -189,6 +189,10 @@ public abstract class SimulationObject extends Model {
 	 return reactionTypeByEventType[eventType];
 	} 
 
+	public int getInfluenceType(int eventType) {
+		 return influenceTypeByEventType[eventType];
+		} 
+
 	public int getState2ActionType() {
 		 return state2ActionType;
 		} 

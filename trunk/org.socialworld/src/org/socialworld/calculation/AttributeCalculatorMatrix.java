@@ -14,6 +14,9 @@ package org.socialworld.calculation;
  * @author Mathias Sikos (tyloesand)
  */
 public class AttributeCalculatorMatrix {
+	public static final int MATRIX_CALCULATION_SIMPLE = 1;
+	public static final int MATRIX_CALCULATION_COMPLEX = 2;
+	
 	private int numberOfAttributes;
 	
 	private int functions[];

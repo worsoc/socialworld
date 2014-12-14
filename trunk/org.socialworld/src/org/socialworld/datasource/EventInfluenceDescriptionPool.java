@@ -1,16 +1,6 @@
 package org.socialworld.datasource;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.net.URL;
-
-import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.EventInfluenceDescription;
-import org.socialworld.calculation.ExpressionFunction;
-import org.socialworld.calculation.ConditionOperator;
-
 import org.socialworld.core.Event;
 
 public class EventInfluenceDescriptionPool extends DescriptionPool {
@@ -49,9 +39,9 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 	}
 
 	protected void initialize() {
-		initializeFromFile();
 	}
 	
+	/*
 	private void initializeFromFile() {
 		
 		Expression expression;
@@ -203,6 +193,6 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 		
 		setTrueAndFalseExpressions();
 	}
-
+*/
 
 }

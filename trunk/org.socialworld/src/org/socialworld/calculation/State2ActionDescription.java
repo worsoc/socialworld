@@ -2,16 +2,16 @@ package org.socialworld.calculation;
 
 public class State2ActionDescription {
 		
-		private Function f_createAction;
+		private FunctionByExpression f_createAction;
 		
 		public State2ActionDescription(Expression startExpression) {
 
-			f_createAction = new Function(startExpression);
+			f_createAction = new FunctionByExpression(startExpression);
 
 		}
 
 
-		public Function getFunctionCreateAction() {
+		public FunctionByExpression getFunctionCreateAction() {
 			return f_createAction;
 		}
 }

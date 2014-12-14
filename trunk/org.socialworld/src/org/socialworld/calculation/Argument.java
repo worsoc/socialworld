@@ -13,6 +13,6 @@ public class Argument {
 	
 	public Object getArgument() { return argument; }
 	
-	public Object getType() { return type; }
+	public ArgumentType getType() { return type; }
 
 }
