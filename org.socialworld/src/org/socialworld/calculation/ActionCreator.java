@@ -6,7 +6,7 @@ import org.socialworld.calculation.Argument;
 import org.socialworld.calculation.ArgumentType;
 import org.socialworld.calculation.EventReactionAssignment;
 import org.socialworld.calculation.EventReactionDescription;
-import org.socialworld.calculation.Function;
+import org.socialworld.calculation.FunctionByExpression;
 import org.socialworld.calculation.State2ActionAssignment;
 import org.socialworld.calculation.State2ActionDescription;
 import org.socialworld.core.Action;
@@ -67,7 +67,7 @@ public class ActionCreator  {
 		int eventType;
 		int eventReactionType;
 		EventReactionDescription eventReactionDescription;
-		Function f_CreateReaction;
+		FunctionByExpression f_CreateReaction;
 		Argument[] arguments;
 		
 		eventType = event.getEventType();
@@ -108,7 +108,7 @@ public class ActionCreator  {
 
 		int state2ActionType;
 		State2ActionDescription state2ActionDescription;
-		Function f_CreateAction;
+		FunctionByExpression f_CreateAction;
 		Argument[] arguments;
 		
 		state2ActionType = actor.getState2ActionType();

@@ -2,16 +2,16 @@ package org.socialworld.calculation;
 
 public class EventReactionDescription {
 	
-	private Function f_createReaction;
+	private FunctionByExpression f_createReaction;
 	
 
 	public EventReactionDescription(Expression startExpression) {
 
-		f_createReaction = new Function(startExpression);
+		f_createReaction = new FunctionByExpression(startExpression);
 
 	}
 
-	public Function getFunctionCreateReaction() {
+	public FunctionByExpression getFunctionCreateReaction() {
 		return f_createReaction;
 	}
 }

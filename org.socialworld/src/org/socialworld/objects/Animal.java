@@ -12,8 +12,6 @@ import org.socialworld.core.Action;
 import org.socialworld.core.Event;
 import org.socialworld.calculation.AttributeCalculator;
 import org.socialworld.calculation.AttributeCalculatorMatrix;
-import org.socialworld.calculation.EventInfluenceDescription;
-import org.socialworld.calculation.EventInfluenceAssignment;
 
 
 /**
@@ -149,22 +147,10 @@ public class Animal extends SimulationObject {
 	 *            the event that effects to the object
 	 */
 	public void changeByEvent(final Event event) {
-		EventInfluenceDescription eventInfluenceDescription;
-		int eventType;
-		int eventInfluenceType;
+		AttributeArray tmp;
 		
-		eventType = event.getEventType();
-		eventInfluenceType = this.influenceTypeByEventType[eventType];
-		
-		eventInfluenceDescription = 
-			EventInfluenceAssignment.getInstance().getEventInfluenceDescription(
-				eventType, eventInfluenceType	);
-		
-		attributeCalculator.setAttributes(this.attributes);
-		attributeCalculator.changeAttributes(eventInfluenceDescription);
-		attributeCalculator.fetchAttributes(this.attributes);
-		
-		
+		tmp = attributeCalculator.changeAttributesByEvent(event, this);
+		this.attributes.set(tmp);
 	}
 
 	/**
