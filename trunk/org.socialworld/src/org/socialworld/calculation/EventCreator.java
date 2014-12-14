@@ -7,26 +7,19 @@ import org.socialworld.core.Event;
 
 public class EventCreator  {
 
-	private Action2EventMapping mapping;
-	private Event event;
 	
-	public EventCreator() {
-		mapping = Action2EventMapping.getInstance();
-	}
 	
 
 	/**
 	 * The method creates a new event for an action.
 	 */
-	public Event createEvent(
+	public static Event createEvent(
 			final SimulationObject actor,
 			final Action action) {
 		
-			this.event = null;
 			
-			createEvent(action, actor);
+			return createEvent(action, actor);
 			
-			return this.event;
 	}
 	
 	/**
@@ -34,8 +27,8 @@ public class EventCreator  {
 	 * Therefore an according mapping description is used to set the event properties.
 	 * 
 	 */
-	private void createEvent(final Action action,	final SimulationObject actor) {
-		event = mapping.createEvent(action, actor);
+	private static Event createEvent(final Action action,	final SimulationObject actor) {
+		return Action2EventMapping.createEvent(action, actor);
 	}
 	
 	
