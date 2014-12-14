@@ -9,23 +9,9 @@ import org.socialworld.core.Event;
 import org.socialworld.objects.SimulationObject;
 
 public class Action2EventMapping {
-	private static Action2EventMapping mapping;
 	
-	private Action2EventMapping() {
-		
-	}
 	
-	/**
-	 * The method gets back the only instance of the Action2EventMapping.
-	 * 
-	 * @return singleton object of Action2EventMapping
-	 */
-	public static Action2EventMapping getInstance() {
-		if (mapping == null) mapping = new Action2EventMapping();
-		return mapping;
-	}
-	
-	public Event createEvent(final Action action,	final SimulationObject actor) {
+	public static Event createEvent(final Action action,	final SimulationObject actor) {
 		Event event;
 		
 		// just for testing:
@@ -72,35 +58,35 @@ public class Action2EventMapping {
 		return event;
 	}
 	
-	private int mapActionToEventType(ActionMode actionMode, ActionType actionType ) {
+	private static int mapActionToEventType(ActionMode actionMode, ActionType actionType ) {
 		return 0;
 	}
 	
-	private int mapActionToIntensity(
+	private static int mapActionToIntensity(
 			ActionMode actionMode, ActionType actionType, double intensity, SimulationObject actor) {
 		return (int) intensity;
 	}
 	
-	private int mapActionToPriority(ActionMode actionMode, ActionType actionType, int priority ) {
+	private static int mapActionToPriority(ActionMode actionMode, ActionType actionType, int priority ) {
 		return priority;
 	}
 
-	private Position calculateEventPosition(final Action action,	final SimulationObject actor ) {
+	private static Position calculateEventPosition(final Action action,	final SimulationObject actor ) {
 		// getPosition() returns a copy of actor's position!
 		Position eventposition = actor.getPosition();
 		return eventposition;
 	}
 
-	private Direction calculateEventDirection(final Action action,	final SimulationObject actor ) {
+	private static Direction calculateEventDirection(final Action action,	final SimulationObject actor ) {
 		Direction eventDirection = new Direction(action.getDirection());
 		return eventDirection;
 	}
 
-	private float calculateEffectDistance(final Action action,	final SimulationObject actor ) {
+	private static float calculateEffectDistance(final Action action,	final SimulationObject actor ) {
 		return 123;
 	}
 
-	private float calculateEffectAngle(final Action action,	final SimulationObject actor ) {
+	private static float calculateEffectAngle(final Action action,	final SimulationObject actor ) {
 		return 12;
 	}
 

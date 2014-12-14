@@ -14,10 +14,7 @@ import org.socialworld.core.Event;
 
 public class ActionCreator  {
 
-	Action action;
 	
-	public ActionCreator() {
-	}
 
 
 	/**
@@ -26,15 +23,13 @@ public class ActionCreator  {
 	 * @param: actor
 	 * @param: event
 	 */
-	public Action createAction(	final SimulationObject actor,	final Event event) {
+	public static Action createAction(	final SimulationObject actor,	final Event event) {
 		
-			action = null;
 			if (actor instanceof Animal) 
-				createAnimalReaction(event, (Animal) actor);
+				return createAnimalReaction(event, (Animal) actor);
 			else
-				createReaction(event,  actor);
+				return createReaction(event,  actor);
 				
-			return action;
 	}
 	
 	/**
@@ -42,15 +37,13 @@ public class ActionCreator  {
 	 *
 	 * @param: actor
 	 */
-	public Action createAction(	final SimulationObject actor) {
+	public static Action createAction(	final SimulationObject actor) {
 		
-			action = null;
 			
 			if (actor instanceof Animal) 
-				createAnimalActionByState( (Animal) actor);
+				return createAnimalActionByState( (Animal) actor);
 			else
-				createActionByState(actor);
-			return action;
+				return createActionByState(actor);
 	}
 	
 	
@@ -61,7 +54,7 @@ public class ActionCreator  {
 	 * @param: event
 	 * @param: actor
 	 */
-	private void createAnimalReaction(final Event event,	final Animal actor) {
+	private static Action createAnimalReaction(final Event event,	final Animal actor) {
 		
 	
 		int eventType;
@@ -84,7 +77,7 @@ public class ActionCreator  {
 		arguments[0] = new Argument(ArgumentType.attributeArray, actor.getAttributes());
 		arguments[1] = new Argument(ArgumentType.event, event);
 		
-		action = (Action) f_CreateReaction.calculate(arguments).getValue();
+		return (Action) f_CreateReaction.calculate(arguments).getValue();
 
 	}
 
@@ -94,8 +87,9 @@ public class ActionCreator  {
 	 * @param: event
 	 * @param: actor
 	 */
-	private void createReaction(final Event event,	final SimulationObject actor) {
-
+	private static Action createReaction(final Event event,	final SimulationObject actor) {
+		// TODO
+		return null;
 	}
 	
 	/**
@@ -104,7 +98,7 @@ public class ActionCreator  {
 	 * 
 	 * @param: actor
 	 */
-	private void createAnimalActionByState(final Animal actor) {
+	private static Action createAnimalActionByState(final Animal actor) {
 
 		int state2ActionType;
 		State2ActionDescription state2ActionDescription;
@@ -122,7 +116,7 @@ public class ActionCreator  {
 		
 		arguments[0] = new Argument(ArgumentType.attributeArray, actor.getAttributes());
 		
-		action = (Action) f_CreateAction.calculate(arguments).getValue();
+		return (Action) f_CreateAction.calculate(arguments).getValue();
 		
 
 	}
@@ -133,8 +127,9 @@ public class ActionCreator  {
 	 * 
 	 * @param: actor
 	 */
-	private void createActionByState(final SimulationObject actor) {
-
+	private static Action createActionByState(final SimulationObject actor) {
+		// TODO
+		return null;
 	}
 	
 }
