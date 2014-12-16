@@ -4,6 +4,8 @@
 package org.socialworld.calculation;
 
 import org.socialworld.attributes.AttributeArray;
+import org.socialworld.calculation.descriptions.EventInfluenceAssignment;
+import org.socialworld.calculation.descriptions.EventInfluenceDescription;
 import org.socialworld.core.Event;
 import org.socialworld.objects.Animal;
 
@@ -25,7 +27,7 @@ public  class AttributeCalculator {
 		int eventInfluenceType;
 	
 		FunctionByExpression f_EventInfluence;
-		Argument[] arguments;
+		Value[] arguments;
 	
 		eventType = event.getEventType();
 		eventInfluenceType = animal.getInfluenceType(eventType);
@@ -37,8 +39,8 @@ public  class AttributeCalculator {
 		f_EventInfluence = eventInfluenceDescription.getFunctionEventInfluence();
 
 		
-		arguments = new Argument[1];
-		arguments[0] = new Argument(ArgumentType.attributeArray, animal.getAttributes());
+		arguments = new Value[1];
+		arguments[0] = new Value(Type.attributeArray, animal.getAttributes());
 	
 		return (AttributeArray) f_EventInfluence.calculate(arguments).getValue();
 	}
@@ -46,12 +48,12 @@ public  class AttributeCalculator {
 
 	public static AttributeArray getAttributesChangedByMatrix(Animal animal) {
 		FunctionByMatrix f_AttributesByMatrix;
-		Argument[] arguments;
+		Value[] arguments;
 	
 
-		arguments = new Argument[2];
-		arguments[0] = new Argument(ArgumentType.attributeArray, animal.getAttributes());
-		arguments[1] = new Argument(ArgumentType.integer, AttributeCalculatorMatrix.MATRIX_CALCULATION_COMPLEX );
+		arguments = new Value[2];
+		arguments[0] = new Value(Type.attributeArray, animal.getAttributes());
+		arguments[1] = new Value(Type.integer, AttributeCalculatorMatrix.MATRIX_CALCULATION_COMPLEX );
 		
 		// TODO get the function object from animal (not the matrix!)
 		//      --> the function object shouldn't be created here
@@ -61,11 +63,11 @@ public  class AttributeCalculator {
 	
 	public static AttributeArray getAttributesChangedByRefresh(Animal animal) {
 		FunctionByMatrix f_AttributesByMatrix;
-		Argument[] arguments;
+		Value[] arguments;
 	
-		arguments = new Argument[2];
-		arguments[0] = new Argument(ArgumentType.attributeArray, animal.getAttributes());
-		arguments[1] = new Argument(ArgumentType.integer, AttributeCalculatorMatrix.MATRIX_CALCULATION_SIMPLE);
+		arguments = new Value[2];
+		arguments[0] = new Value(Type.attributeArray, animal.getAttributes());
+		arguments[1] = new Value(Type.integer, AttributeCalculatorMatrix.MATRIX_CALCULATION_SIMPLE);
 		
 		// TODO get the function object from animal (not the matrix!)
 		//      --> the function object shouldn't be created here

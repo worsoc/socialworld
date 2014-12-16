@@ -1,4 +1,7 @@
-package org.socialworld.calculation;
+package org.socialworld.calculation.descriptions;
+
+import org.socialworld.calculation.Expression;
+import org.socialworld.calculation.FunctionByExpression;
 
 public class EventReactionDescription {
 	

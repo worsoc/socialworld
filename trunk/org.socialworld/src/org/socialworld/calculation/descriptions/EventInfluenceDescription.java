@@ -1,7 +1,10 @@
 /**
  * 
  */
-package org.socialworld.calculation;
+package org.socialworld.calculation.descriptions;
+
+import org.socialworld.calculation.Expression;
+import org.socialworld.calculation.FunctionByExpression;
 
 /**
  * The class holds all informations for

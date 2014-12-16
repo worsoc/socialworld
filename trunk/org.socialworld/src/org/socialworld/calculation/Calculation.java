@@ -20,7 +20,7 @@ public class Calculation {
 		
 	}
 	
-	public Value createValue(Type type, Object value) {
+	public  Value createValue(Type type, Object value) {
 		return new Value(type, value);
 	}
 	
@@ -43,6 +43,32 @@ public class Calculation {
 			switch (op2.getType() ) {
 			case integer:
 				return createValue(Type.integer, (int) op1.getValue() + (int) op2.getValue() );
+			case floatingpoint:
+				return createValue(Type.floatingpoint, (int) op1.getValue() + (double) op2.getValue() );
+			default:
+				return null;
+			}
+		case floatingpoint:
+			switch (op2.getType() ) {
+			case integer:
+				return createValue(Type.floatingpoint, (double) op1.getValue() + (int) op2.getValue() );
+			case floatingpoint:
+				return createValue(Type.floatingpoint, (double) op1.getValue() + (double) op2.getValue() );
+			default:
+				return null;
+			}
+			
+		default:
+			return null;
+		}
+	}
+
+	public Value subtraction(Value op1, Value op2){
+		switch (op1.getType() ) {
+		case integer:
+			switch (op2.getType() ) {
+			case integer:
+				return createValue(Type.integer, (int) op1.getValue() - (int) op2.getValue() );
 			default:
 				return null;
 			}
@@ -57,6 +83,17 @@ public class Calculation {
 			switch (op2.getType() ) {
 			case integer:
 				return createValue(Type.integer, (int) op1.getValue() * (int) op2.getValue() );
+			case floatingpoint:
+				return createValue(Type.floatingpoint, (int) op1.getValue() * (double) op2.getValue() );
+			default:
+				return null;
+			}
+		case floatingpoint:
+			switch (op2.getType() ) {
+			case integer:
+				return createValue(Type.floatingpoint, (double) op1.getValue() * (int) op2.getValue() );
+			case floatingpoint:
+				return createValue(Type.floatingpoint, (double) op1.getValue() * (double) op2.getValue() );
 			default:
 				return null;
 			}

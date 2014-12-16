@@ -13,7 +13,6 @@ package org.socialworld.calculation;
  *   	it corresponds to ( AttributeArray.attributes[i] - AttributeArray.differences[i] )	
  *   	  
  */
-public enum CalculationInputType {
+public enum FunctionByMatrix_InputType {
 	NewAttributeValue, AttributeChange, OldAttributeValue 
-
 }

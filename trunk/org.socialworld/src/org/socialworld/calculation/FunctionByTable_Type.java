@@ -1,7 +1,6 @@
 package org.socialworld.calculation;
 
-
-public enum AttributeCalculatorFunctionTableType {
+public enum FunctionByTable_Type {
 	horizontal_min(0), identical(1), negative_raise(2), 
 	v(3), v_mirrored(4), u(5), u_mirrored(6), horizontal_max(7), positive_raise(8);
 	
@@ -14,7 +13,7 @@ public enum AttributeCalculatorFunctionTableType {
 
 	private int arrayIndex;
 
-	private AttributeCalculatorFunctionTableType(int index) {
+	private FunctionByTable_Type(int index) {
 		this.arrayIndex = index;
 	}
 
@@ -34,10 +33,11 @@ public enum AttributeCalculatorFunctionTableType {
 	 *            attribute index
 	 * @return attribute name
 	 */
-	public AttributeCalculatorFunctionTableType getType(int arrayIndex) {
-		for (AttributeCalculatorFunctionTableType type : AttributeCalculatorFunctionTableType.values())
+	public FunctionByTable_Type getType(int arrayIndex) {
+		for (FunctionByTable_Type type : FunctionByTable_Type.values())
 			if (type.arrayIndex == arrayIndex)
 				return type;
 		return null;
 	}
+
 }

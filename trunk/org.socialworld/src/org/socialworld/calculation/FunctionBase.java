@@ -3,5 +3,5 @@ package org.socialworld.calculation;
 public abstract class FunctionBase {
 	protected Calculation calculation;
 
-	public abstract Value calculate(Argument[] arguments);
+	public abstract Value calculate(Value[] arguments);
 }

@@ -1,4 +1,4 @@
-package org.socialworld.calculation;
+package org.socialworld.calculation.descriptions;
 
 import org.socialworld.datasource.EventReactionDescriptionPool;
 

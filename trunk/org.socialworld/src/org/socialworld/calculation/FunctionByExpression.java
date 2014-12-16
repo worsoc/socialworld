@@ -13,7 +13,7 @@ public class FunctionByExpression extends FunctionBase {
 		this.startExpression  = startExpression;
 	}
 	
-	public Value calculate(Argument[] arguments) {
+	public Value calculate(Value[] arguments) {
 		return startExpression.evaluateExpression(arguments);
 	}
 

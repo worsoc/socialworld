@@ -1,39 +1,30 @@
-/**
- * 
- */
 package org.socialworld.calculation;
 
 import org.socialworld.attributes.AttributeArray;
 
+public class FunctionByTable extends FunctionBase {
 
-/**
- * The class implements the calculation function as a table.
- *  The attribute value is interpreted as table's index.
- *  For the identical function no array is filled.
- *  For the other functions an array is initialized. 
- *  Getting the function value means to look into the array at the index given by the argument value
- * @author Mathias Sikos (tyloesand) 
- */
-public class AttributeCalculatorFunctionTable extends
-		AttributeCalculatorFunction {
-
-	private AttributeCalculatorFunctionTableType acftType;
+	private FunctionByTable_Type type;
 	private int values[];
 
 	private int range;
-
-	public AttributeCalculatorFunctionTable(AttributeCalculatorFunctionTableType type) {
-		this.acftType = type;
+	
+	public FunctionByTable (FunctionByTable_Type type) {
+		this.type = type;
 		this.range = AttributeArray.ATTRIBUTE_RANGE;
 		initialize();
 	}
+	
+	@Override
+	public Value calculate(Value[] arguments) {
+		if (arguments[0].getType() == Type.integer) {
+			return calculation.createValue(Type.integer, calculate((int) arguments[0].getValue()));
+		}
+		return null;
+	}
 
-	/**
-	 * The method interprets the function as a table. The input value is
-	 * understood as the index of a table and table's value at the index is the
-	 * function value.
-	 */
-	public int calculate(int inputValue) {
+	
+	private int calculate(int inputValue) {
 		int result;
 
 		if (inputValue > range)
@@ -41,7 +32,7 @@ public class AttributeCalculatorFunctionTable extends
 		if (inputValue < 0)
 			inputValue = 0;
 
-		switch (acftType) {
+		switch (type) {
 		case identical:
 			result = inputValue;
 			break;
@@ -61,9 +52,9 @@ public class AttributeCalculatorFunctionTable extends
 			result = 0;
 		return (int) result;
 	}
-	
+
 	private void initialize() {
-		switch (acftType) {
+		switch (type) {
 		case negative_raise:
 			values = new int[range + 1];
 		    for(int i=0; i < range; i++)
