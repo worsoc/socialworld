@@ -15,15 +15,15 @@ public class FunctionByMatrix extends FunctionBase {
 	}
 	
 	@Override
-	public Value calculate(Argument[] arguments) {
+	public Value calculate(Value[] arguments) {
 		
 		calculation = Calculation.getInstance();
 
 		switch (arguments[0].getType() ) {
 			case attributeArray:
 				AttributeArray attributes;
-				attributes = (AttributeArray) arguments[0].getArgument();
-				if ((int) arguments[1].getArgument() == AttributeCalculatorMatrix.MATRIX_CALCULATION_SIMPLE)
+				attributes = (AttributeArray) arguments[0].getValue();
+				if ((int) arguments[1].getValue() == AttributeCalculatorMatrix.MATRIX_CALCULATION_SIMPLE)
 					calculateAttributesSimply(attributes);
 				else
 					calculateAttributes(attributes, this.matrix.isWithOffset());
@@ -46,32 +46,36 @@ public class FunctionByMatrix extends FunctionBase {
 		int 	column;
 		int		row;
 
-		int 	attributeValue;
-		
+		Value 	attributeValue;
+		Value 	share;
 		int 	functionIndex;
-		float 	share;
-
-		AttributeCalculatorFunction function;
-
+		FunctionBase function;
 		float change;
+
+		Value[] arguments;
 
 		int     length;
 
 		length = attributes.length();
 		attributesNew = new float[length];
 
+		arguments = new Value[1];
 		
 		for (row = 0; row < length; row++) {
 
-			attributeValue 			= attributes.get(row);
+			attributeValue 			= attributes.getAsValue(row);
 
 			for (column = 0; column < length; column++) {
 
 				functionIndex = this.matrix.getFunction(row, column);
-				share = this.matrix.getShare(row, column);
+				share = new Value(Type.floatingpoint,  this.matrix.getShare(row, column));
 				function = AttributeCalculatorFunctions.get(functionIndex);
 
-				change = share * function.calculate(attributeValue);
+				arguments[0] = new Value(Type.integer, attributeValue );
+				change = (float)
+						calculation.multiplication(share, function.calculate(arguments))
+						.getValue();
+						
 
 				if (change != 0)
 					attributesNew[column] += change;
@@ -105,40 +109,48 @@ public class FunctionByMatrix extends FunctionBase {
 		int 	column;
 		int		row;
 
-		int 	attributeValue;
-		int 	attributeChangeValue;
-		
-		int 	inputValue;
+		Value 	attributeValue;
+		Value 	attributeChangeValue;
+		Value 	inputValue;
 		int 	functionIndex;
-		float 	share;
-		int 	offset = 0;
+		Value 	share;
+		Value 	offset;
+		FunctionByMatrix_InputType 		inputType;
 
 		int     length;
 		
-		AttributeCalculatorFunction function;
-		CalculationInputType 		inputType;
+		FunctionBase function;
+		Value[] arguments;
 
 		float change;
 
 		length = attributes.length();
 		attributesNew = new float[length];
-
+		arguments = new Value[1];
+		offset = new Value(Type.integer,  0);
+		
 		for (row = 0; row < length; row++) {
 
-			attributeValue 			= attributes.get(row);
-			attributeChangeValue 	= attributes.getDifference(row);
+			attributeValue 			= attributes.getAsValue(row);
+			attributeChangeValue 	= attributes.getDifferenceAsValue(row);
 
 			for (column = 0; column < length; column++) {
 
 				functionIndex = this.matrix.getFunction(row, column);
 				inputType = this.matrix.getInputType(row, column);
-				share = this.matrix.getShare(row, column);
-				if (withOffset) offset = this.matrix.getOffset(row, column);
+				share = new Value(Type.floatingpoint,  this.matrix.getShare(row, column));
+				if (withOffset) offset = new Value(Type.integer,  this.matrix.getOffset(row, column));
 
 				function = AttributeCalculatorFunctions.get(functionIndex);
 				inputValue = getInputValue(inputType, attributeValue, attributeChangeValue);
 
-				change = share * function.calculate(inputValue) + offset;
+				arguments[0] = new Value(Type.integer, inputValue );
+				change = (float)
+						calculation.addition(
+								calculation.multiplication(share, function.calculate(arguments)),
+								offset)
+						.getValue();
+				
 
 				if (change != 0)
 					attributesNew[column] += change;
@@ -158,17 +170,17 @@ public class FunctionByMatrix extends FunctionBase {
 	}
 
 
-	private int getInputValue(CalculationInputType type, int attributeValue,
-			int attributeChangeValue) {
+	private Value getInputValue(FunctionByMatrix_InputType type, Value attributeValue,
+			Value attributeChangeValue) {
 		switch (type) {
 		case NewAttributeValue:
 			return attributeValue;
 		case AttributeChange:
 			return attributeChangeValue;
 		case OldAttributeValue:
-			return (attributeValue - attributeChangeValue);
+			return calculation.subtraction(attributeValue , attributeChangeValue);
 		}
-		return 0;
+		return calculation.getNothing();
 	}
 
 }

@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class AttributeCalculatorFunctions {
 
-	private static List<AttributeCalculatorFunction> functions;
+	private static List<FunctionBase> functions;
 	
 	private AttributeCalculatorFunctions() {
 
@@ -27,7 +27,7 @@ public class AttributeCalculatorFunctions {
 	 * @param functionIndex
 	 * @return attribute calculator function
 	 */
-	public static AttributeCalculatorFunction get(int functionIndex) {
+	public static FunctionBase get(int functionIndex) {
 		if (functions == null) {
 			initialize();
 		}
@@ -38,47 +38,47 @@ public class AttributeCalculatorFunctions {
 
 	private static void initialize() {
 		
-		functions = new ArrayList<AttributeCalculatorFunction>();
+		functions = new ArrayList<FunctionBase>();
 		
-		AttributeCalculatorFunction function;
+		FunctionBase function;
 
-		// !!! the order of creation and adding must be conform to the order of enumeration AttributeCalculatorFunctionTableType
-		// because the function array index has to match to the int value that belongs to the AttributeCalculatorFunctionTableType
+		// !!! the order of creation and adding must be conform to the order of enumeration FunctionByTable_Type
+		// because the function array index has to match to the int value that belongs to the FunctionByTable_Type
 
 		// add horizontal_min function 
-		function = new AttributeCalculatorFunctionTable(AttributeCalculatorFunctionTableType.horizontal_min);
+		function = new FunctionByTable(FunctionByTable_Type.horizontal_min);
 		functions.add(function);
 
 		// add identical function 
-		function = new AttributeCalculatorFunctionTable(AttributeCalculatorFunctionTableType.identical);
+		function = new FunctionByTable(FunctionByTable_Type.identical);
 		functions.add(function);
 
 		// add negative_raise function 
-		function = new AttributeCalculatorFunctionTable(AttributeCalculatorFunctionTableType.negative_raise);
+		function = new FunctionByTable(FunctionByTable_Type.negative_raise);
 		functions.add(function);
 
 		// add v function 
-		function = new AttributeCalculatorFunctionTable(AttributeCalculatorFunctionTableType.v);
+		function = new FunctionByTable(FunctionByTable_Type.v);
 		functions.add(function);
 		
 		// add v_mirrored function 
-		function = new AttributeCalculatorFunctionTable(AttributeCalculatorFunctionTableType.v_mirrored);
+		function = new FunctionByTable(FunctionByTable_Type.v_mirrored);
 		functions.add(function);
 
 		// add u function 
-		function = new AttributeCalculatorFunctionTable(AttributeCalculatorFunctionTableType.u);
+		function = new FunctionByTable(FunctionByTable_Type.u);
 		functions.add(function);
 		
 		// add u_mirrored function 
-		function = new AttributeCalculatorFunctionTable(AttributeCalculatorFunctionTableType.u_mirrored);
+		function = new FunctionByTable(FunctionByTable_Type.u_mirrored);
 		functions.add(function);
 
 		// add horizontal_max function 
-		function = new AttributeCalculatorFunctionTable(AttributeCalculatorFunctionTableType.horizontal_max);
+		function = new FunctionByTable(FunctionByTable_Type.horizontal_max);
 		functions.add(function);
 
 		// add positive_raise function 
-		function = new AttributeCalculatorFunctionTable(AttributeCalculatorFunctionTableType.positive_raise);
+		function = new FunctionByTable(FunctionByTable_Type.positive_raise);
 		functions.add(function);
 
 	}

@@ -2,13 +2,13 @@ package org.socialworld.calculation;
 
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.Animal;
-import org.socialworld.calculation.Argument;
-import org.socialworld.calculation.ArgumentType;
-import org.socialworld.calculation.EventReactionAssignment;
-import org.socialworld.calculation.EventReactionDescription;
+import org.socialworld.calculation.Value;
+import org.socialworld.calculation.Type;
 import org.socialworld.calculation.FunctionByExpression;
-import org.socialworld.calculation.State2ActionAssignment;
-import org.socialworld.calculation.State2ActionDescription;
+import org.socialworld.calculation.descriptions.EventReactionAssignment;
+import org.socialworld.calculation.descriptions.EventReactionDescription;
+import org.socialworld.calculation.descriptions.State2ActionAssignment;
+import org.socialworld.calculation.descriptions.State2ActionDescription;
 import org.socialworld.core.Action;
 import org.socialworld.core.Event;
 
@@ -61,7 +61,7 @@ public class ActionCreator  {
 		int eventReactionType;
 		EventReactionDescription eventReactionDescription;
 		FunctionByExpression f_CreateReaction;
-		Argument[] arguments;
+		Value[] arguments;
 		
 		eventType = event.getEventType();
 		eventReactionType = actor.getReactionType(eventType);
@@ -72,10 +72,10 @@ public class ActionCreator  {
 		
 		f_CreateReaction = eventReactionDescription.getFunctionCreateReaction();
 		
-		arguments = new Argument[2];
+		arguments = new Value[2];
 		
-		arguments[0] = new Argument(ArgumentType.attributeArray, actor.getAttributes());
-		arguments[1] = new Argument(ArgumentType.event, event);
+		arguments[0] = new Value(Type.attributeArray, actor.getAttributes());
+		arguments[1] = new Value(Type.event, event);
 		
 		return (Action) f_CreateReaction.calculate(arguments).getValue();
 
@@ -103,7 +103,7 @@ public class ActionCreator  {
 		int state2ActionType;
 		State2ActionDescription state2ActionDescription;
 		FunctionByExpression f_CreateAction;
-		Argument[] arguments;
+		Value[] arguments;
 		
 		state2ActionType = actor.getState2ActionType();
 		
@@ -112,9 +112,9 @@ public class ActionCreator  {
 		
 		f_CreateAction = state2ActionDescription.getFunctionCreateAction();
 		
-		arguments = new Argument[1];
+		arguments = new Value[1];
 		
-		arguments[0] = new Argument(ArgumentType.attributeArray, actor.getAttributes());
+		arguments[0] = new Value(Type.attributeArray, actor.getAttributes());
 		
 		return (Action) f_CreateAction.calculate(arguments).getValue();
 		

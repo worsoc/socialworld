@@ -104,7 +104,7 @@ public class Expression {
 
 	/**
 	 */
-	Value evaluateExpression(Argument[] arguments) {
+	Value evaluateExpression(Value[] arguments) {
 		Value tmp;
 		
 		switch (this.function) {
@@ -113,7 +113,7 @@ public class Expression {
 			
 		case attributeValue:
 			AttributeArray attributeArray;
-			attributeArray = (AttributeArray) get( arguments, ArgumentType.attributeArray, 1);
+			attributeArray = (AttributeArray) get( arguments, Type.attributeArray, 1);
 			return calculation.createValue(
 				Type.integer,
 				attributeArray.get( (int) value.getValueCopy()));
@@ -174,7 +174,7 @@ public class Expression {
 	}
 	
 
-	private Object get(Argument[] arguments, ArgumentType type, int wantedOccurence) {
+	private Object get(Value[] arguments, Type type, int wantedOccurence) {
 		int argumentsCount;
 		int occurence;
 		
@@ -185,7 +185,7 @@ public class Expression {
 			if (arguments[index].getType() == type) {
 				occurence++;
 				if (occurence == wantedOccurence) {
-					return arguments[index].getArgument();
+					return arguments[index].getValue();
 				}
 			}
 		}
