@@ -3,6 +3,9 @@
  */
 package org.socialworld.attributes;
 
+import org.socialworld.calculation.Type;
+import org.socialworld.calculation.Value;
+
 /**
  * The class implements an attribute array. It
  *         has an byte array for the value of every attribute and set and get
@@ -114,6 +117,10 @@ public class AttributeArray {
 	}
 
 
+	public Value getAsValue(int attributeIndex) {
+		return new Value(Type.integer, get(attributeIndex));
+	}
+	
 	/**
 	 * The method returns an attribute's value difference. The attribute is addressed by the
 	 * attribute's index.
@@ -126,6 +133,9 @@ public class AttributeArray {
 	return differences[attibuteIndex];
 	}
 	
+	public Value getDifferenceAsValue(int attributeIndex) {
+		return new Value(Type.integer, getDifference(attributeIndex));
+	}
 	
 	public int length() {
 		return numberOfAttributes;
