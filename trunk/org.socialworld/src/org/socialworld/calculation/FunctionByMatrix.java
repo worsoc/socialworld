@@ -4,13 +4,13 @@ import org.socialworld.attributes.AttributeArray;
 
 public class FunctionByMatrix extends FunctionBase {
 
-	private AttributeCalculatorMatrix matrix;
+	private FunctionByMatrix_Matrix matrix;
 
-	public FunctionByMatrix(AttributeCalculatorMatrix matrix) {
+	public FunctionByMatrix(FunctionByMatrix_Matrix matrix) {
 		this.matrix = matrix;
 	}
 	
-	public void setMatrix(AttributeCalculatorMatrix matrix) {
+	public void setMatrix(FunctionByMatrix_Matrix matrix) {
 		this.matrix = matrix;
 	}
 	
@@ -23,7 +23,7 @@ public class FunctionByMatrix extends FunctionBase {
 			case attributeArray:
 				AttributeArray attributes;
 				attributes = (AttributeArray) arguments[0].getValue();
-				if ((int) arguments[1].getValue() == AttributeCalculatorMatrix.MATRIX_CALCULATION_SIMPLE)
+				if ((int) arguments[1].getValue() == FunctionByMatrix_Matrix.MATRIX_CALCULATION_SIMPLE)
 					calculateAttributesSimply(attributes);
 				else
 					calculateAttributes(attributes, this.matrix.isWithOffset());
@@ -68,8 +68,8 @@ public class FunctionByMatrix extends FunctionBase {
 			for (column = 0; column < length; column++) {
 
 				functionIndex = this.matrix.getFunction(row, column);
-				share = new Value(Type.floatingpoint,  this.matrix.getShare(row, column));
-				function = AttributeCalculatorFunctions.get(functionIndex);
+				share =   this.matrix.getShare(row, column);
+				function = Functions.get(functionIndex);
 
 				arguments[0] = new Value(Type.integer, attributeValue );
 				change = (float)
@@ -138,10 +138,10 @@ public class FunctionByMatrix extends FunctionBase {
 
 				functionIndex = this.matrix.getFunction(row, column);
 				inputType = this.matrix.getInputType(row, column);
-				share = new Value(Type.floatingpoint,  this.matrix.getShare(row, column));
-				if (withOffset) offset = new Value(Type.integer,  this.matrix.getOffset(row, column));
+				share = this.matrix.getShare(row, column);
+				if (withOffset) offset =  this.matrix.getOffset(row, column);
 
-				function = AttributeCalculatorFunctions.get(functionIndex);
+				function = Functions.get(functionIndex);
 				inputValue = getInputValue(inputType, attributeValue, attributeChangeValue);
 
 				arguments[0] = new Value(Type.integer, inputValue );

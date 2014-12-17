@@ -18,8 +18,8 @@ import org.socialworld.attributes.AttributeArray;
 public class Expression {
 	int ID;
 	
-	ExpressionFunction function;
-	ConditionOperator operator;
+	Expression_Function function;
+	Expression_ConditionOperator operator;
 
 	
 	Value value;
@@ -58,11 +58,11 @@ public class Expression {
 
 	public int get_ID_Exp3() {return ID_Exp3; };
 
-	public void setFunction(ExpressionFunction function) {
+	public void setFunction(Expression_Function function) {
 		this.function = function;
 	}
 
-	public void setOperator(ConditionOperator operator) {
+	public void setOperator(Expression_ConditionOperator operator) {
 		this.operator = operator;
 	}
 

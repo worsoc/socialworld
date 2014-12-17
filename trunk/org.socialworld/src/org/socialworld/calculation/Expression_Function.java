@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.socialworld.calculation;
 
 /**
@@ -10,6 +7,7 @@ package org.socialworld.calculation;
  *         constant.
  * @author Mathias Sikos (tyloesand)
  */
-public enum ExpressionFunction {
+public enum Expression_Function {
 	condition, addition, multiplication, replacement, comparison, branching, value, attributeValue
+
 }

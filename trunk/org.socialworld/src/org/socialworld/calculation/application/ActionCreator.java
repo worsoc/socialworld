@@ -1,4 +1,4 @@
-package org.socialworld.calculation;
+package org.socialworld.calculation.application;
 
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.Animal;

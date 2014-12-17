@@ -4,23 +4,25 @@ import java.io.*;
 import java.net.URL;
 
 import org.socialworld.attributes.Attribute;
-import org.socialworld.calculation.AttributeCalculatorMatrix;
+import org.socialworld.calculation.FunctionByMatrix_Matrix;
+import org.socialworld.calculation.Type;
+import org.socialworld.calculation.Value;
 
 public class AttributeCalculatorMatrixPool {
 	public static final int CAPACITY_ACMP_ARRAY = 100;
 
 	private static AttributeCalculatorMatrixPool instance;
 	
-	private static AttributeCalculatorMatrix matrixsForPositiveIndex[];
-	private static AttributeCalculatorMatrix matrixsForNegativeIndex[];
+	private static FunctionByMatrix_Matrix matrixsForPositiveIndex[];
+	private static FunctionByMatrix_Matrix matrixsForNegativeIndex[];
 	
 	private int numberOfAttributes;
 	
 	private AttributeCalculatorMatrixPool () {
-		matrixsForPositiveIndex = new AttributeCalculatorMatrix[CAPACITY_ACMP_ARRAY];
-		matrixsForNegativeIndex = new AttributeCalculatorMatrix[CAPACITY_ACMP_ARRAY];
+		matrixsForPositiveIndex = new FunctionByMatrix_Matrix[CAPACITY_ACMP_ARRAY];
+		matrixsForNegativeIndex = new FunctionByMatrix_Matrix[CAPACITY_ACMP_ARRAY];
 		
-		// TODO: must work for differnt numbers
+		// TODO: must work for different numbers
 		numberOfAttributes = Attribute.NUMBER_OF_ATTRIBUTES;
 		
 		initialize();
@@ -33,7 +35,7 @@ public class AttributeCalculatorMatrixPool {
 		return instance;
 	}
 	
-	public AttributeCalculatorMatrix getMatrix(int index) {
+	public FunctionByMatrix_Matrix getMatrix(int index) {
 		if (index >= 0)
 			if (CAPACITY_ACMP_ARRAY > index ) 
 				return matrixsForPositiveIndex[index];
@@ -59,14 +61,14 @@ public class AttributeCalculatorMatrixPool {
 			String values[];
 			int matrixIndex;
 			int functions[] = new int[64];
-			float shares[] = new float[64];
+			Value shares[] = new Value[64];
 			
 			int index = 0;
 			float deviation = 0;
 			int vorzeichen = 1;
 			int count = 0;
 			
-			AttributeCalculatorMatrix matrix;
+			FunctionByMatrix_Matrix matrix;
 	
 			InputStream input = new URL("http://sourceforge.net/projects/socialworld/files/hmn_acm.swp").openStream();
 			LineNumberReader lnr
@@ -106,7 +108,8 @@ public class AttributeCalculatorMatrixPool {
 					line = line.trim();
 					values = line.split(",");
 					for (matrixIndex = 0; matrixIndex < 64; matrixIndex++){
-						shares[matrixIndex] = Float.parseFloat(values[matrixIndex]);
+						shares[matrixIndex] =
+								new Value (values[matrixIndex], Type.floatingpoint);
 					}
 				}
 				
@@ -114,7 +117,7 @@ public class AttributeCalculatorMatrixPool {
 				}
 
 				if (line.startsWith("</matrix>")) {
-					matrix = new AttributeCalculatorMatrix(numberOfAttributes);
+					matrix = new FunctionByMatrix_Matrix(numberOfAttributes);
 					matrix.setFunctions( functions);
 					matrix.setShares( shares );
 					

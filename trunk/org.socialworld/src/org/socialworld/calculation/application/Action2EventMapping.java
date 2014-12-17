@@ -1,4 +1,4 @@
-package org.socialworld.calculation;
+package org.socialworld.calculation.application;
 import org.socialworld.attributes.ActionMode;
 import org.socialworld.attributes.ActionType;
 import org.socialworld.attributes.Direction;

@@ -10,8 +10,9 @@ import org.socialworld.attributes.AttributeArray;
 import org.socialworld.attributes.Move;
 import org.socialworld.core.Action;
 import org.socialworld.core.Event;
-import org.socialworld.calculation.AttributeCalculator;
-import org.socialworld.calculation.AttributeCalculatorMatrix;
+import org.socialworld.calculation.FunctionByMatrix_Matrix;
+import org.socialworld.calculation.application.ActionCreator;
+import org.socialworld.calculation.application.AttributeCalculator;
 
 
 /**
@@ -25,13 +26,11 @@ public class Animal extends SimulationObject {
 	protected Move move;
 
 	protected AttributeArray attributes;
-	protected AttributeCalculator attributeCalculator;
-	protected AttributeCalculatorMatrix attributeCalculatorMatrix;
+	protected FunctionByMatrix_Matrix attributeCalculatorMatrix;
 	
 	public Animal() {
 		super();
 		attributes = new AttributeArray(Attribute.NUMBER_OF_ATTRIBUTES);
-		this.attributeCalculator = new AttributeCalculator(Attribute.NUMBER_OF_ATTRIBUTES);
 	}
 
 
@@ -45,12 +44,12 @@ public class Animal extends SimulationObject {
 		return new AttributeArray(attributes);
 	}
 	
-	void setMatrix(AttributeCalculatorMatrix matrix,  WriteAccessToAnimal guard) {
+	void setMatrix(FunctionByMatrix_Matrix matrix,  WriteAccessToAnimal guard) {
 		if (this.guard == guard ) attributeCalculatorMatrix  = matrix;
 	}
 	
-	public AttributeCalculatorMatrix getMatrix() {
-		return new AttributeCalculatorMatrix(attributeCalculatorMatrix, Attribute.NUMBER_OF_ATTRIBUTES);
+	public FunctionByMatrix_Matrix getMatrix() {
+		return new FunctionByMatrix_Matrix(attributeCalculatorMatrix, Attribute.NUMBER_OF_ATTRIBUTES);
 	}
 	
 	/**
@@ -149,7 +148,7 @@ public class Animal extends SimulationObject {
 	public void changeByEvent(final Event event) {
 		AttributeArray tmp;
 		
-		tmp = attributeCalculator.changeAttributesByEvent(event, this);
+		tmp = AttributeCalculator.getAttributesChangedByEvent(event, this);
 		this.attributes.set(tmp);
 	}
 
@@ -164,7 +163,7 @@ public class Animal extends SimulationObject {
 
 		logger.debug("reactToEvent");
 
-		reaction =	actionCreator.createAction(	this, event);
+		reaction =	ActionCreator.createAction(	this, event);
 		
 		actionHandler.insertAction(reaction);
 		
