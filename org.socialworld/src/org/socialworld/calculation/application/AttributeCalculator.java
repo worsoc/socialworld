@@ -1,9 +1,14 @@
 /**
  * 
  */
-package org.socialworld.calculation;
+package org.socialworld.calculation.application;
 
 import org.socialworld.attributes.AttributeArray;
+import org.socialworld.calculation.FunctionByExpression;
+import org.socialworld.calculation.FunctionByMatrix;
+import org.socialworld.calculation.FunctionByMatrix_Matrix;
+import org.socialworld.calculation.Type;
+import org.socialworld.calculation.Value;
 import org.socialworld.calculation.descriptions.EventInfluenceAssignment;
 import org.socialworld.calculation.descriptions.EventInfluenceDescription;
 import org.socialworld.core.Event;
@@ -53,7 +58,7 @@ public  class AttributeCalculator {
 
 		arguments = new Value[2];
 		arguments[0] = new Value(Type.attributeArray, animal.getAttributes());
-		arguments[1] = new Value(Type.integer, AttributeCalculatorMatrix.MATRIX_CALCULATION_COMPLEX );
+		arguments[1] = new Value(Type.integer, FunctionByMatrix_Matrix.MATRIX_CALCULATION_COMPLEX );
 		
 		// TODO get the function object from animal (not the matrix!)
 		//      --> the function object shouldn't be created here
@@ -67,7 +72,7 @@ public  class AttributeCalculator {
 	
 		arguments = new Value[2];
 		arguments[0] = new Value(Type.attributeArray, animal.getAttributes());
-		arguments[1] = new Value(Type.integer, AttributeCalculatorMatrix.MATRIX_CALCULATION_SIMPLE);
+		arguments[1] = new Value(Type.integer, FunctionByMatrix_Matrix.MATRIX_CALCULATION_SIMPLE);
 		
 		// TODO get the function object from animal (not the matrix!)
 		//      --> the function object shouldn't be created here

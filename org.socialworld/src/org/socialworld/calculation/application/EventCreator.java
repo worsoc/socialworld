@@ -1,7 +1,6 @@
-package org.socialworld.calculation;
+package org.socialworld.calculation.application;
 
 import org.socialworld.objects.SimulationObject;
-import org.socialworld.calculation.Action2EventMapping;
 import org.socialworld.core.Action;
 import org.socialworld.core.Event;
 

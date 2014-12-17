@@ -1,21 +1,13 @@
-/**
- * 
- */
 package org.socialworld.calculation;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * The class holds all attribute calculation
- *         functions.
- * @author Mathias Sikos (tyloesand) 
- */
-public class AttributeCalculatorFunctions {
+public class Functions {
 
 	private static List<FunctionBase> functions;
 	
-	private AttributeCalculatorFunctions() {
+	private Functions() {
 
 	}
 

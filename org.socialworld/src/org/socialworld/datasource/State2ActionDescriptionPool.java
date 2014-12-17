@@ -1,6 +1,6 @@
 package org.socialworld.datasource;
 
-import org.socialworld.calculation.State2ActionDescription;
+import org.socialworld.calculation.descriptions.State2ActionDescription;
 
 public class State2ActionDescriptionPool extends DescriptionPool {
 	

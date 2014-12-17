@@ -1,6 +1,6 @@
 package org.socialworld.datasource;
 
-import org.socialworld.calculation.EventReactionDescription;
+import org.socialworld.calculation.descriptions.EventReactionDescription;
 import org.socialworld.core.Event;
 
 public class EventReactionDescriptionPool extends DescriptionPool {

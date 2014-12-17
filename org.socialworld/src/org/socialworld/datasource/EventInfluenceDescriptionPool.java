@@ -1,6 +1,6 @@
 package org.socialworld.datasource;
 
-import org.socialworld.calculation.EventInfluenceDescription;
+import org.socialworld.calculation.descriptions.EventInfluenceDescription;
 import org.socialworld.core.Event;
 
 public class EventInfluenceDescriptionPool extends DescriptionPool {

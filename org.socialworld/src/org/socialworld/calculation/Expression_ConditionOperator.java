@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.socialworld.calculation;
 
 /**
@@ -9,7 +6,8 @@ package org.socialworld.calculation;
 
  * @author Mathias Sikos (tyloesand) 
  */
-public enum ConditionOperator {
+public enum Expression_ConditionOperator {
 	equal, notEqual, less, lessEqual, greaterEqual, greater,
 	and, or
+
 }

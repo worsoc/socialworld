@@ -1,44 +1,31 @@
-/**
- * 
- */
 package org.socialworld.calculation;
 
-
-/**
- *  An attribute calculation matrix holds the
- *         information how to compute attribute values. It holds calculation
- *         functions, shares and offsets for every attribute dependent to all
- *         attributes. Access to functions, shares and offset is given by set
- *         and get methods which have the matrix row and matrix column as
- *         parameters.
- * @author Mathias Sikos (tyloesand)
- */
-public class AttributeCalculatorMatrix {
+public class FunctionByMatrix_Matrix {
 	public static final int MATRIX_CALCULATION_SIMPLE = 1;
 	public static final int MATRIX_CALCULATION_COMPLEX = 2;
 	
-	private int numberOfAttributes;
+	private int numberOfColumns;
 	
 	private int functions[];
-	private float shares[];
-	private int offsets[];
+	private Value shares[];
+	private Value offsets[];
 	private FunctionByMatrix_InputType inputTypes[];
 	
 
-	public AttributeCalculatorMatrix(int numberOfAttributes) {
-			this.numberOfAttributes = numberOfAttributes;
+	public FunctionByMatrix_Matrix(int numberOfColumns) {
+			this.numberOfColumns = numberOfColumns;
 	}
 
-	public AttributeCalculatorMatrix(AttributeCalculatorMatrix original, int numberOfAttributes) {
-		this.numberOfAttributes = numberOfAttributes;
+	public FunctionByMatrix_Matrix(FunctionByMatrix_Matrix original, int numberOfColumns) {
+		this.numberOfColumns = numberOfColumns;
 		int count;
 		count = original.length();
 		this.functions = new int[count];
 		for (int i = 0; i < count; i++) this.functions[i] = original.getFunction(i);
-		this.shares = new float[count];
+		this.shares = new Value[count];
 		for (int i = 0; i < count; i++) this.shares[i] = original.getShare(i);
 		if (original.isWithOffset()) {
-			this.offsets = new int[count];
+			this.offsets = new Value[count];
 			for (int i = 0; i < count; i++) this.offsets[i] = original.getOffset(i);
 		}	
 	}
@@ -52,7 +39,7 @@ public class AttributeCalculatorMatrix {
 	 * @return the function
 	 */
 	public int getFunction(int row, int column) {
-		int matrixIndex = row * numberOfAttributes + column;
+		int matrixIndex = row * numberOfColumns + column;
 		return functions[matrixIndex];
 	}
 
@@ -77,15 +64,15 @@ public class AttributeCalculatorMatrix {
 	 *            the function to set
 	 */
 	public void setFunction(int row, int column, int function) {
-		int matrixIndex = row * numberOfAttributes + column;
+		int matrixIndex = row * numberOfColumns + column;
 		this.functions[matrixIndex] = function;
 	}
 
 	/**
 	 * @return the share
 	 */
-	public float getShare(int row, int column) {
-		int matrixIndex = row * numberOfAttributes + column;
+	public Value getShare(int row, int column) {
+		int matrixIndex = row * numberOfColumns + column;
 		return shares[matrixIndex];
 	}
 
@@ -95,7 +82,7 @@ public class AttributeCalculatorMatrix {
 	 * @param shares
 	 *            the shares to set
 	 */
-	public void setShares( float shares[]) {
+	public void setShares( Value shares[]) {
 		this.shares = shares;
 	}
 	
@@ -103,16 +90,16 @@ public class AttributeCalculatorMatrix {
 	 * @param share
 	 *            the share to set
 	 */
-	public void setShare(int row, int column, float share) {
-		int matrixIndex = row * numberOfAttributes + column;
+	public void setShare(int row, int column, Value share) {
+		int matrixIndex = row * numberOfColumns + column;
 		this.shares[matrixIndex] = share;
 	}
 
 	/**
 	 * @return the offset
 	 */
-	public int getOffset(int row, int column) {
-		int matrixIndex = row * numberOfAttributes + column;
+	public Value getOffset(int row, int column) {
+		int matrixIndex = row * numberOfColumns + column;
 		return offsets[matrixIndex];
 	}
 
@@ -120,8 +107,8 @@ public class AttributeCalculatorMatrix {
 	 * @param offset
 	 *            the offset to set
 	 */
-	public void setOffset(int row, int column, int offset) {
-		int matrixIndex = row * numberOfAttributes + column;
+	public void setOffset(int row, int column, Value offset) {
+		int matrixIndex = row * numberOfColumns + column;
 		this.offsets[matrixIndex] = offset;
 	}
 
@@ -129,7 +116,7 @@ public class AttributeCalculatorMatrix {
 	 * @return the input type of the calculation function
 	 */
 	public FunctionByMatrix_InputType getInputType(int row, int column) {
-		int matrixIndex = row * numberOfAttributes + column;
+		int matrixIndex = row * numberOfColumns + column;
 		return inputTypes[matrixIndex];
 	}
 
@@ -138,7 +125,7 @@ public class AttributeCalculatorMatrix {
 	 *            the input type to set
 	 */
 	public void setInputType(int row, int column, FunctionByMatrix_InputType inputType) {
-		int matrixIndex = row * numberOfAttributes + column;
+		int matrixIndex = row * numberOfColumns + column;
 		this.inputTypes[matrixIndex] = inputType;
 	}
 	
@@ -158,7 +145,7 @@ public class AttributeCalculatorMatrix {
 	 * 
 	 * @return the share
 	 */
-	public float getShare(int matrixIndex) {
+	public Value getShare(int matrixIndex) {
 		return shares[matrixIndex];
 	}
 
@@ -166,8 +153,9 @@ public class AttributeCalculatorMatrix {
 	 * 
 	 * @return the offset
 	 */
-	public int getOffset(int matrixIndex) {
+	public Value getOffset(int matrixIndex) {
 		return offsets[matrixIndex];
 	}
+
 
 }
