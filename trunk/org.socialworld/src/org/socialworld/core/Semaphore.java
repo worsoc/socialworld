@@ -15,16 +15,16 @@ public class Semaphore {
 	 * 
 	 * @param user
 	 *            the locking object / the user of the saved object
-	 * @return  SemaphoreReturnCode         
+	 * @return  Semaphore_ReturnCode         
 	 */
-	public SemaphoreReturnCode lockBy(Object user) {
+	public Semaphore_ReturnCode lockBy(Object user) {
 		if (this.locker == null) {
 			this.locker = user;
-			return SemaphoreReturnCode.success;
+			return Semaphore_ReturnCode.success;
 		}
 		if (this.locker == user) 
-			return SemaphoreReturnCode.lockedByUser;
-		return SemaphoreReturnCode.lockedByAnotherUser;
+			return Semaphore_ReturnCode.lockedByUser;
+		return Semaphore_ReturnCode.lockedByAnotherUser;
 	}
 
 	/**
@@ -34,16 +34,16 @@ public class Semaphore {
 	 * 
 	 * @param user
 	 *            the locking object / the user of the saved object
-	 * @return  SemaphoreReturnCode          
+	 * @return  Semaphore_ReturnCode          
 	 */
-	public SemaphoreReturnCode releaseBy(Object user) {
+	public Semaphore_ReturnCode releaseBy(Object user) {
 		if (this.locker == user) {
 			this.locker = null;
-			return SemaphoreReturnCode.success;
+			return Semaphore_ReturnCode.success;
 		}
 		if (this.locker == null)
-			return SemaphoreReturnCode.notLockedByAnyone;
-		return SemaphoreReturnCode.lockedByAnotherUser;
+			return Semaphore_ReturnCode.notLockedByAnyone;
+		return Semaphore_ReturnCode.lockedByAnotherUser;
 	}
 	
 }

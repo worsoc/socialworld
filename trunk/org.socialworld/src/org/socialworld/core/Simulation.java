@@ -5,6 +5,7 @@ package org.socialworld.core;
 
 import org.apache.log4j.Logger;
 import org.socialworld.objects.*;
+import org.socialworld.propertyChange.ChangedProperty;
 
 import org.socialworld.attributes.Position;
 import org.socialworld.collections.ObjectByPositionSearch;

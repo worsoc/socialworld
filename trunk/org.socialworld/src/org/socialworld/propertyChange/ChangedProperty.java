@@ -1,4 +1,4 @@
-package org.socialworld.core;
+package org.socialworld.propertyChange;
 
 public enum ChangedProperty {
 	position
