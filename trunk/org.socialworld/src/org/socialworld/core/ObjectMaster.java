@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.apache.log4j.Logger;
-import org.socialworld.ListModel;
 import org.socialworld.objects.*;
+import org.socialworld.propertyChange.ListenedList;
 import org.socialworld.datasource.*;
 
 import org.socialworld.collections.SimulationObjectArray;
@@ -46,11 +46,11 @@ public class ObjectMaster {
 
 		this.simulationObjects = new SimulationObjectArray(SIMULATION_OBJECTS_START_CAPACITY);
 		
-		this.gods = new ListModel<God>();
-		this.humans = new ListModel<Human>();
-		this.animals = new ListModel<Animal>();
-		this.magics = new ListModel<Magic>();
-		this.items = new ListModel<Item>();
+		this.gods = new ListenedList<God>();
+		this.humans = new ListenedList<Human>();
+		this.animals = new ListenedList<Animal>();
+		this.magics = new ListenedList<Magic>();
+		this.items = new ListenedList<Item>();
 		
 		resetIterators();
 	}	
