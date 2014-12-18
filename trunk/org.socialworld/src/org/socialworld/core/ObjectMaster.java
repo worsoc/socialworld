@@ -66,7 +66,7 @@ public class ObjectMaster {
 	}
 	
 	public SimulationObject createSimulationObject(
-			SimulationObjectType simulationObjectType) {
+			SimulationObject_Type simulationObjectType) {
 		SimulationObject object;
 		int objectID;
 		
@@ -109,7 +109,7 @@ public class ObjectMaster {
 		return object;
 	}
 	
-	public boolean hasNext(SimulationObjectType simulationObjectType) {
+	public boolean hasNext(SimulationObject_Type simulationObjectType) {
 
 		switch (simulationObjectType) {
 		case animal:
@@ -128,7 +128,7 @@ public class ObjectMaster {
 		
 	}
 	
-	public SimulationObject next(SimulationObjectType simulationObjectType) {
+	public SimulationObject next(SimulationObject_Type simulationObjectType) {
 		switch (simulationObjectType) {
 		case animal:
 			return this.animalsIterator.next();
