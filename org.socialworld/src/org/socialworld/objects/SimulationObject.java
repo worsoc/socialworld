@@ -5,7 +5,6 @@ package org.socialworld.objects;
 
 
 import org.apache.log4j.Logger;
-import org.socialworld.Model;
 import org.socialworld.attributes.ActionType;
 import org.socialworld.attributes.Position;
 import org.socialworld.core.Action;
@@ -14,6 +13,7 @@ import org.socialworld.core.ActionHandler;
 import org.socialworld.core.Event;
 import org.socialworld.core.Simulation;
 import org.socialworld.calculation.application.EventCreator;
+import org.socialworld.propertyChange.ListenedBase;
 
 /**
  * Every simulation object (actor in the simulation) is inherited by the abstract class SimulationObject.
@@ -21,7 +21,7 @@ import org.socialworld.calculation.application.EventCreator;
  * @author Mathias Sikos (tyloesand)
  * 
  */
-public abstract class SimulationObject extends Model {
+public abstract class SimulationObject extends ListenedBase {
 	protected static final Logger logger = Logger.getLogger(SimulationObject.class);
 
 	protected	WriteAccessToSimulationObject guard;
