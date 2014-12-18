@@ -72,7 +72,7 @@ public class KnowledgePool {
 		KnowledgeFact fact;
 		KnowledgeSource source;
 		Knowledge knowledge;
-		KnowledgeFactCriterion criterion = null;
+		KnowledgeFact_Criterion criterion = null;
 		
 		Answer answer;
 		boolean withAnswer = false;

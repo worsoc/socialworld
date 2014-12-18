@@ -99,7 +99,7 @@ public class Knowledge {
 			return null;
 	}
 	
-	protected int[] findFactsForCriterion(KnowledgeFactCriterion criterion) {
+	protected int[] findFactsForCriterion(KnowledgeFact_Criterion criterion) {
 		int result_tmp[] = new int[MAXIMUM_KNOWLEDGE_CAPACITY];
 		int result[];
 		int count = 0;
