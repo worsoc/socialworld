@@ -1,5 +1,5 @@
 package org.socialworld.conversation;
-import org.socialworld.knowledge.KnowledgeFactCriterion;
+import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.knowledge.Answer;
 import org.socialworld.objects.Human;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public class Talk {
 		String sentence;
 		
 		Word subject;
-		KnowledgeFactCriterion criterion;
+		KnowledgeFact_Criterion criterion;
 		Word value;
 		
 		
