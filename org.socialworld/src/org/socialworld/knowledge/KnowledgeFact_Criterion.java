@@ -1,6 +1,6 @@
 package org.socialworld.knowledge;
 
-public enum KnowledgeFactCriterion {
+public enum KnowledgeFact_Criterion {
 	colour(0), material(1);
 
 	/**
@@ -16,7 +16,7 @@ public enum KnowledgeFactCriterion {
 
 	private int arrayIndex;
 
-	private KnowledgeFactCriterion(int index) {
+	private KnowledgeFact_Criterion(int index) {
 		this.arrayIndex = index;
 	}
 	
@@ -46,10 +46,11 @@ public enum KnowledgeFactCriterion {
 	 *            criterion index
 	 * @return criterion name
 	 */
-	public KnowledgeFactCriterion getName(int arrayIndex) {
-		for (KnowledgeFactCriterion criterion : KnowledgeFactCriterion.values())
+	public KnowledgeFact_Criterion getName(int arrayIndex) {
+		for (KnowledgeFact_Criterion criterion : KnowledgeFact_Criterion.values())
 			if (criterion.arrayIndex == arrayIndex)
 				return criterion;
 		return null;
 	}	
+
 }

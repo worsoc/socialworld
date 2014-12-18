@@ -1,14 +1,14 @@
 package org.socialworld.knowledge;
 
 public class KnowledgeFact {
-	private KnowledgeFactCriterion criterion;
-	private KnowledgeFactValue value;
+	private KnowledgeFact_Criterion criterion;
+	private KnowledgeFact_Value value;
 	
-	protected KnowledgeFactValue getValue() {
+	protected KnowledgeFact_Value getValue() {
 		return value;
 	}
 	
-	protected KnowledgeFactCriterion getCriterion() {
+	protected KnowledgeFact_Criterion getCriterion() {
 		return criterion;
 	}
 	

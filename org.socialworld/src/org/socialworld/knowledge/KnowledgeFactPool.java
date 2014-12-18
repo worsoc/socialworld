@@ -8,7 +8,7 @@ public class KnowledgeFactPool {
 	KnowledgeFactList[] factListsByCriterion;
 	
 	private KnowledgeFactPool() {
-		factListsByCriterion = new KnowledgeFactList[KnowledgeFactCriterion.NUMBER_OF_KNOWLEDGE_FACT_CRITERION];
+		factListsByCriterion = new KnowledgeFactList[KnowledgeFact_Criterion.NUMBER_OF_KNOWLEDGE_FACT_CRITERION];
 		
 		createPool();
 	}
@@ -23,7 +23,7 @@ public class KnowledgeFactPool {
 		return instance;
 	}
 	
-	public KnowledgeFact find(KnowledgeFactCriterion criterion, Word value) {
+	public KnowledgeFact find(KnowledgeFact_Criterion criterion, Word value) {
 		KnowledgeFact fact;
 		
 		fact = factListsByCriterion[criterion.getIndex()].find(value);

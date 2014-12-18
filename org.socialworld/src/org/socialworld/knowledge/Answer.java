@@ -28,7 +28,7 @@ public class Answer extends Knowledge {
 		return getSubject();
 	}
 	
-	public KnowledgeFactCriterion getAnswerCriterion() {
+	public KnowledgeFact_Criterion getAnswerCriterion() {
 		if (index < count)		return getFact(index).getCriterion();
 		else return null;
 	}
