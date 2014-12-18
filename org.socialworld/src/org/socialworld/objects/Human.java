@@ -15,7 +15,7 @@ import org.socialworld.knowledge.KnowledgeSource;
 import org.socialworld.knowledge.KnowledgeSourceType;
 import org.socialworld.knowledge.Answer;
 import org.socialworld.conversation.Talk;
-import org.socialworld.conversation.TalkSentenceType;
+import org.socialworld.conversation.Talk_SentenceType;
 import org.socialworld.conversation.PunctuationMark;
 import org.socialworld.core.Action;
 import java.util.ArrayList;
@@ -165,7 +165,7 @@ import java.util.ListIterator;
 			case answer:
 				Answer answer;
 			
-				question = getSentence(human, TalkSentenceType.partnersQuestion);
+				question = getSentence(human, Talk_SentenceType.partnersQuestion);
 				if (question != null) {
 					followingAction = new Action(action);
 					answer = knowledge.getAnswerForQuestion(question);
@@ -176,7 +176,7 @@ import java.util.ListIterator;
 				}
 			case ask:
 			
-				question = getSentence(human, TalkSentenceType.myPlannedQuestion);
+				question = getSentence(human, Talk_SentenceType.myPlannedQuestion);
 				if (question != null) {
 				}
 			default:
@@ -221,7 +221,7 @@ import java.util.ListIterator;
 				KnowledgeSource source;
 				String sentence;
 
-				sentence = getSentence(human, TalkSentenceType.partnersSentence);
+				sentence = getSentence(human, Talk_SentenceType.partnersSentence);
 				if (sentence != null) {
 					source = new KnowledgeSource();
 					source.setSourceType( KnowledgeSourceType.heardOf);
@@ -246,17 +246,17 @@ import java.util.ListIterator;
 	
 	protected PunctuationMark addPartnersSentence(String sentence, Human partner) {
 		PunctuationMark returnValue = null;
-		TalkSentenceType type;
+		Talk_SentenceType type;
 		
 		returnValue = talks.get(0).getPunctuationMark(sentence);
 		
 		switch (returnValue) {
 		case dot: 
-			type = TalkSentenceType.partnersSentence;
+			type = Talk_SentenceType.partnersSentence;
 		case question: 
-			type = TalkSentenceType.partnersQuestion;
+			type = Talk_SentenceType.partnersQuestion;
 		default:
-			type = TalkSentenceType.partnersUnknownType;
+			type = Talk_SentenceType.partnersUnknownType;
 		}
 		addSentence(sentence, type, partner);
 		
@@ -271,10 +271,10 @@ import java.util.ListIterator;
 		talk = getTalk(partner);
 		
 		sentence = talk.makeAnswerSentence(answer);
-		talk.addSentence(sentence, TalkSentenceType.myPlannedSentence);
+		talk.addSentence(sentence, Talk_SentenceType.myPlannedSentence);
 	}
 
-	protected void addSentence(String sentence, TalkSentenceType type, Human partner) {
+	protected void addSentence(String sentence, Talk_SentenceType type, Human partner) {
 		Talk talk;
 		
 		talk = getTalk(partner);
@@ -282,7 +282,7 @@ import java.util.ListIterator;
 		talk.addSentence(sentence, type);
 	}
 	
-	protected String getSentence(Human partner, TalkSentenceType type) {
+	protected String getSentence(Human partner, Talk_SentenceType type) {
 		ListIterator<Talk> iterator ;
 		Talk talk;
 		String sentence = null;
