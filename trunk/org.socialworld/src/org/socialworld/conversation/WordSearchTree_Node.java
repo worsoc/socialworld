@@ -1,23 +1,22 @@
 package org.socialworld.conversation;
 
-
-public class WordSearchTreeNode {
+public class WordSearchTree_Node {
 	private Word word;
 	private String letters;
 	private char  firstLetter;
 	private int countEdges;
 	private boolean isLeaf;
-	private  WordSearchTreeNode nextNodes[];
+	private  WordSearchTree_Node nextNodes[];
 	
 	
-	protected WordSearchTreeNode getChild(int index) {
+	protected WordSearchTree_Node getChild(int index) {
 		if (nextNodes.length > index) return nextNodes[index];
 		else return null;
 	}
 	
-	protected WordSearchTreeNode getChild(char letter) {
+	protected WordSearchTree_Node getChild(char letter) {
 		int i;
-		WordSearchTreeNode result = null;
+		WordSearchTree_Node result = null;
 		
 		if (!isLeaf) {
 			for (i = 0; i < countEdges; i++) {
@@ -61,7 +60,7 @@ public class WordSearchTreeNode {
 	
 	
 	protected void createChildren(int count) {
-		nextNodes = new WordSearchTreeNode[count];
+		nextNodes = new WordSearchTree_Node[count];
 		isLeaf = false;
 		countEdges = count;
 	}
@@ -69,7 +68,6 @@ public class WordSearchTreeNode {
 	protected Word getWord() {
 		return word;
 	}
-	
 	
 
 }

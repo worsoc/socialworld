@@ -12,7 +12,7 @@ public class SentenceMaker {
 			sentence = subject.getPronoun().getWord();
 		else {
 			sentence = subject.getWord();
-			if (subject.getType() == WordType.noun) sentence = "The " + sentence;
+			if (subject.getType() == Word_Type.noun) sentence = "The " + sentence;
 			lastSubject = subject;
 		}
 		sentence = sentence + getStatementPhraseForFact(criterion, value);
@@ -44,7 +44,7 @@ public class SentenceMaker {
 		String sentence;
 		
 		sentence = subject.getWord();
-		if (subject.getType() == WordType.noun) sentence = "the " + sentence;
+		if (subject.getType() == Word_Type.noun) sentence = "the " + sentence;
 		
 		switch (criterion) {
 		case colour: 
