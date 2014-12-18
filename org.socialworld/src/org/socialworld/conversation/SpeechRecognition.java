@@ -8,7 +8,7 @@ import org.socialworld.knowledge.KnowledgeFactPool;
 public class SpeechRecognition {
 	private ArrayList<String> wordList;
 	private Word[] foundWordList; //according to the word list above
-	private SpeechRecognitionFunction[] functionList; //according to the word list above
+	private SpeechRecognition_Function[] functionList; //according to the word list above
 	
 	private int indexWordList;
 	private int startSearchForCriterion = 0;
@@ -30,7 +30,7 @@ public class SpeechRecognition {
 		count = divideIntoParts(sentence);
 		
 		foundWordList = new Word[count];
-		functionList = new SpeechRecognitionFunction[count];
+		functionList = new SpeechRecognition_Function[count];
 		if (checkCorrectness()){
 			
 		}
@@ -48,7 +48,7 @@ public class SpeechRecognition {
 		Word word = null;
 		
 		for (int index = 0; index < wordList.size(); index++) {
-			if (functionList[index] == SpeechRecognitionFunction.subject) {
+			if (functionList[index] == SpeechRecognition_Function.subject) {
 				// if the sentence's subject is NOT a knowledge subject (see WordSearchtreeNode) too,
 				// return the subject from a previous sentence
 				// because the actual sentence belongs to the knowledge subject of a previous sentence
@@ -83,7 +83,7 @@ public class SpeechRecognition {
 	public KnowledgeFact getNextFact() {
 		KnowledgeFact fact = null;
 		KnowledgeFactCriterion criterion = null;
-		SpeechRecognitionFunction function = null;
+		SpeechRecognition_Function function = null;
 		Word word = null;
 		
 		criterion = getCriterion();
@@ -120,49 +120,49 @@ public class SpeechRecognition {
 		boolean withQuestionWord;
 		Auxiliary aux;
 		
-		isCorrect = titleOK(SpeechRecognitionFunction.title);
+		isCorrect = titleOK(SpeechRecognition_Function.title);
 		
 		switch (finalPunctuationMark) {
 		case dot:
-			isCorrect = subjectOK(SpeechRecognitionFunction.subject) &&
-			verbOK(SpeechRecognitionFunction.verb) &&
-			objectOK(SpeechRecognitionFunction.object1) && 
-			objectOK(SpeechRecognitionFunction.object2); break;
+			isCorrect = subjectOK(SpeechRecognition_Function.subject) &&
+			verbOK(SpeechRecognition_Function.verb) &&
+			objectOK(SpeechRecognition_Function.object1) && 
+			objectOK(SpeechRecognition_Function.object2); break;
 		case question:
-			withQuestionWord = questionOK(SpeechRecognitionFunction.questionWord);
+			withQuestionWord = questionOK(SpeechRecognition_Function.questionWord);
 			aux = auxiliaryOK();
 			
 			isCorrect = (aux != null) && 
-					subjectOK(SpeechRecognitionFunction.subject) &&
-					verbRestOK(SpeechRecognitionFunction.verb, aux) &&
-					objectOK(SpeechRecognitionFunction.object1) && 
-					objectOK(SpeechRecognitionFunction.object2); 
+					subjectOK(SpeechRecognition_Function.subject) &&
+					verbRestOK(SpeechRecognition_Function.verb, aux) &&
+					objectOK(SpeechRecognition_Function.object1) && 
+					objectOK(SpeechRecognition_Function.object2); 
 			
 			if (withQuestionWord && !isCorrect  )
-				isCorrect = beOK(SpeechRecognitionFunction.verb) && subjectOK(SpeechRecognitionFunction.subject);
+				isCorrect = beOK(SpeechRecognition_Function.verb) && subjectOK(SpeechRecognition_Function.subject);
 			else if	(withQuestionWord && isCorrect  )
-				prepositionOK(SpeechRecognitionFunction.object1);
+				prepositionOK(SpeechRecognition_Function.object1);
 			
 			break;
 		case exclamation:
-			isCorrect = infinitiveOK(SpeechRecognitionFunction.verb) &&
-			objectOK(SpeechRecognitionFunction.object1) && 
-			objectOK(SpeechRecognitionFunction.object2); break;
+			isCorrect = infinitiveOK(SpeechRecognition_Function.verb) &&
+			objectOK(SpeechRecognition_Function.object1) && 
+			objectOK(SpeechRecognition_Function.object2); break;
 			
 		}
 		
 		return isCorrect;
 	}
 	
-	private boolean subjectOK(SpeechRecognitionFunction function) {
+	private boolean subjectOK(SpeechRecognition_Function function) {
 		boolean isOK = false;
-		isOK = itemOK(SpeechRecognitionFunction.subject) ||
-				personOK(SpeechRecognitionFunction.subject) ||
-				personalPronounOK(SpeechRecognitionFunction.subject);	
+		isOK = itemOK(SpeechRecognition_Function.subject) ||
+				personOK(SpeechRecognition_Function.subject) ||
+				personalPronounOK(SpeechRecognition_Function.subject);	
 		return isOK;
 	}
 
-	private boolean verbOK(SpeechRecognitionFunction function) {
+	private boolean verbOK(SpeechRecognition_Function function) {
 		boolean isOK = false;
 		int index_save;
 		String word;
@@ -171,12 +171,12 @@ public class SpeechRecognition {
 		
 		word = wordList.get(indexWordList);
 		if (word == "have" || word == "has" || word == "had") {
-			functionList[indexWordList] = SpeechRecognitionFunction.firstAuxVerb;
+			functionList[indexWordList] = SpeechRecognition_Function.firstAuxVerb;
 			foundWordList[indexWordList] = null;
 			indexWordList++;
 			word = wordList.get(indexWordList); 
 			if (word == "been"){
-				functionList[indexWordList] = SpeechRecognitionFunction.secondAuxVerb_be;
+				functionList[indexWordList] = SpeechRecognition_Function.secondAuxVerb_be;
 				foundWordList[indexWordList] = null;
 				indexWordList++;
 				isOK = pastParticipleOK(function);
@@ -187,7 +187,7 @@ public class SpeechRecognition {
 		else if (auxiliaryOK() != null)  {
 			word = wordList.get(indexWordList);
 			if (word == "be") {
-				functionList[indexWordList] = SpeechRecognitionFunction.secondAuxVerb_be;
+				functionList[indexWordList] = SpeechRecognition_Function.secondAuxVerb_be;
 				foundWordList[indexWordList] = null;
 				indexWordList++;
 				isOK = pastParticipleOK(function);
@@ -201,7 +201,7 @@ public class SpeechRecognition {
 		return isOK;
 	}
 	
-	private boolean verbRestOK(SpeechRecognitionFunction function, Auxiliary aux) {
+	private boolean verbRestOK(SpeechRecognition_Function function, Auxiliary aux) {
 		boolean isOK = false;
 		int index_save;
 		String word;
@@ -213,7 +213,7 @@ public class SpeechRecognition {
 		if ( (aux == Auxiliary.have) || (aux == Auxiliary.has) || (aux == Auxiliary.had) )
 		{
 			if ( word == "been" ) {
-				functionList[indexWordList] = SpeechRecognitionFunction.secondAuxVerb_be;
+				functionList[indexWordList] = SpeechRecognition_Function.secondAuxVerb_be;
 				foundWordList[indexWordList] = null;
 				indexWordList++;
 				isOK = pastParticipleOK(function);
@@ -226,7 +226,7 @@ public class SpeechRecognition {
 			 {
 				 if ( word == "be" )
 				 {
-					functionList[indexWordList] = SpeechRecognitionFunction.secondAuxVerb_be;
+					functionList[indexWordList] = SpeechRecognition_Function.secondAuxVerb_be;
 					foundWordList[indexWordList] = null;
 					indexWordList++;
 					isOK = pastParticipleOK(function);
@@ -240,7 +240,7 @@ public class SpeechRecognition {
 		return isOK;
 	}
 	
-	private boolean objectOK(SpeechRecognitionFunction function) {
+	private boolean objectOK(SpeechRecognition_Function function) {
 		boolean isOK = false;
 		int index_save;
 		String word;
@@ -263,7 +263,7 @@ public class SpeechRecognition {
 		return isOK;
 	}
 
-	private boolean wordOK(SpeechRecognitionFunction function, WordType type) {
+	private boolean wordOK(SpeechRecognition_Function function, Word_Type type) {
 		boolean isOK = false;
 		String word;
 		Word foundWord;
@@ -281,37 +281,37 @@ public class SpeechRecognition {
 		return isOK;
 	}
 	
-	private boolean prepositionOK(SpeechRecognitionFunction function) {
-		return wordOK(function, WordType.preposition);
+	private boolean prepositionOK(SpeechRecognition_Function function) {
+		return wordOK(function, Word_Type.preposition);
 	}
 
-	private boolean nounOK(SpeechRecognitionFunction function) {
-		return  wordOK(function, WordType.noun);
+	private boolean nounOK(SpeechRecognition_Function function) {
+		return  wordOK(function, Word_Type.noun);
 	}
 	
-	private boolean pronounOK(SpeechRecognitionFunction function) {
+	private boolean pronounOK(SpeechRecognition_Function function) {
 		boolean isOK;
-		isOK = ( wordOK(function, WordType.possessive_pronoun) || wordOK(function, WordType.demonstrative_pronoun) );
+		isOK = ( wordOK(function, Word_Type.possessive_pronoun) || wordOK(function, Word_Type.demonstrative_pronoun) );
 		return isOK;
 	}
 	
-	private boolean nameOK(SpeechRecognitionFunction function) {
-		return wordOK(function, WordType.name);
+	private boolean nameOK(SpeechRecognition_Function function) {
+		return wordOK(function, Word_Type.name);
 	}
 	
-	private boolean titleOK(SpeechRecognitionFunction function) {
-		return wordOK(function, WordType.title);
+	private boolean titleOK(SpeechRecognition_Function function) {
+		return wordOK(function, Word_Type.title);
 	}
 	
-	private boolean personalPronounOK(SpeechRecognitionFunction function) {
-		return wordOK(function, WordType.personal_pronoun);
+	private boolean personalPronounOK(SpeechRecognition_Function function) {
+		return wordOK(function, Word_Type.personal_pronoun);
 	}
 
-	private boolean infinitiveOK(SpeechRecognitionFunction function) {
-		return wordOK(function, WordType.infinitive);
+	private boolean infinitiveOK(SpeechRecognition_Function function) {
+		return wordOK(function, Word_Type.infinitive);
 	}
 
-	private boolean beOK(SpeechRecognitionFunction function) {
+	private boolean beOK(SpeechRecognition_Function function) {
 		String word;
 		boolean isOK;
 		
@@ -333,8 +333,8 @@ public class SpeechRecognition {
 		return isOK;
 	}
 
-	private boolean pastParticipleOK(SpeechRecognitionFunction function) {
-		return wordOK(function, WordType.past_participle);
+	private boolean pastParticipleOK(SpeechRecognition_Function function) {
+		return wordOK(function, Word_Type.past_participle);
 	}
 
 	private Auxiliary auxiliaryOK() {
@@ -343,29 +343,29 @@ public class SpeechRecognition {
 		word = wordList.get(indexWordList);
 		
 		switch (word) {
-		case "will": functionList[indexWordList] = SpeechRecognitionFunction.firstAuxVerb;
+		case "will": functionList[indexWordList] = SpeechRecognition_Function.firstAuxVerb;
 				indexWordList++; return Auxiliary.will;
-		case "would": functionList[indexWordList] = SpeechRecognitionFunction.firstAuxVerb;
+		case "would": functionList[indexWordList] = SpeechRecognition_Function.firstAuxVerb;
 				indexWordList++; return Auxiliary.would;
-		case "can": functionList[indexWordList] = SpeechRecognitionFunction.firstAuxVerb;
+		case "can": functionList[indexWordList] = SpeechRecognition_Function.firstAuxVerb;
 				indexWordList++; return Auxiliary.can;
-		case "could": functionList[indexWordList] = SpeechRecognitionFunction.firstAuxVerb;
+		case "could": functionList[indexWordList] = SpeechRecognition_Function.firstAuxVerb;
 				indexWordList++; return Auxiliary.could;
-		case "do": functionList[indexWordList] = SpeechRecognitionFunction.firstAuxVerb;
+		case "do": functionList[indexWordList] = SpeechRecognition_Function.firstAuxVerb;
 				indexWordList++; return Auxiliary.do_;
-		case "does": functionList[indexWordList] = SpeechRecognitionFunction.firstAuxVerb;
+		case "does": functionList[indexWordList] = SpeechRecognition_Function.firstAuxVerb;
 				indexWordList++; return Auxiliary.does;
-		case "did": functionList[indexWordList] = SpeechRecognitionFunction.firstAuxVerb;
+		case "did": functionList[indexWordList] = SpeechRecognition_Function.firstAuxVerb;
 				indexWordList++; return Auxiliary.did;
-		case "have": functionList[indexWordList] = SpeechRecognitionFunction.firstAuxVerb;
+		case "have": functionList[indexWordList] = SpeechRecognition_Function.firstAuxVerb;
 				indexWordList++; return Auxiliary.have;
-		case "has": functionList[indexWordList] = SpeechRecognitionFunction.firstAuxVerb;
+		case "has": functionList[indexWordList] = SpeechRecognition_Function.firstAuxVerb;
 				indexWordList++; return Auxiliary.has;
-		case "had": functionList[indexWordList] = SpeechRecognitionFunction.firstAuxVerb;
+		case "had": functionList[indexWordList] = SpeechRecognition_Function.firstAuxVerb;
 				indexWordList++; return Auxiliary.had;
-		case "shall": functionList[indexWordList] = SpeechRecognitionFunction.firstAuxVerb;
+		case "shall": functionList[indexWordList] = SpeechRecognition_Function.firstAuxVerb;
 				indexWordList++; return Auxiliary.shall;
-		case "should": functionList[indexWordList] = SpeechRecognitionFunction.firstAuxVerb;
+		case "should": functionList[indexWordList] = SpeechRecognition_Function.firstAuxVerb;
 				indexWordList++; return Auxiliary.should;
 		}
 		return null;
@@ -377,15 +377,15 @@ public class SpeechRecognition {
 		String word;
 		
 		index_save = indexWordList;
-		if (beOK(SpeechRecognitionFunction.secondAuxVerb_goingto)) {
+		if (beOK(SpeechRecognition_Function.secondAuxVerb_goingto)) {
 			word = wordList.get(indexWordList);
 			if (word == "going") {
-				functionList[indexWordList] = SpeechRecognitionFunction.secondAuxVerb_goingto;
+				functionList[indexWordList] = SpeechRecognition_Function.secondAuxVerb_goingto;
 				foundWordList[indexWordList] = null;
 				indexWordList++;
 				word = wordList.get(indexWordList);
 				if (word == "to") {
-					functionList[indexWordList] = SpeechRecognitionFunction.secondAuxVerb_goingto;
+					functionList[indexWordList] = SpeechRecognition_Function.secondAuxVerb_goingto;
 					foundWordList[indexWordList] = null;
 					indexWordList++;
 					isOK = true;
@@ -398,13 +398,13 @@ public class SpeechRecognition {
 		return isOK;
 	}
 	
-	private boolean finiteFormOK(SpeechRecognitionFunction function) {
+	private boolean finiteFormOK(SpeechRecognition_Function function) {
 		boolean isOK;
-		isOK = ( wordOK(function, WordType.infinitive) || wordOK(function, WordType.finitive) );
+		isOK = ( wordOK(function, Word_Type.infinitive) || wordOK(function, Word_Type.finitive) );
 		return isOK;
 	}
 
-	private boolean personOK(SpeechRecognitionFunction function) {
+	private boolean personOK(SpeechRecognition_Function function) {
 		boolean isOK = false;
 		
 		isOK = titleOK(function);
@@ -413,7 +413,7 @@ public class SpeechRecognition {
 		return isOK;
 	}
 
-	private boolean itemOK(SpeechRecognitionFunction function) {
+	private boolean itemOK(SpeechRecognition_Function function) {
 		boolean isOK = false;
 		int index_save;
 		String word;
@@ -436,8 +436,8 @@ public class SpeechRecognition {
 		return isOK;
 	}
 	
-	private boolean questionOK(SpeechRecognitionFunction function) {
-		return wordOK(function, WordType.question);
+	private boolean questionOK(SpeechRecognition_Function function) {
+		return wordOK(function, Word_Type.question);
 	}
 	
 

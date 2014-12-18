@@ -38,7 +38,7 @@ public class Talk {
 		return sentence;
 	}
 	
-	public void addSentence(String sentence, TalkSentenceType type) {
+	public void addSentence(String sentence, Talk_SentenceType type) {
 		switch (type) {
 		case myPlannedSentence:
 			myPlannedSentences.add(sentence);
@@ -65,7 +65,7 @@ public class Talk {
 		
 	}
 
-	public String getSentence(TalkSentenceType type) {
+	public String getSentence(Talk_SentenceType type) {
 		switch (type) {
 		case myPlannedSentence:
 			return getMyPlannedSentence();

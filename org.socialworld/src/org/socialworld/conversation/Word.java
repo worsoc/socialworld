@@ -6,7 +6,7 @@ public class Word {
 	private String word;
 	private int wordID;
 	
-	private WordType wordType;
+	private Word_Type wordType;
 	private KnowledgeFactCriterion kfc;
 	private boolean allowedAsKnowledgeSubject = false;
 	
@@ -25,7 +25,7 @@ public class Word {
 		return wordID;
 	}
 	
-	public WordType getType() {
+	public Word_Type getType() {
 		return wordType;
 	}
 

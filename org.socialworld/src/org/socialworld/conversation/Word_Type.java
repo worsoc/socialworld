@@ -1,6 +1,6 @@
 package org.socialworld.conversation;
 
-public enum WordType {
+public enum Word_Type {
 	noun, 
 	infinitive, finitive, simple_past, past_participle,
 	preposition,
@@ -9,4 +9,5 @@ public enum WordType {
 	personal_pronoun, possessive_pronoun, demonstrative_pronoun,
 	name, title,
 	question
+
 }

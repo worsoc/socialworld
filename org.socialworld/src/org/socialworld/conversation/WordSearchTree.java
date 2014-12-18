@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 
 public class WordSearchTree {
-	private WordSearchTreeNode root;
-	private WordSearchTreeNode currentNode;
+	private WordSearchTree_Node root;
+	private WordSearchTree_Node currentNode;
 	
 	
 	public Word findAndGetWord(String word) {
@@ -24,7 +24,7 @@ public class WordSearchTree {
 		int count;
 		int i;
 		
-		WordSearchTreeNode nodeWithFirstLetter;
+		WordSearchTree_Node nodeWithFirstLetter;
 		
 		if (currentNode.getIsLeaf() && word.length() == 0 )return currentNode.getWord(); // node is leaf -> tree contains the word
 		else {
@@ -58,7 +58,7 @@ public class WordSearchTree {
 	
 
 	
-	private void createTree(LineNumberReader lnr, WordSearchTreeNode node, int indexChild) {
+	private void createTree(LineNumberReader lnr, WordSearchTree_Node node, int indexChild) {
 		String line;
 		int countChilds;
 		int i;
@@ -89,7 +89,7 @@ public class WordSearchTree {
 
 	}
 	
-	private void fillTree(LineNumberReader lnr, WordSearchTreeNode node, int indexChild) {
+	private void fillTree(LineNumberReader lnr, WordSearchTree_Node node, int indexChild) {
 		String line;
 		int count;
 		int i;
