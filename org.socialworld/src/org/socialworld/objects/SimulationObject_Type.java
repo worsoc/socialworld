@@ -1,5 +1,6 @@
 package org.socialworld.objects;
 
-public enum SimulationObjectType {
+public enum SimulationObject_Type {
 	animal,human, god, item, magic
+
 }

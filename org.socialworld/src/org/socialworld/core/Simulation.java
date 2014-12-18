@@ -80,7 +80,7 @@ public class Simulation implements IHumanWrite{
 	}
 	
 	public SimulationObject createSimulationObject(
-			SimulationObjectType simulationObjectType) {
+			SimulationObject_Type simulationObjectType) {
 		return this.objectMaster.createSimulationObject(simulationObjectType);
 	}
 
@@ -88,11 +88,11 @@ public class Simulation implements IHumanWrite{
 		return this.objectMaster.getSimulationObject(objectID);
 	}
 	
-	public boolean hasNext(SimulationObjectType objectType) {
+	public boolean hasNext(SimulationObject_Type objectType) {
 		return this.objectMaster.hasNext(objectType);
 	}
 	
-	public SimulationObject next(SimulationObjectType objectType) {
+	public SimulationObject next(SimulationObject_Type objectType) {
 		return this.objectMaster.next(objectType);
 	}
 	
