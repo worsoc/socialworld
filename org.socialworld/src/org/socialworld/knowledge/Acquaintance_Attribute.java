@@ -1,13 +1,12 @@
 package org.socialworld.knowledge;
 
-
 /**
  * The enumeration holds all acquaintance attribute names and collects an index for every
  * attribute. So an attribute is addressable in arrays.
  * 
  * @author Mathias Sikos (tyloesand)
  */
-public enum AcquaintanceAttribute {
+public enum Acquaintance_Attribute {
 	friendship(0), love(1), sympathy(2), responsibility(3), respect(4), trust(5), obedience(6);
 	
 	/**
@@ -19,7 +18,7 @@ public enum AcquaintanceAttribute {
 
 	private int arrayIndex;
 
-	private AcquaintanceAttribute(int index) {
+	private Acquaintance_Attribute(int index) {
 		this.arrayIndex = index;
 	}
 
@@ -40,8 +39,8 @@ public enum AcquaintanceAttribute {
 	 *            attribute index
 	 * @return attribute name
 	 */
-	public AcquaintanceAttribute getAttributeName(int arrayIndex) {
-		for (AcquaintanceAttribute attribute : AcquaintanceAttribute.values())
+	public Acquaintance_Attribute getAttributeName(int arrayIndex) {
+		for (Acquaintance_Attribute attribute : Acquaintance_Attribute.values())
 			if (attribute.arrayIndex == arrayIndex)
 				return attribute;
 		return null;

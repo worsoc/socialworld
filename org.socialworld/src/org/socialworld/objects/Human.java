@@ -7,13 +7,13 @@ import org.socialworld.attributes.AttributeArray;
 import org.socialworld.attributes.ActionType;
 import org.socialworld.attributes.ActionMode;
 import org.socialworld.attributes.Inventory;
-import org.socialworld.knowledge.AcquaintanceAttribute;
+import org.socialworld.knowledge.Acquaintance_Attribute;
 import org.socialworld.knowledge.AcquaintancePool;
 import org.socialworld.knowledge.Acquaintance;
 import org.socialworld.knowledge.KnowledgePool;
 import org.socialworld.knowledge.KnowledgeSource;
-import org.socialworld.knowledge.KnowledgeSourceType;
 import org.socialworld.knowledge.Answer;
+import org.socialworld.knowledge.KnowledgeSource_Type;
 import org.socialworld.conversation.Talk;
 import org.socialworld.conversation.Talk_SentenceType;
 import org.socialworld.conversation.PunctuationMark;
@@ -224,7 +224,7 @@ import java.util.ListIterator;
 				sentence = getSentence(human, Talk_SentenceType.partnersSentence);
 				if (sentence != null) {
 					source = new KnowledgeSource();
-					source.setSourceType( KnowledgeSourceType.heardOf);
+					source.setSourceType( KnowledgeSource_Type.heardOf);
 					// get the acquaintance of target human (null if the there isn't an acquaintance of target human)
 					source.setOrigin(acquaintance.getAcquaintance(human));
 					knowledge.addFactsFromSentence(sentence, source);
@@ -312,9 +312,9 @@ import java.util.ListIterator;
 		// TODO
 		// more complex, please
 		// here only an example for an easy decision
-		if (acquaintance.isAttributeValueLessThan(AcquaintanceAttribute.sympathy, AttributeArray.VALUE_MIDDLE) ) 
+		if (acquaintance.isAttributeValueLessThan(Acquaintance_Attribute.sympathy, AttributeArray.VALUE_MIDDLE) ) 
 			answer.reduceToFactWithMinAccessCount();
-		else if (acquaintance.isAttributeValueGreaterThan(AcquaintanceAttribute.sympathy, AttributeArray.VALUE_MIDDLE) ) 
+		else if (acquaintance.isAttributeValueGreaterThan(Acquaintance_Attribute.sympathy, AttributeArray.VALUE_MIDDLE) ) 
 			answer.sortBySource();
 		else answer.reduceToFactWithMaxAccessCount();
 	}

@@ -1,10 +1,10 @@
 package org.socialworld.knowledge;
 
 public class KnowledgeSource {
-	KnowledgeSourceType type = null;
+	KnowledgeSource_Type type = null;
 	Acquaintance origin = null;
 	
-	public void setSourceType(KnowledgeSourceType type) {
+	public void setSourceType(KnowledgeSource_Type type) {
 		this.type = type;
 	}
 	

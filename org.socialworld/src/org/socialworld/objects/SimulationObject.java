@@ -8,11 +8,11 @@ import org.apache.log4j.Logger;
 import org.socialworld.attributes.ActionType;
 import org.socialworld.attributes.Position;
 import org.socialworld.core.Action;
-import org.socialworld.core.ChangedProperty;
 import org.socialworld.core.ActionHandler;
 import org.socialworld.core.Event;
 import org.socialworld.core.Simulation;
 import org.socialworld.calculation.application.EventCreator;
+import org.socialworld.propertyChange.ChangedProperty;
 import org.socialworld.propertyChange.ListenedBase;
 
 /**

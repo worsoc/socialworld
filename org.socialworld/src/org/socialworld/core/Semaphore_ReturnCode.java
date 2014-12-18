@@ -1,6 +1,6 @@
 package org.socialworld.core;
 
-public enum SemaphoreReturnCode {
+public enum Semaphore_ReturnCode {
 	success, notLockedByAnyone, lockedByAnotherUser, lockedByUser
 
 }
