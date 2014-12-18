@@ -1,11 +1,11 @@
 package org.socialworld.conversation;
-import org.socialworld.knowledge.KnowledgeFactCriterion;
+import org.socialworld.knowledge.KnowledgeFact_Criterion;
 
 public class SentenceMaker {
 	private Word lastSubject;
 	private int random = 0;
 	
-	public String getStatementSentenceForFact(Word subject, KnowledgeFactCriterion criterion, Word value) {
+	public String getStatementSentenceForFact(Word subject, KnowledgeFact_Criterion criterion, Word value) {
 		String sentence;
 		
 		if (lastSubject == subject)
@@ -20,7 +20,7 @@ public class SentenceMaker {
 		return sentence;
 	}
 	
-	private String getStatementPhraseForFact(KnowledgeFactCriterion criterion, Word value){
+	private String getStatementPhraseForFact(KnowledgeFact_Criterion criterion, Word value){
 		String phrase;
 		
 		switch (criterion) {
@@ -40,7 +40,7 @@ public class SentenceMaker {
 		return phrase;
 	}
 	
-	public String getQuestionSentence(Word subject, KnowledgeFactCriterion criterion) {
+	public String getQuestionSentence(Word subject, KnowledgeFact_Criterion criterion) {
 		String sentence;
 		
 		sentence = subject.getWord();
@@ -64,7 +64,7 @@ public class SentenceMaker {
 		return sentence;
 	}
 	
-	private void calculateNewRandom(KnowledgeFactCriterion criterion, int moduloRange) {
+	private void calculateNewRandom(KnowledgeFact_Criterion criterion, int moduloRange) {
 		random = (random + criterion.getIndex()) % moduloRange;
 	}
 	

@@ -1,13 +1,13 @@
 package org.socialworld.conversation;
 
-import org.socialworld.knowledge.KnowledgeFactCriterion;
+import org.socialworld.knowledge.KnowledgeFact_Criterion;
 
 public class Word {
 	private String word;
 	private int wordID;
 	
 	private Word_Type wordType;
-	private KnowledgeFactCriterion kfc;
+	private KnowledgeFact_Criterion kfc;
 	private boolean allowedAsKnowledgeSubject = false;
 	
 	private Word pronoun;
@@ -37,11 +37,11 @@ public class Word {
 		return pronoun;
 	}
 	
-	protected void setKnowledgeFactCriterion(KnowledgeFactCriterion kfc ) {
+	protected void setKnowledgeFact_Criterion(KnowledgeFact_Criterion kfc ) {
 		this.kfc = kfc;
 	}
 
-	protected KnowledgeFactCriterion getKnowledgeFactCriterion() {
+	protected KnowledgeFact_Criterion getKnowledgeFact_Criterion() {
 		return kfc;
 	}
 

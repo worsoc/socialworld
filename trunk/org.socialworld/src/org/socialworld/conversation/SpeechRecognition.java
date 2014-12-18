@@ -1,7 +1,7 @@
 package org.socialworld.conversation;
 
 import java.util.ArrayList;
-import org.socialworld.knowledge.KnowledgeFactCriterion;
+import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.knowledge.KnowledgeFact;
 import org.socialworld.knowledge.KnowledgeFactPool;
 
@@ -66,11 +66,11 @@ public class SpeechRecognition {
 		return word;
 	}
 	
-	public KnowledgeFactCriterion getCriterion() {
-		KnowledgeFactCriterion criterion = null;
-		KnowledgeFactCriterion tmpCriterion = null;
+	public KnowledgeFact_Criterion getCriterion() {
+		KnowledgeFact_Criterion criterion = null;
+		KnowledgeFact_Criterion tmpCriterion = null;
 		for (int index = startSearchForCriterion; index < wordList.size(); index++) {
-			tmpCriterion = foundWordList[index].getKnowledgeFactCriterion();
+			tmpCriterion = foundWordList[index].getKnowledgeFact_Criterion();
 			if (tmpCriterion != null) {
 				criterion = tmpCriterion;
 				indexWordList = index;
@@ -82,7 +82,7 @@ public class SpeechRecognition {
 	
 	public KnowledgeFact getNextFact() {
 		KnowledgeFact fact = null;
-		KnowledgeFactCriterion criterion = null;
+		KnowledgeFact_Criterion criterion = null;
 		SpeechRecognition_Function function = null;
 		Word word = null;
 		
