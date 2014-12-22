@@ -7,6 +7,7 @@ import java.io.LineNumberReader;
 import java.net.URL;
 
 import org.socialworld.attributes.Position;
+import org.socialworld.calculation.Vector;
 
 public class PositionPool {
 	public static final int CAPACITY_PosP_ARRAY = 10;
@@ -90,12 +91,12 @@ public class PositionPool {
 					vorzeichen = vorzeichen * -1;
 					if (index >= 0) 
 							if (index < capacityForPositiveIndex && positionsForPositiveIndex[index] == null ) 
-								positionsForPositiveIndex[index] = new Position(array[0], array[1], array[2]);
+								positionsForPositiveIndex[index] = new Position(new Vector (array[0], array[1], array[2]) );
 							else ;
 					else {
 						index = index * -1;
 						if (index < capacityForNegativeIndex &&  positionsForNegativeIndex[index] == null ) 
-								positionsForNegativeIndex[index] = new Position(array[0], array[1], array[2]);
+								positionsForNegativeIndex[index] = new Position(new Vector (array[0], array[1], array[2]) );
 						index = index * -1;
 					}	
 					

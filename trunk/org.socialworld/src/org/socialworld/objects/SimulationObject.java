@@ -11,6 +11,7 @@ import org.socialworld.core.Action;
 import org.socialworld.core.ActionHandler;
 import org.socialworld.core.Event;
 import org.socialworld.core.Simulation;
+import org.socialworld.calculation.Vector;
 import org.socialworld.calculation.application.EventCreator;
 import org.socialworld.propertyChange.ChangedProperty;
 import org.socialworld.propertyChange.ListenedBase;
@@ -49,7 +50,7 @@ public abstract class SimulationObject extends ListenedBase {
 		
 		this.actionHandler = new ActionHandler(this);
 
-		this.position = new Position( 0,0,0);
+		this.position = new Position( new Vector( 0,0,0));
 		
 
 	}

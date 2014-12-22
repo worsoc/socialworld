@@ -1,11 +1,11 @@
 package org.socialworld.calculation.application;
 import org.socialworld.attributes.ActionMode;
 import org.socialworld.attributes.ActionType;
-import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.Time;
 import org.socialworld.core.Action;
 import org.socialworld.core.Event;
+import org.socialworld.calculation.Vector;
 import org.socialworld.objects.SimulationObject;
 
 public class Action2EventMapping {
@@ -16,8 +16,8 @@ public class Action2EventMapping {
 		
 		// just for testing:
 		if (actor.getObjectID() == 1) {
-			event = new Event(1,  10,  actor,  new Time(1500),  new Position(100,105,0),
-				 new Direction(0,1,0),  10, 
+			event = new Event(1,  10,  actor,  new Time(1500),  new Position(new Vector(100,105,0)),
+					 new Vector(0,1,0),  10, 
 				 10,  45);
 			return event;
 		}
@@ -30,7 +30,7 @@ public class Action2EventMapping {
 		
 		int eventType;
 		SimulationObject causer;
-		Direction direction;
+		Vector direction;
 		int strength;
 		Time time;
 		int priority;
@@ -77,8 +77,8 @@ public class Action2EventMapping {
 		return eventposition;
 	}
 
-	private static Direction calculateEventDirection(final Action action,	final SimulationObject actor ) {
-		Direction eventDirection = new Direction(action.getDirection());
+	private static Vector calculateEventDirection(final Action action,	final SimulationObject actor ) {
+		Vector eventDirection = new Vector(action.getDirection());
 		return eventDirection;
 	}
 

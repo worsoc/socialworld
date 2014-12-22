@@ -5,8 +5,8 @@ package org.socialworld.core;
 
 import org.socialworld.attributes.ActionMode;
 import org.socialworld.attributes.ActionType;
-import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Time;
+import org.socialworld.calculation.Vector;
 import org.socialworld.objects.SimulationObject;
 
 /**
@@ -32,7 +32,7 @@ public class Action extends AbstractAction {
  * @param duration
  */	
 	public Action(final ActionType type, final ActionMode mode,
-			final SimulationObject target, final Direction direction,
+			final SimulationObject target, final Vector direction,
 			final double intensity, final Time minTime, final Time maxTime,
 			final int priority, final long duration) {
 		this.setType(type);

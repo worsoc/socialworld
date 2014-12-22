@@ -5,8 +5,8 @@ import org.socialworld.objects.IHumanWrite;
 import org.socialworld.objects.WriteAccessToHuman;
 import org.socialworld.attributes.ActionMode;
 import org.socialworld.attributes.ActionType;
-import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Time;
+import org.socialworld.calculation.Vector;
 import org.socialworld.core.Action;
 
 public class SimpleClientActionHandler implements IHumanWrite {
@@ -61,13 +61,13 @@ public class SimpleClientActionHandler implements IHumanWrite {
 		switch (action) {
 		case 1:   // step forward
 			actualHuman.setAction(new Action(ActionType.move ,  ActionMode.run,
-					actualHuman.getObject(), new Direction(0,10,0),
+					actualHuman.getObject(), new Vector(0,10,0),
 					10, new Time(1000), new Time(2000),
 					10, 500), this );
 			break;
 		case 2:   // step back
 			actualHuman.setAction(new Action(ActionType.move ,  ActionMode.run,
-					actualHuman.getObject(), new Direction(0,-10,0),
+					actualHuman.getObject(), new Vector(0,-10,0),
 					10, new Time(1000), new Time(2000),
 					10, 500), this );
 			break;

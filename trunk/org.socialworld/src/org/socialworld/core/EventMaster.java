@@ -11,7 +11,7 @@ import java.util.ListIterator;
 
 import org.apache.log4j.Logger;
 import org.socialworld.SocialWorld;
-import org.socialworld.attributes.Direction;
+import org.socialworld.calculation.Vector;
 import org.socialworld.attributes.Position;
 import org.socialworld.objects.SimulationObject;
 
@@ -59,7 +59,7 @@ public class EventMaster extends Thread {
 	/**
 	 * the direction how the event has effects.
 	 */
-	private Direction eventDirection;
+	private Vector eventDirection;
 	
 	/**
 	 * says whether the thread is running or not
@@ -184,7 +184,7 @@ public class EventMaster extends Thread {
 	 */
 	private boolean decideEffective(SimulationObject candidate) {
 		Position position;
-		Direction direction;
+		Vector direction;
 		double distance;
 		double tangent;
 
@@ -193,8 +193,8 @@ public class EventMaster extends Thread {
 		distance = position.getDistance(this.eventPosition);
 
 		if (distance <= this.event.getEffectDistance()) {
-			direction = position.getDirection(this.eventPosition);
-			tangent = direction.getAngleTangent(this.eventDirection);
+			direction = position.getDirectionFrom(this.eventPosition);
+			tangent = direction.getTanPhi(this.eventDirection);
 			return (tangent <= this.tangentOfEffectAngle);
 		}
 		return false;
