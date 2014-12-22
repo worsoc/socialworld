@@ -3,6 +3,8 @@
  */
 package org.socialworld.attributes;
 
+import org.socialworld.calculation.Vector;
+
 /**
  * The class collects information about a
  *         simulation object's movements. A move has an action mode (here it is
@@ -11,7 +13,7 @@ package org.socialworld.attributes;
  */
 public class Move {
 	private ActionMode mode;
-	private Direction direction;
+	private Vector direction;
 	
 	public Move() {
 		this.mode = ActionMode.walk;
@@ -35,7 +37,7 @@ public class Move {
 	/**
 	 * @return the direction
 	 */
-	public Direction getDirection() {
+	public Vector getDirection() {
 		return this.direction;
 	}
 
@@ -43,7 +45,7 @@ public class Move {
 	 * @param direction
 	 *            the direction to set
 	 */
-	public void setDirection(final Direction direction) {
+	public void setDirection(final Vector direction) {
 		this.direction = direction;
 	}
 	

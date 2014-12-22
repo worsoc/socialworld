@@ -5,8 +5,8 @@ package org.socialworld.core;
 
 import org.socialworld.attributes.ActionMode;
 import org.socialworld.attributes.ActionType;
-import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Time;
+import org.socialworld.calculation.Vector;
 import org.socialworld.objects.SimulationObject;
 
 /**
@@ -110,7 +110,7 @@ public class SearchActionDescription extends AbstractAction {
 	 *            the direction to set
 	 */
 	@Override
-	public void setDirection(final Direction direction) {
+	public void setDirection(final Vector direction) {
 		this.direction = direction;
 		this.searchByDirection = true;
 	}

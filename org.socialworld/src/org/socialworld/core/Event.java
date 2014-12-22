@@ -3,7 +3,7 @@
  */
 package org.socialworld.core;
 
-import org.socialworld.attributes.Direction;
+import org.socialworld.calculation.Vector;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.Time;
 import org.socialworld.objects.SimulationObject;
@@ -26,7 +26,7 @@ public class Event implements Comparable<Event> {
 	private SimulationObject causer;
 	private Time time;
 	private Position position;
-	private Direction direction;
+	private Vector direction;
 
 	private int strength;
 
@@ -44,7 +44,7 @@ public class Event implements Comparable<Event> {
 	 * Constructor
 	 */
 	public Event(int eventType, int priority, SimulationObject causer, Time time, Position position,
-			Direction direction, int strength, 
+			Vector direction, int strength, 
 			float effectDistance, float effectAngle) {
 		
 		this.eventType = eventType;		
@@ -200,7 +200,7 @@ public class Event implements Comparable<Event> {
 	/**
 	 * @return the direction
 	 */
-	public Direction getDirection() {
+	public Vector getDirection() {
 		return direction;
 	}
 
@@ -208,7 +208,7 @@ public class Event implements Comparable<Event> {
 	 * @param direction
 	 *            the direction to set
 	 */
-	public void setDirection(Direction direction) {
+	public void setDirection(Vector direction) {
 		this.direction = direction;
 	}
 

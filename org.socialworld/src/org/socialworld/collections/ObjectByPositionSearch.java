@@ -61,8 +61,8 @@ public class ObjectByPositionSearch {
 		if (object.getPosition() == null) return;
 		
 		objectID = object.getObjectID();
-		x = object.getPosition().get_X();
-		y = object.getPosition().get_Y();
+		x = object.getPosition().getX();
+		y = object.getPosition().getY();
 		
 		newNode = addNode(objectID, x, y);
 		

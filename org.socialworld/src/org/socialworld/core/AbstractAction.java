@@ -2,8 +2,8 @@ package org.socialworld.core;
 
 import org.socialworld.attributes.ActionMode;
 import org.socialworld.attributes.ActionType;
-import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Time;
+import org.socialworld.calculation.Vector;
 import org.socialworld.objects.SimulationObject;
 
 /**
@@ -26,7 +26,7 @@ public abstract class AbstractAction {
 	protected Time maxTime;
 	protected int priority;
 	protected SimulationObject target;
-	protected Direction direction;
+	protected Vector direction;
 	protected ActionMode mode;
 	protected double intensity;
 	protected long duration;
@@ -128,7 +128,7 @@ public abstract class AbstractAction {
 	/**
 	 * @return the direction
 	 */
-	public Direction getDirection() {
+	public Vector getDirection() {
 		return this.direction;
 	}
 
@@ -136,7 +136,7 @@ public abstract class AbstractAction {
 	 * @param direction
 	 *            the direction to set
 	 */
-	public void setDirection(final Direction direction) {
+	public void setDirection(final Vector direction) {
 		this.direction = direction;
 	}
 

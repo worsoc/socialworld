@@ -3,6 +3,7 @@
  */
 package org.socialworld.calculation;
 
+
 /**
  * The class is the base for all simulation
  *         position and directions. The vector has 3 dimensions.
@@ -10,9 +11,9 @@ package org.socialworld.calculation;
  */
 public class Vector {
 
-	protected double x;
-	protected double y;
-	protected double z;
+	protected float x;
+	protected float y;
+	protected float z;
 
 	public Vector() {
 
@@ -31,7 +32,7 @@ public class Vector {
 		}
 	}
 	
-	public Vector(double x, double y, double z) {
+	public Vector(float x, float y, float z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -57,7 +58,7 @@ public class Vector {
 	/**
 	 * @return the x
 	 */
-	public double getX() {
+	public float getX() {
 		return x;
 	}
 
@@ -65,14 +66,14 @@ public class Vector {
 	 * @param x
 	 *            the x to set
 	 */
-	public void setX(double x) {
+	public void setX(float x) {
 		this.x = x;
 	}
 
 	/**
 	 * @return the y
 	 */
-	public double getY() {
+	public float getY() {
 		return y;
 	}
 
@@ -80,14 +81,14 @@ public class Vector {
 	 * @param y
 	 *            the y to set
 	 */
-	public void setY(double y) {
+	public void setY(float y) {
 		this.y = y;
 	}
 
 	/**
 	 * @return the z
 	 */
-	public double getZ() {
+	public float getZ() {
 		return z;
 	}
 
@@ -95,7 +96,7 @@ public class Vector {
 	 * @param z
 	 *            the z to set
 	 */
-	public void setZ(double z) {
+	public void setZ(float z) {
 		this.z = z;
 	}
 
@@ -104,14 +105,14 @@ public class Vector {
 	 * 
 	 * @return the length
 	 */
-	public double getLength() {
-		double length;
+	public float length() {
+		float length;
 
-		double xQuad = x * x;
-		double yQuad = y * y;
-		double zQuad = z * z;
+		float xQuad = x * x;
+		float yQuad = y * y;
+		float zQuad = z * z;
 
-		length = Math.sqrt(xQuad + yQuad + zQuad);
+		length = (float) Math.sqrt(xQuad + yQuad + zQuad);
 
 		return length;
 	}
@@ -123,10 +124,10 @@ public class Vector {
 	 * @param position
 	 * @return the direction
 	 */
-	public Vector getDifference(Vector vector) {
-		double deltaX;
-		double deltaY;
-		double deltaZ;
+	public Vector getDirectionFrom(Vector vector) {
+		float deltaX;
+		float deltaY;
+		float deltaZ;
 
 		Vector direction;
 
@@ -155,28 +156,51 @@ public class Vector {
 	 * 
 	 * @param scalar
 	 */
-	public void multiply (double scalar) {
+	public void mul (float scalar) {
 		this.x = this.x * scalar;
 		this.y = this.y * scalar;
 		this.z = this.z * scalar;
 		
 	}
 	
+	
 	/**
-	 * The method multiplies the vector by another vector.
-	 *  In this calculation every single value is multiplied by the corresponding single value.
-	 *  The result is a vector again.
-	 *  (x1,y1,z1) * (x2,y2,z2) = (x1*x2, y1*y2, z1*z2)
+	 * The method calculates the angle's cosine.
+	 * The formula is: cos = a * b   /   |a| * |b|
 	 * 
-	 * @param relativeVector
+	 * 
+	 * @param b
 	 */
-	public void multiply (Vector relativeVector) {
-		this.x = this.x * relativeVector.x;
-		this.y = this.y * relativeVector.y;
-		this.z = this.z * relativeVector.z;
+	public float getCosPhi (Vector b) {
 		
+		Vector a = this;
+		
+		float divisor = (a.length() * b.length());
+		if (divisor == 0)			return Float.NaN;
+		
+		float divident = a.x * b.x + a.y * b.y + a.z * b.z;
+	
+		return divident / divisor;
 	}
 	
+	/**
+	 * The method calculates the tangent of the angle between two vectors. 
+	 * The formula is: tan = (|a| - |b|) / ( |a - b| )
+	 * 
+	 * @param direction
+	 * @return the tangent
+	 */
+	public float getTanPhi(Vector b) {
+		Vector a = this;
+
+		float divisor = a.getDirectionFrom(b).length();
+		if (divisor == 0)			return Float.NaN;
+
+		float divident = a.length() - b.length();
+		
+		return divident / divisor;
+	}
+
 	@Override
 	public String toString() {
 		return "( " + this.x + ", " + this.y + ", " + this.z + " )";
