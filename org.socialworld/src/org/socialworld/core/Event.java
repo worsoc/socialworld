@@ -50,12 +50,9 @@ public class Event implements Comparable<Event> {
 
 	private float effectDistance;
 	private float effectAngle;
-	private float maxDistance;
-	private float maxSee;
-	private float maxHear;
-	private float maxSmell;
-	private float maxFeel;
 
+	private Event_Percipience percipience;
+	
 	public static final int MAX_EVENT_TYPE = 256;
 
 	/**
@@ -78,15 +75,14 @@ public class Event implements Comparable<Event> {
 		this.effectDistance = effectDistance;
 		this.effectAngle = effectAngle;
 		
-		setDistancesOfNotice();
+		this.percipience = new Event_Percipience();
 	}	
 
 	/**
 	 * Constructor
 	 */
 	public Event(int eventType, int priority, int strength, 
-			float effectDistance, float effectAngle,
-			float maxDistance, float maxSee, float maxHear, float maxSmell, float maxFeel) {
+			float effectDistance, float effectAngle) {
 		
 		this.eventType = eventType;		
 		
@@ -96,19 +92,9 @@ public class Event implements Comparable<Event> {
 
 		this.effectDistance = effectDistance;
 		this.effectAngle = effectAngle;
-		
-		this.maxSee = maxSee;
-		this.maxHear = maxHear;
-		this.maxSmell = maxSmell;
-		this.maxFeel = maxFeel;
-		
-		if (maxDistance > 0 ) this.maxDistance = maxDistance;
-		else {
-			maxDistance = maxSee;
-			if (maxHear > maxDistance) maxDistance = maxHear;
-			if (maxSmell > maxDistance) maxDistance = maxSmell;
-			if (maxFeel > maxDistance) maxDistance = maxFeel;
-		}
+
+		this.percipience = new Event_Percipience();
+
 	}	
 	
 	/**
@@ -118,14 +104,6 @@ public class Event implements Comparable<Event> {
 		this.priority = priority;
 	}
 
-	private void setDistancesOfNotice( ) {
-		this. maxDistance = 100;
-		this.maxSee = 100;
-		this.maxHear = 100;
-		this.maxSmell = 2;
-		this.maxFeel = 1;
-		
-	}
 
 	/*
 	 * (non-Javadoc)
@@ -275,80 +253,8 @@ public class Event implements Comparable<Event> {
 		this.effectAngle = effectAngle;
 	}
 
-	/**
-	 * @return the maxDistance (the distance where the event is able to be
-	 *         perceived)
-	 */
-	public float getMaxDistance() {
-		return maxDistance;
-	}
-
-	/**
-	 * @param maxDistance
-	 *            the distance where the event is able to be perceived
-	 */
-	public void setMaxDistance(float maxDistance) {
-		this.maxDistance = maxDistance;
-	}
-
-	/**
-	 * @return the maxSee (the distance where the event is able to be seen)
-	 */
-	public float getMaxSee() {
-		return maxSee;
-	}
-
-	/**
-	 * @param maxSee
-	 *            the distance where the event is able to be seen
-	 */
-	public void setMaxSee(float maxSee) {
-		this.maxSee = maxSee;
-	}
-
-	/**
-	 * @return the maxHear (the distance where the event is able to be heard)
-	 */
-	public float getMaxHear() {
-		return maxHear;
-	}
-
-	/**
-	 * @param maxHear
-	 *            the distance where the event is able to be heard
-	 */
-	public void setMaxHear(float maxHear) {
-		this.maxHear = maxHear;
-	}
-
-	/**
-	 * @return the maxSmell (the distance where the event is able to be smelled)
-	 */
-	public float getMaxSmell() {
-		return maxSmell;
-	}
-
-	/**
-	 * @param maxSmell
-	 *            the distance where the event is able to be smelled
-	 */
-	public void setMaxSmell(float maxSmell) {
-		this.maxSmell = maxSmell;
-	}
-
-	/**
-	 * @return the maxFeel (the distance where the event is able to be felt)
-	 */
-	public float getMaxFeel() {
-		return maxFeel;
-	}
-
-	/**
-	 * @param maxFeel
-	 *            the distance where the event is able to be felt
-	 */
-	public void setMaxFeel(float maxFeel) {
-		this.maxFeel = maxFeel;
+	public void setPercipience(float maxDistance, float maxSee, float maxHear, float maxSmell, float maxFeel ) {
+		this.percipience  = new Event_Percipience( maxDistance,  maxSee,  maxHear,  maxSmell,  maxFeel );
 	}
 
 	public String toString() {
