@@ -58,10 +58,6 @@ public class EventPool {
 			event.setEffectAngle(30);
 			event.setEffectDistance(100);
 			event.setEventType(1);
-			event.setMaxDistance(200);
-			event.setMaxSee(200);
-			event.setMaxHear(100);
-			event.setMaxSmell(0);
 			event.setStrength(50);
 			return event;
 		default:
@@ -69,10 +65,6 @@ public class EventPool {
 			event.setEffectAngle(33);
 			event.setEffectDistance(121);
 			event.setEventType(1);
-			event.setMaxDistance(180);
-			event.setMaxSee(150);
-			event.setMaxHear(180);
-			event.setMaxSmell(0);
 			event.setStrength(66);
 			return event;
 		}
@@ -121,18 +113,13 @@ public class EventPool {
 	
 					 effectDistance = 0;
 					 effectAngle = 0;
-					 maxDistance = 0;
-					 maxSee = 0;
-					 maxHear = 0;
-					 maxSmell= 0;
-					 maxFeel=0;
 					continue;
 				}
 	
 				if (line.startsWith("</EVENT>")) {
 					event = new Event(eventType, priority, strength, 
-							 effectDistance,  effectAngle,
-							 maxDistance,  maxSee,  maxHear,  maxSmell,  maxFeel);
+							 effectDistance,  effectAngle);
+					event.setPercipience(maxDistance, maxSee, maxHear, maxSmell, maxFeel);
 					addEvent(nextFree, event);
 					nextFree = nextFree + 1;
 					continue;
