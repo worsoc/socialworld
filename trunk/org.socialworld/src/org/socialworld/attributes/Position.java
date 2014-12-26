@@ -30,15 +30,26 @@ import org.socialworld.calculation.Vector;
  */
 public class Position {
 
+	public final int LOCATIONBYBASEMAXLENGTH = 9;
+	
 	private Vector m_position;
+	
+	private int locationByBase9;
+	private String locationByBase25;
 
 	public Position(Vector position) {
 		m_position =  position;
+		
+		setLocationByBases(position);
 	}
 	
 	public Position(Position position) {
 		m_position =  new Vector (position.getVector());
 	}
+
+
+	public int getLocationByBase9() { return locationByBase9; }
+	public String getLocationByBase25() { return locationByBase25 ; }
 
 	public Vector getVector() {return m_position;}
 			
@@ -69,4 +80,58 @@ public class Position {
 	public int getY() { return (int) m_position.getY(); }
 	public int getZ() { return (int) m_position.getZ(); }
 	
+	
+	private void setLocationByBases(Vector position)
+	{
+		this.locationByBase25 = getLocationByBase(position, 5);
+		
+		String locationByBase9 = getLocationByBase(position, 3);
+		this.locationByBase9 = Integer.parseInt( locationByBase9 ); 
+	}
+
+	private String getLocationByBase(Vector position, int baseSquareRoot)
+	{ 
+		String locationString = "";
+		
+		int i;
+		int sectorX;
+		int sectorY;
+		int sector;
+		
+		float range;
+		
+		float x = position.getX();
+		float y = position.getY();
+		
+		for (i = 0; i < LOCATIONBYBASEMAXLENGTH; i++) {
+			
+			range = x / baseSquareRoot;
+			sectorX = (int) ( x / range );
+			x = x % range;
+			
+			range = y / baseSquareRoot;
+			sectorY = (int) ( y / range );
+			sectorY = sectorY - 1;
+			y = y % range;
+			
+			sector = sectorY * baseSquareRoot + sectorX;
+			
+			locationString = locationString + getSectorCode(sector, baseSquareRoot) ;
+		}
+		
+		return locationString;
+		
+	}
+	
+	private String getSectorCode(int sector, int baseSquareRoot ) {
+		
+		if (baseSquareRoot == 3) return Integer.toString(sector);
+		
+		if (baseSquareRoot == 5) 
+			// 64 + 1 --> "A", ... , 64 + 25 --> "Y"
+			return String.valueOf(Character.toChars(64 + sector  ));
+		else
+			return Integer.toString(0);
+		
+	}
 }

@@ -22,7 +22,7 @@
 package org.socialworld.collections;
 
 /**
- * The class ObjectByPositionSearchNode describes a node of a search tree for simulation objects.
+ * The class ObjectByPositionSearch_NodeXY describes a node of a search tree for simulation objects.
  * The tree's basis is 4 for four directions which can be described by position's X and Y value
  * - 1 ... smaller and equal X , smaller and equal Y
  * - 2 ... smaller and equal X , greater Y
@@ -37,18 +37,18 @@ package org.socialworld.collections;
  * @author Mathias Sikos (tyloesand)
  * 
  */
-public class ObjectByPositionSearchNode {
+public class ObjectByPositionSearch_NodeXY {
 	protected static final int SMALLEREQUALX_SMALLEREQUALY = 1;
 	protected static final int SMALLEREQUALX_GREATERY = 2;
 	protected static final int GREATERX_SMALLEREQUALY = 3;
 	protected static final int GREATERX_GREATERY = 4;
 	
-	private ObjectByPositionSearchNode smallerEqualX_smallerEqualY;  // childNr 1
-	private ObjectByPositionSearchNode smallerEqualX_greaterY;		 // childNr 2
-	private ObjectByPositionSearchNode greaterX_smallerEqualY;		 // childNr 3	
-	private ObjectByPositionSearchNode greaterX_greaterY;			 // childNr 4
+	private ObjectByPositionSearch_NodeXY smallerEqualX_smallerEqualY;  // childNr 1
+	private ObjectByPositionSearch_NodeXY smallerEqualX_greaterY;		 // childNr 2
+	private ObjectByPositionSearch_NodeXY greaterX_smallerEqualY;		 // childNr 3	
+	private ObjectByPositionSearch_NodeXY greaterX_greaterY;			 // childNr 4
 	
-	private ObjectByPositionSearchNode parent;
+	private ObjectByPositionSearch_NodeXY parent;
 	private int childNr;
 
 	private int x;
@@ -58,7 +58,7 @@ public class ObjectByPositionSearchNode {
 	private int done = 0;
 	private int objectID;
 
-	public ObjectByPositionSearchNode(ObjectByPositionSearchNode parent, int childNr, int objectID) {
+	public ObjectByPositionSearch_NodeXY(ObjectByPositionSearch_NodeXY parent, int childNr, int objectID) {
 		
 		this.parent = parent;
 		this.childNr = childNr;
@@ -72,11 +72,11 @@ public class ObjectByPositionSearchNode {
 		this.greaterX_greaterY = null;
 	}
 
-	public ObjectByPositionSearchNode(ObjectByPositionSearchNode parent, int childNr, int x, int y, 
-			ObjectByPositionSearchNode smallerEqualX_smallerEqualY,
-			ObjectByPositionSearchNode smallerEqualX_greaterY,
-			ObjectByPositionSearchNode greaterX_smallerEqualY,
-			ObjectByPositionSearchNode greaterX_greaterY) {
+	public ObjectByPositionSearch_NodeXY(ObjectByPositionSearch_NodeXY parent, int childNr, int x, int y, 
+			ObjectByPositionSearch_NodeXY smallerEqualX_smallerEqualY,
+			ObjectByPositionSearch_NodeXY smallerEqualX_greaterY,
+			ObjectByPositionSearch_NodeXY greaterX_smallerEqualY,
+			ObjectByPositionSearch_NodeXY greaterX_greaterY) {
 		
 		this.parent = parent;
 		this.childNr = childNr;
@@ -98,7 +98,7 @@ public class ObjectByPositionSearchNode {
 	}
 
 
-	protected ObjectByPositionSearchNode getNode() {
+	protected ObjectByPositionSearch_NodeXY getNode() {
 		if (isLeaf) return null;
 		
 		done = done + 1;
@@ -129,7 +129,7 @@ public class ObjectByPositionSearchNode {
 		return this.objectID;
 	}
 
-	protected ObjectByPositionSearchNode getNode(double searchX, double searchY) {
+	protected ObjectByPositionSearch_NodeXY getNode(double searchX, double searchY) {
 		if (this.isLeaf == true) return this;
 		if (searchX > this.x) 
 			if (searchY > this.y)	return this.greaterX_greaterY;
@@ -147,7 +147,7 @@ public class ObjectByPositionSearchNode {
 			 else	return SMALLEREQUALX_SMALLEREQUALY;
 	}
 
-	protected void setChild(int childNr, ObjectByPositionSearchNode child){
+	protected void setChild(int childNr, ObjectByPositionSearch_NodeXY child){
 		switch (childNr) {
 		case SMALLEREQUALX_SMALLEREQUALY: this.smallerEqualX_smallerEqualY = child; break;
 		case SMALLEREQUALX_GREATERY: this.smallerEqualX_greaterY = child; break;
@@ -160,11 +160,11 @@ public class ObjectByPositionSearchNode {
 		setChild(childNr, null);
 	}
 
-	protected void setParent(ObjectByPositionSearchNode parent) {
+	protected void setParent(ObjectByPositionSearch_NodeXY parent) {
 		this.parent = parent;
 	}
 	
-	protected ObjectByPositionSearchNode getParent() {
+	protected ObjectByPositionSearch_NodeXY getParent() {
 		return this.parent;
 	}
 
