@@ -20,11 +20,11 @@
 *
 */
 package org.socialworld.calculation.application;
+import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.ActionMode;
 import org.socialworld.attributes.ActionType;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.Time;
-import org.socialworld.core.Action;
 import org.socialworld.core.Event;
 import org.socialworld.calculation.Vector;
 import org.socialworld.objects.SimulationObject;
@@ -32,7 +32,7 @@ import org.socialworld.objects.SimulationObject;
 public class Action2EventMapping {
 	
 	
-	public static Event createEvent(final Action action,	final SimulationObject actor) {
+	public static Event createEvent(final AbstractAction action,	final SimulationObject actor) {
 		Event event;
 		
 		// just for testing:
@@ -92,22 +92,23 @@ public class Action2EventMapping {
 		return priority;
 	}
 
-	private static Position calculateEventPosition(final Action action,	final SimulationObject actor ) {
+	private static Position calculateEventPosition(final AbstractAction action,	final SimulationObject actor ) {
 		// getPosition() returns a copy of actor's position!
 		Position eventposition = actor.getPosition();
 		return eventposition;
 	}
 
-	private static Vector calculateEventDirection(final Action action,	final SimulationObject actor ) {
-		Vector eventDirection = new Vector(action.getDirection());
+	private static Vector calculateEventDirection(final AbstractAction action,	final SimulationObject actor ) {
+		// TODO
+		Vector eventDirection = null; //= new Vector(action.getDirection());
 		return eventDirection;
 	}
 
-	private static float calculateEffectDistance(final Action action,	final SimulationObject actor ) {
+	private static float calculateEffectDistance(final AbstractAction action,	final SimulationObject actor ) {
 		return 123;
 	}
 
-	private static float calculateEffectAngle(final Action action,	final SimulationObject actor ) {
+	private static float calculateEffectAngle(final AbstractAction action,	final SimulationObject actor ) {
 		return 12;
 	}
 

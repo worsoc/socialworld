@@ -21,8 +21,8 @@
 */
 package org.socialworld.objects;
 
+import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.ActionMode;
-import org.socialworld.core.Action;
 
 /**
  * A weapon is an item that has special properties. It has its functionality in
@@ -38,7 +38,7 @@ public class Weapon extends Item {
 	}
 
 	@Override
-	public void handle(final Action action, final SimulationObject user) {
+	public void handle(final AbstractAction action, final SimulationObject user) {
 		final ActionMode mode = action.getMode();
 
 		switch (mode) {

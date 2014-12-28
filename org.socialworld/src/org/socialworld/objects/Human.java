@@ -21,6 +21,9 @@
 */
 package org.socialworld.objects;
 
+import org.socialworld.actions.AbstractAction;
+import org.socialworld.actions.ActionHear;
+import org.socialworld.actions.ActionSay;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.attributes.ActionType;
 import org.socialworld.attributes.ActionMode;
@@ -35,7 +38,6 @@ import org.socialworld.knowledge.KnowledgeSource_Type;
 import org.socialworld.conversation.Talk;
 import org.socialworld.conversation.Talk_SentenceType;
 import org.socialworld.conversation.PunctuationMark;
-import org.socialworld.core.Action;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
@@ -78,7 +80,7 @@ import java.util.ListIterator;
 	 * with special implementation of the action.
 	 */
 	@Override
-	protected void doAction(final ActionType type, final Action action) {
+	protected void doAction(final ActionType type, final AbstractAction action) {
 
 
 		switch (type) {
@@ -123,13 +125,13 @@ import java.util.ListIterator;
 		}
 	}
 
-	protected void handleItem(final Action action) {
+	protected void handleItem(final AbstractAction action) {
 
 
 	}
 
 
-	protected void useWeaponRight(final Action action) {
+	protected void useWeaponRight(final AbstractAction action) {
 		final SimulationObject rightHand = this.inventory.getRightHand();
 		if (rightHand != null ) 
 			if (rightHand instanceof Weapon){
@@ -144,7 +146,7 @@ import java.util.ListIterator;
 		
 	}
 
-	protected void useWeaponLeft(final Action action) {
+	protected void useWeaponLeft(final AbstractAction action) {
 		final SimulationObject leftHand = this.inventory.getLeftHand();
 		if (leftHand != null ) 
 			if (leftHand instanceof Weapon){
@@ -158,24 +160,24 @@ import java.util.ListIterator;
 
 	}
 
-	protected void spell(final Action action) {
+	protected void spell(final AbstractAction action) {
 
 
 	}
 
-	protected void controlHandManually(final Action action) {
+	protected void controlHandManually(final AbstractAction action) {
 
 
 	}
 
-	protected void touch(final Action action) {
+	protected void touch(final AbstractAction action) {
 
 
 	}
 
-	protected void say(final Action action) {
+	protected void say(final AbstractAction action) {
 		ActionMode mode = action.getMode();
-		Action followingAction = null;
+		ActionSay followingAction = null;
 		final Human human = (Human) action.getTarget();
 		String question;
 		
@@ -185,7 +187,7 @@ import java.util.ListIterator;
 			
 				question = getSentence(human, Talk_SentenceType.partnersQuestion);
 				if (question != null) {
-					followingAction = new Action(action);
+					followingAction = new ActionSay((ActionSay) action);
 					answer = knowledge.getAnswerForQuestion(question);
 					manipulateAnswer(answer, human);
 					addAnswer(answer,  human);
@@ -203,13 +205,13 @@ import java.util.ListIterator;
 
 	}
 	
-	protected void hear(final Action action) {
+	protected void hear(final AbstractAction action) {
 		ActionMode mode = action.getMode();
 		
 		switch (mode) {
 			case  listenTo:
 				final SimulationObject target = action.getTarget();
-				Action followingAction;
+				ActionHear followingAction;
 				
 				if (target instanceof Human) {
 
@@ -220,7 +222,7 @@ import java.util.ListIterator;
 					sentence = human.getLastSaidSentence();
 					punctuationMark = addPartnersSentence(sentence, human);
 					
-					followingAction = new Action(action);
+					followingAction = new ActionHear((ActionHear)action);
 					switch (punctuationMark) {
 						case dot:
 							followingAction.setMode(ActionMode.understand);
@@ -254,7 +256,7 @@ import java.util.ListIterator;
 
 	}
 
-	protected void understand(final Action action) {
+	protected void understand(final AbstractAction action) {
 
 	}
 	

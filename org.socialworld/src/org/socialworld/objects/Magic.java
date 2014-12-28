@@ -21,8 +21,8 @@
 */
 package org.socialworld.objects;
 
-import org.socialworld.core.Action;
 import org.socialworld.core.Event;
+import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.ActionType;
 
 /**
@@ -54,7 +54,7 @@ public class Magic extends SimulationObject {
 	}
 
 	@Override
-	protected void doAction(final ActionType type, final Action action) {
+	protected void doAction(final ActionType type, final AbstractAction action) {
 	}
 
 }

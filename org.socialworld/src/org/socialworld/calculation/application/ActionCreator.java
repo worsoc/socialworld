@@ -23,6 +23,7 @@ package org.socialworld.calculation.application;
 
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.Animal;
+import org.socialworld.actions.AbstractAction;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.FunctionByExpression;
@@ -30,7 +31,6 @@ import org.socialworld.calculation.descriptions.EventReactionAssignment;
 import org.socialworld.calculation.descriptions.EventReactionDescription;
 import org.socialworld.calculation.descriptions.State2ActionAssignment;
 import org.socialworld.calculation.descriptions.State2ActionDescription;
-import org.socialworld.core.Action;
 import org.socialworld.core.Event;
 
 public class ActionCreator  {
@@ -44,7 +44,7 @@ public class ActionCreator  {
 	 * @param: actor
 	 * @param: event
 	 */
-	public static Action createAction(	final SimulationObject actor,	final Event event) {
+	public static AbstractAction createAction(	final SimulationObject actor,	final Event event) {
 		
 			if (actor instanceof Animal) 
 				return createAnimalReaction(event, (Animal) actor);
@@ -58,7 +58,7 @@ public class ActionCreator  {
 	 *
 	 * @param: actor
 	 */
-	public static Action createAction(	final SimulationObject actor) {
+	public static AbstractAction createAction(	final SimulationObject actor) {
 		
 			
 			if (actor instanceof Animal) 
@@ -75,7 +75,7 @@ public class ActionCreator  {
 	 * @param: event
 	 * @param: actor
 	 */
-	private static Action createAnimalReaction(final Event event,	final Animal actor) {
+	private static AbstractAction createAnimalReaction(final Event event,	final Animal actor) {
 		
 	
 		int eventType;
@@ -98,7 +98,7 @@ public class ActionCreator  {
 		arguments[0] = new Value(Type.attributeArray, actor.getAttributes());
 		arguments[1] = new Value(Type.event, event);
 		
-		return (Action) f_CreateReaction.calculate(arguments).getValue();
+		return (AbstractAction) f_CreateReaction.calculate(arguments).getValue();
 
 	}
 
@@ -108,7 +108,7 @@ public class ActionCreator  {
 	 * @param: event
 	 * @param: actor
 	 */
-	private static Action createReaction(final Event event,	final SimulationObject actor) {
+	private static AbstractAction createReaction(final Event event,	final SimulationObject actor) {
 		// TODO
 		return null;
 	}
@@ -119,7 +119,7 @@ public class ActionCreator  {
 	 * 
 	 * @param: actor
 	 */
-	private static Action createAnimalActionByState(final Animal actor) {
+	private static AbstractAction createAnimalActionByState(final Animal actor) {
 
 		int state2ActionType;
 		State2ActionDescription state2ActionDescription;
@@ -137,7 +137,7 @@ public class ActionCreator  {
 		
 		arguments[0] = new Value(Type.attributeArray, actor.getAttributes());
 		
-		return (Action) f_CreateAction.calculate(arguments).getValue();
+		return (AbstractAction) f_CreateAction.calculate(arguments).getValue();
 		
 
 	}
@@ -148,7 +148,7 @@ public class ActionCreator  {
 	 * 
 	 * @param: actor
 	 */
-	private static Action createActionByState(final SimulationObject actor) {
+	private static AbstractAction createActionByState(final SimulationObject actor) {
 		// TODO
 		return null;
 	}

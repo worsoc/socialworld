@@ -20,8 +20,8 @@
 *
 */
 package org.socialworld.objects;
+import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.Position;
-import org.socialworld.core.Action;
 
 public class WriteAccessToSimulationObject {
 	private SimulationObject object;
@@ -43,7 +43,7 @@ public class WriteAccessToSimulationObject {
 		if (caller instanceof ISimulationObjectWrite) object.setPosition(pos, this);
 	}
 	
-	public void setAction(Action action, Object caller) {
+	public void setAction(AbstractAction action, Object caller) {
 		if (caller instanceof ISimulationObjectWrite) object.setAction(action, this);
 	}
 

@@ -23,9 +23,9 @@ package org.socialworld.objects;
 
 
 import org.apache.log4j.Logger;
+import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.ActionType;
 import org.socialworld.attributes.Position;
-import org.socialworld.core.Action;
 import org.socialworld.core.ActionHandler;
 import org.socialworld.core.Event;
 import org.socialworld.core.Simulation;
@@ -97,7 +97,7 @@ public abstract class SimulationObject extends ListenedBase {
 		}
 	}
 
-	public void setAction(Action newAction, WriteAccessToSimulationObject guard) {
+	public void setAction(AbstractAction newAction, WriteAccessToSimulationObject guard) {
 
 		if (this.guard == guard) {
 			if (Simulation.WITH_LOGGING == 1 ) logger.debug("Mensch " + objectID + " trägt Aktion " + newAction.toString() + " in Liste ein");
@@ -122,7 +122,7 @@ public abstract class SimulationObject extends ListenedBase {
 	 * 
 	 * @param action
 	 */
-	public void doAction(Action action) {
+	public void doAction(AbstractAction action) {
 		ActionType type;
 		Event event;
 		boolean actionDone;
@@ -138,14 +138,14 @@ public abstract class SimulationObject extends ListenedBase {
 		
 	}
 
-	protected abstract void doAction(ActionType type, Action action);
+	protected abstract void doAction(ActionType type, AbstractAction action);
 	
 	/**
 	 * The method creates an event for a simulation object's action.
 	 * 
 	 * @param action
 	 */
-	public Event mapActionToEvent(Action action) {
+	public Event mapActionToEvent(AbstractAction action) {
 		return EventCreator.createEvent(this, action);
 	}
 	

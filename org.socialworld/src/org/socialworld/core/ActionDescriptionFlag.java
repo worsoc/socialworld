@@ -30,8 +30,8 @@ package org.socialworld.core;
  * 
  */
 public enum ActionDescriptionFlag {
-	searchByType, searchByMode, searchByMinTime, searchByMaxTime, searchByPriority, searchByTarget, searchByDirection, searchByIntensity, searchByDuration, searchByRemainedDuration,
+	searchByType, searchByMode, searchByMinTime, searchByMaxTime, searchByPriority, searchByTarget,  searchByIntensity, searchByDuration, searchByRemainedDuration,
 
-	dontSearchByType, dontSearchByMode, dontSearchByMinTime, dontSearchByMaxTime, dontSearchByPriority, dontSearchByTarget, dontSearchByDirection, dontSearchByIntensity, dontSearchByDuration, dontSearchByRemainedDuration
+	dontSearchByType, dontSearchByMode, dontSearchByMinTime, dontSearchByMaxTime, dontSearchByPriority, dontSearchByTarget,  dontSearchByIntensity, dontSearchByDuration, dontSearchByRemainedDuration
 
 }
