@@ -22,6 +22,7 @@
 package org.socialworld.actions;
 
 import org.socialworld.attributes.ActionMode;
+import org.socialworld.attributes.ActionProperty;
 import org.socialworld.attributes.ActionType;
 import org.socialworld.attributes.Time;
 import org.socialworld.calculation.Vector;
@@ -39,33 +40,31 @@ public class ActionHear extends AbstractAction {
 			final SimulationObject target, final Vector direction,
 			final double intensity, final Time minTime, final Time maxTime,
 			final int priority, final long duration) {
-		this.setType(type);
-		this.setMode(mode);
-		this.setTarget(target);
+		
+		setBaseProperties(type,  mode,
+			target, 
+			intensity,  minTime, maxTime,
+			 priority,  duration);
+		
 		this.setDirection(direction);
-		this.setIntensity(intensity);
-		this.setMinTime(minTime);
-		this.setMaxTime(maxTime);
-		this.setPriority(priority);
-		this.setDuration(duration);
-		this.setRemainedDuration(duration);
 
-		this.linkedAction = null;
 	}
 	
 	public ActionHear(ActionHear original) {
-		this.type = original.type;
-		this.mode = original.mode;
-		this.target = original.target;
+		setBaseProperties(original);
 		this.direction = original.direction;
-		this.intensity =original.intensity;
-		this.minTime = original.minTime;
-		this.maxTime = original.maxTime;
-		this.priority = original.priority;
-		this.duration = original.duration;
 	}
 
 	
+	public  Object getConcreteProperty(ActionProperty prop) {
+		switch (prop) {
+		case direction:
+				return getDirection();
+		default:
+			return null;
+		}
+	}
+
 	/**
 	 * @return the direction
 	 */
