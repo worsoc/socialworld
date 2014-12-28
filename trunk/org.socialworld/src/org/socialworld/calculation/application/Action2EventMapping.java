@@ -22,6 +22,7 @@
 package org.socialworld.calculation.application;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.ActionMode;
+import org.socialworld.attributes.ActionProperty;
 import org.socialworld.attributes.ActionType;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.Time;
@@ -99,8 +100,7 @@ public class Action2EventMapping {
 	}
 
 	private static Vector calculateEventDirection(final AbstractAction action,	final SimulationObject actor ) {
-		// TODO
-		Vector eventDirection = null; //= new Vector(action.getDirection());
+		Vector eventDirection =  new Vector((Vector) action.getConcreteProperty(ActionProperty.direction));
 		return eventDirection;
 	}
 

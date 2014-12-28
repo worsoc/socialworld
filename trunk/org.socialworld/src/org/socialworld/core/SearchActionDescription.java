@@ -23,6 +23,7 @@ package org.socialworld.core;
 
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.ActionMode;
+import org.socialworld.attributes.ActionProperty;
 import org.socialworld.attributes.ActionType;
 import org.socialworld.attributes.Time;
 import org.socialworld.objects.SimulationObject;
@@ -59,6 +60,11 @@ public class SearchActionDescription extends AbstractAction {
 		this.searchByIntensity = false;
 		this.searchByDuration = false;
 		this.searchByRemainedDuration = false;
+	}
+
+	public  Object getConcreteProperty(ActionProperty prop) {
+			return null;
+		
 	}
 
 	/**

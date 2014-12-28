@@ -22,6 +22,7 @@
 package org.socialworld.actions;
 
 import org.socialworld.attributes.ActionMode;
+import org.socialworld.attributes.ActionProperty;
 import org.socialworld.attributes.ActionType;
 import org.socialworld.attributes.Time;
 import org.socialworld.objects.SimulationObject;
@@ -84,6 +85,8 @@ public abstract class AbstractAction {
 		
 	}
 	
+	
+	public abstract Object getConcreteProperty(ActionProperty prop);
 	
 	/**
 	 * The method sets the linked action.
