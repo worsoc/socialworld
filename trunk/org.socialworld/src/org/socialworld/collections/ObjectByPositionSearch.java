@@ -73,8 +73,8 @@ public class ObjectByPositionSearch {
 	private ObjectByPositionSearch_NodeXY root;
 	private ObjectByPositionSearch_NodeXY found;
 
-	private ObjectByPositionSearch_NodeSector sectorTreeBase9;
-	private ObjectByPositionSearch_NodeSector sectorTreeBase25;
+	private ObjectByPositionSearch_TreeSector sectorTreeBase9;
+	private ObjectByPositionSearch_TreeSector sectorTreeBase25;
 	
 	private ArrayList<ObjectByPositionSearch_Nodes> allNodesByObjectID;
 	
@@ -83,14 +83,22 @@ public class ObjectByPositionSearch {
 	
 	public ObjectByPositionSearch (int capacity) {
 		root = new ObjectByPositionSearch_NodeXY(null, 0, 0, 0, null,null,null,null);;
-		sectorTreeBase9 = new ObjectByPositionSearch_NodeSector(9);
-		sectorTreeBase25 = new ObjectByPositionSearch_NodeSector(25);
+		sectorTreeBase9 = new ObjectByPositionSearch_TreeSector(9, 9);
+		sectorTreeBase25 = new ObjectByPositionSearch_TreeSector(25, 9);
 
 		allNodesByObjectID = new ArrayList<ObjectByPositionSearch_Nodes>(capacity);
 		size = capacity;
 		
 	}
 	
+	public ArrayList<SimulationObject> getObjectsByBase9(String location) {
+		return sectorTreeBase9.getObjects(location);
+	}
+
+	public ArrayList<SimulationObject> getObjectsByBase25(String location) {
+		return sectorTreeBase25.getObjects(location);
+	}
+
 	public void removeObject(SimulationObject object) {
 		ObjectByPositionSearch_NodeXY node;
 		ObjectByPositionSearch_NodeXY oldParent;
@@ -114,8 +122,8 @@ public class ObjectByPositionSearch {
 				oldParent.clearChild(oldChildNr);
 			}
 			
-			nodes.getBase9Node().removeObject(object);
-			nodes.getBase25Node().removeObject(object);
+			nodes.getBase9Node().removeObject();
+			nodes.getBase25Node().removeObject();
 			
 			nodes.setInvalid();
 		}
