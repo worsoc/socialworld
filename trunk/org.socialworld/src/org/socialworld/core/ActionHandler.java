@@ -29,6 +29,7 @@ import java.util.ListIterator;
 
 import org.apache.log4j.Logger;
 import org.socialworld.objects.SimulationObject;
+import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.ActionType;
 
 /**
@@ -53,24 +54,24 @@ public class ActionHandler  {
 	 * the list where all object's actions are inserted (ordered by action's
 	 * time and priority)
 	 */
-	private List<Action> actionList;
+	private List<AbstractAction> actionList;
 
 	/**
 	 * the action that actually is handled (executed).
 	 */
-	private Action actualAction;
+	private AbstractAction actualAction;
 
 	/**
 	 * the action that has been executed at last.
 	 * needed for decision whether 2 (or more) actions belong together (linked actions) 
 	 */
-	private Action lastExecutedAction;
+	private AbstractAction lastExecutedAction;
 
 	/**
 	 * the second of the actual minute.
 	 *  it is used for decision whether this action handler has yet executed an action within the actual time step
 	 */
-	private byte secondOfTheActualMinute = Action.MAX_ACTION_WAIT_SECONDS;
+	private byte secondOfTheActualMinute = AbstractAction.MAX_ACTION_WAIT_SECONDS;
 	
 	
 	/**
@@ -81,7 +82,7 @@ public class ActionHandler  {
 	
 	public ActionHandler(final SimulationObject simulationObject) {
 		this.actualAction = null;
-		this.actionList = new ArrayList<Action>();
+		this.actionList = new ArrayList<AbstractAction>();
 		this.object = simulationObject;
 		
 		// the new created action handler is added to the action master
@@ -99,7 +100,7 @@ public class ActionHandler  {
 	 * @return int (code for execution state)
 	 */
 	public int doActualAction(byte actualSecond ) {
-		Action action;
+		AbstractAction action;
 		
 		if (Simulation.WITH_LOGGING == 1 )logger.debug("Aufruf doActualAction");
 		
@@ -144,7 +145,7 @@ public class ActionHandler  {
 	 */
 	public void reset() {
 		// this value for second is never reached because the real maximum is one less
-		secondOfTheActualMinute = Action.MAX_ACTION_WAIT_SECONDS;
+		secondOfTheActualMinute = AbstractAction.MAX_ACTION_WAIT_SECONDS;
 	}
 	
 	/**
@@ -155,7 +156,7 @@ public class ActionHandler  {
 	 * 
 	 * @param newAction
 	 */
-	public void insertAction(final Action newAction) {
+	public void insertAction(final AbstractAction newAction) {
 		if (Simulation.WITH_LOGGING == 1 )logger.debug("Aufruf insertAction");
 		
 		long minTimeInMilliseconds;
@@ -164,13 +165,13 @@ public class ActionHandler  {
 		long duration;
 		boolean added = false;
 		
-		Action listedAction;
+		AbstractAction listedAction;
 		
-		ListIterator<Action> iterator;
+		ListIterator<AbstractAction> iterator;
 		int currentIndex = 0;
 		
 		if (newAction == null ) return;
-		if (newAction.type == ActionType.ignore ) return;
+		if (newAction.getType() == ActionType.ignore ) return;
 		
 		
 		minTimeInMilliseconds = newAction.getMinTime().getTotalMilliseconds();
@@ -241,10 +242,10 @@ public class ActionHandler  {
 	 *            (search criteria)
 	 * @return action element that meets the search criteria
 	 */
-	public Action findAction(final SearchActionDescription actionDescription) {
-		Action action;
-		Action noAction;
-		Iterator<Action> iterator;
+	public AbstractAction findAction(final SearchActionDescription actionDescription) {
+		AbstractAction action;
+		AbstractAction noAction;
+		Iterator<AbstractAction> iterator;
 
 		noAction = null;
 		
@@ -288,11 +289,6 @@ public class ActionHandler  {
 			}
 			if (actionDescription.isSearchByMaxTime()) {
 				if (action.getMaxTime() != actionDescription.getMaxTime()) {
-					continue;
-				}
-			}
-			if (actionDescription.isSearchByDirection()) {
-				if (action.getDirection() != actionDescription.getDirection()) {
 					continue;
 				}
 			}

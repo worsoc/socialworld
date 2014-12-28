@@ -21,12 +21,12 @@
 */
 package org.socialworld.objects;
 
+import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.ActionMode;
 import org.socialworld.attributes.ActionType;
 import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.attributes.Move;
-import org.socialworld.core.Action;
 import org.socialworld.core.Event;
 import org.socialworld.calculation.FunctionByMatrix_Matrix;
 import org.socialworld.calculation.application.ActionCreator;
@@ -75,7 +75,7 @@ public class Animal extends SimulationObject {
 	 * with special implementation of the action.
 	 */
 	@Override
-	protected void doAction(final ActionType type, final Action action) {
+	protected void doAction(final ActionType type, final AbstractAction action) {
 
 		
 		switch (type) {
@@ -103,7 +103,7 @@ public class Animal extends SimulationObject {
 	 * 
 	 * @param action
 	 */
-	protected void changeMove(final Action action) {
+	protected void changeMove(final AbstractAction action) {
 		this.move.setMode(action.getMode());
 	}
 
@@ -112,7 +112,7 @@ public class Animal extends SimulationObject {
 	 * 
 	 * @param action
 	 */
-	protected void move(final Action action) {
+	protected void move(final AbstractAction action) {
 		action.lowerRemainedDuration(1000);
 	}
 
@@ -121,7 +121,7 @@ public class Animal extends SimulationObject {
 	 * 
 	 * @param action
 	 */
-	protected void kick(final Action action) {
+	protected void kick(final AbstractAction action) {
 	}
 
 	/**
@@ -129,7 +129,7 @@ public class Animal extends SimulationObject {
 	 * 
 	 * @param action
 	 */
-	protected void sleep(final Action action) {
+	protected void sleep(final AbstractAction action) {
 		final ActionMode mode = action.getMode();
 
 		switch (mode) {
@@ -177,7 +177,7 @@ public class Animal extends SimulationObject {
 	 *            the event that the object reacts to
 	 */
 	public void reactToEvent(final Event event) {
-		Action reaction;
+		AbstractAction reaction;
 
 		logger.debug("reactToEvent");
 

@@ -21,10 +21,10 @@
 */
 package org.socialworld.core;
 
+import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.ActionMode;
 import org.socialworld.attributes.ActionType;
 import org.socialworld.attributes.Time;
-import org.socialworld.calculation.Vector;
 import org.socialworld.objects.SimulationObject;
 
 /**
@@ -44,7 +44,6 @@ public class SearchActionDescription extends AbstractAction {
 	private boolean searchByMaxTime;
 	private boolean searchByPriority;
 	private boolean searchByTarget;
-	private boolean searchByDirection;
 	private boolean searchByIntensity;
 	private boolean searchByDuration;
 	private boolean searchByRemainedDuration;
@@ -57,7 +56,6 @@ public class SearchActionDescription extends AbstractAction {
 		this.searchByMaxTime = false;
 		this.searchByPriority = false;
 		this.searchByTarget = false;
-		this.searchByDirection = false;
 		this.searchByIntensity = false;
 		this.searchByDuration = false;
 		this.searchByRemainedDuration = false;
@@ -123,15 +121,6 @@ public class SearchActionDescription extends AbstractAction {
 		this.searchByTarget = true;
 	}
 
-	/**
-	 * @param direction
-	 *            the direction to set
-	 */
-	@Override
-	public void setDirection(final Vector direction) {
-		this.direction = direction;
-		this.searchByDirection = true;
-	}
 
 	/**
 	 * @param intensity
@@ -188,9 +177,6 @@ public class SearchActionDescription extends AbstractAction {
 		case searchByTarget:
 			this.searchByTarget = true;
 			break;
-		case searchByDirection:
-			this.searchByDirection = true;
-			break;
 		case searchByIntensity:
 			this.searchByIntensity = true;
 			break;
@@ -218,9 +204,6 @@ public class SearchActionDescription extends AbstractAction {
 			break;
 		case dontSearchByTarget:
 			this.searchByTarget = false;
-			break;
-		case dontSearchByDirection:
-			this.searchByDirection = false;
 			break;
 		case dontSearchByIntensity:
 			this.searchByIntensity = false;
@@ -277,12 +260,6 @@ public class SearchActionDescription extends AbstractAction {
 		return this.searchByTarget;
 	}
 
-	/**
-	 * @return the searchByDirection
-	 */
-	public boolean isSearchByDirection() {
-		return this.searchByDirection;
-	}
 
 	/**
 	 * @return the searchByIntensity

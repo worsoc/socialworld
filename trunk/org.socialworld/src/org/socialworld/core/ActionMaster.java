@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.apache.log4j.Logger;
+import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.ActualTime;
 
 
@@ -102,15 +103,15 @@ public class ActionMaster {
 	private ActionMaster() {
 		// list (b):
 		reportedActionHandlers = new ArrayList<List<ActionHandler>>();
-		for (int i = 1; i < Action.MAX_ACTION_WAIT_SECONDS; i++) {
+		for (int i = 1; i < AbstractAction.MAX_ACTION_WAIT_SECONDS; i++) {
 			reportedActionHandlers.add(new ArrayList<ActionHandler>());
 		}
 		
-		indexBySecondAndPiority = new int[Action.MAX_ACTION_WAIT_SECONDS][Action.MAX_ACTION_PRIORITY];
-		minPriorityBySecond = new int[Action.MAX_ACTION_WAIT_SECONDS];
+		indexBySecondAndPiority = new int[AbstractAction.MAX_ACTION_WAIT_SECONDS][AbstractAction.MAX_ACTION_PRIORITY];
+		minPriorityBySecond = new int[AbstractAction.MAX_ACTION_WAIT_SECONDS];
 
-		for (int i = 1; i < Action.MAX_ACTION_WAIT_SECONDS; i++) {
-			minPriorityBySecond[i] = Action.MAX_ACTION_PRIORITY;
+		for (int i = 1; i < AbstractAction.MAX_ACTION_WAIT_SECONDS; i++) {
+			minPriorityBySecond[i] = AbstractAction.MAX_ACTION_PRIORITY;
 		}
 
 		actionHandlersNow = reportedActionHandlers.get(0);
@@ -220,7 +221,7 @@ public class ActionMaster {
 		waitMilliseconds = timeInMilliseconds - nowInMilliseconds;
 		waitSeconds = waitMilliseconds / 1000;
 		
-		if ( waitSeconds >= Action.MAX_ACTION_WAIT_SECONDS) {
+		if ( waitSeconds >= AbstractAction.MAX_ACTION_WAIT_SECONDS) {
 			//reject the action handler element
 			// because there are more than 60 seconds till the action is executed
 			return ACTIONMASTER_RETURN_REJECT_TOOMUCHWAIT;
@@ -229,7 +230,7 @@ public class ActionMaster {
 		// with the help of the two dimensional int array
 		// (that holds the starting indexes for every second and every priority)
 		// the insert position into the priority list for reported action handlers is determined
-		second = (int) waitSeconds % Action.MAX_ACTION_WAIT_SECONDS;
+		second = (int) waitSeconds % AbstractAction.MAX_ACTION_WAIT_SECONDS;
 		indexPrio = indexBySecondAndPiority[second][priority];
 
 		
@@ -281,7 +282,7 @@ public class ActionMaster {
 		ActualTime time;
 		
 		// reset the start value (for index shifting after insertion) for the last second
-		minPriorityBySecond[secondOfTheActualMinute] = Action.MAX_ACTION_PRIORITY;
+		minPriorityBySecond[secondOfTheActualMinute] = AbstractAction.MAX_ACTION_PRIORITY;
 
 		// if the iterator for the continue list points to the end the pointer is set to the list's start
 		if (continueHandlersIterator.nextIndex() == continueActionHandlers.size() )

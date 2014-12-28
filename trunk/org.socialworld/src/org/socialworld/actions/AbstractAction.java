@@ -19,12 +19,11 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.core;
+package org.socialworld.actions;
 
 import org.socialworld.attributes.ActionMode;
 import org.socialworld.attributes.ActionType;
 import org.socialworld.attributes.Time;
-import org.socialworld.calculation.Vector;
 import org.socialworld.objects.SimulationObject;
 
 /**
@@ -43,20 +42,66 @@ public abstract class AbstractAction {
 	public static final int MAX_ACTION_WAIT_SECONDS = 60;
 	
 	protected ActionType type;
+	protected ActionMode mode;
 	protected Time minTime;
 	protected Time maxTime;
 	protected int priority;
 	protected SimulationObject target;
-	protected Vector direction;
-	protected ActionMode mode;
 	protected double intensity;
 	protected long duration;
 	protected long remainedDuration;
-	protected boolean done;
+
+	protected boolean done = false;
+
+	protected AbstractAction linkedAction;
+
+	protected void setBaseProperties(final ActionType type, final ActionMode mode,
+			final SimulationObject target, 
+			final double intensity, final Time minTime, final Time maxTime,
+			final int priority, final long duration) {
+		this.setType(type);
+		this.setMode(mode);
+		this.setTarget(target);
+		this.setIntensity(intensity);
+		this.setMinTime(minTime);
+		this.setMaxTime(maxTime);
+		this.setPriority(priority);
+		this.setDuration(duration);
+		this.setRemainedDuration(duration);
+
+		this.linkedAction = null;
+	}
+
+	protected void setBaseProperties(AbstractAction original) {
+		this.type = original.type;
+		this.mode = original.mode;
+		this.target = original.target;
+		this.intensity =original.intensity;
+		this.minTime = original.minTime;
+		this.maxTime = original.maxTime;
+		this.priority = original.priority;
+		this.duration = original.duration;
+		
+	}
 	
-	public AbstractAction() {
-		super();
-		done = false;
+	
+	/**
+	 * The method sets the linked action.
+	 * 
+	 * @param linked action
+	 */
+	public void setLinkedAction (AbstractAction linkedAction) {
+		this.linkedAction = linkedAction;
+	}
+	
+	/**
+	 * The method returns the linked action.
+	 * It is null if there is no linked action.
+	 * 
+	 * @return linked action
+	 */
+	public AbstractAction getLinkedAction() {
+		return linkedAction;
 	}
 
 	public void setDone() {
@@ -146,20 +191,6 @@ public abstract class AbstractAction {
 		this.target = target;
 	}
 
-	/**
-	 * @return the direction
-	 */
-	public Vector getDirection() {
-		return this.direction;
-	}
-
-	/**
-	 * @param direction
-	 *            the direction to set
-	 */
-	public void setDirection(final Vector direction) {
-		this.direction = direction;
-	}
 
 	/**
 	 * @return the mode
@@ -223,9 +254,35 @@ public abstract class AbstractAction {
 		this.remainedDuration = remainedDuration;
 	}
 
+	/**
+	 * The method decrements the attribute remainedDuration. That means, an
+	 * action needs less time to complete.
+	 * 
+	 * @param decrement
+	 */
+	public void lowerRemainedDuration(final long decrement) {
+		this.remainedDuration -= decrement;
+		
+		if (this.remainedDuration <= 0) done = true;
+	}
+
+	/**
+	 * The method increments the attribute remainedDuration. That means, an
+	 * action needs more time to complete.
+	 * 
+	 * @param increment
+	 */
+	public void raiseRemainedDuration(final long increment) {
+		this.remainedDuration += increment;
+	}
+
+	
+	
 	@Override
 	public String toString() {
 		return this.type.toString() + " -> " + this.target.toString(); //$NON-NLS-1$
 	}
+	
+
 
 }

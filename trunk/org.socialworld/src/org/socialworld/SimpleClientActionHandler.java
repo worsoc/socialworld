@@ -3,11 +3,11 @@ package org.socialworld;
 import org.apache.log4j.Logger;
 import org.socialworld.objects.IHumanWrite;
 import org.socialworld.objects.WriteAccessToHuman;
+import org.socialworld.actions.ActionMove;
 import org.socialworld.attributes.ActionMode;
 import org.socialworld.attributes.ActionType;
 import org.socialworld.attributes.Time;
 import org.socialworld.calculation.Vector;
-import org.socialworld.core.Action;
 
 public class SimpleClientActionHandler implements IHumanWrite {
 	protected static final Logger logger = Logger.getLogger(SimpleClientActionHandler.class);
@@ -60,13 +60,13 @@ public class SimpleClientActionHandler implements IHumanWrite {
 	public void doAction (int action) {
 		switch (action) {
 		case 1:   // step forward
-			actualHuman.setAction(new Action(ActionType.move ,  ActionMode.run,
+			actualHuman.setAction(new ActionMove(ActionType.move ,  ActionMode.run,
 					actualHuman.getObject(), new Vector(0,10,0),
 					10, new Time(1000), new Time(2000),
 					10, 500), this );
 			break;
 		case 2:   // step back
-			actualHuman.setAction(new Action(ActionType.move ,  ActionMode.run,
+			actualHuman.setAction(new ActionMove(ActionType.move ,  ActionMode.run,
 					actualHuman.getObject(), new Vector(0,-10,0),
 					10, new Time(1000), new Time(2000),
 					10, 500), this );

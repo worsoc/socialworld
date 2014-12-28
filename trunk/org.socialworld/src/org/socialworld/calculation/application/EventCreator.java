@@ -22,7 +22,7 @@
 package org.socialworld.calculation.application;
 
 import org.socialworld.objects.SimulationObject;
-import org.socialworld.core.Action;
+import org.socialworld.actions.AbstractAction;
 import org.socialworld.core.Event;
 
 public class EventCreator  {
@@ -35,7 +35,7 @@ public class EventCreator  {
 	 */
 	public static Event createEvent(
 			final SimulationObject actor,
-			final Action action) {
+			final AbstractAction action) {
 		
 			
 			return createEvent(action, actor);
@@ -47,7 +47,7 @@ public class EventCreator  {
 	 * Therefore an according mapping description is used to set the event properties.
 	 * 
 	 */
-	private static Event createEvent(final Action action,	final SimulationObject actor) {
+	private static Event createEvent(final AbstractAction action,	final SimulationObject actor) {
 		return Action2EventMapping.createEvent(action, actor);
 	}
 	

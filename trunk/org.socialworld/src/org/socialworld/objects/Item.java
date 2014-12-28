@@ -21,9 +21,9 @@
 */
 package org.socialworld.objects;
 
+import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.ActionMode;
 import org.socialworld.attributes.ActionType;
-import org.socialworld.core.Action;
 import org.socialworld.core.Event;
 
 /**
@@ -59,7 +59,7 @@ public class Item extends SimulationObject {
 	 * @param user
 	 *            the user
 	 */
-	public void handle(final Action action, final SimulationObject user) {
+	public void handle(final AbstractAction action, final SimulationObject user) {
 		final ActionMode mode = action.getMode();
 
 		switch (mode) {
@@ -89,36 +89,36 @@ public class Item extends SimulationObject {
 		}
 	}
 
-	private void use(final Action action, final SimulationObject user) {
+	private void use(final AbstractAction action, final SimulationObject user) {
 
 	}
 
-	private void examine(final Action action, final SimulationObject user) {
+	private void examine(final AbstractAction action, final SimulationObject user) {
 
 	}
 
-	private void take(final Action action, final SimulationObject user) {
+	private void take(final AbstractAction action, final SimulationObject user) {
 
 	}
 
-	private void collect(final Action action, final SimulationObject user) {
+	private void collect(final AbstractAction action, final SimulationObject user) {
 
 	}
 
-	private void switchItemToLeftHand(final Action action,
+	private void switchItemToLeftHand(final AbstractAction action,
 			final SimulationObject user) {
 
 	}
 
-	private void useTwoItems(final Action action, final SimulationObject user) {
+	private void useTwoItems(final AbstractAction action, final SimulationObject user) {
 
 	}
 
-	private void drop(final Action action, final SimulationObject user) {
+	private void drop(final AbstractAction action, final SimulationObject user) {
 
 	}
 
 	@Override
-	protected void doAction(final ActionType type, final Action action) {
+	protected void doAction(final ActionType type, final AbstractAction action) {
 	}
 }
