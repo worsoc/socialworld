@@ -21,10 +21,53 @@
 */
 package org.socialworld.map;
 
+import org.socialworld.attributes.Position;
+
 /**
  * @author Mathias Sikos
  *
  */
 public class Ground {
+	
+	private static Ground instance;
+	
+	MapPropTree map_GroundHeight;
+	MapPropTree map_GroundInclination;
+	MapPropTree map_GroundMaterial;
+	MapPropTree map_GroundConsistency;
+	
+	private Ground() {
+		map_GroundHeight = new MapPropTree(25, 7);
+		map_GroundInclination = new MapPropTree(25, 7);
+		map_GroundMaterial = new MapPropTree(25, 7);
+		map_GroundConsistency = new MapPropTree(25, 7);
+	}
+	
+	public  static Ground getInstance() {
+		if (instance == null) {
+			instance = new Ground();
+		}
+		return instance;
+	}
+	
+	public Ground_Height height(Position position) {
+		
+		return (Ground_Height) map_GroundHeight.getProperty(position.getLocationByBase25());
+	}
+	
+	public Ground_Material material(Position position) {
+		
+		return (Ground_Material) map_GroundMaterial.getProperty(position.getLocationByBase25());
+	}
+
+	public Ground_Inclination inclination(Position position) {
+		
+		return (Ground_Inclination) map_GroundInclination.getProperty(position.getLocationByBase25());
+	}
+
+	public Ground_Consistency consistency(Position position) {
+		
+		return (Ground_Consistency) map_GroundConsistency.getProperty(position.getLocationByBase25());
+	}
 
 }
