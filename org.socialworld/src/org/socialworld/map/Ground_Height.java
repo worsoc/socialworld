@@ -29,19 +29,35 @@ public class Ground_Height implements IMapProp {
 	private float minHeight;
 	private float maxHeight;
 	private float avgHeight;
+
+	boolean calculateAvg;
 	
-	protected float min() { return minHeight; }
-	protected float max() { return maxHeight; }
-	protected float avg() { return avgHeight; }
-	
-	protected void setMinHeight(float minHeight) {
-		this.minHeight = minHeight;
+	protected Ground_Height(float avg, float min, float max) {
+		this.minHeight = min;
+		this.maxHeight = max;
+		this.avgHeight = avg;
+		this.calculateAvg  = false;
+	}
+
+	protected Ground_Height(float min, float max) {
+		this.minHeight = min;
+		this.maxHeight = max;
 		this.avgHeight = (this.minHeight + this.maxHeight) / 2;
+		this.calculateAvg  = true;
+	}
+
+	public float min() { return minHeight; }
+	public float max() { return maxHeight; }
+	public float avg() { return avgHeight; }
+	
+	protected void setMinHeight(float minHeight ) {
+		this.minHeight = minHeight;
+		if (calculateAvg) this.avgHeight = (this.minHeight + this.maxHeight) / 2;
 	}
 	
 	protected void setMaxHeight(float maxHeight) {
 		this.maxHeight = maxHeight;
-		this.avgHeight = (this.minHeight + this.maxHeight) / 2;
+		if (calculateAvg) this.avgHeight = (this.minHeight + this.maxHeight) / 2;
 	}
 	
 	protected void setAvgHeight(float avgHeight) {
