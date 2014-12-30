@@ -219,6 +219,10 @@ public class Vector {
 		return divident / divisor;
 	}
 
+	public boolean equals(Vector b) {
+		return (x == b.getX() & y == b.getY() & z == b.getZ() );
+	}
+	
 	@Override
 	public String toString() {
 		return "( " + this.x + ", " + this.y + ", " + this.z + " )";
