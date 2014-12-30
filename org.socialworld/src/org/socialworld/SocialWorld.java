@@ -22,7 +22,9 @@
 package org.socialworld;
 
 import org.apache.log4j.Logger;
+import org.socialworld.attributes.Time;
 import org.socialworld.core.Simulation;
+
 
 
 /**
@@ -48,10 +50,13 @@ public class SocialWorld  {
 	
 	public static void main(String[] args)
 	{
-		if (Simulation.WITH_LOGGING == 1 ) logger.info("Start bprogram " );
+		if (Simulation.WITH_LOGGING == 1 ) logger.info("Start program " );
 
 		currentObject = getCurrent();
 		simulation = Simulation.getInstance();
+		
+		Time test = new Time();
+		if (Simulation.WITH_LOGGING == 1 ) logger.info(test.toString() );
 		
 		simulation.startSimulation();
 		
