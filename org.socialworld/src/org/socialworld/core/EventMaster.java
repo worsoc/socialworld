@@ -114,7 +114,7 @@ public class EventMaster extends Thread {
 	public void startEventMaster() {
 		if (Simulation.WITH_LOGGING == 1 )		logger.debug("EventMaster.startEventMaster");
 		isRunning = true;
-		this.start();
+		this.run();
 	}
 	
 	/*
@@ -126,7 +126,10 @@ public class EventMaster extends Thread {
 	public void run() {
 		if (Simulation.WITH_LOGGING == 1 )		logger.debug("EventMaster.run");
 		int sleepTime = 10;
+		int countIterations =  0;
 		while (isRunning) {
+			countIterations++;
+			if (Simulation.WITH_LOGGING == 1 )		logger.debug("EventMaster.run: Iteration " + Integer.toString(countIterations));
 			calculateNextEvent();
 			if (eventQueue.isEmpty())
 				sleepTime = 100;
@@ -139,6 +142,7 @@ public class EventMaster extends Thread {
 				if (Simulation.WITH_ERROR_LOGGING == 1 ) logger.error(e.getStackTrace());
 				e.printStackTrace();
 			}
+			if (countIterations == 100) stopEventMaster();
 		}
 		if (Simulation.WITH_LOGGING == 1 )		logger.debug("EventMaster stops");
 	}
