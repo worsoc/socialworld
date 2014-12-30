@@ -22,15 +22,14 @@
 package org.socialworld;
 
 import org.apache.log4j.Logger;
-import org.osgi.framework.BundleActivator;
-import org.osgi.framework.BundleContext;
 import org.socialworld.core.Simulation;
+
 
 /**
  * @author Mathias Sikos (tyloesand)
  * 
  */
-public class SocialWorld implements BundleActivator {
+public class SocialWorld  {
 	
 	public static final String PLUGIN_ID = "org.socialworld";
 
@@ -38,7 +37,7 @@ public class SocialWorld implements BundleActivator {
 
 	private static SocialWorld currentObject;
 
-	private Simulation simulation;
+	private static Simulation simulation;
 
 /*	private SocialWorld() {
 		super();
@@ -46,6 +45,22 @@ public class SocialWorld implements BundleActivator {
 		
 	}
 */	
+	
+	public static void main(String[] args)
+	{
+		if (Simulation.WITH_LOGGING == 1 ) logger.info("Start bprogram " );
+
+		currentObject = getCurrent();
+		simulation = Simulation.getInstance();
+		
+		simulation.startSimulation();
+		
+		simulation.stopSimulation();
+		
+	}
+	
+	
+/*
 	public void start(BundleContext context) throws Exception {
 		if (Simulation.WITH_LOGGING == 1 ) logger.info("Start bundle " + PLUGIN_ID);
 
@@ -59,6 +74,7 @@ public class SocialWorld implements BundleActivator {
 		simulation.stopSimulation();
 		simulation = null;
 	}
+*/	
 
 	public static SocialWorld getCurrent() {
 		if (currentObject == null) {
