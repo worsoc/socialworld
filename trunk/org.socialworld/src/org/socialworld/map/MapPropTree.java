@@ -49,6 +49,10 @@ public class MapPropTree {
 		return root.getProperty(location);
 	}
 	
+	public void setProperty (IMapProp property, String location) {
+		root.setProperty(property, location);
+	}
+	
 	public ArrayList<IMapProp> getCollection(String location) {
 		return root.getCollection(location);
 	}
