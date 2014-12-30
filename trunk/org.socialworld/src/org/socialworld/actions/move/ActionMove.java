@@ -19,8 +19,9 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.actions;
+package org.socialworld.actions.move;
 
+import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.ActionMode;
 import org.socialworld.attributes.ActionProperty;
 import org.socialworld.attributes.ActionType;
