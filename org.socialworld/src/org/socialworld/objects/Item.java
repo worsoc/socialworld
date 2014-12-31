@@ -22,8 +22,8 @@
 package org.socialworld.objects;
 
 import org.socialworld.actions.AbstractAction;
-import org.socialworld.attributes.ActionMode;
-import org.socialworld.attributes.ActionType;
+import org.socialworld.actions.ActionMode;
+import org.socialworld.actions.ActionType;
 import org.socialworld.core.Event;
 
 /**

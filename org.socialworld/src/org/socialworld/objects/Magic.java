@@ -23,7 +23,7 @@ package org.socialworld.objects;
 
 import org.socialworld.core.Event;
 import org.socialworld.actions.AbstractAction;
-import org.socialworld.attributes.ActionType;
+import org.socialworld.actions.ActionType;
 
 /**
  * magic spells are simulation objects that offer some fantasy aspects. A magic

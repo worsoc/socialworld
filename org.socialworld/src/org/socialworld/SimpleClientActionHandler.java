@@ -3,9 +3,9 @@ package org.socialworld;
 import org.apache.log4j.Logger;
 import org.socialworld.objects.IHumanWrite;
 import org.socialworld.objects.WriteAccessToHuman;
+import org.socialworld.actions.ActionMode;
+import org.socialworld.actions.ActionType;
 import org.socialworld.actions.move.ActionMove;
-import org.socialworld.attributes.ActionMode;
-import org.socialworld.attributes.ActionType;
 import org.socialworld.attributes.Time;
 import org.socialworld.calculation.Vector;
 

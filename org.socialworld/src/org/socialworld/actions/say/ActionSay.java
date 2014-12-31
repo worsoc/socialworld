@@ -19,11 +19,12 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.actions;
+package org.socialworld.actions.say;
 
-import org.socialworld.attributes.ActionMode;
-import org.socialworld.attributes.ActionProperty;
-import org.socialworld.attributes.ActionType;
+import org.socialworld.actions.AbstractAction;
+import org.socialworld.actions.ActionMode;
+import org.socialworld.actions.ActionProperty;
+import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.Time;
 import org.socialworld.calculation.Vector;
 import org.socialworld.objects.SimulationObject;
@@ -32,30 +33,27 @@ import org.socialworld.objects.SimulationObject;
  * @author Mathias Sikos
  *
  */
-public class ActionHear extends AbstractAction {
+public class ActionSay extends AbstractAction {
 
 	private Vector direction;
-
-	public ActionHear(final ActionType type, final ActionMode mode,
+	
+	public ActionSay(final ActionType type, final ActionMode mode,
 			final SimulationObject target, final Vector direction,
 			final double intensity, final Time minTime, final Time maxTime,
 			final int priority, final long duration) {
-		
 		setBaseProperties(type,  mode,
-			target, 
-			intensity,  minTime, maxTime,
-			 priority,  duration);
-		
-		this.setDirection(direction);
-
+				target, 
+				intensity,  minTime, maxTime,
+				 priority,  duration);
+			
+			this.setDirection(direction);
 	}
 	
-	public ActionHear(ActionHear original) {
+	public ActionSay(ActionSay original) {
 		setBaseProperties(original);
 		this.direction = original.direction;
 	}
 
-	
 	public  Object getConcreteProperty(ActionProperty prop) {
 		switch (prop) {
 		case direction:
@@ -80,5 +78,4 @@ public class ActionHear extends AbstractAction {
 		this.direction = direction;
 	}
 
-	
 }

@@ -24,7 +24,7 @@ package org.socialworld.objects;
 
 import org.apache.log4j.Logger;
 import org.socialworld.actions.AbstractAction;
-import org.socialworld.attributes.ActionType;
+import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.Position;
 import org.socialworld.core.ActionHandler;
 import org.socialworld.core.Event;

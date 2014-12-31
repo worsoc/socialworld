@@ -22,11 +22,11 @@
 package org.socialworld.objects;
 
 import org.socialworld.actions.AbstractAction;
-import org.socialworld.attributes.ActionMode;
-import org.socialworld.attributes.ActionType;
+import org.socialworld.actions.ActionMode;
+import org.socialworld.actions.ActionType;
+import org.socialworld.actions.move.Move;
 import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.AttributeArray;
-import org.socialworld.attributes.Move;
 import org.socialworld.core.Event;
 import org.socialworld.calculation.FunctionByMatrix_Matrix;
 import org.socialworld.calculation.application.ActionCreator;

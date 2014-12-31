@@ -19,14 +19,24 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.attributes;
+package org.socialworld.actions;
+
 
 /**
- * The enumeration collects all action types.
- * @author Mathias Sikos (tyloesand) 
+ * @author Mathias Sikos
+ *
  */
-public enum ActionType {
-	ignore,
-	touch, sleep, changeMove, kick, controlHandManually, spell,
-	useWeaponLeft, useWeaponRight, move, say, handleItem, hear
+public enum ActionProperty {
+	type,
+	mode,
+	minTime,
+	maxtime,
+	priority,
+	target,
+	intensity,
+	duration,
+	remainedDuration,
+	linkedAction,
+	
+	direction
 }
