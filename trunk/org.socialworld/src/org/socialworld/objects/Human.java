@@ -22,11 +22,11 @@
 package org.socialworld.objects;
 
 import org.socialworld.actions.AbstractAction;
-import org.socialworld.actions.ActionHear;
-import org.socialworld.actions.ActionSay;
+import org.socialworld.actions.ActionMode;
+import org.socialworld.actions.ActionType;
+import org.socialworld.actions.hear.ActionHear;
+import org.socialworld.actions.say.ActionSay;
 import org.socialworld.attributes.AttributeArray;
-import org.socialworld.attributes.ActionType;
-import org.socialworld.attributes.ActionMode;
 import org.socialworld.attributes.Inventory;
 import org.socialworld.knowledge.Acquaintance_Attribute;
 import org.socialworld.knowledge.AcquaintancePool;

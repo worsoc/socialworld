@@ -30,7 +30,7 @@ import java.util.ListIterator;
 import org.apache.log4j.Logger;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.actions.AbstractAction;
-import org.socialworld.attributes.ActionType;
+import org.socialworld.actions.ActionType;
 
 /**
  * Manages the actions of an {@link SimulationObject}.

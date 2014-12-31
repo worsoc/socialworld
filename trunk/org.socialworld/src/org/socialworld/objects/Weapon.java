@@ -22,7 +22,7 @@
 package org.socialworld.objects;
 
 import org.socialworld.actions.AbstractAction;
-import org.socialworld.attributes.ActionMode;
+import org.socialworld.actions.ActionMode;
 
 /**
  * A weapon is an item that has special properties. It has its functionality in

@@ -19,37 +19,51 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.attributes;
+package org.socialworld.actions.hear;
 
+import org.socialworld.actions.AbstractAction;
+import org.socialworld.actions.ActionMode;
+import org.socialworld.actions.ActionProperty;
+import org.socialworld.actions.ActionType;
+import org.socialworld.attributes.Time;
 import org.socialworld.calculation.Vector;
+import org.socialworld.objects.SimulationObject;
 
 /**
- * The class collects information about a
- *         simulation object's movements. A move has an action mode (here it is
- *         a move mode).
- * @author Mathias Sikos (tyloesand) 
+ * @author Mathias Sikos
+ *
  */
-public class Move {
-	private ActionMode mode;
+public class ActionHear extends AbstractAction {
+
 	private Vector direction;
+
+	public ActionHear(final ActionType type, final ActionMode mode,
+			final SimulationObject target, final Vector direction,
+			final double intensity, final Time minTime, final Time maxTime,
+			final int priority, final long duration) {
+		
+		setBaseProperties(type,  mode,
+			target, 
+			intensity,  minTime, maxTime,
+			 priority,  duration);
+		
+		this.setDirection(direction);
+
+	}
 	
-	public Move() {
-		this.mode = ActionMode.walk;
+	public ActionHear(ActionHear original) {
+		setBaseProperties(original);
+		this.direction = original.direction;
 	}
 
-	/**
-	 * @return the mode
-	 */
-	public ActionMode getMode() {
-		return this.mode;
-	}
-
-	/**
-	 * @param mode
-	 *            the mode to set
-	 */
-	public void setMode(final ActionMode mode) {
-		this.mode = mode;
+	
+	public  Object getConcreteProperty(ActionProperty prop) {
+		switch (prop) {
+		case direction:
+				return getDirection();
+		default:
+			return null;
+		}
 	}
 
 	/**
@@ -66,5 +80,6 @@ public class Move {
 	public void setDirection(final Vector direction) {
 		this.direction = direction;
 	}
+
 	
 }

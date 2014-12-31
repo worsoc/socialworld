@@ -22,9 +22,9 @@
 package org.socialworld.actions.move;
 
 import org.socialworld.actions.AbstractAction;
-import org.socialworld.attributes.ActionMode;
-import org.socialworld.attributes.ActionProperty;
-import org.socialworld.attributes.ActionType;
+import org.socialworld.actions.ActionMode;
+import org.socialworld.actions.ActionProperty;
+import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.Time;
 import org.socialworld.calculation.Vector;
 import org.socialworld.objects.SimulationObject;

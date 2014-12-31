@@ -19,28 +19,14 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.attributes;
+package org.socialworld.actions;
 
 /**
- * The enumeration holds all specialization modes of an action type. So there
- * are (for example) modes for the action type changeMove and for the action
- * type handleItem.
- * 
- * @author Mathias Sikos (tyloesand)
+ * The enumeration collects all action types.
+ * @author Mathias Sikos (tyloesand) 
  */
-public enum ActionMode {
-	
-	
-	run, walk, jump,
-
-	sleepIntentioned, sleepCaused,
-
-	weaponRightHand, weaponLeftHand,
-
-	examineItem, takeItem, useItem, collectItem, switchItemToLeftHand, useTwoItems, dropItem,
-	
-	say, scream, whisper, answer, ask,
-	
-	listenTo, understand
-
+public enum ActionType {
+	ignore,
+	touch, sleep, changeMove, kick, controlHandManually, spell,
+	useWeaponLeft, useWeaponRight, move, say, handleItem, hear
 }

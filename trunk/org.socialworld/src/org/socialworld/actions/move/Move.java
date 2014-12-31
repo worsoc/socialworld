@@ -19,47 +19,40 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.actions;
+package org.socialworld.actions.move;
 
-import org.socialworld.attributes.ActionMode;
-import org.socialworld.attributes.ActionProperty;
-import org.socialworld.attributes.ActionType;
-import org.socialworld.attributes.Time;
+import org.socialworld.actions.ActionMode;
 import org.socialworld.calculation.Vector;
-import org.socialworld.objects.SimulationObject;
+
 
 /**
- * @author Mathias Sikos
- *
+ * The class collects information about a
+ *         simulation object's movements. A move has an action mode (here it is
+ *         a move mode).
+ * @author Mathias Sikos (tyloesand) 
  */
-public class ActionSay extends AbstractAction {
-
+public class Move {
+	private ActionMode mode;
 	private Vector direction;
 	
-	public ActionSay(final ActionType type, final ActionMode mode,
-			final SimulationObject target, final Vector direction,
-			final double intensity, final Time minTime, final Time maxTime,
-			final int priority, final long duration) {
-		setBaseProperties(type,  mode,
-				target, 
-				intensity,  minTime, maxTime,
-				 priority,  duration);
-			
-			this.setDirection(direction);
-	}
-	
-	public ActionSay(ActionSay original) {
-		setBaseProperties(original);
-		this.direction = original.direction;
+	public Move() {
+		this.mode = ActionMode.walk;
 	}
 
-	public  Object getConcreteProperty(ActionProperty prop) {
-		switch (prop) {
-		case direction:
-				return getDirection();
-		default:
-			return null;
-		}
+
+	/**
+	 * @return the mode
+	 */
+	public ActionMode getMode() {
+		return this.mode;
+	}
+
+	/**
+	 * @param mode
+	 *            the mode to set
+	 */
+	public void setMode(final ActionMode mode) {
+		this.mode = mode;
 	}
 
 	/**
@@ -76,5 +69,5 @@ public class ActionSay extends AbstractAction {
 	public void setDirection(final Vector direction) {
 		this.direction = direction;
 	}
-
+	
 }
