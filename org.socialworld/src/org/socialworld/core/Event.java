@@ -46,7 +46,7 @@ public class Event implements Comparable<Event> {
 	private Position position;
 	private Vector direction;
 
-	private int strength;
+	private float strength;
 
 	private float effectDistance;
 	private float effectAngle;
@@ -59,7 +59,7 @@ public class Event implements Comparable<Event> {
 	 * Constructor
 	 */
 	public Event(int eventType, int priority, SimulationObject causer, Time time, Position position,
-			Vector direction, int strength, 
+			Vector direction, float strength, 
 			float effectDistance, float effectAngle) {
 		
 		this.eventType = eventType;		
@@ -81,7 +81,24 @@ public class Event implements Comparable<Event> {
 	/**
 	 * Constructor
 	 */
-	public Event(int eventType, int priority, int strength, 
+	public Event(int eventType,  SimulationObject causer, Time time, Position position,	 float strength) {
+		
+		this.eventType = eventType;		
+		
+		this.causer = causer;
+		this.time = time;
+		this.position = position;
+
+		this.strength = strength;
+
+		
+		this.percipience = new Event_Percipience();
+	}
+	
+	/**
+	 * Constructor
+	 */
+	public Event(int eventType, int priority, float strength, 
 			float effectDistance, float effectAngle) {
 		
 		this.eventType = eventType;		
@@ -211,7 +228,7 @@ public class Event implements Comparable<Event> {
 	/**
 	 * @return the strength
 	 */
-	public int getStrength() {
+	public float getStrength() {
 		return strength;
 	}
 

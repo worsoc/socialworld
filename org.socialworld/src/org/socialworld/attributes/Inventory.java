@@ -21,8 +21,8 @@
 */
 package org.socialworld.attributes;
 
+import org.socialworld.actions.useHands.IWeapon;
 import org.socialworld.objects.SimulationObject;
-import org.socialworld.objects.Weapon;
 
 /**
  * The class collects all informations about a
@@ -71,26 +71,26 @@ public class Inventory {
 	}
 
 	/**
-	 * The method returns the left hand item iff it is an instance of Weapon
+	 * The method returns the left hand item iff it is an instance of IWeapon
 	 * 
 	 * @return the leftHand
 	 */
-	public SimulationObject getLeftHandWeapon() {
-		if (this.leftHand instanceof Weapon) {
-			return this.leftHand;
+	public IWeapon getLeftHandWeapon() {
+		if (this.leftHand instanceof IWeapon) {
+			return (IWeapon) this.leftHand;
 		} else {
 			return null;
 		}
 	}
 
 	/**
-	 * The method returns the right hand item if it is an instance of Weapon
+	 * The method returns the right hand item if it is an instance of IWeapon
 	 * 
 	 * @return the rightHand
 	 */
-	public SimulationObject getRightHandWeapon() {
-		if (this.rightHand instanceof Weapon) {
-			return this.rightHand;
+	public IWeapon getRightHandWeapon() {
+		if (this.rightHand instanceof IWeapon) {
+			return (IWeapon) this.rightHand;
 		} else {
 			return null;
 		}

@@ -39,7 +39,7 @@ public class PathFinder {
 
 	public PathFinder(Animal actor) {
 		this.actor = actor;
-		knownPathsPool = new KnownPathsPool();
+		knownPathsPool = actor.getKnownPathsPool();
 	}
 	
 	public Path findPath(Position end) {

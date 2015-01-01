@@ -61,14 +61,19 @@ public class KnownPathsPool {
 		return pathsWithEndPoint.getPaths();
 	}
 
-	public void addPathByStartPoint(Path path, Position start) {
+	public void addPath(Path path) {
+		addPathByStartPoint(path, path.getStartPoint());
+		addPathByEndPoint(path, path.getEndPoint());
+	}
+	
+	private void addPathByStartPoint(Path path, Position start) {
 		
 		KnownPaths paths = (KnownPaths) startPointsTree.getProperty(start.getLocationByBase25());
 		paths.addPath(path);
 		path.setRefToKnownPathsWithStartingPoint(paths);
 	}
 
-	public void addPathByEndPoint(Path path, Position end) {
+	private void addPathByEndPoint(Path path, Position end) {
 		
 		KnownPaths paths = (KnownPaths) endPointsTree.getProperty(end.getLocationByBase25());
 		paths.addPath(path);
