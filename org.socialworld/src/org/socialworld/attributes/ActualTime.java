@@ -38,4 +38,7 @@ public class ActualTime extends Time {
 		return instance.getTotalMilliseconds();
 	}
 
+	public static Time asTime() {
+		return new Time();
+	}
 }
