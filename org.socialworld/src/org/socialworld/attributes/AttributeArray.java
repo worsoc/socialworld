@@ -124,6 +124,19 @@ public class AttributeArray {
 
 	/**
 	 * The method returns an attribute value. The attribute is addressed by the
+	 * attribute's name.
+	 * 
+	 * @param attibuteName
+	 *            attribute name
+	 * @return attribute value
+	 */
+	public int get(Attribute attributeName) {
+		int attributeIndex = attributeName.getIndex();
+		return get(attributeIndex);
+	}
+	
+	/**
+	 * The method returns an attribute value. The attribute is addressed by the
 	 * attribute's index.
 	 * 
 	 * @param attibuteIndex
