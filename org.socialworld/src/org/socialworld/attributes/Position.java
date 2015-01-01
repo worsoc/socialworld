@@ -46,14 +46,17 @@ public class Position {
 	}
 	
 	public Position(Position position) {
-		m_position =  new Vector (position.getVector());
+		m_position =  position.getVector();
+		
+		locationByBase9 = position.getLocationByBase9();
+		locationByBase25 = position.getLocationByBase25();
 	}
 
 
 	public int getLocationByBase9() { return locationByBase9; }
 	public String getLocationByBase25() { return locationByBase25 ; }
 
-	public Vector getVector() {return m_position;}
+	public Vector getVector() {return new Vector(m_position);}
 			
 	
 	public float getDistance(Position position) {
