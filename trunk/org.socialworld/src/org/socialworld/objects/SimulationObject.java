@@ -30,7 +30,6 @@ import org.socialworld.core.ActionHandler;
 import org.socialworld.core.Event;
 import org.socialworld.core.Simulation;
 import org.socialworld.calculation.Vector;
-import org.socialworld.calculation.application.EventCreator;
 import org.socialworld.propertyChange.ChangedProperty;
 import org.socialworld.propertyChange.ListenedBase;
 
@@ -117,37 +116,23 @@ public abstract class SimulationObject extends ListenedBase {
 		if (this.guard == guard) this.state2ActionType = type;
 	}
 	
+	public void addAction(AbstractAction newAction) {
+		actionHandler.insertAction(newAction);
+	}
+	
 	/**
 	 * The method lets a simulation object do an action.
 	 * 
 	 * @param action
 	 */
 	public void doAction(AbstractAction action) {
-		ActionType type;
-		Event event;
-		boolean actionDone;
-		
-		type = action.getType();
-
-		doAction(type, action);
-		actionDone = action.isDone();
-		if (actionDone) {
-			event = mapActionToEvent(action);
-			simulation.getEventMaster().addEvent(event);
-		}
-		
+		action.setActor(guard);
+		action.perform();
+		action.removeActor();
 	}
 
 	protected abstract void doAction(ActionType type, AbstractAction action);
 	
-	/**
-	 * The method creates an event for a simulation object's action.
-	 * 
-	 * @param action
-	 */
-	public Event mapActionToEvent(AbstractAction action) {
-		return EventCreator.createEvent(this, action);
-	}
 	
 	/**
 	 * The method determines the influence of an event. It calculates how the

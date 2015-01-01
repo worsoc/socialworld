@@ -37,7 +37,7 @@ public class Path {
 	private Position end;
 
 	private ArrayList<Position> points;
-	int indexLastPassedPoint;
+	int indexPointToPassNext = 0;
 	
 	private boolean completelyKnown;
 
@@ -65,23 +65,6 @@ public class Path {
 		return length;
 	}
 	
-	public void setRefToKnownPathsWithStartingPoint(KnownPaths paths) {
-		this.refToKnownPathsWithStartingPoint = paths;
-	}
-
-	public void setRefToKnownPathsWithEndPoint(KnownPaths paths) {
-		this.refToKnownPathsWithEndPoint = paths;
-	}
-
-	public KnownPaths getRefToKnownPathsWithStartingPoint() {
-		return this.refToKnownPathsWithStartingPoint;
-		
-	}
-
-	public KnownPaths getRefToKnownPathsWithEndPoint() {
-		return this.refToKnownPathsWithEndPoint;
-		
-	}
 	
 	public void add (Path b) {
 		points.addAll(b.getPoints());
@@ -105,15 +88,65 @@ public class Path {
 		return start;
 	}
 	
+	public Position getNextPoint() {
+		if (indexPointToPassNext < length)
+			return points.get(indexPointToPassNext);
+		else
+			return null;
+	}
+	
+	public void completeSection(Position position) {
+		if (position.equals(getNextPoint(), Position.LOCATIONBASE25, LOCATION_BASE25_ACCURACY))
+			if (indexPointToPassNext < length)
+				indexPointToPassNext++;
+	}
+	
+	public boolean isCompleted() {
+		return (indexPointToPassNext == length);
+	}
+	
 	public boolean isCompletelyKnown() {
 		return completelyKnown;
 	}
 	
+	public boolean hasRefToKnownPaths() {
+		return ( (this.refToKnownPathsWithStartingPoint != null) &
+				(this.refToKnownPathsWithEndPoint != null) ) ;
+	}
+	
+	public void incrementUsageCounter() {
+		if (this.refToKnownPathsWithStartingPoint != null)
+			this.refToKnownPathsWithStartingPoint.incrementWalkCounter(this);
+		if (this.refToKnownPathsWithEndPoint != null)
+			this.refToKnownPathsWithEndPoint.incrementWalkCounter(this);
+	}
+	
+	public void setRefToKnownPathsWithStartingPoint(KnownPaths paths) {
+		this.refToKnownPathsWithStartingPoint = paths;
+	}
+
+	public void setRefToKnownPathsWithEndPoint(KnownPaths paths) {
+		this.refToKnownPathsWithEndPoint = paths;
+	}
+
+	public KnownPaths getRefToKnownPathsWithStartingPoint() {
+		return this.refToKnownPathsWithStartingPoint;
+		
+	}
+
+	public KnownPaths getRefToKnownPathsWithEndPoint() {
+		return this.refToKnownPathsWithEndPoint;
+		
+	}
+
 	private ArrayList<Position> getPoints() {
 		return points;
 	}
 	
 	private void refresh() {
 		length = points.size();
+		
+		if ((length > 1) & (indexPointToPassNext == 0)) 
+			indexPointToPassNext = 1;
 	}
 }

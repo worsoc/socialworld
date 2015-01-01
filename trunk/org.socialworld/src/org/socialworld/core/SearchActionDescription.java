@@ -62,6 +62,10 @@ public class SearchActionDescription extends AbstractAction {
 		this.searchByRemainedDuration = false;
 	}
 
+	public  void perform() {
+		return;
+	}
+
 	public  Object getConcreteProperty(ActionProperty prop) {
 			return null;
 		
@@ -133,7 +137,7 @@ public class SearchActionDescription extends AbstractAction {
 	 *            the intensity to set
 	 */
 	@Override
-	public void setIntensity(final double intensity) {
+	public void setIntensity(final float intensity) {
 		this.intensity = intensity;
 		this.searchByIntensity = true;
 	}

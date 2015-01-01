@@ -25,12 +25,15 @@ import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionType;
 import org.socialworld.actions.move.Move;
+import org.socialworld.actions.move.PathFinder;
 import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.core.Event;
 import org.socialworld.calculation.FunctionByMatrix_Matrix;
+import org.socialworld.calculation.Vector;
 import org.socialworld.calculation.application.ActionCreator;
 import org.socialworld.calculation.application.AttributeCalculator;
+import org.socialworld.knowledge.KnownPathsPool;
 
 
 /**
@@ -43,12 +46,19 @@ public class Animal extends SimulationObject {
 
 	protected Move move;
 
+	protected Vector directionChest;
+	protected Vector directionView;
+	
 	protected AttributeArray attributes;
 	protected FunctionByMatrix_Matrix attributeCalculatorMatrix;
+	protected PathFinder pathFinder;
+	protected KnownPathsPool knownPathsPool;
 	
 	public Animal() {
 		super();
 		attributes = new AttributeArray(Attribute.NUMBER_OF_ATTRIBUTES);
+		pathFinder = new PathFinder(this);
+		knownPathsPool = new KnownPathsPool();
 	}
 
 
@@ -70,6 +80,59 @@ public class Animal extends SimulationObject {
 		return new FunctionByMatrix_Matrix(attributeCalculatorMatrix, Attribute.NUMBER_OF_ATTRIBUTES);
 	}
 	
+
+	/**
+	 * @return the directionChest
+	 */
+	public Vector getDirectionChest() {
+		return directionChest;
+	}
+
+
+	/**
+	 * @param directionChest the directionChest to set
+	 */
+	public void setDirectionChest(Vector directionChest) {
+		this.directionChest = directionChest;
+	}
+
+
+	/**
+	 * @return the directionView
+	 */
+	public Vector getDirectionView() {
+		return directionView;
+	}
+
+
+	/**
+	 * @param directionView the directionView to set
+	 */
+	public void setDirectionView(Vector directionView) {
+		this.directionView = directionView;
+	}
+
+
+
+	/**
+	 * @return the knownPathsPool
+	 */
+	public KnownPathsPool getKnownPathsPool() {
+		return knownPathsPool;
+	}
+
+
+
+
+	/**
+	 * @return the pathFinder
+	 */
+	public PathFinder getPathFinder() {
+		return pathFinder;
+	}
+
+
+
 	/**
 	 * Depending on the action type the method calls the according procedure
 	 * with special implementation of the action.
@@ -89,7 +152,6 @@ public class Animal extends SimulationObject {
 			 kick(action);
 			break;
 		case move:
-			 move(action);
 			break;
 		case say:
 			break;
@@ -107,14 +169,6 @@ public class Animal extends SimulationObject {
 		this.move.setMode(action.getMode());
 	}
 
-	/**
-	 * The method holds the implementation of moving an animal.
-	 * 
-	 * @param action
-	 */
-	protected void move(final AbstractAction action) {
-		action.lowerRemainedDuration(1000);
-	}
 
 	/**
 	 * The method holds the implementation of kicking.

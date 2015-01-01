@@ -35,6 +35,17 @@ public class WriteAccessToSimulationObject {
 		return this.object;
 	}
 	
+	public final boolean checkGrantRightFor(Object request) {
+		switch (request.getClass().getName()) {
+		case "org.socialworld.actions.move.ActionMove":
+			return true;
+		case "org.socialworld.actions.move.ActionAttack":
+			return true;
+		default:
+			return false;
+		}
+	}
+	
 	public void setObjectID(int objectID, Object caller) {
 		if (caller instanceof ISimulationObjectWrite) object.setObjectID(objectID, this);
 	}
@@ -58,4 +69,6 @@ public class WriteAccessToSimulationObject {
 	public void setState2ActionType(int type, Object caller) {
 		if (caller instanceof ISimulationObjectWrite) object.setState2ActionType(type, this);
 	}
+	
+	
 }

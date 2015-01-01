@@ -40,7 +40,11 @@ public class Talk {
 		myPlannedQuestions = new ArrayList<String>();
 	}
 	
-	public String makeAnswerSentence(Answer answer) {
+	public void addAnswer(Answer answer) {
+		addSentence(makeAnswerSentence(answer), Talk_SentenceType.myPlannedSentence);
+	}
+	
+	private String makeAnswerSentence(Answer answer) {
 		String sentence;
 		
 		Word subject;
@@ -74,7 +78,7 @@ public class Talk {
 		
 	}
 	
-	public PunctuationMark getPunctuationMark(String sentence) {
+	public static PunctuationMark getPunctuationMark(String sentence) {
 		PunctuationMark returnValue = null;
 		if (sentence.contains("?")) {
 			returnValue = PunctuationMark.question;

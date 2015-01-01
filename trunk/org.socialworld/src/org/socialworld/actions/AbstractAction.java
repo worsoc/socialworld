@@ -22,7 +22,10 @@
 package org.socialworld.actions;
 
 import org.socialworld.attributes.Time;
+import org.socialworld.core.Event;
+import org.socialworld.core.Simulation;
 import org.socialworld.objects.SimulationObject;
+import org.socialworld.objects.WriteAccessToSimulationObject;
 
 /**
  * It's the base class for all simulation actions (actions done by simulation
@@ -39,23 +42,39 @@ public abstract class AbstractAction {
 	// because there is used a byte variable for index
 	public static final int MAX_ACTION_WAIT_SECONDS = 60;
 	
+	protected SimulationObject actor;
+	private WriteAccessToSimulationObject writeAccesToActor;
+	
 	protected ActionType type;
 	protected ActionMode mode;
 	protected Time minTime;
 	protected Time maxTime;
 	protected int priority;
 	protected SimulationObject target;
-	protected double intensity;
+	protected float intensity;
 	protected long duration;
 	protected long remainedDuration;
 
 	protected boolean done = false;
 
+	
+	private Simulation simulation = Simulation.getInstance();
+
 	protected AbstractAction linkedAction;
+
+	public void setActor(WriteAccessToSimulationObject writeAccesToActor) {
+		this.writeAccesToActor = writeAccesToActor;
+		this.actor = writeAccesToActor.getObject();
+	}
+
+	public final void removeActor() {
+		this.writeAccesToActor = null;
+		this.actor = null;
+	}
 
 	protected void setBaseProperties(final ActionType type, final ActionMode mode,
 			final SimulationObject target, 
-			final double intensity, final Time minTime, final Time maxTime,
+			final float intensity, final Time minTime, final Time maxTime,
 			final int priority, final long duration) {
 		this.setType(type);
 		this.setMode(mode);
@@ -74,7 +93,7 @@ public abstract class AbstractAction {
 		this.type = original.type;
 		this.mode = original.mode;
 		this.target = original.target;
-		this.intensity =original.intensity;
+		this.intensity = original.intensity;
 		this.minTime = original.minTime;
 		this.maxTime = original.maxTime;
 		this.priority = original.priority;
@@ -82,8 +101,21 @@ public abstract class AbstractAction {
 		
 	}
 	
+	protected  final WriteAccessToSimulationObject getWriteAccess(AbstractAction concreteAction) {
+		if (this == concreteAction & writeAccesToActor.checkGrantRightFor(concreteAction))
+			return writeAccesToActor;
+		else
+			return null;
+	}
+	
+	public abstract void perform();
+	
 	
 	public abstract Object getConcreteProperty(ActionProperty prop);
+	
+	protected void addEvent(Event event) {
+		simulation.getEventMaster().addEvent(event);
+	}
 	
 	/**
 	 * The method sets the linked action.
@@ -218,7 +250,7 @@ public abstract class AbstractAction {
 	 * @param intensity
 	 *            the intensity to set
 	 */
-	public void setIntensity(final double intensity) {
+	public void setIntensity(final float intensity) {
 		this.intensity = intensity;
 	}
 

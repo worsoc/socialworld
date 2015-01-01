@@ -1,6 +1,6 @@
 /*
 * Social World
-* Copyright (C) 2014  Mathias Sikos
+* Copyright (C) 2015  Mathias Sikos
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -19,31 +19,17 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.objects;
+package org.socialworld.actions.useHands;
 
-import org.socialworld.actions.AbstractAction;
-import org.socialworld.actions.ActionMode;
+import org.socialworld.calculation.FunctionBase;
 
 /**
- * A weapon is an item that has special properties. It has its functionality in
- * the hands of humans.
- * 
- * @author Mathias Sikos (tyloesand)
- * 
+ * @author Mathias Sikos
+ *
  */
-public class Weapon extends Item {
-
-	public Weapon() {
-		super();
-	}
-
-	@Override
-	public void handle(final AbstractAction action, final SimulationObject user) {
-		final ActionMode mode = action.getMode();
-
-		switch (mode) {
-		default:
-			super.handle(action, user);
-		}
-	}
+public interface IWeapon {
+	public abstract FunctionBase getStabFunction();
+	public abstract FunctionBase getClubFunction();
+	public abstract FunctionBase getStrokeFunction();
+	public abstract FunctionBase getBackhandFunction();
 }

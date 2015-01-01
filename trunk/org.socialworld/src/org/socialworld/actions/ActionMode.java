@@ -35,7 +35,7 @@ public enum ActionMode {
 
 	sleepIntentioned, sleepCaused,
 
-	weaponRightHand, weaponLeftHand,
+	stab, stroke, backhand, club, 
 
 	examineItem, takeItem, useItem, collectItem, switchItemToLeftHand, useTwoItems, dropItem,
 	

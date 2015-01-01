@@ -1,6 +1,6 @@
 /*
 * Social World
-* Copyright (C) 2014  Mathias Sikos
+* Copyright (C) 2015  Mathias Sikos
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -19,21 +19,16 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.conversation;
+package org.socialworld.actions;
 
-public enum PunctuationMark {
-	dot, question, exclamation;
+import org.socialworld.core.Event;
+
+/**
+ * @author Mathias Sikos
+ *
+ */
+public interface IActionPerformer {
 	
-	public static PunctuationMark getPunctuationMark(String sentence) {
-		PunctuationMark returnValue = null;
-		if (sentence.contains("?")) {
-			returnValue = PunctuationMark.question;
-		}
-		else {
-			returnValue = PunctuationMark.dot;
-		}
-		return returnValue;
-		
-	}
-
+	public abstract Event perform();
+	
 }
