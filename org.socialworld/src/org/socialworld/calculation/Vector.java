@@ -33,6 +33,8 @@ public class Vector {
 	protected float y;
 	protected float z;
 
+	boolean normalized = false;
+	
 	public Vector() {
 
 	}
@@ -73,6 +75,21 @@ public class Vector {
 		this.z = Float.parseFloat(values[2]);
 	}
 	
+	public void normalize() {
+		
+		float length = length();
+		
+		this.x = this.x / length;
+		this.y = this.y / length;
+		this.z = this.z / length;
+		
+		normalized = true;
+	}
+	
+	public boolean isNormalized() {
+		return normalized;
+	}
+
 	/**
 	 * @return the x
 	 */
@@ -86,6 +103,8 @@ public class Vector {
 	 */
 	public void setX(float x) {
 		this.x = x;
+		
+		normalized = false;
 	}
 
 	/**
@@ -101,6 +120,7 @@ public class Vector {
 	 */
 	public void setY(float y) {
 		this.y = y;
+		normalized = false;
 	}
 
 	/**
@@ -116,6 +136,7 @@ public class Vector {
 	 */
 	public void setZ(float z) {
 		this.z = z;
+		normalized = false;
 	}
 
 	/**
@@ -124,6 +145,9 @@ public class Vector {
 	 * @return the length
 	 */
 	public float length() {
+		if 	(	normalized) return 1.0F;
+
+		
 		float length;
 
 		float xQuad = x * x;
@@ -167,6 +191,7 @@ public class Vector {
 		this.x = this.x + xyz.getX();
 		this.y = this.y + xyz.getY();
 		this.z = this.z + xyz.getZ();
+		normalized = false;
 		
 	}
 	/**
@@ -178,6 +203,7 @@ public class Vector {
 		this.x = this.x * scalar;
 		this.y = this.y * scalar;
 		this.z = this.z * scalar;
+		normalized = false;
 		
 	}
 	
@@ -232,5 +258,6 @@ public class Vector {
 		this.x = 0;
 		this.y = 0;
 		this.z = 0;
+		normalized = false;
 	}
 }
