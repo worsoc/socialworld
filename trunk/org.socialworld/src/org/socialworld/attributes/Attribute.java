@@ -29,14 +29,14 @@ package org.socialworld.attributes;
  */
 public enum Attribute {
 	mood(0), courage(1), morals(2), materialism(3), tiredness(4),
-	curiosity(5), spirituality(6), hunger(7);
+	curiosity(5), spirituality(6), hunger(7), power(8);
 
 	/**
 	 * The constant holds the informations how many attributes are simulated.
 	 * The constant is used for iteration about all attributes and for creation
 	 * of attribute arrays.
 	 */
-	public static final int NUMBER_OF_ATTRIBUTES = 8;
+	public static final int NUMBER_OF_ATTRIBUTES = 9;
 	
 	private int arrayIndex;
 
