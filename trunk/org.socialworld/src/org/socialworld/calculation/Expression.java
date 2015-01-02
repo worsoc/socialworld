@@ -58,6 +58,7 @@ public class Expression {
 
 	public Expression() {
 		calculation = Calculation.getInstance();
+		function = Expression_Function.nothing;
 	}
 	
 	
@@ -129,6 +130,9 @@ public class Expression {
 		Value tmp;
 		
 		switch (this.function) {
+		case nothing:
+			//return invalid dummy-Value
+			return Calculation.getNothing();
 		case value:
 			return calculation.copy(value);
 			
@@ -183,11 +187,11 @@ public class Expression {
 		case replacement:
 			//TODO
 			
-			return calculation.getNothing();
+			return Calculation.getNothing();
 			
 			
 		default:
-			return calculation.getNothing();
+			return Calculation.getNothing();
 		}
 		
 

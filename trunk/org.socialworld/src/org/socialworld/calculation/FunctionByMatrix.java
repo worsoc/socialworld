@@ -27,16 +27,24 @@ public class FunctionByMatrix extends FunctionBase {
 
 	private FunctionByMatrix_Matrix matrix;
 
+	public FunctionByMatrix() {
+		returnInvalidNothingvalue = true;
+	}
+
 	public FunctionByMatrix(FunctionByMatrix_Matrix matrix) {
 		this.matrix = matrix;
 	}
 	
 	public void setMatrix(FunctionByMatrix_Matrix matrix) {
 		this.matrix = matrix;
+		returnInvalidNothingvalue = false;
 	}
 	
 	@Override
 	public Value calculate(Value[] arguments) {
+
+		if (returnInvalidNothingvalue) 
+			return new Value();
 		
 		calculation = Calculation.getInstance();
 
@@ -50,7 +58,7 @@ public class FunctionByMatrix extends FunctionBase {
 					calculateAttributes(attributes, this.matrix.isWithOffset());
 				return calculation.createValue(Type.attributeArray, attributes );
 			default:
-				return null;
+				return new Value();
 		}
 		
 	}
@@ -92,7 +100,7 @@ public class FunctionByMatrix extends FunctionBase {
 				share =   this.matrix.getShare(row, column);
 				function = Functions.get(functionIndex);
 
-				arguments[0] = new Value(Type.integer, attributeValue );
+				arguments[0] =  attributeValue;
 				change = (float)
 						calculation.multiplication(share, function.calculate(arguments))
 						.getValue();
@@ -165,7 +173,7 @@ public class FunctionByMatrix extends FunctionBase {
 				function = Functions.get(functionIndex);
 				inputValue = getInputValue(inputType, attributeValue, attributeChangeValue);
 
-				arguments[0] = new Value(Type.integer, inputValue );
+				arguments[0] =  inputValue ;
 				change = (float)
 						calculation.addition(
 								calculation.multiplication(share, function.calculate(arguments)),
@@ -201,7 +209,7 @@ public class FunctionByMatrix extends FunctionBase {
 		case OldAttributeValue:
 			return calculation.subtraction(attributeValue , attributeChangeValue);
 		}
-		return calculation.getNothing();
+		return Calculation.getNothing();
 	}
 
 }
