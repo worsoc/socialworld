@@ -52,11 +52,20 @@ public class EventReactionDescriptionPool extends DescriptionPool {
 		
 		index = eventType *  ReactionTypePool.CAPACITY_RTP_ARRAY + reactionType ;
 		
-		if (sizeDescriptionsArray > index) 			description = descriptions[index];
+		if (index >= 0 & sizeDescriptionsArray > index) 	
+			description = descriptions[index];
+		else
+			// create a dummy description with an expression that returns the invalid "nothing" value
+			description = new EventReactionDescription();
+			
 		return description;
 	}
 
 	protected void initialize() {
+		// initialize with  dummy descriptions with an expression that returns the invalid "nothing" value
+		for (int index = 0; index < sizeDescriptionsArray; index++)
+			descriptions[index] = new EventReactionDescription();
+		
 		initializeFromFile();
 	}
 	

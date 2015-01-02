@@ -34,6 +34,10 @@ public class EventInfluenceDescription {
 
 	protected FunctionByExpression f_eventInfluence;
 	
+	public EventInfluenceDescription() {
+		f_eventInfluence = new FunctionByExpression();
+	}
+	
 	public EventInfluenceDescription(Expression startExpression) {
 		f_eventInfluence = new FunctionByExpression(startExpression);
 	}

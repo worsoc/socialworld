@@ -27,6 +27,10 @@ import org.socialworld.calculation.FunctionByExpression;
 public class State2ActionDescription {
 		
 		private FunctionByExpression f_createAction;
+	
+		public State2ActionDescription() {
+			f_createAction = new FunctionByExpression();
+		}
 		
 		public State2ActionDescription(Expression startExpression) {
 

@@ -8,21 +8,12 @@ public class State2ActionDescriptionPool extends DescriptionPool {
 	private static State2ActionDescriptionPool instance;
 	
 	private State2ActionDescription descriptions[];
-/*	int sizeDescriptionsArray;
 
-	private static ArrayList<Expression> expressions;
-	int sizeExpressionsArray;
-*/	
 	private State2ActionDescriptionPool () {
 		
 		sizeDescriptionsArray = State2ActionTypePool.CAPACITY_S2AP_ARRAY;
 		descriptions = new State2ActionDescription[sizeDescriptionsArray];
 		
-		/*
-		expressions = new ArrayList<Expression> ();
-		sizeExpressionsArray = 0;
-
-		*/
 		initialize();
 		
 	}
@@ -40,11 +31,19 @@ public class State2ActionDescriptionPool extends DescriptionPool {
 		
 		index = state2ActionType ;
 		
-		if (sizeDescriptionsArray > index) 	description = descriptions[index];
+		if (index >= 0 & sizeDescriptionsArray > index) 
+			description = descriptions[index];
+		else
+			// create a dummy description with an expression that returns the invalid "nothing" value
+			description = new State2ActionDescription();
+		
 		return description;
 	}
 
 	protected void initialize() {
+		// initialize with  dummy descriptions with an expression that returns the invalid "nothing" value
+		for (int index = 0; index < sizeDescriptionsArray; index++)
+			descriptions[index] = new State2ActionDescription();
 	}
 	
 
