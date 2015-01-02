@@ -25,11 +25,18 @@ public class Value {
 
 	Type type;
 	Object value;
+	boolean valid;
 	
+	//Dummy-Value
+	public Value() {
+		this.type = Type.nothing;
+		valid = false;
+	}
 	
 	public Value(Type type, Object value) {
 		this.type = type;
 		this.value = value;
+		valid = true;
 	}
 	
 	public Value(String valueAsString, Type castToType) {
@@ -38,17 +45,28 @@ public class Value {
 		switch (castToType) {
 		case integer:
 			this.value = Integer.parseInt(valueAsString);
+			valid = true;
 			break;
 		case longinteger:
 			this.value = Integer.parseInt(valueAsString);
+			valid = true;
 			break;
 		case floatingpoint:
 			this.value = Float.parseFloat(valueAsString);
+			valid = true;
 			break;
 		default:
 			
 		}
 		
+	}
+	
+	public void setInvalid() {
+		valid = false;
+	}
+	
+	public boolean isValid() {
+		return valid;
 	}
 	
 	public Type getType() { return type; };
