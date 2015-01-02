@@ -26,7 +26,7 @@ public class Calculation {
 
 	private static Calculation instance;
 	
-	Value nothing;
+	static Value nothing;
 	
 	public static Calculation getInstance() {
 		if (instance == null) {
@@ -37,7 +37,7 @@ public class Calculation {
 	}
 	
 	private Calculation() {
-		nothing = createValue(Type.nothing, null);
+		nothing = new Value();
 		
 	}
 	
@@ -124,11 +124,14 @@ public class Calculation {
 	}
 
 	public Value copy(Value original) {
-		return createValue(original.getType(), original.getValueCopy() );
+		if (original.isValid())
+			return createValue(original.getType(), original.getValueCopy() );
+		else
+			return new Value();
 	}
 	
 	
-	public Value getNothing() {
+	public static Value getNothing() {
 		return nothing;
 	}
 }
