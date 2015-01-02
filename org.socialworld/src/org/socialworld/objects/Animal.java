@@ -30,6 +30,7 @@ import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.core.Event;
 import org.socialworld.calculation.FunctionByMatrix_Matrix;
+import org.socialworld.calculation.Value;
 import org.socialworld.calculation.Vector;
 import org.socialworld.calculation.application.ActionCreator;
 import org.socialworld.calculation.application.AttributeCalculator;
@@ -218,10 +219,14 @@ public class Animal extends SimulationObject {
 	 *            the event that effects to the object
 	 */
 	public void changeByEvent(final Event event) {
+		Value result;
 		AttributeArray tmp;
 		
-		tmp = AttributeCalculator.getAttributesChangedByEvent(event, this);
-		this.attributes.set(tmp);
+		result = AttributeCalculator.getAttributesChangedByEvent(event, this);
+		if (result.isValid()) {
+			tmp = (AttributeArray) result.getValue();
+			this.attributes.set(tmp);
+		}
 	}
 
 	/**

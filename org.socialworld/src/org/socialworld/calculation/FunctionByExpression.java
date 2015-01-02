@@ -24,6 +24,13 @@ package org.socialworld.calculation;
 public class FunctionByExpression extends FunctionBase {
 	Expression startExpression;
 	
+	//  initialized with an expression that returns the invalid "nothing"-Value
+	//  it is used to avoid null returns
+	public FunctionByExpression() {
+		startExpression = new Expression();
+		returnInvalidNothingvalue = true;
+	}
+	
 	public FunctionByExpression(Expression startExpression) {
 		
 		this.startExpression  = startExpression;
@@ -35,7 +42,10 @@ public class FunctionByExpression extends FunctionBase {
 	}
 	
 	public Value calculate(Value[] arguments) {
-		return startExpression.evaluateExpression(arguments);
+		if (returnInvalidNothingvalue) 
+			return new Value();
+		else
+			return startExpression.evaluateExpression(arguments);
 	}
 
 }
