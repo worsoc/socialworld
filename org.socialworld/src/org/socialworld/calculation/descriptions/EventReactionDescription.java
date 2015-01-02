@@ -28,6 +28,10 @@ public class EventReactionDescription {
 	
 	private FunctionByExpression f_createReaction;
 	
+	public EventReactionDescription() {
+		f_createReaction = new FunctionByExpression();
+	}
+	
 
 	public EventReactionDescription(Expression startExpression) {
 

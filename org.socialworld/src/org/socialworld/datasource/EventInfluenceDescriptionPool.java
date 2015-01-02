@@ -28,17 +28,23 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 	public EventInfluenceDescription getDescription(int eventType,	int influenceType) {
 		int index;
 		
-		EventInfluenceDescription description = null;
+		EventInfluenceDescription description;
 		
-		index = eventType * Event.MAX_EVENT_TYPE + influenceType;
+		index = eventType * InfluenceTypePool.CAPACITY_ITP_ARRAY + influenceType;
 		
-		if (sizeDescriptionsArray > index) {
+		if (index >= 0 & sizeDescriptionsArray > index) 
 			description = descriptions[index];
-		}	
+		else 
+			// create a dummy description with an expression that returns the invalid "nothing" value
+			description = new EventInfluenceDescription();
+		
 		return description;
 	}
 
 	protected void initialize() {
+		// initialize with  dummy descriptions with an expression that returns the invalid "nothing" value
+		for (int index = 0; index < sizeDescriptionsArray; index++)
+			descriptions[index] = new EventInfluenceDescription();
 	}
 	
 	/*
@@ -78,7 +84,7 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 				}
 
 				if (line.startsWith("</EID>")) {
-					index = eventType * Event.MAX_EVENT_TYPE + influenceType;
+					index = eventType * InfluenceTypePool.CAPACITY_ITP_ARRAY + influenceType;
 					descriptions[index] = eid;
 					continue;
 				}
