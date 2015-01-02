@@ -24,7 +24,6 @@ package org.socialworld.objects;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionType;
-import org.socialworld.actions.move.Move;
 import org.socialworld.actions.move.PathFinder;
 import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.AttributeArray;
@@ -45,7 +44,6 @@ import org.socialworld.knowledge.KnownPathsPool;
  */
 public class Animal extends SimulationObject {
 
-	protected Move move;
 
 	protected Vector directionChest;
 	protected Vector directionView;
@@ -167,7 +165,6 @@ public class Animal extends SimulationObject {
 	 * @param action
 	 */
 	protected void changeMove(final AbstractAction action) {
-		this.move.setMode(action.getMode());
 	}
 
 
@@ -194,21 +191,6 @@ public class Animal extends SimulationObject {
 			break;
 		default:
 		}
-	}
-
-	/**
-	 * @return the Move
-	 */
-	public Move getMove() {
-		return this.move;
-	}
-
-	/**
-	 * @param Move
-	 *            the Move to set
-	 */
-	public void setMove(final Move move) {
-		this.move = move;
 	}
 
 
