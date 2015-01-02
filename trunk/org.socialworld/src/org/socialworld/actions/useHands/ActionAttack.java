@@ -25,10 +25,11 @@ import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionProperty;
 import org.socialworld.actions.ActionType;
+import org.socialworld.attributes.ActualTime;
+import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.Time;
+import org.socialworld.calculation.Vector;
 import org.socialworld.core.Event;
-import org.socialworld.objects.Animal;
-import org.socialworld.objects.Item;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.Human;
 
@@ -55,13 +56,23 @@ public class ActionAttack extends AbstractAction {
 	}
 
 	/* (non-Javadoc)
+	 * @see org.socialworld.actions.AbstractAction#getConcreteProperty(org.socialworld.actions.ActionProperty)
+	 */
+	@Override
+	public Object getConcreteProperty(ActionProperty prop) {
+			return null;
+		
+	}
+
+	/* (non-Javadoc)
 	 * @see org.socialworld.actions.AbstractAction#perform()
 	 */
 	@Override
 	public void perform() {
-		// TODO Auto-generated method stub
-		Event event;
-		final IWeapon weapon;
+		IWeapon weapon;
+		Vector directionChest;
+		Vector directionView;
+		Vector directionHit;
 
    		switch (type) {
 		case useWeaponLeft:
@@ -75,25 +86,74 @@ public class ActionAttack extends AbstractAction {
 		}
 		
    		if (weapon == null) return;
+
    		
-   		this.attack = new Attack(type, mode,  weapon);
-   		this.attack.setActor((Human) actor, getWriteAccess(this));
+    	// TODO
+	  	directionChest = ((Human) actor).getDirectionChest();
+    	directionView = ((Human) actor).getDirectionView();
+    	directionHit = ((Human) actor).getDirectionView();
+
+    	// TODO calculation intensity?
+  		this.attack = new Attack(weapon, 
+  								directionChest, directionView, directionHit,
+  								intensity, ((Human)actor).getAttributes().get(Attribute.power));
    		
-   		// TODO
-   		//this.attack.setHitParams(directionChest, directionView, directionHit, actorsIntensity);
-   		
-   		event = attack.perform();
-   		
-		if (event != null) addEvent(event);
+  		attack.perform();
+	
+		Event event;
+  		
+		event = new Event( getEventType(type, mode),    actor /* as causer*/,  ActualTime.asTime(),
+						actor.getPosition(),  attack /* as optional parameter */);
+		addEvent(event);
+		
 	}
 
-	/* (non-Javadoc)
-	 * @see org.socialworld.actions.AbstractAction#getConcreteProperty(org.socialworld.actions.ActionProperty)
-	 */
-	@Override
-	public Object getConcreteProperty(ActionProperty prop) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
+	private int getEventType(ActionType type, ActionMode mode) {
+		int eventType = 0;
+		// TODO
+		
+	  	if (mode == ActionMode.club) {
+	  		eventType = 1;
+    	}
+    	else    	
+    		switch (type) {
+    		case useWeaponLeft:
+    			
+    			switch (mode) {
+    			case stab:
+    				eventType = 2;
+    				break;
+    			case stroke:
+    				eventType = 3;
+    				break;
+    			case backhand:
+    				eventType = 4;
+    				break;
+    			default:	
+    			}
+    			
+    			break;
+    		case useWeaponRight:
+       			switch (mode) {
+    			case stab:
+    				eventType = 5;
+    				break;
+    			case stroke:
+    				eventType = 6;
+    				break;
+    			case backhand:
+    				eventType = 7;
+    				break;
+    			default:
+       			}
+       			
+    			break;
+    		default:
+    			
+    		}
+
+	
+	  	return eventType;
+	}
 }

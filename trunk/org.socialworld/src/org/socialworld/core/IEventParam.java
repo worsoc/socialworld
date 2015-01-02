@@ -19,16 +19,22 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.actions;
+package org.socialworld.core;
 
-import org.socialworld.core.Event;
+import org.socialworld.calculation.Type;
+import org.socialworld.calculation.Value;
 
 /**
  * @author Mathias Sikos
  *
  */
-public interface IActionPerformer {
+public interface IEventParam {
 	
-	public abstract Event perform();
+	public abstract Value getParam(int index);
 	
+	public abstract int size();
+	
+	public abstract int find(Type type);
+	
+	public boolean isValid();
 }

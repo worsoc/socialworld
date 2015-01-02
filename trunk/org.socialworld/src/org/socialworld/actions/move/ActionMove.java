@@ -25,6 +25,7 @@ import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionProperty;
 import org.socialworld.actions.ActionType;
+import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.Time;
 import org.socialworld.calculation.Vector;
@@ -40,6 +41,7 @@ public class ActionMove extends AbstractAction {
 	
 	private Move move;
 	private int repeatsMove;
+	private boolean firstStep;
 	
 	private Path path;
 	private Position end;
@@ -56,6 +58,7 @@ public class ActionMove extends AbstractAction {
 				 priority,  duration);
 			
 			this.setDirection(direction);
+			this.firstStep = true;
 	}
 
 	public ActionMove(final ActionType type, final ActionMode mode,
@@ -68,6 +71,7 @@ public class ActionMove extends AbstractAction {
 				 priority,  duration);
 			
 			this.setEnd(end);
+			this.firstStep = true;
 	}
 
 	public ActionMove(ActionMove original) {
@@ -79,7 +83,9 @@ public class ActionMove extends AbstractAction {
 	public  Object getConcreteProperty(ActionProperty prop) {
 		switch (prop) {
 		case direction:
-				return getDirection();
+			return getDirection();
+		case end:
+			return getEnd();
 		default:
 			return null;
 		}
@@ -88,25 +94,29 @@ public class ActionMove extends AbstractAction {
 	public  void perform() {
 		Event event;
 		if (actor == null) return;
-		if (repeatsMove == 0) createMove();
+
+		if (!firstStep) {
+			repeatsMove--;
+			if (repeatsMove == 0) path.completeSection(actor.getPosition());
+			
+			if (path.isCompleted()) 
+				if (path.hasRefToKnownPaths()) 
+					path.incrementUsageCounter();
+				else
+					((Animal) actor).getKnownPathsPool().addPath(path);
+			firstStep = false;
+		}
 		
-		event = move.perform();
-		repeatsMove--;
-		if (repeatsMove == 0) path.completeSection(actor.getPosition());
+		if (repeatsMove == 0) 			createMove();
 		
-		if (path.isCompleted()) 
-			if (path.hasRefToKnownPaths()) 
-				path.incrementUsageCounter();
-			else
-				((Animal) actor).getKnownPathsPool().addPath(path);
-		
-		if (event != null) addEvent(event);
+		move.perform();
+		// TODO
+		event = new Event( 1,    actor /* as causer*/,  ActualTime.asTime(),
+					actor.getPosition(),  move /* as optional parameter */);
+		addEvent(event);
 		
 	}
 	
-
-	
-
 	private void createMove() {
 		Vector direction;
 		float velocity;
@@ -129,8 +139,8 @@ public class ActionMove extends AbstractAction {
 		
 		direction.mul(factor);
 		
-		this.move = new Move( mode, direction, velocity);
-		this.move.setActor((Animal) actor, getWriteAccess(this));
+		this.move = new Move(  direction, velocity);
+		
 	}
 
 	private void createPath() {
@@ -156,6 +166,7 @@ public class ActionMove extends AbstractAction {
 	public void setDirection(final Vector direction) {
 		this.direction = direction;
 	}
+
 
 	/**
 	 * @return the end

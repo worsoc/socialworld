@@ -24,6 +24,7 @@ package org.socialworld.calculation;
 public class Value {
 
 	Type type;
+	String name;
 	Object value;
 	boolean valid;
 	
@@ -33,6 +34,13 @@ public class Value {
 		valid = false;
 	}
 	
+	public Value(Type type, String name, Object value) {
+		this.type = type;
+		this.name = name;
+		this.value = value;
+		valid = true;
+	}
+
 	public Value(Type type, Object value) {
 		this.type = type;
 		this.value = value;
@@ -70,7 +78,9 @@ public class Value {
 	}
 	
 	public Type getType() { return type; };
-	
+
+	public String getName() { return name; };
+
 	public Object getValue() { return value; };
 
 	public Object getValueCopy() { 

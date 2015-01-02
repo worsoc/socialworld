@@ -51,10 +51,29 @@ public class Event implements Comparable<Event> {
 	private float effectDistance;
 	private float effectAngle;
 
+	private IEventParam optionalParam;
+	
 	private Event_Percipience percipience;
 	
 	public static final int MAX_EVENT_TYPE = 256;
 
+	/**
+	 * Constructor
+	 */
+	public Event(int eventType,  SimulationObject causer, Time time, Position position,	 IEventParam param) {
+		
+		this.eventType = eventType;		
+		
+		this.causer = causer;
+		this.time = time;
+		this.position = position;
+
+		this.optionalParam = param;
+
+		
+		this.percipience = new Event_Percipience();
+	}
+	
 	/**
 	 * Constructor
 	 */
