@@ -21,7 +21,6 @@
 */
 package org.socialworld.calculation.application;
 
-import org.socialworld.attributes.AttributeArray;
 import org.socialworld.calculation.FunctionByExpression;
 import org.socialworld.calculation.FunctionByMatrix;
 import org.socialworld.calculation.FunctionByMatrix_Matrix;
@@ -44,12 +43,12 @@ public  class AttributeCalculator {
 	 * @param eventInfluence
 	 *            the informations how an event effects to the attributes.
 	 */
-	public static AttributeArray getAttributesChangedByEvent(Event event, Animal animal) {
-		EventInfluenceDescription eventInfluenceDescription;
+	public static Value getAttributesChangedByEvent(Event event, Animal animal) {
+		EventInfluenceDescription eventInfluenceDescription = null;
 		int eventType;
 		int eventInfluenceType;
 	
-		FunctionByExpression f_EventInfluence;
+		FunctionByExpression f_EventInfluence = null;
 		Value[] arguments;
 	
 		eventType = event.getEventType();
@@ -59,17 +58,18 @@ public  class AttributeCalculator {
 			EventInfluenceAssignment.getInstance().getEventInfluenceDescription(
 				eventType, eventInfluenceType	);
 
-		f_EventInfluence = eventInfluenceDescription.getFunctionEventInfluence();
 
-		
+		f_EventInfluence = eventInfluenceDescription.getFunctionEventInfluence();
+			
 		arguments = new Value[1];
 		arguments[0] = new Value(Type.attributeArray, animal.getAttributes());
 	
-		return (AttributeArray) f_EventInfluence.calculate(arguments).getValue();
+		return  f_EventInfluence.calculate(arguments);
+	
 	}
 
 
-	public static AttributeArray getAttributesChangedByMatrix(Animal animal) {
+	public static Value getAttributesChangedByMatrix(Animal animal) {
 		FunctionByMatrix f_AttributesByMatrix;
 		Value[] arguments;
 	
@@ -81,10 +81,10 @@ public  class AttributeCalculator {
 		// TODO get the function object from animal (not the matrix!)
 		//      --> the function object shouldn't be created here
 		f_AttributesByMatrix = new FunctionByMatrix(animal.getMatrix());
-		return (AttributeArray) f_AttributesByMatrix.calculate(arguments).getValue();
+		return  f_AttributesByMatrix.calculate(arguments);
 	}
 	
-	public static AttributeArray getAttributesChangedByRefresh(Animal animal) {
+	public static Value getAttributesChangedByRefresh(Animal animal) {
 		FunctionByMatrix f_AttributesByMatrix;
 		Value[] arguments;
 	
@@ -95,7 +95,7 @@ public  class AttributeCalculator {
 		// TODO get the function object from animal (not the matrix!)
 		//      --> the function object shouldn't be created here
 		f_AttributesByMatrix = new FunctionByMatrix(animal.getMatrix());
-		return (AttributeArray) f_AttributesByMatrix.calculate(arguments).getValue();
+		return  f_AttributesByMatrix.calculate(arguments);
 	}
 
 	/**
