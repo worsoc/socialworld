@@ -21,144 +21,58 @@
 */
 package org.socialworld.actions.useHands;
 
-import org.socialworld.actions.ActionMode;
-import org.socialworld.actions.ActionType;
-import org.socialworld.actions.IActionPerformer;
-import org.socialworld.attributes.ActualTime;
-import org.socialworld.attributes.Attribute;
-import org.socialworld.attributes.AttributeArray;
-import org.socialworld.calculation.FunctionBase;
+import org.socialworld.actions.ActionPerformer;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.Vector;
-import org.socialworld.core.Event;
-import org.socialworld.objects.Human;
-import org.socialworld.objects.IHumanWrite;
-import org.socialworld.objects.WriteAccessToHuman;
-import org.socialworld.objects.WriteAccessToSimulationObject;
 
 /**
  * @author Mathias Sikos
  *
  */
-public class Attack implements IHumanWrite, IActionPerformer {
-	private ActionMode mode;
+public class Attack extends ActionPerformer {
     private IWeapon weapon;
-    private boolean useLeftHand;
-    private boolean useRightHand;
-
+ 
 	private Vector directionChest;
 	private Vector directionView;
 	private Vector directionHit;
-	boolean directionsSet;
 	
 	private float actorsIntensity;
-  
-    private Human actor;
-    private WriteAccessToHuman writeAccessToActor;
-
-    
-    public Attack (ActionType type, ActionMode mode, IWeapon weapon ) {
-    	if (mode == ActionMode.club) {
-     		useLeftHand = true;
-    		useRightHand = true;
-    	}
-    	else    	
-    		switch (type) {
-    		case useWeaponLeft:
-    			useLeftHand = true;
-    			break;
-    		case useWeaponRight:
-    			useRightHand = true;
-    			break;
-    		default:
-    			
-    		}
+	private int actorsPower;
+ 
+    public Attack ( IWeapon weapon, 
+    		Vector directionChest, Vector directionView, Vector directionHit,
+    		float actorsIntensity, int actorsPower ) {
+      	this.weapon = weapon;
     	
-    	this.mode = mode;
-    	this.weapon = weapon;
-    	
-  
-    }
-    
-    public void setHitParams(Vector directionChest, Vector directionView, Vector directionHit, float actorsIntensity) {
-    	this.actorsIntensity = actorsIntensity;
-	  	this.directionChest = directionChest;
+  	  	this.directionChest = directionChest;
     	this.directionView = directionView;
     	this.directionHit = directionHit;
-    }
-    
-     
-	protected void setActor(Human actor, WriteAccessToSimulationObject writeAccess) {
-		this.actor = actor;
-		this.writeAccessToActor = (WriteAccessToHuman) writeAccess;
-	}
 
-	/* (non-Javadoc)
-	 * @see org.socialworld.actions.IActionPerformer#perform()
-	 */
-	@Override
-	public Event perform() {
-		Event event;
-		
-		FunctionBase function;
-		Value[] arguments;
+    	this.actorsIntensity = actorsIntensity;
+    	this.actorsPower = actorsPower;
+    }
+  
+   	public void perform() {
 		
 		float intensity;
 		
-		AttributeArray attributes;
+		// TODO
+		intensity = actorsIntensity * actorsPower;
 		
-		if (actor == null | writeAccessToActor == null) return null;
-
-		switch (mode) {
-		case stab:
-			function = weapon.getStabFunction();
-			break;
-		case stroke:
-			function = weapon.getStrokeFunction();
-			break;
-		case club:
-			function = weapon.getClubFunction();
-			break;
-		case backhand:
-			function = weapon.getBackhandFunction();
-			break;
-		default:
-			return null;
+		
+		if (!isValid()) {
+			setMaxParam(6);
+			setParam(0, new Value(Type.simulationObject, "weapon", weapon));
+			setParam(1, new Value(Type.floatingpoint, "actorsIntensity", actorsIntensity));
+			setParam(2, new Value(Type.floatingpoint, "intensity", intensity));
+			setParam(3, new Value(Type.vector, "directionChest", directionChest));
+			setParam(4, new Value(Type.vector, "directionView", directionView));
+			setParam(5, new Value(Type.vector, "directionHit", directionHit));
+			setValid();
 		}
 		
-
-		if (!directionsSet) setDefaultDirections();
-
-		
-		// TODO
-		intensity = actorsIntensity * actor.getAttributes().get(Attribute.power);
-		
-		event = new Event( 2,    actor /* as causer*/,  ActualTime.asTime(),
-				actor.getPosition(),  intensity /* as strength */);
-		
-		
-		arguments = new Value[1];
-		arguments[0] = new Value(Type.attributeArray, actor.getAttributes());
-
-		function.calculate(arguments);
-		attributes = (AttributeArray) function.calculate(arguments).getValue();
-		writeAccessToActor.setAttributes(attributes, this);
-	
-		return event;
 	}
 
-	private void setDefaultDirections() {
-	  	this.directionChest = actor.getDirectionChest();
-    	this.directionView = actor.getDirectionView();
-    	switch (mode) {
-    	case stab:
-        	this.directionHit = this.directionView;
-    	default:
-    		// TODO
-        	this.directionHit = this.directionView;
-    		
-    	}
-	
-	}
+
 }

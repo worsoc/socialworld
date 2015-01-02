@@ -100,7 +100,7 @@ public abstract class AbstractAction {
 		this.duration = original.duration;
 		
 	}
-	
+
 	protected  final WriteAccessToSimulationObject getWriteAccess(AbstractAction concreteAction) {
 		if (this == concreteAction & writeAccesToActor.checkGrantRightFor(concreteAction))
 			return writeAccesToActor;
@@ -109,7 +109,6 @@ public abstract class AbstractAction {
 	}
 	
 	public abstract void perform();
-	
 	
 	public abstract Object getConcreteProperty(ActionProperty prop);
 	

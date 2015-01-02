@@ -38,5 +38,6 @@ public enum ActionProperty {
 	remainedDuration,
 	linkedAction,
 	
-	direction
+	direction,
+	end,
 }
