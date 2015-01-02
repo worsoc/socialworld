@@ -29,6 +29,7 @@ package org.socialworld.calculation;
  * @author Mathias Sikos (tyloesand)
  */
 public enum Expression_Function {
-	condition, addition, multiplication, replacement, comparison, branching, value, attributeValue
+	condition, addition, multiplication, replacement, comparison, branching, value, attributeValue,
+	nothing
 
 }
