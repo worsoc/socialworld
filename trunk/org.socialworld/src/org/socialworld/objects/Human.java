@@ -23,7 +23,7 @@ package org.socialworld.objects;
 
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionType;
-import org.socialworld.actions.useHands.IWeapon;
+import org.socialworld.actions.attack.IWeapon;
 import org.socialworld.attributes.Inventory;
 import org.socialworld.knowledge.AcquaintancePool;
 import org.socialworld.knowledge.Acquaintance;
@@ -109,6 +109,14 @@ import java.util.ListIterator;
 	
 	public IWeapon getRightHandWeapon() {
 		return inventory.getRightHandWeapon();
+	}
+
+	public SimulationObject getLeftHand() {
+		return inventory.getLeftHand();
+	}
+	
+	public SimulationObject getRightHand() {
+		return inventory.getRightHand();
 	}
 
 	/**
