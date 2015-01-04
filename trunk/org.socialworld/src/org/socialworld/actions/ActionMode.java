@@ -37,7 +37,11 @@ public enum ActionMode {
 
 	stab, stroke, backhand, club, 
 
-	examineItem, takeItem, useItem, collectItem, switchItemToLeftHand, useTwoItems, dropItem,
+	examineItem, takeItem,  collectItem, switchItemToLeftHand, useTwoItems,  dropItem,
+	
+	useItemLeftHand, useItemRightHand, combineItems_AddRightToLeft, combineItems_AddLeftToRight,
+	
+	pull, push,
 	
 	say, scream, whisper, answer, ask,
 	
