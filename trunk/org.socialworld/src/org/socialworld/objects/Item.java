@@ -62,15 +62,14 @@ public class Item extends SimulationObject {
 	public void handle(final AbstractAction action, final SimulationObject user) {
 		final ActionMode mode = action.getMode();
 
+		// TODO further modes
+		
 		switch (mode) {
 		case examineItem:
 			examine(action, user);
 			break;
 		case takeItem:
 			take(action, user);
-			break;
-		case useItem:
-			use(action, user);
 			break;
 		case collectItem:
 			collect(action, user);
