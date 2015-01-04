@@ -67,9 +67,8 @@ public abstract class AbstractAction {
 		this.actor = writeAccesToActor.getObject();
 	}
 
-	public final void removeActor() {
+	public final void removeWriteAccess() {
 		this.writeAccesToActor = null;
-		this.actor = null;
 	}
 
 	protected void setBaseProperties(final ActionType type, final ActionMode mode,
@@ -101,13 +100,14 @@ public abstract class AbstractAction {
 		
 	}
 
+	/*
 	protected  final WriteAccessToSimulationObject getWriteAccess(AbstractAction concreteAction) {
 		if (this == concreteAction & writeAccesToActor.checkGrantRightFor(concreteAction))
 			return writeAccesToActor;
 		else
 			return null;
 	}
-	
+	*/
 	public abstract void perform();
 	
 	public abstract Object getConcreteProperty(ActionProperty prop);
@@ -135,6 +135,10 @@ public abstract class AbstractAction {
 		return linkedAction;
 	}
 
+	public SimulationObject getActor() {
+		return actor;
+	}
+	
 	public void setDone() {
 		done = true;
 	}
@@ -241,7 +245,7 @@ public abstract class AbstractAction {
 	/**
 	 * @return the intensity
 	 */
-	public double getIntensity() {
+	public float getIntensity() {
 		return this.intensity;
 	}
 
