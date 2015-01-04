@@ -48,6 +48,8 @@ public class ActionMove extends AbstractAction {
 	
 	private Vector direction;
 	
+	private Vector directionForSection;
+	
 	public ActionMove(final ActionType type, final ActionMode mode,
 			final SimulationObject target, final Vector direction,
 			final float intensity, final Time minTime, final Time maxTime,
@@ -91,12 +93,16 @@ public class ActionMove extends AbstractAction {
 		}
 	}
 
+	public Vector getDirectionForSection() {
+		return new Vector(this.directionForSection);
+	}
+	
 	public  void perform() {
-		Event event;
 		if (actor == null) return;
 
 		if (!firstStep) {
-			repeatsMove--;
+			repeatsMove = move.getNumberOfRepeats();
+			
 			if (repeatsMove == 0) path.completeSection(actor.getPosition());
 			
 			if (path.isCompleted()) 
@@ -104,13 +110,14 @@ public class ActionMove extends AbstractAction {
 					path.incrementUsageCounter();
 				else
 					((Animal) actor).getKnownPathsPool().addPath(path);
-			firstStep = false;
 		}
+		
+		firstStep = false;
 		
 		if (repeatsMove == 0) 			createMove();
 		
-		move.perform();
 		// TODO
+		Event event;
 		event = new Event( 1,    actor /* as causer*/,  ActualTime.asTime(),
 					actor.getPosition(),  move /* as optional parameter */);
 		addEvent(event);
@@ -118,28 +125,16 @@ public class ActionMove extends AbstractAction {
 	}
 	
 	private void createMove() {
-		Vector direction;
-		float velocity;
-		float length;
-		float factor;
 		
 		if (path == null & end != null) createPath();
 		
 		if (path == null) 
-			direction = new Vector(this.direction);
+			this.directionForSection = new Vector(this.direction);
 		else
-			direction = this.actor.getPosition().getDirectionTo(path.getNextPoint());
+			this.directionForSection = this.actor.getPosition().getDirectionTo(path.getNextPoint());
 			
-		velocity = calculateVelocity(actor, intensity, mode);
-		length = direction.length();
-		factor = velocity / length;
 		
-		// TODO
-		this.repeatsMove = (int) (length / velocity );
-		
-		direction.mul(factor);
-		
-		this.move = new Move(  direction, velocity);
+		this.move = new Move( this);
 		
 	}
 
@@ -147,10 +142,6 @@ public class ActionMove extends AbstractAction {
 		path = ((Animal) actor).getPathFinder().findPath(end);
 	}
 	
-	private float calculateVelocity(SimulationObject actor, double intensity, ActionMode mode) {
-		// TODO
-		return 1;
-	}
 	
 	/**
 	 * @return the direction
