@@ -35,6 +35,12 @@ public abstract class ActionPerformer implements IEventParam {
     private int maxParams;
     private boolean valid = false;
     
+    private AbstractAction action;
+    
+    public ActionPerformer (AbstractAction action) {
+    	this.action = action;
+    }
+    
     public abstract void perform();
     
 	/* (non-Javadoc)
@@ -91,4 +97,9 @@ public abstract class ActionPerformer implements IEventParam {
 	protected void setValid() {
 		valid = true;
 	}
+	
+	protected AbstractAction getOriginalActionObject() {
+		return this.action;
+	}
+
 }
