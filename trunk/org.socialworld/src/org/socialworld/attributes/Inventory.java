@@ -21,7 +21,7 @@
 */
 package org.socialworld.attributes;
 
-import org.socialworld.actions.useHands.IWeapon;
+import org.socialworld.actions.attack.IWeapon;
 import org.socialworld.objects.SimulationObject;
 
 /**
