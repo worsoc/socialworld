@@ -25,6 +25,7 @@ import org.socialworld.actions.ActionPerformer;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.Vector;
+import org.socialworld.objects.Animal;
 
 
 /**
@@ -34,24 +35,61 @@ import org.socialworld.calculation.Vector;
  * @author Mathias Sikos (tyloesand) 
  */
 public class Move extends ActionPerformer {
-	private Vector direction;
-	private float velocity;
-     
-
-	public Move( Vector direction, float velocity) {
-		this.direction = direction;
-		this.velocity = velocity;
+	
+	private int repeats;
+	
+	public Move (   ActionMove action ) {
+		super(action);
 	}
 	
 
 	public void perform() {
+		
 		if (!isValid()) {
+
+			ActionMove originalAction;
+			final Animal actor;
+
+			Vector direction;
+			
+			float velocity;
+			
+			float length;
+			float factor;
+			
+			originalAction  = (ActionMove) getOriginalActionObject();
+			actor = (Animal) originalAction.getActor();
+
+			direction = originalAction.getDirectionForSection();
+				
+			velocity = calculateVelocity(originalAction, actor);
+			length = direction.length();
+			factor = velocity / length;
+			
+			// TODO
+			this.repeats = (int) (length / velocity );
+
+			direction.mul(factor);
+
 			setMaxParam(2);
-			setParam(0, new Value(Type.vector, direction));
-			setParam(1, new Value(Type.floatingpoint, velocity));
+			setParam(0, new Value(Type.vector, "direction", direction));
+			setParam(1, new Value(Type.floatingpoint, "velocity", velocity));
+			
 			setValid();
 		}
+		
+		if (repeats > 0) repeats--;
 	} 
 	
-
+	private float calculateVelocity(ActionMove action, Animal actor) {
+		float actorsIntensity;
+		
+		actorsIntensity = action.getIntensity();
+		// TODO
+		return actorsIntensity;
+	}
+	
+	public int getNumberOfRepeats() {
+		return repeats;
+	}
 }
