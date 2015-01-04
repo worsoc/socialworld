@@ -128,7 +128,7 @@ public abstract class SimulationObject extends ListenedBase {
 	public void doAction(AbstractAction action) {
 		action.setActor(guard);
 		action.perform();
-		action.removeActor();
+		action.removeWriteAccess();
 	}
 
 	protected abstract void doAction(ActionType type, AbstractAction action);
