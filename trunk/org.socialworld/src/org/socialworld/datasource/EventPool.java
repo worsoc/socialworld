@@ -49,16 +49,19 @@ public class EventPool {
 
 	private Event createEvent(int number) {
 		byte priority = 1;
-		Event event = new Event(priority);
+		int eventType;
+		Event event; 
 
 		switch (number) {
 		case 1:
-			event.setEventType(1);
-			return event;
+			eventType = 1;
+			break;
 		default:
-			event.setEventType(1);
-			return event;
+			eventType = 0;
 		}
+		
+		event = new Event(eventType, priority);
+		return event;
 	}
 
 	
