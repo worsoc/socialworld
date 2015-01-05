@@ -24,6 +24,7 @@ package org.socialworld.core;
 import org.socialworld.calculation.Vector;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.Time;
+import org.socialworld.objects.Animal;
 import org.socialworld.objects.SimulationObject;
 
 /**
@@ -38,31 +39,26 @@ import org.socialworld.objects.SimulationObject;
  */
 public class Event implements Comparable<Event> {
 
-	private int		eventType;		
+	private int		eventTypeAsInt;		
+	private EventType eventType;
 	
 	private int priority;
 	private SimulationObject causer;
 	private Time time;
 	private Position position;
-	private Vector direction;
-
-	private float strength;
-
-	private float effectDistance;
-	private float effectAngle;
 
 	private IEventParam optionalParam;
 	
 	private Event_Percipience percipience;
 	
-	public static final int MAX_EVENT_TYPE = 256;
 
 	/**
 	 * Constructor
 	 */
 	public Event(int eventType,  SimulationObject causer, Time time, Position position,	 IEventParam param) {
 		
-		this.eventType = eventType;		
+		this.eventType = EventType.getEventType(eventType);
+		this.eventTypeAsInt = eventType;		
 		
 		this.causer = causer;
 		this.time = time;
@@ -77,22 +73,18 @@ public class Event implements Comparable<Event> {
 	/**
 	 * Constructor
 	 */
-	public Event(int eventType, int priority, SimulationObject causer, Time time, Position position,
-			Vector direction, float strength, 
-			float effectDistance, float effectAngle) {
+	public Event(int eventType, int priority, SimulationObject causer, Time time, Position position,	 IEventParam param) {
 		
-		this.eventType = eventType;		
+		this.eventType = EventType.getEventType(eventType);
+		this.eventTypeAsInt = eventType;		
 		
 		this.priority = priority;
 		this.causer = causer;
 		this.time = time;
 		this.position = position;
-		this.direction = direction;
 
-		this.strength = strength;
+		this.optionalParam = param;
 
-		this.effectDistance = effectDistance;
-		this.effectAngle = effectAngle;
 		
 		this.percipience = new Event_Percipience();
 	}	
@@ -100,15 +92,15 @@ public class Event implements Comparable<Event> {
 	/**
 	 * Constructor
 	 */
-	public Event(int eventType,  SimulationObject causer, Time time, Position position,	 float strength) {
+	public Event(int eventType,  SimulationObject causer, Time time, Position position) {
 		
-		this.eventType = eventType;		
+		this.eventType = EventType.getEventType(eventType);
+		this.eventTypeAsInt = eventType;		
 		
 		this.causer = causer;
 		this.time = time;
 		this.position = position;
 
-		this.strength = strength;
 
 		
 		this.percipience = new Event_Percipience();
@@ -117,28 +109,19 @@ public class Event implements Comparable<Event> {
 	/**
 	 * Constructor
 	 */
-	public Event(int eventType, int priority, float strength, 
-			float effectDistance, float effectAngle) {
+	public Event(int eventType, int priority) {
 		
-		this.eventType = eventType;		
+		this.eventType = EventType.getEventType(eventType);
+		this.eventTypeAsInt = eventType;		
 		
 		this.priority = priority;
 
-		this.strength = strength;
 
-		this.effectDistance = effectDistance;
-		this.effectAngle = effectAngle;
 
 		this.percipience = new Event_Percipience();
 
 	}	
 	
-	/**
-	 * Constructor
-	 */
-	public Event(int priority) {
-		this.priority = priority;
-	}
 
 
 	/*
@@ -157,7 +140,14 @@ public class Event implements Comparable<Event> {
 	/**
 	 * @return the event type
 	 */
-	public int getEventType() {
+	public int getEventTypeAsInt() {
+		return eventTypeAsInt;
+	}
+
+	/**
+	 * @return the event type
+	 */
+	public EventType getEventType() {
 		return eventType;
 	}
 
@@ -166,7 +156,17 @@ public class Event implements Comparable<Event> {
 	 *            the number of the event type to set
 	 */
 	public void setEventType(int eventType) {
-		this.eventType = eventType;
+		this.eventType = EventType.getEventType(eventType);
+		this.eventTypeAsInt = eventType;		
+	}
+
+	/**
+	 * @param eventType
+	 *            the number of the event type to set
+	 */
+	public void setEventType(EventType eventType) {
+		this.eventType = eventType ;
+		this.eventTypeAsInt = eventType.getIndex();		
 	}
 
 	/**
@@ -229,70 +229,59 @@ public class Event implements Comparable<Event> {
 		this.position = position;
 	}
 
-	/**
-	 * @return the direction
-	 */
 	public Vector getDirection() {
-		return direction;
-	}
-
-	/**
-	 * @param direction
-	 *            the direction to set
-	 */
-	public void setDirection(Vector direction) {
-		this.direction = direction;
+		int indexParamDirection;
+		if (hasOptionalParam()) {
+			indexParamDirection = optionalParam.find("direction");
+			if (indexParamDirection > 0) 
+				return (Vector) optionalParam.getParam(indexParamDirection).getValueCopy();
+			
+		}
+		if (this.causer instanceof Animal)
+			return ((Animal) causer).getDirectionChest();
+		
+		return new Vector(0, 0, 0);
 	}
 
 	/**
 	 * @return the strength
 	 */
 	public float getStrength() {
-		return strength;
+		int indexParamDirection;
+		if (hasOptionalParam()) {
+			indexParamDirection = optionalParam.find("intensity");
+			if (indexParamDirection > 0) 
+				return (float) optionalParam.getParam(indexParamDirection).getValueCopy();
+			
+		}
+		return 0;
 	}
 
-	/**
-	 * @param strength
-	 *            the strength to set
-	 */
-	public void setStrength(int strength) {
-		this.strength = strength;
-	}
 
 	/**
 	 * @return the effectDistance
 	 */
 	public float getEffectDistance() {
-		return effectDistance;
+		return this.eventType.getEffectDistance();
 	}
 
-	/**
-	 * @param effectDistance
-	 *            the effectDistance to set
-	 */
-	public void setEffectDistance(float effectDistance) {
-		this.effectDistance = effectDistance;
-	}
 
 	/**
 	 * @return the effectAngle
 	 */
 	public float getEffectAngle() {
-		return effectAngle;
+		return this.eventType.getEffectAngle();
 	}
 
-	/**
-	 * @param effectAngle
-	 *            the effectAngle to set
-	 */
-	public void setEffectAngle(float effectAngle) {
-		this.effectAngle = effectAngle;
-	}
 
 	public void setPercipience(float maxDistance, float maxSee, float maxHear, float maxSmell, float maxFeel ) {
 		this.percipience  = new Event_Percipience( maxDistance,  maxSee,  maxHear,  maxSmell,  maxFeel );
 	}
 
+	public boolean hasOptionalParam() {
+		return (optionalParam != null);
+	}
+	
 	public String toString() {
 		return this.eventType + " , " + this.position.toString();
 	}
