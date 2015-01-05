@@ -27,6 +27,6 @@ package org.socialworld.actions;
  */
 public enum ActionType {
 	ignore,
-	touch, sleep, changeMove, kick, controlHandManually, spell,
+	touch, sleep, kick, controlHandManually, spell,
 	useWeaponLeft, useWeaponRight, move, say, handleItem, hear
 }
