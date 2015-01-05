@@ -83,7 +83,20 @@ public abstract class ActionPerformer implements IEventParam {
 		}
 		return -1;
 	}
-	
+
+	/* (non-Javadoc)
+	 * @see org.socialworld.core.IEventParam#find(String)
+	 */
+	@Override
+	public int find(String name) {
+		for (int index = 0; index < maxParams; index++) {
+			if (eventParams[index].getName() == name) {
+					return index;
+			}
+		}
+		return -1;
+	}
+
 	protected void setMaxParam(int max) {
 		this.maxParams = max;
 		this.eventParams = new Value[max];
