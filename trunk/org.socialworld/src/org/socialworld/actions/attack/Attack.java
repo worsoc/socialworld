@@ -83,7 +83,7 @@ public class Attack extends ActionPerformer {
 		weapon = originalAction.getWeapon();
 	
 		setMaxParam(6);
-		setParam(0, new Value(Type.vector, "directionHit", directionHit));
+		setParam(0, new Value(Type.vector, "direction", directionHit));
 		setParam(1, new Value(Type.floatingpoint, "actorsIntensity", actorsIntensity));
 		setParam(2, new Value(Type.floatingpoint, "intensity", intensity));
 		setParam(3, new Value(Type.simulationObject, "weapon", weapon));
