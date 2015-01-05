@@ -84,7 +84,7 @@ public class ActionCreator  {
 		FunctionByExpression f_CreateReaction;
 		Value[] arguments;
 		
-		eventType = event.getEventType();
+		eventType = event.getEventTypeAsInt();
 		eventReactionType = actor.getReactionType(eventType);
 		
 		eventReactionDescription = 

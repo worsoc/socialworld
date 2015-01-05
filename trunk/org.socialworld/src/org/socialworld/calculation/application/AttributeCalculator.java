@@ -51,7 +51,7 @@ public  class AttributeCalculator {
 		FunctionByExpression f_EventInfluence = null;
 		Value[] arguments;
 	
-		eventType = event.getEventType();
+		eventType = event.getEventTypeAsInt();
 		eventInfluenceType = animal.getInfluenceType(eventType);
 		
 		eventInfluenceDescription = 
