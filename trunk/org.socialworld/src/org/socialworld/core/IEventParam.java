@@ -36,5 +36,7 @@ public interface IEventParam {
 	
 	public abstract int find(Type type);
 	
+	public abstract int find(String name);
+	
 	public boolean isValid();
 }
