@@ -22,7 +22,7 @@
 package org.socialworld.datasource;
 
 import org.socialworld.calculation.descriptions.EventReactionDescription;
-import org.socialworld.core.Event;
+import org.socialworld.core.EventType;
 
 public class EventReactionDescriptionPool extends DescriptionPool {
 
@@ -32,7 +32,7 @@ public class EventReactionDescriptionPool extends DescriptionPool {
 	
 	private EventReactionDescriptionPool () {
 		
-		sizeDescriptionsArray = Event.MAX_EVENT_TYPE * ReactionTypePool.CAPACITY_RTP_ARRAY;
+		sizeDescriptionsArray = EventType.MAX_EVENT_TYPE * ReactionTypePool.CAPACITY_RTP_ARRAY;
 		descriptions = new EventReactionDescription[sizeDescriptionsArray];
 
 		initialize();

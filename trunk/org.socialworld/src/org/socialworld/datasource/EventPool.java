@@ -7,7 +7,6 @@ import java.io.LineNumberReader;
 import java.net.URL;
 
 import org.apache.log4j.Logger;
-import org.socialworld.calculation.Vector;
 import org.socialworld.core.Event;
 
 public class EventPool {
@@ -54,18 +53,10 @@ public class EventPool {
 
 		switch (number) {
 		case 1:
-			event.setDirection(new Vector(1,2,3));
-			event.setEffectAngle(30);
-			event.setEffectDistance(100);
 			event.setEventType(1);
-			event.setStrength(50);
 			return event;
 		default:
-			event.setDirection(new Vector(3,2,1));
-			event.setEffectAngle(33);
-			event.setEffectDistance(121);
 			event.setEventType(1);
-			event.setStrength(66);
 			return event;
 		}
 	}
@@ -117,8 +108,7 @@ public class EventPool {
 				}
 	
 				if (line.startsWith("</EVENT>")) {
-					event = new Event(eventType, priority, strength, 
-							 effectDistance,  effectAngle);
+					event = new Event(eventType, priority);
 					event.setPercipience(maxDistance, maxSee, maxHear, maxSmell, maxFeel);
 					addEvent(nextFree, event);
 					nextFree = nextFree + 1;

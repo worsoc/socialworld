@@ -1,7 +1,7 @@
 package org.socialworld.datasource;
 
 import org.socialworld.calculation.descriptions.EventInfluenceDescription;
-import org.socialworld.core.Event;
+import org.socialworld.core.EventType;
 
 public class EventInfluenceDescriptionPool extends DescriptionPool {
 
@@ -11,7 +11,7 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 	
 	private EventInfluenceDescriptionPool () {
 		
-		sizeDescriptionsArray = Event.MAX_EVENT_TYPE * InfluenceTypePool.CAPACITY_ITP_ARRAY;
+		sizeDescriptionsArray = EventType.MAX_EVENT_TYPE * InfluenceTypePool.CAPACITY_ITP_ARRAY;
 		descriptions = new EventInfluenceDescription[sizeDescriptionsArray];
 		
 		
