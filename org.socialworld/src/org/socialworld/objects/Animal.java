@@ -144,9 +144,6 @@ public class Animal extends SimulationObject {
 		case sleep:
 			 sleep(action);
 			break;
-		case changeMove:
-			 changeMove(action);
-			break;
 		case kick:
 			 kick(action);
 			break;

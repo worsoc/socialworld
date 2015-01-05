@@ -134,9 +134,6 @@ import java.util.ListIterator;
 		case sleep:
 			 sleep(action);
 			break;
-		case changeMove:
-			 changeMove(action);
-			break;
 		case kick:
 			 kick(action);
 			break;
