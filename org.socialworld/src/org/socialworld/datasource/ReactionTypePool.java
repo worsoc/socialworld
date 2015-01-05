@@ -21,7 +21,7 @@
 */
 
 package org.socialworld.datasource;
-import org.socialworld.core.Event;
+import org.socialworld.core.EventType;
 
 public class ReactionTypePool {
 	public static final int CAPACITY_RTP_ARRAY = 100;
@@ -32,8 +32,8 @@ public class ReactionTypePool {
 	private static int[] reactionTypesForNegativeIndex;
 
 	private ReactionTypePool() {
-		reactionTypesForPositiveIndex = new int[(CAPACITY_RTP_ARRAY + 1) * Event.MAX_EVENT_TYPE];
-		reactionTypesForNegativeIndex = new int[(CAPACITY_RTP_ARRAY + 1) * Event.MAX_EVENT_TYPE];
+		reactionTypesForPositiveIndex = new int[(CAPACITY_RTP_ARRAY + 1) * EventType.MAX_EVENT_TYPE];
+		reactionTypesForNegativeIndex = new int[(CAPACITY_RTP_ARRAY + 1) * EventType.MAX_EVENT_TYPE];
 	}
 
 	public static ReactionTypePool getInstance() {
@@ -47,17 +47,17 @@ public class ReactionTypePool {
 		int types[];
 		int index;
 		
-		types = new int[Event.MAX_EVENT_TYPE];
+		types = new int[EventType.MAX_EVENT_TYPE];
 	
 		if (indexByGauss >= 0)
-			for (int eventType = 0; eventType < Event.MAX_EVENT_TYPE; eventType++){
-				index = indexByGauss * Event.MAX_EVENT_TYPE  + eventType;
+			for (int eventType = 0; eventType < EventType.MAX_EVENT_TYPE; eventType++){
+				index = indexByGauss * EventType.MAX_EVENT_TYPE  + eventType;
 				types[eventType] = reactionTypesForPositiveIndex[index];
 			}
 		else {
 			indexByGauss = indexByGauss * -1;
-			for (int eventType = 0; eventType < Event.MAX_EVENT_TYPE; eventType++){
-				index = indexByGauss * Event.MAX_EVENT_TYPE  + eventType;
+			for (int eventType = 0; eventType < EventType.MAX_EVENT_TYPE; eventType++){
+				index = indexByGauss * EventType.MAX_EVENT_TYPE  + eventType;
 				types[eventType] = reactionTypesForNegativeIndex[index];
 			}
 		}	
