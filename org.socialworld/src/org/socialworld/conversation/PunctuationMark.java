@@ -26,12 +26,14 @@ public enum PunctuationMark {
 	
 	public static PunctuationMark getPunctuationMark(String sentence) {
 		PunctuationMark returnValue = null;
-		if (sentence.contains("?")) {
+		if (sentence.contains("?")) 
 			returnValue = PunctuationMark.question;
-		}
-		else {
-			returnValue = PunctuationMark.dot;
-		}
+		else 
+			if (sentence.contains("?"))
+				returnValue = PunctuationMark.exclamation;
+			else
+				returnValue = PunctuationMark.dot;
+		
 		return returnValue;
 		
 	}

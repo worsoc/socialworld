@@ -26,13 +26,12 @@ import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionProperty;
 import org.socialworld.actions.ActionType;
-import org.socialworld.attributes.AttributeArray;
+import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Time;
 import org.socialworld.calculation.Vector;
 import org.socialworld.conversation.Talk_SentenceType;
-import org.socialworld.knowledge.Acquaintance;
-import org.socialworld.knowledge.Acquaintance_Attribute;
-import org.socialworld.knowledge.Answer;
+import org.socialworld.core.Event;
+import org.socialworld.core.EventType;
 import org.socialworld.objects.Human;
 import org.socialworld.objects.SimulationObject;
 
@@ -42,6 +41,9 @@ import org.socialworld.objects.SimulationObject;
  */
 public class ActionSay extends AbstractAction {
 
+	private Say say;
+	
+	private String question;
 	private Vector direction;
 	
 	public ActionSay(final ActionType type, final ActionMode mode,
@@ -71,32 +73,42 @@ public class ActionSay extends AbstractAction {
 	}
 
 	public  void perform() {
-		ActionSay followingAction = null;
-		final Human human = (Human) target;
-		String question;
 		
+		Event event;
+		final Human partner = (Human) target;
+		int eventTypeAsInt;
+
 		switch (mode) {
 			case answer:
-				Answer answer;
 			
-				question = ((Human) actor).getSentence(human, Talk_SentenceType.partnersQuestion);
-				if (question != null) {
-					followingAction = new ActionSay(this);
-					answer = ((Human) actor).getAnswerForQuestion(question);
-					manipulateAnswer(answer, human);
-					((Human) actor).addAnswer(answer,  human);
-					// TODO the mode depends on intensity
-					followingAction.setMode(ActionMode.say);
-				}
+				question = ((Human) actor).getSentence(partner, Talk_SentenceType.partnersQuestion);
+				if (question == null) return;
+				
+				eventTypeAsInt = EventType.answer.getIndex();
+				
+				break;
+				
 			case ask:
 			
-				question = ((Human) actor).getSentence(human, Talk_SentenceType.myPlannedQuestion);
-				if (question != null) {
-				}
+				question = ((Human) actor).getSentence(partner, Talk_SentenceType.myPlannedQuestion);
+				if (question == null) return;
+
+				eventTypeAsInt = EventType.ask.getIndex();
+
+				break;
+				
 			default:
+				
+				return;
 		}
-		((Human) actor).addAction(followingAction);
-		
+	
+ 		this.say = new Say(this);
+  		
+		event = new Event(eventTypeAsInt,    actor /* as causer*/,  ActualTime.asTime(),
+				actor.getPosition(),  say /* as optional parameter */);
+
+		addEvent(event);
+
 	}
 
 
@@ -104,20 +116,6 @@ public class ActionSay extends AbstractAction {
 
 	
 
-	private void manipulateAnswer(Answer answer, Human partner) {
-		
-		Acquaintance acquaintance;
-		acquaintance = ((Human)actor).getAcquaintance(partner);
-		
-		// TODO
-		// more complex, please
-		// here only an example for an easy decision
-		if (acquaintance.isAttributeValueLessThan(Acquaintance_Attribute.sympathy, AttributeArray.VALUE_MIDDLE) ) 
-			answer.reduceToFactWithMinAccessCount();
-		else if (acquaintance.isAttributeValueGreaterThan(Acquaintance_Attribute.sympathy, AttributeArray.VALUE_MIDDLE) ) 
-			answer.sortBySource();
-		else answer.reduceToFactWithMaxAccessCount();
-	}
 
 
 	/**
@@ -135,4 +133,8 @@ public class ActionSay extends AbstractAction {
 		this.direction = direction;
 	}
 
+	public String getQuestion() {
+		return question;
+	}
+	
 }

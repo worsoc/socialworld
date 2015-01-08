@@ -78,17 +78,6 @@ public class Talk {
 		
 	}
 	
-	public static PunctuationMark getPunctuationMark(String sentence) {
-		PunctuationMark returnValue = null;
-		if (sentence.contains("?")) {
-			returnValue = PunctuationMark.question;
-		}
-		else {
-			returnValue = PunctuationMark.dot;
-		}
-		return returnValue;
-		
-	}
 
 	public String getSentence(Talk_SentenceType type) {
 		switch (type) {

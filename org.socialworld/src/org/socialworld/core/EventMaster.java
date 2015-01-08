@@ -37,7 +37,7 @@ import org.socialworld.objects.SimulationObject;
  * The event master is a thread that decides what event's influence
  * should be calculated. this decision is made by fetching the first element
  * with highest priority. For that event the simulation objects, who may be
- * affected by the event, will be found. For these simulation objects the
+ * effected by the event, will be found. For these simulation objects the
  * effects (attribute changes) and reactions are calculated.
  * 
  * @author Mathias Sikos (tyloesand)
@@ -47,6 +47,12 @@ public class EventMaster extends Thread {
 	private static final Logger logger = Logger.getLogger(EventMaster.class);
 
 	private static EventMaster instance;
+	
+	/**
+	 * says whether the thread is running or not
+	 */
+	private boolean isRunning;
+
 	/**
 	 * a queue of events ordered by event's priority
 	 */
@@ -58,7 +64,7 @@ public class EventMaster extends Thread {
 	private List<SimulationObject> candidates;
 
 	/**
-	 * the actually analysed event
+	 * the actually treated event
 	 */
 	private Event event;
 
@@ -70,6 +76,12 @@ public class EventMaster extends Thread {
 
 	
 	/**
+	 * the distance that describes the range where the event has
+	 * effects.
+	 */
+	private float effectDistance;
+	
+	/**
 	 * the event's position
 	 */
 	private Position eventPosition;
@@ -79,10 +91,6 @@ public class EventMaster extends Thread {
 	 */
 	private Vector eventDirection;
 	
-	/**
-	 * says whether the thread is running or not
-	 */
-	private boolean isRunning;
 
 	/**
 	 * public Constructor. 
@@ -175,22 +183,35 @@ public class EventMaster extends Thread {
 		
 		this.event = event;
 		
+		if (event.hasOptionalParam()) {
+			event.evaluateOptionalParam();
+		}
+		
 		tangentOfEffectAngle = Math.tan(Math.toRadians(event.getEffectAngle()));
+		effectDistance = event.getEffectDistance();
 		eventPosition = event.getPosition();
 		eventDirection = event.getDirection();
 		
 		return true;
 	}
+	
 	private void determineCandidates() {
 		SimulationObject candidate;
+		int resultDecideEffective;
 		
 		if (Simulation.WITH_LOGGING == 1 )	logger.debug("determineCandidates");
 
 		Simulation simulation = SocialWorld.getCurrent().getSimulation();
 		candidate = simulation.getFirstByPosition(this.eventPosition );
 		while (candidate != null) {
-			if (decideEffective(candidate) == true) 	candidates.add(candidate);
-			candidate = simulation.getNextByPosition();
+			resultDecideEffective = decideEffective(candidate);
+			if ( resultDecideEffective == 1) 	candidates.add(candidate);
+			if ( resultDecideEffective < 0)
+				// exit loop
+				candidate = null;
+			else
+				// continue
+				candidate = simulation.getNextByPosition();
 		}
 	}
 
@@ -201,10 +222,14 @@ public class EventMaster extends Thread {
 	 * 
 	 * @param candidate
 	 *            a simulation object that may be affected by the event
-	 * @return true if the event has effects to the candidate and
-	 * 		 false if there are no effects
+	 * @return 1 ... if the event may have effects to the candidate,
+	 * 			0 ... if the event has no effect to the candidate because of angle
+	 *          -1 ... if the event has no effect to the candidate because of distance
+	 *                (and in consequence there are no further candidates with effect 
+	 *                	because they must have a greater distance than the actually treated candidate)
+	 *          	
 	 */
-	private boolean decideEffective(SimulationObject candidate) {
+	private int decideEffective(SimulationObject candidate) {
 		Position position;
 		Vector direction;
 		double distance;
@@ -214,12 +239,15 @@ public class EventMaster extends Thread {
 
 		distance = position.getDistance(this.eventPosition);
 
-		if (distance <= this.event.getEffectDistance()) {
+		if (distance <= this.effectDistance) {
 			direction = position.getDirectionFrom(this.eventPosition);
 			tangent = direction.getTanPhi(this.eventDirection);
-			return (tangent <= this.tangentOfEffectAngle);
+			if (tangent <= this.tangentOfEffectAngle)
+				return 1;
+			else
+				return 0;
 		}
-		return false;
+		return -1;
 	}
 
 	/**

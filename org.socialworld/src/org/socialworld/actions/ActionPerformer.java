@@ -44,6 +44,14 @@ public abstract class ActionPerformer implements IEventParam {
     public abstract void perform();
     
 	/* (non-Javadoc)
+	 * @see org.socialworld.core.IEventParam#evaluate()
+	 */
+	@Override
+   public void evaluate() {
+    	perform();
+    }
+    
+	/* (non-Javadoc)
 	 * @see org.socialworld.core.IEventParam#isValid()
 	 */
 	@Override
