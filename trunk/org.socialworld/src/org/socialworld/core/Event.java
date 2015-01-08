@@ -282,6 +282,10 @@ public class Event implements Comparable<Event> {
 		return (optionalParam != null);
 	}
 	
+	public void evaluateOptionalParam() {
+		optionalParam.evaluate();
+	}
+	
 	public String toString() {
 		return this.eventType + " , " + this.position.toString();
 	}

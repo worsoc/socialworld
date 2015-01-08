@@ -39,4 +39,6 @@ public interface IEventParam {
 	public abstract int find(String name);
 	
 	public boolean isValid();
+	
+	public void evaluate();
 }

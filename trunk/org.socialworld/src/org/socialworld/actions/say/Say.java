@@ -1,0 +1,102 @@
+/*
+* Social World
+* Copyright (C) 2015  Mathias Sikos
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
+*
+* or see http://www.gnu.org/licenses/gpl-2.0.html
+*
+*/
+package org.socialworld.actions.say;
+
+import org.socialworld.actions.ActionMode;
+import org.socialworld.actions.ActionPerformer;
+import org.socialworld.attributes.AttributeArray;
+import org.socialworld.knowledge.Acquaintance;
+import org.socialworld.knowledge.Acquaintance_Attribute;
+import org.socialworld.knowledge.Answer;
+import org.socialworld.objects.Human;
+
+/**
+ * @author Mathias Sikos
+ *
+ */
+public class Say extends ActionPerformer {
+
+    public Say (ActionSay action) {
+    	super(action);
+    }
+
+	/* (non-Javadoc)
+	 * @see org.socialworld.actions.ActionPerformer#perform()
+	 */
+	@Override
+	public void perform() {
+		
+ 		ActionSay originalAction;
+		Human actor;
+		Human partner;
+		ActionMode mode;
+		
+		originalAction = (ActionSay) getOriginalActionObject();
+		actor = (Human) originalAction.getActor();
+		mode = originalAction.getMode();
+		partner = (Human) originalAction.getTarget();
+
+		String question;
+		
+		switch (mode) {
+			case answer:
+				
+				Answer answer;
+			
+				question = originalAction.getQuestion();
+
+				answer =  actor.getAnswerForQuestion(question);
+				manipulateAnswer(actor, answer, partner);
+				actor.addAnswer(answer,  partner);
+
+				break;
+				
+			case ask:
+			
+				question = originalAction.getQuestion();
+
+				//TODO
+				
+				break;
+				
+			default:
+				
+		}
+
+	}
+
+	private void manipulateAnswer(final Human actor, Answer answer, final Human partner) {
+		
+		Acquaintance acquaintance;
+		acquaintance = actor.getAcquaintance(partner);
+		
+		// TODO
+		// more complex, please
+		// here only an example for an easy decision
+		if (acquaintance.isAttributeValueLessThan(Acquaintance_Attribute.sympathy, AttributeArray.VALUE_MIDDLE) ) 
+			answer.reduceToFactWithMinAccessCount();
+		else if (acquaintance.isAttributeValueGreaterThan(Acquaintance_Attribute.sympathy, AttributeArray.VALUE_MIDDLE) ) 
+			answer.sortBySource();
+		else answer.reduceToFactWithMaxAccessCount();
+	}
+
+}

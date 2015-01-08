@@ -25,12 +25,13 @@ import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionProperty;
 import org.socialworld.actions.ActionType;
+import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Time;
 import org.socialworld.calculation.Vector;
 import org.socialworld.conversation.PunctuationMark;
 import org.socialworld.conversation.Talk_SentenceType;
-import org.socialworld.knowledge.KnowledgeSource;
-import org.socialworld.knowledge.KnowledgeSource_Type;
+import org.socialworld.core.Event;
+import org.socialworld.core.EventType;
 import org.socialworld.objects.Human;
 import org.socialworld.objects.SimulationObject;
 
@@ -39,6 +40,10 @@ import org.socialworld.objects.SimulationObject;
  *
  */
 public class ActionHear extends AbstractAction {
+
+	private Hear hear;
+
+	private String sentence;
 
 	private Vector direction;
 
@@ -71,73 +76,61 @@ public class ActionHear extends AbstractAction {
 	}
 
 	public  void perform() {
+		Human partner;
+		Event event;
+		int eventTypeAsInt;
 		
+		partner = (Human) getTarget();
+
 		switch (mode) {
-			case  listenTo:
-				ActionHear followingAction;
-				
-				if (target instanceof Human) {
+		case listenTo:
+			
+			sentence = partner.getLastSaidSentence();
+			eventTypeAsInt = getEventType( mode, sentence);
+			
+			break;
+			
+		case understand:
 
-					final Human human = (Human) target;
-					String sentence;
-					PunctuationMark punctuationMark;
-					
-					sentence = human.getLastSaidSentence();
-					punctuationMark = addPartnersSentence(sentence, human);
-					
-					followingAction = new ActionHear(this);
-					switch (punctuationMark) {
-						case dot:
-							followingAction.setMode(ActionMode.understand);
-						case question:
-							followingAction.setType(ActionType.say);
-							followingAction.setMode(ActionMode.answer);
-						default:
-							followingAction.setType(ActionType.ignore);
+			sentence = ((Human) actor).getSentence(partner, Talk_SentenceType.partnersSentence);
+			eventTypeAsInt = getEventType( mode, sentence);
 
-					}
-					((Human) actor).addAction(followingAction);
-				}
-				
-			case understand:
-				final Human human = (Human) target;
-				KnowledgeSource source;
-				String sentence;
-
-				sentence = ((Human) actor).getSentence(human, Talk_SentenceType.partnersSentence);
-				if (sentence != null) {
-					source = new KnowledgeSource();
-					source.setSourceType( KnowledgeSource_Type.heardOf);
-					// get the acquaintance of target human (null if the there isn't an acquaintance of target human)
-					source.setOrigin(((Human) actor).getAcquaintance(human));
-					((Human) actor).addFactsFromSentence(sentence, source);
-				}
-			default:
+			break;
+			
+		default:
+			return;
 		}
 		
+		if (eventTypeAsInt == -1) return;
 		
+  		this.hear = new Hear(this);
+  		
+		event = new Event(eventTypeAsInt,    actor /* as causer*/,  ActualTime.asTime(),
+				actor.getPosition(),  hear /* as optional parameter */);
 
-		
+		addEvent(event);
+	
 	}
 
-
-	private PunctuationMark addPartnersSentence(String sentence, Human partner) {
-		PunctuationMark returnValue = null;
-		Talk_SentenceType type;
+	private int getEventType(ActionMode mode, String sentence) {
 		
-		returnValue = PunctuationMark.getPunctuationMark(sentence);
-		
-		switch (returnValue) {
-		case dot: 
-			type = Talk_SentenceType.partnersSentence;
-		case question: 
-			type = Talk_SentenceType.partnersQuestion;
+		switch (mode) {
+		case listenTo:
+			switch (PunctuationMark.getPunctuationMark(sentence)) {
+			case dot: 
+				return EventType.listenToStatement.getIndex();
+			case question:
+				return EventType.listenToQuestion.getIndex();
+			case exclamation:
+				return EventType.listenToInstruction.getIndex();
+			default:
+				return -1;
+			}
+		case understand:
+			return EventType.understand.getIndex();
 		default:
-			type = Talk_SentenceType.partnersUnknownType;
+			return -1;
 		}
-		((Human) actor).addSentence(sentence, type, partner);
-		
-		return returnValue;
 	}
 	
 
@@ -158,4 +151,7 @@ public class ActionHear extends AbstractAction {
 	}
 
 	
+	public String getSentence() {
+		return sentence;
+	}
 }
