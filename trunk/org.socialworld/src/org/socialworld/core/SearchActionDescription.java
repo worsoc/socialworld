@@ -26,7 +26,6 @@ import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionProperty;
 import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.Time;
-import org.socialworld.objects.SimulationObject;
 
 /**
  * It's a description of an action template that is used for searching action
@@ -44,7 +43,6 @@ public class SearchActionDescription extends AbstractAction {
 	private boolean searchByMinTime;
 	private boolean searchByMaxTime;
 	private boolean searchByPriority;
-	private boolean searchByTarget;
 	private boolean searchByIntensity;
 	private boolean searchByDuration;
 	private boolean searchByRemainedDuration;
@@ -56,7 +54,6 @@ public class SearchActionDescription extends AbstractAction {
 		this.searchByMinTime = false;
 		this.searchByMaxTime = false;
 		this.searchByPriority = false;
-		this.searchByTarget = false;
 		this.searchByIntensity = false;
 		this.searchByDuration = false;
 		this.searchByRemainedDuration = false;
@@ -121,15 +118,6 @@ public class SearchActionDescription extends AbstractAction {
 		this.searchByPriority = true;
 	}
 
-	/**
-	 * @param target
-	 *            the target to set
-	 */
-	@Override
-	public void setTarget(final SimulationObject target) {
-		this.target = target;
-		this.searchByTarget = true;
-	}
 
 
 	/**
@@ -184,9 +172,6 @@ public class SearchActionDescription extends AbstractAction {
 		case searchByPriority:
 			this.searchByPriority = true;
 			break;
-		case searchByTarget:
-			this.searchByTarget = true;
-			break;
 		case searchByIntensity:
 			this.searchByIntensity = true;
 			break;
@@ -211,9 +196,6 @@ public class SearchActionDescription extends AbstractAction {
 			break;
 		case dontSearchByPriority:
 			this.searchByPriority = false;
-			break;
-		case dontSearchByTarget:
-			this.searchByTarget = false;
 			break;
 		case dontSearchByIntensity:
 			this.searchByIntensity = false;
@@ -261,13 +243,6 @@ public class SearchActionDescription extends AbstractAction {
 	 */
 	public boolean isSearchByPriority() {
 		return this.searchByPriority;
-	}
-
-	/**
-	 * @return the searchByTarget
-	 */
-	public boolean isSearchByTarget() {
-		return this.searchByTarget;
 	}
 
 
