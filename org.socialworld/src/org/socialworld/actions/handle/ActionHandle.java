@@ -28,7 +28,7 @@ import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Time;
 import org.socialworld.calculation.Vector;
-import org.socialworld.core.Event;
+import org.socialworld.core.EventByAction;
 import org.socialworld.objects.Human;
 import org.socialworld.objects.SimulationObject;
 
@@ -41,7 +41,8 @@ public class ActionHandle extends AbstractAction {
 	private Handle handle;
 	
 	private Vector direction;
-
+    private SimulationObject target;
+    
 	private SimulationObject item1;
 	private SimulationObject item2;
 
@@ -50,11 +51,11 @@ public class ActionHandle extends AbstractAction {
 			final float intensity, final Time minTime, final Time maxTime,
 			final int priority, final long duration) {
 		setBaseProperties(type,  mode,
-				target, 
 				intensity,  minTime, maxTime,
 				 priority,  duration);
 			
 			this.setDirection(direction);
+			this.target = target;
 	}
 
 	/* (non-Javadoc)
@@ -108,9 +109,9 @@ public class ActionHandle extends AbstractAction {
 
    		this.handle = new Handle(this);
   
-		Event event;
-		event = new Event( getEventType(type, mode),    actor /* as causer*/,  ActualTime.asTime(),
-						actor.getPosition(),  handle /* as optional parameter */);
+   		EventByAction event;
+		event = new EventByAction( getEventType(type, mode),    actor /* as causer*/,  ActualTime.asTime(),
+						actor.getPosition(),  handle /* as performer */);
 		addEvent(event);
 
 	}
@@ -155,4 +156,7 @@ public class ActionHandle extends AbstractAction {
 		return this.item2;
 	}
 
+	public SimulationObject getTarget() {
+		return this.target;
+	}
 }

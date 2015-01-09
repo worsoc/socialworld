@@ -50,7 +50,6 @@ public abstract class AbstractAction {
 	protected Time minTime;
 	protected Time maxTime;
 	protected int priority;
-	protected SimulationObject target;
 	protected float intensity;
 	protected long duration;
 	protected long remainedDuration;
@@ -72,12 +71,10 @@ public abstract class AbstractAction {
 	}
 
 	protected void setBaseProperties(final ActionType type, final ActionMode mode,
-			final SimulationObject target, 
 			final float intensity, final Time minTime, final Time maxTime,
 			final int priority, final long duration) {
 		this.setType(type);
 		this.setMode(mode);
-		this.setTarget(target);
 		this.setIntensity(intensity);
 		this.setMinTime(minTime);
 		this.setMaxTime(maxTime);
@@ -91,7 +88,6 @@ public abstract class AbstractAction {
 	protected void setBaseProperties(AbstractAction original) {
 		this.type = original.type;
 		this.mode = original.mode;
-		this.target = original.target;
 		this.intensity = original.intensity;
 		this.minTime = original.minTime;
 		this.maxTime = original.maxTime;
@@ -211,20 +207,6 @@ public abstract class AbstractAction {
 		this.priority = priority;
 	}
 
-	/**
-	 * @return the target
-	 */
-	public SimulationObject getTarget() {
-		return this.target;
-	}
-
-	/**
-	 * @param target
-	 *            the target to set
-	 */
-	public void setTarget(final SimulationObject target) {
-		this.target = target;
-	}
 
 
 	/**
@@ -315,7 +297,7 @@ public abstract class AbstractAction {
 	
 	@Override
 	public String toString() {
-		return this.type.toString() + " -> " + this.target.toString(); //$NON-NLS-1$
+		return this.type.toString() ; //$NON-NLS-1$
 	}
 	
 

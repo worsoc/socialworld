@@ -29,7 +29,7 @@ import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.Time;
 import org.socialworld.calculation.Vector;
-import org.socialworld.core.Event;
+import org.socialworld.core.EventByAction;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.Animal;
 
@@ -55,7 +55,6 @@ public class ActionMove extends AbstractAction {
 			final float intensity, final Time minTime, final Time maxTime,
 			final int priority, final long duration) {
 		setBaseProperties(type,  mode,
-				target, 
 				intensity,  minTime, maxTime,
 				 priority,  duration);
 			
@@ -68,7 +67,6 @@ public class ActionMove extends AbstractAction {
 			final float intensity, final Time minTime, final Time maxTime,
 			final int priority, final long duration) {
 		setBaseProperties(type,  mode,
-				target, 
 				intensity,  minTime, maxTime,
 				 priority,  duration);
 			
@@ -117,9 +115,9 @@ public class ActionMove extends AbstractAction {
 		if (repeatsMove == 0) 			createMove();
 		
 		// TODO
-		Event event;
-		event = new Event( 1,    actor /* as causer*/,  ActualTime.asTime(),
-					actor.getPosition(),  move /* as optional parameter */);
+		EventByAction event;
+		event = new EventByAction( 1,    actor /* as causer*/,  ActualTime.asTime(),
+					actor.getPosition(),  move /* as performer */);
 		addEvent(event);
 		
 	}

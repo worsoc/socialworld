@@ -30,7 +30,7 @@ import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Time;
 import org.socialworld.calculation.Vector;
 import org.socialworld.conversation.Talk_SentenceType;
-import org.socialworld.core.Event;
+import org.socialworld.core.EventByAction;
 import org.socialworld.core.EventType;
 import org.socialworld.objects.Human;
 import org.socialworld.objects.SimulationObject;
@@ -44,6 +44,8 @@ public class ActionSay extends AbstractAction {
 	private Say say;
 	
 	private String question;
+	
+	private SimulationObject target;
 	private Vector direction;
 	
 	public ActionSay(final ActionType type, final ActionMode mode,
@@ -51,11 +53,11 @@ public class ActionSay extends AbstractAction {
 			final float intensity, final Time minTime, final Time maxTime,
 			final int priority, final long duration) {
 		setBaseProperties(type,  mode,
-				target, 
 				intensity,  minTime, maxTime,
 				 priority,  duration);
 			
 			this.setDirection(direction);
+			this.target = target;
 	}
 	
 	public ActionSay(ActionSay original) {
@@ -74,7 +76,7 @@ public class ActionSay extends AbstractAction {
 
 	public  void perform() {
 		
-		Event event;
+		EventByAction event;
 		final Human partner = (Human) target;
 		int eventTypeAsInt;
 
@@ -104,8 +106,8 @@ public class ActionSay extends AbstractAction {
 	
  		this.say = new Say(this);
   		
-		event = new Event(eventTypeAsInt,    actor /* as causer*/,  ActualTime.asTime(),
-				actor.getPosition(),  say /* as optional parameter */);
+		event = new EventByAction(eventTypeAsInt,    actor /* as causer*/,  ActualTime.asTime(),
+				actor.getPosition(),  say /* as performer */);
 
 		addEvent(event);
 
@@ -137,4 +139,7 @@ public class ActionSay extends AbstractAction {
 		return question;
 	}
 	
+	public SimulationObject getTarget() {
+		return this.target;
+	}
 }

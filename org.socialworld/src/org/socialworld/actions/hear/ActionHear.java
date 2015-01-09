@@ -27,10 +27,9 @@ import org.socialworld.actions.ActionProperty;
 import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Time;
-import org.socialworld.calculation.Vector;
 import org.socialworld.conversation.PunctuationMark;
 import org.socialworld.conversation.Talk_SentenceType;
-import org.socialworld.core.Event;
+import org.socialworld.core.EventByAction;
 import org.socialworld.core.EventType;
 import org.socialworld.objects.Human;
 import org.socialworld.objects.SimulationObject;
@@ -45,31 +44,26 @@ public class ActionHear extends AbstractAction {
 
 	private String sentence;
 
-	private Vector direction;
+	private SimulationObject target;
 
 	public ActionHear(final ActionType type, final ActionMode mode,
-			final SimulationObject target, final Vector direction,
+			final SimulationObject target,
 			final float intensity, final Time minTime, final Time maxTime,
 			final int priority, final long duration) {
 		
 		setBaseProperties(type,  mode,
-			target, 
 			intensity,  minTime, maxTime,
 			 priority,  duration);
 		
-		this.setDirection(direction);
-
+		this.target = target;
 	}
 	
 	public ActionHear(ActionHear original) {
 		setBaseProperties(original);
-		this.direction = original.direction;
 	}
 
 	public  Object getConcreteProperty(ActionProperty prop) {
 		switch (prop) {
-		case direction:
-				return getDirection();
 		default:
 			return null;
 		}
@@ -77,7 +71,7 @@ public class ActionHear extends AbstractAction {
 
 	public  void perform() {
 		Human partner;
-		Event event;
+		EventByAction event;
 		int eventTypeAsInt;
 		
 		partner = (Human) getTarget();
@@ -105,8 +99,8 @@ public class ActionHear extends AbstractAction {
 		
   		this.hear = new Hear(this);
   		
-		event = new Event(eventTypeAsInt,    actor /* as causer*/,  ActualTime.asTime(),
-				actor.getPosition(),  hear /* as optional parameter */);
+		event = new EventByAction(eventTypeAsInt,    actor /* as causer*/,  ActualTime.asTime(),
+				actor.getPosition(),  hear /* as performer */);
 
 		addEvent(event);
 	
@@ -135,21 +129,9 @@ public class ActionHear extends AbstractAction {
 	
 
 
-	/**
-	 * @return the direction
-	 */
-	public Vector getDirection() {
-		return this.direction;
+	public SimulationObject getTarget() {
+		return this.target;
 	}
-
-	/**
-	 * @param direction
-	 *            the direction to set
-	 */
-	public void setDirection(final Vector direction) {
-		this.direction = direction;
-	}
-
 	
 	public String getSentence() {
 		return sentence;

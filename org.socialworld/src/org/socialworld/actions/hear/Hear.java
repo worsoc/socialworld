@@ -23,10 +23,8 @@ package org.socialworld.actions.hear;
 
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionPerformer;
-import org.socialworld.conversation.PunctuationMark;
-import org.socialworld.conversation.Talk_SentenceType;
-import org.socialworld.knowledge.KnowledgeSource;
-import org.socialworld.knowledge.KnowledgeSource_Type;
+import org.socialworld.calculation.Type;
+import org.socialworld.calculation.Value;
 import org.socialworld.objects.Human;
 
 /**
@@ -44,61 +42,58 @@ public class Hear extends ActionPerformer {
 	 */
 	@Override
 	public void perform() {
- 		ActionHear originalAction;
-		Human actor;
-		Human partner;
-		String sentence;
 		
-		originalAction = (ActionHear) getOriginalActionObject();
-		actor = (Human) originalAction.getActor();
-		ActionMode mode = originalAction.getMode();
-		partner = (Human) originalAction.getTarget();
-		
-		switch (mode) {
-		case  listenTo:
-	
-			sentence = originalAction.getSentence();
-			addPartnersSentence(actor, sentence, partner);
+		if (!isValid()) {
+	 		ActionHear originalAction;
+			Human partner;
+			String sentence;
 			
-			break;
+			originalAction = (ActionHear) getOriginalActionObject();
+			ActionMode mode = originalAction.getMode();
+			partner = (Human) originalAction.getTarget();
+			
+			switch (mode) {
+			case  listenTo:
+		
+				sentence = originalAction.getSentence();
+		
+				// actor.addSentence(sentence, type (Talk_SentenceType!), partner);
+				// TODO --> event processing
 				
-		case understand:
-			KnowledgeSource source;
-
-			sentence = originalAction.getSentence();
-			
-			source = new KnowledgeSource();
-			source.setSourceType( KnowledgeSource_Type.heardOf);
-			// get the acquaintance of target human (null if the there isn't an acquaintance of target human)
-			source.setOrigin( actor.getAcquaintance(partner));
-			
-			actor.addFactsFromSentence(sentence, source);
-			
-			break;
-			
-		default:
+				setMaxParam(2);
+				setParam(0, new Value(Type.simulationObject, "partner", partner));
+				setParam(1, new Value(Type.string, "sentence", sentence));
+				
+				setValid();
+				
+				break;
+					
+			case understand:
+	
+				sentence = originalAction.getSentence();
+				
+				//KnowledgeSource source;
+				//source = new KnowledgeSource();
+				//source.setSourceType( KnowledgeSource_Type.heardOf);
+				// get the acquaintance of target human (null if the there isn't an acquaintance of target human)
+				//source.setOrigin( actor.getAcquaintance(partner));
+				// actor.addFactsFromSentence(sentence, source);
+				// TODO --> event processing
+				
+				setMaxParam(2);
+				setParam(0, new Value(Type.simulationObject, "partner", partner));
+				setParam(1, new Value(Type.string, "sentence", sentence));
+				
+				setValid();
+				
+				break;
+				
+			default:
+			}
 		}
 	}
 	
 	
 
-	private PunctuationMark addPartnersSentence(Human actor, String sentence, Human partner) {
-		PunctuationMark returnValue = null;
-		Talk_SentenceType type;
-		
-		returnValue = PunctuationMark.getPunctuationMark(sentence);
-		
-		switch (returnValue) {
-		case dot: 
-			type = Talk_SentenceType.partnersSentence;
-		case question: 
-			type = Talk_SentenceType.partnersQuestion;
-		default:
-			type = Talk_SentenceType.partnersUnknownType;
-		}
-		((Human) actor).addSentence(sentence, type, partner);
-		
-		return returnValue;
-	}
 
 }
