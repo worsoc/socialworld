@@ -27,7 +27,7 @@ import org.socialworld.actions.ActionProperty;
 import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Time;
-import org.socialworld.core.Event;
+import org.socialworld.core.EventByAction;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.Human;
 
@@ -38,16 +38,17 @@ import org.socialworld.objects.Human;
 public class ActionAttack extends AbstractAction {
 	private Attack attack;
 	private IWeapon weapon;
+	SimulationObject target;
 	
 	public ActionAttack(final ActionType type, final ActionMode mode,
 			final SimulationObject target, 
 			final float intensity, final Time minTime, final Time maxTime,
 			final int priority, final long duration) {
 		setBaseProperties(type,  mode,
-				target, 
 				intensity,  minTime, maxTime,
 				 priority,  duration);
 			
+		this.target = target;
 	}
 	
 	public ActionAttack(ActionAttack original) {
@@ -87,9 +88,9 @@ public class ActionAttack extends AbstractAction {
    		this.weapon = weapon;
       	this.attack = new Attack( this);
       				
-		Event event;
-		event = new Event( getEventType(type, mode),    actor /* as causer*/,  ActualTime.asTime(),
-						actor.getPosition(),  attack /* as optional parameter */);
+      	EventByAction event;
+		event = new EventByAction( getEventType(type, mode),    actor /* as causer*/,  ActualTime.asTime(),
+						actor.getPosition(),  attack /* as performer */);
 		addEvent(event);
 		
 	}
@@ -144,5 +145,9 @@ public class ActionAttack extends AbstractAction {
 
 	
 	  	return eventType;
+	}
+	
+	public SimulationObject getTarget() {
+		return this.target;
 	}
 }

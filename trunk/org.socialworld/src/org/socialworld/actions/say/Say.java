@@ -24,6 +24,9 @@ package org.socialworld.actions.say;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionPerformer;
 import org.socialworld.attributes.AttributeArray;
+import org.socialworld.calculation.Type;
+import org.socialworld.calculation.Value;
+import org.socialworld.calculation.Vector;
 import org.socialworld.knowledge.Acquaintance;
 import org.socialworld.knowledge.Acquaintance_Attribute;
 import org.socialworld.knowledge.Answer;
@@ -45,43 +48,63 @@ public class Say extends ActionPerformer {
 	@Override
 	public void perform() {
 		
- 		ActionSay originalAction;
-		Human actor;
-		Human partner;
-		ActionMode mode;
 		
-		originalAction = (ActionSay) getOriginalActionObject();
-		actor = (Human) originalAction.getActor();
-		mode = originalAction.getMode();
-		partner = (Human) originalAction.getTarget();
-
-		String question;
-		
-		switch (mode) {
-			case answer:
-				
-				Answer answer;
+		if (!isValid()) {
+	 		ActionSay originalAction;
+			Human actor;
+			Human partner;
+			ActionMode mode;
 			
-				question = originalAction.getQuestion();
-
-				answer =  actor.getAnswerForQuestion(question);
-				manipulateAnswer(actor, answer, partner);
-				actor.addAnswer(answer,  partner);
-
-				break;
-				
-			case ask:
+			Vector direction;
+			String question;
 			
-				question = originalAction.getQuestion();
+			originalAction = (ActionSay) getOriginalActionObject();
+			actor = (Human) originalAction.getActor();
+			mode = originalAction.getMode();
+			partner = (Human) originalAction.getTarget();
+	
+			direction = actor.getPosition().getDirectionTo(partner.getPosition());
+			
+			switch (mode) {
+				case answer:
+					
+					Answer answer;
+				
+					question = originalAction.getQuestion();
+	
+					answer =  actor.getAnswerForQuestion(question);
+					manipulateAnswer(actor, answer, partner);
+					
+					
+					// actor.addAnswer(answer,  partner); 
+					// TODO --> event processing
+	
+					setMaxParam(3);
+					setParam(0, new Value(Type.vector, "direction", direction));
+					setParam(1, new Value(Type.simulationObject, "partner", partner));
+					setParam(2, new Value(Type.answer, "answer", answer));
+					
+					setValid();
+					
+					break;
+					
+				case ask:
+				
+					question = originalAction.getQuestion();
 
-				//TODO
-				
-				break;
-				
-			default:
-				
+					setMaxParam(3);
+					setParam(0, new Value(Type.vector, "direction", direction));
+					setParam(1, new Value(Type.simulationObject, "partner", partner));
+					setParam(2, new Value(Type.string, "question", question));
+					
+					setValid();
+							
+					break;
+					
+				default:
+					
+			}
 		}
-
 	}
 
 	private void manipulateAnswer(final Human actor, Answer answer, final Human partner) {
