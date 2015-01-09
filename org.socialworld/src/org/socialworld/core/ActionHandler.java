@@ -267,11 +267,6 @@ public class ActionHandler  {
 					continue;
 				}
 			}
-			if (actionDescription.isSearchByTarget()) {
-				if (action.getTarget() != actionDescription.getTarget()) {
-					continue;
-				}
-			}
 			if (actionDescription.isSearchByIntensity()) {
 				if (action.getIntensity() != actionDescription.getIntensity()) {
 					continue;
