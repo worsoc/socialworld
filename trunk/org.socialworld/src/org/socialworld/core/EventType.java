@@ -30,7 +30,8 @@ public enum EventType {
 	
 	touch(0), stab(1),
 	listenToStatement(100), listenToQuestion(101), listenToInstruction(102), understand(103),
-	answer(104), ask(105);
+	answer(104), ask(105),
+	sleep(200);
 
 	public static final int MAX_EVENT_TYPE = 256;
 
