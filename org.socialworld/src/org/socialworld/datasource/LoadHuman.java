@@ -33,7 +33,7 @@ import org.socialworld.SimpleClientActionHandler;
  *         and put to a new created instance of class Human
  * @author Mathias Sikos (tyloesand) 
  */
-public class LoadHuman extends LoadAnimal implements IHumanWrite {
+public class LoadHuman extends LoadAnimal {
 	
 	private static LoadHuman instance;
 

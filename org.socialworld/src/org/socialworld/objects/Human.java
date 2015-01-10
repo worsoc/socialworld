@@ -25,15 +25,9 @@ import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionType;
 import org.socialworld.actions.attack.IWeapon;
 import org.socialworld.attributes.Inventory;
-import org.socialworld.knowledge.AcquaintancePool;
 import org.socialworld.knowledge.Acquaintance;
-import org.socialworld.knowledge.KnowledgePool;
-import org.socialworld.knowledge.KnowledgeSource;
 import org.socialworld.knowledge.Answer;
-import org.socialworld.conversation.Talk;
 import org.socialworld.conversation.Talk_SentenceType;
-import java.util.ArrayList;
-import java.util.ListIterator;
 
 /**
  * A human is described in most details. It is the most important simulation
@@ -48,75 +42,81 @@ import java.util.ListIterator;
  */
  public class Human extends Mammal {
 	 
-	protected Inventory inventory;
-	protected KnowledgePool knowledge;
-	protected AcquaintancePool acquaintance;
-	
-	private ArrayList<Talk> talks;
-	private String lastSaidSentence;
+	private StateHuman state;
 	
 	public Human() {
-		super();
-		talks = new ArrayList<Talk>();
+		super(SimulationObject_Type.human);
+		init();
 		
 	}
 
+	public Human(SimulationObject_Type objectType) {
+		super(objectType);
+		init();
+		
+	}
+	
+	private void init() {
+	}
+	
+	void init(WriteAccessToHuman guard) {
+		super.init(guard);
+		if (checkGuard(guard) )
+			this.state = (StateHuman) getState(guard);
+	}
+	
 	/**
 	 * @param inventory
 	 *            the inventory to set
 	 */
 	void setInventory(final Inventory inventory, WriteAccessToHuman guard) {
-		if (this.guard == guard ) this.inventory = inventory;
+		if (checkGuard(guard) ) 
+			this.state.setInventory(inventory);
 	}
 
 		
 	public String getSentence(Human partner, Talk_SentenceType type) {
-		return findSentence( partner,  type);
+		return this.state.findSentence( partner,  type);
 	}
 	
 	public String getLastSaidSentence() {
-		return lastSaidSentence;
+		return this.state.getLastSaidSentence();
 	}
 
-	public void addSentence(String sentence, Talk_SentenceType type, Human partner) {
-		
-		Talk talk = findTalk(partner);
-		talk.addSentence(sentence, type);
+	void addSentence(Human partner, Talk_SentenceType type,  String sentence, WriteAccessToHuman guard) {
+		if (checkGuard(guard) ) 
+			this.state.addSentence( partner,  type,   sentence);
 	}
 
-	public void addAnswer(Answer answer,  Human partner) {
-		
-		Talk talk = findTalk(partner);
-		talk.addAnswer(answer);
+	void addAnswer(Answer answer,  Human partner, WriteAccessToHuman guard) {
+		if (checkGuard(guard) ) 
+			this.state.addAnswer( answer,   partner);
 	}
 	
 	public Answer getAnswerForQuestion(String question) {
-		return knowledge.getAnswerForQuestion(question);
+		return this.state.knowledge.getAnswerForQuestion(question);
 	}
 	
-	public void addFactsFromSentence(String sentence, KnowledgeSource source) {
-		knowledge.addFactsFromSentence(sentence, source);
-	}
 	
 	public Acquaintance getAcquaintance(Human partner) {
-		return acquaintance.getAcquaintance(partner);
+		return this.state.acquaintance.getAcquaintance(partner);
 	}
 	
-	// TODO interface formore complex access to inventory
+	// TODO interface for more complex access to inventory
 	public IWeapon getLeftHandWeapon() {
-		return inventory.getLeftHandWeapon();
+		return this.state.inventory.getLeftHandWeapon();
 	}
 	
 	public IWeapon getRightHandWeapon() {
-		return inventory.getRightHandWeapon();
+		return this.state.inventory.getRightHandWeapon();
 	}
 
 	public SimulationObject getLeftHand() {
-		return inventory.getLeftHand();
+		return this.state.inventory.getLeftHand();
 	}
 	
 	public SimulationObject getRightHand() {
-		return inventory.getRightHand();
+		return this.state.inventory.getRightHand();
 	}
 
 	/**
@@ -189,49 +189,4 @@ import java.util.ListIterator;
 	}
 	
 	
-
-
-	
-	private String findSentence(Human partner, Talk_SentenceType type) {
-		ListIterator<Talk> iterator ;
-		Talk talk;
-		String sentence = null;
-		
-		iterator = talks.listIterator();
-		
-		if (partner == null) 
-			
-			sentence = talks.get(0).getSentence(type);		
-		
-		else while (iterator.hasNext()) {
-			talk = iterator.next();
-			if (talk.getPartner() == partner) {
-				sentence = talk.getSentence(type);		
-				if (sentence == null) iterator.remove();
-				break;
-			}
-		}
-		return sentence;
-	}
-
-	
-	private Talk findTalk(Human partner) {
-		ListIterator<Talk> iterator ;
-		Talk talk;
-		
-		iterator = talks.listIterator();
-		
-		
-		if (partner == null) {
-			
-				return talks.get(0);
-		}
-		else while (iterator.hasNext()) {
-			talk = iterator.next();
-			if (talk.getPartner() == partner) {
-				return talk;
-			}
-		}
-		return  talks.get(0);
-	}
 }

@@ -29,8 +29,6 @@ import org.socialworld.attributes.Position;
 import org.socialworld.core.ActionHandler;
 import org.socialworld.core.Event;
 import org.socialworld.core.Simulation;
-import org.socialworld.calculation.Vector;
-import org.socialworld.propertyChange.ChangedProperty;
 import org.socialworld.propertyChange.ListenedBase;
 
 /**
@@ -42,11 +40,11 @@ import org.socialworld.propertyChange.ListenedBase;
 public abstract class SimulationObject extends ListenedBase {
 	protected static final Logger logger = Logger.getLogger(SimulationObject.class);
 
-	protected	WriteAccessToSimulationObject guard;
+	private	WriteAccessToSimulationObject guard;
 	private		int 			objectID;
 	protected   Simulation  	simulation;
 	
-	private 	Position 		position;
+//	private 	Position 		position;
 
 
 	protected 	ActionHandler 	actionHandler;
@@ -55,23 +53,45 @@ public abstract class SimulationObject extends ListenedBase {
 	protected	int				reactionTypeByEventType[];
 	protected   int				state2ActionType;
 	
-
+	private StateSimulationObject state;
+	
 	/**
 	 * The constructor creates a simulation object.
 	 * 
 	 */
-	public SimulationObject() {
+	public SimulationObject(SimulationObject_Type objectType) {
 		this.guard = null;
 		
 		this.simulation = Simulation.getInstance();
 		
+		initState(objectType);
+		
 		this.actionHandler = new ActionHandler(this);
 
-		this.position = new Position( new Vector( 0,0,0));
-		
-
+	
 	}
 
+	final void initState(SimulationObject_Type objectType) {
+		switch (objectType) {
+		case animal:
+			this.state = new StateAnimal(this);
+			break;
+		case human:
+			this.state = new StateHuman(this);
+			break;
+		default:
+			this.state = new StateSimulationObject(this);
+		}
+	}
+	
+	final StateSimulationObject getState(WriteAccessToSimulationObject guard) {
+		if (checkGuard(guard))
+			return this.state;
+		else
+			return null;
+		
+	}
+	
 	/**
 	 * The method sets write access to a guard.
 	 * This guard can manipulate the object's state by calling methods.
@@ -81,8 +101,13 @@ public abstract class SimulationObject extends ListenedBase {
 	 * 
 	 * @param guard
 	 */
-	void setWriteAccess(WriteAccessToSimulationObject guard) {
+	final void setWriteAccess(WriteAccessToSimulationObject guard) {
 		if (this.guard == null)  this.guard = guard;
+	}
+	
+	
+	final boolean checkGuard(WriteAccessToSimulationObject guard) {
+		return (this.guard == guard);
 	}
 	
 	void setObjectID(int objectID, WriteAccessToSimulationObject guard) {
@@ -90,10 +115,8 @@ public abstract class SimulationObject extends ListenedBase {
 	}
 
 	void setPosition (Position pos, WriteAccessToSimulationObject guard) {
-		if (this.guard == guard) {
-			this.position = pos;
-			simulation.propertyChanged(this, ChangedProperty.position);
-		}
+		if (this.guard == guard) 
+			this.state.setPosition(pos);
 	}
 
 	public void setAction(AbstractAction newAction, WriteAccessToSimulationObject guard) {
@@ -158,8 +181,7 @@ public abstract class SimulationObject extends ListenedBase {
 	 * @return position
 	 */
 	public Position getPosition() {
-		if (position == null) return null;
-		else return new Position(position);
+		return this.state.getPosition();
 	}
 
 	

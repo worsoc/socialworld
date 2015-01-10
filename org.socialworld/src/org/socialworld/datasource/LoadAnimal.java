@@ -22,10 +22,9 @@
 package org.socialworld.datasource;
 
 import org.socialworld.objects.Animal;
-import org.socialworld.objects.IAnimalWrite;
 import org.socialworld.objects.WriteAccessToAnimal;
 
-public class LoadAnimal extends LoadSimulationObjects implements IAnimalWrite {
+public class LoadAnimal extends LoadSimulationObjects  {
 
 	private static LoadAnimal instance;
 	

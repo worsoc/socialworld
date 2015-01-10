@@ -29,10 +29,8 @@ import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.core.Event;
 import org.socialworld.calculation.FunctionByMatrix_Matrix;
-import org.socialworld.calculation.Value;
 import org.socialworld.calculation.Vector;
 import org.socialworld.calculation.application.ActionCreator;
-import org.socialworld.calculation.application.AttributeCalculator;
 import org.socialworld.knowledge.KnownPathsPool;
 
 
@@ -44,55 +42,63 @@ import org.socialworld.knowledge.KnownPathsPool;
  */
 public class Animal extends SimulationObject {
 
-
-	protected Vector directionChest;
-	protected Vector directionView;
+	private StateAnimal state;
 	
-	protected AttributeArray attributes;
 	protected FunctionByMatrix_Matrix attributeCalculatorMatrix;
 	protected PathFinder pathFinder;
-	protected KnownPathsPool knownPathsPool;
-	
+
 	public Animal() {
-		super();
-		attributes = new AttributeArray(Attribute.NUMBER_OF_ATTRIBUTES);
-		pathFinder = new PathFinder(this);
-		knownPathsPool = new KnownPathsPool();
+		super(SimulationObject_Type.animal);
+		init();
+	}
+	
+	public Animal(SimulationObject_Type objectType) {
+		super(objectType);
+		init();
 	}
 
+	private void init() {
+		
+		pathFinder = new PathFinder(this);
+		
+	}
+
+	void init(WriteAccessToAnimal guard) {
+		if (checkGuard(guard) )
+			this.state = (StateAnimal) getState(guard);
+	}
 
 	void setAttributes(AttributeArray array, WriteAccessToAnimal guard) {
-		if (this.guard == guard ) attributes = array;
+		if (checkGuard(guard) ) 
+			this.state.setAttributes(array);
 	}
 	
-	
 	public AttributeArray getAttributes() {
-		if (attributes == null) return null;
-		return new AttributeArray(attributes);
+		return this.state.getAttributes();
 	}
 	
 	void setMatrix(FunctionByMatrix_Matrix matrix,  WriteAccessToAnimal guard) {
-		if (this.guard == guard ) attributeCalculatorMatrix  = matrix;
+		if (checkGuard(guard) ) attributeCalculatorMatrix  = matrix;
 	}
 	
 	public FunctionByMatrix_Matrix getMatrix() {
 		return new FunctionByMatrix_Matrix(attributeCalculatorMatrix, Attribute.NUMBER_OF_ATTRIBUTES);
 	}
-	
 
 	/**
 	 * @return the directionChest
 	 */
 	public Vector getDirectionChest() {
-		return directionChest;
+		return this.state.directionChest;
 	}
 
 
 	/**
 	 * @param directionChest the directionChest to set
 	 */
-	public void setDirectionChest(Vector directionChest) {
-		this.directionChest = directionChest;
+	void setDirectionChest(Vector directionChest, WriteAccessToAnimal guard) {
+		if (checkGuard(guard))
+			this.state.setDirectionChest(directionChest);
 	}
 
 
@@ -100,28 +106,24 @@ public class Animal extends SimulationObject {
 	 * @return the directionView
 	 */
 	public Vector getDirectionView() {
-		return directionView;
+		return this.state.directionView;
 	}
 
 
 	/**
 	 * @param directionView the directionView to set
 	 */
-	public void setDirectionView(Vector directionView) {
-		this.directionView = directionView;
+	void setDirectionView(Vector directionView, WriteAccessToAnimal guard) {
+		if (checkGuard(guard))
+			this.state.setDirectionChest(directionView);
 	}
-
-
 
 	/**
 	 * @return the knownPathsPool
 	 */
 	public KnownPathsPool getKnownPathsPool() {
-		return knownPathsPool;
+		return this.state.knownPathsPool;
 	}
-
-
-
 
 	/**
 	 * @return the pathFinder
@@ -129,8 +131,6 @@ public class Animal extends SimulationObject {
 	public PathFinder getPathFinder() {
 		return pathFinder;
 	}
-
-
 
 	/**
 	 * Depending on the action type the method calls the according procedure
@@ -198,6 +198,8 @@ public class Animal extends SimulationObject {
 	 *            the event that effects to the object
 	 */
 	public void changeByEvent(final Event event) {
+		// TODO
+/*  old !		
 		Value result;
 		AttributeArray tmp;
 		
@@ -206,6 +208,8 @@ public class Animal extends SimulationObject {
 			tmp = (AttributeArray) result.getValue();
 			this.attributes.set(tmp);
 		}
+		
+*/
 	}
 
 	/**

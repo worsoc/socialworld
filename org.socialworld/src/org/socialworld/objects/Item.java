@@ -37,7 +37,7 @@ import org.socialworld.core.Event;
 public class Item extends SimulationObject {
 
 	public Item() {
-		super();
+		super(SimulationObject_Type.item);
 	}
 
 	@Override

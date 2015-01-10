@@ -39,35 +39,63 @@ public class WriteAccessToSimulationObject {
 		switch (request.getClass().getName()) {
 		case "org.socialworld.actions.move.ActionMove":
 			return true;
-		case "org.socialworld.actions.move.ActionAttack":
+		case "org.socialworld.actions.attack.ActionAttack":
 			return true;
+			
 		default:
 			return false;
 		}
 	}
 	
+	protected final boolean checkCaller(Object caller){
+		switch (caller.getClass().getName()) {
+		case "org.socialworld.calculation.application.EventInfluenceCalculator":
+			return true;
+			
+		case "org.socialworld.datasource.LoadAnimal":
+			return true;
+//		case "org.socialworld.datasource.LoadGod":
+//			return true;
+		case "org.socialworld.datasource.LoadHuman":
+			return true;
+//		case "org.socialworld.datasource.LoadItem":
+//			return true;
+//		case "org.socialworld.datasource.LoadMagic":
+//			return true;
+		case "org.socialworld.datasource.LoadSimulationObject":
+			return true;
+
+		case "org.socialworld.SimpleClientActionHandler":
+			// TODO delete, its just for test
+			return true;
+		default:
+			return false;
+		}
+		
+	}
+	
 	public void setObjectID(int objectID, Object caller) {
-		if (caller instanceof ISimulationObjectWrite) object.setObjectID(objectID, this);
+		if (checkCaller(caller)) object.setObjectID(objectID, this);
 	}
 
 	public void setPosition(Position pos, Object caller) {
-		if (caller instanceof ISimulationObjectWrite) object.setPosition(pos, this);
+		if (checkCaller(caller)) object.setPosition(pos, this);
 	}
 	
 	public void setAction(AbstractAction action, Object caller) {
-		if (caller instanceof ISimulationObjectWrite) object.setAction(action, this);
+		if (checkCaller(caller)) object.setAction(action, this);
 	}
 
 	public void setInfluenceTypes(int types[], Object caller) {
-		if (caller instanceof ISimulationObjectWrite) object.setInfluenceTypes(types, this);
+		if (checkCaller(caller)) object.setInfluenceTypes(types, this);
 	}
 
 	public void setReactionTypes(int types[], Object caller) {
-		if (caller instanceof ISimulationObjectWrite) object.setReactionTypes(types, this);
+		if (checkCaller(caller)) object.setReactionTypes(types, this);
 	}
 
 	public void setState2ActionType(int type, Object caller) {
-		if (caller instanceof ISimulationObjectWrite) object.setState2ActionType(type, this);
+		if (checkCaller(caller)) object.setState2ActionType(type, this);
 	}
 	
 	

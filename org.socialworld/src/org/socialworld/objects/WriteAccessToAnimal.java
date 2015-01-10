@@ -33,11 +33,11 @@ public class WriteAccessToAnimal extends WriteAccessToSimulationObject {
 	}
 	
 	public void setAttributes(AttributeArray attributes, Object caller) {
-		if (caller instanceof IAnimalWrite) animal.setAttributes(attributes, this);
+		if (checkCaller(caller)) animal.setAttributes(attributes, this);
 	}
 
 	public void setMatrix(FunctionByMatrix_Matrix matrix, Object caller) {
-		if (caller instanceof IAnimalWrite) animal.setMatrix(matrix, this);
+		if (checkCaller(caller)) animal.setMatrix(matrix, this);
 	}
 
 }
