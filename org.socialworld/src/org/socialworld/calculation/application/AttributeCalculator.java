@@ -38,7 +38,7 @@ public  class AttributeCalculator {
 
 
 
-	public static void calculateAttributesChangedByEvent(Event event, StateAnimal stateAnimal) {
+	public final static void calculateAttributesChangedByEvent(Event event, StateAnimal stateAnimal) {
 		
 		Value returnAttributeArray;
 		

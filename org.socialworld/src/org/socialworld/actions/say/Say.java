@@ -74,11 +74,7 @@ public class Say extends ActionPerformer {
 	
 					answer =  actor.getAnswerForQuestion(question);
 					manipulateAnswer(actor, answer, partner);
-					
-					
-					// actor.addAnswer(answer,  partner); 
-					// TODO --> event processing
-	
+		
 					setMaxParam(3);
 					setParam(0, new Value(Type.vector, "direction", direction));
 					setParam(1, new Value(Type.simulationObject, "partner", partner));

@@ -25,12 +25,15 @@ import java.util.ArrayList;
 import java.util.ListIterator;
 
 import org.socialworld.attributes.Inventory;
+import org.socialworld.calculation.application.TalkCalculator;
 import org.socialworld.conversation.Talk;
 import org.socialworld.conversation.Talk_SentenceType;
 import org.socialworld.core.Event;
+import org.socialworld.knowledge.Acquaintance;
 import org.socialworld.knowledge.AcquaintancePool;
 import org.socialworld.knowledge.Answer;
 import org.socialworld.knowledge.KnowledgePool;
+import org.socialworld.knowledge.KnowledgeSource;
 
 /**
  * @author Mathias Sikos
@@ -56,6 +59,7 @@ public class StateHuman extends StateAnimal {
 		
 		super.calculateEventInfluence(event);
 		
+		TalkCalculator.calculateTalkChangedByEvent(event, this);
 		
 	}
 
@@ -78,6 +82,13 @@ public class StateHuman extends StateAnimal {
 		talk.addAnswer(answer);
 	}
 
+	public void addFactsFromSentence(String sentence, KnowledgeSource source) {
+		this.knowledge.addFactsFromSentence(sentence, source);
+	}
+
+	public Acquaintance getAcquaintance(Human partner) {
+		return this.acquaintance.getAcquaintance(partner);
+	}
 	
 	public String getLastSaidSentence() {
 		return new String(lastSaidSentence);

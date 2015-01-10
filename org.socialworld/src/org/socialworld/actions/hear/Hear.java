@@ -57,9 +57,6 @@ public class Hear extends ActionPerformer {
 		
 				sentence = originalAction.getSentence();
 		
-				// actor.addSentence(sentence, type (Talk_SentenceType!), partner);
-				// TODO --> event processing
-				
 				setMaxParam(2);
 				setParam(0, new Value(Type.simulationObject, "partner", partner));
 				setParam(1, new Value(Type.string, "sentence", sentence));
@@ -71,14 +68,6 @@ public class Hear extends ActionPerformer {
 			case understand:
 	
 				sentence = originalAction.getSentence();
-				
-				//KnowledgeSource source;
-				//source = new KnowledgeSource();
-				//source.setSourceType( KnowledgeSource_Type.heardOf);
-				// get the acquaintance of target human (null if the there isn't an acquaintance of target human)
-				//source.setOrigin( actor.getAcquaintance(partner));
-				// actor.addFactsFromSentence(sentence, source);
-				// TODO --> event processing
 				
 				setMaxParam(2);
 				setParam(0, new Value(Type.simulationObject, "partner", partner));

@@ -24,6 +24,7 @@ package org.socialworld.objects;
 import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.calculation.Vector;
+import org.socialworld.calculation.application.AttributeCalculator;
 import org.socialworld.core.Event;
 import org.socialworld.knowledge.KnownPathsPool;
 
@@ -64,6 +65,7 @@ public class StateAnimal extends StateSimulationObject {
 		
 		super.calculateEventInfluence(event);
 		
+		AttributeCalculator.calculateAttributesChangedByEvent(event, this);
 		
 	}
 
