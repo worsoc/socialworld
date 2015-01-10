@@ -198,18 +198,7 @@ public class Animal extends SimulationObject {
 	 *            the event that effects to the object
 	 */
 	public void changeByEvent(final Event event) {
-		// TODO
-/*  old !		
-		Value result;
-		AttributeArray tmp;
-		
-		result = AttributeCalculator.getAttributesChangedByEvent(event, this);
-		if (result.isValid()) {
-			tmp = (AttributeArray) result.getValue();
-			this.attributes.set(tmp);
-		}
-		
-*/
+		this.state.calculateEventInfluence(event);
 	}
 
 	/**

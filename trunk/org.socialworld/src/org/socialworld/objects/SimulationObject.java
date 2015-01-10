@@ -92,6 +92,10 @@ public abstract class SimulationObject extends ListenedBase {
 		
 	}
 	
+	final void setState(StateSimulationObject state, WriteAccessToSimulationObject guard) {
+		if (checkGuard(guard)) this.state = state;
+	}
+	
 	/**
 	 * The method sets write access to a guard.
 	 * This guard can manipulate the object's state by calling methods.

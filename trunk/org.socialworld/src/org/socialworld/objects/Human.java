@@ -99,7 +99,7 @@ import org.socialworld.conversation.Talk_SentenceType;
 	
 	
 	public Acquaintance getAcquaintance(Human partner) {
-		return this.state.acquaintance.getAcquaintance(partner);
+		return this.state.getAcquaintance(partner);
 	}
 	
 	// TODO interface for more complex access to inventory
