@@ -21,6 +21,7 @@
 */
 package org.socialworld.calculation.application;
 
+import org.socialworld.attributes.AttributeArray;
 import org.socialworld.calculation.FunctionByExpression;
 import org.socialworld.calculation.FunctionByMatrix;
 import org.socialworld.calculation.FunctionByMatrix_Matrix;
@@ -30,12 +31,29 @@ import org.socialworld.calculation.descriptions.EventInfluenceAssignment;
 import org.socialworld.calculation.descriptions.EventInfluenceDescription;
 import org.socialworld.core.Event;
 import org.socialworld.objects.Animal;
+import org.socialworld.objects.StateAnimal;
 
 
 public  class AttributeCalculator {
 
 
 
+	public static void calculateAttributesChangedByEvent(Event event, StateAnimal stateAnimal) {
+		
+		Value returnAttributeArray;
+		
+		Animal animal;
+		animal = (Animal) stateAnimal.getObject();
+		
+		returnAttributeArray = getAttributesChangedByEvent(event, animal);
+		
+		if (returnAttributeArray.isValid()) {
+			stateAnimal.setAttributes((AttributeArray) returnAttributeArray.getValue());
+		}
+		
+	}
+	
+	
 	/**
 	 * The method sets the event influence description to an instance variable
 	 * and starts the calculation.
@@ -43,7 +61,7 @@ public  class AttributeCalculator {
 	 * @param eventInfluence
 	 *            the informations how an event effects to the attributes.
 	 */
-	public static Value getAttributesChangedByEvent(Event event, Animal animal) {
+	private static Value getAttributesChangedByEvent(Event event, Animal animal) {
 		EventInfluenceDescription eventInfluenceDescription = null;
 		int eventType;
 		int eventInfluenceType;
@@ -69,7 +87,7 @@ public  class AttributeCalculator {
 	}
 
 
-	public static Value getAttributesChangedByMatrix(Animal animal) {
+	private static Value getAttributesChangedByMatrix(Animal animal) {
 		FunctionByMatrix f_AttributesByMatrix;
 		Value[] arguments;
 	
@@ -84,7 +102,7 @@ public  class AttributeCalculator {
 		return  f_AttributesByMatrix.calculate(arguments);
 	}
 	
-	public static Value getAttributesChangedByRefresh(Animal animal) {
+	private static Value getAttributesChangedByRefresh(Animal animal) {
 		FunctionByMatrix f_AttributesByMatrix;
 		Value[] arguments;
 	

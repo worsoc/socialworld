@@ -24,7 +24,6 @@ package org.socialworld.datasource;
 import java.util.Random;
 
 import org.apache.log4j.Logger;
-import org.socialworld.objects.ISimulationObjectWrite;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.WriteAccessToSimulationObject;
 
@@ -35,7 +34,7 @@ import org.socialworld.objects.WriteAccessToSimulationObject;
  *  
  * @author Mathias Sikos (tyloesand) 
  */
-public abstract class LoadSimulationObjects implements ISimulationObjectWrite {
+public abstract class LoadSimulationObjects {
 	
 	protected static final Logger logger = Logger.getLogger(LoadSimulationObjects.class);
 

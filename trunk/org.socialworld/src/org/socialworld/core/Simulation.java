@@ -36,7 +36,7 @@ import org.socialworld.collections.ObjectByPositionSearch;
  * @author Mathias Sikos (tyloesand)
  * 
  */
-public class Simulation implements IHumanWrite{
+public class Simulation {
 	public static  int WITH_LOGGING = 1;
 	public static  int WITH_ERROR_LOGGING = 1;
 	private static final Logger logger = Logger.getLogger(Simulation.class);
