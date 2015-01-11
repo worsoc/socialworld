@@ -130,9 +130,7 @@ public class TalkCalculator {
 		else
 			return;
 		
-		source = new KnowledgeSource();
-		source.setSourceType( KnowledgeSource_Type.heardOf);
-		source.setOrigin( stateHuman.getAcquaintance(partner));
+		source = new KnowledgeSource(KnowledgeSource_Type.heardOf, stateHuman.getAcquaintance(partner));
 		stateHuman.addFactsFromSentence(sentence, source);
 
 	}

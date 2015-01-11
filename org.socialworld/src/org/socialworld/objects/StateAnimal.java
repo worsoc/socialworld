@@ -51,7 +51,7 @@ public class StateAnimal extends StateSimulationObject {
 	}
 	
 	public AttributeArray getAttributes() {
-		return new AttributeArray(attributes);
+		return this.attributes;
 	}
 	
 	public void setDirectionChest(Vector directionChest) {

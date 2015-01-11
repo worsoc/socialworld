@@ -66,7 +66,7 @@ public class Animal extends SimulationObject {
 	}
 	
 	public AttributeArray getAttributes() {
-		return this.state.getAttributes();
+		return new AttributeArray(this.state.getAttributes());
 	}
 	
 	void setMatrix(FunctionByMatrix_Matrix matrix,  WriteAccessToAnimal guard) {

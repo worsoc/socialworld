@@ -25,6 +25,16 @@ public class KnowledgeFact {
 	private KnowledgeFact_Criterion criterion;
 	private KnowledgeFact_Value value;
 	
+	public KnowledgeFact(KnowledgeFact_Criterion criterion, KnowledgeFact_Value value ) {
+		this.criterion = criterion;
+		this.value = value;
+	}
+	
+	public KnowledgeFact(KnowledgeFact original) {
+		this.criterion  = original.criterion;
+		this.value = new KnowledgeFact_Value(original.value);
+	}
+	
 	protected KnowledgeFact_Value getValue() {
 		return value;
 	}
@@ -33,10 +43,8 @@ public class KnowledgeFact {
 		return criterion;
 	}
 	
-	protected int compare (KnowledgeFact factB) {
-		if (this == factB) 
-			return 1;
-		else
-			return 0;
+	protected boolean equals(KnowledgeFact b) {
+		return ( this.criterion == b.criterion & this.value.equals(b.value) );
 	}
+	
 }
