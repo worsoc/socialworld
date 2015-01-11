@@ -37,13 +37,15 @@ public class PathFinder {
 	private Animal actor;
 	private KnownPathsPool knownPathsPool;
 
-	public PathFinder(Animal actor) {
+	public PathFinder(Animal actor, KnownPathsPool knownPathsPool) {
 		this.actor = actor;
-		knownPathsPool = actor.getKnownPathsPool();
+		this.knownPathsPool = knownPathsPool;
 	}
 	
 	public Path findPath(Position end) {
 		// TODO more complex and better pathfinding
+		
+		// TODO there must be new creations of paths (copies) because there are soperations on the paths
 		
 		Path result;
 		Path pathStart;
