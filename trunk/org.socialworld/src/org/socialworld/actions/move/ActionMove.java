@@ -107,7 +107,7 @@ public class ActionMove extends AbstractAction {
 				if (path.hasRefToKnownPaths()) 
 					path.incrementUsageCounter();
 				else
-					((Animal) actor).getKnownPathsPool().addPath(path);
+					((Animal) actor).addPath(path);
 		}
 		
 		firstStep = false;
@@ -137,7 +137,7 @@ public class ActionMove extends AbstractAction {
 	}
 
 	private void createPath() {
-		path = ((Animal) actor).getPathFinder().findPath(end);
+		path = ((Animal) actor).findPath(end);
 	}
 	
 	
