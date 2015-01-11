@@ -22,6 +22,7 @@
 package org.socialworld.datasource;
 
 import org.socialworld.objects.Magic;
+import org.socialworld.objects.StateSimulationObject;
 import org.socialworld.objects.WriteAccessToSimulationObject;
 
 public class LoadMagic extends LoadSimulationObjects {
@@ -43,8 +44,13 @@ public class LoadMagic extends LoadSimulationObjects {
 
 	@Override
 	public Magic getObject(int objectID) {
+		// TODO
+		StateSimulationObject state = new StateSimulationObject();
 		
-		Magic createdMagic = new Magic();
+		initState(state);
+		
+		Magic createdMagic = new Magic(state);
+		
 		WriteAccessToSimulationObject magic = new WriteAccessToSimulationObject(createdMagic);
 		
 

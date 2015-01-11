@@ -34,8 +34,8 @@ import org.socialworld.actions.ActionType;
  */
 public class God extends SimulationObject {
 
-	public God() {
-		super(SimulationObject_Type.god);
+	public God(StateSimulationObject state) {
+		super(state);
 	}
 
 	@Override

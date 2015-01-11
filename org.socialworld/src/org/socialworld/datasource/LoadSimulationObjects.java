@@ -25,6 +25,7 @@ import java.util.Random;
 
 import org.apache.log4j.Logger;
 import org.socialworld.objects.SimulationObject;
+import org.socialworld.objects.StateSimulationObject;
 import org.socialworld.objects.WriteAccessToSimulationObject;
 
 /**
@@ -60,7 +61,6 @@ public abstract class LoadSimulationObjects {
 		int indexITP; 
 		int indexRTP; 
 		int indexS2AP; 
-		int indexPosition;
 		double gauss_value;
 		
 		object.setObjectID(objectID, this);
@@ -77,9 +77,15 @@ public abstract class LoadSimulationObjects {
 		indexS2AP = mapGaussToIndex(gauss_value, State2ActionTypePool.CAPACITY_S2AP_ARRAY);
 		object.setState2ActionType(State2ActionTypePool.getInstance().getState2ActionType(indexS2AP), this);
 
+
+	}
+	
+	protected void initState(StateSimulationObject state) {
+		int indexPosition;
+		
 		indexPosition = random.nextInt(PositionPool.CAPACITY_PosP_ARRAY);
 		if (random.nextBoolean() == false) indexPosition = indexPosition * -1;
-		object.setPosition(PositionPool.getInstance().getPosition(indexPosition), this);
+		state.setPosition(PositionPool.getInstance().getPosition(indexPosition));
 
 	}
 }

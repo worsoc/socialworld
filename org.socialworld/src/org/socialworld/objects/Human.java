@@ -44,26 +44,17 @@ import org.socialworld.conversation.Talk_SentenceType;
 	 
 	private StateHuman state;
 	
-	public Human() {
-		super(SimulationObject_Type.human);
+	public Human(StateHuman state) {
+		super(state);
+		this.state = state;
 		init();
-		
 	}
 
-	public Human(SimulationObject_Type objectType) {
-		super(objectType);
-		init();
-		
-	}
 	
 	private void init() {
 	}
 	
-	void init(WriteAccessToHuman guard) {
-		super.init(guard);
-		if (checkGuard(guard) )
-			this.state = (StateHuman) getState(guard);
-	}
+
 	
 	/**
 	 * @param inventory

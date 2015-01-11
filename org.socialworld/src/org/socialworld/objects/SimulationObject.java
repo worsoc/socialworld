@@ -44,8 +44,6 @@ public abstract class SimulationObject extends ListenedBase {
 	private		int 			objectID;
 	protected   Simulation  	simulation;
 	
-//	private 	Position 		position;
-
 
 	protected 	ActionHandler 	actionHandler;
 	
@@ -59,30 +57,18 @@ public abstract class SimulationObject extends ListenedBase {
 	 * The constructor creates a simulation object.
 	 * 
 	 */
-	public SimulationObject(SimulationObject_Type objectType) {
+	public SimulationObject(StateSimulationObject state) {
 		this.guard = null;
 		
 		this.simulation = Simulation.getInstance();
 		
-		initState(objectType);
+		this.state = state;
+		state.setObject(this);
 		
 		this.actionHandler = new ActionHandler(this);
 
-	
 	}
 
-	final void initState(SimulationObject_Type objectType) {
-		switch (objectType) {
-		case animal:
-			this.state = new StateAnimal(this);
-			break;
-		case human:
-			this.state = new StateHuman(this);
-			break;
-		default:
-			this.state = new StateSimulationObject(this);
-		}
-	}
 	
 	final StateSimulationObject getState(WriteAccessToSimulationObject guard) {
 		if (checkGuard(guard))
