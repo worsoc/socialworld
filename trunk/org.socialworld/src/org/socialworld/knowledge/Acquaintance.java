@@ -31,7 +31,13 @@ public class Acquaintance {
 	public Acquaintance(Human human){
 		this.human = human;
 		
-		attributes = new AttributeArray(Acquaintance_Attribute.NUMBER_OF_ATTRIBUTES);
+		this.attributes = new AttributeArray(Acquaintance_Attribute.NUMBER_OF_ATTRIBUTES);
+	}
+	
+	// copy constructor
+	public Acquaintance (Acquaintance original) {
+		this.human = original.human;
+		this.attributes = new AttributeArray(original.attributes);
 	}
 	
 	protected boolean isValid() {
@@ -52,4 +58,8 @@ public class Acquaintance {
 		else return false;
 	}
 
+	public boolean equals(Acquaintance b) {
+		// we don't check the attributes!
+		return this.human == b.human;
+	}
 }

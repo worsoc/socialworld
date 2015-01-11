@@ -75,4 +75,7 @@ public class Word {
 		return this.allowedAsKnowledgeSubject;
 	}
 	
+	public boolean equals(Word b) {
+		return this.wordID == b.wordID;
+	}
 }

@@ -120,8 +120,8 @@ public class KnowledgePool {
 			}
 			
 			for (indexFact = 0;indexFact < countFacts; indexFact++) {
-				fact = knowledge.getFact(indexesForCriterion[indexFact]);
-				source = knowledge.getSource(indexesForCriterion[indexFact]);
+				fact = knowledge.getFactAsCopy(indexesForCriterion[indexFact]);
+				source = knowledge.getSourceAsCopy(indexesForCriterion[indexFact]);
 				
 				answer.addItem(fact, source);
 			}
@@ -247,14 +247,14 @@ public class KnowledgePool {
 			return null;
 	}
 	
-	public KnowledgeFact getFact (int knowledgeIndex, int factIndex) {
+	public KnowledgeFact get_Fact (int knowledgeIndex, int factIndex) {
 		if ( knowledgeIndex >= 0 & knowledgeIndex < MAXIMUM_KNOWLEDGE_POOL_CAPACITY) {
 			accessCount[knowledgeIndex]++;
 			if (accessCount[knowledgeIndex] > maxAccessCount) {
 				maxAccessCount = accessCount[knowledgeIndex];
 				maxAccessCountIndex = knowledgeIndex;
 			}
-			return knowledgeList[knowledgeIndex].getFact(factIndex);
+			return knowledgeList[knowledgeIndex].getFactAsCopy(factIndex);
 		}
 		else
 			return null;

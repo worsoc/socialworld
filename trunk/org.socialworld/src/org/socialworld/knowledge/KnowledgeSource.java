@@ -25,11 +25,25 @@ public class KnowledgeSource {
 	KnowledgeSource_Type type = null;
 	Acquaintance origin = null;
 	
+	public KnowledgeSource(KnowledgeSource_Type type, Acquaintance  origin) {
+		this.type = type;
+		this.origin = origin;
+	}
+	
+	public KnowledgeSource(KnowledgeSource original) {
+		this.type = original.type;
+		this.origin = new Acquaintance(original.origin);
+	}
+	
 	public void setSourceType(KnowledgeSource_Type type) {
 		this.type = type;
 	}
 	
 	public void setOrigin(Acquaintance origin) {
 		this.origin = origin;
+	}
+	
+	public boolean equals(KnowledgeSource b) {
+		return (this.type == b.type & this.origin.equals(b.origin));
 	}
 }

@@ -38,11 +38,11 @@ public class Knowledge {
 	private int itemCount = 0;
 	
 	public Knowledge() {
-		facts = new KnowledgeFact[MAXIMUM_KNOWLEDGE_CAPACITY];
-		source = new KnowledgeSource[MAXIMUM_KNOWLEDGE_CAPACITY];
+		this.facts = new KnowledgeFact[MAXIMUM_KNOWLEDGE_CAPACITY];
+		this.source = new KnowledgeSource[MAXIMUM_KNOWLEDGE_CAPACITY];
 		
-		itemAccessCount = new int[MAXIMUM_KNOWLEDGE_CAPACITY];
-		itemIsValid = new boolean[MAXIMUM_KNOWLEDGE_CAPACITY];
+		this.itemAccessCount = new int[MAXIMUM_KNOWLEDGE_CAPACITY];
+		this.itemIsValid = new boolean[MAXIMUM_KNOWLEDGE_CAPACITY];
 	}
 	
 	protected int count() {
@@ -57,7 +57,7 @@ public class Knowledge {
 				if (itemIsValid[i]) {
 					for (int j = 0; j < MAXIMUM_KNOWLEDGE_CAPACITY; j++) {
 						if (knowledgeB.isItemValid(j)) {
-							if (facts[i] == knowledgeB.getFact(j))  {
+							if (facts[i].equals(knowledgeB.getFact(j)))  {
 								countEqual ++;
 								j = MAXIMUM_KNOWLEDGE_CAPACITY;
 							}
@@ -75,12 +75,12 @@ public class Knowledge {
 			if (knowledgeB.isItemValid(j)) {
 				for (int i = 0; i < MAXIMUM_KNOWLEDGE_CAPACITY; i++) {
 					if (itemIsValid[i])
-						if (facts[i] == knowledgeB.getFact(j)) 
+						if (facts[i].equals(knowledgeB.getFact(j)))
 							// break
 							i = MAXIMUM_KNOWLEDGE_CAPACITY;
 						else 
 							// combine fact from knowledge B to Knowledge A
-							addItem(knowledgeB.getFact(j), knowledgeB.getSource(j));
+							addItem(knowledgeB.getFactAsCopy(j), knowledgeB.getSourceAsCopy(j));
 				}
 			}
 		}
@@ -113,13 +113,27 @@ public class Knowledge {
 			return null;
 	}
 
+	protected KnowledgeFact getFactAsCopy(int index) {
+		if ((index >= 0) & (index < MAXIMUM_KNOWLEDGE_CAPACITY) )
+			return new KnowledgeFact(facts[index]);
+		else
+			return null;
+	}
+
 	protected KnowledgeSource getSource(int index) {
 		if ((index >= 0) & (index < MAXIMUM_KNOWLEDGE_CAPACITY) )
 			return source[index];
 		else
 			return null;
 	}
-	
+
+	protected KnowledgeSource getSourceAsCopy(int index) {
+		if ((index >= 0) & (index < MAXIMUM_KNOWLEDGE_CAPACITY) )
+			return new KnowledgeSource(source[index]);
+		else
+			return null;
+	}
+
 	protected int[] findFactsForCriterion(KnowledgeFact_Criterion criterion) {
 		int result_tmp[] = new int[MAXIMUM_KNOWLEDGE_CAPACITY];
 		int result[];
@@ -258,5 +272,29 @@ public class Knowledge {
 		}
 		
 		return index ;
+	}
+	
+	public boolean equals(Knowledge b) {
+		// we only check all facts , sources and itemIsValid
+		
+		int length;
+		int index;
+		
+		length = facts.length;
+		
+		if (length != b.facts.length)
+			return false;
+		
+		for (index = 0; index < length; index++) {
+			if (!facts[index].equals(b.facts[index])) 
+				return false;
+			if (!source[index].equals(b.source[index])) 
+				return false;
+			if (itemIsValid[index] != b.itemIsValid[index]) 
+				return false;
+
+		}
+		
+		return true;
 	}
 }

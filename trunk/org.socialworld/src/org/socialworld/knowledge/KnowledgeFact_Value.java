@@ -26,8 +26,19 @@ import org.socialworld.conversation.Word;
 public class KnowledgeFact_Value {
 	private Word value;
 	
+	public KnowledgeFact_Value(Word value) {
+		this.value = value;
+	}
+	
+	public KnowledgeFact_Value(KnowledgeFact_Value original) {
+		this.value = original.value;
+	}
+	
 	protected Word getWord() {
 		return value;
 	}
 
+	protected boolean equals(KnowledgeFact_Value b) {
+		return this.value.equals(b.value);
+	}
 }
