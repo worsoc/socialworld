@@ -23,7 +23,6 @@ package org.socialworld.objects;
 
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
-import org.socialworld.actions.ActionType;
 import org.socialworld.core.Event;
 
 /**
@@ -117,7 +116,5 @@ public class Item extends SimulationObject {
 
 	}
 
-	@Override
-	protected void doAction(final ActionType type, final AbstractAction action) {
-	}
+
 }

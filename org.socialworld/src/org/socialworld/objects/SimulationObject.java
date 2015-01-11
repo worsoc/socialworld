@@ -24,7 +24,6 @@ package org.socialworld.objects;
 
 import org.apache.log4j.Logger;
 import org.socialworld.actions.AbstractAction;
-import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.Position;
 import org.socialworld.core.ActionHandler;
 import org.socialworld.core.Event;
@@ -144,7 +143,6 @@ public abstract class SimulationObject extends ListenedBase {
 		action.removeWriteAccess();
 	}
 
-	protected abstract void doAction(ActionType type, AbstractAction action);
 	
 	
 	/**
@@ -171,7 +169,7 @@ public abstract class SimulationObject extends ListenedBase {
 	 * @return position
 	 */
 	public Position getPosition() {
-		return this.state.getPosition();
+		return new Position(this.state.getPosition());
 	}
 
 	

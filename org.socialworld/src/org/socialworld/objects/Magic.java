@@ -22,8 +22,6 @@
 package org.socialworld.objects;
 
 import org.socialworld.core.Event;
-import org.socialworld.actions.AbstractAction;
-import org.socialworld.actions.ActionType;
 
 /**
  * magic spells are simulation objects that offer some fantasy aspects. A magic
@@ -51,10 +49,6 @@ public class Magic extends SimulationObject {
 
 	public void reactToEvent(final Event event) {
 		
-	}
-
-	@Override
-	protected void doAction(final ActionType type, final AbstractAction action) {
 	}
 
 }

@@ -21,8 +21,6 @@
 */
 package org.socialworld.objects;
 
-import org.socialworld.actions.AbstractAction;
-import org.socialworld.actions.ActionType;
 import org.socialworld.actions.attack.IWeapon;
 import org.socialworld.attributes.Inventory;
 import org.socialworld.knowledge.Acquaintance;
@@ -67,11 +65,11 @@ import org.socialworld.conversation.Talk_SentenceType;
 
 		
 	public String getSentence(Human partner, Talk_SentenceType type) {
-		return this.state.findSentence( partner,  type);
+		return new String(this.state.findSentence( partner,  type));
 	}
 	
 	public String getLastSaidSentence() {
-		return this.state.getLastSaidSentence();
+		return new String(this.state.getLastSaidSentence());
 	}
 
 	void addSentence(Human partner, Talk_SentenceType type,  String sentence, WriteAccessToHuman guard) {
@@ -85,6 +83,8 @@ import org.socialworld.conversation.Talk_SentenceType;
 	}
 	
 	public Answer getAnswerForQuestion(String question) {
+		// no copy
+		// because a new answer is created in method KnowledgePool.getAnswerForQuestion()
 		return this.state.knowledge.getAnswerForQuestion(question);
 	}
 	
@@ -95,89 +95,26 @@ import org.socialworld.conversation.Talk_SentenceType;
 	
 	// TODO interface for more complex access to inventory
 	public IWeapon getLeftHandWeapon() {
+		// no copy because it is a simulation object and that isn't allowed to be duplicated
 		return this.state.inventory.getLeftHandWeapon();
 	}
 	
 	public IWeapon getRightHandWeapon() {
+		// no copy because it is a simulation object and that isn't allowed to be duplicated
 		return this.state.inventory.getRightHandWeapon();
 	}
 
 	public SimulationObject getLeftHand() {
+		// no copy because it is a simulation object and that isn't allowed to be duplicated
 		return this.state.inventory.getLeftHand();
 	}
 	
 	public SimulationObject getRightHand() {
+		// no copy because it is a simulation object and that isn't allowed to be duplicated
 		return this.state.inventory.getRightHand();
 	}
 
-	/**
-	 * Depending on the action type the method calls the according procedure
-	 * with special implementation of the action.
-	 */
-	@Override
-	protected void doAction(final ActionType type, final AbstractAction action) {
 
-
-		switch (type) {
-		case touch:
-			 touch(action);
-			break;
-		case sleep:
-			 sleep(action);
-			break;
-		case kick:
-			 kick(action);
-			break;
-		case controlHandManually:
-			 controlHandManually(action);
-			break;
-		case spell:
-			 spell(action);
-			break;
-		case useWeaponLeft:
-			break;
-		case useWeaponRight:
-			break;
-		case move:
-			break;
-		case say:
-			break;
-		case handleItem:
-			 handleItem(action);
-			break;
-		case hear:
-		default:
-			 super.doAction(type,  action);
-			break;
-		}
-	}
-
-	protected void handleItem(final AbstractAction action) {
-
-
-	}
-
-
-
-	protected void spell(final AbstractAction action) {
-
-
-	}
-
-	protected void controlHandManually(final AbstractAction action) {
-
-
-	}
-
-	protected void touch(final AbstractAction action) {
-
-
-	}
-
-
-	protected void understand(final AbstractAction action) {
-
-	}
-	
+		
 	
 }

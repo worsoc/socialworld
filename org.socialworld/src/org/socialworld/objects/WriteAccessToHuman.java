@@ -22,7 +22,7 @@
 package org.socialworld.objects;
 
 import org.socialworld.attributes.Inventory;
-import org.socialworld.conversation.Talk_SentenceType;
+//import org.socialworld.conversation.Talk_SentenceType;
 
 public class WriteAccessToHuman extends WriteAccessToAnimal {
 
@@ -37,7 +37,9 @@ public class WriteAccessToHuman extends WriteAccessToAnimal {
 		if (checkCaller(caller)) human.setInventory(inventory, this);
 	}
 
+	/*
 	public void addSentence(Human partner, Talk_SentenceType type, String sentence, Object caller) {
 		if (checkCaller(caller)) human.addSentence(partner, type, sentence, this);
 	}
+	*/
 }

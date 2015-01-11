@@ -46,6 +46,14 @@ public class StateAnimal extends StateSimulationObject {
 		knownPathsPool = new KnownPathsPool();
 	}
 
+	void calculateEventInfluence(Event event) {
+		
+		super.calculateEventInfluence(event);
+		
+		AttributeCalculator.calculateAttributesChangedByEvent(event, this);
+		
+	}
+
 	public void setAttributes(AttributeArray attributes) {
 		this.attributes = attributes;
 	}
@@ -57,13 +65,10 @@ public class StateAnimal extends StateSimulationObject {
 	public void setDirectionChest(Vector directionChest) {
 		this.directionChest = directionChest;
 	}
-	
-	void calculateEventInfluence(Event event) {
-		
-		super.calculateEventInfluence(event);
-		
-		AttributeCalculator.calculateAttributesChangedByEvent(event, this);
-		
+
+	public void setDirectionView(Vector directionView) {
+		this.directionView = directionView;
 	}
+
 
 }
