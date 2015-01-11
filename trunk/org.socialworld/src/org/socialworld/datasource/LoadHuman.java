@@ -67,7 +67,11 @@ public class LoadHuman extends LoadAnimal {
 	 */
 	public Human getObject(int objectID) {
 	
-		Human createdHuman = new Human();
+		StateHuman state = new StateHuman();
+		
+		initState(state);
+		
+		Human createdHuman = new Human(state);
 		WriteAccessToHuman human = new WriteAccessToHuman(createdHuman);
 
 	
@@ -80,8 +84,12 @@ public class LoadHuman extends LoadAnimal {
 
 	protected void initObject(WriteAccessToHuman object, int objectID) {
 		super.initObject(object, objectID);
-
 	}
+
+	protected void initState(StateHuman state) {
+		super.initState(state);		
+	}
+
 
 	public void selectAll() {
 		

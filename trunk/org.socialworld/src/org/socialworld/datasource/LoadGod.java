@@ -28,6 +28,7 @@ import java.sql.Statement;*/
 import java.sql.*;
 
 import org.socialworld.objects.God;
+import org.socialworld.objects.StateSimulationObject;
 import org.socialworld.objects.WriteAccessToSimulationObject;
 
 public class LoadGod extends LoadSimulationObjects {
@@ -49,8 +50,12 @@ public class LoadGod extends LoadSimulationObjects {
 
 	@Override
 	public God getObject(int objectID) {
+		// TODO
+		StateSimulationObject state = new StateSimulationObject();
 		
-		God createdGod = new God();
+		initState(state);
+		
+		God createdGod = new God(state);
 		WriteAccessToSimulationObject god = new WriteAccessToSimulationObject(createdGod);
 		
 

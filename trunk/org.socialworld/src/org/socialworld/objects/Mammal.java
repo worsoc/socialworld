@@ -27,9 +27,9 @@ package org.socialworld.objects;
  */
 public class Mammal extends Animal {
 
-    public Mammal(SimulationObject_Type objectType) {
-    	super(objectType);
-    }
+    public Mammal(StateAnimal state) {
+		super(state);
+	}
 
    
 }

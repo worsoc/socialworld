@@ -21,7 +21,6 @@
 */
 package org.socialworld.objects;
 
-import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.calculation.Vector;
 import org.socialworld.calculation.application.AttributeCalculator;
@@ -41,12 +40,10 @@ public class StateAnimal extends StateSimulationObject {
 
 	protected KnownPathsPool knownPathsPool;
 
-	StateAnimal(SimulationObject object) {
-		super(object);
+	public StateAnimal() {
+		super();
 		
-		attributes = new AttributeArray(Attribute.NUMBER_OF_ATTRIBUTES);
 		knownPathsPool = new KnownPathsPool();
-
 	}
 
 	public void setAttributes(AttributeArray attributes) {

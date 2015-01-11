@@ -17,7 +17,7 @@ public class ActionHandlerTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		actionHandler = new ActionHandler(new Human());
+		//actionHandler = new ActionHandler(new Human());
 	}
 
 	protected void tearDown() throws Exception {

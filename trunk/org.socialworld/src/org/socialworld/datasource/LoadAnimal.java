@@ -22,6 +22,7 @@
 package org.socialworld.datasource;
 
 import org.socialworld.objects.Animal;
+import org.socialworld.objects.StateAnimal;
 import org.socialworld.objects.WriteAccessToAnimal;
 
 public class LoadAnimal extends LoadSimulationObjects  {
@@ -47,8 +48,11 @@ public class LoadAnimal extends LoadSimulationObjects  {
 
 	@Override
 	public  Animal getObject(int objectID) {
+		StateAnimal state = new StateAnimal();
 		
-		Animal createdAnimal = new Animal();
+		initState(state);
+		
+		Animal createdAnimal = new Animal(state);
 		WriteAccessToAnimal animal = new WriteAccessToAnimal(createdAnimal);
 		
 		initObject(animal, objectID);	
@@ -56,28 +60,38 @@ public class LoadAnimal extends LoadSimulationObjects  {
 		return createdAnimal;
 	}
 
-	protected void selectAllForID(int ObjectID){
-		
-	}
 	
 	protected void initObject(WriteAccessToAnimal object, int objectID) {
-		int indexACMP;
-		int indexAAP;
-		double gauss_value;
-
+	
 		super.initObject(object, objectID);
+
+		int indexACMP;
+		double gauss_value;
 
 		gauss_value = random.nextGaussian();
 		indexACMP = mapGaussToIndex(gauss_value, AttributeCalculatorMatrixPool.CAPACITY_ACMP_ARRAY);
-		gauss_value = random.nextGaussian();
-		indexAAP = mapGaussToIndex(gauss_value, AttributeArrayPool.CAPACITY_AAP_ARRAY);
 
 		object.setMatrix(	
 				AttributeCalculatorMatrixPool.getInstance().getMatrix(indexACMP),
 				this);
-		object.setAttributes(
-				AttributeArrayPool.getInstance().getArray(indexAAP),
-				this);
+		
+	}
+	
+	protected void initState(StateAnimal state) {
+
+		super.initState(state);		
+
+		int indexAAP;
+		double gauss_value;
+
+		gauss_value = random.nextGaussian();
+		indexAAP = mapGaussToIndex(gauss_value, AttributeArrayPool.CAPACITY_AAP_ARRAY);
+		state.setAttributes(
+				AttributeArrayPool.getInstance().getArray(indexAAP));
+		
+	}
+
+	protected void selectAllForID(int ObjectID){
 		
 	}
 	

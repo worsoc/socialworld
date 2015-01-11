@@ -35,8 +35,8 @@ import org.socialworld.actions.ActionType;
  */
 public class Magic extends SimulationObject {
 // TODO implement Magic class functionality
-	public Magic() {
-		super(SimulationObject_Type.magic);
+	public Magic(StateSimulationObject state) {
+		super(state);
 	}
 
 	/*

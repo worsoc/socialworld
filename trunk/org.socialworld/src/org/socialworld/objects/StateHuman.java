@@ -48,8 +48,8 @@ public class StateHuman extends StateAnimal {
 	protected ArrayList<Talk> talks;
 	protected String lastSaidSentence;
 
-	StateHuman(SimulationObject object) {
-		super(object);
+	public StateHuman() {
+		super();
 		
 		talks = new ArrayList<Talk>();
 		

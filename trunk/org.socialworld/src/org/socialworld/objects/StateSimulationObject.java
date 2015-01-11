@@ -22,7 +22,6 @@
 package org.socialworld.objects;
 
 import org.socialworld.attributes.Position;
-import org.socialworld.calculation.Vector;
 import org.socialworld.core.Event;
 import org.socialworld.propertyChange.ListenedBase;
 
@@ -36,11 +35,13 @@ public class StateSimulationObject extends ListenedBase {
 	
 	protected 	Position 		position;
 
-	StateSimulationObject(SimulationObject object) {
+	
+	
+	public StateSimulationObject() {
+	}
+	
+	void setObject (SimulationObject object) {
 		this.object = object;
-		
-		this.position = new Position( new Vector( 0,0,0));
-
 	}
 	
 	public SimulationObject getObject() {

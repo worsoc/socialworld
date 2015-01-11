@@ -22,6 +22,7 @@
 package org.socialworld.datasource;
 
 import org.socialworld.objects.Item;
+import org.socialworld.objects.StateSimulationObject;
 import org.socialworld.objects.WriteAccessToSimulationObject;
 
 public class LoadItem extends LoadSimulationObjects {
@@ -43,8 +44,13 @@ public class LoadItem extends LoadSimulationObjects {
 
 	@Override
 	public Item getObject(int objectID) {
+		// TODO
+		StateSimulationObject state = new StateSimulationObject();
 		
-		Item createdItem = new Item();
+		initState(state);
+		
+		Item createdItem = new Item(state);
+		
 		WriteAccessToSimulationObject item = new WriteAccessToSimulationObject(createdItem);
 		
 

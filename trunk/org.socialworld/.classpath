@@ -6,5 +6,10 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
 	<classpathentry kind="lib" path="C:/Users/Mathias/workspace/socialworld/mariadb-java-client-1.1.7.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Mathias/workspace/lwjgl-2.9.1/jar/lwjgl.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/Users/Mathias/workspace/lwjgl-2.9.1/native/windows"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

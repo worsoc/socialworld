@@ -47,25 +47,17 @@ public class Animal extends SimulationObject {
 	protected FunctionByMatrix_Matrix attributeCalculatorMatrix;
 	protected PathFinder pathFinder;
 
-	public Animal() {
-		super(SimulationObject_Type.animal);
+	public Animal(StateAnimal state) {
+		super(state);
+		this.state = state;
 		init();
 	}
 	
-	public Animal(SimulationObject_Type objectType) {
-		super(objectType);
-		init();
-	}
 
 	private void init() {
 		
 		pathFinder = new PathFinder(this);
 		
-	}
-
-	void init(WriteAccessToAnimal guard) {
-		if (checkGuard(guard) )
-			this.state = (StateAnimal) getState(guard);
 	}
 
 	void setAttributes(AttributeArray array, WriteAccessToAnimal guard) {
