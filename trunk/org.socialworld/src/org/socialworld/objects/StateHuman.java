@@ -91,7 +91,7 @@ public class StateHuman extends StateAnimal {
 	}
 	
 	public String getLastSaidSentence() {
-		return new String(lastSaidSentence);
+		return lastSaidSentence;
 	}
 	
 	protected String findSentence(Human partner, Talk_SentenceType type) {

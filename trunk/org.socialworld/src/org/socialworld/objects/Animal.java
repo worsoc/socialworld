@@ -23,15 +23,15 @@ package org.socialworld.objects;
 
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
-import org.socialworld.actions.ActionType;
+import org.socialworld.actions.move.Path;
 import org.socialworld.actions.move.PathFinder;
 import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.AttributeArray;
+import org.socialworld.attributes.Position;
 import org.socialworld.core.Event;
 import org.socialworld.calculation.FunctionByMatrix_Matrix;
 import org.socialworld.calculation.Vector;
 import org.socialworld.calculation.application.ActionCreator;
-import org.socialworld.knowledge.KnownPathsPool;
 
 
 /**
@@ -56,8 +56,16 @@ public class Animal extends SimulationObject {
 
 	private void init() {
 		
-		pathFinder = new PathFinder(this);
+		pathFinder = new PathFinder(this, this.state.knownPathsPool);
 		
+	}
+
+	void setMatrix(FunctionByMatrix_Matrix matrix,  WriteAccessToAnimal guard) {
+		if (checkGuard(guard) ) attributeCalculatorMatrix  = matrix;
+	}
+	
+	public FunctionByMatrix_Matrix getMatrix() {
+		return new FunctionByMatrix_Matrix(attributeCalculatorMatrix, Attribute.NUMBER_OF_ATTRIBUTES);
 	}
 
 	void setAttributes(AttributeArray array, WriteAccessToAnimal guard) {
@@ -69,21 +77,12 @@ public class Animal extends SimulationObject {
 		return new AttributeArray(this.state.getAttributes());
 	}
 	
-	void setMatrix(FunctionByMatrix_Matrix matrix,  WriteAccessToAnimal guard) {
-		if (checkGuard(guard) ) attributeCalculatorMatrix  = matrix;
-	}
-	
-	public FunctionByMatrix_Matrix getMatrix() {
-		return new FunctionByMatrix_Matrix(attributeCalculatorMatrix, Attribute.NUMBER_OF_ATTRIBUTES);
-	}
-
 	/**
 	 * @return the directionChest
 	 */
 	public Vector getDirectionChest() {
-		return this.state.directionChest;
+		return new Vector(this.state.directionChest);
 	}
-
 
 	/**
 	 * @param directionChest the directionChest to set
@@ -93,77 +92,32 @@ public class Animal extends SimulationObject {
 			this.state.setDirectionChest(directionChest);
 	}
 
-
 	/**
 	 * @return the directionView
 	 */
 	public Vector getDirectionView() {
-		return this.state.directionView;
+		return new Vector(this.state.directionView);
 	}
-
 
 	/**
 	 * @param directionView the directionView to set
 	 */
 	void setDirectionView(Vector directionView, WriteAccessToAnimal guard) {
 		if (checkGuard(guard))
-			this.state.setDirectionChest(directionView);
+			this.state.setDirectionView(directionView);
 	}
 
-	/**
-	 * @return the knownPathsPool
-	 */
-	public KnownPathsPool getKnownPathsPool() {
-		return this.state.knownPathsPool;
+	public void addPath(Path path)  {
+		// TODO guarded write access
+		this.state.knownPathsPool.addPath(path);
 	}
-
-	/**
-	 * @return the pathFinder
-	 */
-	public PathFinder getPathFinder() {
-		return pathFinder;
+	
+	public Path findPath(Position end) {
+		// not as a copy
+		// TODO because the findPath() method has to create the copy
+		return this.pathFinder.findPath(end);
 	}
-
-	/**
-	 * Depending on the action type the method calls the according procedure
-	 * with special implementation of the action.
-	 */
-	@Override
-	protected void doAction(final ActionType type, final AbstractAction action) {
-
-		
-		switch (type) {
-		case sleep:
-			 sleep(action);
-			break;
-		case kick:
-			 kick(action);
-			break;
-		case move:
-			break;
-		case say:
-			break;
-		default:
-			break;
-		}
-	}
-
-	/**
-	 * The method changes the move mode of an animal.
-	 * 
-	 * @param action
-	 */
-	protected void changeMove(final AbstractAction action) {
-	}
-
-
-	/**
-	 * The method holds the implementation of kicking.
-	 * 
-	 * @param action
-	 */
-	protected void kick(final AbstractAction action) {
-	}
+	
 
 	/**
 	 * The method holds the implementation of sleep.

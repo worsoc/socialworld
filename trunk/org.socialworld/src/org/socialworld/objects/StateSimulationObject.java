@@ -53,7 +53,7 @@ public class StateSimulationObject extends ListenedBase {
 	}
 	
 	public Position getPosition() {
-		return new Position(position);
+		return this.position;
 	}
 	
 	void calculateEventInfluence(Event event) {
