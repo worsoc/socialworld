@@ -37,15 +37,6 @@ public class Magic extends SimulationObject {
 		super(state);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.socialworld.objects.SimulationObject#determineInfluence(org.socialworld.objects.SimulationEvent)
-	 */
-	@Override
-	public void changeByEvent(final Event event) {
-
-	}
 
 	public void reactToEvent(final Event event) {
 		

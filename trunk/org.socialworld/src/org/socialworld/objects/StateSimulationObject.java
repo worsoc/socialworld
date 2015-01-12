@@ -22,6 +22,7 @@
 package org.socialworld.objects;
 
 import org.socialworld.attributes.Position;
+import org.socialworld.calculation.application.PositionCalculator;
 import org.socialworld.core.Event;
 import org.socialworld.propertyChange.ListenedBase;
 
@@ -58,6 +59,7 @@ public class StateSimulationObject extends ListenedBase {
 	
 	void calculateEventInfluence(Event event) {
 		
+		PositionCalculator.calculatePositionChangedByEvent(event, this);
 		
 	}
 	
