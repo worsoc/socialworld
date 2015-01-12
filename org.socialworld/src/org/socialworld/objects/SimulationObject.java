@@ -152,7 +152,9 @@ public abstract class SimulationObject extends ListenedBase {
 	 * @param simualationEvent -
 	 *            the event influencing the simulation object
 	 */
-	public abstract void changeByEvent(final Event simualationEvent);
+	public void changeByEvent(final Event simualationEvent) {
+		this.state.calculateEventInfluence(simualationEvent);
+	}
 
 	/**
 	 * The method determines the reaction to an event.

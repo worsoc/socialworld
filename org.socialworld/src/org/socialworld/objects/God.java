@@ -36,10 +36,6 @@ public class God extends SimulationObject {
 		super(state);
 	}
 
-	@Override
-	public void changeByEvent(final Event event) {
-		// TODO Implement method
-	}
 
 	public void reactToEvent(final Event event) {
 		

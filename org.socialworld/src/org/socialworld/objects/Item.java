@@ -39,10 +39,6 @@ public class Item extends SimulationObject {
 		super(state);
 	}
 
-	@Override
-	public void changeByEvent(final Event event) {
-
-	}
 	
 	public void reactToEvent(final Event event) {
 		
