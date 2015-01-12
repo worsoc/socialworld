@@ -114,9 +114,8 @@ public class ActionMove extends AbstractAction {
 		
 		if (repeatsMove == 0) 			createMove();
 		
-		// TODO
 		EventByAction event;
-		event = new EventByAction( 1,    actor /* as causer*/,  ActualTime.asTime(),
+		event = new EventByAction( getEventType(mode),    actor /* as causer*/,  ActualTime.asTime(),
 					actor.getPosition(),  move /* as performer */);
 		addEvent(event);
 		
@@ -141,7 +140,16 @@ public class ActionMove extends AbstractAction {
 	}
 	
 	
+	private int getEventType(ActionMode mode) {
+		switch (mode) {
+		// TODO cases
+		default:
+			return -1;
+		}
+	}
+	
 	/**
+	}
 	 * @return the direction
 	 */
 	public Vector getDirection() {
