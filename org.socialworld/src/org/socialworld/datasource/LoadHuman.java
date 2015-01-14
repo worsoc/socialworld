@@ -72,7 +72,7 @@ public class LoadHuman extends LoadAnimal {
 		initState(state);
 		
 		Human createdHuman = new Human(state);
-		WriteAccessToHuman human = new WriteAccessToHuman(createdHuman);
+		WriteAccessToHuman human = new WriteAccessToHuman(createdHuman, state);
 
 	
 		initObject(human, objectID);	
