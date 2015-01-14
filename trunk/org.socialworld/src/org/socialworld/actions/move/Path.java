@@ -32,6 +32,7 @@ import org.socialworld.knowledge.KnownPaths;
  */
 public class Path {
 	public static final int LOCATION_BASE25_ACCURACY = 7;
+	private static final int STOP_CHILD_INCREMETUSAGE_CALL = 10;
 	
 	private Position start;
 	private Position end;
@@ -46,18 +47,42 @@ public class Path {
 	private KnownPaths refToKnownPathsWithStartingPoint;
 	private KnownPaths refToKnownPathsWithEndPoint;
 	
+	private Path pathA;
+	private Path pathB;
+	
+	
 	public Path(Position start, Position end) {
 		points = new ArrayList<Position>();
 		
 		this.start = start;
 		this.end = end;
 		
-		points.add(start);
-		points.add(end);
+		this.points.add(start);
+		this.points.add(end);
 		
-		completelyKnown = false;
+		this.completelyKnown = false;
 		
 		refresh();
+	}
+	
+	// copy constructor
+	public Path(Path original) {
+		this.start = original.start;
+		this.end = original.end;
+		
+		this.points = new ArrayList<Position>();
+		this.points.addAll(original.getPoints());
+		
+		this.completelyKnown = original.completelyKnown;
+		
+		this.pathA = original;
+		
+		refresh();
+	}
+	
+	public void resetCildPaths() {
+		this.pathA = null;
+		this.pathB = null;
 	}
 	
 	public float costs() {
@@ -71,7 +96,9 @@ public class Path {
 		
 		this.end = b.getEndPoint();
 		this.completelyKnown = this.completelyKnown & b.isCompletelyKnown();
-		
+
+		this.pathB = b;
+
 		refresh();
 	}
 
@@ -114,11 +141,19 @@ public class Path {
 				(this.refToKnownPathsWithEndPoint != null) ) ;
 	}
 	
-	public void incrementUsageCounter() {
+	public void incrementUsageCounter(int countCalls) {
 		if (this.refToKnownPathsWithStartingPoint != null)
 			this.refToKnownPathsWithStartingPoint.incrementWalkCounter(this);
 		if (this.refToKnownPathsWithEndPoint != null)
 			this.refToKnownPathsWithEndPoint.incrementWalkCounter(this);
+		
+		if (countCalls < STOP_CHILD_INCREMETUSAGE_CALL) {
+			countCalls = countCalls + 1;
+			if (this.pathA != null)
+				this.pathA.incrementUsageCounter(countCalls);
+			if (this.pathB != null)
+				this.pathB.incrementUsageCounter(countCalls);
+		}
 	}
 	
 	public void setRefToKnownPathsWithStartingPoint(KnownPaths paths) {
