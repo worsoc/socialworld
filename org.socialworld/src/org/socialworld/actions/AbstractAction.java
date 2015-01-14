@@ -96,14 +96,15 @@ public abstract class AbstractAction {
 		
 	}
 
-	/*
+	
 	protected  final WriteAccessToSimulationObject getWriteAccess(AbstractAction concreteAction) {
 		if (this == concreteAction & writeAccesToActor.checkGrantRightFor(concreteAction))
 			return writeAccesToActor;
 		else
-			return null;
+			// dummy
+			return new WriteAccessToSimulationObject();
 	}
-	*/
+	
 	public abstract void perform();
 	
 	public abstract Object getConcreteProperty(ActionProperty prop);
