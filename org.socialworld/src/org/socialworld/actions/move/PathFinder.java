@@ -45,7 +45,6 @@ public class PathFinder {
 	public Path findPath(Position end) {
 		// TODO more complex and better pathfinding
 		
-		// TODO there must be new creations of paths (copies) because there are soperations on the paths
 		
 		Path result;
 		Path pathStart;
@@ -66,7 +65,7 @@ public class PathFinder {
 					result = createPath(actor.getPosition(), end);
 			else
 				if (pathEnd == null) {
-					result = pathStart;
+					result = new Path(pathStart);
 					result.concat(createPath(result.getEndPoint(), end));
 				}
 				else {
@@ -78,7 +77,7 @@ public class PathFinder {
 					
 					if (partStart.length() > beelineToStartOfPathEnd.length()) {
 						if (pathStart.costs() < pathEnd.costs() ) {
-							result = pathStart;
+							result = new Path( pathStart);
 							result.concat(createPath(result.getEndPoint(), end));
 						}
 						else {
@@ -87,7 +86,7 @@ public class PathFinder {
 						}
 					}
 					else {
-						result = pathStart;
+						result = new Path(pathStart);
 						result.concat(createPath(pathStart.getEndPoint(), pathEnd.getStartPoint()));
 						result.concat(pathEnd);
 					}
@@ -160,6 +159,7 @@ public class PathFinder {
 		// TODO
 		return paths.get(0);
 	}
+	
 	private Path createPath(Position start, Position end) {
 		Path path = new Path(start, end);
 		return path;
