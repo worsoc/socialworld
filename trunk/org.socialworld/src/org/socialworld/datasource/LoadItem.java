@@ -51,7 +51,7 @@ public class LoadItem extends LoadSimulationObjects {
 		
 		Item createdItem = new Item(state);
 		
-		WriteAccessToSimulationObject item = new WriteAccessToSimulationObject(createdItem);
+		WriteAccessToSimulationObject item = new WriteAccessToSimulationObject(createdItem, state);
 		
 
 		initObject(item, objectID);	

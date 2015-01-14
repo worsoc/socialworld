@@ -51,7 +51,7 @@ public class LoadMagic extends LoadSimulationObjects {
 		
 		Magic createdMagic = new Magic(state);
 		
-		WriteAccessToSimulationObject magic = new WriteAccessToSimulationObject(createdMagic);
+		WriteAccessToSimulationObject magic = new WriteAccessToSimulationObject(createdMagic, state);
 		
 
 		initObject(magic, objectID);	

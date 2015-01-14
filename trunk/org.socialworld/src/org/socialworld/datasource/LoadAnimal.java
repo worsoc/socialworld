@@ -53,7 +53,7 @@ public class LoadAnimal extends LoadSimulationObjects  {
 		initState(state);
 		
 		Animal createdAnimal = new Animal(state);
-		WriteAccessToAnimal animal = new WriteAccessToAnimal(createdAnimal);
+		WriteAccessToAnimal animal = new WriteAccessToAnimal(createdAnimal, state);
 		
 		initObject(animal, objectID);	
 		
