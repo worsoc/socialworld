@@ -19,48 +19,16 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.objects;
+package org.socialworld.objects.access;
 
-import org.socialworld.attributes.Position;
-import org.socialworld.calculation.application.PositionCalculator;
-import org.socialworld.core.Event;
-import org.socialworld.propertyChange.ListenedBase;
+import org.socialworld.objects.StateSimulationObject;
 
 /**
  * @author Mathias Sikos
  *
  */
-public class StateSimulationObject extends ListenedBase {
+public interface IHiddenStateBox {
 	
-	private SimulationObject object;
-	
-	private 	Position 		position;
-
-	
-	
-	public StateSimulationObject() {
-	}
-	
-	void setObject (SimulationObject object) {
-		this.object = object;
-	}
-	
-	public SimulationObject getObject() {
-		return object;
-	}
-	
-	public void setPosition(Position position) {
-		this.position = position;
-	}
-	
-	public Position getPosition() {
-		return this.position;
-	}
-	
-	void calculateEventInfluence(Event event) {
-		
-		PositionCalculator.calculatePositionChangedByEvent(event, this);
-		
-	}
+	public void putStateIntoBox(StateSimulationObject state);
 	
 }

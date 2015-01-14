@@ -28,8 +28,8 @@ public class WriteAccessToHuman extends WriteAccessToAnimal {
 
 	private  Human human;
 	
-	public WriteAccessToHuman(Human human) {
-		super(human);
+	public WriteAccessToHuman(Human human, StateHuman state) {
+		super(human, state);
 		this.human = human;
 	}
 	

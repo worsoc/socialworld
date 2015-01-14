@@ -85,7 +85,7 @@ import org.socialworld.conversation.Talk_SentenceType;
 	public Answer getAnswerForQuestion(String question) {
 		// no copy
 		// because a new answer is created in method KnowledgePool.getAnswerForQuestion()
-		return this.state.knowledge.getAnswerForQuestion(question);
+		return this.state.getAnswerForQuestion(question);
 	}
 	
 	
@@ -96,22 +96,22 @@ import org.socialworld.conversation.Talk_SentenceType;
 	// TODO interface for more complex access to inventory
 	public IWeapon getLeftHandWeapon() {
 		// no copy because it is a simulation object and that isn't allowed to be duplicated
-		return this.state.inventory.getLeftHandWeapon();
+		return this.state.getLeftHandWeapon();
 	}
 	
 	public IWeapon getRightHandWeapon() {
 		// no copy because it is a simulation object and that isn't allowed to be duplicated
-		return this.state.inventory.getRightHandWeapon();
+		return this.state.getRightHandWeapon();
 	}
 
 	public SimulationObject getLeftHand() {
 		// no copy because it is a simulation object and that isn't allowed to be duplicated
-		return this.state.inventory.getLeftHand();
+		return this.state.getLeftHand();
 	}
 	
 	public SimulationObject getRightHand() {
 		// no copy because it is a simulation object and that isn't allowed to be duplicated
-		return this.state.inventory.getRightHand();
+		return this.state.getRightHand();
 	}
 
 

@@ -24,6 +24,7 @@ package org.socialworld.objects;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
+import org.socialworld.actions.attack.IWeapon;
 import org.socialworld.attributes.Inventory;
 import org.socialworld.calculation.application.TalkCalculator;
 import org.socialworld.conversation.Talk;
@@ -41,12 +42,12 @@ import org.socialworld.knowledge.KnowledgeSource;
  */
 public class StateHuman extends StateAnimal {
 
-	protected Inventory inventory;
-	protected KnowledgePool knowledge;
-	protected AcquaintancePool acquaintance;
+	private Inventory inventory;
+	private KnowledgePool knowledge;
+	private AcquaintancePool acquaintance;
 	
-	protected ArrayList<Talk> talks;
-	protected String lastSaidSentence;
+	private ArrayList<Talk> talks;
+	private String lastSaidSentence;
 
 	public StateHuman() {
 		super();
@@ -94,6 +95,12 @@ public class StateHuman extends StateAnimal {
 		return lastSaidSentence;
 	}
 	
+	public Answer getAnswerForQuestion(String question) {
+		// no copy
+		// because a new answer is created in method KnowledgePool.getAnswerForQuestion()
+		return this.knowledge.getAnswerForQuestion(question);
+	}
+
 	protected String findSentence(Human partner, Talk_SentenceType type) {
 		ListIterator<Talk> iterator ;
 		Talk talk;
@@ -134,6 +141,26 @@ public class StateHuman extends StateAnimal {
 			}
 		}
 		return  talks.get(0);
+	}
+
+	public IWeapon getLeftHandWeapon() {
+		// no copy because it is a simulation object and that isn't allowed to be duplicated
+		return this.inventory.getLeftHandWeapon();
+	}
+	
+	public IWeapon getRightHandWeapon() {
+		// no copy because it is a simulation object and that isn't allowed to be duplicated
+		return this.inventory.getRightHandWeapon();
+	}
+
+	public SimulationObject getLeftHand() {
+		// no copy because it is a simulation object and that isn't allowed to be duplicated
+		return this.inventory.getLeftHand();
+	}
+	
+	public SimulationObject getRightHand() {
+		// no copy because it is a simulation object and that isn't allowed to be duplicated
+		return this.inventory.getRightHand();
 	}
 
 }
