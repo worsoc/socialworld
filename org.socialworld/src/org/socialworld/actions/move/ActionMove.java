@@ -32,6 +32,7 @@ import org.socialworld.calculation.Vector;
 import org.socialworld.core.EventByAction;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.Animal;
+import org.socialworld.objects.WriteAccessToAnimal;
 
 /**
  * @author Mathias Sikos
@@ -105,9 +106,11 @@ public class ActionMove extends AbstractAction {
 			
 			if (path.isCompleted()) 
 				if (path.hasRefToKnownPaths()) 
-					path.incrementUsageCounter();
+					path.incrementUsageCounter(1);
 				else
-					((Animal) actor).addPath(path);
+				{
+					((WriteAccessToAnimal ) getWriteAccess(this)).addPath(path, this);
+				}
 		}
 		
 		firstStep = false;
