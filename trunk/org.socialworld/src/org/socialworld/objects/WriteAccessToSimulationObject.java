@@ -22,17 +22,34 @@
 package org.socialworld.objects;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.Position;
+import org.socialworld.objects.access.IHiddenStateBox;
 
 public class WriteAccessToSimulationObject {
 	private SimulationObject object;
+	private StateSimulationObject objectsState;
 	
-	public WriteAccessToSimulationObject(SimulationObject object) {
+	boolean isDummy;
+	
+	public WriteAccessToSimulationObject(SimulationObject object, StateSimulationObject state) {
 		this.object = object;
+		this.objectsState = state;
+		
+		isDummy = false;
+
 		object.setWriteAccess(this);
 	}
 	
+	// Dummy
+	public WriteAccessToSimulationObject() {
+		isDummy = true;
+	}
+
 	public SimulationObject getObject() {
 		return this.object;
+	}
+	
+	public final void requestForState(IHiddenStateBox box) {
+		box.putStateIntoBox(objectsState);
 	}
 	
 	public final boolean checkGrantRightFor(Object request) {
@@ -49,6 +66,9 @@ public class WriteAccessToSimulationObject {
 	
 	protected final boolean checkCaller(Object caller){
 		switch (caller.getClass().getName()) {
+		case "org.socialworld.actions.move.ActionMove":
+			return true;
+
 		case "org.socialworld.calculation.application.EventInfluenceCalculator":
 			return true;
 			
@@ -98,5 +118,5 @@ public class WriteAccessToSimulationObject {
 		if (checkCaller(caller)) object.setState2ActionType(type, this);
 	}
 	
-	
+
 }

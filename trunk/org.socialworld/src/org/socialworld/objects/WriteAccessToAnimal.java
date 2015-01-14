@@ -20,6 +20,7 @@
 *
 */
 package org.socialworld.objects;
+import org.socialworld.actions.move.Path;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.calculation.FunctionByMatrix_Matrix;
 
@@ -27,10 +28,11 @@ public class WriteAccessToAnimal extends WriteAccessToSimulationObject {
 	
 	private  Animal animal;
 	
-	public WriteAccessToAnimal(Animal animal) {
-		super(animal);
+	public WriteAccessToAnimal(Animal animal, StateAnimal state) {
+		super(animal, state);
 		this.animal = animal;
 	}
+	
 	
 	public void setAttributes(AttributeArray attributes, Object caller) {
 		if (checkCaller(caller)) animal.setAttributes(attributes, this);
@@ -40,4 +42,7 @@ public class WriteAccessToAnimal extends WriteAccessToSimulationObject {
 		if (checkCaller(caller)) animal.setMatrix(matrix, this);
 	}
 
+	public void addPath(Path path, Object caller) {
+		if (checkCaller(caller)) animal.addPath(path, this);
+	}
 }

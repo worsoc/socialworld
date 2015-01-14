@@ -56,7 +56,7 @@ public class Animal extends SimulationObject {
 
 	private void init() {
 		
-		pathFinder = new PathFinder(this, this.state.knownPathsPool);
+		pathFinder = new PathFinder(this, this.state.getKnownPathsPool());
 		
 	}
 
@@ -81,7 +81,7 @@ public class Animal extends SimulationObject {
 	 * @return the directionChest
 	 */
 	public Vector getDirectionChest() {
-		return new Vector(this.state.directionChest);
+		return new Vector(this.state.getDirectionChest());
 	}
 
 	/**
@@ -96,7 +96,7 @@ public class Animal extends SimulationObject {
 	 * @return the directionView
 	 */
 	public Vector getDirectionView() {
-		return new Vector(this.state.directionView);
+		return new Vector(this.state.getDirectionView());
 	}
 
 	/**
@@ -107,9 +107,9 @@ public class Animal extends SimulationObject {
 			this.state.setDirectionView(directionView);
 	}
 
-	public void addPath(Path path)  {
-		// TODO guarded write access
-		this.state.knownPathsPool.addPath(path);
+	public void addPath(Path path, WriteAccessToAnimal guard)  {
+		if (checkGuard(guard))
+			this.state.addPath(path);
 	}
 	
 	public Path findPath(Position end) {

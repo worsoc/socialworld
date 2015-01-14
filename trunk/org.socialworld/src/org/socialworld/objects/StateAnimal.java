@@ -21,6 +21,7 @@
 */
 package org.socialworld.objects;
 
+import org.socialworld.actions.move.Path;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.calculation.Vector;
 import org.socialworld.calculation.application.AttributeCalculator;
@@ -33,12 +34,12 @@ import org.socialworld.knowledge.KnownPathsPool;
  */
 public class StateAnimal extends StateSimulationObject {
 
-	protected AttributeArray attributes;
+	private AttributeArray attributes;
 
-	protected Vector directionChest;
-	protected Vector directionView;
+	private Vector directionChest;
+	private Vector directionView;
 
-	protected KnownPathsPool knownPathsPool;
+	private KnownPathsPool knownPathsPool;
 
 	public StateAnimal() {
 		super();
@@ -70,5 +71,21 @@ public class StateAnimal extends StateSimulationObject {
 		this.directionView = directionView;
 	}
 
+
+	public Vector getDirectionChest() {
+		return this.directionChest;
+	}
+	
+	public Vector getDirectionView() {
+		return this.directionView;
+	}
+
+	public KnownPathsPool getKnownPathsPool() {
+		return this.knownPathsPool;
+	}
+	
+	public void addPath(Path path)  {
+		this.knownPathsPool.addPath(path);
+	}
 
 }
