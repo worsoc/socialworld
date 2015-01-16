@@ -54,10 +54,15 @@ public class ActionSleep extends AbstractAction {
 	public void perform() {
 		
 		EventByAction event;
-
+		int eventType;
+		
 		sleep = new Sleep(this);
 		
-		event = new EventByAction(EventType.sleep,    actor /* as causer*/,  ActualTime.asTime(),
+		eventType = getEventType(mode);
+				
+		if (eventType == EventType.MAX_EVENT_TYPE) return;
+				
+		event = new EventByAction(eventType,    actor /* as causer*/,  ActualTime.asTime(),
 					actor.getPosition(),  sleep /* as performer */);
 		addEvent(event);
 	}
@@ -71,4 +76,15 @@ public class ActionSleep extends AbstractAction {
 		return null;
 	}
 
+	private int getEventType( ActionMode mode) {
+		switch (mode) {
+		case sleepCaused:
+			return EventType.sleepCaused.getIndex();
+		case sleepIntentioned:
+			return EventType.sleepIntentioned.getIndex();
+		default:
+			return EventType.MAX_EVENT_TYPE;
+		}
+	}
+	
 }

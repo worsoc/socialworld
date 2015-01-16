@@ -46,11 +46,7 @@ public class TalkCalculator {
 	
 		switch (eventType) {
 		case listenToStatement:
-			calculateListenTo(event, eventType, stateHuman );
-			break;
 		case listenToQuestion:
-			calculateListenTo(event, eventType, stateHuman );
-			break;
 		case listenToInstruction:
 			calculateListenTo(event, eventType, stateHuman );
 			break;
@@ -59,7 +55,9 @@ public class TalkCalculator {
 			calculateUnderstand(event, eventType, stateHuman);
 			break;
 			
-		case answer:
+		case answerNormal:
+		case answerScream:
+		case answerWhisper:
 			calculateAnswer(event, eventType, stateHuman);
 			break;
 			
