@@ -30,21 +30,35 @@ package org.socialworld.actions;
  */
 public enum ActionMode {
 	
+	// for ActionType sleep
+	sleepIntentioned,	sleepCaused,
 	
-	run, walk, jump,
+	// for ActionType move
+	walk, run, sneak, jump, swim, fly, 
 
-	sleepIntentioned, sleepCaused,
+	// for ActionType examine
+	look, smell, taste, touch,
+	
+	// for ActionType touch
+	hand, foot,
+	
+	// for ActionType itemAndInventory
+	takeItem, collectItem, dropItem, switchItemToOtherHand,
 
+	// for ActionType handleItem
+	useTwoItems,	useItemLeftHand, useItemRightHand,
+	combineItems_AddRightToLeft, combineItems_AddLeftToRight,
+	pull, push,
+
+	// for ActionType useWeaponLeft and useWeaponRight
 	stab, stroke, backhand, club, 
 
-	examineItem, takeItem,  collectItem, switchItemToLeftHand, useTwoItems,  dropItem,
-	
-	useItemLeftHand, useItemRightHand, combineItems_AddRightToLeft, combineItems_AddLeftToRight,
-	
-	pull, push,
-	
-	say, scream, whisper, answer, ask,
-	
-	listenTo, understand
+	// for ActionType hear
+	listenTo, understand,
 
+	// for ActionType talk
+	answerNormal, answerScream, answerWhisper, askNormal, askScream, askWhisper,
+	
+	// for ActionType say
+	normal, scream, whisper
 }

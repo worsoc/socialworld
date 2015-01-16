@@ -21,8 +21,6 @@
 */
 package org.socialworld.objects;
 
-import org.socialworld.actions.AbstractAction;
-import org.socialworld.actions.ActionMode;
 import org.socialworld.core.Event;
 
 /**
@@ -45,72 +43,7 @@ public class Item extends SimulationObject {
 	}
 
 
-	/**
-	 * The method implements the use of an item by an user. The kind of use is
-	 * specified by an action mode.
-	 * 
-	 * @param mode
-	 *            the mode of using
-	 * @param user
-	 *            the user
-	 */
-	public void handle(final AbstractAction action, final SimulationObject user) {
-		final ActionMode mode = action.getMode();
 
-		// TODO further modes
-		
-		switch (mode) {
-		case examineItem:
-			examine(action, user);
-			break;
-		case takeItem:
-			take(action, user);
-			break;
-		case collectItem:
-			collect(action, user);
-			break;
-		case switchItemToLeftHand:
-			switchItemToLeftHand(action, user);
-			break;
-		case useTwoItems:
-			useTwoItems(action, user);
-			break;
-		case dropItem:
-			drop(action, user);
-			break;
-		default:
-
-		}
-	}
-
-	private void use(final AbstractAction action, final SimulationObject user) {
-
-	}
-
-	private void examine(final AbstractAction action, final SimulationObject user) {
-
-	}
-
-	private void take(final AbstractAction action, final SimulationObject user) {
-
-	}
-
-	private void collect(final AbstractAction action, final SimulationObject user) {
-
-	}
-
-	private void switchItemToLeftHand(final AbstractAction action,
-			final SimulationObject user) {
-
-	}
-
-	private void useTwoItems(final AbstractAction action, final SimulationObject user) {
-
-	}
-
-	private void drop(final AbstractAction action, final SimulationObject user) {
-
-	}
 
 
 }

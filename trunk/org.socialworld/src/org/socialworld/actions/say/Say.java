@@ -66,7 +66,9 @@ public class Say extends ActionPerformer {
 			direction = actor.getPosition().getDirectionTo(partner.getPosition());
 			
 			switch (mode) {
-				case answer:
+				case answerNormal:
+				case answerScream:
+				case answerWhisper:
 					
 					Answer answer;
 				
@@ -84,7 +86,9 @@ public class Say extends ActionPerformer {
 					
 					break;
 					
-				case ask:
+				case askNormal:
+				case askScream:
+				case askWhisper:
 				
 					question = originalAction.getQuestion();
 

@@ -44,6 +44,7 @@ public class ActionSay extends AbstractAction {
 	private Say say;
 	
 	private String question;
+	private String sentence;
 	
 	private SimulationObject target;
 	private Vector direction;
@@ -80,30 +81,110 @@ public class ActionSay extends AbstractAction {
 		final Human partner = (Human) target;
 		int eventTypeAsInt;
 
-		switch (mode) {
-			case answer:
-			
-				question = ((Human) actor).getSentence(partner, Talk_SentenceType.partnersQuestion);
-				if (question == null) return;
+		
+		switch (type) {
+			case talk:
 				
-				eventTypeAsInt = EventType.answer.getIndex();
-				
+				switch (mode) {
+					case answerNormal:
+					case answerScream:
+					case answerWhisper:
+					
+						question = ((Human) actor).getSentence(partner, Talk_SentenceType.partnersQuestion);
+						if (question == null) return;
+						
+						break;
+						
+					case askNormal:
+					case askScream:
+					case askWhisper:
+					
+						question = ((Human) actor).getSentence(partner, Talk_SentenceType.myPlannedQuestion);
+						if (question == null) return;
+		
+						break;
+						
+					default:
+						
+						return;
+				}
 				break;
 				
-			case ask:
-			
-				question = ((Human) actor).getSentence(partner, Talk_SentenceType.myPlannedQuestion);
-				if (question == null) return;
-
-				eventTypeAsInt = EventType.ask.getIndex();
-
+			case say:
+				
+				switch (mode) {
+					case normal:
+						// TODO
+						//sentence = 
+						break;
+					case scream:
+						// TODO
+						//sentence = 
+						break;
+					case whisper:
+						// TODO
+						//sentence = 
+						break;
+					default:
+						return;
+				}
 				break;
 				
 			default:
-				
 				return;
 		}
-	
+
+		
+		switch (type) {
+		case talk:
+			
+			switch (mode) {
+				case answerNormal:
+					eventTypeAsInt = EventType.answerNormal.getIndex();
+					break;
+				case answerScream:
+					eventTypeAsInt = EventType.answerScream.getIndex();
+					break;
+				case answerWhisper:
+					eventTypeAsInt = EventType.answerWhisper.getIndex();
+					break;
+				case askNormal:
+					eventTypeAsInt = EventType.askNormal.getIndex();
+					break;
+				case askScream:
+					eventTypeAsInt = EventType.askScream.getIndex();
+					break;
+				case askWhisper:
+					eventTypeAsInt = EventType.askWhisper.getIndex();
+					break;
+					
+				default:
+					
+					return;
+			}
+			break;
+			
+		case say:
+			
+			switch (mode) {
+				case normal:
+					eventTypeAsInt = EventType.sayNormal.getIndex();
+					break;
+				case scream:
+					eventTypeAsInt = EventType.sayScream.getIndex();
+					break;
+				case whisper:
+					eventTypeAsInt = EventType.sayWhisper.getIndex();
+					break;
+				default:
+					return;
+			}
+			break;
+			
+		default:
+			return;
+	}
+
  		this.say = new Say(this);
   		
 		event = new EventByAction(eventTypeAsInt,    actor /* as causer*/,  ActualTime.asTime(),

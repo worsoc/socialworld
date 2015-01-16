@@ -26,7 +26,32 @@ package org.socialworld.actions;
  * @author Mathias Sikos (tyloesand) 
  */
 public enum ActionType {
-	ignore,
-	touch, sleep, kick, controlHandManually, spell,
-	useWeaponLeft, useWeaponRight, move, say, handleItem, hear
+	sleep(0),
+	move(1),
+	examine(2),
+	touch(3), 
+	itemAndInventory(4),
+	handleItem(5),
+	useWeaponLeft(6),
+	useWeaponRight(7), 
+	hear(8),
+	talk(9),
+	say(10),
+	ignore(11);
+
+	private int arrayIndex;
+
+	private ActionType(int index) {
+		this.arrayIndex = index;
+	}
+
+	/**
+	 * The method returns the index of the ActionType.
+	 * 
+	 * @return attribute's index
+	 */
+	public int getIndex() {
+		return arrayIndex;
+	}
+
 }
