@@ -24,12 +24,16 @@ package org.socialworld.calculation;
 /**
  *  The enumeration holds all possible
  *         expression types. There are mathematical comparison to a constant, an
- *         addition or multiplication by a constnt or the replacement by a
+ *         addition or multiplication by a constant or the replacement by a
  *         constant.
  * @author Mathias Sikos (tyloesand)
  */
 public enum Expression_Function {
-	condition, addition, multiplication, replacement, comparison, branching, value, attributeValue,
+	branching, condition, comparison,
+	addition, multiplication,
+	function,
+	replacement,
+	value, attributeValue, argumentValueByName,
 	nothing
 
 }
