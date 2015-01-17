@@ -21,15 +21,15 @@
 */
 package org.socialworld.actions.attack;
 
-import org.socialworld.calculation.FunctionBase;
+import org.socialworld.attributes.WeaponProperty;
 
 /**
  * @author Mathias Sikos
  *
  */
 public interface IWeapon {
-	public abstract FunctionBase getStabFunction();
-	public abstract FunctionBase getClubFunction();
-	public abstract FunctionBase getStrokeFunction();
-	public abstract FunctionBase getBackhandFunction();
+	public abstract WeaponProperty getStabProperties();
+	public abstract WeaponProperty getClubProperties();
+	public abstract WeaponProperty getStrokeProperties();
+	public abstract WeaponProperty getBackhandProperties();
 }
