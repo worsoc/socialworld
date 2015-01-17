@@ -28,6 +28,10 @@ public class Calculation {
 	
 	static Value nothing;
 	
+	static Value zeroInteger;
+	static Value zeroFloatingPoint;
+	static Value zeroVector;
+	
 	public static Calculation getInstance() {
 		if (instance == null) {
 			instance = new Calculation();
@@ -39,6 +43,10 @@ public class Calculation {
 	private Calculation() {
 		nothing = new Value();
 		
+		// TODO
+		zeroInteger = new Value(Type.integer, 0);
+		zeroFloatingPoint = new Value(Type.floatingpoint, 0F);
+		zeroVector = new Value(Type.vector, new Vector(0F, 0F, 0F));
 	}
 	
 	public  Value createValue(Type type, Object value) {
@@ -46,19 +54,108 @@ public class Calculation {
 	}
 	
 	public Value or(Value op1, Value op2) {
-		return createValue(Type.bool, op1.isTrue() | op2.isTrue());
+		if (op1.isValid() & op2.isValid())
+			return createValue(Type.bool, op1.isTrue() | op2.isTrue());
+		else
+			return nothing;
 	}
 
 	public Value and(Value op1, Value op2) {
-		return createValue(Type.bool, op1.isTrue() & op2.isTrue());
+		
+		if (op1.isValid() & op2.isValid())
+			return createValue(Type.bool, op1.isTrue() & op2.isTrue());
+		else
+			return nothing;
 	}
 
-	public Value compare(Value op1, Value op2) {
+	public Value compareEqual(Value op1, Value op2) {
+		Value tmp;
+		tmp = subtraction(op1, op2);
+		
+		if ( tmp.isValid() ) 
+				return createValue(Type.bool, equalsZero(tmp));
+		return nothing;
+	}
+
+	public Value compareNotEqual(Value op1, Value op2) {
+		Value tmp;
+		tmp = subtraction(op1, op2);
+		
+		if ( tmp.isValid() ) 
+				return createValue(Type.bool, !equalsZero(tmp));
+		return nothing;
+	}
+
+	public Value compareGreater(Value op1, Value op2) {
+		Value tmp;
+		tmp = subtraction(op1, op2);
+		
+		if ( tmp.isValid() ) 
+				return createValue(Type.bool, greaterToZero(tmp));
+		return nothing;
+	}
+
+	public Value compareGreaterEqual(Value op1, Value op2) {
+		Value tmp;
+		tmp = subtraction(op2, op1);
+		
+		if ( tmp.isValid() ) 
+				return createValue(Type.bool, !greaterToZero(tmp));
+		return nothing;
+	}
+
+	public Value compareLessEqual(Value op1, Value op2) {
+		return compareGreaterEqual(op2, op1);
+	}
+
+	public Value compareLess(Value op1, Value op2) {
+		return compareGreater(op2, op1);
+	}
+
+	private boolean equalsZero(Value op1) {
+		// assumption: op1 is valid !
+		Type type;
+		type = op1.getType();
+		
 		// TODO
-		return createValue(Type.bool, false);
-	}
+		switch (type) {
+		case integer:
+			return ( (int) op1.getValue() == 0 /*(int) getZero(Type.integer).getValue()*/ );
+		case floatingpoint:
+			return ( (float) op1.getValue() == 0F /*(float) getZero(Type.floatingpoint).getValue() */ );
+		case vector:
+			Vector tmp;
+			tmp = (Vector) op1.getValue();
+			return (tmp.x == 0F & tmp.y == 0F & tmp.z == 0F);
+		default:
+			return false;
+		}
 
+	}
+	
+	private boolean greaterToZero(Value op1) {
+		// assumption: op1 is valid !
+		
+		Type type;
+		type = op1.getType();
+		
+		// TODO
+		switch (type) {
+		case integer:
+			return ( (int) op1.getValue() > 0 /* (int) getZero(Type.integer).getValue()*/ );
+		case floatingpoint:
+			return ( (float) op1.getValue() > 0F/* (float) getZero(Type.floatingpoint).getValue() */ );
+		case vector:
+			Vector tmp;
+			tmp = (Vector) op1.getValue();
+			return tmp.length() > 0F /* ((Vector) getZero(Type.vector).getValue()).length() */;
+		default:
+			return false;
+		}
+	}
+	
 	public Value addition(Value op1, Value op2){
+		// TODO
 		switch (op1.getType() ) {
 		case integer:
 			switch (op2.getType() ) {
@@ -67,7 +164,7 @@ public class Calculation {
 			case floatingpoint:
 				return createValue(Type.floatingpoint, (int) op1.getValue() + (double) op2.getValue() );
 			default:
-				return null;
+				return nothing;
 			}
 		case floatingpoint:
 			switch (op2.getType() ) {
@@ -76,15 +173,16 @@ public class Calculation {
 			case floatingpoint:
 				return createValue(Type.floatingpoint, (double) op1.getValue() + (double) op2.getValue() );
 			default:
-				return null;
+				return nothing;
 			}
 			
 		default:
-			return null;
+			return nothing;
 		}
 	}
 
 	public Value subtraction(Value op1, Value op2){
+		// TODO
 		switch (op1.getType() ) {
 		case integer:
 			switch (op2.getType() ) {
@@ -99,6 +197,7 @@ public class Calculation {
 	}
 
 	public Value multiplication(Value op1, Value op2){
+		// TODO
 		switch (op1.getType() ) {
 		case integer:
 			switch (op2.getType() ) {
@@ -133,5 +232,20 @@ public class Calculation {
 	
 	public static Value getNothing() {
 		return nothing;
+	}
+	
+	private Value getZero(Type type) {
+		// TODO
+		switch (type) {
+		case integer:
+			return zeroInteger;
+		case floatingpoint:
+			return zeroFloatingPoint;
+		case vector:
+			return zeroVector;
+			
+		default:
+			return nothing;
+		}
 	}
 }

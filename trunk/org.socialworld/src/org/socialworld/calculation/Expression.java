@@ -39,9 +39,9 @@ import org.socialworld.attributes.AttributeArray;
 public class Expression {
 	int ID;
 	
-	Expression_Function function;
+	Expression_Function operation;
 	Expression_ConditionOperator operator;
-
+	FunctionBase function;
 	
 	Value value;
 	
@@ -58,7 +58,7 @@ public class Expression {
 
 	public Expression() {
 		calculation = Calculation.getInstance();
-		function = Expression_Function.nothing;
+		operation = Expression_Function.nothing;
 	}
 	
 	
@@ -80,16 +80,13 @@ public class Expression {
 
 	public int get_ID_Exp3() {return ID_Exp3; };
 
-	public void setFunction(Expression_Function function) {
-		this.function = function;
+	public void setOperation(Expression_Function operation) {
+		this.operation = operation;
 	}
 
 	public void setOperator(Expression_ConditionOperator operator) {
 		this.operator = operator;
 	}
-
-
-
 
 	
 	public void setExpression1(Expression expression) {
@@ -129,7 +126,7 @@ public class Expression {
 	Value evaluateExpression(Value[] arguments) {
 		Value tmp;
 		
-		switch (this.function) {
+		switch (this.operation) {
 		case nothing:
 			//return invalid dummy-Value
 			return Calculation.getNothing();
@@ -143,6 +140,9 @@ public class Expression {
 				Type.integer,
 				attributeArray.get( (int) value.getValueCopy()));
 				
+		case argumentValueByName:
+			return findValue(arguments, (String) value.getValueCopy());
+			
 		case branching:
 			tmp = expression1.evaluateExpression(arguments);
 			if (tmp.isTrue()  ) 
@@ -168,11 +168,35 @@ public class Expression {
 			
 			
 		case comparison :
-			return calculation.compare(
+			
+			switch (operator) {
+			case equal:
+				return calculation.compareEqual(
 						expression1.evaluateExpression(arguments) ,
 						expression2.evaluateExpression(arguments)   );
-			
-			
+			case notEqual:
+				return calculation.compareNotEqual(
+						expression1.evaluateExpression(arguments) ,
+						expression2.evaluateExpression(arguments)   );
+			case greater:
+				return calculation.compareGreater(
+						expression1.evaluateExpression(arguments) ,
+						expression2.evaluateExpression(arguments)   );
+			case greaterEqual:
+				return calculation.compareGreaterEqual(
+						expression1.evaluateExpression(arguments) ,
+						expression2.evaluateExpression(arguments)   );
+			case less:
+				return calculation.compareLess(
+						expression1.evaluateExpression(arguments) ,
+						expression2.evaluateExpression(arguments)   );
+			case lessEqual:
+				return calculation.compareLessEqual(
+						expression1.evaluateExpression(arguments) ,
+						expression2.evaluateExpression(arguments)   );
+			default:
+				return calculation.createValue(Type.bool,  false);
+			}
 			
 		case addition:
 			return calculation.addition(
@@ -189,6 +213,12 @@ public class Expression {
 			
 			return Calculation.getNothing();
 			
+		case function:
+			Value calculateArguments[] = new Value[3];
+			calculateArguments[0] = expression1.evaluateExpression(arguments);
+			calculateArguments[1] = expression2.evaluateExpression(arguments);
+			calculateArguments[2] = expression3.evaluateExpression(arguments);
+			return function.calculate(calculateArguments);
 			
 		default:
 			return Calculation.getNothing();
@@ -216,4 +246,19 @@ public class Expression {
 		}
 		return null;
 	}
+	
+	private Value findValue(Value[] arguments, String name) {
+		int argumentsCount;
+		int index;
+		
+		argumentsCount = arguments.length;
+		
+		for (index = 0; index < argumentsCount; index++) {
+			if (arguments[index].getName() == name) return arguments[index];
+		}
+		
+		return new Value();
+
+	}
+
 }
