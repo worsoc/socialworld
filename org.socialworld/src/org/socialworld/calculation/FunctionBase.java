@@ -27,4 +27,18 @@ public abstract class FunctionBase {
 	boolean returnInvalidNothingvalue;
 	
 	public abstract Value calculate(Value[] arguments);
+	
+	protected Value findValue(Value[] arguments, String name) {
+		int argumentsCount;
+		int index;
+		
+		argumentsCount = arguments.length;
+		
+		for (index = 0; index < argumentsCount; index++) {
+			if (arguments[index].getName() == name) return arguments[index];
+		}
+		
+		return new Value();
+
+	}
 }
