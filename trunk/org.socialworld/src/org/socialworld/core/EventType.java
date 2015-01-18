@@ -32,7 +32,9 @@ public enum EventType {
 // EventByAction	
 //////////////////////////
 	
-	sleepCaused(0),	sleepIntentioned(1),
+	nothing(0),
+	
+	sleepCaused(1),	sleepIntentioned(2),
 	
 	moveWalk(8), moveRun(9), moveSneak(10), moveJump(11), moveSwim(12), moveFly(13),
 	
@@ -44,10 +46,10 @@ public enum EventType {
 	
 	handleItemUse2(40), handleItemUseLeft(41), handleItemUseRight(42), handleItemAddRtoL(43), handleItemAddLtoR(44), handleItemPull(45), handleItemPush(46),
 	
-	weaponLeftStab(48), weaponLeftStroke(49), weaponLeftClub(50), weaponLeftBackhand(51),
+	weaponLeftStab(48), weaponLeftStroke(49), weaponLeftBackhand(50), weaponRightStab(51), weaponRightStroke(52), weaponRightBackhand(53), weaponClub(54),
 
-	weaponRightStab(56), weaponRightStroke(57), weaponRightClub(58), weaponRightBackhand(59),
-
+	punchLeftFistStraight(56),  punchLeftFistsideways(57), punchLeftFistUpward(58), punchRightFistStraight(59),  punchRightFistSideways(60), punchRightFistUpward(61),
+	
 	listenToStatement(64), listenToQuestion(65), listenToInstruction(66), understand(67),
 	
 	askNormal(72), askScream(73), askWhisper(74), answerNormal(75), answerScream(76), answerWhisper(77),
@@ -58,7 +60,7 @@ public enum EventType {
 //EventSelfByAction	
 //////////////////////////
 
-	selfSleepCaused(128),	SelfSleepIntentioned(129),
+	selfSleepCaused(129),	SelfSleepIntentioned(130),
 	
 	SelfmoveWalk(136), SelfmoveRun(137), SelfmoveSneak(138), SelfmoveJump(139), SelfmoveSwim(140), SelfmoveFly(141),
 	
@@ -70,9 +72,7 @@ public enum EventType {
 	
 	selfhandleItemUse2(168), selfhandleItemUseLeft(169), selfhandleItemUseRight(170), selfhandleItemAddRtoL(171), selfhandleItemAddLtoR(172), selfhandleItemPull(173),selfHandleItemPush(174),
 	
-	selfweaponLeftStab(176), selfWeaponLeftStroke(177), selfweaponLeftClub(178), selfweaponLeftBackhand(179),
-
-	selfweaponRightStab(184), selfweaponRightStroke(185), selfweaponRightClub(186), selfweaponRightBackhand(187),
+	selfWeaponLeftStab(176), selfWeaponLeftStroke(177), selfWeaponLeftBackhand(178), selfWeaponRightStab(179), selfWeaponRightStroke(180), selfWeaponRightBackhand(181), selfWeaponClub(182),
 
 	selflistenToStatement(192), selflistenToQuestion(193), selflistenToInstruction(194), selfunderstand(195),
 	
