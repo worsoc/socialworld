@@ -127,14 +127,12 @@ public class Attack extends ActionPerformer {
    	}
    	
    	private boolean isHumanFightAttack() {
-   		// TODO
 		ActionAttack originalAction;
 		originalAction = (ActionAttack) getOriginalActionObject();
 		
 		switch (originalAction.getType()) {
-		case useWeaponLeft:
-			return true;
-		case useWeaponRight:
+		case useWeapon:
+		case punch:
 			return true;
 		default:
 			return false;

@@ -55,6 +55,11 @@ import org.socialworld.objects.Human;
  *  Der Name des Ereignis (EventType) 
  *   wird in Abhängigkeit von Aktionstyp (ActionType) und Aktionsmodus (ActionMode) ermittelt.
  *   
+ *  Eine Aktion der Klasse ActionAttack ist 
+ *  a) ein Angriff mit einer Waffe in der linken oder rechten Hand, oder beide
+ *  oder
+ *  b) ein Fausschlag (Gerade, Seitwärtshaken oder  Aufwärtshaken) mit links oder rechts
+ *   
  */
 public class ActionAttack extends AbstractAction {
 	private Attack attack;
@@ -111,7 +116,18 @@ public class ActionAttack extends AbstractAction {
 	   		break;
 		case punch:
 			switch (mode) {
-			// TODO
+			case punchLeftFistStraight:
+			case punchLeftFistSideways:
+			case punchLeftFistUpward:
+				weapon = ((Human) actor).getLeftHandWeapon();
+		  		if (weapon == null) return;
+				break;
+			case punchRightFistStraight:
+			case punchRightFistSideways:
+			case punchRightFistUpward:
+				weapon = ((Human) actor).getRightHandWeapon();
+		  		if (weapon == null) return;
+				break;
 			default:
 				return;
 			
@@ -137,7 +153,6 @@ public class ActionAttack extends AbstractAction {
 	
 	private EventType getEventType(ActionType type, ActionMode mode) {
 		EventType eventType;
-		// TODO
 		
     		switch (type) {
     		case useWeapon:
@@ -169,14 +184,35 @@ public class ActionAttack extends AbstractAction {
     			}
     			
     			break;
+    			
     		case punch:
     			switch (mode) {
-    			// TODO
-	   			default:
+    			case punchLeftFistStraight:
+      				eventType = EventType.punchLeftFistStraight;
+    				break;
+       			case punchLeftFistSideways:
+      				eventType = EventType.punchLeftFistSideways;
+    				break;
+       			case punchLeftFistUpward:
+      				eventType = EventType.punchLeftFistUpward;
+    				break;
+       			case punchRightFistStraight:
+      				eventType = EventType.punchRightFistStraight;
+    				break;
+       			case punchRightFistSideways:
+      				eventType = EventType.punchRightFistSideways;
+    				break;
+       			case punchRightFistUpward:
+      				eventType = EventType.punchRightFistUpward;
+    				break;
+   				
+ 	   			default:
 					eventType = EventType.nothing;
     			
     			}
- 			
+    			
+    			break;
+    			
     		default:
 				eventType = EventType.nothing;
    			
