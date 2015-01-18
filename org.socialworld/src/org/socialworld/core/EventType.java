@@ -60,15 +60,15 @@ public enum EventType {
 //EventSelfByAction	
 //////////////////////////
 
-	selfSleepCaused(129),	SelfSleepIntentioned(130),
+	selfSleepCaused(129),	selfSleepIntentioned(130),
 	
-	SelfmoveWalk(136), SelfmoveRun(137), SelfmoveSneak(138), SelfmoveJump(139), SelfmoveSwim(140), SelfmoveFly(141),
+	selfmoveWalk(136), selfmoveRun(137), selfmoveSneak(138), selfmoveJump(139), selfmoveSwim(140), selfmoveFly(141),
 	
-	SelfexamineByLook(144), SelfexamineBySmell(145), SelfexamineByTaste(146), SelfexamineByTouch(147),
+	selfexamineByLook(144), selfexamineBySmell(145), selfexamineByTaste(146), selfexamineByTouch(147),
 	
-	SelftouchByHand(152), SelftouchByFoot(153),
+	selftouchByHand(152), selftouchByFoot(153),
 	
-	SelfinventoryTake(160), selfinventoryCollect(161), selfinventoryDrop(162), selfinventorySwitch(163),
+	selfinventoryTake(160), selfinventoryCollect(161), selfinventoryDrop(162), selfinventorySwitch(163),
 	
 	selfhandleItemUse2(168), selfhandleItemUseLeft(169), selfhandleItemUseRight(170), selfhandleItemAddRtoL(171), selfhandleItemAddLtoR(172), selfhandleItemPull(173),selfHandleItemPush(174),
 	
