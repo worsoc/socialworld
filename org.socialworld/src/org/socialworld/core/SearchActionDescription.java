@@ -23,7 +23,6 @@ package org.socialworld.core;
 
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
-import org.socialworld.actions.ActionProperty;
 import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.Time;
 
@@ -63,10 +62,6 @@ public class SearchActionDescription extends AbstractAction {
 		return;
 	}
 
-	public  Object getConcreteProperty(ActionProperty prop) {
-			return null;
-		
-	}
 
 	/**
 	 * @param type
