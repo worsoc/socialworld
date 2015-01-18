@@ -48,7 +48,7 @@ public enum EventType {
 	
 	weaponLeftStab(48), weaponLeftStroke(49), weaponLeftBackhand(50), weaponRightStab(51), weaponRightStroke(52), weaponRightBackhand(53), weaponClub(54),
 
-	punchLeftFistStraight(56),  punchLeftFistsideways(57), punchLeftFistUpward(58), punchRightFistStraight(59),  punchRightFistSideways(60), punchRightFistUpward(61),
+	punchLeftFistStraight(56),  punchLeftFistSideways(57), punchLeftFistUpward(58), punchRightFistStraight(59),  punchRightFistSideways(60), punchRightFistUpward(61),
 	
 	listenToStatement(64), listenToQuestion(65), listenToInstruction(66), understand(67),
 	
@@ -73,6 +73,8 @@ public enum EventType {
 	selfhandleItemUse2(168), selfhandleItemUseLeft(169), selfhandleItemUseRight(170), selfhandleItemAddRtoL(171), selfhandleItemAddLtoR(172), selfhandleItemPull(173),selfHandleItemPush(174),
 	
 	selfWeaponLeftStab(176), selfWeaponLeftStroke(177), selfWeaponLeftBackhand(178), selfWeaponRightStab(179), selfWeaponRightStroke(180), selfWeaponRightBackhand(181), selfWeaponClub(182),
+
+	selfPunchLeftFistStraight(184),  selfPunchLeftFistSideways(185), selfPunchLeftFistUpward(186), selfPunchRightFistStraight(187),  selfPunchRightFistSideways(188), selfPunchRightFistUpward(189),
 
 	selflistenToStatement(192), selflistenToQuestion(193), selflistenToInstruction(194), selfunderstand(195),
 	

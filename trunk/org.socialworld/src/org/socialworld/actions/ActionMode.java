@@ -50,9 +50,12 @@ public enum ActionMode {
 	combineItems_AddRightToLeft, combineItems_AddLeftToRight,
 	pull, push,
 
-	// for ActionType useWeaponLeft and useWeaponRight
-	stab, stroke, backhand, club, 
+	// for ActionType useWeapon
+	weaponLeftStab, weaponLeftStroke, weaponLeftBackhand, weaponRightStab, weaponRightStroke, weaponRightBackhand, weaponClub, 
 
+	// for ActionType punch
+	punchLeftFistStraight,  punchLeftFistSideways, punchLeftFistUpward, punchRightFistStraight,  punchRightFistSideways, punchRightFistUpward,
+		
 	// for ActionType hear
 	listenTo, understand,
 
