@@ -107,7 +107,6 @@ public abstract class AbstractAction {
 	
 	public abstract void perform();
 	
-	public abstract Object getConcreteProperty(ActionProperty prop);
 	
 	protected void addEvent(Event event) {
 		simulation.getEventMaster().addEvent(event);
