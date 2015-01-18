@@ -23,7 +23,6 @@ package org.socialworld.actions.handle;
 
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
-import org.socialworld.actions.ActionProperty;
 import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Time;
@@ -58,18 +57,6 @@ public class ActionHandle extends AbstractAction {
 			this.target = target;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.socialworld.actions.AbstractAction#getConcreteProperty(org.socialworld.actions.ActionProperty)
-	 */
-	@Override
-	public Object getConcreteProperty(ActionProperty prop) {
-		switch (prop) {
-		case direction:
-			return getDirection();
-		default:
-			return null;
-		}
-	}
 
 	/* (non-Javadoc)
 	 * @see org.socialworld.actions.AbstractAction#perform()

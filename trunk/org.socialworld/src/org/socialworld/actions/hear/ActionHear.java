@@ -23,7 +23,6 @@ package org.socialworld.actions.hear;
 
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
-import org.socialworld.actions.ActionProperty;
 import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Time;
@@ -62,12 +61,6 @@ public class ActionHear extends AbstractAction {
 		setBaseProperties(original);
 	}
 
-	public  Object getConcreteProperty(ActionProperty prop) {
-		switch (prop) {
-		default:
-			return null;
-		}
-	}
 
 	public  void perform() {
 		Human partner;

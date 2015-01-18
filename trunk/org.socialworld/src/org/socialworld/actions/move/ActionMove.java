@@ -23,7 +23,6 @@ package org.socialworld.actions.move;
 
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
-import org.socialworld.actions.ActionProperty;
 import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Position;
@@ -80,17 +79,6 @@ public class ActionMove extends AbstractAction {
 		this.direction = original.direction;
 	}
 
-
-	public  Object getConcreteProperty(ActionProperty prop) {
-		switch (prop) {
-		case direction:
-			return getDirection();
-		case end:
-			return getEnd();
-		default:
-			return null;
-		}
-	}
 
 	public Vector getDirectionForSection() {
 		return new Vector(this.directionForSection);

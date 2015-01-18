@@ -23,17 +23,38 @@ package org.socialworld.actions.attack;
 
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
-import org.socialworld.actions.ActionProperty;
 import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Time;
 import org.socialworld.core.EventByAction;
+import org.socialworld.core.EventType;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.Human;
 
 /**
  * @author Mathias Sikos
+ * 
+ * German:
+ * Die Klasse ActionAttack ist von der abstrakten Klasse AbstractAction abgeleitet.
+ * Alle Aktionsobjekte, die Angriffe beschreiben, gehören zu dieser Klasse.
+ * Zur Beschreibung eines Angriffs führt die Klasse die zusätzlichen Eigenschaften
+ * für die ggf. verwendete Waffe und das Zielobjekt.
+ * Die Ausführung der Aktion wird in der Klasse Attack geregelt, 
+ * von der ein Objekt als Eigenschaft der Klasse ActionAttack abgelegt ist.
+ * 
+ * Die Klasse ActionAttack dient der Verwaltung der Aktion.
+ * Die zugehörige Klasse Attack dient der Ausführung der Aktion, 
+ *  nämlich als Argument für das zur Aktion gehörende Event.
  *
+ *  In der Ausführungsmethode perform() wird für denFall einesWaffenangriffs
+ *   die Waffe des Akteurs ermittelt und in der Instanzvariablen weapon abgelegt. 
+ *  Danach wird das Ausführungsobjekt der Klasse Attack erzeugt.
+ *  Schließlich wird das Ereignis zur Aktion erzeugt, mit dem Ausführungsobjekt als Argument.
+ *  Das Ereignis wird in die Ereignisverwaltung (EventMaster) eingetragen.
+ *  
+ *  Der Name des Ereignis (EventType) 
+ *   wird in Abhängigkeit von Aktionstyp (ActionType) und Aktionsmodus (ActionMode) ermittelt.
+ *   
  */
 public class ActionAttack extends AbstractAction {
 	private Attack attack;
@@ -55,14 +76,6 @@ public class ActionAttack extends AbstractAction {
 		setBaseProperties(original);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.socialworld.actions.AbstractAction#getConcreteProperty(org.socialworld.actions.ActionProperty)
-	 */
-	@Override
-	public Object getConcreteProperty(ActionProperty prop) {
-		return null;
-		
-	}
 
 	/* (non-Javadoc)
 	 * @see org.socialworld.actions.AbstractAction#perform()
@@ -71,17 +84,40 @@ public class ActionAttack extends AbstractAction {
 	public void perform() {
 		IWeapon weapon;
 
-   		switch (type) {
-		case useWeaponLeft:
-			weapon = ((Human) actor).getLeftHandWeapon();
-	  		if (weapon == null) return;
-			break;
-		case useWeaponRight:
-			weapon = ((Human)actor).getRightHandWeapon();
-	  		if (weapon == null) return;
-			break;
-		default:
-			weapon = null;
+		switch (type) {
+		
+		case useWeapon:
+	   		switch (mode) {
+			case weaponLeftStab:
+			case weaponLeftStroke:
+			case weaponLeftBackhand:
+				weapon = ((Human) actor).getLeftHandWeapon();
+		  		if (weapon == null) return;
+				break;
+			case weaponRightStab:
+			case weaponRightStroke:
+			case weaponRightBackhand:
+				weapon = ((Human)actor).getRightHandWeapon();
+		  		if (weapon == null) return;
+				break;
+			case weaponClub:
+				weapon = ((Human) actor).getLeftHandWeapon();
+		  		if (weapon == null) return;
+		  		if (weapon != ((Human)actor).getRightHandWeapon()) return;
+		  		break;
+			default:
+				return;
+			}
+	   		break;
+		case punch:
+			switch (mode) {
+			// TODO
+			default:
+				return;
+			
+			}
+	   	default:
+	   		return;
 		}
 		
  
@@ -99,48 +135,51 @@ public class ActionAttack extends AbstractAction {
 		return this.weapon;
 	}
 	
-	private int getEventType(ActionType type, ActionMode mode) {
-		int eventType = 0;
+	private EventType getEventType(ActionType type, ActionMode mode) {
+		EventType eventType;
 		// TODO
 		
-	  	if (mode == ActionMode.club) {
-	  		eventType = 1;
-    	}
-    	else    	
     		switch (type) {
-    		case useWeaponLeft:
+    		case useWeapon:
     			
     			switch (mode) {
-    			case stab:
-    				eventType = 2;
+      			case weaponClub:
+    				eventType = EventType.weaponClub;
     				break;
-    			case stroke:
-    				eventType = 3;
+      			case weaponLeftStab:
+    				eventType = EventType.weaponLeftStab;
     				break;
-    			case backhand:
-    				eventType = 4;
+    			case weaponLeftStroke:
+    				eventType = EventType.weaponLeftStroke;
     				break;
-    			default:	
+      			case weaponLeftBackhand:
+    				eventType = EventType.weaponLeftBackhand;
+    				break;
+     			case weaponRightStab:
+    				eventType = EventType.weaponRightStab;
+    				break;
+    			case weaponRightStroke:
+    				eventType = EventType.weaponRightStroke;
+    				break;
+      			case weaponRightBackhand:
+    				eventType = EventType.weaponRightBackhand;
+    				break;
+    			default:
+    				eventType = EventType.nothing;
     			}
     			
     			break;
-    		case useWeaponRight:
-       			switch (mode) {
-    			case stab:
-    				eventType = 5;
-    				break;
-    			case stroke:
-    				eventType = 6;
-    				break;
-    			case backhand:
-    				eventType = 7;
-    				break;
-    			default:
-       			}
-       			
-    			break;
-    		default:
+    		case punch:
+    			switch (mode) {
+    			// TODO
+	   			default:
+					eventType = EventType.nothing;
     			
+    			}
+ 			
+    		default:
+				eventType = EventType.nothing;
+   			
     		}
 
 	

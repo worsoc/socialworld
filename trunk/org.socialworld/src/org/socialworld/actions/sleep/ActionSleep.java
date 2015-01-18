@@ -23,7 +23,6 @@ package org.socialworld.actions.sleep;
 
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
-import org.socialworld.actions.ActionProperty;
 import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Time;
@@ -67,14 +66,6 @@ public class ActionSleep extends AbstractAction {
 		addEvent(event);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.socialworld.actions.AbstractAction#getConcreteProperty(org.socialworld.actions.ActionProperty)
-	 */
-	@Override
-	public Object getConcreteProperty(ActionProperty prop) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	private int getEventType( ActionMode mode) {
 		switch (mode) {
