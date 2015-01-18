@@ -28,11 +28,40 @@ import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Time;
 import org.socialworld.calculation.Vector;
 import org.socialworld.core.EventByAction;
+import org.socialworld.core.EventType;
 import org.socialworld.objects.Human;
 import org.socialworld.objects.SimulationObject;
 
 /**
  * @author Mathias Sikos
+ * 
+ * German:
+ * Die Klasse ActionHandle ist von der abstrakten Klasse AbstractAction abgeleitet.
+ * Alle Aktionsobjekte, die Handhabe mit einem Simulationsobjekt beschreiben, gehören zu dieser Klasse.
+ * Zur Beschreibung einer Handhabe führt die Klasse die zusätzlichen Eigenschaften
+ * für die verwendeten Gegenstände aus dem Inventar , das Zielobjekt und die Richtung der Tätigkeit.
+ * Die Ausführung der Aktion wird in der Klasse Handle geregelt, 
+ * von der ein Objekt als Eigenschaft der Klasse ActionHandle abgelegt ist.
+ * 
+ * Die Klasse ActionHandle dient der Verwaltung der Aktion.
+ * Die zugehörige Klasse Handle dient der Ausführung der Aktion, 
+ *  nämlich als Argument für das zur Aktion gehörende Event.
+ *
+ *  In der Ausführungsmethode perform() wird für den Fall einer Handhabe mit Gegenständen,
+ *   der Gegenstand oder die Gegenstände der Hände des Akteurs ermittelt und in den Instanzvariablen item1 und item2 abgelegt. 
+ *  Danach wird das Ausführungsobjekt der Klasse Handle erzeugt.
+ *  Schließlich wird das Ereignis zur Aktion erzeugt, mit dem Ausführungsobjekt als Argument.
+ *  Das Ereignis wird in die Ereignisverwaltung (EventMaster) eingetragen.
+ *  
+ *  Der Name des Ereignis (EventType) 
+ *   wird in Abhängigkeit des Aktionsmodus (ActionMode) ermittelt.
+ *   
+ *  Eine Aktion der Klasse ActionHandle ist 
+ *  a) eine Handhabe mit dem/den Gegenstand/Gegenständen in der linken oder rechten Hand, oder beide
+ *  oder
+ *  b) das Ziehen oder Schieben eines Gegenstandes/Lebewesen, der/das sich nicht im Besitz des Akteurs befindet
+ *  oder
+ *  c) das Berühren eines Gegenstandes/Lebewesen, der/das sich nicht im Besitz des Akteurs befindet
  *
  */
 public class ActionHandle extends AbstractAction {
@@ -105,12 +134,44 @@ public class ActionHandle extends AbstractAction {
 
 
 	
-	private int getEventType(ActionType type, ActionMode mode) {
-		int eventType = 0;
-		// TODO
+	private EventType getEventType(ActionType type, ActionMode mode) {
+
+		switch (type) {
+			case handleItem:
+				switch (mode) {
+					case useTwoItems:
+						return EventType.handleItemUse2;
+					case useItemLeftHand:
+						return EventType.handleItemUseLeft;
+					case useItemRightHand:
+						return EventType.handleItemUseRight;
+					case combineItems_AddRightToLeft:
+						return EventType.handleItemAddRtoL;
+					case combineItems_AddLeftToRight:
+						return EventType.handleItemAddLtoR;
+					case pull:
+						return EventType.handleItemPull;
+					case push:
+						return EventType.handleItemPush;
+					default:
+						return EventType.nothing;
+				}
+			
+			case touch:
+				switch (mode) {
+				// TODO
+					case hand:
+						return EventType.touchByHand;
+					case foot:
+						return EventType.touchByFoot;
+					default:
+						return EventType.nothing;
+				}
+			default:
+				return EventType.nothing;
+				
+		}
 		
-	
-	  	return eventType;
 	}
 
 	/**
