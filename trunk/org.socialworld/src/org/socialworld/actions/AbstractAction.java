@@ -28,12 +28,51 @@ import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.WriteAccessToSimulationObject;
 
 /**
+ * @author Mathias Sikos (tyloesand)
+ * 
  * It's the base class for all simulation actions (actions done by simulation
  * objects). It collects all base action attributes. That are action type,
  * action mode, priority, earliest execution time, latest execution time,
- * duration, remained duration, target simulation object, direction, intensity.
+ * duration, remained duration, intensity.
  * 
- * @author Mathias Sikos (tyloesand)
+ * 
+ * German:
+ * AbstractAction ist die Basisklasse (abstrakte Klasse) für Aktionen der Simlationsobjekte.
+ * Die Aktionsobjekte von abgleiteten Klassen werden im ActionMaster verwaltet 
+ * und vom ActionHandler zur Ausführung gebracht.
+ * 
+ * Die Ausführung besteht dabei aus 2 Schritten
+ * a) Einleitung der Ausführung
+ * b) Wirksamwerden der Aktion
+ * 
+ * a) Einleitung der Ausführung:
+ * Der ActionMaster führt die ActionHandler aller Simulationsobjekte
+ *  und weist den jeweiligen ActionHandler an, mit der Ausführung einer Aktion zu beginnen bzw. eine Aktion fortzusetzen.
+ * Der ActionHandler sorgt dafür, 
+ *  dass für das auszuführende Aktionsobjekt (Ableitung von AbstractAction) die Methode perform() aufgerufen wird.
+ * Die Methode perform() ist abstract und muss in allen Ableitungen implementiert werden/sein.
+ * Die Methode perform() führt Vorabprüfungen der Daten zur Aktion durch, 
+ *  erzeugt das zugehörige Performer-Objekt (siehe Schritt b),
+ *  erzeugt die auszulösenden Ereignisse, 
+ *  fügt den Ereignissen das Performerobjekt als Ereigniseigenschaft hinzu,
+ *  und trägt diese in die Ereignisverwaltung (EventMaster) ein (siehe Schritt b).
+ *  
+ * b)  Wirksamwerden der Aktion
+ * Es gilt der Grundsatz, dass alle Aktionen durch ihre Ereignisverarbeitung wirksam werden.
+ * Im Schritt a) wurden Ereignisse zu den Aktionen in die Ereignisverwaltung eingetragen.
+ * Die Ereignisverwaltung arbeitet die Ereignisse nach ihren Regeln ab.
+ * Für jedes Event der Klasse EventByAction, also von Aktionen ausgelöste Ereignisse, 
+ *  wird die evaluate-Methode des dem Ereignis zugeordenten Performers (Ableitung der Klasse ActionPerformer) aufgerufen.
+ * Diese wiederum ruft die Methode perform im Performerobjekt auf.
+ * Diese Methode ermittelt die für die Ereignisverarbeitung benötigten Werte 
+ * 	aus dem Aktionsobjekt, dem ausführenden Objekt (also dem Akteur) und ggf. dem Zielobjekt. 
+ * Diese Werte werden standardisiert in einer Liste abgelegt 
+ *  und können vom Ereignis über Standardmethoden ausgelesen werden.
+ * Schließlich werden für die Ereignisse ihre Wirkung auf die Simulationsobjekte und ggf. Reaktionen ermittelt.
+ *  
+ * Die Klasse AbstractAction ist die Basisklasse für die Aktionsobjekte des Schrittes a), 
+ *  enthält also die Daten für die Einleitung der Ausführung (Erzeugung von Performer und Event).
+ *  
  */
 public abstract class AbstractAction {
 	public static final int MAX_ACTION_PRIORITY = 256;
