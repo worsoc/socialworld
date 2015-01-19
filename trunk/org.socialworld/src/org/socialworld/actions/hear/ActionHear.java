@@ -35,6 +35,34 @@ import org.socialworld.objects.SimulationObject;
 
 /**
  * @author Mathias Sikos
+ * 
+ * German:
+ * Die Klasse ActionHear ist von der abstrakten Klasse AbstractAction abgeleitet.
+ * Alle Aktionsobjekte, die Zuhören und Verstegen beschreiben, gehören zu dieser Klasse.
+ * Zur Beschreibung des Hörens führt die Klasse die zusätzlichen Eigenschaften
+ * für den gehörten Satz und das Zielobjekt.
+ * Die Ausführung der Aktion wird in der Klasse Hear geregelt, 
+ * von der ein Objekt als Eigenschaft der Klasse ActionHear abgelegt ist.
+ * 
+ * Die Klasse ActionHear dient der Verwaltung der Aktion.
+ * Die zugehörige Klasse Hear dient der Ausführung der Aktion, 
+ *  nämlich als Argument für das zur Aktion gehörende Event.
+ *
+ *  In der Ausführungsmethode perform() wird der vom Zielobjekt gesprochene Satz ermittelt
+ *   und in der Instanzvariablen sentence abgelegt. 
+ *  Dabei wird im Falle des Zuhörens direkt beim Zielobjekt ausgelesen, 
+ *   im Falle des Verstehens in der eigenen Stuktur (Talk) des Akteurs.
+ *  Danach wird das Ausführungsobjekt der Klasse Hear erzeugt.
+ *  Schließlich wird das Ereignis zur Aktion erzeugt, mit dem Ausführungsobjekt als Argument.
+ *  Das Ereignis wird in die Ereignisverwaltung (EventMaster) eingetragen.
+ *  
+ *  Der Name des Ereignis (EventType) 
+ *   wird in Abhängigkeit von Aktionsmodus (ActionMode) und Satz ermittelt.
+ *   
+ *  Eine Aktion der Klasse ActionHear ist 
+ *  a) das Zuhören (das Aufnehmen eines Satzes)
+ *  oder
+ *  b) das Verstehen eines Satzes (Information extrahieren und als Wissen ablegen)
  *
  */
 public class ActionHear extends AbstractAction {
@@ -65,7 +93,7 @@ public class ActionHear extends AbstractAction {
 	public  void perform() {
 		Human partner;
 		EventByAction event;
-		int eventTypeAsInt;
+		EventType eventType;
 		
 		partner = (Human) getTarget();
 
@@ -73,14 +101,14 @@ public class ActionHear extends AbstractAction {
 		case listenTo:
 			
 			sentence = partner.getLastSaidSentence();
-			eventTypeAsInt = getEventType( mode, sentence);
+			eventType = getEventType( mode, sentence);
 			
 			break;
 			
 		case understand:
 
 			sentence = ((Human) actor).getSentence(partner, Talk_SentenceType.partnersSentence);
-			eventTypeAsInt = getEventType( mode, sentence);
+			eventType = getEventType( mode, sentence);
 
 			break;
 			
@@ -88,35 +116,35 @@ public class ActionHear extends AbstractAction {
 			return;
 		}
 		
-		if (eventTypeAsInt == -1) return;
+		if (eventType == EventType.nothing) return;
 		
   		this.hear = new Hear(this);
   		
-		event = new EventByAction(eventTypeAsInt,    actor /* as causer*/,  ActualTime.asTime(),
+		event = new EventByAction(eventType,    actor /* as causer*/,  ActualTime.asTime(),
 				actor.getPosition(),  hear /* as performer */);
 
 		addEvent(event);
 	
 	}
 
-	private int getEventType(ActionMode mode, String sentence) {
+	private EventType getEventType(ActionMode mode, String sentence) {
 		
 		switch (mode) {
 		case listenTo:
 			switch (PunctuationMark.getPunctuationMark(sentence)) {
 			case dot: 
-				return EventType.listenToStatement.getIndex();
+				return EventType.listenToStatement;
 			case question:
-				return EventType.listenToQuestion.getIndex();
+				return EventType.listenToQuestion;
 			case exclamation:
-				return EventType.listenToInstruction.getIndex();
+				return EventType.listenToInstruction;
 			default:
-				return -1;
+				return EventType.nothing;
 			}
 		case understand:
-			return EventType.understand.getIndex();
+			return EventType.understand;
 		default:
-			return -1;
+			return EventType.nothing;
 		}
 	}
 	
