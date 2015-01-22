@@ -24,6 +24,19 @@ package org.socialworld.actions.attack;
 import org.socialworld.attributes.WeaponProperty;
 
 /**
+ * German:
+ * Das Interface IWeapon definiert die Methoden zum Ermitteln der Waffeneigenschaft von Simulationsobjekten.
+ * Jedes Simulationsobjekt (insbesondere Gegenstand), 
+ *  der als Waffe verwendet werden kann, implementiert dieses Interface.
+ * Da die Methoden ein Objekt der Klasse WeaponProperty zurückgeben, erfordert es,
+ *  dass Objekte mit Waffeneigenschaft die entsprechenden Ausprägungen der WeaponProperty haben.
+ *  
+ * Die Methoden liefern die Beschreibung für folgende Anwendungsarten der Waffe:
+ *  - Stechen (eine streckende Armbewegung)
+ *  - Keule (beidhändiges Draufhauen, Bewegung von oben auf den Gegner herab)
+ *  - Schlag (eine geschwungene Armbewegung von der Seite)
+ *  - Rückhandschlag (eine geschwungeneArmbewegung von der anderen Seite)
+ *   
  * @author Mathias Sikos
  *
  */

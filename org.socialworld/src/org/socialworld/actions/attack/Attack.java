@@ -30,6 +30,28 @@ import org.socialworld.objects.Animal;
 import org.socialworld.objects.Human;
 
 /**
+ * German:
+ * Die Klasse Attack ist von der abstrakten Klasse ActionPerformer abgeleitet.
+  * 
+ * Die Klasse Attack dient der Wirksamwerdung der Aktion,
+ *  nämlich als Argument für das zur Aktion gehörende Ereignis.
+ *
+ *  In der Ausführungsmethode perform() werden für den Fall eines Waffenangriffs/Faustschlags
+ *   - die Richtung des Angriffs
+ *   - die Intensität des Akteurs
+ *   - die Intensität des Akteurs auf globaler Skala
+ *   - die Waffe (das als Waffe verwendete Objekt)
+ *   - die Richtung (Ausrichtung) der Brust
+ *   - die Blickrichtung
+ *   für den Standardzugriff aus dem Ereignis heraus bereitgestellt.
+ *   
+*  In der Ausführungsmethode perform() werden für den Fall eines tierischen Angriffs
+ *   - die Richtung des Angriffs
+ *   - die Intensität des Akteurs
+ *   - die Intensität des Akteurs auf globaler Skala
+ *   für den Standardzugriff aus dem Ereignis heraus bereitgestellt.
+ *   
+ * 
  * @author Mathias Sikos
  *
  */
