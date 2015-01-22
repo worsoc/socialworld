@@ -40,6 +40,7 @@ public class SimpleClientActionHandler  {
 		}
 	}
 	
+	
 	public void chooseHuman( int nr) {
 		logger.debug("Mensch " + nr + " angesprochen");
 		switch (nr) {
