@@ -33,6 +33,28 @@ import org.socialworld.objects.Human;
 import org.socialworld.objects.SimulationObject;
 
 /**
+ * German:
+ * Die Klasse Handle ist von der abstrakten Klasse ActionPerformer abgeleitet.
+ * 
+ * Die Klasse Handle dient der Wirksamwerdung der Aktion,
+ *  nämlich als Argument für das zur Aktion gehörende Ereignis.
+ *
+ *  In der Ausführungsmethode perform() werden 
+ *   - die Richtung der Handhabe
+ *   - die Intensität des Akteurs
+ *   - die Intensität des Akteurs auf globaler Skala
+ *   - der Gegenstand 1
+ *   - der Gegenstand 2
+ *   für den Standardzugriff aus dem Ereignis heraus bereitgestellt.
+ *   
+ *  Im Falle einer Bewegung eines Objektes (Ziehen oder Schieben) wird KEIN Gegenstand 2 angegeben.
+ *  Im Falle einer Berührung eines Objektes wird gar kein Gegenstand angegeben. 
+ *   Die Richtung der Berührung ist entweder explizit angegeben 
+ *   oder sie wird aus der Richtung zum Zielobjekt ermittelt. 
+ *  Im Falle einer Benutzung eines Objektes wird KEIN Gegenstand 2 angegeben.
+ *  Im Falle einer gleichzeitigen Benutzung zweier Objekte werden alle 5 Eigenschaften angegeben.
+ *  Im Falle einer Kombination zweier Gegenstände werden alle 5 Eigenschaften gesetzt.
+ *  
  * @author Mathias Sikos
  *
  */
@@ -135,9 +157,11 @@ public class Handle extends ActionPerformer {
 		case handleItem:
 			switch (mode) {
 			case useItemLeftHand:
-				return HANDLEKIND_USE;
 			case useItemRightHand:
-				return HANDLEKIND_USE;
+				if (originalAction.getTarget() != null)
+					return HANDLEKIND_USE_WITHTARGET;
+				else
+					return HANDLEKIND_USE_WITHDIRECTION;
 			case useTwoItems:
 				return HANDLEKIND_USE;
 			case combineItems_AddRightToLeft:

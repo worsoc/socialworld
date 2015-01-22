@@ -29,12 +29,47 @@ import org.socialworld.attributes.Position;
 import org.socialworld.attributes.Time;
 import org.socialworld.calculation.Vector;
 import org.socialworld.core.EventByAction;
-import org.socialworld.objects.SimulationObject;
+import org.socialworld.core.EventType;
 import org.socialworld.objects.Animal;
 import org.socialworld.objects.WriteAccessToAnimal;
 
 /**
  * @author Mathias Sikos
+ * 
+ * German:
+ * Die Klasse ActionMove ist von der abstrakten Klasse AbstractAction abgeleitet.
+ * Alle Aktionsobjekte, die Bewegung (also Positionsänderung) beschreiben, gehören zu dieser Klasse.
+ * Zur Beschreibung der Bewegung führt die Klasse die zusätzlichen Eigenschaften
+ *   Anzahl der Zeiteinheiten für die Fortsetzung der Bewegung,
+ *   die Kennung, ob es sich um den ersten Schritt handelt,
+ *   den Pfad, dem entlang die Bewegung vorgenommen wird,
+ *   die Position, an dem die Bewegung abgeschlossen ist,
+ *   die Gesamtrichtung der Bewegung und
+ *   die Richtung eines Teilsbschnittes.
+ * Die Ausführung der Aktion wird in der Klasse Move geregelt, 
+ * von der ein Objekt als Eigenschaft der Klasse ActionMove abgelegt ist.
+ * 
+ * Die Klasse ActionMove dient der Verwaltung der Aktion.
+ * Die zugehörige Klasse Move dient der Wirksamwerdung der Aktion, 
+ *  nämlich als Argument für das zur Aktion gehörende Event.
+ *
+ *  In der Ausführungsmethode perform() werden Pfad, Richtungen und die weitern Eigenschaften
+ *    in den Instanzvariablen abgelegt. 
+ *  Falls es sich um den ersten Schritt handelt, wird das Ausführungsobjekt der Klasse Move erzeugt,
+ *  andernfalls existiert es bereits.
+ *  Schließlich wird das Ereignis zur Aktion erzeugt, mit dem Ausführungsobjekt als Argument.
+ *  Das Ereignis wird in die Ereignisverwaltung (EventMaster) eingetragen.
+ *  
+ *  Ist ein Pfad abgeschlossen, wird das Wissen über ihn beim Akteur abgelegt/angepasst.
+ *  
+ *  Der Name des Ereignis (EventType) 
+ *   wird in Abhängigkeit von Aktionsmodus (ActionMode) ermittelt.
+ *   
+ *  Eine Aktion der Klasse ActionMove ist 
+ *  a) die Bewegung hin zu einer Zielposition (hergeleitet Richtung)
+ *  oder
+ *  b) die Bewegung entlang einer vorgegebenen Richtung
+ * 
  *
  */
 public class ActionMove extends AbstractAction {
@@ -51,19 +86,7 @@ public class ActionMove extends AbstractAction {
 	private Vector directionForSection;
 	
 	public ActionMove(final ActionType type, final ActionMode mode,
-			final SimulationObject target, final Vector direction,
-			final float intensity, final Time minTime, final Time maxTime,
-			final int priority, final long duration) {
-		setBaseProperties(type,  mode,
-				intensity,  minTime, maxTime,
-				 priority,  duration);
-			
-			this.setDirection(direction);
-			this.firstStep = true;
-	}
-
-	public ActionMove(final ActionType type, final ActionMode mode,
-			final SimulationObject target, final Position end,
+			final Position end,
 			final float intensity, final Time minTime, final Time maxTime,
 			final int priority, final long duration) {
 		setBaseProperties(type,  mode,
@@ -71,6 +94,18 @@ public class ActionMove extends AbstractAction {
 				 priority,  duration);
 			
 			this.setEnd(end);
+			this.firstStep = true;
+	}
+
+	public ActionMove(final ActionType type, final ActionMode mode,
+			final Vector direction,
+			final float intensity, final Time minTime, final Time maxTime,
+			final int priority, final long duration) {
+		setBaseProperties(type,  mode,
+				intensity,  minTime, maxTime,
+				 priority,  duration);
+			
+			this.setDirection(direction);
 			this.firstStep = true;
 	}
 
@@ -130,12 +165,22 @@ public class ActionMove extends AbstractAction {
 		path = ((Animal) actor).findPath(end);
 	}
 	
-	
-	private int getEventType(ActionMode mode) {
+	private EventType getEventType(ActionMode mode) {
 		switch (mode) {
-		// TODO cases
+		case walk:
+			return EventType.moveWalk;
+		case run:
+			return EventType.moveRun;
+		case sneak:
+			return EventType.moveSneak;
+		case jump:
+			return EventType.moveJump;
+		case swim:
+			return EventType.moveSwim;
+		case fly: 
+			return EventType.moveFly;
 		default:
-			return -1;
+			return EventType.nothing;
 		}
 	}
 	

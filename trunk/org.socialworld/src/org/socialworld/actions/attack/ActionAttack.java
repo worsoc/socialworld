@@ -32,8 +32,6 @@ import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.Human;
 
 /**
- * @author Mathias Sikos
- * 
  * German:
  * Die Klasse ActionAttack ist von der abstrakten Klasse AbstractAction abgeleitet.
  * Alle Aktionsobjekte, die Angriffe beschreiben, gehören zu dieser Klasse.
@@ -46,7 +44,7 @@ import org.socialworld.objects.Human;
  * Die zugehörige Klasse Attack dient der Ausführung der Aktion, 
  *  nämlich als Argument für das zur Aktion gehörende Event.
  *
- *  In der Ausführungsmethode perform() wird für denFall einesWaffenangriffs
+ *  In der Ausführungsmethode perform() wird für den Fall eines Waffenangriffs
  *   die Waffe des Akteurs ermittelt und in der Instanzvariablen weapon abgelegt. 
  *  Danach wird das Ausführungsobjekt der Klasse Attack erzeugt.
  *  Schließlich wird das Ereignis zur Aktion erzeugt, mit dem Ausführungsobjekt als Argument.
@@ -59,6 +57,9 @@ import org.socialworld.objects.Human;
  *  a) ein Angriff mit einer Waffe in der linken oder rechten Hand, oder beide
  *  oder
  *  b) ein Fausschlag (Gerade, Seitwärtshaken oder  Aufwärtshaken) mit links oder rechts
+ * 
+ * @author Mathias Sikos
+ * 
  *   
  */
 public class ActionAttack extends AbstractAction {

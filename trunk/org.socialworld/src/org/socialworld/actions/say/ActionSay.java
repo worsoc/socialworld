@@ -70,8 +70,6 @@ public class ActionSay extends AbstractAction {
 		
 		EventByAction event;
 		final Human partner = (Human) target;
-		int eventTypeAsInt;
-
 		
 		switch (type) {
 			case talk:
@@ -125,60 +123,9 @@ public class ActionSay extends AbstractAction {
 				return;
 		}
 
-		
-		switch (type) {
-		case talk:
-			
-			switch (mode) {
-				case answerNormal:
-					eventTypeAsInt = EventType.answerNormal.getIndex();
-					break;
-				case answerScream:
-					eventTypeAsInt = EventType.answerScream.getIndex();
-					break;
-				case answerWhisper:
-					eventTypeAsInt = EventType.answerWhisper.getIndex();
-					break;
-				case askNormal:
-					eventTypeAsInt = EventType.askNormal.getIndex();
-					break;
-				case askScream:
-					eventTypeAsInt = EventType.askScream.getIndex();
-					break;
-				case askWhisper:
-					eventTypeAsInt = EventType.askWhisper.getIndex();
-					break;
-					
-				default:
-					
-					return;
-			}
-			break;
-			
-		case say:
-			
-			switch (mode) {
-				case normal:
-					eventTypeAsInt = EventType.sayNormal.getIndex();
-					break;
-				case scream:
-					eventTypeAsInt = EventType.sayScream.getIndex();
-					break;
-				case whisper:
-					eventTypeAsInt = EventType.sayWhisper.getIndex();
-					break;
-				default:
-					return;
-			}
-			break;
-			
-		default:
-			return;
-	}
-
  		this.say = new Say(this);
   		
-		event = new EventByAction(eventTypeAsInt,    actor /* as causer*/,  ActualTime.asTime(),
+		event = new EventByAction(getEventType(type, mode),    actor /* as causer*/,  ActualTime.asTime(),
 				actor.getPosition(),  say /* as performer */);
 
 		addEvent(event);
@@ -187,7 +134,46 @@ public class ActionSay extends AbstractAction {
 
 
 
-
+	private EventType getEventType(ActionType type, ActionMode mode) {
+		switch (type) {
+		case talk:
+			
+			switch (mode) {
+				case answerNormal:
+					return EventType.answerNormal;
+				case answerScream:
+					return EventType.answerScream;
+				case answerWhisper:
+					return EventType.answerWhisper;
+				case askNormal:
+					return EventType.askNormal;
+				case askScream:
+					return EventType.askScream;
+				case askWhisper:
+					return EventType.askWhisper;
+					
+				default:
+					return EventType.nothing;
+			}
+			
+		case say:
+			
+			switch (mode) {
+				case normal:
+					return EventType.sayNormal;
+				case scream:
+					return EventType.sayScream;
+				case whisper:
+					return EventType.sayWhisper;
+				default:
+					return EventType.nothing;
+			}
+			
+		default:
+			return EventType.nothing;
+		}
+		
+	}
 	
 
 
