@@ -60,13 +60,13 @@ public class SimpleClientActionHandler  {
 		switch (action) {
 		case 1:   // step forward
 			actualHuman.setAction(new ActionMove(ActionType.move ,  ActionMode.run,
-					actualHuman.getObject(), new Vector(0,10,0),
+					new Vector(0,10,0),
 					10, new Time(1000), new Time(2000),
 					10, 500), this );
 			break;
 		case 2:   // step back
 			actualHuman.setAction(new ActionMove(ActionType.move ,  ActionMode.run,
-					actualHuman.getObject(), new Vector(0,-10,0),
+					new Vector(0,-10,0),
 					10, new Time(1000), new Time(2000),
 					10, 500), this );
 			break;
