@@ -29,8 +29,21 @@ import org.socialworld.objects.Animal;
 
 
 /**
- * The class collects information about a
- *         simulation object's movements. 
+ * German:
+ * Die Klasse Move ist von der abstrakten Klasse ActionPerformer abgeleitet.
+  * 
+ * Die Klasse Move dient der Wirksamwerdung der Aktion,
+ *  nämlich als Argument für das zur Aktion gehörende Ereignis.
+ *
+ *  In der Ausführungsmethode perform() werden 
+ *   - die Richtung der Bewegung
+ *   - die Geschwindigkeit der Bewegung
+ *   für den Standardzugriff aus dem Ereignis heraus bereitgestellt.
+ *   
+ * Die Geschwindigkeit wird unter anderem asder intensität der Bewegung hergeleitet.
+ * 
+ * Aus der Länge des zurückzulegenden Weges und der Geschwindigkeit wird die zahl der Fortsetzungen ermittelt.
+ * 
  *
  * @author Mathias Sikos (tyloesand) 
  */

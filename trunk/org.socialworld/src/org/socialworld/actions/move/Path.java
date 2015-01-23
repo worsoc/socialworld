@@ -27,6 +27,23 @@ import org.socialworld.attributes.Position;
 import org.socialworld.knowledge.KnownPaths;
 
 /**
+ * German:
+ * Die Klasse Path enthält eine Wegbeschreibung, 
+ *  über welche Zwischenpositionen jemand vom Startpunkt zum Endpunkt (Zielposition) gelangt.
+ *  
+ * Ein Index zeigt an, auf welcher Etappe (Teilstück des Pfades) sich das Objekt befindet.
+ * 
+ * Es gibt eine Kennung, die angibt, ob der Pfad komplett bekannt ist oder ob es unbekannte Teilstücke gibt.
+ * 
+ * Die Beschreibung enthält außerdem die gesamte Weglänge.
+ * 
+ * Außerdem gibt es eine Referenz auf die Wissensbasis des Objektes (KnownPaths),
+ *  über die die Wissensbasis bei Nutzung des Pfades aktualisiert wird.
+ *
+ * Weiterhin werden zu einem Pfad die Kindpfade angegeben.
+ *  Dies sind die beiden Pfade, aus denen der neue Pfad durch Verknüpfung entstanden ist.
+ *   Durch rekursive Aufrufe kann die Aktualisierung der Wissensbasis auch für die Teilabschnitte realisiert werden.
+ *
  * @author Mathias Sikos
  *
  */
