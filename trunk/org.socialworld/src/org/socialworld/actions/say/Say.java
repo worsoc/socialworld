@@ -33,6 +33,32 @@ import org.socialworld.knowledge.Answer;
 import org.socialworld.objects.Human;
 
 /**
+ * German:
+ * Die Klasse Say ist von der abstrakten Klasse ActionPerformer abgeleitet.
+ * 
+ * Die Klasse Say dient der Wirksamwerdung der Aktion,
+ *  nämlich als Argument für das zur Aktion gehörende Ereignis.
+ *
+ *  In der Ausführungsmethode perform() werden im Falle einer Antwort
+ *   - der (Gesprächs)partner (ein Objekt der Klasse Human)
+ *   - die Richtung (in die gesprochen wird)
+ *   - die Antwort
+ *   für den Standardzugriff aus dem Ereignis heraus bereitgestellt.
+ *   
+ *  In der Ausführungsmethode perform() werden im Falle einer Frage
+ *   - der (Gesprächs)partner (ein Objekt der Klasse Human)
+ *   - die Richtung (in die gesprochen wird)
+ *   - die Frage (als Satz (also String))
+ *   für den Standardzugriff aus dem Ereignis heraus bereitgestellt.
+ *   
+ *   Für die Bereitstellung der Parameter ist es unerheblich, ob die Antwort bzw. die Frage
+ *    normal gesprochen, geflüstert oder geschrien wird.
+ *     Diese Unterscheidung steckt bereits im EventType des Ereignisses.
+ *    
+ * Die Antwort auf eine Frage wird in Abhängigkeit der Beziehung zum Gesprächspartner
+ *  (also die Qualität der Bekanntschaft) manipuliert.
+ *  Dadurch wird erreicht, dass der Antworter auf eine Frage nicht grundsätzlich gleich antwortet.
+ *  
  * @author Mathias Sikos
  *
  */
