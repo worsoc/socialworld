@@ -22,6 +22,9 @@
 package org.socialworld.attributes;
 
 /**
+ * The enumeration GroundMaterial holds all ground materials
+ *   that can be set to a map's ground property
+ * 
  * @author Mathias Sikos
  *
  */
@@ -31,6 +34,7 @@ public enum GroundMaterial {
 	crushedRock,  // German: Schotter
 	stones, 	
 	rock,
+	moss,      // German: Moos
 	grass,
 	foliage,   // German: Laub
 	brushwood, // German: Reisig
