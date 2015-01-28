@@ -21,6 +21,15 @@
 */
 package org.socialworld.attributes;
 
+/**
+ * German:
+ * Die Klasse ActualTime ist  von der Klasse Time abgeleitet.
+ * 
+ * Über die statischen Methoden asTime() und inMilliseconds() liefert die Klasse die aktuelle Zeit,
+ * 	einmal als Objekt der Klasse Time und einmal als Zahl für die Millisekunden.
+ * 
+ * @author Mathias Sikos (tyloesand)
+ */
 public class ActualTime extends Time {
 	private static ActualTime instance;
 	
@@ -28,11 +37,7 @@ public class ActualTime extends Time {
 		super();
 	}
 	
-	public static ActualTime get() {
-		instance = new ActualTime();
-		return instance;
-	}
-	
+
 	public static long inMilliseconds() {
 		instance = new ActualTime();
 		return instance.getTotalMilliseconds();

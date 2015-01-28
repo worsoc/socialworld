@@ -24,8 +24,15 @@ package org.socialworld.attributes;
 /**
  * The class implements the simulation time.
  *         Because of being a real time simulation the simulation time should be
- *         mapped to real time. An object of class Type must be seen has a time
+ *         mapped to real time. An object of class Type must be seen as a time
  *         point.
+ *         
+ * German:
+ * Ein Objekt der Klasse Time beschreibt einen Simulationszeitpunkt,
+ *  - zerlegt  in seine Bestandteile Tag, Stunde, Minute, Sekunde und Millisekunde
+ *  - oder als Gesamtzahl Millisekunden
+ * 
+ *         
  * @author Mathias Sikos (tyloesand) 
  */
 public class Time {
