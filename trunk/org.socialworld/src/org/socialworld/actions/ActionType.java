@@ -23,6 +23,27 @@ package org.socialworld.actions;
 
 /**
  * The enumeration collects all action types.
+ * 
+ * German:
+ * Die Enumeration ActionType enthält alle Aktionstypen,
+ *   die für eine Aktion gesetzt werden können.
+ *   
+ * Es sind 11 Aktionstypen umgestzt:
+ *  - Schlafen
+ *  - Bewegung (Positionswechsel)
+ *  - untersuchung von Simulationsobjekten
+ *  - Berührung von Simulationsobjekten
+ *  - Ausstatten 
+ *  - Gegenstandshabung
+ *  - Waffenbenutzung 
+ *  - Schlag 
+ *  - Hören/Zuhören
+ *  - Gespräche führen
+ *  - Sprechen
+ *  
+ * Zur Ablaufsteuerung wird zusätzlich der Aktionstyp Ignorieren angeboten. 
+ *  Dieser soll Vergleiche auf NULL verhindern.
+ *  
  * @author Mathias Sikos (tyloesand) 
  */
 public enum ActionType {

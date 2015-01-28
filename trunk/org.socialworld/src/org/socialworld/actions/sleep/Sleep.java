@@ -26,6 +26,22 @@ import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 
 /**
+ * German:
+ * Die Klasse Sleep ist von der abstrakten Klasse ActionPerformer abgeleitet.
+ * 
+ * Die Klasse Sleep dient der Wirksamwerdung der Aktion,
+ *  nämlich als Argument für das zur Aktion gehörende Ereignis.
+ *
+ *  In der Ausführungsmethode perform() werden im Falle einer Antwort
+ *   - der (Gesprächs)partner (ein Objekt der Klasse Human)
+ *   - die Richtung (in die gesprochen wird)
+ *   - die Antwort
+ *   für den Standardzugriff aus dem Ereignis heraus bereitgestellt.
+ *   
+ *  In der Ausführungsmethode perform() wird
+ *   - die Intensität des Schlafens (also die Tiefe des Schlafs)
+ *   für den Standardzugriff aus dem Ereignis heraus bereitgestellt.
+ *   
  * @author Mathias Sikos
  *
  */
