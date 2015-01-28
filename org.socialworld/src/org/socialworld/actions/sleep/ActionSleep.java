@@ -30,6 +30,30 @@ import org.socialworld.core.EventByAction;
 import org.socialworld.core.EventType;
 
 /**
+ * German:
+ * Die Klasse ActionSleep ist von der abstrakten Klasse AbstractAction abgeleitet.
+ * Alle Aktionsobjekte, die Schlafen beschreiben, gehören zu dieser Klasse.
+ * 
+ * Die Ausführung der Aktion wird in der Klasse Sleep geregelt, 
+ *   von der ein Objekt als Eigenschaft der Klasse ActionSleep abgelegt ist.
+ * Zur Beschreibung des Schlafens führt die Klasse keine weiteren Eigenschaften.
+ * 
+ * Die Klasse ActionSleep dient der Verwaltung der Aktion.
+ * Die zugehörige Klasse Sleep dient der Wirksamwerdung der Aktion, 
+ *  nämlich als Argument für das zur Aktion gehörende Event.
+ *
+ *  In der Ausführungsmethode perform() wird das Ausführungsobjekt der Klasse Sleep erzeugt.
+ *  Außerdem wird das Ereignis zur Aktion erzeugt, mit dem Ausführungsobjekt als Argument.
+ *  Das Ereignis wird in die Ereignisverwaltung (EventMaster) eingetragen.
+ *  
+ *  Der Name des Ereignis (EventType) 
+ *   wird in Abhängigkeit von Aktionsmodus (ActionMode) ermittelt.
+ *   
+ *  Eine Aktion der Klasse ActionSleep ist 
+ *  a) das willkürliche Schlafen, also sich bewusst zum Schlafen hinzulegen
+ *  oder
+ *  b) das aufgrund von Übermüdung oder auf andere Weise erzwungene Schlafen
+ *   
  * @author Mathias Sikos
  *
  */
@@ -53,13 +77,13 @@ public class ActionSleep extends AbstractAction {
 	public void perform() {
 		
 		EventByAction event;
-		int eventType;
+		EventType eventType;
 		
 		sleep = new Sleep(this);
 		
 		eventType = getEventType(mode);
 				
-		if (eventType == EventType.MAX_EVENT_TYPE) return;
+		if (eventType == EventType.nothing) return;
 				
 		event = new EventByAction(eventType,    actor /* as causer*/,  ActualTime.asTime(),
 					actor.getPosition(),  sleep /* as performer */);
@@ -67,14 +91,14 @@ public class ActionSleep extends AbstractAction {
 	}
 
 
-	private int getEventType( ActionMode mode) {
+	private EventType getEventType( ActionMode mode) {
 		switch (mode) {
 		case sleepCaused:
-			return EventType.sleepCaused.getIndex();
+			return EventType.sleepCaused;
 		case sleepIntentioned:
-			return EventType.sleepIntentioned.getIndex();
+			return EventType.sleepIntentioned;
 		default:
-			return EventType.MAX_EVENT_TYPE;
+			return EventType.nothing;
 		}
 	}
 	
