@@ -27,7 +27,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-public class ListenedList<E> extends ListenedBase implements List<E> {
+/*public class ListenedList<E> extends ListenedBase implements List<E> {*/
+public class ListenedList<E> extends ListenedBase  {
 
 	public static final String KEY_LIST_CHANGE_PROPERTY = "list_change_property";
 

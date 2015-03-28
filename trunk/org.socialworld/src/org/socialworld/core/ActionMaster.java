@@ -28,6 +28,7 @@ import java.util.ListIterator;
 import org.apache.log4j.Logger;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.ActualTime;
+import org.socialworld.attributes.Time;
 
 
 
@@ -279,7 +280,7 @@ public class ActionMaster {
 	 *  
 	 */
 	public void nextSecond() {
-		ActualTime time;
+		Time time;
 		
 		// reset the start value (for index shifting after insertion) for the last second
 		minPriorityBySecond[secondOfTheActualMinute] = AbstractAction.MAX_ACTION_PRIORITY;
@@ -288,7 +289,7 @@ public class ActionMaster {
 		if (continueHandlersIterator.nextIndex() == continueActionHandlers.size() )
 			continueHandlersIterator = continueActionHandlers.listIterator();
 		
-		time = ActualTime.get();
+		time = ActualTime.asTime();
 		nowInMilliseconds = time.getTotalMilliseconds();
 		secondOfTheActualMinute = time.getSecond();
 		

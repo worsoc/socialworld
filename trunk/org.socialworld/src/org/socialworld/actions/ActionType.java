@@ -28,7 +28,7 @@ package org.socialworld.actions;
  * Die Enumeration ActionType enthält alle Aktionstypen,
  *   die für eine Aktion gesetzt werden können.
  *   
- * Es sind 11 Aktionstypen umgestzt:
+ * Es sind 11 Aktionstypen umgesetzt:
  *  - Schlafen
  *  - Bewegung (Positionswechsel)
  *  - untersuchung von Simulationsobjekten

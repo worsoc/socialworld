@@ -40,9 +40,9 @@ import org.socialworld.objects.Animal;
  *   - die Geschwindigkeit der Bewegung
  *   für den Standardzugriff aus dem Ereignis heraus bereitgestellt.
  *   
- * Die Geschwindigkeit wird unter anderem asder intensität der Bewegung hergeleitet.
+ * Die Geschwindigkeit wird unter anderem aus der Intensität der Bewegung hergeleitet.
  * 
- * Aus der Länge des zurückzulegenden Weges und der Geschwindigkeit wird die zahl der Fortsetzungen ermittelt.
+ * Aus der Länge des zurückzulegenden Weges und der Geschwindigkeit wird die Zahl der Fortsetzungen ermittelt.
  * 
  *
  * @author Mathias Sikos (tyloesand) 

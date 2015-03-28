@@ -21,7 +21,6 @@
 */
 package org.socialworld.core;
 
-import java.util.List;
 import java.util.ListIterator;
 
 import org.apache.log4j.Logger;
@@ -42,11 +41,11 @@ public class ObjectMaster {
 	
 	private static ObjectMaster instance;
 	
-	private final List<God> gods;
-	private final List<Human> humans;
-	private final List<Item> items;
-	private final List<Magic> magics;
-	private final List<Animal> animals;
+	private final ListenedList<God> gods;
+	private final ListenedList<Human> humans;
+	private final ListenedList<Item> items;
+	private final ListenedList<Magic> magics;
+	private final ListenedList<Animal> animals;
 	
 	private final SimulationObjectArray simulationObjects;
 
@@ -169,7 +168,7 @@ public class ObjectMaster {
 	 * 
 	 * @return
 	 */
-	public List<God> getGods() {
+	public ListenedList<God> getGods() {
 		return this.gods;
 	}
 
@@ -178,7 +177,7 @@ public class ObjectMaster {
 	 * 
 	 * @return
 	 */
-	public List<Human> getHumans() {
+	public ListenedList<Human> getHumans() {
 		return this.humans;
 	}
 
@@ -187,7 +186,7 @@ public class ObjectMaster {
 	 * 
 	 * @return
 	 */
-	public List<Item> getItems() {
+	public ListenedList<Item> getItems() {
 		return this.items;
 	}
 
@@ -197,7 +196,7 @@ public class ObjectMaster {
 	 * 
 	 * @return
 	 */
-	public List<Magic> getMagics() {
+	public ListenedList<Magic> getMagics() {
 		return this.magics;
 	}	
 	
