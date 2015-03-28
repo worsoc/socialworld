@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 import org.socialworld.attributes.Time;
 import org.socialworld.core.Simulation;
 
+import java.sql.*;
 
 
 /**
@@ -54,6 +55,44 @@ public class SocialWorld  {
 
 		currentObject = getCurrent();
 		simulation = Simulation.getInstance();
+		
+		
+		///////  Start Test Connection MariaDB   /////
+		try		{			Class.forName("org.mariadb.jdbc.Driver");		}
+		catch ( ClassNotFoundException e )
+		{
+		  // Blöd: Treiber konnte nicht geladen werden.
+		  e.printStackTrace();
+		}
+		
+		Connection  connection;
+		
+		try {			connection = DriverManager.getConnection("jdbc:mariadb://localhost:3306/sw1", "sw", "sw");		}
+		catch (Exception e) {			  e.printStackTrace();			  return;		}
+		
+		Statement stmt;
+		
+		try 		{			stmt = connection.createStatement(); }
+		catch (SQLException e) { 
+			e.printStackTrace(); return;}
+
+		try 		{		stmt.executeUpdate("INSERT INTO test (id, value) values (1, 'hallo')"); }
+		catch (SQLException e) {
+			e.printStackTrace(); return;}
+
+		try 		{		stmt.close(); }
+		catch (SQLException e) {
+			e.printStackTrace(); return;}
+
+		try 		{			connection.close(); }
+		catch (SQLException e) { 
+			e.printStackTrace(); return;}
+
+		
+		
+		
+		///////  Ende Test Connection MariaDB   /////
+		
 		
 		Time test = new Time();
 		if (Simulation.WITH_LOGGING == 1 ) logger.info(test.toString() );
