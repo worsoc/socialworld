@@ -26,6 +26,33 @@ import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 
 /**
+ * German:
+ * Die Klasse WeaponProperty beschreibt Eigenschaften von Simulationsobjekten
+ *   hinsichtlich ihrer Verwendung als Waffe.
+ *   
+ * Diese Eigenschaften sind:
+ * - Masse
+ * - Härte(grad)
+ * - Schärfe
+ * 
+ *   Anhand dieser Eigenschaften wird die Wirkung der Waffe auf das Ziel des Angriffs ermittelt.
+ *   
+ *   Außerdem führt die Klasse eine lineare Funktion, 
+ *     mit der (in Abhängigkeit der intensität des Angriffs) 
+ *     die Überwindung des (Rüstungsschutzes) des Zielobjektes ermittelt werden kann.
+ *     Nur Wenn der Schwellwert des Schutzes des Ziels überwunden ist, 
+ *       kann die Waffe ihre Wirkung auf das Ziel entfalten.
+ *       
+ *   Die Methode  getOvercomeThresholdForIntensity(float intensity) liefert anhand der Intensität den Schwellwert,
+ *    der überwunden wird.
+ *   Wenn das Ziel also einen Schutz kleiner gleich des Ergbnissees der Funktion hat, gilt der Rüstungsscutz als überwunden.
+ *  
+ *   Alternativ zur Berechnung des Schwellwertes hier, kann auch die Funktion selnbst erfragt werden.
+ *   Diese wird mit der Methode getFunctionForThresholdOvercomeProtection() zurückgegeben.
+ *      
+ *   Mit der Methode getAsArguments() werden die Eigenschaften Masse,Härte und Schärfe 
+ *       als Values und damit als Argumente für Berechnungsmethoden der Berechnungsklassen bereitgestellt.
+ *           
  * @author Mathias Sikos
  *
  */

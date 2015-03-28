@@ -25,7 +25,36 @@ import org.socialworld.calculation.Vector;
 
 /**
  * The class holds information about the position
-
+ *
+ * German:
+ * Position ist die Klasse zur Angabe von Positionen für
+ *   - Simulationsobjekte (über den Zustand des Objektes: StateSimulationObject)
+ *   - Ereignisse (Event)
+ *   
+ * Die Position wird angegeben über
+ *  a) einen Vektor mit den Koordinaten (x,y,z)
+ *  b) eine Zahl zur Beschreibung des Pfades durch einen Suchbaum mit Basis 9
+ *  c) eine Zeichenkette (Folge von Buchstaben) zur Beschreibung des Pfades durch einen Suchbaum mit Basis 25
+ *  
+ *  Die Angaben zum Suchbaum werden bei Setzen/Ändern des Vektors angepasst.
+ *  
+ *  Damit ist derVektor die eigentliche Positionsangabe.
+ *  
+ *  Die beiden Varianten zum Suchbaum dienen der schnellen Findung von Objekten 
+ *    über eine Teilfolge der Zahlen- bzw. Buchstabenfolge.
+ *     (für weitere Informationen zum Suchbaum siehe bitte in Klasse ObjectByPositionSearch)
+ *  Die Angaben zum Suchbaum werden also nicht gesetzt, sondern anhand des Vektors ermittelt.
+ *  
+ *  Neben der set-Methode zum Setzen des Vektors und 
+ *    den Get-Methoden für die drei Varianten der Positionsangabe stellt die Klasse folgende Methoden zur Verfügung:
+ *  -   equals() zur Prüfung auf Gleichheit über den Vektor
+ *  -   equals() zur Prüfung auf Gleichheit über den Suchbaumpfad
+ *           hier wird in den Argumenten angegeben welche Basis (9 oder 25) und welche Genauigkeit (wieviele Schritte durch den Suchbaum) verwendet werden soll 
+ *  -   getDistance() zur Berechnung des Abstandes (also Länge des Weges zu) einer zweiten Position
+ *  -   getDirectionFrom() zur Ermittlung eines Richtungsverktors von einer zweiten Position zur "eigenen"
+ *  -   getDirectionTo() zur Ermittlung eines Richtungsverktors von der "eigenen" zu einer zweiten Position hin
+ *  -   getX(), getY() und getZ() zur Abfrage der einzenen Koordianten desVektors
+ *  
  * @author Mathias Sikos (tyloesand)  
  */
 public class Position {
