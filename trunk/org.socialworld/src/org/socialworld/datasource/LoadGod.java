@@ -68,14 +68,4 @@ public class LoadGod extends LoadSimulationObjects {
 		
 	}
 	
-	public void createTable() throws Exception {
-		Connection  connection;
-		Class.forName("org.mariadb.jdbc.Driver");
-		connection = DriverManager.getConnection("jdbc:mariadb://localhost:3306/test1", "root", "Aragorn");
-		Statement stmt;
-		stmt = connection.createStatement();
-		stmt.executeUpdate("CREATE TABLE a (id int not null primary key, value varchar(20))");
-		stmt.close();
-		connection.close();
-	}
 }
