@@ -150,7 +150,7 @@ public class EventMaster extends Thread {
 				if (Simulation.WITH_ERROR_LOGGING == 1 ) logger.error(e.getStackTrace());
 				e.printStackTrace();
 			}
-			if (countIterations == 100) stopEventMaster();
+			if (countIterations == 10) stopEventMaster();
 		}
 		if (Simulation.WITH_LOGGING == 1 )		logger.debug("EventMaster stops");
 	}
