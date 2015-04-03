@@ -25,8 +25,10 @@ import org.apache.log4j.Logger;
 import org.socialworld.attributes.Time;
 import org.socialworld.core.Simulation;
 
-import java.sql.*;
 
+import org.socialworld.datasource.db.TableObject;
+import org.socialworld.datasource.db.TablePosition;
+import org.socialworld.datasource.db.TableReactionByEvent;
 
 /**
  * @author Mathias Sikos (tyloesand)
@@ -58,38 +60,45 @@ public class SocialWorld  {
 		
 		
 		///////  Start Test Connection MariaDB   /////
-		try		{			Class.forName("org.mariadb.jdbc.Driver");		}
-		catch ( ClassNotFoundException e )
-		{
-		  // Blöd: Treiber konnte nicht geladen werden.
-		  e.printStackTrace();
+		
+		
+		TablePosition positions;
+		
+		positions = new TablePosition();
+		
+		positions.insert(257, 11, 88, 0, 123456789, "ABCDEFGH");
+		positions.update(256,  "KLMNOP");
+//		positions.select(positions.SELECT_ALL_COLUMNS);
+		
+		positions.close();
+		
+		
+		TableObject objects;
+		objects = new TableObject();
+		
+		objects.insert(5, 1, 1967, 1, 1234567, "KLMNOP");
+		objects.insert(6, 1, 1968, 2, 123456789, "ABCDEFGH");
+
+		objects.update(4, 3, 1965, 3, 987654321, "XYZABC");
+
+		objects.close();
+		
+		
+		TableReactionByEvent reactByevent;
+		reactByevent = new TableReactionByEvent();
+		
+		int i;
+		int reactions1[];
+		int reactions2[];
+		reactions1 = new int[256];
+		reactions2 = new int[256];
+		
+		for (i = 0; i < 256; i++) {
+			reactions1[i] =  256 - i;
+			reactions2[i] =  i;
 		}
-		
-		Connection  connection;
-		
-		try {			connection = DriverManager.getConnection("jdbc:mariadb://localhost:3306/sw1", "sw", "sw");		}
-		catch (Exception e) {			  e.printStackTrace();			  return;		}
-		
-		Statement stmt;
-		
-		try 		{			stmt = connection.createStatement(); }
-		catch (SQLException e) { 
-			e.printStackTrace(); return;}
-
-		try 		{		stmt.executeUpdate("INSERT INTO test (id, value) values (1, 'hallo')"); }
-		catch (SQLException e) {
-			e.printStackTrace(); return;}
-
-		try 		{		stmt.close(); }
-		catch (SQLException e) {
-			e.printStackTrace(); return;}
-
-		try 		{			connection.close(); }
-		catch (SQLException e) { 
-			e.printStackTrace(); return;}
-
-		
-		
+		reactByevent.insert(1, reactions1);
+		reactByevent.insert(2, reactions2);
 		
 		///////  Ende Test Connection MariaDB   /////
 		
