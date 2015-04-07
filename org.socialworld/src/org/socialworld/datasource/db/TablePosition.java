@@ -74,7 +74,6 @@ public class TablePosition extends Table {
 
 	@Override
 	public void select(String statement) {
-//		boolean allRead;
 		ResultSet rs;
 		int row = 0;
 		
@@ -84,33 +83,7 @@ public class TablePosition extends Table {
 		switch (selectList) {
 		
 		case SELECT_ALL_COLUMNS:
-			pos_id = new int[rowCount];
-			x = new int[rowCount];
-			y = new int[rowCount];
-			z = new int[rowCount];
-			locBase9 = new int[rowCount];
-			
-			locBase25 = new String[rowCount];
-
-			try {
-				while (rs.next()) {
-					
-					pos_id[row] = rs.getInt(1);
-					x[row] = rs.getInt(2);
-					y[row] = rs.getInt(3);
-					z[row] = rs.getInt(4);
-					locBase9[row] = rs.getInt(5);
-
-					locBase25[row] = rs.getString(6);
-					
-					row++;
-				}
-			}
-			catch (SQLException e) {
-				e.printStackTrace();
-				return;
-			}
-
+			selectAllColumns( rs);
 			break;
 
 		case SELECT_COLUMNS_XYZ:
@@ -170,36 +143,9 @@ public class TablePosition extends Table {
 			break;
 
 		default:
-			pos_id = new int[rowCount];
-			x = new int[rowCount];
-			y = new int[rowCount];
-			z = new int[rowCount];
-			locBase9 = new int[rowCount];
-			
-			locBase25 = new String[rowCount];	
-
-			try {
-				while (rs.next()) {
-					
-					pos_id[row] = rs.getInt(1);
-					x[row] = rs.getInt(2);
-					y[row] = rs.getInt(3);
-					z[row] = rs.getInt(4);
-					locBase9[row] = rs.getInt(5);
-
-					locBase25[row] = rs.getString(6);
-					
-					row++;
-				}
-			}
-			catch (SQLException e) {
-				e.printStackTrace();
-				return;
-			}
-
+			selectAllColumns( rs);
 		}
 		
-//		allRead = (row == rowCount);
 	}
 
 	public void insert(int pos_id, int x, int y, int z, int locBase9, String locBase25) {
@@ -332,4 +278,35 @@ public class TablePosition extends Table {
 		}
 	}
 
+	private void selectAllColumns(ResultSet rs) {
+		int row = 0;
+		
+		pos_id = new int[rowCount];
+		x = new int[rowCount];
+		y = new int[rowCount];
+		z = new int[rowCount];
+		locBase9 = new int[rowCount];
+		
+		locBase25 = new String[rowCount];
+
+		try {
+			while (rs.next()) {
+				
+				pos_id[row] = rs.getInt(1);
+				x[row] = rs.getInt(2);
+				y[row] = rs.getInt(3);
+				z[row] = rs.getInt(4);
+				locBase9[row] = rs.getInt(5);
+
+				locBase25[row] = rs.getString(6);
+				
+				row++;
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			return;
+		}
+		
+	}
 }
