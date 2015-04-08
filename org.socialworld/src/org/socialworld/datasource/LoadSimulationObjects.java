@@ -46,6 +46,7 @@ public abstract class LoadSimulationObjects {
 	}
 
 	public abstract SimulationObject getObject(int objectID) ;
+	public abstract SimulationObject createObject(int objectID) ;
 	protected abstract void selectAllForID(int objectID);
 	
 	protected int mapGaussToIndex(double gaussValue, int arrayCapacity) {
@@ -77,9 +78,14 @@ public abstract class LoadSimulationObjects {
 		indexS2AP = mapGaussToIndex(gauss_value, State2ActionTypePool.CAPACITY_S2AP_ARRAY);
 		object.setState2ActionType(State2ActionTypePool.getInstance().getState2ActionType(indexS2AP), this);
 
-
 	}
 	
+	protected void loadObject(WriteAccessToSimulationObject object, int objectID) {
+		
+		object.setObjectID(objectID, this);
+	
+	}
+
 	protected void initState(StateSimulationObject state) {
 		int indexPosition;
 		
@@ -87,5 +93,9 @@ public abstract class LoadSimulationObjects {
 		if (random.nextBoolean() == false) indexPosition = indexPosition * -1;
 		state.setPosition(PositionPool.getInstance().getPosition(indexPosition));
 
+	}
+	
+	protected void loadState(StateSimulationObject state) {
+		
 	}
 }

@@ -47,7 +47,7 @@ public class LoadAnimal extends LoadSimulationObjects  {
 	
 
 	@Override
-	public  Animal getObject(int objectID) {
+	public  Animal createObject(int objectID) {
 		StateAnimal state = new StateAnimal();
 		
 		initState(state);
@@ -56,6 +56,20 @@ public class LoadAnimal extends LoadSimulationObjects  {
 		WriteAccessToAnimal animal = new WriteAccessToAnimal(createdAnimal, state);
 		
 		initObject(animal, objectID);	
+		
+		return createdAnimal;
+	}
+
+	@Override
+	public  Animal getObject(int objectID) {
+		StateAnimal state = new StateAnimal();
+		
+		loadState(state);
+		
+		Animal createdAnimal = new Animal(state);
+		WriteAccessToAnimal animal = new WriteAccessToAnimal(createdAnimal, state);
+		
+		loadObject(animal, objectID);	
 		
 		return createdAnimal;
 	}
@@ -76,7 +90,13 @@ public class LoadAnimal extends LoadSimulationObjects  {
 				this);
 		
 	}
-	
+
+	protected void loadObject(WriteAccessToAnimal object, int objectID) {
+		
+		super.loadObject(object, objectID);
+
+	}
+
 	protected void initState(StateAnimal state) {
 
 		super.initState(state);		
@@ -91,6 +111,12 @@ public class LoadAnimal extends LoadSimulationObjects  {
 		
 	}
 
+	protected void loadState(StateAnimal state) {
+
+		super.loadState(state);		
+
+	}
+	
 	protected void selectAllForID(int ObjectID){
 		
 	}

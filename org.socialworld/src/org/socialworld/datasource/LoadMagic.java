@@ -43,7 +43,7 @@ public class LoadMagic extends LoadSimulationObjects {
 	}
 
 	@Override
-	public Magic getObject(int objectID) {
+	public Magic createObject(int objectID) {
 		// TODO
 		StateSimulationObject state = new StateSimulationObject();
 		
@@ -55,6 +55,23 @@ public class LoadMagic extends LoadSimulationObjects {
 		
 
 		initObject(magic, objectID);	
+		
+		return createdMagic;
+	}
+
+	@Override
+	public Magic getObject(int objectID) {
+		// TODO
+		StateSimulationObject state = new StateSimulationObject();
+		
+		loadState(state);
+		
+		Magic createdMagic = new Magic(state);
+		
+		WriteAccessToSimulationObject magic = new WriteAccessToSimulationObject(createdMagic, state);
+		
+
+		loadObject(magic, objectID);	
 		
 		return createdMagic;
 	}
