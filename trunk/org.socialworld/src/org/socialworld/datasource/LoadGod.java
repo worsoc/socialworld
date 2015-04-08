@@ -25,7 +25,6 @@ package org.socialworld.datasource;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;*/
-import java.sql.*;
 
 import org.socialworld.objects.God;
 import org.socialworld.objects.StateSimulationObject;
@@ -49,7 +48,7 @@ public class LoadGod extends LoadSimulationObjects {
 	}
 
 	@Override
-	public God getObject(int objectID) {
+	public God createObject(int objectID) {
 		// TODO
 		StateSimulationObject state = new StateSimulationObject();
 		
@@ -60,6 +59,22 @@ public class LoadGod extends LoadSimulationObjects {
 		
 
 		initObject(god, objectID);	
+		
+		return createdGod;
+	}
+
+	@Override
+	public God getObject(int objectID) {
+		// TODO
+		StateSimulationObject state = new StateSimulationObject();
+		
+		loadState(state);
+		
+		God createdGod = new God(state);
+		WriteAccessToSimulationObject god = new WriteAccessToSimulationObject(createdGod, state);
+		
+
+		loadObject(god, objectID);	
 		
 		return createdGod;
 	}

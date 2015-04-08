@@ -43,7 +43,7 @@ public class LoadItem extends LoadSimulationObjects {
 	}
 
 	@Override
-	public Item getObject(int objectID) {
+	public Item createObject(int objectID) {
 		// TODO
 		StateSimulationObject state = new StateSimulationObject();
 		
@@ -55,6 +55,23 @@ public class LoadItem extends LoadSimulationObjects {
 		
 
 		initObject(item, objectID);	
+		
+		return createdItem;
+	}
+
+	@Override
+	public Item getObject(int objectID) {
+		// TODO
+		StateSimulationObject state = new StateSimulationObject();
+		
+		loadState(state);
+		
+		Item createdItem = new Item(state);
+		
+		WriteAccessToSimulationObject item = new WriteAccessToSimulationObject(createdItem, state);
+		
+
+		loadObject(item, objectID);	
 		
 		return createdItem;
 	}
