@@ -210,15 +210,15 @@ public class TableAction extends Table {
 				mode[row] = rs.getInt(4);
 				minTime[row] = rs.getLong(5);
 				maxTime[row] = rs.getLong(6);
-				priority[row] = rs.getInt(2);
-				intensity[row] = rs.getFloat(3);
-				duration[row] = rs.getInt(4);
-				remainedDuration[row] = rs.getInt(4);
-				target[row] = rs.getInt(4);
-				x[row] = rs.getFloat(2);
-				y[row] = rs.getFloat(3);
-				z[row] = rs.getFloat(4);
-				done[row] = rs.getInt(5);
+				priority[row] = rs.getInt(7);
+				intensity[row] = rs.getFloat(8);
+				duration[row] = rs.getInt(9);
+				remainedDuration[row] = rs.getInt(10);
+				target[row] = rs.getInt(11);
+				x[row] = rs.getFloat(12);
+				y[row] = rs.getFloat(13);
+				z[row] = rs.getFloat(14);
+				done[row] = rs.getInt(15);
 
 				
 				row++;
