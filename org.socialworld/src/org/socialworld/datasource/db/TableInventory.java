@@ -89,6 +89,17 @@ public class TableInventory extends Table {
 
 	}
 
+	public void insert(int id) {
+		String statement;
+			
+		if (id > 0) {
+			
+			statement 	= "INSERT INTO sw_inventory (id) VALUES (" + id + ")";
+			
+			insert(statement);
+		}
+	}
+
 	public void updateHands(int id, int leftHand, int rightHand) {
 		String statement;
 			

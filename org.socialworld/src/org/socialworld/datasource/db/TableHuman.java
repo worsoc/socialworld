@@ -68,6 +68,17 @@ public class TableHuman extends Table {
 		}
 	}
 
+	public void insert(int id) {
+		String statement;
+			
+		if (id > 0) {
+			
+			statement 	= "INSERT INTO sw_human (id) VALUES (" + id + ")";
+			
+			insert(statement);
+		}
+	}
+
 	public void update(int id, String lastSentence) {
 		String statement;
 			
