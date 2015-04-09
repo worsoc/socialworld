@@ -164,6 +164,17 @@ public class TableAnimalsDirections extends Table {
 
 	}
 
+	public void insert(int id) {
+		String statement;
+			
+		if (id > 0) {
+			
+			statement 	= "INSERT INTO sw_animalsdirections (id) VALUES (" + id + ")";
+			
+			insert(statement);
+		}
+	}
+
 	public void updateChest(int id, float x, float y, float z) {
 		String statement;
 			
