@@ -26,7 +26,11 @@ import java.util.ListIterator;
 import org.apache.log4j.Logger;
 import org.socialworld.objects.*;
 import org.socialworld.propertyChange.ListenedList;
-import org.socialworld.datasource.*;
+import org.socialworld.datasource.loadObjects.LoadAnimal;
+import org.socialworld.datasource.loadObjects.LoadGod;
+import org.socialworld.datasource.loadObjects.LoadHuman;
+import org.socialworld.datasource.loadObjects.LoadItem;
+import org.socialworld.datasource.loadObjects.LoadMagic;
 
 import org.socialworld.collections.SimulationObjectArray;
 
