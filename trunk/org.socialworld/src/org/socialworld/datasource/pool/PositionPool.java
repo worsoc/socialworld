@@ -1,4 +1,4 @@
-package org.socialworld.datasource;
+package org.socialworld.datasource.pool;
 
 import java.io.IOException;
 import java.io.InputStream;

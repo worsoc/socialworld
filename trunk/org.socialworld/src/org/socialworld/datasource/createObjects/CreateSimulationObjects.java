@@ -24,11 +24,11 @@ package org.socialworld.datasource.createObjects;
 import java.util.Random;
 
 import org.apache.log4j.Logger;
-import org.socialworld.datasource.InfluenceTypePool;
-import org.socialworld.datasource.PositionPool;
-import org.socialworld.datasource.ReactionTypePool;
-import org.socialworld.datasource.State2ActionTypePool;
 import org.socialworld.datasource.loadObjects.LoadSimulationObjects;
+import org.socialworld.datasource.pool.InfluenceTypePool;
+import org.socialworld.datasource.pool.PositionPool;
+import org.socialworld.datasource.pool.ReactionTypePool;
+import org.socialworld.datasource.pool.State2ActionTypePool;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.StateSimulationObject;
 import org.socialworld.objects.WriteAccessToSimulationObject;

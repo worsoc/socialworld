@@ -20,7 +20,7 @@
 *
 */
 
-package org.socialworld.datasource;
+package org.socialworld.datasource.pool;
 import org.socialworld.core.EventType;
 
 public class ReactionTypePool {

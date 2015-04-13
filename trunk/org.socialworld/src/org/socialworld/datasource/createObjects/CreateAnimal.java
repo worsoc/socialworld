@@ -21,8 +21,8 @@
 */
 package org.socialworld.datasource.createObjects;
 
-import org.socialworld.datasource.AttributeArrayPool;
-import org.socialworld.datasource.AttributeCalculatorMatrixPool;
+import org.socialworld.datasource.pool.AttributeArrayPool;
+import org.socialworld.datasource.pool.AttributeCalculatorMatrixPool;
 import org.socialworld.objects.Animal;
 import org.socialworld.objects.StateAnimal;
 import org.socialworld.objects.WriteAccessToAnimal;

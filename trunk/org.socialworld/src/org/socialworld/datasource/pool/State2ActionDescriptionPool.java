@@ -1,4 +1,4 @@
-package org.socialworld.datasource;
+package org.socialworld.datasource.pool;
 
 import org.socialworld.calculation.descriptions.State2ActionDescription;
 
