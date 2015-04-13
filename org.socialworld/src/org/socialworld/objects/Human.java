@@ -42,8 +42,8 @@ import org.socialworld.conversation.Talk_SentenceType;
 	 
 	private StateHuman state;
 	
-	public Human(StateHuman state) {
-		super(state);
+	public Human(int objectID, StateHuman state) {
+		super(objectID, state);
 		this.state = state;
 		init();
 	}

@@ -27,8 +27,8 @@ package org.socialworld.objects;
  */
 public class Mammal extends Animal {
 
-    public Mammal(StateAnimal state) {
-		super(state);
+    public Mammal(int objectID, StateAnimal state) {
+		super(objectID, state);
 	}
 
    

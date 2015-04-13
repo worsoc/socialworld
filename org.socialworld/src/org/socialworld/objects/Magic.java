@@ -33,8 +33,8 @@ import org.socialworld.core.Event;
  */
 public class Magic extends SimulationObject {
 // TODO implement Magic class functionality
-	public Magic(StateSimulationObject state) {
-		super(state);
+	public Magic(int objectID, StateSimulationObject state) {
+		super(objectID, state);
 	}
 
 
