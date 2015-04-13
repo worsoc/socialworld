@@ -32,8 +32,8 @@ import org.socialworld.core.Event;
  */
 public class God extends SimulationObject {
 
-	public God(StateSimulationObject state) {
-		super(state);
+	public God(int objectID, StateSimulationObject state) {
+		super(objectID, state);
 	}
 
 

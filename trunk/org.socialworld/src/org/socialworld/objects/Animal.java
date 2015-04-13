@@ -47,8 +47,8 @@ public class Animal extends SimulationObject {
 	protected FunctionByMatrix_Matrix attributeCalculatorMatrix;
 	protected PathFinder pathFinder;
 
-	public Animal(StateAnimal state) {
-		super(state);
+	public Animal(int objectID, StateAnimal state) {
+		super(objectID, state);
 		this.state = state;
 		init();
 	}

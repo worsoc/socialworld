@@ -56,7 +56,9 @@ public abstract class SimulationObject extends ListenedBase {
 	 * The constructor creates a simulation object.
 	 * 
 	 */
-	public SimulationObject(StateSimulationObject state) {
+	public SimulationObject(int objectID, StateSimulationObject state) {
+		this.objectID = objectID;
+		
 		this.guard = null;
 		
 		this.simulation = Simulation.getInstance();

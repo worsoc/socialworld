@@ -33,8 +33,8 @@ import org.socialworld.core.Event;
  */
 public class Item extends SimulationObject {
 
-	public Item(StateSimulationObject state) {
-		super(state);
+	public Item(int objectID, StateSimulationObject state) {
+		super(objectID, state);
 	}
 
 	
