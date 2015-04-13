@@ -19,7 +19,7 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.datasource;
+package org.socialworld.datasource.loadObjects;
 
 import org.socialworld.objects.Animal;
 import org.socialworld.objects.StateAnimal;
@@ -46,79 +46,37 @@ public class LoadAnimal extends LoadSimulationObjects  {
 	}
 	
 
-	@Override
-	public  Animal createObject(int objectID) {
-		StateAnimal state = new StateAnimal();
-		
-		initState(state);
-		
-		Animal createdAnimal = new Animal(state);
-		WriteAccessToAnimal animal = new WriteAccessToAnimal(createdAnimal, state);
-		
-		initObject(animal, objectID);	
-		
-		return createdAnimal;
-	}
 
 	@Override
 	public  Animal getObject(int objectID) {
+		load(objectID);
+
 		StateAnimal state = new StateAnimal();
+		initState(state);
 		
-		loadState(state);
-		
-		Animal createdAnimal = new Animal(state);
+		Animal createdAnimal = new Animal(objectID, state);
 		WriteAccessToAnimal animal = new WriteAccessToAnimal(createdAnimal, state);
 		
-		loadObject(animal, objectID);	
+		initObject(animal);	
 		
 		return createdAnimal;
 	}
 
 	
-	protected void initObject(WriteAccessToAnimal object, int objectID) {
+	protected void initObject(WriteAccessToAnimal object) {
 	
-		super.initObject(object, objectID);
-
-		int indexACMP;
-		double gauss_value;
-
-		gauss_value = random.nextGaussian();
-		indexACMP = mapGaussToIndex(gauss_value, AttributeCalculatorMatrixPool.CAPACITY_ACMP_ARRAY);
-
-		object.setMatrix(	
-				AttributeCalculatorMatrixPool.getInstance().getMatrix(indexACMP),
-				this);
-		
-	}
-
-	protected void loadObject(WriteAccessToAnimal object, int objectID) {
-		
-		super.loadObject(object, objectID);
+		super.initObject(object);
 
 	}
+
 
 	protected void initState(StateAnimal state) {
 
 		super.initState(state);		
 
-		int indexAAP;
-		double gauss_value;
-
-		gauss_value = random.nextGaussian();
-		indexAAP = mapGaussToIndex(gauss_value, AttributeArrayPool.CAPACITY_AAP_ARRAY);
-		state.setAttributes(
-				AttributeArrayPool.getInstance().getArray(indexAAP));
-		
 	}
 
-	protected void loadState(StateAnimal state) {
 
-		super.loadState(state);		
-
-	}
 	
-	protected void selectAllForID(int ObjectID){
-		
-	}
 	
 }

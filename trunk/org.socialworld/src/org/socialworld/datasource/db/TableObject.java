@@ -222,4 +222,37 @@ public class TableObject extends Table {
 		}
 	}
 
+	public int getIndexForPK(int id) {
+		int size;
+		int index;
+		
+		size = this.id.length;
+		
+		for (index = 0; index < size; index++) {
+			if (this.id[index] == id) return index;
+		}
+		
+		return -1;
+	}
+	
+	public int getType(int index) {
+		return type[index];
+	}
+	
+	public int getPosition(int index) {
+		return position[index];
+	}
+
+	public int getState2Act(int index) {
+		return state2act[index];
+	}
+	
+	public int getLocBase9(int index) {
+		return locBase9[index];
+	}
+
+	public String getLocBase25(int index) {
+		return locBase25[index];
+	}
+
 }

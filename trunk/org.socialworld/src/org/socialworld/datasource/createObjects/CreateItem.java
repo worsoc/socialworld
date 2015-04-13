@@ -1,6 +1,6 @@
 /*
 * Social World
-* Copyright (C) 2014  Mathias Sikos
+* Copyright (C) 2015  Mathias Sikos
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -19,37 +19,26 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.datasource;
+package org.socialworld.datasource.createObjects;
 
 import org.socialworld.objects.Item;
+import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.StateSimulationObject;
 import org.socialworld.objects.WriteAccessToSimulationObject;
 
-public class LoadItem extends LoadSimulationObjects {
-
-	private static LoadItem instance;
-
-	/**
-	 * The method gets back the only instance of the LoadItem.
-	 * 
-	 * @return singleton object of LoadHuman
-	 */
-	public static LoadItem getInstance() {
-		if (instance == null) {
-			instance = new LoadItem();
-			
-		}
-		return instance;
-	}
+/**
+ * @author Mathias Sikos
+ *
+ */
+public class CreateItem extends CreateSimulationObjects {
 
 	@Override
-	public Item createObject(int objectID) {
+	public SimulationObject getObject(int objectID) {
 		// TODO
 		StateSimulationObject state = new StateSimulationObject();
-		
 		initState(state);
 		
-		Item createdItem = new Item(state);
+		Item createdItem = new Item(objectID, state);
 		
 		WriteAccessToSimulationObject item = new WriteAccessToSimulationObject(createdItem, state);
 		
@@ -57,27 +46,6 @@ public class LoadItem extends LoadSimulationObjects {
 		initObject(item, objectID);	
 		
 		return createdItem;
-	}
-
-	@Override
-	public Item getObject(int objectID) {
-		// TODO
-		StateSimulationObject state = new StateSimulationObject();
-		
-		loadState(state);
-		
-		Item createdItem = new Item(state);
-		
-		WriteAccessToSimulationObject item = new WriteAccessToSimulationObject(createdItem, state);
-		
-
-		loadObject(item, objectID);	
-		
-		return createdItem;
-	}
-
-	protected void selectAllForID(int ObjectID){
-		
 	}
 
 }

@@ -19,68 +19,46 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.datasource;
+package org.socialworld.datasource.loadObjects;
 
-/*import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;*/
-
-import org.socialworld.objects.God;
+import org.socialworld.objects.Item;
 import org.socialworld.objects.StateSimulationObject;
 import org.socialworld.objects.WriteAccessToSimulationObject;
 
-public class LoadGod extends LoadSimulationObjects {
+public class LoadItem extends LoadSimulationObjects {
 
-	private static LoadGod instance;
+	private static LoadItem instance;
 
 	/**
-	 * The method gets back the only instance of the LoadGod.
+	 * The method gets back the only instance of the LoadItem.
 	 * 
 	 * @return singleton object of LoadHuman
 	 */
-	public static LoadGod getInstance() {
+	public static LoadItem getInstance() {
 		if (instance == null) {
-			instance = new LoadGod();
+			instance = new LoadItem();
 			
 		}
 		return instance;
 	}
 
 	@Override
-	public God createObject(int objectID) {
+	public Item getObject(int objectID) {
+		
+		load(objectID);
+		
 		// TODO
 		StateSimulationObject state = new StateSimulationObject();
-		
 		initState(state);
 		
-		God createdGod = new God(state);
-		WriteAccessToSimulationObject god = new WriteAccessToSimulationObject(createdGod, state);
-		
+		Item createdItem = new Item(objectID, state);
+		WriteAccessToSimulationObject item = new WriteAccessToSimulationObject(createdItem, state);
 
-		initObject(god, objectID);	
+		initObject(item);	
 		
-		return createdGod;
+		return createdItem;
 	}
 
-	@Override
-	public God getObject(int objectID) {
-		// TODO
-		StateSimulationObject state = new StateSimulationObject();
-		
-		loadState(state);
-		
-		God createdGod = new God(state);
-		WriteAccessToSimulationObject god = new WriteAccessToSimulationObject(createdGod, state);
-		
 
-		loadObject(god, objectID);	
-		
-		return createdGod;
-	}
 
-	protected void selectAllForID(int ObjectID){
-		
-	}
-	
 }
