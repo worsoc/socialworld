@@ -19,10 +19,9 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.datasource;
+package org.socialworld.datasource.loadObjects;
 
 import org.socialworld.objects.*;
-import org.socialworld.datasource.LoadAnimal;
 import org.socialworld.SimpleClientActionHandler;
 
 /**
@@ -67,23 +66,22 @@ public class LoadHuman extends LoadAnimal {
 	 */
 	public Human getObject(int objectID) {
 	
-		StateHuman state = new StateHuman();
+		load(objectID);
 		
+		StateHuman state = new StateHuman();
 		initState(state);
 		
-		Human createdHuman = new Human(state);
+		Human createdHuman = new Human(objectID, state);
 		WriteAccessToHuman human = new WriteAccessToHuman(createdHuman, state);
-
-	
-		initObject(human, objectID);	
+		initObject(human);	
 
 		SimpleClientActionHandler.getInstance().setHumanWrite(objectID, human);
 
 		return createdHuman;
 	}
 
-	protected void initObject(WriteAccessToHuman object, int objectID) {
-		super.initObject(object, objectID);
+	protected void initObject(WriteAccessToHuman object) {
+		super.initObject(object);
 	}
 
 	protected void initState(StateHuman state) {
@@ -91,9 +89,6 @@ public class LoadHuman extends LoadAnimal {
 	}
 
 
-	public void selectAll() {
-		
-	}
 	
 }
 

@@ -19,7 +19,7 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.datasource;
+package org.socialworld.datasource.loadObjects;
 
 import org.socialworld.objects.Magic;
 import org.socialworld.objects.StateSimulationObject;
@@ -43,41 +43,20 @@ public class LoadMagic extends LoadSimulationObjects {
 	}
 
 	@Override
-	public Magic createObject(int objectID) {
+	public Magic getObject(int objectID) {
+		
+		load(objectID);
+		
 		// TODO
 		StateSimulationObject state = new StateSimulationObject();
-		
 		initState(state);
 		
-		Magic createdMagic = new Magic(state);
-		
+		Magic createdMagic = new Magic(objectID, state);
 		WriteAccessToSimulationObject magic = new WriteAccessToSimulationObject(createdMagic, state);
-		
-
-		initObject(magic, objectID);	
+		initObject(magic);	
 		
 		return createdMagic;
 	}
 
-	@Override
-	public Magic getObject(int objectID) {
-		// TODO
-		StateSimulationObject state = new StateSimulationObject();
-		
-		loadState(state);
-		
-		Magic createdMagic = new Magic(state);
-		
-		WriteAccessToSimulationObject magic = new WriteAccessToSimulationObject(createdMagic, state);
-		
-
-		loadObject(magic, objectID);	
-		
-		return createdMagic;
-	}
-
-	protected void selectAllForID(int ObjectID){
-		
-	}
 
 }

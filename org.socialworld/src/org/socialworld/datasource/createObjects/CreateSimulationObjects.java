@@ -1,6 +1,6 @@
 /*
 * Social World
-* Copyright (C) 2014  Mathias Sikos
+* Copyright (C) 2015  Mathias Sikos
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -19,11 +19,16 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.datasource;
+package org.socialworld.datasource.createObjects;
 
 import java.util.Random;
 
 import org.apache.log4j.Logger;
+import org.socialworld.datasource.InfluenceTypePool;
+import org.socialworld.datasource.PositionPool;
+import org.socialworld.datasource.ReactionTypePool;
+import org.socialworld.datasource.State2ActionTypePool;
+import org.socialworld.datasource.loadObjects.LoadSimulationObjects;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.StateSimulationObject;
 import org.socialworld.objects.WriteAccessToSimulationObject;
@@ -31,23 +36,21 @@ import org.socialworld.objects.WriteAccessToSimulationObject;
 /**
  * Its the basic class for creating simulation objects.
  * for inherited classes of class SimulationObject
- *  there exists an inherited class of LoadSimulationObjects.
+ *  there exists an inherited class of CreateSimulationObjects.
  *  
  * @author Mathias Sikos (tyloesand) 
  */
-public abstract class LoadSimulationObjects {
-	
+public abstract class CreateSimulationObjects {
 	protected static final Logger logger = Logger.getLogger(LoadSimulationObjects.class);
 
 	protected Random random;
 
-	public LoadSimulationObjects() {
+	
+	public CreateSimulationObjects() {
 		random = new Random();
 	}
 
 	public abstract SimulationObject getObject(int objectID) ;
-	public abstract SimulationObject createObject(int objectID) ;
-	protected abstract void selectAllForID(int objectID);
 	
 	protected int mapGaussToIndex(double gaussValue, int arrayCapacity) {
 		double factor;
@@ -80,11 +83,6 @@ public abstract class LoadSimulationObjects {
 
 	}
 	
-	protected void loadObject(WriteAccessToSimulationObject object, int objectID) {
-		
-		object.setObjectID(objectID, this);
-	
-	}
 
 	protected void initState(StateSimulationObject state) {
 		int indexPosition;
@@ -95,7 +93,5 @@ public abstract class LoadSimulationObjects {
 
 	}
 	
-	protected void loadState(StateSimulationObject state) {
-		
-	}
+
 }
