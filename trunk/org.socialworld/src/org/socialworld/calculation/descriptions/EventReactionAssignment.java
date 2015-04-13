@@ -21,7 +21,7 @@
 */
 package org.socialworld.calculation.descriptions;
 
-import org.socialworld.datasource.EventReactionDescriptionPool;
+import org.socialworld.datasource.pool.EventReactionDescriptionPool;
 
 public class EventReactionAssignment {
 	private static EventReactionAssignment eventReactionAssignment;
