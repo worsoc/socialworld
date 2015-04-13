@@ -21,7 +21,7 @@
 */
 package org.socialworld.calculation.descriptions;
 
-import org.socialworld.datasource.State2ActionDescriptionPool;
+import org.socialworld.datasource.pool.State2ActionDescriptionPool;
 
 public class State2ActionAssignment {
 	private static State2ActionAssignment instance;

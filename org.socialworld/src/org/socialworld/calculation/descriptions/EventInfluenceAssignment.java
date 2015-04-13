@@ -21,7 +21,7 @@
 */
 package org.socialworld.calculation.descriptions;
 
-import org.socialworld.datasource.EventInfluenceDescriptionPool;
+import org.socialworld.datasource.pool.EventInfluenceDescriptionPool;
 
 
 public class EventInfluenceAssignment {
