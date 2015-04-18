@@ -41,7 +41,7 @@ public abstract class LoadSimulationObjects {
 
 	
 	TableObject tableObjects;
-	int indexTableRow;
+	int rowTableObjects;	
 	
 	public LoadSimulationObjects() {
 		
@@ -57,17 +57,15 @@ public abstract class LoadSimulationObjects {
 		
 		
 		tableObjects.select(tableObjects.SELECT_ALL_COLUMNS, " WHERE id = " + objectID, "");
-	
-		indexTableRow = tableObjects.getIndexForPK(objectID);
+		rowTableObjects = tableObjects.getIndexForPK(objectID);
 		
 	}
 
 	protected void initObject(WriteAccessToSimulationObject object) {
 		int state2ActionType;
 
-		if (indexTableRow >= 0) {
-			
-			state2ActionType = tableObjects.getType(indexTableRow);
+		if (rowTableObjects >= 0) {
+			state2ActionType = tableObjects.getType(rowTableObjects);
 			object.setState2ActionType(state2ActionType, this);
 		}
 
@@ -78,4 +76,7 @@ public abstract class LoadSimulationObjects {
 
 	}
 	
+	protected void resetRowIndexes() {
+		rowTableObjects = -1;
+	}
 }
