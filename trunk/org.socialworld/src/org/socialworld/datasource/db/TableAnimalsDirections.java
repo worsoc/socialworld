@@ -272,4 +272,37 @@ public class TableAnimalsDirections extends Table {
 
 	}
 
+	public float[] getChestDirection(int index) {
+		float direction[];
+				
+		direction = new float[3];
+		direction[0] = chestX[index];
+		direction[1] = chestY[index];
+		direction[2] = chestZ[index];
+		
+		return direction;
+	}
+
+	public float[] getViewDirection(int index) {
+		float direction[];
+				
+		direction = new float[3];
+		direction[0] = viewX[index];
+		direction[1] = viewY[index];
+		direction[2] = viewZ[index];
+		
+		return direction;
+	}
+
+	public float[] getMoveDirection(int index) {
+		float direction[];
+				
+		direction = new float[3];
+		direction[0] = moveX[index];
+		direction[1] = moveY[index];
+		direction[2] = moveZ[index];
+		
+		return direction;
+	}
+
 }

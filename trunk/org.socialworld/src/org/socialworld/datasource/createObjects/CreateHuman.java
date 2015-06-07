@@ -33,12 +33,19 @@ import org.socialworld.objects.WriteAccessToHuman;
  */
 public class CreateHuman extends CreateSimulationObjects {
 
+	private static CreateHuman instance;
+	
+	public static CreateHuman getInstance() {
+		if (instance == null)			instance = new CreateHuman();
+		return instance;
+	}
+
 	@Override
 	public SimulationObject getObject(int objectID) {
 		StateHuman state = new StateHuman();
 		initState(state);
 		
-		Human createdHuman = new Human(objectID, state);
+		Human createdHuman = new Human(objectID);
 		WriteAccessToHuman human = new WriteAccessToHuman(createdHuman, state);
 		initObject(human, objectID);	
 

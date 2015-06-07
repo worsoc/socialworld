@@ -32,6 +32,13 @@ import org.socialworld.objects.WriteAccessToSimulationObject;
  */
 public class CreateGod extends CreateSimulationObjects {
 
+	private static CreateGod instance;
+	
+	public static CreateGod getInstance() {
+		if (instance == null)			instance = new CreateGod();
+		return instance;
+	}
+
 	@Override
 	public SimulationObject getObject(int objectID) {
 		// TODO
@@ -39,7 +46,7 @@ public class CreateGod extends CreateSimulationObjects {
 		
 		initState(state);
 		
-		God createdGod = new God(objectID, state);
+		God createdGod = new God(objectID);
 		WriteAccessToSimulationObject god = new WriteAccessToSimulationObject(createdGod, state);
 		
 

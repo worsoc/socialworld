@@ -21,6 +21,21 @@
 */
 package org.socialworld.datasource.loadObjects;
 
+import org.socialworld.attributes.Inventory;
+import org.socialworld.collections.SimulationObjectArray;
+import org.socialworld.conversation.Word;
+import org.socialworld.core.AllWords;
+import org.socialworld.core.ObjectMaster;
+import org.socialworld.datasource.db.TableHuman;
+import org.socialworld.datasource.db.TableInventory;
+import org.socialworld.datasource.db.TableKnowledgeFactAndSource;
+import org.socialworld.datasource.db.TableKnowledgePool;
+import org.socialworld.knowledge.Knowledge;
+import org.socialworld.knowledge.KnowledgeFact;
+import org.socialworld.knowledge.KnowledgeFact_Criterion;
+import org.socialworld.knowledge.KnowledgeFact_Value;
+import org.socialworld.knowledge.KnowledgeSource;
+import org.socialworld.knowledge.KnowledgeSource_Type;
 import org.socialworld.objects.*;
 import org.socialworld.SimpleClientActionHandler;
 
@@ -35,61 +50,191 @@ import org.socialworld.SimpleClientActionHandler;
 public class LoadHuman extends LoadAnimal {
 	
 	private static LoadHuman instance;
+	
+	TableHuman tableHuman;
+	int rowTableHuman;
+	
+	TableInventory tableInventory;
+	int rowTableInventory;
+	
+	TableKnowledgePool tableKnowledgePool;
+	int allLfdNrForObjectID[];
+	
+	TableKnowledgeFactAndSource tableKnowledgeFactAndSource;
 
 	/**
 	 * Because of being a singleton the instance is created in a private
 	 * constructor.
 	 */
-	private LoadHuman() {
+	private LoadHuman(SimulationObjectArray allObjects) {
+		super(allObjects);
+
+		tableHuman = new TableHuman();
+		tableInventory = new TableInventory();
+		tableKnowledgePool = new TableKnowledgePool();
+		tableKnowledgeFactAndSource = new TableKnowledgeFactAndSource();
 	}
 
 	/**
-	 * The method gets back the only instance of the LoadHuman.
+	 * The method creates the only instance of the LoadAnimal.
 	 * 
-	 * @return singleton object of LoadHuman
 	 */
-	public static LoadHuman getInstance() {
+	public static LoadHuman createInstance(SimulationObjectArray allObjects) {
 		if (instance == null) {
-			instance = new LoadHuman();
+			instance = new LoadHuman(allObjects);
 			
 		}
 		return instance;
+
 	}
 	
+	protected void load(int objectID) {
+		super.load(objectID);
+		
+		tableHuman.select(tableHuman.SELECT_ALL_COLUMNS, " WHERE id = " + objectID , "");
+		tableInventory.select(tableInventory.SELECT_ALL_COLUMNS, " WHERE id = " + objectID , "");
+		tableKnowledgePool.select(tableKnowledgePool.SELECT_ALL_COLUMNS, " WHERE id = " + objectID , "");
+		
+		rowTableHuman = tableHuman.getIndexFor1PK(objectID);
+		rowTableInventory = tableInventory.getIndexFor1PK(objectID);
+		allLfdNrForObjectID = tableKnowledgePool.getAllPK2ForPK1(objectID);
+	}
 
 	
 	/**
 	 * The method creates an instance of class Human.
 	 * 
 	 * @param objectID
-	 * @return  Human
 	 */
-	public Human getObject(int objectID) {
+	public void createObject(int objectID) {
+		Human createdHuman = new Human(objectID);
+		allObjects.set(objectID, createdHuman);
+	}
+
+	public void loadObject(int objectID) {
+		Human createdHuman;
+		createdHuman = (Human) allObjects.get(objectID);
 	
 		load(objectID);
 		
 		StateHuman state = new StateHuman();
-		initState(state);
+		initState(state,  objectID);
 		
-		Human createdHuman = new Human(objectID, state);
 		WriteAccessToHuman human = new WriteAccessToHuman(createdHuman, state);
-		initObject(human);	
+		initObject(human,  objectID);	
 
 		SimpleClientActionHandler.getInstance().setHumanWrite(objectID, human);
 
-		return createdHuman;
 	}
 
-	protected void initObject(WriteAccessToHuman object) {
-		super.initObject(object);
+	protected void initObject(WriteAccessToHuman object, int objectID) {
+		super.initObject(object,  objectID);
 	}
 
-	protected void initState(StateHuman state) {
-		super.initState(state);		
+	protected void initState(StateHuman state, int objectID) {
+		super.initState(state,  objectID);	
+		
+		
+		if (rowTableHuman >= 0) {
+			String lastSentence;
+			lastSentence = tableHuman.getLastSentence(rowTableHuman);
+			state.setLastSaidSentence(lastSentence);
+		}
+		if (rowTableInventory >= 0) {
+			Inventory inventory;
+			inventory = new Inventory();
+			
+			int leftHandID;
+			SimulationObject leftHand = null;
+			
+			int rightHandID;
+			SimulationObject rightHand = null;
+			
+			leftHandID = tableInventory.getLeftHand(rowTableHuman);
+			rightHandID = tableInventory.getRightHand(rowTableHuman);
+			
+			if (leftHandID > 0) {
+				leftHand = allObjects.get(leftHandID);
+				if (leftHand == null) {
+					// TODO
+				}
+			}
+			if (rightHandID > 0) {
+				rightHand = allObjects.get(rightHandID);
+				if (rightHand == null) {
+					// TODO
+				}
+			}
+			inventory.setLeftHand(leftHand);
+			inventory.setRightHand(rightHand);
+			state.setInventory(inventory);
+		}
+
+		setKnowledgePool(state,  objectID);
 	}
 
-
+	private void setKnowledgePool(StateHuman state, int objectID) {
+		int size;
+		int index;
+		int rowTableKnowledgePool;
+		int word_id;
+		int kfs_id;
+		
+		size = allLfdNrForObjectID.length;
+		for (index = 0; index < size; index++) {
+			rowTableKnowledgePool = tableKnowledgePool.getIndexFor2PK(objectID, allLfdNrForObjectID[index]);
+			if (rowTableKnowledgePool >= 0) {
+				word_id = tableKnowledgePool.getSubject(rowTableKnowledgePool);
+				kfs_id = tableKnowledgePool.getKFSID(rowTableKnowledgePool);
+				setKnowledge(state, word_id, kfs_id);
+			}
+		}
+		
+	}
 	
+	private void setKnowledge(StateHuman state, int subject, int kfs_id) {
+		int allLfdNrForKFSID[];
+		int size;
+		int index;
+		int row;
+		
+		int kfc_id;
+		KnowledgeFact_Criterion kfc;
+		int word_id;
+		Word word;
+		int sourceType_id;
+		KnowledgeSource_Type sourceType;
+		int origin_id;
+		SimulationObject origin;
+		
+		KnowledgeFact facts[];
+		KnowledgeSource sources[];
+		
+		tableKnowledgeFactAndSource.select(tableKnowledgeFactAndSource.SELECT_ALL_COLUMNS, " WHERE kfs_id = " + kfs_id, "");
+		allLfdNrForKFSID = tableKnowledgeFactAndSource.getAllPK2ForPK1(kfs_id);
+		size = allLfdNrForKFSID.length;
+		
+		facts = new KnowledgeFact[size];
+		sources = new KnowledgeSource[size];
+		
+		for (index = 0; index < size; index++) {
+			row = tableKnowledgeFactAndSource.getIndexFor2PK(kfs_id, allLfdNrForKFSID[index]);
+			if (row >= 0) {
+				kfc_id = tableKnowledgeFactAndSource.getKFC(row);
+				kfc = KnowledgeFact_Criterion.getName(kfc_id);
+				word_id = tableKnowledgeFactAndSource.getValue(row);
+				word = AllWords.getWord(word_id);
+				sourceType_id = tableKnowledgeFactAndSource.getSourceType(row);
+				sourceType = KnowledgeSource_Type.getName(sourceType_id);
+				origin_id = tableKnowledgeFactAndSource.getOrigin(row);
+				origin = allObjects.get(origin_id);
+				
+				facts[index] = new KnowledgeFact(kfc, new KnowledgeFact_Value(word));
+				sources[index] = new KnowledgeSource(sourceType, origin);
+			}
+		}
+		state.addKnowledge(new Knowledge(AllWords.getWord(subject), facts, sources ));
+	}
 }
 
 

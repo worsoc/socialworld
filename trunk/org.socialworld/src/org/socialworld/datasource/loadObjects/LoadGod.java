@@ -22,6 +22,7 @@
 package org.socialworld.datasource.loadObjects;
 
 
+import org.socialworld.collections.SimulationObjectArray;
 import org.socialworld.objects.God;
 import org.socialworld.objects.StateSimulationObject;
 import org.socialworld.objects.WriteAccessToSimulationObject;
@@ -30,33 +31,44 @@ public class LoadGod extends LoadSimulationObjects {
 
 	private static LoadGod instance;
 
+	protected LoadGod(SimulationObjectArray allObjects) {
+		
+		super(allObjects);
+		
+	}
+
 	/**
-	 * The method gets back the only instance of the LoadGod.
+	 * The method creates the only instance of the LoadAnimal.
 	 * 
-	 * @return singleton object of LoadHuman
 	 */
-	public static LoadGod getInstance() {
+	public static LoadGod createInstance(SimulationObjectArray allObjects) {
 		if (instance == null) {
-			instance = new LoadGod();
+			instance = new LoadGod(allObjects);
 			
 		}
 		return instance;
 	}
 
 	@Override
-	public God getObject(int objectID) {
+	public void createObject(int objectID) {
+		God createdGod = new God(objectID);
+		allObjects.set(objectID, createdGod);
+	}
+
+	@Override
+	public void loadObject(int objectID) {
+		God createdGod;
+		createdGod = (God) allObjects.get(objectID);
+
 		load(objectID);
 	
 		// TODO
 		StateSimulationObject state = new StateSimulationObject();
-		initState(state);
+		initState(state,  objectID);
 		
-		God createdGod = new God(objectID, state);
 		WriteAccessToSimulationObject god = new WriteAccessToSimulationObject(createdGod, state);
-
-		initObject(god);	
+		initObject(god,  objectID);	
 		
-		return createdGod;
 	}
 
 

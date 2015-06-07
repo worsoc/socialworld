@@ -23,8 +23,13 @@ package org.socialworld.datasource.loadObjects;
 
 
 import org.apache.log4j.Logger;
+import org.socialworld.attributes.Position;
+import org.socialworld.calculation.Vector;
+import org.socialworld.collections.SimulationObjectArray;
+import org.socialworld.datasource.db.TableInfluenceByEvent;
 import org.socialworld.datasource.db.TableObject;
-import org.socialworld.objects.SimulationObject;
+import org.socialworld.datasource.db.TablePosition;
+import org.socialworld.datasource.db.TableReactionByEvent;
 import org.socialworld.objects.StateSimulationObject;
 import org.socialworld.objects.WriteAccessToSimulationObject;
 
@@ -39,40 +44,80 @@ public abstract class LoadSimulationObjects {
 	
 	protected static final Logger logger = Logger.getLogger(LoadSimulationObjects.class);
 
+	SimulationObjectArray allObjects;
 	
 	TableObject tableObjects;
 	int rowTableObjects;	
+
+	TablePosition tablePositions;
+	int rowTablePositions;	
+
+	TableInfluenceByEvent tableInfluenceByEvent;
+	int rowTableInfluenceByEvent;	
+
+	TableReactionByEvent tableReactionByEvent;
+	int rowTableReactionByEvent;	
 	
-	public LoadSimulationObjects() {
+	protected LoadSimulationObjects(SimulationObjectArray allObjects) {
+		
+		this.allObjects = allObjects;
 		
 		tableObjects = new TableObject();
+		tablePositions = new TablePosition();
 
 	}
 
-	public abstract SimulationObject getObject(int objectID) ;
+	public abstract void createObject(int objectID) ;
 	
+	public abstract void loadObject(int objectID) ;
 	
 
 	protected void load(int objectID) {
 		
 		
 		tableObjects.select(tableObjects.SELECT_ALL_COLUMNS, " WHERE id = " + objectID, "");
-		rowTableObjects = tableObjects.getIndexForPK(objectID);
+		tablePositions.select(tablePositions.SELECT_ALL_COLUMNS, " WHERE id = " + objectID, "");
+		tableInfluenceByEvent.select(tableInfluenceByEvent.SELECT_ALL_COLUMNS, " WHERE id = " + objectID, "");
+		tableReactionByEvent.select(tableReactionByEvent.SELECT_ALL_COLUMNS, " WHERE id = " + objectID, "");
+
+		rowTableObjects = tableObjects.getIndexFor1PK(objectID);
+		rowTablePositions = tablePositions.getIndexFor1PK(objectID);
+		rowTableInfluenceByEvent = tableInfluenceByEvent.getIndexFor1PK(objectID);
+		rowTableReactionByEvent = tableReactionByEvent.getIndexFor1PK(objectID);
 		
 	}
 
-	protected void initObject(WriteAccessToSimulationObject object) {
-		int state2ActionType;
-
+	protected void initObject(WriteAccessToSimulationObject object, int objectID) {
+		
+		
 		if (rowTableObjects >= 0) {
+			int state2ActionType;
 			state2ActionType = tableObjects.getType(rowTableObjects);
 			object.setState2ActionType(state2ActionType, this);
+		}	
+		if (rowTableInfluenceByEvent >= 0) {
+			int influenceTypes[];
+			influenceTypes = tableInfluenceByEvent.getTypes(rowTableInfluenceByEvent);
+			object.setInfluenceTypes(influenceTypes, this);
+		}	
+		if (rowTableReactionByEvent >= 0) {
+			int reactionTypes[];
+			reactionTypes = tableReactionByEvent.getTypes(rowTableReactionByEvent);
+			object.setReactionTypes(reactionTypes, this);
 		}
 
 	}
 	
 
-	protected void initState(StateSimulationObject state) {
+	protected void initState(StateSimulationObject state, int objectID) {
+		int x,y,z;
+		
+		if (rowTablePositions >= 0) {
+			x = tablePositions.getX(rowTablePositions);
+			y = tablePositions.getY(rowTablePositions);
+			z = tablePositions.getZ(rowTablePositions);
+			state.setPosition(new Position(new Vector(x,y,z)));
+		}
 
 	}
 	

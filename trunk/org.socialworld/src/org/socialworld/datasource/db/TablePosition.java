@@ -145,6 +145,7 @@ public class TablePosition extends Table {
 		default:
 			selectAllColumns( rs);
 		}
+		setPK1(pos_id);
 		
 	}
 
@@ -309,4 +310,26 @@ public class TablePosition extends Table {
 		}
 		
 	}
+	
+	
+	public int getX(int index) {
+		return x[index];
+	}
+	
+	public int getY(int index) {
+		return y[index];
+	}
+
+	public int getZ(int index) {
+		return z[index];
+	}
+	
+	public int getLocBase9(int index) {
+		return locBase9[index];
+	}
+
+	public String getLocBase25(int index) {
+		return locBase25[index];
+	}
+
 }

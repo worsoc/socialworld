@@ -21,6 +21,7 @@
 */
 package org.socialworld.datasource.loadObjects;
 
+import org.socialworld.collections.SimulationObjectArray;
 import org.socialworld.objects.Magic;
 import org.socialworld.objects.StateSimulationObject;
 import org.socialworld.objects.WriteAccessToSimulationObject;
@@ -29,34 +30,46 @@ public class LoadMagic extends LoadSimulationObjects {
 
 	private static LoadMagic instance;
 
+	protected LoadMagic(SimulationObjectArray allObjects) {
+		
+		super(allObjects);
+		
+	}
+
 	/**
-	 * The method gets back the only instance of the LoadItem.
+	 * The method creates the only instance of the LoadAnimal.
 	 * 
-	 * @return singleton object of LoadHuman
 	 */
-	public static LoadMagic getInstance() {
+	public static LoadMagic createInstance(SimulationObjectArray allObjects) {
 		if (instance == null) {
-			instance = new LoadMagic();
+			instance = new LoadMagic(allObjects);
 			
 		}
 		return instance;
 	}
 
 	@Override
-	public Magic getObject(int objectID) {
-		
+	public void createObject(int objectID) {
+		Magic createdMagic = new Magic(objectID);
+		allObjects.set(objectID, createdMagic);
+	}
+
+	@Override
+	public void loadObject(int objectID) {
+		Magic createdMagic;
+		createdMagic = (Magic) allObjects.get(objectID);
+
 		load(objectID);
-		
+	
 		// TODO
 		StateSimulationObject state = new StateSimulationObject();
-		initState(state);
+		initState(state,  objectID);
 		
-		Magic createdMagic = new Magic(objectID, state);
 		WriteAccessToSimulationObject magic = new WriteAccessToSimulationObject(createdMagic, state);
-		initObject(magic);	
+		initObject(magic,  objectID);	
 		
-		return createdMagic;
 	}
+
 
 
 }

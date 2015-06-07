@@ -32,13 +32,20 @@ import org.socialworld.objects.WriteAccessToSimulationObject;
  */
 public class CreateMagic extends CreateSimulationObjects {
 
+	private static CreateMagic instance;
+	
+	public static CreateMagic getInstance() {
+		if (instance == null)			instance = new CreateMagic();
+		return instance;
+	}
+
 	@Override
 	public SimulationObject getObject(int objectID) {
 		// TODO
 		StateSimulationObject state = new StateSimulationObject();
 		initState(state);
 		
-		Magic createdMagic = new Magic(objectID, state);
+		Magic createdMagic = new Magic(objectID);
 		WriteAccessToSimulationObject magic = new WriteAccessToSimulationObject(createdMagic, state);
 		initObject(magic, objectID);	
 		

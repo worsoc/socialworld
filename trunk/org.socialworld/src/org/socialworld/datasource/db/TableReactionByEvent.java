@@ -30,6 +30,8 @@ import java.sql.SQLException;
  */
 public class TableReactionByEvent extends Table {
 
+	public final  int 		SELECT_ALL_COLUMNS 	= 0;
+
 	String allColumns;
 	
 	int event[][];
@@ -151,6 +153,23 @@ public class TableReactionByEvent extends Table {
 			
 			delete(statement);
 		}
+	}
+
+	public int getIndexFor1PK(int pk1) {
+		int size;
+		int index;
+		
+		size = this.event.length / 256;
+		
+		for (index = 0; index < size; index++) {
+			if (this.event[index][0] == pk1) return index;
+		}
+		
+		return -1;
+	}
+
+	public int[] getTypes(int index) {
+		return event[index];
 	}
 
 }

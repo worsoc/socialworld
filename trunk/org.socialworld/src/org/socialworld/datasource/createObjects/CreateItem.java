@@ -32,13 +32,20 @@ import org.socialworld.objects.WriteAccessToSimulationObject;
  */
 public class CreateItem extends CreateSimulationObjects {
 
+	private static CreateItem instance;
+	
+	public static CreateItem getInstance() {
+		if (instance == null)			instance = new CreateItem();
+		return instance;
+	}
+	
 	@Override
 	public SimulationObject getObject(int objectID) {
 		// TODO
 		StateSimulationObject state = new StateSimulationObject();
 		initState(state);
 		
-		Item createdItem = new Item(objectID, state);
+		Item createdItem = new Item(objectID);
 		
 		WriteAccessToSimulationObject item = new WriteAccessToSimulationObject(createdItem, state);
 		

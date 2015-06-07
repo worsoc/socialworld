@@ -35,6 +35,9 @@ public abstract class Table {
 		int rowCount;
 		int rowsAffected;
 		
+		int pk1[];
+		int pk2[];
+		
 		public Table() {
 			connection = new MariaDBConnection();
 		}
@@ -115,5 +118,63 @@ public abstract class Table {
 			rowsAffected = connection.executeUpdate(statement);
 		}
 
+		public void setPK1(int pk[]) {
+			this.pk1 = pk;
+		}
+	
+		public void setPK2(int pk[]) {
+			this.pk2 = pk;
+		}
+
+		public int getIndexFor1PK(int pk1) {
+			int size;
+			int index;
+			
+			size = this.pk1.length;
+			
+			for (index = 0; index < size; index++) {
+				if (this.pk1[index] == pk1) return index;
+			}
+			
+			return -1;
+		}
+
+		public int getIndexFor2PK(int pk1, int pk2) {
+			int size;
+			int index;
+			
+			size = this.pk1.length;
+			
+			for (index = 0; index < size; index++) {
+				if (this.pk1[index] == pk1 &  this.pk2[index] == pk2 ) return index;
+			}
+			
+			return -1;
+		}
+
+		public int[] getAllPK2ForPK1(int pk1) {
+			int size;
+			int index;
+			
+			int result[];
+			int count = 0;
+			int indexResult = 0;
+			
+			size = this.pk1.length;
+			
+			for (index = 0; index < size; index++) {
+				if (this.pk1[index] == pk1) count++;
+			}
+			
+			result = new int[count];
+			for (index = 0; index < size; index++) {
+				if (this.pk1[index] == pk1) {
+					result[indexResult] = this.pk2[index];
+					indexResult++;
+				}
+			}
+			
+			return result;
+		}
 
 }

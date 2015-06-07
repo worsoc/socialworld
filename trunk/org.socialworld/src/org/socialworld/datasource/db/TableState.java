@@ -31,10 +31,11 @@ import java.sql.SQLException;
 public class TableState extends Table {
 
 	public final  String 	ALL_COLUMNS 		=
-			" id, attrib1, attrib2, attrib3, attrib4, attrib5, attrib6, attrib7, attrib8 ";
+			" id, lfd_nr, attrib1, attrib2, attrib3, attrib4, attrib5, attrib6, attrib7, attrib8 ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 	
 	int id[];
+	int lfd_nr[];
 	int a[];
 	int b[];
 	int c[];
@@ -76,14 +77,16 @@ public class TableState extends Table {
 			selectAllColumns(rs);			
 		}
 
+		setPK1(id);
+		setPK2(lfd_nr);
 	}
 
-	public void insert(int id, int attribs[]) {
+	public void insert(int id, int lfd_nr, int attribs[]) {
 		String statement;
 		int i;
 		int count;
 			
-		if ( id > 0)   {
+		if (( id > 0) & (lfd_nr > 0) )  {
 	
 
 			count = attribs.length;
@@ -92,36 +95,36 @@ public class TableState extends Table {
 			for (i = 1; i <= count; i++) {
 				statement = statement + "attrib" + i + ", ";
 			}
-			statement = statement + "id) VALUES (";
+			statement = statement + "id, lfd_nr) VALUES (";
 			
 			for (i = 0; i < count; i++) {
 				statement = statement + attribs[i] +  ", ";
 			}
-			statement 	= statement	+ id +  ") ";
+			statement 	= statement	+ id +  ", " + lfd_nr + ") ";
 			
 			insert(statement);
 		}
 	}
 
-	public void update(int id, int attribNr, int attribValue) {
+	public void update(int id, int lfd_nr, int attribNr, int attribValue) {
 		String statement;
 		
-		if ( (id > 0) & (attribNr > 0) ) {
+		if ( (id > 0) & (lfd_nr > 0) & (attribNr > 0) ) {
 			
 			statement 	= "UPDATE sw_state SET " +
 					"attrib" + attribNr + " = " + attribValue +
-					" WHERE id = " + id ;
+					" WHERE id = " + id + " AND lfd_nr = " + lfd_nr;
 			
 			update(statement);
 		}
 	}	
 
-	public void delete(int id) {
+	public void delete(int id,  int lfd_nr) {
 		String statement;
 			
-		if  (id > 0)  {
+		if  ((id > 0) & (lfd_nr > 0)) {
 	
-			statement 	= "DELETE FROM sw_state WHERE id = " + id ;
+			statement 	= "DELETE FROM sw_state WHERE id = " + id + " AND lfd_nr = " + lfd_nr;
 			
 			delete(statement);
 		}
@@ -130,6 +133,7 @@ public class TableState extends Table {
 	private void selectAllColumns(ResultSet rs) {
 		int row = 0;
 		id = new int[rowCount];
+		lfd_nr = new int[rowCount];
 		a = new int[rowCount];
 		b = new int[rowCount];
 		c = new int[rowCount];
@@ -143,14 +147,15 @@ public class TableState extends Table {
 			while (rs.next()) {
 				
 				id[row] = rs.getInt(1);
-				a[row] = rs.getInt(2);
-				b[row] = rs.getInt(3);
-				c[row] = rs.getInt(4);
-				d[row] = rs.getInt(5);
-				e[row] = rs.getInt(6);
-				f[row] = rs.getInt(7);
-				g[row] = rs.getInt(8);
-				h[row] = rs.getInt(9);
+				lfd_nr[row] = rs.getInt(2);
+				a[row] = rs.getInt(3);
+				b[row] = rs.getInt(4);
+				c[row] = rs.getInt(5);
+				d[row] = rs.getInt(6);
+				e[row] = rs.getInt(7);
+				f[row] = rs.getInt(8);
+				g[row] = rs.getInt(9);
+				h[row] = rs.getInt(10);
 
 				
 				row++;
@@ -163,4 +168,20 @@ public class TableState extends Table {
 
 	}
 
+	public int[] getAttributes(int index) {
+		int attributes[];
+				
+		attributes = new int[8];
+		attributes[0] = a[index];
+		attributes[1] = b[index];
+		attributes[2] = c[index];
+		attributes[3] = d[index];
+		attributes[4] = e[index];
+		attributes[5] = f[index];
+		attributes[6] = g[index];
+		attributes[7] = h[index];
+		
+		return attributes;
+	}
+	
 }
