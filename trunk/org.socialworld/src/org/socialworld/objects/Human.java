@@ -42,14 +42,12 @@ import org.socialworld.conversation.Talk_SentenceType;
 	 
 	private StateHuman state;
 	
-	public Human(int objectID, StateHuman state) {
-		super(objectID, state);
-		this.state = state;
-		init();
+	public Human(int objectID) {
+		super(objectID);
 	}
 
 	
-	private void init() {
+	void init() {
 	}
 	
 
@@ -65,11 +63,11 @@ import org.socialworld.conversation.Talk_SentenceType;
 
 		
 	public String getSentence(Human partner, Talk_SentenceType type) {
-		return new String(this.state.findSentence( partner,  type));
+		return this.state.findSentence( partner,  type);
 	}
 	
 	public String getLastSaidSentence() {
-		return new String(this.state.getLastSaidSentence());
+		return this.state.getLastSaidSentence();
 	}
 
 	void addSentence(Human partner, Talk_SentenceType type,  String sentence, WriteAccessToHuman guard) {
@@ -90,7 +88,7 @@ import org.socialworld.conversation.Talk_SentenceType;
 	
 	
 	public Acquaintance getAcquaintance(Human partner) {
-		return new Acquaintance(this.state.getAcquaintance(partner));
+		return this.state.getAcquaintance(partner);
 	}
 	
 	// TODO interface for more complex access to inventory

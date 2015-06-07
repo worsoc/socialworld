@@ -33,6 +33,7 @@ import org.socialworld.core.Event;
 import org.socialworld.knowledge.Acquaintance;
 import org.socialworld.knowledge.AcquaintancePool;
 import org.socialworld.knowledge.Answer;
+import org.socialworld.knowledge.Knowledge;
 import org.socialworld.knowledge.KnowledgePool;
 import org.socialworld.knowledge.KnowledgeSource;
 
@@ -87,12 +88,20 @@ public class StateHuman extends StateAnimal {
 		this.knowledge.addFactsFromSentence(sentence, source);
 	}
 
+	public void addKnowledge(Knowledge knowledge) {
+		this.knowledge.addKnowledge(knowledge);
+	}
+	
 	public Acquaintance getAcquaintance(Human partner) {
-		return this.acquaintance.getAcquaintance(partner);
+		return new Acquaintance(this.acquaintance.getAcquaintance(partner));
+	}
+	
+	public void setLastSaidSentence(String sentence) {
+		lastSaidSentence = sentence;
 	}
 	
 	public String getLastSaidSentence() {
-		return lastSaidSentence;
+		return new String(lastSaidSentence);
 	}
 	
 	public Answer getAnswerForQuestion(String question) {
@@ -120,7 +129,8 @@ public class StateHuman extends StateAnimal {
 				break;
 			}
 		}
-		return sentence;
+		return new String(sentence);
+
 	}
 
 	protected Talk findTalk(Human partner) {

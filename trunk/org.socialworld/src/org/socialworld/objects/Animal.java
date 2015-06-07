@@ -25,7 +25,6 @@ import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.move.Path;
 import org.socialworld.actions.move.PathFinder;
-import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.attributes.Position;
 import org.socialworld.core.Event;
@@ -44,28 +43,25 @@ public class Animal extends SimulationObject {
 
 	private StateAnimal state;
 	
-	protected FunctionByMatrix_Matrix attributeCalculatorMatrix;
 	protected PathFinder pathFinder;
 
-	public Animal(int objectID, StateAnimal state) {
-		super(objectID, state);
-		this.state = state;
-		init();
-	}
 	
+	public Animal(int objectID) {
+		super(objectID);
+	}
 
-	private void init() {
+	void init() {
 		
 		pathFinder = new PathFinder(this, this.state.getKnownPathsPool());
 		
 	}
 
 	void setMatrix(FunctionByMatrix_Matrix matrix,  WriteAccessToAnimal guard) {
-		if (checkGuard(guard) ) attributeCalculatorMatrix  = matrix;
+		if (checkGuard(guard) ) this.state.setMatrix( matrix);
 	}
 	
 	public FunctionByMatrix_Matrix getMatrix() {
-		return new FunctionByMatrix_Matrix(attributeCalculatorMatrix, Attribute.NUMBER_OF_ATTRIBUTES);
+		return this.state.getMatrix();
 	}
 
 	void setAttributes(AttributeArray array, WriteAccessToAnimal guard) {
@@ -74,14 +70,14 @@ public class Animal extends SimulationObject {
 	}
 	
 	public AttributeArray getAttributes() {
-		return new AttributeArray(this.state.getAttributes());
+		return this.state.getAttributes();
 	}
 	
 	/**
 	 * @return the directionChest
 	 */
 	public Vector getDirectionChest() {
-		return new Vector(this.state.getDirectionChest());
+		return this.state.getDirectionChest();
 	}
 
 	/**
@@ -96,7 +92,7 @@ public class Animal extends SimulationObject {
 	 * @return the directionView
 	 */
 	public Vector getDirectionView() {
-		return new Vector(this.state.getDirectionView());
+		return this.state.getDirectionView();
 	}
 
 	/**

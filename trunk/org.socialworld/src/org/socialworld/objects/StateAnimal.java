@@ -22,7 +22,9 @@
 package org.socialworld.objects;
 
 import org.socialworld.actions.move.Path;
+import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.AttributeArray;
+import org.socialworld.calculation.FunctionByMatrix_Matrix;
 import org.socialworld.calculation.Vector;
 import org.socialworld.calculation.application.AttributeCalculator;
 import org.socialworld.core.Event;
@@ -35,9 +37,12 @@ import org.socialworld.knowledge.KnownPathsPool;
 public class StateAnimal extends StateSimulationObject {
 
 	private AttributeArray attributes;
+	private FunctionByMatrix_Matrix attributeCalculatorMatrix;
 
 	private Vector directionChest;
 	private Vector directionView;
+	private Vector directionMove;
+
 
 	private KnownPathsPool knownPathsPool;
 
@@ -60,9 +65,17 @@ public class StateAnimal extends StateSimulationObject {
 	}
 	
 	public AttributeArray getAttributes() {
-		return this.attributes;
+		return new AttributeArray(this.attributes);
 	}
 	
+	void setMatrix(FunctionByMatrix_Matrix matrix) {
+		 this.attributeCalculatorMatrix  = matrix;
+	}
+	
+	public FunctionByMatrix_Matrix getMatrix() {
+		return new FunctionByMatrix_Matrix(attributeCalculatorMatrix, Attribute.NUMBER_OF_ATTRIBUTES);
+	}
+
 	public void setDirectionChest(Vector directionChest) {
 		this.directionChest = directionChest;
 	}
@@ -71,13 +84,20 @@ public class StateAnimal extends StateSimulationObject {
 		this.directionView = directionView;
 	}
 
+	public void setDirectionMove(Vector directionMove) {
+		this.directionMove = directionMove;
+	}
 
 	public Vector getDirectionChest() {
-		return this.directionChest;
+		return new Vector(this.directionChest);
 	}
 	
 	public Vector getDirectionView() {
-		return this.directionView;
+		return new Vector(this.directionView);
+	}
+
+	public Vector getDirectionMove() {
+		return new Vector(this.directionMove);
 	}
 
 	public KnownPathsPool getKnownPathsPool() {
