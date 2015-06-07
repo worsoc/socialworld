@@ -26,6 +26,27 @@ package org.socialworld.knowledge;
  * @author Mathias Sikos (tyloesand) 
 */
 public enum KnowledgeSource_Type {
-	ownExperience, heardOf, readAbout
+	ownExperience(1), heardOf(2), readAbout(3);
+
+	private int arrayIndex;
+
+	private KnowledgeSource_Type(int index) {
+		this.arrayIndex = index;
+	}
+
+	/**
+	 * The method returns the knowledge source type name which belongs to the parameter
+	 *  index.
+	 * 
+	 * @param arrayIndex
+	 *            type index
+	 * @return source type name
+	 */
+	public static KnowledgeSource_Type getName(int arrayIndex) {
+		for (KnowledgeSource_Type type : KnowledgeSource_Type.values())
+			if (type.arrayIndex == arrayIndex)
+				return type;
+		return null;
+	}	
 
 }

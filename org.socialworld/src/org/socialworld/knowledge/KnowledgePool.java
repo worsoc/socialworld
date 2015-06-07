@@ -53,6 +53,16 @@ public class KnowledgePool {
 		
 	}
 
+	public void addKnowledge(Knowledge knowledge) {
+		
+		int index;
+		
+		index = indexForNewEntry();
+		knowledgeList[index] = knowledge;
+		accessCount[index] = 0;
+		
+	}
+	
 	public void addFactsFromSentence(String sentence, KnowledgeSource source) {
 		Word subject;
 		KnowledgeFact fact;
