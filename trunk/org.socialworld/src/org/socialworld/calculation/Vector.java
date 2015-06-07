@@ -58,6 +58,12 @@ public class Vector {
 		this.z = z;
 	}
 
+	public Vector(float tripel[]) {
+		this.x = tripel[0];
+		this.y = tripel[1];
+		this.z = tripel[2];
+	}
+	
 	public Vector(String vector) {
 		
 		String tmp;
