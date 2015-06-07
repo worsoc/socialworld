@@ -102,10 +102,6 @@ public class Simulation {
 		return this.objectMaster.createSimulationObject(simulationObjectType);
 	}
 
-	public SimulationObject getSimulationObject(int objectID) {
-		return this.objectMaster.getSimulationObject(objectID);
-	}
-	
 	public boolean hasNext(SimulationObject_Type objectType) {
 		return this.objectMaster.hasNext(objectType);
 	}

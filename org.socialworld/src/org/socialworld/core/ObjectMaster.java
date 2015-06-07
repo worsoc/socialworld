@@ -26,6 +26,11 @@ import java.util.ListIterator;
 import org.apache.log4j.Logger;
 import org.socialworld.objects.*;
 import org.socialworld.propertyChange.ListenedList;
+import org.socialworld.datasource.createObjects.CreateAnimal;
+import org.socialworld.datasource.createObjects.CreateGod;
+import org.socialworld.datasource.createObjects.CreateHuman;
+import org.socialworld.datasource.createObjects.CreateItem;
+import org.socialworld.datasource.createObjects.CreateMagic;
 import org.socialworld.datasource.loadObjects.LoadAnimal;
 import org.socialworld.datasource.loadObjects.LoadGod;
 import org.socialworld.datasource.loadObjects.LoadHuman;
@@ -97,27 +102,27 @@ public class ObjectMaster {
 		// TODO (tyloesand) weitere Objekttypen hinzufügen
 		switch (simulationObjectType) {
 		case animal:
-			object = LoadAnimal.getInstance().getObject(objectID);
+			object = CreateAnimal.getInstance().getObject(objectID);
 			this.animals.add((Animal)object);
 			animalsIterator = animals.listIterator(animalsIterator.nextIndex());
 			break;
 		case human:
-			object = LoadHuman.getInstance().getObject(objectID);
+			object = CreateHuman.getInstance().getObject(objectID);
 			this.humans.add((Human)object);
 			humansIterator = humans.listIterator(humansIterator.nextIndex());
 			break;
 		case god:
-			object = LoadGod.getInstance().getObject(objectID);
+			object = CreateGod.getInstance().getObject(objectID);
 			this.gods.add((God)object);
 			godsIterator = gods.listIterator(godsIterator.nextIndex());
 			break;
 		case item:
-			object = LoadItem.getInstance().getObject(objectID);
+			object = CreateItem.getInstance().getObject(objectID);
 			this.items.add((Item)object);
 			itemsIterator = items.listIterator(itemsIterator.nextIndex());
 			break;
 		case magic:
-			object = LoadMagic.getInstance().getObject(objectID);
+			object = CreateMagic.getInstance().getObject(objectID);
 			this.magics.add((Magic)object);
 			magicsIterator = magics.listIterator(magicsIterator.nextIndex());
 			break;
