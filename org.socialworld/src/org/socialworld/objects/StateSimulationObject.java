@@ -36,6 +36,9 @@ public class StateSimulationObject extends ListenedBase {
 	
 	private 	Position 		position;
 
+	private	int				influenceTypeByEventType[];
+	private	int				reactionTypeByEventType[];
+	private   int				state2ActionType;
 	
 	
 	public StateSimulationObject() {
@@ -45,7 +48,7 @@ public class StateSimulationObject extends ListenedBase {
 		this.object = object;
 	}
 	
-	public SimulationObject getObject() {
+	SimulationObject getObject() {
 		return object;
 	}
 	
@@ -54,9 +57,33 @@ public class StateSimulationObject extends ListenedBase {
 	}
 	
 	public Position getPosition() {
-		return this.position;
+		return new Position(this.position);
 	}
 	
+	public void setInfluenceTypes (int types[]) {
+		this.influenceTypeByEventType = types;
+	}
+
+	public int getInfluenceType(int eventType) {
+		 return this.influenceTypeByEventType[eventType];
+	} 
+
+	public void setReactionTypes (int types[]) {
+		this.reactionTypeByEventType = types;
+	}
+
+	public int getReactionType(int eventType) {
+		 return this.reactionTypeByEventType[eventType];
+	} 
+
+	public void setState2ActionType (int type) {
+		this.state2ActionType = type;
+	}
+
+	public int getState2ActionType() {
+		 return this.state2ActionType;
+	} 
+
 	void calculateEventInfluence(Event event) {
 		
 		PositionCalculator.calculatePositionChangedByEvent(event, this);

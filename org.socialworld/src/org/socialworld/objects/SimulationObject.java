@@ -46,30 +46,21 @@ public abstract class SimulationObject extends ListenedBase {
 
 	protected 	ActionHandler 	actionHandler;
 	
-	protected	int				influenceTypeByEventType[];
-	protected	int				reactionTypeByEventType[];
-	protected   int				state2ActionType;
 	
 	private StateSimulationObject state;
 	
+
 	/**
-	 * The constructor creates a simulation object.
+	 * The constructor creates an incomplete simulation object. It's an "empty" object. There is only the object ID.
 	 * 
 	 */
-	public SimulationObject(int objectID, StateSimulationObject state) {
+	public SimulationObject(int objectID) {
 		this.objectID = objectID;
-		
 		this.guard = null;
-		
 		this.simulation = Simulation.getInstance();
-		
-		this.state = state;
-		state.setObject(this);
-		
 		this.actionHandler = new ActionHandler(this);
 
 	}
-
 	
 	final StateSimulationObject getState(WriteAccessToSimulationObject guard) {
 		if (checkGuard(guard))
@@ -80,7 +71,9 @@ public abstract class SimulationObject extends ListenedBase {
 	}
 	
 	final void setState(StateSimulationObject state, WriteAccessToSimulationObject guard) {
-		if (checkGuard(guard)) this.state = state;
+		if (checkGuard(guard)) {
+			this.state = state;
+		}
 	}
 	
 	/**
@@ -119,15 +112,15 @@ public abstract class SimulationObject extends ListenedBase {
 	}
 
 	void setInfluenceTypes (int types[], WriteAccessToSimulationObject guard) {
-		if (this.guard == guard) this.influenceTypeByEventType = types;
+		if (this.guard == guard) this.state.setInfluenceTypes(types);
 	}
 
 	void setReactionTypes (int types[], WriteAccessToSimulationObject guard) {
-		if (this.guard == guard) this.reactionTypeByEventType = types;
+		if (this.guard == guard) this.state.setReactionTypes(types);
 	}
 
 	void setState2ActionType (int type, WriteAccessToSimulationObject guard) {
-		if (this.guard == guard) this.state2ActionType = type;
+		if (this.guard == guard) this.state.setState2ActionType( type);
 	}
 	
 	public void addAction(AbstractAction newAction) {
@@ -173,7 +166,7 @@ public abstract class SimulationObject extends ListenedBase {
 	 * @return position
 	 */
 	public Position getPosition() {
-		return new Position(this.state.getPosition());
+		return this.state.getPosition();
 	}
 
 	
@@ -188,24 +181,17 @@ public abstract class SimulationObject extends ListenedBase {
 		return null;
 	}
 	
-	/**
-	 * The method loads the array of influence types for all event types.
-	 */
-
-	/**
-	 * The method loads the array of reaction types for all event types.
-	 */
 	
 	public int getReactionType(int eventType) {
-	 return reactionTypeByEventType[eventType];
+	 return this.state.getReactionType(eventType);
 	} 
 
 	public int getInfluenceType(int eventType) {
-		 return influenceTypeByEventType[eventType];
+		 return this.state.getInfluenceType(eventType);
 		} 
 
 	public int getState2ActionType() {
-		 return state2ActionType;
+		 return this.state.getState2ActionType();
 		} 
 
 	public int getObjectID() {

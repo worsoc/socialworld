@@ -37,6 +37,8 @@ public class WriteAccessToSimulationObject {
 		isDummy = false;
 
 		object.setWriteAccess(this);
+		object.setState(state, this);
+		state.setObject(object);
 	}
 	
 	// Dummy
