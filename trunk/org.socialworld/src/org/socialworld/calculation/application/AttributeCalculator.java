@@ -30,7 +30,6 @@ import org.socialworld.calculation.Value;
 import org.socialworld.calculation.descriptions.EventInfluenceAssignment;
 import org.socialworld.calculation.descriptions.EventInfluenceDescription;
 import org.socialworld.core.Event;
-import org.socialworld.objects.Animal;
 import org.socialworld.objects.StateAnimal;
 
 
@@ -42,10 +41,7 @@ public  class AttributeCalculator {
 		
 		Value returnAttributeArray;
 		
-		Animal animal;
-		animal = (Animal) stateAnimal.getObject();
-		
-		returnAttributeArray = getAttributesChangedByEvent(event, animal);
+		returnAttributeArray = getAttributesChangedByEvent(event, stateAnimal);
 		
 		if (returnAttributeArray.isValid()) {
 			stateAnimal.setAttributes((AttributeArray) returnAttributeArray.getValue());
@@ -61,7 +57,7 @@ public  class AttributeCalculator {
 	 * @param eventInfluence
 	 *            the informations how an event effects to the attributes.
 	 */
-	private static Value getAttributesChangedByEvent(Event event, Animal animal) {
+	private static Value getAttributesChangedByEvent(Event event, StateAnimal stateAnimal) {
 		EventInfluenceDescription eventInfluenceDescription = null;
 		int eventType;
 		int eventInfluenceType;
@@ -70,7 +66,7 @@ public  class AttributeCalculator {
 		Value[] arguments;
 	
 		eventType = event.getEventTypeAsInt();
-		eventInfluenceType = animal.getInfluenceType(eventType);
+		eventInfluenceType = stateAnimal.getInfluenceType(eventType);
 		
 		eventInfluenceDescription = 
 			EventInfluenceAssignment.getInstance().getEventInfluenceDescription(
@@ -80,39 +76,39 @@ public  class AttributeCalculator {
 		f_EventInfluence = eventInfluenceDescription.getFunctionEventInfluence();
 			
 		arguments = new Value[1];
-		arguments[0] = new Value(Type.attributeArray, animal.getAttributes());
+		arguments[0] = new Value(Type.attributeArray, stateAnimal.getAttributes());
 	
 		return  f_EventInfluence.calculate(arguments);
 	
 	}
 
 
-	private static Value getAttributesChangedByMatrix(Animal animal) {
+	private static Value getAttributesChangedByMatrix(StateAnimal stateAnimal) {
 		FunctionByMatrix f_AttributesByMatrix;
 		Value[] arguments;
 	
 
 		arguments = new Value[2];
-		arguments[0] = new Value(Type.attributeArray, animal.getAttributes());
+		arguments[0] = new Value(Type.attributeArray, stateAnimal.getAttributes());
 		arguments[1] = new Value(Type.integer, FunctionByMatrix_Matrix.MATRIX_CALCULATION_COMPLEX );
 		
 		// TODO get the function object from animal (not the matrix!)
 		//      --> the function object shouldn't be created here
-		f_AttributesByMatrix = new FunctionByMatrix(animal.getMatrix());
+		f_AttributesByMatrix = new FunctionByMatrix(stateAnimal.getMatrix());
 		return  f_AttributesByMatrix.calculate(arguments);
 	}
 	
-	private static Value getAttributesChangedByRefresh(Animal animal) {
+	private static Value getAttributesChangedByRefresh(StateAnimal stateAnimal) {
 		FunctionByMatrix f_AttributesByMatrix;
 		Value[] arguments;
 	
 		arguments = new Value[2];
-		arguments[0] = new Value(Type.attributeArray, animal.getAttributes());
+		arguments[0] = new Value(Type.attributeArray, stateAnimal.getAttributes());
 		arguments[1] = new Value(Type.integer, FunctionByMatrix_Matrix.MATRIX_CALCULATION_SIMPLE);
 		
 		// TODO get the function object from animal (not the matrix!)
 		//      --> the function object shouldn't be created here
-		f_AttributesByMatrix = new FunctionByMatrix(animal.getMatrix());
+		f_AttributesByMatrix = new FunctionByMatrix(stateAnimal.getMatrix());
 		return  f_AttributesByMatrix.calculate(arguments);
 	}
 
