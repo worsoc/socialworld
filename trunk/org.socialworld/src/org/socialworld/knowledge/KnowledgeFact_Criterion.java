@@ -67,7 +67,7 @@ public enum KnowledgeFact_Criterion {
 	 *            criterion index
 	 * @return criterion name
 	 */
-	public KnowledgeFact_Criterion getName(int arrayIndex) {
+	public static KnowledgeFact_Criterion getName(int arrayIndex) {
 		for (KnowledgeFact_Criterion criterion : KnowledgeFact_Criterion.values())
 			if (criterion.arrayIndex == arrayIndex)
 				return criterion;

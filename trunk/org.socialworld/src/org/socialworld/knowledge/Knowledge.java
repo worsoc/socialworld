@@ -33,18 +33,45 @@ public class Knowledge {
 	private int itemAccessCount[];
 	
 	private boolean itemIsValid[];
-	private int validItemCount;
+	private int validItemCount = 0;
 	
 	private int itemCount = 0;
 	
 	public Knowledge() {
+		init();
+	}
+	
+	public Knowledge(Word subject, KnowledgeFact facts[], KnowledgeSource sources[]) {
+		
+		int index;
+		int size;
+		
+		init();
+		
+		this.subject = subject;
+		
+		size = facts.length;
+
+		if (size > MAXIMUM_KNOWLEDGE_CAPACITY) size = MAXIMUM_KNOWLEDGE_CAPACITY;
+		for (index = 0; index < size; index++) {
+			this.facts[index] = facts[index];
+			this.source[index] = sources[index];
+			this.itemAccessCount[index] = 2;
+			this.itemIsValid[index] = true;
+		}
+		validItemCount = size;
+		itemCount = size;
+
+	}
+	
+	private void init() {
 		this.facts = new KnowledgeFact[MAXIMUM_KNOWLEDGE_CAPACITY];
 		this.source = new KnowledgeSource[MAXIMUM_KNOWLEDGE_CAPACITY];
 		
 		this.itemAccessCount = new int[MAXIMUM_KNOWLEDGE_CAPACITY];
 		this.itemIsValid = new boolean[MAXIMUM_KNOWLEDGE_CAPACITY];
 	}
-	
+
 	protected int count() {
 		return itemCount;
 	}

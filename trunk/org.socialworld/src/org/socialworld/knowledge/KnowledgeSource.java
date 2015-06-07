@@ -21,25 +21,27 @@
 */
 package org.socialworld.knowledge;
 
+import org.socialworld.objects.SimulationObject;
+
 public class KnowledgeSource {
 	KnowledgeSource_Type type = null;
-	Acquaintance origin = null;
+	SimulationObject origin = null;
 	
-	public KnowledgeSource(KnowledgeSource_Type type, Acquaintance  origin) {
+	public KnowledgeSource(KnowledgeSource_Type type, SimulationObject  origin) {
 		this.type = type;
 		this.origin = origin;
 	}
 	
 	public KnowledgeSource(KnowledgeSource original) {
 		this.type = original.type;
-		this.origin = new Acquaintance(original.origin);
+		this.origin = original.origin;
 	}
 	
 	public void setSourceType(KnowledgeSource_Type type) {
 		this.type = type;
 	}
 	
-	public void setOrigin(Acquaintance origin) {
+	public void setOrigin(SimulationObject origin) {
 		this.origin = origin;
 	}
 	
