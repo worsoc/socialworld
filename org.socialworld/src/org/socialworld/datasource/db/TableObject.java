@@ -148,6 +148,7 @@ public class TableObject extends Table {
 			}
 		}
 
+		setPK1(id);
 	}
 
 	public void insert(int id, int type, int position, int state2act, int locBase9, String locBase25) {
@@ -222,19 +223,6 @@ public class TableObject extends Table {
 		}
 	}
 
-	public int getIndexForPK(int id) {
-		int size;
-		int index;
-		
-		size = this.id.length;
-		
-		for (index = 0; index < size; index++) {
-			if (this.id[index] == id) return index;
-		}
-		
-		return -1;
-	}
-	
 	public int getType(int index) {
 		return type[index];
 	}

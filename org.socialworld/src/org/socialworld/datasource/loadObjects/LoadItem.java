@@ -21,6 +21,7 @@
 */
 package org.socialworld.datasource.loadObjects;
 
+import org.socialworld.collections.SimulationObjectArray;
 import org.socialworld.objects.Item;
 import org.socialworld.objects.StateSimulationObject;
 import org.socialworld.objects.WriteAccessToSimulationObject;
@@ -29,36 +30,45 @@ public class LoadItem extends LoadSimulationObjects {
 
 	private static LoadItem instance;
 
+	protected LoadItem(SimulationObjectArray allObjects) {
+		
+		super(allObjects);
+		
+	}
+
 	/**
-	 * The method gets back the only instance of the LoadItem.
+	 * The method creates the only instance of the LoadAnimal.
 	 * 
-	 * @return singleton object of LoadHuman
 	 */
-	public static LoadItem getInstance() {
+	public static LoadItem createInstance(SimulationObjectArray allObjects) {
 		if (instance == null) {
-			instance = new LoadItem();
+			instance = new LoadItem(allObjects);
 			
 		}
 		return instance;
 	}
 
 	@Override
-	public Item getObject(int objectID) {
-		
-		load(objectID);
-		
-		// TODO
-		StateSimulationObject state = new StateSimulationObject();
-		initState(state);
-		
-		Item createdItem = new Item(objectID, state);
-		WriteAccessToSimulationObject item = new WriteAccessToSimulationObject(createdItem, state);
-
-		initObject(item);	
-		
-		return createdItem;
+	public void createObject(int objectID) {
+		Item createdItem = new Item(objectID);
+		allObjects.set(objectID, createdItem);
 	}
 
+	@Override
+	public void loadObject(int objectID) {
+		Item createdItem;
+		createdItem = (Item) allObjects.get(objectID);
+
+		load(objectID);
+	
+		// TODO
+		StateSimulationObject state = new StateSimulationObject();
+		initState(state,  objectID);
+		
+		WriteAccessToSimulationObject item = new WriteAccessToSimulationObject(createdItem, state);
+		initObject(item,  objectID);	
+		
+	}
 
 
 }

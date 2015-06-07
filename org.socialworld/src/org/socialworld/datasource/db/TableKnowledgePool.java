@@ -68,6 +68,9 @@ public class TableKnowledgePool extends Table {
 		default:
 			selectAllColumns(rs);
 		}
+		
+		setPK1(id);
+		setPK2(lfd_nr);
 	}
 
 	public void insert(int id, int lfd_nr, int subject, int kfs_id) {
@@ -134,4 +137,12 @@ public class TableKnowledgePool extends Table {
 
 	}
 
+
+	public int getSubject(int index) {
+		return subject[index];
+	}
+
+	public int getKFSID(int index) {
+		return kfs_id[index];
+	}
 }

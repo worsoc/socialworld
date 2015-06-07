@@ -70,6 +70,8 @@ public class TableKnowledgeFactAndSource extends Table {
 		default:
 			selectAllColumns(rs);
 		}
+		setPK1(kfs_id);
+		setPK2(lfd_nr);
 
 	}
 
@@ -165,6 +167,22 @@ public class TableKnowledgeFactAndSource extends Table {
 			return;
 		}
 
+	}
+
+	public int getSourceType(int index) {
+		return sourceType[index];
+	}
+	
+	public int getOrigin(int index) {
+		return origin[index];
+	}
+
+	public int getKFC(int index) {
+		return kfc[index];
+	}
+	
+	public int getValue(int index) {
+		return value[index];
 	}
 
 }

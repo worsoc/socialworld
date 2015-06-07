@@ -87,6 +87,7 @@ public class TableInventory extends Table {
 			selectAllColumns(rs);
 		}
 
+		setPK1(id);
 	}
 
 	public void insert(int id) {
@@ -217,6 +218,14 @@ public class TableInventory extends Table {
 			return;
 		}
 
+	}
+
+	public int getLeftHand(int index) {
+		return leftHand[index];
+	}
+
+	public int getRightHand(int index) {
+		return rightHand[index];
 	}
 
 }

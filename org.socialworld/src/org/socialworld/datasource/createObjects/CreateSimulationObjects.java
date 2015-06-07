@@ -46,7 +46,7 @@ public abstract class CreateSimulationObjects {
 	protected Random random;
 
 	
-	public CreateSimulationObjects() {
+	CreateSimulationObjects() {
 		random = new Random();
 	}
 

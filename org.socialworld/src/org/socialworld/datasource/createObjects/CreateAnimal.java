@@ -33,12 +33,19 @@ import org.socialworld.objects.WriteAccessToAnimal;
  */
 public class CreateAnimal extends CreateSimulationObjects {
 
+	private static CreateAnimal instance;
+	
+	public static CreateAnimal getInstance() {
+		if (instance == null)			instance = new CreateAnimal();
+		return instance;
+	}
+		
 	@Override
-	public  Animal getObject(int objectID) {
+	public Animal getObject(int objectID) {
 		StateAnimal state = new StateAnimal();
 		initState(state);
 		
-		Animal createdAnimal = new Animal(objectID, state);
+		Animal createdAnimal = new Animal(objectID);
 		WriteAccessToAnimal animal = new WriteAccessToAnimal(createdAnimal, state);
 		initObject(animal, objectID);	
 		

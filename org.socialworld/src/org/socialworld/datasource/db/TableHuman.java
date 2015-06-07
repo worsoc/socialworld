@@ -66,6 +66,8 @@ public class TableHuman extends Table {
 		default:
 			selectAllColumns(rs);
 		}
+		
+		setPK1(id);
 	}
 
 	public void insert(int id) {
@@ -124,6 +126,10 @@ public class TableHuman extends Table {
 			return;
 		}
 
+	}
+
+	public String getLastSentence(int index) {
+		return lastSentence[index];
 	}
 
 }
