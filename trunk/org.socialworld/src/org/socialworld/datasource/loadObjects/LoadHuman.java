@@ -21,15 +21,20 @@
 */
 package org.socialworld.datasource.loadObjects;
 
+import org.socialworld.attributes.AttributeArray;
 import org.socialworld.attributes.Inventory;
 import org.socialworld.collections.SimulationObjectArray;
+import org.socialworld.conversation.Talk;
+import org.socialworld.conversation.Talk_SentenceType;
 import org.socialworld.conversation.Word;
 import org.socialworld.core.AllWords;
-import org.socialworld.core.ObjectMaster;
+import org.socialworld.datasource.db.TableAcquaintance;
 import org.socialworld.datasource.db.TableHuman;
 import org.socialworld.datasource.db.TableInventory;
 import org.socialworld.datasource.db.TableKnowledgeFactAndSource;
 import org.socialworld.datasource.db.TableKnowledgePool;
+import org.socialworld.datasource.db.TableSentenceList;
+import org.socialworld.knowledge.Acquaintance;
 import org.socialworld.knowledge.Knowledge;
 import org.socialworld.knowledge.KnowledgeFact;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
@@ -58,10 +63,16 @@ public class LoadHuman extends LoadAnimal {
 	int rowTableInventory;
 	
 	TableKnowledgePool tableKnowledgePool;
-	int allLfdNrForObjectID[];
-	
 	TableKnowledgeFactAndSource tableKnowledgeFactAndSource;
+	int allLfdNrForObjectID[];
+		
+	TableAcquaintance tableAcquaintance;
+	int allAcqPartnerIDsForObjectID[];
+	
+	TableSentenceList tableTalk;
+	int allTalkPartnerIDsForObjectID[];
 
+	
 	/**
 	 * Because of being a singleton the instance is created in a private
 	 * constructor.
@@ -73,6 +84,8 @@ public class LoadHuman extends LoadAnimal {
 		tableInventory = new TableInventory();
 		tableKnowledgePool = new TableKnowledgePool();
 		tableKnowledgeFactAndSource = new TableKnowledgeFactAndSource();
+		tableAcquaintance = new TableAcquaintance();
+		tableTalk = new TableSentenceList();
 	}
 
 	/**
@@ -94,10 +107,14 @@ public class LoadHuman extends LoadAnimal {
 		tableHuman.select(tableHuman.SELECT_ALL_COLUMNS, " WHERE id = " + objectID , "");
 		tableInventory.select(tableInventory.SELECT_ALL_COLUMNS, " WHERE id = " + objectID , "");
 		tableKnowledgePool.select(tableKnowledgePool.SELECT_ALL_COLUMNS, " WHERE id = " + objectID , "");
+		tableAcquaintance.select(tableAcquaintance.SELECT_ALL_COLUMNS, " WHERE id = " + objectID , "");
+		tableTalk.select(tableTalk.SELECT_ALL_COLUMNS, " WHERE id = " + objectID , "");
 		
 		rowTableHuman = tableHuman.getIndexFor1PK(objectID);
 		rowTableInventory = tableInventory.getIndexFor1PK(objectID);
 		allLfdNrForObjectID = tableKnowledgePool.getAllPK2ForPK1(objectID);
+		allAcqPartnerIDsForObjectID = tableAcquaintance.getAllPK2ForPK1(objectID);
+		allTalkPartnerIDsForObjectID = tableTalk.getAllPK2ForPK1(objectID);
 	}
 
 	
@@ -171,6 +188,8 @@ public class LoadHuman extends LoadAnimal {
 		}
 
 		setKnowledgePool(state,  objectID);
+		setAcquaintancePool(state,  objectID);
+		setTalks(state,  objectID);
 	}
 
 	private void setKnowledgePool(StateHuman state, int objectID) {
@@ -235,9 +254,56 @@ public class LoadHuman extends LoadAnimal {
 		}
 		state.addKnowledge(new Knowledge(AllWords.getWord(subject), facts, sources ));
 	}
+
+
+	private void setAcquaintancePool(StateHuman state, int objectID) {
+		int size;
+		int index;
+		int rowTableAcquaintancePool;
+		int partner_id;
+		int attributes[];
+		
+		size = allAcqPartnerIDsForObjectID.length;
+		for (index = 0; index < size; index++) {
+			partner_id = allAcqPartnerIDsForObjectID[index];
+			rowTableAcquaintancePool = tableAcquaintance.getIndexFor2PK(objectID, partner_id);
+			if (rowTableAcquaintancePool >= 0) {
+				attributes = tableAcquaintance.getAttributes(rowTableAcquaintancePool);
+				state.addAcquaintance(new Acquaintance((Human)allObjects.get(partner_id), new AttributeArray(attributes) ));
+			}
+		}
+		
+	}
+
+	private void setTalks(StateHuman state, int objectID) {
+		int size;
+		int index;
+		int partner_id;
+
+		int rowTableTalks;
+		int rowCountTableTalks;
+
+		Talk talk;
+		Talk_SentenceType type; 
+		String sentence;
+		
+		size = allTalkPartnerIDsForObjectID.length;
+		for (index = 0; index < size; index++) {
+			partner_id = allTalkPartnerIDsForObjectID[index];
+			talk = new Talk((Human)allObjects.get(partner_id));
+			tableTalk.select(tableTalk.SELECT_ALL_COLUMNS, " WHERE id = " + objectID + " AND partner_id = " + partner_id, "");
+			// rowCount() usable because there is no DISTINCT in the select list (SELECT_ALL_COLUMNS)
+			rowCountTableTalks = tableTalk.rowCount();
+			for (rowTableTalks = 0; rowTableTalks < rowCountTableTalks; rowCountTableTalks++) {
+				type = Talk_SentenceType.getName(tableTalk.getType(rowTableTalks)) ;
+				sentence = tableTalk.getSentence(rowTableTalks);
+				talk.addSentence(sentence, type);
+			}
+		}
+		
+	}
+
 }
-
-
 /* save
  * 
 	public Human getObject(long objectID) {

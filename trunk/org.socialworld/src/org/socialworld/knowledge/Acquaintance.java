@@ -30,10 +30,14 @@ public class Acquaintance {
 	
 	public Acquaintance(Human human){
 		this.human = human;
-		
 		this.attributes = new AttributeArray(Acquaintance_Attribute.NUMBER_OF_ATTRIBUTES);
 	}
-	
+
+	public Acquaintance(Human human, AttributeArray attributes){
+		this.human = human;
+		this.attributes = attributes;
+	}
+
 	// copy constructor
 	public Acquaintance (Acquaintance original) {
 		this.human = original.human;
