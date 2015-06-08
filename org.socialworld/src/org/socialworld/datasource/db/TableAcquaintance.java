@@ -137,6 +137,8 @@ public class TableAcquaintance extends Table {
 			}
 			
 		}
+		setPK1(id);
+		setPK2(partner_id);
 	}
 
 	public void insert(int id, int partner_id, int attribs[]) {
@@ -186,6 +188,21 @@ public class TableAcquaintance extends Table {
 			
 			delete(statement);
 		}
+	}
+
+	public int[] getAttributes(int index) {
+		int attributes[];
+				
+		attributes = new int[8];
+		attributes[0] = a[index];
+		attributes[1] = b[index];
+		attributes[2] = c[index];
+		attributes[3] = d[index];
+		attributes[4] = e[index];
+		attributes[5] = f[index];
+		attributes[6] = g[index];
+		
+		return attributes;
 	}
 
 }

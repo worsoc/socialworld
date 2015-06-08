@@ -106,6 +106,8 @@ public abstract class Table {
 			select(select);
 		}
 		
+		public int rowCount() { return rowCount; }
+		
 		void insert(String statement) {
 			rowsAffected = connection.executeUpdate(statement);
 		}

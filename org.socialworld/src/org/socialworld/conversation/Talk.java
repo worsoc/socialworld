@@ -28,16 +28,17 @@ import java.util.ArrayList;
 public class Talk {
 	private Human partner;
 	private SentenceMaker sentenceMaker;
-	private ArrayList<String> partnersSentences;
-	private ArrayList<String> partnersQuestions;
 	private ArrayList<String> myPlannedSentences;
 	private ArrayList<String> myPlannedQuestions;
+	private ArrayList<String> partnersSentences;
+	private ArrayList<String> partnersQuestions;
 	
-	public Talk() {
-		partnersSentences = new ArrayList<String>();
-		partnersQuestions = new ArrayList<String>();
+	public Talk(Human partner) {
+		this.partner = partner;
 		myPlannedSentences = new ArrayList<String>();
 		myPlannedQuestions = new ArrayList<String>();
+		partnersSentences = new ArrayList<String>();
+		partnersQuestions = new ArrayList<String>();
 	}
 	
 	public void addAnswer(Answer answer) {

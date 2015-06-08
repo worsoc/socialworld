@@ -21,8 +21,30 @@
 */
 package org.socialworld.conversation;
 
+
 public enum Talk_SentenceType {
-	myPlannedSentence, myPlannedQuestion, partnersSentence, partnersQuestion,
-	partnersInstruction, partnersUnknownType
+	myPlannedSentence(1), myPlannedQuestion(2), partnersSentence(3), partnersQuestion(4),
+	partnersInstruction(5), partnersUnknownType(6);
+
+	private int arrayIndex;
+
+	private Talk_SentenceType(int index) {
+		this.arrayIndex = index;
+	}
+
+	/**
+	 * The method returns the sentence type name which belongs to the parameter
+	 * criterion index.
+	 * 
+	 * @param arrayIndex
+	 *            type index
+	 * @return sentence type name
+	 */
+	public static Talk_SentenceType getName(int arrayIndex) {
+		for (Talk_SentenceType type : Talk_SentenceType.values())
+			if (type.arrayIndex == arrayIndex)
+				return type;
+		return null;
+	}	
 
 }

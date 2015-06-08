@@ -54,7 +54,8 @@ public class StateHuman extends StateAnimal {
 		super();
 		
 		talks = new ArrayList<Talk>();
-		
+		knowledge = new KnowledgePool();
+		acquaintance = new AcquaintancePool();
 	}
 
 	void calculateEventInfluence(Event event) {
@@ -91,7 +92,11 @@ public class StateHuman extends StateAnimal {
 	public void addKnowledge(Knowledge knowledge) {
 		this.knowledge.addKnowledge(knowledge);
 	}
-	
+
+	public void addAcquaintance(Acquaintance acquaintance) {
+		this.acquaintance.addAcquaintance(acquaintance);
+	}
+
 	public Acquaintance getAcquaintance(Human partner) {
 		return new Acquaintance(this.acquaintance.getAcquaintance(partner));
 	}
