@@ -33,8 +33,8 @@ public class TableSentenceList extends Table {
 	public final  String 	ALL_COLUMNS 		=	" id, partner_id, type, lfd_nr, sentence  ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
-	public final  String 	COLUMN_PARTNERID 		=	" distinct id, partner_id  ";
-	public final  int 		SELECT_DISTINCT_PARTNERID 	= 2;
+	public final  String 	COLUMNS_ID_PARTNERID 		=	" id, partner_id  ";
+	public final  int 		SELECT_ID_PARTNERID 	= 2;
 
 	int id[];
 	int partner_id[];
@@ -52,8 +52,8 @@ public class TableSentenceList extends Table {
 		switch (selectList) {
 		case SELECT_ALL_COLUMNS:
 			return  ALL_COLUMNS;
-		case SELECT_DISTINCT_PARTNERID:
-			return  ALL_COLUMNS;
+		case SELECT_ID_PARTNERID:
+			return  COLUMNS_ID_PARTNERID;
 		default:
 			return ALL_COLUMNS;
 		}
@@ -71,7 +71,7 @@ public class TableSentenceList extends Table {
 			selectAllColumns(rs);
 
 			break;
-		case SELECT_DISTINCT_PARTNERID:
+		case SELECT_ID_PARTNERID:
 			int row = 0;
 			id = new int[rowCount];
 			partner_id = new int[rowCount];

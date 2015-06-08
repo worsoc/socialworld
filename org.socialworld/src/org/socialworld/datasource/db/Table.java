@@ -66,8 +66,16 @@ public abstract class Table {
 		public void select(int selectList) {
 			select(selectList, "", "");
 		}
-		
+
 		public void select(int selectList, String where_clause, String orderby) {
+			select(false,  selectList,  where_clause,  orderby);
+		}
+
+		public void selectDistinct(int selectList, String where_clause, String orderby) {
+			select(true,  selectList,  where_clause,  orderby);
+		}
+
+		private void select(boolean withDistinct, int selectList, String where_clause, String orderby) {
 			String select;
 			String count_select;
 			String select_list;
@@ -78,9 +86,17 @@ public abstract class Table {
 			this.selectList = selectList;
 			
 			from_clause = " FROM " + getTableName();
-			select_list = "SELECT " + getSelectList(selectList)  ;
 			
-			count_select = "SELECT count(*) " + from_clause + " " + where_clause ;
+			select_list = getSelectList(selectList);
+			if (withDistinct) {
+				count_select = "SELECT count(DISTINCT " + select_list +") " + from_clause + " " + where_clause ;
+				select_list = "SELECT DISTINCT " + select_list  ;
+			}
+			else {
+				count_select = "SELECT count(*) " + from_clause + " " + where_clause ;
+				select_list = "SELECT " + select_list  ;
+			}
+			
 			rs = connection.executeQuery(count_select);
 			
 			try 		{	

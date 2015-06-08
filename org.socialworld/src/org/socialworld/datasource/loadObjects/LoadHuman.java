@@ -108,7 +108,7 @@ public class LoadHuman extends LoadAnimal {
 		tableInventory.select(tableInventory.SELECT_ALL_COLUMNS, " WHERE id = " + objectID , "");
 		tableKnowledgePool.select(tableKnowledgePool.SELECT_ALL_COLUMNS, " WHERE id = " + objectID , "");
 		tableAcquaintance.select(tableAcquaintance.SELECT_ALL_COLUMNS, " WHERE id = " + objectID , "");
-		tableTalk.select(tableTalk.SELECT_ALL_COLUMNS, " WHERE id = " + objectID , "");
+		tableTalk.selectDistinct(tableTalk.SELECT_ID_PARTNERID, " WHERE id = " + objectID , "");
 		
 		rowTableHuman = tableHuman.getIndexFor1PK(objectID);
 		rowTableInventory = tableInventory.getIndexFor1PK(objectID);
@@ -292,7 +292,6 @@ public class LoadHuman extends LoadAnimal {
 			partner_id = allTalkPartnerIDsForObjectID[index];
 			talk = new Talk((Human)allObjects.get(partner_id));
 			tableTalk.select(tableTalk.SELECT_ALL_COLUMNS, " WHERE id = " + objectID + " AND partner_id = " + partner_id, "");
-			// rowCount() usable because there is no DISTINCT in the select list (SELECT_ALL_COLUMNS)
 			rowCountTableTalks = tableTalk.rowCount();
 			for (rowTableTalks = 0; rowTableTalks < rowCountTableTalks; rowCountTableTalks++) {
 				type = Talk_SentenceType.getName(tableTalk.getType(rowTableTalks)) ;
