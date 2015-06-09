@@ -23,6 +23,7 @@ package org.socialworld.core;
 
 import org.socialworld.collections.WordArray;
 import org.socialworld.conversation.Word;
+import org.socialworld.datasource.loadFromDB.LoadWords;
 
 /**
  * @author Mathias Sikos
@@ -35,9 +36,7 @@ public class AllWords {
 	static WordArray allWordsbyWordID;
 	
 	private AllWords() {
-		allWordsbyWordID = new WordArray(10000);
-		//TODO
-		allWordsbyWordID.set(1, new Word());
+		allWordsbyWordID = LoadWords.getInstance().getAllWords();
 	}
 	
 	public static Word getWord(int wordID) {

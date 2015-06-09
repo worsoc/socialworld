@@ -21,14 +21,35 @@
 */
 package org.socialworld.conversation;
 
-public enum Word_Type {
-	noun, 
-	infinitive, finitive, simple_past, past_participle,
-	preposition,
-	adverb,
-	adjective,
-	personal_pronoun, possessive_pronoun, demonstrative_pronoun,
-	name, title,
-	question
 
+public enum Word_Type {
+	noun(4), 
+	infinitive(5), finitive(6), simple_past(7), past_participle(8),
+	preposition(9),
+	adverb(10),
+	adjective(11),
+	personal_pronoun(1), possessive_pronoun(2), demonstrative_pronoun(3),
+	name(12), title(13),
+	question(14);
+
+	private int arrayIndex;
+
+	private Word_Type(int index) {
+		this.arrayIndex = index;
+	}
+
+	/**
+	 * The method returns the  name which belongs to the parameter index.
+	 * 
+	 * @param arrayIndex
+	 *            word type index
+	 * @return word type name
+	 */
+	public static Word_Type getName(int arrayIndex) {
+		for (Word_Type type : Word_Type.values())
+			if (type.arrayIndex == arrayIndex)
+				return type;
+		return null;
+	}
+	
 }

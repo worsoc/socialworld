@@ -71,7 +71,7 @@ public class TableWord extends Table {
 		default:
 			selectAllColumns(rs);
 		}
-
+		setPK1(word_id);
 	}
 
 	public void insert(int word_id, String word, int type, int kfc, int subjectable, int pronoun) {
@@ -126,4 +126,31 @@ public class TableWord extends Table {
 		}
 
 	}
+	
+	
+	
+	public int getWordID(int index) {
+		return word_id[index];
+	}
+
+	public int getType(int index) {
+		return type[index];
+	}
+
+	public int getKFC(int index) {
+		return kfc[index];
+	}
+	
+	public int getSubjectable(int index) {
+		return subjectable[index];
+	}
+
+	public String getWord(int index) {
+		return word[index];
+	}
+
+	public int getPronoun(int index) {
+		return pronoun[index];
+	}
+
 }

@@ -35,9 +35,18 @@ public class Word {
 	
 	public Word() {
 		kfc = null;
-
 	}
-	
+
+	public Word(int wordID, String word, Word_Type type , KnowledgeFact_Criterion kfc, 
+			boolean allowedAsKnowledgeSubject, Word pronoun) {
+		this.wordID = wordID;
+		this.word = word;
+		this.wordType = type;
+		this.kfc = kfc;
+		this.allowedAsKnowledgeSubject = allowedAsKnowledgeSubject;
+		this.pronoun = pronoun;
+	}
+
 	public String getWord() {
 		return word;
 	}
