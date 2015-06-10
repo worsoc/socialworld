@@ -26,10 +26,10 @@ import org.apache.log4j.Logger;
 import org.socialworld.attributes.Position;
 import org.socialworld.calculation.Vector;
 import org.socialworld.collections.SimulationObjectArray;
-import org.socialworld.datasource.db.TableInfluenceByEvent;
-import org.socialworld.datasource.db.TableObject;
-import org.socialworld.datasource.db.TablePosition;
-import org.socialworld.datasource.db.TableReactionByEvent;
+import org.socialworld.datasource.tablesSimulation.TableInfluenceByEvent;
+import org.socialworld.datasource.tablesSimulation.TableObject;
+import org.socialworld.datasource.tablesSimulation.TablePosition;
+import org.socialworld.datasource.tablesSimulation.TableReactionByEvent;
 import org.socialworld.objects.StateSimulationObject;
 import org.socialworld.objects.WriteAccessToSimulationObject;
 
