@@ -24,6 +24,8 @@ package org.socialworld.datasource.tablesSimulation;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.socialworld.datasource.mariaDB.Table;
+
 /**
  * @author Mathias Sikos
  *
