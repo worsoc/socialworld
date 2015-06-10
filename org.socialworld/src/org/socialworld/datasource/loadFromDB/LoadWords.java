@@ -24,7 +24,7 @@ package org.socialworld.datasource.loadFromDB;
 import org.socialworld.collections.WordArray;
 import org.socialworld.conversation.Word;
 import org.socialworld.conversation.Word_Type;
-import org.socialworld.datasource.db.TableWord;
+import org.socialworld.datasource.tablesSimulation.TableWord;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 
 /**
