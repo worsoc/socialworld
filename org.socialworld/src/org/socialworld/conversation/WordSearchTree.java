@@ -24,10 +24,15 @@ package org.socialworld.conversation;
 import java.io.IOException;
 import java.io.LineNumberReader;
 
+import org.socialworld.datasource.loadFromDB.LoadWordSearchTree;
+
 public class WordSearchTree {
 	private WordSearchTree_Node root;
 	private WordSearchTree_Node currentNode;
 	
+	public WordSearchTree() {
+		root = LoadWordSearchTree.getInstance().root();
+	}
 	
 	public Word findAndGetWord(String word) {
 		currentNode = root;

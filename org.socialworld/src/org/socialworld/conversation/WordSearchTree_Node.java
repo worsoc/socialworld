@@ -25,10 +25,26 @@ public class WordSearchTree_Node {
 	private Word word;
 	private String letters;
 	private char  firstLetter;
-	private int countEdges;
+
 	private boolean isLeaf;
-	private  WordSearchTree_Node nextNodes[];
 	
+	private int countEdges;
+	private  WordSearchTree_Node nextNodes[];
+	private int nextChildIndex = 0;
+	
+	public WordSearchTree_Node(Word word, String letters, int childrenCount) {
+		this.word = word;
+		setLetters(letters);
+		createChildren(childrenCount);
+	}
+	
+	public void addChild(WordSearchTree_Node child) {
+
+		if (nextChildIndex < countEdges) {
+			nextNodes[nextChildIndex] = child;
+			nextChildIndex++;
+		}
+	}
 	
 	protected WordSearchTree_Node getChild(int index) {
 		if (nextNodes.length > index) return nextNodes[index];
@@ -81,9 +97,12 @@ public class WordSearchTree_Node {
 	
 	
 	protected void createChildren(int count) {
-		nextNodes = new WordSearchTree_Node[count];
-		isLeaf = false;
-		countEdges = count;
+		if (count == 0) 			setToLeaf();
+		else {
+			nextNodes = new WordSearchTree_Node[count];
+			isLeaf = false;
+			countEdges = count;
+		}
 	}
 	
 	protected Word getWord() {
