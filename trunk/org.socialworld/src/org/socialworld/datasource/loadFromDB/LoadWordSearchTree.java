@@ -24,7 +24,7 @@ package org.socialworld.datasource.loadFromDB;
 import org.socialworld.conversation.Word;
 import org.socialworld.conversation.WordSearchTree_Node;
 import org.socialworld.core.AllWords;
-import org.socialworld.datasource.db.TableWordSearchTree;
+import org.socialworld.datasource.tablesSimulation.TableWordSearchTree;
 
 
 /**
