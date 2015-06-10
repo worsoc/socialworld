@@ -26,9 +26,9 @@ import org.socialworld.attributes.Time;
 import org.socialworld.core.Simulation;
 
 
-import org.socialworld.datasource.db.TableObject;
-import org.socialworld.datasource.db.TablePosition;
-import org.socialworld.datasource.db.TableReactionByEvent;
+import org.socialworld.datasource.tablesSimulation.TableObject;
+import org.socialworld.datasource.tablesSimulation.TablePosition;
+import org.socialworld.datasource.tablesSimulation.TableReactionByEvent;
 
 /**
  * @author Mathias Sikos (tyloesand)
