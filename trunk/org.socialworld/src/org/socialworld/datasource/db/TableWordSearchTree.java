@@ -30,11 +30,12 @@ import java.sql.SQLException;
  */
 public class TableWordSearchTree extends Table {
 
-	public final  String 	ALL_COLUMNS 		=	" wstn_id, first, letters, parent, word ";
+	public final  String 	ALL_COLUMNS 		=	" wstn_id, level, children, letters, parent, word ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
 	int wstn_id[];
-	String first[];
+	int level[];
+	int children[];
 	String letters[];
 	int parent[];
 	int word[];
@@ -70,29 +71,29 @@ public class TableWordSearchTree extends Table {
 		default:
 			selectAllColumns(rs);
 		}
+		setPK1(wstn_id);
 	}
 
-	public void insert(int wstn_id, String first, String letters, int parent, int word) {
+	public void insert(int wstn_id, int level, int children, String letters, int parent, int word) {
 		String statement;
 			
 		if (wstn_id > 0) {
 	
 
-			statement 	= "INSERT INTO sw_wordsearchtree (wstn_id, first, letters, parent, word) VALUES (" + 
-					wstn_id + ", '" + first + "', '" + letters + "', " + parent + ", " + word + ")";
+			statement 	= "INSERT INTO sw_wordsearchtree (wstn_id, level, children, letters, parent, word) VALUES (" + 
+					wstn_id + ", " + level + ", " + children + ", '" + letters + "', " + parent + ", " + word + ")";
 			
 			insert(statement);
 		}
 	}
 
-	public void update(int wstn_id, String first, String letters) {
+	public void update(int wstn_id,  String letters) {
 		String statement;
 			
 		if (wstn_id > 0) {
 	
 
 			statement 	= "UPDATE sw_wordsearchtree SET " +
-					"first = '" + first  + "', " +
 					"letters = '" + letters  + "' " +
 					"WHERE wstn_id = " + wstn_id  ;
 			
@@ -128,7 +129,8 @@ public class TableWordSearchTree extends Table {
 	private void selectAllColumns(ResultSet rs) {
 		int row = 0;
 		wstn_id = new int[rowCount];
-		first = new String[rowCount];
+		level = new int[rowCount];
+		children = new int[rowCount];
 		letters = new String[rowCount];
 		parent = new int[rowCount];
 		word = new int[rowCount];
@@ -137,10 +139,11 @@ public class TableWordSearchTree extends Table {
 			while (rs.next()) {
 				
 				wstn_id[row] = rs.getInt(1);
-				first[row] = rs.getString(2);
-				letters[row] = rs.getString(3);
-				parent[row] = rs.getInt(4);
-				word[row] = rs.getInt(5);
+				level[row] = rs.getInt(2);
+				children[row] = rs.getInt(3);
+				letters[row] = rs.getString(4);
+				parent[row] = rs.getInt(5);
+				word[row] = rs.getInt(6);
 				
 				row++;
 			}
@@ -150,6 +153,30 @@ public class TableWordSearchTree extends Table {
 			return;
 		}
 
+	}
+
+	public int getWSTNID(int index) {
+		return wstn_id[index];
+	}
+
+	public int getLevel(int index) {
+		return level[index];
+	}
+
+	public int getChildren(int index) {
+		return children[index];
+	}
+
+	public int getParent(int index) {
+		return parent[index];
+	}
+
+	public int getWord(int index) {
+		return word[index];
+	}
+	
+	public String getLetters(int index) {
+		return letters[index];
 	}
 
 }
