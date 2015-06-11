@@ -1,12 +1,11 @@
 package org.socialworld.datasource.pool;
 
-import java.io.*;
-import java.net.URL;
 
 import org.socialworld.attributes.Attribute;
 import org.socialworld.calculation.FunctionByMatrix_Matrix;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
+import org.socialworld.datasource.tablesPool.TablePoolACM;
 
 public class AttributeCalculatorMatrixPool {
 	public static final int CAPACITY_ACMP_ARRAY = 100;
@@ -48,11 +47,79 @@ public class AttributeCalculatorMatrixPool {
 		}	
 	}
 	
+	private void setMatrix(int index, FunctionByMatrix_Matrix matrix) {
+		if (index >= 0)
+			if (CAPACITY_ACMP_ARRAY > index ) 
+				matrixsForPositiveIndex[index] = matrix;
+			else ;
+		else {
+			index = index * -1;
+			if (CAPACITY_ACMP_ARRAY > index ) 
+				matrixsForNegativeIndex[index] = matrix;
+			else;
+		}	
+		
+	}
+
 	private void initialize() {
 		
-		initializeFromFile();
+		loadFromDB();
 	}
 	
+	
+	
+	
+	private void loadFromDB() {
+		TablePoolACM table;
+		int rowCount;
+		int row;
+		
+		int index;
+		int matrixIndex;
+		
+		int lastIndex;
+		
+		int functions[];
+		float share;
+		Value shares[];
+		
+		FunctionByMatrix_Matrix matrix;
+		
+		table = new TablePoolACM();
+		
+		table.select(table.SELECT_ALL_COLUMNS, "", "ORDER BY index, row, col ");
+		rowCount = table.rowCount();
+		
+		if (rowCount > 0) {
+			lastIndex = table.getIndex(0);
+			functions = new int[64];
+			shares = new Value[64];
+			matrixIndex = 0;
+			
+			for (row = 0; row < rowCount; row++) {
+				index = table.getIndex(row);
+				if (index != lastIndex) {
+					matrix = new FunctionByMatrix_Matrix(numberOfAttributes);
+					matrix.setFunctions( functions);
+					matrix.setShares( shares );
+					setMatrix(lastIndex, matrix);
+					functions = new int[64];
+					shares = new Value[64];
+					lastIndex = index;
+					matrixIndex = 0;
+				}
+				share = table.getShare(row);
+				shares[matrixIndex] = 	new Value (Type.floatingpoint, share);
+				functions[matrixIndex] = table.getFunction(row);
+
+				matrixIndex++;
+				
+			}
+		}
+	}
+	
+}
+/*
 	private void initializeFromFile() {
 		
 		try
@@ -165,7 +232,7 @@ public class AttributeCalculatorMatrixPool {
 	}
 
 
-/*	
+
 		int[] functions1 = {1,1,2,0,2,4,4,2,
 							3,1,3,3,2,1,3,4,
 							1,0,1,2,0,0,1,2,
@@ -222,4 +289,4 @@ public class AttributeCalculatorMatrixPool {
 				   (float)0.06, (float) 0.05, (float) 0.04, (float) 0.03, (float) 0.02, (float) 0.01, (float) 0.00, (float) 0.79};
 */
 	
-}
+
