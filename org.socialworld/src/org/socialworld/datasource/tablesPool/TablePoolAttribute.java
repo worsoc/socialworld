@@ -32,11 +32,11 @@ import org.socialworld.datasource.mariaDB.Table;
  */
 public class TablePoolAttribute extends Table {
 
-	public final  String 	ALL_COLUMNS 		=	" lfd_nr, attrib_nr, value ";
+	public final  String 	ALL_COLUMNS 		=	" index, attrib_nr, value ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 	
-	int lfd_nr[];
-	int attrib_nr[];
+	int index[];
+	int attrib_nr[]; 		
 	int value[];
 
 	@Override
@@ -65,14 +65,14 @@ public class TablePoolAttribute extends Table {
 		switch (selectList) {
 		
 		case SELECT_ALL_COLUMNS:
-			lfd_nr = new int[rowCount];
+			index = new int[rowCount];
 			attrib_nr = new int[rowCount];
 			value = new int[rowCount];
 
 			try {
 				while (rs.next()) {
 					
-					lfd_nr[row] = rs.getInt(1);
+					index[row] = rs.getInt(1);
 					attrib_nr[row] = rs.getInt(2);
 					value[row] = rs.getInt(3);
 					
@@ -86,14 +86,14 @@ public class TablePoolAttribute extends Table {
 
 			break;
 		default:
-			lfd_nr = new int[rowCount];
+			index = new int[rowCount];
 			attrib_nr = new int[rowCount];
 			value = new int[rowCount];
 
 			try {
 				while (rs.next()) {
 					
-					lfd_nr[row] = rs.getInt(1);
+					index[row] = rs.getInt(1);
 					attrib_nr[row] = rs.getInt(2);
 					value[row] = rs.getInt(3);
 					
@@ -106,9 +106,59 @@ public class TablePoolAttribute extends Table {
 			}
 			
 		}
-		setPK1(lfd_nr);
+		setPK1(index);
 		setPK2(attrib_nr);
 
+	}
+
+	public void insert(int index, int attrib_nr, int value) {
+		String statement;
+			
+		if ((index > 0) & (attrib_nr > 0)) {
+			
+			statement 	= "INSERT INTO swpool_attribute (index, attrib_nr, value) VALUES (" + 
+							index + ", " + attrib_nr + ", " + value + ")";
+			
+			insert(statement);
+		}
+	}
+	
+	public void update(int index, int attrib_nr, int value) {
+		String statement;
+			
+		if ((index > 0) & (attrib_nr > 0)) {
+	
+
+			statement 	= "UPDATE swpool_attribute SET " +
+					"value = " + value  + 
+					" WHERE index = " + index + " AND attrib_nr = " + attrib_nr ;
+			
+			update(statement);
+		}
+	}
+
+	public void delete(int index, int attrib_nr) {
+		String statement;
+			
+		if ((index > 0) & (attrib_nr > 0)) {
+	
+			statement 	= "DELETE FROM swpool_attribute " +
+					" WHERE index = " + index + " AND attrib_nr = " + attrib_nr ;
+			
+			delete(statement);
+		}
+	}
+
+	public int getIndex(int index) {
+		return this.index[index];
+	}
+
+	public int getAttribNr(int index) {
+		return attrib_nr[index];
+	}
+
+	public int getValue(int index) {
+		return value[index];
 	}
 
 }
