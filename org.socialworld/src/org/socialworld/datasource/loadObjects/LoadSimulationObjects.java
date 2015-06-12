@@ -77,8 +77,8 @@ public abstract class LoadSimulationObjects {
 		
 		tableObjects.select(tableObjects.SELECT_ALL_COLUMNS, " WHERE id = " + objectID, "");
 		tablePositions.select(tablePositions.SELECT_ALL_COLUMNS, " WHERE id = " + objectID, "");
-		tableInfluenceByEvent.select(tableInfluenceByEvent.SELECT_ALL_COLUMNS, " WHERE id = " + objectID, "");
-		tableReactionByEvent.select(tableReactionByEvent.SELECT_ALL_COLUMNS, " WHERE id = " + objectID, "");
+		tableInfluenceByEvent.select(tableInfluenceByEvent.SELECT_ALL_COLUMNS, " WHERE id = " + objectID, " ORDER BY  eventType");
+		tableReactionByEvent.select(tableReactionByEvent.SELECT_ALL_COLUMNS, " WHERE id = " + objectID, " ORDER BY  eventType");
 
 		rowTableObjects = tableObjects.getIndexFor1PK(objectID);
 		rowTablePositions = tablePositions.getIndexFor1PK(objectID);
