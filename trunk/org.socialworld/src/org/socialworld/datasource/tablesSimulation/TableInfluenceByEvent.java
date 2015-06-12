@@ -32,38 +32,25 @@ import org.socialworld.datasource.mariaDB.Table;
  */
 public class TableInfluenceByEvent extends Table {
 
-	public final  int 		SELECT_ALL_COLUMNS 	= 0;
+	public final  String 	ALL_COLUMNS 		=	"  id, eventType, influenceType ";
+	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 	
-	String allColumns;
-	
-	int event[][];
+	int id[];
+	int influenceTypes[][];
 			
-	public TableInfluenceByEvent() {
-		super();
-		
-		int i;
-		
-		allColumns = " ";
-		for (i=1; i<256; i++) {
-			allColumns = allColumns + "event" + i + ", ";
-		}
-		allColumns = allColumns + "event256 ";
-
-	}
 	@Override
 	protected String getTableName() {
 		return "sw_influencebyevent";
 	}
 
 	@Override
-	protected String getSelectList(int eventType) {
-		String result;
-
-		// eventType 0 means complete selectlist (all event types)
-		if (eventType == 0) 	result = allColumns;
-		else		result = " event" + eventType + " ";
-		
-		return result;
+	protected String getSelectList(int selectList) {
+		switch (selectList) {
+		case SELECT_ALL_COLUMNS:
+			return  ALL_COLUMNS;
+		default:
+			return ALL_COLUMNS;
+		}
 	}
 
 	@Override
@@ -72,43 +59,39 @@ public class TableInfluenceByEvent extends Table {
 		int row = 0;
 		int column;
 		
+		int idCount;
+		
 		rs = connection.executeQuery(statement);
 
-		if (selectList == 0) {
-			event = new int[rowCount][256];
-
-			try {
-				while (rs.next()) {
-					
-					for (column = 0; column < 256; column++) {
-						event[row][column] = rs.getInt(column + 1);
-					}
-					
-					row++;
-				}
-			}
-			catch (SQLException e) {
-				e.printStackTrace();
-				return;
-			}
+		idCount = rowCount / 256;
+		influenceTypes = new int[idCount][256];
+		id = new int[idCount];
+		
+		column = 0;
+		row = 0;
+		
+		try {
+			while (rs.next()) {
+				if (column == 0 ) id[row] = rs.getInt(1);
+				influenceTypes[row][column] = rs.getInt(3);
 			
-		}
-		else {
-			try {
-				while (rs.next()) {
-					
-					event[row][0] = rs.getInt(1);
+				column++;
+				if (column == 256)		{
 					row++;
+					column = 0;
 				}
-			}
-			catch (SQLException e) {
-				e.printStackTrace();
-				return;
+				
 			}
 		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			return;
+		}
+			
+		setPK1(id);
 	}
 
-	public void insert(int id, int events[]) {
+	public void insert(int id, int influenceTypes[]) {
 		String statement;
 		int i;
 		int count;
@@ -116,31 +99,24 @@ public class TableInfluenceByEvent extends Table {
 		
 		if (id > 0) {
 	
-			count = events.length;
-			statement = "INSERT INTO sw_influencebyevent (";
+			count = influenceTypes.length;
 			
 			for (i = 1; i <= count; i++) {
-				statement = statement + "event" + i + ", ";
+				statement = "INSERT INTO sw_influencebyevent (id, eventType, influenceType ) VALUES (" + id + ", " + i + ", " + influenceTypes[i] + ")";
+				insert(statement);
 			}
-			statement = statement + "id) VALUES (";
-			
-			for (i = 0; i < count; i++) {
-				statement = statement + events[i] +  ", ";
-			}
-			statement 	= statement	+ id + ")";
-			
-			insert(statement);
+				
 		}
 	}
 	
-	public void update(int id, int eventType, int reactionType) {
+	public void update(int id, int eventType, int influenceType) {
 		String statement;
 		
 		if ( (id > 0) & (eventType > 0) ) {
 			
 			statement 	= "UPDATE sw_influencebyevent SET " +
-					"event" + eventType + " = " + reactionType +
-					" WHERE id = " + id  ;
+					"influenceType  = " + influenceType +
+					" WHERE id = " + id + " AND eventType = " + eventType ;
 			
 			update(statement);
 		}
@@ -158,21 +134,9 @@ public class TableInfluenceByEvent extends Table {
 	}
 	
 	
-	public int getIndexFor1PK(int pk1) {
-		int size;
-		int index;
-		
-		size = this.event.length / 256;
-		
-		for (index = 0; index < size; index++) {
-			if (this.event[index][0] == pk1) return index;
-		}
-		
-		return -1;
-	}
 
 	public int[] getTypes(int index) {
-		return event[index];
+		return influenceTypes[index];
 	}
 
 
