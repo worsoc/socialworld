@@ -32,19 +32,15 @@ import org.socialworld.datasource.mariaDB.Table;
  */
 public class TableAcquaintance extends Table {
 
-	public final  String 	ALL_COLUMNS 		=
-			" id, partner_id, attrib1, attrib2, attrib3, attrib4, attrib5, attrib6, attrib7 ";
+	public final  String 	ALL_COLUMNS 		=	" id, partner_id, attrib_nr, value ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
+	public final  String 	COLUMNs_ID_PARTNERID 		=	"  id, partner_id ";
+	public final  int 		SELECT_ID_PARTNERID 	= 2;
 	
 	int id[];
 	int partner_id[];
-	int a[];
-	int b[];
-	int c[];
-	int d[];
-	int e[];
-	int f[];
-	int g[];
+	int attrib_nr[];
+	int value[];
 
 	@Override
 	protected String getTableName() {
@@ -56,6 +52,8 @@ public class TableAcquaintance extends Table {
 		switch (selectList) {
 		case SELECT_ALL_COLUMNS:
 			return  ALL_COLUMNS;
+		case SELECT_ID_PARTNERID:
+			return  COLUMNs_ID_PARTNERID;
 		default:
 			return ALL_COLUMNS;
 		}
@@ -74,27 +72,16 @@ public class TableAcquaintance extends Table {
 		case SELECT_ALL_COLUMNS:
 			id = new int[rowCount];
 			partner_id = new int[rowCount];
-			a = new int[rowCount];
-			b = new int[rowCount];
-			c = new int[rowCount];
-			d = new int[rowCount];
-			e = new int[rowCount];
-			f = new int[rowCount];
-			g = new int[rowCount];
+			attrib_nr = new int[rowCount];
+			value = new int[rowCount];
 
 			try {
 				while (rs.next()) {
 					
 					id[row] = rs.getInt(1);
 					partner_id[row] = rs.getInt(2);
-					a[row] = rs.getInt(3);
-					b[row] = rs.getInt(4);
-					c[row] = rs.getInt(5);
-					d[row] = rs.getInt(6);
-					e[row] = rs.getInt(7);
-					f[row] = rs.getInt(8);
-					g[row] = rs.getInt(9);
-
+					attrib_nr[row] = rs.getInt(3);
+					value[row] = rs.getInt(4);
 					
 					row++;
 				}
@@ -105,30 +92,41 @@ public class TableAcquaintance extends Table {
 			}
 
 			break;
-		default:
+		case SELECT_ID_PARTNERID:
 			id = new int[rowCount];
 			partner_id = new int[rowCount];
-			a = new int[rowCount];
-			b = new int[rowCount];
-			c = new int[rowCount];
-			d = new int[rowCount];
-			e = new int[rowCount];
-			f = new int[rowCount];
-			g = new int[rowCount];
 
 			try {
 				while (rs.next()) {
 					
 					id[row] = rs.getInt(1);
 					partner_id[row] = rs.getInt(2);
-					a[row] = rs.getInt(3);
-					b[row] = rs.getInt(4);
-					c[row] = rs.getInt(5);
-					d[row] = rs.getInt(6);
-					e[row] = rs.getInt(7);
-					f[row] = rs.getInt(8);
-					g[row] = rs.getInt(9);
+					
+					row++;
+				}
+			}
+			catch (SQLException e) {
+				e.printStackTrace();
+				return;
+			}
 
+			setPK1(id);
+			setPK2(partner_id);
+			break;
+		default:
+			id = new int[rowCount];
+			partner_id = new int[rowCount];
+			attrib_nr = new int[rowCount];
+			value = new int[rowCount];
+
+			try {
+				while (rs.next()) {
+					
+					id[row] = rs.getInt(1);
+					partner_id[row] = rs.getInt(2);
+					attrib_nr[row] = rs.getInt(3);
+					value[row] = rs.getInt(4);
+					
 					
 					row++;
 				}
@@ -139,8 +137,6 @@ public class TableAcquaintance extends Table {
 			}
 			
 		}
-		setPK1(id);
-		setPK2(partner_id);
 	}
 
 	public void insert(int id, int partner_id, int attribs[]) {
@@ -150,32 +146,27 @@ public class TableAcquaintance extends Table {
 			
 		if ( (id > 0) & (partner_id > 0) ) {
 	
-
-			count = attribs.length;
-			statement = "INSERT INTO sw_acquaintance (";
-			
-			for (i = 1; i <= count; i++) {
-				statement = statement + "attrib" + i + ", ";
-			}
-			statement = statement + "id, partner_id) VALUES (";
-			
-			for (i = 0; i < count; i++) {
-				statement = statement + attribs[i] +  ", ";
-			}
-			statement 	= statement	+ id + ", " + partner_id + ") ";
-			
-			insert(statement);
+	
+				
+				count = attribs.length;
+				
+				for (i = 1; i <= count; i++) {
+					statement = "INSERT INTO sw_acquaintance (id, partner_id, attrib_nr, value ) VALUES ("
+								+ id + ", " + partner_id + ", " + i + ", " + attribs[i-1] + ")";
+					insert(statement);
+				}
+					
 		}
 	}
 
-	public void update(int id, int partner_id, int attribNr, int attribValue) {
+	public void update(int id, int partner_id, int attrib_nr, int value) {
 		String statement;
 		
-		if ( (id > 0) & (attribNr > 0) ) {
+		if ( (id > 0) & (partner_id > 0)  & (attrib_nr > 0)) {
 			
-			statement 	= "UPDATE sw_acquaintance SET " +
-					"attrib" + attribNr + " = " + attribValue +
-					" WHERE id = " + id + " AND partner_id = " + partner_id ;
+			statement 	= "UPDATE sw_attribute SET " +
+					"value = " + value +
+					" WHERE id = " + id + " AND partner_id = " + partner_id + " AND attrib_nr = " + attrib_nr;
 			
 			update(statement);
 		}
@@ -192,19 +183,9 @@ public class TableAcquaintance extends Table {
 		}
 	}
 
-	public int[] getAttributes(int index) {
-		int attributes[];
-				
-		attributes = new int[8];
-		attributes[0] = a[index];
-		attributes[1] = b[index];
-		attributes[2] = c[index];
-		attributes[3] = d[index];
-		attributes[4] = e[index];
-		attributes[5] = f[index];
-		attributes[6] = g[index];
+	public int[] getAttributes() {
 		
-		return attributes;
+		return value;
 	}
 
 }
