@@ -102,7 +102,7 @@ public class TableReactionByEvent extends Table {
 			count = reactionTypes.length;
 			
 			for (i = 1; i <= count; i++) {
-				statement = "INSERT INTO sw_reactionbyevent (id, eventType, reactionType ) VALUES (" + id + ", " + i + ", " + reactionTypes[i] + ")";
+				statement = "INSERT INTO sw_reactionbyevent (id, eventType, reactionType ) VALUES (" + id + ", " + i + ", " + reactionTypes[i-1] + ")";
 				insert(statement);
 			}
 				

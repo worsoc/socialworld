@@ -102,7 +102,7 @@ public class TableInfluenceByEvent extends Table {
 			count = influenceTypes.length;
 			
 			for (i = 1; i <= count; i++) {
-				statement = "INSERT INTO sw_influencebyevent (id, eventType, influenceType ) VALUES (" + id + ", " + i + ", " + influenceTypes[i] + ")";
+				statement = "INSERT INTO sw_influencebyevent (id, eventType, influenceType ) VALUES (" + id + ", " + i + ", " + influenceTypes[i-1] + ")";
 				insert(statement);
 			}
 				

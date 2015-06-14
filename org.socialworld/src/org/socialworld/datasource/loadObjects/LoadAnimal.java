@@ -35,8 +35,6 @@ public class LoadAnimal extends LoadSimulationObjects  {
 	private static LoadAnimal instance;
 	
 	TableState tableAttributes;
-	int rowTableAttributes0To7;	
-	int rowTableAttributes8To15;	
 
 	TableAnimalsDirections tableDirections;
 	int rowTableDirections;
@@ -64,11 +62,9 @@ public class LoadAnimal extends LoadSimulationObjects  {
 	protected void load(int objectID) {
 		super.load(objectID);
 		
-		tableAttributes.select(tableAttributes.SELECT_ALL_COLUMNS, " WHERE id = " + objectID , "");
+		tableAttributes.select(tableAttributes.SELECT_ALL_COLUMNS, " WHERE id = " + objectID + " AND array_nr = 1 " , " ORDER BY attrib_nr");
 		tableDirections.select(tableDirections.SELECT_ALL_COLUMNS, " WHERE id = " + objectID , "");
 		
-		rowTableAttributes0To7 = tableAttributes.getIndexFor2PK(objectID, 1);
-		rowTableAttributes8To15 = tableAttributes.getIndexFor2PK(objectID, 2);
 		rowTableDirections = tableDirections.getIndexFor1PK(objectID);
 
 	}
@@ -106,33 +102,11 @@ public class LoadAnimal extends LoadSimulationObjects  {
 	protected void initState(StateAnimal state, int objectID) {
 
 		super.initState(state, objectID);	
-		
-		int attrib0to7[];
-		int attrib8to15[];
+			
 		
 		int attribs[];
-		attribs = new int[9];
 		
-		
-		
-		if (rowTableAttributes0To7 >= 0) {
-			attrib0to7 = tableAttributes.getAttributes(rowTableAttributes0To7);
-			attribs[0] = attrib0to7[0];
-			attribs[1] = attrib0to7[1];
-			attribs[2] = attrib0to7[2];
-			attribs[3] = attrib0to7[3];
-			attribs[4] = attrib0to7[4];
-			attribs[5] = attrib0to7[5];
-			attribs[6] = attrib0to7[6];
-			attribs[7] = attrib0to7[7];
-		}	
-
-		if (rowTableAttributes8To15 >= 0) {
-			attrib8to15 = tableAttributes.getAttributes(rowTableAttributes8To15);
-			attribs[8] = attrib8to15[0];
-		}
-		
-			
+		attribs = tableAttributes.getAttributes();
 		state.setAttributes(new AttributeArray(attribs));
 
 		

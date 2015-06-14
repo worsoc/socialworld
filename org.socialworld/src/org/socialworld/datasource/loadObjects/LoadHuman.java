@@ -107,7 +107,7 @@ public class LoadHuman extends LoadAnimal {
 		tableHuman.select(tableHuman.SELECT_ALL_COLUMNS, " WHERE id = " + objectID , "");
 		tableInventory.select(tableInventory.SELECT_ALL_COLUMNS, " WHERE id = " + objectID , "");
 		tableKnowledgePool.select(tableKnowledgePool.SELECT_ALL_COLUMNS, " WHERE id = " + objectID , "");
-		tableAcquaintance.select(tableAcquaintance.SELECT_ALL_COLUMNS, " WHERE id = " + objectID , "");
+		tableAcquaintance.selectDistinct(tableAcquaintance.SELECT_ID_PARTNERID, " WHERE id = " + objectID , "");
 		tableTalk.selectDistinct(tableTalk.SELECT_ID_PARTNERID, " WHERE id = " + objectID , "");
 		
 		rowTableHuman = tableHuman.getIndexFor1PK(objectID);
@@ -259,18 +259,19 @@ public class LoadHuman extends LoadAnimal {
 	private void setAcquaintancePool(StateHuman state, int objectID) {
 		int size;
 		int index;
-		int rowTableAcquaintancePool;
 		int partner_id;
 		int attributes[];
 		
 		size = allAcqPartnerIDsForObjectID.length;
 		for (index = 0; index < size; index++) {
+			
 			partner_id = allAcqPartnerIDsForObjectID[index];
-			rowTableAcquaintancePool = tableAcquaintance.getIndexFor2PK(objectID, partner_id);
-			if (rowTableAcquaintancePool >= 0) {
-				attributes = tableAcquaintance.getAttributes(rowTableAcquaintancePool);
-				state.addAcquaintance(new Acquaintance((Human)allObjects.get(partner_id), new AttributeArray(attributes) ));
-			}
+			
+			tableAcquaintance.select(tableAcquaintance.SELECT_ALL_COLUMNS, " WHERE id = " + objectID +  " AND partner_id = partner_id " , " ORDER BY attrib_nr");
+			
+			attributes = tableAcquaintance.getAttributes();
+			state.addAcquaintance(new Acquaintance((Human)allObjects.get(partner_id), new AttributeArray(attributes) ));
+			
 		}
 		
 	}
@@ -291,7 +292,7 @@ public class LoadHuman extends LoadAnimal {
 		for (index = 0; index < size; index++) {
 			partner_id = allTalkPartnerIDsForObjectID[index];
 			talk = new Talk((Human)allObjects.get(partner_id));
-			tableTalk.select(tableTalk.SELECT_ALL_COLUMNS, " WHERE id = " + objectID + " AND partner_id = " + partner_id, "");
+			tableTalk.select(tableTalk.SELECT_ALL_COLUMNS, " WHERE id = " + objectID + " AND partner_id = " + partner_id, " ORDER BY type, lfd_nr ");
 			rowCountTableTalks = tableTalk.rowCount();
 			for (rowTableTalks = 0; rowTableTalks < rowCountTableTalks; rowCountTableTalks++) {
 				type = Talk_SentenceType.getName(tableTalk.getType(rowTableTalks)) ;
