@@ -21,6 +21,7 @@
 */
 package org.socialworld.calculation;
 
+
 /**
  *  The enumeration holds all possible
  *         expression types. There are mathematical comparison to a constant, an
@@ -29,11 +30,32 @@ package org.socialworld.calculation;
  * @author Mathias Sikos (tyloesand)
  */
 public enum Expression_Function {
-	branching, condition, comparison,
-	addition, multiplication,
-	function,
-	replacement,
-	value, attributeValue, argumentValueByName,
-	nothing
+	branching(1), condition(2), comparison(3),
+	addition(4), multiplication(5),
+	function(6),
+	replacement(7),
+	value(8), attributeValue(9), argumentValueByName(10),
+	nothing(0);
 
+	private int arrayIndex;
+
+	private Expression_Function(int index) {
+		this.arrayIndex = index;
+	}
+	
+	/**
+	 * The method returns the expression function name which belongs to the parameter
+	 * function index.
+	 * 
+	 * @param arrayIndex
+	 *            function index
+	 * @return expression function name
+	 */
+	public static Expression_Function getName(int arrayIndex) {
+		for (Expression_Function function : Expression_Function.values())
+			if (function.arrayIndex == arrayIndex)
+				return function;
+		return null;
+	}	
+	
 }

@@ -28,7 +28,28 @@ package org.socialworld.calculation;
  * @author Mathias Sikos (tyloesand) 
  */
 public enum Expression_ConditionOperator {
-	equal, notEqual, less, lessEqual, greaterEqual, greater,
-	and, or
+	notEqual(0), equal(1), less(2), lessEqual(3), greaterEqual(4), greater(5),
+	and(6), or(7);
+
+	private int arrayIndex;
+
+	private Expression_ConditionOperator(int index) {
+		this.arrayIndex = index;
+	}
+	
+	/**
+	 * The method returns the expression condition operator name which belongs to the parameter
+	 * operator index.
+	 * 
+	 * @param arrayIndex
+	 *            operator index
+	 * @return expression condition operator name
+	 */
+	public static Expression_ConditionOperator getName(int arrayIndex) {
+		for (Expression_ConditionOperator operator : Expression_ConditionOperator.values())
+			if (operator.arrayIndex == arrayIndex)
+				return operator;
+		return null;
+	}	
 
 }
