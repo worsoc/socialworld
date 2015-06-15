@@ -49,9 +49,8 @@ public class Expression {
 	Expression expression2;
 	Expression expression3;
 	
-	int ID_Exp1;
-	int ID_Exp2;
-	int ID_Exp3;
+		
+	private boolean isValid;
 	
 	private Calculation calculation;
 	
@@ -59,59 +58,48 @@ public class Expression {
 	public Expression() {
 		calculation = Calculation.getInstance();
 		operation = Expression_Function.nothing;
+		isValid = false;
 	}
 	
-	
-	public void setID(int ID) {		this.ID = ID;	}
-
-	public void setID(String ID) {		this.ID = (int) Float.parseFloat(ID);	}
-
-	public int getID() {return ID; };
-
-	public void set_ID_Exp2(int ID) {		this.ID_Exp2 = ID;	}
-
-	public void set_ID_Exp2(String ID) {		this.ID_Exp2 = (int) Float.parseFloat(ID);	}
-	
-	public int get_ID_Exp2() {return ID_Exp2; };
-	
-	public void set_ID_Exp3(int ID) {		this.ID_Exp3 = ID;	}
-
-	public void set_ID_Exp3(String ID) {		this.ID_Exp3 = (int) Float.parseFloat(ID);	}
-
-	public int get_ID_Exp3() {return ID_Exp3; };
+	public void setValid() {
+		isValid = true;
+	}
 
 	public void setOperation(Expression_Function operation) {
-		this.operation = operation;
+		if (!isValid) this.operation = operation;
 	}
 
 	public void setOperator(Expression_ConditionOperator operator) {
-		this.operator = operator;
+		if (!isValid) this.operator = operator;
 	}
 
+	public void setFunction(FunctionBase function) {
+		if (!isValid) this.function = function;
+	}
 	
 	public void setExpression1(Expression expression) {
-		this.expression1 = expression;
+		if (!isValid) this.expression1 = expression;
 	}
 	
 	public void setExpression2(Expression expression) {
-		this.expression2 = expression;
+		if (!isValid) this.expression2 = expression;
 	}
 
 	public void setExpression3(Expression expression) {
-		this.expression3 = expression;
+		if (!isValid) this.expression3 = expression;
 	}
 
 	
 	public void setTrueExpression(Expression expressionForTrue) {
-		setExpression2(expressionForTrue);
+		if (!isValid) setExpression2(expressionForTrue);
 	}
 
 	public void setFalseExpression(Expression expressionForFalse) {
-		setExpression3(expressionForFalse);
+		if (!isValid) setExpression3(expressionForFalse);
 	}
 
 	public void setValue(Value value) {
-		this.value = value;
+		if (!isValid) this.value = value;
 	}
 
 	protected Value getValue() {
