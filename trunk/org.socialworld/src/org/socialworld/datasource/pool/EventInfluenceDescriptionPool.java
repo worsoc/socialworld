@@ -1,7 +1,9 @@
 package org.socialworld.datasource.pool;
 
+import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.descriptions.EventInfluenceDescription;
 import org.socialworld.core.EventType;
+import org.socialworld.datasource.tablesPool.TablePoolEID;
 
 public class EventInfluenceDescriptionPool extends DescriptionPool {
 
@@ -41,11 +43,59 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 		return description;
 	}
 
+	public void setDescription(int eventType,	int influenceType, EventInfluenceDescription eid) {
+		int index;
+			
+		index = eventType * InfluenceTypePool.CAPACITY_ITP_ARRAY + influenceType;
+		
+		if (index >= 0 & sizeDescriptionsArray > index) 
+			 descriptions[index] = eid;
+		
+	}
+
 	protected void initialize() {
 		// initialize with  dummy descriptions with an expression that returns the invalid "nothing" value
 		for (int index = 0; index < sizeDescriptionsArray; index++)
 			descriptions[index] = new EventInfluenceDescription();
+		
+		loadFromDB();
 	}
+
+	private void loadFromDB() {
+		TablePoolEID tableEID;
+
+		int rowCountEID;
+		int rowEID;
+		
+		int eventType;
+		int influenceType;
+		int exp_id;
+		
+		EventInfluenceDescription eid;
+		Expression exp;
+		
+		tableEID = new TablePoolEID();
+
+
+		tableEID.select(tableEID.SELECT_ALL_COLUMNS, "", "ORDER BY index ");
+		rowCountEID = tableEID.rowCount();
+		
+		if (rowCountEID > 0) {
+				
+			for (rowEID = 0; rowEID < rowCountEID; rowEID++) {
+				eventType = tableEID.getEventType(rowEID);
+				influenceType = tableEID.getInfluenceType(rowEID);
+				
+				exp_id = tableEID.getExpression(rowEID);
+				exp = ExpressionPool.getInstance().getExpression(exp_id);
+						
+				eid = new EventInfluenceDescription(exp);
+				setDescription(eventType, influenceType, eid);
+				
+			}
+		}
+	}
+	
 	
 	/*
 	private void initializeFromFile() {

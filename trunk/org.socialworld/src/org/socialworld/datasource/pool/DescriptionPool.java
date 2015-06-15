@@ -21,27 +21,20 @@
 */
 package org.socialworld.datasource.pool;
 
-import java.util.ArrayList;
-import java.util.ListIterator;
-
-import org.socialworld.calculation.Expression;
 
 public abstract class DescriptionPool {
 
 	protected int sizeDescriptionsArray;
 
-	private static ArrayList<Expression> expressions;
-	private int sizeExpressionsArray;
 
 	protected DescriptionPool() {
 		
-		expressions = new ArrayList<Expression> ();
-		sizeExpressionsArray = 0;
 
 	}
 	
 	protected abstract void initialize();
 	
+/*
 	protected void addExpression(Expression expression) {
 		int ID;
 	
@@ -84,4 +77,5 @@ public abstract class DescriptionPool {
 			}
 		}
 	}
+*/
 }
