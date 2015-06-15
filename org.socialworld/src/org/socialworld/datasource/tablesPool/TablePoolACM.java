@@ -93,7 +93,7 @@ public class TablePoolACM extends Table {
 				col[row] = rs.getInt(3);
 				share[row] = rs.getFloat(4);
 				function[row] = rs.getInt(5);
-				offset[row] = rs.getInt(6);
+				offset[row] = rs.getFloat(6);
 				
 				row++;
 			}
@@ -104,6 +104,7 @@ public class TablePoolACM extends Table {
 		}
 		
 	}
+	
 	public void insert(int index, int row, int col, float share, int function, float offset) {
 		String statement;
 			
