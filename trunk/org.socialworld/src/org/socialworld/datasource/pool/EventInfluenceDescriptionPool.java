@@ -13,7 +13,7 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 	
 	private EventInfluenceDescriptionPool () {
 		
-		sizeDescriptionsArray = EventType.MAX_EVENT_TYPE * InfluenceTypePool.CAPACITY_ITP_ARRAY;
+		sizeDescriptionsArray = EventType.MAX_EVENT_TYPE * GaussPoolInfluenceType.CAPACITY_GPIT_ARRAY;
 		descriptions = new EventInfluenceDescription[sizeDescriptionsArray];
 		
 		
@@ -32,7 +32,7 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 		
 		EventInfluenceDescription description;
 		
-		index = eventType * InfluenceTypePool.CAPACITY_ITP_ARRAY + influenceType;
+		index = eventType * GaussPoolInfluenceType.CAPACITY_GPIT_ARRAY + influenceType;
 		
 		if (index >= 0 & sizeDescriptionsArray > index) 
 			description = descriptions[index];
@@ -46,7 +46,7 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 	public void setDescription(int eventType,	int influenceType, EventInfluenceDescription eid) {
 		int index;
 			
-		index = eventType * InfluenceTypePool.CAPACITY_ITP_ARRAY + influenceType;
+		index = eventType * GaussPoolInfluenceType.CAPACITY_GPIT_ARRAY + influenceType;
 		
 		if (index >= 0 & sizeDescriptionsArray > index) 
 			 descriptions[index] = eid;

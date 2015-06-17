@@ -24,6 +24,8 @@ package org.socialworld.datasource.pool;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_ConditionOperator;
 import org.socialworld.calculation.Expression_Function;
+import org.socialworld.calculation.FunctionBase;
+import org.socialworld.calculation.Value;
 import org.socialworld.datasource.tablesPool.TablePoolExpression;
 
 /**
@@ -81,7 +83,7 @@ public class ExpressionPool {
 		int operation; 
 		int condOp;
 		int func_id;
-		int value;
+		int value_id;
 		int exp1_id;
 		int exp2_id;
 		int exp3_id;
@@ -90,7 +92,9 @@ public class ExpressionPool {
 		Expression exp;
 		Expression expChild;
 
-				
+		FunctionBase function;
+		Value value;
+		
 		tableExp = new TablePoolExpression();
 
 		tableExp.select(tableExp.SELECT_ALL_COLUMNS, "", "ORDER BY exp_id");
@@ -118,11 +122,15 @@ public class ExpressionPool {
 				condOp = tableExp.getConditionOperator(row);
 				exp.setOperator(Expression_ConditionOperator.getName(condOp));
 				
-				// TODO set function
-				func_id = tableExp.getFunction(row);
 				
-				// TODO set value
-				value = tableExp.getValue(row);
+				// TODO circular relations (expressions can be members to functions (see FunctionsByExpression))
+				func_id = tableExp.getFunction(row);
+				function = FunctionPool.getInstance().getFunction(func_id);
+				exp.setFunction(function);
+				
+				value_id = tableExp.getValue(row);
+				value = ValuePool.getInstance().getValue(value_id);
+				exp.setValue(value);
 				
 				exp1_id = tableExp.getExp1(row);
 				expChild = getExpression(exp1_id - 1);
