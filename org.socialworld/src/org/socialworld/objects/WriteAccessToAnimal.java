@@ -22,7 +22,7 @@
 package org.socialworld.objects;
 import org.socialworld.actions.move.Path;
 import org.socialworld.attributes.AttributeArray;
-import org.socialworld.calculation.FunctionByMatrix_Matrix;
+import org.socialworld.calculation.FunctionByMatrix;
 
 public class WriteAccessToAnimal extends WriteAccessToSimulationObject {
 	
@@ -39,7 +39,7 @@ public class WriteAccessToAnimal extends WriteAccessToSimulationObject {
 		if (checkCaller(caller)) animal.setAttributes(attributes, this);
 	}
 
-	public void setMatrix(FunctionByMatrix_Matrix matrix, Object caller) {
+	public void setMatrix(FunctionByMatrix matrix, Object caller) {
 		if (checkCaller(caller)) animal.setMatrix(matrix, this);
 	}
 

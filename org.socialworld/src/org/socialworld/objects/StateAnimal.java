@@ -22,9 +22,8 @@
 package org.socialworld.objects;
 
 import org.socialworld.actions.move.Path;
-import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.AttributeArray;
-import org.socialworld.calculation.FunctionByMatrix_Matrix;
+import org.socialworld.calculation.FunctionByMatrix;
 import org.socialworld.calculation.Vector;
 import org.socialworld.calculation.application.AttributeCalculator;
 import org.socialworld.core.Event;
@@ -37,7 +36,7 @@ import org.socialworld.knowledge.KnownPathsPool;
 public class StateAnimal extends StateSimulationObject {
 
 	private AttributeArray attributes;
-	private FunctionByMatrix_Matrix attributeCalculatorMatrix;
+	private FunctionByMatrix attributeCalculatorMatrix;
 
 	private Vector directionChest;
 	private Vector directionView;
@@ -68,12 +67,12 @@ public class StateAnimal extends StateSimulationObject {
 		return new AttributeArray(this.attributes);
 	}
 	
-	void setMatrix(FunctionByMatrix_Matrix matrix) {
+	public void setMatrix(FunctionByMatrix matrix) {
 		 this.attributeCalculatorMatrix  = matrix;
 	}
 	
-	public FunctionByMatrix_Matrix getMatrix() {
-		return new FunctionByMatrix_Matrix(attributeCalculatorMatrix, Attribute.NUMBER_OF_ATTRIBUTES);
+	public FunctionByMatrix getMatrix() {
+		return this.attributeCalculatorMatrix;
 	}
 
 	public void setDirectionChest(Vector directionChest) {
