@@ -21,8 +21,8 @@
 */
 package org.socialworld.datasource.createObjects;
 
-import org.socialworld.datasource.pool.AttributeArrayPool;
-import org.socialworld.datasource.pool.AttributeCalculatorMatrixPool;
+import org.socialworld.datasource.pool.GaussPoolAttributeArray;
+import org.socialworld.datasource.pool.GaussPoolAttributeCalculatorMatrix;
 import org.socialworld.objects.Animal;
 import org.socialworld.objects.StateAnimal;
 import org.socialworld.objects.WriteAccessToAnimal;
@@ -56,16 +56,6 @@ public class CreateAnimal extends CreateSimulationObjects {
 		
 		super.initObject(object, objectID);
 
-		int indexACMP;
-		double gauss_value;
-
-		gauss_value = random.nextGaussian();
-		indexACMP = mapGaussToIndex(gauss_value, AttributeCalculatorMatrixPool.CAPACITY_ACMP_ARRAY);
-
-		object.setMatrix(	
-				AttributeCalculatorMatrixPool.getInstance().getMatrix(indexACMP),
-				this);
-		
 	}
 
 	protected void initState(StateAnimal state) {
@@ -73,12 +63,20 @@ public class CreateAnimal extends CreateSimulationObjects {
 		super.initState(state);		
 
 		int indexAAP;
+		int indexACMP;
 		double gauss_value;
 
 		gauss_value = random.nextGaussian();
-		indexAAP = mapGaussToIndex(gauss_value, AttributeArrayPool.CAPACITY_AAP_ARRAY);
+		indexAAP = mapGaussToIndex(gauss_value, GaussPoolAttributeArray.CAPACITY_GPAA_ARRAY);
 		state.setAttributes(
-				AttributeArrayPool.getInstance().getArray(indexAAP));
+				GaussPoolAttributeArray.getInstance().getArray(indexAAP));
+		
+		gauss_value = random.nextGaussian();
+		indexACMP = mapGaussToIndex(gauss_value, GaussPoolAttributeCalculatorMatrix.CAPACITY_GPACM_ARRAY);
+
+		state.setMatrix(	
+				GaussPoolAttributeCalculatorMatrix.getInstance().getMatrix(indexACMP));
+
 		
 	}
 
