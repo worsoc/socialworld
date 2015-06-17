@@ -22,7 +22,28 @@
 package org.socialworld.calculation;
 
 public enum Type {
-	integer, longinteger, floatingpoint, string, vector, bool, nothing, actionType,
-	attributeArray, event, action, simulationObject, answer
+	nothing(0), integer(1), longinteger(2), floatingpoint(3), string(4), vector(5), bool(6),  actionType(7),
+	attributeArray(8), event(9), action(10), simulationObject(11), answer(12);
+
+	private int arrayIndex;
+
+	private Type(int index) {
+		this.arrayIndex = index;
+	}
+	
+	/**
+	 * The method returns the type name which belongs to the parameter
+	 * type index.
+	 * 
+	 * @param arrayIndex
+	 *            type index
+	 * @return type name
+	 */
+	public static Type getName(int arrayIndex) {
+		for (Type type : Type.values())
+			if (type.arrayIndex == arrayIndex)
+				return type;
+		return null;
+	}	
 
 }
