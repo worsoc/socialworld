@@ -92,9 +92,7 @@ public  class AttributeCalculator {
 		arguments[0] = new Value(Type.attributeArray, stateAnimal.getAttributes());
 		arguments[1] = new Value(Type.integer, FunctionByMatrix_Matrix.MATRIX_CALCULATION_COMPLEX );
 		
-		// TODO get the function object from animal (not the matrix!)
-		//      --> the function object shouldn't be created here
-		f_AttributesByMatrix = new FunctionByMatrix(stateAnimal.getMatrix());
+		f_AttributesByMatrix = stateAnimal.getMatrix();
 		return  f_AttributesByMatrix.calculate(arguments);
 	}
 	
@@ -106,9 +104,7 @@ public  class AttributeCalculator {
 		arguments[0] = new Value(Type.attributeArray, stateAnimal.getAttributes());
 		arguments[1] = new Value(Type.integer, FunctionByMatrix_Matrix.MATRIX_CALCULATION_SIMPLE);
 		
-		// TODO get the function object from animal (not the matrix!)
-		//      --> the function object shouldn't be created here
-		f_AttributesByMatrix = new FunctionByMatrix(stateAnimal.getMatrix());
+		f_AttributesByMatrix = stateAnimal.getMatrix();
 		return  f_AttributesByMatrix.calculate(arguments);
 	}
 
