@@ -28,7 +28,7 @@ import org.socialworld.actions.move.PathFinder;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.attributes.Position;
 import org.socialworld.core.Event;
-import org.socialworld.calculation.FunctionByMatrix_Matrix;
+import org.socialworld.calculation.FunctionByMatrix;
 import org.socialworld.calculation.Vector;
 import org.socialworld.calculation.application.ActionCreator;
 
@@ -56,11 +56,11 @@ public class Animal extends SimulationObject {
 		
 	}
 
-	void setMatrix(FunctionByMatrix_Matrix matrix,  WriteAccessToAnimal guard) {
+	void setMatrix(FunctionByMatrix matrix,  WriteAccessToAnimal guard) {
 		if (checkGuard(guard) ) this.state.setMatrix( matrix);
 	}
 	
-	public FunctionByMatrix_Matrix getMatrix() {
+	public FunctionByMatrix getMatrix() {
 		return this.state.getMatrix();
 	}
 
