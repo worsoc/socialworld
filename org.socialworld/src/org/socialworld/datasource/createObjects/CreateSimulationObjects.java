@@ -25,10 +25,10 @@ import java.util.Random;
 
 import org.apache.log4j.Logger;
 import org.socialworld.datasource.loadObjects.LoadSimulationObjects;
-import org.socialworld.datasource.pool.InfluenceTypePool;
-import org.socialworld.datasource.pool.PositionPool;
-import org.socialworld.datasource.pool.ReactionTypePool;
-import org.socialworld.datasource.pool.State2ActionTypePool;
+import org.socialworld.datasource.pool.GaussPoolInfluenceType;
+import org.socialworld.datasource.pool.GaussPoolPosition;
+import org.socialworld.datasource.pool.GaussPoolReactionType;
+import org.socialworld.datasource.pool.GaussPoolState2ActionType;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.StateSimulationObject;
 import org.socialworld.objects.WriteAccessToSimulationObject;
@@ -70,16 +70,16 @@ public abstract class CreateSimulationObjects {
 		object.setObjectID(objectID, this);
 	
 		gauss_value = random.nextGaussian();
-		indexITP = mapGaussToIndex(gauss_value, InfluenceTypePool.CAPACITY_ITP_ARRAY);
-		object.setInfluenceTypes(InfluenceTypePool.getInstance().getInfluenceTypes(indexITP), this);
+		indexITP = mapGaussToIndex(gauss_value, GaussPoolInfluenceType.CAPACITY_GPIT_ARRAY);
+		object.setInfluenceTypes(GaussPoolInfluenceType.getInstance().getInfluenceTypes(indexITP), this);
 
 		gauss_value = random.nextGaussian();
-		indexRTP = mapGaussToIndex(gauss_value, ReactionTypePool.CAPACITY_RTP_ARRAY);
-		object.setReactionTypes(ReactionTypePool.getInstance().getReactionTypes(indexRTP), this);
+		indexRTP = mapGaussToIndex(gauss_value, GaussPoolReactionType.CAPACITY_GPRT_ARRAY);
+		object.setReactionTypes(GaussPoolReactionType.getInstance().getReactionTypes(indexRTP), this);
 
 		gauss_value = random.nextGaussian();
-		indexS2AP = mapGaussToIndex(gauss_value, State2ActionTypePool.CAPACITY_S2AP_ARRAY);
-		object.setState2ActionType(State2ActionTypePool.getInstance().getState2ActionType(indexS2AP), this);
+		indexS2AP = mapGaussToIndex(gauss_value, GaussPoolState2ActionType.CAPACITY_GPS2A_ARRAY);
+		object.setState2ActionType(GaussPoolState2ActionType.getInstance().getState2ActionType(indexS2AP), this);
 
 	}
 	
@@ -87,9 +87,9 @@ public abstract class CreateSimulationObjects {
 	protected void initState(StateSimulationObject state) {
 		int indexPosition;
 		
-		indexPosition = random.nextInt(PositionPool.CAPACITY_PosP_ARRAY);
+		indexPosition = random.nextInt(GaussPoolPosition.CAPACITY_GPPos_ARRAY);
 		if (random.nextBoolean() == false) indexPosition = indexPosition * -1;
-		state.setPosition(PositionPool.getInstance().getPosition(indexPosition));
+		state.setPosition(GaussPoolPosition.getInstance().getPosition(indexPosition));
 
 	}
 	
