@@ -32,10 +32,13 @@ import org.socialworld.datasource.mariaDB.Table;
  */
 public class TablePoolAttribute extends Table {
 
-	public final  String 	ALL_COLUMNS 		=	" index, attrib_nr, value ";
+	public final  String 	ALL_COLUMNS 		=	" aa_id, attrib_nr, value ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
-	
-	int index[];
+
+	public final  String 	MAX_ATTRIBNR 		=	" max(attrib_nr) ";
+	public final  int 		SELECT_MAX_ATTRIBNR 	= 2;
+
+	int aa_id[];
 	int attrib_nr[]; 		
 	int value[];
 
@@ -49,6 +52,8 @@ public class TablePoolAttribute extends Table {
 		switch (selectList) {
 		case SELECT_ALL_COLUMNS:
 			return  ALL_COLUMNS;
+		case SELECT_MAX_ATTRIBNR:
+			return  MAX_ATTRIBNR;
 		default:
 			return ALL_COLUMNS;
 		}
@@ -65,16 +70,35 @@ public class TablePoolAttribute extends Table {
 		switch (selectList) {
 		
 		case SELECT_ALL_COLUMNS:
-			index = new int[rowCount];
+			aa_id = new int[rowCount];
 			attrib_nr = new int[rowCount];
 			value = new int[rowCount];
 
 			try {
 				while (rs.next()) {
 					
-					index[row] = rs.getInt(1);
+					aa_id[row] = rs.getInt(1);
 					attrib_nr[row] = rs.getInt(2);
 					value[row] = rs.getInt(3);
+					
+					row++;
+				}
+			}
+			catch (SQLException e) {
+				e.printStackTrace();
+				return;
+			}
+
+			setPK1(aa_id);
+			setPK2(attrib_nr);
+			break;
+		case SELECT_MAX_ATTRIBNR:
+			attrib_nr = new int[rowCount];
+
+			try {
+				while (rs.next()) {
+					
+					attrib_nr[row] = rs.getInt(1);
 					
 					row++;
 				}
@@ -86,14 +110,14 @@ public class TablePoolAttribute extends Table {
 
 			break;
 		default:
-			index = new int[rowCount];
+			aa_id = new int[rowCount];
 			attrib_nr = new int[rowCount];
 			value = new int[rowCount];
 
 			try {
 				while (rs.next()) {
 					
-					index[row] = rs.getInt(1);
+					aa_id[row] = rs.getInt(1);
 					attrib_nr[row] = rs.getInt(2);
 					value[row] = rs.getInt(3);
 					
@@ -104,53 +128,53 @@ public class TablePoolAttribute extends Table {
 				e.printStackTrace();
 				return;
 			}
+			setPK1(aa_id);
+			setPK2(attrib_nr);
 			
 		}
-		setPK1(index);
-		setPK2(attrib_nr);
 
 	}
 
-	public void insert(int index, int attrib_nr, int value) {
+	public void insert(int aa_id, int attrib_nr, int value) {
 		String statement;
 			
-		if ((index > 0) & (attrib_nr > 0)) {
+		if ((aa_id > 0) & (attrib_nr > 0)) {
 			
-			statement 	= "INSERT INTO swpool_attribute (index, attrib_nr, value) VALUES (" + 
-							index + ", " + attrib_nr + ", " + value + ")";
+			statement 	= "INSERT INTO swpool_attribute (aa_id, attrib_nr, value) VALUES (" + 
+							aa_id + ", " + attrib_nr + ", " + value + ")";
 			
 			insert(statement);
 		}
 	}
 	
-	public void update(int index, int attrib_nr, int value) {
+	public void update(int aa_id, int attrib_nr, int value) {
 		String statement;
 			
-		if ((index > 0) & (attrib_nr > 0)) {
+		if ((aa_id > 0) & (attrib_nr > 0)) {
 	
 
 			statement 	= "UPDATE swpool_attribute SET " +
 					"value = " + value  + 
-					" WHERE index = " + index + " AND attrib_nr = " + attrib_nr ;
+					" WHERE aa_id = " + aa_id + " AND attrib_nr = " + attrib_nr ;
 			
 			update(statement);
 		}
 	}
 
-	public void delete(int index, int attrib_nr) {
+	public void delete(int aa_id, int attrib_nr) {
 		String statement;
 			
-		if ((index > 0) & (attrib_nr > 0)) {
+		if ((aa_id > 0) & (attrib_nr > 0)) {
 	
 			statement 	= "DELETE FROM swpool_attribute " +
-					" WHERE index = " + index + " AND attrib_nr = " + attrib_nr ;
+					" WHERE aa_id = " + aa_id + " AND attrib_nr = " + attrib_nr ;
 			
 			delete(statement);
 		}
 	}
 
-	public int getIndex(int index) {
-		return this.index[index];
+	public int getAttributeArrayID(int index) {
+		return this.aa_id[index];
 	}
 
 	public int getAttribNr(int index) {

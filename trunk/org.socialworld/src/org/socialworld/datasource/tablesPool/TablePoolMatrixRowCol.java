@@ -30,21 +30,21 @@ import org.socialworld.datasource.mariaDB.Table;
  * @author Mathias Sikos
  *
  */
-public class TablePoolACM extends Table {
+public class TablePoolMatrixRowCol extends Table {
 
-	public final  String 	ALL_COLUMNS 		=	" index, row, col, share, function, offset ";
+	public final  String 	ALL_COLUMNS 		=	" func_id, row, col, share, function, offset ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 	
-	int index[];
+	int func_id[];
 	int row[]; 		
 	int col[]; 
-	float share[];
+	int share[];
 	int function[];
-	float offset[];
+	int offset[];
 	
 	@Override
 	protected String getTableName() {
-		return "swpool_acm";
+		return "swpool_matrix_rowcol";
 	}
 
 	@Override
@@ -72,28 +72,29 @@ public class TablePoolACM extends Table {
 			selectAllColumns( rs);		
 			
 		}
+		setPK1(func_id);
 
 	}
 
 	private void selectAllColumns(ResultSet rs) {
 		int row = 0;
 		
-		index = new int[rowCount];
+		func_id = new int[rowCount];
 		this.row = new int[rowCount];
 		col = new int[rowCount];
-		share = new float[rowCount];
+		share = new int[rowCount];
 		function = new int[rowCount];
-		offset = new float[rowCount];
+		offset = new int[rowCount];
 
 		try {
 			while (rs.next()) {
 				
-				index[row] = rs.getInt(1);
+				func_id[row] = rs.getInt(1);
 				this.row[row] = rs.getInt(2);
 				col[row] = rs.getInt(3);
-				share[row] = rs.getFloat(4);
+				share[row] = rs.getInt(4);
 				function[row] = rs.getInt(5);
-				offset[row] = rs.getFloat(6);
+				offset[row] = rs.getInt(6);
 				
 				row++;
 			}
@@ -105,74 +106,74 @@ public class TablePoolACM extends Table {
 		
 	}
 	
-	public void insert(int index, int row, int col, float share, int function, float offset) {
+	public void insert(int func_id, int row, int col, int share, int function, int offset) {
 		String statement;
 			
-		if ((index > 0) & (row > 0) & (col > 0)) {
+		if ((func_id > 0) & (row > 0) & (col > 0)) {
 			
-			statement 	= "INSERT INTO swpool_acm (index, row, col, share, function, offset) VALUES (" + 
-							index + ", " + row + ", " + col + ", " + share + ", " + function + ", " + offset +")";
+			statement 	= "INSERT INTO swpool_matrix_rowcol (func_id, row, col, share, function, offset) VALUES (" + 
+							func_id + ", " + row + ", " + col + ", " + share + ", " + function + ", " + offset +")";
 			
 			insert(statement);
 		}
 	}
 	
-	public void updateShare(int index, int row, int col,  float share) {
+	public void updateShare(int func_id, int row, int col,  int share) {
 		String statement;
 			
-		if ((index > 0) & (row > 0) & (col > 0)) {
+		if ((func_id > 0) & (row > 0) & (col > 0)) {
 	
 
-			statement 	= "UPDATE swpool_acm SET " +
+			statement 	= "UPDATE swpool_matrix_rowcol SET " +
 					"share = " + share  + 
-					" WHERE index = " + index + " AND row = " + row + " AND col = " + col;
+					" WHERE func_id = " + func_id + " AND row = " + row + " AND col = " + col;
 			
 			update(statement);
 		}
 	}
 
-	public void updateFunction(int index, int row, int col,  int function) {
+	public void updateFunction(int func_id, int row, int col,  int function) {
 		String statement;
 			
-		if ((index > 0) & (row > 0) & (col > 0)) {
+		if ((func_id > 0) & (row > 0) & (col > 0)) {
 	
 
-			statement 	= "UPDATE swpool_acm SET " +
+			statement 	= "UPDATE swpool_matrix_rowcol SET " +
 					"function = " + function  + 
-					" WHERE index = " + index + " AND row = " + row + " AND col = " + col;
+					" WHERE func_id = " + func_id + " AND row = " + row + " AND col = " + col;
 			
 			update(statement);
 		}
 	}
 
-	public void updateOffset(int index, int row, int col,  float offset) {
+	public void updateOffset(int func_id, int row, int col,  int offset) {
 		String statement;
 			
-		if ((index > 0) & (row > 0) & (col > 0)) {
+		if ((func_id > 0) & (row > 0) & (col > 0)) {
 	
 
-			statement 	= "UPDATE swpool_acm SET " +
+			statement 	= "UPDATE swpool_matrix_rowcol SET " +
 					"offset = " + offset  + 
-					" WHERE index = " + index + " AND row = " + row + " AND col = " + col;
+					" WHERE func_id = " + func_id + " AND row = " + row + " AND col = " + col;
 			
 			update(statement);
 		}
 	}
 
-	public void delete(int index, int row, int col) {
+	public void delete(int func_id, int row, int col) {
 		String statement;
 			
-		if ((index > 0) & (row > 0) & (col > 0)) {
+		if ((func_id > 0) & (row > 0) & (col > 0)) {
 	
-			statement 	= "DELETE FROM swpool_acm " +
-					" WHERE index = " + index + " AND row = " + row + " AND col = " + col;
+			statement 	= "DELETE FROM swpool_matrix_rowcol " +
+					" WHERE func_id = " + func_id + " AND row = " + row + " AND col = " + col;
 						
 			delete(statement);
 		}
 	}
 
-	public int getIndex(int index) {
-		return this.index[index];
+	public int getFunctionID(int index) {
+		return this.func_id[index];
 	}
 
 	public int getRow(int index) {
@@ -183,7 +184,7 @@ public class TablePoolACM extends Table {
 		return col[index];
 	}
 
-	public float getShare(int index) {
+	public int getShare(int index) {
 		return share[index];
 	}
 
@@ -191,7 +192,7 @@ public class TablePoolACM extends Table {
 		return function[index];
 	}
 
-	public float getOffset(int index) {
+	public int getOffset(int index) {
 		return offset[index];
 	}
 
