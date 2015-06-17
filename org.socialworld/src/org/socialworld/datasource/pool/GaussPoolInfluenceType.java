@@ -19,51 +19,50 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-
 package org.socialworld.datasource.pool;
 import org.socialworld.core.EventType;
 
-public class ReactionTypePool {
-	public static final int CAPACITY_RTP_ARRAY = 100;
+public class GaussPoolInfluenceType {
+	public static final int CAPACITY_GPIT_ARRAY = 100;
 
-	private static ReactionTypePool instance;
-
-	private static int[] reactionTypesForPositiveIndex;
-	private static int[] reactionTypesForNegativeIndex;
-
-	private ReactionTypePool() {
-		reactionTypesForPositiveIndex = new int[(CAPACITY_RTP_ARRAY + 1) * EventType.MAX_EVENT_TYPE];
-		reactionTypesForNegativeIndex = new int[(CAPACITY_RTP_ARRAY + 1) * EventType.MAX_EVENT_TYPE];
+	private static GaussPoolInfluenceType instance;
+	
+	private static int[] influenceTypesForPositiveIndex;
+	private static int[] influenceTypesForNegativeIndex;
+	
+	private GaussPoolInfluenceType() {
+		influenceTypesForPositiveIndex = new int[(CAPACITY_GPIT_ARRAY + 1) * EventType.MAX_EVENT_TYPE];
+		influenceTypesForNegativeIndex = new int[(CAPACITY_GPIT_ARRAY + 1) * EventType.MAX_EVENT_TYPE];
 	}
-
-	public static ReactionTypePool getInstance() {
+	
+	public static GaussPoolInfluenceType getInstance() {
 		if (instance == null) {
-			instance = new ReactionTypePool();
+			instance = new GaussPoolInfluenceType();
 		}
 		return instance;
 	}
 
-	public int[] getReactionTypes(int indexByGauss) {
+	public int[] getInfluenceTypes(int indexByGauss) {
 		int types[];
 		int index;
 		
 		types = new int[EventType.MAX_EVENT_TYPE];
-	
+		
+		
 		if (indexByGauss >= 0)
 			for (int eventType = 0; eventType < EventType.MAX_EVENT_TYPE; eventType++){
 				index = indexByGauss * EventType.MAX_EVENT_TYPE  + eventType;
-				types[eventType] = reactionTypesForPositiveIndex[index];
+				types[eventType] = influenceTypesForPositiveIndex[index];
 			}
 		else {
 			indexByGauss = indexByGauss * -1;
 			for (int eventType = 0; eventType < EventType.MAX_EVENT_TYPE; eventType++){
 				index = indexByGauss * EventType.MAX_EVENT_TYPE  + eventType;
-				types[eventType] = reactionTypesForNegativeIndex[index];
+				types[eventType] = influenceTypesForNegativeIndex[index];
 			}
 		}	
-		
+
 		return types;
 	}
 	
-
 }

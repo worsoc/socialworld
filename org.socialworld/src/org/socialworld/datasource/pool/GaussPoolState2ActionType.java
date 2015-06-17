@@ -22,34 +22,34 @@
 package org.socialworld.datasource.pool;
 
 
-public class State2ActionTypePool {
+public class GaussPoolState2ActionType {
 
-	public static final int CAPACITY_S2AP_ARRAY = 100;
+	public static final int CAPACITY_GPS2A_ARRAY = 100;
 
-	private static State2ActionTypePool instance;
+	private static GaussPoolState2ActionType instance;
 	
 	private static int[] state2ActionTypesForPositiveIndex;
 	private static int[] state2ActionTypesForNegativeIndex;
 	
-	private State2ActionTypePool() {
-		state2ActionTypesForPositiveIndex = new int[CAPACITY_S2AP_ARRAY];
-		state2ActionTypesForNegativeIndex = new int[CAPACITY_S2AP_ARRAY];
+	private GaussPoolState2ActionType() {
+		state2ActionTypesForPositiveIndex = new int[CAPACITY_GPS2A_ARRAY];
+		state2ActionTypesForNegativeIndex = new int[CAPACITY_GPS2A_ARRAY];
 	}
 	
-	public static State2ActionTypePool getInstance() {
+	public static GaussPoolState2ActionType getInstance() {
 		if (instance == null) {
-			instance = new State2ActionTypePool();
+			instance = new GaussPoolState2ActionType();
 		}
 		return instance;
 	}
 
 	public int getState2ActionType(int index) {
 		if (index >= 0)
-			if (CAPACITY_S2AP_ARRAY > index)	return state2ActionTypesForPositiveIndex[index];
+			if (CAPACITY_GPS2A_ARRAY > index)	return state2ActionTypesForPositiveIndex[index];
 			else return 0;
 		else {
 			index = index * -1;
-			if (CAPACITY_S2AP_ARRAY > index)	return state2ActionTypesForNegativeIndex[index];
+			if (CAPACITY_GPS2A_ARRAY > index)	return state2ActionTypesForNegativeIndex[index];
 			else return 0;
 		}	
 		

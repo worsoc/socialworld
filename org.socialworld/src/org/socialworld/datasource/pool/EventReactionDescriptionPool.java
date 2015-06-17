@@ -32,7 +32,7 @@ public class EventReactionDescriptionPool extends DescriptionPool {
 	
 	private EventReactionDescriptionPool () {
 		
-		sizeDescriptionsArray = EventType.MAX_EVENT_TYPE * ReactionTypePool.CAPACITY_RTP_ARRAY;
+		sizeDescriptionsArray = EventType.MAX_EVENT_TYPE * GaussPoolReactionType.CAPACITY_GPRT_ARRAY;
 		descriptions = new EventReactionDescription[sizeDescriptionsArray];
 
 		initialize();
@@ -50,7 +50,7 @@ public class EventReactionDescriptionPool extends DescriptionPool {
 
 		EventReactionDescription description = null;
 		
-		index = eventType *  ReactionTypePool.CAPACITY_RTP_ARRAY + reactionType ;
+		index = eventType *  GaussPoolReactionType.CAPACITY_GPRT_ARRAY + reactionType ;
 		
 		if (index >= 0 & sizeDescriptionsArray > index) 	
 			description = descriptions[index];

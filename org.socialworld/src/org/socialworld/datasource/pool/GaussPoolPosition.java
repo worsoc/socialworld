@@ -9,30 +9,30 @@ import java.net.URL;
 import org.socialworld.attributes.Position;
 import org.socialworld.calculation.Vector;
 
-public class PositionPool {
-	public static final int CAPACITY_PosP_ARRAY = 10;
+public class GaussPoolPosition {
+	public static final int CAPACITY_GPPos_ARRAY = 10;
 
-	private static PositionPool instance;
+	private static GaussPoolPosition instance;
 	
 	private static Position positionsForPositiveIndex[];
 	private static int capacityForPositiveIndex;
 	private static Position positionsForNegativeIndex[];
 	private static int capacityForNegativeIndex;
 
-	private PositionPool () {
-		positionsForPositiveIndex = new Position[CAPACITY_PosP_ARRAY];
-		capacityForPositiveIndex = CAPACITY_PosP_ARRAY;
+	private GaussPoolPosition () {
+		positionsForPositiveIndex = new Position[CAPACITY_GPPos_ARRAY];
+		capacityForPositiveIndex = CAPACITY_GPPos_ARRAY;
 
-		positionsForNegativeIndex = new Position[CAPACITY_PosP_ARRAY];
-		capacityForNegativeIndex = CAPACITY_PosP_ARRAY;
+		positionsForNegativeIndex = new Position[CAPACITY_GPPos_ARRAY];
+		capacityForNegativeIndex = CAPACITY_GPPos_ARRAY;
 		
 		
 		initializeFromFile();
 	}
 
-	public static PositionPool getInstance() {
+	public static GaussPoolPosition getInstance() {
 		if (instance == null) {
-			instance = new PositionPool();
+			instance = new GaussPoolPosition();
 		}
 		return instance;
 	}

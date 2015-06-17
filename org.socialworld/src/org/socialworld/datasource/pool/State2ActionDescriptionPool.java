@@ -11,7 +11,7 @@ public class State2ActionDescriptionPool extends DescriptionPool {
 
 	private State2ActionDescriptionPool () {
 		
-		sizeDescriptionsArray = State2ActionTypePool.CAPACITY_S2AP_ARRAY;
+		sizeDescriptionsArray = GaussPoolState2ActionType.CAPACITY_GPS2A_ARRAY;
 		descriptions = new State2ActionDescription[sizeDescriptionsArray];
 		
 		initialize();

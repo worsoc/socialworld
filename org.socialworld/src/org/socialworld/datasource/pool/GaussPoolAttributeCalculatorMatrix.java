@@ -1,60 +1,54 @@
 package org.socialworld.datasource.pool;
 
 
-import org.socialworld.attributes.Attribute;
-import org.socialworld.calculation.FunctionByMatrix_Matrix;
-import org.socialworld.calculation.Type;
-import org.socialworld.calculation.Value;
-import org.socialworld.datasource.tablesPool.TablePoolACM;
+import org.socialworld.calculation.FunctionByMatrix;
+import org.socialworld.datasource.tablesPool.TableGaussACM;
 
-public class AttributeCalculatorMatrixPool {
-	public static final int CAPACITY_ACMP_ARRAY = 100;
+public class GaussPoolAttributeCalculatorMatrix {
+	public static final int CAPACITY_GPACM_ARRAY = 100;
 
-	private static AttributeCalculatorMatrixPool instance;
+	private static GaussPoolAttributeCalculatorMatrix instance;
 	
-	private static FunctionByMatrix_Matrix matrixsForPositiveIndex[];
-	private static FunctionByMatrix_Matrix matrixsForNegativeIndex[];
+	private static FunctionByMatrix matrixsForPositiveIndex[];
+	private static FunctionByMatrix matrixsForNegativeIndex[];
 	
-	private int numberOfAttributes;
 	
-	private AttributeCalculatorMatrixPool () {
-		matrixsForPositiveIndex = new FunctionByMatrix_Matrix[CAPACITY_ACMP_ARRAY];
-		matrixsForNegativeIndex = new FunctionByMatrix_Matrix[CAPACITY_ACMP_ARRAY];
+	private GaussPoolAttributeCalculatorMatrix () {
+		matrixsForPositiveIndex = new FunctionByMatrix[CAPACITY_GPACM_ARRAY];
+		matrixsForNegativeIndex = new FunctionByMatrix[CAPACITY_GPACM_ARRAY];
 		
-		// TODO: must work for different numbers
-		numberOfAttributes = Attribute.NUMBER_OF_ATTRIBUTES;
 		
 		initialize();
 	}
 	
-	public static AttributeCalculatorMatrixPool getInstance() {
+	public static GaussPoolAttributeCalculatorMatrix getInstance() {
 		if (instance == null) {
-			instance = new AttributeCalculatorMatrixPool();
+			instance = new GaussPoolAttributeCalculatorMatrix();
 		}
 		return instance;
 	}
 	
-	public FunctionByMatrix_Matrix getMatrix(int index) {
+	public FunctionByMatrix getMatrix(int index) {
 		if (index >= 0)
-			if (CAPACITY_ACMP_ARRAY > index ) 
+			if (CAPACITY_GPACM_ARRAY > index ) 
 				return matrixsForPositiveIndex[index];
 			else return null;
 		else {
 			index = index * -1;
-			if (CAPACITY_ACMP_ARRAY > index ) 
+			if (CAPACITY_GPACM_ARRAY > index ) 
 				return matrixsForNegativeIndex[index];
 			else return null;
 		}	
 	}
 	
-	private void setMatrix(int index, FunctionByMatrix_Matrix matrix) {
+	private void setMatrix(int index, FunctionByMatrix matrix) {
 		if (index >= 0)
-			if (CAPACITY_ACMP_ARRAY > index ) 
+			if (CAPACITY_GPACM_ARRAY > index ) 
 				matrixsForPositiveIndex[index] = matrix;
 			else ;
 		else {
 			index = index * -1;
-			if (CAPACITY_ACMP_ARRAY > index ) 
+			if (CAPACITY_GPACM_ARRAY > index ) 
 				matrixsForNegativeIndex[index] = matrix;
 			else;
 		}	
@@ -70,50 +64,27 @@ public class AttributeCalculatorMatrixPool {
 	
 	
 	private void loadFromDB() {
-		TablePoolACM table;
+		TableGaussACM table;
 		int rowCount;
 		int row;
 		
-		int index;
-		int matrixIndex;
+		int gauss_index;
+		int func_id;
+		FunctionByMatrix matrix;
 		
-		int lastIndex;
+		table = new TableGaussACM();
 		
-		int functions[];
-		float share;
-		Value shares[];
-		
-		FunctionByMatrix_Matrix matrix;
-		
-		table = new TablePoolACM();
-		
-		table.select(table.SELECT_ALL_COLUMNS, "", "ORDER BY index, row, col ");
+		table.select(table.SELECT_ALL_COLUMNS, "", "");
 		rowCount = table.rowCount();
 		
 		if (rowCount > 0) {
-			lastIndex = table.getIndex(0);
-			functions = new int[64];
-			shares = new Value[64];
-			matrixIndex = 0;
 			
 			for (row = 0; row < rowCount; row++) {
-				index = table.getIndex(row);
-				if (index != lastIndex) {
-					matrix = new FunctionByMatrix_Matrix(numberOfAttributes);
-					matrix.setFunctions( functions);
-					matrix.setShares( shares );
-					setMatrix(lastIndex, matrix);
-					functions = new int[64];
-					shares = new Value[64];
-					lastIndex = index;
-					matrixIndex = 0;
-				}
-				share = table.getShare(row);
-				shares[matrixIndex] = 	new Value (Type.floatingpoint, share);
-				functions[matrixIndex] = table.getFunction(row);
-
-				matrixIndex++;
+				gauss_index = table.getGaussIndex(row);
+				func_id = table.getFunctionID(row);
 				
+				matrix = (FunctionByMatrix) FunctionPool.getInstance().getFunction(func_id);
+				setMatrix(gauss_index, matrix);
 			}
 		}
 	}
@@ -192,10 +163,10 @@ public class AttributeCalculatorMatrixPool {
 					vorzeichen = 1;
 					count = 0;
 					// find the nearest free index
-					// but only CAPACITY_ACMP_ARRAY tries
+					// but only CAPACITY_GPACM_ARRAY tries
 					if (index >= 0) {
-						while (count < CAPACITY_ACMP_ARRAY) 
-							if (index < CAPACITY_ACMP_ARRAY && index >= 0 && matrixsForPositiveIndex[index] == null ) {
+						while (count < CAPACITY_GPACM_ARRAY) 
+							if (index < CAPACITY_GPACM_ARRAY && index >= 0 && matrixsForPositiveIndex[index] == null ) {
 								matrixsForPositiveIndex[index] = matrix;
 								break;
 							}
@@ -207,8 +178,8 @@ public class AttributeCalculatorMatrixPool {
 					}
 					else {
 						index = index * -1;
-						while (count < CAPACITY_ACMP_ARRAY) 
-							if (index < CAPACITY_ACMP_ARRAY && index > 0 && matrixsForNegativeIndex[index] == null ) {
+						while (count < CAPACITY_GPACM_ARRAY) 
+							if (index < CAPACITY_GPACM_ARRAY && index > 0 && matrixsForNegativeIndex[index] == null ) {
 								matrixsForNegativeIndex[index] = matrix;
 								break;
 							}

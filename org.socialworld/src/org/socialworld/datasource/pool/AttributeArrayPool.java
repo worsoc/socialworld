@@ -7,16 +7,14 @@ import org.socialworld.datasource.tablesPool.TablePoolAttribute;
 
 public class AttributeArrayPool {
 
-	public static final int CAPACITY_AAP_ARRAY = 100;
+	public static final int CAPACITY_AAP_ARRAY = 1000;
 
 	private static AttributeArrayPool instance;
 	
-	private static AttributeArray attributesForPositiveIndex[];
-	private static AttributeArray attributesForNegativeIndex[];
+	private static AttributeArray attributeArrays[];
 	
 	private AttributeArrayPool () {
-		attributesForPositiveIndex = new AttributeArray[CAPACITY_AAP_ARRAY];
-		attributesForNegativeIndex = new AttributeArray[CAPACITY_AAP_ARRAY];
+		attributeArrays = new AttributeArray[CAPACITY_AAP_ARRAY];
 		
 		initialize();
 	}
@@ -27,35 +25,19 @@ public class AttributeArrayPool {
 		}
 		return instance;
 	}
-	
-	public AttributeArray getArray(int index) {
-		if (index >= 0)
-			if (CAPACITY_AAP_ARRAY > index ) 
-				return attributesForPositiveIndex[index];
-			else return null;
-		else {
-			index = index * -1;
-			if (CAPACITY_AAP_ARRAY > index ) 
-				return attributesForNegativeIndex[index];
-			else return null;
-		}	
-		
-	}
 
 	private void setArray(int index, AttributeArray array) {
 		if (index >= 0)
-			if (CAPACITY_AAP_ARRAY > index ) 
-				attributesForPositiveIndex[index] = array;
-			else ;
-		else {
-			index = index * -1;
-			if (CAPACITY_AAP_ARRAY > index ) 
-				attributesForNegativeIndex[index] = array;
-			else;
-		}	
+			if (CAPACITY_AAP_ARRAY > index ) 	attributeArrays[index] = array;
 		
 	}
 	
+	public AttributeArray getArray(int index) {
+		if (index >= 0)
+			if (CAPACITY_AAP_ARRAY > index ) 	return attributeArrays[index];
+	   return null;
+	}
+
 	private void initialize() {
 		
 		loadFromDB();
@@ -68,38 +50,43 @@ public class AttributeArrayPool {
 		int rowCount;
 		int row;
 		
-		int index;
+		int aa_id;
+		int lastAAID;
+		int maxAttribNr;
 		int attrib_nr; 
 		int attribIndex;
 		int value;
 		
-		int lastIndex;
 		
 		int values[];
 		AttributeArray array;
 		
 		table = new TablePoolAttribute();
 		
-		table.select(table.SELECT_ALL_COLUMNS, "", "ORDER BY index, attrib_nr ");
+		table.select(table.SELECT_ALL_COLUMNS, "", "ORDER BY aa_id ASC, attrib_nr DESC");
 		rowCount = table.rowCount();
 		
 		if (rowCount > 0) {
-			lastIndex = table.getIndex(0);
+			lastAAID = -1;
 			values = new int[Attribute.NUMBER_OF_ATTRIBUTES];
 			
 			for (row = 0; row < rowCount; row++) {
-				index = table.getIndex(row);
-				if (index != lastIndex) {
-					array = new AttributeArray(values);
-					setArray(lastIndex, array);
-					values = new int[Attribute.NUMBER_OF_ATTRIBUTES];
-					lastIndex = index;
+				aa_id = table.getAttributeArrayID(row);
+				if (aa_id != lastAAID) {
+					maxAttribNr = table.getAttribNr(row);
+					values = new int[maxAttribNr];
+					lastAAID = aa_id;
 				}
 				attrib_nr = table.getAttribNr(row);
 				attribIndex = attrib_nr - 1;
 				value = table.getValue(row);
 				values[attribIndex] = value;
-				
+
+				if (attribIndex == 0) {
+					array = new AttributeArray(values);
+					setArray(aa_id, array);
+				}
+
 			}
 		}
 	}
