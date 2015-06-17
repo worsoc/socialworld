@@ -125,6 +125,16 @@ public class FunctionByMatrix_Matrix {
 	}
 
 	/**
+	 * This method sets all offsets of the calculation matrix  at one time
+	 * We assume that the quantity of array entries is equal to the quantity of matrix elements.
+	 * @param offsets
+	 *            the offsets to set
+	 */
+	public void setOffsets( Value offsets[]) {
+		this.offsets = offsets;
+	}
+
+	/**
 	 * @param offset
 	 *            the offset to set
 	 */
