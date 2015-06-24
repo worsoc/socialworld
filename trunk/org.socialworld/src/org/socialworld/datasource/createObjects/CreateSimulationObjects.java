@@ -62,30 +62,33 @@ public abstract class CreateSimulationObjects {
 	
 
 	protected void initObject(WriteAccessToSimulationObject object, int objectID) {
-		int indexITP; 
-		int indexRTP; 
-		int indexS2AP; 
-		double gauss_value;
 		
 		object.setObjectID(objectID, this);
 	
-		gauss_value = random.nextGaussian();
-		indexITP = mapGaussToIndex(gauss_value, GaussPoolInfluenceType.CAPACITY_GPIT_ARRAY);
-		object.setInfluenceTypes(GaussPoolInfluenceType.getInstance().getInfluenceTypes(indexITP), this);
-
-		gauss_value = random.nextGaussian();
-		indexRTP = mapGaussToIndex(gauss_value, GaussPoolReactionType.CAPACITY_GPRT_ARRAY);
-		object.setReactionTypes(GaussPoolReactionType.getInstance().getReactionTypes(indexRTP), this);
-
-		gauss_value = random.nextGaussian();
-		indexS2AP = mapGaussToIndex(gauss_value, GaussPoolState2ActionType.CAPACITY_GPS2A_ARRAY);
-		object.setState2ActionType(GaussPoolState2ActionType.getInstance().getState2ActionType(indexS2AP), this);
-
 	}
 	
 
 	protected void initState(StateSimulationObject state) {
 		int indexPosition;
+
+		int indexGPIT; 
+		int indexGPRT; 
+		int indexGPS2A; 
+		
+		double gauss_value;
+		
+	
+		gauss_value = random.nextGaussian();
+		indexGPIT = mapGaussToIndex(gauss_value, GaussPoolInfluenceType.CAPACITY_GPIT_ARRAY);
+		state.setInfluenceTypes(GaussPoolInfluenceType.getInstance().getInfluenceTypes(indexGPIT));
+
+		gauss_value = random.nextGaussian();
+		indexGPRT = mapGaussToIndex(gauss_value, GaussPoolReactionType.CAPACITY_GPRT_ARRAY);
+		state.setReactionTypes(GaussPoolReactionType.getInstance().getReactionTypes(indexGPRT));
+
+		gauss_value = random.nextGaussian();
+		indexGPS2A = mapGaussToIndex(gauss_value, GaussPoolState2ActionType.CAPACITY_GPS2A_ARRAY);
+		state.setState2ActionType(GaussPoolState2ActionType.getInstance().getState2ActionType(indexGPS2A));
 		
 		indexPosition = random.nextInt(GaussPoolPosition.CAPACITY_GPPos_ARRAY);
 		if (random.nextBoolean() == false) indexPosition = indexPosition * -1;
