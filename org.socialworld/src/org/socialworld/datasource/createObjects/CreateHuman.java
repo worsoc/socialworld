@@ -23,7 +23,6 @@ package org.socialworld.datasource.createObjects;
 
 import org.socialworld.SimpleClientActionHandler;
 import org.socialworld.objects.Human;
-import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.StateHuman;
 import org.socialworld.objects.WriteAccessToHuman;
 
@@ -31,7 +30,7 @@ import org.socialworld.objects.WriteAccessToHuman;
  * @author Mathias Sikos
  *
  */
-public class CreateHuman extends CreateSimulationObjects {
+public class CreateHuman extends CreateAnimal {
 
 	private static CreateHuman instance;
 	
@@ -41,7 +40,7 @@ public class CreateHuman extends CreateSimulationObjects {
 	}
 
 	@Override
-	public SimulationObject getObject(int objectID) {
+	public Human getObject(int objectID) {
 		StateHuman state = new StateHuman();
 		initState(state);
 		

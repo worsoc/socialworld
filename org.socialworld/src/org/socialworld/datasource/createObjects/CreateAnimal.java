@@ -62,20 +62,20 @@ public class CreateAnimal extends CreateSimulationObjects {
 
 		super.initState(state);		
 
-		int indexAAP;
-		int indexACMP;
+		int indexGPAA;
+		int indexGPACM;
 		double gauss_value;
 
 		gauss_value = random.nextGaussian();
-		indexAAP = mapGaussToIndex(gauss_value, GaussPoolAttributeArray.CAPACITY_GPAA_ARRAY);
+		indexGPAA = mapGaussToIndex(gauss_value, GaussPoolAttributeArray.CAPACITY_GPAA_ARRAY);
 		state.setAttributes(
-				GaussPoolAttributeArray.getInstance().getArray(indexAAP));
+				GaussPoolAttributeArray.getInstance().getArray(indexGPAA));
 		
 		gauss_value = random.nextGaussian();
-		indexACMP = mapGaussToIndex(gauss_value, GaussPoolAttributeCalculatorMatrix.CAPACITY_GPACM_ARRAY);
+		indexGPACM = mapGaussToIndex(gauss_value, GaussPoolAttributeCalculatorMatrix.CAPACITY_GPACM_ARRAY);
 
 		state.setMatrix(	
-				GaussPoolAttributeCalculatorMatrix.getInstance().getMatrix(indexACMP));
+				GaussPoolAttributeCalculatorMatrix.getInstance().getMatrix(indexGPACM));
 
 		
 	}
