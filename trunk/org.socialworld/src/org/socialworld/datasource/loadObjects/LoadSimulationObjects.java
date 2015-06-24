@@ -89,7 +89,7 @@ public abstract class LoadSimulationObjects {
 
 	protected void initObject(WriteAccessToSimulationObject object, int objectID) {
 		
-		
+/*		
 		if (rowTableObjects >= 0) {
 			int state2ActionType;
 			state2ActionType = tableObjects.getType(rowTableObjects);
@@ -105,13 +105,30 @@ public abstract class LoadSimulationObjects {
 			reactionTypes = tableReactionByEvent.getTypes(rowTableReactionByEvent);
 			object.setReactionTypes(reactionTypes, this);
 		}
-
+*/
 	}
 	
 
 	protected void initState(StateSimulationObject state, int objectID) {
 		int x,y,z;
+	
 		
+		if (rowTableObjects >= 0) {
+			int state2ActionType;
+			state2ActionType = tableObjects.getType(rowTableObjects);
+			state.setState2ActionType(state2ActionType);
+		}	
+		if (rowTableInfluenceByEvent >= 0) {
+			int influenceTypes[];
+			influenceTypes = tableInfluenceByEvent.getTypes(rowTableInfluenceByEvent);
+			state.setInfluenceTypes(influenceTypes);
+		}	
+		if (rowTableReactionByEvent >= 0) {
+			int reactionTypes[];
+			reactionTypes = tableReactionByEvent.getTypes(rowTableReactionByEvent);
+			state.setReactionTypes(reactionTypes);
+		}
+
 		if (rowTablePositions >= 0) {
 			x = tablePositions.getX(rowTablePositions);
 			y = tablePositions.getY(rowTablePositions);
