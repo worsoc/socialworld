@@ -27,12 +27,12 @@ public class GaussPoolInfluenceType {
 
 	private static GaussPoolInfluenceType instance;
 	
-	private static int[] influenceTypesForPositiveIndex;
-	private static int[] influenceTypesForNegativeIndex;
+	private static int[][] influenceTypesForPositiveIndex;
+	private static int[][] influenceTypesForNegativeIndex;
 	
 	private GaussPoolInfluenceType() {
-		influenceTypesForPositiveIndex = new int[(CAPACITY_GPIT_ARRAY + 1) * EventType.MAX_EVENT_TYPE];
-		influenceTypesForNegativeIndex = new int[(CAPACITY_GPIT_ARRAY + 1) * EventType.MAX_EVENT_TYPE];
+		influenceTypesForPositiveIndex = new int[CAPACITY_GPIT_ARRAY][ EventType.MAX_EVENT_TYPE];
+		influenceTypesForNegativeIndex = new int[CAPACITY_GPIT_ARRAY][ EventType.MAX_EVENT_TYPE];
 	}
 	
 	public static GaussPoolInfluenceType getInstance() {
@@ -44,22 +44,13 @@ public class GaussPoolInfluenceType {
 
 	public int[] getInfluenceTypes(int indexByGauss) {
 		int types[];
-		int index;
-		
-		types = new int[EventType.MAX_EVENT_TYPE];
 		
 		
 		if (indexByGauss >= 0)
-			for (int eventType = 0; eventType < EventType.MAX_EVENT_TYPE; eventType++){
-				index = indexByGauss * EventType.MAX_EVENT_TYPE  + eventType;
-				types[eventType] = influenceTypesForPositiveIndex[index];
-			}
+			types = influenceTypesForPositiveIndex[indexByGauss];
 		else {
 			indexByGauss = indexByGauss * -1;
-			for (int eventType = 0; eventType < EventType.MAX_EVENT_TYPE; eventType++){
-				index = indexByGauss * EventType.MAX_EVENT_TYPE  + eventType;
-				types[eventType] = influenceTypesForNegativeIndex[index];
-			}
+			types = influenceTypesForNegativeIndex[indexByGauss];
 		}	
 
 		return types;

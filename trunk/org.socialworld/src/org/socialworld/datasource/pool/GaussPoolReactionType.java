@@ -28,12 +28,12 @@ public class GaussPoolReactionType {
 
 	private static GaussPoolReactionType instance;
 
-	private static int[] reactionTypesForPositiveIndex;
-	private static int[] reactionTypesForNegativeIndex;
+	private static int[][] reactionTypesForPositiveIndex;
+	private static int[][] reactionTypesForNegativeIndex;
 
 	private GaussPoolReactionType() {
-		reactionTypesForPositiveIndex = new int[(CAPACITY_GPRT_ARRAY + 1) * EventType.MAX_EVENT_TYPE];
-		reactionTypesForNegativeIndex = new int[(CAPACITY_GPRT_ARRAY + 1) * EventType.MAX_EVENT_TYPE];
+		reactionTypesForPositiveIndex = new int[CAPACITY_GPRT_ARRAY][ EventType.MAX_EVENT_TYPE];
+		reactionTypesForNegativeIndex = new int[CAPACITY_GPRT_ARRAY][ EventType.MAX_EVENT_TYPE];
 	}
 
 	public static GaussPoolReactionType getInstance() {
@@ -45,21 +45,12 @@ public class GaussPoolReactionType {
 
 	public int[] getReactionTypes(int indexByGauss) {
 		int types[];
-		int index;
-		
-		types = new int[EventType.MAX_EVENT_TYPE];
 	
 		if (indexByGauss >= 0)
-			for (int eventType = 0; eventType < EventType.MAX_EVENT_TYPE; eventType++){
-				index = indexByGauss * EventType.MAX_EVENT_TYPE  + eventType;
-				types[eventType] = reactionTypesForPositiveIndex[index];
-			}
+				types = reactionTypesForPositiveIndex[indexByGauss];
 		else {
 			indexByGauss = indexByGauss * -1;
-			for (int eventType = 0; eventType < EventType.MAX_EVENT_TYPE; eventType++){
-				index = indexByGauss * EventType.MAX_EVENT_TYPE  + eventType;
-				types[eventType] = reactionTypesForNegativeIndex[index];
-			}
+			types = reactionTypesForNegativeIndex[indexByGauss];
 		}	
 		
 		return types;
