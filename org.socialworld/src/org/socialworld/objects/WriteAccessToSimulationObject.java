@@ -22,6 +22,7 @@
 package org.socialworld.objects;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.Position;
+import org.socialworld.objects.access.HiddenSimulationObject;
 import org.socialworld.objects.access.IHiddenStateBox;
 
 public class WriteAccessToSimulationObject {
@@ -46,6 +47,15 @@ public class WriteAccessToSimulationObject {
 		isDummy = true;
 	}
 
+	protected long nextToken() {
+		// TODO
+		return 1;
+	}
+	
+	HiddenSimulationObject getMeHidden() {
+		return new HiddenSimulationObject(this, nextToken());
+	}
+	
 	public SimulationObject getObject() {
 		return this.object;
 	}
@@ -71,7 +81,7 @@ public class WriteAccessToSimulationObject {
 		case "org.socialworld.actions.move.ActionMove":
 			return true;
 
-		case "org.socialworld.calculation.application.EventInfluenceCalculator":
+		case "org.socialworld.objects.access.HiddenSimulationObject":
 			return true;
 			
 		case "org.socialworld.datasource.LoadAnimal":
@@ -101,7 +111,7 @@ public class WriteAccessToSimulationObject {
 	}
 
 	public void setPosition(Position pos, Object caller) {
-		if (checkCaller(caller)) object.setPosition(pos, this);
+		if (checkCaller(caller)) objectsState.setPosition(pos, this);
 	}
 	
 	public void setAction(AbstractAction action, Object caller) {
@@ -109,15 +119,15 @@ public class WriteAccessToSimulationObject {
 	}
 
 	public void setInfluenceTypes(int types[], Object caller) {
-		if (checkCaller(caller)) object.setInfluenceTypes(types, this);
+		if (checkCaller(caller)) objectsState.setInfluenceTypes(types, this);
 	}
 
 	public void setReactionTypes(int types[], Object caller) {
-		if (checkCaller(caller)) object.setReactionTypes(types, this);
+		if (checkCaller(caller)) objectsState.setReactionTypes(types, this);
 	}
 
 	public void setState2ActionType(int type, Object caller) {
-		if (checkCaller(caller)) object.setState2ActionType(type, this);
+		if (checkCaller(caller)) objectsState.setState2ActionType(type, this);
 	}
 	
 

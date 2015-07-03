@@ -135,27 +135,29 @@ public class LoadHuman extends LoadAnimal {
 		load(objectID);
 		
 		StateHuman state = new StateHuman();
-		initState(state,  objectID);
-		
+
 		WriteAccessToHuman human = new WriteAccessToHuman(createdHuman, state);
+
+		initState(human,  objectID);
+		
 		initObject(human,  objectID);	
 
 		SimpleClientActionHandler.getInstance().setHumanWrite(objectID, human);
 
 	}
 
-	protected void initObject(WriteAccessToHuman object, int objectID) {
-		super.initObject(object,  objectID);
+	protected void initObject(WriteAccessToHuman waHuman, int objectID) {
+		super.initObject(waHuman,  objectID);
 	}
 
-	protected void initState(StateHuman state, int objectID) {
-		super.initState(state,  objectID);	
+	protected void initState(WriteAccessToHuman waHuman, int objectID) {
+		super.initState(waHuman,  objectID);	
 		
 		
 		if (rowTableHuman >= 0) {
 			String lastSentence;
 			lastSentence = tableHuman.getLastSentence(rowTableHuman);
-			state.setLastSaidSentence(lastSentence);
+			waHuman.setLastSaidSentence(lastSentence,  this);
 		}
 		if (rowTableInventory >= 0) {
 			Inventory inventory;
@@ -184,15 +186,15 @@ public class LoadHuman extends LoadAnimal {
 			}
 			inventory.setLeftHand(leftHand);
 			inventory.setRightHand(rightHand);
-			state.setInventory(inventory);
+			waHuman.setInventory(inventory, this);
 		}
 
-		setKnowledgePool(state,  objectID);
-		setAcquaintancePool(state,  objectID);
-		setTalks(state,  objectID);
+		setKnowledgePool(waHuman,  objectID);
+		setAcquaintancePool(waHuman,  objectID);
+		setTalks(waHuman,  objectID);
 	}
 
-	private void setKnowledgePool(StateHuman state, int objectID) {
+	private void setKnowledgePool(WriteAccessToHuman waHuman, int objectID) {
 		int size;
 		int index;
 		int rowTableKnowledgePool;
@@ -205,13 +207,13 @@ public class LoadHuman extends LoadAnimal {
 			if (rowTableKnowledgePool >= 0) {
 				word_id = tableKnowledgePool.getSubject(rowTableKnowledgePool);
 				kfs_id = tableKnowledgePool.getKFSID(rowTableKnowledgePool);
-				setKnowledge(state, word_id, kfs_id);
+				setKnowledge(waHuman, word_id, kfs_id);
 			}
 		}
 		
 	}
 	
-	private void setKnowledge(StateHuman state, int subject, int kfs_id) {
+	private void setKnowledge(WriteAccessToHuman waHuman, int subject, int kfs_id) {
 		int allLfdNrForKFSID[];
 		int size;
 		int index;
@@ -252,11 +254,11 @@ public class LoadHuman extends LoadAnimal {
 				sources[index] = new KnowledgeSource(sourceType, origin);
 			}
 		}
-		state.addKnowledge(new Knowledge(AllWords.getWord(subject), facts, sources ));
+		waHuman.addKnowledge(new Knowledge(AllWords.getWord(subject), facts, sources ), this);
 	}
 
 
-	private void setAcquaintancePool(StateHuman state, int objectID) {
+	private void setAcquaintancePool(WriteAccessToHuman waHuman, int objectID) {
 		int size;
 		int index;
 		int partner_id;
@@ -270,13 +272,13 @@ public class LoadHuman extends LoadAnimal {
 			tableAcquaintance.select(tableAcquaintance.SELECT_ALL_COLUMNS, " WHERE id = " + objectID +  " AND partner_id = partner_id " , " ORDER BY attrib_nr");
 			
 			attributes = tableAcquaintance.getAttributes();
-			state.addAcquaintance(new Acquaintance((Human)allObjects.get(partner_id), new AttributeArray(attributes) ));
+			waHuman.addAcquaintance(new Acquaintance((Human)allObjects.get(partner_id), new AttributeArray(attributes) ), this);
 			
 		}
 		
 	}
 
-	private void setTalks(StateHuman state, int objectID) {
+	private void setTalks(WriteAccessToHuman waHuman, int objectID) {
 		int size;
 		int index;
 		int partner_id;

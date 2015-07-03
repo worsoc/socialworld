@@ -19,39 +19,26 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.datasource.createObjects;
+package org.socialworld.objects.access;
 
-import org.socialworld.objects.Magic;
-import org.socialworld.objects.SimulationObject;
-import org.socialworld.objects.StateSimulationObject;
-import org.socialworld.objects.WriteAccessToSimulationObject;
+import org.socialworld.attributes.AttributeArray;
+import org.socialworld.objects.WriteAccessToAnimal;
 
 /**
  * @author Mathias Sikos
  *
  */
-public class CreateMagic extends CreateSimulationObjects {
-
-	private static CreateMagic instance;
+public class HiddenAnimal extends HiddenSimulationObject {
 	
-	public static CreateMagic getInstance() {
-		if (instance == null)			instance = new CreateMagic();
-		return instance;
+	private WriteAccessToAnimal wa;
+
+	public HiddenAnimal(WriteAccessToAnimal wa, long token) {
+		super(wa, token);
+		this.wa = wa;
 	}
 
-	@Override
-	public SimulationObject getObject(int objectID) {
-		// TODO
-		StateSimulationObject state = new StateSimulationObject();
-		
-		Magic createdMagic = new Magic(objectID);
-		
-		WriteAccessToSimulationObject magic = new WriteAccessToSimulationObject(createdMagic, state);
-		
-		initState(magic);
-		initObject(magic, objectID);	
-		
-		return createdMagic;
-	}
+	public void setAttributes(AttributeArray attributes) {
+		if (isValid()) wa.setAttributes(attributes, this);
 
+	}
 }

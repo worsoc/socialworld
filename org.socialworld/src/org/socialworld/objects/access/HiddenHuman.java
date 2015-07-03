@@ -19,39 +19,38 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.datasource.createObjects;
+package org.socialworld.objects.access;
 
-import org.socialworld.objects.Magic;
-import org.socialworld.objects.SimulationObject;
-import org.socialworld.objects.StateSimulationObject;
-import org.socialworld.objects.WriteAccessToSimulationObject;
+import org.socialworld.conversation.Talk_SentenceType;
+import org.socialworld.knowledge.Answer;
+import org.socialworld.knowledge.KnowledgeSource;
+import org.socialworld.objects.Human;
+import org.socialworld.objects.WriteAccessToHuman;
 
 /**
  * @author Mathias Sikos
  *
  */
-public class CreateMagic extends CreateSimulationObjects {
+public class HiddenHuman extends HiddenAnimal {
 
-	private static CreateMagic instance;
+	private WriteAccessToHuman wa;
+
+	public HiddenHuman(WriteAccessToHuman wa, long token) {
+		super(wa, token);
+		this.wa = wa;
+	}
+
+	public void addSentence(Human partner, Talk_SentenceType type,  String sentence) {
+		if (isValid()) wa.addSentence(partner, type, sentence, this);
+
+	}
+
+	public void addFactsFromSentence(String sentence, KnowledgeSource source) {
+		if (isValid()) wa.addFactsFromSentence(sentence, source, this);
+	}
 	
-	public static CreateMagic getInstance() {
-		if (instance == null)			instance = new CreateMagic();
-		return instance;
+	public void addAnswer(Answer answer,  Human partner) {
+		if (isValid()) wa.addAnswer(answer, partner, this);
 	}
-
-	@Override
-	public SimulationObject getObject(int objectID) {
-		// TODO
-		StateSimulationObject state = new StateSimulationObject();
-		
-		Magic createdMagic = new Magic(objectID);
-		
-		WriteAccessToSimulationObject magic = new WriteAccessToSimulationObject(createdMagic, state);
-		
-		initState(magic);
-		initObject(magic, objectID);	
-		
-		return createdMagic;
-	}
-
+	
 }

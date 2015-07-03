@@ -43,24 +43,26 @@ public class CreateAnimal extends CreateSimulationObjects {
 	@Override
 	public Animal getObject(int objectID) {
 		StateAnimal state = new StateAnimal();
-		initState(state);
 		
 		Animal createdAnimal = new Animal(objectID);
+
 		WriteAccessToAnimal animal = new WriteAccessToAnimal(createdAnimal, state);
+
+		initState(animal);
 		initObject(animal, objectID);	
 		
 		return createdAnimal;
 	}
 
-	protected void initObject(WriteAccessToAnimal object, int objectID) {
+	protected void initObject(WriteAccessToAnimal waAnimal, int objectID) {
 		
-		super.initObject(object, objectID);
+		super.initObject(waAnimal, objectID);
 
 	}
 
-	protected void initState(StateAnimal state) {
+	protected void initState(WriteAccessToAnimal waAnimal) {
 
-		super.initState(state);		
+		super.initState(waAnimal);		
 
 		int indexGPAA;
 		int indexGPACM;
@@ -68,14 +70,14 @@ public class CreateAnimal extends CreateSimulationObjects {
 
 		gauss_value = random.nextGaussian();
 		indexGPAA = mapGaussToIndex(gauss_value, GaussPoolAttributeArray.CAPACITY_GPAA_ARRAY);
-		state.setAttributes(
-				GaussPoolAttributeArray.getInstance().getArray(indexGPAA));
+		waAnimal.setAttributes(
+				GaussPoolAttributeArray.getInstance().getArray(indexGPAA), this);
 		
 		gauss_value = random.nextGaussian();
 		indexGPACM = mapGaussToIndex(gauss_value, GaussPoolAttributeCalculatorMatrix.CAPACITY_GPACM_ARRAY);
 
-		state.setMatrix(	
-				GaussPoolAttributeCalculatorMatrix.getInstance().getMatrix(indexGPACM));
+		waAnimal.setMatrix(	
+				GaussPoolAttributeCalculatorMatrix.getInstance().getMatrix(indexGPACM), this);
 
 		
 	}

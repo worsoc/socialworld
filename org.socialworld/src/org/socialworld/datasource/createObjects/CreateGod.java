@@ -44,12 +44,12 @@ public class CreateGod extends CreateSimulationObjects {
 		// TODO
 		StateSimulationObject state = new StateSimulationObject();
 		
-		initState(state);
-		
 		God createdGod = new God(objectID);
+		
 		WriteAccessToSimulationObject god = new WriteAccessToSimulationObject(createdGod, state);
 		
 
+		initState(god);
 		initObject(god, objectID);	
 		
 		return createdGod;

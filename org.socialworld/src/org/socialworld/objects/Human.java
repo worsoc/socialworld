@@ -22,7 +22,6 @@
 package org.socialworld.objects;
 
 import org.socialworld.actions.attack.IWeapon;
-import org.socialworld.attributes.Inventory;
 import org.socialworld.knowledge.Acquaintance;
 import org.socialworld.knowledge.Answer;
 import org.socialworld.conversation.Talk_SentenceType;
@@ -50,17 +49,6 @@ import org.socialworld.conversation.Talk_SentenceType;
 	void init() {
 	}
 	
-
-	
-	/**
-	 * @param inventory
-	 *            the inventory to set
-	 */
-	void setInventory(final Inventory inventory, WriteAccessToHuman guard) {
-		if (checkGuard(guard) ) 
-			this.state.setInventory(inventory);
-	}
-
 		
 	public String getSentence(Human partner, Talk_SentenceType type) {
 		return this.state.findSentence( partner,  type);
@@ -70,15 +58,7 @@ import org.socialworld.conversation.Talk_SentenceType;
 		return this.state.getLastSaidSentence();
 	}
 
-	void addSentence(Human partner, Talk_SentenceType type,  String sentence, WriteAccessToHuman guard) {
-		if (checkGuard(guard) ) 
-			this.state.addSentence( partner,  type,   sentence);
-	}
 
-	void addAnswer(Answer answer,  Human partner, WriteAccessToHuman guard) {
-		if (checkGuard(guard) ) 
-			this.state.addAnswer( answer,   partner);
-	}
 	
 	public Answer getAnswerForQuestion(String question) {
 		// no copy

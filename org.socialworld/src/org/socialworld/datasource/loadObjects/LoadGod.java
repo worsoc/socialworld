@@ -64,9 +64,11 @@ public class LoadGod extends LoadSimulationObjects {
 	
 		// TODO
 		StateSimulationObject state = new StateSimulationObject();
-		initState(state,  objectID);
-		
+
 		WriteAccessToSimulationObject god = new WriteAccessToSimulationObject(createdGod, state);
+		
+		initState(god,  objectID);
+		
 		initObject(god,  objectID);	
 		
 	}

@@ -42,10 +42,12 @@ public class CreateHuman extends CreateAnimal {
 	@Override
 	public Human getObject(int objectID) {
 		StateHuman state = new StateHuman();
-		initState(state);
 		
 		Human createdHuman = new Human(objectID);
+		
 		WriteAccessToHuman human = new WriteAccessToHuman(createdHuman, state);
+
+		initState(human);
 		initObject(human, objectID);	
 
 		SimpleClientActionHandler.getInstance().setHumanWrite(objectID, human);

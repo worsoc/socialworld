@@ -98,10 +98,6 @@ public abstract class SimulationObject extends ListenedBase {
 		if (this.guard == guard ) this.objectID = objectID;	
 	}
 
-	void setPosition (Position pos, WriteAccessToSimulationObject guard) {
-		if (this.guard == guard) 
-			this.state.setPosition(pos);
-	}
 
 	public void setAction(AbstractAction newAction, WriteAccessToSimulationObject guard) {
 
@@ -111,17 +107,6 @@ public abstract class SimulationObject extends ListenedBase {
 		}
 	}
 
-	void setInfluenceTypes (int types[], WriteAccessToSimulationObject guard) {
-		if (this.guard == guard) this.state.setInfluenceTypes(types);
-	}
-
-	void setReactionTypes (int types[], WriteAccessToSimulationObject guard) {
-		if (this.guard == guard) this.state.setReactionTypes(types);
-	}
-
-	void setState2ActionType (int type, WriteAccessToSimulationObject guard) {
-		if (this.guard == guard) this.state.setState2ActionType( type);
-	}
 	
 	public void addAction(AbstractAction newAction) {
 		actionHandler.insertAction(newAction);

@@ -31,20 +31,21 @@ import org.socialworld.calculation.descriptions.EventInfluenceAssignment;
 import org.socialworld.calculation.descriptions.EventInfluenceDescription;
 import org.socialworld.core.Event;
 import org.socialworld.objects.StateAnimal;
+import org.socialworld.objects.access.HiddenAnimal;
 
 
 public  class AttributeCalculator {
 
 
 
-	public final static void calculateAttributesChangedByEvent(Event event, StateAnimal stateAnimal) {
+	public final static void calculateAttributesChangedByEvent(Event event, StateAnimal stateAnimal, HiddenAnimal hiddenWriteAccess) {
 		
 		Value returnAttributeArray;
 		
 		returnAttributeArray = getAttributesChangedByEvent(event, stateAnimal);
 		
 		if (returnAttributeArray.isValid()) {
-			stateAnimal.setAttributes((AttributeArray) returnAttributeArray.getValue());
+			hiddenWriteAccess.setAttributes((AttributeArray) returnAttributeArray.getValue());
 		}
 		
 	}

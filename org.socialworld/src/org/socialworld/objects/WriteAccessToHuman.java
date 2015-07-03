@@ -21,25 +21,65 @@
 */
 package org.socialworld.objects;
 
+import java.util.ArrayList;
+
 import org.socialworld.attributes.Inventory;
-//import org.socialworld.conversation.Talk_SentenceType;
+import org.socialworld.conversation.Talk;
+import org.socialworld.conversation.Talk_SentenceType;
+import org.socialworld.knowledge.Acquaintance;
+import org.socialworld.knowledge.Answer;
+import org.socialworld.knowledge.Knowledge;
+import org.socialworld.knowledge.KnowledgeSource;
 
 public class WriteAccessToHuman extends WriteAccessToAnimal {
 
 	private  Human human;
+	private  StateHuman	humanState;
 	
 	public WriteAccessToHuman(Human human, StateHuman state) {
 		super(human, state);
 		this.human = human;
+		this.humanState = state;
+		this.human.init();
 	}
 	
 	public void setInventory(Inventory inventory, Object caller) {
-		if (checkCaller(caller)) human.setInventory(inventory, this);
+		if (checkCaller(caller)) humanState.setInventory(inventory, this);
 	}
 
-	/*
-	public void addSentence(Human partner, Talk_SentenceType type, String sentence, Object caller) {
-		if (checkCaller(caller)) human.addSentence(partner, type, sentence, this);
+	
+	public void setTalks(ArrayList<Talk> talks, Object caller) {
+		if (checkCaller(caller)) humanState.setTalks(talks, this);
 	}
-	*/
+	
+	
+	public void addSentence(Human partner, Talk_SentenceType type,  String sentence,  Object caller) {
+		if (checkCaller(caller)) humanState.addSentence(partner, type, sentence, this);
+	}
+
+	public void addAnswer(Answer answer,  Human partner, Object caller) {
+		if (checkCaller(caller)) humanState.addAnswer(answer, partner, this);
+	}
+
+	public void addFactsFromSentence(String sentence, KnowledgeSource source, Object caller) {
+		if (checkCaller(caller)) humanState.addFactsFromSentence(sentence, source, this);
+	}
+
+	public void addKnowledge(Knowledge knowledge, Object caller) {
+		if (checkCaller(caller)) humanState.addKnowledge(knowledge, this);
+	}
+
+	public void addAcquaintance(Acquaintance acquaintance, Object caller) {
+		if (checkCaller(caller)) humanState.addAcquaintance(acquaintance, this);
+	}
+
+	
+	public void setLastSaidSentence(String sentence, Object caller) {
+		if (checkCaller(caller)) humanState.setLastSaidSentence(sentence, this);
+	}
+	
+	
+	
+	
+	
 }

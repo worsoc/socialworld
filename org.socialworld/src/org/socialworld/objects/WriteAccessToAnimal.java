@@ -23,27 +23,50 @@ package org.socialworld.objects;
 import org.socialworld.actions.move.Path;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.calculation.FunctionByMatrix;
+import org.socialworld.calculation.Vector;
+import org.socialworld.objects.access.HiddenAnimal;
+import org.socialworld.objects.access.HiddenSimulationObject;
 
 public class WriteAccessToAnimal extends WriteAccessToSimulationObject {
 	
 	private  Animal animal;
+	private StateAnimal animalState;
 	
 	public WriteAccessToAnimal(Animal animal, StateAnimal state) {
 		super(animal, state);
 		this.animal = animal;
+		this.animalState = state;
 		this.animal.init();
 	}
 	
 	
+	HiddenSimulationObject getMeHidden() {
+		return new HiddenAnimal(this, nextToken());
+	}
+
 	public void setAttributes(AttributeArray attributes, Object caller) {
-		if (checkCaller(caller)) animal.setAttributes(attributes, this);
+		if (checkCaller(caller)) animalState.setAttributes(attributes, this);
 	}
 
 	public void setMatrix(FunctionByMatrix matrix, Object caller) {
-		if (checkCaller(caller)) animal.setMatrix(matrix, this);
+		if (checkCaller(caller)) animalState.setMatrix(matrix, this);
 	}
 
 	public void addPath(Path path, Object caller) {
-		if (checkCaller(caller)) animal.addPath(path, this);
+		if (checkCaller(caller)) animalState.addPath(path, this);
 	}
+	
+	
+	public void setDirectionChest(Vector directionChest, Object caller) {
+		if (checkCaller(caller)) animalState.setDirectionChest(directionChest, this);
+	}
+
+	public void setDirectionView(Vector directionView, Object caller) {
+		if (checkCaller(caller)) animalState.setDirectionView(directionView, this);
+	}
+
+	public void setDirectionMove(Vector directionMove, Object caller) {
+		if (checkCaller(caller)) animalState.setDirectionMove(directionMove, this);
+	}
+
 }
