@@ -30,7 +30,6 @@ import org.socialworld.datasource.tablesSimulation.TableInfluenceByEvent;
 import org.socialworld.datasource.tablesSimulation.TableObject;
 import org.socialworld.datasource.tablesSimulation.TablePosition;
 import org.socialworld.datasource.tablesSimulation.TableReactionByEvent;
-import org.socialworld.objects.StateSimulationObject;
 import org.socialworld.objects.WriteAccessToSimulationObject;
 
 /**
@@ -87,7 +86,7 @@ public abstract class LoadSimulationObjects {
 		
 	}
 
-	protected void initObject(WriteAccessToSimulationObject object, int objectID) {
+	protected void initObject(WriteAccessToSimulationObject waObject, int objectID) {
 		
 /*		
 		if (rowTableObjects >= 0) {
@@ -109,31 +108,31 @@ public abstract class LoadSimulationObjects {
 	}
 	
 
-	protected void initState(StateSimulationObject state, int objectID) {
+	protected void initState(WriteAccessToSimulationObject waObject, int objectID) {
 		int x,y,z;
 	
 		
 		if (rowTableObjects >= 0) {
 			int state2ActionType;
 			state2ActionType = tableObjects.getType(rowTableObjects);
-			state.setState2ActionType(state2ActionType);
+			waObject.setState2ActionType(state2ActionType, this);
 		}	
 		if (rowTableInfluenceByEvent >= 0) {
 			int influenceTypes[];
 			influenceTypes = tableInfluenceByEvent.getTypes(rowTableInfluenceByEvent);
-			state.setInfluenceTypes(influenceTypes);
+			waObject.setInfluenceTypes(influenceTypes, this);
 		}	
 		if (rowTableReactionByEvent >= 0) {
 			int reactionTypes[];
 			reactionTypes = tableReactionByEvent.getTypes(rowTableReactionByEvent);
-			state.setReactionTypes(reactionTypes);
+			waObject.setReactionTypes(reactionTypes, this);
 		}
 
 		if (rowTablePositions >= 0) {
 			x = tablePositions.getX(rowTablePositions);
 			y = tablePositions.getY(rowTablePositions);
 			z = tablePositions.getZ(rowTablePositions);
-			state.setPosition(new Position(new Vector(x,y,z)));
+			waObject.setPosition(new Position(new Vector(x,y,z)), this);
 		}
 
 	}

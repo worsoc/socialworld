@@ -36,6 +36,7 @@ import org.socialworld.knowledge.Answer;
 import org.socialworld.knowledge.Knowledge;
 import org.socialworld.knowledge.KnowledgePool;
 import org.socialworld.knowledge.KnowledgeSource;
+import org.socialworld.objects.access.HiddenHuman;
 
 /**
  * @author Mathias Sikos
@@ -62,47 +63,63 @@ public class StateHuman extends StateAnimal {
 		
 		super.calculateEventInfluence(event);
 		
-		TalkCalculator.calculateTalkChangedByEvent(event, this);
+		TalkCalculator.calculateTalkChangedByEvent(event, ((StateHuman)getMeReadableOnly()), ((HiddenHuman)getMeWritableButHidden() ));
+		
 		
 	}
 
-	public void setTalks(ArrayList<Talk> talks) {
-		this.talks = talks;
+	public void setTalks(ArrayList<Talk> talks, WriteAccessToHuman guard) {
+		if (checkGuard(guard)) {
+			this.talks = talks;
+		}
 	}
 	
-	public void setInventory(Inventory inventory) {
-		this.inventory = inventory;
+	public void setInventory(Inventory inventory, WriteAccessToHuman guard) {
+		if (checkGuard(guard)) {
+			this.inventory = inventory;
+		}
 	}
 	
-	public void addSentence(Human partner, Talk_SentenceType type,  String sentence) {
+	public void addSentence(Human partner, Talk_SentenceType type,  String sentence, WriteAccessToHuman guard) {
+		if (checkGuard(guard)) {
 			Talk talk = findTalk(partner);
 			talk.addSentence(sentence, type);
+		}
 	}
 
-	public void addAnswer(Answer answer,  Human partner) {
-		
-		Talk talk = findTalk(partner);
-		talk.addAnswer(answer);
+	public void addAnswer(Answer answer,  Human partner, WriteAccessToHuman guard) {
+		if (checkGuard(guard)) {
+			Talk talk = findTalk(partner);
+			talk.addAnswer(answer);
+		}
 	}
 
-	public void addFactsFromSentence(String sentence, KnowledgeSource source) {
-		this.knowledge.addFactsFromSentence(sentence, source);
+	public void addFactsFromSentence(String sentence, KnowledgeSource source, WriteAccessToHuman guard) {
+		if (checkGuard(guard)) {
+			this.knowledge.addFactsFromSentence(sentence, source);
+		}
 	}
 
-	public void addKnowledge(Knowledge knowledge) {
-		this.knowledge.addKnowledge(knowledge);
+	public void addKnowledge(Knowledge knowledge, WriteAccessToHuman guard) {
+		if (checkGuard(guard)) {
+			this.knowledge.addKnowledge(knowledge);
+		}
 	}
 
-	public void addAcquaintance(Acquaintance acquaintance) {
-		this.acquaintance.addAcquaintance(acquaintance);
+	public void addAcquaintance(Acquaintance acquaintance, WriteAccessToHuman guard) {
+		if (checkGuard(guard)) {
+			this.acquaintance.addAcquaintance(acquaintance);
+		}
 	}
 
 	public Acquaintance getAcquaintance(Human partner) {
 		return new Acquaintance(this.acquaintance.getAcquaintance(partner));
 	}
 	
-	public void setLastSaidSentence(String sentence) {
-		lastSaidSentence = sentence;
+	public void setLastSaidSentence(String sentence, WriteAccessToHuman guard) {
+		if (checkGuard(guard)) {
+			lastSaidSentence = sentence;
+		}
 	}
 	
 	public String getLastSaidSentence() {

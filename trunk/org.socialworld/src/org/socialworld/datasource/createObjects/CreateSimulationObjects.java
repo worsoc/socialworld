@@ -30,7 +30,6 @@ import org.socialworld.datasource.pool.GaussPoolPosition;
 import org.socialworld.datasource.pool.GaussPoolReactionType;
 import org.socialworld.datasource.pool.GaussPoolState2ActionType;
 import org.socialworld.objects.SimulationObject;
-import org.socialworld.objects.StateSimulationObject;
 import org.socialworld.objects.WriteAccessToSimulationObject;
 
 /**
@@ -61,14 +60,14 @@ public abstract class CreateSimulationObjects {
 	}
 	
 
-	protected void initObject(WriteAccessToSimulationObject object, int objectID) {
+	protected void initObject(WriteAccessToSimulationObject waObject, int objectID) {
 		
-		object.setObjectID(objectID, this);
+		waObject.setObjectID(objectID, this);
 	
 	}
 	
 
-	protected void initState(StateSimulationObject state) {
+	protected void initState(WriteAccessToSimulationObject  waObject) {
 		int indexPosition;
 
 		int indexGPIT; 
@@ -80,19 +79,19 @@ public abstract class CreateSimulationObjects {
 	
 		gauss_value = random.nextGaussian();
 		indexGPIT = mapGaussToIndex(gauss_value, GaussPoolInfluenceType.CAPACITY_GPIT_ARRAY);
-		state.setInfluenceTypes(GaussPoolInfluenceType.getInstance().getInfluenceTypes(indexGPIT));
+		waObject.setInfluenceTypes(GaussPoolInfluenceType.getInstance().getInfluenceTypes(indexGPIT), this);
 
 		gauss_value = random.nextGaussian();
 		indexGPRT = mapGaussToIndex(gauss_value, GaussPoolReactionType.CAPACITY_GPRT_ARRAY);
-		state.setReactionTypes(GaussPoolReactionType.getInstance().getReactionTypes(indexGPRT));
+		waObject.setReactionTypes(GaussPoolReactionType.getInstance().getReactionTypes(indexGPRT), this);
 
 		gauss_value = random.nextGaussian();
 		indexGPS2A = mapGaussToIndex(gauss_value, GaussPoolState2ActionType.CAPACITY_GPS2A_ARRAY);
-		state.setState2ActionType(GaussPoolState2ActionType.getInstance().getState2ActionType(indexGPS2A));
+		waObject.setState2ActionType(GaussPoolState2ActionType.getInstance().getState2ActionType(indexGPS2A), this);
 		
 		indexPosition = random.nextInt(GaussPoolPosition.CAPACITY_GPPos_ARRAY);
 		if (random.nextBoolean() == false) indexPosition = indexPosition * -1;
-		state.setPosition(GaussPoolPosition.getInstance().getPosition(indexPosition));
+		waObject.setPosition(GaussPoolPosition.getInstance().getPosition(indexPosition), this);
 
 	}
 	

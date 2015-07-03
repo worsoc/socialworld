@@ -24,6 +24,7 @@ package org.socialworld.objects;
 import org.socialworld.attributes.Position;
 import org.socialworld.calculation.application.PositionCalculator;
 import org.socialworld.core.Event;
+import org.socialworld.objects.access.HiddenSimulationObject;
 import org.socialworld.propertyChange.ListenedBase;
 
 /**
@@ -33,6 +34,7 @@ import org.socialworld.propertyChange.ListenedBase;
 public class StateSimulationObject extends ListenedBase {
 	
 	private SimulationObject object;
+	private	WriteAccessToSimulationObject guard;
 	
 	private 	Position 		position;
 
@@ -48,36 +50,60 @@ public class StateSimulationObject extends ListenedBase {
 		this.object = object;
 	}
 	
+	HiddenSimulationObject getMeWritableButHidden() {
+		return guard.getMeHidden();
+	}
+	
+	StateSimulationObject getMeReadableOnly() {
+		return this;
+	}
+	
 	SimulationObject getObject() {
 		return object;
 	}
 	
-	public void setPosition(Position position) {
-		this.position = position;
+	final void setWriteAccess(WriteAccessToSimulationObject guard) {
+		if (this.guard == null)  this.guard = guard;
+	}
+
+	final boolean checkGuard(WriteAccessToSimulationObject guard) {
+		return (this.guard == guard);
+	}
+
+	public void setPosition(Position position, WriteAccessToSimulationObject guard) {
+		if (checkGuard(guard)) {
+			this.position = position;
+		}
 	}
 	
 	public Position getPosition() {
 		return new Position(this.position);
 	}
 	
-	public void setInfluenceTypes (int types[]) {
-		this.influenceTypeByEventType = types;
+	public void setInfluenceTypes (int types[], WriteAccessToSimulationObject guard) {
+		if (checkGuard(guard)) {
+			this.influenceTypeByEventType = types;
+		}
 	}
 
 	public int getInfluenceType(int eventType) {
 		 return this.influenceTypeByEventType[eventType];
 	} 
 
-	public void setReactionTypes (int types[]) {
-		this.reactionTypeByEventType = types;
+	public void setReactionTypes (int types[], WriteAccessToSimulationObject guard) {
+		if (checkGuard(guard)) {
+			this.reactionTypeByEventType = types;
+		}
 	}
 
 	public int getReactionType(int eventType) {
 		 return this.reactionTypeByEventType[eventType];
 	} 
 
-	public void setState2ActionType (int type) {
-		this.state2ActionType = type;
+	public void setState2ActionType (int type, WriteAccessToSimulationObject guard) {
+		if (checkGuard(guard)) {
+			this.state2ActionType = type;
+		}
 	}
 
 	public int getState2ActionType() {

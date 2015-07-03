@@ -31,6 +31,7 @@ import org.socialworld.knowledge.KnowledgeSource;
 import org.socialworld.knowledge.KnowledgeSource_Type;
 import org.socialworld.objects.Human;
 import org.socialworld.objects.StateHuman;
+import org.socialworld.objects.access.HiddenHuman;
 
 /**
  * @author Mathias Sikos
@@ -38,7 +39,7 @@ import org.socialworld.objects.StateHuman;
  */
 public class TalkCalculator {
 
-	public final static void calculateTalkChangedByEvent(Event event, StateHuman stateHuman) {
+	public final static void calculateTalkChangedByEvent(Event event, StateHuman stateHuman, HiddenHuman hiddenWriteAccess) {
 		
 		EventType eventType;
 	
@@ -48,17 +49,17 @@ public class TalkCalculator {
 		case listenToStatement:
 		case listenToQuestion:
 		case listenToInstruction:
-			calculateListenTo(event, eventType, stateHuman );
+			calculateListenTo(event, eventType, stateHuman, hiddenWriteAccess );
 			break;
 			
 		case understand:
-			calculateUnderstand(event, eventType, stateHuman);
+			calculateUnderstand(event, eventType, stateHuman, hiddenWriteAccess);
 			break;
 			
 		case answerNormal:
 		case answerScream:
 		case answerWhisper:
-			calculateAnswer(event, eventType, stateHuman);
+			calculateAnswer(event, eventType, stateHuman, hiddenWriteAccess);
 			break;
 			
 			
@@ -67,7 +68,7 @@ public class TalkCalculator {
 		}
 	}
 	
-	private final static void calculateListenTo(Event event, EventType eventType, StateHuman stateHuman) {
+	private final static void calculateListenTo(Event event, EventType eventType, StateHuman stateHuman, HiddenHuman hiddenWriteAccess) {
 		
 		IEventParam params;
 		Value value;
@@ -91,13 +92,13 @@ public class TalkCalculator {
 
 		switch (eventType) {
 		case listenToStatement:
-			stateHuman.addSentence(partner, Talk_SentenceType.partnersSentence, sentence);
+			hiddenWriteAccess.addSentence(partner, Talk_SentenceType.partnersSentence, sentence);
 			break;
 		case listenToQuestion:	
-			stateHuman.addSentence(partner, Talk_SentenceType.partnersQuestion, sentence);
+			hiddenWriteAccess.addSentence(partner, Talk_SentenceType.partnersQuestion, sentence);
 			break;
 		case listenToInstruction:
-			stateHuman.addSentence(partner, Talk_SentenceType.partnersInstruction, sentence);
+			hiddenWriteAccess.addSentence(partner, Talk_SentenceType.partnersInstruction, sentence);
 			break;
 		default:
 			return;
@@ -105,7 +106,7 @@ public class TalkCalculator {
 		
 	}
 
-	private final static void calculateUnderstand(Event event, EventType eventType, StateHuman stateHuman) {
+	private final static void calculateUnderstand(Event event, EventType eventType, StateHuman stateHuman, HiddenHuman hiddenWriteAccess) {
 		IEventParam params;
 		Value value;
 
@@ -129,11 +130,11 @@ public class TalkCalculator {
 			return;
 		
 		source = new KnowledgeSource(KnowledgeSource_Type.heardOf, partner);
-		stateHuman.addFactsFromSentence(sentence, source);
+		hiddenWriteAccess.addFactsFromSentence(sentence, source);
 
 	}
 
-	private final static void calculateAnswer(Event event, EventType eventType, StateHuman stateHuman) {
+	private final static void calculateAnswer(Event event, EventType eventType, StateHuman stateHuman, HiddenHuman hiddenWriteAccess) {
 		IEventParam params;
 		Value value;
 
@@ -159,7 +160,7 @@ public class TalkCalculator {
 		// But it is ignored for talk calculation.
 		
 		
-		stateHuman.addAnswer(answer,  partner); 
+		hiddenWriteAccess.addAnswer(answer,  partner); 
 
 	}
 }

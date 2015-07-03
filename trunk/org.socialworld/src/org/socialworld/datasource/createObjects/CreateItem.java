@@ -43,13 +43,13 @@ public class CreateItem extends CreateSimulationObjects {
 	public SimulationObject getObject(int objectID) {
 		// TODO
 		StateSimulationObject state = new StateSimulationObject();
-		initState(state);
 		
 		Item createdItem = new Item(objectID);
 		
 		WriteAccessToSimulationObject item = new WriteAccessToSimulationObject(createdItem, state);
 		
 
+		initState(item);
 		initObject(item, objectID);	
 		
 		return createdItem;

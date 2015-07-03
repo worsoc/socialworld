@@ -82,38 +82,40 @@ public class LoadAnimal extends LoadSimulationObjects  {
 		load(objectID);
 
 		StateAnimal state = new StateAnimal();
-		initState(state, objectID);
-		
+
 		WriteAccessToAnimal animal = new WriteAccessToAnimal(createdAnimal, state);
+		
+		initState(animal, objectID);
+		
 		initObject(animal,  objectID);	
 		
 	}
 
 	
-	protected void initObject(WriteAccessToAnimal object, int objectID) {
+	protected void initObject(WriteAccessToAnimal waAnimal, int objectID) {
 	
-		super.initObject(object,  objectID);
+		super.initObject(waAnimal,  objectID);
 
 
 
 	}
 
 
-	protected void initState(StateAnimal state, int objectID) {
+	protected void initState(WriteAccessToAnimal waAnimal, int objectID) {
 
-		super.initState(state, objectID);	
+		super.initState(waAnimal, objectID);	
 			
 		
 		int attribs[];
 		
 		attribs = tableAttributes.getAttributes();
-		state.setAttributes(new AttributeArray(attribs));
+		waAnimal.setAttributes(new AttributeArray(attribs), this);
 
 		
 		if (rowTableDirections >= 0) {
-			state.setDirectionChest(new Vector(tableDirections.getChestDirection(rowTableDirections)));
-			state.setDirectionView(new Vector(tableDirections.getViewDirection(rowTableDirections)));
-			state.setDirectionMove(new Vector(tableDirections.getMoveDirection(rowTableDirections)));
+			waAnimal.setDirectionChest(new Vector(tableDirections.getChestDirection(rowTableDirections)), this);
+			waAnimal.setDirectionView(new Vector(tableDirections.getViewDirection(rowTableDirections)), this);
+			waAnimal.setDirectionMove(new Vector(tableDirections.getMoveDirection(rowTableDirections)), this);
 		}
 	}
 

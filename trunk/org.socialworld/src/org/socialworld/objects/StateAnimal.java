@@ -28,6 +28,7 @@ import org.socialworld.calculation.Vector;
 import org.socialworld.calculation.application.AttributeCalculator;
 import org.socialworld.core.Event;
 import org.socialworld.knowledge.KnownPathsPool;
+import org.socialworld.objects.access.HiddenAnimal;
 
 /**
  * @author Mathias Sikos
@@ -55,36 +56,46 @@ public class StateAnimal extends StateSimulationObject {
 		
 		super.calculateEventInfluence(event);
 		
-		AttributeCalculator.calculateAttributesChangedByEvent(event, this);
+		AttributeCalculator.calculateAttributesChangedByEvent(event, ((StateAnimal)getMeReadableOnly()), ((HiddenAnimal)getMeWritableButHidden()));
 		
 	}
 
-	public void setAttributes(AttributeArray attributes) {
-		this.attributes = attributes;
+	public void setAttributes(AttributeArray attributes, WriteAccessToAnimal guard) {
+		if (checkGuard(guard)) {
+			this.attributes = attributes;
+		}
 	}
 	
 	public AttributeArray getAttributes() {
 		return new AttributeArray(this.attributes);
 	}
 	
-	public void setMatrix(FunctionByMatrix matrix) {
-		 this.attributeCalculatorMatrix  = matrix;
+	public void setMatrix(FunctionByMatrix matrix, WriteAccessToAnimal guard) {
+		if (checkGuard(guard)) {
+			this.attributeCalculatorMatrix  = matrix;
+		}
 	}
 	
 	public FunctionByMatrix getMatrix() {
 		return this.attributeCalculatorMatrix;
 	}
 
-	public void setDirectionChest(Vector directionChest) {
-		this.directionChest = directionChest;
+	public void setDirectionChest(Vector directionChest, WriteAccessToAnimal guard) {
+		if (checkGuard(guard)) {
+			this.directionChest = directionChest;
+		}
 	}
 
-	public void setDirectionView(Vector directionView) {
-		this.directionView = directionView;
+	public void setDirectionView(Vector directionView, WriteAccessToAnimal guard) {
+		if (checkGuard(guard)) {
+			this.directionView = directionView;
+		}
 	}
 
-	public void setDirectionMove(Vector directionMove) {
-		this.directionMove = directionMove;
+	public void setDirectionMove(Vector directionMove, WriteAccessToAnimal guard) {
+		if (checkGuard(guard)) {
+			this.directionMove = directionMove;
+		}
 	}
 
 	public Vector getDirectionChest() {
@@ -103,8 +114,10 @@ public class StateAnimal extends StateSimulationObject {
 		return this.knownPathsPool;
 	}
 	
-	public void addPath(Path path)  {
-		this.knownPathsPool.addPath(path);
+	public void addPath(Path path, WriteAccessToAnimal guard)  {
+		if (checkGuard(guard)) {
+			this.knownPathsPool.addPath(path);
+		}
 	}
 
 }

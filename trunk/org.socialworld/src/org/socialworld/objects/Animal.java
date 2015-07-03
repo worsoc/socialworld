@@ -56,18 +56,11 @@ public class Animal extends SimulationObject {
 		
 	}
 
-	void setMatrix(FunctionByMatrix matrix,  WriteAccessToAnimal guard) {
-		if (checkGuard(guard) ) this.state.setMatrix( matrix);
-	}
 	
 	public FunctionByMatrix getMatrix() {
 		return this.state.getMatrix();
 	}
 
-	void setAttributes(AttributeArray array, WriteAccessToAnimal guard) {
-		if (checkGuard(guard) ) 
-			this.state.setAttributes(array);
-	}
 	
 	public AttributeArray getAttributes() {
 		return this.state.getAttributes();
@@ -80,13 +73,6 @@ public class Animal extends SimulationObject {
 		return this.state.getDirectionChest();
 	}
 
-	/**
-	 * @param directionChest the directionChest to set
-	 */
-	void setDirectionChest(Vector directionChest, WriteAccessToAnimal guard) {
-		if (checkGuard(guard))
-			this.state.setDirectionChest(directionChest);
-	}
 
 	/**
 	 * @return the directionView
@@ -95,18 +81,7 @@ public class Animal extends SimulationObject {
 		return this.state.getDirectionView();
 	}
 
-	/**
-	 * @param directionView the directionView to set
-	 */
-	void setDirectionView(Vector directionView, WriteAccessToAnimal guard) {
-		if (checkGuard(guard))
-			this.state.setDirectionView(directionView);
-	}
 
-	public void addPath(Path path, WriteAccessToAnimal guard)  {
-		if (checkGuard(guard))
-			this.state.addPath(path);
-	}
 	
 	public Path findPath(Position end) {
 		// not as a copy
