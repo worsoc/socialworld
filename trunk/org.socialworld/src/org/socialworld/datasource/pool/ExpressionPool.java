@@ -40,6 +40,8 @@ public class ExpressionPool {
 	
 	private static Expression expressions[];
 
+	boolean functionsAreSet = false;
+	
 	private ExpressionPool () {
 		expressions = new Expression[CAPACITY_EP_ARRAY];
 		
@@ -53,16 +55,34 @@ public class ExpressionPool {
 		return instance;
 	}
 
-	private void setExpression(int index, Expression exp) {
-		if (index >= 0)
-			if (CAPACITY_EP_ARRAY > index ) 	expressions[index] = exp;
-		
+	public void setFunctionsToExpressions() {
+		if (!functionsAreSet) {
+			
+			int index;
+			int count;
+			FunctionBase function;
+			
+			count = expressions.length;
+			
+			for (index = 0; index < count; index++) {
+				function = FunctionPool.getInstance().getFunction(expressions[index].getFuncID());
+				expressions[index].setFunction(function);
+			} 
+			
+			functionsAreSet = true;
+		}
 	}
 	
 	public Expression getExpression(int index) {
 		if (index >= 0)
 			if (CAPACITY_EP_ARRAY > index ) 	return expressions[index];
 	   return null;
+	}
+
+	private void setExpression(int index, Expression exp) {
+		if (index >= 0)
+			if (CAPACITY_EP_ARRAY > index ) 	expressions[index] = exp;
+		
 	}
 
 	private void initialize() {
@@ -92,7 +112,6 @@ public class ExpressionPool {
 		Expression exp;
 		Expression expChild;
 
-		FunctionBase function;
 		Value value;
 		
 		tableExp = new TablePoolExpression();
@@ -123,10 +142,11 @@ public class ExpressionPool {
 				exp.setOperator(Expression_ConditionOperator.getName(condOp));
 				
 				
-				// TODO circular relations (expressions can be members to functions (see FunctionsByExpression))
+				// because of circular relations (expressions can be members to functions (see FunctionsByExpression))
+				// we just set the function id to the expressions
+				// later the function id will be mapped to a function object that will be set to the expression
 				func_id = tableExp.getFunction(row);
-				function = FunctionPool.getInstance().getFunction(func_id);
-				exp.setFunction(function);
+				exp.setFuncID(func_id);
 				
 				value_id = tableExp.getValue(row);
 				value = ValuePool.getInstance().getValue(value_id);
