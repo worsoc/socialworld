@@ -198,7 +198,6 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 					line = line.substring(7);
 					line = line.replace("</Const>", "");
 					line = line.trim();
-					// TODO or not
 					//expression.setValue(line);
 					continue;
 				}
