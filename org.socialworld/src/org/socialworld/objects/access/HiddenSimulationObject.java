@@ -41,6 +41,11 @@ public class HiddenSimulationObject {
 		this.isValid = true;
 	}
 	
+	// dummy constructor
+	public HiddenSimulationObject() {
+		this.isValid = false;
+	}
+	
 	protected boolean isValid() {
 		return isValid;
 	}
