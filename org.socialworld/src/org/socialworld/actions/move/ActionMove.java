@@ -31,7 +31,7 @@ import org.socialworld.calculation.Vector;
 import org.socialworld.core.EventByAction;
 import org.socialworld.core.EventType;
 import org.socialworld.objects.Animal;
-import org.socialworld.objects.WriteAccessToAnimal;
+import org.socialworld.objects.access.HiddenAnimal;
 
 /**
  * @author Mathias Sikos
@@ -132,7 +132,7 @@ public class ActionMove extends AbstractAction {
 					path.incrementUsageCounter(1);
 				else
 				{
-					((WriteAccessToAnimal ) getWriteAccess(this)).addPath(path, this);
+					((HiddenAnimal) getHiddenWriteAccessToActor(this)).addPath(path);
 				}
 		}
 		
