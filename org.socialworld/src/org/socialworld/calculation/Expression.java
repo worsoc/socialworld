@@ -41,6 +41,13 @@ public class Expression {
 	
 	Expression_Function operation;
 	Expression_ConditionOperator operator;
+	
+	
+	
+	// because of circular relations (expressions can be members to functions (see FunctionsByExpression))
+	// at first the function id is set to the expressions
+	// later the function id will be mapped to a function object that will be set to the expression
+	private int func_id;
 	FunctionBase function;
 	
 	Value value;
@@ -73,6 +80,14 @@ public class Expression {
 		if (!isValid) this.operator = operator;
 	}
 
+	public void setFuncID(int func_id) {
+		if (!isValid) this.func_id = func_id;
+	}
+	
+	public int getFuncID() {
+		return this.func_id;
+	}
+	
 	public void setFunction(FunctionBase function) {
 		if (!isValid) this.function = function;
 	}
