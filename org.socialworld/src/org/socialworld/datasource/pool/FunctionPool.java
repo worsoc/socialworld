@@ -21,11 +21,14 @@
 */
 package org.socialworld.datasource.pool;
 
+import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.FunctionBase;
+import org.socialworld.calculation.FunctionByExpression;
 import org.socialworld.calculation.FunctionByMatrix;
 import org.socialworld.calculation.FunctionByMatrix_Matrix;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
+import org.socialworld.datasource.tablesPool.TablePoolFunctionExpression;
 import org.socialworld.datasource.tablesPool.TablePoolMatrix;
 import org.socialworld.datasource.tablesPool.TablePoolMatrixRowCol;
 
@@ -69,7 +72,37 @@ public class FunctionPool {
 	private void initialize() {
 		
 		loadMatrixFromDB();
+		loadExpressionFromDB();
 		
+
+	}
+	
+	private void loadExpressionFromDB() {
+		TablePoolFunctionExpression table;
+
+		int rowCount;
+		int row;
+		
+		int func_id;
+
+		int exp_id;
+		Expression exp;
+
+		table = new TablePoolFunctionExpression();
+		table.select(table.SELECT_ALL_COLUMNS, "", "ORDER BY func_id");
+		rowCount = table.rowCount();
+		
+		if (rowCount > 0) {
+			for (row = 0; row < rowCount; row++) {
+				
+				func_id = table.getFunctionID(row);
+				exp_id = table.getExpressionID(row);
+	
+				exp = ExpressionPool.getInstance().getExpression(exp_id);
+				setFunction(func_id, new FunctionByExpression(exp));
+
+			}
+		}
 
 	}
 	
