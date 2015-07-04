@@ -25,7 +25,7 @@ import org.socialworld.attributes.Time;
 import org.socialworld.core.Event;
 import org.socialworld.core.Simulation;
 import org.socialworld.objects.SimulationObject;
-import org.socialworld.objects.WriteAccessToSimulationObject;
+import org.socialworld.objects.access.HiddenSimulationObject;
 
 /**
  * @author Mathias Sikos (tyloesand)
@@ -82,7 +82,7 @@ public abstract class AbstractAction {
 	public static final int MAX_ACTION_WAIT_SECONDS = 60;
 	
 	protected SimulationObject actor;
-	private WriteAccessToSimulationObject writeAccesToActor;
+	private HiddenSimulationObject hiddenWriteAccesToActor;
 	
 	protected ActionType type;
 	protected ActionMode mode;
@@ -100,13 +100,21 @@ public abstract class AbstractAction {
 
 	protected AbstractAction linkedAction;
 
-	public void setActor(WriteAccessToSimulationObject writeAccesToActor) {
-		this.writeAccesToActor = writeAccesToActor;
-		this.actor = writeAccesToActor.getObject();
+	public void setActor(SimulationObject actor, HiddenSimulationObject hiddenWriteAccess) {
+		this.hiddenWriteAccesToActor = hiddenWriteAccess;
+		this.actor = actor;
 	}
 
 	public final void removeWriteAccess() {
-		this.writeAccesToActor = null;
+		this.hiddenWriteAccesToActor = null;
+	}
+
+	protected  final HiddenSimulationObject getHiddenWriteAccessToActor(AbstractAction concreteAction) {
+		if (this == concreteAction )
+			return hiddenWriteAccesToActor;
+		else
+			// dummy
+			return new HiddenSimulationObject();
 	}
 
 	protected void setBaseProperties(final ActionType type, final ActionMode mode,
@@ -136,13 +144,6 @@ public abstract class AbstractAction {
 	}
 
 	
-	protected  final WriteAccessToSimulationObject getWriteAccess(AbstractAction concreteAction) {
-		if (this == concreteAction & writeAccesToActor.checkGrantRightFor(concreteAction))
-			return writeAccesToActor;
-		else
-			// dummy
-			return new WriteAccessToSimulationObject();
-	}
 	
 	public abstract void perform();
 	
