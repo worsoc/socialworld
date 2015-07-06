@@ -23,7 +23,6 @@ package org.socialworld.objects;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.Position;
 import org.socialworld.objects.access.HiddenSimulationObject;
-import org.socialworld.objects.access.IHiddenStateBox;
 
 public class WriteAccessToSimulationObject {
 	private SimulationObject object;
@@ -31,7 +30,7 @@ public class WriteAccessToSimulationObject {
 	
 	boolean isDummy;
 	
-	public WriteAccessToSimulationObject(SimulationObject object, StateSimulationObject state) {
+	public WriteAccessToSimulationObject(SimulationObject object, StateSimulationObject state, HiddenSimulationObject returnHidden) {
 		this.object = object;
 		this.objectsState = state;
 		
@@ -39,7 +38,10 @@ public class WriteAccessToSimulationObject {
 
 		object.setWriteAccess(this);
 		object.setState(state, this);
+		state.setWriteAccess(this);
 		state.setObject(object);
+		
+		returnHidden = getMeHidden();
 	}
 	
 	// Dummy
@@ -52,7 +54,7 @@ public class WriteAccessToSimulationObject {
 		return 1;
 	}
 	
-	HiddenSimulationObject getMeHidden() {
+	public HiddenSimulationObject getMeHidden() {
 		return new HiddenSimulationObject(this, nextToken());
 	}
 	
@@ -60,43 +62,17 @@ public class WriteAccessToSimulationObject {
 		return this.object;
 	}
 	
-	public final void requestForState(IHiddenStateBox box) {
-		box.putStateIntoBox(objectsState);
-	}
-	
-	public final boolean checkGrantRightFor(Object request) {
-		switch (request.getClass().getName()) {
-		case "org.socialworld.actions.move.ActionMove":
-			return true;
-		case "org.socialworld.actions.attack.ActionAttack":
-			return true;
-			
-		default:
-			return false;
-		}
-	}
 	
 	protected final boolean checkCaller(Object caller){
 		switch (caller.getClass().getName()) {
-		case "org.socialworld.actions.move.ActionMove":
-			return true;
 
 		case "org.socialworld.objects.access.HiddenSimulationObject":
 			return true;
+		case "org.socialworld.objects.access.HiddenAnimal":
+			return true;
+		case "org.socialworld.objects.access.HiddenHuman":
+			return true;
 			
-		case "org.socialworld.datasource.LoadAnimal":
-			return true;
-//		case "org.socialworld.datasource.LoadGod":
-//			return true;
-		case "org.socialworld.datasource.LoadHuman":
-			return true;
-//		case "org.socialworld.datasource.LoadItem":
-//			return true;
-//		case "org.socialworld.datasource.LoadMagic":
-//			return true;
-		case "org.socialworld.datasource.LoadSimulationObject":
-			return true;
-
 		case "org.socialworld.SimpleClientActionHandler":
 			// TODO delete, its just for test
 			return true;

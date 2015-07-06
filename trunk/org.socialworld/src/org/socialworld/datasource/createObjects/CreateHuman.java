@@ -25,6 +25,7 @@ import org.socialworld.SimpleClientActionHandler;
 import org.socialworld.objects.Human;
 import org.socialworld.objects.StateHuman;
 import org.socialworld.objects.WriteAccessToHuman;
+import org.socialworld.objects.access.HiddenHuman;
 
 /**
  * @author Mathias Sikos
@@ -41,14 +42,17 @@ public class CreateHuman extends CreateAnimal {
 
 	@Override
 	public Human getObject(int objectID) {
+		HiddenHuman hiddenHuman = null;
+
 		StateHuman state = new StateHuman();
 		
 		Human createdHuman = new Human(objectID);
 		
-		WriteAccessToHuman human = new WriteAccessToHuman(createdHuman, state);
+		// the constructor "returns" the hidden human object
+		WriteAccessToHuman human = new WriteAccessToHuman(createdHuman, state, hiddenHuman);
 
-		initState(human);
-		initObject(human, objectID);	
+		initState(hiddenHuman);
+		initObject(hiddenHuman);	
 
 		SimpleClientActionHandler.getInstance().setHumanWrite(objectID, human);
 

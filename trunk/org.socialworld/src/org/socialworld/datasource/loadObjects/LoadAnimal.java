@@ -29,6 +29,7 @@ import org.socialworld.datasource.tablesSimulation.TableState;
 import org.socialworld.objects.Animal;
 import org.socialworld.objects.StateAnimal;
 import org.socialworld.objects.WriteAccessToAnimal;
+import org.socialworld.objects.access.HiddenAnimal;
 
 public class LoadAnimal extends LoadSimulationObjects  {
 
@@ -77,45 +78,47 @@ public class LoadAnimal extends LoadSimulationObjects  {
 	@Override
 	public  void loadObject(int objectID) {
 		Animal createdAnimal;
+		HiddenAnimal hiddenAnimal = null;
+		
 		createdAnimal = (Animal) allObjects.get(objectID);
 
 		load(objectID);
 
 		StateAnimal state = new StateAnimal();
 
-		WriteAccessToAnimal animal = new WriteAccessToAnimal(createdAnimal, state);
+		// the constructor "returns" the hidden animal object
+		new WriteAccessToAnimal(createdAnimal, state, hiddenAnimal);
 		
-		initState(animal, objectID);
-		
-		initObject(animal,  objectID);	
+		initState(hiddenAnimal, objectID);
+		initObject(hiddenAnimal,  objectID);	
 		
 	}
 
 	
-	protected void initObject(WriteAccessToAnimal waAnimal, int objectID) {
+	protected void initObject(HiddenAnimal hiddenAnimal, int objectID) {
 	
-		super.initObject(waAnimal,  objectID);
+		super.initObject(hiddenAnimal,  objectID);
 
 
 
 	}
 
 
-	protected void initState(WriteAccessToAnimal waAnimal, int objectID) {
+	protected void initState(HiddenAnimal hiddenAnimal, int objectID) {
 
-		super.initState(waAnimal, objectID);	
+		super.initState(hiddenAnimal, objectID);	
 			
 		
 		int attribs[];
 		
 		attribs = tableAttributes.getAttributes();
-		waAnimal.setAttributes(new AttributeArray(attribs), this);
+		hiddenAnimal.setAttributes(new AttributeArray(attribs));
 
 		
 		if (rowTableDirections >= 0) {
-			waAnimal.setDirectionChest(new Vector(tableDirections.getChestDirection(rowTableDirections)), this);
-			waAnimal.setDirectionView(new Vector(tableDirections.getViewDirection(rowTableDirections)), this);
-			waAnimal.setDirectionMove(new Vector(tableDirections.getMoveDirection(rowTableDirections)), this);
+			hiddenAnimal.setDirectionChest(new Vector(tableDirections.getChestDirection(rowTableDirections)));
+			hiddenAnimal.setDirectionView(new Vector(tableDirections.getViewDirection(rowTableDirections)));
+			hiddenAnimal.setDirectionMove(new Vector(tableDirections.getMoveDirection(rowTableDirections)));
 		}
 	}
 

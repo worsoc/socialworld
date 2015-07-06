@@ -32,15 +32,15 @@ public class WriteAccessToAnimal extends WriteAccessToSimulationObject {
 	private  Animal animal;
 	private StateAnimal animalState;
 	
-	public WriteAccessToAnimal(Animal animal, StateAnimal state) {
-		super(animal, state);
+	public WriteAccessToAnimal(Animal animal, StateAnimal state, HiddenAnimal returnHidden) {
+		super(animal, state, returnHidden);
 		this.animal = animal;
 		this.animalState = state;
 		this.animal.init();
 	}
 	
 	
-	HiddenSimulationObject getMeHidden() {
+	public HiddenSimulationObject getMeHidden() {
 		return new HiddenAnimal(this, nextToken());
 	}
 

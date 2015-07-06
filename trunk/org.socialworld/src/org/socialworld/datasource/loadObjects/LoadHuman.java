@@ -42,6 +42,7 @@ import org.socialworld.knowledge.KnowledgeFact_Value;
 import org.socialworld.knowledge.KnowledgeSource;
 import org.socialworld.knowledge.KnowledgeSource_Type;
 import org.socialworld.objects.*;
+import org.socialworld.objects.access.HiddenHuman;
 import org.socialworld.SimpleClientActionHandler;
 
 /**
@@ -130,34 +131,36 @@ public class LoadHuman extends LoadAnimal {
 
 	public void loadObject(int objectID) {
 		Human createdHuman;
+		HiddenHuman hiddenHuman = null;
+		
 		createdHuman = (Human) allObjects.get(objectID);
 	
 		load(objectID);
 		
 		StateHuman state = new StateHuman();
 
-		WriteAccessToHuman human = new WriteAccessToHuman(createdHuman, state);
+		// the constructor "returns" the hidden human object
+		WriteAccessToHuman human = new WriteAccessToHuman(createdHuman, state, hiddenHuman);
 
-		initState(human,  objectID);
-		
-		initObject(human,  objectID);	
+		initState(hiddenHuman,  objectID);
+		initObject(hiddenHuman,  objectID);	
 
 		SimpleClientActionHandler.getInstance().setHumanWrite(objectID, human);
 
 	}
 
-	protected void initObject(WriteAccessToHuman waHuman, int objectID) {
-		super.initObject(waHuman,  objectID);
+	protected void initObject(HiddenHuman hiddenHuman, int objectID) {
+		super.initObject(hiddenHuman,  objectID);
 	}
 
-	protected void initState(WriteAccessToHuman waHuman, int objectID) {
-		super.initState(waHuman,  objectID);	
+	protected void initState(HiddenHuman hiddenHuman, int objectID) {
+		super.initState(hiddenHuman,  objectID);	
 		
 		
 		if (rowTableHuman >= 0) {
 			String lastSentence;
 			lastSentence = tableHuman.getLastSentence(rowTableHuman);
-			waHuman.setLastSaidSentence(lastSentence,  this);
+			hiddenHuman.setLastSaidSentence(lastSentence);
 		}
 		if (rowTableInventory >= 0) {
 			Inventory inventory;
@@ -186,15 +189,15 @@ public class LoadHuman extends LoadAnimal {
 			}
 			inventory.setLeftHand(leftHand);
 			inventory.setRightHand(rightHand);
-			waHuman.setInventory(inventory, this);
+			hiddenHuman.setInventory(inventory);
 		}
 
-		setKnowledgePool(waHuman,  objectID);
-		setAcquaintancePool(waHuman,  objectID);
-		setTalks(waHuman,  objectID);
+		setKnowledgePool(hiddenHuman,  objectID);
+		setAcquaintancePool(hiddenHuman,  objectID);
+		setTalks(hiddenHuman,  objectID);
 	}
 
-	private void setKnowledgePool(WriteAccessToHuman waHuman, int objectID) {
+	private void setKnowledgePool(HiddenHuman hiddenHuman, int objectID) {
 		int size;
 		int index;
 		int rowTableKnowledgePool;
@@ -207,13 +210,13 @@ public class LoadHuman extends LoadAnimal {
 			if (rowTableKnowledgePool >= 0) {
 				word_id = tableKnowledgePool.getSubject(rowTableKnowledgePool);
 				kfs_id = tableKnowledgePool.getKFSID(rowTableKnowledgePool);
-				setKnowledge(waHuman, word_id, kfs_id);
+				setKnowledge(hiddenHuman, word_id, kfs_id);
 			}
 		}
 		
 	}
 	
-	private void setKnowledge(WriteAccessToHuman waHuman, int subject, int kfs_id) {
+	private void setKnowledge(HiddenHuman hiddenHuman, int subject, int kfs_id) {
 		int allLfdNrForKFSID[];
 		int size;
 		int index;
@@ -254,11 +257,11 @@ public class LoadHuman extends LoadAnimal {
 				sources[index] = new KnowledgeSource(sourceType, origin);
 			}
 		}
-		waHuman.addKnowledge(new Knowledge(AllWords.getWord(subject), facts, sources ), this);
+		hiddenHuman.addKnowledge(new Knowledge(AllWords.getWord(subject), facts, sources ));
 	}
 
 
-	private void setAcquaintancePool(WriteAccessToHuman waHuman, int objectID) {
+	private void setAcquaintancePool(HiddenHuman hiddenHuman, int objectID) {
 		int size;
 		int index;
 		int partner_id;
@@ -272,13 +275,13 @@ public class LoadHuman extends LoadAnimal {
 			tableAcquaintance.select(tableAcquaintance.SELECT_ALL_COLUMNS, " WHERE id = " + objectID +  " AND partner_id = partner_id " , " ORDER BY attrib_nr");
 			
 			attributes = tableAcquaintance.getAttributes();
-			waHuman.addAcquaintance(new Acquaintance((Human)allObjects.get(partner_id), new AttributeArray(attributes) ), this);
+			hiddenHuman.addAcquaintance(new Acquaintance((Human)allObjects.get(partner_id), new AttributeArray(attributes) ));
 			
 		}
 		
 	}
 
-	private void setTalks(WriteAccessToHuman waHuman, int objectID) {
+	private void setTalks(HiddenHuman hiddenHuman, int objectID) {
 		int size;
 		int index;
 		int partner_id;

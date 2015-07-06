@@ -30,7 +30,7 @@ import org.socialworld.datasource.pool.GaussPoolPosition;
 import org.socialworld.datasource.pool.GaussPoolReactionType;
 import org.socialworld.datasource.pool.GaussPoolState2ActionType;
 import org.socialworld.objects.SimulationObject;
-import org.socialworld.objects.WriteAccessToSimulationObject;
+import org.socialworld.objects.access.HiddenSimulationObject;
 
 /**
  * Its the basic class for creating simulation objects.
@@ -60,14 +60,12 @@ public abstract class CreateSimulationObjects {
 	}
 	
 
-	protected void initObject(WriteAccessToSimulationObject waObject, int objectID) {
-		
-		waObject.setObjectID(objectID, this);
+	protected void initObject(HiddenSimulationObject hiddenObject) {
 	
 	}
 	
 
-	protected void initState(WriteAccessToSimulationObject  waObject) {
+	protected void initState(HiddenSimulationObject hiddenObject) {
 		int indexPosition;
 
 		int indexGPIT; 
@@ -79,19 +77,19 @@ public abstract class CreateSimulationObjects {
 	
 		gauss_value = random.nextGaussian();
 		indexGPIT = mapGaussToIndex(gauss_value, GaussPoolInfluenceType.CAPACITY_GPIT_ARRAY);
-		waObject.setInfluenceTypes(GaussPoolInfluenceType.getInstance().getInfluenceTypes(indexGPIT), this);
+		hiddenObject.setInfluenceTypes(GaussPoolInfluenceType.getInstance().getInfluenceTypes(indexGPIT));
 
 		gauss_value = random.nextGaussian();
 		indexGPRT = mapGaussToIndex(gauss_value, GaussPoolReactionType.CAPACITY_GPRT_ARRAY);
-		waObject.setReactionTypes(GaussPoolReactionType.getInstance().getReactionTypes(indexGPRT), this);
+		hiddenObject.setReactionTypes(GaussPoolReactionType.getInstance().getReactionTypes(indexGPRT));
 
 		gauss_value = random.nextGaussian();
 		indexGPS2A = mapGaussToIndex(gauss_value, GaussPoolState2ActionType.CAPACITY_GPS2A_ARRAY);
-		waObject.setState2ActionType(GaussPoolState2ActionType.getInstance().getState2ActionType(indexGPS2A), this);
+		hiddenObject.setState2ActionType(GaussPoolState2ActionType.getInstance().getState2ActionType(indexGPS2A));
 		
 		indexPosition = random.nextInt(GaussPoolPosition.CAPACITY_GPPos_ARRAY);
 		if (random.nextBoolean() == false) indexPosition = indexPosition * -1;
-		waObject.setPosition(GaussPoolPosition.getInstance().getPosition(indexPosition), this);
+		hiddenObject.setPosition(GaussPoolPosition.getInstance().getPosition(indexPosition));
 
 	}
 	

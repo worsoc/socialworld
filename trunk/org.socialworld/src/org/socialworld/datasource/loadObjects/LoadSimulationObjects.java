@@ -30,7 +30,7 @@ import org.socialworld.datasource.tablesSimulation.TableInfluenceByEvent;
 import org.socialworld.datasource.tablesSimulation.TableObject;
 import org.socialworld.datasource.tablesSimulation.TablePosition;
 import org.socialworld.datasource.tablesSimulation.TableReactionByEvent;
-import org.socialworld.objects.WriteAccessToSimulationObject;
+import org.socialworld.objects.access.HiddenSimulationObject;
 
 /**
  * Its the basic class for loading simulation objects.
@@ -86,53 +86,37 @@ public abstract class LoadSimulationObjects {
 		
 	}
 
-	protected void initObject(WriteAccessToSimulationObject waObject, int objectID) {
+	protected void initObject(HiddenSimulationObject hiddenObject, int objectID) {
 		
-/*		
-		if (rowTableObjects >= 0) {
-			int state2ActionType;
-			state2ActionType = tableObjects.getType(rowTableObjects);
-			object.setState2ActionType(state2ActionType, this);
-		}	
-		if (rowTableInfluenceByEvent >= 0) {
-			int influenceTypes[];
-			influenceTypes = tableInfluenceByEvent.getTypes(rowTableInfluenceByEvent);
-			object.setInfluenceTypes(influenceTypes, this);
-		}	
-		if (rowTableReactionByEvent >= 0) {
-			int reactionTypes[];
-			reactionTypes = tableReactionByEvent.getTypes(rowTableReactionByEvent);
-			object.setReactionTypes(reactionTypes, this);
-		}
-*/
+
 	}
 	
 
-	protected void initState(WriteAccessToSimulationObject waObject, int objectID) {
+	protected void initState(HiddenSimulationObject hiddenObject, int objectID) {
 		int x,y,z;
 	
 		
 		if (rowTableObjects >= 0) {
 			int state2ActionType;
 			state2ActionType = tableObjects.getType(rowTableObjects);
-			waObject.setState2ActionType(state2ActionType, this);
+			hiddenObject.setState2ActionType(state2ActionType);
 		}	
 		if (rowTableInfluenceByEvent >= 0) {
 			int influenceTypes[];
 			influenceTypes = tableInfluenceByEvent.getTypes(rowTableInfluenceByEvent);
-			waObject.setInfluenceTypes(influenceTypes, this);
+			hiddenObject.setInfluenceTypes(influenceTypes);
 		}	
 		if (rowTableReactionByEvent >= 0) {
 			int reactionTypes[];
 			reactionTypes = tableReactionByEvent.getTypes(rowTableReactionByEvent);
-			waObject.setReactionTypes(reactionTypes, this);
+			hiddenObject.setReactionTypes(reactionTypes);
 		}
 
 		if (rowTablePositions >= 0) {
 			x = tablePositions.getX(rowTablePositions);
 			y = tablePositions.getY(rowTablePositions);
 			z = tablePositions.getZ(rowTablePositions);
-			waObject.setPosition(new Position(new Vector(x,y,z)), this);
+			hiddenObject.setPosition(new Position(new Vector(x,y,z)));
 		}
 
 	}
