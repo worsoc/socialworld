@@ -25,6 +25,7 @@ import org.socialworld.objects.Item;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.StateSimulationObject;
 import org.socialworld.objects.WriteAccessToSimulationObject;
+import org.socialworld.objects.access.HiddenSimulationObject;
 
 /**
  * @author Mathias Sikos
@@ -41,16 +42,18 @@ public class CreateItem extends CreateSimulationObjects {
 	
 	@Override
 	public SimulationObject getObject(int objectID) {
+		HiddenSimulationObject hiddenItem = null;
 		// TODO
 		StateSimulationObject state = new StateSimulationObject();
 		
 		Item createdItem = new Item(objectID);
 		
-		WriteAccessToSimulationObject item = new WriteAccessToSimulationObject(createdItem, state);
+		// the constructor "returns" the hidden item object
+		new WriteAccessToSimulationObject(createdItem, state, hiddenItem);
 		
 
-		initState(item);
-		initObject(item, objectID);	
+		initState(hiddenItem);
+		initObject(hiddenItem);	
 		
 		return createdItem;
 	}

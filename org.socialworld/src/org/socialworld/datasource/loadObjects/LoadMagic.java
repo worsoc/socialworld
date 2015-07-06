@@ -25,6 +25,7 @@ import org.socialworld.collections.SimulationObjectArray;
 import org.socialworld.objects.Magic;
 import org.socialworld.objects.StateSimulationObject;
 import org.socialworld.objects.WriteAccessToSimulationObject;
+import org.socialworld.objects.access.HiddenSimulationObject;
 
 public class LoadMagic extends LoadSimulationObjects {
 
@@ -57,6 +58,8 @@ public class LoadMagic extends LoadSimulationObjects {
 	@Override
 	public void loadObject(int objectID) {
 		Magic createdMagic;
+		HiddenSimulationObject hiddenMagic = null;
+		
 		createdMagic = (Magic) allObjects.get(objectID);
 
 		load(objectID);
@@ -64,10 +67,11 @@ public class LoadMagic extends LoadSimulationObjects {
 		// TODO
 		StateSimulationObject state = new StateSimulationObject();
 		
-		WriteAccessToSimulationObject magic = new WriteAccessToSimulationObject(createdMagic, state);
-		initState(magic,  objectID);
-		
-		initObject(magic,  objectID);	
+		// the constructor "returns" the hidden magic object
+		new WriteAccessToSimulationObject(createdMagic, state, hiddenMagic);
+
+		initState(hiddenMagic,  objectID);
+		initObject(hiddenMagic,  objectID);	
 		
 	}
 

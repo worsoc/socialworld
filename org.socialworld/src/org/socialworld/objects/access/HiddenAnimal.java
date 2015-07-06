@@ -23,6 +23,8 @@ package org.socialworld.objects.access;
 
 import org.socialworld.actions.move.Path;
 import org.socialworld.attributes.AttributeArray;
+import org.socialworld.calculation.FunctionByMatrix;
+import org.socialworld.calculation.Vector;
 import org.socialworld.objects.WriteAccessToAnimal;
 
 /**
@@ -42,8 +44,24 @@ public class HiddenAnimal extends HiddenSimulationObject {
 		if (isValid()) wa.setAttributes(attributes, this);
 	}
 	
+	public void setMatrix(FunctionByMatrix matrix) {
+		if (isValid()) wa.setMatrix(matrix, this);
+	}
+
 	public void addPath(Path path) {
 		if (isValid()) wa.addPath(path, this);
+	}
+
+	public void setDirectionChest(Vector directionChest) {
+		if (isValid()) wa.setDirectionChest(directionChest, this);
+	}
+
+	public void setDirectionView(Vector directionView) {
+		if (isValid()) wa.setDirectionView(directionView, this);
+	}
+
+	public void setDirectionMove(Vector directionMove) {
+		if (isValid()) wa.setDirectionMove(directionMove, this);
 	}
 
 }

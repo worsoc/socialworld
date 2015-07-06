@@ -26,6 +26,7 @@ import org.socialworld.datasource.pool.GaussPoolAttributeCalculatorMatrix;
 import org.socialworld.objects.Animal;
 import org.socialworld.objects.StateAnimal;
 import org.socialworld.objects.WriteAccessToAnimal;
+import org.socialworld.objects.access.HiddenAnimal;
 
 /**
  * @author Mathias Sikos
@@ -42,27 +43,29 @@ public class CreateAnimal extends CreateSimulationObjects {
 		
 	@Override
 	public Animal getObject(int objectID) {
-		StateAnimal state = new StateAnimal();
+		HiddenAnimal hiddenAnimal = null;
 		
+		StateAnimal state = new StateAnimal();
 		Animal createdAnimal = new Animal(objectID);
 
-		WriteAccessToAnimal animal = new WriteAccessToAnimal(createdAnimal, state);
+		// the constructor "returns" the hidden animal object
+		new WriteAccessToAnimal(createdAnimal, state, hiddenAnimal);
 
-		initState(animal);
-		initObject(animal, objectID);	
+		initState(hiddenAnimal);
+		initObject(hiddenAnimal);	
 		
 		return createdAnimal;
 	}
 
-	protected void initObject(WriteAccessToAnimal waAnimal, int objectID) {
+	protected void initObject(HiddenAnimal hiddenAnimal) {
 		
-		super.initObject(waAnimal, objectID);
+		super.initObject(hiddenAnimal);
 
 	}
 
-	protected void initState(WriteAccessToAnimal waAnimal) {
+	protected void initState(HiddenAnimal hiddenAnimal) {
 
-		super.initState(waAnimal);		
+		super.initState(hiddenAnimal);		
 
 		int indexGPAA;
 		int indexGPACM;
@@ -70,14 +73,13 @@ public class CreateAnimal extends CreateSimulationObjects {
 
 		gauss_value = random.nextGaussian();
 		indexGPAA = mapGaussToIndex(gauss_value, GaussPoolAttributeArray.CAPACITY_GPAA_ARRAY);
-		waAnimal.setAttributes(
-				GaussPoolAttributeArray.getInstance().getArray(indexGPAA), this);
+		hiddenAnimal.setAttributes(
+				GaussPoolAttributeArray.getInstance().getArray(indexGPAA));
 		
 		gauss_value = random.nextGaussian();
 		indexGPACM = mapGaussToIndex(gauss_value, GaussPoolAttributeCalculatorMatrix.CAPACITY_GPACM_ARRAY);
-
-		waAnimal.setMatrix(	
-				GaussPoolAttributeCalculatorMatrix.getInstance().getMatrix(indexGPACM), this);
+		hiddenAnimal.setMatrix(	
+				GaussPoolAttributeCalculatorMatrix.getInstance().getMatrix(indexGPACM));
 
 		
 	}

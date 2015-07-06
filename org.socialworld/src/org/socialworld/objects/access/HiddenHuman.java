@@ -21,8 +21,14 @@
 */
 package org.socialworld.objects.access;
 
+import java.util.ArrayList;
+
+import org.socialworld.attributes.Inventory;
+import org.socialworld.conversation.Talk;
 import org.socialworld.conversation.Talk_SentenceType;
+import org.socialworld.knowledge.Acquaintance;
 import org.socialworld.knowledge.Answer;
+import org.socialworld.knowledge.Knowledge;
 import org.socialworld.knowledge.KnowledgeSource;
 import org.socialworld.objects.Human;
 import org.socialworld.objects.WriteAccessToHuman;
@@ -40,9 +46,12 @@ public class HiddenHuman extends HiddenAnimal {
 		this.wa = wa;
 	}
 
+	public void setInventory(Inventory inventory) {
+		if (isValid()) wa.setInventory(inventory, this);
+	}
+
 	public void addSentence(Human partner, Talk_SentenceType type,  String sentence) {
 		if (isValid()) wa.addSentence(partner, type, sentence, this);
-
 	}
 
 	public void addFactsFromSentence(String sentence, KnowledgeSource source) {
@@ -53,4 +62,21 @@ public class HiddenHuman extends HiddenAnimal {
 		if (isValid()) wa.addAnswer(answer, partner, this);
 	}
 	
+	public void setTalks(ArrayList<Talk> talks) {
+		if (isValid()) wa.setTalks(talks, this);
+	}
+	
+	public void addKnowledge(Knowledge knowledge) {
+		if (isValid()) wa.addKnowledge(knowledge, this);
+	}
+
+	public void addAcquaintance(Acquaintance acquaintance) {
+		if (isValid()) wa.addAcquaintance(acquaintance, this);
+	}
+	
+	public void setLastSaidSentence(String sentence) {
+		if (isValid()) wa.setLastSaidSentence(sentence, this);
+	}
+	
+
 }

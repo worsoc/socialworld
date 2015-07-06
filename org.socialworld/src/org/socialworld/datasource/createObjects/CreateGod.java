@@ -25,6 +25,7 @@ import org.socialworld.objects.God;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.StateSimulationObject;
 import org.socialworld.objects.WriteAccessToSimulationObject;
+import org.socialworld.objects.access.HiddenSimulationObject;
 
 /**
  * @author Mathias Sikos
@@ -41,16 +42,18 @@ public class CreateGod extends CreateSimulationObjects {
 
 	@Override
 	public SimulationObject getObject(int objectID) {
+		HiddenSimulationObject hiddenGod = null;
 		// TODO
 		StateSimulationObject state = new StateSimulationObject();
 		
 		God createdGod = new God(objectID);
 		
-		WriteAccessToSimulationObject god = new WriteAccessToSimulationObject(createdGod, state);
+		// the constructor "returns" the hidden god object
+		new WriteAccessToSimulationObject(createdGod, state, hiddenGod);
 		
 
-		initState(god);
-		initObject(god, objectID);	
+		initState(hiddenGod);
+		initObject(hiddenGod);	
 		
 		return createdGod;
 	}

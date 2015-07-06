@@ -30,19 +30,26 @@ import org.socialworld.knowledge.Acquaintance;
 import org.socialworld.knowledge.Answer;
 import org.socialworld.knowledge.Knowledge;
 import org.socialworld.knowledge.KnowledgeSource;
+import org.socialworld.objects.access.HiddenAnimal;
+import org.socialworld.objects.access.HiddenHuman;
+import org.socialworld.objects.access.HiddenSimulationObject;
 
 public class WriteAccessToHuman extends WriteAccessToAnimal {
 
 	private  Human human;
 	private  StateHuman	humanState;
 	
-	public WriteAccessToHuman(Human human, StateHuman state) {
-		super(human, state);
+	public WriteAccessToHuman(Human human, StateHuman state, HiddenAnimal returnHidden) {
+		super(human, state, returnHidden);
 		this.human = human;
 		this.humanState = state;
 		this.human.init();
 	}
-	
+
+	public HiddenSimulationObject getMeHidden() {
+		return new HiddenHuman(this, nextToken());
+	}
+
 	public void setInventory(Inventory inventory, Object caller) {
 		if (checkCaller(caller)) humanState.setInventory(inventory, this);
 	}

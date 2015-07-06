@@ -84,8 +84,6 @@ public class Animal extends SimulationObject {
 
 	
 	public Path findPath(Position end) {
-		// not as a copy
-		// TODO because the findPath() method has to create the copy
 		return this.pathFinder.findPath(end);
 	}
 	
