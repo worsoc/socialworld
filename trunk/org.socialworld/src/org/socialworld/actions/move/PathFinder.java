@@ -174,7 +174,7 @@ public class PathFinder {
 			return null;
 		if (paths.size() == 1) 
 			return paths.get(0);
-		// TODO
+		// TODO implement how to decide which path is choosen
 		return paths.get(0);
 	}
 	

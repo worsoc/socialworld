@@ -159,7 +159,6 @@ public class ActionHandle extends AbstractAction {
 			
 			case touch:
 				switch (mode) {
-				// TODO
 					case hand:
 						return EventType.touchByHand;
 					case foot:
