@@ -49,12 +49,12 @@ public class CreateHuman extends CreateAnimal {
 		Human createdHuman = new Human(objectID);
 		
 		// the constructor "returns" the hidden human object
-		WriteAccessToHuman human = new WriteAccessToHuman(createdHuman, state, hiddenHuman);
+		new WriteAccessToHuman(createdHuman, state, hiddenHuman);
 
 		initState(hiddenHuman);
 		initObject(hiddenHuman);	
 
-		SimpleClientActionHandler.getInstance().setHumanWrite(objectID, human);
+		SimpleClientActionHandler.getInstance().setHumanWrite(objectID, hiddenHuman);
 
 		return createdHuman;
 	}

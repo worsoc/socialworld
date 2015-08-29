@@ -140,12 +140,12 @@ public class LoadHuman extends LoadAnimal {
 		StateHuman state = new StateHuman();
 
 		// the constructor "returns" the hidden human object
-		WriteAccessToHuman human = new WriteAccessToHuman(createdHuman, state, hiddenHuman);
+		new WriteAccessToHuman(createdHuman, state, hiddenHuman);
 
 		initState(hiddenHuman,  objectID);
 		initObject(hiddenHuman,  objectID);	
 
-		SimpleClientActionHandler.getInstance().setHumanWrite(objectID, human);
+		SimpleClientActionHandler.getInstance().setHumanWrite(objectID, hiddenHuman);
 
 	}
 

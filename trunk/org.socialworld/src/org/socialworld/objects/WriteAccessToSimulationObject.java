@@ -63,7 +63,7 @@ public class WriteAccessToSimulationObject {
 	}
 	
 	
-	protected final boolean checkCaller(Object caller){
+	protected final boolean checkCaller(HiddenSimulationObject caller){
 		switch (caller.getClass().getName()) {
 
 		case "org.socialworld.objects.access.HiddenSimulationObject":
@@ -73,36 +73,33 @@ public class WriteAccessToSimulationObject {
 		case "org.socialworld.objects.access.HiddenHuman":
 			return true;
 			
-		case "org.socialworld.SimpleClientActionHandler":
-			// TODO delete, its just for test
-			return true;
 		default:
 			return false;
 		}
 		
 	}
 	
-	public void setObjectID(int objectID, Object caller) {
+	public void setObjectID(int objectID, HiddenSimulationObject caller) {
 		if (checkCaller(caller)) object.setObjectID(objectID, this);
 	}
 
-	public void setPosition(Position pos, Object caller) {
+	public void setPosition(Position pos, HiddenSimulationObject caller) {
 		if (checkCaller(caller)) objectsState.setPosition(pos, this);
 	}
 	
-	public void setAction(AbstractAction action, Object caller) {
+	public void setAction(AbstractAction action, HiddenSimulationObject caller) {
 		if (checkCaller(caller)) object.setAction(action, this);
 	}
 
-	public void setInfluenceTypes(int types[], Object caller) {
+	public void setInfluenceTypes(int types[], HiddenSimulationObject caller) {
 		if (checkCaller(caller)) objectsState.setInfluenceTypes(types, this);
 	}
 
-	public void setReactionTypes(int types[], Object caller) {
+	public void setReactionTypes(int types[], HiddenSimulationObject caller) {
 		if (checkCaller(caller)) objectsState.setReactionTypes(types, this);
 	}
 
-	public void setState2ActionType(int type, Object caller) {
+	public void setState2ActionType(int type, HiddenSimulationObject caller) {
 		if (checkCaller(caller)) objectsState.setState2ActionType(type, this);
 	}
 	

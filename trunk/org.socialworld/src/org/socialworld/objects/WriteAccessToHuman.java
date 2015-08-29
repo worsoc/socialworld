@@ -50,38 +50,38 @@ public class WriteAccessToHuman extends WriteAccessToAnimal {
 		return new HiddenHuman(this, nextToken());
 	}
 
-	public void setInventory(Inventory inventory, Object caller) {
+	public void setInventory(Inventory inventory, HiddenSimulationObject caller) {
 		if (checkCaller(caller)) humanState.setInventory(inventory, this);
 	}
 
 	
-	public void setTalks(ArrayList<Talk> talks, Object caller) {
+	public void setTalks(ArrayList<Talk> talks, HiddenSimulationObject caller) {
 		if (checkCaller(caller)) humanState.setTalks(talks, this);
 	}
 	
 	
-	public void addSentence(Human partner, Talk_SentenceType type,  String sentence,  Object caller) {
+	public void addSentence(Human partner, Talk_SentenceType type,  String sentence,  HiddenSimulationObject caller) {
 		if (checkCaller(caller)) humanState.addSentence(partner, type, sentence, this);
 	}
 
-	public void addAnswer(Answer answer,  Human partner, Object caller) {
+	public void addAnswer(Answer answer,  Human partner, HiddenSimulationObject caller) {
 		if (checkCaller(caller)) humanState.addAnswer(answer, partner, this);
 	}
 
-	public void addFactsFromSentence(String sentence, KnowledgeSource source, Object caller) {
+	public void addFactsFromSentence(String sentence, KnowledgeSource source, HiddenSimulationObject caller) {
 		if (checkCaller(caller)) humanState.addFactsFromSentence(sentence, source, this);
 	}
 
-	public void addKnowledge(Knowledge knowledge, Object caller) {
+	public void addKnowledge(Knowledge knowledge, HiddenSimulationObject caller) {
 		if (checkCaller(caller)) humanState.addKnowledge(knowledge, this);
 	}
 
-	public void addAcquaintance(Acquaintance acquaintance, Object caller) {
+	public void addAcquaintance(Acquaintance acquaintance, HiddenSimulationObject caller) {
 		if (checkCaller(caller)) humanState.addAcquaintance(acquaintance, this);
 	}
 
 	
-	public void setLastSaidSentence(String sentence, Object caller) {
+	public void setLastSaidSentence(String sentence, HiddenSimulationObject caller) {
 		if (checkCaller(caller)) humanState.setLastSaidSentence(sentence, this);
 	}
 	
