@@ -30,6 +30,7 @@ import org.socialworld.knowledge.Acquaintance;
 import org.socialworld.knowledge.Answer;
 import org.socialworld.knowledge.Knowledge;
 import org.socialworld.knowledge.KnowledgeSource;
+import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenAnimal;
 import org.socialworld.objects.access.HiddenHuman;
 import org.socialworld.objects.access.HiddenSimulationObject;
@@ -46,8 +47,8 @@ public class WriteAccessToHuman extends WriteAccessToAnimal {
 		this.human.init();
 	}
 
-	public HiddenSimulationObject getMeHidden() {
-		return new HiddenHuman(this, nextToken());
+	public HiddenSimulationObject getMeHidden(GrantedAccessToProperty properties[]) {
+		return new HiddenHuman(this, properties);
 	}
 
 	public void setInventory(Inventory inventory, HiddenSimulationObject caller) {

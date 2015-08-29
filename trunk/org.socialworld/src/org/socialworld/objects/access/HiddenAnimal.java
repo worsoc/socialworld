@@ -35,33 +35,33 @@ public class HiddenAnimal extends HiddenSimulationObject {
 	
 	private WriteAccessToAnimal wa;
 
-	public HiddenAnimal(WriteAccessToAnimal wa, long token) {
-		super(wa, token);
+	public HiddenAnimal(WriteAccessToAnimal wa, GrantedAccessToProperty properties[]) {
+		super(wa, properties);
 		this.wa = wa;
 	}
 
 	public void setAttributes(AttributeArray attributes) {
-		if (isValid()) wa.setAttributes(attributes, this);
+		wa.setAttributes(attributes, this);
 	}
 	
 	public void setMatrix(FunctionByMatrix matrix) {
-		if (isValid()) wa.setMatrix(matrix, this);
+		wa.setMatrix(matrix, this);
 	}
 
 	public void addPath(Path path) {
-		if (isValid()) wa.addPath(path, this);
+		wa.addPath(path, this);
 	}
 
 	public void setDirectionChest(Vector directionChest) {
-		if (isValid()) wa.setDirectionChest(directionChest, this);
+		wa.setDirectionChest(directionChest, this);
 	}
 
 	public void setDirectionView(Vector directionView) {
-		if (isValid()) wa.setDirectionView(directionView, this);
+		wa.setDirectionView(directionView, this);
 	}
 
 	public void setDirectionMove(Vector directionMove) {
-		if (isValid()) wa.setDirectionMove(directionMove, this);
+		wa.setDirectionMove(directionMove, this);
 	}
 
 }

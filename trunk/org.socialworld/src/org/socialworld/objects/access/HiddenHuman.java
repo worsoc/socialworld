@@ -41,41 +41,41 @@ public class HiddenHuman extends HiddenAnimal {
 
 	private WriteAccessToHuman wa;
 
-	public HiddenHuman(WriteAccessToHuman wa, long token) {
-		super(wa, token);
+	public HiddenHuman(WriteAccessToHuman wa, GrantedAccessToProperty properties[]) {
+		super(wa, properties);
 		this.wa = wa;
 	}
 
 	public void setInventory(Inventory inventory) {
-		if (isValid()) wa.setInventory(inventory, this);
+		wa.setInventory(inventory, this);
 	}
 
 	public void addSentence(Human partner, Talk_SentenceType type,  String sentence) {
-		if (isValid()) wa.addSentence(partner, type, sentence, this);
+		wa.addSentence(partner, type, sentence, this);
 	}
 
 	public void addFactsFromSentence(String sentence, KnowledgeSource source) {
-		if (isValid()) wa.addFactsFromSentence(sentence, source, this);
+		wa.addFactsFromSentence(sentence, source, this);
 	}
 	
 	public void addAnswer(Answer answer,  Human partner) {
-		if (isValid()) wa.addAnswer(answer, partner, this);
+		wa.addAnswer(answer, partner, this);
 	}
 	
 	public void setTalks(ArrayList<Talk> talks) {
-		if (isValid()) wa.setTalks(talks, this);
+		wa.setTalks(talks, this);
 	}
 	
 	public void addKnowledge(Knowledge knowledge) {
-		if (isValid()) wa.addKnowledge(knowledge, this);
+		wa.addKnowledge(knowledge, this);
 	}
 
 	public void addAcquaintance(Acquaintance acquaintance) {
-		if (isValid()) wa.addAcquaintance(acquaintance, this);
+		wa.addAcquaintance(acquaintance, this);
 	}
 	
 	public void setLastSaidSentence(String sentence) {
-		if (isValid()) wa.setLastSaidSentence(sentence, this);
+		wa.setLastSaidSentence(sentence, this);
 	}
 	
 

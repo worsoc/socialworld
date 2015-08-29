@@ -24,6 +24,7 @@ import org.socialworld.actions.move.Path;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.calculation.FunctionByMatrix;
 import org.socialworld.calculation.Vector;
+import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenAnimal;
 import org.socialworld.objects.access.HiddenSimulationObject;
 
@@ -40,8 +41,8 @@ public class WriteAccessToAnimal extends WriteAccessToSimulationObject {
 	}
 	
 	
-	public HiddenSimulationObject getMeHidden() {
-		return new HiddenAnimal(this, nextToken());
+	public HiddenSimulationObject getMeHidden(GrantedAccessToProperty properties[]) {
+		return new HiddenAnimal(this, properties);
 	}
 
 	public void setAttributes(AttributeArray attributes, HiddenSimulationObject caller) {

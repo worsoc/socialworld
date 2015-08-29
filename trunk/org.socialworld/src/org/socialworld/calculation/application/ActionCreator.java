@@ -109,7 +109,7 @@ public class ActionCreator  {
 	 * @param: actor
 	 */
 	private static AbstractAction createReaction(final Event event,	final SimulationObject actor) {
-		// TODO
+		// TODO implement the creation of a reaction to an event  (for simulation objects which aren't animals)
 		return null;
 	}
 	
@@ -149,7 +149,7 @@ public class ActionCreator  {
 	 * @param: actor
 	 */
 	private static AbstractAction createActionByState(final SimulationObject actor) {
-		// TODO
+		// TODO  implement the creation of an action  (for simulation objects which aren't animals)
 		return null;
 	}
 	

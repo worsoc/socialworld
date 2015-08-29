@@ -28,6 +28,7 @@ import org.socialworld.attributes.Position;
 import org.socialworld.core.ActionHandler;
 import org.socialworld.core.Event;
 import org.socialworld.core.Simulation;
+import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.propertyChange.ListenedBase;
 
 /**
@@ -50,6 +51,8 @@ public abstract class SimulationObject extends ListenedBase {
 	private StateSimulationObject state;
 	
 
+	private GrantedAccessToProperty grantAccessToAllProperties[];
+
 	/**
 	 * The constructor creates an incomplete simulation object. It's an "empty" object. There is only the object ID.
 	 * 
@@ -59,6 +62,10 @@ public abstract class SimulationObject extends ListenedBase {
 		this.guard = null;
 		this.simulation = Simulation.getInstance();
 		this.actionHandler = new ActionHandler(this);
+		
+		grantAccessToAllProperties = new GrantedAccessToProperty[1];
+		grantAccessToAllProperties[0] = GrantedAccessToProperty.all;
+
 
 	}
 	
@@ -118,7 +125,7 @@ public abstract class SimulationObject extends ListenedBase {
 	 * @param action
 	 */
 	public void doAction(AbstractAction action) {
-		action.setActor(this, guard.getMeHidden());
+		action.setActor(this, guard.getMeHidden(grantAccessToAllProperties));
 		action.perform();
 		action.removeWriteAccess();
 	}
