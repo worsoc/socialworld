@@ -43,7 +43,7 @@ public class Calculation {
 	private Calculation() {
 		nothing = new Value();
 		
-		// TODO
+		// TODO implement methods for further types
 		zeroInteger = new Value(Type.integer, 0);
 		zeroFloatingPoint = new Value(Type.floatingpoint, 0F);
 		zeroVector = new Value(Type.vector, new Vector(0F, 0F, 0F));
@@ -117,7 +117,6 @@ public class Calculation {
 		Type type;
 		type = op1.getType();
 		
-		// TODO
 		switch (type) {
 		case integer:
 			return ( (int) op1.getValue() == 0 /*(int) getZero(Type.integer).getValue()*/ );
@@ -139,7 +138,6 @@ public class Calculation {
 		Type type;
 		type = op1.getType();
 		
-		// TODO
 		switch (type) {
 		case integer:
 			return ( (int) op1.getValue() > 0 /* (int) getZero(Type.integer).getValue()*/ );
@@ -155,7 +153,6 @@ public class Calculation {
 	}
 	
 	public Value addition(Value op1, Value op2){
-		// TODO
 		switch (op1.getType() ) {
 		case integer:
 			switch (op2.getType() ) {
@@ -181,23 +178,11 @@ public class Calculation {
 		}
 	}
 
-	public Value subtraction(Value op1, Value op2){
-		// TODO
-		switch (op1.getType() ) {
-		case integer:
-			switch (op2.getType() ) {
-			case integer:
-				return createValue(Type.integer, (int) op1.getValue() - (int) op2.getValue() );
-			default:
-				return null;
-			}
-		default:
-			return null;
-		}
+	public Value subtraction(Value op1, Value op2) {
+		return addition(op1, negate(op2));
 	}
 
-	public Value multiplication(Value op1, Value op2){
-		// TODO
+	public Value multiplication(Value op1, Value op2) {
 		switch (op1.getType() ) {
 		case integer:
 			switch (op2.getType() ) {
@@ -222,6 +207,19 @@ public class Calculation {
 		}
 	}
 
+	
+	public Value negate(Value op1) {
+		switch (op1.getType() ) {
+		case integer:
+				return createValue(Type.integer, (int) op1.getValue() * (-1) );
+		case floatingpoint:
+			return createValue(Type.floatingpoint, (double) op1.getValue() * (-1F) );
+		default:
+			return null;
+		}
+		
+	}
+	
 	public Value copy(Value original) {
 		if (original.isValid())
 			return createValue(original.getType(), original.getValueCopy() );
@@ -234,8 +232,9 @@ public class Calculation {
 		return nothing;
 	}
 	
+	
+	
 	private Value getZero(Type type) {
-		// TODO
 		switch (type) {
 		case integer:
 			return zeroInteger;
