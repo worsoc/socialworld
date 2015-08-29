@@ -22,6 +22,7 @@
 package org.socialworld.objects;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.Position;
+import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenSimulationObject;
 
 public class WriteAccessToSimulationObject {
@@ -31,6 +32,8 @@ public class WriteAccessToSimulationObject {
 	boolean isDummy;
 	
 	public WriteAccessToSimulationObject(SimulationObject object, StateSimulationObject state, HiddenSimulationObject returnHidden) {
+		GrantedAccessToProperty propertiesToInit[];
+		
 		this.object = object;
 		this.objectsState = state;
 		
@@ -41,7 +44,10 @@ public class WriteAccessToSimulationObject {
 		state.setWriteAccess(this);
 		state.setObject(object);
 		
-		returnHidden = getMeHidden();
+		propertiesToInit = new GrantedAccessToProperty[1];
+		propertiesToInit[0] = GrantedAccessToProperty.all;
+		
+		returnHidden = getMeHidden(propertiesToInit);
 	}
 	
 	// Dummy
@@ -54,8 +60,8 @@ public class WriteAccessToSimulationObject {
 		return 1;
 	}
 	
-	public HiddenSimulationObject getMeHidden() {
-		return new HiddenSimulationObject(this, nextToken());
+	public HiddenSimulationObject getMeHidden(GrantedAccessToProperty properties[]) {
+		return new HiddenSimulationObject(this, properties);
 	}
 	
 	public SimulationObject getObject() {
@@ -64,6 +70,9 @@ public class WriteAccessToSimulationObject {
 	
 	
 	protected final boolean checkCaller(HiddenSimulationObject caller){
+		
+		if (!caller.isValid()) return false;
+		
 		switch (caller.getClass().getName()) {
 
 		case "org.socialworld.objects.access.HiddenSimulationObject":

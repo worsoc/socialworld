@@ -36,6 +36,7 @@ import org.socialworld.knowledge.Answer;
 import org.socialworld.knowledge.Knowledge;
 import org.socialworld.knowledge.KnowledgePool;
 import org.socialworld.knowledge.KnowledgeSource;
+import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenHuman;
 
 /**
@@ -51,19 +52,25 @@ public class StateHuman extends StateAnimal {
 	private ArrayList<Talk> talks;
 	private String lastSaidSentence;
 
+	private GrantedAccessToProperty grantAccessToPropertyTalk[];
+	
 	public StateHuman() {
 		super();
 		
 		talks = new ArrayList<Talk>();
 		knowledge = new KnowledgePool();
 		acquaintance = new AcquaintancePool();
+		
+		grantAccessToPropertyTalk = new GrantedAccessToProperty[1];
+		grantAccessToPropertyTalk[0] = GrantedAccessToProperty.talks;
+
 	}
 
 	void calculateEventInfluence(Event event) {
 		
 		super.calculateEventInfluence(event);
 		
-		TalkCalculator.calculateTalkChangedByEvent(event, ((StateHuman)getMeReadableOnly()), ((HiddenHuman)getMeWritableButHidden() ));
+		TalkCalculator.calculateTalkChangedByEvent(event, ((StateHuman)getMeReadableOnly()), ((HiddenHuman)getMeWritableButHidden(grantAccessToPropertyTalk) ));
 		
 		
 	}

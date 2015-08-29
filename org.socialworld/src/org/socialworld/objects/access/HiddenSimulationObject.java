@@ -33,11 +33,9 @@ public class HiddenSimulationObject {
 
 	private WriteAccessToSimulationObject wa;
 	private boolean isValid;
-	private long token;
 	
-	public HiddenSimulationObject(WriteAccessToSimulationObject wa, long token) {
+	public HiddenSimulationObject(WriteAccessToSimulationObject wa, GrantedAccessToProperty properties[]) {
 		this.wa = wa;
-		this.token = token;
 		this.isValid = true;
 	}
 	
@@ -46,42 +44,36 @@ public class HiddenSimulationObject {
 		this.isValid = false;
 	}
 	
-	protected boolean isValid() {
+	public final boolean isValid() {
 		return isValid;
 	}
 	
-	protected WriteAccessToSimulationObject myWriteAccess() {
+	/*protected WriteAccessToSimulationObject myWriteAccess() {
 		return wa;
 	}
-	
+	*/
 	public void closeAccess(WriteAccessToSimulationObject wa) {
 		if (wa == this.wa) isValid = false;
 	}
 	
-	public long getToken(WriteAccessToSimulationObject wa) {
-		if (wa == this.wa) 
-			return this.token;
-		else
-			return 0;
-	}
 	
 	public void setPosition(Position pos) {
-		if (isValid) wa.setPosition(pos, this);
+		wa.setPosition(pos, this);
 	}
 	
 	public void setAction(AbstractAction action) {
-		if (isValid) wa.setAction(action, this);
+		wa.setAction(action, this);
 	}
 
 	public void setInfluenceTypes(int types[]) {
-		if (isValid) wa.setInfluenceTypes(types, this);
+		wa.setInfluenceTypes(types, this);
 	}
 
 	public void setReactionTypes(int types[]) {
-		if (isValid) wa.setReactionTypes(types, this);
+		wa.setReactionTypes(types, this);
 	}
 
 	public void setState2ActionType(int type) {
-		if (isValid) wa.setState2ActionType(type, this);
+		wa.setState2ActionType(type, this);
 	}	
 }

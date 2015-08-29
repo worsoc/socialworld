@@ -28,6 +28,7 @@ import org.socialworld.calculation.Vector;
 import org.socialworld.calculation.application.AttributeCalculator;
 import org.socialworld.core.Event;
 import org.socialworld.knowledge.KnownPathsPool;
+import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenAnimal;
 
 /**
@@ -46,17 +47,23 @@ public class StateAnimal extends StateSimulationObject {
 
 	private KnownPathsPool knownPathsPool;
 
+	private GrantedAccessToProperty grantAccessToPropertyAttributes[];
+	
 	public StateAnimal() {
 		super();
 		
 		knownPathsPool = new KnownPathsPool();
+		
+		grantAccessToPropertyAttributes = new GrantedAccessToProperty[1];
+		grantAccessToPropertyAttributes[0] = GrantedAccessToProperty.attributes;
 	}
 
 	void calculateEventInfluence(Event event) {
 		
 		super.calculateEventInfluence(event);
 		
-		AttributeCalculator.calculateAttributesChangedByEvent(event, ((StateAnimal)getMeReadableOnly()), ((HiddenAnimal)getMeWritableButHidden()));
+		
+		AttributeCalculator.calculateAttributesChangedByEvent(event, ((StateAnimal)getMeReadableOnly()), ((HiddenAnimal)getMeWritableButHidden(grantAccessToPropertyAttributes)));
 		
 	}
 

@@ -24,6 +24,7 @@ package org.socialworld.objects;
 import org.socialworld.attributes.Position;
 import org.socialworld.calculation.application.PositionCalculator;
 import org.socialworld.core.Event;
+import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenSimulationObject;
 import org.socialworld.propertyChange.ListenedBase;
 
@@ -50,8 +51,8 @@ public class StateSimulationObject extends ListenedBase {
 		this.object = object;
 	}
 	
-	HiddenSimulationObject getMeWritableButHidden() {
-		return guard.getMeHidden();
+	HiddenSimulationObject getMeWritableButHidden(GrantedAccessToProperty properties[]) {
+		return guard.getMeHidden(properties);
 	}
 	
 	StateSimulationObject getMeReadableOnly() {
