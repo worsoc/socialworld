@@ -1,7 +1,7 @@
 package org.socialworld;
 
 import org.apache.log4j.Logger;
-import org.socialworld.objects.WriteAccessToHuman;
+import org.socialworld.objects.access.HiddenHuman;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionType;
 import org.socialworld.actions.move.ActionMove;
@@ -13,10 +13,10 @@ public class SimpleClientActionHandler  {
 
 	private static SimpleClientActionHandler instance;
 	
-	private WriteAccessToHuman human1;
-	private WriteAccessToHuman human2;
-	private WriteAccessToHuman human3;
-	private WriteAccessToHuman actualHuman;
+	private HiddenHuman human1;
+	private HiddenHuman human2;
+	private HiddenHuman human3;
+	private HiddenHuman actualHuman;
 
 	private SimpleClientActionHandler() {}
 	
@@ -25,7 +25,7 @@ public class SimpleClientActionHandler  {
 		return instance;
 	}
 	
-	public void setHumanWrite(int nr, final WriteAccessToHuman human) {
+	public void setHumanWrite(int nr, final HiddenHuman human) {
 		
 		switch (nr) {
 		case 1:
@@ -63,13 +63,13 @@ public class SimpleClientActionHandler  {
 			actualHuman.setAction(new ActionMove(ActionType.move ,  ActionMode.run,
 					new Vector(0,10,0),
 					10, new Time(1000), new Time(2000),
-					10, 500), this );
+					10, 500) );
 			break;
 		case 2:   // step back
 			actualHuman.setAction(new ActionMove(ActionType.move ,  ActionMode.run,
 					new Vector(0,-10,0),
 					10, new Time(1000), new Time(2000),
-					10, 500), this );
+					10, 500) );
 			break;
 		}
 	}

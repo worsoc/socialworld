@@ -44,28 +44,28 @@ public class WriteAccessToAnimal extends WriteAccessToSimulationObject {
 		return new HiddenAnimal(this, nextToken());
 	}
 
-	public void setAttributes(AttributeArray attributes, Object caller) {
+	public void setAttributes(AttributeArray attributes, HiddenSimulationObject caller) {
 		if (checkCaller(caller)) animalState.setAttributes(attributes, this);
 	}
 
-	public void setMatrix(FunctionByMatrix matrix, Object caller) {
+	public void setMatrix(FunctionByMatrix matrix, HiddenSimulationObject caller) {
 		if (checkCaller(caller)) animalState.setMatrix(matrix, this);
 	}
 
-	public void addPath(Path path, Object caller) {
+	public void addPath(Path path, HiddenSimulationObject caller) {
 		if (checkCaller(caller)) animalState.addPath(path, this);
 	}
 	
 	
-	public void setDirectionChest(Vector directionChest, Object caller) {
+	public void setDirectionChest(Vector directionChest, HiddenSimulationObject caller) {
 		if (checkCaller(caller)) animalState.setDirectionChest(directionChest, this);
 	}
 
-	public void setDirectionView(Vector directionView, Object caller) {
+	public void setDirectionView(Vector directionView, HiddenSimulationObject caller) {
 		if (checkCaller(caller)) animalState.setDirectionView(directionView, this);
 	}
 
-	public void setDirectionMove(Vector directionMove, Object caller) {
+	public void setDirectionMove(Vector directionMove, HiddenSimulationObject caller) {
 		if (checkCaller(caller)) animalState.setDirectionMove(directionMove, this);
 	}
 
