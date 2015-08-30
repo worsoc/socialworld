@@ -26,6 +26,11 @@ import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenSimulationObject;
 
 public class WriteAccessToSimulationObject {
+	
+	public static final int WRITE_ACCESS_RETURNS_INVALID_CALLER = -1;
+	public static final int WRITE_ACCESS_RETURNS_NO_GRANT_FOR_PROPERTY = -2;
+	public static final int WRITE_ACCESS_RETURNS_SUCCESS = 1;
+	
 	private SimulationObject object;
 	private StateSimulationObject objectsState;
 	
@@ -92,50 +97,66 @@ public class WriteAccessToSimulationObject {
 		if (checkCaller(caller) ) object.setObjectID(objectID, this);
 	}
 
-	public boolean setPosition(Position pos, HiddenSimulationObject caller) {
-		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.position)) {
-			objectsState.setPosition(pos, this);
-			return true;
-		}
+	public int setPosition(Position pos, HiddenSimulationObject caller) {
+		if (checkCaller(caller)) 
+			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.position)) {
+				objectsState.setPosition(pos, this);
+				return WRITE_ACCESS_RETURNS_SUCCESS;
+			}
+			else
+				return WRITE_ACCESS_RETURNS_NO_GRANT_FOR_PROPERTY;
 		else
-			return false;
-	}
-	
-	public boolean setAction(AbstractAction action, HiddenSimulationObject caller) {
-		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.action)) {
-			object.setAction(action, this);
-			return true;
-		}
-		else
-			return false;
+			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
 	}
 
-	public boolean setInfluenceTypes(int types[], HiddenSimulationObject caller) {
-		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.influenceTypes)) {
-			objectsState.setInfluenceTypes(types, this);
-			return true;
-		}
+	public int setAction(AbstractAction action, HiddenSimulationObject caller) {
+		if (checkCaller(caller)) 
+			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.action)) {
+				object.setAction(action, this);
+				return WRITE_ACCESS_RETURNS_SUCCESS;
+			}
+			else
+				return WRITE_ACCESS_RETURNS_NO_GRANT_FOR_PROPERTY;
 		else
-			return false;
+			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
 	}
 
-	public boolean setReactionTypes(int types[], HiddenSimulationObject caller) {
-		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.reactionTypes)) {
-			objectsState.setReactionTypes(types, this);
-			return true;
-		}
+	public int setInfluenceTypes(int types[], HiddenSimulationObject caller) {
+		if (checkCaller(caller)) 
+			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.influenceTypes)) {
+				objectsState.setInfluenceTypes(types, this);
+				return WRITE_ACCESS_RETURNS_SUCCESS;
+			}
+			else
+				return WRITE_ACCESS_RETURNS_NO_GRANT_FOR_PROPERTY;
 		else
-			return false;
+			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
 	}
 
-	public boolean setState2ActionType(int type, HiddenSimulationObject caller) {
-		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.state2ActionType)) {
-			objectsState.setState2ActionType(type, this);
-			return true;
-		}
+	public int setReactionTypes(int types[], HiddenSimulationObject caller) {
+		if (checkCaller(caller)) 
+			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.reactionTypes)) {
+				objectsState.setReactionTypes(types, this);
+				return WRITE_ACCESS_RETURNS_SUCCESS;
+			}
+			else
+				return WRITE_ACCESS_RETURNS_NO_GRANT_FOR_PROPERTY;
 		else
-			return false;
+			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
 	}
-	
+
+	public int setState2ActionType(int type, HiddenSimulationObject caller) {
+		if (checkCaller(caller)) 
+			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.state2ActionType)) {
+				objectsState.setState2ActionType(type, this);
+				return WRITE_ACCESS_RETURNS_SUCCESS;
+			}
+			else
+				return WRITE_ACCESS_RETURNS_NO_GRANT_FOR_PROPERTY;
+		else
+			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
+	}
+
+
 
 }

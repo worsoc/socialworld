@@ -35,6 +35,6 @@ public enum GrantedAccessToProperty {
 	attributes, matrix, path, directionChest, directionView, directionMove,
 	
 	// human
-	inventory, sentence, factsFromSentence, answer, talks, knowledge, acquaintance, lastSaisSentence
+	inventory, sentence, factsFromSentence, answer, talks, knowledge, acquaintance, lastSaidSentence
 	
 }

@@ -72,23 +72,23 @@ public class HiddenSimulationObject {
 	}
 	
 	
-	public boolean setPosition(Position pos) {
+	public int setPosition(Position pos) {
 		return wa.setPosition(pos, this);
 	}
 	
-	public boolean setAction(AbstractAction action) {
+	public int setAction(AbstractAction action) {
 		return wa.setAction(action, this);
 	}
 
-	public boolean setInfluenceTypes(int types[]) {
+	public int setInfluenceTypes(int types[]) {
 		return wa.setInfluenceTypes(types, this);
 	}
 
-	public boolean setReactionTypes(int types[]) {
+	public int setReactionTypes(int types[]) {
 		return wa.setReactionTypes(types, this);
 	}
 
-	public boolean setState2ActionType(int type) {
+	public int setState2ActionType(int type) {
 		return wa.setState2ActionType(type, this);
 	}	
 }

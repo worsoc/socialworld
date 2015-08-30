@@ -45,59 +45,78 @@ public class WriteAccessToAnimal extends WriteAccessToSimulationObject {
 		return new HiddenAnimal(this, properties);
 	}
 
-	public boolean setAttributes(AttributeArray attributes, HiddenSimulationObject caller) {
-		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.attributes)) {
-			animalState.setAttributes(attributes, this);
-			return true;
-		}
+	public int setAttributes(AttributeArray attributes, HiddenSimulationObject caller) {
+		if (checkCaller(caller)) 
+			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.attributes)) {
+				animalState.setAttributes(attributes, this);
+				return WRITE_ACCESS_RETURNS_SUCCESS;
+			}
+			else
+				return WRITE_ACCESS_RETURNS_NO_GRANT_FOR_PROPERTY;
 		else
-			return false;
-	}
-
-	public boolean setMatrix(FunctionByMatrix matrix, HiddenSimulationObject caller) {
-		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.matrix)) {
-			animalState.setMatrix(matrix, this);
-			return true;
-		}
-		else
-			return false;
-	}
-
-	public boolean addPath(Path path, HiddenSimulationObject caller) {
-		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.path)) {
-			animalState.addPath(path, this);
-			return true;
-		}
-		else
-			return false;
+			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
 	}
 	
+
+	public int setMatrix(FunctionByMatrix matrix, HiddenSimulationObject caller) {
+		if (checkCaller(caller)) 
+			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.matrix)) {
+				animalState.setMatrix(matrix, this);
+				return WRITE_ACCESS_RETURNS_SUCCESS;
+			}
+			else
+				return WRITE_ACCESS_RETURNS_NO_GRANT_FOR_PROPERTY;
+		else
+			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
+	}
+
+	public int addPath(Path path, HiddenSimulationObject caller) {
+		if (checkCaller(caller)) 
+			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.path)) {
+				animalState.addPath(path, this);
+				return WRITE_ACCESS_RETURNS_SUCCESS;
+			}
+			else
+				return WRITE_ACCESS_RETURNS_NO_GRANT_FOR_PROPERTY;
+		else
+			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
+	}
+
+	public int setDirectionChest(Vector directionChest, HiddenSimulationObject caller) {
+		if (checkCaller(caller)) 
+			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.directionChest)) {
+				animalState.setDirectionChest(directionChest, this);
+				return WRITE_ACCESS_RETURNS_SUCCESS;
+			}
+			else
+				return WRITE_ACCESS_RETURNS_NO_GRANT_FOR_PROPERTY;
+		else
+			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
+	}
+
+	public int setDirectionView(Vector directionView, HiddenSimulationObject caller) {
+		if (checkCaller(caller)) 
+			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.directionView)) {
+				animalState.setDirectionView(directionView, this);
+				return WRITE_ACCESS_RETURNS_SUCCESS;
+			}
+			else
+				return WRITE_ACCESS_RETURNS_NO_GRANT_FOR_PROPERTY;
+		else
+			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
+	}
+
+	public int setDirectionMove(Vector directionMove, HiddenSimulationObject caller) {
+		if (checkCaller(caller)) 
+			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.directionMove)) {
+				animalState.setDirectionMove(directionMove, this);
+				return WRITE_ACCESS_RETURNS_SUCCESS;
+			}
+			else
+				return WRITE_ACCESS_RETURNS_NO_GRANT_FOR_PROPERTY;
+		else
+			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
+	}
 	
-	public boolean setDirectionChest(Vector directionChest, HiddenSimulationObject caller) {
-		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.directionChest)) {
-			animalState.setDirectionChest(directionChest, this);
-			return true;
-		}
-		else
-			return false;
-	}
-
-	public boolean setDirectionView(Vector directionView, HiddenSimulationObject caller) {
-		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.directionView)) {
-			animalState.setDirectionView(directionView, this);
-			return true;
-		}
-		else
-			return false;
-	}
-
-	public boolean setDirectionMove(Vector directionMove, HiddenSimulationObject caller) {
-		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.directionMove)) {
-			animalState.setDirectionMove(directionMove, this);
-			return true;
-		}
-		else
-			return false;
-	}
 
 }
