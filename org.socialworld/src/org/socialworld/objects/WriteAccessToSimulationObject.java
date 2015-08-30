@@ -29,7 +29,7 @@ public class WriteAccessToSimulationObject {
 	
 	public static final int WRITE_ACCESS_RETURNS_INVALID_CALLER = -1;
 	public static final int WRITE_ACCESS_RETURNS_NO_GRANT_FOR_PROPERTY = -2;
-	public static final int WRITE_ACCESS_RETURNS_SUCCESS = 1;
+	public static final int WRITE_ACCESS_RETURNS_SUCCESS = 0;
 	
 	private SimulationObject object;
 	private StateSimulationObject objectsState;
