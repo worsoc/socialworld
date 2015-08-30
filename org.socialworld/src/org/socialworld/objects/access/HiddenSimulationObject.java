@@ -34,9 +34,12 @@ public class HiddenSimulationObject {
 	private WriteAccessToSimulationObject wa;
 	private boolean isValid;
 	
+	private GrantedAccessToProperty propertiesWithGrantedAccess[];
+	
 	public HiddenSimulationObject(WriteAccessToSimulationObject wa, GrantedAccessToProperty properties[]) {
 		this.wa = wa;
 		this.isValid = true;
+		this.propertiesWithGrantedAccess = properties;
 	}
 	
 	// dummy constructor
@@ -48,6 +51,18 @@ public class HiddenSimulationObject {
 		return isValid;
 	}
 	
+	public final boolean checkAccessToPropertyGranted(  GrantedAccessToProperty property){
+		int size;
+		int index;
+		
+		size = propertiesWithGrantedAccess.length;
+		
+		for (index = 0; index < size; index++) {
+			if (propertiesWithGrantedAccess[index] == property ) return true;
+		}
+		return false;
+	}
+	
 	/*protected WriteAccessToSimulationObject myWriteAccess() {
 		return wa;
 	}
@@ -57,23 +72,23 @@ public class HiddenSimulationObject {
 	}
 	
 	
-	public void setPosition(Position pos) {
-		wa.setPosition(pos, this);
+	public boolean setPosition(Position pos) {
+		return wa.setPosition(pos, this);
 	}
 	
-	public void setAction(AbstractAction action) {
-		wa.setAction(action, this);
+	public boolean setAction(AbstractAction action) {
+		return wa.setAction(action, this);
 	}
 
-	public void setInfluenceTypes(int types[]) {
-		wa.setInfluenceTypes(types, this);
+	public boolean setInfluenceTypes(int types[]) {
+		return wa.setInfluenceTypes(types, this);
 	}
 
-	public void setReactionTypes(int types[]) {
-		wa.setReactionTypes(types, this);
+	public boolean setReactionTypes(int types[]) {
+		return wa.setReactionTypes(types, this);
 	}
 
-	public void setState2ActionType(int type) {
-		wa.setState2ActionType(type, this);
+	public boolean setState2ActionType(int type) {
+		return wa.setState2ActionType(type, this);
 	}	
 }

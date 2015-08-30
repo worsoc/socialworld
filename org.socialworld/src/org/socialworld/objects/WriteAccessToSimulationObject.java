@@ -55,10 +55,6 @@ public class WriteAccessToSimulationObject {
 		isDummy = true;
 	}
 
-	protected long nextToken() {
-		// TODO
-		return 1;
-	}
 	
 	public HiddenSimulationObject getMeHidden(GrantedAccessToProperty properties[]) {
 		return new HiddenSimulationObject(this, properties);
@@ -88,28 +84,57 @@ public class WriteAccessToSimulationObject {
 		
 	}
 	
-	public void setObjectID(int objectID, HiddenSimulationObject caller) {
-		if (checkCaller(caller)) object.setObjectID(objectID, this);
-	}
-
-	public void setPosition(Position pos, HiddenSimulationObject caller) {
-		if (checkCaller(caller)) objectsState.setPosition(pos, this);
+	protected final boolean checkAccessToPropertyGranted(HiddenSimulationObject caller, GrantedAccessToProperty property) {
+		return caller.checkAccessToPropertyGranted(property);
 	}
 	
-	public void setAction(AbstractAction action, HiddenSimulationObject caller) {
-		if (checkCaller(caller)) object.setAction(action, this);
+	public void setObjectID(int objectID, HiddenSimulationObject caller) {
+		if (checkCaller(caller) ) object.setObjectID(objectID, this);
 	}
 
-	public void setInfluenceTypes(int types[], HiddenSimulationObject caller) {
-		if (checkCaller(caller)) objectsState.setInfluenceTypes(types, this);
+	public boolean setPosition(Position pos, HiddenSimulationObject caller) {
+		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.position)) {
+			objectsState.setPosition(pos, this);
+			return true;
+		}
+		else
+			return false;
+	}
+	
+	public boolean setAction(AbstractAction action, HiddenSimulationObject caller) {
+		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.action)) {
+			object.setAction(action, this);
+			return true;
+		}
+		else
+			return false;
 	}
 
-	public void setReactionTypes(int types[], HiddenSimulationObject caller) {
-		if (checkCaller(caller)) objectsState.setReactionTypes(types, this);
+	public boolean setInfluenceTypes(int types[], HiddenSimulationObject caller) {
+		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.influenceTypes)) {
+			objectsState.setInfluenceTypes(types, this);
+			return true;
+		}
+		else
+			return false;
 	}
 
-	public void setState2ActionType(int type, HiddenSimulationObject caller) {
-		if (checkCaller(caller)) objectsState.setState2ActionType(type, this);
+	public boolean setReactionTypes(int types[], HiddenSimulationObject caller) {
+		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.reactionTypes)) {
+			objectsState.setReactionTypes(types, this);
+			return true;
+		}
+		else
+			return false;
+	}
+
+	public boolean setState2ActionType(int type, HiddenSimulationObject caller) {
+		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.state2ActionType)) {
+			objectsState.setState2ActionType(type, this);
+			return true;
+		}
+		else
+			return false;
 	}
 	
 

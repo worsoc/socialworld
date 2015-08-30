@@ -51,43 +51,80 @@ public class WriteAccessToHuman extends WriteAccessToAnimal {
 		return new HiddenHuman(this, properties);
 	}
 
-	public void setInventory(Inventory inventory, HiddenSimulationObject caller) {
-		if (checkCaller(caller)) humanState.setInventory(inventory, this);
+	public boolean setInventory(Inventory inventory, HiddenSimulationObject caller) {
+		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.directionView)) {
+			humanState.setInventory(inventory, this);
+			return true;
+		}
+		else
+			return false;
 	}
 
 	
-	public void setTalks(ArrayList<Talk> talks, HiddenSimulationObject caller) {
-		if (checkCaller(caller)) humanState.setTalks(talks, this);
+	public boolean setTalks(ArrayList<Talk> talks, HiddenSimulationObject caller) {
+		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.directionView)) {
+			humanState.setTalks(talks, this);
+			return true;
+		}
+		else
+			return false;
 	}
 	
 	
-	public void addSentence(Human partner, Talk_SentenceType type,  String sentence,  HiddenSimulationObject caller) {
-		if (checkCaller(caller)) humanState.addSentence(partner, type, sentence, this);
+	public boolean addSentence(Human partner, Talk_SentenceType type,  String sentence,  HiddenSimulationObject caller) {
+		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.directionView)){
+			humanState.addSentence(partner, type, sentence, this);
+			return true;
+		}
+		else
+			return false;
 	}
 
-	public void addAnswer(Answer answer,  Human partner, HiddenSimulationObject caller) {
-		if (checkCaller(caller)) humanState.addAnswer(answer, partner, this);
+	public boolean addAnswer(Answer answer,  Human partner, HiddenSimulationObject caller) {
+		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.directionView)) {
+			humanState.addAnswer(answer, partner, this);
+			return true;
+		}
+		else
+			return false;
 	}
 
-	public void addFactsFromSentence(String sentence, KnowledgeSource source, HiddenSimulationObject caller) {
-		if (checkCaller(caller)) humanState.addFactsFromSentence(sentence, source, this);
+	public boolean addFactsFromSentence(String sentence, KnowledgeSource source, HiddenSimulationObject caller) {
+		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.directionView)) {
+			humanState.addFactsFromSentence(sentence, source, this);
+			return true;
+		}
+		else
+			return false;
 	}
 
-	public void addKnowledge(Knowledge knowledge, HiddenSimulationObject caller) {
-		if (checkCaller(caller)) humanState.addKnowledge(knowledge, this);
+	public boolean addKnowledge(Knowledge knowledge, HiddenSimulationObject caller) {
+		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.directionView)) {
+			humanState.addKnowledge(knowledge, this);
+			return true;
+		}
+		else
+			return false;
 	}
 
-	public void addAcquaintance(Acquaintance acquaintance, HiddenSimulationObject caller) {
-		if (checkCaller(caller)) humanState.addAcquaintance(acquaintance, this);
+	public boolean addAcquaintance(Acquaintance acquaintance, HiddenSimulationObject caller) {
+		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.directionView)) {
+			humanState.addAcquaintance(acquaintance, this);
+			return true;
+		}
+		else
+			return false;
 	}
 
 	
-	public void setLastSaidSentence(String sentence, HiddenSimulationObject caller) {
-		if (checkCaller(caller)) humanState.setLastSaidSentence(sentence, this);
+	public boolean setLastSaidSentence(String sentence, HiddenSimulationObject caller) {
+		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.directionView)) {
+			humanState.setLastSaidSentence(sentence, this);
+			return true;
+		}
+		else
+			return false;
 	}
-	
-	
-	
 	
 	
 }

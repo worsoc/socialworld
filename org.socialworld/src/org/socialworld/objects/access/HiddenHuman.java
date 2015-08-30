@@ -46,36 +46,36 @@ public class HiddenHuman extends HiddenAnimal {
 		this.wa = wa;
 	}
 
-	public void setInventory(Inventory inventory) {
-		wa.setInventory(inventory, this);
+	public boolean setInventory(Inventory inventory) {
+		return wa.setInventory(inventory, this);
 	}
 
-	public void addSentence(Human partner, Talk_SentenceType type,  String sentence) {
-		wa.addSentence(partner, type, sentence, this);
+	public boolean addSentence(Human partner, Talk_SentenceType type,  String sentence) {
+		return wa.addSentence(partner, type, sentence, this);
 	}
 
-	public void addFactsFromSentence(String sentence, KnowledgeSource source) {
-		wa.addFactsFromSentence(sentence, source, this);
+	public boolean addFactsFromSentence(String sentence, KnowledgeSource source) {
+		return wa.addFactsFromSentence(sentence, source, this);
 	}
 	
-	public void addAnswer(Answer answer,  Human partner) {
-		wa.addAnswer(answer, partner, this);
+	public boolean addAnswer(Answer answer,  Human partner) {
+		return wa.addAnswer(answer, partner, this);
 	}
 	
-	public void setTalks(ArrayList<Talk> talks) {
-		wa.setTalks(talks, this);
+	public boolean setTalks(ArrayList<Talk> talks) {
+		return wa.setTalks(talks, this);
 	}
 	
-	public void addKnowledge(Knowledge knowledge) {
-		wa.addKnowledge(knowledge, this);
+	public boolean addKnowledge(Knowledge knowledge) {
+		return wa.addKnowledge(knowledge, this);
 	}
 
-	public void addAcquaintance(Acquaintance acquaintance) {
-		wa.addAcquaintance(acquaintance, this);
+	public boolean addAcquaintance(Acquaintance acquaintance) {
+		return wa.addAcquaintance(acquaintance, this);
 	}
 	
-	public void setLastSaidSentence(String sentence) {
-		wa.setLastSaidSentence(sentence, this);
+	public boolean setLastSaidSentence(String sentence) {
+		return wa.setLastSaidSentence(sentence, this);
 	}
 	
 
