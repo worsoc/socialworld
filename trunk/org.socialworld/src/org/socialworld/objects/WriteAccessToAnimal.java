@@ -45,29 +45,59 @@ public class WriteAccessToAnimal extends WriteAccessToSimulationObject {
 		return new HiddenAnimal(this, properties);
 	}
 
-	public void setAttributes(AttributeArray attributes, HiddenSimulationObject caller) {
-		if (checkCaller(caller)) animalState.setAttributes(attributes, this);
+	public boolean setAttributes(AttributeArray attributes, HiddenSimulationObject caller) {
+		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.attributes)) {
+			animalState.setAttributes(attributes, this);
+			return true;
+		}
+		else
+			return false;
 	}
 
-	public void setMatrix(FunctionByMatrix matrix, HiddenSimulationObject caller) {
-		if (checkCaller(caller)) animalState.setMatrix(matrix, this);
+	public boolean setMatrix(FunctionByMatrix matrix, HiddenSimulationObject caller) {
+		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.matrix)) {
+			animalState.setMatrix(matrix, this);
+			return true;
+		}
+		else
+			return false;
 	}
 
-	public void addPath(Path path, HiddenSimulationObject caller) {
-		if (checkCaller(caller)) animalState.addPath(path, this);
+	public boolean addPath(Path path, HiddenSimulationObject caller) {
+		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.path)) {
+			animalState.addPath(path, this);
+			return true;
+		}
+		else
+			return false;
 	}
 	
 	
-	public void setDirectionChest(Vector directionChest, HiddenSimulationObject caller) {
-		if (checkCaller(caller)) animalState.setDirectionChest(directionChest, this);
+	public boolean setDirectionChest(Vector directionChest, HiddenSimulationObject caller) {
+		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.directionChest)) {
+			animalState.setDirectionChest(directionChest, this);
+			return true;
+		}
+		else
+			return false;
 	}
 
-	public void setDirectionView(Vector directionView, HiddenSimulationObject caller) {
-		if (checkCaller(caller)) animalState.setDirectionView(directionView, this);
+	public boolean setDirectionView(Vector directionView, HiddenSimulationObject caller) {
+		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.directionView)) {
+			animalState.setDirectionView(directionView, this);
+			return true;
+		}
+		else
+			return false;
 	}
 
-	public void setDirectionMove(Vector directionMove, HiddenSimulationObject caller) {
-		if (checkCaller(caller)) animalState.setDirectionMove(directionMove, this);
+	public boolean setDirectionMove(Vector directionMove, HiddenSimulationObject caller) {
+		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.directionMove)) {
+			animalState.setDirectionMove(directionMove, this);
+			return true;
+		}
+		else
+			return false;
 	}
 
 }

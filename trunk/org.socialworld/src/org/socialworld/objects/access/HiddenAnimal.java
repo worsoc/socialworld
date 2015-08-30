@@ -40,28 +40,28 @@ public class HiddenAnimal extends HiddenSimulationObject {
 		this.wa = wa;
 	}
 
-	public void setAttributes(AttributeArray attributes) {
-		wa.setAttributes(attributes, this);
+	public boolean setAttributes(AttributeArray attributes) {
+		return wa.setAttributes(attributes, this);
 	}
 	
-	public void setMatrix(FunctionByMatrix matrix) {
-		wa.setMatrix(matrix, this);
+	public boolean setMatrix(FunctionByMatrix matrix) {
+		return wa.setMatrix(matrix, this);
 	}
 
-	public void addPath(Path path) {
-		wa.addPath(path, this);
+	public boolean addPath(Path path) {
+		return wa.addPath(path, this);
 	}
 
-	public void setDirectionChest(Vector directionChest) {
-		wa.setDirectionChest(directionChest, this);
+	public boolean setDirectionChest(Vector directionChest) {
+		return wa.setDirectionChest(directionChest, this);
 	}
 
-	public void setDirectionView(Vector directionView) {
-		wa.setDirectionView(directionView, this);
+	public boolean setDirectionView(Vector directionView) {
+		return wa.setDirectionView(directionView, this);
 	}
 
-	public void setDirectionMove(Vector directionMove) {
-		wa.setDirectionMove(directionMove, this);
+	public boolean setDirectionMove(Vector directionMove) {
+		return wa.setDirectionMove(directionMove, this);
 	}
 
 }

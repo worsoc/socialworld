@@ -32,7 +32,7 @@ public enum GrantedAccessToProperty {
 	position, action, influenceTypes, reactionTypes, state2ActionType,
 	
 	// animal
-	attributes, matrix, path, directionChest, directionView, DirectionMove,
+	attributes, matrix, path, directionChest, directionView, directionMove,
 	
 	// human
 	inventory, sentence, factsFromSentence, answer, talks, knowledge, acquaintance, lastSaisSentence
