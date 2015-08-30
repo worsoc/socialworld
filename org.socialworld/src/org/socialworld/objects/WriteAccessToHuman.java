@@ -51,80 +51,102 @@ public class WriteAccessToHuman extends WriteAccessToAnimal {
 		return new HiddenHuman(this, properties);
 	}
 
-	public boolean setInventory(Inventory inventory, HiddenSimulationObject caller) {
-		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.directionView)) {
-			humanState.setInventory(inventory, this);
-			return true;
-		}
+	public int setInventory(Inventory inventory, HiddenSimulationObject caller) {
+		if (checkCaller(caller)) 
+			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.inventory)) {
+				humanState.setInventory(inventory, this);
+				return WRITE_ACCESS_RETURNS_SUCCESS;
+			}
+			else
+				return WRITE_ACCESS_RETURNS_NO_GRANT_FOR_PROPERTY;
 		else
-			return false;
+			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
 	}
 
-	
-	public boolean setTalks(ArrayList<Talk> talks, HiddenSimulationObject caller) {
-		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.directionView)) {
-			humanState.setTalks(talks, this);
-			return true;
-		}
+	public int setTalks(ArrayList<Talk> talks, HiddenSimulationObject caller) {
+		if (checkCaller(caller)) 
+			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.talks)) {
+				humanState.setTalks(talks, this);
+				return WRITE_ACCESS_RETURNS_SUCCESS;
+			}
+			else
+				return WRITE_ACCESS_RETURNS_NO_GRANT_FOR_PROPERTY;
 		else
-			return false;
-	}
-	
-	
-	public boolean addSentence(Human partner, Talk_SentenceType type,  String sentence,  HiddenSimulationObject caller) {
-		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.directionView)){
-			humanState.addSentence(partner, type, sentence, this);
-			return true;
-		}
-		else
-			return false;
+			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
 	}
 
-	public boolean addAnswer(Answer answer,  Human partner, HiddenSimulationObject caller) {
-		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.directionView)) {
-			humanState.addAnswer(answer, partner, this);
-			return true;
-		}
+	public int addSentence(Human partner, Talk_SentenceType type,  String sentence, HiddenSimulationObject caller) {
+		if (checkCaller(caller)) 
+			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.sentence)) {
+				humanState.addSentence(partner, type, sentence, this);
+				return WRITE_ACCESS_RETURNS_SUCCESS;
+			}
+			else
+				return WRITE_ACCESS_RETURNS_NO_GRANT_FOR_PROPERTY;
 		else
-			return false;
-	}
-
-	public boolean addFactsFromSentence(String sentence, KnowledgeSource source, HiddenSimulationObject caller) {
-		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.directionView)) {
-			humanState.addFactsFromSentence(sentence, source, this);
-			return true;
-		}
-		else
-			return false;
-	}
-
-	public boolean addKnowledge(Knowledge knowledge, HiddenSimulationObject caller) {
-		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.directionView)) {
-			humanState.addKnowledge(knowledge, this);
-			return true;
-		}
-		else
-			return false;
-	}
-
-	public boolean addAcquaintance(Acquaintance acquaintance, HiddenSimulationObject caller) {
-		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.directionView)) {
-			humanState.addAcquaintance(acquaintance, this);
-			return true;
-		}
-		else
-			return false;
-	}
-
-	
-	public boolean setLastSaidSentence(String sentence, HiddenSimulationObject caller) {
-		if (checkCaller(caller) & checkAccessToPropertyGranted(caller, GrantedAccessToProperty.directionView)) {
-			humanState.setLastSaidSentence(sentence, this);
-			return true;
-		}
-		else
-			return false;
+			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
 	}
 	
+	public int addAnswer(Answer answer,  Human partner, HiddenSimulationObject caller) {
+		if (checkCaller(caller)) 
+			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.answer)) {
+				humanState.addAnswer(answer, partner, this);
+				return WRITE_ACCESS_RETURNS_SUCCESS;
+			}
+			else
+				return WRITE_ACCESS_RETURNS_NO_GRANT_FOR_PROPERTY;
+		else
+			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
+	}
+
+	public int addFactsFromSentence(String sentence, KnowledgeSource source, HiddenSimulationObject caller) {
+		if (checkCaller(caller)) 
+			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.factsFromSentence)) {
+				humanState.addFactsFromSentence(sentence, source, this);
+				return WRITE_ACCESS_RETURNS_SUCCESS;
+			}
+			else
+				return WRITE_ACCESS_RETURNS_NO_GRANT_FOR_PROPERTY;
+		else
+			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
+	}
 	
+
+	public int addKnowledge(Knowledge knowledge, HiddenSimulationObject caller) {
+		if (checkCaller(caller)) 
+			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.knowledge)) {
+				humanState.addKnowledge(knowledge, this);
+				return WRITE_ACCESS_RETURNS_SUCCESS;
+			}
+			else
+				return WRITE_ACCESS_RETURNS_NO_GRANT_FOR_PROPERTY;
+		else
+			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
+	}
+
+	public int addAcquaintance(Acquaintance acquaintance, HiddenSimulationObject caller) {
+		if (checkCaller(caller)) 
+			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.acquaintance)) {
+				humanState.addAcquaintance(acquaintance, this);
+				return WRITE_ACCESS_RETURNS_SUCCESS;
+			}
+			else
+				return WRITE_ACCESS_RETURNS_NO_GRANT_FOR_PROPERTY;
+		else
+			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
+	}
+
+	public int setLastSaidSentence(String sentence, HiddenSimulationObject caller) {
+		if (checkCaller(caller)) 
+			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.lastSaidSentence)) {
+				humanState.setLastSaidSentence(sentence, this);
+				return WRITE_ACCESS_RETURNS_SUCCESS;
+			}
+			else
+				return WRITE_ACCESS_RETURNS_NO_GRANT_FOR_PROPERTY;
+		else
+			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
+	}
+	
+
 }
