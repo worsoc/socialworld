@@ -36,17 +36,19 @@ import org.socialworld.objects.access.HiddenAnimal;
 
 public  class AttributeCalculator {
 
+	public static final int ATTRIBUTE_CALCULATOR_RETURNS_INVALID_RESULT = 1;
 
 
-	public final static void calculateAttributesChangedByEvent(Event event, StateAnimal stateAnimal, HiddenAnimal hiddenWriteAccess) {
+	public final static int calculateAttributesChangedByEvent(Event event, StateAnimal stateAnimal, HiddenAnimal hiddenWriteAccess) {
 		
 		Value returnAttributeArray;
 		
 		returnAttributeArray = getAttributesChangedByEvent(event, stateAnimal);
 		
-		if (returnAttributeArray.isValid()) {
-			hiddenWriteAccess.setAttributes((AttributeArray) returnAttributeArray.getValue());
-		}
+		if (returnAttributeArray.isValid()) 
+			return hiddenWriteAccess.setAttributes((AttributeArray) returnAttributeArray.getValue());
+		else
+			return ATTRIBUTE_CALCULATOR_RETURNS_INVALID_RESULT;
 		
 	}
 	

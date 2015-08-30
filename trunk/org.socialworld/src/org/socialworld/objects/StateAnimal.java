@@ -62,7 +62,7 @@ public class StateAnimal extends StateSimulationObject {
 		
 		super.calculateEventInfluence(event);
 		
-		
+		// TODO react to the calculation methods return code
 		AttributeCalculator.calculateAttributesChangedByEvent(event, ((StateAnimal)getMeReadableOnly()), ((HiddenAnimal)getMeWritableButHidden(grantAccessToPropertyAttributes)));
 		
 	}
