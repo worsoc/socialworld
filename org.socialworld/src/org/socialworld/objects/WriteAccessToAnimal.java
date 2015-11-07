@@ -106,10 +106,10 @@ public class WriteAccessToAnimal extends WriteAccessToSimulationObject {
 			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
 	}
 
-	public int setDirectionMove(Vector directionMove, HiddenSimulationObject caller) {
+	public int setDirectionActiveMove(Vector directionMove, HiddenSimulationObject caller) {
 		if (checkCaller(caller)) 
 			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.directionMove)) {
-				animalState.setDirectionMove(directionMove, this);
+				animalState.setDirectionActiveMove(directionMove, this);
 				return WRITE_ACCESS_RETURNS_SUCCESS;
 			}
 			else

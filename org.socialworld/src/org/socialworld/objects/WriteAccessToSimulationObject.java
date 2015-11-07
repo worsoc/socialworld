@@ -22,6 +22,7 @@
 package org.socialworld.objects;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.Position;
+import org.socialworld.calculation.Vector;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenSimulationObject;
 
@@ -101,6 +102,19 @@ public class WriteAccessToSimulationObject {
 		if (checkCaller(caller)) 
 			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.position)) {
 				objectsState.setPosition(pos, this);
+				return WRITE_ACCESS_RETURNS_SUCCESS;
+			}
+			else
+				return WRITE_ACCESS_RETURNS_NO_GRANT_FOR_PROPERTY;
+		else
+			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
+	}
+
+	public int setMove(Vector direction, float power, HiddenSimulationObject caller) {
+		if (checkCaller(caller)) 
+			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.directionMove) & 
+					checkAccessToPropertyGranted(caller, GrantedAccessToProperty.powerMove)) {
+				objectsState.setMove(direction, power , this);
 				return WRITE_ACCESS_RETURNS_SUCCESS;
 			}
 			else

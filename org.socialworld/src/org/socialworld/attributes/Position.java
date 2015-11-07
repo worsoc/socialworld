@@ -81,7 +81,6 @@ public class Position {
 		locationByBase25 = position.getLocationByBase25();
 	}
 
-
 	public int getLocationByBase9() { return locationByBase9; }
 	public String getLocationByBase25() { return locationByBase25 ; }
 

@@ -118,7 +118,7 @@ public class LoadAnimal extends LoadSimulationObjects  {
 		if (rowTableDirections >= 0) {
 			hiddenAnimal.setDirectionChest(new Vector(tableDirections.getChestDirection(rowTableDirections)));
 			hiddenAnimal.setDirectionView(new Vector(tableDirections.getViewDirection(rowTableDirections)));
-			hiddenAnimal.setDirectionMove(new Vector(tableDirections.getMoveDirection(rowTableDirections)));
+			hiddenAnimal.setDirectionActiveMove(new Vector(tableDirections.getMoveDirection(rowTableDirections)));
 		}
 	}
 
