@@ -133,18 +133,16 @@ public class ActionSay extends AbstractAction {
 				break;
 				
 			case say:
+				// TODO implement action type say
 				
 				switch (mode) {
 					case normal:
-						// TODO
 						//sentence = 
 						break;
 					case scream:
-						// TODO
 						//sentence = 
 						break;
 					case whisper:
-						// TODO
 						//sentence = 
 						break;
 					default:

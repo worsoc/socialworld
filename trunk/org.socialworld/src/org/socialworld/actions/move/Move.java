@@ -51,6 +51,10 @@ public class Move extends ActionPerformer {
 	
 	private int repeats;
 	
+	private float velocity;
+	private float acceleration;
+	private float duration;
+	
 	public Move (   ActionMove action ) {
 		super(action);
 	}
@@ -65,28 +69,25 @@ public class Move extends ActionPerformer {
 
 			Vector direction;
 			
-			float velocity;
-			
+				
 			float length;
-			float factor;
 			
 			originalAction  = (ActionMove) getOriginalActionObject();
 			actor = (Animal) originalAction.getActor();
 
 			direction = originalAction.getDirectionForSection();
 				
-			velocity = calculateVelocity(originalAction, actor);
+			calculateVelocity(originalAction, actor);
 			length = direction.length();
-			factor = velocity / length;
 			
 			// TODO
 			this.repeats = (int) (length / velocity );
 
-			direction.mul(factor);
 
-			setMaxParam(2);
+			setMaxParam(3);
 			setParam(0, new Value(Type.vector, "direction", direction));
 			setParam(1, new Value(Type.floatingpoint, "velocity", velocity));
+			setParam(2, new Value(Type.floatingpoint, "acceleration", acceleration));
 			
 			setValid();
 		}
@@ -94,12 +95,19 @@ public class Move extends ActionPerformer {
 		if (repeats > 0) repeats--;
 	} 
 	
-	private float calculateVelocity(ActionMove action, Animal actor) {
+	private void calculateVelocity(ActionMove action, Animal actor) {
 		float actorsIntensity;
 		
-		actorsIntensity = action.getIntensity();
-		// TODO
-		return actorsIntensity;
+		if (this.duration == 0) {
+			actorsIntensity = action.getIntensity();
+			this.velocity = actorsIntensity;
+		}
+		else {
+			this.acceleration = action.getIntensity();
+			this.velocity = this.velocity + this.acceleration * this.duration;
+			
+		}
+		duration = duration + 1;
 	}
 	
 	public int getNumberOfRepeats() {
