@@ -21,9 +21,13 @@
 */
 package org.socialworld.calculation.application;
 
+import org.socialworld.attributes.Position;
+import org.socialworld.calculation.Vector;
 import org.socialworld.core.Event;
 import org.socialworld.core.EventType;
 import org.socialworld.objects.StateSimulationObject;
+import org.socialworld.objects.WriteAccessToSimulationObject;
+import org.socialworld.objects.access.HiddenSimulationObject;
 
 /**
  * @author Mathias Sikos
@@ -31,17 +35,76 @@ import org.socialworld.objects.StateSimulationObject;
  */
 public class PositionCalculator {
 
-	public final static void calculatePositionChangedByEvent(Event event, StateSimulationObject stateObject) {
+	public static final int POSITION_CALCULATOR_RETURNS_NO_CHANGE = 2;
+	public static final int POSITION_CALCULATOR_RETURNS_CHANGE = 3;
 
+	public final static int calculatePositionChangedByEvent(Event event, StateSimulationObject state, HiddenSimulationObject hiddenWriteAccess) {
+
+		int returnSetPosition;
+		int returnSetMove;
+		
 		EventType eventType;
 		
+		
+		Vector position;
+		Position newPosition;
+		
+		
+		Vector directionEvent;
+		Vector directionMoveObject;
+		
+		
+		float powerEvent;
+		float powerMoveObject;
+		
+		float resultingPowerMoveObject;
+		
 		eventType = event.getEventType();
+		position = state.getPosition().getVector();
+		
+		directionMoveObject = state.getDirectionMove();
+		powerMoveObject = state.getPowerMove();
+		
+		directionEvent = event.getDirection();
+		powerEvent = event.getStrength();
+		
+		if (!directionEvent.isNormalized()) directionEvent.normalize();
+		if (!directionMoveObject.isNormalized()) directionMoveObject.normalize();
 		
 		switch (eventType) {
-		// TODO cases
+		// TODO cases and implementations
+		case sleepCaused:
+			directionEvent = new Vector(0,0,0);
+			powerMoveObject = 0;
+			break;
 		default:
-			return;
+			return POSITION_CALCULATOR_RETURNS_NO_CHANGE;
 		}
+		
+		// TODO calculate resulting direction and power
+		
+		
+		directionMoveObject.mul(powerMoveObject);
+		directionEvent.mul(powerEvent);
+		directionMoveObject.add(directionEvent);
+		
+		resultingPowerMoveObject = directionMoveObject.length();
+		position.add(directionMoveObject);
+		directionMoveObject.normalize();
+		
+		newPosition = new Position(position);
+		
+		
+		returnSetPosition = hiddenWriteAccess.setPosition(newPosition);
+		if (returnSetPosition != WriteAccessToSimulationObject.WRITE_ACCESS_RETURNS_SUCCESS) return returnSetPosition;
+		
+		returnSetMove = hiddenWriteAccess.setMove(directionMoveObject, resultingPowerMoveObject);
+		if (returnSetMove != WriteAccessToSimulationObject.WRITE_ACCESS_RETURNS_SUCCESS) return returnSetMove;
 
+		if (directionMoveObject.equals(new Vector(0,0,0)))
+			return POSITION_CALCULATOR_RETURNS_NO_CHANGE;
+		else
+			return POSITION_CALCULATOR_RETURNS_CHANGE;
+			
 	}
 }

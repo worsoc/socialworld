@@ -60,8 +60,8 @@ public class HiddenAnimal extends HiddenSimulationObject {
 		return wa.setDirectionView(directionView, this);
 	}
 
-	public int setDirectionMove(Vector directionMove) {
-		return wa.setDirectionMove(directionMove, this);
+	public int setDirectionActiveMove(Vector directionMove) {
+		return wa.setDirectionActiveMove(directionMove, this);
 	}
 
 }

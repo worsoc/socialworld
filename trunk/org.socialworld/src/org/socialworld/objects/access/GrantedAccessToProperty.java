@@ -29,10 +29,10 @@ public enum GrantedAccessToProperty {
 	all, 
 	
 	// simulation object
-	position, action, influenceTypes, reactionTypes, state2ActionType,
+	position,  directionMove, powerMove, action, influenceTypes, reactionTypes, state2ActionType,
 	
 	// animal
-	attributes, matrix, path, directionChest, directionView, directionMove,
+	attributes, matrix, path, directionChest, directionView, directionActiveMove,
 	
 	// human
 	inventory, sentence, factsFromSentence, answer, talks, knowledge, acquaintance, lastSaidSentence

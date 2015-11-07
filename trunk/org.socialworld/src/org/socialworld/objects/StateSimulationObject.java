@@ -22,6 +22,7 @@
 package org.socialworld.objects;
 
 import org.socialworld.attributes.Position;
+import org.socialworld.calculation.Vector;
 import org.socialworld.calculation.application.PositionCalculator;
 import org.socialworld.core.Event;
 import org.socialworld.objects.access.GrantedAccessToProperty;
@@ -38,13 +39,20 @@ public class StateSimulationObject extends ListenedBase {
 	private	WriteAccessToSimulationObject guard;
 	
 	private 	Position 		position;
-
+	private		Vector directionMove;
+	private 	float powerMove;
+	
 	private	int				influenceTypeByEventType[];
 	private	int				reactionTypeByEventType[];
 	private   int				state2ActionType;
 	
+	private GrantedAccessToProperty grantAccessToPropertyPosition[];
 	
 	public StateSimulationObject() {
+		
+		grantAccessToPropertyPosition = new GrantedAccessToProperty[1];
+		grantAccessToPropertyPosition[0] = GrantedAccessToProperty.position;
+
 	}
 	
 	void setObject (SimulationObject object) {
@@ -81,6 +89,23 @@ public class StateSimulationObject extends ListenedBase {
 		return new Position(this.position);
 	}
 	
+	public void setMove(Vector direction, float power, WriteAccessToSimulationObject guard) {
+		if (checkGuard(guard)) {
+			this.directionMove = direction;
+			this.powerMove = power;
+		}
+		
+	}
+	
+	public Vector getDirectionMove() {
+		return new Vector(directionMove);
+	}
+	
+	
+	public float getPowerMove() {
+		return powerMove;
+	}
+	
 	public void setInfluenceTypes (int types[], WriteAccessToSimulationObject guard) {
 		if (checkGuard(guard)) {
 			this.influenceTypeByEventType = types;
@@ -113,7 +138,8 @@ public class StateSimulationObject extends ListenedBase {
 
 	void calculateEventInfluence(Event event) {
 		
-		PositionCalculator.calculatePositionChangedByEvent(event, this);
+		// TODO react to the calculation methods return code
+		PositionCalculator.calculatePositionChangedByEvent(event, getMeReadableOnly(), getMeWritableButHidden(grantAccessToPropertyPosition));
 		
 	}
 	

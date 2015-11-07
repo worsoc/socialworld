@@ -23,6 +23,7 @@ package org.socialworld.objects.access;
 
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.Position;
+import org.socialworld.calculation.Vector;
 import org.socialworld.objects.WriteAccessToSimulationObject;
 
 /**
@@ -76,6 +77,10 @@ public class HiddenSimulationObject {
 		return wa.setPosition(pos, this);
 	}
 	
+	public int setMove(Vector direction, float  power) {
+		return wa.setMove(direction, power, this);
+	}
+
 	public int setAction(AbstractAction action) {
 		return wa.setAction(action, this);
 	}

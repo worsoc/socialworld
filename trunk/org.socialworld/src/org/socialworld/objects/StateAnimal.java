@@ -42,8 +42,7 @@ public class StateAnimal extends StateSimulationObject {
 
 	private Vector directionChest;
 	private Vector directionView;
-	private Vector directionMove;
-
+	private Vector directionActiveMove;
 
 	private KnownPathsPool knownPathsPool;
 
@@ -99,9 +98,9 @@ public class StateAnimal extends StateSimulationObject {
 		}
 	}
 
-	public void setDirectionMove(Vector directionMove, WriteAccessToAnimal guard) {
+	public void setDirectionActiveMove(Vector directionMove, WriteAccessToAnimal guard) {
 		if (checkGuard(guard)) {
-			this.directionMove = directionMove;
+			this.directionActiveMove = directionMove;
 		}
 	}
 
@@ -113,8 +112,8 @@ public class StateAnimal extends StateSimulationObject {
 		return new Vector(this.directionView);
 	}
 
-	public Vector getDirectionMove() {
-		return new Vector(this.directionMove);
+	public Vector getDirectionActiveMove() {
+		return new Vector(this.directionActiveMove);
 	}
 
 	public KnownPathsPool getKnownPathsPool() {
