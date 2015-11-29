@@ -75,7 +75,6 @@ import org.socialworld.objects.access.HiddenAnimal;
 public class ActionMove extends AbstractAction {
 	
 	private Move move;
-	private int repeatsMove;
 	private boolean firstStep;
 	
 	private Path path;
@@ -120,12 +119,14 @@ public class ActionMove extends AbstractAction {
 	}
 	
 	public  void perform() {
+		boolean moveCompleted = false;
+		
 		if (actor == null) return;
 
 		if (!firstStep) {
-			repeatsMove = move.getNumberOfRepeats();
+			moveCompleted = !move.checkContinueMove();
 			
-			if (repeatsMove == 0) path.completeSection(actor.getPosition());
+			if (moveCompleted) path.completeSection(actor.getPosition());
 			
 			if (path.isCompleted()) 
 				if (path.hasRefToKnownPaths()) 
@@ -136,9 +137,9 @@ public class ActionMove extends AbstractAction {
 				}
 		}
 		
-		firstStep = false;
 		
-		if (repeatsMove == 0) 			createMove();
+		if (moveCompleted || this.firstStep) 			createMove();
+		this.firstStep = false;
 		
 		EventByAction event;
 		event = new EventByAction( getEventType(mode),    actor /* as causer*/,  ActualTime.asTime(),

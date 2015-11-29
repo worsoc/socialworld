@@ -49,58 +49,55 @@ import org.socialworld.objects.Animal;
  */
 public class Move extends ActionPerformer {
 	
-	private int repeats;
+	Vector sectionDirection;
+	float remainedDistance;
 	
 	private float velocity;
 	private float acceleration;
 	private float duration;
 	
+	
 	public Move (   ActionMove action ) {
 		super(action);
+		
+		this.duration = 0;
 	}
 	
 
 	public void perform() {
 		
-		if (!isValid()) {
 
+		if (this.duration == 0 | this.acceleration > 0) {
 			ActionMove originalAction;
 			final Animal actor;
-
-			Vector direction;
-			
 				
-			float length;
-			
 			originalAction  = (ActionMove) getOriginalActionObject();
 			actor = (Animal) originalAction.getActor();
-
-			direction = originalAction.getDirectionForSection();
+	
+			if (this.duration == 0)		{
+				this.sectionDirection = originalAction.getDirectionForSection();
 				
+				setMaxParam(3);
+				setParam(0, new Value(Type.vector, "direction", this.sectionDirection));
+				
+				this.remainedDistance = this.sectionDirection.length();
+			}
+
 			calculateVelocity(originalAction, actor);
-			length = direction.length();
+	
 			
-			// TODO
-			this.repeats = (int) (length / velocity );
-
-
-			setMaxParam(3);
-			setParam(0, new Value(Type.vector, "direction", direction));
 			setParam(1, new Value(Type.floatingpoint, "velocity", velocity));
 			setParam(2, new Value(Type.floatingpoint, "acceleration", acceleration));
-			
-			setValid();
-		}
+		}	
+
+		this.remainedDistance = this.remainedDistance - this.velocity;
 		
-		if (repeats > 0) repeats--;
 	} 
 	
 	private void calculateVelocity(ActionMove action, Animal actor) {
-		float actorsIntensity;
 		
 		if (this.duration == 0) {
-			actorsIntensity = action.getIntensity();
-			this.velocity = actorsIntensity;
+			this.velocity = action.getIntensity();
 		}
 		else {
 			this.acceleration = action.getIntensity();
@@ -110,7 +107,12 @@ public class Move extends ActionPerformer {
 		duration = duration + 1;
 	}
 	
-	public int getNumberOfRepeats() {
-		return repeats;
+	public boolean checkContinueMove() {
+		return (this.remainedDistance > 0);
+	}
+	
+	public boolean checkIsWithAcceleration() {
+		
+		return (this.acceleration != 0);
 	}
 }
