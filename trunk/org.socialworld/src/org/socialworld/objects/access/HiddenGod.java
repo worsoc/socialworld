@@ -21,25 +21,19 @@
 */
 package org.socialworld.objects.access;
 
+import org.socialworld.objects.WriteAccessToGod;
+
 /**
  * @author Mathias Sikos
  *
  */
-public enum GrantedAccessToProperty {
-	all, 
-	
-	// simulation object
-	position,  directionMove, powerMove, action, influenceTypes, reactionTypes, state2ActionType,
-	
-	// animal
-	attributes, matrix, path, directionChest, directionView, directionActiveMove,
-	
-	// human
-	inventory, sentence, factsFromSentence, answer, talks, knowledge, acquaintance, lastSaidSentence
-	
-	// item
-	
-	// magic
-	
-	// god
+public class HiddenGod extends HiddenSimulationObject {
+
+	private WriteAccessToGod wa;
+
+	public HiddenGod(WriteAccessToGod wa, GrantedAccessToProperty properties[]) {
+		super(wa, properties);
+		this.wa = wa;
+	}
+
 }
