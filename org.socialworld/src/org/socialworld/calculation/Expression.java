@@ -211,10 +211,6 @@ public class Expression {
 					expression1.evaluateExpression(arguments) ,
 					expression2.evaluateExpression(arguments)   );
 			
-		case replacement:
-			//TODO
-			
-			return Calculation.getNothing();
 			
 		case function:
 			Value calculateArguments[] = new Value[3];
