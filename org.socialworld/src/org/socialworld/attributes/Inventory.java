@@ -22,6 +22,7 @@
 package org.socialworld.attributes;
 
 import org.socialworld.actions.attack.IWeapon;
+import org.socialworld.core.ObjectMaster;
 import org.socialworld.objects.SimulationObject;
 
 /**
@@ -36,10 +37,32 @@ public class Inventory {
 	protected SimulationObject leftHand;
 	protected SimulationObject rightHand;
 
-	public Inventory() {
-
+	private int leftHandID;
+	private int rightHandID;
+	
+	private boolean complete;
+	
+	public Inventory(boolean complete) {
+		this.complete = complete;
 	}
 
+	
+	public void complete() {
+		if (!complete) {
+			
+// TODO getting the objects	according to the ids	
+			
+			if (leftHandID > 0) {
+				leftHand = ObjectMaster.getInstance().getSimulationObject(leftHandID);
+			}
+			if (rightHandID > 0) {
+				rightHand = ObjectMaster.getInstance().getSimulationObject(rightHandID);
+			}
+			
+			complete = true;
+		}
+	}
+	
 	/**
 	 * @return the leftHand
 	 */
@@ -96,4 +119,20 @@ public class Inventory {
 		}
 	}
 
+	/**
+	 * @param leftHandID
+	 *            the leftHandID to set
+	 */
+	public void setLeftHandID(int  leftHandID) {
+		if (!complete) this.leftHandID = leftHandID;
+	}
+	
+	/**
+	 * @param rightHandID
+	 *            the rightHandID to set
+	 */
+	public void setRightHandID(int  rightHandID) {
+		if (!complete) this.rightHandID = rightHandID;
+	}
+		
 }
