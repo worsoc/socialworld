@@ -23,9 +23,9 @@ package org.socialworld.datasource.loadObjects;
 
 import org.socialworld.collections.SimulationObjectArray;
 import org.socialworld.objects.Item;
-import org.socialworld.objects.StateSimulationObject;
-import org.socialworld.objects.WriteAccessToSimulationObject;
-import org.socialworld.objects.access.HiddenSimulationObject;
+import org.socialworld.objects.StateItem;
+import org.socialworld.objects.WriteAccessToItem;
+import org.socialworld.objects.access.HiddenItem;
 
 public class LoadItem extends LoadSimulationObjects {
 
@@ -58,17 +58,16 @@ public class LoadItem extends LoadSimulationObjects {
 	@Override
 	public void loadObject(int objectID) {
 		Item createdItem;
-		HiddenSimulationObject hiddenItem = null;
+		HiddenItem hiddenItem = null;
 		
 		createdItem = (Item) allObjects.get(objectID);
 
 		load(objectID);
 	
-		// TODO
-		StateSimulationObject state = new StateSimulationObject();
+		StateItem state = new StateItem();
 
 		// the constructor "returns" the hidden item object
-		new WriteAccessToSimulationObject(createdItem, state, hiddenItem);
+		new WriteAccessToItem(createdItem, state, hiddenItem);
 		
 		initState(hiddenItem,  objectID);
 		initObject(hiddenItem,  objectID);	
