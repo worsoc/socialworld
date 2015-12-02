@@ -22,7 +22,6 @@
 package org.socialworld.datasource.createObjects;
 
 import org.socialworld.objects.Magic;
-import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.StateMagic;
 import org.socialworld.objects.WriteAccessToMagic;
 import org.socialworld.objects.access.HiddenMagic;
