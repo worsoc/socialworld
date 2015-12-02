@@ -164,7 +164,7 @@ public class LoadHuman extends LoadAnimal {
 		}
 		if (rowTableInventory >= 0) {
 			Inventory inventory;
-			inventory = new Inventory();
+			boolean inventoryComplete = true;
 			
 			int leftHandID;
 			SimulationObject leftHand = null;
@@ -177,18 +177,22 @@ public class LoadHuman extends LoadAnimal {
 			
 			if (leftHandID > 0) {
 				leftHand = allObjects.get(leftHandID);
-				if (leftHand == null) {
-					// TODO
-				}
+				if (leftHand == null) 	inventoryComplete = false;
+				else leftHandID = 0;
 			}
 			if (rightHandID > 0) {
 				rightHand = allObjects.get(rightHandID);
-				if (rightHand == null) {
-					// TODO
-				}
+				if (rightHand == null)	inventoryComplete = false;
+				else rightHandID = 0;
 			}
+			
+			inventory = new Inventory(inventoryComplete);
+			if (leftHandID > 0) inventory.setLeftHandID(leftHandID);
+			if (rightHandID > 0) inventory.setLeftHandID(rightHandID);
+				
 			inventory.setLeftHand(leftHand);
 			inventory.setRightHand(rightHand);
+			
 			hiddenHuman.setInventory(inventory);
 		}
 
