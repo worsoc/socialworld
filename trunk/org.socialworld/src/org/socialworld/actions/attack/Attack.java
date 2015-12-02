@@ -57,6 +57,8 @@ import org.socialworld.objects.Human;
  */
 public class Attack extends ActionPerformer {
 
+// TODO implementation methods	performFightAttack() and performAnimalAttack() (until now very very simple)
+	
  	public  Attack (ActionAttack action) {
  		super(action);
  	}
@@ -93,12 +95,12 @@ public class Attack extends ActionPerformer {
 		
 		actorsPower = actor.getAttributes().get(Attribute.power);
 			
-		// TODO
+		// to do
 	  	directionChest = actor.getDirectionChest();
 		directionView = actor.getDirectionView();
 		directionHit = actor.getDirectionView();
 
-		// TODO
+		// to do
 		actorsIntensity = originalAction.getIntensity();
 		intensity = actorsIntensity * actorsPower;
 	
@@ -131,10 +133,10 @@ public class Attack extends ActionPerformer {
 		
 		actorsPower = actor.getAttributes().get(Attribute.power);
 			
-		// TODO
+		// to do
 		directionHit = actor.getDirectionView();
 
-		// TODO
+		// to do
 		actorsIntensity = originalAction.getIntensity();
 		intensity = actorsIntensity * actorsPower;
 	
