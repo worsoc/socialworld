@@ -41,7 +41,7 @@ public class CreateItem extends CreateSimulationObjects {
 	}
 	
 	@Override
-	public SimulationObject getObject(int objectID) {
+	public Item getObject(int objectID) {
 		HiddenItem hiddenItem = null;
 
 		StateItem state = new StateItem();
