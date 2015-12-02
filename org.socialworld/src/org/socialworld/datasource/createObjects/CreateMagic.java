@@ -41,7 +41,7 @@ public class CreateMagic extends CreateSimulationObjects {
 	}
 
 	@Override
-	public SimulationObject getObject(int objectID) {
+	public Magic getObject(int objectID) {
 		HiddenMagic hiddenMagic = null;
 
 		StateMagic state = new StateMagic();
