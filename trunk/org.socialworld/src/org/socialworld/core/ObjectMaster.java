@@ -31,11 +31,6 @@ import org.socialworld.datasource.createObjects.CreateGod;
 import org.socialworld.datasource.createObjects.CreateHuman;
 import org.socialworld.datasource.createObjects.CreateItem;
 import org.socialworld.datasource.createObjects.CreateMagic;
-import org.socialworld.datasource.loadObjects.LoadAnimal;
-import org.socialworld.datasource.loadObjects.LoadGod;
-import org.socialworld.datasource.loadObjects.LoadHuman;
-import org.socialworld.datasource.loadObjects.LoadItem;
-import org.socialworld.datasource.loadObjects.LoadMagic;
 
 import org.socialworld.collections.SimulationObjectArray;
 
