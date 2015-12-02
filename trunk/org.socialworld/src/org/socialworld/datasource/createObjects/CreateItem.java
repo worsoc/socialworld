@@ -22,7 +22,6 @@
 package org.socialworld.datasource.createObjects;
 
 import org.socialworld.objects.Item;
-import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.StateItem;
 import org.socialworld.objects.WriteAccessToItem;
 import org.socialworld.objects.access.HiddenItem;
