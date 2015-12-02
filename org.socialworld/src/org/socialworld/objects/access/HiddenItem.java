@@ -21,25 +21,19 @@
 */
 package org.socialworld.objects.access;
 
+import org.socialworld.objects.WriteAccessToItem;
+
 /**
  * @author Mathias Sikos
  *
  */
-public enum GrantedAccessToProperty {
-	all, 
+public class HiddenItem extends HiddenSimulationObject {
+
+	private WriteAccessToItem wa;
+
+	public HiddenItem(WriteAccessToItem wa, GrantedAccessToProperty properties[]) {
+		super(wa, properties);
+		this.wa = wa;
+	}
 	
-	// simulation object
-	position,  directionMove, powerMove, action, influenceTypes, reactionTypes, state2ActionType,
-	
-	// animal
-	attributes, matrix, path, directionChest, directionView, directionActiveMove,
-	
-	// human
-	inventory, sentence, factsFromSentence, answer, talks, knowledge, acquaintance, lastSaidSentence
-	
-	// item
-	
-	// magic
-	
-	// god
 }
