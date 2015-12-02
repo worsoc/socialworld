@@ -23,9 +23,9 @@ package org.socialworld.datasource.createObjects;
 
 import org.socialworld.objects.Magic;
 import org.socialworld.objects.SimulationObject;
-import org.socialworld.objects.StateSimulationObject;
-import org.socialworld.objects.WriteAccessToSimulationObject;
-import org.socialworld.objects.access.HiddenSimulationObject;
+import org.socialworld.objects.StateMagic;
+import org.socialworld.objects.WriteAccessToMagic;
+import org.socialworld.objects.access.HiddenMagic;
 
 /**
  * @author Mathias Sikos
@@ -42,14 +42,14 @@ public class CreateMagic extends CreateSimulationObjects {
 
 	@Override
 	public SimulationObject getObject(int objectID) {
-		HiddenSimulationObject hiddenMagic = null;
-		// TODO
-		StateSimulationObject state = new StateSimulationObject();
+		HiddenMagic hiddenMagic = null;
+
+		StateMagic state = new StateMagic();
 		
 		Magic createdMagic = new Magic(objectID);
 		
 		// the constructor "returns" the hidden magic object
-		new WriteAccessToSimulationObject(createdMagic, state, hiddenMagic);
+		new WriteAccessToMagic(createdMagic, state, hiddenMagic);
 		
 		initState(hiddenMagic);
 		initObject(hiddenMagic);	
