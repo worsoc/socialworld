@@ -103,7 +103,7 @@ public class Path {
 	}
 	
 	public float costs() {
-		// TODO
+		// TODO calculating costs
 		return length;
 	}
 	
