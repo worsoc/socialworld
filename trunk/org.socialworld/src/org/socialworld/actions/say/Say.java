@@ -138,7 +138,7 @@ public class Say extends ActionPerformer {
 		Acquaintance acquaintance;
 		acquaintance = actor.getAcquaintance(partner);
 		
-		// TODO
+		// TODO implement manipulateAnswer()
 		// more complex, please
 		// here only an example for an easy decision
 		if (acquaintance.isAttributeValueLessThan(Acquaintance_Attribute.sympathy, AttributeArray.VALUE_MIDDLE) ) 
