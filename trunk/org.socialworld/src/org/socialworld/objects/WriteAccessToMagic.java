@@ -23,7 +23,6 @@ package org.socialworld.objects;
 
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenMagic;
-import org.socialworld.objects.access.HiddenSimulationObject;
 
 /**
  * @author Mathias Sikos
@@ -34,13 +33,13 @@ public class WriteAccessToMagic extends WriteAccessToSimulationObject {
 	private  Magic magic;
 	private StateMagic magicState;
 	
-	public WriteAccessToMagic(Magic magic, StateMagic state, HiddenMagic returnHidden) {
-		super(magic, state, returnHidden);
+	public WriteAccessToMagic(Magic magic, StateMagic state) {
+		super(magic, state);
 		this.magic = magic;
 		this.magicState = state;
 	}
 
-	public HiddenSimulationObject getMeHidden(GrantedAccessToProperty properties[]) {
+	public HiddenMagic getMeHidden(GrantedAccessToProperty properties[]) {
 		return new HiddenMagic(this, properties);
 	}
 	
