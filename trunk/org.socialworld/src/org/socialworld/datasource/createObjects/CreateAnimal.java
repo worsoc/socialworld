@@ -35,11 +35,23 @@ import org.socialworld.objects.access.HiddenAnimal;
 public class CreateAnimal extends CreateSimulationObjects {
 
 	private static CreateAnimal instance;
+	private static boolean hasBeenCreatedYet = false;
 	
-	public static CreateAnimal getInstance() {
-		if (instance == null)			instance = new CreateAnimal();
-		return instance;
+	/**
+	 * The method returns the only instance of the CreateAnimal class to first caller.
+	 * The method returns null to all further callers. 
+	 * 
+	 */
+	public static CreateAnimal getExlusiveInstance() {
+		if (hasBeenCreatedYet == false) {
+			instance = new CreateAnimal();
+			hasBeenCreatedYet = true;
+			return instance;
+		}
+		else return null;
 	}
+	
+
 		
 	@Override
 	public Animal getObject(int objectID) {

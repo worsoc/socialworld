@@ -21,7 +21,36 @@
 */
 package org.socialworld.objects;
 
-public enum SimulationObject_Type {
-	object, animal,human, god, item, magic
 
+public enum SimulationObject_Type {
+	object(0), animal(1),human(2), god(3), item(4), magic(5);
+
+	private int arrayIndex;
+
+	private SimulationObject_Type(int index) {
+		this.arrayIndex = index;
+	}
+	
+	/**
+	 * The method returns the index of the simulation object type.
+	 * 
+	 * @return type's index
+	 */
+	public int getIndex() {
+		return arrayIndex;
+	}
+	
+	/**
+	 * The method returns the simulation object type which belongs to the parameter index.
+	 * 
+	 * @param arrayIndex
+	 *            type index
+	 * @return simulation object type
+	 */
+	public static SimulationObject_Type getSimulationObjectType(int arrayIndex) {
+		for (SimulationObject_Type type : SimulationObject_Type.values())
+			if (type.arrayIndex == arrayIndex)
+				return type;
+		return null;
+	}
 }

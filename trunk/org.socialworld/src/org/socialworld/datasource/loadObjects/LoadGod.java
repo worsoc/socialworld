@@ -31,6 +31,7 @@ import org.socialworld.objects.access.HiddenGod;
 public class LoadGod extends LoadSimulationObjects {
 
 	private static LoadGod instance;
+	private static boolean hasBeenCreatedYet = false;
 
 	protected LoadGod(SimulationObjectArray allObjects) {
 		
@@ -39,16 +40,19 @@ public class LoadGod extends LoadSimulationObjects {
 	}
 
 	/**
-	 * The method creates the only instance of the LoadAnimal.
+	 * The method returns the only instance of the LoadGod class to first caller.
+	 * The method returns null to all further callers. 
 	 * 
 	 */
-	public static LoadGod createInstance(SimulationObjectArray allObjects) {
-		if (instance == null) {
+	public static LoadGod getExlusiveInstance(SimulationObjectArray allObjects) {
+		if (hasBeenCreatedYet == false) {
 			instance = new LoadGod(allObjects);
-			
+			hasBeenCreatedYet = true;
+			return instance;
 		}
-		return instance;
+		else return null;
 	}
+
 
 	@Override
 	public void createObject(int objectID) {

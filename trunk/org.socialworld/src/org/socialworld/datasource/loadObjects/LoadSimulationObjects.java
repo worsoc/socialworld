@@ -63,9 +63,12 @@ public abstract class LoadSimulationObjects {
 		
 		tableObjects = new TableObject();
 		tablePositions = new TablePosition();
+		tableInfluenceByEvent = new TableInfluenceByEvent();
+		tableReactionByEvent = new TableReactionByEvent();
 
 	}
 
+	
 	public abstract void createObject(int objectID) ;
 	
 	public abstract void loadObject(int objectID) ;
@@ -98,7 +101,7 @@ public abstract class LoadSimulationObjects {
 		
 		if (rowTableObjects >= 0) {
 			int state2ActionType;
-			state2ActionType = tableObjects.getType(rowTableObjects);
+			state2ActionType = tableObjects.getState2Act(rowTableObjects);
 			hiddenObject.setState2ActionType(state2ActionType);
 		}	
 		if (rowTableInfluenceByEvent >= 0) {

@@ -33,10 +33,20 @@ import org.socialworld.objects.access.HiddenItem;
 public class CreateItem extends CreateSimulationObjects {
 
 	private static CreateItem instance;
+	private static boolean hasBeenCreatedYet = false;
 	
-	public static CreateItem getInstance() {
-		if (instance == null)			instance = new CreateItem();
-		return instance;
+	/**
+	 * The method returns the only instance of the CreateItem class to first caller.
+	 * The method returns null to all further callers. 
+	 * 
+	 */
+	public static CreateItem getExlusiveInstance() {
+		if (hasBeenCreatedYet == false) {
+			instance = new CreateItem();
+			hasBeenCreatedYet = true;
+			return instance;
+		}
+		else return null;
 	}
 	
 	@Override

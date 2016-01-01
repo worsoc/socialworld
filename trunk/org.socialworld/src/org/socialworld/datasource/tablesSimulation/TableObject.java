@@ -35,8 +35,8 @@ public class TableObject extends Table {
 	public final  String 	ALL_COLUMNS 		= " id, type, position, state2act, locBase9, locBase25 ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
-	public final  String 	COLUMNS_ID 		= " id ";
-	public final  int 		SELECT_COLUMN_ID 	= 2;
+	public final  String 	COLUMNS_ID_TYPE 		= " id, type ";
+	public final  int 		SELECT_COLUMNS_ID_TYPE 	= 2;
 
 	int id[];
 	int type[];
@@ -56,8 +56,8 @@ public class TableObject extends Table {
 		switch (selectList) {
 		case SELECT_ALL_COLUMNS:
 			return  ALL_COLUMNS;
-		case SELECT_COLUMN_ID:
-			return  COLUMNS_ID;
+		case SELECT_COLUMNS_ID_TYPE:
+			return  COLUMNS_ID_TYPE;
 		default:
 			return ALL_COLUMNS;
 		}
@@ -103,13 +103,15 @@ public class TableObject extends Table {
 
 			break;
 
-		case SELECT_COLUMN_ID:
+		case SELECT_COLUMNS_ID_TYPE:
 			id = new int[rowCount];
+			type = new int[rowCount];
 
 			try {
 				while (rs.next()) {
 					
 					id[row] = rs.getInt(1);
+					type[row] = rs.getInt(2);
 					row++;
 				}
 			}
@@ -167,12 +169,12 @@ public class TableObject extends Table {
 		}
 	}
 
-	public void insert(int id) {
+	public void insert(int id, int type) {
 		String statement;
 			
-		if (id > 0) {
+		if ((id > 0) & (type > 0)) {
 			
-			statement 	= "INSERT INTO sw_object (id) VALUES (" + id + ")";
+			statement 	= "INSERT INTO sw_object (id, type) VALUES (" + id + ", " + type + ")";
 			
 			insert(statement);
 		}
