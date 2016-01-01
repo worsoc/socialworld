@@ -197,4 +197,20 @@ public abstract class Table {
 			return result;
 		}
 
+		public int[] getAllPK1() {
+			int size;
+			int index;
+			
+			int result[];
+			int count = 0;
+			
+			size = this.pk1.length;
+			
+			result = new int[count];
+			for (index = 0; index < size; index++) {
+					result[index] = this.pk1[index];
+			}
+			
+			return result;
+		}		
 }

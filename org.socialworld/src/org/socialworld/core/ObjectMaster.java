@@ -31,6 +31,14 @@ import org.socialworld.datasource.createObjects.CreateGod;
 import org.socialworld.datasource.createObjects.CreateHuman;
 import org.socialworld.datasource.createObjects.CreateItem;
 import org.socialworld.datasource.createObjects.CreateMagic;
+import org.socialworld.datasource.createObjects.CreateSimulationObjects;
+import org.socialworld.datasource.loadObjects.LoadAnimal;
+import org.socialworld.datasource.loadObjects.LoadGod;
+import org.socialworld.datasource.loadObjects.LoadHuman;
+import org.socialworld.datasource.loadObjects.LoadItem;
+import org.socialworld.datasource.loadObjects.LoadMagic;
+import org.socialworld.datasource.loadObjects.LoadSimulationObjects;
+import org.socialworld.datasource.tablesSimulation.TableObject;
 
 import org.socialworld.collections.SimulationObjectArray;
 
@@ -44,6 +52,9 @@ public class ObjectMaster {
 	private static final int SIMULATION_OBJECTS_START_CAPACITY = 1000;
 	
 	private static ObjectMaster instance;
+	
+	private LoadSimulationObjects[] loaders;
+	private CreateSimulationObjects[] creators;
 	
 	private final ListenedList<God> gods;
 	private final ListenedList<Human> humans;
@@ -72,8 +83,22 @@ public class ObjectMaster {
 		this.animals = new ListenedList<Animal>();
 		this.magics = new ListenedList<Magic>();
 		this.items = new ListenedList<Item>();
-		
 		resetIterators();
+		
+		loaders = new LoadSimulationObjects[8];
+		loaders[1] = LoadAnimal.getExlusiveInstance(simulationObjects);
+		loaders[2] = LoadHuman.getExlusiveInstance(simulationObjects);
+		loaders[3] = LoadGod.getExlusiveInstance(simulationObjects);
+		loaders[4] = LoadItem.getExlusiveInstance(simulationObjects);
+		loaders[5] = LoadMagic.getExlusiveInstance(simulationObjects);
+
+		creators = new CreateSimulationObjects[8];
+		creators[1] = CreateAnimal.getExlusiveInstance();
+		creators[2] = CreateHuman.getExlusiveInstance();
+		creators[3] = CreateGod.getExlusiveInstance();
+		creators[4] = CreateItem.getExlusiveInstance();
+		creators[5] = CreateMagic.getExlusiveInstance();
+
 	}	
 	
 	public static ObjectMaster getInstance() {
@@ -82,9 +107,44 @@ public class ObjectMaster {
 		}
 		return instance;
 	}
+	
 	public SimulationObject getSimulationObject(int objectID) {
 		return this.simulationObjects.get(objectID);
 	}
+	
+	public void loadSimulationObjects() {
+		int allIDs[];
+		int length;
+		int index;
+		
+		int objectID;
+		int type;
+		
+		TableObject tableObjects;
+		tableObjects = new TableObject();
+		
+		tableObjects.select(tableObjects.SELECT_COLUMNS_ID_TYPE, "", "ORDER BY id");
+		
+		allIDs = tableObjects.getAllPK1();
+		length = allIDs.length;
+		
+		for (index = 0; index < length; index++) {
+			objectID = allIDs[index];
+			type = tableObjects.getType(index);
+			
+			this.loaders[type].createObject(objectID);
+		}
+		
+		for (index = 0; index < length; index++) {
+			objectID = allIDs[index];
+			type = tableObjects.getType(index);
+
+			this.loaders[type].loadObject(objectID);
+			addObjectToList(SimulationObject_Type.getSimulationObjectType(type), simulationObjects.get(objectID));
+		}
+		
+	}
+	
 	
 	public SimulationObject createSimulationObject(
 			SimulationObject_Type simulationObjectType) {
@@ -94,40 +154,42 @@ public class ObjectMaster {
 		maxObjectID = maxObjectID + 1;
 		objectID =  maxObjectID;
 		
+		object = creators[simulationObjectType.getIndex()].getObject(objectID);
+		
+		if (object != null) {
+			this.simulationObjects.set(objectID, object);
+			addObjectToList(simulationObjectType, object);
+		}
+		
+		return object;
+	}
+	
+	private void addObjectToList(SimulationObject_Type simulationObjectType, SimulationObject object) {
 		// TODO (tyloesand) weitere Objekttypen hinzufügen
 		switch (simulationObjectType) {
 		case animal:
-			object = CreateAnimal.getInstance().getObject(objectID);
 			this.animals.add((Animal)object);
 			animalsIterator = animals.listIterator(animalsIterator.nextIndex());
 			break;
 		case human:
-			object = CreateHuman.getInstance().getObject(objectID);
 			this.humans.add((Human)object);
 			humansIterator = humans.listIterator(humansIterator.nextIndex());
 			break;
 		case god:
-			object = CreateGod.getInstance().getObject(objectID);
 			this.gods.add((God)object);
 			godsIterator = gods.listIterator(godsIterator.nextIndex());
 			break;
 		case item:
-			object = CreateItem.getInstance().getObject(objectID);
 			this.items.add((Item)object);
 			itemsIterator = items.listIterator(itemsIterator.nextIndex());
 			break;
 		case magic:
-			object = CreateMagic.getInstance().getObject(objectID);
 			this.magics.add((Magic)object);
 			magicsIterator = magics.listIterator(magicsIterator.nextIndex());
 			break;
 		default:
 			object = null;
-		}
-		if (object != null) {
-			this.simulationObjects.set(objectID, object);
-		}
-		return object;
+		}		
 	}
 	
 	public boolean hasNext(SimulationObject_Type simulationObjectType) {

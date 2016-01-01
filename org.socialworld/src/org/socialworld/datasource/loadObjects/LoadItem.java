@@ -30,6 +30,7 @@ import org.socialworld.objects.access.HiddenItem;
 public class LoadItem extends LoadSimulationObjects {
 
 	private static LoadItem instance;
+	private static boolean hasBeenCreatedYet = false;
 
 	protected LoadItem(SimulationObjectArray allObjects) {
 		
@@ -38,16 +39,19 @@ public class LoadItem extends LoadSimulationObjects {
 	}
 
 	/**
-	 * The method creates the only instance of the LoadAnimal.
+	 * The method returns the only instance of the LoadItem class to first caller.
+	 * The method returns null to all further callers. 
 	 * 
 	 */
-	public static LoadItem createInstance(SimulationObjectArray allObjects) {
-		if (instance == null) {
+	public static LoadItem getExlusiveInstance(SimulationObjectArray allObjects) {
+		if (hasBeenCreatedYet == false) {
 			instance = new LoadItem(allObjects);
-			
+			hasBeenCreatedYet = true;
+			return instance;
 		}
-		return instance;
+		else return null;
 	}
+
 
 	@Override
 	public void createObject(int objectID) {

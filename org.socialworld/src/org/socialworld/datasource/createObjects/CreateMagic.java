@@ -33,10 +33,20 @@ import org.socialworld.objects.access.HiddenMagic;
 public class CreateMagic extends CreateSimulationObjects {
 
 	private static CreateMagic instance;
+	private static boolean hasBeenCreatedYet = false;
 	
-	public static CreateMagic getInstance() {
-		if (instance == null)			instance = new CreateMagic();
-		return instance;
+	/**
+	 * The method returns the only instance of the CreateMagic class to first caller.
+	 * The method returns null to all further callers. 
+	 * 
+	 */
+	public static CreateMagic getExlusiveInstance() {
+		if (hasBeenCreatedYet == false) {
+			instance = new CreateMagic();
+			hasBeenCreatedYet = true;
+			return instance;
+		}
+		else return null;
 	}
 
 	@Override

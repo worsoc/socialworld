@@ -30,6 +30,7 @@ import org.socialworld.objects.access.HiddenMagic;
 public class LoadMagic extends LoadSimulationObjects {
 
 	private static LoadMagic instance;
+	private static boolean hasBeenCreatedYet = false;
 
 	protected LoadMagic(SimulationObjectArray allObjects) {
 		
@@ -38,16 +39,19 @@ public class LoadMagic extends LoadSimulationObjects {
 	}
 
 	/**
-	 * The method creates the only instance of the LoadAnimal.
+	 * The method returns the only instance of the LoadMagic class to first caller.
+	 * The method returns null to all further callers. 
 	 * 
 	 */
-	public static LoadMagic createInstance(SimulationObjectArray allObjects) {
-		if (instance == null) {
+	public static LoadMagic getExlusiveInstance(SimulationObjectArray allObjects) {
+		if (hasBeenCreatedYet == false) {
 			instance = new LoadMagic(allObjects);
-			
+			hasBeenCreatedYet = true;
+			return instance;
 		}
-		return instance;
+		else return null;
 	}
+
 
 	@Override
 	public void createObject(int objectID) {

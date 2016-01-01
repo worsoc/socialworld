@@ -34,6 +34,7 @@ import org.socialworld.objects.access.HiddenAnimal;
 public class LoadAnimal extends LoadSimulationObjects  {
 
 	private static LoadAnimal instance;
+	private static boolean hasBeenCreatedYet = false;
 	
 	TableState tableAttributes;
 
@@ -48,15 +49,19 @@ public class LoadAnimal extends LoadSimulationObjects  {
 		tableDirections = new TableAnimalsDirections();
 	}
 
+	
 	/**
-	 * The method creates the only instance of the LoadAnimal.
+	 * The method returns the only instance of the LoadAnimal class to first caller.
+	 * The method returns null to all further callers. 
 	 * 
 	 */
-	public static LoadAnimal createInstance(SimulationObjectArray allObjects) {
-		if (instance == null) {
+	public static LoadAnimal getExlusiveInstance(SimulationObjectArray allObjects) {
+		if (hasBeenCreatedYet == false) {
 			instance = new LoadAnimal(allObjects);
+			hasBeenCreatedYet = true;
+			return instance;
 		}
-		return instance;
+		else return null;
 	}
 	
 	

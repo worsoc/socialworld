@@ -56,6 +56,7 @@ import org.socialworld.SimpleClientActionHandler;
 public class LoadHuman extends LoadAnimal {
 	
 	private static LoadHuman instance;
+	private static boolean hasBeenCreatedYet = false;
 	
 	TableHuman tableHuman;
 	int rowTableHuman;
@@ -90,16 +91,17 @@ public class LoadHuman extends LoadAnimal {
 	}
 
 	/**
-	 * The method creates the only instance of the LoadAnimal.
+	 * The method returns the only instance of the LoadHuman class to first caller.
+	 * The method returns null to all further callers. 
 	 * 
 	 */
-	public static LoadHuman createInstance(SimulationObjectArray allObjects) {
-		if (instance == null) {
+	public static LoadHuman getExlusiveInstance(SimulationObjectArray allObjects) {
+		if (hasBeenCreatedYet == false) {
 			instance = new LoadHuman(allObjects);
-			
+			hasBeenCreatedYet = true;
+			return instance;
 		}
-		return instance;
-
+		else return null;
 	}
 	
 	protected void load(int objectID) {

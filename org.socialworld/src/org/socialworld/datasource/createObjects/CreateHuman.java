@@ -34,10 +34,20 @@ import org.socialworld.objects.access.HiddenHuman;
 public class CreateHuman extends CreateAnimal {
 
 	private static CreateHuman instance;
+	private static boolean hasBeenCreatedYet = false;
 	
-	public static CreateHuman getInstance() {
-		if (instance == null)			instance = new CreateHuman();
-		return instance;
+	/**
+	 * The method returns the only instance of the CreateHuman class to first caller.
+	 * The method returns null to all further callers. 
+	 * 
+	 */
+	public static CreateHuman getExlusiveInstance() {
+		if (hasBeenCreatedYet == false) {
+			instance = new CreateHuman();
+			hasBeenCreatedYet = true;
+			return instance;
+		}
+		else return null;
 	}
 
 	@Override
