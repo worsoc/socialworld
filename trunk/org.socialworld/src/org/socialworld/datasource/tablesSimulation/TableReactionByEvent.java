@@ -63,7 +63,7 @@ public class TableReactionByEvent extends Table {
 		
 		rs = connection.executeQuery(statement);
 
-		idCount = rowCount / 256;
+		idCount = rowCount / 256 + 1;
 		reactionTypes = new int[idCount][256];
 		id = new int[idCount];
 		

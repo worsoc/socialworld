@@ -26,6 +26,7 @@ import org.socialworld.datasource.pool.GaussPoolAttributeCalculatorMatrix;
 import org.socialworld.objects.Animal;
 import org.socialworld.objects.StateAnimal;
 import org.socialworld.objects.WriteAccessToAnimal;
+import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenAnimal;
 
 /**
@@ -55,13 +56,17 @@ public class CreateAnimal extends CreateSimulationObjects {
 		
 	@Override
 	public Animal getObject(int objectID) {
+		WriteAccessToAnimal wa;
+		GrantedAccessToProperty propertiesToInit[];
 		HiddenAnimal hiddenAnimal = null;
 		
 		StateAnimal state = new StateAnimal();
 		Animal createdAnimal = new Animal(objectID);
 
-		// the constructor "returns" the hidden animal object
-		new WriteAccessToAnimal(createdAnimal, state, hiddenAnimal);
+		wa = new WriteAccessToAnimal(createdAnimal, state);
+		propertiesToInit = new GrantedAccessToProperty[1];
+		propertiesToInit[0] = GrantedAccessToProperty.all;
+		hiddenAnimal = wa.getMeHidden(propertiesToInit);
 
 		initState(hiddenAnimal);
 		initObject(hiddenAnimal);	

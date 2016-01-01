@@ -24,6 +24,7 @@ package org.socialworld.datasource.createObjects;
 import org.socialworld.objects.Item;
 import org.socialworld.objects.StateItem;
 import org.socialworld.objects.WriteAccessToItem;
+import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenItem;
 
 /**
@@ -51,14 +52,18 @@ public class CreateItem extends CreateSimulationObjects {
 	
 	@Override
 	public Item getObject(int objectID) {
+		WriteAccessToItem wa;
+		GrantedAccessToProperty propertiesToInit[];
 		HiddenItem hiddenItem = null;
 
 		StateItem state = new StateItem();
 		
 		Item createdItem = new Item(objectID);
 		
-		// the constructor "returns" the hidden item object
-		new WriteAccessToItem(createdItem, state, hiddenItem);
+		wa = new WriteAccessToItem(createdItem, state);
+		propertiesToInit = new GrantedAccessToProperty[1];
+		propertiesToInit[0] = GrantedAccessToProperty.all;
+		hiddenItem = wa.getMeHidden(propertiesToInit);
 		
 
 		initState(hiddenItem);

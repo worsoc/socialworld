@@ -23,9 +23,10 @@ package org.socialworld.datasource.createObjects;
 
 import org.socialworld.objects.God;
 import org.socialworld.objects.SimulationObject;
-import org.socialworld.objects.StateSimulationObject;
-import org.socialworld.objects.WriteAccessToSimulationObject;
-import org.socialworld.objects.access.HiddenSimulationObject;
+import org.socialworld.objects.StateGod;
+import org.socialworld.objects.WriteAccessToGod;
+import org.socialworld.objects.access.GrantedAccessToProperty;
+import org.socialworld.objects.access.HiddenGod;
 
 /**
  * @author Mathias Sikos
@@ -52,14 +53,18 @@ public class CreateGod extends CreateSimulationObjects {
 
 	@Override
 	public SimulationObject getObject(int objectID) {
-		HiddenSimulationObject hiddenGod = null;
-		// TODO
-		StateSimulationObject state = new StateSimulationObject();
+		WriteAccessToGod wa;
+		GrantedAccessToProperty propertiesToInit[];
+		HiddenGod hiddenGod = null;
+
+		StateGod state = new StateGod();
 		
 		God createdGod = new God(objectID);
 		
-		// the constructor "returns" the hidden god object
-		new WriteAccessToSimulationObject(createdGod, state, hiddenGod);
+		wa = new WriteAccessToGod(createdGod, state);
+		propertiesToInit = new GrantedAccessToProperty[1];
+		propertiesToInit[0] = GrantedAccessToProperty.all;
+		hiddenGod = wa.getMeHidden(propertiesToInit);
 		
 
 		initState(hiddenGod);

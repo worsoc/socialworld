@@ -42,6 +42,7 @@ import org.socialworld.knowledge.KnowledgeFact_Value;
 import org.socialworld.knowledge.KnowledgeSource;
 import org.socialworld.knowledge.KnowledgeSource_Type;
 import org.socialworld.objects.*;
+import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenHuman;
 import org.socialworld.SimpleClientActionHandler;
 
@@ -133,6 +134,8 @@ public class LoadHuman extends LoadAnimal {
 
 	public void loadObject(int objectID) {
 		Human createdHuman;
+		WriteAccessToHuman wa;
+		GrantedAccessToProperty propertiesToInit[];
 		HiddenHuman hiddenHuman = null;
 		
 		createdHuman = (Human) allObjects.get(objectID);
@@ -141,8 +144,10 @@ public class LoadHuman extends LoadAnimal {
 		
 		StateHuman state = new StateHuman();
 
-		// the constructor "returns" the hidden human object
-		new WriteAccessToHuman(createdHuman, state, hiddenHuman);
+		wa = new WriteAccessToHuman(createdHuman, state);
+		propertiesToInit = new GrantedAccessToProperty[1];
+		propertiesToInit[0] = GrantedAccessToProperty.all;
+		hiddenHuman = wa.getMeHidden(propertiesToInit);
 
 		initState(hiddenHuman,  objectID);
 		initObject(hiddenHuman,  objectID);	
