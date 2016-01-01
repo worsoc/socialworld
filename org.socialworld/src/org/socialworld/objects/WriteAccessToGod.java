@@ -23,7 +23,6 @@ package org.socialworld.objects;
 
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenGod;
-import org.socialworld.objects.access.HiddenSimulationObject;
 
 /**
  * @author Mathias Sikos
@@ -34,13 +33,13 @@ public class WriteAccessToGod extends WriteAccessToSimulationObject {
 	private  God god;
 	private StateGod godState;
 	
-	public WriteAccessToGod(God god, StateGod state, HiddenGod returnHidden) {
-		super(god, state, returnHidden);
+	public WriteAccessToGod(God god, StateGod state) {
+		super(god, state);
 		this.god = god;
 		this.godState = state;
 	}
 
-	public HiddenSimulationObject getMeHidden(GrantedAccessToProperty properties[]) {
+	public HiddenGod getMeHidden(GrantedAccessToProperty properties[]) {
 		return new HiddenGod(this, properties);
 	}
 

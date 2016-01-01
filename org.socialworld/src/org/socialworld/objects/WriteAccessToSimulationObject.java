@@ -37,8 +37,7 @@ public class WriteAccessToSimulationObject {
 	
 	boolean isDummy;
 	
-	public WriteAccessToSimulationObject(SimulationObject object, StateSimulationObject state, HiddenSimulationObject returnHidden) {
-		GrantedAccessToProperty propertiesToInit[];
+	public WriteAccessToSimulationObject(SimulationObject object, StateSimulationObject state) {
 		
 		this.object = object;
 		this.objectsState = state;
@@ -50,10 +49,6 @@ public class WriteAccessToSimulationObject {
 		state.setWriteAccess(this);
 		state.setObject(object);
 		
-		propertiesToInit = new GrantedAccessToProperty[1];
-		propertiesToInit[0] = GrantedAccessToProperty.all;
-		
-		returnHidden = getMeHidden(propertiesToInit);
 	}
 	
 	// Dummy

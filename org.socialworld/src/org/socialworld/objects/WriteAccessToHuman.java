@@ -31,7 +31,6 @@ import org.socialworld.knowledge.Answer;
 import org.socialworld.knowledge.Knowledge;
 import org.socialworld.knowledge.KnowledgeSource;
 import org.socialworld.objects.access.GrantedAccessToProperty;
-import org.socialworld.objects.access.HiddenAnimal;
 import org.socialworld.objects.access.HiddenHuman;
 import org.socialworld.objects.access.HiddenSimulationObject;
 
@@ -40,14 +39,14 @@ public class WriteAccessToHuman extends WriteAccessToAnimal {
 	private  Human human;
 	private  StateHuman	humanState;
 	
-	public WriteAccessToHuman(Human human, StateHuman state, HiddenAnimal returnHidden) {
-		super(human, state, returnHidden);
+	public WriteAccessToHuman(Human human, StateHuman state) {
+		super(human, state);
 		this.human = human;
 		this.humanState = state;
 		this.human.init();
 	}
 
-	public HiddenSimulationObject getMeHidden(GrantedAccessToProperty properties[]) {
+	public HiddenHuman getMeHidden(GrantedAccessToProperty properties[]) {
 		return new HiddenHuman(this, properties);
 	}
 
