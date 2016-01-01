@@ -24,6 +24,7 @@ package org.socialworld.datasource.createObjects;
 import org.socialworld.objects.Magic;
 import org.socialworld.objects.StateMagic;
 import org.socialworld.objects.WriteAccessToMagic;
+import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenMagic;
 
 /**
@@ -51,14 +52,18 @@ public class CreateMagic extends CreateSimulationObjects {
 
 	@Override
 	public Magic getObject(int objectID) {
+		WriteAccessToMagic wa;
+		GrantedAccessToProperty propertiesToInit[];
 		HiddenMagic hiddenMagic = null;
 
 		StateMagic state = new StateMagic();
 		
 		Magic createdMagic = new Magic(objectID);
 		
-		// the constructor "returns" the hidden magic object
-		new WriteAccessToMagic(createdMagic, state, hiddenMagic);
+		wa = new WriteAccessToMagic(createdMagic, state);
+		propertiesToInit = new GrantedAccessToProperty[1];
+		propertiesToInit[0] = GrantedAccessToProperty.all;
+		hiddenMagic = wa.getMeHidden(propertiesToInit);
 		
 		initState(hiddenMagic);
 		initObject(hiddenMagic);	

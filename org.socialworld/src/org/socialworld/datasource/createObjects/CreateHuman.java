@@ -25,6 +25,7 @@ import org.socialworld.SimpleClientActionHandler;
 import org.socialworld.objects.Human;
 import org.socialworld.objects.StateHuman;
 import org.socialworld.objects.WriteAccessToHuman;
+import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenHuman;
 
 /**
@@ -52,14 +53,18 @@ public class CreateHuman extends CreateAnimal {
 
 	@Override
 	public Human getObject(int objectID) {
+		WriteAccessToHuman wa;
+		GrantedAccessToProperty propertiesToInit[];
 		HiddenHuman hiddenHuman = null;
 
 		StateHuman state = new StateHuman();
 		
 		Human createdHuman = new Human(objectID);
 		
-		// the constructor "returns" the hidden human object
-		new WriteAccessToHuman(createdHuman, state, hiddenHuman);
+		wa = new WriteAccessToHuman(createdHuman, state);
+		propertiesToInit = new GrantedAccessToProperty[1];
+		propertiesToInit[0] = GrantedAccessToProperty.all;
+		hiddenHuman = wa.getMeHidden(propertiesToInit);
 
 		initState(hiddenHuman);
 		initObject(hiddenHuman);	

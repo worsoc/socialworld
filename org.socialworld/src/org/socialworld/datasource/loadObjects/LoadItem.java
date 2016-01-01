@@ -25,6 +25,7 @@ import org.socialworld.collections.SimulationObjectArray;
 import org.socialworld.objects.Item;
 import org.socialworld.objects.StateItem;
 import org.socialworld.objects.WriteAccessToItem;
+import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenItem;
 
 public class LoadItem extends LoadSimulationObjects {
@@ -62,6 +63,8 @@ public class LoadItem extends LoadSimulationObjects {
 	@Override
 	public void loadObject(int objectID) {
 		Item createdItem;
+		WriteAccessToItem wa;
+		GrantedAccessToProperty propertiesToInit[];
 		HiddenItem hiddenItem = null;
 		
 		createdItem = (Item) allObjects.get(objectID);
@@ -70,8 +73,10 @@ public class LoadItem extends LoadSimulationObjects {
 	
 		StateItem state = new StateItem();
 
-		// the constructor "returns" the hidden item object
-		new WriteAccessToItem(createdItem, state, hiddenItem);
+		wa = new WriteAccessToItem(createdItem, state);
+		propertiesToInit = new GrantedAccessToProperty[1];
+		propertiesToInit[0] = GrantedAccessToProperty.all;
+		hiddenItem = wa.getMeHidden(propertiesToInit);
 		
 		initState(hiddenItem,  objectID);
 		initObject(hiddenItem,  objectID);	

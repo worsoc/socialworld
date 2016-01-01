@@ -29,6 +29,7 @@ import org.socialworld.datasource.tablesSimulation.TableState;
 import org.socialworld.objects.Animal;
 import org.socialworld.objects.StateAnimal;
 import org.socialworld.objects.WriteAccessToAnimal;
+import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenAnimal;
 
 public class LoadAnimal extends LoadSimulationObjects  {
@@ -83,6 +84,8 @@ public class LoadAnimal extends LoadSimulationObjects  {
 	@Override
 	public  void loadObject(int objectID) {
 		Animal createdAnimal;
+		WriteAccessToAnimal wa;
+		GrantedAccessToProperty propertiesToInit[];
 		HiddenAnimal hiddenAnimal = null;
 		
 		createdAnimal = (Animal) allObjects.get(objectID);
@@ -91,8 +94,10 @@ public class LoadAnimal extends LoadSimulationObjects  {
 
 		StateAnimal state = new StateAnimal();
 
-		// the constructor "returns" the hidden animal object
-		new WriteAccessToAnimal(createdAnimal, state, hiddenAnimal);
+		wa = new WriteAccessToAnimal(createdAnimal, state);
+		propertiesToInit = new GrantedAccessToProperty[1];
+		propertiesToInit[0] = GrantedAccessToProperty.all;
+		hiddenAnimal = wa.getMeHidden(propertiesToInit);
 		
 		initState(hiddenAnimal, objectID);
 		initObject(hiddenAnimal,  objectID);	

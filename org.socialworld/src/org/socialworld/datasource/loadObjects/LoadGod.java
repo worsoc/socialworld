@@ -26,6 +26,7 @@ import org.socialworld.collections.SimulationObjectArray;
 import org.socialworld.objects.God;
 import org.socialworld.objects.StateGod;
 import org.socialworld.objects.WriteAccessToGod;
+import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenGod;
 
 public class LoadGod extends LoadSimulationObjects {
@@ -63,6 +64,8 @@ public class LoadGod extends LoadSimulationObjects {
 	@Override
 	public void loadObject(int objectID) {
 		God createdGod;
+		WriteAccessToGod wa;
+		GrantedAccessToProperty propertiesToInit[];
 		HiddenGod hiddenGod = null;
 		
 		createdGod = (God) allObjects.get(objectID);
@@ -71,9 +74,11 @@ public class LoadGod extends LoadSimulationObjects {
 	
 		StateGod state = new StateGod();
 
-		// the constructor "returns" the hidden god object
-		new WriteAccessToGod(createdGod, state, hiddenGod);
-		
+		wa = new WriteAccessToGod(createdGod, state);
+		propertiesToInit = new GrantedAccessToProperty[1];
+		propertiesToInit[0] = GrantedAccessToProperty.all;
+		hiddenGod = wa.getMeHidden(propertiesToInit);
+				
 		initState(hiddenGod,  objectID);
 		initObject(hiddenGod,  objectID);	
 		

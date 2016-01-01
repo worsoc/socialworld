@@ -78,12 +78,10 @@ public abstract class LoadSimulationObjects {
 		
 		
 		tableObjects.select(tableObjects.SELECT_ALL_COLUMNS, " WHERE id = " + objectID, "");
-		tablePositions.select(tablePositions.SELECT_ALL_COLUMNS, " WHERE id = " + objectID, "");
 		tableInfluenceByEvent.select(tableInfluenceByEvent.SELECT_ALL_COLUMNS, " WHERE id = " + objectID, " ORDER BY  eventType");
 		tableReactionByEvent.select(tableReactionByEvent.SELECT_ALL_COLUMNS, " WHERE id = " + objectID, " ORDER BY  eventType");
 
 		rowTableObjects = tableObjects.getIndexFor1PK(objectID);
-		rowTablePositions = tablePositions.getIndexFor1PK(objectID);
 		rowTableInfluenceByEvent = tableInfluenceByEvent.getIndexFor1PK(objectID);
 		rowTableReactionByEvent = tableReactionByEvent.getIndexFor1PK(objectID);
 		
@@ -97,12 +95,17 @@ public abstract class LoadSimulationObjects {
 
 	protected void initState(HiddenSimulationObject hiddenObject, int objectID) {
 		int x,y,z;
-	
+		int pos_id;
 		
 		if (rowTableObjects >= 0) {
 			int state2ActionType;
 			state2ActionType = tableObjects.getState2Act(rowTableObjects);
 			hiddenObject.setState2ActionType(state2ActionType);
+			
+			pos_id = tableObjects.getPosition(rowTableObjects);
+			tablePositions.select(tablePositions.SELECT_ALL_COLUMNS, " WHERE pos_id = " + pos_id, "");
+			rowTablePositions = tablePositions.getIndexFor1PK(pos_id);
+
 		}	
 		if (rowTableInfluenceByEvent >= 0) {
 			int influenceTypes[];

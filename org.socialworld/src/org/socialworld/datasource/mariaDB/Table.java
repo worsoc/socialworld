@@ -202,11 +202,10 @@ public abstract class Table {
 			int index;
 			
 			int result[];
-			int count = 0;
 			
 			size = this.pk1.length;
 			
-			result = new int[count];
+			result = new int[size];
 			for (index = 0; index < size; index++) {
 					result[index] = this.pk1[index];
 			}
