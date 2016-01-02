@@ -50,6 +50,11 @@ public class Animal extends SimulationObject {
 		super(objectID);
 	}
 
+	
+	protected void assignState(StateSimulationObject state) {
+		if (checkIsMyState(state) ) this.state = (StateAnimal) state;
+	}
+	
 	void init() {
 		
 		pathFinder = new PathFinder(this, this.state.getKnownPathsPool());
