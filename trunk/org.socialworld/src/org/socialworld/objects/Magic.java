@@ -37,6 +37,9 @@ public class Magic extends SimulationObject {
 		super(objectID);
 	}
 
+	protected void assignState(StateSimulationObject state) {
+		//if (checkIsMyState(state) ) this.state = (StateMagic) state;
+	}
 
 	public void reactToEvent(final Event event) {
 		

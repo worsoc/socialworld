@@ -37,6 +37,9 @@ public class Item extends SimulationObject {
 		super(objectID);
 	}
 
+	protected void assignState(StateSimulationObject state) {
+		//if (checkIsMyState(state) ) this.state = (StateItem) state;
+	}
 	
 	public void reactToEvent(final Event event) {
 		

@@ -45,6 +45,10 @@ import org.socialworld.conversation.Talk_SentenceType;
 		super(objectID);
 	}
 
+	protected void assignState(StateSimulationObject state) {
+		super.assignState(state);
+		if (checkIsMyState(state) ) this.state = (StateHuman) state;
+	}
 	
 	void init() {
 	}

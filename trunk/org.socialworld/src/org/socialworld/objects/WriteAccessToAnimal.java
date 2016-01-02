@@ -37,6 +37,7 @@ public class WriteAccessToAnimal extends WriteAccessToSimulationObject {
 		super(animal, state);
 		this.animal = animal;
 		this.animalState = state;
+	
 		this.animal.init();
 	}
 	

@@ -36,6 +36,9 @@ public class God extends SimulationObject {
 		super(objectID);
 	}
 
+	protected void assignState(StateSimulationObject state) {
+		//if (checkIsMyState(state) ) this.state = (StateGod) state;
+	}
 
 	public void reactToEvent(final Event event) {
 		

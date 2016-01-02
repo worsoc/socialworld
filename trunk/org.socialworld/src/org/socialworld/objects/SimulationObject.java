@@ -69,6 +69,7 @@ public abstract class SimulationObject extends ListenedBase {
 
 	}
 	
+
 	final StateSimulationObject getState(WriteAccessToSimulationObject guard) {
 		if (checkGuard(guard))
 			return this.state;
@@ -80,7 +81,14 @@ public abstract class SimulationObject extends ListenedBase {
 	final void setState(StateSimulationObject state, WriteAccessToSimulationObject guard) {
 		if (checkGuard(guard)) {
 			this.state = state;
+			assignState(state);
 		}
+	}
+
+	protected abstract void assignState(StateSimulationObject state);
+
+	protected final boolean checkIsMyState(StateSimulationObject state) {
+		return (state == this.state);
 	}
 	
 	/**
