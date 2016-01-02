@@ -60,6 +60,7 @@ import org.socialworld.calculation.Vector;
 public class Position {
 
 	public final int LOCATIONBYBASEMAXLENGTH = 9;
+	public final int MAX_XY = 1000;
 	public static final int LOCATIONBASE9 = 9;
 	public static final int LOCATIONBASE25 = 25;
 	
@@ -160,7 +161,9 @@ public class Position {
 		int sectorY;
 		int sector;
 		
-		float range;
+		float rangeSector;
+		
+		rangeSector = MAX_XY;
 		
 		float x = position.getX();
 		float y = position.getY();
@@ -169,14 +172,13 @@ public class Position {
 		
 		for (i = 0; i < LOCATIONBYBASEMAXLENGTH; i++) {
 			
-			range = x / baseSquareRoot;
-			sectorX = (int) ( x / range );
-			x = x % range;
+			rangeSector = rangeSector / baseSquareRoot;
 			
-			range = y / baseSquareRoot;
-			sectorY = (int) ( y / range );
-			sectorY = sectorY - 1;
-			y = y % range;
+			sectorX = (int) ( x / rangeSector ) + 1;
+			x = x % rangeSector;
+			
+			sectorY = (int) ( y / rangeSector );
+			y = y % rangeSector;
 			
 			sector = sectorY * baseSquareRoot + sectorX;
 			
