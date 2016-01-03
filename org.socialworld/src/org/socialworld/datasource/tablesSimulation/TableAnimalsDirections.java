@@ -164,6 +164,7 @@ public class TableAnimalsDirections extends Table {
 			selectAllColumns(rs);
 		}
 
+		setPK1(id);
 	}
 
 	public void insert(int id) {

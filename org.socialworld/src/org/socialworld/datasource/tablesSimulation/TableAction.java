@@ -83,6 +83,9 @@ public class TableAction extends Table {
 		default:
 			selectAllColumns(rs);
 		}
+		
+		setPK1(action_id);
+		
 	}
 
 	public void insert(int action_id, int actor, int type, int mode, long minTime, long maxTime, int priority, int done) {

@@ -137,6 +137,10 @@ public class TableAcquaintance extends Table {
 			}
 			
 		}
+		
+		setPK1(id);
+		setPK2(partner_id);
+		
 	}
 
 	public void insert(int id, int partner_id, int attribs[]) {

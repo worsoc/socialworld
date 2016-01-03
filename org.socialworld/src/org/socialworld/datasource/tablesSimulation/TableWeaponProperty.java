@@ -72,6 +72,9 @@ public class TableWeaponProperty extends Table {
 		default:
 			selectAllColumns(rs);
 		}
+		
+		setPK1(id);
+		
 	}
 
 	public void insert(int id, float mass, float hard, float sharp, float m, float n) {

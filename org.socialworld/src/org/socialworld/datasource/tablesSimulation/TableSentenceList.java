@@ -90,13 +90,15 @@ public class TableSentenceList extends Table {
 				e.printStackTrace();
 				return;
 			}
-			setPK1(id);
-			setPK2(partner_id);
 
 			break;
 		default:
 			selectAllColumns(rs);
 		}
+		
+		setPK1(id);
+		setPK2(partner_id);
+		
 	}
 
 	public void insert(int id, int partner_id, int type, int lfd_nr, String sentence) {
