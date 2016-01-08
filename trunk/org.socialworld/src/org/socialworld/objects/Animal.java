@@ -27,10 +27,8 @@ import org.socialworld.actions.move.Path;
 import org.socialworld.actions.move.PathFinder;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.attributes.Position;
-import org.socialworld.core.Event;
 import org.socialworld.calculation.FunctionByMatrix;
 import org.socialworld.calculation.Vector;
-import org.socialworld.calculation.application.ActionCreator;
 
 
 /**
@@ -43,11 +41,13 @@ public class Animal extends SimulationObject {
 
 	private StateAnimal state;
 	
-	protected PathFinder pathFinder;
+	private PathFinder pathFinder;
 
+	private boolean initialized;
 	
 	public Animal(int objectID) {
 		super(objectID);
+		initialized = false;
 	}
 
 	
@@ -56,25 +56,41 @@ public class Animal extends SimulationObject {
 	}
 	
 	void init() {
-		
-		pathFinder = new PathFinder(this, this.state.getKnownPathsPool());
-		
+		if (initialized == false) {
+			pathFinder = new PathFinder(this, this.state.getKnownPathsPool());
+			initialized = true;
+		}
 	}
 
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    ATTRIBUTES  //////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 	
-	public FunctionByMatrix getMatrix() {
+	final public FunctionByMatrix getMatrix() {
 		return this.state.getMatrix();
 	}
 
 	
-	public AttributeArray getAttributes() {
+	final public AttributeArray getAttributes() {
 		return this.state.getAttributes();
 	}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    KNOWLEDGE  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	final public Path findPath(Position end) {
+		return this.pathFinder.findPath(end);
+	}
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    DIRECTIONS ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
 	 * @return the directionChest
 	 */
-	public Vector getDirectionChest() {
+	final public Vector getDirectionChest() {
 		return this.state.getDirectionChest();
 	}
 
@@ -82,15 +98,14 @@ public class Animal extends SimulationObject {
 	/**
 	 * @return the directionView
 	 */
-	public Vector getDirectionView() {
+	final public Vector getDirectionView() {
 		return this.state.getDirectionView();
 	}
 
 
-	
-	public Path findPath(Position end) {
-		return this.pathFinder.findPath(end);
-	}
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    ACTION     ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 	
 
 	/**
@@ -109,34 +124,5 @@ public class Animal extends SimulationObject {
 		default:
 		}
 	}
-
-
-	/**
-	 * The method lets calculate how an event changes an object's state.
-	 * 
-	 * @param event
-	 *            the event that effects to the object
-	 */
-	public void changeByEvent(final Event event) {
-		this.state.calculateEventInfluence(event);
-	}
-
-	/**
-	 * The method lets calculate how an object reacts to an event.
-	 * 
-	 * @param event
-	 *            the event that the object reacts to
-	 */
-	public void reactToEvent(final Event event) {
-		AbstractAction reaction;
-
-		logger.debug("reactToEvent");
-
-		reaction =	ActionCreator.createAction(	this, event);
-		
-		actionHandler.insertAction(reaction);
-		
-	}
-	
 
 }

@@ -25,9 +25,9 @@ package org.socialworld.objects;
 import org.apache.log4j.Logger;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.Position;
+import org.socialworld.calculation.application.ActionCreator;
 import org.socialworld.core.ActionHandler;
 import org.socialworld.core.Event;
-import org.socialworld.core.Simulation;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.propertyChange.ListenedBase;
 
@@ -38,19 +38,16 @@ import org.socialworld.propertyChange.ListenedBase;
  * 
  */
 public abstract class SimulationObject extends ListenedBase {
+	
 	protected static final Logger logger = Logger.getLogger(SimulationObject.class);
 
-	private	WriteAccessToSimulationObject guard;
 	private		int 			objectID;
-	protected   Simulation  	simulation;
-	
-
-	protected 	ActionHandler 	actionHandler;
-	
-	
 	private StateSimulationObject state;
+
+	private 	ActionHandler 	actionHandler;
 	
 
+	private	WriteAccessToSimulationObject guard;
 	private GrantedAccessToProperty grantAccessToAllProperties[];
 
 	/**
@@ -60,7 +57,6 @@ public abstract class SimulationObject extends ListenedBase {
 	public SimulationObject(int objectID) {
 		this.objectID = objectID;
 		this.guard = null;
-		this.simulation = Simulation.getInstance();
 		this.actionHandler = new ActionHandler(this);
 		
 		grantAccessToAllProperties = new GrantedAccessToProperty[1];
@@ -68,28 +64,10 @@ public abstract class SimulationObject extends ListenedBase {
 
 
 	}
-	
 
-	final StateSimulationObject getState(WriteAccessToSimulationObject guard) {
-		if (checkGuard(guard))
-			return this.state;
-		else
-			return null;
-		
-	}
-	
-	final void setState(StateSimulationObject state, WriteAccessToSimulationObject guard) {
-		if (checkGuard(guard)) {
-			this.state = state;
-			assignState(state);
-		}
-	}
-
-	protected abstract void assignState(StateSimulationObject state);
-
-	protected final boolean checkIsMyState(StateSimulationObject state) {
-		return (state == this.state);
-	}
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    WRITE ACCESS     /////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
 	 * The method sets write access to a guard.
@@ -105,39 +83,92 @@ public abstract class SimulationObject extends ListenedBase {
 	}
 	
 	
-	final boolean checkGuard(WriteAccessToSimulationObject guard) {
+	protected final boolean checkGuard(WriteAccessToSimulationObject guard) {
 		return (this.guard == guard);
 	}
-	
-	void setObjectID(int objectID, WriteAccessToSimulationObject guard) {
-		if (this.guard == guard ) this.objectID = objectID;	
+
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    OBJECT_ID      ///////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+		
+	public final int getObjectID() {
+		return objectID;
 	}
-
-
-	public void setAction(AbstractAction newAction, WriteAccessToSimulationObject guard) {
-
-		if (this.guard == guard) {
-			if (Simulation.WITH_LOGGING == 1 ) logger.debug("Mensch " + objectID + " trägt Aktion " + newAction.toString() + " in Liste ein");
-			actionHandler.insertAction(newAction);
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    STATE      ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+	
+	protected final void setState(StateSimulationObject state, WriteAccessToSimulationObject guard) {
+		if (checkGuard(guard)) {
+			this.state = state;
+			assignState(state);
 		}
 	}
 
-	
-	public void addAction(AbstractAction newAction) {
-		actionHandler.insertAction(newAction);
+	protected abstract void assignState(StateSimulationObject state);
+
+	protected final boolean checkIsMyState(StateSimulationObject state) {
+		return (state == this.state);
 	}
+	
+	protected final StateSimulationObject getState(WriteAccessToSimulationObject guard) {
+		if (checkGuard(guard))
+			return this.state;
+		else
+			return null;
+		
+	}
+	
+	/**
+	 * The method returns the object's position.
+	 * 
+	 * @return position
+	 */
+	public final Position getPosition() {
+		return this.state.getPosition();
+	}
+	
+	public final int getReactionType(int eventType) {
+	 return this.state.getReactionType(eventType);
+	} 
+
+	public final int getInfluenceType(int eventType) {
+		 return this.state.getInfluenceType(eventType);
+		} 
+
+	public final int getState2ActionType() {
+		 return this.state.getState2ActionType();
+		} 
+	
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    ACTION     ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public final void setAction(AbstractAction newAction, WriteAccessToSimulationObject guard) {
+
+		if (this.guard == guard) {
+			actionHandler.insertAction(newAction);
+		}
+	}
+	
 	
 	/**
 	 * The method lets a simulation object do an action.
 	 * 
 	 * @param action
 	 */
-	public void doAction(AbstractAction action) {
+	public final void doAction(AbstractAction action) {
 		action.setActor(this, guard.getMeHidden(grantAccessToAllProperties));
 		action.perform();
 		action.removeWriteAccess();
 	}
 
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    EVENT      ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 	
 	
 	/**
@@ -147,7 +178,7 @@ public abstract class SimulationObject extends ListenedBase {
 	 * @param simualationEvent -
 	 *            the event influencing the simulation object
 	 */
-	public void changeByEvent(final Event simualationEvent) {
+	public final void changeByEvent(final Event simualationEvent) {
 		this.state.calculateEventInfluence(simualationEvent);
 	}
 
@@ -158,45 +189,17 @@ public abstract class SimulationObject extends ListenedBase {
 	 * @param simualationEvent -
 	 *            the event influencing the simulation object
 	 */
-	public abstract void reactToEvent(final Event simualationEvent);
-
-	/**
-	 * The method returns the object's position.
-	 * 
-	 * @return position
-	 */
-	public Position getPosition() {
-		return this.state.getPosition();
-	}
-
+	public final void reactToEvent(final Event simualationEvent) {
+		AbstractAction reaction;
 	
-	
-
-	/**
-	 * The method returns the reference to object's action handler.
-	 * 
-	 * @return actionHandler
-	 */
-	public ActionHandler getActionHandler() {
-		return null;
+		reaction =	ActionCreator.createAction(	this, simualationEvent);
+		
+		actionHandler.insertAction(reaction);
 	}
 	
-	
-	public int getReactionType(int eventType) {
-	 return this.state.getReactionType(eventType);
-	} 
-
-	public int getInfluenceType(int eventType) {
-		 return this.state.getInfluenceType(eventType);
-		} 
-
-	public int getState2ActionType() {
-		 return this.state.getState2ActionType();
-		} 
-
-	public int getObjectID() {
-		return objectID;
-	}
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    toString()  //////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 	
 	public String toString() {
 		return "" + objectID;

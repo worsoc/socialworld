@@ -21,7 +21,6 @@
 */
 package org.socialworld.objects;
 
-import org.socialworld.core.Event;
 
 /**
  * magic spells are simulation objects that offer some fantasy aspects. A magic
@@ -41,8 +40,5 @@ public class Magic extends SimulationObject {
 		//if (checkIsMyState(state) ) this.state = (StateMagic) state;
 	}
 
-	public void reactToEvent(final Event event) {
-		
-	}
 
 }

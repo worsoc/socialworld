@@ -57,6 +57,10 @@ public class StateAnimal extends StateSimulationObject {
 		grantAccessToPropertyAttributes[0] = GrantedAccessToProperty.attributes;
 	}
 
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    ATTRIBUTES  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+	
 	void calculateEventInfluence(Event event) {
 		
 		super.calculateEventInfluence(event);
@@ -66,64 +70,73 @@ public class StateAnimal extends StateSimulationObject {
 		
 	}
 
-	public void setAttributes(AttributeArray attributes, WriteAccessToAnimal guard) {
+	final void setAttributes(AttributeArray attributes, WriteAccessToAnimal guard) {
 		if (checkGuard(guard)) {
 			this.attributes = attributes;
 		}
 	}
 	
-	public AttributeArray getAttributes() {
+	final public AttributeArray getAttributes() {
 		return new AttributeArray(this.attributes);
 	}
 	
-	public void setMatrix(FunctionByMatrix matrix, WriteAccessToAnimal guard) {
+	final void setMatrix(FunctionByMatrix matrix, WriteAccessToAnimal guard) {
 		if (checkGuard(guard)) {
 			this.attributeCalculatorMatrix  = matrix;
 		}
 	}
 	
-	public FunctionByMatrix getMatrix() {
+	final public FunctionByMatrix getMatrix() {
 		return this.attributeCalculatorMatrix;
 	}
 
-	public void setDirectionChest(Vector directionChest, WriteAccessToAnimal guard) {
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    KNOWLEDGE  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	final public KnownPathsPool getKnownPathsPool() {
+		return this.knownPathsPool;
+	}
+	
+	final void addPath(Path path, WriteAccessToAnimal guard)  {
+		if (checkGuard(guard)) {
+			this.knownPathsPool.addPath(path);
+		}
+	}
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    DIRECTIONS  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+	
+	final void setDirectionChest(Vector directionChest, WriteAccessToAnimal guard) {
 		if (checkGuard(guard)) {
 			this.directionChest = directionChest;
 		}
 	}
 
-	public void setDirectionView(Vector directionView, WriteAccessToAnimal guard) {
+	final void setDirectionView(Vector directionView, WriteAccessToAnimal guard) {
 		if (checkGuard(guard)) {
 			this.directionView = directionView;
 		}
 	}
 
-	public void setDirectionActiveMove(Vector directionMove, WriteAccessToAnimal guard) {
+	final void setDirectionActiveMove(Vector directionMove, WriteAccessToAnimal guard) {
 		if (checkGuard(guard)) {
 			this.directionActiveMove = directionMove;
 		}
 	}
 
-	public Vector getDirectionChest() {
+	final public Vector getDirectionChest() {
 		return new Vector(this.directionChest);
 	}
 	
-	public Vector getDirectionView() {
+	final public Vector getDirectionView() {
 		return new Vector(this.directionView);
 	}
 
-	public Vector getDirectionActiveMove() {
+	final public Vector getDirectionActiveMove() {
 		return new Vector(this.directionActiveMove);
 	}
 
-	public KnownPathsPool getKnownPathsPool() {
-		return this.knownPathsPool;
-	}
-	
-	public void addPath(Path path, WriteAccessToAnimal guard)  {
-		if (checkGuard(guard)) {
-			this.knownPathsPool.addPath(path);
-		}
-	}
 
 }

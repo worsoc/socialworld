@@ -21,7 +21,6 @@
 */
 package org.socialworld.objects;
 
-import org.socialworld.core.Event;
 
 /**
  * The God is an special simulation object that is responsible for global
@@ -40,7 +39,5 @@ public class God extends SimulationObject {
 		//if (checkIsMyState(state) ) this.state = (StateGod) state;
 	}
 
-	public void reactToEvent(final Event event) {
-		
-	}
+
 }

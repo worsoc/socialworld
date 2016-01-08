@@ -75,71 +75,73 @@ public class StateHuman extends StateAnimal {
 		
 	}
 
-	public void setTalks(ArrayList<Talk> talks, WriteAccessToHuman guard) {
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    KNOWLEDGE  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+	
+	final void addFactsFromSentence(String sentence, KnowledgeSource source, WriteAccessToHuman guard) {
+		if (checkGuard(guard)) {
+			this.knowledge.addFactsFromSentence(sentence, source);
+		}
+	}
+
+	final void addKnowledge(Knowledge knowledge, WriteAccessToHuman guard) {
+		if (checkGuard(guard)) {
+			this.knowledge.addKnowledge(knowledge);
+		}
+	}
+
+	final void addAcquaintance(Acquaintance acquaintance, WriteAccessToHuman guard) {
+		if (checkGuard(guard)) {
+			this.acquaintance.addAcquaintance(acquaintance);
+		}
+	}
+
+	final public Acquaintance getAcquaintance(Human partner) {
+		return new Acquaintance(this.acquaintance.getAcquaintance(partner));
+	}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    TALK       ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	final void setTalks(ArrayList<Talk> talks, WriteAccessToHuman guard) {
 		if (checkGuard(guard)) {
 			this.talks = talks;
 		}
 	}
-	
-	public void setInventory(Inventory inventory, WriteAccessToHuman guard) {
-		if (checkGuard(guard)) {
-			this.inventory = inventory;
-		}
-	}
-	
-	public void addSentence(Human partner, Talk_SentenceType type,  String sentence, WriteAccessToHuman guard) {
+
+	final void addSentence(Human partner, Talk_SentenceType type,  String sentence, WriteAccessToHuman guard) {
 		if (checkGuard(guard)) {
 			Talk talk = findTalk(partner);
 			talk.addSentence(sentence, type);
 		}
 	}
 
-	public void addAnswer(Answer answer,  Human partner, WriteAccessToHuman guard) {
+	final void addAnswer(Answer answer,  Human partner, WriteAccessToHuman guard) {
 		if (checkGuard(guard)) {
 			Talk talk = findTalk(partner);
 			talk.addAnswer(answer);
 		}
 	}
-
-	public void addFactsFromSentence(String sentence, KnowledgeSource source, WriteAccessToHuman guard) {
-		if (checkGuard(guard)) {
-			this.knowledge.addFactsFromSentence(sentence, source);
-		}
-	}
-
-	public void addKnowledge(Knowledge knowledge, WriteAccessToHuman guard) {
-		if (checkGuard(guard)) {
-			this.knowledge.addKnowledge(knowledge);
-		}
-	}
-
-	public void addAcquaintance(Acquaintance acquaintance, WriteAccessToHuman guard) {
-		if (checkGuard(guard)) {
-			this.acquaintance.addAcquaintance(acquaintance);
-		}
-	}
-
-	public Acquaintance getAcquaintance(Human partner) {
-		return new Acquaintance(this.acquaintance.getAcquaintance(partner));
-	}
 	
-	public void setLastSaidSentence(String sentence, WriteAccessToHuman guard) {
+	final void setLastSaidSentence(String sentence, WriteAccessToHuman guard) {
 		if (checkGuard(guard)) {
 			lastSaidSentence = sentence;
 		}
 	}
 	
-	public String getLastSaidSentence() {
+	final public String getLastSaidSentence() {
 		return new String(lastSaidSentence);
 	}
 	
-	public Answer getAnswerForQuestion(String question) {
+	final public Answer getAnswerForQuestion(String question) {
 		// no copy
 		// because a new answer is created in method KnowledgePool.getAnswerForQuestion()
 		return this.knowledge.getAnswerForQuestion(question);
 	}
 
-	protected String findSentence(Human partner, Talk_SentenceType type) {
+	final String findSentence(Human partner, Talk_SentenceType type) {
 		ListIterator<Talk> iterator ;
 		Talk talk;
 		String sentence = null;
@@ -162,7 +164,7 @@ public class StateHuman extends StateAnimal {
 
 	}
 
-	protected Talk findTalk(Human partner) {
+	private Talk findTalk(Human partner) {
 		ListIterator<Talk> iterator ;
 		Talk talk;
 		
@@ -182,22 +184,32 @@ public class StateHuman extends StateAnimal {
 		return  talks.get(0);
 	}
 
-	public IWeapon getLeftHandWeapon() {
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    INVENTORY  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	final void setInventory(Inventory inventory, WriteAccessToHuman guard) {
+		if (checkGuard(guard)) {
+			this.inventory = inventory;
+		}
+	}
+	
+	final public IWeapon getLeftHandWeapon() {
 		// no copy because it is a simulation object and that isn't allowed to be duplicated
 		return this.inventory.getLeftHandWeapon();
 	}
 	
-	public IWeapon getRightHandWeapon() {
+	final public IWeapon getRightHandWeapon() {
 		// no copy because it is a simulation object and that isn't allowed to be duplicated
 		return this.inventory.getRightHandWeapon();
 	}
 
-	public SimulationObject getLeftHand() {
+	final public SimulationObject getLeftHand() {
 		// no copy because it is a simulation object and that isn't allowed to be duplicated
 		return this.inventory.getLeftHand();
 	}
 	
-	public SimulationObject getRightHand() {
+	final public SimulationObject getRightHand() {
 		// no copy because it is a simulation object and that isn't allowed to be duplicated
 		return this.inventory.getRightHand();
 	}
