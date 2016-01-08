@@ -33,11 +33,14 @@ public class FunctionByMatrix extends FunctionBase {
 
 	public FunctionByMatrix(FunctionByMatrix_Matrix matrix) {
 		this.matrix = matrix;
+		returnInvalidNothingvalue = false;
 	}
 	
 	public void setMatrix(FunctionByMatrix_Matrix matrix) {
-		this.matrix = matrix;
-		returnInvalidNothingvalue = false;
+		if (returnInvalidNothingvalue == true) {
+			this.matrix = matrix;
+			returnInvalidNothingvalue = false;
+		}
 	}
 	
 	@Override
