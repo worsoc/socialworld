@@ -98,7 +98,7 @@ public class ObjectMaster {
 		creators[3] = CreateGod.getExlusiveInstance();
 		creators[4] = CreateItem.getExlusiveInstance();
 		creators[5] = CreateMagic.getExlusiveInstance();
-
+		
 	}	
 	
 	public static ObjectMaster getInstance() {
