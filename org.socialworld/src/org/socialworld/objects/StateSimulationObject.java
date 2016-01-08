@@ -55,19 +55,19 @@ public class StateSimulationObject extends ListenedBase {
 
 	}
 	
-	void setObject (SimulationObject object) {
-		this.object = object;
+	final void setObject (SimulationObject object, WriteAccessToSimulationObject guard) {
+		if (checkGuard(guard)) this.object = object;
 	}
 	
-	HiddenSimulationObject getMeWritableButHidden(GrantedAccessToProperty properties[]) {
+	final protected HiddenSimulationObject getMeWritableButHidden(GrantedAccessToProperty properties[]) {
 		return guard.getMeHidden(properties);
 	}
 	
-	StateSimulationObject getMeReadableOnly() {
+	final protected StateSimulationObject getMeReadableOnly() {
 		return this;
 	}
 	
-	SimulationObject getObject() {
+	final protected SimulationObject getObject() {
 		return object;
 	}
 	
@@ -79,17 +79,17 @@ public class StateSimulationObject extends ListenedBase {
 		return (this.guard == guard);
 	}
 
-	public void setPosition(Position position, WriteAccessToSimulationObject guard) {
+	final void setPosition(Position position, WriteAccessToSimulationObject guard) {
 		if (checkGuard(guard)) {
 			this.position = position;
 		}
 	}
 	
-	public Position getPosition() {
+	final public Position getPosition() {
 		return new Position(this.position);
 	}
 	
-	public void setMove(Vector direction, float power, WriteAccessToSimulationObject guard) {
+	final void setMove(Vector direction, float power, WriteAccessToSimulationObject guard) {
 		if (checkGuard(guard)) {
 			this.directionMove = direction;
 			this.powerMove = power;
@@ -97,42 +97,42 @@ public class StateSimulationObject extends ListenedBase {
 		
 	}
 	
-	public Vector getDirectionMove() {
+	final public Vector getDirectionMove() {
 		return new Vector(directionMove);
 	}
 	
 	
-	public float getPowerMove() {
+	final public float getPowerMove() {
 		return powerMove;
 	}
 	
-	public void setInfluenceTypes (int types[], WriteAccessToSimulationObject guard) {
+	final void setInfluenceTypes (int types[], WriteAccessToSimulationObject guard) {
 		if (checkGuard(guard)) {
 			this.influenceTypeByEventType = types;
 		}
 	}
 
-	public int getInfluenceType(int eventType) {
+	final public int getInfluenceType(int eventType) {
 		 return this.influenceTypeByEventType[eventType];
 	} 
 
-	public void setReactionTypes (int types[], WriteAccessToSimulationObject guard) {
+	final void setReactionTypes (int types[], WriteAccessToSimulationObject guard) {
 		if (checkGuard(guard)) {
 			this.reactionTypeByEventType = types;
 		}
 	}
 
-	public int getReactionType(int eventType) {
+	final public int getReactionType(int eventType) {
 		 return this.reactionTypeByEventType[eventType];
 	} 
 
-	public void setState2ActionType (int type, WriteAccessToSimulationObject guard) {
+	final void setState2ActionType (int type, WriteAccessToSimulationObject guard) {
 		if (checkGuard(guard)) {
 			this.state2ActionType = type;
 		}
 	}
 
-	public int getState2ActionType() {
+	final public int getState2ActionType() {
 		 return this.state2ActionType;
 	} 
 

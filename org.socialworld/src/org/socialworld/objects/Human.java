@@ -38,8 +38,8 @@ import org.socialworld.conversation.Talk_SentenceType;
  * 
  */
  public class Human extends Mammal {
-	 
 	private StateHuman state;
+	private boolean initialized;
 	
 	public Human(int objectID) {
 		super(objectID);
@@ -51,47 +51,58 @@ import org.socialworld.conversation.Talk_SentenceType;
 	}
 	
 	void init() {
+		if (initialized == false) {
+			initialized = true;
+		}
 	}
 	
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    TALK       ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 		
-	public String getSentence(Human partner, Talk_SentenceType type) {
+	final public String getSentence(Human partner, Talk_SentenceType type) {
 		return this.state.findSentence( partner,  type);
 	}
 	
-	public String getLastSaidSentence() {
+	final public String getLastSaidSentence() {
 		return this.state.getLastSaidSentence();
 	}
 
-
-	
-	public Answer getAnswerForQuestion(String question) {
+	final public Answer getAnswerForQuestion(String question) {
 		// no copy
 		// because a new answer is created in method KnowledgePool.getAnswerForQuestion()
 		return this.state.getAnswerForQuestion(question);
 	}
 	
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    KNOWLEDGE  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 	
-	public Acquaintance getAcquaintance(Human partner) {
+	final public Acquaintance getAcquaintance(Human partner) {
 		return this.state.getAcquaintance(partner);
 	}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    INVENTORY  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 	
 	// TODO interface for more complex access to inventory
-	public IWeapon getLeftHandWeapon() {
+	final public IWeapon getLeftHandWeapon() {
 		// no copy because it is a simulation object and that isn't allowed to be duplicated
 		return this.state.getLeftHandWeapon();
 	}
 	
-	public IWeapon getRightHandWeapon() {
+	final public IWeapon getRightHandWeapon() {
 		// no copy because it is a simulation object and that isn't allowed to be duplicated
 		return this.state.getRightHandWeapon();
 	}
 
-	public SimulationObject getLeftHand() {
+	final public SimulationObject getLeftHand() {
 		// no copy because it is a simulation object and that isn't allowed to be duplicated
 		return this.state.getLeftHand();
 	}
 	
-	public SimulationObject getRightHand() {
+	final public SimulationObject getRightHand() {
 		// no copy because it is a simulation object and that isn't allowed to be duplicated
 		return this.state.getRightHand();
 	}

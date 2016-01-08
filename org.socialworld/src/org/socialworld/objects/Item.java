@@ -21,7 +21,6 @@
 */
 package org.socialworld.objects;
 
-import org.socialworld.core.Event;
 
 /**
  * The class Item describes all non-living simulation objects. It has a method
@@ -41,9 +40,7 @@ public class Item extends SimulationObject {
 		//if (checkIsMyState(state) ) this.state = (StateItem) state;
 	}
 	
-	public void reactToEvent(final Event event) {
-		
-	}
+
 
 
 

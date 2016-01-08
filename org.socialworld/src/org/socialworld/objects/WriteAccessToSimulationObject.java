@@ -47,7 +47,7 @@ public class WriteAccessToSimulationObject {
 		object.setWriteAccess(this);
 		object.setState(state, this);
 		state.setWriteAccess(this);
-		state.setObject(object);
+		state.setObject(object, this);
 		
 	}
 	
@@ -89,10 +89,6 @@ public class WriteAccessToSimulationObject {
 		return caller.checkAccessToPropertyGranted(property);
 	}
 	
-	public void setObjectID(int objectID, HiddenSimulationObject caller) {
-		if (checkCaller(caller) ) object.setObjectID(objectID, this);
-	}
-
 	public int setPosition(Position pos, HiddenSimulationObject caller) {
 		if (checkCaller(caller)) 
 			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.position)) {
