@@ -73,7 +73,11 @@ public class Simulation {
 	
 	
 	public void startSimulation() {
+	
+		this.objectMaster.loadSimulationObjects();
+
 		this.eventMaster.startEventMaster();
+		
 	}
 	
 	public void stopSimulation() {
