@@ -38,7 +38,7 @@ import org.socialworld.calculation.Vector;
  *  
  *  Die Angaben zum Suchbaum werden bei Setzen/Ändern des Vektors angepasst.
  *  
- *  Damit ist derVektor die eigentliche Positionsangabe.
+ *  Damit ist der Vektor die eigentliche Positionsangabe.
  *  
  *  Die beiden Varianten zum Suchbaum dienen der schnellen Findung von Objekten 
  *    über eine Teilfolge der Zahlen- bzw. Buchstabenfolge.
@@ -60,11 +60,11 @@ import org.socialworld.calculation.Vector;
 public class Position {
 
 	public final int LOCATIONBYBASEMAXLENGTH = 9;
-	public final int MAX_XY = 1000;
+	public final int TRANSLATE = 2000000;
 	public static final int LOCATIONBASE9 = 9;
 	public static final int LOCATIONBASE25 = 25;
 	
-	private Vector m_position;
+	private Vector m_position;  // (x,y,z) millimeters
 	
 	private int locationByBase9;
 	private String locationByBase25;
@@ -161,13 +161,15 @@ public class Position {
 		int sectorY;
 		int sector;
 		
+		int max_xy = 2 * TRANSLATE;
+		
 		float rangeSector;
 		
-		rangeSector = MAX_XY;
+		float x = position.getX() + TRANSLATE;
+		float y = position.getY() + TRANSLATE;
 		
-		float x = position.getX();
-		float y = position.getY();
-		
+		rangeSector = max_xy;
+
 		baseSquareRoot = (int) Math.sqrt(base);
 		
 		for (i = 0; i < LOCATIONBYBASEMAXLENGTH; i++) {
