@@ -76,6 +76,11 @@ public class FunctionByTable extends FunctionBase {
 
 	private void initialize() {
 		switch (type) {
+		case positive_raise:
+			values = new int[range + 1];
+		    for(int i=0; i < range; i++)
+		    	values[i] =   i;  
+			break;
 		case negative_raise:
 			values = new int[range + 1];
 		    for(int i=0; i < range; i++)
