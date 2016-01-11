@@ -32,7 +32,7 @@ import org.socialworld.datasource.mariaDB.Table;
  */
 public class TablePoolMatrixRowCol extends Table {
 
-	public final  String 	ALL_COLUMNS 		=	" func_id, row, col, share, function, offset ";
+	public final  String 	ALL_COLUMNS 		=	" func_id, row, col, share, function, offset, inputType ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 	
 	int func_id[];
@@ -41,6 +41,7 @@ public class TablePoolMatrixRowCol extends Table {
 	int share[];
 	int function[];
 	int offset[];
+	int inputType[];
 	
 	@Override
 	protected String getTableName() {
@@ -85,6 +86,7 @@ public class TablePoolMatrixRowCol extends Table {
 		share = new int[rowCount];
 		function = new int[rowCount];
 		offset = new int[rowCount];
+		inputType = new int[rowCount];
 
 		try {
 			while (rs.next()) {
@@ -95,6 +97,7 @@ public class TablePoolMatrixRowCol extends Table {
 				share[row] = rs.getInt(4);
 				function[row] = rs.getInt(5);
 				offset[row] = rs.getInt(6);
+				inputType[row] = rs.getInt(7);
 				
 				row++;
 			}
@@ -106,13 +109,13 @@ public class TablePoolMatrixRowCol extends Table {
 		
 	}
 	
-	public void insert(int func_id, int row, int col, int share, int function, int offset) {
+	public void insert(int func_id, int row, int col, int share, int function, int offset, int inputType) {
 		String statement;
 			
 		if ((func_id > 0) & (row > 0) & (col > 0)) {
 			
-			statement 	= "INSERT INTO swpool_matrix_rowcol (func_id, row, col, share, function, offset) VALUES (" + 
-							func_id + ", " + row + ", " + col + ", " + share + ", " + function + ", " + offset +")";
+			statement 	= "INSERT INTO swpool_matrix_rowcol (func_id, row, col, share, function, offset, inputType) VALUES (" + 
+							func_id + ", " + row + ", " + col + ", " + share + ", " + function + ", " + offset + ", " + inputType +")";
 			
 			insert(statement);
 		}
@@ -160,6 +163,20 @@ public class TablePoolMatrixRowCol extends Table {
 		}
 	}
 
+	public void updateInputType(int func_id, int row, int col,  int inputType) {
+		String statement;
+			
+		if ((func_id > 0) & (row > 0) & (col > 0)) {
+	
+
+			statement 	= "UPDATE swpool_matrix_rowcol SET " +
+					"inputType = " + inputType  + 
+					" WHERE func_id = " + func_id + " AND row = " + row + " AND col = " + col;
+			
+			update(statement);
+		}
+	}
+	
 	public void delete(int func_id, int row, int col) {
 		String statement;
 			
@@ -196,5 +213,9 @@ public class TablePoolMatrixRowCol extends Table {
 		return offset[index];
 	}
 
+	public int getInputType(int index) {
+		return inputType[index];
+	}
+	
 }
 
