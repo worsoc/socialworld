@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.apache.log4j.Logger;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Time;
@@ -55,7 +54,6 @@ import org.socialworld.attributes.Time;
  * @author Mathias Sikos (tyloesand)
  */
 public class ActionMaster {
-	private static final Logger logger = Logger.getLogger(ActionMaster.class);
 	
 	// a reported action handler is rejected because its best action element's execution time is too far in the future
 	public static final int ACTIONMASTER_RETURN_REJECT_TOOMUCHWAIT = 1;
@@ -159,7 +157,6 @@ public class ActionMaster {
 		boolean handlerFromPriorityList = false;
 		boolean handlerFromContinueList = false;
 
-		if (Simulation.WITH_LOGGING == 1 )logger.debug("Aufruf executeAction");
 
 		// if there is a further action handler in continue list this action handler is chosen to execute its action.
 		if (continueHandlersIterator.hasNext()) {
@@ -296,7 +293,6 @@ public class ActionMaster {
 		actionHandlersNow = reportedActionHandlers.get(secondOfTheActualMinute);
 		handlersIterator = actionHandlersNow.listIterator();
 
-		if (Simulation.WITH_LOGGING == 1 )logger.debug(time.toString());
 		
 		//TODO (tyloesand) there must be a call to "all" ActionHandler.reset() somewhere 
 		// if  the counting of seconds starts with 0

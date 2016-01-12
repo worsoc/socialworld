@@ -27,7 +27,6 @@ import java.util.PriorityQueue;
 import java.util.ListIterator;
 
 
-import org.apache.log4j.Logger;
 import org.socialworld.SocialWorld;
 import org.socialworld.calculation.Vector;
 import org.socialworld.attributes.Position;
@@ -44,7 +43,6 @@ import org.socialworld.objects.SimulationObject;
  */
 public class EventMaster extends Thread {
 
-	private static final Logger logger = Logger.getLogger(EventMaster.class);
 
 	private static EventMaster instance;
 	
@@ -112,7 +110,6 @@ public class EventMaster extends Thread {
 	 * the method stops the event processing
 	 */
 	public void stopEventMaster() {
-		if (Simulation.WITH_LOGGING == 1 )		logger.debug("EventMaster.stopEventMaster");
 		isRunning = false;
 	}
 
@@ -120,7 +117,6 @@ public class EventMaster extends Thread {
 	 * the method starts the event processing
 	 */
 	public void startEventMaster() {
-		if (Simulation.WITH_LOGGING == 1 )		logger.debug("EventMaster.startEventMaster");
 		isRunning = true;
 		this.run();
 	}
@@ -132,12 +128,10 @@ public class EventMaster extends Thread {
 	 */
 	@Override
 	public void run() {
-		if (Simulation.WITH_LOGGING == 1 )		logger.debug("EventMaster.run");
 		int sleepTime = 10;
 		int countIterations =  0;
 		while (isRunning) {
 			countIterations++;
-			if (Simulation.WITH_LOGGING == 1 )		logger.debug("EventMaster.run: Iteration " + Integer.toString(countIterations));
 			calculateNextEvent();
 			if (eventQueue.isEmpty())
 				sleepTime = 100;
@@ -146,13 +140,10 @@ public class EventMaster extends Thread {
 			try {
 				sleep(sleepTime);
 			} catch (InterruptedException e) {
-				if (Simulation.WITH_ERROR_LOGGING == 1 ) logger.error(e.getMessage());
-				if (Simulation.WITH_ERROR_LOGGING == 1 ) logger.error(e.getStackTrace());
 				e.printStackTrace();
 			}
 			if (countIterations == 10) stopEventMaster();
 		}
-		if (Simulation.WITH_LOGGING == 1 )		logger.debug("EventMaster stops");
 	}
 
 	/**
@@ -199,7 +190,6 @@ public class EventMaster extends Thread {
 		SimulationObject candidate;
 		int resultDecideEffective;
 		
-		if (Simulation.WITH_LOGGING == 1 )	logger.debug("determineCandidates");
 
 		Simulation simulation = SocialWorld.getCurrent().getSimulation();
 		candidate = simulation.getFirstByPosition(this.eventPosition );

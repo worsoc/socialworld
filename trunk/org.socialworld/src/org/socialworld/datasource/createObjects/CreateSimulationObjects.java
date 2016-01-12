@@ -23,8 +23,6 @@ package org.socialworld.datasource.createObjects;
 
 import java.util.Random;
 
-import org.apache.log4j.Logger;
-import org.socialworld.datasource.loadObjects.LoadSimulationObjects;
 import org.socialworld.datasource.pool.GaussPoolInfluenceType;
 import org.socialworld.datasource.pool.GaussPoolPosition;
 import org.socialworld.datasource.pool.GaussPoolReactionType;
@@ -40,7 +38,6 @@ import org.socialworld.objects.access.HiddenSimulationObject;
  * @author Mathias Sikos (tyloesand) 
  */
 public abstract class CreateSimulationObjects {
-	protected static final Logger logger = Logger.getLogger(LoadSimulationObjects.class);
 
 	protected Random random;
 

@@ -22,7 +22,6 @@
 package org.socialworld.datasource.loadObjects;
 
 
-import org.apache.log4j.Logger;
 import org.socialworld.attributes.Position;
 import org.socialworld.calculation.Vector;
 import org.socialworld.collections.SimulationObjectArray;
@@ -41,7 +40,6 @@ import org.socialworld.objects.access.HiddenSimulationObject;
  */
 public abstract class LoadSimulationObjects {
 	
-	protected static final Logger logger = Logger.getLogger(LoadSimulationObjects.class);
 
 	SimulationObjectArray allObjects;
 	

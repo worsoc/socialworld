@@ -21,7 +21,6 @@
 */
 package org.socialworld.core;
 
-import org.apache.log4j.Logger;
 import org.socialworld.objects.*;
 import org.socialworld.propertyChange.ChangedProperty;
 
@@ -39,7 +38,6 @@ import org.socialworld.collections.ObjectByPositionSearch;
 public class Simulation {
 	public static  int WITH_LOGGING = 1;
 	public static  int WITH_ERROR_LOGGING = 1;
-	private static final Logger logger = Logger.getLogger(Simulation.class);
 
 	private static Simulation instance;
 	
@@ -50,7 +48,6 @@ public class Simulation {
 	
 	private Simulation() {
 		
-		if (WITH_LOGGING == 1 ) logger.debug("create simulation object");
 		
 		this.eventMaster = EventMaster.getInstance();
 		this.objectMaster = ObjectMaster.getInstance();
