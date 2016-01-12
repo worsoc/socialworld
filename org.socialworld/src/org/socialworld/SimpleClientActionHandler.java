@@ -1,6 +1,5 @@
 package org.socialworld;
 
-import org.apache.log4j.Logger;
 import org.socialworld.objects.access.HiddenHuman;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionType;
@@ -9,7 +8,6 @@ import org.socialworld.attributes.Time;
 import org.socialworld.calculation.Vector;
 
 public class SimpleClientActionHandler  {
-	protected static final Logger logger = Logger.getLogger(SimpleClientActionHandler.class);
 
 	private static SimpleClientActionHandler instance;
 	
@@ -42,7 +40,6 @@ public class SimpleClientActionHandler  {
 	
 	
 	public void chooseHuman( int nr) {
-		logger.debug("Mensch " + nr + " angesprochen");
 		switch (nr) {
 		case 1:
 			actualHuman = human1;

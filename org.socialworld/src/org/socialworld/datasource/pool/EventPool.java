@@ -6,12 +6,10 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.net.URL;
 
-import org.apache.log4j.Logger;
 import org.socialworld.core.Event;
 
 public class EventPool {
 	private static final int EVENT_ARRAY_INCREASE = 100;
-	private static final Logger logger = Logger.getLogger(EventPool.class);
 	private static EventPool instance;
 	
 	private static Event events[];
@@ -19,7 +17,6 @@ public class EventPool {
 	private int nextFree = 0;
 	
 	private EventPool () {
-		logger.debug("create EventPool");
 		events = new Event[size];
 
 		initialize();

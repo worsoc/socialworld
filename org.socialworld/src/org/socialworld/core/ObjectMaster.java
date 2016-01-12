@@ -23,7 +23,6 @@ package org.socialworld.core;
 
 import java.util.ListIterator;
 
-import org.apache.log4j.Logger;
 import org.socialworld.objects.*;
 import org.socialworld.propertyChange.ListenedList;
 import org.socialworld.datasource.createObjects.CreateAnimal;
@@ -48,7 +47,6 @@ import org.socialworld.collections.SimulationObjectArray;
  */
 public class ObjectMaster {
 
-	private static final Logger logger = Logger.getLogger(ObjectMaster.class);
 	private static final int SIMULATION_OBJECTS_START_CAPACITY = 1000;
 	
 	private static ObjectMaster instance;
@@ -74,7 +72,6 @@ public class ObjectMaster {
 	
 	
 	private ObjectMaster() {
-		if (Simulation.WITH_LOGGING == 1 ) logger.debug("create ObjectMaster");
 
 		this.simulationObjects = new SimulationObjectArray(SIMULATION_OBJECTS_START_CAPACITY);
 		

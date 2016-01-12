@@ -22,7 +22,6 @@
 package org.socialworld.objects;
 
 
-import org.apache.log4j.Logger;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.Position;
 import org.socialworld.calculation.application.ActionCreator;
@@ -39,7 +38,6 @@ import org.socialworld.propertyChange.ListenedBase;
  */
 public abstract class SimulationObject extends ListenedBase {
 	
-	protected static final Logger logger = Logger.getLogger(SimulationObject.class);
 
 	private		int 			objectID;
 	private StateSimulationObject state;
