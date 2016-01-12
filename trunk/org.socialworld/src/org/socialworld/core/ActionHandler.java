@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Iterator;
 import java.util.ListIterator;
 
-import org.apache.log4j.Logger;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionType;
@@ -38,7 +37,6 @@ import org.socialworld.actions.ActionType;
  * @author Mathias Sikos (tyloesand)
  */
 public class ActionHandler  {
-	private static final Logger logger = Logger.getLogger(ActionHandler.class);
 
 	public static final int ACTIONHANDLER_RETURN_ACTIONDONE = 0;
 	public static final int ACTIONHANDLER_RETURN_ACTIONISGOINGON = 1;
@@ -102,7 +100,6 @@ public class ActionHandler  {
 	public int doActualAction(byte actualSecond ) {
 		AbstractAction action;
 		
-		if (Simulation.WITH_LOGGING == 1 )logger.debug("Aufruf doActualAction");
 		
 		if (this.actionList.size() > 0)		
 			action = this.actionList.get(0);
@@ -157,7 +154,6 @@ public class ActionHandler  {
 	 * @param newAction
 	 */
 	public void insertAction(final AbstractAction newAction) {
-		if (Simulation.WITH_LOGGING == 1 )logger.debug("Aufruf insertAction");
 		
 		long minTimeInMilliseconds;
 		long maxTimeInMilliseconds;
