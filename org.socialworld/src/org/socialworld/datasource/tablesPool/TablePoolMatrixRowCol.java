@@ -38,9 +38,9 @@ public class TablePoolMatrixRowCol extends Table {
 	int func_id[];
 	int row[]; 		
 	int col[]; 
-	int share[];
+	float share[];
 	int function[];
-	int offset[];
+	float offset[];
 	int inputType[];
 	
 	@Override
@@ -83,9 +83,9 @@ public class TablePoolMatrixRowCol extends Table {
 		func_id = new int[rowCount];
 		this.row = new int[rowCount];
 		col = new int[rowCount];
-		share = new int[rowCount];
+		share = new float[rowCount];
 		function = new int[rowCount];
-		offset = new int[rowCount];
+		offset = new float[rowCount];
 		inputType = new int[rowCount];
 
 		try {
@@ -94,9 +94,9 @@ public class TablePoolMatrixRowCol extends Table {
 				func_id[row] = rs.getInt(1);
 				this.row[row] = rs.getInt(2);
 				col[row] = rs.getInt(3);
-				share[row] = rs.getInt(4);
+				share[row] = rs.getFloat(4);
 				function[row] = rs.getInt(5);
-				offset[row] = rs.getInt(6);
+				offset[row] = rs.getFloat(6);
 				inputType[row] = rs.getInt(7);
 				
 				row++;
@@ -109,7 +109,7 @@ public class TablePoolMatrixRowCol extends Table {
 		
 	}
 	
-	public void insert(int func_id, int row, int col, int share, int function, int offset, int inputType) {
+	public void insert(int func_id, int row, int col, float share, int function, float offset, int inputType) {
 		String statement;
 			
 		if ((func_id > 0) & (row > 0) & (col > 0)) {
@@ -121,7 +121,7 @@ public class TablePoolMatrixRowCol extends Table {
 		}
 	}
 	
-	public void updateShare(int func_id, int row, int col,  int share) {
+	public void updateShare(int func_id, int row, int col,  float share) {
 		String statement;
 			
 		if ((func_id > 0) & (row > 0) & (col > 0)) {
@@ -149,7 +149,7 @@ public class TablePoolMatrixRowCol extends Table {
 		}
 	}
 
-	public void updateOffset(int func_id, int row, int col,  int offset) {
+	public void updateOffset(int func_id, int row, int col,  float offset) {
 		String statement;
 			
 		if ((func_id > 0) & (row > 0) & (col > 0)) {
@@ -201,7 +201,7 @@ public class TablePoolMatrixRowCol extends Table {
 		return col[index];
 	}
 
-	public int getShare(int index) {
+	public float getShare(int index) {
 		return share[index];
 	}
 
@@ -209,7 +209,7 @@ public class TablePoolMatrixRowCol extends Table {
 		return function[index];
 	}
 
-	public int getOffset(int index) {
+	public float getOffset(int index) {
 		return offset[index];
 	}
 

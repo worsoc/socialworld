@@ -32,13 +32,14 @@ import org.socialworld.datasource.mariaDB.Table;
  */
 public class TablePoolMatrix extends Table {
 
-	public final  String 	ALL_COLUMNS 		=	" func_id, anzRow, anzCol, type ";
+	public final  String 	ALL_COLUMNS 		=	" func_id, anzRow, anzCol, typeShare, typeOffset ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 	
 	int func_id[];
 	int anzRow[]; 		
 	int anzCol[]; 
-	int type[]; 
+	int typeShare[]; 
+	int typeOffset[]; 
 	
 	@Override
 	protected String getTableName() {
@@ -80,15 +81,17 @@ public class TablePoolMatrix extends Table {
 		func_id = new int[rowCount];
 		anzRow = new int[rowCount];
 		anzCol = new int[rowCount];
-		type = new int[rowCount];
-	
+		typeShare = new int[rowCount];
+		typeOffset = new int[rowCount];
+			
 		try {
 			while (rs.next()) {
 				
 				func_id[row] = rs.getInt(1);
 				anzRow[row] = rs.getInt(2);
 				anzCol[row] = rs.getInt(3);
-				type[row] = rs.getInt(4);
+				typeShare[row] = rs.getInt(4);
+				typeOffset[row] = rs.getInt(5);
 				
 				row++;
 			}
@@ -100,13 +103,13 @@ public class TablePoolMatrix extends Table {
 		
 	}
 	
-	public void insert(int func_id, int anzRow, int anzCol, int type) {
+	public void insert(int func_id, int anzRow, int anzCol, int typeShare, int typeOffset) {
 		String statement;
 			
 		if ((func_id > 0) & (anzRow > 0) & (anzCol > 0)) {
 			
-			statement 	= "INSERT INTO swpool_matrix (func_id, anzRow, anzCol, type) VALUES (" + 
-							func_id + ", " + anzRow + ", " + anzCol + ", " + type + ")";
+			statement 	= "INSERT INTO swpool_matrix (func_id, anzRow, anzCol, typeShare, typeOffset) VALUES (" + 
+							func_id + ", " + anzRow + ", " + anzCol + ", " + typeShare + ", " + typeOffset + ")";
 			
 			insert(statement);
 		}
@@ -138,19 +141,32 @@ public class TablePoolMatrix extends Table {
 		}
 	}
 
-	public void updateType(int func_id, int type) {
+	public void updateTypeShare(int func_id, int typeShare) {
 		String statement;
 			
-		if ((func_id > 0) & (type > 0) ) {
+		if ((func_id > 0) & (typeShare > 0) ) {
 
 			statement 	= "UPDATE swpool_matrix SET " +
-					"type = " + type  + 
+					"typeShare = " + typeShare  + 
 					" WHERE func_id = " + func_id ;
 			
 			update(statement);
 		}
 	}
 
+	public void updateTypeOffset(int func_id, int typeOffset) {
+		String statement;
+			
+		if ((func_id > 0) & (typeOffset > 0) ) {
+
+			statement 	= "UPDATE swpool_matrix SET " +
+					"typeOffset = " + typeOffset  + 
+					" WHERE func_id = " + func_id ;
+			
+			update(statement);
+		}
+	}
+	
 	public void delete(int func_id) {
 		String statement;
 			
@@ -175,8 +191,12 @@ public class TablePoolMatrix extends Table {
 		return anzCol[index];
 	}
 
-	public int getType(int index) {
-		return type[index];
+	public int getTypeShare(int index) {
+		return typeShare[index];
 	}
 
+	public int getTypeOffset(int index) {
+		return typeOffset[index];
+	}
+	
 }

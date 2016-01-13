@@ -113,11 +113,11 @@ public class FunctionPool {
 		int rowCount;
 		int row;
 		
-		int func_id;
-		int offset;
 		int matrixRow;
 		int matrixCol;
-		int share;
+		float share;
+		int func_id;
+		float offset;
 		
 		int functions[];
 		Value shares[];
@@ -127,7 +127,8 @@ public class FunctionPool {
 		int rowMulCol;
 		int anzRow;
 		int anzCol;
-		int type;
+		int typeShare;
+		int typeOffset;
 		
 		
 		FunctionByMatrix_Matrix matrix;
@@ -145,7 +146,8 @@ public class FunctionPool {
 				func_id = tableMatrix.getFunctionID(row);
 				anzRow = tableMatrix.getAnzRow(row);
 				anzCol = tableMatrix.getAnzCol(row);
-				type = tableMatrix.getType(row);
+				typeShare = tableMatrix.getTypeShare(row);
+				typeOffset = tableMatrix.getTypeOffset(row);
 				
 				rowMulCol = anzRow * anzCol;
 				
@@ -161,12 +163,12 @@ public class FunctionPool {
 						for (matrixCol = 0; matrixCol < anzCol; matrixCol++) {
 							
 							share = tableRowCol.getShare(row);
-							shares[matrixIndex] = 	new Value (Type.getName(type), share);
+							shares[matrixIndex] = 	new Value (Type.getName(typeShare), share);
 
 							functions[matrixIndex] = tableRowCol.getFunction(row);
 
 							offset = tableRowCol.getOffset(row);
-							offsets[matrixIndex] = 	new Value (Type.getName(type), offset);
+							offsets[matrixIndex] = 	new Value (Type.getName(typeOffset), offset);
 
 							matrixIndex++;
 						
