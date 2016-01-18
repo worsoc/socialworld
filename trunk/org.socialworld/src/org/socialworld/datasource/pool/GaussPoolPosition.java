@@ -1,13 +1,8 @@
 package org.socialworld.datasource.pool;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.net.URL;
 
 import org.socialworld.attributes.Position;
-import org.socialworld.calculation.Vector;
+import org.socialworld.datasource.tablesPool.TableGaussPosition;
 
 public class GaussPoolPosition {
 	public static final int CAPACITY_GPPos_ARRAY = 10;
@@ -27,7 +22,7 @@ public class GaussPoolPosition {
 		capacityForNegativeIndex = CAPACITY_GPPos_ARRAY;
 		
 		
-		initializeFromFile();
+		loadFromDB();
 	}
 
 	public static GaussPoolPosition getInstance() {
@@ -50,66 +45,49 @@ public class GaussPoolPosition {
 		}	
 	}
 	
-	private void initializeFromFile() {
+	private void setPosition(int index, Position position) {
 		
-		try
-		{
-			String line;
-			String values[];
-			int array[];
-			
-			int index = 0;
-			int vorzeichen = 1;
-			int count = 0;
-			
-			int i;
-
-			array = new int[3];
-			
-			InputStream input = new URL("http://sourceforge.net/projects/socialworld/files/hmn_positions.swp").openStream();
-			LineNumberReader lnr
-			   = new LineNumberReader(new InputStreamReader(input));
-
+		if (index >= 0) 
+			if (index < capacityForPositiveIndex && positionsForPositiveIndex[index] == null ) 
+				positionsForPositiveIndex[index] = position;
+			else ;
+		else {
+			index = index * -1;
+			if (index < capacityForNegativeIndex &&  positionsForNegativeIndex[index] == null ) 
+					positionsForNegativeIndex[index] = position;
+		}	
+		
+	}
 	
-			while ((line = lnr.readLine()) != null)
-			{
-				
-				if (line.startsWith("("))
-				{
-					line = line.substring(1);
-					line = line.replace(")", "");
-					line = line.replace(" ", "");
-					line = line.trim();
+	private void loadFromDB() {
+		
+			
+			TableGaussPosition table;
+			Position position;
+			int rowCount;
+			int row;
+			
+			int gauss_index;
+			int pos_id;
+
+			table = new TableGaussPosition();
+
+			table.select(table.SELECT_ALL_COLUMNS, "", "");
+			rowCount = table.rowCount();
+
+			if (rowCount > 0) {
+	
+				for (row = 0; row < rowCount; row++) {
 					
-					values = line.split(",");
-					for (i = 0; i < 3; i++){
-						array[i] = Integer.parseInt(values[i]);
-					}
+					gauss_index = table.getGaussIndex(row);
+					pos_id = table.getPositionID(row);
 					
-					index = index + vorzeichen * count;
-					count++;
-					vorzeichen = vorzeichen * -1;
-					if (index >= 0) 
-							if (index < capacityForPositiveIndex && positionsForPositiveIndex[index] == null ) 
-								positionsForPositiveIndex[index] = new Position(new Vector (array[0], array[1], array[2]) );
-							else ;
-					else {
-						index = index * -1;
-						if (index < capacityForNegativeIndex &&  positionsForNegativeIndex[index] == null ) 
-								positionsForNegativeIndex[index] = new Position(new Vector (array[0], array[1], array[2]) );
-						index = index * -1;
-					}	
+					position = PositionPool.getInstance().getPosition(pos_id);
+					setPosition(gauss_index, position);
+
+				}		
 					
-					
-				}
 			}
-			lnr.close();
-		}
-		catch (IOException e)
-		{
-			System.out.println("Fehler beim Lesen der Datei");
-			e.printStackTrace();
-		}
 	}
 	
 }
