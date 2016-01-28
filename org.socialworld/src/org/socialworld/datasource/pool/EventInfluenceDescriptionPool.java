@@ -2,6 +2,7 @@ package org.socialworld.datasource.pool;
 
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.descriptions.EventInfluenceDescription;
+import org.socialworld.calculation.expressions.Sequence;
 import org.socialworld.core.EventType;
 import org.socialworld.datasource.tablesPool.TablePoolEID;
 
@@ -69,7 +70,12 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 		
 		int eventType;
 		int influenceType;
+		int exp_lfd_nr = 0;
+		int exp_lfd_nr_last = 0;
 		int exp_id;
+		
+		
+		Expression[] expressions = new Expression[1];
 		
 		EventInfluenceDescription eid;
 		Expression exp;
@@ -77,21 +83,36 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 		tableEID = new TablePoolEID();
 
 
-		tableEID.select(tableEID.SELECT_ALL_COLUMNS, "", "ORDER BY index ");
+		tableEID.select(tableEID.SELECT_ALL_COLUMNS, "", "ORDER BY eventType, influenceType, exp_lfd_nr desc");
 		rowCountEID = tableEID.rowCount();
 		
 		if (rowCountEID > 0) {
 				
 			for (rowEID = 0; rowEID < rowCountEID; rowEID++) {
-				eventType = tableEID.getEventType(rowEID);
-				influenceType = tableEID.getInfluenceType(rowEID);
-				
-				exp_id = tableEID.getExpression(rowEID);
-				exp = ExpressionPool.getInstance().getExpression(exp_id);
+				exp_lfd_nr = tableEID.getExpLfdNr(rowEID);
+				// assumption: exp_lfd_nr is greater than zero
+				if (exp_lfd_nr > 0) {
+					eventType = tableEID.getEventType(rowEID);
+					influenceType = tableEID.getInfluenceType(rowEID);
+					exp_id = tableEID.getExpression(rowEID);
+					
+					exp = ExpressionPool.getInstance().getExpression(exp_id);
+					
+					// assumption: there are more than one expression describing the event influence
+					if  (exp_lfd_nr > exp_lfd_nr_last)   {
+						eid = new EventInfluenceDescription(new Sequence(expressions));
+						setDescription(eventType, influenceType, eid);
 						
-				eid = new EventInfluenceDescription(exp);
-				setDescription(eventType, influenceType, eid);
-				
+						expressions = new Expression[exp_lfd_nr];
+					}
+					expressions[exp_lfd_nr - 1] = exp;
+					exp_lfd_nr_last = exp_lfd_nr;
+					
+					if (rowEID == rowCountEID - 1) {
+						eid = new EventInfluenceDescription(new Sequence(expressions));
+						setDescription(eventType, influenceType, eid);
+					}
+				}	
 			}
 		}
 	}
