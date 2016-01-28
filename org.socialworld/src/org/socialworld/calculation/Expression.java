@@ -128,6 +128,8 @@ public class Expression {
 	 */
 	Value evaluateExpression(Value[] arguments) {
 		Value tmp;
+		String name;
+		int index;
 		
 		switch (this.operation) {
 		case nothing:
@@ -144,7 +146,7 @@ public class Expression {
 				attributeArray.get( (int) value.getValueCopy()));
 				
 		case argumentValueByName:
-			return findValue(arguments, (String) value.getValueCopy());
+			return getValue(arguments, (String) value.getValueCopy());
 			
 		case branching:
 			tmp = expression1.evaluateExpression(arguments);
@@ -219,6 +221,20 @@ public class Expression {
 			calculateArguments[2] = expression3.evaluateExpression(arguments);
 			return function.calculate(calculateArguments);
 			
+		case sequence:
+			expression1.evaluateExpression(arguments);
+			expression2.evaluateExpression(arguments);
+			tmp = expression3.evaluateExpression(arguments);
+			return tmp;
+			
+		case replacement:
+			name = (String) value.getValueCopy();
+			tmp = expression1.evaluateExpression(arguments);
+			index = findValue(arguments, name);
+			if (index >= 0) 	arguments[index] = 	tmp;
+			return tmp;
+			
+			
 		default:
 			return Calculation.getNothing();
 		}
@@ -246,7 +262,7 @@ public class Expression {
 		return null;
 	}
 	
-	private Value findValue(Value[] arguments, String name) {
+	private Value getValue(Value[] arguments, String name) {
 		int argumentsCount;
 		int index;
 		
@@ -260,4 +276,18 @@ public class Expression {
 
 	}
 
+	private int findValue(Value[] arguments, String name) {
+		int argumentsCount;
+		int index;
+		
+		argumentsCount = arguments.length;
+		
+		for (index = 0; index < argumentsCount; index++) {
+			if (arguments[index].getName() == name) return index;
+		}
+		
+		return -1;
+
+	}
+	
 }
