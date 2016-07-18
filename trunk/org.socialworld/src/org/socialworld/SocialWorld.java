@@ -22,6 +22,8 @@
 package org.socialworld;
 
 import org.socialworld.core.Simulation;
+import org.socialworld.data.FillWithTestData_ACM;
+import org.socialworld.data.FillWithTestData_Position;
 
 
 
@@ -51,7 +53,9 @@ public class SocialWorld  {
 		currentObject = getCurrent();
 		simulation = Simulation.getInstance();
 		
+		test();
 		
+		fillTestData();
 		
 		simulation.startSimulation();
 		
@@ -60,21 +64,7 @@ public class SocialWorld  {
 	}
 	
 	
-/*
-	public void start(BundleContext context) throws Exception {
-		if (Simulation.WITH_LOGGING == 1 ) logger.info("Start bundle " + PLUGIN_ID);
 
-		currentObject = this;
-		simulation = Simulation.getInstance();
-	}
-
-	public void stop(BundleContext context) throws Exception {
-		// TODO Simulation stoppen, Threads beenden, Ressourcen freigeben.
-		currentObject = null;
-		simulation.stopSimulation();
-		simulation = null;
-	}
-*/	
 
 	public static SocialWorld getCurrent() {
 		if (currentObject == null) {
@@ -90,4 +80,25 @@ public class SocialWorld  {
 		return simulation;
 	}
 
+	private static void test()	{
+		
+	}
+	
+	
+	
+	private static void fillTestData() {
+	
+		
+		
+		FillWithTestData_ACM fillACM;
+		fillACM = new FillWithTestData_ACM();
+		
+		fillACM.fill(4);
+		
+		
+		FillWithTestData_Position fillPosition;
+		fillPosition = new FillWithTestData_Position();
+		fillPosition.fill();
+		
+	}
 }
