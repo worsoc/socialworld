@@ -21,11 +21,13 @@
 */
 package org.socialworld.datasource.loadFromDB;
 
-import org.socialworld.collections.WordArray;
+import org.socialworld.collections.Array;
+import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Word;
 import org.socialworld.conversation.Word_Type;
-import org.socialworld.datasource.tablesSimulation.TableWord;
-import org.socialworld.knowledge.KnowledgeFact_Criterion;
+import org.socialworld.core.AllWords;
+import org.socialworld.datasource.tablesSimulation.TableLexem;
+import org.socialworld.datasource.tablesSimulation.ViewWordJoinLexem;
 
 /**
  * @author Mathias Sikos
@@ -35,10 +37,12 @@ public class LoadWords {
 
 	private static LoadWords instance;
 	
-	TableWord tableWord;
+	ViewWordJoinLexem viewWordJoinLexem;
+	TableLexem tableLexem;
 	
 	private LoadWords() {
-		tableWord = new TableWord();
+		tableLexem = new TableLexem();
+		viewWordJoinLexem = new ViewWordJoinLexem();
 	}
 	
 	/**
@@ -52,44 +56,80 @@ public class LoadWords {
 		return instance;
 	}
 
-	public WordArray getAllWords() {
+	public Array<Lexem> getAllLexems() {
+
+		int rowCount;
+		int index;
+
+		Array<Lexem> allLexems;
+		
+		int lexem_id;
+		Lexem element;
+		
+		int type;
+		Word_Type word_type;
+		
+		boolean subjectable;
+	
+		tableLexem.select(tableLexem.SELECT_ALL_COLUMNS, "", " ORDER BY type");
+		rowCount = tableLexem.rowCount();
+		
+		allLexems = new Array<Lexem>(rowCount);
+	
+		for (index = 0; index < rowCount; index++) {
+			lexem_id = tableLexem.getLexemID(index);
+			if (tableLexem.getSubjectable(index) > 0)	subjectable = true;
+			else subjectable = false;
+			type = tableLexem.getType(index);
+			word_type = Word_Type.getName(type);
+			
+			element = new Lexem(
+					lexem_id, 
+					word_type,
+					 subjectable);					
+			allLexems.set(lexem_id, element);
+		}
+		
+		return allLexems;
+	}
+
+	public Array<Word> getAllWords() {
 		
 		int rowCount;
 		int index;
-		Word element;
-		WordArray allWords;
+		
+		Array<Word> allWords;
 		
 		int word_id;
-		int type;
-		int kfc;
-		boolean subjectable;
+		Word element;
 		String word;
-		int pronoun;
+		
+		int lexem_id;
+		Lexem lexem;
+		
+		int pronoun_word_id;
+		Word pronoun;
 		
 		// pronouns first (--> ORDER BY type (pronouns have got the smallest type numbers))
-		tableWord.select(tableWord.SELECT_ALL_COLUMNS, "", " ORDER BY type");
-		rowCount = tableWord.rowCount();
+		viewWordJoinLexem.select(viewWordJoinLexem.SELECT_ALL_COLUMNS, "", " ORDER BY type");
+		rowCount = viewWordJoinLexem.rowCount();
 		
-		allWords = new WordArray(rowCount);
+		allWords = new Array<Word>(rowCount);
 		
 		for (index = 0; index < rowCount; index++) {
-			word_id = tableWord.getWordID(index);
-			type = tableWord.getType(index);
-			kfc = tableWord.getKFC(index);
-			if (tableWord.getSubjectable(index) > 0) 
-				 subjectable = true;
-			else
-				 subjectable = false;
-			word = tableWord.getWord(index);
-			pronoun = tableWord.getPronoun(index);
+			word_id = viewWordJoinLexem.getWordID(index);
+			word = viewWordJoinLexem.getWord(index);
+			lexem_id = viewWordJoinLexem.getLexemID(index);
+			pronoun_word_id = viewWordJoinLexem.getPronounWordID(index);
 
+			lexem = AllWords.getLexem(lexem_id);
+			pronoun = allWords.get(pronoun_word_id);
+			
 			element = new Word(
 					 word_id, 
 					 word,
-					 Word_Type.getName(type) ,
-					 KnowledgeFact_Criterion.getName(kfc) , 
-					 subjectable,
-					 allWords.get(pronoun));					
+					 lexem,
+					 pronoun);					
 			allWords.set(word_id, element);
 		}
 		return allWords;

@@ -21,7 +21,8 @@
 */
 package org.socialworld.core;
 
-import org.socialworld.collections.WordArray;
+import org.socialworld.collections.Array;
+import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Word;
 import org.socialworld.datasource.loadFromDB.LoadWords;
 
@@ -33,10 +34,19 @@ public class AllWords {
 
 	private static AllWords instance;
 
-	static WordArray allWordsbyWordID;
+	private static Array<Lexem> allLexemsbyLexemID;
+	private static Array<Word> allWordsbyWordID;
 	
 	private AllWords() {
+		allLexemsbyLexemID = LoadWords.getInstance().getAllLexems();
 		allWordsbyWordID = LoadWords.getInstance().getAllWords();
+	}
+	
+	public static Lexem getLexem(int lexemID) {
+		if (instance == null) {
+			instance = new AllWords();
+		}
+		return allLexemsbyLexemID.get(lexemID);
 	}
 	
 	public static Word getWord(int wordID) {
@@ -45,4 +55,5 @@ public class AllWords {
 		}
 		return allWordsbyWordID.get(wordID);
 	}
+	
 }

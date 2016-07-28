@@ -1,24 +1,3 @@
-/*
-* Social World
-* Copyright (C) 2015  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
 package org.socialworld.datasource.tablesSimulation;
 
 import java.sql.ResultSet;
@@ -26,13 +5,9 @@ import java.sql.SQLException;
 
 import org.socialworld.datasource.mariaDB.Table;
 
-/**
- * @author Mathias Sikos
- *
- */
-public class TableWord extends Table {
+public class ViewWordJoinLexem extends Table {
 
-	public final  String 	ALL_COLUMNS 		=	" word_id, word, lexem_id, tense, numerus, pronoun_word_id ";
+	public final  String 	ALL_COLUMNS 		=	" word_id, word, lexem_id, tense, numerus, pronoun_word_id, subjectable, type ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
 	int word_id[];
@@ -41,10 +16,12 @@ public class TableWord extends Table {
 	int tense[];
 	int numerus[];
 	int pronoun_word_id[];
+	int type[];
+	int subjectable[];
 	
 	@Override
 	protected String getTableName() {
-		return "sw_word";
+		return "sw_v_word_lexem";
 	}
 
 	@Override
@@ -76,29 +53,6 @@ public class TableWord extends Table {
 		setPK1(word_id);
 	}
 
-	public void insert(int word_id, String word,  int lexem_id, int tense, int numerus, int pronoun_word_id) {
-		String statement;
-			
-		if (word_id > 0) {
-	
-
-			statement 	= "INSERT INTO sw_word (word_id, word, lexem_id, tense, numerus, pronoun_word_id) VALUES (" + 
-					word_id + ", '" + word + "', " + lexem_id + ", " + tense + ", " + numerus + ", " + pronoun_word_id  +")";
-			
-			insert(statement);
-		}
-	}
-
-	public void delete(int word_id) {
-		String statement;
-			
-		if (word_id > 0) {
-	
-			statement 	= "DELETE FROM sw_word WHERE word_id = " + word_id  ;
-			
-			delete(statement);
-		}
-	}
 
 	private void selectAllColumns(ResultSet rs) {
 		int row = 0;
@@ -108,6 +62,8 @@ public class TableWord extends Table {
 		tense = new int[rowCount];
 		numerus = new int[rowCount];
 		pronoun_word_id = new int[rowCount];
+		type = new int[rowCount];
+		subjectable = new int[rowCount];
 
 		try {
 			while (rs.next()) {
@@ -118,6 +74,8 @@ public class TableWord extends Table {
 				tense[row] = rs.getInt(4);
 				numerus[row] = rs.getInt(5);
 				pronoun_word_id[row] = rs.getInt(6);
+				type[row] = rs.getInt(7);
+				subjectable[row] = rs.getInt(8);
 				
 				row++;
 			}
@@ -153,6 +111,14 @@ public class TableWord extends Table {
 
 	public int getPronounWordID(int index) {
 		return pronoun_word_id[index];
+	}
+
+	public int getSubjectable(int index) {
+		return subjectable[index];
+	}
+	
+	public int getType(int index) {
+		return type[index];
 	}
 
 }
