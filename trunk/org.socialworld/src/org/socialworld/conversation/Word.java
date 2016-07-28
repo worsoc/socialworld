@@ -21,29 +21,26 @@
 */
 package org.socialworld.conversation;
 
+
+import org.socialworld.collections.ReadOnlyIterator;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 
 public class Word {
 	private String word;
 	private int wordID;
+	private Lexem lexem;
 	
-	private Word_Type wordType;
-	private KnowledgeFact_Criterion kfc;
-	private boolean allowedAsKnowledgeSubject = false;
+	//private Word_Type wordType;
+	//private KnowledgeFact_Criterion kfc;
+	//private boolean allowedAsKnowledgeSubject = false;
 	
 	private Word pronoun;
 	
-	public Word() {
-		kfc = null;
-	}
 
-	public Word(int wordID, String word, Word_Type type , KnowledgeFact_Criterion kfc, 
-			boolean allowedAsKnowledgeSubject, Word pronoun) {
+	public Word(int wordID, String word, Lexem lexem, Word pronoun) {
 		this.wordID = wordID;
+		this.lexem = lexem;
 		this.word = word;
-		this.wordType = type;
-		this.kfc = kfc;
-		this.allowedAsKnowledgeSubject = allowedAsKnowledgeSubject;
 		this.pronoun = pronoun;
 	}
 
@@ -55,8 +52,12 @@ public class Word {
 		return wordID;
 	}
 	
+	public Lexem getLexem() {
+		return lexem;
+	}
+	
 	public Word_Type getType() {
-		return wordType;
+		return this.lexem.getType();
 	}
 
 	protected void setPronoun(Word pronoun) {
@@ -67,24 +68,27 @@ public class Word {
 		return pronoun;
 	}
 	
+	/*
 	protected void setKnowledgeFact_Criterion(KnowledgeFact_Criterion kfc ) {
 		this.kfc = kfc;
 	}
-
-	protected KnowledgeFact_Criterion getKnowledgeFact_Criterion() {
-		return kfc;
+*/
+	protected ReadOnlyIterator<KnowledgeFact_Criterion> getKnowledgeFact_Criterions() {
+		return this.lexem.getKnowledgeFact_Criterions();
 	}
 
-	
+/*	
 	protected void allowAsKnowledgeSubject() {
 		this.allowedAsKnowledgeSubject = true;
 	}
+	*/
 	
 	public boolean isAllowedAsKnowledgeSubject() {
-		return this.allowedAsKnowledgeSubject;
+		return this.lexem.isAllowedAsKnowledgeSubject();
 	}
 	
 	public boolean equals(Word b) {
 		return this.wordID == b.wordID;
 	}
+	
 }

@@ -22,7 +22,9 @@
 package org.socialworld.conversation;
 
 import java.util.ArrayList;
+
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
+import org.socialworld.collections.ReadOnlyIterator;
 import org.socialworld.knowledge.KnowledgeFact;
 import org.socialworld.knowledge.KnowledgeFactPool;
 
@@ -38,9 +40,14 @@ public class SpeechRecognition {
 	private PunctuationMark finalPunctuationMark;
 	private WordSearchTree allWords;
 	
+	
+	ReadOnlyIterator<KnowledgeFact_Criterion> iteratorForEmptyCriterionsList;
+	
 	public SpeechRecognition() {
 		allWords = new WordSearchTree();
 		lastSubject= null;
+	
+		iteratorForEmptyCriterionsList = new ReadOnlyIterator<KnowledgeFact_Criterion>(new ArrayList<KnowledgeFact_Criterion>().iterator()) ;
 		
 	}
 	
@@ -87,29 +94,33 @@ public class SpeechRecognition {
 		return word;
 	}
 	
-	public KnowledgeFact_Criterion getCriterion() {
-		KnowledgeFact_Criterion criterion = null;
-		KnowledgeFact_Criterion tmpCriterion = null;
+	public ReadOnlyIterator<KnowledgeFact_Criterion> getCriterions() {
+		
+		// initialize with iterator for temp empty list
+		ReadOnlyIterator<KnowledgeFact_Criterion> criterions = iteratorForEmptyCriterionsList ;
+		
 		for (int index = startSearchForCriterion; index < wordList.size(); index++) {
-			tmpCriterion = foundWordList[index].getKnowledgeFact_Criterion();
-			if (tmpCriterion != null) {
-				criterion = tmpCriterion;
+			criterions = foundWordList[index].getKnowledgeFact_Criterions();
+			if (criterions.hasNext()) {
 				indexWordList = index;
-				break;
+				return criterions;
 			}
 		}
-		return criterion;
+		return criterions;
 	}
 	
 	public KnowledgeFact getNextFact() {
 		KnowledgeFact fact = null;
-		KnowledgeFact_Criterion criterion = null;
+		
+		ReadOnlyIterator<KnowledgeFact_Criterion> iteratorCriterions;
+		
 		SpeechRecognition_Function function = null;
 		Word word = null;
 		
-		criterion = getCriterion();
+		iteratorCriterions = getCriterions();
 		
-		if (criterion != null) {
+		// TODO iterate over criterions
+		if (iteratorCriterions.hasNext()) {
 			function = functionList[indexWordList];
 			for (int index = 0; index < wordList.size(); index++) {
 				if (functionList[index] == function) {
@@ -117,7 +128,7 @@ public class SpeechRecognition {
 					break;
 				}
 			}
-			if (word != null)	fact = KnowledgeFactPool.getInstance().find( criterion, word);
+			if (word != null)	fact = KnowledgeFactPool.getInstance().find( iteratorCriterions.next(), word);
 		}
 		
 		return fact;
