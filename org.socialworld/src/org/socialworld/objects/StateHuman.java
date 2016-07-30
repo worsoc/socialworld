@@ -32,7 +32,7 @@ import org.socialworld.conversation.Talk_SentenceType;
 import org.socialworld.core.Event;
 import org.socialworld.knowledge.Acquaintance;
 import org.socialworld.knowledge.AcquaintancePool;
-import org.socialworld.knowledge.Answer;
+import org.socialworld.knowledge.AnswerProperties;
 import org.socialworld.knowledge.Knowledge;
 import org.socialworld.knowledge.KnowledgeProperties;
 import org.socialworld.knowledge.KnowledgeSource;
@@ -118,7 +118,7 @@ public class StateHuman extends StateAnimal {
 		}
 	}
 
-	final void addAnswer(Answer answer,  Human partner, WriteAccessToHuman guard) {
+	final void addAnswer(AnswerProperties answer,  Human partner, WriteAccessToHuman guard) {
 		if (checkGuard(guard)) {
 			Talk talk = findTalk(partner);
 			talk.addAnswer(answer);
@@ -135,7 +135,7 @@ public class StateHuman extends StateAnimal {
 		return new String(lastSaidSentence);
 	}
 	
-	final public Answer getAnswerForQuestion(String question) {
+	final public AnswerProperties getAnswerForQuestion(String question) {
 		// no copy
 		// because a new answer is created in method KnowledgePool.getAnswerForQuestion()
 		return this.knowledge.getAnswerForQuestion(question);

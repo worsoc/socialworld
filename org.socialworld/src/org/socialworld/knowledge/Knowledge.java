@@ -137,7 +137,7 @@ public class Knowledge {
 		
 	}
 	
-	public Answer getAnswerForQuestion(String question){
+	public AnswerProperties getAnswerForQuestion(String question){
 		Word subject;
 		int indexesForSubject[];
 		int indexesForCriterion[];
@@ -150,7 +150,7 @@ public class Knowledge {
 		KnowledgeProperties knowledge;
 		ReadOnlyIterator<KnowledgeFact_Criterion> criterions = null;
 		
-		Answer answer;
+		AnswerProperties answer;
 		boolean withAnswer = false;
 		
 		speechRecognition.analyseSentence(question);
@@ -161,7 +161,7 @@ public class Knowledge {
 		indexesForSubject = findAllKnowledgesForSubject(subject);
 		countKnowledges = indexesForSubject.length;
 		
-		answer = new Answer();
+		answer = new AnswerProperties();
 		
 		// TODO iterate over criterions
 		for (indexKnowledge = 0;indexKnowledge < countKnowledges; indexKnowledge++) {

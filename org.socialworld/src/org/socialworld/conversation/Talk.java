@@ -21,7 +21,7 @@
 */
 package org.socialworld.conversation;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
-import org.socialworld.knowledge.Answer;
+import org.socialworld.knowledge.AnswerProperties;
 import org.socialworld.objects.Human;
 import java.util.ArrayList;
 
@@ -41,11 +41,11 @@ public class Talk {
 		partnersQuestions = new ArrayList<String>();
 	}
 	
-	public void addAnswer(Answer answer) {
+	public void addAnswer(AnswerProperties answer) {
 		addSentence(makeAnswerSentence(answer), Talk_SentenceType.myPlannedSentence);
 	}
 	
-	private String makeAnswerSentence(Answer answer) {
+	private String makeAnswerSentence(AnswerProperties answer) {
 		String sentence;
 		
 		Word subject;
