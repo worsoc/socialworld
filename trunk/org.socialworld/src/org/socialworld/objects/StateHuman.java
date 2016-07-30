@@ -34,7 +34,7 @@ import org.socialworld.knowledge.Acquaintance;
 import org.socialworld.knowledge.AcquaintancePool;
 import org.socialworld.knowledge.Answer;
 import org.socialworld.knowledge.Knowledge;
-import org.socialworld.knowledge.KnowledgePool;
+import org.socialworld.knowledge.KnowledgeProperties;
 import org.socialworld.knowledge.KnowledgeSource;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenHuman;
@@ -46,7 +46,7 @@ import org.socialworld.objects.access.HiddenHuman;
 public class StateHuman extends StateAnimal {
 
 	private Inventory inventory;
-	private KnowledgePool knowledge;
+	private Knowledge knowledge;
 	private AcquaintancePool acquaintance;
 	
 	private ArrayList<Talk> talks;
@@ -58,7 +58,7 @@ public class StateHuman extends StateAnimal {
 		super();
 		
 		talks = new ArrayList<Talk>();
-		knowledge = new KnowledgePool();
+		knowledge = new Knowledge();
 		acquaintance = new AcquaintancePool();
 		
 		grantAccessToPropertyTalk = new GrantedAccessToProperty[1];
@@ -85,7 +85,7 @@ public class StateHuman extends StateAnimal {
 		}
 	}
 
-	final void addKnowledge(Knowledge knowledge, WriteAccessToHuman guard) {
+	final void addKnowledgeProperties(KnowledgeProperties knowledge, WriteAccessToHuman guard) {
 		if (checkGuard(guard)) {
 			this.knowledge.addKnowledge(knowledge);
 		}

@@ -23,7 +23,7 @@ package org.socialworld.knowledge;
 
 import org.socialworld.conversation.Word;
 
-public class Answer extends Knowledge {
+public class Answer extends KnowledgeProperties {
 	
 	private int index;
 	private int count;
