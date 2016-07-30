@@ -26,7 +26,7 @@ import org.socialworld.conversation.Talk_SentenceType;
 import org.socialworld.core.Event;
 import org.socialworld.core.EventType;
 import org.socialworld.core.IEventParam;
-import org.socialworld.knowledge.Answer;
+import org.socialworld.knowledge.AnswerProperties;
 import org.socialworld.knowledge.KnowledgeSource;
 import org.socialworld.knowledge.KnowledgeSource_Type;
 import org.socialworld.objects.Human;
@@ -138,7 +138,7 @@ public class TalkCalculator {
 		IEventParam params;
 		Value value;
 
-		Answer answer;
+		AnswerProperties answer;
 		Human partner;
 
 
@@ -152,7 +152,7 @@ public class TalkCalculator {
 
 		value = params.getParam(params.find("answer"));
 		if (value.isValid())
-			answer = (Answer) value.getValue();
+			answer = (AnswerProperties) value.getValue();
 		else
 			return;
 		

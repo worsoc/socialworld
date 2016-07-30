@@ -23,7 +23,7 @@ package org.socialworld.objects;
 
 import org.socialworld.actions.attack.IWeapon;
 import org.socialworld.knowledge.Acquaintance;
-import org.socialworld.knowledge.Answer;
+import org.socialworld.knowledge.AnswerProperties;
 import org.socialworld.conversation.Talk_SentenceType;
 
 /**
@@ -68,7 +68,7 @@ import org.socialworld.conversation.Talk_SentenceType;
 		return this.state.getLastSaidSentence();
 	}
 
-	final public Answer getAnswerForQuestion(String question) {
+	final public AnswerProperties getAnswerForQuestion(String question) {
 		// no copy
 		// because a new answer is created in method KnowledgePool.getAnswerForQuestion()
 		return this.state.getAnswerForQuestion(question);

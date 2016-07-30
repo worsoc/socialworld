@@ -29,7 +29,7 @@ import org.socialworld.calculation.Value;
 import org.socialworld.calculation.Vector;
 import org.socialworld.knowledge.Acquaintance;
 import org.socialworld.knowledge.Acquaintance_Attribute;
-import org.socialworld.knowledge.Answer;
+import org.socialworld.knowledge.AnswerProperties;
 import org.socialworld.objects.Human;
 
 /**
@@ -96,7 +96,7 @@ public class Say extends ActionPerformer {
 				case answerScream:
 				case answerWhisper:
 					
-					Answer answer;
+					AnswerProperties answer;
 				
 					question = originalAction.getQuestion();
 	
@@ -133,7 +133,7 @@ public class Say extends ActionPerformer {
 		}
 	}
 
-	private void manipulateAnswer(final Human actor, Answer answer, final Human partner) {
+	private void manipulateAnswer(final Human actor, AnswerProperties answer, final Human partner) {
 		
 		Acquaintance acquaintance;
 		acquaintance = actor.getAcquaintance(partner);

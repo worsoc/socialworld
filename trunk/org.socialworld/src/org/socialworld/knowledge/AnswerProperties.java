@@ -1,6 +1,6 @@
 /*
 * Social World
-* Copyright (C) 2014  Mathias Sikos
+* Copyright (C) 2016  Mathias Sikos
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -23,7 +23,7 @@ package org.socialworld.knowledge;
 
 import org.socialworld.conversation.Word;
 
-public class Answer extends KnowledgeProperties {
+public class AnswerProperties extends KnowledgeProperties {
 	
 	private int index;
 	private int count;
