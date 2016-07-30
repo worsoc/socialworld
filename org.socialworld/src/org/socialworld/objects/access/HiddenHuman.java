@@ -28,7 +28,7 @@ import org.socialworld.conversation.Talk;
 import org.socialworld.conversation.Talk_SentenceType;
 import org.socialworld.knowledge.Acquaintance;
 import org.socialworld.knowledge.Answer;
-import org.socialworld.knowledge.Knowledge;
+import org.socialworld.knowledge.KnowledgeProperties;
 import org.socialworld.knowledge.KnowledgeSource;
 import org.socialworld.objects.Human;
 import org.socialworld.objects.WriteAccessToHuman;
@@ -66,8 +66,8 @@ public class HiddenHuman extends HiddenAnimal {
 		return wa.setTalks(talks, this);
 	}
 	
-	public int addKnowledge(Knowledge knowledge) {
-		return wa.addKnowledge(knowledge, this);
+	public int addKnowledgeProperties(KnowledgeProperties knowledge) {
+		return wa.addKnowledgeProperties(knowledge, this);
 	}
 
 	public int addAcquaintance(Acquaintance acquaintance) {

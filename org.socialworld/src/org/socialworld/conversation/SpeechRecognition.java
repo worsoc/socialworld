@@ -42,18 +42,23 @@ public class SpeechRecognition {
 	
 	
 	ReadOnlyIterator<KnowledgeFact_Criterion> iteratorForEmptyCriterionsList;
+	ReadOnlyIterator<KnowledgeFact_Criterion> iteratorCriterions;
 	
 	public SpeechRecognition() {
 		allWords = new WordSearchTree();
 		lastSubject= null;
 	
 		iteratorForEmptyCriterionsList = new ReadOnlyIterator<KnowledgeFact_Criterion>(new ArrayList<KnowledgeFact_Criterion>().iterator()) ;
-		
+		iteratorCriterions = iteratorForEmptyCriterionsList;
 	}
 	
 	
 	public void analyseSentence(String sentence) {
 		int count;
+		
+		// new analysis --> reset
+		startSearchForCriterion = 0;
+		iteratorCriterions = iteratorForEmptyCriterionsList;
 		
 		count = divideIntoParts(sentence);
 		
@@ -64,14 +69,15 @@ public class SpeechRecognition {
 		}
 	}
 	
+	public void resetCriterions() {
+		startSearchForCriterion = 0;
+		iteratorCriterions = iteratorForEmptyCriterionsList;
+	}
+
 	public void resetLastSubject() {
 		lastSubject = null;
 	}
-
-	public void resetIndexSearchCriterion() {
-		startSearchForCriterion = 0;
-	}
-
+	
 	public Word getSubject() {
 		Word word = null;
 		
@@ -94,41 +100,76 @@ public class SpeechRecognition {
 		return word;
 	}
 	
-	public ReadOnlyIterator<KnowledgeFact_Criterion> getCriterions() {
+	public Word getObject1() {
+		Word word = null;
+		
+		for (int index = 0; index < wordList.size(); index++) {
+			if (functionList[index] == SpeechRecognition_Function.object1) {
+					
+				if (foundWordList[index].isAllowedAsKnowledgeSubject())	word = foundWordList[index];
+				index = wordList.size();
+				
+			}
+		}
+		
+		return word;
+	}	
+	
+	public Word getObject2() {
+		Word word = null;
+		
+		for (int index = 0; index < wordList.size(); index++) {
+			if (functionList[index] == SpeechRecognition_Function.object2) {
+				
+				if (foundWordList[index].isAllowedAsKnowledgeSubject())	word = foundWordList[index];
+				index = wordList.size();
+				
+			}
+		}
+		
+		return word;
+	}		
+	
+	public ReadOnlyIterator<KnowledgeFact_Criterion> getCriterions(SpeechRecognition_Function function) {
 		
 		// initialize with iterator for temp empty list
 		ReadOnlyIterator<KnowledgeFact_Criterion> criterions = iteratorForEmptyCriterionsList ;
 		
 		for (int index = startSearchForCriterion; index < wordList.size(); index++) {
-			criterions = foundWordList[index].getKnowledgeFact_Criterions();
-			if (criterions.hasNext()) {
-				indexWordList = index;
-				return criterions;
+			if (functionList[index] == function) {
+				criterions = foundWordList[index].getKnowledgeFact_Criterions();
+				if (criterions.hasNext()) {
+					indexWordList = index;
+					// next time (next call to method getCriterions()) start with the following word
+					startSearchForCriterion = index + 1;
+					iteratorCriterions = criterions;
+					return criterions;
+				}
 			}
 		}
 		return criterions;
 	}
 	
-	public KnowledgeFact getNextFact() {
+	public KnowledgeFact getNextFact(SpeechRecognition_Function function) {
+		
 		KnowledgeFact fact = null;
-		
-		ReadOnlyIterator<KnowledgeFact_Criterion> iteratorCriterions;
-		
-		SpeechRecognition_Function function = null;
 		Word word = null;
 		
-		iteratorCriterions = getCriterions();
-		
-		// TODO iterate over criterions
+		// continue with last criterion list (according to last sentence function)
+		// or start with a new one (according to the next sentence function)
+		if (iteratorCriterions.hasNext() == false)	iteratorCriterions = getCriterions(function);
 		if (iteratorCriterions.hasNext()) {
-			function = functionList[indexWordList];
+			
 			for (int index = 0; index < wordList.size(); index++) {
 				if (functionList[index] == function) {
 					word = foundWordList[index];
-					break;
+					
+					fact = KnowledgeFactPool.getInstance().find( iteratorCriterions.next(), word);
+					
+					if (fact != null)	break;
 				}
 			}
-			if (word != null)	fact = KnowledgeFactPool.getInstance().find( iteratorCriterions.next(), word);
+				
 		}
 		
 		return fact;

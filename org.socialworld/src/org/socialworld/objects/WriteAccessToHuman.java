@@ -28,7 +28,7 @@ import org.socialworld.conversation.Talk;
 import org.socialworld.conversation.Talk_SentenceType;
 import org.socialworld.knowledge.Acquaintance;
 import org.socialworld.knowledge.Answer;
-import org.socialworld.knowledge.Knowledge;
+import org.socialworld.knowledge.KnowledgeProperties;
 import org.socialworld.knowledge.KnowledgeSource;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenHuman;
@@ -111,10 +111,10 @@ public class WriteAccessToHuman extends WriteAccessToAnimal {
 	}
 	
 
-	public int addKnowledge(Knowledge knowledge, HiddenSimulationObject caller) {
+	public int addKnowledgeProperties(KnowledgeProperties knowledge, HiddenSimulationObject caller) {
 		if (checkCaller(caller)) 
 			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.knowledge)) {
-				humanState.addKnowledge(knowledge, this);
+				humanState.addKnowledgeProperties(knowledge, this);
 				return WRITE_ACCESS_RETURNS_SUCCESS;
 			}
 			else

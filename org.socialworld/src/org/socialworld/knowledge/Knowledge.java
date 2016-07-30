@@ -20,308 +20,332 @@
 *
 */
 package org.socialworld.knowledge;
+
+import org.socialworld.collections.ReadOnlyIterator;
+import org.socialworld.conversation.SpeechRecognition;
+import org.socialworld.conversation.SpeechRecognition_Function;
 import org.socialworld.conversation.Word;
 
 public class Knowledge {
-	final int MAXIMUM_KNOWLEDGE_CAPACITY = 100;
+
+	final int MAXIMUM_KNOWLEDGE_POOL_CAPACITY = 100;
+	final int COMBINE_ARRAY_STEP = 13;
 	
-	private Word subject;
+	private KnowledgeProperties knowledgeList[];
+	private int accessCount[];
 	
-	private KnowledgeFact facts[];
-	private KnowledgeSource source[];
+	private int maxAccessCount;
+	private int maxAccessCountIndex;
 	
-	private int itemAccessCount[];
+	private int next_combine_index;
 	
-	private boolean itemIsValid[];
-	private int validItemCount = 0;
+	private double allowCombinePercent = 0.75;   // between 0 and 1 (0% - 100%)
 	
-	private int itemCount = 0;
+
+	private SpeechRecognition speechRecognition;
 	
 	public Knowledge() {
-		init();
+		knowledgeList = new KnowledgeProperties[MAXIMUM_KNOWLEDGE_POOL_CAPACITY];
+		accessCount = new int[MAXIMUM_KNOWLEDGE_POOL_CAPACITY];
+		
+		maxAccessCount = 0;
+		maxAccessCountIndex = 0;
+		next_combine_index = 0;
+
+		speechRecognition = new SpeechRecognition();
+		
 	}
-	
-	public Knowledge(Word subject, KnowledgeFact facts[], KnowledgeSource sources[]) {
+
+	public void addKnowledge(KnowledgeProperties knowledge) {
 		
 		int index;
-		int size;
 		
-		init();
+		index = indexForNewEntry();
+		knowledgeList[index] = knowledge;
+		accessCount[index] = 0;
 		
-		this.subject = subject;
+	}
+	
+	public void addFactsFromSentence(String sentence, KnowledgeSource source) {
+		Word subject;
+		Word object1;
+		Word object2;
 		
-		size = facts.length;
-
-		if (size > MAXIMUM_KNOWLEDGE_CAPACITY) size = MAXIMUM_KNOWLEDGE_CAPACITY;
-		for (index = 0; index < size; index++) {
-			this.facts[index] = facts[index];
-			this.source[index] = sources[index];
-			this.itemAccessCount[index] = 2;
-			this.itemIsValid[index] = true;
+		KnowledgeFact fact;
+		
+		int countFacts = 0;
+		int knowledgeIndex = 0;
+	
+		
+		speechRecognition.analyseSentence(sentence);
+		
+		// add facts for the sentece's subject
+		subject = speechRecognition.getSubject();
+		do
+		{
+			fact = speechRecognition.getNextFact(SpeechRecognition_Function.subject);
+			if (fact != null) {
+				countFacts++;
+				if (countFacts == 1)
+					knowledgeIndex = addNewKnowledge(subject, fact, source);
+				else
+					addToKnowledge(knowledgeIndex, fact, source);
+				
+			}
 		}
-		validItemCount = size;
-		itemCount = size;
-
-	}
-	
-	private void init() {
-		this.facts = new KnowledgeFact[MAXIMUM_KNOWLEDGE_CAPACITY];
-		this.source = new KnowledgeSource[MAXIMUM_KNOWLEDGE_CAPACITY];
+		while(fact != null);
 		
-		this.itemAccessCount = new int[MAXIMUM_KNOWLEDGE_CAPACITY];
-		this.itemIsValid = new boolean[MAXIMUM_KNOWLEDGE_CAPACITY];
-	}
-
-	protected int count() {
-		return itemCount;
-	}
-	
-	protected int compareTo(Knowledge knowledgeB) {
-		int countEqual = 0;
-	
-		if (subject == knowledgeB.getSubject()) {
-			for (int i = 0; i < MAXIMUM_KNOWLEDGE_CAPACITY; i++) {
-				if (itemIsValid[i]) {
-					for (int j = 0; j < MAXIMUM_KNOWLEDGE_CAPACITY; j++) {
-						if (knowledgeB.isItemValid(j)) {
-							if (facts[i].equals(knowledgeB.getFact(j)))  {
-								countEqual ++;
-								j = MAXIMUM_KNOWLEDGE_CAPACITY;
-							}
-						}
-					}
+		// add facts for the sentece's first object
+		object1 = speechRecognition.getObject1();
+		if (object1 != null) {
+			speechRecognition.resetCriterions();
+			countFacts = 0;
+			do
+			{
+				fact = speechRecognition.getNextFact(SpeechRecognition_Function.object1);
+				if (fact != null) {
+					countFacts++;
+					if (countFacts == 1)
+						knowledgeIndex = addNewKnowledge(object1, fact, source);
+					else
+						addToKnowledge(knowledgeIndex, fact, source);
+					
 				}
 			}
+			while(fact != null);
 		}
-		return countEqual;
-	}
-	
-	protected void combineWith(Knowledge knowledgeB) {
 		
-		for (int j = 0; j < MAXIMUM_KNOWLEDGE_CAPACITY; j++) {
-			if (knowledgeB.isItemValid(j)) {
-				for (int i = 0; i < MAXIMUM_KNOWLEDGE_CAPACITY; i++) {
-					if (itemIsValid[i])
-						if (facts[i].equals(knowledgeB.getFact(j)))
-							// break
-							i = MAXIMUM_KNOWLEDGE_CAPACITY;
-						else 
-							// combine fact from knowledge B to Knowledge A
-							addItem(knowledgeB.getFactAsCopy(j), knowledgeB.getSourceAsCopy(j));
+		// add facts for the sentece's second object
+		object2 = speechRecognition.getObject2();
+		if (object2 != null) {
+			speechRecognition.resetCriterions();
+			countFacts = 0;
+			do
+			{
+				fact = speechRecognition.getNextFact(SpeechRecognition_Function.object2);
+				if (fact != null) {
+					countFacts++;
+					if (countFacts == 1)
+						knowledgeIndex = addNewKnowledge(object2, fact, source);
+					else
+						addToKnowledge(knowledgeIndex, fact, source);
+					
 				}
 			}
+			while(fact != null);		
 		}
+		
 	}
 	
-	protected boolean isValid() {
-		return (subject != null);
-	}
-	
-	protected Word getSubject() {
-		return subject;
-	}
+	public Answer getAnswerForQuestion(String question){
+		Word subject;
+		int indexesForSubject[];
+		int indexesForCriterion[];
+		int countKnowledges = 0;
+		int indexKnowledge;
+		int countFacts = 0;
+		int indexFact;
+		KnowledgeFact fact;
+		KnowledgeSource source;
+		KnowledgeProperties knowledge;
+		ReadOnlyIterator<KnowledgeFact_Criterion> criterions = null;
+		
+		Answer answer;
+		boolean withAnswer = false;
+		
+		speechRecognition.analyseSentence(question);
 
-	protected int countValidItems() {
-		return validItemCount;
-	}
-	
-	protected boolean isItemValid(int index) {
-		return itemIsValid[index];
-	}
-	
-	protected void setSubject(Word subject) {
-		if (validItemCount == 0)		this.subject = subject;
-	}
-	
-	protected KnowledgeFact getFact(int index) {
-		if ((index >= 0) & (index < MAXIMUM_KNOWLEDGE_CAPACITY) )
-			return facts[index];
-		else
-			return null;
-	}
-
-	protected KnowledgeFact getFactAsCopy(int index) {
-		if ((index >= 0) & (index < MAXIMUM_KNOWLEDGE_CAPACITY) )
-			return new KnowledgeFact(facts[index]);
-		else
-			return null;
-	}
-
-	protected KnowledgeSource getSource(int index) {
-		if ((index >= 0) & (index < MAXIMUM_KNOWLEDGE_CAPACITY) )
-			return source[index];
-		else
-			return null;
-	}
-
-	protected KnowledgeSource getSourceAsCopy(int index) {
-		if ((index >= 0) & (index < MAXIMUM_KNOWLEDGE_CAPACITY) )
-			return new KnowledgeSource(source[index]);
-		else
-			return null;
-	}
-
-	protected int[] findFactsForCriterion(KnowledgeFact_Criterion criterion) {
-		int result_tmp[] = new int[MAXIMUM_KNOWLEDGE_CAPACITY];
-		int result[];
-		int count = 0;
-		int index;
+		subject = speechRecognition.getSubject();
+		criterions = speechRecognition.getCriterions(SpeechRecognition_Function.subject);
 		
-		for (index=0;index < MAXIMUM_KNOWLEDGE_CAPACITY; index++) {
-			if (itemIsValid[index]) 
-				if (   facts[index].getCriterion() == criterion) 	{
-						
-					result_tmp[count] = index;
-					count++;
-				}
-		}
+		indexesForSubject = findAllKnowledgesForSubject(subject);
+		countKnowledges = indexesForSubject.length;
 		
-		result = new int[ count];
-		for (index = 0; index < count; index++) {
-			result[index] = result_tmp[index];
-		}
-		return result;
-	}
-
-	
-	protected int[] findFactsForValue(Word value) {
-		int result_tmp[] = new int[MAXIMUM_KNOWLEDGE_CAPACITY];
-		int result[];
-		int count = 0;
-		int index;
+		answer = new Answer();
 		
-		for (index=0;index < MAXIMUM_KNOWLEDGE_CAPACITY; index++) {
-			if (itemIsValid[index]) 
-				if (   facts[index].getValue().getWord() == value) 	{
-						
-					result_tmp[count] = index;
-					count++;
-				}
-		}
-		
-		result = new int[ count];
-		for (index = 0; index < count; index++) {
-			result[index] = result_tmp[index];
-		}
-		return result;
-	}
-
-	
-	protected void removeItem(int index) {
-		
-		if (index == itemCount-1) itemCount--;
-		
-		if (this.itemIsValid[index]) {
-			this.itemIsValid[index] = false;
-			this.itemAccessCount[index] = 0;
-			validItemCount--;
-		}
-	}
-	
-	protected void addItem(KnowledgeFact fact, KnowledgeSource source) {
-		int 	replacableIndex;
-		
-		replacableIndex = getReplacableIndex();
-		
-		if (replacableIndex  == itemCount) itemCount++;
-		
-		this.facts[replacableIndex] = fact;
-		this.source[replacableIndex] = source;
-		
-		this.itemAccessCount[replacableIndex] = 2;
-		
-		if (this.itemIsValid[replacableIndex] == false) {
-			this.validItemCount++;
-			this.itemIsValid[replacableIndex] = true;
-		}
-		
-		
-	}
-	
-	protected int getIndexForValidWithMaxAccessCount() {
-		int index;
-		int result;
-		
-		result = getIndexForFirstValid();
-		if (result == -1) return -1;
-	
-		for (index = result + 1; index < itemCount; index++) {
-			if (itemIsValid[index] == true) {
-			 if (itemAccessCount[result] < itemAccessCount[index]) 	result = index;
-			}
-		}
-		return result;
-	}
-	
-	protected int getIndexForValidWithMinAccessCount() {
-		int index;
-		int result;
-	
-		result = getIndexForFirstValid();
-		if (result == -1) return -1;
-
-		for (index = result + 1; index < itemCount; index++) {
-			if (itemIsValid[index] == true) {
-			 if (itemAccessCount[result] > itemAccessCount[index]) 	result = index;
-			}
-		}
-		return result;
-	}
-
-	protected int getIndexForFirstValid() {
-		int index;
-	
-		for (index = 0; index < itemCount; index++) {
-			if (itemIsValid[index] == true)			  	return index;
-		}
-		return -1;
-		
-	}
-	
-	private int getReplacableIndex() {
-		int count;
-		int index;
-		int i;
-		
-		if (itemCount == MAXIMUM_KNOWLEDGE_CAPACITY )
-			count = itemCount;		
-		else
-			count = itemCount + 1;
-		
-		index = 0;
-		for (i=0; i < count; i++) {
-			if (itemIsValid[i] == false) {
-				index = i;
-				return index;
-			}
-			else if (itemAccessCount[i] < itemAccessCount[index]) 	index = i;
+		// TODO iterate over criterions
+		for (indexKnowledge = 0;indexKnowledge < countKnowledges; indexKnowledge++) {
 			
+			knowledge = getKnowledge(indexesForSubject[indexKnowledge]);
+			indexesForCriterion = knowledge.findFactsForCriterion(criterions.next());
+			countFacts = indexesForCriterion.length;
+			if (countFacts > 0) { 
+				answer.setSubject(subject);
+				withAnswer = true;
+			}
+			
+			for (indexFact = 0;indexFact < countFacts; indexFact++) {
+				fact = knowledge.getFactAsCopy(indexesForCriterion[indexFact]);
+				source = knowledge.getSourceAsCopy(indexesForCriterion[indexFact]);
+				
+				answer.addItem(fact, source);
+			}
 		}
-		
-		return index ;
+
+		if (withAnswer) return answer;
+		else return null;
 	}
 	
-	public boolean equals(Knowledge b) {
-		// we only check all facts , sources and itemIsValid
+	public void combine() {
+		KnowledgeProperties knowledgeA;
+		KnowledgeProperties knowledgeB;
 		
-		int length;
-		int index;
+		int resultCompare;
+		int countFactsKnowledgeA;
+		int countFactsKnowledgeB;
 		
-		length = facts.length;
-		
-		if (length != b.facts.length)
-			return false;
-		
-		for (index = 0; index < length; index++) {
-			if (!facts[index].equals(b.facts[index])) 
-				return false;
-			if (!source[index].equals(b.source[index])) 
-				return false;
-			if (itemIsValid[index] != b.itemIsValid[index]) 
-				return false;
+		knowledgeA = knowledgeList[next_combine_index];
+		if ((knowledgeA == null) | (!knowledgeA.isValid()) ) return;
 
+		countFactsKnowledgeA = knowledgeA.countValidItems();
+		
+		for (int i = 0; i < MAXIMUM_KNOWLEDGE_POOL_CAPACITY;i++) {
+			knowledgeB = knowledgeList[i];
+			if ((knowledgeB != null) & knowledgeB.isValid() ) {
+				resultCompare = knowledgeA.compareTo(knowledgeB);
+				
+				//  combine allowed?
+				countFactsKnowledgeB = knowledgeB.countValidItems();
+				if ( (resultCompare / countFactsKnowledgeA > allowCombinePercent)
+						& (resultCompare / countFactsKnowledgeB > allowCombinePercent) ) {
+					knowledgeA.combineWith(knowledgeB);
+					knowledgeList[i] = null;
+				}
+			}
 		}
 		
-		return true;
+		next_combine_index = next_combine_index + COMBINE_ARRAY_STEP;
+		next_combine_index = next_combine_index % MAXIMUM_KNOWLEDGE_POOL_CAPACITY;
+	}
+	
+	private int addNewKnowledge(Word subject, KnowledgeFact fact, KnowledgeSource source) {
+		KnowledgeProperties knowledge;
+		int index;
+		
+		knowledge = new KnowledgeProperties();
+		
+		knowledge.setSubject(subject);
+		knowledge.addItem(fact, source);
+		
+		index = indexForNewEntry();
+		knowledgeList[index] = knowledge;
+		accessCount[index] = 0;
+		
+		return index;
+	}
+	
+	private void addToKnowledge(int knowledgeIndex, KnowledgeFact fact, KnowledgeSource source) {
+		if (knowledgeIndex < MAXIMUM_KNOWLEDGE_POOL_CAPACITY) {
+			knowledgeList[knowledgeIndex].addItem(fact, source);
+		}
+	}
+	
+	public int findMostFrequentKnowledgeForSubject(Word word) {
+		int index;
+		int  foundIndex = -1;
+		int mostFrequent = 0;
+		
+		for (index=0;index < MAXIMUM_KNOWLEDGE_POOL_CAPACITY; index++) {
+			if (knowledgeList[index].getSubject() == word) {
+				if (accessCount[index] > mostFrequent) {
+					
+						foundIndex = index;
+						mostFrequent = accessCount[index];
+
+				}
+			}
+		}
+		
+		return foundIndex;
+	}
+	
+	public int[] findAllKnowledgesForSubject(Word word) {
+		int result_tmp[] = new int[MAXIMUM_KNOWLEDGE_POOL_CAPACITY];
+		int result[];
+		int count = 0;
+		int index;
+		
+		
+		for (index=0;index < MAXIMUM_KNOWLEDGE_POOL_CAPACITY; index++) {
+			if (  knowledgeList[index].getSubject() == word) 	{
+					
+				result_tmp[count] = index;
+				count++;
+			}
+		}
+
+
+
+		result = new int[ count];
+		for (index = 0; index < count; index++) {
+			result[index] = result_tmp[index];
+		}
+		return result;
+
+		
+		
+	}
+	
+	
+	
+	
+	public KnowledgeProperties getKnowledge(int index) {
+		if ( index >= 0 & index < MAXIMUM_KNOWLEDGE_POOL_CAPACITY) {
+			accessCount[index]++;
+			if (accessCount[index] > maxAccessCount) {
+				maxAccessCount = accessCount[index];
+				maxAccessCountIndex = index;
+			}
+			return knowledgeList[index];
+		}
+		else
+			return null;
+	}
+	
+	public KnowledgeFact get_Fact (int knowledgeIndex, int factIndex) {
+		if ( knowledgeIndex >= 0 & knowledgeIndex < MAXIMUM_KNOWLEDGE_POOL_CAPACITY) {
+			accessCount[knowledgeIndex]++;
+			if (accessCount[knowledgeIndex] > maxAccessCount) {
+				maxAccessCount = accessCount[knowledgeIndex];
+				maxAccessCountIndex = knowledgeIndex;
+			}
+			return knowledgeList[knowledgeIndex].getFactAsCopy(factIndex);
+		}
+		else
+			return null;
+	}
+	
+	
+	
+	
+
+	
+	public void SetAllowCombinePercent(int percent) {
+		allowCombinePercent = percent;
+	}
+	
+	private int indexForNewEntry() {
+		KnowledgeProperties knowledge;
+		int fewestAccess;
+		int indexWithFewestAccess;
+		
+		// find empty or invalid entry
+		for (int i = 0; i < MAXIMUM_KNOWLEDGE_POOL_CAPACITY;i++) {
+			knowledge = knowledgeList[i];
+			if ((knowledge == null) | (!knowledge.isValid()) ) return i;
+		}
+		
+		
+		// find entry with fewest access
+		fewestAccess = maxAccessCount + 1;
+		indexWithFewestAccess = maxAccessCountIndex;
+		for (int i = 0; i < MAXIMUM_KNOWLEDGE_POOL_CAPACITY;i++) {
+			if ( accessCount[i] < fewestAccess) {
+				indexWithFewestAccess = i;
+				fewestAccess = accessCount[i];
+			}
+		}
+		return indexWithFewestAccess;
+		
 	}
 }

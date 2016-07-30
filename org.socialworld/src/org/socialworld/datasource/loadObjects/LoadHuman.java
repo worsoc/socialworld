@@ -35,10 +35,10 @@ import org.socialworld.datasource.tablesSimulation.TableKnowledgeFactAndSource;
 import org.socialworld.datasource.tablesSimulation.TableKnowledgePool;
 import org.socialworld.datasource.tablesSimulation.TableSentenceList;
 import org.socialworld.knowledge.Acquaintance;
-import org.socialworld.knowledge.Knowledge;
 import org.socialworld.knowledge.KnowledgeFact;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.knowledge.KnowledgeFact_Value;
+import org.socialworld.knowledge.KnowledgeProperties;
 import org.socialworld.knowledge.KnowledgeSource;
 import org.socialworld.knowledge.KnowledgeSource_Type;
 import org.socialworld.objects.*;
@@ -268,7 +268,7 @@ public class LoadHuman extends LoadAnimal {
 				sources[index] = new KnowledgeSource(sourceType, origin);
 			}
 		}
-		hiddenHuman.addKnowledge(new Knowledge(AllWords.getWord(subject), facts, sources ));
+		hiddenHuman.addKnowledgeProperties(new KnowledgeProperties(AllWords.getWord(subject), facts, sources ));
 	}
 
 
