@@ -22,6 +22,10 @@
 package org.socialworld.conversation;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.knowledge.AnswerProperties;
+import org.socialworld.knowledge.AnswerRelationUnaer;
+import org.socialworld.knowledge.AnswerRelationBinaer;
+import org.socialworld.knowledge.AnswerRelationTrinaer;
+import org.socialworld.knowledge.IAnswer;
 import org.socialworld.objects.Human;
 import java.util.ArrayList;
 
@@ -41,8 +45,65 @@ public class Talk {
 		partnersQuestions = new ArrayList<String>();
 	}
 	
-	public void addAnswer(AnswerProperties answer) {
-		addSentence(makeAnswerSentence(answer), Talk_SentenceType.myPlannedSentence);
+	public void addAnswer(IAnswer answer) {
+		switch (answer.getType()) {
+		case properties: 
+			addSentence(makeAnswerSentence((AnswerProperties)answer), Talk_SentenceType.myPlannedSentence);
+		case relationUnaer: 
+			addSentence(makeAnswerSentence((AnswerRelationUnaer)answer), Talk_SentenceType.myPlannedSentence);
+		case relationBinaer: 
+			addSentence(makeAnswerSentence((AnswerRelationBinaer)answer), Talk_SentenceType.myPlannedSentence);
+		case relationTrinaer: 
+			addSentence(makeAnswerSentence((AnswerRelationTrinaer)answer), Talk_SentenceType.myPlannedSentence);
+		}
+	}
+
+	private  String makeAnswerSentence(AnswerRelationUnaer answer) {
+		String sentence;
+
+		Word subject;
+		Word verb;
+
+		subject = answer.getAnswerSubject();
+		verb = answer.getAnswerVerb();
+		
+		sentence = sentenceMaker.getStatementSentenceForRelationUnaer(subject, verb);
+		
+		return sentence;
+	}
+
+	private  String makeAnswerSentence(AnswerRelationBinaer answer) {
+		String sentence;
+
+		Word subject;
+		Word verb;
+		Word object;
+
+		subject = answer.getAnswerSubject();
+		verb = answer.getAnswerVerb();
+		object = answer.getAnswerObject();
+		
+		sentence = sentenceMaker.getStatementSentenceForRelationBinaer(subject, verb, object);
+		
+		return sentence;
+	}
+
+	private  String makeAnswerSentence(AnswerRelationTrinaer answer) {
+		String sentence;
+
+		Word subject;
+		Word verb;
+		Word object1;
+		Word object2;
+
+		subject = answer.getAnswerSubject();
+		verb = answer.getAnswerVerb();
+		object1 = answer.getAnswerObject1();
+		object2 = answer.getAnswerObject2();
+		
+		sentence = sentenceMaker.getStatementSentenceForRelationTrinaer(subject, verb, object1, object2);
+		
+		return sentence;
 	}
 	
 	private String makeAnswerSentence(AnswerProperties answer) {
