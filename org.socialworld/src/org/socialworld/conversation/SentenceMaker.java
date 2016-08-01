@@ -25,6 +25,75 @@ import org.socialworld.knowledge.KnowledgeFact_Criterion;
 public class SentenceMaker {
 	private Word lastSubject;
 	private int random = 0;
+
+	public String getStatementSentenceForRelationUnaer(Word subject, Word verb) {
+		String sentence;
+
+		if (lastSubject == subject)
+			sentence = subject.getPronoun().getWord();
+		else {
+			sentence = subject.getWord();
+			if (subject.getType() == Word_Type.noun) sentence = "The " + sentence;
+			lastSubject = subject;
+		}
+		
+		sentence = sentence + " " + verb.getWord() + "." ;
+		
+		return sentence;
+		
+	}	
+	public String getStatementSentenceForRelationBinaer(Word subject, Word verb, Word object) {
+		String sentence;
+
+		if (lastSubject == subject)
+			sentence = subject.getPronoun().getWord();
+		else {
+			sentence = subject.getWord();
+			if (subject.getType() == Word_Type.noun) sentence = "The " + sentence;
+			lastSubject = subject;
+		}
+		
+		sentence = sentence + " " + verb.getWord() ;
+		
+		if (object != null) {
+			if (object.getType() == Word_Type.noun) sentence = sentence + " the";
+			sentence = sentence + " " + object.getWord();
+		}
+		
+		sentence = sentence + ".";
+		
+		return sentence;
+		
+	}
+	
+	public String getStatementSentenceForRelationTrinaer(Word subject, Word verb, Word object1, Word object2) {
+		String sentence;
+
+		if (lastSubject == subject)
+			sentence = subject.getPronoun().getWord();
+		else {
+			sentence = subject.getWord();
+			if (subject.getType() == Word_Type.noun) sentence = "The " + sentence;
+			lastSubject = subject;
+		}
+		
+		sentence = sentence + " " + verb.getWord() ;
+		
+		if (object1 != null) {
+			if (object1.getType() == Word_Type.noun) sentence = sentence + " the";
+			sentence = sentence + " " + object1.getWord();
+		}
+
+		if (object2 != null) {
+			if (object2.getType() == Word_Type.noun) sentence = sentence + " the";
+			sentence = sentence + " " + object2.getWord();
+		}
+	
+		sentence = sentence + ".";
+		
+		return sentence;
+		
+	}
 	
 	public String getStatementSentenceForFact(Word subject, KnowledgeFact_Criterion criterion, Word value) {
 		String sentence;

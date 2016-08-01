@@ -23,10 +23,12 @@ package org.socialworld.knowledge;
 
 import org.socialworld.conversation.Word;
 
-public class AnswerProperties extends KnowledgeProperties {
+public class AnswerProperties extends KnowledgeProperties implements IAnswer {
 	
 	private int index;
 	private int count;
+	
+	public KnowledgeType getType() { return KnowledgeType.properties; }
 	
 	public boolean  resetIndex() {
 		index = getIndexForFirstValid();
