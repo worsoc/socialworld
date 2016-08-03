@@ -22,6 +22,8 @@
 package org.socialworld.knowledge;
 
 import org.socialworld.collections.ReadOnlyIterator;
+import org.socialworld.conversation.Lexem;
+import org.socialworld.conversation.Numerus;
 import org.socialworld.conversation.SpeechRecognition;
 import org.socialworld.conversation.SpeechRecognition_Function;
 import org.socialworld.conversation.Word;
@@ -139,6 +141,8 @@ public class Knowledge {
 	
 	public AnswerProperties getAnswerForQuestion(String question){
 		Word subject;
+		Lexem lexemSubject;
+		Numerus numerusSubject;
 		int indexesForSubject[];
 		int indexesForCriterion[];
 		int countKnowledges = 0;
@@ -156,9 +160,12 @@ public class Knowledge {
 		speechRecognition.analyseSentence(question);
 
 		subject = speechRecognition.getSubject();
+		lexemSubject = subject.getLexem();
+		numerusSubject = subject.getNumerus();
+		
 		criterions = speechRecognition.getCriterions(SpeechRecognition_Function.subject);
 		
-		indexesForSubject = findAllKnowledgesForSubject(subject);
+		indexesForSubject = findAllKnowledgesForSubject(lexemSubject);
 		countKnowledges = indexesForSubject.length;
 		
 		answer = new AnswerProperties();
@@ -170,7 +177,7 @@ public class Knowledge {
 			indexesForCriterion = knowledge.findFactsForCriterion(criterions.next());
 			countFacts = indexesForCriterion.length;
 			if (countFacts > 0) { 
-				answer.setSubject(subject);
+				answer.setSubject(lexemSubject, numerusSubject);
 				withAnswer = true;
 			}
 			
@@ -221,10 +228,15 @@ public class Knowledge {
 	private int addNewKnowledge(Word subject, KnowledgeFact fact, KnowledgeSource source) {
 		KnowledgeProperties knowledge;
 		int index;
+
+		Lexem lexemSubject;
+		Numerus numerusSubject;
+
+		lexemSubject = subject.getLexem();
+		numerusSubject = subject.getNumerus();
 		
-		knowledge = new KnowledgeProperties();
+		knowledge = new KnowledgeProperties(lexemSubject);
 		
-		knowledge.setSubject(subject);
 		knowledge.addItem(fact, source);
 		
 		index = indexForNewEntry();
@@ -240,13 +252,13 @@ public class Knowledge {
 		}
 	}
 	
-	public int findMostFrequentKnowledgeForSubject(Word word) {
+	public int findMostFrequentKnowledgeForSubject(Lexem subject) {
 		int index;
 		int  foundIndex = -1;
 		int mostFrequent = 0;
 		
 		for (index=0;index < MAXIMUM_KNOWLEDGE_POOL_CAPACITY; index++) {
-			if (knowledgeList[index].getSubject() == word) {
+			if (knowledgeList[index].getLexemSubject() == subject) {
 				if (accessCount[index] > mostFrequent) {
 					
 						foundIndex = index;
@@ -259,7 +271,7 @@ public class Knowledge {
 		return foundIndex;
 	}
 	
-	public int[] findAllKnowledgesForSubject(Word word) {
+	public int[] findAllKnowledgesForSubject(Lexem subject) {
 		int result_tmp[] = new int[MAXIMUM_KNOWLEDGE_POOL_CAPACITY];
 		int result[];
 		int count = 0;
@@ -267,7 +279,7 @@ public class Knowledge {
 		
 		
 		for (index=0;index < MAXIMUM_KNOWLEDGE_POOL_CAPACITY; index++) {
-			if (  knowledgeList[index].getSubject() == word) 	{
+			if (  knowledgeList[index].getLexemSubject() == subject) 	{
 					
 				result_tmp[count] = index;
 				count++;

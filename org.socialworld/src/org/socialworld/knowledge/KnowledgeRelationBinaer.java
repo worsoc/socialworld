@@ -21,25 +21,32 @@
 */
 package org.socialworld.knowledge;
 
+import org.socialworld.conversation.Lexem;
+import org.socialworld.conversation.Numerus;
 import org.socialworld.conversation.Word;
 
 public class KnowledgeRelationBinaer extends KnowledgeRelation {
 
-	private Word subject;
-	private Word verb;
-	private Word object;
-	
+	private Lexem object;
+	private Numerus numerusObject;
+
 	@Override
-	protected Word getSubject() {
-		return subject;
-	}
-	
-	protected Word getVerb() {
-		return verb;
+	public Word getVerb() {
+		return getLexemVerb().getWord(getTense());
 	}
 
-	protected Word getObject() {
-		return object;
+	@Override
+	public Word getAdverb() {
+		return getLexemAdverb().getWord();
+	}
+	
+	@Override
+	public Word getSubject() {
+		return getLexemSubject().getWord(getNumerusSubject());
+	}
+
+	public Word getObject() {
+		return object.getWord(numerusObject);
 	}
 	
 }

@@ -23,7 +23,19 @@ public class Lexem {
 		if (allowedAsKnowledgeSubject)		criterions = new ArrayList<KnowledgeFact_Criterion>() ;
 		
 	}
-	
+
+	public Word getWord() {
+		return null;
+	}
+
+	public Word getWord(Tense tense) {
+		return null;
+	}
+
+	public Word getWord(Numerus numerus) {
+		return null;
+	}
+
 	public Word_Type getType() {
 		return wordType;
 	}

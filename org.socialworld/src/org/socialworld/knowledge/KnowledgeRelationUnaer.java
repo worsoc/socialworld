@@ -25,16 +25,21 @@ import org.socialworld.conversation.Word;
 
 public class KnowledgeRelationUnaer extends KnowledgeRelation {
 
-	private Word subject;
-	private Word verb;
-	
 	@Override
-	protected Word getSubject() {
-		return subject;
+	public Word getVerb() {
+		return getLexemVerb().getWord(getTense());
 	}
 
-	protected Word getVerb() {
-		return verb;
+	@Override
+	public Word getAdverb() {
+		return getLexemAdverb().getWord();
 	}
+	
+	@Override
+	public Word getSubject() {
+		return getLexemSubject().getWord(getNumerusSubject());
+	}
+
+	
 	
 }

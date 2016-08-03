@@ -20,13 +20,14 @@
 *
 */
 package org.socialworld.knowledge;
+import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Word;
 
 public class KnowledgeProperties {
 
 		final int MAXIMUM_KNOWLEDGE_CAPACITY = 100;
 		
-		private Word subject;
+		private Lexem subject;
 		
 		private KnowledgeFact facts[];
 		private KnowledgeSource source[];
@@ -38,11 +39,14 @@ public class KnowledgeProperties {
 		
 		private int itemCount = 0;
 		
-		public KnowledgeProperties() {
+		public KnowledgeProperties(Lexem subject) {
+			
 			init();
+			
+			this.subject = subject;
 		}
 		
-		public KnowledgeProperties(Word subject, KnowledgeFact facts[], KnowledgeSource sources[]) {
+		public KnowledgeProperties(Lexem subject, KnowledgeFact facts[], KnowledgeSource sources[]) {
 			
 			int index;
 			int size;
@@ -80,7 +84,7 @@ public class KnowledgeProperties {
 		protected int compareTo(KnowledgeProperties knowledgeB) {
 			int countEqual = 0;
 		
-			if (subject == knowledgeB.getSubject()) {
+			if (subject == knowledgeB.getLexemSubject()) {
 				for (int i = 0; i < MAXIMUM_KNOWLEDGE_CAPACITY; i++) {
 					if (itemIsValid[i]) {
 						for (int j = 0; j < MAXIMUM_KNOWLEDGE_CAPACITY; j++) {
@@ -95,6 +99,10 @@ public class KnowledgeProperties {
 				}
 			}
 			return countEqual;
+		}
+		
+		Lexem getLexemSubject() {
+			return subject;
 		}
 		
 		protected void combineWith(KnowledgeProperties knowledgeB) {
@@ -118,9 +126,12 @@ public class KnowledgeProperties {
 			return (subject != null);
 		}
 		
-		protected Word getSubject() {
-			return subject;
+
+		public Word getSubject() {
+			return subject.getWord();
 		}
+
+		
 
 		protected int countValidItems() {
 			return validItemCount;
@@ -130,7 +141,7 @@ public class KnowledgeProperties {
 			return itemIsValid[index];
 		}
 		
-		protected void setSubject(Word subject) {
+		protected void setSubject(Lexem subject) {
 			if (validItemCount == 0)		this.subject = subject;
 		}
 		
@@ -185,7 +196,7 @@ public class KnowledgeProperties {
 		}
 
 		
-		protected int[] findFactsForValue(Word value) {
+		protected int[] findFactsForValue(Lexem value) {
 			int result_tmp[] = new int[MAXIMUM_KNOWLEDGE_CAPACITY];
 			int result[];
 			int count = 0;
@@ -193,7 +204,7 @@ public class KnowledgeProperties {
 			
 			for (index=0;index < MAXIMUM_KNOWLEDGE_CAPACITY; index++) {
 				if (itemIsValid[index]) 
-					if (   facts[index].getValue().getWord() == value) 	{
+					if (   facts[index].getValue().getLexem() == value) 	{
 							
 						result_tmp[count] = index;
 						count++;

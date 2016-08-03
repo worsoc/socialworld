@@ -21,30 +21,40 @@
 */
 package org.socialworld.knowledge;
 
+import org.socialworld.conversation.Lexem;
+import org.socialworld.conversation.Numerus;
 import org.socialworld.conversation.Word;
 
 public class KnowledgeRelationTrinaer extends KnowledgeRelation {
 
-	private Word subject;
-	private Word verb;
-	private Word object1;
-	private Word object2;
+	private Lexem object1;
+	private Numerus numerusObject1;
+
+	private Lexem object2;
+	private Numerus numerusObject2;
+	
+
+	@Override
+	public Word getVerb() {
+		return getLexemVerb().getWord(getTense());
+	}
+
+	@Override
+	public Word getAdverb() {
+		return getLexemAdverb().getWord();
+	}
 	
 	@Override
-	protected Word getSubject() {
-		return subject;
+	public Word getSubject() {
+		return getLexemSubject().getWord(getNumerusSubject());
 	}
 
-	protected Word getVerb() {
-		return verb;
+	public Word getObject1() {
+		return object1.getWord(numerusObject1);
+	}
+
+	public Word getObject2() {
+		return object2.getWord(numerusObject2);
 	}
 	
-	protected Word getObject1() {
-		return object1;
-	}
-
-	protected Word getObject2() {
-		return object2;
-	}
-
 }

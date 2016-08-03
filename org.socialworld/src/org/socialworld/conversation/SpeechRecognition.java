@@ -152,6 +152,7 @@ public class SpeechRecognition {
 	
 	public KnowledgeFact getNextFact(SpeechRecognition_Function function) {
 		
+		KnowledgeFact_Criterion criterion;
 		KnowledgeFact fact = null;
 		Word word = null;
 		
@@ -160,11 +161,13 @@ public class SpeechRecognition {
 		if (iteratorCriterions.hasNext() == false)	iteratorCriterions = getCriterions(function);
 		if (iteratorCriterions.hasNext()) {
 			
+			criterion = iteratorCriterions.next();
+			
 			for (int index = 0; index < wordList.size(); index++) {
 				if (functionList[index] == function) {
 					word = foundWordList[index];
 					
-					fact = KnowledgeFactPool.getInstance().find( iteratorCriterions.next(), word);
+					fact = KnowledgeFactPool.getInstance().find(criterion , word.getLexem());
 					
 					if (fact != null)	break;
 				}

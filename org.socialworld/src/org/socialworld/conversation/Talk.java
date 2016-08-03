@@ -64,8 +64,8 @@ public class Talk {
 		Word subject;
 		Word verb;
 
-		subject = answer.getAnswerSubject();
-		verb = answer.getAnswerVerb();
+		subject = answer.getSubject();
+		verb = answer.getVerb();
 		
 		sentence = sentenceMaker.getStatementSentenceForRelationUnaer(subject, verb);
 		
@@ -79,9 +79,9 @@ public class Talk {
 		Word verb;
 		Word object;
 
-		subject = answer.getAnswerSubject();
-		verb = answer.getAnswerVerb();
-		object = answer.getAnswerObject();
+		subject = answer.getSubject();
+		verb = answer.getVerb();
+		object = answer.getObject();
 		
 		sentence = sentenceMaker.getStatementSentenceForRelationBinaer(subject, verb, object);
 		
@@ -96,10 +96,10 @@ public class Talk {
 		Word object1;
 		Word object2;
 
-		subject = answer.getAnswerSubject();
-		verb = answer.getAnswerVerb();
-		object1 = answer.getAnswerObject1();
-		object2 = answer.getAnswerObject2();
+		subject = answer.getSubject();
+		verb = answer.getVerb();
+		object1 = answer.getObject1();
+		object2 = answer.getObject2();
 		
 		sentence = sentenceMaker.getStatementSentenceForRelationTrinaer(subject, verb, object1, object2);
 		
@@ -116,7 +116,7 @@ public class Talk {
 		
 	// TODO
 		answer.resetIndex();
-		subject = answer.getAnswerSubject();
+		subject = answer.getSubject();
 		criterion = answer.getAnswerCriterion();
 		value = answer.getAnswerValue();
 		

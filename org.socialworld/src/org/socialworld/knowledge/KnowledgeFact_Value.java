@@ -21,12 +21,12 @@
 */
 package org.socialworld.knowledge;
 
-import org.socialworld.conversation.Word;
+import org.socialworld.conversation.Lexem;
 
 public class KnowledgeFact_Value {
-	private Word value;
+	private Lexem value;
 	
-	public KnowledgeFact_Value(Word value) {
+	public KnowledgeFact_Value(Lexem value) {
 		this.value = value;
 	}
 	
@@ -34,9 +34,10 @@ public class KnowledgeFact_Value {
 		this.value = original.value;
 	}
 	
-	protected Word getWord() {
+	protected Lexem getLexem() {
 		return value;
 	}
+
 
 	protected boolean equals(KnowledgeFact_Value b) {
 		return this.value.equals(b.value);
