@@ -20,7 +20,7 @@
 *
 */
 package org.socialworld.knowledge;
-import org.socialworld.conversation.Word;
+import org.socialworld.conversation.Lexem;
 
 
 public class KnowledgeFactPool {
@@ -44,7 +44,7 @@ public class KnowledgeFactPool {
 		return instance;
 	}
 	
-	public KnowledgeFact find(KnowledgeFact_Criterion criterion, Word value) {
+	public KnowledgeFact find(KnowledgeFact_Criterion criterion, Lexem value) {
 		KnowledgeFact fact;
 		
 		fact = factListsByCriterion[criterion.getIndex()].find(value);

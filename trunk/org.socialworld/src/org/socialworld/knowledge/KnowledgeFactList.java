@@ -22,7 +22,8 @@
 package org.socialworld.knowledge;
 
 import java.util.ArrayList;
-import org.socialworld.conversation.Word;
+
+import org.socialworld.conversation.Lexem;
 
 public class KnowledgeFactList  {
 	
@@ -32,7 +33,7 @@ public class KnowledgeFactList  {
 		factSearchList = new ArrayList<KnowledgeFact>();
 	}
 	
-	public KnowledgeFact find(Word  value) {
+	public KnowledgeFact find(Lexem  value) {
 		KnowledgeFact fact;
 		KnowledgeFact temp;
 		
@@ -48,7 +49,7 @@ public class KnowledgeFactList  {
 		{
 			fact = factSearchList.get(index);
 			index++;
-			found =  ( fact.getValue().getWord() == value );
+			found =  ( fact.getValue().getLexem() == value );
 		}
 		while( found  | (index == count) );
 		

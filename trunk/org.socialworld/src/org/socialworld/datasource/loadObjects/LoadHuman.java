@@ -264,11 +264,11 @@ public class LoadHuman extends LoadAnimal {
 				origin_id = tableKnowledgeFactAndSource.getOrigin(row);
 				origin = allObjects.get(origin_id);
 				
-				facts[index] = new KnowledgeFact(kfc, new KnowledgeFact_Value(word));
+				facts[index] = new KnowledgeFact(kfc, new KnowledgeFact_Value(word.getLexem()));
 				sources[index] = new KnowledgeSource(sourceType, origin);
 			}
 		}
-		hiddenHuman.addKnowledgeProperties(new KnowledgeProperties(AllWords.getWord(subject), facts, sources ));
+		hiddenHuman.addKnowledgeProperties(new KnowledgeProperties(AllWords.getWord(subject).getLexem(), facts, sources ));
 	}
 
 

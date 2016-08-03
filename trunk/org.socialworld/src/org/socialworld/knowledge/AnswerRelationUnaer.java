@@ -21,18 +21,15 @@
 */
 package org.socialworld.knowledge;
 
-import org.socialworld.conversation.Word;
+import org.socialworld.conversation.Lexem;
+import org.socialworld.conversation.Numerus;
 
 public class AnswerRelationUnaer extends KnowledgeRelationUnaer implements IAnswer{
 
 	public KnowledgeType getType() { return KnowledgeType.relationUnaer; }
 
-	public Word getAnswerSubject() {
-		return getSubject();
+	public void setSubject(Lexem subject, Numerus numerus) {
+		setLexemSubject(subject);
+		setNumerusSubject(numerus);
 	}
-	
-	public Word getAnswerVerb() {
-		return getVerb();
-	}
-	
 }

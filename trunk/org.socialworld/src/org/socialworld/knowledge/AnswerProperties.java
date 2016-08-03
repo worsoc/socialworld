@@ -21,6 +21,8 @@
 */
 package org.socialworld.knowledge;
 
+import org.socialworld.conversation.Lexem;
+import org.socialworld.conversation.Numerus;
 import org.socialworld.conversation.Word;
 
 public class AnswerProperties extends KnowledgeProperties implements IAnswer {
@@ -28,7 +30,19 @@ public class AnswerProperties extends KnowledgeProperties implements IAnswer {
 	private int index;
 	private int count;
 	
+	public AnswerProperties() {
+		super(null);
+	}
+	
+	public AnswerProperties(Lexem subject) {
+		super(subject);
+	}
+	
 	public KnowledgeType getType() { return KnowledgeType.properties; }
+	
+	public void setSubject(Lexem subject, Numerus numerus) {
+		setSubject(subject);
+	}
 	
 	public boolean  resetIndex() {
 		index = getIndexForFirstValid();
@@ -47,9 +61,7 @@ public class AnswerProperties extends KnowledgeProperties implements IAnswer {
 		return true;
 	}
 	
-	public Word getAnswerSubject() {
-		return getSubject();
-	}
+
 	
 	public KnowledgeFact_Criterion getAnswerCriterion() {
 		if (index < count)		return getFact(index).getCriterion();
@@ -57,7 +69,7 @@ public class AnswerProperties extends KnowledgeProperties implements IAnswer {
 	}
 	
 	public Word getAnswerValue() {
-		if (index < count)	return getFact(index).getValue().getWord();
+		if (index < count)	return getFact(index).getValue().getLexem().getWord();
 		else return null;
 	}
 

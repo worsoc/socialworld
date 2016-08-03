@@ -21,11 +21,55 @@
 */
 package org.socialworld.knowledge;
 
+import org.socialworld.conversation.Lexem;
+import org.socialworld.conversation.Numerus;
+import org.socialworld.conversation.Tense;
 import org.socialworld.conversation.Word;
 
 public abstract class KnowledgeRelation {
 
-	protected abstract Word getSubject();
+	private boolean isSelfRelation;		// knowledge of its own relations (subject ist "I")
+
+	private Lexem verb;
+	private Tense tense;
 	
-	protected abstract Word getVerb();
+	private Lexem adverb;
+	
+	private Lexem subject;
+	private Numerus numerusSubject;
+	
+	abstract Word getSubject();
+	abstract Word getVerb();
+	abstract Word getAdverb();
+	
+	boolean isSelfRelation() {return isSelfRelation;}
+
+	Lexem getLexemVerb() { return verb; }
+	Tense getTense() { return tense; }
+
+	Lexem getLexemAdverb() { return adverb; }
+	
+	Lexem getLexemSubject() { return subject; }
+	Numerus getNumerusSubject() { return numerusSubject; }
+	
+	void setLexemSubject(Lexem subject) {
+		this.subject = subject;
+	}
+
+	void setNumerusSubject(Numerus numerus) {
+		this.numerusSubject = numerus;
+	}
+	
+	boolean isSubjectPlural() {
+		if (numerusSubject == Numerus.plural) return true;
+		if (numerusSubject == Numerus.singular) return false;
+		return true;
+	}
+	
+	boolean isSubjectSingular() {
+		if (numerusSubject == Numerus.plural) return false;
+		if (numerusSubject == Numerus.singular) return true;
+		return true;
+	}
+	
 }

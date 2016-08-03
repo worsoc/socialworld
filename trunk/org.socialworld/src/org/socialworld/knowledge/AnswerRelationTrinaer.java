@@ -21,26 +21,16 @@
 */
 package org.socialworld.knowledge;
 
-import org.socialworld.conversation.Word;
+import org.socialworld.conversation.Lexem;
+import org.socialworld.conversation.Numerus;
 
 public class AnswerRelationTrinaer extends KnowledgeRelationTrinaer implements IAnswer{
 
-	public KnowledgeType getType() { return KnowledgeType.relationUnaer; }
+	public KnowledgeType getType() { return KnowledgeType.relationTrinaer; }
 
-	public Word getAnswerSubject() {
-		return getSubject();
-	}
-
-	public Word getAnswerVerb() {
-		return getVerb();
-	}
-	
-	public Word getAnswerObject1() {
-		return getObject1();
-	}
-
-	public Word getAnswerObject2() {
-		return getObject2();
+	public void setSubject(Lexem subject, Numerus numerus) {
+		setLexemSubject(subject);
+		setNumerusSubject(numerus);
 	}
 
 }
