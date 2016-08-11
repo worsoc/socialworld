@@ -20,7 +20,6 @@
 *
 */
 package org.socialworld.conversation;
-import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.knowledge.AnswerProperties;
 import org.socialworld.knowledge.AnswerRelationUnaer;
 import org.socialworld.knowledge.AnswerRelationBinaer;
@@ -59,70 +58,27 @@ public class Talk {
 	}
 
 	private  String makeAnswerSentence(AnswerRelationUnaer answer) {
-		String sentence;
-
-		Word subject;
-		Word verb;
-
-		subject = answer.getSubject();
-		verb = answer.getVerb();
 		
-		sentence = sentenceMaker.getStatementSentenceForRelationUnaer(subject, verb);
+		return sentenceMaker.getStatementSentenceForRelationUnaer(answer);
 		
-		return sentence;
 	}
 
 	private  String makeAnswerSentence(AnswerRelationBinaer answer) {
-		String sentence;
 
-		Word subject;
-		Word verb;
-		Word object;
-
-		subject = answer.getSubject();
-		verb = answer.getVerb();
-		object = answer.getObject();
+		return sentenceMaker.getStatementSentenceForRelationBinaer(answer);
 		
-		sentence = sentenceMaker.getStatementSentenceForRelationBinaer(subject, verb, object);
-		
-		return sentence;
 	}
 
 	private  String makeAnswerSentence(AnswerRelationTrinaer answer) {
-		String sentence;
-
-		Word subject;
-		Word verb;
-		Word object1;
-		Word object2;
-
-		subject = answer.getSubject();
-		verb = answer.getVerb();
-		object1 = answer.getObject1();
-		object2 = answer.getObject2();
 		
-		sentence = sentenceMaker.getStatementSentenceForRelationTrinaer(subject, verb, object1, object2);
+		return sentenceMaker.getStatementSentenceForRelationTrinaer(answer);
 		
-		return sentence;
 	}
 	
 	private String makeAnswerSentence(AnswerProperties answer) {
-		String sentence;
 		
-		Word subject;
-		KnowledgeFact_Criterion criterion;
-		Word value;
+		return sentenceMaker.getStatementSentenceForFact(answer);
 		
-		
-	// TODO
-		answer.resetIndex();
-		subject = answer.getSubject();
-		criterion = answer.getAnswerCriterion();
-		value = answer.getAnswerValue();
-		
-		sentence = sentenceMaker.getStatementSentenceForFact(subject, criterion, value);
-		
-		return sentence;
 	}
 	
 	public void addSentence(String sentence, Talk_SentenceType type) {

@@ -20,14 +20,24 @@
 *
 */
 package org.socialworld.conversation;
+import org.socialworld.knowledge.AnswerProperties;
+import org.socialworld.knowledge.AnswerRelationBinaer;
+import org.socialworld.knowledge.AnswerRelationTrinaer;
+import org.socialworld.knowledge.AnswerRelationUnaer;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 
 public class SentenceMaker {
 	private Word lastSubject;
 	private int random = 0;
 
-	public String getStatementSentenceForRelationUnaer(Word subject, Word verb) {
+	String getStatementSentenceForRelationUnaer(AnswerRelationUnaer answer) {
 		String sentence;
+
+		Word subject;
+		Word verb;
+
+		subject = answer.getSubject();
+		verb = answer.getVerb();
 
 		if (lastSubject == subject)
 			sentence = subject.getPronoun().getWord();
@@ -42,9 +52,19 @@ public class SentenceMaker {
 		return sentence;
 		
 	}	
-	public String getStatementSentenceForRelationBinaer(Word subject, Word verb, Word object) {
+	
+	
+	String getStatementSentenceForRelationBinaer(AnswerRelationBinaer answer) {
 		String sentence;
 
+		Word subject;
+		Word verb;
+		Word object;
+
+		subject = answer.getSubject();
+		verb = answer.getVerb();
+		object = answer.getObject();
+	
 		if (lastSubject == subject)
 			sentence = subject.getPronoun().getWord();
 		else {
@@ -66,9 +86,19 @@ public class SentenceMaker {
 		
 	}
 	
-	public String getStatementSentenceForRelationTrinaer(Word subject, Word verb, Word object1, Word object2) {
+	String getStatementSentenceForRelationTrinaer(AnswerRelationTrinaer answer) {
 		String sentence;
 
+		Word subject;
+		Word verb;
+		Word object1;
+		Word object2;
+
+		subject = answer.getSubject();
+		verb = answer.getVerb();
+		object1 = answer.getObject1();
+		object2 = answer.getObject2();
+	
 		if (lastSubject == subject)
 			sentence = subject.getPronoun().getWord();
 		else {
@@ -95,9 +125,20 @@ public class SentenceMaker {
 		
 	}
 	
-	public String getStatementSentenceForFact(Word subject, KnowledgeFact_Criterion criterion, Word value) {
+	public String getStatementSentenceForFact(AnswerProperties answer) {
 		String sentence;
+	
+		Word subject;
+		KnowledgeFact_Criterion criterion;
+		Word value;
 		
+		
+	// TODO
+		answer.resetIndex();
+		subject = answer.getSubject();
+		criterion = answer.getAnswerCriterion();
+		value = answer.getAnswerValue();
+	
 		if (lastSubject == subject)
 			sentence = subject.getPronoun().getWord();
 		else {
