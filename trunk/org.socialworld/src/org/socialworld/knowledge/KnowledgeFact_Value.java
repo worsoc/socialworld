@@ -31,7 +31,7 @@ public class KnowledgeFact_Value {
 	}
 	
 	public KnowledgeFact_Value(KnowledgeFact_Value original) {
-		this.value = original.value;
+		this.value = original.getLexem();
 	}
 	
 	protected Lexem getLexem() {

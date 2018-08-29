@@ -31,6 +31,7 @@ public class Word {
 	private Lexem lexem;
 	private Numerus numerus;
 	
+	
 	//private Word_Type wordType;
 	//private KnowledgeFact_Criterion kfc;
 	//private boolean allowedAsKnowledgeSubject = false;
@@ -43,6 +44,7 @@ public class Word {
 		this.lexem = lexem;
 		this.word = word;
 		this.pronoun = pronoun;
+		
 	}
 
 	public Word(int wordID, String word, Lexem lexem, Word pronoun, Numerus numerus) {
@@ -51,6 +53,11 @@ public class Word {
 		this.word = word;
 		this.pronoun = pronoun;
 		this.numerus = numerus;
+	}
+	
+	
+	public Word () {
+		this.wordID = 0;
 	}
 	
 	public String getWord() {
@@ -77,6 +84,8 @@ public class Word {
 	public Word getPronoun() {
 		return pronoun;
 	}
+	
+
 	
 	/*
 	protected void setKnowledgeFact_Criterion(KnowledgeFact_Criterion kfc ) {

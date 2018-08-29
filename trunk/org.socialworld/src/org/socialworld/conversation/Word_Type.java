@@ -30,7 +30,8 @@ public enum Word_Type {
 	adjective(11),
 	personal_pronoun(1), possessive_pronoun(2), demonstrative_pronoun(3),
 	name(12), title(13),
-	question(14);
+	question(14),
+	ignore(0);
 
 	private int arrayIndex;
 
@@ -52,4 +53,7 @@ public enum Word_Type {
 		return null;
 	}
 	
+	public int getIndex() {
+		return this.arrayIndex;
+	}
 }

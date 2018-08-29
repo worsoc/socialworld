@@ -32,13 +32,13 @@ import org.socialworld.datasource.mariaDB.Table;
  */
 public class TableWord extends Table {
 
-	public final  String 	ALL_COLUMNS 		=	" word_id, word, lexem_id, tense, numerus, pronoun_word_id ";
+	public final  String 	ALL_COLUMNS 		=	" word_id, word, lexem_id, word_type, numerus, pronoun_word_id ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
 	int word_id[];
 	String word[];
 	int lexem_id[];
-	int tense[];
+	int word_type[];
 	int numerus[];
 	int pronoun_word_id[];
 	
@@ -76,14 +76,14 @@ public class TableWord extends Table {
 		setPK1(word_id);
 	}
 
-	public void insert(int word_id, String word,  int lexem_id, int tense, int numerus, int pronoun_word_id) {
+	public void insert(int word_id, String word,  int lexem_id, int word_type, int numerus, int pronoun_word_id) {
 		String statement;
 			
 		if (word_id > 0) {
 	
 
-			statement 	= "INSERT INTO sw_word (word_id, word, lexem_id, tense, numerus, pronoun_word_id) VALUES (" + 
-					word_id + ", '" + word + "', " + lexem_id + ", " + tense + ", " + numerus + ", " + pronoun_word_id  +")";
+			statement 	= "INSERT INTO sw_word (word_id, word, lexem_id, word_type, numerus, pronoun_word_id) VALUES (" + 
+					word_id + ", '" + word + "', " + lexem_id + ", " + word_type + ", " + numerus + ", " + pronoun_word_id  +")";
 			
 			insert(statement);
 		}
@@ -105,7 +105,7 @@ public class TableWord extends Table {
 		word_id = new int[rowCount];
 		word = new String[rowCount];
 		lexem_id = new int[rowCount];
-		tense = new int[rowCount];
+		word_type = new int[rowCount];
 		numerus = new int[rowCount];
 		pronoun_word_id = new int[rowCount];
 
@@ -115,7 +115,7 @@ public class TableWord extends Table {
 				word_id[row] = rs.getInt(1);
 				word[row] = rs.getString(2);
 				lexem_id[row] = rs.getInt(3);
-				tense[row] = rs.getInt(4);
+				word_type[row] = rs.getInt(4);
 				numerus[row] = rs.getInt(5);
 				pronoun_word_id[row] = rs.getInt(6);
 				
@@ -144,7 +144,7 @@ public class TableWord extends Table {
 	}
 
 	public int getTense(int index) {
-		return tense[index];
+		return word_type[index];
 	}
 	
 	public int getNumerus(int index) {

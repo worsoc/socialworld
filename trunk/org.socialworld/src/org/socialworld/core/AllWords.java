@@ -37,20 +37,24 @@ public class AllWords {
 	private static Array<Lexem> allLexemsbyLexemID;
 	private static Array<Word> allWordsbyWordID;
 	
-	private AllWords() {
+	private static boolean isLoading = false;
+	
+	private  AllWords() {
 		allLexemsbyLexemID = LoadWords.getInstance().getAllLexems();
+		isLoading = true;
 		allWordsbyWordID = LoadWords.getInstance().getAllWords();
+		isLoading = false;
 	}
 	
 	public static Lexem getLexem(int lexemID) {
-		if (instance == null) {
+		if ( (instance == null) && (isLoading == false) ) {
 			instance = new AllWords();
 		}
 		return allLexemsbyLexemID.get(lexemID);
 	}
 	
 	public static Word getWord(int wordID) {
-		if (instance == null) {
+		if  (instance == null) {
 			instance = new AllWords();
 		}
 		return allWordsbyWordID.get(wordID);
