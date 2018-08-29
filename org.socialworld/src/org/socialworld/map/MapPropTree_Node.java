@@ -102,6 +102,8 @@ public class MapPropTree_Node {
 			if (sector > 0 & sector < 10)		sectorNodes[sector - 1] = node;
 		if (base == 25)
 			if (sector > 0 & sector < 26)		sectorNodes[sector - 1] = node;
+		if (base == 27)
+			if (sector > 0 & sector < 28)		sectorNodes[sector - 1] = node;
 		
 	}
 	

@@ -36,13 +36,20 @@ public class WordSearchTree {
 	
 	public Word findAndGetWord(String word) {
 		currentNode = root;
-		return checkWord(word);
+		
+		// TODO return NoWord
+		if (root != null)  
+			return checkWord(word);
+		else
+			return null;
 	}
 	
 	public Word getWord() {
 		return currentNode.getWord();
 	}
 
+	
+	
 	
 	private Word checkWord(String word) {
 		char firstLetter;

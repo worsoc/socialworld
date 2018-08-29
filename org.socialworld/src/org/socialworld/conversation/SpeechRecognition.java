@@ -28,10 +28,16 @@ import org.socialworld.collections.ReadOnlyIterator;
 import org.socialworld.knowledge.KnowledgeFact;
 import org.socialworld.knowledge.KnowledgeFactPool;
 
+//workaround
+import org.socialworld.datasource.tablesSimulation.ViewWordJoinLexem;
+import org.socialworld.core.AllWords;
+
 public class SpeechRecognition {
 	private ArrayList<String> wordList;
 	private Word[] foundWordList; //according to the word list above
 	private SpeechRecognition_Function[] functionList; //according to the word list above
+	private Word_Type[] wordTypeList; //according to the word list above
+	private Tense[] tenseList; //according to the word list above
 	
 	private int indexWordList;
 	private int startSearchForCriterion = 0;
@@ -39,6 +45,8 @@ public class SpeechRecognition {
 	
 	private PunctuationMark finalPunctuationMark;
 	private WordSearchTree allWords;
+	
+	private boolean isPassive;
 	
 	
 	ReadOnlyIterator<KnowledgeFact_Criterion> iteratorForEmptyCriterionsList;
@@ -53,20 +61,33 @@ public class SpeechRecognition {
 	}
 	
 	
-	public void analyseSentence(String sentence) {
+	public boolean analyseSentence(String sentence) {
 		int count;
+		boolean isOK = false;
 		
 		// new analysis --> reset
+		indexWordList = 0;
 		startSearchForCriterion = 0;
 		iteratorCriterions = iteratorForEmptyCriterionsList;
+		
+		isPassive = false;
+		
+		wordList = new ArrayList<String> (0);
 		
 		count = divideIntoParts(sentence);
 		
 		foundWordList = new Word[count];
 		functionList = new SpeechRecognition_Function[count];
+		wordTypeList = new Word_Type[count];
+		tenseList = new Tense[count];
+		
 		if (checkCorrectness()){
-			
+			isOK = true;
+			lastSubject = getSubject();
+			setTense();
 		}
+		
+		return isOK;
 	}
 	
 	public void resetCriterions() {
@@ -82,7 +103,7 @@ public class SpeechRecognition {
 		Word word = null;
 		
 		for (int index = 0; index < wordList.size(); index++) {
-			if (functionList[index] == SpeechRecognition_Function.subject) {
+			if ( (functionList[index] == SpeechRecognition_Function.subject) && (foundWordList[index] != null)&& (wordTypeList[index] == Word_Type.noun ) ) {
 				// if the sentence's subject is NOT a knowledge subject (see WordSearchtreeNode) too,
 				// return the subject from a previous sentence
 				// because the actual sentence belongs to the knowledge subject of a previous sentence
@@ -92,6 +113,8 @@ public class SpeechRecognition {
 				// 2. "He is 15 years old."
 				
 				if (foundWordList[index].isAllowedAsKnowledgeSubject())	word = foundWordList[index];
+				
+				// exit the iteration
 				index = wordList.size();
 			}
 		}
@@ -104,9 +127,11 @@ public class SpeechRecognition {
 		Word word = null;
 		
 		for (int index = 0; index < wordList.size(); index++) {
-			if (functionList[index] == SpeechRecognition_Function.object1) {
+			if ( (functionList[index] == SpeechRecognition_Function.object1) && (foundWordList[index] != null) && (wordTypeList[index] == Word_Type.noun )){
 					
 				if (foundWordList[index].isAllowedAsKnowledgeSubject())	word = foundWordList[index];
+				
+				// exit the iteration
 				index = wordList.size();
 				
 			}
@@ -115,13 +140,144 @@ public class SpeechRecognition {
 		return word;
 	}	
 	
+	public Word getAttributeForSubject() {
+		Word word = null;
+		
+		for (int index = 0; index < wordList.size(); index++) {
+			if ( (functionList[index] == SpeechRecognition_Function.subject) && (foundWordList[index] != null) && (wordTypeList[index] == Word_Type.adjective )){
+					
+				word = foundWordList[index];
+				
+				// exit the iteration
+				index = wordList.size();
+				
+			}
+		}
+		
+		return word;
+	}	
+	
+	public Word getVerb() {
+		Word word = null;
+		
+		for (int index = 0; index < wordList.size(); index++) {
+			if ( (functionList[index] == SpeechRecognition_Function.verb) && (foundWordList[index] != null)){
+					
+				word = foundWordList[index];
+				
+				// exit the iteration
+				index = wordList.size();
+				
+			}
+		}
+		
+		return word;
+	}	
+	
+	public Word getAttributeForObject1() {
+		Word word = null;
+		
+		for (int index = 0; index < wordList.size(); index++) {
+			if ( (functionList[index] == SpeechRecognition_Function.object1) && (foundWordList[index] != null) && (wordTypeList[index] == Word_Type.adjective )){
+					
+				word = foundWordList[index];
+				
+				// exit the iteration
+				index = wordList.size();
+				
+			}
+		}
+		
+		return word;
+	}	
+	
+	public Word getAttributeForObject2() {
+		Word word = null;
+		
+		for (int index = 0; index < wordList.size(); index++) {
+			if ( (functionList[index] == SpeechRecognition_Function.object2) && (foundWordList[index] != null) && (wordTypeList[index] == Word_Type.adjective )){
+					
+				word = foundWordList[index];
+				
+				// exit the iteration
+				index = wordList.size();
+				
+			}
+		}
+		
+		return word;
+	}	
+	
+	
+	public void setTense() {
+		
+		for (int index = 0; index < wordList.size(); index++) {
+			
+			if((functionList[index] == SpeechRecognition_Function.firstAuxVerb_have) &&( wordTypeList[index] == Word_Type.finitive )) {
+					if (isPassive)tenseList[index] = Tense.present_perfect_passive;
+					else tenseList[index] = Tense.present_perfect_active;
+			}
+			else if((functionList[index] == SpeechRecognition_Function.firstAuxVerb_have) &&( wordTypeList[index] == Word_Type.simple_past )) {
+					if (isPassive)tenseList[index] = Tense.past_perfect_passive;
+					else tenseList[index] = Tense.past_perfect_active;
+			}
+			else if((functionList[index] == SpeechRecognition_Function.firstAuxVerb_will)&&( wordTypeList[index] == Word_Type.finitive )) {
+					if (isPassive)tenseList[index] = Tense.will_future_passive;
+					else tenseList[index] = Tense.will_future_active;
+			}
+			else if((functionList[index] == SpeechRecognition_Function.firstAuxVerb_be)&&( wordTypeList[index] == Word_Type.finitive )) {tenseList[index] = Tense.simple_present_passive;}
+			else if((functionList[index] == SpeechRecognition_Function.firstAuxVerb_be)&&( wordTypeList[index] == Word_Type.simple_past )) {tenseList[index] = Tense.simple_past_passive;}
+			else if((functionList[index] == SpeechRecognition_Function.secondAuxVerb_goingto)&&( wordTypeList[index] == Word_Type.infinitive )) {tenseList[index] = Tense.going_to_future_active;}
+			else if((functionList[index] == SpeechRecognition_Function.firstAuxVerb_do) &&( wordTypeList[index] == Word_Type.finitive )) {tenseList[index] = Tense.simple_present_active;}
+			else if((functionList[index] == SpeechRecognition_Function.firstAuxVerb_do) &&( wordTypeList[index] == Word_Type.simple_past )) {tenseList[index] = Tense.simple_past_active;}
+			else if((functionList[index] == SpeechRecognition_Function.firstAuxVerb_rest) &&( wordTypeList[index] == Word_Type.finitive )) {tenseList[index] = Tense.simple_present_active;}
+			else if((functionList[index] == SpeechRecognition_Function.verb) && (wordTypeList[index] == Word_Type.simple_past )){tenseList[index] = Tense.simple_past_active;}
+			else if((functionList[index] == SpeechRecognition_Function.verb) && (wordTypeList[index] == Word_Type.finitive )){tenseList[index] = Tense.simple_present_active;}
+				
+		}
+		
+	}
+	
+	public String getTense() {
+		String tenseName = "";
+		Tense tense = null;
+		
+		for (int index = 0; index < tenseList.length; index++) {
+
+			tense = tenseList[index];
+			
+			if (tense != null) {
+				
+				switch (tense) {
+				case simple_present_active: tenseName="simple Present active"; break;
+				case simple_present_passive: tenseName="simple Present passive"; break;
+				case simple_past_active: tenseName="simple Past active"; break;
+				case simple_past_passive: tenseName="simple Past passive"; break;
+				case present_perfect_active: tenseName="present Perfect active"; break;
+				case present_perfect_passive: tenseName="present Perfect passive"; break;
+				case past_perfect_active: tenseName="past Perfect active"; break;
+				case past_perfect_passive: tenseName="past Perfect passive"; break;
+				case will_future_active: tenseName="will Future active"; break;
+				case will_future_passive: tenseName="will Future passive"; break;
+				case going_to_future_active: tenseName="going to Future active"; break;
+				case going_to_future_passive: tenseName="going to Future passive"; break;
+
+			}
+				
+			
+		}}
+		return tenseName;
+	}
+	
 	public Word getObject2() {
 		Word word = null;
 		
 		for (int index = 0; index < wordList.size(); index++) {
-			if (functionList[index] == SpeechRecognition_Function.object2) {
+			if ( (functionList[index] == SpeechRecognition_Function.object2) && (foundWordList[index] != null)  && (wordTypeList[index] == Word_Type.noun )){
 				
 				if (foundWordList[index].isAllowedAsKnowledgeSubject())	word = foundWordList[index];
+				
+				// exit the iteration
 				index = wordList.size();
 				
 			}
@@ -181,7 +337,13 @@ public class SpeechRecognition {
 	private int divideIntoParts(String sentence)  {
 		String words[];
 		
-		sentence.replaceAll(",", " , ");
+		sentence = sentence.replace(",", " , ");
+		sentence = sentence.replace(".", " .");
+		sentence = sentence.replace("?", " ?");
+		sentence = sentence.replace("!", " !");
+		sentence = sentence.replaceAll("\\s+", " ");
+		sentence = sentence.toLowerCase();
+		sentence = sentence.replace("going to", "going_to");
 		
 		words = sentence.split(" ");
 		writeWordsToList(words);
@@ -198,38 +360,77 @@ public class SpeechRecognition {
 		
 		isCorrect = titleOK(SpeechRecognition_Function.title);
 		
-		switch (finalPunctuationMark) {
-		case dot:
-			isCorrect = subjectOK(SpeechRecognition_Function.subject) &&
-			verbOK(SpeechRecognition_Function.verb) &&
-			objectOK(SpeechRecognition_Function.object1) && 
-			objectOK(SpeechRecognition_Function.object2); break;
-		case question:
-			withQuestionWord = questionOK(SpeechRecognition_Function.questionWord);
-			aux = auxiliaryOK();
-			
-			isCorrect = (aux != null) && 
-					subjectOK(SpeechRecognition_Function.subject) &&
-					verbRestOK(SpeechRecognition_Function.verb, aux) &&
-					objectOK(SpeechRecognition_Function.object1) && 
-					objectOK(SpeechRecognition_Function.object2); 
-			
-			if (withQuestionWord && !isCorrect  )
-				isCorrect = beOK(SpeechRecognition_Function.verb) && subjectOK(SpeechRecognition_Function.subject);
-			else if	(withQuestionWord && isCorrect  )
-				prepositionOK(SpeechRecognition_Function.object1);
-			
-			break;
-		case exclamation:
-			isCorrect = infinitiveOK(SpeechRecognition_Function.verb) &&
-			objectOK(SpeechRecognition_Function.object1) && 
-			objectOK(SpeechRecognition_Function.object2); break;
-			
-		}
+		// TODO Alternative to null
+		if (finalPunctuationMark != null)
+			switch (finalPunctuationMark) {
+			case dot:
+				isCorrect = subjectOK(SpeechRecognition_Function.subject) &&
+				verbOK(SpeechRecognition_Function.verb) ;
+				
+				
+				if (isCorrect == true) objectOK(SpeechRecognition_Function.object1);
+				if (isCorrect == true) objectOK(SpeechRecognition_Function.object2);
+				
+				
+				isCorrect = finalPunctuationMarkOK();
+				
+				
+				break;
+				
+			case question:
+				withQuestionWord = questionOK(SpeechRecognition_Function.questionWord);
+				aux = auxiliaryOK();
+				
+				isCorrect = (aux != null) && 
+						subjectOK(SpeechRecognition_Function.subject) &&
+						verbRestOK(SpeechRecognition_Function.verb, aux);
+						
+				if (isCorrect = true) objectOK(SpeechRecognition_Function.object1);
+				if (isCorrect = true) objectOK(SpeechRecognition_Function.object2);
+				
+				
+				if (withQuestionWord && !isCorrect  )
+					isCorrect = beOK(SpeechRecognition_Function.verb) && subjectOK(SpeechRecognition_Function.subject);
+				else if	(withQuestionWord && isCorrect  )
+					prepositionOK(SpeechRecognition_Function.object1);
+				
+				
+				isCorrect = finalPunctuationMarkOK();
+				
+				break;
+				
+			case exclamation:
+				isCorrect = infinitiveOK(SpeechRecognition_Function.verb);
+				
+				if (isCorrect = true) objectOK(SpeechRecognition_Function.object1);
+				if (isCorrect = true) objectOK(SpeechRecognition_Function.object2); 
+
+				isCorrect = finalPunctuationMarkOK();
+				
+				break;
+			}
 		
 		return isCorrect;
 	}
 	
+	
+	private boolean finalPunctuationMarkOK() {
+		boolean isOK=false;
+		int index_save;
+		
+		index_save = indexWordList;
+		String word;
+		
+		word = wordList.get(indexWordList);
+		isOK = (word.equals(".") || word.equals( "?") || word.equals("!")) ;
+		
+		if (isOK == false) indexWordList = index_save;
+		
+		
+		return isOK;	
+	}
+	
+
 	private boolean subjectOK(SpeechRecognition_Function function) {
 		boolean isOK = false;
 		isOK = itemOK(SpeechRecognition_Function.subject) ||
@@ -238,45 +439,51 @@ public class SpeechRecognition {
 		return isOK;
 	}
 
+	
+	
 	private boolean verbOK(SpeechRecognition_Function function) {
 		boolean isOK = false;
 		int index_save;
-		String word;
 		
+		Auxiliary aux;
 		index_save = indexWordList;
 		
-		word = wordList.get(indexWordList);
-		if (word == "have" || word == "has" || word == "had") {
-			functionList[indexWordList] = SpeechRecognition_Function.firstAuxVerb;
-			foundWordList[indexWordList] = null;
-			indexWordList++;
-			word = wordList.get(indexWordList); 
-			if (word == "been"){
-				functionList[indexWordList] = SpeechRecognition_Function.secondAuxVerb_be;
-				foundWordList[indexWordList] = null;
-				indexWordList++;
-				isOK = pastParticipleOK(function);
-			}
-			else isOK = pastParticipleOK(function);
-		}
-		else if (goingToFutureOK()) isOK = infinitiveOK(function);
-		else if (auxiliaryOK() != null)  {
-			word = wordList.get(indexWordList);
-			if (word == "be") {
-				functionList[indexWordList] = SpeechRecognition_Function.secondAuxVerb_be;
-				foundWordList[indexWordList] = null;
-				indexWordList++;
-				isOK = pastParticipleOK(function);
-			}
-			else isOK = infinitiveOK(function);
-		}
-		else isOK = finiteFormOK(function);
+		aux = auxiliaryOK();
 		
+		if (aux != null)   {
+			if ((aux == Auxiliary.will) || (aux == Auxiliary.would) || (aux == Auxiliary.can) || (aux == Auxiliary.could) || (aux == Auxiliary.shall) || (aux == Auxiliary.should))      {
+				if (beOK(SpeechRecognition_Function.secondAuxVerb_be)) {
+					isOK = pastParticipleOK(function);
+					isPassive = true;
+				}
+				if (isOK == false) isOK = infinitiveOK(function);
+			} // will and Co
+			if ((aux == Auxiliary.have) || (aux == Auxiliary.has) || (aux == Auxiliary.had))   {
+				beOK(SpeechRecognition_Function.secondAuxVerb_been);
+				isOK = pastParticipleOK(function);
+			}				
+			if ((aux == Auxiliary.is) ||(aux == Auxiliary.am) || (aux == Auxiliary.are) || (aux == Auxiliary.was) || (aux == Auxiliary.were))    {
+				if (goingToFutureOK(SpeechRecognition_Function.secondAuxVerb_goingto))
+					isOK = infinitiveOK(function);
+				else {
+					isOK = pastParticipleOK(function);
+					isPassive = true;
+				}
+			}
+		}
+		
+		if (isOK == false) {
+			indexWordList = index_save;
+			isPassive = false;
+			isOK = finiteFormOK(function);
+		}
+
+
 		if (isOK == false) indexWordList = index_save;
 		
 		return isOK;
 	}
-	
+
 	private boolean verbRestOK(SpeechRecognition_Function function, Auxiliary aux) {
 		boolean isOK = false;
 		int index_save;
@@ -288,23 +495,19 @@ public class SpeechRecognition {
 		
 		if ( (aux == Auxiliary.have) || (aux == Auxiliary.has) || (aux == Auxiliary.had) )
 		{
-			if ( word == "been" ) {
-				functionList[indexWordList] = SpeechRecognition_Function.secondAuxVerb_be;
-				foundWordList[indexWordList] = null;
-				indexWordList++;
+			if ( word.equals( "been") ) {
+				beOK(SpeechRecognition_Function.secondAuxVerb_been);
 				isOK = pastParticipleOK(function);
 			}
 			else
 				isOK = pastParticipleOK(function);
 		}
-		else if ( (aux == Auxiliary.will) || (aux == Auxiliary.would) || (aux == Auxiliary.can) ||
+		else if ( (aux == Auxiliary.would) || (aux == Auxiliary.can) ||
 				(aux == Auxiliary.could) || (aux == Auxiliary.shall) || (aux == Auxiliary.should)	)
 			 {
-				 if ( word == "be" )
+				 if ( word.equals("be") )
 				 {
-					functionList[indexWordList] = SpeechRecognition_Function.secondAuxVerb_be;
-					foundWordList[indexWordList] = null;
-					indexWordList++;
+					 beOK(SpeechRecognition_Function.secondAuxVerb_be);
 					isOK = pastParticipleOK(function);
 				 }
 				 else isOK = infinitiveOK(function);
@@ -319,21 +522,11 @@ public class SpeechRecognition {
 	private boolean objectOK(SpeechRecognition_Function function) {
 		boolean isOK = false;
 		int index_save;
-		String word;
 		
 		index_save = indexWordList;
 
 		prepositionOK(function);
-
-		word = wordList.get(indexWordList);
-		if (word == "the") {
-			functionList[indexWordList] = function;
-			foundWordList[indexWordList] = null;
-			indexWordList++;
-			isOK = nounOK(function);
-		}
-		else if (pronounOK(function)) 			isOK = nounOK(function);
-			 else isOK = personOK(function);
+		isOK = itemOK(function) || personOK(function);
 		
 		if (isOK == false) indexWordList = index_save;
 		return isOK;
@@ -345,17 +538,36 @@ public class SpeechRecognition {
 		Word foundWord;
 		
 		word = wordList.get(indexWordList);
-		foundWord = allWords.findAndGetWord(word);
-		isOK = (foundWord.getType() == type);
-		if (isOK) {
-			functionList[indexWordList] = function;
-			
-			foundWordList[indexWordList] = foundWord;
-			indexWordList++;
+		
+		// TODO lokaler workaround zur Wortsuche weg
+		
+//		foundWord = allWords.findAndGetWord(word);
+//		// TODO Alternative zu null
+//		if (foundWord != null) {
+//			isOK = (foundWord.getType() == type);
+//			if (isOK) {
+//				functionList[indexWordList] = function;
+//				
+//				foundWordList[indexWordList] = foundWord;
+//				indexWordList++;
+//			}
+//		}
+	
+		foundWord = findAndGetWord(word, type);
+		if (foundWord != null) {
+				
+				isOK = true;
+				functionList[indexWordList] = function;
+				wordTypeList[indexWordList] = type;
+				foundWordList[indexWordList] = foundWord;
+				indexWordList++;
+				
 		}
+		
 		
 		return isOK;
 	}
+	
 	
 	private boolean prepositionOK(SpeechRecognition_Function function) {
 		return wordOK(function, Word_Type.preposition);
@@ -363,6 +575,10 @@ public class SpeechRecognition {
 
 	private boolean nounOK(SpeechRecognition_Function function) {
 		return  wordOK(function, Word_Type.noun);
+	}
+	
+	private boolean adjectiveOK(SpeechRecognition_Function function) {
+		return  wordOK(function, Word_Type.adjective);
 	}
 	
 	private boolean pronounOK(SpeechRecognition_Function function) {
@@ -386,21 +602,113 @@ public class SpeechRecognition {
 	private boolean infinitiveOK(SpeechRecognition_Function function) {
 		return wordOK(function, Word_Type.infinitive);
 	}
+	
+	private boolean firstAuxVerb_haveOK (SpeechRecognition_Function function) {
+		String word;
+		word = wordList.get(indexWordList);
+
+		if (word.equals("have")) {
+			return wordOK(function, Word_Type.finitive);
+		}
+		else if (word.equals("has")) {
+			return wordOK(function, Word_Type.finitive);
+		}
+		else if (word.equals("had")) {
+			return wordOK(function, Word_Type.simple_past);
+		}
+		else return false;
+	}
+	
+	private boolean firstAuxVerb_willOK (SpeechRecognition_Function function) {
+			return wordOK(function, Word_Type.finitive);
+	}
+	
+	private boolean firstAuxVerb_doOK (SpeechRecognition_Function function) {
+		String word;
+		word = wordList.get(indexWordList);
+
+		if (word.equals("do")) {
+			return wordOK(function, Word_Type.finitive);
+		}
+		else if (word.equals("does")) {
+			return wordOK(function, Word_Type.finitive);
+		}
+		else if (word.equals("did")) {
+			return wordOK(function, Word_Type.simple_past);
+		}
+		else return false;
+
+	}
+	
+	private boolean firstAuxVerb_beOK (SpeechRecognition_Function function) {
+		String word;
+		word = wordList.get(indexWordList);
+
+		if (word.equals("am")) {
+			return wordOK(function, Word_Type.finitive);
+		}
+		else if (word.equals("are")) {
+			return wordOK(function, Word_Type.finitive);
+		}
+		else if (word.equals("is")) {
+			return wordOK(function, Word_Type.finitive);
+		}
+		else if (word.equals("was")) {
+			return wordOK(function, Word_Type.simple_past);
+		}
+		else if (word.equals("were")) {
+			return wordOK(function, Word_Type.simple_past);
+		}
+		
+		else return false;
+
+	}
+
+	private boolean firstAuxVerb_restOK (SpeechRecognition_Function function) {
+		String word;
+		word = wordList.get(indexWordList);
+
+		if (word.equals("would")) {
+			return wordOK(function, Word_Type.finitive);
+		}
+		else if (word.equals("can")) {
+			return wordOK(function, Word_Type.finitive);
+		}
+		else if (word.equals("could")) {
+			return wordOK(function, Word_Type.finitive);
+		}
+		else if (word.equals("shall")) {
+			return wordOK(function, Word_Type.finitive);
+		}
+		else if (word.equals("should")) {
+			return wordOK(function, Word_Type.finitive);
+		}
+		else return false;
+
+	}
 
 	private boolean beOK(SpeechRecognition_Function function) {
 		String word;
-		boolean isOK;
+		boolean isOK= false;
 		
 		word = wordList.get(indexWordList);
 		
-		switch (word) {
-		case "am": isOK = true; break;
-		case "are": isOK = true; break;
-		case "is": isOK = true; break;
-		case "was": isOK = true; break;
-		case "were": isOK = true; break;
-		default: isOK = false;
+		if (function == SpeechRecognition_Function.secondAuxVerb_be)  {
+			if (word.equals( "be")) 
+			{ isOK = true;  isPassive=true; } 
 		}
+		else if (function == SpeechRecognition_Function.secondAuxVerb_been) {
+			if (word.equals( "been")) { 
+				isOK = true;  isPassive=true;}
+		}
+		else {
+			if (word.equals ("am")) isOK = true; 
+			else if (word.equals ("are")) isOK = true; 
+			else if (word.equals( "is")) isOK = true;
+			else if (word.equals( "was")) isOK = true;
+			else if (word.equals( "were")) isOK = true; 
+		}
+		
 		if (isOK) {
 			functionList[indexWordList] = function;
 			foundWordList[indexWordList] = null;
@@ -418,65 +726,65 @@ public class SpeechRecognition {
 		
 		word = wordList.get(indexWordList);
 		
-		switch (word) {
-		case "will": functionList[indexWordList] = SpeechRecognition_Function.firstAuxVerb;
-				indexWordList++; return Auxiliary.will;
-		case "would": functionList[indexWordList] = SpeechRecognition_Function.firstAuxVerb;
-				indexWordList++; return Auxiliary.would;
-		case "can": functionList[indexWordList] = SpeechRecognition_Function.firstAuxVerb;
-				indexWordList++; return Auxiliary.can;
-		case "could": functionList[indexWordList] = SpeechRecognition_Function.firstAuxVerb;
-				indexWordList++; return Auxiliary.could;
-		case "do": functionList[indexWordList] = SpeechRecognition_Function.firstAuxVerb;
-				indexWordList++; return Auxiliary.do_;
-		case "does": functionList[indexWordList] = SpeechRecognition_Function.firstAuxVerb;
-				indexWordList++; return Auxiliary.does;
-		case "did": functionList[indexWordList] = SpeechRecognition_Function.firstAuxVerb;
-				indexWordList++; return Auxiliary.did;
-		case "have": functionList[indexWordList] = SpeechRecognition_Function.firstAuxVerb;
-				indexWordList++; return Auxiliary.have;
-		case "has": functionList[indexWordList] = SpeechRecognition_Function.firstAuxVerb;
-				indexWordList++; return Auxiliary.has;
-		case "had": functionList[indexWordList] = SpeechRecognition_Function.firstAuxVerb;
-				indexWordList++; return Auxiliary.had;
-		case "shall": functionList[indexWordList] = SpeechRecognition_Function.firstAuxVerb;
-				indexWordList++; return Auxiliary.shall;
-		case "should": functionList[indexWordList] = SpeechRecognition_Function.firstAuxVerb;
-				indexWordList++; return Auxiliary.should;
-		}
+		
+		if (word.equals( "will"))
+				if (firstAuxVerb_willOK(SpeechRecognition_Function.firstAuxVerb_will) )	 return Auxiliary.will;
+		if (word.equals( "would"))
+				if (firstAuxVerb_restOK(SpeechRecognition_Function.firstAuxVerb_rest) )  return Auxiliary.would;
+		if (word.equals ("can")) 
+				if (firstAuxVerb_restOK(SpeechRecognition_Function.firstAuxVerb_rest) ) return Auxiliary.can;
+		if (word.equals ("could")) 
+				if (firstAuxVerb_restOK(SpeechRecognition_Function.firstAuxVerb_rest) ) return Auxiliary.could;
+		if (word.equals ("do")) 
+				if (firstAuxVerb_doOK(SpeechRecognition_Function.firstAuxVerb_do) ) return Auxiliary.do_;
+		if (word.equals ("does")) 
+				if (firstAuxVerb_doOK(SpeechRecognition_Function.firstAuxVerb_do) )  return Auxiliary.does;
+		if (word.equals ("did")) 
+				if (firstAuxVerb_doOK(SpeechRecognition_Function.firstAuxVerb_do) )  return Auxiliary.did;
+		if (word.equals ("have")) 
+				if (firstAuxVerb_haveOK(SpeechRecognition_Function.firstAuxVerb_have) ) return Auxiliary.have;
+		if (word.equals ("has")) 
+				if (firstAuxVerb_haveOK(SpeechRecognition_Function.firstAuxVerb_have) ) return Auxiliary.has;
+		if (word.equals ("had")) 
+				if (firstAuxVerb_haveOK(SpeechRecognition_Function.firstAuxVerb_have) ) return Auxiliary.had;
+		if (word.equals ("shall")) 
+				if (firstAuxVerb_restOK(SpeechRecognition_Function.firstAuxVerb_rest) ) return Auxiliary.shall;
+		if (word.equals ("should")) 
+				if (firstAuxVerb_restOK(SpeechRecognition_Function.firstAuxVerb_rest) ) return Auxiliary.should;
+		if (word.equals ("is")) 
+			if (firstAuxVerb_beOK(SpeechRecognition_Function.firstAuxVerb_be) ) return Auxiliary.is;
+		if (word.equals ("am")) 
+			if (firstAuxVerb_beOK(SpeechRecognition_Function.firstAuxVerb_be) ) return Auxiliary.am;
+		if (word.equals ("are")) 
+			if (firstAuxVerb_beOK(SpeechRecognition_Function.firstAuxVerb_be) ) return Auxiliary.are;
+		if (word.equals ("was")) 
+			if (firstAuxVerb_beOK(SpeechRecognition_Function.firstAuxVerb_be) ) return Auxiliary.was;
+		if (word.equals ("were")) 
+			if (firstAuxVerb_beOK(SpeechRecognition_Function.firstAuxVerb_be) ) return Auxiliary.were;
 		return null;
 	}
 	
-	private boolean goingToFutureOK() {
+	private boolean goingToFutureOK(SpeechRecognition_Function function) {
 		boolean isOK = false;
 		int index_save;
 		String word;
 		
 		index_save = indexWordList;
-		if (beOK(SpeechRecognition_Function.secondAuxVerb_goingto)) {
-			word = wordList.get(indexWordList);
-			if (word == "going") {
-				functionList[indexWordList] = SpeechRecognition_Function.secondAuxVerb_goingto;
-				foundWordList[indexWordList] = null;
-				indexWordList++;
-				word = wordList.get(indexWordList);
-				if (word == "to") {
-					functionList[indexWordList] = SpeechRecognition_Function.secondAuxVerb_goingto;
-					foundWordList[indexWordList] = null;
-					indexWordList++;
-					isOK = true;
-				}
-			}
+		word = wordList.get(indexWordList);
+		if (word.equals("going_to")) { 
+			isOK = wordOK(SpeechRecognition_Function.secondAuxVerb_goingto,Word_Type.infinitive );
 		}
+		
 		if (isOK == false) {
 			indexWordList = index_save;
 		}
+		
 		return isOK;
 	}
 	
 	private boolean finiteFormOK(SpeechRecognition_Function function) {
 		boolean isOK;
-		isOK = ( wordOK(function, Word_Type.infinitive) || wordOK(function, Word_Type.finitive) );
+		isOK = ( wordOK(function, Word_Type.finitive) || wordOK(function, Word_Type.simple_past)||beOK(function));
 		return isOK;
 	}
 
@@ -497,14 +805,17 @@ public class SpeechRecognition {
 		index_save = indexWordList;
 		
 		word = wordList.get(indexWordList);
-		if (word == "the") {
+		if (word.equals("the") || word.equals("an") || word.equals("a")) {
 			functionList[indexWordList] = function;
 			foundWordList[indexWordList] = null;
 			indexWordList++;
 			isOK = true;
 		}
 		else isOK = pronounOK(function);
-		if (isOK) isOK = nounOK(function);
+		
+		
+		isOK = adjectiveOK(function);
+		isOK = nounOK(function);
 
 		if (isOK == false) {
 			indexWordList = index_save;
@@ -528,7 +839,7 @@ public class SpeechRecognition {
 
 	}
 	
-	private void setFinalPunctuationMark(String finalPunctuationMark) {
+	private  void setFinalPunctuationMark(String finalPunctuationMark) {
 		switch (finalPunctuationMark)  {
 		case ".": this.finalPunctuationMark = PunctuationMark.dot; break;
 		case "?": this.finalPunctuationMark = PunctuationMark.question; break;
@@ -536,4 +847,50 @@ public class SpeechRecognition {
 		default: this.finalPunctuationMark = null;
 		}
 	}
+	
+	public PunctuationMark getFinalPunctuationMark() {
+		
+		return finalPunctuationMark;
+	}
+	
+// workaround	
+	private Word findAndGetWord(String word, Word_Type type) {
+		
+		ViewWordJoinLexem words;
+		
+		int rowCount;
+		int index;
+		
+		
+		int word_id;
+		Word element;
+		
+//		int lexem_id;
+//		Lexem lexem;
+		
+		words = new ViewWordJoinLexem();
+		words.select(words.SELECT_ALL_COLUMNS, " WHERE word = '" + word + "' AND word_type = " + type.getIndex(), " ORDER BY word_id");
+		rowCount = words.rowCount();
+		
+		element = null;
+//		for (index = 0; index < rowCount; index++) {
+		// assumption: only one result entry for combination word and word_type
+		if (rowCount > 0)
+			
+			for (index = 0; index < 1; index++) {
+				word_id = words.getWordID(index);
+	//			lexem_id = words.getLexemID(index);
+	//			lexem = AllWords.getLexem(lexem_id);
+				element = AllWords.getWord(word_id);
+				
+				wordTypeList[indexWordList] = type;
+	
+				
+				
+			}
+		
+		return element;
+		
+	}	
+	
 }

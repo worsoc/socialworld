@@ -279,10 +279,13 @@ public class Knowledge {
 		
 		
 		for (index=0;index < MAXIMUM_KNOWLEDGE_POOL_CAPACITY; index++) {
-			if (  knowledgeList[index].getLexemSubject() == subject) 	{
-					
-				result_tmp[count] = index;
-				count++;
+			
+			if (knowledgeList[index] != null) {
+				if (  knowledgeList[index].getLexemSubject() == subject) 	{
+						
+					result_tmp[count] = index;
+					count++;
+				}
 			}
 		}
 
@@ -344,7 +347,7 @@ public class Knowledge {
 		// find empty or invalid entry
 		for (int i = 0; i < MAXIMUM_KNOWLEDGE_POOL_CAPACITY;i++) {
 			knowledge = knowledgeList[i];
-			if ((knowledge == null) | (!knowledge.isValid()) ) return i;
+			if ((knowledge == null) || (!knowledge.isValid()) ) return i;
 		}
 		
 		

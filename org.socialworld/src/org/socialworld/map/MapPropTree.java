@@ -63,6 +63,7 @@ public class MapPropTree {
 	protected int getSector(String locationRest) {
 
 		char firstSign;
+		int firstSign2Int;
 		int sector = -1;
 		
 		if (locationRest.length() > 0) {
@@ -77,6 +78,14 @@ public class MapPropTree {
 				else if (base == 25) {
 					// 64 ... ASCII-Offset to sector number for upper letters
 					sector = (int) firstSign - 64; 
+				}
+				else if (base == 27) {
+					// 64 ... ASCII-Offset to sector number for upper letters
+					// there are only 26 letters, we use sign # for the inner sector (number 14)
+					firstSign2Int = (int) firstSign;
+					if (firstSign2Int == 35) 	 sector  = 14;
+					else if (firstSign2Int < 78) sector = firstSign2Int - 64; 
+					else 						 sector = firstSign2Int - 64 + 1;
 				}
 			}
 		}

@@ -31,8 +31,10 @@ public class KnowledgeFact {
 	}
 	
 	public KnowledgeFact(KnowledgeFact original) {
-		this.criterion  = original.criterion;
-		this.value = new KnowledgeFact_Value(original.value);
+		if (original != null) {
+			this.criterion  = original.getCriterion();
+			this.value = new KnowledgeFact_Value(original.getValue());
+		}
 	}
 	
 	protected KnowledgeFact_Value getValue() {

@@ -21,12 +21,17 @@
 */
 package org.socialworld.conversation;
 
+
+
 public enum SpeechRecognition_Function {
 	subject, 
-	verb, firstAuxVerb, secondAuxVerb_be, secondAuxVerb_goingto,
+	verb, firstAuxVerb_have, firstAuxVerb_will, firstAuxVerb_do, firstAuxVerb_rest, firstAuxVerb_be, secondAuxVerb_be, secondAuxVerb_been, secondAuxVerb_goingto, 
 	object1, object2,
 	title,
 	prepositionForObject1,	prepositionForObject2,
 	questionWord
+	
+	
+//	attributeForSubject, attributeForObject1, attributeForObject2,
 
 }

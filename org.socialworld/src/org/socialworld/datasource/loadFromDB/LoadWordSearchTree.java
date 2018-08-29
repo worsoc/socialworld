@@ -82,7 +82,12 @@ public class LoadWordSearchTree {
 			allWSTN[wstn_id-1] = wstn;
 		}
 		
-		root = allWSTN[0];
+		// TODO root for empty array
+		if (countAll > 0)
+			root = allWSTN[0];
+		else
+			root = null;
+		
 	}
 	
 	/**
