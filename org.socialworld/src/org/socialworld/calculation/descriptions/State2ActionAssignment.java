@@ -34,7 +34,7 @@ public class State2ActionAssignment {
 	}
 
 	/**
-	 * The method gets back the only instance of the EventReactionAssignment.
+	 * The method returns back the only instance of the EventReactionAssignment.
 	 * 
 	 * @return singleton object of eventReactionAssignment
 	 */
@@ -46,12 +46,11 @@ public class State2ActionAssignment {
 	}
 
 	/**
-	 * The method gets back the description how an object reacts to the event.
-	 * The description depends on the event type and the object' reaction type.
+	 * The method returns the description how an object acts depending on its state.
+	 * The description depends on the state-to-action type.
 	 * 
-	 * @param eventType
-	 * @param reactionType	 
-	 * @return EventReactionDescription
+	 * @param state2ActionType	 
+	 * @return State2ActionDescription
 	 */
 	public State2ActionDescription getState2ActionDescription(int state2ActionType) {
 		State2ActionDescription state2ActionDescription;
