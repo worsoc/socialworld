@@ -49,7 +49,7 @@ public class Sequence extends Expression {
 				expressionsC[index] = expressions[index + 3];
 			}
 			
-			setExpression1(new Nothing());
+			setExpression1(Nothing.getInstance());
 			setExpression2(new Sequence(expressionsB));
 			setExpression3(new Sequence(expressionsC));
 			
@@ -61,19 +61,19 @@ public class Sequence extends Expression {
 				setExpression3(expressions[2]);
 			}
 			if (count == 2) {
-				setExpression1(new Nothing());
+				setExpression1(Nothing.getInstance());
 				setExpression2(expressions[0]);
 				setExpression3(expressions[1]);
 			}
 			if (count == 1) {
-				setExpression1(new Nothing());
-				setExpression2(new Nothing());
+				setExpression1(Nothing.getInstance());
+				setExpression2(Nothing.getInstance());
 				setExpression3(expressions[0]);
 			}
 			if (count == 0) {
-				setExpression1(new Nothing());
-				setExpression2(new Nothing());
-				setExpression3(new Nothing());
+				setExpression1(Nothing.getInstance());
+				setExpression2(Nothing.getInstance());
+				setExpression3(Nothing.getInstance());
 			}
 		}
 		
