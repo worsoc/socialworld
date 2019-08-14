@@ -61,10 +61,28 @@ public enum Attribute {
 	 *            attribute index
 	 * @return attribute name
 	 */
-	public Attribute getAttributeName(int arrayIndex) {
+	public static Attribute getAttributeName(int arrayIndex) {
 		for (Attribute attribute : Attribute.values())
 			if (attribute.arrayIndex == arrayIndex)
 				return attribute;
 		return null;
 	}
+	
+	public String toString() {
+		
+		switch (this.arrayIndex) {
+		case 0: return "mood"; 
+		case 1: return "courage";
+		case 2: return "morals"; 
+		case 3: return "materialism";
+		case 4: return "tiredness";
+		case 5: return "curiosity"; 
+		case 6: return "spirituality";
+		case 7: return "hunger"; 
+		case 8: return "power";
+		default: return "";
+		}
+		
+	}
+	
 }
