@@ -41,21 +41,21 @@ import org.socialworld.objects.SimulationObject;
  * 
  * @author Mathias Sikos (tyloesand)
  */
-public class EventMaster extends Thread {
+public class EventMaster extends SocialWorldThread {
 
-
+	private static final int MAX_SLEEP_TIME_FOR_DECREASING_PRIORITY = 10;
+	private static final int MAX_SLEEP_TIME_FOR_EMPTY_QUEUE = 10;
+	
 	private static EventMaster instance;
 	
-	/**
-	 * says whether the thread is running or not
-	 */
-	private boolean isRunning;
-
+	private int sleepTime = 50;
+	
 	/**
 	 * a queue of events ordered by event's priority
 	 */
 	private PriorityQueue<Event> eventQueue;
-
+	private int lastPriority = Event.LOWEST_EVENT_PRIORITY;
+	
 	/**
 	 * a list of simulation objects which may be affected by the event
 	 */
@@ -91,12 +91,13 @@ public class EventMaster extends Thread {
 	
 
 	/**
-	 * public Constructor. 
+	 * private Constructor. 
 	 */
 	private EventMaster() {
 
 		candidates = new ArrayList<SimulationObject>();
 		eventQueue = new PriorityQueue<Event>();
+		
 	}
 
 	public static EventMaster getInstance() {
@@ -106,20 +107,6 @@ public class EventMaster extends Thread {
 		return instance;
 	}
 	
-	/**
-	 * the method stops the event processing
-	 */
-	public void stopEventMaster() {
-		isRunning = false;
-	}
-
-	/**
-	 * the method starts the event processing
-	 */
-	public void startEventMaster() {
-		isRunning = true;
-		this.run();
-	}
 	
 	/*
 	 * (non-Javadoc)
@@ -128,35 +115,26 @@ public class EventMaster extends Thread {
 	 */
 	@Override
 	public void run() {
-		int sleepTime = 10;
-		int countIterations =  0;
-		while (isRunning) {
-			countIterations++;
+		
+		while (isRunning()) {
+			
+			//System.out.println("EventMaster run()");
+
+			// calculating the next event from event queue
+			// !!! the sleepTime may change
+			
 			calculateNextEvent();
-			if (eventQueue.isEmpty())
-				sleepTime = 100;
-			else
-				sleepTime = 10;
+			
+			
+			sleepTime = 50;
 			try {
 				sleep(sleepTime);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			if (countIterations == 10) stopEventMaster();
-		}
-	}
 
-	/**
-	 * Calculates the influences of the event to other simulation objects.
-	 */
-	private void calculateNextEvent() {
-
-		if (!eventQueue.isEmpty()) {
-			if ( loadEvent( this.eventQueue.poll() ) == true ) {
-				determineCandidates();
-				determineInfluence();
-			}
 		}
+		
 	}
 
 	/**
@@ -168,11 +146,32 @@ public class EventMaster extends Thread {
 	public void addEvent(Event event) {
 		eventQueue.add(event);
 	}
+	
+	/**
+	 * Calculates the influences of the event to other simulation objects.
+	 */
+	private void calculateNextEvent() {
+
+		if (!eventQueue.isEmpty()) {
+			if ( loadEvent( this.eventQueue.poll() ) == true ) {
+				determineCandidates();
+				determineInfluence();
+			}
+		}
+		else
+			sleepTime = MAX_SLEEP_TIME_FOR_EMPTY_QUEUE;
+
+	}
+
 
 	private boolean loadEvent(Event event) {
 		if (event == null) return false;
 		
 		this.event = event;
+		if (isLowerPriorityThanEventBefore()) 
+			sleepTime = MAX_SLEEP_TIME_FOR_DECREASING_PRIORITY;
+		else if (sleepTime > 0)
+			sleepTime--;
 		
 		if (event.hasOptionalParam()) {
 			event.evaluateOptionalParam();
@@ -184,6 +183,13 @@ public class EventMaster extends Thread {
 		eventDirection = event.getDirection();
 		
 		return true;
+	}
+	
+	private boolean isLowerPriorityThanEventBefore() {
+		
+		int lastPriority = this.lastPriority;
+		this.lastPriority = event.getPriority();
+		return (this.lastPriority < lastPriority);
 	}
 	
 	private void determineCandidates() {
@@ -247,12 +253,23 @@ public class EventMaster extends Thread {
 		SimulationObject candidate;
 		ListIterator<SimulationObject> iterator;
 		
+		// two iterations because of asynchronous calculations
+		// there is a better chance to react on the event (second iteration) using the newer state (just calculated in first iteration)
+		
+		// first iteration for calculating the effect to the simulation object's state
 		iterator = this.candidates.listIterator();
 		while (iterator.hasNext()) {
 			candidate = iterator.next();
 			candidate.changeByEvent(this.event);
+		}
+		
+		// second iteration for creating the reaction
+		iterator = this.candidates.listIterator();
+		while (iterator.hasNext()) {
+			candidate = iterator.next();
 			candidate.reactToEvent(this.event);
 			iterator.remove();
 		}
+
 	}
 }

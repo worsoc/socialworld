@@ -25,6 +25,7 @@ import org.socialworld.objects.*;
 import org.socialworld.propertyChange.ChangedProperty;
 
 import org.socialworld.attributes.Position;
+import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.collections.ObjectByPositionSearch;
 
 
@@ -36,23 +37,33 @@ import org.socialworld.collections.ObjectByPositionSearch;
  * 
  */
 public class Simulation {
+	
+	
 	public static  int WITH_LOGGING = 1;
 	public static  int WITH_ERROR_LOGGING = 1;
 
 	private static Simulation instance;
 	
-	private final EventMaster eventMaster;
 	private final ObjectMaster objectMaster;
+
+	// threads
+	private final EventMaster eventMaster;
 	private final ActionMaster actionMaster;
+	private final RefreshMaster refreshMaster;
+
 	private final ObjectByPositionSearch searchByPosition;
 	
 	private Simulation() {
 		
 		
-		this.eventMaster = EventMaster.getInstance();
 		this.objectMaster = ObjectMaster.getInstance();
+
+		this.eventMaster = EventMaster.getInstance();
 		this.actionMaster = ActionMaster.getInstance();
+		this.refreshMaster = RefreshMaster.getInstance(this.objectMaster);
+		
 		this.searchByPosition = new ObjectByPositionSearch(1);
+
 	}
 	
 	/**
@@ -71,14 +82,29 @@ public class Simulation {
 	
 	public void startSimulation() {
 	
+		
+		Scheduler myCalcScheduler;
+		myCalcScheduler = Scheduler.getInstance();
+		myCalcScheduler.startThreads();
+		
 		this.objectMaster.loadSimulationObjects();
 
-		this.eventMaster.startEventMaster();
+		this.eventMaster.startThread();
+		this.actionMaster.startThread();
+		this.refreshMaster.startThread();
+		
+		
+		Human myHuman;
+		for (int i = 0;i < 20; i++ ) {
+			myHuman = (Human) this.objectMaster.createSimulationObject(SimulationObject_Type.human);
+		}
 		
 	}
 	
 	public void stopSimulation() {
-		this.eventMaster.stopEventMaster();
+		this.eventMaster.stopThread();
+		this.actionMaster.stopThread();
+		this.refreshMaster.stopThread();
 	}
 
 	public EventMaster getEventMaster() {
@@ -89,9 +115,6 @@ public class Simulation {
 		actionMaster.nextSecond();
 	}
 
-	public void nextAction() {
-		actionMaster.executeAction();
-	}
 
 	// for test visualizes there is a public access to the object master
 	public ObjectMaster getObjectMaster() {
@@ -103,13 +126,6 @@ public class Simulation {
 		return this.objectMaster.createSimulationObject(simulationObjectType);
 	}
 
-	public boolean hasNext(SimulationObject_Type objectType) {
-		return this.objectMaster.hasNext(objectType);
-	}
-	
-	public SimulationObject next(SimulationObject_Type objectType) {
-		return this.objectMaster.next(objectType);
-	}
 	
 	public SimulationObject getFirstByPosition(Position position) {
 		this.searchByPosition.findNearestObject(position.getX(), position.getY());

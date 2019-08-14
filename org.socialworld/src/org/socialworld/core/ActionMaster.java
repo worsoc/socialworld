@@ -53,14 +53,20 @@ import org.socialworld.attributes.Time;
  *  
  * @author Mathias Sikos (tyloesand)
  */
-public class ActionMaster {
+public class ActionMaster extends SocialWorldThread {
 	
 	// a reported action handler is rejected because its best action element's execution time is too far in the future
 	public static final int ACTIONMASTER_RETURN_REJECT_TOOMUCHWAIT = 1;
 	// a reported action handler element has been inserted into the priority list (list (b))
 	public static final int ACTIONMASTER_RETURN_INSERTED = 0;
 
+	private static final int ACTIONMASTER_RETURN_SLEEP_MUCH = 2;
+	private static final int ACTIONMASTER_RETURN_SLEEP_LESS = 1;
+	private static final int ACTIONMASTER_RETURN_SLEEP_ZERO = 0;
+	private int sleepTime = 50;
+
 	private static ActionMaster instance;
+	
 	
 	// queue for action handlers that execute an action that must be continued (list (c))
 	// it is iterated from first to last element and starts at the first element again (while elements remain in the list)
@@ -128,13 +134,39 @@ public class ActionMaster {
 	}
 
 	/**
-	 * The method gets back the only instance of the ActionMaster.
+	 * The method returns the only instance of the ActionMaster.
 	 * 
 	 * @return singleton object of ActionMaster
 	 */
 	public static ActionMaster getInstance() {
 		if (instance == null) instance = new ActionMaster();
 		return instance;
+	}
+	
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Thread#run()
+	 */
+	@Override
+	public void run() {
+		
+		while (isRunning()) {
+			
+//			System.out.println("ActionMaster run()");
+			sleepTime = executeAction();
+			
+			
+			sleepTime = 50;
+			try {
+				sleep(sleepTime);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+		}
+		
 	}
 	
 	/**
@@ -152,7 +184,10 @@ public class ActionMaster {
 	 *  There needn't be a remove from priority list for reported action handlers because that list is iterated only one time.
 	 *  
 	 */
-	public void executeAction() {
+	private int executeAction() {
+		
+		int returnSleepTime = ACTIONMASTER_RETURN_SLEEP_ZERO;
+		
 		ActionHandler handler;
 		boolean handlerFromPriorityList = false;
 		boolean handlerFromContinueList = false;
@@ -171,9 +206,14 @@ public class ActionMaster {
 			}
 			else {
 		// if continue and priority lists are iterated the action handler is chosen from all action handler list.
+				
 				if (allHandlersIterator.nextIndex() == allActionHandlers.size()) 
 					allHandlersIterator = allActionHandlers.listIterator();
-				handler = allHandlersIterator.next();
+				
+				if (allHandlersIterator.hasNext())
+					handler = allHandlersIterator.next();
+				else
+					return ACTIONMASTER_RETURN_SLEEP_MUCH;
 			}
 		
 		
@@ -182,18 +222,25 @@ public class ActionMaster {
 		switch (handler.doActualAction(secondOfTheActualMinute)) {
 		case ActionHandler.ACTIONHANDLER_RETURN_ACTIONDONE:
 			if (handlerFromContinueList)	continueHandlersIterator.remove();
+			returnSleepTime = ACTIONMASTER_RETURN_SLEEP_LESS;
 			break;
 		case ActionHandler.ACTIONHANDLER_RETURN_ACTIONISGOINGON:
 			if (handlerFromPriorityList) continueActionHandlers.add(handler);
 			// because of iterating the priority list, there mustn't be reseted the continue list iterator
 			// It will be reseted if the next iteration process of continue list starts
+			returnSleepTime = ACTIONMASTER_RETURN_SLEEP_LESS;
 			break;
 		case ActionHandler.ACTIONHANDLER_RETURN_NOACTION:
 			if (handlerFromContinueList)	continueHandlersIterator.remove();
+			returnSleepTime = ACTIONMASTER_RETURN_SLEEP_LESS;
 			break;
 		case ActionHandler.ACTIONHANDLER_RETURN_ACTIONYETEXECUTED:
+			returnSleepTime = ACTIONMASTER_RETURN_SLEEP_LESS;
 			break;
 		}
+		
+		return returnSleepTime;
+		
 	}
 	
 	/**

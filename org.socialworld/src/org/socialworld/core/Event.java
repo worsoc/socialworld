@@ -39,6 +39,9 @@ import org.socialworld.objects.SimulationObject;
  */
 public class Event implements Comparable<Event> {
 
+	final static int LOWEST_EVENT_PRIORITY = 0;
+	final static int HIGHEST_EVENT_PRIORITY = 100;
+	
 	private int		eventTypeAsInt;		
 	private EventType eventType;
 	

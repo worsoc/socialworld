@@ -119,7 +119,7 @@ public class ActionHandler  {
 
 		// execute the actual action
 		if (this.actualAction != null) {
-			this.object.doAction(this.actualAction);
+			this.object.doAction(this.actualAction, this);
 			this.secondOfTheActualMinute = actualSecond;
 			// if the actual action is executed completely
 			// then assign it to the last executed action member
