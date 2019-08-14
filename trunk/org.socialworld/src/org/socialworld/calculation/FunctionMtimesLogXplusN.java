@@ -34,8 +34,17 @@ public class FunctionMtimesLogXplusN extends FunctionBase {
 	private float max;
 	private float min;
 	
-	private boolean withMinMaxCheck;
+	private boolean withMinMaxCheck = false;
 	
+
+	public FunctionMtimesLogXplusN( float base, float m, float n) {
+		
+		this.base = base;
+		this.m = m;
+		this.n = n;
+			
+	}
+
 	public FunctionMtimesLogXplusN( float base, float m, float n, float min, float max, boolean withMinMaxCheck) {
 		
 		this.base = base;

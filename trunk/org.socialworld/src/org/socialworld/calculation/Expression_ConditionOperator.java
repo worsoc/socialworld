@@ -31,6 +31,8 @@ public enum Expression_ConditionOperator {
 	notEqual(0), equal(1), less(2), lessEqual(3), greaterEqual(4), greater(5),
 	and(6), or(7);
 
+	public static final int NUMBER_OF_COMPARISON_OPERATORS = 6;
+	
 	private int arrayIndex;
 
 	private Expression_ConditionOperator(int index) {
@@ -51,5 +53,21 @@ public enum Expression_ConditionOperator {
 				return operator;
 		return null;
 	}	
-
+	
+	public String toString() {
+	
+		switch (this.arrayIndex) {
+		case 0: return "!="; 
+		case 1: return "==";
+		case 2: return "<"; 
+		case 3: return "=<";
+		case 4: return ">=";
+		case 5: return ">"; 
+		case 6: return "&";
+		case 7: return "|"; 
+		default: return "";
+		}
+		
+	}
+	
 }

@@ -50,7 +50,26 @@ public class Calculation {
 	}
 	
 	public  Value createValue(Type type, Object value) {
-		return new Value(type, value);
+		
+		Value created;
+		
+		switch (type) {
+		case integer: 
+				if (value instanceof Float)	created = new Value(type, ((Float)value).intValue());
+				else if (value instanceof Double)	created = new Value(type, ((Double)value).intValue());
+				else if (value instanceof Integer)	created = new Value(type, (Integer) value);
+				else created = new Value(type, value);
+				break;
+		case floatingpoint: 
+			if (value instanceof Float)	created = new Value(type, (Float)value);
+			else if (value instanceof Double)	created = new Value(type, ((Double)value).floatValue());
+			else if (value instanceof Integer)	created = new Value(type, ((Integer)value).floatValue());
+			else created = new Value(type, value);
+			break;
+		default: 
+			created = new Value(type, value);
+		}
+		return created;
 	}
 	
 	public Value or(Value op1, Value op2) {
@@ -159,16 +178,16 @@ public class Calculation {
 			case integer:
 				return createValue(Type.integer, (int) op1.getValue() + (int) op2.getValue() );
 			case floatingpoint:
-				return createValue(Type.floatingpoint, (int) op1.getValue() + (double) op2.getValue() );
+				return createValue(Type.floatingpoint, (int) op1.getValue() + (float) op2.getValue() );
 			default:
 				return nothing;
 			}
 		case floatingpoint:
 			switch (op2.getType() ) {
 			case integer:
-				return createValue(Type.floatingpoint, (double) op1.getValue() + (int) op2.getValue() );
+				return createValue(Type.floatingpoint, (float) op1.getValue() + (int) op2.getValue() );
 			case floatingpoint:
-				return createValue(Type.floatingpoint, (double) op1.getValue() + (double) op2.getValue() );
+				return createValue(Type.floatingpoint, (float) op1.getValue() + (float) op2.getValue() );
 			default:
 				return nothing;
 			}
@@ -189,16 +208,16 @@ public class Calculation {
 			case integer:
 				return createValue(Type.integer, (int) op1.getValue() * (int) op2.getValue() );
 			case floatingpoint:
-				return createValue(Type.floatingpoint, (int) op1.getValue() * (double) op2.getValue() );
+				return createValue(Type.floatingpoint, (int) op1.getValue() * (float) op2.getValue() );
 			default:
 				return null;
 			}
 		case floatingpoint:
 			switch (op2.getType() ) {
 			case integer:
-				return createValue(Type.floatingpoint, (double) op1.getValue() * (int) op2.getValue() );
+				return createValue(Type.floatingpoint, (float) op1.getValue() * (int) op2.getValue() );
 			case floatingpoint:
-				return createValue(Type.floatingpoint, (double) op1.getValue() * (double) op2.getValue() );
+				return createValue(Type.floatingpoint, (float) op1.getValue() * (float) op2.getValue() );
 			default:
 				return null;
 			}
@@ -207,13 +226,38 @@ public class Calculation {
 		}
 	}
 
+	public Value division(Value op1, Value op2) {
+		switch (op1.getType() ) {
+		case integer:
+			switch (op2.getType() ) {
+			case integer:
+				return createValue(Type.floatingpoint, (int) op1.getValue() / (int) op2.getValue() );
+			case floatingpoint:
+				return createValue(Type.floatingpoint, (int) op1.getValue() / (float) op2.getValue() );
+			default:
+				return null;
+			}
+		case floatingpoint:
+			switch (op2.getType() ) {
+			case integer:
+				return createValue(Type.floatingpoint, (float) op1.getValue() / (int) op2.getValue() );
+			case floatingpoint:
+				return createValue(Type.floatingpoint, (float) op1.getValue() / (float) op2.getValue() );
+			default:
+				return null;
+			}
+		default:
+			return null;
+		}
+	}
+	
 	
 	public Value negate(Value op1) {
 		switch (op1.getType() ) {
 		case integer:
 				return createValue(Type.integer, (int) op1.getValue() * (-1) );
 		case floatingpoint:
-			return createValue(Type.floatingpoint, (double) op1.getValue() * (-1F) );
+			return createValue(Type.floatingpoint, (float) op1.getValue() * (-1F) );
 		default:
 			return null;
 		}
@@ -234,7 +278,7 @@ public class Calculation {
 	
 	
 	
-	private Value getZero(Type type) {
+	Value getZero(Type type) {
 		switch (type) {
 		case integer:
 			return zeroInteger;

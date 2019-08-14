@@ -22,7 +22,10 @@
 package org.socialworld.calculation;
 
 public abstract class FunctionBase {
-	protected Calculation calculation;
+	
+	private boolean valid = true;
+	
+	protected Calculation calculation = Calculation.getInstance();
 
 	boolean returnInvalidNothingvalue;
 	
@@ -40,5 +43,13 @@ public abstract class FunctionBase {
 		
 		return new Value();
 
+	}
+	
+	protected boolean isValid() {
+		return valid;
+	}
+	
+	protected void setInvalid() {
+		valid = false;
 	}
 }

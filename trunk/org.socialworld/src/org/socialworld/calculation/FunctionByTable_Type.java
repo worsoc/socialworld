@@ -26,11 +26,9 @@ public enum FunctionByTable_Type {
 	v(3), v_mirrored(4), u(5), u_mirrored(6), horizontal_max(7), positive_raise(8);
 	
 	/**
-	 * The constant holds the informations how many attributes are simulated.
-	 * The constant is used for iteration about all attributes and for creation
-	 * of attribute arrays.
+	 * The constant holds the informations how many types  are listed in the enum FunctionByTable_Type.
 	 */
-	public static final int NUMBER_OF_AFCT_TYPES = 9;
+	public static final int NUMBER_OF_FUNCTION_BY_TABLE_TYPES = 9;
 
 	private int arrayIndex;
 
