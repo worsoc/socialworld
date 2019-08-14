@@ -25,7 +25,7 @@ import org.socialworld.actions.move.Path;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.calculation.FunctionByMatrix;
 import org.socialworld.calculation.Vector;
-import org.socialworld.calculation.application.AttributeCalculator;
+import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.core.Event;
 import org.socialworld.knowledge.KnownPathsPool;
 import org.socialworld.objects.access.GrantedAccessToProperty;
@@ -61,17 +61,25 @@ public class StateAnimal extends StateSimulationObject {
 /////////////////////////////    ATTRIBUTES  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
+	void refresh() {
+		
+		super.refresh();
+		Scheduler.getInstance().calculateAttributesChangedBySimpleMatrix((StateAnimal)getMeReadableOnly(), (HiddenAnimal)getMeWritableButHidden(grantAccessToPropertyAttributes));
+
+	}
+	
+
 	void calculateEventInfluence(Event event) {
 		
 		super.calculateEventInfluence(event);
-		
-		// TODO react to the calculation methods return code
-		AttributeCalculator.calculateAttributesChangedByEvent(event, ((StateAnimal)getMeReadableOnly()), ((HiddenAnimal)getMeWritableButHidden(grantAccessToPropertyAttributes)));
+		Scheduler.getInstance().calculateAttributesChangedByEvent(event, (StateAnimal)getMeReadableOnly(), (HiddenAnimal)getMeWritableButHidden(grantAccessToPropertyAttributes) );
 		
 	}
 
 	final void setAttributes(AttributeArray attributes, WriteAccessToAnimal guard) {
 		if (checkGuard(guard)) {
+			System.out.println(getObject().getObjectID() + " : " +  attributes.toString());
+
 			this.attributes = attributes;
 		}
 	}

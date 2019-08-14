@@ -23,7 +23,7 @@ package org.socialworld.objects;
 
 import org.socialworld.attributes.Position;
 import org.socialworld.calculation.Vector;
-import org.socialworld.calculation.application.PositionCalculator;
+import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.core.Event;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenSimulationObject;
@@ -136,10 +136,14 @@ public class StateSimulationObject extends ListenedBase {
 		 return this.state2ActionType;
 	} 
 
+	void refresh() {
+		
+		
+	}
+	
 	void calculateEventInfluence(Event event) {
 		
-		// TODO react to the calculation methods return code
-		PositionCalculator.calculatePositionChangedByEvent(event, getMeReadableOnly(), getMeWritableButHidden(grantAccessToPropertyPosition));
+		Scheduler.getInstance().calculatePositionChangedByEvent(event, getMeReadableOnly(), getMeWritableButHidden(grantAccessToPropertyPosition));
 		
 	}
 	

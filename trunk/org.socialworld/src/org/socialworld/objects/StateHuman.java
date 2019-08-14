@@ -26,7 +26,7 @@ import java.util.ListIterator;
 
 import org.socialworld.actions.attack.IWeapon;
 import org.socialworld.attributes.Inventory;
-import org.socialworld.calculation.application.TalkCalculator;
+import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.conversation.Talk;
 import org.socialworld.conversation.Talk_SentenceType;
 import org.socialworld.core.Event;
@@ -70,7 +70,7 @@ public class StateHuman extends StateAnimal {
 		
 		super.calculateEventInfluence(event);
 		
-		TalkCalculator.calculateTalkChangedByEvent(event, ((StateHuman)getMeReadableOnly()), ((HiddenHuman)getMeWritableButHidden(grantAccessToPropertyTalk) ));
+		Scheduler.getInstance().calculateTalkChangedByEvent(event, ((StateHuman)getMeReadableOnly()), ((HiddenHuman)getMeWritableButHidden(grantAccessToPropertyTalk) ));
 		
 		
 	}
