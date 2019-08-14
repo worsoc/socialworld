@@ -34,6 +34,13 @@ public class GaussPoolState2ActionType {
 	private GaussPoolState2ActionType() {
 		state2ActionTypesForPositiveIndex = new int[CAPACITY_GPS2A_ARRAY];
 		state2ActionTypesForNegativeIndex = new int[CAPACITY_GPS2A_ARRAY];
+		
+		// initial values
+		for (int i = 0; i < CAPACITY_GPS2A_ARRAY; i++) {
+				state2ActionTypesForPositiveIndex[i] = 1;
+				state2ActionTypesForNegativeIndex[i] = 1;
+			}
+
 	}
 	
 	public static GaussPoolState2ActionType getInstance() {

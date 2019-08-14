@@ -57,11 +57,27 @@ public class GaussPoolAttributeCalculatorMatrix {
 
 	private void initialize() {
 		
-		loadFromDB();
+		//loadFromDB();
+		loadTestData();
 	}
 	
 	
-	
+	private void loadTestData() {
+		
+		FunctionByMatrix matrix;
+		
+		int j=0;
+		for (int i = -CAPACITY_GPACM_ARRAY + 1; i < CAPACITY_GPACM_ARRAY; i++) {
+			
+			matrix = (FunctionByMatrix) FunctionPool.getInstance().getFunction(100 + j);
+			setMatrix(i, matrix);
+			
+			j++;
+			
+			if (j == FunctionPool.COUNT_TEST_ENTRIES) j = 0;
+
+		}
+	}
 	
 	private void loadFromDB() {
 		TableGaussACM table;

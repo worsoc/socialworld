@@ -7,6 +7,8 @@ import org.socialworld.datasource.tablesPool.TablePoolAttribute;
 
 public class AttributeArrayPool {
 
+	public static final int COUNT_TEST_ENTRIES = 6;
+
 	public static final int CAPACITY_AAP_ARRAY = 1000;
 
 	private static AttributeArrayPool instance;
@@ -16,7 +18,8 @@ public class AttributeArrayPool {
 	private AttributeArrayPool () {
 		attributeArrays = new AttributeArray[CAPACITY_AAP_ARRAY];
 		
-		initialize();
+		initializeWithTestData();
+		//initialize();
 	}
 	
 	public static AttributeArrayPool getInstance() {
@@ -42,7 +45,28 @@ public class AttributeArrayPool {
 		
 		loadFromDB();
 		
+	}
+	
+	private void initializeWithTestData() {
+		
+		int 		tupelsCount = COUNT_TEST_ENTRIES;
+		String attributeTupels[] = new String[tupelsCount];
+		
+		int numberOfAttributes = 9;
+		
+		attributeTupels[0] = "(52,39,45,52,39,45,52,39,45)";
+		attributeTupels[1] = "(52,41,44,52,41,44,52,41,44)";
+		attributeTupels[2] = "(49,50,38,49,50,38,49,50,38)";
+		attributeTupels[3] = "(52,39,46,52,39,46,52,39,46)";
+		attributeTupels[4] = "(57,41,45,57,41,45,57,41,45)";
+		attributeTupels[5] = "(9,13,14,9,13,14,9,13,14)";
 
+		for (int i = 0; i <  tupelsCount; i++) {
+			
+			setArray(i, new AttributeArray(attributeTupels[i], numberOfAttributes));
+
+		}
+		
 	}
 	
 	private void loadFromDB() {
