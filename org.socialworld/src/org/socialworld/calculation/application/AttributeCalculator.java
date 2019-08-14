@@ -21,6 +21,9 @@
 */
 package org.socialworld.calculation.application;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.calculation.FunctionByExpression;
 import org.socialworld.calculation.FunctionByMatrix;
@@ -30,23 +33,105 @@ import org.socialworld.calculation.Value;
 import org.socialworld.calculation.descriptions.EventInfluenceAssignment;
 import org.socialworld.calculation.descriptions.EventInfluenceDescription;
 import org.socialworld.core.Event;
+import org.socialworld.core.SocialWorldThread;
 import org.socialworld.objects.StateAnimal;
 import org.socialworld.objects.access.HiddenAnimal;
 
 
-public  class AttributeCalculator {
+public  class AttributeCalculator extends SocialWorldThread {
 
+	public static final int ATTRIBUTE_CALCULATOR_RETURNS_EMPTY_LISTS = 0;
 	public static final int ATTRIBUTE_CALCULATOR_RETURNS_INVALID_RESULT = 1;
 
+	private static AttributeCalculator instance;
 
-	public final static int calculateAttributesChangedByEvent(Event event, StateAnimal stateAnimal, HiddenAnimal hiddenWriteAccess) {
+	private List<Event> events;
+	private List<StateAnimal> states4Influence;
+	private List<HiddenAnimal> hiddenAnimals4Influence;
+
+	private List<StateAnimal> states4Change;
+	private List<HiddenAnimal> hiddenAnimals4Change;
+
+	private List<StateAnimal> states4Refresh;
+	private List<HiddenAnimal> hiddenAnimals4Refresh;
+	
+	/**
+	 * private Constructor. 
+	 */
+	private AttributeCalculator() {
+
+		this.events = new ArrayList<Event>();
+		this.states4Influence = new ArrayList<StateAnimal>();
+		this.hiddenAnimals4Influence = new ArrayList<HiddenAnimal>();
+
+		this.states4Change = new ArrayList<StateAnimal>();
+		this.hiddenAnimals4Change = new ArrayList<HiddenAnimal>();
+
+		this.states4Refresh = new ArrayList<StateAnimal>();
+		this.hiddenAnimals4Refresh = new ArrayList<HiddenAnimal>();
 		
-		Value returnAttributeArray;
+	}
+
+	public static AttributeCalculator getInstance() {
+		if (instance == null) {
+			instance = new AttributeCalculator();
+		}
+		return instance;
+	}
+	
+	public void run() {
+		int i=0;
+		while (isRunning()) {
+			
+			i++;
+			if (i < 1000) {
+				Scheduler.getInstance().setThreadName("Attributes ");
+				Scheduler.getInstance().increment();
+			}
+
+			calculateAttributesChangedByEvent();
+			calculateAttributesChangedByComplexMatrix();
+			calculateAttributesChangedBySimpleMatrix();
+			
+			try {
+				sleep(20);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+		}
+	}
+	
+	final void calculateAttributesChangedByEvent(Event event, StateAnimal stateAnimal, HiddenAnimal hiddenWriteAccess) {
+		this.events.add(event);
+		this.states4Influence.add(stateAnimal);
+		this.hiddenAnimals4Influence.add( hiddenWriteAccess);
+	}
+
+	final void calculateAttributesChangedByComplexMatrix(StateAnimal stateAnimal, HiddenAnimal hiddenWriteAccess) {
+		this.states4Change.add(stateAnimal);
+		this.hiddenAnimals4Change.add( hiddenWriteAccess);
+	}
+	
+	final void calculateAttributesChangedBySimpleMatrix(StateAnimal stateAnimal, HiddenAnimal hiddenWriteAccess) {
+		this.states4Refresh.add(stateAnimal);
+		this.hiddenAnimals4Refresh.add( hiddenWriteAccess);
+	}
+	
+	private final int calculateAttributesChangedByEvent() {
 		
-		returnAttributeArray = getAttributesChangedByEvent(event, stateAnimal);
+		if (this.hiddenAnimals4Influence.size() == 0) return ATTRIBUTE_CALCULATOR_RETURNS_EMPTY_LISTS;
 		
-		if (returnAttributeArray.isValid()) 
-			return hiddenWriteAccess.setAttributes((AttributeArray) returnAttributeArray.getValue());
+		Event event = this.events.remove(0);
+		StateAnimal stateAnimal  = this.states4Influence.remove(0);
+		HiddenAnimal hiddenWriteAccess = this.hiddenAnimals4Influence.remove(0);
+		
+		Value resultAttributeArray;
+
+		resultAttributeArray = getAttributesChangedByEvent(event, stateAnimal);
+		
+		if (resultAttributeArray.isValid()) 
+			return hiddenWriteAccess.setAttributes((AttributeArray) resultAttributeArray.getValue());
 		else
 			return ATTRIBUTE_CALCULATOR_RETURNS_INVALID_RESULT;
 		
@@ -75,7 +160,6 @@ public  class AttributeCalculator {
 			EventInfluenceAssignment.getInstance().getEventInfluenceDescription(
 				eventType, eventInfluenceType	);
 
-
 		f_EventInfluence = eventInfluenceDescription.getFunctionEventInfluence();
 			
 		arguments = new Value[1];
@@ -85,27 +169,61 @@ public  class AttributeCalculator {
 	
 	}
 
+	private final int calculateAttributesChangedByComplexMatrix() {
+		
+		if (this.hiddenAnimals4Change.size() == 0) return ATTRIBUTE_CALCULATOR_RETURNS_EMPTY_LISTS;
+		
+		StateAnimal stateAnimal  = this.states4Change.remove(0);
+		HiddenAnimal hiddenWriteAccess = this.hiddenAnimals4Change.remove(0);
+		
+		Value resultAttributeArray;
 
-	private static Value getAttributesChangedByMatrix(StateAnimal stateAnimal) {
+		resultAttributeArray = getAttributesChangedByComplexMatrix(stateAnimal);
+		
+		if (resultAttributeArray.isValid()) 
+			return hiddenWriteAccess.setAttributes((AttributeArray) resultAttributeArray.getValue());
+		else
+			return ATTRIBUTE_CALCULATOR_RETURNS_INVALID_RESULT;
+		
+	}
+
+	private static Value getAttributesChangedByComplexMatrix(StateAnimal stateAnimal) {
 		FunctionByMatrix f_AttributesByMatrix;
 		Value[] arguments;
 	
-
 		arguments = new Value[2];
 		arguments[0] = new Value(Type.attributeArray, stateAnimal.getAttributes());
-		arguments[1] = new Value(Type.integer, FunctionByMatrix_Matrix.MATRIX_CALCULATION_COMPLEX );
+		arguments[1] = new Value(Type.integer, FunctionByMatrix_Matrix.CALCULATION_MODE_MATRIX_X_VECTOR_COMPLEX );
 		
 		f_AttributesByMatrix = stateAnimal.getMatrix();
 		return  f_AttributesByMatrix.calculate(arguments);
 	}
 	
-	private static Value getAttributesChangedByRefresh(StateAnimal stateAnimal) {
+	private final int calculateAttributesChangedBySimpleMatrix() {
+		
+		if (this.hiddenAnimals4Refresh.size() == 0) return ATTRIBUTE_CALCULATOR_RETURNS_EMPTY_LISTS;
+		
+		StateAnimal stateAnimal  = this.states4Refresh.remove(0);
+		HiddenAnimal hiddenWriteAccess = this.hiddenAnimals4Refresh.remove(0);
+		
+		Value resultAttributeArray;
+		
+		resultAttributeArray = getAttributesChangedBySimpleMatrix(stateAnimal);
+		
+		if (resultAttributeArray.isValid()) 
+			return hiddenWriteAccess.setAttributes((AttributeArray) resultAttributeArray.getValue());
+		else
+			return ATTRIBUTE_CALCULATOR_RETURNS_INVALID_RESULT;
+		
+	}
+	
+	private static Value getAttributesChangedBySimpleMatrix(StateAnimal stateAnimal) {
 		FunctionByMatrix f_AttributesByMatrix;
 		Value[] arguments;
 	
 		arguments = new Value[2];
 		arguments[0] = new Value(Type.attributeArray, stateAnimal.getAttributes());
-		arguments[1] = new Value(Type.integer, FunctionByMatrix_Matrix.MATRIX_CALCULATION_SIMPLE);
+		arguments[1] = new Value(Type.integer, FunctionByMatrix_Matrix.CALCULATION_MODE_MATRIX_X_VECTOR_SIMPLE);
 		
 		f_AttributesByMatrix = stateAnimal.getMatrix();
 		return  f_AttributesByMatrix.calculate(arguments);
