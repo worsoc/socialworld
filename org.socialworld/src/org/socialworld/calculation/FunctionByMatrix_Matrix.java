@@ -22,10 +22,12 @@
 package org.socialworld.calculation;
 
 public class FunctionByMatrix_Matrix {
-	public static final int MATRIX_CALCULATION_SIMPLE = 1;
-	public static final int MATRIX_CALCULATION_COMPLEX = 2;
+	public static final int CALCULATION_MODE_MATRIX_X_VECTOR_SIMPLE = 1; //MATRIX_CALCULATION_SIMPLE = 1;
+	public static final int CALCULATION_MODE_MATRIX_X_VECTOR_COMPLEX = 2; //MATRIX_CALCULATION_COMPLEX = 2;
+	public static final int CALCULATION_MODE_VECTOR_X_VECTOR = 11;    // Matrix is a vector (a matrix with one row)
 	
 	private int numberOfColumns;
+	private boolean calculateDiv100;
 	
 	private int functions[];
 	private Value shares[];
@@ -35,20 +37,73 @@ public class FunctionByMatrix_Matrix {
 
 	public FunctionByMatrix_Matrix(int numberOfColumns) {
 			this.numberOfColumns = numberOfColumns;
+			this.calculateDiv100 = false;
 	}
 
-	public FunctionByMatrix_Matrix(FunctionByMatrix_Matrix original, int numberOfColumns) {
+	public FunctionByMatrix_Matrix(String sharesAsLine, String functionsAsLine, String offsetsAsLine, int numberOfColumns){
+
 		this.numberOfColumns = numberOfColumns;
+
+		String[] shares = sharesAsLine.split("\\s+");
+		Value[] sharesMatrix = new Value[shares.length];
+		
+		for(int i = 0; i < shares.length; i++ )
+		{
+			sharesMatrix[i] =  new Value(shares[i], Type.integer);
+		}
+		
+		setShares(sharesMatrix);
+
+		
+		String[] functions = functionsAsLine.split("\\s+");
+		int[] functionsMatrix = new int[functions.length];
+		
+		for(int i = 0; i < functions.length; i++ )
+		{
+			functionsMatrix[i] =  Integer.parseInt(functions[i]);
+		}
+		
+		setFunctions(functionsMatrix);
+		
+		if (offsetsAsLine.length() > 0) {
+			
+			String[] offsets = offsetsAsLine.split("\\s+");
+			if (offsets.length > 0) {
+				
+				Value[] offsetsMatrix = new Value[offsets.length];
+				
+				for(int i = 0; i < offsets.length; i++ )
+				{
+					offsetsMatrix[i] =  new Value(offsets[i], Type.integer);
+				}
+				
+				setOffsets(offsetsMatrix);
+				
+			}
+
+		}	
+		
+	}
+	
+	public FunctionByMatrix_Matrix(FunctionByMatrix_Matrix original) {
+		
+		this.numberOfColumns = original.numberOfColumns;
+		this.calculateDiv100 = original.calculateDiv100;
+		
 		int count;
 		count = original.length();
+		
 		this.functions = new int[count];
 		for (int i = 0; i < count; i++) this.functions[i] = original.getFunction(i);
+		
 		this.shares = new Value[count];
 		for (int i = 0; i < count; i++) this.shares[i] = original.getShare(i);
+		
 		if (original.isWithOffset()) {
 			this.offsets = new Value[count];
 			for (int i = 0; i < count; i++) this.offsets[i] = original.getOffset(i);
 		}	
+		
 	}
 	
 	public int length() {
@@ -60,8 +115,10 @@ public class FunctionByMatrix_Matrix {
 	 * @return the function
 	 */
 	public int getFunction(int row, int column) {
+		
 		int matrixIndex = row * numberOfColumns + column;
 		return functions[matrixIndex];
+		
 	}
 
 	/**
@@ -71,7 +128,9 @@ public class FunctionByMatrix_Matrix {
 	 *            the function to set
 	 */
 	public void setFunctions( int functions[]) {
+		
 		this.functions = functions;
+		
 	}
 	
 	/**
@@ -85,16 +144,20 @@ public class FunctionByMatrix_Matrix {
 	 *            the function to set
 	 */
 	public void setFunction(int row, int column, int function) {
+		
 		int matrixIndex = row * numberOfColumns + column;
 		this.functions[matrixIndex] = function;
+		
 	}
 
 	/**
 	 * @return the share
 	 */
 	public Value getShare(int row, int column) {
+		
 		int matrixIndex = row * numberOfColumns + column;
 		return shares[matrixIndex];
+		
 	}
 
 	/**
@@ -104,7 +167,12 @@ public class FunctionByMatrix_Matrix {
 	 *            the shares to set
 	 */
 	public void setShares( Value shares[]) {
+		
 		this.shares = shares;
+	
+		if (shares.length > 0) {
+			this.calculateDiv100 = (shares[0].getType() == Type.integer);
+		}
 	}
 	
 	/**
@@ -112,16 +180,22 @@ public class FunctionByMatrix_Matrix {
 	 *            the share to set
 	 */
 	public void setShare(int row, int column, Value share) {
+		
+		this.calculateDiv100 = (share.getType() == Type.integer);
+		
 		int matrixIndex = row * numberOfColumns + column;
 		this.shares[matrixIndex] = share;
+		
 	}
 
 	/**
 	 * @return the offset
 	 */
 	public Value getOffset(int row, int column) {
+		
 		int matrixIndex = row * numberOfColumns + column;
 		return offsets[matrixIndex];
+		
 	}
 
 	/**
@@ -131,7 +205,9 @@ public class FunctionByMatrix_Matrix {
 	 *            the offsets to set
 	 */
 	public void setOffsets( Value offsets[]) {
+		
 		this.offsets = offsets;
+		
 	}
 
 	/**
@@ -139,16 +215,20 @@ public class FunctionByMatrix_Matrix {
 	 *            the offset to set
 	 */
 	public void setOffset(int row, int column, Value offset) {
+		
 		int matrixIndex = row * numberOfColumns + column;
 		this.offsets[matrixIndex] = offset;
+		
 	}
 
 	/**
 	 * @return the input type of the calculation function
 	 */
 	public FunctionByMatrix_InputType getInputType(int row, int column) {
+		
 		int matrixIndex = row * numberOfColumns + column;
 		return inputTypes[matrixIndex];
+		
 	}
 
 	/**
@@ -156,20 +236,32 @@ public class FunctionByMatrix_Matrix {
 	 *            the input type to set
 	 */
 	public void setInputType(int row, int column, FunctionByMatrix_InputType inputType) {
+		
 		int matrixIndex = row * numberOfColumns + column;
 		this.inputTypes[matrixIndex] = inputType;
+		
 	}
 	
 	public boolean isWithOffset() {
+		
 		return this.offsets.length > 0;
+		
 	}
-	
+
+	public boolean isWithDiv100() {
+		
+		return this.calculateDiv100;
+		
+	}
+
 	/** 
 	 * 
 	 * @return the function
 	 */
 	public int getFunction(int matrixIndex) {
+		
 		return functions[matrixIndex];
+		
 	}
 
 	/** 
@@ -177,7 +269,9 @@ public class FunctionByMatrix_Matrix {
 	 * @return the share
 	 */
 	public Value getShare(int matrixIndex) {
+		
 		return shares[matrixIndex];
+		
 	}
 
 	/** 
@@ -185,7 +279,9 @@ public class FunctionByMatrix_Matrix {
 	 * @return the offset
 	 */
 	public Value getOffset(int matrixIndex) {
+		
 		return offsets[matrixIndex];
+		
 	}
 
 

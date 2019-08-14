@@ -28,11 +28,11 @@ public class FunctionByTable extends FunctionBase {
 	private FunctionByTable_Type type;
 	private int values[];
 
-	private int range;
+	private int maxValue;
 	
 	public FunctionByTable (FunctionByTable_Type type) {
 		this.type = type;
-		this.range = AttributeArray.ATTRIBUTE_RANGE;
+		this.maxValue = AttributeArray.ATTRIBUTE_VALUE_MAX;
 		initialize();
 	}
 	
@@ -48,8 +48,8 @@ public class FunctionByTable extends FunctionBase {
 	private int calculate(int inputValue) {
 		int result;
 
-		if (inputValue > range)
-			inputValue = range;
+		if (inputValue > maxValue)
+			inputValue = maxValue;
 		if (inputValue < 0)
 			inputValue = 0;
 
@@ -61,14 +61,14 @@ public class FunctionByTable extends FunctionBase {
 			result = 0;
 			break;
 		case horizontal_max:
-			result = range;
+			result = maxValue;
 			break;
 		default:
 			result = values[inputValue];
 		}	
 
-		if (result > range)
-			result = range;
+		if (result > maxValue)
+			result = maxValue;
 		if (result < 0)
 			result = 0;
 		return (int) result;
@@ -77,31 +77,31 @@ public class FunctionByTable extends FunctionBase {
 	private void initialize() {
 		switch (type) {
 		case positive_raise:
-			values = new int[range + 1];
-		    for(int i=0; i < range; i++)
+			values = new int[maxValue + 1];
+		    for(int i=0; i < maxValue; i++)
 		    	values[i] =   i;  
 			break;
 		case negative_raise:
-			values = new int[range + 1];
-		    for(int i=0; i < range; i++)
-		    	values[i] =   (range - i);  
+			values = new int[maxValue + 1];
+		    for(int i=0; i < maxValue; i++)
+		    	values[i] =   (maxValue - i);  
 			break;
 		case v:
-			values = new int[range + 1];
-		    for(int i=0; i <= range/2; i++)
-		    	values[i] =   (range - 2 * i);  
-		    for(int i=(int)(range/2 + 1); i <= range; i++)
-		    	values[i] =   ( 2 * i - range);  
+			values = new int[maxValue + 1];
+		    for(int i=0; i <= maxValue/2; i++)
+		    	values[i] =   (maxValue - 2 * i);  
+		    for(int i=(int)(maxValue/2 + 1); i <= maxValue; i++)
+		    	values[i] =   ( 2 * i - maxValue);  
 			break;
 		case v_mirrored:
-			values = new int[range + 1];
-		    for(int i=0; i <= range/2; i++)
+			values = new int[maxValue + 1];
+		    for(int i=0; i <= maxValue/2; i++)
 		    	values[i] =   (2 * i);  
-		    for(int i=(int)(range/2 + 1); i <= range; i++)
-		    	values[i] =   (2 * (range - i) );  
+		    for(int i=(int)(maxValue/2 + 1); i <= maxValue; i++)
+		    	values[i] =   (2 * (maxValue - i) );  
 			break;
-		case u:			// assumption: range = 100
-			values = new int[range + 1];
+		case u:			// assumption: maxValue = 100
+			values = new int[maxValue + 1];
 			values[0] = 99; values[1] = 89; values[2] = 80; values[3] = 71; values[4] = 63;
 			values[5] = 55; values[6] = 48; values[7] = 41; values[8] = 35; values[9] = 29;
 			values[10] = 24; values[11] = 19; values[12] = 15; values[13] = 11; values[14] = 8;
@@ -116,15 +116,15 @@ public class FunctionByTable extends FunctionBase {
 			values[84] = 5; values[83] = 3; values[82] = 1; 
 
 			break;
-		case u_mirrored:    // assumption: range = 100
-			values = new int[range + 1];
+		case u_mirrored:    // assumption: maxValue = 99
+			values = new int[maxValue+ 1];
 			values[0] = 0; values[1] = 10; values[2] = 19; values[3] = 28; values[4] = 36;
 			values[5] = 44; values[6] = 51; values[7] = 58; values[8] = 64; values[9] = 70;
 			values[10] = 75; values[11] = 80; values[12] = 84; values[13] = 88; values[14] = 91;
 			values[15] = 94; values[16] = 96; values[17] = 98; 
 
 		    for(int i=18; i <= 81; i++)
-		    	values[i] =  range;  
+		    	values[i] =  maxValue;  
 			
 			values[99] = 0; values[98] = 10; values[97] = 19; values[96] = 28; values[95] = 36;
 			values[94] = 44; values[93] = 51; values[92] = 58; values[91] = 64; values[90] = 70;

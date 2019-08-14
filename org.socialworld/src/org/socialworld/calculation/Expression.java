@@ -72,6 +72,10 @@ public class Expression {
 		isValid = true;
 	}
 
+	public boolean isValid() { 
+		return isValid;
+	}
+	
 	public void setOperation(Expression_Function operation) {
 		if (!isValid) this.operation = operation;
 	}
@@ -131,115 +135,120 @@ public class Expression {
 		String name;
 		int index;
 		
-		switch (this.operation) {
-		case nothing:
-			//return invalid dummy-Value
-			return Calculation.getNothing();
-		case value:
-			return calculation.copy(value);
+		if (this.isValid()) {
 			
-		case attributeValue:
-			AttributeArray attributeArray;
-			attributeArray = (AttributeArray) get( arguments, Type.attributeArray, 1);
-			return calculation.createValue(
-				Type.integer,
-				attributeArray.get( (int) value.getValueCopy()));
-				
-		case argumentValueByName:
-			return getValue(arguments, (String) value.getValueCopy());
-			
-		case branching:
-			tmp = expression1.evaluateExpression(arguments);
-			if (tmp.isTrue()  ) 
-				tmp =  expression2.evaluateExpression(arguments);
-			else
-				tmp = expression3.evaluateExpression(arguments);
-			return tmp;
-			
-		case condition:
-			
-			switch (operator) {
-			case or:
-				return calculation.or(
-						expression1.evaluateExpression(arguments) ,
-						expression2.evaluateExpression(arguments)   );
-			case and:
-				return calculation.and(
-						expression1.evaluateExpression(arguments) ,
-						expression2.evaluateExpression(arguments)   );
-			default:
-				return calculation.createValue(Type.bool,  false);
-			}
-			
-			
-		case comparison :
-			
-			switch (operator) {
-			case equal:
-				return calculation.compareEqual(
-						expression1.evaluateExpression(arguments) ,
-						expression2.evaluateExpression(arguments)   );
-			case notEqual:
-				return calculation.compareNotEqual(
-						expression1.evaluateExpression(arguments) ,
-						expression2.evaluateExpression(arguments)   );
-			case greater:
-				return calculation.compareGreater(
-						expression1.evaluateExpression(arguments) ,
-						expression2.evaluateExpression(arguments)   );
-			case greaterEqual:
-				return calculation.compareGreaterEqual(
-						expression1.evaluateExpression(arguments) ,
-						expression2.evaluateExpression(arguments)   );
-			case less:
-				return calculation.compareLess(
-						expression1.evaluateExpression(arguments) ,
-						expression2.evaluateExpression(arguments)   );
-			case lessEqual:
-				return calculation.compareLessEqual(
-						expression1.evaluateExpression(arguments) ,
-						expression2.evaluateExpression(arguments)   );
-			default:
-				return calculation.createValue(Type.bool,  false);
-			}
-			
-		case addition:
-			return calculation.addition(
-					expression1.evaluateExpression(arguments) ,
-					expression2.evaluateExpression(arguments)   );
-			
-		case multiplication:
-			return calculation.multiplication(
-					expression1.evaluateExpression(arguments) ,
-					expression2.evaluateExpression(arguments)   );
-			
-			
-		case function:
-			Value calculateArguments[] = new Value[3];
-			calculateArguments[0] = expression1.evaluateExpression(arguments);
-			calculateArguments[1] = expression2.evaluateExpression(arguments);
-			calculateArguments[2] = expression3.evaluateExpression(arguments);
-			return function.calculate(calculateArguments);
-			
-		case sequence:
-			expression1.evaluateExpression(arguments);
-			expression2.evaluateExpression(arguments);
-			tmp = expression3.evaluateExpression(arguments);
-			return tmp;
-			
-		case replacement:
-			name = (String) value.getValueCopy();
-			tmp = expression1.evaluateExpression(arguments);
-			index = findValue(arguments, name);
-			if (index >= 0) 	arguments[index] = 	tmp;
-			return tmp;
-			
-			
-		default:
-			return Calculation.getNothing();
-		}
 		
-
+			switch (this.operation) {
+			case nothing:
+				//return invalid dummy-Value
+				return Calculation.getNothing();
+			case value:
+				return calculation.copy(value);
+				
+			case attributeValue:
+				AttributeArray attributeArray;
+				attributeArray = (AttributeArray) get( arguments, Type.attributeArray, 1);
+				return calculation.createValue(
+					Type.integer,
+					attributeArray.get( (int) value.getValueCopy()));
+					
+			case argumentValueByName:
+				return getValue(arguments, (String) value.getValueCopy());
+				
+			case branching:
+				tmp = expression1.evaluateExpression(arguments);
+				if (tmp.isTrue()  ) 
+					tmp =  expression2.evaluateExpression(arguments);
+				else
+					tmp = expression3.evaluateExpression(arguments);
+				return tmp;
+				
+			case condition:
+				
+				switch (operator) {
+				case or:
+					return calculation.or(
+							expression1.evaluateExpression(arguments) ,
+							expression2.evaluateExpression(arguments)   );
+				case and:
+					return calculation.and(
+							expression1.evaluateExpression(arguments) ,
+							expression2.evaluateExpression(arguments)   );
+				default:
+					return calculation.createValue(Type.bool,  false);
+				}
+				
+				
+			case comparison :
+				
+				switch (operator) {
+				case equal:
+					return calculation.compareEqual(
+							expression1.evaluateExpression(arguments) ,
+							expression2.evaluateExpression(arguments)   );
+				case notEqual:
+					return calculation.compareNotEqual(
+							expression1.evaluateExpression(arguments) ,
+							expression2.evaluateExpression(arguments)   );
+				case greater:
+					return calculation.compareGreater(
+							expression1.evaluateExpression(arguments) ,
+							expression2.evaluateExpression(arguments)   );
+				case greaterEqual:
+					return calculation.compareGreaterEqual(
+							expression1.evaluateExpression(arguments) ,
+							expression2.evaluateExpression(arguments)   );
+				case less:
+					return calculation.compareLess(
+							expression1.evaluateExpression(arguments) ,
+							expression2.evaluateExpression(arguments)   );
+				case lessEqual:
+					return calculation.compareLessEqual(
+							expression1.evaluateExpression(arguments) ,
+							expression2.evaluateExpression(arguments)   );
+				default:
+					return calculation.createValue(Type.bool,  false);
+				}
+				
+			case addition:
+				return calculation.addition(
+						expression1.evaluateExpression(arguments) ,
+						expression2.evaluateExpression(arguments)   );
+				
+			case multiplication:
+				return calculation.multiplication(
+						expression1.evaluateExpression(arguments) ,
+						expression2.evaluateExpression(arguments)   );
+				
+				
+			case function:
+				Value calculateArguments[] = new Value[3];
+				calculateArguments[0] = expression1.evaluateExpression(arguments);
+				calculateArguments[1] = expression2.evaluateExpression(arguments);
+				calculateArguments[2] = expression3.evaluateExpression(arguments);
+				return function.calculate(calculateArguments);
+				
+			case sequence:
+				expression1.evaluateExpression(arguments);
+				expression2.evaluateExpression(arguments);
+				tmp = expression3.evaluateExpression(arguments);
+				return tmp;
+				
+			case replacement:
+				name = (String) value.getValueCopy();
+				tmp = expression1.evaluateExpression(arguments);
+				index = findValue(arguments, name);
+				if (index >= 0) 	arguments[index] = 	tmp;
+				return tmp;
+				
+				
+			default:
+				return Calculation.getNothing();
+			}
+		
+		}
+		else
+			return Calculation.getNothing();
 
 	}
 	

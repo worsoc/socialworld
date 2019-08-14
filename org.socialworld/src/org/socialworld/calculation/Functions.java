@@ -26,12 +26,36 @@ import java.util.List;
 
 public class Functions {
 
+	private static final int MAX_SIZE = 1000;
+	
 	private static List<FunctionBase> functions;
 	
+	private static FunctionNothing nothing;
+	
 	private Functions() {
-
+		nothing = new FunctionNothing();
 	}
 
+	public static  boolean checkPlaceIsFree(int index) {
+		
+		
+		return (!get(index).isValid());
+		
+	}
+	
+	public static int findNextFree(int start, int end) {
+		
+		if (start < 0) start = 0;
+		if (end >= MAX_SIZE) end = MAX_SIZE;
+		
+		for (int i = start; i < end; i++ ) {
+			if (checkPlaceIsFree(i)) return i;
+		}
+		
+		return -1;
+		
+	}
+	
 	/**
 	 * The method returns the attribute calculation function addressed by the
 	 * function index. When the method is called the first time the function
@@ -45,8 +69,18 @@ public class Functions {
 			initialize();
 		}
 
-		return functions.get(functionIndex);
+		if ( (functionIndex < 0) | (functionIndex >= MAX_SIZE) )
+			return nothing;
+		else
+			return functions.get(functionIndex);
 
+	}
+	
+	public static  void set(int index, FunctionBase function) {
+		
+		if ((index >= FunctionByTable_Type.NUMBER_OF_FUNCTION_BY_TABLE_TYPES) &	(index < MAX_SIZE))
+			functions.set(index, function);
+		
 	}
 
 	private static void initialize() {
@@ -54,45 +88,47 @@ public class Functions {
 		functions = new ArrayList<FunctionBase>();
 		
 		FunctionBase function;
+		
+		for (int i = 0; i < MAX_SIZE; i++) functions.add(nothing);
 
 		// !!! the order of creation and adding must be conform to the order of enumeration FunctionByTable_Type
 		// because the function array index has to match to the int value that belongs to the FunctionByTable_Type
 
 		// add horizontal_min function 
 		function = new FunctionByTable(FunctionByTable_Type.horizontal_min);
-		functions.add(function);
+		functions.set(FunctionByTable_Type.horizontal_min.getIndex(), function);
 
 		// add identical function 
 		function = new FunctionByTable(FunctionByTable_Type.identical);
-		functions.add(function);
+		functions.set(FunctionByTable_Type.identical.getIndex(),function);
 
 		// add negative_raise function 
 		function = new FunctionByTable(FunctionByTable_Type.negative_raise);
-		functions.add(function);
+		functions.set(FunctionByTable_Type.negative_raise.getIndex(), function);
 
 		// add v function 
 		function = new FunctionByTable(FunctionByTable_Type.v);
-		functions.add(function);
+		functions.set(FunctionByTable_Type.v.getIndex(), function);
 		
 		// add v_mirrored function 
 		function = new FunctionByTable(FunctionByTable_Type.v_mirrored);
-		functions.add(function);
+		functions.set(FunctionByTable_Type.v_mirrored.getIndex(), function);
 
 		// add u function 
 		function = new FunctionByTable(FunctionByTable_Type.u);
-		functions.add(function);
+		functions.set(FunctionByTable_Type.u.getIndex(), function);
 		
 		// add u_mirrored function 
 		function = new FunctionByTable(FunctionByTable_Type.u_mirrored);
-		functions.add(function);
+		functions.set(FunctionByTable_Type.u_mirrored.getIndex(), function);
 
 		// add horizontal_max function 
 		function = new FunctionByTable(FunctionByTable_Type.horizontal_max);
-		functions.add(function);
+		functions.set(FunctionByTable_Type.horizontal_max.getIndex(), function);
 
 		// add positive_raise function 
 		function = new FunctionByTable(FunctionByTable_Type.positive_raise);
-		functions.add(function);
+		functions.set(FunctionByTable_Type.positive_raise.getIndex(), function);
 
 	}
 }

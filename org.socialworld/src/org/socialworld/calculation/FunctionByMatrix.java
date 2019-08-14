@@ -26,14 +26,20 @@ import org.socialworld.attributes.AttributeArray;
 public class FunctionByMatrix extends FunctionBase {
 
 	private FunctionByMatrix_Matrix matrix;
-
+	private static Value hundred;
+	private static Value aHalf;
+	
 	public FunctionByMatrix() {
 		returnInvalidNothingvalue = true;
+		hundred = new Value(Type.integer, 100);
+		aHalf = new Value(Type.floatingpoint, 0.5f);
 	}
 
 	public FunctionByMatrix(FunctionByMatrix_Matrix matrix) {
 		this.matrix = matrix;
 		returnInvalidNothingvalue = false;
+		hundred = new Value(Type.floatingpoint, 100.0F);
+		aHalf = new Value(Type.floatingpoint, 0.5f);
 	}
 	
 	public void setMatrix(FunctionByMatrix_Matrix matrix) {
@@ -46,6 +52,8 @@ public class FunctionByMatrix extends FunctionBase {
 	@Override
 	public Value calculate(Value[] arguments) {
 
+		Value result;
+		
 		if (returnInvalidNothingvalue) 
 			return new Value();
 		
@@ -55,17 +63,80 @@ public class FunctionByMatrix extends FunctionBase {
 			case attributeArray:
 				AttributeArray attributes;
 				attributes = (AttributeArray) arguments[0].getValue();
-				if ((int) arguments[1].getValue() == FunctionByMatrix_Matrix.MATRIX_CALCULATION_SIMPLE)
+				
+				int calculationMode = (int) arguments[1].getValue();
+				switch (calculationMode)
+				{
+				case FunctionByMatrix_Matrix.CALCULATION_MODE_MATRIX_X_VECTOR_SIMPLE:
 					calculateAttributesSimply(attributes);
-				else
+					result = calculation.createValue(Type.attributeArray, attributes );
+					break;
+				case FunctionByMatrix_Matrix.CALCULATION_MODE_MATRIX_X_VECTOR_COMPLEX:
 					calculateAttributes(attributes, this.matrix.isWithOffset());
-				return calculation.createValue(Type.attributeArray, attributes );
+					result = calculation.createValue(Type.attributeArray, attributes );
+					break;
+				case FunctionByMatrix_Matrix.CALCULATION_MODE_VECTOR_X_VECTOR:
+					result = new Value(Type.floatingpoint, calculateScalar(attributes));
+					break;
+				default:
+					result = new Value();
+				}
 			default:
-				return new Value();
+				result = new Value();
 		}
+		
+		return result;
 		
 	}
 
+	
+	private float calculateScalar(AttributeArray attributes) {
+		
+		float result = 0;
+		
+		int 	column;
+
+		Value 	inputValue;
+		int 	functionIndex;
+		Value 	share;
+		Value 	offset;
+
+		int     length;
+		
+		FunctionBase function;
+		Value[] arguments;
+
+		float change;
+
+		length = attributes.length();
+		arguments = new Value[1];
+		offset = new Value(Type.integer,  0);
+		
+
+		for (column = 0; column < length; column++) {
+
+			functionIndex = this.matrix.getFunction(0, column);
+			share = this.matrix.getShare(0, column);
+			offset =  this.matrix.getOffset(0, column);
+
+			function = Functions.get(functionIndex);
+			inputValue = attributes.getAsValue(column);
+
+			arguments[0] =  inputValue ;
+			change = (float)
+					calculation.addition(
+							calculation.multiplication(share, function.calculate(arguments)),
+							offset)
+					.getValueCopy();
+			
+
+			result += change;
+
+		}
+		
+		return result;
+		
+	}
 	
 	/**
 	 * The method calculates the attribute changes on a simple way..
@@ -74,7 +145,9 @@ public class FunctionByMatrix extends FunctionBase {
 	 * 
 	 */
 	private void calculateAttributesSimply(AttributeArray attributes) {
-		float 	attributesNew[];
+		
+		Value 	attributesNew[];
+		
 		int 	column;
 		int		row;
 
@@ -82,17 +155,23 @@ public class FunctionByMatrix extends FunctionBase {
 		Value 	share;
 		int 	functionIndex;
 		FunctionBase function;
-		float change;
+		
+		Value change;
 
 		Value[] arguments;
 
 		int     length;
 
 		length = attributes.length();
-		attributesNew = new float[length];
+		attributesNew = new Value[length];
+
+		
+		for (row = 0; row < length; row++) {
+			attributesNew[row] = calculation.getZero(Type.integer);
+		}
 
 		arguments = new Value[1];
-		
+			
 		for (row = 0; row < length; row++) {
 
 			attributeValue 			= attributes.getAsValue(row);
@@ -104,21 +183,23 @@ public class FunctionByMatrix extends FunctionBase {
 				function = Functions.get(functionIndex);
 
 				arguments[0] =  attributeValue;
-				change = (float)
-						calculation.multiplication(share, function.calculate(arguments))
-						.getValue();
-						
 
-				if (change != 0)
-					attributesNew[column] += change;
+				change = calculation.multiplication(share, function.calculate(arguments));
+				attributesNew[column] = calculation.addition(attributesNew[column], change);
 
 			}
 		}
+		
+		
 
 		// rounding the attribute values to integer values
 		// writing them from help array to main array
 		for (row = 0; row < length; row++) {
-			attributes.set(row, (int) (attributesNew[row] + 0.5));
+			
+			if (this.matrix.isWithDiv100() ) attributesNew[row] = calculation.division(attributesNew[row] , hundred);
+			attributesNew[row] = calculation.addition(attributesNew[row], aHalf);
+			attributes.set(row, ((Float) (attributesNew[row].getValue())).intValue());
+			
 		}
 
 		return;
@@ -181,7 +262,7 @@ public class FunctionByMatrix extends FunctionBase {
 						calculation.addition(
 								calculation.multiplication(share, function.calculate(arguments)),
 								offset)
-						.getValue();
+						.getValueCopy();
 				
 
 				if (change != 0)
@@ -193,7 +274,10 @@ public class FunctionByMatrix extends FunctionBase {
 		// rounding the attribute values to integer values
 		// writing them from help array to main array
 		for (row = 0; row < length; row++) {
+			
+			if (this.matrix.isWithDiv100() ) attributesNew[row] = attributesNew[row] / 100;
 			attributes.set(row, (int) (attributesNew[row] + 0.5));
+			
 		}
 
 
