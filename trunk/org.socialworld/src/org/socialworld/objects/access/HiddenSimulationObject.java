@@ -59,7 +59,8 @@ public class HiddenSimulationObject {
 		size = propertiesWithGrantedAccess.length;
 		
 		for (index = 0; index < size; index++) {
-			if (propertiesWithGrantedAccess[index] == property ) return true;
+			if ( (propertiesWithGrantedAccess[index] == property ) 
+					|| (propertiesWithGrantedAccess[index] == GrantedAccessToProperty.all) ) return true;
 		}
 		return false;
 	}
