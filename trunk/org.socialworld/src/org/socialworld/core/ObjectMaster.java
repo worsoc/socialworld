@@ -161,6 +161,24 @@ public class ObjectMaster {
 		return object;
 	}
 	
+	public int refreshNextObjectsState(SimulationObject_Type simObjType) {
+		
+		SimulationObject theNextOne;
+		
+		theNextOne = next(simObjType);
+		
+		if (theNextOne != null) {
+			theNextOne.refreshState();
+			return simObjType.getIndex();
+		}
+		else {
+			resetIterator(simObjType);
+			return  simObjType.next();
+		}
+		
+
+	}
+	
 	private void addObjectToList(SimulationObject_Type simulationObjectType, SimulationObject object) {
 		// TODO (tyloesand) weitere Objekttypen hinzufügen
 		switch (simulationObjectType) {
@@ -189,7 +207,7 @@ public class ObjectMaster {
 		}		
 	}
 	
-	public boolean hasNext(SimulationObject_Type simulationObjectType) {
+	private boolean hasNext(SimulationObject_Type simulationObjectType) {
 
 		switch (simulationObjectType) {
 		case animal:
@@ -208,21 +226,38 @@ public class ObjectMaster {
 		
 	}
 	
-	public SimulationObject next(SimulationObject_Type simulationObjectType) {
+	private SimulationObject next(SimulationObject_Type simulationObjectType) {
 		switch (simulationObjectType) {
 		case animal:
-			return this.animalsIterator.next();
+			if (this.animalsIterator.hasNext())
+				return this.animalsIterator.next();
+			else
+				break;
 		case human:
-			return this.humansIterator.next();
+			if (this.humansIterator.hasNext())
+				return this.humansIterator.next();
+			else
+				break;
 		case god:
-			return this.godsIterator.next();
+			if (this.godsIterator.hasNext())
+				return this.godsIterator.next();
+			else
+				break;
 		case item:
-			return this.itemsIterator.next();
+			if (this.itemsIterator.hasNext())
+				return this.itemsIterator.next();
+			else
+				break;
 		case magic:
-			return this.magicsIterator.next();
+			if (this.magicsIterator.hasNext())
+				return this.magicsIterator.next();
+			else
+				break;
 		default:
 			return null;
 		}		
+		
+		return null;
 		
 	}
 	
@@ -263,7 +298,25 @@ public class ObjectMaster {
 		return this.magics;
 	}	
 	
-	public void resetIterators() {
+	private void resetIterator(SimulationObject_Type simObjType) {
+	
+		switch (simObjType) {
+		case animal:
+			 this.animalsIterator = this.animals.listIterator(); break;
+		case human:
+			 this.humansIterator = this.humans.listIterator(); break;
+		case god:
+			 this.godsIterator = this.gods.listIterator(); break;
+		case item:
+			 this.itemsIterator = this.items.listIterator(); break;
+		case magic:
+			 this.magicsIterator = this.magics.listIterator(); break;
+		default:
+		}		
+
+	}
+	
+	private void resetIterators() {
 		this.godsIterator = this.gods.listIterator();
 		this.humansIterator = this.humans.listIterator();
 		this.animalsIterator = this.animals.listIterator();
