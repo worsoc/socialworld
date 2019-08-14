@@ -24,7 +24,7 @@ package org.socialworld.objects;
 
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.Position;
-import org.socialworld.calculation.application.ActionCreator;
+import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.core.ActionHandler;
 import org.socialworld.core.Event;
 import org.socialworld.objects.access.GrantedAccessToProperty;
@@ -47,6 +47,7 @@ public abstract class SimulationObject extends ListenedBase {
 
 	private	WriteAccessToSimulationObject guard;
 	private GrantedAccessToProperty grantAccessToAllProperties[];
+	private GrantedAccessToProperty grantAccessToPropertyAction[];
 
 	/**
 	 * The constructor creates an incomplete simulation object. It's an "empty" object. There is only the object ID.
@@ -60,6 +61,8 @@ public abstract class SimulationObject extends ListenedBase {
 		grantAccessToAllProperties = new GrantedAccessToProperty[1];
 		grantAccessToAllProperties[0] = GrantedAccessToProperty.all;
 
+		grantAccessToPropertyAction = new GrantedAccessToProperty[1];
+		grantAccessToPropertyAction[0] = GrantedAccessToProperty.action;
 
 	}
 
@@ -96,6 +99,10 @@ public abstract class SimulationObject extends ListenedBase {
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    STATE      ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
+	
+	public final void refreshState() {
+		this.state.refresh();
+	}
 	
 	protected final void setState(StateSimulationObject state, WriteAccessToSimulationObject guard) {
 		if (checkGuard(guard)) {
@@ -154,13 +161,16 @@ public abstract class SimulationObject extends ListenedBase {
 	
 	/**
 	 * The method lets a simulation object do an action.
+	 * Only the object's action handler is allowed to let the object do the action
 	 * 
 	 * @param action
 	 */
-	public final void doAction(AbstractAction action) {
-		action.setActor(this, guard.getMeHidden(grantAccessToAllProperties));
-		action.perform();
-		action.removeWriteAccess();
+	public final void doAction(AbstractAction action, ActionHandler myActionHandler) {
+		if (this.actionHandler == myActionHandler) {
+			action.setActor(this, guard.getMeHidden(grantAccessToAllProperties));
+			action.perform();
+			action.removeWriteAccess();
+		}
 	}
 
 	
@@ -188,11 +198,9 @@ public abstract class SimulationObject extends ListenedBase {
 	 *            the event influencing the simulation object
 	 */
 	public final void reactToEvent(final Event simualationEvent) {
-		AbstractAction reaction;
 	
-		reaction =	ActionCreator.createAction(	this, simualationEvent);
+		Scheduler.getInstance().createReaction(simualationEvent, state, guard.getMeHidden(grantAccessToPropertyAction));
 		
-		actionHandler.insertAction(reaction);
 	}
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
