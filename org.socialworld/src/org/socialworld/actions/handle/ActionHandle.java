@@ -75,15 +75,23 @@ public class ActionHandle extends AbstractAction {
 	private SimulationObject item2;
 
 	public ActionHandle(final ActionType type, final ActionMode mode,
+			final float intensity, final Time minTime, final Time maxTime,
+			final int priority, final long duration) {
+		super(type,  mode,
+				intensity,  minTime, maxTime,
+				 priority,  duration);
+	}
+
+	public ActionHandle(final ActionType type, final ActionMode mode,
 			final SimulationObject target, final Vector direction,
 			final float intensity, final Time minTime, final Time maxTime,
 			final int priority, final long duration) {
-		setBaseProperties(type,  mode,
+		super(type,  mode,
 				intensity,  minTime, maxTime,
 				 priority,  duration);
 			
 			this.setDirection(direction);
-			this.target = target;
+			this.setTarget(target);
 	}
 
 
@@ -203,6 +211,10 @@ public class ActionHandle extends AbstractAction {
 		return this.item2;
 	}
 
+	public void setTarget(SimulationObject target) {
+		this.target = target;
+	}
+	
 	public SimulationObject getTarget() {
 		return this.target;
 	}

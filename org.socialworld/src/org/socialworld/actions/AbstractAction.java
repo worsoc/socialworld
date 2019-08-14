@@ -94,12 +94,23 @@ public abstract class AbstractAction {
 	protected long remainedDuration;
 
 	protected boolean done = false;
-
 	
 	private Simulation simulation = Simulation.getInstance();
 
 	protected AbstractAction linkedAction;
 
+	protected AbstractAction() {
+		
+	}
+	
+	protected AbstractAction(ActionType type, final ActionMode mode,
+			final float intensity, final Time minTime, final Time maxTime,
+			final int priority, final long duration) {
+		setBaseProperties(type,  mode,
+				intensity,  minTime, maxTime,
+				 priority,  duration);
+	}
+	
 	public void setActor(SimulationObject actor, HiddenSimulationObject hiddenWriteAccess) {
 		this.hiddenWriteAccesToActor = hiddenWriteAccess;
 		this.actor = actor;
