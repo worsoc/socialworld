@@ -57,9 +57,27 @@ public class GaussPoolAttributeArray {
 	
 	private void initialize() {
 		
-		loadFromDB();
+		//loadFromDB();
+		loadTestData();
 		
 
+	}
+	
+	private void loadTestData() {
+		
+		AttributeArray attribs;
+		
+		int j=0;
+		for (int i = -CAPACITY_GPAA_ARRAY + 1; i < CAPACITY_GPAA_ARRAY; i++) {
+			
+			attribs =  AttributeArrayPool.getInstance().getArray(j);
+			setArray(i, attribs);
+			
+			j++;
+			
+			if (j == AttributeArrayPool.COUNT_TEST_ENTRIES) j = 0;
+
+		}
 	}
 	
 	private void loadFromDB() {

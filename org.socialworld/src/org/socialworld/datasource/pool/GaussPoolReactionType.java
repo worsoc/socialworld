@@ -34,6 +34,13 @@ public class GaussPoolReactionType {
 	private GaussPoolReactionType() {
 		reactionTypesForPositiveIndex = new int[CAPACITY_GPRT_ARRAY][ EventType.MAX_EVENT_TYPE];
 		reactionTypesForNegativeIndex = new int[CAPACITY_GPRT_ARRAY][ EventType.MAX_EVENT_TYPE];
+		
+		// initial values
+		for (int i = 0; i < CAPACITY_GPRT_ARRAY; i++) 
+			for (int j = 0; j < EventType.MAX_EVENT_TYPE; j++) {				
+				reactionTypesForPositiveIndex[i][j] = 1;
+				reactionTypesForNegativeIndex[i][j] = 1;
+			}
 	}
 
 	public static GaussPoolReactionType getInstance() {

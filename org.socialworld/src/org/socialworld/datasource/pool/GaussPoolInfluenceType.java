@@ -33,6 +33,14 @@ public class GaussPoolInfluenceType {
 	private GaussPoolInfluenceType() {
 		influenceTypesForPositiveIndex = new int[CAPACITY_GPIT_ARRAY][ EventType.MAX_EVENT_TYPE];
 		influenceTypesForNegativeIndex = new int[CAPACITY_GPIT_ARRAY][ EventType.MAX_EVENT_TYPE];
+		
+		// initial values
+		for (int i = 0; i < CAPACITY_GPIT_ARRAY; i++) 
+			for (int j = 0; j < EventType.MAX_EVENT_TYPE; j++) {				
+				influenceTypesForPositiveIndex[i][j] = 1;
+				influenceTypesForNegativeIndex[i][j] = 1;
+			}
+
 	}
 	
 	public static GaussPoolInfluenceType getInstance() {
