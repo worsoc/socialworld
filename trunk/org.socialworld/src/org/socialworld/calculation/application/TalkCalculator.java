@@ -21,11 +21,15 @@
 */
 package org.socialworld.calculation.application;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.socialworld.calculation.Value;
 import org.socialworld.conversation.Talk_SentenceType;
 import org.socialworld.core.Event;
 import org.socialworld.core.EventType;
 import org.socialworld.core.IEventParam;
+import org.socialworld.core.SocialWorldThread;
 import org.socialworld.knowledge.AnswerProperties;
 import org.socialworld.knowledge.KnowledgeSource;
 import org.socialworld.knowledge.KnowledgeSource_Type;
@@ -37,12 +41,73 @@ import org.socialworld.objects.access.HiddenHuman;
  * @author Mathias Sikos
  *
  */
-public class TalkCalculator {
+public class TalkCalculator  extends SocialWorldThread {
 
-	public final static void calculateTalkChangedByEvent(Event event, StateHuman stateHuman, HiddenHuman hiddenWriteAccess) {
+	private static TalkCalculator instance;
+
+	private List<Event> events;
+	private List<StateHuman> states;
+	private List<HiddenHuman> hiddenHumans;
+
+	/**
+	 * private Constructor. 
+	 */
+	private TalkCalculator() {
+
+		this.events = new ArrayList<Event>();
+		this.states = new ArrayList<StateHuman>();
+		this.hiddenHumans = new ArrayList<HiddenHuman>();
+		
+	}
+
+	public static TalkCalculator getInstance() {
+		if (instance == null) {
+			instance = new TalkCalculator();
+		}
+		return instance;
+	}
+	
+	public void run() {
+		int i=0;
+		while (isRunning()) {
+			
+			i++;
+			if (i < 1000) {
+				Scheduler.getInstance().setThreadName("Talk ");
+				Scheduler.getInstance().increment();
+			}
+
+			calculateTalkChangedByEvent();
+			
+			try {
+				sleep(20);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+		}
+	}
+	
+	
+	
+	public final void calculateTalkChangedByEvent(Event event, StateHuman stateHuman, HiddenHuman hiddenWriteAccess) {
+		this.events.add(event);
+		this.states.add(stateHuman);
+		this.hiddenHumans.add( hiddenWriteAccess);
+	}
+
+	private final void calculateTalkChangedByEvent() {
+		
+		if (this.hiddenHumans.size() == 0) return;
+		
+		Event event = this.events.remove(0);
+		StateHuman stateHuman  = this.states.remove(0);
+		HiddenHuman hiddenWriteAccess = this.hiddenHumans.remove(0);
+		
 		
 		EventType eventType;
 	
+		
 		eventType = event.getEventType();
 	
 		switch (eventType) {

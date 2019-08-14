@@ -21,10 +21,14 @@
 */
 package org.socialworld.calculation.application;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.socialworld.attributes.Position;
 import org.socialworld.calculation.Vector;
 import org.socialworld.core.Event;
 import org.socialworld.core.EventType;
+import org.socialworld.core.SocialWorldThread;
 import org.socialworld.objects.StateSimulationObject;
 import org.socialworld.objects.WriteAccessToSimulationObject;
 import org.socialworld.objects.access.HiddenSimulationObject;
@@ -33,13 +37,71 @@ import org.socialworld.objects.access.HiddenSimulationObject;
  * @author Mathias Sikos
  *
  */
-public class PositionCalculator {
+class PositionCalculator extends SocialWorldThread {
 
+	public static final int POSITION_CALCULATOR_RETURNS_EMPTY_LISTS = 0;
 	public static final int POSITION_CALCULATOR_RETURNS_NO_CHANGE = 2;
 	public static final int POSITION_CALCULATOR_RETURNS_CHANGE = 3;
 
-	public final static int calculatePositionChangedByEvent(Event event, StateSimulationObject state, HiddenSimulationObject hiddenWriteAccess) {
+	private static PositionCalculator instance;
 
+	private List<Event> events;
+	private List<StateSimulationObject> states;
+	private List<HiddenSimulationObject> hiddenSimObjects;
+
+	/**
+	 * private Constructor. 
+	 */
+	private PositionCalculator() {
+
+		this.events = new ArrayList<Event>();
+		this.states = new ArrayList<StateSimulationObject>();
+		this.hiddenSimObjects = new ArrayList<HiddenSimulationObject>();
+		
+	}
+
+	public static PositionCalculator getInstance() {
+		if (instance == null) {
+			instance = new PositionCalculator();
+		}
+		return instance;
+	}
+	
+	public void run() {
+		int i=0;
+		while (isRunning()) {
+			
+			i++;
+			if (i < 1000) {
+				Scheduler.getInstance().setThreadName("Position ");
+				Scheduler.getInstance().increment();
+			}
+
+			calculatePositionChangedByEvent();
+			
+			try {
+				sleep(20);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+		}
+	}
+	
+	final void calculatePositionChangedByEvent(final Event event, final StateSimulationObject state, final HiddenSimulationObject hiddenWriteAccess) {
+		this.events.add(event);
+		this.states.add(state);
+		this.hiddenSimObjects.add( hiddenWriteAccess);
+	}
+	
+	private final int calculatePositionChangedByEvent() {
+
+		if (this.hiddenSimObjects.size() == 0) return POSITION_CALCULATOR_RETURNS_EMPTY_LISTS;
+		
+		Event event = this.events.remove(0);
+		StateSimulationObject state  = this.states.remove(0);
+		HiddenSimulationObject hiddenWriteAccess = this.hiddenSimObjects.remove(0);
+		
 		int returnSetPosition;
 		int returnSetMove;
 		
@@ -58,6 +120,10 @@ public class PositionCalculator {
 		float powerMoveObject;
 		
 		float resultingPowerMoveObject;
+		
+		
+		// TODO get elements from List
+
 		
 		eventType = event.getEventType();
 		position = state.getPosition().getVector();

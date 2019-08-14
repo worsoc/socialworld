@@ -22,8 +22,23 @@
 package org.socialworld.calculation.application;
 
 import org.socialworld.objects.SimulationObject;
-import org.socialworld.objects.Animal;
+import org.socialworld.objects.StateAnimal;
+import org.socialworld.objects.StateSimulationObject;
+import org.socialworld.objects.access.HiddenSimulationObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.socialworld.actions.AbstractAction;
+import org.socialworld.actions.ActionMode;
+import org.socialworld.actions.ActionType;
+import org.socialworld.actions.attack.ActionAttack;
+import org.socialworld.actions.handle.ActionHandle;
+import org.socialworld.actions.hear.ActionHear;
+import org.socialworld.actions.move.ActionMove;
+import org.socialworld.actions.say.ActionSay;
+import org.socialworld.actions.sleep.ActionSleep;
+import org.socialworld.attributes.Time;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.FunctionByExpression;
@@ -32,39 +47,125 @@ import org.socialworld.calculation.descriptions.EventReactionDescription;
 import org.socialworld.calculation.descriptions.State2ActionAssignment;
 import org.socialworld.calculation.descriptions.State2ActionDescription;
 import org.socialworld.core.Event;
+import org.socialworld.core.SocialWorldThread;
 
-public class ActionCreator  {
+class ActionCreator extends SocialWorldThread {
 
+	private static ActionCreator instance;
+	
+	private List<Event> events;
+	private List<StateSimulationObject> statesReactor;
+	private List<HiddenSimulationObject> hiddenReactors;
+
+	private List<StateSimulationObject> statesActor;
+	private List<HiddenSimulationObject> hiddenActors;
 	
 
+	/**
+	 * private Constructor. 
+	 */
+	private ActionCreator() {
+
+		this.events = new ArrayList<Event>();
+		this.statesReactor = new ArrayList<StateSimulationObject>();
+		this.hiddenReactors = new ArrayList<HiddenSimulationObject>();
+		
+		this.statesActor = new ArrayList<StateSimulationObject>();
+		this.hiddenActors = new ArrayList<HiddenSimulationObject>();
+
+	}
+
+	public static ActionCreator getInstance() {
+		if (instance == null) {
+			instance = new ActionCreator();
+		}
+		return instance;
+	}
+	
+	public void run() {
+		int i=0;
+		while (isRunning()) {
+			
+			i++;
+			if (i < 1000) {
+				Scheduler.getInstance().setThreadName("Action ");
+				Scheduler.getInstance().increment();
+			}
+			
+			
+			calculateReaction();
+			calculateAction();
+			
+			try {
+				sleep(20);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+		}
+	}
+	
+	
+	final void  createReaction( final Event event,	final StateSimulationObject stateSimObj,	final HiddenSimulationObject hiddenSimObj) {
+		this.events.add(event);
+		this.statesReactor.add(stateSimObj);
+		this.hiddenReactors.add(hiddenSimObj);
+	}
+	
+	final void createAction(	final StateSimulationObject stateSimObj, final HiddenSimulationObject hiddenSimObj) {
+		this.statesActor.add(stateSimObj);
+		this.hiddenActors.add(hiddenSimObj);
+	}
 
 	/**
-	 * The method creates a new action as a reaction to an event.
+	 * The method creates a new action as a reaction to an event and adds it to the reactor's action handler.
 	 * 
-	 * @param: actor
-	 * @param: event
+	 * 
 	 */
-	public static AbstractAction createAction(	final SimulationObject actor,	final Event event) {
+	private void calculateReaction() {
+	
 		
-			if (actor instanceof Animal) 
-				return createAnimalReaction(event, (Animal) actor);
-			else
-				return createReaction(event,  actor);
+		if (this.hiddenReactors.size() == 0) return;
+		
+		Event event = this.events.remove(0);
+		StateSimulationObject stateReactor  = this.statesReactor.remove(0);
+		HiddenSimulationObject hiddenReactor = this.hiddenReactors.remove(0);
+		
+		
+		AbstractAction reaction;
+		
+		
+		if (stateReactor instanceof StateAnimal) 
+			reaction = createAnimalReaction(event, (StateAnimal) stateReactor);
+		else
+			reaction = createNoAnimalReaction(event, stateReactor);
 				
+		hiddenReactor.setAction(reaction);
+		
 	}
 	
 	/**
-	 * The method creates a new action as a consequence of an simulation object's state.
+	 * The method creates a new action as a consequence of an simulation object's state and adds it to the reactor's action handler.
 	 *
-	 * @param: actor
 	 */
-	public static AbstractAction createAction(	final SimulationObject actor) {
+	private void calculateAction() {
 		
-			
-			if (actor instanceof Animal) 
-				return createAnimalActionByState( (Animal) actor);
-			else
-				return createActionByState(actor);
+		if (this.hiddenActors.size() == 0) return;
+		
+		StateSimulationObject stateActor  = this.statesActor.remove(0);
+		HiddenSimulationObject hiddenActor = this.hiddenActors.remove(0);
+		
+		AbstractAction action;
+
+
+		if (stateActor instanceof StateAnimal) 
+			action = createAnimalActionByState((StateAnimal)stateActor);
+		else
+			action = createNoAnimalActionByState(stateActor);
+		
+		hiddenActor.setAction(action);
+		
+		
 	}
 	
 	
@@ -73,9 +174,9 @@ public class ActionCreator  {
 	 * Therefore an according event reaction description is used to set the (re)action properties.
 	 * 
 	 * @param: event
-	 * @param: actor
+	 * @param: stateReactor
 	 */
-	private static AbstractAction createAnimalReaction(final Event event,	final Animal actor) {
+	private AbstractAction createAnimalReaction(Event event, StateAnimal stateReactor ) {
 		
 	
 		int eventType;
@@ -85,7 +186,7 @@ public class ActionCreator  {
 		Value[] arguments;
 		
 		eventType = event.getEventTypeAsInt();
-		eventReactionType = actor.getReactionType(eventType);
+		eventReactionType = stateReactor.getReactionType(eventType);
 		
 		eventReactionDescription = 
 				EventReactionAssignment.getInstance().getEventReactionDescription(
@@ -95,7 +196,7 @@ public class ActionCreator  {
 		
 		arguments = new Value[2];
 		
-		arguments[0] = new Value(Type.attributeArray, actor.getAttributes());
+		arguments[0] = new Value(Type.attributeArray, stateReactor.getAttributes());
 		arguments[1] = new Value(Type.event, event);
 		
 		return (AbstractAction) f_CreateReaction.calculate(arguments).getValue();
@@ -106,9 +207,9 @@ public class ActionCreator  {
 	 * The method creates a new action as a reaction to an event.
 	 * 
 	 * @param: event
-	 * @param: actor
+	 * @param: stateReactor
 	 */
-	private static AbstractAction createReaction(final Event event,	final SimulationObject actor) {
+	private  AbstractAction createNoAnimalReaction(Event event, StateSimulationObject stateReactor) {
 		// TODO implement the creation of a reaction to an event  (for simulation objects which aren't animals)
 		return null;
 	}
@@ -117,16 +218,16 @@ public class ActionCreator  {
 	 * The method creates a new action as a consequence of a simulation object's state.
 	 * The action depends on the object's attributes.
 	 * 
-	 * @param: actor
+	 * @param: stateActor
 	 */
-	private static AbstractAction createAnimalActionByState(final Animal actor) {
+	private AbstractAction createAnimalActionByState(StateAnimal stateActor) {
 
 		int state2ActionType;
 		State2ActionDescription state2ActionDescription;
 		FunctionByExpression f_CreateAction;
 		Value[] arguments;
 		
-		state2ActionType = actor.getState2ActionType();
+		state2ActionType = stateActor.getState2ActionType();
 		
 		state2ActionDescription = 
 			State2ActionAssignment.getInstance().getState2ActionDescription(state2ActionType);
@@ -135,7 +236,7 @@ public class ActionCreator  {
 		
 		arguments = new Value[1];
 		
-		arguments[0] = new Value(Type.attributeArray, actor.getAttributes());
+		arguments[0] = new Value(Type.attributeArray, stateActor.getAttributes());
 		
 		return (AbstractAction) f_CreateAction.calculate(arguments).getValue();
 		
@@ -146,11 +247,36 @@ public class ActionCreator  {
 	 * The method creates a new action as a consequence of a simulation object's state.
 	 * The action depends on the object's attributes.
 	 * 
-	 * @param: actor
+	 * @param: stateActor
 	 */
-	private static AbstractAction createActionByState(final SimulationObject actor) {
+	private  AbstractAction createNoAnimalActionByState(StateSimulationObject stateActor) {
 		// TODO  implement the creation of an action  (for simulation objects which aren't animals)
 		return null;
+	}
+	
+	
+	public static AbstractAction createAction(ActionType type, final ActionMode mode,
+			final float intensity, final Time minTime, final Time maxTime,
+			final int priority, final long duration) {
+		
+		AbstractAction action;
+		
+		switch (type) {
+		case sleep: action = new ActionSleep(type, mode, intensity, minTime, maxTime, priority, duration); break;
+		case move: action = new ActionMove(type, mode, intensity, minTime, maxTime, priority, duration); break;
+		case examine: action = new ActionHandle(type, mode, intensity, minTime, maxTime, priority, duration); break;
+		case touch: action = new ActionHandle(type, mode, intensity, minTime, maxTime, priority, duration); break;
+		case itemAndInventory: action = new ActionHandle(type, mode, intensity, minTime, maxTime, priority, duration); break;
+		case handleItem: action = new ActionHandle(type, mode, intensity, minTime, maxTime, priority, duration); break;
+		case useWeapon: action = new ActionAttack(type, mode, intensity, minTime, maxTime, priority, duration); break;
+		case punch: action = new ActionAttack(type, mode, intensity, minTime, maxTime, priority, duration); break;
+		case hear: action = new ActionHear(type, mode, intensity, minTime, maxTime, priority, duration); break;
+		case talk: action = new ActionSay(type, mode, intensity, minTime, maxTime, priority, duration); break;
+		case say: action = new ActionSay(type, mode, intensity, minTime, maxTime, priority, duration); break;
+		default: action = new ActionSleep(type, mode, intensity, minTime, maxTime, priority, duration); break;
+		}
+		
+		return action;
 	}
 	
 }
