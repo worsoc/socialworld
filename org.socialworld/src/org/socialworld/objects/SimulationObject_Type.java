@@ -40,6 +40,16 @@ public enum SimulationObject_Type {
 		return arrayIndex;
 	}
 	
+	public int next() {
+		switch (arrayIndex) {
+		case 2: return 1; 
+		case 1: return 3; 
+		case 3: return 4; 
+		case 4: return 5; 
+		case 5: return 2; 
+		default:return 0;
+		}
+	}
 	/**
 	 * The method returns the simulation object type which belongs to the parameter index.
 	 * 
