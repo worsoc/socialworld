@@ -74,15 +74,25 @@ public class ActionHear extends AbstractAction {
 	private SimulationObject target;
 
 	public ActionHear(final ActionType type, final ActionMode mode,
+			final float intensity, final Time minTime, final Time maxTime,
+			final int priority, final long duration) {
+		
+		super(type,  mode,
+			intensity,  minTime, maxTime,
+			 priority,  duration);
+		
+	}
+	
+	public ActionHear(final ActionType type, final ActionMode mode,
 			final SimulationObject target,
 			final float intensity, final Time minTime, final Time maxTime,
 			final int priority, final long duration) {
 		
-		setBaseProperties(type,  mode,
+		super(type,  mode,
 			intensity,  minTime, maxTime,
 			 priority,  duration);
 		
-		this.target = target;
+		this.setTarget(target);
 	}
 	
 	public ActionHear(ActionHear original) {
@@ -149,7 +159,10 @@ public class ActionHear extends AbstractAction {
 	}
 	
 
-
+	public void setTarget(SimulationObject target) {
+		this.target = target;
+	}
+	
 	public SimulationObject getTarget() {
 		return this.target;
 	}

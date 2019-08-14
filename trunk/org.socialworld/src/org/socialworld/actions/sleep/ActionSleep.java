@@ -64,7 +64,7 @@ public class ActionSleep extends AbstractAction {
 	public ActionSleep(final ActionType type, final ActionMode mode,
 			final float intensity, final Time minTime, final Time maxTime,
 			final int priority, final long duration) {
-		setBaseProperties(type,  mode,
+		super(type,  mode,
 				intensity,  minTime, maxTime,
 				 priority,  duration);
 			

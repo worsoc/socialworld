@@ -85,10 +85,20 @@ public class ActionMove extends AbstractAction {
 	private Vector directionForSection;
 	
 	public ActionMove(final ActionType type, final ActionMode mode,
+			final float intensity, final Time minTime, final Time maxTime,
+			final int priority, final long duration) {
+		super(type,  mode,
+				intensity,  minTime, maxTime,
+				 priority,  duration);
+		this.firstStep = true;
+			
+	}
+	
+	public ActionMove(final ActionType type, final ActionMode mode,
 			final Position end,
 			final float intensity, final Time minTime, final Time maxTime,
 			final int priority, final long duration) {
-		setBaseProperties(type,  mode,
+		super(type,  mode,
 				intensity,  minTime, maxTime,
 				 priority,  duration);
 			
@@ -100,7 +110,7 @@ public class ActionMove extends AbstractAction {
 			final Vector direction,
 			final float intensity, final Time minTime, final Time maxTime,
 			final int priority, final long duration) {
-		setBaseProperties(type,  mode,
+		super(type,  mode,
 				intensity,  minTime, maxTime,
 				 priority,  duration);
 			

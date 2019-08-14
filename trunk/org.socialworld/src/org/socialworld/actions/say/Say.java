@@ -141,9 +141,9 @@ public class Say extends ActionPerformer {
 		// TODO implement manipulateAnswer()
 		// more complex, please
 		// here only an example for an easy decision
-		if (acquaintance.isAttributeValueLessThan(Acquaintance_Attribute.sympathy, AttributeArray.VALUE_MIDDLE) ) 
+		if (acquaintance.isAttributeValueLessThan(Acquaintance_Attribute.sympathy, AttributeArray.ATTRIBUTE_VALUE_MIDDLE) ) 
 			answer.reduceToFactWithMinAccessCount();
-		else if (acquaintance.isAttributeValueGreaterThan(Acquaintance_Attribute.sympathy, AttributeArray.VALUE_MIDDLE) ) 
+		else if (acquaintance.isAttributeValueGreaterThan(Acquaintance_Attribute.sympathy, AttributeArray.ATTRIBUTE_VALUE_MIDDLE) ) 
 			answer.sortBySource();
 		else answer.reduceToFactWithMaxAccessCount();
 	}

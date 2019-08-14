@@ -68,14 +68,22 @@ public class ActionAttack extends AbstractAction {
 	SimulationObject target;
 	
 	public ActionAttack(final ActionType type, final ActionMode mode,
+			final float intensity, final Time minTime, final Time maxTime,
+			final int priority, final long duration) {
+		super(type,  mode,
+				intensity,  minTime, maxTime,
+				 priority,  duration);
+	}
+	
+	public ActionAttack(final ActionType type, final ActionMode mode,
 			final SimulationObject target, 
 			final float intensity, final Time minTime, final Time maxTime,
 			final int priority, final long duration) {
-		setBaseProperties(type,  mode,
+		super(type,  mode,
 				intensity,  minTime, maxTime,
 				 priority,  duration);
 			
-		this.target = target;
+		this.setTarget(target);
 	}
 	
 	public ActionAttack(ActionAttack original) {
@@ -221,6 +229,10 @@ public class ActionAttack extends AbstractAction {
 
 	
 	  	return eventType;
+	}
+	
+	public void setTarget(SimulationObject target) {
+		this.target = target;
 	}
 	
 	public SimulationObject getTarget() {
