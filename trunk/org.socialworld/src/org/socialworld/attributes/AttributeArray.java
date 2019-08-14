@@ -37,10 +37,10 @@ public class AttributeArray {
 	 * The constant holds the informations about the range of values. The range
 	 * of values is from 0 to the constant's value.
 	 */
-	public static final byte ATTRIBUTE_RANGE = 99;
+	public static final byte ATTRIBUTE_VALUE_MAX = 99;
 	// !!! if the constant ATTRIBUTE_RANGE is changed the following methods have to be conformed :
 	// - AttributeCalculatorFunctionTable.initialize()
-	public static final byte VALUE_MIDDLE = 50;
+	public static final byte ATTRIBUTE_VALUE_MIDDLE = 50;
 	
 	private int numberOfAttributes;
 
@@ -75,6 +75,24 @@ public class AttributeArray {
 		}
 	}
 	
+	public AttributeArray(String tupel, int numberOfAttributes) {
+
+		this.numberOfAttributes = numberOfAttributes;
+		attributes 	= new int[numberOfAttributes];
+		differences = new int[numberOfAttributes];
+		
+		String line = tupel.substring(1, tupel.length() - 1);
+		String[] values = line.split(",");
+		
+		for(int i = 0; i < values.length; i++ )
+		{
+			this.attributes[i] =  Integer.parseInt(values[i]);
+			this.differences[i] = 0;
+		}
+		
+
+
+	}
 	
 	public AttributeArray(AttributeArray original) {
 		numberOfAttributes = original.length();
@@ -94,6 +112,9 @@ public class AttributeArray {
 	 * @param attributeValue
 	 */
 	public void set(int attributeIndex, int attributeValue) {
+		if (attributeValue > ATTRIBUTE_VALUE_MAX) attributeValue = ATTRIBUTE_VALUE_MAX;
+		if (attributeValue < 0) attributeValue = 0;
+		
 		differences[attributeIndex] = (attributeValue - attributes[attributeIndex]);
 		attributes[attributeIndex] 	= attributeValue;
 	}
@@ -107,6 +128,10 @@ public class AttributeArray {
 	 */
 	public void set(Attribute attributeName, int attributeValue) {
 		int attributeIndex = attributeName.getIndex();
+		
+		if (attributeValue > ATTRIBUTE_VALUE_MAX) attributeValue = ATTRIBUTE_VALUE_MAX;
+		if (attributeValue < 0) attributeValue = 0;
+		
 		differences[attributeIndex] = (attributeValue - attributes[attributeIndex]);
 		attributes[attributeIndex] = attributeValue;
 	}
