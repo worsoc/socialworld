@@ -35,13 +35,25 @@ public class FunctionMXplusN extends FunctionBase {
 	private Value max;
 	private Value min;
 	
-	private boolean withMinMaxCheck;
+	private boolean withMinMaxCheck = false;
 	
 	// special floatingpoint
 	private float n_as_float;
 	private float max_as_float;
 	private float min_as_float;
 	
+	//special constructor for float values
+	public FunctionMXplusN( float m, float n) {
+		
+		this.type = Type.floatingpoint;
+		
+		this.m = m;
+		this.n = new Value(Type.floatingpoint, n);
+		
+		this.n_as_float = n;
+		
+	}
+
 	public FunctionMXplusN(Type type, float m, Value n, Value min, Value max, boolean withMinMaxCheck) {
 		
 		this.type = type;
