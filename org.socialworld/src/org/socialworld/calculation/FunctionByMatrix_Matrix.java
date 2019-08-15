@@ -40,6 +40,15 @@ public class FunctionByMatrix_Matrix {
 			this.calculateDiv100 = false;
 	}
 
+	public FunctionByMatrix_Matrix(Value[] shares, int[] functions,  Value[] offsets) {
+		this.numberOfColumns = shares.length;
+		this.calculateDiv100 = false;
+		
+		this.shares = shares;
+		this.functions = functions;
+		this.offsets = offsets;
+	}
+	
 	public FunctionByMatrix_Matrix(String sharesAsLine, String functionsAsLine, String offsetsAsLine, int numberOfColumns){
 
 		this.numberOfColumns = numberOfColumns;

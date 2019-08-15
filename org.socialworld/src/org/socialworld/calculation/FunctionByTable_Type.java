@@ -37,22 +37,22 @@ public enum FunctionByTable_Type {
 	}
 
 	/**
-	 * The method returns the index of the attribute calculator function table.
+	 * The method returns the index of the (attribute calculator) function table.
 	 * 
-	 * @return attribute's index
+	 * @return type's index
 	 */
 	public int getIndex() {
 		return arrayIndex;
 	}
 	
 	/**
-	 * The method returns the acft type which belongs to the parameter index.
+	 * The method returns the type which belongs to the parameter index.
 	 * 
 	 * @param arrayIndex
-	 *            attribute index
-	 * @return attribute name
+	 *            
+	 * @return type
 	 */
-	public FunctionByTable_Type getType(int arrayIndex) {
+	public static FunctionByTable_Type getType(int arrayIndex) {
 		for (FunctionByTable_Type type : FunctionByTable_Type.values())
 			if (type.arrayIndex == arrayIndex)
 				return type;
