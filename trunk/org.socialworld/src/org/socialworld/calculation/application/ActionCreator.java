@@ -21,7 +21,6 @@
 */
 package org.socialworld.calculation.application;
 
-import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.StateAnimal;
 import org.socialworld.objects.StateSimulationObject;
 import org.socialworld.objects.access.HiddenSimulationObject;
@@ -236,7 +235,7 @@ class ActionCreator extends SocialWorldThread {
 		
 		arguments = new Value[1];
 		
-		arguments[0] = new Value(Type.attributeArray, stateActor.getAttributes());
+		arguments[0] = new Value(Type.attributeArray, "attributes", stateActor.getAttributes());
 		
 		return (AbstractAction) f_CreateAction.calculate(arguments).getValue();
 		
