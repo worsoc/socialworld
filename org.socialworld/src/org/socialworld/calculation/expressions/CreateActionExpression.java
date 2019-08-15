@@ -1,3 +1,24 @@
+/*
+* Social World
+* Copyright (C) 2019  Mathias Sikos
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
+*
+* or see http://www.gnu.org/licenses/gpl-2.0.html
+*
+*/
 package org.socialworld.calculation.expressions;
 
 import org.socialworld.attributes.Attribute;
@@ -5,6 +26,7 @@ import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_ConditionOperator;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
+import org.socialworld.datasource.parsing.ParseExpressionStrings;
 
 public class CreateActionExpression extends Expression {
 	
@@ -101,9 +123,24 @@ public class CreateActionExpression extends Expression {
 		String partDANN;
 		Expression actionValue;
 		
+		String[] functionTags = {"Const", "Table", "VSPE", "MX+N","MLogX+N", "MExpX+N"};
+		String[] function;
+		
 		int posDann = line.indexOf("DANN");
 		
 		partDANN = line.substring(posDann);
+		
+		
+		String tagValueActionType = ParseExpressionStrings.getTagValue(partDANN, "ACTION_TYPE");
+		String tagValueActionMode = ParseExpressionStrings.getTagValue(partDANN, "ACTION_MODE");
+		String tagValueMinTime = ParseExpressionStrings.getTagValue(partDANN, "MIN_TIME");
+		String tagValueMaxTime = ParseExpressionStrings.getTagValue(partDANN, "MAX_TIME");
+		String tagValuePriority = ParseExpressionStrings.getTagValue(partDANN, "PRIORITY");
+		String tagValueIntensity = ParseExpressionStrings.getTagValue(partDANN, "INTENSITY");
+		String tagValueDuration = ParseExpressionStrings.getTagValue(partDANN, "DURATION");
+		
+		
+		function = ParseExpressionStrings.getTagValue(tagValueActionType, functionTags);
 		
 		
 		actionValue = new  Expression();
@@ -111,6 +148,22 @@ public class CreateActionExpression extends Expression {
 		
 			
 		return actionValue;
+	}
+	
+	private Expression getFunctionExpression(String[] function) {
+		
+		Expression result = Nothing.getInstance();
+		
+		switch (function[0]) {
+		case "Const":		result = new Constant(new Value(function[1], Type.floatingpoint));
+		case "Table":		result = new TableLookup(function[1]);
+		case "VSPE":		result = new VectorScalarProduct(function[1]);
+		case "MX+N":		result = new MXPlusN(function[1]);
+		case "MLogX+N":		result = new MLogXPlusN(function[1]);
+		case "MExpX+N":		result = new MExpXPlusN(function[1]);
+		}
+		return result;
+		
 	}
 	
 	private Expression parseConjunction(String conjunction) {
