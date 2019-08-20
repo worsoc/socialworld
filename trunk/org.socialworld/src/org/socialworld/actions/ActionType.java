@@ -21,6 +21,8 @@
 */
 package org.socialworld.actions;
 
+import org.socialworld.attributes.Attribute;
+
 /**
  * The enumeration collects all action types.
  * 
@@ -60,19 +62,26 @@ public enum ActionType {
 	say(10),
 	ignore(11);
 
-	private int arrayIndex;
+	private int index;
 
 	private ActionType(int index) {
-		this.arrayIndex = index;
+		this.index = index;
+	}
+
+	public static ActionType getName(int index) {
+		for (ActionType actiontype : ActionType.values())
+			if (actiontype.index == index)
+				return actiontype;
+		return null;
 	}
 
 	/**
 	 * The method returns the index of the ActionType.
 	 * 
-	 * @return attribute's index
+	 * @return action type's index
 	 */
 	public int getIndex() {
-		return arrayIndex;
+		return index;
 	}
 
 }
