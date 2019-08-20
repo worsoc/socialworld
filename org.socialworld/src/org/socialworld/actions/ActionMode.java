@@ -30,38 +30,63 @@ package org.socialworld.actions;
  */
 public enum ActionMode {
 	
+	ignore(0),
+	
 	// for ActionType sleep
-	sleepIntentioned,	sleepCaused,
+	sleepIntentioned(1),	sleepCaused(2),
 	
 	// for ActionType move
-	walk, run, sneak, jump, swim, fly, 
+	walk(11), run(12), sneak(13), jump(14), swim(15), fly(16), 
 
 	// for ActionType examine
-	look, smell, taste, touch,
+	look(21), smell(22), taste(23), touch(24),
 	
 	// for ActionType touch
-	hand, foot,
+	hand(31), foot(32),
 	
 	// for ActionType itemAndInventory
-	takeItem, collectItem, dropItem, switchItemToOtherHand,
+	takeItem(41), collectItem(42), dropItem(43), switchItemToOtherHand(44),
 
 	// for ActionType handleItem
-	useTwoItems,	useItemLeftHand, useItemRightHand,
-	combineItems_AddRightToLeft, combineItems_AddLeftToRight,
-	pull, push,
+	useTwoItems(51),	useItemLeftHand(52), useItemRightHand(53),
+	combineItems_AddRightToLeft(54), combineItems_AddLeftToRight(55),
+	pull(56), push(57),
 
 	// for ActionType useWeapon
-	weaponLeftStab, weaponLeftStroke, weaponLeftBackhand, weaponRightStab, weaponRightStroke, weaponRightBackhand, weaponClub, 
+	weaponLeftStab(61), weaponLeftStroke(62), weaponLeftBackhand(63), weaponRightStab(64), weaponRightStroke(65), weaponRightBackhand(66), weaponClub(67), 
 
 	// for ActionType punch
-	punchLeftFistStraight,  punchLeftFistSideways, punchLeftFistUpward, punchRightFistStraight,  punchRightFistSideways, punchRightFistUpward,
+	punchLeftFistStraight(71),  punchLeftFistSideways(72), punchLeftFistUpward(73), punchRightFistStraight(74),  punchRightFistSideways(75), punchRightFistUpward(76),
 		
 	// for ActionType hear
-	listenTo, understand,
+	listenTo(81), understand(82),
 
 	// for ActionType talk
-	answerNormal, answerScream, answerWhisper, askNormal, askScream, askWhisper,
+	answerNormal(91), answerScream(92), answerWhisper(93), askNormal(94), askScream(95), askWhisper(96),
 	
 	// for ActionType say
-	normal, scream, whisper
+	normal(101), scream(102), whisper(103);
+	
+	private int index;
+
+	private ActionMode(int index) {
+		this.index = index;
+	}
+	
+	public static ActionMode getName(int index) {
+		for (ActionMode actionmode : ActionMode.values())
+			if (actionmode.index == index)
+				return actionmode;
+		return null;
+	}
+
+	/**
+	 * The method returns the index of the ActionMode.
+	 * 
+	 * @return action mode's index
+	 */
+	public int getIndex() {
+		return index;
+	}
+
 }
