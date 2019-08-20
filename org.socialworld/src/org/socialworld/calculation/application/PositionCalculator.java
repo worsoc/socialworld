@@ -37,7 +37,7 @@ import org.socialworld.objects.access.HiddenSimulationObject;
  * @author Mathias Sikos
  *
  */
-class PositionCalculator extends SocialWorldThread {
+public class PositionCalculator extends SocialWorldThread {
 
 	public static final int POSITION_CALCULATOR_RETURNS_EMPTY_LISTS = 0;
 	public static final int POSITION_CALCULATOR_RETURNS_NO_CHANGE = 2;

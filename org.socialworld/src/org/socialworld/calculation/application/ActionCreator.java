@@ -48,7 +48,7 @@ import org.socialworld.calculation.descriptions.State2ActionDescription;
 import org.socialworld.core.Event;
 import org.socialworld.core.SocialWorldThread;
 
-class ActionCreator extends SocialWorldThread {
+public class ActionCreator extends SocialWorldThread {
 
 	private static ActionCreator instance;
 	
