@@ -51,8 +51,13 @@ public class Time {
 		separate();
 	}
 
-	public Time(long totalmilliseconds) {
-		this.totalMilliseconds = totalmilliseconds;
+	public Time(boolean isAbsolut, long milliseconds) {
+		if (isAbsolut) {
+			this.totalMilliseconds = milliseconds;
+		}
+		else {
+			this.totalMilliseconds = now() + milliseconds;
+		}		
 		separate();
 	}
 
