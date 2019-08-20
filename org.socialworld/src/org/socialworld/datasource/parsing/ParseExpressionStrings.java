@@ -45,7 +45,7 @@ public class ParseExpressionStrings {
 	public static String[] getTagValue(String text, String[] tagNames) {
 		
 		String tagValue;
-		String[] result = new String[2];
+		String[] result = {"",""}; 
 		
 		for (int i = 0; i < tagNames.length; i++ ) {
 			
