@@ -21,11 +21,15 @@
 */
 package org.socialworld.calculation.expressions;
 
+import org.socialworld.actions.ActionMode;
+import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.Attribute;
+import org.socialworld.attributes.Time;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_ConditionOperator;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
+import org.socialworld.calculation.application.ActionCreator;
 import org.socialworld.datasource.parsing.ParseExpressionStrings;
 
 public class CreateActionExpression extends Expression {
@@ -62,6 +66,40 @@ public class CreateActionExpression extends Expression {
 		
 	}
 
+	protected Value createValue(Type valueType, Value[] arguments) {
+
+		Object createdObject;
+		Value createdValue;
+		
+		Value localArguments[] = new Value[8];
+		
+		// copy attribute array to local argument array
+		localArguments[0] = calculation.copy(arguments[0]);
+		localArguments[1] = new Value(Type.actionType, "actiontype", ActionType.ignore);  
+		localArguments[2] = new Value(Type.actionMode, "actionmode", ActionMode.ignore);  
+		localArguments[3] = new Value(Type.floatingpoint, "intensity", 0);  
+		localArguments[4] = new Value(Type.time, "mintime", 0);  
+		localArguments[5] = new Value(Type.time, "maxtime", 0);  
+		localArguments[6] = new Value(Type.integer, "priority", 0);  
+		localArguments[7] = new Value(Type.longinteger, "duration", 0); 
+		
+		evaluateExpression1(localArguments);
+		
+		ActionType type = (ActionType) localArguments[1].getValueCopy();
+		ActionMode mode = (ActionMode) localArguments[2].getValueCopy();
+		float intensity = (float) localArguments[3].getValueCopy();
+		Time minTime = (Time) localArguments[4].getValueCopy();
+		Time maxTime = (Time) localArguments[5].getValueCopy();
+		int priority = (int) localArguments[6].getValueCopy();
+		long duration = (long) localArguments[7].getValueCopy();
+		
+		createdObject = ActionCreator.createAction(type, mode, intensity, minTime, maxTime, priority, duration) ;
+		createdValue = calculation.createValue(valueType, createdObject);
+		
+		return createdValue;
+		
+	}
+	
 	
 	private Expression parseLinesTail(int index, String[] lines) {
 		
@@ -121,7 +159,11 @@ public class CreateActionExpression extends Expression {
 	private Expression parseDann(String line) {
 		
 		String partDANN;
+		
 		Expression actionValue;
+		Expression replacementChain;
+		Expression[] sequence = new Expression[2];
+		Expression createAction;
 		
 		String[] functionTags = {"Const", "Table", "VSPE", "MX+N","MLogX+N", "MExpX+N"};
 		String[] function;
@@ -131,36 +173,81 @@ public class CreateActionExpression extends Expression {
 		partDANN = line.substring(posDann);
 		
 		
-		String tagValueActionType = ParseExpressionStrings.getTagValue(partDANN, "ACTION_TYPE");
-		String tagValueActionMode = ParseExpressionStrings.getTagValue(partDANN, "ACTION_MODE");
+		String tagValueActionType = ParseExpressionStrings.getTagValue(partDANN, "TYPE");
+		String tagValueActionMode = ParseExpressionStrings.getTagValue(partDANN, "MODE");
 		String tagValueMinTime = ParseExpressionStrings.getTagValue(partDANN, "MIN_TIME");
 		String tagValueMaxTime = ParseExpressionStrings.getTagValue(partDANN, "MAX_TIME");
-		String tagValuePriority = ParseExpressionStrings.getTagValue(partDANN, "PRIORITY");
+		String tagValuePriority = ParseExpressionStrings.getTagValue(partDANN, "PRIO");
 		String tagValueIntensity = ParseExpressionStrings.getTagValue(partDANN, "INTENSITY");
 		String tagValueDuration = ParseExpressionStrings.getTagValue(partDANN, "DURATION");
 		
-		
 		function = ParseExpressionStrings.getTagValue(tagValueActionType, functionTags);
+		actionValue = getFunctionExpression("actiontype", function);
+		replacementChain = new Replacement("actiontype", actionValue);
 		
+		function = ParseExpressionStrings.getTagValue(tagValueActionMode, functionTags);
+		actionValue = getFunctionExpression("actionmode", function);
+		sequence[0] = new Replacement("actionmode", actionValue);
+		sequence[1] = replacementChain;
+		replacementChain = new Sequence(sequence);
 		
-		actionValue = new  Expression();
+		function = ParseExpressionStrings.getTagValue(tagValueMinTime, functionTags);
+		actionValue = getFunctionExpression("mintime", function);
+		sequence[0] = new Replacement("mintime", actionValue);
+		sequence[1] = replacementChain;
+		replacementChain = new Sequence(sequence);
 		
+		function = ParseExpressionStrings.getTagValue(tagValueMaxTime, functionTags);
+		actionValue = getFunctionExpression("maxtime", function);
+		sequence[0] = new Replacement("maxtime", actionValue);
+		sequence[1] = replacementChain;
+		replacementChain = new Sequence(sequence);
+
+		function = ParseExpressionStrings.getTagValue(tagValueIntensity, functionTags);
+		actionValue = getFunctionExpression("intensity", function);
+		sequence[0] = new Replacement("intensity", actionValue);
+		sequence[1] = replacementChain;
+		replacementChain = new Sequence(sequence);
 		
-			
-		return actionValue;
+		function = ParseExpressionStrings.getTagValue(tagValuePriority, functionTags);
+		actionValue = getFunctionExpression("priority", function);
+		sequence[0] = new Replacement("priority", actionValue);
+		sequence[1] = replacementChain;
+		replacementChain = new Sequence(sequence);
+		
+		function = ParseExpressionStrings.getTagValue(tagValueDuration, functionTags);
+		actionValue = getFunctionExpression("duration", function);
+		sequence[0] = new Replacement("duration", actionValue);
+		sequence[1] = replacementChain;
+		replacementChain = new Sequence(sequence);
+		
+		createAction = new CreateValue(Type.action, replacementChain);
+		return createAction;
 	}
 	
-	private Expression getFunctionExpression(String[] function) {
+	private Expression getFunctionExpression(String property, String[] function) {
 		
 		Expression result = Nothing.getInstance();
+		Type type;
 		
 		switch (function[0]) {
-		case "Const":		result = new Constant(new Value(function[1], Type.floatingpoint));
-		case "Table":		result = new TableLookup(function[1]);
-		case "VSPE":		result = new VectorScalarProduct(function[1]);
-		case "MX+N":		result = new MXPlusN(function[1]);
-		case "MLogX+N":		result = new MLogXPlusN(function[1]);
-		case "MExpX+N":		result = new MExpXPlusN(function[1]);
+		case "Const":
+			switch (property) {
+			case  "actiontype": type = Type.actionType; break;
+			case  "actionmode": type = Type.actionMode; break;
+			case  "mintime": type = Type.time; break;
+			case  "maxtime": type = Type.time; break;
+			case  "intensity": type = Type.floatingpoint; break;
+			case  "priority": type = Type.integer; break;
+			case  "duration": type = Type.longinteger; break;
+			default: type = Type.nothing;
+			}
+			result = new Constant(calculation.createValue(type,  Float.parseFloat(function[1] ))); break;
+		case "Table":		result = new TableLookup(function[1]); ; break;
+		case "VSPE":		result = new VectorScalarProduct(function[1]); ; break;
+		case "MX+N":		result = new MXPlusN(function[1]); ; break;
+		case "MLogX+N":		result = new MLogXPlusN(function[1]); ; break;
+		case "MExpX+N":		result = new MExpXPlusN(function[1]); ; break;
 		}
 		return result;
 		
@@ -194,7 +281,7 @@ public class CreateActionExpression extends Expression {
 	
 	private Expression parseCondition(String condition) {
 		
-		String[] conditionElements = condition.split("\\s+");
+		String[] conditionElements = condition.trim().split("\\s+");
 		
 		// we assume 3 elements --> (attribute name, operator, value)
 		if (conditionElements.length == 3) {
