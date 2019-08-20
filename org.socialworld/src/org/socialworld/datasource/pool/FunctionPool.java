@@ -28,6 +28,8 @@ import org.socialworld.calculation.FunctionByMatrix;
 import org.socialworld.calculation.FunctionByMatrix_Matrix;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
+import org.socialworld.calculation.expressions.CreateActionExpression;
+import org.socialworld.calculation.expressions.Nothing;
 import org.socialworld.datasource.tablesPool.TablePoolFunctionExpression;
 import org.socialworld.datasource.tablesPool.TablePoolMatrix;
 import org.socialworld.datasource.tablesPool.TablePoolMatrixRowCol;
@@ -38,7 +40,8 @@ import org.socialworld.datasource.tablesPool.TablePoolMatrixRowCol;
  */
 public class FunctionPool {
 
-	public static final int COUNT_TEST_ENTRIES = 54;
+	public static final int COUNT_FbM_TEST_ENTRIES = 54;		// Anzahl Testeintraege FunctionByMatrix
+	public static final int COUNT_FbE_TEST_ENTRIES = 1;		// Anzahl Testeintraege FunctionByExpression
 	
 	public static final int CAPACITY_FP_ARRAY = 1000;
 
@@ -50,7 +53,9 @@ public class FunctionPool {
 		functions = new FunctionBase[CAPACITY_FP_ARRAY];
 		
 		//initialize();
-		initializeWithTestData();
+		initializeWithTestData_FunctionByMatrix();
+		initializeWithTestData_FunctionByExpression();
+		
 	}
 
 	public static FunctionPool getInstance() {
@@ -72,9 +77,9 @@ public class FunctionPool {
 	   return null;
 	}
 
-	private void initializeWithTestData() {
+	private void initializeWithTestData_FunctionByMatrix() {
 		
-		int 		shareLinesCount = COUNT_TEST_ENTRIES;
+		int 		shareLinesCount = COUNT_FbM_TEST_ENTRIES;
 		String shareLines[] = new String[shareLinesCount];
 		
 		shareLines[0] = "71 0 2 4 4 8 2 5 4 1 83 2 4 0 6 2 2 0 6 7 67 6 3 2 3 0 6 0 0 0 88 1 0 1 0 10 0 2 4 0 77 0 4 5 8 2 0 4 2 2 80 3 1 6 4 9 3 3 3 10 58 2 8 2 6 1 0 0 0 3 85 3 1 1 2 1 0 2 0 0 93"; 
@@ -145,6 +150,23 @@ public class FunctionPool {
 			setFunction(100 + i, new FunctionByMatrix(new FunctionByMatrix_Matrix(shareLines[i], functionLines[0] , offssetLine,  numberOfColumns)));
 
 		}
+				
+	}
+
+	private void initializeWithTestData_FunctionByExpression() {
+		
+		int 		linesCount = COUNT_FbE_TEST_ENTRIES;
+		String lines[] = new String[linesCount];
+		Expression startExpression = Nothing.getInstance();
+		
+		lines[0] = "WENN mood > 66 DANN <TYPE><Const>1</Const></TYPE><MODE><Const>14</Const></MODE><MIN_TIME><Const>10000</Const></MIN_TIME><MAX_TIME><Const>100000</Const></MAX_TIME><PRIO><Const>50</Const></PRIO><INTENSITY><Const>10</Const></INTENSITY><DURATION><Const>1000</Const></DURATION>";
+//		for (int i = 0; i <  linesCount; i++) {
+			
+			int i = 0;
+			startExpression = new CreateActionExpression(lines);
+			setFunction(200 + i, new FunctionByExpression(startExpression));
+
+//		}
 		
 	}
 	
