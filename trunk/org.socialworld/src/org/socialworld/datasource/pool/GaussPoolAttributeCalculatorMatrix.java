@@ -74,7 +74,7 @@ public class GaussPoolAttributeCalculatorMatrix {
 			
 			j++;
 			
-			if (j == FunctionPool.COUNT_TEST_ENTRIES) j = 0;
+			if (j == FunctionPool.COUNT_FbM_TEST_ENTRIES) j = 0;
 
 		}
 	}
