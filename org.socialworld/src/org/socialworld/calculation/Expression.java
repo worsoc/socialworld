@@ -59,7 +59,7 @@ public class Expression {
 		
 	private boolean isValid;
 	
-	private Calculation calculation;
+	protected Calculation calculation;
 	
 
 	public Expression() {
@@ -240,7 +240,22 @@ public class Expression {
 				index = findValue(arguments, name);
 				if (index >= 0) 	arguments[index] = 	tmp;
 				return tmp;
+			
+			case create:
 				
+				Type type;
+				Value createdValue;
+				
+				type = Type.getName((int)value.getValueCopy());
+				
+				switch (type) {
+				case action:
+					createdValue = createValue(type, arguments); break;
+				default:
+					createdValue = Calculation.getNothing();
+				}
+				
+				return createdValue;
 				
 			default:
 				return Calculation.getNothing();
@@ -299,4 +314,11 @@ public class Expression {
 
 	}
 	
+	protected Value createValue(Type valueType, Value[] arguments) {
+		return new Value();
+	}
+	
+	protected void evaluateExpression1(Value[] arguments) {
+		expression1.evaluateExpression(arguments);
+	}
 }

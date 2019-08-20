@@ -21,6 +21,9 @@
 */
 package org.socialworld.calculation;
 
+import org.socialworld.actions.ActionMode;
+import org.socialworld.actions.ActionType;
+import org.socialworld.attributes.Time;
 
 public class Calculation {
 
@@ -55,15 +58,39 @@ public class Calculation {
 		
 		switch (type) {
 		case integer: 
-				if (value instanceof Float)	created = new Value(type, ((Float)value).intValue());
-				else if (value instanceof Double)	created = new Value(type, ((Double)value).intValue());
-				else if (value instanceof Integer)	created = new Value(type, (Integer) value);
-				else created = new Value(type, value);
-				break;
+			if (value instanceof Float)	created = new Value(type, ((Float)value).intValue());
+			else if (value instanceof Double)	created = new Value(type, ((Double)value).intValue());
+			else if (value instanceof Integer)	created = new Value(type, (Integer) value);
+			else created = new Value(type, value);
+			break;
+		case longinteger: 
+			if (value instanceof Double)	created = new Value(type, ((Double)value).longValue());
+			else if (value instanceof Float)	created = new Value(type, ((Float)value).longValue());
+			else if (value instanceof Integer)	created = new Value(type, (Integer) value);
+			else created = new Value(type, value);
+			break;
 		case floatingpoint: 
-			if (value instanceof Float)	created = new Value(type, (Float)value);
-			else if (value instanceof Double)	created = new Value(type, ((Double)value).floatValue());
+			if (value instanceof Double)	created = new Value(type, ((Double)value).floatValue());
+			else if (value instanceof Float)	created = new Value(type, (Float)value);
 			else if (value instanceof Integer)	created = new Value(type, ((Integer)value).floatValue());
+			else created = new Value(type, value);
+			break;
+		case actionType:
+			if (value instanceof Double)	created = new Value(type, ActionType.getName(((Double)value).intValue()));
+			else if (value instanceof Float)	created = new Value(type, ActionType.getName(((Float)value).intValue()));
+			else if (value instanceof Integer)	created = new Value(type, ActionType.getName((Integer) value));
+			else created = new Value(type, value);
+			break;
+		case actionMode:
+			if (value instanceof Double)	created = new Value(type, ActionMode.getName(((Double)value).intValue()));
+			else if (value instanceof Float)	created = new Value(type, ActionMode.getName(((Float)value).intValue()));
+			else if (value instanceof Integer)	created = new Value(type, ActionMode.getName((Integer) value));
+			else created = new Value(type, value);
+			break;
+		case time:
+			if (value instanceof Double)	created = new Value(type, new Time(false, ((Double)value).longValue()));
+			else if (value instanceof Float)	created = new Value(type, new Time(false, ((Float)value).longValue()));
+			else if (value instanceof Integer)	created = new Value(type, new Time(false,(Integer) value));
 			else created = new Value(type, value);
 			break;
 		default: 

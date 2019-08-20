@@ -36,6 +36,7 @@ public enum Expression_Function {
 	replacement(7),
 	sequence(8),
 	value(9), attributeValue(10), argumentValueByName(11),
+	create(12),
 	nothing(0);
 
 	private int arrayIndex;
