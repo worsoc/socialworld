@@ -60,10 +60,12 @@ public class Expression {
 	private boolean isValid;
 	
 	protected Calculation calculation;
-	
+	protected Functions functions;
+
 
 	public Expression() {
 		calculation = Calculation.getInstance();
+		functions = Functions.getInstance();
 		operation = Expression_Function.nothing;
 		isValid = false;
 	}

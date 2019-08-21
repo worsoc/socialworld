@@ -25,7 +25,6 @@ import org.socialworld.attributes.Attribute;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
 import org.socialworld.calculation.FunctionMtimesExpXplusN;
-import org.socialworld.calculation.Functions;
 
 public class MExpXPlusN extends Expression {
 
@@ -66,11 +65,11 @@ public class MExpXPlusN extends Expression {
 					
 				}
 	
-				int freeFunctionIndex = Functions.findNextFree(100, 200);
+				int freeFunctionIndex = functions.findNextFree(100, 200);
 				
 				if (freeFunctionIndex > 0) {
 				
-					Functions.set(freeFunctionIndex, function);
+					functions.set(freeFunctionIndex, function);
 					
 					setFuncID(freeFunctionIndex);
 					setFunction(function);
