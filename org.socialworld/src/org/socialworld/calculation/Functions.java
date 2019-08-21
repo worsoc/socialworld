@@ -26,24 +26,33 @@ import java.util.List;
 
 public class Functions {
 
+	private static Functions instance;
+	
 	private static final int MAX_SIZE = 1000;
 	
 	private static List<FunctionBase> functions;
 	
 	private static FunctionNothing nothing;
 	
+	public static Functions getInstance() {
+		if (instance == null) {
+			instance = new Functions();
+		}
+		return instance;
+		
+	}
+
 	private Functions() {
 		nothing = new FunctionNothing();
 	}
 
-	public static  boolean checkPlaceIsFree(int index) {
+	public  boolean checkPlaceIsFree(int index) {
 		
-		
-		return (!get(index).isValid());
+		return (!(get(index).isValid()));
 		
 	}
 	
-	public static int findNextFree(int start, int end) {
+	public int findNextFree(int start, int end) {
 		
 		if (start < 0) start = 0;
 		if (end >= MAX_SIZE) end = MAX_SIZE;
@@ -64,26 +73,31 @@ public class Functions {
 	 * @param functionIndex
 	 * @return attribute calculator function
 	 */
-	public static FunctionBase get(int functionIndex) {
+	public  FunctionBase get(int functionIndex) {
 		if (functions == null) {
 			initialize();
 		}
 
 		if ( (functionIndex < 0) | (functionIndex >= MAX_SIZE) )
 			return nothing;
-		else
-			return functions.get(functionIndex);
+		else {
+			FunctionBase functionAtIndex = functions.get(functionIndex);
+			if (functionAtIndex != null)
+				return functionAtIndex;
+			else
+				return nothing;
+		}
 
 	}
 	
-	public static  void set(int index, FunctionBase function) {
+	public   void set(int index, FunctionBase function) {
 		
 		if ((index >= FunctionByTable_Type.NUMBER_OF_FUNCTION_BY_TABLE_TYPES) &	(index < MAX_SIZE))
 			functions.set(index, function);
 		
 	}
 
-	private static void initialize() {
+	private void initialize() {
 		
 		functions = new ArrayList<FunctionBase>();
 		

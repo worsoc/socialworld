@@ -26,7 +26,6 @@ import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
 import org.socialworld.calculation.FunctionByMatrix;
 import org.socialworld.calculation.FunctionByMatrix_Matrix;
-import org.socialworld.calculation.Functions;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 
@@ -58,11 +57,11 @@ public class VectorScalarProduct extends Expression {
 			FunctionByMatrix function = new FunctionByMatrix( matrix);
 					
 	
-			int freeFunctionIndex = Functions.findNextFree(100, 200);
+			int freeFunctionIndex = this.functions.findNextFree(100, 200);
 			
 			if (freeFunctionIndex > 0) {
 			
-				Functions.set(freeFunctionIndex, function);
+				this.functions.set(freeFunctionIndex, function);
 				
 				setFuncID(freeFunctionIndex);
 				setFunction(function);

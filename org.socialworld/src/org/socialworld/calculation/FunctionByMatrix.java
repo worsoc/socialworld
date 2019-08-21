@@ -103,6 +103,7 @@ public class FunctionByMatrix extends FunctionBase {
 
 		int     length;
 		
+		Functions functions = Functions.getInstance();
 		FunctionBase function;
 		Value[] arguments;
 
@@ -119,7 +120,7 @@ public class FunctionByMatrix extends FunctionBase {
 			share = this.matrix.getShare(0, column);
 			offset =  this.matrix.getOffset(0, column);
 
-			function = Functions.get(functionIndex);
+			function = functions.get(functionIndex);
 			inputValue = attributes.getAsValue(column);
 
 			arguments[0] =  inputValue ;
@@ -155,6 +156,7 @@ public class FunctionByMatrix extends FunctionBase {
 		Value 	share;
 		int 	functionIndex;
 		FunctionBase function;
+		Functions functions = Functions.getInstance();
 		
 		Value change;
 
@@ -180,7 +182,7 @@ public class FunctionByMatrix extends FunctionBase {
 
 				functionIndex = this.matrix.getFunction(row, column);
 				share =   this.matrix.getShare(row, column);
-				function = Functions.get(functionIndex);
+				function = functions.get(functionIndex);
 
 				arguments[0] =  attributeValue;
 
@@ -230,6 +232,8 @@ public class FunctionByMatrix extends FunctionBase {
 		Value 	offset;
 		FunctionByMatrix_InputType 		inputType;
 
+		Functions functions = Functions.getInstance();
+		
 		int     length;
 		
 		FunctionBase function;
@@ -254,7 +258,7 @@ public class FunctionByMatrix extends FunctionBase {
 				share = this.matrix.getShare(row, column);
 				if (withOffset) offset =  this.matrix.getOffset(row, column);
 
-				function = Functions.get(functionIndex);
+				function = functions.get(functionIndex);
 				inputValue = getInputValue(inputType, attributeValue, attributeChangeValue);
 
 				arguments[0] =  inputValue ;
