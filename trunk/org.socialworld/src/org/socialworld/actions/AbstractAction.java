@@ -128,6 +128,10 @@ public abstract class AbstractAction {
 			return new HiddenSimulationObject();
 	}
 
+	public boolean isToBeIgnored() {
+		return (type == ActionType.ignore);
+	}
+	
 	protected void setBaseProperties(final ActionType type, final ActionMode mode,
 			final float intensity, final Time minTime, final Time maxTime,
 			final int priority, final long duration) {
