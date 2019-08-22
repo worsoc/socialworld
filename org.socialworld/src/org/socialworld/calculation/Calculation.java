@@ -57,6 +57,12 @@ public class Calculation {
 		Value created;
 		
 		switch (type) {
+		case bool:
+			if ((boolean)value == true) 
+				created = new Value(type, true);
+			else
+				created = new Value(type, false);
+			break;
 		case integer: 
 			if (value instanceof Float)	created = new Value(type, ((Float)value).intValue());
 			else if (value instanceof Double)	created = new Value(type, ((Double)value).intValue());

@@ -24,7 +24,7 @@ package org.socialworld.calculation;
 public class Value {
 
 	Type type;
-	String name;
+	String name = "";
 	Object value;
 	boolean valid;
 	
@@ -77,6 +77,10 @@ public class Value {
 		return valid;
 	}
 	
+	public void setName(String name) {
+		if (this.name.length() == 0) this.name = name;
+	}
+	
 	public Type getType() { return type; };
 
 	public String getName() { return name; };
@@ -90,11 +94,9 @@ public class Value {
 		case longinteger:
 			return (long) value;
 		case floatingpoint:
-			return (double) value;
-		case actionType:
-			return value;
+			return (float) value;
 		default:
-			return null;
+			return value;
 		}
 	};
 	
@@ -108,7 +110,7 @@ public class Value {
 		case longinteger:
 			return (long) value > 0;
 		case floatingpoint:
-			return (double) value > 0;
+			return (float) value > 0;
 		default:
 			return false;
 		}
