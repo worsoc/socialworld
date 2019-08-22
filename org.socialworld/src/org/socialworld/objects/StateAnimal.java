@@ -47,6 +47,7 @@ public class StateAnimal extends StateSimulationObject {
 	private KnownPathsPool knownPathsPool;
 
 	private GrantedAccessToProperty grantAccessToPropertyAttributes[];
+	private GrantedAccessToProperty grantAccessToPropertyAction[];
 	
 	public StateAnimal() {
 		super();
@@ -55,6 +56,10 @@ public class StateAnimal extends StateSimulationObject {
 		
 		grantAccessToPropertyAttributes = new GrantedAccessToProperty[1];
 		grantAccessToPropertyAttributes[0] = GrantedAccessToProperty.attributes;
+
+		grantAccessToPropertyAction = new GrantedAccessToProperty[1];
+		grantAccessToPropertyAction[0] = GrantedAccessToProperty.action;
+		
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -65,6 +70,7 @@ public class StateAnimal extends StateSimulationObject {
 		
 		super.refresh();
 		Scheduler.getInstance().calculateAttributesChangedBySimpleMatrix((StateAnimal)getMeReadableOnly(), (HiddenAnimal)getMeWritableButHidden(grantAccessToPropertyAttributes));
+		Scheduler.getInstance().createAction((StateAnimal)getMeReadableOnly(), (HiddenAnimal)getMeWritableButHidden(grantAccessToPropertyAction));
 
 	}
 	

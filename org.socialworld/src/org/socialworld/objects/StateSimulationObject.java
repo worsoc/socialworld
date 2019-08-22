@@ -47,12 +47,16 @@ public class StateSimulationObject extends ListenedBase {
 	private   int				state2ActionType;
 	
 	private GrantedAccessToProperty grantAccessToPropertyPosition[];
+	private GrantedAccessToProperty grantAccessToPropertyAction[];
 	
 	public StateSimulationObject() {
 		
 		grantAccessToPropertyPosition = new GrantedAccessToProperty[1];
 		grantAccessToPropertyPosition[0] = GrantedAccessToProperty.position;
 
+		grantAccessToPropertyPosition = new GrantedAccessToProperty[1];
+		grantAccessToPropertyPosition[0] = GrantedAccessToProperty.position;
+		
 	}
 	
 	final void setObject (SimulationObject object, WriteAccessToSimulationObject guard) {
