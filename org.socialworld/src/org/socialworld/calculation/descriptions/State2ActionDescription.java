@@ -38,6 +38,11 @@ public class State2ActionDescription {
 
 		}
 
+		public State2ActionDescription(FunctionByExpression function) {
+
+			f_createAction = function;
+
+		}
 
 		public FunctionByExpression getFunctionCreateAction() {
 			return f_createAction;
