@@ -60,11 +60,13 @@ public class FunctionByMatrix extends FunctionBase {
 		calculation = Calculation.getInstance();
 
 		switch (arguments[0].getType() ) {
+		
 			case attributeArray:
 				AttributeArray attributes;
 				attributes = (AttributeArray) arguments[0].getValue();
 				
 				int calculationMode = (int) arguments[1].getValue();
+				
 				switch (calculationMode)
 				{
 				case FunctionByMatrix_Matrix.CALCULATION_MODE_MATRIX_X_VECTOR_SIMPLE:
@@ -81,8 +83,12 @@ public class FunctionByMatrix extends FunctionBase {
 				default:
 					result = new Value();
 				}
+				
+				break;
+				
 			default:
 				result = new Value();
+				
 		}
 		
 		return result;

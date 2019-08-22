@@ -89,7 +89,7 @@ public class FunctionMXplusN extends FunctionBase {
 			if (!x.isValid()) return x;
 			 
 			if (type == Type.floatingpoint) 
-				return new Value (Type.floatingpoint, calculateFloatingPoint((float) x.getValue()));
+				return calculation.createValue(Type.floatingpoint, calculateFloatingPoint((float) calculation.createValue(Type.floatingpoint, x.getValueCopy()).getValueCopy()));
 				
 			Value result;
 			
