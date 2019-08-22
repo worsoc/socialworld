@@ -30,6 +30,7 @@ import java.util.List;
 
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
+import org.socialworld.actions.ActionNothing;
 import org.socialworld.actions.ActionType;
 import org.socialworld.actions.attack.ActionAttack;
 import org.socialworld.actions.handle.ActionHandle;
@@ -139,7 +140,7 @@ public class ActionCreator extends SocialWorldThread {
 		else
 			reaction = createNoAnimalReaction(event, stateReactor);
 				
-		hiddenReactor.setAction(reaction);
+		if (!reaction.isToBeIgnored())	hiddenReactor.setAction(reaction);
 		
 	}
 	
@@ -162,7 +163,8 @@ public class ActionCreator extends SocialWorldThread {
 		else
 			action = createNoAnimalActionByState(stateActor);
 		
-		hiddenActor.setAction(action);
+		if (!action.isToBeIgnored())	
+			hiddenActor.setAction(action);
 		
 		
 	}
@@ -237,7 +239,9 @@ public class ActionCreator extends SocialWorldThread {
 		
 		arguments[0] = new Value(Type.attributeArray, "attributes", stateActor.getAttributes());
 		
-		return (AbstractAction) f_CreateAction.calculate(arguments).getValue();
+		Value result = f_CreateAction.calculate(arguments);
+		return (AbstractAction) result.getValue();
+//		return (AbstractAction) f_CreateAction.calculate(arguments).getValue();
 		
 
 	}
@@ -254,7 +258,7 @@ public class ActionCreator extends SocialWorldThread {
 	}
 	
 	
-	public static AbstractAction createAction(ActionType type, final ActionMode mode,
+	public static AbstractAction createAction(final ActionType type, final ActionMode mode,
 			final float intensity, final Time minTime, final Time maxTime,
 			final int priority, final long duration) {
 		
@@ -272,7 +276,7 @@ public class ActionCreator extends SocialWorldThread {
 		case hear: action = new ActionHear(type, mode, intensity, minTime, maxTime, priority, duration); break;
 		case talk: action = new ActionSay(type, mode, intensity, minTime, maxTime, priority, duration); break;
 		case say: action = new ActionSay(type, mode, intensity, minTime, maxTime, priority, duration); break;
-		default: action = new ActionSleep(type, mode, intensity, minTime, maxTime, priority, duration); break;
+		default: action = new ActionNothing(); break;
 		}
 		
 		return action;

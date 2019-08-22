@@ -96,6 +96,12 @@ public class Scheduler{
 		threadActionCreator.createReaction(event, state, hiddenWriteAccess);
 		
 	}
+
+	public void createAction(final StateSimulationObject state, final HiddenSimulationObject hiddenWriteAccess) {
+		
+		threadActionCreator.createAction(state, hiddenWriteAccess);
+		
+	}
 	
 	public void calculateAttributesChangedByEvent(final Event event, final StateAnimal stateAnimal, final HiddenAnimal hiddenWriteAccess) {
 
