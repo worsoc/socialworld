@@ -93,6 +93,7 @@ public abstract class AbstractAction {
 	protected long duration;
 	protected long remainedDuration;
 
+	protected boolean interruptable = false;
 	protected boolean done = false;
 	
 	private Simulation simulation = Simulation.getInstance();
@@ -135,6 +136,7 @@ public abstract class AbstractAction {
 	protected void setBaseProperties(final ActionType type, final ActionMode mode,
 			final float intensity, final Time minTime, final Time maxTime,
 			final int priority, final long duration) {
+		
 		this.setType(type);
 		this.setMode(mode);
 		this.setIntensity(intensity);
@@ -145,6 +147,9 @@ public abstract class AbstractAction {
 		this.setRemainedDuration(duration);
 
 		this.linkedAction = null;
+		
+		if (duration > 0) interruptable = true;
+		
 	}
 
 	protected void setBaseProperties(AbstractAction original) {
@@ -196,6 +201,10 @@ public abstract class AbstractAction {
 	
 	public boolean isDone() {
 		return done;
+	}
+	
+	public boolean isInterruptable() {
+		return interruptable;
 	}
 	
 	/**
@@ -335,6 +344,7 @@ public abstract class AbstractAction {
 	public void lowerRemainedDuration(final long decrement) {
 		this.remainedDuration -= decrement;
 		
+		System.out.println("AbstractAction.lowerRemainedDuration(): " + toString() + "  " + actor.toString() + " noch offen: " + this.remainedDuration);
 		if (this.remainedDuration <= 0) done = true;
 	}
 
@@ -352,7 +362,7 @@ public abstract class AbstractAction {
 	
 	@Override
 	public String toString() {
-		return this.type.toString() ; //$NON-NLS-1$
+		return  "(" + this.type.toString() + ")"; //$NON-NLS-1$
 	}
 	
 
