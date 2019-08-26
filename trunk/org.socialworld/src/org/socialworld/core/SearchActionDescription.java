@@ -58,6 +58,15 @@ public class SearchActionDescription extends AbstractAction {
 		this.searchByRemainedDuration = false;
 	}
 
+	public SearchActionDescription(AbstractAction search) {
+		super();
+		setType(search.getType());
+		setMode(search.getMode());
+		setPriority(search.getPriority());
+		setIntensity(search.getIntensity());
+		setDuration(search.getDuration());
+	}
+	
 	public  void perform() {
 		return;
 	}
