@@ -23,10 +23,12 @@ package org.socialworld.objects;
 
 
 import org.socialworld.actions.AbstractAction;
+import org.socialworld.actions.ActionNothing;
 import org.socialworld.attributes.Position;
 import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.core.ActionHandler;
 import org.socialworld.core.Event;
+import org.socialworld.core.SearchActionDescription;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.propertyChange.ListenedBase;
 
@@ -154,7 +156,9 @@ public abstract class SimulationObject extends ListenedBase {
 	public final void setAction(AbstractAction newAction, WriteAccessToSimulationObject guard) {
 
 		if (this.guard == guard) {
-			actionHandler.insertAction(newAction);
+			if (actionHandler.findAction(new SearchActionDescription(newAction)) == ActionNothing.getInstance()) {
+				actionHandler.insertAction(newAction);
+			}
 		}
 	}
 	
@@ -165,10 +169,11 @@ public abstract class SimulationObject extends ListenedBase {
 	 * 
 	 * @param action
 	 */
-	public final void doAction(AbstractAction action, ActionHandler myActionHandler) {
+	public final void doAction(AbstractAction action, int milliSecondsPast, ActionHandler myActionHandler) {
 		if (this.actionHandler == myActionHandler) {
 			action.setActor(this, guard.getMeHidden(grantAccessToAllProperties));
 			action.perform();
+			action.lowerRemainedDuration(milliSecondsPast);
 			action.removeWriteAccess();
 		}
 	}
