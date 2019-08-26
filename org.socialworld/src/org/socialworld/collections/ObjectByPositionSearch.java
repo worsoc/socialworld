@@ -176,7 +176,9 @@ public class ObjectByPositionSearch {
 		ObjectByPositionSearch_NodeXY tmp;
 		int nextID = 0;
 		
-		while (nextID == 0) {
+		if (found == null) found = root;
+		
+		while (nextID == 0 & found != null) {
 			tmp = found.getNode();
 			
 			while (tmp != null) {
