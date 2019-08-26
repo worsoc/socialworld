@@ -100,7 +100,7 @@ public class ActionMaster extends SocialWorldThread {
 	 *  
 	 *  the list for reported action handlers is a list containing of lists.
 	 *  For every second of a minute there is one list. And every list for a second is ordered by action's priority.
-	 *  Furthermore the is a two dimensional array that holds the indexes for the second an the priority.
+	 *  Furthermore there is a two dimensional array that holds the indexes for the second an the priority.
 	 *  So a fast insertion of a new reported action handler is possible.
 	 *  
 	 *  For every list there is a list iterator.
@@ -108,14 +108,14 @@ public class ActionMaster extends SocialWorldThread {
 	private ActionMaster() {
 		// list (b):
 		reportedActionHandlers = new ArrayList<List<ActionHandler>>();
-		for (int i = 1; i < AbstractAction.MAX_ACTION_WAIT_SECONDS; i++) {
+		for (int i = 0; i < AbstractAction.MAX_ACTION_WAIT_SECONDS; i++) {
 			reportedActionHandlers.add(new ArrayList<ActionHandler>());
 		}
 		
 		indexBySecondAndPiority = new int[AbstractAction.MAX_ACTION_WAIT_SECONDS][AbstractAction.MAX_ACTION_PRIORITY];
 		minPriorityBySecond = new int[AbstractAction.MAX_ACTION_WAIT_SECONDS];
 
-		for (int i = 1; i < AbstractAction.MAX_ACTION_WAIT_SECONDS; i++) {
+		for (int i = 0; i < AbstractAction.MAX_ACTION_WAIT_SECONDS; i++) {
 			minPriorityBySecond[i] = AbstractAction.MAX_ACTION_PRIORITY;
 		}
 
@@ -323,8 +323,7 @@ public class ActionMaster extends SocialWorldThread {
  	 *  - sets the actual priority list for reported action handlers and resets the list iterator
 	 *  
 	 */
-	public void nextSecond() {
-		Time time;
+	public void nextSecond(Time time) {
 		
 		// reset the start value (for index shifting after insertion) for the last second
 		minPriorityBySecond[secondOfTheActualMinute] = AbstractAction.MAX_ACTION_PRIORITY;
@@ -333,7 +332,6 @@ public class ActionMaster extends SocialWorldThread {
 		if (continueHandlersIterator.nextIndex() == continueActionHandlers.size() )
 			continueHandlersIterator = continueActionHandlers.listIterator();
 		
-		time = ActualTime.asTime();
 		nowInMilliseconds = time.getTotalMilliseconds();
 		secondOfTheActualMinute = time.getSecond();
 		

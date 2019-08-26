@@ -23,8 +23,9 @@ package org.socialworld.core;
 
 import org.socialworld.objects.*;
 import org.socialworld.propertyChange.ChangedProperty;
-
+import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Position;
+import org.socialworld.attributes.Time;
 import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.collections.ObjectByPositionSearch;
 
@@ -36,7 +37,7 @@ import org.socialworld.collections.ObjectByPositionSearch;
  * @author Mathias Sikos (tyloesand)
  * 
  */
-public class Simulation {
+public class Simulation extends SocialWorldThread {
 	
 	
 	public static  int WITH_LOGGING = 1;
@@ -52,6 +53,9 @@ public class Simulation {
 	private final RefreshMaster refreshMaster;
 
 	private final ObjectByPositionSearch searchByPosition;
+	
+	private boolean run = false;
+	private int sleepTime = 500;
 	
 	private Simulation() {
 		
@@ -80,6 +84,24 @@ public class Simulation {
 	}
 	
 	
+	public void run() {
+		while (isRunning()) {
+			
+			
+			if (run) 
+				nextTimeStep();
+			else
+				waitForStartTime();
+			
+			try {
+				sleep(sleepTime);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+		}
+	}	
+	
 	public void startSimulation() {
 	
 		
@@ -89,15 +111,14 @@ public class Simulation {
 		
 		this.objectMaster.loadSimulationObjects();
 
-		this.eventMaster.startThread();
-		this.actionMaster.startThread();
-		this.refreshMaster.startThread();
-		
+	
+		this.startThread();
 		
 		Human myHuman;
 		for (int i = 0;i < 20; i++ ) {
 			myHuman = (Human) this.objectMaster.createSimulationObject(SimulationObject_Type.human);
 		}
+		
 		
 	}
 	
@@ -111,11 +132,34 @@ public class Simulation {
 		return this.eventMaster;
 	}
 
-	public void nextTimeStep() {
-		actionMaster.nextSecond();
+	private void nextTimeStep() {
+		Time actualTime = ActualTime.asTime();
+		System.out.println("Zeit: " + actualTime.toString());
+		actionMaster.nextSecond(actualTime);
 	}
 
 
+	private void waitForStartTime() {
+		Time time = ActualTime.asTime();
+		byte secondOfTheActualMinute = time.getSecond();
+		
+		if (secondOfTheActualMinute == 0) {
+			sleepTime = 1000;
+			run = true;
+			this.eventMaster.startThread();
+			this.actionMaster.startThread();
+			this.refreshMaster.startThread();
+		}
+		else if (secondOfTheActualMinute < 50)
+			sleepTime = 500;
+		else if (secondOfTheActualMinute < 55)
+			sleepTime = 100;
+		else if (secondOfTheActualMinute < 59)
+			sleepTime = 1;
+		
+		//System.out.println("Sekunde: " + secondOfTheActualMinute);
+	}
+	
 	// for test visualizes there is a public access to the object master
 	public ObjectMaster getObjectMaster() {
 		return this.objectMaster;
