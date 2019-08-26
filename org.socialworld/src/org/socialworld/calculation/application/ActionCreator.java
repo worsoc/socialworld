@@ -276,7 +276,7 @@ public class ActionCreator extends SocialWorldThread {
 		case hear: action = new ActionHear(type, mode, intensity, minTime, maxTime, priority, duration); break;
 		case talk: action = new ActionSay(type, mode, intensity, minTime, maxTime, priority, duration); break;
 		case say: action = new ActionSay(type, mode, intensity, minTime, maxTime, priority, duration); break;
-		default: action = new ActionNothing(); break;
+		default: action = ActionNothing.getInstance(); break;
 		}
 		
 		return action;
