@@ -151,21 +151,31 @@ public class ActionCreator extends SocialWorldThread {
 	private void calculateAction() {
 		
 		if (this.hiddenActors.size() == 0) return;
-		
-		StateSimulationObject stateActor  = this.statesActor.remove(0);
+
 		HiddenSimulationObject hiddenActor = this.hiddenActors.remove(0);
+		StateSimulationObject stateActor  = this.statesActor.remove(0);
 		
+		int state2ActionType = stateActor.getState2ActionType();
+		State2ActionDescription state2ActionDescription = 
+			State2ActionAssignment.getInstance().getState2ActionDescription(state2ActionType);
+		int count = state2ActionDescription.countFunctions();
+		
+		FunctionByExpression f_CreateAction;
 		AbstractAction action;
-
-
-		if (stateActor instanceof StateAnimal) 
-			action = createAnimalActionByState((StateAnimal)stateActor);
-		else
-			action = createNoAnimalActionByState(stateActor);
 		
-		if (!action.isToBeIgnored())	
-			hiddenActor.setAction(action);
-		
+		for (int i = 0; i < count; i++) {
+			
+			f_CreateAction = state2ActionDescription.getFunctionCreateAction(i);
+	
+			if (stateActor instanceof StateAnimal) 
+				action = createAnimalActionByState((StateAnimal)stateActor, f_CreateAction);
+			else
+				action = createNoAnimalActionByState(stateActor);
+			
+			if (!action.isToBeIgnored())	
+				hiddenActor.setAction(action);
+			
+		}
 		
 	}
 	
@@ -221,20 +231,9 @@ public class ActionCreator extends SocialWorldThread {
 	 * 
 	 * @param: stateActor
 	 */
-	private AbstractAction createAnimalActionByState(StateAnimal stateActor) {
+	private AbstractAction createAnimalActionByState(StateAnimal stateActor, FunctionByExpression f_CreateAction) {
 
-		int state2ActionType;
-		State2ActionDescription state2ActionDescription;
-		FunctionByExpression f_CreateAction;
 		Value[] arguments;
-		
-		state2ActionType = stateActor.getState2ActionType();
-		
-		state2ActionDescription = 
-			State2ActionAssignment.getInstance().getState2ActionDescription(state2ActionType);
-		
-		f_CreateAction = state2ActionDescription.getFunctionCreateAction();
-		
 		arguments = new Value[1];
 		
 		arguments[0] = new Value(Type.attributeArray, "attributes", stateActor.getAttributes());
