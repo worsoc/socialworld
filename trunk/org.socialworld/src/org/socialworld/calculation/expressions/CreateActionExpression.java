@@ -66,6 +66,27 @@ public class CreateActionExpression extends Expression {
 		
 	}
 
+	public CreateActionExpression(String line) {
+		
+		super();
+			
+		Expression exp1;  // WENN
+		Expression exp2;  // DANN
+		Expression exp3;  // SONST (doesn't exist here  --> action Nothing)
+			
+		exp1 = parseWenn(line);
+		exp2 = parseDann(line);
+		exp3 = new CreateValue(Type.action, Nothing.getInstance());
+		
+		setExpression1(exp1);
+		setExpression2(exp2);
+		setExpression3(exp3);
+
+		setOperation(Expression_Function.branching);
+
+		setValid();
+		
+	}
 
 	
 	private Expression parseLinesTail(int index, String[] lines) {
