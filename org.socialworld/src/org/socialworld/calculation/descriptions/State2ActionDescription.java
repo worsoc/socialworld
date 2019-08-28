@@ -21,30 +21,52 @@
 */
 package org.socialworld.calculation.descriptions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.FunctionByExpression;
 
 public class State2ActionDescription {
 		
-		private FunctionByExpression f_createAction;
-	
+		private List<FunctionByExpression> functionsCreateAction;
+		
 		public State2ActionDescription() {
-			f_createAction = new FunctionByExpression();
+			
+			functionsCreateAction = new  ArrayList<FunctionByExpression>();
+			
 		}
 		
 		public State2ActionDescription(Expression startExpression) {
-
-			f_createAction = new FunctionByExpression(startExpression);
+			
+			functionsCreateAction = new  ArrayList<FunctionByExpression>();
+			FunctionByExpression f_createAction = new FunctionByExpression(startExpression);
+			functionsCreateAction.add(f_createAction);
 
 		}
 
 		public State2ActionDescription(FunctionByExpression function) {
 
-			f_createAction = function;
+			functionsCreateAction = new  ArrayList<FunctionByExpression>();
+			functionsCreateAction.add(function);
 
 		}
 
-		public FunctionByExpression getFunctionCreateAction() {
-			return f_createAction;
+		public void addFunctionCreateAction(FunctionByExpression function) {
+
+			functionsCreateAction.add(function);
+
+		}
+		
+		public FunctionByExpression getFunctionCreateAction(int index) {
+			
+			return functionsCreateAction.get(index);
+			
+		}
+		
+		public int countFunctions() {
+			
+			return functionsCreateAction.size();
+			
 		}
 }
