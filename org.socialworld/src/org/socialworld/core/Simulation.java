@@ -115,7 +115,7 @@ public class Simulation extends SocialWorldThread {
 		this.startThread();
 		
 		Human myHuman;
-		for (int i = 0;i < 20; i++ ) {
+		for (int i = 0; i < 2000; i++ ) {
 			myHuman = (Human) this.objectMaster.createSimulationObject(SimulationObject_Type.human);
 		}
 		

@@ -26,7 +26,7 @@ import org.socialworld.objects.SimulationObject_Type;
 /**
  * The refresh master is a thread that calculates the change of state of all simulation objects one time in a given time period.
  * Therefore there is a calculation of a new attribute array (for animals only), depending only on the former attribute array and a calculation matrix.
- * The calculationdoesn't depend on actions or events according to the simulation object. 
+ * The calculation doesn't depend on actions or events according to the simulation object. 
  * 
  * @author Mathias Sikos (tyloesand)
  */
@@ -36,7 +36,7 @@ public class RefreshMaster extends SocialWorldThread {
 	
 	ObjectMaster myObjectMaster;
 	
-	private int sleepTime = 1 ; //100;
+	private int sleepTime = 100;
 	
 	SimulationObject_Type simObjType;
 	

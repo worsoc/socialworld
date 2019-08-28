@@ -1,5 +1,6 @@
 package org.socialworld.datasource.pool;
 
+import org.socialworld.calculation.FunctionByExpression;
 import org.socialworld.calculation.descriptions.State2ActionDescription;
 
 public class State2ActionDescriptionPool extends DescriptionPool {
@@ -41,9 +42,20 @@ public class State2ActionDescriptionPool extends DescriptionPool {
 	}
 
 	protected void initialize() {
+
+		State2ActionDescription description;
+		
 		// initialize with  dummy descriptions with an expression that returns the invalid "nothing" value
-		for (int index = 0; index < sizeDescriptionsArray; index++)
-			descriptions[index] = new State2ActionDescription();
+		for (int index = 0; index < sizeDescriptionsArray; index++) {
+			
+			description = new State2ActionDescription();
+			description.addFunctionCreateAction((FunctionByExpression)(FunctionPool.getInstance().getFunction(200)));
+			description.addFunctionCreateAction((FunctionByExpression)(FunctionPool.getInstance().getFunction(201)));
+			
+			descriptions[index] = description;
+	
+		}
+		
 	}
 	
 
