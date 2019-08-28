@@ -133,7 +133,7 @@ public class ActionMove extends AbstractAction {
 		
 		if (actor == null) return;
 
-		if (!firstStep) {
+		if ((!firstStep) && (path != null)) {
 			moveCompleted = !move.checkContinueMove();
 			
 			if (moveCompleted) path.completeSection(actor.getPosition());

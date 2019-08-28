@@ -41,7 +41,7 @@ import org.socialworld.datasource.tablesPool.TablePoolMatrixRowCol;
 public class FunctionPool {
 
 	public static final int COUNT_FbM_TEST_ENTRIES = 54;		// Anzahl Testeintraege FunctionByMatrix
-	public static final int COUNT_FbE_TEST_ENTRIES = 1;		// Anzahl Testeintraege FunctionByExpression
+	public static final int COUNT_FbE_TEST_ENTRIES = 2;		// Anzahl Testeintraege FunctionByExpression
 	
 	public static final int CAPACITY_FP_ARRAY = 1000;
 
@@ -159,14 +159,19 @@ public class FunctionPool {
 		String lines[] = new String[linesCount];
 		Expression startExpression = Nothing.getInstance();
 		
-		lines[0] = "WENN mood > 66 DANN <TYPE><Const>1</Const></TYPE><MODE><Const>14</Const></MODE><MIN_TIME><Const>10000</Const></MIN_TIME><MAX_TIME><Const>100000</Const></MAX_TIME><PRIO><Const>50</Const></PRIO><INTENSITY><Const>10</Const></INTENSITY><DURATION><Const>1000</Const></DURATION>";
-//		for (int i = 0; i <  linesCount; i++) {
+//		lines[0] = "WENN mood < 23 & hunger > 90 | courage = 80 & power < 30 DANN <TYPE><Const>1</Const></TYPE><MODE><Const>14</Const></MODE><MIN_TIME><Const>10000</Const></MIN_TIME><MAX_TIME><Const>100000</Const></MAX_TIME><PRIO><Const>50</Const></PRIO><INTENSITY><MX+N>5;1.5;23</MX+N></INTENSITY><DURATION><Const>1000</Const></DURATION>";
+//		lines[0] = "WENN mood > 23 & hunger < 90 | courage > 8 & power < 98 DANN <TYPE><Const>1</Const></TYPE><MODE><Const>14</Const></MODE><MIN_TIME><Const>10000</Const></MIN_TIME><MAX_TIME><Const>100000</Const></MAX_TIME><PRIO><Const>50</Const></PRIO><INTENSITY><MX+N>5;1.5;23</MX+N></INTENSITY><DURATION><Const>10000</Const></DURATION>";
+//		lines[0] = "WENN mood == 50 & mood = 50 | mood = 50 & mood = 50 DANN <TYPE><Const>1</Const></TYPE><MODE><Const>14</Const></MODE><MIN_TIME><Const>10000</Const></MIN_TIME><MAX_TIME><Const>100000</Const></MAX_TIME><PRIO><Const>50</Const></PRIO><INTENSITY><MX+N>5;1.5;23</MX+N></INTENSITY><DURATION><Const>10000</Const></DURATION>";
+
+		lines[0] = "WENN mood == 50 DANN <TYPE><Const>1</Const></TYPE><MODE><Const>14</Const></MODE><MIN_TIME><Const>10000</Const></MIN_TIME><MAX_TIME><Const>100000</Const></MAX_TIME><PRIO><Const>50</Const></PRIO><INTENSITY><MX+N>5;1.5;23</MX+N></INTENSITY><DURATION><Const>10000</Const></DURATION>";
+		lines[1] = "WENN tiredness == 11 DANN <TYPE><Const>0</Const></TYPE><MODE><Const>2</Const></MODE><MIN_TIME><Const>10000</Const></MIN_TIME><MAX_TIME><Const>100000</Const></MAX_TIME><PRIO><Const>150</Const></PRIO><INTENSITY><MX+N>4;1.5;0</MX+N></INTENSITY><DURATION><Const>21600000</Const></DURATION>";
+
+		for (int i = 0; i <  linesCount; i++) {
 			
-			int i = 0;
-			startExpression = new CreateActionExpression(lines);
+			startExpression = new CreateActionExpression(lines[i]);
 			setFunction(200 + i, new FunctionByExpression(startExpression));
 
-//		}
+		}
 		
 	}
 	

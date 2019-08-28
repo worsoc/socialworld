@@ -110,13 +110,16 @@ public class ActionHandler  {
 		// then determine, whether there are linked action
 		// if there are no linked actions return without execution of a further action
 		if (actualSecond == this.secondOfTheActualMinute) {
-			if (this.lastExecutedAction == null)
+			
+			if (this.lastExecutedAction == null) {
 				return ACTIONHANDLER_RETURN_NOACTION;
+			}
 			
 			if (action == this.lastExecutedAction.getLinkedAction() )
 				;
 			else
 				return ACTIONHANDLER_RETURN_ACTIONYETEXECUTED;
+			
 		}
 		else 
 			if (action != this.actualAction) 

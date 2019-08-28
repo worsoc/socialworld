@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.socialworld.actions.AbstractAction;
-import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Time;
 
 
@@ -75,9 +74,9 @@ public class ActionMaster extends SocialWorldThread {
 
 	// priority list for reported action handlers (list (b))
 	// it is iterated one time from first to last element
-	// after a complete iteration the list is cleared an will be filled by new reported action handler elements
+	// after a complete iteration the list is cleared and will be filled with new reported action handler elements
 	private ArrayList<List<ActionHandler>> reportedActionHandlers;
-	private int[][] indexBySecondAndPiority;
+	private int[][] indexBySecondAndPriority;
 	private  List<ActionHandler> actionHandlersNow;
 	private  ListIterator<ActionHandler> handlersIterator;
 	private int[] minPriorityBySecond;
@@ -112,7 +111,7 @@ public class ActionMaster extends SocialWorldThread {
 			reportedActionHandlers.add(new ArrayList<ActionHandler>());
 		}
 		
-		indexBySecondAndPiority = new int[AbstractAction.MAX_ACTION_WAIT_SECONDS][AbstractAction.MAX_ACTION_PRIORITY];
+		indexBySecondAndPriority = new int[AbstractAction.MAX_ACTION_WAIT_SECONDS][AbstractAction.MAX_ACTION_PRIORITY];
 		minPriorityBySecond = new int[AbstractAction.MAX_ACTION_WAIT_SECONDS];
 
 		for (int i = 0; i < AbstractAction.MAX_ACTION_WAIT_SECONDS; i++) {
@@ -158,7 +157,6 @@ public class ActionMaster extends SocialWorldThread {
 			sleepTime = executeAction();
 			
 			
-			sleepTime = 50;
 			try {
 				sleep(sleepTime);
 			} catch (InterruptedException e) {
@@ -276,7 +274,7 @@ public class ActionMaster extends SocialWorldThread {
 		// (that holds the starting indexes for every second and every priority)
 		// the insert position into the priority list for reported action handlers is determined
 		second = (int) waitSeconds % AbstractAction.MAX_ACTION_WAIT_SECONDS;
-		indexPrio = indexBySecondAndPiority[second][priority];
+		indexPrio = indexBySecondAndPriority[second][priority];
 
 		
 		// insert the reported action handler at the determined position
@@ -294,7 +292,7 @@ public class ActionMaster extends SocialWorldThread {
 		// because an element has been inserted other elements' index has to be increased
 		// (only the elements that are listed behind the inserted one, that are the elements with lower priority)
 		for (int i = minPriorityBySecond[second]; i < priority; i++) {
-			indexBySecondAndPiority[second][i]++;
+			indexBySecondAndPriority[second][i]++;
 		}
 		
 		// if there is a lower priority than before then change the start value for index shifting after insertion
