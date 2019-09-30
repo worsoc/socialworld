@@ -64,39 +64,40 @@ public class Calculation {
 				created = new Value(type, false);
 			break;
 		case integer: 
-			if (value instanceof Float)	created = new Value(type, ((Float)value).intValue());
+			if (value instanceof Float)			created = new Value(type, ((Float)value).intValue());
 			else if (value instanceof Double)	created = new Value(type, ((Double)value).intValue());
 			else if (value instanceof Integer)	created = new Value(type, (Integer) value);
 			else created = new Value(type, value);
 			break;
 		case longinteger: 
-			if (value instanceof Double)	created = new Value(type, ((Double)value).longValue());
+			if (value instanceof Double)		created = new Value(type, ((Double)value).longValue());
 			else if (value instanceof Float)	created = new Value(type, ((Float)value).longValue());
 			else if (value instanceof Integer)	created = new Value(type, (Integer) value);
 			else created = new Value(type, value);
 			break;
 		case floatingpoint: 
-			if (value instanceof Double)	created = new Value(type, ((Double)value).floatValue());
+			if (value instanceof Double)		created = new Value(type, ((Double)value).floatValue());
 			else if (value instanceof Float)	created = new Value(type, (Float)value);
 			else if (value instanceof Integer)	created = new Value(type, ((Integer)value).floatValue());
 			else created = new Value(type, value);
 			break;
 		case actionType:
-			if (value instanceof Double)	created = new Value(type, ActionType.getName(((Double)value).intValue()));
+			if (value instanceof Double)		created = new Value(type, ActionType.getName(((Double)value).intValue()));
 			else if (value instanceof Float)	created = new Value(type, ActionType.getName(((Float)value).intValue()));
 			else if (value instanceof Integer)	created = new Value(type, ActionType.getName((Integer) value));
 			else created = new Value(type, value);
 			break;
 		case actionMode:
-			if (value instanceof Double)	created = new Value(type, ActionMode.getName(((Double)value).intValue()));
+			if (value instanceof Double)		created = new Value(type, ActionMode.getName(((Double)value).intValue()));
 			else if (value instanceof Float)	created = new Value(type, ActionMode.getName(((Float)value).intValue()));
 			else if (value instanceof Integer)	created = new Value(type, ActionMode.getName((Integer) value));
 			else created = new Value(type, value);
 			break;
 		case time:
-			if (value instanceof Double)	created = new Value(type, new Time(false, ((Double)value).longValue()));
+			if (value instanceof Double)		created = new Value(type, new Time(false, ((Double)value).longValue()));
 			else if (value instanceof Float)	created = new Value(type, new Time(false, ((Float)value).longValue()));
 			else if (value instanceof Integer)	created = new Value(type, new Time(false,(Integer) value));
+			else if (value instanceof Long)		created = new Value(type, new Time(false,(Long) value));
 			else created = new Value(type, value);
 			break;
 		default: 
