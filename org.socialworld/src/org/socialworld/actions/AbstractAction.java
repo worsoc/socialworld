@@ -77,9 +77,6 @@ import org.socialworld.objects.access.HiddenSimulationObject;
 public abstract class AbstractAction {
 	public static final int MAX_ACTION_PRIORITY = 256;
 	
-	// must be in byte range
-	// because there is used a byte variable for index
-	public static final int MAX_ACTION_WAIT_SECONDS = 60;
 	
 	protected SimulationObject actor;
 	private HiddenSimulationObject hiddenWriteAccesToActor;
@@ -94,6 +91,7 @@ public abstract class AbstractAction {
 	protected long remainedDuration;
 
 	protected boolean interruptable = false;
+	protected boolean interrupted = false;
 	protected boolean done = false;
 	
 	private Simulation simulation = Simulation.getInstance();
@@ -150,6 +148,8 @@ public abstract class AbstractAction {
 		
 		if (duration > 0) interruptable = true;
 		
+
+		
 	}
 
 	protected void setBaseProperties(AbstractAction original) {
@@ -205,6 +205,24 @@ public abstract class AbstractAction {
 	
 	public boolean isInterruptable() {
 		return interruptable;
+	}
+	
+	public boolean isInterrupted() {
+		return interrupted;
+	}
+	
+	public void interrupt() {
+		
+		this.setDuration(remainedDuration);
+		this.setRemainedDuration(0);
+		this.interrupted = true;
+		
+		
+	}
+	
+	public void continueAfterInterrupt() {
+		this.setRemainedDuration(duration);
+		this.interrupted = false;
 	}
 	
 	/**
@@ -344,7 +362,7 @@ public abstract class AbstractAction {
 	public void lowerRemainedDuration(final long decrement) {
 		this.remainedDuration -= decrement;
 		
-		System.out.println("AbstractAction.lowerRemainedDuration(): " + toString() + "  " + actor.toString() + " noch offen: " + this.remainedDuration);
+//		System.out.println("AbstractAction.lowerRemainedDuration(): " + toString() + "  " + actor.toString() + " noch offen: " + this.remainedDuration);
 		if (this.remainedDuration <= 0) done = true;
 	}
 
@@ -358,7 +376,6 @@ public abstract class AbstractAction {
 		this.remainedDuration += increment;
 	}
 
-	
 	
 	@Override
 	public String toString() {
