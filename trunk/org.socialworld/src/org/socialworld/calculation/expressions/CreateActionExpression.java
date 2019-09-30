@@ -153,7 +153,7 @@ public class CreateActionExpression extends Expression {
 		Expression[] sequence = new Expression[2];
 		Expression createAction;
 		
-		String[] functionTags = {"Const", "Table", "VSPE", "MX+N","MLogX+N", "MExpX+N"};
+		String[] functionTags = {"Const", "Table", "VSPE", "MX+N","MLogX+N", "MExpX+N","Now+N"};
 		String[] function;
 		
 		int posDann = line.indexOf("DANN");
@@ -231,11 +231,12 @@ public class CreateActionExpression extends Expression {
 			default: type = Type.nothing;
 			}
 			result = new Constant(calculation.createValue(type,  Float.parseFloat(function[1] ))); break;
-		case "Table":		result = new TableLookup(function[1]); ; break;
-		case "VSPE":		result = new VectorScalarProduct(function[1]); ; break;
-		case "MX+N":		result = new MXPlusN(function[1]); ; break;
-		case "MLogX+N":		result = new MLogXPlusN(function[1]); ; break;
-		case "MExpX+N":		result = new MExpXPlusN(function[1]); ; break;
+		case "Table":		result = new TableLookup(function[1]);  break;
+		case "VSPE":		result = new VectorScalarProduct(function[1]);  break;
+		case "MX+N":		result = new MXPlusN(function[1]);  break;
+		case "MLogX+N":		result = new MLogXPlusN(function[1]);  break;
+		case "MExpX+N":		result = new MExpXPlusN(function[1]);  break;
+		case "Now+N":		result = new CreateValue(Type.time, new Constant(calculation.createValue(Type.longinteger,  Integer.parseInt(function[1] )))); break;
 		}
 		return result;
 		
