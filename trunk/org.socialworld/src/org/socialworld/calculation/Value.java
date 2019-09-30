@@ -21,6 +21,8 @@
 */
 package org.socialworld.calculation;
 
+import org.socialworld.attributes.Time;
+
 public class Value {
 
 	Type type;
@@ -92,9 +94,16 @@ public class Value {
 		case integer:
 			return (int) value;
 		case longinteger:
+			if (value instanceof Integer)	return ((Integer) value).longValue();
 			return (long) value;
 		case floatingpoint:
 			return (float) value;
+		case time:
+			if (!(value instanceof Time)) {
+				return new Time();
+			}
+			else
+				return (Time) value;
 		default:
 			return value;
 		}
