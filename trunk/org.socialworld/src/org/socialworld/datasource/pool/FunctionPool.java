@@ -54,7 +54,6 @@ public class FunctionPool {
 		
 		//initialize();
 		initializeWithTestData_FunctionByMatrix();
-		initializeWithTestData_FunctionByExpression();
 		
 	}
 
@@ -153,27 +152,6 @@ public class FunctionPool {
 				
 	}
 
-	private void initializeWithTestData_FunctionByExpression() {
-		
-		int 		linesCount = COUNT_FbE_TEST_ENTRIES;
-		String lines[] = new String[linesCount];
-		Expression startExpression = Nothing.getInstance();
-		
-//		lines[0] = "WENN mood < 23 & hunger > 90 | courage = 80 & power < 30 DANN <TYPE><Const>1</Const></TYPE><MODE><Const>14</Const></MODE><MIN_TIME><Const>10000</Const></MIN_TIME><MAX_TIME><Const>100000</Const></MAX_TIME><PRIO><Const>50</Const></PRIO><INTENSITY><MX+N>5;1.5;23</MX+N></INTENSITY><DURATION><Const>1000</Const></DURATION>";
-//		lines[0] = "WENN mood > 23 & hunger < 90 | courage > 8 & power < 98 DANN <TYPE><Const>1</Const></TYPE><MODE><Const>14</Const></MODE><MIN_TIME><Const>10000</Const></MIN_TIME><MAX_TIME><Const>100000</Const></MAX_TIME><PRIO><Const>50</Const></PRIO><INTENSITY><MX+N>5;1.5;23</MX+N></INTENSITY><DURATION><Const>10000</Const></DURATION>";
-//		lines[0] = "WENN mood == 50 & mood = 50 | mood = 50 & mood = 50 DANN <TYPE><Const>1</Const></TYPE><MODE><Const>14</Const></MODE><MIN_TIME><Const>10000</Const></MIN_TIME><MAX_TIME><Const>100000</Const></MAX_TIME><PRIO><Const>50</Const></PRIO><INTENSITY><MX+N>5;1.5;23</MX+N></INTENSITY><DURATION><Const>10000</Const></DURATION>";
-
-		lines[0] = "WENN mood == 50 DANN <TYPE><Const>1</Const></TYPE><MODE><Const>14</Const></MODE><MIN_TIME><Const>10000</Const></MIN_TIME><MAX_TIME><Const>100000</Const></MAX_TIME><PRIO><Const>50</Const></PRIO><INTENSITY><MX+N>5;1.5;23</MX+N></INTENSITY><DURATION><Const>10000</Const></DURATION>";
-		lines[1] = "WENN tiredness == 11 DANN <TYPE><Const>0</Const></TYPE><MODE><Const>2</Const></MODE><MIN_TIME><Const>10000</Const></MIN_TIME><MAX_TIME><Const>100000</Const></MAX_TIME><PRIO><Const>150</Const></PRIO><INTENSITY><MX+N>4;1.5;0</MX+N></INTENSITY><DURATION><Const>21600000</Const></DURATION>";
-
-		for (int i = 0; i <  linesCount; i++) {
-			
-			startExpression = new CreateActionExpression(lines[i]);
-			setFunction(200 + i, new FunctionByExpression(startExpression));
-
-		}
-		
-	}
 	
 	private void initialize() {
 		

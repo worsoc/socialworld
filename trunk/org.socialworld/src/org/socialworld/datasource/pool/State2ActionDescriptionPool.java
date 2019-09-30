@@ -1,19 +1,28 @@
 package org.socialworld.datasource.pool;
 
+import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.FunctionByExpression;
 import org.socialworld.calculation.descriptions.State2ActionDescription;
+import org.socialworld.calculation.expressions.CreateActionExpression;
+import org.socialworld.calculation.expressions.Nothing;
 
 public class State2ActionDescriptionPool extends DescriptionPool {
 	
+	public static final int COUNT_FbE_TEST_ENTRIES = 2;		// Anzahl Testeintraege FunctionByExpression
 
 	private static State2ActionDescriptionPool instance;
 	
 	private State2ActionDescription descriptions[];
-
+	private FunctionByExpression expressions[];
+	
 	private State2ActionDescriptionPool () {
 		
 		sizeDescriptionsArray = GaussPoolState2ActionType.CAPACITY_GPS2A_ARRAY;
 		descriptions = new State2ActionDescription[sizeDescriptionsArray];
+		
+		expressions = new FunctionByExpression[COUNT_FbE_TEST_ENTRIES];
+		
+		initializeWithTestData_FunctionByExpression();
 		
 		initialize();
 		
@@ -49,8 +58,8 @@ public class State2ActionDescriptionPool extends DescriptionPool {
 		for (int index = 0; index < sizeDescriptionsArray; index++) {
 			
 			description = new State2ActionDescription();
-			description.addFunctionCreateAction((FunctionByExpression)(FunctionPool.getInstance().getFunction(200)));
-			description.addFunctionCreateAction((FunctionByExpression)(FunctionPool.getInstance().getFunction(201)));
+			description.addFunctionCreateAction(expressions[0]);
+			description.addFunctionCreateAction(expressions[1]);
 			
 			descriptions[index] = description;
 	
@@ -58,7 +67,27 @@ public class State2ActionDescriptionPool extends DescriptionPool {
 		
 	}
 	
+	private void initializeWithTestData_FunctionByExpression() {
+		
+		int 		linesCount = COUNT_FbE_TEST_ENTRIES;
+		String lines[] = new String[linesCount];
+		Expression startExpression = Nothing.getInstance();
+		
+//		lines[0] = "WENN mood < 23 & hunger > 90 | courage = 80 & power < 30 DANN <TYPE><Const>1</Const></TYPE><MODE><Const>14</Const></MODE><MIN_TIME><Const>10000</Const></MIN_TIME><MAX_TIME><Const>100000</Const></MAX_TIME><PRIO><Const>50</Const></PRIO><INTENSITY><MX+N>5;1.5;23</MX+N></INTENSITY><DURATION><Const>1000</Const></DURATION>";
+//		lines[0] = "WENN mood > 23 & hunger < 90 | courage > 8 & power < 98 DANN <TYPE><Const>1</Const></TYPE><MODE><Const>14</Const></MODE><MIN_TIME><Const>10000</Const></MIN_TIME><MAX_TIME><Const>100000</Const></MAX_TIME><PRIO><Const>50</Const></PRIO><INTENSITY><MX+N>5;1.5;23</MX+N></INTENSITY><DURATION><Const>10000</Const></DURATION>";
+//		lines[0] = "WENN mood == 50 & mood = 50 | mood = 50 & mood = 50 DANN <TYPE><Const>1</Const></TYPE><MODE><Const>14</Const></MODE><MIN_TIME><Const>10000</Const></MIN_TIME><MAX_TIME><Const>100000</Const></MAX_TIME><PRIO><Const>50</Const></PRIO><INTENSITY><MX+N>5;1.5;23</MX+N></INTENSITY><DURATION><Const>10000</Const></DURATION>";
 
+		lines[0] = "WENN mood == 50 DANN <TYPE><Const>1</Const></TYPE><MODE><Const>14</Const></MODE><MIN_TIME><Now+N>10000</Now+N></MIN_TIME><MAX_TIME><Now+N>100000</Now+N></MAX_TIME><PRIO><Const>150</Const></PRIO><INTENSITY><MX+N>5;1.5;23</MX+N></INTENSITY><DURATION><Const>10000</Const></DURATION>";
+		lines[1] = "WENN tiredness == 41 DANN <TYPE><Const>0</Const></TYPE><MODE><Const>2</Const></MODE><MIN_TIME><Now+N>10000</Now+N></MIN_TIME><MAX_TIME><Now+N>100000</Now+N></MAX_TIME><PRIO><Const>50</Const></PRIO><INTENSITY><MX+N>4;1.5;0</MX+N></INTENSITY><DURATION><Const>610000</Const></DURATION>";
+
+		for (int i = 0; i <  linesCount; i++) {
+			
+			startExpression = new CreateActionExpression(lines[i]);
+			expressions[i] = new FunctionByExpression(startExpression);
+
+		}
+		
+	}
 	
 	/*
 	private void initializeFromFile() {
