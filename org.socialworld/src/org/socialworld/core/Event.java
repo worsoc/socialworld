@@ -133,10 +133,14 @@ public class Event implements Comparable<Event> {
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
 	public int compareTo(Event event) {
+		if (event == null) return 1;
+		
 		if (this.priority < event.getPriority())
 			return -1;
+		
 		if (this.priority > event.getPriority())
 			return 1;
+		
 		return 0;
 	}
 
