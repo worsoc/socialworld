@@ -24,6 +24,7 @@ package org.socialworld.core;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 import java.util.ListIterator;
 
 
@@ -49,11 +50,12 @@ public class EventMaster extends SocialWorldThread {
 	private static EventMaster instance;
 	
 	private int sleepTime = 50;
+	private boolean calculationAllowed = true;
 	
 	/**
 	 * a queue of events ordered by event's priority
 	 */
-	private PriorityQueue<Event> eventQueue;
+	private PriorityBlockingQueue<Event> eventQueue;
 	private int lastPriority = Event.LOWEST_EVENT_PRIORITY;
 	
 	/**
@@ -96,7 +98,7 @@ public class EventMaster extends SocialWorldThread {
 	private EventMaster() {
 
 		candidates = new ArrayList<SimulationObject>();
-		eventQueue = new PriorityQueue<Event>();
+		eventQueue = new PriorityBlockingQueue<Event>();
 		
 	}
 
@@ -123,7 +125,7 @@ public class EventMaster extends SocialWorldThread {
 			// calculating the next event from event queue
 			// !!! the sleepTime may change
 			
-			calculateNextEvent();
+			if (calculationAllowed) calculateNextEvent();
 			
 			
 			sleepTime = 50;
@@ -144,7 +146,9 @@ public class EventMaster extends SocialWorldThread {
 	 *            The event, which should add to the event queue.
 	 */
 	public void addEvent(Event event) {
+		calculationAllowed = false;
 		eventQueue.add(event);
+		calculationAllowed = true;
 	}
 	
 	/**
@@ -153,7 +157,16 @@ public class EventMaster extends SocialWorldThread {
 	private void calculateNextEvent() {
 
 		if (!eventQueue.isEmpty()) {
-			if ( loadEvent( this.eventQueue.poll() ) == true ) {
+			
+			Event event = null;;
+			try {
+				event = this.eventQueue.take();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+			
+			if ( loadEvent( event ) == true ) {
 				determineCandidates();
 				determineInfluence();
 			}
