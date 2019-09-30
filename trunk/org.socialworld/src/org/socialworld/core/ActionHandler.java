@@ -27,9 +27,12 @@ import java.util.List;
 import java.util.Iterator;
 import java.util.ListIterator;
 
+import java.lang.Math;
+
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionNothing;
+import org.socialworld.attributes.Time;
 
 /**
  * Manages the actions of an {@link SimulationObject}.
@@ -39,10 +42,15 @@ import org.socialworld.actions.ActionNothing;
 public class ActionHandler  {
 
 	public static final int ACTIONHANDLER_RETURN_ACTIONDONE = 0;
-	public static final int ACTIONHANDLER_RETURN_ACTIONISGOINGON = 1;
-	public static final int ACTIONHANDLER_RETURN_ACTIONYETEXECUTED = 2;
+	public static final int ACTIONHANDLER_RETURN_ACTIONINTERRUPTED = 1;
+	public static final int ACTIONHANDLER_RETURN_ACTIONISGOINGON = 2;
+	public static final int ACTIONHANDLER_RETURN_ACTIONYETEXECUTED = 3;
 	public static final int ACTIONHANDLER_RETURN_NOACTION = -1;
 
+	// must be in byte range
+	// because there is used a byte variable for index
+	public static final byte MAX_ACTION_WAIT_SECONDS = 60;
+	
 	/**
 	 * the simulation object whose actions are managed
 	 */
@@ -69,14 +77,19 @@ public class ActionHandler  {
 	 * the second of the actual minute.
 	 *  it is used for decision whether this action handler has yet executed an action within the actual time step
 	 */
-	private byte secondOfTheActualMinute = AbstractAction.MAX_ACTION_WAIT_SECONDS;
+	private byte secondOfTheActualMinute = MAX_ACTION_WAIT_SECONDS;
 	
+	private int secondsTillNextCalculation = 0;
+	private int secondsSinceLastCalculation = 0;
 	
 	/**
 	 * the latest time (in milliseconds) when the actual action's execution should start (later it would become invalid)
 	 * 
 	 */
 	private long latestExecutionTime;
+	
+	protected boolean removeFromActionMasterContinueIterator = false;
+
 	
 	public ActionHandler(final SimulationObject simulationObject) {
 		this.actualAction = null;
@@ -99,10 +112,12 @@ public class ActionHandler  {
 	 */
 	public int doActualAction(byte actualSecond ) {
 		AbstractAction action;
+		boolean interrupt = false;
 		
-		
-		if (this.actionList.size() > 0)		
+		if (this.actionList.size() > 0)	{	
 			action = this.actionList.get(0);
+			if (action == null) return ACTIONHANDLER_RETURN_NOACTION;
+		}
 		else
 			return ACTIONHANDLER_RETURN_NOACTION;
 
@@ -122,52 +137,98 @@ public class ActionHandler  {
 			
 		}
 		else 
-			if (action != this.actualAction) 
-				reset();
-			
-			
-		this.actualAction = action;
-
-		// execute the actual action
-		if (this.actualAction != null) {
-			
-			int secondsPast;
-			if (this.secondOfTheActualMinute == AbstractAction.MAX_ACTION_WAIT_SECONDS) 
-				secondsPast = 0;
-			else if (actualSecond < this.secondOfTheActualMinute) {
-				// we assume: there never are more than 60 seconds, till we reach a call to doActualAction()
-				// that's why a new minute is if actual second is less than this.secondOfTheActualMinute
-				secondsPast = AbstractAction.MAX_ACTION_WAIT_SECONDS - this.secondOfTheActualMinute + actualSecond;
+			if ((action != this.actualAction) && (this.actualAction != null)) {
+				if (this.actualAction.getRemainedDuration() > 0) {
+					interrupt = true;
+				}
+				else
+					reset();
 			}
-			else
-				secondsPast = actualSecond - this.secondOfTheActualMinute;
 			
 			
-			this.object.doAction(this.actualAction, 1000 * secondsPast, this);
-			this.secondOfTheActualMinute = actualSecond;
+		int secondsPast;
+		if (this.secondOfTheActualMinute == MAX_ACTION_WAIT_SECONDS) 
+			secondsPast = 0;
+		else if (actualSecond < this.secondOfTheActualMinute) {
+			// we assume: there never are more than 60 seconds, till we reach a call to doActualAction()
+			// that's why a new minute is if actual second is less than this.secondOfTheActualMinute
+			secondsPast = MAX_ACTION_WAIT_SECONDS - this.secondOfTheActualMinute + actualSecond;
+		}
+		else
+			secondsPast = actualSecond - this.secondOfTheActualMinute;
+		
+		if (!interrupt) {
+			if (action.isInterrupted()) {
+				System.out.println("ActionHandler.doActualAction(): continue after interrupt "  + action.toString());
+				action.continueAfterInterrupt();
+			}
+			this.actualAction = action;
+		}
+		
+		secondsTillNextCalculation = secondsTillNextCalculation - secondsPast;
+		secondsSinceLastCalculation = secondsSinceLastCalculation + secondsPast;
+		this.secondOfTheActualMinute = actualSecond;
+
+		if (secondsTillNextCalculation <= 0 || interrupt) {
 			
-			// if the actual action is executed completely
+			this.object.doAction(this.actualAction, 1000 * secondsSinceLastCalculation, this);
+			
+			secondsSinceLastCalculation = 0;
+			
+			// if the actual action is executed completely or interrupted
 			// then assign it to the last executed action member
 			// and remove it from the list
-			if (this.actualAction.isDone()) {
+			if (this.actualAction.isDone() || interrupt) {
 				this.lastExecutedAction = this.actualAction;
-				this.actionList.remove(this.actualAction);
-				return ACTIONHANDLER_RETURN_ACTIONDONE;
+				secondsTillNextCalculation = 0;
+				if (interrupt) {
+					System.out.println("ActionHandler.doActualAction(): interrupt " + this.actualAction.getActor().toString() + " " + action.toString());
+					this.actualAction.setLinkedAction(action);
+					if (this.actualAction.isInterruptable()) {
+						this.actualAction.interrupt();
+					}
+					else {
+						this.actionList.remove(this.actualAction);
+					}
+					return ACTIONHANDLER_RETURN_ACTIONINTERRUPTED;
+				}
+				else {
+					this.actionList.remove(this.actualAction);
+					return ACTIONHANDLER_RETURN_ACTIONDONE;
+				}
 			}
-			else
+			else {
+				secondsTillNextCalculation = getSecondsTillNextCalculation();
 				return ACTIONHANDLER_RETURN_ACTIONISGOINGON;
+			}
 		}
-		return ACTIONHANDLER_RETURN_NOACTION;
+		else	
+			return ACTIONHANDLER_RETURN_ACTIONISGOINGON;
 
 	}
 
+	
+	private int getSecondsTillNextCalculation() {
+		
+		int secondsTillNextCalculation = 0;
+		long remainedDurationInSeconds = this.actualAction.getRemainedDuration() / 1000;
+		
+		if (remainedDurationInSeconds > 60)	{
+			secondsTillNextCalculation = (int) Math.sqrt(remainedDurationInSeconds);
+			if (remainedDurationInSeconds < 600) {
+				secondsTillNextCalculation = (int) Math.sqrt(secondsTillNextCalculation);
+			}
+		}
+		return secondsTillNextCalculation;
+	}
+	
 	/**
 	 * The method resets the state of the action handler.
 	 * the property secondOfTheActualMinute is set to MAX_ACTION_WAIT_SECONDS
 	 */
 	public void reset() {
 		// this value for second is never reached because the real maximum is one less
-		secondOfTheActualMinute = AbstractAction.MAX_ACTION_WAIT_SECONDS;
+		secondOfTheActualMinute = MAX_ACTION_WAIT_SECONDS;
 	}
 	
 	/**
@@ -197,6 +258,7 @@ public class ActionHandler  {
 		
 		minTimeInMilliseconds = newAction.getMinTime().getTotalMilliseconds();
 		maxTimeInMilliseconds = newAction.getMaxTime().getTotalMilliseconds();
+
 		priority = newAction.getPriority();
 		duration = newAction.getDuration();
 		
@@ -205,6 +267,8 @@ public class ActionHandler  {
 			while (iterator.hasNext() && added == false) {
 				currentIndex = iterator.nextIndex() ;
 				listedAction = iterator.next();
+				
+				// a higher priority value means more important
 				
 				if ( listedAction.getPriority() < priority ) 
 					if ( (listedAction.getMaxTime().getTotalMilliseconds() + listedAction.getRemainedDuration()) <
@@ -218,7 +282,7 @@ public class ActionHandler  {
 						continue;
 					else
 						if (currentIndex == 0) 
-							if (this.actionList.indexOf(this.actualAction) == 0)
+							if ((this.actualAction != null) && (this.actionList.indexOf(this.actualAction) == 0) && (this.actualAction.isInterruptable()))
 								continue;
 				else // if ( listedAction.getPriority() > priority )
 					if ( listedAction.getMinTime().getTotalMilliseconds()  <=
@@ -226,7 +290,7 @@ public class ActionHandler  {
 						continue;
 					else
 						if (currentIndex == 0) 
-							if (this.actionList.indexOf(this.actualAction) == 0)
+							if ((this.actualAction != null) && (this.actionList.indexOf(this.actualAction) == 0) && (this.actualAction.isInterruptable()))
 								continue;
 	
 				// insert the new action element at the determined position (index)
@@ -319,4 +383,17 @@ public class ActionHandler  {
 
 		return noAction;
 	}
+	
+	public void removeFromContinueIterator() {
+		removeFromActionMasterContinueIterator = true;
+	}
+
+	public void dontRemoveFromContinueIterator() {
+		removeFromActionMasterContinueIterator = false;
+	}
+
+	public boolean isToBeRemovedFromContinueIterator() {
+		return removeFromActionMasterContinueIterator;
+	}
+
 }
