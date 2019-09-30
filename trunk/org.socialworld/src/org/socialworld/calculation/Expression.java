@@ -128,7 +128,10 @@ public class Expression {
 	}
 	
 		
-
+	Value evaluateExpression() {
+		Value[] noArguments = null;
+		return evaluateExpression(noArguments);
+	}
 
 	/**
 	 */
@@ -252,7 +255,11 @@ public class Expression {
 				
 				switch (type) {
 				case action:
-					createdValue = createValue(type, arguments); break;
+					createdValue = createValue(type, arguments);
+					break;
+				case time:
+					createdValue = calculation.createValue(type, expression1.evaluateExpression().getValueCopy());
+					break;
 				default:
 					createdValue = Calculation.getNothing();
 				}
