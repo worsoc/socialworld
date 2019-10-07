@@ -39,10 +39,14 @@ public class MapPropTree {
 		createRoot();
 	}
 	
-	private void createRoot() {
-		this.root = new MapPropTree_Node(this, 1);
+	protected void createRoot() {
+		setRoot( new MapPropTree_Node(this, 1));
 	}
 	
+	protected final void setRoot(MapPropTree_Node root) {
+		if (this.root == null) this.root = root;
+	}
+
 	protected MapPropTree_Node getRoot() {return this.root;}
 	
 	public IMapProp getProperty(String location) {
