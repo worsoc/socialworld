@@ -40,11 +40,42 @@ public class MapPropTree_Node {
 	
 	
 	protected MapPropTree_Node(MapPropTree tree, int level)  {
+		this.tree = tree;
 		this.level = level;
-		this.sectorNodes = new MapPropTree_Node[tree.getBase()];
+		createSectorNodesArray(tree.getBase());
+	}
+	
+	protected void createSectorNodesArray(int base) {
+		createSectorNodesArray(new MapPropTree_Node[base]);
 	}
 
+	protected final void createSectorNodesArray(MapPropTree_Node[] nodes) {
+		if (this.sectorNodes == null) this.sectorNodes = nodes;
+	}
+	
+	protected final void setNewNode(int sector) {
+		setNode(sector, createNewNode());
+	}
+	
+	protected MapPropTree_Node createNewNode() {
+		return new MapPropTree_Node(this.tree, level + 1);
+	}
+
+	protected void setNode(int sector, MapPropTree_Node node ) {
+		int base = tree.getBase();
+		
+		if (base == 9)
+			if (sector > 0 & sector < 10)		sectorNodes[sector - 1] = node;
+		if (base == 25)
+			if (sector > 0 & sector < 26)		sectorNodes[sector - 1] = node;
+		if (base == 27)
+			if (sector > 0 & sector < 28)		sectorNodes[sector - 1] = node;
+		
+	}
+	
 	protected MapPropTree getTree() { return tree; }
+	
+	protected int getLevel() { return level; }
 	
 	protected IMapProp getProperty(String locationRest) {
 		
@@ -95,29 +126,20 @@ public class MapPropTree_Node {
 	}
 
 	
-	protected void setNode(int sector, MapPropTree_Node node ) {
-		int base = tree.getBase();
-		
-		if (base == 9)
-			if (sector > 0 & sector < 10)		sectorNodes[sector - 1] = node;
-		if (base == 25)
-			if (sector > 0 & sector < 26)		sectorNodes[sector - 1] = node;
-		if (base == 27)
-			if (sector > 0 & sector < 28)		sectorNodes[sector - 1] = node;
-		
-	}
-	
-	
+
 	protected MapPropTree_Node setProperty(IMapProp property, String locationRest) {
 		int sector;
 
 		sector = tree.getSector(locationRest);
 		
 		if ( (sector == 0) | locationRest.length() == 0 ) return setProperty(property);
-		else return sectorNodes[sector - 1].setProperty(property, locationRest.substring(1));
+		
+		if (sectorNodes[sector - 1] == null) setNewNode(sector);
+		return sectorNodes[sector - 1].setProperty(property, locationRest.substring(1));
 		
 	}
 
+	
 	protected MapPropTree_Node setProperty(IMapProp property) {
 		isLeaf = true;
 		this.property = property;
