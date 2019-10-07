@@ -36,6 +36,10 @@ public class ObjectByPositionSearch_TreeSector extends MapPropTree {
 		super(base, accuracy);
 	}
 	
+	protected void createRoot() {
+		setRoot(new ObjectByPositionSearch_NodeSector(this, 1));
+	}
+
 	protected  ObjectByPositionSearch_NodeSector insertObject(SimulationObject object) {
 		return ((ObjectByPositionSearch_NodeSector) getRoot()).insertObject(object);
 	}
