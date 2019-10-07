@@ -41,8 +41,14 @@ public class ObjectByPositionSearch_NodeSector extends MapPropTree_Node{
 			super(tree, level);
 		}
 	 
+	protected void createSectorNodesArray(int base) {
+		createSectorNodesArray(new ObjectByPositionSearch_NodeSector[base]);
+	}
 
-	
+	protected MapPropTree_Node createNewNode() {
+		return new ObjectByPositionSearch_NodeSector((ObjectByPositionSearch_TreeSector) getTree(), getLevel() + 1);
+	}
+
 	protected ObjectByPositionSearch_NodeSector insertObject(SimulationObject object) {
 		String location;
 
