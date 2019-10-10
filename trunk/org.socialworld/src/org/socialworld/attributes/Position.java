@@ -202,4 +202,8 @@ public class Position {
 			return Integer.toString(0);
 		
 	}
+	
+	public String toString() {
+		return m_position.toString();
+	}
 }
