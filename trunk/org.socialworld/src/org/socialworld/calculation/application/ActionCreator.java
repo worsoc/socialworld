@@ -163,9 +163,9 @@ public class ActionCreator extends SocialWorldThread {
 		FunctionByExpression f_CreateAction;
 		AbstractAction action;
 		
-		for (int i = 0; i < count; i++) {
+		for (int index = 0; index < count; index++) {
 			
-			f_CreateAction = state2ActionDescription.getFunctionCreateAction(i);
+			f_CreateAction = state2ActionDescription.getFunctionCreateAction(index);
 	
 			if (stateActor instanceof StateAnimal) 
 				action = createAnimalActionByState((StateAnimal)stateActor, f_CreateAction);
