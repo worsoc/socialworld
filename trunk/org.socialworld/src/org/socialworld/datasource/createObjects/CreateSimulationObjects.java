@@ -21,6 +21,8 @@
 */
 package org.socialworld.datasource.createObjects;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import org.socialworld.datasource.pool.GaussPoolInfluenceType;
@@ -41,9 +43,11 @@ public abstract class CreateSimulationObjects {
 
 	protected Random random;
 
+	private List<Integer> usedPositionIndex;
 	
 	CreateSimulationObjects() {
 		random = new Random();
+		usedPositionIndex = new ArrayList<Integer>();
 	}
 
 	public abstract SimulationObject getObject(int objectID) ;
@@ -84,11 +88,23 @@ public abstract class CreateSimulationObjects {
 		indexGPS2A = mapGaussToIndex(gauss_value, GaussPoolState2ActionType.CAPACITY_GPS2A_ARRAY);
 		hiddenObject.setState2ActionType(GaussPoolState2ActionType.getInstance().getState2ActionType(indexGPS2A));
 		
-		indexPosition = random.nextInt(GaussPoolPosition.CAPACITY_GPPos_ARRAY);
-		if (random.nextBoolean() == false) indexPosition = indexPosition * -1;
+		do {
+			indexPosition = random.nextInt(GaussPoolPosition.CAPACITY_GPPos_ARRAY);
+			if (random.nextBoolean() == false) indexPosition = indexPosition * -1;
+		} while (checkArrayContainsValue(usedPositionIndex, indexPosition));
+		usedPositionIndex.add(indexPosition);
 		hiddenObject.setPosition(GaussPoolPosition.getInstance().getPosition(indexPosition));
 
 	}
 	
-
+	private boolean checkArrayContainsValue(List<Integer> array, int value) {
+		
+		int size = array.size();
+		
+		for (int index = 0; index < size; index++) {
+			if (array.get(index) == value) return true;
+		}
+		
+		return false;
+	}
 }
