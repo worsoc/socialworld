@@ -21,6 +21,9 @@
 */
 package org.socialworld.calculation.descriptions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.FunctionByExpression;
 
@@ -32,20 +35,41 @@ import org.socialworld.calculation.FunctionByExpression;
  */
 public class EventInfluenceDescription {
 
-	protected FunctionByExpression f_eventInfluence;
+	private List<FunctionByExpression> functionsEventInfluence;
 	
 	public EventInfluenceDescription() {
-		f_eventInfluence = new FunctionByExpression();
+		functionsEventInfluence = new  ArrayList<FunctionByExpression>();
 	}
 	
 	public EventInfluenceDescription(Expression startExpression) {
-		f_eventInfluence = new FunctionByExpression(startExpression);
+		
+		functionsEventInfluence = new  ArrayList<FunctionByExpression>();
+		FunctionByExpression f_eventInfluence = new FunctionByExpression(startExpression);
+		functionsEventInfluence.add(f_eventInfluence);
+
 	}
 	
-	public FunctionByExpression getFunctionEventInfluence() {
-		return f_eventInfluence;
+	public EventInfluenceDescription(FunctionByExpression function) {
+
+		functionsEventInfluence = new  ArrayList<FunctionByExpression>();
+		functionsEventInfluence.add(function);
+
+	}
+	
+	public void addFunctionEventInfluence(FunctionByExpression function) {
+
+		functionsEventInfluence.add(function);
+
+	}
+	
+	public FunctionByExpression getFunctionEventInfluence(int index) {
+		return functionsEventInfluence.get(index);
 	}
 
 
-
+	public int countFunctions() {
+		
+		return functionsEventInfluence.size();
+		
+	}
 }

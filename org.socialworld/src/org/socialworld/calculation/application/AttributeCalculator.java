@@ -160,13 +160,19 @@ public  class AttributeCalculator extends SocialWorldThread {
 			EventInfluenceAssignment.getInstance().getEventInfluenceDescription(
 				eventType, eventInfluenceType	);
 
-		f_EventInfluence = eventInfluenceDescription.getFunctionEventInfluence();
-			
+		int count = eventInfluenceDescription.countFunctions();
+		
 		arguments = new Value[1];
 		arguments[0] = new Value(Type.attributeArray, stateAnimal.getAttributes());
-	
-		return  f_EventInfluence.calculate(arguments);
-	
+		
+		for (int index = 0; index < count; index++){
+			
+			f_EventInfluence = eventInfluenceDescription.getFunctionEventInfluence(index);
+			arguments[0] =  f_EventInfluence.calculate(arguments);
+			
+		}
+	  
+		return arguments[0];
 	}
 
 	private final int calculateAttributesChangedByComplexMatrix() {

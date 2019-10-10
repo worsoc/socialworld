@@ -21,24 +21,36 @@
 */
 package org.socialworld.calculation.expressions;
 
+import org.socialworld.attributes.Attribute;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
+import org.socialworld.calculation.FunctionSetAttributeValue;
 
-public class Branching extends Expression {
+public class SetAttributeValue extends Expression {
 
-	public Branching (Expression expIF, Expression expTHEN, Expression expELSE) {
+	public SetAttributeValue(int indexAttribute, Expression expGetAttributeArray, Expression expCalculateAttributeValue) {
 		
 		super();
-		
-		
-		setExpression1(expIF);
-		setExpression2(expTHEN);
-		setExpression3(expELSE);
-		
-		setOperation(Expression_Function.branching);
-		setValid();
+		init( indexAttribute, expGetAttributeArray, expCalculateAttributeValue);
 		
 	}
-	
 
+	public SetAttributeValue(Attribute attribute, Expression expGetAttributeArray, Expression expCalculateAttributeValue) {
+		
+		super();
+		init( attribute.getIndex(), expGetAttributeArray, expCalculateAttributeValue);
+		
+	}
+
+	private void init(int indexAttribute, Expression expGetAttributeArray, Expression expCalculateAttributeValue) {
+		FunctionSetAttributeValue function = new FunctionSetAttributeValue(indexAttribute);
+		
+		setFunction(function);
+		setExpression1(expGetAttributeArray);
+		setExpression2(expCalculateAttributeValue);
+		setExpression3(Nothing.getInstance());
+		setOperation(Expression_Function.function);
+		
+		setValid();
+	}
 }
