@@ -23,7 +23,6 @@ package org.socialworld.core;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.PriorityQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.ListIterator;
 
@@ -50,7 +49,9 @@ public class EventMaster extends SocialWorldThread {
 	private static EventMaster instance;
 	
 	private int sleepTime = 50;
-	private boolean calculationAllowed = true;
+	
+	private boolean blockedByAdd = false;
+	private boolean blockedByCalculate = false;
 	
 	/**
 	 * a queue of events ordered by event's priority
@@ -125,7 +126,7 @@ public class EventMaster extends SocialWorldThread {
 			// calculating the next event from event queue
 			// !!! the sleepTime may change
 			
-			if (calculationAllowed) calculateNextEvent();
+			if (!blockedByAdd && !blockedByCalculate) calculateNextEvent();
 			
 			
 			sleepTime = 50;
@@ -146,9 +147,9 @@ public class EventMaster extends SocialWorldThread {
 	 *            The event, which should add to the event queue.
 	 */
 	public void addEvent(Event event) {
-		calculationAllowed = false;
+		blockedByAdd = true;
 		eventQueue.add(event);
-		calculationAllowed = true;
+		blockedByAdd = false;
 	}
 	
 	/**
@@ -158,18 +159,19 @@ public class EventMaster extends SocialWorldThread {
 
 		if (!eventQueue.isEmpty()) {
 			
-			Event event = null;;
+			Event event = null;
 			try {
 				event = this.eventQueue.take();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 
-			
+			blockedByCalculate = true;
 			if ( loadEvent( event ) == true ) {
 				determineCandidates();
 				determineInfluence();
 			}
+			blockedByCalculate = false;
 		}
 		else
 			sleepTime = MAX_SLEEP_TIME_FOR_EMPTY_QUEUE;
