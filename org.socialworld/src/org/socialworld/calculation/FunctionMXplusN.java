@@ -32,15 +32,11 @@ public class FunctionMXplusN extends FunctionBase {
 	private float m;
 	private Value n;
 	
-	private Value max;
-	private Value min;
 	
-	private boolean withMinMaxCheck = false;
+	private boolean useFloatingPointCalculation = false;
 	
 	// special floatingpoint
 	private float n_as_float;
-	private float max_as_float;
-	private float min_as_float;
 	
 	//special constructor for float values
 	public FunctionMXplusN( float m, float n) {
@@ -48,12 +44,25 @@ public class FunctionMXplusN extends FunctionBase {
 		this.type = Type.floatingpoint;
 		
 		this.m = m;
-		this.n = new Value(Type.floatingpoint, n);
+	//	this.n = new Value(Type.floatingpoint, n);
 		
 		this.n_as_float = n;
 		
+		this.useFloatingPointCalculation = true;
 	}
 
+	public FunctionMXplusN(Type type, float m, float n, float min, float max) {
+		
+		this.type = type;
+		
+		this.m = m;
+		this.n_as_float = n;
+		setMinMaxCheckFloat(min, max);
+		this.useFloatingPointCalculation = true;
+		
+			
+	}
+	
 	public FunctionMXplusN(Type type, float m, Value n, Value min, Value max, boolean withMinMaxCheck) {
 		
 		this.type = type;
@@ -61,17 +70,8 @@ public class FunctionMXplusN extends FunctionBase {
 		this.m = m;
 		this.n = n;
 		
-		this.min = min;
-		this.max = max;
+		setMinMaxCheckValue(min, max);
 		
-		this.withMinMaxCheck = withMinMaxCheck;
-		
-		if (type == Type.floatingpoint) {
-			n_as_float = (float) n.getValue();
-			max_as_float = (float) max.getValue();
-			min_as_float = (float) min.getValue();
-			
-		}
 	}
 	
 	/* (non-Javadoc)
@@ -80,18 +80,27 @@ public class FunctionMXplusN extends FunctionBase {
 	@Override
 	public Value calculate(Value[] arguments) {
 			// assumption: value is at index 0 
-		
+			Value result;
 			Value x;
 			
 			if ( arguments.length < 1) return new Value();
 			x = arguments[0];
 			
 			if (!x.isValid()) return x;
-			 
-			if (type == Type.floatingpoint) 
-				return calculation.createValue(Type.floatingpoint, calculateFloatingPoint((float) calculation.createValue(Type.floatingpoint, x.getValueCopy()).getValueCopy()));
+			
+			if (this.useFloatingPointCalculation) {
 				
-			Value result;
+				if (type == Type.floatingpoint)  {
+					result = calculation.createValue(Type.floatingpoint, calculateFloatingPoint((float) calculation.createValue(Type.floatingpoint, x.getValueCopy()).getValueCopy()));
+					return result;
+				}
+				if (type == Type.integer) {
+					result = calculation.createValue(Type.integer, calculateFloatingPoint((float) calculation.createValue(Type.floatingpoint, x.getValueCopy()).getValueCopy()));
+					return result;
+				}
+				
+			}
+
 			
 			if (x.type != n.type) return new Value();
 					
@@ -103,11 +112,7 @@ public class FunctionMXplusN extends FunctionBase {
 
 			if (result.type != n.type) return new Value();
 
-			if (withMinMaxCheck) {
-				if (calculation.compareGreater(result,  max).isTrue() ) result = calculation.copy(max);
-				if (calculation.compareLess(result,  min).isTrue() ) result = calculation.copy(min);
-			}
-			
+			result = getMinMaxedValue(result);
 			return result;
 	}
 
@@ -116,11 +121,7 @@ public class FunctionMXplusN extends FunctionBase {
 		float result;
 		
 		result = m * x + n_as_float;
-		
-		if (withMinMaxCheck) {
-			if (result > max_as_float) result = max_as_float;
-			if (result < min_as_float) result = min_as_float;
-		}
+		result = getMinMaxedFloat(result);
 		
 		return result;
 	}

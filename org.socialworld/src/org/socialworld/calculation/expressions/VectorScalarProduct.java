@@ -28,13 +28,23 @@ import org.socialworld.calculation.FunctionByMatrix;
 import org.socialworld.calculation.FunctionByMatrix_Matrix;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
+import org.socialworld.calculation.ValueInterpreteAs;
 
 public class VectorScalarProduct extends Expression {
 
+	public VectorScalarProduct(String formula, ValueInterpreteAs interpreteResultAs) {
+		
+		super();
+		init(formula, interpreteResultAs );
+	}	
+	
 	public VectorScalarProduct(String formula) {
 		
 		super();
-		
+		init(formula, ValueInterpreteAs.nothing );
+	}	
+	
+	private void init(String formula, ValueInterpreteAs interpreteResultAs)	{
 		String elements[];
 		elements = formula.split(";");
 
@@ -54,7 +64,7 @@ public class VectorScalarProduct extends Expression {
 			for (int i = 0; i < offsets.length; i++) offsetsValue[i] = new Value(offsets[i].trim(), Type.floatingpoint);
 		
 			FunctionByMatrix_Matrix matrix  = new FunctionByMatrix_Matrix(sharesValue, functionIDs, offsetsValue);
-			FunctionByMatrix function = new FunctionByMatrix( matrix);
+			FunctionByMatrix function = new FunctionByMatrix(interpreteResultAs, matrix);
 					
 	
 			int freeFunctionIndex = this.functions.findNextFree(100, 200);
@@ -68,7 +78,7 @@ public class VectorScalarProduct extends Expression {
 				
 				setOperation(Expression_Function.function);
 				
-				setExpression1(new GetArgumentByName(GetArgumentByName.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES));
+				setExpression1(new GetArgumentByName(Value.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES));
 				setExpression2(new Constant(new Value(Type.integer, FunctionByMatrix_Matrix.CALCULATION_MODE_VECTOR_X_VECTOR)));
 				setExpression3(Nothing.getInstance());
 				

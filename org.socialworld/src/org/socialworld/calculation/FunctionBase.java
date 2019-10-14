@@ -24,6 +24,15 @@ package org.socialworld.calculation;
 public abstract class FunctionBase {
 	
 	private boolean valid = true;
+
+	private boolean withMinMaxCheck = false;
+
+	private Value max;
+	private Value min;
+
+	// special floatingpoint
+	private float max_as_float;
+	private float min_as_float;
 	
 	protected Calculation calculation = Calculation.getInstance();
 
@@ -44,6 +53,39 @@ public abstract class FunctionBase {
 		return new Value();
 
 	}
+	
+	protected void setMinMaxCheckValue(Value min, Value max) {
+		this.max = max;
+		this.min = min;
+		this.withMinMaxCheck = true;
+	}	
+	protected void setMinMaxCheckFloat(float min, float max) {
+		this.max_as_float = max;
+		this.min_as_float = min;
+		this.withMinMaxCheck = true;
+	}
+	
+	protected boolean isWithMinMaxCheck() {
+		return withMinMaxCheck;
+	}
+	
+	protected float getMinMaxedFloat(float value) {
+		if (withMinMaxCheck) {
+			if (value > max_as_float) value = max_as_float;
+			if (value < min_as_float) value = min_as_float;
+		}
+		return value;
+	}
+	
+	protected Value getMinMaxedValue(Value value) {
+		Value result = value;
+		if (withMinMaxCheck) {
+			if (calculation.compareGreater(value,  max).isTrue() ) result = calculation.copy(max);
+			if (calculation.compareLess(value,  min).isTrue() ) result = calculation.copy(min);
+		}
+		return result;
+	}
+
 	
 	protected boolean isValid() {
 		return valid;

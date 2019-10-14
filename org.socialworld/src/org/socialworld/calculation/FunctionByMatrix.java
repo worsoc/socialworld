@@ -25,21 +25,46 @@ import org.socialworld.attributes.AttributeArray;
 
 public class FunctionByMatrix extends FunctionBase {
 
+	ValueInterpreteAs interpreteResultAs;
+
 	private FunctionByMatrix_Matrix matrix;
 	private static Value hundred;
 	private static Value aHalf;
 	
-	public FunctionByMatrix() {
+	public FunctionByMatrix(ValueInterpreteAs interpreteResultAs) {
+		
+		this.interpreteResultAs = interpreteResultAs;
 		returnInvalidNothingvalue = true;
 		hundred = new Value(Type.integer, 100);
 		aHalf = new Value(Type.floatingpoint, 0.5f);
+		
+		if (interpreteResultAs == ValueInterpreteAs.attributeValue) {
+			setMinMaxCheckFloat(0, AttributeArray.ATTRIBUTE_VALUE_MAX) ;
+		}
 	}
 
 	public FunctionByMatrix(FunctionByMatrix_Matrix matrix) {
+		
+		this.interpreteResultAs = ValueInterpreteAs.nothing;
 		this.matrix = matrix;
 		returnInvalidNothingvalue = false;
 		hundred = new Value(Type.floatingpoint, 100.0F);
 		aHalf = new Value(Type.floatingpoint, 0.5f);
+		
+	}
+
+	public FunctionByMatrix(ValueInterpreteAs interpreteResultAs, FunctionByMatrix_Matrix matrix) {
+		
+		this.interpreteResultAs = interpreteResultAs;
+		this.matrix = matrix;
+		returnInvalidNothingvalue = false;
+		hundred = new Value(Type.floatingpoint, 100.0F);
+		aHalf = new Value(Type.floatingpoint, 0.5f);
+		
+		if (interpreteResultAs == ValueInterpreteAs.attributeValue) {
+			setMinMaxCheckFloat(0, AttributeArray.ATTRIBUTE_VALUE_MAX) ;
+		}
+
 	}
 	
 	public void setMatrix(FunctionByMatrix_Matrix matrix) {
@@ -78,7 +103,10 @@ public class FunctionByMatrix extends FunctionBase {
 					result = calculation.createValue(Type.attributeArray, attributes );
 					break;
 				case FunctionByMatrix_Matrix.CALCULATION_MODE_VECTOR_X_VECTOR:
-					result = new Value(Type.floatingpoint, calculateScalar(attributes));
+					if (interpreteResultAs == ValueInterpreteAs.attributeValue) 
+						result = calculation.createValue(Type.integer, calculateScalar(attributes));
+					else
+						result = calculation.createValue(Type.floatingpoint, calculateScalar(attributes));
 					break;
 				default:
 					result = new Value();
@@ -141,6 +169,8 @@ public class FunctionByMatrix extends FunctionBase {
 
 		}
 		
+		result = getMinMaxedFloat(result);
+
 		return result;
 		
 	}
@@ -281,12 +311,18 @@ public class FunctionByMatrix extends FunctionBase {
 			}
 		}
 
+		if (this.matrix.isWithDiv100() ) {
+			for (row = 0; row < length; row++) {
+				 attributesNew[row] = attributesNew[row] / 100;
+			}
+		}
+		
+		
 		// rounding the attribute values to integer values
 		// writing them from help array to main array
 		for (row = 0; row < length; row++) {
 			
-			if (this.matrix.isWithDiv100() ) attributesNew[row] = attributesNew[row] / 100;
-			attributes.set(row, (int) (attributesNew[row] + 0.5));
+			attributes.set(row, (int) getMinMaxedFloat(attributesNew[row] + 0.5F));
 			
 		}
 

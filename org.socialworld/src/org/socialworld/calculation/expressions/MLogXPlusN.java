@@ -25,12 +25,22 @@ import org.socialworld.attributes.Attribute;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
 import org.socialworld.calculation.FunctionMtimesLogXplusN;
+import org.socialworld.calculation.Type;
+import org.socialworld.calculation.ValueInterpreteAs;
 
 public class MLogXPlusN extends Expression {
 
 	public MLogXPlusN(String formula) {
-		
 		super();
+		init(formula, ValueInterpreteAs.nothing);
+	}
+
+	public MLogXPlusN(String formula,   ValueInterpreteAs interpreteResultAs) {
+		super();
+		init(formula, interpreteResultAs);
+	}
+	
+	private void init(String formula,  ValueInterpreteAs interpreteResultAs) {
 		
 		String elements[];
 		elements = formula.split(";");
@@ -51,7 +61,10 @@ public class MLogXPlusN extends Expression {
 					float min = Float.parseFloat(elements[4].trim());
 					float max = Float.parseFloat(elements[5].trim());
 					
-					function = new FunctionMtimesLogXplusN( base, m, n, min,  max, true);
+					if (interpreteResultAs == ValueInterpreteAs.attributeValue) 
+						function = new FunctionMtimesLogXplusN( Type.integer, base, m, n, min,  max);
+					else
+						function = new FunctionMtimesLogXplusN( Type.floatingpoint,base, m, n, min,  max);
 					
 				}
 				
@@ -61,7 +74,10 @@ public class MLogXPlusN extends Expression {
 					float m = Float.parseFloat(elements[2].trim());
 					float n = Float.parseFloat(elements[3].trim());
 					
-					function = new FunctionMtimesLogXplusN( base, m, n);
+					if (interpreteResultAs == ValueInterpreteAs.attributeValue) 
+						function = new FunctionMtimesLogXplusN( Type.integer, base, m, n);
+					else
+						function = new FunctionMtimesLogXplusN( Type.floatingpoint,base, m, n);
 					
 				}
 	

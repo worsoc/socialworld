@@ -28,6 +28,7 @@ import org.socialworld.calculation.FunctionByMatrix;
 import org.socialworld.calculation.FunctionByMatrix_Matrix;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
+import org.socialworld.calculation.ValueInterpreteAs;
 import org.socialworld.calculation.expressions.CreateActionExpression;
 import org.socialworld.calculation.expressions.Nothing;
 import org.socialworld.datasource.tablesPool.TablePoolFunctionExpression;
@@ -146,7 +147,7 @@ public class FunctionPool {
 		
 		for (int i = 0; i <  shareLinesCount; i++) {
 			
-			setFunction(100 + i, new FunctionByMatrix(new FunctionByMatrix_Matrix(shareLines[i], functionLines[0] , offssetLine,  numberOfColumns)));
+			setFunction(100 + i, new FunctionByMatrix(ValueInterpreteAs.attributeValue, new FunctionByMatrix_Matrix(shareLines[i], functionLines[0] , offssetLine,  numberOfColumns)));
 
 		}
 				
