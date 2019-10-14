@@ -21,16 +21,52 @@
 */
 package org.socialworld.calculation.expressions;
 
+import java.util.List;
+
 import org.socialworld.attributes.Attribute;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_ConditionOperator;
 import org.socialworld.calculation.Expression_Function;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
+import org.socialworld.calculation.ValueInterpreteAs;
 import org.socialworld.datasource.parsing.ParseExpressionStrings;
 
 public class ChangeAttributes extends Expression {
 
+	public ChangeAttributes(List<String> lines) {
+		
+		super();
+		
+		if (lines.size() > 0)
+		{
+			String line;
+			
+			Expression exp1;  // WENN
+			Expression exp2;  // DANN
+			Expression exp3;  // SONST
+				
+			line = lines.get(0);
+			exp1 = parseWenn(line);
+			exp2 = parseDann(line);
+			
+			if (lines.size() > 1) {
+				exp3 = parseLinesTail(1, lines);
+			}
+			else {
+				exp3 = new GetArgumentByName(Value.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES);
+			}
+			
+			setExpression1(exp1);
+			setExpression2(exp2);
+			setExpression3(exp3);
+
+			setOperation(Expression_Function.branching);
+
+			setValid();
+		}
+		
+	}
 	
 	public ChangeAttributes(String line) {
 		
@@ -39,11 +75,11 @@ public class ChangeAttributes extends Expression {
 		
 		Expression exp1;  // WENN
 		Expression exp2;  // DANN
-		Expression exp3;  // SONST (doesn't exist here  --> action Nothing)
+		Expression exp3;  // SONST (doesn't exist here  --> return an equal attribute array)
 			
 		exp1 = parseWenn(line);
 		exp2 = parseDann(line);
-		exp3 = new CreateValue(Type.action, Nothing.getInstance());
+		exp3 = new GetArgumentByName(Value.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES);
 		
 		setExpression1(exp1);
 		setExpression2(exp2);
@@ -55,6 +91,26 @@ public class ChangeAttributes extends Expression {
 		
 	}
 
+	private Expression parseLinesTail(int index, List<String> lines) {
+		
+		String line;
+		
+		Expression wenn;
+		Expression dann;
+		Expression tail;
+		
+		line = lines.get(index);
+		wenn = parseWenn(line);
+		dann = parseDann(line);
+		
+		if (index == (lines.size() - 1)) 
+			 tail = new GetArgumentByName(Value.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES);
+		else
+			 tail = parseLinesTail(index + 1, lines);
+		
+		return new Branching(wenn, dann, tail);
+			
+	}
 	
 	private Expression parseWenn(String line) {
 		
@@ -124,16 +180,16 @@ public class ChangeAttributes extends Expression {
 				
 				expressionSetAttributeValue = 
 							new SetAttributeValue(attribute, 
-									new GetArgumentByName(GetArgumentByName.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES), 
+									new GetArgumentByName(Value.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES), 
 									expressionCalculateNewAttributeValue);
 				
 				if (isFirstExpression) {
-					replacementChain = new Replacement(GetArgumentByName.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES, expressionSetAttributeValue);
+					replacementChain = new Replacement(Value.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES, expressionSetAttributeValue);
 					isFirstExpression = false;
 				}
 				else {
 					sequence[0] = replacementChain;
-					sequence[1] = new Replacement(GetArgumentByName.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES, expressionSetAttributeValue);
+					sequence[1] = new Replacement(Value.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES, expressionSetAttributeValue);
 					replacementChain = new Sequence(sequence);
 
 				}
@@ -157,10 +213,10 @@ public class ChangeAttributes extends Expression {
 			result = new Constant(calculation.createValue(type,  Integer.parseInt(function[1] )));
 			break;
 		case "Table":		result = new TableLookup(function[1]);  break;
-		case "VSPE":		result = new VectorScalarProduct(function[1]);  break;
-		case "MX+N":		result = new MXPlusN(function[1]);  break;
-		case "MLogX+N":		result = new MLogXPlusN(function[1]);  break;
-		case "MExpX+N":		result = new MExpXPlusN(function[1]);  break;
+		case "VSPE":		result = new VectorScalarProduct(function[1], ValueInterpreteAs.attributeValue);  break;
+		case "MX+N":		result = new MXPlusN(function[1], ValueInterpreteAs.attributeValue);  break;
+		case "MLogX+N":		result = new MLogXPlusN(function[1], ValueInterpreteAs.attributeValue);  break;
+		case "MExpX+N":		result = new MExpXPlusN(function[1], ValueInterpreteAs.attributeValue);  break;
 		}
 		return result;
 		

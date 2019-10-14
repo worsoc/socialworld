@@ -27,17 +27,16 @@ package org.socialworld.calculation;
  */
 public class FunctionMtimesLogXplusN extends FunctionBase {
 
+	Type type;
+
 	private float base;
 	private float m;
 	private float n;
 	
-	private float max;
-	private float min;
-	
-	private boolean withMinMaxCheck = false;
-	
 
-	public FunctionMtimesLogXplusN( float base, float m, float n) {
+	public FunctionMtimesLogXplusN(Type type,  float base, float m, float n) {
+		
+		this.type = type;
 		
 		this.base = base;
 		this.m = m;
@@ -45,16 +44,16 @@ public class FunctionMtimesLogXplusN extends FunctionBase {
 			
 	}
 
-	public FunctionMtimesLogXplusN( float base, float m, float n, float min, float max, boolean withMinMaxCheck) {
+	public FunctionMtimesLogXplusN(Type type, float base, float m, float n, float min, float max) {
+		
+		this.type = type;
 		
 		this.base = base;
 		this.m = m;
 		this.n = n;
 		
-		this.min = min;
-		this.max = max;
-		
-		this.withMinMaxCheck = withMinMaxCheck;
+		setMinMaxCheckFloat(min, max);
+
 		
 	}
 
@@ -64,30 +63,30 @@ public class FunctionMtimesLogXplusN extends FunctionBase {
 	@Override
 	public Value calculate(Value[] arguments) {
 		Value x;
-		
+		float result;
 		if ( arguments.length < 1) return new Value();
 		x = arguments[0];
 		
 		if (!x.isValid()) return x;
 		 
 		if (!(x.type == Type.floatingpoint)) return new Value();
-		
-		return new Value (Type.floatingpoint, calculation.createValue(Type.floatingpoint, calculateFloatingPoint((float) calculation.createValue(Type.floatingpoint, x.getValueCopy()).getValueCopy())));
-			
+	
+		result = calculateFloatingPoint((float) calculation.createValue(Type.floatingpoint, x.getValueCopy()).getValueCopy());
+		return  calculation.createValue(this.type, result);
+
 	}
 
+	
 	public float calculateFloatingPoint(float x) {
 		
-		double result;
+		double resultD;
+		float resultF;
 		
-		result = m * Math.log(x) / Math.log(base) + n;
+		resultD = m * Math.log(x) / Math.log(base) + n;
 		
-		if (withMinMaxCheck) {
-			if (result > max) result = max;
-			if (result < min) result = min;
-		}
+		resultF = getMinMaxedFloat((float)resultD);
 		
-		return (float) result;
+		return  resultF;
 	}
 
 }

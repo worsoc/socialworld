@@ -22,17 +22,31 @@
 package org.socialworld.calculation.expressions;
 
 import org.socialworld.attributes.Attribute;
+import org.socialworld.attributes.AttributeArray;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
 import org.socialworld.calculation.FunctionMXplusN;
 import org.socialworld.calculation.Type;
-import org.socialworld.calculation.Value;
+import org.socialworld.calculation.ValueInterpreteAs;
 
 public class MXPlusN extends Expression {
 
+	
 	public MXPlusN(String formula) {
 		
 		super();
+		// init without type casting (using floating point)
+		init(formula,  ValueInterpreteAs.nothing);
+	}
+
+	public MXPlusN(String formula,  ValueInterpreteAs interpreteResultAs) {
+		
+		super();
+		init(formula,  interpreteResultAs);
+		
+	}
+	
+	private void init(String formula,  ValueInterpreteAs interpreteResultAs) {
 		
 		String elements[];
 		elements = formula.split(";");
@@ -48,11 +62,14 @@ public class MXPlusN extends Expression {
 				if (elements.length == 5) {
 					
 					float m = Float.parseFloat(elements[1].trim());
-					Value n = new Value(elements[2].trim(), Type.floatingpoint);
-					Value min = new Value(elements[3].trim(), Type.floatingpoint);
-					Value max = new Value(elements[4].trim(), Type.floatingpoint);
+					float n = Float.parseFloat(elements[2].trim());
+					float min = Float.parseFloat(elements[3].trim());
+					float max = Float.parseFloat(elements[4].trim());
 					
-					function = new FunctionMXplusN( Type.floatingpoint, m, n, min,  max, true);
+					if (interpreteResultAs == ValueInterpreteAs.attributeValue) 
+						function = new FunctionMXplusN( Type.integer, m, n, min,  max);
+					else
+						function = new FunctionMXplusN( Type.floatingpoint, m, n, min,  max);
 					
 				}
 				
@@ -61,7 +78,10 @@ public class MXPlusN extends Expression {
 					float m = Float.parseFloat(elements[1].trim());
 					float n = Float.parseFloat(elements[2].trim());
 					
-					function = new FunctionMXplusN(m, n);
+					if (interpreteResultAs == ValueInterpreteAs.attributeValue) 
+						function = new FunctionMXplusN(Type.integer, m, n, 0, AttributeArray.ATTRIBUTE_VALUE_MAX);
+					else
+						function = new FunctionMXplusN(m, n);
 					
 				}
 	

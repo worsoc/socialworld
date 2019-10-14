@@ -28,7 +28,6 @@ import org.socialworld.calculation.Value;
 
 public class GetArgumentByName extends Expression {
 
-	public static String ARGUMENT_VALUE_BY_NAME_ATTRIBUTES = "attributes";
 	
 	public GetArgumentByName(String name) {
 		

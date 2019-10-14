@@ -21,6 +21,8 @@
 */
 package org.socialworld.calculation.expressions;
 
+import java.util.List;
+
 import org.socialworld.attributes.Attribute;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_ConditionOperator;
@@ -31,11 +33,11 @@ import org.socialworld.datasource.parsing.ParseExpressionStrings;
 
 public class CreateActionExpression extends Expression {
 	
-	public CreateActionExpression(String[] lines) {
+	public CreateActionExpression(List<String> lines) {
 		
 		super();
 		
-		if (lines.length > 0)
+		if (lines.size() > 0)
 		{
 			String line;
 			
@@ -43,16 +45,15 @@ public class CreateActionExpression extends Expression {
 			Expression exp2;  // DANN
 			Expression exp3;  // SONST
 				
-			line = lines[0];
+			line = lines.get(0);
 			exp1 = parseWenn(line);
 			exp2 = parseDann(line);
 			
-			if (lines.length > 1) {
+			if (lines.size() > 1) {
 				exp3 = parseLinesTail(1, lines);
 			}
 			else {
 				exp3 = new CreateValue(Type.action, Nothing.getInstance());
-
 			}
 			
 			setExpression1(exp1);
@@ -89,7 +90,7 @@ public class CreateActionExpression extends Expression {
 	}
 
 	
-	private Expression parseLinesTail(int index, String[] lines) {
+	private Expression parseLinesTail(int index, List<String> lines) {
 		
 		String line;
 		
@@ -97,18 +98,17 @@ public class CreateActionExpression extends Expression {
 		Expression dann;
 		Expression tail;
 		
-		line = lines[index];
+		line = lines.get(index);
 		wenn = parseWenn(line);
 		dann = parseDann(line);
 		
-		if (index == (lines.length - 1)) 
+		if (index == (lines.size() - 1)) 
 			 tail = new Expression();
 		else
 			 tail = parseLinesTail(index + 1, lines);
 		
 		return new Branching(wenn, dann, tail);
 			
-		
 	}
 	
 	private Expression parseWenn(String line) {
@@ -218,18 +218,19 @@ public class CreateActionExpression extends Expression {
 		Expression result = Nothing.getInstance();
 		Type type;
 		
+		switch (property) {
+		case  "actiontype": type = Type.actionType; break;
+		case  "actionmode": type = Type.actionMode; break;
+		case  "mintime": type = Type.time; break;
+		case  "maxtime": type = Type.time; break;
+		case  "intensity": type = Type.floatingpoint; break;
+		case  "priority": type = Type.integer; break;
+		case  "duration": type = Type.longinteger; break;
+		default: type = Type.nothing;
+		}
+		
 		switch (function[0]) {
 		case "Const":
-			switch (property) {
-			case  "actiontype": type = Type.actionType; break;
-			case  "actionmode": type = Type.actionMode; break;
-			case  "mintime": type = Type.time; break;
-			case  "maxtime": type = Type.time; break;
-			case  "intensity": type = Type.floatingpoint; break;
-			case  "priority": type = Type.integer; break;
-			case  "duration": type = Type.longinteger; break;
-			default: type = Type.nothing;
-			}
 			result = new Constant(calculation.createValue(type,  Float.parseFloat(function[1] ))); break;
 		case "Table":		result = new TableLookup(function[1]);  break;
 		case "VSPE":		result = new VectorScalarProduct(function[1]);  break;

@@ -153,9 +153,10 @@ public class Expression {
 			case attributeValue:
 				AttributeArray attributeArray;
 				attributeArray = (AttributeArray) get( arguments, Type.attributeArray, 1);
+				index = (int) value.getValueCopy();
 				return calculation.createValue(
 					Type.integer,
-					attributeArray.get( (int) value.getValueCopy()));
+					attributeArray.get(index ));
 					
 			case argumentValueByName:
 				return getValue(arguments, (String) value.getValueCopy());

@@ -25,6 +25,8 @@ import org.socialworld.attributes.Time;
 
 public class Value {
 
+	public static String ARGUMENT_VALUE_BY_NAME_ATTRIBUTES = "attributes";
+
 	Type type;
 	String name = "";
 	Object value;
