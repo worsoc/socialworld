@@ -21,11 +21,14 @@
 */
 package org.socialworld.actions.hear;
 
+import java.util.List;
+
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Time;
+import org.socialworld.calculation.Value;
 import org.socialworld.conversation.PunctuationMark;
 import org.socialworld.conversation.Talk_SentenceType;
 import org.socialworld.core.EventByAction;
@@ -72,6 +75,10 @@ public class ActionHear extends AbstractAction {
 	private String sentence;
 
 	private SimulationObject target;
+
+	public ActionHear(List<Value> actionProperties) {
+		super(actionProperties);
+	}
 
 	public ActionHear(final ActionType type, final ActionMode mode,
 			final float intensity, final Time minTime, final Time maxTime,

@@ -23,6 +23,7 @@ package org.socialworld.calculation.expressions;
 
 import java.util.List;
 
+import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.Attribute;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_ConditionOperator;
@@ -149,7 +150,7 @@ public class CreateActionExpression extends Expression {
 		String partDANN;
 		
 		Expression actionValue;
-		Expression replacementChain;
+		Expression replacementChain = null;
 		Expression[] sequence = new Expression[2];
 		Expression createAction;
 		
@@ -160,55 +161,41 @@ public class CreateActionExpression extends Expression {
 		
 		partDANN = line.substring(posDann);
 		
+		String tagValue = "";
+		String[] propertyNames;
+		String propertyName;
+		ActionType actionType = ActionType.ignore;
 		
-		String tagValueActionType = ParseExpressionStrings.getTagValue(partDANN, "TYPE");
-		String tagValueActionMode = ParseExpressionStrings.getTagValue(partDANN, "MODE");
-		String tagValueMinTime = ParseExpressionStrings.getTagValue(partDANN, "MIN_TIME");
-		String tagValueMaxTime = ParseExpressionStrings.getTagValue(partDANN, "MAX_TIME");
-		String tagValuePriority = ParseExpressionStrings.getTagValue(partDANN, "PRIO");
-		String tagValueIntensity = ParseExpressionStrings.getTagValue(partDANN, "INTENSITY");
-		String tagValueDuration = ParseExpressionStrings.getTagValue(partDANN, "DURATION");
-		
-		function = ParseExpressionStrings.getTagValue(tagValueActionType, functionTags);
-		actionValue = getFunctionExpression("actiontype", function);
-		replacementChain = new Replacement("actiontype", actionValue);
-		
-		function = ParseExpressionStrings.getTagValue(tagValueActionMode, functionTags);
-		actionValue = getFunctionExpression("actionmode", function);
-		sequence[0] = new Replacement("actionmode", actionValue);
-		sequence[1] = replacementChain;
-		replacementChain = new Sequence(sequence);
-		
-		function = ParseExpressionStrings.getTagValue(tagValueMinTime, functionTags);
-		actionValue = getFunctionExpression("mintime", function);
-		sequence[0] = new Replacement("mintime", actionValue);
-		sequence[1] = replacementChain;
-		replacementChain = new Sequence(sequence);
-		
-		function = ParseExpressionStrings.getTagValue(tagValueMaxTime, functionTags);
-		actionValue = getFunctionExpression("maxtime", function);
-		sequence[0] = new Replacement("maxtime", actionValue);
-		sequence[1] = replacementChain;
-		replacementChain = new Sequence(sequence);
+		for (int i = 0; i < 2; i++)
+		{
+			if (i==0) 
+				propertyNames = ActionType.getStandardPropertyNames();
+			else
+				propertyNames = actionType.getFurtherPropertyNames();
+			
+			for (int indexPropertyNames = 0; indexPropertyNames < propertyNames.length; indexPropertyNames++) {
+				
+				propertyName = propertyNames[indexPropertyNames];
+				tagValue = ParseExpressionStrings.getTagValue(partDANN, propertyName.toUpperCase());
+				function = ParseExpressionStrings.getTagValue(tagValue, functionTags);
+				actionValue = getFunctionExpression(propertyName, function);
+				
+				if (( i == 0) && ( indexPropertyNames == 0 )) 
+				{
+					// first iteration: the first property has to be the action type as constant expression
+					replacementChain = new Replacement(propertyName, actionValue);
+					actionType = ActionType.getName(Integer.parseInt(function[1]) );
+				}
+				else
+				{
+					sequence[0] = new Replacement(propertyName, actionValue);
+					sequence[1] = replacementChain;
+					replacementChain = new Sequence(sequence);
 
-		function = ParseExpressionStrings.getTagValue(tagValueIntensity, functionTags);
-		actionValue = getFunctionExpression("intensity", function);
-		sequence[0] = new Replacement("intensity", actionValue);
-		sequence[1] = replacementChain;
-		replacementChain = new Sequence(sequence);
-		
-		function = ParseExpressionStrings.getTagValue(tagValuePriority, functionTags);
-		actionValue = getFunctionExpression("priority", function);
-		sequence[0] = new Replacement("priority", actionValue);
-		sequence[1] = replacementChain;
-		replacementChain = new Sequence(sequence);
-		
-		function = ParseExpressionStrings.getTagValue(tagValueDuration, functionTags);
-		actionValue = getFunctionExpression("duration", function);
-		sequence[0] = new Replacement("duration", actionValue);
-		sequence[1] = replacementChain;
-		replacementChain = new Sequence(sequence);
-		
+				}
+			}
+		}
+	
 		createAction = new CreateValue(Type.action, replacementChain);
 		return createAction;
 	}
@@ -313,3 +300,54 @@ public class CreateActionExpression extends Expression {
 	}
 	
 }
+
+
+/*
+String tagValueActionType = ParseExpressionStrings.getTagValue(partDANN, "TYPE");
+String tagValueActionMode = ParseExpressionStrings.getTagValue(partDANN, "MODE");
+String tagValueMinTime = ParseExpressionStrings.getTagValue(partDANN, "MIN_TIME");
+String tagValueMaxTime = ParseExpressionStrings.getTagValue(partDANN, "MAX_TIME");
+String tagValuePriority = ParseExpressionStrings.getTagValue(partDANN, "PRIO");
+String tagValueIntensity = ParseExpressionStrings.getTagValue(partDANN, "INTENSITY");
+String tagValueDuration = ParseExpressionStrings.getTagValue(partDANN, "DURATION");
+
+function = ParseExpressionStrings.getTagValue(tagValueActionType, functionTags);
+actionValue = getFunctionExpression("actiontype", function);
+replacementChain = new Replacement("actiontype", actionValue);
+
+function = ParseExpressionStrings.getTagValue(tagValueActionMode, functionTags);
+actionValue = getFunctionExpression("actionmode", function);
+sequence[0] = new Replacement("actionmode", actionValue);
+sequence[1] = replacementChain;
+replacementChain = new Sequence(sequence);
+
+function = ParseExpressionStrings.getTagValue(tagValueMinTime, functionTags);
+actionValue = getFunctionExpression("mintime", function);
+sequence[0] = new Replacement("mintime", actionValue);
+sequence[1] = replacementChain;
+replacementChain = new Sequence(sequence);
+
+function = ParseExpressionStrings.getTagValue(tagValueMaxTime, functionTags);
+actionValue = getFunctionExpression("maxtime", function);
+sequence[0] = new Replacement("maxtime", actionValue);
+sequence[1] = replacementChain;
+replacementChain = new Sequence(sequence);
+
+function = ParseExpressionStrings.getTagValue(tagValueIntensity, functionTags);
+actionValue = getFunctionExpression("intensity", function);
+sequence[0] = new Replacement("intensity", actionValue);
+sequence[1] = replacementChain;
+replacementChain = new Sequence(sequence);
+
+function = ParseExpressionStrings.getTagValue(tagValuePriority, functionTags);
+actionValue = getFunctionExpression("priority", function);
+sequence[0] = new Replacement("priority", actionValue);
+sequence[1] = replacementChain;
+replacementChain = new Sequence(sequence);
+
+function = ParseExpressionStrings.getTagValue(tagValueDuration, functionTags);
+actionValue = getFunctionExpression("duration", function);
+sequence[0] = new Replacement("duration", actionValue);
+sequence[1] = replacementChain;
+replacementChain = new Sequence(sequence);
+*/

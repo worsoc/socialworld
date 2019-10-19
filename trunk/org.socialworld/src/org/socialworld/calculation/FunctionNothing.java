@@ -1,5 +1,7 @@
 package org.socialworld.calculation;
 
+import java.util.List;
+
 public class FunctionNothing extends FunctionBase {
 
 	public FunctionNothing() {
@@ -8,8 +10,9 @@ public class FunctionNothing extends FunctionBase {
 	}
 	
 	@Override
-	public Value calculate(Value[] arguments) {
+	public Value calculate(List<Value> arguments) {
 		return new Value();
 	}
+
 
 }

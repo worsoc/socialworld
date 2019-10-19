@@ -130,8 +130,11 @@ public  class AttributeCalculator extends SocialWorldThread {
 
 		resultAttributeArray = getAttributesChangedByEvent(event, stateAnimal);
 		
-		if (resultAttributeArray.isValid()) 
-			return hiddenWriteAccess.setAttributes((AttributeArray) resultAttributeArray.getValue());
+		if (resultAttributeArray.isValid()) {
+			AttributeArray attributes = (AttributeArray) resultAttributeArray.getValue();
+			System.out.println("AttributeCalculator.calculateAttributesChangedByEvent() nachher: " + attributes.toString());
+			return hiddenWriteAccess.setAttributes(attributes);
+		}
 		else
 			return ATTRIBUTE_CALCULATOR_RETURNS_INVALID_RESULT;
 		
@@ -149,9 +152,10 @@ public  class AttributeCalculator extends SocialWorldThread {
 		EventInfluenceDescription eventInfluenceDescription = null;
 		int eventType;
 		int eventInfluenceType;
-	
+		Value newAttributes;
+		
 		FunctionByExpression f_EventInfluence = null;
-		Value[] arguments;
+		List<Value> arguments;
 	
 		eventType = event.getEventTypeAsInt();
 		eventInfluenceType = stateAnimal.getInfluenceType(eventType);
@@ -162,17 +166,20 @@ public  class AttributeCalculator extends SocialWorldThread {
 
 		int count = eventInfluenceDescription.countFunctions();
 		
-		arguments = new Value[1];
-		arguments[0] = new Value(Type.attributeArray, stateAnimal.getAttributes());
+		arguments = new ArrayList<Value>();
+		arguments.add( new Value(Type.attributeArray, Value.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES, stateAnimal.getAttributes()) );
+
+		System.out.println("AttributeCalculator.calculateAttributesChangedByEvent() vorher: " + stateAnimal.getAttributes().toString());
 		
 		for (int index = 0; index < count; index++){
 			
 			f_EventInfluence = eventInfluenceDescription.getFunctionEventInfluence(index);
-			arguments[0] =  f_EventInfluence.calculate(arguments);
+			newAttributes = f_EventInfluence.calculate(arguments);
+			arguments.set(0,  newAttributes);
 			
 		}
 	  
-		return arguments[0];
+		return arguments.get(0);
 	}
 
 	private final int calculateAttributesChangedByComplexMatrix() {
@@ -195,11 +202,11 @@ public  class AttributeCalculator extends SocialWorldThread {
 
 	private static Value getAttributesChangedByComplexMatrix(StateAnimal stateAnimal) {
 		FunctionByMatrix f_AttributesByMatrix;
-		Value[] arguments;
+		List<Value> arguments;
 	
-		arguments = new Value[2];
-		arguments[0] = new Value(Type.attributeArray, stateAnimal.getAttributes());
-		arguments[1] = new Value(Type.integer, FunctionByMatrix_Matrix.CALCULATION_MODE_MATRIX_X_VECTOR_COMPLEX );
+		arguments = new ArrayList<Value>();
+		arguments.add( new Value(Type.attributeArray, stateAnimal.getAttributes()) );
+		arguments.add( new Value(Type.integer, FunctionByMatrix_Matrix.CALCULATION_MODE_MATRIX_X_VECTOR_COMPLEX ) );
 		
 		f_AttributesByMatrix = stateAnimal.getMatrix();
 		return  f_AttributesByMatrix.calculate(arguments);
@@ -225,11 +232,11 @@ public  class AttributeCalculator extends SocialWorldThread {
 	
 	private static Value getAttributesChangedBySimpleMatrix(StateAnimal stateAnimal) {
 		FunctionByMatrix f_AttributesByMatrix;
-		Value[] arguments;
+		List<Value> arguments;
 	
-		arguments = new Value[2];
-		arguments[0] = new Value(Type.attributeArray, stateAnimal.getAttributes());
-		arguments[1] = new Value(Type.integer, FunctionByMatrix_Matrix.CALCULATION_MODE_MATRIX_X_VECTOR_SIMPLE);
+		arguments = new ArrayList<Value>();
+		arguments.add( new Value(Type.attributeArray, stateAnimal.getAttributes()) );
+		arguments.add( new Value(Type.integer, FunctionByMatrix_Matrix.CALCULATION_MODE_MATRIX_X_VECTOR_SIMPLE) );
 		
 		f_AttributesByMatrix = stateAnimal.getMatrix();
 		return  f_AttributesByMatrix.calculate(arguments);

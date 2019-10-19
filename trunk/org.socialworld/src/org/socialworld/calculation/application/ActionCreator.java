@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.actions.AbstractAction;
-import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionNothing;
 import org.socialworld.actions.ActionType;
 import org.socialworld.actions.attack.ActionAttack;
@@ -38,9 +37,9 @@ import org.socialworld.actions.hear.ActionHear;
 import org.socialworld.actions.move.ActionMove;
 import org.socialworld.actions.say.ActionSay;
 import org.socialworld.actions.sleep.ActionSleep;
-import org.socialworld.attributes.Time;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.Type;
+import org.socialworld.calculation.Calculation;
 import org.socialworld.calculation.FunctionByExpression;
 import org.socialworld.calculation.descriptions.EventReactionAssignment;
 import org.socialworld.calculation.descriptions.EventReactionDescription;
@@ -60,18 +59,23 @@ public class ActionCreator extends SocialWorldThread {
 	private List<StateSimulationObject> statesActor;
 	private List<HiddenSimulationObject> hiddenActors;
 	
-
+	private static String namePropertyActionType;
+	
 	/**
 	 * private Constructor. 
 	 */
 	private ActionCreator() {
-
+		
 		this.events = new ArrayList<Event>();
 		this.statesReactor = new ArrayList<StateSimulationObject>();
 		this.hiddenReactors = new ArrayList<HiddenSimulationObject>();
 		
 		this.statesActor = new ArrayList<StateSimulationObject>();
 		this.hiddenActors = new ArrayList<HiddenSimulationObject>();
+		
+		String[] actionPropertyNames;
+		actionPropertyNames = ActionType.getStandardPropertyNames();
+		namePropertyActionType = actionPropertyNames[0];
 
 	}
 
@@ -139,9 +143,12 @@ public class ActionCreator extends SocialWorldThread {
 			reaction = createAnimalReaction(event, (StateAnimal) stateReactor);
 		else
 			reaction = createNoAnimalReaction(event, stateReactor);
-				
-		if (!reaction.isToBeIgnored())	hiddenReactor.setAction(reaction);
-		
+			
+		if (reaction != null) {
+			if (!reaction.isToBeIgnored())	{
+				hiddenReactor.setAction(reaction);
+			}
+		}
 	}
 	
 	/**
@@ -194,7 +201,7 @@ public class ActionCreator extends SocialWorldThread {
 		int eventReactionType;
 		EventReactionDescription eventReactionDescription;
 		FunctionByExpression f_CreateReaction;
-		Value[] arguments;
+		List<Value> arguments;
 		
 		eventType = event.getEventTypeAsInt();
 		eventReactionType = stateReactor.getReactionType(eventType);
@@ -205,10 +212,10 @@ public class ActionCreator extends SocialWorldThread {
 		
 		f_CreateReaction = eventReactionDescription.getFunctionCreateReaction();
 		
-		arguments = new Value[2];
+		arguments = new ArrayList<Value>();
 		
-		arguments[0] = new Value(Type.attributeArray, stateReactor.getAttributes());
-		arguments[1] = new Value(Type.event, event);
+		arguments.add( new Value(Type.attributeArray, stateReactor.getAttributes()) );
+		arguments.add( new Value(Type.event, event) );
 		
 		return (AbstractAction) f_CreateReaction.calculate(arguments).getValue();
 
@@ -233,10 +240,10 @@ public class ActionCreator extends SocialWorldThread {
 	 */
 	private AbstractAction createAnimalActionByState(StateAnimal stateActor, FunctionByExpression f_CreateAction) {
 
-		Value[] arguments;
-		arguments = new Value[1];
+		List<Value> arguments;
+		arguments = new ArrayList<Value>();
 		
-		arguments[0] = new Value(Type.attributeArray, "attributes", stateActor.getAttributes());
+		arguments.add( new Value(Type.attributeArray, "attributes", stateActor.getAttributes()) );
 		
 		Value result = f_CreateAction.calculate(arguments);
 		return (AbstractAction) result.getValue();
@@ -257,28 +264,31 @@ public class ActionCreator extends SocialWorldThread {
 	}
 	
 	
-	public static AbstractAction createAction(final ActionType type, final ActionMode mode,
-			final float intensity, final Time minTime, final Time maxTime,
-			final int priority, final long duration) {
+	public static AbstractAction createAction(List<Value> actionProperties) {
 		
 		AbstractAction action;
+		ActionType type;
+		
+		type = (ActionType) Calculation.getValue(actionProperties, namePropertyActionType).getValue();
 		
 		switch (type) {
-		case sleep: action = new ActionSleep(type, mode, intensity, minTime, maxTime, priority, duration); break;
-		case move: action = new ActionMove(type, mode, intensity, minTime, maxTime, priority, duration); break;
-		case examine: action = new ActionHandle(type, mode, intensity, minTime, maxTime, priority, duration); break;
-		case touch: action = new ActionHandle(type, mode, intensity, minTime, maxTime, priority, duration); break;
-		case itemAndInventory: action = new ActionHandle(type, mode, intensity, minTime, maxTime, priority, duration); break;
-		case handleItem: action = new ActionHandle(type, mode, intensity, minTime, maxTime, priority, duration); break;
-		case useWeapon: action = new ActionAttack(type, mode, intensity, minTime, maxTime, priority, duration); break;
-		case punch: action = new ActionAttack(type, mode, intensity, minTime, maxTime, priority, duration); break;
-		case hear: action = new ActionHear(type, mode, intensity, minTime, maxTime, priority, duration); break;
-		case talk: action = new ActionSay(type, mode, intensity, minTime, maxTime, priority, duration); break;
-		case say: action = new ActionSay(type, mode, intensity, minTime, maxTime, priority, duration); break;
+		case sleep: action = new ActionSleep(actionProperties); break;
+		case move: action = new ActionMove(actionProperties); break;
+		case examine: action = new ActionHandle(actionProperties); break;
+		case touch: action = new ActionHandle(actionProperties); break;
+		case itemAndInventory: action = new ActionHandle(actionProperties); break;
+		case handleItem: action = new ActionHandle(actionProperties); break;
+		case useWeapon: action = new ActionAttack(actionProperties); break;
+		case punch: action = new ActionAttack(actionProperties); break;
+		case hear: action = new ActionHear(actionProperties); break;
+		case talk: action = new ActionSay(actionProperties); break;
+		case say: action = new ActionSay(actionProperties); break;
 		default: action = ActionNothing.getInstance(); break;
 		}
 		
 		return action;
 	}
+	
+
 	
 }

@@ -21,6 +21,8 @@
 */
 package org.socialworld.calculation;
 
+import java.util.List;
+
 /**
  * @author Mathias Sikos
  *
@@ -78,13 +80,13 @@ public class FunctionMXplusN extends FunctionBase {
 	 * @see org.socialworld.calculation.FunctionBase#calculate(org.socialworld.calculation.Value[])
 	 */
 	@Override
-	public Value calculate(Value[] arguments) {
+	public Value calculate(List<Value> arguments) {
 			// assumption: value is at index 0 
 			Value result;
 			Value x;
 			
-			if ( arguments.length < 1) return new Value();
-			x = arguments[0];
+			if ( arguments.size() < 1) return new Value();
+			x = arguments.get(0);
 			
 			if (!x.isValid()) return x;
 			
@@ -115,6 +117,7 @@ public class FunctionMXplusN extends FunctionBase {
 			result = getMinMaxedValue(result);
 			return result;
 	}
+
 
 	public float calculateFloatingPoint(float x) {
 		

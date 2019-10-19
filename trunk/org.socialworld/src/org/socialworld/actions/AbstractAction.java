@@ -21,7 +21,11 @@
 */
 package org.socialworld.actions;
 
+import java.util.List;
+
 import org.socialworld.attributes.Time;
+import org.socialworld.calculation.Calculation;
+import org.socialworld.calculation.Value;
 import org.socialworld.core.Event;
 import org.socialworld.core.Simulation;
 import org.socialworld.objects.SimulationObject;
@@ -98,10 +102,17 @@ public abstract class AbstractAction {
 
 	protected AbstractAction linkedAction;
 
+	static private String[] standardPropertyNames = ActionType.getStandardPropertyNames();
+	
 	protected AbstractAction() {
 		
 	}
 	
+	
+	protected AbstractAction(List<Value> actionProperties) {
+		setBaseProperties(actionProperties);
+	}
+
 	protected AbstractAction(ActionType type, final ActionMode mode,
 			final float intensity, final Time minTime, final Time maxTime,
 			final int priority, final long duration) {
@@ -131,7 +142,39 @@ public abstract class AbstractAction {
 		return (type == ActionType.ignore);
 	}
 	
-	protected void setBaseProperties(final ActionType type, final ActionMode mode,
+	private void setBaseProperties(List<Value> actionProperties) {
+		
+		ActionType type;
+		ActionMode mode;
+		float intensity;
+		Time minTime, maxTime;
+		int priority;
+		long duration;
+		
+		type = (ActionType) Calculation.getValue(actionProperties, standardPropertyNames[0]).getValue();
+		mode = (ActionMode) Calculation.getValue(actionProperties, standardPropertyNames[1]).getValue();
+		intensity = (int) Calculation.getValue(actionProperties, standardPropertyNames[2]).getValueCopy();
+		minTime = (Time) Calculation.getValue(actionProperties, standardPropertyNames[3]).getValue();
+		maxTime = (Time) Calculation.getValue(actionProperties, standardPropertyNames[4]).getValue();
+		priority = (int) Calculation.getValue(actionProperties, standardPropertyNames[5]).getValueCopy();
+		duration = (long) Calculation.getValue(actionProperties, standardPropertyNames[6]).getValueCopy();
+		
+		this.setType(type);
+		this.setMode(mode);
+		this.setIntensity(intensity);
+		this.setMinTime(minTime);
+		this.setMaxTime(maxTime);
+		this.setPriority(priority);
+		this.setDuration(duration);
+		this.setRemainedDuration(duration);
+
+		this.linkedAction = null;
+		
+		if (duration > 0) interruptable = true;
+		
+	}
+
+	private void setBaseProperties(final ActionType type, final ActionMode mode,
 			final float intensity, final Time minTime, final Time maxTime,
 			final int priority, final long duration) {
 		
@@ -147,8 +190,6 @@ public abstract class AbstractAction {
 		this.linkedAction = null;
 		
 		if (duration > 0) interruptable = true;
-		
-
 		
 	}
 

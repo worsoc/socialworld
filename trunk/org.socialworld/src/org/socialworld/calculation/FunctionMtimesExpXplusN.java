@@ -21,6 +21,8 @@
 */
 package org.socialworld.calculation;
 
+import java.util.List;
+
 /**
  * @author Mathias Sikos
  *
@@ -60,12 +62,12 @@ public class FunctionMtimesExpXplusN extends FunctionBase {
 	 * @see org.socialworld.calculation.FunctionBase#calculate(org.socialworld.calculation.Value[])
 	 */
 	@Override
-	public Value calculate(Value[] arguments) {
+	public Value calculate(List<Value> arguments) {
 		Value x;
 		float result;
 		
-		if ( arguments.length < 1) return new Value();
-		x = arguments[0];
+		if ( arguments.size() < 1) return new Value();
+		x = arguments.get(0);
 		
 		if (!x.isValid()) return x;
 		 
@@ -77,6 +79,7 @@ public class FunctionMtimesExpXplusN extends FunctionBase {
 		
 	}
 
+	
 	public float calculateFloatingPoint(float x) {
 		
 		double resultD;
