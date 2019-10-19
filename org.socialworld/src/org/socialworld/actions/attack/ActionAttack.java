@@ -21,11 +21,14 @@
 */
 package org.socialworld.actions.attack;
 
+import java.util.List;
+
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Time;
+import org.socialworld.calculation.Value;
 import org.socialworld.core.EventByAction;
 import org.socialworld.core.EventType;
 import org.socialworld.objects.SimulationObject;
@@ -67,6 +70,10 @@ public class ActionAttack extends AbstractAction {
 	private IWeapon weapon;
 	SimulationObject target;
 	
+	public ActionAttack(List<Value> actionProperties) {
+		super(actionProperties);
+	}
+
 	public ActionAttack(final ActionType type, final ActionMode mode,
 			final float intensity, final Time minTime, final Time maxTime,
 			final int priority, final long duration) {

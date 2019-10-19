@@ -21,6 +21,9 @@
 */
 package org.socialworld.calculation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.socialworld.attributes.AttributeArray;
 
 public class FunctionByMatrix extends FunctionBase {
@@ -75,7 +78,7 @@ public class FunctionByMatrix extends FunctionBase {
 	}
 	
 	@Override
-	public Value calculate(Value[] arguments) {
+	public Value calculate(List<Value> arguments) {
 
 		Value result;
 		
@@ -84,13 +87,13 @@ public class FunctionByMatrix extends FunctionBase {
 		
 		calculation = Calculation.getInstance();
 
-		switch (arguments[0].getType() ) {
+		switch (arguments.get(0).getType() ) {
 		
 			case attributeArray:
 				AttributeArray attributes;
-				attributes = (AttributeArray) arguments[0].getValue();
+				attributes = (AttributeArray) arguments.get(0).getValue();
 				
-				int calculationMode = (int) arguments[1].getValue();
+				int calculationMode = (int) arguments.get(1).getValue();
 				
 				switch (calculationMode)
 				{
@@ -139,12 +142,14 @@ public class FunctionByMatrix extends FunctionBase {
 		
 		Functions functions = Functions.getInstance();
 		FunctionBase function;
-		Value[] arguments;
+		List<Value> arguments;
 
 		float change;
 
 		length = attributes.length();
-		arguments = new Value[1];
+		arguments = new ArrayList<Value>();
+		arguments.add(Calculation.nothing);
+		
 		offset = new Value(Type.integer,  0);
 		
 
@@ -157,7 +162,7 @@ public class FunctionByMatrix extends FunctionBase {
 			function = functions.get(functionIndex);
 			inputValue = attributes.getAsValue(column);
 
-			arguments[0] =  inputValue ;
+			arguments.set(0, inputValue);
 			change = (float)
 					calculation.addition(
 							calculation.multiplication(share, function.calculate(arguments)),
@@ -196,7 +201,7 @@ public class FunctionByMatrix extends FunctionBase {
 		
 		Value change;
 
-		Value[] arguments;
+		List<Value> arguments;
 
 		int     length;
 
@@ -208,7 +213,8 @@ public class FunctionByMatrix extends FunctionBase {
 			attributesNew[row] = calculation.getZero(Type.integer);
 		}
 
-		arguments = new Value[1];
+		arguments = new ArrayList<Value>();
+		arguments.add(Calculation.nothing);
 			
 		for (row = 0; row < length; row++) {
 
@@ -220,7 +226,7 @@ public class FunctionByMatrix extends FunctionBase {
 				share =   this.matrix.getShare(row, column);
 				function = functions.get(functionIndex);
 
-				arguments[0] =  attributeValue;
+				arguments.set(0,   attributeValue);
 
 				change = calculation.multiplication(share, function.calculate(arguments));
 				attributesNew[column] = calculation.addition(attributesNew[column], change);
@@ -273,13 +279,15 @@ public class FunctionByMatrix extends FunctionBase {
 		int     length;
 		
 		FunctionBase function;
-		Value[] arguments;
+		List<Value> arguments;
 
 		float change;
 
 		length = attributes.length();
 		attributesNew = new float[length];
-		arguments = new Value[1];
+		arguments = new ArrayList<Value>();
+		arguments.add(Calculation.nothing);  
+		
 		offset = new Value(Type.integer,  0);
 		
 		for (row = 0; row < length; row++) {
@@ -297,7 +305,7 @@ public class FunctionByMatrix extends FunctionBase {
 				function = functions.get(functionIndex);
 				inputValue = getInputValue(inputType, attributeValue, attributeChangeValue);
 
-				arguments[0] =  inputValue ;
+				arguments.set(0,  inputValue) ;
 				change = (float)
 						calculation.addition(
 								calculation.multiplication(share, function.calculate(arguments)),

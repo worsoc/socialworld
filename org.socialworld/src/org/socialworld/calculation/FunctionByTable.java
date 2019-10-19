@@ -21,6 +21,8 @@
 */
 package org.socialworld.calculation;
 
+import java.util.List;
+
 import org.socialworld.attributes.AttributeArray;
 
 public class FunctionByTable extends FunctionBase {
@@ -37,14 +39,16 @@ public class FunctionByTable extends FunctionBase {
 	}
 	
 	@Override
-	public Value calculate(Value[] arguments) {
-		if (arguments[0].getType() == Type.integer) {
-			return calculation.createValue(Type.integer, calculate((int) arguments[0].getValue()));
+	public Value calculate(List<Value> arguments) {
+		Value value;
+		value = arguments.get(0);
+		if (value.getType() == Type.integer) {
+			return calculation.createValue(Type.integer, calculate((int) value.getValue()));
 		}
 		return null;
 	}
 
-	
+
 	private int calculate(int inputValue) {
 		int result;
 

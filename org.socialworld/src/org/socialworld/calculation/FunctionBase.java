@@ -21,6 +21,8 @@
 */
 package org.socialworld.calculation;
 
+import java.util.List;
+
 public abstract class FunctionBase {
 	
 	private boolean valid = true;
@@ -38,22 +40,15 @@ public abstract class FunctionBase {
 
 	boolean returnInvalidNothingvalue;
 	
-	public abstract Value calculate(Value[] arguments);
 	
-	protected Value findValue(Value[] arguments, String name) {
-		int argumentsCount;
-		int index;
-		
-		argumentsCount = arguments.length;
-		
-		for (index = 0; index < argumentsCount; index++) {
-			if (arguments[index].getName() == name) return arguments[index];
-		}
-		
-		return new Value();
-
+	public abstract Value calculate(List<Value> arguments);
+	
+	protected Value findValue(List<Value> arguments, String name) {
+		// TODO Methode findValueweg und gleich aus Calculation rufen
+		return Calculation.getValue(arguments, name);
 	}
-	
+
+
 	protected void setMinMaxCheckValue(Value min, Value max) {
 		this.max = max;
 		this.min = min;

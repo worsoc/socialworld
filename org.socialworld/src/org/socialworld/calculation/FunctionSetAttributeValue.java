@@ -1,5 +1,7 @@
 package org.socialworld.calculation;
 
+import java.util.List;
+
 import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.AttributeArray;
 
@@ -16,84 +18,42 @@ public class FunctionSetAttributeValue extends FunctionBase {
 	}
 	
 	@Override
-	public Value calculate(Value[] arguments) {
+	public Value calculate(List<Value> arguments) {
 		
 		int newAttributeValue;
 		
 		
-		if (arguments.length == 3) {
-			if ((arguments[0].getType() == Type.attributeArray) &&
-				(arguments[1].getType() == Type.integer) && 
-				(arguments[2].getType() == Type.nothing)) 
+		if (arguments.size() == 3) {
+			if ((arguments.get(0).getType() == Type.attributeArray) &&
+				(arguments.get(1).getType() == Type.integer) && 
+				(arguments.get(2).getType() == Type.nothing)) 
 			{	
-				AttributeArray attributes = new AttributeArray((AttributeArray) arguments[0].getValue());
-				newAttributeValue = (int)arguments[1].getValueCopy();
+				AttributeArray attributes = new AttributeArray((AttributeArray) arguments.get(0).getValue());
+				newAttributeValue = (int)arguments.get(1).getValueCopy();
 				attributes.set(this.indexAttribute, newAttributeValue);
 				return new Value(Type.attributeArray, Value.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES, attributes);
 			}
 		}
-		else if (arguments.length == 2) {
-			if ((arguments[0].getType() == Type.attributeArray) &&
-				(arguments[1].getType() == Type.integer)) 
+		else if (arguments.size() == 2) {
+			if ((arguments.get(0).getType() == Type.attributeArray) &&
+				(arguments.get(1).getType() == Type.integer)) 
 			{	
-				AttributeArray attributes = new AttributeArray((AttributeArray) arguments[0].getValue());
-				newAttributeValue = (int)arguments[1].getValueCopy();
+				AttributeArray attributes = new AttributeArray((AttributeArray) arguments.get(0).getValue());
+				newAttributeValue = (int)arguments.get(1).getValueCopy();
 				attributes.set(this.indexAttribute, newAttributeValue);
 				return new Value(Type.attributeArray, Value.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES, attributes);
 			}
 		}
 		
-		if ((arguments.length >= 1) && (arguments[0].getType() == Type.attributeArray)) {
-			return arguments[0];
+		if ((arguments.size() >= 1) && (arguments.get(0).getType() == Type.attributeArray)) {
+			return arguments.get(0);
 		}
 		
 		return new Value();
 	}
 
-	
 
 }
 
 
 
-/*
-public Value calculate(Value[] arguments) {
-	
-	int newAttributeValue;
-	
-	
-	if (arguments.length == 3) {
-		if ((arguments[0].getType() == Type.attributeArray) &&
-			((arguments[1].getType() == Type.floatingpoint) || (arguments[1].getType() == Type.integer)) && 
-			(arguments[2].getType() == Type.nothing)) 
-		{	
-			AttributeArray attributes = new AttributeArray((AttributeArray) arguments[0].getValue());
-			if (arguments[1].getType() == Type.floatingpoint)
-				newAttributeValue = ((Float)arguments[1].getValueCopy()).intValue();
-			else
-				newAttributeValue = (int)arguments[1].getValueCopy();
-			attributes.set(this.indexAttribute, newAttributeValue);
-			return new Value(Type.attributeArray, Value.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES, attributes);
-		}
-	}
-	else if (arguments.length == 2) {
-		if ((arguments[0].getType() == Type.attributeArray) &&
-			((arguments[1].getType() == Type.floatingpoint) || (arguments[1].getType() == Type.integer))) 
-		{	
-			AttributeArray attributes = new AttributeArray((AttributeArray) arguments[0].getValue());
-			if (arguments[1].getType() == Type.floatingpoint)
-				newAttributeValue = ((Float)arguments[1].getValueCopy()).intValue();
-			else
-				newAttributeValue = (int)arguments[1].getValueCopy();
-			attributes.set(this.indexAttribute, newAttributeValue);
-			return new Value(Type.attributeArray, Value.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES, attributes);
-		}
-	}
-	
-	if ((arguments.length >= 1) && (arguments[0].getType() == Type.attributeArray)) {
-		return arguments[0];
-	}
-	
-	return new Value();
-}
-*/
