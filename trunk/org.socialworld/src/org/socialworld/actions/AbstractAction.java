@@ -21,11 +21,9 @@
 */
 package org.socialworld.actions;
 
-import java.util.List;
 
 import org.socialworld.attributes.Time;
-import org.socialworld.calculation.Calculation;
-import org.socialworld.calculation.Value;
+import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.Event;
 import org.socialworld.core.Simulation;
 import org.socialworld.objects.SimulationObject;
@@ -103,24 +101,26 @@ public abstract class AbstractAction {
 	protected AbstractAction linkedAction;
 
 	static private String[] standardPropertyNames = ActionType.getStandardPropertyNames();
+	protected final String[] furtherPropertyNames;
+
 	
 	protected AbstractAction() {
-		
+		this.type = ActionType.ignore;
+		this.furtherPropertyNames = this.type.getFurtherPropertyNames();
 	}
 	
 	
-	protected AbstractAction(List<Value> actionProperties) {
+	public AbstractAction(AbstractAction original) {
+		setBaseProperties(original);
+		this.furtherPropertyNames = this.type.getFurtherPropertyNames();
+	}
+	
+	protected AbstractAction(ValueArrayList actionProperties) {
 		setBaseProperties(actionProperties);
+		this.furtherPropertyNames = this.type.getFurtherPropertyNames();
+		setFurtherProperties(actionProperties);
 	}
 
-	protected AbstractAction(ActionType type, final ActionMode mode,
-			final float intensity, final Time minTime, final Time maxTime,
-			final int priority, final long duration) {
-		setBaseProperties(type,  mode,
-				intensity,  minTime, maxTime,
-				 priority,  duration);
-	}
-	
 	public void setActor(SimulationObject actor, HiddenSimulationObject hiddenWriteAccess) {
 		this.hiddenWriteAccesToActor = hiddenWriteAccess;
 		this.actor = actor;
@@ -142,7 +142,9 @@ public abstract class AbstractAction {
 		return (type == ActionType.ignore);
 	}
 	
-	private void setBaseProperties(List<Value> actionProperties) {
+
+	
+	private void setBaseProperties(ValueArrayList actionProperties) {
 		
 		ActionType type;
 		ActionMode mode;
@@ -151,13 +153,13 @@ public abstract class AbstractAction {
 		int priority;
 		long duration;
 		
-		type = (ActionType) Calculation.getValue(actionProperties, standardPropertyNames[0]).getValue();
-		mode = (ActionMode) Calculation.getValue(actionProperties, standardPropertyNames[1]).getValue();
-		intensity = (int) Calculation.getValue(actionProperties, standardPropertyNames[2]).getValueCopy();
-		minTime = (Time) Calculation.getValue(actionProperties, standardPropertyNames[3]).getValue();
-		maxTime = (Time) Calculation.getValue(actionProperties, standardPropertyNames[4]).getValue();
-		priority = (int) Calculation.getValue(actionProperties, standardPropertyNames[5]).getValueCopy();
-		duration = (long) Calculation.getValue(actionProperties, standardPropertyNames[6]).getValueCopy();
+		type = (ActionType) actionProperties.getValue( standardPropertyNames[0]).getValue();
+		mode = (ActionMode) actionProperties.getValue( standardPropertyNames[1]).getValue();
+		intensity = (float) actionProperties.getValue( standardPropertyNames[2]).getValueCopy();
+		minTime = (Time) actionProperties.getValue( standardPropertyNames[3]).getValue();
+		maxTime = (Time) actionProperties.getValue( standardPropertyNames[4]).getValue();
+		priority = (int) actionProperties.getValue( standardPropertyNames[5]).getValueCopy();
+		duration = (long) actionProperties.getValue( standardPropertyNames[6]).getValueCopy();
 		
 		this.setType(type);
 		this.setMode(mode);
@@ -174,26 +176,11 @@ public abstract class AbstractAction {
 		
 	}
 
-	private void setBaseProperties(final ActionType type, final ActionMode mode,
-			final float intensity, final Time minTime, final Time maxTime,
-			final int priority, final long duration) {
-		
-		this.setType(type);
-		this.setMode(mode);
-		this.setIntensity(intensity);
-		this.setMinTime(minTime);
-		this.setMaxTime(maxTime);
-		this.setPriority(priority);
-		this.setDuration(duration);
-		this.setRemainedDuration(duration);
+	protected abstract void setFurtherProperties(ValueArrayList actionProperties);
 
-		this.linkedAction = null;
-		
-		if (duration > 0) interruptable = true;
-		
-	}
 
 	protected void setBaseProperties(AbstractAction original) {
+		
 		this.type = original.type;
 		this.mode = original.mode;
 		this.intensity = original.intensity;
@@ -204,7 +191,7 @@ public abstract class AbstractAction {
 		
 	}
 
-	
+	protected abstract void setFurtherProperties(AbstractAction original);
 	
 	public abstract void perform();
 	

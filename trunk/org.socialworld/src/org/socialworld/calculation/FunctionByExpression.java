@@ -21,7 +21,8 @@
 */
 package org.socialworld.calculation;
 
-import java.util.List;
+
+import org.socialworld.collections.ValueArrayList;
 
 public class FunctionByExpression extends FunctionBase {
 	Expression startExpression;
@@ -43,7 +44,7 @@ public class FunctionByExpression extends FunctionBase {
 		this.startExpression  = startExpression;
 	}
 	
-	public Value calculate(List<Value> arguments) {
+	public Value calculate(ValueArrayList arguments) {
 		if (returnInvalidNothingvalue) 
 			return new Value();
 		else

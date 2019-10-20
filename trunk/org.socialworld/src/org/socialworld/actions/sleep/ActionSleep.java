@@ -21,14 +21,11 @@
 */
 package org.socialworld.actions.sleep;
 
-import java.util.List;
 
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
-import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.ActualTime;
-import org.socialworld.attributes.Time;
-import org.socialworld.calculation.Value;
+import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.EventByAction;
 import org.socialworld.core.EventType;
 
@@ -64,19 +61,22 @@ public class ActionSleep extends AbstractAction {
 
 	Sleep sleep;
 	
-	public ActionSleep(List<Value> actionProperties) {
+	public ActionSleep(ValueArrayList actionProperties) {
 		super(actionProperties);
 	}
 
-	public ActionSleep(final ActionType type, final ActionMode mode,
-			final float intensity, final Time minTime, final Time maxTime,
-			final int priority, final long duration) {
-		super(type,  mode,
-				intensity,  minTime, maxTime,
-				 priority,  duration);
-			
+	public ActionSleep(ActionSleep original) {
+		super(original);
 	}
 
+	protected void setFurtherProperties(ValueArrayList actionProperties) {
+		// no further properties
+	}
+
+	protected void setFurtherProperties(AbstractAction original) {
+		//no further properties
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.socialworld.actions.AbstractAction#perform()
 	 */

@@ -1,6 +1,7 @@
 package org.socialworld.calculation;
 
-import java.util.List;
+
+import org.socialworld.collections.ValueArrayList;
 
 public class FunctionNothing extends FunctionBase {
 
@@ -10,7 +11,7 @@ public class FunctionNothing extends FunctionBase {
 	}
 	
 	@Override
-	public Value calculate(List<Value> arguments) {
+	public Value calculate(ValueArrayList arguments) {
 		return new Value();
 	}
 

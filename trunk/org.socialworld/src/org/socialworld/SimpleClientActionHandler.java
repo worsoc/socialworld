@@ -1,11 +1,9 @@
 package org.socialworld;
 
 import org.socialworld.objects.access.HiddenHuman;
-import org.socialworld.actions.ActionMode;
-import org.socialworld.actions.ActionType;
+
 import org.socialworld.actions.move.ActionMove;
-import org.socialworld.attributes.Time;
-import org.socialworld.calculation.Vector;
+import org.socialworld.collections.ValueArrayList;
 
 public class SimpleClientActionHandler  {
 
@@ -55,19 +53,19 @@ public class SimpleClientActionHandler  {
 	}
 	
 	public void doAction (int action) {
+		
+		ValueArrayList properties = new ValueArrayList();
+
 		switch (action) {
 		case 1:   // step forward
-			actualHuman.setAction(new ActionMove(ActionType.move ,  ActionMode.run,
-					new Vector(0,10,0),
-					10, new Time(false, 1000), new Time(false,2000),
-					10, 500) );
+			
+			actualHuman.setAction(new ActionMove(properties) );
 			break;
 		case 2:   // step back
-			actualHuman.setAction(new ActionMove(ActionType.move ,  ActionMode.run,
-					new Vector(0,-10,0),
-					10, new Time(false,1000), new Time(false,2000),
-					10, 500) );
+			
+			actualHuman.setAction(new ActionMove(properties) );
 			break;
 		}
+		
 	}
 }

@@ -39,12 +39,12 @@ import org.socialworld.actions.say.ActionSay;
 import org.socialworld.actions.sleep.ActionSleep;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.Type;
-import org.socialworld.calculation.Calculation;
 import org.socialworld.calculation.FunctionByExpression;
 import org.socialworld.calculation.descriptions.EventReactionAssignment;
 import org.socialworld.calculation.descriptions.EventReactionDescription;
 import org.socialworld.calculation.descriptions.State2ActionAssignment;
 import org.socialworld.calculation.descriptions.State2ActionDescription;
+import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.Event;
 import org.socialworld.core.SocialWorldThread;
 
@@ -59,7 +59,7 @@ public class ActionCreator extends SocialWorldThread {
 	private List<StateSimulationObject> statesActor;
 	private List<HiddenSimulationObject> hiddenActors;
 	
-	private static String namePropertyActionType;
+	private static String namePropertyActionType = "actiontype";
 	
 	/**
 	 * private Constructor. 
@@ -201,7 +201,7 @@ public class ActionCreator extends SocialWorldThread {
 		int eventReactionType;
 		EventReactionDescription eventReactionDescription;
 		FunctionByExpression f_CreateReaction;
-		List<Value> arguments;
+		ValueArrayList arguments;
 		
 		eventType = event.getEventTypeAsInt();
 		eventReactionType = stateReactor.getReactionType(eventType);
@@ -212,7 +212,7 @@ public class ActionCreator extends SocialWorldThread {
 		
 		f_CreateReaction = eventReactionDescription.getFunctionCreateReaction();
 		
-		arguments = new ArrayList<Value>();
+		arguments = new ValueArrayList();
 		
 		arguments.add( new Value(Type.attributeArray, stateReactor.getAttributes()) );
 		arguments.add( new Value(Type.event, event) );
@@ -240,8 +240,8 @@ public class ActionCreator extends SocialWorldThread {
 	 */
 	private AbstractAction createAnimalActionByState(StateAnimal stateActor, FunctionByExpression f_CreateAction) {
 
-		List<Value> arguments;
-		arguments = new ArrayList<Value>();
+		ValueArrayList arguments;
+		arguments = new ValueArrayList();
 		
 		arguments.add( new Value(Type.attributeArray, "attributes", stateActor.getAttributes()) );
 		
@@ -264,12 +264,12 @@ public class ActionCreator extends SocialWorldThread {
 	}
 	
 	
-	public static AbstractAction createAction(List<Value> actionProperties) {
+	public static AbstractAction createAction(ValueArrayList actionProperties) {
 		
 		AbstractAction action;
 		ActionType type;
 		
-		type = (ActionType) Calculation.getValue(actionProperties, namePropertyActionType).getValue();
+		type = (ActionType) actionProperties.getValue(namePropertyActionType).getValue();
 		
 		switch (type) {
 		case sleep: action = new ActionSleep(actionProperties); break;

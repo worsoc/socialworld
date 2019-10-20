@@ -21,14 +21,12 @@
 */
 package org.socialworld.actions.hear;
 
-import java.util.List;
 
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
-import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.ActualTime;
-import org.socialworld.attributes.Time;
 import org.socialworld.calculation.Value;
+import org.socialworld.collections.ValueArrayList;
 import org.socialworld.conversation.PunctuationMark;
 import org.socialworld.conversation.Talk_SentenceType;
 import org.socialworld.core.EventByAction;
@@ -76,37 +74,33 @@ public class ActionHear extends AbstractAction {
 
 	private SimulationObject target;
 
-	public ActionHear(List<Value> actionProperties) {
+	public ActionHear(ValueArrayList actionProperties) {
 		super(actionProperties);
 	}
 
-	public ActionHear(final ActionType type, final ActionMode mode,
-			final float intensity, final Time minTime, final Time maxTime,
-			final int priority, final long duration) {
-		
-		super(type,  mode,
-			intensity,  minTime, maxTime,
-			 priority,  duration);
-		
-	}
-	
-	public ActionHear(final ActionType type, final ActionMode mode,
-			final SimulationObject target,
-			final float intensity, final Time minTime, final Time maxTime,
-			final int priority, final long duration) {
-		
-		super(type,  mode,
-			intensity,  minTime, maxTime,
-			 priority,  duration);
-		
-		this.setTarget(target);
-	}
 	
 	public ActionHear(ActionHear original) {
-		setBaseProperties(original);
+		super(original);
 	}
 
+	protected void setFurtherProperties(ValueArrayList actionProperties) {
 
+		Value value;
+		
+		SimulationObject target;
+
+		value =  actionProperties.getValue(furtherPropertyNames[0]);
+		if (value.isValid()) {
+			target =  (SimulationObject) value.getValue() ;
+			this.setTarget(target);
+		}
+
+	}
+
+	protected void setFurtherProperties(AbstractAction original) {
+		setTarget(((ActionHear) original).getTarget());
+	}
+	
 	public  void perform() {
 		Human partner;
 		EventByAction event;

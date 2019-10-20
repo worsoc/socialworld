@@ -21,7 +21,8 @@
 */
 package org.socialworld.calculation;
 
-import java.util.List;
+
+import org.socialworld.collections.ValueArrayList;
 
 /**
  * @author Mathias Sikos
@@ -80,7 +81,7 @@ public class FunctionMXplusN extends FunctionBase {
 	 * @see org.socialworld.calculation.FunctionBase#calculate(org.socialworld.calculation.Value[])
 	 */
 	@Override
-	public Value calculate(List<Value> arguments) {
+	public Value calculate(ValueArrayList arguments) {
 			// assumption: value is at index 0 
 			Value result;
 			Value x;

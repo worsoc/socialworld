@@ -21,7 +21,8 @@
 */
 package org.socialworld.calculation;
 
-import java.util.List;
+
+import org.socialworld.collections.ValueArrayList;
 
 public abstract class FunctionBase {
 	
@@ -41,13 +42,8 @@ public abstract class FunctionBase {
 	boolean returnInvalidNothingvalue;
 	
 	
-	public abstract Value calculate(List<Value> arguments);
+	public abstract Value calculate(ValueArrayList arguments);
 	
-	protected Value findValue(List<Value> arguments, String name) {
-		// TODO Methode findValueweg und gleich aus Calculation rufen
-		return Calculation.getValue(arguments, name);
-	}
-
 
 	protected void setMinMaxCheckValue(Value min, Value max) {
 		this.max = max;

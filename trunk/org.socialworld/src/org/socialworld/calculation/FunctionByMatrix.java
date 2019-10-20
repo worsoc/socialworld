@@ -21,10 +21,9 @@
 */
 package org.socialworld.calculation;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.socialworld.attributes.AttributeArray;
+import org.socialworld.collections.ValueArrayList;
 
 public class FunctionByMatrix extends FunctionBase {
 
@@ -78,7 +77,7 @@ public class FunctionByMatrix extends FunctionBase {
 	}
 	
 	@Override
-	public Value calculate(List<Value> arguments) {
+	public Value calculate(ValueArrayList arguments) {
 
 		Value result;
 		
@@ -142,13 +141,12 @@ public class FunctionByMatrix extends FunctionBase {
 		
 		Functions functions = Functions.getInstance();
 		FunctionBase function;
-		List<Value> arguments;
+		ValueArrayList arguments;
 
 		float change;
 
 		length = attributes.length();
-		arguments = new ArrayList<Value>();
-		arguments.add(Calculation.nothing);
+		arguments = new ValueArrayList(1);
 		
 		offset = new Value(Type.integer,  0);
 		
@@ -201,7 +199,7 @@ public class FunctionByMatrix extends FunctionBase {
 		
 		Value change;
 
-		List<Value> arguments;
+		ValueArrayList arguments;
 
 		int     length;
 
@@ -213,8 +211,7 @@ public class FunctionByMatrix extends FunctionBase {
 			attributesNew[row] = calculation.getZero(Type.integer);
 		}
 
-		arguments = new ArrayList<Value>();
-		arguments.add(Calculation.nothing);
+		arguments = new ValueArrayList(1);
 			
 		for (row = 0; row < length; row++) {
 
@@ -279,14 +276,13 @@ public class FunctionByMatrix extends FunctionBase {
 		int     length;
 		
 		FunctionBase function;
-		List<Value> arguments;
+		ValueArrayList arguments;
 
 		float change;
 
 		length = attributes.length();
 		attributesNew = new float[length];
-		arguments = new ArrayList<Value>();
-		arguments.add(Calculation.nothing);  
+		arguments = new ValueArrayList(1);
 		
 		offset = new Value(Type.integer,  0);
 		

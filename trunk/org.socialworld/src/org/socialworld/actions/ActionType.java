@@ -21,7 +21,6 @@
 */
 package org.socialworld.actions;
 
-import org.socialworld.attributes.Attribute;
 
 /**
  * The enumeration collects all action types.
@@ -82,6 +81,83 @@ public enum ActionType {
 	 */
 	public int getIndex() {
 		return index;
+	}
+	
+	private static String[] STANDARD_PROPERTY_NAMES = {"actiontype", "actionmode", "intensity", "mintime", "maxtime", "priority", "duration"};
+	private static String[] NO_FURTHER_PROPERTY_NAMES = {};
+	private static String[] FURTHER_PROPERTY_NAMES___SLEEP = {};
+	private static String[] FURTHER_PROPERTY_NAMES___MOVE = {"endposition","direction"};
+	private static String[] FURTHER_PROPERTY_NAMES___EXAMINE = {"target"};
+	private static String[] FURTHER_PROPERTY_NAMES___TOUCH = {"target"};
+	private static String[] FURTHER_PROPERTY_NAMES___ITEMANDINVENTORY = {"target"};
+	private static String[] FURTHER_PROPERTY_NAMES___HANDLEITEM = {"target","direction"};
+	private static String[] FURTHER_PROPERTY_NAMES___USEWEAPON = {"target"};
+	private static String[] FURTHER_PROPERTY_NAMES___PUNCH = {"target"};
+	private static String[] FURTHER_PROPERTY_NAMES___HEAR = {"target"};
+	private static String[] FURTHER_PROPERTY_NAMES___TALK = {"target"};
+	private static String[] FURTHER_PROPERTY_NAMES___SAY = {"target","direction"};
+	
+	public static String[] getStandardPropertyNames() {
+		String[] copy;
+		
+		copy = new String[STANDARD_PROPERTY_NAMES.length];
+		for (int i = 0; i < STANDARD_PROPERTY_NAMES.length;i++) {
+			copy[i] = new String(STANDARD_PROPERTY_NAMES[i]);
+		}
+		return copy;
+	}
+	
+	public String[] getFurtherPropertyNames() {
+	
+		String[] original;
+		String[] copy;
+
+		switch (index) {
+		case 0: // sleep
+			original = FURTHER_PROPERTY_NAMES___SLEEP;
+			break;
+		case 1: // move
+			original = FURTHER_PROPERTY_NAMES___MOVE;
+			break;
+		case 2: // examine
+			original = FURTHER_PROPERTY_NAMES___EXAMINE;
+			break;
+		case 3: // touch
+			original = FURTHER_PROPERTY_NAMES___TOUCH;
+			break;
+		case 4: // itemAndInventory
+			original = FURTHER_PROPERTY_NAMES___ITEMANDINVENTORY;
+			break;
+		case 5: // handleItem
+			original = FURTHER_PROPERTY_NAMES___HANDLEITEM;
+			break;
+		case 6: // useWeapon
+			original = FURTHER_PROPERTY_NAMES___USEWEAPON;
+			break;
+		case 7: // punch
+			original = FURTHER_PROPERTY_NAMES___PUNCH;
+			break;
+		case 8: // hear
+			original = FURTHER_PROPERTY_NAMES___HEAR;
+			break;
+		case 9: // talk
+			original = FURTHER_PROPERTY_NAMES___TALK;
+			break;
+		case 10: // say
+			original = FURTHER_PROPERTY_NAMES___SAY;
+			break;
+		default:
+			original = NO_FURTHER_PROPERTY_NAMES;
+			break;
+		}
+		
+		copy = new String[original.length];
+		for (int i = 0; i < original.length;i++) {
+			copy[i] = new String(original[i]);
+		}
+
+		return copy;
+
 	}
 
 }

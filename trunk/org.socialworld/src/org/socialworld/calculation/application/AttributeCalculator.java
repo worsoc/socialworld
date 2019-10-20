@@ -32,6 +32,7 @@ import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.descriptions.EventInfluenceAssignment;
 import org.socialworld.calculation.descriptions.EventInfluenceDescription;
+import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.Event;
 import org.socialworld.core.SocialWorldThread;
 import org.socialworld.objects.StateAnimal;
@@ -155,7 +156,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 		Value newAttributes;
 		
 		FunctionByExpression f_EventInfluence = null;
-		List<Value> arguments;
+		ValueArrayList arguments;
 	
 		eventType = event.getEventTypeAsInt();
 		eventInfluenceType = stateAnimal.getInfluenceType(eventType);
@@ -166,7 +167,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 
 		int count = eventInfluenceDescription.countFunctions();
 		
-		arguments = new ArrayList<Value>();
+		arguments = new ValueArrayList();
 		arguments.add( new Value(Type.attributeArray, Value.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES, stateAnimal.getAttributes()) );
 
 		System.out.println("AttributeCalculator.calculateAttributesChangedByEvent() vorher: " + stateAnimal.getAttributes().toString());
@@ -202,9 +203,9 @@ public  class AttributeCalculator extends SocialWorldThread {
 
 	private static Value getAttributesChangedByComplexMatrix(StateAnimal stateAnimal) {
 		FunctionByMatrix f_AttributesByMatrix;
-		List<Value> arguments;
+		ValueArrayList arguments;
 	
-		arguments = new ArrayList<Value>();
+		arguments = new ValueArrayList();
 		arguments.add( new Value(Type.attributeArray, stateAnimal.getAttributes()) );
 		arguments.add( new Value(Type.integer, FunctionByMatrix_Matrix.CALCULATION_MODE_MATRIX_X_VECTOR_COMPLEX ) );
 		
@@ -232,9 +233,9 @@ public  class AttributeCalculator extends SocialWorldThread {
 	
 	private static Value getAttributesChangedBySimpleMatrix(StateAnimal stateAnimal) {
 		FunctionByMatrix f_AttributesByMatrix;
-		List<Value> arguments;
+		ValueArrayList arguments;
 	
-		arguments = new ArrayList<Value>();
+		arguments = new ValueArrayList();
 		arguments.add( new Value(Type.attributeArray, stateAnimal.getAttributes()) );
 		arguments.add( new Value(Type.integer, FunctionByMatrix_Matrix.CALCULATION_MODE_MATRIX_X_VECTOR_SIMPLE) );
 		

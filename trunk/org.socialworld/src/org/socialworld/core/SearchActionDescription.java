@@ -21,8 +21,10 @@
 */
 package org.socialworld.core;
 
+
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
+import org.socialworld.actions.ActionNothing;
 import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.Time;
 
@@ -35,42 +37,20 @@ import org.socialworld.attributes.Time;
  * @author Mathias Sikos (tyloesand)
  * 
  */
-public class SearchActionDescription extends AbstractAction {
+public class SearchActionDescription extends ActionNothing {
 
-	private boolean searchByType;
-	private boolean searchByMode;
-	private boolean searchByMinTime;
-	private boolean searchByMaxTime;
-	private boolean searchByPriority;
-	private boolean searchByIntensity;
-	private boolean searchByDuration;
-	private boolean searchByRemainedDuration;
+	private boolean searchByType = false;
+	private boolean searchByMode = false;
+	private boolean searchByMinTime = false;
+	private boolean searchByMaxTime = false;
+	private boolean searchByPriority = false;
+	private boolean searchByIntensity = false;
+	private boolean searchByDuration = false;
+	private boolean searchByRemainedDuration = false;
 
-	public SearchActionDescription() {
-		super();
-		this.searchByType = false;
-		this.searchByMode = false;
-		this.searchByMinTime = false;
-		this.searchByMaxTime = false;
-		this.searchByPriority = false;
-		this.searchByIntensity = false;
-		this.searchByDuration = false;
-		this.searchByRemainedDuration = false;
+	public SearchActionDescription(AbstractAction original) {
+		super(original);
 	}
-
-	public SearchActionDescription(AbstractAction search) {
-		super();
-		setType(search.getType());
-		setMode(search.getMode());
-		setPriority(search.getPriority());
-		setIntensity(search.getIntensity());
-		setDuration(search.getDuration());
-	}
-	
-	public  void perform() {
-		return;
-	}
-
 
 	/**
 	 * @param type
