@@ -21,15 +21,14 @@
 */
 package org.socialworld.actions.handle;
 
-import java.util.List;
 
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.ActualTime;
-import org.socialworld.attributes.Time;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.Vector;
+import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.EventByAction;
 import org.socialworld.core.EventType;
 import org.socialworld.objects.Human;
@@ -77,30 +76,39 @@ public class ActionHandle extends AbstractAction {
 	private SimulationObject item1;
 	private SimulationObject item2;
 
-	public ActionHandle(List<Value> actionProperties) {
+	public ActionHandle(ValueArrayList actionProperties) {
 		super(actionProperties);
 	}
+
+	public ActionHandle(ActionHandle original) {
+		super(original);
+	}
 	
-	public ActionHandle(final ActionType type, final ActionMode mode,
-			final float intensity, final Time minTime, final Time maxTime,
-			final int priority, final long duration) {
-		super(type,  mode,
-				intensity,  minTime, maxTime,
-				 priority,  duration);
-	}
+	protected void setFurtherProperties(ValueArrayList actionProperties) {
 
-	public ActionHandle(final ActionType type, final ActionMode mode,
-			final SimulationObject target, final Vector direction,
-			final float intensity, final Time minTime, final Time maxTime,
-			final int priority, final long duration) {
-		super(type,  mode,
-				intensity,  minTime, maxTime,
-				 priority,  duration);
-			
-			this.setDirection(direction);
+		Value value;
+		
+		SimulationObject target;
+		Vector direction;
+
+		value =  actionProperties.getValue(furtherPropertyNames[0]);
+		if (value.isValid()) {
+			target =  (SimulationObject) value.getValue() ;
 			this.setTarget(target);
+		}
+
+		value =  actionProperties.getValue(furtherPropertyNames[1]);
+		if (value.isValid()) {
+			direction = (Vector) value.getValue();
+			this.setDirection(direction);
+		}
+
 	}
 
+	protected void setFurtherProperties(AbstractAction original) {
+		setTarget(((ActionHandle) original).getTarget());
+		setDirection(((ActionHandle) original).getDirection());
+	}
 
 	/* (non-Javadoc)
 	 * @see org.socialworld.actions.AbstractAction#perform()

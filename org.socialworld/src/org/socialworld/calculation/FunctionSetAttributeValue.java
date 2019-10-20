@@ -1,9 +1,9 @@
 package org.socialworld.calculation;
 
-import java.util.List;
 
 import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.AttributeArray;
+import org.socialworld.collections.ValueArrayList;
 
 public class FunctionSetAttributeValue extends FunctionBase {
 
@@ -18,7 +18,7 @@ public class FunctionSetAttributeValue extends FunctionBase {
 	}
 	
 	@Override
-	public Value calculate(List<Value> arguments) {
+	public Value calculate(ValueArrayList arguments) {
 		
 		int newAttributeValue;
 		

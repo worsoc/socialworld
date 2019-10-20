@@ -21,10 +21,9 @@
 */
 package org.socialworld.calculation;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.socialworld.attributes.AttributeArray;
+import org.socialworld.collections.ValueArrayList;
 
 /**
  * The class is an implementation of an
@@ -132,11 +131,11 @@ public class Expression {
 	
 		
 	Value evaluateExpression() {
-		List<Value> noArguments = null;
+		ValueArrayList noArguments = null;
 		return evaluateExpression(noArguments);
 	}
 
-	Value evaluateExpression(List<Value> arguments) {
+	Value evaluateExpression(ValueArrayList arguments) {
 		
 		Value tmp;
 		String name;
@@ -161,7 +160,7 @@ public class Expression {
 					attributeArray.get(index ));
 					
 			case argumentValueByName:
-				return getValue(arguments, (String) value.getValueCopy());
+				return arguments.getValue( (String) value.getValueCopy());
 				
 			case branching:
 				tmp = expression1.evaluateExpression(arguments);
@@ -230,7 +229,7 @@ public class Expression {
 				
 				
 			case function:
-				List<Value> calculateArguments = new ArrayList<Value>();
+				ValueArrayList calculateArguments = new ValueArrayList();
 				calculateArguments.add( expression1.evaluateExpression(arguments) );
 				calculateArguments.add( expression2.evaluateExpression(arguments) );
 				calculateArguments.add( expression3.evaluateExpression(arguments) );
@@ -245,8 +244,13 @@ public class Expression {
 			case replacement:
 				name = (String) value.getValueCopy();
 				tmp = expression1.evaluateExpression(arguments);
-				index = findValue(arguments, name);
-				if (index >= 0) 	arguments.set(index, tmp);
+				index = arguments.findValue(name);
+				if (index >= 0) {
+					if (tmp.getName().isEmpty()) {
+						tmp.setName(name);
+					}
+					arguments.set(index, tmp);
+				}	
 				return tmp;
 			
 			case create:
@@ -282,66 +286,27 @@ public class Expression {
 	
 	
 
-	private Object get(List<Value> arguments, Type type, int wantedOccurence) {
-		int argumentsCount;
-		int occurence;
+	private Object get(ValueArrayList arguments, Type type, int wantedOccurence) {
+		
 		Value value;
+		value = arguments.getValue(type, wantedOccurence);
 		
-		argumentsCount = arguments.size();
-		occurence = 0;
-		
-		for (int index = 0; index < argumentsCount; index++) {
-			value = arguments.get(index);
-			if (value.getType() == type) {
-				occurence++;
-				if (occurence == wantedOccurence) {
-					return value.getValue();
-				}
-			}
+		if (value.isValid()) {
+			return value.getValue();
 		}
-		return null;
-	}
-
-	
-	private Value getValue(List<Value> arguments, String name) {
-		int argumentsCount;
-		int index;
-		Value value;
-		
-		argumentsCount = arguments.size();
-		
-		for (index = 0; index < argumentsCount; index++) {
-			value = arguments.get(index);
-			if (value.getName().equals(name)) return value;
+		else {
+			return null;
 		}
 		
-		return new Value();
-
 	}
-
-
-	private int findValue(List<Value> arguments, String name) {
-		int argumentsCount;
-		int index;
-		
-		argumentsCount = arguments.size();
-		
-		for (index = 0; index < argumentsCount; index++) {
-			if (arguments.get(index).getName().equals(name)) return index;
-		}
-		
-		return -1;
-
-	}
-
 
 	// will be overrided in inherited Expressions dedicated to creating values
-	protected Value createValue(Type valueType, List<Value> arguments) {
+	protected Value createValue(Type valueType, ValueArrayList arguments) {
 		return new Value();
 	}
 	
 
-	protected void evaluateExpression1(List<Value> arguments) {
+	protected void evaluateExpression1(ValueArrayList arguments) {
 		expression1.evaluateExpression(arguments);
 	}
 

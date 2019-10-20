@@ -22,15 +22,14 @@
 package org.socialworld.actions.say;
 
 
-import java.util.List;
 
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.ActualTime;
-import org.socialworld.attributes.Time;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.Vector;
+import org.socialworld.collections.ValueArrayList;
 import org.socialworld.conversation.Talk_SentenceType;
 import org.socialworld.core.EventByAction;
 import org.socialworld.core.EventType;
@@ -84,35 +83,39 @@ public class ActionSay extends AbstractAction {
 	private SimulationObject target;
 	private Vector direction;
 	
-	public ActionSay(List<Value> actionProperties) {
+	public ActionSay(ValueArrayList actionProperties) {
 		super(actionProperties);
-	}
-
-	public ActionSay(final ActionType type, final ActionMode mode,
-			final float intensity, final Time minTime, final Time maxTime,
-			final int priority, final long duration) {
-		super(type,  mode,
-				intensity,  minTime, maxTime,
-				 priority,  duration);
-	}
-	
-	public ActionSay(final ActionType type, final ActionMode mode,
-			final SimulationObject target, final Vector direction,
-			final float intensity, final Time minTime, final Time maxTime,
-			final int priority, final long duration) {
-		super(type,  mode,
-				intensity,  minTime, maxTime,
-				 priority,  duration);
-			
-			this.setDirection(direction);
-			this.setTarget(target);
 	}
 	
 	public ActionSay(ActionSay original) {
-		setBaseProperties(original);
-		this.direction = original.direction;
+		super(original);
 	}
 
+	protected void setFurtherProperties(ValueArrayList actionProperties) {
+
+		Value value;
+		
+		SimulationObject target;
+		Vector direction;
+
+		value =  actionProperties.getValue(furtherPropertyNames[0]);
+		if (value.isValid()) {
+			target =  (SimulationObject) value.getValue() ;
+			this.setTarget(target);
+		}
+
+		value =  actionProperties.getValue(furtherPropertyNames[1]);
+		if (value.isValid()) {
+			direction = (Vector) value.getValue();
+			this.setDirection(direction);
+		}
+
+	}
+
+	protected void setFurtherProperties(AbstractAction original) {
+		setTarget(((ActionSay) original).getTarget());
+		setDirection(((ActionSay) original).getDirection());
+	}
 
 	public  void perform() {
 		

@@ -21,16 +21,14 @@
 */
 package org.socialworld.actions.move;
 
-import java.util.List;
 
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
-import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Position;
-import org.socialworld.attributes.Time;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.Vector;
+import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.EventByAction;
 import org.socialworld.core.EventType;
 import org.socialworld.objects.Animal;
@@ -87,52 +85,40 @@ public class ActionMove extends AbstractAction {
 	
 	private Vector directionForSection;
 	
-	public ActionMove(List<Value> actionProperties) {
+	public ActionMove(ValueArrayList actionProperties) {
 		super(actionProperties);
 	}
 
-	public ActionMove(final ActionType type, final ActionMode mode,
-			final float intensity, final Time minTime, final Time maxTime,
-			final int priority, final long duration) {
-		super(type,  mode,
-				intensity,  minTime, maxTime,
-				 priority,  duration);
-		this.firstStep = true;
-			
-	}
-	
-	public ActionMove(final ActionType type, final ActionMode mode,
-			final Position end,
-			final float intensity, final Time minTime, final Time maxTime,
-			final int priority, final long duration) {
-		super(type,  mode,
-				intensity,  minTime, maxTime,
-				 priority,  duration);
-			
-			this.setEnd(end);
-			this.firstStep = true;
-	}
-
-	public ActionMove(final ActionType type, final ActionMode mode,
-			final Vector direction,
-			final float intensity, final Time minTime, final Time maxTime,
-			final int priority, final long duration) {
-		super(type,  mode,
-				intensity,  minTime, maxTime,
-				 priority,  duration);
-			
-			this.setDirection(direction);
-			this.firstStep = true;
-	}
 
 	public ActionMove(ActionMove original) {
-		setBaseProperties(original);
-		this.direction = original.direction;
+		super(original);
 	}
 
 
-	public Vector getDirectionForSection() {
-		return new Vector(this.directionForSection);
+	protected void setFurtherProperties(ValueArrayList actionProperties) {
+
+		Value value;
+		
+		Position endPosition;
+		Vector direction;
+
+		value =  actionProperties.getValue(furtherPropertyNames[0]);
+		if (value.isValid()) {
+			endPosition = new Position( (Vector) value.getValue() );
+			this.setEnd(endPosition);
+		}
+
+		value =  actionProperties.getValue(furtherPropertyNames[1]);
+		if (value.isValid()) {
+			direction = (Vector) value.getValue();
+			this.setDirection(direction);
+		}
+		
+	}
+	
+	protected void setFurtherProperties(AbstractAction original) {
+		setEnd(((ActionMove) original).getEnd());
+		setDirection(((ActionMove) original).getDirection());
 	}
 	
 	public  void perform() {
@@ -164,6 +150,11 @@ public class ActionMove extends AbstractAction {
 		addEvent(event);
 		
 	}
+
+	public Vector getDirectionForSection() {
+		return new Vector(this.directionForSection);
+	}
+	
 	
 	private void createMove() {
 		

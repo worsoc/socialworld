@@ -11,6 +11,7 @@ import org.socialworld.calculation.Expression_Function;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.application.ActionCreator;
+import org.socialworld.collections.ValueArrayList;
 
 public class CreateValue extends Expression {
 
@@ -27,12 +28,12 @@ public class CreateValue extends Expression {
 		
 	}
 	
-	protected Value createValue(Type valueType, List<Value> arguments) {
+	protected Value createValue(Type valueType, ValueArrayList arguments) {
 
 		Object createdObject;
 		Value createdValue;
 		
-		List<Value> localArguments = new ArrayList<Value>();
+		ValueArrayList localArguments = new ValueArrayList();
 		
 		// copy attribute array to local argument array
 		localArguments.add( calculation.copy(arguments.get(0)) );

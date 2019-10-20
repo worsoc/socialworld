@@ -21,9 +21,9 @@
 */
 package org.socialworld.calculation;
 
-import java.util.List;
 
 import org.socialworld.attributes.AttributeArray;
+import org.socialworld.collections.ValueArrayList;
 
 public class FunctionByTable extends FunctionBase {
 
@@ -39,7 +39,7 @@ public class FunctionByTable extends FunctionBase {
 	}
 	
 	@Override
-	public Value calculate(List<Value> arguments) {
+	public Value calculate(ValueArrayList arguments) {
 		Value value;
 		value = arguments.get(0);
 		if (value.getType() == Type.integer) {

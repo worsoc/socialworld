@@ -21,7 +21,8 @@
 */
 package org.socialworld.calculation;
 
-import java.util.List;
+
+import org.socialworld.collections.ValueArrayList;
 
 /**
  * @author Mathias Sikos
@@ -63,7 +64,7 @@ public class FunctionMtimesLogXplusN extends FunctionBase {
 	 * @see org.socialworld.calculation.FunctionBase#calculate(org.socialworld.calculation.Value[])
 	 */
 	@Override
-	public Value calculate(List<Value> arguments) {
+	public Value calculate(ValueArrayList arguments) {
 		Value x;
 		float result;
 		if ( arguments.size() < 1) return new Value();

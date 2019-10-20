@@ -21,7 +21,6 @@
 */
 package org.socialworld.calculation;
 
-import java.util.List;
 
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionType;
@@ -328,20 +327,5 @@ public class Calculation {
 		}
 	}
 	
-	public static Value getValue(List<Value> values, String name) {
-		int valuesCount;
-		int index;
-		Value value;
-		
-		valuesCount = values.size();
-		
-		for (index = 0; index < valuesCount; index++) {
-			value = values.get(index);
-		
-			if (value.getName().equals(name)) return value;
-		}
-		
-		return nothing;
-	}
 	
 }
