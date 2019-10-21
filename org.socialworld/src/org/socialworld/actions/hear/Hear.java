@@ -73,9 +73,8 @@ public class Hear extends ActionPerformer {
 		
 				sentence = originalAction.getSentence();
 		
-				setMaxParam(2);
-				setParam(0, new Value(Type.simulationObject, "partner", partner));
-				setParam(1, new Value(Type.string, "sentence", sentence));
+				addParam( new Value(Type.simulationObject, "partner", partner));
+				addParam( new Value(Type.string, "sentence", sentence));
 				
 				setValid();
 				
@@ -85,9 +84,8 @@ public class Hear extends ActionPerformer {
 	
 				sentence = originalAction.getSentence();
 				
-				setMaxParam(2);
-				setParam(0, new Value(Type.simulationObject, "partner", partner));
-				setParam(1, new Value(Type.string, "sentence", sentence));
+				addParam( new Value(Type.simulationObject, "partner", partner));
+				addParam( new Value(Type.string, "sentence", sentence));
 				
 				setValid();
 				

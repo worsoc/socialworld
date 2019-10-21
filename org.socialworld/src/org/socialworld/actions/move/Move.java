@@ -66,8 +66,7 @@ public class Move extends ActionPerformer {
 
 	public void perform() {
 		
-
-		if (this.duration == 0 | this.acceleration > 0) {
+		if (this.duration == 0 | this.acceleration != 0) {
 			ActionMove originalAction;
 			final Animal actor;
 				
@@ -77,17 +76,15 @@ public class Move extends ActionPerformer {
 			if (this.duration == 0)		{
 				this.sectionDirection = originalAction.getDirectionForSection();
 				
-				setMaxParam(3);
-				setParam(0, new Value(Type.vector, "direction", this.sectionDirection));
+				setParam( new Value(Type.vector, "direction", this.sectionDirection));
 				
 				this.remainedDistance = this.sectionDirection.length();
 			}
 
 			calculateVelocity(originalAction, actor);
 	
-			
-			setParam(1, new Value(Type.floatingpoint, "velocity", velocity));
-			setParam(2, new Value(Type.floatingpoint, "acceleration", acceleration));
+			setParam( new Value(Type.floatingpoint, "velocity", velocity));
+			setParam( new Value(Type.floatingpoint, "acceleration", acceleration));
 		}	
 
 		this.remainedDistance = this.remainedDistance - this.velocity;

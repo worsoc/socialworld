@@ -103,10 +103,9 @@ public class Say extends ActionPerformer {
 					answer =  actor.getAnswerForQuestion(question);
 					manipulateAnswer(actor, answer, partner);
 		
-					setMaxParam(3);
-					setParam(0, new Value(Type.vector, "direction", direction));
-					setParam(1, new Value(Type.simulationObject, "partner", partner));
-					setParam(2, new Value(Type.answer, "answer", answer));
+					addParam( new Value(Type.vector, "direction", direction));
+					addParam( new Value(Type.simulationObject, "partner", partner));
+					addParam( new Value(Type.answer, "answer", answer));
 					
 					setValid();
 					
@@ -118,10 +117,9 @@ public class Say extends ActionPerformer {
 				
 					question = originalAction.getQuestion();
 
-					setMaxParam(3);
-					setParam(0, new Value(Type.vector, "direction", direction));
-					setParam(1, new Value(Type.simulationObject, "partner", partner));
-					setParam(2, new Value(Type.string, "question", question));
+					addParam( new Value(Type.vector, "direction", direction));
+					addParam( new Value(Type.simulationObject, "partner", partner));
+					addParam( new Value(Type.string, "question", question));
 					
 					setValid();
 							

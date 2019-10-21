@@ -29,16 +29,12 @@ import org.socialworld.calculation.Value;
  *
  */
 public interface IEventParam {
-	
-	public abstract Value getParam(int index);
-	
-	public abstract int size();
-	
-	public abstract int find(Type type);
-	
-	public abstract int find(String name);
+
+	public abstract Value getParam(String name);
+
+	public abstract Value getParam(Type name);
 	
 	public boolean isValid();
 	
-	public void evaluate();
+	public abstract void evaluate();
 }

@@ -128,12 +128,11 @@ public class Handle extends ActionPerformer {
 			actorsPower = actor.getAttributes().get(Attribute.power);
 			intensity = actorsIntensity * actorsPower;
 	
-			setMaxParam(5);
-			setParam(0, new Value(Type.vector, "direction", direction));
-			setParam(1, new Value(Type.floatingpoint, "actorsIntensity", actorsIntensity));
-			setParam(2, new Value(Type.floatingpoint, "intensity", intensity));
-			setParam(3, new Value(Type.simulationObject, "item1", item1));
-			setParam(4, new Value(Type.simulationObject, "item2", item2));
+			addParam( new Value(Type.vector, "direction", direction));
+			addParam( new Value(Type.floatingpoint, "actorsIntensity", actorsIntensity));
+			addParam( new Value(Type.floatingpoint, "intensity", intensity));
+			addParam( new Value(Type.simulationObject, "item1", item1));
+			addParam( new Value(Type.simulationObject, "item2", item2));
 			
 			setValid();
 			

@@ -106,13 +106,12 @@ public class Attack extends ActionPerformer {
 	
 		weapon = originalAction.getWeapon();
 	
-		setMaxParam(6);
-		setParam(0, new Value(Type.vector, "direction", directionHit));
-		setParam(1, new Value(Type.floatingpoint, "actorsIntensity", actorsIntensity));
-		setParam(2, new Value(Type.floatingpoint, "intensity", intensity));
-		setParam(3, new Value(Type.simulationObject, "weapon", weapon));
-		setParam(4, new Value(Type.vector, "directionChest", directionChest));
-		setParam(5, new Value(Type.vector, "directionView", directionView));
+		addParam( new Value(Type.vector, "direction", directionHit));
+		addParam( new Value(Type.floatingpoint, "actorsIntensity", actorsIntensity));
+		addParam( new Value(Type.floatingpoint, "intensity", intensity));
+		addParam( new Value(Type.simulationObject, "weapon", weapon));
+		addParam( new Value(Type.vector, "directionChest", directionChest));
+		addParam( new Value(Type.vector, "directionView", directionView));
 		
 		setValid();
   		
@@ -140,11 +139,9 @@ public class Attack extends ActionPerformer {
 		actorsIntensity = originalAction.getIntensity();
 		intensity = actorsIntensity * actorsPower;
 	
-	
-		setMaxParam(3);
-		setParam(0, new Value(Type.vector, "directionHit", directionHit));
-		setParam(1, new Value(Type.floatingpoint, "actorsIntensity", actorsIntensity));
-		setParam(2, new Value(Type.floatingpoint, "intensity", intensity));
+		addParam( new Value(Type.vector, "directionHit", directionHit));
+		addParam( new Value(Type.floatingpoint, "actorsIntensity", actorsIntensity));
+		addParam( new Value(Type.floatingpoint, "intensity", intensity));
 		
 		setValid();
   		
