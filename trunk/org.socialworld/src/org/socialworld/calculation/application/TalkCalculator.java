@@ -143,13 +143,13 @@ public class TalkCalculator  extends SocialWorldThread {
 		
 		params = event.getOptionalParam();
 		
-		value = params.getParam(params.find("partner"));
+		value = params.getParam("partner");
 		if (value.isValid())
 			partner = (Human) value.getValue();
 		else
 			return;
 
-		value = params.getParam(params.find("sentence"));
+		value = params.getParam("sentence");
 		if (value.isValid())
 			sentence = (String) value.getValue();
 		else
@@ -182,13 +182,13 @@ public class TalkCalculator  extends SocialWorldThread {
 
 		params = event.getOptionalParam();
 		
-		value = params.getParam(params.find("partner"));
+		value = params.getParam("partner");
 		if (value.isValid())
 			partner = (Human) value.getValue();
 		else
 			return;
 
-		value = params.getParam(params.find("sentence"));
+		value = params.getParam("sentence");
 		if (value.isValid())
 			sentence = (String) value.getValue();
 		else
@@ -209,13 +209,13 @@ public class TalkCalculator  extends SocialWorldThread {
 
 		params = event.getOptionalParam();
 		
-		value = params.getParam(params.find("partner"));
+		value = params.getParam("partner");
 		if (value.isValid())
 			partner = (Human) value.getValue();
 		else
 			return;
 
-		value = params.getParam(params.find("answer"));
+		value = params.getParam("answer");
 		if (value.isValid())
 			answer = (AnswerProperties) value.getValue();
 		else

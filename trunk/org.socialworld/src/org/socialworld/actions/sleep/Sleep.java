@@ -60,8 +60,7 @@ public class Sleep extends ActionPerformer {
 			originalAction  = (ActionSleep) getOriginalActionObject();
 			actorsIntensity = originalAction.getIntensity();
 	
-			setMaxParam(1);
-			setParam(0, new Value(Type.floatingpoint, "actorsIntensity", actorsIntensity));
+			addParam( new Value(Type.floatingpoint, "actorsIntensity", actorsIntensity));
 			
 			setValid();
 		}

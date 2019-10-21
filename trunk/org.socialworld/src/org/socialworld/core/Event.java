@@ -21,6 +21,7 @@
 */
 package org.socialworld.core;
 
+import org.socialworld.calculation.Value;
 import org.socialworld.calculation.Vector;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.Time;
@@ -237,11 +238,12 @@ public class Event implements Comparable<Event> {
 	}
 
 	public Vector getDirection() {
-		int indexParamDirection;
+		Value direction;;
+		
 		if (hasOptionalParam()) {
-			indexParamDirection = optionalParam.find("direction");
-			if (indexParamDirection > 0) 
-				return (Vector) optionalParam.getParam(indexParamDirection).getValueCopy();
+			direction = optionalParam.getParam("direction");
+			if (direction.isValid()) 
+				return (Vector) direction.getValueCopy();
 			
 		}
 		if (this.causer instanceof Animal)
@@ -254,11 +256,11 @@ public class Event implements Comparable<Event> {
 	 * @return the strength
 	 */
 	public float getStrength() {
-		int indexParamDirection;
+		Value strength;
 		if (hasOptionalParam()) {
-			indexParamDirection = optionalParam.find("intensity");
-			if (indexParamDirection > 0) 
-				return (float) optionalParam.getParam(indexParamDirection).getValueCopy();
+			strength = optionalParam.getParam("intensity");
+			if (strength.isValid()) 
+				return (float) strength.getValueCopy();
 			
 		}
 		return 0;

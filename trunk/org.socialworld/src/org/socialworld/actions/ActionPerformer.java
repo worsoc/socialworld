@@ -23,6 +23,7 @@ package org.socialworld.actions;
 
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
+import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.IEventParam;
 
 /**
@@ -72,8 +73,7 @@ import org.socialworld.core.IEventParam;
  */
 public abstract class ActionPerformer implements IEventParam {
 
-    private Value eventParams[];
-    private int maxParams;
+    private ValueArrayList eventParams;
     private boolean valid = false;
     
     private AbstractAction action;
@@ -100,61 +100,42 @@ public abstract class ActionPerformer implements IEventParam {
 		return valid;
 	}
 	
+	public Value getParam(String name) {
+		return eventParams.getValue(name);
+	}
+
 	/* (non-Javadoc)
 	 * @see org.socialworld.core.IEventParam#getParam(int)
 	 */
 	@Override
-	public Value getParam(int index) {
-		if (index >= 0 &index < size())
-			return eventParams[index];
+	public Value getParam(Type type) {
+		// 1 ... always first occurence
+		return eventParams.getValue(type, 1);
+	}
+
+	protected  void addParam(Value param) {
+		eventParams.add(param);
+	}
+
+	protected void setParam(Value param) {
+		int indexParam = findParam(param.getName());
+		if (indexParam >= 0)
+			setParam(indexParam, param);
 		else
-			// invalid "nothing" value
-			return new Value();
+			addParam( param);
 	}
-
-	/* (non-Javadoc)
-	 * @see org.socialworld.core.IEventParam#size()
-	 */
-	@Override
-	public int size() {
-		return eventParams.length;
+	
+	private int findParam(String name) {
+		return eventParams.findValue(name);
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see org.socialworld.core.IEventParam#find(org.socialworld.calculation.Type)
 	 */
-	@Override
-	public int find(Type type) {
-		for (int index = 0; index < maxParams; index++) {
-			if (eventParams[index].getType() == type) {
-					return index;
-			}
-		}
-		return -1;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.socialworld.core.IEventParam#find(String)
-	 */
-	@Override
-	public int find(String name) {
-		for (int index = 0; index < maxParams; index++) {
-			if (eventParams[index].getName() == name) {
-					return index;
-			}
-		}
-		return -1;
-	}
-
-	protected void setMaxParam(int max) {
-		this.maxParams = max;
-		this.eventParams = new Value[max];
+	private void setParam(int index, Value param) {
+			eventParams.set(index, param);
 	}
 	
-	protected void setParam(int index, Value param) {
-		if (index >= 0 & index < maxParams)
-			eventParams[index] = param;
-	}
 	
 	protected void setValid() {
 		valid = true;
