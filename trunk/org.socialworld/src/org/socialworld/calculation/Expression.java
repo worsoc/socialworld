@@ -148,6 +148,7 @@ public class Expression {
 			case nothing:
 				//return invalid dummy-Value
 				return Calculation.getNothing();
+				
 			case value:
 				return calculation.copy(value);
 				
@@ -161,6 +162,18 @@ public class Expression {
 					
 			case argumentValueByName:
 				return arguments.getValue( (String) value.getValueCopy());
+				
+				
+			case valueFromValueList:
+				// get value list's name
+				name =  (String) expression1.evaluateExpression(arguments).getValueCopy();
+				// get the value list
+				tmp = arguments.getValue(name);
+				ValueArrayList subValueList = (ValueArrayList) tmp.getValue();
+				// get the value list element's name
+				name = (String) expression2.evaluateExpression(arguments).getValueCopy();
+				// get the result value from the value list
+				return subValueList.getValue(name);
 				
 			case branching:
 				tmp = expression1.evaluateExpression(arguments);
