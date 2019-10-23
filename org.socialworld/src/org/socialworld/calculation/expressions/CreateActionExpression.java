@@ -23,6 +23,7 @@ package org.socialworld.calculation.expressions;
 
 import java.util.List;
 
+import org.socialworld.actions.ActionPerformer;
 import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.Attribute;
 import org.socialworld.calculation.Expression;
@@ -34,9 +35,16 @@ import org.socialworld.datasource.parsing.ParseExpressionStrings;
 
 public class CreateActionExpression extends Expression {
 	
-	public CreateActionExpression(List<String> lines) {
+	public static final int MODUS_CREATE_STATE2ACTION = 1;
+	public static final int MODUS_CREATE_REACTION = 2;
+	
+	private int modus;
+	
+	public CreateActionExpression(List<String> lines, int modus) {
 		
 		super();
+		
+		this.modus = modus;
 		
 		if (lines.size() > 0)
 		{
@@ -65,28 +73,6 @@ public class CreateActionExpression extends Expression {
 
 			setValid();
 		}
-		
-	}
-
-	public CreateActionExpression(String line) {
-		
-		super();
-			
-		Expression exp1;  // WENN
-		Expression exp2;  // DANN
-		Expression exp3;  // SONST (doesn't exist here  --> action Nothing)
-			
-		exp1 = parseWenn(line);
-		exp2 = parseDann(line);
-		exp3 = new CreateValue(Type.action, Nothing.getInstance());
-		
-		setExpression1(exp1);
-		setExpression2(exp2);
-		setExpression3(exp3);
-
-		setOperation(Expression_Function.branching);
-
-		setValid();
 		
 	}
 
@@ -256,7 +242,20 @@ public class CreateActionExpression extends Expression {
 		
 	}
 	
+	
 	private Expression parseCondition(String condition) {
+		
+		switch (this.modus) {
+		case MODUS_CREATE_STATE2ACTION:
+			return parseAttributeCondition(condition);
+		case MODUS_CREATE_REACTION:
+			return parseEventPropsCondition(condition);
+		default:
+			return new Expression();
+		}
+	}
+	
+	private Expression parseAttributeCondition(String condition) {
 		
 		String[] conditionElements = condition.trim().split("\\s+");
 		
@@ -287,6 +286,46 @@ public class CreateActionExpression extends Expression {
 				
 				if (Expression_ConditionOperator.getName(i).toString().equals(operator) ) {
 					comparison = new Comparison(Expression_ConditionOperator.getName(i), attributeValue, constant );
+					break;
+				}
+			}
+			
+			return comparison;
+			
+		}
+		else
+			return new Expression();
+
+	}
+	
+	private Expression parseEventPropsCondition(String condition) {
+		
+		String[] conditionElements = condition.trim().split("\\s+");
+		
+		// we assume 4 elements --> (type, event property name, operator, value)
+		if (conditionElements.length == 4) {
+			
+			// type as Type's index (look at the enum Type)
+			String type = conditionElements[0];
+			
+			// the value list element name (the name of one value in the value list)
+			String propertyName = conditionElements[1];
+			
+			String operator = conditionElements[2];
+			
+			// the value the event's property is compared to
+			String value = conditionElements[3];
+			
+			Expression propertyValue = new ValueFromValueList(ActionPerformer.EVENT_PARAMS_NAME, propertyName);
+			
+			Expression constant = new Constant(new Value(value, Type.getName(Integer.parseInt(type)) ) );
+			
+			Expression comparison = new Expression();
+			
+			for (int i = 0; i < Expression_ConditionOperator.NUMBER_OF_COMPARISON_OPERATORS; i++) {
+				
+				if (Expression_ConditionOperator.getName(i).toString().equals(operator) ) {
+					comparison = new Comparison(Expression_ConditionOperator.getName(i), propertyValue, constant );
 					break;
 				}
 			}

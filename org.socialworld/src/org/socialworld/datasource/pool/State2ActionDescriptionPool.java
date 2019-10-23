@@ -79,17 +79,17 @@ public class State2ActionDescriptionPool extends DescriptionPool {
 		Expression startExpression = Nothing.getInstance();
 
 		lines = new ArrayList<String>(1);
-		lines.add("WENN mood == 50 DANN <TYPE><Const>1</Const></TYPE><MODE><Const>14</Const></MODE><MIN_TIME><Now+N>10000</Now+N></MIN_TIME><MAX_TIME><Now+N>100000</Now+N></MAX_TIME><PRIO><Const>150</Const></PRIO><INTENSITY><MX+N>5;1.5;23</MX+N></INTENSITY><DURATION><Const>10000</Const></DURATION>");
+		lines.add("WENN mood > 10 DANN <ACTIONTYPE><Const>1</Const></ACTIONTYPE><ACTIONMODE><Const>14</Const></ACTIONMODE><MINTIME><Now+N>10000</Now+N></MINTIME><MAXTIME><Now+N>100000</Now+N></MAXTIME><PRIORITY><Const>150</Const></PRIORITY><INTENSITY><MX+N>5;1.5;23</MX+N></INTENSITY><DURATION><Const>10000</Const></DURATION>");
 		expressions.add(lines);
 		
 		lines = new ArrayList<String>(1);
-		lines.add("WENN tiredness == 41 DANN <TYPE><Const>0</Const></TYPE><MODE><Const>2</Const></MODE><MIN_TIME><Now+N>10000</Now+N></MIN_TIME><MAX_TIME><Now+N>100000</Now+N></MAX_TIME><PRIO><Const>50</Const></PRIO><INTENSITY><MX+N>4;1.5;0</MX+N></INTENSITY><DURATION><Const>610000</Const></DURATION>");
+		lines.add("WENN tiredness == 41 DANN <ACTIONTYPE><Const>0</Const></ACTIONTYPE><ACTIONMODE><Const>2</Const></ACTIONMODE><MINTIME><Now+N>10000</Now+N></MINTIME><MAXTIME><Now+N>100000</Now+N></MAXTIME><PRIORITY><Const>50</Const></PRIORITY><INTENSITY><MX+N>4;1.5;0</MX+N></INTENSITY><DURATION><Const>610000</Const></DURATION>");
 		expressions.add(lines);
 
 
 		for (int i = 0; i <  expressionsCount; i++) {
 			
-			startExpression = new CreateActionExpression(expressions.get(i));
+			startExpression = new CreateActionExpression(expressions.get(i), CreateActionExpression.MODUS_CREATE_STATE2ACTION);
 			this.expressions[i] = new FunctionByExpression(startExpression);
 
 		}

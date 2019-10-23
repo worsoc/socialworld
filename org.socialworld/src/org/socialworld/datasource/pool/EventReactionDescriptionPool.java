@@ -21,14 +21,24 @@
 */
 package org.socialworld.datasource.pool;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.socialworld.calculation.Expression;
+import org.socialworld.calculation.FunctionByExpression;
 import org.socialworld.calculation.descriptions.EventReactionDescription;
+import org.socialworld.calculation.expressions.CreateActionExpression;
+import org.socialworld.calculation.expressions.Nothing;
 import org.socialworld.core.EventType;
 
 public class EventReactionDescriptionPool extends DescriptionPool {
 
+	public static final int COUNT_FbE_TEST_ENTRIES = 2;		// Anzahl Testeintraege FunctionByExpression
+	
 	private static EventReactionDescriptionPool instance;
 	
-	private static EventReactionDescription descriptions[];
+	private EventReactionDescription descriptions[];
+	private FunctionByExpression expressions[];
 	
 	private EventReactionDescriptionPool () {
 		
@@ -66,9 +76,37 @@ public class EventReactionDescriptionPool extends DescriptionPool {
 		for (int index = 0; index < sizeDescriptionsArray; index++)
 			descriptions[index] = new EventReactionDescription();
 		
+		initializeWithTestData_FunctionByExpression();
 		initializeFromFile();
 	}
 	
+	
+	private void initializeWithTestData_FunctionByExpression() {
+		
+		
+		int 		expressionsCount = COUNT_FbE_TEST_ENTRIES;
+		List<List<String>> expressions = new ArrayList<List<String>>(expressionsCount);
+		List<String> lines;
+		Expression startExpression = Nothing.getInstance();
+
+		lines = new ArrayList<String>(1);
+		lines.add("WENN mood > 10 DANN <ACTIONTYPE><Const>1</Const></ACTIONTYPE><ACTIONMODE><Const>14</Const></ACTIONMODE><MINTIME><Now+N>10000</Now+N></MINTIME><MAXTIME><Now+N>100000</Now+N></MAXTIME><PRIORITY><Const>150</Const></PRIORITY><INTENSITY><MX+N>5;1.5;23</MX+N></INTENSITY><DURATION><Const>10000</Const></DURATION>");
+		expressions.add(lines);
+		
+		lines = new ArrayList<String>(1);
+		lines.add("WENN tiredness == 41 DANN <ACTIONTYPE><Const>0</Const></ACTIONTYPE><ACTIONMODE><Const>2</Const></ACTIONMODE><MINTIME><Now+N>10000</Now+N></MINTIME><MAXTIME><Now+N>100000</Now+N></MAXTIME><PRIORITY><Const>50</Const></PRIORITY><INTENSITY><MX+N>4;1.5;0</MX+N></INTENSITY><DURATION><Const>610000</Const></DURATION>");
+		expressions.add(lines);
+
+
+		for (int i = 0; i <  expressionsCount; i++) {
+			
+			startExpression = new CreateActionExpression(expressions.get(i), CreateActionExpression.MODUS_CREATE_REACTION);
+			this.expressions[i] = new FunctionByExpression(startExpression);
+
+		}
+		
+	}
+
 	private void initializeFromFile() {
 		
 	}
