@@ -73,6 +73,8 @@ import org.socialworld.core.IEventParam;
  */
 public abstract class ActionPerformer implements IEventParam {
 
+	public static final String EVENT_PARAMS_NAME = "eventparams";
+	
     private ValueArrayList eventParams;
     private boolean valid = false;
     
