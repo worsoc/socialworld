@@ -21,25 +21,51 @@
 */
 package org.socialworld.calculation.descriptions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.FunctionByExpression;
 
 public class EventReactionDescription {
 	
-	private FunctionByExpression f_createReaction;
+	private List<FunctionByExpression> functionsCreateReaction;
 	
 	public EventReactionDescription() {
-		f_createReaction = new FunctionByExpression();
+		functionsCreateReaction = new  ArrayList<FunctionByExpression>();
 	}
 	
-
 	public EventReactionDescription(Expression startExpression) {
-
-		f_createReaction = new FunctionByExpression(startExpression);
+		
+		functionsCreateReaction = new  ArrayList<FunctionByExpression>();
+		FunctionByExpression f_createRection = new FunctionByExpression(startExpression);
+		functionsCreateReaction.add(f_createRection);
 
 	}
 
-	public FunctionByExpression getFunctionCreateReaction() {
-		return f_createReaction;
+	public EventReactionDescription(FunctionByExpression function) {
+
+		functionsCreateReaction = new  ArrayList<FunctionByExpression>();
+		functionsCreateReaction.add(function);
+
 	}
+
+	public void addFunctionCreateReaction(FunctionByExpression function) {
+
+		functionsCreateReaction.add(function);
+
+	}
+	
+	public FunctionByExpression getFunctionCreateAction(int index) {
+		
+		return functionsCreateReaction.get(index);
+		
+	}
+	
+	public int countFunctions() {
+		
+		return functionsCreateReaction.size();
+		
+	}
+
 }

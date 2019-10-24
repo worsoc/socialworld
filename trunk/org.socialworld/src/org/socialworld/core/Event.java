@@ -52,6 +52,7 @@ public class Event implements Comparable<Event> {
 	private Position position;
 
 	private IEventParam optionalParam;
+	private boolean hasOptionalParams = false;
 	
 	private Event_Percipience percipience;
 	
@@ -69,7 +70,7 @@ public class Event implements Comparable<Event> {
 		this.position = position;
 
 		this.optionalParam = param;
-
+		hasOptionalParams = true;
 		
 		this.percipience = new Event_Percipience();
 	}
@@ -88,6 +89,7 @@ public class Event implements Comparable<Event> {
 		this.position = position;
 
 		this.optionalParam = param;
+		hasOptionalParams = true;
 
 		
 		this.percipience = new Event_Percipience();
@@ -288,11 +290,13 @@ public class Event implements Comparable<Event> {
 	}
 
 	public boolean hasOptionalParam() {
-		return (optionalParam != null);
+		return hasOptionalParams;
 	}
 	
 	public void evaluateOptionalParam() {
-		this.optionalParam.evaluate();
+		if (hasOptionalParams) {
+			this.optionalParam.evaluate();
+		}
 	}
 	
 	public IEventParam getOptionalParam() {

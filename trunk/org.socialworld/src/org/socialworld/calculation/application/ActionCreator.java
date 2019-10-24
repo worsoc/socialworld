@@ -128,26 +128,37 @@ public class ActionCreator extends SocialWorldThread {
 	 */
 	private void calculateReaction() {
 	
-		
 		if (this.hiddenReactors.size() == 0) return;
 		
 		Event event = this.events.remove(0);
 		StateSimulationObject stateReactor  = this.statesReactor.remove(0);
 		HiddenSimulationObject hiddenReactor = this.hiddenReactors.remove(0);
 		
+		int eventType = event.getEventTypeAsInt();
+		int eventReactionType = stateReactor.getReactionType(eventType);
+		EventReactionDescription eventReactionDescription = 
+				EventReactionAssignment.getInstance().getEventReactionDescription(
+					eventType, eventReactionType	);
+		int count = eventReactionDescription.countFunctions();
 		
 		AbstractAction reaction;
+		FunctionByExpression f_CreateReaction;
 		
-		
-		if (stateReactor instanceof StateAnimal) 
-			reaction = createAnimalReaction(event, (StateAnimal) stateReactor);
-		else
-			reaction = createNoAnimalReaction(event, stateReactor);
+		for (int index = 0; index < count; index++) 
+		{
+			f_CreateReaction = eventReactionDescription.getFunctionCreateAction(index);
 			
-		if (reaction != null) {
-			if (!reaction.isToBeIgnored())	{
-				hiddenReactor.setAction(reaction);
+			if (stateReactor instanceof StateAnimal) 
+				reaction = createAnimalReaction(event, (StateAnimal) stateReactor, f_CreateReaction);
+			else
+				reaction = createNoAnimalReaction(event, stateReactor);
+				
+			if (reaction != null) {
+				if (!reaction.isToBeIgnored())	{
+					hiddenReactor.setAction(reaction);
+				}
 			}
+			
 		}
 	}
 	
@@ -194,30 +205,17 @@ public class ActionCreator extends SocialWorldThread {
 	 * @param: event
 	 * @param: stateReactor
 	 */
-	private AbstractAction createAnimalReaction(Event event, StateAnimal stateReactor ) {
+	private AbstractAction createAnimalReaction(Event event, StateAnimal stateReactor, FunctionByExpression f_CreateReaction ) {
 		
-	
-		int eventType;
-		int eventReactionType;
-		EventReactionDescription eventReactionDescription;
-		FunctionByExpression f_CreateReaction;
 		ValueArrayList arguments;
-		
-		eventType = event.getEventTypeAsInt();
-		eventReactionType = stateReactor.getReactionType(eventType);
-		
-		eventReactionDescription = 
-				EventReactionAssignment.getInstance().getEventReactionDescription(
-					eventType, eventReactionType	);
-		
-		f_CreateReaction = eventReactionDescription.getFunctionCreateReaction();
-		
 		arguments = new ValueArrayList();
 		
-		arguments.add( new Value(Type.attributeArray, stateReactor.getAttributes()) );
-		arguments.add( new Value(Type.event, event) );
+		arguments.add( new Value(Type.attributeArray, Value.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES, stateReactor.getAttributes()) );
+		arguments.add( new Value(Type.event, Value.ARGUMENT_VALUE_BY_NAME_EVENT, event) );
+		arguments.add( event.getOptionalParam().getParamListAsValue());
 		
-		return (AbstractAction) f_CreateReaction.calculate(arguments).getValue();
+		Value result = f_CreateReaction.calculate(arguments);
+		return (AbstractAction) result.getValue();
 
 	}
 
@@ -243,11 +241,10 @@ public class ActionCreator extends SocialWorldThread {
 		ValueArrayList arguments;
 		arguments = new ValueArrayList();
 		
-		arguments.add( new Value(Type.attributeArray, "attributes", stateActor.getAttributes()) );
+		arguments.add( new Value(Type.attributeArray, Value.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES, stateActor.getAttributes()) );
 		
 		Value result = f_CreateAction.calculate(arguments);
 		return (AbstractAction) result.getValue();
-//		return (AbstractAction) f_CreateAction.calculate(arguments).getValue();
 		
 
 	}
