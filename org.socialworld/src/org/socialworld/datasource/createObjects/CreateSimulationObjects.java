@@ -77,14 +77,17 @@ public abstract class CreateSimulationObjects {
 		
 	
 		gauss_value = random.nextGaussian();
+		while ((gauss_value > 4) || (gauss_value < -4)) gauss_value = random.nextGaussian();
 		indexGPIT = mapGaussToIndex(gauss_value, GaussPoolInfluenceType.CAPACITY_GPIT_ARRAY);
 		hiddenObject.setInfluenceTypes(GaussPoolInfluenceType.getInstance().getInfluenceTypes(indexGPIT));
 
 		gauss_value = random.nextGaussian();
+		while ((gauss_value > 4) || (gauss_value < -4)) gauss_value = random.nextGaussian();
 		indexGPRT = mapGaussToIndex(gauss_value, GaussPoolReactionType.CAPACITY_GPRT_ARRAY);
 		hiddenObject.setReactionTypes(GaussPoolReactionType.getInstance().getReactionTypes(indexGPRT));
 
 		gauss_value = random.nextGaussian();
+		while ((gauss_value > 4) || (gauss_value < -4)) gauss_value = random.nextGaussian();
 		indexGPS2A = mapGaussToIndex(gauss_value, GaussPoolState2ActionType.CAPACITY_GPS2A_ARRAY);
 		hiddenObject.setState2ActionType(GaussPoolState2ActionType.getInstance().getState2ActionType(indexGPS2A));
 		
