@@ -56,7 +56,7 @@ import org.socialworld.core.IEventParam;
  * Die Ereignisverwaltung arbeitet die Ereignisse nach ihren Regeln ab.
  * Für jedes Event der Klasse EventByAction, also von Aktionen ausgelöste Ereignisse, 
  *  wird die evaluate-Methode des dem Ereignis zugeordenten Performers (Ableitung der Klasse ActionPerformer) aufgerufen.
- * Diese wiederum ruft die (in der Klasse ActionPerformer abstrakte) Methode perform im Performerobjekt auf.
+ * Diese wiederum ruft die (in der Klasse ActionPerformer abstrakte) Methode perform() im Performerobjekt auf.
  * Diese Methode ermittelt die für die Ereignisverarbeitung benötigten Werte 
  * 	aus dem Aktionsobjekt, dem ausführenden Objekt (also dem Akteur) und ggf. dem Zielobjekt. 
  * Diese Werte werden standardisiert in einer Liste abgelegt 
@@ -66,14 +66,13 @@ import org.socialworld.core.IEventParam;
  * Die Klasse ActionPerformer ist die Basisklasse für die Aktionsobjekte des Schrittes b), 
  *  enthält also die Daten zur von der Ereignisverarbeitung ausgelösten Berechnung der Auswirkungen.
  *  
- * Die Daten werden in der Liste eventParams (ein Arrayvom typ Value) abgelegt.
- * Jeder Value dieser List hat einen Namen, über den das Eventgenau auf den gewünschtne Wert zugreifen kann.
+ * Die Daten werden in der Liste eventParams (eine ValueArrayList (List<Value>)) abgelegt.
+ * Jeder Value dieser List hat einen Namen, über den das Event genau auf den gewünschten Wert zugreifen kann.
  * Damit kann die Ereignisverarbeitung standardisiert auf notwendige Daten zur auslösenden Aktion zugreifen.
  *
  */
 public abstract class ActionPerformer implements IEventParam {
 
-	public static final String EVENT_PARAMS_NAME = "eventparams";
 	
     private ValueArrayList eventParams;
     private boolean valid = false;
@@ -82,6 +81,7 @@ public abstract class ActionPerformer implements IEventParam {
     
     public ActionPerformer (AbstractAction action) {
     	this.action = action;
+    	this.eventParams = new ValueArrayList();
     }
     
     public abstract void perform();
@@ -100,6 +100,10 @@ public abstract class ActionPerformer implements IEventParam {
 	@Override
     public boolean isValid() {
 		return valid;
+	}
+	
+	public Value getParamListAsValue() {
+		return new Value(Type.valueList, Value.ARGUMENT_VALUE_BY_NAME_EVENT_PARAMS, eventParams);
 	}
 	
 	public Value getParam(String name) {

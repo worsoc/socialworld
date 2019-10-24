@@ -26,6 +26,8 @@ import org.socialworld.attributes.Time;
 public class Value {
 
 	public static String ARGUMENT_VALUE_BY_NAME_ATTRIBUTES = "attributes";
+	public static String ARGUMENT_VALUE_BY_NAME_EVENT_PARAMS = "eventparams";
+	public static String ARGUMENT_VALUE_BY_NAME_EVENT = "event";
 
 	Type type;
 	String name = "";

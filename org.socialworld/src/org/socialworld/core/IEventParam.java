@@ -30,6 +30,8 @@ import org.socialworld.calculation.Value;
  */
 public interface IEventParam {
 
+	public abstract Value getParamListAsValue();
+	
 	public abstract Value getParam(String name);
 
 	public abstract Value getParam(Type name);

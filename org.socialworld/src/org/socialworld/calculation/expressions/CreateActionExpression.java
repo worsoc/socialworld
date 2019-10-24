@@ -23,7 +23,6 @@ package org.socialworld.calculation.expressions;
 
 import java.util.List;
 
-import org.socialworld.actions.ActionPerformer;
 import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.Attribute;
 import org.socialworld.calculation.Expression;
@@ -316,7 +315,7 @@ public class CreateActionExpression extends Expression {
 			// the value the event's property is compared to
 			String value = conditionElements[3];
 			
-			Expression propertyValue = new ValueFromValueList(ActionPerformer.EVENT_PARAMS_NAME, propertyName);
+			Expression propertyValue = new ValueFromValueList(Value.ARGUMENT_VALUE_BY_NAME_EVENT_PARAMS, propertyName);
 			
 			Expression constant = new Constant(new Value(value, Type.getName(Integer.parseInt(type)) ) );
 			
