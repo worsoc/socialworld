@@ -57,7 +57,6 @@ public class State2ActionDescriptionPool extends DescriptionPool {
 
 		State2ActionDescription description;
 		
-		// initialize with  dummy descriptions with an expression that returns the invalid "nothing" value
 		for (int index = 0; index < sizeDescriptionsArray; index++) {
 			
 			description = new State2ActionDescription();
