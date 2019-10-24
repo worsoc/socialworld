@@ -76,7 +76,7 @@ import org.socialworld.objects.access.HiddenAnimal;
 public class ActionMove extends AbstractAction {
 	
 	private Move move;
-	private boolean firstStep;
+	private boolean firstStep = true;
 	
 	private Path path;
 	private Position end;
