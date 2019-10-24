@@ -45,6 +45,8 @@ public class EventReactionDescriptionPool extends DescriptionPool {
 		sizeDescriptionsArray = EventType.MAX_EVENT_TYPE * GaussPoolReactionType.CAPACITY_GPRT_ARRAY;
 		descriptions = new EventReactionDescription[sizeDescriptionsArray];
 
+		expressions = new FunctionByExpression[COUNT_FbE_TEST_ENTRIES];
+		
 		initialize();
 	}
 	
@@ -72,12 +74,22 @@ public class EventReactionDescriptionPool extends DescriptionPool {
 	}
 
 	protected void initialize() {
-		// initialize with  dummy descriptions with an expression that returns the invalid "nothing" value
-		for (int index = 0; index < sizeDescriptionsArray; index++)
-			descriptions[index] = new EventReactionDescription();
-		
+
+		EventReactionDescription description;
+
 		initializeWithTestData_FunctionByExpression();
 		initializeFromFile();
+
+		for (int index = 0; index < sizeDescriptionsArray; index++) {
+			
+			description = new EventReactionDescription();
+			description.addFunctionCreateReaction(expressions[0]);
+			description.addFunctionCreateReaction(expressions[1]);
+			
+			descriptions[index] = description;
+	
+		}
+			
 	}
 	
 	
@@ -90,11 +102,11 @@ public class EventReactionDescriptionPool extends DescriptionPool {
 		Expression startExpression = Nothing.getInstance();
 
 		lines = new ArrayList<String>(1);
-		lines.add("WENN mood > 10 DANN <ACTIONTYPE><Const>1</Const></ACTIONTYPE><ACTIONMODE><Const>14</Const></ACTIONMODE><MINTIME><Now+N>10000</Now+N></MINTIME><MAXTIME><Now+N>100000</Now+N></MAXTIME><PRIORITY><Const>150</Const></PRIORITY><INTENSITY><MX+N>5;1.5;23</MX+N></INTENSITY><DURATION><Const>10000</Const></DURATION>");
+		lines.add("WENN 3 velocity > 10 DANN <ACTIONTYPE><Const>7</Const></ACTIONTYPE><ACTIONMODE><Const>74</Const></ACTIONMODE><MINTIME><Now+N>10000</Now+N></MINTIME><MAXTIME><Now+N>100000</Now+N></MAXTIME><PRIORITY><Const>160</Const></PRIORITY><INTENSITY><MX+N>8;1.3;23</MX+N></INTENSITY><DURATION><Const>0</Const></DURATION>");
 		expressions.add(lines);
 		
 		lines = new ArrayList<String>(1);
-		lines.add("WENN tiredness == 41 DANN <ACTIONTYPE><Const>0</Const></ACTIONTYPE><ACTIONMODE><Const>2</Const></ACTIONMODE><MINTIME><Now+N>10000</Now+N></MINTIME><MAXTIME><Now+N>100000</Now+N></MAXTIME><PRIORITY><Const>50</Const></PRIORITY><INTENSITY><MX+N>4;1.5;0</MX+N></INTENSITY><DURATION><Const>610000</Const></DURATION>");
+		lines.add("WENN 3 acceleration < 11 DANN <ACTIONTYPE><Const>6</Const></ACTIONTYPE><ACTIONMODE><Const>67</Const></ACTIONMODE><MINTIME><Now+N>10000</Now+N></MINTIME><MAXTIME><Now+N>100000</Now+N></MAXTIME><PRIORITY><Const>140</Const></PRIORITY><INTENSITY><MX+N>8;1.5;0</MX+N></INTENSITY><DURATION><Const>0</Const></DURATION>");
 		expressions.add(lines);
 
 
