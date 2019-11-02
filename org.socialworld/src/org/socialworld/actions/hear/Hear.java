@@ -25,6 +25,7 @@ import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionPerformer;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
+import org.socialworld.collections.ValueArrayList;
 import org.socialworld.objects.Human;
 
 /**
@@ -53,6 +54,14 @@ public class Hear extends ActionPerformer {
     	super(action);
     }
 		
+    protected final void choosePropertiesFromPropertyList(ValueArrayList properties) {
+    	
+		for (int i = 0; i < properties.size(); i++) {
+			addProperty(properties.get(i));
+		}
+   	
+    }
+   
 	/* (non-Javadoc)
 	 * @see org.socialworld.actions.ActionPerformer#perform()
 	 */

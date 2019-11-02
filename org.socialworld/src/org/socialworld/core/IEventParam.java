@@ -23,6 +23,7 @@ package org.socialworld.core;
 
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
+import org.socialworld.collections.ValueArrayList;
 
 /**
  * @author Mathias Sikos
@@ -39,4 +40,6 @@ public interface IEventParam {
 	public boolean isValid();
 	
 	public abstract void evaluate();
+	
+	public abstract void answerPropertiesRequest(ValueArrayList values);
 }

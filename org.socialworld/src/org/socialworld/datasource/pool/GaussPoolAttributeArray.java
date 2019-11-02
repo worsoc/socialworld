@@ -2,6 +2,8 @@ package org.socialworld.datasource.pool;
 
 
 import org.socialworld.attributes.AttributeArray;
+import org.socialworld.calculation.Type;
+import org.socialworld.calculation.Value;
 import org.socialworld.datasource.tablesPool.TableGaussAA;
 
 public class GaussPoolAttributeArray {
@@ -25,6 +27,10 @@ public class GaussPoolAttributeArray {
 			instance = new GaussPoolAttributeArray();
 		}
 		return instance;
+	}
+	
+	public Value getArrayAsValue(int index) {
+		return new Value(Type.attributeArray, getArray(index));
 	}
 	
 	public AttributeArray getArray(int index) {

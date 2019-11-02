@@ -25,9 +25,12 @@ package org.socialworld.objects;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionNothing;
 import org.socialworld.attributes.Position;
+import org.socialworld.calculation.Value;
 import org.socialworld.calculation.application.Scheduler;
+import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.ActionHandler;
 import org.socialworld.core.Event;
+import org.socialworld.core.IEventParam;
 import org.socialworld.core.SearchActionDescription;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.propertyChange.ListenedBase;
@@ -136,6 +139,10 @@ public abstract class SimulationObject extends ListenedBase {
 		return this.state.getPosition();
 	}
 	
+	public final Value getPositionVectorAsValue(String valueName) {
+		return this.state.getPositionVectorAsValue(valueName);
+	}
+	
 	public final int getReactionType(int eventType) {
 	 return this.state.getReactionType(eventType);
 	} 
@@ -148,7 +155,7 @@ public abstract class SimulationObject extends ListenedBase {
 		 return this.state.getState2ActionType();
 		} 
 	
-	
+		
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    ACTION     ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -207,6 +214,23 @@ public abstract class SimulationObject extends ListenedBase {
 		Scheduler.getInstance().createReaction(simualationEvent, state, guard.getMeHidden(grantAccessToPropertyAction));
 		
 	}
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    PROPERTY LIST  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public void requestPropertyList(IEventParam paramObject) {
+	
+		ValueArrayList propertiesAsValueList = new ValueArrayList();
+		
+		propertiesAsValueList.add(this.state.getPositionVectorAsValue(Value.ARGUMENT_VALUE_BY_NAME_POSITION_VECTOR));
+		propertiesAsValueList.add(this.state.getDirectionMoveAsValue(Value.ARGUMENT_VALUE_BY_NAME_DIRECTION_MOVE));
+		propertiesAsValueList.add(this.state.getPowerMoveAsValue(Value.ARGUMENT_VALUE_BY_NAME_POWER_MOVE));
+
+		paramObject.answerPropertiesRequest(propertiesAsValueList);
+	
+	}
+	
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    toString()  //////////////////////////////////////////////

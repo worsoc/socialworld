@@ -77,7 +77,7 @@ public enum ActionMode {
 		for (ActionMode actionmode : ActionMode.values())
 			if (actionmode.index == index)
 				return actionmode;
-		return null;
+		return ignore;
 	}
 
 	/**
@@ -89,4 +89,7 @@ public enum ActionMode {
 		return index;
 	}
 
+	public static int maxIndex() {
+		return 103;
+	}
 }

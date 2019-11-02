@@ -21,6 +21,8 @@
 */
 package org.socialworld.objects;
 
+import org.socialworld.collections.ValueArrayList;
+import org.socialworld.core.IEventParam;
 
 /**
  * magic spells are simulation objects that offer some fantasy aspects. A magic
@@ -40,5 +42,17 @@ public class Magic extends SimulationObject {
 		//if (checkIsMyState(state) ) this.state = (StateMagic) state;
 	}
 
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    PROPERTY LIST  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public void requestPropertyList(IEventParam paramObject) {
+	
+		super.requestPropertyList(paramObject);
+		
+		ValueArrayList propertiesAsValueList = new ValueArrayList();
+		paramObject.answerPropertiesRequest(propertiesAsValueList);
+	
+	}
 
 }

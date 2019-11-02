@@ -25,6 +25,7 @@ import org.socialworld.actions.ActionPerformer;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.Vector;
+import org.socialworld.collections.ValueArrayList;
 import org.socialworld.objects.Animal;
 
 
@@ -61,8 +62,17 @@ public class Move extends ActionPerformer {
 		super(action);
 		
 		this.duration = 0;
+		this.acceleration = 0;
+		this.velocity = 0;
 	}
 	
+    protected final void choosePropertiesFromPropertyList(ValueArrayList properties) {
+    	
+		for (int i = 0; i < properties.size(); i++) {
+			addProperty(properties.get(i));
+		}
+   	
+    }
 
 	public void perform() {
 		
@@ -95,6 +105,7 @@ public class Move extends ActionPerformer {
 		
 		if (this.duration == 0) {
 			this.velocity = action.getIntensity();
+			this.acceleration = 0;
 		}
 		else {
 			this.acceleration = action.getIntensity();

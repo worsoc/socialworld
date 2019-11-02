@@ -48,7 +48,7 @@ public class FunctionByExpression extends FunctionBase {
 		if (returnInvalidNothingvalue) 
 			return new Value();
 		else
-			return startExpression.evaluateExpression(arguments);
+			return startExpression.evaluate(arguments);
 	}
 	
 

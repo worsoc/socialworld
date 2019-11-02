@@ -63,6 +63,8 @@ public class StateHuman extends StateAnimal {
 		
 		grantAccessToPropertyTalk = new GrantedAccessToProperty[1];
 		grantAccessToPropertyTalk[0] = GrantedAccessToProperty.talks;
+		
+		inventory = new Inventory(false);
 
 	}
 
