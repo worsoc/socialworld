@@ -21,8 +21,8 @@
 */
 package org.socialworld.objects;
 import org.socialworld.actions.move.Path;
-import org.socialworld.attributes.AttributeArray;
 import org.socialworld.calculation.FunctionByMatrix;
+import org.socialworld.calculation.Value;
 import org.socialworld.calculation.Vector;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenAnimal;
@@ -46,7 +46,8 @@ public class WriteAccessToAnimal extends WriteAccessToSimulationObject {
 		return new HiddenAnimal(this, properties);
 	}
 
-	public int setAttributes(AttributeArray attributes, HiddenSimulationObject caller) {
+	
+	public int setAttributes(Value attributes, HiddenSimulationObject caller) {
 		if (checkCaller(caller)) 
 			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.attributes)) {
 				animalState.setAttributes(attributes, this);
@@ -57,7 +58,6 @@ public class WriteAccessToAnimal extends WriteAccessToSimulationObject {
 		else
 			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
 	}
-	
 
 	public int setMatrix(FunctionByMatrix matrix, HiddenSimulationObject caller) {
 		if (checkCaller(caller)) 

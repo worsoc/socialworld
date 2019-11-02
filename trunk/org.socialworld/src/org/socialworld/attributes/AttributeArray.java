@@ -136,12 +136,20 @@ public class AttributeArray {
 		attributes[attributeIndex] = attributeValue;
 	}
 
+	
+	public void set(Value attributeArray) {
+		if (attributeArray.isValid() && (attributeArray.getType() == Type.attributeArray)) {
+			set((AttributeArray)attributeArray.getValue());
+		}
+	}
+	
 	/**
 	 * The method sets all attribute values. 
 	 * 
 	 * @param attributeArray
 	 */
-	public void set(AttributeArray attributeArray) {
+	private void set(AttributeArray attributeArray) {
+		
 		for (int i = 0; i < numberOfAttributes; i++ ) {
 			set(i, attributeArray.get(i));
 		}
@@ -195,6 +203,16 @@ public class AttributeArray {
 	
 	public int length() {
 		return numberOfAttributes;
+	}
+	
+	public boolean equals(AttributeArray anotherOne) {
+		
+		for (int i = 0; i < numberOfAttributes; i++) {
+			if (this.attributes[i] != anotherOne.attributes[i]) return false;
+		}
+		
+		return true;
+		
 	}
 	
 	public String toString() {

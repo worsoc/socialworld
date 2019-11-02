@@ -31,7 +31,7 @@ package org.socialworld.calculation;
  */
 public enum Expression_Function {
 	branching(1), condition(2), comparison(3),
-	addition(4), multiplication(5),
+	addition(4), subtraction(14), multiplication(5), division(15),
 	function(6),
 	replacement(7),
 	sequence(8),

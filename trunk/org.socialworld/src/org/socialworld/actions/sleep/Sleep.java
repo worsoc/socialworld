@@ -24,6 +24,7 @@ package org.socialworld.actions.sleep;
 import org.socialworld.actions.ActionPerformer;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
+import org.socialworld.collections.ValueArrayList;
 
 /**
  * German:
@@ -46,6 +47,14 @@ public class Sleep extends ActionPerformer {
     	super(action);
     }
 	
+    protected final void choosePropertiesFromPropertyList(ValueArrayList properties) {
+    	
+		for (int i = 0; i < properties.size(); i++) {
+			addProperty(properties.get(i));
+		}
+   	
+    }
+
 	/* (non-Javadoc)
 	 * @see org.socialworld.actions.ActionPerformer#perform()
 	 */

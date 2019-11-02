@@ -141,6 +141,8 @@ public class Calculation {
 	}
 
 	public Value compareGreater(Value op1, Value op2) {
+
+		
 		Value tmp;
 		tmp = subtraction(op1, op2);
 		
@@ -207,6 +209,7 @@ public class Calculation {
 	}
 	
 	public Value addition(Value op1, Value op2){
+	
 		switch (op1.getType() ) {
 		case integer:
 			switch (op2.getType() ) {
@@ -237,6 +240,7 @@ public class Calculation {
 	}
 
 	public Value multiplication(Value op1, Value op2) {
+	
 		switch (op1.getType() ) {
 		case integer:
 			switch (op2.getType() ) {
@@ -245,7 +249,7 @@ public class Calculation {
 			case floatingpoint:
 				return createValue(Type.floatingpoint, (int) op1.getValue() * (float) op2.getValue() );
 			default:
-				return null;
+				return nothing;
 			}
 		case floatingpoint:
 			switch (op2.getType() ) {
@@ -254,10 +258,10 @@ public class Calculation {
 			case floatingpoint:
 				return createValue(Type.floatingpoint, (float) op1.getValue() * (float) op2.getValue() );
 			default:
-				return null;
+				return nothing;
 			}
 		default:
-			return null;
+			return nothing;
 		}
 	}
 
@@ -270,7 +274,7 @@ public class Calculation {
 			case floatingpoint:
 				return createValue(Type.floatingpoint, (int) op1.getValue() / (float) op2.getValue() );
 			default:
-				return null;
+				return nothing;
 			}
 		case floatingpoint:
 			switch (op2.getType() ) {
@@ -279,10 +283,10 @@ public class Calculation {
 			case floatingpoint:
 				return createValue(Type.floatingpoint, (float) op1.getValue() / (float) op2.getValue() );
 			default:
-				return null;
+				return nothing;
 			}
 		default:
-			return null;
+			return nothing;
 		}
 	}
 	
@@ -294,7 +298,7 @@ public class Calculation {
 		case floatingpoint:
 			return createValue(Type.floatingpoint, (float) op1.getValue() * (-1F) );
 		default:
-			return null;
+			return nothing;
 		}
 		
 	}

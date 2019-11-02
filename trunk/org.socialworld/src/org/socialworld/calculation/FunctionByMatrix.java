@@ -89,26 +89,27 @@ public class FunctionByMatrix extends FunctionBase {
 		switch (arguments.get(0).getType() ) {
 		
 			case attributeArray:
-				AttributeArray attributes;
-				attributes = (AttributeArray) arguments.get(0).getValue();
+				AttributeArray attributesOld;
+				AttributeArray attributesNew;
+				attributesOld = (AttributeArray) arguments.get(0).getValue();
 				
 				int calculationMode = (int) arguments.get(1).getValue();
 				
 				switch (calculationMode)
 				{
 				case FunctionByMatrix_Matrix.CALCULATION_MODE_MATRIX_X_VECTOR_SIMPLE:
-					calculateAttributesSimply(attributes);
-					result = calculation.createValue(Type.attributeArray, attributes );
+					attributesNew = calculateAttributesSimply(attributesOld);
+					result = calculation.createValue(Type.attributeArray, attributesNew );
 					break;
 				case FunctionByMatrix_Matrix.CALCULATION_MODE_MATRIX_X_VECTOR_COMPLEX:
-					calculateAttributes(attributes, this.matrix.isWithOffset());
-					result = calculation.createValue(Type.attributeArray, attributes );
+					attributesNew = calculateAttributes(attributesOld, this.matrix.isWithOffset());
+					result = calculation.createValue(Type.attributeArray, attributesNew );
 					break;
 				case FunctionByMatrix_Matrix.CALCULATION_MODE_VECTOR_X_VECTOR:
 					if (interpreteResultAs == ValueInterpreteAs.attributeValue) 
-						result = calculation.createValue(Type.integer, calculateScalar(attributes));
+						result = calculation.createValue(Type.integer, calculateScalar(attributesOld));
 					else
-						result = calculation.createValue(Type.floatingpoint, calculateScalar(attributes));
+						result = calculation.createValue(Type.floatingpoint, calculateScalar(attributesOld));
 					break;
 				default:
 					result = new Value();
@@ -184,7 +185,7 @@ public class FunctionByMatrix extends FunctionBase {
 	 *  The function's input values are the current attribute values.
 	 * 
 	 */
-	private void calculateAttributesSimply(AttributeArray attributes) {
+	private AttributeArray calculateAttributesSimply(AttributeArray attributes) {
 		
 		Value 	attributesNew[];
 		
@@ -203,6 +204,8 @@ public class FunctionByMatrix extends FunctionBase {
 
 		int     length;
 
+		AttributeArray result = new AttributeArray(attributes);
+	
 		length = attributes.length();
 		attributesNew = new Value[length];
 
@@ -226,6 +229,13 @@ public class FunctionByMatrix extends FunctionBase {
 				arguments.set(0,   attributeValue);
 
 				change = calculation.multiplication(share, function.calculate(arguments));
+				
+				// TODO kann weg, zum Feststellen, ob Fehler
+				if (change == null) {
+					System.out.println("FunctionByMatrix.calculateAttributesSimply() : change ist Null");
+					
+				}
+				
 				attributesNew[column] = calculation.addition(attributesNew[column], change);
 
 			}
@@ -239,11 +249,11 @@ public class FunctionByMatrix extends FunctionBase {
 			
 			if (this.matrix.isWithDiv100() ) attributesNew[row] = calculation.division(attributesNew[row] , hundred);
 			attributesNew[row] = calculation.addition(attributesNew[row], aHalf);
-			attributes.set(row, ((Float) (attributesNew[row].getValue())).intValue());
+			result.set(row, ((Float) (attributesNew[row].getValue())).intValue());
 			
 		}
 
-		return;
+		return result;
 	}
 	
 	
@@ -258,7 +268,9 @@ public class FunctionByMatrix extends FunctionBase {
 	 * - the last attribute value
 	 * 
 	 */
-	private void calculateAttributes(AttributeArray attributes, boolean withOffset ) {
+	private AttributeArray calculateAttributes(AttributeArray attributes, boolean withOffset ) {
+		
+		
 		float	attributesNew[];
 		int 	column;
 		int		row;
@@ -279,6 +291,8 @@ public class FunctionByMatrix extends FunctionBase {
 		ValueArrayList arguments;
 
 		float change;
+
+		AttributeArray result = new AttributeArray(attributes);
 
 		length = attributes.length();
 		attributesNew = new float[length];
@@ -326,12 +340,12 @@ public class FunctionByMatrix extends FunctionBase {
 		// writing them from help array to main array
 		for (row = 0; row < length; row++) {
 			
-			attributes.set(row, (int) getMinMaxedFloat(attributesNew[row] + 0.5F));
+			result.set(row, (int) getMinMaxedFloat(attributesNew[row] + 0.5F));
 			
 		}
 
 
-		return ;
+		return result;
 
 	}
 

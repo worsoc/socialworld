@@ -22,9 +22,11 @@
 package org.socialworld.objects;
 
 import org.socialworld.actions.attack.IWeapon;
+import org.socialworld.collections.ValueArrayList;
 import org.socialworld.knowledge.Acquaintance;
 import org.socialworld.knowledge.AnswerProperties;
 import org.socialworld.conversation.Talk_SentenceType;
+import org.socialworld.core.IEventParam;
 
 /**
  * A human is described in most details. It is the most important simulation
@@ -107,7 +109,18 @@ import org.socialworld.conversation.Talk_SentenceType;
 		return this.state.getRightHand();
 	}
 
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    PROPERTY LIST  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 
+	public void requestPropertyList(IEventParam paramObject) {
+		
+		super.requestPropertyList(paramObject);
+		
+		ValueArrayList propertiesAsValueList = new ValueArrayList();
+		paramObject.answerPropertiesRequest(propertiesAsValueList);
+		
+	}
 		
 	
 }

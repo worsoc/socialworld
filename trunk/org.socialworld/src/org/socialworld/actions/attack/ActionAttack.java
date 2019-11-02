@@ -26,10 +26,12 @@ import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.ActualTime;
+import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.EventByAction;
 import org.socialworld.core.EventType;
+import org.socialworld.core.IEventParam;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.Human;
 
@@ -134,18 +136,17 @@ public class ActionAttack extends AbstractAction {
 			case punchLeftFistSideways:
 			case punchLeftFistUpward:
 				weapon = ((Human) actor).getLeftHandWeapon();
-		  		if (weapon == null) return;
 				break;
 			case punchRightFistStraight:
 			case punchRightFistSideways:
 			case punchRightFistUpward:
 				weapon = ((Human) actor).getRightHandWeapon();
-		  		if (weapon == null) return;
 				break;
 			default:
 				return;
 			
 			}
+			break;
 	   	default:
 	   		return;
 		}
@@ -161,9 +162,10 @@ public class ActionAttack extends AbstractAction {
 		
 	}
 
-	public IWeapon getWeapon() {
-		return this.weapon;
+	public Value getWeaponAsValue(String valueName) {
+		return new Value(Type.simulationObject, valueName, this.weapon);
 	}
+	
 	
 	private EventType getEventType(ActionType type, ActionMode mode) {
 		EventType eventType;
@@ -243,4 +245,21 @@ public class ActionAttack extends AbstractAction {
 	public SimulationObject getTarget() {
 		return this.target;
 	}
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    PROPERTY LIST  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public void requestPropertyList(IEventParam paramObject) {
+	
+		super.requestPropertyList(paramObject);
+		
+		ValueArrayList propertiesAsValueList = new ValueArrayList();
+		
+		propertiesAsValueList.add(getWeaponAsValue(Value.ARGUMENT_VALUE_BY_NAME_WEAPON_ACTION));
+		paramObject.answerPropertiesRequest(propertiesAsValueList);
+	
+	}
+	
+	
 }

@@ -23,8 +23,11 @@ package org.socialworld.actions;
 
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
+import org.socialworld.calculation.descriptions.Action2PerformerAssignment;
+import org.socialworld.calculation.descriptions.Action2PerformerDescription;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.IEventParam;
+import org.socialworld.objects.SimulationObject;
 
 /**
  * @author Mathias Sikos
@@ -73,24 +76,59 @@ import org.socialworld.core.IEventParam;
  */
 public abstract class ActionPerformer implements IEventParam {
 
-	
+
     private ValueArrayList eventParams;
     private boolean valid = false;
     
+    private boolean actionPropertiesAreRequested = false;
+    private ValueArrayList actionAndActorProperties;
+    		
     private AbstractAction action;
     
     public ActionPerformer (AbstractAction action) {
     	this.action = action;
+    	this.actionAndActorProperties = new ValueArrayList();
     	this.eventParams = new ValueArrayList();
     }
     
     public abstract void perform();
+    
+	public void answerPropertiesRequest(ValueArrayList properties) {
+		
+		if (actionPropertiesAreRequested) {
+			choosePropertiesFromPropertyList(properties);
+		}
+		
+	}
+    
+    protected abstract void choosePropertiesFromPropertyList(ValueArrayList properties);
+    
+    protected void addProperty(Value value) {
+    	actionAndActorProperties.add(value);
+    }
     
 	/* (non-Javadoc)
 	 * @see org.socialworld.core.IEventParam#evaluate()
 	 */
 	@Override
    public void evaluate() {
+		
+		SimulationObject actor =  this.action.getActor();
+		ActionMode actionMode = this.action.getMode();
+		
+		actionPropertiesAreRequested = true;
+		actor.requestPropertyList(this);
+		this.action.requestPropertyList(this);
+		actionPropertiesAreRequested = false;
+		
+		Action2PerformerDescription descriptionForMode =
+				Action2PerformerAssignment.getInstance().getAction2PerformerDescription(actionMode);
+		
+		
+		for (int i = 0; i < descriptionForMode.countFunctions(); i++) {
+			addParam(descriptionForMode.getFunction(i).calculate(actionAndActorProperties));
+		}
+		
     	perform();
     }
     

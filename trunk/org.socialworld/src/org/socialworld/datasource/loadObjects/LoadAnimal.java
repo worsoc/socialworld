@@ -22,6 +22,8 @@
 package org.socialworld.datasource.loadObjects;
 
 import org.socialworld.attributes.AttributeArray;
+import org.socialworld.calculation.Type;
+import org.socialworld.calculation.Value;
 import org.socialworld.calculation.Vector;
 import org.socialworld.collections.SimulationObjectArray;
 import org.socialworld.datasource.tablesSimulation.TableAnimalsDirections;
@@ -122,7 +124,7 @@ public class LoadAnimal extends LoadSimulationObjects  {
 		int attribs[];
 		
 		attribs = tableAttributes.getAttributes();
-		hiddenAnimal.setAttributes(new AttributeArray(attribs));
+		hiddenAnimal.setAttributes(new Value(Type.attributeArray, new AttributeArray(attribs)));
 
 		
 		if (rowTableDirections >= 0) {

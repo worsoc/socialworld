@@ -29,6 +29,7 @@ import org.socialworld.attributes.Attribute;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.Vector;
+import org.socialworld.collections.ValueArrayList;
 import org.socialworld.objects.Human;
 import org.socialworld.objects.SimulationObject;
 
@@ -74,6 +75,14 @@ public class Handle extends ActionPerformer {
     	super(action);
     }
 	
+    protected final void choosePropertiesFromPropertyList(ValueArrayList properties) {
+    	
+		for (int i = 0; i < properties.size(); i++) {
+			addProperty(properties.get(i));
+		}
+   	
+    }
+
 	/* (non-Javadoc)
 	 * @see org.socialworld.actions.ActionPerformer#perform()
 	 */
@@ -125,7 +134,7 @@ public class Handle extends ActionPerformer {
 			
 			actorsIntensity = originalAction.getIntensity();
 			// TODO
-			actorsPower = actor.getAttributes().get(Attribute.power);
+			actorsPower = actor.getAttribute(Attribute.power);
 			intensity = actorsIntensity * actorsPower;
 	
 			addParam( new Value(Type.vector, "direction", direction));

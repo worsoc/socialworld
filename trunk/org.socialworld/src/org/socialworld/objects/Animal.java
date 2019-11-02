@@ -25,10 +25,12 @@ import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.move.Path;
 import org.socialworld.actions.move.PathFinder;
-import org.socialworld.attributes.AttributeArray;
+import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.Position;
 import org.socialworld.calculation.FunctionByMatrix;
-import org.socialworld.calculation.Vector;
+import org.socialworld.calculation.Value;
+import org.socialworld.collections.ValueArrayList;
+import org.socialworld.core.IEventParam;
 
 
 /**
@@ -70,9 +72,12 @@ public class Animal extends SimulationObject {
 		return this.state.getMatrix();
 	}
 
+	final public int getAttribute(Attribute attributeName) {
+		return this.state.getAttribute(attributeName);
+	}
 	
-	final public AttributeArray getAttributes() {
-		return this.state.getAttributes();
+	final public Value getAttributesAsValue(String valueName) {
+		return this.state.getAttributesAsValue(valueName);
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -90,16 +95,16 @@ public class Animal extends SimulationObject {
 	/**
 	 * @return the directionChest
 	 */
-	final public Vector getDirectionChest() {
-		return this.state.getDirectionChest();
+	final public Value getDirectionChestAsValue(String valueName) {
+		return this.state.getDirectionChestAsValue(valueName);
 	}
 
 
 	/**
 	 * @return the directionView
 	 */
-	final public Vector getDirectionView() {
-		return this.state.getDirectionView();
+	final public Value getDirectionViewAsValue(String valueName) {
+		return this.state.getDirectionViewAsValue(valueName);
 	}
 
 
@@ -123,6 +128,25 @@ public class Animal extends SimulationObject {
 			break;
 		default:
 		}
+	}
+
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    PROPERTY LIST  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public void requestPropertyList(IEventParam paramObject) {
+	
+		super.requestPropertyList(paramObject);
+		
+		ValueArrayList propertiesAsValueList = new ValueArrayList();
+		
+		propertiesAsValueList.add(this.state.getAttributesAsValue(Value.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES));
+		propertiesAsValueList.add(this.state.getDirectionChestAsValue(Value.ARGUMENT_VALUE_BY_NAME_DIRECTION_CHEST));
+		propertiesAsValueList.add(this.state.getDirectionViewAsValue(Value.ARGUMENT_VALUE_BY_NAME_DIRECTION_VIEW));
+		propertiesAsValueList.add(this.state.getDirectionActiveMoveAsValue(Value.ARGUMENT_VALUE_BY_NAME_DIRECTION_ACTIVEMOVE));
+		paramObject.answerPropertiesRequest(propertiesAsValueList);
+	
 	}
 
 }

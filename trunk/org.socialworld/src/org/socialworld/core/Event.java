@@ -240,16 +240,20 @@ public class Event implements Comparable<Event> {
 	}
 
 	public Vector getDirection() {
-		Value direction;;
+		Value direction;
 		
 		if (hasOptionalParam()) {
-			direction = optionalParam.getParam("direction");
+			direction = optionalParam.getParam(Value.ARGUMENT_VALUE_BY_NAME_DIRECTION_EVENT);
 			if (direction.isValid()) 
 				return (Vector) direction.getValueCopy();
 			
 		}
-		if (this.causer instanceof Animal)
-			return ((Animal) causer).getDirectionChest();
+		
+		if (this.causer instanceof Animal){
+			direction = ((Animal) causer).getDirectionChestAsValue(Value.VALUE_NAME_UNUSED_BECAUSE_TEMPORARY);
+			return (Vector) direction.getValueCopy();
+			
+		}
 		
 		return new Vector(0, 0, 0);
 	}

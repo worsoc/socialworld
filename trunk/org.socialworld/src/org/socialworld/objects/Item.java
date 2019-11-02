@@ -21,6 +21,8 @@
 */
 package org.socialworld.objects;
 
+import org.socialworld.collections.ValueArrayList;
+import org.socialworld.core.IEventParam;
 
 /**
  * The class Item describes all non-living simulation objects. It has a method
@@ -41,6 +43,18 @@ public class Item extends SimulationObject {
 	}
 	
 
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    PROPERTY LIST  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public void requestPropertyList(IEventParam paramObject) {
+	
+		super.requestPropertyList(paramObject);
+		
+		ValueArrayList propertiesAsValueList = new ValueArrayList();
+		paramObject.answerPropertiesRequest(propertiesAsValueList);
+	
+	}
 
 
 

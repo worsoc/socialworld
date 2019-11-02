@@ -22,6 +22,8 @@
 package org.socialworld.objects;
 
 import org.socialworld.attributes.Position;
+import org.socialworld.calculation.Type;
+import org.socialworld.calculation.Value;
 import org.socialworld.calculation.Vector;
 import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.core.Event;
@@ -93,6 +95,11 @@ public class StateSimulationObject extends ListenedBase {
 		return new Position(this.position);
 	}
 	
+	final public Value getPositionVectorAsValue(String valueName) {
+		return new Value(Type.vector, valueName, new Vector(this.position.getVector()) );
+		
+	}
+	
 	final void setMove(Vector direction, float power, WriteAccessToSimulationObject guard) {
 		if (checkGuard(guard)) {
 			this.directionMove = direction;
@@ -101,15 +108,15 @@ public class StateSimulationObject extends ListenedBase {
 		
 	}
 	
-	final public Vector getDirectionMove() {
-		return new Vector(directionMove);
+	final public Value getDirectionMoveAsValue(String valueName) {
+		return new Value( Type.vector, valueName, new Vector(this.directionMove) );
 	}
-	
-	
-	final public float getPowerMove() {
-		return powerMove;
+
+		
+	final public Value getPowerMoveAsValue(String valueName) {
+		return new Value( Type.floatingpoint, valueName, powerMove );
 	}
-	
+
 	final void setInfluenceTypes (int types[], WriteAccessToSimulationObject guard) {
 		if (checkGuard(guard)) {
 			this.influenceTypeByEventType = types;

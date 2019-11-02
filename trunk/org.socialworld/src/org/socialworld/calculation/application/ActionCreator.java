@@ -155,6 +155,7 @@ public class ActionCreator extends SocialWorldThread {
 				
 			if (reaction != null) {
 				if (!reaction.isToBeIgnored())	{
+					System.out.println("ActionCreator.calculateReaction(): " + reaction.getType().toString());
 					hiddenReactor.setAction(reaction);
 				}
 			}
@@ -190,9 +191,11 @@ public class ActionCreator extends SocialWorldThread {
 			else
 				action = createNoAnimalActionByState(stateActor);
 			
-			if (!action.isToBeIgnored())	
+			if (!action.isToBeIgnored()) {	
+				
+				System.out.println("ActionCreator.calculateAction(): " + action.getType().toString());
 				hiddenActor.setAction(action);
-			
+			}
 		}
 		
 	}
@@ -210,7 +213,7 @@ public class ActionCreator extends SocialWorldThread {
 		ValueArrayList arguments;
 		arguments = new ValueArrayList();
 		
-		arguments.add( new Value(Type.attributeArray, Value.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES, stateReactor.getAttributes()) );
+		arguments.add( stateReactor.getAttributesAsValue(Value.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES) );
 		arguments.add( new Value(Type.event, Value.ARGUMENT_VALUE_BY_NAME_EVENT, event) );
 		arguments.add( event.getOptionalParam().getParamListAsValue());
 		
@@ -241,7 +244,7 @@ public class ActionCreator extends SocialWorldThread {
 		ValueArrayList arguments;
 		arguments = new ValueArrayList();
 		
-		arguments.add( new Value(Type.attributeArray, Value.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES, stateActor.getAttributes()) );
+		arguments.add( stateActor.getAttributesAsValue(Value.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES) );
 		
 		Value result = f_CreateAction.calculate(arguments);
 		return (AbstractAction) result.getValue();

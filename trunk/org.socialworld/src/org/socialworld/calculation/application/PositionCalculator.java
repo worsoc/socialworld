@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.attributes.Position;
+import org.socialworld.calculation.Value;
 import org.socialworld.calculation.Vector;
 import org.socialworld.core.Event;
 import org.socialworld.core.EventType;
@@ -128,8 +129,8 @@ public class PositionCalculator extends SocialWorldThread {
 		eventType = event.getEventType();
 		position = state.getPosition().getVector();
 		
-		directionMoveObject = state.getDirectionMove();
-		powerMoveObject = state.getPowerMove();
+		directionMoveObject = (Vector) state.getDirectionMoveAsValue(Value.ARGUMENT_VALUE_BY_NAME_DIRECTION_MOVE).getValue();
+		powerMoveObject = (float)state.getPowerMoveAsValue(Value.ARGUMENT_VALUE_BY_NAME_POWER_MOVE).getValueCopy();
 		
 		directionEvent = event.getDirection();
 		powerEvent = event.getStrength();

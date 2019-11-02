@@ -21,6 +21,9 @@
 */
 package org.socialworld.objects;
 
+import org.socialworld.collections.ValueArrayList;
+import org.socialworld.core.IEventParam;
+
 /**
  * @author Mathias Sikos (tyloesand)
  * 
@@ -31,5 +34,18 @@ public class Mammal extends Animal {
 		super(objectID);
 	}
 
-   
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    PROPERTY LIST  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public void requestPropertyList(IEventParam paramObject) {
+	
+		super.requestPropertyList(paramObject);
+		
+		ValueArrayList propertiesAsValueList = new ValueArrayList();
+		paramObject.answerPropertiesRequest(propertiesAsValueList);
+	
+	}
+
+  
 }

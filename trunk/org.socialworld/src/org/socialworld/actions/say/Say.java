@@ -27,6 +27,7 @@ import org.socialworld.attributes.AttributeArray;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.Vector;
+import org.socialworld.collections.ValueArrayList;
 import org.socialworld.knowledge.Acquaintance;
 import org.socialworld.knowledge.Acquaintance_Attribute;
 import org.socialworld.knowledge.AnswerProperties;
@@ -66,6 +67,14 @@ public class Say extends ActionPerformer {
 
     public Say (ActionSay action) {
     	super(action);
+    }
+
+    protected final void choosePropertiesFromPropertyList(ValueArrayList properties) {
+    	
+		for (int i = 0; i < properties.size(); i++) {
+			addProperty(properties.get(i));
+		}
+   	
     }
 
 	/* (non-Javadoc)

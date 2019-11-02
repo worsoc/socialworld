@@ -23,8 +23,11 @@ package org.socialworld.actions;
 
 
 import org.socialworld.attributes.Time;
+import org.socialworld.calculation.Type;
+import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.Event;
+import org.socialworld.core.IEventParam;
 import org.socialworld.core.Simulation;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.access.HiddenSimulationObject;
@@ -252,6 +255,15 @@ public abstract class AbstractAction {
 		this.setRemainedDuration(duration);
 		this.interrupted = false;
 	}
+	
+	
+	public void requestPropertyList(IEventParam paramObject) {
+		ValueArrayList propertiesAsValueList = new ValueArrayList();
+		
+		propertiesAsValueList.add(new Value(Type.floatingpoint, Value.ARGUMENT_VALUE_BY_NAME_INTENSITY_ACTION, this.intensity));
+		paramObject.answerPropertiesRequest(propertiesAsValueList);
+	}
+
 	
 	/**
 	 * The methods returns the action type.

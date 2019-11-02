@@ -21,6 +21,8 @@
 */
 package org.socialworld.objects;
 
+import org.socialworld.collections.ValueArrayList;
+import org.socialworld.core.IEventParam;
 
 /**
  * The God is an special simulation object that is responsible for global
@@ -39,5 +41,17 @@ public class God extends SimulationObject {
 		//if (checkIsMyState(state) ) this.state = (StateGod) state;
 	}
 
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    PROPERTY LIST  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public void requestPropertyList(IEventParam paramObject) {
+	
+		super.requestPropertyList(paramObject);
+		
+		ValueArrayList propertiesAsValueList = new ValueArrayList();
+		paramObject.answerPropertiesRequest(propertiesAsValueList);
+		
+	}
 
 }

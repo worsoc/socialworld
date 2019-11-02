@@ -22,8 +22,11 @@
 package org.socialworld.objects;
 
 import org.socialworld.actions.move.Path;
+import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.calculation.FunctionByMatrix;
+import org.socialworld.calculation.Type;
+import org.socialworld.calculation.Value;
 import org.socialworld.calculation.Vector;
 import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.core.Event;
@@ -37,7 +40,7 @@ import org.socialworld.objects.access.HiddenAnimal;
  */
 public class StateAnimal extends StateSimulationObject {
 
-	private AttributeArray attributes;
+	private final AttributeArray attributes;
 	private FunctionByMatrix attributeCalculatorMatrix;
 
 	private Vector directionChest;
@@ -59,6 +62,8 @@ public class StateAnimal extends StateSimulationObject {
 
 		grantAccessToPropertyAction = new GrantedAccessToProperty[1];
 		grantAccessToPropertyAction[0] = GrantedAccessToProperty.action;
+		
+		attributes = new AttributeArray(Attribute.NUMBER_OF_ATTRIBUTES);
 		
 	}
 
@@ -82,16 +87,21 @@ public class StateAnimal extends StateSimulationObject {
 		
 	}
 
-	final void setAttributes(AttributeArray attributes, WriteAccessToAnimal guard) {
-		if (checkGuard(guard)) {
-			System.out.println(getObject().getObjectID() + " : " +  attributes.toString());
+	
+	final void setAttributes(Value attributes, WriteAccessToAnimal guard) {
 
-			this.attributes = attributes;
+		if (checkGuard(guard)) {
+//		System.out.println(getObject().getObjectID() + " : " +  attributes.getValue().toString());
+			this.attributes.set(attributes);
 		}
 	}
 	
-	final public AttributeArray getAttributes() {
-		return new AttributeArray(this.attributes);
+	final int getAttribute(Attribute attributeName) {
+		return this.attributes.get(attributeName);
+	}
+	
+	final public Value getAttributesAsValue(String valueName) {
+		return new Value(Type.attributeArray, valueName, new AttributeArray(this.attributes) );
 	}
 	
 	final void setMatrix(FunctionByMatrix matrix, WriteAccessToAnimal guard) {
@@ -140,16 +150,16 @@ public class StateAnimal extends StateSimulationObject {
 		}
 	}
 
-	final public Vector getDirectionChest() {
-		return new Vector(this.directionChest);
+	final public Value getDirectionChestAsValue(String valueName) {
+		return new Value( Type.vector, valueName, new Vector(this.directionChest) );
 	}
 	
-	final public Vector getDirectionView() {
-		return new Vector(this.directionView);
+	final public Value getDirectionViewAsValue(String valueName) {
+		return new Value( Type.vector, valueName, new Vector(this.directionView) );
 	}
 
-	final public Vector getDirectionActiveMove() {
-		return new Vector(this.directionActiveMove);
+	final public Value getDirectionActiveMoveAsValue(String valueName) {
+		return new Value( Type.vector, valueName, new Vector(this.directionActiveMove) );
 	}
 
 

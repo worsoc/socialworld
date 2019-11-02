@@ -34,9 +34,9 @@ public class State2ActionAssignment {
 	}
 
 	/**
-	 * The method returns back the only instance of the EventReactionAssignment.
+	 * The method returns back the only instance of the State2ActionAssignment.
 	 * 
-	 * @return singleton object of eventReactionAssignment
+	 * @return singleton object of State2ActionAssignment
 	 */
 	public static State2ActionAssignment getInstance() {
 		if (instance == null) {

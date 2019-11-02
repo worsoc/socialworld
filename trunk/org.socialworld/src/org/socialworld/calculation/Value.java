@@ -21,18 +21,37 @@
 */
 package org.socialworld.calculation;
 
+import org.socialworld.attributes.AttributeArray;
 import org.socialworld.attributes.Time;
 
 public class Value {
 
 	public static String ARGUMENT_VALUE_BY_NAME_ATTRIBUTES = "attributes";
+
+	public static String ARGUMENT_VALUE_BY_NAME_INTENSITY_ACTION = "intensityAction";
+	public static String ARGUMENT_VALUE_BY_NAME_WEAPON_ACTION = "weaponAction";
+
 	public static String ARGUMENT_VALUE_BY_NAME_EVENT_PARAMS = "eventparams";
 	public static String ARGUMENT_VALUE_BY_NAME_EVENT = "event";
+	public static String ARGUMENT_VALUE_BY_NAME_DIRECTION_EVENT = "directionEvent";
+	public static String ARGUMENT_VALUE_BY_NAME_INTENSITY_EVENT = "intensityEvent";
+
+	public static String ARGUMENT_VALUE_BY_NAME_DIRECTION_CHEST = "directionChest";
+	public static String ARGUMENT_VALUE_BY_NAME_DIRECTION_VIEW = "directionView";
+	public static String ARGUMENT_VALUE_BY_NAME_DIRECTION_ACTIVEMOVE = "directionActiveMove";
+
+	public static String ARGUMENT_VALUE_BY_NAME_POSITION_VECTOR = "position";
+	public static String ARGUMENT_VALUE_BY_NAME_DIRECTION_MOVE = "directionMove";
+	public static String ARGUMENT_VALUE_BY_NAME_POWER_MOVE = "powerMove";
+
+	public static String VALUE_NAME_UNUSED_BECAUSE_TEMPORARY = "temp";
 
 	Type type;
 	String name = "";
 	Object value;
+	
 	boolean valid;
+	ValueTransferCode transferCode = ValueTransferCode.noFurtherInformation; 
 	
 	//Dummy-Value
 	public Value() {
@@ -75,6 +94,14 @@ public class Value {
 		
 	}
 	
+	public void setTransferCode(ValueTransferCode code) {
+		this.transferCode = code;
+	}
+	
+	public ValueTransferCode getTransferCode() {
+		return this.transferCode;
+	}
+	
 	public void setInvalid() {
 		valid = false;
 	}
@@ -113,6 +140,22 @@ public class Value {
 		}
 	};
 	
+	public boolean equals(Value anotherValue) {
+		
+		if (this.type.equals(anotherValue.type) ) {
+			
+			// TODO call concrete equals() implementations
+			switch (this.type) {
+				case attributeArray:
+					return ( ((AttributeArray) this.getValue()).equals((AttributeArray) anotherValue.getValue()) ) ;
+				default:
+					return (  this.getValue().equals(anotherValue.getValue()) ) ;
+			}
+		}
+		
+		return false;
+		
+	}
 	
 	public boolean isTrue() {
 		switch (type) {

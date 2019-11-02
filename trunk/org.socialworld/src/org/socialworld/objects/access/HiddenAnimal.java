@@ -22,8 +22,8 @@
 package org.socialworld.objects.access;
 
 import org.socialworld.actions.move.Path;
-import org.socialworld.attributes.AttributeArray;
 import org.socialworld.calculation.FunctionByMatrix;
+import org.socialworld.calculation.Value;
 import org.socialworld.calculation.Vector;
 import org.socialworld.objects.WriteAccessToAnimal;
 
@@ -40,7 +40,8 @@ public class HiddenAnimal extends HiddenSimulationObject {
 		this.wa = wa;
 	}
 
-	public int setAttributes(AttributeArray attributes) {
+	
+	public int setAttributes(Value attributes) {
 		return wa.setAttributes(attributes, this);
 	}
 	

@@ -89,11 +89,15 @@ public class CreateAnimal extends CreateSimulationObjects {
 		double gauss_value;
 
 		gauss_value = random.nextGaussian();
+		while ((gauss_value > THRESHOLD_RANDOM_GAUSSIAN_VALUE) || (gauss_value < -THRESHOLD_RANDOM_GAUSSIAN_VALUE))
+			gauss_value = random.nextGaussian();
 		indexGPAA = mapGaussToIndex(gauss_value, GaussPoolAttributeArray.CAPACITY_GPAA_ARRAY);
 		hiddenAnimal.setAttributes(
-				GaussPoolAttributeArray.getInstance().getArray(indexGPAA));
+				GaussPoolAttributeArray.getInstance().getArrayAsValue(indexGPAA));
 		
 		gauss_value = random.nextGaussian();
+		while ((gauss_value > THRESHOLD_RANDOM_GAUSSIAN_VALUE) || (gauss_value < -THRESHOLD_RANDOM_GAUSSIAN_VALUE))
+			gauss_value = random.nextGaussian();
 		indexGPACM = mapGaussToIndex(gauss_value, GaussPoolAttributeCalculatorMatrix.CAPACITY_GPACM_ARRAY);
 		hiddenAnimal.setMatrix(	
 				GaussPoolAttributeCalculatorMatrix.getInstance().getMatrix(indexGPACM));
