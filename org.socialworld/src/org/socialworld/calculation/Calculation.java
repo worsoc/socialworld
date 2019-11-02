@@ -123,40 +123,59 @@ public class Calculation {
 	}
 
 	public Value compareEqual(Value op1, Value op2) {
-		Value tmp;
-		tmp = subtraction(op1, op2);
 		
-		if ( tmp.isValid() ) 
+		if (op1.isValid() & op2.isValid())
+		{
+			Value tmp;
+			tmp = subtraction(op1, op2);
+			
+			if ( tmp.isValid() ) {
 				return createValue(Type.bool, equalsZero(tmp));
+			}
+		}
+
 		return nothing;
 	}
 
 	public Value compareNotEqual(Value op1, Value op2) {
-		Value tmp;
-		tmp = subtraction(op1, op2);
-		
-		if ( tmp.isValid() ) 
-				return createValue(Type.bool, !equalsZero(tmp));
+
+		if (op1.isValid() & op2.isValid())
+		{
+			Value tmp;
+			tmp = subtraction(op1, op2);
+			
+			if ( tmp.isValid() ) {
+					return createValue(Type.bool, !equalsZero(tmp));
+			}
+		}
 		return nothing;
 	}
 
 	public Value compareGreater(Value op1, Value op2) {
 
-		
-		Value tmp;
-		tmp = subtraction(op1, op2);
-		
-		if ( tmp.isValid() ) 
-				return createValue(Type.bool, greaterToZero(tmp));
+		if (op1.isValid() & op2.isValid())
+		{
+			Value tmp;
+			tmp = subtraction(op1, op2);
+			
+			if ( tmp.isValid() ) {
+					return createValue(Type.bool, greaterToZero(tmp));
+			}
+		}
 		return nothing;
 	}
 
 	public Value compareGreaterEqual(Value op1, Value op2) {
-		Value tmp;
-		tmp = subtraction(op2, op1);
-		
-		if ( tmp.isValid() ) 
-				return createValue(Type.bool, !greaterToZero(tmp));
+
+		if (op1.isValid() & op2.isValid())
+		{
+			Value tmp;
+			tmp = subtraction(op2, op1);
+			
+			if ( tmp.isValid() ) {
+					return createValue(Type.bool, !greaterToZero(tmp));
+			}
+		}
 		return nothing;
 	}
 
@@ -210,104 +229,128 @@ public class Calculation {
 	
 	public Value addition(Value op1, Value op2){
 	
-		switch (op1.getType() ) {
-		case integer:
-			switch (op2.getType() ) {
+		if (op1.isValid() & op2.isValid())
+		{
+
+			switch (op1.getType() ) {
 			case integer:
-				return createValue(Type.integer, (int) op1.getValue() + (int) op2.getValue() );
+				switch (op2.getType() ) {
+				case integer:
+					return createValue(Type.integer, (int) op1.getValue() + (int) op2.getValue() );
+				case floatingpoint:
+					return createValue(Type.floatingpoint, (int) op1.getValue() + (float) op2.getValue() );
+				default:
+					return nothing;
+				}
 			case floatingpoint:
-				return createValue(Type.floatingpoint, (int) op1.getValue() + (float) op2.getValue() );
+				switch (op2.getType() ) {
+				case integer:
+					return createValue(Type.floatingpoint, (float) op1.getValue() + (int) op2.getValue() );
+				case floatingpoint:
+					return createValue(Type.floatingpoint, (float) op1.getValue() + (float) op2.getValue() );
+				default:
+					return nothing;
+				}
+				
 			default:
 				return nothing;
 			}
-		case floatingpoint:
-			switch (op2.getType() ) {
-			case integer:
-				return createValue(Type.floatingpoint, (float) op1.getValue() + (int) op2.getValue() );
-			case floatingpoint:
-				return createValue(Type.floatingpoint, (float) op1.getValue() + (float) op2.getValue() );
-			default:
-				return nothing;
-			}
-			
-		default:
-			return nothing;
 		}
+		return nothing;
 	}
 
 	public Value subtraction(Value op1, Value op2) {
-		return addition(op1, negate(op2));
+		
+		if (op1.isValid() & op2.isValid())
+		{
+			return addition(op1, negate(op2));
+		}
+		
+		return nothing;
 	}
 
 	public Value multiplication(Value op1, Value op2) {
 	
-		switch (op1.getType() ) {
-		case integer:
-			switch (op2.getType() ) {
+		if (op1.isValid() & op2.isValid())
+		{
+			switch (op1.getType() ) {
 			case integer:
-				return createValue(Type.integer, (int) op1.getValue() * (int) op2.getValue() );
+				switch (op2.getType() ) {
+				case integer:
+					return createValue(Type.integer, (int) op1.getValue() * (int) op2.getValue() );
+				case floatingpoint:
+					return createValue(Type.floatingpoint, (int) op1.getValue() * (float) op2.getValue() );
+				default:
+					return nothing;
+				}
 			case floatingpoint:
-				return createValue(Type.floatingpoint, (int) op1.getValue() * (float) op2.getValue() );
+				switch (op2.getType() ) {
+				case integer:
+					return createValue(Type.floatingpoint, (float) op1.getValue() * (int) op2.getValue() );
+				case floatingpoint:
+					return createValue(Type.floatingpoint, (float) op1.getValue() * (float) op2.getValue() );
+				default:
+					return nothing;
+				}
 			default:
 				return nothing;
 			}
-		case floatingpoint:
-			switch (op2.getType() ) {
-			case integer:
-				return createValue(Type.floatingpoint, (float) op1.getValue() * (int) op2.getValue() );
-			case floatingpoint:
-				return createValue(Type.floatingpoint, (float) op1.getValue() * (float) op2.getValue() );
-			default:
-				return nothing;
-			}
-		default:
-			return nothing;
 		}
+		return nothing;
 	}
 
 	public Value division(Value op1, Value op2) {
-		switch (op1.getType() ) {
-		case integer:
-			switch (op2.getType() ) {
+
+		if (op1.isValid() & op2.isValid())
+		{
+			switch (op1.getType() ) {
 			case integer:
-				return createValue(Type.floatingpoint, (int) op1.getValue() / (int) op2.getValue() );
+				switch (op2.getType() ) {
+				case integer:
+					return createValue(Type.floatingpoint, (int) op1.getValue() / (int) op2.getValue() );
+				case floatingpoint:
+					return createValue(Type.floatingpoint, (int) op1.getValue() / (float) op2.getValue() );
+				default:
+					return nothing;
+				}
 			case floatingpoint:
-				return createValue(Type.floatingpoint, (int) op1.getValue() / (float) op2.getValue() );
+				switch (op2.getType() ) {
+				case integer:
+					return createValue(Type.floatingpoint, (float) op1.getValue() / (int) op2.getValue() );
+				case floatingpoint:
+					return createValue(Type.floatingpoint, (float) op1.getValue() / (float) op2.getValue() );
+				default:
+					return nothing;
+				}
 			default:
 				return nothing;
 			}
-		case floatingpoint:
-			switch (op2.getType() ) {
-			case integer:
-				return createValue(Type.floatingpoint, (float) op1.getValue() / (int) op2.getValue() );
-			case floatingpoint:
-				return createValue(Type.floatingpoint, (float) op1.getValue() / (float) op2.getValue() );
-			default:
-				return nothing;
-			}
-		default:
-			return nothing;
 		}
+		return nothing;
 	}
 	
 	
 	public Value negate(Value op1) {
-		switch (op1.getType() ) {
-		case integer:
-				return createValue(Type.integer, (int) op1.getValue() * (-1) );
-		case floatingpoint:
-			return createValue(Type.floatingpoint, (float) op1.getValue() * (-1F) );
-		default:
-			return nothing;
-		}
 		
+		if (op1.isValid())
+		{
+			switch (op1.getType() ) {
+			case integer:
+					return createValue(Type.integer, (int) op1.getValue() * (-1) );
+			case floatingpoint:
+				return createValue(Type.floatingpoint, (float) op1.getValue() * (-1F) );
+			default:
+				return nothing;
+			}
+		}
+		return nothing;
 	}
 	
 	public Value copy(Value original) {
 		if (original.isValid())
 			return createValue(original.getType(), original.getValueCopy() );
 		else
-			return new Value();
+			return nothing;
 	}
 	
 	
