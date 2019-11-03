@@ -26,11 +26,13 @@ import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.ActualTime;
+import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.Vector;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.EventByAction;
 import org.socialworld.core.EventType;
+import org.socialworld.core.IEventParam;
 import org.socialworld.objects.Human;
 import org.socialworld.objects.SimulationObject;
 
@@ -199,15 +201,22 @@ public class ActionHandle extends AbstractAction {
 	/**
 	 * @return the direction
 	 */
-	public Vector getDirection() {
+	private Vector getDirection() {
 		return this.direction;
 	}
 
 	/**
 	 * @return the direction
 	 */
-	public Vector getDirectionCopy() {
-		return new Vector(this.direction);
+	public Value getDirectionAsValue(String valueName) {
+		Vector direction;
+		if (this.target == null) {
+			direction = new Vector(this.direction);
+		}
+		else {
+			direction = actor.getPosition().getDirectionTo(this.target.getPosition());
+		}
+		return new Value(Type.vector, valueName, direction);
 	}
 
 	/**
@@ -218,12 +227,12 @@ public class ActionHandle extends AbstractAction {
 		this.direction = direction;
 	}
 
-	public SimulationObject getItem1() {
-		return this.item1;
+	public Value getItem1AsValue(String valueName) {
+		return new Value(Type.simulationObject, valueName, this.item1);
 	}
 	
-	public SimulationObject getItem2() {
-		return this.item2;
+	public Value getItem2AsValue(String valueName) {
+		return new Value(Type.simulationObject, valueName, this.item2);
 	}
 
 	public void setTarget(SimulationObject target) {
@@ -233,4 +242,22 @@ public class ActionHandle extends AbstractAction {
 	public SimulationObject getTarget() {
 		return this.target;
 	}
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    PROPERTY LIST  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public void requestPropertyList(IEventParam paramObject) {
+	
+		super.requestPropertyList(paramObject);
+		
+		ValueArrayList propertiesAsValueList = new ValueArrayList();
+		
+		propertiesAsValueList.add(getItem1AsValue(Value.VALUE_BY_NAME_ACTION_ITEM1));
+		propertiesAsValueList.add(getItem2AsValue(Value.VALUE_BY_NAME_ACTION_ITEM2));
+		propertiesAsValueList.add(getDirectionAsValue(Value.VALUE_BY_NAME_ACTION_DIRECTION));
+		paramObject.answerPropertiesRequest(propertiesAsValueList);
+	
+	}
+
 }
