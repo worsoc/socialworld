@@ -21,17 +21,9 @@
 */
 package org.socialworld.actions.handle;
 
-import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionPerformer;
-import org.socialworld.actions.ActionType;
-import org.socialworld.actions.attack.ActionAttack;
-import org.socialworld.attributes.Attribute;
-import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
-import org.socialworld.calculation.Vector;
 import org.socialworld.collections.ValueArrayList;
-import org.socialworld.objects.Human;
-import org.socialworld.objects.SimulationObject;
 
 /**
  * German:
@@ -61,6 +53,7 @@ import org.socialworld.objects.SimulationObject;
  */
 public class Handle extends ActionPerformer {
 
+/*
 	public final int HANDLEKIND_MOVEOBJECT = 1;
 	public final int HANDLEKIND_TOUCH_WITHTARGET = 2;
 	public final int HANDLEKIND_TOUCH_WITHDIRECTION = 3;
@@ -69,7 +62,7 @@ public class Handle extends ActionPerformer {
 	public final int HANDLEKIND_USE_WITHDIRECTION = 6;
 	
 	public final int OTHER_HANDLEKIND = 0;
-
+*/
 
     public Handle (ActionHandle action) {
     	super(action);
@@ -77,10 +70,39 @@ public class Handle extends ActionPerformer {
 	
     protected final void choosePropertiesFromPropertyList(ValueArrayList properties) {
     	
-		for (int i = 0; i < properties.size(); i++) {
-			addProperty(properties.get(i));
-		}
-   	
+    	Value property;
+    	
+    	property = properties.getValue(Value.VALUE_BY_NAME_SIMOBJ_ATTRIBUTES);
+    	if (property.isValid()) {
+    		addProperty(property);
+    	}
+ 
+       	property = properties.getValue(Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_VIEW);
+    	if (property.isValid()) {
+    		addProperty(property);
+    	}
+
+       	property = properties.getValue(Value.VALUE_BY_NAME_ACTION_INTENSITY);
+    	if (property.isValid()) {
+    		addProperty(property);
+    	}
+
+       	property = properties.getValue(Value.VALUE_BY_NAME_ACTION_DIRECTION);
+    	if (property.isValid()) {
+    		addProperty(property);
+    	}
+
+       	property = properties.getValue(Value.VALUE_BY_NAME_ACTION_ITEM1);
+    	if (property.isValid()) {
+    		addProperty(property);
+    	}
+
+       	property = properties.getValue(Value.VALUE_BY_NAME_ACTION_ITEM2);
+    	if (property.isValid()) {
+    		addProperty(property);
+    	}
+
+ 
     }
 
 	/* (non-Javadoc)
@@ -91,57 +113,6 @@ public class Handle extends ActionPerformer {
 
 		if (!isValid()) {
 
-			ActionHandle originalAction;
-			final Human actor;
-			
-			SimulationObject item1 = null;
-			SimulationObject item2 = null;
-			Vector direction;
-			float actorsIntensity;
-			float intensity;
-			int actorsPower;
-	
-			originalAction  = (ActionHandle) getOriginalActionObject();
-			actor = (Human) originalAction.getActor();
-	
-			switch (getHandleKind()) {
-			case HANDLEKIND_MOVEOBJECT:
-				item1 = originalAction.getItem1();
-				direction = originalAction.getDirectionCopy();
-				break;
-			case HANDLEKIND_TOUCH_WITHTARGET:
-				direction = actor.getPosition().getDirectionTo(originalAction.getTarget().getPosition());
-				break;
-			case HANDLEKIND_TOUCH_WITHDIRECTION:
-				direction = originalAction.getDirectionCopy();
-				break;
-			case HANDLEKIND_USE:
-				item1 = originalAction.getItem1();
-				item2 = originalAction.getItem2();
-				direction = originalAction.getDirectionCopy();
-				break;
-			case HANDLEKIND_USE_WITHTARGET:
-				item1 = originalAction.getItem1();
-				direction = actor.getPosition().getDirectionTo(originalAction.getTarget().getPosition());
-				break;
-			case HANDLEKIND_USE_WITHDIRECTION:
-				item1 = originalAction.getItem1();
-				direction = originalAction.getDirectionCopy();
-				break;
-			default:
-				direction = originalAction.getDirectionCopy();
-			}
-			
-			actorsIntensity = originalAction.getIntensity();
-			// TODO
-			actorsPower = actor.getAttribute(Attribute.power);
-			intensity = actorsIntensity * actorsPower;
-	
-			addParam( new Value(Type.vector, "direction", direction));
-			addParam( new Value(Type.floatingpoint, "actorsIntensity", actorsIntensity));
-			addParam( new Value(Type.floatingpoint, "intensity", intensity));
-			addParam( new Value(Type.simulationObject, "item1", item1));
-			addParam( new Value(Type.simulationObject, "item2", item2));
 			
 			setValid();
 			
@@ -149,6 +120,7 @@ public class Handle extends ActionPerformer {
 		
 	}
 
+	/*
    	private int getHandleKind() {
  		ActionAttack originalAction;
 		originalAction = (ActionAttack) getOriginalActionObject();
@@ -188,4 +160,6 @@ public class Handle extends ActionPerformer {
 			
 		}
    	}
+   	
+   	*/
 }

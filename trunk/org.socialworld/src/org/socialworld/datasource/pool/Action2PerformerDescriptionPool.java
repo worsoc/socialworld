@@ -95,30 +95,127 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 		
 		switch (actionMode)
 		{
-			case punchRightFistStraight:
+			case hand:
+			case foot:
+	
+				// directionAction
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_DIRECTION + ")", Value.VALUE_BY_NAME_ACTION_DIRECTION );
+				result.add( new FunctionByExpression(startExpression) );
+	
+				// actorsIntensity
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_INTENSITY + ")", Value.VALUE_BY_NAME_ACTION_INTENSITY);
+				result.add( new FunctionByExpression(startExpression) );
+	
+				// intensity
+				startExpression = new Calculate("MUL(" +
+													"GET(" + Value.VALUE_BY_NAME_ACTION_INTENSITY + ")" + "," +
+													"ATTR(" + Attribute.power.getIndex() + ")" +
+												")" , Value.VALUE_BY_NAME_EVENT_INTENSITY);
+				result.add( new FunctionByExpression(startExpression) );
+							
+				break;
+		
+			case pull:
+			case push:
 				
-				
-				// directionHit
-				startExpression = new Calculate("GET(" + Value.ARGUMENT_VALUE_BY_NAME_DIRECTION_VIEW + ")", Value.ARGUMENT_VALUE_BY_NAME_DIRECTION_EVENT );
+				// directionAction
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_DIRECTION + ")", Value.VALUE_BY_NAME_ACTION_DIRECTION );
 				result.add( new FunctionByExpression(startExpression) );
 
 				// actorsIntensity
-				startExpression = new Calculate("GET(" + Value.ARGUMENT_VALUE_BY_NAME_INTENSITY_ACTION + ")", Value.ARGUMENT_VALUE_BY_NAME_INTENSITY_ACTION);
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_INTENSITY + ")", Value.VALUE_BY_NAME_ACTION_INTENSITY);
 				result.add( new FunctionByExpression(startExpression) );
 
 				// intensity
 				startExpression = new Calculate("MUL(" +
-													"GET(" + Value.ARGUMENT_VALUE_BY_NAME_INTENSITY_ACTION + ")" + "," +
+													"GET(" + Value.VALUE_BY_NAME_ACTION_INTENSITY + ")" + "," +
 													"ATTR(" + Attribute.power.getIndex() + ")" +
-												")" , Value.ARGUMENT_VALUE_BY_NAME_INTENSITY_EVENT);
+												")" , Value.VALUE_BY_NAME_EVENT_INTENSITY);
+				result.add( new FunctionByExpression(startExpression) );
+				
+				// Item1
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_ITEM1 + ")", Value.VALUE_BY_NAME_ACTION_ITEM1);
+				result.add( new FunctionByExpression(startExpression) );
+
+				break;
+				
+			case useItemLeftHand:
+			case useItemRightHand:
+
+				// directionAction
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_DIRECTION + ")", Value.VALUE_BY_NAME_ACTION_DIRECTION );
+				result.add( new FunctionByExpression(startExpression) );
+
+				// actorsIntensity
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_INTENSITY + ")", Value.VALUE_BY_NAME_ACTION_INTENSITY);
+				result.add( new FunctionByExpression(startExpression) );
+
+				// intensity
+				startExpression = new Calculate("MUL(" +
+													"GET(" + Value.VALUE_BY_NAME_ACTION_INTENSITY + ")" + "," +
+													"ATTR(" + Attribute.power.getIndex() + ")" +
+												")" , Value.VALUE_BY_NAME_EVENT_INTENSITY);
+				result.add( new FunctionByExpression(startExpression) );
+				
+				// Item1
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_ITEM1 + ")", Value.VALUE_BY_NAME_ACTION_ITEM1);
+				result.add( new FunctionByExpression(startExpression) );
+				
+				break;
+				
+			case useTwoItems:
+			case combineItems_AddRightToLeft:
+			case combineItems_AddLeftToRight:
+				
+				// directionAction
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_DIRECTION + ")", Value.VALUE_BY_NAME_ACTION_DIRECTION );
+				result.add( new FunctionByExpression(startExpression) );
+
+				// actorsIntensity
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_INTENSITY + ")", Value.VALUE_BY_NAME_ACTION_INTENSITY);
+				result.add( new FunctionByExpression(startExpression) );
+
+				// intensity
+				startExpression = new Calculate("MUL(" +
+													"GET(" + Value.VALUE_BY_NAME_ACTION_INTENSITY + ")" + "," +
+													"ATTR(" + Attribute.power.getIndex() + ")" +
+												")" , Value.VALUE_BY_NAME_EVENT_INTENSITY);
+				result.add( new FunctionByExpression(startExpression) );
+				
+				// Item1
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_ITEM1 + ")", Value.VALUE_BY_NAME_ACTION_ITEM1);
+				result.add( new FunctionByExpression(startExpression) );
+
+				// Item2
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_ITEM2 + ")", Value.VALUE_BY_NAME_ACTION_ITEM2);
+				result.add( new FunctionByExpression(startExpression) );
+
+				break;
+				
+			case punchRightFistStraight:
+				
+				
+				// directionHit
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_VIEW + ")", Value.VALUE_BY_NAME_EVENT_DIRECTION );
+				result.add( new FunctionByExpression(startExpression) );
+
+				// actorsIntensity
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_INTENSITY + ")", Value.VALUE_BY_NAME_ACTION_INTENSITY);
+				result.add( new FunctionByExpression(startExpression) );
+
+				// intensity
+				startExpression = new Calculate("MUL(" +
+													"GET(" + Value.VALUE_BY_NAME_ACTION_INTENSITY + ")" + "," +
+													"ATTR(" + Attribute.power.getIndex() + ")" +
+												")" , Value.VALUE_BY_NAME_EVENT_INTENSITY);
 				result.add( new FunctionByExpression(startExpression) );
 
 				// directionChest
-				startExpression = new Calculate("GET(" + Value.ARGUMENT_VALUE_BY_NAME_DIRECTION_CHEST + ")", Value.ARGUMENT_VALUE_BY_NAME_DIRECTION_CHEST);
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_CHEST + ")", Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_CHEST);
 				result.add( new FunctionByExpression(startExpression) );
 
 				// directionView
-				startExpression = new Calculate("GET(" + Value.ARGUMENT_VALUE_BY_NAME_DIRECTION_VIEW + ")", Value.ARGUMENT_VALUE_BY_NAME_DIRECTION_VIEW);
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_VIEW + ")", Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_VIEW);
 				result.add( new FunctionByExpression(startExpression) );
 				
 				break;
@@ -126,30 +223,30 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 			case weaponClub:
 				
 				// directionHit
-				startExpression = new Calculate("GET(" + Value.ARGUMENT_VALUE_BY_NAME_DIRECTION_VIEW + ")", Value.ARGUMENT_VALUE_BY_NAME_DIRECTION_EVENT );
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_VIEW + ")", Value.VALUE_BY_NAME_EVENT_DIRECTION );
 				result.add( new FunctionByExpression(startExpression) );
 
 				// actorsIntensity
-				startExpression = new Calculate("GET(" + Value.ARGUMENT_VALUE_BY_NAME_INTENSITY_ACTION + ")", Value.ARGUMENT_VALUE_BY_NAME_INTENSITY_ACTION);
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_INTENSITY + ")", Value.VALUE_BY_NAME_ACTION_INTENSITY);
 				result.add( new FunctionByExpression(startExpression) );
 
 				// intensity
 				startExpression = new Calculate("MUL(" +
-													"GET(" + Value.ARGUMENT_VALUE_BY_NAME_INTENSITY_ACTION + ")" + "," +
+													"GET(" + Value.VALUE_BY_NAME_ACTION_INTENSITY + ")" + "," +
 													"ATTR(" + Attribute.power.getIndex() + ")" +
-												")" , Value.ARGUMENT_VALUE_BY_NAME_INTENSITY_EVENT);
+												")" , Value.VALUE_BY_NAME_EVENT_INTENSITY);
 				result.add( new FunctionByExpression(startExpression) );
 
 				// weapon
-				startExpression = new Calculate("GET(" + Value.ARGUMENT_VALUE_BY_NAME_WEAPON_ACTION + ")", Value.ARGUMENT_VALUE_BY_NAME_WEAPON_ACTION);
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_WEAPON + ")", Value.VALUE_BY_NAME_ACTION_WEAPON);
 				result.add( new FunctionByExpression(startExpression) );
 
 				// directionChest
-				startExpression = new Calculate("GET(" + Value.ARGUMENT_VALUE_BY_NAME_DIRECTION_CHEST + ")", Value.ARGUMENT_VALUE_BY_NAME_DIRECTION_CHEST);
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_CHEST + ")", Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_CHEST);
 				result.add( new FunctionByExpression(startExpression) );
 
 				// directionView
-				startExpression = new Calculate("GET(" + Value.ARGUMENT_VALUE_BY_NAME_DIRECTION_VIEW + ")", Value.ARGUMENT_VALUE_BY_NAME_DIRECTION_VIEW);
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_VIEW + ")", Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_VIEW);
 				result.add( new FunctionByExpression(startExpression) );
 				
 				break;
