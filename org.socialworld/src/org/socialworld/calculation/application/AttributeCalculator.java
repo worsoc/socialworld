@@ -170,7 +170,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 
 		int count = eventInfluenceDescription.countFunctions();
 		
-		oldAttributes =  stateAnimal.getAttributesAsValue(Value.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES);
+		oldAttributes =  stateAnimal.getAttributesAsValue(Value.VALUE_BY_NAME_SIMOBJ_ATTRIBUTES);
 		arguments = new ValueArrayList();
 		arguments.add( oldAttributes );
 		
@@ -224,7 +224,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 		Value oldAttributes;
 		Value newAttributes = new Value();
 	
-		oldAttributes =  stateAnimal.getAttributesAsValue(Value.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES);
+		oldAttributes =  stateAnimal.getAttributesAsValue(Value.VALUE_BY_NAME_SIMOBJ_ATTRIBUTES);
 
 		arguments = new ValueArrayList();
 		arguments.add( oldAttributes );
@@ -276,7 +276,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 		Value oldAttributes;
 		Value newAttributes = new Value();
 	
-		oldAttributes =  stateAnimal.getAttributesAsValue(Value.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES);
+		oldAttributes =  stateAnimal.getAttributesAsValue(Value.VALUE_BY_NAME_SIMOBJ_ATTRIBUTES);
 
 		arguments = new ValueArrayList();
 		arguments.add( oldAttributes );

@@ -78,7 +78,7 @@ public class VectorScalarProduct extends Expression {
 				
 				setOperation(Expression_Function.function);
 				
-				setExpression1(new GetArgumentByName(Value.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES));
+				setExpression1(new GetArgumentByName(Value.VALUE_BY_NAME_SIMOBJ_ATTRIBUTES));
 				setExpression2(new Constant(new Value(Type.integer, FunctionByMatrix_Matrix.CALCULATION_MODE_VECTOR_X_VECTOR)));
 				setExpression3(Nothing.getInstance());
 				

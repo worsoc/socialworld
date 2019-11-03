@@ -223,9 +223,9 @@ public abstract class SimulationObject extends ListenedBase {
 	
 		ValueArrayList propertiesAsValueList = new ValueArrayList();
 		
-		propertiesAsValueList.add(this.state.getPositionVectorAsValue(Value.ARGUMENT_VALUE_BY_NAME_POSITION_VECTOR));
-		propertiesAsValueList.add(this.state.getDirectionMoveAsValue(Value.ARGUMENT_VALUE_BY_NAME_DIRECTION_MOVE));
-		propertiesAsValueList.add(this.state.getPowerMoveAsValue(Value.ARGUMENT_VALUE_BY_NAME_POWER_MOVE));
+		propertiesAsValueList.add(this.state.getPositionVectorAsValue(Value.VALUE_BY_NAME_SIMOBJ_POSITION_VECTOR));
+		propertiesAsValueList.add(this.state.getDirectionMoveAsValue(Value.VALUE_BY_NAME_SIMOBJ_MOVE_DIRECTION));
+		propertiesAsValueList.add(this.state.getPowerMoveAsValue(Value.VALUE_BY_NAME_SIMOBJ_MOVE_POWER));
 
 		paramObject.answerPropertiesRequest(propertiesAsValueList);
 	

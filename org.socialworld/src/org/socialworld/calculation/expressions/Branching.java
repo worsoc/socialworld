@@ -178,7 +178,7 @@ public class Branching extends Expression {
 		// the value the event's property is compared to
 		String value = conditionElements[3];
 		
-		Expression propertyValue = new ValueFromValueList(Value.ARGUMENT_VALUE_BY_NAME_EVENT_PARAMS, propertyName);
+		Expression propertyValue = new ValueFromValueList(Value.VALUE_BY_NAME_EVENT_PARAMS, propertyName);
 		
 		Expression constant = new Constant(new Value(value, Type.getName(Integer.parseInt(type)) ) );
 		

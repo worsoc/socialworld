@@ -26,23 +26,26 @@ import org.socialworld.attributes.Time;
 
 public class Value {
 
-	public static String ARGUMENT_VALUE_BY_NAME_ATTRIBUTES = "attributes";
+	public static String VALUE_BY_NAME_SIMOBJ_ATTRIBUTES = "attributes";
 
-	public static String ARGUMENT_VALUE_BY_NAME_INTENSITY_ACTION = "intensityAction";
-	public static String ARGUMENT_VALUE_BY_NAME_WEAPON_ACTION = "weaponAction";
+	public static String VALUE_BY_NAME_ACTION_INTENSITY = "intensityAction";
+	public static String VALUE_BY_NAME_ACTION_WEAPON = "weaponAction";
+	public static String VALUE_BY_NAME_ACTION_ITEM1 = "item1Action";
+	public static String VALUE_BY_NAME_ACTION_ITEM2 = "item2Action";
+	public static String VALUE_BY_NAME_ACTION_DIRECTION = "directionAction";
 
-	public static String ARGUMENT_VALUE_BY_NAME_EVENT_PARAMS = "eventparams";
-	public static String ARGUMENT_VALUE_BY_NAME_EVENT = "event";
-	public static String ARGUMENT_VALUE_BY_NAME_DIRECTION_EVENT = "directionEvent";
-	public static String ARGUMENT_VALUE_BY_NAME_INTENSITY_EVENT = "intensityEvent";
+	public static String VALUE_BY_NAME_EVENT_PARAMS = "eventparams";
+	public static String VALUE_BY_NAME_EVENT = "event";
+	public static String VALUE_BY_NAME_EVENT_DIRECTION = "directionEvent";
+	public static String VALUE_BY_NAME_EVENT_INTENSITY = "intensityEvent";
 
-	public static String ARGUMENT_VALUE_BY_NAME_DIRECTION_CHEST = "directionChest";
-	public static String ARGUMENT_VALUE_BY_NAME_DIRECTION_VIEW = "directionView";
-	public static String ARGUMENT_VALUE_BY_NAME_DIRECTION_ACTIVEMOVE = "directionActiveMove";
+	public static String VALUE_BY_NAME_SIMOBJ_DIRECTION_CHEST = "directionChest";
+	public static String VALUE_BY_NAME_SIMOBJ_DIRECTION_VIEW = "directionView";
+	public static String VALUE_BY_NAME_SIMOBJ_DIRECTION_ACTIVEMOVE = "directionActiveMove";
 
-	public static String ARGUMENT_VALUE_BY_NAME_POSITION_VECTOR = "position";
-	public static String ARGUMENT_VALUE_BY_NAME_DIRECTION_MOVE = "directionMove";
-	public static String ARGUMENT_VALUE_BY_NAME_POWER_MOVE = "powerMove";
+	public static String VALUE_BY_NAME_SIMOBJ_POSITION_VECTOR = "position";
+	public static String VALUE_BY_NAME_SIMOBJ_MOVE_DIRECTION = "directionMove";
+	public static String VALUE_BY_NAME_SIMOBJ_MOVE_POWER = "powerMove";
 
 	public static String VALUE_NAME_UNUSED_BECAUSE_TEMPORARY = "temp";
 

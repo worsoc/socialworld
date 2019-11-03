@@ -53,7 +53,7 @@ public class ChangeAttributes extends Branching {
 				exp3 = parseLinesTail(1, lines);
 			}
 			else {
-				exp3 = new GetArgumentByName(Value.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES);
+				exp3 = new GetArgumentByName(Value.VALUE_BY_NAME_SIMOBJ_ATTRIBUTES);
 			}
 			
 			setExpression1(exp1);
@@ -80,7 +80,7 @@ public class ChangeAttributes extends Branching {
 		dann = parseDann(line);
 		
 		if (index == (lines.size() - 1)) 
-			 tail = new GetArgumentByName(Value.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES);
+			 tail = new GetArgumentByName(Value.VALUE_BY_NAME_SIMOBJ_ATTRIBUTES);
 		else
 			 tail = parseLinesTail(index + 1, lines);
 		
@@ -123,16 +123,16 @@ public class ChangeAttributes extends Branching {
 				
 				expressionSetAttributeValue = 
 							new SetAttributeValue(attribute, 
-									new GetArgumentByName(Value.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES), 
+									new GetArgumentByName(Value.VALUE_BY_NAME_SIMOBJ_ATTRIBUTES), 
 									expressionCalculateNewAttributeValue);
 				
 				if (isFirstExpression) {
-					replacementChain = new Replacement(Value.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES, expressionSetAttributeValue);
+					replacementChain = new Replacement(Value.VALUE_BY_NAME_SIMOBJ_ATTRIBUTES, expressionSetAttributeValue);
 					isFirstExpression = false;
 				}
 				else {
 					sequence[0] = replacementChain;
-					sequence[1] = new Replacement(Value.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES, expressionSetAttributeValue);
+					sequence[1] = new Replacement(Value.VALUE_BY_NAME_SIMOBJ_ATTRIBUTES, expressionSetAttributeValue);
 					replacementChain = new Sequence(sequence);
 
 				}
