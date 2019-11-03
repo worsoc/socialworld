@@ -141,10 +141,10 @@ public class Animal extends SimulationObject {
 		
 		ValueArrayList propertiesAsValueList = new ValueArrayList();
 		
-		propertiesAsValueList.add(this.state.getAttributesAsValue(Value.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES));
-		propertiesAsValueList.add(this.state.getDirectionChestAsValue(Value.ARGUMENT_VALUE_BY_NAME_DIRECTION_CHEST));
-		propertiesAsValueList.add(this.state.getDirectionViewAsValue(Value.ARGUMENT_VALUE_BY_NAME_DIRECTION_VIEW));
-		propertiesAsValueList.add(this.state.getDirectionActiveMoveAsValue(Value.ARGUMENT_VALUE_BY_NAME_DIRECTION_ACTIVEMOVE));
+		propertiesAsValueList.add(this.state.getAttributesAsValue(Value.VALUE_BY_NAME_SIMOBJ_ATTRIBUTES));
+		propertiesAsValueList.add(this.state.getDirectionChestAsValue(Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_CHEST));
+		propertiesAsValueList.add(this.state.getDirectionViewAsValue(Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_VIEW));
+		propertiesAsValueList.add(this.state.getDirectionActiveMoveAsValue(Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_ACTIVEMOVE));
 		paramObject.answerPropertiesRequest(propertiesAsValueList);
 	
 	}

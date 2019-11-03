@@ -256,7 +256,7 @@ public class ActionAttack extends AbstractAction {
 		
 		ValueArrayList propertiesAsValueList = new ValueArrayList();
 		
-		propertiesAsValueList.add(getWeaponAsValue(Value.ARGUMENT_VALUE_BY_NAME_WEAPON_ACTION));
+		propertiesAsValueList.add(getWeaponAsValue(Value.VALUE_BY_NAME_ACTION_WEAPON));
 		paramObject.answerPropertiesRequest(propertiesAsValueList);
 	
 	}

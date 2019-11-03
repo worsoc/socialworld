@@ -213,8 +213,8 @@ public class ActionCreator extends SocialWorldThread {
 		ValueArrayList arguments;
 		arguments = new ValueArrayList();
 		
-		arguments.add( stateReactor.getAttributesAsValue(Value.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES) );
-		arguments.add( new Value(Type.event, Value.ARGUMENT_VALUE_BY_NAME_EVENT, event) );
+		arguments.add( stateReactor.getAttributesAsValue(Value.VALUE_BY_NAME_SIMOBJ_ATTRIBUTES) );
+		arguments.add( new Value(Type.event, Value.VALUE_BY_NAME_EVENT, event) );
 		arguments.add( event.getOptionalParam().getParamListAsValue());
 		
 		Value result = f_CreateReaction.calculate(arguments);
@@ -244,7 +244,7 @@ public class ActionCreator extends SocialWorldThread {
 		ValueArrayList arguments;
 		arguments = new ValueArrayList();
 		
-		arguments.add( stateActor.getAttributesAsValue(Value.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES) );
+		arguments.add( stateActor.getAttributesAsValue(Value.VALUE_BY_NAME_SIMOBJ_ATTRIBUTES) );
 		
 		Value result = f_CreateAction.calculate(arguments);
 		return (AbstractAction) result.getValue();

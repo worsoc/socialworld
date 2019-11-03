@@ -54,7 +54,6 @@ import org.socialworld.collections.ValueArrayList;
  */
 public class Attack extends ActionPerformer {
 
-// TODO implementation methods	performFightAttack() and performAnimalAttack() (until now very very simple)
 	
  	public  Attack (ActionAttack action) {
  		super(action);
@@ -64,27 +63,27 @@ public class Attack extends ActionPerformer {
     	
     	Value property;
     	
-    	property = properties.getValue(Value.ARGUMENT_VALUE_BY_NAME_ATTRIBUTES);
+    	property = properties.getValue(Value.VALUE_BY_NAME_SIMOBJ_ATTRIBUTES);
     	if (property.isValid()) {
     		addProperty(property);
     	}
  
-       	property = properties.getValue(Value.ARGUMENT_VALUE_BY_NAME_DIRECTION_CHEST);
+       	property = properties.getValue(Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_CHEST);
     	if (property.isValid()) {
     		addProperty(property);
     	}
 
-       	property = properties.getValue(Value.ARGUMENT_VALUE_BY_NAME_DIRECTION_VIEW);
+       	property = properties.getValue(Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_VIEW);
     	if (property.isValid()) {
     		addProperty(property);
     	}
 
-       	property = properties.getValue(Value.ARGUMENT_VALUE_BY_NAME_INTENSITY_ACTION);
+       	property = properties.getValue(Value.VALUE_BY_NAME_ACTION_INTENSITY);
     	if (property.isValid()) {
     		addProperty(property);
     	}
 
-      	property = properties.getValue(Value.ARGUMENT_VALUE_BY_NAME_WEAPON_ACTION);
+      	property = properties.getValue(Value.VALUE_BY_NAME_ACTION_WEAPON);
     	if (property.isValid()) {
     		addProperty(property);
     	}
@@ -109,80 +108,12 @@ public class Attack extends ActionPerformer {
 
    	private void performFightAttack() {
    		
-   		/*
-		ActionAttack originalAction;
-		final Human actor;
-		
-		IWeapon weapon;
-		float actorsIntensity;
-		float intensity;
-		int actorsPower;
-		
-		Value directionChest;
-		Value directionView;
-		Value directionHit;
-	
-		originalAction  = (ActionAttack) getOriginalActionObject();
-		actor = (Human) originalAction.getActor();
-		
-		
-		
-		
-		actorsPower = actor.getAttribute(Attribute.power);
-			
-		// to do
-	  	directionChest = actor.getDirectionChestAsValue("directionChest");
-		directionView = actor.getDirectionViewAsValue("directionView");
-		directionHit = actor.getDirectionViewAsValue(Value.ARGUMENT_VALUE_BY_NAME_EVENT_DIRECTION);
-
-		// to do
-		actorsIntensity = originalAction.getIntensity();
-		intensity = actorsIntensity * actorsPower;
-	
-		weapon = originalAction.getWeapon();
-	
-	
-	
-		addParam( directionHit);
-		addParam( new Value(Type.floatingpoint, "actorsIntensity", actorsIntensity));
-		addParam( new Value(Type.floatingpoint, "intensity", intensity));
-		addParam( new Value(Type.simulationObject, "weapon", weapon));
-		addParam( directionChest);
-		addParam( directionView);
-		*/
    		
 		setValid();
   		
    	}
    	
    	private void performAnimalAttack() {
-   		/*
-		ActionAttack originalAction;
-		final Animal actor;
-		
-		float actorsIntensity;
-		float intensity;
-		int actorsPower;
-		
-		Value directionHit;
-	
-		originalAction  = (ActionAttack) getOriginalActionObject();
-		actor = (Animal) originalAction.getActor();
-		
-		actorsPower = actor.getAttribute(Attribute.power);
-			
-		// to do
-		directionHit = actor.getDirectionViewAsValue(Value.ARGUMENT_VALUE_BY_NAME_EVENT_DIRECTION);
-
-		// to do
-		actorsIntensity = originalAction.getIntensity();
-		intensity = actorsIntensity * actorsPower;
-	
-		addParam(directionHit);
-		addParam( new Value(Type.floatingpoint, "actorsIntensity", actorsIntensity));
-		addParam( new Value(Type.floatingpoint, "intensity", intensity));
-		
-		*/
    		
 		setValid();
   		

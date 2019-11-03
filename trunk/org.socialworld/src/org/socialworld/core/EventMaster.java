@@ -215,7 +215,8 @@ public class EventMaster extends SocialWorldThread {
 		Simulation simulation = SocialWorld.getCurrent().getSimulation();
 		candidate = simulation.getFirstByPosition(this.eventPosition );
 		while (candidate != null) {
-			//resultDecideEffective = decideEffective(candidate);
+			
+			// TODO resultDecideEffective = decideEffective(candidate);
 			resultDecideEffective = 1;
 			if ( resultDecideEffective == 1) 	candidates.add(candidate);
 			if ( resultDecideEffective < 0)

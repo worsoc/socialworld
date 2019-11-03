@@ -243,7 +243,7 @@ public class Event implements Comparable<Event> {
 		Value direction;
 		
 		if (hasOptionalParam()) {
-			direction = optionalParam.getParam(Value.ARGUMENT_VALUE_BY_NAME_DIRECTION_EVENT);
+			direction = optionalParam.getParam(Value.VALUE_BY_NAME_EVENT_DIRECTION);
 			if (direction.isValid()) 
 				return (Vector) direction.getValueCopy();
 			

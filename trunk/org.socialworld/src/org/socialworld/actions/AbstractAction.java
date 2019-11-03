@@ -260,7 +260,7 @@ public abstract class AbstractAction {
 	public void requestPropertyList(IEventParam paramObject) {
 		ValueArrayList propertiesAsValueList = new ValueArrayList();
 		
-		propertiesAsValueList.add(new Value(Type.floatingpoint, Value.ARGUMENT_VALUE_BY_NAME_INTENSITY_ACTION, this.intensity));
+		propertiesAsValueList.add(new Value(Type.floatingpoint, Value.VALUE_BY_NAME_ACTION_INTENSITY, this.intensity));
 		paramObject.answerPropertiesRequest(propertiesAsValueList);
 	}
 
