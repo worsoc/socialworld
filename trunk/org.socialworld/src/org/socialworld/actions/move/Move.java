@@ -24,9 +24,7 @@ package org.socialworld.actions.move;
 import org.socialworld.actions.ActionPerformer;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
-import org.socialworld.calculation.Vector;
 import org.socialworld.collections.ValueArrayList;
-import org.socialworld.objects.Animal;
 
 
 /**
@@ -50,70 +48,87 @@ import org.socialworld.objects.Animal;
  */
 public class Move extends ActionPerformer {
 	
-	Vector sectionDirection;
-	float remainedDistance;
+	private float remainedDistance;
 	
 	private float velocity;
 	private float acceleration;
-	private float duration;
 	
 	
 	public Move (   ActionMove action ) {
 		super(action);
 		
-		this.duration = 0;
-		this.acceleration = 0;
+		this.acceleration = action.getIntensity();
 		this.velocity = 0;
+		this.remainedDistance = action.getSectionLength();
+
 	}
 	
     protected final void choosePropertiesFromPropertyList(ValueArrayList properties) {
     	
-		for (int i = 0; i < properties.size(); i++) {
-			addProperty(properties.get(i));
-		}
-   	
+    	Value property;
+    	
+    	property = properties.getValue(Value.VALUE_BY_NAME_SIMOBJ_ATTRIBUTES);
+    	if (property.isValid()) {
+    		addProperty(property);
+    	}
+ 
+       	property = properties.getValue(Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_CHEST);
+    	if (property.isValid()) {
+    		addProperty(property);
+    	}
+
+       	property = properties.getValue(Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_VIEW);
+    	if (property.isValid()) {
+    		addProperty(property);
+    	}
+  
+      	property = properties.getValue(Value.VALUE_BY_NAME_ACTION_INTENSITY);
+    	if (property.isValid()) {
+    		addProperty(property);
+    	}
+ 
+      	property = properties.getValue(Value.VALUE_BY_NAME_ACTION_DIRECTION);
+    	if (property.isValid()) {
+    		addProperty(property);
+    	}
+
+      	property = properties.getValue(Value.VALUE_BY_NAME_ACTION_MOVE_ACCELERATION);
+    	if (property.isValid()) {
+    		addProperty(property);
+    	}
+
+      	property = properties.getValue(Value.VALUE_BY_NAME_ACTION_MOVE_VELOCITY);
+    	if (property.isValid()) {
+    		addProperty(property);
+    	}
+  	
     }
 
 	public void perform() {
 		
-		if (this.duration == 0 | this.acceleration != 0) {
-			ActionMove originalAction;
-			final Animal actor;
+		Value tmp;
+		
+		tmp = getParam(Value.VALUE_BY_NAME_ACTION_MOVE_ACCELERATION);
+		if (tmp.isValid()) {
+			this.acceleration = (Float) tmp.getValueCopy();
+		}
+		else {
+			setParam( new Value(Type.floatingpoint, Value.VALUE_BY_NAME_ACTION_MOVE_ACCELERATION, this.acceleration));
+		}
+		
+		tmp = getParam(Value.VALUE_BY_NAME_ACTION_MOVE_VELOCITY);
+		if (tmp.isValid()) {
+			this.velocity = (Float) tmp.getValueCopy();
+		}
+		else {
+			this.velocity = this.velocity + this.acceleration;
+			setParam( new Value(Type.floatingpoint, Value.VALUE_BY_NAME_ACTION_MOVE_VELOCITY, this.velocity));
+		}
 				
-			originalAction  = (ActionMove) getOriginalActionObject();
-			actor = (Animal) originalAction.getActor();
-	
-			if (this.duration == 0)		{
-				this.sectionDirection = originalAction.getDirectionForSection();
-				
-				setParam( new Value(Type.vector, "direction", this.sectionDirection));
-				
-				this.remainedDistance = this.sectionDirection.length();
-			}
-
-			calculateVelocity(originalAction, actor);
-	
-			setParam( new Value(Type.floatingpoint, "velocity", velocity));
-			setParam( new Value(Type.floatingpoint, "acceleration", acceleration));
-		}	
-
 		this.remainedDistance = this.remainedDistance - this.velocity;
 		
 	} 
 	
-	private void calculateVelocity(ActionMove action, Animal actor) {
-		
-		if (this.duration == 0) {
-			this.velocity = action.getIntensity();
-			this.acceleration = 0;
-		}
-		else {
-			this.acceleration = action.getIntensity();
-			this.velocity = this.velocity + this.acceleration * this.duration;
-			
-		}
-		duration = duration + 1;
-	}
 	
 	public boolean checkContinueMove() {
 		return (this.remainedDistance > 0);
@@ -123,4 +138,13 @@ public class Move extends ActionPerformer {
 		
 		return (this.acceleration != 0);
 	}
+	
+	public float getVelocity() {
+		return this.velocity;
+	}
+
+	public float getAcceleration() {
+		return this.acceleration;
+	}
+
 }

@@ -33,7 +33,13 @@ public class Value {
 	public static String VALUE_BY_NAME_ACTION_ITEM1 = "item1Action";
 	public static String VALUE_BY_NAME_ACTION_ITEM2 = "item2Action";
 	public static String VALUE_BY_NAME_ACTION_DIRECTION = "directionAction";
+	public static String VALUE_BY_NAME_ACTION_TARGET = "targetAction";
+	public static String VALUE_BY_NAME_ACTION_SENTENCE = "sentenceAction";
+	
+	public static String VALUE_BY_NAME_ACTION_MOVE_ACCELERATION = "acceleration";
+	public static String VALUE_BY_NAME_ACTION_MOVE_VELOCITY = "velocity";
 
+	
 	public static String VALUE_BY_NAME_EVENT_PARAMS = "eventparams";
 	public static String VALUE_BY_NAME_EVENT = "event";
 	public static String VALUE_BY_NAME_EVENT_DIRECTION = "directionEvent";

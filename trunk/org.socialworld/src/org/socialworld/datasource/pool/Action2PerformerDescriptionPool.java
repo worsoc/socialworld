@@ -95,6 +95,30 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 		
 		switch (actionMode)
 		{
+			case walk:
+			case run:
+			case sneak:
+			case jump:
+			case swim:
+			case fly:
+				
+				// directionAction
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_DIRECTION + ")", Value.VALUE_BY_NAME_ACTION_DIRECTION );
+				result.add( new FunctionByExpression(startExpression) );
+	
+				// acceleration
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_MOVE_ACCELERATION + ")", Value.VALUE_BY_NAME_ACTION_MOVE_ACCELERATION);
+				result.add( new FunctionByExpression(startExpression) );
+
+				// velocity
+				startExpression = new Calculate("ADD(" +
+													"GET(" + Value.VALUE_BY_NAME_ACTION_MOVE_VELOCITY + ")" + "," +
+													"GET(" + Value.VALUE_BY_NAME_ACTION_MOVE_ACCELERATION + ")" +
+												")" , Value.VALUE_BY_NAME_ACTION_MOVE_VELOCITY);
+				result.add( new FunctionByExpression(startExpression) );
+				
+				break;
+		
 			case hand:
 			case foot:
 	
@@ -251,6 +275,22 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				
 				break;
 				
+			case listenTo:
+			case understand:
+				
+				// Sentence
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCE + ")", Value.VALUE_BY_NAME_ACTION_SENTENCE);
+				result.add( new FunctionByExpression(startExpression) );
+				
+				// Target
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_TARGET + ")", Value.VALUE_BY_NAME_ACTION_TARGET);
+				result.add( new FunctionByExpression(startExpression) );
+
+				// directionView
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_VIEW + ")", Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_VIEW);
+				result.add( new FunctionByExpression(startExpression) );
+
+				break;
 				
 			default:
 				break;
