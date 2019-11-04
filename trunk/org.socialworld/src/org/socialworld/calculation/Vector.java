@@ -29,9 +29,9 @@ package org.socialworld.calculation;
  */
 public class Vector {
 
-	protected float x;
-	protected float y;
-	protected float z;
+	protected float x = 0;
+	protected float y = 0;
+	protected float z = 0;
 
 	boolean normalized = false;
 	
@@ -44,11 +44,6 @@ public class Vector {
 			this.x = original.getX();
 			this.y = original.getY();
 			this.z = original.getZ();
-		}
-		else {
-			this.x = 0;
-			this.y = 0;
-			this.z = 0;
 		}
 	}
 	
