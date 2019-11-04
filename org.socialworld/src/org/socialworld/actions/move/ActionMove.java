@@ -26,11 +26,13 @@ import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Position;
+import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.Vector;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.EventByAction;
 import org.socialworld.core.EventType;
+import org.socialworld.core.IEventParam;
 import org.socialworld.objects.Animal;
 import org.socialworld.objects.access.HiddenAnimal;
 
@@ -77,6 +79,7 @@ public class ActionMove extends AbstractAction {
 	
 	private Move move;
 	private boolean firstStep = true;
+	private boolean firstPerforming = true;
 	
 	private Path path;
 	private Position end;
@@ -126,23 +129,26 @@ public class ActionMove extends AbstractAction {
 		
 		if (actor == null) return;
 
+		firstStep = firstPerforming;
+		
 		if ((!firstStep) && (path != null)) {
 			moveCompleted = !move.checkContinueMove();
 			
 			if (moveCompleted) path.completeSection(actor.getPosition());
 			
-			if (path.isCompleted()) 
-				if (path.hasRefToKnownPaths()) 
+			if (path.isCompleted()) {
+				if (path.hasRefToKnownPaths()) {
 					path.incrementUsageCounter(1);
-				else
-				{
+				}
+				else {
 					((HiddenAnimal) getHiddenWriteAccessToActor(this)).addPath(path);
 				}
+			}
 		}
 		
 		
 		if (moveCompleted || this.firstStep) 			createMove();
-		this.firstStep = false;
+		this.firstPerforming = false;
 		
 		EventByAction event;
 		event = new EventByAction( getEventType(mode),    actor /* as causer*/,  ActualTime.asTime(),
@@ -151,20 +157,24 @@ public class ActionMove extends AbstractAction {
 		
 	}
 
-	public Vector getDirectionForSection() {
-		return new Vector(this.directionForSection);
-	}
 	
 	
 	private void createMove() {
 		
 		if (path == null & end != null) createPath();
 		
-		if (path == null) 
+		if (path == null) { 
 			this.directionForSection = new Vector(this.direction);
-		else
-			this.directionForSection = this.actor.getPosition().getDirectionTo(path.getNextPoint());
-			
+		}
+		else {
+			Position nextPoint = path.getNextPoint();
+			if (nextPoint != null) {
+				this.directionForSection = this.actor.getPosition().getDirectionTo(nextPoint);
+			}
+			else {
+				this.directionForSection = new Vector(this.direction);
+			}
+		}	
 		
 		this.move = new Move( this);
 		
@@ -224,4 +234,42 @@ public class ActionMove extends AbstractAction {
 		this.end = end;
 	}
 
+	public boolean isFirstStep() {
+		return this.firstStep;
+	}
+	
+	float getSectionLength() {
+		return this.directionForSection.length();
+	}
+
+	private Value getSectionDirectionAsValue(String valueName) {
+		return new Value(Type.vector, valueName, new Vector(this.directionForSection));
+	}
+	
+	private Value getVelocityAsValue(String valueName) {
+		return new Value(Type.floatingpoint, valueName, this.move.getVelocity());
+	}
+
+	private Value getAccelerationAsValue(String valueName) {
+		return new Value(Type.floatingpoint, valueName, this.move.getAcceleration());
+	}
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    PROPERTY LIST  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public void requestPropertyList(IEventParam paramObject) {
+	
+		super.requestPropertyList(paramObject);
+		
+		ValueArrayList propertiesAsValueList = new ValueArrayList();
+		
+		propertiesAsValueList.add(getSectionDirectionAsValue(Value.VALUE_BY_NAME_ACTION_DIRECTION));
+		propertiesAsValueList.add(getVelocityAsValue(Value.VALUE_BY_NAME_ACTION_MOVE_VELOCITY));
+		propertiesAsValueList.add(getAccelerationAsValue(Value.VALUE_BY_NAME_ACTION_MOVE_ACCELERATION));
+		paramObject.answerPropertiesRequest(propertiesAsValueList);
+	
+	}
+	
+	
 }

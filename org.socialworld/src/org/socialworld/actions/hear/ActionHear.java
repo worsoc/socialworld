@@ -25,12 +25,14 @@ package org.socialworld.actions.hear;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.attributes.ActualTime;
+import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.conversation.PunctuationMark;
 import org.socialworld.conversation.Talk_SentenceType;
 import org.socialworld.core.EventByAction;
 import org.socialworld.core.EventType;
+import org.socialworld.core.IEventParam;
 import org.socialworld.objects.Human;
 import org.socialworld.objects.SimulationObject;
 
@@ -106,7 +108,7 @@ public class ActionHear extends AbstractAction {
 		EventByAction event;
 		EventType eventType;
 		
-		partner = (Human) getTarget();
+		partner = (Human) this.target;
 
 		switch (mode) {
 		case listenTo:
@@ -163,12 +165,33 @@ public class ActionHear extends AbstractAction {
 	public void setTarget(SimulationObject target) {
 		this.target = target;
 	}
-	
-	public SimulationObject getTarget() {
+
+	private SimulationObject getTarget() {
 		return this.target;
 	}
 	
-	public String getSentence() {
-		return sentence;
+	public Value getTargetAsValue(String valueName) {
+		return new Value(Type.simulationObject, valueName, this.target);
 	}
+	
+	public Value getSentenceAsValue(String valueName) {
+		return new Value(Type.string, valueName, this.sentence);
+	}
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    PROPERTY LIST  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public void requestPropertyList(IEventParam paramObject) {
+	
+		super.requestPropertyList(paramObject);
+		
+		ValueArrayList propertiesAsValueList = new ValueArrayList();
+		
+		propertiesAsValueList.add(getTargetAsValue(Value.VALUE_BY_NAME_ACTION_TARGET));
+		propertiesAsValueList.add(getSentenceAsValue(Value.VALUE_BY_NAME_ACTION_SENTENCE));
+		paramObject.answerPropertiesRequest(propertiesAsValueList);
+	
+	}
+	
 }

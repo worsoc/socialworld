@@ -21,12 +21,9 @@
 */
 package org.socialworld.actions.hear;
 
-import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionPerformer;
-import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
-import org.socialworld.objects.Human;
 
 /**
  * German:
@@ -56,10 +53,28 @@ public class Hear extends ActionPerformer {
 		
     protected final void choosePropertiesFromPropertyList(ValueArrayList properties) {
     	
-		for (int i = 0; i < properties.size(); i++) {
-			addProperty(properties.get(i));
-		}
-   	
+   	Value property;
+    	
+    	property = properties.getValue(Value.VALUE_BY_NAME_SIMOBJ_ATTRIBUTES);
+    	if (property.isValid()) {
+    		addProperty(property);
+    	}
+
+       	property = properties.getValue(Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_VIEW);
+    	if (property.isValid()) {
+    		addProperty(property);
+    	}
+
+      	property = properties.getValue(Value.VALUE_BY_NAME_ACTION_TARGET);
+    	if (property.isValid()) {
+    		addProperty(property);
+    	}
+
+      	property = properties.getValue(Value.VALUE_BY_NAME_ACTION_SENTENCE);
+    	if (property.isValid()) {
+    		addProperty(property);
+    	}
+
     }
    
 	/* (non-Javadoc)
@@ -69,39 +84,7 @@ public class Hear extends ActionPerformer {
 	public void perform() {
 		
 		if (!isValid()) {
-	 		ActionHear originalAction;
-			Human partner;
-			String sentence;
-			
-			originalAction = (ActionHear) getOriginalActionObject();
-			ActionMode mode = originalAction.getMode();
-			partner = (Human) originalAction.getTarget();
-			
-			switch (mode) {
-			case  listenTo:
-		
-				sentence = originalAction.getSentence();
-		
-				addParam( new Value(Type.simulationObject, "partner", partner));
-				addParam( new Value(Type.string, "sentence", sentence));
-				
-				setValid();
-				
-				break;
-					
-			case understand:
-	
-				sentence = originalAction.getSentence();
-				
-				addParam( new Value(Type.simulationObject, "partner", partner));
-				addParam( new Value(Type.string, "sentence", sentence));
-				
-				setValid();
-				
-				break;
-				
-			default:
-			}
+			setValid();
 		}
 	}
 	
