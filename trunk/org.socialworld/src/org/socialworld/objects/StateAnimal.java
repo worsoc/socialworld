@@ -21,6 +21,7 @@
 */
 package org.socialworld.objects;
 
+import org.socialworld.SocialWorld;
 import org.socialworld.actions.move.Path;
 import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.AttributeArray;
@@ -91,8 +92,12 @@ public class StateAnimal extends StateSimulationObject {
 	final void setAttributes(Value attributes, WriteAccessToAnimal guard) {
 
 		if (checkGuard(guard)) {
-//		System.out.println(getObject().getObjectID() + " : " +  attributes.getValue().toString());
+			
+			SocialWorld.showAttributeChanges(getObject().getObjectID(), (AttributeArray) attributes.getValue());
+
+			System.out.println(getObject().getObjectID() + " : " +  attributes.getValue().toString());
 			this.attributes.set(attributes);
+			
 		}
 	}
 	
