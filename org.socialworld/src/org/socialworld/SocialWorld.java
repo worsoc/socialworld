@@ -25,12 +25,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.socialworld.actions.AbstractAction;
+import org.socialworld.attributes.AttributeArray;
 import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.calculation.expressions.AttributeValue;
 import org.socialworld.core.Event;
 import org.socialworld.core.Simulation;
 import org.socialworld.data.FillWithTestData_ACM;
 import org.socialworld.data.FillWithTestData_Position;
+import org.socialworld.visualize.SimVisual;
 
 
 
@@ -46,6 +49,8 @@ public class SocialWorld  {
 	private static SocialWorld currentObject;
 
 	private static Simulation simulation;
+	
+	private static SimVisual visualizeSimulation;
 
 /*	private SocialWorld() {
 		super();
@@ -56,6 +61,9 @@ public class SocialWorld  {
 	
 	public static void main(String[] args)
 	{
+
+		visualizeSimulation = new SimVisual();
+		visualizeSimulation.show();
 
 //		AttributeValue value3 = AttributeValue.getInstance(3);
 //		AttributeValue value6 = AttributeValue.getInstance(6);
@@ -78,7 +86,17 @@ public class SocialWorld  {
 	}
 	
 	
+	public static void startAction(int objID, AbstractAction action) {
+		visualizeSimulation.startAction(objID, action);
+	}
 
+	public static void stopAction(int objID) {
+		visualizeSimulation.stopAction(objID);
+	}
+	
+	public static void showAttributeChanges(int objID, AttributeArray attributes) {
+		visualizeSimulation.setAttributes(objID, attributes);
+	}
 
 	public static SocialWorld getCurrent() {
 		if (currentObject == null) {

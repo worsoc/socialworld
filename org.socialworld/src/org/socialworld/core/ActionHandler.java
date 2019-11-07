@@ -30,9 +30,9 @@ import java.util.ListIterator;
 import java.lang.Math;
 
 import org.socialworld.objects.SimulationObject;
+import org.socialworld.SocialWorld;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionNothing;
-import org.socialworld.attributes.Time;
 
 /**
  * Manages the actions of an {@link SimulationObject}.
@@ -171,6 +171,7 @@ public class ActionHandler  {
 
 		if (secondsTillNextCalculation <= 0 || interrupt) {
 			
+			SocialWorld.startAction(object.getObjectID(), this.actualAction);
 			this.object.doAction(this.actualAction, 1000 * secondsSinceLastCalculation, this);
 			
 			secondsSinceLastCalculation = 0;
@@ -179,6 +180,7 @@ public class ActionHandler  {
 			// then assign it to the last executed action member
 			// and remove it from the list
 			if (this.actualAction.isDone() || interrupt) {
+				SocialWorld.stopAction(object.getObjectID());
 				this.lastExecutedAction = this.actualAction;
 				secondsTillNextCalculation = 0;
 				if (interrupt) {
