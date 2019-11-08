@@ -27,12 +27,14 @@ import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.ActualTime;
+import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.Vector;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.conversation.Talk_SentenceType;
 import org.socialworld.core.EventByAction;
 import org.socialworld.core.EventType;
+import org.socialworld.core.IEventParam;
 import org.socialworld.objects.Human;
 import org.socialworld.objects.SimulationObject;
 
@@ -155,13 +157,13 @@ public class ActionSay extends AbstractAction {
 				
 				switch (mode) {
 					case normal:
-						//sentence = 
+						sentence = "i love it.";
 						break;
 					case scream:
-						//sentence = 
+						sentence = "Help me.";
 						break;
 					case whisper:
-						//sentence = 
+						sentence = "That sucks.";
 						break;
 					default:
 						return;
@@ -242,15 +244,49 @@ public class ActionSay extends AbstractAction {
 		this.direction = direction;
 	}
 
-	public String getQuestion() {
-		return question;
+	String getQuestion() {
+		return this.question;
+	}
+	
+	public Value getQuestionAsValue(String valueName) {
+		return new Value(Type.string, valueName, this.question);
+	}
+
+	String getSentence() {
+		return this.sentence;
+	}
+	
+	public Value getSentenceAsValue(String valueName) {
+		return new Value(Type.string, valueName, this.sentence);
 	}
 	
 	public void setTarget(SimulationObject target) {
 		this.target = target;
 	}
 	
-	public SimulationObject getTarget() {
+	SimulationObject getTarget() {
 		return this.target;
 	}
+
+	public Value getTargetAsValue(String valueName) {
+		return new Value(Type.simulationObject, valueName, this.target);
+	}
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    PROPERTY LIST  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public void requestPropertyList(IEventParam paramObject) {
+	
+		super.requestPropertyList(paramObject);
+		
+		ValueArrayList propertiesAsValueList = new ValueArrayList();
+		
+		propertiesAsValueList.add(getTargetAsValue(Value.VALUE_BY_NAME_ACTION_TARGET));
+		propertiesAsValueList.add(getQuestionAsValue(Value.VALUE_BY_NAME_ACTION_QUESTION));
+		propertiesAsValueList.add(getSentenceAsValue(Value.VALUE_BY_NAME_ACTION_SENTENCE));
+		paramObject.answerPropertiesRequest(propertiesAsValueList);
+	
+	}
+	
 }

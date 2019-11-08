@@ -26,7 +26,6 @@ import org.socialworld.actions.ActionPerformer;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
-import org.socialworld.calculation.Vector;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.knowledge.Acquaintance;
 import org.socialworld.knowledge.Acquaintance_Attribute;
@@ -65,16 +64,46 @@ import org.socialworld.objects.Human;
  */
 public class Say extends ActionPerformer {
 
+	
     public Say (ActionSay action) {
     	super(action);
+    	
     }
 
     protected final void choosePropertiesFromPropertyList(ValueArrayList properties) {
     	
-		for (int i = 0; i < properties.size(); i++) {
-			addProperty(properties.get(i));
-		}
-   	
+    	Value property;
+    	
+    	property = properties.getValue(Value.VALUE_BY_NAME_SIMOBJ_ATTRIBUTES);
+    	if (property.isValid()) {
+    		addProperty(property);
+    	}
+
+       	property = properties.getValue(Value.VALUE_BY_NAME_ACTION_DIRECTION);
+    	if (property.isValid()) {
+    		addProperty(property);
+    	}
+
+      	property = properties.getValue(Value.VALUE_BY_NAME_ACTION_INTENSITY);
+    	if (property.isValid()) {
+    		addProperty(property);
+    	}
+
+    	property = properties.getValue(Value.VALUE_BY_NAME_ACTION_TARGET);
+    	if (property.isValid()) {
+    		addProperty(property);
+    	}
+
+      	property = properties.getValue(Value.VALUE_BY_NAME_ACTION_QUESTION);
+    	if (property.isValid()) {
+    		addProperty(property);
+    	}
+
+      	property = properties.getValue(Value.VALUE_BY_NAME_ACTION_SENTENCE);
+    	if (property.isValid()) {
+    		addProperty(property);
+    	}
+  	
     }
 
 	/* (non-Javadoc)
@@ -85,20 +114,17 @@ public class Say extends ActionPerformer {
 		
 		
 		if (!isValid()) {
+			
 	 		ActionSay originalAction;
 			Human actor;
 			Human partner;
 			ActionMode mode;
 			
-			Vector direction;
 			String question;
 			
 			originalAction = (ActionSay) getOriginalActionObject();
 			actor = (Human) originalAction.getActor();
 			mode = originalAction.getMode();
-			partner = (Human) originalAction.getTarget();
-	
-			direction = actor.getPosition().getDirectionTo(partner.getPosition());
 			
 			switch (mode) {
 				case answerNormal:
@@ -106,15 +132,30 @@ public class Say extends ActionPerformer {
 				case answerWhisper:
 					
 					AnswerProperties answer;
-				
-					question = originalAction.getQuestion();
+					
+					Value tmp;
+					tmp = getParam(Value.VALUE_BY_NAME_ACTION_QUESTION);
+					if (tmp.isValid()) {
+						question = (String) tmp.getValueCopy();
+					}
+					else {
+						question = originalAction.getQuestion();
+						setParam( new Value(Type.string, Value.VALUE_BY_NAME_ACTION_QUESTION, question));
+					}
 	
+					tmp = getParam(Value.VALUE_BY_NAME_ACTION_TARGET);
+					if (tmp.isValid()) {
+						partner = (Human) tmp.getValueCopy();
+					}
+					else {
+						partner = (Human) originalAction.getTarget();
+						setParam( new Value(Type.simulationObject, Value.VALUE_BY_NAME_ACTION_TARGET, partner ));
+					}
+
 					answer =  actor.getAnswerForQuestion(question);
 					manipulateAnswer(actor, answer, partner);
 		
-					addParam( new Value(Type.vector, "direction", direction));
-					addParam( new Value(Type.simulationObject, "partner", partner));
-					addParam( new Value(Type.answer, "answer", answer));
+					addParam( new Value(Type.answer, Value.VALUE_BY_NAME_ACTION_ANSWER, answer));
 					
 					setValid();
 					
@@ -123,15 +164,15 @@ public class Say extends ActionPerformer {
 				case askNormal:
 				case askScream:
 				case askWhisper:
-				
-					question = originalAction.getQuestion();
-
-					addParam( new Value(Type.vector, "direction", direction));
-					addParam( new Value(Type.simulationObject, "partner", partner));
-					addParam( new Value(Type.string, "question", question));
-					
+										
 					setValid();
-							
+
+				case normal:
+				case scream:
+				case whisper:
+										
+					setValid();
+					
 					break;
 					
 				default:
