@@ -292,7 +292,96 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 
 				break;
 				
+			case answerNormal:
+			case answerScream:
+			case answerWhisper:
+				
+				// direction
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_DIRECTION + ")", Value.VALUE_BY_NAME_ACTION_DIRECTION);
+				result.add( new FunctionByExpression(startExpression) );
+
+				// Target (Partner)
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_TARGET + ")", Value.VALUE_BY_NAME_ACTION_TARGET);
+				result.add( new FunctionByExpression(startExpression) );
+				
+				// Question
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_QUESTION + ")", Value.VALUE_BY_NAME_ACTION_QUESTION);
+				result.add( new FunctionByExpression(startExpression) );
+
+				break;
+				
+			case askNormal:
+			case askScream:
+			case askWhisper:
+	
+				// direction
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_DIRECTION + ")", Value.VALUE_BY_NAME_ACTION_DIRECTION);
+				result.add( new FunctionByExpression(startExpression) );
+
+				// Target (Partner)
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_TARGET + ")", Value.VALUE_BY_NAME_ACTION_TARGET);
+				result.add( new FunctionByExpression(startExpression) );
+				
+				// Question
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_QUESTION + ")", Value.VALUE_BY_NAME_ACTION_QUESTION);
+				result.add( new FunctionByExpression(startExpression) );
+				
+				break;
+			
+			case normal:
+				
+				// direction
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_DIRECTION + ")", Value.VALUE_BY_NAME_ACTION_DIRECTION);
+				result.add( new FunctionByExpression(startExpression) );
+
+				// Target (Partner)
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_TARGET + ")", Value.VALUE_BY_NAME_ACTION_TARGET);
+				result.add( new FunctionByExpression(startExpression) );
+				
+				// Sentence
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCE + ")", Value.VALUE_BY_NAME_ACTION_SENTENCE);
+				result.add( new FunctionByExpression(startExpression) );
+
+				break;
+				
+			case scream:
+				
+				// loudness
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_INTENSITY + ")", Value.VALUE_BY_NAME_ACTION_SAY_LOUDNESS);
+				result.add( new FunctionByExpression(startExpression) );
+
+				// direction
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_DIRECTION + ")", Value.VALUE_BY_NAME_ACTION_DIRECTION);
+				result.add( new FunctionByExpression(startExpression) );
+
+				// Target (Partner)
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_TARGET + ")", Value.VALUE_BY_NAME_ACTION_TARGET);
+				result.add( new FunctionByExpression(startExpression) );
+				
+				// Sentence
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCE + ")", Value.VALUE_BY_NAME_ACTION_SENTENCE);
+				result.add( new FunctionByExpression(startExpression) );
+
+				break;
+				
+			case whisper:
+	
+				// direction
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_DIRECTION + ")", Value.VALUE_BY_NAME_ACTION_DIRECTION);
+				result.add( new FunctionByExpression(startExpression) );
+
+				// Target (Partner)
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_TARGET + ")", Value.VALUE_BY_NAME_ACTION_TARGET);
+				result.add( new FunctionByExpression(startExpression) );
+				
+				// Sentence
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCE + ")", Value.VALUE_BY_NAME_ACTION_SENTENCE);
+				result.add( new FunctionByExpression(startExpression) );
+
+				break;
+				
 			default:
+				
 				break;
 				
 		}
