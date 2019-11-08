@@ -7,6 +7,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
@@ -98,7 +100,7 @@ public class SimVisual {
 		
 		frameActions = new JFrame();
 		frameActions.setTitle("Action");
-		frameActions.setBounds(100, 100, 600, 600);
+		frameActions.setBounds(100, 100, 500, 500);
 		frameActions.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		frameActions.getContentPane().setLayout(new GridLayout(1,1));
@@ -112,7 +114,6 @@ public class SimVisual {
 		for (int i = 0; i < 100; i++) {
 			objIDforRow[i] = i + 1;
 			attributeLines[i] = new JTextField("" + (i + 1));
-			//attributeLines[i].setText( "" + (i + 1));
 			panelAttributeList.add(attributeLines[i]);
 		}
 
@@ -124,9 +125,6 @@ public class SimVisual {
 		frameAttributes.getContentPane().setLayout(new GridLayout(1,1));
 		frameAttributes.getContentPane().add(panelAttributeList);
 		
-	//	buttonBorder = buttonReduceToChoosableTiles.getBorder();
-		
-
 	}
 	
 	
@@ -152,7 +150,11 @@ public class SimVisual {
 
 			
 		private void stopAction() {
+			Color color = this.getBackground();
+			Border thickBorder = new LineBorder(color, 4);
+			this.setBorder(thickBorder);
 			this.setBackground(Color.WHITE);
+			this.clear();
 		}
 		
 		private void startAction(AbstractAction action) {
@@ -165,16 +167,37 @@ public class SimVisual {
 			
 			switch (type) {
 			case sleep:
-				color = Color.GRAY;
+				color = Color.BLACK;
 				break;
 			case move:
 				color = Color.BLUE;
+				break;
+			case examine:
+				color = Color.YELLOW;
+				break;
+			case itemAndInventory:
+				color = Color.CYAN;
+				break;
+			case handleItem:
+				color = Color.GREEN;
+				break;
+			case touch:
+				color = Color.PINK;
 				break;
 			case punch:
 				color = Color.ORANGE;
 				break;
 			case useWeapon:
 				color = Color.RED;
+				break;
+			case hear:
+				color = Color.LIGHT_GRAY;
+				break;
+			case talk:
+				color = Color.GRAY;
+				break;
+			case say:
+				color = Color.DARK_GRAY;
 				break;
 			default:
 				color = Color.WHITE;
