@@ -69,11 +69,13 @@ public class EventMaster extends SocialWorldThread {
 	 */
 	private Event event;
 
+	private boolean isRelevantForEffectiveCheck;
+	
 	/**
-	 * the tangent of the angle that describes the range where the event has
+	 * the angle that describes the range where the event has
 	 * effects.
 	 */
-	private double tangentOfEffectAngle;
+	private double effectAngle;
 
 	
 	/**
@@ -121,13 +123,17 @@ public class EventMaster extends SocialWorldThread {
 		
 		while (isRunning()) {
 			
-			//System.out.println("EventMaster run()");
-
 			// calculating the next event from event queue
 			// !!! the sleepTime may change
 			
-			if (!blockedByAdd && !blockedByCalculate) calculateNextEvent();
-			
+			if (!blockedByAdd && !blockedByCalculate) {
+//				System.out.println("EventMaster.run(): Aufruf calculateNextEvent()");
+				calculateNextEvent();
+			}
+			else {
+//				System.out.println("EventMaster.run(): blockiert Aufruf calculateNextEvent()");
+				
+			}
 			
 			sleepTime = 50;
 			try {
@@ -165,11 +171,14 @@ public class EventMaster extends SocialWorldThread {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-
+		
+			
 			blockedByCalculate = true;
 			if ( loadEvent( event ) == true ) {
-				determineCandidates();
-				determineInfluence();
+				if (isRelevantForEffectiveCheck) {
+					determineCandidates();
+					determineInfluenceToCandidates();
+				}
 			}
 			blockedByCalculate = false;
 		}
@@ -192,7 +201,8 @@ public class EventMaster extends SocialWorldThread {
 			event.evaluateOptionalParam();
 		}
 		
-		tangentOfEffectAngle = Math.tan(Math.toRadians(event.getEffectAngle()));
+		isRelevantForEffectiveCheck = event.getEventType().isRelevantForEffectiveCheck();
+		effectAngle = event.getEffectAngle();
 		effectDistance = event.getEffectDistance();
 		eventPosition = event.getPosition();
 		eventDirection = event.getDirection();
@@ -209,23 +219,23 @@ public class EventMaster extends SocialWorldThread {
 	
 	private void determineCandidates() {
 		SimulationObject candidate;
-		int resultDecideEffective;
+		int ignoreCandidate;
 		
 
 		Simulation simulation = SocialWorld.getCurrent().getSimulation();
 		candidate = simulation.getFirstByPosition(this.eventPosition );
 		while (candidate != null) {
 			
-			// TODO resultDecideEffective = decideEffective(candidate);
-			resultDecideEffective = 1;
-			if ( resultDecideEffective == 1) 	candidates.add(candidate);
-			if ( resultDecideEffective < 0)
+			ignoreCandidate = checkIgnoreCandidate(candidate);
+			if ( ignoreCandidate == 0) 	candidates.add(candidate);
+			if ( ignoreCandidate < 0)
 				// exit loop
 				candidate = null;
 			else
 				// continue
 				candidate = simulation.getNextByPosition();
 		}
+
 	}
 
 	/**
@@ -235,30 +245,54 @@ public class EventMaster extends SocialWorldThread {
 	 * 
 	 * @param candidate
 	 *            a simulation object that may be affected by the event
-	 * @return 1 ... if the event may have effects to the candidate,
-	 * 			0 ... if the event has no effect to the candidate because of angle
-	 *          -1 ... if the event has no effect to the candidate because of distance
+	 * @return 0 ... DON'T IGNORE : if the event may have effects to the candidate,
+	 * 			1 ... IGNORE: if the event has no effect to the candidate because of angle
+	 * 			2 ... IGNORE: if the event position is the same to candidate position
+	 * 			3 ... IGNORE: if the event direction is the 0-vector (0,0,0) (and the effect angle is not 360°)
+	 *          -1 ... IGNORE: if the event has no effect to the candidate because of distance
 	 *                (and in consequence there are no further candidates with effect 
 	 *                	because they must have a greater distance than the actually treated candidate)
 	 *          	
 	 */
-	private int decideEffective(SimulationObject candidate) {
+	private int checkIgnoreCandidate(SimulationObject candidate) {
 		Position position;
 		Vector direction;
 		double distance;
-		double tangent;
-
+		double cosineBetweenDirections;
+		double angleBetweenDirectionsToRadians;
+		double effectAngleToRadians;
+		
 		position = candidate.getPosition();
 
-		distance = position.getDistance(this.eventPosition);
+		direction = position.getDirectionFrom(this.eventPosition);
+		distance = direction.length();
 
+		if (distance == 0) return 2;
+		
 		if (distance <= this.effectDistance) {
-			direction = position.getDirectionFrom(this.eventPosition);
-			tangent = direction.getTanPhi(this.eventDirection);
-			if (tangent <= this.tangentOfEffectAngle)
-				return 1;
-			else
+			
+			if (this.effectAngle > 180.0F) {
 				return 0;
+			}
+			else {
+				
+				if (this.eventDirection.is000()) {
+					return 3;
+				}
+				else {
+					effectAngleToRadians = Math.toRadians(this.effectAngle);
+					
+					cosineBetweenDirections = direction.getCosPhi(this.eventDirection);
+					angleBetweenDirectionsToRadians = Math.acos(cosineBetweenDirections);
+					
+					if (angleBetweenDirectionsToRadians <= effectAngleToRadians)
+						return 0;
+					else
+						return 1;
+				}
+				
+			}
+			
 		}
 		return -1;
 	}
@@ -266,7 +300,7 @@ public class EventMaster extends SocialWorldThread {
 	/**
 	 * The method lets all candidates calculate the event's effect.
 	 */
-	private void determineInfluence() {
+	private void determineInfluenceToCandidates() {
 		SimulationObject candidate;
 		ListIterator<SimulationObject> iterator;
 		
@@ -283,7 +317,7 @@ public class EventMaster extends SocialWorldThread {
 		// second iteration for creating the reaction
 		iterator = this.candidates.listIterator();
 		while (iterator.hasNext()) {
-			candidate = iterator.next();
+			candidate = iterator.next();			
 			candidate.reactToEvent(this.event);
 			iterator.remove();
 		}

@@ -33,7 +33,7 @@ import org.socialworld.core.EventType;
 
 public class EventReactionDescriptionPool extends DescriptionPool {
 
-	public static final int COUNT_FbE_TEST_ENTRIES = 2;		// Anzahl Testeintraege FunctionByExpression
+	public static final int COUNT_FbE_TEST_ENTRIES = 3;		// Anzahl Testeintraege FunctionByExpression
 	
 	private static EventReactionDescriptionPool instance;
 	
@@ -83,8 +83,10 @@ public class EventReactionDescriptionPool extends DescriptionPool {
 		for (int index = 0; index < sizeDescriptionsArray; index++) {
 			
 			description = new EventReactionDescription();
-			description.addFunctionCreateReaction(expressions[0]);
-			description.addFunctionCreateReaction(expressions[1]);
+			
+			for (int i = 0; i < COUNT_FbE_TEST_ENTRIES; i++) {
+				description.addFunctionCreateReaction(expressions[i]);
+			}
 			
 			descriptions[index] = description;
 	
@@ -101,13 +103,20 @@ public class EventReactionDescriptionPool extends DescriptionPool {
 		List<String> lines;
 		Expression startExpression = Nothing.getInstance();
 
-		lines = new ArrayList<String>(1);
-		lines.add("WENN 3 velocity > 10 & mood >= 50 DANN <ACTIONTYPE><Const>7</Const></ACTIONTYPE><ACTIONMODE><Const>74</Const></ACTIONMODE><MINTIME><Now+N>10000</Now+N></MINTIME><MAXTIME><Now+N>100000</Now+N></MAXTIME><PRIORITY><Const>160</Const></PRIORITY><INTENSITY><MX+N>8;1.3;23</MX+N></INTENSITY><DURATION><Const>2000</Const></DURATION>");
-		expressions.add(lines);
 		
 		lines = new ArrayList<String>(1);
-		lines.add("WENN 3 acceleration > 11 & mood < 50 DANN <ACTIONTYPE><Const>6</Const></ACTIONTYPE><ACTIONMODE><Const>67</Const></ACTIONMODE><MINTIME><Now+N>10000</Now+N></MINTIME><MAXTIME><Now+N>100000</Now+N></MAXTIME><PRIORITY><Const>165</Const></PRIORITY><INTENSITY><MX+N>8;1.5;0</MX+N></INTENSITY><DURATION><Const>2000</Const></DURATION>");
+		lines.add("WENN 3 velocity > 11 & mood >= 60 & mood < 90 DANN <ACTIONTYPE><Const>6</Const></ACTIONTYPE><ACTIONMODE><Const>67</Const></ACTIONMODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>10000</Now+N></MAXTIME><PRIORITY><Const>155</Const></PRIORITY><INTENSITY><MX+N>8;1.5;0</MX+N></INTENSITY><DURATION><Const>2000</Const></DURATION>");
 		expressions.add(lines);
+
+		lines = new ArrayList<String>(1);
+		lines.add("WENN 3 velocity > 0 & mood >= 45 & mood < 60 DANN <ACTIONTYPE><Const>7</Const></ACTIONTYPE><ACTIONMODE><Const>74</Const></ACTIONMODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>10000</Now+N></MAXTIME><PRIORITY><Const>162</Const></PRIORITY><INTENSITY><MX+N>8;0.1;0</MX+N></INTENSITY><DURATION><Const>2000</Const></DURATION>");
+		expressions.add(lines);
+
+		lines = new ArrayList<String>(1);
+		lines.add("WENN 3 loudness > 10 & mood >= 30 & mood < 45 DANN <ACTIONTYPE><Const>3</Const></ACTIONTYPE><ACTIONMODE><Const>31</Const></ACTIONMODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>10000</Now+N></MAXTIME><PRIORITY><Const>160</Const></PRIORITY><INTENSITY><MX+N>8;1.3;23</MX+N></INTENSITY><DURATION><Const>2000</Const></DURATION>");
+		expressions.add(lines);
+
+		
 
 		for (int i = 0; i <  expressionsCount; i++) {
 			

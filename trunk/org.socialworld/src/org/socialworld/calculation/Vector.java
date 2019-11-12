@@ -71,9 +71,11 @@ public class Vector {
 		
 		values = tmp.split(",");
 		
-		this.x = Float.parseFloat(values[0]);
-		this.y = Float.parseFloat(values[1]);
-		this.z = Float.parseFloat(values[2]);
+		if (values.length == 3) {
+			this.x = Float.parseFloat(values[0]);
+			this.y = Float.parseFloat(values[1]);
+			this.z = Float.parseFloat(values[2]);
+		}
 	}
 	
 	public void normalize() {
@@ -248,6 +250,10 @@ public class Vector {
 
 	public boolean equals(Vector b) {
 		return (x == b.getX() & y == b.getY() & z == b.getZ() );
+	}
+	
+	public boolean is000() {
+		return (x == 0 & y == 0 & z == 0);
 	}
 	
 	@Override

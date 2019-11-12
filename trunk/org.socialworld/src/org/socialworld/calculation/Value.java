@@ -126,6 +126,10 @@ public class Value {
 		if (this.name.length() == 0) this.name = name;
 	}
 	
+	void changeName(String name) {
+		this.name = name;
+	}
+	
 	public Type getType() { return type; };
 
 	public String getName() { return name; };

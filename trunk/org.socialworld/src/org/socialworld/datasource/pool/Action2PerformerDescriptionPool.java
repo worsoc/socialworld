@@ -102,10 +102,10 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 			case swim:
 			case fly:
 				
-				// directionAction
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_DIRECTION + ")", Value.VALUE_BY_NAME_ACTION_DIRECTION );
+				// directionEvent
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_DIRECTION + ")", Value.VALUE_BY_NAME_EVENT_DIRECTION );
 				result.add( new FunctionByExpression(startExpression) );
-	
+
 				// acceleration
 				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_MOVE_ACCELERATION + ")", Value.VALUE_BY_NAME_ACTION_MOVE_ACCELERATION);
 				result.add( new FunctionByExpression(startExpression) );
@@ -122,8 +122,8 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 			case hand:
 			case foot:
 	
-				// directionAction
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_DIRECTION + ")", Value.VALUE_BY_NAME_ACTION_DIRECTION );
+				// directionEvent
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_DIRECTION + ")", Value.VALUE_BY_NAME_EVENT_DIRECTION );
 				result.add( new FunctionByExpression(startExpression) );
 	
 				// actorsIntensity
@@ -142,8 +142,8 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 			case pull:
 			case push:
 				
-				// directionAction
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_DIRECTION + ")", Value.VALUE_BY_NAME_ACTION_DIRECTION );
+				// directionEvent
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_DIRECTION + ")", Value.VALUE_BY_NAME_EVENT_DIRECTION );
 				result.add( new FunctionByExpression(startExpression) );
 
 				// actorsIntensity
@@ -166,8 +166,8 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 			case useItemLeftHand:
 			case useItemRightHand:
 
-				// directionAction
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_DIRECTION + ")", Value.VALUE_BY_NAME_ACTION_DIRECTION );
+				// directionEvent
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_DIRECTION + ")", Value.VALUE_BY_NAME_EVENT_DIRECTION );
 				result.add( new FunctionByExpression(startExpression) );
 
 				// actorsIntensity
@@ -191,8 +191,8 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 			case combineItems_AddRightToLeft:
 			case combineItems_AddLeftToRight:
 				
-				// directionAction
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_DIRECTION + ")", Value.VALUE_BY_NAME_ACTION_DIRECTION );
+				// directionEvent
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_DIRECTION + ")", Value.VALUE_BY_NAME_EVENT_DIRECTION );
 				result.add( new FunctionByExpression(startExpression) );
 
 				// actorsIntensity
@@ -296,8 +296,8 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 			case answerScream:
 			case answerWhisper:
 				
-				// direction
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_DIRECTION + ")", Value.VALUE_BY_NAME_ACTION_DIRECTION);
+				// directionEvent
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_DIRECTION + ")", Value.VALUE_BY_NAME_EVENT_DIRECTION );
 				result.add( new FunctionByExpression(startExpression) );
 
 				// Target (Partner)
@@ -314,8 +314,8 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 			case askScream:
 			case askWhisper:
 	
-				// direction
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_DIRECTION + ")", Value.VALUE_BY_NAME_ACTION_DIRECTION);
+				// directionEvent
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_DIRECTION + ")", Value.VALUE_BY_NAME_EVENT_DIRECTION );
 				result.add( new FunctionByExpression(startExpression) );
 
 				// Target (Partner)
@@ -330,8 +330,8 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 			
 			case normal:
 				
-				// direction
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_DIRECTION + ")", Value.VALUE_BY_NAME_ACTION_DIRECTION);
+				// directionEvent
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_DIRECTION + ")", Value.VALUE_BY_NAME_EVENT_DIRECTION );
 				result.add( new FunctionByExpression(startExpression) );
 
 				// Target (Partner)
@@ -350,8 +350,8 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_INTENSITY + ")", Value.VALUE_BY_NAME_ACTION_SAY_LOUDNESS);
 				result.add( new FunctionByExpression(startExpression) );
 
-				// direction
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_DIRECTION + ")", Value.VALUE_BY_NAME_ACTION_DIRECTION);
+				// directionEvent
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_DIRECTION + ")", Value.VALUE_BY_NAME_EVENT_DIRECTION );
 				result.add( new FunctionByExpression(startExpression) );
 
 				// Target (Partner)
@@ -366,8 +366,8 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				
 			case whisper:
 	
-				// direction
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_DIRECTION + ")", Value.VALUE_BY_NAME_ACTION_DIRECTION);
+				// directionEvent
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_DIRECTION + ")", Value.VALUE_BY_NAME_EVENT_DIRECTION );
 				result.add( new FunctionByExpression(startExpression) );
 
 				// Target (Partner)

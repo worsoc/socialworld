@@ -61,6 +61,8 @@ public class Junction extends Expression {
 		
 		junction.setExpression1(junctionParts[index]);
 		
+		junction.setValid();
+		
 		return junction;
 		
 	}

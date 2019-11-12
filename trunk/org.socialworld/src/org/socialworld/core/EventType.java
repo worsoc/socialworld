@@ -114,31 +114,151 @@ public enum EventType {
 		return index;
 	}
 
-	
+	public boolean isRelevantForEffectiveCheck() {
+		
+		if (this.index > 127) return false;
+		if (this.index < 8) return false;
+		if (this.index >= 16 & this.index < 24) return false;
+
+		return true;
+		
+	}
 	
 	public float getEffectDistance() {
 		switch (this) {
-		case touchByHand:
-			return 100.0F;
+		// TODO getEffectDistance()
+		case moveWalk: return 9000.0F;
+		case moveRun: return 10000.0F;
+		case moveSneak: return 1000.0F; 
+		case moveJump: return 3000.0F;
+		case moveSwim: return 3000.0F;
+		case moveFly:  return 5000.0F;
+			
+		case touchByHand: return 1000.0F; 
+		case touchByFoot: return 1000.0F; 
+				
+		case inventoryTake:
+		case inventoryCollect:
+		case inventoryDrop:
+		case inventorySwitch:
+			return 1000.0F;
+			
+		case handleItemUse2: 
+		case handleItemUseLeft:
+		case handleItemUseRight:
+		case handleItemAddRtoL:
+		case handleItemAddLtoR:
+		case handleItemPull:
+		case handleItemPush:
+			return 1000.0F; 
+			
 		case weaponLeftStab:
-			return 100.0F;
+		case weaponLeftStroke:
+		case weaponLeftBackhand:
 		case weaponRightStab:
-			return 100.0F;
-		default:
+		case weaponRightStroke:
+		case weaponRightBackhand:
+		case weaponClub:
+			return 2000.0F; 
+			
+		case punchLeftFistStraight:
+		case punchLeftFistSideways:
+		case punchLeftFistUpward:
+		case punchRightFistStraight:
+		case punchRightFistSideways:
+		case punchRightFistUpward:
+			return 1000.0F; 
+			
+		case listenToStatement:
+		case listenToQuestion:
+		case listenToInstruction:
+		case understand:
 			return 10000.0F;
+			
+		case askNormal: return 10000.0F; 
+		case askScream: return 100000.0F; 
+		case askWhisper: return 1000.0F; 
+		case answerNormal: return 10000.0F; 
+		case answerScream: return 100000.0F; 
+		case answerWhisper: return 1000.0F; 
+					
+		case sayNormal: return 10000.0F; 
+		case sayScream: return 100000.0F; 
+		case sayWhisper: return 1000.0F; 
+
+		default:
+			return 1000000.0F;
 		}
 	}
 
 	public float getEffectAngle() {
 		switch (this) {
-		case touchByHand:
+		
+		case moveWalk:
+		case moveRun:
+		case moveSneak:
+		case moveJump:
+		case moveSwim:
+		case moveFly:
 			return 45.0F;
-		case weaponLeftStab:
+			
+		case touchByHand: 
+		case touchByFoot:
 			return 45.0F;
-		case weaponRightStab:
-			return 45.0F;
-		default:
+
+		case inventoryTake:
+		case inventoryCollect:
+		case inventoryDrop:
+		case inventorySwitch:
 			return 360.0F;
+			
+		case handleItemUse2:
+		case handleItemUseLeft:
+		case handleItemUseRight:
+		case handleItemAddRtoL:
+		case handleItemAddLtoR:
+		case handleItemPull:
+		case handleItemPush:
+			return 360.0F;
+
+		case weaponLeftStab:
+		case weaponLeftStroke:
+		case weaponLeftBackhand:
+		case weaponRightStab:
+		case weaponRightStroke:
+		case weaponRightBackhand:
+		case weaponClub:
+			return 45.0F;
+
+		case punchLeftFistStraight:
+		case punchLeftFistSideways:
+		case punchLeftFistUpward:
+		case punchRightFistStraight:
+		case punchRightFistSideways:
+		case punchRightFistUpward:
+			return 45.0F;
+				
+		case listenToStatement:
+		case listenToQuestion:
+		case listenToInstruction:
+		case understand:
+			return 360.0F;
+		
+		case askNormal:
+		case askScream:
+		case askWhisper:
+		case answerNormal:
+		case answerScream:
+		case answerWhisper:
+			return 360.0F;
+					
+		case sayNormal:
+		case sayScream:
+		case sayWhisper:
+			return 360.0F;
+		
+		default:
+			return 0.0F;
 		}
 	}
 	

@@ -153,6 +153,11 @@ public class ActionMove extends AbstractAction {
 		EventByAction event;
 		event = new EventByAction( getEventType(mode),    actor /* as causer*/,  ActualTime.asTime(),
 					actor.getPosition(),  move /* as performer */);
+
+		// TODO wieder weg weil nur Debuggen
+		//System.out.println("ActionMaster.perform(): event type " +  event.getEventType().toString() + " - acceleration: " + this.move.getAcceleration());
+
+		
 		addEvent(event);
 		
 	}
