@@ -269,7 +269,7 @@ public class Expression {
 					tmp = expression3.evaluate(arguments);
 					if (this.value != null) {
 						if (this.value.getName().length() > 0) {
-							tmp.setName(this.value.getName());
+							tmp.changeName(this.value.getName());
 						}
 					}
 					return tmp;
@@ -283,7 +283,11 @@ public class Expression {
 							tmp.setName(name);
 						}
 						arguments.set(index, tmp);
-					}	
+					}
+					else {
+						tmp.setName(name);
+						arguments.add(tmp);
+					}
 					return tmp;
 				
 				case create:

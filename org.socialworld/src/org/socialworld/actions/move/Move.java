@@ -127,6 +127,7 @@ public class Move extends ActionPerformer {
 				
 		this.remainedDistance = this.remainedDistance - this.velocity;
 		
+		setValid();
 	} 
 	
 	

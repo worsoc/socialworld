@@ -55,7 +55,7 @@ public class Event_Percipience {
 	 * @return the maxDistance (the distance where the event is able to be
 	 *         perceived)
 	 */
-	public float get_MaxDistance() {
+	public float getMaxDistance() {
 		return maxDistance;
 	}
 
@@ -128,7 +128,7 @@ public class Event_Percipience {
 	}
 
 	private void setDistancesOfNotice( ) {
-		this. maxDistance = 100;
+		this.maxDistance = 100;
 		this.maxSee = 100;
 		this.maxHear = 100;
 		this.maxSmell = 2;

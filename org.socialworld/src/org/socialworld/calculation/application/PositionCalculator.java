@@ -69,15 +69,9 @@ public class PositionCalculator extends SocialWorldThread {
 	}
 	
 	public void run() {
-		int i=0;
+
 		while (isRunning()) {
 			
-			i++;
-			if (i < 1000) {
-				Scheduler.getInstance().setThreadName("Position ");
-				Scheduler.getInstance().increment();
-			}
-
 			calculatePositionChangedByEvent();
 			
 			try {

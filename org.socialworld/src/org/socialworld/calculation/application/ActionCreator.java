@@ -61,6 +61,9 @@ public class ActionCreator extends SocialWorldThread {
 	
 	private static String namePropertyActionType = "actiontype";
 	
+	private int sleepTime = 10;
+	private int sizeThreashold;
+	
 	/**
 	 * private Constructor. 
 	 */
@@ -77,6 +80,7 @@ public class ActionCreator extends SocialWorldThread {
 		actionPropertyNames = ActionType.getStandardPropertyNames();
 		namePropertyActionType = actionPropertyNames[0];
 
+		sizeThreashold = (int) 1000 / sleepTime;
 	}
 
 	public static ActionCreator getInstance() {
@@ -87,21 +91,14 @@ public class ActionCreator extends SocialWorldThread {
 	}
 	
 	public void run() {
-		int i=0;
+
 		while (isRunning()) {
-			
-			i++;
-			if (i < 1000) {
-				Scheduler.getInstance().setThreadName("Action ");
-				Scheduler.getInstance().increment();
-			}
-			
 			
 			calculateReaction();
 			calculateAction();
 			
 			try {
-				sleep(20);
+				sleep(sleepTime);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -111,14 +108,18 @@ public class ActionCreator extends SocialWorldThread {
 	
 	
 	final void  createReaction( final Event event,	final StateSimulationObject stateSimObj,	final HiddenSimulationObject hiddenSimObj) {
-		this.events.add(event);
-		this.statesReactor.add(stateSimObj);
-		this.hiddenReactors.add(hiddenSimObj);
+		if (event != null && stateSimObj != null && hiddenSimObj != null) {
+			this.events.add(event);
+			this.statesReactor.add(stateSimObj);
+			this.hiddenReactors.add(hiddenSimObj);
+		}
 	}
 	
 	final void createAction(	final StateSimulationObject stateSimObj, final HiddenSimulationObject hiddenSimObj) {
-		this.statesActor.add(stateSimObj);
-		this.hiddenActors.add(hiddenSimObj);
+		if (stateSimObj != null && hiddenSimObj != null) {
+			this.statesActor.add(stateSimObj);
+			this.hiddenActors.add(hiddenSimObj);
+		}
 	}
 
 	/**
@@ -127,12 +128,22 @@ public class ActionCreator extends SocialWorldThread {
 	 * 
 	 */
 	private void calculateReaction() {
-	
-		if (this.hiddenReactors.size() == 0) return;
+
+		// TODO fuer Debuggen
+		/*
+		if (this.events.size() > sizeThreashold) {
+			System.out.println("ActionCreator.calculateReaction(): this.events.size() " + this.events.size());
+		}
+		*/
+		
+		if ((this.events.size() == 0) ||
+			(this.statesReactor.size() == 0) ||
+			(this.hiddenReactors.size() == 0))  return;
 		
 		Event event = this.events.remove(0);
 		StateSimulationObject stateReactor  = this.statesReactor.remove(0);
 		HiddenSimulationObject hiddenReactor = this.hiddenReactors.remove(0);
+	
 		
 		int eventType = event.getEventTypeAsInt();
 		int eventReactionType = stateReactor.getReactionType(eventType);
@@ -148,14 +159,15 @@ public class ActionCreator extends SocialWorldThread {
 		{
 			f_CreateReaction = eventReactionDescription.getFunctionCreateAction(index);
 			
-			if (stateReactor instanceof StateAnimal) 
+			if (stateReactor instanceof StateAnimal) {
 				reaction = createAnimalReaction(event, (StateAnimal) stateReactor, f_CreateReaction);
+			}
 			else
 				reaction = createNoAnimalReaction(event, stateReactor);
 				
 			if (reaction != null) {
 				if (!reaction.isToBeIgnored())	{
-					System.out.println("ActionCreator.calculateReaction(): " + reaction.getType().toString());
+					System.out.println("ActionCreator.calculateReaction(): Obj: " + stateReactor.getObjectID() + ": " + reaction.getType().toString() +  "." + reaction.getMode().toString());
 					hiddenReactor.setAction(reaction);
 				}
 			}
@@ -169,7 +181,8 @@ public class ActionCreator extends SocialWorldThread {
 	 */
 	private void calculateAction() {
 		
-		if (this.hiddenActors.size() == 0) return;
+		if ((this.statesActor.size() == 0) ||
+				(this.hiddenActors.size() == 0))  return;
 
 		HiddenSimulationObject hiddenActor = this.hiddenActors.remove(0);
 		StateSimulationObject stateActor  = this.statesActor.remove(0);
@@ -193,7 +206,7 @@ public class ActionCreator extends SocialWorldThread {
 			
 			if (!action.isToBeIgnored()) {	
 				
-				System.out.println("ActionCreator.calculateAction(): " + action.getType().toString());
+				System.out.println("ActionCreator.calculateAction(): " + action.getType().toString() +  "." + action.getMode().toString());
 				hiddenActor.setAction(action);
 			}
 		}

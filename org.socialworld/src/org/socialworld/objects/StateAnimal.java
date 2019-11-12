@@ -95,7 +95,6 @@ public class StateAnimal extends StateSimulationObject {
 			
 			SocialWorld.showAttributeChanges(getObject().getObjectID(), (AttributeArray) attributes.getValue());
 
-			System.out.println(getObject().getObjectID() + " : " +  attributes.getValue().toString());
 			this.attributes.set(attributes);
 			
 		}

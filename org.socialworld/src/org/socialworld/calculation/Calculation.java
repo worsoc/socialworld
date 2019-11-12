@@ -101,6 +101,9 @@ public class Calculation {
 			else if (value instanceof Long)		created = new Value(type, new Time(false,(Long) value));
 			else created = new Value(type, value);
 			break;
+		case vector:
+			created = new Value(type, value);
+			break;
 		default: 
 			created = new Value(type, value);
 		}

@@ -68,15 +68,9 @@ public class TalkCalculator  extends SocialWorldThread {
 	}
 	
 	public void run() {
-		int i=0;
+
 		while (isRunning()) {
 			
-			i++;
-			if (i < 1000) {
-				Scheduler.getInstance().setThreadName("Talk ");
-				Scheduler.getInstance().increment();
-			}
-
 			calculateTalkChangedByEvent();
 			
 			try {

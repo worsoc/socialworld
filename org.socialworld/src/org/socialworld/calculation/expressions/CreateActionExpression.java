@@ -27,6 +27,7 @@ import org.socialworld.actions.ActionType;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
 import org.socialworld.calculation.Type;
+import org.socialworld.calculation.Vector;
 import org.socialworld.datasource.parsing.ParseExpressionStrings;
 
 public class CreateActionExpression extends Branching {
@@ -161,12 +162,27 @@ public class CreateActionExpression extends Branching {
 		case  "intensity": type = Type.floatingpoint; break;
 		case  "priority": type = Type.integer; break;
 		case  "duration": type = Type.longinteger; break;
+		case  "direction": type = Type.vector; break;
 		default: type = Type.nothing;
 		}
 		
 		switch (function[0]) {
 		case "Const":
-			result = new Constant(calculation.createValue(type,  Float.parseFloat(function[1] ))); break;
+			switch (type) {
+			case actionType:
+			case actionMode:
+			case integer:
+			case floatingpoint:
+			case longinteger:
+				result = new Constant(calculation.createValue(type,  Float.parseFloat(function[1] )));
+				break;
+			case vector:
+				result = new Constant(calculation.createValue(type,  new Vector(function[1]) ));
+				break;
+			default:
+				break;
+			}
+			break;
 		case "Table":		result = new TableLookup(function[1]);  break;
 		case "VSPE":		result = new VectorScalarProduct(function[1]);  break;
 		case "MX+N":		result = new MXPlusN(function[1]);  break;

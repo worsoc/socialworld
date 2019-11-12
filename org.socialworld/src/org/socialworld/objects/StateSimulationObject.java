@@ -77,6 +77,10 @@ public class StateSimulationObject extends ListenedBase {
 		return object;
 	}
 	
+	final public int getObjectID() {
+		return object.getObjectID();
+	}
+	
 	final void setWriteAccess(WriteAccessToSimulationObject guard) {
 		if (this.guard == null)  this.guard = guard;
 	}

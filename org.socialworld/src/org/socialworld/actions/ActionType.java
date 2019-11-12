@@ -88,7 +88,7 @@ public enum ActionType {
 	private static String[] FURTHER_PROPERTY_NAMES___SLEEP = {};
 	private static String[] FURTHER_PROPERTY_NAMES___MOVE = {"endposition","direction"};
 	private static String[] FURTHER_PROPERTY_NAMES___EXAMINE = {"target"};
-	private static String[] FURTHER_PROPERTY_NAMES___TOUCH = {"target"};
+	private static String[] FURTHER_PROPERTY_NAMES___TOUCH = {"target","direction"};
 	private static String[] FURTHER_PROPERTY_NAMES___ITEMANDINVENTORY = {"target"};
 	private static String[] FURTHER_PROPERTY_NAMES___HANDLEITEM = {"target","direction"};
 	private static String[] FURTHER_PROPERTY_NAMES___USEWEAPON = {"target"};

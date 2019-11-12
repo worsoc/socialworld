@@ -31,23 +31,6 @@ import org.socialworld.objects.access.HiddenSimulationObject;
 
 public class Scheduler{
 
-	////////////////////////////
-	// TODO irgendwann wieder raus
-	//just for testing
-	private int number = 0;
-	private String myThread = "HelloWorld" ;
-	public void increment() {
-		number++;
-		show();
-	}
-	public void setThreadName(String name) {
-		myThread = name;
-	}
-	private void show() {
-		//System.out.println(number + " " + myThread);
-	}
-	//////////////////////////////
-	
 	private static Scheduler instance;
 	
 	boolean isRunning = false;

@@ -82,15 +82,9 @@ public  class AttributeCalculator extends SocialWorldThread {
 	}
 	
 	public void run() {
-		int i=0;
+
 		while (isRunning()) {
 			
-			i++;
-			if (i < 1000) {
-				Scheduler.getInstance().setThreadName("Attributes ");
-				Scheduler.getInstance().increment();
-			}
-
 			calculateAttributesChangedByEvent();
 			calculateAttributesChangedByComplexMatrix();
 			calculateAttributesChangedBySimpleMatrix();
@@ -105,14 +99,18 @@ public  class AttributeCalculator extends SocialWorldThread {
 	}
 	
 	final void calculateAttributesChangedByEvent(Event event, StateAnimal stateAnimal, HiddenAnimal hiddenWriteAccess) {
-		this.events.add(event);
-		this.states4Influence.add(stateAnimal);
-		this.hiddenAnimals4Influence.add( hiddenWriteAccess);
+		if (event != null && stateAnimal != null && hiddenWriteAccess != null) {
+			this.events.add(event);
+			this.states4Influence.add(stateAnimal);
+			this.hiddenAnimals4Influence.add( hiddenWriteAccess);
+		}
 	}
 
 	final void calculateAttributesChangedByComplexMatrix(StateAnimal stateAnimal, HiddenAnimal hiddenWriteAccess) {
-		this.states4Change.add(stateAnimal);
-		this.hiddenAnimals4Change.add( hiddenWriteAccess);
+		if (stateAnimal != null && hiddenWriteAccess != null) {
+			this.states4Change.add(stateAnimal);
+			this.hiddenAnimals4Change.add( hiddenWriteAccess);
+		}
 	}
 	
 	final void calculateAttributesChangedBySimpleMatrix(StateAnimal stateAnimal, HiddenAnimal hiddenWriteAccess) {
@@ -122,7 +120,12 @@ public  class AttributeCalculator extends SocialWorldThread {
 	
 	private final int calculateAttributesChangedByEvent() {
 		
-		if (this.hiddenAnimals4Influence.size() == 0) return ATTRIBUTE_CALCULATOR_RETURNS_EMPTY_LISTS;
+		if ((this.events.size() == 0) || 
+			(this.states4Influence.size() == 0) ||
+			(this.hiddenAnimals4Influence.size() == 0)) 
+		{
+			return ATTRIBUTE_CALCULATOR_RETURNS_EMPTY_LISTS;
+		}
 		
 		Event event = this.events.remove(0);
 		StateAnimal stateAnimal  = this.states4Influence.remove(0);
@@ -187,8 +190,6 @@ public  class AttributeCalculator extends SocialWorldThread {
 				newAttributes.setTransferCode(ValueTransferCode.noChanges);
 			}
 			else {
-				System.out.println("AttributeCalculator.calculateAttributesChangedByEvent() vorher: " + oldAttributes.getValue().toString());
-				System.out.println("AttributeCalculator.calculateAttributesChangedByEvent() nachher: " +  newAttributes.getValue().toString());
 			}
 			return newAttributes;
 		}
@@ -238,8 +239,6 @@ public  class AttributeCalculator extends SocialWorldThread {
 				newAttributes.setTransferCode(ValueTransferCode.noChanges);
 			}
 			else {
-				System.out.println("AttributeCalculator.calculateAttributesChangedByComplexMatrix() vorher: " + oldAttributes.getValue().toString());
-				System.out.println("AttributeCalculator.calculateAttributesChangedByComplexMatrix() nachher: " +  newAttributes.getValue().toString());
 			}
 			return newAttributes;
 		}
@@ -290,8 +289,6 @@ public  class AttributeCalculator extends SocialWorldThread {
 				newAttributes.setTransferCode(ValueTransferCode.noChanges);
 			}
 			else {
-				System.out.println("AttributeCalculator.calculateAttributesChangedBySimpleMatrix() vorher: " + oldAttributes.getValue().toString());
-				System.out.println("AttributeCalculator.calculateAttributesChangedBySimpleMatrix() nachher: " +  newAttributes.getValue().toString());
 			}
 			return newAttributes;
 		}
