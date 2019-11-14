@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.ListIterator;
 
 import org.socialworld.actions.attack.IWeapon;
-import org.socialworld.attributes.Inventory;
+import org.socialworld.actions.handle.Inventory;
 import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.conversation.Talk;
 import org.socialworld.conversation.Talk_SentenceType;

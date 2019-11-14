@@ -34,7 +34,7 @@ public enum EventType {
 	
 	nothing(0),
 	
-	sleepCaused(1),	sleepIntentioned(2),
+	sleep(1), drink(2), eat(3), piss(4), shit(5), 	
 	
 	moveWalk(8), moveRun(9), moveSneak(10), moveJump(11), moveSwim(12), moveFly(13),
 	
@@ -42,7 +42,7 @@ public enum EventType {
 	
 	touchByHand(24), touchByFoot(25),
 	
-	inventoryTake(32), inventoryCollect(33), inventoryDrop(34), inventorySwitch(35),
+	inventoryTake(32), inventoryCollect(33), inventoryDrop(34), inventorySwitch(35), inventoryPut(36),
 	
 	handleItemUse2(40), handleItemUseLeft(41), handleItemUseRight(42), handleItemAddRtoL(43), handleItemAddLtoR(44), handleItemPull(45), handleItemPush(46),
 	
@@ -60,27 +60,27 @@ public enum EventType {
 //EventSelfByAction	
 //////////////////////////
 
-	selfSleepCaused(129),	selfSleepIntentioned(130),
+	selfSleep(129), selfDrink(130), selfEat(131), selfPiss(132), selfShit(133), 	
 	
-	selfmoveWalk(136), selfmoveRun(137), selfmoveSneak(138), selfmoveJump(139), selfmoveSwim(140), selfmoveFly(141),
+	selfMoveWalk(136), selfMoveRun(137), selfMoveSneak(138), selfMoveJump(139), selfMoveSwim(140), selfMoveFly(141),
 	
-	selfexamineByLook(144), selfexamineBySmell(145), selfexamineByTaste(146), selfexamineByTouch(147),
+	selfExamineByLook(144), selfExamineBySmell(145), selfExamineByTaste(146), selfExamineByTouch(147),
 	
-	selftouchByHand(152), selftouchByFoot(153),
+	selfTouchByHand(152), selfTouchByFoot(153),
 	
-	selfinventoryTake(160), selfinventoryCollect(161), selfinventoryDrop(162), selfinventorySwitch(163),
+	selfInventoryTake(160), selfInventoryCollect(161), selfInventoryDrop(162), selfInventorySwitch(163), selfInventoryPut(164),
 	
-	selfhandleItemUse2(168), selfhandleItemUseLeft(169), selfhandleItemUseRight(170), selfhandleItemAddRtoL(171), selfhandleItemAddLtoR(172), selfhandleItemPull(173),selfHandleItemPush(174),
+	selfHandleItemUse2(168), selfHandleItemUseLeft(169), selfHandleItemUseRight(170), selfHandleItemAddRtoL(171), selfHandleItemAddLtoR(172), selfHandleItemPull(173),selfHandleItemPush(174),
 	
 	selfWeaponLeftStab(176), selfWeaponLeftStroke(177), selfWeaponLeftBackhand(178), selfWeaponRightStab(179), selfWeaponRightStroke(180), selfWeaponRightBackhand(181), selfWeaponClub(182),
 
 	selfPunchLeftFistStraight(184),  selfPunchLeftFistSideways(185), selfPunchLeftFistUpward(186), selfPunchRightFistStraight(187),  selfPunchRightFistSideways(188), selfPunchRightFistUpward(189),
 
-	selflistenToStatement(192), selflistenToQuestion(193), selflistenToInstruction(194), selfunderstand(195),
+	selfListenToStatement(192), selfListenToQuestion(193), selfListenToInstruction(194), selfUnderstand(195),
 	
-	selfaskNormal(200), selfaskScream(201), selfaskWhisper(202), selfanswerNormal(203), selfanswerScream(204), selfanswerWhisper(205),
+	selfAskNormal(200), selfAskScream(201), selfAskWhisper(202), selfAnswerNormal(203), selfAnswerScream(204), selfAnswerWhisper(205),
 	
-	selfsayNormal(208), selfsayScream(209), selfsayWhisper(210);
+	selfSayNormal(208), selfSayScream(209), selfSayWhisper(210);
 
 	public static final int MAX_EVENT_TYPE = 256;
 
@@ -127,7 +127,7 @@ public enum EventType {
 	public float getEffectDistance() {
 		switch (this) {
 		// TODO getEffectDistance()
-		case moveWalk: return 9000.0F;
+		case moveWalk: return 5000.0F;
 		case moveRun: return 10000.0F;
 		case moveSneak: return 1000.0F; 
 		case moveJump: return 3000.0F;
@@ -176,14 +176,14 @@ public enum EventType {
 			return 10000.0F;
 			
 		case askNormal: return 10000.0F; 
-		case askScream: return 100000.0F; 
+		case askScream: return 50000.0F; 
 		case askWhisper: return 1000.0F; 
 		case answerNormal: return 10000.0F; 
-		case answerScream: return 100000.0F; 
+		case answerScream: return 50000.0F; 
 		case answerWhisper: return 1000.0F; 
 					
 		case sayNormal: return 10000.0F; 
-		case sayScream: return 100000.0F; 
+		case sayScream: return 50000.0F; 
 		case sayWhisper: return 1000.0F; 
 
 		default:

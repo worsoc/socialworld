@@ -31,35 +31,37 @@ import org.socialworld.core.EventType;
 
 /**
  * German:
- * Die Klasse ActionSleep ist von der abstrakten Klasse AbstractAction abgeleitet.
+ * Die Klasse ActionBodilyFunction ist von der abstrakten Klasse AbstractAction abgeleitet.
  * Alle Aktionsobjekte, die Schlafen beschreiben, gehören zu dieser Klasse.
  * 
- * Die Ausführung der Aktion wird in der Klasse Sleep geregelt, 
- *   von der ein Objekt als Eigenschaft der Klasse ActionSleep abgelegt ist.
+ * Die Ausführung der Aktion wird in der Klasse BodilyFunction geregelt, 
+ *   von der ein Objekt als Eigenschaft der Klasse ActionBodilyFunction abgelegt ist.
  * Zur Beschreibung des Schlafens führt die Klasse keine weiteren Eigenschaften.
  * 
- * Die Klasse ActionSleep dient der Verwaltung der Aktion.
- * Die zugehörige Klasse Sleep dient der Wirksamwerdung der Aktion, 
+ * Die Klasse ActionBodilyFunction dient der Verwaltung der Aktion.
+ * Die zugehörige Klasse BodilyFunction dient der Wirksamwerdung der Aktion, 
  *  nämlich als Argument für das zur Aktion gehörende Event.
  *
- *  In der Ausführungsmethode perform() wird das Ausführungsobjekt der Klasse Sleep erzeugt.
+ *  In der Ausführungsmethode perform() wird das Ausführungsobjekt der Klasse BodilyFunction erzeugt.
  *  Außerdem wird das Ereignis zur Aktion erzeugt, mit dem Ausführungsobjekt als Argument.
  *  Das Ereignis wird in die Ereignisverwaltung (EventMaster) eingetragen.
  *  
  *  Der Name des Ereignis (EventType) 
  *   wird in Abhängigkeit von Aktionsmodus (ActionMode) ermittelt.
  *   
- *  Eine Aktion der Klasse ActionSleep ist 
- *  a) das willkürliche Schlafen, also sich bewusst zum Schlafen hinzulegen
- *  oder
- *  b) das aufgrund von Übermüdung oder auf andere Weise erzwungene Schlafen
+ *  Eine Aktion der Klasse ActionBodilyFunction ist 
+ *  a) Schlafen
+ *  b) Trinken
+ *  c) Essen
+ *  4) Urinieren
+ *  5) Koten
  *   
  * @author Mathias Sikos
  *
  */
 public class ActionBodilyFunction extends AbstractAction {
 
-	BodilyFunction sleep;
+	BodilyFunction bodilyFunction;
 	
 	public ActionBodilyFunction(ValueArrayList actionProperties) {
 		super(actionProperties);
@@ -86,24 +88,30 @@ public class ActionBodilyFunction extends AbstractAction {
 		EventByAction event;
 		EventType eventType;
 		
-		sleep = new BodilyFunction(this);
+		bodilyFunction = new BodilyFunction(this);
 		
 		eventType = getEventType(mode);
 				
 		if (eventType == EventType.nothing) return;
 				
 		event = new EventByAction(eventType,    actor /* as causer*/,  ActualTime.asTime(),
-					actor.getPosition(),  sleep /* as performer */);
+					actor.getPosition(),  bodilyFunction /* as performer */);
 		addEvent(event);
 	}
 
 
 	private EventType getEventType( ActionMode mode) {
 		switch (mode) {
-		case sleepCaused:
-			return EventType.sleepCaused;
-		case sleepIntentioned:
-			return EventType.sleepIntentioned;
+		case sleep:
+			return EventType.sleep;
+		case drink:
+			return EventType.drink;
+		case eat:
+			return EventType.eat;
+		case piss:
+			return EventType.piss;
+		case shit:
+			return EventType.shit;
 		default:
 			return EventType.nothing;
 		}

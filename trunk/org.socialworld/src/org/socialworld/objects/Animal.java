@@ -114,17 +114,23 @@ public class Animal extends SimulationObject {
 	
 
 	/**
-	 * The method holds the implementation of sleep.
+	 * The method holds the implementation of bodilyFunctions.
 	 * 
 	 * @param action
 	 */
-	protected void sleep(final AbstractAction action) {
+	protected void bodilyFunction(final AbstractAction action) {
 		final ActionMode mode = action.getMode();
 
 		switch (mode) {
-		case sleepIntentioned:
+		case sleep:
 			break;
-		case sleepCaused:
+		case drink:
+			break;
+		case eat:
+			break;
+		case piss:
+			break;
+		case shit:
 			break;
 		default:
 		}

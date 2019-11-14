@@ -22,7 +22,6 @@
 package org.socialworld.datasource.loadObjects;
 
 import org.socialworld.attributes.AttributeArray;
-import org.socialworld.attributes.Inventory;
 import org.socialworld.collections.SimulationObjectArray;
 import org.socialworld.conversation.Talk;
 import org.socialworld.conversation.Talk_SentenceType;
@@ -45,6 +44,7 @@ import org.socialworld.objects.*;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenHuman;
 import org.socialworld.SimpleClientActionHandler;
+import org.socialworld.actions.handle.Inventory;
 
 /**
  * Because of being a singleton there exists

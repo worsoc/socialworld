@@ -134,7 +134,7 @@ public class PositionCalculator extends SocialWorldThread {
 		
 		switch (eventType) {
 		// TODO cases and implementations
-		case sleepCaused:
+		case sleep:
 			directionEvent = new Vector(0,0,0);
 			powerMoveObject = 0;
 			break;

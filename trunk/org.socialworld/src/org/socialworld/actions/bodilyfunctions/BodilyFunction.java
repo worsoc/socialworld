@@ -28,9 +28,9 @@ import org.socialworld.collections.ValueArrayList;
 
 /**
  * German:
- * Die Klasse Sleep ist von der abstrakten Klasse ActionPerformer abgeleitet.
+ * Die Klasse BodilyFunction ist von der abstrakten Klasse ActionPerformer abgeleitet.
  * 
- * Die Klasse Sleep dient der Wirksamwerdung der Aktion,
+ * Die Klasse BodilyFunction dient der Wirksamwerdung der Aktion,
  *  nämlich als Argument für das zur Aktion gehörende Ereignis.
  *
  *   

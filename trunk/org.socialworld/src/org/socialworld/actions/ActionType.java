@@ -30,12 +30,12 @@ package org.socialworld.actions;
  *   die für eine Aktion gesetzt werden können.
  *   
  * Es sind 11 Aktionstypen umgesetzt:
- *  - Schlafen
+ *  - Körperfunktionen (Schlafen,Essen,...)
  *  - Bewegung (Positionswechsel)
  *  - untersuchung von Simulationsobjekten
  *  - Berührung von Simulationsobjekten
  *  - Ausstatten 
- *  - Gegenstandshabung
+ *  - Gegenstandshandhabung
  *  - Waffenbenutzung 
  *  - Schlag 
  *  - Hören/Zuhören
@@ -48,11 +48,11 @@ package org.socialworld.actions;
  * @author Mathias Sikos (tyloesand) 
  */
 public enum ActionType {
-	sleep(0),
+	bodilyFunction(0),
 	move(1),
 	examine(2),
 	touch(3), 
-	itemAndInventory(4),
+	equip(4),
 	handleItem(5),
 	useWeapon(6),
 	punch(7), 
@@ -89,7 +89,7 @@ public enum ActionType {
 	private static String[] FURTHER_PROPERTY_NAMES___MOVE = {"endposition","direction"};
 	private static String[] FURTHER_PROPERTY_NAMES___EXAMINE = {"target"};
 	private static String[] FURTHER_PROPERTY_NAMES___TOUCH = {"target","direction"};
-	private static String[] FURTHER_PROPERTY_NAMES___ITEMANDINVENTORY = {"target"};
+	private static String[] FURTHER_PROPERTY_NAMES___EQUIP = {"target","inventoryPlace"};
 	private static String[] FURTHER_PROPERTY_NAMES___HANDLEITEM = {"target","direction"};
 	private static String[] FURTHER_PROPERTY_NAMES___USEWEAPON = {"target"};
 	private static String[] FURTHER_PROPERTY_NAMES___PUNCH = {"target"};
@@ -125,8 +125,8 @@ public enum ActionType {
 		case 3: // touch
 			original = FURTHER_PROPERTY_NAMES___TOUCH;
 			break;
-		case 4: // itemAndInventory
-			original = FURTHER_PROPERTY_NAMES___ITEMANDINVENTORY;
+		case 4: // equip
+			original = FURTHER_PROPERTY_NAMES___EQUIP;
 			break;
 		case 5: // handleItem
 			original = FURTHER_PROPERTY_NAMES___HANDLEITEM;
