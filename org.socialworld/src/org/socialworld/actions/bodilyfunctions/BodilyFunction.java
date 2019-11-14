@@ -41,9 +41,9 @@ import org.socialworld.collections.ValueArrayList;
  * @author Mathias Sikos
  *
  */
-public class Sleep extends ActionPerformer {
+public class BodilyFunction extends ActionPerformer {
 
-    public Sleep (ActionSleep action) {
+    public BodilyFunction (ActionBodilyFunction action) {
     	super(action);
     }
 	
@@ -63,10 +63,10 @@ public class Sleep extends ActionPerformer {
 		
 		if (!isValid()) {
 			
-			ActionSleep originalAction;
+			ActionBodilyFunction originalAction;
 			float actorsIntensity;
 			
-			originalAction  = (ActionSleep) getOriginalActionObject();
+			originalAction  = (ActionBodilyFunction) getOriginalActionObject();
 			actorsIntensity = originalAction.getIntensity();
 	
 			addParam( new Value(Type.floatingpoint, "actorsIntensity", actorsIntensity));

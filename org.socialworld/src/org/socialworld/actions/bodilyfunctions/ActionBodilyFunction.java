@@ -57,15 +57,15 @@ import org.socialworld.core.EventType;
  * @author Mathias Sikos
  *
  */
-public class ActionSleep extends AbstractAction {
+public class ActionBodilyFunction extends AbstractAction {
 
-	Sleep sleep;
+	BodilyFunction sleep;
 	
-	public ActionSleep(ValueArrayList actionProperties) {
+	public ActionBodilyFunction(ValueArrayList actionProperties) {
 		super(actionProperties);
 	}
 
-	public ActionSleep(ActionSleep original) {
+	public ActionBodilyFunction(ActionBodilyFunction original) {
 		super(original);
 	}
 
@@ -86,7 +86,7 @@ public class ActionSleep extends AbstractAction {
 		EventByAction event;
 		EventType eventType;
 		
-		sleep = new Sleep(this);
+		sleep = new BodilyFunction(this);
 		
 		eventType = getEventType(mode);
 				
