@@ -32,8 +32,8 @@ public enum ActionMode {
 	
 	ignore(0),
 	
-	// for ActionType sleep
-	sleepIntentioned(1),	sleepCaused(2),
+	// for ActionType bodilyFunction
+	sleep(1), drink(2), eat(3), piss(4), shit(5), 	
 	
 	// for ActionType move
 	walk(11), run(12), sneak(13), jump(14), swim(15), fly(16), 
@@ -44,8 +44,8 @@ public enum ActionMode {
 	// for ActionType touch
 	hand(31), foot(32),
 	
-	// for ActionType itemAndInventory
-	takeItem(41), collectItem(42), dropItem(43), switchItemToOtherHand(44),
+	// for ActionType equip
+	takeItem(41), collectItem(42), dropItem(43), switchItemToOtherHand(44), putToInventory(45),
 
 	// for ActionType handleItem
 	useTwoItems(51),	useItemLeftHand(52), useItemRightHand(53),

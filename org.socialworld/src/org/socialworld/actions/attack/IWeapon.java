@@ -21,8 +21,6 @@
 */
 package org.socialworld.actions.attack;
 
-import org.socialworld.attributes.WeaponProperty;
-
 /**
  * German:
  * Das Interface IWeapon definiert die Methoden zum Ermitteln der Waffeneigenschaft von Simulationsobjekten.

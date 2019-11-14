@@ -32,11 +32,11 @@ import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionNothing;
 import org.socialworld.actions.ActionType;
 import org.socialworld.actions.attack.ActionAttack;
+import org.socialworld.actions.bodilyfunctions.ActionBodilyFunction;
 import org.socialworld.actions.handle.ActionHandle;
 import org.socialworld.actions.hear.ActionHear;
 import org.socialworld.actions.move.ActionMove;
 import org.socialworld.actions.say.ActionSay;
-import org.socialworld.actions.sleep.ActionSleep;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.FunctionByExpression;
@@ -130,11 +130,11 @@ public class ActionCreator extends SocialWorldThread {
 	private void calculateReaction() {
 
 		// TODO fuer Debuggen
-		/*
+		
 		if (this.events.size() > sizeThreashold) {
 			System.out.println("ActionCreator.calculateReaction(): this.events.size() " + this.events.size());
 		}
-		*/
+		
 		
 		if ((this.events.size() == 0) ||
 			(this.statesReactor.size() == 0) ||
@@ -285,11 +285,11 @@ public class ActionCreator extends SocialWorldThread {
 		type = (ActionType) actionProperties.getValue(namePropertyActionType).getValue();
 		
 		switch (type) {
-		case sleep: action = new ActionSleep(actionProperties); break;
+		case bodilyFunction: action = new ActionBodilyFunction(actionProperties); break;
 		case move: action = new ActionMove(actionProperties); break;
 		case examine: action = new ActionHandle(actionProperties); break;
 		case touch: action = new ActionHandle(actionProperties); break;
-		case itemAndInventory: action = new ActionHandle(actionProperties); break;
+		case equip: action = new ActionHandle(actionProperties); break;
 		case handleItem: action = new ActionHandle(actionProperties); break;
 		case useWeapon: action = new ActionAttack(actionProperties); break;
 		case punch: action = new ActionAttack(actionProperties); break;
