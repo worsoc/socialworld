@@ -19,7 +19,7 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.attributes;
+package org.socialworld.actions.handle;
 
 import org.socialworld.actions.attack.IWeapon;
 import org.socialworld.core.ObjectMaster;
@@ -36,9 +36,11 @@ public class Inventory {
 
 	protected SimulationObject leftHand;
 	protected SimulationObject rightHand;
+	protected SimulationObject mouth;
 
 	private int leftHandID;
 	private int rightHandID;
+	private int mouthID;
 	
 	private boolean complete;
 	
@@ -57,6 +59,9 @@ public class Inventory {
 			}
 			if (rightHandID > 0) {
 				rightHand = ObjectMaster.getInstance().getSimulationObject(rightHandID);
+			}
+			if (mouthID > 0) {
+				mouth = ObjectMaster.getInstance().getSimulationObject(mouthID);
 			}
 			
 			complete = true;
