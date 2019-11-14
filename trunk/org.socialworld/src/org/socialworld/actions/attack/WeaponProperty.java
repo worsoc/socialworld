@@ -19,11 +19,12 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.attributes;
+package org.socialworld.actions.attack;
 
 import org.socialworld.calculation.FunctionMXplusN;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
+import org.socialworld.collections.ValueArrayList;
 
 /**
  * German:
@@ -50,8 +51,8 @@ import org.socialworld.calculation.Value;
  *   Alternativ zur Berechnung des Schwellwertes hier, kann auch die Funktion selnbst erfragt werden.
  *   Diese wird mit der Methode getFunctionForThresholdOvercomeProtection() zurückgegeben.
  *      
- *   Mit der Methode getAsArguments() werden die Eigenschaften Masse,Härte und Schärfe 
- *       als Values und damit als Argumente für Berechnungsmethoden der Berechnungsklassen bereitgestellt.
+ *   Mit der Methode getAsValues() werden die Eigenschaften Masse,Härte und Schärfe 
+ *       als ValueArrayList und damit als Argumente für Berechnungsmethoden der Berechnungsklassen bereitgestellt.
  *           
  * @author Mathias Sikos
  *
@@ -86,14 +87,14 @@ public class WeaponProperty {
 	public float getHardness() { return this.hardness; }
 	public float getSharpness() { return this.sharpness; }
 
-	public Value[] getAsArguments() {
-		Value result[];
+	public ValueArrayList getAsValues() {
+		ValueArrayList result;
 		
-		result = new Value[3];
+		result = new ValueArrayList();
 		
-		result[0] = new Value(Type.floatingpoint, "mass", mass);
-		result[1] = new Value(Type.floatingpoint, "hardness", hardness);
-		result[2] = new Value(Type.floatingpoint, "sharpness", sharpness);
+		result.add( new Value(Type.floatingpoint, Value.VALUE_BY_NAME_WEAPON_MASS, mass));
+		result.add( new Value(Type.floatingpoint, Value.VALUE_BY_NAME_WEAPON_HARDNESS, hardness));
+		result.add( new Value(Type.floatingpoint, Value.VALUE_BY_NAME_WEAPON_SHARPNESS, sharpness));
 		
 		return result;
 	}
