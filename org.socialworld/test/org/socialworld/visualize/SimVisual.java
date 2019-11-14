@@ -166,7 +166,7 @@ public class SimVisual {
 			Color color;
 			
 			switch (type) {
-			case sleep:
+			case bodilyFunction:
 				color = Color.BLACK;
 				break;
 			case move:
@@ -175,7 +175,7 @@ public class SimVisual {
 			case examine:
 				color = Color.YELLOW;
 				break;
-			case itemAndInventory:
+			case equip:
 				color = Color.CYAN;
 				break;
 			case handleItem:
