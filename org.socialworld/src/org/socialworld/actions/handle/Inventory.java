@@ -24,6 +24,7 @@ package org.socialworld.actions.handle;
 import org.socialworld.actions.attack.IWeapon;
 import org.socialworld.core.ObjectMaster;
 import org.socialworld.objects.SimulationObject;
+import org.socialworld.objects.SimulationObject_Type;
 
 /**
  * The class collects all informations about a
@@ -43,9 +44,21 @@ public class Inventory {
 	private int mouthID;
 	
 	private boolean complete;
+	private boolean isHumanInventory;
 	
-	public Inventory(boolean complete) {
-		this.complete = complete;
+	public Inventory(SimulationObject_Type objectType) {
+		this.complete = true;
+		this.isHumanInventory = false;
+		
+		if (objectType  == SimulationObject_Type.human ) {
+			this.isHumanInventory = true;
+			this.complete = false;
+		}
+		
+		if (objectType  == SimulationObject_Type.animal ) {
+			this.complete = false;
+		}
+
 	}
 
 	
@@ -98,6 +111,14 @@ public class Inventory {
 		this.rightHand = rightHand;
 	}
 
+	/**
+	 * @return the mouth item
+	 */
+	public SimulationObject getMouth() {
+		return this.mouth;
+	}
+	
+	
 	/**
 	 * The method returns the left hand item iff it is an instance of IWeapon
 	 * 

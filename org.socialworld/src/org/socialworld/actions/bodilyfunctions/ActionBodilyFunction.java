@@ -28,6 +28,8 @@ import org.socialworld.attributes.ActualTime;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.EventByAction;
 import org.socialworld.core.EventType;
+import org.socialworld.objects.Animal;
+import org.socialworld.objects.SimulationObject;
 
 /**
  * German:
@@ -62,6 +64,7 @@ import org.socialworld.core.EventType;
 public class ActionBodilyFunction extends AbstractAction {
 
 	BodilyFunction bodilyFunction;
+	private SimulationObject item = null;
 	
 	public ActionBodilyFunction(ValueArrayList actionProperties) {
 		super(actionProperties);
@@ -72,11 +75,11 @@ public class ActionBodilyFunction extends AbstractAction {
 	}
 
 	protected void setFurtherProperties(ValueArrayList actionProperties) {
-		// no further properties
+		
+
 	}
 
 	protected void setFurtherProperties(AbstractAction original) {
-		//no further properties
 	}
 	
 	/* (non-Javadoc)
@@ -87,6 +90,27 @@ public class ActionBodilyFunction extends AbstractAction {
 		
 		EventByAction event;
 		EventType eventType;
+		
+   		switch (mode) {
+		case sleep:
+			break;
+		case drink:
+			item = ((Animal) actor).getMouth();
+			if (item == null) return;
+			break;
+		case eat:
+			item = ((Animal) actor).getMouth();
+			if (item == null) return;
+			break;
+		case piss:
+			break;
+		case shit:
+			break;
+
+		default:
+		}
+
+		
 		
 		bodilyFunction = new BodilyFunction(this);
 		

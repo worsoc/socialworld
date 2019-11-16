@@ -193,7 +193,7 @@ public class LoadHuman extends LoadAnimal {
 				else rightHandID = 0;
 			}
 			
-			inventory = new Inventory(inventoryComplete);
+			inventory = new Inventory(SimulationObject_Type.human);
 			if (leftHandID > 0) inventory.setLeftHandID(leftHandID);
 			if (rightHandID > 0) inventory.setLeftHandID(rightHandID);
 				
