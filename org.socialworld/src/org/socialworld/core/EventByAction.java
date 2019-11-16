@@ -32,12 +32,15 @@ import org.socialworld.objects.SimulationObject;
  */
 public class EventByAction extends Event {
 
+	
 	/**
 	 * Constructor
 	 */
 	public EventByAction(int eventType,  SimulationObject causer, Time time, Position position,	 ActionPerformer performer) {
 		
 		super(eventType,   causer,  time,  position,	  performer);
+		eventToCauserItself = EventType.getEventType(eventType).isEventToCauserItself();
+		
 	}
 	
 	/**
@@ -46,6 +49,8 @@ public class EventByAction extends Event {
 	public EventByAction(EventType eventType,  SimulationObject causer, Time time, Position position,	 ActionPerformer performer) {
 		
 		super(eventType.getIndex(),   causer,  time,  position,	  performer);
+		eventToCauserItself = eventType.isEventToCauserItself();
+
 	}
 
 	/**
@@ -54,6 +59,8 @@ public class EventByAction extends Event {
 	public EventByAction(int eventType, int priority,  SimulationObject causer, Time time, Position position,	 ActionPerformer performer) {
 		
 		super(eventType, priority,  causer,  time,  position,	  performer);
+		eventToCauserItself = EventType.getEventType(eventType).isEventToCauserItself();
+
 	}
 
 }

@@ -56,9 +56,9 @@ public enum EventType {
 	
 	sayNormal(80), sayScream(81), sayWhisper(82),
 
-//////////////////////////
-//EventSelfByAction	
-//////////////////////////
+//////////////////////////////////////////////////////////////////////
+//EventSelfByAction	(event with influence to causer itself)
+//////////////////////////////////////////////////////////////////////
 
 	selfSleep(129), selfDrink(130), selfEat(131), selfPiss(132), selfShit(133), 	
 	
@@ -114,6 +114,16 @@ public enum EventType {
 		return index;
 	}
 
+	public boolean isEventToCauserItself() {
+		
+		if (this.index > 127) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
 	public boolean isRelevantForEffectiveCheck() {
 		
 		if (this.index > 127) return false;

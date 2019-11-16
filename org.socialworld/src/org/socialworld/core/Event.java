@@ -56,6 +56,7 @@ public class Event implements Comparable<Event> {
 	
 	private Event_Percipience percipience;
 	
+	protected boolean eventToCauserItself = false;
 
 	/**
 	 * Constructor
@@ -209,6 +210,10 @@ public class Event implements Comparable<Event> {
 		this.causer = causer;
 	}
 
+	public boolean isEventToCauserItself() {
+		return this.eventToCauserItself;
+	}
+	
 	/**
 	 * @return the time
 	 */
