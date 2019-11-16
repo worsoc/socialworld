@@ -116,6 +116,7 @@ public abstract class AbstractAction {
 	public AbstractAction(AbstractAction original) {
 		setBaseProperties(original);
 		this.furtherPropertyNames = this.type.getFurtherPropertyNames();
+		setFurtherProperties(original);
 	}
 	
 	protected AbstractAction(ValueArrayList actionProperties) {
