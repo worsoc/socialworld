@@ -110,10 +110,10 @@ public class Say extends ActionPerformer {
 	 * @see org.socialworld.actions.ActionPerformer#perform()
 	 */
 	@Override
-	public void perform() {
+	protected void perform() {
 		
 		
-		if (!isValid()) {
+		if (!isEvaluated()) {
 			
 	 		ActionSay originalAction;
 			Human actor;
@@ -157,7 +157,6 @@ public class Say extends ActionPerformer {
 		
 					addParam( new Value(Type.answer, Value.VALUE_BY_NAME_ACTION_ANSWER, answer));
 					
-					setValid();
 					
 					break;
 					
@@ -165,19 +164,21 @@ public class Say extends ActionPerformer {
 				case askScream:
 				case askWhisper:
 										
-					setValid();
 
+					break;
+					
 				case normal:
 				case scream:
 				case whisper:
 										
-					setValid();
 					
 					break;
 					
 				default:
 					
 			}
+			
+			setEvaluated();
 		}
 	}
 

@@ -32,10 +32,10 @@ public class Equip extends ActionPerformer {
 	}
 	
 	@Override
-	public void perform() {
+	protected void perform() {
 
-		if (!isValid()) {
-			setValid();
+		if (!isEvaluated()) {
+			setEvaluated();
 		}
 
 	}

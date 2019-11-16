@@ -59,9 +59,9 @@ public class BodilyFunction extends ActionPerformer {
 	 * @see org.socialworld.actions.ActionPerformer#perform()
 	 */
 	@Override
-	public void perform() {
+	protected void perform() {
 		
-		if (!isValid()) {
+		if (!isEvaluated()) {
 			
 			ActionBodilyFunction originalAction;
 			float actorsIntensity;
@@ -71,7 +71,7 @@ public class BodilyFunction extends ActionPerformer {
 	
 			addParam( new Value(Type.floatingpoint, "actorsIntensity", actorsIntensity));
 			
-			setValid();
+			setEvaluated();
 		}
 		
 	}

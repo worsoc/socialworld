@@ -109,12 +109,12 @@ public class Handle extends ActionPerformer {
 	 * @see org.socialworld.actions.ActionPerformer#perform()
 	 */
 	@Override
-	public void perform() {
+	protected void perform() {
 
-		if (!isValid()) {
+		if (!isEvaluated()) {
 
 			
-			setValid();
+			setEvaluated();
 			
 		}
 		

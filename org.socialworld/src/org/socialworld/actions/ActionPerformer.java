@@ -78,7 +78,7 @@ public abstract class ActionPerformer implements IEventParam {
 
 
     private ValueArrayList eventParams;
-    private boolean valid = false;
+    private boolean evaluated = false;
     
     private boolean actionPropertiesAreRequested = false;
     private ValueArrayList actionAndActorProperties;
@@ -91,7 +91,7 @@ public abstract class ActionPerformer implements IEventParam {
     	this.eventParams = new ValueArrayList();
     }
     
-    public abstract void perform();
+    protected abstract void perform();
     
 	public void answerPropertiesRequest(ValueArrayList properties) {
 		
@@ -111,33 +111,38 @@ public abstract class ActionPerformer implements IEventParam {
 	 * @see org.socialworld.core.IEventParam#evaluate()
 	 */
 	@Override
-   public void evaluate() {
+   public final void evaluate() {
 		
-		SimulationObject actor =  this.action.getActor();
-		ActionMode actionMode = this.action.getMode();
+		if (!this.isEvaluated()) {
 		
-		actionPropertiesAreRequested = true;
-		actor.requestPropertyList(this);
-		this.action.requestPropertyList(this);
-		actionPropertiesAreRequested = false;
-		
-		Action2PerformerDescription descriptionForMode =
-				Action2PerformerAssignment.getInstance().getAction2PerformerDescription(actionMode);
-		
-		
-		for (int i = 0; i < descriptionForMode.countFunctions(); i++) {
-			addParam(descriptionForMode.getFunction(i).calculate(actionAndActorProperties));
+			SimulationObject actor =  this.action.getActor();
+			ActionMode actionMode = this.action.getMode();
+			
+			actionPropertiesAreRequested = true;
+			actor.requestPropertyList(this);
+			this.action.requestPropertyList(this);
+			actionPropertiesAreRequested = false;
+			
+			Action2PerformerDescription descriptionForMode =
+					Action2PerformerAssignment.getInstance().getAction2PerformerDescription(actionMode);
+			
+			
+			for (int i = 0; i < descriptionForMode.countFunctions(); i++) {
+				addParam(descriptionForMode.getFunction(i).calculate(actionAndActorProperties));
+			}
+			
+	    	perform();
+	    	
 		}
 		
-    	perform();
     }
     
 	/* (non-Javadoc)
 	 * @see org.socialworld.core.IEventParam#isValid()
 	 */
 	@Override
-    public boolean isValid() {
-		return valid;
+    public boolean isEvaluated() {
+		return evaluated;
 	}
 	
 	public Value getParamListAsValue() {
@@ -158,7 +163,7 @@ public abstract class ActionPerformer implements IEventParam {
 	}
 
 	protected  void addParam(Value param) {
-		eventParams.add(param);
+		this.eventParams.add(param);
 	}
 
 	protected void setParam(Value param) {
@@ -170,19 +175,19 @@ public abstract class ActionPerformer implements IEventParam {
 	}
 	
 	private int findParam(String name) {
-		return eventParams.findValue(name);
+		return this.eventParams.findValue(name);
 	}
 	
 	/* (non-Javadoc)
 	 * @see org.socialworld.core.IEventParam#find(org.socialworld.calculation.Type)
 	 */
 	private void setParam(int index, Value param) {
-			eventParams.set(index, param);
+			this.eventParams.set(index, param);
 	}
 	
 	
-	protected void setValid() {
-		valid = true;
+	protected void setEvaluated() {
+		this.evaluated = true;
 	}
 	
 	protected AbstractAction getOriginalActionObject() {

@@ -104,7 +104,7 @@ public class Move extends ActionPerformer {
   	
     }
 
-	public void perform() {
+    protected void perform() {
 		
 		Value tmp;
 		
@@ -127,7 +127,7 @@ public class Move extends ActionPerformer {
 				
 		this.remainedDistance = this.remainedDistance - this.velocity;
 		
-		setValid();
+		setEvaluated();
 	} 
 	
 	
