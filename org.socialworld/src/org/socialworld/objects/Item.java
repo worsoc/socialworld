@@ -38,6 +38,10 @@ public class Item extends SimulationObject {
 		super(objectID);
 	}
 
+	protected SimulationObject_Type getSimObjectType() {
+		return SimulationObject_Type.item;
+	}
+
 	protected void assignState(StateSimulationObject state) {
 		//if (checkIsMyState(state) ) this.state = (StateItem) state;
 	}

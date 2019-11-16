@@ -53,6 +53,10 @@ public class Animal extends SimulationObject {
 	}
 
 	
+	protected SimulationObject_Type getSimObjectType() {
+		return SimulationObject_Type.animal;
+	}
+
 	protected void assignState(StateSimulationObject state) {
 		if (checkIsMyState(state) ) this.state = (StateAnimal) state;
 	}
@@ -136,6 +140,27 @@ public class Animal extends SimulationObject {
 		}
 	}
 
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    INVENTORY  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+	
+	// TODO interface for more complex access to inventory
+	
+	final public SimulationObject getLeftHand() {
+	// no copy because it is a simulation object and that isn't allowed to be duplicated
+	return this.state.getLeftHand();
+	}
+	
+	final public SimulationObject getRightHand() {
+	// no copy because it is a simulation object and that isn't allowed to be duplicated
+	return this.state.getRightHand();
+	}
+	
+	final public SimulationObject getMouth() {
+	// no copy because it is a simulation object and that isn't allowed to be duplicated
+	return this.state.getMouth();
+	}
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    PROPERTY LIST  ///////////////////////////////////////////////

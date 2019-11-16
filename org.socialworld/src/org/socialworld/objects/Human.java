@@ -47,6 +47,10 @@ import org.socialworld.core.IEventParam;
 		super(objectID);
 	}
 
+	protected SimulationObject_Type getSimObjectType() {
+		return SimulationObject_Type.human;
+	}
+
 	protected void assignState(StateSimulationObject state) {
 		super.assignState(state);
 		if (checkIsMyState(state) ) this.state = (StateHuman) state;
@@ -97,16 +101,6 @@ import org.socialworld.core.IEventParam;
 	final public IWeapon getRightHandWeapon() {
 		// no copy because it is a simulation object and that isn't allowed to be duplicated
 		return this.state.getRightHandWeapon();
-	}
-
-	final public SimulationObject getLeftHand() {
-		// no copy because it is a simulation object and that isn't allowed to be duplicated
-		return this.state.getLeftHand();
-	}
-	
-	final public SimulationObject getRightHand() {
-		// no copy because it is a simulation object and that isn't allowed to be duplicated
-		return this.state.getRightHand();
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////

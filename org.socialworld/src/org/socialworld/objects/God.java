@@ -37,6 +37,10 @@ public class God extends SimulationObject {
 		super(objectID);
 	}
 
+	protected SimulationObject_Type getSimObjectType() {
+		return SimulationObject_Type.god;
+	}
+
 	protected void assignState(StateSimulationObject state) {
 		//if (checkIsMyState(state) ) this.state = (StateGod) state;
 	}
