@@ -22,6 +22,8 @@
 package org.socialworld.objects;
 
 import org.socialworld.SocialWorld;
+import org.socialworld.actions.attack.IWeapon;
+import org.socialworld.actions.handle.Inventory;
 import org.socialworld.actions.move.Path;
 import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.AttributeArray;
@@ -50,6 +52,8 @@ public class StateAnimal extends StateSimulationObject {
 
 	private KnownPathsPool knownPathsPool;
 
+	private Inventory inventory;
+	
 	private GrantedAccessToProperty grantAccessToPropertyAttributes[];
 	private GrantedAccessToProperty grantAccessToPropertyAction[];
 	
@@ -66,7 +70,10 @@ public class StateAnimal extends StateSimulationObject {
 		
 		attributes = new AttributeArray(Attribute.NUMBER_OF_ATTRIBUTES);
 		
+		createInventory();
+		
 	}
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    ATTRIBUTES  ///////////////////////////////////////////////
@@ -166,5 +173,54 @@ public class StateAnimal extends StateSimulationObject {
 		return new Value( Type.vector, valueName, new Vector(this.directionActiveMove) );
 	}
 
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    INVENTORY  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 
+	protected void createInventory() {
+		inventory = new Inventory(getObject().getSimObjectType());
+	}
+	
+	final void setInventory(Inventory inventory, WriteAccessToAnimal guard) {
+		if (checkGuard(guard)) {
+			this.inventory = inventory;
+		}
+	}
+	
+	final public SimulationObject getLeftHand() {
+		// no copy because it is a simulation object and that isn't allowed to be duplicated
+		return this.inventory.getLeftHand();
+	}
+	
+	final public SimulationObject getRightHand() {
+		// no copy because it is a simulation object and that isn't allowed to be duplicated
+		return this.inventory.getRightHand();
+	}
+	
+	final public SimulationObject getMouth() {
+		// no copy because it is a simulation object and that isn't allowed to be duplicated
+		return this.inventory.getMouth();
+	}
+	
+	final protected IWeapon _getLeftHandWeapon() {
+		// no copy because it is a simulation object and that isn't allowed to be duplicated
+		if (getObject().getSimObjectType() == SimulationObject_Type.human) {
+			return this.inventory.getLeftHandWeapon();
+		}
+		else {
+			return null;
+		}
+	}
+	
+	final protected IWeapon _getRightHandWeapon() {
+		// no copy because it is a simulation object and that isn't allowed to be duplicated
+		if (getObject().getSimObjectType() == SimulationObject_Type.human) {
+			return this.inventory.getRightHandWeapon();
+		}
+		else {
+			return null;
+		}
+	}
+	
+	
 }

@@ -45,7 +45,6 @@ import org.socialworld.objects.access.HiddenHuman;
  */
 public class StateHuman extends StateAnimal {
 
-	private Inventory inventory;
 	private Knowledge knowledge;
 	private AcquaintancePool acquaintance;
 	
@@ -64,10 +63,11 @@ public class StateHuman extends StateAnimal {
 		grantAccessToPropertyTalk = new GrantedAccessToProperty[1];
 		grantAccessToPropertyTalk[0] = GrantedAccessToProperty.talks;
 		
-		inventory = new Inventory(false);
 
 	}
 
+	
+	
 	void calculateEventInfluence(Event event) {
 		
 		super.calculateEventInfluence(event);
@@ -190,30 +190,14 @@ public class StateHuman extends StateAnimal {
 /////////////////////////////    INVENTORY  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	final void setInventory(Inventory inventory, WriteAccessToHuman guard) {
-		if (checkGuard(guard)) {
-			this.inventory = inventory;
-		}
-	}
 	
 	final public IWeapon getLeftHandWeapon() {
-		// no copy because it is a simulation object and that isn't allowed to be duplicated
-		return this.inventory.getLeftHandWeapon();
+		return _getLeftHandWeapon();
 	}
 	
 	final public IWeapon getRightHandWeapon() {
-		// no copy because it is a simulation object and that isn't allowed to be duplicated
-		return this.inventory.getRightHandWeapon();
+		return _getRightHandWeapon();
 	}
 
-	final public SimulationObject getLeftHand() {
-		// no copy because it is a simulation object and that isn't allowed to be duplicated
-		return this.inventory.getLeftHand();
-	}
-	
-	final public SimulationObject getRightHand() {
-		// no copy because it is a simulation object and that isn't allowed to be duplicated
-		return this.inventory.getRightHand();
-	}
 
 }
