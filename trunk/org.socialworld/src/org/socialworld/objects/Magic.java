@@ -38,6 +38,10 @@ public class Magic extends SimulationObject {
 		super(objectID);
 	}
 
+	protected SimulationObject_Type getSimObjectType() {
+		return SimulationObject_Type.magic;
+	}
+
 	protected void assignState(StateSimulationObject state) {
 		//if (checkIsMyState(state) ) this.state = (StateMagic) state;
 	}
