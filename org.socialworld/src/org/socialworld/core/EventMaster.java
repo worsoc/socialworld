@@ -179,6 +179,9 @@ public class EventMaster extends SocialWorldThread {
 					determineCandidates();
 					determineInfluenceToCandidates();
 				}
+				if (event.isEventToCauserItself()) {
+					determineInfluenceToCauser();
+				}
 			}
 			blockedByCalculate = false;
 		}
@@ -201,7 +204,8 @@ public class EventMaster extends SocialWorldThread {
 			event.evaluateOptionalParam();
 		}
 		
-		isRelevantForEffectiveCheck = event.getEventType().isRelevantForEffectiveCheck();
+		isRelevantForEffectiveCheck = 
+				event.getEventType().isRelevantForEffectiveCheck() && !event.isEventToCauserItself();
 		effectAngle = event.getEffectAngle();
 		effectDistance = event.getEffectDistance();
 		eventPosition = event.getPosition();
@@ -323,4 +327,9 @@ public class EventMaster extends SocialWorldThread {
 		}
 
 	}
+	
+	private void determineInfluenceToCauser() {
+		this.event.getCauser().changeByEvent(this.event);
+	}
+	
 }
