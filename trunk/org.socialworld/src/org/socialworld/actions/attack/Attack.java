@@ -91,9 +91,9 @@ public class Attack extends ActionPerformer {
     }
  
     
-   	public void perform() {
+    protected void perform() {
 		
-		if (!isValid()) {
+		if (!isEvaluated()) {
 	
 			if (isHumanFightAttack())
 				performFightAttack();
@@ -109,13 +109,13 @@ public class Attack extends ActionPerformer {
    	private void performFightAttack() {
    		
    		
-		setValid();
+		setEvaluated();
   		
    	}
    	
    	private void performAnimalAttack() {
    		
-		setValid();
+		setEvaluated();
   		
    	}
    	

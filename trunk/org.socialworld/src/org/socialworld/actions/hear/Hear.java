@@ -81,10 +81,10 @@ public class Hear extends ActionPerformer {
 	 * @see org.socialworld.actions.ActionPerformer#perform()
 	 */
 	@Override
-	public void perform() {
+	protected void perform() {
 		
-		if (!isValid()) {
-			setValid();
+		if (!isEvaluated()) {
+			setEvaluated();
 		}
 	}
 	
