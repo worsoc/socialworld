@@ -41,6 +41,8 @@ public class Value {
 	public static String VALUE_BY_NAME_ACTION_MOVE_ACCELERATION = "acceleration";
 	public static String VALUE_BY_NAME_ACTION_MOVE_VELOCITY = "velocity";
 	public static String VALUE_BY_NAME_ACTION_SAY_LOUDNESS = "loudness";
+	public static String VALUE_BY_NAME_ACTION_EQUIP_ITEM = "item";
+	public static String VALUE_BY_NAME_ACTION_EQUIP_PLACE = "inventoryPlace";
 
 	
 	public static String VALUE_BY_NAME_EVENT_PARAMS = "eventparams";
