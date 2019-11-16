@@ -304,7 +304,9 @@ public class Event implements Comparable<Event> {
 	
 	public void evaluateOptionalParam() {
 		if (hasOptionalParams) {
-			this.optionalParam.evaluate();
+			if (!this.optionalParam.isEvaluated()) {
+				this.optionalParam.evaluate();
+			}
 		}
 	}
 	
