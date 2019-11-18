@@ -21,6 +21,7 @@
 */
 package org.socialworld.datasource.createObjects;
 
+import org.socialworld.actions.handle.Inventory;
 import org.socialworld.datasource.pool.GaussPoolAttributeArray;
 import org.socialworld.datasource.pool.GaussPoolAttributeCalculatorMatrix;
 import org.socialworld.objects.Animal;
@@ -77,9 +78,11 @@ public class CreateAnimal extends CreateSimulationObjects {
 	protected void initObject(HiddenAnimal hiddenAnimal) {
 		
 		super.initObject(hiddenAnimal);
+		
 
 	}
 
+	
 	protected void initState(HiddenAnimal hiddenAnimal) {
 
 		super.initState(hiddenAnimal);		
@@ -102,6 +105,7 @@ public class CreateAnimal extends CreateSimulationObjects {
 		hiddenAnimal.setMatrix(	
 				GaussPoolAttributeCalculatorMatrix.getInstance().getMatrix(indexGPACM));
 
+		hiddenAnimal.setInventory(new Inventory(hiddenAnimal.getSimObjectType()));
 		
 	}
 

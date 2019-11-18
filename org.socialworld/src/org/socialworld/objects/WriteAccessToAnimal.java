@@ -20,6 +20,7 @@
 *
 */
 package org.socialworld.objects;
+import org.socialworld.actions.handle.Inventory;
 import org.socialworld.actions.move.Path;
 import org.socialworld.calculation.FunctionByMatrix;
 import org.socialworld.calculation.Value;
@@ -51,6 +52,18 @@ public class WriteAccessToAnimal extends WriteAccessToSimulationObject {
 		if (checkCaller(caller)) 
 			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.attributes)) {
 				animalState.setAttributes(attributes, this);
+				return WRITE_ACCESS_RETURNS_SUCCESS;
+			}
+			else
+				return WRITE_ACCESS_RETURNS_NO_GRANT_FOR_PROPERTY;
+		else
+			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
+	}
+
+	public int setInventory(Inventory inventory, HiddenSimulationObject caller) {
+		if (checkCaller(caller)) 
+			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.inventory)) {
+				animalState.setInventory(inventory, this);
 				return WRITE_ACCESS_RETURNS_SUCCESS;
 			}
 			else
