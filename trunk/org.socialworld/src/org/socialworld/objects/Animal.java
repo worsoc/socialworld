@@ -147,19 +147,19 @@ public class Animal extends SimulationObject {
 	
 	// TODO interface for more complex access to inventory
 	
-	final public SimulationObject getLeftHand() {
+	final public SimulationObject getLeftHandItem() {
 	// no copy because it is a simulation object and that isn't allowed to be duplicated
-	return this.state.getLeftHand();
+	return this.state.getLeftHandItem();
 	}
 	
-	final public SimulationObject getRightHand() {
+	final public SimulationObject getRightHandItem() {
 	// no copy because it is a simulation object and that isn't allowed to be duplicated
-	return this.state.getRightHand();
+	return this.state.getRightHandItem();
 	}
 	
-	final public SimulationObject getMouth() {
+	final public SimulationObject getMouthItem() {
 	// no copy because it is a simulation object and that isn't allowed to be duplicated
-	return this.state.getMouth();
+	return this.state.getMouthItem();
 	}
 	
 ///////////////////////////////////////////////////////////////////////////////////////////

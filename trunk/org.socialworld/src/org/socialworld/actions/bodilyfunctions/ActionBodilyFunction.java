@@ -25,9 +25,12 @@ package org.socialworld.actions.bodilyfunctions;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.attributes.ActualTime;
+import org.socialworld.calculation.Type;
+import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.EventByAction;
 import org.socialworld.core.EventType;
+import org.socialworld.core.IEventParam;
 import org.socialworld.objects.Animal;
 import org.socialworld.objects.SimulationObject;
 
@@ -88,6 +91,7 @@ public class ActionBodilyFunction extends AbstractAction {
 	@Override
 	public void perform() {
 		
+		
 		EventByAction event;
 		EventType eventType;
 		
@@ -95,12 +99,16 @@ public class ActionBodilyFunction extends AbstractAction {
 		case sleep:
 			break;
 		case drink:
-			item = ((Animal) actor).getMouth();
-			if (item == null) return;
+			this.item = ((Animal) actor).getMouthItem();
+			if 	(!(this.item instanceof IDrinkable)) {
+				return;
+			}
 			break;
 		case eat:
-			item = ((Animal) actor).getMouth();
-			if (item == null) return;
+			this.item = ((Animal) actor).getMouthItem();
+			if 	(!(this.item instanceof IEatable)) {
+				return;
+			}
 			break;
 		case piss:
 			break;
@@ -109,8 +117,6 @@ public class ActionBodilyFunction extends AbstractAction {
 
 		default:
 		}
-
-		
 		
 		bodilyFunction = new BodilyFunction(this);
 		
@@ -127,18 +133,74 @@ public class ActionBodilyFunction extends AbstractAction {
 	private EventType getEventType( ActionMode mode) {
 		switch (mode) {
 		case sleep:
-			return EventType.sleep;
+			return EventType.selfSleep;
 		case drink:
-			return EventType.drink;
+			return EventType.selfDrink;
 		case eat:
-			return EventType.eat;
+			return EventType.selfEat;
 		case piss:
-			return EventType.piss;
+			return EventType.selfPiss;
 		case shit:
-			return EventType.shit;
+			return EventType.selfShit;
 		default:
 			return EventType.nothing;
 		}
+	}
+	
+	
+	public Value getItemAsValue(String valueName) {
+		if (this.item == null) {
+			return new Value();
+		}
+		else {
+			return new Value(Type.simulationObject, valueName, this.item);
+		}
+	}
+
+	public Value getItemDrinkAsValue(String valueName) { 
+		if (this.item == null) {
+			return new Value();
+		}
+		else {
+			if 	 (this.item instanceof IDrinkable) {
+				return new Value(Type.simulationObject, valueName, this.item);
+			}
+			else {
+				return new Value();
+			}
+		}
+	}
+
+	public Value getItemEatAsValue(String valueName) { 
+		if (this.item == null) {
+			return new Value();
+		}
+		else {
+			if 	 (this.item instanceof IEatable) {
+				return new Value(Type.simulationObject, valueName, this.item);
+			}
+			else {
+				return new Value();
+			}
+		}
+	}
+
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    PROPERTY LIST  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public void requestPropertyList(IEventParam paramObject) {
+	
+		super.requestPropertyList(paramObject);
+		
+		ValueArrayList propertiesAsValueList = new ValueArrayList();
+		
+		propertiesAsValueList.add(getItemAsValue(Value.VALUE_BY_NAME_ACTION_BF_ITEM));
+		propertiesAsValueList.add(getItemDrinkAsValue(Value.VALUE_BY_NAME_ACTION_BF_ITEMDRINK));
+		propertiesAsValueList.add(getItemEatAsValue(Value.VALUE_BY_NAME_ACTION_BF_ITEMEAT));
+		paramObject.answerPropertiesRequest(propertiesAsValueList);
+	
 	}
 	
 }

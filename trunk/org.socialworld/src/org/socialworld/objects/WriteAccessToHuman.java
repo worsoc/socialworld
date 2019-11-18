@@ -50,17 +50,6 @@ public class WriteAccessToHuman extends WriteAccessToAnimal {
 		return new HiddenHuman(this, properties);
 	}
 
-	public int setInventory(Inventory inventory, HiddenSimulationObject caller) {
-		if (checkCaller(caller)) 
-			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.inventory)) {
-				humanState.setInventory(inventory, this);
-				return WRITE_ACCESS_RETURNS_SUCCESS;
-			}
-			else
-				return WRITE_ACCESS_RETURNS_NO_GRANT_FOR_PROPERTY;
-		else
-			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
-	}
 
 	public int setTalks(ArrayList<Talk> talks, HiddenSimulationObject caller) {
 		if (checkCaller(caller)) 

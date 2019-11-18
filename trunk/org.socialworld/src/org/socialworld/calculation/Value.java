@@ -43,6 +43,11 @@ public class Value {
 	public static String VALUE_BY_NAME_ACTION_SAY_LOUDNESS = "loudness";
 	public static String VALUE_BY_NAME_ACTION_EQUIP_ITEM = "item";
 	public static String VALUE_BY_NAME_ACTION_EQUIP_PLACE = "inventoryPlace";
+	public static String VALUE_BY_NAME_ACTION_BF_ITEM = "item";
+	public static String VALUE_BY_NAME_ACTION_BF_ITEMDRINK = "itemDrink";
+	public static String VALUE_BY_NAME_ACTION_BF_ITEMISDRINKABLE = "itemIsDrinkable";
+	public static String VALUE_BY_NAME_ACTION_BF_ITEMEAT = "itemEat";
+	public static String VALUE_BY_NAME_ACTION_BF_ITEMISEATABLE = "itemIsEatable";
 
 	
 	public static String VALUE_BY_NAME_EVENT_PARAMS = "eventparams";

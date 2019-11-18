@@ -122,26 +122,26 @@ public class ActionHandle extends AbstractAction {
 		
    		switch (mode) {
 		case useItemLeftHand:
-			item1 = ((Human) actor).getLeftHand();
+			item1 = ((Human) actor).getLeftHandItem();
 			if (item1 == null) return;
 			break;
 		case useItemRightHand:
-			item1 = ((Human) actor).getRightHand();
+			item1 = ((Human) actor).getRightHandItem();
 			if (item1 == null) return;
 			break;
 		case useTwoItems:
-			item1 = ((Human) actor).getRightHand();
-			item2 = ((Human) actor).getLeftHand();
+			item1 = ((Human) actor).getRightHandItem();
+			item2 = ((Human) actor).getLeftHandItem();
 			if (item1 == null | item2 == null) return;
 			break;
 		case combineItems_AddLeftToRight:
-			item1 = ((Human) actor).getRightHand();
-			item2 = ((Human) actor).getLeftHand();
+			item1 = ((Human) actor).getRightHandItem();
+			item2 = ((Human) actor).getLeftHandItem();
 			if (item1 == null | item2 == null) return;
 			break;
 		case combineItems_AddRightToLeft:
-			item1 = ((Human) actor).getLeftHand();
-			item2 = ((Human) actor).getRightHand();
+			item1 = ((Human) actor).getLeftHandItem();
+			item2 = ((Human) actor).getRightHandItem();
 			if (item1 == null | item2 == null) return;
 			break;
 

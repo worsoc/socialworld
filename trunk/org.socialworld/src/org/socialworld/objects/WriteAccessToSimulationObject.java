@@ -65,6 +65,9 @@ public class WriteAccessToSimulationObject {
 		return this.object;
 	}
 	
+	public SimulationObject_Type getSimObjectType() {
+		return this.object.getSimObjectType();
+	}
 	
 	protected final boolean checkCaller(HiddenSimulationObject caller){
 		

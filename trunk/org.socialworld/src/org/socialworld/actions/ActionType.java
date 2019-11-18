@@ -85,7 +85,7 @@ public enum ActionType {
 	
 	private static String[] STANDARD_PROPERTY_NAMES = {"actiontype", "actionmode", "intensity", "mintime", "maxtime", "priority", "duration"};
 	private static String[] NO_FURTHER_PROPERTY_NAMES = {};
-	private static String[] FURTHER_PROPERTY_NAMES___SLEEP = {};
+	private static String[] FURTHER_PROPERTY_NAMES___BODILYFUNCTIONS = {};
 	private static String[] FURTHER_PROPERTY_NAMES___MOVE = {"endposition","direction"};
 	private static String[] FURTHER_PROPERTY_NAMES___EXAMINE = {"target"};
 	private static String[] FURTHER_PROPERTY_NAMES___TOUCH = {"target","direction"};
@@ -113,8 +113,8 @@ public enum ActionType {
 		String[] copy;
 
 		switch (index) {
-		case 0: // sleep
-			original = FURTHER_PROPERTY_NAMES___SLEEP;
+		case 0: // bodily functions
+			original = FURTHER_PROPERTY_NAMES___BODILYFUNCTIONS;
 			break;
 		case 1: // move
 			original = FURTHER_PROPERTY_NAMES___MOVE;

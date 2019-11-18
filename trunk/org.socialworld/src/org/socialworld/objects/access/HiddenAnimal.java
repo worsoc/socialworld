@@ -21,6 +21,7 @@
 */
 package org.socialworld.objects.access;
 
+import org.socialworld.actions.handle.Inventory;
 import org.socialworld.actions.move.Path;
 import org.socialworld.calculation.FunctionByMatrix;
 import org.socialworld.calculation.Value;
@@ -45,6 +46,10 @@ public class HiddenAnimal extends HiddenSimulationObject {
 		return wa.setAttributes(attributes, this);
 	}
 	
+	public int setInventory(Inventory inventory) {
+		return wa.setInventory(inventory, this);
+	}
+
 	public int setMatrix(FunctionByMatrix matrix) {
 		return wa.setMatrix(matrix, this);
 	}

@@ -24,6 +24,7 @@ package org.socialworld.objects.access;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.Position;
 import org.socialworld.calculation.Vector;
+import org.socialworld.objects.SimulationObject_Type;
 import org.socialworld.objects.WriteAccessToSimulationObject;
 
 /**
@@ -50,6 +51,10 @@ public class HiddenSimulationObject {
 	
 	public final boolean isValid() {
 		return isValid;
+	}
+	
+	public SimulationObject_Type getSimObjectType() {
+		return this.wa.getSimObjectType();
 	}
 	
 	public final boolean checkAccessToPropertyGranted(  GrantedAccessToProperty property){

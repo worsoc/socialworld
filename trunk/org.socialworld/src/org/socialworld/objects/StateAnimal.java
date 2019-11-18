@@ -70,8 +70,6 @@ public class StateAnimal extends StateSimulationObject {
 		
 		attributes = new AttributeArray(Attribute.NUMBER_OF_ATTRIBUTES);
 		
-		createInventory();
-		
 	}
 
 
@@ -177,9 +175,6 @@ public class StateAnimal extends StateSimulationObject {
 /////////////////////////////    INVENTORY  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	protected void createInventory() {
-		inventory = new Inventory(getObject().getSimObjectType());
-	}
 	
 	final void setInventory(Inventory inventory, WriteAccessToAnimal guard) {
 		if (checkGuard(guard)) {
@@ -187,17 +182,17 @@ public class StateAnimal extends StateSimulationObject {
 		}
 	}
 	
-	final public SimulationObject getLeftHand() {
+	final public SimulationObject getLeftHandItem() {
 		// no copy because it is a simulation object and that isn't allowed to be duplicated
 		return this.inventory.getLeftHand();
 	}
 	
-	final public SimulationObject getRightHand() {
+	final public SimulationObject getRightHandItem() {
 		// no copy because it is a simulation object and that isn't allowed to be duplicated
 		return this.inventory.getRightHand();
 	}
 	
-	final public SimulationObject getMouth() {
+	final public SimulationObject getMouthItem() {
 		// no copy because it is a simulation object and that isn't allowed to be duplicated
 		return this.inventory.getMouth();
 	}

@@ -23,7 +23,6 @@ package org.socialworld.objects.access;
 
 import java.util.ArrayList;
 
-import org.socialworld.actions.handle.Inventory;
 import org.socialworld.conversation.Talk;
 import org.socialworld.conversation.Talk_SentenceType;
 import org.socialworld.knowledge.Acquaintance;
@@ -44,10 +43,6 @@ public class HiddenHuman extends HiddenAnimal {
 	public HiddenHuman(WriteAccessToHuman wa, GrantedAccessToProperty properties[]) {
 		super(wa, properties);
 		this.wa = wa;
-	}
-
-	public int setInventory(Inventory inventory) {
-		return wa.setInventory(inventory, this);
 	}
 
 	public int addSentence(Human partner, Talk_SentenceType type,  String sentence) {
