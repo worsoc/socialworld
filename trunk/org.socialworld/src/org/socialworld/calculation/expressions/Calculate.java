@@ -2,6 +2,7 @@ package org.socialworld.calculation.expressions;
 
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
+import org.socialworld.calculation.FunctionCheckType;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 
@@ -49,6 +50,13 @@ public class Calculate extends Expression {
 				case "attr":
 					result.setOperation(Expression_Function.attributeValue);
 					mustHaveSubExpressions = false;
+					break;
+				case "isnothing":
+					result.setOperation(Expression_Function.function);
+					result.setFunction(new FunctionCheckType(Type.nothing));
+					result.setExpression1(new Expression());
+					result.setExpression2(new Expression());
+					result.setExpression3(new Expression());
 					break;
 				case "add":
 					result.setOperation(Expression_Function.addition);
