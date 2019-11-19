@@ -21,10 +21,10 @@
 */
 package org.socialworld.objects;
 
-import org.socialworld.actions.attack.IWeapon;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.knowledge.Acquaintance;
 import org.socialworld.knowledge.AnswerProperties;
+import org.socialworld.objects.properties.IWeapon;
 import org.socialworld.conversation.Talk_SentenceType;
 import org.socialworld.core.IEventParam;
 

@@ -22,7 +22,6 @@
 package org.socialworld.objects;
 
 import org.socialworld.SocialWorld;
-import org.socialworld.actions.attack.IWeapon;
 import org.socialworld.actions.handle.Inventory;
 import org.socialworld.actions.move.Path;
 import org.socialworld.attributes.Attribute;
@@ -36,6 +35,7 @@ import org.socialworld.core.Event;
 import org.socialworld.knowledge.KnownPathsPool;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenAnimal;
+import org.socialworld.objects.properties.IWeapon;
 
 /**
  * @author Mathias Sikos
