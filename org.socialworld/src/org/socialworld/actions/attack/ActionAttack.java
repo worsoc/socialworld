@@ -33,6 +33,7 @@ import org.socialworld.core.EventByAction;
 import org.socialworld.core.EventType;
 import org.socialworld.core.IEventParam;
 import org.socialworld.objects.SimulationObject;
+import org.socialworld.objects.properties.IWeapon;
 import org.socialworld.objects.Human;
 
 /**

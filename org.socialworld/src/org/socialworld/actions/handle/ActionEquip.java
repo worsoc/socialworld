@@ -40,7 +40,7 @@ public class ActionEquip extends AbstractAction {
 	
     private SimulationObject item;
     
-    private InventoryPlace inventoryPlace;;
+    private InventoryPlace inventoryPlace;
 
 	@Override
 	protected void setFurtherProperties(ValueArrayList actionProperties) {
@@ -105,17 +105,17 @@ public class ActionEquip extends AbstractAction {
 				case takeItem:
 					eventType = EventType.selfInventoryTake;
 					break;
-				case collectItem:
-					eventType = EventType.selfInventoryCollect;
-					break;
 				case dropItem:
 					eventType = EventType.selfInventoryDrop;
 					break;
 				case switchItemToOtherHand:
 					eventType = EventType.selfInventorySwitch;
 					break;
-				case putToInventory:
-					eventType = EventType.selfInventoryPut;
+				case setItemToInventory:
+					eventType = EventType.selfInventorySet;
+					break;
+				case getItemFromInventory:
+					eventType = EventType.selfInventoryGet;
 					break;
 				default:
 					eventType = EventType.nothing;
@@ -130,17 +130,17 @@ public class ActionEquip extends AbstractAction {
 				case takeItem:
 					eventType = EventType.inventoryTake;
 					break;
-				case collectItem:
-					eventType = EventType.inventoryCollect;
-					break;
 				case dropItem:
 					eventType = EventType.inventoryDrop;
 					break;
 				case switchItemToOtherHand:
 					eventType = EventType.inventorySwitch;
 					break;
-				case putToInventory:
-					eventType = EventType.inventoryPut;
+				case setItemToInventory:
+					eventType = EventType.inventorySet;
+					break;
+				case getItemFromInventory:
+					eventType = EventType.inventoryGet;
 					break;
 				default:
 					eventType = EventType.nothing;
