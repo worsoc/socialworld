@@ -29,6 +29,8 @@ import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.core.Event;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenSimulationObject;
+import org.socialworld.objects.connections.Connection;
+import org.socialworld.objects.connections.ConnectionList;
 import org.socialworld.propertyChange.ListenedBase;
 
 /**
@@ -44,6 +46,8 @@ public class StateSimulationObject extends ListenedBase {
 	private		Vector directionMove;
 	private 	float powerMove;
 	
+	private ConnectionList connections;
+
 	private	int				influenceTypeByEventType[];
 	private	int				reactionTypeByEventType[];
 	private   int				state2ActionType;
@@ -56,13 +60,16 @@ public class StateSimulationObject extends ListenedBase {
 		grantAccessToPropertyPosition = new GrantedAccessToProperty[1];
 		grantAccessToPropertyPosition[0] = GrantedAccessToProperty.position;
 
-		grantAccessToPropertyPosition = new GrantedAccessToProperty[1];
-		grantAccessToPropertyPosition[0] = GrantedAccessToProperty.position;
+		grantAccessToPropertyAction = new GrantedAccessToProperty[1];
+		grantAccessToPropertyAction[0] = GrantedAccessToProperty.action;
 		
 	}
 	
 	final void setObject (SimulationObject object, WriteAccessToSimulationObject guard) {
-		if (checkGuard(guard)) this.object = object;
+		if (checkGuard(guard)) {
+			this.object = object;
+			this.connections = new ConnectionList(this.object);
+		}
 	}
 	
 	final protected HiddenSimulationObject getMeWritableButHidden(GrantedAccessToProperty properties[]) {
@@ -162,4 +169,14 @@ public class StateSimulationObject extends ListenedBase {
 		
 	}
 	
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    CONNECTED OBJECTS  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	final void addConnection(Connection connection, SimulationObject connectedObject, WriteAccessToSimulationObject guard) {
+		if (checkGuard(guard)) {
+			this.connections.add(connection, connectedObject);
+		}
+		
+	}
 }
