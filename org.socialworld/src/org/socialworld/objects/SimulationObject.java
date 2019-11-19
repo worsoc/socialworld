@@ -33,6 +33,7 @@ import org.socialworld.core.Event;
 import org.socialworld.core.IEventParam;
 import org.socialworld.core.SearchActionDescription;
 import org.socialworld.objects.access.GrantedAccessToProperty;
+import org.socialworld.objects.connections.Connection;
 import org.socialworld.propertyChange.ListenedBase;
 
 /**
@@ -54,7 +55,8 @@ public abstract class SimulationObject extends ListenedBase {
 	private	WriteAccessToSimulationObject guard;
 	private GrantedAccessToProperty grantAccessToAllProperties[];
 	private GrantedAccessToProperty grantAccessToPropertyAction[];
-
+	
+	
 	/**
 	 * The constructor creates an incomplete simulation object. It's an "empty" object. There is only the object ID.
 	 * 
@@ -222,6 +224,16 @@ public abstract class SimulationObject extends ListenedBase {
 		Scheduler.getInstance().createReaction(simualationEvent, state, guard.getMeHidden(grantAccessToPropertyAction));
 		
 	}
+
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    CONNECTED OBJECTS  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	final public void addConnection(Connection connection,  SimulationObject connectedObject) {
+		this.state.addConnection(connection, connectedObject, guard);
+	}
+	
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    PROPERTY LIST  ///////////////////////////////////////////////
