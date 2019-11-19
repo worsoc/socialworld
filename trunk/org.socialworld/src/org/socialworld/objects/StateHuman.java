@@ -24,8 +24,6 @@ package org.socialworld.objects;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
-import org.socialworld.actions.attack.IWeapon;
-import org.socialworld.actions.handle.Inventory;
 import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.conversation.Talk;
 import org.socialworld.conversation.Talk_SentenceType;
@@ -38,6 +36,7 @@ import org.socialworld.knowledge.KnowledgeProperties;
 import org.socialworld.knowledge.KnowledgeSource;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenHuman;
+import org.socialworld.objects.properties.IWeapon;
 
 /**
  * @author Mathias Sikos
