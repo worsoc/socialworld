@@ -21,10 +21,10 @@
 */
 package org.socialworld.actions.handle;
 
-import org.socialworld.actions.attack.IWeapon;
 import org.socialworld.core.ObjectMaster;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.SimulationObject_Type;
+import org.socialworld.objects.properties.IWeapon;
 
 /**
  * The class collects all informations about a

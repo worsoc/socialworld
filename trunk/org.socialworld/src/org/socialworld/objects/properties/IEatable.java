@@ -19,8 +19,10 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.actions.bodilyfunctions;
+package org.socialworld.objects.properties;
 
-public interface IDrinkable {
+
+public interface IEatable {
+
 
 }

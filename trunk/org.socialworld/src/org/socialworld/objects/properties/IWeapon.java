@@ -19,7 +19,9 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.actions.attack;
+package org.socialworld.objects.properties;
+
+import org.socialworld.actions.attack.WeaponProperty;
 
 /**
  * German:

@@ -33,6 +33,8 @@ import org.socialworld.core.EventType;
 import org.socialworld.core.IEventParam;
 import org.socialworld.objects.Animal;
 import org.socialworld.objects.SimulationObject;
+import org.socialworld.objects.properties.IDrinkable;
+import org.socialworld.objects.properties.IEatable;
 
 /**
  * German:
