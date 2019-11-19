@@ -29,7 +29,7 @@ import org.socialworld.attributes.ActualTime;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
-import org.socialworld.core.EventByAction;
+import org.socialworld.core.EventToCandidates;
 import org.socialworld.core.EventType;
 import org.socialworld.core.IEventParam;
 import org.socialworld.objects.SimulationObject;
@@ -156,8 +156,8 @@ public class ActionAttack extends AbstractAction {
    		this.weapon = weapon;
       	this.attack = new Attack( this);
       				
-      	EventByAction event;
-		event = new EventByAction( getEventType(type, mode),    actor /* as causer*/,  ActualTime.asTime(),
+      	EventToCandidates event;
+		event = new EventToCandidates( getEventType(type, mode),    actor /* as causer*/,  ActualTime.asTime(),
 						actor.getPosition(),  attack /* as performer */);
 		addEvent(event);
 		
@@ -176,25 +176,25 @@ public class ActionAttack extends AbstractAction {
     			
     			switch (mode) {
       			case weaponClub:
-    				eventType = EventType.weaponClub;
+    				eventType = EventType.candidatesWeaponClub;
     				break;
       			case weaponLeftStab:
-    				eventType = EventType.weaponLeftStab;
+    				eventType = EventType.candidatesWeaponLeftStab;
     				break;
     			case weaponLeftStroke:
-    				eventType = EventType.weaponLeftStroke;
+    				eventType = EventType.candidatesWeaponLeftStroke;
     				break;
       			case weaponLeftBackhand:
-    				eventType = EventType.weaponLeftBackhand;
+    				eventType = EventType.candidatesWeaponLeftBackhand;
     				break;
      			case weaponRightStab:
-    				eventType = EventType.weaponRightStab;
+    				eventType = EventType.candidatesWeaponRightStab;
     				break;
     			case weaponRightStroke:
-    				eventType = EventType.weaponRightStroke;
+    				eventType = EventType.candidatesWeaponRightStroke;
     				break;
       			case weaponRightBackhand:
-    				eventType = EventType.weaponRightBackhand;
+    				eventType = EventType.candidatesWeaponRightBackhand;
     				break;
     			default:
     				eventType = EventType.nothing;
@@ -205,22 +205,22 @@ public class ActionAttack extends AbstractAction {
     		case punch:
     			switch (mode) {
     			case punchLeftFistStraight:
-      				eventType = EventType.punchLeftFistStraight;
+      				eventType = EventType.candidatesPunchLeftFistStraight;
     				break;
        			case punchLeftFistSideways:
-      				eventType = EventType.punchLeftFistSideways;
+      				eventType = EventType.candidatesPunchLeftFistSideways;
     				break;
        			case punchLeftFistUpward:
-      				eventType = EventType.punchLeftFistUpward;
+      				eventType = EventType.candidatesPunchLeftFistUpward;
     				break;
        			case punchRightFistStraight:
-      				eventType = EventType.punchRightFistStraight;
+      				eventType = EventType.candidatesPunchRightFistStraight;
     				break;
        			case punchRightFistSideways:
-      				eventType = EventType.punchRightFistSideways;
+      				eventType = EventType.candidatesPunchRightFistSideways;
     				break;
        			case punchRightFistUpward:
-      				eventType = EventType.punchRightFistUpward;
+      				eventType = EventType.candidatesPunchRightFistUpward;
     				break;
    				
  	   			default:

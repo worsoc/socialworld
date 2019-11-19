@@ -66,8 +66,7 @@ import org.socialworld.objects.access.HiddenSimulationObject;
  * Es gilt der Grundsatz, dass alle Aktionen durch ihre Ereignisverarbeitung wirksam werden.
  * Im Schritt a) wurden Ereignisse zu den Aktionen in die Ereignisverwaltung eingetragen.
  * Die Ereignisverwaltung arbeitet die Ereignisse nach ihren Regeln ab.
- * Für jedes Event der Klasse EventByAction, also von Aktionen ausgelöste Ereignisse, 
- *  wird die evaluate-Methode des dem Ereignis zugeordenten Performers (Ableitung der Klasse ActionPerformer) aufgerufen.
+ * Für jedes Event wird die evaluate-Methode des dem Ereignis zugeordenten Performers (Ableitung der Klasse ActionPerformer) aufgerufen.
  * Diese wiederum ruft die Methode perform im Performerobjekt auf.
  * Diese Methode ermittelt die für die Ereignisverarbeitung benötigten Werte 
  * 	aus dem Aktionsobjekt, dem ausführenden Objekt (also dem Akteur) und ggf. dem Zielobjekt. 

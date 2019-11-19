@@ -32,7 +32,9 @@ import org.socialworld.calculation.Value;
 import org.socialworld.calculation.Vector;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.conversation.Talk_SentenceType;
-import org.socialworld.core.EventByAction;
+import org.socialworld.core.Event;
+import org.socialworld.core.EventToCandidates;
+import org.socialworld.core.EventToTarget;
 import org.socialworld.core.EventType;
 import org.socialworld.core.IEventParam;
 import org.socialworld.objects.Human;
@@ -121,7 +123,7 @@ public class ActionSay extends AbstractAction {
 
 	public  void perform() {
 		
-		EventByAction event;
+		Event event;
 		final Human partner = (Human) target;
 		
 		switch (type) {
@@ -150,6 +152,11 @@ public class ActionSay extends AbstractAction {
 						
 						return;
 				}
+				
+				
+		 		this.say = new Say(this);
+				event = new EventToTarget(getEventType(type, mode),    actor /* as causer*/,  ActualTime.asTime(),
+						actor.getPosition(),  say /* as performer */);
 				break;
 				
 			case say:
@@ -168,16 +175,15 @@ public class ActionSay extends AbstractAction {
 					default:
 						return;
 				}
-				break;
+
+		 		this.say = new Say(this);
+				event = new EventToCandidates(getEventType(type, mode),    actor /* as causer*/,  ActualTime.asTime(),
+						actor.getPosition(),  say /* as performer */);
+		 		break;
 				
 			default:
 				return;
 		}
-
- 		this.say = new Say(this);
-  		
-		event = new EventByAction(getEventType(type, mode),    actor /* as causer*/,  ActualTime.asTime(),
-				actor.getPosition(),  say /* as performer */);
 
 		addEvent(event);
 
@@ -191,17 +197,17 @@ public class ActionSay extends AbstractAction {
 			
 			switch (mode) {
 				case answerNormal:
-					return EventType.answerNormal;
+					return EventType.targetAnswerNormal;
 				case answerScream:
-					return EventType.answerScream;
+					return EventType.targetAnswerScream;
 				case answerWhisper:
-					return EventType.answerWhisper;
+					return EventType.targetAnswerWhisper;
 				case askNormal:
-					return EventType.askNormal;
+					return EventType.targetAskNormal;
 				case askScream:
-					return EventType.askScream;
+					return EventType.targetAskScream;
 				case askWhisper:
-					return EventType.askWhisper;
+					return EventType.targetAskWhisper;
 					
 				default:
 					return EventType.nothing;
@@ -211,11 +217,11 @@ public class ActionSay extends AbstractAction {
 			
 			switch (mode) {
 				case normal:
-					return EventType.sayNormal;
+					return EventType.candidatesSayNormal;
 				case scream:
-					return EventType.sayScream;
+					return EventType.candidatesSayScream;
 				case whisper:
-					return EventType.sayWhisper;
+					return EventType.candidatesSayWhisper;
 				default:
 					return EventType.nothing;
 			}

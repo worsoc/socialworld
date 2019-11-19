@@ -105,19 +105,19 @@ public class TalkCalculator  extends SocialWorldThread {
 		eventType = event.getEventType();
 	
 		switch (eventType) {
-		case listenToStatement:
-		case listenToQuestion:
-		case listenToInstruction:
+		case selfListenToStatement:
+		case selfListenToQuestion:
+		case selfListenToInstruction:
 			calculateListenTo(event, eventType, stateHuman, hiddenWriteAccess );
 			break;
 			
-		case understand:
+		case selfUnderstand:
 			calculateUnderstand(event, eventType, stateHuman, hiddenWriteAccess);
 			break;
 			
-		case answerNormal:
-		case answerScream:
-		case answerWhisper:
+		case selfAnswerNormal:
+		case selfAnswerScream:
+		case selfAnswerWhisper:
 			calculateAnswer(event, eventType, stateHuman, hiddenWriteAccess);
 			break;
 			
@@ -150,13 +150,13 @@ public class TalkCalculator  extends SocialWorldThread {
 			return;
 
 		switch (eventType) {
-		case listenToStatement:
+		case selfListenToStatement:
 			hiddenWriteAccess.addSentence(partner, Talk_SentenceType.partnersSentence, sentence);
 			break;
-		case listenToQuestion:	
+		case selfListenToQuestion:	
 			hiddenWriteAccess.addSentence(partner, Talk_SentenceType.partnersQuestion, sentence);
 			break;
-		case listenToInstruction:
+		case selfListenToInstruction:
 			hiddenWriteAccess.addSentence(partner, Talk_SentenceType.partnersInstruction, sentence);
 			break;
 		default:

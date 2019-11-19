@@ -30,7 +30,7 @@ import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.conversation.PunctuationMark;
 import org.socialworld.conversation.Talk_SentenceType;
-import org.socialworld.core.EventByAction;
+import org.socialworld.core.EventToCauser;
 import org.socialworld.core.EventType;
 import org.socialworld.core.IEventParam;
 import org.socialworld.objects.Human;
@@ -105,7 +105,7 @@ public class ActionHear extends AbstractAction {
 	
 	public  void perform() {
 		Human partner;
-		EventByAction event;
+		EventToCauser event;
 		EventType eventType;
 		
 		partner = (Human) this.target;
@@ -133,7 +133,7 @@ public class ActionHear extends AbstractAction {
 		
   		this.hear = new Hear(this);
   		
-		event = new EventByAction(eventType,    actor /* as causer*/,  ActualTime.asTime(),
+		event = new EventToCauser(eventType,    actor /* as causer*/,  ActualTime.asTime(),
 				actor.getPosition(),  hear /* as performer */);
 
 		addEvent(event);
@@ -146,16 +146,16 @@ public class ActionHear extends AbstractAction {
 		case listenTo:
 			switch (PunctuationMark.getPunctuationMark(sentence)) {
 			case dot: 
-				return EventType.listenToStatement;
+				return EventType.selfListenToStatement;
 			case question:
-				return EventType.listenToQuestion;
+				return EventType.selfListenToQuestion;
 			case exclamation:
-				return EventType.listenToInstruction;
+				return EventType.selfListenToInstruction;
 			default:
 				return EventType.nothing;
 			}
 		case understand:
-			return EventType.understand;
+			return EventType.selfUnderstand;
 		default:
 			return EventType.nothing;
 		}
