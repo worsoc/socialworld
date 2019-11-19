@@ -2,6 +2,7 @@ package org.socialworld.objects.connections;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 import org.socialworld.objects.SimulationObject;
 
@@ -38,10 +39,30 @@ public class ConnectionList {
 		master.addConnection(newConnection, listOwner);
 	}
 	
+	public void releaseConnection(SimulationObject object) {
+		ListIterator<Connection> iterator = connections.listIterator();
+		Connection con = null;
+		while (iterator.hasNext()) {
+			con = (Connection) iterator.next();
+			if (con.getObject1() ==  object || con.getObject2() == object) {
+				iterator.remove();
+				object.releaseConnection(con, listOwner);
+				break;
+			}
+		}
+	}
+	
 	public void add(Connection connection, SimulationObject connectedObject) {
 		if ( (connection.getObject1() == this.listOwner || connection.getObject2() == this.listOwner) && 
 			 (connection.getObject1() == connectedObject || connection.getObject2() == connectedObject) ) {
 			connections.add(connection);
+		}
+	}
+
+	public void release(Connection connection, SimulationObject connectedObject) {
+		if ( (connection.getObject1() == this.listOwner || connection.getObject2() == this.listOwner) && 
+			 (connection.getObject1() == connectedObject || connection.getObject2() == connectedObject) ) {
+			connections.remove(connection);
 		}
 	}
 

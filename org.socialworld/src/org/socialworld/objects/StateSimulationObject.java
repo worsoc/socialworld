@@ -31,6 +31,7 @@ import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenSimulationObject;
 import org.socialworld.objects.connections.Connection;
 import org.socialworld.objects.connections.ConnectionList;
+import org.socialworld.objects.connections.ConnectionType;
 import org.socialworld.propertyChange.ListenedBase;
 
 /**
@@ -173,10 +174,36 @@ public class StateSimulationObject extends ListenedBase {
 /////////////////////////////    CONNECTED OBJECTS  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
+	final void connectEqualTo(SimulationObject object, ConnectionType type, WriteAccessToSimulationObject guard) {
+		if (checkGuard(guard)) {
+			this.connections.connectEqualTo(object, type);
+		}
+	}
+
+	final void connectAsMasterTo(SimulationObject object, ConnectionType type, WriteAccessToSimulationObject guard) {
+		if (checkGuard(guard)) {
+			this.connections.connectAsMasterTo(object, type);
+		}
+	}
+
+	final void connectAsSlaveTo(SimulationObject object, ConnectionType type, WriteAccessToSimulationObject guard) {
+		if (checkGuard(guard)) {
+			this.connections.connectAsSlaveTo(object, type);
+		}
+	}
+
 	final void addConnection(Connection connection, SimulationObject connectedObject, WriteAccessToSimulationObject guard) {
 		if (checkGuard(guard)) {
 			this.connections.add(connection, connectedObject);
 		}
-		
 	}
+	
+	final void releaseConnection(Connection connection, SimulationObject connectedObject, WriteAccessToSimulationObject guard) {
+		if (checkGuard(guard)) {
+			this.connections.release(connection, connectedObject);
+		}
+	}
+	
+	
+
 }

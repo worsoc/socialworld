@@ -34,6 +34,7 @@ import org.socialworld.core.IEventParam;
 import org.socialworld.core.SearchActionDescription;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.connections.Connection;
+import org.socialworld.objects.connections.ConnectionType;
 import org.socialworld.propertyChange.ListenedBase;
 
 /**
@@ -227,13 +228,28 @@ public abstract class SimulationObject extends ListenedBase {
 
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////    CONNECTED OBJECTS  ///////////////////////////////////////////////
+/////////////////////////////    CONNECTED OBJECTS  ///////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
+	final public void connectEqualTo(SimulationObject object, ConnectionType type) {
+		this.state.connectEqualTo(object, type, this.guard);
+	}
+
+	final public void connectAsMasterTo(SimulationObject object, ConnectionType type) {
+		this.state.connectAsMasterTo(object, type, this.guard);
+	}
+
+	final public void connectAsSlaveTo(SimulationObject object, ConnectionType type) {
+		this.state.connectAsSlaveTo(object, type, this.guard);
+	}
+
 	final public void addConnection(Connection connection,  SimulationObject connectedObject) {
-		this.state.addConnection(connection, connectedObject, guard);
+		this.state.addConnection(connection, connectedObject, this.guard);
 	}
 	
+	final public void releaseConnection(Connection connection,  SimulationObject connectedObject) {
+		this.state.releaseConnection(connection, connectedObject, this.guard);
+	}
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    PROPERTY LIST  ///////////////////////////////////////////////
