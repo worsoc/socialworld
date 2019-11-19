@@ -30,7 +30,7 @@ import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.Vector;
 import org.socialworld.collections.ValueArrayList;
-import org.socialworld.core.EventByAction;
+import org.socialworld.core.EventToTarget;
 import org.socialworld.core.EventType;
 import org.socialworld.core.IEventParam;
 import org.socialworld.objects.Human;
@@ -150,8 +150,8 @@ public class ActionHandle extends AbstractAction {
 
    		this.handle = new Handle(this);
   
-   		EventByAction event;
-		event = new EventByAction( getEventType(type, mode),    actor /* as causer*/,  ActualTime.asTime(),
+   		EventToTarget event;
+		event = new EventToTarget( getEventType(type, mode),    actor /* as causer*/,  ActualTime.asTime(),
 						actor.getPosition(),  handle /* as performer */);
 		addEvent(event);
 
@@ -165,19 +165,19 @@ public class ActionHandle extends AbstractAction {
 			case handleItem:
 				switch (mode) {
 					case useTwoItems:
-						return EventType.handleItemUse2;
+						return EventType.targetHandleItemUse2;
 					case useItemLeftHand:
-						return EventType.handleItemUseLeft;
+						return EventType.targetHandleItemUseLeft;
 					case useItemRightHand:
-						return EventType.handleItemUseRight;
+						return EventType.targetHandleItemUseRight;
 					case combineItems_AddRightToLeft:
-						return EventType.handleItemAddRtoL;
+						return EventType.targetHandleItemAddRtoL;
 					case combineItems_AddLeftToRight:
-						return EventType.handleItemAddLtoR;
+						return EventType.targetHandleItemAddLtoR;
 					case pull:
-						return EventType.handleItemPull;
+						return EventType.targetHandleItemPull;
 					case push:
-						return EventType.handleItemPush;
+						return EventType.targetHandleItemPush;
 					default:
 						return EventType.nothing;
 				}
@@ -185,9 +185,9 @@ public class ActionHandle extends AbstractAction {
 			case touch:
 				switch (mode) {
 					case hand:
-						return EventType.touchByHand;
+						return EventType.targetTouchByHand;
 					case foot:
-						return EventType.touchByFoot;
+						return EventType.targetTouchByFoot;
 					default:
 						return EventType.nothing;
 				}

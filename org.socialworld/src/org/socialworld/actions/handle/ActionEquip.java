@@ -29,7 +29,8 @@ import org.socialworld.attributes.Time;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
-import org.socialworld.core.EventByAction;
+import org.socialworld.core.EventToCauser;
+import org.socialworld.core.EventToTarget;
 import org.socialworld.core.EventType;
 import org.socialworld.core.IEventParam;
 import org.socialworld.objects.SimulationObject;
@@ -80,14 +81,14 @@ public class ActionEquip extends AbstractAction {
 		Time actualTime = ActualTime.asTime();
 		
       	// event with influence to other objects
-      	EventByAction event;
-		event = new EventByAction( getEventType(mode, false),    actor /* as causer*/, actualTime ,
+      	EventToTarget event;
+		event = new EventToTarget( getEventType(mode, false),    actor /* as causer*/, actualTime ,
 				position,  equip /* as performer */);
 		addEvent(event);
 
       	// event with influence to causer itself 
-     	EventByAction eventSelf;
-     	eventSelf = new EventByAction( getEventType(mode, true),    actor /* as causer*/,  actualTime,
+     	EventToCauser eventSelf;
+     	eventSelf = new EventToCauser( getEventType(mode, true),    actor /* as causer*/,  actualTime,
      			position,  equip /* as performer */);
 		addEvent(eventSelf);
 
@@ -128,19 +129,19 @@ public class ActionEquip extends AbstractAction {
 			switch (mode) {
 			
 				case takeItem:
-					eventType = EventType.inventoryTake;
+					eventType = EventType.targetInventoryTake;
 					break;
 				case dropItem:
-					eventType = EventType.inventoryDrop;
+					eventType = EventType.targetInventoryDrop;
 					break;
 				case switchItemToOtherHand:
-					eventType = EventType.inventorySwitch;
+					eventType = EventType.targetInventorySwitch;
 					break;
 				case setItemToInventory:
-					eventType = EventType.inventorySet;
+					eventType = EventType.targetInventorySet;
 					break;
 				case getItemFromInventory:
-					eventType = EventType.inventoryGet;
+					eventType = EventType.targetInventoryGet;
 					break;
 				default:
 					eventType = EventType.nothing;

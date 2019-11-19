@@ -30,7 +30,7 @@ import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.Vector;
 import org.socialworld.collections.ValueArrayList;
-import org.socialworld.core.EventByAction;
+import org.socialworld.core.EventToCandidates;
 import org.socialworld.core.EventType;
 import org.socialworld.core.IEventParam;
 import org.socialworld.objects.Animal;
@@ -150,8 +150,8 @@ public class ActionMove extends AbstractAction {
 		if (moveCompleted || this.firstStep) 			createMove();
 		this.firstPerforming = false;
 		
-		EventByAction event;
-		event = new EventByAction( getEventType(mode),    actor /* as causer*/,  ActualTime.asTime(),
+		EventToCandidates event;
+		event = new EventToCandidates( getEventType(mode),    actor /* as causer*/,  ActualTime.asTime(),
 					actor.getPosition(),  move /* as performer */);
 
 		// TODO wieder weg weil nur Debuggen
@@ -192,17 +192,17 @@ public class ActionMove extends AbstractAction {
 	private EventType getEventType(ActionMode mode) {
 		switch (mode) {
 		case walk:
-			return EventType.moveWalk;
+			return EventType.candidatesMoveWalk;
 		case run:
-			return EventType.moveRun;
+			return EventType.candidatesMoveRun;
 		case sneak:
-			return EventType.moveSneak;
+			return EventType.candidatesMoveSneak;
 		case jump:
-			return EventType.moveJump;
+			return EventType.candidatesMoveJump;
 		case swim:
-			return EventType.moveSwim;
+			return EventType.candidatesMoveSwim;
 		case fly: 
-			return EventType.moveFly;
+			return EventType.candidatesMoveFly;
 		default:
 			return EventType.nothing;
 		}

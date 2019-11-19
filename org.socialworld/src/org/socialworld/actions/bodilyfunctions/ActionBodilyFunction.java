@@ -28,7 +28,7 @@ import org.socialworld.attributes.ActualTime;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
-import org.socialworld.core.EventByAction;
+import org.socialworld.core.EventToCauser;
 import org.socialworld.core.EventType;
 import org.socialworld.core.IEventParam;
 import org.socialworld.objects.Animal;
@@ -94,7 +94,7 @@ public class ActionBodilyFunction extends AbstractAction {
 	public void perform() {
 		
 		
-		EventByAction event;
+		EventToCauser event;
 		EventType eventType;
 		
    		switch (mode) {
@@ -126,7 +126,7 @@ public class ActionBodilyFunction extends AbstractAction {
 				
 		if (eventType == EventType.nothing) return;
 				
-		event = new EventByAction(eventType,    actor /* as causer*/,  ActualTime.asTime(),
+		event = new EventToCauser(eventType,    actor /* as causer*/,  ActualTime.asTime(),
 					actor.getPosition(),  bodilyFunction /* as performer */);
 		addEvent(event);
 	}

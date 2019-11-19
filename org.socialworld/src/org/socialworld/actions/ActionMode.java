@@ -45,7 +45,7 @@ public enum ActionMode {
 	hand(31), foot(32),
 	
 	// for ActionType equip
-	takeItem(41), collectItem(42), dropItem(43), switchItemToOtherHand(44), putToInventory(45),
+	takeItem(41), dropItem(42), switchItemToOtherHand(43), setItemToInventory(44), getItemFromInventory(45),
 
 	// for ActionType handleItem
 	useTwoItems(51),	useItemLeftHand(52), useItemRightHand(53),
