@@ -65,6 +65,11 @@ public class EventMaster extends SocialWorldThread {
 	private List<SimulationObject> candidates;
 
 	/**
+	 * a list of simulation objects which are explicitly assigned to the event as property (targets, items ...)
+	 */
+	private List<SimulationObject> targets;
+
+	/**
 	 * the actually treated event
 	 */
 	private Event event;
@@ -175,12 +180,15 @@ public class EventMaster extends SocialWorldThread {
 			
 			blockedByCalculate = true;
 			if ( loadEvent( event ) == true ) {
-				if (isRelevantForEffectiveCheck) {
-					determineCandidates();
-					determineInfluenceToCandidates();
+				if (event.isEventToTarget()) {
+					determineInfluenceToTargets();
 				}
 				if (event.isEventToCauserItself()) {
 					determineInfluenceToCauser();
+				}
+				if (isRelevantForEffectiveCheck) {
+					determineCandidates();
+					determineInfluenceToCandidates();
 				}
 			}
 			blockedByCalculate = false;
@@ -241,6 +249,7 @@ public class EventMaster extends SocialWorldThread {
 		}
 
 	}
+
 
 	/**
 	 * The method calculates whether a candidate {@link SimulationObject} is
@@ -326,6 +335,42 @@ public class EventMaster extends SocialWorldThread {
 			iterator.remove();
 		}
 
+	}
+	
+	
+
+	/**
+	 * The method lets all explicitly assigned  target objects calculate the event's effect.
+	 */
+	private void determineInfluenceToTargets() {
+		
+		List<SimulationObject> targets = this.event.getTargetObjects();
+		
+		if (targets.size() > 0){
+			
+			SimulationObject target;
+			ListIterator<SimulationObject> iterator;
+			
+			// two iterations because of asynchronous calculations
+			// there is a better chance to react on the event (second iteration) using the newer state (just calculated in first iteration)
+			
+			// first iteration for calculating the effect to the simulation object's state
+			iterator = targets.listIterator();
+			while (iterator.hasNext()) {
+				target = iterator.next();
+				target.changeByEvent(this.event);
+			}
+			
+			// second iteration for creating the reaction
+			iterator = targets.listIterator();
+			while (iterator.hasNext()) {
+				target = iterator.next();			
+				target.reactToEvent(this.event);
+				iterator.remove();
+			}
+		
+		}
+		
 	}
 	
 	private void determineInfluenceToCauser() {
