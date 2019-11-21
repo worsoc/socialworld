@@ -188,9 +188,6 @@ public class ActionAttack extends AbstractAction {
 		
 	}
 
-	public Value getWeaponAsValue(String valueName) {
-		return new Value(Type.simulationObject, valueName, this.weapon);
-	}
 	
 	
 	private EventType getEventToCandidatesType(ActionType type, ActionMode mode ) {
@@ -406,7 +403,13 @@ public class ActionAttack extends AbstractAction {
 	  	return eventType;
 	}
 	
+	public Value getWeaponAsValue(String valueName) {
+		return new Value(Type.simulationObject, valueName, this.weapon);
+	}
 	
+	public IWeapon getWeapon() {
+		return this.weapon;
+	}
 	
 	public void setTarget(SimulationObject target) {
 		this.target = target;

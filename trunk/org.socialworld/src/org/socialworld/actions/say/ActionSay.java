@@ -132,6 +132,7 @@ public class ActionSay extends AbstractAction {
 		switch (type) {
 			case talk:
 				
+				
 				switch (mode) {
 					case answerNormal:
 					case answerScream:

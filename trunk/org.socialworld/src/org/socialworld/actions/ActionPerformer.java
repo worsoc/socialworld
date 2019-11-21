@@ -21,6 +21,8 @@
 */
 package org.socialworld.actions;
 
+import java.util.List;
+
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.descriptions.Action2PerformerAssignment;
@@ -193,5 +195,8 @@ public abstract class ActionPerformer implements IEventParam {
 	protected AbstractAction getOriginalActionObject() {
 		return this.action;
 	}
+
+	
+    public abstract List<SimulationObject> getTargets();
 
 }

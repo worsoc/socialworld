@@ -21,9 +21,13 @@
 */
 package org.socialworld.actions.hear;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.socialworld.actions.ActionPerformer;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
+import org.socialworld.objects.SimulationObject;
 
 /**
  * German:
@@ -88,7 +92,12 @@ public class Hear extends ActionPerformer {
 		}
 	}
 	
+   public List<SimulationObject> getTargets() {
+
+    	List<SimulationObject> targets = new ArrayList<SimulationObject>();
+    	
+    	return targets;
+    	
+    }
 	
-
-
 }

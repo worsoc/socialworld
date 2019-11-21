@@ -21,9 +21,13 @@
 */
 package org.socialworld.actions.handle;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.socialworld.actions.ActionPerformer;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
+import org.socialworld.objects.SimulationObject;
 
 /**
  * German:
@@ -120,6 +124,31 @@ public class Handle extends ActionPerformer {
 		
 	}
 
+	
+	public List<SimulationObject> getTargets() {
+
+	    	List<SimulationObject> targets = new ArrayList<SimulationObject>();
+	    	SimulationObject target;
+	    	
+	    	target =  ((ActionHandle) this.getOriginalActionObject()).getItem1();
+	    	if (target != null) {
+	    		targets.add(target);
+	    	}
+
+	    	target =  ((ActionHandle) this.getOriginalActionObject()).getItem2();
+	    	if (target != null) {
+	    		targets.add(target);
+	    	}
+
+	    	target =  ((ActionHandle) this.getOriginalActionObject()).getTarget();
+	    	if (target != null) {
+	    		targets.add(target);
+	    	}
+	    	
+	    	return targets;
+	    	
+	}
+	
 	/*
    	private int getHandleKind() {
  		ActionAttack originalAction;
