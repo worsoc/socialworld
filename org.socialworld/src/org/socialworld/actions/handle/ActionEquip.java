@@ -29,6 +29,7 @@ import org.socialworld.attributes.Time;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
+import org.socialworld.core.Event;
 import org.socialworld.core.EventToCauser;
 import org.socialworld.core.EventToTarget;
 import org.socialworld.core.EventType;
@@ -79,74 +80,81 @@ public class ActionEquip extends AbstractAction {
       	
 		Position position = actor.getPosition();
 		Time actualTime = ActualTime.asTime();
+
+      	Event event;
+      	EventType eventType;
+      	
+      	// event with influence to equipment objects
+		eventType = getEventToTargetType(mode);
+		if (eventType != EventType.nothing) {
+			event = new EventToTarget( eventType,    actor /* as causer*/, actualTime ,
+					position,  equip /* as performer */);
+			addEvent(event);
+		}
 		
-      	// event with influence to other objects
-      	EventToTarget event;
-		event = new EventToTarget( getEventType(mode, false),    actor /* as causer*/, actualTime ,
-				position,  equip /* as performer */);
-		addEvent(event);
-
       	// event with influence to causer itself 
-     	EventToCauser eventSelf;
-     	eventSelf = new EventToCauser( getEventType(mode, true),    actor /* as causer*/,  actualTime,
-     			position,  equip /* as performer */);
-		addEvent(eventSelf);
-
+		eventType = getEventToCauserType(mode);
+		if (eventType != EventType.nothing) {
+	     	event = new EventToCauser( eventType,    actor /* as causer*/,  actualTime,
+	     			position,  equip /* as performer */);
+			addEvent(event);
+		}
 		
 	}
 
-	private EventType getEventType(ActionMode mode, boolean eventToCauserItself) {
+	private EventType getEventToCauserType(ActionMode mode) {
+		
+		EventType eventType;
+ 			
+		switch (mode) {
+
+			case takeItem:
+				eventType = EventType.selfInventoryTake;
+				break;
+			case dropItem:
+				eventType = EventType.selfInventoryDrop;
+				break;
+			case switchItemToOtherHand:
+				eventType = EventType.selfInventorySwitch;
+				break;
+			case setItemToInventory:
+				eventType = EventType.selfInventorySet;
+				break;
+			case getItemFromInventory:
+				eventType = EventType.selfInventoryGet;
+				break;
+			default:
+				eventType = EventType.nothing;
+				
+		}
+		
+	  	return eventType;
+	  	
+	}
+
+	private EventType getEventToTargetType(ActionMode mode) {
 		
 		EventType eventType;
    			
-		if (eventToCauserItself) {
-			
-			switch (mode) {
-	
-				case takeItem:
-					eventType = EventType.selfInventoryTake;
-					break;
-				case dropItem:
-					eventType = EventType.selfInventoryDrop;
-					break;
-				case switchItemToOtherHand:
-					eventType = EventType.selfInventorySwitch;
-					break;
-				case setItemToInventory:
-					eventType = EventType.selfInventorySet;
-					break;
-				case getItemFromInventory:
-					eventType = EventType.selfInventoryGet;
-					break;
-				default:
-					eventType = EventType.nothing;
-					
-			}
-			
-		}
-		else {
-			
-			switch (mode) {
-			
-				case takeItem:
-					eventType = EventType.targetInventoryTake;
-					break;
-				case dropItem:
-					eventType = EventType.targetInventoryDrop;
-					break;
-				case switchItemToOtherHand:
-					eventType = EventType.targetInventorySwitch;
-					break;
-				case setItemToInventory:
-					eventType = EventType.targetInventorySet;
-					break;
-				case getItemFromInventory:
-					eventType = EventType.targetInventoryGet;
-					break;
-				default:
-					eventType = EventType.nothing;
-				
-			}
+		switch (mode) {
+		
+			case takeItem:
+				eventType = EventType.targetInventoryTake;
+				break;
+			case dropItem:
+				eventType = EventType.targetInventoryDrop;
+				break;
+			case switchItemToOtherHand:
+				eventType = EventType.targetInventorySwitch;
+				break;
+			case setItemToInventory:
+				eventType = EventType.targetInventorySet;
+				break;
+			case getItemFromInventory:
+				eventType = EventType.targetInventoryGet;
+				break;
+			default:
+				eventType = EventType.nothing;
 			
 		}
 		

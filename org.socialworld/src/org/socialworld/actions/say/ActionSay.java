@@ -34,6 +34,7 @@ import org.socialworld.collections.ValueArrayList;
 import org.socialworld.conversation.Talk_SentenceType;
 import org.socialworld.core.Event;
 import org.socialworld.core.EventToCandidates;
+import org.socialworld.core.EventToCauser;
 import org.socialworld.core.EventToTarget;
 import org.socialworld.core.EventType;
 import org.socialworld.core.IEventParam;
@@ -123,7 +124,9 @@ public class ActionSay extends AbstractAction {
 
 	public  void perform() {
 		
-		Event event;
+		Event event = null;
+		EventType eventType;
+		
 		final Human partner = (Human) target;
 		
 		switch (type) {
@@ -155,8 +158,11 @@ public class ActionSay extends AbstractAction {
 				
 				
 		 		this.say = new Say(this);
-				event = new EventToTarget(getEventType(type, mode),    actor /* as causer*/,  ActualTime.asTime(),
+		 		eventType = getEventType(type, mode);
+				if (eventType != EventType.nothing) {
+					event = new EventToTarget(eventType,    actor /* as causer*/,  ActualTime.asTime(),
 						actor.getPosition(),  say /* as performer */);
+				}
 				break;
 				
 			case say:
@@ -177,15 +183,27 @@ public class ActionSay extends AbstractAction {
 				}
 
 		 		this.say = new Say(this);
-				event = new EventToCandidates(getEventType(type, mode),    actor /* as causer*/,  ActualTime.asTime(),
+		 		eventType = getEventType(type, mode);
+				if (eventType != EventType.nothing) {
+					event = new EventToCandidates(eventType,    actor /* as causer*/,  ActualTime.asTime(),
 						actor.getPosition(),  say /* as performer */);
+				}
 		 		break;
 				
 			default:
 				return;
 		}
 
-		addEvent(event);
+		if (eventType != EventType.nothing) {
+			addEvent(event);
+		}
+		
+ 		eventType = getEventToCauserType(type, mode);
+		if (eventType != EventType.nothing) {
+			event = new EventToCauser(eventType,    actor /* as causer*/,  ActualTime.asTime(),
+				actor.getPosition(),  say /* as performer */);
+			addEvent(event);
+		}
 
 	}
 
@@ -231,9 +249,48 @@ public class ActionSay extends AbstractAction {
 		}
 		
 	}
+
+	private EventType getEventToCauserType(ActionType type, ActionMode mode) {
+		switch (type) {
+		case talk:
+			
+			switch (mode) {
+				case answerNormal:
+					return EventType.selfAnswerNormal;
+				case answerScream:
+					return EventType.selfAnswerScream;
+				case answerWhisper:
+					return EventType.selfAnswerWhisper;
+				case askNormal:
+					return EventType.selfAskNormal;
+				case askScream:
+					return EventType.selfAskScream;
+				case askWhisper:
+					return EventType.selfAskWhisper;
+					
+				default:
+					return EventType.nothing;
+			}
+			
+		case say:
+			
+			switch (mode) {
+				case normal:
+					return EventType.selfSayNormal;
+				case scream:
+					return EventType.selfSayScream;
+				case whisper:
+					return EventType.selfSayWhisper;
+				default:
+					return EventType.nothing;
+			}
+			
+		default:
+			return EventType.nothing;
+		}
+		
+	}
 	
-
-
 
 	/**
 	 * @return the direction

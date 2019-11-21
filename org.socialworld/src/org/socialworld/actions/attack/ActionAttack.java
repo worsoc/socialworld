@@ -29,7 +29,10 @@ import org.socialworld.attributes.ActualTime;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
+import org.socialworld.core.Event;
 import org.socialworld.core.EventToCandidates;
+import org.socialworld.core.EventToCauser;
+import org.socialworld.core.EventToTarget;
 import org.socialworld.core.EventType;
 import org.socialworld.core.IEventParam;
 import org.socialworld.objects.SimulationObject;
@@ -104,7 +107,8 @@ public class ActionAttack extends AbstractAction {
 	 */
 	@Override
 	public void perform() {
-		IWeapon weapon;
+		
+		IWeapon weapon = null;
 
 		switch (type) {
 		
@@ -156,10 +160,31 @@ public class ActionAttack extends AbstractAction {
    		this.weapon = weapon;
       	this.attack = new Attack( this);
       				
-      	EventToCandidates event;
-		event = new EventToCandidates( getEventType(type, mode),    actor /* as causer*/,  ActualTime.asTime(),
-						actor.getPosition(),  attack /* as performer */);
-		addEvent(event);
+      	Event event;
+		EventType eventType;
+     	
+		eventType = getEventToCandidatesType(type, mode);
+		if (eventType != EventType.nothing) {
+			event = new EventToCandidates(eventType ,    actor /* as causer*/,  ActualTime.asTime(),
+							actor.getPosition(),  attack /* as performer */);
+			addEvent(event);
+		}
+		
+		if (this.weapon != null) {
+			eventType = getEventToTargetType(type, mode);
+			if (eventType != EventType.nothing) {
+				event = new EventToTarget(eventType,    actor /* as causer*/,  ActualTime.asTime(),
+								actor.getPosition(),  attack /* as performer */);
+				addEvent(event);
+			}
+		}
+		
+		eventType = getEventToCauserType(type, mode);
+		if (eventType != EventType.nothing) {
+			event = new EventToCauser(eventType,    actor /* as causer*/,  ActualTime.asTime(),
+					actor.getPosition(),  attack /* as performer */);
+			addEvent(event);
+		}
 		
 	}
 
@@ -168,7 +193,7 @@ public class ActionAttack extends AbstractAction {
 	}
 	
 	
-	private EventType getEventType(ActionType type, ActionMode mode) {
+	private EventType getEventToCandidatesType(ActionType type, ActionMode mode ) {
 		EventType eventType;
 		
     		switch (type) {
@@ -238,6 +263,150 @@ public class ActionAttack extends AbstractAction {
 	
 	  	return eventType;
 	}
+
+	private EventType getEventToTargetType(ActionType type, ActionMode mode ) {
+		EventType eventType;
+		
+    		switch (type) {
+    		case useWeapon:
+    			
+    			switch (mode) {
+      			case weaponClub:
+    				eventType = EventType.targetWeaponClub;
+    				break;
+      			case weaponLeftStab:
+    				eventType = EventType.targetWeaponLeftStab;
+    				break;
+    			case weaponLeftStroke:
+    				eventType = EventType.targetWeaponLeftStroke;
+    				break;
+      			case weaponLeftBackhand:
+    				eventType = EventType.targetWeaponLeftBackhand;
+    				break;
+     			case weaponRightStab:
+    				eventType = EventType.targetWeaponRightStab;
+    				break;
+    			case weaponRightStroke:
+    				eventType = EventType.targetWeaponRightStroke;
+    				break;
+      			case weaponRightBackhand:
+    				eventType = EventType.targetWeaponRightBackhand;
+    				break;
+    			default:
+    				eventType = EventType.nothing;
+    			}
+    			
+    			break;
+    			
+    		case punch:
+    			switch (mode) {
+    			case punchLeftFistStraight:
+      				eventType = EventType.targetPunchLeftFistStraight;
+    				break;
+       			case punchLeftFistSideways:
+      				eventType = EventType.targetPunchLeftFistSideways;
+    				break;
+       			case punchLeftFistUpward:
+      				eventType = EventType.targetPunchLeftFistUpward;
+    				break;
+       			case punchRightFistStraight:
+      				eventType = EventType.targetPunchRightFistStraight;
+    				break;
+       			case punchRightFistSideways:
+      				eventType = EventType.targetPunchRightFistSideways;
+    				break;
+       			case punchRightFistUpward:
+      				eventType = EventType.targetPunchRightFistUpward;
+    				break;
+   				
+ 	   			default:
+					eventType = EventType.nothing;
+    			
+    			}
+    			
+    			break;
+    			
+    		default:
+				eventType = EventType.nothing;
+   			
+    		}
+
+	
+	  	return eventType;
+	}
+	
+	private EventType getEventToCauserType(ActionType type, ActionMode mode ) {
+		EventType eventType;
+		
+    		switch (type) {
+    		case useWeapon:
+    			
+    			switch (mode) {
+      			case weaponClub:
+    				eventType = EventType.selfWeaponClub;
+    				break;
+      			case weaponLeftStab:
+    				eventType = EventType.selfWeaponLeftStab;
+    				break;
+    			case weaponLeftStroke:
+    				eventType = EventType.selfWeaponLeftStroke;
+    				break;
+      			case weaponLeftBackhand:
+    				eventType = EventType.selfWeaponLeftBackhand;
+    				break;
+     			case weaponRightStab:
+    				eventType = EventType.selfWeaponRightStab;
+    				break;
+    			case weaponRightStroke:
+    				eventType = EventType.selfWeaponRightStroke;
+    				break;
+      			case weaponRightBackhand:
+    				eventType = EventType.selfWeaponRightBackhand;
+    				break;
+    			default:
+    				eventType = EventType.nothing;
+    			}
+    			
+    			break;
+    			
+    		case punch:
+    			switch (mode) {
+    			case punchLeftFistStraight:
+      				eventType = EventType.selfPunchLeftFistStraight;
+    				break;
+       			case punchLeftFistSideways:
+      				eventType = EventType.selfPunchLeftFistSideways;
+    				break;
+       			case punchLeftFistUpward:
+      				eventType = EventType.selfPunchLeftFistUpward;
+    				break;
+       			case punchRightFistStraight:
+      				eventType = EventType.selfPunchRightFistStraight;
+    				break;
+       			case punchRightFistSideways:
+      				eventType = EventType.selfPunchRightFistSideways;
+    				break;
+       			case punchRightFistUpward:
+      				eventType = EventType.selfPunchRightFistUpward;
+    				break;
+   				
+ 	   			default:
+					eventType = EventType.nothing;
+    			
+    			}
+    			
+    			break;
+    			
+    		default:
+				eventType = EventType.nothing;
+   			
+    		}
+
+	
+	  	return eventType;
+	}
+	
+	
 	
 	public void setTarget(SimulationObject target) {
 		this.target = target;
