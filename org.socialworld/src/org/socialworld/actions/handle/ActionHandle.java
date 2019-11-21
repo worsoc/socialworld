@@ -296,16 +296,24 @@ public class ActionHandle extends AbstractAction {
 	public Value getItem1AsValue(String valueName) {
 		return new Value(Type.simulationObject, valueName, this.item1);
 	}
-	
+
+	protected SimulationObject getItem1() {
+		return this.item1;
+	}
+
 	public Value getItem2AsValue(String valueName) {
 		return new Value(Type.simulationObject, valueName, this.item2);
 	}
 
+	protected SimulationObject getItem2() {
+		return this.item2;
+	}
+	
 	public void setTarget(SimulationObject target) {
 		this.target = target;
 	}
 	
-	public SimulationObject getTarget() {
+	protected SimulationObject getTarget() {
 		return this.target;
 	}
 	

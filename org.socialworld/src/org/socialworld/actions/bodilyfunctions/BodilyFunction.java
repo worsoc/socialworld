@@ -21,10 +21,14 @@
 */
 package org.socialworld.actions.bodilyfunctions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.socialworld.actions.ActionPerformer;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
+import org.socialworld.objects.SimulationObject;
 
 /**
  * German:
@@ -76,4 +80,18 @@ public class BodilyFunction extends ActionPerformer {
 		
 	}
 
+   public List<SimulationObject> getTargets() {
+
+    	List<SimulationObject> targets = new ArrayList<SimulationObject>();
+    	SimulationObject target;
+    	
+    	target =  ((ActionBodilyFunction) this.getOriginalActionObject()).getItem();
+    	if (target != null) {
+    		targets.add(target);
+    	}
+    	
+    	return targets;
+    	
+    }
+	
 }

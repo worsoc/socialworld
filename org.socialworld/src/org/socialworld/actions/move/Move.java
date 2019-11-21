@@ -21,10 +21,14 @@
 */
 package org.socialworld.actions.move;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.socialworld.actions.ActionPerformer;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
+import org.socialworld.objects.SimulationObject;
 
 
 /**
@@ -148,4 +152,12 @@ public class Move extends ActionPerformer {
 		return this.acceleration;
 	}
 
+   public List<SimulationObject> getTargets() {
+
+    	List<SimulationObject> targets = new ArrayList<SimulationObject>();
+    	
+    	return targets;
+    	
+    }
+	
 }

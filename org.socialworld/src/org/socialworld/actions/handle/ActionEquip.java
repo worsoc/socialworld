@@ -178,7 +178,7 @@ public class ActionEquip extends AbstractAction {
 		this.item = item;
 	}
 
-	private SimulationObject getItem() {
+	protected SimulationObject getItem() {
 		return this.item;
 	}
 

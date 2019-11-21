@@ -21,6 +21,9 @@
 */
 package org.socialworld.actions.say;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionPerformer;
 import org.socialworld.attributes.AttributeArray;
@@ -31,6 +34,7 @@ import org.socialworld.knowledge.Acquaintance;
 import org.socialworld.knowledge.Acquaintance_Attribute;
 import org.socialworld.knowledge.AnswerProperties;
 import org.socialworld.objects.Human;
+import org.socialworld.objects.SimulationObject;
 
 /**
  * German:
@@ -197,4 +201,18 @@ public class Say extends ActionPerformer {
 		else answer.reduceToFactWithMaxAccessCount();
 	}
 
+   public List<SimulationObject> getTargets() {
+
+    	List<SimulationObject> targets = new ArrayList<SimulationObject>();
+    	SimulationObject target;
+
+       	target =  ((ActionSay) this.getOriginalActionObject()).getTarget();
+    	if (target != null) {
+    		targets.add(target);
+    	}
+
+    	return targets;
+    	
+    }
+	
 }

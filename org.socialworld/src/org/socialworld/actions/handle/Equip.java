@@ -21,9 +21,13 @@
 */
 package org.socialworld.actions.handle;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.socialworld.actions.ActionPerformer;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
+import org.socialworld.objects.SimulationObject;
 
 public class Equip extends ActionPerformer {
 
@@ -58,4 +62,18 @@ public class Equip extends ActionPerformer {
 
 	}
 
+   public List<SimulationObject> getTargets() {
+
+    	List<SimulationObject> targets = new ArrayList<SimulationObject>();
+    	SimulationObject target;
+    	
+    	target =  ((ActionEquip) this.getOriginalActionObject()).getItem();
+    	if (target != null) {
+    		targets.add(target);
+    	}
+    	
+    	return targets;
+    	
+    }
+	
 }
