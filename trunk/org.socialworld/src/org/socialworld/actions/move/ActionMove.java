@@ -30,7 +30,9 @@ import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.Vector;
 import org.socialworld.collections.ValueArrayList;
+import org.socialworld.core.Event;
 import org.socialworld.core.EventToCandidates;
+import org.socialworld.core.EventToCauser;
 import org.socialworld.core.EventType;
 import org.socialworld.core.IEventParam;
 import org.socialworld.objects.Animal;
@@ -125,6 +127,7 @@ public class ActionMove extends AbstractAction {
 	}
 	
 	public  void perform() {
+		
 		boolean moveCompleted = false;
 		
 		if (actor == null) return;
@@ -150,18 +153,62 @@ public class ActionMove extends AbstractAction {
 		if (moveCompleted || this.firstStep) 			createMove();
 		this.firstPerforming = false;
 		
-		EventToCandidates event;
-		event = new EventToCandidates( getEventType(mode),    actor /* as causer*/,  ActualTime.asTime(),
-					actor.getPosition(),  move /* as performer */);
-
-		// TODO wieder weg weil nur Debuggen
-		//System.out.println("ActionMaster.perform(): event type " +  event.getEventType().toString() + " - acceleration: " + this.move.getAcceleration());
-
+		Event event;
+		EventType eventType;
 		
-		addEvent(event);
+		eventType = getEventToCauserType(mode);
+		if (eventType != EventType.nothing) {
+			event = new EventToCauser( eventType,    actor /* as causer*/,  ActualTime.asTime(),
+						actor.getPosition(),  move /* as performer */);	
+			addEvent(event);
+		}
 		
+		eventType = getEventToCandidatesType(mode);
+		if (eventType != EventType.nothing) {
+			event = new EventToCandidates( eventType,    actor /* as causer*/,  ActualTime.asTime(),
+						actor.getPosition(),  move /* as performer */);	
+			addEvent(event);
+		}
+
 	}
 
+	private EventType getEventToCauserType(ActionMode mode) {
+		switch (mode) {
+		case walk:
+			return EventType.selfMoveWalk;
+		case run:
+			return EventType.selfMoveRun;
+		case sneak:
+			return EventType.selfMoveSneak;
+		case jump:
+			return EventType.selfMoveJump;
+		case swim:
+			return EventType.selfMoveSwim;
+		case fly: 
+			return EventType.selfMoveFly;
+		default:
+			return EventType.nothing;
+		}
+	}
+	
+	private EventType getEventToCandidatesType(ActionMode mode) {
+		switch (mode) {
+		case walk:
+			return EventType.candidatesMoveWalk;
+		case run:
+			return EventType.candidatesMoveRun;
+		case sneak:
+			return EventType.candidatesMoveSneak;
+		case jump:
+			return EventType.candidatesMoveJump;
+		case swim:
+			return EventType.candidatesMoveSwim;
+		case fly: 
+			return EventType.candidatesMoveFly;
+		default:
+			return EventType.nothing;
+		}
+	}
 	
 	
 	private void createMove() {
@@ -189,24 +236,6 @@ public class ActionMove extends AbstractAction {
 		path = ((Animal) actor).findPath(end);
 	}
 	
-	private EventType getEventType(ActionMode mode) {
-		switch (mode) {
-		case walk:
-			return EventType.candidatesMoveWalk;
-		case run:
-			return EventType.candidatesMoveRun;
-		case sneak:
-			return EventType.candidatesMoveSneak;
-		case jump:
-			return EventType.candidatesMoveJump;
-		case swim:
-			return EventType.candidatesMoveSwim;
-		case fly: 
-			return EventType.candidatesMoveFly;
-		default:
-			return EventType.nothing;
-		}
-	}
 	
 	/**
 	}

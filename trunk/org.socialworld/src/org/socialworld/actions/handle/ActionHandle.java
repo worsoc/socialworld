@@ -30,6 +30,8 @@ import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.Vector;
 import org.socialworld.collections.ValueArrayList;
+import org.socialworld.core.Event;
+import org.socialworld.core.EventToCauser;
 import org.socialworld.core.EventToTarget;
 import org.socialworld.core.EventType;
 import org.socialworld.core.IEventParam;
@@ -120,6 +122,8 @@ public class ActionHandle extends AbstractAction {
 
 		// TODO continuation of a handle action that belongs more than one time union
 		
+		boolean withEventToTarget = true;
+		
    		switch (mode) {
 		case useItemLeftHand:
 			item1 = ((Human) actor).getLeftHandItem();
@@ -144,22 +148,44 @@ public class ActionHandle extends AbstractAction {
 			item2 = ((Human) actor).getRightHandItem();
 			if (item1 == null | item2 == null) return;
 			break;
-
+		case pull:
+		case push:
+			if (this.target == null) return;
+			break;
+		case hand:
+		case foot:
+			if (this.target == null) {
+				withEventToTarget = false;
+			}
+			break;
 		default:
 		}
 
    		this.handle = new Handle(this);
   
-   		EventToTarget event;
-		event = new EventToTarget( getEventType(type, mode),    actor /* as causer*/,  ActualTime.asTime(),
-						actor.getPosition(),  handle /* as performer */);
-		addEvent(event);
-
+   		Event event;
+   		EventType eventType;
+   		
+   		if (withEventToTarget) {
+			eventType = getEventToTargetType(type, mode);
+			if (eventType != EventType.nothing) {
+				event = new EventToTarget( eventType,    actor /* as causer*/,  ActualTime.asTime(),
+								actor.getPosition(),  handle /* as performer */);
+				addEvent(event);
+			}
+   		}
+   		
+		eventType = getEventToCauserType(type, mode);
+		if (eventType != EventType.nothing) {
+			event = new EventToCauser( eventType,    actor /* as causer*/,  ActualTime.asTime(),
+							actor.getPosition(),  handle /* as performer */);
+			addEvent(event);
+		}
+		
+		
 	}
 
-
-	
-	private EventType getEventType(ActionType type, ActionMode mode) {
+	private EventType getEventToTargetType(ActionType type, ActionMode mode) {
 
 		switch (type) {
 			case handleItem:
@@ -188,6 +214,46 @@ public class ActionHandle extends AbstractAction {
 						return EventType.targetTouchByHand;
 					case foot:
 						return EventType.targetTouchByFoot;
+					default:
+						return EventType.nothing;
+				}
+			default:
+				return EventType.nothing;
+				
+		}
+		
+	}
+
+	
+	private EventType getEventToCauserType(ActionType type, ActionMode mode) {
+
+		switch (type) {
+			case handleItem:
+				switch (mode) {
+					case useTwoItems:
+						return EventType.selfHandleItemUse2;
+					case useItemLeftHand:
+						return EventType.selfHandleItemUseLeft;
+					case useItemRightHand:
+						return EventType.selfHandleItemUseRight;
+					case combineItems_AddRightToLeft:
+						return EventType.selfHandleItemAddRtoL;
+					case combineItems_AddLeftToRight:
+						return EventType.selfHandleItemAddLtoR;
+					case pull:
+						return EventType.selfHandleItemPull;
+					case push:
+						return EventType.selfHandleItemPush;
+					default:
+						return EventType.nothing;
+				}
+			
+			case touch:
+				switch (mode) {
+					case hand:
+						return EventType.selfTouchByHand;
+					case foot:
+						return EventType.selfTouchByFoot;
 					default:
 						return EventType.nothing;
 				}

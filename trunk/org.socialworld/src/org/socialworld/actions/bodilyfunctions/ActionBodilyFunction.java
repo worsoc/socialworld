@@ -28,7 +28,9 @@ import org.socialworld.attributes.ActualTime;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
+import org.socialworld.core.Event;
 import org.socialworld.core.EventToCauser;
+import org.socialworld.core.EventToTarget;
 import org.socialworld.core.EventType;
 import org.socialworld.core.IEventParam;
 import org.socialworld.objects.Animal;
@@ -93,9 +95,7 @@ public class ActionBodilyFunction extends AbstractAction {
 	@Override
 	public void perform() {
 		
-		
-		EventToCauser event;
-		EventType eventType;
+		boolean withEventTotarget = false;
 		
    		switch (mode) {
 		case sleep:
@@ -105,12 +105,14 @@ public class ActionBodilyFunction extends AbstractAction {
 			if 	(!(this.item instanceof IDrinkable)) {
 				return;
 			}
+			withEventTotarget = true;
 			break;
 		case eat:
 			this.item = ((Animal) actor).getMouthItem();
 			if 	(!(this.item instanceof IEatable)) {
 				return;
 			}
+			withEventTotarget = true;
 			break;
 		case piss:
 			break;
@@ -122,17 +124,28 @@ public class ActionBodilyFunction extends AbstractAction {
 		
 		bodilyFunction = new BodilyFunction(this);
 		
-		eventType = getEventType(mode);
-				
-		if (eventType == EventType.nothing) return;
-				
-		event = new EventToCauser(eventType,    actor /* as causer*/,  ActualTime.asTime(),
-					actor.getPosition(),  bodilyFunction /* as performer */);
-		addEvent(event);
+		Event event;
+		EventType eventType;
+		
+		eventType = getEventToCauserType(mode);
+		if (eventType != EventType.nothing) {
+			event = new EventToCauser(eventType,    actor /* as causer*/,  ActualTime.asTime(),
+						actor.getPosition(),  bodilyFunction /* as performer */);
+			addEvent(event);
+		}
+		
+		if (withEventTotarget) {
+			eventType = getEventToTargetType(mode);
+			if (eventType != EventType.nothing) {
+				event = new EventToTarget(eventType,    actor /* as causer*/,  ActualTime.asTime(),
+							actor.getPosition(),  bodilyFunction /* as performer */);
+				addEvent(event);
+			}
+		}
 	}
 
 
-	private EventType getEventType( ActionMode mode) {
+	private EventType getEventToCauserType( ActionMode mode) {
 		switch (mode) {
 		case sleep:
 			return EventType.selfSleep;
@@ -149,6 +162,16 @@ public class ActionBodilyFunction extends AbstractAction {
 		}
 	}
 	
+	private EventType getEventToTargetType( ActionMode mode) {
+		switch (mode) {
+		case drink:
+			return EventType.targetDrink;
+		case eat:
+			return EventType.targetEat;
+		default:
+			return EventType.nothing;
+		}
+	}
 	
 	public Value getItemAsValue(String valueName) {
 		if (this.item == null) {

@@ -104,6 +104,7 @@ public class ActionHear extends AbstractAction {
 	}
 	
 	public  void perform() {
+		
 		Human partner;
 		EventToCauser event;
 		EventType eventType;
