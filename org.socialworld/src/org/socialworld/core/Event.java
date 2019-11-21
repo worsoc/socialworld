@@ -23,6 +23,10 @@ package org.socialworld.core;
 
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.Vector;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.Time;
 import org.socialworld.objects.Animal;
@@ -57,6 +61,7 @@ public class Event implements Comparable<Event> {
 	private Event_Percipience percipience;
 	
 	protected boolean eventToCauserItself = false;
+	protected boolean eventToTarget = false;
 
 	/**
 	 * Constructor
@@ -213,7 +218,11 @@ public class Event implements Comparable<Event> {
 	public boolean isEventToCauserItself() {
 		return this.eventToCauserItself;
 	}
-	
+
+	public boolean isEventToTarget() {
+		return this.eventToTarget;
+	}
+
 	/**
 	 * @return the time
 	 */
@@ -312,6 +321,10 @@ public class Event implements Comparable<Event> {
 	
 	public IEventParam getOptionalParam() {
 		return this.optionalParam;
+	}
+	
+	public List<SimulationObject> getTargetObjects() {
+		return new ArrayList<SimulationObject>(0);
 	}
 	
 	public String toString() {

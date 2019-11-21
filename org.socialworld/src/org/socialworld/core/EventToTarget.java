@@ -1,5 +1,7 @@
 package org.socialworld.core;
 
+import java.util.List;
+
 import org.socialworld.actions.ActionPerformer;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.Time;
@@ -13,7 +15,7 @@ public class EventToTarget extends Event {
 	public EventToTarget(int eventType,  SimulationObject causer, Time time, Position position,	 ActionPerformer performer) {
 		
 		super(eventType,   causer,  time,  position,	  performer);
-		eventToCauserItself = false;
+		eventToTarget = true;
 		
 	}
 	
@@ -23,7 +25,7 @@ public class EventToTarget extends Event {
 	public EventToTarget(EventType eventType,  SimulationObject causer, Time time, Position position,	 ActionPerformer performer) {
 		
 		super(eventType.getIndex(),   causer,  time,  position,	  performer);
-		eventToCauserItself = false;
+		eventToTarget = true;
 
 	}
 
@@ -33,9 +35,14 @@ public class EventToTarget extends Event {
 	public EventToTarget(int eventType, int priority,  SimulationObject causer, Time time, Position position,	 ActionPerformer performer) {
 		
 		super(eventType, priority,  causer,  time,  position,	  performer);
-		eventToCauserItself = false;
+		eventToTarget = true;
 
 	}
 
-	
+	public List<SimulationObject> getTargetObjects() {
+		List<SimulationObject> targets;
+		targets = ((ActionPerformer) getOptionalParam()).getTargets();
+		return targets;
+	}
+
 }

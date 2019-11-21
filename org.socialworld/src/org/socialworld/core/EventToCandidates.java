@@ -39,7 +39,6 @@ public class EventToCandidates extends Event {
 	public EventToCandidates(int eventType,  SimulationObject causer, Time time, Position position,	 ActionPerformer performer) {
 		
 		super(eventType,   causer,  time,  position,	  performer);
-		eventToCauserItself = false;
 		
 	}
 	
@@ -49,7 +48,6 @@ public class EventToCandidates extends Event {
 	public EventToCandidates(EventType eventType,  SimulationObject causer, Time time, Position position,	 ActionPerformer performer) {
 		
 		super(eventType.getIndex(),   causer,  time,  position,	  performer);
-		eventToCauserItself = false;
 
 	}
 
@@ -59,7 +57,6 @@ public class EventToCandidates extends Event {
 	public EventToCandidates(int eventType, int priority,  SimulationObject causer, Time time, Position position,	 ActionPerformer performer) {
 		
 		super(eventType, priority,  causer,  time,  position,	  performer);
-		eventToCauserItself = false;
 
 	}
 

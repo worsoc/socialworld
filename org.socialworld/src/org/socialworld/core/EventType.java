@@ -50,9 +50,9 @@ public enum EventType {
 
 	candidatesPunchLeftFistStraight(56), candidatesPunchLeftFistSideways(57), candidatesPunchLeftFistUpward(58), candidatesPunchRightFistStraight(59), candidatesPunchRightFistSideways(60), candidatesPunchRightFistUpward(61),
 	
-	candidatesListenToStatement(64), candidatesListenToQuestion(65), candidatesListenToInstruction(66), candidatesUnderstand(67),
+/*	candidatesListenToStatement(64), candidatesListenToQuestion(65), candidatesListenToInstruction(66), candidatesUnderstand(67), */
 	
-	candidatesAskNormal(72), candidatesAskScream(73), candidatesAskWhisper(74), candidatesAnswerNormal(75), candidatesAnswerScream(76), candidatesAnswerWhisper(77),
+/*	candidatesAskNormal(72), candidatesAskScream(73), candidatesAskWhisper(74), candidatesAnswerNormal(75), candidatesAnswerScream(76), candidatesAnswerWhisper(77), */
 	
 	candidatesSayNormal(80), candidatesSayScream(81), candidatesSayWhisper(82),
 	
@@ -86,9 +86,9 @@ public enum EventType {
 //EventToTargets	(event with influence to explicit involved objects (targets, items ...)
 //////////////////////////////////////////////////////////////////////
 	
-	targetSleep(257), targetDrink(258), targetEat(259), targetPiss(260), targetShit(261), 	
+/*	targetSleep(257),*/ targetDrink(258), targetEat(259), /* targetPiss(260), targetShit(261),*/ 	
 	
-	targetMoveWalk(264), targetMoveRun(265), targetMoveSneak(266), targetMoveJump(267), targetMoveSwim(268), targetMoveFly(269),
+/*	targetMoveWalk(264), targetMoveRun(265), targetMoveSneak(266), targetMoveJump(267), targetMoveSwim(268), targetMoveFly(269), */
 	
 	targetExamineByLook(272), targetExamineBySmell(273), targetExamineByTaste(274), targetExamineByTouch(275),
 	
@@ -102,11 +102,11 @@ public enum EventType {
 
 	targetPunchLeftFistStraight(312),  targetPunchLeftFistSideways(313), targetPunchLeftFistUpward(314), targetPunchRightFistStraight(315),  targetPunchRightFistSideways(316), targetPunchRightFistUpward(317),
 
-	targetListenToStatement(320), targetListenToQuestion(321), targetListenToInstruction(322), targetUnderstand(323),
+/*	targetListenToStatement(320), targetListenToQuestion(321), targetListenToInstruction(322), targetUnderstand(323),*/
 	
 	targetAskNormal(328), targetAskScream(329), targetAskWhisper(330), targetAnswerNormal(331), targetAnswerScream(332), targetAnswerWhisper(333),
 	
-	targetSayNormal(336), targetSayScream(337), targetSayWhisper(338);
+/*	targetSayNormal(336), targetSayScream(337), targetSayWhisper(338) */ ;
 	
 	public static final int MAX_EVENT_TYPE =  384;
 
@@ -152,10 +152,19 @@ public enum EventType {
 	
 	public boolean isRelevantForEffectiveCheck() {
 		
+		// pull and push with effective check
+		if (this.index == 301 || this.index == 302) return true;
+		// touch with effective check
+		if (this.index == 280 || this.index == 281) return true;
+		// talk with effective check
+		if (this.index >= 328 && this.index == 333) return true;
+		
+		// the following with noeffective check
 		if (this.index > 127) return false;
 		if (this.index < 8) return false;
 		if (this.index >= 16 & this.index < 24) return false;
 
+		// the rest with effective check
 		return true;
 		
 	}
@@ -206,18 +215,6 @@ public enum EventType {
 		case candidatesPunchRightFistUpward:
 			return 1000.0F; 
 			
-		case candidatesListenToStatement:
-		case candidatesListenToQuestion:
-		case candidatesListenToInstruction:
-		case candidatesUnderstand:
-			return 10000.0F;
-			
-		case candidatesAskNormal: return 10000.0F; 
-		case candidatesAskScream: return 50000.0F; 
-		case candidatesAskWhisper: return 1000.0F; 
-		case candidatesAnswerNormal: return 10000.0F; 
-		case candidatesAnswerScream: return 50000.0F; 
-		case candidatesAnswerWhisper: return 1000.0F; 
 					
 		case candidatesSayNormal: return 10000.0F; 
 		case candidatesSayScream: return 50000.0F; 
@@ -276,20 +273,6 @@ public enum EventType {
 		case candidatesPunchRightFistUpward:
 			return 45.0F;
 				
-		case candidatesListenToStatement:
-		case candidatesListenToQuestion:
-		case candidatesListenToInstruction:
-		case candidatesUnderstand:
-			return 360.0F;
-		
-		case candidatesAskNormal:
-		case candidatesAskScream:
-		case candidatesAskWhisper:
-		case candidatesAnswerNormal:
-		case candidatesAnswerScream:
-		case candidatesAnswerWhisper:
-			return 360.0F;
-					
 		case candidatesSayNormal:
 		case candidatesSayScream:
 		case candidatesSayWhisper:
