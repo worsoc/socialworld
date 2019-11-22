@@ -29,7 +29,7 @@ import org.socialworld.objects.Animal;
  * @author Mathias Sikos (tyloesand)
  * 
  */
-public class Mammal extends Animal {
+public abstract class Mammal extends Animal {
 
     public Mammal(int objectID) {
 		super(objectID);
