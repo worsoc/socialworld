@@ -27,6 +27,7 @@ import org.socialworld.objects.StateItem;
 import org.socialworld.objects.WriteAccessToItem;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenItem;
+import org.socialworld.objects.concrete.eatable.fruits.Apple;
 
 public class LoadItem extends LoadSimulationObjects {
 
@@ -56,7 +57,7 @@ public class LoadItem extends LoadSimulationObjects {
 
 	@Override
 	public void createObject(int objectID) {
-		Item createdItem = new Item(objectID);
+		Item createdItem = new Apple(objectID);
 		allObjects.set(objectID, createdItem);
 	}
 

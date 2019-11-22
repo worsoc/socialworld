@@ -29,6 +29,7 @@ import org.socialworld.objects.StateAnimal;
 import org.socialworld.objects.WriteAccessToAnimal;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenAnimal;
+import org.socialworld.objects.concrete.animals.mammals.Dog;
 
 /**
  * @author Mathias Sikos
@@ -62,7 +63,7 @@ public class CreateAnimal extends CreateSimulationObjects {
 		HiddenAnimal hiddenAnimal = null;
 		
 		StateAnimal state = new StateAnimal();
-		Animal createdAnimal = new Animal(objectID);
+		Animal createdAnimal = new Dog(objectID);
 
 		wa = new WriteAccessToAnimal(createdAnimal, state);
 		propertiesToInit = new GrantedAccessToProperty[1];
