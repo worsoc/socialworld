@@ -32,7 +32,7 @@ import org.socialworld.core.IEventParam;
  * @author Mathias Sikos (tyloesand)
  * 
  */
-public class Item extends SimulationObject {
+public abstract class Item extends SimulationObject {
 
 	public Item(int objectID) {
 		super(objectID);
