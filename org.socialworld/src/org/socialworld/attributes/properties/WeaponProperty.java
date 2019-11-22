@@ -19,7 +19,7 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.actions.attack;
+package org.socialworld.attributes.properties;
 
 import org.socialworld.calculation.FunctionMXplusN;
 import org.socialworld.calculation.Type;

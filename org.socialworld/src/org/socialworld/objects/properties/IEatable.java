@@ -21,8 +21,17 @@
 */
 package org.socialworld.objects.properties;
 
+import org.socialworld.attributes.properties.NutrientProperty;
+import org.socialworld.attributes.properties.TasteProperty;
 
 public interface IEatable {
 
+	public abstract float getTemperature();
+	public abstract float getConsistence();
+	public abstract float getFirmness();
+	
+	public abstract NutrientProperty getNutrientProperties();
+	
+	public abstract TasteProperty getTasteProperties();
 
 }
