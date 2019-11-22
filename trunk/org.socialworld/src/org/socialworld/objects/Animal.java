@@ -39,7 +39,7 @@ import org.socialworld.core.IEventParam;
  * @author Mathias Sikos (tyloesand)
  * 
  */
-public class Animal extends SimulationObject {
+public abstract class Animal extends SimulationObject {
 
 	private StateAnimal state;
 	
@@ -61,7 +61,7 @@ public class Animal extends SimulationObject {
 		if (checkIsMyState(state) ) this.state = (StateAnimal) state;
 	}
 	
-	void init() {
+	protected void init() {
 		if (initialized == false) {
 			pathFinder = new PathFinder(this, this.state.getKnownPathsPool());
 			initialized = true;
