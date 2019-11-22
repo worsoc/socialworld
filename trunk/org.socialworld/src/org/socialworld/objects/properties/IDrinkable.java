@@ -21,6 +21,16 @@
 */
 package org.socialworld.objects.properties;
 
+import org.socialworld.attributes.properties.NutrientProperty;
+import org.socialworld.attributes.properties.TasteProperty;
+
 public interface IDrinkable {
+
+	public abstract float getTemperature();
+	public abstract float getViscosity();
+	
+	public abstract NutrientProperty getNutrientProperties();
+	
+	public abstract TasteProperty getTasteProperties();
 
 }

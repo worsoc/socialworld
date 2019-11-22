@@ -21,7 +21,7 @@
 */
 package org.socialworld.objects.properties;
 
-import org.socialworld.actions.attack.WeaponProperty;
+import org.socialworld.attributes.properties.WeaponProperty;
 
 /**
  * German:
