@@ -19,10 +19,11 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.objects;
+package org.socialworld.objects.concrete.animals;
 
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.IEventParam;
+import org.socialworld.objects.Animal;
 
 /**
  * @author Mathias Sikos (tyloesand)
