@@ -8,9 +8,6 @@ import org.socialworld.objects.State;
 
 public class Lightning extends Magic {
 
-	public Lightning(int objectID) {
-		super(objectID);
-	}
 	
 	protected List<State> createAddOnStates() {
 		

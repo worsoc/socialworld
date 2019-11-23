@@ -27,7 +27,6 @@ import org.socialworld.objects.StateGod;
 import org.socialworld.objects.WriteAccessToGod;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenGod;
-import org.socialworld.objects.concrete.gods.Weather;
 
 /**
  * @author Mathias Sikos
@@ -53,16 +52,19 @@ public class CreateGod extends CreateSimulationObjects {
 	}
 
 	@Override
-	public SimulationObject getObject(int objectID) {
+	public SimulationObject getObject(int objectID,  String fullClassName) {
 		WriteAccessToGod wa;
 		GrantedAccessToProperty propertiesToInit[];
 		HiddenGod hiddenGod = null;
-
+		
+		Object createdObject = createObjectForName(fullClassName);
+		if (createdObject == null) return null;
+		
+		God createdGod = (God) createdObject;
+		createdGod.setObjectID(objectID);
 		StateGod state = new StateGod();
-		
-		God createdGod = new Weather(objectID);
-		
 		wa = new WriteAccessToGod(createdGod, state);
+
 		propertiesToInit = new GrantedAccessToProperty[1];
 		propertiesToInit[0] = GrantedAccessToProperty.all;
 		hiddenGod = wa.getMeHidden(propertiesToInit);

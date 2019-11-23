@@ -35,9 +35,6 @@ import org.socialworld.core.IEventParam;
 public abstract class Magic extends SimulationObject {
 	
 // TODO implement Magic class functionality
-	public Magic(int objectID) {
-		super(objectID);
-	}
 
 	protected SimulationObject_Type getSimObjectType() {
 		return SimulationObject_Type.magic;

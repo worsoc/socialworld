@@ -23,6 +23,11 @@ package org.socialworld.core;
 
 import org.socialworld.objects.*;
 import org.socialworld.propertyChange.ChangedProperty;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import org.socialworld.SocialWorld;
 import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.Time;
@@ -115,8 +120,9 @@ public class Simulation extends SocialWorldThread {
 		this.startThread();
 		
 		Human myHuman;
-		for (int i = 0; i < 2000; i++ ) {
-			myHuman = (Human) this.objectMaster.createSimulationObject(SimulationObject_Type.human);
+		for (int i = 0; i < 100; i++ ) {
+			myHuman = (Human) createSimulationObject(SimulationObject_Type.human);
+			System.out.println(myHuman.getPosition().toString());
 		}
 		
 		
@@ -167,7 +173,12 @@ public class Simulation extends SocialWorldThread {
 	
 	public SimulationObject createSimulationObject(
 			SimulationObject_Type simulationObjectType) {
-		return this.objectMaster.createSimulationObject(simulationObjectType);
+		
+		SimulationObject createdObject;
+		createdObject = this.objectMaster.createSimulationObject(simulationObjectType);
+		this.searchByPosition.addObject(createdObject);
+		
+		return createdObject;
 	}
 
 	
@@ -191,4 +202,32 @@ public class Simulation extends SocialWorldThread {
 	private void positionChanged(SimulationObject changedObject) {
 		this.searchByPosition.changePosition(changedObject);
 	}
+	
+	public static void showMessage(String methodName, Object something) {
+		Method[] methods = SocialWorld.getSimVisual().getClass().getDeclaredMethods();
+		
+		for (Method m : methods) {
+			String mname = m.getName();
+			if (mname.equals(methodName)) {
+
+					try {
+						m.setAccessible(true);
+					    m.invoke(Simulation.getInstance(), something);
+		
+					// Handle any exceptions thrown by method to be invoked.
+					}
+					catch (InvocationTargetException ite) {
+					    Throwable cause = ite.getCause();
+					    System.out.println( cause.getMessage());
+					}
+					catch (IllegalAccessException iae) {
+						iae.printStackTrace();
+					} 
+					
+					break;
+			}
+		}
+
+	}
+	
 }

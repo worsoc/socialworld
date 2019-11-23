@@ -14,9 +14,6 @@ public abstract class Fruit extends Item implements IEatable {
 
 	private StateEatable state;
 	
-	public Fruit(int objectID) {
-		super(objectID);
-	}
 	
 	public  NutrientProperty getNutrientProperties() { return this.state.getNutrientProperties(); }
 	

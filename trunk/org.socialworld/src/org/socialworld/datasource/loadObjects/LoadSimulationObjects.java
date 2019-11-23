@@ -67,10 +67,31 @@ public abstract class LoadSimulationObjects {
 	}
 
 	
-	public abstract void createObject(int objectID) ;
+	public abstract void createObject(int objectID,  String fullClassName) ;
 	
 	public abstract void loadObject(int objectID) ;
 	
+	protected final Object createObjectForName(String fullClassName) {
+		
+		Object createdObject;
+		try {
+			createdObject = Class.forName(fullClassName).newInstance();
+		}
+		catch (ClassNotFoundException cnfe ) {
+			System.out.println(cnfe.getMessage());
+			return null;
+		}
+		catch (IllegalAccessException iae ) {
+			System.out.println(iae.getMessage());
+			return null;
+		}
+		catch (InstantiationException ie) {
+			ie.printStackTrace();
+			return null;
+		}
+		
+		return createdObject;
+	}
 
 	protected void load(int objectID) {
 		

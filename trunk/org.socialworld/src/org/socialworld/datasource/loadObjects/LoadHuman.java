@@ -127,8 +127,12 @@ public class LoadHuman extends LoadAnimal {
 	 * 
 	 * @param objectID
 	 */
-	public void createObject(int objectID) {
-		Human createdHuman = new Human(objectID);
+	public void createObject(int objectID,  String fullClassName) {
+		Object createdObject = createObjectForName(fullClassName);
+		if (createdObject == null) return;
+
+		Animal createdHuman = (Animal) createdObject;
+		createdHuman.setObjectID(objectID);
 		allObjects.set(objectID, createdHuman);
 	}
 

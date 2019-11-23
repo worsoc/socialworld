@@ -52,16 +52,19 @@ public class CreateHuman extends CreateAnimal {
 	}
 
 	@Override
-	public Human getObject(int objectID) {
+	public Human getObject(int objectID,  String fullClassName) {
 		WriteAccessToHuman wa;
 		GrantedAccessToProperty propertiesToInit[];
 		HiddenHuman hiddenHuman = null;
 
+		Object createdObject = createObjectForName(fullClassName);
+		if (createdObject == null) return null;
+		
+		Human createdHuman = (Human) createdObject;
+		createdHuman.setObjectID(objectID);
 		StateHuman state = new StateHuman();
-		
-		Human createdHuman = new Human(objectID);
-		
 		wa = new WriteAccessToHuman(createdHuman, state);
+		
 		propertiesToInit = new GrantedAccessToProperty[1];
 		propertiesToInit[0] = GrantedAccessToProperty.all;
 		hiddenHuman = wa.getMeHidden(propertiesToInit);

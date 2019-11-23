@@ -45,12 +45,8 @@ public abstract class Animal extends SimulationObject {
 	
 	private PathFinder pathFinder;
 
-	private boolean initialized;
+	private boolean initialized = false;
 	
-	public Animal(int objectID) {
-		super(objectID);
-		initialized = false;
-	}
 
 	
 	protected SimulationObject_Type getSimObjectType() {

@@ -8,9 +8,6 @@ import org.socialworld.objects.State;
 
 public class Weather extends God {
 
-	public Weather(int objectID) {
-		super(objectID);
-	}
 	
 	protected List<State> createAddOnStates() {
 		
