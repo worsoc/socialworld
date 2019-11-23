@@ -23,6 +23,8 @@ package org.socialworld.objects;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.socialworld.attributes.Position;
 import org.socialworld.calculation.Type;
@@ -46,6 +48,8 @@ public class StateSimulationObject extends ListenedBase {
 	private SimulationObject object;
 	private	WriteAccessToSimulationObject guard;
 	
+	private List<State> stateAddOns;
+	
 	private 	Position 		position;
 	private		Vector directionMove;
 	private 	float powerMove;
@@ -66,6 +70,8 @@ public class StateSimulationObject extends ListenedBase {
 
 		grantAccessToPropertyAction = new GrantedAccessToProperty[1];
 		grantAccessToPropertyAction[0] = GrantedAccessToProperty.action;
+		
+		//stateAddOns = new ArrayList<State>();
 		
 	}
 	
@@ -100,6 +106,31 @@ public class StateSimulationObject extends ListenedBase {
 		return (this.guard == guard);
 	}
 
+	final void initAddOnStates(List<State> states, WriteAccessToSimulationObject guard) {
+		if (checkGuard(guard)) {
+			
+			if (this.stateAddOns == null) {
+				this.stateAddOns = states;
+			}
+		}
+	}
+
+	final void addState(State state, WriteAccessToSimulationObject guard) {
+		if (checkGuard(guard)) {
+			
+			if (this.stateAddOns == null) {
+				this.stateAddOns = new ArrayList<State>();
+			}
+			
+			String className = state.getClass().getName();
+			for (int nrStateAddOn = 0; nrStateAddOn < stateAddOns.size(); nrStateAddOn++) {
+				if (stateAddOns.get(nrStateAddOn).getClass().getName().equals(className)) return;
+			}
+			this.stateAddOns.add(state);
+			
+		}
+	}
+	
 	final void setPosition(Position position, WriteAccessToSimulationObject guard) {
 		if (checkGuard(guard)) {
 			this.position = position;
@@ -207,33 +238,37 @@ public class StateSimulationObject extends ListenedBase {
 		}
 	}
 	
-	final void setSomething(String methodName, Object something, WriteAccessToSimulationObject guard) {
+	final void setSomething(String stateClassName, String methodName, Object something, WriteAccessToSimulationObject guard) {
 		if (checkGuard(guard)) {
-			Method method = getMethod(methodName);
-			try {
-				method.setAccessible(true);
-			    Object o = method.invoke(this, something);
-
-			// Handle any exceptions thrown by method to be invoked.
+			
+			State stateAddOn;
+			for (int nrStateAddOn = 0; nrStateAddOn < stateAddOns.size(); nrStateAddOn++) {
+				
+				stateAddOn = stateAddOns.get(nrStateAddOn);
+				
+				if (stateAddOn.getClass().getName().equals(stateClassName)) {
+					Method method = stateAddOn.getMethod(methodName);
+					if (method != null) {
+						try {
+							method.setAccessible(true);
+						    method.invoke(this, something);
+			
+						// Handle any exceptions thrown by method to be invoked.
+						}
+						catch (InvocationTargetException ite) {
+						    Throwable cause = ite.getCause();
+						    System.out.println( cause.getMessage());
+						}
+						catch (IllegalAccessException iae) {
+							iae.printStackTrace();
+						} 
+						
+						// assumption: there is only one method in all state add ons
+						break;
+					}
+				}
 			}
-			catch (InvocationTargetException x) {
-			    Throwable cause = x.getCause();
-			    System.out.println( cause.getMessage());
-			}
-			catch (IllegalAccessException e) {
-				e.printStackTrace();
-			} 
 		}
 	}
 	
-	final private Method getMethod(String method) {
-		Method[] allMethods = this.getClass().getDeclaredMethods();
-		
-		for (Method m : allMethods) {
-			String mname = m.getName();
-			if (mname.equals(method)) return m;
-		}
-		return null;
-	}
-
 }

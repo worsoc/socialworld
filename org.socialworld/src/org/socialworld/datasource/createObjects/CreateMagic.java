@@ -26,6 +26,7 @@ import org.socialworld.objects.StateMagic;
 import org.socialworld.objects.WriteAccessToMagic;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenMagic;
+import org.socialworld.objects.concrete.spells.Lightning;
 
 /**
  * @author Mathias Sikos
@@ -58,7 +59,7 @@ public class CreateMagic extends CreateSimulationObjects {
 
 		StateMagic state = new StateMagic();
 		
-		Magic createdMagic = new Magic(objectID);
+		Magic createdMagic = new Lightning(objectID);
 		
 		wa = new WriteAccessToMagic(createdMagic, state);
 		propertiesToInit = new GrantedAccessToProperty[1];

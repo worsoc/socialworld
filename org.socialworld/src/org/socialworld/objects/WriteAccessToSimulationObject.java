@@ -20,6 +20,8 @@
 *
 */
 package org.socialworld.objects;
+import java.util.List;
+
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.Position;
 import org.socialworld.calculation.Vector;
@@ -48,6 +50,10 @@ public class WriteAccessToSimulationObject {
 		object.setState(state, this);
 		state.setWriteAccess(this);
 		state.setObject(object, this);
+		
+		List<State> addOnStates;
+		addOnStates = object.createAddOnStates();
+		state.initAddOnStates(addOnStates, this);
 		
 	}
 	
@@ -91,6 +97,19 @@ public class WriteAccessToSimulationObject {
 	protected final boolean checkAccessToPropertyGranted(HiddenSimulationObject caller, GrantedAccessToProperty property) {
 		return caller.checkAccessToPropertyGranted(property);
 	}
+	
+	public int addState(State state, HiddenSimulationObject caller) {
+		if (checkCaller(caller)) 
+			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.position)) {
+				objectsState.addState(state, this);
+				return WRITE_ACCESS_RETURNS_SUCCESS;
+			}
+			else
+				return WRITE_ACCESS_RETURNS_NO_GRANT_FOR_PROPERTY;
+		else
+			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
+	}
+
 	
 	public int setPosition(Position pos, HiddenSimulationObject caller) {
 		if (checkCaller(caller)) 
@@ -165,10 +184,10 @@ public class WriteAccessToSimulationObject {
 			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
 	}
 
-	public int callMethodSetSomething(String method, Object something, HiddenSimulationObject caller) {
+	public int callMethodSetSomething(String stateClassName, String method, Object something, HiddenSimulationObject caller) {
 		if (checkCaller(caller)) 
 			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.state2ActionType)) {
-				objectsState.setSomething(method, something , this);
+				objectsState.setSomething(stateClassName, method, something , this);
 				return WRITE_ACCESS_RETURNS_SUCCESS;
 			}
 			else

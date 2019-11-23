@@ -27,6 +27,7 @@ import org.socialworld.objects.StateGod;
 import org.socialworld.objects.WriteAccessToGod;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenGod;
+import org.socialworld.objects.concrete.gods.Weather;
 
 /**
  * @author Mathias Sikos
@@ -59,7 +60,7 @@ public class CreateGod extends CreateSimulationObjects {
 
 		StateGod state = new StateGod();
 		
-		God createdGod = new God(objectID);
+		God createdGod = new Weather(objectID);
 		
 		wa = new WriteAccessToGod(createdGod, state);
 		propertiesToInit = new GrantedAccessToProperty[1];

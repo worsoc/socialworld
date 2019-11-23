@@ -2,9 +2,9 @@ package org.socialworld.objects.concrete;
 
 import org.socialworld.attributes.properties.NutrientProperty;
 import org.socialworld.attributes.properties.TasteProperty;
-import org.socialworld.objects.StateItem;
+import org.socialworld.objects.State;
 
-public class StateEatable extends StateItem {
+public class StateEatable extends State {
 
 	NutrientProperty nutrientProps;
 	TasteProperty tasteProps;

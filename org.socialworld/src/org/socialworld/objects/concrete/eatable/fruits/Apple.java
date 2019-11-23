@@ -1,16 +1,11 @@
 package org.socialworld.objects.concrete.eatable.fruits;
 
-import org.socialworld.attributes.properties.NutrientProperty;
-import org.socialworld.attributes.properties.TasteProperty;
 import org.socialworld.objects.concrete.eatable.Fruit;
-import org.socialworld.objects.properties.IEatable;
 import org.socialworld.objects.properties.IThrowable;
 
-public class Apple extends Fruit implements IEatable, IThrowable {
+public class Apple extends Fruit implements IThrowable {
 
-	NutrientProperty nutrientProps;
-	TasteProperty tasteProps;
-	
+
 	public Apple(int objectID) {
 		super(objectID);
 	}

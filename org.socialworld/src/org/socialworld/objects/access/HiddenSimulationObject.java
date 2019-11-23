@@ -25,6 +25,7 @@ import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.Position;
 import org.socialworld.calculation.Vector;
 import org.socialworld.objects.SimulationObject_Type;
+import org.socialworld.objects.State;
 import org.socialworld.objects.WriteAccessToSimulationObject;
 
 /**
@@ -103,7 +104,11 @@ public class HiddenSimulationObject {
 		return wa.setState2ActionType(type, this);
 	}
 	
-	final public int setSomething(String methodName, Object something) {
-		return wa.callMethodSetSomething(methodName, something, this);
+	final public int setSomething(String stateClassName, String methodName, Object something) {
+		return wa.callMethodSetSomething(stateClassName, methodName, something, this);
+	}
+	
+	final public int addState(State state) {
+		return wa.addState(state, this);
 	}
 }
