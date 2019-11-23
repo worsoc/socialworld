@@ -53,19 +53,20 @@ public class CreateItem extends CreateSimulationObjects {
 	
 	@Override
 	public Item getObject(int objectID) {
+		
+		// TODO here only apple example
 		WriteAccessToItem wa;
 		GrantedAccessToProperty propertiesToInit[];
 		HiddenItem hiddenItem = null;
 
 		StateItem state = new StateItem();
-		
 		Item createdItem = new Apple(objectID);
 		
 		wa = new WriteAccessToItem(createdItem, state);
+
 		propertiesToInit = new GrantedAccessToProperty[1];
 		propertiesToInit[0] = GrantedAccessToProperty.all;
-		hiddenItem = wa.getMeHidden(propertiesToInit);
-		
+		hiddenItem =  wa.getMeHidden(propertiesToInit);
 
 		initState(hiddenItem);
 		initObject(hiddenItem);	

@@ -21,6 +21,9 @@
 */
 package org.socialworld.objects;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.knowledge.Acquaintance;
 import org.socialworld.knowledge.AnswerProperties;
@@ -52,17 +55,29 @@ import org.socialworld.core.IEventParam;
 		return SimulationObject_Type.human;
 	}
 
-	protected void assignState(StateSimulationObject state) {
-		super.assignState(state);
-		if (checkIsMyState(state) ) this.state = (StateHuman) state;
-	}
 	
 	protected void init() {
 		if (initialized == false) {
 			initialized = true;
 		}
 	}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    STATE       //////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 	
+	protected void assignState(StateSimulationObject state) {
+		super.assignState(state);
+		if (checkIsMyState(state) ) this.state = (StateHuman) state;
+	}
+
+	protected List<State> createAddOnStates() {
+		List<State> result;
+		result = new ArrayList<State>();
+//		result = super.createAddOnStates();
+		return result;
+	}
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    TALK       ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////

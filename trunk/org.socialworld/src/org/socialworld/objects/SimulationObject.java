@@ -22,6 +22,8 @@
 package org.socialworld.objects;
 
 
+import java.util.List;
+
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionNothing;
 import org.socialworld.attributes.Position;
@@ -77,7 +79,7 @@ public abstract class SimulationObject extends ListenedBase {
 
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////    SIMULATION OBJECT TXPE     ///////////////////////////////
+/////////////////////////////    SIMULATION OBJECT TYPE     ///////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
 	protected abstract SimulationObject_Type getSimObjectType();
@@ -129,6 +131,8 @@ public abstract class SimulationObject extends ListenedBase {
 
 	protected abstract void assignState(StateSimulationObject state);
 
+	protected abstract List<State> createAddOnStates();
+	
 	protected final boolean checkIsMyState(StateSimulationObject state) {
 		return (state == this.state);
 	}

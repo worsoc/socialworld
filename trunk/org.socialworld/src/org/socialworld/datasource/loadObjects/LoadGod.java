@@ -28,6 +28,7 @@ import org.socialworld.objects.StateGod;
 import org.socialworld.objects.WriteAccessToGod;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenGod;
+import org.socialworld.objects.concrete.gods.Weather;
 
 public class LoadGod extends LoadSimulationObjects {
 
@@ -57,7 +58,7 @@ public class LoadGod extends LoadSimulationObjects {
 
 	@Override
 	public void createObject(int objectID) {
-		God createdGod = new God(objectID);
+		God createdGod = new Weather(objectID);
 		allObjects.set(objectID, createdGod);
 	}
 

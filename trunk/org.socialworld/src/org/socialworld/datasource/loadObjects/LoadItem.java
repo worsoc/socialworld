@@ -79,6 +79,7 @@ public class LoadItem extends LoadSimulationObjects {
 		propertiesToInit[0] = GrantedAccessToProperty.all;
 		hiddenItem = wa.getMeHidden(propertiesToInit);
 		
+		
 		initState(hiddenItem,  objectID);
 		initObject(hiddenItem,  objectID);	
 		

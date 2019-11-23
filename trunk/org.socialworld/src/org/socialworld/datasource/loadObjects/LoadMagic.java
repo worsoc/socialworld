@@ -27,6 +27,7 @@ import org.socialworld.objects.StateMagic;
 import org.socialworld.objects.WriteAccessToMagic;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenMagic;
+import org.socialworld.objects.concrete.spells.Lightning;
 
 public class LoadMagic extends LoadSimulationObjects {
 
@@ -56,7 +57,7 @@ public class LoadMagic extends LoadSimulationObjects {
 
 	@Override
 	public void createObject(int objectID) {
-		Magic createdMagic = new Magic(objectID);
+		Magic createdMagic = new Lightning(objectID);
 		allObjects.set(objectID, createdMagic);
 	}
 
