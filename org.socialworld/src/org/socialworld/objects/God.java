@@ -33,9 +33,6 @@ import org.socialworld.core.IEventParam;
  */
 public abstract class God extends SimulationObject {
 
-	public God(int objectID) {
-		super(objectID);
-	}
 
 	protected SimulationObject_Type getSimObjectType() {
 		return SimulationObject_Type.god;

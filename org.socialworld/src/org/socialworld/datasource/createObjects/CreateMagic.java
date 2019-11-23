@@ -26,7 +26,6 @@ import org.socialworld.objects.StateMagic;
 import org.socialworld.objects.WriteAccessToMagic;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenMagic;
-import org.socialworld.objects.concrete.spells.Lightning;
 
 /**
  * @author Mathias Sikos
@@ -52,16 +51,19 @@ public class CreateMagic extends CreateSimulationObjects {
 	}
 
 	@Override
-	public Magic getObject(int objectID) {
+	public Magic getObject(int objectID,  String fullClassName) {
 		WriteAccessToMagic wa;
 		GrantedAccessToProperty propertiesToInit[];
 		HiddenMagic hiddenMagic = null;
 
+		Object createdObject = createObjectForName(fullClassName);
+		if (createdObject == null) return null;
+		
+		Magic createdMagic = (Magic) createdObject;
+		createdMagic.setObjectID(objectID);
 		StateMagic state = new StateMagic();
-		
-		Magic createdMagic = new Lightning(objectID);
-		
 		wa = new WriteAccessToMagic(createdMagic, state);
+		
 		propertiesToInit = new GrantedAccessToProperty[1];
 		propertiesToInit[0] = GrantedAccessToProperty.all;
 		hiddenMagic = wa.getMeHidden(propertiesToInit);

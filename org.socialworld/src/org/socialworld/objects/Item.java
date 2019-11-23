@@ -34,9 +34,6 @@ import org.socialworld.core.IEventParam;
  */
 public abstract class Item extends SimulationObject {
 
-	public Item(int objectID) {
-		super(objectID);
-	}
 
 	protected SimulationObject_Type getSimObjectType() {
 		return SimulationObject_Type.item;

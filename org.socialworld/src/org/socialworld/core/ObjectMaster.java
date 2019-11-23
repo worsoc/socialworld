@@ -110,9 +110,12 @@ public class ObjectMaster {
 	}
 	
 	public void loadSimulationObjects() {
+		
 		int allIDs[];
 		int length;
 		int index;
+		
+		String fullClassName;
 		
 		int objectID;
 		int type;
@@ -128,8 +131,16 @@ public class ObjectMaster {
 		for (index = 0; index < length; index++) {
 			objectID = allIDs[index];
 			type = tableObjects.getType(index);
-			
-			this.loaders[type].createObject(objectID);
+
+			switch (type) {
+				case 1: fullClassName = "org.socialworld.objects.concrete.animals.mammals.Dog"; break;
+				case 2: fullClassName = "org.socialworld.objects.Human"; break;
+				case 3: fullClassName = "org.socialworld.objects.concrete.gods.Weather"; break;
+				case 4: fullClassName = "org.socialworld.objects.concrete.eatable.fruits.Apple"; break;
+				case 5: fullClassName = "org.socialworld.objects.concrete.spells.Lightning"; break;
+				default: continue;
+			}
+			this.loaders[type].createObject(objectID, fullClassName);
 		}
 		
 		for (index = 0; index < length; index++) {
@@ -143,15 +154,26 @@ public class ObjectMaster {
 	}
 	
 	
-	public SimulationObject createSimulationObject(
+	SimulationObject createSimulationObject(
 			SimulationObject_Type simulationObjectType) {
 		SimulationObject object;
 		int objectID;
 		
+		String fullClassName;
+
 		maxObjectID = maxObjectID + 1;
 		objectID =  maxObjectID;
 		
-		object = creators[simulationObjectType.getIndex()].getObject(objectID);
+		switch (simulationObjectType) {
+			case animal: fullClassName = "org.socialworld.objects.concrete.animals.mammals.Dog"; break;
+			case human: fullClassName = "org.socialworld.objects.Human"; break;
+			case god: fullClassName = "org.socialworld.objects.concrete.gods.Weather"; break;
+			case item: fullClassName = "org.socialworld.objects.concrete.eatable.fruits.Apple"; break;
+			case magic: fullClassName = "org.socialworld.objects.concrete.spells.Lightning"; break;
+			default: return null;
+		}
+
+		object = creators[simulationObjectType.getIndex()].getObject(objectID, fullClassName);
 		
 		if (object != null) {
 			this.simulationObjects.set(objectID, object);

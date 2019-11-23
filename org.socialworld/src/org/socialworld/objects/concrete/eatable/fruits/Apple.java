@@ -6,9 +6,6 @@ import org.socialworld.objects.properties.IThrowable;
 public class Apple extends Fruit implements IThrowable {
 
 
-	public Apple(int objectID) {
-		super(objectID);
-	}
 	
 	public  float getTemperature() {return 20; };
 	public  float getConsistence() {return 20; };

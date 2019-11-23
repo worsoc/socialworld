@@ -26,7 +26,6 @@ import org.socialworld.objects.StateItem;
 import org.socialworld.objects.WriteAccessToItem;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenItem;
-import org.socialworld.objects.concrete.eatable.fruits.Apple;
 
 /**
  * @author Mathias Sikos
@@ -51,17 +50,20 @@ public class CreateItem extends CreateSimulationObjects {
 		else return null;
 	}
 	
-	@Override
-	public Item getObject(int objectID) {
+	
+	public Item getObject(int objectID, String fullClassName) {
 		
-		// TODO here only apple example
+		
 		WriteAccessToItem wa;
 		GrantedAccessToProperty propertiesToInit[];
 		HiddenItem hiddenItem = null;
 
-		StateItem state = new StateItem();
-		Item createdItem = new Apple(objectID);
+		Object createdObject = createObjectForName(fullClassName);
+		if (createdObject == null) return null;
 		
+		Item createdItem = (Item) createdObject;
+		createdItem.setObjectID(objectID);
+		StateItem state = new StateItem();
 		wa = new WriteAccessToItem(createdItem, state);
 
 		propertiesToInit = new GrantedAccessToProperty[1];

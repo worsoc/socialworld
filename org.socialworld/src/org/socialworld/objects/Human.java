@@ -47,9 +47,6 @@ import org.socialworld.core.IEventParam;
 	private StateHuman state;
 	private boolean initialized;
 	
-	public Human(int objectID) {
-		super(objectID);
-	}
 
 	protected SimulationObject_Type getSimObjectType() {
 		return SimulationObject_Type.human;

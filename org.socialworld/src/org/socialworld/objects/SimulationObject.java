@@ -64,8 +64,8 @@ public abstract class SimulationObject extends ListenedBase {
 	 * The constructor creates an incomplete simulation object. It's an "empty" object. There is only the object ID.
 	 * 
 	 */
-	public SimulationObject(int objectID) {
-		this.objectID = objectID;
+	public SimulationObject() {
+		this.objectID = 0;
 		this.guard = null;
 		this.actionHandler = new ActionHandler(this);
 		
@@ -110,6 +110,12 @@ public abstract class SimulationObject extends ListenedBase {
 /////////////////////////////    OBJECT_ID      ///////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 		
+	public final void setObjectID(int objectID) {
+		if (this.objectID == 0) {
+			this.objectID = objectID;
+		}
+	}
+	
 	public final int getObjectID() {
 		return objectID;
 	}

@@ -33,7 +33,6 @@ import org.socialworld.objects.StateAnimal;
 import org.socialworld.objects.WriteAccessToAnimal;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenAnimal;
-import org.socialworld.objects.concrete.animals.mammals.Dog;
 
 public class LoadAnimal extends LoadSimulationObjects  {
 
@@ -79,8 +78,12 @@ public class LoadAnimal extends LoadSimulationObjects  {
 
 	}
 
-	public void createObject(int objectID) {
-		Animal createdAnimal = new Dog(objectID);
+	public void createObject(int objectID,  String fullClassName) {
+		Object createdObject = createObjectForName(fullClassName);
+		if (createdObject == null) return;
+
+		Animal createdAnimal = (Animal) createdObject;
+		createdAnimal.setObjectID(objectID);
 		allObjects.set(objectID, createdAnimal);
 	}
 	

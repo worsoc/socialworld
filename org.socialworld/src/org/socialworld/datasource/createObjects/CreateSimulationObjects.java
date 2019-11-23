@@ -51,7 +51,29 @@ public abstract class CreateSimulationObjects {
 		usedPositionIndex = new ArrayList<Integer>();
 	}
 
-	public abstract SimulationObject getObject(int objectID) ;
+	public abstract SimulationObject getObject(int objectID, String fullClassName) ;
+	
+	protected final Object createObjectForName(String fullClassName) {
+		
+		Object createdObject;
+		try {
+			createdObject = Class.forName(fullClassName).newInstance();
+		}
+		catch (ClassNotFoundException cnfe ) {
+			System.out.println(cnfe.getMessage());
+			return null;
+		}
+		catch (IllegalAccessException iae ) {
+			System.out.println(iae.getMessage());
+			return null;
+		}
+		catch (InstantiationException ie) {
+			ie.printStackTrace();
+			return null;
+		}
+		
+		return createdObject;
+	}
 	
 	protected int mapGaussToIndex(double gaussValue, int arrayCapacity) {
 		double factor;

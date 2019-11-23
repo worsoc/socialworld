@@ -29,7 +29,6 @@ import org.socialworld.objects.StateAnimal;
 import org.socialworld.objects.WriteAccessToAnimal;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenAnimal;
-import org.socialworld.objects.concrete.animals.mammals.Dog;
 
 /**
  * @author Mathias Sikos
@@ -57,15 +56,20 @@ public class CreateAnimal extends CreateSimulationObjects {
 
 		
 	@Override
-	public Animal getObject(int objectID) {
+	public Animal getObject(int objectID,  String fullClassName) {
+		
 		WriteAccessToAnimal wa;
 		GrantedAccessToProperty propertiesToInit[];
 		HiddenAnimal hiddenAnimal = null;
 		
-		StateAnimal state = new StateAnimal();
-		Animal createdAnimal = new Dog(objectID);
+		Object createdObject = createObjectForName(fullClassName);
+		if (createdObject == null) return null;
 
+		Animal createdAnimal = (Animal) createdObject;
+		createdAnimal.setObjectID(objectID);
+		StateAnimal state = new StateAnimal();
 		wa = new WriteAccessToAnimal(createdAnimal, state);
+
 		propertiesToInit = new GrantedAccessToProperty[1];
 		propertiesToInit[0] = GrantedAccessToProperty.all;
 		hiddenAnimal = wa.getMeHidden(propertiesToInit);

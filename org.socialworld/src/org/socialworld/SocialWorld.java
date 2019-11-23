@@ -27,9 +27,6 @@ import java.util.ListIterator;
 
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.AttributeArray;
-import org.socialworld.calculation.application.Scheduler;
-import org.socialworld.calculation.expressions.AttributeValue;
-import org.socialworld.core.Event;
 import org.socialworld.core.Simulation;
 import org.socialworld.data.FillWithTestData_ACM;
 import org.socialworld.data.FillWithTestData_Position;
@@ -75,6 +72,8 @@ public class SocialWorld  {
 			
 		simulation = Simulation.getInstance();
 		
+		Simulation.showMessage("myPrint", "Bitte Geduld. Wir starten bei Sekunde 0.");
+		
 //		test();
 		
 //		fillTestData();
@@ -105,6 +104,10 @@ public class SocialWorld  {
 		return currentObject;
 	}
 
+	public static SimVisual getSimVisual() {
+		return visualizeSimulation;
+	}
+	
 	/**
 	 * @return the simulation
 	 */
