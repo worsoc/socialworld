@@ -19,6 +19,10 @@ public class NutrientProperty extends SharesPropertyBase {
 		super(sharesNutrientMain);
 	}
 	
+	public NutrientProperty(NutrientProperty original) {
+		super(original);
+	}
+	
 	protected int getMainSharesComponentCount() { return NUTPROP_COUNT;}
 	protected float[] getMainNothing() {return NutrientProperty.nothing; }
 
