@@ -21,6 +21,9 @@
 */
 package org.socialworld.objects;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import org.socialworld.attributes.Position;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
@@ -204,6 +207,33 @@ public class StateSimulationObject extends ListenedBase {
 		}
 	}
 	
+	final void setSomething(String methodName, Object something, WriteAccessToSimulationObject guard) {
+		if (checkGuard(guard)) {
+			Method method = getMethod(methodName);
+			try {
+				method.setAccessible(true);
+			    Object o = method.invoke(this, something);
+
+			// Handle any exceptions thrown by method to be invoked.
+			}
+			catch (InvocationTargetException x) {
+			    Throwable cause = x.getCause();
+			    System.out.println( cause.getMessage());
+			}
+			catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} 
+		}
+	}
 	
+	final private Method getMethod(String method) {
+		Method[] allMethods = this.getClass().getDeclaredMethods();
+		
+		for (Method m : allMethods) {
+			String mname = m.getName();
+			if (mname.equals(method)) return m;
+		}
+		return null;
+	}
 
 }

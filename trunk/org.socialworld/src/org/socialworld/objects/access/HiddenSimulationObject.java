@@ -101,5 +101,9 @@ public class HiddenSimulationObject {
 
 	public int setState2ActionType(int type) {
 		return wa.setState2ActionType(type, this);
-	}	
+	}
+	
+	final public int setSomething(String methodName, Object something) {
+		return wa.callMethodSetSomething(methodName, something, this);
+	}
 }

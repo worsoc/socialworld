@@ -24,6 +24,7 @@ package org.socialworld.objects;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.knowledge.Acquaintance;
 import org.socialworld.knowledge.AnswerProperties;
+import org.socialworld.objects.concrete.animals.Mammal;
 import org.socialworld.objects.properties.IWeapon;
 import org.socialworld.conversation.Talk_SentenceType;
 import org.socialworld.core.IEventParam;
@@ -56,7 +57,7 @@ import org.socialworld.core.IEventParam;
 		if (checkIsMyState(state) ) this.state = (StateHuman) state;
 	}
 	
-	void init() {
+	protected void init() {
 		if (initialized == false) {
 			initialized = true;
 		}
