@@ -19,9 +19,6 @@ public class Apple extends Fruit implements IEatable, IThrowable {
 	public  float getConsistence() {return 20; };
 	public  float getFirmness() {return 20; };
 	
-	public  NutrientProperty getNutrientProperties() { return nutrientProps; }
-	
-	public  TasteProperty getTasteProperties() { return tasteProps; }
 
 	public float getGrip() { return 20; }
 	public float getMass()  { return 20; }

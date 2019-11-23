@@ -165,6 +165,17 @@ public class WriteAccessToSimulationObject {
 			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
 	}
 
-
+	public int callMethodSetSomething(String method, Object something, HiddenSimulationObject caller) {
+		if (checkCaller(caller)) 
+			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.state2ActionType)) {
+				objectsState.setSomething(method, something , this);
+				return WRITE_ACCESS_RETURNS_SUCCESS;
+			}
+			else
+				return WRITE_ACCESS_RETURNS_NO_GRANT_FOR_PROPERTY;
+		else
+			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
+			
+	}
 
 }
