@@ -13,6 +13,10 @@ public abstract class SharesPropertyBase {
 		setMainShares(sharesMain);
 	}
 	
+	protected SharesPropertyBase(SharesPropertyBase original) {
+		setMainShares(original.sharesMain);
+	}
+	
 	private void setMainShares(float[] sharesMain) {
 		
 		float nothing = checkShares(sharesMain, getMainSharesComponentCount());

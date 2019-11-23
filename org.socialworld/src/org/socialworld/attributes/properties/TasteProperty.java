@@ -18,6 +18,10 @@ public class TasteProperty extends SharesPropertyBase {
 		super(sharesTaste);
 	}
 
+	public TasteProperty(TasteProperty original) {
+		super(original);
+	}
+
 	protected int getMainSharesComponentCount() { return TASTEPROP_COUNT;}
 	protected float[] getMainNothing() {return TasteProperty.nothing; }
 	
