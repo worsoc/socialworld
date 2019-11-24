@@ -22,6 +22,7 @@
 package org.socialworld.core;
 
 import org.socialworld.objects.*;
+import org.socialworld.objects.access.HiddenSimulationObject;
 import org.socialworld.propertyChange.ChangedProperty;
 
 import java.lang.reflect.InvocationTargetException;
@@ -120,8 +121,10 @@ public class Simulation extends SocialWorldThread {
 		this.startThread();
 		
 		Human myHuman;
+		Item myItem;
 		for (int i = 0; i < 100; i++ ) {
 			myHuman = (Human) createSimulationObject(SimulationObject_Type.human);
+			myItem = (Item) createSimulationObject(SimulationObject_Type.item);
 			System.out.println(myHuman.getPosition().toString());
 		}
 		
@@ -174,9 +177,22 @@ public class Simulation extends SocialWorldThread {
 	public SimulationObject createSimulationObject(
 			SimulationObject_Type simulationObjectType) {
 		
-		SimulationObject createdObject;
-		createdObject = this.objectMaster.createSimulationObject(simulationObjectType);
-		this.searchByPosition.addObject(createdObject);
+		int incompleteObjectIndex;
+		int objectID;
+		HiddenSimulationObject hiddenObject;
+		SimulationObject createdObject = null;
+		
+		incompleteObjectIndex = this.objectMaster.createSimulationObject(simulationObjectType);
+		if (incompleteObjectIndex >= 0) {
+			objectID = this.objectMaster.getObjectIDForIncompleteObjectIndex(incompleteObjectIndex);
+			if (objectID > 0) {
+				createdObject = this.objectMaster.getObjectForIncompleteObjectIndex(incompleteObjectIndex, objectID);
+				if (createdObject != null) {
+					this.searchByPosition.addObject(createdObject);
+				}
+				hiddenObject = this.objectMaster.getHiddenObjectForIncompleteObjectIndex(incompleteObjectIndex, objectID);
+			}
+		}
 		
 		return createdObject;
 	}

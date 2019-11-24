@@ -21,6 +21,7 @@
 */
 package org.socialworld.datasource.createObjects;
 
+import org.socialworld.core.IncompleteSimulationObject;
 import org.socialworld.objects.Magic;
 import org.socialworld.objects.StateMagic;
 import org.socialworld.objects.WriteAccessToMagic;
@@ -51,7 +52,7 @@ public class CreateMagic extends CreateSimulationObjects {
 	}
 
 	@Override
-	public Magic getObject(int objectID,  String fullClassName) {
+	public IncompleteSimulationObject getObject(int objectID,  String fullClassName) {
 		WriteAccessToMagic wa;
 		GrantedAccessToProperty propertiesToInit[];
 		HiddenMagic hiddenMagic = null;
@@ -71,7 +72,7 @@ public class CreateMagic extends CreateSimulationObjects {
 		initState(hiddenMagic);
 		initObject(hiddenMagic);	
 		
-		return createdMagic;
+		return new IncompleteSimulationObject(createdMagic, hiddenMagic);
 	}
 
 }

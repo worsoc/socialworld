@@ -22,6 +22,7 @@
 package org.socialworld.datasource.createObjects;
 
 import org.socialworld.SimpleClientActionHandler;
+import org.socialworld.core.IncompleteSimulationObject;
 import org.socialworld.objects.Human;
 import org.socialworld.objects.StateHuman;
 import org.socialworld.objects.WriteAccessToHuman;
@@ -52,7 +53,7 @@ public class CreateHuman extends CreateAnimal {
 	}
 
 	@Override
-	public Human getObject(int objectID,  String fullClassName) {
+	public IncompleteSimulationObject getObject(int objectID,  String fullClassName) {
 		WriteAccessToHuman wa;
 		GrantedAccessToProperty propertiesToInit[];
 		HiddenHuman hiddenHuman = null;
@@ -74,7 +75,7 @@ public class CreateHuman extends CreateAnimal {
 
 		SimpleClientActionHandler.getInstance().setHumanWrite(objectID, hiddenHuman);
 
-		return createdHuman;
+		return new IncompleteSimulationObject(createdHuman, hiddenHuman);
 	}
 
 }
