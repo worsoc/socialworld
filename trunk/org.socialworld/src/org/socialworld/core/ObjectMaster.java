@@ -199,7 +199,7 @@ public class ObjectMaster {
 	
 	int getObjectIDForIncompleteObjectIndex(int  incompleteObjectsIndex) {
 		IncompleteSimulationObject incompleteObject;
-		incompleteObject = this.incompleteObjects.getIncompleteObject(incompleteObjectsIndex);
+		incompleteObject = this.incompleteObjects.get(incompleteObjectsIndex);
 		
 		if (incompleteObject.isValid()) {
 			return incompleteObject.getObjectID();
@@ -212,7 +212,7 @@ public class ObjectMaster {
 	SimulationObject getObjectForIncompleteObjectIndex(int  incompleteObjectsIndex, int objectID) {
 		
 		IncompleteSimulationObject incompleteObject;
-		incompleteObject = this.incompleteObjects.getIncompleteObject(incompleteObjectsIndex);
+		incompleteObject = this.incompleteObjects.get(incompleteObjectsIndex);
 		
 		if (incompleteObject.isValid() && incompleteObject.getObjectID() == objectID) {
 			return incompleteObject.getObject();
@@ -226,7 +226,7 @@ public class ObjectMaster {
 	HiddenSimulationObject getHiddenObjectForIncompleteObjectIndex(int  incompleteObjectsIndex, int objectID) {
 		
 		IncompleteSimulationObject incompleteObject;
-		incompleteObject = this.incompleteObjects.getIncompleteObject(incompleteObjectsIndex);
+		incompleteObject = this.incompleteObjects.get(incompleteObjectsIndex);
 		
 		if (incompleteObject.isValid() && incompleteObject.getObjectID() == objectID) {
 			return incompleteObject.getHiddenObject();
@@ -237,6 +237,15 @@ public class ObjectMaster {
 		
 	}
 
+	void setSimulationObjectComplete(int  incompleteObjectsIndex, int objectID) {
+		
+		IncompleteSimulationObject removedObject = this.incompleteObjects.remove(incompleteObjectsIndex, objectID);
+		
+		if (removedObject.isValid()) {
+			removedObject.setComplete();
+		}
+	}
+	
 	public int refreshNextObjectsState(SimulationObject_Type simObjType) {
 		
 		SimulationObject theNextOne;
