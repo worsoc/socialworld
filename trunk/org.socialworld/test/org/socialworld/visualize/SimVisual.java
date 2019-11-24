@@ -212,4 +212,8 @@ public class SimVisual {
 		
 	}
 
+	public static void myPrint(String line) {
+		System.out.println(line);
+	}
+
 }
