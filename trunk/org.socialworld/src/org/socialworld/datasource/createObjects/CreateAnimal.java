@@ -22,6 +22,7 @@
 package org.socialworld.datasource.createObjects;
 
 import org.socialworld.actions.handle.Inventory;
+import org.socialworld.core.IncompleteSimulationObject;
 import org.socialworld.datasource.pool.GaussPoolAttributeArray;
 import org.socialworld.datasource.pool.GaussPoolAttributeCalculatorMatrix;
 import org.socialworld.objects.Animal;
@@ -56,7 +57,7 @@ public class CreateAnimal extends CreateSimulationObjects {
 
 		
 	@Override
-	public Animal getObject(int objectID,  String fullClassName) {
+	public IncompleteSimulationObject getObject(int objectID,  String fullClassName) {
 		
 		WriteAccessToAnimal wa;
 		GrantedAccessToProperty propertiesToInit[];
@@ -77,7 +78,7 @@ public class CreateAnimal extends CreateSimulationObjects {
 		initState(hiddenAnimal);
 		initObject(hiddenAnimal);	
 		
-		return createdAnimal;
+		return new IncompleteSimulationObject(createdAnimal, hiddenAnimal);
 	}
 
 	protected void initObject(HiddenAnimal hiddenAnimal) {

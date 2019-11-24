@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.socialworld.core.IncompleteSimulationObject;
 import org.socialworld.datasource.pool.GaussPoolInfluenceType;
 import org.socialworld.datasource.pool.GaussPoolPosition;
 import org.socialworld.datasource.pool.GaussPoolReactionType;
@@ -51,7 +52,7 @@ public abstract class CreateSimulationObjects {
 		usedPositionIndex = new ArrayList<Integer>();
 	}
 
-	public abstract SimulationObject getObject(int objectID, String fullClassName) ;
+	public abstract IncompleteSimulationObject getObject(int objectID, String fullClassName) ;
 	
 	protected final Object createObjectForName(String fullClassName) {
 		

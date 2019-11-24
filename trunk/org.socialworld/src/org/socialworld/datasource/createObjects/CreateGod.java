@@ -21,8 +21,8 @@
 */
 package org.socialworld.datasource.createObjects;
 
+import org.socialworld.core.IncompleteSimulationObject;
 import org.socialworld.objects.God;
-import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.StateGod;
 import org.socialworld.objects.WriteAccessToGod;
 import org.socialworld.objects.access.GrantedAccessToProperty;
@@ -52,7 +52,7 @@ public class CreateGod extends CreateSimulationObjects {
 	}
 
 	@Override
-	public SimulationObject getObject(int objectID,  String fullClassName) {
+	public IncompleteSimulationObject getObject(int objectID,  String fullClassName) {
 		WriteAccessToGod wa;
 		GrantedAccessToProperty propertiesToInit[];
 		HiddenGod hiddenGod = null;
@@ -73,7 +73,7 @@ public class CreateGod extends CreateSimulationObjects {
 		initState(hiddenGod);
 		initObject(hiddenGod);	
 		
-		return createdGod;
+		return new IncompleteSimulationObject(createdGod, hiddenGod);
 	}
 
 }

@@ -24,6 +24,7 @@ package org.socialworld.core;
 import java.util.ListIterator;
 
 import org.socialworld.objects.*;
+import org.socialworld.objects.access.HiddenSimulationObject;
 import org.socialworld.propertyChange.ListenedList;
 import org.socialworld.datasource.createObjects.CreateAnimal;
 import org.socialworld.datasource.createObjects.CreateGod;
@@ -38,7 +39,7 @@ import org.socialworld.datasource.loadObjects.LoadItem;
 import org.socialworld.datasource.loadObjects.LoadMagic;
 import org.socialworld.datasource.loadObjects.LoadSimulationObjects;
 import org.socialworld.datasource.tablesSimulation.TableObject;
-
+import org.socialworld.collections.IncompleteObjects;
 import org.socialworld.collections.SimulationObjectArray;
 
 /**
@@ -53,6 +54,8 @@ public class ObjectMaster {
 	
 	private LoadSimulationObjects[] loaders;
 	private CreateSimulationObjects[] creators;
+		
+	private IncompleteObjects incompleteObjects;
 	
 	private final ListenedList<God> gods;
 	private final ListenedList<Human> humans;
@@ -82,6 +85,8 @@ public class ObjectMaster {
 		this.items = new ListenedList<Item>();
 		resetIterators();
 		
+		this.incompleteObjects = new IncompleteObjects();
+				
 		loaders = new LoadSimulationObjects[8];
 		loaders[1] = LoadAnimal.getExlusiveInstance(simulationObjects);
 		loaders[2] = LoadHuman.getExlusiveInstance(simulationObjects);
@@ -154,10 +159,14 @@ public class ObjectMaster {
 	}
 	
 	
-	SimulationObject createSimulationObject(
+	int createSimulationObject(
 			SimulationObject_Type simulationObjectType) {
+		
+		IncompleteSimulationObject incompleteObject;
 		SimulationObject object;
+		
 		int objectID;
+		int incompleteObjectIndex;
 		
 		String fullClassName;
 
@@ -170,19 +179,64 @@ public class ObjectMaster {
 			case god: fullClassName = "org.socialworld.objects.concrete.gods.Weather"; break;
 			case item: fullClassName = "org.socialworld.objects.concrete.eatable.fruits.Apple"; break;
 			case magic: fullClassName = "org.socialworld.objects.concrete.spells.Lightning"; break;
-			default: return null;
+			default: return -1;
 		}
 
-		object = creators[simulationObjectType.getIndex()].getObject(objectID, fullClassName);
+		incompleteObject = creators[simulationObjectType.getIndex()].getObject(objectID, fullClassName);
 		
-		if (object != null) {
+		if (incompleteObject != null) {
+			incompleteObjectIndex = incompleteObjects.add(incompleteObject);
+			object = incompleteObject.getObject();
 			this.simulationObjects.set(objectID, object);
 			addObjectToList(simulationObjectType, object);
 		}
+		else {
+			incompleteObjectIndex = -1;
+		}
 		
-		return object;
+		return incompleteObjectIndex;
 	}
 	
+	int getObjectIDForIncompleteObjectIndex(int  incompleteObjectsIndex) {
+		IncompleteSimulationObject incompleteObject;
+		incompleteObject = this.incompleteObjects.getIncompleteObject(incompleteObjectsIndex);
+		
+		if (incompleteObject.isValid()) {
+			return incompleteObject.getObjectID();
+		}
+		else {
+			return 0;
+		}
+	}
+	
+	SimulationObject getObjectForIncompleteObjectIndex(int  incompleteObjectsIndex, int objectID) {
+		
+		IncompleteSimulationObject incompleteObject;
+		incompleteObject = this.incompleteObjects.getIncompleteObject(incompleteObjectsIndex);
+		
+		if (incompleteObject.isValid() && incompleteObject.getObjectID() == objectID) {
+			return incompleteObject.getObject();
+		}
+		else {
+			return null;
+		}
+		
+	}
+
+	HiddenSimulationObject getHiddenObjectForIncompleteObjectIndex(int  incompleteObjectsIndex, int objectID) {
+		
+		IncompleteSimulationObject incompleteObject;
+		incompleteObject = this.incompleteObjects.getIncompleteObject(incompleteObjectsIndex);
+		
+		if (incompleteObject.isValid() && incompleteObject.getObjectID() == objectID) {
+			return incompleteObject.getHiddenObject();
+		}
+		else {
+			return null;
+		}
+		
+	}
+
 	public int refreshNextObjectsState(SimulationObject_Type simObjType) {
 		
 		SimulationObject theNextOne;

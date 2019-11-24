@@ -21,6 +21,7 @@
 */
 package org.socialworld.datasource.createObjects;
 
+import org.socialworld.core.IncompleteSimulationObject;
 import org.socialworld.objects.Item;
 import org.socialworld.objects.StateItem;
 import org.socialworld.objects.WriteAccessToItem;
@@ -51,7 +52,7 @@ public class CreateItem extends CreateSimulationObjects {
 	}
 	
 	
-	public Item getObject(int objectID, String fullClassName) {
+	public IncompleteSimulationObject getObject(int objectID, String fullClassName) {
 		
 		
 		WriteAccessToItem wa;
@@ -73,7 +74,7 @@ public class CreateItem extends CreateSimulationObjects {
 		initState(hiddenItem);
 		initObject(hiddenItem);	
 		
-		return createdItem;
+		return new IncompleteSimulationObject(createdItem, hiddenItem);
 	}
 
 }
