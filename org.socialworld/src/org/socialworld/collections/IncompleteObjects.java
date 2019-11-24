@@ -11,15 +11,13 @@ public class IncompleteObjects {
 
 	private int freePosition;
 	
-	private IncompleteSimulationObject nothing;
+	public static IncompleteSimulationObject nothing = new IncompleteSimulationObject();
 	
 	public IncompleteObjects() {
 		
 		this.incompleteObjects = new ArrayList<IncompleteSimulationObject>();
 		freePosition = 0;
-		
-		nothing = new IncompleteSimulationObject();
-		
+			
 	}
 	
 	public int add(IncompleteSimulationObject incompleteObject) {
@@ -41,28 +39,31 @@ public class IncompleteObjects {
 		
 	}
 	
-	public void remove(int position, int objectID) {
+	public IncompleteSimulationObject remove(int position, int objectID) {
 		
 		IncompleteSimulationObject incompleteObject = this.incompleteObjects.get(position);
 		
 		if (incompleteObject.isValid()) {
 			if (incompleteObject.getObjectID() == objectID) {
-				this.incompleteObjects.set(position, this.nothing);
+				this.incompleteObjects.set(position, nothing);
 				if (position < this.freePosition) {
 					this.freePosition = position;
 				}
+				return incompleteObject;
 			}
 		}
+		
+		return nothing;
 		
 	}
 	
 	 
-	public IncompleteSimulationObject getIncompleteObject(int position) {
+	public IncompleteSimulationObject get(int position) {
 		
 		if (position >= 0 && position < this.incompleteObjects.size())
 			return this.incompleteObjects.get(position);
 		else
-			return this.nothing;
+			return nothing;
 		
 	}
 	

@@ -24,6 +24,8 @@ package org.socialworld.objects.access;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.Position;
 import org.socialworld.calculation.Vector;
+import org.socialworld.collections.IncompleteObjects;
+import org.socialworld.core.IncompleteSimulationObject;
 import org.socialworld.objects.SimulationObject_Type;
 import org.socialworld.objects.State;
 import org.socialworld.objects.WriteAccessToSimulationObject;
@@ -36,12 +38,15 @@ public class HiddenSimulationObject {
 
 	private WriteAccessToSimulationObject wa;
 	private boolean isValid;
+	private boolean validOnlyForIncompleteObject;
+	IncompleteSimulationObject incompleteObject;
 	
 	private GrantedAccessToProperty propertiesWithGrantedAccess[];
 	
 	public HiddenSimulationObject(WriteAccessToSimulationObject wa, GrantedAccessToProperty properties[]) {
 		this.wa = wa;
 		this.isValid = true;
+		this.validOnlyForIncompleteObject = false;
 		this.propertiesWithGrantedAccess = properties;
 	}
 	
@@ -50,7 +55,25 @@ public class HiddenSimulationObject {
 		this.isValid = false;
 	}
 	
+	public final void setIncompleteSimulationObject(IncompleteSimulationObject incompleteObject) {
+		
+		if (incompleteObject.checkForHiddenObject(this)){
+			this.incompleteObject = incompleteObject;
+			validOnlyForIncompleteObject = true;
+		}
+		
+	}
+	
 	public final boolean isValid() {
+		
+		if (isValid) {
+			if (validOnlyForIncompleteObject) {
+				if (!incompleteObject.isIncomplete()) {
+					incompleteObject = IncompleteObjects.nothing;
+					isValid = false;
+				}
+			}
+		}
 		return isValid;
 	}
 	
