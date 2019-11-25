@@ -37,6 +37,8 @@ public interface IEventParam {
 
 	public abstract Value getParam(Type name);
 	
+	public abstract int getPriority();
+	
 	public abstract boolean isEvaluated();
 	
 	public abstract void evaluate();
