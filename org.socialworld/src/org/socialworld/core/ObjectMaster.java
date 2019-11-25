@@ -64,8 +64,8 @@ public class ObjectMaster {
 	private final ListenedList<Animal> animals;
 	
 	private final SimulationObjectArray simulationObjects;
-
 	private int maxObjectID = 0;
+	private int nextIndexForPerceive = 0;
 	
 	private  ListIterator<God> godsIterator;
 	private  ListIterator<Human> humansIterator;
@@ -86,7 +86,8 @@ public class ObjectMaster {
 		resetIterators();
 		
 		this.incompleteObjects = new IncompleteObjects();
-				
+		
+		
 		loaders = new LoadSimulationObjects[8];
 		loaders[1] = LoadAnimal.getExlusiveInstance(simulationObjects);
 		loaders[2] = LoadHuman.getExlusiveInstance(simulationObjects);
@@ -154,6 +155,10 @@ public class ObjectMaster {
 
 			this.loaders[type].loadObject(objectID);
 			addObjectToList(SimulationObject_Type.getSimulationObjectType(type), simulationObjects.get(objectID));
+		}
+		
+		if (allIDs.length > 0) {
+			this.maxObjectID = allIDs[allIDs.length - 1];
 		}
 		
 	}
@@ -260,10 +265,26 @@ public class ObjectMaster {
 			resetIterator(simObjType);
 			return  simObjType.next();
 		}
-		
 
 	}
-	
+
+	public void perceiveNextObject() {
+		
+		SimulationObject theNextOne;
+		
+		theNextOne = this.simulationObjects.get(this.nextIndexForPerceive);
+		
+		if (theNextOne != null) {
+			theNextOne.letBePerceived();
+		}
+
+		this.nextIndexForPerceive++;
+		if (this.nextIndexForPerceive > this.maxObjectID) {
+			this.nextIndexForPerceive = 0;
+		}
+		
+	}
+
 	private void addObjectToList(SimulationObject_Type simulationObjectType, SimulationObject object) {
 		// TODO (tyloesand) weitere Objekttypen hinzufügen
 		switch (simulationObjectType) {

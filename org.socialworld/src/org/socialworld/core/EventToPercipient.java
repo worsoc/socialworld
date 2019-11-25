@@ -16,7 +16,7 @@ public class EventToPercipient extends Event {
 		
 	}
 	
-	public EventToPercipient(int eventType,  SimulationObject causer, int priority, Position position) {
+	public EventToPercipient(EventType eventType,  SimulationObject causer, int priority, Position position) {
 
 		super(eventType,   causer,    priority,	  position);
 

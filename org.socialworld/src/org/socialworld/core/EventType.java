@@ -132,7 +132,9 @@ public enum EventType {
 
 	percipientAskNormal(456), percipientAskScream(457), percipientAskWhisper(458), percipientAnswerNormal(459), percipientAnswerScream(460), percipientAnswerWhisper(461),
 
-	/*percipientSayNormal(464), percipientSayScream(465), percipientSayWhisper(466)*/;
+	/*percipientSayNormal(464), percipientSayScream(465), percipientSayWhisper(466), */
+	
+	percipientExists(511);
 	
 	public static final int MAX_EVENT_TYPE =  512;
 

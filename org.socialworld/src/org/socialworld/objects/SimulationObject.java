@@ -32,8 +32,11 @@ import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.ActionHandler;
 import org.socialworld.core.Event;
+import org.socialworld.core.EventToPercipient;
+import org.socialworld.core.EventType;
 import org.socialworld.core.IEventParam;
 import org.socialworld.core.SearchActionDescription;
+import org.socialworld.core.Simulation;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.connections.Connection;
 import org.socialworld.objects.connections.ConnectionType;
@@ -213,6 +216,16 @@ public abstract class SimulationObject extends ListenedBase {
 		}
 	}
 
+	public final void letBePerceived() {
+		
+     	Event event;
+     	
+		event = new EventToPercipient(EventType.percipientExists ,   this /* as causer*/, 
+				getSimObjectType().getPercipiencePriority(), this.getPosition());
+		Simulation.getInstance().getEventMaster().addEvent(event);
+
+
+	}
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    EVENT      ///////////////////////////////////////////////
