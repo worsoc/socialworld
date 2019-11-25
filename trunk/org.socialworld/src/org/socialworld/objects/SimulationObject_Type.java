@@ -63,4 +63,19 @@ public enum SimulationObject_Type {
 				return type;
 		return null;
 	}
+	
+	public int getPercipiencePriority() {
+		
+		switch(this){
+		case god: return 40;
+		case magic: return 35;
+		case human: return 30;
+		case animal: return 25;
+		case item: return 20;
+		default: return 5;
+		}
+		
+	}
+	
+	
 }

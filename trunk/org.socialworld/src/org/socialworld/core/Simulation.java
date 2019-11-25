@@ -57,6 +57,7 @@ public class Simulation extends SocialWorldThread {
 	private final EventMaster eventMaster;
 	private final ActionMaster actionMaster;
 	private final RefreshMaster refreshMaster;
+	private final PercipienceMaster percipienceMaster;
 
 	private final ObjectByPositionSearch searchByPosition;
 	
@@ -71,6 +72,7 @@ public class Simulation extends SocialWorldThread {
 		this.eventMaster = EventMaster.getInstance();
 		this.actionMaster = ActionMaster.getInstance();
 		this.refreshMaster = RefreshMaster.getInstance(this.objectMaster);
+		this.percipienceMaster = PercipienceMaster.getInstance(this.objectMaster);
 		
 		this.searchByPosition = new ObjectByPositionSearch(1);
 
@@ -138,6 +140,7 @@ public class Simulation extends SocialWorldThread {
 		this.eventMaster.stopThread();
 		this.actionMaster.stopThread();
 		this.refreshMaster.stopThread();
+		this.percipienceMaster.stopThread();
 	}
 
 	public EventMaster getEventMaster() {
@@ -161,6 +164,7 @@ public class Simulation extends SocialWorldThread {
 			this.eventMaster.startThread();
 			this.actionMaster.startThread();
 			this.refreshMaster.startThread();
+			this.percipienceMaster.startThread();
 		}
 		else if (secondOfTheActualMinute < 50)
 			sleepTime = 500;

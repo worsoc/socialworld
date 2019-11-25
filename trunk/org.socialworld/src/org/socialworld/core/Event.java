@@ -120,10 +120,10 @@ public class Event implements Comparable<Event> {
 	/**
 	 * Constructor
 	 */
-	public Event(int eventType,  SimulationObject causer, int priority, Position position) {
+	public Event(EventType eventType,  SimulationObject causer, int priority, Position position) {
 		
-		this.eventType = EventType.getEventType(eventType);
-		this.eventTypeAsInt = eventType;		
+		this.eventType = eventType;
+		this.eventTypeAsInt = eventType.getIndex();		
 		
 		this.causer = causer;
 		this.priority = priority;
@@ -159,10 +159,10 @@ public class Event implements Comparable<Event> {
 		if (event == null) return 1;
 		
 		if (this.priority < event.getPriority())
-			return -1;
+			return 1;
 		
 		if (this.priority > event.getPriority())
-			return 1;
+			return -1;
 		
 		return 0;
 	}
