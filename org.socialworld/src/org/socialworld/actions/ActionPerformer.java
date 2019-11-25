@@ -95,6 +95,10 @@ public abstract class ActionPerformer implements IEventParam {
     
     protected abstract void perform();
     
+	public int getPriority() {
+		return this.action.getPriority();
+	}
+
 	public void answerPropertiesRequest(ValueArrayList properties) {
 		
 		if (actionPropertiesAreRequested) {
