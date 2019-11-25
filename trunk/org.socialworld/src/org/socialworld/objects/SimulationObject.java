@@ -49,6 +49,7 @@ public abstract class SimulationObject extends ListenedBase {
 	
 
 	private		int 			objectID;
+	private boolean 			justCreated;
 	
 	private StateSimulationObject state;
 
@@ -65,7 +66,9 @@ public abstract class SimulationObject extends ListenedBase {
 	 * 
 	 */
 	public SimulationObject() {
+		
 		this.objectID = 0;
+		this.justCreated = true;
 		this.guard = null;
 		this.actionHandler = new ActionHandler(this);
 		
@@ -104,6 +107,10 @@ public abstract class SimulationObject extends ListenedBase {
 	
 	protected final boolean checkGuard(WriteAccessToSimulationObject guard) {
 		return (this.guard == guard);
+	}
+
+	public final boolean isJustCreated() {
+		return this.justCreated;
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////

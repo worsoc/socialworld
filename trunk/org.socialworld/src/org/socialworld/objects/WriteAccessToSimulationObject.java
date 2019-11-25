@@ -75,17 +75,25 @@ public class WriteAccessToSimulationObject {
 		return this.object.getSimObjectType();
 	}
 	
+	public boolean checkObjectIsJustCreated() {
+		return this.object.isJustCreated();
+	}
+	
 	protected final boolean checkCaller(HiddenSimulationObject caller){
 		
 		if (!caller.isValid()) return false;
 		
 		switch (caller.getClass().getName()) {
 
-		case "org.socialworld.objects.access.HiddenSimulationObject":
-			return true;
 		case "org.socialworld.objects.access.HiddenAnimal":
 			return true;
 		case "org.socialworld.objects.access.HiddenHuman":
+			return true;
+		case "org.socialworld.objects.access.HiddenSimulationObject":
+			return true;
+		case "org.socialworld.objects.access.HiddenItem":
+			return true;
+		case "org.socialworld.objects.access.HiddenMagic":
 			return true;
 			
 		default:

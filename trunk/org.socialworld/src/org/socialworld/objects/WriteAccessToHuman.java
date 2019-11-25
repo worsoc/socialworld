@@ -23,7 +23,6 @@ package org.socialworld.objects;
 
 import java.util.ArrayList;
 
-import org.socialworld.actions.handle.Inventory;
 import org.socialworld.conversation.Talk;
 import org.socialworld.conversation.Talk_SentenceType;
 import org.socialworld.knowledge.Acquaintance;
