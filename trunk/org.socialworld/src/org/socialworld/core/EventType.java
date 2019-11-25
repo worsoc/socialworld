@@ -29,86 +29,112 @@ package org.socialworld.core;
 public enum EventType {
 
 	nothing(0),
-
-//////////////////////////
-// EventToCandidates	
-//////////////////////////
-	
-	candidatesSleep(1), candidatesDrink(2), candidatesEat(3), candidatesPiss(4), candidatesShit(5), 	
-	
-	candidatesMoveWalk(8), candidatesMoveRun(9), candidatesMoveSneak(10), candidatesMoveJump(11), candidatesMoveSwim(12), candidatesMoveFly(13),
-	
-	candidatesExamineByLook(16), candidatesExamineBySmell(17), candidatesExamineByTaste(18), candidatesExamineByTouch(19),
-	
-	candidatesTouchByHand(24), candidatesTouchByFoot(25),
-	
-	candidatesInventoryTake(32), candidatesInventoryDrop(33), candidatesInventorySwitch(34), candidatesInventorySet(35), candidatesInventoryGet(36),
-	
-	candidatesHandleItemUse2(40), candidatesHandleItemUseLeft(41), candidatesHandleItemUseRight(42), candidatesHandleItemAddRtoL(43), candidatesHandleItemAddLtoR(44), candidatesHandleItemPull(45), candidatesHandleItemPush(46),
-	
-	candidatesWeaponLeftStab(48), candidatesWeaponLeftStroke(49), candidatesWeaponLeftBackhand(50), candidatesWeaponRightStab(51), candidatesWeaponRightStroke(52), candidatesWeaponRightBackhand(53), candidatesWeaponClub(54),
-
-	candidatesPunchLeftFistStraight(56), candidatesPunchLeftFistSideways(57), candidatesPunchLeftFistUpward(58), candidatesPunchRightFistStraight(59), candidatesPunchRightFistSideways(60), candidatesPunchRightFistUpward(61),
-	
-/*	candidatesListenToStatement(64), candidatesListenToQuestion(65), candidatesListenToInstruction(66), candidatesUnderstand(67), */
-	
-/*	candidatesAskNormal(72), candidatesAskScream(73), candidatesAskWhisper(74), candidatesAnswerNormal(75), candidatesAnswerScream(76), candidatesAnswerWhisper(77), */
-	
-	candidatesSayNormal(80), candidatesSayScream(81), candidatesSayWhisper(82),
 	
 //////////////////////////////////////////////////////////////////////
 //EventToCauser	(event with influence to causer itself)
 //////////////////////////////////////////////////////////////////////
 
-	selfSleep(129), selfDrink(130), selfEat(131), selfPiss(132), selfShit(133), 	
+	selfSleep(1), selfDrink(2), selfEat(3), selfPiss(4), selfShit(5), 	
 	
-	selfMoveWalk(136), selfMoveRun(137), selfMoveSneak(138), selfMoveJump(139), selfMoveSwim(140), selfMoveFly(141),
+	selfMoveWalk(8), selfMoveRun(9), selfMoveSneak(10), selfMoveJump(11), selfMoveSwim(12), selfMoveFly(13),
 	
-	selfExamineByLook(144), selfExamineBySmell(145), selfExamineByTaste(146), selfExamineByTouch(147),
+	selfExamineByLook(16), selfExamineBySmell(17), selfExamineByTaste(18), selfExamineByTouch(19),
 	
-	selfTouchByHand(152), selfTouchByFoot(153),
+	selfTouchByHand(24), selfTouchByFoot(25),
 	
-	selfInventoryTake(160), selfInventoryDrop(161), selfInventorySwitch(162), selfInventorySet(163), selfInventoryGet(164),
+	selfInventoryTake(32), selfInventoryDrop(33), selfInventorySwitch(34), selfInventorySet(35), selfInventoryGet(36),
 	
-	selfHandleItemUse2(168), selfHandleItemUseLeft(169), selfHandleItemUseRight(170), selfHandleItemAddRtoL(171), selfHandleItemAddLtoR(172), selfHandleItemPull(173),selfHandleItemPush(174),
+	selfHandleItemUse2(40), selfHandleItemUseLeft(41), selfHandleItemUseRight(42), selfHandleItemAddRtoL(43), selfHandleItemAddLtoR(44), selfHandleItemPull(45), selfHandleItemPush(46),
 	
-	selfWeaponLeftStab(176), selfWeaponLeftStroke(177), selfWeaponLeftBackhand(178), selfWeaponRightStab(179), selfWeaponRightStroke(180), selfWeaponRightBackhand(181), selfWeaponClub(182),
+	selfWeaponLeftStab(48), selfWeaponLeftStroke(49), selfWeaponLeftBackhand(50), selfWeaponRightStab(51), selfWeaponRightStroke(52), selfWeaponRightBackhand(53), selfWeaponClub(54),
 
-	selfPunchLeftFistStraight(184),  selfPunchLeftFistSideways(185), selfPunchLeftFistUpward(186), selfPunchRightFistStraight(187),  selfPunchRightFistSideways(188), selfPunchRightFistUpward(189),
-
-	selfListenToStatement(192), selfListenToQuestion(193), selfListenToInstruction(194), selfUnderstand(195),
+	selfPunchLeftFistStraight(56), selfPunchLeftFistSideways(57), selfPunchLeftFistUpward(58), selfPunchRightFistStraight(59), selfPunchRightFistSideways(60), selfPunchRightFistUpward(61),
 	
-	selfAskNormal(200), selfAskScream(201), selfAskWhisper(202), selfAnswerNormal(203), selfAnswerScream(204), selfAnswerWhisper(205),
+	selfListenToStatement(64), selfListenToQuestion(65), selfListenToInstruction(66), selfUnderstand(67), 
 	
-	selfSayNormal(208), selfSayScream(209), selfSayWhisper(210),
+	selfAskNormal(72), selfAskScream(73), selfAskWhisper(74), selfAnswerNormal(75), selfAnswerScream(76), selfAnswerWhisper(77), 
+	
+	selfSayNormal(80), selfSayScream(81), selfSayWhisper(82),
 
 //////////////////////////////////////////////////////////////////////
 //EventToTargets	(event with influence to explicit involved objects (targets, items ...)
 //////////////////////////////////////////////////////////////////////
 	
-/*	targetSleep(257),*/ targetDrink(258), targetEat(259), /* targetPiss(260), targetShit(261),*/ 	
+	/*targetSleep(129),*/ targetDrink(130), targetEat(131), /*targetPiss(132), targetShit(133), */	
 	
-/*	targetMoveWalk(264), targetMoveRun(265), targetMoveSneak(266), targetMoveJump(267), targetMoveSwim(268), targetMoveFly(269), */
+	/*targetMoveWalk(136), targetMoveRun(137), targetMoveSneak(138), targetMoveJump(139), targetMoveSwim(140), targetMoveFly(141), */
 	
-	targetExamineByLook(272), targetExamineBySmell(273), targetExamineByTaste(274), targetExamineByTouch(275),
+	targetExamineByLook(144), targetExamineBySmell(145), targetExamineByTaste(146), targetExamineByTouch(147),
 	
-	targetTouchByHand(280), targetTouchByFoot(281),
+	targetTouchByHand(152), targetTouchByFoot(153),
 	
-	targetInventoryTake(288), targetInventoryDrop(289), targetInventorySwitch(290), targetInventorySet(291), targetInventoryGet(292),
+	targetInventoryTake(160), targetInventoryDrop(161), targetInventorySwitch(162), targetInventorySet(163), targetInventoryGet(164),
 	
-	targetHandleItemUse2(296), targetHandleItemUseLeft(297), targetHandleItemUseRight(298), targetHandleItemAddRtoL(299), targetHandleItemAddLtoR(300), targetHandleItemPull(301),targetHandleItemPush(302),
+	targetHandleItemUse2(168), targetHandleItemUseLeft(169), targetHandleItemUseRight(170), targetHandleItemAddRtoL(171), targetHandleItemAddLtoR(172), targetHandleItemPull(173),targetHandleItemPush(174),
 	
-	targetWeaponLeftStab(304), targetWeaponLeftStroke(305), targetWeaponLeftBackhand(306), targetWeaponRightStab(307), targetWeaponRightStroke(308), targetWeaponRightBackhand(309), targetWeaponClub(310),
+	targetWeaponLeftStab(176), targetWeaponLeftStroke(177), targetWeaponLeftBackhand(178), targetWeaponRightStab(179), targetWeaponRightStroke(180), targetWeaponRightBackhand(181), targetWeaponClub(182),
 
-	targetPunchLeftFistStraight(312),  targetPunchLeftFistSideways(313), targetPunchLeftFistUpward(314), targetPunchRightFistStraight(315),  targetPunchRightFistSideways(316), targetPunchRightFistUpward(317),
+	targetPunchLeftFistStraight(184),  targetPunchLeftFistSideways(185), targetPunchLeftFistUpward(186), targetPunchRightFistStraight(187),  targetPunchRightFistSideways(188), targetPunchRightFistUpward(189),
 
-/*	targetListenToStatement(320), targetListenToQuestion(321), targetListenToInstruction(322), targetUnderstand(323),*/
+	/*targetListenToStatement(192), targetListenToQuestion(193), targetListenToInstruction(194), targetUnderstand(195),*/
 	
-	targetAskNormal(328), targetAskScream(329), targetAskWhisper(330), targetAnswerNormal(331), targetAnswerScream(332), targetAnswerWhisper(333),
+	targetAskNormal(200), targetAskScream(201), targetAskWhisper(202), targetAnswerNormal(203), targetAnswerScream(204), targetAnswerWhisper(205),
 	
-/*	targetSayNormal(336), targetSayScream(337), targetSayWhisper(338) */ ;
+	/*targetSayNormal(208), targetSayScream(209), targetSayWhisper(210),*/
+
+//////////////////////////
+//EventToCandidates	
+//////////////////////////
+
+	candidatesSleep(257), candidatesDrink(258), candidatesEat(259), candidatesPiss(260), candidatesShit(261), 	
 	
-	public static final int MAX_EVENT_TYPE =  384;
+	candidatesMoveWalk(264), candidatesMoveRun(265), candidatesMoveSneak(266), candidatesMoveJump(267), candidatesMoveSwim(268), candidatesMoveFly(269),
+	
+	candidatesExamineByLook(272), candidatesExamineBySmell(273), candidatesExamineByTaste(274), candidatesExamineByTouch(275),
+	
+	candidatesTouchByHand(280), candidatesTouchByFoot(281),
+	
+	candidatesInventoryTake(288), candidatesInventoryDrop(289), candidatesInventorySwitch(290), candidatesInventorySet(291), candidatesInventoryGet(292),
+	
+	candidatesHandleItemUse2(296), candidatesHandleItemUseLeft(297), candidatesHandleItemUseRight(298), candidatesHandleItemAddRtoL(299), candidatesHandleItemAddLtoR(300), candidatesHandleItemPull(301),candidatesHandleItemPush(302),
+	
+	candidatesWeaponLeftStab(304), candidatesWeaponLeftStroke(305), candidatesWeaponLeftBackhand(306), candidatesWeaponRightStab(307), candidatesWeaponRightStroke(308), candidatesWeaponRightBackhand(309), candidatesWeaponClub(310),
+	
+	candidatesPunchLeftFistStraight(312),  candidatesPunchLeftFistSideways(313), candidatesPunchLeftFistUpward(314), candidatesPunchRightFistStraight(315),  candidatesPunchRightFistSideways(316), candidatesPunchRightFistUpward(317),
+	
+/*	candidatesListenToStatement(320), candidatesListenToQuestion(321), candidatesListenToInstruction(322), candidatesUnderstand(323),*/
+
+/*	candidatesAskNormal(328), candidatesAskScream(329), candidatesAskWhisper(330), candidatesAnswerNormal(331), candidatesAnswerScream(332), candidatesAnswerWhisper(333),*/
+	
+	candidatesSayNormal(336), candidatesSayScream(337), candidatesSayWhisper(338),
+
+//////////////////////////
+//EventToPercipient	
+//////////////////////////
+
+	percipientSleep(385), percipientDrink(386), percipientEat(387), percipientPiss(388), percipientShit(389), 	
+
+	percipientMoveWalk(392), percipientMoveRun(393), percipientMoveSneak(394), percipientMoveJump(395), percipientMoveSwim(396), percipientMoveFly(397),
+
+	percipientExamineByLook(400), percipientExamineBySmell(401), percipientExamineByTaste(402), percipientExamineByTouch(403),
+
+	percipientTouchByHand(408), percipientTouchByFoot(409),
+
+	percipientInventoryTake(416), percipientInventoryDrop(417), percipientInventorySwitch(418), percipientInventorySet(419), percipientInventoryGet(420),
+
+	percipientHandleItemUse2(424), percipientHandleItemUseLeft(425), percipientHandleItemUseRight(426), percipientHandleItemAddRtoL(427), percipientHandleItemAddLtoR(428), percipientHandleItemPull(429),percipientHandleItemPush(430),
+
+	percipientWeaponLeftStab(432), percipientWeaponLeftStroke(433), percipientWeaponLeftBackhand(434), percipientWeaponRightStab(435), percipientWeaponRightStroke(436), percipientWeaponRightBackhand(437), percipientWeaponClub(438),
+
+	percipientPunchLeftFistStraight(440),  percipientPunchLeftFistSideways(441), percipientPunchLeftFistUpward(442), percipientPunchRightFistStraight(443),  percipientPunchRightFistSideways(444), percipientPunchRightFistUpward(445),
+
+	/*percipientListenToStatement(448), percipientListenToQuestion(449), percipientListenToInstruction(450), percipientUnderstand(451),*/
+
+	percipientAskNormal(456), percipientAskScream(457), percipientAskWhisper(458), percipientAnswerNormal(459), percipientAnswerScream(460), percipientAnswerWhisper(461),
+
+	/*percipientSayNormal(464), percipientSayScream(465), percipientSayWhisper(466)*/;
+	
+	public static final int MAX_EVENT_TYPE =  512;
 
 	private int index;
 
@@ -142,7 +168,17 @@ public enum EventType {
 
 	public boolean isEventToCauserItself() {
 		
-		if (this.index > 127  & this.index < 256) {
+		if (this.index > 0  & this.index < 128) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	public boolean isEventToTarget() {
+		
+		if (this.index > 128  & this.index < 256) {
 			return true;
 		}
 		else {
@@ -153,18 +189,29 @@ public enum EventType {
 	public boolean isRelevantForEffectiveCheck() {
 		
 		// pull and push with effective check
-		if (this.index == 301 || this.index == 302) return true;
+		if (this.index == 173 || this.index == 174) return true;
 		// touch with effective check
-		if (this.index == 280 || this.index == 281) return true;
+		if (this.index == 152 || this.index == 153) return true;
 		// talk with effective check
-		if (this.index >= 328 && this.index == 333) return true;
+		if (this.index >= 200 && this.index <= 205) return true;
 		
 		// the following with noeffective check
-		if (this.index > 127) return false;
-		if (this.index < 8) return false;
-		if (this.index >= 16 & this.index < 24) return false;
+		// all events to causer itself
+		if (this.index <= 128) return false;
+		// all events to explicit targets (instead defined above)
+		if (this.index >= 129 && this.index <= 256) return false;
+		// there are no candidates for body functions
+		if (this.index >= 257 && this.index <= 263) return false;
+		// there are no candidates for examine actions
+		if (this.index >= 272 & this.index <= 279) return false;
+		// there are no percipients for hearing
+		if (this.index >= 448 & this.index <= 455) return false;
+		// there are no percipients for saying (because every percipient is a candidate)
+		if (this.index >= 464 & this.index <= 471) return false;
 
 		// the rest with effective check
+		// nearly all events to candidates
+		// nearly all events to percipients
 		return true;
 		
 	}
