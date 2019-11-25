@@ -71,6 +71,7 @@ public class Event implements Comparable<Event> {
 		this.eventType = EventType.getEventType(eventType);
 		this.eventTypeAsInt = eventType;		
 		
+		this.priority = param.getPriority();
 		this.causer = causer;
 		this.time = time;
 		this.position = position;
@@ -112,8 +113,21 @@ public class Event implements Comparable<Event> {
 		this.causer = causer;
 		this.time = time;
 		this.position = position;
+		
+		this.percipience = new Event_Percipience();
+	}
 
-
+	/**
+	 * Constructor
+	 */
+	public Event(int eventType,  SimulationObject causer, int priority, Position position) {
+		
+		this.eventType = EventType.getEventType(eventType);
+		this.eventTypeAsInt = eventType;		
+		
+		this.causer = causer;
+		this.priority = priority;
+		this.position = position;
 		
 		this.percipience = new Event_Percipience();
 	}
