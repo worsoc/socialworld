@@ -124,10 +124,13 @@ public class Simulation extends SocialWorldThread {
 		Item myItem;
 		for (int i = 0; i < 100; i++ ) {
 			myHuman = (Human) createSimulationObject(SimulationObject_Type.human);
-			myItem = (Item) createSimulationObject(SimulationObject_Type.item);
-			System.out.println(myHuman.getPosition().toString());
+			System.out.println("Human: " + myHuman.getPosition().toString());
 		}
 		
+		for (int i = 0; i < 75; i++ ) {
+			myItem = (Item) createSimulationObject(SimulationObject_Type.item);
+			System.out.println("Apple:" + myItem.getPosition().toString());
+		}
 		
 	}
 	
