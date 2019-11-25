@@ -46,7 +46,13 @@ public class HiddenSimulationObject {
 	public HiddenSimulationObject(WriteAccessToSimulationObject wa, GrantedAccessToProperty properties[]) {
 		this.wa = wa;
 		this.isValid = true;
-		this.validOnlyForIncompleteObject = false;
+		if (this.wa.checkObjectIsJustCreated()) {
+			this.validOnlyForIncompleteObject = true;
+		}
+		else
+		{
+			this.validOnlyForIncompleteObject = false;
+		}
 		this.propertiesWithGrantedAccess = properties;
 	}
 	
@@ -66,7 +72,7 @@ public class HiddenSimulationObject {
 	
 	public final boolean isValid() {
 		
-		if (isValid) {
+		if (isValid && !this.wa.checkObjectIsJustCreated()) {
 			if (validOnlyForIncompleteObject) {
 				if (!incompleteObject.isIncomplete()) {
 					incompleteObject = IncompleteObjects.nothing;
