@@ -188,6 +188,16 @@ public enum EventType {
 		}
 	}
 	
+	public boolean isEventToPercipient() {
+		
+		if (this.index > 384  & this.index < 512) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
 	public boolean isRelevantForEffectiveCheck() {
 		
 		// pull and push with effective check
@@ -200,6 +210,8 @@ public enum EventType {
 		// the following with noeffective check
 		// all events to causer itself
 		if (this.index <= 128) return false;
+		// all events to percipients
+		if (this.index >= 385 && this.index <= 511) return false;
 		// all events to explicit targets (instead defined above)
 		if (this.index >= 129 && this.index <= 256) return false;
 		// there are no candidates for body functions
@@ -213,7 +225,6 @@ public enum EventType {
 
 		// the rest with effective check
 		// nearly all events to candidates
-		// nearly all events to percipients
 		return true;
 		
 	}
@@ -327,6 +338,9 @@ public enum EventType {
 		case candidatesSayWhisper:
 			return 360.0F;
 		
+		case percipientExists:
+			return 0.0F;
+			
 		default:
 			return 0.0F;
 		}
