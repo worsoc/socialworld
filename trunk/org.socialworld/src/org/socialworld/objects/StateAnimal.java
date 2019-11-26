@@ -50,6 +50,8 @@ public class StateAnimal extends StateSimulationObject {
 	private Vector directionView;
 	private Vector directionActiveMove;
 
+	private float angleView = 120.0F;
+	
 	private KnownPathsPool knownPathsPool;
 
 	private Inventory inventory;
@@ -171,6 +173,14 @@ public class StateAnimal extends StateSimulationObject {
 		return new Value( Type.vector, valueName, new Vector(this.directionActiveMove) );
 	}
 
+	final public Vector getDirectionView() {
+		return new Vector(this.directionView);
+	}
+
+	final public float getAngleView() {
+		return this.angleView;
+	}
+	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    INVENTORY  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////

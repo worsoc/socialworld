@@ -29,6 +29,7 @@ import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.Position;
 import org.socialworld.calculation.FunctionByMatrix;
 import org.socialworld.calculation.Value;
+import org.socialworld.calculation.Vector;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.IEventParam;
 
@@ -108,6 +109,14 @@ public abstract class Animal extends SimulationObject {
 	}
 
 
+	final public Vector getDirectionView() {
+		return this.state.getDirectionView();
+	}
+
+	final public float getAngleView() {
+		return this.state.getAngleView();
+	}
+	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    ACTION     ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
