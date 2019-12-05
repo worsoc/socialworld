@@ -26,7 +26,7 @@ import java.util.List;
 
 import org.socialworld.attributes.Position;
 import org.socialworld.calculation.Value;
-import org.socialworld.calculation.Vector;
+import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.core.Event;
 import org.socialworld.core.EventType;
 import org.socialworld.core.SocialWorldThread;

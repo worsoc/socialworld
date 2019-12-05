@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.ListIterator;
 
 import org.socialworld.attributes.Position;
-import org.socialworld.calculation.Vector;
+import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.knowledge.KnownPathsPool;
 import org.socialworld.objects.Animal;
 

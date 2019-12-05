@@ -22,7 +22,7 @@
 package org.socialworld.core;
 
 import org.socialworld.calculation.Value;
-import org.socialworld.calculation.Vector;
+import org.socialworld.calculation.geometry.Vector;
 
 import java.util.ArrayList;
 import java.util.List;

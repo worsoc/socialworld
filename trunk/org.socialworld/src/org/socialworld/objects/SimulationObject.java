@@ -220,9 +220,9 @@ public abstract class SimulationObject extends ListenedBase {
 		
      	Event event;
      	
-		event = new EventToPercipient(EventType.percipientExists ,   this /* as causer*/, 
-				getSimObjectType().getPercipiencePriority(), this.getPosition());
-		Simulation.getInstance().getEventMaster().addEvent(event);
+//		event = new EventToPercipient(EventType.percipientExists ,   this /* as causer*/, 
+//				getSimObjectType().getPercipiencePriority(), this.getPosition());
+//		Simulation.getInstance().getEventMaster().addEvent(event);
 
 
 	}
@@ -252,6 +252,9 @@ public abstract class SimulationObject extends ListenedBase {
 	 */
 	public final void reactToEvent(final Event simualationEvent) {
 	
+		if (simualationEvent.getEventType() == EventType.percipientExists) {
+			System.out.println(this.getObjectID() + " nimmt wahr " + simualationEvent.getCauser().getObjectID());
+		}
 		Scheduler.getInstance().createReaction(simualationEvent, state, guard.getMeHidden(grantAccessToPropertyAction));
 		
 	}

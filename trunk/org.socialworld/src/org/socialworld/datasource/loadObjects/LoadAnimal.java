@@ -24,7 +24,7 @@ package org.socialworld.datasource.loadObjects;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
-import org.socialworld.calculation.Vector;
+import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.collections.SimulationObjectArray;
 import org.socialworld.datasource.tablesSimulation.TableAnimalsDirections;
 import org.socialworld.datasource.tablesSimulation.TableState;

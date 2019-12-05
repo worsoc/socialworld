@@ -33,7 +33,7 @@ import org.socialworld.core.EventType;
 
 public class EventReactionDescriptionPool extends DescriptionPool {
 
-	public static final int COUNT_FbE_TEST_ENTRIES = 3;		// Anzahl Testeintraege FunctionByExpression
+	public static final int COUNT_FbE_TEST_ENTRIES = 4;		// Anzahl Testeintraege FunctionByExpression
 	
 	private static EventReactionDescriptionPool instance;
 	
@@ -114,6 +114,10 @@ public class EventReactionDescriptionPool extends DescriptionPool {
 
 		lines = new ArrayList<String>(1);
 		lines.add("WENN 3 loudness > 10 & mood >= 30 & mood < 45 DANN <ACTIONTYPE><Const>3</Const></ACTIONTYPE><ACTIONMODE><Const>31</Const></ACTIONMODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>10000</Now+N></MAXTIME><PRIORITY><Const>160</Const></PRIORITY><INTENSITY><MX+N>8;1.3;23</MX+N></INTENSITY><DURATION><Const>2000</Const></DURATION>");
+		expressions.add(lines);
+
+		lines = new ArrayList<String>(1);
+		lines.add("WENN 1 itemIsDrinkable == 1 DANN <ACTIONTYPE><Const>0</Const></ACTIONTYPE><ACTIONMODE><Const>2</Const></ACTIONMODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>2000</Now+N></MAXTIME><PRIORITY><Const>165</Const></PRIORITY><INTENSITY><MX+N>7;1;0</MX+N></INTENSITY><DURATION><Const>1000</Const></DURATION>");
 		expressions.add(lines);
 
 		

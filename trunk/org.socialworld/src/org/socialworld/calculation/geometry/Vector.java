@@ -19,7 +19,7 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.calculation;
+package org.socialworld.calculation.geometry;
 
 
 /**
@@ -29,6 +29,7 @@ package org.socialworld.calculation;
  */
 public class Vector {
 
+	
 	protected float x = 0;
 	protected float y = 0;
 	protected float z = 0;
@@ -255,6 +256,7 @@ public class Vector {
 	public boolean is000() {
 		return (x == 0 & y == 0 & z == 0);
 	}
+	
 	
 	@Override
 	public String toString() {

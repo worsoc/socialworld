@@ -25,6 +25,7 @@ package org.socialworld.calculation;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.Time;
+import org.socialworld.calculation.geometry.Vector;
 
 public class Calculation {
 
@@ -203,7 +204,7 @@ public class Calculation {
 		case vector:
 			Vector tmp;
 			tmp = (Vector) op1.getValue();
-			return (tmp.x == 0F & tmp.y == 0F & tmp.z == 0F);
+			return (tmp.getX() == 0F & tmp.getY() == 0F & tmp.getZ() == 0F);
 		default:
 			return false;
 		}

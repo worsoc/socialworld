@@ -61,7 +61,7 @@ public class ActionCreator extends SocialWorldThread {
 	
 	private static String namePropertyActionType = "actiontype";
 	
-	private int sleepTime = 10;
+	private int sleepTime = 20;
 	private int sizeThreashold;
 	
 	/**
@@ -228,7 +228,9 @@ public class ActionCreator extends SocialWorldThread {
 		
 		arguments.add( stateReactor.getAttributesAsValue(Value.VALUE_BY_NAME_SIMOBJ_ATTRIBUTES) );
 		arguments.add( new Value(Type.event, Value.VALUE_BY_NAME_EVENT, event) );
-		arguments.add( event.getOptionalParam().getParamListAsValue());
+		if (event.hasOptionalParam()) {
+			arguments.add( event.getOptionalParam().getParamListAsValue());
+		}
 		
 		Value result = f_CreateReaction.calculate(arguments);
 		return (AbstractAction) result.getValue();

@@ -58,7 +58,6 @@ public class SocialWorld  {
 	
 	public static void main(String[] args)
 	{
-
 		visualizeSimulation = new SimVisual();
 		visualizeSimulation.show();
 
