@@ -27,7 +27,7 @@ import org.socialworld.actions.ActionType;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
 import org.socialworld.calculation.Type;
-import org.socialworld.calculation.Vector;
+import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.datasource.parsing.ParseExpressionStrings;
 
 public class CreateActionExpression extends Branching {

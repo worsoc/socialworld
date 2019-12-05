@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.Position;
-import org.socialworld.calculation.Vector;
+import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenSimulationObject;
 

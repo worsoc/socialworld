@@ -139,6 +139,10 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 							
 				break;
 		
+				
+
+				
+				
 			case pull:
 			case push:
 				
@@ -377,6 +381,38 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				// Sentence
 				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCE + ")", Value.VALUE_BY_NAME_ACTION_SENTENCE);
 				result.add( new FunctionByExpression(startExpression) );
+
+				break;
+				
+			case sleep:
+				break;
+				
+			case drink:
+				
+				// itemIsDrinkable
+				startExpression = new Calculate("isNothing(GET(" + Value.VALUE_BY_NAME_ACTION_BF_ITEMDRINK + "))", Value.VALUE_BY_NAME_ACTION_BF_ITEMISDRINKABLE);
+				result.add( new FunctionByExpression(startExpression) );
+
+				// itemDrink
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_BF_ITEMDRINK + ")", Value.VALUE_BY_NAME_ACTION_BF_ITEMDRINK);
+				result.add( new FunctionByExpression(startExpression) );
+				
+				break;
+				
+			case eat:
+				
+				// itemIsEatable
+				startExpression = new Calculate("isNothing(GET(" + Value.VALUE_BY_NAME_ACTION_BF_ITEMEAT + "))", Value.VALUE_BY_NAME_ACTION_BF_ITEMISEATABLE);
+				result.add( new FunctionByExpression(startExpression) );
+
+				// itemEat
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_BF_ITEMEAT + ")", Value.VALUE_BY_NAME_ACTION_BF_ITEMEAT);
+				result.add( new FunctionByExpression(startExpression) );
+				
+				break;
+				
+			case piss:
+			case shit: 	
 
 				break;
 				

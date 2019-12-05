@@ -135,33 +135,37 @@ public class TalkCalculator  extends SocialWorldThread {
 		String sentence;
 		Human partner;
 		
-		params = event.getOptionalParam();
+		if (event.hasOptionalParam()) {
 		
-		value = params.getParam("partner");
-		if (value.isValid())
-			partner = (Human) value.getValue();
-		else
-			return;
-
-		value = params.getParam("sentence");
-		if (value.isValid())
-			sentence = (String) value.getValue();
-		else
-			return;
-
-		switch (eventType) {
-		case selfListenToStatement:
-			hiddenWriteAccess.addSentence(partner, Talk_SentenceType.partnersSentence, sentence);
-			break;
-		case selfListenToQuestion:	
-			hiddenWriteAccess.addSentence(partner, Talk_SentenceType.partnersQuestion, sentence);
-			break;
-		case selfListenToInstruction:
-			hiddenWriteAccess.addSentence(partner, Talk_SentenceType.partnersInstruction, sentence);
-			break;
-		default:
-			return;
-		}
+			params = event.getOptionalParam();
+			
+			value = params.getParam("partner");
+			if (value.isValid())
+				partner = (Human) value.getValue();
+			else
+				return;
+	
+			value = params.getParam("sentence");
+			if (value.isValid())
+				sentence = (String) value.getValue();
+			else
+				return;
+	
+			switch (eventType) {
+			case selfListenToStatement:
+				hiddenWriteAccess.addSentence(partner, Talk_SentenceType.partnersSentence, sentence);
+				break;
+			case selfListenToQuestion:	
+				hiddenWriteAccess.addSentence(partner, Talk_SentenceType.partnersQuestion, sentence);
+				break;
+			case selfListenToInstruction:
+				hiddenWriteAccess.addSentence(partner, Talk_SentenceType.partnersInstruction, sentence);
+				break;
+			default:
+				return;
+			}
+		
+		}	
 		
 	}
 
@@ -174,22 +178,26 @@ public class TalkCalculator  extends SocialWorldThread {
 
 		KnowledgeSource source;
 
-		params = event.getOptionalParam();
-		
-		value = params.getParam("partner");
-		if (value.isValid())
-			partner = (Human) value.getValue();
-		else
-			return;
+		if (event.hasOptionalParam()) {
 
-		value = params.getParam("sentence");
-		if (value.isValid())
-			sentence = (String) value.getValue();
-		else
-			return;
+			params = event.getOptionalParam();
+			
+			value = params.getParam("partner");
+			if (value.isValid())
+				partner = (Human) value.getValue();
+			else
+				return;
+	
+			value = params.getParam("sentence");
+			if (value.isValid())
+				sentence = (String) value.getValue();
+			else
+				return;
+			
+			source = new KnowledgeSource(KnowledgeSource_Type.heardOf, partner);
+			hiddenWriteAccess.addFactsFromSentence(sentence, source);
 		
-		source = new KnowledgeSource(KnowledgeSource_Type.heardOf, partner);
-		hiddenWriteAccess.addFactsFromSentence(sentence, source);
+		}
 
 	}
 
@@ -200,26 +208,28 @@ public class TalkCalculator  extends SocialWorldThread {
 		AnswerProperties answer;
 		Human partner;
 
+		if (event.hasOptionalParam()) {
 
-		params = event.getOptionalParam();
-		
-		value = params.getParam("partner");
-		if (value.isValid())
-			partner = (Human) value.getValue();
-		else
-			return;
+			params = event.getOptionalParam();
+			
+			value = params.getParam("partner");
+			if (value.isValid())
+				partner = (Human) value.getValue();
+			else
+				return;
+	
+			value = params.getParam("answer");
+			if (value.isValid())
+				answer = (AnswerProperties) value.getValue();
+			else
+				return;
+			
+			// There is a parameter direction, too   (Type.vector, "direction").
+			// But it is ignored for talk calculation.
+				
+			hiddenWriteAccess.addAnswer(answer,  partner); 
 
-		value = params.getParam("answer");
-		if (value.isValid())
-			answer = (AnswerProperties) value.getValue();
-		else
-			return;
+		}
 		
-		// There is a parameter direction, too   (Type.vector, "direction").
-		// But it is ignored for talk calculation.
-		
-		
-		hiddenWriteAccess.addAnswer(answer,  partner); 
-
 	}
 }

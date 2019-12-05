@@ -29,7 +29,7 @@ import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.ActualTime;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
-import org.socialworld.calculation.Vector;
+import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.conversation.Talk_SentenceType;
 import org.socialworld.core.Event;

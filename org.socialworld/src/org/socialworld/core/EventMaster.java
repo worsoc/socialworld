@@ -28,8 +28,8 @@ import java.util.ListIterator;
 
 
 import org.socialworld.SocialWorld;
-import org.socialworld.calculation.Vector;
 import org.socialworld.attributes.Position;
+import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.objects.Animal;
 import org.socialworld.objects.SimulationObject;
 
@@ -253,6 +253,7 @@ public class EventMaster extends SocialWorldThread {
 		SimulationObject candidate;
 		int ignoreCandidate;
 		
+		this.candidates = new ArrayList<SimulationObject>();
 
 		Simulation simulation = SocialWorld.getCurrent().getSimulation();
 		candidate = simulation.getFirstByPosition(this.eventPosition );
@@ -407,6 +408,8 @@ public class EventMaster extends SocialWorldThread {
 		
 //		System.out.println("Position Event: " + this.eventPosition.toString());
 
+		this.percipients = new ArrayList<SimulationObject>();
+		
 		Simulation simulation = SocialWorld.getCurrent().getSimulation();
 		percipient = simulation.getFirstByPosition(this.eventPosition );
 		while (percipient != null) {
@@ -475,7 +478,7 @@ public class EventMaster extends SocialWorldThread {
 			cosineBetweenDirections = direction.getCosPhi(directionView);
 			angleBetweenDirectionsToRadians = Math.acos(cosineBetweenDirections);
 
-//			System.out.println("cosineBetweenDirections:" + cosineBetweenDirections +  " -->  angleBetwDirToRadians: " + angleBetweenDirectionsToRadians + "<= ? angleToRadians: " + angleToRadians);
+//			System.out.println("direction: " + direction.toString() + "  cosineBetweenDirections:" + cosineBetweenDirections +  " -->  angleBetwDirToRadians: " + angleBetweenDirectionsToRadians + "<= ? angleToRadians: " + angleToRadians);
 
 			if (angleBetweenDirectionsToRadians <= angleToRadians)
 				return 0;
@@ -512,6 +515,8 @@ public class EventMaster extends SocialWorldThread {
 			percipient.reactToEvent(this.event);
 			iterator.remove();
 		}
+
+		System.out.println("determineInfluenceToPercipients() completed");
 
 	}
 	

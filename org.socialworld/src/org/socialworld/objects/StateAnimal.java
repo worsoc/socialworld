@@ -29,8 +29,9 @@ import org.socialworld.attributes.AttributeArray;
 import org.socialworld.calculation.FunctionByMatrix;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
-import org.socialworld.calculation.Vector;
 import org.socialworld.calculation.application.Scheduler;
+import org.socialworld.calculation.geometry.Vector;
+import org.socialworld.calculation.geometry.VectorMapper;
 import org.socialworld.core.Event;
 import org.socialworld.knowledge.KnownPathsPool;
 import org.socialworld.objects.access.GrantedAccessToProperty;
@@ -47,10 +48,11 @@ public class StateAnimal extends StateSimulationObject {
 	private FunctionByMatrix attributeCalculatorMatrix;
 
 	private Vector directionChest;
-	private Vector directionView;
 	private Vector directionActiveMove;
 
-	private float angleView = 120.0F;
+	private Vector directionView;
+	private float angleView = 60.0F;
+	private int bestPercipiencePerpendicular;
 	
 	private KnownPathsPool knownPathsPool;
 
@@ -152,6 +154,7 @@ public class StateAnimal extends StateSimulationObject {
 	final void setDirectionView(Vector directionView, WriteAccessToAnimal guard) {
 		if (checkGuard(guard)) {
 			this.directionView = directionView;
+			this.bestPercipiencePerpendicular =  VectorMapper.getInstance().getBestVisibleAreaPerpendicular(this.directionView);
 		}
 	}
 
@@ -179,6 +182,10 @@ public class StateAnimal extends StateSimulationObject {
 
 	final public float getAngleView() {
 		return this.angleView;
+	}
+	
+	final public int getBestPercipiencePerpendicular() {
+		return this.bestPercipiencePerpendicular;
 	}
 	
 ///////////////////////////////////////////////////////////////////////////////////////////

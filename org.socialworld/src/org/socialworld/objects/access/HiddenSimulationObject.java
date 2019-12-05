@@ -23,7 +23,7 @@ package org.socialworld.objects.access;
 
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.Position;
-import org.socialworld.calculation.Vector;
+import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.collections.IncompleteObjects;
 import org.socialworld.core.IncompleteSimulationObject;
 import org.socialworld.objects.SimulationObject_Type;

@@ -1,5 +1,6 @@
 package org.socialworld.core;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.actions.ActionPerformer;
@@ -41,7 +42,12 @@ public class EventToTarget extends Event {
 
 	public List<SimulationObject> getTargetObjects() {
 		List<SimulationObject> targets;
-		targets = ((ActionPerformer) getOptionalParam()).getTargets();
+		if  (this.hasOptionalParam()) {
+			targets = ((ActionPerformer) getOptionalParam()).getTargets();
+		}
+		else {
+			targets = new ArrayList<SimulationObject>();
+		}
 		return targets;
 	}
 

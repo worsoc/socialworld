@@ -21,7 +21,7 @@
 */
 package org.socialworld.attributes;
 
-import org.socialworld.calculation.Vector;
+import org.socialworld.calculation.geometry.Vector;
 
 /**
  * The class holds information about the position

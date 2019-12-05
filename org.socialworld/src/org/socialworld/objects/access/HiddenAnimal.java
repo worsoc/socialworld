@@ -25,7 +25,7 @@ import org.socialworld.actions.handle.Inventory;
 import org.socialworld.actions.move.Path;
 import org.socialworld.calculation.FunctionByMatrix;
 import org.socialworld.calculation.Value;
-import org.socialworld.calculation.Vector;
+import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.objects.WriteAccessToAnimal;
 
 /**
