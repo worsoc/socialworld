@@ -19,20 +19,20 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.core;
+package org.socialworld.attributes.percipience;
 
 /**
  * @author Mathias Sikos
  *
  */
-public class Event_Percipience {
+public class Percipience {
 	private float maxDistance;
 	private float maxSee;
 	private float maxHear;
 	private float maxSmell;
 	private float maxFeel;
 
-	protected Event_Percipience(float maxDistance, float maxSee, float maxHear, float maxSmell, float maxFeel) {
+	public Percipience(float maxDistance, float maxSee, float maxHear, float maxSmell, float maxFeel) {
 		this.maxSee = maxSee;
 		this.maxHear = maxHear;
 		this.maxSmell = maxSmell;
@@ -47,7 +47,7 @@ public class Event_Percipience {
 		}
 	}
 	
-	protected Event_Percipience() {
+	public Percipience() {
 		setDistancesOfNotice();
 	}
 	
