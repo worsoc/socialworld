@@ -4,7 +4,7 @@ public class VectorMapper {
 
 	private static VectorMapper instance;
 
-	private static int COUNT_STANDARD_VISIBLE_AREA_PERPENDICULARS = 26;
+	public static int COUNT_STANDARD_VISIBLE_AREA_PERPENDICULARS = 26;
 	private static Vector[] standardVisibleAreaPerpendiculars;
 	private static Vector[] standardVisibleAreaANorm;
 	private static Vector[] standardVisibleAreaBNorm;
@@ -85,14 +85,14 @@ public class VectorMapper {
 		standardVisibleAreaANorm[9] = new Vector(minus1DivSqrt2, minus1DivSqrt2, 0);		// for perp (-1, 1, 0)
 		standardVisibleAreaBNorm[9] = new Vector(0, 0, 1);		// for perp (-1, 1, 0)
 		
-		standardVisibleAreaANorm[10] = new Vector(minus1DivSqrt2, 0, plus1DivSqrt2); // for perp (1, 0, 1)
-		standardVisibleAreaBNorm[10] = new Vector(0, 1, 0);				// for perp (1, 0, 1)
-		standardVisibleAreaANorm[11] = new Vector(minus1DivSqrt2, 0, minus1DivSqrt2);	// for perp (-1, 0, 1)
-		standardVisibleAreaBNorm[11] = new Vector(0, 1, 0);		// for perp (-1, 0, 1)
-		standardVisibleAreaANorm[12] = new Vector(0, minus1DivSqrt2, plus1DivSqrt2);	// for perp (0, 1, 1)
-		standardVisibleAreaBNorm[12] = new Vector(-1, 0, 0); // for perp (0, 1, 1)
-		standardVisibleAreaANorm[13] = new Vector(0, plus1DivSqrt2, plus1DivSqrt2); // for perp (0, -1, 1)
-		standardVisibleAreaBNorm[13] = new Vector(1, 0, 0); // for perp (0, -1, 1)
+		standardVisibleAreaANorm[10] = new Vector(0, 1, 0);				// for perp (1, 0, 1)
+		standardVisibleAreaBNorm[10] = new Vector(minus1DivSqrt2, 0, plus1DivSqrt2); // for perp (1, 0, 1)
+		standardVisibleAreaANorm[11] = new Vector(0, -1, 0);		// for perp (-1, 0, 1)
+		standardVisibleAreaBNorm[11] = new Vector(plus1DivSqrt2, 0, plus1DivSqrt2);	// for perp (-1, 0, 1)
+		standardVisibleAreaANorm[12] = new Vector(-1, 0, 0); // for perp (0, 1, 1)
+		standardVisibleAreaBNorm[12] = new Vector(0, minus1DivSqrt2, plus1DivSqrt2);	// for perp (0, 1, 1)
+		standardVisibleAreaANorm[13] = new Vector(1, 0, 0); // for perp (0, -1, 1)
+		standardVisibleAreaBNorm[13] = new Vector(0, plus1DivSqrt2, plus1DivSqrt2); // for perp (0, -1, 1)
 		
 		standardVisibleAreaANorm[14] = new Vector(minus1DivSqrt2, plus1DivSqrt2, 0);  // for perp (1, 1, 1)
 		standardVisibleAreaBNorm[14] = new Vector(minus1DivSqrt3, minus1DivSqrt3, plus1DivSqrt3);  // for perp (1, 1, 1)
@@ -103,14 +103,14 @@ public class VectorMapper {
 		standardVisibleAreaANorm[17] = new Vector(minus1DivSqrt2, minus1DivSqrt2, 0); // for perp (-1, 1, 1)
 		standardVisibleAreaBNorm[17] = new Vector(plus1DivSqrt3, minus1DivSqrt3, plus1DivSqrt3); // for perp (-1, 1, 1)
 	
-		standardVisibleAreaANorm[18] = new Vector(plus1DivSqrt2, 0, plus1DivSqrt2); // for perp (1, 0, -1)
-		standardVisibleAreaBNorm[18] = new Vector(0, 1, 0); // for perp (1, 0, -1)
-		standardVisibleAreaANorm[19] = new Vector(minus1DivSqrt2, 0, plus1DivSqrt2); // for perp (-1, 0, -1)
-		standardVisibleAreaBNorm[19] = new Vector(0, -1, 0); // for perp (-1, 0, -1)
-		standardVisibleAreaANorm[20] = new Vector(0, plus1DivSqrt2, plus1DivSqrt2); // for perp (0, 1, -1)
-		standardVisibleAreaBNorm[20] = new Vector(-1, 0, 0); // for perp (0, 1, -1)
-		standardVisibleAreaANorm[21] = new Vector(0, plus1DivSqrt2, minus1DivSqrt2); // for perp (0, -1, -1)
-		standardVisibleAreaBNorm[21] = new Vector(-1, 0, 0); // for perp (0, -1, -1)
+		standardVisibleAreaANorm[18] = new Vector(0, 1, 0); // for perp (1, 0, -1)
+		standardVisibleAreaBNorm[18] = new Vector(plus1DivSqrt2, 0, plus1DivSqrt2); // for perp (1, 0, -1)
+		standardVisibleAreaANorm[19] = new Vector(0, -1, 0); // for perp (-1, 0, -1)
+		standardVisibleAreaBNorm[19] = new Vector(minus1DivSqrt2, 0, plus1DivSqrt2); // for perp (-1, 0, -1)
+		standardVisibleAreaANorm[20] = new Vector(-1, 0, 0); // for perp (0, 1, -1)
+		standardVisibleAreaBNorm[20] = new Vector(0, plus1DivSqrt2, plus1DivSqrt2); // for perp (0, 1, -1)
+		standardVisibleAreaANorm[21] = new Vector(1, 0, 0); // for perp (0, -1, -1)
+		standardVisibleAreaBNorm[21] = new Vector(0, minus1DivSqrt2, plus1DivSqrt2); // for perp (0, -1, -1)
 		
 		standardVisibleAreaANorm[22] = new Vector(minus1DivSqrt2, plus1DivSqrt2, 0); // for perp (1, 1, -1)
 		standardVisibleAreaBNorm[22] = new Vector(plus1DivSqrt3, plus1DivSqrt3, plus1DivSqrt3); // for perp (1, 1, -1)

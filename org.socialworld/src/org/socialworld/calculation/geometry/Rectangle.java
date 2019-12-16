@@ -13,6 +13,9 @@ public class Rectangle {
 	private Vector b;
 	private Vector perpendicular;
 	
+	boolean withStandardPerpendicular = false;
+	int nrStandardPerpendicular = VectorMapper.COUNT_STANDARD_VISIBLE_AREA_PERPENDICULARS;
+	
 	private double area;
 	
 	private VectorMapper vectorMapper;
@@ -58,6 +61,8 @@ public class Rectangle {
 		vectorMapper = VectorMapper.getInstance();
 		this.m = m;
 		this.perpendicular = vectorMapper.getPerpendicular(nrPerpendicular);
+		this.withStandardPerpendicular = true;
+		this.nrStandardPerpendicular = nrPerpendicular;
 		
 		Vector a;
 		Vector b;
@@ -83,6 +88,10 @@ public class Rectangle {
 		this.p3 = vectorMapper.addition(m.getVector(), vectorMapper.subtraction(halfA, halfB));
 		this.p4 = vectorMapper.addition(m.getVector(), vectorMapper.addition(halfB, halfA));
 		
+	}
+	
+	public double getArea() {
+		return this.area;
 	}
 	
 }
