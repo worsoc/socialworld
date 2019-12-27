@@ -21,11 +21,28 @@
 */
 package org.socialworld.attributes.percipience;
 
+import org.socialworld.attributes.Position;
+import org.socialworld.calculation.geometry.Vector;
+import org.socialworld.objects.Animal;
+
 /**
  * @author Mathias Sikos
  *
  */
 public class Percipience {
+	
+	public static int PERCIPIENCE_TOTAL = 0;
+	public static int PERCIPIENCE_SEE = 1;
+	public static int PERCIPIENCE_HEAR = 2;
+	public static int PERCIPIENCE_SMELL = 3;
+	public static int PERCIPIENCE_FEEL = 4;
+	
+	
+	private Position position;
+	private Vector cuboid;
+	
+	private Visibility visibility;
+	
 	private float maxDistance;
 	private float maxSee;
 	private float maxHear;
@@ -45,11 +62,66 @@ public class Percipience {
 			if (maxSmell > maxDistance) maxDistance = maxSmell;
 			if (maxFeel > maxDistance) maxDistance = maxFeel;
 		}
+		
+		this.cuboid = new Vector();
 	}
 	
 	public Percipience() {
+		this.cuboid = new Vector();
 		setDistancesOfNotice();
 	}
+	
+	public Percipience(Position position, Vector cuboid) {
+		this.position = position;
+		this.cuboid = cuboid;
+		this.visibility = new Visibility(position, cuboid);
+		setDistancesOfNotice();
+	}
+	
+	public void setVisibility(Position  position, Vector cuboid) {
+		
+		if (this.cuboid.equals(cuboid)) {
+			this.visibility.changeMiddlePoint(position);
+		}
+		else {
+			this.visibility = new Visibility(position, cuboid);
+		}
+		
+	}
+	
+	public boolean checkChanceToBeSeen(Animal possibleSeer) {
+		return true;
+	}
+	
+	public boolean checkIsPossibleSeer(Animal possibleSeer) {
+		
+		Position positionSeer = possibleSeer.getPosition();
+		Vector direction = this.position.getDirectionFrom(positionSeer);
+
+		if (direction.is000()) return false;
+
+		double distance = direction.length();
+
+		if (distance <= this.maxSee) {
+
+			Vector directionView =  possibleSeer.getDirectionView();
+			double angleView =  possibleSeer.getAngleView();
+			double angleViewToRadians = Math.toRadians(angleView);
+			
+			double cosineBetweenDirections = direction.getCosPhi(directionView);
+			double angleBetweenDirectionsToRadians = Math.acos(cosineBetweenDirections);
+			
+			if (angleBetweenDirectionsToRadians <= angleViewToRadians)
+				return this.visibility.checkIsPossibleSeer(possibleSeer, distance);
+			else
+				return false;
+
+
+		}
+		return false;
+	}
+
+	
 	
 	/**
 	 * @return the maxDistance (the distance where the event is able to be

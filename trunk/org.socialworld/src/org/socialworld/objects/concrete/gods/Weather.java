@@ -1,18 +1,22 @@
 package org.socialworld.objects.concrete.gods;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.socialworld.objects.God;
 import org.socialworld.objects.State;
+import org.socialworld.objects.concrete.StatePerceptible;
 
 public class Weather extends God {
 
 	
-	protected List<State> createAddOnStates() {
+
+	
+	protected State getInitState(String stateClassName) {
+		switch (stateClassName) {
+		case "StatePerceptible": 
+			return new StatePerceptible();
+		}
 		
-		List<State> result = new ArrayList<State>();
-		return result;
+		return null;
 		
 	}
 

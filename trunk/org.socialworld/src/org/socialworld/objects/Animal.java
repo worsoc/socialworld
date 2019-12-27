@@ -21,6 +21,8 @@
 */
 package org.socialworld.objects;
 
+import java.util.List;
+
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.move.Path;
@@ -28,10 +30,13 @@ import org.socialworld.actions.move.PathFinder;
 import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.Position;
 import org.socialworld.calculation.FunctionByMatrix;
+import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.IEventParam;
+import org.socialworld.objects.concrete.animals.ISeer;
+import org.socialworld.objects.concrete.animals.StateSeer;
 
 
 /**
@@ -40,9 +45,10 @@ import org.socialworld.core.IEventParam;
  * @author Mathias Sikos (tyloesand)
  * 
  */
-public abstract class Animal extends SimulationObject {
+public abstract class Animal extends SimulationObject implements ISeer {
 
 	private StateAnimal state;
+	private StateSeer stateSeer;
 	
 	private PathFinder pathFinder;
 
@@ -63,6 +69,24 @@ public abstract class Animal extends SimulationObject {
 			pathFinder = new PathFinder(this, this.state.getKnownPathsPool());
 			initialized = true;
 		}
+	}
+
+	protected List<State> createAddOnStates() {
+		
+		List<State> result = super.createAddOnStates();
+		
+		System.out.println("Animal.createAddOnStates");
+		
+		return result;
+		
+	}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////    implementing ISeer     //////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public double getSizeDistanceRelationThreshold() {
+		return this.stateSeer.getSizeDistanceRelationThreshold();
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -101,24 +125,30 @@ public abstract class Animal extends SimulationObject {
 	}
 
 
+	final void setDirectionView(Vector directionView, WriteAccessToAnimal guard) {
+		if (checkGuard(guard)) {
+			this.stateSeer.setDirectionView(directionView);
+		}
+	}
+
 	/**
 	 * @return the directionView
 	 */
 	final public Value getDirectionViewAsValue(String valueName) {
-		return this.state.getDirectionViewAsValue(valueName);
+		return new Value( Type.vector, valueName, this.stateSeer.getDirectionView() );
 	}
 
 
 	final public Vector getDirectionView() {
-		return this.state.getDirectionView();
+		return this.stateSeer.getDirectionView();
 	}
 
 	final public float getAngleView() {
-		return this.state.getAngleView();
+		return this.stateSeer.getAngleView();
 	}
 
 	final public int getBestPercipiencePerpendicular() {
-		return this.state.getBestPercipiencePerpendicular();
+		return this.stateSeer.getBestPercipiencePerpendicular();
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -150,6 +180,7 @@ public abstract class Animal extends SimulationObject {
 	}
 
 	
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    INVENTORY  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -183,7 +214,7 @@ public abstract class Animal extends SimulationObject {
 		
 		propertiesAsValueList.add(this.state.getAttributesAsValue(Value.VALUE_BY_NAME_SIMOBJ_ATTRIBUTES));
 		propertiesAsValueList.add(this.state.getDirectionChestAsValue(Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_CHEST));
-		propertiesAsValueList.add(this.state.getDirectionViewAsValue(Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_VIEW));
+		propertiesAsValueList.add(getDirectionViewAsValue(Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_VIEW));
 		propertiesAsValueList.add(this.state.getDirectionActiveMoveAsValue(Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_ACTIVEMOVE));
 		paramObject.answerPropertiesRequest(propertiesAsValueList);
 	

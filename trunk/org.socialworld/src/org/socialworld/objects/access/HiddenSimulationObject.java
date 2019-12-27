@@ -109,6 +109,10 @@ public class HiddenSimulationObject {
 	}
 	
 	
+	public int setCuboid(Vector cuboid) {
+		return wa.setCuboid(cuboid, this);
+	}
+	
 	public int setPosition(Position pos) {
 		return wa.setPosition(pos, this);
 	}

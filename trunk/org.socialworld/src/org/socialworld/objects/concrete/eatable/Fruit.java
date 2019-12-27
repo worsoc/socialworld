@@ -1,6 +1,5 @@
 package org.socialworld.objects.concrete.eatable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.attributes.properties.NutrientProperty;
@@ -12,21 +11,21 @@ import org.socialworld.objects.properties.IEatable;
 
 public abstract class Fruit extends Item implements IEatable {
 
-	private StateEatable state;
+	private StateEatable stateEatable;
 	
 	
-	public  NutrientProperty getNutrientProperties() { return this.state.getNutrientProperties(); }
+	public  NutrientProperty getNutrientProperties() { return this.stateEatable.getNutrientProperties(); }
 	
-	public  TasteProperty getTasteProperties() { return this.state.getTasteProperties(); }
+	public  TasteProperty getTasteProperties() { return this.stateEatable.getTasteProperties(); }
 
 	
 	protected List<State> createAddOnStates() {
 		
-		List<State> result = new ArrayList<State>();
+		List<State> result = super.createAddOnStates();
 		
-		State addOnState;
-		addOnState = new StateEatable();
-		result.add(addOnState);
+		System.out.println("Fruit.createAddOnStates");
+		this.stateEatable = (StateEatable) getInitState("StateEatable");
+		result.add(this.stateEatable);
 		
 		return result;
 		

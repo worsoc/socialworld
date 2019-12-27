@@ -111,7 +111,7 @@ public class WriteAccessToAnimal extends WriteAccessToSimulationObject {
 	public int setDirectionView(Vector directionView, HiddenSimulationObject caller) {
 		if (checkCaller(caller)) 
 			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.directionView)) {
-				animalState.setDirectionView(directionView, this);
+				animal.setDirectionView(directionView, this);
 				return WRITE_ACCESS_RETURNS_SUCCESS;
 			}
 			else

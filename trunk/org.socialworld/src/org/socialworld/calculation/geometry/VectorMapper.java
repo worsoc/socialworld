@@ -207,7 +207,7 @@ public class VectorMapper {
 		
 	}
 
-	public Vector getPerpendicular(int nrPerpendicular) {
+	public static Vector getPerpendicular(int nrPerpendicular) {
 		if ( (nrPerpendicular >= 0) && (nrPerpendicular < COUNT_STANDARD_VISIBLE_AREA_PERPENDICULARS) ) {
 			return new Vector(standardVisibleAreaPerpendiculars[nrPerpendicular]);
 		}

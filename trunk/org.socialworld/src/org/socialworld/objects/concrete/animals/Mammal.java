@@ -43,8 +43,9 @@ public abstract class Mammal extends Animal {
     
 	protected List<State> createAddOnStates() {
 		
-		List<State> result = new ArrayList<State>();
+		List<State> result = super.createAddOnStates();
 		
+		System.out.println("Mammal.createAddOnStates");
 		
 		return result;
 		
