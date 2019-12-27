@@ -21,6 +21,9 @@
 */
 package org.socialworld.objects;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.IEventParam;
 
@@ -43,6 +46,16 @@ public abstract class Item extends SimulationObject {
 		//if (checkIsMyState(state) ) this.state = (StateItem) state;
 	}
 	
+
+	protected List<State> createAddOnStates() {
+		
+		List<State> result = super.createAddOnStates();
+		
+		System.out.println("Item.createAddOnStates");
+		
+		return result;
+		
+	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    PROPERTY LIST  ///////////////////////////////////////////////

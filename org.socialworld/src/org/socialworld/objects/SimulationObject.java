@@ -22,6 +22,7 @@
 package org.socialworld.objects;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.actions.AbstractAction;
@@ -32,14 +33,14 @@ import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.ActionHandler;
 import org.socialworld.core.Event;
-import org.socialworld.core.EventToPercipient;
 import org.socialworld.core.EventType;
 import org.socialworld.core.IEventParam;
 import org.socialworld.core.SearchActionDescription;
-import org.socialworld.core.Simulation;
 import org.socialworld.objects.access.GrantedAccessToProperty;
+import org.socialworld.objects.concrete.StatePerceptible;
 import org.socialworld.objects.connections.Connection;
 import org.socialworld.objects.connections.ConnectionType;
+import org.socialworld.objects.properties.IPerceptible;
 import org.socialworld.propertyChange.ListenedBase;
 
 /**
@@ -48,7 +49,7 @@ import org.socialworld.propertyChange.ListenedBase;
  * @author Mathias Sikos (tyloesand)
  * 
  */
-public abstract class SimulationObject extends ListenedBase {
+public abstract class SimulationObject extends ListenedBase implements IPerceptible {
 	
 
 	private		int 			objectID;
@@ -56,9 +57,13 @@ public abstract class SimulationObject extends ListenedBase {
 	
 	private StateSimulationObject state;
 
+	private StatePerceptible statePerceptible;
+	
 	private 	ActionHandler 	actionHandler;
 	
-
+	
+	
+	
 	private	WriteAccessToSimulationObject guard;
 	private GrantedAccessToProperty grantAccessToAllProperties[];
 	private GrantedAccessToProperty grantAccessToPropertyAction[];
@@ -147,7 +152,19 @@ public abstract class SimulationObject extends ListenedBase {
 
 	protected abstract void assignState(StateSimulationObject state);
 
-	protected abstract List<State> createAddOnStates();
+	protected List<State> createAddOnStates() {
+		
+		List<State> result = new ArrayList<State>();
+		
+		System.out.println("SimulationObject.createAddOnStates");
+		this.statePerceptible = (StatePerceptible) getInitState("StatePerceptible");
+		result.add(this.statePerceptible);
+		
+		return result;
+		
+	};
+	
+	protected abstract State getInitState(String stateClassName);
 	
 	protected final boolean checkIsMyState(StateSimulationObject state) {
 		return (state == this.state);
@@ -186,7 +203,19 @@ public abstract class SimulationObject extends ListenedBase {
 		 return this.state.getState2ActionType();
 		} 
 	
-		
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////    implementing IPerceptible     ////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public boolean checkChanceToBeSeen(Animal possibleSeer) {
+		return this.statePerceptible.checkChanceToBeSeen(possibleSeer);
+	}
+	
+	public boolean checkIsPossibleSeer(Animal possibleSeer) {
+		return this.statePerceptible.checkIsPossibleSeer(possibleSeer);
+	}
+
+	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    ACTION     ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////

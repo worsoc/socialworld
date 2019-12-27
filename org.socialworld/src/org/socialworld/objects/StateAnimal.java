@@ -31,7 +31,6 @@ import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.calculation.geometry.Vector;
-import org.socialworld.calculation.geometry.VectorMapper;
 import org.socialworld.core.Event;
 import org.socialworld.knowledge.KnownPathsPool;
 import org.socialworld.objects.access.GrantedAccessToProperty;
@@ -50,9 +49,6 @@ public class StateAnimal extends StateSimulationObject {
 	private Vector directionChest;
 	private Vector directionActiveMove;
 
-	private Vector directionView;
-	private float angleView = 60.0F;
-	private int bestPercipiencePerpendicular;
 	
 	private KnownPathsPool knownPathsPool;
 
@@ -151,12 +147,6 @@ public class StateAnimal extends StateSimulationObject {
 		}
 	}
 
-	final void setDirectionView(Vector directionView, WriteAccessToAnimal guard) {
-		if (checkGuard(guard)) {
-			this.directionView = directionView;
-			this.bestPercipiencePerpendicular =  VectorMapper.getInstance().getBestVisibleAreaPerpendicular(this.directionView);
-		}
-	}
 
 	final void setDirectionActiveMove(Vector directionMove, WriteAccessToAnimal guard) {
 		if (checkGuard(guard)) {
@@ -168,25 +158,13 @@ public class StateAnimal extends StateSimulationObject {
 		return new Value( Type.vector, valueName, new Vector(this.directionChest) );
 	}
 	
-	final public Value getDirectionViewAsValue(String valueName) {
-		return new Value( Type.vector, valueName, new Vector(this.directionView) );
-	}
 
 	final public Value getDirectionActiveMoveAsValue(String valueName) {
 		return new Value( Type.vector, valueName, new Vector(this.directionActiveMove) );
 	}
 
-	final public Vector getDirectionView() {
-		return new Vector(this.directionView);
-	}
 
-	final public float getAngleView() {
-		return this.angleView;
-	}
 	
-	final public int getBestPercipiencePerpendicular() {
-		return this.bestPercipiencePerpendicular;
-	}
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    INVENTORY  ///////////////////////////////////////////////

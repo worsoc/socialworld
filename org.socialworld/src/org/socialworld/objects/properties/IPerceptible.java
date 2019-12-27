@@ -21,18 +21,12 @@
 */
 package org.socialworld.objects.properties;
 
-import org.socialworld.attributes.properties.NutrientProperty;
-import org.socialworld.attributes.properties.TasteProperty;
+import org.socialworld.objects.Animal;
 
-public interface IEatable {
+public interface IPerceptible {
 
-	public abstract float getTemperature();
-	public abstract float getConsistence();
-	public abstract float getFirmness();
+	public abstract boolean checkChanceToBeSeen(Animal possibleSeer);
 	
-	public abstract NutrientProperty getNutrientProperties();
+	public abstract boolean checkIsPossibleSeer(Animal possibleSeer);
 	
-	public abstract TasteProperty getTasteProperties();
-	
-
 }

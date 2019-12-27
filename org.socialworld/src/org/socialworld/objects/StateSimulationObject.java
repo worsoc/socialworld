@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.attributes.Position;
+import org.socialworld.attributes.percipience.Percipience;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.application.Scheduler;
@@ -43,7 +44,7 @@ import org.socialworld.propertyChange.ListenedBase;
  * @author Mathias Sikos
  *
  */
-public class StateSimulationObject extends ListenedBase {
+public abstract class StateSimulationObject extends ListenedBase {
 	
 	private SimulationObject object;
 	private	WriteAccessToSimulationObject guard;
@@ -53,6 +54,9 @@ public class StateSimulationObject extends ListenedBase {
 	private 	Position 		position;
 	private		Vector directionMove;
 	private 	float powerMove;
+	
+	private Vector cuboid;
+	private Percipience percipience;
 	
 	private ConnectionList connections;
 
@@ -74,7 +78,7 @@ public class StateSimulationObject extends ListenedBase {
 		//stateAddOns = new ArrayList<State>();
 		
 	}
-	
+		
 	final void setObject (SimulationObject object, WriteAccessToSimulationObject guard) {
 		if (checkGuard(guard)) {
 			this.object = object;
@@ -131,9 +135,32 @@ public class StateSimulationObject extends ListenedBase {
 		}
 	}
 	
+	final public void setCuboid(Vector cuboid, WriteAccessToSimulationObject guard) {
+		if (checkGuard(guard)) {
+			this.cuboid = cuboid;
+			if (this.position != null) {
+				setVisibility();
+			}
+		}
+	}
+
 	final void setPosition(Position position, WriteAccessToSimulationObject guard) {
 		if (checkGuard(guard)) {
 			this.position = position;
+			if (this.cuboid != null) {
+				setVisibility();
+			}
+		}
+	}
+	
+	private void setVisibility() {
+		Vector cuboidCopy = new Vector(this.cuboid);
+		Position positionCopy = new Position(this.position);
+		if (this.percipience == null) {
+			this.percipience = new Percipience(positionCopy, cuboidCopy);
+		}
+		else {
+			this.percipience.setVisibility(positionCopy, cuboidCopy);
 		}
 	}
 	
@@ -145,6 +172,7 @@ public class StateSimulationObject extends ListenedBase {
 		return new Value(Type.vector, valueName, new Vector(this.position.getVector()) );
 		
 	}
+	
 	
 	final void setMove(Vector direction, float power, WriteAccessToSimulationObject guard) {
 		if (checkGuard(guard)) {

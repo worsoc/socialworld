@@ -21,12 +21,11 @@
 */
 package org.socialworld.objects;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.knowledge.Acquaintance;
 import org.socialworld.knowledge.AnswerProperties;
+import org.socialworld.objects.concrete.StatePerceptible;
 import org.socialworld.objects.concrete.animals.Mammal;
 import org.socialworld.objects.properties.IWeapon;
 import org.socialworld.conversation.Talk_SentenceType;
@@ -68,11 +67,14 @@ import org.socialworld.core.IEventParam;
 		if (checkIsMyState(state) ) this.state = (StateHuman) state;
 	}
 
-	protected List<State> createAddOnStates() {
-		List<State> result;
-		result = new ArrayList<State>();
-//		result = super.createAddOnStates();
-		return result;
+	protected State getInitState(String stateClassName) {
+		switch (stateClassName) {
+		case "StatePerceptible": 
+			return new StatePerceptible();
+		}
+		
+		return null;
+		
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////

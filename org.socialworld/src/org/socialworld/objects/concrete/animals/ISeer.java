@@ -19,20 +19,10 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.objects.properties;
+package org.socialworld.objects.concrete.animals;
 
-import org.socialworld.attributes.properties.NutrientProperty;
-import org.socialworld.attributes.properties.TasteProperty;
+public interface ISeer {
 
-public interface IEatable {
-
-	public abstract float getTemperature();
-	public abstract float getConsistence();
-	public abstract float getFirmness();
+	public abstract double getSizeDistanceRelationThreshold();
 	
-	public abstract NutrientProperty getNutrientProperties();
-	
-	public abstract TasteProperty getTasteProperties();
-	
-
 }

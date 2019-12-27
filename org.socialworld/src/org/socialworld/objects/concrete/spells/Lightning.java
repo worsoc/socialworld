@@ -1,18 +1,19 @@
 package org.socialworld.objects.concrete.spells;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.socialworld.objects.Magic;
 import org.socialworld.objects.State;
+import org.socialworld.objects.concrete.StatePerceptible;
 
 public class Lightning extends Magic {
 
-	
-	protected List<State> createAddOnStates() {
+	protected State getInitState(String stateClassName) {
+		switch (stateClassName) {
+		case "StatePerceptible": 
+			return new StatePerceptible();
+		}
 		
-		List<State> result = new ArrayList<State>();
-		return result;
+		return null;
 		
 	}
 

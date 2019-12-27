@@ -49,10 +49,10 @@ public class Rectangle {
 		
 		halfA = vectorMapper.multiplicationWithScalar(a, 0.5F);
 		halfB = vectorMapper.multiplicationWithScalar(b, 0.5F);
-		this.p1 = vectorMapper.subtraction(m.getVector(), vectorMapper.addition(halfA, halfB));
-		this.p2 = vectorMapper.addition(m.getVector(), vectorMapper.subtraction(halfB, halfA));
-		this.p3 = vectorMapper.addition(m.getVector(), vectorMapper.subtraction(halfA, halfB));
-		this.p4 = vectorMapper.addition(m.getVector(), vectorMapper.addition(halfB, halfA));
+		this.p1 = vectorMapper.addition(halfA, halfB);
+		this.p2 = vectorMapper.subtraction(halfB, halfA);
+		this.p3 = vectorMapper.reverseVector(vectorMapper.addition(halfB, halfA));
+		this.p4 = vectorMapper.subtraction(halfA, halfB);
 		
 	}
 
@@ -83,15 +83,22 @@ public class Rectangle {
 		
 		halfA = vectorMapper.multiplicationWithScalar(a, 0.5F);
 		halfB = vectorMapper.multiplicationWithScalar(b, 0.5F);
-		this.p1 = vectorMapper.subtraction(m.getVector(), vectorMapper.addition(halfA, halfB));
-		this.p2 = vectorMapper.addition(m.getVector(), vectorMapper.subtraction(halfB, halfA));
-		this.p3 = vectorMapper.addition(m.getVector(), vectorMapper.subtraction(halfA, halfB));
-		this.p4 = vectorMapper.addition(m.getVector(), vectorMapper.addition(halfB, halfA));
+		this.p1 = vectorMapper.addition(halfA, halfB);
+		this.p2 = vectorMapper.subtraction(halfB, halfA);
+		this.p3 = vectorMapper.reverseVector(vectorMapper.addition(halfB, halfA));
+		this.p4 = vectorMapper.subtraction(halfA, halfB);
 		
+	}
+	
+	public void changeMiddlePoint(Position m) {
+		this.m = m;
 	}
 	
 	public double getArea() {
 		return this.area;
 	}
 	
+	public Vector getPerpendicular() {
+		return new Vector(this.perpendicular);
+	}
 }
