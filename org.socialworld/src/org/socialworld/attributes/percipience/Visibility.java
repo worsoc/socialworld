@@ -31,7 +31,6 @@ public class Visibility {
 
 	public Visibility(Position middlePointTotal, Vector abcCuboidWithStandardPerpendiculars) {
 		
-		Rectangle visibilityRectangles[];
 		visibilityRectangles = new Rectangle[VectorMapper.COUNT_STANDARD_VISIBLE_AREA_PERPENDICULARS];
 		
 		
@@ -156,7 +155,7 @@ public class Visibility {
 	private double getSizeDistanceRelation(int nrStandardPerpendicular, double distance) {
 		
 		double result = 0;
-		if (nrStandardPerpendicular > 0 && nrStandardPerpendicular < VectorMapper.COUNT_STANDARD_VISIBLE_AREA_PERPENDICULARS) {
+		if (nrStandardPerpendicular >= 0 && nrStandardPerpendicular < VectorMapper.COUNT_STANDARD_VISIBLE_AREA_PERPENDICULARS) {
 			Rectangle rect = visibilityRectangles[nrStandardPerpendicular];
 			double area = rect.getArea();
 			result = area / distance;
