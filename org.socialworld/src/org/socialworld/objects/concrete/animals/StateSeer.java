@@ -6,12 +6,17 @@ import org.socialworld.objects.State;
 
 public class StateSeer extends State {
 
-	private Vector directionView;
+	private Vector directionView ;
 
-	private float angleView = 60.0F;
+	private float angleView;
 	private int bestPercipiencePerpendicular;
 
 	private double sizeDistanceRelationThreshold;
+	
+	public StateSeer() {
+		setDirectionView( new Vector(2,1,0));
+		setAngleView(60.0F);
+	}
 	
 	public double getSizeDistanceRelationThreshold() {
 		return this.sizeDistanceRelationThreshold;
@@ -24,6 +29,10 @@ public class StateSeer extends State {
 	public void setDirectionView(Vector directionView) {
 		this.directionView = directionView;
 		setBestPercipiencePerpendicular();
+	}
+	
+	public void setAngleView(float angleView) {
+		this.angleView = angleView;
 	}
 	
 	public float getAngleView() {

@@ -21,6 +21,7 @@
 */
 package org.socialworld.objects;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.actions.AbstractAction;
@@ -71,15 +72,19 @@ public abstract class Animal extends SimulationObject implements ISeer {
 		}
 	}
 
+	
 	protected List<State> createAddOnStates() {
 		
 		List<State> result = super.createAddOnStates();
 		
 		System.out.println("Animal.createAddOnStates");
+		this.stateSeer = (StateSeer) getInitState(StateSeer.class.getName());
+		result.add(this.stateSeer);
 		
 		return result;
 		
-	}
+	};
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////    implementing ISeer     //////////////////////////////////
