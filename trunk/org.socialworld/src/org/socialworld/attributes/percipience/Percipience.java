@@ -67,7 +67,18 @@ public class Percipience {
 	}
 	
 	public Percipience() {
-		this.cuboid = new Vector();
+		this.cuboid = new Vector(0, 0, 0);
+		setDistancesOfNotice();
+	}
+
+	public Percipience(float cubeDiagonal) {
+		double tmp;
+		float a;
+		tmp = cubeDiagonal * cubeDiagonal;
+		tmp = tmp / 3;
+		tmp = Math.sqrt(tmp);
+		a = (float) tmp;
+		this.cuboid = new Vector(a, a, a);
 		setDistancesOfNotice();
 	}
 	
@@ -78,16 +89,18 @@ public class Percipience {
 		setDistancesOfNotice();
 	}
 	
-	public void setVisibility(Position  position, Vector cuboid) {
+	
+	public boolean checkIsPossiblePercipient(Animal possiblePercipient) {
 		
-		if (this.cuboid.equals(cuboid)) {
-			this.visibility.changeMiddlePoint(position);
+		if (checkChanceToBeSeen(possiblePercipient)) {
+			return checkIsPossibleSeer(possiblePercipient);
 		}
 		else {
-			this.visibility = new Visibility(position, cuboid);
+			return false;
 		}
-		
 	}
+
+
 	
 	public boolean checkChanceToBeSeen(Animal possibleSeer) {
 		return true;
@@ -121,8 +134,39 @@ public class Percipience {
 		return false;
 	}
 
-	
-	
+	public void setCuboid(Vector cuboid) {
+		this.cuboid = cuboid;
+		if (this.position != null) {
+			setVisibility();
+		}
+	}
+
+	public void setPosition(Position position) {
+		this.position = position;
+		if (this.cuboid != null) {
+			setVisibility();
+		}
+	}
+
+	private void setVisibility() {
+		Vector cuboidCopy = new Vector(this.cuboid);
+		Position positionCopy = new Position(this.position);
+		
+		setVisibility(positionCopy, cuboidCopy);
+		
+	}
+
+	private void setVisibility(Position  position, Vector cuboid) {
+		
+		if (this.cuboid.equals(cuboid) && this.visibility != null) {
+			this.visibility.changeMiddlePoint(position);
+		}
+		else {
+			this.visibility = new Visibility(position, cuboid);
+		}
+		
+	}
+
 	/**
 	 * @return the maxDistance (the distance where the event is able to be
 	 *         perceived)
@@ -200,11 +244,11 @@ public class Percipience {
 	}
 
 	private void setDistancesOfNotice( ) {
-		this.maxDistance = 100;
-		this.maxSee = 100;
-		this.maxHear = 100;
-		this.maxSmell = 2;
-		this.maxFeel = 1;
+		this.maxDistance = 100000;
+		this.maxSee = 100000;
+		this.maxHear = 100000;
+		this.maxSmell = 2000;
+		this.maxFeel = 1000;
 		
 	}
 
