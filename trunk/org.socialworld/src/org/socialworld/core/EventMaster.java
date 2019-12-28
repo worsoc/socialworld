@@ -32,6 +32,7 @@ import org.socialworld.attributes.Position;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.objects.Animal;
 import org.socialworld.objects.SimulationObject;
+import org.socialworld.objects.properties.IPerceptible;
 
 /**
  * The event master is a thread that decides what event's influence
@@ -403,93 +404,47 @@ public class EventMaster extends SocialWorldThread {
 	
 	private void determinePossiblePercipients() {
 		
+		IPerceptible causer;
 		SimulationObject percipient;
-		int ignorePercipient;
-		
-//		System.out.println("Position Event: " + this.eventPosition.toString());
+		boolean isPossiblePercipient;
+		EventToPercipient event;
 
 		this.percipients = new ArrayList<SimulationObject>();
-		
-		Simulation simulation = SocialWorld.getCurrent().getSimulation();
-		percipient = simulation.getFirstByPosition(this.eventPosition );
-		while (percipient != null) {
-			
-			if (percipient instanceof Animal) {
-//				System.out.println("Position Human: " + percipient.getPosition().toString());
 
-				ignorePercipient = checkIgnorePossiblePercipient((Animal) percipient);
-				if ( ignorePercipient == 0) 	percipients.add(percipient);
-				if ( ignorePercipient < 0)
-					// exit loop
-					percipient = null;
+		if (this.event instanceof EventToPercipient) {
+			event = (EventToPercipient) this.event;
+			if (event.checkIsEvent_LetMeBePerceived())
+				causer = event.getCauser();
+			else
+				causer = event;
+			
+	//		System.out.println("Position Event: " + this.eventPosition.toString());
+	
+			
+			Simulation simulation = SocialWorld.getCurrent().getSimulation();
+			percipient = simulation.getFirstByPosition(this.eventPosition );
+			while (percipient != null) {
+				
+				if (percipient instanceof Animal) {
+	//				System.out.println("Position Human: " + percipient.getPosition().toString());
+	
+					isPossiblePercipient = causer.checkIsPossiblePercipient((Animal) percipient);
+					if ( isPossiblePercipient ) {
+						percipients.add(percipient);
+					}
+					
+					percipient = simulation.getNextByPosition();
+					
+				}
 				else {
-					// continue
+	//				System.out.println("Position Apple: " + percipient.getPosition().toString());
 					percipient = simulation.getNextByPosition();
 				}
-			}
-			else {
-//				System.out.println("Position Apple: " + percipient.getPosition().toString());
-				percipient = simulation.getNextByPosition();
-			}
-
-		}
-
-	}
-
-	/**
-	 * The method calculates whether a possible percipient {@link SimulationObject} may perceive the event
-	 * 
-	 * @param percipient
-	 *            a simulation object that may perceive the event 
-	 * @return 0 ... DON'T IGNORE : if the event may be perceived,
-	 * 			1 ... IGNORE: if the event is not in the view angle
-	 * 			2 ... IGNORE: if the event position is the same to percipient position
-	 *          -1 ... IGNORE: if the event could not be perceived because of distance
-	 *                (and in consequence there are no further percipient objects 
-	 *                	because they must have a greater distance than the actually treated object)
-	 *          	
-	 */
-	private int checkIgnorePossiblePercipient(Animal percipient) {
-		
-		Position position;
-		Vector direction;
-		double distance;
-		
-		double angleView;
-		Vector directionView;
-		double angleToRadians;
-		
-		double cosineBetweenDirections;
-		double angleBetweenDirectionsToRadians;
-		
-		position = percipient.getPosition();
-		direction = this.eventPosition.getDirectionFrom(position);
-
-		if (direction.is000()) return 2;
-
-		distance = direction.length();
-		
-		if (distance <= this.effectDistance) {
-			
-			directionView =  new Vector(2,1,0);// percipient.getDirectionView();
-			angleView =  percipient.getAngleView();
-			angleToRadians = Math.toRadians(angleView);
-			
-			cosineBetweenDirections = direction.getCosPhi(directionView);
-			angleBetweenDirectionsToRadians = Math.acos(cosineBetweenDirections);
-
-//			System.out.println("direction: " + direction.toString() + "  cosineBetweenDirections:" + cosineBetweenDirections +  " -->  angleBetwDirToRadians: " + angleBetweenDirectionsToRadians + "<= ? angleToRadians: " + angleToRadians);
-
-			if (angleBetweenDirectionsToRadians <= angleToRadians)
-				return 0;
-			else
-				return 1;
-			
-		}
-		return -1;
-		
-	}
 	
+			}
+		}
+	}
+
 	/**
 	 * The method lets all percipients calculate the event's effect.
 	 */
