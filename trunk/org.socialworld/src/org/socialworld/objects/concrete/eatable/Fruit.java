@@ -24,7 +24,7 @@ public abstract class Fruit extends Item implements IEatable {
 		List<State> result = super.createAddOnStates();
 		
 		System.out.println("Fruit.createAddOnStates");
-		this.stateEatable = (StateEatable) getInitState("StateEatable");
+		this.stateEatable = (StateEatable) getInitState(StateEatable.class.getName());
 		result.add(this.stateEatable);
 		
 		return result;

@@ -27,6 +27,7 @@ import org.socialworld.attributes.Position;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenSimulationObject;
+import org.socialworld.objects.concrete.StatePerceptible;
 
 public class WriteAccessToSimulationObject {
 	
@@ -121,7 +122,7 @@ public class WriteAccessToSimulationObject {
 	public int setCuboid(Vector cuboid, HiddenSimulationObject caller) {
 		if (checkCaller(caller)) 
 			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.position)) {
-				objectsState.setCuboid(cuboid, this);
+				objectsState.setSomething(StatePerceptible.class.getName(), "setCuboid", cuboid, this);
 				return WRITE_ACCESS_RETURNS_SUCCESS;
 			}
 			else

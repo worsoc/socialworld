@@ -22,11 +22,13 @@
 package org.socialworld.objects;
 
 
+import org.socialworld.attributes.percipience.Percipience;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.knowledge.Acquaintance;
 import org.socialworld.knowledge.AnswerProperties;
 import org.socialworld.objects.concrete.StatePerceptible;
 import org.socialworld.objects.concrete.animals.Mammal;
+import org.socialworld.objects.concrete.animals.StateSeer;
 import org.socialworld.objects.properties.IWeapon;
 import org.socialworld.conversation.Talk_SentenceType;
 import org.socialworld.core.IEventParam;
@@ -68,9 +70,12 @@ import org.socialworld.core.IEventParam;
 	}
 
 	protected State getInitState(String stateClassName) {
-		switch (stateClassName) {
-		case "StatePerceptible": 
-			return new StatePerceptible();
+		if (stateClassName.equals(StatePerceptible.class.getName())) {
+			Percipience percipience = new Percipience(2000);
+			return new StatePerceptible(percipience);
+		}
+		else if (stateClassName.equals(StateSeer.class.getName())) {
+			return new StateSeer();
 		}
 		
 		return null;

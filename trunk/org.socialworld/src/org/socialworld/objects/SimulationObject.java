@@ -33,9 +33,11 @@ import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.ActionHandler;
 import org.socialworld.core.Event;
+import org.socialworld.core.EventToPercipient;
 import org.socialworld.core.EventType;
 import org.socialworld.core.IEventParam;
 import org.socialworld.core.SearchActionDescription;
+import org.socialworld.core.Simulation;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.concrete.StatePerceptible;
 import org.socialworld.objects.connections.Connection;
@@ -157,7 +159,7 @@ public abstract class SimulationObject extends ListenedBase implements IPercepti
 		List<State> result = new ArrayList<State>();
 		
 		System.out.println("SimulationObject.createAddOnStates");
-		this.statePerceptible = (StatePerceptible) getInitState("StatePerceptible");
+		this.statePerceptible = (StatePerceptible) getInitState(StatePerceptible.class.getName());
 		result.add(this.statePerceptible);
 		
 		return result;
@@ -207,6 +209,11 @@ public abstract class SimulationObject extends ListenedBase implements IPercepti
 /////////////////////////    implementing IPerceptible     ////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
+	public boolean checkIsPossiblePercipient(Animal possiblePercipient) {
+		return this.statePerceptible.checkIsPossibleSeer(possiblePercipient);
+	}
+
+	
 	public boolean checkChanceToBeSeen(Animal possibleSeer) {
 		return this.statePerceptible.checkChanceToBeSeen(possibleSeer);
 	}
@@ -249,9 +256,9 @@ public abstract class SimulationObject extends ListenedBase implements IPercepti
 		
      	Event event;
      	
-//		event = new EventToPercipient(EventType.percipientExists ,   this /* as causer*/, 
-//				getSimObjectType().getPercipiencePriority(), this.getPosition());
-//		Simulation.getInstance().getEventMaster().addEvent(event);
+		event = new EventToPercipient(EventType.percipientExists ,   this /* as causer*/, 
+				getSimObjectType().getPercipiencePriority(), this.getPosition());
+		Simulation.getInstance().getEventMaster().addEvent(event);
 
 
 	}

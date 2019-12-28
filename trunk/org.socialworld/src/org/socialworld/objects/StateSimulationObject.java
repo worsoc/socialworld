@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.attributes.Position;
-import org.socialworld.attributes.percipience.Percipience;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.application.Scheduler;
@@ -35,6 +34,7 @@ import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.core.Event;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenSimulationObject;
+import org.socialworld.objects.concrete.StatePerceptible;
 import org.socialworld.objects.connections.Connection;
 import org.socialworld.objects.connections.ConnectionList;
 import org.socialworld.objects.connections.ConnectionType;
@@ -54,9 +54,6 @@ public abstract class StateSimulationObject extends ListenedBase {
 	private 	Position 		position;
 	private		Vector directionMove;
 	private 	float powerMove;
-	
-	private Vector cuboid;
-	private Percipience percipience;
 	
 	private ConnectionList connections;
 
@@ -135,34 +132,14 @@ public abstract class StateSimulationObject extends ListenedBase {
 		}
 	}
 	
-	final public void setCuboid(Vector cuboid, WriteAccessToSimulationObject guard) {
-		if (checkGuard(guard)) {
-			this.cuboid = cuboid;
-			if (this.position != null) {
-				setVisibility();
-			}
-		}
-	}
 
 	final void setPosition(Position position, WriteAccessToSimulationObject guard) {
 		if (checkGuard(guard)) {
 			this.position = position;
-			if (this.cuboid != null) {
-				setVisibility();
-			}
+			setSomething(StatePerceptible.class.getName(), "setPosition", position, guard);
 		}
 	}
 	
-	private void setVisibility() {
-		Vector cuboidCopy = new Vector(this.cuboid);
-		Position positionCopy = new Position(this.position);
-		if (this.percipience == null) {
-			this.percipience = new Percipience(positionCopy, cuboidCopy);
-		}
-		else {
-			this.percipience.setVisibility(positionCopy, cuboidCopy);
-		}
-	}
 	
 	final public Position getPosition() {
 		return new Position(this.position);
@@ -266,20 +243,57 @@ public abstract class StateSimulationObject extends ListenedBase {
 		}
 	}
 	
+	private void callMethod(String stateClassName, String methodName) {
+		State stateAddOn;
+		for (int nrStateAddOn = 0; nrStateAddOn < stateAddOns.size(); nrStateAddOn++) {
+			
+			stateAddOn = stateAddOns.get(nrStateAddOn);
+			
+			if (stateAddOn.getClass().getName().equals(stateClassName)) {
+				Method method = stateAddOn.getMethod(methodName);
+				if (method != null) {
+					try {
+						method.setAccessible(true);
+					    method.invoke(stateAddOn);
+		
+					// Handle any exceptions thrown by method to be invoked.
+					}
+					catch (InvocationTargetException ite) {
+					    Throwable cause = ite.getCause();
+					    System.out.println( cause.getMessage());
+					}
+					catch (IllegalAccessException iae) {
+						iae.printStackTrace();
+					} 
+					
+					// assumption: there is only one method in all state add ons
+					break;
+				}
+			}
+		}
+	
+	}
+	
 	final void setSomething(String stateClassName, String methodName, Object something, WriteAccessToSimulationObject guard) {
 		if (checkGuard(guard)) {
 			
 			State stateAddOn;
+			String classNameStateAddOn;
+			
 			for (int nrStateAddOn = 0; nrStateAddOn < stateAddOns.size(); nrStateAddOn++) {
 				
 				stateAddOn = stateAddOns.get(nrStateAddOn);
-				
-				if (stateAddOn.getClass().getName().equals(stateClassName)) {
+				if (stateAddOn == null){
+					System.out.println("stateAddOn ist null");
+					continue;
+				}
+				classNameStateAddOn = stateAddOn.getClass().getName();
+				if (classNameStateAddOn.equals(stateClassName)) {
 					Method method = stateAddOn.getMethod(methodName);
 					if (method != null) {
 						try {
 							method.setAccessible(true);
-						    method.invoke(this, something);
+						    method.invoke(stateAddOn, something);
 			
 						// Handle any exceptions thrown by method to be invoked.
 						}
@@ -290,7 +304,9 @@ public abstract class StateSimulationObject extends ListenedBase {
 						catch (IllegalAccessException iae) {
 							iae.printStackTrace();
 						} 
-						
+						catch (IllegalArgumentException iarge) {
+							iarge.printStackTrace();
+						}
 						// assumption: there is only one method in all state add ons
 						break;
 					}
