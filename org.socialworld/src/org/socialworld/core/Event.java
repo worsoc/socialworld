@@ -29,7 +29,6 @@ import java.util.List;
 
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.Time;
-import org.socialworld.attributes.percipience.Percipience;
 import org.socialworld.objects.Animal;
 import org.socialworld.objects.SimulationObject;
 
@@ -43,7 +42,7 @@ import org.socialworld.objects.SimulationObject;
  * 
  * @author Andre Schade (circlesmiler), Mathias Sikos (tyloesand)
  */
-public class Event implements Comparable<Event> {
+public abstract class Event implements Comparable<Event> {
 
 	final static int LOWEST_EVENT_PRIORITY = 0;
 	final static int HIGHEST_EVENT_PRIORITY = 100;
@@ -59,7 +58,6 @@ public class Event implements Comparable<Event> {
 	private IEventParam optionalParam;
 	private boolean hasOptionalParams = false;
 	
-	private Percipience percipience;
 	
 	protected boolean eventToCauserItself = false;
 	protected boolean eventToTarget = false;
@@ -80,7 +78,6 @@ public class Event implements Comparable<Event> {
 		this.optionalParam = param;
 		hasOptionalParams = true;
 		
-		this.percipience = new Percipience();
 	}
 	
 	/**
@@ -100,7 +97,6 @@ public class Event implements Comparable<Event> {
 		hasOptionalParams = true;
 
 		
-		this.percipience = new Percipience();
 	}	
 
 	/**
@@ -115,7 +111,6 @@ public class Event implements Comparable<Event> {
 		this.time = time;
 		this.position = position;
 		
-		this.percipience = new Percipience();
 	}
 
 	/**
@@ -130,7 +125,6 @@ public class Event implements Comparable<Event> {
 		this.priority = priority;
 		this.position = position;
 		
-		this.percipience = new Percipience();
 	}
 	
 	/**
@@ -143,9 +137,6 @@ public class Event implements Comparable<Event> {
 		
 		this.priority = priority;
 
-
-
-		this.percipience = new Percipience();
 
 	}	
 	
@@ -318,9 +309,6 @@ public class Event implements Comparable<Event> {
 	}
 
 
-	public void setPercipience(float maxDistance, float maxSee, float maxHear, float maxSmell, float maxFeel ) {
-		this.percipience  = new Percipience( maxDistance,  maxSee,  maxHear,  maxSmell,  maxFeel );
-	}
 
 	public boolean hasOptionalParam() {
 		return hasOptionalParams;
