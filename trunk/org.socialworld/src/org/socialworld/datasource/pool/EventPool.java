@@ -47,7 +47,7 @@ public class EventPool {
 	private Event createEvent(int number) {
 		byte priority = 1;
 		int eventType;
-		Event event; 
+		Event event = null; 
 
 		switch (number) {
 		case 1:
@@ -57,7 +57,7 @@ public class EventPool {
 			eventType = 0;
 		}
 		
-		event = new Event(eventType, priority);
+		//event = new Event(eventType, priority);
 		return event;
 	}
 
@@ -66,7 +66,7 @@ public class EventPool {
 
 	private void initializeFromFile() {
 		
-		
+/*		
 		Event event;
 		
 		int eventType = 0;
@@ -225,7 +225,7 @@ public class EventPool {
 			e.printStackTrace();
 		}
 		
-		
+		*/
 	}
 
 	private void addEvent(int index, Event event) {
