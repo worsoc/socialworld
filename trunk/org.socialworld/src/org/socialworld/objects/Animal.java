@@ -76,7 +76,6 @@ public abstract class Animal extends SimulationObject implements ISeer {
 		
 		List<State> result = super.createAddOnStates();
 		
-		System.out.println("Animal.createAddOnStates");
 		this.stateSeer = (StateSeer) getInitState(StateSeer.class.getName());
 		result.add(this.stateSeer);
 		

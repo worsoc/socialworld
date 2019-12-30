@@ -158,7 +158,6 @@ public abstract class SimulationObject extends ListenedBase implements IPercepti
 		
 		List<State> result = new ArrayList<State>();
 		
-		System.out.println("SimulationObject.createAddOnStates");
 		this.statePerceptible = (StatePerceptible) getInitState(StatePerceptible.class.getName());
 		result.add(this.statePerceptible);
 		
@@ -272,26 +271,25 @@ public abstract class SimulationObject extends ListenedBase implements IPercepti
 	 * The method determines the influence of an event. It calculates how the
 	 * event changes the attributes of the simulation object.
 	 * 
-	 * @param simualationEvent -
+	 * @param simulationEvent -
 	 *            the event influencing the simulation object
 	 */
-	public final void changeByEvent(final Event simualationEvent) {
-		this.state.calculateEventInfluence(simualationEvent);
+	public final void changeByEvent(final Event simulationEvent) {
+		this.state.calculateEventInfluence(simulationEvent);
 	}
 
 	/**
 	 * The method determines the reaction to an event.
 	 * It creates an action object and inserts it into the action handler list.
 	 * 
-	 * @param simualationEvent -
+	 * @param simulationEvent -
 	 *            the event influencing the simulation object
 	 */
-	public final void reactToEvent(final Event simualationEvent) {
+	public final void reactToEvent(final Event simulationEvent) {
 	
-		if (simualationEvent.getEventType() == EventType.percipientExists) {
-			System.out.println(this.getObjectID() + " nimmt wahr " + simualationEvent.getCauser().getObjectID());
+		if (simulationEvent.getEventType() == EventType.percipientExists) {
 		}
-		Scheduler.getInstance().createReaction(simualationEvent, state, guard.getMeHidden(grantAccessToPropertyAction));
+		Scheduler.getInstance().createReaction(simulationEvent, state, guard.getMeHidden(grantAccessToPropertyAction));
 		
 	}
 
