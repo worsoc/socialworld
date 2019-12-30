@@ -21,7 +21,6 @@
 */
 package org.socialworld.objects;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.collections.ValueArrayList;
@@ -50,9 +49,7 @@ public abstract class Item extends SimulationObject {
 	protected List<State> createAddOnStates() {
 		
 		List<State> result = super.createAddOnStates();
-		
-		System.out.println("Item.createAddOnStates");
-		
+				
 		return result;
 		
 	}

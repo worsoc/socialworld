@@ -21,7 +21,6 @@
 */
 package org.socialworld.objects.concrete.animals;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.collections.ValueArrayList;
@@ -44,9 +43,7 @@ public abstract class Mammal extends Animal {
 	protected List<State> createAddOnStates() {
 		
 		List<State> result = super.createAddOnStates();
-		
-		System.out.println("Mammal.createAddOnStates");
-		
+				
 		return result;
 		
 	}
