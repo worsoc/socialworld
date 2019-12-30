@@ -21,8 +21,19 @@
 */
 package org.socialworld.objects.concrete.animals;
 
+import org.socialworld.calculation.geometry.Vector;
+
 public interface ISeer {
 
 	public abstract double getSizeDistanceRelationThreshold();
 	
+	public abstract Vector getDirectionView();
+	public abstract int getBestPercipiencePerpendicular();
+
+	public abstract float getAngleViewPerceivingEvents();
+	public abstract double getAngleViewPerceivingEventsInRadians();
+
+	public abstract float getAngleViewPerceivingObjects();
+	public abstract double getAngleViewPerceivingObjectsInRadians();
+
 }

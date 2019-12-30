@@ -1,6 +1,7 @@
 package org.socialworld.objects.concrete.eatable.fruits;
 
 import org.socialworld.attributes.percipience.Percipience;
+import org.socialworld.attributes.percipience.PercipienceType;
 import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.StateEatable;
 import org.socialworld.objects.concrete.StatePerceptible;
@@ -24,7 +25,7 @@ public class Apple extends Fruit implements IThrowable {
 	
 	protected State getInitState(String stateClassName) {
 		if (stateClassName.equals(StatePerceptible.class.getName())) {
-			Percipience percipience = new Percipience(100);
+			Percipience percipience = new Percipience(PercipienceType.simobject, 100);
 			return new StatePerceptible(percipience);
 		}
 		else if (stateClassName.equals(StateEatable.class.getName())) {
