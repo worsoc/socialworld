@@ -38,6 +38,8 @@ public class Percipience {
 	public static int PERCIPIENCE_FEEL = 4;
 	
 	
+	private PercipienceType type;
+	
 	private Position position;
 	private Vector cuboid;
 	
@@ -49,7 +51,8 @@ public class Percipience {
 	private float maxSmell;
 	private float maxFeel;
 
-	public Percipience(float maxDistance, float maxSee, float maxHear, float maxSmell, float maxFeel) {
+	public Percipience(PercipienceType type, float maxDistance, float maxSee, float maxHear, float maxSmell, float maxFeel) {
+		this.type = type;
 		this.maxSee = maxSee;
 		this.maxHear = maxHear;
 		this.maxSmell = maxSmell;
@@ -66,23 +69,27 @@ public class Percipience {
 		this.cuboid = new Vector();
 	}
 	
-	public Percipience() {
+	public Percipience(PercipienceType type) {
+		this.type = type;
 		this.cuboid = new Vector(0, 0, 0);
 		setDistancesOfNotice();
 	}
 
-	public Percipience(float cubeDiagonal) {
+	public Percipience(PercipienceType type, float cubeDiagonal) {
 		double tmp;
 		float a;
 		tmp = cubeDiagonal * cubeDiagonal;
 		tmp = tmp / 3;
 		tmp = Math.sqrt(tmp);
 		a = (float) tmp;
+		
+		this.type = type;
 		this.cuboid = new Vector(a, a, a);
 		setDistancesOfNotice();
 	}
 	
-	public Percipience(Position position, Vector cuboid) {
+	public Percipience(PercipienceType type, Position position, Vector cuboid) {
+		this.type = type;
 		this.position = position;
 		this.cuboid = cuboid;
 		this.visibility = new Visibility(position, cuboid);
@@ -105,8 +112,21 @@ public class Percipience {
 	public boolean checkChanceToBeSeen(Animal possibleSeer) {
 		return true;
 	}
-	
+
 	public boolean checkIsPossibleSeer(Animal possibleSeer) {
+		switch (type) {
+		case simobject:
+			return checkMaySeeingObject(possibleSeer);
+		case event:
+			return checkMaySeeingEvent(possibleSeer);
+		case dynamic:
+			return checkMaySeeingEvent(possibleSeer);
+		default:
+			return false;
+		}
+	}
+	
+	private boolean checkMaySeeingObject(Animal possibleSeer) {
 		
 		Position positionSeer = possibleSeer.getPosition();
 		Vector direction = this.position.getDirectionFrom(positionSeer);
@@ -118,13 +138,39 @@ public class Percipience {
 		if (distance <= this.maxSee) {
 
 			Vector directionView =  possibleSeer.getDirectionView();
-			double angleView =  possibleSeer.getAngleView();
-			double angleViewToRadians = Math.toRadians(angleView);
+			double angleViewInRadians =  possibleSeer.getAngleViewPerceivingObjectsInRadians();
 			
 			double cosineBetweenDirections = direction.getCosPhi(directionView);
-			double angleBetweenDirectionsToRadians = Math.acos(cosineBetweenDirections);
+			double angleBetweenDirectionsInRadians = Math.acos(cosineBetweenDirections);
 			
-			if (angleBetweenDirectionsToRadians <= angleViewToRadians)
+			if (angleBetweenDirectionsInRadians <= angleViewInRadians)
+				return this.visibility.checkIsPossibleSeer(possibleSeer, distance);
+			else
+				return false;
+
+
+		}
+		return false;
+	}
+
+	private boolean checkMaySeeingEvent(Animal possibleSeer) {
+		
+		Position positionSeer = possibleSeer.getPosition();
+		Vector direction = this.position.getDirectionFrom(positionSeer);
+
+		if (direction.is000()) return false;
+
+		double distance = direction.length();
+
+		if (distance <= this.maxSee) {
+
+			Vector directionView =  possibleSeer.getDirectionView();
+			double angleViewInRadians =  possibleSeer.getAngleViewPerceivingEventsInRadians();
+			
+			double cosineBetweenDirections = direction.getCosPhi(directionView);
+			double angleBetweenDirectionsInRadians = Math.acos(cosineBetweenDirections);
+			
+			if (angleBetweenDirectionsInRadians <= angleViewInRadians)
 				return this.visibility.checkIsPossibleSeer(possibleSeer, distance);
 			else
 				return false;

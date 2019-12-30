@@ -21,7 +21,6 @@
 */
 package org.socialworld.objects;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.actions.AbstractAction;
@@ -94,6 +93,30 @@ public abstract class Animal extends SimulationObject implements ISeer {
 		return this.stateSeer.getSizeDistanceRelationThreshold();
 	}
 
+	final public Vector getDirectionView() {
+		return this.stateSeer.getDirectionView();
+	}
+
+	final public float getAngleViewPerceivingObjects() {
+		return this.stateSeer.getAngleViewPerceivingObjects();
+	}
+
+	final public double getAngleViewPerceivingObjectsInRadians() {
+		return this.stateSeer.getAngleViewPerceivingObjectsInRadians();
+	}
+
+	final public float getAngleViewPerceivingEvents() {
+		return this.stateSeer.getAngleViewPerceivingEvents();
+	}
+
+	final public double getAngleViewPerceivingEventsInRadians() {
+		return this.stateSeer.getAngleViewPerceivingEventsInRadians();
+	}
+
+	final public int getBestPercipiencePerpendicular() {
+		return this.stateSeer.getBestPercipiencePerpendicular();
+	}
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    ATTRIBUTES  //////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -144,17 +167,6 @@ public abstract class Animal extends SimulationObject implements ISeer {
 	}
 
 
-	final public Vector getDirectionView() {
-		return this.stateSeer.getDirectionView();
-	}
-
-	final public float getAngleView() {
-		return this.stateSeer.getAngleView();
-	}
-
-	final public int getBestPercipiencePerpendicular() {
-		return this.stateSeer.getBestPercipiencePerpendicular();
-	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    ACTION     ///////////////////////////////////////////////
