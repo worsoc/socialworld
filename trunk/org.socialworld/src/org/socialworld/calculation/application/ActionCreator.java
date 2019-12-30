@@ -61,7 +61,7 @@ public class ActionCreator extends SocialWorldThread {
 	
 	private static String namePropertyActionType = "actiontype";
 	
-	private int sleepTime = 20;
+	private int sleepTime = 5;
 	private int sizeThreashold;
 	
 	/**
