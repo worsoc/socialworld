@@ -55,7 +55,7 @@ public class ObjectByPositionSearch_NodeXY {
 	private int y;
 	
 	private boolean isLeaf;
-	private int done = 0;
+	private int[] done = {0,0,0,0};
 	private int objectID;
 
 	public ObjectByPositionSearch_NodeXY(ObjectByPositionSearch_NodeXY parent, int childNr, int objectID) {
@@ -101,29 +101,44 @@ public class ObjectByPositionSearch_NodeXY {
 	protected ObjectByPositionSearch_NodeXY getNode() {
 		if (isLeaf) return null;
 		
-		done = done + 1;
-		switch  (done){
-			case SMALLEREQUALX_SMALLEREQUALY:
-						if (this.smallerEqualX_smallerEqualY != null)	return this.smallerEqualX_smallerEqualY;
-						else done = done + 1;
-			case SMALLEREQUALX_GREATERY:	
-						if (this.smallerEqualX_greaterY != null)	return this.smallerEqualX_greaterY;
-						else done = done + 1;
-			case GREATERX_SMALLEREQUALY:
-						if (this.greaterX_smallerEqualY != null)	return this.greaterX_smallerEqualY;
-						else done = done + 1;
-			case GREATERX_GREATERY:	
-						if (this.greaterX_greaterY != null)	return this.greaterX_greaterY;
+		if (done[SMALLEREQUALX_SMALLEREQUALY - 1] == 0) {
+			done[SMALLEREQUALX_SMALLEREQUALY - 1] = 1;
+			if (this.smallerEqualX_smallerEqualY != null) 		return this.smallerEqualX_smallerEqualY;
 		}
-		done = 0;
+		if (done[SMALLEREQUALX_GREATERY - 1] == 0) {
+			done[SMALLEREQUALX_GREATERY - 1] = 1;
+			if (this.smallerEqualX_greaterY != null) 		return this.smallerEqualX_greaterY;
+		}
+		if (done[GREATERX_SMALLEREQUALY - 1] == 0) {
+			done[GREATERX_SMALLEREQUALY - 1] = 1;
+			if (this.greaterX_smallerEqualY != null) 		return this.greaterX_smallerEqualY;
+		}
+		if (done[GREATERX_GREATERY - 1] == 0) {
+			done[GREATERX_GREATERY - 1] = 1;
+			if (this.greaterX_greaterY != null) 		return this.greaterX_greaterY;
+		}
+		
+		if ( (done[SMALLEREQUALX_SMALLEREQUALY - 1] + done[SMALLEREQUALX_GREATERY - 1] + done[GREATERX_SMALLEREQUALY - 1] + done[GREATERX_GREATERY - 1]) == 4) {
+			resetGetNode();
+			if (parent != null) {
+				parent.setDone(this.childNr);
+			}
+		}
+		
 		return null;
 		
 	}
 	
 	protected void resetGetNode() {
-		done = 0;
+		done[0] = 0;
+		done[1] = 0;
+		done[2] = 0;
+		done[3] = 0;
 	}
 	
+	private void setDone(int childNr) {
+		done[childNr - 1] = 1;
+	}
 	
 	protected int getObjectID() {
 		return this.objectID;
