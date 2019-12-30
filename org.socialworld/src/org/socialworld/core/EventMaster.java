@@ -425,7 +425,7 @@ public class EventMaster extends SocialWorldThread {
 			percipient = simulation.getFirstByPosition(this.eventPosition );
 			while (percipient != null) {
 				
-				if (percipient instanceof Animal) {
+				if (percipient instanceof Animal ) {
 	//				System.out.println("Position Human: " + percipient.getPosition().toString());
 	
 					isPossiblePercipient = causer.checkIsPossiblePercipient((Animal) percipient);
@@ -453,6 +453,7 @@ public class EventMaster extends SocialWorldThread {
 		SimulationObject percipient;
 		ListIterator<SimulationObject> iterator;
 		
+		
 		// two iterations because of asynchronous calculations
 		// there is a better chance to react on the event (second iteration) using the newer state (just calculated in first iteration)
 		
@@ -470,8 +471,6 @@ public class EventMaster extends SocialWorldThread {
 			percipient.reactToEvent(this.event);
 			iterator.remove();
 		}
-
-		System.out.println("determineInfluenceToPercipients() completed");
 
 	}
 	
