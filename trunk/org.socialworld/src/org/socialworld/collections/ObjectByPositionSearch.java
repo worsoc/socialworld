@@ -178,7 +178,7 @@ public class ObjectByPositionSearch {
 		
 		if (found == null) found = root;
 		
-		while (nextID == 0 & found != null) {
+		while (nextID == 0 && found != null) {
 			tmp = found.getNode();
 			
 			while (tmp != null) {
@@ -278,7 +278,7 @@ public class ObjectByPositionSearch {
 			
 			dummy = new ObjectByPositionSearch_Nodes();
 			
-			for (index = 1; index < newCapacity - listSize; index++) {
+			for (index = 0; index < newCapacity - listSize; index++) {
 				allNodesByObjectID.add(dummy);
 			}
 			
