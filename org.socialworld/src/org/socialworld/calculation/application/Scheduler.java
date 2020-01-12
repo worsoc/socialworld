@@ -38,6 +38,7 @@ public class Scheduler{
 	private final PositionCalculator threadPositionCalculator;
 	private final ActionCreator threadActionCreator;
 	private final AttributeCalculator threadAttributeCalculator;
+	private final KnowledgeCalculator threadKnowledgeCalculator;
 	private final TalkCalculator threadTalkCalculator;
 	
 	private Scheduler() {
@@ -46,6 +47,7 @@ public class Scheduler{
 		threadPositionCalculator = PositionCalculator.getInstance();
 		threadActionCreator = ActionCreator.getInstance();
 		threadAttributeCalculator = AttributeCalculator.getInstance();
+		threadKnowledgeCalculator = KnowledgeCalculator.getInstance();
 		threadTalkCalculator = TalkCalculator.getInstance();
 		
 
@@ -64,6 +66,7 @@ public class Scheduler{
 			threadPositionCalculator.startThread();
 			threadActionCreator.startThread();
 			threadAttributeCalculator.startThread();
+			threadKnowledgeCalculator.startThread();
 			threadTalkCalculator.startThread();
 		}
 	}
@@ -86,6 +89,12 @@ public class Scheduler{
 		
 	}
 	
+	public void calculatePerception(final Event event, final StateAnimal stateAnimal, final HiddenAnimal hiddenWriteAccess) {
+
+		threadKnowledgeCalculator.calculatePerception(event,  stateAnimal,  hiddenWriteAccess);
+
+	}
+
 	public void calculateAttributesChangedByEvent(final Event event, final StateAnimal stateAnimal, final HiddenAnimal hiddenWriteAccess) {
 
 		threadAttributeCalculator.calculateAttributesChangedByEvent(event,  stateAnimal,  hiddenWriteAccess);
