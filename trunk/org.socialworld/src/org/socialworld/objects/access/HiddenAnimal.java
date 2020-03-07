@@ -26,6 +26,8 @@ import org.socialworld.actions.move.Path;
 import org.socialworld.calculation.FunctionByMatrix;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.geometry.Vector;
+import org.socialworld.knowledge.KnowledgeElement;
+import org.socialworld.knowledge.KnowledgeProperties;
 import org.socialworld.objects.WriteAccessToAnimal;
 
 /**
@@ -58,6 +60,10 @@ public class HiddenAnimal extends HiddenSimulationObject {
 		return wa.addPath(path, this);
 	}
 
+	public int addKnowledgeElement(KnowledgeElement knowledgeElement) {
+		return wa.addKnowledgeElement(knowledgeElement, this);
+	}
+	
 	public int setDirectionChest(Vector directionChest) {
 		return wa.setDirectionChest(directionChest, this);
 	}

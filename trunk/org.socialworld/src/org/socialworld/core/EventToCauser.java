@@ -3,6 +3,7 @@ package org.socialworld.core;
 import org.socialworld.actions.ActionPerformer;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.Time;
+import org.socialworld.collections.ValueArrayList;
 import org.socialworld.objects.SimulationObject;
 
 public class EventToCauser extends Event {
@@ -37,5 +38,9 @@ public class EventToCauser extends Event {
 
 	}
 
-	
+	public final ValueArrayList getProperties() {
+		
+		return getOptionalParam().getParamList();
+	}
+
 }

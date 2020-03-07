@@ -57,9 +57,10 @@ public abstract class StateSimulationObject extends ListenedBase {
 	
 	private ConnectionList connections;
 
-	private	int				influenceTypeByEventType[];
-	private	int				reactionTypeByEventType[];
-	private   int				state2ActionType;
+	private int				state2ActionType;
+	private	int				influenceTypeForEventType[];
+	private	int				reactionTypeForEventType[];
+	private	int				perceptionTypeForEventType[];
 	
 	private GrantedAccessToProperty grantAccessToPropertyPosition[];
 	private GrantedAccessToProperty grantAccessToPropertyAction[];
@@ -170,22 +171,32 @@ public abstract class StateSimulationObject extends ListenedBase {
 
 	final void setInfluenceTypes (int types[], WriteAccessToSimulationObject guard) {
 		if (checkGuard(guard)) {
-			this.influenceTypeByEventType = types;
+			this.influenceTypeForEventType = types;
 		}
 	}
 
 	final public int getInfluenceType(int eventType) {
-		 return this.influenceTypeByEventType[eventType];
+		 return this.influenceTypeForEventType[eventType];
 	} 
 
 	final void setReactionTypes (int types[], WriteAccessToSimulationObject guard) {
 		if (checkGuard(guard)) {
-			this.reactionTypeByEventType = types;
+			this.reactionTypeForEventType = types;
 		}
 	}
 
 	final public int getReactionType(int eventType) {
-		 return this.reactionTypeByEventType[eventType];
+		 return this.reactionTypeForEventType[eventType];
+	} 
+
+	final void setPerceptionTypes (int types[], WriteAccessToSimulationObject guard) {
+		if (checkGuard(guard)) {
+			this.perceptionTypeForEventType = types;
+		}
+	}
+
+	final public int getPerceptionType(int eventType) {
+		 return this.perceptionTypeForEventType[eventType];
 	} 
 
 	final void setState2ActionType (int type, WriteAccessToSimulationObject guard) {

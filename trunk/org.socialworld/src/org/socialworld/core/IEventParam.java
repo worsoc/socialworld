@@ -33,6 +33,8 @@ public interface IEventParam {
 
 	public abstract Value getParamListAsValue();
 	
+	public abstract ValueArrayList getParamList();
+	
 	public abstract Value getParam(String name);
 
 	public abstract Value getParam(Type name);

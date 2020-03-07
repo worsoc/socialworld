@@ -26,10 +26,23 @@ import org.socialworld.conversation.Numerus;
 
 public class AnswerRelationUnaer extends KnowledgeRelationUnaer implements IAnswer{
 
+	private KnowledgeSource source;
+
+	public AnswerRelationUnaer(KnowledgeRelationUnaer original) {
+		super(original);
+	}
+
 	public KnowledgeType getType() { return KnowledgeType.relationUnaer; }
 
 	public void setSubject(Lexem subject, Numerus numerus) {
 		setLexemSubject(subject);
 		setNumerusSubject(numerus);
 	}
+	
+	public void setSource(KnowledgeSource source) {
+		this.source = source;
+	}
+
+	public KnowledgeSource getSource() { return this.source; }
+
 }

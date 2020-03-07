@@ -26,7 +26,7 @@ import org.socialworld.conversation.Numerus;
 import org.socialworld.conversation.Tense;
 import org.socialworld.conversation.Word;
 
-public abstract class KnowledgeRelation {
+public abstract class KnowledgeRelation extends KnowledgeFact {
 
 	private boolean isSelfRelation;		// knowledge of its own relations (subject ist "I")
 
@@ -51,6 +51,12 @@ public abstract class KnowledgeRelation {
 	
 	Lexem getLexemSubject() { return subject; }
 	Numerus getNumerusSubject() { return numerusSubject; }
+	
+	abstract Lexem[] getValues();
+	
+	KnowledgeFact_Criterion getCriterion() {
+		return KnowledgeFact_Criterion.relation;
+	}
 	
 	void setLexemSubject(Lexem subject) {
 		this.subject = subject;

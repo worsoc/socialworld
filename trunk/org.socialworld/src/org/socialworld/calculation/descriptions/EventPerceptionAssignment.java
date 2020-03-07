@@ -14,9 +14,9 @@ public class EventPerceptionAssignment {
 	}
 
 	/**
-	 * The method gets back the only instance of the EventReactionAssignment.
+	 * The method gets back the only instance of the EventPerceptionAssignment.
 	 * 
-	 * @return singleton object of eventReactionAssignment
+	 * @return singleton object of eventPerceptionAssignment
 	 */
 	public static EventPerceptionAssignment getInstance() {
 		if (eventPerceptionAssignment == null) {
@@ -26,18 +26,18 @@ public class EventPerceptionAssignment {
 	}
 
 	/**
-	 * The method gets back the description how an object reacts to the event.
-	 * The description depends on the event type and the object' reaction type.
+	 * The method gets back the description how an object perceives an event.
+	 * The description depends on the event type and the object' perception type.
 	 * 
 	 * @param eventType
-	 * @param reactionType	 
+	 * @param perceptionType	 
 	 * @return EventPerceptionDescription
 	 */
 	public EventPerceptionDescription getEventPerceptionDescription(
-			int eventType,	int reactionType) {
+			int eventType,	int perceptionType) {
 		EventPerceptionDescription eventPerceptionDescription;
 		eventPerceptionDescription = 
-				EventPerceptionDescriptionPool.getInstance().getDescription(eventType, reactionType);
+				EventPerceptionDescriptionPool.getInstance().getDescription(eventType, perceptionType);
 		
 		return eventPerceptionDescription;
 	}

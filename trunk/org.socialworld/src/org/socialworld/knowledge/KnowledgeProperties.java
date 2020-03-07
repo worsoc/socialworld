@@ -25,8 +25,8 @@ import org.socialworld.conversation.Word;
 
 public class KnowledgeProperties {
 
+	// TODO muss weg
 		final int MAXIMUM_KNOWLEDGE_CAPACITY = 100;
-		
 		private Lexem subject;
 		
 		private KnowledgeFact facts[];
@@ -76,11 +76,12 @@ public class KnowledgeProperties {
 			this.itemAccessCount = new int[MAXIMUM_KNOWLEDGE_CAPACITY];
 			this.itemIsValid = new boolean[MAXIMUM_KNOWLEDGE_CAPACITY];
 		}
-
+/*
 		protected int count() {
 			return itemCount;
 		}
-		
+		*/
+		/*
 		protected int compareTo(KnowledgeProperties knowledgeB) {
 			int countEqual = 0;
 		
@@ -100,11 +101,13 @@ public class KnowledgeProperties {
 			}
 			return countEqual;
 		}
-		
+		*/
+		/*
 		Lexem getLexemSubject() {
 			return subject;
 		}
-		
+		*/
+		/*
 		protected void combineWith(KnowledgeProperties knowledgeB) {
 			
 			for (int j = 0; j < MAXIMUM_KNOWLEDGE_CAPACITY; j++) {
@@ -121,12 +124,13 @@ public class KnowledgeProperties {
 				}
 			}
 		}
-		
-		protected boolean isValid() {
+	*/
+		/*
+		public boolean isValid() {
 			return (subject != null);
 		}
-		
-
+	*/	
+/*
 		public Word getSubject() {
 			return subject.getWord();
 		}
@@ -144,7 +148,8 @@ public class KnowledgeProperties {
 		protected void setSubject(Lexem subject) {
 			if (validItemCount == 0)		this.subject = subject;
 		}
-		
+		*/
+/*		
 		protected KnowledgeFact getFact(int index) {
 			if ((index >= 0) & (index < MAXIMUM_KNOWLEDGE_CAPACITY) )
 				return facts[index];
@@ -158,7 +163,8 @@ public class KnowledgeProperties {
 			else
 				return null;
 		}
-
+		*/
+/*
 		protected KnowledgeSource getSource(int index) {
 			if ((index >= 0) & (index < MAXIMUM_KNOWLEDGE_CAPACITY) )
 				return source[index];
@@ -172,7 +178,8 @@ public class KnowledgeProperties {
 			else
 				return null;
 		}
-
+		*/
+/*
 		protected int[] findFactsForCriterion(KnowledgeFact_Criterion criterion) {
 			int result_tmp[] = new int[MAXIMUM_KNOWLEDGE_CAPACITY];
 			int result[];
@@ -194,8 +201,8 @@ public class KnowledgeProperties {
 			}
 			return result;
 		}
-
-		
+*/
+/*		
 		protected int[] findFactsForValue(Lexem value) {
 			int result_tmp[] = new int[MAXIMUM_KNOWLEDGE_CAPACITY];
 			int result[];
@@ -217,8 +224,8 @@ public class KnowledgeProperties {
 			}
 			return result;
 		}
-
-		
+*/
+		/*
 		protected void removeItem(int index) {
 			
 			if (index == itemCount-1) itemCount--;
@@ -229,7 +236,8 @@ public class KnowledgeProperties {
 				validItemCount--;
 			}
 		}
-		
+		*/
+		/*
 		protected void addItem(KnowledgeFact fact, KnowledgeSource source) {
 			int 	replacableIndex;
 			
@@ -249,7 +257,8 @@ public class KnowledgeProperties {
 			
 			
 		}
-		
+	*/
+		/*
 		protected int getIndexForValidWithMaxAccessCount() {
 			int index;
 			int result;
@@ -289,7 +298,8 @@ public class KnowledgeProperties {
 			return -1;
 			
 		}
-		
+		*/
+		/*
 		private int getReplacableIndex() {
 			int count;
 			int index;
@@ -312,7 +322,8 @@ public class KnowledgeProperties {
 			
 			return index ;
 		}
-		
+*/
+		/*
 		public boolean equals(KnowledgeProperties b) {
 			// we only check all facts , sources and itemIsValid
 			
@@ -335,6 +346,6 @@ public class KnowledgeProperties {
 			}
 			
 			return true;
-		}
+		}*/
 	}
 

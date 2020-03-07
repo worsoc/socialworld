@@ -20,7 +20,7 @@
 *
 */
 package org.socialworld.conversation;
-import org.socialworld.knowledge.AnswerProperties;
+import org.socialworld.knowledge.AnswerProperty;
 import org.socialworld.knowledge.AnswerRelationUnaer;
 import org.socialworld.knowledge.AnswerRelationBinaer;
 import org.socialworld.knowledge.AnswerRelationTrinaer;
@@ -46,8 +46,8 @@ public class Talk {
 	
 	public void addAnswer(IAnswer answer) {
 		switch (answer.getType()) {
-		case properties: 
-			addSentence(makeAnswerSentence((AnswerProperties)answer), Talk_SentenceType.myPlannedSentence);
+		case property: 
+			addSentence(makeAnswerSentence((AnswerProperty)answer), Talk_SentenceType.myPlannedSentence);
 		case relationUnaer: 
 			addSentence(makeAnswerSentence((AnswerRelationUnaer)answer), Talk_SentenceType.myPlannedSentence);
 		case relationBinaer: 
@@ -75,7 +75,7 @@ public class Talk {
 		
 	}
 	
-	private String makeAnswerSentence(AnswerProperties answer) {
+	private String makeAnswerSentence(AnswerProperty answer) {
 		
 		return sentenceMaker.getStatementSentenceForFact(answer);
 		

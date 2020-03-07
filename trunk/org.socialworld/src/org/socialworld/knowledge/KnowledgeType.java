@@ -23,6 +23,6 @@ package org.socialworld.knowledge;
 
 public enum KnowledgeType {
 
-	relationUnaer, relationBinaer, relationTrinaer, properties;
+	relationUnaer, relationBinaer, relationTrinaer, property;
 	
 }

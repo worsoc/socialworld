@@ -155,6 +155,10 @@ public abstract class ActionPerformer implements IEventParam {
 		return new Value(Type.valueList, Value.VALUE_BY_NAME_EVENT_PARAMS, eventParams);
 	}
 	
+	public ValueArrayList getParamList() {
+		return this.eventParams;
+	}
+
 	public Value getParam(String name) {
 		return eventParams.getValue(name);
 	}

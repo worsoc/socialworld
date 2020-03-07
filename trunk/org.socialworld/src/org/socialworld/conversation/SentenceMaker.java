@@ -20,7 +20,7 @@
 *
 */
 package org.socialworld.conversation;
-import org.socialworld.knowledge.AnswerProperties;
+import org.socialworld.knowledge.AnswerProperty;
 import org.socialworld.knowledge.AnswerRelationBinaer;
 import org.socialworld.knowledge.AnswerRelationTrinaer;
 import org.socialworld.knowledge.AnswerRelationUnaer;
@@ -125,7 +125,7 @@ public class SentenceMaker {
 		
 	}
 	
-	public String getStatementSentenceForFact(AnswerProperties answer) {
+	public String getStatementSentenceForFact(AnswerProperty answer) {
 		String sentence;
 	
 		Word subject;
@@ -134,7 +134,6 @@ public class SentenceMaker {
 		
 		
 	// TODO
-		answer.resetIndex();
 		subject = answer.getSubject();
 		criterion = answer.getAnswerCriterion();
 		value = answer.getAnswerValue();

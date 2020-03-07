@@ -30,6 +30,20 @@ public class KnowledgeRelationBinaer extends KnowledgeRelation {
 	private Lexem object;
 	private Numerus numerusObject;
 
+	public KnowledgeRelationBinaer() {
+		
+	}
+
+	public KnowledgeRelationBinaer(KnowledgeRelationBinaer original) {
+		if (original != null) {
+			// TODO
+		}
+	}
+	
+	KnowledgeFact copy() {
+		return new KnowledgeRelationBinaer(this);
+	}
+
 	@Override
 	public Word getVerb() {
 		return getLexemVerb().getWord(getTense());
@@ -49,4 +63,13 @@ public class KnowledgeRelationBinaer extends KnowledgeRelation {
 		return object.getWord(numerusObject);
 	}
 	
+	Lexem[] getValues() {
+		Lexem[] result = new Lexem[2];
+		result[0] = getLexemSubject();
+		result[1] = this.object;
+		
+		return result;
+	}
+
+
 }

@@ -30,7 +30,7 @@ import org.socialworld.core.Event;
 import org.socialworld.core.EventType;
 import org.socialworld.core.IEventParam;
 import org.socialworld.core.SocialWorldThread;
-import org.socialworld.knowledge.AnswerProperties;
+import org.socialworld.knowledge.AnswerProperty;
 import org.socialworld.knowledge.KnowledgeSource;
 import org.socialworld.knowledge.KnowledgeSource_Type;
 import org.socialworld.objects.Human;
@@ -205,7 +205,7 @@ public class TalkCalculator  extends SocialWorldThread {
 		IEventParam params;
 		Value value;
 
-		AnswerProperties answer;
+		AnswerProperty answer;
 		Human partner;
 
 		if (event.hasOptionalParam()) {
@@ -220,7 +220,7 @@ public class TalkCalculator  extends SocialWorldThread {
 	
 			value = params.getParam("answer");
 			if (value.isValid())
-				answer = (AnswerProperties) value.getValue();
+				answer = (AnswerProperty) value.getValue();
 			else
 				return;
 			

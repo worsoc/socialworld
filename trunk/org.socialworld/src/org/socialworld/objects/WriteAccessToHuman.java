@@ -26,8 +26,8 @@ import java.util.ArrayList;
 import org.socialworld.conversation.Talk;
 import org.socialworld.conversation.Talk_SentenceType;
 import org.socialworld.knowledge.Acquaintance;
-import org.socialworld.knowledge.AnswerProperties;
-import org.socialworld.knowledge.KnowledgeProperties;
+import org.socialworld.knowledge.AnswerProperty;
+import org.socialworld.knowledge.KnowledgeElement;
 import org.socialworld.knowledge.KnowledgeSource;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenHuman;
@@ -74,7 +74,7 @@ public class WriteAccessToHuman extends WriteAccessToAnimal {
 			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
 	}
 	
-	public int addAnswer(AnswerProperties answer,  Human partner, HiddenSimulationObject caller) {
+	public int addAnswer(AnswerProperty answer,  Human partner, HiddenSimulationObject caller) {
 		if (checkCaller(caller)) 
 			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.answer)) {
 				humanState.addAnswer(answer, partner, this);
@@ -99,10 +99,10 @@ public class WriteAccessToHuman extends WriteAccessToAnimal {
 	}
 	
 
-	public int addKnowledgeProperties(KnowledgeProperties knowledge, HiddenSimulationObject caller) {
+	public int addKnowledgeElement(KnowledgeElement knowledgeElement, HiddenSimulationObject caller) {
 		if (checkCaller(caller)) 
 			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.knowledge)) {
-				humanState.addKnowledgeProperties(knowledge, this);
+				humanState.addKnowledgeElement(knowledgeElement, this);
 				return WRITE_ACCESS_RETURNS_SUCCESS;
 			}
 			else

@@ -23,6 +23,7 @@ package org.socialworld.core;
 
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.geometry.Vector;
+import org.socialworld.collections.ValueArrayList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -140,7 +141,7 @@ public abstract class Event implements Comparable<Event> {
 
 	}	
 	
-
+	public abstract ValueArrayList getProperties();
 
 	/*
 	 * (non-Javadoc)

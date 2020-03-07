@@ -26,8 +26,8 @@ import java.util.ArrayList;
 import org.socialworld.conversation.Talk;
 import org.socialworld.conversation.Talk_SentenceType;
 import org.socialworld.knowledge.Acquaintance;
-import org.socialworld.knowledge.AnswerProperties;
-import org.socialworld.knowledge.KnowledgeProperties;
+import org.socialworld.knowledge.AnswerProperty;
+import org.socialworld.knowledge.KnowledgeElement;
 import org.socialworld.knowledge.KnowledgeSource;
 import org.socialworld.objects.Human;
 import org.socialworld.objects.WriteAccessToHuman;
@@ -53,7 +53,7 @@ public class HiddenHuman extends HiddenAnimal {
 		return wa.addFactsFromSentence(sentence, source, this);
 	}
 	
-	public int addAnswer(AnswerProperties answer,  Human partner) {
+	public int addAnswer(AnswerProperty answer,  Human partner) {
 		return wa.addAnswer(answer, partner, this);
 	}
 	
@@ -61,8 +61,8 @@ public class HiddenHuman extends HiddenAnimal {
 		return wa.setTalks(talks, this);
 	}
 	
-	public int addKnowledgeProperties(KnowledgeProperties knowledge) {
-		return wa.addKnowledgeProperties(knowledge, this);
+	public int addKnowledgeElement(KnowledgeElement knowledgeElement) {
+		return wa.addKnowledgeElement(knowledgeElement, this);
 	}
 
 	public int addAcquaintance(Acquaintance acquaintance) {

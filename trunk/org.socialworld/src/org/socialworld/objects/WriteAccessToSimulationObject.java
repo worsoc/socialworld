@@ -192,6 +192,18 @@ public class WriteAccessToSimulationObject {
 			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
 	}
 
+	public int setPerceptionTypes(int types[], HiddenSimulationObject caller) {
+		if (checkCaller(caller)) 
+			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.perceptionTypes)) {
+				objectsState.setPerceptionTypes(types, this);
+				return WRITE_ACCESS_RETURNS_SUCCESS;
+			}
+			else
+				return WRITE_ACCESS_RETURNS_NO_GRANT_FOR_PROPERTY;
+		else
+			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
+	}
+
 	public int setState2ActionType(int type, HiddenSimulationObject caller) {
 		if (checkCaller(caller)) 
 			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.state2ActionType)) {

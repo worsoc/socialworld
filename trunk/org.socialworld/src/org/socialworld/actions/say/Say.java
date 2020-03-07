@@ -32,7 +32,7 @@ import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.knowledge.Acquaintance;
 import org.socialworld.knowledge.Acquaintance_Attribute;
-import org.socialworld.knowledge.AnswerProperties;
+import org.socialworld.knowledge.AnswerProperty;
 import org.socialworld.objects.Human;
 import org.socialworld.objects.SimulationObject;
 
@@ -135,7 +135,8 @@ public class Say extends ActionPerformer {
 				case answerScream:
 				case answerWhisper:
 					
-					AnswerProperties answer;
+					AnswerProperty answer;
+					List<AnswerProperty> answers;
 					
 					Value tmp;
 					tmp = getParam(Value.VALUE_BY_NAME_ACTION_QUESTION);
@@ -156,7 +157,9 @@ public class Say extends ActionPerformer {
 						setParam( new Value(Type.simulationObject, Value.VALUE_BY_NAME_ACTION_TARGET, partner ));
 					}
 
-					answer =  actor.getAnswerForQuestion(question);
+					// TODO many answers --> one answer
+					answers =  actor.getAnswersForQuestion(question);
+					answer = answers.get(0);
 					manipulateAnswer(actor, answer, partner);
 		
 					addParam( new Value(Type.answer, Value.VALUE_BY_NAME_ACTION_ANSWER, answer));
@@ -186,7 +189,7 @@ public class Say extends ActionPerformer {
 		}
 	}
 
-	private void manipulateAnswer(final Human actor, AnswerProperties answer, final Human partner) {
+	private void manipulateAnswer(final Human actor, AnswerProperty answer, final Human partner) {
 		
 		Acquaintance acquaintance;
 		acquaintance = actor.getAcquaintance(partner);
@@ -194,11 +197,15 @@ public class Say extends ActionPerformer {
 		// TODO implement manipulateAnswer()
 		// more complex, please
 		// here only an example for an easy decision
+		
+		/*
 		if (acquaintance.isAttributeValueLessThan(Acquaintance_Attribute.sympathy, AttributeArray.ATTRIBUTE_VALUE_MIDDLE) ) 
 			answer.reduceToFactWithMinAccessCount();
 		else if (acquaintance.isAttributeValueGreaterThan(Acquaintance_Attribute.sympathy, AttributeArray.ATTRIBUTE_VALUE_MIDDLE) ) 
 			answer.sortBySource();
 		else answer.reduceToFactWithMaxAccessCount();
+		
+		*/
 	}
 
    public List<SimulationObject> getTargets() {

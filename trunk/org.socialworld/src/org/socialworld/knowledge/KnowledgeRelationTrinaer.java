@@ -33,6 +33,19 @@ public class KnowledgeRelationTrinaer extends KnowledgeRelation {
 	private Lexem object2;
 	private Numerus numerusObject2;
 	
+	public KnowledgeRelationTrinaer() {
+		
+	}
+
+	public KnowledgeRelationTrinaer(KnowledgeRelationTrinaer original) {
+		if (original != null) {
+			// TODO
+		}
+	}
+	
+	KnowledgeFact copy() {
+		return new KnowledgeRelationTrinaer(this);
+	}
 
 	@Override
 	public Word getVerb() {
@@ -57,4 +70,13 @@ public class KnowledgeRelationTrinaer extends KnowledgeRelation {
 		return object2.getWord(numerusObject2);
 	}
 	
+	Lexem[] getValues() {
+		Lexem[] result = new Lexem[3];
+		result[0] = getLexemSubject();
+		result[1] = this.object1;
+		result[2] = this.object2;
+		
+		return result;
+	}
+
 }

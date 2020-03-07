@@ -22,7 +22,8 @@
 package org.socialworld.knowledge;
 
 public enum KnowledgeFact_Criterion {
-	colour(0), material(1);
+	colour(0), material(1),
+	relation(1000);
 
 	/**
 	 * The constant holds the informations how many knowledge fact criterions exist.
