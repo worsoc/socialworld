@@ -25,63 +25,56 @@ import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Numerus;
 import org.socialworld.conversation.Word;
 
-public class AnswerProperties extends KnowledgeProperties implements IAnswer {
+public class AnswerProperty extends KnowledgeProperty implements IAnswer {
 	
-	private int index;
-	private int count;
+
+	private Lexem subject;
+	private KnowledgeSource source;
 	
-	public AnswerProperties() {
-		super(null);
+	public AnswerProperty(KnowledgeProperty original) {
+		super(original);
 	}
 	
-	public AnswerProperties(Lexem subject) {
+	/*
+	public AnswerProperty(Lexem subject) {
 		super(subject);
 	}
-	
-	public KnowledgeType getType() { return KnowledgeType.properties; }
+	*/
+	public KnowledgeType getType() { return KnowledgeType.property; }
 	
 	public void setSubject(Lexem subject, Numerus numerus) {
-		setSubject(subject);
+		this.subject = subject;
 	}
 	
-	public boolean  resetIndex() {
-		index = getIndexForFirstValid();
-		if (index == -1) return false;
-		
-		count = count();
-		return true;
+	public Word getSubject() { return this.subject.getWord(); }
+	
+
+	public void setSource(KnowledgeSource source) {
+		this.source = source;
 	}
 	
-	public boolean next() {
-		do	{
-			index = index + 1;
-			if (index == count) return false;
-		}
-		while (!isItemValid(index));
-		return true;
-	}
-	
+	public KnowledgeSource getSource() { return this.source; }
+
 
 	
 	public KnowledgeFact_Criterion getAnswerCriterion() {
-		if (index < count)		return getFact(index).getCriterion();
-		else return null;
+		return getCriterion();
 	}
 	
 	public Word getAnswerValue() {
-		if (index < count)	return getFact(index).getValue().getLexem().getWord();
-		else return null;
+		return getValue().getLexem().getWord();
+		
 	}
 
 	public KnowledgeSource getAnswerSource() {
-		if (index < count)	return getSource(index);
-		else return null;
+		return this.source;
 	}
 
 	public void sortBySource() {
 		
 	}
 	
+	/*
 	public void reduceToFactWithMaxAccessCount() {
 		int count;
 		int index;
@@ -107,5 +100,5 @@ public class AnswerProperties extends KnowledgeProperties implements IAnswer {
 		}
 		
 	}
-
+	*/
 }
