@@ -22,6 +22,7 @@
 package org.socialworld.objects;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ListIterator;
 
 import org.socialworld.calculation.application.Scheduler;
@@ -30,9 +31,7 @@ import org.socialworld.conversation.Talk_SentenceType;
 import org.socialworld.core.Event;
 import org.socialworld.knowledge.Acquaintance;
 import org.socialworld.knowledge.AcquaintancePool;
-import org.socialworld.knowledge.AnswerProperties;
-import org.socialworld.knowledge.Knowledge;
-import org.socialworld.knowledge.KnowledgeProperties;
+import org.socialworld.knowledge.AnswerProperty;
 import org.socialworld.knowledge.KnowledgeSource;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenHuman;
@@ -44,7 +43,6 @@ import org.socialworld.objects.properties.IWeapon;
  */
 public class StateHuman extends StateAnimal {
 
-	private Knowledge knowledge;
 	private AcquaintancePool acquaintance;
 	
 	private ArrayList<Talk> talks;
@@ -56,7 +54,6 @@ public class StateHuman extends StateAnimal {
 		super();
 		
 		talks = new ArrayList<Talk>();
-		knowledge = new Knowledge();
 		acquaintance = new AcquaintancePool();
 		
 		grantAccessToPropertyTalk = new GrantedAccessToProperty[1];
@@ -86,11 +83,6 @@ public class StateHuman extends StateAnimal {
 		}
 	}
 
-	final void addKnowledgeProperties(KnowledgeProperties knowledge, WriteAccessToHuman guard) {
-		if (checkGuard(guard)) {
-			this.knowledge.addKnowledge(knowledge);
-		}
-	}
 
 	final void addAcquaintance(Acquaintance acquaintance, WriteAccessToHuman guard) {
 		if (checkGuard(guard)) {
@@ -119,7 +111,7 @@ public class StateHuman extends StateAnimal {
 		}
 	}
 
-	final void addAnswer(AnswerProperties answer,  Human partner, WriteAccessToHuman guard) {
+	final void addAnswer(AnswerProperty answer,  Human partner, WriteAccessToHuman guard) {
 		if (checkGuard(guard)) {
 			Talk talk = findTalk(partner);
 			talk.addAnswer(answer);
@@ -136,10 +128,10 @@ public class StateHuman extends StateAnimal {
 		return new String(lastSaidSentence);
 	}
 	
-	final public AnswerProperties getAnswerForQuestion(String question) {
+	final public List<AnswerProperty> getAnswersForQuestion(String question) {
 		// no copy
 		// because a new answer is created in method KnowledgePool.getAnswerForQuestion()
-		return this.knowledge.getAnswerForQuestion(question);
+		return this.knowledge.getAnswersForQuestion(question);
 	}
 
 	final String findSentence(Human partner, Talk_SentenceType type) {

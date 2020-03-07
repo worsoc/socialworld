@@ -21,32 +21,37 @@
 */
 package org.socialworld.knowledge;
 
-public class KnowledgeFact {
-	private KnowledgeFact_Criterion criterion;
-	private KnowledgeFact_Value value;
+import org.socialworld.conversation.Lexem;
+
+public abstract class KnowledgeFact {
 	
-	public KnowledgeFact(KnowledgeFact_Criterion criterion, KnowledgeFact_Value value ) {
-		this.criterion = criterion;
-		this.value = value;
+	
+	private int itemAccessCount;
+	private boolean itemIsValid;
+	
+	abstract Lexem[] getValues();
+	abstract KnowledgeFact_Criterion getCriterion();
+
+	abstract KnowledgeFact copy();
+	
+	void setValid(boolean isValid) {
+		this.itemIsValid = isValid;
 	}
 	
-	public KnowledgeFact(KnowledgeFact original) {
-		if (original != null) {
-			this.criterion  = original.getCriterion();
-			this.value = new KnowledgeFact_Value(original.getValue());
-		}
+	boolean isItemValid() {
+		return this.itemIsValid;
 	}
 	
-	protected KnowledgeFact_Value getValue() {
-		return value;
+	void resetAcccessCount() {
+		this.itemAccessCount = 0;
 	}
 	
-	protected KnowledgeFact_Criterion getCriterion() {
-		return criterion;
+	void incrementAccessCount() {
+		this.itemAccessCount++;
 	}
 	
-	protected boolean equals(KnowledgeFact b) {
-		return ( this.criterion == b.criterion & this.value.equals(b.value) );
+	int getItemAccessCount() {
+		return this.itemAccessCount;
 	}
-	
+
 }

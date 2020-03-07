@@ -25,6 +25,7 @@ import org.socialworld.actions.move.Path;
 import org.socialworld.calculation.FunctionByMatrix;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.geometry.Vector;
+import org.socialworld.knowledge.KnowledgeElement;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenAnimal;
 import org.socialworld.objects.access.HiddenSimulationObject;
@@ -88,6 +89,18 @@ public class WriteAccessToAnimal extends WriteAccessToSimulationObject {
 		if (checkCaller(caller)) 
 			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.path)) {
 				animalState.addPath(path, this);
+				return WRITE_ACCESS_RETURNS_SUCCESS;
+			}
+			else
+				return WRITE_ACCESS_RETURNS_NO_GRANT_FOR_PROPERTY;
+		else
+			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
+	}
+
+	public int addKnowledgeElement(KnowledgeElement knowledgeElement, HiddenSimulationObject caller) {
+		if (checkCaller(caller)) 
+			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.knowledge)) {
+				animalState.addKnowledgeElement(knowledgeElement, this);
 				return WRITE_ACCESS_RETURNS_SUCCESS;
 			}
 			else

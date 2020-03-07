@@ -24,6 +24,7 @@ package org.socialworld.core;
 import org.socialworld.actions.ActionPerformer;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.Time;
+import org.socialworld.collections.ValueArrayList;
 import org.socialworld.objects.SimulationObject;
 
 /**
@@ -58,6 +59,12 @@ public class EventToCandidates extends Event {
 		
 		super(eventType, priority,  causer,  time,  position,	  performer);
 
+	}
+
+	
+	public final ValueArrayList getProperties() {
+		
+		return getOptionalParam().getParamList();
 	}
 
 }

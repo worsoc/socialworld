@@ -32,7 +32,10 @@ import org.socialworld.calculation.Value;
 import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.core.Event;
+import org.socialworld.knowledge.Knowledge;
+import org.socialworld.knowledge.KnowledgeElement;
 import org.socialworld.knowledge.KnownPathsPool;
+import org.socialworld.knowledge.LastPerceivedObjects;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenAnimal;
 import org.socialworld.objects.properties.IWeapon;
@@ -49,7 +52,8 @@ public class StateAnimal extends StateSimulationObject {
 	private Vector directionChest;
 	private Vector directionActiveMove;
 
-	
+	private LastPerceivedObjects lastPerceivedObjects;
+	protected Knowledge knowledge;
 	private KnownPathsPool knownPathsPool;
 
 	private Inventory inventory;
@@ -60,7 +64,9 @@ public class StateAnimal extends StateSimulationObject {
 	public StateAnimal() {
 		super();
 		
+		knowledge = new Knowledge();
 		knownPathsPool = new KnownPathsPool();
+		lastPerceivedObjects = new LastPerceivedObjects(10);
 		
 		grantAccessToPropertyAttributes = new GrantedAccessToProperty[1];
 		grantAccessToPropertyAttributes[0] = GrantedAccessToProperty.attributes;
@@ -131,11 +137,48 @@ public class StateAnimal extends StateSimulationObject {
 		return this.knownPathsPool;
 	}
 	
-	final void addPath(Path path, WriteAccessToAnimal guard)  {
+	final public void addPath(Path path, WriteAccessToAnimal guard)  {
 		if (checkGuard(guard)) {
 			this.knownPathsPool.addPath(path);
 		}
 	}
+	
+	final public void addKnowledgeElement(KnowledgeElement knowledgeElement, WriteAccessToAnimal guard) {
+		if (checkGuard(guard)) {
+			this.knowledge.addKnowledge(knowledgeElement);
+		}
+	}
+
+	final public void addLastSeen(SimulationObject element, WriteAccessToAnimal guard) {
+		if (checkGuard(guard)) {
+			this.lastPerceivedObjects.addLastSeen(element);
+		}
+	}
+	
+	final public void addLastHeard(SimulationObject element, WriteAccessToAnimal guard) {
+		if (checkGuard(guard)) {
+			this.lastPerceivedObjects.addLastHeard(element);
+		}
+	}
+
+	final public void addLastSmelled(SimulationObject element, WriteAccessToAnimal guard) {
+		if (checkGuard(guard)) {
+			this.lastPerceivedObjects.addLastSmelled(element);
+		}
+	}
+
+	final public SimulationObject getLastSeen() {
+		return this.lastPerceivedObjects.getLastSeen();
+	}
+
+	final public SimulationObject getLastHeard() {
+		return this.lastPerceivedObjects.getLastSeen();
+	}
+
+	final public SimulationObject getLastSmelled() {
+		return this.lastPerceivedObjects.getLastSmelled();
+	}
+
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    DIRECTIONS  ///////////////////////////////////////////////

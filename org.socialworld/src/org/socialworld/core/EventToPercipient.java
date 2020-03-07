@@ -5,6 +5,7 @@ import org.socialworld.attributes.Position;
 import org.socialworld.attributes.Time;
 import org.socialworld.attributes.percipience.Percipience;
 import org.socialworld.attributes.percipience.PercipienceType;
+import org.socialworld.collections.ValueArrayList;
 import org.socialworld.objects.Animal;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.properties.IPerceptible;
@@ -42,6 +43,12 @@ public class EventToPercipient extends Event implements IPerceptible {
 		return this.getEventType() == EventType.percipientExists;
 	}
 	
+	
+	public final ValueArrayList getProperties() {
+		
+		return getOptionalParam().getParamList();
+	}
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    implementing IPerceptible     ////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////

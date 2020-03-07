@@ -21,9 +21,24 @@
 */
 package org.socialworld.knowledge;
 
+import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Word;
 
 public class KnowledgeRelationUnaer extends KnowledgeRelation {
+
+	public KnowledgeRelationUnaer() {
+		
+	}
+	
+	public KnowledgeRelationUnaer(KnowledgeRelationUnaer original) {
+		if (original != null) {
+			// TODO
+		}
+	}
+	
+	KnowledgeFact copy() {
+		return new KnowledgeRelationUnaer(this);
+	}
 
 	@Override
 	public Word getVerb() {
@@ -40,6 +55,11 @@ public class KnowledgeRelationUnaer extends KnowledgeRelation {
 		return getLexemSubject().getWord(getNumerusSubject());
 	}
 
-	
+	Lexem[] getValues() {
+		Lexem[] result = new Lexem[1];
+		result[0] = getLexemSubject();
+		
+		return result;
+	}
 	
 }

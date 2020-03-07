@@ -6,6 +6,7 @@ import java.util.List;
 import org.socialworld.actions.ActionPerformer;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.Time;
+import org.socialworld.collections.ValueArrayList;
 import org.socialworld.objects.SimulationObject;
 
 public class EventToTarget extends Event {
@@ -49,6 +50,11 @@ public class EventToTarget extends Event {
 			targets = new ArrayList<SimulationObject>();
 		}
 		return targets;
+	}
+
+	public final ValueArrayList getProperties() {
+		
+		return getOptionalParam().getParamList();
 	}
 
 }

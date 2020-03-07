@@ -34,10 +34,11 @@ import org.socialworld.datasource.tablesSimulation.TableKnowledgeFactAndSource;
 import org.socialworld.datasource.tablesSimulation.TableKnowledgePool;
 import org.socialworld.datasource.tablesSimulation.TableSentenceList;
 import org.socialworld.knowledge.Acquaintance;
+import org.socialworld.knowledge.KnowledgeElement;
 import org.socialworld.knowledge.KnowledgeFact;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.knowledge.KnowledgeFact_Value;
-import org.socialworld.knowledge.KnowledgeProperties;
+import org.socialworld.knowledge.KnowledgeProperty;
 import org.socialworld.knowledge.KnowledgeSource;
 import org.socialworld.knowledge.KnowledgeSource_Type;
 import org.socialworld.objects.*;
@@ -246,16 +247,17 @@ public class LoadHuman extends LoadAnimal {
 		int origin_id;
 		SimulationObject origin;
 		
-		KnowledgeFact facts[];
-		KnowledgeSource sources[];
+		KnowledgeFact fact;
+		KnowledgeSource source;
+		KnowledgeElement knowledgeElement;
 		
 		tableKnowledgeFactAndSource.select(tableKnowledgeFactAndSource.SELECT_ALL_COLUMNS, " WHERE kfs_id = " + kfs_id, "");
 		allLfdNrForKFSID = tableKnowledgeFactAndSource.getAllPK2ForPK1(kfs_id);
 		size = allLfdNrForKFSID.length;
 		
-		facts = new KnowledgeFact[size];
-		sources = new KnowledgeSource[size];
 		
+		knowledgeElement = new KnowledgeElement(AllWords.getWord(subject).getLexem());
+
 		for (index = 0; index < size; index++) {
 			row = tableKnowledgeFactAndSource.getIndexFor2PK(kfs_id, allLfdNrForKFSID[index]);
 			if (row >= 0) {
@@ -268,11 +270,15 @@ public class LoadHuman extends LoadAnimal {
 				origin_id = tableKnowledgeFactAndSource.getOrigin(row);
 				origin = allObjects.get(origin_id);
 				
-				facts[index] = new KnowledgeFact(kfc, new KnowledgeFact_Value(word.getLexem()));
-				sources[index] = new KnowledgeSource(sourceType, origin);
+				fact = new KnowledgeProperty(kfc, new KnowledgeFact_Value(word.getLexem()));
+				source = new KnowledgeSource(sourceType, origin);
+				
+				knowledgeElement.add(fact, source);
+
 			}
 		}
-		hiddenHuman.addKnowledgeProperties(new KnowledgeProperties(AllWords.getWord(subject).getLexem(), facts, sources ));
+		
+		hiddenHuman.addKnowledgeElement(knowledgeElement);
 	}
 
 

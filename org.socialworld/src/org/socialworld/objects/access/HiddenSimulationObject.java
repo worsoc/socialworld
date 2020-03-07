@@ -133,6 +133,10 @@ public class HiddenSimulationObject {
 		return wa.setReactionTypes(types, this);
 	}
 
+	public int setPerceptionTypes(int types[]) {
+		return wa.setPerceptionTypes(types, this);
+	}
+
 	public int setState2ActionType(int type) {
 		return wa.setState2ActionType(type, this);
 	}

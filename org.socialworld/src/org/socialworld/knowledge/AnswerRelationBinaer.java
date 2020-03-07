@@ -23,8 +23,15 @@ package org.socialworld.knowledge;
 
 import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Numerus;
+import org.socialworld.conversation.Word;
 
 public class AnswerRelationBinaer extends KnowledgeRelationBinaer implements IAnswer{
+
+	private KnowledgeSource source;
+	
+	public AnswerRelationBinaer(KnowledgeRelationBinaer original) {
+		super(original);
+	}
 
 	public KnowledgeType getType() { return KnowledgeType.relationBinaer; }
 
@@ -33,4 +40,11 @@ public class AnswerRelationBinaer extends KnowledgeRelationBinaer implements IAn
 		setNumerusSubject(numerus);
 	}
 	
+
+	public void setSource(KnowledgeSource source) {
+		this.source = source;
+	}
+
+	public KnowledgeSource getSource() { return this.source; }
+
 }
