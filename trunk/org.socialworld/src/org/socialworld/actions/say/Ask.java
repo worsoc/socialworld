@@ -1,6 +1,6 @@
 /*
 * Social World
-* Copyright (C) 2015  Mathias Sikos
+* Copyright (C) 2020  Mathias Sikos
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -33,12 +33,18 @@ import org.socialworld.objects.SimulationObject;
 
 /**
  * German:
- * Die Klasse Say ist von der abstrakten Klasse ActionPerformer abgeleitet.
+ * Die Klasse Ask ist von der abstrakten Klasse ActionPerformer abgeleitet.
  * 
- * Die Klasse Say dient der Wirksamwerdung der Aktion,
+ * Die Klasse Ask dient der Wirksamwerdung der Aktion,
  *  nämlich als Argument für das zur Aktion gehörende Ereignis.
  *
- *   Für die Bereitstellung der Parameter ist es unerheblich, ob 
+ *  In der Ausführungsmethode perform() werden
+ *   - der (Gesprächs)partner (ein Objekt der Klasse Human)
+ *   - die Richtung (in die gesprochen wird)
+ *   - die Frage (als Satz (also String))
+ *   für den Standardzugriff aus dem Ereignis heraus bereitgestellt.
+ *   
+ *   Für die Bereitstellung der Parameter ist es unerheblich, ob die die Frage
  *    normal gesprochen, geflüstert oder geschrien wird.
  *     Diese Unterscheidung steckt bereits im EventType des Ereignisses.
  *    
@@ -46,10 +52,10 @@ import org.socialworld.objects.SimulationObject;
  * @author Mathias Sikos
  *
  */
-public class Say extends ActionPerformer {
+public class Ask extends ActionPerformer {
 
 	
-    public Say (ActionSay action) {
+    public Ask (ActionSay action) {
     	super(action);
     	
     }
@@ -78,7 +84,7 @@ public class Say extends ActionPerformer {
     		addProperty(property);
     	}
 
-
+ 
       	property = properties.getValue(Value.VALUE_BY_NAME_ACTION_SENTENCE);
     	if (property.isValid()) {
     		addProperty(property);
@@ -97,8 +103,10 @@ public class Say extends ActionPerformer {
 			
 	 		ActionSay originalAction;
 			Human actor;
+			Human partner;
 			ActionMode mode;
 			
+			String question;
 			
 			originalAction = (ActionSay) getOriginalActionObject();
 			actor = (Human) originalAction.getActor();

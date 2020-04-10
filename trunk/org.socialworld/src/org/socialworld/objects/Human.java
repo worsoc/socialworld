@@ -28,7 +28,7 @@ import org.socialworld.attributes.percipience.Percipience;
 import org.socialworld.attributes.percipience.PercipienceType;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.knowledge.Acquaintance;
-import org.socialworld.knowledge.AnswerProperty;
+import org.socialworld.knowledge.IAnswer;
 import org.socialworld.objects.concrete.StatePerceptible;
 import org.socialworld.objects.concrete.animals.Mammal;
 import org.socialworld.objects.concrete.animals.StateSeer;
@@ -97,7 +97,7 @@ import org.socialworld.core.IEventParam;
 		return this.state.getLastSaidSentence();
 	}
 
-	final public List<AnswerProperty> getAnswersForQuestion(String question) {
+	final public List<IAnswer> getAnswersForQuestion(String question) {
 		// no copy
 		// because a new answer is created in method KnowledgePool.getAnswerForQuestion()
 		return this.state.getAnswersForQuestion(question);

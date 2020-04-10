@@ -25,12 +25,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.calculation.Value;
+import org.socialworld.collections.ValueArrayList;
 import org.socialworld.conversation.Talk_SentenceType;
 import org.socialworld.core.Event;
 import org.socialworld.core.EventType;
 import org.socialworld.core.IEventParam;
 import org.socialworld.core.SocialWorldThread;
-import org.socialworld.knowledge.AnswerProperty;
+import org.socialworld.knowledge.Acquaintance;
+import org.socialworld.knowledge.IAnswer;
 import org.socialworld.knowledge.KnowledgeSource;
 import org.socialworld.knowledge.KnowledgeSource_Type;
 import org.socialworld.objects.Human;
@@ -118,7 +120,7 @@ public class TalkCalculator  extends SocialWorldThread {
 		case selfAnswerNormal:
 		case selfAnswerScream:
 		case selfAnswerWhisper:
-			calculateAnswer(event, eventType, stateHuman, hiddenWriteAccess);
+			calculateAnswers(event, eventType, stateHuman, hiddenWriteAccess);
 			break;
 			
 			
@@ -201,35 +203,63 @@ public class TalkCalculator  extends SocialWorldThread {
 
 	}
 
-	private final static void calculateAnswer(Event event, EventType eventType, StateHuman stateHuman, HiddenHuman hiddenWriteAccess) {
+	private final static void calculateAnswers(Event event, EventType eventType, StateHuman stateHuman, HiddenHuman hiddenWriteAccess) {
 		IEventParam params;
 		Value value;
 
-		AnswerProperty answer;
+		ValueArrayList answers;
+		
+		IAnswer answer;
 		Human partner;
 
 		if (event.hasOptionalParam()) {
 
 			params = event.getOptionalParam();
 			
-			value = params.getParam("partner");
+			value = params.getParam(Value.VALUE_BY_NAME_ACTION_TARGET);
 			if (value.isValid())
 				partner = (Human) value.getValue();
 			else
 				return;
 	
-			value = params.getParam("answer");
+			value = params.getParam(Value.VALUE_BY_NAME_ACTION_ANSWERS);
 			if (value.isValid())
-				answer = (AnswerProperty) value.getValue();
+				answers = (ValueArrayList) value.getValue();
 			else
 				return;
 			
 			// There is a parameter direction, too   (Type.vector, "direction").
 			// But it is ignored for talk calculation.
-				
-			hiddenWriteAccess.addAnswer(answer,  partner); 
+			
+			Acquaintance acquaintance;
+			acquaintance = stateHuman.getAcquaintance(partner);
+
+			for (int i = 0; i < answers.size(); i++) {
+				answer = (IAnswer) answers.get(i).getValue();
+				manipulateAnswer(answer, acquaintance, stateHuman,  partner);
+				hiddenWriteAccess.addAnswer(answer,  partner); 
+			}
 
 		}
 		
 	}
+	
+	
+	private static void manipulateAnswer(IAnswer answer, Acquaintance acquaintance, final StateHuman stateHuman,  final Human partner) {
+		
+		
+		// TODO implement manipulateAnswer()
+		// more complex, please
+		// here only an example for an easy decision
+		
+		/*
+		if (acquaintance.isAttributeValueLessThan(Acquaintance_Attribute.sympathy, AttributeArray.ATTRIBUTE_VALUE_MIDDLE) ) 
+			answer.reduceToFactWithMinAccessCount();
+		else if (acquaintance.isAttributeValueGreaterThan(Acquaintance_Attribute.sympathy, AttributeArray.ATTRIBUTE_VALUE_MIDDLE) ) 
+			answer.sortBySource();
+		else answer.reduceToFactWithMaxAccessCount();
+		
+		*/
+	}
+
 }

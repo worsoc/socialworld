@@ -308,10 +308,14 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_TARGET + ")", Value.VALUE_BY_NAME_ACTION_TARGET);
 				result.add( new FunctionByExpression(startExpression) );
 				
-				// Question
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_QUESTION + ")", Value.VALUE_BY_NAME_ACTION_QUESTION);
+				// Sentence
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCE + ")", Value.VALUE_BY_NAME_ACTION_SENTENCE);
 				result.add( new FunctionByExpression(startExpression) );
 
+				// SentenceType
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCETYPE + ")", Value.VALUE_BY_NAME_ACTION_SENTENCETYPE);
+				result.add( new FunctionByExpression(startExpression) );
+				
 				break;
 				
 			case askNormal:
@@ -326,8 +330,12 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_TARGET + ")", Value.VALUE_BY_NAME_ACTION_TARGET);
 				result.add( new FunctionByExpression(startExpression) );
 				
-				// Question
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_QUESTION + ")", Value.VALUE_BY_NAME_ACTION_QUESTION);
+				// Sentence
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCE + ")", Value.VALUE_BY_NAME_ACTION_SENTENCE);
+				result.add( new FunctionByExpression(startExpression) );
+
+				// SentenceType
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCETYPE + ")", Value.VALUE_BY_NAME_ACTION_SENTENCETYPE);
 				result.add( new FunctionByExpression(startExpression) );
 				
 				break;
@@ -346,6 +354,10 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCE + ")", Value.VALUE_BY_NAME_ACTION_SENTENCE);
 				result.add( new FunctionByExpression(startExpression) );
 
+				// SentenceType
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCETYPE + ")", Value.VALUE_BY_NAME_ACTION_SENTENCETYPE);
+				result.add( new FunctionByExpression(startExpression) );
+				
 				break;
 				
 			case scream:
@@ -366,6 +378,10 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCE + ")", Value.VALUE_BY_NAME_ACTION_SENTENCE);
 				result.add( new FunctionByExpression(startExpression) );
 
+				// SentenceType
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCETYPE + ")", Value.VALUE_BY_NAME_ACTION_SENTENCETYPE);
+				result.add( new FunctionByExpression(startExpression) );
+				
 				break;
 				
 			case whisper:
@@ -382,6 +398,10 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCE + ")", Value.VALUE_BY_NAME_ACTION_SENTENCE);
 				result.add( new FunctionByExpression(startExpression) );
 
+				// SentenceType
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCETYPE + ")", Value.VALUE_BY_NAME_ACTION_SENTENCETYPE);
+				result.add( new FunctionByExpression(startExpression) );
+				
 				break;
 				
 			case sleep:

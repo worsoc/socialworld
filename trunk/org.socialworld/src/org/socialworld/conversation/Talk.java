@@ -32,6 +32,7 @@ public class Talk {
 	private Human partner;
 	private SentenceMaker sentenceMaker;
 	private ArrayList<String> myPlannedSentences;
+	private ArrayList<String> myPlannedAnswers;
 	private ArrayList<String> myPlannedQuestions;
 	private ArrayList<String> partnersSentences;
 	private ArrayList<String> partnersQuestions;
@@ -39,6 +40,7 @@ public class Talk {
 	public Talk(Human partner) {
 		this.partner = partner;
 		myPlannedSentences = new ArrayList<String>();
+		myPlannedAnswers = new ArrayList<String>();
 		myPlannedQuestions = new ArrayList<String>();
 		partnersSentences = new ArrayList<String>();
 		partnersQuestions = new ArrayList<String>();
@@ -47,13 +49,13 @@ public class Talk {
 	public void addAnswer(IAnswer answer) {
 		switch (answer.getType()) {
 		case property: 
-			addSentence(makeAnswerSentence((AnswerProperty)answer), Talk_SentenceType.myPlannedSentence);
+			addSentence(makeAnswerSentence((AnswerProperty)answer), Talk_SentenceType.myPlannedAnswer);
 		case relationUnaer: 
-			addSentence(makeAnswerSentence((AnswerRelationUnaer)answer), Talk_SentenceType.myPlannedSentence);
+			addSentence(makeAnswerSentence((AnswerRelationUnaer)answer), Talk_SentenceType.myPlannedAnswer);
 		case relationBinaer: 
-			addSentence(makeAnswerSentence((AnswerRelationBinaer)answer), Talk_SentenceType.myPlannedSentence);
+			addSentence(makeAnswerSentence((AnswerRelationBinaer)answer), Talk_SentenceType.myPlannedAnswer);
 		case relationTrinaer: 
-			addSentence(makeAnswerSentence((AnswerRelationTrinaer)answer), Talk_SentenceType.myPlannedSentence);
+			addSentence(makeAnswerSentence((AnswerRelationTrinaer)answer), Talk_SentenceType.myPlannedAnswer);
 		}
 	}
 
@@ -85,6 +87,8 @@ public class Talk {
 		switch (type) {
 		case myPlannedSentence:
 			myPlannedSentences.add(sentence);
+		case myPlannedAnswer:
+			myPlannedAnswers.add(sentence);
 		case myPlannedQuestion:
 			myPlannedQuestions.add(sentence);
 		case partnersSentence:
@@ -101,6 +105,8 @@ public class Talk {
 		switch (type) {
 		case myPlannedSentence:
 			return getMyPlannedSentence();
+		case myPlannedAnswer:
+			return getMyPlannedAnswer();
 		case myPlannedQuestion:
 			return getMyPlannedQuestion();
 		case partnersSentence:
@@ -129,6 +135,13 @@ public class Talk {
 	private String getMyPlannedSentence() {
 		if (myPlannedSentences.size() > 0)
 			return  myPlannedSentences.remove(0);
+		else
+			return null;
+	}
+
+	private String getMyPlannedAnswer() {
+		if (myPlannedAnswers.size() > 0)
+			return  myPlannedAnswers.remove(0);
 		else
 			return null;
 	}

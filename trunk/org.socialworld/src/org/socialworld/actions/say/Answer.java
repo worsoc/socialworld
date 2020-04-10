@@ -1,6 +1,6 @@
 /*
 * Social World
-* Copyright (C) 2015  Mathias Sikos
+* Copyright (C) 2020  Mathias Sikos
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -26,30 +26,42 @@ import java.util.List;
 
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionPerformer;
+import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
+import org.socialworld.conversation.SentenceType;
+import org.socialworld.knowledge.IAnswer;
 import org.socialworld.objects.Human;
 import org.socialworld.objects.SimulationObject;
 
 /**
  * German:
- * Die Klasse Say ist von der abstrakten Klasse ActionPerformer abgeleitet.
+ * Die Klasse Answer ist von der abstrakten Klasse ActionPerformer abgeleitet.
  * 
- * Die Klasse Say dient der Wirksamwerdung der Aktion,
+ * Die Klasse Answer dient der Wirksamwerdung der Aktion,
  *  nämlich als Argument für das zur Aktion gehörende Ereignis.
  *
- *   Für die Bereitstellung der Parameter ist es unerheblich, ob 
+ *  In der Ausführungsmethode perform() werden 
+ *   - der (Gesprächs)partner (ein Objekt der Klasse Human)
+ *   - die Richtung (in die gesprochen wird)
+ *   - die Antwort
+ *   für den Standardzugriff aus dem Ereignis heraus bereitgestellt.
+ *   
+ *   Für die Bereitstellung der Parameter ist es unerheblich, ob die Antwort 
  *    normal gesprochen, geflüstert oder geschrien wird.
  *     Diese Unterscheidung steckt bereits im EventType des Ereignisses.
  *    
+ * Die Antwort auf eine Frage wird in Abhängigkeit der Beziehung zum Gesprächspartner
+ *  (also die Qualität der Bekanntschaft) manipuliert.
+ *  Dadurch wird erreicht, dass der Antworter auf eine Frage nicht grundsätzlich gleich antwortet.
  *  
  * @author Mathias Sikos
  *
  */
-public class Say extends ActionPerformer {
+public class Answer extends ActionPerformer {
 
 	
-    public Say (ActionSay action) {
+    public Answer (ActionSay action) {
     	super(action);
     	
     }
@@ -97,26 +109,71 @@ public class Say extends ActionPerformer {
 			
 	 		ActionSay originalAction;
 			Human actor;
+			Human partner;
 			ActionMode mode;
 			
+			SentenceType sentenceType;
+			String sentence;
 			
 			originalAction = (ActionSay) getOriginalActionObject();
 			actor = (Human) originalAction.getActor();
 			mode = originalAction.getMode();
 			
+			
 			switch (mode) {
+				case answerNormal:
+				case answerScream:
+				case answerWhisper:
 					
-				case askNormal:
-				case askScream:
-				case askWhisper:
-										
+					Value tmp;
 
-					break;
+					tmp = getParam(Value.VALUE_BY_NAME_ACTION_TARGET);
+					if (tmp.isValid()) {
+						partner = (Human) tmp.getValueCopy();
+					}
+					else {
+						partner = (Human) originalAction.getTarget();
+						setParam( new Value(Type.simulationObject, Value.VALUE_BY_NAME_ACTION_TARGET, partner ));
+					}
+
+					List<IAnswer> answers;
 					
-				case normal:
-				case scream:
-				case whisper:
-										
+					
+					tmp = getParam(Value.VALUE_BY_NAME_ACTION_SENTENCETYPE);
+					if (tmp.isValid()) {
+						sentenceType = SentenceType.getSentenceType((int) tmp.getValueCopy());
+					}
+					else {
+						sentenceType = originalAction.getSentenceType();
+						setParam( new Value(Type.integer, Value.VALUE_BY_NAME_ACTION_SENTENCETYPE, sentenceType.getIndex()));
+					}
+					
+					tmp = getParam(Value.VALUE_BY_NAME_ACTION_SENTENCE);
+					if (tmp.isValid()) {
+						sentence = (String) tmp.getValueCopy();
+					}
+					else {
+						sentence = originalAction.getSentence();
+						setParam( new Value(Type.string, Value.VALUE_BY_NAME_ACTION_SENTENCE, sentence));
+					}
+					
+					if (sentence != null) {
+					
+						switch(sentenceType) {
+							case say:
+								break;
+							case question:
+								answers =  actor.getAnswersForQuestion(sentence);
+								addParam( new Value(Type.valueList, Value.VALUE_BY_NAME_ACTION_ANSWERS, new ValueArrayList(answers, Type.answer)));
+								break;
+							case answer:
+								break;
+							default:
+						}
+	
+					}
+					
+		
 					
 					break;
 					

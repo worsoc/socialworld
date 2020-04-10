@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import org.socialworld.conversation.Talk;
 import org.socialworld.conversation.Talk_SentenceType;
 import org.socialworld.knowledge.Acquaintance;
-import org.socialworld.knowledge.AnswerProperty;
+import org.socialworld.knowledge.IAnswer;
 import org.socialworld.knowledge.KnowledgeElement;
 import org.socialworld.knowledge.KnowledgeSource;
 import org.socialworld.objects.Human;
@@ -53,7 +53,7 @@ public class HiddenHuman extends HiddenAnimal {
 		return wa.addFactsFromSentence(sentence, source, this);
 	}
 	
-	public int addAnswer(AnswerProperty answer,  Human partner) {
+	public int addAnswer(IAnswer answer,  Human partner) {
 		return wa.addAnswer(answer, partner, this);
 	}
 	

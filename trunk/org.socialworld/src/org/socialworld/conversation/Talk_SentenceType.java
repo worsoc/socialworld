@@ -23,8 +23,8 @@ package org.socialworld.conversation;
 
 
 public enum Talk_SentenceType {
-	myPlannedSentence(1), myPlannedQuestion(2), partnersSentence(3), partnersQuestion(4),
-	partnersInstruction(5), partnersUnknownType(6);
+	myPlannedSentence(1), myPlannedQuestion(2), myPlannedAnswer(3), partnersSentence(4), partnersQuestion(5),
+	partnersInstruction(6), partnersUnknownType(7);
 
 	private int arrayIndex;
 

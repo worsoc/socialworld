@@ -25,12 +25,14 @@ package org.socialworld.actions.say;
 
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
+import org.socialworld.actions.ActionPerformer;
 import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.ActualTime;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.collections.ValueArrayList;
+import org.socialworld.conversation.SentenceType;
 import org.socialworld.conversation.Talk_SentenceType;
 import org.socialworld.core.Event;
 import org.socialworld.core.EventToCandidates;
@@ -80,10 +82,10 @@ import org.socialworld.objects.SimulationObject;
  */
 public class ActionSay extends AbstractAction {
 
-	private Say say;
+	private ActionPerformer say;
 	
-	private String question;
 	private String sentence;
+	private SentenceType sentenceType = SentenceType.nothing;
 	
 	private SimulationObject target;
 	private Vector direction;
@@ -138,18 +140,36 @@ public class ActionSay extends AbstractAction {
 					case answerScream:
 					case answerWhisper:
 					
-						question = ((Human) actor).getSentence(partner, Talk_SentenceType.partnersQuestion);
-						if (question == null) return;
-						
+						sentence = ((Human) actor).getSentence(partner, Talk_SentenceType.partnersQuestion);
+						if (sentence == null) {
+							sentence = ((Human) actor).getSentence(partner, Talk_SentenceType.myPlannedAnswer);
+							if (sentence == null) {
+								return;
+							}
+							else {
+								sentenceType = SentenceType.answer;
+							}
+							
+						}
+						else {
+							sentenceType = SentenceType.question;
+						}
+	
+				 		this.say = new Answer(this);
+
 						break;
 						
 					case askNormal:
 					case askScream:
 					case askWhisper:
 					
-						question = ((Human) actor).getSentence(partner, Talk_SentenceType.myPlannedQuestion);
-						if (question == null) return;
-		
+						sentence = ((Human) actor).getSentence(partner, Talk_SentenceType.myPlannedQuestion);
+						if (sentence == null) return;
+						
+						sentenceType = SentenceType.question;
+						
+				 		this.say = new Ask(this);
+
 						break;
 						
 					default:
@@ -158,7 +178,6 @@ public class ActionSay extends AbstractAction {
 				}
 				
 				
-		 		this.say = new Say(this);
 		 		eventType = getEventType(type, mode);
 				if (eventType != EventType.nothing) {
 					event = new EventToTarget(eventType,    actor /* as causer*/,  ActualTime.asTime(),
@@ -183,6 +202,8 @@ public class ActionSay extends AbstractAction {
 						return;
 				}
 
+				sentenceType = SentenceType.say;
+				
 		 		this.say = new Say(this);
 		 		eventType = getEventType(type, mode);
 				if (eventType != EventType.nothing) {
@@ -308,12 +329,13 @@ public class ActionSay extends AbstractAction {
 		this.direction = direction;
 	}
 
-	String getQuestion() {
-		return this.question;
+
+	SentenceType getSentenceType() {
+		return this.sentenceType;
 	}
 	
-	public Value getQuestionAsValue(String valueName) {
-		return new Value(Type.string, valueName, this.question);
+	public Value getSentenceTypeAsValue(String valueName) {
+		return new Value(Type.integer, valueName, this.sentenceType.getIndex());
 	}
 
 	String getSentence() {
@@ -347,7 +369,7 @@ public class ActionSay extends AbstractAction {
 		ValueArrayList propertiesAsValueList = new ValueArrayList();
 		
 		propertiesAsValueList.add(getTargetAsValue(Value.VALUE_BY_NAME_ACTION_TARGET));
-		propertiesAsValueList.add(getQuestionAsValue(Value.VALUE_BY_NAME_ACTION_QUESTION));
+		propertiesAsValueList.add(getSentenceTypeAsValue(Value.VALUE_BY_NAME_ACTION_SENTENCETYPE));
 		propertiesAsValueList.add(getSentenceAsValue(Value.VALUE_BY_NAME_ACTION_SENTENCE));
 		paramObject.answerPropertiesRequest(propertiesAsValueList);
 	
