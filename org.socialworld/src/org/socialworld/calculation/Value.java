@@ -35,8 +35,8 @@ public class Value {
 	public static String VALUE_BY_NAME_ACTION_DIRECTION = "directionAction";
 	public static String VALUE_BY_NAME_ACTION_TARGET = "targetAction";
 	public static String VALUE_BY_NAME_ACTION_SENTENCE = "sentenceAction";
-	public static String VALUE_BY_NAME_ACTION_QUESTION = "questionAction";
-	public static String VALUE_BY_NAME_ACTION_ANSWER = "answerAction";
+	public static String VALUE_BY_NAME_ACTION_SENTENCETYPE = "sentenceTypeAction";
+	public static String VALUE_BY_NAME_ACTION_ANSWERS = "answersAction";
 	
 	public static String VALUE_BY_NAME_ACTION_MOVE_ACCELERATION = "acceleration";
 	public static String VALUE_BY_NAME_ACTION_MOVE_VELOCITY = "velocity";

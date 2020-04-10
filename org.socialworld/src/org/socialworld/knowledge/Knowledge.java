@@ -142,7 +142,7 @@ public class Knowledge {
 		
 	}
 	
-	public List<AnswerProperty> getAnswersForQuestion(String question){
+	public List<IAnswer> getAnswersForQuestion(String question){
 		Word subject;
 		Lexem lexemSubject;
 		Numerus numerusSubject;
@@ -158,8 +158,8 @@ public class Knowledge {
 		KnowledgeElement knowledgeElement;
 		ReadOnlyIterator<KnowledgeFact_Criterion> criterions = null;
 		
-		AnswerProperty answer;
-		List<AnswerProperty> answers;
+		IAnswer answer;
+		List<IAnswer> answers;
 		boolean withAnswer = false;
 		
 		speechRecognition.analyseSentence(question);
@@ -173,7 +173,7 @@ public class Knowledge {
 		indexesForSubject = findAllKnowledgeElementsForSubject(lexemSubject);
 		countKnowledges = indexesForSubject.length;
 		
-		answers = new ArrayList<AnswerProperty>();
+		answers = new ArrayList<IAnswer>();
 		
 		// TODO iterate over criterions
 		for (indexKnowledge = 0;indexKnowledge < countKnowledges; indexKnowledge++) {

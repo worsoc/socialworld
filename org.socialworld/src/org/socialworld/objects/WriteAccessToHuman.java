@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import org.socialworld.conversation.Talk;
 import org.socialworld.conversation.Talk_SentenceType;
 import org.socialworld.knowledge.Acquaintance;
-import org.socialworld.knowledge.AnswerProperty;
+import org.socialworld.knowledge.IAnswer;
 import org.socialworld.knowledge.KnowledgeElement;
 import org.socialworld.knowledge.KnowledgeSource;
 import org.socialworld.objects.access.GrantedAccessToProperty;
@@ -74,7 +74,7 @@ public class WriteAccessToHuman extends WriteAccessToAnimal {
 			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
 	}
 	
-	public int addAnswer(AnswerProperty answer,  Human partner, HiddenSimulationObject caller) {
+	public int addAnswer(IAnswer answer,  Human partner, HiddenSimulationObject caller) {
 		if (checkCaller(caller)) 
 			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.answer)) {
 				humanState.addAnswer(answer, partner, this);

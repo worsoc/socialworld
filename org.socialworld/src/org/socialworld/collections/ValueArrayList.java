@@ -16,6 +16,14 @@ public class ValueArrayList {
 		this.nothing = new Value();
 	}
 	
+	public ValueArrayList(List values, Type type) {
+		this.values = new ArrayList<Value>();
+		for (int i = 0; i < values.size(); i++) {
+			add(new Value(type, values.get(i)));
+		}
+		this.nothing = new Value();
+	}
+	
 	public ValueArrayList(int size) {
 		
 		this.values = new ArrayList<Value>();
