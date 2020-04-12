@@ -26,10 +26,10 @@ import org.socialworld.conversation.Lexem;
 public class KnowledgeFactPool {
 	
 	private static KnowledgeFactPool instance;
-	KnowledgeFactList[] factListsByCriterion;
+	KnowledgeAtomList[] factListsByCriterion;
 	
 	private KnowledgeFactPool() {
-		factListsByCriterion = new KnowledgeFactList[KnowledgeFact_Criterion.NUMBER_OF_KNOWLEDGE_FACT_CRITERION];
+		factListsByCriterion = new KnowledgeAtomList[KnowledgeFact_Criterion.NUMBER_OF_KNOWLEDGE_FACT_CRITERION];
 		
 		createPool();
 	}

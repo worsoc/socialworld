@@ -23,35 +23,13 @@ package org.socialworld.knowledge;
 
 import org.socialworld.conversation.Lexem;
 
-public abstract class KnowledgeFact {
+public abstract class KnowledgeFact extends KnowledgeAtom {
 	
 	
-	private int itemAccessCount;
-	private boolean itemIsValid;
 	
 	abstract Lexem[] getValues();
 	abstract KnowledgeFact_Criterion getCriterion();
 
-	abstract KnowledgeFact copy();
 	
-	void setValid(boolean isValid) {
-		this.itemIsValid = isValid;
-	}
-	
-	boolean isItemValid() {
-		return this.itemIsValid;
-	}
-	
-	void resetAcccessCount() {
-		this.itemAccessCount = 0;
-	}
-	
-	void incrementAccessCount() {
-		this.itemAccessCount++;
-	}
-	
-	int getItemAccessCount() {
-		return this.itemAccessCount;
-	}
 
 }

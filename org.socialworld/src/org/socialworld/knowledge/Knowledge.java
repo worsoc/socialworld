@@ -153,6 +153,7 @@ public class Knowledge {
 		int countFacts = 0;
 		int indexFact;
 		
+		KnowledgeAtom atom;
 		KnowledgeFact fact;
 		KnowledgeSource source;
 		KnowledgeElement knowledgeElement;
@@ -181,19 +182,21 @@ public class Knowledge {
 			knowledgeElement = getKnowledgeElement(indexesForSubject[indexKnowledge]);
 			indexesForCriterion = knowledgeElement.findFactsForCriterion(criterions.next());
 			countFacts = indexesForCriterion.length;
-			if (countFacts > 0) { 
-				withAnswer = true;
-			}
 			
 			for (indexFact = 0;indexFact < countFacts; indexFact++) {
-				fact = knowledgeElement.getFactAsCopy(indexesForCriterion[indexFact]);
-				source = knowledgeElement.getSourceAsCopy(indexesForCriterion[indexFact]);
+				atom = knowledgeElement.getAtomAsCopy(indexesForCriterion[indexFact]);
 				
-				answer = new AnswerProperty((KnowledgeProperty)fact);
-				answer.setSubject(lexemSubject, numerusSubject);
-				answer.setSource(source);
-				
-				answers.add(answer);
+				if (atom instanceof KnowledgeFact ) {
+					fact = (KnowledgeFact) atom;
+					source = knowledgeElement.getSourceAsCopy(indexesForCriterion[indexFact]);
+					
+					answer = new AnswerProperty((KnowledgeProperty)fact);
+					answer.setSubject(lexemSubject, numerusSubject);
+					answer.setSource(source);
+					
+					answers.add(answer);
+					withAnswer = true;
+				}
 			}
 		}
 
@@ -324,14 +327,14 @@ public class Knowledge {
 			return null;
 	}
 	
-	public KnowledgeFact getFact (int knowledgeElementIndex, int factIndex) {
+	public KnowledgeAtom getFact (int knowledgeElementIndex, int factIndex) {
 		if ( knowledgeElementIndex >= 0 & knowledgeElementIndex < MAXIMUM_KNOWLEDGE_POOL_CAPACITY) {
 			accessCount[knowledgeElementIndex]++;
 			if (accessCount[knowledgeElementIndex] > maxAccessCount) {
 				maxAccessCount = accessCount[knowledgeElementIndex];
 				maxAccessCountIndex = knowledgeElementIndex;
 			}
-			return knowledgeElementList[knowledgeElementIndex].getFactAsCopy(factIndex);
+			return knowledgeElementList[knowledgeElementIndex].getAtomAsCopy(factIndex);
 		}
 		else
 			return null;

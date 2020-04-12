@@ -29,7 +29,7 @@ public class KnowledgeElement {
 
 	private Lexem subject;
 	
-	private KnowledgeFactList knowledgeFactList;
+	private KnowledgeAtomList knowledgeAtomList;
 
 	public KnowledgeElement(Lexem subject) {
 		
@@ -39,11 +39,11 @@ public class KnowledgeElement {
 	}
 
 	private void init() {
-		this.knowledgeFactList = new KnowledgeFactList();
+		this.knowledgeAtomList = new KnowledgeAtomList();
 	}
 	
 	protected void setSubject(Lexem subject) {
-		if (knowledgeFactList.countValidItems() == 0)		this.subject = subject;
+		if (knowledgeAtomList.countValidItems() == 0)		this.subject = subject;
 	}
 	
 	Lexem getLexemSubject() {
@@ -55,27 +55,27 @@ public class KnowledgeElement {
 	}
 
 	public void add(KnowledgeFact fact, KnowledgeSource source) {
-		this.knowledgeFactList.add(fact, source);
+		this.knowledgeAtomList.add(fact, source);
 	}
 	
-	KnowledgeFact getFactAsCopy(int index) {
-		return this.knowledgeFactList.getFactAsCopy(index);
+	KnowledgeAtom getAtomAsCopy(int index) {
+		return this.knowledgeAtomList.getAtomAsCopy(index);
 	}
 
 	KnowledgeSource getSourceAsCopy(int index) {
-		return this.knowledgeFactList.getSourceAsCopy(index);
+		return this.knowledgeAtomList.getSourceAsCopy(index);
 	}
 
 	int[] findFactsForCriterion(KnowledgeFact_Criterion criterion) {
-		return this.knowledgeFactList.findFactsForCriterion(criterion);
+		return this.knowledgeAtomList.findFactsForCriterion(criterion);
 	}
 
-	private KnowledgeFactList getFactList() {
-		return this.knowledgeFactList;		
+	private KnowledgeAtomList getAtomList() {
+		return this.knowledgeAtomList;		
 	}
 	
 	int countValidFacts() {
-		return this.knowledgeFactList.countValidItems();
+		return this.knowledgeAtomList.countValidItems();
 	}
 	
 	public boolean isValid() {
@@ -87,7 +87,7 @@ public class KnowledgeElement {
 		int countEqual = 0;
 		
 		if (this.subject == keB.getLexemSubject()) {
-			countEqual = knowledgeFactList.compareTo(keB.getFactList());
+			countEqual = knowledgeAtomList.compareTo(keB.getAtomList());
 		}
 		
 		return countEqual;
@@ -95,7 +95,7 @@ public class KnowledgeElement {
 	}
 	
 	protected void combineWith(KnowledgeElement keB) {
-		this.getFactList().combineWith(keB.getFactList());
+		this.getAtomList().combineWith(keB.getAtomList());
 	}
 
 
