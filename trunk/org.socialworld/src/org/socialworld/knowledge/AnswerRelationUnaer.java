@@ -32,7 +32,7 @@ public class AnswerRelationUnaer extends KnowledgeRelationUnaer implements IAnsw
 		super(original);
 	}
 
-	public KnowledgeType getType() { return KnowledgeType.relationUnaer; }
+	public KnowledgeAtomType getType() { return KnowledgeAtomType.relationUnaer; }
 
 	public void setSubject(Lexem subject, Numerus numerus) {
 		setLexemSubject(subject);

@@ -21,7 +21,7 @@
 */
 package org.socialworld.knowledge;
 
-public enum KnowledgeType {
+public enum KnowledgeAtomType {
 
 	relationUnaer, relationBinaer, relationTrinaer, property;
 	
