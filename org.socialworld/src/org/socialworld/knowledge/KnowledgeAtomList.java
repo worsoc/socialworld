@@ -90,7 +90,6 @@ public class KnowledgeAtomList  {
 	public KnowledgeFact find(Lexem  value) {
 		KnowledgeAtom atom;
 		KnowledgeFact fact = null;
-		KnowledgeFact temp;
 		
 		Lexem lexems[];
 		int indexLexem;
@@ -107,20 +106,26 @@ public class KnowledgeAtomList  {
 		do
 		{
 			atom = atomSearchList.get(index);
-			if (atom instanceof KnowledgeFact ) {
-
-				fact = (KnowledgeFact) atom;
-				index++;
+			index++;
+			
+			if (atom.isItemValid()) {
 				
-				lexems = fact.getValues();
-				countLexems = lexems.length;
+				if (atom instanceof KnowledgeFact ) {
+	
+					fact = (KnowledgeFact) atom;
+					
+					lexems = fact.getValues();
+					countLexems = lexems.length;
+					
+					found = false;
+					for (indexLexem = 0; indexLexem < countLexems; indexLexem++) {
+						if (lexems[indexLexem] == value) found = true;
+					}
 				
-				found = false;
-				for (indexLexem = 0; indexLexem < countLexems; indexLexem++) {
-					if (lexems[indexLexem] == value) found = true;
 				}
 			
 			}
+
 			
 		}
 		while( found  | (index == count) );
@@ -128,18 +133,14 @@ public class KnowledgeAtomList  {
 		index--;
 		
 		// exchange the element for the previous one
+		// the knowledge fact is changed to any knowledge atom
 		if ( found && index > 0)  {
 			
 			// the previous list element
 			atom = atomSearchList.get(index - 1);
-			if (atom instanceof KnowledgeFact ) { 
-				
-				temp = (KnowledgeFact) atom;
-				
-				atomSearchList.set(index - 1, fact);
-				atomSearchList.set(index , temp);
-				
-			}
+					
+			atomSearchList.set(index - 1, fact);
+			atomSearchList.set(index , atom);
 			
 		}
 		
