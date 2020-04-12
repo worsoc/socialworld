@@ -32,7 +32,7 @@ public class AnswerRelationTrinaer extends KnowledgeRelationTrinaer implements I
 		super(original);
 	}
 
-	public KnowledgeType getType() { return KnowledgeType.relationTrinaer; }
+	public KnowledgeAtomType getType() { return KnowledgeAtomType.relationTrinaer; }
 
 	public void setSubject(Lexem subject, Numerus numerus) {
 		setLexemSubject(subject);
