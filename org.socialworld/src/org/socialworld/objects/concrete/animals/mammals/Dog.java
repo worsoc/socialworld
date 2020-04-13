@@ -9,7 +9,11 @@ import org.socialworld.objects.concrete.animals.StateSeer;
 
 public class Dog extends Mammal {
 
-	
+	protected int getLexemID() {
+		// TODO set lexemID
+		return 0;
+	}
+
 	protected State getInitState(String stateClassName) {
 		if (stateClassName.equals(StatePerceptible.class.getName())) {
 			Percipience percipience = new Percipience(PercipienceType.simobject);

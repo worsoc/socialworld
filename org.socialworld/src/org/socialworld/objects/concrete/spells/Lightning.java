@@ -9,6 +9,11 @@ import org.socialworld.objects.concrete.StatePerceptible;
 
 public class Lightning extends Magic {
 
+	protected int getLexemID() {
+		// TODO set lexemID
+		return 0;
+	}
+
 	protected State getInitState(String stateClassName) {
 		if (stateClassName.equals(StatePerceptible.class.getName())) {
 			Percipience percipience = new Percipience(PercipienceType.dynamic);

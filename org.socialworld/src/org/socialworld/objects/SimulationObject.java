@@ -31,7 +31,9 @@ import org.socialworld.attributes.Position;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.collections.ValueArrayList;
+import org.socialworld.conversation.Lexem;
 import org.socialworld.core.ActionHandler;
+import org.socialworld.core.AllWords;
 import org.socialworld.core.Event;
 import org.socialworld.core.EventToPercipient;
 import org.socialworld.core.EventType;
@@ -56,6 +58,8 @@ public abstract class SimulationObject extends ListenedBase implements IPercepti
 
 	private		int 			objectID;
 	private boolean 			justCreated;
+	private Lexem				lexem;
+	
 	
 	private StateSimulationObject state;
 
@@ -80,6 +84,9 @@ public abstract class SimulationObject extends ListenedBase implements IPercepti
 		this.objectID = 0;
 		this.justCreated = true;
 		this.guard = null;
+		
+		this.lexem = AllWords.getLexem(getLexemID());
+		
 		this.actionHandler = new ActionHandler(this);
 		
 		grantAccessToAllProperties = new GrantedAccessToProperty[1];
@@ -124,7 +131,7 @@ public abstract class SimulationObject extends ListenedBase implements IPercepti
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////    OBJECT_ID      ///////////////////////////////////////////
+/////////////////////////////////    OBJECT     ///////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 		
 	public final void setObjectID(int objectID) {
@@ -136,6 +143,13 @@ public abstract class SimulationObject extends ListenedBase implements IPercepti
 	public final int getObjectID() {
 		return objectID;
 	}
+	
+	protected abstract int getLexemID();
+	
+	public final Lexem getLexem() {
+		return this.lexem;
+	}
+	
 		
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    STATE      ///////////////////////////////////////////////
