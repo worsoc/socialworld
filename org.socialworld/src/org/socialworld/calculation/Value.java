@@ -67,6 +67,7 @@ public class Value {
 	public static String VALUE_BY_NAME_WEAPON_HARDNESS = "hardness";
 	public static String VALUE_BY_NAME_WEAPON_SHARPNESS = "sharpness";
 	
+	public static String VALUE_BY_NAME_KNOWLEDGE_ELEMENT_PROPS = "knowledgeElementProperties";
 	
 	
 	public static String VALUE_NAME_UNUSED_BECAUSE_TEMPORARY = "temp";

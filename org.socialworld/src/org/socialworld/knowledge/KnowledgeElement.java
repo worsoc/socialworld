@@ -54,8 +54,8 @@ public class KnowledgeElement {
 		return this.subject.getWord();
 	}
 
-	public void add(KnowledgeFact fact, KnowledgeSource source) {
-		this.knowledgeAtomList.add(fact, source);
+	public void add(KnowledgeAtom atom, KnowledgeSource source) {
+		this.knowledgeAtomList.add(atom, source);
 	}
 	
 	KnowledgeAtom getAtomAsCopy(int index) {
