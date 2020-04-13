@@ -23,7 +23,8 @@ package org.socialworld.calculation;
 
 public enum Type {
 	nothing(0), integer(1), longinteger(2), floatingpoint(3), string(4), vector(5), bool(6),  actionType(7), actionMode(8), time(9),
-	attributeArray(10), event(11), action(12), simulationObject(13), answer(14), valueList(15), knowledgeElement(16);
+	attributeArray(10), event(11), action(12), simulationObject(13), answer(14),
+	valueList(15), knowledgeElement(16), knowledgeSource(17), knowledgeAtom(18);
 
 	private int index;
 
@@ -54,5 +55,23 @@ public enum Type {
 				return type;
 		return null;
 	}	
+	
+	public boolean isAllowedAsKnowledgeValue() {
+		
+		switch (this){
+			case integer: return true;
+			case longinteger: return true;
+			case floatingpoint: return true;
+			case string: return true;
+			case vector: return true;
+			case bool: return true;
+			case actionType: return true;
+			case actionMode: return true;
+			case time: return true;
+			case simulationObject: return true;
+			
+			default:return false;
+		}
+	}
 
 }

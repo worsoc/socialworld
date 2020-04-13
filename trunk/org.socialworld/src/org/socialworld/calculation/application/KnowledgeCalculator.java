@@ -8,10 +8,13 @@ import org.socialworld.calculation.Value;
 import org.socialworld.calculation.descriptions.EventPerceptionAssignment;
 import org.socialworld.calculation.descriptions.EventPerceptionDescription;
 import org.socialworld.collections.ValueArrayList;
+import org.socialworld.conversation.Lexem;
 import org.socialworld.core.Event;
 import org.socialworld.core.SocialWorldThread;
+import org.socialworld.knowledge.KnowledgeAtom;
 import org.socialworld.knowledge.KnowledgeElement;
-import org.socialworld.knowledge.KnowledgeProperties;
+import org.socialworld.knowledge.KnowledgeSource;
+import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.StateAnimal;
 import org.socialworld.objects.access.HiddenAnimal;
 
@@ -92,27 +95,27 @@ public class KnowledgeCalculator extends SocialWorldThread {
 	private final int setFacts(Event event, StateAnimal stateAnimal, HiddenAnimal hiddenWriteAccess) {
 		
 		KnowledgeElement knowledgeElement;
-		Value valueKF;
+		Value valueKE;
 		
-		ValueArrayList facts;   
-		facts = event.getProperties();
+		ValueArrayList eventProps;   
+		eventProps = event.getProperties();
 		
 		int result = KNOWLEDGE_CALCULATOR_RETURNS_NO_CHANGES;
 		int resultTmp;
 		
 		int eventType = event.getEventTypeAsInt();
 		int perceptionType = stateAnimal.getPerceptionType(eventType);
-		EventPerceptionDescription descGetFacts = EventPerceptionAssignment.getInstance().getEventPerceptionDescription(
+		EventPerceptionDescription descGetKE = EventPerceptionAssignment.getInstance().getEventPerceptionDescription(
 				eventType, perceptionType	);
-		int count = descGetFacts.countFunctions();
+		int count = descGetKE.countFunctions();
 
 		FunctionByExpression f_CreatePerception;
 		
 		for (int index = 0; index < count; index++) 
 		{
-			f_CreatePerception = descGetFacts.getFunctionCreatePerception(index);
-			valueKF = f_CreatePerception.calculate(facts);
-			knowledgeElement = (KnowledgeElement) valueKF.getValue();	
+			f_CreatePerception = descGetKE.getFunctionCreatePerception(index);
+			valueKE = f_CreatePerception.calculate(eventProps);
+			knowledgeElement = (KnowledgeElement) valueKE.getValue();	
 			
 			if (knowledgeElement != null) {
 				if (knowledgeElement.isValid())	{
@@ -130,5 +133,46 @@ public class KnowledgeCalculator extends SocialWorldThread {
 		
 		return result;
 	}
+	
+	public static KnowledgeElement createKnowledgeElement(ValueArrayList knowledgeElementProperties) {
+		
+		SimulationObject subject;
+		Lexem lexemSubject;
+		
+		int size;
+		
+		size = knowledgeElementProperties.size();
+		
+		if (size > 0) {
+			
+			subject = (SimulationObject) knowledgeElementProperties.get(0).getValue();
+			lexemSubject = subject.getLexem();
+			
+			KnowledgeElement knowledgeElement = new KnowledgeElement(lexemSubject);
+			KnowledgeAtom atom = null;
+			KnowledgeSource source = null;
+			
+			for (int index = 1; index < size; index++) {
+			
+				if ((index % 2) == 1) {
+					atom = (KnowledgeAtom) knowledgeElementProperties.get(index).getValue();
+				}
+				else {
+					source = (KnowledgeSource) knowledgeElementProperties.get(index).getValue();
+					knowledgeElement.add(atom, source);
+				}
+				
+			}
+			return knowledgeElement;
+			
+		}
+		else {
+			
+			return null;
+			
+		}
+		
+	}
+
 	
 }
