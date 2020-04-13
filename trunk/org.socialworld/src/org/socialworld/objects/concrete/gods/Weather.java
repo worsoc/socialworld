@@ -9,7 +9,10 @@ import org.socialworld.objects.concrete.StatePerceptible;
 
 public class Weather extends God {
 
-	
+	protected int getLexemID() {
+		// TODO set lexemID
+		return 0;
+	}
 
 	
 	protected State getInitState(String stateClassName) {

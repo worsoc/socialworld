@@ -11,7 +11,11 @@ import org.socialworld.objects.properties.IThrowable;
 public class Apple extends Fruit implements IThrowable {
 
 
-	
+	protected int getLexemID() {
+		// TODO set lexemID
+		return 0;
+	}
+
 	public  float getTemperature() {return 20; };
 	public  float getConsistence() {return 20; };
 	public  float getFirmness() {return 20; };
