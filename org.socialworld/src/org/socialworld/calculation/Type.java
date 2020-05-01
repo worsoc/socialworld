@@ -24,7 +24,8 @@ package org.socialworld.calculation;
 public enum Type {
 	nothing(0), integer(1), longinteger(2), floatingpoint(3), string(4), vector(5), bool(6),  actionType(7), actionMode(8), time(9),
 	attributeArray(10), event(11), action(12), simulationObject(13), answer(14),
-	valueList(15), knowledgeElement(16), knowledgeSource(17), knowledgeAtom(18);
+	valueList(15), knowledgeElement(16), _knowledgeSource(17), _knowledgeAtom(18),
+	simObjProp(19);
 
 	private int index;
 

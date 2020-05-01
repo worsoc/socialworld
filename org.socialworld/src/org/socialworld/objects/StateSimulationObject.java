@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.attributes.Position;
+import org.socialworld.attributes.SimObjPropertyName;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.application.Scheduler;
@@ -133,6 +134,22 @@ public abstract class StateSimulationObject extends ListenedBase {
 		}
 	}
 	
+	public final Value getProperty(SimObjPropertyName prop) {
+		String name;
+		name = prop.toString();
+		return getProperty(prop, name);
+	}
+	
+	public Value getProperty(SimObjPropertyName prop, String name) {
+		
+		switch (prop) {
+		case position:
+			return this.position.getAsValue(name);
+		default:
+			return new Value();
+		}
+	}
+
 
 	final void setPosition(Position position, WriteAccessToSimulationObject guard) {
 		if (checkGuard(guard)) {
@@ -145,6 +162,7 @@ public abstract class StateSimulationObject extends ListenedBase {
 	final public Position getPosition() {
 		return new Position(this.position);
 	}
+	
 	
 	final public Value getPositionVectorAsValue(String valueName) {
 		return new Value(Type.vector, valueName, new Vector(this.position.getVector()) );

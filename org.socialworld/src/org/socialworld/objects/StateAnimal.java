@@ -26,6 +26,8 @@ import org.socialworld.actions.handle.Inventory;
 import org.socialworld.actions.move.Path;
 import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.AttributeArray;
+import org.socialworld.attributes.Direction;
+import org.socialworld.attributes.SimObjPropertyName;
 import org.socialworld.calculation.FunctionByMatrix;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
@@ -49,8 +51,8 @@ public class StateAnimal extends StateSimulationObject {
 	private final AttributeArray attributes;
 	private FunctionByMatrix attributeCalculatorMatrix;
 
-	private Vector directionChest;
-	private Vector directionActiveMove;
+	private Direction directionChest;
+	private Direction directionActiveMove;
 
 	private LastPerceivedObjects lastPerceivedObjects;
 	protected Knowledge knowledge;
@@ -82,6 +84,22 @@ public class StateAnimal extends StateSimulationObject {
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    ATTRIBUTES  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
+	
+	public Value getProperty(SimObjPropertyName prop, String name) {
+		switch (prop) {
+		case inventory:
+			return this.inventory.getAsValue(name);
+		case knowledge:
+			return this.knowledge.getAsValue(name);
+		case directionChest:
+			return this.directionChest.getAsValue(name);
+		case directionActiveMove:
+			return this.directionActiveMove.getAsValue(name);
+		default:
+			return super.getProperty(prop);
+		}
+	}
+
 	
 	void refresh() {
 		
@@ -186,24 +204,24 @@ public class StateAnimal extends StateSimulationObject {
 	
 	final void setDirectionChest(Vector directionChest, WriteAccessToAnimal guard) {
 		if (checkGuard(guard)) {
-			this.directionChest = directionChest;
+			this.directionChest = new Direction(directionChest, SimObjPropertyName.directionChest);
 		}
 	}
 
 
 	final void setDirectionActiveMove(Vector directionMove, WriteAccessToAnimal guard) {
 		if (checkGuard(guard)) {
-			this.directionActiveMove = directionMove;
+			this.directionActiveMove = new Direction(directionMove, SimObjPropertyName.directionActiveMove);;
 		}
 	}
 
 	final public Value getDirectionChestAsValue(String valueName) {
-		return new Value( Type.vector, valueName, new Vector(this.directionChest) );
+		return new Value( Type.vector, valueName, this.directionChest.getVector() );
 	}
 	
 
 	final public Value getDirectionActiveMoveAsValue(String valueName) {
-		return new Value( Type.vector, valueName, new Vector(this.directionActiveMove) );
+		return new Value( Type.vector, valueName, this.directionActiveMove.getVector() );
 	}
 
 

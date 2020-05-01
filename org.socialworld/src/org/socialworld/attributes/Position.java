@@ -57,13 +57,14 @@ import org.socialworld.calculation.geometry.Vector;
  *  
  * @author Mathias Sikos (tyloesand)  
  */
-public class Position {
+public class Position extends SimObjProperty {
 
 	public final int LOCATIONBYBASEMAXLENGTH = 9;
 	public final int TRANSLATE = 2000000;
 	public static final int LOCATIONBASE9 = 9;
 	public static final int LOCATIONBASE25 = 25;
 	
+
 	private Vector m_position;  // (x,y,z) millimeters
 	
 	private int locationByBase9;
@@ -81,6 +82,20 @@ public class Position {
 		locationByBase9 = position.getLocationByBase9();
 		locationByBase25 = position.getLocationByBase25();
 	}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    ISimObjProperty  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	protected SimObjProperty copyForProperty() {
+		return new Position(this);
+	}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    Position  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
 
 	public int getLocationByBase9() { return locationByBase9; }
 	public String getLocationByBase25() { return locationByBase25 ; }

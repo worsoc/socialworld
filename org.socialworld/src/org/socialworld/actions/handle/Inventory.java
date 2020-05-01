@@ -21,6 +21,7 @@
 */
 package org.socialworld.actions.handle;
 
+import org.socialworld.attributes.SimObjProperty;
 import org.socialworld.core.ObjectMaster;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.SimulationObject_Type;
@@ -33,8 +34,9 @@ import org.socialworld.objects.properties.IWeapon;
 
  * @author Mathias Sikos (tyloesand)
  */
-public class Inventory {
+public class Inventory extends SimObjProperty {
 
+	
 	protected SimulationObject leftHand;
 	protected SimulationObject rightHand;
 	protected SimulationObject mouth;
@@ -60,6 +62,22 @@ public class Inventory {
 		}
 
 	}
+
+	public Inventory(Inventory inventory) {
+		//TODO implementcopy constructor
+	}
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    ISimObjProperty  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	protected SimObjProperty copyForProperty() {
+		return new Inventory(this);
+	}
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    Inventory  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 
 	
 	public void complete() {
