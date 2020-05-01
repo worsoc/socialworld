@@ -26,6 +26,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.SimObjPropertyName;
 import org.socialworld.calculation.Type;
@@ -53,8 +54,7 @@ public abstract class StateSimulationObject extends ListenedBase {
 	private List<State> stateAddOns;
 	
 	private 	Position 		position;
-	private		Vector directionMove;
-	private 	float powerMove;
+	private		Direction	 directionMove;
 	
 	private ConnectionList connections;
 
@@ -145,6 +145,8 @@ public abstract class StateSimulationObject extends ListenedBase {
 		switch (prop) {
 		case position:
 			return this.position.getAsValue(name);
+		case directionMove:
+			return this.directionMove.getAsValue(name);
 		default:
 			return new Value();
 		}
@@ -172,19 +174,18 @@ public abstract class StateSimulationObject extends ListenedBase {
 	
 	final void setMove(Vector direction, float power, WriteAccessToSimulationObject guard) {
 		if (checkGuard(guard)) {
-			this.directionMove = direction;
-			this.powerMove = power;
+			this.directionMove = new Direction(SimObjPropertyName.directionMove, direction, power);
 		}
 		
 	}
 	
 	final public Value getDirectionMoveAsValue(String valueName) {
-		return new Value( Type.vector, valueName, new Vector(this.directionMove) );
+		return new Value( Type.vector, valueName, this.directionMove.getVector() );
 	}
 
 		
 	final public Value getPowerMoveAsValue(String valueName) {
-		return new Value( Type.floatingpoint, valueName, powerMove );
+		return new Value( Type.floatingpoint, valueName, this.directionMove.getPower() );
 	}
 
 	final void setInfluenceTypes (int types[], WriteAccessToSimulationObject guard) {

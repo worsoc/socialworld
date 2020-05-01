@@ -204,14 +204,14 @@ public class StateAnimal extends StateSimulationObject {
 	
 	final void setDirectionChest(Vector directionChest, WriteAccessToAnimal guard) {
 		if (checkGuard(guard)) {
-			this.directionChest = new Direction(directionChest, SimObjPropertyName.directionChest);
+			this.directionChest = new Direction(SimObjPropertyName.directionChest, directionChest );
 		}
 	}
 
 
 	final void setDirectionActiveMove(Vector directionMove, WriteAccessToAnimal guard) {
 		if (checkGuard(guard)) {
-			this.directionActiveMove = new Direction(directionMove, SimObjPropertyName.directionActiveMove);;
+			this.directionActiveMove = new Direction(SimObjPropertyName.directionActiveMove, directionMove );
 		}
 	}
 
