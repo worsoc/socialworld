@@ -1,6 +1,7 @@
 package org.socialworld.datasource.pool;
 
 import org.socialworld.attributes.Position;
+import org.socialworld.attributes.SimPropertyName;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.datasource.tablesPool.TablePoolPosition;;
 
@@ -66,7 +67,7 @@ public class PositionPool {
 				y = table.getY(row);
 				z = table.getZ(row);
 	
-				setPosition(pos_id, new Position(new Vector (x, y, z)));
+				setPosition(pos_id, new Position(SimPropertyName.unknown, new Vector (x, y, z)));
 
 			}
 		}

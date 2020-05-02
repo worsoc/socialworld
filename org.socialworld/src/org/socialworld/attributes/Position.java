@@ -21,6 +21,7 @@
 */
 package org.socialworld.attributes;
 
+import org.socialworld.calculation.Type;
 import org.socialworld.calculation.geometry.Vector;
 
 /**
@@ -70,13 +71,15 @@ public class Position extends SimProperty {
 	private int locationByBase9;
 	private String locationByBase25;
 
-	public Position(Vector position) {
+	public Position(SimPropertyName prop, Vector position) {
+		setPropertyName(prop);
 		m_position =  position;
 		
 		setLocationByBases(position);
 	}
 	
-	public Position(Position position) {
+	public Position(Type propertyType, Position position) {
+		setPropertyName(getPropertyName().toType(propertyType));
 		m_position =  position.getVector();
 		
 		locationByBase9 = position.getLocationByBase9();
@@ -87,8 +90,8 @@ public class Position extends SimProperty {
 /////////////////////////////    ISimProperty  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	protected SimProperty copyForProperty() {
-		return new Position(this);
+	protected SimProperty copyForProperty(Type propertyType) {
+		return new Position(propertyType, this);
 	}
 
 

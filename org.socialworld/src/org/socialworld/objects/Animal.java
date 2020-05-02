@@ -87,13 +87,13 @@ public abstract class Animal extends SimulationObject implements ISeer {
 
 	public Value getProperty(SimPropertyName prop, String name) {
 		switch (prop) {
-		case inventory:
+		case simobj_inventory:
 			return this.state.getProperty(prop, name);
-		case knowledge:
+		case simobj_knowledge:
 			return this.state.getProperty(prop, name);
-		case directionChest:
+		case simobj_directionChest:
 			return this.state.getProperty(prop, name);
-		case directionActiveMove:
+		case simobj_directionActiveMove:
 			return this.state.getProperty(prop, name);
 		default:
 			return super.getProperty(prop);

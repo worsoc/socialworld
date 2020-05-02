@@ -7,28 +7,32 @@ public abstract class SimProperty implements ISimProperty {
 
 	private SimPropertyName propertyName = SimPropertyName.unknown;
 
-	protected abstract SimProperty copyForProperty();
+	protected abstract SimProperty copyForProperty(Type propertyType);
 	
 	///////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////    ISimProperty  ///////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
-	public void setPropertyName(SimPropertyName prop) {
+	public final void setPropertyName(SimPropertyName prop) {
 		if (this.propertyName == SimPropertyName.unknown) {
 			this.propertyName = prop;
 		}
 	}
 	
-	public SimPropertyName getPropertyName() {
+	public final SimPropertyName getPropertyName() {
 		return this.propertyName;
 	}
 	
-	public Value getAsValue() {
-		return new Value(Type.simObjProp, this.propertyName.toString(), copyForProperty());
+	public final  Value getAsValue() {
+		Type propertyType;
+		propertyType = this.propertyName.getType();
+		return new Value(propertyType, this.propertyName.toString(), copyForProperty(propertyType));
 	}
 	
-	public Value getAsValue(String name) {
-		return new Value(Type.simObjProp, name, copyForProperty());
+	public final Value getAsValue(String name) {
+		Type propertyType;
+		propertyType = this.propertyName.getType();
+		return new Value(propertyType, name, copyForProperty(propertyType));
 	}
 
 }

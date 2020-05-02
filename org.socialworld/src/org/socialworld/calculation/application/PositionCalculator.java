@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.attributes.Position;
+import org.socialworld.attributes.SimPropertyName;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.core.Event;
@@ -121,7 +122,7 @@ public class PositionCalculator extends SocialWorldThread {
 
 		
 		eventType = event.getEventType();
-		position = state.getPosition().getVector();
+		position = (Vector) state.getPositionVectorAsValue(Value.VALUE_NAME_UNUSED_BECAUSE_TEMPORARY).getValue();
 		
 		directionMoveObject = (Vector) state.getDirectionMoveAsValue(Value.VALUE_BY_NAME_SIMOBJ_MOVE_DIRECTION).getValue();
 		powerMoveObject = (float)state.getPowerMoveAsValue(Value.VALUE_BY_NAME_SIMOBJ_MOVE_POWER).getValueCopy();
@@ -153,7 +154,7 @@ public class PositionCalculator extends SocialWorldThread {
 		position.add(directionMoveObject);
 		directionMoveObject.normalize();
 		
-		newPosition = new Position(position);
+		newPosition = new Position(SimPropertyName.simobj_position, position);
 		
 		
 		returnSetPosition = hiddenWriteAccess.setPosition(newPosition);

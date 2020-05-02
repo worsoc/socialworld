@@ -22,6 +22,7 @@
 package org.socialworld.actions.handle;
 
 import org.socialworld.attributes.SimProperty;
+import org.socialworld.calculation.Type;
 import org.socialworld.core.ObjectMaster;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.SimulationObject_Type;
@@ -71,7 +72,7 @@ public class Inventory extends SimProperty {
 /////////////////////////////    ISimProperty  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	protected SimProperty copyForProperty() {
+	protected SimProperty copyForProperty(Type propertyType) {
 		return new Inventory(this);
 	}
 	

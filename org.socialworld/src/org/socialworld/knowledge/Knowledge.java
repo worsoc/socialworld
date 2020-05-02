@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.attributes.SimProperty;
+import org.socialworld.calculation.Type;
 import org.socialworld.collections.ReadOnlyIterator;
 import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Numerus;
@@ -70,7 +71,7 @@ public class Knowledge extends SimProperty {
 /////////////////////////////    ISimProperty  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	protected SimProperty copyForProperty() {
+	protected SimProperty copyForProperty(Type propertyType) {
 		return new Knowledge(this);
 	}
 
