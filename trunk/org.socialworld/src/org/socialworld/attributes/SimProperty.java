@@ -3,23 +3,23 @@ package org.socialworld.attributes;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 
-public abstract class SimObjProperty implements ISimObjProperty {
+public abstract class SimProperty implements ISimProperty {
 
-	private SimObjPropertyName propertyName = SimObjPropertyName.unknown;
+	private SimPropertyName propertyName = SimPropertyName.unknown;
 
-	protected abstract SimObjProperty copyForProperty();
+	protected abstract SimProperty copyForProperty();
 	
 	///////////////////////////////////////////////////////////////////////////////////////////
-	/////////////////////////////    ISimObjProperty  ///////////////////////////////////////////////
+	/////////////////////////////    ISimProperty  ///////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
-	public void setPropertyName(SimObjPropertyName prop) {
-		if (this.propertyName == SimObjPropertyName.unknown) {
+	public void setPropertyName(SimPropertyName prop) {
+		if (this.propertyName == SimPropertyName.unknown) {
 			this.propertyName = prop;
 		}
 	}
 	
-	public SimObjPropertyName getPropertyName() {
+	public SimPropertyName getPropertyName() {
 		return this.propertyName;
 	}
 	

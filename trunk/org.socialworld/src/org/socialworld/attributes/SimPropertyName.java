@@ -1,6 +1,8 @@
 package org.socialworld.attributes;
 
-public enum SimObjPropertyName {
+import org.socialworld.calculation.Type;
+
+public enum SimPropertyName {
 
 	unknown(0), position(1), inventory(2), knowledge(3),
 	directionMove(10), directionChest(11), directionActiveMove(12);
@@ -14,8 +16,12 @@ public enum SimObjPropertyName {
 	
 	private int arrayIndex;
 
-	private SimObjPropertyName(int index) {
+	private SimPropertyName(int index) {
 		this.arrayIndex = index;
+	}
+	
+	public Type getType() {
+		return Type.simObjProp;
 	}
 	
 	public String toString() {

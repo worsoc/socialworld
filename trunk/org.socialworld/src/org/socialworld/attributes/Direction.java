@@ -2,18 +2,18 @@ package org.socialworld.attributes;
 
 import org.socialworld.calculation.geometry.Vector;
 
-public class Direction extends SimObjProperty {
+public class Direction extends SimProperty {
 
 	private Vector vector;
 	
 	float power;
 	
-	public Direction (SimObjPropertyName prop, Vector vector ) {
+	public Direction (SimPropertyName prop, Vector vector ) {
 		this.vector = vector;
 		setPropertyName(prop);
 	}
 
-	public Direction (SimObjPropertyName prop, Vector vector, float power ) {
+	public Direction (SimPropertyName prop, Vector vector, float power ) {
 		this.vector = vector;
 		this.power = power;
 		setPropertyName(prop);
@@ -26,11 +26,11 @@ public class Direction extends SimObjProperty {
 	}
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////    ISimObjProperty  ///////////////////////////////////////////////
+/////////////////////////////    ISimProperty  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
 	@Override
-	protected SimObjProperty copyForProperty() {
+	protected SimProperty copyForProperty() {
 		return new Direction(this);
 	}
 

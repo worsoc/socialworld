@@ -29,7 +29,7 @@ import org.socialworld.actions.move.Path;
 import org.socialworld.actions.move.PathFinder;
 import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.Position;
-import org.socialworld.attributes.SimObjPropertyName;
+import org.socialworld.attributes.SimPropertyName;
 import org.socialworld.calculation.FunctionByMatrix;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
@@ -85,7 +85,7 @@ public abstract class Animal extends SimulationObject implements ISeer {
 	};
 
 
-	public Value getProperty(SimObjPropertyName prop, String name) {
+	public Value getProperty(SimPropertyName prop, String name) {
 		switch (prop) {
 		case inventory:
 			return this.state.getProperty(prop, name);
