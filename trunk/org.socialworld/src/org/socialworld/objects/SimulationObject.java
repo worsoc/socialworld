@@ -164,7 +164,7 @@ public abstract class SimulationObject extends ListenedBase implements IPercepti
 	
 	public Value getProperty(SimPropertyName prop, String name) {
 		switch (prop) {
-		case position:
+		case simobj_position:
 			return this.state.getProperty(prop, name);
 		default:
 			return new Value();
@@ -215,7 +215,7 @@ public abstract class SimulationObject extends ListenedBase implements IPercepti
 	 * @return position
 	 */
 	public final Position getPosition() {
-		return this.state.getPosition();
+		return (Position) getProperty(SimPropertyName.simobj_position).getValue();
 	}
 	
 	

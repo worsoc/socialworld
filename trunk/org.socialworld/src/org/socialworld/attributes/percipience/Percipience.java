@@ -196,7 +196,7 @@ public class Percipience {
 
 	private void setVisibility() {
 		Vector cuboidCopy = new Vector(this.cuboid);
-		Position positionCopy = new Position(this.position);
+		Position positionCopy = new Position(this.position.getPropertyName().getType(),   this.position);
 		
 		setVisibility(positionCopy, cuboidCopy);
 		

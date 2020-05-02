@@ -87,13 +87,13 @@ public class StateAnimal extends StateSimulationObject {
 	
 	public Value getProperty(SimPropertyName prop, String name) {
 		switch (prop) {
-		case inventory:
+		case simobj_inventory:
 			return this.inventory.getAsValue(name);
-		case knowledge:
+		case simobj_knowledge:
 			return this.knowledge.getAsValue(name);
-		case directionChest:
+		case simobj_directionChest:
 			return this.directionChest.getAsValue(name);
-		case directionActiveMove:
+		case simobj_directionActiveMove:
 			return this.directionActiveMove.getAsValue(name);
 		default:
 			return super.getProperty(prop);
@@ -204,14 +204,14 @@ public class StateAnimal extends StateSimulationObject {
 	
 	final void setDirectionChest(Vector directionChest, WriteAccessToAnimal guard) {
 		if (checkGuard(guard)) {
-			this.directionChest = new Direction(SimPropertyName.directionChest, directionChest );
+			this.directionChest = new Direction(SimPropertyName.simobj_directionChest, directionChest );
 		}
 	}
 
 
 	final void setDirectionActiveMove(Vector directionMove, WriteAccessToAnimal guard) {
 		if (checkGuard(guard)) {
-			this.directionActiveMove = new Direction(SimPropertyName.directionActiveMove, directionMove );
+			this.directionActiveMove = new Direction(SimPropertyName.simobj_directionActiveMove, directionMove );
 		}
 	}
 

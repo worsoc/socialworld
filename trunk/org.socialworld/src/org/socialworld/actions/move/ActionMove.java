@@ -26,6 +26,7 @@ import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Position;
+import org.socialworld.attributes.SimPropertyName;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.geometry.Vector;
@@ -109,7 +110,7 @@ public class ActionMove extends AbstractAction {
 
 		value =  actionProperties.getValue(furtherPropertyNames[0]);
 		if (value.isValid()) {
-			endPosition = new Position( (Vector) value.getValue() );
+			endPosition = new Position(SimPropertyName.action_position, (Vector) value.getValue() );
 			this.setEnd(endPosition);
 		}
 

@@ -143,9 +143,9 @@ public abstract class StateSimulationObject extends ListenedBase {
 	public Value getProperty(SimPropertyName prop, String name) {
 		
 		switch (prop) {
-		case position:
+		case simobj_position:
 			return this.position.getAsValue(name);
-		case directionMove:
+		case simobj_directionMove:
 			return this.directionMove.getAsValue(name);
 		default:
 			return new Value();
@@ -161,9 +161,6 @@ public abstract class StateSimulationObject extends ListenedBase {
 	}
 	
 	
-	final public Position getPosition() {
-		return new Position(this.position);
-	}
 	
 	
 	final public Value getPositionVectorAsValue(String valueName) {
@@ -174,7 +171,7 @@ public abstract class StateSimulationObject extends ListenedBase {
 	
 	final void setMove(Vector direction, float power, WriteAccessToSimulationObject guard) {
 		if (checkGuard(guard)) {
-			this.directionMove = new Direction(SimPropertyName.directionMove, direction, power);
+			this.directionMove = new Direction(SimPropertyName.simobj_directionMove, direction, power);
 		}
 		
 	}

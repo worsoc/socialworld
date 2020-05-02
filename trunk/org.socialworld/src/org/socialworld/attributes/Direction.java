@@ -1,5 +1,6 @@
 package org.socialworld.attributes;
 
+import org.socialworld.calculation.Type;
 import org.socialworld.calculation.geometry.Vector;
 
 public class Direction extends SimProperty {
@@ -19,10 +20,10 @@ public class Direction extends SimProperty {
 		setPropertyName(prop);
 	}
 
-	public Direction (Direction original) {
+	public Direction (Type propertyType, Direction original) {
 		this.vector = original.getVector();
 		this.power = original.getPower();
-		setPropertyName(original.getPropertyName());
+		setPropertyName(original.getPropertyName().toType(propertyType));
 	}
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -30,8 +31,8 @@ public class Direction extends SimProperty {
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
 	@Override
-	protected SimProperty copyForProperty() {
-		return new Direction(this);
+	protected SimProperty copyForProperty(Type propertyType) {
+		return new Direction(propertyType, this);
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
