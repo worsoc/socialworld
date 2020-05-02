@@ -27,7 +27,7 @@ import org.socialworld.actions.move.Path;
 import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.attributes.Direction;
-import org.socialworld.attributes.SimObjPropertyName;
+import org.socialworld.attributes.SimPropertyName;
 import org.socialworld.calculation.FunctionByMatrix;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
@@ -85,7 +85,7 @@ public class StateAnimal extends StateSimulationObject {
 /////////////////////////////    ATTRIBUTES  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
-	public Value getProperty(SimObjPropertyName prop, String name) {
+	public Value getProperty(SimPropertyName prop, String name) {
 		switch (prop) {
 		case inventory:
 			return this.inventory.getAsValue(name);
@@ -204,14 +204,14 @@ public class StateAnimal extends StateSimulationObject {
 	
 	final void setDirectionChest(Vector directionChest, WriteAccessToAnimal guard) {
 		if (checkGuard(guard)) {
-			this.directionChest = new Direction(SimObjPropertyName.directionChest, directionChest );
+			this.directionChest = new Direction(SimPropertyName.directionChest, directionChest );
 		}
 	}
 
 
 	final void setDirectionActiveMove(Vector directionMove, WriteAccessToAnimal guard) {
 		if (checkGuard(guard)) {
-			this.directionActiveMove = new Direction(SimObjPropertyName.directionActiveMove, directionMove );
+			this.directionActiveMove = new Direction(SimPropertyName.directionActiveMove, directionMove );
 		}
 	}
 

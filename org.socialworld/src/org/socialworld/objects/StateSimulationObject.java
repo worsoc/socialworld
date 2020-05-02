@@ -28,7 +28,7 @@ import java.util.List;
 
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
-import org.socialworld.attributes.SimObjPropertyName;
+import org.socialworld.attributes.SimPropertyName;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.application.Scheduler;
@@ -134,13 +134,13 @@ public abstract class StateSimulationObject extends ListenedBase {
 		}
 	}
 	
-	public final Value getProperty(SimObjPropertyName prop) {
+	public final Value getProperty(SimPropertyName prop) {
 		String name;
 		name = prop.toString();
 		return getProperty(prop, name);
 	}
 	
-	public Value getProperty(SimObjPropertyName prop, String name) {
+	public Value getProperty(SimPropertyName prop, String name) {
 		
 		switch (prop) {
 		case position:
@@ -174,7 +174,7 @@ public abstract class StateSimulationObject extends ListenedBase {
 	
 	final void setMove(Vector direction, float power, WriteAccessToSimulationObject guard) {
 		if (checkGuard(guard)) {
-			this.directionMove = new Direction(SimObjPropertyName.directionMove, direction, power);
+			this.directionMove = new Direction(SimPropertyName.directionMove, direction, power);
 		}
 		
 	}

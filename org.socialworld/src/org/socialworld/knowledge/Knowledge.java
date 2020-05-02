@@ -24,7 +24,7 @@ package org.socialworld.knowledge;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.socialworld.attributes.SimObjProperty;
+import org.socialworld.attributes.SimProperty;
 import org.socialworld.collections.ReadOnlyIterator;
 import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Numerus;
@@ -32,7 +32,7 @@ import org.socialworld.conversation.SpeechRecognition;
 import org.socialworld.conversation.SpeechRecognition_Function;
 import org.socialworld.conversation.Word;
 
-public class Knowledge extends SimObjProperty {
+public class Knowledge extends SimProperty {
 
 	final int MAXIMUM_KNOWLEDGE_POOL_CAPACITY = 100;
 	final int COMBINE_ARRAY_STEP = 13;
@@ -67,10 +67,10 @@ public class Knowledge extends SimObjProperty {
 	}
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////    ISimObjProperty  ///////////////////////////////////////////////
+/////////////////////////////    ISimProperty  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	protected SimObjProperty copyForProperty() {
+	protected SimProperty copyForProperty() {
 		return new Knowledge(this);
 	}
 

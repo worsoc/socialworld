@@ -28,7 +28,7 @@ import java.util.List;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionNothing;
 import org.socialworld.attributes.Position;
-import org.socialworld.attributes.SimObjPropertyName;
+import org.socialworld.attributes.SimPropertyName;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.collections.ValueArrayList;
@@ -156,13 +156,13 @@ public abstract class SimulationObject extends ListenedBase implements IPercepti
 /////////////////////////////    STATE      ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
-	public final Value getProperty(SimObjPropertyName prop) {
+	public final Value getProperty(SimPropertyName prop) {
 		String name;
 		name = prop.toString();
 		return getProperty(prop, name);
 	}
 	
-	public Value getProperty(SimObjPropertyName prop, String name) {
+	public Value getProperty(SimPropertyName prop, String name) {
 		switch (prop) {
 		case position:
 			return this.state.getProperty(prop, name);

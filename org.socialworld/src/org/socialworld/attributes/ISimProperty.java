@@ -2,10 +2,10 @@ package org.socialworld.attributes;
 
 import org.socialworld.calculation.Value;
 
-public interface ISimObjProperty {
+public interface ISimProperty {
 
-	public abstract void setPropertyName(SimObjPropertyName prop);
-	public abstract SimObjPropertyName getPropertyName();
+	public abstract void setPropertyName(SimPropertyName prop);
+	public abstract SimPropertyName getPropertyName();
 	public abstract Value getAsValue();
 	public abstract Value getAsValue(String name);
 	

@@ -57,7 +57,7 @@ import org.socialworld.calculation.geometry.Vector;
  *  
  * @author Mathias Sikos (tyloesand)  
  */
-public class Position extends SimObjProperty {
+public class Position extends SimProperty {
 
 	public final int LOCATIONBYBASEMAXLENGTH = 9;
 	public final int TRANSLATE = 2000000;
@@ -84,10 +84,10 @@ public class Position extends SimObjProperty {
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////    ISimObjProperty  ///////////////////////////////////////////////
+/////////////////////////////    ISimProperty  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	protected SimObjProperty copyForProperty() {
+	protected SimProperty copyForProperty() {
 		return new Position(this);
 	}
 
