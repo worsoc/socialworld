@@ -87,6 +87,8 @@ public class StateAnimal extends StateSimulationObject {
 	
 	public Value getProperty(SimPropertyName prop, String name) {
 		switch (prop) {
+		case simobj_attributearray:
+			return this.attributes.getAsValue(name);
 		case simobj_inventory:
 			return this.inventory.getAsValue(name);
 		case simobj_knowledge:
@@ -133,9 +135,6 @@ public class StateAnimal extends StateSimulationObject {
 		return this.attributes.get(attributeName);
 	}
 	
-	final public Value getAttributesAsValue(String valueName) {
-		return new Value(Type.attributeArray, valueName, new AttributeArray(this.attributes) );
-	}
 	
 	final void setMatrix(FunctionByMatrix matrix, WriteAccessToAnimal guard) {
 		if (checkGuard(guard)) {

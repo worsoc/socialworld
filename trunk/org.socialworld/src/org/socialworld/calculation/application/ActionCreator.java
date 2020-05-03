@@ -227,7 +227,7 @@ public class ActionCreator extends SocialWorldThread {
 		ValueArrayList arguments;
 		arguments = new ValueArrayList();
 		
-		arguments.add( stateReactor.getAttributesAsValue(SimPropertyName.SIMOBJPROP_ATTRIBUTEARRAY) );
+		arguments.add( stateReactor.getProperty(SimPropertyName.simobj_attributearray) );
 		arguments.add( new Value(Type.event, Value.VALUE_BY_NAME_EVENT, event) );
 		if (event.hasOptionalParam()) {
 			arguments.add( event.getOptionalParam().getParamListAsValue());
@@ -260,7 +260,7 @@ public class ActionCreator extends SocialWorldThread {
 		ValueArrayList arguments;
 		arguments = new ValueArrayList();
 		
-		arguments.add( stateActor.getAttributesAsValue(SimPropertyName.SIMOBJPROP_ATTRIBUTEARRAY) );
+		arguments.add( stateActor.getProperty(SimPropertyName.simobj_attributearray) );
 		
 		Value result = f_CreateAction.calculate(arguments);
 		return (AbstractAction) result.getValue();
