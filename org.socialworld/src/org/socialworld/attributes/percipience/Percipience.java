@@ -137,7 +137,7 @@ public class Percipience {
 
 		if (distance <= this.maxSee) {
 
-			Vector directionView =  possibleSeer.getDirectionView();
+			Vector directionView =  possibleSeer.getDirectionView().getVector();
 			double angleViewInRadians =  possibleSeer.getAngleViewPerceivingObjectsInRadians();
 			
 			double cosineBetweenDirections = direction.getCosPhi(directionView);
@@ -164,7 +164,7 @@ public class Percipience {
 
 		if (distance <= this.maxSee) {
 
-			Vector directionView =  possibleSeer.getDirectionView();
+			Vector directionView =  possibleSeer.getDirectionView().getVector();
 			double angleViewInRadians =  possibleSeer.getAngleViewPerceivingEventsInRadians();
 			
 			double cosineBetweenDirections = direction.getCosPhi(directionView);

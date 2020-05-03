@@ -24,6 +24,7 @@ package org.socialworld.calculation.application;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.SimPropertyName;
 import org.socialworld.calculation.Value;
@@ -107,13 +108,13 @@ public class PositionCalculator extends SocialWorldThread {
 		Vector position;
 		Position newPosition;
 		
-		
-		Vector directionEvent;
-		Vector directionMoveObject;
-		
-		
-		float powerEvent;
+		Direction directionMoveObject;
+		Vector vectorMoveObject;
 		float powerMoveObject;
+
+		Direction directionEvent;
+		Vector vectorEvent;
+		float powerEvent;
 		
 		float resultingPowerMoveObject;
 		
@@ -124,19 +125,21 @@ public class PositionCalculator extends SocialWorldThread {
 		eventType = event.getEventType();
 		position = (Vector) state.getPositionVectorAsValue(Value.VALUE_NAME_UNUSED_BECAUSE_TEMPORARY).getValue();
 		
-		directionMoveObject = (Vector) state.getDirectionMoveAsValue(Value.VALUE_BY_NAME_SIMOBJ_MOVE_DIRECTION).getValue();
-		powerMoveObject = (float)state.getPowerMoveAsValue(Value.VALUE_BY_NAME_SIMOBJ_MOVE_POWER).getValueCopy();
+		directionMoveObject = (Direction) state.getDirectionMoveAsValue(SimPropertyName.SIMOBJPROP_DIRECTION_MOVE).getValue();
+		vectorMoveObject =  directionMoveObject.getVector();
+		powerMoveObject = directionMoveObject.getPower();
 		
-		directionEvent = event.getDirection();
+		directionEvent = (Direction) event.getDirection().getValue();
+		vectorEvent = directionEvent.getVector();
 		powerEvent = event.getStrength();
 		
-		if (!directionEvent.isNormalized()) directionEvent.normalize();
-		if (!directionMoveObject.isNormalized()) directionMoveObject.normalize();
+		if (!vectorEvent.isNormalized()) vectorEvent.normalize();
+		if (!vectorMoveObject.isNormalized()) vectorMoveObject.normalize();
 		
 		switch (eventType) {
 		// TODO cases and implementations
 		case selfSleep:
-			directionEvent = new Vector(0,0,0);
+			vectorEvent = new Vector(0,0,0);
 			powerMoveObject = 0;
 			break;
 		default:
@@ -146,13 +149,13 @@ public class PositionCalculator extends SocialWorldThread {
 		// TODO calculate resulting direction and power
 		
 		
-		directionMoveObject.mul(powerMoveObject);
-		directionEvent.mul(powerEvent);
-		directionMoveObject.add(directionEvent);
+		vectorMoveObject.mul(powerMoveObject);
+		vectorEvent.mul(powerEvent);
+		vectorMoveObject.add(vectorEvent);
 		
-		resultingPowerMoveObject = directionMoveObject.length();
-		position.add(directionMoveObject);
-		directionMoveObject.normalize();
+		resultingPowerMoveObject = vectorMoveObject.length();
+		position.add(vectorMoveObject);
+		vectorMoveObject.normalize();
 		
 		newPosition = new Position(SimPropertyName.simobj_position, position);
 		
@@ -160,10 +163,10 @@ public class PositionCalculator extends SocialWorldThread {
 		returnSetPosition = hiddenWriteAccess.setPosition(newPosition);
 		if (returnSetPosition != WriteAccessToSimulationObject.WRITE_ACCESS_RETURNS_SUCCESS) return returnSetPosition;
 		
-		returnSetMove = hiddenWriteAccess.setMove(directionMoveObject, resultingPowerMoveObject);
+		returnSetMove = hiddenWriteAccess.setMove(new Direction(SimPropertyName.simobj_directionMove, vectorMoveObject, resultingPowerMoveObject));
 		if (returnSetMove != WriteAccessToSimulationObject.WRITE_ACCESS_RETURNS_SUCCESS) return returnSetMove;
 
-		if (directionMoveObject.equals(new Vector(0,0,0)))
+		if (vectorMoveObject.equals(new Vector(0,0,0)))
 			return POSITION_CALCULATOR_RETURNS_NO_CHANGE;
 		else
 			return POSITION_CALCULATOR_RETURNS_CHANGE;

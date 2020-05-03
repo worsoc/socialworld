@@ -21,6 +21,7 @@
 */
 package org.socialworld.core;
 
+import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.collections.ValueArrayList;
@@ -28,7 +29,9 @@ import org.socialworld.collections.ValueArrayList;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
+import org.socialworld.attributes.SimPropertyName;
 import org.socialworld.attributes.Time;
 import org.socialworld.objects.Animal;
 import org.socialworld.objects.SimulationObject;
@@ -63,6 +66,8 @@ public abstract class Event implements Comparable<Event> {
 	protected boolean eventToCauserItself = false;
 	protected boolean eventToTarget = false;
 
+	private static Value noDirection = new Value(Type.eventProp, new Direction(SimPropertyName.event_direction, new Vector(0,0,0)));
+	
 	/**
 	 * Constructor
 	 */
@@ -260,23 +265,22 @@ public abstract class Event implements Comparable<Event> {
 		this.position = position;
 	}
 
-	public Vector getDirection() {
+	public Value getDirection() {
 		Value direction;
 		
 		if (hasOptionalParam()) {
 			direction = optionalParam.getParam(Value.VALUE_BY_NAME_EVENT_DIRECTION);
-			if (direction.isValid()) 
-				return (Vector) direction.getValueCopy();
+			return  direction;
 			
 		}
 		
 		if (this.causer instanceof Animal){
 			direction = ((Animal) causer).getDirectionChestAsValue(Value.VALUE_NAME_UNUSED_BECAUSE_TEMPORARY);
-			return (Vector) direction.getValueCopy();
+			return direction;
 			
 		}
 		
-		return new Vector(0, 0, 0);
+		return noDirection;
 	}
 
 	/**

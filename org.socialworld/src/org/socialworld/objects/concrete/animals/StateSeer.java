@@ -1,12 +1,15 @@
 package org.socialworld.objects.concrete.animals;
 
+import org.socialworld.attributes.Direction;
+import org.socialworld.attributes.SimPropertyName;
+import org.socialworld.calculation.Value;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.calculation.geometry.VectorMapper;
 import org.socialworld.objects.State;
 
 public class StateSeer extends State {
 
-	private Vector directionView ;
+	private Direction directionView ;
 
 	private float angleViewPerceivingEvents;
 	private double  angleViewPerceivingEventsInRadians;
@@ -23,16 +26,25 @@ public class StateSeer extends State {
 		setAngleViewPerceivingEvents(60.0F);
 	}
 	
+	
+	public Value getProperty(SimPropertyName prop, String name) {
+		
+		switch (prop) {
+		case simobj_directionView:
+			return this.directionView.getAsValue(name);
+		default:
+			return new Value();
+		}
+	}
+
+	
 	public double getSizeDistanceRelationThreshold() {
 		return this.sizeDistanceRelationThreshold;
 	}
 	
-	public Vector getDirectionView() {
-		return new Vector(this.directionView);
-	}
 
 	public void setDirectionView(Vector directionView) {
-		this.directionView = directionView;
+		this.directionView = new Direction(SimPropertyName.simobj_directionView, directionView);
 		setBestPercipiencePerpendicular();
 	}
 	
@@ -67,7 +79,7 @@ public class StateSeer extends State {
 	}
 
 	private void setBestPercipiencePerpendicular() {
-		this.bestPercipiencePerpendicular =  VectorMapper.getInstance().getBestVisibleAreaPerpendicular(this.directionView);
+		this.bestPercipiencePerpendicular =  VectorMapper.getInstance().getBestVisibleAreaPerpendicular(this.directionView.getVector());
 
 	}
 	

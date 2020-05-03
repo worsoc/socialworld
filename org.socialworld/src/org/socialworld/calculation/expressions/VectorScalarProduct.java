@@ -22,6 +22,7 @@
 
 package org.socialworld.calculation.expressions;
 
+import org.socialworld.attributes.SimPropertyName;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
 import org.socialworld.calculation.FunctionByMatrix;
@@ -78,7 +79,7 @@ public class VectorScalarProduct extends Expression {
 				
 				setOperation(Expression_Function.function);
 				
-				setExpression1(new GetArgumentByName(Value.VALUE_BY_NAME_SIMOBJ_ATTRIBUTES));
+				setExpression1(new GetArgumentByName(SimPropertyName.SIMOBJPROP_ATTRIBUTEARRAY));
 				setExpression2(new Constant(new Value(Type.integer, FunctionByMatrix_Matrix.CALCULATION_MODE_VECTOR_X_VECTOR)));
 				setExpression3(Nothing.getInstance());
 				

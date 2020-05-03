@@ -24,10 +24,10 @@ package org.socialworld.calculation.expressions;
 import java.util.List;
 
 import org.socialworld.attributes.Attribute;
+import org.socialworld.attributes.SimPropertyName;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
 import org.socialworld.calculation.Type;
-import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueInterpreteAs;
 import org.socialworld.datasource.parsing.ParseExpressionStrings;
 
@@ -53,7 +53,7 @@ public class ChangeAttributes extends Branching {
 				exp3 = parseLinesTail(1, lines);
 			}
 			else {
-				exp3 = new GetArgumentByName(Value.VALUE_BY_NAME_SIMOBJ_ATTRIBUTES);
+				exp3 = new GetArgumentByName(SimPropertyName.SIMOBJPROP_ATTRIBUTEARRAY);
 			}
 			
 			setExpression1(exp1);
@@ -80,7 +80,7 @@ public class ChangeAttributes extends Branching {
 		dann = parseDann(line);
 		
 		if (index == (lines.size() - 1)) 
-			 tail = new GetArgumentByName(Value.VALUE_BY_NAME_SIMOBJ_ATTRIBUTES);
+			 tail = new GetArgumentByName(SimPropertyName.SIMOBJPROP_ATTRIBUTEARRAY);
 		else
 			 tail = parseLinesTail(index + 1, lines);
 		
@@ -123,16 +123,16 @@ public class ChangeAttributes extends Branching {
 				
 				expressionSetAttributeValue = 
 							new SetAttributeValue(attribute, 
-									new GetArgumentByName(Value.VALUE_BY_NAME_SIMOBJ_ATTRIBUTES), 
+									new GetArgumentByName(SimPropertyName.SIMOBJPROP_ATTRIBUTEARRAY), 
 									expressionCalculateNewAttributeValue);
 				
 				if (isFirstExpression) {
-					replacementChain = new Replacement(Value.VALUE_BY_NAME_SIMOBJ_ATTRIBUTES, expressionSetAttributeValue);
+					replacementChain = new Replacement(SimPropertyName.SIMOBJPROP_ATTRIBUTEARRAY, expressionSetAttributeValue);
 					isFirstExpression = false;
 				}
 				else {
 					sequence[0] = replacementChain;
-					sequence[1] = new Replacement(Value.VALUE_BY_NAME_SIMOBJ_ATTRIBUTES, expressionSetAttributeValue);
+					sequence[1] = new Replacement(SimPropertyName.SIMOBJPROP_ATTRIBUTEARRAY, expressionSetAttributeValue);
 					replacementChain = new Sequence(sequence);
 
 				}

@@ -26,7 +26,7 @@ import org.socialworld.attributes.Time;
 
 public class Value {
 
-	public static String VALUE_BY_NAME_SIMOBJ_ATTRIBUTES = "attributes";
+	//public static String VALUE_BY_NAME_SIMOBJ_ATTRIBUTES = "attributes";
 
 	public static String VALUE_BY_NAME_ACTION_INTENSITY = "intensityAction";
 	public static String VALUE_BY_NAME_ACTION_WEAPON = "weaponAction";
@@ -55,13 +55,13 @@ public class Value {
 	public static String VALUE_BY_NAME_EVENT_DIRECTION = "directionEvent";
 	public static String VALUE_BY_NAME_EVENT_INTENSITY = "intensityEvent";
 
-	public static String VALUE_BY_NAME_SIMOBJ_DIRECTION_CHEST = "directionChest";
-	public static String VALUE_BY_NAME_SIMOBJ_DIRECTION_VIEW = "directionView";
-	public static String VALUE_BY_NAME_SIMOBJ_DIRECTION_ACTIVEMOVE = "directionActiveMove";
+//	public static String VALUE_BY_NAME_SIMOBJ_DIRECTION_CHEST = "directionChest";
+//	public static String VALUE_BY_NAME_SIMOBJ_DIRECTION_VIEW = "directionView";
+//	public static String VALUE_BY_NAME_SIMOBJ_DIRECTION_ACTIVEMOVE = "directionActiveMove";
 
-	public static String VALUE_BY_NAME_SIMOBJ_POSITION_VECTOR = "position";
-	public static String VALUE_BY_NAME_SIMOBJ_MOVE_DIRECTION = "directionMove";
-	public static String VALUE_BY_NAME_SIMOBJ_MOVE_POWER = "powerMove";
+//	public static String VALUE_BY_NAME_SIMOBJ_POSITION_VECTOR = "position";
+//	public static String VALUE_BY_NAME_SIMOBJ_MOVE_DIRECTION = "directionMove";
+//	public static String VALUE_BY_NAME_SIMOBJ_MOVE_POWER = "powerMove";
 
 	public static String VALUE_BY_NAME_WEAPON_MASS = "mass";
 	public static String VALUE_BY_NAME_WEAPON_HARDNESS = "hardness";

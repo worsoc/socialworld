@@ -28,10 +28,10 @@ import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.move.Path;
 import org.socialworld.actions.move.PathFinder;
 import org.socialworld.attributes.Attribute;
+import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.SimPropertyName;
 import org.socialworld.calculation.FunctionByMatrix;
-import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.collections.ValueArrayList;
@@ -87,12 +87,10 @@ public abstract class Animal extends SimulationObject implements ISeer {
 
 	public Value getProperty(SimPropertyName prop, String name) {
 		switch (prop) {
+		case simobj_attributearray:
 		case simobj_inventory:
-			return this.state.getProperty(prop, name);
 		case simobj_knowledge:
-			return this.state.getProperty(prop, name);
 		case simobj_directionChest:
-			return this.state.getProperty(prop, name);
 		case simobj_directionActiveMove:
 			return this.state.getProperty(prop, name);
 		default:
@@ -110,8 +108,8 @@ public abstract class Animal extends SimulationObject implements ISeer {
 		return this.stateSeer.getSizeDistanceRelationThreshold();
 	}
 
-	final public Vector getDirectionView() {
-		return this.stateSeer.getDirectionView();
+	final public Direction getDirectionView() {
+		return (Direction) getProperty(SimPropertyName.simobj_directionView).getValue();
 	}
 
 	final public float getAngleViewPerceivingObjects() {
@@ -176,12 +174,6 @@ public abstract class Animal extends SimulationObject implements ISeer {
 		}
 	}
 
-	/**
-	 * @return the directionView
-	 */
-	final public Value getDirectionViewAsValue(String valueName) {
-		return new Value( Type.vector, valueName, this.stateSeer.getDirectionView() );
-	}
 
 
 
@@ -246,10 +238,10 @@ public abstract class Animal extends SimulationObject implements ISeer {
 		
 		ValueArrayList propertiesAsValueList = new ValueArrayList();
 		
-		propertiesAsValueList.add(this.state.getAttributesAsValue(Value.VALUE_BY_NAME_SIMOBJ_ATTRIBUTES));
-		propertiesAsValueList.add(this.state.getDirectionChestAsValue(Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_CHEST));
-		propertiesAsValueList.add(getDirectionViewAsValue(Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_VIEW));
-		propertiesAsValueList.add(this.state.getDirectionActiveMoveAsValue(Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_ACTIVEMOVE));
+		propertiesAsValueList.add(getProperty(SimPropertyName.simobj_attributearray));
+		propertiesAsValueList.add(getProperty(SimPropertyName.simobj_directionChest));
+		propertiesAsValueList.add(getProperty(SimPropertyName.simobj_directionView));
+		propertiesAsValueList.add(getProperty(SimPropertyName.simobj_directionActiveMove));
 		paramObject.answerPropertiesRequest(propertiesAsValueList);
 	
 	}

@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.actions.ActionPerformer;
+import org.socialworld.attributes.SimPropertyName;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.objects.SimulationObject;
@@ -50,7 +51,7 @@ public class Equip extends ActionPerformer {
 
 		Value property;
     	
-    	property = properties.getValue(Value.VALUE_BY_NAME_SIMOBJ_ATTRIBUTES);
+    	property = properties.getValue(SimPropertyName.SIMOBJPROP_ATTRIBUTEARRAY);
     	if (property.isValid()) {
     		addProperty(property);
     	}

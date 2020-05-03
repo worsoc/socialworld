@@ -22,6 +22,7 @@
 package org.socialworld.objects.access;
 
 import org.socialworld.actions.AbstractAction;
+import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.collections.IncompleteObjects;
@@ -117,8 +118,8 @@ public class HiddenSimulationObject {
 		return wa.setPosition(pos, this);
 	}
 	
-	public int setMove(Vector direction, float  power) {
-		return wa.setMove(direction, power, this);
+	public int setMove(Direction direction) {
+		return wa.setMove(direction, this);
 	}
 
 	public int setAction(AbstractAction action) {
