@@ -145,7 +145,7 @@ public abstract class Animal extends SimulationObject implements ISeer {
 	}
 	
 	final public Value getAttributesAsValue(String valueName) {
-		return this.state.getAttributesAsValue(valueName);
+		return getProperty(SimPropertyName.simobj_attributearray, valueName);
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
