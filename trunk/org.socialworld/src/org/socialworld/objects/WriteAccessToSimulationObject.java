@@ -23,6 +23,7 @@ package org.socialworld.objects;
 import java.util.List;
 
 import org.socialworld.actions.AbstractAction;
+import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.objects.access.GrantedAccessToProperty;
@@ -143,11 +144,11 @@ public class WriteAccessToSimulationObject {
 			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
 	}
 
-	public int setMove(Vector direction, float power, HiddenSimulationObject caller) {
+	public int setMove(Direction direction, HiddenSimulationObject caller) {
 		if (checkCaller(caller)) 
 			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.directionMove) & 
 					checkAccessToPropertyGranted(caller, GrantedAccessToProperty.powerMove)) {
-				objectsState.setMove(direction, power , this);
+				objectsState.setMove(direction,  this);
 				return WRITE_ACCESS_RETURNS_SUCCESS;
 			}
 			else

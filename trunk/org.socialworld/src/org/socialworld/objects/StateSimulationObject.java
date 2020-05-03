@@ -169,9 +169,9 @@ public abstract class StateSimulationObject extends ListenedBase {
 	}
 	
 	
-	final void setMove(Vector direction, float power, WriteAccessToSimulationObject guard) {
+	final void setMove(Direction direction, WriteAccessToSimulationObject guard) {
 		if (checkGuard(guard)) {
-			this.directionMove = new Direction(SimPropertyName.simobj_directionMove, direction, power);
+			this.directionMove =  direction;
 		}
 		
 	}

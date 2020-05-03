@@ -32,7 +32,7 @@ import org.socialworld.calculation.Value;
  *         to its old value, that means how the attribute has changed by the last calculation
  * @author Mathias Sikos (tyloesand) 
  */
-public class AttributeArray {
+public class AttributeArray extends SimProperty {
 	/**
 	 * The constant holds the informations about the range of values. The range
 	 * of values is from 0 to the constant's value.
@@ -104,6 +104,20 @@ public class AttributeArray {
 			attributes[i] = original.attributes[i];
 		}
 	}
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    ISimProperty  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	@Override
+	protected SimProperty copyForProperty(Type propertyType) {
+		return new AttributeArray(this);
+	}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    Attribute Array  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+	
 	/**
 	 * The method sets an attribute value. The attribute is addressed by the
 	 * attribute index.

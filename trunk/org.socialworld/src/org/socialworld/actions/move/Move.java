@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.actions.ActionPerformer;
+import org.socialworld.attributes.SimPropertyName;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
@@ -71,17 +72,17 @@ public class Move extends ActionPerformer {
     	
     	Value property;
     	
-    	property = properties.getValue(Value.VALUE_BY_NAME_SIMOBJ_ATTRIBUTES);
+    	property = properties.getValue(SimPropertyName.SIMOBJPROP_ATTRIBUTEARRAY);
     	if (property.isValid()) {
     		addProperty(property);
     	}
  
-       	property = properties.getValue(Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_CHEST);
+       	property = properties.getValue(SimPropertyName.SIMOBJPROP_DIRECTION_CHEST);
     	if (property.isValid()) {
     		addProperty(property);
     	}
 
-       	property = properties.getValue(Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_VIEW);
+       	property = properties.getValue(SimPropertyName.SIMOBJPROP_DIRECTION_VIEW);
     	if (property.isValid()) {
     		addProperty(property);
     	}

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.socialworld.actions.ActionMode;
 import org.socialworld.attributes.Attribute;
+import org.socialworld.attributes.SimPropertyName;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.FunctionByExpression;
 import org.socialworld.calculation.Value;
@@ -224,7 +225,7 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				
 				
 				// directionHit
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_VIEW + ")", Value.VALUE_BY_NAME_EVENT_DIRECTION );
+				startExpression = new Calculate("GET(" + SimPropertyName.SIMOBJPROP_DIRECTION_VIEW + ")", Value.VALUE_BY_NAME_EVENT_DIRECTION );
 				result.add( new FunctionByExpression(startExpression) );
 
 				// actorsIntensity
@@ -239,11 +240,11 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				result.add( new FunctionByExpression(startExpression) );
 
 				// directionChest
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_CHEST + ")", Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_CHEST);
+				startExpression = new Calculate("GET(" + SimPropertyName.SIMOBJPROP_DIRECTION_CHEST + ")", SimPropertyName.SIMOBJPROP_DIRECTION_CHEST);
 				result.add( new FunctionByExpression(startExpression) );
 
 				// directionView
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_VIEW + ")", Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_VIEW);
+				startExpression = new Calculate("GET(" + SimPropertyName.SIMOBJPROP_DIRECTION_VIEW + ")", SimPropertyName.SIMOBJPROP_DIRECTION_VIEW);
 				result.add( new FunctionByExpression(startExpression) );
 				
 				break;
@@ -251,7 +252,7 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 			case weaponClub:
 				
 				// directionHit
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_VIEW + ")", Value.VALUE_BY_NAME_EVENT_DIRECTION );
+				startExpression = new Calculate("GET(" + SimPropertyName.SIMOBJPROP_DIRECTION_VIEW + ")", Value.VALUE_BY_NAME_EVENT_DIRECTION );
 				result.add( new FunctionByExpression(startExpression) );
 
 				// actorsIntensity
@@ -270,11 +271,11 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				result.add( new FunctionByExpression(startExpression) );
 
 				// directionChest
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_CHEST + ")", Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_CHEST);
+				startExpression = new Calculate("GET(" + SimPropertyName.SIMOBJPROP_DIRECTION_CHEST + ")", SimPropertyName.SIMOBJPROP_DIRECTION_CHEST);
 				result.add( new FunctionByExpression(startExpression) );
 
 				// directionView
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_VIEW + ")", Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_VIEW);
+				startExpression = new Calculate("GET(" + SimPropertyName.SIMOBJPROP_DIRECTION_VIEW + ")", SimPropertyName.SIMOBJPROP_DIRECTION_VIEW);
 				result.add( new FunctionByExpression(startExpression) );
 				
 				break;
@@ -291,7 +292,7 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				result.add( new FunctionByExpression(startExpression) );
 
 				// directionView
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_VIEW + ")", Value.VALUE_BY_NAME_SIMOBJ_DIRECTION_VIEW);
+				startExpression = new Calculate("GET(" + SimPropertyName.SIMOBJPROP_DIRECTION_VIEW + ")", SimPropertyName.SIMOBJPROP_DIRECTION_VIEW);
 				result.add( new FunctionByExpression(startExpression) );
 
 				break;

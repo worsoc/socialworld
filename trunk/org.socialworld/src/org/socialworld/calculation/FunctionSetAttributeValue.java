@@ -3,6 +3,7 @@ package org.socialworld.calculation;
 
 import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.AttributeArray;
+import org.socialworld.attributes.SimPropertyName;
 import org.socialworld.collections.ValueArrayList;
 
 public class FunctionSetAttributeValue extends FunctionBase {
@@ -31,7 +32,7 @@ public class FunctionSetAttributeValue extends FunctionBase {
 				AttributeArray attributes = new AttributeArray((AttributeArray) arguments.get(0).getValue());
 				newAttributeValue = (int)arguments.get(1).getValueCopy();
 				attributes.set(this.indexAttribute, newAttributeValue);
-				return new Value(Type.attributeArray, Value.VALUE_BY_NAME_SIMOBJ_ATTRIBUTES, attributes);
+				return new Value(Type.attributeArray, SimPropertyName.SIMOBJPROP_ATTRIBUTEARRAY, attributes);
 			}
 		}
 		else if (arguments.size() == 2) {
@@ -41,7 +42,7 @@ public class FunctionSetAttributeValue extends FunctionBase {
 				AttributeArray attributes = new AttributeArray((AttributeArray) arguments.get(0).getValue());
 				newAttributeValue = (int)arguments.get(1).getValueCopy();
 				attributes.set(this.indexAttribute, newAttributeValue);
-				return new Value(Type.attributeArray, Value.VALUE_BY_NAME_SIMOBJ_ATTRIBUTES, attributes);
+				return new Value(Type.attributeArray, SimPropertyName.SIMOBJPROP_ATTRIBUTEARRAY, attributes);
 			}
 		}
 		

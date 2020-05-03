@@ -28,7 +28,9 @@ import java.util.ListIterator;
 
 
 import org.socialworld.SocialWorld;
+import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
+import org.socialworld.calculation.Value;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.objects.Animal;
 import org.socialworld.objects.SimulationObject;
@@ -100,7 +102,7 @@ public class EventMaster extends SocialWorldThread {
 	/**
 	 * the direction how the event has effects.
 	 */
-	private Vector eventDirection;
+	private Value eventDirection;
 	
 
 	/**
@@ -312,14 +314,17 @@ public class EventMaster extends SocialWorldThread {
 				return 0;
 			}
 			else {
-				
-				if (this.eventDirection.is000()) {
+				Vector vectorDirectionEvent;
+				Direction directionEvent;
+				directionEvent = (Direction) this.eventDirection.getValue();
+				vectorDirectionEvent = directionEvent.getVector();
+				if (vectorDirectionEvent.is000()) {
 					return 3;
 				}
 				else {
 					effectAngleToRadians = Math.toRadians(this.effectAngle);
 					
-					cosineBetweenDirections = direction.getCosPhi(this.eventDirection);
+					cosineBetweenDirections = direction.getCosPhi(vectorDirectionEvent);
 					angleBetweenDirectionsToRadians = Math.acos(cosineBetweenDirections);
 					
 					if (angleBetweenDirectionsToRadians <= effectAngleToRadians)

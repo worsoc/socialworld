@@ -353,9 +353,11 @@ public abstract class SimulationObject extends ListenedBase implements IPercepti
 	
 		ValueArrayList propertiesAsValueList = new ValueArrayList();
 		
-		propertiesAsValueList.add(this.state.getPositionVectorAsValue(Value.VALUE_BY_NAME_SIMOBJ_POSITION_VECTOR));
-		propertiesAsValueList.add(this.state.getDirectionMoveAsValue(Value.VALUE_BY_NAME_SIMOBJ_MOVE_DIRECTION));
-		propertiesAsValueList.add(this.state.getPowerMoveAsValue(Value.VALUE_BY_NAME_SIMOBJ_MOVE_POWER));
+		propertiesAsValueList.add(getProperty(SimPropertyName.simobj_position));
+			//	this.state.getPositionVectorAsValue(Value.VALUE_BY_NAME_SIMOBJ_POSITION_VECTOR)
+		propertiesAsValueList.add(getProperty(SimPropertyName.simobj_directionMove));
+			//	this.state.getDirectionMoveAsValue(Value.VALUE_BY_NAME_SIMOBJ_MOVE_DIRECTION)
+		//propertiesAsValueList.add(this.state.getPowerMoveAsValue(Value.VALUE_BY_NAME_SIMOBJ_MOVE_POWER));
 
 		paramObject.answerPropertiesRequest(propertiesAsValueList);
 	
