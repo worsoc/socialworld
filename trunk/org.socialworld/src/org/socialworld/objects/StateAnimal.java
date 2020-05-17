@@ -29,7 +29,6 @@ import org.socialworld.attributes.AttributeArray;
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.SimPropertyName;
 import org.socialworld.calculation.FunctionByMatrix;
-import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.calculation.geometry.Vector;
@@ -78,6 +77,9 @@ public class StateAnimal extends StateSimulationObject {
 		
 		attributes = new AttributeArray(Attribute.NUMBER_OF_ATTRIBUTES);
 		
+		this.directionChest = new Direction(SimPropertyName.simobj_directionChest);
+		this.directionActiveMove = new Direction(SimPropertyName.simobj_directionActiveMove);
+		
 	}
 
 
@@ -98,7 +100,7 @@ public class StateAnimal extends StateSimulationObject {
 		case simobj_directionActiveMove:
 			return this.directionActiveMove.getAsValue(name);
 		default:
-			return super.getProperty(prop);
+			return super.getProperty(prop, name);
 		}
 	}
 
@@ -215,12 +217,12 @@ public class StateAnimal extends StateSimulationObject {
 	}
 
 	final public Value getDirectionChestAsValue(String valueName) {
-		return new Value( Type.vector, valueName, this.directionChest.getVector() );
+		return  this.directionChest.getAsValue(valueName);
 	}
 	
 
 	final public Value getDirectionActiveMoveAsValue(String valueName) {
-		return new Value( Type.vector, valueName, this.directionActiveMove.getVector() );
+		return  this.directionActiveMove.getAsValue(valueName) ;
 	}
 
 

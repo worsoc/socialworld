@@ -94,7 +94,7 @@ public abstract class Animal extends SimulationObject implements ISeer {
 		case simobj_directionActiveMove:
 			return this.state.getProperty(prop, name);
 		default:
-			return super.getProperty(prop);
+			return super.getProperty(prop, name);
 		}
 	}
 	
@@ -109,7 +109,7 @@ public abstract class Animal extends SimulationObject implements ISeer {
 	}
 
 	final public Direction getDirectionView() {
-		return (Direction) getProperty(SimPropertyName.simobj_directionView).getValue();
+		return (Direction) stateSeer.getProperty(SimPropertyName.simobj_directionView).getValue();
 	}
 
 	final public float getAngleViewPerceivingObjects() {

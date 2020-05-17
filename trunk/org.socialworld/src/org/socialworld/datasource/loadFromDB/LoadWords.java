@@ -71,7 +71,7 @@ public class LoadWords {
 		
 		boolean subjectable;
 	
-		tableLexem.select(tableLexem.SELECT_ALL_COLUMNS, "", " ORDER BY lexem_type");
+		tableLexem.select(tableLexem.SELECT_ALL_COLUMNS, "", " ORDER BY type");
 		rowCount = tableLexem.rowCount();
 		
 		allLexems = new Array<Lexem>(rowCount);
@@ -111,7 +111,7 @@ public class LoadWords {
 		Word pronoun;
 		
 		// pronouns first (--> ORDER BY type (pronouns have got the smallest type numbers))
-		viewWordJoinLexem.select(viewWordJoinLexem.SELECT_ALL_COLUMNS, "", " ORDER BY word_type");
+		viewWordJoinLexem.select(viewWordJoinLexem.SELECT_ALL_COLUMNS, "", " ORDER BY type");
 		rowCount = viewWordJoinLexem.rowCount();
 		
 		allWords = new Array<Word>(rowCount);

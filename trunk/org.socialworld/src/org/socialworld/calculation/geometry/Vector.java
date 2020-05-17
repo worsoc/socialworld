@@ -36,6 +36,8 @@ public class Vector {
 
 	boolean normalized = false;
 	
+	public static Vector vector0;
+	
 	public Vector() {
 
 	}
@@ -77,6 +79,13 @@ public class Vector {
 			this.y = Float.parseFloat(values[1]);
 			this.z = Float.parseFloat(values[2]);
 		}
+	}
+	
+	public static Vector get0Vector() {
+		if (vector0 == null) {
+			vector0 = new Vector(0,0,0);
+		}
+		return vector0;
 	}
 	
 	public void normalize() {

@@ -11,6 +11,7 @@ public enum SimPropertyName {
 	simobj_directionMove, simobj_directionChest, simobj_directionView, simobj_directionActiveMove,
 	simobj_inventory,
 	simobj_knowledge,
+	simobj_stateSeer,
 	
 	event_position,
 	event_direction,
@@ -25,6 +26,7 @@ public enum SimPropertyName {
 	public final static String SIMOBJPROP_DIRECTION_CHEST = "direction_chest";
 	public final static String SIMOBJPROP_DIRECTION_VIEW = "direction_view";
 	public final static String SIMOBJPROP_DIRECTION_ACTIVEMOVE = "direction_activemove";
+	public final static String SIMOBJPROP_STATE_SEER = "state_seer";
 	
 	public final static String EVENT_POSITION = "event_position";
 	public final static String EVENT_DIRECTION = "event_direction";
@@ -44,6 +46,7 @@ public enum SimPropertyName {
 		case simobj_directionChest: 
 		case simobj_directionView: 
 		case simobj_directionActiveMove: 
+		case simobj_stateSeer: 
 			return Type.simObjProp; 
 		case event_position:
 		case event_direction:
@@ -83,6 +86,7 @@ public enum SimPropertyName {
 		case simobj_directionChest: return SIMOBJPROP_DIRECTION_CHEST;
 		case simobj_directionView: return SIMOBJPROP_DIRECTION_VIEW;
 		case simobj_directionActiveMove: return SIMOBJPROP_DIRECTION_ACTIVEMOVE; 
+		case simobj_stateSeer: return SIMOBJPROP_STATE_SEER; 
 		
 		case event_position: return EVENT_POSITION; 
 		case event_direction: return EVENT_DIRECTION; 

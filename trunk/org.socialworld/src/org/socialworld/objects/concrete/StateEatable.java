@@ -1,13 +1,33 @@
 package org.socialworld.objects.concrete;
 
+import org.socialworld.attributes.SimPropertyName;
 import org.socialworld.attributes.properties.NutrientProperty;
 import org.socialworld.attributes.properties.TasteProperty;
+import org.socialworld.calculation.Type;
+import org.socialworld.calculation.Value;
 import org.socialworld.objects.State;
 
 public class StateEatable extends State {
 
 	NutrientProperty nutrientProps;
 	TasteProperty tasteProps;
+
+	public StateEatable() {
+		
+	}
+	
+	private StateEatable(StateEatable original) {
+		// TODO implement copy constructor
+	}
+	
+	protected State copyForProperty(Type propertyType) {
+		return new StateEatable(this);
+	}
+
+	public  Value getProperty(SimPropertyName prop, String name) {
+		// TODO implement getProperty()
+		return new Value();
+	}
 
 	public NutrientProperty getNutrientProperties() { return new NutrientProperty(nutrientProps); }
 //	protected NutrientProperty getOriginalNutrientProperties() { return nutrientProps; }

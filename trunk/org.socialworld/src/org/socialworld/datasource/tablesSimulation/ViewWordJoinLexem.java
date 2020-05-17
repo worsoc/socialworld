@@ -7,16 +7,16 @@ import org.socialworld.datasource.mariaDB.Table;
 
 public class ViewWordJoinLexem extends Table {
 
-	public final  String 	ALL_COLUMNS 		=	" word_id, word, lexem_id, word_type, numerus, pronoun_word_id, subjectable, lexem_type ";
+	public final  String 	ALL_COLUMNS 		=	" word_id, word, lexem_id, tense, numerus, pronoun_word_id, subjectable, type ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
 	int word_id[];
 	String word[];
 	int lexem_id[];
-	int word_type[];
+	int tense[];
 	int numerus[];
 	int pronoun_word_id[];
-	int lexem_type[];
+	int type[];
 	int subjectable[];
 	
 	@Override
@@ -59,11 +59,11 @@ public class ViewWordJoinLexem extends Table {
 		word_id = new int[rowCount];
 		word = new String[rowCount];
 		lexem_id = new int[rowCount];
-		word_type = new int[rowCount];
+		tense = new int[rowCount];
 		numerus = new int[rowCount];
 		pronoun_word_id = new int[rowCount];
 		subjectable = new int[rowCount];
-		lexem_type = new int[rowCount];
+		type = new int[rowCount];
 
 		try {
 			while (rs.next()) {
@@ -71,11 +71,11 @@ public class ViewWordJoinLexem extends Table {
 				word_id[row] = rs.getInt(1);
 				word[row] = rs.getString(2);
 				lexem_id[row] = rs.getInt(3);
-				word_type[row] = rs.getInt(4);
+				tense[row] = rs.getInt(4);
 				numerus[row] = rs.getInt(5);
 				pronoun_word_id[row] = rs.getInt(6);
 				subjectable[row] = rs.getInt(7);
-				lexem_type[row] = rs.getInt(8);
+				type[row] = rs.getInt(8);
 				
 				row++;
 			}
@@ -102,7 +102,7 @@ public class ViewWordJoinLexem extends Table {
 	}
 
 	public int getTense(int index) {
-		return word_type[index];
+		return tense[index];
 	}
 	
 	public int getNumerus(int index) {
@@ -117,8 +117,8 @@ public class ViewWordJoinLexem extends Table {
 		return subjectable[index];
 	}
 	
-	public int getWordType(int index) {
-		return lexem_type[index];
+	public int getType(int index) {
+		return type[index];
 	}
 
 }

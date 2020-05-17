@@ -74,6 +74,7 @@ public abstract class StateSimulationObject extends ListenedBase {
 		grantAccessToPropertyAction = new GrantedAccessToProperty[1];
 		grantAccessToPropertyAction[0] = GrantedAccessToProperty.action;
 		
+		this.directionMove = new Direction(SimPropertyName.simobj_directionMove);
 		//stateAddOns = new ArrayList<State>();
 		
 	}
@@ -148,7 +149,7 @@ public abstract class StateSimulationObject extends ListenedBase {
 		case simobj_directionMove:
 			return this.directionMove.getAsValue(name);
 		default:
-			return new Value();
+			return getStateAsProperty( prop,  name) ;
 		}
 	}
 
@@ -177,12 +178,7 @@ public abstract class StateSimulationObject extends ListenedBase {
 	}
 	
 	final public Value getDirectionMoveAsValue(String valueName) {
-		return new Value( Type.vector, valueName, this.directionMove.getVector() );
-	}
-
-		
-	final public Value getPowerMoveAsValue(String valueName) {
-		return new Value( Type.floatingpoint, valueName, this.directionMove.getPower() );
+		return this.directionMove.getAsValue(valueName);
 	}
 
 	final void setInfluenceTypes (int types[], WriteAccessToSimulationObject guard) {
@@ -268,6 +264,24 @@ public abstract class StateSimulationObject extends ListenedBase {
 		if (checkGuard(guard)) {
 			this.connections.release(connection, connectedObject);
 		}
+	}
+	
+	
+	private Value getStateAsProperty(SimPropertyName prop, String name) {
+		State stateAddOn;
+		Value result = new Value();
+		
+		for (int nrStateAddOn = 0; nrStateAddOn < stateAddOns.size(); nrStateAddOn++) {
+			
+			stateAddOn = stateAddOns.get(nrStateAddOn);
+		
+			if (stateAddOn.getPropertyName() == prop) {
+				result = stateAddOn.getAsValue(name);
+				break;
+			}
+			
+		}
+		return result;
 	}
 	
 	private void callMethod(String stateClassName, String methodName) {
