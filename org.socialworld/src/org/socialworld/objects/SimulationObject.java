@@ -167,7 +167,7 @@ public abstract class SimulationObject extends ListenedBase implements IPercepti
 		case simobj_position:
 			return this.state.getProperty(prop, name);
 		default:
-			return new Value();
+			return this.state.getProperty(prop, name);
 		}
 	}
 	

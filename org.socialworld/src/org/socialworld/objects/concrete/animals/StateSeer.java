@@ -1,7 +1,9 @@
 package org.socialworld.objects.concrete.animals;
 
+
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.SimPropertyName;
+import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.calculation.geometry.VectorMapper;
@@ -21,12 +23,22 @@ public class StateSeer extends State {
 	private double sizeDistanceRelationThreshold;
 	
 	public StateSeer() {
+		setPropertyName(SimPropertyName.simobj_stateSeer);
 		setDirectionView( new Vector(2,1,0));
 		setAngleViewPerceivingObjects(20.0F);
 		setAngleViewPerceivingEvents(60.0F);
 	}
 	
+	private StateSeer(StateSeer original) {
+		// TODO implement copy constructor
+		setPropertyName(SimPropertyName.simobj_stateSeer);
+		this.angleViewPerceivingEvents = original.getAngleViewPerceivingEvents();
+	}
 	
+	protected State copyForProperty(Type propertyType) {
+		return new StateSeer(this);
+	}
+
 	public Value getProperty(SimPropertyName prop, String name) {
 		
 		switch (prop) {
@@ -37,7 +49,7 @@ public class StateSeer extends State {
 		}
 	}
 
-	
+
 	public double getSizeDistanceRelationThreshold() {
 		return this.sizeDistanceRelationThreshold;
 	}

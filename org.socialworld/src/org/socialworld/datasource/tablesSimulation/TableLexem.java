@@ -7,11 +7,11 @@ import org.socialworld.datasource.mariaDB.Table;
 
 public class TableLexem extends Table {
 
-	public final  String 	ALL_COLUMNS 		=	" lexem_id, subjectable, lexem_type ";
+	public final  String 	ALL_COLUMNS 		=	" lexem_id, subjectable, type ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 	
 	int lexem_id[];
-	int lexem_type[];
+	int type[];
 	int subjectable[];
 	
 	@Override
@@ -49,14 +49,14 @@ public class TableLexem extends Table {
 
 	}
 
-	public void insert(int lexem_id,  int subjectable,  int lexem_type) {
+	public void insert(int lexem_id,  int subjectable,  int type) {
 		String statement;
 			
 		if (lexem_id > 0) {
 	
 
-			statement 	= "INSERT INTO sw_lexem (lexem_id, subjectable, lexem_type) VALUES (" + 
-					lexem_id +  ", " + subjectable + ", " + lexem_type  + ")";
+			statement 	= "INSERT INTO sw_lexem (lexem_id, subjectable, type) VALUES (" + 
+					lexem_id +  ", " + subjectable + ", " + type  + ")";
 			
 			insert(statement);
 		}
@@ -77,14 +77,14 @@ public class TableLexem extends Table {
 		int row = 0;
 		lexem_id = new int[rowCount];
 		subjectable = new int[rowCount];
-		lexem_type = new int[rowCount];
+		type = new int[rowCount];
 
 		try {
 			while (rs.next()) {
 				
 				lexem_id[row] = rs.getInt(1);
 				subjectable[row] = rs.getInt(2);
-				lexem_type[row] = rs.getInt(3);
+				type[row] = rs.getInt(3);
 				
 				row++;
 			}
@@ -106,7 +106,7 @@ public class TableLexem extends Table {
 	}
 	
 	public int getType(int index) {
-		return lexem_type[index];
+		return type[index];
 	}	
 	
 }
