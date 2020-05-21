@@ -1,9 +1,13 @@
 package org.socialworld.datasource.pool;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.FunctionByExpression;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.descriptions.EventPerceptionDescription;
-import org.socialworld.calculation.expressions.Calculate;
+import org.socialworld.calculation.expressions.GetValue;
 import org.socialworld.core.EventType;
 
 public class EventPerceptionDescriptionPool extends DescriptionPool {
@@ -52,11 +56,13 @@ public class EventPerceptionDescriptionPool extends DescriptionPool {
 	protected void initialize() {
 		// TODO Auto-generated method stub
 
+		Expression startExpression;
+		List<FunctionByExpression> result;
+		result = new ArrayList<FunctionByExpression>();
 		
-		/*
-		startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_DIRECTION + ")", Value.VALUE_BY_NAME_EVENT_DIRECTION );
+		startExpression = new GetValue(GetValue.getValue(Value.VALUE_BY_NAME_ACTION_DIRECTION)  ,  Value.VALUE_BY_NAME_EVENT_DIRECTION );
 		result.add( new FunctionByExpression(startExpression) );
-		*/
+		
 	}
 
 }

@@ -30,19 +30,17 @@ package org.socialworld.calculation;
  * @author Mathias Sikos (tyloesand)
  */
 public enum Expression_Function {
-	branching(1), condition(2), comparison(3),
-	addition(4), subtraction(14), multiplication(5), division(15),
-	function(6),
-	replacement(7),
-	sequence(8),
-	value(9), attributeValue(10), argumentValueByName(11), valueFromValueList(12),
-	create(13),
+	branching(1), condition(2), comparison(3), replacement(4),	sequence(5),
+	addition(11), subtraction(12), multiplication(13), division(14),
+	function(21), property(22), get(23),
+	create(31),
+	value(41), attributeValue(42), argumentValueByName(43), valueFromValueList(44),
 	nothing(0);
 
-	private int arrayIndex;
+	private int index;
 
 	private Expression_Function(int index) {
-		this.arrayIndex = index;
+		this.index = index;
 	}
 	
 	/**
@@ -53,9 +51,9 @@ public enum Expression_Function {
 	 *            function index
 	 * @return expression function name
 	 */
-	public static Expression_Function getName(int arrayIndex) {
+	public static Expression_Function getName(int index) {
 		for (Expression_Function function : Expression_Function.values())
-			if (function.arrayIndex == arrayIndex)
+			if (function.index == index)
 				return function;
 		return null;
 	}	

@@ -27,6 +27,15 @@ public class CreateValue extends Expression {
 		
 	}
 	
+	protected CreateValue(Type type) {
+		
+		super();
+		
+		setOperation(Expression_Function.create);
+		setValue(new Value(Type.integer, type.getIndex()));
+		
+	}
+	
 	protected Value createValue(Type valueType, ValueArrayList arguments) {
 
 		Object createdObject = null;
@@ -56,7 +65,7 @@ public class CreateValue extends Expression {
 		case knowledgeElement:
 			
 			localArguments =  (ValueArrayList) arguments.getValue(Value.VALUE_BY_NAME_KNOWLEDGE_ELEMENT_PROPS).getValue();
-			createdObject  = KnowledgeCalculator.createKnowledgeElement(arguments);
+			createdObject  = KnowledgeCalculator.createKnowledgeElement(localArguments);
 			break;
 			
 		default:

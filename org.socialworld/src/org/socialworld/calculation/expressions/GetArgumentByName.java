@@ -35,9 +35,22 @@ public class GetArgumentByName extends Expression {
 		
 		setOperation(Expression_Function.argumentValueByName);
 		setValue(new Value(Type.string, name));
+		setExpression1(new Constant(new Value(Type.string, "")));
+
+		setValid();
+
+	}
+
+	public GetArgumentByName(String name, String aliasName) {
+		
+		super();
+		
+		setOperation(Expression_Function.argumentValueByName);
+		setValue(new Value(Type.string, name));
+		setExpression1(new Constant(new Value(Type.string, aliasName)));
 		
 		setValid();
 
 	}
-	
+
 }

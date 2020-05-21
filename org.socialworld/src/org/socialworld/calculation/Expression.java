@@ -22,8 +22,15 @@
 package org.socialworld.calculation;
 
 
+import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.AttributeArray;
+import org.socialworld.attributes.SimPropertyName;
+import org.socialworld.calculation.expressions.Nothing;
 import org.socialworld.collections.ValueArrayList;
+import org.socialworld.core.Event;
+import org.socialworld.objects.SimulationObject;
+import org.socialworld.objects.State;
+import org.socialworld.objects.StateSimulationObject;
 
 /**
  * The class is an implementation of an
@@ -69,6 +76,11 @@ public class Expression {
 		calculation = Calculation.getInstance();
 		functions = Functions.getInstance();
 		operation = Expression_Function.nothing;
+		
+		setExpression1(Nothing.getInstance());
+		setExpression2(Nothing.getInstance());
+		setExpression3(Nothing.getInstance());
+		
 		isValid = false;
 	}
 	
@@ -160,16 +172,22 @@ public class Expression {
 					
 				case attributeValue:
 					AttributeArray attributeArray;
-					attributeArray = (AttributeArray) get( arguments, Type.attributeArray, 1);
+					attributeArray = (AttributeArray) getFromValueArrayList( arguments, Type.attributeArray, 1);
 					index = (int) value.getValueCopy();
 					return calculation.createValue(
 						Type.integer,
 						attributeArray.get(index ));
 						
 				case argumentValueByName:
-					return arguments.getValue( (String) value.getValueCopy());
 					
+					tmp = arguments.getValue( (String) value.getValueCopy());
+					name = (String) expression1.evaluate(arguments).getValueCopy();
+					if (name.length() > 0) {
+							tmp.changeName(name);
+					}
+ 					return tmp;
 					
+										
 				case valueFromValueList:
 					// get value list's name
 					name =  (String) expression1.evaluate(arguments).getValueCopy();
@@ -180,6 +198,22 @@ public class Expression {
 					name = (String) expression2.evaluate(arguments).getValueCopy();
 					// get the result value from the value list
 					return subValueList.getValue(name);
+	
+				case property:
+					
+					Value object = arguments.get(0);
+					SimPropertyName simPropName = (SimPropertyName) value.getValue();
+					String methodName = (String) expression2.evaluate(arguments).getValueCopy();
+					name = (String) expression1.evaluate(arguments).getValueCopy();
+
+					return getProperty(object, simPropName, methodName, name);
+				
+				case get:
+					
+					ValueArrayList subArgument = new ValueArrayList();
+					subArgument.add(expression1.evaluate(arguments));
+					tmp = expression2.evaluate(subArgument);
+					return tmp;
 					
 				case branching:
 					tmp = expression1.evaluate(arguments);
@@ -304,6 +338,16 @@ public class Expression {
 					case time:
 						createdValue = calculation.createValue(type, expression1.evaluate().getValueCopy());
 						break;
+					case knowledgeElement:
+						ValueArrayList knowledgeElementSourceAndAtoms = new ValueArrayList();
+						// expression1 is a sequence expression
+						expression1.evaluate(arguments);
+						int size = arguments.size();
+						for ( index = 1; index < size; index++) {
+							knowledgeElementSourceAndAtoms.add(arguments.get(index));
+						}
+						createdValue = createValue(type, knowledgeElementSourceAndAtoms);
+						break;
 					default:
 						createdValue = Calculation.getNothing();
 					}
@@ -328,7 +372,7 @@ public class Expression {
 	
 	
 
-	private Object get(ValueArrayList arguments, Type type, int wantedOccurence) {
+	private Object getFromValueArrayList(ValueArrayList arguments, Type type, int wantedOccurence) {
 		
 		Value value;
 		value = arguments.getValue(type, wantedOccurence);
@@ -342,6 +386,58 @@ public class Expression {
 		
 	}
 
+	private Value getProperty(Value valueObject, SimPropertyName simPropName, String methodName, String valueName) {
+		
+		Value result;
+		result = Calculation.nothing;
+		Object object = valueObject.getValue();
+		
+		if (simPropName == SimPropertyName.unknown) {
+			
+			if (methodName.length() > 0) {
+			
+				// use reflection for calling the method
+				
+				if (object instanceof State) {
+					State state = (State) object;
+					result = state.getValue(methodName, valueName);
+				}
+				
+			}
+		
+		}
+		else {
+			
+			// call getProperty()
+			
+			if (object instanceof SimulationObject) {
+				SimulationObject simObj;
+				simObj = (SimulationObject) object;
+				result = simObj.getProperty(simPropName, valueName);
+			}
+			else if (object instanceof StateSimulationObject) {
+				StateSimulationObject stateSimObj;
+				stateSimObj = (StateSimulationObject) object;
+				result = stateSimObj.getProperty(simPropName, valueName);
+			}
+			else if (object instanceof State) {
+				State stateAddOn;
+				stateAddOn = (State) object;
+				result = stateAddOn.getProperty(simPropName, valueName);
+			}
+			else if (object instanceof Event) {
+				
+			}
+			else if (object instanceof AbstractAction) {
+				
+			}
+			
+		}
+
+		return result;
+		
+	}
+	
 	// will be overrided in inherited Expressions dedicated to creating values
 	protected Value createValue(Type valueType, ValueArrayList arguments) {
 		return new Value();

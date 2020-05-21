@@ -21,12 +21,27 @@
 */
 package org.socialworld.calculation.expressions;
 
+import java.util.List;
+
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
 
 public class Sequence extends Expression {
 
 	public Sequence(Expression[] expressions) {
+		
+		init(expressions);
+		
+	}
+
+	public Sequence(List<Expression> expressions) {
+		
+		Expression[] expressionsAsArray = expressions.toArray(new Expression[0]);
+		init(expressionsAsArray);
+		
+	}
+	
+	private void init(Expression[] expressions) {
 		
 		Expression[] expressionsA;
 		Expression[] expressionsB;
@@ -103,6 +118,7 @@ public class Sequence extends Expression {
 		setValid();
 		
 	}
+	
 	
 	
 }

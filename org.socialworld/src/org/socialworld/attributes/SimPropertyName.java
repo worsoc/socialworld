@@ -98,5 +98,25 @@ public enum SimPropertyName {
 		
 	}
 
-
+	public static SimPropertyName forString(String name) {
+		
+		switch (name) {
+		case "unknown": return unknown; 
+		case SIMOBJPROP_POSITION: return simobj_position;
+		case SIMOBJPROP_ATTRIBUTEARRAY: return simobj_attributearray;
+		case SIMOBJPROP_INVENTORY: return simobj_inventory; 
+		case SIMOBJPROP_KNOWLEDGE: return simobj_knowledge;
+		case SIMOBJPROP_DIRECTION_MOVE: return simobj_directionMove;
+		case SIMOBJPROP_DIRECTION_CHEST: return simobj_directionChest;
+		case SIMOBJPROP_DIRECTION_VIEW: return simobj_directionView;
+		case SIMOBJPROP_DIRECTION_ACTIVEMOVE: return simobj_directionActiveMove; 
+		case SIMOBJPROP_STATE_SEER: return simobj_stateSeer; 
+		
+		case EVENT_POSITION: return event_position; 
+		case EVENT_DIRECTION: return event_direction; 
+		
+		case ACTION_POSITION: return action_position;
+		default: return unknown;
+		}
+	}
 }
