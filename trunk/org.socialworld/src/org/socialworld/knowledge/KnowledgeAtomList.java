@@ -160,7 +160,7 @@ public class KnowledgeAtomList  {
 			
 			replacableIndex = getReplacableIndex();
 			
-			atom.resetAcccessCount();
+			atom.resetAccessCount();
 			atom.incrementAccessCount();
 			atom.incrementAccessCount();
 			
@@ -193,7 +193,7 @@ public class KnowledgeAtomList  {
 		
 		if (kaTmp.isItemValid()) {
 			kaTmp.setValid( false);
-			kaTmp.resetAcccessCount();
+			kaTmp.resetAccessCount();
 			this.validItemCount--;
 		}
 	}
