@@ -21,8 +21,39 @@
 */
 package org.socialworld.knowledge;
 
+
 public enum KnowledgeAtomType {
 
-	relationUnaer, relationBinaer, relationTrinaer, property, value;
+	relationUnaer(21), relationBinaer(22), relationTrinaer(23), property(11), value(1);
 	
+	private int index;
+
+	private KnowledgeAtomType(int index) {
+		this.index = index;
+	}
+	
+	/**
+	 * The method returns the index of the KnowledgeAtomType.
+	 * 
+	 * @return type's index
+	 */
+	public int getIndex() {
+		return index;
+	}
+
+	/**
+	 * The method returns the type name which belongs to the parameter
+	 * type index.
+	 * 
+	 * @param index
+	 *            type index
+	 * @return type name
+	 */
+	public static KnowledgeAtomType getName(int index) {
+		for (KnowledgeAtomType type : KnowledgeAtomType.values())
+			if (type.index == index)
+				return type;
+		return null;
+	}	
+
 }

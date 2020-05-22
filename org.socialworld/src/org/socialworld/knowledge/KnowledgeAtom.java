@@ -15,7 +15,7 @@ public abstract class KnowledgeAtom {
 		return this.itemIsValid;
 	}
 	
-	void resetAcccessCount() {
+	void resetAccessCount() {
 		this.itemAccessCount = 0;
 	}
 	

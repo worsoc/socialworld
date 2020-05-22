@@ -10,7 +10,7 @@ public class KnowledgeValue extends KnowledgeAtom {
 	public KnowledgeValue(KnowledgeValue original) {
 		if (original != null) {
 			this.setValid(original.isItemValid());
-			this.resetAcccessCount();
+			this.resetAccessCount();
 			this.value = original.value;
 
 		}

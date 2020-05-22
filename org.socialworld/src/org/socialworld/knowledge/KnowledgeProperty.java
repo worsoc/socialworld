@@ -17,7 +17,7 @@ public class KnowledgeProperty extends KnowledgeFact {
 			this.criterion  = original.getCriterion();
 			this.value = new KnowledgeFact_Value(original.getValue());
 			this.setValid(original.isItemValid());
-			this.resetAcccessCount();
+			this.resetAccessCount();
 		}
 	}
 	
