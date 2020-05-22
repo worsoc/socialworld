@@ -1,10 +1,29 @@
+/*
+* Social World
+* Copyright (C) 2014  Mathias Sikos
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
+*
+* or see http://www.gnu.org/licenses/gpl-2.0.html
+*
+*/
 package org.socialworld.calculation.expressions;
 
 import org.socialworld.attributes.SimPropertyName;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
-import org.socialworld.calculation.Type;
-import org.socialworld.calculation.Value;
 
 public class GetValue extends Expression {
 
@@ -20,15 +39,11 @@ public class GetValue extends Expression {
 		steps = getValuePath.split(".");
 		
 		if (steps.length > 0) {
-			setOperation(Expression_Function.branching);
+			setOperation(Expression_Function.oneExpression);
 			
-			Expression exp1 = new Constant( new Value(Type.bool,  true));
-			Expression exp2 = new GetValue(steps, 0, valueAliasName);
-			Expression exp3 = Nothing.getInstance();
+			Expression exp1 = new GetValue(steps, 0, valueAliasName);
 			
 			setExpression1(exp1);
-			setExpression2(exp2);
-			setExpression3(exp3);
 			setValid();
 			
 		}

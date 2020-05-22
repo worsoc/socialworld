@@ -169,7 +169,7 @@ public class Expression {
 					
 				case value:
 					return calculation.copy(value);
-					
+										
 				case attributeValue:
 					AttributeArray attributeArray;
 					attributeArray = (AttributeArray) getFromValueArrayList( arguments, Type.attributeArray, 1);
@@ -297,6 +297,15 @@ public class Expression {
 					calculateArguments.add( expression3.evaluate(arguments) );
 					return function.calculate(calculateArguments);
 					
+				case oneExpression:
+					tmp = expression1.evaluate(arguments);
+					if (this.value != null) {
+						if (this.value.getName().length() > 0) {
+							tmp.changeName(this.value.getName());
+						}
+					}
+					return tmp;
+					
 				case sequence:
 					expression1.evaluate(arguments);
 					expression2.evaluate(arguments);
@@ -309,17 +318,23 @@ public class Expression {
 					return tmp;
 					
 				case replacement:
-					name = (String) value.getValueCopy();
+					
 					tmp = expression1.evaluate(arguments);
-					index = arguments.findValue(name);
-					if (index >= 0) {
-						if (tmp.getName().isEmpty()) {
-							tmp.setName(name);
+					name = (String) value.getValueCopy();
+					if (name.length() > 0) {
+						index = arguments.findValue(name);
+						if (index >= 0) {
+							if (tmp.getName().isEmpty()) {
+								tmp.setName(name);
+							}
+							arguments.set(index, tmp);
 						}
-						arguments.set(index, tmp);
+						else {
+							tmp.setName(name);
+							arguments.add(tmp);
+						}
 					}
 					else {
-						tmp.setName(name);
 						arguments.add(tmp);
 					}
 					return tmp;
@@ -327,26 +342,28 @@ public class Expression {
 				case create:
 					
 					Type type;
-					Value createdValue;
+					Value createdValue;;
+					int subType;
 					
 					type = Type.getName((int)value.getValueCopy());
+					subType = (int) expression1.evaluate().getValueCopy();
 					
 					switch (type) {
 					case action:
-						createdValue = createValue(type, arguments);
+						createdValue = createValue(type, subType, arguments);
 						break;
 					case time:
-						createdValue = calculation.createValue(type, expression1.evaluate().getValueCopy());
+						createdValue = calculation.createValue(type, expression2.evaluate().getValueCopy());
 						break;
 					case knowledgeElement:
 						ValueArrayList knowledgeElementSourceAndAtoms = new ValueArrayList();
-						// expression1 is a sequence expression
-						expression1.evaluate(arguments);
+						// expression2 is a sequence expression
+						expression2.evaluate(arguments);
 						int size = arguments.size();
 						for ( index = 1; index < size; index++) {
 							knowledgeElementSourceAndAtoms.add(arguments.get(index));
 						}
-						createdValue = createValue(type, knowledgeElementSourceAndAtoms);
+						createdValue = createValue(type, subType, knowledgeElementSourceAndAtoms);
 						break;
 					default:
 						createdValue = Calculation.getNothing();
@@ -439,7 +456,7 @@ public class Expression {
 	}
 	
 	// will be overrided in inherited Expressions dedicated to creating values
-	protected Value createValue(Type valueType, ValueArrayList arguments) {
+	protected Value createValue(Type valueType, int subType, ValueArrayList arguments) {
 		return new Value();
 	}
 	
