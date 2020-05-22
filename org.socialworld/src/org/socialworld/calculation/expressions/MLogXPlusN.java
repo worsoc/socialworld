@@ -92,7 +92,7 @@ public class MLogXPlusN extends Expression {
 					
 					setOperation(Expression_Function.function);
 					
-					setExpression1(AttributeValue.getInstance(attributeIndex));
+					setExpression1(GetAttributeValue.getInstance(attributeIndex));
 					setExpression2(Nothing.getInstance());
 					setExpression3(Nothing.getInstance());
 					

@@ -142,7 +142,7 @@ public class Branching extends Expression {
 		for (int i = 0; i < Attribute.NUMBER_OF_ATTRIBUTES; i++) {
 			
 			if (Attribute.getAttributeName(i).toString().equals(attributeName.toLowerCase()) ) {
-				attributeValue = AttributeValue.getInstance(i);
+				attributeValue = GetAttributeValue.getInstance(i);
 				break;
 			}
 		}
@@ -178,7 +178,7 @@ public class Branching extends Expression {
 		// the value the event's property is compared to
 		String value = conditionElements[3];
 		
-		Expression propertyValue = new ValueFromValueList(Value.VALUE_BY_NAME_EVENT_PARAMS, propertyName);
+		Expression propertyValue = new GetValueFromValueList(Value.VALUE_BY_NAME_EVENT_PARAMS, propertyName);
 		
 		Expression constant = new Constant(new Value(value, Type.getName(Integer.parseInt(type)) ) );
 		
