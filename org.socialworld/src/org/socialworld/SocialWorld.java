@@ -61,8 +61,8 @@ public class SocialWorld  {
 		visualizeSimulation = new SimVisual();
 		visualizeSimulation.show();
 
-//		AttributeValue value3 = AttributeValue.getInstance(3);
-//		AttributeValue value6 = AttributeValue.getInstance(6);
+//		GetAttributeValue value3 = GetAttributeValue.getInstance(3);
+//		GetAttributeValue value6 = GetAttributeValue.getInstance(6);
 		
 //		int a = (int) Float.parseFloat("1" );
 //		int b = (int) Float.parseFloat("3.87" );

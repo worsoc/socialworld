@@ -19,4 +19,18 @@ class Replacement extends Expression {
 		setValid();
 		
 	}
+	
+	public Replacement(Expression exp1) {
+		
+		super();
+		
+		setOperation(Expression_Function.replacement);
+		
+		setExpression1(exp1);
+		setValue(new Value(Type.string, ""));
+		
+		setValid();
+		
+	}
+
 }
