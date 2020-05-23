@@ -46,6 +46,8 @@ public class FunctionPool {
 	
 	public static final int CAPACITY_FP_ARRAY = 1000;
 
+	public static final int OFFSET_FUNCTIONID_GET_LEXEM = 900;
+	
 	private static FunctionPool instance;
 	
 	private static FunctionBase functions[];

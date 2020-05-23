@@ -26,6 +26,7 @@ import java.util.List;
 
 public class Functions {
 
+	//TODO ? is the class obsolete: use FunctionsPool instead ?
 	private static Functions instance;
 	
 	private static final int MAX_SIZE = 1000;
