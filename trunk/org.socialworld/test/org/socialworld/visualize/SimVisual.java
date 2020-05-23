@@ -2,6 +2,8 @@ package org.socialworld.visualize;
 
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -14,6 +16,11 @@ import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.AttributeArray;
+import org.socialworld.attributes.SimPropertyName;
+import org.socialworld.calculation.Value;
+import org.socialworld.core.Simulation;
+import org.socialworld.objects.Human;
+import org.socialworld.objects.State;
 
 public class SimVisual {
 
@@ -138,6 +145,14 @@ public class SimVisual {
 			super();
 			//this.setFont(new Font("Arial", Font.PLAIN, 15));
 			setIndex(index);
+			
+			addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {				  
+					clickRasterField(((RasterField) e.getSource()).index);
+				}															
+			});
+
+			
 		}
 		
 		private void clear() {
@@ -209,7 +224,30 @@ public class SimVisual {
 			
 		}
 
+		private void clicked() {
+			Human human;
+			Value prop;
+			State state;
+			Value propSub;
+			
+			human = Simulation.getInstance().getObjectMaster().getHumans().get(index);
+			prop = human.getProperty(SimPropertyName.simobj_stateSeer);
+			state = (State) prop.getValue();
+			if (state != null) {
+				propSub = state.getValue("getAngleViewPerceivingEvents", "angleViewPerceivingEvents");
+				myPrint("Button " + index + " clicked: " + propSub.getValueCopy().toString() );
+			}
+			else {
+				myPrint("Button " + index + " clicked "  );
+			}
+		}
+	}
+
+	private void clickRasterField(int index) {
 		
+		
+		raster[index].clicked();
+	
 	}
 
 	public static void myPrint(String line) {
