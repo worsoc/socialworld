@@ -39,6 +39,8 @@ public class CreateKnowledgeAtomExpression extends CreateValue {
 		super(Type.knowledgeAtom);
 		
 		initRelationUnaer(subject, verb, adverb);
+
+		setValid();
 		
 	}
 
@@ -48,6 +50,8 @@ public class CreateKnowledgeAtomExpression extends CreateValue {
 		super(Type.knowledgeAtom);
 		
 		initRelationBinaer(subject, verb, adverb, object1);
+
+		setValid();
 		
 	}
 
@@ -58,6 +62,8 @@ public class CreateKnowledgeAtomExpression extends CreateValue {
 		
 		initRelationTrinaer(subject, verb, adverb, object1, object2);
 		
+		setValid();
+		
 	}
 	
 	public CreateKnowledgeAtomExpression(Expression expression) {
@@ -67,8 +73,7 @@ public class CreateKnowledgeAtomExpression extends CreateValue {
 		initValue(expression);
 			
 		setValid();
-			
-		
+					
 	}
 
 	public CreateKnowledgeAtomExpression(KnowledgeFact_Criterion criterion, List<Expression> listExpressions) {
