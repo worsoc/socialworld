@@ -22,10 +22,21 @@
 package org.socialworld.calculation;
 
 public enum Type {
-	nothing(0), integer(1), longinteger(2), floatingpoint(3), string(4), vector(5), bool(6),  actionType(7), actionMode(8), time(9),
-	attributeArray(10), event(11), action(12), simulationObject(13), answer(14),
-	valueList(15), knowledgeElement(16), knowledgeSource(17), knowledgeAtom(18),
-	simPropName(20), simObjProp(21), eventProp(22), actionProp(23),
+	nothing(0),
+	integer(1), longinteger(2), floatingpoint(3),
+	string(11),
+	bool(21),
+	vector(31), 
+	time(41),
+	actionType(51), actionMode(52),
+	attributeArray(61),
+	event(71),
+	action(81),
+	simulationObject(91),
+	simPropName(101), simObjProp(102), eventProp(103), actionProp(104),
+	lexem(111), answer(112),
+	knowledgeElement(121), knowledgeSource(122), knowledgeAtom(123),
+	valueList(8888), 
 	object(9999);
 
 	private int index;
