@@ -33,6 +33,64 @@ import org.socialworld.knowledge.KnowledgeFact_Criterion;
 
 public class CreateKnowledgeAtomExpression extends CreateValue {
 
+	public CreateKnowledgeAtomExpression(KnowledgeAtomType knowledgeAtomType, List<Expression> listExpressions) {
+		
+		super(Type.knowledgeAtom);
+
+		switch (knowledgeAtomType) {
+		case property:
+			if (listExpressions.size() > 1) {
+				
+				initProperty(listExpressions);
+				
+				setValid();
+				
+			}
+			break;
+		case value:
+			if (listExpressions.size() == 1) {
+				
+				initValue(listExpressions.get(0));
+				
+				setValid();
+				
+			}
+			break;
+		case relationUnaer:
+			if (listExpressions.size() > 2) {
+				
+				initRelationUnaer(listExpressions.get(0), listExpressions.get(1), listExpressions.get(2));
+				
+				setValid();
+				
+			}
+			break;
+		case relationBinaer:
+			if (listExpressions.size() > 3) {
+				
+				initRelationBinaer(listExpressions.get(0), listExpressions.get(1), listExpressions.get(2), listExpressions.get(3));
+				
+				setValid();
+				
+			}
+			break;
+		case relationTrinaer:
+			if (listExpressions.size() > 4) {
+				
+				initRelationTrinaer(listExpressions.get(0), listExpressions.get(1), listExpressions.get(2), listExpressions.get(3), listExpressions.get(4));
+				
+				setValid();
+				
+			}
+			break;
+		default:
+			
+		}
+		
+		
+	}
+	
+	
 	public CreateKnowledgeAtomExpression(
 			Expression subject, Expression verb, Expression adverb) {
 		
@@ -74,6 +132,20 @@ public class CreateKnowledgeAtomExpression extends CreateValue {
 			
 		setValid();
 					
+	}
+
+	public CreateKnowledgeAtomExpression(List<Expression> listExpressions) {
+		
+		super(Type.knowledgeAtom);
+
+		if (listExpressions.size() > 1) {
+		
+			initProperty(listExpressions);
+			
+			setValid();
+			
+		}
+		
 	}
 
 	public CreateKnowledgeAtomExpression(KnowledgeFact_Criterion criterion, List<Expression> listExpressions) {
@@ -166,6 +238,26 @@ public class CreateKnowledgeAtomExpression extends CreateValue {
 		
 	}
 	
+	private void initProperty(List<Expression> listExpressions) {
+		
+		List<Expression> listExpressionsWithCriterion = new ArrayList<Expression>();
+		List<String> names = new ArrayList<String>();
+
+		names.add("criterion");
+		listExpressionsWithCriterion.add(listExpressions.get(0));
+
+		for (int index = 1; index < listExpressions.size(); index++) {
+			names.add("value_" + index);
+			listExpressionsWithCriterion.add(listExpressions.get(index));
+		}
+
+		// sub type property
+		setExpression1(new Constant(new Value(Type.integer, KnowledgeAtomType.property.getIndex())));
+
+		setExpression2(new AddOrSetValuesToArguments(listExpressionsWithCriterion, names));
+		
+	}
+
 
 	private void initProperty(KnowledgeFact_Criterion criterion, List<Expression> listExpressions) {
 		

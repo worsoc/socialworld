@@ -60,7 +60,7 @@ public class CreateValue extends Expression {
 		
 	}
 	
-	protected Value createValue(Type valueType, int subType, ValueArrayList arguments) {
+	protected Value createValue(Type valueType, ValueArrayList arguments) {
 
 		Object createdObject = null;
 		Value createdValue;
@@ -92,8 +92,6 @@ public class CreateValue extends Expression {
 			createdObject  = KnowledgeCalculator.createKnowledgeElement(localArguments);
 			break;
 
-		case knowledgeAtom:
-			break;
 			
 		default:
 			
@@ -105,5 +103,27 @@ public class CreateValue extends Expression {
 		
 	}
 
+	protected Value createValue(Type valueType, int subType, ValueArrayList arguments) {
+
+		Object createdObject = null;
+		Value createdValue;
+
+		ValueArrayList localArguments; 
+
+		switch (valueType) {
+
+		case knowledgeAtom:
+			// TODO implement KnowledgeAtom
+			break;
+			
+		default:
+			
+		}
+		
+		createdValue = calculation.createValue(valueType, createdObject);
+		
+		return createdValue;
+		
+	}
 	
 }
