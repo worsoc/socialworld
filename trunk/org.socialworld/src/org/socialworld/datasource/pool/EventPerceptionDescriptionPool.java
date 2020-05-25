@@ -28,6 +28,7 @@ import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.FunctionByExpression;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.descriptions.EventPerceptionDescription;
+import org.socialworld.calculation.expressions.CreateKnowledgeElementExpression;
 import org.socialworld.calculation.expressions.GetValue;
 import org.socialworld.core.EventType;
 
@@ -81,8 +82,27 @@ public class EventPerceptionDescriptionPool extends DescriptionPool {
 		List<FunctionByExpression> result;
 		result = new ArrayList<FunctionByExpression>();
 		
-		startExpression = new GetValue(GetValue.getValue(Value.VALUE_BY_NAME_ACTION_DIRECTION)  ,  Value.VALUE_BY_NAME_EVENT_DIRECTION );
+		String description;
+		// example for developing
+		description = 
+		"KSbj:GETVal(eventProps).GETVal(target);" +
+		"KSrcT:1," +
+		"KSrc:GETVal(myself)," +
+		"KFC:0," +
+		"KProp:GETVal(eventProps).GETVal(target).GETProp(stateInventory).GETProp(clothes).GETProp(shirt).GETFctVal(getMainColour)," +
+		"KProp:GETVal(eventProps).GETVal(target).GETProp(stateBody).GETFctVal(getHead).GETFctVal(getScinColour)," +
+		"KProp:GETVal(eventProps).GETVal(target).GETProp(stateBody).GETFctVal(getHead).GETFctVal(getHairColour);" +
+		"KSrcT:1," +
+		"KSrc:GETVal(myself)," +
+		"KFC:1," +
+		"KProp:GETVal(eventProps).GETVal(target).GETProp(stateInventory).GETProp(clothes).GETProp(shirt).GETFctVal(getMainMaterial)," +
+		"KProp:GETVal(eventProps).GETVal(target).GETProp(stateInventory).GETProp(clothes).GETProp(trousers).GETFctVal(getMainMaterial)," +
+		"KProp:GETVal(eventProps).GETVal(target).GETProp(stateInventory).GETProp(clothes).GETProp(shoes).GETFctVal(getMainMaterial)," +
+		"KProp:GETVal(eventProps).GETVal(target).GETProp(stateInventory).GETProp(clothes).GETProp(cap).GETFctVal(getMainMaterial)" ;
+
+		startExpression = new CreateKnowledgeElementExpression(description);
 		result.add( new FunctionByExpression(startExpression) );
+		
 		
 	}
 
