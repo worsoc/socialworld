@@ -21,25 +21,23 @@
 */
 package org.socialworld.datasource.pool;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.FunctionByExpression;
-import org.socialworld.calculation.Value;
 import org.socialworld.calculation.descriptions.EventPerceptionDescription;
 import org.socialworld.calculation.expressions.CreateKnowledgeElementExpression;
-import org.socialworld.calculation.expressions.GetValue;
 import org.socialworld.core.EventType;
 
 public class EventPerceptionDescriptionPool extends DescriptionPool {
 
-	public static final int COUNT_FbE_TEST_ENTRIES = 4;		// Anzahl Testeintraege FunctionByExpression
+	// temporary for test data
+	private FunctionByExpression expressions[];
+	public static final int COUNT_FbE_TEST_ENTRIES = 1;		// Anzahl Testeintraege FunctionByExpression
 
 	private static EventPerceptionDescriptionPool instance;
 	
 	private EventPerceptionDescription descriptions[];
-	private FunctionByExpression expressions[];
+	
 	
 	private EventPerceptionDescriptionPool () {
 		
@@ -48,7 +46,9 @@ public class EventPerceptionDescriptionPool extends DescriptionPool {
 
 		expressions = new FunctionByExpression[COUNT_FbE_TEST_ENTRIES];
 		
+		initializeWithTestData_FunctionByExpression();
 		initialize();
+		
 	}
 	
 	public static EventPerceptionDescriptionPool getInstance() {
@@ -73,18 +73,26 @@ public class EventPerceptionDescriptionPool extends DescriptionPool {
 			
 		return description;
 	}
-
-	@Override
-	protected void initialize() {
-		// TODO Auto-generated method stub
-
-		Expression startExpression;
-		List<FunctionByExpression> result;
-		result = new ArrayList<FunctionByExpression>();
+	
+	public void setDescription(int eventType,	int perceptionType, EventPerceptionDescription epd) {
+		int index;
+			
+		index = eventType * GaussPoolPerceptionType.CAPACITY_GPPT_ARRAY + perceptionType;
 		
-		String description;
+		if (index >= 0 & sizeDescriptionsArray > index) 
+			 descriptions[index] = epd;
+		
+	}
+
+
+	private void initializeWithTestData_FunctionByExpression() {
+
+		int 		expressionsCount = COUNT_FbE_TEST_ENTRIES;
+		String descriptions[] = new String[COUNT_FbE_TEST_ENTRIES];
+		Expression startExpression;
+
 		// example for developing
-		description = 
+		descriptions[0] = 
 		"KSbj:GETVal(eventProps).GETVal(target);" +
 		"KSrcT:1," +
 		"KSrc:GETVal(myself)," +
@@ -100,10 +108,34 @@ public class EventPerceptionDescriptionPool extends DescriptionPool {
 		"KProp:GETVal(eventProps).GETVal(target).GETProp(stateInventory).GETProp(clothes).GETProp(shoes).GETFctVal(getMainMaterial)," +
 		"KProp:GETVal(eventProps).GETVal(target).GETProp(stateInventory).GETProp(clothes).GETProp(cap).GETFctVal(getMainMaterial)" ;
 
-		startExpression = new CreateKnowledgeElementExpression(description);
-		result.add( new FunctionByExpression(startExpression) );
 		
+		for (int i = 0; i <  expressionsCount; i++) {
+			
+			startExpression = new CreateKnowledgeElementExpression(descriptions[i]);
+			this.expressions[i] = new FunctionByExpression(startExpression);
+
+		}
+
 		
 	}
+	
+	protected void initialize() {
+
+		EventPerceptionDescription description;
+		int indexExps;
+		int linesCount = COUNT_FbE_TEST_ENTRIES;
+		
+		for (int index = 0; index < sizeDescriptionsArray; index++) {
+			
+			description = new EventPerceptionDescription();
+			for (indexExps = 0; indexExps <  linesCount; indexExps++) {
+				description.addFunctionCreatePerception(expressions[indexExps]);
+			}
+			descriptions[index] = description;
+	
+		}
+		
+	}
+
 
 }
