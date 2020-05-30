@@ -7,6 +7,7 @@ import org.socialworld.attributes.ISimProperty;
 import org.socialworld.attributes.SimPropertyName;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
+import org.socialworld.calculation.ValueProperty;
 
 public abstract class State implements ISimProperty {
 
@@ -36,28 +37,68 @@ public abstract class State implements ISimProperty {
 		return this.propertyName;
 	}
 
-	public final  Value getAsValue() {
+	public final  ValueProperty getAsValue() {
 		Type propertyType;
 		propertyType = this.propertyName.getType();
-		return new Value(propertyType, this.propertyName.toString(), copyForProperty(propertyType));
+		return new ValueProperty(propertyType, this.propertyName, this.propertyName.toString(), copyForProperty(propertyType));
 	}
 	
-	public final Value getAsValue(String name) {
+	public final ValueProperty getAsValue(String name) {
 		Type propertyType;
 		propertyType = this.propertyName.getType();
-		return new Value(propertyType, name, copyForProperty(propertyType));
+		return new ValueProperty(propertyType, this.propertyName, name, copyForProperty(propertyType));
 	}
 
 	////////////////////////////////////////////
 	
-	public final Value getProperty(SimPropertyName prop) {
+	public final ValueProperty getProperty(SimPropertyName prop) {
 		String name;
 		name = prop.toString();
 		return getProperty(prop, name);
 	}
 	
-	public abstract Value getProperty(SimPropertyName prop, String name);
+	//public abstract ValueProperty getProperty(SimPropertyName prop, String name);
 	
+	public final ValueProperty getProperty(String methodName, String name) {
+		
+		Object got = null;
+		ValueProperty result = ValueProperty.getInvalid();
+		Method method;
+		method = getMethod(methodName);
+		
+		if (method != null) {
+			try {
+				method.setAccessible(true);
+				got = method.invoke(this);
+
+			// Handle any exceptions thrown by method to be invoked.
+			}
+			catch (InvocationTargetException ite) {
+			    Throwable cause = ite.getCause();
+			    System.out.println( cause.getMessage());
+			}
+			catch (IllegalAccessException iae) {
+				iae.printStackTrace();
+			} 
+			catch (IllegalArgumentException iarge) {
+				iarge.printStackTrace();
+			}
+			
+			if (got != null) {
+				
+				if (got instanceof ValueProperty) {  
+					
+					result = ( ValueProperty ) got ;
+					result.setName(name);
+				}
+				
+			}
+		}
+
+		return result;
+		
+	}
+
 	public final Value getValue(String methodName, String name) {
 		
 		Object got = null;

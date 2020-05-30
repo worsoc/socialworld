@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.calculation.Expression;
+import org.socialworld.calculation.PropertyUsingAs;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.knowledge.KnowledgeAtomType;
@@ -64,7 +65,7 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 			List<Expression> listExpressions = new ArrayList<Expression>();;
 			
 			String descriptionSubject = main[0].substring(LABEL_SUBJECT.length());
-			Expression subject = new GetValue(descriptionSubject, "subject");
+			Expression subject = new GetValue(PropertyUsingAs.knowledgeSubject, descriptionSubject, "subject");
 			
 			listExpressions.add(subject);
 			
@@ -79,7 +80,7 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 					
 					
 					String descriptionKnowledgeSource = descriptionKnowledgeAtomList[1].substring(LABEL_KNOWLEDGESOURCE.length());
-					Expression knowledgeSource = new GetValue(descriptionKnowledgeSource, "source");
+					Expression knowledgeSource = new GetValue(PropertyUsingAs.knowledgeSource, descriptionKnowledgeSource, "source");
 					
 					Expression creationKnowledgeSource = new CreateKnowledgeSourceExpression(knowledgeSourcetype, knowledgeSource);
 					
@@ -102,17 +103,17 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 						}
 						else if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGEPROPERTY.length()) > 0) {
 							descriptionKnowledgeAtomPart = descriptionKnowledgeAtomList[indexSub].substring(LABEL_KNOWLEDGEPROPERTY.length());
-							value = new GetValue(descriptionKnowledgeAtomPart, "value_" + (indexSub - 2));
+							value = new GetValue(PropertyUsingAs.knowledgeProperty, descriptionKnowledgeAtomPart, "value_" + (indexSub - 2));
 							expressions.add(value);
 						}
 						else if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGEVALUE.length()) > 0) {
 							descriptionKnowledgeAtomPart = descriptionKnowledgeAtomList[indexSub].substring(LABEL_KNOWLEDGEVALUE.length());
-							value = new GetValue(descriptionKnowledgeAtomPart, "value_" + (indexSub - 2));
+							value = new GetValue(PropertyUsingAs.knowledgeValue, descriptionKnowledgeAtomPart, "value_" + (indexSub - 2));
 							expressions.add(value);
 						}
 						else if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGERELATIONSUBJECT.length()) > 0) {
 							descriptionKnowledgeAtomPart = descriptionKnowledgeAtomList[indexSub].substring(LABEL_KNOWLEDGERELATIONSUBJECT.length());
-							value = new GetValue(descriptionKnowledgeAtomPart, "subject");
+							value = new GetValue(PropertyUsingAs.knowledgeRelationSubject, descriptionKnowledgeAtomPart, "subject");
 							if (expressions.size() == 0) {
 								expressions.add(Nothing.getInstance());
 								expressions.add(Nothing.getInstance());
@@ -127,7 +128,7 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 						}
 						else if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGERELATIONVERB.length()) > 0) {
 							descriptionKnowledgeAtomPart = descriptionKnowledgeAtomList[indexSub].substring(LABEL_KNOWLEDGERELATIONVERB.length());
-							value = new GetValue(descriptionKnowledgeAtomPart, "verb");
+							value = new GetValue(PropertyUsingAs.knowledgeRelationVerb, descriptionKnowledgeAtomPart, "verb");
 							if (expressions.size() == 0) {
 								expressions.add(Nothing.getInstance());
 								expressions.add(Nothing.getInstance());
@@ -142,7 +143,7 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 						}
 						else if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGERELATIONADVERB.length()) > 0) {
 							descriptionKnowledgeAtomPart = descriptionKnowledgeAtomList[indexSub].substring(LABEL_KNOWLEDGERELATIONADVERB.length());
-							value = new GetValue(descriptionKnowledgeAtomPart, "adverb");
+							value = new GetValue(PropertyUsingAs.knowledgeRelationAdverb, descriptionKnowledgeAtomPart, "adverb");
 							if (expressions.size() == 0) {
 								expressions.add(Nothing.getInstance());
 								expressions.add(Nothing.getInstance());
@@ -157,7 +158,7 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 						}
 						else if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGERELATIONOBJECT1.length()) > 0) {
 							descriptionKnowledgeAtomPart = descriptionKnowledgeAtomList[indexSub].substring(LABEL_KNOWLEDGERELATIONOBJECT1.length());
-							value = new GetValue(descriptionKnowledgeAtomPart, "object1");
+							value = new GetValue(PropertyUsingAs.knowledgeRelationObject, descriptionKnowledgeAtomPart, "object1");
 							if (expressions.size() == 0) {
 								expressions.add(Nothing.getInstance());
 								expressions.add(Nothing.getInstance());
@@ -172,7 +173,7 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 						}
 						else if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGERELATIONOBJECT2.length()) > 0) {
 							descriptionKnowledgeAtomPart = descriptionKnowledgeAtomList[indexSub].substring(LABEL_KNOWLEDGERELATIONOBJECT2.length());
-							value = new GetValue(descriptionKnowledgeAtomPart, "object2");
+							value = new GetValue(PropertyUsingAs.knowledgeRelationObject, descriptionKnowledgeAtomPart, "object2");
 							if (expressions.size() == 0) {
 								expressions.add(Nothing.getInstance());
 								expressions.add(Nothing.getInstance());

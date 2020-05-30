@@ -91,8 +91,15 @@ public class EventPerceptionDescriptionPool extends DescriptionPool {
 		String descriptions[] = new String[COUNT_FbE_TEST_ENTRIES];
 		Expression startExpression;
 
-		// example for developing
 		descriptions[0] = 
+		"KSbj:GETVal(eventProps).GETVal(target);" +
+		"KSrcT:1," +
+		"KSrc:GETVal(myself)," +
+		"KVal:GetVal(eventProps).GETVal(target).GETProp(position).GETProp(position_vector)";
+		
+/*
+		// example for developing
+		descriptions[1] = 
 		"KSbj:GETVal(eventProps).GETVal(target);" +
 		"KSrcT:1," +
 		"KSrc:GETVal(myself)," +
@@ -107,7 +114,7 @@ public class EventPerceptionDescriptionPool extends DescriptionPool {
 		"KProp:GETVal(eventProps).GETVal(target).GETProp(stateInventory).GETProp(clothes).GETProp(trousers).GETFctVal(getMainMaterial)," +
 		"KProp:GETVal(eventProps).GETVal(target).GETProp(stateInventory).GETProp(clothes).GETProp(shoes).GETFctVal(getMainMaterial)," +
 		"KProp:GETVal(eventProps).GETVal(target).GETProp(stateInventory).GETProp(clothes).GETProp(cap).GETFctVal(getMainMaterial)" ;
-
+*/
 		
 		for (int i = 0; i <  expressionsCount; i++) {
 			

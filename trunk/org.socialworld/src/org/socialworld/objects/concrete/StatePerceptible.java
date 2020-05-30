@@ -4,7 +4,7 @@ import org.socialworld.attributes.Position;
 import org.socialworld.attributes.SimPropertyName;
 import org.socialworld.attributes.percipience.Percipience;
 import org.socialworld.calculation.Type;
-import org.socialworld.calculation.Value;
+import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.objects.Animal;
 import org.socialworld.objects.State;
@@ -25,9 +25,9 @@ public class StatePerceptible extends State {
 		return new StatePerceptible(this);
 	}
 
-	public  Value getProperty(SimPropertyName prop, String name) {
+	public  ValueProperty getProperty(SimPropertyName prop, String name) {
 		// TODO implement getProperty()
-		return new Value();
+		return ValueProperty.getInvalid();
 	}
 
 	public boolean checkIsPossiblePercipient(Animal possiblePercipient) {

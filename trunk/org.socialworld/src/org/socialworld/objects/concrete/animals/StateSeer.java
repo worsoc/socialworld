@@ -4,7 +4,7 @@ package org.socialworld.objects.concrete.animals;
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.SimPropertyName;
 import org.socialworld.calculation.Type;
-import org.socialworld.calculation.Value;
+import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.calculation.geometry.VectorMapper;
 import org.socialworld.objects.State;
@@ -39,13 +39,13 @@ public class StateSeer extends State {
 		return new StateSeer(this);
 	}
 
-	public Value getProperty(SimPropertyName prop, String name) {
+	public ValueProperty getProperty(SimPropertyName prop, String name) {
 		
 		switch (prop) {
 		case simobj_directionView:
 			return this.directionView.getAsValue(name);
 		default:
-			return new Value();
+			return ValueProperty.getInvalid();
 		}
 	}
 

@@ -24,6 +24,9 @@ package org.socialworld.calculation.expressions;
 import org.socialworld.attributes.SimPropertyName;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
+import org.socialworld.calculation.PropertyUsingAs;
+import org.socialworld.calculation.Type;
+import org.socialworld.calculation.Value;
 
 public class GetValue extends Expression {
 
@@ -31,7 +34,7 @@ public class GetValue extends Expression {
 	public static String GETPROPERTY = "GETProp";
 	public static String GETFUNCTIONVALUE = "GETFctVal";
 	
-	public GetValue(String getValuePath, String valueAliasName) {
+	public GetValue(PropertyUsingAs usablePermission, String getValuePath, String valueAliasName) {
 		
 		super();
 		
@@ -41,7 +44,7 @@ public class GetValue extends Expression {
 		if (steps.length > 0) {
 			setOperation(Expression_Function.oneExpression);
 			
-			Expression exp1 = new GetValue(steps, 0, valueAliasName);
+			Expression exp1 = new GetValue(usablePermission, steps, 0, valueAliasName);
 			
 			setExpression1(exp1);
 			setValid();
@@ -53,11 +56,13 @@ public class GetValue extends Expression {
 			
 	}
 	
-	private GetValue(String[] steps, int indexContinue, String valueAliasName) {
+	private GetValue(PropertyUsingAs usablePermission, String[] steps, int indexContinue, String valueAliasName) {
 		
 		Expression exp1 = Nothing.getInstance();
 		Expression exp2 = Nothing.getInstance();
 		String step;
+		
+		Value checkPermission;
 		
 		step = steps[indexContinue];
 		exp1 = getStepExpression(step, valueAliasName);
@@ -67,19 +72,23 @@ public class GetValue extends Expression {
 			// because the expression 1 evaluation result
 			// is forwarded (as argument value list array with that one element)  to expression 2 evaluation
 			exp2 = new GetArgumentByName(valueAliasName, valueAliasName);
+			checkPermission = new Value(Type.integer, usablePermission.getIndex());
 		}
 		
 		if (steps.length == indexContinue + 2) {
 			step = steps[indexContinue + 1];
 			exp2 = getStepExpression(step, valueAliasName);
+			checkPermission = new Value(Type.integer, usablePermission.getIndex() - 1);
 		}
 		else {
 				
-			exp2 = new GetValue(steps, indexContinue + 1, valueAliasName);
+			exp2 = new GetValue(usablePermission, steps, indexContinue + 1, valueAliasName);
+			checkPermission = new Value(Type.integer, usablePermission.getIndex() - 1);
 
 		}
 
 		setOperation(Expression_Function.get);
+		setValue(checkPermission);
 		setExpression1(exp1);
 		setExpression2(exp2);
 		setExpression3(Nothing.getInstance());

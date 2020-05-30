@@ -33,6 +33,7 @@ import org.socialworld.attributes.Position;
 import org.socialworld.attributes.SimPropertyName;
 import org.socialworld.calculation.FunctionByMatrix;
 import org.socialworld.calculation.Value;
+import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.IEventParam;
@@ -85,7 +86,7 @@ public abstract class Animal extends SimulationObject implements ISeer {
 	};
 
 
-	public Value getProperty(SimPropertyName prop, String name) {
+	public ValueProperty getProperty(SimPropertyName prop, String name) {
 		switch (prop) {
 		case simobj_attributearray:
 		case simobj_inventory:
