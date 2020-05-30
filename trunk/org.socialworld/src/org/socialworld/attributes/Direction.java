@@ -10,12 +10,12 @@ public class Direction extends SimProperty {
 	float power;
 	
 	
-	public Direction (SimPropertyName prop, Vector vector ) {
+	public Direction (PropertyName prop, Vector vector ) {
 		this.vector = vector;
 		setPropertyName(prop);
 	}
 
-	public Direction (SimPropertyName prop, Vector vector, float power ) {
+	public Direction (PropertyName prop, Vector vector, float power ) {
 		this.vector = vector;
 		this.power = power;
 		setPropertyName(prop);
@@ -27,7 +27,7 @@ public class Direction extends SimProperty {
 		setPropertyName(original.getPropertyName().toType(propertyType));
 	}
 	
-	public Direction (SimPropertyName prop) {
+	public Direction (PropertyName prop) {
 		this.vector = vector.get0Vector();
 		setPropertyName(prop);
 	}

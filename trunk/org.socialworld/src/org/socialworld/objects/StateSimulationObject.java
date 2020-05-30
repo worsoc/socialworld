@@ -28,7 +28,7 @@ import java.util.List;
 
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
-import org.socialworld.attributes.SimPropertyName;
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueProperty;
@@ -75,7 +75,7 @@ public abstract class StateSimulationObject extends ListenedBase {
 		grantAccessToPropertyAction = new GrantedAccessToProperty[1];
 		grantAccessToPropertyAction[0] = GrantedAccessToProperty.action;
 		
-		this.directionMove = new Direction(SimPropertyName.simobj_directionMove);
+		this.directionMove = new Direction(PropertyName.simobj_directionMove);
 		//stateAddOns = new ArrayList<State>();
 		
 	}
@@ -136,13 +136,13 @@ public abstract class StateSimulationObject extends ListenedBase {
 		}
 	}
 	
-	public final ValueProperty getProperty(SimPropertyName prop) {
+	public final ValueProperty getProperty(PropertyName prop) {
 		String name;
 		name = prop.toString();
 		return getProperty(prop, name);
 	}
 	
-	public ValueProperty getProperty(SimPropertyName prop, String name) {
+	public ValueProperty getProperty(PropertyName prop, String name) {
 		
 		switch (prop) {
 		case simobj_position:
@@ -268,7 +268,7 @@ public abstract class StateSimulationObject extends ListenedBase {
 	}
 	
 	
-	private ValueProperty getStateAsProperty(SimPropertyName prop, String name) {
+	private ValueProperty getStateAsProperty(PropertyName prop, String name) {
 		State stateAddOn;
 		ValueProperty result = ValueProperty.getInvalid();
 		

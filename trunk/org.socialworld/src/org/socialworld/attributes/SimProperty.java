@@ -5,7 +5,7 @@ import org.socialworld.calculation.ValueProperty;
 
 public abstract class SimProperty implements ISimProperty {
 
-	private SimPropertyName propertyName = SimPropertyName.unknown;
+	private PropertyName propertyName = PropertyName.unknown;
 
 	protected abstract SimProperty copyForProperty(Type propertyType);
 	
@@ -13,13 +13,13 @@ public abstract class SimProperty implements ISimProperty {
 	/////////////////////////////    ISimProperty  ///////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
-	public final void setPropertyName(SimPropertyName prop) {
-		if (this.propertyName == SimPropertyName.unknown) {
+	public final void setPropertyName(PropertyName prop) {
+		if (this.propertyName == PropertyName.unknown) {
 			this.propertyName = prop;
 		}
 	}
 	
-	public final SimPropertyName getPropertyName() {
+	public final PropertyName getPropertyName() {
 		return this.propertyName;
 	}
 	
@@ -35,7 +35,7 @@ public abstract class SimProperty implements ISimProperty {
 		return new ValueProperty(propertyType, this.propertyName, name, copyForProperty(propertyType));
 	}
 	
-	public  ValueProperty getProperty(SimPropertyName simPropName, String valueName) {
+	public  ValueProperty getProperty(PropertyName simPropName, String valueName) {
 		return ValueProperty.getInvalid();
 	}
 	

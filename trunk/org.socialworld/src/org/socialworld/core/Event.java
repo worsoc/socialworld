@@ -31,7 +31,7 @@ import java.util.List;
 
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
-import org.socialworld.attributes.SimPropertyName;
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.Time;
 import org.socialworld.objects.Animal;
 import org.socialworld.objects.SimulationObject;
@@ -66,7 +66,7 @@ public abstract class Event implements Comparable<Event> {
 	protected boolean eventToCauserItself = false;
 	protected boolean eventToTarget = false;
 
-	private static Value noDirection = new Value(Type.eventProp, new Direction(SimPropertyName.event_direction, new Vector(0,0,0)));
+	private static Value noDirection = new Value(Type.eventProp, new Direction(PropertyName.event_direction, new Vector(0,0,0)));
 	
 	/**
 	 * Constructor

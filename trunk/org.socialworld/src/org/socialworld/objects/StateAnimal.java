@@ -27,7 +27,7 @@ import org.socialworld.actions.move.Path;
 import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.attributes.Direction;
-import org.socialworld.attributes.SimPropertyName;
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.FunctionByMatrix;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueProperty;
@@ -78,8 +78,8 @@ public class StateAnimal extends StateSimulationObject {
 		
 		attributes = new AttributeArray(Attribute.NUMBER_OF_ATTRIBUTES);
 		
-		this.directionChest = new Direction(SimPropertyName.simobj_directionChest);
-		this.directionActiveMove = new Direction(SimPropertyName.simobj_directionActiveMove);
+		this.directionChest = new Direction(PropertyName.simobj_directionChest);
+		this.directionActiveMove = new Direction(PropertyName.simobj_directionActiveMove);
 		
 	}
 
@@ -88,7 +88,7 @@ public class StateAnimal extends StateSimulationObject {
 /////////////////////////////    ATTRIBUTES  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
-	public ValueProperty getProperty(SimPropertyName prop, String name) {
+	public ValueProperty getProperty(PropertyName prop, String name) {
 		switch (prop) {
 		case simobj_attributearray:
 			return this.attributes.getAsValue(name);
@@ -206,14 +206,14 @@ public class StateAnimal extends StateSimulationObject {
 	
 	final void setDirectionChest(Vector directionChest, WriteAccessToAnimal guard) {
 		if (checkGuard(guard)) {
-			this.directionChest = new Direction(SimPropertyName.simobj_directionChest, directionChest );
+			this.directionChest = new Direction(PropertyName.simobj_directionChest, directionChest );
 		}
 	}
 
 
 	final void setDirectionActiveMove(Vector directionMove, WriteAccessToAnimal guard) {
 		if (checkGuard(guard)) {
-			this.directionActiveMove = new Direction(SimPropertyName.simobj_directionActiveMove, directionMove );
+			this.directionActiveMove = new Direction(PropertyName.simobj_directionActiveMove, directionMove );
 		}
 	}
 

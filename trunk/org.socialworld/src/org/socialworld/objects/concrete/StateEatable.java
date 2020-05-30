@@ -1,6 +1,6 @@
 package org.socialworld.objects.concrete;
 
-import org.socialworld.attributes.SimPropertyName;
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.properties.NutrientProperty;
 import org.socialworld.attributes.properties.TasteProperty;
 import org.socialworld.calculation.Type;
@@ -24,7 +24,7 @@ public class StateEatable extends State {
 		return new StateEatable(this);
 	}
 
-	public  ValueProperty getProperty(SimPropertyName prop, String name) {
+	public  ValueProperty getProperty(PropertyName prop, String name) {
 		// TODO implement getProperty()
 		return ValueProperty.getInvalid();
 	}

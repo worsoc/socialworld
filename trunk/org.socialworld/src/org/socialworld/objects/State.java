@@ -4,14 +4,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.socialworld.attributes.ISimProperty;
-import org.socialworld.attributes.SimPropertyName;
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueProperty;
 
 public abstract class State implements ISimProperty {
 
-	private SimPropertyName propertyName = SimPropertyName.unknown;
+	private PropertyName propertyName = PropertyName.unknown;
 	
 	protected abstract State copyForProperty(Type propertyType);
 
@@ -27,13 +27,13 @@ public abstract class State implements ISimProperty {
 	
 	/////////////////////////////////////////////
 	
-	public final void setPropertyName(SimPropertyName prop) {
-		if (this.propertyName == SimPropertyName.unknown) {
+	public final void setPropertyName(PropertyName prop) {
+		if (this.propertyName == PropertyName.unknown) {
 			this.propertyName = prop;
 		}
 	}
 	
-	public final SimPropertyName getPropertyName() {
+	public final PropertyName getPropertyName() {
 		return this.propertyName;
 	}
 
@@ -51,13 +51,13 @@ public abstract class State implements ISimProperty {
 
 	////////////////////////////////////////////
 	
-	public final ValueProperty getProperty(SimPropertyName prop) {
+	public final ValueProperty getProperty(PropertyName prop) {
 		String name;
 		name = prop.toString();
 		return getProperty(prop, name);
 	}
 	
-	//public abstract ValueProperty getProperty(SimPropertyName prop, String name);
+	//public abstract ValueProperty getProperty(PropertyName prop, String name);
 	
 	public final ValueProperty getProperty(String methodName, String name) {
 		

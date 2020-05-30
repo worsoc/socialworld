@@ -30,7 +30,7 @@ import org.socialworld.actions.move.PathFinder;
 import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
-import org.socialworld.attributes.SimPropertyName;
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.FunctionByMatrix;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueProperty;
@@ -86,7 +86,7 @@ public abstract class Animal extends SimulationObject implements ISeer {
 	};
 
 
-	public ValueProperty getProperty(SimPropertyName prop, String name) {
+	public ValueProperty getProperty(PropertyName prop, String name) {
 		switch (prop) {
 		case simobj_attributearray:
 		case simobj_inventory:
@@ -110,7 +110,7 @@ public abstract class Animal extends SimulationObject implements ISeer {
 	}
 
 	final public Direction getDirectionView() {
-		return (Direction) stateSeer.getProperty(SimPropertyName.simobj_directionView).getValue();
+		return (Direction) stateSeer.getProperty(PropertyName.simobj_directionView).getValue();
 	}
 
 	final public float getAngleViewPerceivingObjects() {
@@ -146,7 +146,7 @@ public abstract class Animal extends SimulationObject implements ISeer {
 	}
 	
 	final public Value getAttributesAsValue(String valueName) {
-		return getProperty(SimPropertyName.simobj_attributearray, valueName);
+		return getProperty(PropertyName.simobj_attributearray, valueName);
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -239,10 +239,10 @@ public abstract class Animal extends SimulationObject implements ISeer {
 		
 		ValueArrayList propertiesAsValueList = new ValueArrayList();
 		
-		propertiesAsValueList.add(getProperty(SimPropertyName.simobj_attributearray));
-		propertiesAsValueList.add(getProperty(SimPropertyName.simobj_directionChest));
-		propertiesAsValueList.add(getProperty(SimPropertyName.simobj_directionView));
-		propertiesAsValueList.add(getProperty(SimPropertyName.simobj_directionActiveMove));
+		propertiesAsValueList.add(getProperty(PropertyName.simobj_attributearray));
+		propertiesAsValueList.add(getProperty(PropertyName.simobj_directionChest));
+		propertiesAsValueList.add(getProperty(PropertyName.simobj_directionView));
+		propertiesAsValueList.add(getProperty(PropertyName.simobj_directionActiveMove));
 		paramObject.answerPropertiesRequest(propertiesAsValueList);
 	
 	}

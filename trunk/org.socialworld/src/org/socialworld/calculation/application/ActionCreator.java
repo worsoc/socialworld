@@ -37,7 +37,7 @@ import org.socialworld.actions.handle.ActionHandle;
 import org.socialworld.actions.hear.ActionHear;
 import org.socialworld.actions.move.ActionMove;
 import org.socialworld.actions.say.ActionSay;
-import org.socialworld.attributes.SimPropertyName;
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.FunctionByExpression;
@@ -227,7 +227,7 @@ public class ActionCreator extends SocialWorldThread {
 		ValueArrayList arguments;
 		arguments = new ValueArrayList();
 		
-		arguments.add( stateReactor.getProperty(SimPropertyName.simobj_attributearray) );
+		arguments.add( stateReactor.getProperty(PropertyName.simobj_attributearray) );
 		arguments.add( new Value(Type.event, Value.VALUE_BY_NAME_EVENT, event) );
 		if (event.hasOptionalParam()) {
 			arguments.add( event.getOptionalParam().getParamListAsValue());
@@ -260,7 +260,7 @@ public class ActionCreator extends SocialWorldThread {
 		ValueArrayList arguments;
 		arguments = new ValueArrayList();
 		
-		arguments.add( stateActor.getProperty(SimPropertyName.simobj_attributearray) );
+		arguments.add( stateActor.getProperty(PropertyName.simobj_attributearray) );
 		
 		Value result = f_CreateAction.calculate(arguments);
 		return (AbstractAction) result.getValue();
