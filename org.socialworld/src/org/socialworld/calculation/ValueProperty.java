@@ -2,7 +2,7 @@ package org.socialworld.calculation;
 
 import java.util.List;
 
-import org.socialworld.attributes.SimPropertyName;
+import org.socialworld.attributes.PropertyName;
 
 public class ValueProperty extends Value {
 
@@ -15,11 +15,11 @@ public class ValueProperty extends Value {
 		super();
 	}
 
-	public ValueProperty(Type type, SimPropertyName simPropertyName, String name, Object value) {
+	public ValueProperty(Type type, PropertyName propertyName, String name, Object value) {
 
 		super(type, name, value);
 		
-		setUseAsPermissions(simPropertyName);
+		setUseAsPermissions(propertyName);
 		
 		valid = true;
 	}
@@ -37,7 +37,7 @@ public class ValueProperty extends Value {
 		return inValid;
 	}
 
-	private void setUseAsPermissions(SimPropertyName simPropertyName) {
+	private void setUseAsPermissions(PropertyName propertyName) {
 		
 	}
 	

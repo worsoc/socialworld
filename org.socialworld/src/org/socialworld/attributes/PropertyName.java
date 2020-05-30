@@ -2,7 +2,7 @@ package org.socialworld.attributes;
 
 import org.socialworld.calculation.Type;
 
-public enum SimPropertyName {
+public enum PropertyName {
 
 	unknown, 
 	
@@ -58,7 +58,7 @@ public enum SimPropertyName {
 		}
 	}
 	
-	public SimPropertyName toType(Type propertyType) {
+	public PropertyName toType(Type propertyType) {
 		if (getType() == propertyType ){
 			return this;
 		}
@@ -98,7 +98,7 @@ public enum SimPropertyName {
 		
 	}
 
-	public static SimPropertyName forString(String name) {
+	public static PropertyName forString(String name) {
 		
 		switch (name) {
 		case "unknown": return unknown; 

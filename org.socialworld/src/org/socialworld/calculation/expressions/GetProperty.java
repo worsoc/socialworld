@@ -21,7 +21,7 @@
 */
 package org.socialworld.calculation.expressions;
 
-import org.socialworld.attributes.SimPropertyName;
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
 import org.socialworld.calculation.Type;
@@ -29,7 +29,7 @@ import org.socialworld.calculation.Value;
 
 public class GetProperty extends Expression {
 
-	public GetProperty(SimPropertyName simPropName, String propertyName) {
+	public GetProperty(PropertyName simPropName, String propertyName) {
 		
 		super();
 		
@@ -51,7 +51,7 @@ public class GetProperty extends Expression {
 		super();
 		
 		setOperation(Expression_Function.property);
-		setValue(new Value(Type.simPropName, SimPropertyName.unknown));
+		setValue(new Value(Type.simPropName, PropertyName.unknown));
 		
 		Expression exp1 = new Constant(new Value(Type.string, propertyName));
 		Expression exp2 = new Constant(new Value(Type.string, methodName));

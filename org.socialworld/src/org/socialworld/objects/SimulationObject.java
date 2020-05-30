@@ -28,7 +28,7 @@ import java.util.List;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionNothing;
 import org.socialworld.attributes.Position;
-import org.socialworld.attributes.SimPropertyName;
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.collections.ValueArrayList;
@@ -156,13 +156,13 @@ public abstract class SimulationObject extends ListenedBase implements IPercepti
 /////////////////////////////    STATE      ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
-	public final ValueProperty getProperty(SimPropertyName prop) {
+	public final ValueProperty getProperty(PropertyName prop) {
 		String name;
 		name = prop.toString();
 		return getProperty(prop, name);
 	}
 	
-	public ValueProperty getProperty(SimPropertyName prop, String name) {
+	public ValueProperty getProperty(PropertyName prop, String name) {
 		switch (prop) {
 		case simobj_position:
 			return this.state.getProperty(prop, name);
@@ -215,7 +215,7 @@ public abstract class SimulationObject extends ListenedBase implements IPercepti
 	 * @return position
 	 */
 	public final Position getPosition() {
-		return (Position) getProperty(SimPropertyName.simobj_position).getValue();
+		return (Position) getProperty(PropertyName.simobj_position).getValue();
 	}
 	
 	
@@ -353,9 +353,9 @@ public abstract class SimulationObject extends ListenedBase implements IPercepti
 	
 		ValueArrayList propertiesAsValueList = new ValueArrayList();
 		
-		propertiesAsValueList.add(getProperty(SimPropertyName.simobj_position));
+		propertiesAsValueList.add(getProperty(PropertyName.simobj_position));
 			//	this.state.getPositionVectorAsValue(Value.VALUE_BY_NAME_SIMOBJ_POSITION_VECTOR)
-		propertiesAsValueList.add(getProperty(SimPropertyName.simobj_directionMove));
+		propertiesAsValueList.add(getProperty(PropertyName.simobj_directionMove));
 			//	this.state.getDirectionMoveAsValue(Value.VALUE_BY_NAME_SIMOBJ_MOVE_DIRECTION)
 		//propertiesAsValueList.add(this.state.getPowerMoveAsValue(Value.VALUE_BY_NAME_SIMOBJ_MOVE_POWER));
 

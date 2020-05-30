@@ -55,7 +55,7 @@ public class AttributeArray extends SimProperty {
 	private int differences[];
 	                         
 	public AttributeArray(int numberOfAttributes) {
-		setPropertyName(SimPropertyName.simobj_attributearray);
+		setPropertyName(PropertyName.simobj_attributearray);
 		this.numberOfAttributes = numberOfAttributes;
 		attributes 	= new int[numberOfAttributes];
 		differences = new int[numberOfAttributes];
@@ -66,7 +66,7 @@ public class AttributeArray extends SimProperty {
 	}
 
 	public AttributeArray(int[] array) {
-		setPropertyName(SimPropertyName.simobj_attributearray);
+		setPropertyName(PropertyName.simobj_attributearray);
 		numberOfAttributes = array.length;
 		attributes 	= new int[numberOfAttributes];
 		differences = new int[numberOfAttributes];
@@ -79,7 +79,7 @@ public class AttributeArray extends SimProperty {
 	
 	public AttributeArray(String tupel, int numberOfAttributes) {
 
-		setPropertyName(SimPropertyName.simobj_attributearray);
+		setPropertyName(PropertyName.simobj_attributearray);
 		this.numberOfAttributes = numberOfAttributes;
 		attributes 	= new int[numberOfAttributes];
 		differences = new int[numberOfAttributes];
@@ -98,7 +98,7 @@ public class AttributeArray extends SimProperty {
 	}
 	
 	public AttributeArray(AttributeArray original) {
-		setPropertyName(SimPropertyName.simobj_attributearray);
+		setPropertyName(PropertyName.simobj_attributearray);
 		numberOfAttributes = original.length();
 		attributes 	= new int[numberOfAttributes];
 		differences = new int[numberOfAttributes];

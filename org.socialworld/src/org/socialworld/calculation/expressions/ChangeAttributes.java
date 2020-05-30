@@ -24,7 +24,7 @@ package org.socialworld.calculation.expressions;
 import java.util.List;
 
 import org.socialworld.attributes.Attribute;
-import org.socialworld.attributes.SimPropertyName;
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
 import org.socialworld.calculation.Type;
@@ -53,7 +53,7 @@ public class ChangeAttributes extends Branching {
 				exp3 = parseLinesTail(1, lines);
 			}
 			else {
-				exp3 = new GetArgumentByName(SimPropertyName.SIMOBJPROP_ATTRIBUTEARRAY);
+				exp3 = new GetArgumentByName(PropertyName.SIMOBJPROP_ATTRIBUTEARRAY);
 			}
 			
 			setExpression1(exp1);
@@ -80,7 +80,7 @@ public class ChangeAttributes extends Branching {
 		dann = parseDann(line);
 		
 		if (index == (lines.size() - 1)) 
-			 tail = new GetArgumentByName(SimPropertyName.SIMOBJPROP_ATTRIBUTEARRAY);
+			 tail = new GetArgumentByName(PropertyName.SIMOBJPROP_ATTRIBUTEARRAY);
 		else
 			 tail = parseLinesTail(index + 1, lines);
 		
@@ -123,16 +123,16 @@ public class ChangeAttributes extends Branching {
 				
 				expressionSetAttributeValue = 
 							new SetAttributeValue(attribute, 
-									new GetArgumentByName(SimPropertyName.SIMOBJPROP_ATTRIBUTEARRAY), 
+									new GetArgumentByName(PropertyName.SIMOBJPROP_ATTRIBUTEARRAY), 
 									expressionCalculateNewAttributeValue);
 				
 				if (isFirstExpression) {
-					replacementChain = new Replacement(SimPropertyName.SIMOBJPROP_ATTRIBUTEARRAY, expressionSetAttributeValue);
+					replacementChain = new Replacement(PropertyName.SIMOBJPROP_ATTRIBUTEARRAY, expressionSetAttributeValue);
 					isFirstExpression = false;
 				}
 				else {
 					sequence[0] = replacementChain;
-					sequence[1] = new Replacement(SimPropertyName.SIMOBJPROP_ATTRIBUTEARRAY, expressionSetAttributeValue);
+					sequence[1] = new Replacement(PropertyName.SIMOBJPROP_ATTRIBUTEARRAY, expressionSetAttributeValue);
 					replacementChain = new Sequence(sequence);
 
 				}

@@ -71,7 +71,7 @@ public class Position extends SimProperty {
 	private int locationByBase9;
 	private String locationByBase25;
 
-	public Position(SimPropertyName prop, Vector position) {
+	public Position(PropertyName prop, Vector position) {
 		setPropertyName(prop);
 		m_position =  position;
 		

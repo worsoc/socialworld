@@ -21,7 +21,7 @@
 */
 package org.socialworld.calculation.expressions;
 
-import org.socialworld.attributes.SimPropertyName;
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
 import org.socialworld.calculation.PropertyUsingAs;
@@ -97,7 +97,7 @@ public class GetValue extends Expression {
 
 	}
 	
-	public static String getValue(SimPropertyName prop) {
+	public static String getValue(PropertyName prop) {
 		return GETVALUE + "(" + prop.toString() + ")"; 
 	}
 	
@@ -105,7 +105,7 @@ public class GetValue extends Expression {
 		return GETVALUE + "(" + name + ")"; 
 	}
 
-	public static String getProperty(SimPropertyName prop) {
+	public static String getProperty(PropertyName prop) {
 		return GETPROPERTY + "(" + prop.toString() + ")"; 
 	}
 	
@@ -126,7 +126,7 @@ public class GetValue extends Expression {
 			result = new GetArgumentByName(name, valueAliasName);
 		}
 		if (step.indexOf(GETPROPERTY + "(") > 0 ) {
-			result = new GetProperty(SimPropertyName.forString(name), valueAliasName);
+			result = new GetProperty(PropertyName.forString(name), valueAliasName);
 		}
 		if (step.indexOf(GETFUNCTIONVALUE + "(") > 0 ) {
 			result = new GetProperty(name, valueAliasName);

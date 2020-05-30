@@ -24,7 +24,7 @@ package org.socialworld.calculation.application;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.socialworld.attributes.SimPropertyName;
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.FunctionByExpression;
 import org.socialworld.calculation.FunctionByMatrix;
 import org.socialworld.calculation.FunctionByMatrix_Matrix;
@@ -174,7 +174,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 
 		int count = eventInfluenceDescription.countFunctions();
 		
-		oldAttributes =  stateAnimal.getProperty(SimPropertyName.simobj_attributearray);
+		oldAttributes =  stateAnimal.getProperty(PropertyName.simobj_attributearray);
 		arguments = new ValueArrayList();
 		arguments.add( oldAttributes );
 		
@@ -226,7 +226,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 		Value oldAttributes;
 		Value newAttributes = new Value();
 	
-		oldAttributes =  stateAnimal.getProperty(SimPropertyName.simobj_attributearray);
+		oldAttributes =  stateAnimal.getProperty(PropertyName.simobj_attributearray);
 
 		arguments = new ValueArrayList();
 		arguments.add( oldAttributes );
@@ -276,7 +276,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 		Value oldAttributes;
 		Value newAttributes = new Value();
 	
-		oldAttributes =  stateAnimal.getProperty(SimPropertyName.simobj_attributearray);
+		oldAttributes =  stateAnimal.getProperty(PropertyName.simobj_attributearray);
 
 		arguments = new ValueArrayList();
 		arguments.add( oldAttributes );

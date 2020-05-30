@@ -23,7 +23,7 @@ package org.socialworld.datasource.loadObjects;
 
 
 import org.socialworld.attributes.Position;
-import org.socialworld.attributes.SimPropertyName;
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.collections.SimulationObjectArray;
 import org.socialworld.datasource.tablesSimulation.TableInfluenceByEvent;
@@ -142,7 +142,7 @@ public abstract class LoadSimulationObjects {
 			x = tablePositions.getX(rowTablePositions);
 			y = tablePositions.getY(rowTablePositions);
 			z = tablePositions.getZ(rowTablePositions);
-			hiddenObject.setPosition(new Position(SimPropertyName.simobj_position, new Vector(x,y,z)));
+			hiddenObject.setPosition(new Position(PropertyName.simobj_position, new Vector(x,y,z)));
 		}
 
 	}

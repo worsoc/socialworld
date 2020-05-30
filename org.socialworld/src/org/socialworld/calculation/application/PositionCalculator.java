@@ -26,7 +26,7 @@ import java.util.List;
 
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
-import org.socialworld.attributes.SimPropertyName;
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.core.Event;
@@ -125,7 +125,7 @@ public class PositionCalculator extends SocialWorldThread {
 		eventType = event.getEventType();
 		position = (Vector) state.getPositionVectorAsValue(Value.VALUE_NAME_UNUSED_BECAUSE_TEMPORARY).getValue();
 		
-		directionMoveObject = (Direction) state.getDirectionMoveAsValue(SimPropertyName.SIMOBJPROP_DIRECTION_MOVE).getValue();
+		directionMoveObject = (Direction) state.getDirectionMoveAsValue(PropertyName.SIMOBJPROP_DIRECTION_MOVE).getValue();
 		vectorMoveObject =  directionMoveObject.getVector();
 		powerMoveObject = directionMoveObject.getPower();
 		
@@ -157,13 +157,13 @@ public class PositionCalculator extends SocialWorldThread {
 		position.add(vectorMoveObject);
 		vectorMoveObject.normalize();
 		
-		newPosition = new Position(SimPropertyName.simobj_position, position);
+		newPosition = new Position(PropertyName.simobj_position, position);
 		
 		
 		returnSetPosition = hiddenWriteAccess.setPosition(newPosition);
 		if (returnSetPosition != WriteAccessToSimulationObject.WRITE_ACCESS_RETURNS_SUCCESS) return returnSetPosition;
 		
-		returnSetMove = hiddenWriteAccess.setMove(new Direction(SimPropertyName.simobj_directionMove, vectorMoveObject, resultingPowerMoveObject));
+		returnSetMove = hiddenWriteAccess.setMove(new Direction(PropertyName.simobj_directionMove, vectorMoveObject, resultingPowerMoveObject));
 		if (returnSetMove != WriteAccessToSimulationObject.WRITE_ACCESS_RETURNS_SUCCESS) return returnSetMove;
 
 		if (vectorMoveObject.equals(new Vector(0,0,0)))

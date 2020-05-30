@@ -25,7 +25,7 @@ package org.socialworld.calculation;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.attributes.ISimProperty;
-import org.socialworld.attributes.SimPropertyName;
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.expressions.Nothing;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.Event;
@@ -203,7 +203,7 @@ public class Expression {
 				case property:
 					
 					Value object = arguments.get(0);
-					SimPropertyName simPropName = (SimPropertyName) value.getValue();
+					PropertyName simPropName = (PropertyName) value.getValue();
 					String methodName = (String) expression2.evaluate(arguments).getValueCopy();
 					name = (String) expression1.evaluate(arguments).getValueCopy();
 
@@ -446,13 +446,13 @@ public class Expression {
 		
 	}
 
-	private ValueProperty getProperty(Value valueObject, SimPropertyName simPropName, String methodName, String valueName) {
+	private ValueProperty getProperty(Value valueObject, PropertyName simPropName, String methodName, String valueName) {
 		
 		ValueProperty result;
 		result = ValueProperty.getInvalid();
 		Object object = valueObject.getValue();
 		
-		if (simPropName == SimPropertyName.unknown) {
+		if (simPropName == PropertyName.unknown) {
 			
 			if (methodName.length() > 0) {
 			
