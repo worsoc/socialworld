@@ -31,6 +31,7 @@ import org.socialworld.attributes.Position;
 import org.socialworld.attributes.SimPropertyName;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
+import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.core.Event;
@@ -135,13 +136,13 @@ public abstract class StateSimulationObject extends ListenedBase {
 		}
 	}
 	
-	public final Value getProperty(SimPropertyName prop) {
+	public final ValueProperty getProperty(SimPropertyName prop) {
 		String name;
 		name = prop.toString();
 		return getProperty(prop, name);
 	}
 	
-	public Value getProperty(SimPropertyName prop, String name) {
+	public ValueProperty getProperty(SimPropertyName prop, String name) {
 		
 		switch (prop) {
 		case simobj_position:
@@ -267,9 +268,9 @@ public abstract class StateSimulationObject extends ListenedBase {
 	}
 	
 	
-	private Value getStateAsProperty(SimPropertyName prop, String name) {
+	private ValueProperty getStateAsProperty(SimPropertyName prop, String name) {
 		State stateAddOn;
-		Value result = new Value();
+		ValueProperty result = ValueProperty.getInvalid();
 		
 		for (int nrStateAddOn = 0; nrStateAddOn < stateAddOns.size(); nrStateAddOn++) {
 			

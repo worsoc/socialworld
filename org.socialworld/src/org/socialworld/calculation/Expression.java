@@ -24,6 +24,7 @@ package org.socialworld.calculation;
 
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.AttributeArray;
+import org.socialworld.attributes.ISimProperty;
 import org.socialworld.attributes.SimPropertyName;
 import org.socialworld.calculation.expressions.Nothing;
 import org.socialworld.collections.ValueArrayList;
@@ -208,11 +209,42 @@ public class Expression {
 
 					return getProperty(object, simPropName, methodName, name);
 				
-				case get:
+				case get:  // --> returns a ValueProperty!!!
 					
 					ValueArrayList subArgument = new ValueArrayList();
-					subArgument.add(expression1.evaluate(arguments));
-					tmp = expression2.evaluate(subArgument);
+					boolean checkSuccess = false;
+					ValueProperty property;
+					
+					tmp = expression1.evaluate(arguments);
+
+					int checkUseAsPermission = (int) value.getValueCopy();
+					if (checkUseAsPermission > 0) {
+						if (tmp instanceof ValueProperty) {
+							property = (ValueProperty) tmp;
+							if ( property.checkHasUseAsPermission(PropertyUsingAs.getName(checkUseAsPermission)) ) {
+								checkSuccess = true;
+							}
+						}
+					}
+					else {
+						// no check needed --> true
+						checkSuccess = true;
+					}
+					
+					if (checkSuccess) {
+						subArgument.add(tmp);
+						tmp = expression2.evaluate(subArgument);
+						if (tmp instanceof ValueProperty) {
+							property = (ValueProperty) tmp;
+							if (property.getUsing() == null) {
+								property.setUsing(PropertyUsingAs.getName(checkUseAsPermission));
+							}
+						}
+					}
+					else {
+						tmp = ValueProperty.getInvalid();
+					}
+					
 					return tmp;
 					
 				case branching:
@@ -414,10 +446,10 @@ public class Expression {
 		
 	}
 
-	private Value getProperty(Value valueObject, SimPropertyName simPropName, String methodName, String valueName) {
+	private ValueProperty getProperty(Value valueObject, SimPropertyName simPropName, String methodName, String valueName) {
 		
-		Value result;
-		result = Calculation.nothing;
+		ValueProperty result;
+		result = ValueProperty.getInvalid();
 		Object object = valueObject.getValue();
 		
 		if (simPropName == SimPropertyName.unknown) {
@@ -428,7 +460,12 @@ public class Expression {
 				
 				if (object instanceof State) {
 					State state = (State) object;
-					result = state.getValue(methodName, valueName);
+					result = state.getProperty(methodName, valueName);
+				}
+				else if (object instanceof ISimProperty) {
+					ISimProperty simProperty;
+					simProperty = (ISimProperty) object;
+					result = simProperty.getProperty(methodName, valueName);
 				}
 				
 			}
@@ -452,6 +489,11 @@ public class Expression {
 				State stateAddOn;
 				stateAddOn = (State) object;
 				result = stateAddOn.getProperty(simPropName, valueName);
+			}
+			else if (object instanceof ISimProperty) {
+				ISimProperty simProperty;
+				simProperty = (ISimProperty) object;
+				result = simProperty.getProperty(simPropName, valueName);
 			}
 			else if (object instanceof Event) {
 				

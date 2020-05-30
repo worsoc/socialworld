@@ -1,7 +1,7 @@
 package org.socialworld.attributes;
 
 import org.socialworld.calculation.Type;
-import org.socialworld.calculation.Value;
+import org.socialworld.calculation.ValueProperty;
 
 public abstract class SimProperty implements ISimProperty {
 
@@ -23,16 +23,25 @@ public abstract class SimProperty implements ISimProperty {
 		return this.propertyName;
 	}
 	
-	public final  Value getAsValue() {
+	public final  ValueProperty getAsValue() {
 		Type propertyType;
 		propertyType = this.propertyName.getType();
-		return new Value(propertyType, this.propertyName.toString(), copyForProperty(propertyType));
+		return new ValueProperty(propertyType, this.propertyName, this.propertyName.toString(), copyForProperty(propertyType));
 	}
 	
-	public final Value getAsValue(String name) {
+	public final ValueProperty getAsValue(String name) {
 		Type propertyType;
 		propertyType = this.propertyName.getType();
-		return new Value(propertyType, name, copyForProperty(propertyType));
+		return new ValueProperty(propertyType, this.propertyName, name, copyForProperty(propertyType));
 	}
+	
+	public  ValueProperty getProperty(SimPropertyName simPropName, String valueName) {
+		return ValueProperty.getInvalid();
+	}
+	
+	public  ValueProperty getProperty(String methodName, String valueName){
+		return ValueProperty.getInvalid();
+	}
+
 
 }

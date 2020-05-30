@@ -4,7 +4,7 @@ import org.socialworld.attributes.SimPropertyName;
 import org.socialworld.attributes.properties.NutrientProperty;
 import org.socialworld.attributes.properties.TasteProperty;
 import org.socialworld.calculation.Type;
-import org.socialworld.calculation.Value;
+import org.socialworld.calculation.ValueProperty;
 import org.socialworld.objects.State;
 
 public class StateEatable extends State {
@@ -24,9 +24,9 @@ public class StateEatable extends State {
 		return new StateEatable(this);
 	}
 
-	public  Value getProperty(SimPropertyName prop, String name) {
+	public  ValueProperty getProperty(SimPropertyName prop, String name) {
 		// TODO implement getProperty()
-		return new Value();
+		return ValueProperty.getInvalid();
 	}
 
 	public NutrientProperty getNutrientProperties() { return new NutrientProperty(nutrientProps); }
