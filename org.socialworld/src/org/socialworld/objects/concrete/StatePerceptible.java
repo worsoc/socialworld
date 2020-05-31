@@ -3,6 +3,7 @@ package org.socialworld.objects.concrete;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.percipience.Percipience;
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
@@ -25,7 +26,7 @@ public class StatePerceptible extends State {
 		return new StatePerceptible(this);
 	}
 
-	public  ValueProperty getProperty(PropertyName prop, String name) {
+	public  ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String name) {
 		// TODO implement getProperty()
 		return ValueProperty.getInvalid();
 	}

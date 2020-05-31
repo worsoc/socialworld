@@ -27,6 +27,7 @@ import org.socialworld.actions.ActionMode;
 import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.geometry.Vector;
@@ -138,7 +139,7 @@ public class ActionMove extends AbstractAction {
 		if ((!firstStep) && (path != null)) {
 			moveCompleted = !move.checkContinueMove();
 			
-			if (moveCompleted) path.completeSection(actor.getPosition());
+			if (moveCompleted) path.completeSection(actor.getPosition(SimulationCluster.action));
 			
 			if (path.isCompleted()) {
 				if (path.hasRefToKnownPaths()) {
@@ -160,14 +161,14 @@ public class ActionMove extends AbstractAction {
 		eventType = getEventToCauserType(mode);
 		if (eventType != EventType.nothing) {
 			event = new EventToCauser( eventType,    actor /* as causer*/,  ActualTime.asTime(),
-						actor.getPosition(),  move /* as performer */);	
+						actor.getPosition(SimulationCluster.action),  move /* as performer */);	
 			addEvent(event);
 		}
 		
 		eventType = getEventToCandidatesType(mode);
 		if (eventType != EventType.nothing) {
 			event = new EventToCandidates( eventType,    actor /* as causer*/,  ActualTime.asTime(),
-						actor.getPosition(),  move /* as performer */);	
+						actor.getPosition(SimulationCluster.action),  move /* as performer */);	
 			addEvent(event);
 		}
 
@@ -222,7 +223,7 @@ public class ActionMove extends AbstractAction {
 		else {
 			Position nextPoint = path.getNextPoint();
 			if (nextPoint != null) {
-				this.directionForSection = this.actor.getPosition().getDirectionTo(nextPoint);
+				this.directionForSection = this.actor.getPosition(SimulationCluster.action).getDirectionTo(nextPoint);
 			}
 			else {
 				this.directionForSection = new Vector(this.direction);

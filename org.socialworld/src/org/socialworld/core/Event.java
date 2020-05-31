@@ -21,6 +21,7 @@
 */
 package org.socialworld.core;
 
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.geometry.Vector;
@@ -275,7 +276,7 @@ public abstract class Event implements Comparable<Event> {
 		}
 		
 		if (this.causer instanceof Animal){
-			direction = ((Animal) causer).getDirectionChestAsValue(Value.VALUE_NAME_UNUSED_BECAUSE_TEMPORARY);
+			direction = ((Animal) causer).getDirectionChestAsValue(SimulationCluster.todo, Value.VALUE_NAME_UNUSED_BECAUSE_TEMPORARY);
 			return direction;
 			
 		}

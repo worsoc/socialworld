@@ -25,6 +25,7 @@ import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
 import org.socialworld.calculation.PropertyUsingAs;
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 
@@ -34,7 +35,7 @@ public class GetValue extends Expression {
 	public static String GETPROPERTY = "GETProp";
 	public static String GETFUNCTIONVALUE = "GETFctVal";
 	
-	public GetValue(PropertyUsingAs usablePermission, String getValuePath, String valueAliasName) {
+	public GetValue(SimulationCluster cluster, PropertyUsingAs usablePermission, String getValuePath, String valueAliasName) {
 		
 		super();
 		
@@ -44,7 +45,7 @@ public class GetValue extends Expression {
 		if (steps.length > 0) {
 			setOperation(Expression_Function.oneExpression);
 			
-			Expression exp1 = new GetValue(usablePermission, steps, 0, valueAliasName);
+			Expression exp1 = new GetValue(cluster, usablePermission, steps, 0, valueAliasName);
 			
 			setExpression1(exp1);
 			setValid();
@@ -56,7 +57,7 @@ public class GetValue extends Expression {
 			
 	}
 	
-	private GetValue(PropertyUsingAs usablePermission, String[] steps, int indexContinue, String valueAliasName) {
+	private GetValue(SimulationCluster cluster, PropertyUsingAs usablePermission, String[] steps, int indexContinue, String valueAliasName) {
 		
 		Expression exp1 = Nothing.getInstance();
 		Expression exp2 = Nothing.getInstance();
@@ -65,7 +66,7 @@ public class GetValue extends Expression {
 		Value checkPermission;
 		
 		step = steps[indexContinue];
-		exp1 = getStepExpression(step, valueAliasName);
+		exp1 = getStepExpression(cluster, step, valueAliasName);
 
 		if (steps.length == indexContinue + 1) {
 			// that is the value from expression 1,
@@ -77,12 +78,12 @@ public class GetValue extends Expression {
 		
 		if (steps.length == indexContinue + 2) {
 			step = steps[indexContinue + 1];
-			exp2 = getStepExpression(step, valueAliasName);
+			exp2 = getStepExpression(cluster, step, valueAliasName);
 			checkPermission = new Value(Type.integer, usablePermission.getIndex() - 1);
 		}
 		else {
 				
-			exp2 = new GetValue(usablePermission, steps, indexContinue + 1, valueAliasName);
+			exp2 = new GetValue(cluster, usablePermission, steps, indexContinue + 1, valueAliasName);
 			checkPermission = new Value(Type.integer, usablePermission.getIndex() - 1);
 
 		}
@@ -117,7 +118,7 @@ public class GetValue extends Expression {
 		return GETFUNCTIONVALUE + "(" + name + ")"; 
 	}
 	
-	private Expression getStepExpression(String step, String valueAliasName) {
+	private Expression getStepExpression(SimulationCluster cluster, String step, String valueAliasName) {
 		Expression result = Nothing.getInstance();
 		String name;
 		
@@ -126,10 +127,10 @@ public class GetValue extends Expression {
 			result = new GetArgumentByName(name, valueAliasName);
 		}
 		if (step.indexOf(GETPROPERTY + "(") > 0 ) {
-			result = new GetProperty(PropertyName.forString(name), valueAliasName);
+			result = new GetProperty(cluster, PropertyName.forString(name), valueAliasName);
 		}
 		if (step.indexOf(GETFUNCTIONVALUE + "(") > 0 ) {
-			result = new GetProperty(name, valueAliasName);
+			result = new GetProperty(cluster, name, valueAliasName);
 		}
 
 		return result;

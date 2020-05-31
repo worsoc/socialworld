@@ -28,6 +28,7 @@ import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.FunctionByExpression;
 import org.socialworld.calculation.FunctionByMatrix;
 import org.socialworld.calculation.FunctionByMatrix_Matrix;
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueTransferCode;
@@ -174,7 +175,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 
 		int count = eventInfluenceDescription.countFunctions();
 		
-		oldAttributes =  stateAnimal.getProperty(PropertyName.simobj_attributearray);
+		oldAttributes =  stateAnimal.getProperty(SimulationCluster.attributeArray, PropertyName.simobj_attributearray);
 		arguments = new ValueArrayList();
 		arguments.add( oldAttributes );
 		
@@ -226,7 +227,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 		Value oldAttributes;
 		Value newAttributes = new Value();
 	
-		oldAttributes =  stateAnimal.getProperty(PropertyName.simobj_attributearray);
+		oldAttributes =  stateAnimal.getProperty(SimulationCluster.attributeArray, PropertyName.simobj_attributearray);
 
 		arguments = new ValueArrayList();
 		arguments.add( oldAttributes );
@@ -276,7 +277,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 		Value oldAttributes;
 		Value newAttributes = new Value();
 	
-		oldAttributes =  stateAnimal.getProperty(PropertyName.simobj_attributearray);
+		oldAttributes =  stateAnimal.getProperty(SimulationCluster.attributeArray, PropertyName.simobj_attributearray);
 
 		arguments = new ValueArrayList();
 		arguments.add( oldAttributes );

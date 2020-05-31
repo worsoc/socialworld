@@ -30,6 +30,7 @@ import java.util.ListIterator;
 import org.socialworld.SocialWorld;
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.objects.Animal;
@@ -301,7 +302,7 @@ public class EventMaster extends SocialWorldThread {
 		double angleBetweenDirectionsToRadians;
 		double effectAngleToRadians;
 		
-		position = candidate.getPosition();
+		position = candidate.getPosition(SimulationCluster.todo);
 
 		direction = position.getDirectionFrom(this.eventPosition);
 		if (direction.is000()) return 2;

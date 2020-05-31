@@ -24,40 +24,45 @@ package org.socialworld.calculation.expressions;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 
 public class GetProperty extends Expression {
 
-	public GetProperty(PropertyName simPropName, String propertyName) {
+	public GetProperty(SimulationCluster cluster, PropertyName simPropName, String propertyName) {
 		
 		super();
 		
 		setOperation(Expression_Function.property);
 		setValue(new Value(Type.simPropName, simPropName));
 		
-		Expression exp1 = new Constant(new Value(Type.string, propertyName));
+		Expression exp1 = new Constant(new Value(Type.integer, cluster.getIndex()));
 		Expression exp2 = new Constant(new Value(Type.string, ""));
+		Expression exp3 = new Constant(new Value(Type.string, propertyName));
 		
 		setExpression1(exp1);
 		setExpression2(exp2);
+		setExpression3(exp3);
 		setValid();
 			
 			
 	}
 
-	public GetProperty(String methodName, String propertyName) {
+	public GetProperty(SimulationCluster cluster, String methodName, String propertyName) {
 		
 		super();
 		
 		setOperation(Expression_Function.property);
 		setValue(new Value(Type.simPropName, PropertyName.unknown));
 		
-		Expression exp1 = new Constant(new Value(Type.string, propertyName));
+		Expression exp1 = new Constant(new Value(Type.integer, cluster.getIndex()));
 		Expression exp2 = new Constant(new Value(Type.string, methodName));
+		Expression exp3 = new Constant(new Value(Type.string, propertyName));
 		
 		setExpression1(exp1);
 		setExpression2(exp2);
+		setExpression3(exp3);
 		setValid();
 			
 	}

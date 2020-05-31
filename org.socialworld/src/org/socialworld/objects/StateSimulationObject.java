@@ -29,6 +29,7 @@ import java.util.List;
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueProperty;
@@ -136,21 +137,21 @@ public abstract class StateSimulationObject extends ListenedBase {
 		}
 	}
 	
-	public final ValueProperty getProperty(PropertyName prop) {
+	public final ValueProperty getProperty(SimulationCluster cluster, PropertyName prop) {
 		String name;
 		name = prop.toString();
-		return getProperty(prop, name);
+		return getProperty(cluster, prop, name);
 	}
 	
-	public ValueProperty getProperty(PropertyName prop, String name) {
+	public ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String name) {
 		
 		switch (prop) {
 		case simobj_position:
-			return this.position.getAsValue(name);
+			return this.position.getAsValue(cluster, name);
 		case simobj_directionMove:
-			return this.directionMove.getAsValue(name);
+			return this.directionMove.getAsValue(cluster, name);
 		default:
-			return getStateAsProperty( prop,  name) ;
+			return getStateAsProperty( cluster, prop,  name) ;
 		}
 	}
 
@@ -178,8 +179,9 @@ public abstract class StateSimulationObject extends ListenedBase {
 		
 	}
 	
-	final public Value getDirectionMoveAsValue(String valueName) {
-		return this.directionMove.getAsValue(valueName);
+	final public Value getDirectionMoveAsValue(SimulationCluster cluster, String valueName) {
+		// TODO obsolet???
+		return this.directionMove.getAsValue(cluster, valueName);
 	}
 
 	final void setInfluenceTypes (int types[], WriteAccessToSimulationObject guard) {
@@ -268,7 +270,7 @@ public abstract class StateSimulationObject extends ListenedBase {
 	}
 	
 	
-	private ValueProperty getStateAsProperty(PropertyName prop, String name) {
+	private ValueProperty getStateAsProperty(SimulationCluster cluster, PropertyName prop, String name) {
 		State stateAddOn;
 		ValueProperty result = ValueProperty.getInvalid();
 		
@@ -277,7 +279,7 @@ public abstract class StateSimulationObject extends ListenedBase {
 			stateAddOn = stateAddOns.get(nrStateAddOn);
 		
 			if (stateAddOn.getPropertyName() == prop) {
-				result = stateAddOn.getAsValue(name);
+				result = stateAddOn.getAsValue(cluster, name);
 				break;
 			}
 			

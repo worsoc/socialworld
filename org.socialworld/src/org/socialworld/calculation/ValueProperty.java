@@ -1,6 +1,5 @@
 package org.socialworld.calculation;
 
-import java.util.List;
 
 import org.socialworld.attributes.PropertyName;
 
@@ -8,23 +7,27 @@ public class ValueProperty extends Value {
 
 	private static ValueProperty inValid = new ValueProperty();
 	
-	private List<PropertyUsingAs> useAsPermissions;
+	private SimulationCluster cluster;
+	
+	private PropertyUsingAs[] useAsPermissions;
 	private PropertyUsingAs usedAs = null;
 	
 	private ValueProperty() {
 		super();
 	}
 
-	public ValueProperty(Type type, PropertyName propertyName, String name, Object value) {
+	public ValueProperty(Type type, SimulationCluster cluster, PropertyName propertyName, String name, Object value) {
 
 		super(type, name, value);
 		
-		setUseAsPermissions(propertyName);
+		this.cluster = cluster;
+		setUseAsPermissions(cluster, propertyName);
 		
 		valid = true;
 	}
+	
 
-	public ValueProperty(Type type, List<PropertyUsingAs> useAsPermissions, String name, Object value) {
+	public ValueProperty(Type type, PropertyUsingAs[] useAsPermissions, String name, Object value) {
 
 		super(type, name, value);
 
@@ -37,14 +40,14 @@ public class ValueProperty extends Value {
 		return inValid;
 	}
 
-	private void setUseAsPermissions(PropertyName propertyName) {
+	private void setUseAsPermissions(SimulationCluster cluster, PropertyName propertyName) {
 		
 	}
 	
 	public boolean checkHasUseAsPermission(PropertyUsingAs useAsPermission) {
 		
-		for (int index = 0; index < useAsPermissions.size(); index++) {
-			if  (useAsPermissions.get(index).equals(useAsPermission)) return true;
+		for (int index = 0; index < useAsPermissions.length; index++) {
+			if  (useAsPermissions[index].equals(useAsPermission)) return true;
 		}
 		
 		return false;
@@ -57,6 +60,17 @@ public class ValueProperty extends Value {
 	
 	public PropertyUsingAs getUsing( ) {
 		return this.usedAs;
+	}
+	
+	public void setCluster(SimulationCluster cluster) {
+		
+		if (this.cluster.equals(SimulationCluster.toBeSet)) {
+			this.cluster = cluster;
+			
+			// TODO set useAsPermissions
+			
+		}
+		
 	}
 	
 }

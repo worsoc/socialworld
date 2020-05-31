@@ -33,5 +33,13 @@ public enum PropertyUsingAs {
 	public PropertyUsingAs getPathPermission(PropertyUsingAs finalValuePermission) {
 		return getName(finalValuePermission.index - 1);
 	}
+	
+	public SimulationCluster getSimulationCluster() {
+		
+		if (this.index == 0) return SimulationCluster.unknown;
+		else if (this.index < 100) return SimulationCluster.knowledge;
+		else return SimulationCluster.unknown;
+		
+	}
 
 }

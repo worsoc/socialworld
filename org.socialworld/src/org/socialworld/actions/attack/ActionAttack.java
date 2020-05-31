@@ -26,6 +26,7 @@ import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.ActualTime;
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
@@ -166,7 +167,7 @@ public class ActionAttack extends AbstractAction {
 		eventType = getEventToCandidatesType(type, mode);
 		if (eventType != EventType.nothing) {
 			event = new EventToCandidates(eventType ,    actor /* as causer*/,  ActualTime.asTime(),
-							actor.getPosition(),  attack /* as performer */);
+							actor.getPosition(SimulationCluster.action),  attack /* as performer */);
 			addEvent(event);
 		}
 		
@@ -174,7 +175,7 @@ public class ActionAttack extends AbstractAction {
 			eventType = getEventToTargetType(type, mode);
 			if (eventType != EventType.nothing) {
 				event = new EventToTarget(eventType,    actor /* as causer*/,  ActualTime.asTime(),
-								actor.getPosition(),  attack /* as performer */);
+								actor.getPosition(SimulationCluster.action),  attack /* as performer */);
 				addEvent(event);
 			}
 		}
@@ -182,7 +183,7 @@ public class ActionAttack extends AbstractAction {
 		eventType = getEventToCauserType(type, mode);
 		if (eventType != EventType.nothing) {
 			event = new EventToCauser(eventType,    actor /* as causer*/,  ActualTime.asTime(),
-					actor.getPosition(),  attack /* as performer */);
+					actor.getPosition(SimulationCluster.action),  attack /* as performer */);
 			addEvent(event);
 		}
 		

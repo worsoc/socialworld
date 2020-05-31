@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.ListIterator;
 
 import org.socialworld.attributes.Position;
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.knowledge.KnownPathsPool;
 import org.socialworld.objects.Animal;
@@ -68,29 +69,31 @@ public class PathFinder {
 		Path pathStart;
 		Path pathEnd;
 		
-		result = findPathWithStartAndEnd(actor.getPosition(), end);
+		Position actorsPosition = actor.getPosition(SimulationCluster.pathFinder);
+		
+		result = findPathWithStartAndEnd(actorsPosition, end);
 		
 		if (result == null) {
-			pathStart = findPathWithStartAndNearestEnd(actor.getPosition(), end);
-			pathEnd = findPathWithNearestStartAndEnd(actor.getPosition(), end);
+			pathStart = findPathWithStartAndNearestEnd(actorsPosition, end);
+			pathEnd = findPathWithNearestStartAndEnd(actorsPosition, end);
 			
 			if (pathStart == null) 
 				if (pathEnd != null) {
-					result = createPath(actor.getPosition(), pathEnd.getStartPoint());
+					result = createPath(actorsPosition, pathEnd.getStartPoint());
 					result.concat(pathEnd);
 				}
 				else 
-					result = createPath(actor.getPosition(), end);
+					result = createPath(actorsPosition, end);
 			else
 				if (pathEnd == null) {
 					result = new Path(pathStart);
 					result.concat(createPath(result.getEndPoint(), end));
 				}
 				else {
-					Vector partStart = actor.getPosition().getDirectionTo(pathStart.getEndPoint());
+					Vector partStart = actorsPosition.getDirectionTo(pathStart.getEndPoint());
 //					Vector partEnd = pathEnd.getStartPoint().getDirectionTo(end);
 //					Vector partUnknown = pathStart.getEndPoint().getDirectionTo(pathEnd.getStartPoint());
-					Vector beelineToStartOfPathEnd = actor.getPosition().getDirectionTo(pathEnd.getStartPoint());
+					Vector beelineToStartOfPathEnd = actorsPosition.getDirectionTo(pathEnd.getStartPoint());
 //					Vector beeline = actor.getPosition().getDirectionTo(end);
 					
 					if (partStart.length() > beelineToStartOfPathEnd.length()) {
@@ -99,7 +102,7 @@ public class PathFinder {
 							result.concat(createPath(result.getEndPoint(), end));
 						}
 						else {
-							result = createPath(actor.getPosition(), pathEnd.getStartPoint());
+							result = createPath(actorsPosition, pathEnd.getStartPoint());
 							result.concat(pathEnd);
 						}
 					}

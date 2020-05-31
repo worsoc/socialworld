@@ -23,6 +23,7 @@ package org.socialworld.actions;
 
 import java.util.List;
 
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.descriptions.Action2PerformerAssignment;
@@ -125,7 +126,7 @@ public abstract class ActionPerformer implements IEventParam {
 			ActionMode actionMode = this.action.getMode();
 			
 			actionPropertiesAreRequested = true;
-			actor.requestPropertyList(this);
+			actor.requestPropertyList(SimulationCluster.action, this);
 			this.action.requestPropertyList(this);
 			actionPropertiesAreRequested = false;
 			

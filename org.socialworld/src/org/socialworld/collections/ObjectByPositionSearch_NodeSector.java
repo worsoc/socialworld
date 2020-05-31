@@ -25,6 +25,7 @@ package org.socialworld.collections;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.map.IMapProp;
 import org.socialworld.map.MapPropTree_Node;
 import org.socialworld.objects.SimulationObject;
@@ -53,10 +54,10 @@ public class ObjectByPositionSearch_NodeSector extends MapPropTree_Node{
 		String location;
 
 		if ( ((ObjectByPositionSearch_TreeSector) getTree()).getBase() == 9) {
-			location = 	Integer.toString(object.getPosition().getLocationByBase9());	
+			location = 	Integer.toString(object.getPosition(SimulationCluster.objectMaster).getLocationByBase9());	
 			}
 		else if ( ((ObjectByPositionSearch_TreeSector) getTree()).getBase() == 25) {
-			location = 	object.getPosition().getLocationByBase25();	
+			location = 	object.getPosition(SimulationCluster.objectMaster).getLocationByBase25();	
 			}
 		else
 			 return null;

@@ -26,6 +26,7 @@ import org.socialworld.actions.ActionMode;
 import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.Time;
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
@@ -78,7 +79,7 @@ public class ActionEquip extends AbstractAction {
 
       	this.equip = new Equip( this);
       	
-		Position position = actor.getPosition();
+		Position position = actor.getPosition(SimulationCluster.action);
 		Time actualTime = ActualTime.asTime();
 
       	Event event;
