@@ -29,6 +29,7 @@ import org.socialworld.attributes.AttributeArray;
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.FunctionByMatrix;
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.application.Scheduler;
@@ -88,20 +89,20 @@ public class StateAnimal extends StateSimulationObject {
 /////////////////////////////    ATTRIBUTES  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
-	public ValueProperty getProperty(PropertyName prop, String name) {
+	public ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String name) {
 		switch (prop) {
 		case simobj_attributearray:
-			return this.attributes.getAsValue(name);
+			return this.attributes.getAsValue(cluster, name);
 		case simobj_inventory:
-			return this.inventory.getAsValue(name);
+			return this.inventory.getAsValue(cluster, name);
 		case simobj_knowledge:
-			return this.knowledge.getAsValue(name);
+			return this.knowledge.getAsValue(cluster, name);
 		case simobj_directionChest:
-			return this.directionChest.getAsValue(name);
+			return this.directionChest.getAsValue(cluster, name);
 		case simobj_directionActiveMove:
-			return this.directionActiveMove.getAsValue(name);
+			return this.directionActiveMove.getAsValue(cluster, name);
 		default:
-			return super.getProperty(prop, name);
+			return super.getProperty(cluster, prop, name);
 		}
 	}
 
@@ -217,13 +218,15 @@ public class StateAnimal extends StateSimulationObject {
 		}
 	}
 
-	final public Value getDirectionChestAsValue(String valueName) {
-		return  this.directionChest.getAsValue(valueName);
+	final public Value getDirectionChestAsValue(SimulationCluster cluster, String valueName) {
+		// TODO obsolet ???
+		return  this.directionChest.getAsValue(cluster, valueName);
 	}
 	
 
-	final public Value getDirectionActiveMoveAsValue(String valueName) {
-		return  this.directionActiveMove.getAsValue(valueName) ;
+	final public Value getDirectionActiveMoveAsValue(SimulationCluster cluster, String valueName) {
+		// TODO obsolet ???
+		return  this.directionActiveMove.getAsValue(cluster, valueName) ;
 	}
 
 

@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 
 import org.socialworld.attributes.ISimProperty;
 import org.socialworld.attributes.PropertyName;
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueProperty;
@@ -37,29 +38,29 @@ public abstract class State implements ISimProperty {
 		return this.propertyName;
 	}
 
-	public final  ValueProperty getAsValue() {
+	public final  ValueProperty getAsValue(SimulationCluster cluster) {
 		Type propertyType;
 		propertyType = this.propertyName.getType();
-		return new ValueProperty(propertyType, this.propertyName, this.propertyName.toString(), copyForProperty(propertyType));
+		return new ValueProperty(propertyType, cluster, this.propertyName, this.propertyName.toString(), copyForProperty(propertyType));
 	}
 	
-	public final ValueProperty getAsValue(String name) {
+	public final ValueProperty getAsValue(SimulationCluster cluster, String name) {
 		Type propertyType;
 		propertyType = this.propertyName.getType();
-		return new ValueProperty(propertyType, this.propertyName, name, copyForProperty(propertyType));
+		return new ValueProperty(propertyType, cluster, this.propertyName, name, copyForProperty(propertyType));
 	}
 
 	////////////////////////////////////////////
 	
-	public final ValueProperty getProperty(PropertyName prop) {
+	public final ValueProperty getProperty(SimulationCluster cluster, PropertyName prop) {
 		String name;
 		name = prop.toString();
-		return getProperty(prop, name);
+		return getProperty(cluster, prop, name);
 	}
 	
 	//public abstract ValueProperty getProperty(PropertyName prop, String name);
 	
-	public final ValueProperty getProperty(String methodName, String name) {
+	public final ValueProperty getProperty(SimulationCluster cluster, String methodName, String name) {
 		
 		Object got = null;
 		ValueProperty result = ValueProperty.getInvalid();
@@ -90,6 +91,7 @@ public abstract class State implements ISimProperty {
 					
 					result = ( ValueProperty ) got ;
 					result.setName(name);
+					result.setCluster(cluster);
 				}
 				
 			}

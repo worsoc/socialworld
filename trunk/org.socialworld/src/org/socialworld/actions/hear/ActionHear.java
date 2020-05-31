@@ -25,6 +25,7 @@ package org.socialworld.actions.hear;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.attributes.ActualTime;
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
@@ -135,7 +136,7 @@ public class ActionHear extends AbstractAction {
   		this.hear = new Hear(this);
   		
 		event = new EventToCauser(eventType,    actor /* as causer*/,  ActualTime.asTime(),
-				actor.getPosition(),  hear /* as performer */);
+				actor.getPosition(SimulationCluster.action),  hear /* as performer */);
 
 		addEvent(event);
 	

@@ -1,5 +1,6 @@
 package org.socialworld.attributes;
 
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 
@@ -23,23 +24,23 @@ public abstract class SimProperty implements ISimProperty {
 		return this.propertyName;
 	}
 	
-	public final  ValueProperty getAsValue() {
+	public final  ValueProperty getAsValue(SimulationCluster cluster) {
 		Type propertyType;
 		propertyType = this.propertyName.getType();
-		return new ValueProperty(propertyType, this.propertyName, this.propertyName.toString(), copyForProperty(propertyType));
+		return new ValueProperty(propertyType, cluster, this.propertyName, this.propertyName.toString(), copyForProperty(propertyType));
 	}
 	
-	public final ValueProperty getAsValue(String name) {
+	public final ValueProperty getAsValue(SimulationCluster cluster, String name) {
 		Type propertyType;
 		propertyType = this.propertyName.getType();
-		return new ValueProperty(propertyType, this.propertyName, name, copyForProperty(propertyType));
+		return new ValueProperty(propertyType, cluster, this.propertyName, name, copyForProperty(propertyType));
 	}
 	
-	public  ValueProperty getProperty(PropertyName simPropName, String valueName) {
+	public  ValueProperty getProperty(SimulationCluster cluster, PropertyName simPropName, String valueName) {
 		return ValueProperty.getInvalid();
 	}
 	
-	public  ValueProperty getProperty(String methodName, String valueName){
+	public  ValueProperty getProperty(SimulationCluster cluster, String methodName, String valueName){
 		return ValueProperty.getInvalid();
 	}
 

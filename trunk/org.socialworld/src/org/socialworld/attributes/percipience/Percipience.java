@@ -22,6 +22,7 @@
 package org.socialworld.attributes.percipience;
 
 import org.socialworld.attributes.Position;
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.objects.Animal;
 
@@ -128,7 +129,7 @@ public class Percipience {
 	
 	private boolean checkMaySeeingObject(Animal possibleSeer) {
 		
-		Position positionSeer = possibleSeer.getPosition();
+		Position positionSeer = possibleSeer.getPosition(SimulationCluster.percipience);
 		Vector direction = this.position.getDirectionFrom(positionSeer);
 
 		if (direction.is000()) return false;
@@ -155,7 +156,7 @@ public class Percipience {
 
 	private boolean checkMaySeeingEvent(Animal possibleSeer) {
 		
-		Position positionSeer = possibleSeer.getPosition();
+		Position positionSeer = possibleSeer.getPosition(SimulationCluster.percipience);
 		Vector direction = this.position.getDirectionFrom(positionSeer);
 
 		if (direction.is000()) return false;

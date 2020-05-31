@@ -3,6 +3,7 @@ package org.socialworld.objects.concrete;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.properties.NutrientProperty;
 import org.socialworld.attributes.properties.TasteProperty;
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.objects.State;
@@ -24,7 +25,7 @@ public class StateEatable extends State {
 		return new StateEatable(this);
 	}
 
-	public  ValueProperty getProperty(PropertyName prop, String name) {
+	public  ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String name) {
 		// TODO implement getProperty()
 		return ValueProperty.getInvalid();
 	}

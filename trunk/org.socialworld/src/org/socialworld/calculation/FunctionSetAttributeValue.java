@@ -31,7 +31,7 @@ public class FunctionSetAttributeValue extends FunctionBase {
 				AttributeArray attributes = new AttributeArray((AttributeArray) arguments.get(0).getValue());
 				newAttributeValue = (int)arguments.get(1).getValueCopy();
 				attributes.set(this.indexAttribute, newAttributeValue);
-				return attributes.getAsValue();
+				return attributes.getAsValue(SimulationCluster.toBeSet);
 			}
 		}
 		else if (arguments.size() == 2) {
@@ -41,7 +41,7 @@ public class FunctionSetAttributeValue extends FunctionBase {
 				AttributeArray attributes = new AttributeArray((AttributeArray) arguments.get(0).getValue());
 				newAttributeValue = (int)arguments.get(1).getValueCopy();
 				attributes.set(this.indexAttribute, newAttributeValue);
-				return attributes.getAsValue();
+				return attributes.getAsValue(SimulationCluster.toBeSet);
 			}
 		}
 		

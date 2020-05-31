@@ -32,6 +32,7 @@ import org.socialworld.SocialWorld;
 import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.Time;
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.collections.ObjectByPositionSearch;
 
@@ -126,12 +127,12 @@ public class Simulation extends SocialWorldThread {
 		Item myItem;
 		for (int i = 0; i < 100; i++ ) {
 			myHuman = (Human) createSimulationObject(SimulationObject_Type.human);
-			System.out.println("Human: " + myHuman.getPosition().toString());
+			System.out.println("Human: " + myHuman.getPosition(SimulationCluster.test).toString());
 		}
 		
 		for (int i = 0; i < 75; i++ ) {
 			myItem = (Item) createSimulationObject(SimulationObject_Type.item);
-			System.out.println("Apple:" + myItem.getPosition().toString());
+			System.out.println("Apple:" + myItem.getPosition(SimulationCluster.test).toString());
 		}
 		
 	}

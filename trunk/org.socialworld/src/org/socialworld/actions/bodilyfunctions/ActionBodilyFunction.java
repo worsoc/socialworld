@@ -25,6 +25,7 @@ package org.socialworld.actions.bodilyfunctions;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.attributes.ActualTime;
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
@@ -130,7 +131,7 @@ public class ActionBodilyFunction extends AbstractAction {
 		eventType = getEventToCauserType(mode);
 		if (eventType != EventType.nothing) {
 			event = new EventToCauser(eventType,    actor /* as causer*/,  ActualTime.asTime(),
-						actor.getPosition(),  bodilyFunction /* as performer */);
+						actor.getPosition(SimulationCluster.action),  bodilyFunction /* as performer */);
 			addEvent(event);
 		}
 		
@@ -138,7 +139,7 @@ public class ActionBodilyFunction extends AbstractAction {
 			eventType = getEventToTargetType(mode);
 			if (eventType != EventType.nothing) {
 				event = new EventToTarget(eventType,    actor /* as causer*/,  ActualTime.asTime(),
-							actor.getPosition(),  bodilyFunction /* as performer */);
+							actor.getPosition(SimulationCluster.action),  bodilyFunction /* as performer */);
 				addEvent(event);
 			}
 		}

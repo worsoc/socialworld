@@ -26,6 +26,7 @@ import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.ActualTime;
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.geometry.Vector;
@@ -170,7 +171,7 @@ public class ActionHandle extends AbstractAction {
 			eventType = getEventToTargetType(type, mode);
 			if (eventType != EventType.nothing) {
 				event = new EventToTarget( eventType,    actor /* as causer*/,  ActualTime.asTime(),
-								actor.getPosition(),  handle /* as performer */);
+								actor.getPosition(SimulationCluster.action),  handle /* as performer */);
 				addEvent(event);
 			}
    		}
@@ -178,7 +179,7 @@ public class ActionHandle extends AbstractAction {
 		eventType = getEventToCauserType(type, mode);
 		if (eventType != EventType.nothing) {
 			event = new EventToCauser( eventType,    actor /* as causer*/,  ActualTime.asTime(),
-							actor.getPosition(),  handle /* as performer */);
+							actor.getPosition(SimulationCluster.action),  handle /* as performer */);
 			addEvent(event);
 		}
 		
@@ -280,7 +281,7 @@ public class ActionHandle extends AbstractAction {
 			direction = new Vector(this.direction);
 		}
 		else {
-			direction = actor.getPosition().getDirectionTo(this.target.getPosition());
+			direction = actor.getPosition(SimulationCluster.action).getDirectionTo(this.target.getPosition(SimulationCluster.action));
 		}
 		return new Value(Type.vector, valueName, direction);
 	}

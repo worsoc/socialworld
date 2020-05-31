@@ -21,6 +21,7 @@
 */
 package org.socialworld.objects;
 
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.IEventParam;
 
@@ -58,9 +59,9 @@ public abstract class Magic extends SimulationObject {
 /////////////////////////////    PROPERTY LIST  ///////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	public void requestPropertyList(IEventParam paramObject) {
+	public void requestPropertyList(SimulationCluster cluster, IEventParam paramObject) {
 	
-		super.requestPropertyList(paramObject);
+		super.requestPropertyList(cluster, paramObject);
 		
 		ValueArrayList propertiesAsValueList = new ValueArrayList();
 		paramObject.answerPropertiesRequest(propertiesAsValueList);

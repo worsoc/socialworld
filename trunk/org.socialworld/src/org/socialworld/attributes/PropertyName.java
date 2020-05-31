@@ -1,23 +1,30 @@
 package org.socialworld.attributes;
 
+
+import org.socialworld.calculation.PropertyUsingAs;
 import org.socialworld.calculation.Type;
 
 public enum PropertyName {
 
-	unknown, 
 	
-	simobj_position,
-	simobj_attributearray,
-	simobj_directionMove, simobj_directionChest, simobj_directionView, simobj_directionActiveMove,
-	simobj_inventory,
-	simobj_knowledge,
-	simobj_stateSeer,
+	unknown(0), 
 	
-	event_position,
-	event_direction,
+	simobj_position(1001),
+	simobj_attributearray(1011),
+	simobj_directionMove(1021), simobj_directionChest(1022), simobj_directionView(1023), simobj_directionActiveMove(1024),
+	simobj_inventory(1031),
+	simobj_knowledge(1041),
+	simobj_stateSeer(2001),
 	
-	action_position;
+	event_position(101001),
+	event_direction(101020),
 	
+	action_position(201001),
+	
+	position_vector(1001001);
+
+	private final static int THREASHOLD_SIMPROPERTY = 1000000;
+
 	public final static String SIMOBJPROP_POSITION = "position";
 	public final static String SIMOBJPROP_ATTRIBUTEARRAY = "attributes";
 	public final static String SIMOBJPROP_INVENTORY = "inventory";
@@ -32,6 +39,25 @@ public enum PropertyName {
 	public final static String EVENT_DIRECTION = "event_direction";
 	
 	public final static String ACTION_POSITION = "action_position";
+	
+	
+	private int index;
+
+	private PropertyName(int index) {
+		this.index = index;
+	}
+	
+	public int getIndex() {
+		return index;
+	}
+
+	public static PropertyName getName(int index) {
+		for (PropertyName prop : PropertyName.values())
+			if (prop.index == index)
+				return prop;
+		return unknown;
+	}
+
 	
 	public Type getType() {
 		switch (this) {
@@ -117,6 +143,35 @@ public enum PropertyName {
 		
 		case ACTION_POSITION: return action_position;
 		default: return unknown;
+		}
+	}
+	
+	public boolean isSimProperty() {
+		
+		if (this.index < THREASHOLD_SIMPROPERTY) {
+			return true;
+		}
+		
+		return false;
+		
+	}
+
+	private static PropertyUsingAs emptyPermissions[] = {};
+	private static PropertyUsingAs only_pathToKnowledgeValue[] = {PropertyUsingAs.pathToKnowledgeValue };
+	private static PropertyUsingAs only_knowledgeValue[] = {PropertyUsingAs.knowledgeValue };
+	private static PropertyUsingAs only_knowledgeRelationSubjectOrObject[] =  {PropertyUsingAs.knowledgeRelationSubject, PropertyUsingAs.knowledgeRelationObject };
+
+	
+	public  PropertyUsingAs[] getUsingAsPermissions() {
+		switch (this) {
+		case simobj_position: return only_pathToKnowledgeValue;
+		case simobj_inventory: return only_knowledgeRelationSubjectOrObject;
+		case simobj_directionMove: return only_pathToKnowledgeValue;
+		case simobj_directionChest: return only_pathToKnowledgeValue;
+		case simobj_directionView: return only_pathToKnowledgeValue;
+		case simobj_directionActiveMove: return only_pathToKnowledgeValue;
+		case position_vector: return only_knowledgeValue;
+		default:			return emptyPermissions;
 		}
 	}
 }

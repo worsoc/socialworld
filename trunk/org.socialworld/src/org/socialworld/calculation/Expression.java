@@ -204,10 +204,11 @@ public class Expression {
 					
 					Value object = arguments.get(0);
 					PropertyName simPropName = (PropertyName) value.getValue();
+					SimulationCluster cluster = SimulationCluster.getName((int) expression1.evaluate(arguments).getValueCopy());
 					String methodName = (String) expression2.evaluate(arguments).getValueCopy();
-					name = (String) expression1.evaluate(arguments).getValueCopy();
-
-					return getProperty(object, simPropName, methodName, name);
+					name = (String) expression3.evaluate(arguments).getValueCopy();
+					
+					return getProperty(object, cluster, simPropName, methodName, name);
 				
 				case get:  // --> returns a ValueProperty!!!
 					
@@ -446,7 +447,7 @@ public class Expression {
 		
 	}
 
-	private ValueProperty getProperty(Value valueObject, PropertyName simPropName, String methodName, String valueName) {
+	private ValueProperty getProperty(Value valueObject, SimulationCluster cluster, PropertyName simPropName, String methodName, String valueName) {
 		
 		ValueProperty result;
 		result = ValueProperty.getInvalid();
@@ -460,12 +461,12 @@ public class Expression {
 				
 				if (object instanceof State) {
 					State state = (State) object;
-					result = state.getProperty(methodName, valueName);
+					result = state.getProperty(cluster, methodName, valueName);
 				}
 				else if (object instanceof ISimProperty) {
 					ISimProperty simProperty;
 					simProperty = (ISimProperty) object;
-					result = simProperty.getProperty(methodName, valueName);
+					result = simProperty.getProperty(cluster, methodName, valueName);
 				}
 				
 			}
@@ -478,22 +479,22 @@ public class Expression {
 			if (object instanceof SimulationObject) {
 				SimulationObject simObj;
 				simObj = (SimulationObject) object;
-				result = simObj.getProperty(simPropName, valueName);
+				result = simObj.getProperty(cluster, simPropName, valueName);
 			}
 			else if (object instanceof StateSimulationObject) {
 				StateSimulationObject stateSimObj;
 				stateSimObj = (StateSimulationObject) object;
-				result = stateSimObj.getProperty(simPropName, valueName);
+				result = stateSimObj.getProperty(cluster, simPropName, valueName);
 			}
 			else if (object instanceof State) {
 				State stateAddOn;
 				stateAddOn = (State) object;
-				result = stateAddOn.getProperty(simPropName, valueName);
+				result = stateAddOn.getProperty(cluster, simPropName, valueName);
 			}
 			else if (object instanceof ISimProperty) {
 				ISimProperty simProperty;
 				simProperty = (ISimProperty) object;
-				result = simProperty.getProperty(simPropName, valueName);
+				result = simProperty.getProperty(cluster, simPropName, valueName);
 			}
 			else if (object instanceof Event) {
 				

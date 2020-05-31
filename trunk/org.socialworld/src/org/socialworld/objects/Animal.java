@@ -32,6 +32,7 @@ import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.FunctionByMatrix;
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
@@ -86,16 +87,16 @@ public abstract class Animal extends SimulationObject implements ISeer {
 	};
 
 
-	public ValueProperty getProperty(PropertyName prop, String name) {
+	public ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String name) {
 		switch (prop) {
 		case simobj_attributearray:
 		case simobj_inventory:
 		case simobj_knowledge:
 		case simobj_directionChest:
 		case simobj_directionActiveMove:
-			return this.state.getProperty(prop, name);
+			return this.state.getProperty(cluster, prop, name);
 		default:
-			return super.getProperty(prop, name);
+			return super.getProperty(cluster, prop, name);
 		}
 	}
 	
@@ -110,7 +111,8 @@ public abstract class Animal extends SimulationObject implements ISeer {
 	}
 
 	final public Direction getDirectionView() {
-		return (Direction) stateSeer.getProperty(PropertyName.simobj_directionView).getValue();
+		// TODO obsolet / refactoring the Iseer Interface
+		return (Direction) stateSeer.getProperty(SimulationCluster.unknown, PropertyName.simobj_directionView).getValue();
 	}
 
 	final public float getAngleViewPerceivingObjects() {
@@ -145,8 +147,9 @@ public abstract class Animal extends SimulationObject implements ISeer {
 		return this.state.getAttribute(attributeName);
 	}
 	
-	final public Value getAttributesAsValue(String valueName) {
-		return getProperty(PropertyName.simobj_attributearray, valueName);
+	final public Value getAttributesAsValue(SimulationCluster cluster, String valueName) {
+		// TODO obsolet ???
+		return getProperty(cluster, PropertyName.simobj_attributearray, valueName);
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -164,8 +167,9 @@ public abstract class Animal extends SimulationObject implements ISeer {
 	/**
 	 * @return the directionChest
 	 */
-	final public Value getDirectionChestAsValue(String valueName) {
-		return this.state.getDirectionChestAsValue(valueName);
+	final public Value getDirectionChestAsValue(SimulationCluster cluster, String valueName) {
+		// TODO obsolet ???
+		return this.state.getDirectionChestAsValue(cluster, valueName);
 	}
 
 
@@ -233,16 +237,16 @@ public abstract class Animal extends SimulationObject implements ISeer {
 /////////////////////////////    PROPERTY LIST  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	public void requestPropertyList(IEventParam paramObject) {
+	public void requestPropertyList(SimulationCluster cluster, IEventParam paramObject) {
 	
-		super.requestPropertyList(paramObject);
+		super.requestPropertyList(cluster, paramObject);
 		
 		ValueArrayList propertiesAsValueList = new ValueArrayList();
 		
-		propertiesAsValueList.add(getProperty(PropertyName.simobj_attributearray));
-		propertiesAsValueList.add(getProperty(PropertyName.simobj_directionChest));
-		propertiesAsValueList.add(getProperty(PropertyName.simobj_directionView));
-		propertiesAsValueList.add(getProperty(PropertyName.simobj_directionActiveMove));
+		propertiesAsValueList.add(getProperty(cluster, PropertyName.simobj_attributearray));
+		propertiesAsValueList.add(getProperty(cluster, PropertyName.simobj_directionChest));
+		propertiesAsValueList.add(getProperty(cluster, PropertyName.simobj_directionView));
+		propertiesAsValueList.add(getProperty(cluster, PropertyName.simobj_directionActiveMove));
 		paramObject.answerPropertiesRequest(propertiesAsValueList);
 	
 	}
