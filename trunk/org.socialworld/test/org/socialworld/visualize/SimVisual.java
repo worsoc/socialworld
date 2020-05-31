@@ -17,6 +17,7 @@ import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.attributes.PropertyName;
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Value;
 import org.socialworld.core.Simulation;
 import org.socialworld.objects.Human;
@@ -231,7 +232,7 @@ public class SimVisual {
 			Value propSub;
 			
 			human = Simulation.getInstance().getObjectMaster().getHumans().get(index);
-			prop = human.getProperty(PropertyName.simobj_stateSeer);
+			prop = human.getProperty(SimulationCluster.test, PropertyName.simobj_stateSeer);
 			state = (State) prop.getValue();
 			if (state != null) {
 				propSub = state.getValue("getAngleViewPerceivingEvents", "angleViewPerceivingEvents");
