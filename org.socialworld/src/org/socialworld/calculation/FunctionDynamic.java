@@ -46,7 +46,7 @@ public class FunctionDynamic extends FunctionBase {
 	public  Value calculate(ValueArrayList arguments) {
 
 		if (arguments.size() >= 2) {
-			int func_id = (int) arguments.get(0).getValueCopy();
+			int func_id = (int) arguments.get(0).getValue();
 			FunctionBase function = functions.getFunction(func_id);
 			
 			if (function != null) {

@@ -74,7 +74,7 @@ public class FunctionMtimesLogXplusN extends FunctionBase {
 		 
 		if (!(x.hasType(Type.floatingpoint))) return new Value();
 	
-		result = calculateFloatingPoint((float) calculation.createValue(Type.floatingpoint, x.getValueCopy()).getValueCopy());
+		result = calculateFloatingPoint((float) calculation.createValue(Type.floatingpoint, x.getValue()).getValue());
 		return  calculation.createValue(this.type, result);
 
 	}

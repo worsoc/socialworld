@@ -29,7 +29,7 @@ public class FunctionSetAttributeValue extends FunctionBase {
 				(arguments.get(2).getType() == Type.nothing)) 
 			{	
 				AttributeArray attributes = new AttributeArray((AttributeArray) arguments.get(0).getValue());
-				newAttributeValue = (int)arguments.get(1).getValueCopy();
+				newAttributeValue = (int)arguments.get(1).getValue();
 				attributes.set(this.indexAttribute, newAttributeValue);
 				return attributes.getAsValue(SimulationCluster.toBeSet);
 			}
@@ -39,7 +39,7 @@ public class FunctionSetAttributeValue extends FunctionBase {
 				(arguments.get(1).getType() == Type.integer)) 
 			{	
 				AttributeArray attributes = new AttributeArray((AttributeArray) arguments.get(0).getValue());
-				newAttributeValue = (int)arguments.get(1).getValueCopy();
+				newAttributeValue = (int)arguments.get(1).getValue();
 				attributes.set(this.indexAttribute, newAttributeValue);
 				return attributes.getAsValue(SimulationCluster.toBeSet);
 			}

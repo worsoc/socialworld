@@ -166,7 +166,7 @@ public class FunctionByMatrix extends FunctionBase {
 					calculation.addition(
 							calculation.multiplication(share, function.calculate(arguments)),
 							offset)
-					.getValueCopy();
+					.getValue();
 			
 
 			result += change;
@@ -320,7 +320,7 @@ public class FunctionByMatrix extends FunctionBase {
 						calculation.addition(
 								calculation.multiplication(share, function.calculate(arguments)),
 								offset)
-						.getValueCopy();
+						.getValue();
 				
 
 				if (change != 0)

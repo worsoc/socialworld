@@ -152,9 +152,7 @@ public class Value {
 
 	public String getName() { return name; };
 
-	public Object getValue() { return value; };
-
-	public Object getValueCopy() { 
+	public Object getValue() { 
 		switch (type) {
 		case integer:
 			return (int) value;
@@ -172,8 +170,9 @@ public class Value {
 		default:
 			return value;
 		}
-	};
-	
+	}		
+			
+
 	public boolean equals(Value anotherValue) {
 		
 		if (this.type.equals(anotherValue.type) ) {

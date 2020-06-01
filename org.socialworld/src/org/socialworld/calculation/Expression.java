@@ -174,15 +174,15 @@ public class Expression {
 				case attributeValue:
 					AttributeArray attributeArray;
 					attributeArray = (AttributeArray) getFromValueArrayList( arguments, Type.attributeArray, 1);
-					index = (int) value.getValueCopy();
+					index = (int) value.getValue();
 					return calculation.createValue(
 						Type.integer,
 						attributeArray.get(index ));
 						
 				case argumentValueByName:
 					
-					tmp = arguments.getValue( (String) value.getValueCopy());
-					name = (String) expression1.evaluate(arguments).getValueCopy();
+					tmp = arguments.getValue( (String) value.getValue());
+					name = (String) expression1.evaluate(arguments).getValue();
 					if (name.length() > 0) {
 							tmp.changeName(name);
 					}
@@ -191,12 +191,12 @@ public class Expression {
 										
 				case valueFromValueList:
 					// get value list's name
-					name =  (String) expression1.evaluate(arguments).getValueCopy();
+					name =  (String) expression1.evaluate(arguments).getValue();
 					// get the value list
 					tmp = arguments.getValue(name);
 					ValueArrayList subValueList = (ValueArrayList) tmp.getValue();
 					// get the value list element's name
-					name = (String) expression2.evaluate(arguments).getValueCopy();
+					name = (String) expression2.evaluate(arguments).getValue();
 					// get the result value from the value list
 					return subValueList.getValue(name);
 	
@@ -204,9 +204,9 @@ public class Expression {
 					
 					Value object = arguments.get(0);
 					PropertyName simPropName = (PropertyName) value.getValue();
-					SimulationCluster cluster = SimulationCluster.getName((int) expression1.evaluate(arguments).getValueCopy());
-					String methodName = (String) expression2.evaluate(arguments).getValueCopy();
-					name = (String) expression3.evaluate(arguments).getValueCopy();
+					SimulationCluster cluster = SimulationCluster.getName((int) expression1.evaluate(arguments).getValue());
+					String methodName = (String) expression2.evaluate(arguments).getValue();
+					name = (String) expression3.evaluate(arguments).getValue();
 					
 					return getProperty(object, cluster, simPropName, methodName, name);
 				
@@ -218,7 +218,7 @@ public class Expression {
 					
 					tmp = expression1.evaluate(arguments);
 
-					int checkUseAsPermission = (int) value.getValueCopy();
+					int checkUseAsPermission = (int) value.getValue();
 					if (checkUseAsPermission > 0) {
 						if (tmp instanceof ValueProperty) {
 							property = (ValueProperty) tmp;
@@ -353,7 +353,7 @@ public class Expression {
 				case replacement:
 					
 					tmp = expression1.evaluate(arguments);
-					name = (String) value.getValueCopy();
+					name = (String) value.getValue();
 					if (name.length() > 0) {
 						index = arguments.findValue(name);
 						if (index >= 0) {
@@ -378,14 +378,14 @@ public class Expression {
 					Value createdValue;;
 					int size;
 					
-					type = Type.getName((int)value.getValueCopy());
+					type = Type.getName((int)value.getValue());
 					
 					switch (type) {
 					case action:
 						createdValue = createValue(type, arguments);
 						break;
 					case time:
-						createdValue = calculation.createValue(type, expression2.evaluate().getValueCopy());
+						createdValue = calculation.createValue(type, expression2.evaluate().getValue());
 						break;
 					case knowledgeElement:
 						ValueArrayList knowledgeElementSourceAndAtoms = new ValueArrayList();
@@ -399,7 +399,7 @@ public class Expression {
 						break;
 					case knowledgeAtom:
 						int subType;
-						subType = (int) expression1.evaluate().getValueCopy();
+						subType = (int) expression1.evaluate().getValue();
 						ValueArrayList knowledgeAtom = new ValueArrayList();
 						// expression2 is a sequence expression
 						expression2.evaluate(arguments);

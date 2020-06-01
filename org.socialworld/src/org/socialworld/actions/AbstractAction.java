@@ -158,11 +158,11 @@ public abstract class AbstractAction {
 		
 		type = (ActionType) actionProperties.getValue( standardPropertyNames[0]).getValue();
 		mode = (ActionMode) actionProperties.getValue( standardPropertyNames[1]).getValue();
-		intensity = (float) actionProperties.getValue( standardPropertyNames[2]).getValueCopy();
+		intensity = (float) actionProperties.getValue( standardPropertyNames[2]).getValue();
 		minTime = (Time) actionProperties.getValue( standardPropertyNames[3]).getValue();
 		maxTime = (Time) actionProperties.getValue( standardPropertyNames[4]).getValue();
-		priority = (int) actionProperties.getValue( standardPropertyNames[5]).getValueCopy();
-		duration = (long) actionProperties.getValue( standardPropertyNames[6]).getValueCopy();
+		priority = (int) actionProperties.getValue( standardPropertyNames[5]).getValue();
+		duration = (long) actionProperties.getValue( standardPropertyNames[6]).getValue();
 		
 		this.setType(type);
 		this.setMode(mode);

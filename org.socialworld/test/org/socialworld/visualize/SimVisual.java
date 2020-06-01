@@ -236,7 +236,7 @@ public class SimVisual {
 			state = (State) prop.getValue();
 			if (state != null) {
 				propSub = state.getValue("getAngleViewPerceivingEvents", "angleViewPerceivingEvents");
-				myPrint("Button " + index + " clicked: " + propSub.getValueCopy().toString() );
+				myPrint("Button " + index + " clicked: " + propSub.getValue().toString() );
 			}
 			else {
 				myPrint("Button " + index + " clicked "  );
