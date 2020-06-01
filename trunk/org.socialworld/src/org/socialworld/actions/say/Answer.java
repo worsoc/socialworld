@@ -130,7 +130,7 @@ public class Answer extends ActionPerformer {
 
 					tmp = getParam(Value.VALUE_BY_NAME_ACTION_TARGET);
 					if (tmp.isValid()) {
-						partner = (Human) tmp.getValueCopy();
+						partner = (Human) tmp.getValue();
 					}
 					else {
 						partner = (Human) originalAction.getTarget();
@@ -142,7 +142,7 @@ public class Answer extends ActionPerformer {
 					
 					tmp = getParam(Value.VALUE_BY_NAME_ACTION_SENTENCETYPE);
 					if (tmp.isValid()) {
-						sentenceType = SentenceType.getSentenceType((int) tmp.getValueCopy());
+						sentenceType = SentenceType.getSentenceType((int) tmp.getValue());
 					}
 					else {
 						sentenceType = originalAction.getSentenceType();
@@ -151,7 +151,7 @@ public class Answer extends ActionPerformer {
 					
 					tmp = getParam(Value.VALUE_BY_NAME_ACTION_SENTENCE);
 					if (tmp.isValid()) {
-						sentence = (String) tmp.getValueCopy();
+						sentence = (String) tmp.getValue();
 					}
 					else {
 						sentence = originalAction.getSentence();

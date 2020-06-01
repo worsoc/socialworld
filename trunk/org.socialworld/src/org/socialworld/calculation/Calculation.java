@@ -352,7 +352,7 @@ public class Calculation {
 	
 	public Value copy(Value original) {
 		if (original.isValid())
-			return createValue(original.getType(), original.getValueCopy() );
+			return createValue(original.getType(), original.getValue() );
 		else
 			return nothing;
 	}

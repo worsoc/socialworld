@@ -61,7 +61,7 @@ public class ActionEquip extends AbstractAction {
 
 		value =  actionProperties.getValue(furtherPropertyNames[1]);
 		if (value.isValid()) {
-			inventoryPlace = InventoryPlace.getName((int) value.getValueCopy());
+			inventoryPlace = InventoryPlace.getName((int) value.getValue());
 			this.setInventoryPlace(inventoryPlace);
 		}
 

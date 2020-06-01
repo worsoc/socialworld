@@ -292,7 +292,7 @@ public abstract class Event implements Comparable<Event> {
 		if (hasOptionalParam()) {
 			strength = optionalParam.getParam("intensity");
 			if (strength.isValid()) 
-				return (float) strength.getValueCopy();
+				return (float) strength.getValue();
 			
 		}
 		return 0;
