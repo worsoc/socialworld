@@ -72,9 +72,9 @@ public class Value {
 	
 	public static String VALUE_NAME_UNUSED_BECAUSE_TEMPORARY = "temp";
 
-	Type type;
-	String name = "";
-	Object value;
+	private Type type;
+	private String name = "";
+	private Object value;
 	
 	boolean valid;
 	ValueTransferCode transferCode = ValueTransferCode.noFurtherInformation; 
@@ -142,6 +142,10 @@ public class Value {
 	
 	void changeName(String name) {
 		this.name = name;
+	}
+	
+	public boolean hasType(Type type) {
+		return this.type == type;
 	}
 	
 	public Type getType() { return type; };
