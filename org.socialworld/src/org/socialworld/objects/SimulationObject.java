@@ -157,6 +157,8 @@ public abstract class SimulationObject extends ListenedBase implements IPercepti
 /////////////////////////////    STATE      ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
+
+	
 	public final ValueProperty getProperty(SimulationCluster cluster, PropertyName prop) {
 		String name;
 		name = prop.toString();
@@ -171,6 +173,17 @@ public abstract class SimulationObject extends ListenedBase implements IPercepti
 			return this.state.getProperty(cluster, prop, name);
 		}
 	}
+	
+	
+	public ValueProperty getStateProperty(SimulationCluster cluster, PropertyName propState, PropertyName propSub, String name) {
+		return this.state.getStateProperty(cluster, propState, propSub, name);
+	}
+	
+	public ValueProperty getStatePropertyFromMethod(SimulationCluster cluster, PropertyName propState, String methodName, String name) {
+		return this.state.getStatePropertyFromMethod(cluster, propState, methodName, name);
+	}
+
+	
 	
 	public final void refreshState() {
 		this.state.refresh();

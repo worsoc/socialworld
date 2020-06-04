@@ -21,10 +21,19 @@
 */
 package org.socialworld.objects.concrete.animals;
 
-import org.socialworld.attributes.Direction;
+import org.socialworld.calculation.SimulationCluster;
+import org.socialworld.calculation.ValueProperty;
 
 public interface ISeer {
 
+	public static  String METHODNAME_BESTPERCIPIENCEPERPENDICULAR ="getBestPercipiencePerpendicular";
+	public static  String METHODNAME_SIZEDISTANCERELATIONTHRESHOLD ="getSizeDistanceRelationThreshold";
+	public static  String METHODNAME_GETANGLEVIEWPERCEIVINGOBJECTSINRADIANS ="getAngleViewPerceivingObjectsInRadians";
+
+	public StateSeer getSavedStateSeer(SimulationCluster cluster);
+	public ValueProperty getStateSeerAsProperty(SimulationCluster cluster, String name);
+
+/*	
 	public abstract double getSizeDistanceRelationThreshold();
 	
 	public abstract Direction getDirectionView();
@@ -35,5 +44,7 @@ public interface ISeer {
 
 	public abstract float getAngleViewPerceivingObjects();
 	public abstract double getAngleViewPerceivingObjectsInRadians();
+	
+	*/
 
 }

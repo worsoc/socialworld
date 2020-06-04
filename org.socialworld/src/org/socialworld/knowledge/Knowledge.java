@@ -24,8 +24,11 @@ package org.socialworld.knowledge;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.attributes.PropertyName;
+import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.attributes.SimProperty;
-import org.socialworld.calculation.Type;
+import org.socialworld.calculation.SimulationCluster;
+import org.socialworld.calculation.ValueProperty;
 import org.socialworld.collections.ReadOnlyIterator;
 import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Numerus;
@@ -63,16 +66,26 @@ public class Knowledge extends SimProperty {
 		
 	}
 
-	private Knowledge(Knowledge knowledge) {
+	private Knowledge(Knowledge original, PropertyProtection protectionOriginal, SimulationCluster cluster ) {
+		super(protectionOriginal, cluster);
 		// TODO implement copy constructor
 	}
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////    ISimProperty  ///////////////////////////////////////////////
+/////////////////////////////    ISavedValues  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	protected SimProperty copyForProperty(Type propertyType) {
-		return new Knowledge(this);
+	public SimProperty copyForProperty(SimulationCluster cluster) {
+		return new Knowledge(this, getPropertyProtection(), cluster);
+	}
+
+	public  ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String valueName) {
+		switch (prop) {
+		// TODO switch property names
+		default:
+			return ValueProperty.getInvalid();
+		}
+
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////

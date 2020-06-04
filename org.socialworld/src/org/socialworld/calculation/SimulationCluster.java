@@ -11,6 +11,7 @@ public enum SimulationCluster {
 	action(51),
 	event(61),
 	objectMaster(1001),
+	total(8888),
 	todo(9998),
 	test(9999);
 	

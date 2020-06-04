@@ -21,8 +21,11 @@
 */
 package org.socialworld.actions.handle;
 
+import org.socialworld.attributes.PropertyName;
+import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.attributes.SimProperty;
-import org.socialworld.calculation.Type;
+import org.socialworld.calculation.SimulationCluster;
+import org.socialworld.calculation.ValueProperty;
 import org.socialworld.core.ObjectMaster;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.SimulationObject_Type;
@@ -64,18 +67,28 @@ public class Inventory extends SimProperty {
 
 	}
 
-	public Inventory(Inventory inventory) {
+	private Inventory(Inventory original, PropertyProtection protectionOriginal, SimulationCluster cluster) {
+		super(protectionOriginal, cluster);
 		//TODO implementcopy constructor
 	}
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////    ISimProperty  ///////////////////////////////////////////////
+/////////////////////////////    ISavedValues  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	protected SimProperty copyForProperty(Type propertyType) {
-		return new Inventory(this);
+	public SimProperty copyForProperty(SimulationCluster cluster) {
+		return new Inventory(this, getPropertyProtection(), cluster);
 	}
 	
+	public  ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String valueName) {
+		switch (prop) {
+		// TODO switch property names
+		default:
+			return ValueProperty.getInvalid();
+		}
+
+	}
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    Inventory  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////

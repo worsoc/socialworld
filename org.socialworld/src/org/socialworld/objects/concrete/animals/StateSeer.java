@@ -3,8 +3,8 @@ package org.socialworld.objects.concrete.animals;
 
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.PropertyName;
+import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.calculation.SimulationCluster;
-import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.calculation.geometry.VectorMapper;
@@ -24,22 +24,25 @@ public class StateSeer extends State {
 	private double sizeDistanceRelationThreshold;
 	
 	public StateSeer() {
+		super();
 		setPropertyName(PropertyName.simobj_stateSeer);
 		setDirectionView( new Vector(2,1,0));
 		setAngleViewPerceivingObjects(20.0F);
 		setAngleViewPerceivingEvents(60.0F);
 	}
 	
-	private StateSeer(StateSeer original) {
+	private StateSeer( StateSeer original, PropertyProtection protectionOriginal, SimulationCluster cluster) {
+		super(protectionOriginal, cluster);
 		// TODO implement copy constructor
 		setPropertyName(PropertyName.simobj_stateSeer);
 		this.angleViewPerceivingEvents = original.getAngleViewPerceivingEvents();
 	}
 	
-	protected State copyForProperty(Type propertyType) {
-		return new StateSeer(this);
+	public State copyForProperty(SimulationCluster cluster) {
+		return new StateSeer(this, getPropertyProtection(), cluster);
 	}
 
+	
 	public ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String name) {
 		
 		switch (prop) {
@@ -50,6 +53,8 @@ public class StateSeer extends State {
 		}
 	}
 
+
+	
 
 	public double getSizeDistanceRelationThreshold() {
 		return this.sizeDistanceRelationThreshold;

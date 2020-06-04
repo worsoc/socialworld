@@ -21,10 +21,14 @@
 */
 package org.socialworld.attributes.percipience;
 
+import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.SimulationCluster;
+import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.objects.Animal;
+import org.socialworld.objects.concrete.animals.ISeer;
 
 /**
  * @author Mathias Sikos
@@ -129,55 +133,81 @@ public class Percipience {
 	
 	private boolean checkMaySeeingObject(Animal possibleSeer) {
 		
-		Position positionSeer = possibleSeer.getPosition(SimulationCluster.percipience);
-		Vector direction = this.position.getDirectionFrom(positionSeer);
+		if (possibleSeer instanceof ISeer) {
 
-		if (direction.is000()) return false;
-
-		double distance = direction.length();
-
-		if (distance <= this.maxSee) {
-
-			Vector directionView =  possibleSeer.getDirectionView().getVector();
-			double angleViewInRadians =  possibleSeer.getAngleViewPerceivingObjectsInRadians();
-			
-			double cosineBetweenDirections = direction.getCosPhi(directionView);
-			double angleBetweenDirectionsInRadians = Math.acos(cosineBetweenDirections);
-			
-			if (angleBetweenDirectionsInRadians <= angleViewInRadians)
-				return this.visibility.checkIsPossibleSeer(possibleSeer, distance);
-			else
-				return false;
-
-
+		
+			Position positionSeer = possibleSeer.getPosition(SimulationCluster.percipience);
+			Vector direction = this.position.getDirectionFrom(positionSeer);
+	
+			if (direction.is000()) return false;
+	
+			double distance = direction.length();
+	
+			if (distance <= this.maxSee) {
+	
+				ValueProperty vpDirectionView;
+				vpDirectionView = possibleSeer.getStateProperty(SimulationCluster.todo, PropertyName.simobj_stateSeer, PropertyName.simobj_directionView, PropertyName.simobj_directionView.toString());
+				Vector directionView = ((Direction)vpDirectionView.getValue()).getVector();
+	
+				ValueProperty vpAngleView;
+				vpAngleView = possibleSeer.getStatePropertyFromMethod(SimulationCluster.todo, PropertyName.simobj_stateSeer, ISeer.METHODNAME_GETANGLEVIEWPERCEIVINGOBJECTSINRADIANS, "sizeDistanceRelThreashold");
+				double angleViewInRadians = (double) vpAngleView.getValue();
+				
+			/*	
+				Vector directionView =  possibleSeer.getDirectionView().getVector();
+				double angleViewInRadians =  possibleSeer.getAngleViewPerceivingObjectsInRadians();
+			*/	
+				
+				double cosineBetweenDirections = direction.getCosPhi(directionView);
+				double angleBetweenDirectionsInRadians = Math.acos(cosineBetweenDirections);
+				
+				if (angleBetweenDirectionsInRadians <= angleViewInRadians)
+					return this.visibility.checkIsPossibleSeer(possibleSeer, distance);
+				else
+					return false;
+	
+	
+			}
 		}
+		
 		return false;
 	}
 
 	private boolean checkMaySeeingEvent(Animal possibleSeer) {
 		
-		Position positionSeer = possibleSeer.getPosition(SimulationCluster.percipience);
-		Vector direction = this.position.getDirectionFrom(positionSeer);
+		if (possibleSeer instanceof ISeer) {
 
-		if (direction.is000()) return false;
-
-		double distance = direction.length();
-
-		if (distance <= this.maxSee) {
-
-			Vector directionView =  possibleSeer.getDirectionView().getVector();
-			double angleViewInRadians =  possibleSeer.getAngleViewPerceivingEventsInRadians();
-			
-			double cosineBetweenDirections = direction.getCosPhi(directionView);
-			double angleBetweenDirectionsInRadians = Math.acos(cosineBetweenDirections);
-			
-			if (angleBetweenDirectionsInRadians <= angleViewInRadians)
-				return this.visibility.checkIsPossibleSeer(possibleSeer, distance);
-			else
-				return false;
-
-
+			Position positionSeer = possibleSeer.getPosition(SimulationCluster.percipience);
+			Vector direction = this.position.getDirectionFrom(positionSeer);
+	
+			if (direction.is000()) return false;
+	
+			double distance = direction.length();
+	
+			if (distance <= this.maxSee) {
+	
+				ValueProperty vpDirectionView;
+				vpDirectionView = possibleSeer.getStateProperty(SimulationCluster.todo, PropertyName.simobj_stateSeer, PropertyName.simobj_directionView, PropertyName.simobj_directionView.toString());
+				Vector directionView = (Vector) (vpDirectionView.getSubProperty(PropertyName.direction_vector)).getValue();
+		//		Vector directionView = ((Direction)vpDirectionView.getValue()).getVector();
+	
+				ValueProperty vpAngleView;
+				vpAngleView = possibleSeer.getStatePropertyFromMethod(SimulationCluster.todo, PropertyName.simobj_stateSeer, ISeer.METHODNAME_GETANGLEVIEWPERCEIVINGOBJECTSINRADIANS, "sizeDistanceRelThreashold");
+				double angleViewInRadians = (double) vpAngleView.getValue();
+	
+				
+				double cosineBetweenDirections = direction.getCosPhi(directionView);
+				double angleBetweenDirectionsInRadians = Math.acos(cosineBetweenDirections);
+				
+				if (angleBetweenDirectionsInRadians <= angleViewInRadians)
+					return this.visibility.checkIsPossibleSeer(possibleSeer, distance);
+				else
+					return false;
+	
+	
+			}
 		}
+		
 		return false;
 	}
 

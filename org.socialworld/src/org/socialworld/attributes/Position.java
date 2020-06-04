@@ -21,7 +21,9 @@
 */
 package org.socialworld.attributes;
 
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
+import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
 
 /**
@@ -72,6 +74,7 @@ public class Position extends SimProperty {
 	private String locationByBase25;
 
 	public Position(PropertyName prop, Vector position) {
+		super();
 		setPropertyName(prop);
 		m_position =  position;
 		
@@ -79,6 +82,7 @@ public class Position extends SimProperty {
 	}
 	
 	public Position(Type propertyType, Position position) {
+		// TODO costructor Position switching sim property type
 		setPropertyName(getPropertyName().toType(propertyType));
 		m_position =  position.getVector();
 		
@@ -86,14 +90,31 @@ public class Position extends SimProperty {
 		locationByBase25 = position.getLocationByBase25();
 	}
 
-///////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////    ISimProperty  ///////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////
-
-	protected SimProperty copyForProperty(Type propertyType) {
-		return new Position(propertyType, this);
+	private Position(Position original, PropertyProtection protectionOriginal, SimulationCluster cluster ) {
+		super(protectionOriginal, cluster);
+		setPropertyName(original.getPropertyName());
+		m_position =  original.getVector();
+		
+		locationByBase9 = original.getLocationByBase9();
+		locationByBase25 = original.getLocationByBase25();
 	}
 
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    ISavedValues  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public SimProperty copyForProperty(SimulationCluster cluster) {
+		return new Position(this, getPropertyProtection(), cluster);
+	}
+
+	public  ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String valueName) {
+		switch (prop) {
+		// TODO switch property names
+		default:
+			return ValueProperty.getInvalid();
+		}
+
+	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    Position  ///////////////////////////////////////////////

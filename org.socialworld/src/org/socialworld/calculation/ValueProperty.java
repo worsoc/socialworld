@@ -4,28 +4,54 @@ package org.socialworld.calculation;
 import org.socialworld.attributes.ISavedValues;
 import org.socialworld.attributes.ISimProperty;
 import org.socialworld.attributes.PropertyName;
+import org.socialworld.attributes.PropertyProtection;
 
 public class ValueProperty extends Value {
 
 	private static ValueProperty invalid = new ValueProperty();
 	
+	private PropertyProtection propertyProtection;
 	private boolean isSavedValues = false;
 	private boolean isSimProperty = false;
 	
-	private SimulationCluster cluster;
+//	private SimulationCluster cluster = SimulationCluster.toBeSet;;
 	
-	private PropertyUsingAs[] useAsPermissions;
+//	private PropertyUsingAs[] useAsPermissions;
 	private PropertyUsingAs usedAs = null;
 	
 	private ValueProperty() {
 		super();
 	}
 
+	
+	public ValueProperty(Type type, String name, Object value) {
+
+		super(type, name, value);
+		
+		
+		init(value);
+
+		valid = true;
+	}
+
+/*	
+	public ValueProperty(Type type, PropertyProtection protection, String name, Object value) {
+
+		super(type, name, value);
+		
+		this.propertyProtection = protection;
+		
+		init(value);
+
+		valid = true;
+	}
+
 	public ValueProperty(Type type, SimulationCluster cluster, PropertyName propertyName, String name, Object value) {
 
 		super(type, name, value);
 		
-		this.cluster = cluster;
+		// TODO PropertyProtection
+//		this.cluster = cluster;
 		setUseAsPermissions(cluster, propertyName);
 		
 		init(value);
@@ -38,13 +64,15 @@ public class ValueProperty extends Value {
 
 		super(type, name, value);
 
-		this.useAsPermissions = useAsPermissions;
+		// TODO PropertyProtection
+//		this.useAsPermissions = useAsPermissions;
 		
 		init(value);
 
 		valid = true;
 	}
 	
+*/	
 	public static ValueProperty getInvalid() {
 		return invalid;
 	}
@@ -66,18 +94,26 @@ public class ValueProperty extends Value {
 		
 	}
 	
+/*	03.06.2020
 	public Object getValue() { 
 		
 		Object result = super.getValue();
 		
 		if (isSavedValues) {
 			ISavedValues savedValues = (ISavedValues) result;
-			if (!savedValues.checkHasPropertyProtection()) {
+			if (!savedValues.hasPropertyProtection()) {
 				savedValues.setPropertyProtection(this);
 			}
 		}
 		
 		return result;
+		
+	}
+*/
+	
+	public ValueProperty getSubProperty(PropertyName propName) {
+		
+		return getSubProperty(propName, propName.toString());
 		
 	}
 
@@ -88,18 +124,47 @@ public class ValueProperty extends Value {
 		if (isSavedValues) {
 			ISavedValues savedValues = (ISavedValues) super.getValue();
 			result = savedValues.getProperty(propName, valueName);
-			result.overridePermissions(this.cluster, this.useAsPermissions);
 		}
 
+/* 	03.06.2020	
 		if (isSimProperty) {
 			ISimProperty simProperty = (ISimProperty) super.getValue();
 			result = simProperty.getProperty(cluster, propName, valueName);
 		}
-		
+*/		
 		return result;
 		
 	}
 	
+	public ValueProperty getSubPropertyFromMethod(String methodName, String valueName) {
+		
+		ValueProperty result = invalid;
+		
+		if (isSavedValues) {
+			ISavedValues savedValues = (ISavedValues) super.getValue();
+			result = savedValues.getPropertyFromMethod(methodName, valueName);
+		}
+
+/* 	03.06.2020	
+		if (isSimProperty) {
+			ISimProperty simProperty = (ISimProperty) super.getValue();
+			result = simProperty.getPropertyFromMethod(cluster, methodName, valueName);
+		}
+*/		
+		return result;
+		
+	}
+
+	public boolean checkHasUseAsPermission(PropertyUsingAs useAsPermission) {
+		
+		if (isSavedValues) {
+			return ((ISavedValues) super.getValue()).checkHasUseAsPermission(useAsPermission);
+		}
+		return false;
+		
+	}
+
+/*	03.06.2020
 	public boolean checkHasUseAsPermission(PropertyUsingAs useAsPermission) {
 		
 		for (int index = 0; index < useAsPermissions.length; index++) {
@@ -109,7 +174,7 @@ public class ValueProperty extends Value {
 		return false;
 		
 	}
-	
+*/	
 	public void setUsing(PropertyUsingAs usedAs) {
 		this.usedAs = usedAs;
 	}
@@ -117,6 +182,7 @@ public class ValueProperty extends Value {
 	public PropertyUsingAs getUsing( ) {
 		return this.usedAs;
 	}
+	/*	03.06.2020
 	
 	private void overridePermissions(SimulationCluster cluster, PropertyUsingAs[] useAsPermissions) {
 		
@@ -124,6 +190,7 @@ public class ValueProperty extends Value {
 		this.useAsPermissions = useAsPermissions;
 
 	}
+	
 	
 	public void setCluster(SimulationCluster cluster) {
 		
@@ -136,4 +203,9 @@ public class ValueProperty extends Value {
 		
 	}
 	
+	public SimulationCluster getCluster() {
+		return this.cluster;
+	}
+	
+	*/
 }

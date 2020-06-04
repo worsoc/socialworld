@@ -137,6 +137,7 @@ public abstract class StateSimulationObject extends ListenedBase {
 		}
 	}
 	
+
 	public final ValueProperty getProperty(SimulationCluster cluster, PropertyName prop) {
 		String name;
 		name = prop.toString();
@@ -269,6 +270,45 @@ public abstract class StateSimulationObject extends ListenedBase {
 		}
 	}
 	
+	ValueProperty getStateProperty(SimulationCluster cluster, PropertyName propState, PropertyName propSub, String name) {
+		
+		State stateAddOn;
+		ValueProperty result = ValueProperty.getInvalid();
+		
+		for (int nrStateAddOn = 0; nrStateAddOn < stateAddOns.size(); nrStateAddOn++) {
+			
+			stateAddOn = stateAddOns.get(nrStateAddOn);
+		
+			if (stateAddOn.getPropertyName() == propState) {
+				result = stateAddOn.getProperty(cluster, propSub, name);
+				break;
+			}
+			
+		}
+		return result;
+
+	}
+	
+	ValueProperty getStatePropertyFromMethod(SimulationCluster cluster, PropertyName propState, String methodName, String name) {
+		
+		State stateAddOn;
+		ValueProperty result = ValueProperty.getInvalid();
+		
+		for (int nrStateAddOn = 0; nrStateAddOn < stateAddOns.size(); nrStateAddOn++) {
+			
+			stateAddOn = stateAddOns.get(nrStateAddOn);
+		
+			if (stateAddOn.getPropertyName() == propState) {
+				result = stateAddOn.getPropertyFromMethod(cluster, methodName, name);
+				break;
+			}
+			
+		}
+		return result;
+		
+	}
+
+
 	
 	private ValueProperty getStateAsProperty(SimulationCluster cluster, PropertyName prop, String name) {
 		State stateAddOn;

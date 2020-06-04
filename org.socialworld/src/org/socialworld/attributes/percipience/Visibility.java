@@ -1,10 +1,15 @@
 package org.socialworld.attributes.percipience;
 
 import org.socialworld.attributes.Position;
+import org.socialworld.attributes.PropertyName;
+import org.socialworld.calculation.SimulationCluster;
+import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Rectangle;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.calculation.geometry.VectorMapper;
 import org.socialworld.objects.Animal;
+import org.socialworld.objects.concrete.animals.ISeer;
+import org.socialworld.objects.concrete.animals.StateSeer;
 
 public class Visibility {
 
@@ -138,17 +143,35 @@ public class Visibility {
 		double sizeDistanceRelation;
 		double sizeDistanceRelationThreshold;
 		
-		nrPerpendicular = possibleSeer.getBestPercipiencePerpendicular();
-		sizeDistanceRelationThreshold = possibleSeer.getSizeDistanceRelationThreshold();
-		
-		sizeDistanceRelation = getSizeDistanceRelation(nrPerpendicular, distance);
-		
-		if (sizeDistanceRelation > sizeDistanceRelationThreshold) {
-			return true;
+		if (possibleSeer instanceof ISeer) {
+
+			
+			ISeer seer = (ISeer) possibleSeer;
+			StateSeer stateSeer;
+			
+			stateSeer = seer.getSavedStateSeer(SimulationCluster.todo);
+			nrPerpendicular = stateSeer.getBestPercipiencePerpendicular();
+
+			ValueProperty vp;
+			vp = possibleSeer.getStatePropertyFromMethod(SimulationCluster.todo, PropertyName.simobj_stateSeer, ISeer.METHODNAME_SIZEDISTANCERELATIONTHRESHOLD, "sizeDistanceRelThreashold");
+			sizeDistanceRelationThreshold = (double) vp.getValue(); 
+			
+			/*
+			nrPerpendicular = possibleSeer.getBestPercipiencePerpendicular();
+			sizeDistanceRelationThreshold = possibleSeer.getSizeDistanceRelationThreshold();
+			*/
+			
+			sizeDistanceRelation = getSizeDistanceRelation(nrPerpendicular, distance);
+			
+			if (sizeDistanceRelation > sizeDistanceRelationThreshold) {
+				return true;
+			}
+			else {
+				return false;
+			}
 		}
-		else {
-			return false;
-		}
+		
+		return false;
 		
 	}
 
