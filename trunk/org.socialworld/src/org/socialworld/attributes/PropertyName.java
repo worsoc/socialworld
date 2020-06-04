@@ -21,7 +21,8 @@ public enum PropertyName {
 	
 	action_position(201001),
 	
-	position_vector(1001001);
+	position_vector(1001001),
+	direction_vector(1001023);
 
 	private final static int THREASHOLD_SIMPROPERTY = 1000000;
 

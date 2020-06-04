@@ -1,10 +1,10 @@
 package org.socialworld.objects.concrete;
 
 import org.socialworld.attributes.PropertyName;
+import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.attributes.properties.NutrientProperty;
 import org.socialworld.attributes.properties.TasteProperty;
 import org.socialworld.calculation.SimulationCluster;
-import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.objects.State;
 
@@ -12,17 +12,18 @@ public class StateEatable extends State {
 
 	NutrientProperty nutrientProps;
 	TasteProperty tasteProps;
-
-	public StateEatable() {
-		
-	}
 	
-	private StateEatable(StateEatable original) {
+	public StateEatable() {
+		super();
+	}
+
+	private StateEatable( StateEatable original, PropertyProtection protectionOriginal, SimulationCluster cluster) {
+		super(protectionOriginal, cluster);
 		// TODO implement copy constructor
 	}
-	
-	protected State copyForProperty(Type propertyType) {
-		return new StateEatable(this);
+
+	public State copyForProperty(SimulationCluster cluster) {
+		return new StateEatable(this, getPropertyProtection(), cluster);
 	}
 
 	public  ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String name) {

@@ -106,6 +106,18 @@ public abstract class Animal extends SimulationObject implements ISeer {
 //////////////////////////////    implementing ISeer     //////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
+	public StateSeer getSavedStateSeer(SimulationCluster cluster) {
+		// make a copy as ValueProperty
+		ValueProperty vp = this.stateSeer.getAsValue(cluster);
+		// the copy is permitted for cluster only
+		return (StateSeer) vp.getValue();
+	}
+	
+	public ValueProperty getStateSeerAsProperty(SimulationCluster cluster, String name) {
+		return this.stateSeer.getAsValue(cluster, name);
+	}
+
+	/*
 	public double getSizeDistanceRelationThreshold() {
 		return this.stateSeer.getSizeDistanceRelationThreshold();
 	}
@@ -134,7 +146,7 @@ public abstract class Animal extends SimulationObject implements ISeer {
 	final public int getBestPercipiencePerpendicular() {
 		return this.stateSeer.getBestPercipiencePerpendicular();
 	}
-
+*/
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    ATTRIBUTES  //////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -147,10 +159,6 @@ public abstract class Animal extends SimulationObject implements ISeer {
 		return this.state.getAttribute(attributeName);
 	}
 	
-	final public Value getAttributesAsValue(SimulationCluster cluster, String valueName) {
-		// TODO obsolet ???
-		return getProperty(cluster, PropertyName.simobj_attributearray, valueName);
-	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    KNOWLEDGE  ///////////////////////////////////////////////

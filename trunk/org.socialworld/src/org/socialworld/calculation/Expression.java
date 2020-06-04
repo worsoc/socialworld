@@ -24,13 +24,12 @@ package org.socialworld.calculation;
 
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.AttributeArray;
-import org.socialworld.attributes.ISimProperty;
+import org.socialworld.attributes.ISavedValues;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.expressions.Nothing;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.Event;
 import org.socialworld.objects.SimulationObject;
-import org.socialworld.objects.State;
 import org.socialworld.objects.StateSimulationObject;
 
 /**
@@ -459,14 +458,10 @@ public class Expression {
 			
 				// use reflection for calling the method
 				
-				if (object instanceof State) {
-					State state = (State) object;
-					result = state.getProperty(cluster, methodName, valueName);
-				}
-				else if (object instanceof ISimProperty) {
-					ISimProperty simProperty;
-					simProperty = (ISimProperty) object;
-					result = simProperty.getProperty(cluster, methodName, valueName);
+				if (object instanceof ISavedValues) {
+					ISavedValues savedValue;
+					savedValue = (ISavedValues) object;
+					result = savedValue.getPropertyFromMethod(cluster, methodName, valueName);
 				}
 				
 			}
@@ -486,15 +481,10 @@ public class Expression {
 				stateSimObj = (StateSimulationObject) object;
 				result = stateSimObj.getProperty(cluster, simPropName, valueName);
 			}
-			else if (object instanceof State) {
-				State stateAddOn;
-				stateAddOn = (State) object;
-				result = stateAddOn.getProperty(cluster, simPropName, valueName);
-			}
-			else if (object instanceof ISimProperty) {
-				ISimProperty simProperty;
-				simProperty = (ISimProperty) object;
-				result = simProperty.getProperty(cluster, simPropName, valueName);
+			else if (object instanceof ISavedValues) {
+				ISavedValues savedValue;
+				savedValue = (ISavedValues) object;
+				result = savedValue.getProperty(cluster, simPropName, valueName);
 			}
 			else if (object instanceof Event) {
 				

@@ -21,8 +21,10 @@
 */
 package org.socialworld.attributes;
 
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
+import org.socialworld.calculation.ValueProperty;
 
 /**
  * The class implements an attribute array. It
@@ -109,13 +111,35 @@ public class AttributeArray extends SimProperty {
 		}
 	}
 	
+	private AttributeArray(AttributeArray original, PropertyProtection protectionOriginal, SimulationCluster cluster ) {
+		super(protectionOriginal, cluster);
+		setPropertyName(PropertyName.simobj_attributearray);
+		numberOfAttributes = original.length();
+		attributes 	= new int[numberOfAttributes];
+		differences = new int[numberOfAttributes];
+		
+		for (int i = 0; i < numberOfAttributes; i++ ) {
+			differences[i] = 0;
+			attributes[i] = original.attributes[i];
+		}
+	}
+
+	
 ///////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////    ISimProperty  ///////////////////////////////////////////////
+/////////////////////////////    ISavedValues  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	@Override
-	protected SimProperty copyForProperty(Type propertyType) {
-		return new AttributeArray(this);
+	public SimProperty copyForProperty(SimulationCluster cluster) {
+		return new AttributeArray(this, getPropertyProtection(), cluster);
+	}
+
+	public  ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String valueName) {
+		switch (prop) {
+		// TODO switch property names
+		default:
+			return ValueProperty.getInvalid();
+		}
+
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////

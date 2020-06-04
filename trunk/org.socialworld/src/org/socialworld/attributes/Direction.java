@@ -1,6 +1,8 @@
 package org.socialworld.attributes;
 
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
+import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
 
 public class Direction extends SimProperty {
@@ -32,15 +34,35 @@ public class Direction extends SimProperty {
 		setPropertyName(prop);
 	}
 
-	
-///////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////    ISimProperty  ///////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////
-	
-	@Override
-	protected SimProperty copyForProperty(Type propertyType) {
-		return new Direction(propertyType, this);
+	private Direction(Direction original, PropertyProtection protectionOriginal, SimulationCluster cluster ) {
+		super(protectionOriginal, cluster);
+		this.vector = original.getVector();
+		this.power = original.getPower();
+		setPropertyName(original.getPropertyName());
 	}
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    ISavedValues  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public SimProperty copyForProperty(SimulationCluster cluster) {
+		return new Direction(this, getPropertyProtection(), cluster);
+	}
+	
+	public  ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String valueName) {
+		switch (prop) {
+		case direction_vector:
+			return new ValueProperty(Type.vector, valueName, getVector());
+			// TODO Vector as ISavedValues
+			// return this.vector.getAsValue(cluster, valueName);
+		default:
+			return ValueProperty.getInvalid();
+		}
+
+	}
+	
+
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    Direction  ///////////////////////////////////////////////
