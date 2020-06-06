@@ -499,12 +499,12 @@ public class Expression {
 		
 	}
 	
-	// will be overrided in inherited Expressions dedicated to creating values
+	// will be overridden in inherited Expressions dedicated to creating values
 	protected Value createValue(Type valueType, int subType, ValueArrayList arguments) {
 		return new Value();
 	}
 	
-	// will be overrided in inherited Expressions dedicated to creating values
+	// will be overridden in inherited Expressions dedicated to creating values
 	protected Value createValue(Type valueType, ValueArrayList arguments) {
 		return new Value();
 	}
