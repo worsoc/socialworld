@@ -318,7 +318,7 @@ public class EventMaster extends SocialWorldThread {
 				Vector vectorDirectionEvent;
 				Direction directionEvent;
 				directionEvent = (Direction) this.eventDirection.getValue();
-				vectorDirectionEvent = directionEvent.getVector();
+				vectorDirectionEvent = directionEvent.getVector(SimulationCluster.event);
 				if (vectorDirectionEvent.is000()) {
 					return 3;
 				}

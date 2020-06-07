@@ -7,18 +7,18 @@ import org.socialworld.calculation.geometry.Vector;
 
 public class Direction extends SimProperty {
 
-	private Vector vector;
+	private SVVector vector;
 	
 	float power;
 	
-	
+	// TODO Herleitung  property name (direction's vector)
 	public Direction (PropertyName prop, Vector vector ) {
-		this.vector = vector;
+		this.vector = new SVVector(vector, prop);
 		setPropertyName(prop);
 	}
 
 	public Direction (PropertyName prop, Vector vector, float power ) {
-		this.vector = vector;
+		this.vector = new SVVector(vector, prop);
 		this.power = power;
 		setPropertyName(prop);
 	}
@@ -30,7 +30,7 @@ public class Direction extends SimProperty {
 	}
 	
 	public Direction (PropertyName prop) {
-		this.vector = vector.get0Vector();
+		this.vector = new SVVector(Vector.get0Vector(), prop);
 		setPropertyName(prop);
 	}
 
@@ -68,10 +68,17 @@ public class Direction extends SimProperty {
 /////////////////////////////    Direction  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
-	public final Vector getVector() {
-		return new Vector(this.vector);
+	public final Vector getVector(SimulationCluster cluster) {
+		SVVector copy = (SVVector) this.vector.copyForProperty(cluster);
+		Vector released = copy.getReleased(cluster);
+		return released;
 	}
+
 	
+	private SVVector getVector() {
+		return (SVVector) this.vector.copyForProperty(getPropertyProtection().getCluster());
+	}
+
 	public final float getPower() {
 		return this.power;
 	}

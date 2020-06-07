@@ -68,23 +68,25 @@ public class Position extends SimProperty {
 	public static final int LOCATIONBASE25 = 25;
 	
 
-	private Vector m_position;  // (x,y,z) millimeters
+	private SVVector vector;  // (x,y,z) millimeters
 	
 	private int locationByBase9;
 	private String locationByBase25;
 
+	// TODO Herleitung  property name (position's vector)
+
 	public Position(PropertyName prop, Vector position) {
 		super();
 		setPropertyName(prop);
-		m_position =  position;
+		this.vector =  new SVVector(position, prop);
 		
 		setLocationByBases(position);
 	}
 	
 	public Position(Type propertyType, Position position) {
-		// TODO costructor Position switching sim property type
-		setPropertyName(getPropertyName().toType(propertyType));
-		m_position =  position.getVector();
+		// TODO constructor Position switching sim property type
+		setPropertyName(position.getPropertyName().toType(propertyType));
+		this.vector =  position.getVector();
 		
 		locationByBase9 = position.getLocationByBase9();
 		locationByBase25 = position.getLocationByBase25();
@@ -93,7 +95,7 @@ public class Position extends SimProperty {
 	private Position(Position original, PropertyProtection protectionOriginal, SimulationCluster cluster ) {
 		super(protectionOriginal, cluster);
 		setPropertyName(original.getPropertyName());
-		m_position =  original.getVector();
+		this.vector =  original.getVector();
 		
 		locationByBase9 = original.getLocationByBase9();
 		locationByBase25 = original.getLocationByBase25();
@@ -110,6 +112,8 @@ public class Position extends SimProperty {
 	public  ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String valueName) {
 		switch (prop) {
 		// TODO switch property names
+		case position_vector:
+			return this.vector.getAsValue(cluster, valueName);
 		default:
 			return ValueProperty.getInvalid();
 		}
@@ -124,7 +128,15 @@ public class Position extends SimProperty {
 	public int getLocationByBase9() { return locationByBase9; }
 	public String getLocationByBase25() { return locationByBase25 ; }
 
-	public Vector getVector() {return new Vector(m_position);}
+	public final Vector getVector(SimulationCluster cluster) {
+		SVVector copy = (SVVector) this.vector.copyForProperty(cluster);
+		Vector released = copy.getReleased(cluster);
+		return released;
+	}
+	
+	private SVVector getVector() {
+		return (SVVector) this.vector.copyForProperty(getPropertyProtection().getCluster());
+	}
 			
 	
 	public float getDistance(Position position) {
@@ -145,7 +157,7 @@ public class Position extends SimProperty {
 	 * @return the direction
 	 */
 	public Vector getDirectionFrom(Position position) {
-		Vector direction = m_position.getDirectionFrom(position.getVector());
+		Vector direction = this.vector.getDirectionFrom(position.getVector());
 		return direction;
 	}
 
@@ -157,13 +169,20 @@ public class Position extends SimProperty {
 	 * @return the direction
 	 */
 	public Vector getDirectionTo(Position position) {
-		Vector direction = position.getVector().getDirectionFrom(m_position);
+		Vector direction = position.getVector().getDirectionFrom(this.vector);
 		return direction;
 	}
 
-	public int getX() { return (int) m_position.getX(); }
-	public int getY() { return (int) m_position.getY(); }
-	public int getZ() { return (int) m_position.getZ(); }
+
+	public int getX(SimulationCluster cluster) { 
+		return  this.vector.getX(cluster); 
+	}
+	public int getY(SimulationCluster cluster) { 
+		return  this.vector.getY(cluster); 
+	}
+	public int getZ(SimulationCluster cluster) { 
+		return  this.vector.getZ(cluster); 
+	}
 	
 	public boolean equals(Position b, int locationBase, int accuracyLevel) {
 		if (locationBase == LOCATIONBASE25)  {
@@ -179,7 +198,7 @@ public class Position extends SimProperty {
 	}
 	
 	public boolean equals(Position b) {
-		return m_position.equals(b.getVector());
+		return this.vector.equals(b.getVector());
 	}
 	
 	private void setLocationByBases(Vector position)
@@ -243,6 +262,6 @@ public class Position extends SimProperty {
 	}
 	
 	public String toString() {
-		return m_position.toString();
+		return this.vector.toString();
 	}
 }

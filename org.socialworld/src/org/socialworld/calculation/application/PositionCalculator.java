@@ -28,7 +28,6 @@ import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.SimulationCluster;
-import org.socialworld.calculation.Value;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.core.Event;
 import org.socialworld.core.EventType;
@@ -106,6 +105,7 @@ public class PositionCalculator extends SocialWorldThread {
 		EventType eventType;
 		
 		
+		Position positionOriginal;
 		Vector position;
 		Position newPosition;
 		
@@ -124,14 +124,16 @@ public class PositionCalculator extends SocialWorldThread {
 
 		
 		eventType = event.getEventType();
-		position = (Vector) state.getPositionVectorAsValue(Value.VALUE_NAME_UNUSED_BECAUSE_TEMPORARY).getValue();
+		positionOriginal = (Position) state.getProperty(SimulationCluster.position, PropertyName.simobj_position).getValue();
+		position = positionOriginal.getVector(SimulationCluster.position);
 		
-		directionMoveObject = (Direction) state.getDirectionMoveAsValue(SimulationCluster.position, PropertyName.SIMOBJPROP_DIRECTION_MOVE).getValue();
-		vectorMoveObject =  directionMoveObject.getVector();
+		directionMoveObject = (Direction) state.getProperty(SimulationCluster.position, PropertyName.simobj_directionMove).getValue();
+//		directionMoveObject = (Direction) state.getDirectionMoveAsValue(SimulationCluster.position, PropertyName.SIMOBJPROP_DIRECTION_MOVE).getValue();
+		vectorMoveObject = directionMoveObject.getVector(SimulationCluster.position);
 		powerMoveObject = directionMoveObject.getPower();
 		
 		directionEvent = (Direction) event.getDirection().getValue();
-		vectorEvent = directionEvent.getVector();
+		vectorEvent = directionEvent.getVector(SimulationCluster.position);
 		powerEvent = event.getStrength();
 		
 		if (!vectorEvent.isNormalized()) vectorEvent.normalize();

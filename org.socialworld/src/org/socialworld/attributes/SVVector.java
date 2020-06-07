@@ -30,27 +30,78 @@ public class SVVector extends SavedValue {
 
 	private Vector savedVector;
 	
+	public SVVector (Vector vector, PropertyName propNameParent) {
+		super();
+		this.savedVector = vector;
+	}
+	
 	private SVVector( SVVector original, PropertyProtection protectionOriginal, SimulationCluster cluster) {
 		super(protectionOriginal, cluster);
 		setPropertyName(original.getPropertyName());
 		this.savedVector = original.getVector();
 	}
 
+	///////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////  implementing  SavedValues abstract methods  ///////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
+
+	public Vector getReleased(SimulationCluster cluster) {
+		return getVector();
+	}
+
+	///////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////  implementing  ISavedValues  ////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
+	
 	public ISavedValues copyForProperty(SimulationCluster cluster) {
 		return new SVVector(this, getPropertyProtection(), cluster);
 	}
 	
 	public  ValueProperty getProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
 		switch (propName) {
-		case position_vector:
-		case direction_vector:
+		case vector:
 			return new ValueProperty(Type.vector, valueName, getVector());
+		case vector_x:
+			return new ValueProperty(Type.floatingpoint, valueName, this.savedVector.getX());
+		case vector_y:
+			return new ValueProperty(Type.floatingpoint, valueName, this.savedVector.getY());
+		case vector_z:
+			return new ValueProperty(Type.floatingpoint, valueName, this.savedVector.getZ());
 		default:	
 			return ValueProperty.getInvalid();
 		}
 	}
-	
 
+	///////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////  implementing  Vector methods  ////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
+	
+	public int getX(SimulationCluster cluster) { 
+		return (int) savedVector.getX(); 
+	}
+	
+	public int getY(SimulationCluster cluster) {
+		return (int) savedVector.getY(); 
+	}
+	
+	public int getZ(SimulationCluster cluster) { 
+		return (int) savedVector.getZ();
+	}
+	
+	public Vector getDirectionFrom(SVVector vectorPosition) {
+		Vector direction = this.savedVector.getDirectionFrom(vectorPosition.getVector());
+		return direction;
+	}
+
+	public Vector getDirectionTo(SVVector vectorPosition) {
+		Vector direction = vectorPosition.getVector().getDirectionFrom(this.savedVector);
+		return direction;
+	}
+
+	public boolean equals(SVVector b) {
+		return this.savedVector.equals(b.getVector());
+	}
+	
 	private Vector getVector() {
 		return new Vector(this.savedVector);
 	}

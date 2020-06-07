@@ -46,7 +46,7 @@ public enum SimulationCluster {
 		return index;
 	}
 
-	public static SimulationCluster getName(int index) {
+	static SimulationCluster getName(int index) {
 		for (SimulationCluster cluster : SimulationCluster.values())
 			if (cluster.index == index)
 				return cluster;
