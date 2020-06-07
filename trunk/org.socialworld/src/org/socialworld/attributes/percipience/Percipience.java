@@ -147,7 +147,7 @@ public class Percipience {
 	
 				ValueProperty vpDirectionView;
 				vpDirectionView = possibleSeer.getStateProperty(SimulationCluster.todo, PropertyName.simobj_stateSeer, PropertyName.simobj_directionView, PropertyName.simobj_directionView.toString());
-				Vector directionView = ((Direction)vpDirectionView.getValue()).getVector();
+				Vector directionView = ((Direction)vpDirectionView.getValue()).getVector(SimulationCluster.todo);
 	
 				ValueProperty vpAngleView;
 				vpAngleView = possibleSeer.getStatePropertyFromMethod(SimulationCluster.todo, PropertyName.simobj_stateSeer, ISeer.METHODNAME_GETANGLEVIEWPERCEIVINGOBJECTSINRADIANS, "sizeDistanceRelThreashold");

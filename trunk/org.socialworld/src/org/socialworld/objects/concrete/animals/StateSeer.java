@@ -118,7 +118,8 @@ public class StateSeer extends State {
 	}
 
 	private void setBestPercipiencePerpendicular() {
-		this.bestPercipiencePerpendicular =  VectorMapper.getInstance().getBestVisibleAreaPerpendicular(this.directionView.getVector());
+		this.bestPercipiencePerpendicular =  
+				VectorMapper.getInstance().getBestVisibleAreaPerpendicular(this.directionView.getVector(SimulationCluster.todo));
 
 	}
 	

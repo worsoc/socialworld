@@ -167,8 +167,9 @@ public abstract class StateSimulationObject extends ListenedBase {
 	
 	
 	
-	final public Value getPositionVectorAsValue(String valueName) {
-		return new Value(Type.vector, valueName, new Vector(this.position.getVector()) );
+	final public Value _getPositionVectorAsValue(String valueName) {
+		return new Value();
+				//Type.vector, valueName, new Vector(this.position.getProperty(PropertyName.position_vector, "").getVector()) );
 		
 	}
 	

@@ -139,7 +139,7 @@ public class ValueProperty extends Value {
 	}
 
 	public ValueProperty getSubProperty(PropertyName propName, String valueName) {
-		
+		// TODO ??? must beprotected by SimulationCluster???
 		ValueProperty result = invalid;
 		
 		if (isSavedValues) {

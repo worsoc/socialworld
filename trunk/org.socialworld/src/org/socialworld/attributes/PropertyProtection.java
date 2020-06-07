@@ -95,5 +95,12 @@ public class PropertyProtection {
 		return false;
 		
 	}
+	
+	public boolean checkHasGetPermission(SimulationCluster cluster) {
+		
+		// TODO implement checkHasGetPermission
+		return true;
+		
+	}
 
 }

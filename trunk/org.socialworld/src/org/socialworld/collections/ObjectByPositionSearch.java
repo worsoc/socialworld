@@ -23,6 +23,7 @@ package org.socialworld.collections;
 
 import java.util.ArrayList;
 
+import org.socialworld.attributes.Position;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.objects.SimulationObject;
 
@@ -134,6 +135,7 @@ public class ObjectByPositionSearch {
 		ObjectByPositionSearch_Nodes nodes;
 
 		int objectID;
+		Position position;
 		int x;
 		int y;
 		
@@ -144,9 +146,9 @@ public class ObjectByPositionSearch {
 		objectID = object.getObjectID();
 		if (size <= objectID) 	ensureCapacity(objectID + 1000);
 		
-		// TODO only one time getPosition
-		x = object.getPosition(SimulationCluster.objectMaster).getX();
-		y = object.getPosition(SimulationCluster.objectMaster).getY();
+		position = object.getPosition(SimulationCluster.objectMaster);
+		x = position.getX(SimulationCluster.objectMaster);
+		y = position.getY(SimulationCluster.objectMaster);
 		
 		nodes = new ObjectByPositionSearch_Nodes(
 					addNode(objectID, x, y),
