@@ -21,6 +21,9 @@
 */
 package org.socialworld.attributes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.socialworld.calculation.PropertyUsingAs;
 import org.socialworld.calculation.SimulationCluster;
 
@@ -34,10 +37,12 @@ public class PropertyProtection {
 	public PropertyProtection(SimulationCluster cluster) {
 		
 		if (cluster == SimulationCluster.total) {
+			// TODO what to do for SimulationCluster.total
 			this.cluster = SimulationCluster.unknown;
 		}
 		else {
 			this.cluster = cluster;
+			this.useAsPermissions = cluster.getPossibleUsingAs();
 		}
 	}
 	
@@ -45,11 +50,12 @@ public class PropertyProtection {
 		
 		if (!savedValue.hasPropertyProtection()) {
 			this.cluster = cluster;
-			// TODO init property protection
+			this.useAsPermissions = original.getIntersection(cluster.getPossibleUsingAs());
 			savedValue.setPropertyProtection(this);
 		}
 		else {
 			this.cluster = SimulationCluster.unknown;
+			this.useAsPermissions = new PropertyUsingAs[0];
 		}
 	}
 	
@@ -57,11 +63,12 @@ public class PropertyProtection {
 		
 		if (!savedValue.hasPropertyProtection()) {
 			this.cluster = SimulationCluster.total;
-			// TODO init property protection
+			this.useAsPermissions = this.cluster.getPossibleUsingAs();
 			savedValue.setPropertyProtection(this);
 		}
 		else {
 			this.cluster = SimulationCluster.unknown;
+			this.useAsPermissions = new PropertyUsingAs[0];
 		}
 	}
 
@@ -71,10 +78,35 @@ public class PropertyProtection {
 		
 		int size = original.useAsPermissions.length;
 		this.useAsPermissions = new PropertyUsingAs[size];
-		for (int i = 0; i < size; i++) {
-			this.useAsPermissions[i] = original.useAsPermissions[i];
+		for (int index = 0; index < size; index++) {
+			this.useAsPermissions[index] = original.useAsPermissions[index];
 		}
 		this.usedAs = null;
+		
+	}
+	
+	private PropertyUsingAs[] getIntersection(PropertyUsingAs[] toIntersectWith) {
+		
+		PropertyUsingAs[] result;
+		List<PropertyUsingAs> intersection = new ArrayList<PropertyUsingAs>();
+		
+		for (int indexA = 0; indexA < this.useAsPermissions.length; indexA++) {
+			
+			for (int indexB = 0; indexB < toIntersectWith.length; indexB++) {
+			
+				if (this.useAsPermissions[indexA].equals(toIntersectWith[indexB])) {
+					
+					intersection.add(toIntersectWith[indexB]);
+					
+				}
+				
+			}
+			
+		}
+		
+		result = intersection.toArray(new PropertyUsingAs[intersection.size()]);
+		
+		return result;
 		
 	}
 	
@@ -88,8 +120,8 @@ public class PropertyProtection {
 
 	public boolean checkHasUseAsPermission(PropertyUsingAs useAsPermission) {
 		
-		for (int index = 0; index < useAsPermissions.length; index++) {
-			if  (useAsPermissions[index].equals(useAsPermission)) return true;
+		for (int index = 0; index < this.useAsPermissions.length; index++) {
+			if  (this.useAsPermissions[index].equals(useAsPermission)) return true;
 		}
 		
 		return false;
@@ -98,8 +130,28 @@ public class PropertyProtection {
 	
 	public boolean checkHasGetPermission(SimulationCluster cluster) {
 		
-		// TODO implement checkHasGetPermission
-		return true;
+		// TODO check whether there is needed an extra method for checking get permission
+		
+		// there is a get permission if this.useAsPermissions and cluster's useAsPermissions are not intersection-free
+		
+		PropertyUsingAs[] tmp;
+		tmp = cluster.getPossibleUsingAs();
+		
+		for (int indexA = 0; indexA < this.useAsPermissions.length; indexA++) {
+			
+			for (int indexB = 0; indexB < tmp.length; indexB++) {
+			
+				if (this.useAsPermissions[indexA].equals(tmp[indexB])) {
+					
+					return true;
+					
+				}
+				
+			}
+			
+		}
+
+		return false;
 		
 	}
 
