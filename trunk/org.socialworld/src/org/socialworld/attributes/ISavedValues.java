@@ -31,6 +31,7 @@ public interface ISavedValues {
 	public abstract boolean hasPropertyProtection();
 	public abstract PropertyProtection getPropertyProtection();
 	public abstract void setPropertyProtection(PropertyProtection propertyProtection);
+	public abstract boolean checkHasGetPermission(SimulationCluster cluster);
 	public abstract boolean checkHasUseAsPermission(PropertyUsingAs useAsPermission);
 
 	// getting a copy as ValueProperty for a simulation cluster (intersection from argument cluster and the "parent" protection)

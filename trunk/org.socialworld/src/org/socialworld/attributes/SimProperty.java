@@ -62,7 +62,7 @@ public abstract class SimProperty implements ISimProperty, ISavedValues {
 	///////////////////////////////////////////////////////////////////////////////////////////
 
 
-	public boolean hasPropertyProtection() {
+	public final boolean hasPropertyProtection() {
 		
 		if (this.protection == null) 	return false;
 		if (this.protection.hasUnknownCluster()) return false;
@@ -70,15 +70,19 @@ public abstract class SimProperty implements ISimProperty, ISavedValues {
 		
 	}
 
-	public PropertyProtection getPropertyProtection() {
+	public final PropertyProtection getPropertyProtection() {
 		return new PropertyProtection(this.protection);
 	};
 	
-	public void setPropertyProtection(PropertyProtection propertyProtection) {
+	public final void setPropertyProtection(PropertyProtection propertyProtection) {
 		this.protection = propertyProtection;
 	}
-	
-	public boolean checkHasUseAsPermission(PropertyUsingAs useAsPermission) {
+
+	public final boolean checkHasGetPermission(SimulationCluster cluster) {
+		return this.protection.checkHasGetPermission(cluster);
+	}
+
+	public final boolean checkHasUseAsPermission(PropertyUsingAs useAsPermission) {
 		return this.protection.checkHasUseAsPermission(useAsPermission);
 	}
 	
