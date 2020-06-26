@@ -58,16 +58,21 @@ public class SVVector extends SavedValue {
 	}
 	
 	public  ValueProperty getProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
-		switch (propName) {
-		case vector:
-			return new ValueProperty(Type.vector, valueName, getVector());
-		case vector_x:
-			return new ValueProperty(Type.floatingpoint, valueName, this.savedVector.getX());
-		case vector_y:
-			return new ValueProperty(Type.floatingpoint, valueName, this.savedVector.getY());
-		case vector_z:
-			return new ValueProperty(Type.floatingpoint, valueName, this.savedVector.getZ());
-		default:	
+		if (checkHasGetPermission(cluster)) {
+			switch (propName) {
+			case vector:
+				return new ValueProperty(Type.vector, valueName, getVector());
+			case vector_x:
+				return new ValueProperty(Type.floatingpoint, valueName, this.savedVector.getX());
+			case vector_y:
+				return new ValueProperty(Type.floatingpoint, valueName, this.savedVector.getY());
+			case vector_z:
+				return new ValueProperty(Type.floatingpoint, valueName, this.savedVector.getZ());
+			default:	
+				return ValueProperty.getInvalid();
+			}
+		}
+		else {
 			return ValueProperty.getInvalid();
 		}
 	}
