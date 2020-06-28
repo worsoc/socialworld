@@ -30,11 +30,9 @@ import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.SimulationCluster;
-import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.application.Scheduler;
-import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.core.Event;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenSimulationObject;
@@ -146,14 +144,20 @@ public abstract class StateSimulationObject extends ListenedBase {
 	
 	public ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String name) {
 		
+		ValueProperty result;
 		switch (prop) {
 		case simobj_position:
-			return this.position.getAsValue(cluster, name);
+			result = this.position.getAsValue(cluster, name); break;
 		case simobj_directionMove:
-			return this.directionMove.getAsValue(cluster, name);
+			result = this.directionMove.getAsValue(cluster, name); break;
 		default:
-			return getStateAsProperty( cluster, prop,  name) ;
+			result = getStateAsProperty( cluster, prop,  name);
+			if (!result.isValid()) {
+				result = getStateProperty(cluster, prop,  name);
+			}
 		}
+		
+		return result;
 	}
 
 
@@ -286,6 +290,27 @@ public abstract class StateSimulationObject extends ListenedBase {
 			}
 			
 		}
+		return result;
+
+	}
+
+	ValueProperty getStateProperty(SimulationCluster cluster, PropertyName propSubToTry, String name) {
+		
+		State stateAddOn;
+		ValueProperty result = ValueProperty.getInvalid();
+		
+		for (int nrStateAddOn = 0; nrStateAddOn < stateAddOns.size(); nrStateAddOn++) {
+			
+			stateAddOn = stateAddOns.get(nrStateAddOn);
+		
+			result = stateAddOn.getProperty(cluster, propSubToTry, name);
+			
+			if (result.isValid()) {
+				break;
+			}
+			
+		}
+		
 		return result;
 
 	}

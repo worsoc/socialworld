@@ -53,7 +53,7 @@ public class ChangeAttributes extends Branching {
 				exp3 = parseLinesTail(1, lines);
 			}
 			else {
-				exp3 = new GetArgumentByName(PropertyName.SIMOBJPROP_ATTRIBUTEARRAY);
+				exp3 = new GetArgumentByName(PropertyName.simobj_attributeArray.toString());
 			}
 			
 			setExpression1(exp1);
@@ -80,7 +80,7 @@ public class ChangeAttributes extends Branching {
 		dann = parseDann(line);
 		
 		if (index == (lines.size() - 1)) 
-			 tail = new GetArgumentByName(PropertyName.SIMOBJPROP_ATTRIBUTEARRAY);
+			 tail = new GetArgumentByName(PropertyName.simobj_attributeArray.toString());
 		else
 			 tail = parseLinesTail(index + 1, lines);
 		
@@ -123,16 +123,16 @@ public class ChangeAttributes extends Branching {
 				
 				expressionSetAttributeValue = 
 							new SetAttributeValue(attribute, 
-									new GetArgumentByName(PropertyName.SIMOBJPROP_ATTRIBUTEARRAY), 
+									new GetArgumentByName(PropertyName.simobj_attributeArray.toString()), 
 									expressionCalculateNewAttributeValue);
 				
 				if (isFirstExpression) {
-					replacementChain = new Replacement(PropertyName.SIMOBJPROP_ATTRIBUTEARRAY, expressionSetAttributeValue);
+					replacementChain = new Replacement(PropertyName.simobj_attributeArray.toString(), expressionSetAttributeValue);
 					isFirstExpression = false;
 				}
 				else {
 					sequence[0] = replacementChain;
-					sequence[1] = new Replacement(PropertyName.SIMOBJPROP_ATTRIBUTEARRAY, expressionSetAttributeValue);
+					sequence[1] = new Replacement(PropertyName.simobj_attributeArray.toString(), expressionSetAttributeValue);
 					replacementChain = new Sequence(sequence);
 
 				}

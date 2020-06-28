@@ -30,43 +30,38 @@ public enum PropertyName {
 	
 	unknown(0), 
 	
-	simobj_position(1001),
-	simobj_attributearray(1011),
-	simobj_directionMove(1021), simobj_directionChest(1022), simobj_directionView(1023), simobj_directionActiveMove(1024),
-	simobj_inventory(1031),
-	simobj_knowledge(1041),
-	simobj_stateSeer(2001),
-	
-	event_position(101001),
-	event_direction(101020),
-	
-	action_position(201001),
-	
-	position_vector(1001001),
-	direction_vector(1001021),
-	
-	vector(2001010),
-	vector_x(2001011),
-	vector_y(2001012),
-	vector_z(2001013);
+	simobj_position(1001001),
+	simobj_attributeArray(1001011),
+	simobj_directionMove(1001021), simobj_directionChest(1001022), simobj_directionActiveMove(1001023),
+	simobj_inventory(1001031),
+	simobj_knowledge(1001041),
 
-	private final static int THREASHOLD_SIMPROPERTY = 1000000;
+	simobj_stateSeer(1101000),
+	
+	stateSeer_directionView(1101001),
+	stateSeer_angleViewPerceivingEvents(11010002),
+	stateSeer_angleViewPerceivingEventsInRadians(1101003),
+	stateSeer_angleViewPerceivingObjects(1101004),
+	stateSeer_angleViewPerceivingObjectsInRadians(1101005),
+	stateSeer_bestPercipiencePerpendicular(11010006),
+	stateSeer_sizeDistanceRelationThreshold(11010007),
 
-	public final static String SIMOBJPROP_POSITION = "position";
-	public final static String SIMOBJPROP_ATTRIBUTEARRAY = "attributes";
-	public final static String SIMOBJPROP_INVENTORY = "inventory";
-	public final static String SIMOBJPROP_KNOWLEDGE = "knowledge";
-	public final static String SIMOBJPROP_DIRECTION_MOVE = "direction_move";
-	public final static String SIMOBJPROP_DIRECTION_CHEST = "direction_chest";
-	public final static String SIMOBJPROP_DIRECTION_VIEW = "direction_view";
-	public final static String SIMOBJPROP_DIRECTION_ACTIVEMOVE = "direction_activemove";
-	public final static String SIMOBJPROP_STATE_SEER = "state_seer";
 	
-	public final static String EVENT_POSITION = "event_position";
-	public final static String EVENT_DIRECTION = "event_direction";
+	event_position(2001001),
+	event_direction(2001020),
 	
-	public final static String ACTION_POSITION = "action_position";
+	action_position(3001001),
 	
+	position_vector(4001001),
+	direction_vector(4002001),
+	
+	vector(5001010),
+	vector_x(5001011),
+	vector_y(5001012),
+	vector_z(5001013);
+
+	private final static int THREASHOLD_SIMPROPERTY = 2000000;
+
 	
 	private int index;
 
@@ -90,14 +85,14 @@ public enum PropertyName {
 		switch (this) {
 		case unknown:
 			return Type.nothing; 
-		case simobj_attributearray:
+		case simobj_attributeArray:
 			return Type.attributeArray;
 		case simobj_position:
 		case simobj_inventory:  
 		case simobj_knowledge:
 		case simobj_directionMove: 
 		case simobj_directionChest: 
-		case simobj_directionView: 
+		case stateSeer_directionView: 
 		case simobj_directionActiveMove: 
 		case simobj_stateSeer: 
 			return Type.simObjProp; 
@@ -127,50 +122,16 @@ public enum PropertyName {
 		}
 	}
 	
-	public String toString() {
-		
-		switch (this) {
-		case unknown: return "unknown"; 
-		case simobj_position: return SIMOBJPROP_POSITION;
-		case simobj_attributearray: return SIMOBJPROP_ATTRIBUTEARRAY;
-		case simobj_inventory: return SIMOBJPROP_INVENTORY; 
-		case simobj_knowledge: return SIMOBJPROP_KNOWLEDGE;
-		case simobj_directionMove: return SIMOBJPROP_DIRECTION_MOVE;
-		case simobj_directionChest: return SIMOBJPROP_DIRECTION_CHEST;
-		case simobj_directionView: return SIMOBJPROP_DIRECTION_VIEW;
-		case simobj_directionActiveMove: return SIMOBJPROP_DIRECTION_ACTIVEMOVE; 
-		case simobj_stateSeer: return SIMOBJPROP_STATE_SEER; 
-		
-		case event_position: return EVENT_POSITION; 
-		case event_direction: return EVENT_DIRECTION; 
-		
-		case action_position: return ACTION_POSITION; 
-		
-		default: return "";
-		}
-		
-	}
 
 	public static PropertyName forString(String name) {
 		
-		switch (name) {
-		case "unknown": return unknown; 
-		case SIMOBJPROP_POSITION: return simobj_position;
-		case SIMOBJPROP_ATTRIBUTEARRAY: return simobj_attributearray;
-		case SIMOBJPROP_INVENTORY: return simobj_inventory; 
-		case SIMOBJPROP_KNOWLEDGE: return simobj_knowledge;
-		case SIMOBJPROP_DIRECTION_MOVE: return simobj_directionMove;
-		case SIMOBJPROP_DIRECTION_CHEST: return simobj_directionChest;
-		case SIMOBJPROP_DIRECTION_VIEW: return simobj_directionView;
-		case SIMOBJPROP_DIRECTION_ACTIVEMOVE: return simobj_directionActiveMove; 
-		case SIMOBJPROP_STATE_SEER: return simobj_stateSeer; 
 		
-		case EVENT_POSITION: return event_position; 
-		case EVENT_DIRECTION: return event_direction; 
-		
-		case ACTION_POSITION: return action_position;
-		default: return unknown;
-		}
+		for (PropertyName prop : PropertyName.values())
+			if (prop.name().equals( name))
+				return prop;
+		return unknown;
+
+
 	}
 	
 	public boolean isSimProperty() {
@@ -195,7 +156,7 @@ public enum PropertyName {
 		case simobj_inventory: return only_knowledgeRelationSubjectOrObject;
 		case simobj_directionMove: return only_pathToKnowledgeValue;
 		case simobj_directionChest: return only_pathToKnowledgeValue;
-		case simobj_directionView: return only_pathToKnowledgeValue;
+		case stateSeer_directionView: return only_pathToKnowledgeValue;
 		case simobj_directionActiveMove: return only_pathToKnowledgeValue;
 		case position_vector: return only_knowledgeValue;
 		default:			return emptyPermissions;

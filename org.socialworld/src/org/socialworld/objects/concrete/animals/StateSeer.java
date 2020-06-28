@@ -26,6 +26,7 @@ import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.calculation.SimulationCluster;
+import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.calculation.geometry.VectorMapper;
@@ -67,8 +68,20 @@ public class StateSeer extends State {
 	public ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String name) {
 		
 		switch (prop) {
-		case simobj_directionView:
+		case stateSeer_directionView:
 			return this.directionView.getAsValue(cluster, name);
+		case stateSeer_angleViewPerceivingEvents:
+			return new ValueProperty(Type.floatingpoint, name, this.angleViewPerceivingEvents);
+		case stateSeer_angleViewPerceivingEventsInRadians:
+			return new ValueProperty(Type.floatingpoint, name, this.angleViewPerceivingEventsInRadians);
+		case stateSeer_angleViewPerceivingObjects:
+			return new ValueProperty(Type.floatingpoint, name, this.angleViewPerceivingObjects);
+		case stateSeer_angleViewPerceivingObjectsInRadians:
+			return new ValueProperty(Type.floatingpoint, name, this.angleViewPerceivingObjectsInRadians);
+		case stateSeer_bestPercipiencePerpendicular:
+			return new ValueProperty(Type.integer, name, this.bestPercipiencePerpendicular);
+		case stateSeer_sizeDistanceRelationThreshold:
+			return new ValueProperty(Type.floatingpoint, name, this.sizeDistanceRelationThreshold);
 		default:
 			return ValueProperty.getInvalid();
 		}
@@ -83,7 +96,7 @@ public class StateSeer extends State {
 	
 
 	public void setDirectionView(Vector directionView) {
-		this.directionView = new Direction(PropertyName.simobj_directionView, directionView);
+		this.directionView = new Direction(PropertyName.stateSeer_directionView, directionView);
 		setBestPercipiencePerpendicular();
 	}
 	

@@ -72,17 +72,17 @@ public class Move extends ActionPerformer {
     	
     	Value property;
     	
-    	property = properties.getValue(PropertyName.SIMOBJPROP_ATTRIBUTEARRAY);
+    	property = properties.getValue(PropertyName.simobj_attributeArray.toString());
     	if (property.isValid()) {
     		addProperty(property);
     	}
  
-       	property = properties.getValue(PropertyName.SIMOBJPROP_DIRECTION_CHEST);
+       	property = properties.getValue(PropertyName.simobj_directionChest.toString());
     	if (property.isValid()) {
     		addProperty(property);
     	}
 
-       	property = properties.getValue(PropertyName.SIMOBJPROP_DIRECTION_VIEW);
+       	property = properties.getValue(PropertyName.stateSeer_directionView.toString());
     	if (property.isValid()) {
     		addProperty(property);
     	}

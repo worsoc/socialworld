@@ -228,7 +228,7 @@ public class ActionCreator extends SocialWorldThread {
 		ValueArrayList arguments;
 		arguments = new ValueArrayList();
 		
-		arguments.add( stateReactor.getProperty(SimulationCluster.action, PropertyName.simobj_attributearray) );
+		arguments.add( stateReactor.getProperty(SimulationCluster.action, PropertyName.simobj_attributeArray) );
 		arguments.add( new Value(Type.event, Value.VALUE_BY_NAME_EVENT, event) );
 		if (event.hasOptionalParam()) {
 			arguments.add( event.getOptionalParam().getParamListAsValue());
@@ -261,7 +261,7 @@ public class ActionCreator extends SocialWorldThread {
 		ValueArrayList arguments;
 		arguments = new ValueArrayList();
 		
-		arguments.add( stateActor.getProperty(SimulationCluster.action, PropertyName.simobj_attributearray) );
+		arguments.add( stateActor.getProperty(SimulationCluster.action, PropertyName.simobj_attributeArray) );
 		
 		Value result = f_CreateAction.calculate(arguments);
 		return (AbstractAction) result.getValue();
