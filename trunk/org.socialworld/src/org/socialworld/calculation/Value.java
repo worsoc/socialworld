@@ -160,7 +160,8 @@ public class Value {
 			if (value instanceof Integer)	return ((Integer) value).longValue();
 			return (long) value;
 		case floatingpoint:
-			return (float) value;
+			if (value instanceof Double) return (double)value;
+			else return (float) value;
 		case time:
 			if (!(value instanceof Time)) {
 				return new Time();

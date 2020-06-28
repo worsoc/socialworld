@@ -38,22 +38,9 @@ public enum SimulationCluster {
 	
 	private int index;
 
-	private PropertyUsingAs[] possibleUsingAs;
-	
-	private static PropertyUsingAs[] emptyPossibleUsingAs = {};
-	private static PropertyUsingAs[] possibleUsingAs4ClusterKnowledge = 
-		{PropertyUsingAs.pathToKnowledgeSubject, PropertyUsingAs.knowledgeSubject,
-		PropertyUsingAs.pathToKnowledgeSource, PropertyUsingAs.knowledgeSource,
-		PropertyUsingAs.pathToKnowledgeValue, PropertyUsingAs.knowledgeValue,
-		PropertyUsingAs.pathToKnowledgeProperty, PropertyUsingAs.knowledgeProperty,
-		PropertyUsingAs.pathToKnowledgeRelationSubject, PropertyUsingAs.knowledgeRelationSubject,
-		PropertyUsingAs.pathToKnowledgeRelationVerb, PropertyUsingAs.knowledgeRelationVerb,
-		PropertyUsingAs.pathToKnowledgeRelationAdverb, PropertyUsingAs.knowledgeRelationAdverb,
-		PropertyUsingAs.pathToKnowledgeRelationObject, PropertyUsingAs.knowledgeRelationObject};
 	
 	private SimulationCluster(int index) {
 		this.index = index;
-		initPossibleUsingAs();
 	}
 	
 	public int getIndex() {
@@ -67,32 +54,9 @@ public enum SimulationCluster {
 		return unknown;
 	}
 	
-	private void initPossibleUsingAs() {
-		
-		PropertyUsingAs[] result;
-		
-		switch (this) {
-		case knowledge:
-			result = possibleUsingAs4ClusterKnowledge;
-			break;
-		case toBeSet:
-		case total:
-		case todo:
-		case test:
-			result = possibleUsingAs4ClusterKnowledge;
-			break;
-		default:
-			result = emptyPossibleUsingAs;
-		}
-		
-		this.possibleUsingAs = result;
+	public  PropertyUsingAs[] getPossibleUsingAs() {
+		return GetSimulationClustersPropUsingAs.getPossibleUsingAs(this);
 	}
-	
-	public PropertyUsingAs[] getPossibleUsingAs() {
-		
-		PropertyUsingAs[] copy = this.possibleUsingAs.clone();
-		return copy;
-		
-	}
+
 
 }

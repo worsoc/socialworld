@@ -89,7 +89,7 @@ public abstract class Animal extends SimulationObject implements ISeer {
 
 	public ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String name) {
 		switch (prop) {
-		case simobj_attributearray:
+		case simobj_attributeArray:
 		case simobj_inventory:
 		case simobj_knowledge:
 		case simobj_directionChest:
@@ -117,36 +117,7 @@ public abstract class Animal extends SimulationObject implements ISeer {
 		return this.stateSeer.getAsValue(cluster, name);
 	}
 
-	/*
-	public double getSizeDistanceRelationThreshold() {
-		return this.stateSeer.getSizeDistanceRelationThreshold();
-	}
 
-	final public Direction getDirectionView() {
-		// TODO obsolet / refactoring the Iseer Interface
-		return (Direction) stateSeer.getProperty(SimulationCluster.unknown, PropertyName.simobj_directionView).getValue();
-	}
-
-	final public float getAngleViewPerceivingObjects() {
-		return this.stateSeer.getAngleViewPerceivingObjects();
-	}
-
-	final public double getAngleViewPerceivingObjectsInRadians() {
-		return this.stateSeer.getAngleViewPerceivingObjectsInRadians();
-	}
-
-	final public float getAngleViewPerceivingEvents() {
-		return this.stateSeer.getAngleViewPerceivingEvents();
-	}
-
-	final public double getAngleViewPerceivingEventsInRadians() {
-		return this.stateSeer.getAngleViewPerceivingEventsInRadians();
-	}
-
-	final public int getBestPercipiencePerpendicular() {
-		return this.stateSeer.getBestPercipiencePerpendicular();
-	}
-*/
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    ATTRIBUTES  //////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -251,9 +222,9 @@ public abstract class Animal extends SimulationObject implements ISeer {
 		
 		ValueArrayList propertiesAsValueList = new ValueArrayList();
 		
-		propertiesAsValueList.add(getProperty(cluster, PropertyName.simobj_attributearray));
+		propertiesAsValueList.add(getProperty(cluster, PropertyName.simobj_attributeArray));
 		propertiesAsValueList.add(getProperty(cluster, PropertyName.simobj_directionChest));
-		propertiesAsValueList.add(getProperty(cluster, PropertyName.simobj_directionView));
+		propertiesAsValueList.add(getProperty(cluster, PropertyName.stateSeer_directionView));
 		propertiesAsValueList.add(getProperty(cluster, PropertyName.simobj_directionActiveMove));
 		paramObject.answerPropertiesRequest(propertiesAsValueList);
 	

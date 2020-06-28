@@ -225,7 +225,7 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				
 				
 				// directionHit
-				startExpression = new Calculate("GET(" + PropertyName.SIMOBJPROP_DIRECTION_VIEW + ")", Value.VALUE_BY_NAME_EVENT_DIRECTION );
+				startExpression = new Calculate("GET(" + PropertyName.stateSeer_directionView.toString() + ")", Value.VALUE_BY_NAME_EVENT_DIRECTION );
 				result.add( new FunctionByExpression(startExpression) );
 
 				// actorsIntensity
@@ -240,11 +240,11 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				result.add( new FunctionByExpression(startExpression) );
 
 				// directionChest
-				startExpression = new Calculate("GET(" + PropertyName.SIMOBJPROP_DIRECTION_CHEST + ")", PropertyName.SIMOBJPROP_DIRECTION_CHEST);
+				startExpression = new Calculate("GET(" + PropertyName.simobj_directionChest.toString() + ")", PropertyName.simobj_directionChest.toString());
 				result.add( new FunctionByExpression(startExpression) );
 
 				// directionView
-				startExpression = new Calculate("GET(" + PropertyName.SIMOBJPROP_DIRECTION_VIEW + ")", PropertyName.SIMOBJPROP_DIRECTION_VIEW);
+				startExpression = new Calculate("GET(" + PropertyName.stateSeer_directionView.toString() + ")", PropertyName.stateSeer_directionView.toString());
 				result.add( new FunctionByExpression(startExpression) );
 				
 				break;
@@ -252,7 +252,7 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 			case weaponClub:
 				
 				// directionHit
-				startExpression = new Calculate("GET(" + PropertyName.SIMOBJPROP_DIRECTION_VIEW + ")", Value.VALUE_BY_NAME_EVENT_DIRECTION );
+				startExpression = new Calculate("GET(" + PropertyName.stateSeer_directionView.toString() + ")", Value.VALUE_BY_NAME_EVENT_DIRECTION );
 				result.add( new FunctionByExpression(startExpression) );
 
 				// actorsIntensity
@@ -271,11 +271,11 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				result.add( new FunctionByExpression(startExpression) );
 
 				// directionChest
-				startExpression = new Calculate("GET(" + PropertyName.SIMOBJPROP_DIRECTION_CHEST + ")", PropertyName.SIMOBJPROP_DIRECTION_CHEST);
+				startExpression = new Calculate("GET(" + PropertyName.simobj_directionChest.toString() + ")", PropertyName.simobj_directionChest.toString());
 				result.add( new FunctionByExpression(startExpression) );
 
 				// directionView
-				startExpression = new Calculate("GET(" + PropertyName.SIMOBJPROP_DIRECTION_VIEW + ")", PropertyName.SIMOBJPROP_DIRECTION_VIEW);
+				startExpression = new Calculate("GET(" + PropertyName.stateSeer_directionView.toString() + ")", PropertyName.stateSeer_directionView.toString());
 				result.add( new FunctionByExpression(startExpression) );
 				
 				break;
@@ -292,7 +292,7 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				result.add( new FunctionByExpression(startExpression) );
 
 				// directionView
-				startExpression = new Calculate("GET(" + PropertyName.SIMOBJPROP_DIRECTION_VIEW + ")", PropertyName.SIMOBJPROP_DIRECTION_VIEW);
+				startExpression = new Calculate("GET(" + PropertyName.stateSeer_directionView.toString() + ")", PropertyName.stateSeer_directionView.toString());
 				result.add( new FunctionByExpression(startExpression) );
 
 				break;

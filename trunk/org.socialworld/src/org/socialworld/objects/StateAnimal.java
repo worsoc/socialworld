@@ -91,7 +91,7 @@ public class StateAnimal extends StateSimulationObject {
 	
 	public ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String name) {
 		switch (prop) {
-		case simobj_attributearray:
+		case simobj_attributeArray:
 			return this.attributes.getAsValue(cluster, name);
 		case simobj_inventory:
 			return this.inventory.getAsValue(cluster, name);

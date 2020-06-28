@@ -59,7 +59,7 @@ public class Say extends ActionPerformer {
     	
     	Value property;
     	
-    	property = properties.getValue(PropertyName.SIMOBJPROP_ATTRIBUTEARRAY);
+    	property = properties.getValue(PropertyName.simobj_attributeArray.toString());
     	if (property.isValid()) {
     		addProperty(property);
     	}
