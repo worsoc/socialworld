@@ -146,11 +146,11 @@ public class Percipience {
 			if (distance <= this.maxSee) {
 	
 				ValueProperty vpDirectionView;
-				vpDirectionView = possibleSeer.getStateProperty(SimulationCluster.todo, PropertyName.simobj_stateSeer, PropertyName.simobj_directionView, PropertyName.simobj_directionView.toString());
+				vpDirectionView = possibleSeer.getStateProperty(SimulationCluster.todo, PropertyName.simobj_stateSeer, PropertyName.stateSeer_directionView, PropertyName.stateSeer_directionView.toString());
 				Vector directionView = ((Direction)vpDirectionView.getValue()).getVector(SimulationCluster.todo);
 	
 				ValueProperty vpAngleView;
-				vpAngleView = possibleSeer.getStatePropertyFromMethod(SimulationCluster.todo, PropertyName.simobj_stateSeer, ISeer.METHODNAME_GETANGLEVIEWPERCEIVINGOBJECTSINRADIANS, "sizeDistanceRelThreashold");
+				vpAngleView = possibleSeer.getStateProperty(SimulationCluster.todo, PropertyName.simobj_stateSeer, PropertyName.stateSeer_angleViewPerceivingObjectsInRadians, PropertyName.stateSeer_angleViewPerceivingObjectsInRadians.toString());
 				double angleViewInRadians = (double) vpAngleView.getValue();
 				
 			/*	
@@ -187,12 +187,12 @@ public class Percipience {
 			if (distance <= this.maxSee) {
 	
 				ValueProperty vpDirectionView;
-				vpDirectionView = possibleSeer.getStateProperty(SimulationCluster.todo, PropertyName.simobj_stateSeer, PropertyName.simobj_directionView, PropertyName.simobj_directionView.toString());
+				vpDirectionView = possibleSeer.getStateProperty(SimulationCluster.todo, PropertyName.simobj_stateSeer, PropertyName.stateSeer_directionView, PropertyName.stateSeer_directionView.toString());
 				Vector directionView = (Vector) (vpDirectionView.getSubProperty(PropertyName.direction_vector)).getValue();
 		//		Vector directionView = ((Direction)vpDirectionView.getValue()).getVector();
 	
 				ValueProperty vpAngleView;
-				vpAngleView = possibleSeer.getStatePropertyFromMethod(SimulationCluster.todo, PropertyName.simobj_stateSeer, ISeer.METHODNAME_GETANGLEVIEWPERCEIVINGOBJECTSINRADIANS, "sizeDistanceRelThreashold");
+				vpAngleView = possibleSeer.getStateProperty(SimulationCluster.todo, PropertyName.simobj_stateSeer, PropertyName.stateSeer_angleViewPerceivingObjectsInRadians, PropertyName.stateSeer_angleViewPerceivingObjectsInRadians.toString());
 				double angleViewInRadians = (double) vpAngleView.getValue();
 	
 				
