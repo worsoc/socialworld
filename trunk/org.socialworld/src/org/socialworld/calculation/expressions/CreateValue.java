@@ -81,7 +81,7 @@ public class CreateValue extends Expression {
 			localArguments.add( new Value(Type.integer, "priority", 0) );  
 			localArguments.add( new Value(Type.longinteger, "duration", 0L) ); 
 			
-			evaluateExpression1(localArguments);
+			evaluateExpression2(localArguments);
 					
 			createdObject = ActionCreator.createAction(localArguments) ;
 			break;

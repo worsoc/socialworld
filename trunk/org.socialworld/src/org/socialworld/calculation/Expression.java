@@ -525,8 +525,17 @@ public class Expression {
 		return new Value();
 	}
 
-	protected void evaluateExpression1(ValueArrayList arguments) {
+	protected final void evaluateExpression1(ValueArrayList arguments) {
 		expression1.evaluate(arguments);
 	}
+
+	protected final void evaluateExpression2(ValueArrayList arguments) {
+		expression2.evaluate(arguments);
+	}
+	
+	protected final void evaluateExpression3(ValueArrayList arguments) {
+		expression3.evaluate(arguments);
+	}
+
 
 }
