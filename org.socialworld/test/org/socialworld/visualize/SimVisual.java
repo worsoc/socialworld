@@ -46,6 +46,28 @@ import org.socialworld.objects.State;
 
 public class SimVisual {
 
+	public static final Color COLOR_CORNSILK = new Color(255,248,220);
+	public static final Color COLOR_BLANCHEDALMOND = new Color(255,235,205);
+	public static final Color COLOR_BISQUE = new Color(255,228,196);
+	public static final Color COLOR_NAVAJOWHITE = new Color(255,222,173);
+	public static final Color COLOR_WHEAT = new Color(245,222,179);
+	public static final Color COLOR_SANDYBROWN = new Color(244,164,96);
+	public static final Color COLOR_GOLDENROD = new Color(218,165,32);
+	public static final Color COLOR_SADDLSEBROWN = new Color(139,69,19);
+	public static final Color COLOR_SIENNA = new Color(160,82,45);
+	
+	public static final Color COLOR_MAROON = new Color(128,0,0);
+
+	
+	
+	/*
+  	burlywood	#DEB887	rgb(222,184,135)
+ 	tan	#D2B48C	rgb(210,180,140)
+ 	rosybrown	#BC8F8F	rgb(188,143,143)
+ 	peru	#CD853F	rgb(205,133,63)
+ 	chocolate	#D2691E	rgb(210,105,30)
+ 	brown	#A52A2A	rgb(165,42,42)
+*/
 	
 	private JFrame  frameActions;
 	
@@ -116,6 +138,7 @@ public class SimVisual {
 */
 		
 	}
+	
 	
 	private void init() {
 		
@@ -201,10 +224,13 @@ public class SimVisual {
 			float intensity;
 			
 			Color color;
+
 			
+			
+
 			switch (type) {
 			case bodilyFunction:
-				color = Color.BLACK;
+				color = COLOR_CORNSILK;
 				break;
 			case move:
 				color = Color.BLUE;
@@ -225,19 +251,19 @@ public class SimVisual {
 				color = Color.ORANGE;
 				break;
 			case useWeapon:
-				color = Color.RED;
+				color = Color.MAGENTA;
 				break;
 			case hear:
-				color = Color.LIGHT_GRAY;
+				color = Color.WHITE;
 				break;
 			case talk:
-				color = Color.GRAY;
+				color = Color.LIGHT_GRAY;
 				break;
 			case say:
-				color = Color.DARK_GRAY;
+				color = Color.GRAY;
 				break;
 			default:
-				color = Color.WHITE;
+				color = Color.BLACK;
 			}
 
 			intensity = action.getIntensity();
@@ -277,3 +303,31 @@ public class SimVisual {
 	}
 
 }
+
+
+
+/*
+ https://www.rapidtables.com/web/color
+
+Color	HTML / CSS
+Color Name	Hex Code
+#RRGGBB	Decimal Code
+(R,G,B)
+ 	cornsilk	#FFF8DC	rgb(255,248,220)
+ 	blanchedalmond	#FFEBCD	rgb(255,235,205)
+ 	bisque	#FFE4C4	rgb(255,228,196)
+ 	navajowhite	#FFDEAD	rgb(255,222,173)
+ 	wheat	#F5DEB3	rgb(245,222,179)
+ 	burlywood	#DEB887	rgb(222,184,135)
+ 	tan	#D2B48C	rgb(210,180,140)
+ 	rosybrown	#BC8F8F	rgb(188,143,143)
+ 	sandybrown	#F4A460	rgb(244,164,96)
+ 	goldenrod	#DAA520	rgb(218,165,32)
+ 	peru	#CD853F	rgb(205,133,63)
+ 	chocolate	#D2691E	rgb(210,105,30)
+ 	saddlebrown	#8B4513	rgb(139,69,19)
+ 	sienna	#A0522D	rgb(160,82,45)
+ 	brown	#A52A2A	rgb(165,42,42)
+ 	maroon	#800000	rgb(128,0,0)
+
+*/
