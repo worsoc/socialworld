@@ -120,6 +120,7 @@ public abstract class ActionPerformer implements IEventParam {
 	@Override
    public final void evaluate() {
 		
+		
 		if (!this.isEvaluated()) {
 		
 			SimulationObject actor =  this.action.getActor();
@@ -133,6 +134,7 @@ public abstract class ActionPerformer implements IEventParam {
 			Action2PerformerDescription descriptionForMode =
 					Action2PerformerAssignment.getInstance().getAction2PerformerDescription(actionMode);
 			
+			addParam(new Value(Type.simulationObject, Value.VALUE_BY_NAME_EVENT_CAUSER, actor));
 			
 			for (int i = 0; i < descriptionForMode.countFunctions(); i++) {
 				addParam(descriptionForMode.getFunction(i).calculate(actionAndActorProperties));

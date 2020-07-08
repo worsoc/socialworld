@@ -137,6 +137,7 @@ public class ActionCreator extends SocialWorldThread {
 			System.out.println("ActionCreator.calculateReaction(): this.events.size() " + this.events.size());
 		}
 		
+		// TODO one reactor list element type ( a class containing the references to event, stateReactor and hiddenReactor)
 		
 		if ((this.events.size() == 0) ||
 			(this.statesReactor.size() == 0) ||
@@ -146,6 +147,8 @@ public class ActionCreator extends SocialWorldThread {
 		StateSimulationObject stateReactor  = this.statesReactor.remove(0);
 		HiddenSimulationObject hiddenReactor = this.hiddenReactors.remove(0);
 	
+		
+		if ((event == null) || (stateReactor == null) || (hiddenReactor == null)) return;
 		
 		int eventType = event.getEventTypeAsInt();
 		int eventReactionType = stateReactor.getReactionType(eventType);
@@ -169,7 +172,18 @@ public class ActionCreator extends SocialWorldThread {
 				
 			if (reaction != null) {
 				if (!reaction.isToBeIgnored())	{
+					// Logging ...
 					System.out.println("ActionCreator.calculateReaction(): Obj: " + stateReactor.getObjectID() + ": " + reaction.getType().toString() +  "." + reaction.getMode().toString());
+					if (reaction.getType() == ActionType.useWeapon) {
+						if (((ActionAttack) reaction).getTarget() == null) {
+							System.out.println("UseWeapon from object " + stateReactor.getObjectID() + " to target object null"  );
+						}
+						else {
+							System.out.println("UseWeapon from object " + stateReactor.getObjectID() + " to target object " + ((ActionAttack) reaction).getTarget().getObjectID() );
+						}
+					}
+					// ... Logging
+					
 					hiddenReactor.setAction(reaction);
 				}
 			}
@@ -295,7 +309,8 @@ public class ActionCreator extends SocialWorldThread {
 		case touch: action = new ActionHandle(actionProperties); break;
 		case equip: action = new ActionHandle(actionProperties); break;
 		case handleItem: action = new ActionHandle(actionProperties); break;
-		case useWeapon: action = new ActionAttack(actionProperties); break;
+		case useWeapon: 
+			action = new ActionAttack(actionProperties); break;
 		case punch: action = new ActionAttack(actionProperties); break;
 		case hear: action = new ActionHear(actionProperties); break;
 		case talk: action = new ActionSay(actionProperties); break;

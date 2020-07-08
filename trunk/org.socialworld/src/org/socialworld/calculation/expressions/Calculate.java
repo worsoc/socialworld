@@ -12,11 +12,9 @@ public class Calculate extends Expression {
 		
 		Expression main = parseTerm(term, this);
 		
-		setValue(new Value(Type.string,nameResultValue, nameResultValue));
-		setOperation(Expression_Function.sequence);
-		setExpression1(new Expression());   // ignore
-		setExpression2(new Expression());	// ignore
-		setExpression3(main);				// the third expression of sequence returns the evaluation value
+		setValue(new Value(Type.string, nameResultValue, nameResultValue));
+		setOperation(Expression_Function.oneExpression);
+		setExpression1(main);  		
 		
 		if (main.isValid()){
 			setValid();

@@ -271,6 +271,11 @@ public abstract class Event implements Comparable<Event> {
 		
 		if (hasOptionalParam()) {
 			direction = optionalParam.getParam(Value.VALUE_BY_NAME_EVENT_DIRECTION);
+			if (direction.getType().equals(Type.vector)) {
+				// TODO ensure direction is a Direction and not a Vector
+				Vector vectorDirection = (Vector) direction.getValue();
+				direction = new Value(Type.eventProp, new Direction(PropertyName.event_direction, vectorDirection));
+			}
 			return  direction;
 			
 		}

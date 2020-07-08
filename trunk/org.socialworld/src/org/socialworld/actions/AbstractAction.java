@@ -43,7 +43,7 @@ import org.socialworld.objects.access.HiddenSimulationObject;
  * 
  * German:
  * AbstractAction ist die Basisklasse (abstrakte Klasse) für Aktionen der Simlationsobjekte.
- * Die Aktionsobjekte von abgleiteten Klassen werden im ActionMaster verwaltet 
+ * Die Aktionsobjekte von abgeleiteten Klassen werden im ActionMaster verwaltet 
  * und vom ActionHandler zur Ausführung gebracht.
  * 
  * Die Ausführung besteht dabei aus 2 Schritten

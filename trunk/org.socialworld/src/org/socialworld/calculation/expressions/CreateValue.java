@@ -65,14 +65,19 @@ public class CreateValue extends Expression {
 		Object createdObject = null;
 		Value createdValue;
 
+		int indexOrigArgs;
+		
 		ValueArrayList localArguments; 
 
 		switch (valueType) {
 		case action:
 			
 			localArguments = new ValueArrayList();
-			// copy attribute array to local argument array
-			localArguments.add( calculation.copy(arguments.get(0)) );
+			
+			for ( indexOrigArgs = 0; indexOrigArgs < arguments.size(); indexOrigArgs++) {
+				localArguments.add( arguments.get(indexOrigArgs) );
+			}
+			
 			localArguments.add( new Value(Type.actionType, "actiontype", ActionType.ignore) );  
 			localArguments.add( new Value(Type.actionMode, "actionmode", ActionMode.ignore) );  
 			localArguments.add( new Value(Type.floatingpoint, "intensity", 0.0F) );  

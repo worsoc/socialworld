@@ -202,7 +202,6 @@ public class EventMaster extends SocialWorldThread {
 					determinePossiblePercipients();
 					determineInfluenceToPercipients();
 				}
-				
 			}
 			blockedByCalculate = false;
 		}
@@ -287,6 +286,7 @@ public class EventMaster extends SocialWorldThread {
 	 * 			1 ... IGNORE: if the event has no effect to the candidate because of angle
 	 * 			2 ... IGNORE: if the event position is the same to candidate position
 	 * 			3 ... IGNORE: if the event direction is the 0-vector (0,0,0) (and the effect angle is not 360°)
+	 * 			4 ... IGNORE: if there is no event direction ( ERROR!!!)
 	 *          -1 ... IGNORE: if the event has no effect to the candidate because of distance
 	 *                (and in consequence there are no further candidates with effect 
 	 *                	because they must have a greater distance than the actually treated candidate)
@@ -317,23 +317,28 @@ public class EventMaster extends SocialWorldThread {
 			else {
 				Vector vectorDirectionEvent;
 				Direction directionEvent;
-				directionEvent = (Direction) this.eventDirection.getValue();
-				vectorDirectionEvent = directionEvent.getVector(SimulationCluster.event);
-				if (vectorDirectionEvent.is000()) {
-					return 3;
+				if (this.eventDirection != null) {
+					directionEvent = (Direction) this.eventDirection.getValue();
+					vectorDirectionEvent = directionEvent.getVector(SimulationCluster.event);
+					if (vectorDirectionEvent.is000()) {
+						return 3;
+					}
+					else {
+						effectAngleToRadians = Math.toRadians(this.effectAngle);
+						
+						cosineBetweenDirections = direction.getCosPhi(vectorDirectionEvent);
+						angleBetweenDirectionsToRadians = Math.acos(cosineBetweenDirections);
+						
+						if (angleBetweenDirectionsToRadians <= effectAngleToRadians)
+							return 0;
+						else
+							return 1;
+					}
 				}
 				else {
-					effectAngleToRadians = Math.toRadians(this.effectAngle);
-					
-					cosineBetweenDirections = direction.getCosPhi(vectorDirectionEvent);
-					angleBetweenDirectionsToRadians = Math.acos(cosineBetweenDirections);
-					
-					if (angleBetweenDirectionsToRadians <= effectAngleToRadians)
-						return 0;
-					else
-						return 1;
+					System.out.println("EventMaster.checkIgnoreCandidate(): this.eventDirection is null ");
+					return 4;
 				}
-				
 			}
 			
 		}

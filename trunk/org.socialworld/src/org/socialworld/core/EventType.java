@@ -277,7 +277,7 @@ public enum EventType {
 			
 					
 		case candidatesSayNormal: return 10000.0F; 
-		case candidatesSayScream: return 50000.0F; 
+		case candidatesSayScream: return 40000.0F; 
 		case candidatesSayWhisper: return 1000.0F; 
 
 		case percipientExists: return 100000.0F;

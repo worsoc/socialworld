@@ -97,12 +97,12 @@ public class Move extends ActionPerformer {
     		addProperty(property);
     	}
 
-      	property = properties.getValue(Value.VALUE_BY_NAME_ACTION_MOVE_ACCELERATION);
+     	property = properties.getValue(Value.VALUE_BY_NAME_ACTION_MOVE_ACCELERATION);
     	if (property.isValid()) {
     		addProperty(property);
     	}
 
-      	property = properties.getValue(Value.VALUE_BY_NAME_ACTION_MOVE_VELOCITY);
+     	property = properties.getValue(Value.VALUE_BY_NAME_ACTION_MOVE_VELOCITY);
     	if (property.isValid()) {
     		addProperty(property);
     	}

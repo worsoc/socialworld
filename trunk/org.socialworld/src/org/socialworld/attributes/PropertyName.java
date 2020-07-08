@@ -53,7 +53,9 @@ public enum PropertyName {
 	action_position(3001001),
 	
 	position_vector(4001001),
+	
 	direction_vector(4002001),
+	direction_power(4002002),
 	
 	vector(5001010),
 	vector_x(5001011),
