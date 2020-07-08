@@ -21,6 +21,7 @@
 */
 package org.socialworld.calculation;
 
+import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.attributes.Time;
 
@@ -28,28 +29,29 @@ public class Value {
 
 	//public static String VALUE_BY_NAME_SIMOBJ_ATTRIBUTES = "attributes";
 
-	public static final String CREATE_ACTION_EXPRESSION_SUFFIX_ACTION = "Action";
+	public static final String PRAEFIX_ACTION = "action_";
 
-	public static final String VALUE_BY_NAME_ACTION_INTENSITY = "intensityAction";
-	public static final String VALUE_BY_NAME_ACTION_WEAPON = "weaponAction";
-	public static final String VALUE_BY_NAME_ACTION_ITEM1 = "item1Action";
-	public static final String VALUE_BY_NAME_ACTION_ITEM2 = "item2Action";
-	public static final String VALUE_BY_NAME_ACTION_DIRECTION = "directionAction";
-	public static final String VALUE_BY_NAME_ACTION_TARGET = "targetAction";
-	public static final String VALUE_BY_NAME_ACTION_SENTENCE = "sentenceAction";
-	public static final String VALUE_BY_NAME_ACTION_SENTENCETYPE = "sentenceTypeAction";
-	public static final String VALUE_BY_NAME_ACTION_ANSWERS = "answersAction";
+	public static final String VALUE_BY_NAME_ACTION_INTENSITY = PRAEFIX_ACTION + "intensity";
+	public static final String VALUE_BY_NAME_ACTION_WEAPON = PRAEFIX_ACTION + "weapon";
+	public static final String VALUE_BY_NAME_ACTION_ITEM1 = PRAEFIX_ACTION + "item1";
+	public static final String VALUE_BY_NAME_ACTION_ITEM2 = PRAEFIX_ACTION + "item2";
+	public static final String VALUE_BY_NAME_ACTION_DIRECTION = PRAEFIX_ACTION + "direction";
+	public static final String VALUE_BY_NAME_ACTION_TARGET = PRAEFIX_ACTION + "target";
+	public static final String VALUE_BY_NAME_ACTION_SENTENCE = PRAEFIX_ACTION + "sentence";
+	public static final String VALUE_BY_NAME_ACTION_SENTENCETYPE = PRAEFIX_ACTION + "sentenceType";
+	public static final String VALUE_BY_NAME_ACTION_ANSWERS = PRAEFIX_ACTION + "answers";
 	
-	public static final String VALUE_BY_NAME_ACTION_MOVE_ACCELERATION = "acceleration";
-	public static final String VALUE_BY_NAME_ACTION_MOVE_VELOCITY = "velocity";
-	public static final String VALUE_BY_NAME_ACTION_SAY_LOUDNESS = "loudness";
-	public static final String VALUE_BY_NAME_ACTION_EQUIP_ITEM = "item";
-	public static final String VALUE_BY_NAME_ACTION_EQUIP_PLACE = "inventoryPlace";
-	public static final String VALUE_BY_NAME_ACTION_BF_ITEM = "item";
-	public static final String VALUE_BY_NAME_ACTION_BF_ITEMDRINK = "itemDrink";
-	public static final String VALUE_BY_NAME_ACTION_BF_ITEMISDRINKABLE = "itemIsDrinkable";
-	public static final String VALUE_BY_NAME_ACTION_BF_ITEMEAT = "itemEat";
-	public static final String VALUE_BY_NAME_ACTION_BF_ITEMISEATABLE = "itemIsEatable";
+	public static final String VALUE_BY_NAME_ACTION_MOVE_ACCELERATION = ActionType.move.getPraefix() + "acceleration";
+	public static final String VALUE_BY_NAME_ACTION_MOVE_VELOCITY = ActionType.move.getPraefix() + "velocity";
+	public static final String VALUE_BY_NAME_ACTION_MOVE_ENDPOSITION = ActionType.move.getPraefix() + "endposition";
+	public static final String VALUE_BY_NAME_ACTION_SAY_LOUDNESS = ActionType.say.getPraefix() + "loudness";
+	public static final String VALUE_BY_NAME_ACTION_EQUIP_ITEM = ActionType.equip.getPraefix() + "item";
+	public static final String VALUE_BY_NAME_ACTION_EQUIP_PLACE = ActionType.equip.getPraefix() + "inventoryPlace";
+	public static final String VALUE_BY_NAME_ACTION_BF_ITEM =  ActionType.bodilyFunction.getPraefix() + "item";  
+	public static final String VALUE_BY_NAME_ACTION_BF_ITEMDRINK = ActionType.bodilyFunction.getPraefix() + "itemDrink";
+	public static final String VALUE_BY_NAME_ACTION_BF_ITEMISDRINKABLE = ActionType.bodilyFunction.getPraefix() + "itemIsDrinkable";
+	public static final String VALUE_BY_NAME_ACTION_BF_ITEMEAT = ActionType.bodilyFunction.getPraefix() + "itemEat";
+	public static final String VALUE_BY_NAME_ACTION_BF_ITEMISEATABLE =  ActionType.bodilyFunction.getPraefix() + "itemIsEatable";
 
 	
 	public static final String VALUE_BY_NAME_EVENT_PARAMS = "eventparams";

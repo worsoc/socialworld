@@ -87,10 +87,10 @@ public enum ActionType {
 	private static String[] STANDARD_PROPERTY_NAMES = {"actiontype", "actionmode", "intensity", "mintime", "maxtime", "priority", "duration"};
 	private static String[] NO_FURTHER_PROPERTY_NAMES = {};
 	private static String[] FURTHER_PROPERTY_NAMES___BODILYFUNCTIONS = {};
-	private static String[] FURTHER_PROPERTY_NAMES___MOVE = {"endposition",Value.VALUE_BY_NAME_ACTION_DIRECTION};
+	private static String[] FURTHER_PROPERTY_NAMES___MOVE = {Value.VALUE_BY_NAME_ACTION_MOVE_ENDPOSITION,Value.VALUE_BY_NAME_ACTION_DIRECTION};
 	private static String[] FURTHER_PROPERTY_NAMES___EXAMINE = {Value.VALUE_BY_NAME_ACTION_TARGET};
 	private static String[] FURTHER_PROPERTY_NAMES___TOUCH = {Value.VALUE_BY_NAME_ACTION_TARGET,Value.VALUE_BY_NAME_ACTION_DIRECTION};
-	private static String[] FURTHER_PROPERTY_NAMES___EQUIP = {"item","inventoryPlace"};
+	private static String[] FURTHER_PROPERTY_NAMES___EQUIP = {Value.VALUE_BY_NAME_ACTION_EQUIP_ITEM,Value.VALUE_BY_NAME_ACTION_EQUIP_PLACE};
 	private static String[] FURTHER_PROPERTY_NAMES___HANDLEITEM = {Value.VALUE_BY_NAME_ACTION_TARGET,Value.VALUE_BY_NAME_ACTION_DIRECTION};
 	private static String[] FURTHER_PROPERTY_NAMES___USEWEAPON = {Value.VALUE_BY_NAME_ACTION_TARGET};
 	private static String[] FURTHER_PROPERTY_NAMES___PUNCH = {Value.VALUE_BY_NAME_ACTION_TARGET};
@@ -159,6 +159,10 @@ public enum ActionType {
 
 		return copy;
 
+	}
+	
+	public  String getPraefix() {
+		return name() + "_";
 	}
 
 }
