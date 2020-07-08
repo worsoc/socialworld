@@ -61,7 +61,7 @@ public class ActionCreator extends SocialWorldThread {
 	private List<StateSimulationObject> statesActor;
 	private List<HiddenSimulationObject> hiddenActors;
 	
-	private static String namePropertyActionType = "actiontype";
+	private static String namePropertyActionType = Value.VALUE_BY_NAME_ACTION_TYPE;
 	
 	private int sleepTime = 5;
 	private int sizeThreashold;

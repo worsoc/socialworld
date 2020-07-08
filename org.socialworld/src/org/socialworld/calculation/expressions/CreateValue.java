@@ -78,13 +78,13 @@ public class CreateValue extends Expression {
 				localArguments.add( arguments.get(indexOrigArgs) );
 			}
 			
-			localArguments.add( new Value(Type.actionType, "actiontype", ActionType.ignore) );  
-			localArguments.add( new Value(Type.actionMode, "actionmode", ActionMode.ignore) );  
-			localArguments.add( new Value(Type.floatingpoint, "intensity", 0.0F) );  
-			localArguments.add( new Value(Type.time, "mintime", new Time(true, 0)) );  
-			localArguments.add( new Value(Type.time, "maxtime", new Time(true, 0)) );  
-			localArguments.add( new Value(Type.integer, "priority", 0) );  
-			localArguments.add( new Value(Type.longinteger, "duration", 0L) ); 
+			localArguments.add( new Value(Type.actionType, Value.VALUE_BY_NAME_ACTION_TYPE, ActionType.ignore) );  
+			localArguments.add( new Value(Type.actionMode, Value.VALUE_BY_NAME_ACTION_MODE, ActionMode.ignore) );  
+			localArguments.add( new Value(Type.floatingpoint, Value.VALUE_BY_NAME_ACTION_INTENSITY, 0.0F) );  
+			localArguments.add( new Value(Type.time, Value.VALUE_BY_NAME_ACTION_MINTIME, new Time(true, 0)) );  
+			localArguments.add( new Value(Type.time, Value.VALUE_BY_NAME_ACTION_MAXTIME, new Time(true, 0)) );  
+			localArguments.add( new Value(Type.integer, Value.VALUE_BY_NAME_ACTION_PRIORITY, 0) );  
+			localArguments.add( new Value(Type.longinteger, Value.VALUE_BY_NAME_ACTION_DURATION, 0L) ); 
 			
 			evaluateExpression2(localArguments);
 					

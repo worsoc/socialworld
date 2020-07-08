@@ -80,27 +80,27 @@ public class State2ActionDescriptionPool extends DescriptionPool {
 		Expression startExpression = Nothing.getInstance();
 
 		lines = new ArrayList<String>(1);
-		lines.add("WENN curiosity > 60 & curiosity < 65 & power > 30 DANN <ACTIONTYPE><Const>1</Const></ACTIONTYPE><ACTIONMODE><Const>11</Const></ACTIONMODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>5000</Now+N></MAXTIME><PRIORITY><Const>50</Const></PRIORITY><INTENSITY><MX+N>8;1.5;23</MX+N></INTENSITY><DURATION><Const>2000</Const></DURATION><DIRECTION><Const>(2,7,0)</Const></DIRECTION>");
+		lines.add("WENN curiosity > 60 & curiosity < 65 & power > 30 DANN <TYPE><Const>1</Const></TYPE><MODE><Const>11</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>5000</Now+N></MAXTIME><PRIORITY><Const>50</Const></PRIORITY><INTENSITY><MX+N>8;1.5;23</MX+N></INTENSITY><DURATION><Const>2000</Const></DURATION><DIRECTION><Const>(2,7,0)</Const></DIRECTION>");
 		expressions.add(lines);
 
 		lines = new ArrayList<String>(1);
-		lines.add("WENN hunger > 45 & courage > 45 DANN <ACTIONTYPE><Const>4</Const></ACTIONTYPE><ACTIONMODE><Const>41</Const></ACTIONMODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>50000</Now+N></MAXTIME><PRIORITY><Const>100</Const></PRIORITY><INTENSITY><MX+N>7;1;0</MX+N></INTENSITY><DURATION><Const>1000</Const></DURATION>");
+		lines.add("WENN hunger > 45 & courage > 45 DANN <TYPE><Const>4</Const></TYPE><MODE><Const>41</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>50000</Now+N></MAXTIME><PRIORITY><Const>100</Const></PRIORITY><INTENSITY><MX+N>7;1;0</MX+N></INTENSITY><DURATION><Const>1000</Const></DURATION>");
 		expressions.add(lines);
 
 		lines = new ArrayList<String>(1);
-		lines.add("WENN hunger > 45 & courage > 45 DANN <ACTIONTYPE><Const>4</Const></ACTIONTYPE><ACTIONMODE><Const>44</Const></ACTIONMODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>50000</Now+N></MAXTIME><PRIORITY><Const>99</Const></PRIORITY><INTENSITY><MX+N>7;1;0</MX+N></INTENSITY><DURATION><Const>1000</Const></DURATION><INVENTORYPLACE><Const>3</Const></INVENTORYPLACE>");
+		lines.add("WENN hunger > 45 & courage > 45 DANN <TYPE><Const>4</Const></TYPE><MODE><Const>44</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>50000</Now+N></MAXTIME><PRIORITY><Const>99</Const></PRIORITY><INTENSITY><MX+N>7;1;0</MX+N></INTENSITY><DURATION><Const>1000</Const></DURATION><INVENTORYPLACE><Const>3</Const></INVENTORYPLACE>");
 		expressions.add(lines);
 		
 		lines = new ArrayList<String>(1);
-		lines.add("WENN mood > 30 & mood < 40 & power > 50 DANN <ACTIONTYPE><Const>1</Const></ACTIONTYPE><ACTIONMODE><Const>12</Const></ACTIONMODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>5000</Now+N></MAXTIME><PRIORITY><Const>60</Const></PRIORITY><INTENSITY><MX+N>8;1;0</MX+N></INTENSITY><DURATION><Const>5000</Const></DURATION><DIRECTION><Const>(-3.21,2.09,0)</Const></DIRECTION>");
+		lines.add("WENN mood > 30 & mood < 40 & power > 50 DANN <TYPE><Const>1</Const></TYPE><MODE><Const>12</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>5000</Now+N></MAXTIME><PRIORITY><Const>60</Const></PRIORITY><INTENSITY><MX+N>8;1;0</MX+N></INTENSITY><DURATION><Const>5000</Const></DURATION><DIRECTION><Const>(-3.21,2.09,0)</Const></DIRECTION>");
 		expressions.add(lines);
 
 		lines = new ArrayList<String>(1);
-		lines.add("WENN courage < 15 & mood < 15 & power > 15 & power < 25 DANN <ACTIONTYPE><Const>10</Const></ACTIONTYPE><ACTIONMODE><Const>102</Const></ACTIONMODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>5000</Now+N></MAXTIME><PRIORITY><Const>70</Const></PRIORITY><INTENSITY><MX+N>8;3;0</MX+N></INTENSITY><DURATION><Const>1000</Const></DURATION>");
+		lines.add("WENN courage < 15 & mood < 15 & power > 15 & power < 25 DANN <TYPE><Const>10</Const></TYPE><MODE><Const>102</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>5000</Now+N></MAXTIME><PRIORITY><Const>70</Const></PRIORITY><INTENSITY><MX+N>8;3;0</MX+N></INTENSITY><DURATION><Const>1000</Const></DURATION>");
 		expressions.add(lines);
 
 		lines = new ArrayList<String>(1);
-		lines.add("WENN tiredness > 50 DANN <ACTIONTYPE><Const>0</Const></ACTIONTYPE><ACTIONMODE><Const>1</Const></ACTIONMODE><MINTIME><Now+N>10000</Now+N></MINTIME><MAXTIME><Now+N>100000</Now+N></MAXTIME><PRIORITY><Const>40</Const></PRIORITY><INTENSITY><MX+N>4;1.5;0</MX+N></INTENSITY><DURATION><Const>610000</Const></DURATION>");
+		lines.add("WENN tiredness > 50 DANN <TYPE><Const>0</Const></TYPE><MODE><Const>1</Const></MODE><MINTIME><Now+N>10000</Now+N></MINTIME><MAXTIME><Now+N>100000</Now+N></MAXTIME><PRIORITY><Const>40</Const></PRIORITY><INTENSITY><MX+N>4;1.5;0</MX+N></INTENSITY><DURATION><Const>610000</Const></DURATION>");
 		expressions.add(lines);
 
 
