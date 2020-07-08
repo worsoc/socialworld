@@ -131,7 +131,11 @@ public class CreateActionExpression extends Branching {
 				
 				propertyName = propertyNames[indexPropertyNames];
 				
-				if (i == 1) {
+				if (i == 0) {
+					// standard propertyNames
+					tag = propertyName.substring(Value.PRAEFIX_ACTION.length()).toUpperCase();
+				}
+				else {
 					// further propertyNames
 					if (propertyName.indexOf(Value.PRAEFIX_ACTION) == 0) {
 						tag = propertyName.substring(Value.PRAEFIX_ACTION.length()).toUpperCase();
@@ -139,10 +143,6 @@ public class CreateActionExpression extends Branching {
 					else {
 						tag = propertyName.substring(actionType.getPraefix().length()).toUpperCase();
 					}
-				}
-				else {
-					// standard propertyNames
-					tag = propertyName.toUpperCase();
 				}
 				
 				tagValue = ParseExpressionStrings.getTagValue(partDANN, tag);
@@ -177,13 +177,13 @@ public class CreateActionExpression extends Branching {
 		Type type;
 		
 		switch (property) {
-		case  "actiontype": type = Type.actionType; break;
-		case  "actionmode": type = Type.actionMode; break;
-		case  "mintime": type = Type.time; break;
-		case  "maxtime": type = Type.time; break;
-		case  "intensity": type = Type.floatingpoint; break;
-		case  "priority": type = Type.integer; break;
-		case  "duration": type = Type.longinteger; break;
+		case  Value.VALUE_BY_NAME_ACTION_TYPE: type = Type.actionType; break;
+		case  Value.VALUE_BY_NAME_ACTION_MODE: type = Type.actionMode; break;
+		case  Value.VALUE_BY_NAME_ACTION_MINTIME: type = Type.time; break;
+		case  Value.VALUE_BY_NAME_ACTION_MAXTIME: type = Type.time; break;
+		case  Value.VALUE_BY_NAME_ACTION_INTENSITY: type = Type.floatingpoint; break;
+		case  Value.VALUE_BY_NAME_ACTION_PRIORITY: type = Type.integer; break;
+		case  Value.VALUE_BY_NAME_ACTION_DURATION: type = Type.longinteger; break;
 		case  Value.VALUE_BY_NAME_ACTION_DIRECTION: type = Type.vector; break;
 		case  Value.VALUE_BY_NAME_ACTION_TARGET:	type = Type.simulationObject; break;
 		default: type = Type.nothing;

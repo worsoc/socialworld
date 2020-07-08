@@ -27,11 +27,20 @@ import org.socialworld.attributes.Time;
 
 public class Value {
 
-	//public static String VALUE_BY_NAME_SIMOBJ_ATTRIBUTES = "attributes";
 
 	public static final String PRAEFIX_ACTION = "action_";
+	public static final String PRAEFIX_EVENT = "event_";
 
+	public static final String PRAEFIX_WEAPON = "weapon_";
+
+	public static final String VALUE_BY_NAME_ACTION_TYPE = PRAEFIX_ACTION + "type";
+	public static final String VALUE_BY_NAME_ACTION_MODE = PRAEFIX_ACTION + "mode";
 	public static final String VALUE_BY_NAME_ACTION_INTENSITY = PRAEFIX_ACTION + "intensity";
+	public static final String VALUE_BY_NAME_ACTION_PRIORITY = PRAEFIX_ACTION + "priority";
+	public static final String VALUE_BY_NAME_ACTION_MINTIME = PRAEFIX_ACTION + "mintime";
+	public static final String VALUE_BY_NAME_ACTION_MAXTIME = PRAEFIX_ACTION + "maxtime";
+	public static final String VALUE_BY_NAME_ACTION_DURATION = PRAEFIX_ACTION + "duration";
+	
 	public static final String VALUE_BY_NAME_ACTION_WEAPON = PRAEFIX_ACTION + "weapon";
 	public static final String VALUE_BY_NAME_ACTION_ITEM1 = PRAEFIX_ACTION + "item1";
 	public static final String VALUE_BY_NAME_ACTION_ITEM2 = PRAEFIX_ACTION + "item2";
@@ -54,23 +63,16 @@ public class Value {
 	public static final String VALUE_BY_NAME_ACTION_BF_ITEMISEATABLE =  ActionType.bodilyFunction.getPraefix() + "itemIsEatable";
 
 	
-	public static final String VALUE_BY_NAME_EVENT_PARAMS = "eventparams";
 	public static final String VALUE_BY_NAME_EVENT = "event";
-	public static final String VALUE_BY_NAME_EVENT_CAUSER = "causerEvent";
-	public static final String VALUE_BY_NAME_EVENT_DIRECTION = "directionEvent";
-	public static final String VALUE_BY_NAME_EVENT_INTENSITY = "intensityEvent";
+	public static final String VALUE_BY_NAME_EVENT_PARAMS = PRAEFIX_EVENT + "params";
+	public static final String VALUE_BY_NAME_EVENT_CAUSER = PRAEFIX_EVENT + "causer";
+	public static final String VALUE_BY_NAME_EVENT_DIRECTION = PRAEFIX_EVENT + "direction";
+	public static final String VALUE_BY_NAME_EVENT_INTENSITY = PRAEFIX_EVENT + "intensity";
 
-//	public static String VALUE_BY_NAME_SIMOBJ_DIRECTION_CHEST = "directionChest";
-//	public static String VALUE_BY_NAME_SIMOBJ_DIRECTION_VIEW = "directionView";
-//	public static String VALUE_BY_NAME_SIMOBJ_DIRECTION_ACTIVEMOVE = "directionActiveMove";
 
-//	public static String VALUE_BY_NAME_SIMOBJ_POSITION_VECTOR = "position";
-//	public static String VALUE_BY_NAME_SIMOBJ_MOVE_DIRECTION = "directionMove";
-//	public static String VALUE_BY_NAME_SIMOBJ_MOVE_POWER = "powerMove";
-
-	public static final String VALUE_BY_NAME_WEAPON_MASS = "mass";
-	public static final String VALUE_BY_NAME_WEAPON_HARDNESS = "hardness";
-	public static final String VALUE_BY_NAME_WEAPON_SHARPNESS = "sharpness";
+	public static final String VALUE_BY_NAME_WEAPON_MASS = PRAEFIX_WEAPON + "mass";
+	public static final String VALUE_BY_NAME_WEAPON_HARDNESS = PRAEFIX_WEAPON + "hardness";
+	public static final String VALUE_BY_NAME_WEAPON_SHARPNESS = PRAEFIX_WEAPON + "sharpness";
 	
 	public static final String VALUE_BY_NAME_KNOWLEDGE_ELEMENT_PROPS = "knowledgeElementProperties";
 	

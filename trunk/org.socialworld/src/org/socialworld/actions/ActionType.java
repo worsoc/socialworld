@@ -84,7 +84,11 @@ public enum ActionType {
 		return index;
 	}
 	
-	private static String[] STANDARD_PROPERTY_NAMES = {"actiontype", "actionmode", "intensity", "mintime", "maxtime", "priority", "duration"};
+	private static String[] STANDARD_PROPERTY_NAMES = {Value.VALUE_BY_NAME_ACTION_TYPE, 
+			Value.VALUE_BY_NAME_ACTION_MODE, Value.VALUE_BY_NAME_ACTION_INTENSITY, 
+			Value.VALUE_BY_NAME_ACTION_MINTIME, Value.VALUE_BY_NAME_ACTION_MAXTIME,
+			Value.VALUE_BY_NAME_ACTION_PRIORITY, Value.VALUE_BY_NAME_ACTION_DURATION};
+
 	private static String[] NO_FURTHER_PROPERTY_NAMES = {};
 	private static String[] FURTHER_PROPERTY_NAMES___BODILYFUNCTIONS = {};
 	private static String[] FURTHER_PROPERTY_NAMES___MOVE = {Value.VALUE_BY_NAME_ACTION_MOVE_ENDPOSITION,Value.VALUE_BY_NAME_ACTION_DIRECTION};
