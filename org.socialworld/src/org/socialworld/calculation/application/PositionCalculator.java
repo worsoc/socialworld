@@ -133,7 +133,13 @@ public class PositionCalculator extends SocialWorldThread {
 		powerMoveObject = directionMoveObject.getPower();
 		
 		directionEvent = (Direction) event.getDirection().getValue();
-		vectorEvent = directionEvent.getVector(SimulationCluster.position);
+		if (directionEvent != null) {
+			vectorEvent = directionEvent.getVector(SimulationCluster.position);
+		}
+		else {
+			// TODO directionEvent is null
+			vectorEvent = new Vector(0,0,0);
+		}
 		powerEvent = event.getStrength();
 		
 		if (!vectorEvent.isNormalized()) vectorEvent.normalize();

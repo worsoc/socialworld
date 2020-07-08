@@ -123,12 +123,13 @@ public class PropertyProtection {
 		for (int index = 0; index < this.useAsPermissions.length; index++) {
 			if  (this.useAsPermissions[index].equals(useAsPermission)) return true;
 		}
-		
-		return false;
+		return true;
+// TODO 		return false;
 		
 	}
 	
 	public boolean checkHasGetPermission(SimulationCluster cluster) {
+		
 		
 		// TODO check whether there is needed an extra method for checking get permission
 		
@@ -151,7 +152,8 @@ public class PropertyProtection {
 			
 		}
 
-		return false;
+		return true;
+		//TODO return false;
 		
 	}
 

@@ -27,6 +27,7 @@ import org.socialworld.actions.ActionType;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
 import org.socialworld.calculation.Type;
+import org.socialworld.calculation.Value;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.datasource.parsing.ParseExpressionStrings;
 
@@ -103,29 +104,43 @@ public class CreateActionExpression extends Branching {
 		Expression[] sequence = new Expression[2];
 		Expression createAction;
 		
-		String[] functionTags = {"Const", "Table", "VSPE", "MX+N","MLogX+N", "MExpX+N","Now+N"};
+		String[] functionTags = {"Const", "Table", "VSPE", "MX+N","MLogX+N", "MExpX+N","Now+N", "GetEvParm"};
 		String[] function;
 		
 		int posDann = line.indexOf("DANN");
 		
 		partDANN = line.substring(posDann);
 		
-		String tagValue = "";
 		String[] propertyNames;
 		String propertyName;
+		int positionInString;
+		String tag;
+		String tagValue = "";
 		ActionType actionType = ActionType.ignore;
 		
 		for (int i = 0; i < 2; i++)
 		{
-			if (i==0) 
+			if (i==0) {
 				propertyNames = ActionType.getStandardPropertyNames();
-			else
+			}
+			else {
 				propertyNames = actionType.getFurtherPropertyNames();
+			}
 			
 			for (int indexPropertyNames = 0; indexPropertyNames < propertyNames.length; indexPropertyNames++) {
 				
 				propertyName = propertyNames[indexPropertyNames];
-				tagValue = ParseExpressionStrings.getTagValue(partDANN, propertyName.toUpperCase());
+				positionInString = propertyName.indexOf(Value.CREATE_ACTION_EXPRESSION_SUFFIX_ACTION);
+				if (positionInString > 0) {
+					tag = propertyName.substring(0, positionInString).toUpperCase();
+				}
+				else {
+					tag = propertyName.toUpperCase();
+				}
+				
+				tagValue = ParseExpressionStrings.getTagValue(partDANN, tag);
+				if (tagValue.length() == 0) continue;
+				
 				function = ParseExpressionStrings.getTagValue(tagValue, functionTags);
 				actionValue = getFunctionExpression(propertyName, function);
 				
@@ -162,7 +177,8 @@ public class CreateActionExpression extends Branching {
 		case  "intensity": type = Type.floatingpoint; break;
 		case  "priority": type = Type.integer; break;
 		case  "duration": type = Type.longinteger; break;
-		case  "direction": type = Type.vector; break;
+		case  Value.VALUE_BY_NAME_ACTION_DIRECTION: type = Type.vector; break;
+		case  Value.VALUE_BY_NAME_ACTION_TARGET:	type = Type.simulationObject; break;
 		default: type = Type.nothing;
 		}
 		
@@ -189,6 +205,9 @@ public class CreateActionExpression extends Branching {
 		case "MLogX+N":		result = new MLogXPlusN(function[1]);  break;
 		case "MExpX+N":		result = new MExpXPlusN(function[1]);  break;
 		case "Now+N":		result = new CreateValue(Type.time, new Constant(calculation.createValue(Type.longinteger,  Integer.parseInt(function[1] )))); break;
+		case "GetEvParm":	
+			result = new GetValueFromValueList(Value.VALUE_BY_NAME_EVENT_PARAMS, function[1]);  break;
+			// TODO "GetEvParm"
 		}
 		return result;
 		

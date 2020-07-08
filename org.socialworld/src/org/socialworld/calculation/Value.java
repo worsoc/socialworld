@@ -28,32 +28,35 @@ public class Value {
 
 	//public static String VALUE_BY_NAME_SIMOBJ_ATTRIBUTES = "attributes";
 
-	public static String VALUE_BY_NAME_ACTION_INTENSITY = "intensityAction";
-	public static String VALUE_BY_NAME_ACTION_WEAPON = "weaponAction";
-	public static String VALUE_BY_NAME_ACTION_ITEM1 = "item1Action";
-	public static String VALUE_BY_NAME_ACTION_ITEM2 = "item2Action";
-	public static String VALUE_BY_NAME_ACTION_DIRECTION = "directionAction";
-	public static String VALUE_BY_NAME_ACTION_TARGET = "targetAction";
-	public static String VALUE_BY_NAME_ACTION_SENTENCE = "sentenceAction";
-	public static String VALUE_BY_NAME_ACTION_SENTENCETYPE = "sentenceTypeAction";
-	public static String VALUE_BY_NAME_ACTION_ANSWERS = "answersAction";
+	public static final String CREATE_ACTION_EXPRESSION_SUFFIX_ACTION = "Action";
+
+	public static final String VALUE_BY_NAME_ACTION_INTENSITY = "intensityAction";
+	public static final String VALUE_BY_NAME_ACTION_WEAPON = "weaponAction";
+	public static final String VALUE_BY_NAME_ACTION_ITEM1 = "item1Action";
+	public static final String VALUE_BY_NAME_ACTION_ITEM2 = "item2Action";
+	public static final String VALUE_BY_NAME_ACTION_DIRECTION = "directionAction";
+	public static final String VALUE_BY_NAME_ACTION_TARGET = "targetAction";
+	public static final String VALUE_BY_NAME_ACTION_SENTENCE = "sentenceAction";
+	public static final String VALUE_BY_NAME_ACTION_SENTENCETYPE = "sentenceTypeAction";
+	public static final String VALUE_BY_NAME_ACTION_ANSWERS = "answersAction";
 	
-	public static String VALUE_BY_NAME_ACTION_MOVE_ACCELERATION = "acceleration";
-	public static String VALUE_BY_NAME_ACTION_MOVE_VELOCITY = "velocity";
-	public static String VALUE_BY_NAME_ACTION_SAY_LOUDNESS = "loudness";
-	public static String VALUE_BY_NAME_ACTION_EQUIP_ITEM = "item";
-	public static String VALUE_BY_NAME_ACTION_EQUIP_PLACE = "inventoryPlace";
-	public static String VALUE_BY_NAME_ACTION_BF_ITEM = "item";
-	public static String VALUE_BY_NAME_ACTION_BF_ITEMDRINK = "itemDrink";
-	public static String VALUE_BY_NAME_ACTION_BF_ITEMISDRINKABLE = "itemIsDrinkable";
-	public static String VALUE_BY_NAME_ACTION_BF_ITEMEAT = "itemEat";
-	public static String VALUE_BY_NAME_ACTION_BF_ITEMISEATABLE = "itemIsEatable";
+	public static final String VALUE_BY_NAME_ACTION_MOVE_ACCELERATION = "acceleration";
+	public static final String VALUE_BY_NAME_ACTION_MOVE_VELOCITY = "velocity";
+	public static final String VALUE_BY_NAME_ACTION_SAY_LOUDNESS = "loudness";
+	public static final String VALUE_BY_NAME_ACTION_EQUIP_ITEM = "item";
+	public static final String VALUE_BY_NAME_ACTION_EQUIP_PLACE = "inventoryPlace";
+	public static final String VALUE_BY_NAME_ACTION_BF_ITEM = "item";
+	public static final String VALUE_BY_NAME_ACTION_BF_ITEMDRINK = "itemDrink";
+	public static final String VALUE_BY_NAME_ACTION_BF_ITEMISDRINKABLE = "itemIsDrinkable";
+	public static final String VALUE_BY_NAME_ACTION_BF_ITEMEAT = "itemEat";
+	public static final String VALUE_BY_NAME_ACTION_BF_ITEMISEATABLE = "itemIsEatable";
 
 	
-	public static String VALUE_BY_NAME_EVENT_PARAMS = "eventparams";
-	public static String VALUE_BY_NAME_EVENT = "event";
-	public static String VALUE_BY_NAME_EVENT_DIRECTION = "directionEvent";
-	public static String VALUE_BY_NAME_EVENT_INTENSITY = "intensityEvent";
+	public static final String VALUE_BY_NAME_EVENT_PARAMS = "eventparams";
+	public static final String VALUE_BY_NAME_EVENT = "event";
+	public static final String VALUE_BY_NAME_EVENT_CAUSER = "causerEvent";
+	public static final String VALUE_BY_NAME_EVENT_DIRECTION = "directionEvent";
+	public static final String VALUE_BY_NAME_EVENT_INTENSITY = "intensityEvent";
 
 //	public static String VALUE_BY_NAME_SIMOBJ_DIRECTION_CHEST = "directionChest";
 //	public static String VALUE_BY_NAME_SIMOBJ_DIRECTION_VIEW = "directionView";
@@ -63,14 +66,14 @@ public class Value {
 //	public static String VALUE_BY_NAME_SIMOBJ_MOVE_DIRECTION = "directionMove";
 //	public static String VALUE_BY_NAME_SIMOBJ_MOVE_POWER = "powerMove";
 
-	public static String VALUE_BY_NAME_WEAPON_MASS = "mass";
-	public static String VALUE_BY_NAME_WEAPON_HARDNESS = "hardness";
-	public static String VALUE_BY_NAME_WEAPON_SHARPNESS = "sharpness";
+	public static final String VALUE_BY_NAME_WEAPON_MASS = "mass";
+	public static final String VALUE_BY_NAME_WEAPON_HARDNESS = "hardness";
+	public static final String VALUE_BY_NAME_WEAPON_SHARPNESS = "sharpness";
 	
-	public static String VALUE_BY_NAME_KNOWLEDGE_ELEMENT_PROPS = "knowledgeElementProperties";
+	public static final String VALUE_BY_NAME_KNOWLEDGE_ELEMENT_PROPS = "knowledgeElementProperties";
 	
 	
-	public static String VALUE_NAME_UNUSED_BECAUSE_TEMPORARY = "temp";
+	public static final String VALUE_NAME_UNUSED_BECAUSE_TEMPORARY = "temp";
 
 	private Type type;
 	private String name = "";

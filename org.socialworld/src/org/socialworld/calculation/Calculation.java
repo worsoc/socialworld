@@ -351,10 +351,18 @@ public class Calculation {
 	}
 	
 	public Value copy(Value original) {
-		if (original.isValid())
-			return createValue(original.getType(), original.getValue() );
-		else
-			return nothing;
+		
+		Value result;
+		
+		if (original.isValid()) {
+			result = createValue(original.getType(), original.getValue() );
+			result.setName(original.getName());
+		}
+		else {
+			result = nothing;
+		}
+		
+		return result;
 	}
 	
 	

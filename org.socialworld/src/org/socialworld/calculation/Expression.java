@@ -196,9 +196,12 @@ public class Expression {
 						
 				case argumentValueByName:
 					
-					tmp = arguments.getValue( (String) value.getValue());
+					name = (String) value.getValue();
+					tmp = arguments.getValue(name );
+					tmp = calculation.copy(tmp);
+					
 					name = (String) expression1.evaluate(arguments).getValue();
-					if (name.length() > 0) {
+					if (name != null && name.length() > 0) {
 							tmp.changeName(name);
 					}
  					return tmp;
@@ -347,9 +350,11 @@ public class Expression {
 					
 				case oneExpression:
 					tmp = expression1.evaluate(arguments);
+					tmp = calculation.copy(tmp);
 					if (this.value != null) {
-						if (this.value.getName().length() > 0) {
-							tmp.changeName(this.value.getName());
+						name = (String)this.value.getValue();
+						if (name.length() > 0) {
+							tmp.changeName(name);
 						}
 					}
 					return tmp;
@@ -358,27 +363,42 @@ public class Expression {
 					expression1.evaluate(arguments);
 					expression2.evaluate(arguments);
 					tmp = expression3.evaluate(arguments);
+					tmp = calculation.copy(tmp);
 					if (this.value != null) {
-						if (this.value.getName().length() > 0) {
-							tmp.changeName(this.value.getName());
+						name = (String)this.value.getValue();
+						if (name.length() > 0) {
+							tmp.changeName(name);
 						}
 					}
 					return tmp;
 					
 				case replacement:
-					
+				
 					tmp = expression1.evaluate(arguments);
+					tmp = calculation.copy(tmp);
 					name = (String) value.getValue();
+					
+					// just for debugging
+					if (name.equals(Value.VALUE_BY_NAME_ACTION_TARGET)) {
+						if (tmp.getValue() == null )
+							System.out.println("Expression.evaluate: action target ist null "  );
+						else 
+							if ( tmp.getType() != Type.simulationObject)
+								System.out.println("Expression.evaluate: action target ist nicht vom Type.simulationObject "  );
+							else
+								System.out.println("Expression.evaluate: action target: " + ((SimulationObject)tmp.getValue()).getObjectID()  );
+					}
+					
 					if (name.length() > 0) {
 						index = arguments.findValue(name);
 						if (index >= 0) {
 							if (tmp.getName().isEmpty()) {
-								tmp.setName(name);
+								tmp.changeName(name);
 							}
 							arguments.set(index, tmp);
 						}
 						else {
-							tmp.setName(name);
+							tmp.changeName(name);
 							arguments.add(tmp);
 						}
 					}
