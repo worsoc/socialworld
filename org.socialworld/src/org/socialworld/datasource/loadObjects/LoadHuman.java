@@ -363,6 +363,7 @@ public class LoadHuman extends LoadAnimal {
 		human.setInfluenceTypes(InfluenceTypePool.getInstance().getInfluenceTypes(indexITP), this);
 		human.setReactionTypes(ReactionTypePool.getInstance().getReactionTypes(indexRTP), this);
 		human.setState2ActionType(State2ActionTypePool.getInstance().getState2ActionType(indexS2AP), this);
+		human.setPerceptionTypes(PerceptionTypePool.getInstance().getPerceptionTypes(indexPTP), this);
 		human.setPosition(PositionPool.getInstance().getPosition(indexPosition), this);
 
 		SimpleClientActionHandler.getInstance().setHumanWrite((int)objectID, human);

@@ -111,4 +111,7 @@ public class SVVector extends SavedValue {
 		return new Vector(this.savedVector);
 	}
 
+	public String toString() {
+		return this.savedVector.toString();
+	}
 }

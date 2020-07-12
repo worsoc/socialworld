@@ -94,7 +94,7 @@ public abstract class StateSimulationObject extends ListenedBase {
 		return this;
 	}
 	
-	final protected SimulationObject getObject() {
+	final public SimulationObject getObject() {
 		return object;
 	}
 	

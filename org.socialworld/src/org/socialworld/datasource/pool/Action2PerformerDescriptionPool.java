@@ -108,14 +108,14 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				result.add( new FunctionByExpression(startExpression) );
 
 				// acceleration
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_MOVE_ACCELERATION + ")", Value.VALUE_BY_NAME_ACTION_MOVE_ACCELERATION);
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_MOVE_ACCELERATION + ")", Value.VALUE_BY_NAME_EVENT_MOVE_ACCELERATION);
 				result.add( new FunctionByExpression(startExpression) );
 
 				// velocity
 				startExpression = new Calculate("ADD(" +
 													"GET(" + Value.VALUE_BY_NAME_ACTION_MOVE_VELOCITY + ")" + "," +
 													"GET(" + Value.VALUE_BY_NAME_ACTION_MOVE_ACCELERATION + ")" +
-												")" , Value.VALUE_BY_NAME_ACTION_MOVE_VELOCITY);
+												")" , Value.VALUE_BY_NAME_EVENT_MOVE_VELOCITY);
 				result.add( new FunctionByExpression(startExpression) );
 				
 				break;
@@ -163,7 +163,7 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				result.add( new FunctionByExpression(startExpression) );
 				
 				// Item1
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_ITEM1 + ")", Value.VALUE_BY_NAME_ACTION_ITEM1);
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_ITEM1 + ")", Value.VALUE_BY_NAME_EVENT_HANDLE_ITEM1);
 				result.add( new FunctionByExpression(startExpression) );
 
 				break;
@@ -187,7 +187,7 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				result.add( new FunctionByExpression(startExpression) );
 				
 				// Item1
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_ITEM1 + ")", Value.VALUE_BY_NAME_ACTION_ITEM1);
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_ITEM1 + ")", Value.VALUE_BY_NAME_EVENT_HANDLE_ITEM1);
 				result.add( new FunctionByExpression(startExpression) );
 				
 				break;
@@ -208,15 +208,15 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				startExpression = new Calculate("MUL(" +
 													"GET(" + Value.VALUE_BY_NAME_ACTION_INTENSITY + ")" + "," +
 													"ATTR(" + Attribute.power.getIndex() + ")" +
-												")" , Value.VALUE_BY_NAME_EVENT_INTENSITY);
+												")" , Value.VALUE_BY_NAME_EVENT_HANDLE_INTENSITY);
 				result.add( new FunctionByExpression(startExpression) );
 				
 				// Item1
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_ITEM1 + ")", Value.VALUE_BY_NAME_ACTION_ITEM1);
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_ITEM1 + ")", Value.VALUE_BY_NAME_EVENT_HANDLE_ITEM1);
 				result.add( new FunctionByExpression(startExpression) );
 
 				// Item2
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_ITEM2 + ")", Value.VALUE_BY_NAME_ACTION_ITEM2);
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_ITEM2 + ")", Value.VALUE_BY_NAME_EVENT_HANDLE_ITEM2);
 				result.add( new FunctionByExpression(startExpression) );
 
 				break;
@@ -225,7 +225,7 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				
 				
 				// directionHit
-				startExpression = new Calculate("GET(" + PropertyName.stateSeer_directionView.toString() + ")", Value.VALUE_BY_NAME_EVENT_DIRECTION );
+				startExpression = new Calculate("GET(" + PropertyName.stateSeer_directionView.toString() + ")", Value.VALUE_BY_NAME_EVENT_PUNCH_DIRECTION );
 				result.add( new FunctionByExpression(startExpression) );
 
 				// actorsIntensity
@@ -236,7 +236,7 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				startExpression = new Calculate("MUL(" +
 													"GET(" + Value.VALUE_BY_NAME_ACTION_INTENSITY + ")" + "," +
 													"ATTR(" + Attribute.power.getIndex() + ")" +
-												")" , Value.VALUE_BY_NAME_EVENT_INTENSITY);
+												")" , Value.VALUE_BY_NAME_EVENT_PUNCH_INTENSITY);
 				result.add( new FunctionByExpression(startExpression) );
 
 				// directionChest
@@ -252,7 +252,7 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 			case weaponClub:
 				
 				// directionHit
-				startExpression = new Calculate("GET(" + PropertyName.stateSeer_directionView.toString() + ")", Value.VALUE_BY_NAME_EVENT_DIRECTION );
+				startExpression = new Calculate("GET(" + PropertyName.stateSeer_directionView.toString() + ")", Value.VALUE_BY_NAME_EVENT_USEWEAPON_DIRECTION );
 				result.add( new FunctionByExpression(startExpression) );
 
 				// actorsIntensity
@@ -263,11 +263,11 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				startExpression = new Calculate("MUL(" +
 													"GET(" + Value.VALUE_BY_NAME_ACTION_INTENSITY + ")" + "," +
 													"ATTR(" + Attribute.power.getIndex() + ")" +
-												")" , Value.VALUE_BY_NAME_EVENT_INTENSITY);
+												")" , Value.VALUE_BY_NAME_EVENT_USEWEAPON_INTENSITY);
 				result.add( new FunctionByExpression(startExpression) );
 
 				// weapon
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_WEAPON + ")", Value.VALUE_BY_NAME_ACTION_WEAPON);
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_WEAPON + ")", Value.VALUE_BY_NAME_EVENT_WEAPON);
 				result.add( new FunctionByExpression(startExpression) );
 
 				// directionChest
@@ -284,11 +284,11 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 			case understand:
 				
 				// Sentence
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCE + ")", Value.VALUE_BY_NAME_ACTION_SENTENCE);
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCE + ")", Value.VALUE_BY_NAME_EVENT_SENTENCE);
 				result.add( new FunctionByExpression(startExpression) );
 				
 				// Target
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_TARGET + ")", Value.VALUE_BY_NAME_ACTION_TARGET);
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_TARGET + ")", Value.VALUE_BY_NAME_EVENT_TARGET);
 				result.add( new FunctionByExpression(startExpression) );
 
 				// directionView
@@ -306,15 +306,15 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				result.add( new FunctionByExpression(startExpression) );
 
 				// Target (Partner)
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_TARGET + ")", Value.VALUE_BY_NAME_ACTION_TARGET);
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_TARGET + ")", Value.VALUE_BY_NAME_EVENT_TARGET);
 				result.add( new FunctionByExpression(startExpression) );
 				
 				// Sentence
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCE + ")", Value.VALUE_BY_NAME_ACTION_SENTENCE);
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCE + ")", Value.VALUE_BY_NAME_EVENT_SENTENCE);
 				result.add( new FunctionByExpression(startExpression) );
 
 				// SentenceType
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCETYPE + ")", Value.VALUE_BY_NAME_ACTION_SENTENCETYPE);
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCETYPE + ")", Value.VALUE_BY_NAME_EVENT_SENTENCETYPE);
 				result.add( new FunctionByExpression(startExpression) );
 				
 				break;
@@ -328,15 +328,15 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				result.add( new FunctionByExpression(startExpression) );
 
 				// Target (Partner)
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_TARGET + ")", Value.VALUE_BY_NAME_ACTION_TARGET);
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_TARGET + ")", Value.VALUE_BY_NAME_EVENT_TARGET);
 				result.add( new FunctionByExpression(startExpression) );
 				
 				// Sentence
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCE + ")", Value.VALUE_BY_NAME_ACTION_SENTENCE);
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCE + ")", Value.VALUE_BY_NAME_EVENT_SENTENCE);
 				result.add( new FunctionByExpression(startExpression) );
 
 				// SentenceType
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCETYPE + ")", Value.VALUE_BY_NAME_ACTION_SENTENCETYPE);
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCETYPE + ")", Value.VALUE_BY_NAME_EVENT_SENTENCETYPE);
 				result.add( new FunctionByExpression(startExpression) );
 				
 				break;
@@ -348,15 +348,15 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				result.add( new FunctionByExpression(startExpression) );
 
 				// Target (Partner)
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_TARGET + ")", Value.VALUE_BY_NAME_ACTION_TARGET);
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_TARGET + ")", Value.VALUE_BY_NAME_EVENT_TARGET);
 				result.add( new FunctionByExpression(startExpression) );
 				
 				// Sentence
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCE + ")", Value.VALUE_BY_NAME_ACTION_SENTENCE);
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCE + ")", Value.VALUE_BY_NAME_EVENT_SENTENCE);
 				result.add( new FunctionByExpression(startExpression) );
 
 				// SentenceType
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCETYPE + ")", Value.VALUE_BY_NAME_ACTION_SENTENCETYPE);
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCETYPE + ")", Value.VALUE_BY_NAME_EVENT_SENTENCETYPE);
 				result.add( new FunctionByExpression(startExpression) );
 				
 				break;
@@ -364,7 +364,7 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 			case scream:
 				
 				// loudness
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_INTENSITY + ")", Value.VALUE_BY_NAME_ACTION_SAY_LOUDNESS);
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_INTENSITY + ")", Value.VALUE_BY_NAME_EVENT_SAY_LOUDNESS);
 				result.add( new FunctionByExpression(startExpression) );
 
 				// directionEvent
@@ -372,15 +372,15 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				result.add( new FunctionByExpression(startExpression) );
 
 				// Target (Partner)
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_TARGET + ")", Value.VALUE_BY_NAME_ACTION_TARGET);
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_TARGET + ")", Value.VALUE_BY_NAME_EVENT_TARGET);
 				result.add( new FunctionByExpression(startExpression) );
 				
 				// Sentence
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCE + ")", Value.VALUE_BY_NAME_ACTION_SENTENCE);
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCE + ")", Value.VALUE_BY_NAME_EVENT_SENTENCE);
 				result.add( new FunctionByExpression(startExpression) );
 
 				// SentenceType
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCETYPE + ")", Value.VALUE_BY_NAME_ACTION_SENTENCETYPE);
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCETYPE + ")", Value.VALUE_BY_NAME_EVENT_SENTENCETYPE);
 				result.add( new FunctionByExpression(startExpression) );
 				
 				break;
@@ -392,17 +392,30 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				result.add( new FunctionByExpression(startExpression) );
 
 				// Target (Partner)
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_TARGET + ")", Value.VALUE_BY_NAME_ACTION_TARGET);
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_TARGET + ")", Value.VALUE_BY_NAME_EVENT_TARGET);
 				result.add( new FunctionByExpression(startExpression) );
 				
 				// Sentence
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCE + ")", Value.VALUE_BY_NAME_ACTION_SENTENCE);
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCE + ")", Value.VALUE_BY_NAME_EVENT_SENTENCE);
 				result.add( new FunctionByExpression(startExpression) );
 
 				// SentenceType
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCETYPE + ")", Value.VALUE_BY_NAME_ACTION_SENTENCETYPE);
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_SENTENCETYPE + ")", Value.VALUE_BY_NAME_EVENT_SENTENCETYPE);
 				result.add( new FunctionByExpression(startExpression) );
 				
+				break;
+				
+				
+			case setItemToInventory:
+				
+				// itemIsDrinkable
+				startExpression = new Calculate("isNothing(GET(" + Value.VALUE_BY_NAME_ACTION_EQUIP_ITEM + "))", Value.VALUE_BY_NAME_EVENT_EQUIP_ITEMISDRINKABLE);
+				result.add( new FunctionByExpression(startExpression) );
+
+				// itemIsEatable
+				startExpression = new Calculate("isNothing(GET(" + Value.VALUE_BY_NAME_ACTION_EQUIP_ITEM + "))", Value.VALUE_BY_NAME_EVENT_EQUIP_ITEMISEATABLE);
+				result.add( new FunctionByExpression(startExpression) );
+
 				break;
 				
 			case sleep:
@@ -410,24 +423,18 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				
 			case drink:
 				
-				// itemIsDrinkable
-				startExpression = new Calculate("isNothing(GET(" + Value.VALUE_BY_NAME_ACTION_BF_ITEMDRINK + "))", Value.VALUE_BY_NAME_ACTION_BF_ITEMISDRINKABLE);
-				result.add( new FunctionByExpression(startExpression) );
 
 				// itemDrink
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_BF_ITEMDRINK + ")", Value.VALUE_BY_NAME_ACTION_BF_ITEMDRINK);
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_BF_ITEMDRINK + ")", Value.VALUE_BY_NAME_EVENT_BF_ITEMDRINK);
 				result.add( new FunctionByExpression(startExpression) );
 				
 				break;
 				
 			case eat:
 				
-				// itemIsEatable
-				startExpression = new Calculate("isNothing(GET(" + Value.VALUE_BY_NAME_ACTION_BF_ITEMEAT + "))", Value.VALUE_BY_NAME_ACTION_BF_ITEMISEATABLE);
-				result.add( new FunctionByExpression(startExpression) );
 
 				// itemEat
-				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_BF_ITEMEAT + ")", Value.VALUE_BY_NAME_ACTION_BF_ITEMEAT);
+				startExpression = new Calculate("GET(" + Value.VALUE_BY_NAME_ACTION_BF_ITEMEAT + ")", Value.VALUE_BY_NAME_EVENT_BF_ITEMEAT);
 				result.add( new FunctionByExpression(startExpression) );
 				
 				break;
