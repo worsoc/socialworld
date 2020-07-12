@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.calculation.FunctionByExpression;
+import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.descriptions.EventPerceptionAssignment;
 import org.socialworld.calculation.descriptions.EventPerceptionDescription;
@@ -118,8 +119,14 @@ public class KnowledgeCalculator extends SocialWorldThread {
 		KnowledgeElement knowledgeElement;
 		Value valueKE;
 		
-		ValueArrayList eventProps;   
-		eventProps = event.getProperties();
+		ValueArrayList arguments;
+		arguments = new ValueArrayList();
+
+		ValueArrayList eventParams;   
+		eventParams = event.getProperties();
+		
+		arguments.add(new Value(Type.valueList, Value.VALUE_BY_NAME_EVENT_PARAMS, eventParams));
+		arguments.add(new Value(Type.simulationObject, Value.VALUE_NAME_KNOWLEDGE_SOURCE_MYSELF, stateAnimal.getObject()));
 		
 		int result = KNOWLEDGE_CALCULATOR_RETURNS_NO_CHANGES;
 		int resultTmp;
@@ -135,7 +142,7 @@ public class KnowledgeCalculator extends SocialWorldThread {
 		for (int index = 0; index < count; index++) 
 		{
 			f_CreatePerception = descGetKE.getFunctionCreatePerception(index);
-			valueKE = f_CreatePerception.calculate(eventProps);
+			valueKE = f_CreatePerception.calculate(arguments);
 			knowledgeElement = (KnowledgeElement) valueKE.getValue();	
 			
 			if (knowledgeElement != null) {
