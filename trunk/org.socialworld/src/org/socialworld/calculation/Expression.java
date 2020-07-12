@@ -228,9 +228,8 @@ public class Expression {
 					
 					return getProperty(object, cluster, simPropName, methodName, name);
 				
-				case get:  // --> returns a ValueProperty!!!
+				case get:  
 					
-					ValueArrayList subArgument = new ValueArrayList();
 					boolean checkSuccess = false;
 					ValueProperty property;
 					
@@ -244,6 +243,11 @@ public class Expression {
 								checkSuccess = true;
 							}
 						}
+						else {
+							// just instanceof Value
+							// TODO checkHasUseAsPermission for different types
+							checkSuccess = true;
+						}
 					}
 					else {
 						// no check needed --> true
@@ -251,7 +255,14 @@ public class Expression {
 					}
 					
 					if (checkSuccess) {
-						subArgument.add(tmp);
+						ValueArrayList subArgument;
+						if ((tmp.hasType(Type.valueList)) && (tmp.getValue() instanceof ValueArrayList)) {
+							subArgument = (ValueArrayList) tmp.getValue();
+						}
+						else {
+							subArgument	= new ValueArrayList();
+							subArgument.add(tmp);
+						}
 						tmp = expression2.evaluate(subArgument);
 						if (tmp instanceof ValueProperty) {
 							property = (ValueProperty) tmp;
@@ -432,17 +443,20 @@ public class Expression {
 						}
 						createdValue = createValue(type, knowledgeElementSourceAndAtoms);
 						break;
+					case knowledgeSource:
 					case knowledgeAtom:
 						int subType;
+						int firstCreateArgument;
 						subType = (int) expression1.evaluate().getValue();
-						ValueArrayList knowledgeAtom = new ValueArrayList();
+						ValueArrayList createArgs = new ValueArrayList();
 						// expression2 is a sequence expression
+						firstCreateArgument = arguments.size();
 						expression2.evaluate(arguments);
 						size = arguments.size();
-						for ( index = 1; index < size; index++) {
-							knowledgeAtom.add(arguments.get(index));
+						for ( index = firstCreateArgument; index < size; index++) {
+							createArgs.add(arguments.get(index));
 						}
-						createdValue = createValue(type, subType, knowledgeAtom);
+						createdValue = createValue(type, subType, createArgs);
 						break;
 					default:
 						createdValue = Calculation.getNothing();

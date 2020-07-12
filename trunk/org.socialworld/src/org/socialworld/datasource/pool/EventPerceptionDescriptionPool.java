@@ -24,6 +24,7 @@ package org.socialworld.datasource.pool;
 
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.FunctionByExpression;
+import org.socialworld.calculation.Value;
 import org.socialworld.calculation.descriptions.EventPerceptionDescription;
 import org.socialworld.calculation.expressions.CreateKnowledgeElementExpression;
 import org.socialworld.core.EventType;
@@ -92,28 +93,28 @@ public class EventPerceptionDescriptionPool extends DescriptionPool {
 		Expression startExpression;
 
 		descriptions[0] = 
-		"KSbj:GETVal(eventProps).GETVal(target);" +
+		"KSbj:GETVal(" + Value.VALUE_BY_NAME_EVENT_PARAMS + ").GETVal(" + Value.VALUE_BY_NAME_EVENT_CAUSER + ");" +
 		"KSrcT:1," +
-		"KSrc:GETVal(myself)," +
-		"KVal:GetVal(eventProps).GETVal(target).GETProp(position).GETProp(position_vector)";
+		"KSrc:GETVal(" + Value.VALUE_NAME_KNOWLEDGE_SOURCE_MYSELF + ")," +
+		"KVal:GetVal(" + Value.VALUE_BY_NAME_EVENT_PARAMS + ").GETVal(" + Value.VALUE_BY_NAME_EVENT_CAUSER + ").GETProp(simobj_position).GETProp(position_vector)";
 		
 /*
 		// example for developing
 		descriptions[1] = 
-		"KSbj:GETVal(eventProps).GETVal(target);" +
+		"KSbj:GETVal(" + Value.VALUE_BY_NAME_EVENT_PARAMS + ").GETVal(" + Value.VALUE_BY_NAME_EVENT_TARGET + ");" +
 		"KSrcT:1," +
-		"KSrc:GETVal(myself)," +
+		"KSrc:GETVal(" + Value.VALUE_NAME_KNOWLEDGE_SOURCE_MYSELF + ")," +
 		"KFC:0," +
-		"KProp:GETVal(eventProps).GETVal(target).GETProp(stateInventory).GETProp(clothes).GETProp(shirt).GETFctVal(getMainColour)," +
-		"KProp:GETVal(eventProps).GETVal(target).GETProp(stateBody).GETFctVal(getHead).GETFctVal(getScinColour)," +
-		"KProp:GETVal(eventProps).GETVal(target).GETProp(stateBody).GETFctVal(getHead).GETFctVal(getHairColour);" +
+		"KProp:GETVal(" + Value.VALUE_BY_NAME_EVENT_PARAMS + ").GETVal(" + Value.VALUE_BY_NAME_EVENT_TARGET + ").GETProp(stateInventory).GETProp(clothes).GETProp(shirt).GETFctVal(getMainColour)," +
+		"KProp:GETVal(" + Value.VALUE_BY_NAME_EVENT_PARAMS + ").GETVal(" + Value.VALUE_BY_NAME_EVENT_TARGET + ").GETProp(stateBody).GETFctVal(getHead).GETFctVal(getScinColour)," +
+		"KProp:GETVal(" + Value.VALUE_BY_NAME_EVENT_PARAMS + ").GETVal(" + Value.VALUE_BY_NAME_EVENT_TARGET + ").GETProp(stateBody).GETFctVal(getHead).GETFctVal(getHairColour);" +
 		"KSrcT:1," +
-		"KSrc:GETVal(myself)," +
+		"KSrc:GETVal(" + Value.VALUE_NAME_KNOWLEDGE_SOURCE_MYSELF + ")," +
 		"KFC:1," +
-		"KProp:GETVal(eventProps).GETVal(target).GETProp(stateInventory).GETProp(clothes).GETProp(shirt).GETFctVal(getMainMaterial)," +
-		"KProp:GETVal(eventProps).GETVal(target).GETProp(stateInventory).GETProp(clothes).GETProp(trousers).GETFctVal(getMainMaterial)," +
-		"KProp:GETVal(eventProps).GETVal(target).GETProp(stateInventory).GETProp(clothes).GETProp(shoes).GETFctVal(getMainMaterial)," +
-		"KProp:GETVal(eventProps).GETVal(target).GETProp(stateInventory).GETProp(clothes).GETProp(cap).GETFctVal(getMainMaterial)" ;
+		"KProp:GETVal(" + Value.VALUE_BY_NAME_EVENT_PARAMS + ").GETVal(" + Value.VALUE_BY_NAME_EVENT_TARGET + ").GETProp(stateInventory).GETProp(clothes).GETProp(shirt).GETFctVal(getMainMaterial)," +
+		"KProp:GETVal(" + Value.VALUE_BY_NAME_EVENT_PARAMS + ").GETVal(" + Value.VALUE_BY_NAME_EVENT_TARGET + ").GETProp(stateInventory).GETProp(clothes).GETProp(trousers).GETFctVal(getMainMaterial)," +
+		"KProp:GETVal(" + Value.VALUE_BY_NAME_EVENT_PARAMS + ").GETVal(" + Value.VALUE_BY_NAME_EVENT_TARGET + ").GETProp(stateInventory).GETProp(clothes).GETProp(shoes).GETFctVal(getMainMaterial)," +
+		"KProp:GETVal(" + Value.VALUE_BY_NAME_EVENT_PARAMS + ").GETVal(" + Value.VALUE_BY_NAME_EVENT_TARGET + ").GETProp(stateInventory).GETProp(clothes).GETProp(cap).GETFctVal(getMainMaterial)" ;
 */
 		
 		for (int i = 0; i <  expressionsCount; i++) {

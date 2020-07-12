@@ -53,22 +53,38 @@ public class Value {
 	public static final String VALUE_BY_NAME_ACTION_MOVE_ACCELERATION = ActionType.move.getPraefix() + "acceleration";
 	public static final String VALUE_BY_NAME_ACTION_MOVE_VELOCITY = ActionType.move.getPraefix() + "velocity";
 	public static final String VALUE_BY_NAME_ACTION_MOVE_ENDPOSITION = ActionType.move.getPraefix() + "endposition";
-	public static final String VALUE_BY_NAME_ACTION_SAY_LOUDNESS = ActionType.say.getPraefix() + "loudness";
 	public static final String VALUE_BY_NAME_ACTION_EQUIP_ITEM = ActionType.equip.getPraefix() + "item";
 	public static final String VALUE_BY_NAME_ACTION_EQUIP_PLACE = ActionType.equip.getPraefix() + "inventoryPlace";
 	public static final String VALUE_BY_NAME_ACTION_BF_ITEM =  ActionType.bodilyFunction.getPraefix() + "item";  
 	public static final String VALUE_BY_NAME_ACTION_BF_ITEMDRINK = ActionType.bodilyFunction.getPraefix() + "itemDrink";
-	public static final String VALUE_BY_NAME_ACTION_BF_ITEMISDRINKABLE = ActionType.bodilyFunction.getPraefix() + "itemIsDrinkable";
 	public static final String VALUE_BY_NAME_ACTION_BF_ITEMEAT = ActionType.bodilyFunction.getPraefix() + "itemEat";
-	public static final String VALUE_BY_NAME_ACTION_BF_ITEMISEATABLE =  ActionType.bodilyFunction.getPraefix() + "itemIsEatable";
 
 	
 	public static final String VALUE_BY_NAME_EVENT = "event";
 	public static final String VALUE_BY_NAME_EVENT_PARAMS = PRAEFIX_EVENT + "params";
 	public static final String VALUE_BY_NAME_EVENT_CAUSER = PRAEFIX_EVENT + "causer";
+	public static final String VALUE_BY_NAME_EVENT_TARGET = PRAEFIX_EVENT + "target";
 	public static final String VALUE_BY_NAME_EVENT_DIRECTION = PRAEFIX_EVENT + "direction";
 	public static final String VALUE_BY_NAME_EVENT_INTENSITY = PRAEFIX_EVENT + "intensity";
 
+	public static final String VALUE_BY_NAME_EVENT_WEAPON = PRAEFIX_EVENT + "weapon";
+	public static final String VALUE_BY_NAME_EVENT_SENTENCE = PRAEFIX_EVENT + "sentence";
+	public static final String VALUE_BY_NAME_EVENT_SENTENCETYPE = PRAEFIX_EVENT + "sentenceType";
+
+	public static final String VALUE_BY_NAME_EVENT_MOVE_ACCELERATION = ActionType.move.getPraefix() + "acceleration";
+	public static final String VALUE_BY_NAME_EVENT_MOVE_VELOCITY = ActionType.move.getPraefix() + "velocity";
+	public static final String VALUE_BY_NAME_EVENT_EQUIP_ITEMISDRINKABLE = ActionType.equip.getPraefix() + "itemIsDrinkable";
+	public static final String VALUE_BY_NAME_EVENT_EQUIP_ITEMISEATABLE =  ActionType.equip.getPraefix() + "itemIsEatable";
+	public static final String VALUE_BY_NAME_EVENT_HANDLE_INTENSITY = ActionType.handleItem.getPraefix() + "intensity";
+	public static final String VALUE_BY_NAME_EVENT_HANDLE_ITEM1 = ActionType.handleItem.getPraefix() + "item1";
+	public static final String VALUE_BY_NAME_EVENT_HANDLE_ITEM2 = ActionType.handleItem.getPraefix() + "item2";
+	public static final String VALUE_BY_NAME_EVENT_USEWEAPON_DIRECTION = ActionType.useWeapon.getPraefix() + "direction";
+	public static final String VALUE_BY_NAME_EVENT_USEWEAPON_INTENSITY = ActionType.useWeapon.getPraefix() + "intensity";
+	public static final String VALUE_BY_NAME_EVENT_PUNCH_DIRECTION = ActionType.punch.getPraefix() + "direction";
+	public static final String VALUE_BY_NAME_EVENT_PUNCH_INTENSITY = ActionType.punch.getPraefix() + "intensity";
+	public static final String VALUE_BY_NAME_EVENT_SAY_LOUDNESS = ActionType.say.getPraefix() + "loudness";
+	public static final String VALUE_BY_NAME_EVENT_BF_ITEMDRINK = ActionType.bodilyFunction.getPraefix() + "itemDrink";
+	public static final String VALUE_BY_NAME_EVENT_BF_ITEMEAT = ActionType.bodilyFunction.getPraefix() + "itemEat";
 
 	public static final String VALUE_BY_NAME_WEAPON_MASS = PRAEFIX_WEAPON + "mass";
 	public static final String VALUE_BY_NAME_WEAPON_HARDNESS = PRAEFIX_WEAPON + "hardness";
@@ -76,6 +92,7 @@ public class Value {
 	
 	public static final String VALUE_BY_NAME_KNOWLEDGE_ELEMENT_PROPS = "knowledgeElementProperties";
 	
+	public static final String VALUE_NAME_KNOWLEDGE_SOURCE_MYSELF = "myself";
 	
 	public static final String VALUE_NAME_UNUSED_BECAUSE_TEMPORARY = "temp";
 

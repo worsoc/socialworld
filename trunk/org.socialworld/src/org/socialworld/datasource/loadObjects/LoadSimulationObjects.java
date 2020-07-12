@@ -138,6 +138,9 @@ public abstract class LoadSimulationObjects {
 			hiddenObject.setReactionTypes(reactionTypes);
 		}
 
+		// TODO set perception types
+		
+		
 		if (rowTablePositions >= 0) {
 			x = tablePositions.getX(rowTablePositions);
 			y = tablePositions.getY(rowTablePositions);

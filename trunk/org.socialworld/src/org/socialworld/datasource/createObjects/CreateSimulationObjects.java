@@ -27,6 +27,7 @@ import java.util.Random;
 
 import org.socialworld.core.IncompleteSimulationObject;
 import org.socialworld.datasource.pool.GaussPoolInfluenceType;
+import org.socialworld.datasource.pool.GaussPoolPerceptionType;
 import org.socialworld.datasource.pool.GaussPoolPosition;
 import org.socialworld.datasource.pool.GaussPoolReactionType;
 import org.socialworld.datasource.pool.GaussPoolState2ActionType;
@@ -96,6 +97,7 @@ public abstract class CreateSimulationObjects {
 		int indexGPIT; 
 		int indexGPRT; 
 		int indexGPS2A; 
+		int indexGPPT; 
 		
 		double gauss_value;
 		
@@ -117,6 +119,12 @@ public abstract class CreateSimulationObjects {
 			gauss_value = random.nextGaussian();
 		indexGPS2A = mapGaussToIndex(gauss_value, GaussPoolState2ActionType.CAPACITY_GPS2A_ARRAY);
 		hiddenObject.setState2ActionType(GaussPoolState2ActionType.getInstance().getState2ActionType(indexGPS2A));
+
+		gauss_value = random.nextGaussian();
+		while ((gauss_value > THRESHOLD_RANDOM_GAUSSIAN_VALUE) || (gauss_value < -THRESHOLD_RANDOM_GAUSSIAN_VALUE)) 
+			gauss_value = random.nextGaussian();
+		indexGPPT = mapGaussToIndex(gauss_value, GaussPoolPerceptionType.CAPACITY_GPPT_ARRAY);
+		hiddenObject.setPerceptionTypes(GaussPoolPerceptionType.getInstance().getPerceptionTypes(indexGPPT));
 		
 		do {
 			indexPosition = random.nextInt(GaussPoolPosition.CAPACITY_GPPos_ARRAY);

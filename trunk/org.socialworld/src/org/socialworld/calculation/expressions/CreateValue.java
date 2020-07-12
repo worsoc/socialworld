@@ -117,6 +117,9 @@ public class CreateValue extends Expression {
 
 		switch (valueType) {
 
+		case knowledgeSource:
+			// TODO implement KnowledgeSource
+			break;
 		case knowledgeAtom:
 			// TODO implement KnowledgeAtom
 			break;

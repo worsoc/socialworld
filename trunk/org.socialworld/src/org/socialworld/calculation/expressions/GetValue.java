@@ -1,6 +1,6 @@
 /*
 * Social World
-* Copyright (C) 2014  Mathias Sikos
+* Copyright (C) 2020  Mathias Sikos
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -40,8 +40,8 @@ public class GetValue extends Expression {
 		super();
 		
 		String steps[];
-		steps = getValuePath.split(".");
-		
+		steps = getValuePath.split("\\.");
+
 		if (steps.length > 0) {
 			setOperation(Expression_Function.oneExpression);
 			
@@ -69,23 +69,28 @@ public class GetValue extends Expression {
 		exp1 = getStepExpression(cluster, step, valueAliasName);
 
 		if (steps.length == indexContinue + 1) {
+			
 			// that is the value from expression 1,
 			// because the expression 1 evaluation result
 			// is forwarded (as argument value list array with that one element)  to expression 2 evaluation
 			exp2 = new GetArgumentByName(valueAliasName, valueAliasName);
 			checkPermission = new Value(Type.integer, usablePermission.getIndex());
-		}
-		
-		if (steps.length == indexContinue + 2) {
-			step = steps[indexContinue + 1];
-			exp2 = getStepExpression(cluster, step, valueAliasName);
-			checkPermission = new Value(Type.integer, usablePermission.getIndex() - 1);
+			
 		}
 		else {
+			if (steps.length == indexContinue + 2) {
 				
-			exp2 = new GetValue(cluster, usablePermission, steps, indexContinue + 1, valueAliasName);
-			checkPermission = new Value(Type.integer, usablePermission.getIndex() - 1);
-
+				step = steps[indexContinue + 1];
+				exp2 = getStepExpression(cluster, step, valueAliasName);
+				checkPermission = new Value(Type.integer, usablePermission.getIndex() - 1);
+				
+			}
+			else {
+					
+				exp2 = new GetValue(cluster, usablePermission, steps, indexContinue + 1, valueAliasName);
+				checkPermission = new Value(Type.integer, usablePermission.getIndex() - 1);
+	
+			}
 		}
 
 		setOperation(Expression_Function.get);
@@ -123,13 +128,13 @@ public class GetValue extends Expression {
 		String name;
 		
 		name = step.substring(step.indexOf("(") + 1, step.indexOf(")"));
-		if (step.indexOf(GETVALUE + "(") > 0 ) {
+		if (step.indexOf(GETVALUE + "(") >= 0 ) {
 			result = new GetArgumentByName(name, valueAliasName);
 		}
-		if (step.indexOf(GETPROPERTY + "(") > 0 ) {
+		if (step.indexOf(GETPROPERTY + "(") >= 0 ) {
 			result = new GetProperty(cluster, PropertyName.forString(name), valueAliasName);
 		}
-		if (step.indexOf(GETFUNCTIONVALUE + "(") > 0 ) {
+		if (step.indexOf(GETFUNCTIONVALUE + "(") >= 0 ) {
 			result = new GetProperty(cluster, name, valueAliasName);
 		}
 

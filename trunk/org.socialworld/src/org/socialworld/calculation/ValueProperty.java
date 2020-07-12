@@ -26,6 +26,7 @@ import org.socialworld.attributes.ISavedValues;
 import org.socialworld.attributes.ISimProperty;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
+import org.socialworld.objects.SimulationObject;
 
 public class ValueProperty extends Value {
 
@@ -180,6 +181,10 @@ public class ValueProperty extends Value {
 		
 		if (isSavedValues) {
 			return ((ISavedValues) super.getValue()).checkHasUseAsPermission(useAsPermission);
+		}
+		if (super.getValue() instanceof SimulationObject) {
+			// TODO checkHasUseAsPermission for SimulationObject(s)
+			return true;
 		}
 		return false;
 		

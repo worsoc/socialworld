@@ -63,7 +63,7 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 
 		if (main.length > 1) {
 			
-			List<Expression> listExpressions = new ArrayList<Expression>();;
+			List<Expression> listExpressions = new ArrayList<Expression>();
 			
 			String descriptionSubject = main[0].substring(LABEL_SUBJECT.length());
 			Expression subject = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeSubject, descriptionSubject, "subject");
@@ -97,22 +97,31 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 					
 					for (int indexSub = 2; indexSub < descriptionKnowledgeAtomList.length; indexSub++) {
 						
-						if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGEFACTCRITERION.length()) > 0) {
+						if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGEFACTCRITERION) >= 0) {
 							descriptionKnowledgeAtomPart = descriptionKnowledgeAtomList[indexSub].substring(LABEL_KNOWLEDGEFACTCRITERION.length());
 							knowledgeFactCriterion = new Constant(new Value(Type.integer, "criterion", Integer.parseInt(descriptionKnowledgeAtomPart) ));
 							expressions.add(knowledgeFactCriterion);
+							if (knowledgeAtomType == null ) {
+								knowledgeAtomType = KnowledgeAtomType.property;
+							}
 						}
-						else if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGEPROPERTY.length()) > 0) {
+						else if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGEPROPERTY) >= 0) {
 							descriptionKnowledgeAtomPart = descriptionKnowledgeAtomList[indexSub].substring(LABEL_KNOWLEDGEPROPERTY.length());
 							value = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeProperty, descriptionKnowledgeAtomPart, "value_" + (indexSub - 2));
 							expressions.add(value);
+							if (knowledgeAtomType == null ) {
+								knowledgeAtomType = KnowledgeAtomType.property;
+							}
 						}
-						else if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGEVALUE.length()) > 0) {
+						else if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGEVALUE) >= 0) {
 							descriptionKnowledgeAtomPart = descriptionKnowledgeAtomList[indexSub].substring(LABEL_KNOWLEDGEVALUE.length());
 							value = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeValue, descriptionKnowledgeAtomPart, "value_" + (indexSub - 2));
 							expressions.add(value);
+							if (knowledgeAtomType == null ) {
+								knowledgeAtomType = KnowledgeAtomType.value;
+							}
 						}
-						else if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGERELATIONSUBJECT.length()) > 0) {
+						else if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGERELATIONSUBJECT) >= 0) {
 							descriptionKnowledgeAtomPart = descriptionKnowledgeAtomList[indexSub].substring(LABEL_KNOWLEDGERELATIONSUBJECT.length());
 							value = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeRelationSubject, descriptionKnowledgeAtomPart, "subject");
 							if (expressions.size() == 0) {
@@ -127,7 +136,7 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 								knowledgeAtomType = KnowledgeAtomType.relationUnaer;
 							}
 						}
-						else if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGERELATIONVERB.length()) > 0) {
+						else if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGERELATIONVERB) >= 0) {
 							descriptionKnowledgeAtomPart = descriptionKnowledgeAtomList[indexSub].substring(LABEL_KNOWLEDGERELATIONVERB.length());
 							value = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeRelationVerb, descriptionKnowledgeAtomPart, "verb");
 							if (expressions.size() == 0) {
@@ -142,7 +151,7 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 								knowledgeAtomType = KnowledgeAtomType.relationUnaer;
 							}
 						}
-						else if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGERELATIONADVERB.length()) > 0) {
+						else if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGERELATIONADVERB) >= 0) {
 							descriptionKnowledgeAtomPart = descriptionKnowledgeAtomList[indexSub].substring(LABEL_KNOWLEDGERELATIONADVERB.length());
 							value = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeRelationAdverb, descriptionKnowledgeAtomPart, "adverb");
 							if (expressions.size() == 0) {
@@ -157,7 +166,7 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 								knowledgeAtomType = KnowledgeAtomType.relationUnaer;
 							}
 						}
-						else if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGERELATIONOBJECT1.length()) > 0) {
+						else if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGERELATIONOBJECT1) >= 0) {
 							descriptionKnowledgeAtomPart = descriptionKnowledgeAtomList[indexSub].substring(LABEL_KNOWLEDGERELATIONOBJECT1.length());
 							value = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeRelationObject, descriptionKnowledgeAtomPart, "object1");
 							if (expressions.size() == 0) {
@@ -172,7 +181,7 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 								knowledgeAtomType = KnowledgeAtomType.relationBinaer;
 							}
 						}
-						else if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGERELATIONOBJECT2.length()) > 0) {
+						else if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGERELATIONOBJECT2) >= 0) {
 							descriptionKnowledgeAtomPart = descriptionKnowledgeAtomList[indexSub].substring(LABEL_KNOWLEDGERELATIONOBJECT2.length());
 							value = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeRelationObject, descriptionKnowledgeAtomPart, "object2");
 							if (expressions.size() == 0) {
