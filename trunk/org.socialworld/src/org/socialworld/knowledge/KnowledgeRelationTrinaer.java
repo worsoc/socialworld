@@ -39,7 +39,7 @@ public class KnowledgeRelationTrinaer extends KnowledgeRelation {
 
 	public KnowledgeRelationTrinaer(KnowledgeRelationTrinaer original) {
 		if (original != null) {
-			// TODO
+			// TODO copy
 		}
 	}
 	

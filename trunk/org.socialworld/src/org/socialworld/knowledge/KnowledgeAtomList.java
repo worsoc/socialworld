@@ -30,14 +30,22 @@ public class KnowledgeAtomList  {
 	final int MAXIMUM_KNOWLEDGE_CAPACITY = 100;
 	
 	private ArrayList<KnowledgeAtom> atomSearchList;
-	private ArrayList<KnowledgeSource> sourceSearchList;
 	
 	private int validItemCount = 0;
+	
+
 
 	
 	
 	public KnowledgeAtomList() {
+		
 		atomSearchList = new ArrayList<KnowledgeAtom>();
+		
+		// add invalid KnowledgeValue as first dummy element (ensure there is always an element in the list)
+		
+		KnowledgeAtom dummy = new KnowledgeValue();
+		atomSearchList.add(dummy);
+		
 	}
 	
 	protected int size() {
@@ -72,19 +80,7 @@ public class KnowledgeAtomList  {
 			return null;
 	}
 
-	protected KnowledgeSource getSource(int index) {
-		if ((index >= 0) & (index < size()) )
-			return sourceSearchList.get(index);
-		else
-			return null;
-	}
 
-	protected KnowledgeSource getSourceAsCopy(int index) {
-		if ((index >= 0) & (index < size()) )
-			return new KnowledgeSource(sourceSearchList.get(index));
-		else
-			return null;
-	}
 	
 
 	public KnowledgeFact find(Lexem  value) {
@@ -149,7 +145,7 @@ public class KnowledgeAtomList  {
 		return fact;
 	}
 	
-	public void add (KnowledgeAtom atom) {
+	private void add (KnowledgeAtom atom) {
 		atomSearchList.add(atom);
 	}
 	
@@ -164,10 +160,10 @@ public class KnowledgeAtomList  {
 			atom.incrementAccessCount();
 			atom.incrementAccessCount();
 			
-	
+			atom.setSource(source);
+			
 			if (replacableIndex  == size()) {
 				this.atomSearchList.add( atom);
-				this.sourceSearchList.add( source);
 			}
 			else {
 				
@@ -176,7 +172,6 @@ public class KnowledgeAtomList  {
 				}
 	
 				this.atomSearchList.set(replacableIndex, atom);
-				this.sourceSearchList.set(replacableIndex, source);
 			}
 			
 			this.validItemCount++;
@@ -367,7 +362,7 @@ public class KnowledgeAtomList  {
 						}
 						else {
 							// combine atom from knowledge B to Knowledge A
-							add(kalB.getAtomAsCopy(j), kalB.getSourceAsCopy(j));
+							add(kalB.getAtomAsCopy(j));
 						}
 				}
 			}
@@ -414,7 +409,8 @@ public class KnowledgeAtomList  {
 			
 			if (!atomSearchList.get(index).equals(tmpCopyKF)) 
 				return false;
-			if (!sourceSearchList.get(index).equals(b.getSource(index))) 
+			// TODO compare source too, in implementation KnowledgeAtom.equals()
+			if (!atomSearchList.get(index).getSource().equals(b.getAtom(index).getSource())) 
 				return false;
 			if (atomSearchList.get(index).isItemValid() != tmpCopyKF.isItemValid()) 
 				return false;

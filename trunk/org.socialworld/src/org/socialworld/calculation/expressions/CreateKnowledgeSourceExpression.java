@@ -26,6 +26,7 @@ import java.util.List;
 
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Type;
+import org.socialworld.calculation.Value;
 
 public class CreateKnowledgeSourceExpression extends CreateValue {
 
@@ -37,10 +38,10 @@ public class CreateKnowledgeSourceExpression extends CreateValue {
 		List<String> names = new ArrayList<String>();
 		
 		listExpressions.add(sourceType);
-		names.add("soureType");
+		names.add(Value.VALUE_NAME_KNOWLEDGE_SOURCE_TYPE);
 
 		listExpressions.add(source);
-		names.add("source");
+		names.add(Value.VALUE_NAME_KNOWLEDGE_SOURCE);
 
 		setExpression2(new AddOrSetValuesToArguments(listExpressions, names));
 

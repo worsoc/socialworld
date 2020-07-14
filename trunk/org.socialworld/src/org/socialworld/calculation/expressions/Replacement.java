@@ -15,6 +15,10 @@ class Replacement extends Expression {
 		
 		setExpression1(exp1);
 		setValue(new Value(Type.string, name));
+
+		// there is no sub list
+		Constant getNameSubList = new Constant(new Value(Type.string, "", ""));
+		setExpression2(getNameSubList);
 		
 		setValid();
 		
@@ -28,6 +32,26 @@ class Replacement extends Expression {
 		
 		setExpression1(exp1);
 		setValue(new Value(Type.string, ""));
+
+		// there is no sub list
+		Constant getNameSubList = new Constant(new Value(Type.string, "", ""));
+		setExpression2(getNameSubList);
+		
+		setValid();
+		
+	}
+	
+	public Replacement(String nameSubList, String name, Expression exp1) {
+	
+		super();
+		
+		setOperation(Expression_Function.replacement);
+		
+		setExpression1(exp1);
+		setValue(new Value(Type.string, name));
+		
+		Constant getNameSubList = new Constant(new Value(Type.string, nameSubList, nameSubList));
+		setExpression2(getNameSubList);
 		
 		setValid();
 		

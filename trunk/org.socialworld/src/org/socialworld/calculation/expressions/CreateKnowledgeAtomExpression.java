@@ -169,13 +169,13 @@ public class CreateKnowledgeAtomExpression extends CreateValue {
 		List<String> names = new ArrayList<String>();
 		
 		listExpressions.add(subject);
-		names.add("subject");
+		names.add(Value.VALUE_NAME_KNOWLEDGE_RELATION_SUBJECT);
 
 		listExpressions.add(verb);
-		names.add("verb");
+		names.add(Value.VALUE_NAME_KNOWLEDGE_RELATION_VERB);
 
 		listExpressions.add(adverb);
-		names.add("adverb");
+		names.add(Value.VALUE_NAME_KNOWLEDGE_RELATION_ADVERB);
 		
 		// setting the knowledge atom sub type 
 		setExpression1(new Constant(new Value(Type.integer, KnowledgeAtomType.relationUnaer.getIndex())));
@@ -191,16 +191,16 @@ public class CreateKnowledgeAtomExpression extends CreateValue {
 		List<String> names = new ArrayList<String>();
 		
 		listExpressions.add(subject);
-		names.add("subject");
+		names.add(Value.VALUE_NAME_KNOWLEDGE_RELATION_SUBJECT);
 
 		listExpressions.add(verb);
-		names.add("verb");
+		names.add(Value.VALUE_NAME_KNOWLEDGE_RELATION_VERB);
 
 		listExpressions.add(adverb);
-		names.add("adverb");
+		names.add(Value.VALUE_NAME_KNOWLEDGE_RELATION_ADVERB);
 
 		listExpressions.add(object1);
-		names.add("object1");
+		names.add(Value.VALUE_NAME_KNOWLEDGE_RELATION_OBJECT1);
 
 		// setting the knowledge atom sub type 
 		setExpression1(new Constant(new Value(Type.integer, KnowledgeAtomType.relationBinaer.getIndex())));
@@ -216,19 +216,19 @@ public class CreateKnowledgeAtomExpression extends CreateValue {
 		List<String> names = new ArrayList<String>();
 		
 		listExpressions.add(subject);
-		names.add("subject");
+		names.add(Value.VALUE_NAME_KNOWLEDGE_RELATION_SUBJECT);
 
 		listExpressions.add(verb);
-		names.add("verb");
+		names.add(Value.VALUE_NAME_KNOWLEDGE_RELATION_VERB);
 
 		listExpressions.add(adverb);
-		names.add("adverb");
+		names.add(Value.VALUE_NAME_KNOWLEDGE_RELATION_ADVERB);
 
 		listExpressions.add(object1);
-		names.add("object1");
+		names.add(Value.VALUE_NAME_KNOWLEDGE_RELATION_OBJECT1);
 
 		listExpressions.add(object2);
-		names.add("object2");
+		names.add(Value.VALUE_NAME_KNOWLEDGE_RELATION_OBJECT2);
 		
 
 		// setting the knowledge atom sub type 
@@ -243,11 +243,11 @@ public class CreateKnowledgeAtomExpression extends CreateValue {
 		List<Expression> listExpressionsWithCriterion = new ArrayList<Expression>();
 		List<String> names = new ArrayList<String>();
 
-		names.add("criterion");
+		names.add(Value.VALUE_NAME_KNOWLEDGE_PROPERTY_CRITERION);
 		listExpressionsWithCriterion.add(listExpressions.get(0));
 
 		for (int index = 1; index < listExpressions.size(); index++) {
-			names.add("value_" + index);
+			names.add(Value.VALUE_NAME_KNOWLEDGE_PROPERTY_VALUE + index);
 			listExpressionsWithCriterion.add(listExpressions.get(index));
 		}
 
@@ -264,11 +264,11 @@ public class CreateKnowledgeAtomExpression extends CreateValue {
 		List<Expression> listExpressionsWithCriterion = new ArrayList<Expression>();
 		List<String> names = new ArrayList<String>();
 
-		names.add("criterion");
+		names.add(Value.VALUE_NAME_KNOWLEDGE_PROPERTY_CRITERION);
 		listExpressionsWithCriterion.add(new Constant(new Value(Type.integer, criterion.getIndex())));
 
 		for (int index = 0; index < listExpressions.size(); index++) {
-			names.add("value_" + index);
+			names.add(Value.VALUE_NAME_KNOWLEDGE_PROPERTY_VALUE + index);
 			listExpressionsWithCriterion.add(listExpressions.get(index));
 		}
 
@@ -282,13 +282,15 @@ public class CreateKnowledgeAtomExpression extends CreateValue {
 	private void initValue(Expression expression) {
 		
 		List<Expression> listExpressions = new ArrayList<Expression>();
+		List<String> names = new ArrayList<String>();
 
 		listExpressions.add(expression);
+		names.add(Value.VALUE_NAME_KNOWLEDGE_PROPERTY_VALUE + "0");
 
 		// setting the knowledge atom sub type 
 		setExpression1(new Constant(new Value(Type.integer, KnowledgeAtomType.value.getIndex())));
 		
-		setExpression2(new AddOrSetValuesToArguments(listExpressions));
+		setExpression2(new AddOrSetValuesToArguments(listExpressions, names));
 		
 	}
 

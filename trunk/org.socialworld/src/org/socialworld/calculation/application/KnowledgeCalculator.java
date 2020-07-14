@@ -24,6 +24,7 @@ package org.socialworld.calculation.application;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.calculation.Calculation;
 import org.socialworld.calculation.FunctionByExpression;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
@@ -34,8 +35,11 @@ import org.socialworld.conversation.Lexem;
 import org.socialworld.core.Event;
 import org.socialworld.core.SocialWorldThread;
 import org.socialworld.knowledge.KnowledgeAtom;
+import org.socialworld.knowledge.KnowledgeAtomType;
 import org.socialworld.knowledge.KnowledgeElement;
 import org.socialworld.knowledge.KnowledgeSource;
+import org.socialworld.knowledge.KnowledgeSource_Type;
+import org.socialworld.knowledge.KnowledgeValue;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.StateAnimal;
 import org.socialworld.objects.access.HiddenAnimal;
@@ -177,16 +181,16 @@ public class KnowledgeCalculator extends SocialWorldThread {
 			lexemSubject = subject.getLexem();
 			
 			KnowledgeElement knowledgeElement = new KnowledgeElement(lexemSubject);
-			KnowledgeAtom atom = null;
 			KnowledgeSource source = null;
+			KnowledgeAtom atom = null;
 			
 			for (int index = 1; index < size; index++) {
 			
 				if ((index % 2) == 1) {
-					atom = (KnowledgeAtom) knowledgeElementProperties.get(index).getValue();
+					source = (KnowledgeSource) knowledgeElementProperties.get(index).getValue();
 				}
 				else {
-					source = (KnowledgeSource) knowledgeElementProperties.get(index).getValue();
+					atom = (KnowledgeAtom) knowledgeElementProperties.get(index).getValue();
 					knowledgeElement.add(atom, source);
 				}
 				
@@ -202,5 +206,117 @@ public class KnowledgeCalculator extends SocialWorldThread {
 		
 	}
 
-	
+	public static KnowledgeSource createKnowledgeSource(ValueArrayList knowledgeSourceProperties) {
+		
+		KnowledgeSource_Type type;
+		SimulationObject  origin;
+		KnowledgeSource result = null;
+		int find;
+		
+		find = knowledgeSourceProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_SOURCE_TYPE);
+		
+		if (find >= 0) {
+			type = KnowledgeSource_Type.getName((int) knowledgeSourceProperties.get(find).getValue());
+			find = knowledgeSourceProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_SOURCE);
+			if (find >= 0) {
+				origin = (SimulationObject) knowledgeSourceProperties.get(find).getValue();
+				result = new KnowledgeSource(type, origin);
+			}
+		}
+		
+		return result;
+		
+	}
+
+	public static KnowledgeAtom createKnowledgeAtom(KnowledgeAtomType type, ValueArrayList knowledgeAtomProperties) {
+		
+		KnowledgeAtom result = new KnowledgeValue(Calculation.getNothing());
+		
+		int index;
+		int size;
+		int find;
+		
+		Value subject = new Value() ;
+		Value verb = new Value();
+		Value adverb = new Value();
+		Value object1 = new Value();
+		Value object2 = new Value();
+		
+		Value value = Calculation.getNothing();
+		
+		size = knowledgeAtomProperties.size();
+		
+		switch (type) {
+		case relationTrinaer:
+			
+			find = knowledgeAtomProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_RELATION_OBJECT2);
+			if (find >= 0) {
+				object2 = knowledgeAtomProperties.get(find);
+			
+			}
+
+		case relationBinaer:
+			
+			find = knowledgeAtomProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_RELATION_OBJECT1);
+			if (find >= 0) {
+				object1 = knowledgeAtomProperties.get(find);
+			
+			}
+			
+		case relationUnaer:
+			
+			find = knowledgeAtomProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_RELATION_SUBJECT);
+			if (find >= 0) {
+				
+				subject = knowledgeAtomProperties.get(find);
+				
+				find = knowledgeAtomProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_RELATION_VERB);
+				if (find >= 0) {
+					verb = knowledgeAtomProperties.get(find);
+				
+				}
+
+				find = knowledgeAtomProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_RELATION_ADVERB);
+				if (find >= 0) {
+					adverb = knowledgeAtomProperties.get(find);
+				
+				}
+
+			}
+			
+			break;
+			
+		case property:
+			
+			break;
+			
+		case value:
+
+			if (size == 1) {
+				
+				value = knowledgeAtomProperties.get(0);
+			
+			}
+			else {
+				
+				find = knowledgeAtomProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_PROPERTY_VALUE + "0");
+				if (find >= 0) {
+					value = knowledgeAtomProperties.get(find);
+				
+				}
+				
+			}
+			
+			result = new KnowledgeValue(value);
+
+			break;
+			
+		}
+		
+		
+		
+		return result;
+		
+	}
+
 }

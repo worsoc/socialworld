@@ -96,7 +96,7 @@ public class EventPerceptionDescriptionPool extends DescriptionPool {
 		"KSbj:GETVal(" + Value.VALUE_BY_NAME_EVENT_PARAMS + ").GETVal(" + Value.VALUE_BY_NAME_EVENT_CAUSER + ");" +
 		"KSrcT:1," +
 		"KSrc:GETVal(" + Value.VALUE_NAME_KNOWLEDGE_SOURCE_MYSELF + ")," +
-		"KVal:GetVal(" + Value.VALUE_BY_NAME_EVENT_PARAMS + ").GETVal(" + Value.VALUE_BY_NAME_EVENT_CAUSER + ").GETProp(simobj_position).GETProp(position_vector)";
+		"KVal:GETVal(" + Value.VALUE_BY_NAME_EVENT_PARAMS + ").GETVal(" + Value.VALUE_BY_NAME_EVENT_CAUSER + ").GETProp(simobj_position).GETProp(position_vector)";
 		
 /*
 		// example for developing

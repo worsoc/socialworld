@@ -33,10 +33,11 @@ public class KnowledgeProperty extends KnowledgeFact {
 		this.value = value;
 	}
 	
-	public KnowledgeProperty(KnowledgeProperty original) {
+	protected KnowledgeProperty(KnowledgeProperty original) {
 		if (original != null) {
 			this.criterion  = original.getCriterion();
 			this.value = new KnowledgeFact_Value(original.getValue());
+			this.setSource(original.getSource());
 			this.setValid(original.isItemValid());
 			this.resetAccessCount();
 		}
