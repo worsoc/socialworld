@@ -26,12 +26,26 @@ public abstract class KnowledgeAtom {
 	private int itemAccessCount;
 	private boolean itemIsValid;
 
+	private KnowledgeSource source;
+	
 	abstract KnowledgeAtom copy();
 
 	void setValid(boolean isValid) {
 		this.itemIsValid = isValid;
 	}
 	
+	void setSource(KnowledgeSource source) {
+		this.source = source;
+	}
+	
+	KnowledgeSource getSource() {
+		return this.source;
+	}
+	
+	KnowledgeSource getSourceAsCopy() {
+		return new KnowledgeSource(this.source);
+	}
+
 	boolean isItemValid() {
 		return this.itemIsValid;
 	}
@@ -47,5 +61,7 @@ public abstract class KnowledgeAtom {
 	int getItemAccessCount() {
 		return this.itemAccessCount;
 	}
+	
+	// TODO implement equals()
 
 }

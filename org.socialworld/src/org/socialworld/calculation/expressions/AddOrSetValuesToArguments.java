@@ -21,6 +21,7 @@
 */
 package org.socialworld.calculation.expressions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.calculation.Expression;
@@ -32,7 +33,29 @@ public class AddOrSetValuesToArguments extends Expression {
 		
 		super();
 		
-		init(listExpressions);
+		List<String> names = new ArrayList<String>();
+		
+		for (int index = 0; index < listExpressions.size(); index++) {
+			names.add("");
+		}
+
+		init("", listExpressions, names);
+		
+		setOperation(Expression_Function.oneExpression);
+		setValid();
+	}
+
+	public AddOrSetValuesToArguments(String nameSubList, List<Expression> listExpressions) {
+		
+		super();
+		
+		List<String> names = new ArrayList<String>();
+		
+		for (int index = 0; index < listExpressions.size(); index++) {
+			names.add("");
+		}
+
+		init(nameSubList, listExpressions, names);
 		
 		setOperation(Expression_Function.oneExpression);
 		setValid();
@@ -42,14 +65,14 @@ public class AddOrSetValuesToArguments extends Expression {
 		
 		super();
 			
-		init(listExpressions, names);
+		init("", listExpressions, names);
 		
 		setOperation(Expression_Function.oneExpression);
 		setValid();
 		
 	}
 
-	private void init( List<Expression> listExpressions, List<String> names) {
+	private void init(String nameSubList,  List<Expression> listExpressions, List<String> names) {
 		
 		Expression expValue;
 		String name;
@@ -61,7 +84,12 @@ public class AddOrSetValuesToArguments extends Expression {
 		for (int index = listExpressions.size() - 1; index >= 0; index--) {
 			expValue = listExpressions.get(index);
 			name = names.get(index);
-			expAddValue = new Replacement(name, expValue);
+			if (nameSubList.length() > 0) {
+				expAddValue = new Replacement(nameSubList, name, expValue);
+			}
+			else {
+				expAddValue = new Replacement(name, expValue);
+			}
 			sequence[0] = expAddValue;
 			sequence[1] = expSequence;
 			expSequence = new Sequence(sequence);
@@ -72,25 +100,6 @@ public class AddOrSetValuesToArguments extends Expression {
 
 	}
 	
-	private void init( List<Expression> listExpressions) {
-		
-		Expression expValue;
-		Expression expAddValue;
-		Expression[] sequence = new Expression[2];
-		
-		Expression expSequence = Nothing.getInstance();
-		
-		for (int index = listExpressions.size() - 1; index >= 0; index--) {
-			expValue = listExpressions.get(index);
-			expAddValue = new Replacement(expValue);
-			sequence[0] = expAddValue;
-			sequence[1] = expSequence;
-			expSequence = new Sequence(sequence);
-		}
 
-		
-		setExpression1(expSequence);
-
-	}
 
 }

@@ -173,6 +173,8 @@ public class Expression {
 		String name;
 		int index;
 		
+		ValueArrayList valueList;
+		
 		if (this.isValid()) {
 			
 			try {
@@ -212,11 +214,11 @@ public class Expression {
 					name =  (String) expression1.evaluate(arguments).getValue();
 					// get the value list
 					tmp = arguments.getValue(name);
-					ValueArrayList subValueList = (ValueArrayList) tmp.getValue();
+					valueList = (ValueArrayList) tmp.getValue();
 					// get the value list element's name
 					name = (String) expression2.evaluate(arguments).getValue();
 					// get the result value from the value list
-					return subValueList.getValue(name);
+					return valueList.getValue(name);
 	
 				case property:
 					
@@ -255,15 +257,14 @@ public class Expression {
 					}
 					
 					if (checkSuccess) {
-						ValueArrayList subArgument;
 						if ((tmp.hasType(Type.valueList)) && (tmp.getValue() instanceof ValueArrayList)) {
-							subArgument = (ValueArrayList) tmp.getValue();
+							valueList = (ValueArrayList) tmp.getValue();
 						}
 						else {
-							subArgument	= new ValueArrayList();
-							subArgument.add(tmp);
+							valueList	= new ValueArrayList();
+							valueList.add(tmp);
 						}
-						tmp = expression2.evaluate(subArgument);
+						tmp = expression2.evaluate(valueList);
 						if (tmp instanceof ValueProperty) {
 							property = (ValueProperty) tmp;
 							if (property.getUsing() == null) {
@@ -353,11 +354,11 @@ public class Expression {
 							expression2.evaluate(arguments)   );
 					
 				case function:
-					ValueArrayList calculateArguments = new ValueArrayList();
-					calculateArguments.add( expression1.evaluate(arguments) );
-					calculateArguments.add( expression2.evaluate(arguments) );
-					calculateArguments.add( expression3.evaluate(arguments) );
-					return function.calculate(calculateArguments);
+					valueList = new ValueArrayList();
+					valueList.add( expression1.evaluate(arguments) );
+					valueList.add( expression2.evaluate(arguments) );
+					valueList.add( expression3.evaluate(arguments) );
+					return function.calculate(valueList);
 					
 				case oneExpression:
 					tmp = expression1.evaluate(arguments);
@@ -387,6 +388,26 @@ public class Expression {
 				
 					tmp = expression1.evaluate(arguments);
 					tmp = calculation.copy(tmp);
+					
+					// is there a name for a sub list
+					name = (String) expression2.evaluate().getValue();
+					if (name.length() > 0) {
+						if (arguments.findValue(name) < 0) {
+							// if the sub list doesn't exist, then create it and add it to arguments
+							valueList = new ValueArrayList();
+							arguments.add(new Value(Type.valueList, name, valueList));
+						}
+						else {
+							// get the sub list from arguments
+							valueList = (ValueArrayList) arguments.getValue(name).getValue();
+						}
+					}
+					else {
+						// use the arguments
+						valueList = arguments;
+					}
+					
+					// get the name for the (expression1) evaluated value 
 					name = (String) value.getValue();
 					
 					// just for debugging
@@ -401,24 +422,26 @@ public class Expression {
 					}
 					
 					if (name.length() > 0) {
-						index = arguments.findValue(name);
+						index = valueList.findValue(name);
 						if (index >= 0) {
 							if (tmp.getName().isEmpty()) {
 								tmp.changeName(name);
 							}
-							arguments.set(index, tmp);
+							valueList.set(index, tmp);
 						}
 						else {
 							tmp.changeName(name);
-							arguments.add(tmp);
+							valueList.add(tmp);
 						}
 					}
 					else {
-						arguments.add(tmp);
+						valueList.add(tmp);
 					}
 					return tmp;
 				
 				case create:
+					
+					// TODO name for a created object, given from expression evaluation
 					
 					Type type;
 					Value createdValue;;
@@ -428,35 +451,31 @@ public class Expression {
 					
 					switch (type) {
 					case action:
-						createdValue = createValue(type, arguments);
+						createdValue = createValue(type, type.name(), arguments);
 						break;
 					case time:
 						createdValue = calculation.createValue(type, expression2.evaluate().getValue());
 						break;
 					case knowledgeElement:
-						ValueArrayList knowledgeElementSourceAndAtoms = new ValueArrayList();
+						valueList = new ValueArrayList();
 						// expression2 is a sequence expression
 						expression2.evaluate(arguments);
-						size = arguments.size();
-						for ( index = 1; index < size; index++) {
-							knowledgeElementSourceAndAtoms.add(arguments.get(index));
-						}
-						createdValue = createValue(type, knowledgeElementSourceAndAtoms);
+						createdValue = createValue(type, type.name(), arguments);
 						break;
 					case knowledgeSource:
 					case knowledgeAtom:
 						int subType;
 						int firstCreateArgument;
 						subType = (int) expression1.evaluate().getValue();
-						ValueArrayList createArgs = new ValueArrayList();
+						valueList = new ValueArrayList();
 						// expression2 is a sequence expression
 						firstCreateArgument = arguments.size();
 						expression2.evaluate(arguments);
 						size = arguments.size();
 						for ( index = firstCreateArgument; index < size; index++) {
-							createArgs.add(arguments.get(index));
+							valueList.add(arguments.get(index));
 						}
-						createdValue = createValue(type, subType, createArgs);
+						createdValue = createValue(type, subType, type.name(), valueList);
 						break;
 					default:
 						createdValue = Calculation.getNothing();
@@ -550,12 +569,12 @@ public class Expression {
 	}
 	
 	// will be overridden in inherited Expressions dedicated to creating values
-	protected Value createValue(Type valueType, int subType, ValueArrayList arguments) {
+	protected Value createValue(Type valueType, int subType, String name, ValueArrayList arguments) {
 		return new Value();
 	}
 	
 	// will be overridden in inherited Expressions dedicated to creating values
-	protected Value createValue(Type valueType, ValueArrayList arguments) {
+	protected Value createValue(Type valueType, String name, ValueArrayList arguments) {
 		return new Value();
 	}
 

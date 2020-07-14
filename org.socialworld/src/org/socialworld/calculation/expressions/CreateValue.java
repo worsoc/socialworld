@@ -32,6 +32,7 @@ import org.socialworld.calculation.Value;
 import org.socialworld.calculation.application.ActionCreator;
 import org.socialworld.calculation.application.KnowledgeCalculator;
 import org.socialworld.collections.ValueArrayList;
+import org.socialworld.knowledge.KnowledgeAtomType;
 
 public class CreateValue extends Expression {
 
@@ -60,7 +61,7 @@ public class CreateValue extends Expression {
 		
 	}
 	
-	protected Value createValue(Type valueType, ValueArrayList arguments) {
+	protected Value createValue(Type valueType, String name, ValueArrayList arguments) {
 
 		Object createdObject = null;
 		Value createdValue;
@@ -102,33 +103,36 @@ public class CreateValue extends Expression {
 			
 		}
 		
-		createdValue = calculation.createValue(valueType, createdObject);
+		createdValue = calculation.createValue(valueType, name, createdObject);
 		
 		return createdValue;
 		
 	}
 
-	protected Value createValue(Type valueType, int subType, ValueArrayList arguments) {
+	protected Value createValue(Type valueType, int subType, String name, ValueArrayList arguments) {
 
 		Object createdObject = null;
 		Value createdValue;
 
-		ValueArrayList localArguments; 
 
 		switch (valueType) {
 
 		case knowledgeSource:
-			// TODO implement KnowledgeSource
+			createdObject  = KnowledgeCalculator.createKnowledgeSource(arguments);
 			break;
 		case knowledgeAtom:
-			// TODO implement KnowledgeAtom
+			
+			KnowledgeAtomType kat;
+			kat = KnowledgeAtomType.getName(subType);
+			
+			createdObject  = KnowledgeCalculator.createKnowledgeAtom(kat, arguments);
 			break;
 			
 		default:
 			
 		}
 		
-		createdValue = calculation.createValue(valueType, createdObject);
+		createdValue = calculation.createValue(valueType, name, createdObject);
 		
 		return createdValue;
 		

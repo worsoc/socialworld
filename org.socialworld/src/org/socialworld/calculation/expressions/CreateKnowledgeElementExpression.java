@@ -213,7 +213,7 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 			
 			if (listExpressions.size() > 1) {
 				
-				Expression sequence = new	AddOrSetValuesToArguments(listExpressions);
+				Expression sequence = new	AddOrSetValuesToArguments(Value.VALUE_BY_NAME_KNOWLEDGE_ELEMENT_PROPS, listExpressions);
 				setExpression2(sequence);
 	
 				setValid();

@@ -28,11 +28,24 @@ public class KnowledgeValue extends KnowledgeAtom {
 
 	private Value value;
 	
-	public KnowledgeValue(KnowledgeValue original) {
+	KnowledgeValue() {
+		this.setValid(false);
+		this.resetAccessCount();
+	}
+	
+	public KnowledgeValue(Value value) {
+		this.setValid(value.isValid());
+		this.resetAccessCount();
+		this.value = value;
+	}
+	
+	private KnowledgeValue(KnowledgeValue original) {
 		if (original != null) {
 			this.setValid(original.isItemValid());
 			this.resetAccessCount();
+			// TODO copy value and source?
 			this.value = original.value;
+			this.setSource(original.getSource());
 
 		}
 	}

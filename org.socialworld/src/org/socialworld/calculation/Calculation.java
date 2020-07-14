@@ -54,6 +54,18 @@ public class Calculation {
 		zeroVector = new Value(Type.vector, new Vector(0F, 0F, 0F));
 	}
 	
+	public  Value createValue(Type type, String name, Object value) {
+		
+		Value result;
+		
+		result = createValue(type, value);
+		result.setName(name);
+		
+		return result;
+		
+	}
+
+	
 	public  Value createValue(Type type, Object value) {
 		
 		Value created;

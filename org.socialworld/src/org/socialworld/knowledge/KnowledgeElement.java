@@ -63,7 +63,14 @@ public class KnowledgeElement {
 	}
 
 	KnowledgeSource getSourceAsCopy(int index) {
-		return this.knowledgeAtomList.getSourceAsCopy(index);
+		KnowledgeAtom ka;
+		ka = this.knowledgeAtomList.getAtom(index);
+		if (ka != null) {
+			return ka.getSourceAsCopy();
+		}
+		else {
+			return null;
+		}
 	}
 
 	int[] findFactsForCriterion(KnowledgeFact_Criterion criterion) {
