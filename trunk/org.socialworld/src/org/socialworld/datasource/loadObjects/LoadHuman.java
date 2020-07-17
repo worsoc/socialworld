@@ -23,6 +23,7 @@ package org.socialworld.datasource.loadObjects;
 
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.collections.SimulationObjectArray;
+import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Talk;
 import org.socialworld.conversation.Talk_SentenceType;
 import org.socialworld.conversation.Word;
@@ -37,13 +38,17 @@ import org.socialworld.knowledge.Acquaintance;
 import org.socialworld.knowledge.KnowledgeElement;
 import org.socialworld.knowledge.KnowledgeFact;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
-import org.socialworld.knowledge.KnowledgeFact_Value;
+import org.socialworld.knowledge.KnowledgeFact_Lexems;
 import org.socialworld.knowledge.KnowledgeProperty;
 import org.socialworld.knowledge.KnowledgeSource;
 import org.socialworld.knowledge.KnowledgeSource_Type;
 import org.socialworld.objects.*;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenHuman;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.socialworld.SimpleClientActionHandler;
 import org.socialworld.actions.handle.Inventory;
 
@@ -251,6 +256,8 @@ public class LoadHuman extends LoadAnimal {
 		KnowledgeSource source;
 		KnowledgeElement knowledgeElement;
 		
+		List<Lexem> lexems;
+		
 		tableKnowledgeFactAndSource.select(tableKnowledgeFactAndSource.SELECT_ALL_COLUMNS, " WHERE kfs_id = " + kfs_id, "");
 		allLfdNrForKFSID = tableKnowledgeFactAndSource.getAllPK2ForPK1(kfs_id);
 		size = allLfdNrForKFSID.length;
@@ -270,7 +277,10 @@ public class LoadHuman extends LoadAnimal {
 				origin_id = tableKnowledgeFactAndSource.getOrigin(row);
 				origin = allObjects.get(origin_id);
 				
-				fact = new KnowledgeProperty(kfc, new KnowledgeFact_Value(word.getLexem()));
+				lexems = new ArrayList<Lexem>();
+				lexems.add(word.getLexem());
+				
+				fact = new KnowledgeProperty(kfc, new KnowledgeFact_Lexems(lexems));
 				source = new KnowledgeSource(sourceType, origin);
 				
 				knowledgeElement.add(fact, source);

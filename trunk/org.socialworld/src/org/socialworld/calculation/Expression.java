@@ -422,15 +422,12 @@ public class Expression {
 					}
 					
 					if (name.length() > 0) {
+						tmp.changeName(name);
 						index = valueList.findValue(name);
 						if (index >= 0) {
-							if (tmp.getName().isEmpty()) {
-								tmp.changeName(name);
-							}
 							valueList.set(index, tmp);
 						}
 						else {
-							tmp.changeName(name);
 							valueList.add(tmp);
 						}
 					}
@@ -447,8 +444,13 @@ public class Expression {
 					Value createdValue;;
 					int size;
 					
-					type = Type.getName((int)value.getValue());
+					int subType;
+					type = Type.getName((int) value.getValue());
+					subType = (int) expression1.evaluate().getValue();
+					name = (String) expression3.evaluate().getValue();
 					
+					createdValue = createValue(type, subType, name, arguments);
+/*					
 					switch (type) {
 					case action:
 						createdValue = createValue(type, type.name(), arguments);
@@ -464,7 +466,6 @@ public class Expression {
 						break;
 					case knowledgeSource:
 					case knowledgeAtom:
-						int subType;
 						int firstCreateArgument;
 						subType = (int) expression1.evaluate().getValue();
 						valueList = new ValueArrayList();
@@ -480,7 +481,7 @@ public class Expression {
 					default:
 						createdValue = Calculation.getNothing();
 					}
-					
+*/					
 					return createdValue;
 					
 				default:
@@ -578,17 +579,62 @@ public class Expression {
 		return new Value();
 	}
 
-	protected final void evaluateExpression1(ValueArrayList arguments) {
-		expression1.evaluate(arguments);
+	protected final Value evaluateExpression1(ValueArrayList arguments) {
+		return expression1.evaluate(arguments);
 	}
 
-	protected final void evaluateExpression2(ValueArrayList arguments) {
-		expression2.evaluate(arguments);
+	protected final Value evaluateExpression2(ValueArrayList arguments) {
+		return expression2.evaluate(arguments);
 	}
 	
-	protected final void evaluateExpression3(ValueArrayList arguments) {
-		expression3.evaluate(arguments);
+	protected final Value evaluateExpression3(ValueArrayList arguments) {
+		return expression3.evaluate(arguments);
 	}
 
 
 }
+
+
+
+/*
+case create:
+	
+	// TODO name for a created object, given from expression evaluation
+	
+	Type type;
+	Value createdValue;;
+	int size;
+	
+	name = (String) expression3.evaluate().getValue();
+	
+	type = Type.getName((int)value.getValue());
+	
+	switch (type) {
+	case action:
+		createdValue = createValue(type, type.name(), arguments);
+		break;
+	case time:
+		createdValue = calculation.createValue(type, expression2.evaluate().getValue());
+		break;
+	case knowledgeElement:
+		valueList = new ValueArrayList();
+		// expression2 is a sequence expression
+		expression2.evaluate(arguments);
+		createdValue = createValue(type, type.name(), arguments);
+		break;
+	case knowledgeSource:
+	case knowledgeAtom:
+		int subType;
+		int firstCreateArgument;
+		subType = (int) expression1.evaluate().getValue();
+		valueList = new ValueArrayList();
+		// expression2 is a sequence expression
+		firstCreateArgument = arguments.size();
+		expression2.evaluate(arguments);
+		size = arguments.size();
+		for ( index = firstCreateArgument; index < size; index++) {
+			valueList.add(arguments.get(index));
+		}
+		createdValue = createValue(type, subType, type.name(), valueList);
+		break;
+*/

@@ -211,7 +211,7 @@ public class CreateActionExpression extends Branching {
 		case "MX+N":		result = new MXPlusN(function[1]);  break;
 		case "MLogX+N":		result = new MLogXPlusN(function[1]);  break;
 		case "MExpX+N":		result = new MExpXPlusN(function[1]);  break;
-		case "Now+N":		result = new CreateValue(Type.time, new Constant(calculation.createValue(Type.longinteger,  Integer.parseInt(function[1] )))); break;
+		case "Now+N":		result = new CreateValue(Type.time, property, new Constant(calculation.createValue(Type.longinteger,  Integer.parseInt(function[1] )))); break;
 		case "GetEvParm":	
 			result = new GetValueFromValueList(Value.VALUE_BY_NAME_EVENT_PARAMS, function[1]);  break;
 			// TODO "GetEvParm"

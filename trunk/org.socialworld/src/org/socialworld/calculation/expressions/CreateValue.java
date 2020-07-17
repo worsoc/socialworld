@@ -25,6 +25,7 @@ package org.socialworld.calculation.expressions;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.Time;
+import org.socialworld.calculation.Calculation;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
 import org.socialworld.calculation.Type;
@@ -44,12 +45,28 @@ public class CreateValue extends Expression {
 		// expression 1 is reserved for creation sub type
 		setExpression1(new Constant(new Value(Type.integer, 0)));
 		setExpression2(exp2);
+		setExpression3(new Constant(new Value(Type.string, Value.META_NAME_4_VALUE_NAME, type.name())));
 		setValue(new Value(Type.integer, type.getIndex()));
 		
 		setValid();
 		
 	}
 	
+	public CreateValue(Type type, String name, Expression exp2) {
+		
+		super();
+		
+		setOperation(Expression_Function.create);
+		// expression 1 is reserved for creation sub type
+		setExpression1(new Constant(new Value(Type.integer, 0)));
+		setExpression2(exp2);
+		setExpression3(new Constant(new Value(Type.string, Value.META_NAME_4_VALUE_NAME, name)));
+		setValue(new Value(Type.integer, type.getIndex()));
+		
+		setValid();
+		
+	}
+
 	protected CreateValue(Type type) {
 		
 		super();
@@ -57,10 +74,11 @@ public class CreateValue extends Expression {
 		setOperation(Expression_Function.create);
 		// expression 1 is reserved for creation sub type
 		setExpression1(new Constant(new Value(Type.integer, 0)));
+		setExpression3(new Constant(new Value(Type.string, Value.META_NAME_4_VALUE_NAME, type.name())));
 		setValue(new Value(Type.integer, type.getIndex()));
 		
 	}
-	
+/*	
 	protected Value createValue(Type valueType, String name, ValueArrayList arguments) {
 
 		Object createdObject = null;
@@ -94,7 +112,7 @@ public class CreateValue extends Expression {
 			
 		case knowledgeElement:
 			
-			localArguments =  (ValueArrayList) arguments.getValue(Value.VALUE_BY_NAME_KNOWLEDGE_ELEMENT_PROPS).getValue();
+			localArguments =  (ValueArrayList) arguments.getValue(Value.VALUE_NAME_KNOWLEDGE_ELEMENT_PROPS).getValue();
 			createdObject  = KnowledgeCalculator.createKnowledgeElement(localArguments);
 			break;
 
@@ -108,13 +126,74 @@ public class CreateValue extends Expression {
 		return createdValue;
 		
 	}
-
+*/
 	protected Value createValue(Type valueType, int subType, String name, ValueArrayList arguments) {
 
 		Object createdObject = null;
 		Value createdValue;
 
+		ValueArrayList localArguments = new ValueArrayList();
+		
+		int indexOrigArgs;
+		int size;		
+		int firstCreateArgument;
+		
+		switch (valueType) {
+		case action:
+			
+			for ( indexOrigArgs = 0; indexOrigArgs < arguments.size(); indexOrigArgs++) {
+				localArguments.add( arguments.get(indexOrigArgs) );
+			}
+			
+			localArguments.add( new Value(Type.actionType, Value.VALUE_BY_NAME_ACTION_TYPE, ActionType.ignore) );  
+			localArguments.add( new Value(Type.actionMode, Value.VALUE_BY_NAME_ACTION_MODE, ActionMode.ignore) );  
+			localArguments.add( new Value(Type.floatingpoint, Value.VALUE_BY_NAME_ACTION_INTENSITY, 0.0F) );  
+			localArguments.add( new Value(Type.time, Value.VALUE_BY_NAME_ACTION_MINTIME, new Time(true, 0)) );  
+			localArguments.add( new Value(Type.time, Value.VALUE_BY_NAME_ACTION_MAXTIME, new Time(true, 0)) );  
+			localArguments.add( new Value(Type.integer, Value.VALUE_BY_NAME_ACTION_PRIORITY, 0) );  
+			localArguments.add( new Value(Type.longinteger, Value.VALUE_BY_NAME_ACTION_DURATION, 0L) ); 
+			
+			evaluateExpression2(localArguments);
+					
+			createdObject = ActionCreator.createAction(localArguments) ;
+			break;
+		case time:
+			createdObject = evaluateExpression2(localArguments).getValue();
+			break;
+		case knowledgeElement:
+			evaluateExpression2(arguments);
+			localArguments =  (ValueArrayList) arguments.getValue(Value.VALUE_NAME_KNOWLEDGE_ELEMENT_PROPS).getValue();
+			createdObject  = KnowledgeCalculator.createKnowledgeElement(localArguments);
+			break;
+		case knowledgeSource:
+			firstCreateArgument = arguments.size();
+			evaluateExpression2(arguments);
+			size = arguments.size();
+			for ( indexOrigArgs = firstCreateArgument; indexOrigArgs < size; indexOrigArgs++) {
+				localArguments.add(arguments.get(indexOrigArgs));
+			}
+			createdObject  = KnowledgeCalculator.createKnowledgeSource(arguments);
+			break;
+		case knowledgeAtom:
 
+			KnowledgeAtomType kat;
+			kat = KnowledgeAtomType.getName(subType);
+			firstCreateArgument = arguments.size();
+			evaluateExpression2(arguments);
+			size = arguments.size();
+			for ( indexOrigArgs = firstCreateArgument; indexOrigArgs < size; indexOrigArgs++) {
+				localArguments.add(arguments.get(indexOrigArgs));
+			}
+			createdObject  = KnowledgeCalculator.createKnowledgeAtom(kat, localArguments);
+			break;
+
+		default:
+			return Calculation.getNothing();
+		}
+		
+		
+		
+/*		
 		switch (valueType) {
 
 		case knowledgeSource:
@@ -131,7 +210,7 @@ public class CreateValue extends Expression {
 		default:
 			
 		}
-		
+*/		
 		createdValue = calculation.createValue(valueType, name, createdObject);
 		
 		return createdValue;

@@ -27,7 +27,6 @@ import org.socialworld.calculation.FunctionByMatrix;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.knowledge.KnowledgeElement;
-import org.socialworld.knowledge.KnowledgeProperties;
 import org.socialworld.objects.WriteAccessToAnimal;
 
 /**
