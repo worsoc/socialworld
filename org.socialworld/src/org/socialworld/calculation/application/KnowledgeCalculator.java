@@ -21,8 +21,6 @@
 */
 package org.socialworld.calculation.application;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.socialworld.calculation.Calculation;
 import org.socialworld.calculation.FunctionByExpression;
@@ -30,6 +28,7 @@ import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.descriptions.EventPerceptionAssignment;
 import org.socialworld.calculation.descriptions.EventPerceptionDescription;
+import org.socialworld.collections.CapacityQueue;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.conversation.Lexem;
 import org.socialworld.core.Event;
@@ -58,20 +57,24 @@ public class KnowledgeCalculator extends SocialWorldThread {
 	
 	private static KnowledgeCalculator instance;
 
-	private List<Event> events4Perception;
+	private CapacityQueue<CollectionElementSimObjInfluenced> perceptions;
+
+/*	private List<Event> events4Perception;
 	private List<StateAnimal> states4Perception;
 	private List<HiddenAnimal> hiddenAnimals4Perception;
-
+*/
 	
 	/**
 	 * private Constructor. 
 	 */
 	private KnowledgeCalculator() {
 
-		this.events4Perception = new ArrayList<Event>();
+		this.perceptions = new CapacityQueue<CollectionElementSimObjInfluenced>("perceptions", 1000);
+
+/*		this.events4Perception = new ArrayList<Event>();
 		this.states4Perception = new ArrayList<StateAnimal>();
 		this.hiddenAnimals4Perception = new ArrayList<HiddenAnimal>();
-
+*/
 		
 	}
 
@@ -86,10 +89,10 @@ public class KnowledgeCalculator extends SocialWorldThread {
 
 		while (isRunning()) {
 			
-			calculatePerception();
+			if (this.perceptions.size() > 0) calculatePerception();
 			
 			try {
-				sleep(20);
+				sleep(5);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -99,15 +102,21 @@ public class KnowledgeCalculator extends SocialWorldThread {
 
 	final void calculatePerception(Event event, StateAnimal stateAnimal, HiddenAnimal hiddenWriteAccess) {
 		if (event != null && stateAnimal != null && hiddenWriteAccess != null) {
+			if (!this.perceptions.add(new CollectionElementSimObjInfluenced(event, stateAnimal, hiddenWriteAccess))) {
+				// TODO what shall happen if the queue is filled
+			};
+		}
+/*		if (event != null && stateAnimal != null && hiddenWriteAccess != null) {
 			this.events4Perception.add(event);
 			this.states4Perception.add(stateAnimal);
 			this.hiddenAnimals4Perception.add( hiddenWriteAccess);
 		}
+*/
 	}
 
 	private final int calculatePerception() {
 		
-		if ((this.events4Perception.size() == 0) || 
+/*		if ((this.events4Perception.size() == 0) || 
 				(this.states4Perception.size() == 0) ||
 				(this.hiddenAnimals4Perception.size() == 0)) 
 		{
@@ -117,9 +126,22 @@ public class KnowledgeCalculator extends SocialWorldThread {
 		Event event = this.events4Perception.remove(0);
 		StateAnimal stateAnimal  = this.states4Perception.remove(0);
 		HiddenAnimal hiddenWriteAccess = this.hiddenAnimals4Perception.remove(0);
+*/
+		CollectionElementSimObjInfluenced perception = this.perceptions.remove();
+		if (perception != null) {
 
-		return setFacts( event,  stateAnimal,  hiddenWriteAccess);
-	
+			Event event = perception.getEvent();
+			StateAnimal stateAnimal  = (StateAnimal) perception.getState();
+			HiddenAnimal hiddenWriteAccess =  (HiddenAnimal) perception.getHidden();
+
+			return setFacts( event,  stateAnimal,  hiddenWriteAccess);
+			
+		}
+		else {
+			System.out.println("KnowledgeCalculator.calculatePerception(): perception is null");
+			return KNOWLEDGE_CALCULATOR_RETURNS_EMPTY_LISTS;
+		}
+		
 	}
 	
 	private final int setFacts(Event event, StateAnimal stateAnimal, HiddenAnimal hiddenWriteAccess) {

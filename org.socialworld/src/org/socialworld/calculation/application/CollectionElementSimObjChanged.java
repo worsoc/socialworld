@@ -1,23 +1,23 @@
 package org.socialworld.calculation.application;
 
-import org.socialworld.objects.StateAnimal;
-import org.socialworld.objects.access.HiddenAnimal;
+import org.socialworld.objects.StateSimulationObject;
+import org.socialworld.objects.access.HiddenSimulationObject;
 
 public class CollectionElementSimObjChanged {
 	
-	private StateAnimal state;
-	private HiddenAnimal hidden;
+	private StateSimulationObject state;
+	private HiddenSimulationObject hidden;
 	
-	CollectionElementSimObjChanged(StateAnimal state, HiddenAnimal hidden) {
+	CollectionElementSimObjChanged(StateSimulationObject state, HiddenSimulationObject hidden) {
 		this.state = state;
 		this.hidden = hidden;
 	}
 	
-	StateAnimal getState() {
+	StateSimulationObject getState() {
 		return this.state;
 	}
 	
-	HiddenAnimal getHidden() {
+	HiddenSimulationObject getHidden() {
 		return this.hidden;
 	}
 

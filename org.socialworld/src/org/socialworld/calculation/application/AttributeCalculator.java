@@ -157,8 +157,8 @@ public  class AttributeCalculator extends SocialWorldThread {
 		if (influenced != null) {
 
 			Event event = influenced.getEvent();
-			StateAnimal stateAnimal  = influenced.getState();
-			HiddenAnimal hiddenWriteAccess =  influenced.getHidden();
+			StateAnimal stateAnimal  = (StateAnimal) influenced.getState();
+			HiddenAnimal hiddenWriteAccess =  (HiddenAnimal) influenced.getHidden();
 
 	/*		Event event = this.events.remove(0);
 			StateAnimal stateAnimal  = this.states4Influence.remove(0);
@@ -244,8 +244,8 @@ public  class AttributeCalculator extends SocialWorldThread {
 		CollectionElementSimObjChanged changed = this.changed.remove();
 		if (changed != null) {
 
-			StateAnimal stateAnimal  = changed.getState();
-			HiddenAnimal hiddenWriteAccess =  changed.getHidden();
+			StateAnimal stateAnimal  = (StateAnimal) changed.getState();
+			HiddenAnimal hiddenWriteAccess = (HiddenAnimal) changed.getHidden();
 
 			Value resultAttributeArray;
 	
@@ -305,8 +305,8 @@ public  class AttributeCalculator extends SocialWorldThread {
 		CollectionElementSimObjRefreshed refreshed = this.refreshed.remove();
 		if (refreshed != null) {
 
-			StateAnimal stateAnimal  = refreshed.getState();
-			HiddenAnimal hiddenWriteAccess =  refreshed.getHidden();
+			StateAnimal stateAnimal  = (StateAnimal) refreshed.getState();
+			HiddenAnimal hiddenWriteAccess =  (HiddenAnimal) refreshed.getHidden();
 			
 			Value resultAttributeArray;
 			
