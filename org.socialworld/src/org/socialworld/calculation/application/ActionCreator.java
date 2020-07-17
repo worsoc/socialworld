@@ -25,8 +25,6 @@ import org.socialworld.objects.StateAnimal;
 import org.socialworld.objects.StateSimulationObject;
 import org.socialworld.objects.access.HiddenSimulationObject;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionNothing;
@@ -46,6 +44,7 @@ import org.socialworld.calculation.descriptions.EventReactionAssignment;
 import org.socialworld.calculation.descriptions.EventReactionDescription;
 import org.socialworld.calculation.descriptions.State2ActionAssignment;
 import org.socialworld.calculation.descriptions.State2ActionDescription;
+import org.socialworld.collections.CapacityQueue;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.Event;
 import org.socialworld.core.SocialWorldThread;
@@ -54,13 +53,19 @@ public class ActionCreator extends SocialWorldThread {
 
 	private static ActionCreator instance;
 	
+	private CapacityQueue<CollectionElementReactor> reactors;
+
+	/*
 	private List<Event> events;
 	private List<StateSimulationObject> statesReactor;
 	private List<HiddenSimulationObject> hiddenReactors;
-
+*/
+	private CapacityQueue<CollectionElementActor> actors;
+	
+	/*
 	private List<StateSimulationObject> statesActor;
 	private List<HiddenSimulationObject> hiddenActors;
-	
+	*/
 	private static String namePropertyActionType = Value.VALUE_BY_NAME_ACTION_TYPE;
 	
 	private int sleepTime = 5;
@@ -71,12 +76,20 @@ public class ActionCreator extends SocialWorldThread {
 	 */
 	private ActionCreator() {
 		
+		this.reactors = new CapacityQueue<CollectionElementReactor>("reactors", 1000);
+
+		/*
 		this.events = new ArrayList<Event>();
 		this.statesReactor = new ArrayList<StateSimulationObject>();
 		this.hiddenReactors = new ArrayList<HiddenSimulationObject>();
+		*/
 		
+		this.actors = new CapacityQueue<CollectionElementActor>("actors", 1000);
+
+		/*
 		this.statesActor = new ArrayList<StateSimulationObject>();
 		this.hiddenActors = new ArrayList<HiddenSimulationObject>();
+		*/
 		
 		String[] actionPropertyNames;
 		actionPropertyNames = ActionType.getStandardPropertyNames();
@@ -96,8 +109,8 @@ public class ActionCreator extends SocialWorldThread {
 
 		while (isRunning()) {
 			
-			calculateReaction();
-			calculateAction();
+			if (this.reactors.size() > 0) calculateReaction();
+			if (this.actors.size() > 0) calculateAction();
 			
 			try {
 				sleep(sleepTime);
@@ -111,16 +124,26 @@ public class ActionCreator extends SocialWorldThread {
 	
 	final void  createReaction( final Event event,	final StateSimulationObject stateSimObj,	final HiddenSimulationObject hiddenSimObj) {
 		if (event != null && stateSimObj != null && hiddenSimObj != null) {
+			if (!this.reactors.add(new CollectionElementReactor(event, stateSimObj, hiddenSimObj))) {
+				// TODO what shall happen if the queue is filled
+			};
+/*
 			this.events.add(event);
 			this.statesReactor.add(stateSimObj);
 			this.hiddenReactors.add(hiddenSimObj);
+*/			
 		}
 	}
 	
 	final void createAction(	final StateSimulationObject stateSimObj, final HiddenSimulationObject hiddenSimObj) {
 		if (stateSimObj != null && hiddenSimObj != null) {
+			if (!this.actors.add(new CollectionElementActor(stateSimObj, hiddenSimObj))) {
+				// TODO what shall happen if the queue is filled
+			};
+			/*
 			this.statesActor.add(stateSimObj);
 			this.hiddenActors.add(hiddenSimObj);
+			*/
 		}
 	}
 
@@ -133,61 +156,75 @@ public class ActionCreator extends SocialWorldThread {
 
 		// TODO fuer Debuggen
 		
-		if (this.events.size() > sizeThreashold) {
-			System.out.println("ActionCreator.calculateReaction(): this.events.size() " + this.events.size());
+		if (this.reactors.size() > sizeThreashold) {
+			System.out.println("ActionCreator.calculateReaction(): this.reactors.size() " + this.reactors.size());
 		}
 		
-		// TODO one reactor list element type ( a class containing the references to event, stateReactor and hiddenReactor)
-		
+		/*
 		if ((this.events.size() == 0) ||
 			(this.statesReactor.size() == 0) ||
 			(this.hiddenReactors.size() == 0))  return;
+		*/
 		
-		Event event = this.events.remove(0);
-		StateSimulationObject stateReactor  = this.statesReactor.remove(0);
-		HiddenSimulationObject hiddenReactor = this.hiddenReactors.remove(0);
-	
-		
-		if ((event == null) || (stateReactor == null) || (hiddenReactor == null)) return;
-		
-		int eventType = event.getEventTypeAsInt();
-		int eventReactionType = stateReactor.getReactionType(eventType);
-		EventReactionDescription eventReactionDescription = 
-				EventReactionAssignment.getInstance().getEventReactionDescription(
-					eventType, eventReactionType	);
-		int count = eventReactionDescription.countFunctions();
-		
-		AbstractAction reaction;
-		FunctionByExpression f_CreateReaction;
-		
-		for (int index = 0; index < count; index++) 
-		{
-			f_CreateReaction = eventReactionDescription.getFunctionCreateAction(index);
+		CollectionElementReactor reactor = this.reactors.remove();
+		if (reactor != null) {
+
+			/*
+			Event event = this.events.remove(0);
+			StateSimulationObject stateReactor  = this.statesReactor.remove(0);
+			HiddenSimulationObject hiddenReactor = this.hiddenReactors.remove(0);
 			
-			if (stateReactor instanceof StateAnimal) {
-				reaction = createAnimalReaction(event, (StateAnimal) stateReactor, f_CreateReaction);
-			}
-			else
-				reaction = createNoAnimalReaction(event, stateReactor);
+			if ((event == null) || (stateReactor == null) || (hiddenReactor == null)) return;
+			*/
+			
+			Event event = reactor.getEvent();
+			StateSimulationObject stateReactor  = reactor.getState();
+			HiddenSimulationObject hiddenReactor =  reactor.getHidden();
+
+			int eventType = event.getEventTypeAsInt();
+			int eventReactionType = stateReactor.getReactionType(eventType);
+			EventReactionDescription eventReactionDescription = 
+					EventReactionAssignment.getInstance().getEventReactionDescription(
+						eventType, eventReactionType	);
+			int count = eventReactionDescription.countFunctions();
+			
+			AbstractAction reaction;
+			FunctionByExpression f_CreateReaction;
+			
+			for (int index = 0; index < count; index++) 
+			{
+				f_CreateReaction = eventReactionDescription.getFunctionCreateAction(index);
 				
-			if (reaction != null) {
-				if (!reaction.isToBeIgnored())	{
-					// Logging ...
-					System.out.println("ActionCreator.calculateReaction(): Obj: " + stateReactor.getObjectID() + ": " + reaction.getType().toString() +  "." + reaction.getMode().toString());
-					if (reaction.getType() == ActionType.useWeapon) {
-						if (((ActionAttack) reaction).getTarget() == null) {
-							System.out.println("UseWeapon from object " + stateReactor.getObjectID() + " to target object null"  );
-						}
-						else {
-							System.out.println("UseWeapon from object " + stateReactor.getObjectID() + " to target object " + ((ActionAttack) reaction).getTarget().getObjectID() );
-						}
-					}
-					// ... Logging
-					
-					hiddenReactor.setAction(reaction);
+				if (stateReactor instanceof StateAnimal) {
+					reaction = createAnimalReaction(event, (StateAnimal) stateReactor, f_CreateReaction);
 				}
+				else
+					reaction = createNoAnimalReaction(event, stateReactor);
+					
+				if (reaction != null) {
+					if (!reaction.isToBeIgnored())	{
+						// Logging ...
+						System.out.println("ActionCreator.calculateReaction(): Obj: " + stateReactor.getObjectID() + ": " + reaction.getType().toString() +  "." + reaction.getMode().toString());
+						if (reaction.getType() == ActionType.useWeapon) {
+							if (((ActionAttack) reaction).getTarget() == null) {
+								System.out.println("UseWeapon from object " + stateReactor.getObjectID() + " to target object null"  );
+							}
+							else {
+								System.out.println("UseWeapon from object " + stateReactor.getObjectID() + " to target object " + ((ActionAttack) reaction).getTarget().getObjectID() );
+							}
+						}
+						// ... Logging
+						
+						hiddenReactor.setAction(reaction);
+					}
+				}
+				
 			}
 			
+		}
+		else {
+			System.out.println("ActionCreator.calculateReaction(): reactor is null");
+
 		}
 	}
 	
@@ -196,37 +233,52 @@ public class ActionCreator extends SocialWorldThread {
 	 *
 	 */
 	private void calculateAction() {
-		
+	/*	
 		if ((this.statesActor.size() == 0) ||
 				(this.hiddenActors.size() == 0))  return;
 
 		HiddenSimulationObject hiddenActor = this.hiddenActors.remove(0);
 		StateSimulationObject stateActor  = this.statesActor.remove(0);
+	*/	
 		
-		int state2ActionType = stateActor.getState2ActionType();
-		State2ActionDescription state2ActionDescription = 
-			State2ActionAssignment.getInstance().getState2ActionDescription(state2ActionType);
-		int count = state2ActionDescription.countFunctions();
-		
-		FunctionByExpression f_CreateAction;
-		AbstractAction action;
-		
-		for (int index = 0; index < count; index++) {
+
+		CollectionElementActor actor = this.actors.remove();
+		if (actor != null) {
 			
-			f_CreateAction = state2ActionDescription.getFunctionCreateAction(index);
-	
-			if (stateActor instanceof StateAnimal) 
-				action = createAnimalActionByState((StateAnimal)stateActor, f_CreateAction);
-			else
-				action = createNoAnimalActionByState(stateActor);
+			HiddenSimulationObject hiddenActor = actor.getHidden();
+			StateSimulationObject stateActor = actor.getState(); 
+
+			int state2ActionType = stateActor.getState2ActionType();
+			State2ActionDescription state2ActionDescription = 
+				State2ActionAssignment.getInstance().getState2ActionDescription(state2ActionType);
+			int count = state2ActionDescription.countFunctions();
 			
-			if (!action.isToBeIgnored()) {	
+			FunctionByExpression f_CreateAction;
+			AbstractAction action;
+			
+			for (int index = 0; index < count; index++) {
 				
-				System.out.println("ActionCreator.calculateAction(): " + action.getType().toString() +  "." + action.getMode().toString());
-				hiddenActor.setAction(action);
-			}
-		}
+				f_CreateAction = state2ActionDescription.getFunctionCreateAction(index);
 		
+				if (stateActor instanceof StateAnimal) 
+					action = createAnimalActionByState((StateAnimal)stateActor, f_CreateAction);
+				else
+					action = createNoAnimalActionByState(stateActor);
+				
+				if (!action.isToBeIgnored()) {	
+					
+					System.out.println("ActionCreator.calculateAction(): " + action.getType().toString() +  "." + action.getMode().toString());
+					hiddenActor.setAction(action);
+				}
+				
+			}
+			
+		}
+		else {
+			System.out.println("ActionCreator.calculateAction(): actor is null");
+
+		}
+
 	}
 	
 	
