@@ -21,6 +21,8 @@
 */
 package org.socialworld.knowledge;
 
+import java.util.List;
+
 import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Numerus;
 import org.socialworld.conversation.Word;
@@ -62,7 +64,12 @@ public class AnswerProperty extends KnowledgeProperty implements IAnswer {
 	}
 	
 	public Word getAnswerValue() {
-		return getValue().getLexem().getWord();
+		// TODO choose from lexem list
+		List<Lexem> lexems = getLexems();
+		if (lexems.size() > 0)
+			return lexems.get(0).getWord();
+		else
+			return new Word();
 		
 	}
 

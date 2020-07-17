@@ -21,6 +21,10 @@
 */
 package org.socialworld.knowledge;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.socialworld.calculation.Value;
 import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Numerus;
 import org.socialworld.conversation.Word;
@@ -30,13 +34,15 @@ public class KnowledgeRelationBinaer extends KnowledgeRelation {
 	private Lexem object;
 	private Numerus numerusObject;
 
-	public KnowledgeRelationBinaer() {
-		
+	public KnowledgeRelationBinaer(Value subject, Value verb, Value adverb, Value object) {
+		super(subject, verb, adverb);
+		this.object = translateToLexem(object);
 	}
-
-	public KnowledgeRelationBinaer(KnowledgeRelationBinaer original) {
+	
+	KnowledgeRelationBinaer(KnowledgeRelationBinaer original) {
+		super(original);
 		if (original != null) {
-			// TODO
+			// TODO copy
 		}
 	}
 	
@@ -63,13 +69,14 @@ public class KnowledgeRelationBinaer extends KnowledgeRelation {
 		return object.getWord(numerusObject);
 	}
 	
-	Lexem[] getValues() {
-		Lexem[] result = new Lexem[2];
-		result[0] = getLexemSubject();
-		result[1] = this.object;
+	List<Lexem> getLexems() {
+		List<Lexem> result = new ArrayList<Lexem>();
+		result.add(getLexemSubject());
+		result.add(this.object);
 		
 		return result;
 	}
+
 
 
 }

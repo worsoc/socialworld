@@ -21,6 +21,9 @@
 */
 package org.socialworld.knowledge;
 
+import java.util.List;
+
+import org.socialworld.calculation.Value;
 import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Numerus;
 import org.socialworld.conversation.Tense;
@@ -38,6 +41,19 @@ public abstract class KnowledgeRelation extends KnowledgeFact {
 	private Lexem subject;
 	private Numerus numerusSubject;
 	
+	protected KnowledgeRelation(Value subject, Value verb, Value adverb) {
+		this.subject = translateToLexem(subject);
+		this.verb = translateToLexem(verb);
+		this.adverb = translateToLexem(adverb);
+		// TODO set tense and numerus
+	}
+	
+	protected KnowledgeRelation(KnowledgeRelation original) {
+		if (original != null) {
+			// TODO copy
+		}
+	}
+
 	abstract Word getSubject();
 	abstract Word getVerb();
 	abstract Word getAdverb();
@@ -52,7 +68,7 @@ public abstract class KnowledgeRelation extends KnowledgeFact {
 	Lexem getLexemSubject() { return subject; }
 	Numerus getNumerusSubject() { return numerusSubject; }
 	
-	abstract Lexem[] getValues();
+	abstract List<Lexem> getLexems();
 	
 	KnowledgeFact_Criterion getCriterion() {
 		return KnowledgeFact_Criterion.relation;

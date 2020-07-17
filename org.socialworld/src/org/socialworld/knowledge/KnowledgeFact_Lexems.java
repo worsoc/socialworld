@@ -21,34 +21,28 @@
 */
 package org.socialworld.knowledge;
 
+import java.util.List;
+
 import org.socialworld.conversation.Lexem;
 
-public class KnowledgeFact_Value {
-	private Lexem value;
-	private Lexem lexemValue[];
+public class KnowledgeFact_Lexems {
+	private List<Lexem> lexems;
 	
-	public KnowledgeFact_Value(Lexem value) {
-		this.value = value;
-		this.lexemValue = new Lexem[1];
-		this.lexemValue[0] = value;
+	public KnowledgeFact_Lexems(List<Lexem> lexems) {
+		this.lexems = lexems;
 	}
 	
-	public KnowledgeFact_Value(KnowledgeFact_Value original) {
-		this.value = original.getLexem();
-		this.lexemValue = new Lexem[1];
-		this.lexemValue[0] = original.getLexem();
+	KnowledgeFact_Lexems(KnowledgeFact_Lexems original) {
+		this.lexems = original.getLexems();
 	}
 	
-	Lexem[] getLexems() {
-		return lexemValue;
+	List<Lexem> getLexems() {
+		return this.lexems;
 	}
 	
-	protected Lexem getLexem() {
-		return value;
-	}
 
 
-	protected boolean equals(KnowledgeFact_Value b) {
-		return this.value.equals(b.value);
+	protected boolean equals(KnowledgeFact_Lexems b) {
+		return this.lexems.equals(b.lexems);
 	}
 }
