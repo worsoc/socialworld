@@ -285,7 +285,7 @@ public class CreateKnowledgeAtomExpression extends CreateValue {
 		List<String> names = new ArrayList<String>();
 
 		listExpressions.add(expression);
-		names.add(Value.VALUE_NAME_KNOWLEDGE_PROPERTY_VALUE + "0");
+		names.add(Value.VALUE_NAME_KNOWLEDGE_VALUE_VALUE + "0");
 
 		// setting the knowledge atom sub type 
 		setExpression1(new Constant(new Value(Type.integer, KnowledgeAtomType.value.getIndex())));

@@ -27,7 +27,8 @@ import org.socialworld.attributes.Time;
 
 public class Value {
 
-
+	public static final String META_NAME_4_VALUE_NAME = "valueName";
+	
 	public static final String PRAEFIX_ACTION = "action_";
 	public static final String PRAEFIX_EVENT = "event_";
 
@@ -90,8 +91,9 @@ public class Value {
 	public static final String VALUE_BY_NAME_WEAPON_HARDNESS = PRAEFIX_WEAPON + "hardness";
 	public static final String VALUE_BY_NAME_WEAPON_SHARPNESS = PRAEFIX_WEAPON + "sharpness";
 	
-	public static final String VALUE_BY_NAME_KNOWLEDGE_ELEMENT_PROPS = "knowledgeElementProperties";
+	public static final String VALUE_NAME_KNOWLEDGE_ELEMENT_PROPS = "knowledgeElementProperties";
 
+	public static final String VALUE_NAME_KNOWLEDGE_SUBJECT = "subject";
 	public static final String VALUE_NAME_KNOWLEDGE_SOURCE = "source";
 	public static final String VALUE_NAME_KNOWLEDGE_SOURCE_TYPE = "sourceType";
 	public static final String VALUE_NAME_KNOWLEDGE_SOURCE_MYSELF = "myself";
@@ -102,6 +104,7 @@ public class Value {
 	public static final String VALUE_NAME_KNOWLEDGE_RELATION_OBJECT2 = "object2";
 	public static final String VALUE_NAME_KNOWLEDGE_PROPERTY_CRITERION = "criterion";
 	public static final String VALUE_NAME_KNOWLEDGE_PROPERTY_VALUE = "value_"; // the value's index number is added !
+	public static final String VALUE_NAME_KNOWLEDGE_VALUE_VALUE = "value_"; // the value's index number is added !
 	
 	public static final String VALUE_NAME_UNUSED_BECAUSE_TEMPORARY = "temp";
 

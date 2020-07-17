@@ -37,6 +37,10 @@ import org.socialworld.core.SocialWorldThread;
 import org.socialworld.knowledge.KnowledgeAtom;
 import org.socialworld.knowledge.KnowledgeAtomType;
 import org.socialworld.knowledge.KnowledgeElement;
+import org.socialworld.knowledge.KnowledgeProperty;
+import org.socialworld.knowledge.KnowledgeRelationBinaer;
+import org.socialworld.knowledge.KnowledgeRelationTrinaer;
+import org.socialworld.knowledge.KnowledgeRelationUnaer;
 import org.socialworld.knowledge.KnowledgeSource;
 import org.socialworld.knowledge.KnowledgeSource_Type;
 import org.socialworld.knowledge.KnowledgeValue;
@@ -232,36 +236,85 @@ public class KnowledgeCalculator extends SocialWorldThread {
 		
 		KnowledgeAtom result = new KnowledgeValue(Calculation.getNothing());
 		
-		int index;
 		int size;
 		int find;
 		
-		Value subject = new Value() ;
-		Value verb = new Value();
-		Value adverb = new Value();
-		Value object1 = new Value();
-		Value object2 = new Value();
+		Value subject = Calculation.getNothing();
+		Value verb = Calculation.getNothing();
+		Value adverb = Calculation.getNothing();
+		Value object1 = Calculation.getNothing();
+		Value object2 = Calculation.getNothing();
+		
+		Value kfc = Calculation.getNothing();
 		
 		Value value = Calculation.getNothing();
+		
+		ValueArrayList values = new ValueArrayList();
 		
 		size = knowledgeAtomProperties.size();
 		
 		switch (type) {
 		case relationTrinaer:
-			
-			find = knowledgeAtomProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_RELATION_OBJECT2);
+	
+			find = knowledgeAtomProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_RELATION_SUBJECT);
 			if (find >= 0) {
-				object2 = knowledgeAtomProperties.get(find);
+				
+				subject = knowledgeAtomProperties.get(find);
+				
+				find = knowledgeAtomProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_RELATION_VERB);
+				if (find >= 0) {
+					verb = knowledgeAtomProperties.get(find);
+				}
+
+				find = knowledgeAtomProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_RELATION_ADVERB);
+				if (find >= 0) {
+					adverb = knowledgeAtomProperties.get(find);
+				}
+
+				find = knowledgeAtomProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_RELATION_OBJECT1);
+				if (find >= 0) {
+					object1 = knowledgeAtomProperties.get(find);
+				}
+
+				find = knowledgeAtomProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_RELATION_OBJECT2);
+				if (find >= 0) {
+					object2 = knowledgeAtomProperties.get(find);
+				}
+
+				result = new KnowledgeRelationTrinaer(subject, verb, adverb, object1, object2);
 			
 			}
-
+			
+			break;
+			
 		case relationBinaer:
 			
-			find = knowledgeAtomProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_RELATION_OBJECT1);
+			find = knowledgeAtomProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_RELATION_SUBJECT);
 			if (find >= 0) {
-				object1 = knowledgeAtomProperties.get(find);
-			
+				
+				subject = knowledgeAtomProperties.get(find);
+				
+				find = knowledgeAtomProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_RELATION_VERB);
+				if (find >= 0) {
+					verb = knowledgeAtomProperties.get(find);
+				}
+
+				find = knowledgeAtomProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_RELATION_ADVERB);
+				if (find >= 0) {
+					adverb = knowledgeAtomProperties.get(find);
+				}
+
+				find = knowledgeAtomProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_RELATION_OBJECT1);
+				if (find >= 0) {
+					object1 = knowledgeAtomProperties.get(find);
+				}
+				
+				result = new KnowledgeRelationBinaer(subject, verb, adverb, object1);
+
+
 			}
+			
+			break;
 			
 		case relationUnaer:
 			
@@ -282,11 +335,37 @@ public class KnowledgeCalculator extends SocialWorldThread {
 				
 				}
 
+				result = new KnowledgeRelationUnaer(subject, verb, adverb);
+
 			}
 			
 			break;
 			
 		case property:
+			
+			find = knowledgeAtomProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_PROPERTY_CRITERION);
+			
+			if (find >= 0) {
+				
+				kfc = knowledgeAtomProperties.get(find);
+				
+				if (size >= 2) {
+					// okay
+					
+					for (find = 0; find < size; find++) {
+						value = knowledgeAtomProperties.get(find);
+						if (value.getName().equals(Value.VALUE_NAME_KNOWLEDGE_PROPERTY_CRITERION)) continue;
+						if (value.getName().indexOf(Value.VALUE_NAME_KNOWLEDGE_PROPERTY_VALUE) == 0) {
+							values.add(value);
+						}
+						
+					}
+					
+					result = new KnowledgeProperty(kfc, values);
+				
+				}
+
+			}
 			
 			break;
 			
@@ -299,7 +378,7 @@ public class KnowledgeCalculator extends SocialWorldThread {
 			}
 			else {
 				
-				find = knowledgeAtomProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_PROPERTY_VALUE + "0");
+				find = knowledgeAtomProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_VALUE_VALUE + "0");
 				if (find >= 0) {
 					value = knowledgeAtomProperties.get(find);
 				
@@ -312,8 +391,6 @@ public class KnowledgeCalculator extends SocialWorldThread {
 			break;
 			
 		}
-		
-		
 		
 		return result;
 		
