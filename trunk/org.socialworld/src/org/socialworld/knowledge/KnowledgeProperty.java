@@ -21,22 +21,36 @@
 */
 package org.socialworld.knowledge;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.socialworld.calculation.Value;
+import org.socialworld.collections.ValueArrayList;
 import org.socialworld.conversation.Lexem;
 
 public class KnowledgeProperty extends KnowledgeFact {
 
 	private KnowledgeFact_Criterion criterion;
-	private KnowledgeFact_Value value;
+	private KnowledgeFact_Lexems lexems;
 	
-	public KnowledgeProperty(KnowledgeFact_Criterion criterion, KnowledgeFact_Value value ) {
+	public KnowledgeProperty(Value criterion, ValueArrayList values ) {
+		this.criterion = KnowledgeFact_Criterion.getName( (int) criterion.getValue());
+		List<Lexem> lexems = new ArrayList<Lexem>();
+		for (int index =  0; index < values.size(); index++) {
+			lexems.add(translateToLexem(values.get(index)));
+		}
+		this.lexems = new KnowledgeFact_Lexems(lexems);
+	}
+
+	public KnowledgeProperty(KnowledgeFact_Criterion criterion, KnowledgeFact_Lexems lexems ) {
 		this.criterion = criterion;
-		this.value = value;
+		this.lexems = lexems;
 	}
 	
 	protected KnowledgeProperty(KnowledgeProperty original) {
 		if (original != null) {
 			this.criterion  = original.getCriterion();
-			this.value = new KnowledgeFact_Value(original.getValue());
+			this.lexems = new KnowledgeFact_Lexems(original.getLexems());
 			this.setSource(original.getSource());
 			this.setValid(original.isItemValid());
 			this.resetAccessCount();
@@ -47,20 +61,18 @@ public class KnowledgeProperty extends KnowledgeFact {
 		return new KnowledgeProperty(this);
 	}
 	
-	Lexem[] getValues() {
-		return this.value.getLexems();
+	List<Lexem> getLexems() {
+		return this.lexems.getLexems();
 	}
 	
-	protected KnowledgeFact_Value getValue() {
-		return value;
-	}
 	
 	protected KnowledgeFact_Criterion getCriterion() {
 		return criterion;
 	}
 	
 	protected boolean equals(KnowledgeProperty b) {
-		return ( this.criterion == b.criterion & this.value.equals(b.value) );
+		return ( this.criterion == b.criterion & this.lexems.equals(b.lexems) );
 	}
+	
 
 }

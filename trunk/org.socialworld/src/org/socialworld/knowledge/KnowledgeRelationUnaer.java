@@ -21,18 +21,23 @@
 */
 package org.socialworld.knowledge;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.socialworld.calculation.Value;
 import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Word;
 
 public class KnowledgeRelationUnaer extends KnowledgeRelation {
 
-	public KnowledgeRelationUnaer() {
-		
+	public KnowledgeRelationUnaer(Value subject, Value verb, Value adverb) {
+		super(subject, verb, adverb);
 	}
 	
-	public KnowledgeRelationUnaer(KnowledgeRelationUnaer original) {
+	KnowledgeRelationUnaer(KnowledgeRelationUnaer original) {
+		super(original);
 		if (original != null) {
-			// TODO
+			// TODO copy
 		}
 	}
 	
@@ -55,11 +60,13 @@ public class KnowledgeRelationUnaer extends KnowledgeRelation {
 		return getLexemSubject().getWord(getNumerusSubject());
 	}
 
-	Lexem[] getValues() {
-		Lexem[] result = new Lexem[1];
-		result[0] = getLexemSubject();
+	List<Lexem> getLexems() {
+		List<Lexem> result = new ArrayList<Lexem>();
+		result.add(getLexemSubject());
 		
 		return result;
 	}
+
+
 	
 }

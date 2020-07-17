@@ -22,6 +22,7 @@
 package org.socialworld.knowledge;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.socialworld.conversation.Lexem;
 
@@ -87,7 +88,7 @@ public class KnowledgeAtomList  {
 		KnowledgeAtom atom;
 		KnowledgeFact fact = null;
 		
-		Lexem lexems[];
+		List<Lexem> lexems;
 		int indexLexem;
 		int countLexems;
 		
@@ -110,12 +111,12 @@ public class KnowledgeAtomList  {
 	
 					fact = (KnowledgeFact) atom;
 					
-					lexems = fact.getValues();
-					countLexems = lexems.length;
+					lexems = fact.getLexems();
+					countLexems = lexems.size();
 					
 					found = false;
 					for (indexLexem = 0; indexLexem < countLexems; indexLexem++) {
-						if (lexems[indexLexem] == value) found = true;
+						if (lexems.get(indexLexem) == value) found = true;
 					}
 				
 				}
@@ -240,7 +241,7 @@ public class KnowledgeAtomList  {
 		int count = 0;
 		int index;
 		
-		Lexem lexems[];
+		List<Lexem> lexems;
 		int indexLexem;
 		int countLexems;
 
@@ -256,12 +257,12 @@ public class KnowledgeAtomList  {
 			
 					fact = (KnowledgeFact) atom;
 					
-					lexems = fact.getValues();
-					countLexems = lexems.length;
+					lexems = fact.getLexems();
+					countLexems = lexems.size();
 					
 					for (indexLexem = 0; indexLexem < countLexems; indexLexem++) {
 						
-						if (lexems[indexLexem] == value)  	{
+						if (lexems.get(indexLexem) == value)  	{
 							
 							result_tmp[count] = index;
 							count++;

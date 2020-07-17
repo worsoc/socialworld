@@ -21,15 +21,33 @@
 */
 package org.socialworld.knowledge;
 
+//import java.util.ArrayList;
+import java.util.List;
+
+import org.socialworld.calculation.Value;
+//import org.socialworld.collections.ValueArrayList;
 import org.socialworld.conversation.Lexem;
 
 public abstract class KnowledgeFact extends KnowledgeAtom {
 	
 	
 	
-	abstract Lexem[] getValues();
+	abstract List<Lexem> getLexems();
 	abstract KnowledgeFact_Criterion getCriterion();
 
 	
+	protected Lexem translateToLexem(Value value) {
+		Lexem result = null;
+		// TODO translate from value to lexem
+		return result;
+	}
+	
+	/*
+	protected List<Lexem> translateToLexems(ValueArrayList values) {
+		List<Lexem> result = new ArrayList<Lexem>();
+		// TODO translate from values to lexems
+		return result;
+	}
+*/
 
 }
