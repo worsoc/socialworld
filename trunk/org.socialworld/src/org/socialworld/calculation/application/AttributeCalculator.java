@@ -21,8 +21,6 @@
 */
 package org.socialworld.calculation.application;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.FunctionByExpression;
@@ -34,6 +32,7 @@ import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueTransferCode;
 import org.socialworld.calculation.descriptions.EventInfluenceAssignment;
 import org.socialworld.calculation.descriptions.EventInfluenceDescription;
+import org.socialworld.collections.CapacityQueue;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.Event;
 import org.socialworld.core.SocialWorldThread;
@@ -49,31 +48,43 @@ public  class AttributeCalculator extends SocialWorldThread {
 
 	private static AttributeCalculator instance;
 
+	private CapacityQueue<CollectionElementSimObjInfluenced> influenced;
+
+/*	
 	private List<Event> events;
 	private List<StateAnimal> states4Influence;
 	private List<HiddenAnimal> hiddenAnimals4Influence;
+*/
 
-	private List<StateAnimal> states4Change;
-	private List<HiddenAnimal> hiddenAnimals4Change;
-
-	private List<StateAnimal> states4Refresh;
-	private List<HiddenAnimal> hiddenAnimals4Refresh;
+	private CapacityQueue<CollectionElementSimObjChanged> changed;
 	
+/*	private List<StateAnimal> states4Change;
+	private List<HiddenAnimal> hiddenAnimals4Change;
+*/
+	
+	private CapacityQueue<CollectionElementSimObjRefreshed> refreshed;
+/*	private List<StateAnimal> states4Refresh;
+	private List<HiddenAnimal> hiddenAnimals4Refresh;
+*/	
 	/**
 	 * private Constructor. 
 	 */
 	private AttributeCalculator() {
 
+		this.influenced = new CapacityQueue<CollectionElementSimObjInfluenced>("influenced", 1000);
+/*
 		this.events = new ArrayList<Event>();
 		this.states4Influence = new ArrayList<StateAnimal>();
 		this.hiddenAnimals4Influence = new ArrayList<HiddenAnimal>();
-
-		this.states4Change = new ArrayList<StateAnimal>();
+*/
+		this.changed = new CapacityQueue<CollectionElementSimObjChanged>("changed", 1000);
+/*		this.states4Change = new ArrayList<StateAnimal>();
 		this.hiddenAnimals4Change = new ArrayList<HiddenAnimal>();
-
-		this.states4Refresh = new ArrayList<StateAnimal>();
+*/
+		this.refreshed = new CapacityQueue<CollectionElementSimObjRefreshed>("refreshed", 1000);
+/*		this.states4Refresh = new ArrayList<StateAnimal>();
 		this.hiddenAnimals4Refresh = new ArrayList<HiddenAnimal>();
-		
+*/		
 	}
 
 	public static AttributeCalculator getInstance() {
@@ -87,12 +98,12 @@ public  class AttributeCalculator extends SocialWorldThread {
 
 		while (isRunning()) {
 			
-			calculateAttributesChangedByEvent();
-			calculateAttributesChangedByComplexMatrix();
-			calculateAttributesChangedBySimpleMatrix();
+			if (this.influenced.size() > 0) calculateAttributesChangedByEvent();
+			if (this.changed.size() > 0) calculateAttributesChangedByComplexMatrix();
+			if (this.refreshed.size() > 0) calculateAttributesChangedBySimpleMatrix();
 			
 			try {
-				sleep(20);
+				sleep(5);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -102,50 +113,74 @@ public  class AttributeCalculator extends SocialWorldThread {
 	
 	final void calculateAttributesChangedByEvent(Event event, StateAnimal stateAnimal, HiddenAnimal hiddenWriteAccess) {
 		if (event != null && stateAnimal != null && hiddenWriteAccess != null) {
-			this.events.add(event);
+			if (!this.influenced.add(new CollectionElementSimObjInfluenced(event, stateAnimal, hiddenWriteAccess))) {
+				// TODO what shall happen if the queue is filled
+			};
+/*			this.events.add(event);
 			this.states4Influence.add(stateAnimal);
 			this.hiddenAnimals4Influence.add( hiddenWriteAccess);
+*/
 		}
 	}
 
 	final void calculateAttributesChangedByComplexMatrix(StateAnimal stateAnimal, HiddenAnimal hiddenWriteAccess) {
 		if (stateAnimal != null && hiddenWriteAccess != null) {
-			this.states4Change.add(stateAnimal);
+			if (!this.changed.add(new CollectionElementSimObjChanged(stateAnimal, hiddenWriteAccess))) {
+				// TODO what shall happen if the queue is filled
+			};
+/*			this.states4Change.add(stateAnimal);
 			this.hiddenAnimals4Change.add( hiddenWriteAccess);
+*/			
 		}
 	}
 	
 	final void calculateAttributesChangedBySimpleMatrix(StateAnimal stateAnimal, HiddenAnimal hiddenWriteAccess) {
-		this.states4Refresh.add(stateAnimal);
+		if (stateAnimal != null && hiddenWriteAccess != null) {
+			if (!this.refreshed.add(new CollectionElementSimObjRefreshed(stateAnimal, hiddenWriteAccess))) {
+				// TODO what shall happen if the queue is filled
+			};
+/*		this.states4Refresh.add(stateAnimal);
 		this.hiddenAnimals4Refresh.add( hiddenWriteAccess);
+*/		}
 	}
 	
 	private final int calculateAttributesChangedByEvent() {
 		
-		if ((this.events.size() == 0) || 
+/*		if ((this.events.size() == 0) || 
 			(this.states4Influence.size() == 0) ||
 			(this.hiddenAnimals4Influence.size() == 0)) 
 		{
 			return ATTRIBUTE_CALCULATOR_RETURNS_EMPTY_LISTS;
 		}
-		
-		Event event = this.events.remove(0);
-		StateAnimal stateAnimal  = this.states4Influence.remove(0);
-		HiddenAnimal hiddenWriteAccess = this.hiddenAnimals4Influence.remove(0);
-		
-		Value resultAttributeArray;
+*/		
+		CollectionElementSimObjInfluenced influenced = this.influenced.remove();
+		if (influenced != null) {
 
-		resultAttributeArray = getAttributesChangedByEvent(event, stateAnimal);
-		
-		if (resultAttributeArray.isValid()) {
-			if (resultAttributeArray.getTransferCode() == ValueTransferCode.noChanges) {
-				return ATTRIBUTE_CALCULATOR_RETURNS_NO_CHANGES;
+			Event event = influenced.getEvent();
+			StateAnimal stateAnimal  = influenced.getState();
+			HiddenAnimal hiddenWriteAccess =  influenced.getHidden();
+
+	/*		Event event = this.events.remove(0);
+			StateAnimal stateAnimal  = this.states4Influence.remove(0);
+			HiddenAnimal hiddenWriteAccess = this.hiddenAnimals4Influence.remove(0);
+	*/		
+			Value resultAttributeArray;
+	
+			resultAttributeArray = getAttributesChangedByEvent(event, stateAnimal);
+			
+			if (resultAttributeArray.isValid()) {
+				if (resultAttributeArray.getTransferCode() == ValueTransferCode.noChanges) {
+					return ATTRIBUTE_CALCULATOR_RETURNS_NO_CHANGES;
+				}
+				return hiddenWriteAccess.setAttributes(resultAttributeArray);
 			}
-			return hiddenWriteAccess.setAttributes(resultAttributeArray);
+			else
+				return ATTRIBUTE_CALCULATOR_RETURNS_INVALID_RESULT;
 		}
-		else
-			return ATTRIBUTE_CALCULATOR_RETURNS_INVALID_RESULT;
-		
+		else {
+			System.out.println("AttributeCalculator.calculateAttributesChangedByEvent(): influenced is null");
+			return ATTRIBUTE_CALCULATOR_RETURNS_EMPTY_LISTS;
+		}
 	}
 	
 	
@@ -201,24 +236,35 @@ public  class AttributeCalculator extends SocialWorldThread {
 
 	private final int calculateAttributesChangedByComplexMatrix() {
 		
-		if (this.hiddenAnimals4Change.size() == 0) return ATTRIBUTE_CALCULATOR_RETURNS_EMPTY_LISTS;
+/*		if (this.hiddenAnimals4Change.size() == 0) return ATTRIBUTE_CALCULATOR_RETURNS_EMPTY_LISTS;
 		
 		StateAnimal stateAnimal  = this.states4Change.remove(0);
 		HiddenAnimal hiddenWriteAccess = this.hiddenAnimals4Change.remove(0);
-		
-		Value resultAttributeArray;
+*/		
+		CollectionElementSimObjChanged changed = this.changed.remove();
+		if (changed != null) {
 
-		resultAttributeArray = getAttributesChangedByComplexMatrix(stateAnimal);
-		
-		if (resultAttributeArray.isValid()) {
-			if (resultAttributeArray.getTransferCode() == ValueTransferCode.noChanges) {
-				return ATTRIBUTE_CALCULATOR_RETURNS_NO_CHANGES;
+			StateAnimal stateAnimal  = changed.getState();
+			HiddenAnimal hiddenWriteAccess =  changed.getHidden();
+
+			Value resultAttributeArray;
+	
+			resultAttributeArray = getAttributesChangedByComplexMatrix(stateAnimal);
+			
+			if (resultAttributeArray.isValid()) {
+				if (resultAttributeArray.getTransferCode() == ValueTransferCode.noChanges) {
+					return ATTRIBUTE_CALCULATOR_RETURNS_NO_CHANGES;
+				}
+				return hiddenWriteAccess.setAttributes(resultAttributeArray);
 			}
-			return hiddenWriteAccess.setAttributes(resultAttributeArray);
+			else
+				return ATTRIBUTE_CALCULATOR_RETURNS_INVALID_RESULT;
 		}
-		else
-			return ATTRIBUTE_CALCULATOR_RETURNS_INVALID_RESULT;
-
+		else {
+			System.out.println("AttributeCalculator.calculateAttributesChangedByComplexMatrix(): changed is null");
+			return ATTRIBUTE_CALCULATOR_RETURNS_EMPTY_LISTS;
+		}
+		
 	}
 
 	private static Value getAttributesChangedByComplexMatrix(StateAnimal stateAnimal) {
@@ -251,24 +297,35 @@ public  class AttributeCalculator extends SocialWorldThread {
 	
 	private final int calculateAttributesChangedBySimpleMatrix() {
 		
-		if (this.hiddenAnimals4Refresh.size() == 0) return ATTRIBUTE_CALCULATOR_RETURNS_EMPTY_LISTS;
+/*		if (this.hiddenAnimals4Refresh.size() == 0) return ATTRIBUTE_CALCULATOR_RETURNS_EMPTY_LISTS;
 		
 		StateAnimal stateAnimal  = this.states4Refresh.remove(0);
 		HiddenAnimal hiddenWriteAccess = this.hiddenAnimals4Refresh.remove(0);
-		
-		Value resultAttributeArray;
-		
-		resultAttributeArray = getAttributesChangedBySimpleMatrix(stateAnimal);
-		
-		if (resultAttributeArray.isValid()) {
-			if (resultAttributeArray.getTransferCode() == ValueTransferCode.noChanges) {
-				return ATTRIBUTE_CALCULATOR_RETURNS_NO_CHANGES;
-			}
-			return hiddenWriteAccess.setAttributes(resultAttributeArray);
-		}
-		else
-			return ATTRIBUTE_CALCULATOR_RETURNS_INVALID_RESULT;
+*/		
+		CollectionElementSimObjRefreshed refreshed = this.refreshed.remove();
+		if (refreshed != null) {
 
+			StateAnimal stateAnimal  = refreshed.getState();
+			HiddenAnimal hiddenWriteAccess =  refreshed.getHidden();
+			
+			Value resultAttributeArray;
+			
+			resultAttributeArray = getAttributesChangedBySimpleMatrix(stateAnimal);
+			
+			if (resultAttributeArray.isValid()) {
+				if (resultAttributeArray.getTransferCode() == ValueTransferCode.noChanges) {
+					return ATTRIBUTE_CALCULATOR_RETURNS_NO_CHANGES;
+				}
+				return hiddenWriteAccess.setAttributes(resultAttributeArray);
+			}
+			else
+				return ATTRIBUTE_CALCULATOR_RETURNS_INVALID_RESULT;
+		}
+		else {
+			System.out.println("AttributeCalculator.calculateAttributesChangedBySimpleMatrix(): refreshed is null");
+			return ATTRIBUTE_CALCULATOR_RETURNS_EMPTY_LISTS;
+		}
+		
 	}
 	
 	private static Value getAttributesChangedBySimpleMatrix(StateAnimal stateAnimal) {
