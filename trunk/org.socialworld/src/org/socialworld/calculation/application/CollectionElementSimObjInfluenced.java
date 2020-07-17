@@ -1,16 +1,16 @@
 package org.socialworld.calculation.application;
 
 import org.socialworld.core.Event;
-import org.socialworld.objects.StateAnimal;
-import org.socialworld.objects.access.HiddenAnimal;
+import org.socialworld.objects.StateSimulationObject;
+import org.socialworld.objects.access.HiddenSimulationObject;
 
 public class CollectionElementSimObjInfluenced {
 
 	private Event event;
-	private StateAnimal state;
-	private HiddenAnimal hidden;
+	private StateSimulationObject state;
+	private HiddenSimulationObject hidden;
 	
-	CollectionElementSimObjInfluenced(Event event, StateAnimal state, HiddenAnimal hidden) {
+	CollectionElementSimObjInfluenced(Event event, StateSimulationObject state, HiddenSimulationObject hidden) {
 		this.event = event;
 		this.state = state;
 		this.hidden = hidden;
@@ -20,11 +20,11 @@ public class CollectionElementSimObjInfluenced {
 		return this.event;
 	}
 	
-	StateAnimal getState() {
+	StateSimulationObject getState() {
 		return this.state;
 	}
 	
-	HiddenAnimal getHidden() {
+	HiddenSimulationObject getHidden() {
 		return this.hidden;
 	}
 

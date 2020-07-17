@@ -21,10 +21,9 @@
 */
 package org.socialworld.calculation.application;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.socialworld.calculation.Value;
+import org.socialworld.collections.CapacityQueue;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.conversation.Talk_SentenceType;
 import org.socialworld.core.Event;
@@ -47,19 +46,23 @@ public class TalkCalculator  extends SocialWorldThread {
 
 	private static TalkCalculator instance;
 
-	private List<Event> events;
+	private CapacityQueue<CollectionElementSimObjInfluenced> influencedTalks;
+	
+/*	private List<Event> events;
 	private List<StateHuman> states;
 	private List<HiddenHuman> hiddenHumans;
-
+*/
 	/**
 	 * private Constructor. 
 	 */
 	private TalkCalculator() {
 
-		this.events = new ArrayList<Event>();
+		this.influencedTalks = new CapacityQueue<CollectionElementSimObjInfluenced>("influencedTalks", 1000);
+
+/*		this.events = new ArrayList<Event>();
 		this.states = new ArrayList<StateHuman>();
 		this.hiddenHumans = new ArrayList<HiddenHuman>();
-		
+*/		
 	}
 
 	public static TalkCalculator getInstance() {
@@ -73,10 +76,10 @@ public class TalkCalculator  extends SocialWorldThread {
 
 		while (isRunning()) {
 			
-			calculateTalkChangedByEvent();
+			if (this.influencedTalks.size() > 0) calculateTalkInfluencedByEvent();
 			
 			try {
-				sleep(20);
+				sleep(5);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -86,47 +89,63 @@ public class TalkCalculator  extends SocialWorldThread {
 	
 	
 	
-	public final void calculateTalkChangedByEvent(Event event, StateHuman stateHuman, HiddenHuman hiddenWriteAccess) {
-		this.events.add(event);
+	public final void calculateTalkInfluencedByEvent(Event event, StateHuman stateHuman, HiddenHuman hiddenWriteAccess) {
+		if (event != null && stateHuman != null && hiddenWriteAccess != null) {
+			if (!this.influencedTalks.add(new CollectionElementSimObjInfluenced(event, stateHuman, hiddenWriteAccess))) {
+				// TODO what shall happen if the queue is filled
+			};
+		}
+/*		this.events.add(event);
 		this.states.add(stateHuman);
 		this.hiddenHumans.add( hiddenWriteAccess);
+*/
 	}
 
-	private final void calculateTalkChangedByEvent() {
+	private final void calculateTalkInfluencedByEvent() {
 		
-		if (this.hiddenHumans.size() == 0) return;
+/*		if (this.hiddenHumans.size() == 0) return;
 		
 		Event event = this.events.remove(0);
 		StateHuman stateHuman  = this.states.remove(0);
 		HiddenHuman hiddenWriteAccess = this.hiddenHumans.remove(0);
+*/		
+		CollectionElementSimObjInfluenced influencedTalk = this.influencedTalks.remove();
+		if (influencedTalk != null) {
+
+			Event event = influencedTalk.getEvent();
+			StateHuman stateHuman  = (StateHuman) influencedTalk.getState();
+			HiddenHuman hiddenWriteAccess =  (HiddenHuman) influencedTalk.getHidden();
 		
+			EventType eventType;
+			eventType = event.getEventType();
 		
-		EventType eventType;
-	
-		
-		eventType = event.getEventType();
-	
-		switch (eventType) {
-		case selfListenToStatement:
-		case selfListenToQuestion:
-		case selfListenToInstruction:
-			calculateListenTo(event, eventType, stateHuman, hiddenWriteAccess );
-			break;
-			
-		case selfUnderstand:
-			calculateUnderstand(event, eventType, stateHuman, hiddenWriteAccess);
-			break;
-			
-		case selfAnswerNormal:
-		case selfAnswerScream:
-		case selfAnswerWhisper:
-			calculateAnswers(event, eventType, stateHuman, hiddenWriteAccess);
-			break;
-			
-			
-		default:
+			switch (eventType) {
+			case selfListenToStatement:
+			case selfListenToQuestion:
+			case selfListenToInstruction:
+				calculateListenTo(event, eventType, stateHuman, hiddenWriteAccess );
+				break;
+				
+			case selfUnderstand:
+				calculateUnderstand(event, eventType, stateHuman, hiddenWriteAccess);
+				break;
+				
+			case selfAnswerNormal:
+			case selfAnswerScream:
+			case selfAnswerWhisper:
+				calculateAnswers(event, eventType, stateHuman, hiddenWriteAccess);
+				break;
+				
+				
+			default:
+				return;
+			}
+		}	
+		else {
+			System.out.println("TalkCalculator.calculateTalkInfluencedByEvent(): influencedTalk is null");
 			return;
 		}
+			
 	}
 	
 	private final static void calculateListenTo(Event event, EventType eventType, StateHuman stateHuman, HiddenHuman hiddenWriteAccess) {

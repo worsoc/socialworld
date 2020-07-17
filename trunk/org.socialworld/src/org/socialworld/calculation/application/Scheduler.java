@@ -115,7 +115,7 @@ public class Scheduler{
 	
 	public void calculateTalkChangedByEvent(final Event event, final StateHuman stateHuman, final HiddenHuman hiddenWriteAccess) {
 		
-		threadTalkCalculator.calculateTalkChangedByEvent(event,  stateHuman,  hiddenWriteAccess);
+		threadTalkCalculator.calculateTalkInfluencedByEvent(event,  stateHuman,  hiddenWriteAccess);
 		
 	}
 

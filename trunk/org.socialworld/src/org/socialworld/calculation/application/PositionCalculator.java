@@ -21,14 +21,13 @@
 */
 package org.socialworld.calculation.application;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.geometry.Vector;
+import org.socialworld.collections.CapacityQueue;
 import org.socialworld.core.Event;
 import org.socialworld.core.EventType;
 import org.socialworld.core.SocialWorldThread;
@@ -48,19 +47,22 @@ public class PositionCalculator extends SocialWorldThread {
 
 	private static PositionCalculator instance;
 
-	private List<Event> events;
+	private CapacityQueue<CollectionElementSimObjInfluenced> moved;
+
+/*	private List<Event> events;
 	private List<StateSimulationObject> states;
 	private List<HiddenSimulationObject> hiddenSimObjects;
-
+*/
 	/**
 	 * private Constructor. 
 	 */
 	private PositionCalculator() {
 
-		this.events = new ArrayList<Event>();
+		this.moved = new CapacityQueue<CollectionElementSimObjInfluenced>("moved", 1000);
+/*		this.events = new ArrayList<Event>();
 		this.states = new ArrayList<StateSimulationObject>();
 		this.hiddenSimObjects = new ArrayList<HiddenSimulationObject>();
-		
+*/		
 	}
 
 	public static PositionCalculator getInstance() {
@@ -74,10 +76,10 @@ public class PositionCalculator extends SocialWorldThread {
 
 		while (isRunning()) {
 			
-			calculatePositionChangedByEvent();
+			if (this.moved.size() > 0) calculatePositionChangedByEvent();
 			
 			try {
-				sleep(20);
+				sleep(5);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -86,99 +88,115 @@ public class PositionCalculator extends SocialWorldThread {
 	}
 	
 	final void calculatePositionChangedByEvent(final Event event, final StateSimulationObject state, final HiddenSimulationObject hiddenWriteAccess) {
-		this.events.add(event);
+
+		if (event != null && state != null && hiddenWriteAccess != null) {
+			if (!this.moved.add(new CollectionElementSimObjInfluenced(event, state, hiddenWriteAccess))) {
+				// TODO what shall happen if the queue is filled
+			};
+		}
+/*		this.events.add(event);
 		this.states.add(state);
 		this.hiddenSimObjects.add( hiddenWriteAccess);
+*/
 	}
 	
 	private final int calculatePositionChangedByEvent() {
 
-		if (this.hiddenSimObjects.size() == 0) return POSITION_CALCULATOR_RETURNS_EMPTY_LISTS;
+/*		if (this.hiddenSimObjects.size() == 0) return POSITION_CALCULATOR_RETURNS_EMPTY_LISTS;
 		
 		Event event = this.events.remove(0);
 		StateSimulationObject state  = this.states.remove(0);
 		HiddenSimulationObject hiddenWriteAccess = this.hiddenSimObjects.remove(0);
-		
-		int returnSetPosition;
-		int returnSetMove;
-		
-		EventType eventType;
-		
-		
-		Position positionOriginal;
-		Vector position;
-		Position newPosition;
-		
-		Direction directionMoveObject;
-		Vector vectorMoveObject;
-		float powerMoveObject;
+*/		
+		CollectionElementSimObjInfluenced moved = this.moved.remove();
+		if (moved != null) {
 
-		Direction directionEvent;
-		Vector vectorEvent;
-		float powerEvent;
-		
-		float resultingPowerMoveObject;
-		
-		
-		// TODO get elements from List
+			Event event = moved.getEvent();
+			StateSimulationObject state  =  moved.getState();
+			HiddenSimulationObject hiddenWriteAccess =   moved.getHidden();
 
 		
-		eventType = event.getEventType();
-		positionOriginal = (Position) state.getProperty(SimulationCluster.position, PropertyName.simobj_position).getValue();
-		position = positionOriginal.getVector(SimulationCluster.position);
-		
-		directionMoveObject = (Direction) state.getProperty(SimulationCluster.position, PropertyName.simobj_directionMove).getValue();
-//		directionMoveObject = (Direction) state.getDirectionMoveAsValue(SimulationCluster.position, PropertyName.SIMOBJPROP_DIRECTION_MOVE).getValue();
-		vectorMoveObject = directionMoveObject.getVector(SimulationCluster.position);
-		powerMoveObject = directionMoveObject.getPower();
-		
-		directionEvent = (Direction) event.getDirection().getValue();
-		if (directionEvent != null) {
-			vectorEvent = directionEvent.getVector(SimulationCluster.position);
-		}
-		else {
-			// TODO directionEvent is null
-			vectorEvent = new Vector(0,0,0);
-		}
-		powerEvent = event.getStrength();
-		
-		if (!vectorEvent.isNormalized()) vectorEvent.normalize();
-		if (!vectorMoveObject.isNormalized()) vectorMoveObject.normalize();
-		
-		switch (eventType) {
-		// TODO cases and implementations
-		case selfSleep:
-			vectorEvent = new Vector(0,0,0);
-			powerMoveObject = 0;
-			break;
-		default:
-			return POSITION_CALCULATOR_RETURNS_NO_CHANGE;
-		}
-		
-		// TODO calculate resulting direction and power
-		
-		
-		vectorMoveObject.mul(powerMoveObject);
-		vectorEvent.mul(powerEvent);
-		vectorMoveObject.add(vectorEvent);
-		
-		resultingPowerMoveObject = vectorMoveObject.length();
-		position.add(vectorMoveObject);
-		vectorMoveObject.normalize();
-		
-		newPosition = new Position(PropertyName.simobj_position, position);
-		
-		
-		returnSetPosition = hiddenWriteAccess.setPosition(newPosition);
-		if (returnSetPosition != WriteAccessToSimulationObject.WRITE_ACCESS_RETURNS_SUCCESS) return returnSetPosition;
-		
-		returnSetMove = hiddenWriteAccess.setMove(new Direction(PropertyName.simobj_directionMove, vectorMoveObject, resultingPowerMoveObject));
-		if (returnSetMove != WriteAccessToSimulationObject.WRITE_ACCESS_RETURNS_SUCCESS) return returnSetMove;
-
-		if (vectorMoveObject.equals(new Vector(0,0,0)))
-			return POSITION_CALCULATOR_RETURNS_NO_CHANGE;
-		else
-			return POSITION_CALCULATOR_RETURNS_CHANGE;
+			int returnSetPosition;
+			int returnSetMove;
 			
+			EventType eventType;
+			
+			
+			Position positionOriginal;
+			Vector position;
+			Position newPosition;
+			
+			Direction directionMoveObject;
+			Vector vectorMoveObject;
+			float powerMoveObject;
+	
+			Direction directionEvent;
+			Vector vectorEvent;
+			float powerEvent;
+			
+			float resultingPowerMoveObject;
+				
+			
+			eventType = event.getEventType();
+			positionOriginal = (Position) state.getProperty(SimulationCluster.position, PropertyName.simobj_position).getValue();
+			position = positionOriginal.getVector(SimulationCluster.position);
+			
+			directionMoveObject = (Direction) state.getProperty(SimulationCluster.position, PropertyName.simobj_directionMove).getValue();
+	//		directionMoveObject = (Direction) state.getDirectionMoveAsValue(SimulationCluster.position, PropertyName.SIMOBJPROP_DIRECTION_MOVE).getValue();
+			vectorMoveObject = directionMoveObject.getVector(SimulationCluster.position);
+			powerMoveObject = directionMoveObject.getPower();
+			
+			directionEvent = (Direction) event.getDirection().getValue();
+			if (directionEvent != null) {
+				vectorEvent = directionEvent.getVector(SimulationCluster.position);
+			}
+			else {
+				// TODO directionEvent is null
+				vectorEvent = new Vector(0,0,0);
+			}
+			powerEvent = event.getStrength();
+			
+			if (!vectorEvent.isNormalized()) vectorEvent.normalize();
+			if (!vectorMoveObject.isNormalized()) vectorMoveObject.normalize();
+			
+			switch (eventType) {
+			// TODO cases and implementations
+			case selfSleep:
+				vectorEvent = new Vector(0,0,0);
+				powerMoveObject = 0;
+				break;
+			default:
+				return POSITION_CALCULATOR_RETURNS_NO_CHANGE;
+			}
+			
+			// TODO calculate resulting direction and power
+			
+			
+			vectorMoveObject.mul(powerMoveObject);
+			vectorEvent.mul(powerEvent);
+			vectorMoveObject.add(vectorEvent);
+			
+			resultingPowerMoveObject = vectorMoveObject.length();
+			position.add(vectorMoveObject);
+			vectorMoveObject.normalize();
+			
+			newPosition = new Position(PropertyName.simobj_position, position);
+			
+			
+			returnSetPosition = hiddenWriteAccess.setPosition(newPosition);
+			if (returnSetPosition != WriteAccessToSimulationObject.WRITE_ACCESS_RETURNS_SUCCESS) return returnSetPosition;
+			
+			returnSetMove = hiddenWriteAccess.setMove(new Direction(PropertyName.simobj_directionMove, vectorMoveObject, resultingPowerMoveObject));
+			if (returnSetMove != WriteAccessToSimulationObject.WRITE_ACCESS_RETURNS_SUCCESS) return returnSetMove;
+	
+			if (vectorMoveObject.equals(new Vector(0,0,0)))
+				return POSITION_CALCULATOR_RETURNS_NO_CHANGE;
+			else
+				return POSITION_CALCULATOR_RETURNS_CHANGE;
+		}	
+		else {
+			System.out.println("PositionCalculator.calculatePositionChangedByEvent(): moved is null");
+			return POSITION_CALCULATOR_RETURNS_EMPTY_LISTS;
+		}
 	}
 }
