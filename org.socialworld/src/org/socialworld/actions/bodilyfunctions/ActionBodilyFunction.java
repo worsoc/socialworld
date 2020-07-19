@@ -25,6 +25,7 @@ package org.socialworld.actions.bodilyfunctions;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.attributes.ActualTime;
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
@@ -35,6 +36,7 @@ import org.socialworld.core.EventToTarget;
 import org.socialworld.core.EventType;
 import org.socialworld.core.IEventParam;
 import org.socialworld.objects.Animal;
+import org.socialworld.objects.Human;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.properties.IDrinkable;
 import org.socialworld.objects.properties.IEatable;
@@ -102,14 +104,16 @@ public class ActionBodilyFunction extends AbstractAction {
 		case sleep:
 			break;
 		case drink:
-			this.item = ((Animal) actor).getMouthItem();
+			this.item = (SimulationObject) ((Animal) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_mouth, PropertyName.inventory_mouth.toString()).getValue();
+//			this.item = ((Animal) actor).getMouthItem();
 			if 	(!(this.item instanceof IDrinkable)) {
 				return;
 			}
 			withEventTotarget = true;
 			break;
 		case eat:
-			this.item = ((Animal) actor).getMouthItem();
+			this.item = (SimulationObject) ((Animal) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_mouth, PropertyName.inventory_mouth.toString()).getValue();
+//			this.item = ((Animal) actor).getMouthItem();
 			if 	(!(this.item instanceof IEatable)) {
 				return;
 			}

@@ -181,7 +181,7 @@ public class StateHuman extends StateAnimal {
 /////////////////////////////    INVENTORY  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	
+/*	
 	final public IWeapon getLeftHandWeapon() {
 		return _getLeftHandWeapon();
 	}
@@ -189,6 +189,6 @@ public class StateHuman extends StateAnimal {
 	final public IWeapon getRightHandWeapon() {
 		return _getRightHandWeapon();
 	}
-
+*/
 
 }

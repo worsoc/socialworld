@@ -33,10 +33,10 @@ public enum PropertyName {
 	simobj_position(1001001),
 	simobj_attributeArray(1001011),
 	simobj_directionMove(1001021), simobj_directionChest(1001022), simobj_directionActiveMove(1001023),
-	simobj_inventory(1001031),
+	simobj_inventory(1001031),  // subs see under stateInventory
 	simobj_knowledge(1001041),
 
-	simobj_stateSeer(1101000),
+	stateSeer(1101000),
 	
 	stateSeer_directionView(1101001),
 	stateSeer_angleViewPerceivingEvents(11010002),
@@ -46,6 +46,18 @@ public enum PropertyName {
 	stateSeer_bestPercipiencePerpendicular(11010006),
 	stateSeer_sizeDistanceRelationThreshold(11010007),
 
+	stateInventory(1102000),
+	inventory_shirt(1102031),
+	inventory_trousers(1102032),
+	inventory_shoes(1102033),
+	inventory_cap(1102034),
+	inventory_leftHand(1102011),
+	inventory_rightHand(1102012),
+	inventory_leftFoot(1102013),
+	inventory_rightFoot(1102014),
+	inventory_mouth(1102001),
+
+	stateBody(1103000),
 	
 	event_position(2001001),
 	event_direction(2001020),
@@ -96,7 +108,7 @@ public enum PropertyName {
 		case simobj_directionChest: 
 		case stateSeer_directionView: 
 		case simobj_directionActiveMove: 
-		case simobj_stateSeer: 
+		case stateSeer: 
 			return Type.simObjProp; 
 		case event_position:
 		case event_direction:

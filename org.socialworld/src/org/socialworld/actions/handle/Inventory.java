@@ -45,9 +45,19 @@ public class Inventory extends SimProperty {
 	protected SimulationObject rightHand;
 	protected SimulationObject mouth;
 
+	protected SimulationObject shirt;
+	protected SimulationObject trousers;
+	protected SimulationObject shoes;
+	protected SimulationObject cap;
+
 	private int leftHandID;
 	private int rightHandID;
 	private int mouthID;
+
+	private int shirtID;
+	private int trousersID;
+	private int shoesID;
+	private int capID;
 	
 	private boolean complete;
 	private boolean isHumanInventory;
@@ -83,6 +93,20 @@ public class Inventory extends SimProperty {
 	public  ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String valueName) {
 		switch (prop) {
 		// TODO switch property names
+/*
+  		case inventory_shirt:
+			return this.inventory.getProperty(cluster, propName, valueName);
+		case inventory_trousers:
+			return this.inventory.getProperty(cluster, propName, valueName);
+		case inventory_shoes:
+			return this.inventory.getProperty(cluster, propName, valueName);
+		case inventory_cap:
+			return this.inventory.getProperty(cluster, propName, valueName);
+		case inventory_leftHand:
+			return this.inventory.getProperty(cluster, propName, valueName);
+		case inventory_rightHand:
+			return this.inventory.getProperty(cluster, propName, valueName);
+*/
 		default:
 			return ValueProperty.getInvalid();
 		}
@@ -177,6 +201,23 @@ public class Inventory extends SimProperty {
 		}
 	}
 
+	
+	public void setShirt(final SimulationObject shirt) {
+		this.shirt = shirt;
+	}
+
+	public void setTrousers(final SimulationObject trousers) {
+		this.trousers = trousers;
+	}
+
+	public void setShoes(final SimulationObject shoes) {
+		this.shoes = shoes;
+	}
+
+	public void setCap(final SimulationObject cap) {
+		this.cap = cap;
+	}
+
 	/**
 	 * @param leftHandID
 	 *            the leftHandID to set
@@ -192,5 +233,6 @@ public class Inventory extends SimProperty {
 	public void setRightHandID(int  rightHandID) {
 		if (!complete) this.rightHandID = rightHandID;
 	}
+	
 		
 }

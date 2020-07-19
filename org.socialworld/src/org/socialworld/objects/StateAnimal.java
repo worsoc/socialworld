@@ -237,13 +237,14 @@ public class StateAnimal extends StateSimulationObject {
 /////////////////////////////    INVENTORY  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	
 	final void setInventory(Inventory inventory, WriteAccessToAnimal guard) {
 		if (checkGuard(guard)) {
 			this.inventory = inventory;
 		}
 	}
-	
+
+/*	
+
 	final public SimulationObject getLeftHandItem() {
 		// no copy because it is a simulation object and that isn't allowed to be duplicated
 		return this.inventory.getLeftHand();
@@ -278,6 +279,6 @@ public class StateAnimal extends StateSimulationObject {
 			return null;
 		}
 	}
-	
+*/	
 	
 }

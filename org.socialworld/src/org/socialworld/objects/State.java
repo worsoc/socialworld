@@ -28,6 +28,7 @@ import org.socialworld.attributes.ISavedValues;
 import org.socialworld.attributes.ISimProperty;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
+import org.socialworld.attributes.SimProperty;
 import org.socialworld.calculation.PropertyUsingAs;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
@@ -249,5 +250,6 @@ public abstract class State implements ISimProperty, ISavedValues {
 		return null;
 	}
 
-
+	protected abstract void setProperty(PropertyName propName, ValueProperty property);
+	
 }
