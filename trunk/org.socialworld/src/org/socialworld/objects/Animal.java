@@ -196,7 +196,8 @@ public abstract class Animal extends SimulationObject implements ISeer {
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
 	// TODO interface for more complex access to inventory
-	
+	// TODO Do we need access to inventory in class Animal?
+/*	
 	final public SimulationObject getLeftHandItem() {
 	// no copy because it is a simulation object and that isn't allowed to be duplicated
 	return this.state.getLeftHandItem();
@@ -211,7 +212,7 @@ public abstract class Animal extends SimulationObject implements ISeer {
 	// no copy because it is a simulation object and that isn't allowed to be duplicated
 	return this.state.getMouthItem();
 	}
-	
+*/	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    PROPERTY LIST  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////

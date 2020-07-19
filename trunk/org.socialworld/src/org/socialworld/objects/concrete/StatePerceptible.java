@@ -54,6 +54,10 @@ public class StatePerceptible extends State {
 		return ValueProperty.getInvalid();
 	}
 
+	protected void setProperty(PropertyName propName, ValueProperty property) {
+		// TODO setProperty
+	}
+	
 	public boolean checkIsPossiblePercipient(Animal possiblePercipient) {
 		return this.percipience.checkIsPossiblePercipient(possiblePercipient);
 	}

@@ -123,7 +123,7 @@ import org.socialworld.core.IEventParam;
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
 	// TODO interface for more complex access to inventory
-	final public IWeapon getLeftHandWeapon() {
+/*	final public IWeapon getLeftHandWeapon() {
 		// no copy because it is a simulation object and that isn't allowed to be duplicated
 		return this.state.getLeftHandWeapon();
 	}
@@ -132,7 +132,7 @@ import org.socialworld.core.IEventParam;
 		// no copy because it is a simulation object and that isn't allowed to be duplicated
 		return this.state.getRightHandWeapon();
 	}
-
+*/
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    PROPERTY LIST  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////

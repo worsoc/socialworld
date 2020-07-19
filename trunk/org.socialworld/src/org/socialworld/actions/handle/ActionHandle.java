@@ -26,6 +26,7 @@ import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.ActualTime;
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
@@ -127,26 +128,34 @@ public class ActionHandle extends AbstractAction {
 		
    		switch (mode) {
 		case useItemLeftHand:
-			item1 = ((Human) actor).getLeftHandItem();
+			item1 = (SimulationObject) ((Human) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_leftHand, PropertyName.inventory_leftHand.toString()).getValue();
+// vormals:			item1 = ((Human) actor).getLeftHandItem();
 			if (item1 == null) return;
 			break;
 		case useItemRightHand:
-			item1 = ((Human) actor).getRightHandItem();
+			item1 = (SimulationObject) ((Human) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_rightHand, PropertyName.inventory_rightHand.toString()).getValue();
+//			item1 = ((Human) actor).getRightHandItem();
 			if (item1 == null) return;
 			break;
 		case useTwoItems:
-			item1 = ((Human) actor).getRightHandItem();
-			item2 = ((Human) actor).getLeftHandItem();
+			item1 = (SimulationObject) ((Human) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_rightHand, PropertyName.inventory_rightHand.toString()).getValue();
+			item2 = (SimulationObject) ((Human) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_leftHand, PropertyName.inventory_leftHand.toString()).getValue();
+//			item1 = ((Human) actor).getRightHandItem();
+//			item2 = ((Human) actor).getLeftHandItem();
 			if (item1 == null | item2 == null) return;
 			break;
 		case combineItems_AddLeftToRight:
-			item1 = ((Human) actor).getRightHandItem();
-			item2 = ((Human) actor).getLeftHandItem();
+			item1 = (SimulationObject) ((Human) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_rightHand, PropertyName.inventory_rightHand.toString()).getValue();
+			item2 = (SimulationObject) ((Human) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_leftHand, PropertyName.inventory_leftHand.toString()).getValue();
+//			item1 = ((Human) actor).getRightHandItem();
+//			item2 = ((Human) actor).getLeftHandItem();
 			if (item1 == null | item2 == null) return;
 			break;
 		case combineItems_AddRightToLeft:
-			item1 = ((Human) actor).getLeftHandItem();
-			item2 = ((Human) actor).getRightHandItem();
+			item1 = (SimulationObject) ((Human) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_leftHand, PropertyName.inventory_leftHand.toString()).getValue();
+			item2 = (SimulationObject) ((Human) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_rightHand, PropertyName.inventory_rightHand.toString()).getValue();
+//			item1 = ((Human) actor).getLeftHandItem();
+//			item2 = ((Human) actor).getRightHandItem();
 			if (item1 == null | item2 == null) return;
 			break;
 		case pull:

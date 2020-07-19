@@ -52,6 +52,10 @@ public class StateEatable extends State {
 		return ValueProperty.getInvalid();
 	}
 
+	protected void setProperty(PropertyName propName, ValueProperty property) {
+		// TODO setProperty
+	}
+
 	public NutrientProperty getNutrientProperties() { return new NutrientProperty(nutrientProps); }
 //	protected NutrientProperty getOriginalNutrientProperties() { return nutrientProps; }
 	protected void setNutrientProperties(NutrientProperty changed) {  }

@@ -26,6 +26,7 @@ import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.ActualTime;
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
@@ -38,6 +39,7 @@ import org.socialworld.core.EventType;
 import org.socialworld.core.IEventParam;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.properties.IWeapon;
+import org.socialworld.objects.Animal;
 import org.socialworld.objects.Human;
 
 /**
@@ -110,6 +112,8 @@ public class ActionAttack extends AbstractAction {
 	@Override
 	public void perform() {
 		
+		SimulationObject itemLeft;
+		SimulationObject itemRight;
 		IWeapon weapon = null;
 
 		switch (type) {
@@ -119,19 +123,37 @@ public class ActionAttack extends AbstractAction {
 			case weaponLeftStab:
 			case weaponLeftStroke:
 			case weaponLeftBackhand:
-				weapon = ((Human) actor).getLeftHandWeapon();
-		  		if (weapon == null) return;
+				itemLeft = (SimulationObject) ((Animal) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_leftHand, PropertyName.inventory_leftHand.toString()).getValue();
+				if (itemLeft instanceof IWeapon) {
+					weapon = (IWeapon) itemLeft;
+				}
+				else {
+					return;
+				}
 				break;
 			case weaponRightStab:
 			case weaponRightStroke:
 			case weaponRightBackhand:
-				weapon = ((Human)actor).getRightHandWeapon();
-		  		if (weapon == null) return;
+				itemRight = (SimulationObject) ((Animal) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_rightHand, PropertyName.inventory_rightHand.toString()).getValue();
+				if (itemRight instanceof IWeapon) {
+					weapon = (IWeapon) itemRight;
+				}
+				else {
+					return;
+				}
 				break;
 			case weaponClub:
-				weapon = ((Human) actor).getLeftHandWeapon();
-		  		if (weapon == null) return;
-		  		if (weapon != ((Human)actor).getRightHandWeapon()) return;
+				itemLeft = (SimulationObject) ((Animal) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_leftHand, PropertyName.inventory_leftHand.toString()).getValue();
+				itemRight = (SimulationObject) ((Animal) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_rightHand, PropertyName.inventory_rightHand.toString()).getValue();
+				if (itemLeft != null && itemRight != null && !itemLeft.equals(itemRight)) {
+					return;
+				}
+				if (itemLeft instanceof IWeapon) {
+					weapon = (IWeapon) itemLeft;
+				}
+				else {
+					return;
+				}
 		  		break;
 			default:
 				return;
@@ -142,12 +164,25 @@ public class ActionAttack extends AbstractAction {
 			case punchLeftFistStraight:
 			case punchLeftFistSideways:
 			case punchLeftFistUpward:
-				weapon = ((Human) actor).getLeftHandWeapon();
+				itemLeft = (SimulationObject) ((Animal) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_leftHand, PropertyName.inventory_leftHand.toString()).getValue();
+				if (itemLeft instanceof IWeapon) {
+					weapon = (IWeapon) itemLeft;
+				}
+				else {
+					return;
+				}
 				break;
 			case punchRightFistStraight:
 			case punchRightFistSideways:
 			case punchRightFistUpward:
-				weapon = ((Human) actor).getRightHandWeapon();
+				// TODO there must be a weapon in the fist
+				itemRight = (SimulationObject) ((Animal) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_rightHand, PropertyName.inventory_rightHand.toString()).getValue();
+				if (itemRight instanceof IWeapon) {
+					weapon = (IWeapon) itemRight;
+				}
+				else {
+					return;
+				}
 				break;
 			default:
 				return;

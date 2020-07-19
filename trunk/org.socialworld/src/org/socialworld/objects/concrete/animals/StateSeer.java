@@ -47,7 +47,7 @@ public class StateSeer extends State {
 	
 	public StateSeer() {
 		super();
-		setPropertyName(PropertyName.simobj_stateSeer);
+		setPropertyName(PropertyName.stateSeer);
 		setDirectionView( new Vector(2,1,0));
 		setAngleViewPerceivingObjects(20.0F);
 		setAngleViewPerceivingEvents(60.0F);
@@ -56,7 +56,7 @@ public class StateSeer extends State {
 	private StateSeer( StateSeer original, PropertyProtection protectionOriginal, SimulationCluster cluster) {
 		super(protectionOriginal, cluster);
 		// TODO implement copy constructor
-		setPropertyName(PropertyName.simobj_stateSeer);
+		setPropertyName(PropertyName.stateSeer);
 		this.angleViewPerceivingEvents = original.getAngleViewPerceivingEvents();
 	}
 	
@@ -65,28 +65,31 @@ public class StateSeer extends State {
 	}
 
 	
-	public ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String name) {
+	public ValueProperty getProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
 		
-		switch (prop) {
+		switch (propName) {
 		case stateSeer_directionView:
-			return this.directionView.getAsValue(cluster, name);
+			return this.directionView.getAsValue(cluster, valueName);
 		case stateSeer_angleViewPerceivingEvents:
-			return new ValueProperty(Type.floatingpoint, name, this.angleViewPerceivingEvents);
+			return new ValueProperty(Type.floatingpoint, valueName, this.angleViewPerceivingEvents);
 		case stateSeer_angleViewPerceivingEventsInRadians:
-			return new ValueProperty(Type.floatingpoint, name, this.angleViewPerceivingEventsInRadians);
+			return new ValueProperty(Type.floatingpoint, valueName, this.angleViewPerceivingEventsInRadians);
 		case stateSeer_angleViewPerceivingObjects:
-			return new ValueProperty(Type.floatingpoint, name, this.angleViewPerceivingObjects);
+			return new ValueProperty(Type.floatingpoint, valueName, this.angleViewPerceivingObjects);
 		case stateSeer_angleViewPerceivingObjectsInRadians:
-			return new ValueProperty(Type.floatingpoint, name, this.angleViewPerceivingObjectsInRadians);
+			return new ValueProperty(Type.floatingpoint, valueName, this.angleViewPerceivingObjectsInRadians);
 		case stateSeer_bestPercipiencePerpendicular:
-			return new ValueProperty(Type.integer, name, this.bestPercipiencePerpendicular);
+			return new ValueProperty(Type.integer, valueName, this.bestPercipiencePerpendicular);
 		case stateSeer_sizeDistanceRelationThreshold:
-			return new ValueProperty(Type.floatingpoint, name, this.sizeDistanceRelationThreshold);
+			return new ValueProperty(Type.floatingpoint, valueName, this.sizeDistanceRelationThreshold);
 		default:
 			return ValueProperty.getInvalid();
 		}
 	}
 
+	protected void setProperty(PropertyName propName, ValueProperty property) {
+		// TODO setProperty
+	}
 
 	
 
