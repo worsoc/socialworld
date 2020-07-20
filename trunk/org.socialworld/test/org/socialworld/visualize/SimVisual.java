@@ -1,6 +1,7 @@
 /*
 * Social World
-* Copyright (C) 2019  Mathias Sikos
+* Copyright (C) 2019  Mathias Sikos 
+* ^				2020  Daniel Litvak
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -25,6 +26,7 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -55,20 +57,47 @@ public class SimVisual {
 	public static final Color COLOR_GOLDENROD = new Color(218,165,32);
 	public static final Color COLOR_SADDLSEBROWN = new Color(139,69,19);
 	public static final Color COLOR_SIENNA = new Color(160,82,45);
-	
+	public static final Color COLOR_BURLYWOOD =  new Color(222,184,135);
+	public static final Color COLOR_TAN =  new Color(210,180,140);
+	public static final Color COLOR_ROSYBROWN =  new Color(188,143,143);
+	public static final Color COLOR_PERU =  new Color(205,133,63);
+	public static final Color COLOR_CHOCOLATE =  new Color(210,105,30);
+	public static final Color COLOR_BROWN =  new Color(165,42,42);
 	public static final Color COLOR_MAROON = new Color(128,0,0);
+	
+	public static final Color COLOR_BLACK = new Color(0,0,0);
+	public static final Color COLOR_DIMGRAY = new Color(105,105,105);
+	public static final Color COLOR_GRAY = new Color(128,128,128);
+	public static final Color COLOR_DARKGRAY = new Color(169,169,169);
+	public static final Color COLOR_SILVER = new Color(192,192,192);
+	
+	public static final Color COLOR_ALICEBLUE = new Color(240,248,255);
+	public static final Color COLOR_LAVENDER = new Color(230,230,250);
+	public static final Color COLOR_POWDERBLUE = new Color(176,224,230);
+	public static final Color COLOR_LIGHTBLUE = new Color(173,216,230);
+	public static final Color COLOR_LIGHTSKYBLUE = new Color(135,206,250);
+	public static final Color COLOR_SKYBLUE = new Color(135,206,235);	
+	public static final Color COLOR_DEEPSKYBLUE = new Color(0,191,255);
+	public static final Color COLOR_LIGHTSTEELBLUE = new Color(176,196,222);
+	public static final Color COLOR_DODGERBLUE = new Color(30,144,255);
+	public static final Color COLOR_CORNFLOWERBLUE = new Color(100,149,237);
+	public static final Color COLOR_STEELBLOW = new Color(70,130,180);
+	public static final Color COLOR_CADETBLUE = new Color(95,158,160);
+	public static final Color COLOR_MEDIUMSLATEBLUE = new Color(123,104,238);
+	public static final Color COLOR_SLATEBLUE = new Color(106,90,205);
+	public static final Color COLOR_DARKESLATEBLUE = new Color(72,61,139);
+	public static final Color COLOR_ROYELBLUE = new Color(65,105,225);
+	public static final Color COLOR_BLUE = new Color(0,0,255);
+	public static final Color COLOR_MEDIUMBLUE = new Color(0,0,205);
+	public static final Color COLOR_DARKEBLUE = new Color(0,0,139);
+	public static final Color COLOR_NAVY = new Color(0,0,128);
+	public static final Color COLOR_MIDNIGHTBLUE = new Color(25,25,112);
+	public static final Color COLOR_BLUEVIOLET = new Color(138,43,226);
+	public static final Color COLOR_INDIGO = new Color(75,0,130);
+	
 
-	
-	
-	/*
-  	burlywood	#DEB887	rgb(222,184,135)
- 	tan	#D2B48C	rgb(210,180,140)
- 	rosybrown	#BC8F8F	rgb(188,143,143)
- 	peru	#CD853F	rgb(205,133,63)
- 	chocolate	#D2691E	rgb(210,105,30)
- 	brown	#A52A2A	rgb(165,42,42)
-*/
-	
+
+
 	private JFrame  frameActions;
 	
 	private JFrame frameAttributes;
@@ -83,6 +112,27 @@ public class SimVisual {
 	
 	public SimVisual() {
 		init();
+//		drawHeart();
+//		drawM();
+//		drawA();
+//		drawN();
+//		drawU();
+//		drawI();
+//		drawL();
+//		drawO();
+//		drawV();
+		drawE();
+		/*
+		try
+		{
+		    Thread.sleep(10000);
+		}
+		catch(InterruptedException ex)
+		{
+		    Thread.currentThread().interrupt();
+		}
+		*/
+		//clearAll();
 	}
 	
 	
@@ -210,15 +260,16 @@ public class SimVisual {
 
 			
 		private void stopAction() {
-			Color color = this.getBackground();
+/*			Color color = this.getBackground();
 			Border thickBorder = new LineBorder(color, 4);
 			this.setBorder(thickBorder);
 			this.setBackground(Color.WHITE);
 			this.clear();
+*/			
 		}
 		
 		private void startAction(AbstractAction action) {
-			
+/*			
 			ActionType type = action.getType();
 			ActionMode mode = action.getMode();
 			float intensity;
@@ -269,7 +320,7 @@ public class SimVisual {
 			intensity = action.getIntensity();
 			this.setBackground(color);
 			this.setText(Integer.toString((int)intensity));
-			
+*/			
 		}
 
 		private void clicked() {
@@ -279,7 +330,7 @@ public class SimVisual {
 			Value propSub;
 			
 			human = Simulation.getInstance().getObjectMaster().getHumans().get(index);
-			prop = human.getProperty(SimulationCluster.test, PropertyName.simobj_stateSeer);
+			prop = human.getProperty(SimulationCluster.test, PropertyName.stateSeer);
 			state = (State) prop.getValue();
 			if (state != null) {
 				propSub = state.getValue("getAngleViewPerceivingEvents", "angleViewPerceivingEvents");
@@ -302,6 +353,254 @@ public class SimVisual {
 		System.out.println(line);
 	}
 
+	
+	public void  drawHeart() {
+		this.raster[21].setBackground(Color.RED);
+		this.raster[22].setBackground(Color.RED);
+		this.raster[27].setBackground(Color.RED);
+		this.raster[28].setBackground(Color.RED);
+		this.raster[30].setBackground(Color.RED);
+		this.raster[31].setBackground(Color.RED);
+		this.raster[32].setBackground(Color.RED);
+		this.raster[33].setBackground(Color.RED);
+		this.raster[36].setBackground(Color.RED);
+		this.raster[37].setBackground(Color.RED);
+		this.raster[38].setBackground(Color.RED);
+		this.raster[39].setBackground(Color.RED);
+		this.raster[40].setBackground(Color.RED);
+		this.raster[41].setBackground(Color.RED);
+		this.raster[42].setBackground(Color.RED);
+		this.raster[43].setBackground(Color.RED);
+		this.raster[44].setBackground(Color.RED);
+		this.raster[45].setBackground(Color.RED);
+		this.raster[46].setBackground(Color.RED);
+		this.raster[47].setBackground(Color.RED);
+		this.raster[48].setBackground(Color.RED);
+		this.raster[49].setBackground(Color.RED);
+		this.raster[51].setBackground(Color.RED);
+		this.raster[52].setBackground(Color.RED);
+		this.raster[53].setBackground(Color.RED);
+		this.raster[54].setBackground(Color.RED);
+		this.raster[55].setBackground(Color.RED);
+		this.raster[56].setBackground(Color.RED);
+		this.raster[57].setBackground(Color.RED);
+		this.raster[58].setBackground(Color.RED);
+		this.raster[62].setBackground(Color.RED);
+		this.raster[63].setBackground(Color.RED);
+		this.raster[64].setBackground(Color.RED);
+		this.raster[65].setBackground(Color.RED);
+		this.raster[66].setBackground(Color.RED);
+		this.raster[67].setBackground(Color.RED);
+		this.raster[73].setBackground(Color.RED);
+		this.raster[74].setBackground(Color.RED);
+		this.raster[75].setBackground(Color.RED);
+		this.raster[76].setBackground(Color.RED);
+		this.raster[84].setBackground(Color.RED);
+		this.raster[85].setBackground(Color.RED);
+	}
+	
+	
+	public void clearAll() {
+		for(int i=0; i<100; i++)
+		{
+			this.raster[i].setBackground(Color.WHITE);
+		}
+	}
+	
+
+
+	public void drawM() {
+		this.raster[21].setBackground(Color.BLACK);
+		this.raster[22].setBackground(Color.BLACK);
+		this.raster[27].setBackground(Color.BLACK);
+		this.raster[28].setBackground(Color.BLACK);
+		this.raster[31].setBackground(Color.BLACK);
+		this.raster[33].setBackground(Color.BLACK);
+		this.raster[36].setBackground(Color.BLACK);
+		this.raster[38].setBackground(Color.BLACK);
+		this.raster[41].setBackground(Color.BLACK);
+		this.raster[44].setBackground(Color.BLACK);
+		this.raster[45].setBackground(Color.BLACK);
+		this.raster[48].setBackground(Color.BLACK);
+		this.raster[51].setBackground(Color.BLACK);
+		this.raster[58].setBackground(Color.BLACK);
+		this.raster[61].setBackground(Color.BLACK);
+		this.raster[68].setBackground(Color.BLACK);
+		this.raster[71].setBackground(Color.BLACK);
+		this.raster[78].setBackground(Color.BLACK);
+		this.raster[81].setBackground(Color.BLACK);
+		this.raster[88].setBackground(Color.BLACK);
+		
+	}
+	public void drawA() {
+		this.raster[14].setBackground(Color.BLACK);
+		this.raster[15].setBackground(Color.BLACK);
+		this.raster[23].setBackground(Color.BLACK);
+		this.raster[26].setBackground(Color.BLACK);
+		this.raster[32].setBackground(Color.BLACK);
+		this.raster[37].setBackground(Color.BLACK);
+		this.raster[42].setBackground(Color.BLACK);
+		this.raster[47].setBackground(Color.BLACK);
+		this.raster[52].setBackground(Color.BLACK);
+		this.raster[53].setBackground(Color.BLACK);
+		this.raster[54].setBackground(Color.BLACK);
+		this.raster[55].setBackground(Color.BLACK);
+		this.raster[56].setBackground(Color.BLACK);
+		this.raster[57].setBackground(Color.BLACK);
+		this.raster[62].setBackground(Color.BLACK);
+		this.raster[67].setBackground(Color.BLACK);
+		this.raster[72].setBackground(Color.BLACK);
+		this.raster[77].setBackground(Color.BLACK);
+		this.raster[82].setBackground(Color.BLACK);
+		this.raster[87].setBackground(Color.BLACK);
+		
+	}
+	public void drawN() {
+		
+		this.raster[11].setBackground(Color.BLACK);
+		this.raster[12].setBackground(Color.BLACK);
+		this.raster[17].setBackground(Color.BLACK);
+		this.raster[21].setBackground(Color.BLACK);
+		this.raster[23].setBackground(Color.BLACK);
+		this.raster[27].setBackground(Color.BLACK);
+		this.raster[31].setBackground(Color.BLACK);
+		this.raster[34].setBackground(Color.BLACK);
+		this.raster[37].setBackground(Color.BLACK);
+		this.raster[41].setBackground(Color.BLACK);
+		this.raster[44].setBackground(Color.BLACK);
+		this.raster[47].setBackground(Color.BLACK);
+		this.raster[51].setBackground(Color.BLACK);
+		this.raster[55].setBackground(Color.BLACK);
+		this.raster[57].setBackground(Color.BLACK);
+		this.raster[61].setBackground(Color.BLACK);
+		this.raster[65].setBackground(Color.BLACK);
+		this.raster[67].setBackground(Color.BLACK);
+		this.raster[71].setBackground(Color.BLACK);
+		this.raster[76].setBackground(Color.BLACK);
+		this.raster[77].setBackground(Color.BLACK);
+		this.raster[81].setBackground(Color.BLACK);
+		this.raster[87].setBackground(Color.BLACK);
+		this.raster[87].setBackground(Color.BLACK);
+
+	}
+	public void drawU() {
+		
+		this.raster[11].setBackground(Color.BLACK);
+		this.raster[17].setBackground(Color.BLACK);
+		this.raster[21].setBackground(Color.BLACK);
+		this.raster[27].setBackground(Color.BLACK);
+		this.raster[31].setBackground(Color.BLACK);
+		this.raster[37].setBackground(Color.BLACK);
+		this.raster[41].setBackground(Color.BLACK);
+		this.raster[47].setBackground(Color.BLACK);
+		this.raster[51].setBackground(Color.BLACK);
+		this.raster[56].setBackground(Color.BLACK);
+		this.raster[57].setBackground(Color.BLACK);
+		this.raster[61].setBackground(Color.BLACK);
+		this.raster[66].setBackground(Color.BLACK);
+		this.raster[67].setBackground(Color.BLACK);
+		this.raster[72].setBackground(Color.BLACK);
+		this.raster[75].setBackground(Color.BLACK);
+		this.raster[77].setBackground(Color.BLACK);
+		this.raster[83].setBackground(Color.BLACK);
+		this.raster[84].setBackground(Color.BLACK);
+		this.raster[87].setBackground(Color.BLACK);
+	}
+	public void drawI() {
+		
+		this.raster[14].setBackground(Color.BLACK);
+		this.raster[15].setBackground(Color.BLACK);
+		this.raster[24].setBackground(Color.BLACK);
+		this.raster[25].setBackground(Color.BLACK);
+		this.raster[34].setBackground(Color.BLACK);
+		this.raster[35].setBackground(Color.BLACK);
+		this.raster[44].setBackground(Color.BLACK);
+		this.raster[45].setBackground(Color.BLACK);
+		this.raster[54].setBackground(Color.BLACK);
+		this.raster[55].setBackground(Color.BLACK);
+		this.raster[64].setBackground(Color.BLACK);
+		this.raster[65].setBackground(Color.BLACK);
+		this.raster[74].setBackground(Color.BLACK);
+		this.raster[75].setBackground(Color.BLACK);
+		this.raster[84].setBackground(Color.BLACK);
+		this.raster[85].setBackground(Color.BLACK);
+	}
+	public void drawL() {
+		
+		this.raster[13].setBackground(Color.BLACK);
+		this.raster[23].setBackground(Color.BLACK);
+		this.raster[33].setBackground(Color.BLACK);
+		this.raster[43].setBackground(Color.BLACK);
+		this.raster[53].setBackground(Color.BLACK);
+		this.raster[63].setBackground(Color.BLACK);
+		this.raster[73].setBackground(Color.BLACK);
+		this.raster[83].setBackground(Color.BLACK);
+		this.raster[84].setBackground(Color.BLACK);
+		this.raster[85].setBackground(Color.BLACK);
+		this.raster[86].setBackground(Color.BLACK);
+		this.raster[87].setBackground(Color.BLACK);
+	}
+	public void drawO() {
+		
+	this.raster[14].setBackground(Color.BLACK);
+	this.raster[15].setBackground(Color.BLACK);
+	this.raster[23].setBackground(Color.BLACK);
+	this.raster[26].setBackground(Color.BLACK);
+	this.raster[32].setBackground(Color.BLACK);
+	this.raster[37].setBackground(Color.BLACK);
+	this.raster[41].setBackground(Color.BLACK);
+	this.raster[48].setBackground(Color.BLACK);
+	this.raster[51].setBackground(Color.BLACK);
+	this.raster[58].setBackground(Color.BLACK);
+	this.raster[62].setBackground(Color.BLACK);
+	this.raster[67].setBackground(Color.BLACK);
+	this.raster[73].setBackground(Color.BLACK);
+	this.raster[76].setBackground(Color.BLACK);
+	this.raster[84].setBackground(Color.BLACK);
+	this.raster[85].setBackground(Color.BLACK);
+	}
+	public void drawV() {
+		
+		this.raster[11].setBackground(Color.BLACK);
+		this.raster[18].setBackground(Color.BLACK);
+		this.raster[21].setBackground(Color.BLACK);
+		this.raster[28].setBackground(Color.BLACK);
+		this.raster[31].setBackground(Color.BLACK);
+		this.raster[38].setBackground(Color.BLACK);
+		this.raster[41].setBackground(Color.BLACK);
+		this.raster[48].setBackground(Color.BLACK);
+		this.raster[52].setBackground(Color.BLACK);
+		this.raster[57].setBackground(Color.BLACK);
+		this.raster[62].setBackground(Color.BLACK);
+		this.raster[67].setBackground(Color.BLACK);
+		this.raster[73].setBackground(Color.BLACK);
+		this.raster[76].setBackground(Color.BLACK);
+		this.raster[84].setBackground(Color.BLACK);
+		this.raster[85].setBackground(Color.BLACK);
+	}
+	public void drawE() {
+		
+		this.raster[12].setBackground(Color.BLACK);
+		this.raster[13].setBackground(Color.BLACK);
+		this.raster[14].setBackground(Color.BLACK);
+		this.raster[15].setBackground(Color.BLACK);
+		this.raster[16].setBackground(Color.BLACK);
+		this.raster[22].setBackground(Color.BLACK);
+		this.raster[32].setBackground(Color.BLACK);
+		this.raster[42].setBackground(Color.BLACK);
+		this.raster[43].setBackground(Color.BLACK);
+		this.raster[44].setBackground(Color.BLACK);
+		this.raster[45].setBackground(Color.BLACK);
+		this.raster[46].setBackground(Color.BLACK);
+		this.raster[52].setBackground(Color.BLACK);
+		this.raster[62].setBackground(Color.BLACK);
+		this.raster[72].setBackground(Color.BLACK);
+		this.raster[82].setBackground(Color.BLACK);
+		this.raster[83].setBackground(Color.BLACK);
+		this.raster[84].setBackground(Color.BLACK);
+		this.raster[85].setBackground(Color.BLACK);
+		this.raster[86].setBackground(Color.BLACK);
+	}
 }
 
 
@@ -329,5 +628,35 @@ Color Name	Hex Code
  	sienna	#A0522D	rgb(160,82,45)
  	brown	#A52A2A	rgb(165,42,42)
  	maroon	#800000	rgb(128,0,0)
+
+  	black 	#000000 	rgb(0,0,0)
+  	dimgray / dimgray 	#696969 	rgb(105,105,105)
+  	gray / grey 	#808080 	rgb(128,128,128)
+  	darkgray / darkgrey 	#A9A9A9 	rgb(169,169,169)
+  	silver 	#C0C0C0 	rgb(192,192,192)
+  	
+  	aliceblue 	#F0F8FF 	rgb(240,248,255)
+  	lavender 	#E6E6FA 	rgb(230,230,250)
+  	powderblue 	#B0E0E6 	rgb(176,224,230)
+  	lightblue 	#ADD8E6 	rgb(173,216,230)
+  	lightskyblue 	#87CEFA 	rgb(135,206,250)
+  	skyblue 	#87CEEB 	rgb(135,206,235)
+  	deepskyblue 	#00BFFF 	rgb(0,191,255)
+  	lightsteelblue 	#B0C4DE 	rgb(176,196,222)
+  	dodgerblue 	#1E90FF 	rgb(30,144,255)
+  	cornflowerblue 	#6495ED 	rgb(100,149,237)
+  	steelblue 	#4682B4 	rgb(70,130,180)
+  	cadetblue 	#5F9EA0 	rgb(95,158,160)
+  	mediumslateblue 	#7B68EE 	rgb(123,104,238)
+  	slateblue 	#6A5ACD 	rgb(106,90,205)
+  	darkslateblue 	#483D8B 	rgb(72,61,139)
+  	royalblue 	#4169E1 	rgb(65,105,225)
+  	blue 	#0000FF 	rgb(0,0,255)
+  	mediumblue 	#0000CD 	rgb(0,0,205)
+  	darkblue 	#00008B 	rgb(0,0,139)
+  	navy 	#000080 	rgb(0,0,128)
+  	midnightblue 	#191970 	rgb(25,25,112)
+  	blueviolet 	#8A2BE2 	rgb(138,43,226)
+  	indigo 	#4B0082 	rgb(75,0,130)
 
 */
