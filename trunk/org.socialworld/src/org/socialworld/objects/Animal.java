@@ -28,7 +28,6 @@ import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.move.Path;
 import org.socialworld.actions.move.PathFinder;
 import org.socialworld.attributes.Attribute;
-import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.FunctionByMatrix;
@@ -39,6 +38,8 @@ import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.IEventParam;
 import org.socialworld.objects.concrete.animals.ISeer;
+import org.socialworld.objects.concrete.animals.StateBody;
+import org.socialworld.objects.concrete.animals.StateInventory;
 import org.socialworld.objects.concrete.animals.StateSeer;
 
 
@@ -52,6 +53,9 @@ public abstract class Animal extends SimulationObject implements ISeer {
 
 	private StateAnimal state;
 	private StateSeer stateSeer;
+	
+	private StateBody stateBody;
+	private StateInventory stateInventory;
 	
 	private PathFinder pathFinder;
 
@@ -81,6 +85,12 @@ public abstract class Animal extends SimulationObject implements ISeer {
 		
 		this.stateSeer = (StateSeer) getInitState(StateSeer.class.getName());
 		result.add(this.stateSeer);
+		
+		this.stateBody = (StateBody) getInitState(StateBody.class.getName());
+		result.add(this.stateBody);
+		
+		this.stateInventory = (StateInventory) getInitState(StateInventory.class.getName());
+		result.add(this.stateInventory);
 		
 		return result;
 		

@@ -4,7 +4,6 @@ import org.socialworld.actions.handle.Inventory;
 import org.socialworld.attributes.ISavedValues;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
-import org.socialworld.attributes.SimProperty;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.objects.SimulationObject;
@@ -12,7 +11,13 @@ import org.socialworld.objects.State;
 
 public class StateInventory extends State {
 
+	public static final String METHOD_NAME_SETINVENTORY = "setInventory";
+	
 	private Inventory inventory;
+	
+	public StateInventory() {
+		super();
+	}
 	
 	private StateInventory( StateInventory original, PropertyProtection protectionOriginal, SimulationCluster cluster) {
 		super(protectionOriginal, cluster);
@@ -76,6 +81,10 @@ public class StateInventory extends State {
 
 		}
 		
+	}
+	
+	protected void setInventory(Inventory inventory) {
+		this.inventory = inventory;
 	}
 
 }

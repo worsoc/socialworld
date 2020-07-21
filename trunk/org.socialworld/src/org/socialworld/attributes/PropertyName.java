@@ -59,6 +59,10 @@ public enum PropertyName {
 
 	stateBody(1103000),
 	
+	stateComposition(1104000),
+	
+	stateAppearance(1105000),
+
 	event_position(2001001),
 	event_direction(2001020),
 	
@@ -146,6 +150,21 @@ public enum PropertyName {
 		return unknown;
 
 
+	}
+	
+	public PropertyName parentState() {
+	
+		int index_ = name().indexOf("_");
+		int indexState = name().indexOf("state");
+		String parentStateName;
+		
+		if (index_ > 0 && indexState == 0) {
+			parentStateName = name().substring(0, index_);
+			return forString(parentStateName);
+		}
+		else {
+			return null;
+		}
 	}
 	
 	public boolean isSimProperty() {

@@ -40,7 +40,6 @@ import org.socialworld.core.IEventParam;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.properties.IWeapon;
 import org.socialworld.objects.Animal;
-import org.socialworld.objects.Human;
 
 /**
  * German:
@@ -145,7 +144,7 @@ public class ActionAttack extends AbstractAction {
 			case weaponClub:
 				itemLeft = (SimulationObject) ((Animal) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_leftHand, PropertyName.inventory_leftHand.toString()).getValue();
 				itemRight = (SimulationObject) ((Animal) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_rightHand, PropertyName.inventory_rightHand.toString()).getValue();
-				if (itemLeft != null && itemRight != null && !itemLeft.equals(itemRight)) {
+/*				if (itemLeft != null && itemRight != null && !itemLeft.equals(itemRight)) {
 					return;
 				}
 				if (itemLeft instanceof IWeapon) {
@@ -153,7 +152,7 @@ public class ActionAttack extends AbstractAction {
 				}
 				else {
 					return;
-				}
+				}*/
 		  		break;
 			default:
 				return;
@@ -175,13 +174,13 @@ public class ActionAttack extends AbstractAction {
 			case punchRightFistStraight:
 			case punchRightFistSideways:
 			case punchRightFistUpward:
-				// TODO there must be a weapon in the fist
+				// TODO there must not be a weapon in the fist
 				itemRight = (SimulationObject) ((Animal) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_rightHand, PropertyName.inventory_rightHand.toString()).getValue();
 				if (itemRight instanceof IWeapon) {
 					weapon = (IWeapon) itemRight;
 				}
 				else {
-					return;
+					weapon = null;
 				}
 				break;
 			default:
@@ -207,13 +206,11 @@ public class ActionAttack extends AbstractAction {
 			addEvent(event);
 		}
 		
-		if (this.weapon != null) {
-			eventType = getEventToTargetType(type, mode);
-			if (eventType != EventType.nothing) {
-				event = new EventToTarget(eventType,    actor /* as causer*/,  ActualTime.asTime(),
-								actor.getPosition(SimulationCluster.action),  attack /* as performer */);
-				addEvent(event);
-			}
+		eventType = getEventToTargetType(type, mode);
+		if (eventType != EventType.nothing) {
+			event = new EventToTarget(eventType,    actor /* as causer*/,  ActualTime.asTime(),
+							actor.getPosition(SimulationCluster.action),  attack /* as performer */);
+			addEvent(event);
 		}
 		
 		eventType = getEventToCauserType(type, mode);

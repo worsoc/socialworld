@@ -24,6 +24,8 @@ package org.socialworld.objects.concrete.eatable.fruits;
 import org.socialworld.attributes.percipience.Percipience;
 import org.socialworld.attributes.percipience.PercipienceType;
 import org.socialworld.objects.State;
+import org.socialworld.objects.concrete.StateAppearance;
+import org.socialworld.objects.concrete.StateComposition;
 import org.socialworld.objects.concrete.StateEatable;
 import org.socialworld.objects.concrete.StatePerceptible;
 import org.socialworld.objects.concrete.eatable.Fruit;
@@ -55,6 +57,12 @@ public class Apple extends Fruit implements IThrowable {
 		}
 		else if (stateClassName.equals(StateEatable.class.getName())) {
 			return new StateEatable();
+		}
+		else if (stateClassName.equals(StateAppearance.class.getName())) {
+			return new StateAppearance();
+		}
+		else if (stateClassName.equals(StateComposition.class.getName())) {
+			return new StateComposition();
 		}
 		
 		return null;
