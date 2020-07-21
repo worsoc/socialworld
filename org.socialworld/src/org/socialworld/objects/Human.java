@@ -30,8 +30,10 @@ import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.knowledge.Acquaintance;
 import org.socialworld.knowledge.IAnswer;
-import org.socialworld.objects.concrete.StatePerceptible;
+import org.socialworld.objects.concrete.*;
 import org.socialworld.objects.concrete.animals.Mammal;
+import org.socialworld.objects.concrete.animals.StateBody;
+import org.socialworld.objects.concrete.animals.StateInventory;
 import org.socialworld.objects.concrete.animals.StateSeer;
 import org.socialworld.objects.properties.IWeapon;
 import org.socialworld.conversation.Talk_SentenceType;
@@ -84,8 +86,20 @@ import org.socialworld.core.IEventParam;
 			Percipience percipience = new Percipience(PercipienceType.simobject, 2000);
 			return new StatePerceptible(percipience);
 		}
+		else if (stateClassName.equals(StateAppearance.class.getName())) {
+			return new StateAppearance();
+		}
+		else if (stateClassName.equals(StateComposition.class.getName())) {
+			return new StateComposition();
+		}
 		else if (stateClassName.equals(StateSeer.class.getName())) {
 			return new StateSeer();
+		}
+		else if (stateClassName.equals(StateBody.class.getName())) {
+			return new StateBody();
+		}
+		else if (stateClassName.equals(StateInventory.class.getName())) {
+			return new StateInventory();
 		}
 		
 		return null;

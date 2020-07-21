@@ -145,16 +145,23 @@ public abstract class StateSimulationObject extends ListenedBase {
 	public ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String name) {
 		
 		ValueProperty result;
+		PropertyName parentStatePropName;
+		
 		switch (prop) {
 		case simobj_position:
 			result = this.position.getAsValue(cluster, name); break;
 		case simobj_directionMove:
 			result = this.directionMove.getAsValue(cluster, name); break;
 		default:
-			result = getStateAsProperty( cluster, prop,  name);
-			if (!result.isValid()) {
-				result = getStateProperty(cluster, prop,  name);
+			
+			parentStatePropName = getParentStatePropertyName ( cluster, prop,  name);
+			if (parentStatePropName != PropertyName.unknown) {
+				result = getStateProperty( cluster, parentStatePropName, prop,  name);
 			}
+			else {
+				result = getStateAsProperty( cluster,  prop,  name);
+			}
+			
 		}
 		
 		return result;
@@ -284,9 +291,15 @@ public abstract class StateSimulationObject extends ListenedBase {
 			
 			stateAddOn = stateAddOns.get(nrStateAddOn);
 		
-			if (stateAddOn.getPropertyName() == propState) {
-				result = stateAddOn.getProperty(cluster, propSub, name);
-				break;
+			if (stateAddOn == null) {
+				System.out.println("StateSimulationObject.getStateProperty(): stateAddon ist null !!!!!!!!!!! PropertyName: " + propSub.toString());
+			}
+			else {
+				if (stateAddOn.getPropertyName() == propState) {
+					result = stateAddOn.getProperty(cluster, propSub, name);
+					break;
+				}
+				
 			}
 			
 		}
@@ -340,11 +353,12 @@ public abstract class StateSimulationObject extends ListenedBase {
 		State stateAddOn;
 		ValueProperty result = ValueProperty.getInvalid();
 		
+		
 		for (int nrStateAddOn = 0; nrStateAddOn < stateAddOns.size(); nrStateAddOn++) {
 			
 			stateAddOn = stateAddOns.get(nrStateAddOn);
 		
-			if (stateAddOn.getPropertyName() == prop) {
+			if ( stateAddOn.getPropertyName() == prop) {
 				result = stateAddOn.getAsValue(cluster, name);
 				break;
 			}
@@ -352,6 +366,24 @@ public abstract class StateSimulationObject extends ListenedBase {
 		}
 		return result;
 	}
+	
+	private PropertyName getParentStatePropertyName(SimulationCluster cluster, PropertyName prop, String name) {
+		State stateAddOn;
+		
+		
+		for (int nrStateAddOn = 0; nrStateAddOn < stateAddOns.size(); nrStateAddOn++) {
+			
+			stateAddOn = stateAddOns.get(nrStateAddOn);
+		
+			if (  stateAddOn.getPropertyName() == prop.parentState() ) {
+				return stateAddOn.getPropertyName();
+			}
+			
+		}
+		return PropertyName.unknown;
+	}
+	
+	
 	
 	private void callMethod(String stateClassName, String methodName) {
 		State stateAddOn;
@@ -384,7 +416,7 @@ public abstract class StateSimulationObject extends ListenedBase {
 	
 	}
 	
-	final void setSomething(String stateClassName, String methodName, Object something, WriteAccessToSimulationObject guard) {
+	protected final void setSomething(String stateClassName, String methodName, Object something, WriteAccessToSimulationObject guard) {
 		if (checkGuard(guard)) {
 			
 			State stateAddOn;
@@ -399,27 +431,7 @@ public abstract class StateSimulationObject extends ListenedBase {
 				}
 				classNameStateAddOn = stateAddOn.getClass().getName();
 				if (classNameStateAddOn.equals(stateClassName)) {
-					Method method = stateAddOn.getMethod(methodName);
-					if (method != null) {
-						try {
-							method.setAccessible(true);
-						    method.invoke(stateAddOn, something);
-			
-						// Handle any exceptions thrown by method to be invoked.
-						}
-						catch (InvocationTargetException ite) {
-						    Throwable cause = ite.getCause();
-						    System.out.println( cause.getMessage());
-						}
-						catch (IllegalAccessException iae) {
-							iae.printStackTrace();
-						} 
-						catch (IllegalArgumentException iarge) {
-							iarge.printStackTrace();
-						}
-						// assumption: there is only one method in all state add ons
-						break;
-					}
+					stateAddOn.setSomething(methodName, something, this, guard );
 				}
 			}
 		}

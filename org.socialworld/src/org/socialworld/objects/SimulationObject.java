@@ -43,7 +43,7 @@ import org.socialworld.core.IEventParam;
 import org.socialworld.core.SearchActionDescription;
 import org.socialworld.core.Simulation;
 import org.socialworld.objects.access.GrantedAccessToProperty;
-import org.socialworld.objects.concrete.StatePerceptible;
+import org.socialworld.objects.concrete.*;
 import org.socialworld.objects.connections.Connection;
 import org.socialworld.objects.connections.ConnectionType;
 import org.socialworld.objects.properties.IPerceptible;
@@ -66,6 +66,9 @@ public abstract class SimulationObject extends ListenedBase implements IPercepti
 	private StateSimulationObject state;
 
 	private StatePerceptible statePerceptible;
+	
+	private StateAppearance stateAppearance;
+	private StateComposition stateComposition;
 	
 	private 	ActionHandler 	actionHandler;
 	
@@ -127,6 +130,7 @@ public abstract class SimulationObject extends ListenedBase implements IPercepti
 	protected final boolean checkGuard(WriteAccessToSimulationObject guard) {
 		return (this.guard == guard);
 	}
+
 
 	public final boolean isJustCreated() {
 		return this.justCreated;
@@ -204,7 +208,13 @@ public abstract class SimulationObject extends ListenedBase implements IPercepti
 		
 		this.statePerceptible = (StatePerceptible) getInitState(StatePerceptible.class.getName());
 		result.add(this.statePerceptible);
-		
+
+		this.stateAppearance = (StateAppearance) getInitState(StateAppearance.class.getName());
+		result.add(this.stateAppearance);
+
+		this.stateComposition = (StateComposition) getInitState(StateComposition.class.getName());
+		result.add(this.stateComposition);
+
 		return result;
 		
 	};

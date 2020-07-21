@@ -28,7 +28,6 @@ import org.socialworld.attributes.ISavedValues;
 import org.socialworld.attributes.ISimProperty;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
-import org.socialworld.attributes.SimProperty;
 import org.socialworld.calculation.PropertyUsingAs;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
@@ -39,6 +38,7 @@ public abstract class State implements ISimProperty, ISavedValues {
 
 	private PropertyName propertyName = PropertyName.unknown;
 	private PropertyProtection protection;
+	
 		
 	protected State() {
 		this.protection = new PropertyProtection(this);
@@ -250,6 +250,33 @@ public abstract class State implements ISimProperty, ISavedValues {
 		return null;
 	}
 
+	
+	final void setSomething(String methodName, Object something, StateSimulationObject mySimObjectsState, WriteAccessToSimulationObject guard) {
+		if (mySimObjectsState.checkGuard(guard)) {
+			
+			Method method = this.getMethod(methodName);
+			if (method != null) {
+				try {
+					method.setAccessible(true);
+				    method.invoke(this, something);
+	
+				// Handle any exceptions thrown by method to be invoked.
+				}
+				catch (InvocationTargetException ite) {
+				    Throwable cause = ite.getCause();
+				    System.out.println( cause.getMessage());
+				}
+				catch (IllegalAccessException iae) {
+					iae.printStackTrace();
+				} 
+				catch (IllegalArgumentException iarge) {
+					iarge.printStackTrace();
+				}
+			}
+		}
+	}
+
 	protected abstract void setProperty(PropertyName propName, ValueProperty property);
+	
 	
 }

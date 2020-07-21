@@ -41,7 +41,7 @@ import org.socialworld.knowledge.KnownPathsPool;
 import org.socialworld.knowledge.LastPerceivedObjects;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenAnimal;
-import org.socialworld.objects.properties.IWeapon;
+import org.socialworld.objects.concrete.animals.StateInventory;
 
 /**
  * @author Mathias Sikos
@@ -194,7 +194,7 @@ public class StateAnimal extends StateSimulationObject {
 	}
 
 	final public SimulationObject getLastHeard() {
-		return this.lastPerceivedObjects.getLastSeen();
+		return this.lastPerceivedObjects.getLastHeard();
 	}
 
 	final public SimulationObject getLastSmelled() {
@@ -240,6 +240,7 @@ public class StateAnimal extends StateSimulationObject {
 	final void setInventory(Inventory inventory, WriteAccessToAnimal guard) {
 		if (checkGuard(guard)) {
 			this.inventory = inventory;
+			setSomething(StateInventory.class.getName(), StateInventory.METHOD_NAME_SETINVENTORY, inventory, guard);
 		}
 	}
 

@@ -25,6 +25,7 @@ import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.attributes.SimProperty;
 import org.socialworld.calculation.SimulationCluster;
+import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.core.ObjectMaster;
 import org.socialworld.objects.SimulationObject;
@@ -93,20 +94,19 @@ public class Inventory extends SimProperty {
 	public  ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String valueName) {
 		switch (prop) {
 		// TODO switch property names
-/*
   		case inventory_shirt:
-			return this.inventory.getProperty(cluster, propName, valueName);
+			return new ValueProperty(Type.simulationObject, valueName, this.shirt);
 		case inventory_trousers:
-			return this.inventory.getProperty(cluster, propName, valueName);
+			return new ValueProperty(Type.simulationObject, valueName, this.trousers);
 		case inventory_shoes:
-			return this.inventory.getProperty(cluster, propName, valueName);
+			return new ValueProperty(Type.simulationObject, valueName, this.shoes);
 		case inventory_cap:
-			return this.inventory.getProperty(cluster, propName, valueName);
+			return new ValueProperty(Type.simulationObject, valueName, this.cap);
 		case inventory_leftHand:
-			return this.inventory.getProperty(cluster, propName, valueName);
+			return new ValueProperty(Type.simulationObject, valueName, this.leftHand);
 		case inventory_rightHand:
-			return this.inventory.getProperty(cluster, propName, valueName);
-*/
+			return new ValueProperty(Type.simulationObject, valueName, this.rightHand);
+
 		default:
 			return ValueProperty.getInvalid();
 		}
