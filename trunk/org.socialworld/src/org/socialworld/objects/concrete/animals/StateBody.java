@@ -11,6 +11,12 @@ import org.socialworld.objects.State;
 
 public class StateBody extends State {
 
+	public static final String VALUENAME_FACE_COLOUR = "faceColour";
+	public static final String VALUENAME_HAIR_COLOUR = "hairColour";
+
+	public static final String METHODNAME_GET_FACE_COLOUR = "getFaceColour";
+	public static final String METHODNAME_GET_HAIR_COLOUR = "getHairColour";
+
 	@Override
 	public ISavedValues copyForProperty(SimulationCluster cluster) {
 		// TODO Auto-generated method stub
@@ -29,12 +35,12 @@ public class StateBody extends State {
 
 	}
 
-	public ValueProperty getFaceColour() {
-		return new ValueProperty(Type.integer,  "faceColour", Color.PINK.getRGB());
+	protected ValueProperty getFaceColour() {
+		return new ValueProperty(Type.integer,  VALUENAME_FACE_COLOUR, Color.PINK.getRGB());
 	}
 
-	public ValueProperty getHairColour() {
-		return new ValueProperty(Type.integer,  "hairColour", Color.BLACK.getRGB());
+	protected ValueProperty getHairColour() {
+		return new ValueProperty(Type.integer,  VALUENAME_HAIR_COLOUR, Color.BLACK.getRGB());
 	}
 	
 }

@@ -11,7 +11,7 @@ import org.socialworld.objects.State;
 
 public class StateInventory extends State {
 
-	public static final String METHOD_NAME_SETINVENTORY = "setInventory";
+	public static final String METHODNAME_SET_INVENTORY = "setInventory";
 	
 	private Inventory inventory;
 	

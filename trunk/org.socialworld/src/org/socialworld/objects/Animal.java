@@ -32,9 +32,7 @@ import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.FunctionByMatrix;
 import org.socialworld.calculation.SimulationCluster;
-import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueProperty;
-import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.IEventParam;
 import org.socialworld.objects.concrete.animals.ISeer;
@@ -149,27 +147,6 @@ public abstract class Animal extends SimulationObject implements ISeer {
 		return this.pathFinder.findPath(end);
 	}
 	
-///////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////    DIRECTIONS ///////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * @return the directionChest
-	 */
-	final public Value getDirectionChestAsValue(SimulationCluster cluster, String valueName) {
-		// TODO obsolet ???
-		return this.state.getDirectionChestAsValue(cluster, valueName);
-	}
-
-
-	final void setDirectionView(Vector directionView, WriteAccessToAnimal guard) {
-		if (checkGuard(guard)) {
-			this.stateSeer.setDirectionView(directionView);
-		}
-	}
-
-
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    ACTION     ///////////////////////////////////////////////

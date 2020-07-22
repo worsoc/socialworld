@@ -63,6 +63,10 @@ public enum PropertyName {
 	
 	stateAppearance(1105000),
 
+	statePerceptible(1106000),
+	statePerceptible_position(1106001),
+	statePerceptible_cuboid(1106002),
+	
 	event_position(2001001),
 	event_direction(2001020),
 	

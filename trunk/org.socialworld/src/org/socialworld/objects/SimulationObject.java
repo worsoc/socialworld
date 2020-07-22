@@ -241,7 +241,6 @@ public abstract class SimulationObject extends ListenedBase implements IPercepti
 	 * @return position
 	 */
 	public final Position getPosition(SimulationCluster cluster) {
-		// TODO obsolet ???
 		return (Position) getProperty(cluster, PropertyName.simobj_position).getValue();
 	}
 	
@@ -381,10 +380,7 @@ public abstract class SimulationObject extends ListenedBase implements IPercepti
 		ValueArrayList propertiesAsValueList = new ValueArrayList();
 		
 		propertiesAsValueList.add(getProperty(cluster, PropertyName.simobj_position));
-			//	this.state.getPositionVectorAsValue(Value.VALUE_BY_NAME_SIMOBJ_POSITION_VECTOR)
 		propertiesAsValueList.add(getProperty(cluster, PropertyName.simobj_directionMove));
-			//	this.state.getDirectionMoveAsValue(Value.VALUE_BY_NAME_SIMOBJ_MOVE_DIRECTION)
-		//propertiesAsValueList.add(this.state.getPowerMoveAsValue(Value.VALUE_BY_NAME_SIMOBJ_MOVE_POWER));
 
 		paramObject.answerPropertiesRequest(propertiesAsValueList);
 	
