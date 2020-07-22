@@ -34,6 +34,7 @@ import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.conversation.Lexem;
+import org.socialworld.conversation.Word_Type;
 import org.socialworld.core.ActionHandler;
 import org.socialworld.core.AllWords;
 import org.socialworld.core.Event;
@@ -153,7 +154,8 @@ public abstract class SimulationObject extends ListenedBase implements IPercepti
 	protected abstract int getLexemID();
 	
 	public final Lexem getLexem() {
-		return this.lexem;
+//		return this.lexem;
+		return new Lexem(Lexem.newLexemID++,  Word_Type.noun , true);
 	}
 	
 		
