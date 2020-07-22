@@ -8,6 +8,8 @@ import org.socialworld.knowledge.KnowledgeFact_Criterion;
 
 public class Lexem {
 
+	public static int newLexemID = 0;
+	
 	private int lexemID;
 	private boolean allowedAsKnowledgeSubject = false;
 	private Word_Type wordType;
