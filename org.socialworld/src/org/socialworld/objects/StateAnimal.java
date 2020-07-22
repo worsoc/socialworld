@@ -63,6 +63,7 @@ public class StateAnimal extends StateSimulationObject {
 	
 	private GrantedAccessToProperty grantAccessToPropertyAttributes[];
 	private GrantedAccessToProperty grantAccessToPropertyAction[];
+	private GrantedAccessToProperty grantAccessToPropertyKnowledge[];
 	
 	public StateAnimal() {
 		super();
@@ -76,6 +77,9 @@ public class StateAnimal extends StateSimulationObject {
 
 		grantAccessToPropertyAction = new GrantedAccessToProperty[1];
 		grantAccessToPropertyAction[0] = GrantedAccessToProperty.action;
+	
+		grantAccessToPropertyKnowledge = new GrantedAccessToProperty[1];
+		grantAccessToPropertyKnowledge[0] = GrantedAccessToProperty.knowledge;
 		
 		attributes = new AttributeArray(Attribute.NUMBER_OF_ATTRIBUTES);
 		
@@ -120,7 +124,7 @@ public class StateAnimal extends StateSimulationObject {
 		
 		super.calculateEventInfluence(event);
 		Scheduler.getInstance().calculateAttributesChangedByEvent(event, (StateAnimal)getMeReadableOnly(), (HiddenAnimal)getMeWritableButHidden(grantAccessToPropertyAttributes) );
-		Scheduler.getInstance().calculatePerception(event, (StateAnimal)getMeReadableOnly(), (HiddenAnimal)getMeWritableButHidden(grantAccessToPropertyAttributes) );
+		Scheduler.getInstance().calculatePerception(event, (StateAnimal)getMeReadableOnly(), (HiddenAnimal)getMeWritableButHidden(grantAccessToPropertyKnowledge) );
 		
 	}
 
