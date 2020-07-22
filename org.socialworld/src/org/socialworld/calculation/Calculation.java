@@ -58,8 +58,13 @@ public class Calculation {
 		
 		Value result;
 		
-		result = createValue(type, value);
-		result.setName(name);
+		if (value == null) {
+			result = nothing;
+		}
+		else {
+			result = createValue(type, value);
+			result.setName(name);
+		}
 		
 		return result;
 		
