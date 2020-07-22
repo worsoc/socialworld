@@ -360,7 +360,6 @@ public class SpeechRecognition {
 		
 		isCorrect = titleOK(SpeechRecognition_Function.title);
 		
-		// TODO Alternative to null
 		if (finalPunctuationMark != null)
 			switch (finalPunctuationMark) {
 			case dot:
