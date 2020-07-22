@@ -197,31 +197,41 @@ public class KnowledgeCalculator extends SocialWorldThread {
 		SimulationObject subject;
 		Lexem lexemSubject;
 		
+		Value getFromVAL;
+		
 		int size;
 		
 		size = knowledgeElementProperties.size();
 		
 		if (size > 0) {
 			
-			subject = (SimulationObject) knowledgeElementProperties.get(0).getValue();
-			lexemSubject = subject.getLexem();
+			getFromVAL = knowledgeElementProperties.get(0);
 			
-			KnowledgeElement knowledgeElement = new KnowledgeElement(lexemSubject);
-			KnowledgeSource source = null;
-			KnowledgeAtom atom = null;
-			
-			for (int index = 1; index < size; index++) {
-			
-				if ((index % 2) == 1) {
-					source = (KnowledgeSource) knowledgeElementProperties.get(index).getValue();
-				}
-				else {
-					atom = (KnowledgeAtom) knowledgeElementProperties.get(index).getValue();
-					knowledgeElement.add(atom, source);
-				}
+			if (getFromVAL.isValid() && getFromVAL.getName().equals(Value.VALUE_NAME_KNOWLEDGE_SUBJECT)) {
 				
+				subject = (SimulationObject) knowledgeElementProperties.get(0).getValue();
+				lexemSubject = subject.getLexem();
+				
+				KnowledgeElement knowledgeElement = new KnowledgeElement(lexemSubject);
+				KnowledgeSource source = null;
+				KnowledgeAtom atom = null;
+				
+				for (int index = 1; index < size; index++) {
+				
+					if ((index % 2) == 1) {
+						source = (KnowledgeSource) knowledgeElementProperties.get(index).getValue();
+					}
+					else {
+						atom = (KnowledgeAtom) knowledgeElementProperties.get(index).getValue();
+						knowledgeElement.add(atom, source);
+					}
+					
+				}
+				return knowledgeElement;
+			
 			}
-			return knowledgeElement;
+			
+			return null;
 			
 		}
 		else {

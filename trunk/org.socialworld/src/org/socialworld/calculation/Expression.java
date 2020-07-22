@@ -200,11 +200,13 @@ public class Expression {
 					
 					name = (String) value.getValue();
 					tmp = arguments.getValue(name );
-					tmp = calculation.copy(tmp);
+					if (tmp.isValid()) {
+						tmp = calculation.copy(tmp);
 					
-					name = (String) expression1.evaluate(arguments).getValue();
-					if (name != null && name.length() > 0) {
-							tmp.changeName(name);
+						name = (String) expression1.evaluate(arguments).getValue();
+						if (name != null && name.length() > 0) {
+								tmp.changeName(name);
+						}
 					}
  					return tmp;
 					
@@ -214,11 +216,16 @@ public class Expression {
 					name =  (String) expression1.evaluate(arguments).getValue();
 					// get the value list
 					tmp = arguments.getValue(name);
-					valueList = (ValueArrayList) tmp.getValue();
-					// get the value list element's name
-					name = (String) expression2.evaluate(arguments).getValue();
-					// get the result value from the value list
-					return valueList.getValue(name);
+					if (tmp.isValid()) {
+
+						valueList = (ValueArrayList) tmp.getValue();
+						// get the value list element's name
+						name = (String) expression2.evaluate(arguments).getValue();
+						// get the result value from the value list
+						return valueList.getValue(name);
+						
+					}
+					return Calculation.getNothing();
 	
 				case property:
 					
@@ -236,24 +243,29 @@ public class Expression {
 					ValueProperty property;
 					
 					tmp = expression1.evaluate(arguments);
-
-					int checkUseAsPermission = (int) value.getValue();
-					if (checkUseAsPermission > 0) {
-						if (tmp instanceof ValueProperty) {
-							property = (ValueProperty) tmp;
-							if ( property.checkHasUseAsPermission(PropertyUsingAs.getName(checkUseAsPermission)) ) {
+					int checkUseAsPermission = 0;
+					if (tmp.isValid()) {
+						checkUseAsPermission = (int) value.getValue();
+						if (checkUseAsPermission > 0) {
+							if (tmp instanceof ValueProperty) {
+								property = (ValueProperty) tmp;
+								if ( property.checkHasUseAsPermission(PropertyUsingAs.getName(checkUseAsPermission)) ) {
+									checkSuccess = true;
+								}
+							}
+							else {
+								// just instanceof Value
+								// TODO checkHasUseAsPermission for different types
 								checkSuccess = true;
 							}
 						}
 						else {
-							// just instanceof Value
-							// TODO checkHasUseAsPermission for different types
+							// no check needed --> true
 							checkSuccess = true;
 						}
 					}
 					else {
-						// no check needed --> true
-						checkSuccess = true;
+						checkSuccess = false;
 					}
 					
 					if (checkSuccess) {
@@ -362,11 +374,13 @@ public class Expression {
 					
 				case oneExpression:
 					tmp = expression1.evaluate(arguments);
-					tmp = calculation.copy(tmp);
-					if (this.value != null) {
-						name = (String)this.value.getValue();
-						if (name.length() > 0) {
-							tmp.changeName(name);
+					if (tmp.isValid()) {
+						tmp = calculation.copy(tmp);
+						if (this.value != null) {
+							name = (String)this.value.getValue();
+							if (name.length() > 0) {
+								tmp.changeName(name);
+							}
 						}
 					}
 					return tmp;
@@ -375,64 +389,70 @@ public class Expression {
 					expression1.evaluate(arguments);
 					expression2.evaluate(arguments);
 					tmp = expression3.evaluate(arguments);
-					tmp = calculation.copy(tmp);
-					if (this.value != null) {
-						name = (String)this.value.getValue();
-						if (name.length() > 0) {
-							tmp.changeName(name);
+					if (tmp.isValid()) {
+						tmp = calculation.copy(tmp);
+						if (this.value != null) {
+							name = (String)this.value.getValue();
+							if (name.length() > 0) {
+								tmp.changeName(name);
+							}
 						}
-					}
+					}	
 					return tmp;
 					
 				case replacement:
 				
 					tmp = expression1.evaluate(arguments);
-					tmp = calculation.copy(tmp);
-					
-					// is there a name for a sub list
-					name = (String) expression2.evaluate().getValue();
-					if (name.length() > 0) {
-						if (arguments.findValue(name) < 0) {
-							// if the sub list doesn't exist, then create it and add it to arguments
-							valueList = new ValueArrayList();
-							arguments.add(new Value(Type.valueList, name, valueList));
+					if (tmp.isValid()) {
+						
+						tmp = calculation.copy(tmp);
+						
+						// is there a name for a sub list
+						name = (String) expression2.evaluate().getValue();
+						if (name.length() > 0) {
+							if (arguments.findValue(name) < 0) {
+								// if the sub list doesn't exist, then create it and add it to arguments
+								valueList = new ValueArrayList();
+								arguments.add(new Value(Type.valueList, name, valueList));
+							}
+							else {
+								// get the sub list from arguments
+								valueList = (ValueArrayList) arguments.getValue(name).getValue();
+							}
 						}
 						else {
-							// get the sub list from arguments
-							valueList = (ValueArrayList) arguments.getValue(name).getValue();
+							// use the arguments
+							valueList = arguments;
 						}
-					}
-					else {
-						// use the arguments
-						valueList = arguments;
-					}
-					
-					// get the name for the (expression1) evaluated value 
-					name = (String) value.getValue();
-					
-					// just for debugging
-					if (name.equals(Value.VALUE_BY_NAME_ACTION_TARGET)) {
-						if (tmp.getValue() == null )
-							System.out.println("Expression.evaluate: action target ist null "  );
-						else 
-							if ( tmp.getType() != Type.simulationObject)
-								System.out.println("Expression.evaluate: action target ist nicht vom Type.simulationObject "  );
-							else
-								System.out.println("Expression.evaluate: action target: " + ((SimulationObject)tmp.getValue()).getObjectID()  );
-					}
-					
-					if (name.length() > 0) {
-						tmp.changeName(name);
-						index = valueList.findValue(name);
-						if (index >= 0) {
-							valueList.set(index, tmp);
+						
+						// get the name for the (expression1) evaluated value 
+						name = (String) value.getValue();
+						
+						// just for debugging
+						if (name.equals(Value.VALUE_BY_NAME_ACTION_TARGET)) {
+							if (tmp.getValue() == null )
+								System.out.println("Expression.evaluate: action target ist null "  );
+							else 
+								if ( tmp.getType() != Type.simulationObject)
+									System.out.println("Expression.evaluate: action target ist nicht vom Type.simulationObject "  );
+								else
+									System.out.println("Expression.evaluate: action target: " + ((SimulationObject)tmp.getValue()).getObjectID()  );
+						}
+						
+						if (name.length() > 0) {
+							tmp.changeName(name);
+							index = valueList.findValue(name);
+							if (index >= 0) {
+								valueList.set(index, tmp);
+							}
+							else {
+								valueList.add(tmp);
+							}
 						}
 						else {
 							valueList.add(tmp);
 						}
-					}
-					else {
-						valueList.add(tmp);
+						
 					}
 					return tmp;
 				
@@ -450,38 +470,7 @@ public class Expression {
 					name = (String) expression3.evaluate().getValue();
 					
 					createdValue = createValue(type, subType, name, arguments);
-/*					
-					switch (type) {
-					case action:
-						createdValue = createValue(type, type.name(), arguments);
-						break;
-					case time:
-						createdValue = calculation.createValue(type, expression2.evaluate().getValue());
-						break;
-					case knowledgeElement:
-						valueList = new ValueArrayList();
-						// expression2 is a sequence expression
-						expression2.evaluate(arguments);
-						createdValue = createValue(type, type.name(), arguments);
-						break;
-					case knowledgeSource:
-					case knowledgeAtom:
-						int firstCreateArgument;
-						subType = (int) expression1.evaluate().getValue();
-						valueList = new ValueArrayList();
-						// expression2 is a sequence expression
-						firstCreateArgument = arguments.size();
-						expression2.evaluate(arguments);
-						size = arguments.size();
-						for ( index = firstCreateArgument; index < size; index++) {
-							valueList.add(arguments.get(index));
-						}
-						createdValue = createValue(type, subType, type.name(), valueList);
-						break;
-					default:
-						createdValue = Calculation.getNothing();
-					}
-*/					
+
 					return createdValue;
 					
 				default:

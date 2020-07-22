@@ -131,7 +131,8 @@ public class CreateValue extends Expression {
 
 		Object createdObject = null;
 		Value createdValue;
-
+		Value tmp;
+		
 		ValueArrayList localArguments = new ValueArrayList();
 		
 		int indexOrigArgs;
@@ -182,7 +183,13 @@ public class CreateValue extends Expression {
 			evaluateExpression2(arguments);
 			size = arguments.size();
 			for ( indexOrigArgs = firstCreateArgument; indexOrigArgs < size; indexOrigArgs++) {
-				localArguments.add(arguments.get(indexOrigArgs));
+				tmp = arguments.get(indexOrigArgs);
+				if (tmp.isValid()) {
+					localArguments.add(tmp);
+				}
+				else {
+					return Calculation.getNothing();
+				}
 			}
 			createdObject  = KnowledgeCalculator.createKnowledgeAtom(kat, localArguments);
 			break;
@@ -211,7 +218,12 @@ public class CreateValue extends Expression {
 			
 		}
 */		
-		createdValue = calculation.createValue(valueType, name, createdObject);
+		if (createdObject == null) {
+			createdValue = Calculation.getNothing();
+		}
+		else {
+			createdValue = calculation.createValue(valueType, name, createdObject);
+		}
 		
 		return createdValue;
 		
