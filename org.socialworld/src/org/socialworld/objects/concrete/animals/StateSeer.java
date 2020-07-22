@@ -88,7 +88,23 @@ public class StateSeer extends State {
 	}
 
 	protected void setProperty(PropertyName propName, ValueProperty property) {
-		// TODO setProperty
+		
+		Object value;
+		value = property.getValue();
+	
+		switch (propName) {
+		case stateSeer_directionView:
+			if (value instanceof Vector) {
+				this.directionView = new Direction(PropertyName.stateSeer_directionView, (Vector) value);
+			}
+			if (value instanceof Direction) {
+				this.directionView = (Direction) value;
+			}
+			setBestPercipiencePerpendicular();
+			
+		default:
+			
+		}
 	}
 
 	
@@ -98,10 +114,6 @@ public class StateSeer extends State {
 	}
 	
 
-	public void setDirectionView(Vector directionView) {
-		this.directionView = new Direction(PropertyName.stateSeer_directionView, directionView);
-		setBestPercipiencePerpendicular();
-	}
 	
 	public void setAngleViewPerceivingObjects(float angleView) {
 		this.angleViewPerceivingObjects = angleView;
@@ -138,5 +150,12 @@ public class StateSeer extends State {
 				VectorMapper.getInstance().getBestVisibleAreaPerpendicular(this.directionView.getVector(SimulationCluster.todo));
 
 	}
+	
+	
+	private void setDirectionView(Vector directionView) {
+		this.directionView = new Direction(PropertyName.stateSeer_directionView, directionView);
+		setBestPercipiencePerpendicular();
+	}
+
 	
 }

@@ -11,7 +11,10 @@ import java.awt.Color;
 
 public class StateAppearance extends State {
 
-	
+	public static final String VALUENAME_MAIN_COLOR = "mainColour";
+
+	public static final String METHODNAME_GET_MAIN_COLOR = "getMainColour";
+
 	
 	@Override
 	public ISavedValues copyForProperty(SimulationCluster cluster) {
@@ -34,7 +37,7 @@ public class StateAppearance extends State {
 	}
 	
 	
-	public ValueProperty getMainColour() {
-		return new ValueProperty(Type.integer, "mainColour", Color.RED.getRGB());
+	protected ValueProperty getMainColour() {
+		return new ValueProperty(Type.integer, VALUENAME_MAIN_COLOR, Color.RED.getRGB());
 	}
 }

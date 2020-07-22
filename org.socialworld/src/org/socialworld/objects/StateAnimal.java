@@ -223,19 +223,6 @@ public class StateAnimal extends StateSimulationObject {
 		}
 	}
 
-	final public Value getDirectionChestAsValue(SimulationCluster cluster, String valueName) {
-		// TODO obsolet ???
-		return  this.directionChest.getAsValue(cluster, valueName);
-	}
-	
-
-	final public Value getDirectionActiveMoveAsValue(SimulationCluster cluster, String valueName) {
-		// TODO obsolet ???
-		return  this.directionActiveMove.getAsValue(cluster, valueName) ;
-	}
-
-
-	
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    INVENTORY  ///////////////////////////////////////////////
@@ -244,7 +231,7 @@ public class StateAnimal extends StateSimulationObject {
 	final void setInventory(Inventory inventory, WriteAccessToAnimal guard) {
 		if (checkGuard(guard)) {
 			this.inventory = inventory;
-			setSomething(StateInventory.class.getName(), StateInventory.METHOD_NAME_SETINVENTORY, inventory, guard);
+			setSomething(StateInventory.class.getName(), StateInventory.METHODNAME_SET_INVENTORY, inventory, guard);
 		}
 	}
 

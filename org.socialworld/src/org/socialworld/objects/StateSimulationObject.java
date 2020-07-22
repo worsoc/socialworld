@@ -192,11 +192,6 @@ public abstract class StateSimulationObject extends ListenedBase {
 		
 	}
 	
-	final public Value getDirectionMoveAsValue(SimulationCluster cluster, String valueName) {
-		// TODO obsolet???
-		return this.directionMove.getAsValue(cluster, valueName);
-	}
-
 	final void setInfluenceTypes (int types[], WriteAccessToSimulationObject guard) {
 		if (checkGuard(guard)) {
 			this.influenceTypeForEventType = types;
@@ -347,6 +342,40 @@ public abstract class StateSimulationObject extends ListenedBase {
 		
 	}
 
+	
+	final void setStateProperty(PropertyName propState, PropertyName propSub, ValueProperty something, WriteAccessToSimulationObject guard) {
+		
+		if (checkGuard(guard)) {
+			
+			State stateAddOn;
+			for (int nrStateAddOn = 0; nrStateAddOn < stateAddOns.size(); nrStateAddOn++) {
+				
+				stateAddOn = stateAddOns.get(nrStateAddOn);
+				if (stateAddOn == null){
+					System.out.println("stateAddOn ist null");
+					continue;
+				}
+				if (stateAddOn.getPropertyName() == propState) {
+					stateAddOn.setProperty(propSub, something );
+				}
+				
+			}
+		}
+	}
+
+	final void setStateProperty(State stateAddOn, PropertyName propSub, ValueProperty something, WriteAccessToSimulationObject guard) {
+		
+		if (checkGuard(guard)) {
+			
+			if (stateAddOn == null){
+				System.out.println("stateAddOn ist null");
+			}
+			else {
+				stateAddOn.setProperty(propSub, something );
+			}
+				
+		}
+	}
 
 	
 	private ValueProperty getStateAsProperty(SimulationCluster cluster, PropertyName prop, String name) {

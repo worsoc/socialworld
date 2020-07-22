@@ -22,8 +22,11 @@
 package org.socialworld.objects;
 import org.socialworld.actions.handle.Inventory;
 import org.socialworld.actions.move.Path;
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.FunctionByMatrix;
+import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
+import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.knowledge.KnowledgeElement;
 import org.socialworld.objects.access.GrantedAccessToProperty;
@@ -124,7 +127,7 @@ public class WriteAccessToAnimal extends WriteAccessToSimulationObject {
 	public int setDirectionView(Vector directionView, HiddenSimulationObject caller) {
 		if (checkCaller(caller)) 
 			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.directionView)) {
-				animal.setDirectionView(directionView, this);
+				animalState.setStateProperty(PropertyName.stateSeer, PropertyName.stateSeer_directionView, new ValueProperty(Type.vector, PropertyName.stateSeer_directionView.name(), directionView), this);
 				return WRITE_ACCESS_RETURNS_SUCCESS;
 			}
 			else

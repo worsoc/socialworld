@@ -11,6 +11,10 @@ import org.socialworld.objects.State;
 
 public class StateComposition extends State {
 
+	public static final String VALUENAME_MAIN_MATERIAL = "mainColour";
+
+	public static final String METHODNAME_GET_MAIN_MATERIAL = "getMainMaterial";
+	
 	@Override
 	public ISavedValues copyForProperty(SimulationCluster cluster) {
 		// TODO Auto-generated method stub
@@ -30,6 +34,6 @@ public class StateComposition extends State {
 	}
 
 	public ValueProperty getMainMaterial() {
-		return new ValueProperty(Type.integer, "mainMaterial", Material.leather.getIndex());
+		return new ValueProperty(Type.integer, VALUENAME_MAIN_MATERIAL, Material.leather.getIndex());
 	}
 }

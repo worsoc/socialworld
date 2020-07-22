@@ -281,7 +281,7 @@ public abstract class Event implements Comparable<Event> {
 		}
 		
 		if (this.causer instanceof Animal){
-			direction = ((Animal) causer).getDirectionChestAsValue(SimulationCluster.todo, Value.VALUE_NAME_UNUSED_BECAUSE_TEMPORARY);
+			direction = ((Animal) causer).getProperty(SimulationCluster.todo, PropertyName.simobj_directionChest);
 			return direction;
 			
 		}

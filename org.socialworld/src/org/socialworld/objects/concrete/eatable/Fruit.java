@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.socialworld.attributes.properties.NutrientProperty;
 import org.socialworld.attributes.properties.TasteProperty;
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.objects.Item;
 import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.StateEatable;
@@ -13,11 +14,6 @@ public abstract class Fruit extends Item implements IEatable {
 
 	private StateEatable stateEatable;
 	
-	
-	public  NutrientProperty getNutrientProperties() { return this.stateEatable.getNutrientProperties(); }
-	
-	public  TasteProperty getTasteProperties() { return this.stateEatable.getTasteProperties(); }
-
 	
 	protected List<State> createAddOnStates() {
 		
@@ -29,5 +25,19 @@ public abstract class Fruit extends Item implements IEatable {
 		return result;
 		
 	}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////    implementing IEatable     ////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+	
+	public  NutrientProperty getNutrientProperties() {
+		return (NutrientProperty) 	this.stateEatable.getPropertyFromMethod(SimulationCluster.todo, StateEatable.METHODNAME_GET_NUTRIENT_PROPERTIES, StateEatable.VALUENAME_NUTRIENT_PROPERTIES).getValue();
+	}
+	
+	public  TasteProperty getTasteProperties() {
+		return (TasteProperty) 	this.stateEatable.getPropertyFromMethod(SimulationCluster.todo, StateEatable.METHODNAME_GET_TASTE_PROPERTIES, StateEatable.VALUENAME_TASTE_PROPERTIES).getValue();
+	}
+
+	
 
 }

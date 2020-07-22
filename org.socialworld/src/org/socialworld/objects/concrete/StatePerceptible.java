@@ -33,7 +33,9 @@ import org.socialworld.objects.State;
 
 public class StatePerceptible extends State {
 
-	Percipience percipience;
+
+	
+	private Percipience percipience;
 	
 	public StatePerceptible(Percipience percipience) {
 		super();
@@ -49,13 +51,29 @@ public class StatePerceptible extends State {
 		return new StatePerceptible(this, getPropertyProtection(), cluster);
 	}
 
-	public  ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String name) {
-		// TODO implement getProperty()
-		return ValueProperty.getInvalid();
+	public  ValueProperty getProperty(SimulationCluster cluster, PropertyName propName, String name) {
+		switch (propName) {
+		default:
+			return ValueProperty.getInvalid();
+		}
 	}
 
 	protected void setProperty(PropertyName propName, ValueProperty property) {
-		// TODO setProperty
+		Object value;
+		value = property.getValue();
+		
+		switch (propName) {
+		case statePerceptible_position:
+			if (value instanceof Position) {
+				this.percipience.setPosition((Position) value);
+			}
+		case statePerceptible_cuboid:
+			if (value instanceof Vector) {
+				this.percipience.setCuboid((Vector) value);
+			}
+		default:
+			
+		}
 	}
 	
 	public boolean checkIsPossiblePercipient(Animal possiblePercipient) {
@@ -70,12 +88,7 @@ public class StatePerceptible extends State {
 		return this.percipience.checkIsPossibleSeer(possibleSeer);
 	}
 
-	public void setPosition(Position position) {
-		this.percipience.setPosition(position);
-	}
+	
 
-	public void setCuboid(Vector cuboid) {
-		this.percipience.setCuboid(cuboid);
-	}
 
 }

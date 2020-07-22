@@ -21,18 +21,29 @@
 */
 package org.socialworld.objects.concrete;
 
+
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.attributes.properties.NutrientProperty;
 import org.socialworld.attributes.properties.TasteProperty;
 import org.socialworld.calculation.SimulationCluster;
+import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.objects.State;
 
 public class StateEatable extends State {
 
-	NutrientProperty nutrientProps;
-	TasteProperty tasteProps;
+	public static final String VALUENAME_NUTRIENT_PROPERTIES = "nutritionProps";
+	public static final String VALUENAME_TASTE_PROPERTIES = "tasteProps";
+
+	public static final String METHODNAME_GET_NUTRIENT_PROPERTIES = "getNutrientProperties";
+	public static final String METHODNAME_GET_TASTE_PROPERTIES = "getTasteProperties";
+
+	public static final String METHODNAME_SET_NUTRIENT_PROPERTIES = "setNutrientProperties";
+	public static final String METHODNAME_SET_TASTE_PROPERTIES = "setTasteProperties";
+
+	private NutrientProperty nutrientProps;
+	private TasteProperty tasteProps;
 	
 	public StateEatable() {
 		super();
@@ -56,12 +67,16 @@ public class StateEatable extends State {
 		// TODO setProperty
 	}
 
-	public NutrientProperty getNutrientProperties() { return new NutrientProperty(nutrientProps); }
-//	protected NutrientProperty getOriginalNutrientProperties() { return nutrientProps; }
+	protected ValueProperty getNutrientProperties() {
+		return new ValueProperty(Type.object, VALUENAME_NUTRIENT_PROPERTIES, nutrientProps);
+	}
+	
 	protected void setNutrientProperties(NutrientProperty changed) {  }
 	
-	public TasteProperty getTasteProperties() { return new TasteProperty(tasteProps); }
-//	protected TasteProperty getOriginalTasteProperties() { return tasteProps; }
+	protected ValueProperty getTasteProperties() {
+		return new ValueProperty(Type.object, VALUENAME_TASTE_PROPERTIES, tasteProps);
+	}
+	
 	protected void setTasteProperties(TasteProperty changed) {  }
 
 }
