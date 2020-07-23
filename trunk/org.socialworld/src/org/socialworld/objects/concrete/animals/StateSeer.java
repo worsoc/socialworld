@@ -60,6 +60,10 @@ public class StateSeer extends State {
 		this.angleViewPerceivingEvents = original.getAngleViewPerceivingEvents();
 	}
 	
+	protected  void initPropertyName() {
+		setPropertyName(PropertyName.stateSeer);
+	}
+
 	public State copyForProperty(SimulationCluster cluster) {
 		return new StateSeer(this, getPropertyProtection(), cluster);
 	}

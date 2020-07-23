@@ -17,6 +17,10 @@ public class StateBody extends State {
 	public static final String METHODNAME_GET_FACE_COLOUR = "getFaceColour";
 	public static final String METHODNAME_GET_HAIR_COLOUR = "getHairColour";
 
+	protected  void initPropertyName() {
+		setPropertyName(PropertyName.stateBody);
+	}
+
 	@Override
 	public ISavedValues copyForProperty(SimulationCluster cluster) {
 		// TODO Auto-generated method stub

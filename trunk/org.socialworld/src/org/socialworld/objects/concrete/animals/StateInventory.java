@@ -25,6 +25,10 @@ public class StateInventory extends State {
 		setPropertyName(PropertyName.stateInventory);
 	}
 
+	protected  void initPropertyName() {
+		setPropertyName(PropertyName.stateInventory);
+	}
+
 	@Override
 	public ISavedValues copyForProperty(SimulationCluster cluster) {
 		return new StateInventory(this, getPropertyProtection(), cluster);

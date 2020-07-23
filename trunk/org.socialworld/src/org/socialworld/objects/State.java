@@ -41,20 +41,23 @@ public abstract class State implements ISimProperty, ISavedValues {
 	
 		
 	protected State() {
+		initPropertyName();
 		this.protection = new PropertyProtection(this);
 	}
 
 	protected State(PropertyProtection protectionOriginal, SimulationCluster clusterNew) {
+		initPropertyName();
 		this.protection = new PropertyProtection(protectionOriginal, clusterNew, this);
 	}
 
+	protected abstract void initPropertyName();
 	
 	///////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////  implementing  ISimProperty  ////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
 	public final void setPropertyName(PropertyName prop) {
-		if (this.propertyName == PropertyName.unknown) {
+		if (this.propertyName == PropertyName.unknown ) {
 			this.propertyName = prop;
 		}
 	}
@@ -62,6 +65,7 @@ public abstract class State implements ISimProperty, ISavedValues {
 	public final PropertyName getPropertyName() {
 		return this.propertyName;
 	}
+	
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////  implementing  ISavedValues  ////////////////////////////////////

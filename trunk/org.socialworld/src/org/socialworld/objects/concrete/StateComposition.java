@@ -15,6 +15,10 @@ public class StateComposition extends State {
 
 	public static final String METHODNAME_GET_MAIN_MATERIAL = "getMainMaterial";
 	
+	protected  void initPropertyName() {
+		setPropertyName(PropertyName.stateComposition);
+	}
+
 	@Override
 	public ISavedValues copyForProperty(SimulationCluster cluster) {
 		// TODO Auto-generated method stub
