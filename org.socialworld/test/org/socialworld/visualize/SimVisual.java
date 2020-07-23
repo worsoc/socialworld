@@ -43,10 +43,11 @@ import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Value;
 import org.socialworld.core.Simulation;
+import org.socialworld.core.SocialWorldThread;
 import org.socialworld.objects.Human;
 import org.socialworld.objects.State;
 
-public class SimVisual {
+public class SimVisual extends SocialWorldThread {
 
 	public static final Color COLOR_CORNSILK = new Color(255,248,220);
 	public static final Color COLOR_BLANCHEDALMOND = new Color(255,235,205);
@@ -95,9 +96,34 @@ public class SimVisual {
 	public static final Color COLOR_BLUEVIOLET = new Color(138,43,226);
 	public static final Color COLOR_INDIGO = new Color(75,0,130);
 	
+	public static final Color COLOR_LIGHTCYAN = new Color(224,255,255);
+	public static final Color COLOR_CYAN = new Color(0,255,255) ;
+	public static final Color COLOR_AQUA = new Color(0,255,255) ;
+	public static final Color COLOR_AQUAMARINE = new Color(127,255,212) ;
+	public static final Color COLOR_MEDIUMAQUAMARINE = new Color(102,205,170);	 
+	public static final Color COLOR_PALETURQUOISE = new Color(175,238,238);
+	public static final Color COLOR_TUREQUOISE = new Color(64,224,208);
+	public static final Color COLOR_MEDIUMTURQUOISE = new Color(72,209,204);
+	public static final Color COLOR_DARKTURQUOISE = new Color(0,206,209);
+	public static final Color COLOR_LIGHTSEAGREEN = new Color(32,178,170);
+	public static final Color COLOR_DARKCYAN = new Color(0,139,139);
+	public static final Color COLOR_TEAL = new Color(0,128,128);
+	
+	public static final Color COLOR_LIGHTGOLDENRODYELLOW = new Color(250,250,210);
+	public static final Color COLOR_PALEGOLDENROD = new Color(238,232,170);
+	public static final Color COLOR_KHAKI = new Color(240,230,140);
+	public static final Color COLOR_GOLD = new Color(255,215,0);
+	public static final Color COLOR_ORANGE = new Color(255,165,0);
+	public static final Color COLOR_DARKORANGE = new Color(255,140,0);
+	public static final Color COLOR_SADDLEBROWN = new Color(139,69,19);
+	public static final Color COLOR_GOLDEN_YELLOW = new Color(255,223,0);
+	public static final Color COLOR_METALLIC_GOLD = new Color(212,175,55);
+	public static final Color COLOR_OLD_GOLD = new Color(207,181,59);
+	public static final Color COLOR_VEGAS_GOLD = new Color(197,179,88);
+	public static final Color COLOR_PALE_GOLD = new Color(230,190,138);
+	public static final Color COLOR_GOLDEN_BROWN = new Color(153,101,21);
 
-
-
+			
 	private JFrame  frameActions;
 	
 	private JFrame frameAttributes;
@@ -110,32 +136,318 @@ public class SimVisual {
 	private int lastChangedObjID = 100;
 	int[] objIDforRow;
 	
+	
+	private int sleepTime = 100;
+	private int state; 
+	
 	public SimVisual() {
+		state = 0;
 		init();
-//		drawHeart();
-//		drawM();
-//		drawA();
-//		drawN();
-//		drawU();
-//		drawI();
-//		drawL();
-//		drawO();
-//		drawV();
-		drawE();
-		/*
-		try
-		{
-		    Thread.sleep(10000);
-		}
-		catch(InterruptedException ex)
-		{
-		    Thread.currentThread().interrupt();
-		}
-		*/
-		//clearAll();
+
+		this.startThread();	
 	}
 	
-	
+	public void run() {
+		while (isRunning()) {
+			
+			
+			if (isRunning()) {
+				switch (state) {
+				case 0:
+					// lange Pause
+					state++;
+					break;
+				case 1:
+					// immer noch lange Pause
+					state++;
+					break;
+				case 2:
+					// immer noch lange Pause
+					state++;
+					break;
+				case 3:
+					// immer noch lange Pause
+					state++;
+					break;
+				case 4:
+					// immer noch lange Pause
+					state++;
+					break;
+				case 5:
+					clearAll();
+					drawHeart();
+					state++;
+					break;
+				case 6:
+					// Herz stehen lassen
+					state++;
+					break;
+				case 7:
+					clearAll();
+					state++;
+					break;
+				case 8:
+					// lange Pause
+					state++;
+					break;
+				case 9:
+					// immer noch lange Pause
+					state++;
+					break;
+				case 10:
+					// immer noch lange Pause
+					state++;
+					break;
+				case 11:
+					// immer noch lange Pause
+					state++;
+					break;
+				case 12:
+					// immer noch lange Pause
+					state++;
+					break;
+				case 13:
+					drawM();
+					state++;
+					break;
+				case 14:
+					// M stehen lassen weitere 100 ms
+					state++;
+					break;
+				case 15:
+					clearAll();
+					state++;
+				case 16:
+					// kurze Pause
+					state++;
+					break;
+				case 17:
+					drawA();
+					state++;
+					break;
+				case 18:
+					// A stehen lassen weitere 100 ms
+					state++;
+					break;
+				case 19:
+					clearAll();
+					state++;
+				case 20:
+					// kurze Pause
+					state++;
+					break;
+				case 21:
+					drawN();
+					state++;
+					break;
+				case 22:
+					// N stehen lassen
+					state++;
+					break;
+				case 23:
+					clearAll();
+					state++;
+				case 24:
+					// kurze Pause
+					state++;
+					break;
+				case 25:
+					drawU();
+					state++;
+					break;
+				case 26:
+					// U stehen lassen
+					state++;
+					break;
+				case 27:
+					clearAll();
+					state++;
+					break;
+				case 28:
+					// lange Pause
+					state++;
+					break;
+				case 29:
+					// immer noch lange Pause
+					state++;
+					break;
+				case 30:
+					// immer noch lange Pause
+					state++;
+					break;
+				case 31:
+					// immer noch lange Pause
+					state++;
+					break;
+				case 32:
+					// immer noch lange Pause
+					state++;
+					break;
+				case 33:
+					drawI();
+					state++;
+					break;
+				case 34:
+					// I stehen lassen
+					state++;
+					break;
+				case 35:
+					clearAll();
+					state++;
+					break;
+				case 36:
+					// lange Pause
+					state++;
+					break;
+				case 37:
+					// immer noch lange Pause
+					state++;
+					break;
+				case 38:
+					// immer noch lange Pause
+					state++;
+					break;
+				case 39:
+					// immer noch lange Pause
+					state++;
+					break;
+				case 40:
+					// immer noch lange Pause
+					state++;
+					break;
+				case 41:
+					drawL();
+					state++;
+					break;
+				case 42:
+					// L stehen lassen
+					state++;
+					break;
+				case 43:
+					clearAll();
+					state++;
+				case 44:
+					// kurze Pause
+					state++;
+					break;
+				case 45:
+					drawO();
+					state++;
+					break;
+				case 46:
+					// O stehen lassen
+					state++;
+					break;
+				case 47:
+					clearAll();
+					state++;
+				case 48:
+					// kurze Pause
+					state++;
+					break;
+				case 49:
+					drawV();
+					state++;
+					break;
+				case 50:
+					// V stehen lassen
+					state++;
+					break;
+				case 51:
+					clearAll();
+					state++;
+				case 52:
+					// kurze Pause
+					state++;
+					break;
+				case 53:
+					drawE();
+					state++;
+					break;
+				case 54:
+					// E stehen lassen
+					state++;
+					break;
+				case 55:
+					clearAll();
+					state++;
+				case 56:
+					// lange Pause
+					state++;
+					break;
+				case 57:
+					// immer noch lange Pause
+					state++;
+					break;
+				case 58:
+					// immer noch lange Pause
+					state++;
+					break;
+				case 59:
+					// immer noch lange Pause
+					state++;
+					break;
+				case 60:
+					// immer noch lange Pause
+					state++;
+					break;
+				case 61:
+					drawU();
+					state++;
+					break;
+				case 62:
+					// U2 stehen lassen
+					state++;
+					break;
+				case 63:
+					clearAll();
+					state++;
+				case 64:
+					// lange Pause
+					state++;
+					break;
+				case 65:
+					// immer noch lange Pause
+					state++;
+					break;
+				case 66:
+					// immer noch lange Pause
+					state++;
+					break;
+				case 67:
+					// immer noch lange Pause
+					state++;
+					break;
+				case 68:
+					// immer noch lange Pause
+					state++;
+					break;
+					
+				default:
+					state = 0;
+				}
+//				
+//				drawM();
+//				drawA();
+//				drawN();
+//				drawU();
+//				drawI();
+//				drawL();
+//				drawO();
+//				drawV();
+//				drawE();
+
+			}
+			
+			try {
+				sleep(sleepTime);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+		}
+	}	
+
 	public void show() {
 		this.frameAttributes.setVisible(true);
 		this.frameActions.setVisible(true);
@@ -326,12 +638,12 @@ public class SimVisual {
 		private void clicked() {
 			Human human;
 			Value prop;
-			State state;
+			org.socialworld.objects.State state;
 			Value propSub;
 			
 			human = Simulation.getInstance().getObjectMaster().getHumans().get(index);
 			prop = human.getProperty(SimulationCluster.test, PropertyName.stateSeer);
-			state = (State) prop.getValue();
+			state = (org.socialworld.objects.State) prop.getValue();
 			if (state != null) {
 				propSub = state.getValue("getAngleViewPerceivingEvents", "angleViewPerceivingEvents");
 				myPrint("Button " + index + " clicked: " + propSub.getValue().toString() );
@@ -658,5 +970,37 @@ Color Name	Hex Code
   	midnightblue 	#191970 	rgb(25,25,112)
   	blueviolet 	#8A2BE2 	rgb(138,43,226)
   	indigo 	#4B0082 	rgb(75,0,130)
+  	
+ 	lightcyan	#E0FFFF	rgb(224,255,255) 
+	cyan	#00FFFF	rgb(0,255,255) 
+	aqua	#00FFFF	rgb(0,255,255) 
+	aquamarine	#7FFFD4	rgb(127,255,212) 
+	mediumaquamarine	#66CDAA	rgb(102,205,170)	 
+	paleturquoise	#AFEEEE	rgb(175,238,238)	 
+	turquoise	#40E0D0	rgb(64,224,208)	 
+	mediumturquoise	#48D1CC	rgb(72,209,204)	 
+	darkturquoise	#00CED1	rgb(0,206,209)	 
+	lightseagreen	#20B2AA	rgb(32,178,170)	 
+	cadetblue	#5F9EA0	rgb(95,158,160)	 
+	darkcyan	#008B8B	rgb(0,139,139)	 
+	teal	#008080	rgb(0,128,128)
+	
+	lightgoldenrodyellow	#FAFAD2	rgb(250,250,210)	 
+	palegoldenrod	#EEE8AA	rgb(238,232,170)	 
+	khaki	#F0E68C	rgb(240,230,140)	 
+	goldenrod	#DAA520	rgb(218,165,32)	 
+	gold	#FFD700	rgb(255,215,0)	 
+	orange	#FFA500	rgb(255,165,0)	 
+	darkorange	#FF8C00	rgb(255,140,0)	 
+	peru	#CD853F	rgb(205,133,63)	 
+	chocolate	#D2691E	rgb(210,105,30)	 
+	saddlebrown	#8B4513	rgb(139,69,19)	 
+	sienna	#A0522D	rgb(160,82,45)
+	Golden yellow	#FFDF00	rgb(255,223,0)	 
+	Metallic gold	#D4AF37	rgb(212,175,55)	 
+	Old gold	#CFB53B	rgb(207,181,59)	 
+	Vegas gold	#C5B358	rgb(197,179,88)	 
+	Pale gold	#E6BE8A	rgb(230,190,138)	 
+	Golden brown	#996515	rgb(153,101,21)
 
 */
