@@ -30,13 +30,13 @@ import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.SimulationCluster;
+import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.core.Event;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenSimulationObject;
-import org.socialworld.objects.concrete.StatePerceptible;
 import org.socialworld.objects.connections.Connection;
 import org.socialworld.objects.connections.ConnectionList;
 import org.socialworld.objects.connections.ConnectionType;
@@ -171,7 +171,7 @@ public abstract class StateSimulationObject extends ListenedBase {
 	final void setPosition(Position position, WriteAccessToSimulationObject guard) {
 		if (checkGuard(guard)) {
 			this.position = position;
-			setSomething(StatePerceptible.class.getName(), "setPosition", position, guard);
+			setStateProperty(PropertyName.statePerceptible, PropertyName.statePerceptible_position, new ValueProperty(Type.object, PropertyName.statePerceptible_position.name(), position),  guard);
 		}
 	}
 	

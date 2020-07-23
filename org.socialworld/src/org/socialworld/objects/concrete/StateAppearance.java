@@ -15,7 +15,10 @@ public class StateAppearance extends State {
 
 	public static final String METHODNAME_GET_MAIN_COLOR = "getMainColour";
 
-	
+	protected  void initPropertyName() {
+		setPropertyName(PropertyName.stateAppearance);
+	}
+
 	@Override
 	public ISavedValues copyForProperty(SimulationCluster cluster) {
 		// TODO Auto-generated method stub

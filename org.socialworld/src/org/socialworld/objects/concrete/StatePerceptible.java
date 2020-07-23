@@ -47,6 +47,11 @@ public class StatePerceptible extends State {
 		// TODO implement copy constructor
 	}
 	
+	
+	protected  void initPropertyName() {
+		setPropertyName(PropertyName.statePerceptible);
+	}
+
 	public State copyForProperty(SimulationCluster cluster) {
 		return new StatePerceptible(this, getPropertyProtection(), cluster);
 	}

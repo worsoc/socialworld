@@ -67,6 +67,8 @@ public enum PropertyName {
 	statePerceptible_position(1106001),
 	statePerceptible_cuboid(1106002),
 	
+	stateEatable(1107000),
+	
 	event_position(2001001),
 	event_direction(2001020),
 	

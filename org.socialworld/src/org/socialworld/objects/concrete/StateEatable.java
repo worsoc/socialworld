@@ -54,6 +54,10 @@ public class StateEatable extends State {
 		// TODO implement copy constructor
 	}
 
+	protected  void initPropertyName() {
+		setPropertyName(PropertyName.stateEatable);
+	}
+
 	public State copyForProperty(SimulationCluster cluster) {
 		return new StateEatable(this, getPropertyProtection(), cluster);
 	}
