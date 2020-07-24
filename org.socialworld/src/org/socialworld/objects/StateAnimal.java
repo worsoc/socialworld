@@ -30,6 +30,7 @@ import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.FunctionByMatrix;
 import org.socialworld.calculation.SimulationCluster;
+import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.application.Scheduler;
@@ -41,7 +42,6 @@ import org.socialworld.knowledge.KnownPathsPool;
 import org.socialworld.knowledge.LastPerceivedObjects;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenAnimal;
-import org.socialworld.objects.concrete.animals.StateInventory;
 
 /**
  * @author Mathias Sikos
@@ -231,7 +231,7 @@ public class StateAnimal extends StateSimulationObject {
 	final void setInventory(Inventory inventory, WriteAccessToAnimal guard) {
 		if (checkGuard(guard)) {
 			this.inventory = inventory;
-			setSomething(StateInventory.class.getName(), StateInventory.METHODNAME_SET_INVENTORY, inventory, guard);
+			setStateProperty(PropertyName.stateInventory, PropertyName.stateInventory_inventory, new ValueProperty(Type.object, PropertyName.stateInventory_inventory.name(), inventory), guard);
 		}
 	}
 

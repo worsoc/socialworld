@@ -47,6 +47,7 @@ public enum PropertyName {
 	stateSeer_sizeDistanceRelationThreshold(11010007),
 
 	stateInventory(1102000),
+	stateInventory_inventory(1102001),
 	inventory_shirt(1102031),
 	inventory_trousers(1102032),
 	inventory_shoes(1102033),
@@ -55,7 +56,7 @@ public enum PropertyName {
 	inventory_rightHand(1102012),
 	inventory_leftFoot(1102013),
 	inventory_rightFoot(1102014),
-	inventory_mouth(1102001),
+	inventory_mouth(1102021),
 
 	stateBody(1103000),
 	

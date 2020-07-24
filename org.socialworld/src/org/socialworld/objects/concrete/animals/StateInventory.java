@@ -11,7 +11,6 @@ import org.socialworld.objects.State;
 
 public class StateInventory extends State {
 
-	public static final String METHODNAME_SET_INVENTORY = "setInventory";
 	
 	private Inventory inventory;
 	
@@ -60,6 +59,11 @@ public class StateInventory extends State {
 		value = property.getValue();
 		
 		switch (propName) {
+		case stateInventory_inventory:
+			if (value instanceof Inventory) {
+				this.inventory = (Inventory) value;
+			}
+			break;
 		case inventory_shirt:
 			if (value instanceof SimulationObject) {
 				this.inventory.setShirt((SimulationObject) value );
@@ -87,8 +91,5 @@ public class StateInventory extends State {
 		
 	}
 	
-	protected void setInventory(Inventory inventory) {
-		this.inventory = inventory;
-	}
 
 }
