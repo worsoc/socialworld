@@ -32,7 +32,9 @@ public enum PropertyUsingAs {
 	pathToKnowledgeRelationSubject(41), knowledgeRelationSubject(42),
 	pathToKnowledgeRelationVerb(51), knowledgeRelationVerb(52),
 	pathToKnowledgeRelationAdverb(61), knowledgeRelationAdverb(62),
-	pathToKnowledgeRelationObject(71), knowledgeRelationObject(72);
+	pathToKnowledgeRelationObject(71), knowledgeRelationObject(72),
+	todo(9998);
+
 
 	private int index;
 
