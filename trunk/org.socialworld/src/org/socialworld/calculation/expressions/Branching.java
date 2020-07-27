@@ -26,6 +26,8 @@ import org.socialworld.attributes.Attribute;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_ConditionOperator;
 import org.socialworld.calculation.Expression_Function;
+import org.socialworld.calculation.PropertyUsingAs;
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 
@@ -49,7 +51,7 @@ public class Branching extends Expression {
 		super();
 	}
 	
-	protected Expression parseWenn(String line) {
+	protected Expression parseWenn(SimulationCluster cluster, PropertyUsingAs usablePermission, String line) {
 		
 		String partWENN;
 		
@@ -67,7 +69,7 @@ public class Branching extends Expression {
 	
 			for (int i = 0; i < countORs; i++) {
 				
-				disjunctionParts[i] = parseConjunction(listORs[i]);
+				disjunctionParts[i] = parseConjunction(cluster, usablePermission, listORs[i]);
 				
 			}
 			
@@ -76,13 +78,13 @@ public class Branching extends Expression {
 		}
 		else {
 			
-			return parseConjunction(listORs[0]);
+			return parseConjunction(cluster, usablePermission, listORs[0]);
 			
 		}
 		
 	}
 	
-	private Expression parseConjunction(String conjunction) {
+	private Expression parseConjunction(SimulationCluster cluster, PropertyUsingAs usablePermission, String conjunction) {
 		
 		String[] listANDs = conjunction.split("&");
 		int countANDs = listANDs.length;
@@ -93,7 +95,7 @@ public class Branching extends Expression {
 			
 			for (int i = 0; i < countANDs; i++) {
 				
-				conjunctionParts[i] = parseCondition(listANDs[i].trim());
+				conjunctionParts[i] = parseCondition(cluster, usablePermission, listANDs[i].trim());
 				
 			}
 			
@@ -102,13 +104,15 @@ public class Branching extends Expression {
 		}
 		else {
 			
-			return parseCondition(listANDs[0]);
+			return parseCondition(cluster, usablePermission, listANDs[0]);
 			
 		}
 		
 	}
 	
-	private Expression parseCondition(String condition) {
+	
+	
+	private Expression parseCondition(SimulationCluster cluster, PropertyUsingAs usablePermission, String condition) {
 
 		String[] conditionElements = condition.trim().split("\\s+");
 		
@@ -119,10 +123,17 @@ public class Branching extends Expression {
 			
 		}
 		
-		// in case of 4 elements --> (type, event property name, operator, value)
+		// in case of 4 elements --> (type, get value path, operator, value)
+		//						 --> (type, event property name, operator, value)
 		if (conditionElements.length == 4) {
 			
-			return parseEventPropsCondition(conditionElements);
+			if (conditionElements[1].indexOf("(") > 0) {
+				// the get value path contains at least one "(" for GETVal(...), GETProp(...) or  GETFctVal(...)
+				return parseStateCondition(cluster, usablePermission, conditionElements);
+			}
+			else {
+				return parseEventPropsCondition(cluster, usablePermission, conditionElements);
+			}
 			
 		}
 		
@@ -165,7 +176,7 @@ public class Branching extends Expression {
 			
 	}
 	
-	private Expression parseEventPropsCondition(String[] conditionElements) {
+	private Expression parseEventPropsCondition(SimulationCluster cluster, PropertyUsingAs usablePermission, String[] conditionElements) {
 		
 		// type as Type's index (look at the enum Type)
 		String type = conditionElements[0];
@@ -196,5 +207,35 @@ public class Branching extends Expression {
 			
 	}
 
+	private Expression parseStateCondition(SimulationCluster cluster, PropertyUsingAs usablePermission, String[] conditionElements) {
+		
+		// type as Type's index (look at the enum Type)
+		String type = conditionElements[0];
+		
+		// the get value path 
+		String getValuePath = conditionElements[1];
+		
+		String operator = conditionElements[2];
+		
+		// the value the event's property is compared to
+		String value = conditionElements[3];
+		
+		Expression getValue = new GetValue(cluster, usablePermission, getValuePath, Value.VALUE_NAME_UNUSED_BECAUSE_TEMPORARY);
+		
+		Expression constant = new Constant(new Value(value, Type.getName(Integer.parseInt(type)) ) );
+		
+		Expression comparison = new Expression();
+		
+		for (int i = 0; i < Expression_ConditionOperator.NUMBER_OF_COMPARISON_OPERATORS; i++) {
+			
+			if (Expression_ConditionOperator.getName(i).toString().equals(operator) ) {
+				comparison = new Comparison(Expression_ConditionOperator.getName(i), getValue, constant );
+				break;
+			}
+		}
+		
+		return comparison;
+			
+	}
 
 }

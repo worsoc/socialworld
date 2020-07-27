@@ -26,6 +26,8 @@ import java.util.List;
 import org.socialworld.actions.ActionType;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
+import org.socialworld.calculation.PropertyUsingAs;
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.geometry.Vector;
@@ -53,7 +55,7 @@ public class CreateActionExpression extends Branching {
 			Expression exp3;  // SONST
 				
 			line = lines.get(0);
-			exp1 = parseWenn(line);
+			exp1 = parseWenn(SimulationCluster.todo, PropertyUsingAs.todo, line);
 			exp2 = parseDann(line);
 			
 			if (lines.size() > 1) {
@@ -84,7 +86,7 @@ public class CreateActionExpression extends Branching {
 		Expression tail;
 		
 		line = lines.get(index);
-		wenn = parseWenn(line);
+		wenn = parseWenn(SimulationCluster.todo, PropertyUsingAs.todo, line);
 		dann = parseDann(line);
 		
 		if (index == (lines.size() - 1)) 
