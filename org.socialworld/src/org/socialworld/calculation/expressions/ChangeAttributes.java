@@ -27,6 +27,8 @@ import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
+import org.socialworld.calculation.PropertyUsingAs;
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueInterpreteAs;
 import org.socialworld.datasource.parsing.ParseExpressionStrings;
@@ -46,7 +48,7 @@ public class ChangeAttributes extends Branching {
 			Expression exp3;  // SONST
 				
 			line = lines.get(0);
-			exp1 = parseWenn(line);
+			exp1 = parseWenn(SimulationCluster.todo, PropertyUsingAs.todo, line);
 			exp2 = parseDann(line);
 			
 			if (lines.size() > 1) {
@@ -76,7 +78,7 @@ public class ChangeAttributes extends Branching {
 		Expression tail;
 		
 		line = lines.get(index);
-		wenn = parseWenn(line);
+		wenn = parseWenn(SimulationCluster.todo, PropertyUsingAs.todo, line);
 		dann = parseDann(line);
 		
 		if (index == (lines.size() - 1)) 
