@@ -34,6 +34,8 @@ public class GetValue extends Expression {
 	public static String GETVALUE = "GETVal";
 	public static String GETPROPERTY = "GETProp";
 	public static String GETFUNCTIONVALUE = "GETFctVal";
+	public static String GETISA = "IsA";
+	public static String GETCHECK = "Check";
 	
 	public GetValue(SimulationCluster cluster, PropertyUsingAs usablePermission, String getValuePath, String valueAliasName) {
 		
@@ -122,6 +124,14 @@ public class GetValue extends Expression {
 	public static String getFctValue(String name) {
 		return GETFUNCTIONVALUE + "(" + name + ")"; 
 	}
+
+	public static String getIsA(String name) {
+		return GETISA + "(" + name + ")"; 
+	}
+	
+	public static String getCheck(String name) {
+		return GETCHECK + "(" + name + ")"; 
+	}
 	
 	private Expression getStepExpression(SimulationCluster cluster, String step, String valueAliasName) {
 		Expression result = Nothing.getInstance();
@@ -132,10 +142,16 @@ public class GetValue extends Expression {
 			result = new GetArgumentByName(name, valueAliasName);
 		}
 		if (step.indexOf(GETPROPERTY + "(") >= 0 ) {
-			result = new GetProperty(cluster, PropertyName.forString(name), valueAliasName);
+			result = new GetProperty(cluster, GetPropertyMode.property, name, valueAliasName);
 		}
 		if (step.indexOf(GETFUNCTIONVALUE + "(") >= 0 ) {
-			result = new GetProperty(cluster, name, valueAliasName);
+			result = new GetProperty(cluster, GetPropertyMode.method, name, valueAliasName);
+		}
+		if (step.indexOf(GETISA + "(") >= 0 ) {
+			result = new GetProperty(cluster, GetPropertyMode.isA, name, valueAliasName);
+		}
+		if (step.indexOf(GETCHECK + "(") >= 0 ) {
+			result = new GetProperty(cluster, GetPropertyMode.check, name, valueAliasName);
 		}
 
 		return result;
