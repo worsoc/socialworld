@@ -61,6 +61,11 @@ public class Equip extends ActionPerformer {
     		addProperty(property);
     	}
 
+       	property = properties.getValue(Value.VALUE_BY_NAME_ACTION_EQUIP_ITEM);
+    	if (property.isValid()) {
+    		addProperty(property);
+    	}
+
 	}
 
    public List<SimulationObject> getTargets() {
