@@ -22,15 +22,11 @@
 package org.socialworld.calculation;
 
 
-import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.AttributeArray;
-import org.socialworld.attributes.ISavedValues;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.expressions.Nothing;
 import org.socialworld.collections.ValueArrayList;
-import org.socialworld.core.Event;
 import org.socialworld.objects.SimulationObject;
-import org.socialworld.objects.StateSimulationObject;
 
 /**
  * The class is an implementation of an
@@ -505,59 +501,12 @@ public class Expression {
 		
 	}
 
-	private ValueProperty getProperty(Value valueObject, SimulationCluster cluster, PropertyName simPropName, String methodName, String valueName) {
-		
-		ValueProperty result;
-		result = ValueProperty.getInvalid();
-		Object object = valueObject.getValue();
-		
-		if (simPropName == PropertyName.unknown) {
-			
-			if (methodName.length() > 0) {
-			
-				// use reflection for calling the method
-				
-				if (object instanceof ISavedValues) {
-					ISavedValues savedValue;
-					savedValue = (ISavedValues) object;
-					result = savedValue.getPropertyFromMethod(cluster, methodName, valueName);
-				}
-				
-			}
-		
-		}
-		else {
-			
-			// call getProperty()
-			
-			if (object instanceof SimulationObject) {
-				SimulationObject simObj;
-				simObj = (SimulationObject) object;
-				result = simObj.getProperty(cluster, simPropName, valueName);
-			}
-			else if (object instanceof StateSimulationObject) {
-				StateSimulationObject stateSimObj;
-				stateSimObj = (StateSimulationObject) object;
-				result = stateSimObj.getProperty(cluster, simPropName, valueName);
-			}
-			else if (object instanceof ISavedValues) {
-				ISavedValues savedValue;
-				savedValue = (ISavedValues) object;
-				result = savedValue.getProperty(cluster, simPropName, valueName);
-			}
-			else if (object instanceof Event) {
-				
-			}
-			else if (object instanceof AbstractAction) {
-				
-			}
-			
-		}
-
-		return result;
-		
-	}
 	
+	// will be overridden in inherited Expressions dedicated to getting ValueProperty
+	protected ValueProperty getProperty(Value valueObject, SimulationCluster cluster, PropertyName simPropName, String methodName, String valueName) {
+		return new ValueProperty(Type.nothing, "", null );
+	}
+
 	// will be overridden in inherited Expressions dedicated to creating values
 	protected Value createValue(Type valueType, int subType, String name, ValueArrayList arguments) {
 		return new Value();
