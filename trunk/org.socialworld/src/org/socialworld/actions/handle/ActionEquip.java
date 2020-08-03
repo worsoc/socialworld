@@ -45,6 +45,10 @@ public class ActionEquip extends AbstractAction {
     
     private InventoryPlace inventoryPlace;
 
+	public ActionEquip(ValueArrayList actionProperties) {
+		super(actionProperties);
+	}
+
 	@Override
 	protected void setFurtherProperties(ValueArrayList actionProperties) {
 
@@ -197,6 +201,7 @@ public class ActionEquip extends AbstractAction {
 		
 		ValueArrayList propertiesAsValueList = new ValueArrayList();
 		
+		propertiesAsValueList.add(getItemAsValue(Value.VALUE_BY_NAME_ACTION_EQUIP_ITEM));
 		paramObject.answerPropertiesRequest(propertiesAsValueList);
 		
 	}
