@@ -22,6 +22,8 @@
 package org.socialworld.objects;
 
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +32,7 @@ import org.socialworld.actions.ActionNothing;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.SimulationCluster;
+import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.collections.ValueArrayList;
@@ -48,7 +51,6 @@ import org.socialworld.objects.concrete.*;
 import org.socialworld.objects.connections.Connection;
 import org.socialworld.objects.connections.ConnectionType;
 import org.socialworld.objects.properties.IPerceptible;
-import org.socialworld.propertyChange.ListenedBase;
 
 /**
  * Every simulation object (actor in the simulation) is inherited by the abstract class SimulationObject.
@@ -56,7 +58,7 @@ import org.socialworld.propertyChange.ListenedBase;
  * @author Mathias Sikos (tyloesand)
  * 
  */
-public abstract class SimulationObject extends ListenedBase implements IPerceptible {
+public abstract class SimulationObject implements IPerceptible {
 	
 
 	private		int 			objectID;
@@ -257,6 +259,90 @@ public abstract class SimulationObject extends ListenedBase implements IPercepti
 		 return this.state.getState2ActionType();
 		} 
 	
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    checking for interface  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public final ValueProperty isA(String nameInterface, String nameValue) {
+		
+		boolean result = isInterface(nameInterface);
+		return new ValueProperty(Type.bool, nameValue, result);
+	
+	}
+
+	protected boolean isInterface(String nameInterface) {
+		
+		boolean result;
+		
+		switch (nameInterface) {
+			case IPerceptible.NAME:
+				result = (this instanceof IPerceptible);
+				break;
+			default:
+				result = false;
+		}
+		
+		return result;
+
+	}
+	
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+////////////// checking for dynamic method name (using reflection)  ///////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public final ValueProperty check(String methodName, String nameValue) {
+		
+		boolean result = false; 
+
+		Method method = getMethod(methodName);
+		
+		if (method != null) {
+			
+			Class<?>  cls= method.getReturnType();
+			if (cls.toString().equals("boolean")) {
+				
+				Object got = null;
+				try {
+					method.setAccessible(true);
+					got = method.invoke(this);
+	
+				// Handle any exceptions thrown by method to be invoked.
+				}
+				catch (InvocationTargetException ite) {
+				    Throwable cause = ite.getCause();
+				    System.out.println( cause.getMessage());
+				}
+				catch (IllegalAccessException iae) {
+					iae.printStackTrace();
+				} 
+	
+				if (got != null) {
+					
+					if (got instanceof Boolean) {
+						result =  (Boolean) got ;
+					}
+					
+				}
+			}
+
+		}
+
+		return new ValueProperty(Type.bool, nameValue, result);
+	
+	}
+	
+	private final Method getMethod(String methodName) {
+		Method[] allMethods = this.getClass().getMethods();
+		
+		for (Method m : allMethods) {
+			String mname = m.getName();
+			if (mname.equals(methodName)) return m;
+		}
+		return null;
+	}
+	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    implementing IPerceptible     ////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -386,6 +472,8 @@ public abstract class SimulationObject extends ListenedBase implements IPercepti
 	
 	}
 	
+	
+
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    toString()  //////////////////////////////////////////////
