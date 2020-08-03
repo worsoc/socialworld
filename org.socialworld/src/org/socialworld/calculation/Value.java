@@ -150,6 +150,10 @@ public class Value {
 			this.value = Float.parseFloat(valueAsString);
 			valid = true;
 			break;
+		case bool:
+			this.value = Boolean.parseBoolean(valueAsString);
+			valid = true;
+			break;
 		default:
 			
 		}
