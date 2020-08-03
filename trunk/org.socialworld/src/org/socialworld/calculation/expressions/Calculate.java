@@ -3,6 +3,8 @@ package org.socialworld.calculation.expressions;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
 import org.socialworld.calculation.FunctionCheckType;
+import org.socialworld.calculation.PropertyUsingAs;
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 
@@ -24,7 +26,7 @@ public class Calculate extends Expression {
 	
 	private Expression parseTerm(String term, Expression parent) {
 		
-		String functionName = getFunctionName(term);
+		String functionName = getFunctionName(term).toLowerCase();
 		Expression result;
 		boolean mustHaveSubExpressions = true;
 		boolean valid = true;
@@ -34,42 +36,50 @@ public class Calculate extends Expression {
 			String subString = term.substring(term.indexOf("(") + 1, term.lastIndexOf(")") ).trim();
 			
 			
-			result = new Expression();
-			
-			switch (functionName.toLowerCase()) {
-				case "const":
-					result.setOperation(Expression_Function.value);
-					mustHaveSubExpressions = false;
-					break;
-				case "get":
-					result.setOperation(Expression_Function.argumentValueByName);
-					mustHaveSubExpressions = false;
-					break;
-				case "attr":
-					result.setOperation(Expression_Function.attributeValue);
-					mustHaveSubExpressions = false;
-					break;
-				case "isnothing":
-					result.setOperation(Expression_Function.function);
-					result.setFunction(new FunctionCheckType(Type.nothing));
-					result.setExpression1(new Expression());
-					result.setExpression2(new Expression());
-					result.setExpression3(new Expression());
-					break;
-				case "add":
-					result.setOperation(Expression_Function.addition);
-					break;
-				case "sub":
-					result.setOperation(Expression_Function.subtraction);
-					break;
-				case "mul":
-					result.setOperation(Expression_Function.multiplication);
-					break;
-				case "div":
-					result.setOperation(Expression_Function.division);
-					break;
-				default:
-					valid = false;
+			if (functionName.equals("get")) {
+				
+				result = new GetValue(SimulationCluster.todo, PropertyUsingAs.todo, subString, Value.VALUE_NAME_UNUSED_BECAUSE_TEMPORARY);
+				return result;
+			}
+			else {
+				
+				result = new Expression();
+				
+				switch (functionName) {
+					case "const":
+						result.setOperation(Expression_Function.value);
+						mustHaveSubExpressions = false;
+						break;
+/*					case "get":
+						result.setOperation(Expression_Function.argumentValueByName);
+						mustHaveSubExpressions = false;
+						break;*/
+					case "attr":
+						result.setOperation(Expression_Function.attributeValue);
+						mustHaveSubExpressions = false;
+						break;
+					case "isnothing":
+						result.setOperation(Expression_Function.function);
+						result.setFunction(new FunctionCheckType(Type.nothing));
+						result.setExpression1(new Expression());
+						result.setExpression2(new Expression());
+						result.setExpression3(new Expression());
+						break;
+					case "add":
+						result.setOperation(Expression_Function.addition);
+						break;
+					case "sub":
+						result.setOperation(Expression_Function.subtraction);
+						break;
+					case "mul":
+						result.setOperation(Expression_Function.multiplication);
+						break;
+					case "div":
+						result.setOperation(Expression_Function.division);
+						break;
+					default:
+						valid = false;
+				}
 			}
 			
 			Expression[] subTermExpressions = parseSubString(subString, result);
