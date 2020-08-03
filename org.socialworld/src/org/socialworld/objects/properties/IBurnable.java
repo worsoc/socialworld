@@ -23,4 +23,6 @@ package org.socialworld.objects.properties;
 
 public interface IBurnable {
 
+	public static final String NAME = "IBurnable";
+
 }

@@ -26,6 +26,7 @@ import org.socialworld.calculation.ValueProperty;
 
 public interface ISeer {
 
+	public static final String NAME = "ISeer";
 
 	public StateSeer getSavedStateSeer(SimulationCluster cluster);
 	public ValueProperty getStateSeerAsProperty(SimulationCluster cluster, String name);

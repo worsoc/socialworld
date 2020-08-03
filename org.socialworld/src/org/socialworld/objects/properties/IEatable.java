@@ -26,6 +26,8 @@ import org.socialworld.attributes.properties.TasteProperty;
 
 public interface IEatable {
 
+	public static final String NAME = "IEatable";
+
 	public abstract float getTemperature();
 	public abstract float getConsistence();
 	public abstract float getFirmness();

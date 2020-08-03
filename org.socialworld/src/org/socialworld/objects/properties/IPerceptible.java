@@ -25,10 +25,14 @@ import org.socialworld.objects.Animal;
 
 public interface IPerceptible {
 
+	public static final String NAME = "IPerceptible";
+	
 	public abstract boolean checkIsPossiblePercipient(Animal possiblePercipient);
 	
 	public abstract boolean checkChanceToBeSeen(Animal possibleSeer);
 	
 	public abstract boolean checkIsPossibleSeer(Animal possibleSeer);
+	
+	
 	
 }
