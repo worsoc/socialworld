@@ -68,4 +68,25 @@ public class Apple extends Fruit implements IThrowable {
 		return null;
 		
 	}
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    checking for interface  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	protected boolean isInterface(String nameInterface) {
+	
+		boolean result;
+		
+		switch (nameInterface) {
+			case IThrowable.NAME:
+				result = (this instanceof IThrowable);
+				break;
+			default:
+				result = super.isInterface(nameInterface);
+		}
+		
+		return  result;
+	
+	}
+	
 }

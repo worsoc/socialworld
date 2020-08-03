@@ -76,7 +76,6 @@ public abstract class Animal extends SimulationObject implements ISeer {
 		}
 	}
 
-	
 	protected List<State> createAddOnStates() {
 		
 		List<State> result = super.createAddOnStates();
@@ -108,6 +107,28 @@ public abstract class Animal extends SimulationObject implements ISeer {
 		}
 	}
 	
+
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    checking for interface  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	protected boolean isInterface(String nameInterface) {
+		
+		boolean result;
+		
+		switch (nameInterface) {
+			case ISeer.NAME:
+				result = (this instanceof ISeer);
+				break;
+			default:
+				result = super.isInterface(nameInterface);
+
+		}
+		
+		
+		return result;
+		
+	}
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////
