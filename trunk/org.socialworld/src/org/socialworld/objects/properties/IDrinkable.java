@@ -26,6 +26,8 @@ import org.socialworld.attributes.properties.TasteProperty;
 
 public interface IDrinkable {
 
+	public static final String NAME = "IDrinkable";
+
 	public abstract float getTemperature();
 	public abstract float getViscosity();
 	

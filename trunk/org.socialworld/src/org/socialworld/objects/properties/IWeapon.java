@@ -41,6 +41,9 @@ import org.socialworld.attributes.properties.WeaponProperty;
  *
  */
 public interface IWeapon {
+	
+	public static final String NAME = "IWeapon";
+
 	public abstract WeaponProperty getStabProperties();
 	public abstract WeaponProperty getClubProperties();
 	public abstract WeaponProperty getStrokeProperties();

@@ -23,6 +23,8 @@ package org.socialworld.objects.properties;
 
 public interface IThrowable {
 
+	public static final String NAME = "IThrowable";
+
 	public abstract float getGrip();
 	public abstract float getMass();
 	public abstract float getVolume();

@@ -23,4 +23,6 @@ package org.socialworld.objects.properties;
 
 public interface IWearable {
 
+	public static final String NAME = "IWearable";
+
 }

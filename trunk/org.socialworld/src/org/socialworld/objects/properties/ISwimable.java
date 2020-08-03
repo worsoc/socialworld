@@ -23,4 +23,6 @@ package org.socialworld.objects.properties;
 
 public interface ISwimable {
 
+	public static final String NAME = "ISwimable";
+
 }
