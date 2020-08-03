@@ -29,6 +29,9 @@ public enum PropertyName {
 
 	
 	unknown(0), 
+	method(1),
+	isA(2),
+	check(3),
 	
 	simobj_position(1001001),
 	simobj_attributeArray(1001011),
