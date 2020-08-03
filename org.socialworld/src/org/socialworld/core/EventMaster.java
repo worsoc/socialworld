@@ -410,6 +410,7 @@ public class EventMaster extends SocialWorldThread {
 	
 	private void determineInfluenceToCauser() {
 		this.event.getCauser().changeByEvent(this.event);
+		this.event.getCauser().reactToEvent(this.event);
 	}
 	
 	
