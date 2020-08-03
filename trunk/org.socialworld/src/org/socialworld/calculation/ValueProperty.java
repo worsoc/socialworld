@@ -186,7 +186,8 @@ public class ValueProperty extends Value {
 			// TODO checkHasUseAsPermission for SimulationObject(s)
 			return true;
 		}
-		return false;
+		return true;
+		//return false;
 		
 	}
 
