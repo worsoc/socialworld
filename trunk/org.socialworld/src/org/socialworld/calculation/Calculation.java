@@ -147,11 +147,17 @@ public class Calculation {
 		
 		if (op1.isValid() & op2.isValid())
 		{
-			Value tmp;
-			tmp = subtraction(op1, op2);
 			
-			if ( tmp.isValid() ) {
-				return createValue(Type.bool, equalsZero(tmp));
+			if (op1.getType() == Type.bool & op2.getType() == Type.bool) {
+				return createValue(Type.bool, op1.getValue().equals(op2.getValue()));
+			}
+			else {
+				Value tmp;
+				tmp = subtraction(op1, op2);
+				
+				if ( tmp.isValid() ) {
+					return createValue(Type.bool, equalsZero(tmp));
+				}
 			}
 		}
 
