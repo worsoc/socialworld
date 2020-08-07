@@ -31,6 +31,7 @@ import org.socialworld.actions.ActionNothing;
 import org.socialworld.actions.ActionType;
 import org.socialworld.actions.attack.ActionAttack;
 import org.socialworld.actions.bodilyfunctions.ActionBodilyFunction;
+import org.socialworld.actions.handle.ActionEquip;
 import org.socialworld.actions.handle.ActionHandle;
 import org.socialworld.actions.hear.ActionHear;
 import org.socialworld.actions.move.ActionMove;
@@ -55,17 +56,8 @@ public class ActionCreator extends SocialWorldThread {
 	
 	private CapacityQueue<CollectionElementReactor> reactors;
 
-	/*
-	private List<Event> events;
-	private List<StateSimulationObject> statesReactor;
-	private List<HiddenSimulationObject> hiddenReactors;
-*/
 	private CapacityQueue<CollectionElementActor> actors;
 	
-	/*
-	private List<StateSimulationObject> statesActor;
-	private List<HiddenSimulationObject> hiddenActors;
-	*/
 	private static String namePropertyActionType = Value.VALUE_BY_NAME_ACTION_TYPE;
 	
 	private int sleepTime = 5;
@@ -77,19 +69,7 @@ public class ActionCreator extends SocialWorldThread {
 	private ActionCreator() {
 		
 		this.reactors = new CapacityQueue<CollectionElementReactor>("reactors", 1000);
-
-		/*
-		this.events = new ArrayList<Event>();
-		this.statesReactor = new ArrayList<StateSimulationObject>();
-		this.hiddenReactors = new ArrayList<HiddenSimulationObject>();
-		*/
-		
 		this.actors = new CapacityQueue<CollectionElementActor>("actors", 1000);
-
-		/*
-		this.statesActor = new ArrayList<StateSimulationObject>();
-		this.hiddenActors = new ArrayList<HiddenSimulationObject>();
-		*/
 		
 		String[] actionPropertyNames;
 		actionPropertyNames = ActionType.getStandardPropertyNames();
@@ -127,11 +107,6 @@ public class ActionCreator extends SocialWorldThread {
 			if (!this.reactors.add(new CollectionElementReactor(event, stateSimObj, hiddenSimObj))) {
 				// TODO what shall happen if the queue is filled
 			};
-/*
-			this.events.add(event);
-			this.statesReactor.add(stateSimObj);
-			this.hiddenReactors.add(hiddenSimObj);
-*/			
 		}
 	}
 	
@@ -140,10 +115,6 @@ public class ActionCreator extends SocialWorldThread {
 			if (!this.actors.add(new CollectionElementActor(stateSimObj, hiddenSimObj))) {
 				// TODO what shall happen if the queue is filled
 			};
-			/*
-			this.statesActor.add(stateSimObj);
-			this.hiddenActors.add(hiddenSimObj);
-			*/
 		}
 	}
 
@@ -160,24 +131,14 @@ public class ActionCreator extends SocialWorldThread {
 			System.out.println("ActionCreator.calculateReaction(): this.reactors.size() " + this.reactors.size());
 		}
 		
-		/*
-		if ((this.events.size() == 0) ||
-			(this.statesReactor.size() == 0) ||
-			(this.hiddenReactors.size() == 0))  return;
-		*/
 		
 		CollectionElementReactor reactor = this.reactors.remove();
 		if (reactor != null) {
 
-			/*
-			Event event = this.events.remove(0);
-			StateSimulationObject stateReactor  = this.statesReactor.remove(0);
-			HiddenSimulationObject hiddenReactor = this.hiddenReactors.remove(0);
-			
-			if ((event == null) || (stateReactor == null) || (hiddenReactor == null)) return;
-			*/
 			
 			Event event = reactor.getEvent();
+			
+			
 			StateSimulationObject stateReactor  = reactor.getState();
 			HiddenSimulationObject hiddenReactor =  reactor.getHidden();
 
@@ -204,7 +165,7 @@ public class ActionCreator extends SocialWorldThread {
 				if (reaction != null) {
 					if (!reaction.isToBeIgnored())	{
 						// Logging ...
-						System.out.println("ActionCreator.calculateReaction(): Obj: " + stateReactor.getObjectID() + ": " + reaction.getType().toString() +  "." + reaction.getMode().toString());
+						System.out.println("ActionCreator.calculateReaction(): Obj " + stateReactor.getObjectID() + ": " + reaction.getType().toString() +  "." + reaction.getMode().toString());
 						if (reaction.getType() == ActionType.useWeapon) {
 							if (((ActionAttack) reaction).getTarget() == null) {
 								System.out.println("UseWeapon from object " + stateReactor.getObjectID() + " to target object null"  );
@@ -233,13 +194,6 @@ public class ActionCreator extends SocialWorldThread {
 	 *
 	 */
 	private void calculateAction() {
-	/*	
-		if ((this.statesActor.size() == 0) ||
-				(this.hiddenActors.size() == 0))  return;
-
-		HiddenSimulationObject hiddenActor = this.hiddenActors.remove(0);
-		StateSimulationObject stateActor  = this.statesActor.remove(0);
-	*/	
 		
 
 		CollectionElementActor actor = this.actors.remove();
@@ -267,7 +221,7 @@ public class ActionCreator extends SocialWorldThread {
 				
 				if (!action.isToBeIgnored()) {	
 					
-					System.out.println("ActionCreator.calculateAction(): " + action.getType().toString() +  "." + action.getMode().toString());
+					System.out.println("ActionCreator.calculateAction(): Obj " + stateActor.getObjectID() + ": " + action.getType().toString() +  "." + action.getMode().toString());
 					hiddenActor.setAction(action);
 				}
 				
@@ -298,6 +252,9 @@ public class ActionCreator extends SocialWorldThread {
 		arguments.add( new Value(Type.event, Value.VALUE_BY_NAME_EVENT, event) );
 		if (event.hasOptionalParam()) {
 			arguments.add( event.getOptionalParam().getParamListAsValue());
+		}
+		else {
+			arguments.add(new Value(Type.valueList, Value.VALUE_BY_NAME_EVENT_PARAMS, event.getProperties()));
 		}
 		
 		Value result = f_CreateReaction.calculate(arguments);
@@ -355,19 +312,30 @@ public class ActionCreator extends SocialWorldThread {
 		type = (ActionType) actionProperties.getValue(namePropertyActionType).getValue();
 		
 		switch (type) {
-		case bodilyFunction: action = new ActionBodilyFunction(actionProperties); break;
-		case move: action = new ActionMove(actionProperties); break;
-		case examine: action = new ActionHandle(actionProperties); break;
-		case touch: action = new ActionHandle(actionProperties); break;
-		case equip: action = new ActionHandle(actionProperties); break;
-		case handleItem: action = new ActionHandle(actionProperties); break;
+		case bodilyFunction: 
+			action = new ActionBodilyFunction(actionProperties); break;
+		case move: 
+			action = new ActionMove(actionProperties); break;
+		case examine: 
+			action = new ActionHandle(actionProperties); break;
+		case touch: 
+			action = new ActionHandle(actionProperties); break;
+		case equip: 
+			action = new ActionEquip(actionProperties); break;
+		case handleItem: 
+			action = new ActionHandle(actionProperties); break;
 		case useWeapon: 
 			action = new ActionAttack(actionProperties); break;
-		case punch: action = new ActionAttack(actionProperties); break;
-		case hear: action = new ActionHear(actionProperties); break;
-		case talk: action = new ActionSay(actionProperties); break;
-		case say: action = new ActionSay(actionProperties); break;
-		default: action = ActionNothing.getInstance(); break;
+		case punch: 
+			action = new ActionAttack(actionProperties); break;
+		case hear: 
+			action = new ActionHear(actionProperties); break;
+		case talk: 
+			action = new ActionSay(actionProperties); break;
+		case say: 
+			action = new ActionSay(actionProperties); break;
+		default: 
+			action = ActionNothing.getInstance(); break;
 		}
 		
 		return action;
