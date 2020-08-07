@@ -178,21 +178,38 @@ public class CreateActionExpression extends Branching {
 		Expression result = Nothing.getInstance();
 		Type type;
 		
-		switch (property) {
-		case  Value.VALUE_BY_NAME_ACTION_TYPE: type = Type.actionType; break;
-		case  Value.VALUE_BY_NAME_ACTION_MODE: type = Type.actionMode; break;
-		case  Value.VALUE_BY_NAME_ACTION_MINTIME: type = Type.time; break;
-		case  Value.VALUE_BY_NAME_ACTION_MAXTIME: type = Type.time; break;
-		case  Value.VALUE_BY_NAME_ACTION_INTENSITY: type = Type.floatingpoint; break;
-		case  Value.VALUE_BY_NAME_ACTION_PRIORITY: type = Type.integer; break;
-		case  Value.VALUE_BY_NAME_ACTION_DURATION: type = Type.longinteger; break;
-		case  Value.VALUE_BY_NAME_ACTION_DIRECTION: type = Type.vector; break;
-		case  Value.VALUE_BY_NAME_ACTION_TARGET:	type = Type.simulationObject; break;
-		default: type = Type.nothing;
-		}
 		
-		switch (function[0]) {
-		case "Const":
+		if (function[0].equals("Const")) {
+			
+			switch (property) {
+			case  Value.VALUE_BY_NAME_ACTION_TYPE: type = Type.actionType; break;
+			case  Value.VALUE_BY_NAME_ACTION_MODE: type = Type.actionMode; break;
+			case  Value.VALUE_BY_NAME_ACTION_MINTIME: type = Type.time; break;
+			case  Value.VALUE_BY_NAME_ACTION_MAXTIME: type = Type.time; break;
+			case  Value.VALUE_BY_NAME_ACTION_INTENSITY: type = Type.floatingpoint; break;
+			case  Value.VALUE_BY_NAME_ACTION_PRIORITY: type = Type.integer; break;
+			case  Value.VALUE_BY_NAME_ACTION_DURATION: type = Type.longinteger; break;
+			case  Value.VALUE_BY_NAME_ACTION_DIRECTION: type = Type.vector; break;
+			case  Value.VALUE_BY_NAME_ACTION_TARGET:
+			case  Value.VALUE_BY_NAME_ACTION_WEAPON:
+			case  Value.VALUE_BY_NAME_ACTION_ITEM1:
+			case  Value.VALUE_BY_NAME_ACTION_ITEM2:
+				type = Type.simulationObject; break;
+			default: 
+				if (property.equals(Value.VALUE_BY_NAME_ACTION_EQUIP_PLACE)) {
+					type = Type.integer;
+				}
+				else if (property.equals(Value.VALUE_BY_NAME_ACTION_EQUIP_ITEM)) {
+					type = Type.simulationObject;
+				}
+				else {
+					type = Type.nothing;
+					
+				}
+				
+
+			}
+			
 			switch (type) {
 			case actionType:
 			case actionMode:
@@ -207,14 +224,18 @@ public class CreateActionExpression extends Branching {
 			default:
 				break;
 			}
-			break;
-		case "Table":		result = new TableLookup(function[1]);  break;
-		case "VSPE":		result = new VectorScalarProduct(function[1]);  break;
-		case "MX+N":		result = new MXPlusN(function[1]);  break;
-		case "MLogX+N":		result = new MLogXPlusN(function[1]);  break;
-		case "MExpX+N":		result = new MExpXPlusN(function[1]);  break;
-		case "Now+N":		result = new CreateValue(Type.time, property, new Constant(calculation.createValue(Type.longinteger,  Integer.parseInt(function[1] )))); break;
-		case "GetEvParm":	result = new GetValueFromValueList(Value.VALUE_BY_NAME_EVENT_PARAMS, function[1]);  break;
+
+		}
+		else {
+			switch (function[0]) {
+			case "Table":		result = new TableLookup(function[1]);  break;
+			case "VSPE":		result = new VectorScalarProduct(function[1]);  break;
+			case "MX+N":		result = new MXPlusN(function[1]);  break;
+			case "MLogX+N":		result = new MLogXPlusN(function[1]);  break;
+			case "MExpX+N":		result = new MExpXPlusN(function[1]);  break;
+			case "Now+N":		result = new CreateValue(Type.time, property, new Constant(calculation.createValue(Type.longinteger,  Integer.parseInt(function[1] )))); break;
+			case "GetEvParm":	result = new GetValueFromValueList(Value.VALUE_BY_NAME_EVENT_PARAMS, function[1]);  break;
+			}
 		}
 		return result;
 		
