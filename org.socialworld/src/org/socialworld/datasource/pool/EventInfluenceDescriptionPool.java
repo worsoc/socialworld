@@ -96,12 +96,12 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 		Expression startExpression = Nothing.getInstance();
 
 		lines = new ArrayList<String>(2);
-		lines.add("WENN mood > 45 & mood < 52  DANN <MOOD><MX+N>0;1.2;23</MX+N></MOOD><COURAGE><MX+1>1;1;1</MX+N></COURAGE>");
-		lines.add("WENN mood > 70 & mood < 85  DANN <MOOD><MX+N>0;0.9;-10</MX+N></MOOD><COURAGE><MX+1>1;1;-1</MX+N></COURAGE>");
+		lines.add("WENN mood >= 45 & mood < 52  DANN <MOOD><MX+N>0;1.2;23</MX+N></MOOD><COURAGE><MX+1>1;1;1</MX+N></COURAGE>");
+		lines.add("WENN mood >= 70 & mood < 85  DANN <MOOD><MX+N>0;0.9;-10</MX+N></MOOD><COURAGE><MX+1>1;1;-1</MX+N></COURAGE>");
 		expressions.add(lines);
 		
 		lines = new ArrayList<String>(1);
-		lines.add("WENN power > 80 & morals > 60 DANN <POWER><MX+N>8;1;-1</MX+N></POWER><MORALS><MX+1>2;1;-1</MX+N></MORALS>");
+		lines.add("WENN power >= 80 & morals >= 60 DANN <POWER><MX+N>8;1;-1</MX+N></POWER><MORALS><MX+1>2;1;-1</MX+N></MORALS>");
 		expressions.add(lines);
 
 		for (int i = 0; i <  expressionsCount; i++) {
