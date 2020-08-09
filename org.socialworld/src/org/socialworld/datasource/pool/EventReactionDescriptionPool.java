@@ -132,8 +132,10 @@ public class EventReactionDescriptionPool extends DescriptionPool {
 		allLines.add(lines4EventType);
 
 		lines4EventType = new Strings4EventType(EventType.candidatesSayScream, GaussPoolReactionType.CAPACITY_GPRT_ARRAY);
-		for ( reactionType = 0; reactionType < GaussPoolReactionType.CAPACITY_GPRT_ARRAY; reactionType++) 
-			lines4EventType.add(reactionType, 0, "WENN 3 " + Value.VALUE_BY_NAME_EVENT_SAY_LOUDNESS + " > 50 & mood >= 30 & mood < 45 DANN <TYPE><Const>3</Const></TYPE><MODE><Const>31</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>10000</Now+N></MAXTIME><PRIORITY><Const>160</Const></PRIORITY><INTENSITY><MX+N>8;1.3;23</MX+N></INTENSITY><DURATION><Const>2000</Const></DURATION>");
+		for ( reactionType = 0; reactionType < GaussPoolReactionType.CAPACITY_GPRT_ARRAY; reactionType++) {
+			lines4EventType.add(reactionType, 0, "WENN 3 " + Value.VALUE_BY_NAME_EVENT_SAY_LOUDNESS + " > 50 & mood >= 20 & mood < 55 DANN <TYPE><Const>2</Const></TYPE><MODE><Const>21</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>10000</Now+N></MAXTIME><PRIORITY><Const>160</Const></PRIORITY><INTENSITY><Const>1</Const></INTENSITY><DURATION><Const>5000</Const></DURATION><TARGET><GetEvParm>" + Value.VALUE_BY_NAME_EVENT_CAUSER + "</GetEvParm></TARGET>");
+			lines4EventType.add(reactionType, 1, "WENN 3 " + Value.VALUE_BY_NAME_EVENT_SAY_LOUDNESS + " > 50 & mood >= 20 & mood < 55 DANN <TYPE><Const>3</Const></TYPE><MODE><Const>31</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>10000</Now+N></MAXTIME><PRIORITY><Const>158</Const></PRIORITY><INTENSITY><MX+N>8;1.3;23</MX+N></INTENSITY><DURATION><Const>2000</Const></DURATION>");
+		}
 		allLines.add(lines4EventType);
 		
 		lines4EventType = new Strings4EventType(EventType.percipientExists, GaussPoolReactionType.CAPACITY_GPRT_ARRAY);
@@ -143,12 +145,12 @@ public class EventReactionDescriptionPool extends DescriptionPool {
 		
 		lines4EventType = new Strings4EventType(EventType.selfInventoryTake, GaussPoolReactionType.CAPACITY_GPRT_ARRAY);
 		for ( reactionType = 0; reactionType < GaussPoolReactionType.CAPACITY_GPRT_ARRAY; reactionType++) 
-			lines4EventType.add(reactionType, 0, "WENN hunger >= 55 & courage >= 35 DANN <TYPE><Const>4</Const></TYPE><MODE><Const>44</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>50000</Now+N></MAXTIME><PRIORITY><Const>99</Const></PRIORITY><INTENSITY><MX+N>7;1;0</MX+N></INTENSITY><DURATION><Const>1000</Const></DURATION><ITEM><GetEvParm>" + Value.VALUE_BY_NAME_EVENT_EQUIP_ITEM + "</GetEvParm></ITEM><INVENTORYPLACE><Const>3</Const></INVENTORYPLACE>");
+			lines4EventType.add(reactionType, 0, "WENN hunger >= 60 & courage >= 45 DANN <TYPE><Const>4</Const></TYPE><MODE><Const>44</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>50000</Now+N></MAXTIME><PRIORITY><Const>99</Const></PRIORITY><INTENSITY><MX+N>7;1;0</MX+N></INTENSITY><DURATION><Const>1000</Const></DURATION><ITEM><GetEvParm>" + Value.VALUE_BY_NAME_EVENT_EQUIP_ITEM + "</GetEvParm></ITEM><INVENTORYPLACE><Const>3</Const></INVENTORYPLACE>");
 		allLines.add(lines4EventType);
 		
 		lines4EventType = new Strings4EventType(EventType.selfInventorySet, GaussPoolReactionType.CAPACITY_GPRT_ARRAY);
 		for ( reactionType = 0; reactionType < GaussPoolReactionType.CAPACITY_GPRT_ARRAY; reactionType++) 
-			lines4EventType.add(reactionType, 0, "WENN 21 " + Value.VALUE_BY_NAME_EVENT_EQUIP_ITEMISEATABLE + " == false & hunger >= 55 DANN <TYPE><Const>0</Const></TYPE><MODE><Const>3</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>2000</Now+N></MAXTIME><PRIORITY><Const>165</Const></PRIORITY><INTENSITY><MX+N>7;1;0</MX+N></INTENSITY><DURATION><Const>1000</Const></DURATION>");
+			lines4EventType.add(reactionType, 0, "WENN 21 " + Value.VALUE_BY_NAME_EVENT_EQUIP_ITEMISEATABLE + " == false & hunger >= 70 DANN <TYPE><Const>0</Const></TYPE><MODE><Const>3</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>2000</Now+N></MAXTIME><PRIORITY><Const>165</Const></PRIORITY><INTENSITY><MX+N>7;1;0</MX+N></INTENSITY><DURATION><Const>1000</Const></DURATION>");
 		allLines.add(lines4EventType);
 		
 		int indexExpressions;

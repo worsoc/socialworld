@@ -32,6 +32,7 @@ import org.socialworld.actions.ActionType;
 import org.socialworld.actions.attack.ActionAttack;
 import org.socialworld.actions.bodilyfunctions.ActionBodilyFunction;
 import org.socialworld.actions.handle.ActionEquip;
+import org.socialworld.actions.handle.ActionExamine;
 import org.socialworld.actions.handle.ActionHandle;
 import org.socialworld.actions.hear.ActionHear;
 import org.socialworld.actions.move.ActionMove;
@@ -148,6 +149,11 @@ public class ActionCreator extends SocialWorldThread {
 					EventReactionAssignment.getInstance().getEventReactionDescription(
 						eventType, eventReactionType	);
 			int count = eventReactionDescription.countFunctions();
+			
+			if (count == 2) {
+				int myBreak = 0;
+				myBreak++;
+			}
 			
 			AbstractAction reaction;
 			FunctionByExpression f_CreateReaction;
@@ -317,7 +323,7 @@ public class ActionCreator extends SocialWorldThread {
 		case move: 
 			action = new ActionMove(actionProperties); break;
 		case examine: 
-			action = new ActionHandle(actionProperties); break;
+			action = new ActionExamine(actionProperties); break;
 		case touch: 
 			action = new ActionHandle(actionProperties); break;
 		case equip: 

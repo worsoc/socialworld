@@ -120,6 +120,14 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				
 				break;
 		
+			case look:
+				
+				// Target
+				startExpression = new Calculate("GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_TARGET + "))", Value.VALUE_BY_NAME_EVENT_TARGET);
+				result.add( new FunctionByExpression(startExpression) );
+
+				break;
+				
 			case hand:
 			case foot:
 	
