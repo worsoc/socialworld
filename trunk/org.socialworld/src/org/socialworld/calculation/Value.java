@@ -74,6 +74,7 @@ public class Value {
 
 	public static final String VALUE_BY_NAME_EVENT_MOVE_ACCELERATION = ActionType.move.getPraefix() + "acceleration";
 	public static final String VALUE_BY_NAME_EVENT_MOVE_VELOCITY = ActionType.move.getPraefix() + "velocity";
+	public static final String VALUE_BY_NAME_EVENT_EQUIP_ITEM = ActionType.equip.getPraefix() + "item";
 	public static final String VALUE_BY_NAME_EVENT_EQUIP_ITEMISDRINKABLE = ActionType.equip.getPraefix() + "itemIsDrinkable";
 	public static final String VALUE_BY_NAME_EVENT_EQUIP_ITEMISEATABLE =  ActionType.equip.getPraefix() + "itemIsEatable";
 	public static final String VALUE_BY_NAME_EVENT_HANDLE_INTENSITY = ActionType.handleItem.getPraefix() + "intensity";
