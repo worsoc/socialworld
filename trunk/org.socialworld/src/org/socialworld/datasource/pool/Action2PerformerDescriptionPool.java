@@ -405,6 +405,13 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				
 				break;
 				
+			case takeItem:
+
+				// equip item
+				startExpression = new Calculate("GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_EQUIP_ITEM + "))", Value.VALUE_BY_NAME_EVENT_EQUIP_ITEM);
+				result.add( new FunctionByExpression(startExpression) );
+
+				break;
 				
 			case setItemToInventory:
 				
