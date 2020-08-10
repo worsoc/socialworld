@@ -21,7 +21,6 @@ public class Strings4EventType {
 		
 		for (int i = 0; i < capacity; i++) {
 			this.lines.add(new ArrayList<List<String>>());
-			this.lines.get(i).add(new ArrayList<String>());
 		}
 	}
 		
@@ -46,10 +45,19 @@ public class Strings4EventType {
 	void add(int mainIndex, int nr, String line) {
 		// main index ... the int value for the mapped type (reaction type, influence type, perception type ...)
 		if (mainIndex >= 0 & mainIndex < this.capacity) {
+			
 			List<List<String>> forMainIndex = this.lines.get(mainIndex);
-			if (nr >= 0 & nr < forMainIndex.size()) {
+			
+			if (nr >= 0 & nr >= forMainIndex.size()) {
+				for (int i = forMainIndex.size(); i <= nr; i++) {
+					forMainIndex.add(new ArrayList<String>());
+				}
+			}
+			
+			if (nr >= 0) {
 				forMainIndex.get(nr).add(line);
 			}
+			
 		}
 	}
 }
