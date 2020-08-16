@@ -22,34 +22,30 @@
 package org.socialworld.datasource.pool;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.socialworld.calculation.Expression;
-import org.socialworld.calculation.FunctionByExpression;
 import org.socialworld.calculation.Value;
+import org.socialworld.calculation.descriptions.DescriptionBase;
 import org.socialworld.calculation.descriptions.EventPerceptionDescription;
 import org.socialworld.calculation.expressions.CreateKnowledgeElementExpression;
 import org.socialworld.core.EventType;
-import org.socialworld.objects.concrete.StateAppearance;
-import org.socialworld.objects.concrete.StateComposition;
 
 public class EventPerceptionDescriptionPool extends DescriptionPool {
 
-	// temporary for test data
-	private FunctionByExpression expressions[];
-	public static final int COUNT_FbE_TEST_ENTRIES = 1;		// Anzahl Testeintraege FunctionByExpression
 
 	private static EventPerceptionDescriptionPool instance;
 	
-	private EventPerceptionDescription descriptions[];
 	
 	
 	private EventPerceptionDescriptionPool () {
-		
-		sizeDescriptionsArray = EventType.MAX_EVENT_TYPE * GaussPoolPerceptionType.CAPACITY_GPPT_ARRAY;
-		descriptions = new EventPerceptionDescription[sizeDescriptionsArray];
 
-		expressions = new FunctionByExpression[COUNT_FbE_TEST_ENTRIES];
+		super(EventType.MAX_EVENT_TYPE, GaussPoolPerceptionType.CAPACITY_GPPT_ARRAY);
+
+		_descriptions = new EventPerceptionDescription[sizeDescriptionsArray];
+
 		
-		initializeWithTestData_FunctionByExpression();
 		initialize();
 		
 	}
@@ -61,44 +57,43 @@ public class EventPerceptionDescriptionPool extends DescriptionPool {
 		return instance;
 	}
 
-	public EventPerceptionDescription getDescription(int eventType,	int perceptionType) {
-		int index;
-
-		EventPerceptionDescription description = null;
-		
-		index = eventType *  GaussPoolPerceptionType.CAPACITY_GPPT_ARRAY + perceptionType ;
-		
-		if (index >= 0 & sizeDescriptionsArray > index) 	
-			description = descriptions[index];
-		else
-			// create a dummy description with an expression that returns the invalid "nothing" value
-			description = new EventPerceptionDescription();
-			
-		return description;
-	}
-	
+/*	
 	public void setDescription(int eventType,	int perceptionType, EventPerceptionDescription epd) {
 		int index;
 			
 		index = eventType * GaussPoolPerceptionType.CAPACITY_GPPT_ARRAY + perceptionType;
 		
 		if (index >= 0 & sizeDescriptionsArray > index) 
-			 descriptions[index] = epd;
+			 _descriptions[index] = epd;
 		
 	}
+*/
 
+	protected  final DescriptionBase getNewDescription() {
+		return new EventPerceptionDescription();
+	}
 
-	private void initializeWithTestData_FunctionByExpression() {
+	protected final Expression getStartExpression(List<String> lines4OneExpression) {
+		return new CreateKnowledgeElementExpression(lines4OneExpression.get(0));
+	}
+	
+	protected void initializeWithTestData_FunctionByExpression() {
 
-		int 		expressionsCount = COUNT_FbE_TEST_ENTRIES;
-		String descriptions[] = new String[COUNT_FbE_TEST_ENTRIES];
-		Expression startExpression;
+		List<Lines> allLines;
+		allLines = new ArrayList<Lines>();
+		
+		Lines lines4EventType;
+		int perceptionType;
 
-		descriptions[0] = 
-		"KSbj:GETVal(" + Value.VALUE_BY_NAME_EVENT_PARAMS + ").GETVal(" + Value.VALUE_BY_NAME_EVENT_CAUSER + ");" +
-		"KSrcT:1," +
-		"KSrc:GETVal(" + Value.VALUE_NAME_KNOWLEDGE_SOURCE_MYSELF + ")," +
-		"KVal:GETVal(" + Value.VALUE_BY_NAME_EVENT_PARAMS + ").GETVal(" + Value.VALUE_BY_NAME_EVENT_CAUSER + ").GETProp(simobj_position).GETProp(position_vector)";
+		lines4EventType = new Lines(EventType.candidatesMoveWalk, rangeSecondIndex);
+		for ( perceptionType = 0; perceptionType < rangeSecondIndex; perceptionType++) {
+			lines4EventType.add(perceptionType, 0, "KSbj:GETVal(" + Value.VALUE_BY_NAME_EVENT_PARAMS + ").GETVal(" + Value.VALUE_BY_NAME_EVENT_CAUSER + ");" +
+													"KSrcT:1," +
+													"KSrc:GETVal(" + Value.VALUE_NAME_KNOWLEDGE_SOURCE_MYSELF + ")," +
+													"KVal:GETVal(" + Value.VALUE_BY_NAME_EVENT_PARAMS + ").GETVal(" + Value.VALUE_BY_NAME_EVENT_CAUSER + ").GETProp(simobj_position).GETProp(position_vector)");
+		}
+		allLines.add(lines4EventType);
+
 		
 /*
 		// example for developing
@@ -119,33 +114,10 @@ public class EventPerceptionDescriptionPool extends DescriptionPool {
 		"KProp:GETVal(" + Value.VALUE_BY_NAME_EVENT_PARAMS + ").GETVal(" + Value.VALUE_BY_NAME_EVENT_TARGET + ").GETProp(stateInventory).GETProp(inventory_cap).GETProp(stateComposition).GETFctVal(" + StateComposition.METHODNAME_GET_MAIN_MATERIAL + ")" ;
 */
 		
-		for (int i = 0; i <  expressionsCount; i++) {
-			
-			startExpression = new CreateKnowledgeElementExpression(descriptions[i]);
-			this.expressions[i] = new FunctionByExpression(startExpression);
-
-		}
-
+		bla(allLines);
 		
 	}
 	
-	protected void initialize() {
-
-		EventPerceptionDescription description;
-		int indexExps;
-		int linesCount = COUNT_FbE_TEST_ENTRIES;
-		
-		for (int index = 0; index < sizeDescriptionsArray; index++) {
-			
-			description = new EventPerceptionDescription();
-			for (indexExps = 0; indexExps <  linesCount; indexExps++) {
-				description.addFunctionCreatePerception(expressions[indexExps]);
-			}
-			descriptions[index] = description;
-	
-		}
-		
-	}
 
 
 }

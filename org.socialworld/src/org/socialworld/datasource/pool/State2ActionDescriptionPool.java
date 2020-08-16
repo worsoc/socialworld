@@ -4,28 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.calculation.Expression;
-import org.socialworld.calculation.FunctionByExpression;
+import org.socialworld.calculation.descriptions.DescriptionBase;
 import org.socialworld.calculation.descriptions.State2ActionDescription;
 import org.socialworld.calculation.expressions.CreateActionExpression;
-import org.socialworld.calculation.expressions.Nothing;
+import org.socialworld.core.EventType;
 
 public class State2ActionDescriptionPool extends DescriptionPool {
 	
-	public static final int COUNT_FbE_TEST_ENTRIES = 4;		// Anzahl Testeintraege FunctionByExpression
 
 	private static State2ActionDescriptionPool instance;
 	
-	private State2ActionDescription descriptions[];
-	private FunctionByExpression expressions[];
 	
 	private State2ActionDescriptionPool () {
 		
-		sizeDescriptionsArray = GaussPoolState2ActionType.CAPACITY_GPS2A_ARRAY;
-		descriptions = new State2ActionDescription[sizeDescriptionsArray];
-		
-		expressions = new FunctionByExpression[COUNT_FbE_TEST_ENTRIES];
-		
-		initializeWithTestData_FunctionByExpression();
+		super(1, GaussPoolState2ActionType.CAPACITY_GPS2A_ARRAY);
+		_descriptions = new State2ActionDescription[sizeDescriptionsArray];
 		
 		initialize();
 		
@@ -38,78 +31,63 @@ public class State2ActionDescriptionPool extends DescriptionPool {
 		return instance;
 	}
 	
-	public State2ActionDescription getDescription(int state2ActionType ) {
-		int index;
-		State2ActionDescription description = null;
-		
-		index = state2ActionType ;
-		
-		if (index >= 0 & sizeDescriptionsArray > index) 
-			description = descriptions[index];
-		else
-			// create a dummy description with an expression that returns the invalid "nothing" value
-			description = new State2ActionDescription();
-		
-		return description;
+
+	protected  final DescriptionBase getNewDescription() {
+		return new State2ActionDescription();
 	}
 
-	protected void initialize() {
-
-		State2ActionDescription description;
-		
-		for (int index = 0; index < sizeDescriptionsArray; index++) {
-			
-			description = new State2ActionDescription();
-
-			for (int i = 0; i < COUNT_FbE_TEST_ENTRIES; i++) {
-				description.addFunctionCreateAction(expressions[i]);
-			}
-			
-			descriptions[index] = description;
-	
-		}
-		
+	protected final Expression getStartExpression(List<String> lines4OneExpression) {
+		return new CreateActionExpression(lines4OneExpression);
 	}
-	
-	private void initializeWithTestData_FunctionByExpression() {
-		
-		
-		int 		expressionsCount = COUNT_FbE_TEST_ENTRIES;
-		List<List<String>> expressions = new ArrayList<List<String>>(expressionsCount);
-		List<String> lines;
-		Expression startExpression = Nothing.getInstance();
 
-		lines = new ArrayList<String>(1);
-		lines.add("WENN curiosity >= 60 & curiosity < 65 & power >= 30 DANN <TYPE><Const>1</Const></TYPE><MODE><Const>11</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>5000</Now+N></MAXTIME><PRIORITY><Const>50</Const></PRIORITY><INTENSITY><MX+N>8;1.5;23</MX+N></INTENSITY><DURATION><Const>2000</Const></DURATION><DIRECTION><Const>(2,7,0)</Const></DIRECTION>");
-		expressions.add(lines);
+	
+	protected void initializeWithTestData_FunctionByExpression() {
+		
+		
+		List<Lines> allLines;
+		allLines = new ArrayList<Lines>();
+		
+		Lines lines;
+
+		int state2ActionType;
+
+		lines = new Lines(EventType.candidatesMoveWalk, GaussPoolState2ActionType.CAPACITY_GPS2A_ARRAY);
+		for ( state2ActionType = 0; state2ActionType < GaussPoolState2ActionType.CAPACITY_GPS2A_ARRAY; state2ActionType++) 
+			lines.add(0, 0, "WENN curiosity >= 60 & curiosity < 65 & power >= 30 DANN <TYPE><Const>1</Const></TYPE><MODE><Const>11</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>5000</Now+N></MAXTIME><PRIORITY><Const>50</Const></PRIORITY><INTENSITY><MX+N>8;1.5;23</MX+N></INTENSITY><DURATION><Const>2000</Const></DURATION><DIRECTION><Const>(2,7,0)</Const></DIRECTION>");
+		allLines.add(lines);
+		
+		
 /*
-		lines = new ArrayList<String>(1);
-		lines.add("WENN hunger >= 45 & courage >= 45 DANN <TYPE><Const>4</Const></TYPE><MODE><Const>41</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>50000</Now+N></MAXTIME><PRIORITY><Const>100</Const></PRIORITY><INTENSITY><MX+N>7;1;0</MX+N></INTENSITY><DURATION><Const>1000</Const></DURATION>");
-		expressions.add(lines);
+  
+  		lines = new Strings4EventType(EventType.candidatesMoveWalk, GaussPoolState2ActionType.CAPACITY_GPS2A_ARRAY);
+		for ( state2ActionType = 0; state2ActionType < GaussPoolState2ActionType.CAPACITY_GPS2A_ARRAY; state2ActionType++) 
+		lines.add(0, 0, "WENN hunger >= 45 & courage >= 45 DANN <TYPE><Const>4</Const></TYPE><MODE><Const>41</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>50000</Now+N></MAXTIME><PRIORITY><Const>100</Const></PRIORITY><INTENSITY><MX+N>7;1;0</MX+N></INTENSITY><DURATION><Const>1000</Const></DURATION>");
+		allLines.add(lines);
+		
+		lines = new Strings4EventType(EventType.candidatesMoveWalk, GaussPoolState2ActionType.CAPACITY_GPS2A_ARRAY);
+		for ( state2ActionType = 0; state2ActionType < GaussPoolState2ActionType.CAPACITY_GPS2A_ARRAY; state2ActionType++) 
+		lines.add(0, 0, "WENN hunger >= 45 & courage >= 45 DANN <TYPE><Const>4</Const></TYPE><MODE><Const>44</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>50000</Now+N></MAXTIME><PRIORITY><Const>99</Const></PRIORITY><INTENSITY><MX+N>7;1;0</MX+N></INTENSITY><DURATION><Const>1000</Const></DURATION><INVENTORYPLACE><Const>3</Const></INVENTORYPLACE>");
+		allLines.add(lines);
 
-		lines = new ArrayList<String>(1);
-		lines.add("WENN hunger >= 45 & courage >= 45 DANN <TYPE><Const>4</Const></TYPE><MODE><Const>44</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>50000</Now+N></MAXTIME><PRIORITY><Const>99</Const></PRIORITY><INTENSITY><MX+N>7;1;0</MX+N></INTENSITY><DURATION><Const>1000</Const></DURATION><INVENTORYPLACE><Const>3</Const></INVENTORYPLACE>");
-		expressions.add(lines);
-*/		
-		lines = new ArrayList<String>(1);
-		lines.add("WENN mood >= 30 & mood < 40 & power >= 50 DANN <TYPE><Const>1</Const></TYPE><MODE><Const>12</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>5000</Now+N></MAXTIME><PRIORITY><Const>60</Const></PRIORITY><INTENSITY><MX+N>8;1;0</MX+N></INTENSITY><DURATION><Const>5000</Const></DURATION><DIRECTION><Const>(-3.21,2.09,0)</Const></DIRECTION>");
-		expressions.add(lines);
+*/	
+		
+		lines = new Lines(EventType.candidatesMoveWalk, GaussPoolState2ActionType.CAPACITY_GPS2A_ARRAY);
+		for ( state2ActionType = 0; state2ActionType < GaussPoolState2ActionType.CAPACITY_GPS2A_ARRAY; state2ActionType++) 
+			lines.add(0, 0, "WENN mood >= 30 & mood < 40 & power >= 50 DANN <TYPE><Const>1</Const></TYPE><MODE><Const>12</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>5000</Now+N></MAXTIME><PRIORITY><Const>60</Const></PRIORITY><INTENSITY><MX+N>8;1;0</MX+N></INTENSITY><DURATION><Const>5000</Const></DURATION><DIRECTION><Const>(-3.21,2.09,0)</Const></DIRECTION>");
+		allLines.add(lines);
 
-		lines = new ArrayList<String>(1);
-		lines.add("WENN courage < 15 & mood < 15 & power >= 15 & power < 25 DANN <TYPE><Const>10</Const></TYPE><MODE><Const>102</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>5000</Now+N></MAXTIME><PRIORITY><Const>70</Const></PRIORITY><INTENSITY><MX+N>8;3;0</MX+N></INTENSITY><DURATION><Const>1000</Const></DURATION>");
-		expressions.add(lines);
+		lines = new Lines(EventType.candidatesMoveWalk, GaussPoolState2ActionType.CAPACITY_GPS2A_ARRAY);
+		for ( state2ActionType = 0; state2ActionType < GaussPoolState2ActionType.CAPACITY_GPS2A_ARRAY; state2ActionType++) 
+			lines.add(0, 0, "WENN courage < 15 & mood < 15 & power >= 15 & power < 25 DANN <TYPE><Const>10</Const></TYPE><MODE><Const>102</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>5000</Now+N></MAXTIME><PRIORITY><Const>70</Const></PRIORITY><INTENSITY><MX+N>8;3;0</MX+N></INTENSITY><DURATION><Const>1000</Const></DURATION>");
+		allLines.add(lines);
 
-		lines = new ArrayList<String>(1);
-		lines.add("WENN tiredness >= 70 DANN <TYPE><Const>0</Const></TYPE><MODE><Const>1</Const></MODE><MINTIME><Now+N>10000</Now+N></MINTIME><MAXTIME><Now+N>100000</Now+N></MAXTIME><PRIORITY><Const>40</Const></PRIORITY><INTENSITY><MX+N>4;1.5;0</MX+N></INTENSITY><DURATION><Const>610000</Const></DURATION>");
-		expressions.add(lines);
+		lines = new Lines(EventType.candidatesMoveWalk, GaussPoolState2ActionType.CAPACITY_GPS2A_ARRAY);
+		for ( state2ActionType = 0; state2ActionType < GaussPoolState2ActionType.CAPACITY_GPS2A_ARRAY; state2ActionType++) 
+			lines.add(0, 0, "WENN tiredness >= 70 DANN <TYPE><Const>0</Const></TYPE><MODE><Const>1</Const></MODE><MINTIME><Now+N>10000</Now+N></MINTIME><MAXTIME><Now+N>100000</Now+N></MAXTIME><PRIORITY><Const>40</Const></PRIORITY><INTENSITY><MX+N>4;1.5;0</MX+N></INTENSITY><DURATION><Const>610000</Const></DURATION>");
+		allLines.add(lines);
 
 
-		for (int i = 0; i <  expressionsCount; i++) {
-			
-			startExpression = new CreateActionExpression(expressions.get(i), CreateActionExpression.MODUS_CREATE_STATE2ACTION);
-			this.expressions[i] = new FunctionByExpression(startExpression);
-
-		}
+		bla(allLines);
 		
 	}
 	

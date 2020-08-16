@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.socialworld.core.EventType;
 
-public class Strings4EventType {
+public class Lines {
 
 	private EventType eventType;
 	private List<List<List<String>>> lines;
@@ -14,7 +14,7 @@ public class Strings4EventType {
 	// for example: how many reaction types are possible for event type
 	private int capacity;
 	
-	Strings4EventType(EventType eventType, int capacity) {
+	Lines(EventType eventType, int capacity) {
 		this.eventType = eventType;
 		this.capacity = capacity;
 		this.lines = new ArrayList<List<List<String>>>();
