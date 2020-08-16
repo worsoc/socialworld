@@ -35,19 +35,19 @@ public abstract class DescriptionPool {
 	protected int sizeDescriptionsArray;
 
 	protected DescriptionBase descriptions[];
-	protected List<List<FunctionByExpression>> _expressions;
+	protected List<List<FunctionByExpression>> expressions;
 
 	protected DescriptionPool(int rangeMainIndex, int rangeSecondIndex) {
 		
 		this.rangeMainIndex = rangeMainIndex;
 		this.rangeSecondIndex = rangeSecondIndex;
-		sizeDescriptionsArray = rangeMainIndex * rangeSecondIndex;
+		this.sizeDescriptionsArray = rangeMainIndex * rangeSecondIndex;
 
-		_expressions = new ArrayList<List<FunctionByExpression>>(sizeDescriptionsArray);
+		this.expressions = new ArrayList<List<FunctionByExpression>>(sizeDescriptionsArray);
 		ArrayList<FunctionByExpression> nothing;
 		nothing = new  ArrayList<FunctionByExpression>();
 		for (int i = 0; i < sizeDescriptionsArray; i++) {
-			_expressions.add(nothing);
+			this.expressions.add(nothing);
 		}
 
 
@@ -55,7 +55,6 @@ public abstract class DescriptionPool {
 	
 	protected abstract DescriptionBase getNewDescription();
 	protected abstract Expression getStartExpression(List<String> lines4OneExpression);
-//	protected abstract void initialize();
 	protected abstract void initializeWithTestData_FunctionByExpression();
 
 	protected void initialize() {
@@ -73,7 +72,7 @@ public abstract class DescriptionPool {
 			for (int secondIndex = 0; secondIndex < rangeSecondIndex; secondIndex++) {
 				
 				index = mainIndex * rangeSecondIndex + secondIndex;
-				oneDescriptionExpressions = _expressions.get(index);
+				oneDescriptionExpressions = this.expressions.get(index);
 				
 				description = getNewDescription();
 				
@@ -109,27 +108,27 @@ public abstract class DescriptionPool {
 		return description;
 	}
 	
-	protected final void bla(List<Lines> allLines) {
+	protected final void createExpressions(List<Lines> allLines) {
 		
 		int indexExpressions;
 		int i;
 		Expression startExpression;
 		List<FunctionByExpression> oneDescriptionExpressions;
 		List<List<String>> lines4OneDescriptionExpressions;
-		Lines lines4EventType;
+		Lines lines;
 		int secondIndex;
 		
 		for (int index = 0; index < allLines.size(); index++ ) {
-			lines4EventType = allLines.get(index);
-			indexExpressions = lines4EventType.getMainIndex() * rangeSecondIndex;
+			lines = allLines.get(index);
+			indexExpressions = lines.getMainIndex() * rangeSecondIndex;
 			for ( secondIndex = 0; secondIndex < rangeSecondIndex; secondIndex++) {
-				lines4OneDescriptionExpressions = lines4EventType.getLines(secondIndex);
+				lines4OneDescriptionExpressions = lines.getLines(secondIndex);
 				oneDescriptionExpressions = new ArrayList<FunctionByExpression>();
 				for (i = 0; i < lines4OneDescriptionExpressions.size(); i++) {
 					startExpression = getStartExpression(lines4OneDescriptionExpressions.get(i));
 					oneDescriptionExpressions.add(new FunctionByExpression(startExpression));
 				}
-				this._expressions.set(indexExpressions + secondIndex, oneDescriptionExpressions);
+				this.expressions.set(indexExpressions + secondIndex, oneDescriptionExpressions);
 			}
 		}
 	
