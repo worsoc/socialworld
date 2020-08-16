@@ -216,7 +216,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 		
 		for (int index = 0; index < count; index++){
 			
-			f_EventInfluence = eventInfluenceDescription.getFunctionEventInfluence(index);
+			f_EventInfluence = eventInfluenceDescription.getFunction(index);
 			newAttributes = f_EventInfluence.calculate(arguments);
 			arguments.set(0,  newAttributes);
 			
