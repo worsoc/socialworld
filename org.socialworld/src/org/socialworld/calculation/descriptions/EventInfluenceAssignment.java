@@ -58,7 +58,7 @@ public class EventInfluenceAssignment {
 	public EventInfluenceDescription getEventInfluenceDescription(
 			int eventType,	int influenceType) {
 		EventInfluenceDescription eventInfluenceDescription;
-		eventInfluenceDescription = 
+		eventInfluenceDescription = (EventInfluenceDescription)
 			EventInfluenceDescriptionPool.getInstance().getDescription(eventType, influenceType);
 		return eventInfluenceDescription;
 	}

@@ -33,7 +33,7 @@ import org.socialworld.calculation.FunctionByExpression;
 
  * @author Mathias Sikos (tyloesand)   
  */
-public class EventInfluenceDescription {
+public class EventInfluenceDescription extends DescriptionBase {
 
 	private List<FunctionByExpression> functionsEventInfluence;
 	

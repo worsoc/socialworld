@@ -27,7 +27,7 @@ import java.util.List;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.FunctionByExpression;
 
-public class EventReactionDescription {
+public class EventReactionDescription extends DescriptionBase {
 	
 	private List<FunctionByExpression> functionsCreateReaction;
 	

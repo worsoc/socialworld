@@ -54,8 +54,8 @@ public class State2ActionAssignment {
 	 */
 	public State2ActionDescription getState2ActionDescription(int state2ActionType) {
 		State2ActionDescription state2ActionDescription;
-		state2ActionDescription = 
-			State2ActionDescriptionPool.getInstance().getDescription(state2ActionType);
+		state2ActionDescription = (State2ActionDescription)
+			State2ActionDescriptionPool.getInstance().getDescription(0, state2ActionType);
 		
 		return state2ActionDescription;
 	}
