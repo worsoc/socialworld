@@ -38,13 +38,11 @@ public class CreateActionExpression extends Branching {
 	public static final int MODUS_CREATE_STATE2ACTION = 1;
 	public static final int MODUS_CREATE_REACTION = 2;
 	
-	private int modus;
 	
-	public CreateActionExpression(List<String> lines, int modus) {
+	public CreateActionExpression(List<String> lines) {
 		
 		super();
 		
-		this.modus = modus;
 		
 		if (lines.size() > 0)
 		{
