@@ -26,7 +26,7 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 
 		super(ActionMode.maxIndex() + 1, 1);
 
-		_descriptions = new Action2PerformerDescription[sizeDescriptionsArray];
+		this.descriptions = new Action2PerformerDescription[sizeDescriptionsArray];
 		
 		initialize();
 		

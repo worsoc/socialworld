@@ -43,7 +43,7 @@ public class EventPerceptionDescriptionPool extends DescriptionPool {
 
 		super(EventType.MAX_EVENT_TYPE, GaussPoolPerceptionType.CAPACITY_GPPT_ARRAY);
 
-		_descriptions = new EventPerceptionDescription[sizeDescriptionsArray];
+		this.descriptions = new EventPerceptionDescription[sizeDescriptionsArray];
 
 		
 		initialize();
@@ -82,10 +82,10 @@ public class EventPerceptionDescriptionPool extends DescriptionPool {
 		List<Lines> allLines;
 		allLines = new ArrayList<Lines>();
 		
-		Lines lines4EventType;
+		Lines4EventType lines4EventType;
 		int perceptionType;
 
-		lines4EventType = new Lines(EventType.candidatesMoveWalk, rangeSecondIndex);
+		lines4EventType = new Lines4EventType(EventType.candidatesMoveWalk, rangeSecondIndex);
 		for ( perceptionType = 0; perceptionType < rangeSecondIndex; perceptionType++) {
 			lines4EventType.add(perceptionType, 0, "KSbj:GETVal(" + Value.VALUE_BY_NAME_EVENT_PARAMS + ").GETVal(" + Value.VALUE_BY_NAME_EVENT_CAUSER + ");" +
 													"KSrcT:1," +

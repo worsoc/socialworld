@@ -3,19 +3,20 @@ package org.socialworld.datasource.pool;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.socialworld.core.EventType;
 
 public class Lines {
 
-	private EventType eventType;
+	int mainIndex; // the index of the main type (for example the index number of an event type)
+// it is possible that there is only main index 0, and the second index is the only index for difference
+	
 	private List<List<List<String>>> lines;
 	
 	// capacity is the range for the mapped type
 	// for example: how many reaction types are possible for event type
 	private int capacity;
 	
-	Lines(EventType eventType, int capacity) {
-		this.eventType = eventType;
+	Lines(int mainIndex, int capacity) {
+		this.mainIndex = mainIndex;
 		this.capacity = capacity;
 		this.lines = new ArrayList<List<List<String>>>();
 		
@@ -25,37 +26,37 @@ public class Lines {
 	}
 		
 	
-	
-	EventType getEventType() {
-		return this.eventType;
+	int getMainIndex() {
+		return this.mainIndex;
 	}
 	
 	int getCapacity() {
 		return this.capacity;
 	}
 	
-	List<List<String>> getLines(int mainIndex) {
-		// main index ... the int value for the mapped type (reaction type, influence type, perception type ...)
-		if (mainIndex > 0 & mainIndex < this.capacity)
-			return this.lines.get(mainIndex);
+	List<List<String>> getLines(int secondIndex) {
+		// second index ... the int value for the mapped type (reaction type, influence type, perception type ...)
+		// it is possible that there is only the second index 0 (the only difference is in main index)
+		if (secondIndex > 0 & secondIndex < this.capacity)
+			return this.lines.get(secondIndex);
 		else
 			return new ArrayList<List<String>>();
 	}
 	
-	void add(int mainIndex, int nr, String line) {
-		// main index ... the int value for the mapped type (reaction type, influence type, perception type ...)
-		if (mainIndex >= 0 & mainIndex < this.capacity) {
+	void add(int secondIndex, int nr, String line) {
+		// second index ... the int value for the mapped type (reaction type, influence type, perception type ...)
+		if (secondIndex >= 0 & secondIndex < this.capacity) {
 			
-			List<List<String>> forMainIndex = this.lines.get(mainIndex);
+			List<List<String>> forSecondIndex = this.lines.get(secondIndex);
 			
-			if (nr >= 0 & nr >= forMainIndex.size()) {
-				for (int i = forMainIndex.size(); i <= nr; i++) {
-					forMainIndex.add(new ArrayList<String>());
+			if (nr >= 0 & nr >= forSecondIndex.size()) {
+				for (int i = forSecondIndex.size(); i <= nr; i++) {
+					forSecondIndex.add(new ArrayList<String>());
 				}
 			}
 			
 			if (nr >= 0) {
-				forMainIndex.get(nr).add(line);
+				forSecondIndex.get(nr).add(line);
 			}
 			
 		}
