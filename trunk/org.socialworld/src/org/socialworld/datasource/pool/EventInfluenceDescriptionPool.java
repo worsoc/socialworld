@@ -25,32 +25,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.calculation.Expression;
-import org.socialworld.calculation.FunctionByExpression;
+import org.socialworld.calculation.descriptions.DescriptionBase;
 import org.socialworld.calculation.descriptions.EventInfluenceDescription;
 import org.socialworld.calculation.expressions.ChangeAttributes;
-import org.socialworld.calculation.expressions.Nothing;
-import org.socialworld.calculation.expressions.Sequence;
 import org.socialworld.core.EventType;
-import org.socialworld.datasource.tablesPool.TablePoolEID;
 
 public class EventInfluenceDescriptionPool extends DescriptionPool {
 
-	public static final int COUNT_FbE_TEST_ENTRIES = 2;		// Anzahl Testeintraege FunctionByExpression
 	
 	private static EventInfluenceDescriptionPool instance;
 	
-	private static EventInfluenceDescription descriptions[];
-	private FunctionByExpression expressions[];
 	
 	private EventInfluenceDescriptionPool () {
 		
-		sizeDescriptionsArray = EventType.MAX_EVENT_TYPE * GaussPoolInfluenceType.CAPACITY_GPIT_ARRAY;
-		descriptions = new EventInfluenceDescription[sizeDescriptionsArray];
+		super(EventType.MAX_EVENT_TYPE, GaussPoolInfluenceType.CAPACITY_GPIT_ARRAY);
 
-		expressions = new FunctionByExpression[COUNT_FbE_TEST_ENTRIES];
+		_descriptions = new EventInfluenceDescription[sizeDescriptionsArray];
 
-		initializeWithTestData_FunctionByExpression();
-		
 		initialize();
 	}
 	
@@ -61,22 +52,7 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 		return instance;
 	}
 	
-	public EventInfluenceDescription getDescription(int eventType,	int influenceType) {
-		int index;
-		
-		EventInfluenceDescription description;
-		
-		index = eventType * GaussPoolInfluenceType.CAPACITY_GPIT_ARRAY + influenceType;
-		
-		if (index >= 0 & sizeDescriptionsArray > index) 
-			description = descriptions[index];
-		else 
-			// create a dummy description with an expression that returns the invalid "nothing" value
-			description = new EventInfluenceDescription();
-		
-		return description;
-	}
-
+/*
 	public void setDescription(int eventType,	int influenceType, EventInfluenceDescription eid) {
 		int index;
 			
@@ -86,53 +62,45 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 			 descriptions[index] = eid;
 		
 	}
+*/
+	protected  final DescriptionBase getNewDescription() {
+		return new EventInfluenceDescription();
+	}
 
+	protected final Expression getStartExpression(List<String> lines4OneExpression) {
+		return new ChangeAttributes(lines4OneExpression);
+	}
 	
-	private void initializeWithTestData_FunctionByExpression() {
+	protected void initializeWithTestData_FunctionByExpression() {
 		
-		int 		expressionsCount = COUNT_FbE_TEST_ENTRIES;
-		List<List<String>> expressions = new ArrayList<List<String>>(expressionsCount);
-		List<String> lines;
-		Expression startExpression = Nothing.getInstance();
-
-		lines = new ArrayList<String>(2);
-		lines.add("WENN mood >= 45 & mood < 52  DANN <MOOD><MX+N>0;1.2;23</MX+N></MOOD><COURAGE><MX+1>1;1;1</MX+N></COURAGE>");
-		lines.add("WENN mood >= 70 & mood < 85  DANN <MOOD><MX+N>0;0.9;-10</MX+N></MOOD><COURAGE><MX+1>1;1;-1</MX+N></COURAGE>");
-		expressions.add(lines);
+		List<Lines> allLines;
+		allLines = new ArrayList<Lines>();
 		
-		lines = new ArrayList<String>(1);
-		lines.add("WENN power >= 80 & morals >= 60 DANN <POWER><MX+N>8;1;-1</MX+N></POWER><MORALS><MX+1>2;1;-1</MX+N></MORALS>");
-		expressions.add(lines);
+		Lines lines4EventType;
 
-		for (int i = 0; i <  expressionsCount; i++) {
-			startExpression = new ChangeAttributes(expressions.get(i));
-			this.expressions[i] = new FunctionByExpression(startExpression);
+		int influenceType;
 
+		lines4EventType = new Lines(EventType.candidatesMoveWalk, GaussPoolInfluenceType.CAPACITY_GPIT_ARRAY);
+		for ( influenceType = 0; influenceType < GaussPoolInfluenceType.CAPACITY_GPIT_ARRAY; influenceType++) {
+			lines4EventType.add(influenceType, 0, "WENN mood >= 45 & mood < 52  DANN <MOOD><MX+N>0;1.2;23</MX+N></MOOD><COURAGE><MX+1>1;1;1</MX+N></COURAGE>");
+			lines4EventType.add(influenceType, 1, "WENN mood >= 70 & mood < 85  DANN <MOOD><MX+N>0;0.9;-10</MX+N></MOOD><COURAGE><MX+1>1;1;-1</MX+N></COURAGE>");
 		}
+		allLines.add(lines4EventType);
+		
+		lines4EventType = new Lines(EventType.candidatesMoveWalk, GaussPoolInfluenceType.CAPACITY_GPIT_ARRAY);
+		for ( influenceType = 0; influenceType < GaussPoolInfluenceType.CAPACITY_GPIT_ARRAY; influenceType++) {
+			lines4EventType.add(influenceType, 0, "WENN power >= 80 & morals >= 60 DANN <POWER><MX+N>8;1;-1</MX+N></POWER><MORALS><MX+1>2;1;-1</MX+N></MORALS>");
+		}
+		allLines.add(lines4EventType);
+		
+
+		bla(allLines);
 		
 	}
 	
-	
-	protected void initialize() {
 
-		EventInfluenceDescription description;
-		int indexExps;
-		int linesCount = COUNT_FbE_TEST_ENTRIES;
-		
-		for (int index = 0; index < sizeDescriptionsArray; index++) {
-			
-			description = new EventInfluenceDescription();
-			for (indexExps = 0; indexExps <  linesCount; indexExps++) {
-				description.addFunctionEventInfluence(expressions[indexExps]);
-			}
-			descriptions[index] = description;
-	
-		}
-		
-		//loadFromDB();
-	}
 
-	
+/*	
 	private void loadFromDB() {
 		TablePoolEID tableEID;
 
@@ -187,7 +155,7 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 			}
 		}
 	}
-	
+*/	
 	
 	/*
 	private void initializeFromFile() {

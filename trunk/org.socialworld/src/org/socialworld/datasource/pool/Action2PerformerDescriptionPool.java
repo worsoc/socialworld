@@ -10,6 +10,7 @@ import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.FunctionByExpression;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.descriptions.Action2PerformerDescription;
+import org.socialworld.calculation.descriptions.DescriptionBase;
 import org.socialworld.calculation.expressions.Calculate;
 import org.socialworld.calculation.expressions.Nothing;
 
@@ -20,12 +21,12 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 
 	private static Action2PerformerDescriptionPool instance;
 	
-	private Action2PerformerDescription descriptions[];
 	
 	private Action2PerformerDescriptionPool () {
-		
-		sizeDescriptionsArray = ActionMode.maxIndex() + 1;
-		descriptions = new Action2PerformerDescription[sizeDescriptionsArray];
+
+		super(ActionMode.maxIndex() + 1, 1);
+
+		_descriptions = new Action2PerformerDescription[sizeDescriptionsArray];
 		
 		initialize();
 		
@@ -38,6 +39,15 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 		return instance;
 	}
 
+	protected  final DescriptionBase getNewDescription() {
+		return new Action2PerformerDescription();
+	}
+
+	protected final Expression getStartExpression(List<String> lines4OneExpression) {
+		return new Calculate(lines4OneExpression.get(0), lines4OneExpression.get(1));
+	}
+
+	/*
 	public Action2PerformerDescription getDescription(ActionMode actionMode ) {
 		int index;
 		Action2PerformerDescription description = null;
@@ -52,7 +62,8 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 		
 		return description;
 	}
-
+*/
+	/*
 	@Override
 	protected void initialize() {
 
@@ -87,7 +98,12 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 		}
 
 	}
+	*/
 	
+	protected void initializeWithTestData_FunctionByExpression() {
+		// TODO implement lines (get from initializeWithTestData(ActionMode actionMode) )
+	}
+
 	private List<FunctionByExpression> initializeWithTestData(ActionMode actionMode) {
 		
 		Expression startExpression = Nothing.getInstance();
