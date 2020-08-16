@@ -171,7 +171,7 @@ public class KnowledgeCalculator extends SocialWorldThread {
 		
 		for (int index = 0; index < count; index++) 
 		{
-			f_CreatePerception = descGetKE.getFunctionCreatePerception(index);
+			f_CreatePerception = descGetKE.getFunction(index);
 			valueKE = f_CreatePerception.calculate(arguments);
 			knowledgeElement = (KnowledgeElement) valueKE.getValue();	
 			

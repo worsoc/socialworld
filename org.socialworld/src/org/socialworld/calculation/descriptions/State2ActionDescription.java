@@ -21,21 +21,8 @@
 */
 package org.socialworld.calculation.descriptions;
 
-import org.socialworld.calculation.FunctionByExpression;
 
 public class State2ActionDescription extends DescriptionBase {
 	
-		public void addFunctionCreateAction(FunctionByExpression function) {
-
-			addFunction(function);
-
-		}
-		
-		public FunctionByExpression getFunctionCreateAction(int index) {
-			
-			return getFunction(index);
-			
-		}
-		
 
 }

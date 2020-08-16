@@ -160,7 +160,7 @@ public class ActionCreator extends SocialWorldThread {
 			
 			for (int index = 0; index < count; index++) 
 			{
-				f_CreateReaction = eventReactionDescription.getFunctionCreateAction(index);
+				f_CreateReaction = eventReactionDescription.getFunction(index);
 				
 				if (stateReactor instanceof StateAnimal) {
 					reaction = createAnimalReaction(event, (StateAnimal) stateReactor, f_CreateReaction);
@@ -218,7 +218,7 @@ public class ActionCreator extends SocialWorldThread {
 			
 			for (int index = 0; index < count; index++) {
 				
-				f_CreateAction = state2ActionDescription.getFunctionCreateAction(index);
+				f_CreateAction = state2ActionDescription.getFunction(index);
 		
 				if (stateActor instanceof StateAnimal) 
 					action = createAnimalActionByState((StateAnimal)stateActor, f_CreateAction);
