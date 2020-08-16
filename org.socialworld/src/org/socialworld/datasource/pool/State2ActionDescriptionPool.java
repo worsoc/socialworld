@@ -7,7 +7,6 @@ import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.descriptions.DescriptionBase;
 import org.socialworld.calculation.descriptions.State2ActionDescription;
 import org.socialworld.calculation.expressions.CreateActionExpression;
-import org.socialworld.core.EventType;
 
 public class State2ActionDescriptionPool extends DescriptionPool {
 	
@@ -48,11 +47,11 @@ public class State2ActionDescriptionPool extends DescriptionPool {
 		List<Lines> allLines;
 		allLines = new ArrayList<Lines>();
 		
-		Lines4EventType lines;
+		Lines lines;
 
 		int state2ActionType;
 
-		lines = new Lines4EventType(EventType.candidatesMoveWalk, rangeSecondIndex);
+		lines = new Lines(0, rangeSecondIndex);
 		for ( state2ActionType = 0; state2ActionType < rangeSecondIndex; state2ActionType++) 
 			lines.add(0, 0, "WENN curiosity >= 60 & curiosity < 65 & power >= 30 DANN <TYPE><Const>1</Const></TYPE><MODE><Const>11</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>5000</Now+N></MAXTIME><PRIORITY><Const>50</Const></PRIORITY><INTENSITY><MX+N>8;1.5;23</MX+N></INTENSITY><DURATION><Const>2000</Const></DURATION><DIRECTION><Const>(2,7,0)</Const></DIRECTION>");
 		allLines.add(lines);
@@ -60,29 +59,29 @@ public class State2ActionDescriptionPool extends DescriptionPool {
 		
 /*
   
-  		lines = new Lines4EventType(EventType.candidatesMoveWalk, rangeSecondIndex);
+  		lines = new Lines(0, rangeSecondIndex);
 		for ( state2ActionType = 0; state2ActionType < rangeSecondIndex; state2ActionType++) 
 		lines.add(0, 0, "WENN hunger >= 45 & courage >= 45 DANN <TYPE><Const>4</Const></TYPE><MODE><Const>41</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>50000</Now+N></MAXTIME><PRIORITY><Const>100</Const></PRIORITY><INTENSITY><MX+N>7;1;0</MX+N></INTENSITY><DURATION><Const>1000</Const></DURATION>");
 		allLines.add(lines);
 		
-		lines = new Lines4EventType(EventType.candidatesMoveWalk, GaussPoolState2ActionType.CAPACITY_GPS2A_ARRAY);
-		for ( state2ActionType = 0; state2ActionType < GaussPoolState2ActionType.CAPACITY_GPS2A_ARRAY; state2ActionType++) 
+		lines = new Lines(0, rangeSecondIndex);
+		for ( state2ActionType = 0; state2ActionType < rangeSecondIndex; state2ActionType++) 
 		lines.add(0, 0, "WENN hunger >= 45 & courage >= 45 DANN <TYPE><Const>4</Const></TYPE><MODE><Const>44</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>50000</Now+N></MAXTIME><PRIORITY><Const>99</Const></PRIORITY><INTENSITY><MX+N>7;1;0</MX+N></INTENSITY><DURATION><Const>1000</Const></DURATION><INVENTORYPLACE><Const>3</Const></INVENTORYPLACE>");
 		allLines.add(lines);
 
 */	
 		
-		lines = new Lines4EventType(EventType.candidatesMoveWalk, rangeSecondIndex);
+		lines = new Lines(0, rangeSecondIndex);
 		for ( state2ActionType = 0; state2ActionType < rangeSecondIndex; state2ActionType++) 
 			lines.add(0, 0, "WENN mood >= 30 & mood < 40 & power >= 50 DANN <TYPE><Const>1</Const></TYPE><MODE><Const>12</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>5000</Now+N></MAXTIME><PRIORITY><Const>60</Const></PRIORITY><INTENSITY><MX+N>8;1;0</MX+N></INTENSITY><DURATION><Const>5000</Const></DURATION><DIRECTION><Const>(-3.21,2.09,0)</Const></DIRECTION>");
 		allLines.add(lines);
 
-		lines = new Lines4EventType(EventType.candidatesMoveWalk, rangeSecondIndex);
+		lines = new Lines(0, rangeSecondIndex);
 		for ( state2ActionType = 0; state2ActionType < rangeSecondIndex; state2ActionType++) 
 			lines.add(0, 0, "WENN courage < 15 & mood < 15 & power >= 15 & power < 25 DANN <TYPE><Const>10</Const></TYPE><MODE><Const>102</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>5000</Now+N></MAXTIME><PRIORITY><Const>70</Const></PRIORITY><INTENSITY><MX+N>8;3;0</MX+N></INTENSITY><DURATION><Const>1000</Const></DURATION>");
 		allLines.add(lines);
 
-		lines = new Lines4EventType(EventType.candidatesMoveWalk, rangeSecondIndex);
+		lines = new Lines(0, rangeSecondIndex);
 		for ( state2ActionType = 0; state2ActionType < rangeSecondIndex; state2ActionType++) 
 			lines.add(0, 0, "WENN tiredness >= 70 DANN <TYPE><Const>0</Const></TYPE><MODE><Const>1</Const></MODE><MINTIME><Now+N>10000</Now+N></MINTIME><MAXTIME><Now+N>100000</Now+N></MAXTIME><PRIORITY><Const>40</Const></PRIORITY><INTENSITY><MX+N>4;1.5;0</MX+N></INTENSITY><DURATION><Const>610000</Const></DURATION>");
 		allLines.add(lines);
