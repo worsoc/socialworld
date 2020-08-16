@@ -40,7 +40,7 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 		
 		super(EventType.MAX_EVENT_TYPE, GaussPoolInfluenceType.CAPACITY_GPIT_ARRAY);
 
-		_descriptions = new EventInfluenceDescription[sizeDescriptionsArray];
+		this.descriptions = new EventInfluenceDescription[sizeDescriptionsArray];
 
 		initialize();
 	}
@@ -76,19 +76,19 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 		List<Lines> allLines;
 		allLines = new ArrayList<Lines>();
 		
-		Lines lines4EventType;
+		Lines4EventType lines4EventType;
 
 		int influenceType;
 
-		lines4EventType = new Lines(EventType.candidatesMoveWalk, GaussPoolInfluenceType.CAPACITY_GPIT_ARRAY);
-		for ( influenceType = 0; influenceType < GaussPoolInfluenceType.CAPACITY_GPIT_ARRAY; influenceType++) {
+		lines4EventType = new Lines4EventType(EventType.candidatesMoveWalk, rangeSecondIndex);
+		for ( influenceType = 0; influenceType < rangeSecondIndex; influenceType++) {
 			lines4EventType.add(influenceType, 0, "WENN mood >= 45 & mood < 52  DANN <MOOD><MX+N>0;1.2;23</MX+N></MOOD><COURAGE><MX+1>1;1;1</MX+N></COURAGE>");
 			lines4EventType.add(influenceType, 1, "WENN mood >= 70 & mood < 85  DANN <MOOD><MX+N>0;0.9;-10</MX+N></MOOD><COURAGE><MX+1>1;1;-1</MX+N></COURAGE>");
 		}
 		allLines.add(lines4EventType);
 		
-		lines4EventType = new Lines(EventType.candidatesMoveWalk, GaussPoolInfluenceType.CAPACITY_GPIT_ARRAY);
-		for ( influenceType = 0; influenceType < GaussPoolInfluenceType.CAPACITY_GPIT_ARRAY; influenceType++) {
+		lines4EventType = new Lines4EventType(EventType.candidatesMoveWalk, rangeSecondIndex);
+		for ( influenceType = 0; influenceType < rangeSecondIndex; influenceType++) {
 			lines4EventType.add(influenceType, 0, "WENN power >= 80 & morals >= 60 DANN <POWER><MX+N>8;1;-1</MX+N></POWER><MORALS><MX+1>2;1;-1</MX+N></MORALS>");
 		}
 		allLines.add(lines4EventType);

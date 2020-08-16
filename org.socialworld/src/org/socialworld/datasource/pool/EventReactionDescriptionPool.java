@@ -41,7 +41,7 @@ public class EventReactionDescriptionPool extends DescriptionPool {
 		
 		super(EventType.MAX_EVENT_TYPE, GaussPoolReactionType.CAPACITY_GPRT_ARRAY);
 		
-		_descriptions = new EventReactionDescription[sizeDescriptionsArray];
+		this.descriptions = new EventReactionDescription[sizeDescriptionsArray];
 		
 		initialize();
 	}
@@ -65,39 +65,39 @@ public class EventReactionDescriptionPool extends DescriptionPool {
 		List<Lines> allLines;
 		allLines = new ArrayList<Lines>();
 		
-		Lines lines4EventType;
+		Lines4EventType lines4EventType;
 
 		int reactionType;
 		
-		lines4EventType = new Lines(EventType.candidatesMoveWalk, GaussPoolReactionType.CAPACITY_GPRT_ARRAY);
-		for ( reactionType = 0; reactionType < GaussPoolReactionType.CAPACITY_GPRT_ARRAY; reactionType++) 
+		lines4EventType = new Lines4EventType(EventType.candidatesMoveWalk, rangeSecondIndex);
+		for ( reactionType = 0; reactionType < rangeSecondIndex; reactionType++) 
 			lines4EventType.add(reactionType, 0, "WENN 3 " + Value.VALUE_BY_NAME_EVENT_MOVE_VELOCITY + " > 11 & mood >= 60 & mood < 90 DANN <TYPE><Const>6</Const></TYPE><MODE><Const>67</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>10000</Now+N></MAXTIME><PRIORITY><Const>155</Const></PRIORITY><INTENSITY><MX+N>8;1.5;0</MX+N></INTENSITY><DURATION><Const>2000</Const></DURATION><TARGET><GetEvParm>" + Value.VALUE_BY_NAME_EVENT_CAUSER + "</GetEvParm></TARGET>");
 		allLines.add(lines4EventType);
 		
-		lines4EventType = new Lines(EventType.candidatesMoveRun, GaussPoolReactionType.CAPACITY_GPRT_ARRAY);
-		for ( reactionType = 0; reactionType < GaussPoolReactionType.CAPACITY_GPRT_ARRAY; reactionType++) 
+		lines4EventType = new Lines4EventType(EventType.candidatesMoveRun, rangeSecondIndex);
+		for ( reactionType = 0; reactionType < rangeSecondIndex; reactionType++) 
 			lines4EventType.add(reactionType, 0, "WENN 3 " + Value.VALUE_BY_NAME_EVENT_MOVE_VELOCITY + " > 11 & mood >= 45 & mood < 60 DANN <TYPE><Const>7</Const></TYPE><MODE><Const>74</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>10000</Now+N></MAXTIME><PRIORITY><Const>162</Const></PRIORITY><INTENSITY><MX+N>8;0.1;0</MX+N></INTENSITY><DURATION><Const>2000</Const></DURATION><TARGET><GetEvParm>" + Value.VALUE_BY_NAME_EVENT_CAUSER + "</GetEvParm></TARGET>");
 		allLines.add(lines4EventType);
 
-		lines4EventType = new Lines(EventType.candidatesSayScream, GaussPoolReactionType.CAPACITY_GPRT_ARRAY);
-		for ( reactionType = 0; reactionType < GaussPoolReactionType.CAPACITY_GPRT_ARRAY; reactionType++) {
+		lines4EventType = new Lines4EventType(EventType.candidatesSayScream, rangeSecondIndex);
+		for ( reactionType = 0; reactionType < rangeSecondIndex; reactionType++) {
 			lines4EventType.add(reactionType, 0, "WENN 3 " + Value.VALUE_BY_NAME_EVENT_SAY_LOUDNESS + " > 50 & mood >= 20 & mood < 55 DANN <TYPE><Const>2</Const></TYPE><MODE><Const>21</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>10000</Now+N></MAXTIME><PRIORITY><Const>160</Const></PRIORITY><INTENSITY><Const>1</Const></INTENSITY><DURATION><Const>5000</Const></DURATION><TARGET><GetEvParm>" + Value.VALUE_BY_NAME_EVENT_CAUSER + "</GetEvParm></TARGET>");
 			lines4EventType.add(reactionType, 1, "WENN 3 " + Value.VALUE_BY_NAME_EVENT_SAY_LOUDNESS + " > 50 & mood >= 20 & mood < 55 DANN <TYPE><Const>3</Const></TYPE><MODE><Const>31</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>10000</Now+N></MAXTIME><PRIORITY><Const>158</Const></PRIORITY><INTENSITY><MX+N>8;1.3;23</MX+N></INTENSITY><DURATION><Const>2000</Const></DURATION>");
 		}
 		allLines.add(lines4EventType);
 		
-		lines4EventType = new Lines(EventType.percipientExists, GaussPoolReactionType.CAPACITY_GPRT_ARRAY);
-		for ( reactionType = 0; reactionType < GaussPoolReactionType.CAPACITY_GPRT_ARRAY; reactionType++) 
+		lines4EventType = new Lines4EventType(EventType.percipientExists, rangeSecondIndex);
+		for ( reactionType = 0; reactionType < rangeSecondIndex; reactionType++) 
 			lines4EventType.add(reactionType, 0, "WENN hunger >= 45 & courage >= 35 DANN <TYPE><Const>4</Const></TYPE><MODE><Const>41</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>50000</Now+N></MAXTIME><PRIORITY><Const>100</Const></PRIORITY><INTENSITY><MX+N>7;1;0</MX+N></INTENSITY><DURATION><Const>1000</Const></DURATION><ITEM><GetEvParm>" + Value.VALUE_BY_NAME_EVENT_CAUSER + "</GetEvParm></ITEM>");
 		allLines.add(lines4EventType);
 		
-		lines4EventType = new Lines(EventType.selfInventoryTake, GaussPoolReactionType.CAPACITY_GPRT_ARRAY);
-		for ( reactionType = 0; reactionType < GaussPoolReactionType.CAPACITY_GPRT_ARRAY; reactionType++) 
+		lines4EventType = new Lines4EventType(EventType.selfInventoryTake, rangeSecondIndex);
+		for ( reactionType = 0; reactionType < rangeSecondIndex; reactionType++) 
 			lines4EventType.add(reactionType, 0, "WENN hunger >= 60 & courage >= 45 DANN <TYPE><Const>4</Const></TYPE><MODE><Const>44</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>50000</Now+N></MAXTIME><PRIORITY><Const>99</Const></PRIORITY><INTENSITY><MX+N>7;1;0</MX+N></INTENSITY><DURATION><Const>1000</Const></DURATION><ITEM><GetEvParm>" + Value.VALUE_BY_NAME_EVENT_EQUIP_ITEM + "</GetEvParm></ITEM><INVENTORYPLACE><Const>3</Const></INVENTORYPLACE>");
 		allLines.add(lines4EventType);
 		
-		lines4EventType = new Lines(EventType.selfInventorySet, GaussPoolReactionType.CAPACITY_GPRT_ARRAY);
-		for ( reactionType = 0; reactionType < GaussPoolReactionType.CAPACITY_GPRT_ARRAY; reactionType++) 
+		lines4EventType = new Lines4EventType(EventType.selfInventorySet, rangeSecondIndex);
+		for ( reactionType = 0; reactionType < rangeSecondIndex; reactionType++) 
 			lines4EventType.add(reactionType, 0, "WENN 21 " + Value.VALUE_BY_NAME_EVENT_EQUIP_ITEMISEATABLE + " == false & hunger >= 70 DANN <TYPE><Const>0</Const></TYPE><MODE><Const>3</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>2000</Now+N></MAXTIME><PRIORITY><Const>165</Const></PRIORITY><INTENSITY><MX+N>7;1;0</MX+N></INTENSITY><DURATION><Const>1000</Const></DURATION>");
 		allLines.add(lines4EventType);
 		

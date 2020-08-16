@@ -34,7 +34,7 @@ public abstract class DescriptionPool {
 	protected int rangeSecondIndex;
 	protected int sizeDescriptionsArray;
 
-	protected DescriptionBase _descriptions[];
+	protected DescriptionBase descriptions[];
 	protected List<List<FunctionByExpression>> _expressions;
 
 	protected DescriptionPool(int rangeMainIndex, int rangeSecondIndex) {
@@ -85,7 +85,7 @@ public abstract class DescriptionPool {
 					
 				}
 				
-				_descriptions[index] = description;
+				descriptions[index] = description;
 		
 			}
 			
@@ -101,7 +101,7 @@ public abstract class DescriptionPool {
 		index = mainIndex *  rangeSecondIndex + secondIndex ;
 		
 		if (index >= 0 & sizeDescriptionsArray > index) 	
-			description = _descriptions[index];
+			description = descriptions[index];
 		else
 			// create a dummy description with an expression that returns the invalid "nothing" value
 			description = getNewDescription();
@@ -121,7 +121,7 @@ public abstract class DescriptionPool {
 		
 		for (int index = 0; index < allLines.size(); index++ ) {
 			lines4EventType = allLines.get(index);
-			indexExpressions = lines4EventType.getEventType().getIndex() * rangeSecondIndex;
+			indexExpressions = lines4EventType.getMainIndex() * rangeSecondIndex;
 			for ( secondIndex = 0; secondIndex < rangeSecondIndex; secondIndex++) {
 				lines4OneDescriptionExpressions = lines4EventType.getLines(secondIndex);
 				oneDescriptionExpressions = new ArrayList<FunctionByExpression>();
