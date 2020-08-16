@@ -114,7 +114,7 @@ public class EventPerceptionDescriptionPool extends DescriptionPool {
 		"KProp:GETVal(" + Value.VALUE_BY_NAME_EVENT_PARAMS + ").GETVal(" + Value.VALUE_BY_NAME_EVENT_TARGET + ").GETProp(stateInventory).GETProp(inventory_cap).GETProp(stateComposition).GETFctVal(" + StateComposition.METHODNAME_GET_MAIN_MATERIAL + ")" ;
 */
 		
-		bla(allLines);
+		createExpressions(allLines);
 		
 	}
 	
