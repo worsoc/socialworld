@@ -57,7 +57,7 @@ public class EventPerceptionAssignment {
 	public EventPerceptionDescription getEventPerceptionDescription(
 			int eventType,	int perceptionType) {
 		EventPerceptionDescription eventPerceptionDescription;
-		eventPerceptionDescription = 
+		eventPerceptionDescription = (EventPerceptionDescription)
 				EventPerceptionDescriptionPool.getInstance().getDescription(eventType, perceptionType);
 		
 		return eventPerceptionDescription;

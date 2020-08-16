@@ -57,8 +57,8 @@ public class Action2PerformerAssignment {
 	 */
 	public Action2PerformerDescription getAction2PerformerDescription(ActionMode actionMode) {
 		Action2PerformerDescription action2PerformerDescription;
-		action2PerformerDescription = 
-				Action2PerformerDescriptionPool.getInstance().getDescription(actionMode);
+		action2PerformerDescription = (Action2PerformerDescription)
+				Action2PerformerDescriptionPool.getInstance().getDescription(actionMode.getIndex(), 0);
 		
 		return action2PerformerDescription;
 	}

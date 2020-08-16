@@ -56,7 +56,7 @@ public class EventReactionAssignment {
 	public EventReactionDescription getEventReactionDescription(
 			int eventType,	int reactionType) {
 		EventReactionDescription eventReactionDescription;
-		eventReactionDescription = 
+		eventReactionDescription = (EventReactionDescription)
 			EventReactionDescriptionPool.getInstance().getDescription(eventType, reactionType);
 		
 		return eventReactionDescription;
