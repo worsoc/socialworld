@@ -101,11 +101,24 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 	*/
 	
 	protected void initializeWithTestData_FunctionByExpression() {
-		// TODO implement lines (get from initializeWithTestData(ActionMode actionMode) )
+		
+		List<Lines> allLines;
+		allLines = new ArrayList<Lines>();
+		
+		Lines lines;
+		
+		for (ActionMode actionmode : ActionMode.values()) {
+			lines = new Lines(actionmode.getIndex(), rangeSecondIndex);
+			initializeWithTestData(actionmode, lines);
+			allLines.add(lines);
+		}
+
 	}
 
-	private List<FunctionByExpression> initializeWithTestData(ActionMode actionMode) {
-		
+	private List<FunctionByExpression> initializeWithTestData(ActionMode actionMode, Lines lines) {
+
+		// TODO implement adding lines (instead of returning List<FunctionByExpression>) )
+
 		Expression startExpression = Nothing.getInstance();
 		List<FunctionByExpression> result;
 		result = new ArrayList<FunctionByExpression>();
@@ -119,9 +132,14 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 			case swim:
 			case fly:
 				
+				
+				
 				// directionEvent
-				startExpression = new Calculate("GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_DIRECTION + "))", Value.VALUE_BY_NAME_EVENT_DIRECTION );
-				result.add( new FunctionByExpression(startExpression) );
+				lines.add(0, 0, "GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_DIRECTION + "))");
+				lines.add(0, 0, Value.VALUE_BY_NAME_EVENT_DIRECTION);
+
+//				startExpression = new Calculate("GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_DIRECTION + "))", Value.VALUE_BY_NAME_EVENT_DIRECTION );
+//				result.add( new FunctionByExpression(startExpression) );
 
 				// acceleration
 				startExpression = new Calculate("GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_MOVE_ACCELERATION + "))", Value.VALUE_BY_NAME_EVENT_MOVE_ACCELERATION);
