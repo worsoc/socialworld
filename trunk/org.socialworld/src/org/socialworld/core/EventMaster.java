@@ -319,6 +319,11 @@ public class EventMaster extends SocialWorldThread {
 				Direction directionEvent;
 				if (this.eventDirection != null) {
 					directionEvent = (Direction) this.eventDirection.getValue();
+					if (directionEvent == null) {
+						// TODO directionEvent == null: that shouldn't be possible
+						System.out.println("EventMaster.checkIgnoreCandidate(): this.eventDirection.getValue() is null ");
+						return 4;
+					}
 					vectorDirectionEvent = directionEvent.getVector(SimulationCluster.event);
 					if (vectorDirectionEvent.is000()) {
 						return 3;
