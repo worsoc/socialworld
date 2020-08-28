@@ -71,6 +71,9 @@ public class CreateActionExpression extends Branching {
 
 			setValid();
 		}
+		else {
+			System.out.println("CreateActionExpression.constructor(): lines ist leer!");
+		}
 		
 	}
 
