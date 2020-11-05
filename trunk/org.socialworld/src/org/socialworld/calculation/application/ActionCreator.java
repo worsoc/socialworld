@@ -150,10 +150,6 @@ public class ActionCreator extends SocialWorldThread {
 						eventType, eventReactionType	);
 			int count = eventReactionDescription.countFunctions();
 			
-			if (count == 2) {
-				int myBreak = 0;
-				myBreak++;
-			}
 			
 			AbstractAction reaction;
 			FunctionByExpression f_CreateReaction;
