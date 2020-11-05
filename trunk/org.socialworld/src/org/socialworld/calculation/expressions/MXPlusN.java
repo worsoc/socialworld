@@ -85,7 +85,7 @@ public class MXPlusN extends Expression {
 					
 				}
 	
-				int freeFunctionIndex = functions.findNextFree(100, 200);
+				int freeFunctionIndex = functions.findNextFree(10000, 99999);
 				
 				if (freeFunctionIndex > 0) {
 				
@@ -102,6 +102,9 @@ public class MXPlusN extends Expression {
 					
 					setValid();
 	
+				}
+				else {
+					System.out.println("MXPlusN.init(): kein freier Slot in Functions gefunden.");
 				}
 				
 			}
