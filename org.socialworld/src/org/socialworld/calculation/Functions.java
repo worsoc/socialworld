@@ -29,7 +29,7 @@ public class Functions {
 	//TODO ? is the class obsolete: use FunctionsPool instead ?
 	private static Functions instance;
 	
-	private static final int MAX_SIZE = 1000;
+	private static final int MAX_SIZE = 100000;
 	
 	private static List<FunctionBase> functions;
 	
