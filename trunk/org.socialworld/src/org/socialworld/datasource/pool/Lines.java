@@ -37,7 +37,7 @@ public class Lines {
 	List<List<String>> getLines(int secondIndex) {
 		// second index ... the int value for the mapped type (reaction type, influence type, perception type ...)
 		// it is possible that there is only the second index 0 (the only difference is in main index)
-		if (secondIndex > 0 & secondIndex < this.capacity)
+		if (secondIndex >= 0 & secondIndex < this.capacity)
 			return this.lines.get(secondIndex);
 		else
 			return new ArrayList<List<String>>();
