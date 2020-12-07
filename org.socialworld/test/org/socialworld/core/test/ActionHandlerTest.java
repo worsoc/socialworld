@@ -24,7 +24,7 @@ package org.socialworld.core.test;
 import junit.framework.TestCase;
 
 import org.socialworld.core.ActionHandler;
-
+// test checkin from white notebook
 public class ActionHandlerTest extends TestCase {
 
 	private ActionHandler actionHandler;
