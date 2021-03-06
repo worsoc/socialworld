@@ -11,7 +11,6 @@ import javax.swing.border.*;
 
 public class PerceptionCreationTool extends JFrame{
 	
-	
 	JPanel mainPanelOben = new JPanel(new BorderLayout());		// Panel �ber BorerLayxout
 	JPanel mainPanelRight = new JPanel(new BorderLayout());		// Panel �ber BorerLayxout
 	JPanel mainPanelLinksUnten = new JPanel(new BorderLayout());
