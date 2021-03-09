@@ -12,6 +12,5 @@ Export-Package:
  org.socialworld.core.test;uses:="junit.framework",
  org.socialworld.objects;uses:="org.socialworld.attributes,org.socialworld,org.socialworld.core"
 Eclipse-LazyStart: true
-Require-Bundle: org.socialworld.tools,
- org.eclipse.osgi
+Require-Bundle: org.eclipse.osgi
 Bundle-Activator: org.socialworld.SocialWorld
