@@ -188,22 +188,22 @@ public class CreateVector
          	yout += y[8];
          	if (i < threshold )++koeffizienten[1];
          	}  	
-         if(input1.charAt(i) == '�') 
+         if(input1.charAt(i) == ' ') 
          	{
          	zout += z[8];
          	if (i < threshold )++koeffizienten[1];
          	}
-         if(input1.charAt(i) == '�') 
+         if(input1.charAt(i) == ',') 
          	{
          	xout += x[9];
          	if (i < threshold )++exponenten[2];
          	}
-         if(input1.charAt(i) == '�') 
+         if(input1.charAt(i) == ',') 
          	{
          	yout += y[9];
          	if (i < threshold )++offset[0];
          	}
-         if(input1.charAt(i) == '�') 
+         if(input1.charAt(i) == '/') 
          	{
          	zout += z[9];
          	if (i < threshold )++koeffizienten[0];
@@ -372,10 +372,10 @@ public class CreateVector
 	   case 'x': out_6++; break;
 	   case 'y': out_7++; break;
 	   case 'z': out_8++; break;
-	   case 'ä': out_9++; break;
-	   case 'ö': out_1++; break;
-	   case 'ü': out_2++; break;
-	   case 'ß': out_3++; break;
+	   case ' ': out_9++; break;
+	   case ',': out_1++; break;
+	   case '.': out_2++; break;
+	   case '/': out_3++; break;
 	   case '0': out_4++; break;
 	   case '1': out_5++; break;
 	   case '2': out_6++; break;
@@ -386,9 +386,10 @@ public class CreateVector
 	   case '7': out_2++; break;
 	   case '8': out_3++; break;
 	   case '9': out_4++; break;
-	   case ' ': out_5++; break;
-	   case ',': out_6++; break;
-	   case '.': out_7++; break;
+	   case '?': out_5++; break;
+	   case '!': out_6++; break;
+	   case '+': out_7++; break;
+	   case '-': out_8++; break;
 	   default: out_8++;
    	   }
    }
