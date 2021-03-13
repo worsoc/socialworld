@@ -24,24 +24,68 @@ package org.socialworld.tools.mct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
+/**
+ * 
+ * @author Mathias Sikos
+ *
+ * The class TileGrid describes a 9x9-matrix of tiles.
+ * Because of describing the map in different levels, a tile grid is a tile itself on the higher level.
+ * There are supported 3 tile type levels:
+ * large , medium and small
+ * A large tile grid contains of large tiles or medium sub tile grids.
+ * A medium tile grid contains of medium tiles or small sub tile grids.
+ * A small tile grid contains of 81 small tiles. There aren't sub tile grid on small tile type level.
+ * 
+ * For the set of tiles that could be arranged in tile raster see class Tile.
+ * 
+ * While arranging or creating a raster filling there must be met edge and height conditions.
+ * See the classes CalculatePossibleTiles, PossibleTiles and HeightChangeChecker for the implementation of the neighbourhood rules.
+ * 
+ * If there are tiles with different tile type levels in the same raster there must be met special edge conditions from a tile to a sub tile grid.
+ * These edge conditions are solved by border adapters. That is a set of 9 special tiles that are arranged at the 9 border raster fields in northe, east, south or west.
+ * A border adapter on a sub tile grid manages that an inclination or a declination matches to the inclination/declination of the neighboured tile (with higher tile type level).
+ * A border adapter arranges (for example) 9 small tiles next to one medium tile.
+ * 
+ * Furthermore a tile grid has a describing value, how the height is allowed to change over the complete grid.
+ * This value is the integer variable cornerMaximaNr. 
+ * It contains of 5 digits, that define the allowed height difference for
+ *  the corner north west (first digit)
+ *  the corner north east (second digit)
+ *  the corner south east (third digit)
+ *  the corner south west (forth digit)
+ *  the center tile (fifth digit)
+ *  The default cornerMaximaNr is 11114 an means that that height may change by a difference of 4 from the corner tiles to the center tile.
+ *  The allowed difference is always given as positive digit, but means positive or negative (absolute value).
+ *  That means die value 11114 allows the center grid to lay 4 units higher or lower.
+ *  
+ *  There are different fill orders. The concrete tile grid fill order depends on whether and where are arranged adapter borders.
+ *  The concrete fill order is given to the variable fillOrder. 
+ *  That is an array that is iterated from 0 to to 80 an gives for every fill index the assigned tile grid raster index.
+ *  
+*/
 public class TileGrid extends Tile {
 
+	// the 9x9 matrix or 9x9 raster
 	Tile tiles[];
+	// a blocked raster element isn't allowed to be reseted in backtracking algorithms
 	boolean blocked[] = new boolean[81];
+	// the index of the tile raster, that will be calculated/generated currently
 	int actualTileIndex = 0;
-	int fillIndex = -1;
+	// the reference to the parent tile grid 
 	private TileGrid parent;
 
+	// is set to true, if all raster elements are filled
 	boolean isComplete = false;
 	
 	int tileTypeLevel; 
-	// --> TileType
+	// --> see class TileType
 	// static final int TILE_LEVEL_LARGE = 0;
 	// static final int TILE_LEVEL_MEDIUM = 1;
 	// static final int TILE_LEVEL_SMALL = 2;
 
+	// a string that is used for generation
 	String inputForGeneration;
+	// a list of integer values that a calculated from input string
 	List<Integer> totalValuesForGeneration;
 	int borderValueForGeneration = 0;
 	
@@ -51,12 +95,15 @@ public class TileGrid extends Tile {
 	private TileGridBorderAdapterType borderAdapterTypeSouth = TileGridBorderAdapterType.noAdapter;
 	private TileGridBorderAdapterType borderAdapterTypeWest = TileGridBorderAdapterType.noAdapter;
 	
+	// filling the raster
 	private static int fillOrderFromNWToSE[];
 	private static int fillOrderFromNEToSW[];
 	private static int fillOrderFromSEToNW[];
 	private static int fillOrderFromSWToNE[];
 	private static int fillOrderFromOutToIn[];
 	private int fillOrder[];
+	int fillIndex = -1;
+	// unused until now
 	private int fillDirection = 1;
 	
 	SubClusterCalculations subClusterCalculation = new SubClusterCalculations();
