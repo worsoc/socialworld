@@ -8,6 +8,7 @@ import org.socialworld.calculation.expressions.CreateKnowledgeElementExpression;
 import org.socialworld.calculation.expressions.GetValue;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.tools.Generation;
+import org.socialworld.tools.StringPair;
 
 public class PerceptionGeneration extends Generation{
 
@@ -193,14 +194,14 @@ public class PerceptionGeneration extends Generation{
 		
 		NextDotElement result = new NextDotElement();
 		
-		String selectedProperty = "";
-		String selectedPropertyFromMethod = "";
+		StringPair selectedProperty = new StringPair("", "");
+		StringPair selectedPropertyFromMethod = new StringPair("", "");
 		
-		List<String> returnablePropertyTypes;
-		List<String> returnablePropertyFromMethodTypes;
+		List<StringPair> returnablePropertyTypes;
+		List<StringPair> returnablePropertyFromMethodTypes;
 		
-		returnablePropertyTypes = simulationMetaInformation.getPropertyTypesForClass(lastClassName, this);
-		returnablePropertyFromMethodTypes = simulationMetaInformation.getPropertyFromMethodTypesForClass(lastClassName, this);
+		returnablePropertyTypes = simulationMetaInformation.getPropertiesMetaInfosForClass(lastClassName, this);
+		returnablePropertyFromMethodTypes = simulationMetaInformation.getPropMethodsMetaInfosForClass(lastClassName, this);
 
 		int selectProperty = -1;
 		if (returnablePropertyTypes.size() > 0) {
@@ -216,21 +217,21 @@ public class PerceptionGeneration extends Generation{
 		if (selectProperty >= 0 && selectPropertyFromMethod >= 0) {
 			int choosePropVSPropFromMethod = selection % 2;
 			if (choosePropVSPropFromMethod == 0) {
-				result.className = selectedProperty;
-				result.nextDotElement = GetValue.getProperty(selectedProperty);
+				result.className = selectedProperty.getLeft();
+				result.nextDotElement = GetValue.getProperty(selectedProperty.getRight());
 			}
 			else {
-				result.className = selectedPropertyFromMethod;
-				result.nextDotElement = GetValue.getFctValue(selectedPropertyFromMethod);
+				result.className = selectedPropertyFromMethod.getLeft();
+				result.nextDotElement = GetValue.getFctValue(selectedPropertyFromMethod.getRight());
 			}
 		}
 		else if (selectProperty >= 0) {
-			result.className = selectedProperty;
-			result.nextDotElement = GetValue.getProperty(selectedProperty);
+			result.className = selectedProperty.getLeft();
+			result.nextDotElement = GetValue.getProperty(selectedProperty.getRight());
 		}
 		else if (selectPropertyFromMethod >= 0) {
-			result.className = selectedPropertyFromMethod;
-			result.nextDotElement = GetValue.getFctValue(selectedPropertyFromMethod);
+			result.className = selectedPropertyFromMethod.getLeft();
+			result.nextDotElement = GetValue.getFctValue(selectedPropertyFromMethod.getRight());
 		}
 		
 		return result;
