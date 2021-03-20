@@ -23,6 +23,8 @@ package org.socialworld.attributes;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.socialworld.calculation.PropertyUsingAs;
 import org.socialworld.calculation.SimulationCluster;
@@ -182,6 +184,14 @@ public abstract class SimProperty implements ISimProperty, ISavedValues {
 		
 	}
 
+	public List<String> getReturnableGetPropertyTypes() {
+		return new ArrayList<String>();
+	}
+
+	public List<String> getReturnableGetPropertyFromMethodTypes() {
+		return new ArrayList<String>();
+	}
+	
 	/////////////////////////////////////////////
 	
 	public final ValueProperty getProperty(SimulationCluster cluster, PropertyName propName) {

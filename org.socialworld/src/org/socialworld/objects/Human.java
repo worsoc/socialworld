@@ -35,7 +35,6 @@ import org.socialworld.objects.concrete.animals.Mammal;
 import org.socialworld.objects.concrete.animals.StateBody;
 import org.socialworld.objects.concrete.animals.StateInventory;
 import org.socialworld.objects.concrete.animals.StateSeer;
-import org.socialworld.objects.properties.IWeapon;
 import org.socialworld.conversation.Talk_SentenceType;
 import org.socialworld.core.IEventParam;
 

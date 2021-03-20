@@ -1,18 +1,48 @@
 package org.socialworld.objects.concrete.animals;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.socialworld.actions.handle.Inventory;
 import org.socialworld.attributes.ISavedValues;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.calculation.SimulationCluster;
+import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.State;
+import org.socialworld.tools.Generation;
 
 public class StateInventory extends State {
 
 	
 	private Inventory inventory;
+	
+	///////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////static instance for meta information    ///////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
+
+	private static StateInventory singletonDummyForGenerationTools;
+	private static List<String> listOfReturnableGetPropertyTypes;
+	private boolean listOfReturnablePropertyTypesIsFilled = false;
+	private static String[] returnableGetPropertyTypes = new String[]{Type.simulationObject.getIndexWithSWTPraefix()} ;
+
+	public static StateInventory getInstance(Generation calledFromGeneration) {
+		if (singletonDummyForGenerationTools == null) {
+			singletonDummyForGenerationTools = new StateInventory(calledFromGeneration);
+		}
+		return singletonDummyForGenerationTools;
+	}
+	
+	private StateInventory(Generation calledFromGeneration) 
+	{
+		
+	}
+
+	///////////////////////////////////////////////////////////////////////////////////////////
+	////////////////// creating instance for simulation    ///////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
 	
 	public StateInventory() {
 		super();
@@ -28,6 +58,10 @@ public class StateInventory extends State {
 		setPropertyName(PropertyName.stateInventory);
 	}
 
+	///////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////  implementing  ISavedValues  ////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
+	
 	@Override
 	public ISavedValues copyForProperty(SimulationCluster cluster) {
 		return new StateInventory(this, getPropertyProtection(), cluster);
@@ -90,6 +124,22 @@ public class StateInventory extends State {
 		}
 		
 	}
+
+	public List<String> getReturnableGetPropertyTypes() {
+		if (!listOfReturnablePropertyTypesIsFilled) {
+			List<String> result = super.getReturnableGetPropertyTypes();
+			for (int indexAdd = 0; indexAdd < returnableGetPropertyTypes.length; indexAdd++) {
+				result.add(returnableGetPropertyTypes[indexAdd]);
+			}
+			listOfReturnableGetPropertyTypes = result;
+			listOfReturnablePropertyTypesIsFilled = true;
+		}
+		return new ArrayList<String>(listOfReturnableGetPropertyTypes);
+	}
+	
+	///////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////  implementing  StateInventory methods  ////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
 	
 
 }

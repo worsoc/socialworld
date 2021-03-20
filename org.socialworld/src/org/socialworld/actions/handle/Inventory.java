@@ -21,6 +21,9 @@
 */
 package org.socialworld.actions.handle;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.attributes.SimProperty;
@@ -31,6 +34,7 @@ import org.socialworld.core.ObjectMaster;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.SimulationObject_Type;
 import org.socialworld.objects.properties.IWeapon;
+import org.socialworld.tools.Generation;
 
 /**
  * The class collects all informations about a
@@ -63,6 +67,31 @@ public class Inventory extends SimProperty {
 	private boolean complete;
 	private boolean isHumanInventory;
 	
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////  static instance for meta information    ///////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+	
+	private static Inventory singletonDummyForGenerationTools;
+	private static List<String> listOfReturnableGetPropertyTypes;
+	private boolean listOfReturnablePropertyTypesIsFilled = false;
+	private static String[] returnableGetPropertyTypes = new String[]{Type.simulationObject.getIndexWithSWTPraefix()} ;
+
+	public static Inventory getInstance(Generation calledFromGeneration) {
+		if (singletonDummyForGenerationTools == null) {
+			singletonDummyForGenerationTools = new Inventory(calledFromGeneration);
+		}
+		return singletonDummyForGenerationTools;
+	}
+	
+	private Inventory(Generation calledFromGeneration) 
+	{
+		
+	}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+////////////////// creating instance for simulation    ///////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+	
 	public Inventory(SimulationObject_Type objectType) {
 		this.complete = true;
 		this.isHumanInventory = false;
@@ -77,6 +106,7 @@ public class Inventory extends SimProperty {
 		}
 
 	}
+
 
 	private Inventory(Inventory original, PropertyProtection protectionOriginal, SimulationCluster cluster) {
 		super(protectionOriginal, cluster);
@@ -113,6 +143,18 @@ public class Inventory extends SimProperty {
 
 	}
 
+	public List<String> getReturnableGetPropertyTypes() {
+		if (!listOfReturnablePropertyTypesIsFilled) {
+			List<String> result = super.getReturnableGetPropertyTypes();
+			for (int indexAdd = 0; indexAdd < returnableGetPropertyTypes.length; indexAdd++) {
+				result.add(returnableGetPropertyTypes[indexAdd]);
+			}
+			listOfReturnableGetPropertyTypes = result;
+			listOfReturnablePropertyTypesIsFilled = true;
+		}
+		return new ArrayList<String>(listOfReturnableGetPropertyTypes);
+	}
+	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    Inventory  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////

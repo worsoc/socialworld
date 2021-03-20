@@ -21,10 +21,14 @@
 */
 package org.socialworld.attributes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueProperty;
+import org.socialworld.tools.Generation;
 
 /**
  * The class implements an attribute array. It
@@ -55,7 +59,32 @@ public class AttributeArray extends SimProperty {
 	 * an array for every attribute's value change.
 	 */
 	private int differences[];
-	                         
+	          
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////  static instance for meta information    ///////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	private static AttributeArray singletonDummyForGenerationTools;
+	private static List<String> listOfReturnableGetPropertyTypes;
+	private boolean listOfReturnablePropertyTypesIsFilled = false;
+	private static String[] returnableGetPropertyTypes = new String[]{Type.integer.getIndexWithSWTPraefix()} ;
+	
+	public static AttributeArray getInstance(Generation calledFromGeneration) {
+	if (singletonDummyForGenerationTools == null) {
+	singletonDummyForGenerationTools = new AttributeArray(calledFromGeneration);
+	}
+	return singletonDummyForGenerationTools;
+	}
+	
+	private AttributeArray(Generation calledFromGeneration) 
+	{
+	
+	}
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////      creating instance for simulation    ///////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+	
 	public AttributeArray(int numberOfAttributes) {
 		setPropertyName(PropertyName.simobj_attributeArray);
 		this.numberOfAttributes = numberOfAttributes;
@@ -126,7 +155,7 @@ public class AttributeArray extends SimProperty {
 
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////    ISavedValues  ///////////////////////////////////////////////
+/////////////////////////////  implementing  ISavedValues  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 	public SimProperty copyForProperty(SimulationCluster cluster) {
@@ -142,6 +171,18 @@ public class AttributeArray extends SimProperty {
 
 	}
 
+	public List<String> getReturnableGetPropertyTypes() {
+		if (!listOfReturnablePropertyTypesIsFilled) {
+			List<String> result = super.getReturnableGetPropertyTypes();
+			for (int indexAdd = 0; indexAdd < returnableGetPropertyTypes.length; indexAdd++) {
+				result.add(returnableGetPropertyTypes[indexAdd]);
+			}
+			listOfReturnableGetPropertyTypes = result;
+			listOfReturnablePropertyTypesIsFilled = true;
+		}
+		return new ArrayList<String>(listOfReturnableGetPropertyTypes);
+	}
+	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    Attribute Array  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////

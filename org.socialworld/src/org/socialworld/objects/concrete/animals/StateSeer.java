@@ -22,6 +22,9 @@
 package org.socialworld.objects.concrete.animals;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
@@ -31,6 +34,7 @@ import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.calculation.geometry.VectorMapper;
 import org.socialworld.objects.State;
+import org.socialworld.tools.Generation;
 
 public class StateSeer extends State {
 
@@ -44,6 +48,32 @@ public class StateSeer extends State {
 	private int bestPercipiencePerpendicular;
 
 	private double sizeDistanceRelationThreshold;
+	
+	///////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////static instance for meta information    ///////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
+
+	private static StateSeer singletonDummyForGenerationTools;
+	private static List<String> listOfReturnableGetPropertyTypes;
+	private boolean listOfReturnablePropertyTypesIsFilled = false;
+	private static String[] returnableGetPropertyTypes = new String[]{
+			Type.floatingpoint.getIndexWithSWTPraefix(), Type.integer.getIndexWithSWTPraefix(), "Direction"} ;
+
+	public static StateSeer getInstance(Generation calledFromGeneration) {
+		if (singletonDummyForGenerationTools == null) {
+			singletonDummyForGenerationTools = new StateSeer(calledFromGeneration);
+		}
+		return singletonDummyForGenerationTools;
+	}
+	
+	private StateSeer(Generation calledFromGeneration) 
+	{
+		
+	}
+
+	///////////////////////////////////////////////////////////////////////////////////////////
+	////////////////// creating instance for simulation    ///////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
 	
 	public StateSeer() {
 		super();
@@ -64,6 +94,10 @@ public class StateSeer extends State {
 		setPropertyName(PropertyName.stateSeer);
 	}
 
+	///////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////  implementing  ISavedValues  ////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
+	
 	public State copyForProperty(SimulationCluster cluster) {
 		return new StateSeer(this, getPropertyProtection(), cluster);
 	}
@@ -111,6 +145,21 @@ public class StateSeer extends State {
 		}
 	}
 
+	public List<String> getReturnableGetPropertyTypes() {
+		if (!listOfReturnablePropertyTypesIsFilled) {
+			List<String> result = super.getReturnableGetPropertyTypes();
+			for (int indexAdd = 0; indexAdd < returnableGetPropertyTypes.length; indexAdd++) {
+				result.add(returnableGetPropertyTypes[indexAdd]);
+			}
+			listOfReturnableGetPropertyTypes = result;
+			listOfReturnablePropertyTypesIsFilled = true;
+		}
+		return new ArrayList<String>(listOfReturnableGetPropertyTypes);
+	}
+	
+	///////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////  implementing  StateSeer methods  ////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
 	
 
 	public double getSizeDistanceRelationThreshold() {
