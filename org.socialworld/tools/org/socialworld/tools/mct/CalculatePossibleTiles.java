@@ -1,9 +1,49 @@
+/*
+* Social World
+* Copyright (C) 2021  Mathias Sikos
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
+*
+* or see http://www.gnu.org/licenses/gpl-2.0.html
+*
+*/
 package org.socialworld.tools.mct;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * 
+ * @author Mathias Sikos
+ *
+ * The class CalculatePossibleTiles implements the neighbourhood rules.
+ * 
+ * It's a singleton class with only one method.
+ * 
+ * The method getResultSet returns a set of tile numbers that are allowed to arrange between the neighboured tiles.
+ * There are calculated the sets for every neighbour.
+ * Finally there is calculated the intersection of the 4 sets for the allowance sets from the 4 neigboured tiles.
+ * 
+ * If there is no tile given for one ore more neighbour tiles, the allowance set for this direction is the complete list 
+ * 	(with all tiles). So there is no influence for calculation of the intersection.
+ * 
+ * There is implemented a complete mapping for all directions from all tile types to all tile types.
+ * The tile sets are fetched from class PossibleTiles.
+ *  
+*/
 public class CalculatePossibleTiles {
 
 	static PossibleTiles possibleTiles = PossibleTiles.getInstance();

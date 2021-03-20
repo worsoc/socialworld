@@ -21,6 +21,28 @@
 */
 package org.socialworld.tools.mct;
 
+/**
+ * 
+ * @author Mathias Sikos
+ *
+ * The class Tile holds the information of one raster element and describes the part of the landscape.
+ * The main informations are
+ * - the tile number for assigning the physical form (inclination/declination, border adapter, specials ... 
+ * 						(there will be a documentation soon, it's just analog on paper until now))
+ * 			( the combination of tile type and tile number results in the global tile number (tile number + offset for the tile type) )
+ * - the height
+ * 			--	the all over height (according to the whole map)
+ * 			--  the relative height difference to neighbored tiles in north and west 
+ * 
+ * Every tile grid is a tile itself (TileGrid is a sub class of Tile).
+ * There are methods for interpretation a sub tile grid as a tile of the same tile type level.
+ * Every sub tile grid must be fit in next to the other tiles. So a sub tile grid feels as a tile itself.
+ * There are the methods getFeelAsTileType() and getNumber() for implementation of the feeling as a tile.
+ * They abstract from the tile grid to a tile.
+ * 
+ * There are methods for getting the border adapter type, that is needed to a arrange a sub tile grid next to the tile.
+ * 
+*/
 public class Tile {
 
 	TileType type;

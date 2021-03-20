@@ -42,7 +42,7 @@ import java.util.Set;
  * See the classes CalculatePossibleTiles, PossibleTiles and HeightChangeChecker for the implementation of the neighbourhood rules.
  * 
  * If there are tiles with different tile type levels in the same raster there must be met special edge conditions from a tile to a sub tile grid.
- * These edge conditions are solved by border adapters. That is a set of 9 special tiles that are arranged at the 9 border raster fields in northe, east, south or west.
+ * These edge conditions are solved by border adapters. That is a set of 9 special tiles that are arranged at the 9 border raster fields in north, east, south or west.
  * A border adapter on a sub tile grid manages that an inclination or a declination matches to the inclination/declination of the neighboured tile (with higher tile type level).
  * A border adapter arranges (for example) 9 small tiles next to one medium tile.
  * 
@@ -54,9 +54,9 @@ import java.util.Set;
  *  the corner south east (third digit)
  *  the corner south west (forth digit)
  *  the center tile (fifth digit)
- *  The default cornerMaximaNr is 11114 an means that that height may change by a difference of 4 from the corner tiles to the center tile.
+ *  The default cornerMaximaNr is 11114 and means that height may change by a difference of 4 from the corner tiles to the center tile.
  *  The allowed difference is always given as positive digit, but means positive or negative (absolute value).
- *  That means die value 11114 allows the center grid to lay 4 units higher or lower.
+ *  That means the value 11114 allows the center grid to lay 4 units higher or lower.
  *  
  *  There are different fill orders. The concrete tile grid fill order depends on whether and where are arranged adapter borders.
  *  The concrete fill order is given to the variable fillOrder. 
