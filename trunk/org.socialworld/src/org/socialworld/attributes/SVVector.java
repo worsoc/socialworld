@@ -21,14 +21,44 @@
 */
 package org.socialworld.attributes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
+import org.socialworld.tools.Generation;
 
 public class SVVector extends SavedValue {
 
 	private Vector savedVector;
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////static instance for meta information    ///////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	private static SVVector singletonDummyForGenerationTools;
+	private static List<String> listOfReturnableGetPropertyTypes;
+	private boolean listOfReturnablePropertyTypesIsFilled = false;
+	private static String[] returnableGetPropertyTypes = new String[]{
+			Type.vector.getIndexWithSWTPraefix(),Type.floatingpoint.getIndexWithSWTPraefix()} ;
+
+	public static SVVector getInstance(Generation calledFromGeneration) {
+		if (singletonDummyForGenerationTools == null) {
+			singletonDummyForGenerationTools = new SVVector(calledFromGeneration);
+		}
+		return singletonDummyForGenerationTools;
+	}
+	
+	private SVVector(Generation calledFromGeneration) 
+	{
+		
+	}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+////////////////// creating instance for simulation    ///////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 	
 	public SVVector (Vector vector, PropertyName propNameParent) {
 		super();
@@ -75,6 +105,18 @@ public class SVVector extends SavedValue {
 		else {
 			return ValueProperty.getInvalid();
 		}
+	}
+
+	public List<String> getReturnableGetPropertyTypes() {
+		if (!listOfReturnablePropertyTypesIsFilled) {
+			List<String> result = super.getReturnableGetPropertyTypes();
+			for (int indexAdd = 0; indexAdd < returnableGetPropertyTypes.length; indexAdd++) {
+				result.add(returnableGetPropertyTypes[indexAdd]);
+			}
+			listOfReturnableGetPropertyTypes = result;
+			listOfReturnablePropertyTypesIsFilled = true;
+		}
+		return new ArrayList<String>(listOfReturnableGetPropertyTypes);
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////

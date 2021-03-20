@@ -29,7 +29,7 @@ public enum KnowledgeFact_Criterion {
 	 * The constant holds the informations how many knowledge fact criterions exist.
 	 * The constant is used for iteration about all criterions 
 	 */
-	public static final int NUMBER_OF_KNOWLEDGE_FACT_CRITERION = 8;
+	public static final int NUMBER_OF_KNOWLEDGE_FACT_CRITERION = 2;
 
 	/**
 	 * The constant holds the offset that must be added to criterion's index for getting the word ID (word search tree ID)

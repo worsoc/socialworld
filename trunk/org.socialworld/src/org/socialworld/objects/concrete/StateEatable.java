@@ -22,6 +22,9 @@
 package org.socialworld.objects.concrete;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.attributes.properties.NutrientProperty;
@@ -30,6 +33,7 @@ import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.objects.State;
+import org.socialworld.tools.Generation;
 
 public class StateEatable extends State {
 
@@ -45,6 +49,31 @@ public class StateEatable extends State {
 	private NutrientProperty nutrientProps;
 	private TasteProperty tasteProps;
 	
+	///////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////static instance for meta information    ///////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
+
+	private static StateEatable singletonDummyForGenerationTools;
+	private static List<String> listOfReturnableGetPropertyTypes;
+	private boolean listOfReturnablePropertyTypesIsFilled = false;
+	private static String[] returnableGetPropertyTypes = new String[]{} ;
+	
+	public static StateEatable getInstance(Generation calledFromGeneration) {
+		if (singletonDummyForGenerationTools == null) {
+			singletonDummyForGenerationTools = new StateEatable(calledFromGeneration);
+		}
+		return singletonDummyForGenerationTools;
+	}
+	
+	private StateEatable(Generation calledFromGeneration) 
+	{
+		
+	}
+
+	///////////////////////////////////////////////////////////////////////////////////////////
+	////////////////// creating instance for simulation    ///////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
+	
 	public StateEatable() {
 		super();
 	}
@@ -58,6 +87,10 @@ public class StateEatable extends State {
 		setPropertyName(PropertyName.stateEatable);
 	}
 
+	///////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////  implementing  ISavedValues  ////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
+	
 	public State copyForProperty(SimulationCluster cluster) {
 		return new StateEatable(this, getPropertyProtection(), cluster);
 	}
@@ -71,6 +104,22 @@ public class StateEatable extends State {
 		// TODO setProperty
 	}
 
+	public List<String> getReturnableGetPropertyTypes() {
+		if (!listOfReturnablePropertyTypesIsFilled) {
+			List<String> result = super.getReturnableGetPropertyTypes();
+			for (int indexAdd = 0; indexAdd < returnableGetPropertyTypes.length; indexAdd++) {
+				result.add(returnableGetPropertyTypes[indexAdd]);
+			}
+			listOfReturnableGetPropertyTypes = result;
+			listOfReturnablePropertyTypesIsFilled = true;
+		}
+		return new ArrayList<String>(listOfReturnableGetPropertyTypes);
+	}
+
+	///////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////  implementing  StateEatable methods  ////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
+	
 	protected ValueProperty getNutrientProperties() {
 		return new ValueProperty(Type.object, VALUENAME_NUTRIENT_PROPERTIES, nutrientProps);
 	}

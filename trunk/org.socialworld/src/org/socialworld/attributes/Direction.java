@@ -1,15 +1,44 @@
 package org.socialworld.attributes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
+import org.socialworld.tools.Generation;
 
 public class Direction extends SimProperty {
 
 	private SVVector vector;
 	
 	float power;
+
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////  static instance for meta information    ///////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+	
+	private static Direction singletonDummyForGenerationTools;
+	private static List<String> listOfReturnableGetPropertyTypes;
+	private boolean listOfReturnablePropertyTypesIsFilled = false;
+	private static String[] returnableGetPropertyTypes = new String[]{"SVVector",Type.floatingpoint.getIndexWithSWTPraefix()} ;
+
+	public static Direction getInstance(Generation calledFromGeneration) {
+	if (singletonDummyForGenerationTools == null) {
+	singletonDummyForGenerationTools = new Direction(calledFromGeneration);
+	}
+	return singletonDummyForGenerationTools;
+	}
+	
+	private Direction(Generation calledFromGeneration) 
+	{
+	
+	}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////      creating instance for simulation    ///////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 	
 	// TODO Herleitung  property name (direction's vector)
 	public Direction (PropertyName prop, Vector vector ) {
@@ -55,12 +84,26 @@ public class Direction extends SimProperty {
 			return new ValueProperty(Type.vector, valueName, getVector());
 			// TODO Vector as ISavedValues
 			// return this.vector.getAsValue(cluster, valueName);
+		case direction_power:
+			return new ValueProperty(Type.floatingpoint, valueName, this.power);
+			
 		default:
 			return ValueProperty.getInvalid();
 		}
 
 	}
 	
+	public List<String> getReturnableGetPropertyTypes() {
+		if (!listOfReturnablePropertyTypesIsFilled) {
+			List<String> result = super.getReturnableGetPropertyTypes();
+			for (int indexAdd = 0; indexAdd < returnableGetPropertyTypes.length; indexAdd++) {
+				result.add(returnableGetPropertyTypes[indexAdd]);
+			}
+			listOfReturnableGetPropertyTypes = result;
+			listOfReturnablePropertyTypesIsFilled = true;
+		}
+		return new ArrayList<String>(listOfReturnableGetPropertyTypes);
+	}
 
 
 

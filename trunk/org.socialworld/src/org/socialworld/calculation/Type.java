@@ -86,5 +86,22 @@ public enum Type {
 			default:return false;
 		}
 	}
+	
+	public String getIndexWithSWTPraefix() {
+			return "SWType_" + getIndex();
+	
+		
+	}
+	
+	public static Type getTypeForSWTPraefixedName(String preafixdName) {
+		
+		if (preafixdName.startsWith("SWType_")) {
+			int index = (int) Integer.parseInt(preafixdName.substring(7)); 
+			return getName(index);
+		}
+		else {
+			return Type.nothing;
+		}
+	}
 
 }

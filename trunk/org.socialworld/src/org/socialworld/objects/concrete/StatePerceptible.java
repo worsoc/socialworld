@@ -21,21 +21,54 @@
 */
 package org.socialworld.objects.concrete;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.attributes.percipience.Percipience;
 import org.socialworld.calculation.SimulationCluster;
+import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.objects.Animal;
 import org.socialworld.objects.State;
+import org.socialworld.tools.Generation;
 
 public class StatePerceptible extends State {
 
 
 	
 	private Percipience percipience;
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////static instance for meta information    ///////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
+
+	private static StatePerceptible singletonDummyForGenerationTools;
+	private static List<String> listOfReturnableGetPropertyTypes;
+	private boolean listOfReturnablePropertyTypesIsFilled = false;
+	private static String[] returnableGetPropertyTypes = new String[]{
+			Type.vector.getIndexWithSWTPraefix()   ,"Position"} ;
+
+	public static StatePerceptible getInstance(Generation calledFromGeneration) {
+		if (singletonDummyForGenerationTools == null) {
+			singletonDummyForGenerationTools = new StatePerceptible(calledFromGeneration);
+		}
+		return singletonDummyForGenerationTools;
+	}
+	
+	private StatePerceptible(Generation calledFromGeneration) 
+	{
+		
+	}
+
+	///////////////////////////////////////////////////////////////////////////////////////////
+	////////////////// creating instance for simulation    ///////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
+	
 	
 	public StatePerceptible(Percipience percipience) {
 		super();
@@ -52,6 +85,10 @@ public class StatePerceptible extends State {
 		setPropertyName(PropertyName.statePerceptible);
 	}
 
+	///////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////  implementing  ISavedValues  ////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
+	
 	public State copyForProperty(SimulationCluster cluster) {
 		return new StatePerceptible(this, getPropertyProtection(), cluster);
 	}
@@ -80,6 +117,22 @@ public class StatePerceptible extends State {
 			
 		}
 	}
+	
+	public List<String> getReturnableGetPropertyTypes() {
+		if (!listOfReturnablePropertyTypesIsFilled) {
+			List<String> result = super.getReturnableGetPropertyTypes();
+			for (int indexAdd = 0; indexAdd < returnableGetPropertyTypes.length; indexAdd++) {
+				result.add(returnableGetPropertyTypes[indexAdd]);
+			}
+			listOfReturnableGetPropertyTypes = result;
+			listOfReturnablePropertyTypesIsFilled = true;
+		}
+		return new ArrayList<String>(listOfReturnableGetPropertyTypes);
+	}
+
+	///////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////  implementing  StatePerceptible methods  ////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
 	
 	public boolean checkIsPossiblePercipient(Animal possiblePercipient) {
 		return this.percipience.checkIsPossiblePercipient(possiblePercipient);

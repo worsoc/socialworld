@@ -21,6 +21,8 @@
 */
 package org.socialworld.attributes;
 
+import java.util.List;
+
 import org.socialworld.calculation.PropertyUsingAs;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.ValueProperty;
@@ -47,5 +49,7 @@ public interface ISavedValues {
 	public abstract ValueProperty getProperty(SimulationCluster cluster, PropertyName propName, String valueName);
 	public abstract ValueProperty getPropertyFromMethod(SimulationCluster cluster, String methodName, String valueName);
 
-	
+	// getting meta information (for using reflection that is used for generation)
+	public abstract List<String> getReturnableGetPropertyTypes();
+	public abstract List<String> getReturnableGetPropertyFromMethodTypes();
 }
