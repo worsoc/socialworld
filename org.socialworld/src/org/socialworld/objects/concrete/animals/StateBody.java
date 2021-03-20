@@ -11,6 +11,7 @@ import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.objects.State;
 import org.socialworld.tools.Generation;
+import org.socialworld.tools.StringPair;
 
 public class StateBody extends State {
 
@@ -25,9 +26,9 @@ public class StateBody extends State {
 	///////////////////////////////////////////////////////////////////////////////////////////
 
 	private static StateBody singletonDummyForGenerationTools;
-	private static List<String> listOfReturnableGetPropertyTypes;
-	private boolean listOfReturnablePropertyTypesIsFilled = false;
-	private static String[] returnableGetPropertyTypes = new String[]{} ;
+	private static List<StringPair> listOfPropertyMetaInfo;
+	private boolean listOfPropertyMetaInfoIsFilled = false;
+	private static StringPair[] propertiesMetaInfos = new StringPair[]{};
 	
 	public static StateBody getInstance(Generation calledFromGeneration) {
 		if (singletonDummyForGenerationTools == null) {
@@ -75,16 +76,16 @@ public class StateBody extends State {
 
 	}
 
-	public List<String> getReturnableGetPropertyTypes() {
-		if (!listOfReturnablePropertyTypesIsFilled) {
-			List<String> result = super.getReturnableGetPropertyTypes();
-			for (int indexAdd = 0; indexAdd < returnableGetPropertyTypes.length; indexAdd++) {
-				result.add(returnableGetPropertyTypes[indexAdd]);
+	public List<StringPair> getPropertiesMetaInfos() {
+		if (!listOfPropertyMetaInfoIsFilled) {
+			List<StringPair> result = super.getPropertiesMetaInfos();
+			for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
+				result.add(propertiesMetaInfos[indexAdd]);
 			}
-			listOfReturnableGetPropertyTypes = result;
-			listOfReturnablePropertyTypesIsFilled = true;
+			listOfPropertyMetaInfo = result;
+			listOfPropertyMetaInfoIsFilled = true;
 		}
-		return new ArrayList<String>(listOfReturnableGetPropertyTypes);
+		return new ArrayList<StringPair>(listOfPropertyMetaInfo);
 	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////////

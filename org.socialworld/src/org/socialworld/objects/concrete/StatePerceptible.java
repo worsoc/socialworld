@@ -29,12 +29,12 @@ import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.attributes.percipience.Percipience;
 import org.socialworld.calculation.SimulationCluster;
-import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.objects.Animal;
 import org.socialworld.objects.State;
 import org.socialworld.tools.Generation;
+import org.socialworld.tools.StringPair;
 
 public class StatePerceptible extends State {
 
@@ -48,10 +48,11 @@ public class StatePerceptible extends State {
 	///////////////////////////////////////////////////////////////////////////////////////////
 
 	private static StatePerceptible singletonDummyForGenerationTools;
-	private static List<String> listOfReturnableGetPropertyTypes;
-	private boolean listOfReturnablePropertyTypesIsFilled = false;
-	private static String[] returnableGetPropertyTypes = new String[]{
-			Type.vector.getIndexWithSWTPraefix()   ,"Position"} ;
+	private static List<StringPair> listOfPropertyMetaInfo;
+	private boolean listOfPropertyMetaInfoIsFilled = false;
+	private static StringPair[] propertiesMetaInfos = new StringPair[]{};
+			//new StringPair(Type.vector.getIndexWithSWTPraefix() , PropertyName.statePerceptible_cuboid.name()),
+			//new StringPair("Position", PropertyName.statePerceptible_position.name())} ;
 
 	public static StatePerceptible getInstance(Generation calledFromGeneration) {
 		if (singletonDummyForGenerationTools == null) {
@@ -118,16 +119,16 @@ public class StatePerceptible extends State {
 		}
 	}
 	
-	public List<String> getReturnableGetPropertyTypes() {
-		if (!listOfReturnablePropertyTypesIsFilled) {
-			List<String> result = super.getReturnableGetPropertyTypes();
-			for (int indexAdd = 0; indexAdd < returnableGetPropertyTypes.length; indexAdd++) {
-				result.add(returnableGetPropertyTypes[indexAdd]);
+	public List<StringPair> getPropertiesMetaInfos() {
+		if (!listOfPropertyMetaInfoIsFilled) {
+			List<StringPair> result = super.getPropertiesMetaInfos();
+			for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
+				result.add(propertiesMetaInfos[indexAdd]);
 			}
-			listOfReturnableGetPropertyTypes = result;
-			listOfReturnablePropertyTypesIsFilled = true;
+			listOfPropertyMetaInfo = result;
+			listOfPropertyMetaInfoIsFilled = true;
 		}
-		return new ArrayList<String>(listOfReturnableGetPropertyTypes);
+		return new ArrayList<StringPair>(listOfPropertyMetaInfo);
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////

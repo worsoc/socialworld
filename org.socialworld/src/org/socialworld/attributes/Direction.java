@@ -8,6 +8,7 @@ import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.tools.Generation;
+import org.socialworld.tools.StringPair;
 
 public class Direction extends SimProperty {
 
@@ -20,9 +21,12 @@ public class Direction extends SimProperty {
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
 	private static Direction singletonDummyForGenerationTools;
-	private static List<String> listOfReturnableGetPropertyTypes;
-	private boolean listOfReturnablePropertyTypesIsFilled = false;
-	private static String[] returnableGetPropertyTypes = new String[]{"SVVector",Type.floatingpoint.getIndexWithSWTPraefix()} ;
+	private static List<StringPair> listOfPropertyMetaInfo;
+	private boolean listOfPropertyMetaInfoIsFilled = false;
+	private static StringPair[] propertiesMetaInfos = new StringPair[]{
+			new StringPair("SVVector", PropertyName.direction_vector.name()),
+			new StringPair(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.direction_power.name())
+			} ;
 
 	public static Direction getInstance(Generation calledFromGeneration) {
 	if (singletonDummyForGenerationTools == null) {
@@ -93,16 +97,16 @@ public class Direction extends SimProperty {
 
 	}
 	
-	public List<String> getReturnableGetPropertyTypes() {
-		if (!listOfReturnablePropertyTypesIsFilled) {
-			List<String> result = super.getReturnableGetPropertyTypes();
-			for (int indexAdd = 0; indexAdd < returnableGetPropertyTypes.length; indexAdd++) {
-				result.add(returnableGetPropertyTypes[indexAdd]);
+	public List<StringPair> getPropertiesMetaInfos() {
+		if (!listOfPropertyMetaInfoIsFilled) {
+			List<StringPair> result = super.getPropertiesMetaInfos();
+			for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
+				result.add(propertiesMetaInfos[indexAdd]);
 			}
-			listOfReturnableGetPropertyTypes = result;
-			listOfReturnablePropertyTypesIsFilled = true;
+			listOfPropertyMetaInfo = result;
+			listOfPropertyMetaInfoIsFilled = true;
 		}
-		return new ArrayList<String>(listOfReturnableGetPropertyTypes);
+		return new ArrayList<StringPair>(listOfPropertyMetaInfo);
 	}
 
 
