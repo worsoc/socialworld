@@ -35,6 +35,7 @@ import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.calculation.geometry.VectorMapper;
 import org.socialworld.objects.State;
 import org.socialworld.tools.Generation;
+import org.socialworld.tools.StringPair;
 
 public class StateSeer extends State {
 
@@ -54,10 +55,16 @@ public class StateSeer extends State {
 	///////////////////////////////////////////////////////////////////////////////////////////
 
 	private static StateSeer singletonDummyForGenerationTools;
-	private static List<String> listOfReturnableGetPropertyTypes;
-	private boolean listOfReturnablePropertyTypesIsFilled = false;
-	private static String[] returnableGetPropertyTypes = new String[]{
-			Type.floatingpoint.getIndexWithSWTPraefix(), Type.integer.getIndexWithSWTPraefix(), "Direction"} ;
+	private static List<StringPair> listOfPropertyMetaInfo;
+	private boolean listOfPropertyMetaInfoIsFilled = false;
+	private static StringPair[] propertiesMetaInfos = new StringPair[]{
+			new StringPair("Direction", PropertyName.stateSeer_directionView.name()),
+			new StringPair(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.stateSeer_angleViewPerceivingEvents.name()),
+			new StringPair(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.stateSeer_angleViewPerceivingEventsInRadians.name()),
+			new StringPair(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.stateSeer_angleViewPerceivingObjects.name()),
+			new StringPair(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.stateSeer_angleViewPerceivingObjectsInRadians.name()),
+			new StringPair(Type.integer.getIndexWithSWTPraefix(), PropertyName.stateSeer_bestPercipiencePerpendicular.name()),
+			new StringPair(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.stateSeer_sizeDistanceRelationThreshold.name())} ;
 
 	public static StateSeer getInstance(Generation calledFromGeneration) {
 		if (singletonDummyForGenerationTools == null) {
@@ -145,16 +152,16 @@ public class StateSeer extends State {
 		}
 	}
 
-	public List<String> getReturnableGetPropertyTypes() {
-		if (!listOfReturnablePropertyTypesIsFilled) {
-			List<String> result = super.getReturnableGetPropertyTypes();
-			for (int indexAdd = 0; indexAdd < returnableGetPropertyTypes.length; indexAdd++) {
-				result.add(returnableGetPropertyTypes[indexAdd]);
+	public List<StringPair> getPropertiesMetaInfos() {
+		if (!listOfPropertyMetaInfoIsFilled) {
+			List<StringPair> result = super.getPropertiesMetaInfos();
+			for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
+				result.add(propertiesMetaInfos[indexAdd]);
 			}
-			listOfReturnableGetPropertyTypes = result;
-			listOfReturnablePropertyTypesIsFilled = true;
+			listOfPropertyMetaInfo = result;
+			listOfPropertyMetaInfoIsFilled = true;
 		}
-		return new ArrayList<String>(listOfReturnableGetPropertyTypes);
+		return new ArrayList<StringPair>(listOfPropertyMetaInfo);
 	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////////

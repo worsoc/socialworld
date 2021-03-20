@@ -35,6 +35,7 @@ import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueProperty;
+import org.socialworld.tools.StringPair;
 
 public abstract class State implements ISimProperty, ISavedValues {
 
@@ -203,12 +204,12 @@ public abstract class State implements ISimProperty, ISavedValues {
 
 	
 	
-	public List<String> getReturnableGetPropertyTypes() {
-		return new ArrayList<String>();
+	public List<StringPair> getPropertiesMetaInfos() {
+		return new ArrayList<StringPair>();
 	}
 
-	public List<String> getReturnableGetPropertyFromMethodTypes() {
-		return new ArrayList<String>();
+	public List<StringPair> getPropMethodsMetaInfos() {
+		return new ArrayList<StringPair>();
 	}
 
 	/////////////////////////////////////////////

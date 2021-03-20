@@ -29,6 +29,7 @@ import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.tools.Generation;
+import org.socialworld.tools.StringPair;
 
 public class SVVector extends SavedValue {
 
@@ -39,10 +40,14 @@ public class SVVector extends SavedValue {
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 	private static SVVector singletonDummyForGenerationTools;
-	private static List<String> listOfReturnableGetPropertyTypes;
-	private boolean listOfReturnablePropertyTypesIsFilled = false;
-	private static String[] returnableGetPropertyTypes = new String[]{
-			Type.vector.getIndexWithSWTPraefix(),Type.floatingpoint.getIndexWithSWTPraefix()} ;
+	private static List<StringPair> listOfPropertyMetaInfo;
+	private boolean listOfPropertyMetaInfoIsFilled = false;
+	private static StringPair[] propertiesMetaInfos = new StringPair[]{
+ 			new StringPair(Type.vector.getIndexWithSWTPraefix(), PropertyName.vector.name()),
+ 			new StringPair(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.vector_x.name()),
+ 			new StringPair(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.vector_y.name()),
+ 			new StringPair(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.vector_z.name())
+ 			} ;
 
 	public static SVVector getInstance(Generation calledFromGeneration) {
 		if (singletonDummyForGenerationTools == null) {
@@ -107,16 +112,16 @@ public class SVVector extends SavedValue {
 		}
 	}
 
-	public List<String> getReturnableGetPropertyTypes() {
-		if (!listOfReturnablePropertyTypesIsFilled) {
-			List<String> result = super.getReturnableGetPropertyTypes();
-			for (int indexAdd = 0; indexAdd < returnableGetPropertyTypes.length; indexAdd++) {
-				result.add(returnableGetPropertyTypes[indexAdd]);
+	public List<StringPair> getPropertiesMetaInfos() {
+		if (!listOfPropertyMetaInfoIsFilled) {
+			List<StringPair> result = super.getPropertiesMetaInfos();
+			for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
+				result.add(propertiesMetaInfos[indexAdd]);
 			}
-			listOfReturnableGetPropertyTypes = result;
-			listOfReturnablePropertyTypesIsFilled = true;
+			listOfPropertyMetaInfo = result;
+			listOfPropertyMetaInfoIsFilled = true;
 		}
-		return new ArrayList<String>(listOfReturnableGetPropertyTypes);
+		return new ArrayList<StringPair>(listOfPropertyMetaInfo);
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////
