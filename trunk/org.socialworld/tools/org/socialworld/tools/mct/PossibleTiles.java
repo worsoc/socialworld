@@ -25,6 +25,17 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * 
+ * @author Mathias Sikos
+ *
+ * The class PossibleTiles implements the neighbourhood sets.
+ * 
+ * It's a singleton class.
+ * 
+ * It holds all neighbour sets. For every tile number there is a set of allowed tile numbers, implemented as an array of Set where the tile number is the array index.
+ * Please, see the comments according to the Set<Integer> declarations. 
+*/
 public class PossibleTiles {
 
 	private static PossibleTiles instance;
@@ -45,10 +56,6 @@ public class PossibleTiles {
 		
 	////////////////////////////////////////////////////////////////
 	
-//	Set<Integer> nbEast_LS_to_LS[]= new Set[16];  	// east neighbors for large standard tiles
-//	Set<Integer> nbWest_LS_to_LS[]= new Set[16];  	// west  neighbors for large standard tiles
-//	Set<Integer> nbSouth_LS_to_LS[]= new Set[16]; 	// south neighbors for large standard tiles
-//	Set<Integer> nbNorth_LS_to_LS[]= new Set[16];  	// north neighbors for large standard tiles
 	Set<Integer> nbEast_LS_to_LS[]= new Set[20];  	// east neighbors for large standard tiles
 	Set<Integer> nbWest_LS_to_LS[]= new Set[20];  	// west  neighbors for large standard tiles
 	Set<Integer> nbSouth_LS_to_LS[]= new Set[20]; 	// south neighbors for large standard tiles
@@ -59,10 +66,6 @@ public class PossibleTiles {
 	Set<Integer> nbSouth_MS_to_MS[]= new Set[20];  	// south neighbors for medium standard tiles
 	Set<Integer> nbNorth_MS_to_MS[]= new Set[20];  	// north neighbors for medium standard tiles
 				
-//	Set<Integer> nbEast_SS_to_SS[]= new Set[16];  	// east neighbors for small standard tiles
-//	Set<Integer> nbWest_SS_to_SS[]= new Set[16];  	// west  neighbors for small standard tiles
-//	Set<Integer> nbSouth_SS_to_SS[]= new Set[16];  	// south neighbors for small standard tiles
-//	Set<Integer> nbNorth_SS_to_SS[]= new Set[16];  	// north neighbors for small standard tiles
 	Set<Integer> nbEast_SS_to_SS[]= new Set[20];  	// east neighbors for small standard tiles
 	Set<Integer> nbWest_SS_to_SS[]= new Set[20];  	// west  neighbors for small standard tiles
 	Set<Integer> nbSouth_SS_to_SS[]= new Set[20];  	// south neighbors for small standard tiles
@@ -174,9 +177,7 @@ public class PossibleTiles {
 		//}
 
 		////////////////////////////////////////////////////////////////
-		//Integer allLargeStandardTiles[]  = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
 		Integer allLargeStandardTiles[]  = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19};
-		//Integer allSmallStandardTiles[]  = {0, 1, 2, 3, 4, 5, 7, 8, 10, 11, 12, 13, 14, 15};
 		Integer allSmallStandardTiles[]  = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19};
 		Integer allSmallSpecialTiles_withoutVariantOffset[]   = {3, 5, 10, 12};
 		Integer allSmallSpecialAdapterTiles_withoutVariantOffset[]   = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28};
