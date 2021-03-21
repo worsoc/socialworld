@@ -41,6 +41,8 @@ import org.socialworld.objects.connections.Connection;
 import org.socialworld.objects.connections.ConnectionList;
 import org.socialworld.objects.connections.ConnectionType;
 import org.socialworld.propertyChange.ListenedBase;
+import org.socialworld.tools.Generation;
+import org.socialworld.tools.StringPair;
 
 /**
  * @author Mathias Sikos
@@ -65,6 +67,36 @@ public abstract class StateSimulationObject extends ListenedBase {
 	
 	private GrantedAccessToProperty grantAccessToPropertyPosition[];
 	private GrantedAccessToProperty grantAccessToPropertyAction[];
+	
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////meta information    ////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	protected List<StringPair> listOfPropertyMetaInfo;
+	private static StringPair[] propertiesMetaInfos = new StringPair[]{
+		new StringPair("Position", PropertyName.simobj_position.name()),
+		new StringPair("Direction", PropertyName.simobj_directionMove.name()),
+		} ;
+	
+	protected StateSimulationObject(Generation calledFromGeneration) {
+		listOfPropertyMetaInfo = new ArrayList<StringPair>();
+		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
+			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
+		}
+	}
+	
+	public List<StringPair> getPropertiesMetaInfos() {
+		return new ArrayList<StringPair>(listOfPropertyMetaInfo);
+	}
+	
+	public List<StringPair> getPropMethodsMetaInfos() {
+		return new ArrayList<StringPair>();
+	}
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////    creating instance for simulation    //////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 	
 	public StateSimulationObject() {
 		
@@ -276,6 +308,10 @@ public abstract class StateSimulationObject extends ListenedBase {
 			this.connections.release(connection, connectedObject);
 		}
 	}
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////    State Add Ons  /////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 	
 	ValueProperty getStateProperty(SimulationCluster cluster, PropertyName propState, PropertyName propSub, String name) {
 		

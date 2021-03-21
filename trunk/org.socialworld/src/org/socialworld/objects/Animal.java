@@ -21,6 +21,7 @@
 */
 package org.socialworld.objects;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.actions.AbstractAction;
@@ -39,6 +40,8 @@ import org.socialworld.objects.concrete.animals.ISeer;
 import org.socialworld.objects.concrete.animals.StateBody;
 import org.socialworld.objects.concrete.animals.StateInventory;
 import org.socialworld.objects.concrete.animals.StateSeer;
+import org.socialworld.tools.Generation;
+import org.socialworld.tools.StringPair;
 
 
 /**
@@ -50,8 +53,9 @@ import org.socialworld.objects.concrete.animals.StateSeer;
 public abstract class Animal extends SimulationObject implements ISeer {
 
 	private StateAnimal state;
+
+	// add on states
 	private StateSeer stateSeer;
-	
 	private StateBody stateBody;
 	private StateInventory stateInventory;
 	
@@ -60,6 +64,28 @@ public abstract class Animal extends SimulationObject implements ISeer {
 	private boolean initialized = false;
 	
 
+///////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////	meta information    ////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	private static StringPair[] propertiesMetaInfos = new StringPair[]{
+		new StringPair("StateSeer", PropertyName.stateSeer.name()),
+		new StringPair("StateBody", PropertyName.stateBody.name()),
+		new StringPair("StateInventory", PropertyName.stateInventory.name())
+		} ;
+	
+	protected Animal(Generation calledFromGeneration) {
+		super(calledFromGeneration);
+		listOfPropertyMetaInfo = super.getPropertiesMetaInfos();
+		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
+			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
+		}
+	}
+	
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////    creating instance for simulation    //////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 	
 	protected SimulationObject_Type getSimObjectType() {
 		return SimulationObject_Type.animal;

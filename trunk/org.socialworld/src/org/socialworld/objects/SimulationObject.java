@@ -51,6 +51,8 @@ import org.socialworld.objects.concrete.*;
 import org.socialworld.objects.connections.Connection;
 import org.socialworld.objects.connections.ConnectionType;
 import org.socialworld.objects.properties.IPerceptible;
+import org.socialworld.tools.Generation;
+import org.socialworld.tools.StringPair;
 
 /**
  * Every simulation object (actor in the simulation) is inherited by the abstract class SimulationObject.
@@ -68,8 +70,8 @@ public abstract class SimulationObject implements IPerceptible {
 	
 	private StateSimulationObject state;
 
+	// add on states
 	private StatePerceptible statePerceptible;
-	
 	private StateAppearance stateAppearance;
 	private StateComposition stateComposition;
 	
@@ -82,6 +84,35 @@ public abstract class SimulationObject implements IPerceptible {
 	private GrantedAccessToProperty grantAccessToAllProperties[];
 	private GrantedAccessToProperty grantAccessToPropertyAction[];
 	
+///////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////   meta information    ////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	protected List<StringPair> listOfPropertyMetaInfo;
+	private static StringPair[] propertiesMetaInfos = new StringPair[]{
+			new StringPair("StatePerceptible", PropertyName.statePerceptible.name()),
+			new StringPair("StateAppearance", PropertyName.stateAppearance.name()),
+			new StringPair("StateComposition", PropertyName.stateComposition.name())
+			} ;
+	
+	protected SimulationObject(Generation calledFromGeneration) {
+		listOfPropertyMetaInfo = new ArrayList<StringPair>();
+		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
+			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
+		}
+
+	}
+	public List<StringPair> getPropertiesMetaInfos() {
+		return new ArrayList<StringPair>(listOfPropertyMetaInfo);
+	}
+	
+	public List<StringPair> getPropMethodsMetaInfos() {
+		return new ArrayList<StringPair>();
+	}
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////    creating instance for simulation    //////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
 	 * The constructor creates an incomplete simulation object. It's an "empty" object. There is only the object ID.
@@ -111,6 +142,8 @@ public abstract class SimulationObject implements IPerceptible {
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
 	protected abstract SimulationObject_Type getSimObjectType();
+	
+	
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    WRITE ACCESS     /////////////////////////////////////////
@@ -175,8 +208,6 @@ public abstract class SimulationObject implements IPerceptible {
 	
 	public ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String name) {
 		switch (prop) {
-		case simobj_position:
-			return this.state.getProperty(cluster, prop, name);
 		default:
 			return this.state.getProperty(cluster, prop, name);
 		}

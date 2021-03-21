@@ -21,13 +21,17 @@
 */
 package org.socialworld.objects.concrete.animals;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.IEventParam;
 import org.socialworld.objects.Animal;
 import org.socialworld.objects.State;
+import org.socialworld.tools.Generation;
+import org.socialworld.tools.StringPair;
 
 /**
  * @author Mathias Sikos (tyloesand)
@@ -36,7 +40,26 @@ import org.socialworld.objects.State;
 public abstract class Mammal extends Animal {
 
  
-    
+///////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////meta information    ////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	private static StringPair[] propertiesMetaInfos = new StringPair[]{
+		} ;
+	
+	protected Mammal(Generation calledFromGeneration) {
+		super(calledFromGeneration);
+		listOfPropertyMetaInfo = super.getPropertiesMetaInfos();
+		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
+			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
+		}
+	}
+	
+
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////    creating instance for simulation    //////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+   
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    STATE    /////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////

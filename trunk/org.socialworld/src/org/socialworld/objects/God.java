@@ -21,9 +21,15 @@
 */
 package org.socialworld.objects;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.IEventParam;
+import org.socialworld.tools.Generation;
+import org.socialworld.tools.StringPair;
 
 /**
  * The God is an special simulation object that is responsible for global
@@ -34,7 +40,26 @@ import org.socialworld.core.IEventParam;
  */
 public abstract class God extends SimulationObject {
 
+///////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////meta information    ////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 
+	private static StringPair[] propertiesMetaInfos = new StringPair[]{
+		} ;
+	
+	protected God(Generation calledFromGeneration) {
+		super(calledFromGeneration);
+		listOfPropertyMetaInfo = super.getPropertiesMetaInfos();
+		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
+			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
+		}
+	}
+	
+
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////    creating instance for simulation    //////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+	
 	protected SimulationObject_Type getSimObjectType() {
 		return SimulationObject_Type.god;
 	}

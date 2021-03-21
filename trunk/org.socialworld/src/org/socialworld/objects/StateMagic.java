@@ -21,10 +21,45 @@
 */
 package org.socialworld.objects;
 
+import org.socialworld.tools.Generation;
+import org.socialworld.tools.StringPair;
+
 /**
  * @author Mathias Sikos
  *
  */
 public class StateMagic extends StateSimulationObject {
+
+	///////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////meta information    ////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
+	
+	private static StateMagic singletonDummyForGenerationTools;
+	private static StringPair[] propertiesMetaInfos = new StringPair[]{
+		} ;
+	
+	public static StateMagic getInstance(Generation calledFromGeneration) {
+		if (singletonDummyForGenerationTools == null) {
+			singletonDummyForGenerationTools = new StateMagic(calledFromGeneration);
+		}
+		return singletonDummyForGenerationTools;
+	}
+	
+	protected StateMagic(Generation calledFromGeneration) {
+		super(calledFromGeneration);
+		listOfPropertyMetaInfo = super.getPropertiesMetaInfos();
+		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
+			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
+		}
+	}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////    creating instance for simulation    //////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public StateMagic() {
+		super();
+	}
 
 }

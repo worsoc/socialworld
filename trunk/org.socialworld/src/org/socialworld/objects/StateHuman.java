@@ -36,6 +36,8 @@ import org.socialworld.knowledge.KnowledgeSource;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenHuman;
 import org.socialworld.objects.properties.IWeapon;
+import org.socialworld.tools.Generation;
+import org.socialworld.tools.StringPair;
 
 /**
  * @author Mathias Sikos
@@ -49,6 +51,36 @@ public class StateHuman extends StateAnimal {
 	private String lastSaidSentence;
 
 	private GrantedAccessToProperty grantAccessToPropertyTalk[];
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////	meta information    ///////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
+	
+	private static StateHuman singletonDummyForGenerationTools;
+	private static StringPair[] propertiesMetaInfos = new StringPair[]{
+		} ;
+	
+	public static StateHuman getInstance(Generation calledFromGeneration) {
+		if (singletonDummyForGenerationTools == null) {
+			singletonDummyForGenerationTools = new StateHuman(calledFromGeneration);
+		}
+		return singletonDummyForGenerationTools;
+	}
+	
+	protected StateHuman(Generation calledFromGeneration) {
+		super(calledFromGeneration);
+		listOfPropertyMetaInfo = super.getPropertiesMetaInfos();
+		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
+			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
+		}
+	}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////    creating instance for simulation    //////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+	
 	
 	public StateHuman() {
 		super();

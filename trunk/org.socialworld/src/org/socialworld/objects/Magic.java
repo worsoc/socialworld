@@ -21,9 +21,14 @@
 */
 package org.socialworld.objects;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.IEventParam;
+import org.socialworld.tools.Generation;
+import org.socialworld.tools.StringPair;
 
 /**
  * magic spells are simulation objects that offer some fantasy aspects. A magic
@@ -34,6 +39,27 @@ import org.socialworld.core.IEventParam;
  * 
  */
 public abstract class Magic extends SimulationObject {
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////meta information    ////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	private static StringPair[] propertiesMetaInfos = new StringPair[]{
+	} ;
+	
+	protected Magic(Generation calledFromGeneration) {
+		super(calledFromGeneration);
+		listOfPropertyMetaInfo = super.getPropertiesMetaInfos();
+		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
+			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
+		}
+	}
+	
+
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////    creating instance for simulation    //////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+	
 	
 // TODO implement Magic class functionality
 

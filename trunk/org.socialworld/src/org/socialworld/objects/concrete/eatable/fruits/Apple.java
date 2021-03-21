@@ -21,6 +21,10 @@
 */
 package org.socialworld.objects.concrete.eatable.fruits;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.percipience.Percipience;
 import org.socialworld.attributes.percipience.PercipienceType;
 import org.socialworld.objects.State;
@@ -30,9 +34,38 @@ import org.socialworld.objects.concrete.StateEatable;
 import org.socialworld.objects.concrete.StatePerceptible;
 import org.socialworld.objects.concrete.eatable.Fruit;
 import org.socialworld.objects.properties.IThrowable;
+import org.socialworld.tools.Generation;
+import org.socialworld.tools.StringPair;
 
 public class Apple extends Fruit implements IThrowable {
 
+///////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////meta information    ////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	private static Apple singletonDummyForGenerationTools;
+	private static StringPair[] propertiesMetaInfos = new StringPair[]{
+			} ;
+
+	public static Apple getInstance(Generation calledFromGeneration) {
+		if (singletonDummyForGenerationTools == null) {
+			singletonDummyForGenerationTools = new Apple(calledFromGeneration);
+		}
+		return singletonDummyForGenerationTools;
+	}
+	
+	protected Apple(Generation calledFromGeneration) {
+		super(calledFromGeneration);
+		listOfPropertyMetaInfo = super.getPropertiesMetaInfos();
+		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
+			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
+		}
+	}
+	
+
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////    creating instance for simulation    //////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 
 	protected int getLexemID() {
 		// TODO set lexemID
