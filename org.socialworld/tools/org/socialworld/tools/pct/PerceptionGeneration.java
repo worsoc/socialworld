@@ -46,7 +46,7 @@ public class PerceptionGeneration extends Generation{
 	
 	public String generatePerceptionDescription(String someCharacters) {
 		
-		String perceptionDescription;
+		String perceptionDescription = "";
 		int countChars = someCharacters.length();
 		if (countChars > 4) {
 
@@ -187,7 +187,7 @@ public class PerceptionGeneration extends Generation{
 					}
 			}
 		}
-		return "";
+		return perceptionDescription;
 	}
 	
 	private NextDotElement getNextDotElement(String lastClassName, byte selection) {
