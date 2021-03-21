@@ -29,10 +29,10 @@ public class Direction extends SimProperty {
 			} ;
 
 	public static Direction getInstance(Generation calledFromGeneration) {
-	if (singletonDummyForGenerationTools == null) {
-	singletonDummyForGenerationTools = new Direction(calledFromGeneration);
-	}
-	return singletonDummyForGenerationTools;
+		if (singletonDummyForGenerationTools == null) {
+			singletonDummyForGenerationTools = new Direction(calledFromGeneration);
+		}
+		return singletonDummyForGenerationTools;
 	}
 	
 	private Direction(Generation calledFromGeneration) 
