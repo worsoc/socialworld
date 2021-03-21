@@ -40,7 +40,6 @@ public enum PropertyName {
 	simobj_knowledge(1001041),
 
 	stateSeer(1101000),
-	
 	stateSeer_directionView(1101001),
 	stateSeer_angleViewPerceivingEvents(11010002),
 	stateSeer_angleViewPerceivingEventsInRadians(1101003),
