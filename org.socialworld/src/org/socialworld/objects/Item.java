@@ -21,11 +21,14 @@
 */
 package org.socialworld.objects;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.IEventParam;
+import org.socialworld.tools.Generation;
+import org.socialworld.tools.StringPair;
 
 /**
  * The class Item describes all non-living simulation objects. It has a method
@@ -37,6 +40,25 @@ import org.socialworld.core.IEventParam;
  */
 public abstract class Item extends SimulationObject {
 
+///////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////meta information    ////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	private static StringPair[] propertiesMetaInfos = new StringPair[]{
+		} ;
+	
+	protected Item(Generation calledFromGeneration) {
+		super(calledFromGeneration);
+		listOfPropertyMetaInfo = super.getPropertiesMetaInfos();
+		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
+			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
+		}
+	}
+	
+
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////    creating instance for simulation    //////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 
 	protected SimulationObject_Type getSimObjectType() {
 		return SimulationObject_Type.item;

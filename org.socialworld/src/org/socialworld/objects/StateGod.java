@@ -21,10 +21,44 @@
 */
 package org.socialworld.objects;
 
+import org.socialworld.tools.Generation;
+import org.socialworld.tools.StringPair;
+
 /**
  * @author Mathias Sikos
  *
  */
 public class StateGod extends StateSimulationObject {
 
+	///////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////meta information    ////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
+	
+	private static StateGod singletonDummyForGenerationTools;
+	private static StringPair[] propertiesMetaInfos = new StringPair[]{
+		} ;
+	
+	public static StateGod getInstance(Generation calledFromGeneration) {
+		if (singletonDummyForGenerationTools == null) {
+			singletonDummyForGenerationTools = new StateGod(calledFromGeneration);
+		}
+		return singletonDummyForGenerationTools;
+	}
+	
+	protected StateGod(Generation calledFromGeneration) {
+		super(calledFromGeneration);
+		listOfPropertyMetaInfo = super.getPropertiesMetaInfos();
+		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
+			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
+		}
+	}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////    creating instance for simulation    //////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public StateGod() {
+		super();
+	}
 }

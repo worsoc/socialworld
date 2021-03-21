@@ -21,15 +21,49 @@
 */
 package org.socialworld.objects.concrete.animals.mammals;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.socialworld.attributes.percipience.Percipience;
 import org.socialworld.attributes.percipience.PercipienceType;
 import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.StatePerceptible;
 import org.socialworld.objects.concrete.animals.Mammal;
 import org.socialworld.objects.concrete.animals.StateSeer;
+import org.socialworld.objects.concrete.eatable.fruits.Apple;
+import org.socialworld.tools.Generation;
+import org.socialworld.tools.StringPair;
 
 public class Dog extends Mammal {
 
+///////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////meta information    ////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	private static Dog singletonDummyForGenerationTools;
+	private static StringPair[] propertiesMetaInfos = new StringPair[]{
+		} ;
+	
+	public static Dog getInstance(Generation calledFromGeneration) {
+		if (singletonDummyForGenerationTools == null) {
+			singletonDummyForGenerationTools = new Dog(calledFromGeneration);
+		}
+		return singletonDummyForGenerationTools;
+	}
+	
+	protected Dog(Generation calledFromGeneration) {
+		super(calledFromGeneration);
+		listOfPropertyMetaInfo = super.getPropertiesMetaInfos();
+		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
+			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
+		}
+	}
+	
+
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////    creating instance for simulation    //////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+	
 	protected int getLexemID() {
 		// TODO set lexemID
 		return 0;

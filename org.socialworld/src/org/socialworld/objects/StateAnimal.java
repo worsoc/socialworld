@@ -42,6 +42,10 @@ import org.socialworld.knowledge.KnownPathsPool;
 import org.socialworld.knowledge.LastPerceivedObjects;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenAnimal;
+import org.socialworld.objects.concrete.eatable.fruits.Apple;
+import org.socialworld.objects.concrete.spells.Lightning;
+import org.socialworld.tools.Generation;
+import org.socialworld.tools.StringPair;
 
 /**
  * @author Mathias Sikos
@@ -64,6 +68,41 @@ public class StateAnimal extends StateSimulationObject {
 	private GrantedAccessToProperty grantAccessToPropertyAttributes[];
 	private GrantedAccessToProperty grantAccessToPropertyAction[];
 	private GrantedAccessToProperty grantAccessToPropertyKnowledge[];
+	
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////meta information    ////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	private static StateAnimal singletonDummyForGenerationTools;
+	private static StringPair[] propertiesMetaInfos = new StringPair[]{
+			new StringPair(Type.attributeArray.getIndexWithSWTPraefix(), PropertyName.simobj_attributeArray.name()),
+			new StringPair("Inventory", PropertyName.simobj_inventory.name()),
+			new StringPair("Knowledge", PropertyName.simobj_knowledge.name()),
+			new StringPair("Direction", PropertyName.simobj_directionChest.name()),
+			new StringPair("Direction", PropertyName.simobj_directionActiveMove.name())
+		} ;
+	
+	public static StateAnimal getInstance(Generation calledFromGeneration) {
+		if (singletonDummyForGenerationTools == null) {
+			singletonDummyForGenerationTools = new StateAnimal(calledFromGeneration);
+		}
+		return singletonDummyForGenerationTools;
+	}
+
+	protected StateAnimal(Generation calledFromGeneration) {
+		super(calledFromGeneration);
+		attributes = new AttributeArray(Attribute.NUMBER_OF_ATTRIBUTES);
+		listOfPropertyMetaInfo = super.getPropertiesMetaInfos();
+		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
+			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
+		}
+	}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////    creating instance for simulation    //////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 	
 	public StateAnimal() {
 		super();

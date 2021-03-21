@@ -1,7 +1,9 @@
 package org.socialworld.objects.concrete.eatable;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.properties.NutrientProperty;
 import org.socialworld.attributes.properties.TasteProperty;
 import org.socialworld.calculation.SimulationCluster;
@@ -9,11 +11,33 @@ import org.socialworld.objects.Item;
 import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.StateEatable;
 import org.socialworld.objects.properties.IEatable;
+import org.socialworld.tools.Generation;
+import org.socialworld.tools.StringPair;
 
 public abstract class Fruit extends Item implements IEatable {
 
 	private StateEatable stateEatable;
 	
+///////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////meta information    ////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	private static StringPair[] propertiesMetaInfos = new StringPair[]{
+			new StringPair("stateEatable", PropertyName.stateEatable.name())
+			} ;
+	
+	protected Fruit(Generation calledFromGeneration) {
+		super(calledFromGeneration);
+		listOfPropertyMetaInfo = super.getPropertiesMetaInfos();
+		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
+			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
+		}
+	}
+	
+
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////    creating instance for simulation    //////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 	
 	protected List<State> createAddOnStates() {
 		
