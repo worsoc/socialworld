@@ -86,9 +86,33 @@ public abstract class SubIsle {
 	protected abstract int checkForIsle(List<Integer> isleSubs);
 	protected abstract HeightIsle getIsleAtRasterIndex(int rasterIndex);
 	
-	protected final  boolean checkForMatch(List<Integer> isleSubs, List<Integer> rasterIndizesDescripingTheIsle) {
+	protected final  boolean checkForMatch(List<Integer> isleSubs, List<Integer> rasterIndizesDescribingTheIsle) {
 		
+		int sub;
+		int indexSubs;
+		int startIndex = 0;
+		int size = isleSubs.size();
 		
+		// assumption: both lists are sorted -->  possibility for optimized iteration 
+		for (int mustHaveForBeingTheSubIsle : rasterIndizesDescribingTheIsle) {
+			
+			for (indexSubs = startIndex; indexSubs < size; indexSubs++) {
+				
+				sub = isleSubs.get(indexSubs);
+				if (sub == mustHaveForBeingTheSubIsle) {
+					startIndex = indexSubs + 1;
+					break;
+				}
+				
+				if (sub > mustHaveForBeingTheSubIsle) {
+					return false;
+				}
+				
+				// there is no match fo a single sub --> the whole set doesn't match the isle definition
+				if (indexSubs == (size - 1)) return false; 
+			}
+		}
+
 		return true;
 
 	}
