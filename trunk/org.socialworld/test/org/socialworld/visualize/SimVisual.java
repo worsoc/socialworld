@@ -22,7 +22,6 @@
 */
 package org.socialworld.visualize;
 
-// test commit with account damian-z
 
 import java.awt.Color;
 import java.awt.GridLayout;
