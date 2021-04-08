@@ -83,6 +83,7 @@ public class PerceptionGeneration extends Generation{
 								break;
 						}
 					}
+					break;
 				case 1:
 					// subject target, source myself, knowledge value
 					perceptionDescription = pd_subject_target + pd_source + pd_value_praefix;
@@ -103,6 +104,7 @@ public class PerceptionGeneration extends Generation{
 								break;
 						}
 					}
+					break;
 				case 2:
 					// subject causer, source myself, knowledge property for kfc
 					perceptionDescription = pd_subject_causer ;
@@ -144,6 +146,7 @@ public class PerceptionGeneration extends Generation{
 							newPropertyForKFC = true;
 						}
 					}
+					break;
 				case 3:
 					// subject causer, source myself, knowledge property for kfc
 					perceptionDescription = pd_subject_target ;
@@ -185,6 +188,7 @@ public class PerceptionGeneration extends Generation{
 							newPropertyForKFC = true;
 						}
 					}
+					break;
 			}
 		}
 		return perceptionDescription;
