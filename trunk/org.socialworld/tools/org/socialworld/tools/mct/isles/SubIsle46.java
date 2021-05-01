@@ -251,7 +251,7 @@ cornerMaxima = Arrays.asList(cornerMaximaNrs);
 		nr46at29 = Arrays.asList(at29);
 		heightIsle46at29 = new HeightIsle(nr46at29, cornerMaxima);
 		
-		nr46at30 = Arrays.asList(at29);
+		nr46at30 = Arrays.asList(at30);
 		heightIsle46at30 = new HeightIsle(nr46at30, cornerMaxima);
 		
 	}
