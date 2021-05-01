@@ -190,7 +190,7 @@ public class SubIsle49 extends SubIsle{
 		
 		List<Integer> copy = new ArrayList<Integer>(isleSubs);
 		
-		List<Integer>  rasterIndizesDescripingTheIsle;
+		List<Integer>  rasterIndizesDescribingTheIsle;
 		
 		for (int sub : copy) {
 			
@@ -198,27 +198,27 @@ public class SubIsle49 extends SubIsle{
 			
 			switch (sub) {
 			case 0:
-				rasterIndizesDescripingTheIsle = nr49at00; break;
+				rasterIndizesDescribingTheIsle = nr49at00; break;
 			case 1:
-				rasterIndizesDescripingTheIsle = nr49at01; break;
+				rasterIndizesDescribingTheIsle = nr49at01; break;
 			case 2:
-				rasterIndizesDescripingTheIsle = nr49at02; break;
+				rasterIndizesDescribingTheIsle = nr49at02; break;
 			case 9:
-				rasterIndizesDescripingTheIsle = nr49at09; break;
+				rasterIndizesDescribingTheIsle = nr49at09; break;
 			case 10:
-				rasterIndizesDescripingTheIsle = nr49at10; break;
+				rasterIndizesDescribingTheIsle = nr49at10; break;
 			case 11:
-				rasterIndizesDescripingTheIsle = nr49at11; break;
+				rasterIndizesDescribingTheIsle = nr49at11; break;
 			case 18:
-				rasterIndizesDescripingTheIsle = nr49at18; break;
+				rasterIndizesDescribingTheIsle = nr49at18; break;
 			case 19:
-				rasterIndizesDescripingTheIsle = nr49at19; break;
+				rasterIndizesDescribingTheIsle = nr49at19; break;
 			case 20:
-				rasterIndizesDescripingTheIsle = nr49at20; break;
+				rasterIndizesDescribingTheIsle = nr49at20; break;
 			default:
 				continue;
 			}
-			if (checkForMatch(copy, rasterIndizesDescripingTheIsle)) return sub;
+			if (checkForMatch(copy, rasterIndizesDescribingTheIsle)) return sub;
 
 		}
 		
