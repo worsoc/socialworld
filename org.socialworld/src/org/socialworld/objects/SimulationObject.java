@@ -318,6 +318,25 @@ public abstract class SimulationObject implements IPerceptible {
 
 	}
 	
+///////////////////////////////////////////////////////////////////////////////////////////
+////////////// checking whether simulation object belongs to the set //////////////////////
+/////////////	(the set is specified by the set number ///////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+	
+	
+	public final ValueProperty isElementOf(String setNumber, String nameValue) {
+		
+		int setNr = Integer.parseInt(setNumber);
+		boolean result = isElementOf(setNr);
+		return new ValueProperty(Type.bool, nameValue, result);
+	
+	}
+	
+	private boolean isElementOf(int setNumber) {
+		
+		// TODO implement isElementOf
+		return true;
+	}
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 ////////////// checking for dynamic method name (using reflection)  ///////////////////////

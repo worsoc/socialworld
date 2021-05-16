@@ -67,7 +67,7 @@ public class PerceptionGeneration extends Generation{
 					// subject causer, source myself, knowledge value
 					perceptionDescription = pd_subject_causer + pd_source + pd_value_praefix;
 					perceptionDescription += GetValue.getValue(Value.VALUE_BY_NAME_EVENT_PARAMS) + "." +
-							GetValue.getValue(Value.VALUE_BY_NAME_EVENT_CAUSER);
+							GetValue.getValue(Value.VALUE_BY_NAME_EVENT_CAUSER) + "#" + GetValue.getIsElementOf(19650);
 					for (int index = 1; index < bytes.length; index++) {
 						if ((bytes[index] % PERCEPTION_GENERATION_STOP_DOT_NOTATION_MODULO_DIVISOR) == 0) {
 							break;
@@ -88,7 +88,7 @@ public class PerceptionGeneration extends Generation{
 					// subject target, source myself, knowledge value
 					perceptionDescription = pd_subject_target + pd_source + pd_value_praefix;
 					perceptionDescription += GetValue.getValue(Value.VALUE_BY_NAME_EVENT_PARAMS) + "." +
-							GetValue.getValue(Value.VALUE_BY_NAME_EVENT_TARGET);
+							GetValue.getValue(Value.VALUE_BY_NAME_EVENT_TARGET) + "#" + GetValue.getIsElementOf(19651);
 					for (int index = 1; index < bytes.length; index++) {
 						if ((bytes[index] % PERCEPTION_GENERATION_STOP_DOT_NOTATION_MODULO_DIVISOR) == 0) {
 							break;
@@ -124,7 +124,7 @@ public class PerceptionGeneration extends Generation{
 							}
 							perceptionDescription += pd_source + pd_kfc_praefix + kfc + "," + pd_property_praefix;
 							perceptionDescription += GetValue.getValue(Value.VALUE_BY_NAME_EVENT_PARAMS) + "." +
-									GetValue.getValue(Value.VALUE_BY_NAME_EVENT_CAUSER);
+									GetValue.getValue(Value.VALUE_BY_NAME_EVENT_CAUSER) + "#" + GetValue.getIsElementOf(196521);
 							lastClassName = "SimulationObject";
 							newPropertyForKFC = false;
 							newSourceElement = false;
@@ -132,7 +132,7 @@ public class PerceptionGeneration extends Generation{
 						else if (newPropertyForKFC == true || (bytes[index] % PERCEPTION_GENERATION_STOP_DOT_NOTATION_MODULO_DIVISOR) == 1) {
 							perceptionDescription += "," + pd_property_praefix;
 							perceptionDescription += GetValue.getValue(Value.VALUE_BY_NAME_EVENT_PARAMS) + "." +
-									GetValue.getValue(Value.VALUE_BY_NAME_EVENT_CAUSER);
+									GetValue.getValue(Value.VALUE_BY_NAME_EVENT_CAUSER) + "#" + GetValue.getIsElementOf(196522);
 							lastClassName = "SimulationObject";
 							newPropertyForKFC = false;
 						}
@@ -166,7 +166,7 @@ public class PerceptionGeneration extends Generation{
 							}
 							perceptionDescription += pd_source + pd_kfc_praefix + kfc + "," + pd_property_praefix;
 							perceptionDescription += GetValue.getValue(Value.VALUE_BY_NAME_EVENT_PARAMS) + "." +
-									GetValue.getValue(Value.VALUE_BY_NAME_EVENT_TARGET);
+									GetValue.getValue(Value.VALUE_BY_NAME_EVENT_TARGET) + "#" + GetValue.getIsElementOf(196531);
 							lastClassName = "SimulationObject";
 							newPropertyForKFC = false;
 							newSourceElement = false;
@@ -174,7 +174,7 @@ public class PerceptionGeneration extends Generation{
 						else if (newPropertyForKFC == true || (bytes[index] % PERCEPTION_GENERATION_STOP_DOT_NOTATION_MODULO_DIVISOR) == 1) {
 							perceptionDescription += "," + pd_property_praefix;
 							perceptionDescription += GetValue.getValue(Value.VALUE_BY_NAME_EVENT_PARAMS) + "." +
-									GetValue.getValue(Value.VALUE_BY_NAME_EVENT_TARGET);
+									GetValue.getValue(Value.VALUE_BY_NAME_EVENT_TARGET) + "#" + GetValue.getIsElementOf(196532);
 							lastClassName = "SimulationObject";
 							newPropertyForKFC = false;
 						}
