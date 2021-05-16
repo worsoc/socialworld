@@ -87,6 +87,10 @@ public abstract class Animal extends SimulationObject implements ISeer {
 /////////////////////////    creating instance for simulation    //////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
+	public Animal() {
+		super();
+	}
+	
 	protected SimulationObject_Type getSimObjectType() {
 		return SimulationObject_Type.animal;
 	}

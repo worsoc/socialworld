@@ -67,6 +67,10 @@ public class Apple extends Fruit implements IThrowable {
 /////////////////////////    creating instance for simulation    //////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
+	public Apple() {
+		super();
+	}
+
 	protected int getLexemID() {
 		// TODO set lexemID
 		return 0;

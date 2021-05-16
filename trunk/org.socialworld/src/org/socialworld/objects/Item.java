@@ -60,6 +60,10 @@ public abstract class Item extends SimulationObject {
 /////////////////////////    creating instance for simulation    //////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
+	public Item() {
+		super();
+	}
+
 	protected SimulationObject_Type getSimObjectType() {
 		return SimulationObject_Type.item;
 	}
