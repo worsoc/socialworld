@@ -77,6 +77,10 @@ import org.socialworld.core.IEventParam;
 /////////////////////////    creating instance for simulation    //////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
+	public Human() {
+		super();
+	}
+
 	protected SimulationObject_Type getSimObjectType() {
 		return SimulationObject_Type.human;
 	}

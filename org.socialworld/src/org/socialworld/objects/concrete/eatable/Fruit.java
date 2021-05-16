@@ -39,6 +39,10 @@ public abstract class Fruit extends Item implements IEatable {
 /////////////////////////    creating instance for simulation    //////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
+	public Fruit() {
+		super();
+	}
+
 	protected List<State> createAddOnStates() {
 		
 		List<State> result = super.createAddOnStates();
