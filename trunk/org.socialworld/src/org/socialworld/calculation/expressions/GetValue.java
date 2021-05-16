@@ -36,6 +36,7 @@ public class GetValue extends Expression {
 	public static String GETFUNCTIONVALUE = "GETFctVal";
 	public static String GETISA = "IsA";
 	public static String GETCHECK = "Check";
+	public static String GETISELEMENTOF = "IsElem";
 	
 	public GetValue(SimulationCluster cluster, PropertyUsingAs usablePermission, String getValuePath, String valueAliasName) {
 		
@@ -68,7 +69,7 @@ public class GetValue extends Expression {
 		Value checkPermission;
 		
 		step = steps[indexContinue];
-		exp1 = getStepExpression(cluster, step, valueAliasName);
+		exp1 = getStepExpression(cluster, usablePermission, step, valueAliasName);
 
 		if (steps.length == indexContinue + 1) {
 			
@@ -83,7 +84,7 @@ public class GetValue extends Expression {
 			if (steps.length == indexContinue + 2) {
 				
 				step = steps[indexContinue + 1];
-				exp2 = getStepExpression(cluster, step, valueAliasName);
+				exp2 = getStepExpression(cluster, usablePermission, step, valueAliasName);
 				checkPermission = new Value(Type.integer, usablePermission.getIndex() - 1);
 				
 			}
@@ -132,26 +133,55 @@ public class GetValue extends Expression {
 	public static String getCheck(String name) {
 		return GETCHECK + "(" + name + ")"; 
 	}
+
+	public static String getIsElementOf(int setNumber) {
+		return GETISELEMENTOF + "(" + setNumber + ")"; 
+	}
 	
-	private Expression getStepExpression(SimulationCluster cluster, String step, String valueAliasName) {
+	private Expression getStepExpression(SimulationCluster cluster, PropertyUsingAs usablePermission, String step, String valueAliasName) {
 		Expression result = Nothing.getInstance();
 		String name;
 		
 		name = step.substring(step.indexOf("(") + 1, step.indexOf(")"));
 		if (step.indexOf(GETVALUE + "(") >= 0 ) {
-			result = new GetArgumentByName(name, valueAliasName);
+			
+			if (step.indexOf("#" + GETISELEMENTOF + "(") >= 0 ) {
+				String stepCopy = new String(step);
+				stepCopy = stepCopy.replace("#", ".");
+				result = new  Branching (new GetValue(cluster, usablePermission, stepCopy, valueAliasName), 
+						new GetArgumentByName(name, valueAliasName), 
+						Nothing.getInstance());
+			}
+			else {
+				result = new GetArgumentByName(name, valueAliasName);
+			}
+			
 		}
-		if (step.indexOf(GETPROPERTY + "(") >= 0 ) {
-			result = new GetProperty(cluster, GetPropertyMode.property, name, valueAliasName);
+		else if (step.indexOf(GETPROPERTY + "(") >= 0 ) {
+
+			if (step.indexOf("#" + GETISELEMENTOF + "(") >= 0 ) {
+				String stepCopy = new String(step);
+				stepCopy = stepCopy.replace("#", ".");
+				result = new  Branching (new GetValue(cluster, usablePermission, stepCopy, valueAliasName), 
+						new GetProperty(cluster, GetPropertyMode.property, name, valueAliasName), 
+						Nothing.getInstance());
+			}
+			else {
+				result = new GetProperty(cluster, GetPropertyMode.property, name, valueAliasName);
+			}
+			
 		}
-		if (step.indexOf(GETFUNCTIONVALUE + "(") >= 0 ) {
+		else if (step.indexOf(GETFUNCTIONVALUE + "(") >= 0 ) {
 			result = new GetProperty(cluster, GetPropertyMode.method, name, valueAliasName);
 		}
-		if (step.indexOf(GETISA + "(") >= 0 ) {
+		else if (step.indexOf(GETISA + "(") >= 0 ) {
 			result = new GetProperty(cluster, GetPropertyMode.isA, name, valueAliasName);
 		}
-		if (step.indexOf(GETCHECK + "(") >= 0 ) {
+		else if (step.indexOf(GETCHECK + "(") >= 0 ) {
 			result = new GetProperty(cluster, GetPropertyMode.check, name, valueAliasName);
+		}
+		else if (step.indexOf(GETISELEMENTOF + "(") >= 0 ) {
+			result = new GetProperty(cluster, GetPropertyMode.isElem, name, valueAliasName);
 		}
 
 		return result;

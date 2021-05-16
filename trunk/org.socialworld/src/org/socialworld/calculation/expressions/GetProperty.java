@@ -58,6 +58,9 @@ public class GetProperty extends Expression {
 		case check:
 			setValue(new Value(Type.simPropName, PropertyName.check));
 			break;
+		case isElem:
+			setValue(new Value(Type.simPropName, PropertyName.isElem));
+			break;
 		}
 		
 		Expression exp1 = new Constant(new Value(Type.integer, cluster.getIndex()));
@@ -116,6 +119,21 @@ public class GetProperty extends Expression {
 					SimulationObject simObj;
 					simObj = (SimulationObject) object;
 					result = simObj.check(methodName, valueName);
+				}
+				
+			}
+			break;
+
+		case isElem:
+			
+			if (methodName.length() > 0) {
+				
+				
+				if (object instanceof SimulationObject) {
+					SimulationObject simObj;
+					simObj = (SimulationObject) object;
+					// the methodName variable holds the setNumber as string
+					result = simObj.isElementOf(methodName, valueName);
 				}
 				
 			}

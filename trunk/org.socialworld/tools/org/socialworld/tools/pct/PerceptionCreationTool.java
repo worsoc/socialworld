@@ -7,6 +7,9 @@ import java.awt.event.ActionListener;
 
 import javax.swing.border.*;
 
+import org.socialworld.calculation.Value;
+import org.socialworld.calculation.expressions.CreateKnowledgeElementExpression;
+
 
 
 public class PerceptionCreationTool extends JFrame{
@@ -46,6 +49,17 @@ public class PerceptionCreationTool extends JFrame{
 		String result = pg.generatePerceptionDescription("gfjg48gtdzi57ugjjgkt");
 		System.out.println("Hello World");
 		System.out.println(result);
+		
+		String test = 
+		"KSbj:GETVal(" + Value.VALUE_BY_NAME_EVENT_PARAMS + ").GETVal(" + Value.VALUE_BY_NAME_EVENT_CAUSER + ");" +
+		"KSrcT:1," +
+		"KSrc:GETVal(" + Value.VALUE_NAME_KNOWLEDGE_SOURCE_MYSELF + ")," +
+		"KVal:GETVal(" + Value.VALUE_BY_NAME_EVENT_PARAMS + ").GETVal(" + Value.VALUE_BY_NAME_EVENT_CAUSER + ")#IsElem(1965).GETProp(simobj_position).GETProp(position_vector)";
+
+		CreateKnowledgeElementExpression exp;
+		exp = new CreateKnowledgeElementExpression(test);
+		System.out.println(exp.toString());
+
 		System.out.println("Bye, Bye, World");
 	}
 	

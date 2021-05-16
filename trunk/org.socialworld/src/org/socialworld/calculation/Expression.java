@@ -234,6 +234,7 @@ public class Expression {
 					return getProperty(object, cluster, simPropName, methodName, name);
 				
 				case get:  
+
 					
 					boolean checkSuccess = false;
 					ValueProperty property;
@@ -529,7 +530,44 @@ public class Expression {
 		return expression3.evaluate(arguments);
 	}
 
+	public String toString() {
+		
+		String result;
+		
+		String exp1 = "";
+		String exp2 = "";
+		String exp3 = "";
+		
+		if (expression1.operation == Expression_Function.nothing) {
+			exp1 = "Nothing";
+		}
+		else {
+			exp1 = expression1.toString();
+		}
+		
+		if (expression2.operation == Expression_Function.nothing) {
+			exp2 = "Nothing";
+		}
+		else {
+			exp2 = expression2.toString();
+		}
+		
+		if (expression3.operation == Expression_Function.nothing) {
+			exp3 = "Nothing";
+		}
+		else {
+			exp3 = expression3.toString();
+		}
 
+		if (exp1.equals("Nothing") && exp2.equals("Nothing") && exp3.equals("Nothing")) {
+			result = operation.name() + "(" + value.toString() + ")";
+		}
+		else {
+			result = operation.name() + "(" + exp1 + ", " + exp2 + ", " + exp3 + ")" ;
+		}
+		
+		return result;
+	}
 }
 
 
