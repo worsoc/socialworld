@@ -69,7 +69,7 @@ public class AnswerProperty extends KnowledgeProperty implements IAnswer {
 		if (lexems.size() > 0)
 			return lexems.get(0).getWord();
 		else
-			return new Word();
+			return Word.getNoWord();
 		
 	}
 

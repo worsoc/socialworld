@@ -91,7 +91,7 @@ public class PositionCalculator extends SocialWorldThread {
 
 		if (event != null && state != null && hiddenWriteAccess != null) {
 			if (!this.moved.add(new CollectionElementSimObjInfluenced(event, state, hiddenWriteAccess))) {
-				// TODO what shall happen if the queue is filled
+				// SUB_THREAD_IMPLEMENTATION what shall happen if the queue is filled
 			};
 		}
 /*		this.events.add(event);

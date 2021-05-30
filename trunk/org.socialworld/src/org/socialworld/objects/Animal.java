@@ -234,7 +234,7 @@ public abstract class Animal extends SimulationObject implements ISeer {
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
 	// TODO interface for more complex access to inventory
-	// TODO Do we need access to inventory in class Animal?
+	// QUESTION Do we need access to inventory in class Animal?
 /*	
 	final public SimulationObject getLeftHandItem() {
 	// no copy because it is a simulation object and that isn't allowed to be duplicated

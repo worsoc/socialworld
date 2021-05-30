@@ -187,13 +187,16 @@ public abstract class SimulationObject implements IPerceptible {
 	}
 	
 	protected abstract int getLexemID();
+	// TODO set lexemID in getLexemID() method in sub classes
+
 	
 	public final Lexem getLexem() {
 //		return this.lexem;
 		return new Lexem(Lexem.newLexemID++,  Word_Type.noun , true);
 	}
 	
-		
+	public abstract boolean checkObjectBelongsToGroup(short groupNumberSuffix);
+	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    STATE      ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -326,16 +329,14 @@ public abstract class SimulationObject implements IPerceptible {
 	
 	public final ValueProperty isElementOf(String setNumber, String nameValue) {
 		
-		int setNr = Integer.parseInt(setNumber);
-		boolean result = isElementOf(setNr);
+		int groupNr = Integer.parseInt(setNumber);
+		boolean result = belongsToGroup(groupNr);
 		return new ValueProperty(Type.bool, nameValue, result);
 	
 	}
 	
-	private boolean isElementOf(int setNumber) {
-		
-		// TODO implement isElementOf
-		return true;
+	private boolean belongsToGroup(int groupNr) {
+		return GroupingOfSimulationObjects.checkObjectBelongsToGroup(this, groupNr);
 	}
 	
 ///////////////////////////////////////////////////////////////////////////////////////////

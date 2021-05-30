@@ -575,7 +575,6 @@ public class Expression {
 /*
 case create:
 	
-	// TODO name for a created object, given from expression evaluation
 	
 	Type type;
 	Value createdValue;;

@@ -118,7 +118,6 @@ public class Inventory extends SimProperty {
 
 	private Inventory(Inventory original, PropertyProtection protectionOriginal, SimulationCluster cluster) {
 		super(protectionOriginal, cluster);
-		//TODO implementcopy constructor
 	}
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -131,7 +130,6 @@ public class Inventory extends SimProperty {
 	
 	public  ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String valueName) {
 		switch (prop) {
-		// TODO switch property names
   		case inventory_shirt:
 			return new ValueProperty(Type.simulationObject, valueName, this.shirt);
 		case inventory_trousers:

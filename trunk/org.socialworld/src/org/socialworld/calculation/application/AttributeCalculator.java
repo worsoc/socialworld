@@ -114,7 +114,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 	final void calculateAttributesChangedByEvent(Event event, StateAnimal stateAnimal, HiddenAnimal hiddenWriteAccess) {
 		if (event != null && stateAnimal != null && hiddenWriteAccess != null) {
 			if (!this.influenced.add(new CollectionElementSimObjInfluenced(event, stateAnimal, hiddenWriteAccess))) {
-				// TODO what shall happen if the queue is filled
+				// SUB_THREAD_IMPLEMENTATION what shall happen if the queue is filled
 			};
 /*			this.events.add(event);
 			this.states4Influence.add(stateAnimal);
@@ -126,7 +126,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 	final void calculateAttributesChangedByComplexMatrix(StateAnimal stateAnimal, HiddenAnimal hiddenWriteAccess) {
 		if (stateAnimal != null && hiddenWriteAccess != null) {
 			if (!this.changed.add(new CollectionElementSimObjChanged(stateAnimal, hiddenWriteAccess))) {
-				// TODO what shall happen if the queue is filled
+				// SUB_THREAD_IMPLEMENTATION what shall happen if the queue is filled
 			};
 /*			this.states4Change.add(stateAnimal);
 			this.hiddenAnimals4Change.add( hiddenWriteAccess);
@@ -137,7 +137,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 	final void calculateAttributesChangedBySimpleMatrix(StateAnimal stateAnimal, HiddenAnimal hiddenWriteAccess) {
 		if (stateAnimal != null && hiddenWriteAccess != null) {
 			if (!this.refreshed.add(new CollectionElementSimObjRefreshed(stateAnimal, hiddenWriteAccess))) {
-				// TODO what shall happen if the queue is filled
+				// SUB_THREAD_IMPLEMENTATION what shall happen if the queue is filled
 			};
 /*		this.states4Refresh.add(stateAnimal);
 		this.hiddenAnimals4Refresh.add( hiddenWriteAccess);

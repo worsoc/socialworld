@@ -123,8 +123,9 @@ public class PropertyProtection {
 		for (int index = 0; index < this.useAsPermissions.length; index++) {
 			if  (this.useAsPermissions[index].equals(useAsPermission)) return true;
 		}
+		// TEMP_SOLUTION
 		return true;
-// TODO 		return false;
+// --> 		return false;
 		
 	}
 	
@@ -152,8 +153,9 @@ public class PropertyProtection {
 			
 		}
 
+		// TEMP_SOLUTION
 		return true;
-		//TODO return false;
+		// --> return false;
 		
 	}
 

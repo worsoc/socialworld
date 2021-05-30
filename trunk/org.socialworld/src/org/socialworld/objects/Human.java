@@ -97,6 +97,11 @@ import org.socialworld.core.IEventParam;
 		return 0;
 	}
 
+	public boolean checkObjectBelongsToGroup(short groupNumberSuffix) {
+		// SUB_CLASS_IMPLEMENTATION checkObjectBelongsToGroup()
+		// TEMP_SOLUTION
+		return true;
+	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    STATE       //////////////////////////////////////////////

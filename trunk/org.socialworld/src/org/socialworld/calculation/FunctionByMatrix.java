@@ -230,7 +230,7 @@ public class FunctionByMatrix extends FunctionBase {
 
 				change = calculation.multiplication(share, function.calculate(arguments));
 				
-				// TODO kann weg, zum Feststellen, ob Fehler
+				// DEBUG kann weg, zum Feststellen, ob Fehler
 				if (change == null) {
 					System.out.println("FunctionByMatrix.calculateAttributesSimply() : change ist Null");
 					

@@ -78,7 +78,6 @@ public class StatePerceptible extends State {
 	
 	private StatePerceptible( StatePerceptible original, PropertyProtection protectionOriginal, SimulationCluster cluster) {
 		super(protectionOriginal, cluster);
-		// TODO implement copy constructor
 	}
 	
 	

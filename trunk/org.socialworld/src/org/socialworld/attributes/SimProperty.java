@@ -32,6 +32,9 @@ import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.tools.StringPair;
 
+// TODO implement copy constructor in sub classes
+
+
 public abstract class SimProperty implements ISimProperty, ISavedValues {
 
 	private PropertyName propertyName = PropertyName.unknown;
@@ -134,7 +137,9 @@ public abstract class SimProperty implements ISimProperty, ISavedValues {
 	
 	
 	/*	03.06.2020
-	 // TODO wieder freigeben
+	 // TODO 		 switch property names in getProperty() method in sub classes
+	// TEMP_SOLUTION
+	// --> wieder freigeben 
 		public  ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String valueName) {
 			return ValueProperty.getInvalid();
 		}

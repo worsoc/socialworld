@@ -26,7 +26,7 @@ import org.socialworld.datasource.pool.FunctionPool;
 
 public class FunctionDynamic extends FunctionBase {
 
-	// TODO ? use Functions instead of FunctionsPool ?  is class Functions obsolete ?
+	// QUESTION ? use Functions instead of FunctionsPool ?  is class Functions obsolete ?
 	private static FunctionPool functions = FunctionPool.getInstance();
 	
 	private static FunctionDynamic instance;

@@ -81,7 +81,6 @@ public class StateEatable extends State {
 
 	private StateEatable( StateEatable original, PropertyProtection protectionOriginal, SimulationCluster cluster) {
 		super(protectionOriginal, cluster);
-		// TODO implement copy constructor
 	}
 
 	protected  void initPropertyName() {
@@ -97,12 +96,10 @@ public class StateEatable extends State {
 	}
 
 	public  ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String name) {
-		// TODO implement getProperty()
 		return ValueProperty.getInvalid();
 	}
 
 	protected void setProperty(PropertyName propName, ValueProperty property) {
-		// TODO setProperty
 	}
 
 	public List<StringPair> getPropertiesMetaInfos() {

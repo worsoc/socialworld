@@ -143,7 +143,6 @@ public class Position extends SimProperty {
 
 	public  ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String valueName) {
 		switch (prop) {
-		// TODO switch property names
 		case position_vector:
 			return this.vector.getAsValue(cluster, valueName);
 		default:

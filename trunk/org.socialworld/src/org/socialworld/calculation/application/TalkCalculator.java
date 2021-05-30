@@ -92,7 +92,7 @@ public class TalkCalculator  extends SocialWorldThread {
 	public final void calculateTalkInfluencedByEvent(Event event, StateHuman stateHuman, HiddenHuman hiddenWriteAccess) {
 		if (event != null && stateHuman != null && hiddenWriteAccess != null) {
 			if (!this.influencedTalks.add(new CollectionElementSimObjInfluenced(event, stateHuman, hiddenWriteAccess))) {
-				// TODO what shall happen if the queue is filled
+				// SUB_THREAD_IMPLEMENTATION what shall happen if the queue is filled
 			};
 		}
 /*		this.events.add(event);

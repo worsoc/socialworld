@@ -23,7 +23,7 @@ public class GetLexem extends Expression {
 		
 		Expression calculateFunctionID = new Expression();
 		calculateFunctionID.setOperation(Expression_Function.addition);
-		// TODO ? use offset constant from Functions instead of FunctionsPool ? is class Functions obsolete ?
+		// QUESTION ? use offset constant from Functions instead of FunctionsPool ? is class Functions obsolete ?
 		calculateFunctionID.setExpression1(new Constant(new Value(Type.integer, FunctionPool.OFFSET_FUNCTIONID_GET_LEXEM)));
 		calculateFunctionID.setExpression2(expressionTranslateToLexemType);
 		setExpression1(calculateFunctionID);

@@ -541,7 +541,6 @@ public class SpeechRecognition {
 		// TODO lokaler workaround zur Wortsuche weg
 		
 //		foundWord = allWords.findAndGetWord(word);
-//		// TODO Alternative zu null
 //		if (foundWord != null) {
 //			isOK = (foundWord.getType() == type);
 //			if (isOK) {

@@ -152,3 +152,13 @@ public class SocialWorld  {
 		
 	}
 }
+
+/* labels for comments
+ * TODO
+ * DEBUG
+ * QUESTION
+ * TEMP_SOLUTION
+ * -->
+ * SUB_CLASS_IMPLEMENTATION
+ * SUB_THREAD_IMPLEMENTATION
+ */
