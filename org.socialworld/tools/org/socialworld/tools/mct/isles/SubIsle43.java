@@ -260,7 +260,7 @@ cornerMaxima = Arrays.asList(cornerMaximaNrs);
 		nr43at20 = Arrays.asList(at20);
 		heightIsle43at20 = new HeightIsle(nr43at20, cornerMaxima);
 		
-		nr43at21 = Arrays.asList(at20);
+		nr43at21 = Arrays.asList(at21);
 		heightIsle43at21 = new HeightIsle(nr43at21, cornerMaxima);
 		
 		nr43at27 = Arrays.asList(at27);
@@ -272,7 +272,7 @@ cornerMaxima = Arrays.asList(cornerMaximaNrs);
 		nr43at29 = Arrays.asList(at29);
 		heightIsle43at29 = new HeightIsle(nr43at29, cornerMaxima);
 		
-		nr43at30 = Arrays.asList(at29);
+		nr43at30 = Arrays.asList(at30);
 		heightIsle43at30 = new HeightIsle(nr43at30, cornerMaxima);
 		
 		nr43at36 = Arrays.asList(at36);
@@ -284,7 +284,7 @@ cornerMaxima = Arrays.asList(cornerMaximaNrs);
 		nr43at38 = Arrays.asList(at38);
 		heightIsle43at38 = new HeightIsle(nr43at38, cornerMaxima);
 		
-		nr43at39 = Arrays.asList(at38);
+		nr43at39 = Arrays.asList(at39);
 		heightIsle43at39 = new HeightIsle(nr43at39, cornerMaxima);
 		
 	}
