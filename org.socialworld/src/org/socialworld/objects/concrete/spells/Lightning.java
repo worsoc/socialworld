@@ -65,7 +65,6 @@ public class Lightning extends Magic {
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
 	protected int getLexemID() {
-		// TODO set lexemID
 		return 0;
 	}
 
@@ -77,6 +76,12 @@ public class Lightning extends Magic {
 		
 		return null;
 		
+	}
+
+	public boolean checkObjectBelongsToGroup(short groupNumberSuffix) {
+		// SUB_CLASS_IMPLEMENTATION checkObjectBelongsToGroup()
+		// TEMP_SOLUTION
+		return true;
 	}
 
 }

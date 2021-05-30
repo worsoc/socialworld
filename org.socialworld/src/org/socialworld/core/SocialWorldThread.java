@@ -45,5 +45,8 @@ public class SocialWorldThread extends Thread{
 		isRunning = true;
 		this.start();
 	}
+	
+	// TODO what shall happen if the queues in concrete sub class simulations are filled
+
 
 }

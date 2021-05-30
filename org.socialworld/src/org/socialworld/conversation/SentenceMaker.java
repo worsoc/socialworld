@@ -133,7 +133,7 @@ public class SentenceMaker {
 		Word value;
 		
 		
-	// TODO
+	// TODO implement getStatementSentenceForFact()
 		subject = answer.getSubject();
 		criterion = answer.getAnswerCriterion();
 		value = answer.getAnswerValue();

@@ -86,7 +86,7 @@ public class ValueProperty extends Value {
 
 		super(type, name, value);
 
-		// TODO PropertyProtection
+		// TO DO PropertyProtection
 //		this.useAsPermissions = useAsPermissions;
 		
 		init(value);
@@ -140,7 +140,7 @@ public class ValueProperty extends Value {
 	}
 
 	public ValueProperty getSubProperty(PropertyName propName, String valueName) {
-		// TODO ??? must beprotected by SimulationCluster???
+		// QUESTION ??? must be protected by SimulationCluster???
 		ValueProperty result = invalid;
 		
 		if (isSavedValues) {

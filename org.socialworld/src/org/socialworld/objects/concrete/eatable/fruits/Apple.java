@@ -72,7 +72,6 @@ public class Apple extends Fruit implements IThrowable {
 	}
 
 	protected int getLexemID() {
-		// TODO set lexemID
 		return 0;
 	}
 
@@ -104,6 +103,12 @@ public class Apple extends Fruit implements IThrowable {
 		
 		return null;
 		
+	}
+	
+	public boolean checkObjectBelongsToGroup(short groupNumberSuffix) {
+		// SUB_CLASS_IMPLEMENTATION checkObjectBelongsToGroup()
+		// TEMP_SOLUTION
+		return true;
 	}
 	
 ///////////////////////////////////////////////////////////////////////////////////////////

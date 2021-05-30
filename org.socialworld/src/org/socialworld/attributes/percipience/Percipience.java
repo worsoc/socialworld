@@ -162,9 +162,13 @@ public class Percipience {
 				double angleBetweenDirectionsInRadians = Math.acos(cosineBetweenDirections);
 				
 				if (angleBetweenDirectionsInRadians <= angleViewInRadians)
-					return this.visibility.checkIsPossibleSeer(possibleSeer, distance);
+					// TEMP_SOLUTION return true raus
+					return true;
+					// --> return this.visibility.checkIsPossibleSeer(possibleSeer, distance);
 				else
-					return false;
+					// TEMP_SOLUTION return true raus
+					return true;
+					//--> return false;
 	
 	
 			}

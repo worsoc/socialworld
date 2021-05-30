@@ -139,7 +139,9 @@ public abstract class SavedValue implements ISavedValues {
 	
 
 	/*	03.06.2020
-	 // TODO wieder freigeben
+	 // TODO implement getProperty in sub classes
+	 // TEMP_SOLUTION wieder freigeben
+	 // -->
 		public  ValueProperty getProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
 			return ValueProperty.getInvalid();
 		}

@@ -106,7 +106,7 @@ public class ActionCreator extends SocialWorldThread {
 	final void  createReaction( final Event event,	final StateSimulationObject stateSimObj,	final HiddenSimulationObject hiddenSimObj) {
 		if (event != null && stateSimObj != null && hiddenSimObj != null) {
 			if (!this.reactors.add(new CollectionElementReactor(event, stateSimObj, hiddenSimObj))) {
-				// TODO what shall happen if the queue is filled
+				// SUB_THREAD_IMPLEMENTATION what shall happen if the queue is filled
 			};
 		}
 	}
@@ -114,7 +114,7 @@ public class ActionCreator extends SocialWorldThread {
 	final void createAction(	final StateSimulationObject stateSimObj, final HiddenSimulationObject hiddenSimObj) {
 		if (stateSimObj != null && hiddenSimObj != null) {
 			if (!this.actors.add(new CollectionElementActor(stateSimObj, hiddenSimObj))) {
-				// TODO what shall happen if the queue is filled
+				// SUB_THREAD_IMPLEMENTATION what shall happen if the queue is filled
 			};
 		}
 	}
@@ -126,7 +126,7 @@ public class ActionCreator extends SocialWorldThread {
 	 */
 	private void calculateReaction() {
 
-		// TODO fuer Debuggen
+		// DEBUG Output falls size zu groß
 		
 		if (this.reactors.size() > sizeThreashold) {
 			System.out.println("ActionCreator.calculateReaction(): this.reactors.size() " + this.reactors.size());

@@ -166,7 +166,6 @@ public class AttributeArray extends SimProperty {
 
 	public  ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String valueName) {
 		switch (prop) {
-		// TODO switch property names
 		default:
 			return ValueProperty.getInvalid();
 		}

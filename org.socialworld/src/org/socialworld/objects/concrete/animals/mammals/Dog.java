@@ -65,7 +65,6 @@ public class Dog extends Mammal {
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
 	protected int getLexemID() {
-		// TODO set lexemID
 		return 0;
 	}
 
@@ -80,6 +79,12 @@ public class Dog extends Mammal {
 		
 		return null;
 		
+	}
+
+	public boolean checkObjectBelongsToGroup(short groupNumberSuffix) {
+		// SUB_CLASS_IMPLEMENTATION checkObjectBelongsToGroup()
+		// TEMP_SOLUTION
+		return true;
 	}
 
 }

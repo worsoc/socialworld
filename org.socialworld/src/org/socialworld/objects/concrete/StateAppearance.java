@@ -59,7 +59,6 @@ public class StateAppearance extends State {
 	
 	@Override
 	public ISavedValues copyForProperty(SimulationCluster cluster) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -73,7 +72,6 @@ public class StateAppearance extends State {
 
 	@Override
 	protected void setProperty(PropertyName propName, ValueProperty property) {
-		// TODO Auto-generated method stub
 
 	}
 	

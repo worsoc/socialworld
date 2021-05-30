@@ -92,7 +92,6 @@ public class StateSeer extends State {
 	
 	private StateSeer( StateSeer original, PropertyProtection protectionOriginal, SimulationCluster cluster) {
 		super(protectionOriginal, cluster);
-		// TODO implement copy constructor
 		setPropertyName(PropertyName.stateSeer);
 		this.angleViewPerceivingEvents = original.getAngleViewPerceivingEvents();
 	}

@@ -68,7 +68,6 @@ public class Knowledge extends SimProperty {
 
 	private Knowledge(Knowledge original, PropertyProtection protectionOriginal, SimulationCluster cluster ) {
 		super(protectionOriginal, cluster);
-		// TODO implement copy constructor
 	}
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -81,7 +80,6 @@ public class Knowledge extends SimProperty {
 
 	public  ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String valueName) {
 		switch (prop) {
-		// TODO switch property names
 		default:
 			return ValueProperty.getInvalid();
 		}

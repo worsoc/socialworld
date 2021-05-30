@@ -31,6 +31,7 @@ public class Word {
 	private Lexem lexem;
 	private Numerus numerus;
 	
+	private static Word noWord;
 	
 	//private Word_Type wordType;
 	//private KnowledgeFact_Criterion kfc;
@@ -38,6 +39,17 @@ public class Word {
 	
 	private Word pronoun;
 	
+
+	public static Word getNoWord() {
+		if (noWord == null) {
+			noWord = new Word();
+		}
+		return noWord;
+	}
+
+	private Word () {
+		this.wordID = 0;
+	}
 
 	public Word(int wordID, String word, Lexem lexem, Word pronoun) {
 		this.wordID = wordID;
@@ -56,9 +68,6 @@ public class Word {
 	}
 	
 	
-	public Word () {
-		this.wordID = 0;
-	}
 	
 	public String getWord() {
 		return word;
@@ -108,6 +117,10 @@ public class Word {
 	
 	public boolean equals(Word b) {
 		return this.wordID == b.wordID;
+	}
+	
+	public boolean isNoWord(Word word) {
+		return (wordID == 0);
 	}
 	
 }

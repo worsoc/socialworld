@@ -58,7 +58,6 @@ public class StateInventory extends State {
 	
 	private StateInventory( StateInventory original, PropertyProtection protectionOriginal, SimulationCluster cluster) {
 		super(protectionOriginal, cluster);
-		// TODO implement copy constructor
 		setPropertyName(PropertyName.stateInventory);
 	}
 
