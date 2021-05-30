@@ -17,13 +17,15 @@ class HLCfromWestToEast extends SubHLC {
 
 	@Override
 	boolean checkExistAllowedHLC(int start, int end) {
-		// TODO Auto-generated method stub
+		// SUB_CLASS_IMPLEMENTATION
+		// TEMP_SOLUTION
 		return false;
 	}
 
 	@Override
 	List<HeightLevelChanger> getAllowedHLC(int start, int end, List<Integer> subClusterSorted) {
-		// TODO Auto-generated method stub
+		// SUB_CLASS_IMPLEMENTATION
+		// TEMP_SOLUTION
 		return null;
 	}
 
