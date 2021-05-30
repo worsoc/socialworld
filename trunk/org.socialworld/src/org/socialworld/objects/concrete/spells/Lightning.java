@@ -22,15 +22,12 @@
 package org.socialworld.objects.concrete.spells;
 
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.socialworld.attributes.percipience.Percipience;
 import org.socialworld.attributes.percipience.PercipienceType;
 import org.socialworld.objects.Magic;
 import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.StatePerceptible;
-import org.socialworld.objects.concrete.eatable.fruits.Apple;
 import org.socialworld.tools.Generation;
 import org.socialworld.tools.StringPair;
 
@@ -78,6 +75,10 @@ public class Lightning extends Magic {
 		
 	}
 
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////    checking whether the class belongs to a sub set of classes //////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+	
 	public boolean checkObjectBelongsToGroup(short groupNumberSuffix) {
 		// SUB_CLASS_IMPLEMENTATION checkObjectBelongsToGroup()
 		// TEMP_SOLUTION

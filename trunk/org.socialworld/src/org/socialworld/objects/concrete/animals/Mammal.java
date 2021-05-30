@@ -21,10 +21,8 @@
 */
 package org.socialworld.objects.concrete.animals;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.IEventParam;
