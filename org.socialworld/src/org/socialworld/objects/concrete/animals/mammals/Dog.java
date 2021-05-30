@@ -21,8 +21,6 @@
 */
 package org.socialworld.objects.concrete.animals.mammals;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.socialworld.attributes.percipience.Percipience;
 import org.socialworld.attributes.percipience.PercipienceType;
@@ -30,7 +28,6 @@ import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.StatePerceptible;
 import org.socialworld.objects.concrete.animals.Mammal;
 import org.socialworld.objects.concrete.animals.StateSeer;
-import org.socialworld.objects.concrete.eatable.fruits.Apple;
 import org.socialworld.tools.Generation;
 import org.socialworld.tools.StringPair;
 
@@ -81,6 +78,10 @@ public class Dog extends Mammal {
 		
 	}
 
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////    checking whether the class belongs to a sub set of classes //////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+	
 	public boolean checkObjectBelongsToGroup(short groupNumberSuffix) {
 		// SUB_CLASS_IMPLEMENTATION checkObjectBelongsToGroup()
 		// TEMP_SOLUTION

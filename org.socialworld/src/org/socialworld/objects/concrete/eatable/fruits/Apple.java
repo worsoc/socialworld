@@ -21,10 +21,6 @@
 */
 package org.socialworld.objects.concrete.eatable.fruits;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.percipience.Percipience;
 import org.socialworld.attributes.percipience.PercipienceType;
 import org.socialworld.objects.State;
@@ -75,16 +71,6 @@ public class Apple extends Fruit implements IThrowable {
 		return 0;
 	}
 
-	public  float getTemperature() {return 20; };
-	public  float getConsistence() {return 20; };
-	public  float getFirmness() {return 20; };
-	
-
-	public float getGrip() { return 20; }
-	public float getMass()  { return 20; }
-	public float getVolume()  { return 20; }
-	public float getForm()  { return 20; }
-
 	
 	protected State getInitState(String stateClassName) {
 		if (stateClassName.equals(StatePerceptible.class.getName())) {
@@ -105,14 +91,26 @@ public class Apple extends Fruit implements IThrowable {
 		
 	}
 	
-	public boolean checkObjectBelongsToGroup(short groupNumberSuffix) {
-		// SUB_CLASS_IMPLEMENTATION checkObjectBelongsToGroup()
-		// TEMP_SOLUTION
-		return true;
-	}
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////// implementing IEatable ///////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+	
+	public  float getTemperature() {return 20; };
+	public  float getConsistence() {return 20; };
+	public  float getFirmness() {return 20; };
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////    checking for interface  ///////////////////////////////////////////////
+/////////////////////////////// implementing IThrowable ///////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public float getGrip() { return 20; }
+	public float getMass()  { return 20; }
+	public float getVolume()  { return 20; }
+	public float getForm()  { return 20; }
+
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////    checking whether the class belongs to a sub set of classes //////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 	protected boolean isInterface(String nameInterface) {
@@ -131,4 +129,10 @@ public class Apple extends Fruit implements IThrowable {
 	
 	}
 	
+	public boolean checkObjectBelongsToGroup(short groupNumberSuffix) {
+		// SUB_CLASS_IMPLEMENTATION checkObjectBelongsToGroup()
+		// TEMP_SOLUTION
+		return true;
+	}
+
 }
