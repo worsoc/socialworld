@@ -446,91 +446,95 @@ public class SubIsle34 extends SubIsle {
 	@Override
 	protected int checkForIsle(List<Integer> isleSubs) {
 
-	List<Integer> copy = new ArrayList<Integer>(isleSubs);
-
-	List<Integer>  rasterIndizesDescribingTheIsle;
-
-	for (int sub : copy) {
-
-		if (sub > 50) return -1;
-
-		switch (sub) {
-		case 0:
-			rasterIndizesDescribingTheIsle = nr34at00; break;
-		case 1:
-			rasterIndizesDescribingTheIsle = nr34at01; break;
-		case 2:
-			rasterIndizesDescribingTheIsle = nr34at02; break;
-		case 3:
-			rasterIndizesDescribingTheIsle = nr34at03; break;
-		case 4:
-			rasterIndizesDescribingTheIsle = nr34at04; break;
-		case 5:
-			rasterIndizesDescribingTheIsle = nr34at05; break;
-		case 9:
-			rasterIndizesDescribingTheIsle = nr34at09; break;
-		case 10:
-			rasterIndizesDescribingTheIsle = nr34at10; break;
-		case 11:
-			rasterIndizesDescribingTheIsle = nr34at11; break;
-		case 12:
-			rasterIndizesDescribingTheIsle = nr34at12; break;
-		case 13:
-			rasterIndizesDescribingTheIsle = nr34at13; break;
-		case 14:
-			rasterIndizesDescribingTheIsle = nr34at14; break;
-		case 18:
-			rasterIndizesDescribingTheIsle = nr34at18; break;
-		case 19:
-			rasterIndizesDescribingTheIsle = nr34at19; break;
-		case 20:
-			rasterIndizesDescribingTheIsle = nr34at20; break;
-		case 21:
-			rasterIndizesDescribingTheIsle = nr34at21; break;
-		case 22:
-			rasterIndizesDescribingTheIsle = nr34at22; break;
-		case 23:
-			rasterIndizesDescribingTheIsle = nr34at23; break;
-		case 27:
-			rasterIndizesDescribingTheIsle = nr34at27; break;
-		case 28:
-			rasterIndizesDescribingTheIsle = nr34at28; break;
-		case 29:
-			rasterIndizesDescribingTheIsle = nr34at29; break;
-		case 30:
-			rasterIndizesDescribingTheIsle = nr34at30; break;
-		case 31:
-			rasterIndizesDescribingTheIsle = nr34at31; break;
-		case 32:
-			rasterIndizesDescribingTheIsle = nr34at32; break;
-		case 36:
-			rasterIndizesDescribingTheIsle = nr34at36; break;
-		case 37:
-			rasterIndizesDescribingTheIsle = nr34at37; break;
-		case 38:
-			rasterIndizesDescribingTheIsle = nr34at38; break;
-		case 39:
-			rasterIndizesDescribingTheIsle = nr34at39; break;
-		case 40:
-			rasterIndizesDescribingTheIsle = nr34at40; break;
-		case 41:
-			rasterIndizesDescribingTheIsle = nr34at41; break;
-		case 45:
-			rasterIndizesDescribingTheIsle = nr34at45; break;
-		case 46:
-			rasterIndizesDescribingTheIsle = nr34at46; break;
-		case 47:
-			rasterIndizesDescribingTheIsle = nr34at47; break;
-		case 48:
-			rasterIndizesDescribingTheIsle = nr34at48; break;
-		case 49:
-			rasterIndizesDescribingTheIsle = nr34at49; break;
-		case 50:
-			rasterIndizesDescribingTheIsle = nr34at50; break;
-		default:
-			continue;
+		List<Integer> copy = new ArrayList<Integer>(isleSubs);
+	
+		List<Integer>  rasterIndizesDescribingTheIsle;
+	
+		for (int sub : copy) {
+	
+			if (sub > 50) return -1;
+	
+			switch (sub) {
+			case 0:
+				rasterIndizesDescribingTheIsle = nr34at00; break;
+			case 1:
+				rasterIndizesDescribingTheIsle = nr34at01; break;
+			case 2:
+				rasterIndizesDescribingTheIsle = nr34at02; break;
+			case 3:
+				rasterIndizesDescribingTheIsle = nr34at03; break;
+			case 4:
+				rasterIndizesDescribingTheIsle = nr34at04; break;
+			case 5:
+				rasterIndizesDescribingTheIsle = nr34at05; break;
+			case 9:
+				rasterIndizesDescribingTheIsle = nr34at09; break;
+			case 10:
+				rasterIndizesDescribingTheIsle = nr34at10; break;
+			case 11:
+				rasterIndizesDescribingTheIsle = nr34at11; break;
+			case 12:
+				rasterIndizesDescribingTheIsle = nr34at12; break;
+			case 13:
+				rasterIndizesDescribingTheIsle = nr34at13; break;
+			case 14:
+				rasterIndizesDescribingTheIsle = nr34at14; break;
+			case 18:
+				rasterIndizesDescribingTheIsle = nr34at18; break;
+			case 19:
+				rasterIndizesDescribingTheIsle = nr34at19; break;
+			case 20:
+				rasterIndizesDescribingTheIsle = nr34at20; break;
+			case 21:
+				rasterIndizesDescribingTheIsle = nr34at21; break;
+			case 22:
+				rasterIndizesDescribingTheIsle = nr34at22; break;
+			case 23:
+				rasterIndizesDescribingTheIsle = nr34at23; break;
+			case 27:
+				rasterIndizesDescribingTheIsle = nr34at27; break;
+			case 28:
+				rasterIndizesDescribingTheIsle = nr34at28; break;
+			case 29:
+				rasterIndizesDescribingTheIsle = nr34at29; break;
+			case 30:
+				rasterIndizesDescribingTheIsle = nr34at30; break;
+			case 31:
+				rasterIndizesDescribingTheIsle = nr34at31; break;
+			case 32:
+				rasterIndizesDescribingTheIsle = nr34at32; break;
+			case 36:
+				rasterIndizesDescribingTheIsle = nr34at36; break;
+			case 37:
+				rasterIndizesDescribingTheIsle = nr34at37; break;
+			case 38:
+				rasterIndizesDescribingTheIsle = nr34at38; break;
+			case 39:
+				rasterIndizesDescribingTheIsle = nr34at39; break;
+			case 40:
+				rasterIndizesDescribingTheIsle = nr34at40; break;
+			case 41:
+				rasterIndizesDescribingTheIsle = nr34at41; break;
+			case 45:
+				rasterIndizesDescribingTheIsle = nr34at45; break;
+			case 46:
+				rasterIndizesDescribingTheIsle = nr34at46; break;
+			case 47:
+				rasterIndizesDescribingTheIsle = nr34at47; break;
+			case 48:
+				rasterIndizesDescribingTheIsle = nr34at48; break;
+			case 49:
+				rasterIndizesDescribingTheIsle = nr34at49; break;
+			case 50:
+				rasterIndizesDescribingTheIsle = nr34at50; break;
+			default:
+				continue;
+			}
+			if (checkForMatch(copy, rasterIndizesDescribingTheIsle)) return sub;
+	
 		}
-		if (checkForMatch(copy, rasterIndizesDescribingTheIsle)) return sub;
+		
+		return -1;
 
 	}
 

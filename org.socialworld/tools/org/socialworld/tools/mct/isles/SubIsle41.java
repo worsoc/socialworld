@@ -350,70 +350,75 @@ public class SubIsle41 extends SubIsle {
 	@Override
 	protected int checkForIsle(List<Integer> isleSubs) {
 
-	List<Integer> copy = new ArrayList<Integer>(isleSubs);
-
-	List<Integer>  rasterIndizesDescribingTheIsle;
-
-	for (int sub : copy) {
-
-		if (sub > 40) return -1;
-
-		switch (sub) {
-		case 0:
-			rasterIndizesDescribingTheIsle = nr41at00; break;
-		case 1:
-			rasterIndizesDescribingTheIsle = nr41at01; break;
-		case 2:
-			rasterIndizesDescribingTheIsle = nr41at02; break;
-		case 3:
-			rasterIndizesDescribingTheIsle = nr41at03; break;
-		case 4:
-			rasterIndizesDescribingTheIsle = nr41at04; break;
-		case 9:
-			rasterIndizesDescribingTheIsle = nr41at09; break;
-		case 10:
-			rasterIndizesDescribingTheIsle = nr41at10; break;
-		case 11:
-			rasterIndizesDescribingTheIsle = nr41at11; break;
-		case 12:
-			rasterIndizesDescribingTheIsle = nr41at12; break;
-		case 13:
-			rasterIndizesDescribingTheIsle = nr41at13; break;
-		case 18:
-			rasterIndizesDescribingTheIsle = nr41at18; break;
-		case 19:
-			rasterIndizesDescribingTheIsle = nr41at19; break;
-		case 20:
-			rasterIndizesDescribingTheIsle = nr41at20; break;
-		case 21:
-			rasterIndizesDescribingTheIsle = nr41at21; break;
-		case 22:
-			rasterIndizesDescribingTheIsle = nr41at22; break;
-		case 27:
-			rasterIndizesDescribingTheIsle = nr41at27; break;
-		case 28:
-			rasterIndizesDescribingTheIsle = nr41at28; break;
-		case 29:
-			rasterIndizesDescribingTheIsle = nr41at29; break;
-		case 30:
-			rasterIndizesDescribingTheIsle = nr41at30; break;
-		case 31:
-			rasterIndizesDescribingTheIsle = nr41at31; break;
-		case 36:
-			rasterIndizesDescribingTheIsle = nr41at36; break;
-		case 37:
-			rasterIndizesDescribingTheIsle = nr41at37; break;
-		case 38:
-			rasterIndizesDescribingTheIsle = nr41at38; break;
-		case 39:
-			rasterIndizesDescribingTheIsle = nr41at39; break;
-		case 40:
-			rasterIndizesDescribingTheIsle = nr41at40; break;
-		default:
-			continue;
+		List<Integer> copy = new ArrayList<Integer>(isleSubs);
+	
+		List<Integer>  rasterIndizesDescribingTheIsle;
+	
+		for (int sub : copy) {
+	
+			if (sub > 40) return -1;
+	
+			switch (sub) {
+			case 0:
+				rasterIndizesDescribingTheIsle = nr41at00; break;
+			case 1:
+				rasterIndizesDescribingTheIsle = nr41at01; break;
+			case 2:
+				rasterIndizesDescribingTheIsle = nr41at02; break;
+			case 3:
+				rasterIndizesDescribingTheIsle = nr41at03; break;
+			case 4:
+				rasterIndizesDescribingTheIsle = nr41at04; break;
+			case 9:
+				rasterIndizesDescribingTheIsle = nr41at09; break;
+			case 10:
+				rasterIndizesDescribingTheIsle = nr41at10; break;
+			case 11:
+				rasterIndizesDescribingTheIsle = nr41at11; break;
+			case 12:
+				rasterIndizesDescribingTheIsle = nr41at12; break;
+			case 13:
+				rasterIndizesDescribingTheIsle = nr41at13; break;
+			case 18:
+				rasterIndizesDescribingTheIsle = nr41at18; break;
+			case 19:
+				rasterIndizesDescribingTheIsle = nr41at19; break;
+			case 20:
+				rasterIndizesDescribingTheIsle = nr41at20; break;
+			case 21:
+				rasterIndizesDescribingTheIsle = nr41at21; break;
+			case 22:
+				rasterIndizesDescribingTheIsle = nr41at22; break;
+			case 27:
+				rasterIndizesDescribingTheIsle = nr41at27; break;
+			case 28:
+				rasterIndizesDescribingTheIsle = nr41at28; break;
+			case 29:
+				rasterIndizesDescribingTheIsle = nr41at29; break;
+			case 30:
+				rasterIndizesDescribingTheIsle = nr41at30; break;
+			case 31:
+				rasterIndizesDescribingTheIsle = nr41at31; break;
+			case 36:
+				rasterIndizesDescribingTheIsle = nr41at36; break;
+			case 37:
+				rasterIndizesDescribingTheIsle = nr41at37; break;
+			case 38:
+				rasterIndizesDescribingTheIsle = nr41at38; break;
+			case 39:
+				rasterIndizesDescribingTheIsle = nr41at39; break;
+			case 40:
+				rasterIndizesDescribingTheIsle = nr41at40; break;
+			default:
+				continue;
+			}
+			if (checkForMatch(copy, rasterIndizesDescribingTheIsle)) return sub;
+	
 		}
-		if (checkForMatch(copy, rasterIndizesDescribingTheIsle)) return sub;
-
+		
+		return -1;
+			
+		
 	}
 
 	@Override
