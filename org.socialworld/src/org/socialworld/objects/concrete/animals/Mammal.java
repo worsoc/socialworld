@@ -27,6 +27,7 @@ import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.IEventParam;
 import org.socialworld.objects.Animal;
+import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.State;
 import org.socialworld.tools.Generation;
 import org.socialworld.tools.StringPair;
@@ -44,15 +45,15 @@ public abstract class Mammal extends Animal {
 
 	private static StringPair[] propertiesMetaInfos = new StringPair[]{
 		} ;
-	
-	protected Mammal(Generation calledFromGeneration) {
-		super(calledFromGeneration);
-		listOfPropertyMetaInfo = super.getPropertiesMetaInfos();
+
+	public static List<StringPair> getPropertiesMetaInfos() {
+		List<StringPair> listOfPropertyMetaInfo = Animal.getPropertiesMetaInfos();
 		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
 			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}
+		return listOfPropertyMetaInfo;
 	}
-	
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////

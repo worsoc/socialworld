@@ -21,7 +21,6 @@
 */
 package org.socialworld.objects;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.actions.AbstractAction;
@@ -40,7 +39,6 @@ import org.socialworld.objects.concrete.animals.ISeer;
 import org.socialworld.objects.concrete.animals.StateBody;
 import org.socialworld.objects.concrete.animals.StateInventory;
 import org.socialworld.objects.concrete.animals.StateSeer;
-import org.socialworld.tools.Generation;
 import org.socialworld.tools.StringPair;
 
 
@@ -73,16 +71,15 @@ public abstract class Animal extends SimulationObject implements ISeer {
 		new StringPair("StateBody", PropertyName.stateBody.name()),
 		new StringPair("StateInventory", PropertyName.stateInventory.name())
 		} ;
-	
-	protected Animal(Generation calledFromGeneration) {
-		super(calledFromGeneration);
-		listOfPropertyMetaInfo = super.getPropertiesMetaInfos();
+
+	public static List<StringPair> getPropertiesMetaInfos() {
+		List<StringPair> listOfPropertyMetaInfo = SimulationObject.getPropertiesMetaInfos();
 		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
 			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}
+		return listOfPropertyMetaInfo;
 	}
-	
-	
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
