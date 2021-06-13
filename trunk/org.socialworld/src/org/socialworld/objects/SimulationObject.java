@@ -88,25 +88,22 @@ public abstract class SimulationObject implements IPerceptible {
 ////////////////////////////////   meta information    ////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	protected List<StringPair> listOfPropertyMetaInfo;
 	private static StringPair[] propertiesMetaInfos = new StringPair[]{
 			new StringPair("StatePerceptible", PropertyName.statePerceptible.name()),
 			new StringPair("StateAppearance", PropertyName.stateAppearance.name()),
 			new StringPair("StateComposition", PropertyName.stateComposition.name())
 			} ;
-	
-	protected SimulationObject(Generation calledFromGeneration) {
-		listOfPropertyMetaInfo = new ArrayList<StringPair>();
+
+	public static List<StringPair> getPropertiesMetaInfos() {
+		List<StringPair> listOfPropertyMetaInfo = new ArrayList<StringPair>();
 		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
 			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}
-
-	}
-	public List<StringPair> getPropertiesMetaInfos() {
-		return new ArrayList<StringPair>(listOfPropertyMetaInfo);
+		return listOfPropertyMetaInfo;
 	}
 	
-	public List<StringPair> getPropMethodsMetaInfos() {
+	
+	public static List<StringPair> getPropMethodsMetaInfos() {
 		return new ArrayList<StringPair>();
 	}
 	

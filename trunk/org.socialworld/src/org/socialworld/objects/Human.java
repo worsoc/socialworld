@@ -22,10 +22,8 @@
 package org.socialworld.objects;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.percipience.Percipience;
 import org.socialworld.attributes.percipience.PercipienceType;
 import org.socialworld.calculation.SimulationCluster;
@@ -37,7 +35,6 @@ import org.socialworld.objects.concrete.animals.Mammal;
 import org.socialworld.objects.concrete.animals.StateBody;
 import org.socialworld.objects.concrete.animals.StateInventory;
 import org.socialworld.objects.concrete.animals.StateSeer;
-import org.socialworld.tools.Generation;
 import org.socialworld.tools.StringPair;
 import org.socialworld.conversation.Talk_SentenceType;
 import org.socialworld.core.IEventParam;
@@ -64,14 +61,14 @@ import org.socialworld.core.IEventParam;
 	private static StringPair[] propertiesMetaInfos = new StringPair[]{
 		} ;
 	
-	protected Human(Generation calledFromGeneration) {
-		super(calledFromGeneration);
-		listOfPropertyMetaInfo = super.getPropertiesMetaInfos();
+	public static List<StringPair> getPropertiesMetaInfos() {
+		List<StringPair> listOfPropertyMetaInfo = Mammal.getPropertiesMetaInfos();
 		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
 			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}
+		return listOfPropertyMetaInfo;
 	}
-	
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////

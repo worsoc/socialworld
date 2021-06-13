@@ -10,7 +10,6 @@ import org.socialworld.objects.Item;
 import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.StateEatable;
 import org.socialworld.objects.properties.IEatable;
-import org.socialworld.tools.Generation;
 import org.socialworld.tools.StringPair;
 
 public abstract class Fruit extends Item implements IEatable {
@@ -25,12 +24,12 @@ public abstract class Fruit extends Item implements IEatable {
 			new StringPair("stateEatable", PropertyName.stateEatable.name())
 			} ;
 	
-	protected Fruit(Generation calledFromGeneration) {
-		super(calledFromGeneration);
-		listOfPropertyMetaInfo = super.getPropertiesMetaInfos();
+	public static List<StringPair> getPropertiesMetaInfos() {
+		List<StringPair> listOfPropertyMetaInfo = Item.getPropertiesMetaInfos();
 		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
 			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}
+		return listOfPropertyMetaInfo;
 	}
 	
 

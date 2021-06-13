@@ -23,12 +23,13 @@ package org.socialworld.objects.concrete.gods;
 
 
 
+import java.util.List;
+
 import org.socialworld.attributes.percipience.Percipience;
 import org.socialworld.attributes.percipience.PercipienceType;
 import org.socialworld.objects.God;
 import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.StatePerceptible;
-import org.socialworld.tools.Generation;
 import org.socialworld.tools.StringPair;
 
 public class Weather extends God {
@@ -37,23 +38,15 @@ public class Weather extends God {
 ////////////////////////////////meta information    ////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	private static Weather singletonDummyForGenerationTools;
 	private static StringPair[] propertiesMetaInfos = new StringPair[]{
 			} ;
-	
-	public static Weather getInstance(Generation calledFromGeneration) {
-		if (singletonDummyForGenerationTools == null) {
-			singletonDummyForGenerationTools = new Weather(calledFromGeneration);
-		}
-		return singletonDummyForGenerationTools;
-	}
-	
-	protected Weather(Generation calledFromGeneration) {
-		super(calledFromGeneration);
-		listOfPropertyMetaInfo = super.getPropertiesMetaInfos();
+		
+	public static List<StringPair> getPropertiesMetaInfos() {
+		List<StringPair> listOfPropertyMetaInfo = God.getPropertiesMetaInfos();
 		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
 			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}
+		return listOfPropertyMetaInfo;
 	}
 	
 

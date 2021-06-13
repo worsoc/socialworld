@@ -21,14 +21,11 @@
 */
 package org.socialworld.objects;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.IEventParam;
-import org.socialworld.tools.Generation;
 import org.socialworld.tools.StringPair;
 
 /**
@@ -47,14 +44,14 @@ public abstract class God extends SimulationObject {
 	private static StringPair[] propertiesMetaInfos = new StringPair[]{
 		} ;
 	
-	protected God(Generation calledFromGeneration) {
-		super(calledFromGeneration);
-		listOfPropertyMetaInfo = super.getPropertiesMetaInfos();
+	public static List<StringPair> getPropertiesMetaInfos() {
+		List<StringPair> listOfPropertyMetaInfo = SimulationObject.getPropertiesMetaInfos();
 		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
 			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}
+		return listOfPropertyMetaInfo;
 	}
-	
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////
