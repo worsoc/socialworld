@@ -29,6 +29,7 @@ import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.attributes.percipience.Percipience;
 import org.socialworld.calculation.SimulationCluster;
+import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.objects.Animal;
@@ -50,9 +51,10 @@ public class StatePerceptible extends State {
 	private static StatePerceptible singletonDummyForGenerationTools;
 	private static List<StringPair> listOfPropertyMetaInfo;
 	private boolean listOfPropertyMetaInfoIsFilled = false;
-	private static StringPair[] propertiesMetaInfos = new StringPair[]{};
-			//new StringPair(Type.vector.getIndexWithSWTPraefix() , PropertyName.statePerceptible_cuboid.name()),
-			//new StringPair("Position", PropertyName.statePerceptible_position.name())} ;
+	private static StringPair[] propertiesMetaInfos = new StringPair[] {
+			new StringPair(Type.vector.getIndexWithSWTPraefix() , PropertyName.statePerceptible_cuboid.name()),
+			new StringPair("Position", PropertyName.statePerceptible_position.name())
+			} ;
 
 	public static StatePerceptible getInstance(Generation calledFromGeneration) {
 		if (singletonDummyForGenerationTools == null) {

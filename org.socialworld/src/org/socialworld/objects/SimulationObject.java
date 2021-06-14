@@ -51,7 +51,6 @@ import org.socialworld.objects.concrete.*;
 import org.socialworld.objects.connections.Connection;
 import org.socialworld.objects.connections.ConnectionType;
 import org.socialworld.objects.properties.IPerceptible;
-import org.socialworld.tools.Generation;
 import org.socialworld.tools.StringPair;
 
 /**
