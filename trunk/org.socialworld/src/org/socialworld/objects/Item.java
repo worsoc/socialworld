@@ -26,6 +26,7 @@ import java.util.List;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.IEventParam;
+import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.tools.StringPair;
 
 /**
@@ -53,7 +54,19 @@ public abstract class Item extends SimulationObject {
 		return listOfPropertyMetaInfo;
 	}
 	
+	private static KnowledgeFact_Criterion[] resultingKFCs = new KnowledgeFact_Criterion[] {
+			KnowledgeFact_Criterion.colour,
+			KnowledgeFact_Criterion.material
+		};
 
+	public static List<KnowledgeFact_Criterion> getResultingKFCs() {
+		List<KnowledgeFact_Criterion> listOfResultingKFCs = SimulationObject.getResultingKFCs();
+		for (int indexAdd = 0; indexAdd < resultingKFCs.length; indexAdd++) {
+		listOfResultingKFCs.add(resultingKFCs[indexAdd]);
+		}
+		return listOfResultingKFCs;
+	}
+	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////

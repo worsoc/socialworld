@@ -46,6 +46,7 @@ import org.socialworld.core.EventType;
 import org.socialworld.core.IEventParam;
 import org.socialworld.core.SearchActionDescription;
 import org.socialworld.core.Simulation;
+import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.concrete.*;
 import org.socialworld.objects.connections.Connection;
@@ -92,6 +93,7 @@ public abstract class SimulationObject implements IPerceptible {
 			new StringPair("StateAppearance", PropertyName.stateAppearance.name()),
 			new StringPair("StateComposition", PropertyName.stateComposition.name())
 			} ;
+	private static StringPair[] propMethodsMetaInfos = new StringPair[] {} ;
 
 	public static List<StringPair> getPropertiesMetaInfos() {
 		List<StringPair> listOfPropertyMetaInfo = new ArrayList<StringPair>();
@@ -103,7 +105,21 @@ public abstract class SimulationObject implements IPerceptible {
 	
 	
 	public static List<StringPair> getPropMethodsMetaInfos() {
-		return new ArrayList<StringPair>();
+		List<StringPair> listOfPropMethodMetaInfo = new ArrayList<StringPair>();
+		for (int indexAdd = 0; indexAdd < propMethodsMetaInfos.length; indexAdd++) {
+			listOfPropMethodMetaInfo.add(propMethodsMetaInfos[indexAdd]);
+		}
+		return listOfPropMethodMetaInfo;
+	}
+	
+	private static KnowledgeFact_Criterion[] resultingKFCs = new KnowledgeFact_Criterion[] {};
+	
+	public static List<KnowledgeFact_Criterion> getResultingKFCs() {
+		List<KnowledgeFact_Criterion> listOfResultingKFCs = new ArrayList<KnowledgeFact_Criterion>();
+		for (int indexAdd = 0; indexAdd < resultingKFCs.length; indexAdd++) {
+			listOfResultingKFCs.add(resultingKFCs[indexAdd]);
+		}
+		return listOfResultingKFCs;
 	}
 	
 ///////////////////////////////////////////////////////////////////////////////////////////

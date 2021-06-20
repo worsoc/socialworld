@@ -21,14 +21,12 @@
 */
 package org.socialworld.attributes;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
-import org.socialworld.tools.Generation;
 import org.socialworld.tools.StringPair;
 
 public class SVVector extends SavedValue {
@@ -39,9 +37,6 @@ public class SVVector extends SavedValue {
 //////////////////static instance for meta information    ///////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	private static SVVector singletonDummyForGenerationTools;
-	private static List<StringPair> listOfPropertyMetaInfo;
-	private boolean listOfPropertyMetaInfoIsFilled = false;
 	private static StringPair[] propertiesMetaInfos = new StringPair[]{
  			new StringPair(Type.vector.getIndexWithSWTPraefix(), PropertyName.vector.name()),
  			new StringPair(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.vector_x.name()),
@@ -49,16 +44,12 @@ public class SVVector extends SavedValue {
  			new StringPair(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.vector_z.name())
  			} ;
 
-	public static SVVector getInstance(Generation calledFromGeneration) {
-		if (singletonDummyForGenerationTools == null) {
-			singletonDummyForGenerationTools = new SVVector(calledFromGeneration);
+	public static List<StringPair> getPropertiesMetaInfos() {
+		List<StringPair> listOfPropertyMetaInfo = SavedValue.getPropertiesMetaInfos();
+		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
+			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}
-		return singletonDummyForGenerationTools;
-	}
-	
-	private SVVector(Generation calledFromGeneration) 
-	{
-		
+		return listOfPropertyMetaInfo;
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -112,17 +103,6 @@ public class SVVector extends SavedValue {
 		}
 	}
 
-	public List<StringPair> getPropertiesMetaInfos() {
-		if (!listOfPropertyMetaInfoIsFilled) {
-			List<StringPair> result = super.getPropertiesMetaInfos();
-			for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
-				result.add(propertiesMetaInfos[indexAdd]);
-			}
-			listOfPropertyMetaInfo = result;
-			listOfPropertyMetaInfoIsFilled = true;
-		}
-		return new ArrayList<StringPair>(listOfPropertyMetaInfo);
-	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////  implementing  Vector methods  ////////////////////////////////////

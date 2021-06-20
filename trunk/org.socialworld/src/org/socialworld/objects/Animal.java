@@ -35,6 +35,7 @@ import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.IEventParam;
+import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.concrete.animals.ISeer;
 import org.socialworld.objects.concrete.animals.StateBody;
 import org.socialworld.objects.concrete.animals.StateInventory;
@@ -78,6 +79,18 @@ public abstract class Animal extends SimulationObject implements ISeer {
 			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}
 		return listOfPropertyMetaInfo;
+	}
+
+	private static KnowledgeFact_Criterion[] resultingKFCs = new KnowledgeFact_Criterion[] {
+			KnowledgeFact_Criterion.colour,
+		};
+
+	public static List<KnowledgeFact_Criterion> getResultingKFCs() {
+		List<KnowledgeFact_Criterion> listOfResultingKFCs = SimulationObject.getResultingKFCs();
+		for (int indexAdd = 0; indexAdd < resultingKFCs.length; indexAdd++) {
+		listOfResultingKFCs.add(resultingKFCs[indexAdd]);
+		}
+		return listOfResultingKFCs;
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
