@@ -30,6 +30,7 @@ import org.socialworld.calculation.PropertyUsingAs;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
+import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.tools.StringPair;
 
 public abstract class SavedValue implements ISavedValues {
@@ -57,6 +58,40 @@ public abstract class SavedValue implements ISavedValues {
 	}
 
 	public abstract Object getReleased(SimulationCluster cluster);
+	
+	///////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////  meta information   //////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
+
+	
+	private static StringPair[] propertiesMetaInfos = new StringPair[] {} ;
+	private static StringPair[] propMethodsMetaInfos = new StringPair[] {} ;
+
+	public static List<StringPair> getPropertiesMetaInfos() {
+		List<StringPair> listOfPropertyMetaInfo = new ArrayList<StringPair>();
+		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
+			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
+		}
+		return listOfPropertyMetaInfo;
+	}
+	
+	public static List<StringPair> getPropMethodsMetaInfos() {
+		List<StringPair> listOfPropMethodMetaInfo = new ArrayList<StringPair>();
+		for (int indexAdd = 0; indexAdd < propMethodsMetaInfos.length; indexAdd++) {
+			listOfPropMethodMetaInfo.add(propMethodsMetaInfos[indexAdd]);
+		}
+		return listOfPropMethodMetaInfo;
+	}
+	
+	private static KnowledgeFact_Criterion[] resultingKFCs = new KnowledgeFact_Criterion[] {};
+	
+	public static List<KnowledgeFact_Criterion> getResultingKFCs() {
+		List<KnowledgeFact_Criterion> listOfResultingKFCs = new ArrayList<KnowledgeFact_Criterion>();
+		for (int indexAdd = 0; indexAdd < resultingKFCs.length; indexAdd++) {
+			listOfResultingKFCs.add(resultingKFCs[indexAdd]);
+		}
+		return listOfResultingKFCs;
+	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////  implementing  ISavedValues  ////////////////////////////////////
@@ -192,15 +227,7 @@ public abstract class SavedValue implements ISavedValues {
 		
 	}
 	
-	public List<StringPair> getPropertiesMetaInfos() {
-		return new ArrayList<StringPair>();
-	}
 
-	public List<StringPair> getPropMethodsMetaInfos() {
-		return new ArrayList<StringPair>();
-	}
-
-	
 //////////////////////////////////////////////////////////////////////////////
 	
 	private final Method getMethod(String method) {

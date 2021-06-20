@@ -21,7 +21,6 @@
 */
 package org.socialworld.objects.concrete;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.attributes.Position;
@@ -32,9 +31,9 @@ import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
+import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.Animal;
 import org.socialworld.objects.State;
-import org.socialworld.tools.Generation;
 import org.socialworld.tools.StringPair;
 
 public class StatePerceptible extends State {
@@ -48,25 +47,40 @@ public class StatePerceptible extends State {
 	//////////////////static instance for meta information    ///////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 
-	private static StatePerceptible singletonDummyForGenerationTools;
-	private static List<StringPair> listOfPropertyMetaInfo;
-	private boolean listOfPropertyMetaInfoIsFilled = false;
 	private static StringPair[] propertiesMetaInfos = new StringPair[] {
 			new StringPair(Type.vector.getIndexWithSWTPraefix() , PropertyName.statePerceptible_cuboid.name()),
 			new StringPair("Position", PropertyName.statePerceptible_position.name())
 			} ;
-
-	public static StatePerceptible getInstance(Generation calledFromGeneration) {
-		if (singletonDummyForGenerationTools == null) {
-			singletonDummyForGenerationTools = new StatePerceptible(calledFromGeneration);
+	private static StringPair[] propMethodsMetaInfos = new StringPair[] {} ;
+	
+	public static List<StringPair> getPropertiesMetaInfos() {
+		List<StringPair> listOfPropertyMetaInfo = State.getPropertiesMetaInfos();
+		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
+			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}
-		return singletonDummyForGenerationTools;
+		return listOfPropertyMetaInfo;
+	}
+
+	public static List<StringPair> getPropMethodsMetaInfos() {
+		List<StringPair> listOfPropMethodMetaInfo = State.getPropMethodsMetaInfos();
+		for (int indexAdd = 0; indexAdd < propMethodsMetaInfos.length; indexAdd++) {
+			listOfPropMethodMetaInfo.add(propMethodsMetaInfos[indexAdd]);
+		}
+		return listOfPropMethodMetaInfo;
+	}
+
+	private static KnowledgeFact_Criterion[] resultingKFCs = new KnowledgeFact_Criterion[] {
+		};
+
+	public static List<KnowledgeFact_Criterion> getResultingKFCs() {
+		List<KnowledgeFact_Criterion> listOfResultingKFCs = State.getResultingKFCs();
+		for (int indexAdd = 0; indexAdd < resultingKFCs.length; indexAdd++) {
+			listOfResultingKFCs.add(resultingKFCs[indexAdd]);
+		}
+		return listOfResultingKFCs;
 	}
 	
-	private StatePerceptible(Generation calledFromGeneration) 
-	{
-		
-	}
+	
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	////////////////// creating instance for simulation    ///////////////////////////////
@@ -120,17 +134,6 @@ public class StatePerceptible extends State {
 		}
 	}
 	
-	public List<StringPair> getPropertiesMetaInfos() {
-		if (!listOfPropertyMetaInfoIsFilled) {
-			List<StringPair> result = super.getPropertiesMetaInfos();
-			for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
-				result.add(propertiesMetaInfos[indexAdd]);
-			}
-			listOfPropertyMetaInfo = result;
-			listOfPropertyMetaInfoIsFilled = true;
-		}
-		return new ArrayList<StringPair>(listOfPropertyMetaInfo);
-	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////  implementing  StatePerceptible methods  ////////////////////////////////////

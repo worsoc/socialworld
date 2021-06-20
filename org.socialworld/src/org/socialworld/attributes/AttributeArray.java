@@ -21,14 +21,12 @@
 */
 package org.socialworld.attributes;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueProperty;
-import org.socialworld.tools.Generation;
 import org.socialworld.tools.StringPair;
 
 /**
@@ -65,23 +63,17 @@ public class AttributeArray extends SimProperty {
 //////////////////  static instance for meta information    ///////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	private static AttributeArray singletonDummyForGenerationTools;
-	private static List<StringPair> listOfPropertyMetaInfo;
-	private boolean listOfPropertyMetaInfoIsFilled = false;
 	private static StringPair[] propertiesMetaInfos = new StringPair[]{};
 			//new StringPair(Type.integer.getIndexWithSWTPraefix(),  PropertyName.attributeArray_1.name()} ;
 	
-	public static AttributeArray getInstance(Generation calledFromGeneration) {
-	if (singletonDummyForGenerationTools == null) {
-	singletonDummyForGenerationTools = new AttributeArray(calledFromGeneration);
+	public static List<StringPair> getPropertiesMetaInfos() {
+		List<StringPair> listOfPropertyMetaInfo = SimProperty.getPropertiesMetaInfos();
+		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
+			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
+		}
+		return listOfPropertyMetaInfo;
 	}
-	return singletonDummyForGenerationTools;
-	}
-	
-	private AttributeArray(Generation calledFromGeneration) 
-	{
-	
-	}
+
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 //////////////////      creating instance for simulation    ///////////////////////////////
@@ -172,18 +164,7 @@ public class AttributeArray extends SimProperty {
 
 	}
 
-	public List<StringPair> getPropertiesMetaInfos() {
-		if (!listOfPropertyMetaInfoIsFilled) {
-			List<StringPair> result = super.getPropertiesMetaInfos();
-			for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
-				result.add(propertiesMetaInfos[indexAdd]);
-			}
-			listOfPropertyMetaInfo = result;
-			listOfPropertyMetaInfoIsFilled = true;
-		}
-		return new ArrayList<StringPair>(listOfPropertyMetaInfo);
-	}
-	
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    Attribute Array  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////

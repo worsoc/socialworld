@@ -1,7 +1,6 @@
 package org.socialworld.objects.concrete.animals;
 
 import java.awt.Color;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.attributes.ISavedValues;
@@ -9,8 +8,8 @@ import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
+import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.State;
-import org.socialworld.tools.Generation;
 import org.socialworld.tools.StringPair;
 
 public class StateBody extends State {
@@ -25,21 +24,35 @@ public class StateBody extends State {
 	//////////////////static instance for meta information    ///////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 
-	private static StateBody singletonDummyForGenerationTools;
-	private static List<StringPair> listOfPropertyMetaInfo;
-	private boolean listOfPropertyMetaInfoIsFilled = false;
 	private static StringPair[] propertiesMetaInfos = new StringPair[]{};
+	private static StringPair[] propMethodsMetaInfos = new StringPair[] {} ;
 	
-	public static StateBody getInstance(Generation calledFromGeneration) {
-		if (singletonDummyForGenerationTools == null) {
-			singletonDummyForGenerationTools = new StateBody(calledFromGeneration);
+	public static List<StringPair> getPropertiesMetaInfos() {
+		List<StringPair> listOfPropertyMetaInfo = State.getPropertiesMetaInfos();
+		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
+			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}
-		return singletonDummyForGenerationTools;
+		return listOfPropertyMetaInfo;
+	}
+
+	public static List<StringPair> getPropMethodsMetaInfos() {
+		List<StringPair> listOfPropMethodMetaInfo = State.getPropMethodsMetaInfos();
+		for (int indexAdd = 0; indexAdd < propMethodsMetaInfos.length; indexAdd++) {
+			listOfPropMethodMetaInfo.add(propMethodsMetaInfos[indexAdd]);
+		}
+		return listOfPropMethodMetaInfo;
 	}
 	
-	private StateBody(Generation calledFromGeneration) 
-	{
-		
+	private static KnowledgeFact_Criterion[] resultingKFCs = new KnowledgeFact_Criterion[] {
+			KnowledgeFact_Criterion.colour
+		};
+
+	public static List<KnowledgeFact_Criterion> getResultingKFCs() {
+		List<KnowledgeFact_Criterion> listOfResultingKFCs = State.getResultingKFCs();
+		for (int indexAdd = 0; indexAdd < resultingKFCs.length; indexAdd++) {
+		listOfResultingKFCs.add(resultingKFCs[indexAdd]);
+		}
+		return listOfResultingKFCs;
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////
@@ -73,17 +86,6 @@ public class StateBody extends State {
 
 	}
 
-	public List<StringPair> getPropertiesMetaInfos() {
-		if (!listOfPropertyMetaInfoIsFilled) {
-			List<StringPair> result = super.getPropertiesMetaInfos();
-			for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
-				result.add(propertiesMetaInfos[indexAdd]);
-			}
-			listOfPropertyMetaInfo = result;
-			listOfPropertyMetaInfoIsFilled = true;
-		}
-		return new ArrayList<StringPair>(listOfPropertyMetaInfo);
-	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////  implementing  StateBody methods  ////////////////////////////////////

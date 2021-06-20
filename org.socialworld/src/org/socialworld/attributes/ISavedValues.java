@@ -21,12 +21,10 @@
 */
 package org.socialworld.attributes;
 
-import java.util.List;
 
 import org.socialworld.calculation.PropertyUsingAs;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.ValueProperty;
-import org.socialworld.tools.StringPair;
 
 public interface ISavedValues {
 
@@ -50,7 +48,4 @@ public interface ISavedValues {
 	public abstract ValueProperty getProperty(SimulationCluster cluster, PropertyName propName, String valueName);
 	public abstract ValueProperty getPropertyFromMethod(SimulationCluster cluster, String methodName, String valueName);
 
-	// getting meta information 
-	public abstract List<StringPair> getPropertiesMetaInfos();
-	public abstract List<StringPair> getPropMethodsMetaInfos();
 }

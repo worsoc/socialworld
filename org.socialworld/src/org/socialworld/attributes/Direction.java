@@ -1,13 +1,12 @@
 package org.socialworld.attributes;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
-import org.socialworld.tools.Generation;
 import org.socialworld.tools.StringPair;
 
 public class Direction extends SimProperty {
@@ -20,25 +19,20 @@ public class Direction extends SimProperty {
 //////////////////  static instance for meta information    ///////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
-	private static Direction singletonDummyForGenerationTools;
-	private static List<StringPair> listOfPropertyMetaInfo;
-	private boolean listOfPropertyMetaInfoIsFilled = false;
 	private static StringPair[] propertiesMetaInfos = new StringPair[]{
 			new StringPair("SVVector", PropertyName.direction_vector.name()),
 			new StringPair(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.direction_power.name())
 			} ;
 
-	public static Direction getInstance(Generation calledFromGeneration) {
-		if (singletonDummyForGenerationTools == null) {
-			singletonDummyForGenerationTools = new Direction(calledFromGeneration);
+	public static List<StringPair> getPropertiesMetaInfos() {
+		List<StringPair> listOfPropertyMetaInfo = SimProperty.getPropertiesMetaInfos();
+		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
+			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}
-		return singletonDummyForGenerationTools;
+		return listOfPropertyMetaInfo;
 	}
-	
-	private Direction(Generation calledFromGeneration) 
-	{
-	
-	}
+
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //////////////////      creating instance for simulation    ///////////////////////////////
@@ -97,19 +91,6 @@ public class Direction extends SimProperty {
 
 	}
 	
-	public List<StringPair> getPropertiesMetaInfos() {
-		if (!listOfPropertyMetaInfoIsFilled) {
-			List<StringPair> result = super.getPropertiesMetaInfos();
-			for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
-				result.add(propertiesMetaInfos[indexAdd]);
-			}
-			listOfPropertyMetaInfo = result;
-			listOfPropertyMetaInfoIsFilled = true;
-		}
-		return new ArrayList<StringPair>(listOfPropertyMetaInfo);
-	}
-
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    Direction  ///////////////////////////////////////////////

@@ -21,7 +21,6 @@
 */
 package org.socialworld.actions.handle;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.attributes.PropertyName;
@@ -31,10 +30,10 @@ import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.core.ObjectMaster;
+import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.SimulationObject_Type;
 import org.socialworld.objects.properties.IWeapon;
-import org.socialworld.tools.Generation;
 import org.socialworld.tools.StringPair;
 
 /**
@@ -72,9 +71,6 @@ public class Inventory extends SimProperty {
 //////////////////  static instance for meta information    ///////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
-	private static Inventory singletonDummyForGenerationTools;
-	private static List<StringPair> listOfPropertyMetaInfo;
-	private boolean listOfPropertyMetaInfoIsFilled = false;
 	private static StringPair[] propertiesMetaInfos = new StringPair[]{
 			new StringPair(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_shirt.name()),
 			new StringPair(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_trousers.name()),
@@ -84,18 +80,27 @@ public class Inventory extends SimProperty {
 			new StringPair(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_rightHand.name())
 			} ;
 
-	public static Inventory getInstance(Generation calledFromGeneration) {
-		if (singletonDummyForGenerationTools == null) {
-			singletonDummyForGenerationTools = new Inventory(calledFromGeneration);
+	public static List<StringPair> getPropertiesMetaInfos() {
+		List<StringPair> listOfPropertyMetaInfo = SimProperty.getPropertiesMetaInfos();
+		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
+			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}
-		return singletonDummyForGenerationTools;
-	}
-	
-	private Inventory(Generation calledFromGeneration) 
-	{
-		
+		return listOfPropertyMetaInfo;
 	}
 
+	private static KnowledgeFact_Criterion[] resultingKFCs = new KnowledgeFact_Criterion[] {
+			KnowledgeFact_Criterion.colour,
+			KnowledgeFact_Criterion.material
+		};
+
+	public static List<KnowledgeFact_Criterion> getResultingKFCs() {
+		List<KnowledgeFact_Criterion> listOfResultingKFCs = SimProperty.getResultingKFCs();
+		for (int indexAdd = 0; indexAdd < resultingKFCs.length; indexAdd++) {
+		listOfResultingKFCs.add(resultingKFCs[indexAdd]);
+		}
+		return listOfResultingKFCs;
+	}
+	
 ///////////////////////////////////////////////////////////////////////////////////////////
 ////////////////// creating instance for simulation    ///////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -149,18 +154,7 @@ public class Inventory extends SimProperty {
 
 	}
 
-	public List<StringPair> getPropertiesMetaInfos() {
-		if (!listOfPropertyMetaInfoIsFilled) {
-			List<StringPair> result = super.getPropertiesMetaInfos();
-			for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
-				result.add(propertiesMetaInfos[indexAdd]);
-			}
-			listOfPropertyMetaInfo = result;
-			listOfPropertyMetaInfoIsFilled = true;
-		}
-		return new ArrayList<StringPair>(listOfPropertyMetaInfo);
-	}
-	
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    Inventory  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////

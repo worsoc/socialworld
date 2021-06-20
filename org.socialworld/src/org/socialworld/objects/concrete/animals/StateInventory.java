@@ -1,6 +1,5 @@
 package org.socialworld.objects.concrete.animals;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.actions.handle.Inventory;
@@ -10,9 +9,9 @@ import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
+import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.State;
-import org.socialworld.tools.Generation;
 import org.socialworld.tools.StringPair;
 
 public class StateInventory extends State {
@@ -24,9 +23,6 @@ public class StateInventory extends State {
 	//////////////////static instance for meta information    ///////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 
-	private static StateInventory singletonDummyForGenerationTools;
-	private static List<StringPair> listOfPropertyMetaInfo;
-	private boolean listOfPropertyMetaInfoIsFilled = false;
 	private static StringPair[] propertiesMetaInfos = new StringPair[]{
 		new StringPair(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_shirt.name()),
 		new StringPair(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_trousers.name()),
@@ -35,17 +31,35 @@ public class StateInventory extends State {
 		new StringPair(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_leftHand.name()),
 		new StringPair(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_rightHand.name())
 		} ;
-
-	public static StateInventory getInstance(Generation calledFromGeneration) {
-		if (singletonDummyForGenerationTools == null) {
-			singletonDummyForGenerationTools = new StateInventory(calledFromGeneration);
+	private static StringPair[] propMethodsMetaInfos = new StringPair[] {} ;
+	
+	public static List<StringPair> getPropertiesMetaInfos() {
+		List<StringPair> listOfPropertyMetaInfo = State.getPropertiesMetaInfos();
+		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
+			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}
-		return singletonDummyForGenerationTools;
+		return listOfPropertyMetaInfo;
+	}
+
+	public static List<StringPair> getPropMethodsMetaInfos() {
+		List<StringPair> listOfPropMethodMetaInfo = State.getPropMethodsMetaInfos();
+		for (int indexAdd = 0; indexAdd < propMethodsMetaInfos.length; indexAdd++) {
+			listOfPropMethodMetaInfo.add(propMethodsMetaInfos[indexAdd]);
+		}
+		return listOfPropMethodMetaInfo;
 	}
 	
-	private StateInventory(Generation calledFromGeneration) 
-	{
-		
+	private static KnowledgeFact_Criterion[] resultingKFCs = new KnowledgeFact_Criterion[] {
+			KnowledgeFact_Criterion.colour,
+			KnowledgeFact_Criterion.material
+		};
+
+	public static List<KnowledgeFact_Criterion> getResultingKFCs() {
+		List<KnowledgeFact_Criterion> listOfResultingKFCs = State.getResultingKFCs();
+		for (int indexAdd = 0; indexAdd < resultingKFCs.length; indexAdd++) {
+		listOfResultingKFCs.add(resultingKFCs[indexAdd]);
+		}
+		return listOfResultingKFCs;
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////
@@ -132,17 +146,6 @@ public class StateInventory extends State {
 		
 	}
 
-	public List<StringPair> getPropertiesMetaInfos() {
-		if (!listOfPropertyMetaInfoIsFilled) {
-			List<StringPair> result = super.getPropertiesMetaInfos();
-			for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
-				result.add(propertiesMetaInfos[indexAdd]);
-			}
-			listOfPropertyMetaInfo = result;
-			listOfPropertyMetaInfoIsFilled = true;
-		}
-		return new ArrayList<StringPair>(listOfPropertyMetaInfo);
-	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////  implementing  StateInventory methods  ////////////////////////////////////

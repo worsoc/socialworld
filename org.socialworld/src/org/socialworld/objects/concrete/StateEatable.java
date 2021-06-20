@@ -22,7 +22,6 @@
 package org.socialworld.objects.concrete;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.attributes.PropertyName;
@@ -32,8 +31,8 @@ import org.socialworld.attributes.properties.TasteProperty;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
+import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.State;
-import org.socialworld.tools.Generation;
 import org.socialworld.tools.StringPair;
 
 public class StateEatable extends State {
@@ -54,22 +53,37 @@ public class StateEatable extends State {
 	//////////////////static instance for meta information    ///////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 
-	private static StateEatable singletonDummyForGenerationTools;
-	private static List<StringPair> listOfPropertyMetaInfo;
-	private boolean listOfPropertyMetaInfoIsFilled = false;
 	private static StringPair[] propertiesMetaInfos = new StringPair[]{};
+	private static StringPair[] propMethodsMetaInfos = new StringPair[] {} ;
 	
-	public static StateEatable getInstance(Generation calledFromGeneration) {
-		if (singletonDummyForGenerationTools == null) {
-			singletonDummyForGenerationTools = new StateEatable(calledFromGeneration);
+	public static List<StringPair> getPropertiesMetaInfos() {
+		List<StringPair> listOfPropertyMetaInfo = State.getPropertiesMetaInfos();
+		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
+			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}
-		return singletonDummyForGenerationTools;
+		return listOfPropertyMetaInfo;
 	}
-	
-	private StateEatable(Generation calledFromGeneration) 
-	{
-		
+
+	public static List<StringPair> getPropMethodsMetaInfos() {
+		List<StringPair> listOfPropMethodMetaInfo = State.getPropMethodsMetaInfos();
+		for (int indexAdd = 0; indexAdd < propMethodsMetaInfos.length; indexAdd++) {
+			listOfPropMethodMetaInfo.add(propMethodsMetaInfos[indexAdd]);
+		}
+		return listOfPropMethodMetaInfo;
 	}
+
+	private static KnowledgeFact_Criterion[] resultingKFCs = new KnowledgeFact_Criterion[] {
+		};
+
+	public static List<KnowledgeFact_Criterion> getResultingKFCs() {
+		List<KnowledgeFact_Criterion> listOfResultingKFCs = State.getResultingKFCs();
+		for (int indexAdd = 0; indexAdd < resultingKFCs.length; indexAdd++) {
+			listOfResultingKFCs.add(resultingKFCs[indexAdd]);
+		}
+		return listOfResultingKFCs;
+	}
+
+
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	////////////////// creating instance for simulation    ///////////////////////////////
@@ -102,17 +116,6 @@ public class StateEatable extends State {
 	protected void setProperty(PropertyName propName, ValueProperty property) {
 	}
 
-	public List<StringPair> getPropertiesMetaInfos() {
-		if (!listOfPropertyMetaInfoIsFilled) {
-			List<StringPair> result = super.getPropertiesMetaInfos();
-			for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
-				result.add(propertiesMetaInfos[indexAdd]);
-			}
-			listOfPropertyMetaInfo = result;
-			listOfPropertyMetaInfoIsFilled = true;
-		}
-		return new ArrayList<StringPair>(listOfPropertyMetaInfo);
-	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////  implementing  StateEatable methods  ////////////////////////////////////

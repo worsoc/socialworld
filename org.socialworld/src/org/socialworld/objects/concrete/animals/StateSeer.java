@@ -22,7 +22,6 @@
 package org.socialworld.objects.concrete.animals;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.attributes.Direction;
@@ -33,8 +32,8 @@ import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.calculation.geometry.VectorMapper;
+import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.State;
-import org.socialworld.tools.Generation;
 import org.socialworld.tools.StringPair;
 
 public class StateSeer extends State {
@@ -54,9 +53,6 @@ public class StateSeer extends State {
 	//////////////////static instance for meta information    ///////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 
-	private static StateSeer singletonDummyForGenerationTools;
-	private static List<StringPair> listOfPropertyMetaInfo;
-	private boolean listOfPropertyMetaInfoIsFilled = false;
 	private static StringPair[] propertiesMetaInfos = new StringPair[]{
 			new StringPair("Direction", PropertyName.stateSeer_directionView.name()),
 			new StringPair(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.stateSeer_angleViewPerceivingEvents.name()),
@@ -65,19 +61,35 @@ public class StateSeer extends State {
 			new StringPair(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.stateSeer_angleViewPerceivingObjectsInRadians.name()),
 			new StringPair(Type.integer.getIndexWithSWTPraefix(), PropertyName.stateSeer_bestPercipiencePerpendicular.name()),
 			new StringPair(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.stateSeer_sizeDistanceRelationThreshold.name())} ;
-
-	public static StateSeer getInstance(Generation calledFromGeneration) {
-		if (singletonDummyForGenerationTools == null) {
-			singletonDummyForGenerationTools = new StateSeer(calledFromGeneration);
+	private static StringPair[] propMethodsMetaInfos = new StringPair[] {} ;
+	
+	public static List<StringPair> getPropertiesMetaInfos() {
+		List<StringPair> listOfPropertyMetaInfo = State.getPropertiesMetaInfos();
+		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
+			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}
-		return singletonDummyForGenerationTools;
+		return listOfPropertyMetaInfo;
+	}
+
+	public static List<StringPair> getPropMethodsMetaInfos() {
+		List<StringPair> listOfPropMethodMetaInfo = State.getPropMethodsMetaInfos();
+		for (int indexAdd = 0; indexAdd < propMethodsMetaInfos.length; indexAdd++) {
+			listOfPropMethodMetaInfo.add(propMethodsMetaInfos[indexAdd]);
+		}
+		return listOfPropMethodMetaInfo;
 	}
 	
-	private StateSeer(Generation calledFromGeneration) 
-	{
-		
-	}
+	private static KnowledgeFact_Criterion[] resultingKFCs = new KnowledgeFact_Criterion[] {
+		};
 
+	public static List<KnowledgeFact_Criterion> getResultingKFCs() {
+		List<KnowledgeFact_Criterion> listOfResultingKFCs = State.getResultingKFCs();
+		for (int indexAdd = 0; indexAdd < resultingKFCs.length; indexAdd++) {
+		listOfResultingKFCs.add(resultingKFCs[indexAdd]);
+		}
+		return listOfResultingKFCs;
+	}
+	
 	///////////////////////////////////////////////////////////////////////////////////////////
 	////////////////// creating instance for simulation    ///////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
@@ -151,17 +163,6 @@ public class StateSeer extends State {
 		}
 	}
 
-	public List<StringPair> getPropertiesMetaInfos() {
-		if (!listOfPropertyMetaInfoIsFilled) {
-			List<StringPair> result = super.getPropertiesMetaInfos();
-			for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
-				result.add(propertiesMetaInfos[indexAdd]);
-			}
-			listOfPropertyMetaInfo = result;
-			listOfPropertyMetaInfoIsFilled = true;
-		}
-		return new ArrayList<StringPair>(listOfPropertyMetaInfo);
-	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////  implementing  StateSeer methods  ////////////////////////////////////
