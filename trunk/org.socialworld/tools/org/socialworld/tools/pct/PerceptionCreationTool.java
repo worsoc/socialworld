@@ -49,21 +49,12 @@ public class PerceptionCreationTool extends JFrame{
 		System.out.println("Hello World");
 
 		PerceptionGeneration pg = new PerceptionGeneration();
-		String result = pg.generatePerceptionDescription("gfjg48gtdzi57ugjjgkt");
+		//String result = pg.generatePerceptionDescription("gfjg48gtdzi57ugjjgkt");
+		String result = pg.generatePerceptionDescription("bnthnhiut8ub849206u0bu0");
 		System.out.println(result);
 		exp = new CreateKnowledgeElementExpression(result);
 		System.out.println(exp.toString());
-/*		
-		String test = 
-		"KSbj:GETVal(" + Value.VALUE_BY_NAME_EVENT_PARAMS + ").GETVal(" + Value.VALUE_BY_NAME_EVENT_CAUSER + ");" +
-		"KSrcT:1," +
-		"KSrc:GETVal(" + Value.VALUE_NAME_KNOWLEDGE_SOURCE_MYSELF + ")," +
-		"KVal:GETVal(" + Value.VALUE_BY_NAME_EVENT_PARAMS + ").GETVal(" + Value.VALUE_BY_NAME_EVENT_CAUSER + ")#IsElem(1056964607).GETProp(simobj_position).GETProp(position_vector)";
-		System.out.println(test);
-
-		exp = new CreateKnowledgeElementExpression(test);
-		System.out.println(exp.toString());
-*/
+		
 		System.out.println("Bye, Bye, World");
 	}
 	

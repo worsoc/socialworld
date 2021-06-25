@@ -1,10 +1,10 @@
 package org.socialworld.objects.concrete.animals;
 
-import java.awt.Color;
 import java.util.List;
 
 import org.socialworld.attributes.ISavedValues;
 import org.socialworld.attributes.PropertyName;
+import org.socialworld.attributes.properties.Colour;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
@@ -25,7 +25,10 @@ public class StateBody extends State {
 	///////////////////////////////////////////////////////////////////////////////////////////
 
 	private static StringPair[] propertiesMetaInfos = new StringPair[]{};
-	private static StringPair[] propMethodsMetaInfos = new StringPair[] {} ;
+	private static StringPair[] propMethodsMetaInfos = new StringPair[] {
+			new StringPair("Colour",METHODNAME_GET_FACE_COLOUR),
+			new StringPair("Colour",METHODNAME_GET_HAIR_COLOUR)
+			} ;
 	
 	public static List<StringPair> getPropertiesMetaInfos() {
 		List<StringPair> listOfPropertyMetaInfo = State.getPropertiesMetaInfos();
@@ -92,11 +95,11 @@ public class StateBody extends State {
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
 	protected ValueProperty getFaceColour() {
-		return new ValueProperty(Type.integer,  VALUENAME_FACE_COLOUR, Color.PINK.getRGB());
+		return new ValueProperty(Type.object,  VALUENAME_FACE_COLOUR, Colour.black);
 	}
 
 	protected ValueProperty getHairColour() {
-		return new ValueProperty(Type.integer,  VALUENAME_HAIR_COLOUR, Color.BLACK.getRGB());
+		return new ValueProperty(Type.object,  VALUENAME_HAIR_COLOUR, Colour.silver);
 	}
 	
 }

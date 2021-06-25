@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
+import org.socialworld.tools.SimulationMetaInformation;
 import org.socialworld.tools.StringPair;
 import org.socialworld.visualize.SimVisual;
 
@@ -68,7 +69,7 @@ public enum Colour {
 	
 	public static List<StringPair> getPropMethodsMetaInfos() {
 		List<StringPair> listOfPropMethodMetaInfo = new ArrayList<StringPair>();
-		listOfPropMethodMetaInfo.add(new StringPair("enumIndex", "getIndex"));
+		listOfPropMethodMetaInfo.add(new StringPair(SimulationMetaInformation.CLASSNAME_ENUM_INDEX, SimulationMetaInformation.METHODNAME_ENUM_GETINDEX));
 		return listOfPropMethodMetaInfo;
 	}
 
