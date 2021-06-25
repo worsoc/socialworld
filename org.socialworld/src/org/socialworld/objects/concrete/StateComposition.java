@@ -15,7 +15,7 @@ import org.socialworld.tools.StringPair;
 
 public class StateComposition extends State {
 
-	public static final String VALUENAME_MAIN_MATERIAL = "mainColour";
+	public static final String VALUENAME_MAIN_MATERIAL = "mainMaterial";
 
 	public static final String METHODNAME_GET_MAIN_MATERIAL = "getMainMaterial";
 	
@@ -24,7 +24,8 @@ public class StateComposition extends State {
 	///////////////////////////////////////////////////////////////////////////////////////////
 
 	private static StringPair[] propertiesMetaInfos = new StringPair[]{};
-	private static StringPair[] propMethodsMetaInfos = new StringPair[] {} ;
+	private static StringPair[] propMethodsMetaInfos = new StringPair[] {
+		new StringPair("Material", METHODNAME_GET_MAIN_MATERIAL)} ;
 	
 	public static List<StringPair> getPropertiesMetaInfos() {
 		List<StringPair> listOfPropertyMetaInfo = State.getPropertiesMetaInfos();
@@ -43,7 +44,7 @@ public class StateComposition extends State {
 	}
 	
 	private static KnowledgeFact_Criterion[] resultingKFCs = new KnowledgeFact_Criterion[] {
-			KnowledgeFact_Criterion.material,
+			KnowledgeFact_Criterion.material
 		};
 
 	public static List<KnowledgeFact_Criterion> getResultingKFCs() {
@@ -94,6 +95,6 @@ public class StateComposition extends State {
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
 	public ValueProperty getMainMaterial() {
-		return new ValueProperty(Type.integer, VALUENAME_MAIN_MATERIAL, Material.leather.getIndex());
+		return new ValueProperty(Type.object, VALUENAME_MAIN_MATERIAL, Material.leather);
 	}
 }

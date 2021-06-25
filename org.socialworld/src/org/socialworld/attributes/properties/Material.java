@@ -1,5 +1,11 @@
 package org.socialworld.attributes.properties;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.socialworld.knowledge.KnowledgeFact_Criterion;
+import org.socialworld.tools.SimulationMetaInformation;
+import org.socialworld.tools.StringPair;
 
 public enum Material {
 
@@ -29,10 +35,26 @@ public enum Material {
 	 * @return material name
 	 */
 	public static Material getName(int arrayIndex) {
-		for (Material material : Material.values())
-			if (material.arrayIndex == arrayIndex)
-				return material;
+		for (Material element : Material.values())
+			if (element.arrayIndex == arrayIndex)
+				return element;
 		return null;
 	}
 	
+	///////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////meta information    ////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
+	
+	public static List<StringPair> getPropMethodsMetaInfos() {
+		List<StringPair> listOfPropMethodMetaInfo = new ArrayList<StringPair>();
+		listOfPropMethodMetaInfo.add(new StringPair(SimulationMetaInformation.CLASSNAME_ENUM_INDEX, SimulationMetaInformation.METHODNAME_ENUM_GETINDEX));
+		return listOfPropMethodMetaInfo;
+	}
+
+	public static List<KnowledgeFact_Criterion> getResultingKFCs() {
+		List<KnowledgeFact_Criterion> listOfResultingKFCs = new ArrayList<KnowledgeFact_Criterion>();
+		listOfResultingKFCs.add(KnowledgeFact_Criterion.material);
+		return listOfResultingKFCs;
+	}
+
 }

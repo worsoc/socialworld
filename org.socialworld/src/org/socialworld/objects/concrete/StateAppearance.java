@@ -2,6 +2,7 @@ package org.socialworld.objects.concrete;
 
 import org.socialworld.attributes.ISavedValues;
 import org.socialworld.attributes.PropertyName;
+import org.socialworld.attributes.properties.Colour;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
@@ -9,7 +10,6 @@ import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.State;
 import org.socialworld.tools.StringPair;
 
-import java.awt.Color;
 import java.util.List;
 
 public class StateAppearance extends State {
@@ -19,11 +19,12 @@ public class StateAppearance extends State {
 	public static final String METHODNAME_GET_MAIN_COLOR = "getMainColour";
 
 	///////////////////////////////////////////////////////////////////////////////////////////
-	//////////////////static instance for meta information    ///////////////////////////////
+	//////////////////  static instance for meta information    ///////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 
 	private static StringPair[] propertiesMetaInfos = new StringPair[]{};
-	private static StringPair[] propMethodsMetaInfos = new StringPair[] {} ;
+	private static StringPair[] propMethodsMetaInfos = new StringPair[] {
+				new StringPair("Colour",METHODNAME_GET_MAIN_COLOR)} ;
 	
 	public static List<StringPair> getPropertiesMetaInfos() {
 		List<StringPair> listOfPropertyMetaInfo = State.getPropertiesMetaInfos();
@@ -42,7 +43,7 @@ public class StateAppearance extends State {
 	}
 	
 	private static KnowledgeFact_Criterion[] resultingKFCs = new KnowledgeFact_Criterion[] {
-						KnowledgeFact_Criterion.colour,
+						KnowledgeFact_Criterion.colour
 					};
 	
 	public static List<KnowledgeFact_Criterion> getResultingKFCs() {
@@ -96,6 +97,6 @@ public class StateAppearance extends State {
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
 	protected ValueProperty getMainColour() {
-		return new ValueProperty(Type.integer, VALUENAME_MAIN_COLOR, Color.RED.getRGB());
+		return new ValueProperty(Type.object, VALUENAME_MAIN_COLOR, Colour.black);
 	}
 }

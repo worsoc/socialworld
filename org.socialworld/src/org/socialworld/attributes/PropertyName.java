@@ -66,6 +66,7 @@ public enum PropertyName {
 	stateComposition(1104000),
 	
 	stateAppearance(1105000),
+	stateAppearance_mainColour(1105001),
 
 	statePerceptible(1106000),
 	statePerceptible_position(1106001),
@@ -88,6 +89,7 @@ public enum PropertyName {
 	vector_y(5001012),
 	vector_z(5001013);
 
+	
 	private final static int THREASHOLD_SIMPROPERTY = 2000000;
 
 	
