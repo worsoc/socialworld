@@ -116,7 +116,7 @@ public class TileInfo {
 		return getTileInfoLargeStandard(number);	
 	}
 	
-	//TODO
+	//TODO implement tiel info for small special adapters
 	String  getTileInfoSmallSpecialAdapter ( int number) {
 		
 		switch (number) {

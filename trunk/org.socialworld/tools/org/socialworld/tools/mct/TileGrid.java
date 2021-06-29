@@ -96,15 +96,9 @@ public class TileGrid extends Tile {
 	private TileGridBorderAdapterType borderAdapterTypeWest = TileGridBorderAdapterType.noAdapter;
 	
 	// filling the raster
-	private static int fillOrderFromNWToSE[];
-	private static int fillOrderFromNEToSW[];
-	private static int fillOrderFromSEToNW[];
-	private static int fillOrderFromSWToNE[];
 	private static int fillOrderFromOutToIn[];
 	private int fillOrder[];
 	int fillIndex = -1;
-	// unused until now
-	private int fillDirection = 1;
 	
 	SubClusterCalculations subClusterCalculation = new SubClusterCalculations();
 	
@@ -166,99 +160,126 @@ public class TileGrid extends Tile {
 		int index;
 		int index2;
 		this.tiles = new Tile[81];
+		
 		for (index = 0; index < 81; index++) {
 			addTile(Tile.getInstance(), index);
 			blocked[index] = false;
 		}
+
+		// TEMP_SOLUTION
+		// init outer raster fields with plane tiles
+		for (index = 0; index < 9; index++) {
+			addTile(
+				new Tile(TileType.addGlobalNumberOffset(TileType.getTileTypeForLevel(tileTypeLevel) , 0)	, heightLevel),
+				index);
+			addTile(
+				new Tile(TileType.addGlobalNumberOffset(TileType.getTileTypeForLevel(tileTypeLevel) , 0)	, heightLevel),
+				index + 72);
+			addTile(
+				new Tile(TileType.addGlobalNumberOffset(TileType.getTileTypeForLevel(tileTypeLevel) , 0)	, heightLevel),
+				index * 9);
+			addTile(
+				new Tile(TileType.addGlobalNumberOffset(TileType.getTileTypeForLevel(tileTypeLevel) , 0)	, heightLevel),
+				index * 9 + 8);
+		}
+		// TEMP_SOLUTION
+		// for testing
+		addTile(
+				new Tile(TileType.addGlobalNumberOffset(TileType.getTileTypeForLevel(tileTypeLevel) , 1)	, heightLevel),
+				1);
+		addTile(
+				new Tile(TileType.addGlobalNumberOffset(TileType.getTileTypeForLevel(tileTypeLevel) , 18)	, heightLevel),
+				2);
+		addTile(
+				new Tile(TileType.addGlobalNumberOffset(TileType.getTileTypeForLevel(tileTypeLevel) , 18)	, heightLevel),
+				3);
+		addTile(
+				new Tile(TileType.addGlobalNumberOffset(TileType.getTileTypeForLevel(tileTypeLevel) , 3)	, heightLevel),
+				4);
+		addTile(
+				new Tile(TileType.addGlobalNumberOffset(TileType.getTileTypeForLevel(tileTypeLevel) , 17)	, heightLevel),
+				5);
+		addTile(
+				new Tile(TileType.addGlobalNumberOffset(TileType.getTileTypeForLevel(tileTypeLevel) , 17)	, heightLevel),
+				6);
+		addTile(
+				new Tile(TileType.addGlobalNumberOffset(TileType.getTileTypeForLevel(tileTypeLevel) , 2)	, heightLevel),
+				7);
+
 		
-		if (fillOrderFromNWToSE == null) {
-			fillOrderFromNWToSE = new int[81];
-			for (index= 0; index < 81; index++) {
-				fillOrderFromNWToSE[index] = index;
-			}
-		}
-
-		if (fillOrderFromNEToSW == null) {
-			fillOrderFromNEToSW = new int[81];
-			for (index= 0; index < 9; index++) {
-				for (index2= 0; index2 < 9; index2++) {
-					fillOrderFromNEToSW[index * 9 + index2] = index * 9 + 8 - index2;
-				}
-			}
-		}
-
-		if (fillOrderFromSEToNW == null) {
-			fillOrderFromSEToNW = new int[81];
-			for (index= 0; index < 81; index++) {
-				fillOrderFromSEToNW[index] = 80 - index;
-			}
-		}
 		
-		if (fillOrderFromSWToNE == null) {
-			fillOrderFromSWToNE	= new int[81];
-			for (index= 0; index < 9; index++) {
-				for (index2= 0; index2 < 9; index2++) {
-					fillOrderFromSWToNE[index * 9 + index2] = (8 - index) * 9 + index2;
-				}
-			}
-		}
-
+		
 		if (fillOrderFromOutToIn == null) {
 			fillOrderFromOutToIn = new int[81];
-			for (index= 0; index < 18; index++) {
+			for (index= 0; index < 9; index++) {
 				fillOrderFromOutToIn[index] = index;
-				fillOrderFromOutToIn[index + 18] = index + 63;
+				fillOrderFromOutToIn[index + 9] = index + 72;
 			}
-			fillOrderFromOutToIn[36] = 18;
+			for (index= 0; index < 7; index++) {
+				fillOrderFromOutToIn[index + 18] = (index + 1)  * 9;
+				fillOrderFromOutToIn[index + 25] = (index + 1) * 9 + 8;
+			}
+
+			fillOrderFromOutToIn[32] = 10;
+			fillOrderFromOutToIn[33] = 70;
+			fillOrderFromOutToIn[34] = 16;
+			fillOrderFromOutToIn[35] = 64;
+			fillOrderFromOutToIn[36] = 11;
 			fillOrderFromOutToIn[37] = 19;
-			fillOrderFromOutToIn[38] = 25;
-			fillOrderFromOutToIn[39] = 26;
-			fillOrderFromOutToIn[40] = 27;
-			fillOrderFromOutToIn[41] = 28;
-			fillOrderFromOutToIn[42] = 34;
-			fillOrderFromOutToIn[43] = 35;
-			fillOrderFromOutToIn[44] = 36;
-			fillOrderFromOutToIn[45] = 37;
-			fillOrderFromOutToIn[46] = 43;
-			fillOrderFromOutToIn[47] = 44;
-			fillOrderFromOutToIn[48] = 45;
-			fillOrderFromOutToIn[49] = 46;
-			fillOrderFromOutToIn[50] = 52;
-			fillOrderFromOutToIn[51] = 53;
-			fillOrderFromOutToIn[52] = 54;
-			fillOrderFromOutToIn[53] = 55;
-			fillOrderFromOutToIn[54] = 61;
-			fillOrderFromOutToIn[55] = 62;
+			fillOrderFromOutToIn[38] = 61;
+			fillOrderFromOutToIn[39] = 69;
+			fillOrderFromOutToIn[40] = 15;
+			fillOrderFromOutToIn[41] = 25;
+			fillOrderFromOutToIn[42] = 55;
+			fillOrderFromOutToIn[43] = 65;
 			
-			fillOrderFromOutToIn[56] = 20;
-			fillOrderFromOutToIn[57] = 21;
-			fillOrderFromOutToIn[58] = 22;
-			fillOrderFromOutToIn[59] = 23;
-			fillOrderFromOutToIn[60] = 24;
-			fillOrderFromOutToIn[61] = 33;
-			fillOrderFromOutToIn[62] = 42;
-			fillOrderFromOutToIn[63] = 51;
-			fillOrderFromOutToIn[64] = 60;
-			fillOrderFromOutToIn[65] = 59;
-			fillOrderFromOutToIn[66] = 58;
+			fillOrderFromOutToIn[44] = 12;
+			fillOrderFromOutToIn[45] = 28;
+			fillOrderFromOutToIn[46] = 20;
+			fillOrderFromOutToIn[47] = 52;
+			fillOrderFromOutToIn[48] = 68;
+			fillOrderFromOutToIn[49] = 60;
+			fillOrderFromOutToIn[50] = 14;
+			fillOrderFromOutToIn[51] = 34;
+			fillOrderFromOutToIn[52] = 24;
+			fillOrderFromOutToIn[53] = 46;
+			fillOrderFromOutToIn[54] = 66;
+			fillOrderFromOutToIn[55] = 56;
+			
+			fillOrderFromOutToIn[56] = 13;
+			fillOrderFromOutToIn[57] = 37;
+			fillOrderFromOutToIn[58] = 21;
+			fillOrderFromOutToIn[59] = 29;
+			fillOrderFromOutToIn[60] = 43;
+			fillOrderFromOutToIn[61] = 67;
+			fillOrderFromOutToIn[62] = 51;
+			fillOrderFromOutToIn[63] = 59;
+			fillOrderFromOutToIn[64] = 23;
+			fillOrderFromOutToIn[65] = 33;
+			fillOrderFromOutToIn[66] = 47;
 			fillOrderFromOutToIn[67] = 57;
-			fillOrderFromOutToIn[68] = 56;
-			fillOrderFromOutToIn[69] = 47;
-			fillOrderFromOutToIn[70] = 38;
-			fillOrderFromOutToIn[71] = 29;
-			fillOrderFromOutToIn[72] = 30;
-			fillOrderFromOutToIn[73] = 31;
+			
+			fillOrderFromOutToIn[68] = 22;
+			fillOrderFromOutToIn[69] = 38;
+			fillOrderFromOutToIn[70] = 30;
+			fillOrderFromOutToIn[71] = 42;
+			fillOrderFromOutToIn[72] = 58;
+			fillOrderFromOutToIn[73] = 50;
 			fillOrderFromOutToIn[74] = 32;
-			fillOrderFromOutToIn[75] = 41;
-			fillOrderFromOutToIn[76] = 50;
-			fillOrderFromOutToIn[77] = 49;
-			fillOrderFromOutToIn[78] = 48;
-			fillOrderFromOutToIn[79] = 39;
+			fillOrderFromOutToIn[75] = 48;
+			fillOrderFromOutToIn[76] = 31;
+			fillOrderFromOutToIn[77] = 39;
+			fillOrderFromOutToIn[78] = 41;
+			fillOrderFromOutToIn[79] = 49;
 			fillOrderFromOutToIn[80] = 40;
 			
 		}
 
 	}
+	
+										
+
+	
 	
 	private String createFromString() {
 
@@ -1167,64 +1188,9 @@ public class TileGrid extends Tile {
 		setBorderCornerNE();
 		setBorderCornerSE();
 		setBorderCornerSW();
+
 		
-		if ((borderAdapterTypeNorth == TileGridBorderAdapterType.from0To1 || 
-				borderAdapterTypeNorth == TileGridBorderAdapterType.from1To0) &&
-			(borderAdapterTypeSouth == TileGridBorderAdapterType.from0To1 ||
-				borderAdapterTypeSouth == TileGridBorderAdapterType.from1To0) ) 
-		{
-				fillOrder = fillOrderFromOutToIn;
-				fillDirection = 5;
-		}
-		else if ((borderAdapterTypeWest == TileGridBorderAdapterType.from0To1 ||
-					borderAdapterTypeWest == TileGridBorderAdapterType.from1To0 ) &&
-				 (borderAdapterTypeEast == TileGridBorderAdapterType.from0To1 || 
-				 	borderAdapterTypeEast == TileGridBorderAdapterType.from1To0) )
-		{
-				fillOrder = fillOrderFromOutToIn;
-				fillDirection = 5;
-		}
-		else if ((borderAdapterTypeEast == TileGridBorderAdapterType.from0To1 || 
-				 	borderAdapterTypeEast == TileGridBorderAdapterType.from1To0 ) &&
-				 (borderAdapterTypeSouth == TileGridBorderAdapterType.from0To1 || 
-				 	borderAdapterTypeSouth == TileGridBorderAdapterType.from1To0 )) 
-		{
-				fillOrder = fillOrderFromSEToNW;
-				fillDirection = 4;
-		}
-		else if ((borderAdapterTypeEast == TileGridBorderAdapterType.from0To1 || 
-			 	borderAdapterTypeEast == TileGridBorderAdapterType.from1To0 ) &&
-			 (borderAdapterTypeNorth == TileGridBorderAdapterType.from0To1 || 
-			 	borderAdapterTypeNorth == TileGridBorderAdapterType.from1To0 )) 
-		{
-				fillOrder = fillOrderFromNEToSW;
-				fillDirection = 3;
-		}
-		else if ((borderAdapterTypeWest == TileGridBorderAdapterType.from0To1 || 
-			 	borderAdapterTypeWest == TileGridBorderAdapterType.from1To0 ) &&
-			 (borderAdapterTypeSouth == TileGridBorderAdapterType.from0To1 || 
-			 	borderAdapterTypeSouth == TileGridBorderAdapterType.from1To0 )) 
-		{
-				fillOrder = fillOrderFromSWToNE;
-				fillDirection = 2;
-		}
-		else if  (borderAdapterTypeEast == TileGridBorderAdapterType.from0To1 || 
-			 	borderAdapterTypeEast == TileGridBorderAdapterType.from1To0 ) 
-		{
-				fillOrder = fillOrderFromSEToNW;
-				fillDirection = 4;
-		}
-		else if  (borderAdapterTypeSouth == TileGridBorderAdapterType.from0To1 || 
-			 	borderAdapterTypeSouth == TileGridBorderAdapterType.from1To0 ) 
-		{
-				fillOrder = fillOrderFromSEToNW;
-				fillDirection = 4;
-		}
-		else {
-			fillOrder =  fillOrderFromNWToSE;
-			fillDirection = 1;
-		}
-		
+		fillOrder = fillOrderFromOutToIn;
 		
 		fillIndex = -1;
 		setNextToDoActualIndex();
@@ -1422,36 +1388,36 @@ public class TileGrid extends Tile {
 		int globalTileNumberCornerNE_N10 = 31;
 		int globalTileNumberCornerNE_E10 = 59;
 		
-		int globalTileNumberCornerNW = 0;
+		int globalTileNumberCornerNE = 0;
 		
 		if (this.borderAdapterTypeNorth == TileGridBorderAdapterType.from0To1) {
 			if (this.borderAdapterTypeEast == TileGridBorderAdapterType.from1To0) {
-				globalTileNumberCornerNW = globalTileNumberCornerNE_N01_E10;
+				globalTileNumberCornerNE = globalTileNumberCornerNE_N01_E10;
 			}
 			else {
-				globalTileNumberCornerNW = globalTileNumberCornerNE_N01;
+				globalTileNumberCornerNE = globalTileNumberCornerNE_N01;
 			}
 		}
 		else if (this.borderAdapterTypeNorth == TileGridBorderAdapterType.from1To0) {
 			if (this.borderAdapterTypeEast == TileGridBorderAdapterType.from0To1) {
-				globalTileNumberCornerNW = globalTileNumberCornerNE_N10_E01;
+				globalTileNumberCornerNE = globalTileNumberCornerNE_N10_E01;
 			}
 			else {
-				globalTileNumberCornerNW = globalTileNumberCornerNE_N10;
+				globalTileNumberCornerNE = globalTileNumberCornerNE_N10;
 			}
 		}
 		else if (this.borderAdapterTypeEast == TileGridBorderAdapterType.from0To1) {
-			globalTileNumberCornerNW = globalTileNumberCornerNE_E01;
+			globalTileNumberCornerNE = globalTileNumberCornerNE_E01;
 		}
 		else if (this.borderAdapterTypeEast == TileGridBorderAdapterType.from1To0) {
-			globalTileNumberCornerNW = globalTileNumberCornerNE_E10;
+			globalTileNumberCornerNE = globalTileNumberCornerNE_E10;
 		}
 		
-		if (globalTileNumberCornerNW > 0) {
-			globalTileNumberCornerNW +=  offsetAdapterVariante;
-			globalTileNumberCornerNW =
-					TileType.addGlobalNumberOffset(TileType.getAdapterTileTypeForLevel(tileTypeLevel), globalTileNumberCornerNW);
-			addTile(new Tile(globalTileNumberCornerNW, heightLevel), 8);
+		if (globalTileNumberCornerNE > 0) {
+			globalTileNumberCornerNE +=  offsetAdapterVariante;
+			globalTileNumberCornerNE =
+					TileType.addGlobalNumberOffset(TileType.getAdapterTileTypeForLevel(tileTypeLevel), globalTileNumberCornerNE);
+			addTile(new Tile(globalTileNumberCornerNE, heightLevel), 8);
 		}
 
 	}
@@ -1466,36 +1432,36 @@ public class TileGrid extends Tile {
 		int globalTileNumberCornerSE_S10 = 71;
 		int globalTileNumberCornerSE_E10 = 51;
 		
-		int globalTileNumberCornerNW = 0;
+		int globalTileNumberCornerSE = 0;
 
 		if (this.borderAdapterTypeSouth == TileGridBorderAdapterType.from0To1) {
 			if (this.borderAdapterTypeEast == TileGridBorderAdapterType.from0To1) {
-				globalTileNumberCornerNW = globalTileNumberCornerSE_S01_E01;
+				globalTileNumberCornerSE = globalTileNumberCornerSE_S01_E01;
 			}
 			else {
-				globalTileNumberCornerNW = globalTileNumberCornerSE_S01;
+				globalTileNumberCornerSE = globalTileNumberCornerSE_S01;
 			}
 		}
 		else if (this.borderAdapterTypeSouth == TileGridBorderAdapterType.from1To0) {
 			if (this.borderAdapterTypeEast == TileGridBorderAdapterType.from1To0) {
-				globalTileNumberCornerNW = globalTileNumberCornerSE_S10_E10;
+				globalTileNumberCornerSE = globalTileNumberCornerSE_S10_E10;
 			}
 			else {
-				globalTileNumberCornerNW = globalTileNumberCornerSE_S10;
+				globalTileNumberCornerSE = globalTileNumberCornerSE_S10;
 			}
 		}
 		else if (this.borderAdapterTypeEast == TileGridBorderAdapterType.from0To1) {
-			globalTileNumberCornerNW = globalTileNumberCornerSE_E01;
+			globalTileNumberCornerSE = globalTileNumberCornerSE_E01;
 		}
 		else if (this.borderAdapterTypeEast == TileGridBorderAdapterType.from1To0) {
-			globalTileNumberCornerNW = globalTileNumberCornerSE_E10;
+			globalTileNumberCornerSE = globalTileNumberCornerSE_E10;
 		}
 		
-		if (globalTileNumberCornerNW > 0) {
-			globalTileNumberCornerNW +=  offsetAdapterVariante;
-			globalTileNumberCornerNW =
-					TileType.addGlobalNumberOffset(TileType.getAdapterTileTypeForLevel(tileTypeLevel), globalTileNumberCornerNW);
-			addTile(new Tile(globalTileNumberCornerNW, heightLevel), 80);
+		if (globalTileNumberCornerSE > 0) {
+			globalTileNumberCornerSE +=  offsetAdapterVariante;
+			globalTileNumberCornerSE =
+					TileType.addGlobalNumberOffset(TileType.getAdapterTileTypeForLevel(tileTypeLevel), globalTileNumberCornerSE);
+			addTile(new Tile(globalTileNumberCornerSE, heightLevel), 80);
 		}
 
 	}
@@ -1510,36 +1476,36 @@ public class TileGrid extends Tile {
 		int globalTileNumberCornerSW_S10 = 79;
 		int globalTileNumberCornerSW_W10 = 41;
 		
-		int globalTileNumberCornerNW = 0;
+		int globalTileNumberCornerSW = 0;
 
 		if (this.borderAdapterTypeSouth == TileGridBorderAdapterType.from0To1) {
 			if (this.borderAdapterTypeWest == TileGridBorderAdapterType.from1To0) {
-				globalTileNumberCornerNW = globalTileNumberCornerSW_S01_W10;
+				globalTileNumberCornerSW = globalTileNumberCornerSW_S01_W10;
 			}
 			else {
-				globalTileNumberCornerNW = globalTileNumberCornerSW_S01;
+				globalTileNumberCornerSW = globalTileNumberCornerSW_S01;
 			}
 		}
 		else if (this.borderAdapterTypeSouth == TileGridBorderAdapterType.from1To0) {
 			if (this.borderAdapterTypeWest == TileGridBorderAdapterType.from0To1) {
-				globalTileNumberCornerNW = globalTileNumberCornerSW_S10_W01;
+				globalTileNumberCornerSW = globalTileNumberCornerSW_S10_W01;
 			}
 			else {
-				globalTileNumberCornerNW = globalTileNumberCornerSW_S10;
+				globalTileNumberCornerSW = globalTileNumberCornerSW_S10;
 			}
 		}
 		else if (this.borderAdapterTypeWest == TileGridBorderAdapterType.from0To1) {
-			globalTileNumberCornerNW = globalTileNumberCornerSW_W01;
+			globalTileNumberCornerSW = globalTileNumberCornerSW_W01;
 		}
 		else if (this.borderAdapterTypeWest == TileGridBorderAdapterType.from1To0) {
-			globalTileNumberCornerNW = globalTileNumberCornerSW_W10;
+			globalTileNumberCornerSW = globalTileNumberCornerSW_W10;
 		}
 		
-		if (globalTileNumberCornerNW > 0) {
-			globalTileNumberCornerNW +=  offsetAdapterVariante;
-			globalTileNumberCornerNW =
-					TileType.addGlobalNumberOffset(TileType.getAdapterTileTypeForLevel(tileTypeLevel), globalTileNumberCornerNW);
-			addTile(new Tile(globalTileNumberCornerNW, heightLevel), 72);
+		if (globalTileNumberCornerSW > 0) {
+			globalTileNumberCornerSW +=  offsetAdapterVariante;
+			globalTileNumberCornerSW =
+					TileType.addGlobalNumberOffset(TileType.getAdapterTileTypeForLevel(tileTypeLevel), globalTileNumberCornerSW);
+			addTile(new Tile(globalTileNumberCornerSW, heightLevel), 72);
 		}
 
 	}
