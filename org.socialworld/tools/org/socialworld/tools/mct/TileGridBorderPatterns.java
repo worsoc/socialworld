@@ -7,7 +7,7 @@ import java.util.Random;
 public class TileGridBorderPatterns {
 
 	private static final List<int[]> corner_0_Patterns = new ArrayList<int[]>(13000);
-	private static List<Integer> corner_0_PatternsIndices;
+	private static List<Integer> corner_0_PatternsIndices = new ArrayList<Integer>();
 	
 	private Random random = new Random();
 	
@@ -78,7 +78,7 @@ public class TileGridBorderPatterns {
 	
 	static TileGridBorderPatterns instance;
 	
-	TileGridBorderPatterns getInstance() {
+	static TileGridBorderPatterns getInstance() {
 		if (instance == null) {
 			instance = new TileGridBorderPatterns();
 		}
@@ -89,11 +89,16 @@ public class TileGridBorderPatterns {
 		
 		corner_0_PatternsIndices = new ArrayList<Integer>();
 
+		for (int index = 0; index < 13000; index++) {
+			corner_0_Patterns.add(new int[0]);
+		}
+		
 		/*********** north 0 -> 0 ***********/
 		
 		firstIndexCorner0North_0_0 = 0;	
 		
-		corner_0_Patterns.set(0, new int[] {0,0,0,0,0,0,0,0,0});corner_0_PatternsIndices.add(0);
+		corner_0_Patterns.set(0, new int[] {0,0,0,0,0,0,0,0,0});
+		corner_0_PatternsIndices.add(0);
 		corner_0_Patterns.set(2, new int[] {0,1,3,2,0,0,0,0,0});corner_0_PatternsIndices.add(2);
 		corner_0_Patterns.set(3, new int[] {0,0,1,3,2,0,0,0,0});corner_0_PatternsIndices.add(3);
 		corner_0_Patterns.set(4, new int[] {0,0,0,1,3,2,0,0,0});corner_0_PatternsIndices.add(4);
@@ -732,6 +737,8 @@ public class TileGridBorderPatterns {
 		
 		/*********** east 0 -> 0 ***********/
 		
+		firstIndexCorner0East_0_0 = corner_0_PatternsIndices.size();
+		
 		corner_0_Patterns.set(9000, new int[] {0,0,0,0,0,0,0,0,0});corner_0_PatternsIndices.add(9000);
 		corner_0_Patterns.set(9002, new int[] {0,2,10,8,0,0,0,0,0});corner_0_PatternsIndices.add(9002);
 		corner_0_Patterns.set(9003, new int[] {0,0,2,10,8,0,0,0,0});corner_0_PatternsIndices.add(9003);
@@ -1025,7 +1032,7 @@ public class TileGridBorderPatterns {
 	}
 	
 	private int getRandomIntBetween(int a, int b) {
-		int value = random.nextInt((b - a) + a) ;
+		int value = random.nextInt(b - a) + a ;
 		return value;
 	}
 	
