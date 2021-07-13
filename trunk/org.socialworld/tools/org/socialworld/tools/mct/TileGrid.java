@@ -182,30 +182,6 @@ public class TileGrid extends Tile {
 				new Tile(TileType.addGlobalNumberOffset(TileType.getTileTypeForLevel(tileTypeLevel) , 0)	, heightLevel),
 				index * 9 + 8);
 		}
-		// TEMP_SOLUTION
-		// for testing
-		addTile(
-				new Tile(TileType.addGlobalNumberOffset(TileType.getTileTypeForLevel(tileTypeLevel) , 1)	, heightLevel),
-				1);
-		addTile(
-				new Tile(TileType.addGlobalNumberOffset(TileType.getTileTypeForLevel(tileTypeLevel) , 18)	, heightLevel),
-				2);
-		addTile(
-				new Tile(TileType.addGlobalNumberOffset(TileType.getTileTypeForLevel(tileTypeLevel) , 18)	, heightLevel),
-				3);
-		addTile(
-				new Tile(TileType.addGlobalNumberOffset(TileType.getTileTypeForLevel(tileTypeLevel) , 3)	, heightLevel),
-				4);
-		addTile(
-				new Tile(TileType.addGlobalNumberOffset(TileType.getTileTypeForLevel(tileTypeLevel) , 17)	, heightLevel),
-				5);
-		addTile(
-				new Tile(TileType.addGlobalNumberOffset(TileType.getTileTypeForLevel(tileTypeLevel) , 17)	, heightLevel),
-				6);
-		addTile(
-				new Tile(TileType.addGlobalNumberOffset(TileType.getTileTypeForLevel(tileTypeLevel) , 2)	, heightLevel),
-				7);
-
 		
 		
 		
@@ -1224,7 +1200,7 @@ public class TileGrid extends Tile {
 			addTile(new Tile(globalTileNumberEdgeNorth_N01_Index1 + 5, heightLevel), 6);
 			addTile(new Tile(globalTileNumberEdgeNorth_N01_Index1 + 6, heightLevel), 7);
 		}
-		if (this.borderAdapterTypeNorth == TileGridBorderAdapterType.from1To0) {
+		else if (this.borderAdapterTypeNorth == TileGridBorderAdapterType.from1To0) {
 			addTile(new Tile(globalTileNumberEdgeNorth_N10_Index1, heightLevel), 1);
 			addTile(new Tile(globalTileNumberEdgeNorth_N10_Index1 - 1, heightLevel), 2);
 			addTile(new Tile(globalTileNumberEdgeNorth_N10_Index1 - 2, heightLevel), 3);
@@ -1232,6 +1208,13 @@ public class TileGrid extends Tile {
 			addTile(new Tile(globalTileNumberEdgeNorth_N10_Index1 - 4, heightLevel), 5);
 			addTile(new Tile(globalTileNumberEdgeNorth_N10_Index1 - 5, heightLevel), 6);
 			addTile(new Tile(globalTileNumberEdgeNorth_N10_Index1 - 6, heightLevel), 7);
+		}
+		else {
+			int[] borderNorthPattern = TileGridBorderPatterns.getInstance().getBorderPattern(1, 0);
+			for (int index = 1; index < 8; index++) {
+				addTile(new Tile(TileType.addGlobalNumberOffset(TileType.getTileTypeForLevel(tileTypeLevel),borderNorthPattern[index]), heightLevel), 
+						index);
+			}
 		}
 	}
 	
@@ -1257,7 +1240,7 @@ public class TileGrid extends Tile {
 			addTile(new Tile(globalTileNumberEdgeEast_E01_Index17 + 5, heightLevel), 62);
 			addTile(new Tile(globalTileNumberEdgeEast_E01_Index17 + 6, heightLevel), 71);
 		}
-		if (this.borderAdapterTypeEast == TileGridBorderAdapterType.from1To0) {
+		else if (this.borderAdapterTypeEast == TileGridBorderAdapterType.from1To0) {
 			addTile(new Tile(globalTileNumberEdgeEast_E10_Index17, heightLevel), 17);
 			addTile(new Tile(globalTileNumberEdgeEast_E10_Index17 - 1, heightLevel), 26);
 			addTile(new Tile(globalTileNumberEdgeEast_E10_Index17 - 2, heightLevel), 35);
@@ -1265,6 +1248,13 @@ public class TileGrid extends Tile {
 			addTile(new Tile(globalTileNumberEdgeEast_E10_Index17 - 4, heightLevel), 53);
 			addTile(new Tile(globalTileNumberEdgeEast_E10_Index17 - 5, heightLevel), 62);
 			addTile(new Tile(globalTileNumberEdgeEast_E10_Index17 - 6, heightLevel), 71);
+		}
+		else {
+			int[] borderEastPattern = TileGridBorderPatterns.getInstance().getBorderPattern(4, 0);
+			for (int index = 1; index < 8; index++) {
+				addTile(new Tile(TileType.addGlobalNumberOffset(TileType.getTileTypeForLevel(tileTypeLevel),borderEastPattern[index]), heightLevel), 
+						9 * index + 8);
+			}
 		}
 	}
 	
@@ -1290,7 +1280,7 @@ public class TileGrid extends Tile {
 			addTile(new Tile(globalTileNumberEdgeSouth_S01_Index73 + 5, heightLevel), 78);
 			addTile(new Tile(globalTileNumberEdgeSouth_S01_Index73 + 6, heightLevel), 79);
 		}
-		if (this.borderAdapterTypeSouth == TileGridBorderAdapterType.from1To0) {
+		else if (this.borderAdapterTypeSouth == TileGridBorderAdapterType.from1To0) {
 			addTile(new Tile(globalTileNumberEdgeSouth_S10_Index73, heightLevel), 73);
 			addTile(new Tile(globalTileNumberEdgeSouth_S10_Index73 - 1, heightLevel), 74);
 			addTile(new Tile(globalTileNumberEdgeSouth_S10_Index73 - 2, heightLevel), 75);
@@ -1298,6 +1288,13 @@ public class TileGrid extends Tile {
 			addTile(new Tile(globalTileNumberEdgeSouth_S10_Index73 - 4, heightLevel), 77);
 			addTile(new Tile(globalTileNumberEdgeSouth_S10_Index73 - 5, heightLevel), 78);
 			addTile(new Tile(globalTileNumberEdgeSouth_S10_Index73 - 6, heightLevel), 79);
+		}
+		else {
+			int[] borderSouthPattern = TileGridBorderPatterns.getInstance().getBorderPattern(2, 0);
+			for (int index = 1; index < 8; index++) {
+				addTile(new Tile(TileType.addGlobalNumberOffset(TileType.getTileTypeForLevel(tileTypeLevel),borderSouthPattern[index]), heightLevel),
+						index + 72);
+			}
 		}
 	}
 	
@@ -1323,7 +1320,7 @@ public class TileGrid extends Tile {
 			addTile(new Tile(globalTileNumberEdgeWest_W01_Index9 + 5, heightLevel), 54);
 			addTile(new Tile(globalTileNumberEdgeWest_W01_Index9 + 6, heightLevel), 63);
 		}
-		if (this.borderAdapterTypeWest == TileGridBorderAdapterType.from1To0) {
+		else if (this.borderAdapterTypeWest == TileGridBorderAdapterType.from1To0) {
 			addTile(new Tile(globalTileNumberEdgeWest_W10_Index9, heightLevel), 9);
 			addTile(new Tile(globalTileNumberEdgeWest_W10_Index9 - 1, heightLevel), 18);
 			addTile(new Tile(globalTileNumberEdgeWest_W10_Index9 - 2, heightLevel), 27);
@@ -1331,6 +1328,13 @@ public class TileGrid extends Tile {
 			addTile(new Tile(globalTileNumberEdgeWest_W10_Index9 - 4, heightLevel), 45);
 			addTile(new Tile(globalTileNumberEdgeWest_W10_Index9 - 5, heightLevel), 54);
 			addTile(new Tile(globalTileNumberEdgeWest_W10_Index9 - 6, heightLevel), 63);
+		}
+		else {
+			int[] borderWestPattern = TileGridBorderPatterns.getInstance().getBorderPattern(3, 0);
+			for (int index = 1; index < 8; index++) {
+				addTile(new Tile(	TileType.addGlobalNumberOffset(TileType.getTileTypeForLevel(tileTypeLevel), borderWestPattern[index]),	heightLevel),
+						9 * index);
+			}
 		}
 	}
 
