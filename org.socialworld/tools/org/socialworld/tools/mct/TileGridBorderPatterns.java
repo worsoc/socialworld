@@ -116,7 +116,6 @@ public class TileGridBorderPatterns {
 		corner_0_Patterns.set(202, new int[] {0,1,18,18,17,17,2,0,0});corner_0_PatternsIndices.add(202);
 		corner_0_Patterns.set(203, new int[] {0,0,1,18,18,17,17,2,0});corner_0_PatternsIndices.add(203);
 		corner_0_Patterns.set(212, new int[] {0,1,18,18,3,17,17,2,0});corner_0_PatternsIndices.add(212);
-
 		
 		/*********** north 0 -> n ***********/
 		
