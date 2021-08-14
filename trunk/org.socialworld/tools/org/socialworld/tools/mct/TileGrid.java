@@ -104,6 +104,12 @@ public class TileGrid extends Tile {
 	
 	HeightChangeChecker heightChangeChecker = HeightChangeChecker.getInstance();
 
+	private final int[] innerCircleRasterIndizes = {10, 16, 64, 70,
+													11, 12, 15, 14, 13, 
+													19, 28, 55, 46, 37,
+													25, 34, 61, 52, 43,
+													65, 66, 69, 68, 67}; 
+
 	TileGrid(Tile parent) {
 		super( TileType.sub);
 		this.parent = (TileGrid) parent;
@@ -158,14 +164,14 @@ public class TileGrid extends Tile {
 	
 	private void initWithTodo() {
 		int index;
-		int index2;
 		this.tiles = new Tile[81];
 		
 		for (index = 0; index < 81; index++) {
-			addTile(Tile.getInstance(), index);
 			blocked[index] = false;
+			addTile(Tile.getInstance(), index);
 		}
 
+		
 		// TEMP_SOLUTION
 		// init outer raster fields with plane tiles
 		for (index = 0; index < 9; index++) {
@@ -282,15 +288,8 @@ public class TileGrid extends Tile {
 		}
 		setHeightLevel(heightLevel);
 */	
-		initWithTodo();
-		setBorders();
-		
-		for (int index = 0; index < 81; index++) {
-			if (tiles[index].getType() != TileType.todo) {
-				blocked[index] = true;
-			}
-		}
 
+		
 		restFromInput = createTotalValuesList();
 		
 		int valueWithOffset;
@@ -301,72 +300,90 @@ public class TileGrid extends Tile {
 		int numberOfPossibleTiles;
 		int choosenTile;
 		
-		int IndexRepeatedStartAfterError = 0;
 		int indexValueList;
-		for ( indexValueList = 0; indexValueList < totalValuesForGeneration.size(); indexValueList++) {
+		
+		while (!isComplete) {
 			
-			valueWithOffset = totalValuesForGeneration.get(indexValueList);
 			
-//			if (tileTypeLevel == 2) {
-//				int mybreak;
-//				mybreak = 1;
-//			}
-			if (valueWithOffset > 100000000) {
-				possibleTilesSet = getPossibleTiles();
-				numberOfPossibleTiles = possibleTilesSet.size(); 
-				if (numberOfPossibleTiles > 0) {
-				    possibleTilesArray = new ArrayList<Integer>(numberOfPossibleTiles); 
-				    for (Integer x : possibleTilesSet) 
-				    	possibleTilesArray.add(x); 
-					value = valueWithOffset - 100000000;
-					choosenTile = possibleTilesArray.get(value % numberOfPossibleTiles);
-					choosenTile = TileType.addGlobalNumberOffset(TileType.getTileTypeForLevel(tileTypeLevel), choosenTile);
-					setSubGrid(valueWithOffset, choosenTile);
+			initWithTodo();
+			setBorders();
+			
+			for (int index = 0; index < 81; index++) {
+				if (tiles[index].getType() != TileType.todo) {
+					blocked[index] = true;
+				}
+			}
+	
+			for ( indexValueList = 0; indexValueList < totalValuesForGeneration.size(); indexValueList++) {
+				
+				valueWithOffset = totalValuesForGeneration.get(indexValueList);
+				
+				if (valueWithOffset > 100000000) {
+					possibleTilesSet = getPossibleTiles();
+					numberOfPossibleTiles = possibleTilesSet.size(); 
+					if (numberOfPossibleTiles > 0) {
+					    possibleTilesArray = new ArrayList<Integer>(numberOfPossibleTiles); 
+					    for (Integer x : possibleTilesSet) 
+					    	possibleTilesArray.add(x); 
+						value = valueWithOffset - 100000000;
+						choosenTile = possibleTilesArray.get(value % numberOfPossibleTiles);
+						choosenTile = TileType.addGlobalNumberOffset(TileType.getTileTypeForLevel(tileTypeLevel), choosenTile);
+						setSubGrid(valueWithOffset, choosenTile);
+					}
+					else {
+						setError();
+					}
 				}
 				else {
-//					System.out.println("setError for big valueWithOffset (tileTypeLevel = " + tileTypeLevel + ")");
-					setError();
-//					setSubGrid(valueWithOffset);
+					offset = TileType.getTileTypeOffset(TileType.getTileType(valueWithOffset));
+					value = valueWithOffset - offset;
+					possibleTilesSet = getPossibleTiles();
+					numberOfPossibleTiles = possibleTilesSet.size(); 
+					if (numberOfPossibleTiles > 0) {
+					    possibleTilesArray = new ArrayList<Integer>(numberOfPossibleTiles); 
+					    for (Integer x : possibleTilesSet) 
+					    	possibleTilesArray.add(x); 
+						choosenTile = possibleTilesArray.get(value % numberOfPossibleTiles);
+						setTile(choosenTile + offset);
+					}
+					else {
+						setError();
+					}
+				}
+				
+				
+				
+				if (isComplete) {
+						break;
 				}
 			}
-			else {
-				offset = TileType.getTileTypeOffset(TileType.getTileType(valueWithOffset));
-				value = valueWithOffset - offset;
-				possibleTilesSet = getPossibleTiles();
-				numberOfPossibleTiles = possibleTilesSet.size(); 
-				if (numberOfPossibleTiles > 0) {
-				    possibleTilesArray = new ArrayList<Integer>(numberOfPossibleTiles); 
-				    for (Integer x : possibleTilesSet) 
-				    	possibleTilesArray.add(x); 
-					choosenTile = possibleTilesArray.get(value % numberOfPossibleTiles);
-					setTile(choosenTile + offset);
+	
+/*	
+			if (!isComplete) {
+				for (int index = 0; index < 81; index++) {
+					addTile(Tile.getInstance(), index);
+				}
+				if (!setFirstInnerCircle()) {
+			  		System.out.println("setFirstInnerCircle liefert keine Belegung"  );
+					for (int index = 0; index < 81; index++) {
+						addTile(Tile.getInstance(), index);
+					}
 				}
 				else {
-//					System.out.println("setError for small valueWithOffset (tileTypeLevel = " + tileTypeLevel + ")");
-					setError();
+					//backtrackTileGrid((short) 10, (short) 0 ) ;
+					if (!backtrackTileGrid((short) 20, (short) 0 ) ) {
+				  		System.out.println("BackTracking liefert keine Lösung"  );
+						for (int index = 0; index < 81; index++) {
+							addTile(Tile.getInstance(), index);
+						}
+					}
+					else {
+				  		System.out.println("BackTracking liefert Lösung"  );
+					};
 				}
 			}
-			
-			
-			
-			if (isComplete) {
-//				System.out.println("Index Valuelist: " + indexValueList + " / " + totalValuesForGeneration.size() );
-					break;
-			}
-
-			if (indexValueList == (totalValuesForGeneration.size() - 1) && !isComplete) {
-				indexValueList = IndexRepeatedStartAfterError;
-				IndexRepeatedStartAfterError++;
-//				indexValueList = 0;
-			}
-		}
-
-		for (int index_ = 0; index_ < 81; index_++) {
-			if (tiles[index_].globalNumber == -2) {
-				System.out.println("Index Valuelist: " + indexValueList + " Index Raster: " + index_ + ": " + tiles[index_].globalNumber + ", " + IndexRepeatedStartAfterError + " / " + totalValuesForGeneration.size() );
-				isComplete = false;
-			}
-		}
+*/		
+		}	
 
 		subClusterCalculation.initWithTiles(this.tiles);
 		subClusterCalculation.setBorderAdapters();
@@ -379,13 +396,11 @@ public class TileGrid extends Tile {
 		restFromInput = restFromInput.substring(0, inputLength);
 		String inputRest = restFromInput.substring(0);
 
-
 		TileGrid sub;
 
 		for (int index = 0; index < 81; index++) {
 			if (this.tiles[index].getType() == TileType.sub) {
 				sub = (TileGrid) this.tiles[index];
-				System.out.println(tileTypeLevel + ": " + index);
 				 sub.setInputForGeneration(inputRest);
 				 inputRest = sub.createFromString();
 			}
@@ -412,79 +427,84 @@ public class TileGrid extends Tile {
 	
 	private void setError() {
 		
-//		if (fillDirection == 1) {
-			if (actualTileIndex > 8) {
+//		System.out.println("setError for tileTypeLevel = " + tileTypeLevel + " and actualTileIndex = " + actualTileIndex);
+/*	
+		for (int index = 0; index < 81; index++) {
+			addTile(Tile.getInstance(), index);
+		}
+*/
+		
+		
+		
+			if (actualTileIndex > 17) {
 				addTile(Tile.getInstance(), actualTileIndex - 9);
-				if ((actualTileIndex % 9) > 0) {
+				if ((actualTileIndex % 9) > 1) {
 					addTile(Tile.getInstance(), actualTileIndex - 10);
 				}
-				if ((actualTileIndex % 9) > 1) {
+				if ((actualTileIndex % 9) > 2) {
 					addTile(Tile.getInstance(), actualTileIndex - 11);
 				}
-				if ((actualTileIndex % 9) < 8) {
+				if ((actualTileIndex % 9) < 7) {
 					addTile(Tile.getInstance(), actualTileIndex - 8);
 				}
-				if ((actualTileIndex % 9) < 7) {
+				if ((actualTileIndex % 9) < 6) {
 					addTile(Tile.getInstance(), actualTileIndex - 7);
 				}
 			}
-			if ((actualTileIndex % 9) > 0) {
+			if ((actualTileIndex % 9) > 1) {
 				addTile(Tile.getInstance(), actualTileIndex - 1);
 			}
 			
-			if (actualTileIndex > 17) {
-				if ((actualTileIndex % 9) > 1) {
+			if (actualTileIndex > 36) {
+				if ((actualTileIndex % 9) > 2) {
 					addTile(Tile.getInstance(), actualTileIndex - 20);
 					addTile(Tile.getInstance(), actualTileIndex - 19);
 					addTile(Tile.getInstance(), actualTileIndex - 18);
 				}
-				if ((actualTileIndex % 9) < 7) {
+				if ((actualTileIndex % 9) < 6) {
 					addTile(Tile.getInstance(), actualTileIndex - 17);
 					addTile(Tile.getInstance(), actualTileIndex - 16);
 				}
 			}
-			if ((actualTileIndex % 9) > 1) {
+			if ((actualTileIndex > 8) &&  (actualTileIndex % 9) > 1) {
 				addTile(Tile.getInstance(), actualTileIndex - 2);
 			}
 		
-//		}
-//		else if (fillDirection == 2) {
-			if (actualTileIndex < 72) {
+			if (actualTileIndex < 63) {
 				addTile(Tile.getInstance(), actualTileIndex + 9);
-				if ((actualTileIndex % 9) > 0) {
+				if ((actualTileIndex % 9) > 1) {
 					addTile(Tile.getInstance(), actualTileIndex + 8);
 				}
-				if ((actualTileIndex % 9) > 1) {
+				if ((actualTileIndex % 9) > 2) {
 					addTile(Tile.getInstance(), actualTileIndex + 7);
 				}
-				if ((actualTileIndex % 9) < 8) {
+				if ((actualTileIndex % 9) < 7) {
 					addTile(Tile.getInstance(), actualTileIndex + 10);
 				}
-				if ((actualTileIndex % 9) < 7) {
+				if ((actualTileIndex % 9) < 6) {
 					addTile(Tile.getInstance(), actualTileIndex + 11);
 				}
 			}
-			if ((actualTileIndex % 9) < 8) {
+			if ((actualTileIndex < 72) && (actualTileIndex % 9) < 7) {
 				addTile(Tile.getInstance(), actualTileIndex + 1);
 			}
+			if ((actualTileIndex < 72) && (actualTileIndex % 9) < 6) {
+				addTile(Tile.getInstance(), actualTileIndex + 2);
+			}
 			
-			if (actualTileIndex < 62) {
-				if ((actualTileIndex % 9) > 1) {
+			if (actualTileIndex < 54) {
+				if ((actualTileIndex % 9) > 2) {
 					addTile(Tile.getInstance(), actualTileIndex + 16);
 					addTile(Tile.getInstance(), actualTileIndex + 17);
 					addTile(Tile.getInstance(), actualTileIndex + 18);
 				}
-				if ((actualTileIndex % 9) < 7) {
+				if ((actualTileIndex % 9) < 6) {
 					addTile(Tile.getInstance(), actualTileIndex + 19);
 					addTile(Tile.getInstance(), actualTileIndex + 20);
 				}
 			}
-			if ((actualTileIndex % 9) < 7) {
-				addTile(Tile.getInstance(), actualTileIndex + 2);
-			}
 
-//		}
-		
+
 		// start from first index
 		fillIndex = -1;
 		setNextToDoActualIndex();
@@ -584,13 +604,11 @@ public class TileGrid extends Tile {
 				if (heightFromWest == heightFromNorth) height = heightFromWest;
 				else {
 					height = -999;
-//					System.out.println("Fehler Höhenbestimmung bei Index: " + i + " --> Höhe von oben: " + heightFromNorth + " und Höhe von links: " + heightFromWest);
 				}
 
 			}
 			
 			tiles[i].heightLevel = height;
-//			System.out.println("Level " + tileTypeLevel + " : Index " + i + " mit Höhe " + height);
 			
 		}
 			
@@ -963,8 +981,6 @@ public class TileGrid extends Tile {
 		
 		String threePack;
 		int nrZoomIn;
-		int valueZoomIn;
-		boolean twoValues;
 		
 		
 		int levelGeneration = tileTypeLevel;
@@ -1043,12 +1059,8 @@ public class TileGrid extends Tile {
 				
 			}
 				
-			if (valuesTotal.size() > 81) break;
 		}
 		
-		for (int i = 0; i < valuesTotal.size(); i++) {
-//			System.out.println(i + ": " + valuesTotal.get(i));
-		}
 		
 		this.totalValuesForGeneration = valuesTotal;
 
@@ -1542,7 +1554,270 @@ public class TileGrid extends Tile {
 		
 		return result;
 	}
+	
+	
+	boolean backtrackTileGrid(short iterationIndex, short iterCount) {
+        boolean resultRecCall;
 
+		/*
+        if (iterationIndex > 70)
+            return true;
+
+        if ((iterCount % 7 == 0) && iterCount != 0)
+            iterationIndex += 2;
+ */
+        if (iterationIndex > 60)
+            return true;
+
+        if ((iterCount % 5 == 0) && iterCount != 0)
+            iterationIndex += 4;
+
+
+        // get index of next writeable Tile
+
+        addTile(Tile.getInstance(), iterationIndex + 1);
+        addTile(Tile.getInstance(), iterationIndex + 9);
+        Set<Integer> possibleTiles = CalculatePossibleTiles.getReducedSet(TileType.getTileTypeForLevel(tileTypeLevel), 0,
+                tiles[iterationIndex + 1], tiles[iterationIndex - 1], tiles[iterationIndex - 9],
+                tiles[iterationIndex + 9]);
+        
+//			System.out.println("Index Backtrack: " + iterationIndex + " -->  " + possibleTiles.size()  );
+			 
+       if (possibleTiles.size() == 0) {
+    		
+     		   return false;
+
+       }
+
+         for (int x : possibleTiles) {
+ //    		System.out.println( iterationIndex + " --> " +  x + " ");
+            // set Tile at current position
+            addTile(new Tile(TileType.getTileTypeForLevel(tileTypeLevel), x, heightLevel), iterationIndex);
+
+            resultRecCall = backtrackTileGrid((short) (iterationIndex + 1), (short) (iterCount + 1));
+            
+            if (resultRecCall == true)             	return true;
+ 
+         }
+        return false;
+ 
+        	
+
+    }
+	
+	private boolean setFirstInnerCircle() {
+		
+		Tile nbNorth;
+		Tile nbSouth;
+		Tile nbWest;
+		Tile nbEast;
+		
+		TileType type = TileType.getTileTypeForLevel(tileTypeLevel);
+		
+		Set<Integer> reducedSet;
+		Object[] possibleTileNumbers;
+		
+		int tileNumber = -2;
+		
+		for (int rasterIndex : innerCircleRasterIndizes) {
+			nbNorth = tiles[rasterIndex - 9];
+			nbSouth = tiles[rasterIndex + 9];
+			nbWest = tiles[rasterIndex - 1];
+			nbEast = tiles[rasterIndex + 1];
+			
+			reducedSet = CalculatePossibleTiles.getReducedSet(type, 0, nbEast, nbWest, nbNorth, nbSouth);
+			possibleTileNumbers =  reducedSet.toArray();
+			
+			if (reducedSet.size() == 0) 
+				return false;
+			else if (reducedSet.size() == 1) 
+				addTile(new Tile(type, (Integer) possibleTileNumbers[0],  heightLevel), rasterIndex);
+			else if (reducedSet.contains(16))
+				addTile(new Tile(type, 16,  heightLevel), rasterIndex);
+			else if (reducedSet.contains(17))
+				addTile(new Tile(type, 17,  heightLevel), rasterIndex);
+			else if (reducedSet.contains(18))
+				addTile(new Tile(type, 18,  heightLevel), rasterIndex);
+			else if (reducedSet.contains(19))
+				addTile(new Tile(type, 19,  heightLevel), rasterIndex);
+			else {
+				switch (rasterIndex) {
+					case 10:
+					case 11:
+					case 12:
+					case 19:
+					case 28:
+						tileNumber = getTileNumberForCombinationNorthWest(rasterIndex); break;
+					case 16:
+					case 15:
+					case 14:
+					case 25:
+					case 34:
+						tileNumber = getTileNumberForCombinationNorthEast(rasterIndex); break;
+					case 64:
+					case 65:
+					case 66:
+					case 55:
+					case 46:
+						tileNumber = getTileNumberForCombinationSouthWest(rasterIndex); break;
+					case 70:
+					case 69:
+					case 68:
+					case 61:
+					case 52:
+						tileNumber = getTileNumberForCombinationSouthEast(rasterIndex); break;
+					default: 
+						tileNumber = -2;
+				}
+				addTile(new Tile(type, tileNumber,  heightLevel), rasterIndex);
+
+			}
+			
+			if (tileNumber == -2) return false;
+			
+			blocked[rasterIndex] = true;
+
+		}
+		
+		return true;
+	}
+	
+	private int getTileNumberForCombinationNorthWest(int rasterIndex) {
+		
+		int tileNumberNorth = tiles[rasterIndex - 9].getNumber();
+		if (tileNumberNorth > 300)  tileNumberNorth = 15;
+		else if (tileNumberNorth > 230)  tileNumberNorth = 2;
+		else if (tileNumberNorth > 200)  tileNumberNorth = 1;
+		else if (tileNumberNorth > 100)  tileNumberNorth = 0;
+		
+		int tileNumberWest = tiles[rasterIndex - 1].getNumber();
+		if (tileNumberWest > 300)  tileNumberWest = 15;
+		else if (tileNumberWest > 240)  tileNumberWest = 4;
+		else if (tileNumberWest > 220)  tileNumberWest = 1;
+		else if (tileNumberWest > 100)  tileNumberWest = 0;
+		
+		if (tileNumberNorth == 0 || tileNumberNorth == 3 || tileNumberNorth == 4 || tileNumberNorth == 7 || tileNumberNorth == 8 || tileNumberNorth == 11 || tileNumberNorth == 12 || tileNumberNorth == 15) {
+			if (tileNumberWest == 0 || tileNumberWest == 2 || tileNumberWest == 5 || tileNumberWest == 7 || tileNumberWest == 8 || tileNumberWest == 10 || tileNumberWest == 13 || tileNumberWest == 15 )
+				return 0;
+			else if (tileNumberWest == 1 || tileNumberWest == 3 || tileNumberWest == 9 || tileNumberWest == 11 || tileNumberWest == 17 || tileNumberWest == 18)
+				return 3;
+			else if (tileNumberWest == 4 || tileNumberWest == 6 || tileNumberWest == 12 || tileNumberWest == 14 || tileNumberWest == 16 || tileNumberWest == 19)
+				return 12;
+		}
+		else if (tileNumberWest == 0 || tileNumberWest == 2 || tileNumberWest == 5 || tileNumberWest == 7 || tileNumberWest == 8 || tileNumberWest == 10 || tileNumberWest == 13 || tileNumberWest == 15 ) {
+			if (tileNumberNorth == 0 || tileNumberNorth == 3 || tileNumberNorth == 4 || tileNumberNorth == 7 || tileNumberNorth == 8 || tileNumberNorth == 11 || tileNumberNorth == 12 || tileNumberNorth == 15)
+				return 0;
+			else if (tileNumberNorth == 1 || tileNumberNorth == 5 || tileNumberNorth == 9 || tileNumberNorth == 13 || tileNumberNorth == 16 || tileNumberNorth == 18)
+				return 5;
+			else if (tileNumberNorth == 2 || tileNumberNorth == 10 || tileNumberNorth == 6 || tileNumberNorth == 14 || tileNumberNorth == 17 || tileNumberNorth == 19)
+				return 10;
+		}
+		
+		return -2;
+	}
+	
+	private int getTileNumberForCombinationNorthEast(int rasterIndex) {
+		
+		int tileNumberNorth = tiles[rasterIndex - 9].getNumber();
+		if (tileNumberNorth > 300)  tileNumberNorth = 15;
+		else if (tileNumberNorth > 230)  tileNumberNorth = 2;
+		else if (tileNumberNorth > 200)  tileNumberNorth = 1;
+		else if (tileNumberNorth > 100)  tileNumberNorth = 0;
+		
+		int tileNumberEast = tiles[rasterIndex + 1].getNumber();
+		if (tileNumberEast > 300)  tileNumberEast = 15;
+		else if (tileNumberEast > 250)  tileNumberEast = 8;
+		else if (tileNumberEast > 210)  tileNumberEast = 2;
+		else if (tileNumberEast > 100)  tileNumberEast = 0;
+		
+		if (tileNumberNorth == 0 || tileNumberNorth == 3 || tileNumberNorth == 4 || tileNumberNorth == 7 || tileNumberNorth == 8 || tileNumberNorth == 11 || tileNumberNorth == 12 || tileNumberNorth == 15) {
+			if (tileNumberEast == 0 || tileNumberEast == 1 || tileNumberEast == 4 || tileNumberEast == 5 || tileNumberEast == 10 || tileNumberEast == 11 || tileNumberEast == 14 || tileNumberEast == 15 )
+				return 0;
+			else if (tileNumberEast == 2 || tileNumberEast == 3 || tileNumberEast == 6 || tileNumberEast == 7 || tileNumberEast == 17 || tileNumberEast == 18)
+				return 3;
+			else if (tileNumberEast == 8 || tileNumberEast == 9 || tileNumberEast == 12 || tileNumberEast == 13 || tileNumberEast == 16 || tileNumberEast == 19)
+				return 12;
+		}
+		else if (tileNumberEast == 0 || tileNumberEast == 1 || tileNumberEast == 4 || tileNumberEast == 5 || tileNumberEast == 10 || tileNumberEast == 11 || tileNumberEast == 14 || tileNumberEast == 15 ) {
+			if (tileNumberNorth == 0 || tileNumberNorth == 3 || tileNumberNorth == 4 || tileNumberNorth == 7 || tileNumberNorth == 8 || tileNumberNorth == 11 || tileNumberNorth == 12 || tileNumberNorth == 15) 
+				return 0;
+			else if (tileNumberNorth == 1 || tileNumberNorth == 5 || tileNumberNorth == 9 || tileNumberNorth == 13 || tileNumberNorth == 16 || tileNumberNorth == 18)
+				return 5;
+			else if (tileNumberNorth == 2 || tileNumberNorth == 10 || tileNumberNorth == 6 || tileNumberNorth == 14 || tileNumberNorth == 17 || tileNumberNorth == 19)
+				return 10;
+		}
+		
+		return -2;
+	}
+	
+	private int getTileNumberForCombinationSouthWest(int rasterIndex) {
+		
+		int tileNumberSouth = tiles[rasterIndex + 9].getNumber();
+		if (tileNumberSouth > 300)  tileNumberSouth = 15;
+		else if (tileNumberSouth > 270)  tileNumberSouth = 8;
+		else if (tileNumberSouth > 260)  tileNumberSouth = 4;
+		else if (tileNumberSouth > 100)  tileNumberSouth = 0;
+		
+		int tileNumberWest = tiles[rasterIndex - 1].getNumber();
+		if (tileNumberWest > 300)  tileNumberWest = 15;
+		else if (tileNumberWest > 240)  tileNumberWest = 4;
+		else if (tileNumberWest > 220)  tileNumberWest = 1;
+		else if (tileNumberWest > 100)  tileNumberWest = 0;
+		
+		if (tileNumberSouth == 0 || tileNumberSouth == 1 || tileNumberSouth == 2 || tileNumberSouth == 3 || tileNumberSouth == 12 || tileNumberSouth == 13 || tileNumberSouth == 14 || tileNumberSouth == 15) {
+			if (tileNumberWest == 0 || tileNumberWest == 2 || tileNumberWest == 5 || tileNumberWest == 7 || tileNumberWest == 8 || tileNumberWest == 10 || tileNumberWest == 13 || tileNumberWest == 15 )
+				return 0;
+			else if (tileNumberWest == 1 || tileNumberWest == 3 || tileNumberWest == 9 || tileNumberWest == 11 || tileNumberWest == 17 || tileNumberWest == 18)
+				return 3;
+			else if (tileNumberWest == 4 || tileNumberWest == 6 || tileNumberWest == 12 || tileNumberWest == 14 || tileNumberWest == 16 || tileNumberWest == 19)
+				return 12;
+		}
+		else if (tileNumberWest == 0 || tileNumberWest == 2 || tileNumberWest == 5 || tileNumberWest == 7 || tileNumberWest == 8 || tileNumberWest == 10 || tileNumberWest == 13 || tileNumberWest == 15 ) {
+			if (tileNumberSouth == 0 || tileNumberSouth == 1 || tileNumberSouth == 2 || tileNumberSouth == 3 || tileNumberSouth == 12 || tileNumberSouth == 13 || tileNumberSouth == 14 || tileNumberSouth == 15) 
+				return 0;
+			else if (tileNumberSouth == 4 || tileNumberSouth == 5 || tileNumberSouth == 6 || tileNumberSouth == 7 || tileNumberSouth == 16 || tileNumberSouth == 18)
+				return 5;
+			else if (tileNumberSouth == 8 || tileNumberSouth == 9 || tileNumberSouth == 10 || tileNumberSouth == 11 || tileNumberSouth == 17 || tileNumberSouth == 19)
+				return 10;
+		}
+		
+		return -2;
+	}
+	
+	private int getTileNumberForCombinationSouthEast(int rasterIndex) {
+		
+		int tileNumberSouth = tiles[rasterIndex + 9].getNumber();
+		if (tileNumberSouth > 300)  tileNumberSouth = 15;
+		else if (tileNumberSouth > 270)  tileNumberSouth = 8;
+		else if (tileNumberSouth > 260)  tileNumberSouth = 4;
+		else if (tileNumberSouth > 100)  tileNumberSouth = 0;
+		
+		int tileNumberEast = tiles[rasterIndex + 1].getNumber();
+		if (tileNumberEast > 300)  tileNumberEast = 15;
+		else if (tileNumberEast > 250)  tileNumberEast = 8;
+		else if (tileNumberEast > 210)  tileNumberEast = 2;
+		else if (tileNumberEast > 100)  tileNumberEast = 0;
+		
+		if (tileNumberSouth == 0 || tileNumberSouth == 1 || tileNumberSouth == 2 || tileNumberSouth == 3 || tileNumberSouth == 12 || tileNumberSouth == 13 || tileNumberSouth == 14 || tileNumberSouth == 15) {
+			if (tileNumberEast == 0 || tileNumberEast == 1 || tileNumberEast == 4 || tileNumberEast == 5 || tileNumberEast == 10 || tileNumberEast == 11 || tileNumberEast == 14 || tileNumberEast == 15 )
+				return 0;
+			else if (tileNumberEast == 2 || tileNumberEast == 3 || tileNumberEast == 6 || tileNumberEast == 7 || tileNumberEast == 17 || tileNumberEast == 18)
+				return 3;
+			else if (tileNumberEast == 8 || tileNumberEast == 9 || tileNumberEast == 12 || tileNumberEast == 13 || tileNumberEast == 16 || tileNumberEast == 19)
+				return 12;
+		}
+		else if (tileNumberEast == 0 || tileNumberEast == 1 || tileNumberEast == 4 || tileNumberEast == 5 || tileNumberEast == 10 || tileNumberEast == 11 || tileNumberEast == 14 || tileNumberEast == 15 ) {
+			if (tileNumberSouth == 0 || tileNumberSouth == 1 || tileNumberSouth == 2 || tileNumberSouth == 3 || tileNumberSouth == 12 || tileNumberSouth == 13 || tileNumberSouth == 14 || tileNumberSouth == 15) 
+				return 0;
+			else if (tileNumberSouth == 4 || tileNumberSouth == 5 || tileNumberSouth == 6 || tileNumberSouth == 7 || tileNumberSouth == 16 || tileNumberSouth == 18)
+				return 5;
+			else if (tileNumberSouth == 8 || tileNumberSouth == 9 || tileNumberSouth == 10 || tileNumberSouth == 11 || tileNumberSouth == 17 || tileNumberSouth == 19)
+				return 10;
+		}
+		
+		return -2;
+	}
+	
 }
 
 /*
