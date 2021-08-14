@@ -1188,7 +1188,7 @@ public class MapCreationTool {
 				raster[i].setSub();
 			}
 			else if (type == TileType.todo) {
-				
+				raster[i].setToDo();
 			}
 			else {
 				raster[i].setTile(type, tileTypeAlternative, number);
