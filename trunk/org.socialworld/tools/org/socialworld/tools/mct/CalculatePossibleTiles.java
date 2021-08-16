@@ -706,4 +706,193 @@ public class CalculatePossibleTiles {
 				
 	}
 
+	
+	static int[] mirrorBorderPatternFromNorth(int[] borderPattern) {
+		int[] result = new int[9];
+		for (int index = 0; index < 9; index++) {
+			result[index] = mirrorTileFromNorth(borderPattern[index]);
+		}
+		return result;
+	}
+	
+	private static int mirrorTileFromNorth(int tileNumber) {
+		TileGridBorderAdapterType tgbat;
+		switch (tileNumber) {
+			case 0: return 0;
+			case 1: return 4;
+			case 2: return 8;
+			case 3: return 12;
+			case 4: return 1;
+			case 5: return 5;
+			case 6: return 9;
+			case 7: return 13;
+			case 8: return 2;
+			case 9: return 6;
+			case 10: return 10;
+			case 11: return 14;
+			case 12: return 3;
+			case 13: return 7;
+			case 14: return 11;
+			case 15: return 15;
+			case 16: return 18;
+			case 17: return 19;
+			case 18: return 16;
+			case 19: return 17;
+			default: 
+				if (tileNumber > 100 && tileNumber < 200) {
+					tgbat = TileGridBorderAdapterType.getBorderAdapterTypeSouth(false, tileNumber);
+					if (tgbat == TileGridBorderAdapterType.flat)
+						return 0;
+					else if (tgbat == TileGridBorderAdapterType.from0To1)
+						return 4;
+					else if (tgbat == TileGridBorderAdapterType.from1To0)
+						return 8;
+					else
+						return 15;
+				}
+				else return -2;
+		}
+	}
+	
+	static int[] mirrorBorderPatternFromSouth(int[] borderPattern) {
+		int[] result = new int[9];
+		for (int index = 0; index < 9; index++) {
+			result[index] = mirrorTileFromSouth(borderPattern[index]);
+		}
+		return result;
+	}
+	
+	private static int mirrorTileFromSouth(int tileNumber) {
+		TileGridBorderAdapterType tgbat;
+		switch (tileNumber) {
+			case 0: return 0;
+			case 1: return 4;
+			case 2: return 8;
+			case 3: return 12;
+			case 4: return 1;
+			case 5: return 5;
+			case 6: return 9;
+			case 7: return 13;
+			case 8: return 2;
+			case 9: return 6;
+			case 10: return 10;
+			case 11: return 14;
+			case 12: return 3;
+			case 13: return 7;
+			case 14: return 11;
+			case 15: return 15;
+			case 16: return 18;
+			case 17: return 19;
+			case 18: return 16;
+			case 19: return 17;
+			default: 
+				if (tileNumber > 100 && tileNumber < 200) {
+					tgbat = TileGridBorderAdapterType.getBorderAdapterTypeNorth(false, tileNumber);
+					if (tgbat == TileGridBorderAdapterType.flat)
+						return 0;
+					else if (tgbat == TileGridBorderAdapterType.from0To1)
+						return 1;
+					else if (tgbat == TileGridBorderAdapterType.from1To0)
+						return 2;
+					else
+						return 15;
+				}
+				else return -2;
+		}
+	}
+	
+	static int[] mirrorBorderPatternFromWest(int[] borderPattern) {
+		int[] result = new int[9];
+		for (int index = 0; index < 9; index++) {
+			result[index] = mirrorTileFromWest(borderPattern[index]);
+		}
+		return result;
+	}
+	
+	private static int mirrorTileFromWest(int tileNumber) {
+		TileGridBorderAdapterType tgbat;
+		switch (tileNumber) {
+			case 0: return 0;
+			case 1: return 2;
+			case 2: return 1;
+			case 3: return 3;
+			case 4: return 8;
+			case 5: return 10;
+			case 6: return 9;
+			case 7: return 11;
+			case 8: return 4;
+			case 9: return 6;
+			case 10: return 5;
+			case 11: return 7;
+			case 12: return 12;
+			case 13: return 14;
+			case 14: return 13;
+			case 15: return 15;
+			case 16: return 19;
+			case 17: return 18;
+			case 18: return 17;
+			case 19: return 16;
+			default: 
+				if (tileNumber > 100 && tileNumber < 200) {
+					tgbat = TileGridBorderAdapterType.getBorderAdapterTypeEast(false, tileNumber);
+					if (tgbat == TileGridBorderAdapterType.flat)
+						return 0;
+					else if (tgbat == TileGridBorderAdapterType.from0To1)
+						return 2;
+					else if (tgbat == TileGridBorderAdapterType.from1To0)
+						return 8;
+					else
+						return 15;
+				}
+				else return -2;
+		}
+	}
+	
+	static int[] mirrorBorderPatternFromEast(int[] borderPattern) {
+		int[] result = new int[9];
+		for (int index = 0; index < 9; index++) {
+			result[index] = mirrorTileFromEast(borderPattern[index]);
+		}
+		return result;
+	}
+	
+	private static int mirrorTileFromEast(int tileNumber) {
+		TileGridBorderAdapterType tgbat;
+		switch (tileNumber) {
+			case 0: return 0;
+			case 1: return 2;
+			case 2: return 1;
+			case 3: return 3;
+			case 4: return 8;
+			case 5: return 10;
+			case 6: return 9;
+			case 7: return 11;
+			case 8: return 4;
+			case 9: return 6;
+			case 10: return 5;
+			case 11: return 7;
+			case 12: return 12;
+			case 13: return 14;
+			case 14: return 13;
+			case 15: return 15;
+			case 16: return 19;
+			case 17: return 18;
+			case 18: return 17;
+			case 19: return 16;
+			default: 
+				if (tileNumber > 100 && tileNumber < 200) {
+					tgbat = TileGridBorderAdapterType.getBorderAdapterTypeWest(false, tileNumber);
+					if (tgbat == TileGridBorderAdapterType.flat)
+						return 0;
+					else if (tgbat == TileGridBorderAdapterType.from0To1)
+						return 1;
+					else if (tgbat == TileGridBorderAdapterType.from1To0)
+						return 4;
+					else
+						return 15;
+				}
+				else return -2;
+		}
+	}
+
 }

@@ -208,19 +208,19 @@ public class Tile {
 	}
 	
 	TileGridBorderAdapterType getBorderAdapterTypeNorth() {
-		return TileGridBorderAdapterType.getBorderAdapterTypeNorth(globalNumber);
+		return TileGridBorderAdapterType.getBorderAdapterTypeNorth(true, globalNumber);
 	}
 
 	TileGridBorderAdapterType getBorderAdapterTypeEast() {
-		return TileGridBorderAdapterType.getBorderAdapterTypeEast(globalNumber);
+		return TileGridBorderAdapterType.getBorderAdapterTypeEast(true, globalNumber);
 	}
 
 	TileGridBorderAdapterType getBorderAdapterTypeSouth() {
-		return TileGridBorderAdapterType.getBorderAdapterTypeSouth(globalNumber);
+		return TileGridBorderAdapterType.getBorderAdapterTypeSouth(true, globalNumber);
 	}
 
 	TileGridBorderAdapterType getBorderAdapterTypeWest() {
-		return TileGridBorderAdapterType.getBorderAdapterTypeWest(globalNumber);
+		return TileGridBorderAdapterType.getBorderAdapterTypeWest(true, globalNumber);
 	}
 
 	public String toString() {

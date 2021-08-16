@@ -73,7 +73,8 @@ public class TileGrid extends Tile {
 	int actualTileIndex = 0;
 	// the reference to the parent tile grid 
 	private TileGrid parent;
-
+	private int myRasterIndexInParentGrid = -1;
+	
 	// is set to true, if all raster elements are filled
 	boolean isComplete = false;
 	
@@ -163,6 +164,11 @@ public class TileGrid extends Tile {
 	}
 	
 	private void initWithTodo() {
+		
+		if (tileTypeLevel > 0) {
+			myRasterIndexInParentGrid = parent.findTile(this);
+		}
+		
 		int index;
 		this.tiles = new Tile[81];
 		
@@ -301,9 +307,13 @@ public class TileGrid extends Tile {
 		int choosenTile;
 		
 		int indexValueList;
+		int tries = 0;
 		
 		while (!isComplete) {
 			
+			tries++;
+			
+			if (tries == 20) break;
 			
 			initWithTodo();
 			setBorders();
@@ -1222,7 +1232,11 @@ public class TileGrid extends Tile {
 			addTile(new Tile(globalTileNumberEdgeNorth_N10_Index1 - 6, heightLevel), 7);
 		}
 		else {
-			int[] borderNorthPattern = TileGridBorderPatterns.getInstance().getBorderPattern(1, 0);
+			int[] borderNorthPattern;
+			borderNorthPattern = getBorderMirrorFromNorth();
+			if (borderNorthPattern == null) {
+				borderNorthPattern = TileGridBorderPatterns.getInstance().getBorderPattern(1, 0);
+			}
 			for (int index = 1; index < 8; index++) {
 				addTile(new Tile(TileType.addGlobalNumberOffset(TileType.getTileTypeForLevel(tileTypeLevel),borderNorthPattern[index]), heightLevel), 
 						index);
@@ -1262,7 +1276,11 @@ public class TileGrid extends Tile {
 			addTile(new Tile(globalTileNumberEdgeEast_E10_Index17 - 6, heightLevel), 71);
 		}
 		else {
-			int[] borderEastPattern = TileGridBorderPatterns.getInstance().getBorderPattern(4, 0);
+			int[] borderEastPattern;
+			borderEastPattern = getBorderMirrorFromEast();
+			if (borderEastPattern == null) {
+				borderEastPattern = TileGridBorderPatterns.getInstance().getBorderPattern(4, 0);
+			}
 			for (int index = 1; index < 8; index++) {
 				addTile(new Tile(TileType.addGlobalNumberOffset(TileType.getTileTypeForLevel(tileTypeLevel),borderEastPattern[index]), heightLevel), 
 						9 * index + 8);
@@ -1302,7 +1320,11 @@ public class TileGrid extends Tile {
 			addTile(new Tile(globalTileNumberEdgeSouth_S10_Index73 - 6, heightLevel), 79);
 		}
 		else {
-			int[] borderSouthPattern = TileGridBorderPatterns.getInstance().getBorderPattern(2, 0);
+			int[] borderSouthPattern;
+			borderSouthPattern = getBorderMirrorFromSouth();
+			if (borderSouthPattern == null) {
+				borderSouthPattern = TileGridBorderPatterns.getInstance().getBorderPattern(2, 0);
+			}
 			for (int index = 1; index < 8; index++) {
 				addTile(new Tile(TileType.addGlobalNumberOffset(TileType.getTileTypeForLevel(tileTypeLevel),borderSouthPattern[index]), heightLevel),
 						index + 72);
@@ -1342,7 +1364,11 @@ public class TileGrid extends Tile {
 			addTile(new Tile(globalTileNumberEdgeWest_W10_Index9 - 6, heightLevel), 63);
 		}
 		else {
-			int[] borderWestPattern = TileGridBorderPatterns.getInstance().getBorderPattern(3, 0);
+			int[] borderWestPattern;
+			borderWestPattern = getBorderMirrorFromWest();
+			if (borderWestPattern == null) {
+				borderWestPattern = TileGridBorderPatterns.getInstance().getBorderPattern(3, 0);
+			}
 			for (int index = 1; index < 8; index++) {
 				addTile(new Tile(	TileType.addGlobalNumberOffset(TileType.getTileTypeForLevel(tileTypeLevel), borderWestPattern[index]),	heightLevel),
 						9 * index);
@@ -1359,12 +1385,17 @@ public class TileGrid extends Tile {
 		int globalTileNumberCornerNW_N10_W10 = 82;
 		int globalTileNumberCornerNW_N10 = 39;
 		int globalTileNumberCornerNW_W10 = 49;
+		int globalTileNumberCornerNW_N01_W10 = 91;
+		int globalTileNumberCornerNW_N10_W01 = 92;
 		
 		int globalTileNumberCornerNW = 0;
 		
 		if (this.borderAdapterTypeNorth == TileGridBorderAdapterType.from0To1) {
 			if (this.borderAdapterTypeWest == TileGridBorderAdapterType.from0To1) {
 				globalTileNumberCornerNW = globalTileNumberCornerNW_N01_W01;
+			}
+			else if (this.borderAdapterTypeWest == TileGridBorderAdapterType.from1To0) {
+				globalTileNumberCornerNW = globalTileNumberCornerNW_N01_W10;
 			}
 			else {
 				globalTileNumberCornerNW = globalTileNumberCornerNW_N01;
@@ -1373,6 +1404,9 @@ public class TileGrid extends Tile {
 		else if (this.borderAdapterTypeNorth == TileGridBorderAdapterType.from1To0) {
 			if (this.borderAdapterTypeWest == TileGridBorderAdapterType.from1To0) {
 				globalTileNumberCornerNW = globalTileNumberCornerNW_N10_W10;
+			}
+			else if (this.borderAdapterTypeWest == TileGridBorderAdapterType.from0To1) {
+				globalTileNumberCornerNW = globalTileNumberCornerNW_N10_W01;
 			}
 			else {
 				globalTileNumberCornerNW = globalTileNumberCornerNW_N10;
@@ -1403,12 +1437,17 @@ public class TileGrid extends Tile {
 		int globalTileNumberCornerNE_N10_E01 = 84;
 		int globalTileNumberCornerNE_N10 = 31;
 		int globalTileNumberCornerNE_E10 = 59;
+		int globalTileNumberCornerNE_N01_E01 = 93;
+		int globalTileNumberCornerNE_N10_E10 = 94;
 		
 		int globalTileNumberCornerNE = 0;
 		
 		if (this.borderAdapterTypeNorth == TileGridBorderAdapterType.from0To1) {
 			if (this.borderAdapterTypeEast == TileGridBorderAdapterType.from1To0) {
 				globalTileNumberCornerNE = globalTileNumberCornerNE_N01_E10;
+			}
+			else if (this.borderAdapterTypeEast == TileGridBorderAdapterType.from0To1) {
+				globalTileNumberCornerNE = globalTileNumberCornerNE_N01_E01;
 			}
 			else {
 				globalTileNumberCornerNE = globalTileNumberCornerNE_N01;
@@ -1417,6 +1456,9 @@ public class TileGrid extends Tile {
 		else if (this.borderAdapterTypeNorth == TileGridBorderAdapterType.from1To0) {
 			if (this.borderAdapterTypeEast == TileGridBorderAdapterType.from0To1) {
 				globalTileNumberCornerNE = globalTileNumberCornerNE_N10_E01;
+			}
+			else if (this.borderAdapterTypeEast == TileGridBorderAdapterType.from1To0) {
+				globalTileNumberCornerNE = globalTileNumberCornerNE_N10_E10;
 			}
 			else {
 				globalTileNumberCornerNE = globalTileNumberCornerNE_N10;
@@ -1447,12 +1489,17 @@ public class TileGrid extends Tile {
 		int globalTileNumberCornerSE_S10_E10 = 88;
 		int globalTileNumberCornerSE_S10 = 71;
 		int globalTileNumberCornerSE_E10 = 51;
+		int globalTileNumberCornerSE_S01_E10 = 97;
+		int globalTileNumberCornerSE_S10_E01 = 98;
 		
 		int globalTileNumberCornerSE = 0;
 
 		if (this.borderAdapterTypeSouth == TileGridBorderAdapterType.from0To1) {
 			if (this.borderAdapterTypeEast == TileGridBorderAdapterType.from0To1) {
 				globalTileNumberCornerSE = globalTileNumberCornerSE_S01_E01;
+			}
+			else if (this.borderAdapterTypeEast == TileGridBorderAdapterType.from1To0) {
+				globalTileNumberCornerSE = globalTileNumberCornerSE_S01_E10;
 			}
 			else {
 				globalTileNumberCornerSE = globalTileNumberCornerSE_S01;
@@ -1461,6 +1508,9 @@ public class TileGrid extends Tile {
 		else if (this.borderAdapterTypeSouth == TileGridBorderAdapterType.from1To0) {
 			if (this.borderAdapterTypeEast == TileGridBorderAdapterType.from1To0) {
 				globalTileNumberCornerSE = globalTileNumberCornerSE_S10_E10;
+			}
+			else if (this.borderAdapterTypeEast == TileGridBorderAdapterType.from0To1) {
+				globalTileNumberCornerSE = globalTileNumberCornerSE_S10_E01;
 			}
 			else {
 				globalTileNumberCornerSE = globalTileNumberCornerSE_S10;
@@ -1491,12 +1541,17 @@ public class TileGrid extends Tile {
 		int globalTileNumberCornerSW_S10_W01 = 85;
 		int globalTileNumberCornerSW_S10 = 79;
 		int globalTileNumberCornerSW_W10 = 41;
+		int globalTileNumberCornerSW_S01_W01 = 96;
+		int globalTileNumberCornerSW_S10_W10 = 95;
 		
 		int globalTileNumberCornerSW = 0;
 
 		if (this.borderAdapterTypeSouth == TileGridBorderAdapterType.from0To1) {
 			if (this.borderAdapterTypeWest == TileGridBorderAdapterType.from1To0) {
 				globalTileNumberCornerSW = globalTileNumberCornerSW_S01_W10;
+			}
+			else if (this.borderAdapterTypeWest == TileGridBorderAdapterType.from0To1) {
+				globalTileNumberCornerSW = globalTileNumberCornerSW_S01_W01;
 			}
 			else {
 				globalTileNumberCornerSW = globalTileNumberCornerSW_S01;
@@ -1505,6 +1560,9 @@ public class TileGrid extends Tile {
 		else if (this.borderAdapterTypeSouth == TileGridBorderAdapterType.from1To0) {
 			if (this.borderAdapterTypeWest == TileGridBorderAdapterType.from0To1) {
 				globalTileNumberCornerSW = globalTileNumberCornerSW_S10_W01;
+			}
+			else if (this.borderAdapterTypeWest == TileGridBorderAdapterType.from1To0) {
+				globalTileNumberCornerSW = globalTileNumberCornerSW_S10_W10;
 			}
 			else {
 				globalTileNumberCornerSW = globalTileNumberCornerSW_S10;
@@ -1526,6 +1584,163 @@ public class TileGrid extends Tile {
 
 	}
 
+	
+	
+	int[] getBorderMirrorFromNorth() {
+		Tile northern = getParentNorthernTile();
+		if (northern == null)
+			return null;
+		else {
+			if (northern instanceof TileGrid && ((TileGrid) northern).tiles != null) {
+				return CalculatePossibleTiles.mirrorBorderPatternFromNorth(((TileGrid)northern).getSouthernBorderTiles());
+			}
+			else {
+				return null;
+			}
+		}
+	}
+	
+	int[] getBorderMirrorFromEast() {
+		Tile eastern = getParentEasternTile();
+		if (eastern == null)
+			return null;
+		else {
+			if (eastern instanceof TileGrid && ((TileGrid) eastern).tiles != null) {
+				return CalculatePossibleTiles.mirrorBorderPatternFromEast(((TileGrid)eastern).getWesternBorderTiles());
+			}
+			else {
+				return null;
+			}
+		}
+	}
+	
+	int[] getBorderMirrorFromSouth() {
+		Tile southern = getParentSouthernTile();
+		if (southern == null)
+			return null;
+		else {
+			if (southern instanceof TileGrid && ((TileGrid) southern).tiles != null) {
+				return CalculatePossibleTiles.mirrorBorderPatternFromSouth(((TileGrid)southern).getNorthernBorderTiles());
+			}
+			else {
+				return null;
+			}
+		}
+	}
+	
+	int[] getBorderMirrorFromWest() {
+		Tile western = getParentWesternTile();
+		if (western == null)
+			return null;
+		else {
+			if (western instanceof TileGrid && ((TileGrid) western).tiles != null) {
+				return CalculatePossibleTiles.mirrorBorderPatternFromWest(((TileGrid)western).getEasternBorderTiles());
+			}
+			else {
+				return null;
+			}
+		}
+	}
+	
+	
+	
+	
+	int[] getNorthernBorderTiles() {
+		int[] borderTiles = new int[9];
+		for (int index = 0; index < 9; index++) {
+			borderTiles[index] = tiles[index].getNumber();
+		}
+		return borderTiles;
+	}
+	
+	int[] getEasternBorderTiles() {
+		int[] borderTiles = new int[9];
+		for (int index = 0; index < 9; index++) {
+			borderTiles[index] = tiles[index * 9 + 8].getNumber();
+		}
+		return borderTiles;
+	}
+
+	int[] getSouthernBorderTiles() {
+		int[] borderTiles = new int[9];
+		for (int index = 0; index < 9; index++) {
+			borderTiles[index] = tiles[index + 72].getNumber();
+		}
+		return borderTiles;
+	}
+
+	int[] getWesternBorderTiles() {
+		int[] borderTiles = new int[9];
+		for (int index = 0; index < 9; index++) {
+			borderTiles[index] = tiles[index * 9].getNumber();
+		}
+		return borderTiles;
+	}
+
+	Tile getTile(int index) {
+		return tiles[index];
+	}
+	
+	int findTile(Tile tile) {
+		for (int index = 0; index < 81; index++) {
+			if (tiles[index] == tile) {
+				return index;
+			}
+		}
+		return -1;
+	}
+	
+	private Tile getParentNorthernTile() {
+		if (parent == null) return null;
+		if (myRasterIndexInParentGrid == -1) {
+			myRasterIndexInParentGrid = parent.findTile(this);
+		}
+		if (myRasterIndexInParentGrid > 8) {
+			return parent.getTile(myRasterIndexInParentGrid - 9);
+		}
+		else
+			return null;
+	}
+	
+	private Tile getParentEasternTile() {
+		if (parent == null) return null;
+		if (myRasterIndexInParentGrid == -1) {
+			myRasterIndexInParentGrid = parent.findTile(this);
+		}
+		if (myRasterIndexInParentGrid % 9 < 8) {
+			return parent.getTile(myRasterIndexInParentGrid + 1);
+		}
+		else
+			return null;
+	}
+
+	private Tile getParentSouthernTile() {
+		if (parent == null) return null;
+		if (myRasterIndexInParentGrid == -1) {
+			myRasterIndexInParentGrid = parent.findTile(this);
+		}
+		if (myRasterIndexInParentGrid >= 0 && myRasterIndexInParentGrid < 72) {
+			return parent.getTile(myRasterIndexInParentGrid + 9);
+		}
+		else
+			return null;
+	}
+
+	private Tile getParentWesternTile() {
+		if (parent == null) return null;
+		if (myRasterIndexInParentGrid == -1) {
+			myRasterIndexInParentGrid = parent.findTile(this);
+		}
+		if (myRasterIndexInParentGrid % 9 > 0) {
+			return parent.getTile(myRasterIndexInParentGrid - 1);
+		}
+		else
+			return null;
+	}
+
+	
+	
+	
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	public String toString() {
