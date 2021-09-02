@@ -533,7 +533,7 @@ class HLCfromNorthToSouth extends SubHLC {
 		rasterIndices_1021At05 = getRasterIndicesList(5, rasterIndicesHLC_1021);
 		rasterIndices_1021At06 = getRasterIndicesList(6, rasterIndicesHLC_1021);
 		rasterIndices_1021At07 = getRasterIndicesList(7, rasterIndicesHLC_1021);
-		rasterIndices_1021At08 = getRasterIndicesList(0, rasterIndicesHLC_1021);
+		rasterIndices_1021At08 = getRasterIndicesList(8, rasterIndicesHLC_1021);
 		cornerMaximaNrs_1021 = Arrays.asList(cornerMaximaNrsHLC_1021);
 	
 		rasterIndices_1022At01 = getRasterIndicesList(1, rasterIndicesHLC_1022);
@@ -543,7 +543,7 @@ class HLCfromNorthToSouth extends SubHLC {
 		rasterIndices_1022At05 = getRasterIndicesList(5, rasterIndicesHLC_1022);
 		rasterIndices_1022At06 = getRasterIndicesList(6, rasterIndicesHLC_1022);
 		rasterIndices_1022At07 = getRasterIndicesList(7, rasterIndicesHLC_1022);
-		rasterIndices_1022At08 = getRasterIndicesList(0, rasterIndicesHLC_1022);
+		rasterIndices_1022At08 = getRasterIndicesList(8, rasterIndicesHLC_1022);
 		cornerMaximaNrs_1022 = Arrays.asList(cornerMaximaNrsHLC_1022);
 
 		rasterIndices_1023At01 = getRasterIndicesList(1, rasterIndicesHLC_1023);
@@ -553,7 +553,7 @@ class HLCfromNorthToSouth extends SubHLC {
 		rasterIndices_1023At05 = getRasterIndicesList(5, rasterIndicesHLC_1023);
 		rasterIndices_1023At06 = getRasterIndicesList(6, rasterIndicesHLC_1023);
 		rasterIndices_1023At07 = getRasterIndicesList(7, rasterIndicesHLC_1023);
-		rasterIndices_1023At08 = getRasterIndicesList(0, rasterIndicesHLC_1023);
+		rasterIndices_1023At08 = getRasterIndicesList(8, rasterIndicesHLC_1023);
 		cornerMaximaNrs_1023 = Arrays.asList(cornerMaximaNrsHLC_1023);
 		
 		rasterIndices_1031At00 = getRasterIndicesList(0, rasterIndicesHLC_1031);
@@ -589,7 +589,7 @@ class HLCfromNorthToSouth extends SubHLC {
 		rasterIndices_1041At05 = getRasterIndicesList(5, rasterIndicesHLC_1041);
 		rasterIndices_1041At06 = getRasterIndicesList(6, rasterIndicesHLC_1041);
 		rasterIndices_1041At07 = getRasterIndicesList(7, rasterIndicesHLC_1041);
-		rasterIndices_1041At08 = getRasterIndicesList(0, rasterIndicesHLC_1041);
+		rasterIndices_1041At08 = getRasterIndicesList(8, rasterIndicesHLC_1041);
 		cornerMaximaNrs_1041 = Arrays.asList(cornerMaximaNrsHLC_1041);
 	
 		rasterIndices_1042At02 = getRasterIndicesList(2, rasterIndicesHLC_1042);
@@ -598,7 +598,7 @@ class HLCfromNorthToSouth extends SubHLC {
 		rasterIndices_1042At05 = getRasterIndicesList(5, rasterIndicesHLC_1042);
 		rasterIndices_1042At06 = getRasterIndicesList(6, rasterIndicesHLC_1042);
 		rasterIndices_1042At07 = getRasterIndicesList(7, rasterIndicesHLC_1042);
-		rasterIndices_1042At08 = getRasterIndicesList(0, rasterIndicesHLC_1042);
+		rasterIndices_1042At08 = getRasterIndicesList(8, rasterIndicesHLC_1042);
 		cornerMaximaNrs_1042 = Arrays.asList(cornerMaximaNrsHLC_1042);
 
 		rasterIndices_1043At02 = getRasterIndicesList(2, rasterIndicesHLC_1043);
@@ -607,7 +607,7 @@ class HLCfromNorthToSouth extends SubHLC {
 		rasterIndices_1043At05 = getRasterIndicesList(5, rasterIndicesHLC_1043);
 		rasterIndices_1043At06 = getRasterIndicesList(6, rasterIndicesHLC_1043);
 		rasterIndices_1043At07 = getRasterIndicesList(7, rasterIndicesHLC_1043);
-		rasterIndices_1043At08 = getRasterIndicesList(0, rasterIndicesHLC_1043);
+		rasterIndices_1043At08 = getRasterIndicesList(8, rasterIndicesHLC_1043);
 		cornerMaximaNrs_1043 = Arrays.asList(cornerMaximaNrsHLC_1043);
 		
 		rasterIndices_1101At00 = getRasterIndicesList(0, rasterIndicesHLC_1101);
