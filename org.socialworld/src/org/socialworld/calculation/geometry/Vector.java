@@ -220,7 +220,6 @@ public class Vector {
 		
 	}
 	
-	
 	/**
 	 * The method calculates the angle's cosine.
 	 * The formula is: cos = a * b   /   |a| * |b|
@@ -278,4 +277,13 @@ public class Vector {
 		this.z = 0;
 		normalized = false;
 	}
+	
+	public static Vector crossProduct(Vector vect_A, Vector vect_B) {
+	        Vector cross_P = new Vector(0, 0, 0);
+	        cross_P.x = vect_A.y * vect_B.z - vect_A.z * vect_B.y;
+	        cross_P.y = vect_A.z * vect_B.x - vect_A.x * vect_B.z;
+	        cross_P.z = vect_A.x * vect_B.y - vect_A.y * vect_B.x;
+	        return cross_P;
+	}
+
 }
