@@ -38,7 +38,7 @@ public abstract class SubHLC {
 	
 	protected List<Integer> getRasterIndicesList(int start, int[] rasterIndices) {
 		List<Integer> result = new ArrayList<Integer>();
-		int offset = rasterIndices[0] - start;
+		int offset = start - rasterIndices[0];
 		for (int i = 0; i < rasterIndices.length; i++) {
 			result.add(rasterIndices[i] + offset);
 		}
