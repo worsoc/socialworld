@@ -48,7 +48,7 @@ class Vector3 {
 
  }
 
-public class Cube {
+public abstract class Cube {
 	
     private static short SIZE = 3;
     public static double epsilon = 0.000001;
@@ -60,7 +60,27 @@ public class Cube {
     private boolean isValid = true;
     private String address = "";
 
-    private static double getDelta(Vector3 pointA, Vector3 pointB, Vector3 pointC, Vector3 pointInCubeToCheck) {
+    protected abstract Cube getNewInstance();
+    
+    protected abstract Vector3[] getCornerOffsets(short level);
+    
+    protected abstract Vector3 coordinatesOfBitsIndex(short index);
+    
+    private void fillInnerCubes() {
+        this.hasChildren = true;
+        this.isFullyFilled = true;
+        for (short x = 0; x < 3; x++) {
+            for (short y = 0; y < 3; y++) {
+                for (short z = 0; z < 3; z++) {
+                    this.innerCubes[x][y][z] = getNewInstance();
+                    this.innerCubes[x][y][z].level = (short) (this.level + 1);
+                    this.innerCubes[x][y][z].address = this.address + getLetter(x, y, z);
+                }
+            }
+        }
+    }
+
+    protected static double getDelta(Vector3 pointA, Vector3 pointB, Vector3 pointC, Vector3 pointInCubeToCheck) {
 
         /*
          * Get two different vectors which are in the plane, such as B−A=(3,0,−3) and
@@ -89,37 +109,6 @@ public class Cube {
             return 0;
 
         return ((pointInCubeToCheck.x * x) + (pointInCubeToCheck.y * y) + (pointInCubeToCheck.z * z) + k);
-    }
-
-    private void fillInnerCubes() {
-        this.hasChildren = true;
-        this.isFullyFilled = true;
-        for (short x = 0; x < 3; x++) {
-            for (short y = 0; y < 3; y++) {
-                for (short z = 0; z < 3; z++) {
-                    this.innerCubes[x][y][z] = new Cube();
-                    this.innerCubes[x][y][z].level = (short) (this.level + 1);
-                    this.innerCubes[x][y][z].address = this.address + getLetter(x, y, z);
-                }
-            }
-        }
-    }
-
-    private static Vector3[] getCornerOffsets(short level) {
-        Vector3[] corners = new Vector3[8];
-        double stepSize = getMinimalStepOnLevel(level);
-        int i = 0;
-        for (short x = 0; x <= 1; x++) {
-            for (short y = 0; y <= 1; y++) {
-                for (short z = 0; z <= 1; z++) {
-                    // / 3 * level
-                    corners[i] = new Vector3(x * stepSize, y * stepSize, z * stepSize);
-                    i++;
-                }
-            }
-        }
-
-        return corners;
     }
 
     private String getLetter(short xIndex, short yIndex, short zIndex) {
@@ -214,7 +203,7 @@ public class Cube {
         return ".";
     }
 
-    public static boolean isBeingSplit(Vector3 pointA, Vector3 pointB, Vector3 pointC, double absoluteX,
+    private boolean isBeingSplit(Vector3 pointA, Vector3 pointB, Vector3 pointC, double absoluteX,
             double absoluteY, double absoluteZ, short level) {
         if (level == 0)
             return true;
@@ -233,11 +222,13 @@ public class Cube {
         return false;
     }
 
-    private static double getMinimalStepOnLevel(int level) {
+   
+    protected double getMinimalStepOnLevel(int level) {
         return (1 / (Math.pow(3, level)));
     }
 
-    private static short findIndexBits(boolean valueToFind, boolean bits[]) {
+    
+    private short findIndexBits(boolean valueToFind, boolean bits[]) {
         for (short i = 0; i < bits.length; i++)
             if (bits[i] == valueToFind)
                 return i;
@@ -245,7 +236,7 @@ public class Cube {
         return -1;
     }
 
-    private static short[] findAllIndeciesBits(boolean valueToFind, boolean bits[]) {
+    private short[] findAllIndeciesBits(boolean valueToFind, boolean bits[]) {
         short result[] = { 0, 0, 0, 0 };
         short pointer = 0;
         for (short i = 0; i < bits.length; i++)
@@ -257,23 +248,7 @@ public class Cube {
         return result;
     }
 
-    private static Vector3 coordinatesOfBitsIndex(short index) {
-        /* only the first and second values are important */
-        switch (index) {
-            case 0:
-                return new Vector3(1, 0, 0);
-            case 1:
-                return new Vector3(0, 0, 0);
-            case 2:
-                return new Vector3(1, 1, 0);
-            case 3:
-                return new Vector3(0, 1, 0);
-            default:
-                return new Vector3(0, 0, 0);
-        }
-    }
-
-    public static Vector3[] getPlanePointsFromTile(short bitsNumber) {
+    private Vector3[] getPlanePointsFromTile(short bitsNumber) {
         /* create bits from Number */
         Vector3 resultPoints[] = new Vector3[3];
         boolean bits[] = new boolean[4];
@@ -362,7 +337,7 @@ public class Cube {
             return "-";
     }
 
-    private static short countBits(boolean bits[]) {
+    private short countBits(boolean bits[]) {
         short count = 0;
         for (boolean bit : bits) {
             if (bit)
@@ -450,24 +425,24 @@ public class Cube {
 
     }
 
-    private static void setFullyFilled(Cube cube, short level, short threasholdChildren) {
+    private void setFullyFilled(short level, short threasholdChildren) {
         
-    	if (cube.level < level) {
+    	if (this.level < level) {
 	    	for (short iterX = 0; iterX < 3; iterX++) {
 	            for (short iterY = 0; iterY < 3; iterY++) {
 	                for (short iterZ = 0; iterZ < 3; iterZ++) {
-	                	if (cube.innerCubes[iterX][iterY][iterZ] != null) {
-	                		setFullyFilled(cube.innerCubes[iterX][iterY][iterZ], level, threasholdChildren);
+	                	if (this.innerCubes[iterX][iterY][iterZ] != null) {
+	                		this.innerCubes[iterX][iterY][iterZ].setFullyFilled( level, threasholdChildren);
 	                	}
 	                }
 	            }
 	        }
     	}
     	else {
-    		if (cube.countValidChildren >= threasholdChildren) {
-    			cube.isFullyFilled = true;
-    			cube.isValid = true;
-    			cube.hasChildren = true;
+    		if (this.countValidChildren >= threasholdChildren) {
+    			this.isFullyFilled = true;
+    			this.isValid = true;
+    			this.hasChildren = true;
     		}
     	}
 
@@ -476,33 +451,33 @@ public class Cube {
     public ArrayList<String> getEndAddresses() {
         ArrayList<String> addresses = new ArrayList<String>();
 
-        recursiveAddressStep(this, addresses);
+        recursiveAddressStep(addresses);
 
         return addresses;
     }
 
-    private static ArrayList<String> recursiveAddressStep(Cube cube, ArrayList<String> addresses) {
+    private ArrayList<String> recursiveAddressStep(ArrayList<String> addresses) {
  
-        if (cube.isFullyFilled) {
-            addresses.add(cube.address);
+        if (this.isFullyFilled) {
+            addresses.add(this.address);
             return addresses;
         }
 
     	for (short iterX = 0; iterX < 3; iterX++) {
             for (short iterY = 0; iterY < 3; iterY++) {
                 for (short iterZ = 0; iterZ < 3; iterZ++) {
-                    if (cube.hasChildren) {
+                    if (this.hasChildren) {
                     	/*
                         if (cube.isFullyFilled) {
                             addresses.add(cube.address);
                             return addresses;
                         }
                       */
-                        if (!cube.innerCubes[iterX][iterY][iterZ].hasChildren
-                                && cube.innerCubes[iterX][iterY][iterZ].isValid) {
-                            addresses.add(cube.innerCubes[iterX][iterY][iterZ].address);
-                        } else if (cube.innerCubes[iterX][iterY][iterZ].hasChildren && cube.isValid) {
-                            recursiveAddressStep(cube.innerCubes[iterX][iterY][iterZ], addresses);
+                        if (!this.innerCubes[iterX][iterY][iterZ].hasChildren
+                                && this.innerCubes[iterX][iterY][iterZ].isValid) {
+                            addresses.add(this.innerCubes[iterX][iterY][iterZ].address);
+                        } else if (this.innerCubes[iterX][iterY][iterZ].hasChildren && this.isValid) {
+                        	this.innerCubes[iterX][iterY][iterZ].recursiveAddressStep( addresses);
                         }
                     }
                 }
@@ -513,7 +488,7 @@ public class Cube {
 
     public static void main(String args[]) {
     	short detailDepth = 4;
-        Cube cube = new Cube();
+        Cube cube = new CubeS();
         // Vector3 points[][] = getPlanePointsFromTile((short) 11);
 
         cube.splitCube((short) 7, detailDepth, true);
@@ -526,7 +501,8 @@ public class Cube {
         System.out.println(lookAtCube.hasChildren);
         System.out.println(lookAtCube.isFullyFilled);
         
-        setFullyFilled(cube, (short) (detailDepth - 1), (short) 14);
+        cube.setFullyFilled( (short) (detailDepth - 1), (short) 14);
+        cube.setFullyFilled( (short) (detailDepth - 2), (short) 26);
         ArrayList<String> addr = cube.getEndAddresses();
         int countAdr = 0;
         for (String address : addr) {
