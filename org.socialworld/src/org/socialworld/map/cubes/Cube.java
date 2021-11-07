@@ -22,6 +22,8 @@
 package org.socialworld.map.cubes;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Arrays;
 
 class Vector3 {
     double x, y, z = 0;
@@ -54,6 +56,10 @@ public abstract class Cube {
 	protected final static byte CUBE_SIZE_TILE_MEDIUM = 9;
 	protected final static byte CUBE_SIZE_TILE_LARGE = 81;
 
+	protected final static byte setFullyFilledMinDepth_small = 1;
+	protected final static byte setFullyFilledMinDepth_medium = 2;
+	protected final static byte setFullyFilledMinDepth_large = 2;
+	
 	protected byte size;
 	protected byte heightOffset;
 	
@@ -75,14 +81,14 @@ public abstract class Cube {
     protected abstract Vector3 coordinatesOfBitsIndex(byte index);
     
     protected abstract Vector3[] getPlanePointsFromTile(byte bitsNumber);
+    protected abstract List<Vector3[]> getPlanesForTile(byte bitsNumber);
 
     protected abstract void initResultPoints();
     
     private void fillInnerCubes() {
         this.hasChildren = true;
-        this.isValid = true;  // Matze
-  // Matze     this.isFullyFilled = true;
-        for (byte x = 0; x < 3; x++) {
+        this.isValid = true;  
+         for (byte x = 0; x < 3; x++) {
             for (byte y = 0; y < 3; y++) {
                 for (byte z = 0; z < 3; z++) {
                     this.innerCubes[x][y][z] = getNewInstance(size, heightOffset);
@@ -100,7 +106,7 @@ public abstract class Cube {
          * C−A=(3,3,3) . Compute the cross product of the two obtained vectors:
          * (B−A)×(C−A)=(9,−18,9) . This is the normal vector of the plane, so we can
          * divide it by 9 and get (1,−2,1) . The equation of the plane is thus
-         * x−2y+z+k=0 . To get k, substitute any point and solve; we get k=−6. The final
+         * x−2y+z=k . To get k, substitute any point and solve; we get k=−6. The final
          * equation of the plane is x−2y+z−6=0.
          */
 
@@ -109,17 +115,24 @@ public abstract class Cube {
         Vector3 vecAC = new Vector3(pointC.x - pointA.x, pointC.y - pointA.y, pointC.z - pointA.z);
         /* take cross product of VectorAB & VectorAC */
         Vector3 cross_P = Vector3.crossProduct(vecAB, vecAC);
-        /* deconstruct x,y,z -> for x+y+z+k=0 */
+        /* deconstruct x,y,z -> for x+y+z=k */
         double x = cross_P.x;
         double y = cross_P.y;
         double z = cross_P.z;
+        
+        if (z < 0) {
+        	x = x * -1;
+        	y = y * -1;
+        	z = z * -1;
+        }
+        
         /* solve for k (use any point) */
-        double k = ((pointA.x * x) + (pointA.y * y) + (pointA.z * z)) * -1;
+        double k = (pointA.x * x) + (pointA.y * y) + (pointA.z * z);
 
         double delta;
         
         /* solve with x,y,z of PointToCheck */
-        delta = (pointInCubeToCheck.x * x) + (pointInCubeToCheck.y * y) + (pointInCubeToCheck.z * z) + k;
+        delta = (pointInCubeToCheck.x * x) + (pointInCubeToCheck.y * y) + (pointInCubeToCheck.z * z) - k;
         if (Math.abs(delta) < epsilon)
             return 0;
 
@@ -218,15 +231,45 @@ public abstract class Cube {
         return ".";
     }
 
+    
+    private boolean isBeingSplit(List<Vector3[]> planeList, double absoluteX,
+            double absoluteY, double absoluteZ, byte depth) {
+        
+    	
+    	
+    	if (depth == 0)
+            return true;
+
+    	Vector3 pointA;
+    	Vector3 pointB;
+    	Vector3 pointC;
+    	     	
+        Vector3 cornerOffsets[] = getCornerOffsets(depth);
+        byte originDeltaSignum;
+         
+        for (Vector3[] plane : planeList) {
+        	pointA = plane[0];
+        	pointB = plane[1];
+        	pointC = plane[2];
+            originDeltaSignum = (byte) Math
+                    .signum(getDelta(pointA, pointB, pointC, new Vector3(absoluteX, absoluteY, absoluteZ)));
+
+            for (int i = 1; i < cornerOffsets.length; i++) {
+                if (Math.signum(getDelta(pointA, pointB, pointC, new Vector3(absoluteX + cornerOffsets[i].x,
+                        absoluteY + cornerOffsets[i].y, absoluteZ + cornerOffsets[i].z))) != originDeltaSignum) {
+                	return true;
+                }
+            }
+
+        }
+  
+        return false;
+    }
+
     private boolean isBeingSplit(Vector3 pointA, Vector3 pointB, Vector3 pointC, double absoluteX,
             double absoluteY, double absoluteZ, byte depth) {
         
-    	// Matze 29.09.2021
-    	if (this.address.equals("A")) {
-    		int myBreak = 0;
-    		myBreak++;
-    	}
-    	
+	
     	
     	if (depth == 0)
             return true;
@@ -259,7 +302,7 @@ public abstract class Cube {
         return -1;
     }
 
-    protected byte[] findAllIndeciesBits(boolean valueToFind, boolean bits[]) {
+    protected byte[] findAllIndicesBits(boolean valueToFind, boolean bits[]) {
         byte result[] = { 0, 0, 0, 0 };
         byte pointer = 0;
         for (byte i = 0; i < bits.length; i++)
@@ -297,13 +340,20 @@ public abstract class Cube {
     }
 
     public void splitCube(byte tileNumber, byte detailDepth, boolean keepPositiveDelta) {
-       // Matze this.fillInnerCubes();
         if (tileNumber == 6 || tileNumber == 9) {
             // execute 2 splits
-            return;
+        	if (tileNumber == 6) {
+                this.recursiveSplitting((byte)2, detailDepth, (double) 0, (double) 0, (double) 0, keepPositiveDelta);
+                this.recursiveSplitting((byte)4, detailDepth, (double) 0, (double) 0, (double) 0, keepPositiveDelta);
+        	}
+        	else if (tileNumber == 9) {
+                this.recursiveSplitting((byte)1, detailDepth, (double) 0, (double) 0, (double) 0, keepPositiveDelta);
+                this.recursiveSplitting((byte)8, detailDepth, (double) 0, (double) 0, (double) 0, keepPositiveDelta);
+        	}
         }
-
-        this.recursiveSplitting(tileNumber, detailDepth, (double) 0, (double) 0, (double) 0, keepPositiveDelta);
+        else {
+            this.recursiveSplitting(tileNumber, detailDepth, (double) 0, (double) 0, (double) 0, keepPositiveDelta);
+        }
  
     }
 
@@ -313,16 +363,15 @@ public abstract class Cube {
     	// Matze: the sub cube has already been visited and marked as fully filled
     	if (this.isFullyFilled ) return;
     	
-        Vector3 planePoints[] = getPlanePointsFromTile(tileNumber);
+        List<Vector3[]> planes = getPlanesForTile(tileNumber);
 
-        if (isBeingSplit(planePoints[0], planePoints[1], planePoints[2], absX, absY, absZ, this.depth)) {
+         if (isBeingSplit(planes, absX, absY, absZ, this.depth)) {
             if (this.depth < detailDepth) {
                 double minStep = getMinimalStepForDepth((byte)(this.depth + 1));
-                if (!this.hasChildren) {  // Matze
+                if (!this.hasChildren) { 
                     this.fillInnerCubes();
                 }
                 else {
-                	// Matze
                 	this.isValid = true;
                 }
                 for (byte x = 0; x < 3; x++) {
@@ -334,28 +383,32 @@ public abstract class Cube {
                     }
                 }
             } 
-            /*
-            else {
-                this.isValid = keepPositiveDelta;
-                this.hasChildren = false;
-                this.isFullyFilled = false;
-            }
-            */
 
-        } else {
-            double delta = getDelta(planePoints[0], planePoints[1], planePoints[2], new Vector3(absX, absY, absZ));
-            if ((delta > 0 && !keepPositiveDelta) || (delta < 0 && keepPositiveDelta)) {
-                this.hasChildren = false;
-                this.isFullyFilled = false;
-                this.isValid = false;
+        } else if (countValidChildren == 0){
+            double delta;
+            Vector3 pointA;
+            Vector3 pointB;
+            Vector3 pointC;
+            boolean existsCorrect = false;
+            for (Vector3[] plane : planes) {
+            	pointA = plane[0];
+            	pointB = plane[1];
+            	pointC = plane[2];
+
+            	delta = getDelta(pointA, pointB, pointC, new Vector3(absX, absY, absZ));
+	            if ((delta > 0 && !keepPositiveDelta) || (delta < 0 && keepPositiveDelta)) {
+	            }
+	            else {
+	            	existsCorrect = true;
+	            }
+ 
+            }  
+            if (!existsCorrect) {
+	            this.hasChildren = false;
+	            this.isFullyFilled = false;
+	            this.isValid = false;
             }
-            else {
-            	// Matze am 29.09.2021, aber wird wohl nicht benötigt, raum auch immer?
-            	// also auskommentiert
-            //	this.isFullyFilled = true;
-            //   this.isValid = true;
-            }
-                        
+
         }
         if (this.hasChildren) {
 
@@ -518,46 +571,73 @@ public abstract class Cube {
     }
 
     public static void main(String args[]) {
-    	byte detailDepth = 5;
-    	byte heightOffset = 10;
-        Cube cube = new CubeStandard(CUBE_SIZE_TILE_LARGE, heightOffset);
+    	byte detailDepth = 4;
+    	byte heightOffset = 0;
+        Cube cube = new CubeStandard(CUBE_SIZE_TILE_SMALL, heightOffset);
+
+        byte setFullyFilledMinDepth = 1;
+        switch (cube.size) {
+		case CUBE_SIZE_TILE_SMALL:
+			setFullyFilledMinDepth = setFullyFilledMinDepth_small; break;
+		case CUBE_SIZE_TILE_MEDIUM:
+			setFullyFilledMinDepth = setFullyFilledMinDepth_medium; break;
+		case CUBE_SIZE_TILE_LARGE:
+			setFullyFilledMinDepth = setFullyFilledMinDepth_large; break;
+		}
 
         cube.initResultPoints();
         cube.fillTheGround(heightOffset);
-        cube.splitCube((byte) 1, detailDepth, true);
+        cube.splitCube((byte) 4, detailDepth, false);
 
-        
-  		if (cube.size < CUBE_SIZE_TILE_LARGE) {
-  	        cube.setFullyFilled( (byte) (detailDepth - 1), (byte) 14); 
- 	        cube.setFullyFilled( (byte) (detailDepth - 2), (byte) 26); 
- 	        for (byte depth = (byte) (detailDepth - 3); depth > 0; depth--) {
- 	            cube.setFullyFilled( depth, (byte) 27);
- 	        }
- 		}
- 
+      
+        cube.setFullyFilled( (byte) (detailDepth - 1), (byte) 14); 
+        cube.setFullyFilled( (byte) (detailDepth - 2), (byte) 26); 
+        if (cube.size < CUBE_SIZE_TILE_LARGE) {
+ 	        for (byte depth = (byte) (detailDepth - 3); depth >= setFullyFilledMinDepth; depth--) {
+	           cube.setFullyFilled( depth, (byte) 27);
+	        }
+        }
+
         ArrayList<String> addr = cube.getEndAddresses();
+        Object[] sortedAddr =  addr.toArray();
+        Arrays.sort(sortedAddr);
+        
         int countAdr = 0;
-        for (String address : addr) {
+        String addresseString;
+        for (Object addresseObject : sortedAddr) {
+        	addresseString = (String) addresseObject;
         	countAdr++;
-        	/*
-        	if (address.equals("U")) {
-        		int mybreak;
-        		mybreak = 0;
-        	}
-        	*/
-//	       	if (address.length() < detailDepth) {
-	        		System.out.println(address);
-//	       	}
+	        System.out.println(countAdr + ": " + addresseString);
+	        		
         }
         System.out.println(countAdr);
     }
 
 }
 
-
-
+// small, with setFullyFilled, detailDepth 4 :
+// 1 mit false
+// 2 mit false
+// 4 mit false
+// 6 mit false
+// 7 mit false
+// 8 mit false
+// 9 mit false
+// 11 mit false
+// 13 mit false
+// 14 mit false
  
 
+// medium, with setFullyFilled  , detailDepth 4:
+
+// large, with setFullyFilled  , detailDepth 6:
 
 
+
+/*        	
+if (addresseString.equals("X")) {
+	int mybreak;
+	mybreak = 0;
+}
+*/        	
 

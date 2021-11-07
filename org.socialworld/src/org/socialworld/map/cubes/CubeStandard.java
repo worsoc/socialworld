@@ -21,6 +21,9 @@
 */
 package org.socialworld.map.cubes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CubeStandard extends Cube {
 
 	private static final Vector3[] coordinatesForBit_small = {
@@ -55,10 +58,21 @@ public class CubeStandard extends Cube {
 	private static Vector3[] resultPoints_noBit2; 
 	private static Vector3[] resultPoints_noBit3; 
 	
+	private static List<Vector3[]> planes_bit0; 
+	private static List<Vector3[]> planes_bit1; 
+	private static List<Vector3[]> planes_bit2; 
+	private static List<Vector3[]> planes_bit3; 
+
+	private static List<Vector3[]> planes_noBit0; 
+	private static List<Vector3[]> planes_noBit1; 
+	private static List<Vector3[]> planes_noBit2; 
+	private static List<Vector3[]> planes_noBit3; 
 	
 	public CubeStandard( byte size, byte heightOffset) {
 		this.size = size;
 		this.heightOffset = heightOffset;
+		
+		 
 	}
 	
     protected Cube getNewInstance(byte size,  byte heightOffset) {
@@ -81,6 +95,8 @@ public class CubeStandard extends Cube {
     	resultPoints_bit0[2].y = Math.abs(resultPoints_bit0[0].y - this.size);
     	resultPoints_bit0[2].z = 0 + this.heightOffset;
 
+    	planes_bit0 = new ArrayList<Vector3[]> ();
+    	planes_bit0.add(resultPoints_bit0);
     	
     	resultPoints_bit1 = new Vector3[3];
     	resultPoints_bit1[0] = new Vector3(coordinatesOfBitsIndex((byte)1));
@@ -96,7 +112,9 @@ public class CubeStandard extends Cube {
     	resultPoints_bit1[2].y = Math.abs(resultPoints_bit1[0].y - this.size);
     	resultPoints_bit1[2].z = 0 + this.heightOffset;
 
-    	
+       	planes_bit1 = new ArrayList<Vector3[]> ();
+    	planes_bit1.add(resultPoints_bit1);
+   	
        	resultPoints_bit2 = new Vector3[3];
     	resultPoints_bit2[0] = new Vector3(coordinatesOfBitsIndex((byte)2));
     	resultPoints_bit2[0].z = 1 + this.heightOffset;
@@ -111,7 +129,9 @@ public class CubeStandard extends Cube {
     	resultPoints_bit2[2].y = Math.abs(resultPoints_bit2[0].y - this.size);
     	resultPoints_bit2[2].z = 0 + this.heightOffset;
 
-    	
+       	planes_bit2 = new ArrayList<Vector3[]> ();
+    	planes_bit2.add(resultPoints_bit2);
+   	
        	resultPoints_bit3 = new Vector3[3];
     	resultPoints_bit3[0] = new Vector3(coordinatesOfBitsIndex((byte)3));
     	resultPoints_bit3[0].z = 1 + this.heightOffset;
@@ -126,7 +146,10 @@ public class CubeStandard extends Cube {
     	resultPoints_bit3[2].y = Math.abs(resultPoints_bit3[0].y - this.size);
     	resultPoints_bit3[2].z = 0 + this.heightOffset;
 
-    	
+       	planes_bit3 = new ArrayList<Vector3[]> ();
+    	planes_bit3.add(resultPoints_bit3);
+
+ 
     	///////////
     	
     	resultPoints_noBit0 = new Vector3[3];
@@ -139,7 +162,9 @@ public class CubeStandard extends Cube {
     	resultPoints_noBit0[2] = new Vector3(coordinatesOfBitsIndex((byte)0));
     	resultPoints_noBit0[2].z = 0 + this.heightOffset;
 
-    	
+       	planes_noBit0 = new ArrayList<Vector3[]> ();
+       	planes_noBit0.add(resultPoints_noBit0);
+   	
     	resultPoints_noBit1 = new Vector3[3];
     	resultPoints_noBit1[0] = new Vector3(coordinatesOfBitsIndex((byte)0));
     	resultPoints_noBit1[0].z = 1 + this.heightOffset;
@@ -150,6 +175,8 @@ public class CubeStandard extends Cube {
     	resultPoints_noBit1[2] = new Vector3(coordinatesOfBitsIndex((byte)1));
     	resultPoints_noBit1[2].z = 0 + this.heightOffset;
 
+       	planes_noBit1 = new ArrayList<Vector3[]> ();
+       	planes_noBit1.add(resultPoints_noBit1);
     	
     	resultPoints_noBit2 = new Vector3[3];
     	resultPoints_noBit2[0] = new Vector3(coordinatesOfBitsIndex((byte)0));
@@ -161,7 +188,9 @@ public class CubeStandard extends Cube {
     	resultPoints_noBit2[2] = new Vector3(coordinatesOfBitsIndex((byte)2));
     	resultPoints_noBit2[2].z = 0 + this.heightOffset;
 
-    	
+       	planes_noBit2 = new ArrayList<Vector3[]> ();
+       	planes_noBit2.add(resultPoints_noBit2);
+   	
     	resultPoints_noBit3 = new Vector3[3];
     	resultPoints_noBit3[0] = new Vector3(coordinatesOfBitsIndex((byte)1));
     	resultPoints_noBit3[0].z = 1 + this.heightOffset;
@@ -172,11 +201,14 @@ public class CubeStandard extends Cube {
     	resultPoints_noBit3[2] = new Vector3(coordinatesOfBitsIndex((byte)3));
     	resultPoints_noBit3[2].z = 0 + this.heightOffset;
 
+       	planes_noBit3 = new ArrayList<Vector3[]> ();
+       	planes_noBit3.add(resultPoints_noBit3);
+
     }
     
     protected  Vector3[] getCornerOffsets(byte depth) {
         Vector3[] corners = new Vector3[8];
-        double stepSize = getMinimalStepForDepth(depth); // / this.size am 26.09.2021
+        double stepSize = getMinimalStepForDepth(depth); 
         byte[] minAndMax = {0, 1};
         byte x;
         byte y;
@@ -188,8 +220,7 @@ public class CubeStandard extends Cube {
                 	x = minAndMax[a];
                 	y = minAndMax[b];
                 	z = minAndMax[c];
-                    // / 3 * level
-                    corners[i] = new Vector3(x * stepSize, y * stepSize, z * stepSize  );
+                     corners[i] = new Vector3(x * stepSize, y * stepSize, z * stepSize  );
                     i++;
                 }
             }
@@ -216,10 +247,62 @@ public class CubeStandard extends Cube {
     }
 
     
+    protected List<Vector3[]> getPlanesForTile(byte bitsNumber) {
+    	
+        /* create bits from Number */
+        
+        boolean bits[] = new boolean[4];
+        if (bitsNumber > 7) {
+            bits[3] = true;
+            bitsNumber -= 8;
+        }
+        if (bitsNumber > 3) {
+            bits[2] = true;
+            bitsNumber -= 4;
+        }
+        if (bitsNumber > 1) {
+            bits[1] = true;
+            bitsNumber -= 2;
+        }
+        if (bitsNumber > 0) {
+            bits[0] = true;
+        }
+        
+        byte count = countBits(bits);
+        byte bit;
+        
+        switch (count) {
+        case 1:
+            bit = findIndexBits(true, bits);
+            
+            switch (bit) {
+            case  0 : return planes_bit0;
+            case  1 : return planes_bit1;
+            case  2 : return planes_bit2;
+            case  3 : return planes_bit3;
+            }
+            break;
+        case 3:
+            bit = findIndexBits(false, bits);
+            
+            switch (bit) {
+            case  0 : return planes_noBit0;
+            case  1 : return planes_noBit1;
+            case  2 : return planes_noBit2;
+            case  3 : return planes_noBit3;
+            }
+            break;
+        default:
+        	return null;
+        }
+
+        return null;
+    }
+
+    
     protected Vector3[] getPlanePointsFromTile(byte bitsNumber) {
     	
         /* create bits from Number */
-        Vector3 resultPoints[];
         
         boolean bits[] = new boolean[4];
         if (bitsNumber > 7) {
@@ -280,7 +363,7 @@ public class CubeStandard extends Cube {
         switch (count) {
              case 2: {
                 // get all positive indecies
-                byte indecies[] = findAllIndeciesBits(true, bits);
+                byte indecies[] = findAllIndicesBits(true, bits);
 
                 for (byte i = 0; i < 2; i++) {
                     resultPoints[i] = new Vector3(coordinatesOfBitsIndex(indecies[i]));
