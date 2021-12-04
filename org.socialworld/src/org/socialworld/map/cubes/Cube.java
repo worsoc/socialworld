@@ -48,6 +48,10 @@ class Vector3 {
         return cross_P;
     }
 
+    protected void addToZ(double valueToAdd) {
+    	this.z = this.z + valueToAdd;
+    }
+    
  }
 
 public abstract class Cube {
@@ -56,6 +60,30 @@ public abstract class Cube {
 	protected final static byte CUBE_SIZE_TILE_MEDIUM = 9;
 	protected final static byte CUBE_SIZE_TILE_LARGE = 81;
 
+	
+	protected static final Vector3[] coordinatesForBit_small = {
+			new Vector3(CUBE_SIZE_TILE_SMALL, 0, 0),
+			new Vector3(0, 0, 0),
+			new Vector3(CUBE_SIZE_TILE_SMALL, CUBE_SIZE_TILE_SMALL, 0),
+			new Vector3(0, CUBE_SIZE_TILE_SMALL, 0),
+	};
+			
+	protected static final Vector3[] coordinatesForBit_medium = {
+			new Vector3(CUBE_SIZE_TILE_MEDIUM, 0, 0),
+			new Vector3(0, 0, 0),
+			new Vector3(CUBE_SIZE_TILE_MEDIUM, CUBE_SIZE_TILE_MEDIUM, 0),
+			new Vector3(0, CUBE_SIZE_TILE_MEDIUM, 0),
+	};
+
+	protected static final Vector3[] coordinatesForBit_large = {
+			new Vector3(CUBE_SIZE_TILE_LARGE, 0, 0),
+			new Vector3(0, 0, 0),
+			new Vector3(CUBE_SIZE_TILE_LARGE, CUBE_SIZE_TILE_LARGE, 0),
+			new Vector3(0, CUBE_SIZE_TILE_LARGE, 0),
+	};
+
+
+	
 	protected final static byte setFullyFilledMinDepth_small = 1;
 	protected final static byte setFullyFilledMinDepth_medium = 2;
 	protected final static byte setFullyFilledMinDepth_large = 2;
@@ -73,18 +101,31 @@ public abstract class Cube {
     private boolean isValid = true;
     private String address = "";
 
+    protected abstract void initPlanes();
 
     protected abstract Cube getNewInstance(byte size,  byte heightOffset);
     
-    protected abstract Vector3[] getCornerOffsets(byte depth);
+//    protected abstract Vector3[] getCornerOffsets(byte depth);
     
-    protected abstract Vector3 coordinatesOfBitsIndex(byte index);
     
-    protected abstract Vector3[] getPlanePointsFromTile(byte bitsNumber);
     protected abstract List<Vector3[]> getPlanesForTile(byte bitsNumber);
 
-    protected abstract void initResultPoints();
-    
+    protected Vector3 coordinatesOfBitsIndex(byte index) {
+        // only the first and second values (the x value and the y value) are important 
+       
+    	switch(this.size) {
+    	case CUBE_SIZE_TILE_SMALL:
+    		return coordinatesForBit_small[index];
+    	case CUBE_SIZE_TILE_MEDIUM:
+    		return coordinatesForBit_medium[index];
+    	case CUBE_SIZE_TILE_LARGE:
+    		return coordinatesForBit_large[index];
+    	}
+    	
+    	return coordinatesForBit_small[1];
+        
+    }
+  
     private void fillInnerCubes() {
         this.hasChildren = true;
         this.isValid = true;  
@@ -231,7 +272,29 @@ public abstract class Cube {
         return ".";
     }
 
-    
+    protected  Vector3[] getCornerOffsets(byte depth) {
+        Vector3[] corners = new Vector3[8];
+        double stepSize = getMinimalStepForDepth(depth); 
+        byte[] minAndMax = {0, 1};
+        byte x;
+        byte y;
+        byte z;
+        int i = 0;
+        for (byte a = 0; a <= 1; a++) {
+            for (byte b = 0; b <= 1; b++) {
+                for (byte c = 0; c <= 1; c++) {
+                	x = minAndMax[a];
+                	y = minAndMax[b];
+                	z = minAndMax[c];
+                     corners[i] = new Vector3(x * stepSize, y * stepSize, z * stepSize  );
+                    i++;
+                }
+            }
+        }
+
+        return corners;
+    }
+   
     private boolean isBeingSplit(List<Vector3[]> planeList, double absoluteX,
             double absoluteY, double absoluteZ, byte depth) {
         
@@ -573,7 +636,8 @@ public abstract class Cube {
     public static void main(String args[]) {
     	byte detailDepth = 4;
     	byte heightOffset = 0;
-        Cube cube = new CubeStandard(CUBE_SIZE_TILE_SMALL, heightOffset);
+       // Cube cube = new CubeStandard(CUBE_SIZE_TILE_LARGE, heightOffset);
+        Cube cube = new CubeAdapter(CUBE_SIZE_TILE_SMALL, heightOffset);
 
         byte setFullyFilledMinDepth = 1;
         switch (cube.size) {
@@ -585,9 +649,9 @@ public abstract class Cube {
 			setFullyFilledMinDepth = setFullyFilledMinDepth_large; break;
 		}
 
-        cube.initResultPoints();
+        cube.initPlanes();
         cube.fillTheGround(heightOffset);
-        cube.splitCube((byte) 4, detailDepth, false);
+        cube.splitCube((byte) 3, detailDepth, false);
 
       
         cube.setFullyFilled( (byte) (detailDepth - 1), (byte) 14); 
