@@ -67,43 +67,43 @@ class HLCfromNorthToWest extends SubHLC {
 
 	private static int[] rasterIndicesHLC_4001 = {1,9,10};
 	private static Integer[] cornerMaximaNrsHLC_4001 =
-		{19914, 19914, 19914, 19114, 99914, 19914, 11914, 19994, 19914, 19914, 19914};
+		{19914, 11994, 19994};
 	private List<Integer> rasterIndices_4001At01;
 	private List<Integer> cornerMaximaNrs_4001;
 
 	private static int[] rasterIndicesHLC_4002 = {2,11,18,19,20};
 	private static Integer[] cornerMaximaNrsHLC_4002 =
-		{19914, 19914, 19914, 19114, 99914, 19914, 11914, 19994, 19914, 19914, 19914};
+		{19914, 19914, 11994, 11994, 19994};
 	private List<Integer> rasterIndices_4002At02;
 	private List<Integer> cornerMaximaNrs_4002;
 
 	private static int[] rasterIndicesHLC_4003 = {3,12,21,27,28,29,30};
 	private static Integer[] cornerMaximaNrsHLC_4003 =
-		{19914, 19914, 19914, 19114, 99914, 19914, 11914, 19994, 19914, 19914, 19914};
+		{19914, 19914, 19914, 11994, 11994, 11994, 19994};
 	private List<Integer> rasterIndices_4003At03;
 	private List<Integer> cornerMaximaNrs_4003;
 
 	private static int[] rasterIndicesHLC_4004 = {4,13,22,31,36,37,38,39,40};
 	private static Integer[] cornerMaximaNrsHLC_4004 =
-		{19914, 19914, 19914, 19114, 99914, 19914, 11914, 19994, 19914, 19914, 19914};
+		{19914, 19914, 19914, 19914, 11994, 11994, 11994, 11994, 19994};
 	private List<Integer> rasterIndices_4004At04;
 	private List<Integer> cornerMaximaNrs_4004;
 
 	private static int[] rasterIndicesHLC_4005 = {5,14,23,32,41,45,46,47,48,49,50};
 	private static Integer[] cornerMaximaNrsHLC_4005 =
-		{19914, 19914, 19914, 19114, 99914, 19914, 11914, 19994, 19914, 19914, 19914};
+		{19914, 19914, 19914, 19914, 19914, 11994, 11994, 11994, 11994, 11994, 19994};
 	private List<Integer> rasterIndices_4005At05;
 	private List<Integer> cornerMaximaNrs_4005;
 
 	private static int[] rasterIndicesHLC_4006 = {6,15,24,33,42,51,54,55,56,57,58,59,60};
 	private static Integer[] cornerMaximaNrsHLC_4006 =
-		{19914, 19914, 19914, 19114, 99914, 19914, 11914, 19994, 19914, 19914, 19914};
+		{19914, 19914, 19914, 19914, 19914, 19914, 11994, 11994, 11994, 11994, 11994, 11994, 19994};
 	private List<Integer> rasterIndices_4006At06;
 	private List<Integer> cornerMaximaNrs_4006;
 
 	private static int[] rasterIndicesHLC_4007 = {7,16,25,34,43,52,61,63,64,65,66,67,68,69,70};
 	private static Integer[] cornerMaximaNrsHLC_4007 =
-		{19914, 19914, 19914, 19114, 99914, 19914, 11914, 19994, 19914, 19914, 19914};
+		{19914, 19914, 19914, 19914, 19914, 19914, 19914, 11994, 11994, 11994, 11994, 11994, 11994, 11994, 19994};
 	private List<Integer> rasterIndices_4007At07;
 	private List<Integer> cornerMaximaNrs_4007;
 
