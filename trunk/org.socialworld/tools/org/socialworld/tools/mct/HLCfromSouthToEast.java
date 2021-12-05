@@ -108,25 +108,25 @@ class HLCfromSouthToEast extends SubHLC {
 	private List<Integer> cornerMaximaNrs_6007;
 
 	private HLCfromSouthToEast() {
-	rasterIndices_6001At73 = getRasterIndicesList(1, rasterIndicesHLC_6001);
+	rasterIndices_6001At73 = getRasterIndicesList(10, rasterIndicesHLC_6001);
 	cornerMaximaNrs_6001 = Arrays.asList(cornerMaximaNrsHLC_6001);
 
-	rasterIndices_6002At74 = getRasterIndicesList(2, rasterIndicesHLC_6002);
+	rasterIndices_6002At74 = getRasterIndicesList(20, rasterIndicesHLC_6002);
 	cornerMaximaNrs_6002 = Arrays.asList(cornerMaximaNrsHLC_6002);
 
-	rasterIndices_6003At75 = getRasterIndicesList(3, rasterIndicesHLC_6003);
+	rasterIndices_6003At75 = getRasterIndicesList(30, rasterIndicesHLC_6003);
 	cornerMaximaNrs_6003 = Arrays.asList(cornerMaximaNrsHLC_6003);
 
-	rasterIndices_6004At76 = getRasterIndicesList(4, rasterIndicesHLC_6004);
+	rasterIndices_6004At76 = getRasterIndicesList(40, rasterIndicesHLC_6004);
 	cornerMaximaNrs_6004 = Arrays.asList(cornerMaximaNrsHLC_6004);
 
-	rasterIndices_6005At77 = getRasterIndicesList(5, rasterIndicesHLC_6005);
+	rasterIndices_6005At77 = getRasterIndicesList(50, rasterIndicesHLC_6005);
 	cornerMaximaNrs_6005 = Arrays.asList(cornerMaximaNrsHLC_6005);
 
-	rasterIndices_6006At78 = getRasterIndicesList(6, rasterIndicesHLC_6006);
+	rasterIndices_6006At78 = getRasterIndicesList(60, rasterIndicesHLC_6006);
 	cornerMaximaNrs_6006 = Arrays.asList(cornerMaximaNrsHLC_6006);
 
-	rasterIndices_6007At79 = getRasterIndicesList(7, rasterIndicesHLC_6007);
+	rasterIndices_6007At79 = getRasterIndicesList(70, rasterIndicesHLC_6007);
 	cornerMaximaNrs_6007 = Arrays.asList(cornerMaximaNrsHLC_6007);
 
 }
