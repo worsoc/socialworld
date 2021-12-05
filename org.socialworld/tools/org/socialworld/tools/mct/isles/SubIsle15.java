@@ -421,7 +421,11 @@ public class SubIsle15 extends SubIsle {
 	private List<Integer> nr15at61;
 	private HeightIsle heightIsle15at61;
 
-	private final static Integer[] cornerMaximaNrs = {};
+	private final static Integer[] cornerMaximaNrs = {
+			11914, 11194,	
+			19914, 91194,
+			19114, 91114
+		};
 
 	private List<Integer> cornerMaxima;
 

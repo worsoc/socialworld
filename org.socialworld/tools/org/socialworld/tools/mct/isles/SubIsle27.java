@@ -323,7 +323,11 @@ public class SubIsle27 extends SubIsle {
 	private List<Integer> nr27at59;
 	private HeightIsle heightIsle27at59;
 
-	private final static Integer[] cornerMaximaNrs = {};
+	private final static Integer[] cornerMaximaNrs = {
+			11914, 11994, 11994, 11194,	
+			19914, 11114, 11114, 91194,
+			19114, 99114, 99114, 91114
+		};
 
 	private List<Integer> cornerMaxima;
 
