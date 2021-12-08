@@ -258,7 +258,7 @@ public class CubeStandard extends Cube {
     
  
     
-    protected List<Vector3[]> getPlanesForTile(byte bitsNumber) {
+    protected List<Vector3[]> getPlanesForTile(int bitsNumber) {
     	
         /* create bits from Number */
         
