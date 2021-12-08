@@ -108,7 +108,7 @@ public abstract class Cube {
 //    protected abstract Vector3[] getCornerOffsets(byte depth);
     
     
-    protected abstract List<Vector3[]> getPlanesForTile(byte bitsNumber);
+    protected abstract List<Vector3[]> getPlanesForTile(int bitsNumber);
 
     protected Vector3 coordinatesOfBitsIndex(byte index) {
         // only the first and second values (the x value and the y value) are important 
@@ -402,7 +402,7 @@ public abstract class Cube {
         return count;
     }
 
-    public void splitCube(byte tileNumber, byte detailDepth, boolean keepPositiveDelta) {
+    public void splitCube(int tileNumber, byte detailDepth, boolean keepPositiveDelta) {
         if (tileNumber == 6 || tileNumber == 9) {
             // execute 2 splits
         	if (tileNumber == 6) {
@@ -420,7 +420,7 @@ public abstract class Cube {
  
     }
 
-    private void recursiveSplitting(byte tileNumber, byte detailDepth, double absX, double absY, double absZ,
+    private void recursiveSplitting(int tileNumber, byte detailDepth, double absX, double absY, double absZ,
             boolean keepPositiveDelta) {
     	
     	// Matze: the sub cube has already been visited and marked as fully filled
@@ -651,7 +651,7 @@ public abstract class Cube {
 
         cube.initPlanes();
         cube.fillTheGround(heightOffset);
-        cube.splitCube((byte) 3, detailDepth, false);
+        cube.splitCube( 503, detailDepth, false);
 
       
         cube.setFullyFilled( (byte) (detailDepth - 1), (byte) 14); 
