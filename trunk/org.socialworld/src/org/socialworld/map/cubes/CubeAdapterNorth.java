@@ -24,8 +24,9 @@ package org.socialworld.map.cubes;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CubeAdapter extends Cube {
+public class CubeAdapterNorth extends Cube {
 
+	// 101 ... 109
 	private static List<Vector3[]> planes_nw_to_ne_00__1; 
 	private static List<Vector3[]> planes_nw_to_ne_00__2; 
 	private static List<Vector3[]> planes_nw_to_ne_00__3; 
@@ -68,18 +69,23 @@ public class CubeAdapter extends Cube {
 	
 	
 	
-	
-	
-	public CubeAdapter( byte size, byte heightOffset) {
+	public CubeAdapterNorth( byte size, byte heightOffset) {
 		this.size = size;
 		this.heightOffset = heightOffset;
-		
-		 
 	}
 
 	@Override
 	protected Cube getNewInstance(byte size, byte heightOffset) {
-    	return new CubeAdapter(size, heightOffset);
+    	return new CubeAdapterNorth(size, heightOffset);
+	}
+
+	@Override
+	protected void initPlanes() {
+
+		initPlanes_NW_2_NE_0_0();
+		initPlanes_NW_2_NE_1_1();
+		initPlanes_NE_2_NW_0_0();
+		initPlanes_NE_2_NW_1_1();
 	}
 
 	@Override
@@ -161,26 +167,10 @@ public class CubeAdapter extends Cube {
 		}
 		
 		
-		
-		
-		
-		
-			
-		
-		
-		
-		
-		return planes_nw_to_ne_00__8;
+	
+		return planes_nw_to_ne_00__1;
 	}
 
-	@Override
-	protected void initPlanes() {
-
-		initPlanes_NW_2_NE_0_0();
-		initPlanes_NW_2_NE_1_1();
-		initPlanes_NE_2_NW_0_0();
-		initPlanes_NE_2_NW_1_1();
-	}
 
 
 	private void initPlanes_NW_2_NE_0_0() {
@@ -209,6 +199,7 @@ public class CubeAdapter extends Cube {
 		resultPoints_nw_to_ne_plane2[2].z = (1/9) + this.heightOffset;
 
 		
+		// TileNumber 101
 		planes_nw_to_ne_00__1 = new ArrayList<Vector3[]> ();
 		Vector3[] pts_nw_2_ne_1_pln1 = new Vector3[3];
 		pts_nw_2_ne_1_pln1[0] = resultPoints_nw_to_ne_plane1[0];
@@ -226,6 +217,7 @@ public class CubeAdapter extends Cube {
 		planes_nw_to_ne_00__1.add(pts_nw_2_ne_1_pln2);
 
 		
+		// TileNumber 102
 		planes_nw_to_ne_00__2 = new ArrayList<Vector3[]> ();
 		Vector3[] pts_nw_2_ne_2_pln1 = new Vector3[3];
 		pts_nw_2_ne_2_pln1[0] = resultPoints_nw_to_ne_plane1[0];
@@ -244,6 +236,7 @@ public class CubeAdapter extends Cube {
 		
 		
 		
+		// TileNumber 103
 		planes_nw_to_ne_00__3 = new ArrayList<Vector3[]> ();
 		Vector3[] pts_nw_2_ne_3_pln1 = new Vector3[3];
 		pts_nw_2_ne_3_pln1[0] = resultPoints_nw_to_ne_plane1[0];
@@ -261,6 +254,7 @@ public class CubeAdapter extends Cube {
 		planes_nw_to_ne_00__3.add(pts_nw_2_ne_3_pln2);
 		
 		
+		// TileNumber 104
 		planes_nw_to_ne_00__4 = new ArrayList<Vector3[]> ();
 		Vector3[] pts_nw_2_ne_4_pln1 = new Vector3[3];
 		pts_nw_2_ne_4_pln1[0] = resultPoints_nw_to_ne_plane1[0];
@@ -278,6 +272,7 @@ public class CubeAdapter extends Cube {
 		planes_nw_to_ne_00__4.add(pts_nw_2_ne_4_pln2);
 		
 		
+		// TileNumber 105
 		planes_nw_to_ne_00__5 = new ArrayList<Vector3[]> ();
 		Vector3[] pts_nw_2_ne_5_pln1 = new Vector3[3];
 		pts_nw_2_ne_5_pln1[0] = resultPoints_nw_to_ne_plane1[0];
@@ -295,6 +290,7 @@ public class CubeAdapter extends Cube {
 		planes_nw_to_ne_00__5.add(pts_nw_2_ne_5_pln2);
 		
 		
+		// TileNumber 106
 		planes_nw_to_ne_00__6 = new ArrayList<Vector3[]> ();
 		Vector3[] pts_nw_2_ne_6_pln1 = new Vector3[3];
 		pts_nw_2_ne_6_pln1[0] = resultPoints_nw_to_ne_plane1[0];
@@ -312,6 +308,7 @@ public class CubeAdapter extends Cube {
 		planes_nw_to_ne_00__6.add(pts_nw_2_ne_6_pln2);
 		
 		
+		// TileNumber 107
 		planes_nw_to_ne_00__7 = new ArrayList<Vector3[]> ();
 		Vector3[] pts_nw_2_ne_7_pln1 = new Vector3[3];
 		pts_nw_2_ne_7_pln1[0] = resultPoints_nw_to_ne_plane1[0];
@@ -328,6 +325,7 @@ public class CubeAdapter extends Cube {
 		planes_nw_to_ne_00__7.add(pts_nw_2_ne_7_pln1);
 		planes_nw_to_ne_00__7.add(pts_nw_2_ne_7_pln2);
 		
+		// TileNumber 108
 		planes_nw_to_ne_00__8 = new ArrayList<Vector3[]> ();
 		Vector3[] pts_nw_2_ne_8_pln1 = new Vector3[3];
 		pts_nw_2_ne_8_pln1[0] = resultPoints_nw_to_ne_plane1[0];
@@ -345,6 +343,7 @@ public class CubeAdapter extends Cube {
 		planes_nw_to_ne_00__8.add(pts_nw_2_ne_8_pln2);
 		
 		
+		// TileNumber 109
 		planes_nw_to_ne_00__9 = new ArrayList<Vector3[]> ();
 		Vector3[] pts_nw_2_ne_9_pln1 = new Vector3[3];
 		pts_nw_2_ne_9_pln1[0] = resultPoints_nw_to_ne_plane1[0];
@@ -386,7 +385,9 @@ public class CubeAdapter extends Cube {
 
 		resultPoints_nw_to_ne_plane2[2] = new Vector3(coordinatesOfBitsIndex((byte)2));
 		resultPoints_nw_to_ne_plane2[2].z = (1/9) + this.heightOffset;
+	
 		
+		// TileNumber 301
 		planes_nw_to_ne_11__1 = new ArrayList<Vector3[]> ();
 		Vector3[] pts_nw_2_ne_1_pln1 = new Vector3[3];
 		pts_nw_2_ne_1_pln1[0] = resultPoints_nw_to_ne_plane1[0];
@@ -404,6 +405,7 @@ public class CubeAdapter extends Cube {
 		planes_nw_to_ne_11__1.add(pts_nw_2_ne_1_pln2);
 
 		
+		// TileNumber 302
 		planes_nw_to_ne_11__2 = new ArrayList<Vector3[]> ();
 		Vector3[] pts_nw_2_ne_2_pln1 = new Vector3[3];
 		pts_nw_2_ne_2_pln1[0] = resultPoints_nw_to_ne_plane1[0];
@@ -421,7 +423,7 @@ public class CubeAdapter extends Cube {
 		planes_nw_to_ne_11__2.add(pts_nw_2_ne_2_pln2);
 		
 		
-		
+		// TileNumber 303
 		planes_nw_to_ne_11__3 = new ArrayList<Vector3[]> ();
 		Vector3[] pts_nw_2_ne_3_pln1 = new Vector3[3];
 		pts_nw_2_ne_3_pln1[0] = resultPoints_nw_to_ne_plane1[0];
@@ -439,6 +441,7 @@ public class CubeAdapter extends Cube {
 		planes_nw_to_ne_11__3.add(pts_nw_2_ne_3_pln2);
 		
 		
+		// TileNumber 304
 		planes_nw_to_ne_11__4 = new ArrayList<Vector3[]> ();
 		Vector3[] pts_nw_2_ne_4_pln1 = new Vector3[3];
 		pts_nw_2_ne_4_pln1[0] = resultPoints_nw_to_ne_plane1[0];
@@ -456,6 +459,7 @@ public class CubeAdapter extends Cube {
 		planes_nw_to_ne_11__4.add(pts_nw_2_ne_4_pln2);
 		
 		
+		// TileNumber 305
 		planes_nw_to_ne_11__5 = new ArrayList<Vector3[]> ();
 		Vector3[] pts_nw_2_ne_5_pln1 = new Vector3[3];
 		pts_nw_2_ne_5_pln1[0] = resultPoints_nw_to_ne_plane1[0];
@@ -473,6 +477,7 @@ public class CubeAdapter extends Cube {
 		planes_nw_to_ne_11__5.add(pts_nw_2_ne_5_pln2);
 		
 		
+		// TileNumber 306
 		planes_nw_to_ne_11__6 = new ArrayList<Vector3[]> ();
 		Vector3[] pts_nw_2_ne_6_pln1 = new Vector3[3];
 		pts_nw_2_ne_6_pln1[0] = resultPoints_nw_to_ne_plane1[0];
@@ -490,6 +495,7 @@ public class CubeAdapter extends Cube {
 		planes_nw_to_ne_11__6.add(pts_nw_2_ne_6_pln2);
 		
 		
+		// TileNumber 307
 		planes_nw_to_ne_11__7 = new ArrayList<Vector3[]> ();
 		Vector3[] pts_nw_2_ne_7_pln1 = new Vector3[3];
 		pts_nw_2_ne_7_pln1[0] = resultPoints_nw_to_ne_plane1[0];
@@ -505,7 +511,9 @@ public class CubeAdapter extends Cube {
 		
 		planes_nw_to_ne_11__7.add(pts_nw_2_ne_7_pln1);
 		planes_nw_to_ne_11__7.add(pts_nw_2_ne_7_pln2);
+
 		
+		// TileNumber 308
 		planes_nw_to_ne_11__8 = new ArrayList<Vector3[]> ();
 		Vector3[] pts_nw_2_ne_8_pln1 = new Vector3[3];
 		pts_nw_2_ne_8_pln1[0] = resultPoints_nw_to_ne_plane1[0];
@@ -523,6 +531,7 @@ public class CubeAdapter extends Cube {
 		planes_nw_to_ne_11__8.add(pts_nw_2_ne_8_pln2);
 		
 		
+		// TileNumber 309
 		planes_nw_to_ne_11__9 = new ArrayList<Vector3[]> ();
 		Vector3[] pts_nw_2_ne_9_pln1 = new Vector3[3];
 		pts_nw_2_ne_9_pln1[0] = resultPoints_nw_to_ne_plane1[0];
@@ -566,75 +575,79 @@ public class CubeAdapter extends Cube {
 		resultPoints_ne_to_nw_plane2[2].z = 0 + this.heightOffset;
 
 		
-		planes_ne_to_nw_00__9 = new ArrayList<Vector3[]> ();
-		Vector3[] pts_ne_2_nw_9_pln1 = new Vector3[3];
-		pts_ne_2_nw_9_pln1[0] = resultPoints_ne_to_nw_plane1[0];
-		pts_ne_2_nw_9_pln1[1] = resultPoints_ne_to_nw_plane1[1];
-		pts_ne_2_nw_9_pln1[2] = new Vector3(resultPoints_ne_to_nw_plane1[2]);
-		pts_ne_2_nw_9_pln1[2].addToZ((double)0/(double)9);
-		Vector3[] pts_ne_2_nw_9_pln2 = new Vector3[3];
-		pts_ne_2_nw_9_pln2[0] = resultPoints_ne_to_nw_plane2[0];
-		pts_ne_2_nw_9_pln2[1] = new Vector3(resultPoints_ne_to_nw_plane2[1]);
-		pts_ne_2_nw_9_pln2[1].addToZ((double)0/(double)9);
-		pts_ne_2_nw_9_pln2[2] = new Vector3(resultPoints_ne_to_nw_plane2[2]);
-		pts_ne_2_nw_9_pln2[2].addToZ((double)0/(double)9);
+		// TileNumber 131
+		planes_ne_to_nw_00__1 = new ArrayList<Vector3[]> ();
+		Vector3[] pts_ne_2_nw_1_pln1 = new Vector3[3];
+		pts_ne_2_nw_1_pln1[0] = resultPoints_ne_to_nw_plane1[0];
+		pts_ne_2_nw_1_pln1[1] = resultPoints_ne_to_nw_plane1[1];
+		pts_ne_2_nw_1_pln1[2] = new Vector3(resultPoints_ne_to_nw_plane1[2]);
+		pts_ne_2_nw_1_pln1[2].addToZ((double)0/(double)9);
+		Vector3[] pts_ne_2_nw_1_pln2 = new Vector3[3];
+		pts_ne_2_nw_1_pln2[0] = resultPoints_ne_to_nw_plane2[0];
+		pts_ne_2_nw_1_pln2[1] = new Vector3(resultPoints_ne_to_nw_plane2[1]);
+		pts_ne_2_nw_1_pln2[1].addToZ((double)0/(double)9);
+		pts_ne_2_nw_1_pln2[2] = new Vector3(resultPoints_ne_to_nw_plane2[2]);
+		pts_ne_2_nw_1_pln2[2].addToZ((double)0/(double)9);
 		
-		planes_ne_to_nw_00__9.add(pts_ne_2_nw_9_pln1);
-		planes_ne_to_nw_00__9.add(pts_ne_2_nw_9_pln2);
+		planes_ne_to_nw_00__1.add(pts_ne_2_nw_1_pln1);
+		planes_ne_to_nw_00__1.add(pts_ne_2_nw_1_pln2);
 
 		
-		planes_ne_to_nw_00__8 = new ArrayList<Vector3[]> ();
-		Vector3[] pts_ne_2_nw_8_pln1 = new Vector3[3];
-		pts_ne_2_nw_8_pln1[0] = resultPoints_ne_to_nw_plane1[0];
-		pts_ne_2_nw_8_pln1[1] = resultPoints_ne_to_nw_plane1[1];
-		pts_ne_2_nw_8_pln1[2] = new Vector3(resultPoints_ne_to_nw_plane1[2]);
-		pts_ne_2_nw_8_pln1[2].addToZ((double)1/(double)9);
-		Vector3[] pts_ne_2_nw_8_pln2 = new Vector3[3];
-		pts_ne_2_nw_8_pln2[0] = resultPoints_ne_to_nw_plane2[0];
-		pts_ne_2_nw_8_pln2[1] = new Vector3(resultPoints_ne_to_nw_plane2[1]);
-		pts_ne_2_nw_8_pln2[1].addToZ((double)1/(double)9);
-		pts_ne_2_nw_8_pln2[2] = new Vector3(resultPoints_ne_to_nw_plane2[2]);
-		pts_ne_2_nw_8_pln2[2].addToZ((double)1/(double)9);
+		// TileNumber 132
+		planes_ne_to_nw_00__2 = new ArrayList<Vector3[]> ();
+		Vector3[] pts_ne_2_nw_2_pln1 = new Vector3[3];
+		pts_ne_2_nw_2_pln1[0] = resultPoints_ne_to_nw_plane1[0];
+		pts_ne_2_nw_2_pln1[1] = resultPoints_ne_to_nw_plane1[1];
+		pts_ne_2_nw_2_pln1[2] = new Vector3(resultPoints_ne_to_nw_plane1[2]);
+		pts_ne_2_nw_2_pln1[2].addToZ((double)1/(double)9);
+		Vector3[] pts_ne_2_nw_2_pln2 = new Vector3[3];
+		pts_ne_2_nw_2_pln2[0] = resultPoints_ne_to_nw_plane2[0];
+		pts_ne_2_nw_2_pln2[1] = new Vector3(resultPoints_ne_to_nw_plane2[1]);
+		pts_ne_2_nw_2_pln2[1].addToZ((double)1/(double)9);
+		pts_ne_2_nw_2_pln2[2] = new Vector3(resultPoints_ne_to_nw_plane2[2]);
+		pts_ne_2_nw_2_pln2[2].addToZ((double)1/(double)9);
 		
-		planes_ne_to_nw_00__8.add(pts_ne_2_nw_8_pln1);
-		planes_ne_to_nw_00__8.add(pts_ne_2_nw_8_pln2);
-		
-		
-		
-		planes_ne_to_nw_00__7 = new ArrayList<Vector3[]> ();
-		Vector3[] pts_ne_2_nw_7_pln1 = new Vector3[3];
-		pts_ne_2_nw_7_pln1[0] = resultPoints_ne_to_nw_plane1[0];
-		pts_ne_2_nw_7_pln1[1] = resultPoints_ne_to_nw_plane1[1];
-		pts_ne_2_nw_7_pln1[2] = new Vector3(resultPoints_ne_to_nw_plane1[2]);
-		pts_ne_2_nw_7_pln1[2].addToZ((double)2/(double)9);
-		Vector3[] pts_ne_2_nw_7_pln2 = new Vector3[3];
-		pts_ne_2_nw_7_pln2[0] = resultPoints_ne_to_nw_plane2[0];
-		pts_ne_2_nw_7_pln2[1] = new Vector3(resultPoints_ne_to_nw_plane2[1]);
-		pts_ne_2_nw_7_pln2[1].addToZ((double)2/(double)9);
-		pts_ne_2_nw_7_pln2[2] = new Vector3(resultPoints_ne_to_nw_plane2[2]);
-		pts_ne_2_nw_7_pln2[2].addToZ((double)2/(double)9);
-		
-		planes_ne_to_nw_00__7.add(pts_ne_2_nw_7_pln1);
-		planes_ne_to_nw_00__7.add(pts_ne_2_nw_7_pln2);
+		planes_ne_to_nw_00__2.add(pts_ne_2_nw_2_pln1);
+		planes_ne_to_nw_00__2.add(pts_ne_2_nw_2_pln2);
 		
 		
-		planes_ne_to_nw_00__6 = new ArrayList<Vector3[]> ();
-		Vector3[] pts_ne_2_nw_6_pln1 = new Vector3[3];
-		pts_ne_2_nw_6_pln1[0] = resultPoints_ne_to_nw_plane1[0];
-		pts_ne_2_nw_6_pln1[1] = resultPoints_ne_to_nw_plane1[1];
-		pts_ne_2_nw_6_pln1[2] = new Vector3(resultPoints_ne_to_nw_plane1[2]);
-		pts_ne_2_nw_6_pln1[2].addToZ((double)3/(double)9);
-		Vector3[] pts_ne_2_nw_6_pln2 = new Vector3[3];
-		pts_ne_2_nw_6_pln2[0] = resultPoints_ne_to_nw_plane2[0];
-		pts_ne_2_nw_6_pln2[1] = new Vector3(resultPoints_ne_to_nw_plane2[1]);
-		pts_ne_2_nw_6_pln2[1].addToZ((double)3/(double)9);
-		pts_ne_2_nw_6_pln2[2] = new Vector3(resultPoints_ne_to_nw_plane2[2]);
-		pts_ne_2_nw_6_pln2[2].addToZ((double)3/(double)9);
+		// TileNumber 133
+		planes_ne_to_nw_00__3 = new ArrayList<Vector3[]> ();
+		Vector3[] pts_ne_2_nw_3_pln1 = new Vector3[3];
+		pts_ne_2_nw_3_pln1[0] = resultPoints_ne_to_nw_plane1[0];
+		pts_ne_2_nw_3_pln1[1] = resultPoints_ne_to_nw_plane1[1];
+		pts_ne_2_nw_3_pln1[2] = new Vector3(resultPoints_ne_to_nw_plane1[2]);
+		pts_ne_2_nw_3_pln1[2].addToZ((double)2/(double)9);
+		Vector3[] pts_ne_2_nw_3_pln2 = new Vector3[3];
+		pts_ne_2_nw_3_pln2[0] = resultPoints_ne_to_nw_plane2[0];
+		pts_ne_2_nw_3_pln2[1] = new Vector3(resultPoints_ne_to_nw_plane2[1]);
+		pts_ne_2_nw_3_pln2[1].addToZ((double)2/(double)9);
+		pts_ne_2_nw_3_pln2[2] = new Vector3(resultPoints_ne_to_nw_plane2[2]);
+		pts_ne_2_nw_3_pln2[2].addToZ((double)2/(double)9);
 		
-		planes_ne_to_nw_00__6.add(pts_ne_2_nw_6_pln1);
-		planes_ne_to_nw_00__6.add(pts_ne_2_nw_6_pln2);
+		planes_ne_to_nw_00__3.add(pts_ne_2_nw_3_pln1);
+		planes_ne_to_nw_00__3.add(pts_ne_2_nw_3_pln2);
 		
 		
+		// TileNumber 134
+		planes_ne_to_nw_00__4 = new ArrayList<Vector3[]> ();
+		Vector3[] pts_ne_2_nw_4_pln1 = new Vector3[3];
+		pts_ne_2_nw_4_pln1[0] = resultPoints_ne_to_nw_plane1[0];
+		pts_ne_2_nw_4_pln1[1] = resultPoints_ne_to_nw_plane1[1];
+		pts_ne_2_nw_4_pln1[2] = new Vector3(resultPoints_ne_to_nw_plane1[2]);
+		pts_ne_2_nw_4_pln1[2].addToZ((double)3/(double)9);
+		Vector3[] pts_ne_2_nw_4_pln2 = new Vector3[3];
+		pts_ne_2_nw_4_pln2[0] = resultPoints_ne_to_nw_plane2[0];
+		pts_ne_2_nw_4_pln2[1] = new Vector3(resultPoints_ne_to_nw_plane2[1]);
+		pts_ne_2_nw_4_pln2[1].addToZ((double)3/(double)9);
+		pts_ne_2_nw_4_pln2[2] = new Vector3(resultPoints_ne_to_nw_plane2[2]);
+		pts_ne_2_nw_4_pln2[2].addToZ((double)3/(double)9);
+		
+		planes_ne_to_nw_00__4.add(pts_ne_2_nw_4_pln1);
+		planes_ne_to_nw_00__4.add(pts_ne_2_nw_4_pln2);
+		
+
+		// TileNumber 135
 		planes_ne_to_nw_00__5 = new ArrayList<Vector3[]> ();
 		Vector3[] pts_ne_2_nw_5_pln1 = new Vector3[3];
 		pts_ne_2_nw_5_pln1[0] = resultPoints_ne_to_nw_plane1[0];
@@ -652,71 +665,76 @@ public class CubeAdapter extends Cube {
 		planes_ne_to_nw_00__5.add(pts_ne_2_nw_5_pln2);
 		
 		
-		planes_ne_to_nw_00__4 = new ArrayList<Vector3[]> ();
-		Vector3[] pts_ne_2_nw_4_pln1 = new Vector3[3];
-		pts_ne_2_nw_4_pln1[0] = resultPoints_ne_to_nw_plane1[0];
-		pts_ne_2_nw_4_pln1[1] = resultPoints_ne_to_nw_plane1[1];
-		pts_ne_2_nw_4_pln1[2] = new Vector3(resultPoints_ne_to_nw_plane1[2]);
-		pts_ne_2_nw_4_pln1[2].addToZ((double)5/(double)9);
-		Vector3[] pts_ne_2_nw_4_pln2 = new Vector3[3];
-		pts_ne_2_nw_4_pln2[0] = resultPoints_ne_to_nw_plane2[0];
-		pts_ne_2_nw_4_pln2[1] = new Vector3(resultPoints_ne_to_nw_plane2[1]);
-		pts_ne_2_nw_4_pln2[1].addToZ((double)5/(double)9);
-		pts_ne_2_nw_4_pln2[2] = new Vector3(resultPoints_ne_to_nw_plane2[2]);
-		pts_ne_2_nw_4_pln2[2].addToZ((double)5/(double)9);
+		// TileNumber 136
+		planes_ne_to_nw_00__6 = new ArrayList<Vector3[]> ();
+		Vector3[] pts_ne_2_nw_6_pln1 = new Vector3[3];
+		pts_ne_2_nw_6_pln1[0] = resultPoints_ne_to_nw_plane1[0];
+		pts_ne_2_nw_6_pln1[1] = resultPoints_ne_to_nw_plane1[1];
+		pts_ne_2_nw_6_pln1[2] = new Vector3(resultPoints_ne_to_nw_plane1[2]);
+		pts_ne_2_nw_6_pln1[2].addToZ((double)5/(double)9);
+		Vector3[] pts_ne_2_nw_6_pln2 = new Vector3[3];
+		pts_ne_2_nw_6_pln2[0] = resultPoints_ne_to_nw_plane2[0];
+		pts_ne_2_nw_6_pln2[1] = new Vector3(resultPoints_ne_to_nw_plane2[1]);
+		pts_ne_2_nw_6_pln2[1].addToZ((double)5/(double)9);
+		pts_ne_2_nw_6_pln2[2] = new Vector3(resultPoints_ne_to_nw_plane2[2]);
+		pts_ne_2_nw_6_pln2[2].addToZ((double)5/(double)9);
 		
-		planes_ne_to_nw_00__4.add(pts_ne_2_nw_4_pln1);
-		planes_ne_to_nw_00__4.add(pts_ne_2_nw_4_pln2);
+		planes_ne_to_nw_00__6.add(pts_ne_2_nw_6_pln1);
+		planes_ne_to_nw_00__6.add(pts_ne_2_nw_6_pln2);
 		
 		
-		planes_ne_to_nw_00__3 = new ArrayList<Vector3[]> ();
-		Vector3[] pts_ne_2_nw_3_pln1 = new Vector3[3];
-		pts_ne_2_nw_3_pln1[0] = resultPoints_ne_to_nw_plane1[0];
-		pts_ne_2_nw_3_pln1[1] = resultPoints_ne_to_nw_plane1[1];
-		pts_ne_2_nw_3_pln1[2] = new Vector3(resultPoints_ne_to_nw_plane1[2]);
-		pts_ne_2_nw_3_pln1[2].addToZ((double)6/(double)9);
-		Vector3[] pts_ne_2_nw_3_pln2 = new Vector3[3];
-		pts_ne_2_nw_3_pln2[0] = resultPoints_ne_to_nw_plane2[0];
-		pts_ne_2_nw_3_pln2[1] = new Vector3(resultPoints_ne_to_nw_plane2[1]);
-		pts_ne_2_nw_3_pln2[1].addToZ((double)6/(double)9);
-		pts_ne_2_nw_3_pln2[2] = new Vector3(resultPoints_ne_to_nw_plane2[2]);
-		pts_ne_2_nw_3_pln2[2].addToZ((double)6/(double)9);
+		// TileNumber 137
+		planes_ne_to_nw_00__7 = new ArrayList<Vector3[]> ();
+		Vector3[] pts_ne_2_nw_7_pln1 = new Vector3[3];
+		pts_ne_2_nw_7_pln1[0] = resultPoints_ne_to_nw_plane1[0];
+		pts_ne_2_nw_7_pln1[1] = resultPoints_ne_to_nw_plane1[1];
+		pts_ne_2_nw_7_pln1[2] = new Vector3(resultPoints_ne_to_nw_plane1[2]);
+		pts_ne_2_nw_7_pln1[2].addToZ((double)6/(double)9);
+		Vector3[] pts_ne_2_nw_7_pln2 = new Vector3[3];
+		pts_ne_2_nw_7_pln2[0] = resultPoints_ne_to_nw_plane2[0];
+		pts_ne_2_nw_7_pln2[1] = new Vector3(resultPoints_ne_to_nw_plane2[1]);
+		pts_ne_2_nw_7_pln2[1].addToZ((double)6/(double)9);
+		pts_ne_2_nw_7_pln2[2] = new Vector3(resultPoints_ne_to_nw_plane2[2]);
+		pts_ne_2_nw_7_pln2[2].addToZ((double)6/(double)9);
 		
-		planes_ne_to_nw_00__3.add(pts_ne_2_nw_7_pln1);
-		planes_ne_to_nw_00__3.add(pts_ne_2_nw_7_pln2);
+		planes_ne_to_nw_00__7.add(pts_ne_2_nw_7_pln1);
+		planes_ne_to_nw_00__7.add(pts_ne_2_nw_7_pln2);
 		
-		planes_ne_to_nw_00__2 = new ArrayList<Vector3[]> ();
-		Vector3[] pts_ne_2_nw_2_pln1 = new Vector3[3];
+
+		// TileNumber 138
+		planes_ne_to_nw_00__8 = new ArrayList<Vector3[]> ();
+		Vector3[] pts_ne_2_nw_8_pln1 = new Vector3[3];
 		pts_ne_2_nw_8_pln1[0] = resultPoints_ne_to_nw_plane1[0];
 		pts_ne_2_nw_8_pln1[1] = resultPoints_ne_to_nw_plane1[1];
 		pts_ne_2_nw_8_pln1[2] = new Vector3(resultPoints_ne_to_nw_plane1[2]);
 		pts_ne_2_nw_8_pln1[2].addToZ((double)7/(double)9);
-		Vector3[] pts_ne_2_nw_2_pln2 = new Vector3[3];
-		pts_ne_2_nw_2_pln2[0] = resultPoints_ne_to_nw_plane2[0];
-		pts_ne_2_nw_2_pln2[1] = new Vector3(resultPoints_ne_to_nw_plane2[1]);
-		pts_ne_2_nw_2_pln2[1].addToZ((double)7/(double)9);
-		pts_ne_2_nw_2_pln2[2] = new Vector3(resultPoints_ne_to_nw_plane2[2]);
-		pts_ne_2_nw_2_pln2[2].addToZ((double)7/(double)9);
+		Vector3[] pts_ne_2_nw_8_pln2 = new Vector3[3];
+		pts_ne_2_nw_8_pln2[0] = resultPoints_ne_to_nw_plane2[0];
+		pts_ne_2_nw_8_pln2[1] = new Vector3(resultPoints_ne_to_nw_plane2[1]);
+		pts_ne_2_nw_8_pln2[1].addToZ((double)7/(double)9);
+		pts_ne_2_nw_8_pln2[2] = new Vector3(resultPoints_ne_to_nw_plane2[2]);
+		pts_ne_2_nw_8_pln2[2].addToZ((double)7/(double)9);
 		
-		planes_ne_to_nw_00__2.add(pts_ne_2_nw_2_pln1);
-		planes_ne_to_nw_00__2.add(pts_ne_2_nw_2_pln2);
+		planes_ne_to_nw_00__8.add(pts_ne_2_nw_8_pln1);
+		planes_ne_to_nw_00__8.add(pts_ne_2_nw_8_pln2);
 		
 		
-		planes_ne_to_nw_00__1 = new ArrayList<Vector3[]> ();
-		Vector3[] pts_ne_2_nw_1_pln1 = new Vector3[3];
-		pts_ne_2_nw_1_pln1[0] = resultPoints_ne_to_nw_plane1[0];
-		pts_ne_2_nw_1_pln1[1] = resultPoints_ne_to_nw_plane1[1];
-		pts_ne_2_nw_1_pln1[2] = new Vector3(resultPoints_ne_to_nw_plane1[2]);
-		pts_ne_2_nw_1_pln1[2].addToZ((double)8/(double)9);
-		Vector3[] pts_ne_2_nw_1_pln2 = new Vector3[3];
-		pts_ne_2_nw_1_pln2[0] = resultPoints_ne_to_nw_plane2[0];
-		pts_ne_2_nw_1_pln2[1] = new Vector3(resultPoints_ne_to_nw_plane2[1]);
-		pts_ne_2_nw_1_pln2[1].addToZ((double)8/(double)9);
-		pts_ne_2_nw_1_pln2[2] = new Vector3(resultPoints_ne_to_nw_plane2[2]);
-		pts_ne_2_nw_1_pln2[2].addToZ((double)8/(double)9);
+		// TileNumber 139
+		planes_ne_to_nw_00__9 = new ArrayList<Vector3[]> ();
+		Vector3[] pts_ne_2_nw_9_pln1 = new Vector3[3];
+		pts_ne_2_nw_9_pln1[0] = resultPoints_ne_to_nw_plane1[0];
+		pts_ne_2_nw_9_pln1[1] = resultPoints_ne_to_nw_plane1[1];
+		pts_ne_2_nw_9_pln1[2] = new Vector3(resultPoints_ne_to_nw_plane1[2]);
+		pts_ne_2_nw_9_pln1[2].addToZ((double)8/(double)9);
+		Vector3[] pts_ne_2_nw_9_pln2 = new Vector3[3];
+		pts_ne_2_nw_9_pln2[0] = resultPoints_ne_to_nw_plane2[0];
+		pts_ne_2_nw_9_pln2[1] = new Vector3(resultPoints_ne_to_nw_plane2[1]);
+		pts_ne_2_nw_9_pln2[1].addToZ((double)8/(double)9);
+		pts_ne_2_nw_9_pln2[2] = new Vector3(resultPoints_ne_to_nw_plane2[2]);
+		pts_ne_2_nw_9_pln2[2].addToZ((double)8/(double)9);
 		
-		planes_ne_to_nw_00__1.add(pts_ne_2_nw_1_pln1);
-		planes_ne_to_nw_00__1.add(pts_ne_2_nw_1_pln2);
+		planes_ne_to_nw_00__9.add(pts_ne_2_nw_9_pln1);
+		planes_ne_to_nw_00__9.add(pts_ne_2_nw_9_pln2);
 
 		
 	}
@@ -747,75 +765,79 @@ public class CubeAdapter extends Cube {
 		resultPoints_ne_to_nw_plane2[2].z = 0 + this.heightOffset;
 
 		
-		planes_ne_to_nw_11__9 = new ArrayList<Vector3[]> ();
-		Vector3[] pts_ne_2_nw_9_pln1 = new Vector3[3];
-		pts_ne_2_nw_9_pln1[0] = resultPoints_ne_to_nw_plane1[0];
-		pts_ne_2_nw_9_pln1[1] = resultPoints_ne_to_nw_plane1[1];
-		pts_ne_2_nw_9_pln1[2] = new Vector3(resultPoints_ne_to_nw_plane1[2]);
-		pts_ne_2_nw_9_pln1[2].addToZ((double)0/(double)9);
-		Vector3[] pts_ne_2_nw_9_pln2 = new Vector3[3];
-		pts_ne_2_nw_9_pln2[0] = resultPoints_ne_to_nw_plane2[0];
-		pts_ne_2_nw_9_pln2[1] = new Vector3(resultPoints_ne_to_nw_plane2[1]);
-		pts_ne_2_nw_9_pln2[1].addToZ((double)0/(double)9);
-		pts_ne_2_nw_9_pln2[2] = new Vector3(resultPoints_ne_to_nw_plane2[2]);
-		pts_ne_2_nw_9_pln2[2].addToZ((double)0/(double)9);
+		// TileNumber 331
+		planes_ne_to_nw_11__1 = new ArrayList<Vector3[]> ();
+		Vector3[] pts_ne_2_nw_1_pln1 = new Vector3[3];
+		pts_ne_2_nw_1_pln1[0] = resultPoints_ne_to_nw_plane1[0];
+		pts_ne_2_nw_1_pln1[1] = resultPoints_ne_to_nw_plane1[1];
+		pts_ne_2_nw_1_pln1[2] = new Vector3(resultPoints_ne_to_nw_plane1[2]);
+		pts_ne_2_nw_1_pln1[2].addToZ((double)0/(double)9);
+		Vector3[] pts_ne_2_nw_1_pln2 = new Vector3[3];
+		pts_ne_2_nw_1_pln2[0] = resultPoints_ne_to_nw_plane2[0];
+		pts_ne_2_nw_1_pln2[1] = new Vector3(resultPoints_ne_to_nw_plane2[1]);
+		pts_ne_2_nw_1_pln2[1].addToZ((double)0/(double)9);
+		pts_ne_2_nw_1_pln2[2] = new Vector3(resultPoints_ne_to_nw_plane2[2]);
+		pts_ne_2_nw_1_pln2[2].addToZ((double)0/(double)9);
 		
-		planes_ne_to_nw_11__9.add(pts_ne_2_nw_9_pln1);
-		planes_ne_to_nw_11__9.add(pts_ne_2_nw_9_pln2);
+		planes_ne_to_nw_11__1.add(pts_ne_2_nw_1_pln1);
+		planes_ne_to_nw_11__1.add(pts_ne_2_nw_1_pln2);
 
 		
-		planes_ne_to_nw_11__8 = new ArrayList<Vector3[]> ();
-		Vector3[] pts_ne_2_nw_8_pln1 = new Vector3[3];
-		pts_ne_2_nw_8_pln1[0] = resultPoints_ne_to_nw_plane1[0];
-		pts_ne_2_nw_8_pln1[1] = resultPoints_ne_to_nw_plane1[1];
-		pts_ne_2_nw_8_pln1[2] = new Vector3(resultPoints_ne_to_nw_plane1[2]);
-		pts_ne_2_nw_8_pln1[2].addToZ((double)1/(double)9);
-		Vector3[] pts_ne_2_nw_8_pln2 = new Vector3[3];
-		pts_ne_2_nw_8_pln2[0] = resultPoints_ne_to_nw_plane2[0];
-		pts_ne_2_nw_8_pln2[1] = new Vector3(resultPoints_ne_to_nw_plane2[1]);
-		pts_ne_2_nw_8_pln2[1].addToZ((double)1/(double)9);
-		pts_ne_2_nw_8_pln2[2] = new Vector3(resultPoints_ne_to_nw_plane2[2]);
-		pts_ne_2_nw_8_pln2[2].addToZ((double)1/(double)9);
+		// TileNumber 332
+		planes_ne_to_nw_11__2 = new ArrayList<Vector3[]> ();
+		Vector3[] pts_ne_2_nw_2_pln1 = new Vector3[3];
+		pts_ne_2_nw_2_pln1[0] = resultPoints_ne_to_nw_plane1[0];
+		pts_ne_2_nw_2_pln1[1] = resultPoints_ne_to_nw_plane1[1];
+		pts_ne_2_nw_2_pln1[2] = new Vector3(resultPoints_ne_to_nw_plane1[2]);
+		pts_ne_2_nw_2_pln1[2].addToZ((double)1/(double)9);
+		Vector3[] pts_ne_2_nw_2_pln2 = new Vector3[3];
+		pts_ne_2_nw_2_pln2[0] = resultPoints_ne_to_nw_plane2[0];
+		pts_ne_2_nw_2_pln2[1] = new Vector3(resultPoints_ne_to_nw_plane2[1]);
+		pts_ne_2_nw_2_pln2[1].addToZ((double)1/(double)9);
+		pts_ne_2_nw_2_pln2[2] = new Vector3(resultPoints_ne_to_nw_plane2[2]);
+		pts_ne_2_nw_2_pln2[2].addToZ((double)1/(double)9);
 		
-		planes_ne_to_nw_11__8.add(pts_ne_2_nw_8_pln1);
-		planes_ne_to_nw_11__8.add(pts_ne_2_nw_8_pln2);
-		
-		
-		
-		planes_ne_to_nw_11__7 = new ArrayList<Vector3[]> ();
-		Vector3[] pts_ne_2_nw_7_pln1 = new Vector3[3];
-		pts_ne_2_nw_7_pln1[0] = resultPoints_ne_to_nw_plane1[0];
-		pts_ne_2_nw_7_pln1[1] = resultPoints_ne_to_nw_plane1[1];
-		pts_ne_2_nw_7_pln1[2] = new Vector3(resultPoints_ne_to_nw_plane1[2]);
-		pts_ne_2_nw_7_pln1[2].addToZ((double)2/(double)9);
-		Vector3[] pts_ne_2_nw_7_pln2 = new Vector3[3];
-		pts_ne_2_nw_7_pln2[0] = resultPoints_ne_to_nw_plane2[0];
-		pts_ne_2_nw_7_pln2[1] = new Vector3(resultPoints_ne_to_nw_plane2[1]);
-		pts_ne_2_nw_7_pln2[1].addToZ((double)2/(double)9);
-		pts_ne_2_nw_7_pln2[2] = new Vector3(resultPoints_ne_to_nw_plane2[2]);
-		pts_ne_2_nw_7_pln2[2].addToZ((double)2/(double)9);
-		
-		planes_ne_to_nw_11__7.add(pts_ne_2_nw_7_pln1);
-		planes_ne_to_nw_11__7.add(pts_ne_2_nw_7_pln2);
+		planes_ne_to_nw_11__2.add(pts_ne_2_nw_2_pln1);
+		planes_ne_to_nw_11__2.add(pts_ne_2_nw_2_pln2);
 		
 		
-		planes_ne_to_nw_11__6 = new ArrayList<Vector3[]> ();
-		Vector3[] pts_ne_2_nw_6_pln1 = new Vector3[3];
-		pts_ne_2_nw_6_pln1[0] = resultPoints_ne_to_nw_plane1[0];
-		pts_ne_2_nw_6_pln1[1] = resultPoints_ne_to_nw_plane1[1];
-		pts_ne_2_nw_6_pln1[2] = new Vector3(resultPoints_ne_to_nw_plane1[2]);
-		pts_ne_2_nw_6_pln1[2].addToZ((double)3/(double)9);
-		Vector3[] pts_ne_2_nw_6_pln2 = new Vector3[3];
-		pts_ne_2_nw_6_pln2[0] = resultPoints_ne_to_nw_plane2[0];
-		pts_ne_2_nw_6_pln2[1] = new Vector3(resultPoints_ne_to_nw_plane2[1]);
-		pts_ne_2_nw_6_pln2[1].addToZ((double)3/(double)9);
-		pts_ne_2_nw_6_pln2[2] = new Vector3(resultPoints_ne_to_nw_plane2[2]);
-		pts_ne_2_nw_6_pln2[2].addToZ((double)3/(double)9);
+		// TileNumber 333
+		planes_ne_to_nw_11__3 = new ArrayList<Vector3[]> ();
+		Vector3[] pts_ne_2_nw_3_pln1 = new Vector3[3];
+		pts_ne_2_nw_3_pln1[0] = resultPoints_ne_to_nw_plane1[0];
+		pts_ne_2_nw_3_pln1[1] = resultPoints_ne_to_nw_plane1[1];
+		pts_ne_2_nw_3_pln1[2] = new Vector3(resultPoints_ne_to_nw_plane1[2]);
+		pts_ne_2_nw_3_pln1[2].addToZ((double)2/(double)9);
+		Vector3[] pts_ne_2_nw_3_pln2 = new Vector3[3];
+		pts_ne_2_nw_3_pln2[0] = resultPoints_ne_to_nw_plane2[0];
+		pts_ne_2_nw_3_pln2[1] = new Vector3(resultPoints_ne_to_nw_plane2[1]);
+		pts_ne_2_nw_3_pln2[1].addToZ((double)2/(double)9);
+		pts_ne_2_nw_3_pln2[2] = new Vector3(resultPoints_ne_to_nw_plane2[2]);
+		pts_ne_2_nw_3_pln2[2].addToZ((double)2/(double)9);
 		
-		planes_ne_to_nw_11__6.add(pts_ne_2_nw_6_pln1);
-		planes_ne_to_nw_11__6.add(pts_ne_2_nw_6_pln2);
+		planes_ne_to_nw_11__3.add(pts_ne_2_nw_3_pln1);
+		planes_ne_to_nw_11__3.add(pts_ne_2_nw_3_pln2);
 		
 		
+		// TileNumber 334
+		planes_ne_to_nw_11__4 = new ArrayList<Vector3[]> ();
+		Vector3[] pts_ne_2_nw_4_pln1 = new Vector3[3];
+		pts_ne_2_nw_4_pln1[0] = resultPoints_ne_to_nw_plane1[0];
+		pts_ne_2_nw_4_pln1[1] = resultPoints_ne_to_nw_plane1[1];
+		pts_ne_2_nw_4_pln1[2] = new Vector3(resultPoints_ne_to_nw_plane1[2]);
+		pts_ne_2_nw_4_pln1[2].addToZ((double)3/(double)9);
+		Vector3[] pts_ne_2_nw_4_pln2 = new Vector3[3];
+		pts_ne_2_nw_4_pln2[0] = resultPoints_ne_to_nw_plane2[0];
+		pts_ne_2_nw_4_pln2[1] = new Vector3(resultPoints_ne_to_nw_plane2[1]);
+		pts_ne_2_nw_4_pln2[1].addToZ((double)3/(double)9);
+		pts_ne_2_nw_4_pln2[2] = new Vector3(resultPoints_ne_to_nw_plane2[2]);
+		pts_ne_2_nw_4_pln2[2].addToZ((double)3/(double)9);
+		
+		planes_ne_to_nw_11__4.add(pts_ne_2_nw_4_pln1);
+		planes_ne_to_nw_11__4.add(pts_ne_2_nw_4_pln2);
+		
+		
+		// TileNumber 335
 		planes_ne_to_nw_11__5 = new ArrayList<Vector3[]> ();
 		Vector3[] pts_ne_2_nw_5_pln1 = new Vector3[3];
 		pts_ne_2_nw_5_pln1[0] = resultPoints_ne_to_nw_plane1[0];
@@ -833,113 +855,81 @@ public class CubeAdapter extends Cube {
 		planes_ne_to_nw_11__5.add(pts_ne_2_nw_5_pln2);
 		
 		
-		planes_ne_to_nw_11__4 = new ArrayList<Vector3[]> ();
-		Vector3[] pts_ne_2_nw_4_pln1 = new Vector3[3];
-		pts_ne_2_nw_4_pln1[0] = resultPoints_ne_to_nw_plane1[0];
-		pts_ne_2_nw_4_pln1[1] = resultPoints_ne_to_nw_plane1[1];
-		pts_ne_2_nw_4_pln1[2] = new Vector3(resultPoints_ne_to_nw_plane1[2]);
-		pts_ne_2_nw_4_pln1[2].addToZ((double)5/(double)9);
-		Vector3[] pts_ne_2_nw_4_pln2 = new Vector3[3];
-		pts_ne_2_nw_4_pln2[0] = resultPoints_ne_to_nw_plane2[0];
-		pts_ne_2_nw_4_pln2[1] = new Vector3(resultPoints_ne_to_nw_plane2[1]);
-		pts_ne_2_nw_4_pln2[1].addToZ((double)5/(double)9);
-		pts_ne_2_nw_4_pln2[2] = new Vector3(resultPoints_ne_to_nw_plane2[2]);
-		pts_ne_2_nw_4_pln2[2].addToZ((double)5/(double)9);
+		// TileNumber 336
+		planes_ne_to_nw_11__6 = new ArrayList<Vector3[]> ();
+		Vector3[] pts_ne_2_nw_6_pln1 = new Vector3[3];
+		pts_ne_2_nw_6_pln1[0] = resultPoints_ne_to_nw_plane1[0];
+		pts_ne_2_nw_6_pln1[1] = resultPoints_ne_to_nw_plane1[1];
+		pts_ne_2_nw_6_pln1[2] = new Vector3(resultPoints_ne_to_nw_plane1[2]);
+		pts_ne_2_nw_6_pln1[2].addToZ((double)5/(double)9);
+		Vector3[] pts_ne_2_nw_6_pln2 = new Vector3[3];
+		pts_ne_2_nw_6_pln2[0] = resultPoints_ne_to_nw_plane2[0];
+		pts_ne_2_nw_6_pln2[1] = new Vector3(resultPoints_ne_to_nw_plane2[1]);
+		pts_ne_2_nw_6_pln2[1].addToZ((double)5/(double)9);
+		pts_ne_2_nw_6_pln2[2] = new Vector3(resultPoints_ne_to_nw_plane2[2]);
+		pts_ne_2_nw_6_pln2[2].addToZ((double)5/(double)9);
 		
-		planes_ne_to_nw_11__4.add(pts_ne_2_nw_4_pln1);
-		planes_ne_to_nw_11__4.add(pts_ne_2_nw_4_pln2);
+		planes_ne_to_nw_11__6.add(pts_ne_2_nw_6_pln1);
+		planes_ne_to_nw_11__6.add(pts_ne_2_nw_6_pln2);
 		
 		
-		planes_ne_to_nw_11__3 = new ArrayList<Vector3[]> ();
-		Vector3[] pts_ne_2_nw_3_pln1 = new Vector3[3];
-		pts_ne_2_nw_3_pln1[0] = resultPoints_ne_to_nw_plane1[0];
-		pts_ne_2_nw_3_pln1[1] = resultPoints_ne_to_nw_plane1[1];
-		pts_ne_2_nw_3_pln1[2] = new Vector3(resultPoints_ne_to_nw_plane1[2]);
-		pts_ne_2_nw_3_pln1[2].addToZ((double)6/(double)9);
-		Vector3[] pts_ne_2_nw_3_pln2 = new Vector3[3];
-		pts_ne_2_nw_3_pln2[0] = resultPoints_ne_to_nw_plane2[0];
-		pts_ne_2_nw_3_pln2[1] = new Vector3(resultPoints_ne_to_nw_plane2[1]);
-		pts_ne_2_nw_3_pln2[1].addToZ((double)6/(double)9);
-		pts_ne_2_nw_3_pln2[2] = new Vector3(resultPoints_ne_to_nw_plane2[2]);
-		pts_ne_2_nw_3_pln2[2].addToZ((double)6/(double)9);
+		// TileNumber 337
+		planes_ne_to_nw_11__7 = new ArrayList<Vector3[]> ();
+		Vector3[] pts_ne_2_nw_7_pln1 = new Vector3[3];
+		pts_ne_2_nw_7_pln1[0] = resultPoints_ne_to_nw_plane1[0];
+		pts_ne_2_nw_7_pln1[1] = resultPoints_ne_to_nw_plane1[1];
+		pts_ne_2_nw_7_pln1[2] = new Vector3(resultPoints_ne_to_nw_plane1[2]);
+		pts_ne_2_nw_7_pln1[2].addToZ((double)6/(double)9);
+		Vector3[] pts_ne_2_nw_7_pln2 = new Vector3[3];
+		pts_ne_2_nw_7_pln2[0] = resultPoints_ne_to_nw_plane2[0];
+		pts_ne_2_nw_7_pln2[1] = new Vector3(resultPoints_ne_to_nw_plane2[1]);
+		pts_ne_2_nw_7_pln2[1].addToZ((double)6/(double)9);
+		pts_ne_2_nw_7_pln2[2] = new Vector3(resultPoints_ne_to_nw_plane2[2]);
+		pts_ne_2_nw_7_pln2[2].addToZ((double)6/(double)9);
 		
-		planes_ne_to_nw_11__3.add(pts_ne_2_nw_3_pln1);
-		planes_ne_to_nw_11__3.add(pts_ne_2_nw_3_pln2);
+		planes_ne_to_nw_11__7.add(pts_ne_2_nw_7_pln1);
+		planes_ne_to_nw_11__7.add(pts_ne_2_nw_7_pln2);
 		
-		planes_ne_to_nw_11__2 = new ArrayList<Vector3[]> ();
-		Vector3[] pts_ne_2_nw_2_pln1 = new Vector3[3];
+		
+		// TileNumber 338
+		planes_ne_to_nw_11__8 = new ArrayList<Vector3[]> ();
+		Vector3[] pts_ne_2_nw_8_pln1 = new Vector3[3];
 		pts_ne_2_nw_8_pln1[0] = resultPoints_ne_to_nw_plane1[0];
 		pts_ne_2_nw_8_pln1[1] = resultPoints_ne_to_nw_plane1[1];
 		pts_ne_2_nw_8_pln1[2] = new Vector3(resultPoints_ne_to_nw_plane1[2]);
 		pts_ne_2_nw_8_pln1[2].addToZ((double)7/(double)9);
-		Vector3[] pts_ne_2_nw_2_pln2 = new Vector3[3];
-		pts_ne_2_nw_2_pln2[0] = resultPoints_ne_to_nw_plane2[0];
-		pts_ne_2_nw_2_pln2[1] = new Vector3(resultPoints_ne_to_nw_plane2[1]);
-		pts_ne_2_nw_2_pln2[1].addToZ((double)7/(double)9);
-		pts_ne_2_nw_2_pln2[2] = new Vector3(resultPoints_ne_to_nw_plane2[2]);
-		pts_ne_2_nw_2_pln2[2].addToZ((double)7/(double)9);
+		Vector3[] pts_ne_2_nw_8_pln2 = new Vector3[3];
+		pts_ne_2_nw_8_pln2[0] = resultPoints_ne_to_nw_plane2[0];
+		pts_ne_2_nw_8_pln2[1] = new Vector3(resultPoints_ne_to_nw_plane2[1]);
+		pts_ne_2_nw_8_pln2[1].addToZ((double)7/(double)9);
+		pts_ne_2_nw_8_pln2[2] = new Vector3(resultPoints_ne_to_nw_plane2[2]);
+		pts_ne_2_nw_8_pln2[2].addToZ((double)7/(double)9);
 		
-		planes_ne_to_nw_11__2.add(pts_ne_2_nw_2_pln1);
-		planes_ne_to_nw_11__2.add(pts_ne_2_nw_2_pln2);
+		planes_ne_to_nw_11__8.add(pts_ne_2_nw_8_pln1);
+		planes_ne_to_nw_11__8.add(pts_ne_2_nw_8_pln2);
 		
 		
-		planes_ne_to_nw_11__1 = new ArrayList<Vector3[]> ();
-		Vector3[] pts_ne_2_nw_1_pln1 = new Vector3[3];
-		pts_ne_2_nw_1_pln1[0] = resultPoints_ne_to_nw_plane1[0];
-		pts_ne_2_nw_1_pln1[1] = resultPoints_ne_to_nw_plane1[1];
-		pts_ne_2_nw_1_pln1[2] = new Vector3(resultPoints_ne_to_nw_plane1[2]);
-		pts_ne_2_nw_1_pln1[2].addToZ((double)8/(double)9);
-		Vector3[] pts_ne_2_nw_1_pln2 = new Vector3[3];
-		pts_ne_2_nw_1_pln2[0] = resultPoints_ne_to_nw_plane2[0];
-		pts_ne_2_nw_1_pln2[1] = new Vector3(resultPoints_ne_to_nw_plane2[1]);
-		pts_ne_2_nw_1_pln2[1].addToZ((double)8/(double)9);
-		pts_ne_2_nw_1_pln2[2] = new Vector3(resultPoints_ne_to_nw_plane2[2]);
-		pts_ne_2_nw_1_pln2[2].addToZ((double)8/(double)9);
+		// TileNumber 339
+		planes_ne_to_nw_11__9 = new ArrayList<Vector3[]> ();
+		Vector3[] pts_ne_2_nw_9_pln1 = new Vector3[3];
+		pts_ne_2_nw_9_pln1[0] = resultPoints_ne_to_nw_plane1[0];
+		pts_ne_2_nw_9_pln1[1] = resultPoints_ne_to_nw_plane1[1];
+		pts_ne_2_nw_9_pln1[2] = new Vector3(resultPoints_ne_to_nw_plane1[2]);
+		pts_ne_2_nw_9_pln1[2].addToZ((double)8/(double)9);
+		Vector3[] pts_ne_2_nw_9_pln2 = new Vector3[3];
+		pts_ne_2_nw_9_pln2[0] = resultPoints_ne_to_nw_plane2[0];
+		pts_ne_2_nw_9_pln2[1] = new Vector3(resultPoints_ne_to_nw_plane2[1]);
+		pts_ne_2_nw_9_pln2[1].addToZ((double)8/(double)9);
+		pts_ne_2_nw_9_pln2[2] = new Vector3(resultPoints_ne_to_nw_plane2[2]);
+		pts_ne_2_nw_9_pln2[2].addToZ((double)8/(double)9);
 		
-		planes_ne_to_nw_11__1.add(pts_ne_2_nw_1_pln1);
-		planes_ne_to_nw_11__1.add(pts_ne_2_nw_1_pln2);
+		planes_ne_to_nw_11__9.add(pts_ne_2_nw_9_pln1);
+		planes_ne_to_nw_11__9.add(pts_ne_2_nw_9_pln2);
 
 		
 		
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 
 }
