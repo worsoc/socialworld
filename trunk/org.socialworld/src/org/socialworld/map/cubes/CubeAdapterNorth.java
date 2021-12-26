@@ -37,6 +37,7 @@ public class CubeAdapterNorth extends Cube {
 	private static List<Vector3[]> planes_nw_to_ne_00__8; 
 	private static List<Vector3[]> planes_nw_to_ne_00__9; 
 	
+	// 301 ... 309
 	private static List<Vector3[]> planes_nw_to_ne_11__1; 
 	private static List<Vector3[]> planes_nw_to_ne_11__2; 
 	private static List<Vector3[]> planes_nw_to_ne_11__3; 
@@ -47,25 +48,27 @@ public class CubeAdapterNorth extends Cube {
 	private static List<Vector3[]> planes_nw_to_ne_11__8; 
 	private static List<Vector3[]> planes_nw_to_ne_11__9; 
 	
-	private static List<Vector3[]> planes_ne_to_nw_00__1; 
-	private static List<Vector3[]> planes_ne_to_nw_00__2; 
-	private static List<Vector3[]> planes_ne_to_nw_00__3; 
-	private static List<Vector3[]> planes_ne_to_nw_00__4; 
-	private static List<Vector3[]> planes_ne_to_nw_00__5; 
-	private static List<Vector3[]> planes_ne_to_nw_00__6; 
-	private static List<Vector3[]> planes_ne_to_nw_00__7; 
+	// 139 ... 131
+	private static List<Vector3[]> planes_ne_to_nw_00__9; 
 	private static List<Vector3[]> planes_ne_to_nw_00__8; 
-	private static List<Vector3[]> planes_ne_to_nw_00__9;
+	private static List<Vector3[]> planes_ne_to_nw_00__7; 
+	private static List<Vector3[]> planes_ne_to_nw_00__6; 
+	private static List<Vector3[]> planes_ne_to_nw_00__5; 
+	private static List<Vector3[]> planes_ne_to_nw_00__4; 
+	private static List<Vector3[]> planes_ne_to_nw_00__3; 
+	private static List<Vector3[]> planes_ne_to_nw_00__2; 
+	private static List<Vector3[]> planes_ne_to_nw_00__1;
 	
-	private static List<Vector3[]> planes_ne_to_nw_11__1; 
-	private static List<Vector3[]> planes_ne_to_nw_11__2; 
-	private static List<Vector3[]> planes_ne_to_nw_11__3; 
-	private static List<Vector3[]> planes_ne_to_nw_11__4; 
-	private static List<Vector3[]> planes_ne_to_nw_11__5; 
-	private static List<Vector3[]> planes_ne_to_nw_11__6; 
-	private static List<Vector3[]> planes_ne_to_nw_11__7; 
+	// 339 ... 331
+	private static List<Vector3[]> planes_ne_to_nw_11__9; 
 	private static List<Vector3[]> planes_ne_to_nw_11__8; 
-	private static List<Vector3[]> planes_ne_to_nw_11__9;
+	private static List<Vector3[]> planes_ne_to_nw_11__7; 
+	private static List<Vector3[]> planes_ne_to_nw_11__6; 
+	private static List<Vector3[]> planes_ne_to_nw_11__5; 
+	private static List<Vector3[]> planes_ne_to_nw_11__4; 
+	private static List<Vector3[]> planes_ne_to_nw_11__3; 
+	private static List<Vector3[]> planes_ne_to_nw_11__2; 
+	private static List<Vector3[]> planes_ne_to_nw_11__1;
 	
 	
 	
