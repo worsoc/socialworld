@@ -73,7 +73,7 @@ import java.util.List;
  *  6x2 --> SubIsle21
  *  2x5 --> SubIsle20
  *  5x2 --> SubIsle19
- *  2x3 --> SubIsle18
+ *  2x4 --> SubIsle18
  *  4x2 --> SubIsle17
  *  2x3 --> SubIsle16
  *  3x2 --> SubIsle15
