@@ -29,6 +29,8 @@ import org.socialworld.tools.mct.SubIsle;
 
 public class SubIsle30 extends SubIsle {
 
+	private static SubIsle30 instance;
+
 	private final static Integer at00[]  = {0,  1,  2,  
 						9,  10, 11, 
 						18, 19, 20, 
