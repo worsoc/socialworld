@@ -81,7 +81,7 @@ public class HeightLevelChangerList {
 		starts = new ArrayList<List<Integer>>();
 		for (int i = 0; i <= maxNrHLCNeighbourCluster; i++) {
 			startsForNrNeighbourCluster = new ArrayList<Integer>();
-			starts.set(i, startsForNrNeighbourCluster);
+			starts.add( startsForNrNeighbourCluster);
 		}
 
 		List<List<Integer>> neighbourIndexs;
@@ -89,7 +89,7 @@ public class HeightLevelChangerList {
 		neighbourIndexs = new ArrayList<List<Integer>>();
 		for (int i = 0; i <= maxNrHLCNeighbourCluster; i++) {
 			neighbourIndexsForNrNeighbourCluster = new ArrayList<Integer>();
-			neighbourIndexs.set(i, neighbourIndexsForNrNeighbourCluster);
+			neighbourIndexs.add( neighbourIndexsForNrNeighbourCluster);
 		}
 		
 		
