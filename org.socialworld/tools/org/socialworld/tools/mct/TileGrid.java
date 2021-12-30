@@ -397,6 +397,7 @@ public class TileGrid extends Tile {
 
 		subClusterCalculation.initWithTiles(this.tiles);
 		subClusterCalculation.setBorderAdapters();
+		subClusterCalculation.calculate();
 		
 		setHeights();
 		

@@ -81,7 +81,6 @@ import java.util.List;
 */
 public abstract class SubIsle {
 
-	protected static SubIsle instance;
 	
 	protected abstract int checkForIsle(List<Integer> isleSubs);
 	protected abstract HeightIsle getIsleAtRasterIndex(int rasterIndex);
@@ -95,6 +94,8 @@ public abstract class SubIsle {
 		
 		// assumption: both lists are sorted -->  possibility for optimized iteration 
 		for (int mustHaveForBeingTheSubIsle : rasterIndizesDescribingTheIsle) {
+			
+			if (startIndex == size) return false;
 			
 			for (indexSubs = startIndex; indexSubs < size; indexSubs++) {
 				

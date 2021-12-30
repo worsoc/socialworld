@@ -46,7 +46,7 @@ public class SubClusterCalculations {
 	
 	void initWithTiles(Tile[] tiles) {
 		this.tiles = tiles;
-	//	findSubClusters();
+		findSubClusters();
 		isInitialized = true;
 	}
 	
@@ -103,7 +103,8 @@ public class SubClusterCalculations {
 				List<Integer> southTiles = getBorderTilesToSouth(subCluster);
 				List<Integer> westTiles = getBorderTilesToWest(subCluster);
 				List<Integer> eastTiles = getBorderTilesToEast(subCluster);
-				
+
+/*				
 				HeightLevelChangerList hlcListN2S = getAllAllowedHLCfromNorthToSouth(
 						northTiles, southTiles, subCluster);
 				hlcListN2S.reduceToBest();
@@ -157,7 +158,8 @@ public class SubClusterCalculations {
 					bestHLCs = hlcListS2W.getBestHLCs();
 					maxCountHLC = countHLCsS2W;
 				}
-
+*/
+				
 				if (maxCountHLC == 0) {
 					hlcSubs = new ArrayList<Integer>();
 				}
@@ -167,7 +169,8 @@ public class SubClusterCalculations {
 				}
 				
 				List<Integer> isleSubs = getIsleSubs(hlcSubs, subCluster);
-				List<HeightIsle> bestIsles = getBestSubIsles(isleSubs);
+				List<HeightIsle>  bestIsles = new ArrayList<HeightIsle>();
+				getBestSubIsles(isleSubs, bestIsles);
 				
 				setHeightIslesToTiles(bestIsles);
 			}
@@ -187,11 +190,13 @@ public class SubClusterCalculations {
 	}
 
 	private void setHeightIslesToTiles(List<HeightIsle> isles) {
+		Integer rasterIndex;
 		for (HeightIsle isle : isles) {
 			List<Integer> rasterIndices = isle.getRasterIndices();
 			List<Integer> cornerMaximaNrs = isle.getCornerMaximaNrs();
-			for (Integer index : rasterIndices) {
-				((TileGrid)tiles[index]).setCornerMaximaNr(cornerMaximaNrs.get(index));
+			for (int index = 0; index < rasterIndices.size(); index++) {
+				rasterIndex = rasterIndices.get(index);
+				((TileGrid)tiles[rasterIndex]).setCornerMaximaNr(cornerMaximaNrs.get(index));
 			}
 		}
 	}
@@ -217,29 +222,170 @@ public class SubClusterCalculations {
 		
 	}
 	
-	private List<HeightIsle> getBestSubIsles(List<Integer> isleSubs) {
+	private void getBestSubIsles(List<Integer> isleSubs, List<HeightIsle> bestHeightIsles) {
 		
-		List<HeightIsle> result = null;
+		
 		int countSubs = isleSubs.size();
 		
 		if (countSubs > 49) countSubs = 49;
 		
 		switch (countSubs) {
 		case 49: 
-			if (addBestSubIsles(SubIsle49.getInstance(), isleSubs, result)) {
+			if (addBestSubIsles(SubIsle49.getInstance(), isleSubs, bestHeightIsles)) {
 				break;
 			}
+		case 48: 
+		case 47: 
+		case 46: 
+		case 45: 
+		case 44: 
+		case 43: 
 		case 42: 
-			if (addBestSubIsles(SubIsle48.getInstance(), isleSubs, result)) {
+			if (addBestSubIsles(SubIsle48.getInstance(), isleSubs, bestHeightIsles)) {
 				break;
 			}
-			if (addBestSubIsles(SubIsle47.getInstance(), isleSubs, result)) {
+			if (addBestSubIsles(SubIsle47.getInstance(), isleSubs, bestHeightIsles)) {
+				break;
+			}
+		case 41: 
+		case 40: 
+		case 39: 
+		case 38: 
+		case 37: 
+		case 36: 
+			if (addBestSubIsles(SubIsle46.getInstance(), isleSubs, bestHeightIsles)) {
+				break;
+			}
+		case 35: 
+			if (addBestSubIsles(SubIsle45.getInstance(), isleSubs, bestHeightIsles)) {
+				break;
+			}
+			if (addBestSubIsles(SubIsle44.getInstance(), isleSubs, bestHeightIsles)) {
+				break;
+			}
+		case 34: 
+		case 33: 
+		case 32: 
+		case 31: 
+		case 30: 
+			if (addBestSubIsles(SubIsle43.getInstance(), isleSubs, bestHeightIsles)) {
+				break;
+			}
+			if (addBestSubIsles(SubIsle42.getInstance(), isleSubs, bestHeightIsles)) {
+				break;
+			}
+		case 29: 
+		case 28: 
+			if (addBestSubIsles(SubIsle40.getInstance(), isleSubs, bestHeightIsles)) {
+				break;
+			}
+			if (addBestSubIsles(SubIsle39.getInstance(), isleSubs, bestHeightIsles)) {
+				break;
+			}
+		case 27: 
+		case 26: 
+		case 25: 
+			if (addBestSubIsles(SubIsle41.getInstance(), isleSubs, bestHeightIsles)) {
+				break;
+			}
+		case 24: 
+			if (addBestSubIsles(SubIsle38.getInstance(), isleSubs, bestHeightIsles)) {
+				break;
+			}
+			if (addBestSubIsles(SubIsle37.getInstance(), isleSubs, bestHeightIsles)) {
+				break;
+			}
+		case 23: 
+		case 22: 
+		case 21: 
+			if (addBestSubIsles(SubIsle33.getInstance(), isleSubs, bestHeightIsles)) {
+				break;
+			}
+			if (addBestSubIsles(SubIsle32.getInstance(), isleSubs, bestHeightIsles)) {
+				break;
+			}
+		case 20: 
+			if (addBestSubIsles(SubIsle36.getInstance(), isleSubs, bestHeightIsles)) {
+				break;
+			}
+			if (addBestSubIsles(SubIsle35.getInstance(), isleSubs, bestHeightIsles)) {
+				break;
+			}
+		case 19: 
+		case 18: 
+			if (addBestSubIsles(SubIsle31.getInstance(), isleSubs, bestHeightIsles)) {
+				break;
+			}
+			if (addBestSubIsles(SubIsle30.getInstance(), isleSubs, bestHeightIsles)) {
+				break;
+			}
+		case 17: 
+		case 16: 
+			if (addBestSubIsles(SubIsle34.getInstance(), isleSubs, bestHeightIsles)) {
+				break;
+			}
+		case 15: 
+			if (addBestSubIsles(SubIsle29.getInstance(), isleSubs, bestHeightIsles)) {
+				break;
+			}
+			if (addBestSubIsles(SubIsle28.getInstance(), isleSubs, bestHeightIsles)) {
+				break;
+			}
+		case 14: 
+			if (addBestSubIsles(SubIsle24.getInstance(), isleSubs, bestHeightIsles)) {
+				break;
+			}
+			if (addBestSubIsles(SubIsle23.getInstance(), isleSubs, bestHeightIsles)) {
+				break;
+			}
+		case 13: 
+		case 12: 
+			if (addBestSubIsles(SubIsle27.getInstance(), isleSubs, bestHeightIsles)) {
+				break;
+			}
+			if (addBestSubIsles(SubIsle26.getInstance(), isleSubs, bestHeightIsles)) {
+				break;
+			}
+			if (addBestSubIsles(SubIsle22.getInstance(), isleSubs, bestHeightIsles)) {
+				break;
+			}
+			if (addBestSubIsles(SubIsle21.getInstance(), isleSubs, bestHeightIsles)) {
+				break;
+			}
+		case 11: 
+		case 10: 
+			if (addBestSubIsles(SubIsle20.getInstance(), isleSubs, bestHeightIsles)) {
+				break;
+			}
+			if (addBestSubIsles(SubIsle19.getInstance(), isleSubs, bestHeightIsles)) {
+				break;
+			}
+		case 9: 
+			if (addBestSubIsles(SubIsle25.getInstance(), isleSubs, bestHeightIsles)) {
+				break;
+			}
+		case 8: 
+			if (addBestSubIsles(SubIsle18.getInstance(), isleSubs, bestHeightIsles)) {
+				break;
+			}
+			if (addBestSubIsles(SubIsle17.getInstance(), isleSubs, bestHeightIsles)) {
+				break;
+			}
+		case 7: 
+		case 6: 
+			if (addBestSubIsles(SubIsle16.getInstance(), isleSubs, bestHeightIsles)) {
+				break;
+			}
+			if (addBestSubIsles(SubIsle15.getInstance(), isleSubs, bestHeightIsles)) {
+				break;
+			}
+		case 5: 
+		case 4: 
+			if (addBestSubIsles(SubIsle14.getInstance(), isleSubs, bestHeightIsles)) {
 				break;
 			}
 		default:
-			result = new ArrayList<HeightIsle>();
 		}
-		return result;
 	}
 	
 	private boolean addBestSubIsles(
@@ -253,7 +399,7 @@ public class SubClusterCalculations {
 		if (rasterIndex >= 0) {
 			heightIsle = subIsle.getIsleAtRasterIndex(rasterIndex);
 			isleSubs.removeAll(heightIsle.getRasterIndices());
-			bestHeightIsles = getBestSubIsles(isleSubs);
+			getBestSubIsles(isleSubs, bestHeightIsles);
 			bestHeightIsles.add(heightIsle);
 			heightIsleAdded = true;
 		}
@@ -443,7 +589,7 @@ public class SubClusterCalculations {
 		
 		List<List<Integer>> subClustersSorted = new ArrayList<List<Integer>>(subClusters.size());
 		for (int clusterNr = 0; clusterNr < subClusters.size(); clusterNr++) {
-			subClustersSorted.set(clusterNr, getSortedCluster(subClusters.get(clusterNr)));
+			subClustersSorted.add(getSortedCluster(subClusters.get(clusterNr)));
 		}
 		return subClustersSorted;
 	}
@@ -471,7 +617,7 @@ public class SubClusterCalculations {
 				clusterUnsorted.set(jForMin, last);
 			}
 
-			result.set(i, min);
+			result.add( min);
 		}
 		
 		return result;
