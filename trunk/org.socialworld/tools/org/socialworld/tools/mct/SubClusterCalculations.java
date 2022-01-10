@@ -192,14 +192,64 @@ public class SubClusterCalculations {
 	private void setHeightIslesToTiles(List<HeightIsle> isles) {
 		Integer rasterIndex;
 		int isleID = 0;
+		int levelDelta = 4;
+		int isleRing;
+		int isleRingeOffset;
+		int cornerMaximaNr;
+		
 		for (HeightIsle isle : isles) {
 			List<Integer> rasterIndices = isle.getRasterIndices();
 			List<Integer> cornerMaximaNrs = isle.getCornerMaximaNrs();
+			List<Integer> isleRings = isle.getRings();
 			isleID++;
 			for (int index = 0; index < rasterIndices.size(); index++) {
+				
 				rasterIndex = rasterIndices.get(index);
-				((TileGrid)tiles[rasterIndex]).setCornerMaximaNr(cornerMaximaNrs.get(index));
-				((TileGrid)tiles[rasterIndex]).setIsleLevelDelta(isleID, 4);
+				cornerMaximaNr = cornerMaximaNrs.get(index);
+				((TileGrid)tiles[rasterIndex]).setCornerMaximaNr(cornerMaximaNr);
+				
+				isleRingeOffset = 0;
+				isleRing = 1;
+				if (isleRings.size() > 0) {
+					
+					isleRing = isleRings.get(index);
+					
+					if ( isleRing == 1 && ( (cornerMaximaNr == 99114) /* from east to west */ || 
+							 (cornerMaximaNr == 91194) /* from south to north */ ||
+							 (cornerMaximaNr == 91114) /* to corner north/west */||
+							 (cornerMaximaNr == 11114) /* isle's inner tiles */ ) ) {
+						isleRingeOffset = 4;
+					}
+					else if ( isleRing == 1 /* other directions at ring 1 */) {
+						isleRingeOffset = 0;
+					}
+					else if ( isleRing == 2 && ( (cornerMaximaNr == 99114) /* from east to west */ || 
+							 (cornerMaximaNr == 91194) /* from south to north */ ||
+							 (cornerMaximaNr == 91114) /* to corner north/west */||
+							 (cornerMaximaNr == 11114) /* isle's inner tiles */ ) ) {
+						isleRingeOffset = 8;
+					}
+					else if ( isleRing == 2 /* other directions at ring 2 */) {
+						isleRingeOffset = 4;
+					}
+					else if ( isleRing == 3 && ( (cornerMaximaNr == 99114) /* from east to west */ || 
+							 (cornerMaximaNr == 91194) /* from south to north */ ||
+							 (cornerMaximaNr == 91114) /* to corner north/west */||
+							 (cornerMaximaNr == 11114) /* isle's inner tiles */ ) ) {
+						isleRingeOffset = 12;
+					}
+					else if ( isleRing == 3 /* other directions at ring 3 */) {
+						isleRingeOffset = 8;
+					}
+				}
+				else if ( isleRing == 1 && ( (cornerMaximaNr == 99114) /* from east to west */ || 
+						 (cornerMaximaNr == 91194) /* from south to north */ ||
+						 (cornerMaximaNr == 91114) /* to corner north/west */||
+						 (cornerMaximaNr == 11114) /* isle's inner tiles */ ) ) {
+					isleRingeOffset = 4;
+				}
+
+				((TileGrid)tiles[rasterIndex]).setIsleLevelDelta(isleID, isleRing, isleRingeOffset, levelDelta);
 				
 			}
 		}

@@ -115,6 +115,8 @@ public class TileGrid extends Tile {
 	private int originalHeightLevel;
 	
 	private int deltaLevel4test = 4;
+	private int isleRing = 0;
+	private int isleRingOffset = 0;
 	private int isleID = 0;
 	
 	TileGrid(Tile parent) {
@@ -149,8 +151,10 @@ public class TileGrid extends Tile {
 		this.cornerMaximaNr = cornerMaximaNr;
 	}
 	
-	void setIsleLevelDelta(int isleID, int deltaLevel) {
+	void setIsleLevelDelta(int isleID, int isleRing, int isleRingOffset, int deltaLevel) {
 		this.isleID = isleID;
+		this.isleRing = isleRing;
+		this.isleRingOffset = isleRingOffset;
 		this.deltaLevel4test = deltaLevel;
 	}
 	
@@ -1258,14 +1262,7 @@ public class TileGrid extends Tile {
 		
 		if (this.isleID > 0) {
 			
-			if ( (this.cornerMaximaNr == 99114) /* from east to west */ || 
-				 (this.cornerMaximaNr == 91194) /* from south to north */ ||
-				 (this.cornerMaximaNr == 91114) /* to corner north/west */||
-				 (this.cornerMaximaNr == 11114) /* isle's inner tiles */ ) {
-			
-				setHeightLevel(originalHeightLevel + deltaLevel4test);
-			
-			}
+				setHeightLevel(originalHeightLevel + isleRingOffset);
 			
 		}
 		

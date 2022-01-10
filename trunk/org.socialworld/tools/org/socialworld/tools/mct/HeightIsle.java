@@ -28,18 +28,30 @@ public class HeightIsle {
 
 	List<Integer> rasterIndices;
 	List<Integer> cornerMaximaNrs;
+	List<Integer> isleRings;
 	
 	public HeightIsle(List<Integer> rasterIndices, List<Integer> cornerMaximaNrs) {
 		this.rasterIndices = rasterIndices;
 		this.cornerMaximaNrs = cornerMaximaNrs;
+		this.isleRings = new ArrayList<Integer>();
 	}
-	
+
+	public HeightIsle(List<Integer> rasterIndices, List<Integer> cornerMaximaNrs, List<Integer> isleRings) {
+		this.rasterIndices = rasterIndices;
+		this.cornerMaximaNrs = cornerMaximaNrs;
+		this.isleRings = isleRings;
+	}
+
 	List<Integer> getRasterIndices() {
 		return new ArrayList<Integer>(rasterIndices);
 	}
 	
 	List<Integer> getCornerMaximaNrs() {
 		return new ArrayList<Integer>(cornerMaximaNrs);
+	}
+
+	List<Integer> getRings() {
+		return new ArrayList<Integer>(isleRings);
 	}
 
 	boolean isValid() {

@@ -183,65 +183,74 @@ public class SubIsle40 extends SubIsle {
 				19114, 99114, 99114, 99114, 99114, 99114, 91114
 		};
 
+	private final static Integer[] isleRingNrs = {
+			1, 1, 1, 1,	1, 1, 1,
+			1, 2, 2, 2, 2, 2, 1,
+			1, 2, 2, 2, 2, 2, 1,
+			1, 1, 1, 1,	1, 1, 1
+		};
+
 	private List<Integer> cornerMaxima;
+	private List<Integer> isleRings;
 
 	private SubIsle40() {
 
 		cornerMaxima = Arrays.asList(cornerMaximaNrs);
+		isleRings = Arrays.asList(isleRingNrs);
 
 		nr40at00 = Arrays.asList(at00);
-		heightIsle40at00 = new HeightIsle(nr40at00, cornerMaxima);
+		heightIsle40at00 = new HeightIsle(nr40at00, cornerMaxima, isleRings);
 
 		nr40at01 = Arrays.asList(at01);
-		heightIsle40at01 = new HeightIsle(nr40at01, cornerMaxima);
+		heightIsle40at01 = new HeightIsle(nr40at01, cornerMaxima, isleRings);
 
 		nr40at02 = Arrays.asList(at02);
-		heightIsle40at02 = new HeightIsle(nr40at02, cornerMaxima);
+		heightIsle40at02 = new HeightIsle(nr40at02, cornerMaxima, isleRings);
 
 		nr40at09 = Arrays.asList(at09);
-		heightIsle40at09 = new HeightIsle(nr40at09, cornerMaxima);
+		heightIsle40at09 = new HeightIsle(nr40at09, cornerMaxima, isleRings);
 
 		nr40at10 = Arrays.asList(at10);
-		heightIsle40at10 = new HeightIsle(nr40at10, cornerMaxima);
+		heightIsle40at10 = new HeightIsle(nr40at10, cornerMaxima, isleRings);
 
 		nr40at11 = Arrays.asList(at11);
-		heightIsle40at11 = new HeightIsle(nr40at11, cornerMaxima);
+		heightIsle40at11 = new HeightIsle(nr40at11, cornerMaxima, isleRings);
 
 		nr40at18 = Arrays.asList(at18);
-		heightIsle40at18 = new HeightIsle(nr40at18, cornerMaxima);
+		heightIsle40at18 = new HeightIsle(nr40at18, cornerMaxima, isleRings);
 
 		nr40at19 = Arrays.asList(at19);
-		heightIsle40at19 = new HeightIsle(nr40at19, cornerMaxima);
+		heightIsle40at19 = new HeightIsle(nr40at19, cornerMaxima, isleRings);
 
 		nr40at20 = Arrays.asList(at20);
-		heightIsle40at20 = new HeightIsle(nr40at20, cornerMaxima);
+		heightIsle40at20 = new HeightIsle(nr40at20, cornerMaxima, isleRings);
 
 		nr40at27 = Arrays.asList(at27);
-		heightIsle40at27 = new HeightIsle(nr40at27, cornerMaxima);
+		heightIsle40at27 = new HeightIsle(nr40at27, cornerMaxima, isleRings);
 
 		nr40at28 = Arrays.asList(at28);
-		heightIsle40at28 = new HeightIsle(nr40at28, cornerMaxima);
+		heightIsle40at28 = new HeightIsle(nr40at28, cornerMaxima, isleRings);
 
 		nr40at29 = Arrays.asList(at29);
-		heightIsle40at29 = new HeightIsle(nr40at29, cornerMaxima);
+		heightIsle40at29 = new HeightIsle(nr40at29, cornerMaxima, isleRings);
 
 		nr40at36 = Arrays.asList(at36);
-		heightIsle40at36 = new HeightIsle(nr40at36, cornerMaxima);
+		heightIsle40at36 = new HeightIsle(nr40at36, cornerMaxima, isleRings);
 
 		nr40at37 = Arrays.asList(at37);
-		heightIsle40at37 = new HeightIsle(nr40at37, cornerMaxima);
+		heightIsle40at37 = new HeightIsle(nr40at37, cornerMaxima, isleRings);
 
 		nr40at38 = Arrays.asList(at38);
-		heightIsle40at38 = new HeightIsle(nr40at38, cornerMaxima);
+		heightIsle40at38 = new HeightIsle(nr40at38, cornerMaxima, isleRings);
 
 		nr40at45 = Arrays.asList(at45);
-		heightIsle40at45 = new HeightIsle(nr40at45, cornerMaxima);
+		heightIsle40at45 = new HeightIsle(nr40at45, cornerMaxima, isleRings);
 
 		nr40at46 = Arrays.asList(at46);
-		heightIsle40at46 = new HeightIsle(nr40at46, cornerMaxima);
+		heightIsle40at46 = new HeightIsle(nr40at46, cornerMaxima, isleRings);
 
 		nr40at47 = Arrays.asList(at47);
-		heightIsle40at47 = new HeightIsle(nr40at47, cornerMaxima);
+		heightIsle40at47 = new HeightIsle(nr40at47, cornerMaxima, isleRings);
 
 	}
 
