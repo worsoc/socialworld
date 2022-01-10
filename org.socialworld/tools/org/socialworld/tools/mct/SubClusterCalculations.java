@@ -24,6 +24,7 @@ package org.socialworld.tools.mct;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import org.socialworld.tools.mct.isles.*;
 
@@ -44,6 +45,8 @@ public class SubClusterCalculations {
 
 	boolean isInitialized = false;
 	
+	private Random random = new Random();
+
 	void initWithTiles(Tile[] tiles) {
 		this.tiles = tiles;
 		findSubClusters();
@@ -197,11 +200,19 @@ public class SubClusterCalculations {
 		int isleRingeOffset;
 		int cornerMaximaNr;
 		
+		int randomArrayIndex;
+		int[] levelDeltas = {3, 4, 7};
+		
 		for (HeightIsle isle : isles) {
+			
 			List<Integer> rasterIndices = isle.getRasterIndices();
 			List<Integer> cornerMaximaNrs = isle.getCornerMaximaNrs();
 			List<Integer> isleRings = isle.getRings();
+			
 			isleID++;
+			randomArrayIndex = getRandomIntBetween(0, 3);
+			levelDelta = levelDeltas[randomArrayIndex];
+			
 			for (int index = 0; index < rasterIndices.size(); index++) {
 				
 				rasterIndex = rasterIndices.get(index);
@@ -218,7 +229,7 @@ public class SubClusterCalculations {
 							 (cornerMaximaNr == 91194) /* from south to north */ ||
 							 (cornerMaximaNr == 91114) /* to corner north/west */||
 							 (cornerMaximaNr == 11114) /* isle's inner tiles */ ) ) {
-						isleRingeOffset = 4;
+						isleRingeOffset = levelDelta;
 					}
 					else if ( isleRing == 1 /* other directions at ring 1 */) {
 						isleRingeOffset = 0;
@@ -227,26 +238,26 @@ public class SubClusterCalculations {
 							 (cornerMaximaNr == 91194) /* from south to north */ ||
 							 (cornerMaximaNr == 91114) /* to corner north/west */||
 							 (cornerMaximaNr == 11114) /* isle's inner tiles */ ) ) {
-						isleRingeOffset = 8;
+						isleRingeOffset = 2 * levelDelta;
 					}
 					else if ( isleRing == 2 /* other directions at ring 2 */) {
-						isleRingeOffset = 4;
+						isleRingeOffset = levelDelta;
 					}
 					else if ( isleRing == 3 && ( (cornerMaximaNr == 99114) /* from east to west */ || 
 							 (cornerMaximaNr == 91194) /* from south to north */ ||
 							 (cornerMaximaNr == 91114) /* to corner north/west */||
 							 (cornerMaximaNr == 11114) /* isle's inner tiles */ ) ) {
-						isleRingeOffset = 12;
+						isleRingeOffset = 3 * levelDelta;
 					}
 					else if ( isleRing == 3 /* other directions at ring 3 */) {
-						isleRingeOffset = 8;
+						isleRingeOffset = 2 * levelDelta;
 					}
 				}
 				else if ( isleRing == 1 && ( (cornerMaximaNr == 99114) /* from east to west */ || 
 						 (cornerMaximaNr == 91194) /* from south to north */ ||
 						 (cornerMaximaNr == 91114) /* to corner north/west */||
 						 (cornerMaximaNr == 11114) /* isle's inner tiles */ ) ) {
-					isleRingeOffset = 4;
+					isleRingeOffset = levelDelta;
 				}
 
 				((TileGrid)tiles[rasterIndex]).setIsleLevelDelta(isleID, isleRing, isleRingeOffset, levelDelta);
@@ -680,6 +691,10 @@ public class SubClusterCalculations {
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 	
+	private int getRandomIntBetween(int a, int b) {
+		int value = random.nextInt(b - a) + a ;
+		return value;
+	}
 
 
 }
