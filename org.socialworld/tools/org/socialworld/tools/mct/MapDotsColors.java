@@ -32,47 +32,47 @@ class MapDotsColors {
 		Color color = SimVisual.COLOR_PINK;
 		
 		switch (height) {
-		case 17:
-			color = SimVisual.COLOR_POWDERBLUE; break;
-		case 18:
-			color = SimVisual.COLOR_CADETBLUE; break;
-		case 19:
-			color = SimVisual.COLOR_LIGHTSEAGREEN; break;
-		case 20:
-			color = SimVisual.COLOR_MEDIUMSPRINGGREEN; break;
-		case 21:
-			color = SimVisual.COLOR_MEDIUMSEAGREEN; break;
 		case 22:
-			color = SimVisual.COLOR_SEAGREEN; break;
+			color = SimVisual.COLOR_POWDERBLUE; break;
 		case 23:
-			color = SimVisual.COLOR_DARKGREEN; break;
+			color = SimVisual.COLOR_CADETBLUE; break;
 		case 24:
-			color = SimVisual.COLOR_GREEN; break;
+			color = SimVisual.COLOR_LIGHTSEAGREEN; break;
 		case 25:
-			color = SimVisual.COLOR_LIMEGREEN; break;
+			color = SimVisual.COLOR_MEDIUMSPRINGGREEN; break;
 		case 26:
-			color = SimVisual.COLOR_LIME; break;
+			color = SimVisual.COLOR_MEDIUMSEAGREEN; break;
 		case 27:
-			color = SimVisual.COLOR_GREENYELLOW; break;
+			color = SimVisual.COLOR_SEAGREEN; break;
 		case 28:
-			color = SimVisual.COLOR_YELLOWGREEN; break;
+			color = SimVisual.COLOR_DARKGREEN; break;
 		case 29:
-			color = SimVisual.COLOR_OLIVE; break;
+			color = SimVisual.COLOR_GREEN; break;
 		case 30:
-			color = SimVisual.COLOR_KHAKI; break;
+			color = SimVisual.COLOR_LIMEGREEN; break;
 		case 31:
-			color = SimVisual.COLOR_GOLD; break;
+			color = SimVisual.COLOR_LIME; break;
 		case 32:
-			color = SimVisual.COLOR_ORANGE; break;
+			color = SimVisual.COLOR_GREENYELLOW; break;
 		case 33:
-			color = SimVisual.COLOR_CHOCOLATE; break;
+			color = SimVisual.COLOR_YELLOWGREEN; break;
 		case 34:
-			color = SimVisual.COLOR_SIENNA; break;
+			color = SimVisual.COLOR_OLIVE; break;
 		case 35:
-			color = SimVisual.COLOR_SADDLEBROWN; break;
+			color = SimVisual.COLOR_KHAKI; break;
 		case 36:
-			color = SimVisual.COLOR_BROWN; break;
+			color = SimVisual.COLOR_GOLD; break;
 		case 37:
+			color = SimVisual.COLOR_ORANGE; break;
+		case 38:
+			color = SimVisual.COLOR_CHOCOLATE; break;
+		case 39:
+			color = SimVisual.COLOR_SIENNA; break;
+		case 40:
+			color = SimVisual.COLOR_SADDLEBROWN; break;
+		case 41:
+			color = SimVisual.COLOR_BROWN; break;
+		case 42:
 			color = SimVisual.COLOR_MAROON; break;
 		default:
 			System.out.println("keine Farbe für Höhe " + height);
