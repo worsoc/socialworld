@@ -191,12 +191,16 @@ public class SubClusterCalculations {
 
 	private void setHeightIslesToTiles(List<HeightIsle> isles) {
 		Integer rasterIndex;
+		int isleID = 0;
 		for (HeightIsle isle : isles) {
 			List<Integer> rasterIndices = isle.getRasterIndices();
 			List<Integer> cornerMaximaNrs = isle.getCornerMaximaNrs();
+			isleID++;
 			for (int index = 0; index < rasterIndices.size(); index++) {
 				rasterIndex = rasterIndices.get(index);
 				((TileGrid)tiles[rasterIndex]).setCornerMaximaNr(cornerMaximaNrs.get(index));
+				((TileGrid)tiles[rasterIndex]).setIsleLevelDelta(isleID, 4);
+				
 			}
 		}
 	}

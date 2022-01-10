@@ -66,7 +66,7 @@ public class TileGridBorderPatternsFlat {
 		corner_0_Patterns.set(3005, new int[] {0,0,0,0,4,12,8,0,0});corner_0_PatternsIndices.add(3005);
 		corner_0_Patterns.set(3006, new int[] {0,0,0,0,0,4,12,8,0});corner_0_PatternsIndices.add(3006);
 		corner_0_Patterns.set(3012, new int[] {0,4,12,12,12,12,12,8,0});corner_0_PatternsIndices.add(3012);
-		corner_0_Patterns.set(3013, new int[] {0,0,4,12,12,12,2,0,0});corner_0_PatternsIndices.add(3013);
+		corner_0_Patterns.set(3013, new int[] {0,0,4,12,12,12,8,0,0});corner_0_PatternsIndices.add(3013);
 		corner_0_Patterns.set(3022, new int[] {0,4,12,8,0,4,12,8,0});corner_0_PatternsIndices.add(3022);
 		corner_0_Patterns.set(3023, new int[] {0,0,4,12,8,4,12,8,0});corner_0_PatternsIndices.add(3023);
 		corner_0_Patterns.set(3024, new int[] {0,4,12,8,4,12,8,0,0});corner_0_PatternsIndices.add(3024);
