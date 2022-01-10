@@ -111,6 +111,12 @@ public class TileGrid extends Tile {
 													25, 34, 61, 52, 43,
 													65, 66, 69, 68, 67}; 
 
+	private final int tries4test = 20;
+	private int originalHeightLevel;
+	
+	private int deltaLevel4test = 4;
+	private int isleID = 0;
+	
 	TileGrid(Tile parent) {
 		super( TileType.sub);
 		this.parent = (TileGrid) parent;
@@ -141,6 +147,11 @@ public class TileGrid extends Tile {
 	
 	void setCornerMaximaNr(int cornerMaximaNr) {
 		this.cornerMaximaNr = cornerMaximaNr;
+	}
+	
+	void setIsleLevelDelta(int isleID, int deltaLevel) {
+		this.isleID = isleID;
+		this.deltaLevel4test = deltaLevel;
 	}
 	
 	void setBorderAdapterTypeNorth(TileGridBorderAdapterType type) {
@@ -280,7 +291,10 @@ public class TileGrid extends Tile {
 			int heightLevel;
 			heightLevel = heigtValue % 81; 
 			setHeightLevel(heightLevel);
-		}	
+		}
+		else {
+			originalHeightLevel = this.heightLevel;
+		}
 /*		
 		switch (tileTypeLevel) {
 		case TileType.TILE_LEVEL_LARGE:
@@ -313,15 +327,22 @@ public class TileGrid extends Tile {
 			
 			tries++;
 			
-			if (tries == 20) break;
-			
-			initWithTodo();
-			setBorders();
-			
-			for (int index = 0; index < 81; index++) {
-				if (tiles[index].getType() != TileType.todo) {
-					blocked[index] = true;
+			if (tries == tries4test) {
+				tryEasyPattern();
+			}
+			else {
+				
+				if (tries > tries4test) break;
+				
+				initWithTodo();
+				setBorders();
+				
+				for (int index = 0; index < 81; index++) {
+					if (tiles[index].getType() != TileType.todo) {
+						blocked[index] = true;
+					}
 				}
+
 			}
 	
 			for ( indexValueList = 0; indexValueList < totalValuesForGeneration.size(); indexValueList++) {
@@ -553,6 +574,60 @@ public class TileGrid extends Tile {
 			}
 		}
 		
+	}
+	
+	private void tryEasyPattern() {
+		int[] pattern;
+		TileGridEasyPatterns tgep = TileGridEasyPatterns.getInstance();
+		switch (this.cornerMaximaNr) {
+		case 19914: 
+			pattern = tgep.getEasyPattern(TileGridEasyPatterns.NORTH_AND_SOUTH, deltaLevel4test);
+			break;
+		case 91194: 
+			pattern = tgep.getEasyPattern(TileGridEasyPatterns.NORTH_AND_SOUTH, -deltaLevel4test);
+			break;
+		case 11994: 
+			pattern = tgep.getEasyPattern(TileGridEasyPatterns.EAST_AND_WEST, deltaLevel4test);
+			break;
+		case 99114: 
+			pattern = tgep.getEasyPattern(TileGridEasyPatterns.EAST_AND_WEST, -deltaLevel4test);
+			break;
+		case 91114: 
+			pattern = tgep.getEasyPattern(TileGridEasyPatterns.NORTH_AND_WEST, deltaLevel4test);
+			break;
+		case 19114: 
+			pattern = tgep.getEasyPattern(TileGridEasyPatterns.NORTH_AND_EAST, deltaLevel4test);
+			break;
+		case 11194: 
+			pattern = tgep.getEasyPattern(TileGridEasyPatterns.SOUTH_AND_WEST, deltaLevel4test);
+			break;
+		case 11914: 
+			pattern = tgep.getEasyPattern(TileGridEasyPatterns.SOUTH_AND_EAST, deltaLevel4test);
+			break;
+		default:
+			return;
+		}
+		
+
+		for (int index = 0; index < 81; index++) {
+			if (pattern[index] >= 0) {
+				blocked[index] = false;
+				addTile(new Tile(TileType.getTileTypeForLevel(this.tileTypeLevel), pattern[index] , heightLevel), index);
+				blocked[index] = true;
+			}
+		}
+		
+		for (int index = 0; index < 81; index++) {
+			if (pattern[index] < 0) {
+				addTile(Tile.getInstance(), index);
+			}
+		}
+		
+
+		// start from first index
+		fillIndex = -1;
+		setNextToDoActualIndex();
+
 	}
 	
 //	private int rasterIndexForActualTileIndex()
@@ -1009,6 +1084,7 @@ public class TileGrid extends Tile {
 			}
 			
 			if (levelGeneration < 2) {
+//			if (levelGeneration < 1) {
 				
 				nrZoomIn = input.checkForZoomIn(threePack, levelGeneration);
 				if (nrZoomIn > 0) {
@@ -1180,14 +1256,27 @@ public class TileGrid extends Tile {
 	
 	private void setBorders() {
 		
+		if (this.isleID > 0) {
+			
+			if ( (this.cornerMaximaNr == 99114) /* from east to west */ || 
+				 (this.cornerMaximaNr == 91194) /* from south to north */ ||
+				 (this.cornerMaximaNr == 91114) /* to corner north/west */||
+				 (this.cornerMaximaNr == 11114) /* isle's inner tiles */ ) {
+			
+				setHeightLevel(originalHeightLevel + deltaLevel4test);
+			
+			}
+			
+		}
+		
 		boolean setRandomBorderEdgeNorth = !setBorderEdgeNorth();
 		boolean setRandomBorderEdgeEast = !setBorderEdgeEast();
 		boolean setRandomBorderEdgeSouth = !setBorderEdgeSouth();
 		boolean setRandomBorderEdgeWest = !setBorderEdgeWest();
-		if (setRandomBorderEdgeNorth)	setRandomBorderEdgeNorth(0);
-		if (setRandomBorderEdgeEast)	setRandomBorderEdgeEast(0);
-		if (setRandomBorderEdgeSouth)	setRandomBorderEdgeSouth(0);
-		if (setRandomBorderEdgeWest)	setRandomBorderEdgeWest(0);
+		if (setRandomBorderEdgeNorth)	setRandomBorderEdgeNorth(this.cornerMaximaNr);
+		if (setRandomBorderEdgeEast)	setRandomBorderEdgeEast(this.cornerMaximaNr);
+		if (setRandomBorderEdgeSouth)	setRandomBorderEdgeSouth(this.cornerMaximaNr);
+		if (setRandomBorderEdgeWest)	setRandomBorderEdgeWest(this.cornerMaximaNr);
 		
 		setBorderCornerNW();
 		setBorderCornerNE();
@@ -1239,7 +1328,7 @@ public class TileGrid extends Tile {
 			addTile(new Tile(globalTileNumberEdgeNorth_N10_Index1 - 6, heightLevel), 7);
 		}
 		else if (this.borderAdapterTypeNorth == TileGridBorderAdapterType.flat) {
-			setRandomBorderEdgeNorth(999);
+			setRandomBorderEdgeNorth(4);
 		}
 		else {
 			int[] borderNorthPattern;
@@ -1248,6 +1337,7 @@ public class TileGrid extends Tile {
 				return false;
 				//borderNorthPattern = TileGridBorderPatterns.getInstance().getBorderPattern(1, 0);
 			}
+
 			for (int index = 1; index < 8; index++) {
 				addTile(new Tile(TileType.addGlobalNumberOffset(TileType.getTileTypeForLevel(tileTypeLevel),borderNorthPattern[index]), heightLevel), 
 						index);
@@ -1256,16 +1346,29 @@ public class TileGrid extends Tile {
 		return true;
 	}
 	
-	private void setRandomBorderEdgeNorth(int deltaLevel) {
+	private void setRandomBorderEdgeNorth(int cornerMaxNr ) {
 		int[] borderNorthPattern;
-		if (deltaLevel == 999) {
+		int deltaLevel = 0;
+		int heightOffset = 0;
+		if (cornerMaxNr == 4) {
 			borderNorthPattern = TileGridBorderPatternsFlat.getInstance().getBorderPattern(1);
 		}
 		else {
+			if (cornerMaxNr == 91114)  {
+				deltaLevel = -deltaLevel4test;
+			}
+			if (cornerMaxNr == 19114) deltaLevel = deltaLevel4test;
+			if (cornerMaxNr == 91194) {
+				deltaLevel = -deltaLevel4test;
+			}
+			if (cornerMaxNr == 19914) {
+				deltaLevel = deltaLevel4test;
+				heightOffset = 0;
+			}
 			borderNorthPattern = TileGridBorderPatterns.getInstance().getBorderPattern(1, deltaLevel);
 		}
 		for (int index = 1; index < 8; index++) {
-			addTile(new Tile(TileType.addGlobalNumberOffset(TileType.getTileTypeForLevel(tileTypeLevel),borderNorthPattern[index]), heightLevel), 
+			addTile(new Tile(TileType.addGlobalNumberOffset(TileType.getTileTypeForLevel(tileTypeLevel),borderNorthPattern[index]), heightLevel + heightOffset), 
 					index);
 		}
 		
@@ -1304,7 +1407,7 @@ public class TileGrid extends Tile {
 			addTile(new Tile(globalTileNumberEdgeEast_E10_Index17 - 6, heightLevel), 71);
 		}
 		else if (this.borderAdapterTypeEast == TileGridBorderAdapterType.flat) {
-			setRandomBorderEdgeEast(999);
+			setRandomBorderEdgeEast(4);
 		}
 		else {
 			int[] borderEastPattern;
@@ -1321,16 +1424,23 @@ public class TileGrid extends Tile {
 		return true;
 	}
 	
-	private void setRandomBorderEdgeEast(int deltaLevel) {
+	private void setRandomBorderEdgeEast(int cornerMaxNr) {
 		int[] borderEastPattern;
-		if (deltaLevel == 999) {
+		int deltaLevel = 0;
+		if (cornerMaxNr == 4) {
 			borderEastPattern = TileGridBorderPatternsFlat.getInstance().getBorderPattern(4);
 		}
 		else {
+			if (cornerMaxNr == 19114) deltaLevel = -deltaLevel4test;
+			if (cornerMaxNr == 11914) deltaLevel = deltaLevel4test;
+			if (cornerMaxNr == 99114) {
+				deltaLevel = -deltaLevel4test;
+			}
+			if (cornerMaxNr == 11994) deltaLevel = deltaLevel4test;
 			borderEastPattern = TileGridBorderPatterns.getInstance().getBorderPattern(4, deltaLevel);
 		}
 		for (int index = 1; index < 8; index++) {
-			addTile(new Tile(TileType.addGlobalNumberOffset(TileType.getTileTypeForLevel(tileTypeLevel),borderEastPattern[index]), heightLevel), 
+			addTile(new Tile(TileType.addGlobalNumberOffset(TileType.getTileTypeForLevel(tileTypeLevel),borderEastPattern[index]), heightLevel ), 
 					9 * index + 8);
 		}
 	}
@@ -1367,7 +1477,7 @@ public class TileGrid extends Tile {
 			addTile(new Tile(globalTileNumberEdgeSouth_S10_Index73 - 6, heightLevel), 79);
 		}
 		else if (this.borderAdapterTypeSouth == TileGridBorderAdapterType.flat) {
-			setRandomBorderEdgeSouth(999);
+			setRandomBorderEdgeSouth(4);
 		}
 		else {
 			int[] borderSouthPattern;
@@ -1385,12 +1495,19 @@ public class TileGrid extends Tile {
 	}
 	
 	
-	private void setRandomBorderEdgeSouth(int deltaLevel) {
+	private void setRandomBorderEdgeSouth(int cornerMaxNr) {
 		int[] borderSouthPattern;
-		if (deltaLevel == 999) {
+		int deltaLevel =0;
+		if (cornerMaxNr == 4) {
 			borderSouthPattern = TileGridBorderPatternsFlat.getInstance().getBorderPattern(2);
 		}
 		else {
+			if (cornerMaxNr == 11914) deltaLevel = deltaLevel4test;
+			if (cornerMaxNr == 11194) deltaLevel = -deltaLevel4test;
+			if (cornerMaxNr == 91194) {
+				deltaLevel = -deltaLevel4test;
+			}
+			if (cornerMaxNr == 19914) deltaLevel = deltaLevel4test;
 			borderSouthPattern = TileGridBorderPatterns.getInstance().getBorderPattern(2, deltaLevel);
 		}
 		for (int index = 1; index < 8; index++) {
@@ -1431,7 +1548,7 @@ public class TileGrid extends Tile {
 			addTile(new Tile(globalTileNumberEdgeWest_W10_Index9 - 6, heightLevel), 63);
 		}
 		else if (this.borderAdapterTypeWest == TileGridBorderAdapterType.flat) {
-			setRandomBorderEdgeWest(999);
+			setRandomBorderEdgeWest(4);
 		}
 		else {
 			int[] borderWestPattern;
@@ -1448,12 +1565,21 @@ public class TileGrid extends Tile {
 		return true;
 	}
 
-	private void setRandomBorderEdgeWest(int deltaLevel) {
+	private void setRandomBorderEdgeWest(int cornerMaxNr) {
 		int[] borderWestPattern;
-		if (deltaLevel == 999) {
+		int deltaLevel = 0;
+		if (cornerMaxNr == 4) {
 			borderWestPattern = TileGridBorderPatternsFlat.getInstance().getBorderPattern(3);
 		}
 		else {
+			if (cornerMaxNr == 91114)  {
+				deltaLevel = -deltaLevel4test;
+			}
+			if (cornerMaxNr == 11194) deltaLevel = deltaLevel4test;
+			if (cornerMaxNr == 99114) {
+				deltaLevel = -deltaLevel4test;
+			}
+			if (cornerMaxNr == 11994) deltaLevel = deltaLevel4test;
 			borderWestPattern = TileGridBorderPatterns.getInstance().getBorderPattern(3, deltaLevel);
 		}
 		for (int index = 1; index < 8; index++) {

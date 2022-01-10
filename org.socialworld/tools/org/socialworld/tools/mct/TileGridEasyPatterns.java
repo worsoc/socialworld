@@ -2,6 +2,25 @@ package org.socialworld.tools.mct;
 
 public class TileGridEasyPatterns {
 
+	public static final int NORTH_AND_SOUTH = 1;
+	public static final int EAST_AND_WEST   = 2;
+	public static final int NORTH_AND_EAST  = 3;
+	public static final int NORTH_AND_WEST  = 4;
+	public static final int SOUTH_AND_EAST  = 5;
+	public static final int SOUTH_AND_WEST  = 6;
+	
+	private int[] totalFreePattern = {
+			-9, -9, -9, -9, -9, -9, -9, -9, -9,
+			-9, -9, -9, -9, -9, -9, -9, -9, -9,
+			-9, -9, -9, -9, -9, -9, -9, -9, -9,
+			-9, -9, -9, -9, -9, -9, -9, -9, -9,
+			-9, -9, -9, -9, -9, -9, -9, -9, -9,
+			-9, -9, -9, -9, -9, -9, -9, -9, -9,
+			-9, -9, -9, -9, -9, -9, -9, -9, -9,
+			-9, -9, -9, -9, -9, -9, -9, -9, -9,
+			-9, -9, -9, -9, -9, -9, -9, -9, -9
+		};
+
 	private int[] easyPatternNorthPlus4SouthPlus4 = {
 		-9,  0, 5, 5, 5, 5,  0,  0, -9,
 		-9, -9, 5, 5, 5, 5, -9, -9, -9,
@@ -97,5 +116,69 @@ public class TileGridEasyPatterns {
 			 0, -9, -9, -9, -9, -9, -9, -9, -9,
 			-9, -9, -9, -9, -9, -9, -9, -9, -9
 	};
+
+	static TileGridEasyPatterns instance;
+	
+	static TileGridEasyPatterns getInstance() {
+		if (instance == null) {
+			instance = new TileGridEasyPatterns();
+		}
+		return instance;
+	}
+
+	int[] getEasyPattern(int variante, int deltaLevel) {
+		switch (variante) {
+		 case NORTH_AND_SOUTH:
+			 switch (deltaLevel) {
+			  case 4: 
+				  return easyPatternNorthPlus4SouthPlus4;
+			  case -4: 
+				  return easyPatternNorthMinus4SouthMinus4;
+			 }
+			 break;
+		 case EAST_AND_WEST:
+			 switch (deltaLevel) {
+			  case 4: 
+				  return easyPatternWestPlus4EastPlus4;
+			  case -4: 
+				  return easyPatternWestMinus4EastMinus4;
+			 }
+			 break;
+		 case NORTH_AND_EAST:
+			 switch (deltaLevel) {
+			  case 4: 
+				  return easyPatternNorthPlus4EastMinus4;
+			  case -4: 
+				  return easyPatternNorthPlus4EastMinus4;
+			 }
+			 break;
+		 case NORTH_AND_WEST:
+			 switch (deltaLevel) {
+			  case 4: 
+				  return easyPatternNorthMinus4WestMinus4;
+			  case -4: 
+				  return easyPatternNorthMinus4WestMinus4;
+			 }
+			 break;
+		 case SOUTH_AND_EAST:
+			 switch (deltaLevel) {
+			  case 4: 
+				  return easyPatternSouthPlus4EastPlus4;
+			  case -4: 
+				  return easyPatternSouthPlus4EastPlus4;
+			 }
+			 break;
+		 case SOUTH_AND_WEST:
+			 switch (deltaLevel) {
+			  case 4: 
+				  return easyPatternSouthMinus4WestPlus4;
+			  case -4: 
+				  return easyPatternSouthMinus4WestPlus4;
+			 }
+			 break;
+		};
+		
+		return totalFreePattern;
+	}
 
 }
