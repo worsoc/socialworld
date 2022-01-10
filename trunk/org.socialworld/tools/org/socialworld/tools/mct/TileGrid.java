@@ -1348,7 +1348,7 @@ public class TileGrid extends Tile {
 		int deltaLevel = 0;
 		int heightOffset = 0;
 		if (cornerMaxNr == 4) {
-			borderNorthPattern = TileGridBorderPatternsFlat.getInstance().getBorderPattern(1);
+			borderNorthPattern = TileGridBorderPatternsFlat.getInstance().getBorderPattern(0/*1*/);
 		}
 		else {
 			if (cornerMaxNr == 91114)  {
@@ -1425,7 +1425,7 @@ public class TileGrid extends Tile {
 		int[] borderEastPattern;
 		int deltaLevel = 0;
 		if (cornerMaxNr == 4) {
-			borderEastPattern = TileGridBorderPatternsFlat.getInstance().getBorderPattern(4);
+			borderEastPattern = TileGridBorderPatternsFlat.getInstance().getBorderPattern(0/*4*/);
 		}
 		else {
 			if (cornerMaxNr == 19114) deltaLevel = -deltaLevel4test;
@@ -1496,7 +1496,7 @@ public class TileGrid extends Tile {
 		int[] borderSouthPattern;
 		int deltaLevel =0;
 		if (cornerMaxNr == 4) {
-			borderSouthPattern = TileGridBorderPatternsFlat.getInstance().getBorderPattern(2);
+			borderSouthPattern = TileGridBorderPatternsFlat.getInstance().getBorderPattern(0/*2*/);
 		}
 		else {
 			if (cornerMaxNr == 11914) deltaLevel = deltaLevel4test;
@@ -1566,7 +1566,7 @@ public class TileGrid extends Tile {
 		int[] borderWestPattern;
 		int deltaLevel = 0;
 		if (cornerMaxNr == 4) {
-			borderWestPattern = TileGridBorderPatternsFlat.getInstance().getBorderPattern(3);
+			borderWestPattern = TileGridBorderPatternsFlat.getInstance().getBorderPattern(0/*3*/);
 		}
 		else {
 			if (cornerMaxNr == 91114)  {

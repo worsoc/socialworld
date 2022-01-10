@@ -167,19 +167,19 @@ public class TileGridBorderPatterns {
 
 		firstIndexCorner0North_0_3 = corner_0_PatternsIndices.size();
 
-		corner_0_Patterns.set(1203, new int[] {0,0,0,0,4,16,16,13,0});corner_0_PatternsIndices.add(1203);
-		corner_0_Patterns.set(1204, new int[] {0,0,0,4,16,16,13,0,0});corner_0_PatternsIndices.add(1204);
-		corner_0_Patterns.set(1205, new int[] {0,0,4,16,16,13,0,0,0});corner_0_PatternsIndices.add(1205);
-		corner_0_Patterns.set(1206, new int[] {0,4,16,16,13,0,0,0,0});corner_0_PatternsIndices.add(1206);
-		corner_0_Patterns.set(1212, new int[] {0,0,0,0,0,5,5,5,0});corner_0_PatternsIndices.add(1212);
-		corner_0_Patterns.set(1213, new int[] {0,0,0,0,5,5,5,0,0});corner_0_PatternsIndices.add(1213);
+//		corner_0_Patterns.set(1203, new int[] {0,0,0,0,4,16,16,13,0});corner_0_PatternsIndices.add(1203);
+//		corner_0_Patterns.set(1204, new int[] {0,0,0,4,16,16,13,0,0});corner_0_PatternsIndices.add(1204);
+//		corner_0_Patterns.set(1205, new int[] {0,0,4,16,16,13,0,0,0});corner_0_PatternsIndices.add(1205);
+//		corner_0_Patterns.set(1206, new int[] {0,4,16,16,13,0,0,0,0});corner_0_PatternsIndices.add(1206);
+//		corner_0_Patterns.set(1212, new int[] {0,0,0,0,0,5,5,5,0});corner_0_PatternsIndices.add(1212);
+//		corner_0_Patterns.set(1213, new int[] {0,0,0,0,5,5,5,0,0});corner_0_PatternsIndices.add(1213);
 		corner_0_Patterns.set(1214, new int[] {0,0,0,5,5,5,0,0,0});corner_0_PatternsIndices.add(1214);
-		corner_0_Patterns.set(1215, new int[] {0,0,5,5,5,0,0,0,0});corner_0_PatternsIndices.add(1215);
-		corner_0_Patterns.set(1216, new int[] {0,5,5,5,0,0,0,0,0});corner_0_PatternsIndices.add(1216);
-		corner_0_Patterns.set(1222, new int[] {0,0,0,0,1,18,18,7,0});corner_0_PatternsIndices.add(1222);
-		corner_0_Patterns.set(1223, new int[] {0,0,0,1,18,18,7,0,0});corner_0_PatternsIndices.add(1223);
-		corner_0_Patterns.set(1224, new int[] {0,0,1,18,18,7,0,0,0});corner_0_PatternsIndices.add(1224);
-		corner_0_Patterns.set(1225, new int[] {0,1,18,18,7,0,0,0,0});corner_0_PatternsIndices.add(1225);
+//		corner_0_Patterns.set(1215, new int[] {0,0,5,5,5,0,0,0,0});corner_0_PatternsIndices.add(1215);
+//		corner_0_Patterns.set(1216, new int[] {0,5,5,5,0,0,0,0,0});corner_0_PatternsIndices.add(1216);
+//		corner_0_Patterns.set(1222, new int[] {0,0,0,0,1,18,18,7,0});corner_0_PatternsIndices.add(1222);
+//		corner_0_Patterns.set(1223, new int[] {0,0,0,1,18,18,7,0,0});corner_0_PatternsIndices.add(1223);
+//		corner_0_Patterns.set(1224, new int[] {0,0,1,18,18,7,0,0,0});corner_0_PatternsIndices.add(1224);
+//		corner_0_Patterns.set(1225, new int[] {0,1,18,18,7,0,0,0,0});corner_0_PatternsIndices.add(1225);
 
 		firstIndexCorner0North_0_4 = corner_0_PatternsIndices.size();
 
@@ -259,19 +259,19 @@ public class TileGridBorderPatterns {
 
 		firstIndexCorner0North_3_0 = corner_0_PatternsIndices.size();
 
-		corner_0_Patterns.set(2203, new int[] {0,14,19,19,8,0,0,0,0});corner_0_PatternsIndices.add(2203);
-		corner_0_Patterns.set(2204, new int[] {0,0,14,19,19,8,0,0,0});corner_0_PatternsIndices.add(2204);
-		corner_0_Patterns.set(2205, new int[] {0,0,0,14,19,19,8,0,0});corner_0_PatternsIndices.add(2205);
-		corner_0_Patterns.set(2206, new int[] {0,0,0,0,14,19,19,8,0});corner_0_PatternsIndices.add(2206);
-		corner_0_Patterns.set(2212, new int[] {0,10,10,10,0,0,0,0,0});corner_0_PatternsIndices.add(2212);
-		corner_0_Patterns.set(2213, new int[] {0,0,10,10,10,0,0,0,0});corner_0_PatternsIndices.add(2213);
+//		corner_0_Patterns.set(2203, new int[] {0,14,19,19,8,0,0,0,0});corner_0_PatternsIndices.add(2203);
+//		corner_0_Patterns.set(2204, new int[] {0,0,14,19,19,8,0,0,0});corner_0_PatternsIndices.add(2204);
+//		corner_0_Patterns.set(2205, new int[] {0,0,0,14,19,19,8,0,0});corner_0_PatternsIndices.add(2205);
+//		corner_0_Patterns.set(2206, new int[] {0,0,0,0,14,19,19,8,0});corner_0_PatternsIndices.add(2206);
+//		corner_0_Patterns.set(2212, new int[] {0,10,10,10,0,0,0,0,0});corner_0_PatternsIndices.add(2212);
+//		corner_0_Patterns.set(2213, new int[] {0,0,10,10,10,0,0,0,0});corner_0_PatternsIndices.add(2213);
 		corner_0_Patterns.set(2214, new int[] {0,0,0,10,10,10,0,0,0});corner_0_PatternsIndices.add(2214);
-		corner_0_Patterns.set(2215, new int[] {0,0,0,0,10,10,10,0,0});corner_0_PatternsIndices.add(2215);
-		corner_0_Patterns.set(2216, new int[] {0,0,0,0,0,10,10,10,0});corner_0_PatternsIndices.add(2216);
-		corner_0_Patterns.set(2222, new int[] {0,11,17,17,2,0,0,0,0});corner_0_PatternsIndices.add(2222);
-		corner_0_Patterns.set(2223, new int[] {0,0,11,17,17,2,0,0,0});corner_0_PatternsIndices.add(2223);
-		corner_0_Patterns.set(2224, new int[] {0,0,0,11,17,17,2,0,0});corner_0_PatternsIndices.add(2224);
-		corner_0_Patterns.set(2225, new int[] {0,0,0,0,11,17,17,2,0});corner_0_PatternsIndices.add(2225);
+//		corner_0_Patterns.set(2215, new int[] {0,0,0,0,10,10,10,0,0});corner_0_PatternsIndices.add(2215);
+//		corner_0_Patterns.set(2216, new int[] {0,0,0,0,0,10,10,10,0});corner_0_PatternsIndices.add(2216);
+//		corner_0_Patterns.set(2222, new int[] {0,11,17,17,2,0,0,0,0});corner_0_PatternsIndices.add(2222);
+//		corner_0_Patterns.set(2223, new int[] {0,0,11,17,17,2,0,0,0});corner_0_PatternsIndices.add(2223);
+//		corner_0_Patterns.set(2224, new int[] {0,0,0,11,17,17,2,0,0});corner_0_PatternsIndices.add(2224);
+//		corner_0_Patterns.set(2225, new int[] {0,0,0,0,11,17,17,2,0});corner_0_PatternsIndices.add(2225);
 
 		firstIndexCorner0North_4_0 = corner_0_PatternsIndices.size();
 
@@ -380,19 +380,19 @@ public class TileGridBorderPatterns {
 
 		firstIndexCorner0South_0_3 = corner_0_PatternsIndices.size();
 
-		corner_0_Patterns.set(4203, new int[] {0,0,0,0,1,18,18,7,0});corner_0_PatternsIndices.add(4203);
-		corner_0_Patterns.set(4204, new int[] {0,0,0,1,18,18,7,0,0});corner_0_PatternsIndices.add(4204);
-		corner_0_Patterns.set(4205, new int[] {0,0,1,18,18,7,0,0,0});corner_0_PatternsIndices.add(4205);
-		corner_0_Patterns.set(4206, new int[] {0,1,18,18,7,0,0,0,0});corner_0_PatternsIndices.add(4206);
-		corner_0_Patterns.set(4212, new int[] {0,0,0,0,0,5,5,5,0});corner_0_PatternsIndices.add(4212);
-		corner_0_Patterns.set(4213, new int[] {0,0,0,0,5,5,5,0,0});corner_0_PatternsIndices.add(4213);
+//		corner_0_Patterns.set(4203, new int[] {0,0,0,0,1,18,18,7,0});corner_0_PatternsIndices.add(4203);
+//		corner_0_Patterns.set(4204, new int[] {0,0,0,1,18,18,7,0,0});corner_0_PatternsIndices.add(4204);
+//		corner_0_Patterns.set(4205, new int[] {0,0,1,18,18,7,0,0,0});corner_0_PatternsIndices.add(4205);
+//		corner_0_Patterns.set(4206, new int[] {0,1,18,18,7,0,0,0,0});corner_0_PatternsIndices.add(4206);
+//		corner_0_Patterns.set(4212, new int[] {0,0,0,0,0,5,5,5,0});corner_0_PatternsIndices.add(4212);
+//		corner_0_Patterns.set(4213, new int[] {0,0,0,0,5,5,5,0,0});corner_0_PatternsIndices.add(4213);
 		corner_0_Patterns.set(4214, new int[] {0,0,0,5,5,5,0,0,0});corner_0_PatternsIndices.add(4214);
-		corner_0_Patterns.set(4215, new int[] {0,0,5,5,5,0,0,0,0});corner_0_PatternsIndices.add(4215);
-		corner_0_Patterns.set(4216, new int[] {0,5,5,5,0,0,0,0,0});corner_0_PatternsIndices.add(4216);
-		corner_0_Patterns.set(4222, new int[] {0,0,0,0,4,16,16,13,0});corner_0_PatternsIndices.add(4222);
-		corner_0_Patterns.set(4223, new int[] {0,0,0,4,16,16,13,0,0});corner_0_PatternsIndices.add(4223);
-		corner_0_Patterns.set(4224, new int[] {0,0,4,16,16,13,0,0,0});corner_0_PatternsIndices.add(4224);
-		corner_0_Patterns.set(4225, new int[] {0,4,16,16,13,0,0,0,0});corner_0_PatternsIndices.add(4225);
+//		corner_0_Patterns.set(4215, new int[] {0,0,5,5,5,0,0,0,0});corner_0_PatternsIndices.add(4215);
+//		corner_0_Patterns.set(4216, new int[] {0,5,5,5,0,0,0,0,0});corner_0_PatternsIndices.add(4216);
+//		corner_0_Patterns.set(4222, new int[] {0,0,0,0,4,16,16,13,0});corner_0_PatternsIndices.add(4222);
+//		corner_0_Patterns.set(4223, new int[] {0,0,0,4,16,16,13,0,0});corner_0_PatternsIndices.add(4223);
+//		corner_0_Patterns.set(4224, new int[] {0,0,4,16,16,13,0,0,0});corner_0_PatternsIndices.add(4224);
+//		corner_0_Patterns.set(4225, new int[] {0,4,16,16,13,0,0,0,0});corner_0_PatternsIndices.add(4225);
 
 		firstIndexCorner0South_0_4 = corner_0_PatternsIndices.size();
 
@@ -473,19 +473,19 @@ public class TileGridBorderPatterns {
 
 		firstIndexCorner0South_3_0 = corner_0_PatternsIndices.size();
 
-		corner_0_Patterns.set(5203, new int[] {0,11,17,17,2,0,0,0,0});corner_0_PatternsIndices.add(5203);
-		corner_0_Patterns.set(5204, new int[] {0,0,11,17,17,2,0,0,0});corner_0_PatternsIndices.add(5204);
-		corner_0_Patterns.set(5205, new int[] {0,0,0,11,17,17,2,0,0});corner_0_PatternsIndices.add(5205);
-		corner_0_Patterns.set(5206, new int[] {0,0,0,0,11,17,17,2,0});corner_0_PatternsIndices.add(5206);
-		corner_0_Patterns.set(5212, new int[] {0,10,10,10,0,0,0,0,0});corner_0_PatternsIndices.add(5212);
-		corner_0_Patterns.set(5213, new int[] {0,0,10,10,10,0,0,0,0});corner_0_PatternsIndices.add(5213);
+//		corner_0_Patterns.set(5203, new int[] {0,11,17,17,2,0,0,0,0});corner_0_PatternsIndices.add(5203);
+//		corner_0_Patterns.set(5204, new int[] {0,0,11,17,17,2,0,0,0});corner_0_PatternsIndices.add(5204);
+//		corner_0_Patterns.set(5205, new int[] {0,0,0,11,17,17,2,0,0});corner_0_PatternsIndices.add(5205);
+//		corner_0_Patterns.set(5206, new int[] {0,0,0,0,11,17,17,2,0});corner_0_PatternsIndices.add(5206);
+//		corner_0_Patterns.set(5212, new int[] {0,10,10,10,0,0,0,0,0});corner_0_PatternsIndices.add(5212);
+//		corner_0_Patterns.set(5213, new int[] {0,0,10,10,10,0,0,0,0});corner_0_PatternsIndices.add(5213);
 		corner_0_Patterns.set(5214, new int[] {0,0,0,10,10,10,0,0,0});corner_0_PatternsIndices.add(5214);
-		corner_0_Patterns.set(5215, new int[] {0,0,0,0,10,10,10,0,0});corner_0_PatternsIndices.add(5215);
-		corner_0_Patterns.set(5216, new int[] {0,0,0,0,0,10,10,10,0});corner_0_PatternsIndices.add(5216);
-		corner_0_Patterns.set(5222, new int[] {0,14,19,19,8,0,0,0,0});corner_0_PatternsIndices.add(5222);
-		corner_0_Patterns.set(5223, new int[] {0,0,14,19,19,8,0,0,0});corner_0_PatternsIndices.add(5223);
-		corner_0_Patterns.set(5224, new int[] {0,0,0,14,19,19,8,0,0});corner_0_PatternsIndices.add(5224);
-		corner_0_Patterns.set(5225, new int[] {0,0,0,0,14,19,19,8,0});corner_0_PatternsIndices.add(5225);
+//		corner_0_Patterns.set(5215, new int[] {0,0,0,0,10,10,10,0,0});corner_0_PatternsIndices.add(5215);
+//		corner_0_Patterns.set(5216, new int[] {0,0,0,0,0,10,10,10,0});corner_0_PatternsIndices.add(5216);
+//		corner_0_Patterns.set(5222, new int[] {0,14,19,19,8,0,0,0,0});corner_0_PatternsIndices.add(5222);
+//		corner_0_Patterns.set(5223, new int[] {0,0,14,19,19,8,0,0,0});corner_0_PatternsIndices.add(5223);
+//		corner_0_Patterns.set(5224, new int[] {0,0,0,14,19,19,8,0,0});corner_0_PatternsIndices.add(5224);
+//		corner_0_Patterns.set(5225, new int[] {0,0,0,0,14,19,19,8,0});corner_0_PatternsIndices.add(5225);
 
 		firstIndexCorner0South_4_0 = corner_0_PatternsIndices.size();
 
@@ -594,19 +594,19 @@ public class TileGridBorderPatterns {
 
 		firstIndexCorner0West_0_3 = corner_0_PatternsIndices.size();
 
-		corner_0_Patterns.set(7203, new int[] {0,0,0,0,2,17,17,11,0});corner_0_PatternsIndices.add(7203);
-		corner_0_Patterns.set(7204, new int[] {0,0,0,2,17,17,11,0,0});corner_0_PatternsIndices.add(7204);
-		corner_0_Patterns.set(7205, new int[] {0,0,2,17,17,11,0,0,0});corner_0_PatternsIndices.add(7205);
-		corner_0_Patterns.set(7206, new int[] {0,2,17,17,11,0,0,0,0});corner_0_PatternsIndices.add(7206);
-		corner_0_Patterns.set(7212, new int[] {0,0,0,0,0,3,3,3,0});corner_0_PatternsIndices.add(7212);
-		corner_0_Patterns.set(7213, new int[] {0,0,0,0,3,3,3,0,0});corner_0_PatternsIndices.add(7213);
+//		corner_0_Patterns.set(7203, new int[] {0,0,0,0,2,17,17,11,0});corner_0_PatternsIndices.add(7203);
+//		corner_0_Patterns.set(7204, new int[] {0,0,0,2,17,17,11,0,0});corner_0_PatternsIndices.add(7204);
+//		corner_0_Patterns.set(7205, new int[] {0,0,2,17,17,11,0,0,0});corner_0_PatternsIndices.add(7205);
+//		corner_0_Patterns.set(7206, new int[] {0,2,17,17,11,0,0,0,0});corner_0_PatternsIndices.add(7206);
+//		corner_0_Patterns.set(7212, new int[] {0,0,0,0,0,3,3,3,0});corner_0_PatternsIndices.add(7212);
+//		corner_0_Patterns.set(7213, new int[] {0,0,0,0,3,3,3,0,0});corner_0_PatternsIndices.add(7213);
 		corner_0_Patterns.set(7214, new int[] {0,0,0,3,3,3,0,0,0});corner_0_PatternsIndices.add(7214);
-		corner_0_Patterns.set(7215, new int[] {0,0,3,3,3,0,0,0,0});corner_0_PatternsIndices.add(7215);
-		corner_0_Patterns.set(7216, new int[] {0,3,3,3,0,0,0,0,0});corner_0_PatternsIndices.add(7216);
-		corner_0_Patterns.set(7222, new int[] {0,0,0,0,1,18,18,7,0});corner_0_PatternsIndices.add(7222);
-		corner_0_Patterns.set(7223, new int[] {0,0,0,1,18,18,7,0,0});corner_0_PatternsIndices.add(7223);
-		corner_0_Patterns.set(7224, new int[] {0,0,1,18,18,7,0,0,0});corner_0_PatternsIndices.add(7224);
-		corner_0_Patterns.set(7225, new int[] {0,1,18,18,7,0,0,0,0});corner_0_PatternsIndices.add(7225);
+//		corner_0_Patterns.set(7215, new int[] {0,0,3,3,3,0,0,0,0});corner_0_PatternsIndices.add(7215);
+//		corner_0_Patterns.set(7216, new int[] {0,3,3,3,0,0,0,0,0});corner_0_PatternsIndices.add(7216);
+//		corner_0_Patterns.set(7222, new int[] {0,0,0,0,1,18,18,7,0});corner_0_PatternsIndices.add(7222);
+//		corner_0_Patterns.set(7223, new int[] {0,0,0,1,18,18,7,0,0});corner_0_PatternsIndices.add(7223);
+//		corner_0_Patterns.set(7224, new int[] {0,0,1,18,18,7,0,0,0});corner_0_PatternsIndices.add(7224);
+//		corner_0_Patterns.set(7225, new int[] {0,1,18,18,7,0,0,0,0});corner_0_PatternsIndices.add(7225);
 
 		firstIndexCorner0West_0_4 = corner_0_PatternsIndices.size();
 
@@ -687,19 +687,19 @@ public class TileGridBorderPatterns {
 
 		firstIndexCorner0West_3_0 = corner_0_PatternsIndices.size();
 
-		corner_0_Patterns.set(8203, new int[] {0,13,16,16,4,0,0,0,0});corner_0_PatternsIndices.add(8203);
-		corner_0_Patterns.set(8204, new int[] {0,0,13,16,16,4,0,0,0});corner_0_PatternsIndices.add(8204);
-		corner_0_Patterns.set(8205, new int[] {0,0,0,13,16,16,4,0,0});corner_0_PatternsIndices.add(8205);
-		corner_0_Patterns.set(8206, new int[] {0,0,0,0,13,16,16,4,0});corner_0_PatternsIndices.add(8206);
-		corner_0_Patterns.set(8212, new int[] {0,12,12,12,0,0,0,0,0});corner_0_PatternsIndices.add(8212);
-		corner_0_Patterns.set(8213, new int[] {0,0,12,12,12,0,0,0,0});corner_0_PatternsIndices.add(8213);
+//		corner_0_Patterns.set(8203, new int[] {0,13,16,16,4,0,0,0,0});corner_0_PatternsIndices.add(8203);
+//		corner_0_Patterns.set(8204, new int[] {0,0,13,16,16,4,0,0,0});corner_0_PatternsIndices.add(8204);
+//		corner_0_Patterns.set(8205, new int[] {0,0,0,13,16,16,4,0,0});corner_0_PatternsIndices.add(8205);
+//		corner_0_Patterns.set(8206, new int[] {0,0,0,0,13,16,16,4,0});corner_0_PatternsIndices.add(8206);
+//		corner_0_Patterns.set(8212, new int[] {0,12,12,12,0,0,0,0,0});corner_0_PatternsIndices.add(8212);
+//		corner_0_Patterns.set(8213, new int[] {0,0,12,12,12,0,0,0,0});corner_0_PatternsIndices.add(8213);
 		corner_0_Patterns.set(8214, new int[] {0,0,0,12,12,12,0,0,0});corner_0_PatternsIndices.add(8214);
-		corner_0_Patterns.set(8215, new int[] {0,0,0,0,12,12,12,0,0});corner_0_PatternsIndices.add(8215);
-		corner_0_Patterns.set(8216, new int[] {0,0,0,0,0,12,12,12,0});corner_0_PatternsIndices.add(8216);
-		corner_0_Patterns.set(8222, new int[] {0,14,19,19,8,0,0,0,0});corner_0_PatternsIndices.add(8222);
-		corner_0_Patterns.set(8223, new int[] {0,0,14,19,19,8,0,0,0});corner_0_PatternsIndices.add(8223);
-		corner_0_Patterns.set(8224, new int[] {0,0,0,14,19,19,8,0,0});corner_0_PatternsIndices.add(8224);
-		corner_0_Patterns.set(8225, new int[] {0,0,0,0,14,19,19,8,0});corner_0_PatternsIndices.add(8225);
+//		corner_0_Patterns.set(8215, new int[] {0,0,0,0,12,12,12,0,0});corner_0_PatternsIndices.add(8215);
+//		corner_0_Patterns.set(8216, new int[] {0,0,0,0,0,12,12,12,0});corner_0_PatternsIndices.add(8216);
+//		corner_0_Patterns.set(8222, new int[] {0,14,19,19,8,0,0,0,0});corner_0_PatternsIndices.add(8222);
+//		corner_0_Patterns.set(8223, new int[] {0,0,14,19,19,8,0,0,0});corner_0_PatternsIndices.add(8223);
+//		corner_0_Patterns.set(8224, new int[] {0,0,0,14,19,19,8,0,0});corner_0_PatternsIndices.add(8224);
+//		corner_0_Patterns.set(8225, new int[] {0,0,0,0,14,19,19,8,0});corner_0_PatternsIndices.add(8225);
 
 		firstIndexCorner0West_4_0 = corner_0_PatternsIndices.size();
 
@@ -808,19 +808,19 @@ public class TileGridBorderPatterns {
 
 		firstIndexCorner0East_0_3 = corner_0_PatternsIndices.size();
 
-		corner_0_Patterns.set(10203, new int[] {0,0,0,0,1,18,18,7,0});corner_0_PatternsIndices.add(10203);
-		corner_0_Patterns.set(10204, new int[] {0,0,0,1,18,18,7,0,0});corner_0_PatternsIndices.add(10204);
-		corner_0_Patterns.set(10205, new int[] {0,0,1,18,18,7,0,0,0});corner_0_PatternsIndices.add(10205);
-		corner_0_Patterns.set(10206, new int[] {0,1,18,18,7,0,0,0,0});corner_0_PatternsIndices.add(10206);
-		corner_0_Patterns.set(10212, new int[] {0,0,0,0,0,3,3,3,0});corner_0_PatternsIndices.add(10212);
-		corner_0_Patterns.set(10213, new int[] {0,0,0,0,3,3,3,0,0});corner_0_PatternsIndices.add(10213);
+//		corner_0_Patterns.set(10203, new int[] {0,0,0,0,1,18,18,7,0});corner_0_PatternsIndices.add(10203);
+//		corner_0_Patterns.set(10204, new int[] {0,0,0,1,18,18,7,0,0});corner_0_PatternsIndices.add(10204);
+//		corner_0_Patterns.set(10205, new int[] {0,0,1,18,18,7,0,0,0});corner_0_PatternsIndices.add(10205);
+//		corner_0_Patterns.set(10206, new int[] {0,1,18,18,7,0,0,0,0});corner_0_PatternsIndices.add(10206);
+//		corner_0_Patterns.set(10212, new int[] {0,0,0,0,0,3,3,3,0});corner_0_PatternsIndices.add(10212);
+//		corner_0_Patterns.set(10213, new int[] {0,0,0,0,3,3,3,0,0});corner_0_PatternsIndices.add(10213);
 		corner_0_Patterns.set(10214, new int[] {0,0,0,3,3,3,0,0,0});corner_0_PatternsIndices.add(10214);
-		corner_0_Patterns.set(10215, new int[] {0,0,3,3,3,0,0,0,0});corner_0_PatternsIndices.add(10215);
-		corner_0_Patterns.set(10216, new int[] {0,3,3,3,0,0,0,0,0});corner_0_PatternsIndices.add(10216);
-		corner_0_Patterns.set(10222, new int[] {0,0,0,0,2,17,17,11,0});corner_0_PatternsIndices.add(10222);
-		corner_0_Patterns.set(10223, new int[] {0,0,0,2,17,17,11,0,0});corner_0_PatternsIndices.add(10223);
-		corner_0_Patterns.set(10224, new int[] {0,0,2,17,17,11,0,0,0});corner_0_PatternsIndices.add(10224);
-		corner_0_Patterns.set(10225, new int[] {0,2,17,17,11,0,0,0,0});corner_0_PatternsIndices.add(10225);
+//		corner_0_Patterns.set(10215, new int[] {0,0,3,3,3,0,0,0,0});corner_0_PatternsIndices.add(10215);
+//		corner_0_Patterns.set(10216, new int[] {0,3,3,3,0,0,0,0,0});corner_0_PatternsIndices.add(10216);
+//		corner_0_Patterns.set(10222, new int[] {0,0,0,0,2,17,17,11,0});corner_0_PatternsIndices.add(10222);
+//		corner_0_Patterns.set(10223, new int[] {0,0,0,2,17,17,11,0,0});corner_0_PatternsIndices.add(10223);
+//		corner_0_Patterns.set(10224, new int[] {0,0,2,17,17,11,0,0,0});corner_0_PatternsIndices.add(10224);
+//		corner_0_Patterns.set(10225, new int[] {0,2,17,17,11,0,0,0,0});corner_0_PatternsIndices.add(10225);
 
 		firstIndexCorner0East_0_4 = corner_0_PatternsIndices.size();
 
@@ -901,19 +901,19 @@ public class TileGridBorderPatterns {
 
 		firstIndexCorner0East_3_0 = corner_0_PatternsIndices.size();
 
-		corner_0_Patterns.set(11203, new int[] {0,14,19,19,8,0,0,0,0});corner_0_PatternsIndices.add(11203);
-		corner_0_Patterns.set(11204, new int[] {0,0,14,19,19,8,0,0,0});corner_0_PatternsIndices.add(11204);
-		corner_0_Patterns.set(11205, new int[] {0,0,0,14,19,19,8,0,0});corner_0_PatternsIndices.add(11205);
-		corner_0_Patterns.set(11206, new int[] {0,0,0,0,14,19,19,8,0});corner_0_PatternsIndices.add(11206);
-		corner_0_Patterns.set(11212, new int[] {0,12,12,12,0,0,0,0,0});corner_0_PatternsIndices.add(11212);
-		corner_0_Patterns.set(11213, new int[] {0,0,12,12,12,0,0,0,0});corner_0_PatternsIndices.add(11213);
+//		corner_0_Patterns.set(11203, new int[] {0,14,19,19,8,0,0,0,0});corner_0_PatternsIndices.add(11203);
+//		corner_0_Patterns.set(11204, new int[] {0,0,14,19,19,8,0,0,0});corner_0_PatternsIndices.add(11204);
+//		corner_0_Patterns.set(11205, new int[] {0,0,0,14,19,19,8,0,0});corner_0_PatternsIndices.add(11205);
+//		corner_0_Patterns.set(11206, new int[] {0,0,0,0,14,19,19,8,0});corner_0_PatternsIndices.add(11206);
+//		corner_0_Patterns.set(11212, new int[] {0,12,12,12,0,0,0,0,0});corner_0_PatternsIndices.add(11212);
+//		corner_0_Patterns.set(11213, new int[] {0,0,12,12,12,0,0,0,0});corner_0_PatternsIndices.add(11213);
 		corner_0_Patterns.set(11214, new int[] {0,0,0,12,12,12,0,0,0});corner_0_PatternsIndices.add(11214);
-		corner_0_Patterns.set(11215, new int[] {0,0,0,0,12,12,12,0,0});corner_0_PatternsIndices.add(11215);
-		corner_0_Patterns.set(11216, new int[] {0,0,0,0,0,12,12,12,0});corner_0_PatternsIndices.add(11216);
-		corner_0_Patterns.set(11222, new int[] {0,13,16,16,4,0,0,0,0});corner_0_PatternsIndices.add(11222);
-		corner_0_Patterns.set(11223, new int[] {0,0,13,16,16,4,0,0,0});corner_0_PatternsIndices.add(11223);
-		corner_0_Patterns.set(11224, new int[] {0,0,0,13,16,16,4,0,0});corner_0_PatternsIndices.add(11224);
-		corner_0_Patterns.set(11225, new int[] {0,0,0,0,13,16,16,4,0});corner_0_PatternsIndices.add(11225);
+//		corner_0_Patterns.set(11215, new int[] {0,0,0,0,12,12,12,0,0});corner_0_PatternsIndices.add(11215);
+//		corner_0_Patterns.set(11216, new int[] {0,0,0,0,0,12,12,12,0});corner_0_PatternsIndices.add(11216);
+//		corner_0_Patterns.set(11222, new int[] {0,13,16,16,4,0,0,0,0});corner_0_PatternsIndices.add(11222);
+//		corner_0_Patterns.set(11223, new int[] {0,0,13,16,16,4,0,0,0});corner_0_PatternsIndices.add(11223);
+//		corner_0_Patterns.set(11224, new int[] {0,0,0,13,16,16,4,0,0});corner_0_PatternsIndices.add(11224);
+//		corner_0_Patterns.set(11225, new int[] {0,0,0,0,13,16,16,4,0});corner_0_PatternsIndices.add(11225);
 
 		firstIndexCorner0East_4_0 = corner_0_PatternsIndices.size();
 
@@ -954,6 +954,9 @@ public class TileGridBorderPatterns {
 	}
 	
 	int[] getBorderPattern(int north_1__south_2__west_3__east_4, int deltaLevel) {
+		if (deltaLevel == 0) {
+			north_1__south_2__west_3__east_4 = 0;
+		}
 		switch (north_1__south_2__west_3__east_4) {
 		case 1: 
 			switch (deltaLevel) {
