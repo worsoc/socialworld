@@ -184,6 +184,12 @@ public class SubIsle33 extends SubIsle {
 			19114, 99114, 99114, 99114, 99114, 99114, 91114
 		};
 
+	private final static Integer[] isleRingNrs = {
+			1, 1, 1, 1,	1, 1, 1,
+			1, 1, 1, 1,	1, 1, 1,
+			1, 1, 1, 1,	1, 1, 1
+		};
+
 	private List<Integer> cornerMaxima;
 
 	private SubIsle33() {

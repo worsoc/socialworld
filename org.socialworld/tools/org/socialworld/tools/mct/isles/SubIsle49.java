@@ -144,38 +144,50 @@ public class SubIsle49 extends SubIsle{
 		19114, 99114, 99114, 99114, 99114, 99114, 91114
 	};
 	
+	private final static Integer[] isleRingNrs = {
+			1, 1, 1, 1,	1, 1, 1,
+			1, 2, 2, 2, 2, 2, 1,
+			1, 2, 3, 3, 3, 2, 1,
+			1, 2, 3, 3, 3, 2, 1,
+			1, 2, 3, 3, 3, 2, 1,
+			1, 2, 2, 2, 2, 2, 1,
+			1, 1, 1, 1,	1, 1, 1
+		};
+
 	private List<Integer> cornerMaxima;
+	private List<Integer> isleRings;
 
 	private SubIsle49() {
 		
 		cornerMaxima = Arrays.asList(cornerMaximaNrs);
+		isleRings = Arrays.asList(isleRingNrs);
 		
 		nr49at00 = Arrays.asList(at00);
-		heightIsle49at00 = new HeightIsle(nr49at00, cornerMaxima);
+		heightIsle49at00 = new HeightIsle(nr49at00, cornerMaxima, isleRings);
 
 		nr49at01 = Arrays.asList(at01);
-		heightIsle49at01 = new HeightIsle(nr49at01, cornerMaxima);
+		heightIsle49at01 = new HeightIsle(nr49at01, cornerMaxima, isleRings);
 
 		nr49at02 = Arrays.asList(at02);
-		heightIsle49at02 = new HeightIsle(nr49at02, cornerMaxima);
+		heightIsle49at02 = new HeightIsle(nr49at02, cornerMaxima, isleRings);
 
 		nr49at09 = Arrays.asList(at09);
-		heightIsle49at09 = new HeightIsle(nr49at09, cornerMaxima);
+		heightIsle49at09 = new HeightIsle(nr49at09, cornerMaxima, isleRings);
 
 		nr49at10 = Arrays.asList(at10);
-		heightIsle49at10 = new HeightIsle(nr49at10, cornerMaxima);
+		heightIsle49at10 = new HeightIsle(nr49at10, cornerMaxima, isleRings);
 
 		nr49at11 = Arrays.asList(at11);
-		heightIsle49at11 = new HeightIsle(nr49at11, cornerMaxima);
+		heightIsle49at11 = new HeightIsle(nr49at11, cornerMaxima, isleRings);
 
 		nr49at18 = Arrays.asList(at18);
-		heightIsle49at18 = new HeightIsle(nr49at18, cornerMaxima);
+		heightIsle49at18 = new HeightIsle(nr49at18, cornerMaxima, isleRings);
 
 		nr49at19 = Arrays.asList(at19);
-		heightIsle49at19 = new HeightIsle(nr49at19, cornerMaxima);
+		heightIsle49at19 = new HeightIsle(nr49at19, cornerMaxima, isleRings);
 
 		nr49at20 = Arrays.asList(at20);
-		heightIsle49at20 = new HeightIsle(nr49at20, cornerMaxima);
+		heightIsle49at20 = new HeightIsle(nr49at20, cornerMaxima, isleRings);
 
 	}
 	
