@@ -954,9 +954,6 @@ public class TileGridBorderPatterns {
 	}
 	
 	int[] getBorderPattern(int north_1__south_2__west_3__east_4, int deltaLevel) {
-		if (deltaLevel == 0) {
-			north_1__south_2__west_3__east_4 = 0;
-		}
 		switch (north_1__south_2__west_3__east_4) {
 		case 1: 
 			switch (deltaLevel) {
