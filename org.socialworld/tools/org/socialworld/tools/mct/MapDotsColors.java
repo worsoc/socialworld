@@ -32,6 +32,25 @@ class MapDotsColors {
 		Color color = SimVisual.COLOR_PINK;
 		
 		switch (height) {
+		case -3:
+			color = SimVisual.COLOR_MEDIUMSPRINGGREEN; break;
+		case -2:
+			color = SimVisual.COLOR_MEDIUMSEAGREEN; break;
+		case -1:
+			color = SimVisual.COLOR_SEAGREEN; break;
+		case 0:
+			color = SimVisual.COLOR_DARKGREEN; break;
+		case 1:
+			color = SimVisual.COLOR_GREEN; break;
+		case 2:
+			color = SimVisual.COLOR_LIMEGREEN; break;
+		case 3:
+			color = SimVisual.COLOR_LIME; break;
+		case 4:
+			color = SimVisual.COLOR_GREENYELLOW; break;
+			
+			
+			
 		case 22:
 			color = SimVisual.COLOR_POWDERBLUE; break;
 		case 23:

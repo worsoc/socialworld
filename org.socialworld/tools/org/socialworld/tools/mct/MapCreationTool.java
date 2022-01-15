@@ -619,7 +619,7 @@ public class MapCreationTool {
 		
 		
 		//tileTerm.setHeights();
-		return;
+//		return;
 		
 /*		int heightFromWest;
 		int heightFromNorth;
@@ -691,7 +691,7 @@ public class MapCreationTool {
 		
 		}
 			
-		
+		*/	
 		for (int i = 0; i < 81; i++) {
 			
 			if ( (!raster[i].getText().equals( "sub")) && (!raster[i].getText().equals( "TODO")) ) {
@@ -700,7 +700,7 @@ public class MapCreationTool {
 			
 				
 		}
-		*/
+		tileTerm.setHeights();
 	
 	}
 	
@@ -867,12 +867,17 @@ public class MapCreationTool {
 		
 		String tileTermLoad = "";
 		String dateiname = "tileterm.txt";
+		String line;
 		try
 		{
 			File datei = new File(dateiname);
 			FileReader fr = new FileReader(datei);
 			BufferedReader br = new BufferedReader (fr);
-			tileTermLoad = br.readLine();
+			
+   			while ((line = br.readLine()) != null) {
+				tileTermLoad = tileTermLoad + line;
+			}
+
 			br.close();
 		}
 		catch (IOException e1)
@@ -884,7 +889,6 @@ public class MapCreationTool {
 		parseString(tileTermWithoutSub, 1, null);
 		this.tileTerm = loadedTileGridFromFile;
 		
-		System.out.println(tileTerm.toString());
 		fillTileRaster();
 		
 		type = TileType.largeStandard;
@@ -928,13 +932,16 @@ public class MapCreationTool {
        		if ( (dateiname.contains("raster_S")) && (!this.type.isSmall()) ) return;
         	
         	
-        	
+        	String line;
     		try
     		{
     			File datei = new File(dateiname);
     			FileReader fr = new FileReader(datei);
     			BufferedReader br = new BufferedReader (fr);
-    			tileTermLoad = br.readLine();
+    			
+    			while ((line = br.readLine()) != null) {
+    				tileTermLoad = tileTermLoad + line;
+    			}
     			br.close();
     		}
     		catch (IOException e1)
@@ -943,6 +950,7 @@ public class MapCreationTool {
     		}
     		
     		String tileTermWithoutSub = tileTermLoad.replaceAll("sub","");
+    		tileTermWithoutSub = tileTermWithoutSub.replaceAll("\n","");
     		parseString(tileTermWithoutSub, 1, this.tileTerm.getParentGrid());
     		
     		if (this.type.isMedium())
@@ -1561,9 +1569,15 @@ public class MapCreationTool {
 			char c = input.charAt(indexString);
 			
 			if(c == ')') {
-					thisTileGrid.addTile(child, index);
-					loadedTileGridFromFile = thisTileGrid;
-					return indexString;
+				if (child == null) {
+					if (tile.equals("TODO"))
+						child = new Tile(TileType.todo);					
+					else 
+						child = new Tile(tile);
+				}
+				thisTileGrid.addTile(child, index);
+				loadedTileGridFromFile = thisTileGrid;
+				return indexString;
 			}
 
 				
@@ -1571,6 +1585,7 @@ public class MapCreationTool {
 				loadedTileGridFromFile = null;
 				indexString =  parseString(input, indexString + 1, thisTileGrid);
 				child = loadedTileGridFromFile;
+				
 			}
 			
 			

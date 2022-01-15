@@ -201,7 +201,7 @@ public class SubClusterCalculations {
 		int cornerMaximaNr;
 		
 		int randomArrayIndex;
-		int[] levelDeltas = {3, 4, 7};
+		int[] levelDeltas = {1, 2, 3, 4, 6, 7};
 		
 		for (HeightIsle isle : isles) {
 			
@@ -210,7 +210,7 @@ public class SubClusterCalculations {
 			List<Integer> isleRings = isle.getRings();
 			
 			isleID++;
-			randomArrayIndex = getRandomIntBetween(0, 3);
+			randomArrayIndex = getRandomIntBetween(0, 6);
 			levelDelta = levelDeltas[randomArrayIndex];
 			
 			for (int index = 0; index < rasterIndices.size(); index++) {
