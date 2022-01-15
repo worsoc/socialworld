@@ -78,6 +78,7 @@ public class Tile {
 		case "L" : this.type = TileType.largeStandard; break;
 		case "M" : this.type = TileType.mediumStandard; break;
 		case "S" : this.type = TileType.smallStandard; break;
+		case "SA" : this.type = TileType.smallAdapter; break;
 		case "MA" : this.type = TileType.mediumAdapter; break;
 		case "SX" : this.type = TileType.smallSpecial; break;
 		case "SXA" : this.type = TileType.smallSpecialAdapter; break;
@@ -127,8 +128,6 @@ public class Tile {
 		this.heightLevel = heightLevel;
 	}
 
-
-	
 	void setSub() {
 		type = TileType.sub;
 		number = -1;
@@ -230,6 +229,7 @@ public class Tile {
 			case smallStandard: result = "S"; break;
 			case mediumStandard: result = "M";break;
 			case largeStandard: result = "L"; break;
+			case smallAdapter: result = "SA";break;
 			case mediumAdapter: result = "MA";break;
 			case smallSpecial: result = "SX"; break;
 			case smallSpecialAdapter: result = "SXA"; break;

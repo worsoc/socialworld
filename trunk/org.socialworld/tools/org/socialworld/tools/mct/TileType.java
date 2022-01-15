@@ -144,4 +144,20 @@ public enum TileType {
 		return todo;
 	}
 
+	int getTileTypeLevel() {
+		switch(this) {
+		case smallStandard:
+		case smallAdapter:
+		case smallSpecial:
+		case smallSpecialAdapter:
+			return TILE_LEVEL_SMALL;
+		case mediumStandard:
+		case mediumAdapter:
+			return TILE_LEVEL_MEDIUM;
+		case largeStandard:
+			return TILE_LEVEL_LARGE;
+		}
+		return TILE_LEVEL_LARGE;
+
+	}
 }

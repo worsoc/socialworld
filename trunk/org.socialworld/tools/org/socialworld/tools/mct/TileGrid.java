@@ -123,8 +123,12 @@ public class TileGrid extends Tile {
 		super( TileType.sub);
 		this.parent = (TileGrid) parent;
 		tiles = new Tile[81];
+		if (parent != null) {
+			this.tileTypeLevel = ((TileGrid) parent).tileTypeLevel + 1;
+		}
 	}
-	
+
+
 	TileGrid(Tile parent, int tileTypeLevel, int borderValue) {
 		super( TileType.sub);
 		this.parent = (TileGrid) parent;
