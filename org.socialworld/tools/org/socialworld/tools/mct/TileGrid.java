@@ -809,6 +809,13 @@ public class TileGrid extends Tile {
 			return -2;  
 	}
 	
+	int getTileNumberGlobal(int index) {
+		if (tiles[index] != null) 
+			return tiles[index].getGlobalNumber();
+		else
+			return -2;  
+	}
+
 	int getHeightLevel(int index) {
 		if (tiles[index] != null) 
 			return tiles[index].getHeightLevel();
@@ -2022,7 +2029,12 @@ public class TileGrid extends Tile {
 			result = result + tileString;
 		}
 		
-		result = "sub(" + result + ")";
+		if (this.globalNumber > 0) {
+			result = "sub["+ this.globalNumber + "](" + result + ")";
+		}
+		else {
+			result = "sub(" + result + ")";
+		}
 		if (tileTypeLevel == 1) result = result + "\n";
 		if (tileTypeLevel == 0) result = result + "\n\n";
 		
