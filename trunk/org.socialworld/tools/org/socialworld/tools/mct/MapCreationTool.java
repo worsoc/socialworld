@@ -206,6 +206,12 @@ public class MapCreationTool {
 			this.tile = new Tile(TileType.sub);
 		}
 		
+		private void setSub(int feelAsGlobalNumber) {
+			this.tile = new Tile(TileType.sub);
+			this.tile.setGlobalNumber(feelAsGlobalNumber);
+		}
+		
+		
 		private void setTile(TileType type, int alternative, int tileNumber) {
 			this.tile = new Tile(type);
 			this.tile.setAlternative(alternative);
@@ -1183,6 +1189,7 @@ public class MapCreationTool {
 	private void fillTileRaster() {
 		
 		int number;
+		int globalNumber;
 		TileType type;
 		int tileTypeAlternative;
 		
@@ -1190,10 +1197,16 @@ public class MapCreationTool {
 			
 			type = tileTerm.getTileType(i);
 			number = tileTerm.getTileNumber(i);
+			globalNumber = tileTerm.getTileNumberGlobal(i);
 			tileTypeAlternative = tileTerm.getTileTypeAlternative(i);
 			
 			if (type == TileType.sub) {
-				raster[i].setSub();
+				if (globalNumber > 0) {
+					raster[i].setSub(globalNumber);
+				}
+				else {
+					raster[i].setSub();
+				}
 			}
 			else if (type == TileType.todo) {
 				raster[i].setToDo();
@@ -1559,6 +1572,9 @@ public class MapCreationTool {
 		
 		String tile = "";
 		
+		boolean consumeSubGlobalNumber = false;
+		String subGlbalNumber = "";
+		
 		TileGrid thisTileGrid;
 		thisTileGrid = new TileGrid(parent);
 
@@ -1567,6 +1583,16 @@ public class MapCreationTool {
 		
 		while(indexString < input.length()) {
 			char c = input.charAt(indexString);
+			
+			if(c == '[') {
+				subGlbalNumber = "";
+				consumeSubGlobalNumber = true;
+			}
+
+			if(c == ']') {
+				consumeSubGlobalNumber = false;
+			}
+
 			
 			if(c == ')') {
 				if (child == null) {
@@ -1585,6 +1611,9 @@ public class MapCreationTool {
 				loadedTileGridFromFile = null;
 				indexString =  parseString(input, indexString + 1, thisTileGrid);
 				child = loadedTileGridFromFile;
+				if (subGlbalNumber.length() > 0) {
+					child.globalNumber = Integer.parseInt(subGlbalNumber);
+				}
 				
 			}
 			
@@ -1603,7 +1632,14 @@ public class MapCreationTool {
 				tile = "";
 			}
 			
-			if ( (c != ',') && (c != '(') && (c != ')') && (c != ' '))	tile = tile + c;
+			if ( (c != ',') && (c != '(') && (c != ')') && (c != '[') && (c != ']') && (c != ' ')) {
+				if (consumeSubGlobalNumber) {
+					subGlbalNumber = subGlbalNumber + c;
+				}
+				else {
+					tile = tile + c;
+				}
+			}
 			
 			indexString++;    
 			
