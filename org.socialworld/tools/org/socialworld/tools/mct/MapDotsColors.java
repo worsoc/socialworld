@@ -27,6 +27,35 @@ import org.socialworld.visualize.SimVisual;
 class MapDotsColors {
 	int[][] colorsForXY = new int[729][729];
 	
+	static int getColorForIsle(int isleID) {
+		
+		Color color = SimVisual.COLOR_GRAY;
+
+		switch (isleID) {
+		case 1:
+			color = SimVisual.COLOR_MEDIUMSPRINGGREEN; break;
+		case 2:
+			color = SimVisual.COLOR_MEDIUMSEAGREEN; break;
+		case 3:
+			color = SimVisual.COLOR_SEAGREEN; break;
+		case 4:
+			color = SimVisual.COLOR_DARKGREEN; break;
+		case 5:
+			color = SimVisual.COLOR_GREEN; break;
+		case 6:
+			color = SimVisual.COLOR_LIMEGREEN; break;
+		case 7:
+			color = SimVisual.COLOR_LIME; break;
+		case 8:
+			color = SimVisual.COLOR_GREENYELLOW; break;
+		default:
+			
+		}
+		int colorRGB = color.getRGB();
+		return colorRGB;
+	}
+
+	
 	int getColorForHeight(int height) {
 		
 		Color color = SimVisual.COLOR_PINK;
