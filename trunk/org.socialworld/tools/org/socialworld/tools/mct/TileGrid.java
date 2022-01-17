@@ -166,6 +166,9 @@ public class TileGrid extends Tile {
 		return this.isleHeightChange;
 	}
 	
+	int getIsleID()  {
+		return this.isleID;
+	}
 	
 	void setBorderAdapterTypeNorth(TileGridBorderAdapterType type) {
 		this.borderAdapterTypeNorth = type;
@@ -814,6 +817,13 @@ public class TileGrid extends Tile {
 			return tiles[index].getGlobalNumber();
 		else
 			return -2;  
+	}
+
+	int getIsleID(int index) {
+		if (tiles[index] instanceof TileGrid) 
+			return ((TileGrid)tiles[index]).getIsleID();
+		else
+			return 0;  
 	}
 
 	int getHeightLevel(int index) {

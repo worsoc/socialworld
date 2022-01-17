@@ -156,10 +156,14 @@ public class MapCreationTool {
 		int index;
 		
 		Tile tile;
+		private int isleID; // here redundant because raster fields have Tile only, no TileGrid
+					// is needed for highlighting
 		
 		int height;
 		int heightOffsetFromWest = 0;
 		int heightOffsetFromNorth = 0;
+		
+		Color buttonDefaultColor;
 		
 		static final long serialVersionUID = 1;
 		
@@ -174,6 +178,7 @@ public class MapCreationTool {
 					clickRasterField(((RasterField) e.getSource()).getIndex());
 				}															
 			});
+			buttonDefaultColor = this.getBackground();
 		}
 		
 		private void clear() {
@@ -206,10 +211,21 @@ public class MapCreationTool {
 			this.tile = new Tile(TileType.sub);
 		}
 		
-		private void setSub(int feelAsGlobalNumber) {
+		private void setSubWithFeelAsNumber(int feelAsGlobalNumber) {
 			this.tile = new Tile(TileType.sub);
 			this.tile.setGlobalNumber(feelAsGlobalNumber);
 		}
+
+		private void setSubWithIsleID(int isleID) {
+			this.tile = new Tile(TileType.sub);
+			this.isleID = isleID;
+		}
+		
+		private void clearIsleID() {
+			this.isleID = 0;
+		}
+		
+
 		
 		
 		private void setTile(TileType type, int alternative, int tileNumber) {
@@ -238,6 +254,7 @@ public class MapCreationTool {
 		
 		private void setText() {
 			String text;
+			TileGrid sub;
 			
 			switch (this.tile.getType()) {
 				case smallStandard: text = "S" + this.tile.getNumber(); break;
@@ -247,7 +264,17 @@ public class MapCreationTool {
 				case mediumStandard: text = "M" + this.tile.getNumber(); break;
 				case mediumAdapter: text = "MA" + this.tile.getNumber(); break;
 				case largeStandard: text = "L" + this.tile.getNumber(); break;
-				case sub: text = "sub"; break;
+				case sub: 
+					
+					if (this.isleID > 0) {
+						text = "isle " + this.isleID;
+						this.setBackground(new Color(MapDotsColors.getColorForIsle(isleID)));
+						break;
+					}
+					
+					text = ">" + this.tile.getNumber() + "<";
+					break;
+					
 				case todo: text = "TODO"; break;
 				default: text = "TODO";
 			}
@@ -420,7 +447,7 @@ public class MapCreationTool {
 				default:
 			}
 			    
-			raster[index].setSub();
+			if (raster[index].getTileType() != TileType.sub) raster[index].setSub();
 			raster[index].setText();
 			saveTileTermIntern();
 
@@ -700,7 +727,7 @@ public class MapCreationTool {
 		*/	
 		for (int i = 0; i < 81; i++) {
 			
-			if ( (!raster[i].getText().equals( "sub")) && (!raster[i].getText().equals( "TODO")) ) {
+			if ( (raster[i].getTileType() != TileType.sub) && (raster[i].getTileType() != TileType.todo) ) {
 				tileTerm.addTile(new Tile(raster[i].getTileType(),  raster[i].getTileNumber(), raster[i].height), i);
 			}
 			
@@ -1191,6 +1218,7 @@ public class MapCreationTool {
 		int number;
 		int globalNumber;
 		TileType type;
+		int isleID;
 		int tileTypeAlternative;
 		
 		for (int i = 0; i < 81; i++) {
@@ -1198,15 +1226,24 @@ public class MapCreationTool {
 			type = tileTerm.getTileType(i);
 			number = tileTerm.getTileNumber(i);
 			globalNumber = tileTerm.getTileNumberGlobal(i);
+			isleID = tileTerm.getIsleID(i);
 			tileTypeAlternative = tileTerm.getTileTypeAlternative(i);
 			
 			if (type == TileType.sub) {
-				if (globalNumber > 0) {
-					raster[i].setSub(globalNumber);
+				
+				if (isleID > 0) {
+					raster[i].setSubWithIsleID(isleID);
 				}
 				else {
-					raster[i].setSub();
+					raster[i].clearIsleID();
+					if (globalNumber > 0) {
+						raster[i].setSubWithFeelAsNumber(globalNumber);
+					}
+					else {
+						raster[i].setSub();
+					}
 				}
+				
 			}
 			else if (type == TileType.todo) {
 				raster[i].setToDo();
@@ -1215,6 +1252,8 @@ public class MapCreationTool {
 				raster[i].setTile(type, tileTypeAlternative, number);
 			}
 			
+			raster[i].setBackground(raster[i].buttonDefaultColor);
+
 			raster[i].setText();
 		}
 	}
