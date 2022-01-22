@@ -27,10 +27,13 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
+import java.awt.Button;
 import java.awt.Color;
 import java.awt.EventQueue;
 //import java.awt.Font;
@@ -343,6 +346,7 @@ public class MapCreationTool {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -353,7 +357,70 @@ public class MapCreationTool {
 				}
 			}
 		});
+			
 	}	
+	
+	
+	private void generateFromTextArea() {
+        JFrame frameInputText = new JFrame();
+        frameInputText.setTitle("Input Text");
+        frameInputText.setSize(800, 600);
+        JPanel panel = new JPanel();
+        
+    	Button buttonGenerate = new Button("Generieren");
+
+         JTextArea textfeld = new JTextArea(34, 70);
+ 
+        textfeld.setLineWrap(true);
+ 
+        textfeld.setWrapStyleWord(true);
+ 
+        JScrollPane scrollpane = new JScrollPane(textfeld);       
+ 
+        panel.add(scrollpane);
+ 
+		buttonGenerate.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			
+			{
+				
+				buttonGenerate.setEnabled(false);
+				
+				String input;
+				input = "l" + textfeld.getText();
+			
+				RandomRasterIndexOrder random = RandomRasterIndexOrder.getInstance();
+				random.initRandomIntsFromInputString(input);
+				TileGrid grid = new TileGrid(input, 0); 
+
+				String filename =  "tileterm.txt";
+				try
+				{
+					// false ... replace
+					BufferedWriter writer = new BufferedWriter(new FileWriter(filename, false));
+					writer.write(grid.toString());
+					writer.close();
+					
+				}
+				catch(IOException e1)
+				{
+					e1.printStackTrace();	
+				}
+
+				frameInputText.setVisible(false);
+				frameInputText.dispose();
+				
+				loadTotal();
+				showMap();
+			}
+		});
+		buttonGenerate.setBounds(700, 530, 87, 26);
+		frameInputText.getContentPane().add(buttonGenerate);
+
+        frameInputText.add(panel);
+        frameInputText.setVisible(true);
+	}
 	
 	private void clickRasterField(int index) {
 		
@@ -831,6 +898,11 @@ public class MapCreationTool {
 	
 	private void generateFromText() {
 		
+		
+		generateFromTextArea();
+		
+		
+/*		
 		clearInfoFieldOben();
 		clearInfoFieldMitte();
 		
@@ -868,6 +940,8 @@ public class MapCreationTool {
 		System.out.println();
 		System.out.println();
 		System.out.println();
+		RandomRasterIndexOrder random = RandomRasterIndexOrder.getInstance();
+		random.initRandomIntsFromInputString(tileTermLoad);
 		TileGrid grid = new TileGrid(tileTermLoad, 0); 
 		System.out.println();
 //		System.out.println(grid.toString());
@@ -877,7 +951,7 @@ public class MapCreationTool {
 		fillTileRaster();
 		
 		setTileSelection(possibleTiles.getAllLargeStandardTiles());
-
+*/
 	}
 	
 	
