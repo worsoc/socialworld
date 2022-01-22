@@ -45,7 +45,7 @@ public class SubClusterCalculations {
 
 	boolean isInitialized = false;
 	
-	private Random random = new Random();
+	private RandomRasterIndexOrder random = RandomRasterIndexOrder.getInstance();
 
 	void initWithTiles(Tile[] tiles) {
 		this.tiles = tiles;
@@ -210,7 +210,7 @@ public class SubClusterCalculations {
 			List<Integer> isleRings = isle.getRings();
 			
 			isleID++;
-			randomArrayIndex = getRandomIntBetween(0, 6);
+			randomArrayIndex = getRandomIntBetween(0, 6); // exclusive 6
 			levelDelta = levelDeltas[randomArrayIndex];
 			
 			for (int index = 0; index < rasterIndices.size(); index++) {
@@ -692,8 +692,7 @@ public class SubClusterCalculations {
 /////////////////////////////////////////////////////////////////////////////////////////////
 	
 	private int getRandomIntBetween(int a, int b) {
-		int value = random.nextInt(b - a) + a ;
-		return value;
+		return this.random.getRandomIntBetween(a, b);
 	}
 
 

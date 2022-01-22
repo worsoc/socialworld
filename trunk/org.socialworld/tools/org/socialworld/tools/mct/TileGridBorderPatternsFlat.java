@@ -10,7 +10,7 @@ public class TileGridBorderPatternsFlat {
 	private static final List<int[]> corner_0_Patterns = new ArrayList<int[]>(13000);
 	private static List<Integer> corner_0_PatternsIndices = new ArrayList<Integer>();
 	
-	private Random random = new Random();
+	private RandomRasterIndexOrder random = RandomRasterIndexOrder.getInstance();
 	
 	private int firstIndexCorner0North_0_0;
 	
@@ -122,8 +122,7 @@ public class TileGridBorderPatternsFlat {
 	}
 	
 	private int getRandomIntBetween(int a, int b) {
-		int value = random.nextInt(b - a) + a ;
-		return value;
+		return this.random.getRandomIntBetween(a, b);
 	}
 
 }

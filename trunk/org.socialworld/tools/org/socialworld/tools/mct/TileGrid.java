@@ -86,8 +86,10 @@ public class TileGrid extends Tile {
 
 	// a string that is used for generation
 	String inputForGeneration;
-	// a list of integer values that a calculated from input string
+	// a list of integer values that are calculated from input string
 	List<Integer> totalValuesForGeneration;
+	
+	
 	int borderValueForGeneration = 0;
 	
 	int cornerMaximaNr = 11114;
@@ -139,6 +141,8 @@ public class TileGrid extends Tile {
 	TileGrid(String input, int tileTypeLevel) {
 		
 		super(TileType.sub);
+		
+		
 		this.tileTypeLevel = tileTypeLevel;
 		this.inputForGeneration = input;
 		while (this.inputForGeneration.length() < 300) {
@@ -983,7 +987,7 @@ public class TileGrid extends Tile {
 			bigBinaer = getBigBinaer(threePack, 1);
 			
 			//for (int index = 0; index < 4; index++) {
-				int index  = rrio.getRandomInt(0, 3);
+				int index  = rrio.getRandomIntBetween(0, 4); // exclusive 4
 				smallBinaer = bigBinaer.substring(6*index, 6*index + 6);
 				smallInt = Integer.parseInt(smallBinaer, 2);
 				typeNew = TileType.getTileTypeForLevelAndRandom(tileTypeLevel, smallInt);
@@ -1007,7 +1011,7 @@ public class TileGrid extends Tile {
 			bigBinaer = getBigBinaer(threePack, 1);
 			
 //			for (int index = 0; index < 6; index++) {
-				int index  = rrio.getRandomInt(0, 5);
+				int index  = rrio.getRandomIntBetween(0, 6); // exclusive 6
 				smallBinaer = bigBinaer.substring(4*index, 4*index + 4);
 				smallInt = Integer.parseInt(smallBinaer, 2);
 				typeNew = TileType.getTileTypeForLevelAndRandom(tileTypeLevel, smallInt);
@@ -1031,7 +1035,7 @@ public class TileGrid extends Tile {
 			bigBinaer = getBigBinaer(threePack, 1);
 			
 //			for (int index = 0; index < 8; index++) {
-				int index  = rrio.getRandomInt(0, 7);
+				int index  = rrio.getRandomIntBetween(0, 8); // exclusive 8
 				smallBinaer = bigBinaer.substring(3*index, 3*index + 3);
 				smallInt = Integer.parseInt(smallBinaer, 2);
 				typeNew = TileType.getTileTypeForLevelAndRandom(tileTypeLevel, smallInt);
