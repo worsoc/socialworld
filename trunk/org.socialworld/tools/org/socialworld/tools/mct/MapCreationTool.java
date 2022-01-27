@@ -219,9 +219,11 @@ public class MapCreationTool {
 			this.tile.setGlobalNumber(feelAsGlobalNumber);
 		}
 
-		private void setSubWithIsleID(int isleID) {
+		private void setSubWithIsleID(int isleID, int globalNumber) {
 			this.tile = new Tile(TileType.sub);
 			this.isleID = isleID;
+			this.tile.isleID = isleID;
+			this.tile.setGlobalNumber(globalNumber);
 		}
 		
 		private void clearIsleID() {
@@ -258,6 +260,7 @@ public class MapCreationTool {
 		private void setText() {
 			String text;
 			TileGrid sub;
+			int globalNumber; 
 			
 			switch (this.tile.getType()) {
 				case smallStandard: text = "S" + this.tile.getNumber(); break;
@@ -268,14 +271,16 @@ public class MapCreationTool {
 				case mediumAdapter: text = "MA" + this.tile.getNumber(); break;
 				case largeStandard: text = "L" + this.tile.getNumber(); break;
 				case sub: 
+
+					this.isleID = this.tile.getIsleID();
 					
-					if (this.isleID > 0) {
-						text = "isle " + this.isleID;
+					if (this.isleID > 0  ) {
+						text = "isle " + this.isleID ;
 						this.setBackground(new Color(MapDotsColors.getColorForIsle(isleID)));
 						break;
 					}
 					
-					text = ">" + this.tile.getNumber() + "<";
+					text = ">" + this.tile.getNumber() + "<" ;
 					break;
 					
 				case todo: text = "TODO"; break;
@@ -991,6 +996,9 @@ public class MapCreationTool {
 		{
 			e1.printStackTrace();	
 		}
+
+		type = TileType.largeStandard;
+
 		String tileTermWithoutSub = tileTermLoad.replaceAll("\n","");
 		tileTermWithoutSub = tileTermWithoutSub.replaceAll("sub","");
 		parseString(tileTermWithoutSub, 1, null);
@@ -998,7 +1006,6 @@ public class MapCreationTool {
 		
 		fillTileRaster();
 		
-		type = TileType.largeStandard;
 		setTypeComboboxEntries(comboboxEntriesLargeTiles);
 		setTileSelection(possibleTiles.getAllLargeStandardTiles());
 		
@@ -1294,19 +1301,24 @@ public class MapCreationTool {
 		TileType type;
 		int isleID;
 		int tileTypeAlternative;
+		int height;
 		
 		for (int i = 0; i < 81; i++) {
 			
 			type = tileTerm.getTileType(i);
 			number = tileTerm.getTileNumber(i);
 			globalNumber = tileTerm.getTileNumberGlobal(i);
+			height = tileTerm.getHeightLevel(i);
 			isleID = tileTerm.getIsleID(i);
+			
+			raster[i].height = height;
+			
 			tileTypeAlternative = tileTerm.getTileTypeAlternative(i);
 			
 			if (type == TileType.sub) {
 				
 				if (isleID > 0) {
-					raster[i].setSubWithIsleID(isleID);
+					raster[i].setSubWithIsleID(isleID, globalNumber);
 				}
 				else {
 					raster[i].clearIsleID();
@@ -1684,6 +1696,7 @@ public class MapCreationTool {
 		indexString = indexStart;
 		
 		String tile = "";
+		String[] subMetaInfoParts;
 		
 		boolean consumeSubGlobalNumber = false;
 		String subGlbalNumber = "";
@@ -1725,7 +1738,14 @@ public class MapCreationTool {
 				indexString =  parseString(input, indexString + 1, thisTileGrid);
 				child = loadedTileGridFromFile;
 				if (subGlbalNumber.length() > 0) {
-					child.globalNumber = Integer.parseInt(subGlbalNumber);
+					if (subGlbalNumber.contains("#")) {
+						subMetaInfoParts = subGlbalNumber.split("#");
+						child.isleID = Integer.parseInt(subMetaInfoParts[0]);
+						child.globalNumber = Integer.parseInt(subMetaInfoParts[1]);
+					}
+					else {
+						child.globalNumber = Integer.parseInt(subGlbalNumber);
+					}
 				}
 				
 			}
