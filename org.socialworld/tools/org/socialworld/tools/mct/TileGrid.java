@@ -119,7 +119,6 @@ public class TileGrid extends Tile {
 	private int isleHeightChange = 0;
 	private int isleRing = 0;
 	private int isleRingOffset = 0;
-	private int isleID = 0;
 	
 	TileGrid(Tile parent) {
 		super( TileType.sub);
@@ -170,9 +169,6 @@ public class TileGrid extends Tile {
 		return this.isleHeightChange;
 	}
 	
-	int getIsleID()  {
-		return this.isleID;
-	}
 	
 	void setBorderAdapterTypeNorth(TileGridBorderAdapterType type) {
 		this.borderAdapterTypeNorth = type;
@@ -309,7 +305,7 @@ public class TileGrid extends Tile {
 			char firstChar = inputForGeneration.charAt(0);
 			int heigtValue = (int) firstChar;
 			int heightLevel;
-			heightLevel = heigtValue % 81; 
+			heightLevel = 0; //heigtValue % 81; 
 			setHeightLevel(heightLevel);
 		}
 		else {
@@ -2025,6 +2021,7 @@ public class TileGrid extends Tile {
 	
 	public String toString() {
 		String result = "";
+		String resultTmp;
 		String tileString = "";
 		int i;
 		
@@ -2043,7 +2040,14 @@ public class TileGrid extends Tile {
 			result = result + tileString;
 		}
 		
-		if (this.globalNumber > 0) {
+		if (this.isleID > 0) {
+			resultTmp = "sub["+ this.isleID;
+			if (this.globalNumber > 0) {
+				resultTmp = resultTmp + "#" + this.globalNumber ;
+			}
+			result = resultTmp + "](" + result + ")";
+		}
+		else if (this.globalNumber > 0) {
 			result = "sub["+ this.globalNumber + "](" + result + ")";
 		}
 		else {
