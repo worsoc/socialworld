@@ -49,6 +49,7 @@ public class Tile {
 	int alternative = 0;
 	int number;
 	int globalNumber = -2;
+	int isleID = 0;
 	int heightLevel;
 	
 	int heightOffsetFromWest;
@@ -200,6 +201,10 @@ public class Tile {
 	
 	int getGlobalNumber() {
 		return globalNumber;
+	}
+
+	int getIsleID() {
+		return isleID;
 	}
 
 	int getHeightLevel() {
