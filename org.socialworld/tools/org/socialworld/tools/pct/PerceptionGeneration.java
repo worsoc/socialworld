@@ -89,6 +89,7 @@ public class PerceptionGeneration extends Generation{
 				GetValue.getValue(Value.VALUE_BY_NAME_EVENT_CAUSER) + "#" + "<GETVALUE_GETISELEMENTOF_NUMBER>";
 		
 		String description;
+		List<String> ignoreNDEs = new ArrayList<String> ();
 		
 		for (int indexGN = 0; indexGN < allGroupingNumbers.length;  indexGN++ ) {
 			
@@ -99,7 +100,7 @@ public class PerceptionGeneration extends Generation{
 			description = descriptionTemplate.replaceFirst("<GETVALUE_GETISELEMENTOF_NUMBER>", 
 					GetValue.getIsElementOf(allGroupingNumbers[indexGN]));
 			
-			getDotElementConcats(0, lastClassName, kfc, description);
+			getDotElementConcats(0, lastClassName, kfc, description, ignoreNDEs);
 			
 			allDescriptions.addAll(dotElementConcats);
 			
@@ -111,20 +112,37 @@ public class PerceptionGeneration extends Generation{
 	}
 	
 	private void getDotElementConcats(
-			int depth,  String lastClassName, int nrKFC, String dotElementConcat) {
+			int depth,  String lastClassName, int nrKFC, String dotElementConcat, List<String> ignoreNDEs) {
 		
 		String nextDepthDotElementConcat;
 		List<NextDotElement> nextDotElements;
+		boolean ignore;
+		
+		List<String> ignoreNDEsNextDepth;
 		
 		nextDotElements = getNextDotElements(lastClassName, nrKFC);
 		
-		if ((nextDotElements.size()  > 0) && (depth < 5)) {
+		if (nextDotElements.size()  > 0)  {
 			
 			
 			for (NextDotElement nde :  nextDotElements) {
 				
+				// checking for ignoring next dot element
+				ignore = false;
+				for (String elem : ignoreNDEs) {
+					if (nde.nextDotElement.equals(elem)) {
+						ignore = true;
+					}
+				}
+				if (ignore) continue;
+				
 				nextDepthDotElementConcat = dotElementConcat + "." + nde.nextDotElement;
-				getDotElementConcats(depth + 1, nde.className, nrKFC, nextDepthDotElementConcat);
+				
+				ignoreNDEsNextDepth = new ArrayList<String>();
+				ignoreNDEsNextDepth.addAll(ignoreNDEs);
+				ignoreNDEsNextDepth.add(nde.nextDotElement);
+				
+				getDotElementConcats(depth + 1, nde.className, nrKFC, nextDepthDotElementConcat, ignoreNDEsNextDepth);
 				
 			}
 
