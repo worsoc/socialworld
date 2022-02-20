@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.border.*;
 
@@ -14,8 +15,8 @@ import org.socialworld.calculation.expressions.CreateKnowledgeElementExpression;
 
 public class PerceptionCreationTool extends JFrame{
 	
-	JPanel mainPanelOben = new JPanel(new BorderLayout());		// Panel �ber BorerLayxout
-	JPanel mainPanelRight = new JPanel(new BorderLayout());		// Panel �ber BorerLayxout
+	JPanel mainPanelOben = new JPanel(new BorderLayout());		
+	JPanel mainPanelRight = new JPanel(new BorderLayout());	
 	JPanel mainPanelLinksUnten = new JPanel(new BorderLayout());
 	JPanel mainPanelMitte = new JPanel();
 	
@@ -49,13 +50,20 @@ public class PerceptionCreationTool extends JFrame{
 		System.out.println("Hello World");
 
 		PerceptionGeneration pg = new PerceptionGeneration();
-		//String result = pg.generatePerceptionDescription("gfjg48gtdzi57ugjjgkt");
-		String result = pg.generatePerceptionDescription("bnthnhiut8ub849206u0bu0");
+		
+		List<String> result = pg.generateAllPerceptionKnowledgeAtomDescriptions();
+		for (String description : result) {
+			System.out.println(description);
+		}
+
+/*		String result = pg.generatePerceptionDescription("gfjg48gtdzi57ugjjgkt");
+		//String result = pg.generatePerceptionDescription("bnthnhiut8ub849206u0bu0");
 		System.out.println(result);
 		exp = new CreateKnowledgeElementExpression(result);
 		System.out.println(exp.toString());
-		
+*/		
 		System.out.println("Bye, Bye, World");
+
 	}
 	
 	public PerceptionCreationTool() {
@@ -103,7 +111,7 @@ public class PerceptionCreationTool extends JFrame{
 
 		cbFactType2 = new JComboBox();
 	    final String FactTypeListe2_1[] = {"colour", "material"};
-	    final String FactTypeListe2_2[] = {"unear", "binaer", "trinaer"};
+	    final String FactTypeListe2_2[] = {"unaer", "binaer", "trinaer"};
 
         
         String FactTypeListe1[] = {"value", "relation", "property"};
