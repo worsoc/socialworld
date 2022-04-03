@@ -56,7 +56,8 @@ public class PerceptionCreationTool extends JFrame{
 			System.out.println(description);
 		}
 
-/*		String result = pg.generatePerceptionDescription("gfjg48gtdzi57ugjjgkt");
+/*
+		String result = pg.generatePerceptionDescription("gfjg48gtdzi57ugjjgkt");
 		//String result = pg.generatePerceptionDescription("bnthnhiut8ub849206u0bu0");
 		System.out.println(result);
 		exp = new CreateKnowledgeElementExpression(result);
