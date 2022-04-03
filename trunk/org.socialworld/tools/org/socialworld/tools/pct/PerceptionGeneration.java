@@ -57,6 +57,7 @@ public class PerceptionGeneration extends Generation{
 
 		List<String> allDescriptions = new ArrayList<String>();
 		List<String> descriptionsKnowledgeValue;
+		List<String> descriptionsKnowledgeProperty;
 		
 		for (KnowledgeAtomType k_a_t : KnowledgeAtomType.values()) {
 			
@@ -64,6 +65,12 @@ public class PerceptionGeneration extends Generation{
 			case value: 
 				descriptionsKnowledgeValue = generateAllPerceptionKnowledgeValueDescriptions();
 				allDescriptions.addAll(descriptionsKnowledgeValue);
+				break;
+			case property: 
+				descriptionsKnowledgeProperty = generateAllPerceptionKnowledgePropertyDescriptions();
+				allDescriptions.addAll(descriptionsKnowledgeProperty);
+				break;
+			//default:
 			}
 		}
 		
@@ -78,9 +85,7 @@ public class PerceptionGeneration extends Generation{
 		
 		String lastClassName = "SimulationObject";
 		
-//		boolean newPropertyForKFC = false; // new property line for KFC
 		int kfc = -1;
-//		List<Integer> usedKFCNumberSoFar = new ArrayList<Integer>();
 		
 		String descriptionTemplate = "";
 
@@ -108,8 +113,55 @@ public class PerceptionGeneration extends Generation{
 		// "<GETVALUE_GETISELEMENTOF_NUMBER>" = GetValue.getIsElementOf(indexGroupingOfSimulationObjects)
 		
 		return allDescriptions;
+	}
+	
+	
+	private List<String> generateAllPerceptionKnowledgePropertyDescriptions() {
+		
+		List<String> allDescriptions = new ArrayList<String>();
+		
+		String lastClassName = "SimulationObject";
+		
+//		boolean newPropertyForKFC = false; // new property line for KFC
+//		List<Integer> usedKFCNumberSoFar = new ArrayList<Integer>();
+		
+		String descriptionTemplate = "";
+
+		
+		for (KnowledgeFact_Criterion criterion : KnowledgeFact_Criterion.values()) {
+		
+			int kfc = criterion.getIndex();
+			
+			descriptionTemplate = pd_kfc_praefix + kfc + "," + pd_property_praefix;
+			descriptionTemplate += GetValue.getValue(Value.VALUE_BY_NAME_EVENT_PARAMS) + "." +
+					GetValue.getValue(Value.VALUE_BY_NAME_EVENT_CAUSER) + "#" + "<GETVALUE_GETISELEMENTOF_NUMBER>";
+		
+			String description;
+			List<String> ignoreNDEs = new ArrayList<String> ();
+			
+			for (int indexGN = 0; indexGN < allGroupingNumbers.length;  indexGN++ ) {
+				
+				dotElementConcats = new ArrayList<String>();
+				
+				lastClassName = SimulationMetaInformation.PRAEFIX_GROUPING_NUMBER + allGroupingNumbers[indexGN];
+				
+				description = descriptionTemplate.replaceFirst("<GETVALUE_GETISELEMENTOF_NUMBER>", 
+						GetValue.getIsElementOf(allGroupingNumbers[indexGN]));
+				
+				getDotElementConcats(0, lastClassName, kfc, description, ignoreNDEs);
+				
+				allDescriptions.addAll(dotElementConcats);
+				
+			}
+		
+		}
+		// "<GETVALUE_GETISELEMENTOF_NUMBER>" = GetValue.getIsElementOf(indexGroupingOfSimulationObjects)
+		
+		return allDescriptions;
 		
 	}
+	
+	
 	
 	private void getDotElementConcats(
 			int depth,  String lastClassName, int nrKFC, String dotElementConcat, List<String> ignoreNDEs) {
@@ -217,6 +269,11 @@ public class PerceptionGeneration extends Generation{
 						addToResult = false;
 					};
 				}
+				else {
+					if (simulationMetaInformation.checkIsKFCPropertyOnly(propertyClassName) == true ) {
+						addToResult = false;
+					}
+				}
 
 				if (addToResult) {
 					nde = new NextDotElement();
@@ -267,10 +324,18 @@ public class PerceptionGeneration extends Generation{
 				if ( propertyClassName.equals(SimulationMetaInformation.CLASSNAME_ENUM_INDEX)) {
 					
 				}
-				else if (nrKFC >= 0) {
-					if (simulationMetaInformation.checkClassForReturnableKFCs(propertyClassName, kfc) == false ) {
-						addToResult = false;
-					};
+				else {
+					if (nrKFC >= 0) {
+						if (simulationMetaInformation.checkClassForReturnableKFCs(propertyClassName, kfc) == false ) {
+							addToResult = false;
+						}
+					}
+					else {
+						if (simulationMetaInformation.checkIsKFCPropertyOnly(propertyClassName) == true ) {
+							addToResult = false;
+						}
+					}
+
 				}
 				
 				if (addToResult) {
