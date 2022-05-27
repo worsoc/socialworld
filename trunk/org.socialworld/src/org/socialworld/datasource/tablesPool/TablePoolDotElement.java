@@ -88,7 +88,7 @@ public class TablePoolDotElement extends Table {
 		if ((dot_element_id > 0) & (dotelem_function > 0) & (dotelem_value_name.length() > 0)) {
 			
 			statement 	= "INSERT INTO swpool_dot_element (" + ALL_COLUMNS + ") VALUES (" + 
-					dot_element_id + ", " + dotelem_function + ", " + dotelem_value_name + ", " + dotelem_addon + ", " + dotelem_addon_intarg + ", " + dotelem_addon_charsarg + ")";
+					dot_element_id + ", " + dotelem_function + ", '" + dotelem_value_name + "', " + dotelem_addon + ", " + dotelem_addon_intarg + ", '" + dotelem_addon_charsarg + "')";
 			
 			insert(statement);
 		}
