@@ -77,6 +77,28 @@ public class TablePoolDotElemLine extends Table {
 		
 	}
 
+	public int insert( int dotelemline_function, String dotelemline_result_value_name, String dotelemline_result_type ) {
+		String statement;
+		int  dot_elem_line_id = 0;
+		
+		if ( dotelemline_function > 0 ) {
+			
+			dot_elem_line_id = getNewID("swpool_dotelemline", "dot_elem_line_id");
+
+			if (dot_elem_line_id > 0) {
+				
+				statement 	= "INSERT INTO swpool_dotelemline (" + ALL_COLUMNS + ") VALUES (" + 
+						dot_elem_line_id + ", " + dotelemline_function + ", '" + dotelemline_result_value_name + "', '" + dotelemline_result_type  + "')";
+				
+				insert(statement);
+
+			}
+		}
+		
+		return dot_elem_line_id;
+
+	}
+
 	public void insert(int  dot_elem_line_id, int dotelemline_function, String dotelemline_result_value_name, String dotelemline_result_type ) {
 		String statement;
 			
