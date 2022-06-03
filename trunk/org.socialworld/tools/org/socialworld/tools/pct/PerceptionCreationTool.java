@@ -10,6 +10,10 @@ import javax.swing.border.*;
 
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.expressions.CreateKnowledgeElementExpression;
+import org.socialworld.calculation.expressions.GetValue;
+import org.socialworld.datasource.tablesPool.TablePoolDotElem;
+import org.socialworld.datasource.tablesPool.TablePoolDotElemLine;
+import org.socialworld.datasource.tablesPool.TablePoolDotElement;
 
 
 
@@ -72,8 +76,127 @@ public class PerceptionCreationTool extends JFrame{
 		initGUI();	
 	}
 
+	private void addDotElementLine(String dotElementLine) {
+		TablePoolDotElement tableDotElement;
+		int rowCount;
 
-	public void initGUI() {
+		int dot_element_id;
+		int dotElemFunction = 0;
+		String dotElemValueName = "";
+		int dotElemAddon = 0;
+		int dotElemAddonIntArg = 0;
+		String dotElemAddonCharsArg = "";
+		
+		int dot_elem_line_id = 0;
+		int dotelemline_function = 0;
+		String dotElemLineResultValueName;
+		String dotElemLineResultType;
+		
+		String main[];
+		main = dotElementLine.split(":");
+
+		String elems[];
+		elems = main[1].split(".");
+		
+		
+		// new entry for SWPOOL_DOTELEMLINE
+		if (elems.length > 0) {
+			
+			String fct = main[0].substring(0); // later perhaps: substring(0,  main[0].indexOf("("));
+			if (fct.equals(CreateKnowledgeElementExpression.LABEL_KNOWLEDGEVALUE)) {
+				dotelemline_function = 1;
+			}
+			else if (fct.equals(CreateKnowledgeElementExpression.LABEL_KNOWLEDGEPROPERTY)) {
+				dotelemline_function = 2;
+			}
+
+			dotElemLineResultValueName = "";
+			//later perhaps:
+			//main[0].substring( main[0].indexOf("(") + 1, main[0].indexOf(")"));
+			
+			dotElemLineResultType = "";
+			
+			TablePoolDotElemLine tableDotElemLine;
+			tableDotElemLine = new TablePoolDotElemLine();
+
+			// insert new line to table SWPOOL_DOTELEMLINE
+			dot_elem_line_id = tableDotElemLine.insert( dotelemline_function, dotElemLineResultValueName, dotElemLineResultType	);				
+
+		}
+		
+		if (dot_elem_line_id > 0) {
+			
+			TablePoolDotElem tableDotElem;
+			tableDotElem = new TablePoolDotElem();
+			
+			for (int lfdNr = 0; lfdNr < elems.length; lfdNr++) {
+				
+				dotElemFunction = 0;
+				dotElemValueName = "";
+				dotElemAddon = 0;
+				
+				String element = elems[lfdNr];
+				
+				String splitBySharp[];
+				splitBySharp = element.split("#");
+				
+				String fct = splitBySharp[0].substring(0,  splitBySharp[0].indexOf("("));
+				if (fct.equals(GetValue.GETVALUE)) {
+					dotElemFunction = 1;
+				}
+				else if (fct.equals(GetValue.GETPROPERTY)) {
+					dotElemFunction = 2;
+				}
+				
+				dotElemValueName = splitBySharp[0].substring( splitBySharp[0].indexOf("(") + 1, splitBySharp[0].indexOf(")"));
+				
+				if (splitBySharp.length == 2) {
+					
+					String addon = splitBySharp[1].substring(0,  splitBySharp[0].indexOf("("));
+					if (addon.equals(GetValue.GETISELEMENTOF)) {
+						dotElemAddon = 1;
+					}
+					
+					String addonarg = splitBySharp[1].substring( splitBySharp[0].indexOf("(") + 1, splitBySharp[0].indexOf(")"));
+					dotElemAddonIntArg = Integer.parseInt(addonarg);
+				}
+				
+				String whereClause;
+				
+				whereClause = "WHERE dotelem_function = " + dotElemFunction + " and dotelem_value_name = '" + dotElemValueName + "'";
+				if (dotElemAddon > 0 && (dotElemAddonIntArg > 0 || dotElemAddonCharsArg.length() > 0)) {
+					whereClause = whereClause + " and dotelem_addon = " + dotElemAddon;
+					if (dotElemAddonIntArg > 0) {
+						whereClause = whereClause + " and dotelem_addon_intarg = " + dotElemAddonIntArg;
+					}
+					else {
+						whereClause = whereClause + " and dotelem_addon_charsarg = '" + dotElemAddonCharsArg + "'";
+					}
+				}
+				
+				tableDotElement = new TablePoolDotElement();
+				tableDotElement.select(tableDotElement.SELECT_DOT_ELEMENT_ID, whereClause, 	"ORDER BY dot_element_id");
+				rowCount = tableDotElement.rowCount();
+	
+				if (rowCount == 1) {
+					dot_element_id = tableDotElement.getDotElementID(0);
+				}
+				else {
+					// insert new line to table SWPOOL_DOTELEMENT
+					dot_element_id = tableDotElement.insert( dotElemFunction, dotElemValueName, dotElemAddon, dotElemAddonIntArg, dotElemAddonCharsArg);
+				}
+				
+				tableDotElem.insert(dot_elem_line_id, lfdNr + 1, dot_element_id);
+				
+			}
+	
+		}
+
+	}
+
+	
+	
+	private void initGUI() {
 		
 		initPanelOben();
 		initPanelLinksUnten();
