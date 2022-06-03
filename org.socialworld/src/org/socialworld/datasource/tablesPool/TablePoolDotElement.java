@@ -9,6 +9,7 @@ public class TablePoolDotElement extends Table {
 
 	public final  String 	ALL_COLUMNS 		=	" dot_element_id, dotelem_function, dotelem_value_name, dotelem_addon, dotelem_addon_intarg, dotelem_addon_charsarg ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
+	public final  int 		SELECT_DOT_ELEMENT_ID 	= 2;
 
 	int dot_element_id[];
 	int dotelem_function[]; 		
@@ -19,7 +20,7 @@ public class TablePoolDotElement extends Table {
 
 	@Override
 	protected String getTableName() {
-		return "swpool_dot_element";
+		return "swpool_dotelement";
 	}
 
 	@Override
@@ -27,6 +28,8 @@ public class TablePoolDotElement extends Table {
 		switch (selectList) {
 		case SELECT_ALL_COLUMNS:
 			return  ALL_COLUMNS;
+		case SELECT_DOT_ELEMENT_ID:
+			return  " dot_element_id ";
 		default:
 			return ALL_COLUMNS;
 		}
@@ -82,12 +85,33 @@ public class TablePoolDotElement extends Table {
 		
 	}
 
+	public int insert(int dotelem_function, String dotelem_value_name, int dotelem_addon, int dotelem_addon_intarg, String dotelem_addon_charsarg ) {
+		String statement;
+		int dot_element_id = 0;	
+		if ( (dotelem_function > 0) & (dotelem_value_name.length() > 0)) {
+			
+			dot_element_id = getNewID("swpool_dotelement", "dot_element_id");
+			
+			if (dot_element_id > 0) {
+				statement 	= "INSERT INTO swpool_dotelement (" + ALL_COLUMNS + ") VALUES (" + 
+						dot_element_id + ", " + dotelem_function + ", '" + dotelem_value_name + "', " + dotelem_addon + ", " + dotelem_addon_intarg + ", '" + dotelem_addon_charsarg + "')";
+				
+				insert(statement);
+
+			}
+		}
+		
+		return dot_element_id;
+
+		
+	}
+
 	public void insert(int  dot_element_id, int dotelem_function, String dotelem_value_name, int dotelem_addon, int dotelem_addon_intarg, String dotelem_addon_charsarg ) {
 		String statement;
 			
 		if ((dot_element_id > 0) & (dotelem_function > 0) & (dotelem_value_name.length() > 0)) {
 			
-			statement 	= "INSERT INTO swpool_dot_element (" + ALL_COLUMNS + ") VALUES (" + 
+			statement 	= "INSERT INTO swpool_dotelement (" + ALL_COLUMNS + ") VALUES (" + 
 					dot_element_id + ", " + dotelem_function + ", '" + dotelem_value_name + "', " + dotelem_addon + ", " + dotelem_addon_intarg + ", '" + dotelem_addon_charsarg + "')";
 			
 			insert(statement);
@@ -99,7 +123,7 @@ public class TablePoolDotElement extends Table {
 			
 		if (dot_element_id > 0) {
 	
-			statement 	= "DELETE FROM swpool_dot_element WHERE dot_element_id = " + dot_element_id  ;
+			statement 	= "DELETE FROM swpool_dotelement WHERE dot_element_id = " + dot_element_id  ;
 			
 			delete(statement);
 		}
