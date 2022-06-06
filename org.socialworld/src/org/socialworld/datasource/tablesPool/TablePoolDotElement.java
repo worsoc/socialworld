@@ -46,6 +46,9 @@ public class TablePoolDotElement extends Table {
 		case SELECT_ALL_COLUMNS:
 			selectAllColumns( rs);
 			break;
+		case SELECT_DOT_ELEMENT_ID:
+			selectDotElementID( rs);
+			break;
 		default:
 			selectAllColumns( rs);		
 			
@@ -74,6 +77,27 @@ public class TablePoolDotElement extends Table {
 				dotelem_addon[row] = rs.getInt(4);
 				dotelem_addon_intarg[row] = rs.getInt(5);
 				dotelem_addon_charsarg[row] = rs.getString(6);
+				
+				row++;
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			return;
+		}
+		
+	}
+
+	private void selectDotElementID(ResultSet rs) {
+		int row = 0;
+
+
+		dot_element_id = new int[rowCount];
+			
+		try {
+			while (rs.next()) {
+				
+				dot_element_id[row] = rs.getInt(1);
 				
 				row++;
 			}
