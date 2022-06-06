@@ -67,8 +67,8 @@ public class PerceptionGeneration extends Generation{
 				allDescriptions.addAll(descriptionsKnowledgeValue);
 				break;
 			case property: 
-				descriptionsKnowledgeProperty = generateAllPerceptionKnowledgePropertyDescriptions();
-				allDescriptions.addAll(descriptionsKnowledgeProperty);
+				//descriptionsKnowledgeProperty = generateAllPerceptionKnowledgePropertyDescriptions();
+				//allDescriptions.addAll(descriptionsKnowledgeProperty);
 				break;
 			//default:
 			}
