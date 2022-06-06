@@ -124,7 +124,39 @@ public abstract class Table {
 			select(select);
 		}
 		
+		private int selectScalarInt(String completeSelect) {
+			
+			int result = 0;
+			ResultSet rs;
+			rs = connection.executeQuery(completeSelect);
+			
+			try 		{	
+				if (rs.next())			result = rs.getInt(1); 
+			}
+			catch (SQLException e) {
+				e.printStackTrace();
+				rowCount = -1 ;
+				
+				return 0;
+			}
+
+			try 		{	
+				rs.close();
+			}
+			catch (SQLException e) {
+				e.printStackTrace();
+				return 0;
+			}
+		
+			return result;
+		}
+
 		public int rowCount() { return rowCount; }
+		
+		public int getNewID(String tableName, String idName) {
+			String selectGetNewId = "SELECT IFNULL(max(" + idName + "), 0) + 1 FROM " + tableName;
+			return selectScalarInt(selectGetNewId);
+		}
 		
 		protected void insert(String statement) {
 			rowsAffected = connection.executeUpdate(statement);
