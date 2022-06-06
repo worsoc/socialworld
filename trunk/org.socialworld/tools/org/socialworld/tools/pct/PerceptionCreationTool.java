@@ -14,6 +14,7 @@ import org.socialworld.calculation.expressions.GetValue;
 import org.socialworld.datasource.tablesPool.TablePoolDotElem;
 import org.socialworld.datasource.tablesPool.TablePoolDotElemLine;
 import org.socialworld.datasource.tablesPool.TablePoolDotElement;
+import org.socialworld.datasource.tablesPool.TablePoolParseInput;
 
 
 
@@ -47,6 +48,7 @@ public class PerceptionCreationTool extends JFrame{
 	JButton btnAdd = new JButton ("Add");
 	JButton btnSave = new JButton ("SAVE");
 
+	TablePoolParseInput tableParseInput = new TablePoolParseInput();
 	
 	TablePoolDotElement tableDotElement = new TablePoolDotElement();
 	TablePoolDotElemLine tableDotElemLine = new TablePoolDotElemLine();
@@ -62,9 +64,15 @@ public class PerceptionCreationTool extends JFrame{
 		PerceptionGeneration pg = new PerceptionGeneration();
 		
 		List<String> result = pg.generateAllPerceptionKnowledgeAtomDescriptions();
+
+		int lfdNr = 0;
+		int newIDOffset = pct.tableParseInput.getNewID("swpool_parseinputs", "parse_input_id");
+		
 		for (String description : result) {
 			System.out.println(description);
-			pct.addDotElementLine(description);
+			//pct.addDotElementLine(description);
+			//pct.addParseInputString(newIDOffset + lfdNr, description);
+			lfdNr++;
 		}
 
 /*
@@ -83,6 +91,15 @@ public class PerceptionCreationTool extends JFrame{
 		//initGUI();	
 	}
 
+	
+	private void addParseInputString(int id, String dotElementLine) {
+		
+		tableParseInput.insert(id, 1, dotElementLine);
+		
+
+		
+	}
+	
 	private  void addDotElementLine(String dotElementLine) {
 		int rowCount;
 
