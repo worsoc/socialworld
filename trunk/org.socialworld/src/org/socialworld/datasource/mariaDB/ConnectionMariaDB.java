@@ -44,6 +44,7 @@ public class ConnectionMariaDB {
 		
 		try {		
 			connection = DriverManager.getConnection("jdbc:mariadb://localhost:3306/sw1", "sw", "sw");	
+			//connection = DriverManager.getConnection("jdbc:mariadb://207.180.198.144:3306/sw1", "socialworld", "socialworld");	
 		}
 		catch (Exception e) {
 			e.printStackTrace();
