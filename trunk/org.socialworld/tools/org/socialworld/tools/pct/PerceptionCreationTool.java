@@ -47,8 +47,14 @@ public class PerceptionCreationTool extends JFrame{
 	JButton btnAdd = new JButton ("Add");
 	JButton btnSave = new JButton ("SAVE");
 
+	
+	TablePoolDotElement tableDotElement = new TablePoolDotElement();
+	TablePoolDotElemLine tableDotElemLine = new TablePoolDotElemLine();
+	TablePoolDotElem tableDotElem = new TablePoolDotElem();
+
+	
 	public static void main(String args[]) {
-		//new PerceptionCreationTool();
+		PerceptionCreationTool pct = new PerceptionCreationTool();
 
 		CreateKnowledgeElementExpression exp;
 		System.out.println("Hello World");
@@ -58,6 +64,7 @@ public class PerceptionCreationTool extends JFrame{
 		List<String> result = pg.generateAllPerceptionKnowledgeAtomDescriptions();
 		for (String description : result) {
 			System.out.println(description);
+			pct.addDotElementLine(description);
 		}
 
 /*
@@ -72,12 +79,11 @@ public class PerceptionCreationTool extends JFrame{
 	}
 	
 	public PerceptionCreationTool() {
-		super();
-		initGUI();	
+		//super();
+		//initGUI();	
 	}
 
-	private void addDotElementLine(String dotElementLine) {
-		TablePoolDotElement tableDotElement;
+	private  void addDotElementLine(String dotElementLine) {
 		int rowCount;
 
 		int dot_element_id;
@@ -95,18 +101,19 @@ public class PerceptionCreationTool extends JFrame{
 		String main[];
 		main = dotElementLine.split(":");
 
+		String line = main[1];
 		String elems[];
-		elems = main[1].split(".");
+		elems = line.split("\\.");
 		
 		
 		// new entry for SWPOOL_DOTELEMLINE
 		if (elems.length > 0) {
 			
-			String fct = main[0].substring(0); // later perhaps: substring(0,  main[0].indexOf("("));
-			if (fct.equals(CreateKnowledgeElementExpression.LABEL_KNOWLEDGEVALUE)) {
+			String fct = main[0].substring(0) ; // later perhaps: substring(0,  main[0].indexOf("("));
+			if ((fct + ":").equals(CreateKnowledgeElementExpression.LABEL_KNOWLEDGEVALUE)) {
 				dotelemline_function = 1;
 			}
-			else if (fct.equals(CreateKnowledgeElementExpression.LABEL_KNOWLEDGEPROPERTY)) {
+			else if ((fct + ":").equals(CreateKnowledgeElementExpression.LABEL_KNOWLEDGEPROPERTY)) {
 				dotelemline_function = 2;
 			}
 
@@ -116,8 +123,6 @@ public class PerceptionCreationTool extends JFrame{
 			
 			dotElemLineResultType = "";
 			
-			TablePoolDotElemLine tableDotElemLine;
-			tableDotElemLine = new TablePoolDotElemLine();
 
 			// insert new line to table SWPOOL_DOTELEMLINE
 			dot_elem_line_id = tableDotElemLine.insert( dotelemline_function, dotElemLineResultValueName, dotElemLineResultType	);				
@@ -126,8 +131,6 @@ public class PerceptionCreationTool extends JFrame{
 		
 		if (dot_elem_line_id > 0) {
 			
-			TablePoolDotElem tableDotElem;
-			tableDotElem = new TablePoolDotElem();
 			
 			for (int lfdNr = 0; lfdNr < elems.length; lfdNr++) {
 				
@@ -152,13 +155,17 @@ public class PerceptionCreationTool extends JFrame{
 				
 				if (splitBySharp.length == 2) {
 					
-					String addon = splitBySharp[1].substring(0,  splitBySharp[0].indexOf("("));
+					String addon = splitBySharp[1].substring(0,  splitBySharp[1].indexOf("("));
 					if (addon.equals(GetValue.GETISELEMENTOF)) {
 						dotElemAddon = 1;
 					}
 					
-					String addonarg = splitBySharp[1].substring( splitBySharp[0].indexOf("(") + 1, splitBySharp[0].indexOf(")"));
+					String addonarg = splitBySharp[1].substring( splitBySharp[1].indexOf("(") + 1, splitBySharp[1].indexOf(")"));
 					dotElemAddonIntArg = Integer.parseInt(addonarg);
+				}
+				else {
+					dotElemAddonIntArg = 0;
+					dotElemAddonCharsArg = "";
 				}
 				
 				String whereClause;
@@ -174,7 +181,7 @@ public class PerceptionCreationTool extends JFrame{
 					}
 				}
 				
-				tableDotElement = new TablePoolDotElement();
+				//tableDotElement = new TablePoolDotElement();
 				tableDotElement.select(tableDotElement.SELECT_DOT_ELEMENT_ID, whereClause, 	"ORDER BY dot_element_id");
 				rowCount = tableDotElement.rowCount();
 	
