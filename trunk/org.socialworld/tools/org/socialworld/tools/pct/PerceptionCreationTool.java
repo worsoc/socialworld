@@ -67,11 +67,12 @@ public class PerceptionCreationTool extends JFrame{
 
 		int lfdNr = 0;
 		int newIDOffset = pct.tableParseInput.getNewID("swpool_parseinputs", "parse_input_id");
+		int dot_elem_line_id = 0;
 		
 		for (String description : result) {
 			System.out.println(description);
-			//pct.addDotElementLine(description);
-			//pct.addParseInputString(newIDOffset + lfdNr, description);
+			dot_elem_line_id = pct.addDotElementLine(description);
+			pct.addParseInputString(newIDOffset + lfdNr, dot_elem_line_id, description);
 			lfdNr++;
 		}
 
@@ -92,15 +93,15 @@ public class PerceptionCreationTool extends JFrame{
 	}
 
 	
-	private void addParseInputString(int id, String dotElementLine) {
+	private void addParseInputString(int id, int refID, String dotElementLine) {
 		
-		tableParseInput.insert(id, 1, dotElementLine);
+		tableParseInput.insert(id, 1, refID, dotElementLine);
 		
 
 		
 	}
 	
-	private  void addDotElementLine(String dotElementLine) {
+	private  int addDotElementLine(String dotElementLine) {
 		int rowCount;
 
 		int dot_element_id;
@@ -216,6 +217,7 @@ public class PerceptionCreationTool extends JFrame{
 	
 		}
 
+		return dot_elem_line_id;
 	}
 
 	
