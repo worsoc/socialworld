@@ -56,12 +56,15 @@ public class PerceptionCreationTool extends JFrame{
 
 	
 	public static void main(String args[]) {
-		PerceptionCreationTool pct = new PerceptionCreationTool();
-
-		CreateKnowledgeElementExpression exp;
-		System.out.println("Hello World");
 
 		PerceptionGeneration pg = new PerceptionGeneration();
+		CreateKnowledgeElementExpression exp;
+
+
+ 		PerceptionCreationTool pct = new PerceptionCreationTool();
+ 
+		System.out.println("Hello World");
+
 		
 		List<String> result = pg.generateAllPerceptionKnowledgeAtomDescriptions();
 
@@ -75,6 +78,8 @@ public class PerceptionCreationTool extends JFrame{
 			pct.addParseInputString(newIDOffset + lfdNr, dot_elem_line_id, description);
 			lfdNr++;
 		}
+
+		System.out.println(lfdNr);
 
 /*
 		String result = pg.generatePerceptionDescription("gfjg48gtdzi57ugjjgkt");
@@ -128,10 +133,10 @@ public class PerceptionCreationTool extends JFrame{
 		if (elems.length > 0) {
 			
 			String fct = main[0].substring(0) ; // later perhaps: substring(0,  main[0].indexOf("("));
-			if ((fct + ":").equals(CreateKnowledgeElementExpression.LABEL_KNOWLEDGEVALUE)) {
+			if (fct.equals(CreateKnowledgeElementExpression.LABEL_KNOWLEDGEVALUE)) {
 				dotelemline_function = 1;
 			}
-			else if ((fct + ":").equals(CreateKnowledgeElementExpression.LABEL_KNOWLEDGEPROPERTY)) {
+			else if (fct.indexOf(CreateKnowledgeElementExpression.LABEL_KNOWLEDGEPROPERTY) >= 0) {
 				dotelemline_function = 2;
 			}
 

@@ -24,7 +24,6 @@ public class PerceptionGeneration extends Generation{
 	private String pd_source;
 
 	private String pd_value_praefix;
-	private String pd_kfc_praefix;
 	private String pd_property_praefix;
 	
 	
@@ -33,22 +32,23 @@ public class PerceptionGeneration extends Generation{
 	List<String> dotElementConcats;
 	
 	PerceptionGeneration() {
-		pd_subject_causer = CreateKnowledgeElementExpression.LABEL_SUBJECT +
+		pd_subject_causer = CreateKnowledgeElementExpression.LABEL_SUBJECT + ":" +
 							GetValue.getValue(Value.VALUE_BY_NAME_EVENT_PARAMS) + "." +
 							GetValue.getValue(Value.VALUE_BY_NAME_EVENT_CAUSER) + ";";
 		
-		pd_subject_target = CreateKnowledgeElementExpression.LABEL_SUBJECT +
+		pd_subject_target = CreateKnowledgeElementExpression.LABEL_SUBJECT + ":" +
 							GetValue.getValue(Value.VALUE_BY_NAME_EVENT_PARAMS) + "." +
 							GetValue.getValue(Value.VALUE_BY_NAME_EVENT_TARGET) + ";";
 
-		pd_source = CreateKnowledgeElementExpression.LABEL_KNOWLEDGESOURCETYPE + "1," +	// always source type MYSELF
-					CreateKnowledgeElementExpression.LABEL_KNOWLEDGESOURCE + 
-					GetValue.getValue(Value.VALUE_NAME_KNOWLEDGE_SOURCE_MYSELF) + "," ;
+		pd_source = CreateKnowledgeElementExpression.LABEL_KNOWLEDGESOURCETYPE + ":1," +	// always source type MYSELF
+					CreateKnowledgeElementExpression.LABEL_KNOWLEDGESOURCE + ":" +
+					GetValue.getValue(Value.VALUE_NAME_KNOWLEDGE_SOURCE_MYSELF) + ";" ;
 		
-		pd_value_praefix = CreateKnowledgeElementExpression.LABEL_KNOWLEDGEVALUE;
-		pd_kfc_praefix = CreateKnowledgeElementExpression.LABEL_KNOWLEDGEFACTCRITERION;
+		pd_value_praefix = CreateKnowledgeElementExpression.LABEL_KNOWLEDGEVALUE + ":";
 		pd_property_praefix = CreateKnowledgeElementExpression.LABEL_KNOWLEDGEPROPERTY;
+
 		
+
 		initArrayAllGroupingNumbers();
 	}
 	
@@ -63,12 +63,12 @@ public class PerceptionGeneration extends Generation{
 			
 			switch (k_a_t) {
 			case value: 
-				descriptionsKnowledgeValue = generateAllPerceptionKnowledgeValueDescriptions();
-				allDescriptions.addAll(descriptionsKnowledgeValue);
+				//descriptionsKnowledgeValue = generateAllPerceptionKnowledgeValueDescriptions();
+				//allDescriptions.addAll(descriptionsKnowledgeValue);
 				break;
 			case property: 
-				//descriptionsKnowledgeProperty = generateAllPerceptionKnowledgePropertyDescriptions();
-				//allDescriptions.addAll(descriptionsKnowledgeProperty);
+				descriptionsKnowledgeProperty = generateAllPerceptionKnowledgePropertyDescriptions();
+				allDescriptions.addAll(descriptionsKnowledgeProperty);
 				break;
 			//default:
 			}
@@ -132,7 +132,7 @@ public class PerceptionGeneration extends Generation{
 		
 			int kfc = criterion.getIndex();
 			
-			descriptionTemplate = pd_kfc_praefix + kfc + "," + pd_property_praefix;
+			descriptionTemplate =   pd_property_praefix + "(" + kfc + "):";
 			descriptionTemplate += GetValue.getValue(Value.VALUE_BY_NAME_EVENT_PARAMS) + "." +
 					GetValue.getValue(Value.VALUE_BY_NAME_EVENT_CAUSER) + "#" + "<GETVALUE_GETISELEMENTOF_NUMBER>";
 		
@@ -407,7 +407,7 @@ public class PerceptionGeneration extends Generation{
 					break;
 				case 2:
 					// subject causer, source myself, knowledge property for kfc
-					perceptionDescription = pd_subject_causer ;
+					perceptionDescription = pd_subject_causer + pd_source;
 					newSourceElement = true;
 					for (int index = 1; index < bytes.length; index++) {
 						if (newSourceElement == true ) {
@@ -423,7 +423,7 @@ public class PerceptionGeneration extends Generation{
 								perceptionDescription += ";" ;
 							}
 							groupingNumber = getGroupingNumberForIndex(bytes[index]);
-							perceptionDescription += pd_source + pd_kfc_praefix + kfc + "," + pd_property_praefix;
+							perceptionDescription +=  pd_property_praefix + "(" + kfc + "):";
 							perceptionDescription += GetValue.getValue(Value.VALUE_BY_NAME_EVENT_PARAMS) + "." +
 									GetValue.getValue(Value.VALUE_BY_NAME_EVENT_CAUSER) + "#" + GetValue.getIsElementOf(groupingNumber);
 							lastClassName = SimulationMetaInformation.PRAEFIX_GROUPING_NUMBER + groupingNumber;
@@ -432,7 +432,7 @@ public class PerceptionGeneration extends Generation{
 						}
 						else if (newPropertyForKFC == true ) {
 							groupingNumber = getGroupingNumberForIndex(bytes[index]);
-							perceptionDescription += "," + pd_property_praefix;
+							perceptionDescription += "," + pd_property_praefix + "(" + kfc + "):";
 							perceptionDescription += GetValue.getValue(Value.VALUE_BY_NAME_EVENT_PARAMS) + "." +
 									GetValue.getValue(Value.VALUE_BY_NAME_EVENT_CAUSER) + "#" + GetValue.getIsElementOf(groupingNumber);
 							lastClassName = SimulationMetaInformation.PRAEFIX_GROUPING_NUMBER + groupingNumber;
@@ -451,7 +451,7 @@ public class PerceptionGeneration extends Generation{
 					break;
 				case 3:
 					// subject target, source myself, knowledge property for kfc
-					perceptionDescription = pd_subject_target ;
+					perceptionDescription = pd_subject_target + pd_source ;
 					newSourceElement = true;
 					for (int index = 1; index < bytes.length; index++) {
 						if (newSourceElement == true) {
@@ -467,7 +467,7 @@ public class PerceptionGeneration extends Generation{
 								perceptionDescription += ";" ;
 							}
 							groupingNumber = getGroupingNumberForIndex(bytes[index]);
-							perceptionDescription += pd_source + pd_kfc_praefix + kfc + "," + pd_property_praefix;
+							perceptionDescription +=  pd_property_praefix + "(" + kfc + "):";
 							perceptionDescription += GetValue.getValue(Value.VALUE_BY_NAME_EVENT_PARAMS) + "." +
 									GetValue.getValue(Value.VALUE_BY_NAME_EVENT_TARGET) + "#" + GetValue.getIsElementOf(groupingNumber);
 							lastClassName = SimulationMetaInformation.PRAEFIX_GROUPING_NUMBER + groupingNumber;
@@ -476,7 +476,7 @@ public class PerceptionGeneration extends Generation{
 						}
 						else if (newPropertyForKFC == true) {
 							groupingNumber = getGroupingNumberForIndex(bytes[index]);
-							perceptionDescription += "," + pd_property_praefix;
+							perceptionDescription += "," + pd_property_praefix + "(" + kfc + "):";
 							perceptionDescription += GetValue.getValue(Value.VALUE_BY_NAME_EVENT_PARAMS) + "." +
 									GetValue.getValue(Value.VALUE_BY_NAME_EVENT_TARGET) + "#" + GetValue.getIsElementOf(groupingNumber);
 							lastClassName = SimulationMetaInformation.PRAEFIX_GROUPING_NUMBER + groupingNumber;
