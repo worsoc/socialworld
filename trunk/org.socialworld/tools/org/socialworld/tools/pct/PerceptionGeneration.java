@@ -67,8 +67,8 @@ public class PerceptionGeneration extends Generation{
 				//allDescriptions.addAll(descriptionsKnowledgeValue);
 				break;
 			case property: 
-				descriptionsKnowledgeProperty = generateAllPerceptionKnowledgePropertyDescriptions();
-				allDescriptions.addAll(descriptionsKnowledgeProperty);
+				//descriptionsKnowledgeProperty = generateAllPerceptionKnowledgePropertyDescriptions();
+				//allDescriptions.addAll(descriptionsKnowledgeProperty);
 				break;
 			//default:
 			}
@@ -200,7 +200,13 @@ public class PerceptionGeneration extends Generation{
 
 		}
 		else {
-			System.out.println(dotElementConcat);
+			
+			// add Type name to KVal
+			if (nrKFC == -1) {
+				dotElementConcat = dotElementConcat.replaceFirst("KVal", "KVal(" + lastClassName + ")");
+			}
+	
+			//System.out.println(dotElementConcat);
 			dotElementConcats.add(dotElementConcat);
 		}
 		
