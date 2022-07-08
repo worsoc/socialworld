@@ -71,7 +71,7 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 			
 			
 			
-			String[] descriptionKnowledgeSourceElements = main[1].split(",");
+			String[] descriptionKnowledgeSourceElements = main[1].split("&");
 			
 			String descriptionKnowledgeSourceType = descriptionKnowledgeSourceElements[0].substring(LABEL_KNOWLEDGESOURCETYPE.length() + ":".length());
 			Expression knowledgeSourcetype = new Constant(new Value(Type.integer, Value.VALUE_NAME_KNOWLEDGE_SOURCE_TYPE, Integer.parseInt(descriptionKnowledgeSourceType) ));
@@ -85,7 +85,7 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 			
 			for (int indexMain = 2; indexMain < main.length; indexMain++) {
 			
-				String descriptionKnowledgeAtomList[] = main[indexMain].split(",");
+				String descriptionKnowledgeAtomList[] = main[indexMain].split("&");
 			
 				if (descriptionKnowledgeAtomList.length > 0) {
 					
@@ -101,6 +101,8 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 					
 					for (int indexSub = 0; indexSub < descriptionKnowledgeAtomList.length; indexSub++) {
 						
+						String valueName = "";
+						
 /*						if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGEFACTCRITERION) >= 0) {
 							descriptionKnowledgeAtomPart = descriptionKnowledgeAtomList[indexSub].substring(LABEL_KNOWLEDGEFACTCRITERION.length());
 							knowledgeFactCriterion = new Constant(new Value(Type.integer, Value.VALUE_NAME_KNOWLEDGE_PROPERTY_CRITERION, Integer.parseInt(descriptionKnowledgeAtomPart) ));
@@ -111,22 +113,47 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 						}
 */
 						if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGEPROPERTY) >= 0) {
+							
 							descriptionKnowledgeAtomPart = descriptionKnowledgeAtomList[indexSub].substring(descriptionKnowledgeAtomList[indexSub].indexOf(":") + 1);
+//							System.out.println(descriptionKnowledgeAtomList[indexSub]);
+							valueName = Value.VALUE_NAME_KNOWLEDGE_PROPERTY_VALUE + indexSub;
+							if ((descriptionKnowledgeAtomList[indexSub].indexOf(",") < descriptionKnowledgeAtomList[indexSub].indexOf(":")) 
+								&& (descriptionKnowledgeAtomList[indexSub].indexOf(",") < descriptionKnowledgeAtomList[indexSub].indexOf(")"))
+									&& (descriptionKnowledgeAtomList[indexSub].indexOf(",") > descriptionKnowledgeAtomList[indexSub].indexOf("("))) {
+								valueName =		descriptionKnowledgeAtomList[indexSub].
+												substring(descriptionKnowledgeAtomList[indexSub].indexOf(",") + 1, descriptionKnowledgeAtomList[indexSub].indexOf(")"));
+							
+								kfc = descriptionKnowledgeAtomList[indexSub].substring(descriptionKnowledgeAtomList[indexSub].indexOf("(") + 1, descriptionKnowledgeAtomList[indexSub].indexOf(","));
+							}	
+							else {
+								kfc = descriptionKnowledgeAtomList[indexSub].substring(descriptionKnowledgeAtomList[indexSub].indexOf("(") + 1, descriptionKnowledgeAtomList[indexSub].indexOf(")"));
+							}
 
-							kfc = descriptionKnowledgeAtomList[indexSub].substring(descriptionKnowledgeAtomList[indexSub].indexOf("(") + 1, descriptionKnowledgeAtomList[indexSub].indexOf(")"));
 							knowledgeFactCriterion = new Constant(new Value(Type.integer, Value.VALUE_NAME_KNOWLEDGE_PROPERTY_CRITERION, Integer.parseInt(kfc) ));
 							expressions.add(knowledgeFactCriterion);
 							
-							value = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeProperty, descriptionKnowledgeAtomPart, Value.VALUE_NAME_KNOWLEDGE_PROPERTY_VALUE + indexSub);
+							value = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeProperty, descriptionKnowledgeAtomPart, valueName);
 							expressions.add(value);
+							
 							if (knowledgeAtomType == null ) {
 								knowledgeAtomType = KnowledgeAtomType.property;
 							}
 						}
 						else if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGEVALUE) >= 0) {
+							
 							descriptionKnowledgeAtomPart = descriptionKnowledgeAtomList[indexSub].substring(descriptionKnowledgeAtomList[indexSub].indexOf(":") + 1);
-							value = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeValue, descriptionKnowledgeAtomPart, Value.VALUE_NAME_KNOWLEDGE_VALUE_VALUE + indexSub);
+		
+							valueName = Value.VALUE_NAME_KNOWLEDGE_VALUE_VALUE + indexSub;
+							if ((descriptionKnowledgeAtomList[indexSub].indexOf(",") < descriptionKnowledgeAtomList[indexSub].indexOf(":")) 
+									&& (descriptionKnowledgeAtomList[indexSub].indexOf(",") < descriptionKnowledgeAtomList[indexSub].indexOf(")"))
+										&& (descriptionKnowledgeAtomList[indexSub].indexOf(",") > descriptionKnowledgeAtomList[indexSub].indexOf("("))) {
+									valueName =		descriptionKnowledgeAtomList[indexSub].
+													substring(descriptionKnowledgeAtomList[indexSub].indexOf(",") + 1, descriptionKnowledgeAtomList[indexSub].indexOf(")"));
+							}	
+								
+							value = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeValue, descriptionKnowledgeAtomPart, valueName);
 							expressions.add(value);
+							
 							if (knowledgeAtomType == null ) {
 								knowledgeAtomType = KnowledgeAtomType.value;
 							}
