@@ -79,8 +79,8 @@ public class StateAnimal extends StateSimulationObject {
 			new StringTupel(Type.attributeArray.getIndexWithSWTPraefix(), PropertyName.simobj_attributeArray.name()),
 			new StringTupel("Inventory", PropertyName.simobj_inventory.name()),
 			new StringTupel("Knowledge", PropertyName.simobj_knowledge.name()),
-			new StringTupel("Direction", PropertyName.simobj_directionChest.name()),
-			new StringTupel("Direction", PropertyName.simobj_directionActiveMove.name())
+			new StringTupel(new String[] {"Direction", PropertyName.simobj_directionChest.name(), PropertyName.simobj_directionChest.toString()}),
+			new StringTupel(new String[] {"Direction", PropertyName.simobj_directionActiveMove.name(), PropertyName.simobj_directionActiveMove.toString()})
 		} ;
 	
 	public static StateAnimal getInstance(Generation calledFromGeneration) {

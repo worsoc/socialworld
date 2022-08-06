@@ -82,7 +82,8 @@ public class Position extends SimProperty {
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{
-				new StringTupel("SVVector", PropertyName.position_vector.name())} ;
+				new StringTupel(new String[] {"SVVector", PropertyName.position_vector.name(), PropertyName.position_vector.toString()})
+				};
 
 	public static List<StringTupel> getPropertiesMetaInfos() {
 		List<StringTupel> listOfPropertyMetaInfo = SimProperty.getPropertiesMetaInfos();

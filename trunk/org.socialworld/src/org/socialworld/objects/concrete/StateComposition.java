@@ -25,7 +25,8 @@ public class StateComposition extends State {
 
 	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{};
 	private static StringTupel[] propMethodsMetaInfos = new StringTupel[] {
-		new StringTupel("Material", METHODNAME_GET_MAIN_MATERIAL)} ;
+		new StringTupel(new String[] {"Material", METHODNAME_GET_MAIN_MATERIAL, VALUENAME_MAIN_MATERIAL})
+		} ;
 	
 	public static List<StringTupel> getPropertiesMetaInfos() {
 		List<StringTupel> listOfPropertyMetaInfo = State.getPropertiesMetaInfos();

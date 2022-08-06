@@ -48,8 +48,8 @@ public class StatePerceptible extends State {
 	///////////////////////////////////////////////////////////////////////////////////////////
 
 	private static StringTupel[] propertiesMetaInfos = new StringTupel[] {
-			new StringTupel(Type.vector.getIndexWithSWTPraefix() , PropertyName.statePerceptible_cuboid.name()),
-			new StringTupel("Position", PropertyName.statePerceptible_position.name())
+			new StringTupel(new String[] {Type.vector.getIndexWithSWTPraefix() , PropertyName.statePerceptible_cuboid.name(), PropertyName.statePerceptible_cuboid.toString()}),
+			new StringTupel(new String[] {"Position", PropertyName.statePerceptible_position.name(), PropertyName.statePerceptible_position.toString()})
 			} ;
 	private static StringTupel[] propMethodsMetaInfos = new StringTupel[] {} ;
 	

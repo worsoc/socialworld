@@ -26,8 +26,8 @@ public class StateBody extends State {
 
 	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{};
 	private static StringTupel[] propMethodsMetaInfos = new StringTupel[] {
-			new StringTupel("Colour",METHODNAME_GET_FACE_COLOUR),
-			new StringTupel("Colour",METHODNAME_GET_HAIR_COLOUR)
+			new StringTupel(new String[] {"Colour",METHODNAME_GET_FACE_COLOUR, VALUENAME_FACE_COLOUR}),
+			new StringTupel(new String[] {"Colour",METHODNAME_GET_HAIR_COLOUR, VALUENAME_HAIR_COLOUR})
 			} ;
 	
 	public static List<StringTupel> getPropertiesMetaInfos() {

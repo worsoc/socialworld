@@ -20,8 +20,8 @@ public class Direction extends SimProperty {
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
 	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{
-			new StringTupel("SVVector", PropertyName.direction_vector.name()),
-			new StringTupel(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.direction_power.name())
+			new StringTupel(new String[] {"SVVector", PropertyName.direction_vector.name(), PropertyName.direction_vector.toString()}),
+			new StringTupel(new String[] {Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.direction_power.name(), PropertyName.direction_power.toString()})
 			} ;
 
 	public static List<StringTupel> getPropertiesMetaInfos() {

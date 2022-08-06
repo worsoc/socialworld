@@ -75,8 +75,8 @@ public abstract class StateSimulationObject extends ListenedBase {
 
 	protected List<StringTupel> listOfPropertyMetaInfo;
 	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{
-		new StringTupel("Position", PropertyName.simobj_position.name()),
-		new StringTupel("Direction", PropertyName.simobj_directionMove.name()),
+		new StringTupel(new String[] {"Position", PropertyName.simobj_position.name(), PropertyName.simobj_position.toString()}),
+		new StringTupel(new String[] {"Direction", PropertyName.simobj_directionMove.name(), PropertyName.simobj_directionMove.toString()}),
 		} ;
 	
 	protected StateSimulationObject(Generation calledFromGeneration) {

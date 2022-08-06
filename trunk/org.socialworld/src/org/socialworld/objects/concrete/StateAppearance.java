@@ -24,7 +24,8 @@ public class StateAppearance extends State {
 
 	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{};
 	private static StringTupel[] propMethodsMetaInfos = new StringTupel[] {
-				new StringTupel("Colour",METHODNAME_GET_MAIN_COLOR)} ;
+				new StringTupel(new String[] {"Colour", METHODNAME_GET_MAIN_COLOR, VALUENAME_MAIN_COLOR})
+				};
 	
 	public static List<StringTupel> getPropertiesMetaInfos() {
 		List<StringTupel> listOfPropertyMetaInfo = State.getPropertiesMetaInfos();
