@@ -73,7 +73,9 @@ public class Scheduler{
 	
 	public void calculatePositionChangedByEvent(final Event event, final StateSimulationObject state, final HiddenSimulationObject hiddenWriteAccess) {
 
-		threadPositionCalculator.calculatePositionChangedByEvent(event, state,  hiddenWriteAccess);
+		if (event.getEventType().isRelevantForChangingPosition()) {
+			threadPositionCalculator.calculatePositionChangedByEvent(event, state,  hiddenWriteAccess);
+		}
 
 	}
 	
@@ -91,8 +93,9 @@ public class Scheduler{
 	
 	public void calculatePerception(final Event event, final StateAnimal stateAnimal, final HiddenAnimal hiddenWriteAccess) {
 
-		threadKnowledgeCalculator.calculatePerception(event,  stateAnimal,  hiddenWriteAccess);
-
+		if (event.getEventType().isEventToPercipient()) {
+			threadKnowledgeCalculator.calculatePerception(event,  stateAnimal,  hiddenWriteAccess);
+		}
 	}
 
 	public void calculateAttributesChangedByEvent(final Event event, final StateAnimal stateAnimal, final HiddenAnimal hiddenWriteAccess) {
