@@ -23,9 +23,11 @@ public class StateDispersibility extends State {
 	///////////////////////////////////////////////////////////////////////////////////////////
 
 	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{
-			new StringTupel(Type.floatingpoint.getIndexWithSWTPraefix(),PropertyName.stateDispersibility_widthWings.name()),
-			new StringTupel(Type.integer.getIndexWithSWTPraefix(), PropertyName.stateDispersibility_numberWings.name()),
-			new StringTupel("Direction", PropertyName.stateDispersibility_directionFly.name()),} ;
+			new StringTupel(new String[] {Type.floatingpoint.getIndexWithSWTPraefix(),PropertyName.stateDispersibility_widthWings.name(),PropertyName.stateDispersibility_widthWings.toString()}),
+			new StringTupel(new String[] {Type.integer.getIndexWithSWTPraefix(), PropertyName.stateDispersibility_numberWings.name(), PropertyName.stateDispersibility_numberWings.toString()}),
+			new StringTupel(new String[] {"Direction", PropertyName.stateDispersibility_directionFly.name(), PropertyName.stateDispersibility_directionFly.toString()})
+			} ;
+	
 	private static StringTupel[] propMethodsMetaInfos = new StringTupel[] {} ;
 	
 	public static List<StringTupel> getPropertiesMetaInfos() {

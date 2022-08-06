@@ -72,12 +72,12 @@ public class Inventory extends SimProperty {
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
 	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{
-			new StringTupel(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_shirt.name()),
-			new StringTupel(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_trousers.name()),
-			new StringTupel(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_shoes.name()),
-			new StringTupel(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_cap.name()),
-			new StringTupel(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_leftHand.name()),
-			new StringTupel(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_rightHand.name())
+			new StringTupel(new String[] {Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_shirt.name(), PropertyName.inventory_shirt.toString()}),
+			new StringTupel(new String[] {Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_trousers.name(), PropertyName.inventory_trousers.toString()}),
+			new StringTupel(new String[] {Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_shoes.name(), PropertyName.inventory_shoes.toString()}),
+			new StringTupel(new String[] {Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_cap.name(), PropertyName.inventory_cap.toString()}),
+			new StringTupel(new String[] {Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_leftHand.name(), PropertyName.inventory_leftHand.toString()}),
+			new StringTupel(new String[] {Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_rightHand.name(), PropertyName.inventory_rightHand.toString()})
 			} ;
 
 	public static List<StringTupel> getPropertiesMetaInfos() {

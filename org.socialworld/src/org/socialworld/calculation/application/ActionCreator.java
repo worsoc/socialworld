@@ -49,6 +49,7 @@ import org.socialworld.calculation.descriptions.State2ActionDescription;
 import org.socialworld.collections.CapacityQueue;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.Event;
+import org.socialworld.core.EventType;
 import org.socialworld.core.SocialWorldThread;
 
 public class ActionCreator extends SocialWorldThread {
@@ -61,7 +62,7 @@ public class ActionCreator extends SocialWorldThread {
 	
 	private static String namePropertyActionType = Value.VALUE_BY_NAME_ACTION_TYPE;
 	
-	private int sleepTime = 5;
+	private int sleepTime = 2;
 	private int sizeThreashold;
 	
 	/**
@@ -69,8 +70,8 @@ public class ActionCreator extends SocialWorldThread {
 	 */
 	private ActionCreator() {
 		
-		this.reactors = new CapacityQueue<CollectionElementReactor>("reactors", 1000);
-		this.actors = new CapacityQueue<CollectionElementActor>("actors", 1000);
+		this.reactors = new CapacityQueue<CollectionElementReactor>("reactors", 10000);
+		this.actors = new CapacityQueue<CollectionElementActor>("actors", 10000);
 		
 		String[] actionPropertyNames;
 		actionPropertyNames = ActionType.getStandardPropertyNames();
@@ -92,6 +93,8 @@ public class ActionCreator extends SocialWorldThread {
 			
 			if (this.reactors.size() > 0) calculateReaction();
 			if (this.actors.size() > 0) calculateAction();
+			if (this.reactors.size() > 0) calculateReaction();
+			if (this.reactors.size() > 0) calculateReaction();
 			
 			try {
 				sleep(sleepTime);
@@ -105,9 +108,14 @@ public class ActionCreator extends SocialWorldThread {
 	
 	final void  createReaction( final Event event,	final StateSimulationObject stateSimObj,	final HiddenSimulationObject hiddenSimObj) {
 		if (event != null && stateSimObj != null && hiddenSimObj != null) {
-			if (!this.reactors.add(new CollectionElementReactor(event, stateSimObj, hiddenSimObj))) {
-				// SUB_THREAD_IMPLEMENTATION what shall happen if the queue is filled
-			};
+			if (this.reactors.size() > sizeThreashold && event.getEventType().isEventToPercipient()) {
+				
+			}
+			else {
+				if (!this.reactors.add(new CollectionElementReactor(event, stateSimObj, hiddenSimObj))) {
+					// SUB_THREAD_IMPLEMENTATION what shall happen if the queue is filled
+				};
+			}
 		}
 	}
 	
@@ -127,17 +135,27 @@ public class ActionCreator extends SocialWorldThread {
 	private void calculateReaction() {
 
 		// DEBUG Output falls size zu groß
-		
+
+/*		
 		if (this.reactors.size() > sizeThreashold) {
 			System.out.println("ActionCreator.calculateReaction(): this.reactors.size() " + this.reactors.size());
 		}
-		
+*/		
 		
 		CollectionElementReactor reactor = this.reactors.remove();
 		if (reactor != null) {
 
 			
 			Event event = reactor.getEvent();
+			
+
+			if ((event.getEventType() == EventType.candidatesMoveWalk) ||
+					(event.getEventType() == EventType.candidatesMoveRun) )
+				{
+					int breakpoint = 0;
+					breakpoint++;
+				}
+			
 			
 			
 			StateSimulationObject stateReactor  = reactor.getState();
