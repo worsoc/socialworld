@@ -46,9 +46,9 @@ public class CapacityQueue<Type> {
 	public boolean add(Type element) {
 		
 		if (this.size == this.capacity) {
-			System.out.println("------------------------");
-			System.out.println("CapacityQueue " + this.name + " is full!!!");
-			System.out.println("------------------------");
+	//		System.out.println("------------------------");
+	//		System.out.println("CapacityQueue " + this.name + " is full!!!");
+	//		System.out.println("------------------------");
 			return false;
 		}
 		else {

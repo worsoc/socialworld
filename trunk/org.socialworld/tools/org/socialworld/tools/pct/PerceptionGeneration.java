@@ -11,7 +11,7 @@ import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.tools.Generation;
 import org.socialworld.tools.SimulationMetaInformation;
-import org.socialworld.tools.StringPair;
+import org.socialworld.tools.StringTupel;
 
 public class PerceptionGeneration extends Generation{
 
@@ -243,11 +243,11 @@ public class PerceptionGeneration extends Generation{
 		List<NextDotElement> nextDotElements = new ArrayList<NextDotElement>();
 		NextDotElement nde;
 		
-		StringPair selectedProperty = new StringPair("", "");
-		StringPair selectedPropertyFromMethod = new StringPair("", "");
+		StringTupel selectedProperty = new StringTupel("", "");
+		StringTupel selectedPropertyFromMethod = new StringTupel("", "");
 		
-		List<StringPair> returnablePropertyTypes;
-		List<StringPair> returnablePropertyFromMethodTypes;
+		List<StringTupel> returnablePropertyTypes;
+		List<StringTupel> returnablePropertyFromMethodTypes;
 		
 		String propertyClassName;
 		
@@ -537,11 +537,11 @@ public class PerceptionGeneration extends Generation{
 		
 		NextDotElement result = new NextDotElement();
 		
-		StringPair selectedProperty = new StringPair("", "");
-		StringPair selectedPropertyFromMethod = new StringPair("", "");
+		StringTupel selectedProperty = new StringTupel("", "");
+		StringTupel selectedPropertyFromMethod = new StringTupel("", "");
 		
-		List<StringPair> returnablePropertyTypes;
-		List<StringPair> returnablePropertyFromMethodTypes;
+		List<StringTupel> returnablePropertyTypes;
+		List<StringTupel> returnablePropertyFromMethodTypes;
 		
 		String propertyClassName;
 		

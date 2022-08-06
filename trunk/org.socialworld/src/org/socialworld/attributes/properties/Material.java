@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.tools.SimulationMetaInformation;
-import org.socialworld.tools.StringPair;
+import org.socialworld.tools.StringTupel;
 
 public enum Material {
 
@@ -45,9 +45,9 @@ public enum Material {
 	////////////////////////////////meta information    ////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
-	public static List<StringPair> getPropMethodsMetaInfos() {
-		List<StringPair> listOfPropMethodMetaInfo = new ArrayList<StringPair>();
-		listOfPropMethodMetaInfo.add(new StringPair(SimulationMetaInformation.CLASSNAME_ENUM_INDEX, SimulationMetaInformation.METHODNAME_ENUM_GETINDEX));
+	public static List<StringTupel> getPropMethodsMetaInfos() {
+		List<StringTupel> listOfPropMethodMetaInfo = new ArrayList<StringTupel>();
+		listOfPropMethodMetaInfo.add(new StringTupel(SimulationMetaInformation.CLASSNAME_ENUM_INDEX, SimulationMetaInformation.METHODNAME_ENUM_GETINDEX));
 		return listOfPropMethodMetaInfo;
 	}
 

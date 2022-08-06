@@ -27,7 +27,7 @@ import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
-import org.socialworld.tools.StringPair;
+import org.socialworld.tools.StringTupel;
 
 public class SVVector extends SavedValue {
 
@@ -37,15 +37,15 @@ public class SVVector extends SavedValue {
 //////////////////static instance for meta information    ///////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	private static StringPair[] propertiesMetaInfos = new StringPair[]{
- 			new StringPair(Type.vector.getIndexWithSWTPraefix(), PropertyName.vector.name()),
- 			new StringPair(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.vector_x.name()),
- 			new StringPair(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.vector_y.name()),
- 			new StringPair(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.vector_z.name())
+	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{
+ 			new StringTupel(Type.vector.getIndexWithSWTPraefix(), PropertyName.vector.name()),
+ 			new StringTupel(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.vector_x.name()),
+ 			new StringTupel(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.vector_y.name()),
+ 			new StringTupel(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.vector_z.name())
  			} ;
 
-	public static List<StringPair> getPropertiesMetaInfos() {
-		List<StringPair> listOfPropertyMetaInfo = SavedValue.getPropertiesMetaInfos();
+	public static List<StringTupel> getPropertiesMetaInfos() {
+		List<StringTupel> listOfPropertyMetaInfo = SavedValue.getPropertiesMetaInfos();
 		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
 			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}

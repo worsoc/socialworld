@@ -34,7 +34,7 @@ import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.calculation.geometry.VectorMapper;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.State;
-import org.socialworld.tools.StringPair;
+import org.socialworld.tools.StringTupel;
 
 public class StateSeer extends State {
 
@@ -53,26 +53,26 @@ public class StateSeer extends State {
 	//////////////////static instance for meta information    ///////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 
-	private static StringPair[] propertiesMetaInfos = new StringPair[]{
-			new StringPair("Direction", PropertyName.stateSeer_directionView.name()),
-			new StringPair(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.stateSeer_angleViewPerceivingEvents.name()),
-			new StringPair(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.stateSeer_angleViewPerceivingEventsInRadians.name()),
-			new StringPair(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.stateSeer_angleViewPerceivingObjects.name()),
-			new StringPair(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.stateSeer_angleViewPerceivingObjectsInRadians.name()),
-			new StringPair(Type.integer.getIndexWithSWTPraefix(), PropertyName.stateSeer_bestPercipiencePerpendicular.name()),
-			new StringPair(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.stateSeer_sizeDistanceRelationThreshold.name())} ;
-	private static StringPair[] propMethodsMetaInfos = new StringPair[] {} ;
+	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{
+			new StringTupel("Direction", PropertyName.stateSeer_directionView.name()),
+			new StringTupel(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.stateSeer_angleViewPerceivingEvents.name()),
+			new StringTupel(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.stateSeer_angleViewPerceivingEventsInRadians.name()),
+			new StringTupel(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.stateSeer_angleViewPerceivingObjects.name()),
+			new StringTupel(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.stateSeer_angleViewPerceivingObjectsInRadians.name()),
+			new StringTupel(Type.integer.getIndexWithSWTPraefix(), PropertyName.stateSeer_bestPercipiencePerpendicular.name()),
+			new StringTupel(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.stateSeer_sizeDistanceRelationThreshold.name())} ;
+	private static StringTupel[] propMethodsMetaInfos = new StringTupel[] {} ;
 	
-	public static List<StringPair> getPropertiesMetaInfos() {
-		List<StringPair> listOfPropertyMetaInfo = State.getPropertiesMetaInfos();
+	public static List<StringTupel> getPropertiesMetaInfos() {
+		List<StringTupel> listOfPropertyMetaInfo = State.getPropertiesMetaInfos();
 		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
 			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}
 		return listOfPropertyMetaInfo;
 	}
 
-	public static List<StringPair> getPropMethodsMetaInfos() {
-		List<StringPair> listOfPropMethodMetaInfo = State.getPropMethodsMetaInfos();
+	public static List<StringTupel> getPropMethodsMetaInfos() {
+		List<StringTupel> listOfPropMethodMetaInfo = State.getPropMethodsMetaInfos();
 		for (int indexAdd = 0; indexAdd < propMethodsMetaInfos.length; indexAdd++) {
 			listOfPropMethodMetaInfo.add(propMethodsMetaInfos[indexAdd]);
 		}

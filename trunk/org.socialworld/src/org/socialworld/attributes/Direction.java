@@ -7,7 +7,7 @@ import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
-import org.socialworld.tools.StringPair;
+import org.socialworld.tools.StringTupel;
 
 public class Direction extends SimProperty {
 
@@ -19,13 +19,13 @@ public class Direction extends SimProperty {
 //////////////////  static instance for meta information    ///////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
-	private static StringPair[] propertiesMetaInfos = new StringPair[]{
-			new StringPair("SVVector", PropertyName.direction_vector.name()),
-			new StringPair(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.direction_power.name())
+	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{
+			new StringTupel("SVVector", PropertyName.direction_vector.name()),
+			new StringTupel(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.direction_power.name())
 			} ;
 
-	public static List<StringPair> getPropertiesMetaInfos() {
-		List<StringPair> listOfPropertyMetaInfo = SimProperty.getPropertiesMetaInfos();
+	public static List<StringTupel> getPropertiesMetaInfos() {
+		List<StringTupel> listOfPropertyMetaInfo = SimProperty.getPropertiesMetaInfos();
 		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
 			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}

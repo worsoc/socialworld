@@ -22,7 +22,7 @@
 package org.socialworld.objects;
 
 import org.socialworld.tools.Generation;
-import org.socialworld.tools.StringPair;
+import org.socialworld.tools.StringTupel;
 
 /**
  * @author Mathias Sikos
@@ -35,7 +35,7 @@ public class StateMagic extends StateSimulationObject {
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
 	private static StateMagic singletonDummyForGenerationTools;
-	private static StringPair[] propertiesMetaInfos = new StringPair[]{
+	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{
 		} ;
 	
 	public static StateMagic getInstance(Generation calledFromGeneration) {

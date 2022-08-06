@@ -30,7 +30,7 @@ import org.socialworld.attributes.percipience.PercipienceType;
 import org.socialworld.objects.Magic;
 import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.StatePerceptible;
-import org.socialworld.tools.StringPair;
+import org.socialworld.tools.StringTupel;
 
 public class Lightning extends Magic {
 
@@ -38,12 +38,12 @@ public class Lightning extends Magic {
 ////////////////////////////////meta information    ////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	private static StringPair[] propertiesMetaInfos = new StringPair[]{
+	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{
 			} ;
 	
 	
-	public static List<StringPair> getPropertiesMetaInfos() {
-		List<StringPair> listOfPropertyMetaInfo = Magic.getPropertiesMetaInfos();
+	public static List<StringTupel> getPropertiesMetaInfos() {
+		List<StringTupel> listOfPropertyMetaInfo = Magic.getPropertiesMetaInfos();
 		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
 			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}

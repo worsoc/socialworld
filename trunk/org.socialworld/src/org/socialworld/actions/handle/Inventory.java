@@ -34,7 +34,7 @@ import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.SimulationObject_Type;
 import org.socialworld.objects.properties.IWeapon;
-import org.socialworld.tools.StringPair;
+import org.socialworld.tools.StringTupel;
 
 /**
  * The class collects all informations about a
@@ -71,17 +71,17 @@ public class Inventory extends SimProperty {
 //////////////////  static instance for meta information    ///////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
-	private static StringPair[] propertiesMetaInfos = new StringPair[]{
-			new StringPair(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_shirt.name()),
-			new StringPair(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_trousers.name()),
-			new StringPair(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_shoes.name()),
-			new StringPair(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_cap.name()),
-			new StringPair(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_leftHand.name()),
-			new StringPair(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_rightHand.name())
+	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{
+			new StringTupel(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_shirt.name()),
+			new StringTupel(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_trousers.name()),
+			new StringTupel(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_shoes.name()),
+			new StringTupel(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_cap.name()),
+			new StringTupel(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_leftHand.name()),
+			new StringTupel(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_rightHand.name())
 			} ;
 
-	public static List<StringPair> getPropertiesMetaInfos() {
-		List<StringPair> listOfPropertyMetaInfo = SimProperty.getPropertiesMetaInfos();
+	public static List<StringTupel> getPropertiesMetaInfos() {
+		List<StringTupel> listOfPropertyMetaInfo = SimProperty.getPropertiesMetaInfos();
 		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
 			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}

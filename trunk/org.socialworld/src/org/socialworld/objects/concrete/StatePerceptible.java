@@ -34,7 +34,7 @@ import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.Animal;
 import org.socialworld.objects.State;
-import org.socialworld.tools.StringPair;
+import org.socialworld.tools.StringTupel;
 
 public class StatePerceptible extends State {
 
@@ -47,22 +47,22 @@ public class StatePerceptible extends State {
 	//////////////////static instance for meta information    ///////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 
-	private static StringPair[] propertiesMetaInfos = new StringPair[] {
-			new StringPair(Type.vector.getIndexWithSWTPraefix() , PropertyName.statePerceptible_cuboid.name()),
-			new StringPair("Position", PropertyName.statePerceptible_position.name())
+	private static StringTupel[] propertiesMetaInfos = new StringTupel[] {
+			new StringTupel(Type.vector.getIndexWithSWTPraefix() , PropertyName.statePerceptible_cuboid.name()),
+			new StringTupel("Position", PropertyName.statePerceptible_position.name())
 			} ;
-	private static StringPair[] propMethodsMetaInfos = new StringPair[] {} ;
+	private static StringTupel[] propMethodsMetaInfos = new StringTupel[] {} ;
 	
-	public static List<StringPair> getPropertiesMetaInfos() {
-		List<StringPair> listOfPropertyMetaInfo = State.getPropertiesMetaInfos();
+	public static List<StringTupel> getPropertiesMetaInfos() {
+		List<StringTupel> listOfPropertyMetaInfo = State.getPropertiesMetaInfos();
 		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
 			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}
 		return listOfPropertyMetaInfo;
 	}
 
-	public static List<StringPair> getPropMethodsMetaInfos() {
-		List<StringPair> listOfPropMethodMetaInfo = State.getPropMethodsMetaInfos();
+	public static List<StringTupel> getPropMethodsMetaInfos() {
+		List<StringTupel> listOfPropMethodMetaInfo = State.getPropMethodsMetaInfos();
 		for (int indexAdd = 0; indexAdd < propMethodsMetaInfos.length; indexAdd++) {
 			listOfPropMethodMetaInfo.add(propMethodsMetaInfos[indexAdd]);
 		}

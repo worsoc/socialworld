@@ -12,7 +12,7 @@ import org.socialworld.calculation.ValueProperty;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.State;
-import org.socialworld.tools.StringPair;
+import org.socialworld.tools.StringTupel;
 
 public class StateInventory extends State {
 
@@ -23,26 +23,26 @@ public class StateInventory extends State {
 	//////////////////static instance for meta information    ///////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 
-	private static StringPair[] propertiesMetaInfos = new StringPair[]{
-		new StringPair(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_shirt.name()),
-		new StringPair(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_trousers.name()),
-		new StringPair(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_shoes.name()),
-		new StringPair(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_cap.name()),
-		new StringPair(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_leftHand.name()),
-		new StringPair(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_rightHand.name())
+	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{
+		new StringTupel(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_shirt.name()),
+		new StringTupel(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_trousers.name()),
+		new StringTupel(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_shoes.name()),
+		new StringTupel(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_cap.name()),
+		new StringTupel(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_leftHand.name()),
+		new StringTupel(Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_rightHand.name())
 		} ;
-	private static StringPair[] propMethodsMetaInfos = new StringPair[] {} ;
+	private static StringTupel[] propMethodsMetaInfos = new StringTupel[] {} ;
 	
-	public static List<StringPair> getPropertiesMetaInfos() {
-		List<StringPair> listOfPropertyMetaInfo = State.getPropertiesMetaInfos();
+	public static List<StringTupel> getPropertiesMetaInfos() {
+		List<StringTupel> listOfPropertyMetaInfo = State.getPropertiesMetaInfos();
 		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
 			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}
 		return listOfPropertyMetaInfo;
 	}
 
-	public static List<StringPair> getPropMethodsMetaInfos() {
-		List<StringPair> listOfPropMethodMetaInfo = State.getPropMethodsMetaInfos();
+	public static List<StringTupel> getPropMethodsMetaInfos() {
+		List<StringTupel> listOfPropMethodMetaInfo = State.getPropMethodsMetaInfos();
 		for (int indexAdd = 0; indexAdd < propMethodsMetaInfos.length; indexAdd++) {
 			listOfPropMethodMetaInfo.add(propMethodsMetaInfos[indexAdd]);
 		}

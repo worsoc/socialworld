@@ -31,20 +31,21 @@ import org.socialworld.objects.concrete.StateComposition;
 import org.socialworld.objects.concrete.StateEatable;
 import org.socialworld.objects.concrete.StatePerceptible;
 import org.socialworld.objects.concrete.eatable.Fruit;
+import org.socialworld.objects.properties.IEatable;
 import org.socialworld.objects.properties.IThrowable;
-import org.socialworld.tools.StringPair;
+import org.socialworld.tools.StringTupel;
 
-public class Apple extends Fruit implements IThrowable {
+public class Apple extends Fruit implements IEatable, IThrowable {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////meta information    ////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	private static StringPair[] propertiesMetaInfos = new StringPair[]{
+	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{
 			} ;
 
-	public static List<StringPair> getPropertiesMetaInfos() {
-		List<StringPair> listOfPropertyMetaInfo = Fruit.getPropertiesMetaInfos();
+	public static List<StringTupel> getPropertiesMetaInfos() {
+		List<StringTupel> listOfPropertyMetaInfo = Fruit.getPropertiesMetaInfos();
 		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
 			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}

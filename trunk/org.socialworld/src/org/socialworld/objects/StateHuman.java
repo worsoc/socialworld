@@ -37,7 +37,7 @@ import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenHuman;
 import org.socialworld.objects.properties.IWeapon;
 import org.socialworld.tools.Generation;
-import org.socialworld.tools.StringPair;
+import org.socialworld.tools.StringTupel;
 
 /**
  * @author Mathias Sikos
@@ -58,7 +58,7 @@ public class StateHuman extends StateAnimal {
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
 	private static StateHuman singletonDummyForGenerationTools;
-	private static StringPair[] propertiesMetaInfos = new StringPair[]{
+	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{
 		} ;
 	
 	public static StateHuman getInstance(Generation calledFromGeneration) {

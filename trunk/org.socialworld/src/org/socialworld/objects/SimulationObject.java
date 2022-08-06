@@ -52,7 +52,7 @@ import org.socialworld.objects.concrete.*;
 import org.socialworld.objects.connections.Connection;
 import org.socialworld.objects.connections.ConnectionType;
 import org.socialworld.objects.properties.IPerceptible;
-import org.socialworld.tools.StringPair;
+import org.socialworld.tools.StringTupel;
 
 /**
  * Every simulation object (actor in the simulation) is inherited by the abstract class SimulationObject.
@@ -88,15 +88,15 @@ public abstract class SimulationObject implements IPerceptible {
 ////////////////////////////////   meta information    ////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	private static StringPair[] propertiesMetaInfos = new StringPair[]{
-			new StringPair("StatePerceptible", PropertyName.statePerceptible.name()),
-			new StringPair("StateAppearance", PropertyName.stateAppearance.name()),
-			new StringPair("StateComposition", PropertyName.stateComposition.name())
+	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{
+			new StringTupel("StatePerceptible", PropertyName.statePerceptible.name()),
+			new StringTupel("StateAppearance", PropertyName.stateAppearance.name()),
+			new StringTupel("StateComposition", PropertyName.stateComposition.name())
 			} ;
-	private static StringPair[] propMethodsMetaInfos = new StringPair[] {} ;
+	private static StringTupel[] propMethodsMetaInfos = new StringTupel[] {} ;
 
-	public static List<StringPair> getPropertiesMetaInfos() {
-		List<StringPair> listOfPropertyMetaInfo = new ArrayList<StringPair>();
+	public static List<StringTupel> getPropertiesMetaInfos() {
+		List<StringTupel> listOfPropertyMetaInfo = new ArrayList<StringTupel>();
 		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
 			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}
@@ -104,8 +104,8 @@ public abstract class SimulationObject implements IPerceptible {
 	}
 	
 	
-	public static List<StringPair> getPropMethodsMetaInfos() {
-		List<StringPair> listOfPropMethodMetaInfo = new ArrayList<StringPair>();
+	public static List<StringTupel> getPropMethodsMetaInfos() {
+		List<StringTupel> listOfPropMethodMetaInfo = new ArrayList<StringTupel>();
 		for (int indexAdd = 0; indexAdd < propMethodsMetaInfos.length; indexAdd++) {
 			listOfPropMethodMetaInfo.add(propMethodsMetaInfos[indexAdd]);
 		}

@@ -1,11 +1,11 @@
 package org.socialworld.tools;
 
-public class StringPair {
+public class StringTupel {
 
 	private String left;
 	private String right;
 	
-	public StringPair(String left, String right) {
+	public StringTupel(String left, String right) {
 		this.left = left;
 		this.right = right;
 	}
