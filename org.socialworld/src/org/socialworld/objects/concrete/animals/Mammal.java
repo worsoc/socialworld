@@ -23,31 +23,34 @@ package org.socialworld.objects.concrete.animals;
 
 import java.util.List;
 
+import org.socialworld.attributes.Direction;
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.SimulationCluster;
+import org.socialworld.calculation.ValueProperty;
+import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.IEventParam;
 import org.socialworld.objects.Animal;
-import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.State;
-import org.socialworld.tools.Generation;
-import org.socialworld.tools.StringPair;
+import org.socialworld.tools.StringTupel;
 
 /**
  * @author Mathias Sikos (tyloesand)
  * 
  */
-public abstract class Mammal extends Animal {
+public abstract class Mammal extends Animal implements IRunnable{
 
- 
+	private StateRunnable stateRunnable;
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////meta information    ////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	private static StringPair[] propertiesMetaInfos = new StringPair[]{
+	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{
 		} ;
 
-	public static List<StringPair> getPropertiesMetaInfos() {
-		List<StringPair> listOfPropertyMetaInfo = Animal.getPropertiesMetaInfos();
+	public static List<StringTupel> getPropertiesMetaInfos() {
+		List<StringTupel> listOfPropertyMetaInfo = Animal.getPropertiesMetaInfos();
 		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
 			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}
@@ -75,6 +78,29 @@ public abstract class Mammal extends Animal {
 		
 	}
 
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////// implementing IRunnable ///////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public  float getSpeed() {return 27; };
+	public  float getNumberLegs() {return 2; };
+	
+	public Direction getDirectionRun() {
+		return new Direction(PropertyName.stateRunnable_directionRun , new Vector(1.3F, 1.4F, 1.5F),30.6F);
+	}
+	
+	
+	public StateRunnable getSavedStateRunnable(SimulationCluster cluster) {
+		//make a copy as ValueProperty
+		ValueProperty vp = this.stateRunnable.getAsValue(cluster);
+		//the copy is permitted for cluster only
+		return (StateRunnable) vp.getValue();
+	}
+	
+	public ValueProperty getStateRunnableAsProperty(SimulationCluster cluster, String name) {
+		return this.stateRunnable.getAsValue(cluster, name);
+	}
+	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    PROPERTY LIST  ///////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////

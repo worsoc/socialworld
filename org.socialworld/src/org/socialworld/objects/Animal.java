@@ -36,11 +36,12 @@ import org.socialworld.calculation.ValueProperty;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.IEventParam;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
+import org.socialworld.objects.concrete.animals.IRunnable;
 import org.socialworld.objects.concrete.animals.ISeer;
 import org.socialworld.objects.concrete.animals.StateBody;
 import org.socialworld.objects.concrete.animals.StateInventory;
 import org.socialworld.objects.concrete.animals.StateSeer;
-import org.socialworld.tools.StringPair;
+import org.socialworld.tools.StringTupel;
 
 
 /**
@@ -49,7 +50,7 @@ import org.socialworld.tools.StringPair;
  * @author Mathias Sikos (tyloesand)
  * 
  */
-public abstract class Animal extends SimulationObject implements ISeer {
+public abstract class Animal extends SimulationObject implements ISeer, IRunnable {
 
 	private StateAnimal state;
 
@@ -67,14 +68,14 @@ public abstract class Animal extends SimulationObject implements ISeer {
 ////////////////////////////////	meta information    ////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	private static StringPair[] propertiesMetaInfos = new StringPair[]{
-		new StringPair("StateSeer", PropertyName.stateSeer.name()),
-		new StringPair("StateBody", PropertyName.stateBody.name()),
-		new StringPair("StateInventory", PropertyName.stateInventory.name())
+	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{
+		new StringTupel("StateSeer", PropertyName.stateSeer.name()),
+		new StringTupel("StateBody", PropertyName.stateBody.name()),
+		new StringTupel("StateInventory", PropertyName.stateInventory.name())
 		} ;
 
-	public static List<StringPair> getPropertiesMetaInfos() {
-		List<StringPair> listOfPropertyMetaInfo = SimulationObject.getPropertiesMetaInfos();
+	public static List<StringTupel> getPropertiesMetaInfos() {
+		List<StringTupel> listOfPropertyMetaInfo = SimulationObject.getPropertiesMetaInfos();
 		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
 			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}

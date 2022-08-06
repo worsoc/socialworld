@@ -26,7 +26,7 @@ import java.util.List;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.IEventParam;
-import org.socialworld.tools.StringPair;
+import org.socialworld.tools.StringTupel;
 
 /**
  * The God is an special simulation object that is responsible for global
@@ -41,11 +41,11 @@ public abstract class God extends SimulationObject {
 ////////////////////////////////meta information    ////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	private static StringPair[] propertiesMetaInfos = new StringPair[]{
+	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{
 		} ;
 	
-	public static List<StringPair> getPropertiesMetaInfos() {
-		List<StringPair> listOfPropertyMetaInfo = SimulationObject.getPropertiesMetaInfos();
+	public static List<StringTupel> getPropertiesMetaInfos() {
+		List<StringTupel> listOfPropertyMetaInfo = SimulationObject.getPropertiesMetaInfos();
 		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
 			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}

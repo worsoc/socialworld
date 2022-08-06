@@ -42,7 +42,7 @@ import org.socialworld.objects.connections.ConnectionList;
 import org.socialworld.objects.connections.ConnectionType;
 import org.socialworld.propertyChange.ListenedBase;
 import org.socialworld.tools.Generation;
-import org.socialworld.tools.StringPair;
+import org.socialworld.tools.StringTupel;
 
 /**
  * @author Mathias Sikos
@@ -73,25 +73,25 @@ public abstract class StateSimulationObject extends ListenedBase {
 ////////////////////////////////meta information    ////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	protected List<StringPair> listOfPropertyMetaInfo;
-	private static StringPair[] propertiesMetaInfos = new StringPair[]{
-		new StringPair("Position", PropertyName.simobj_position.name()),
-		new StringPair("Direction", PropertyName.simobj_directionMove.name()),
+	protected List<StringTupel> listOfPropertyMetaInfo;
+	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{
+		new StringTupel("Position", PropertyName.simobj_position.name()),
+		new StringTupel("Direction", PropertyName.simobj_directionMove.name()),
 		} ;
 	
 	protected StateSimulationObject(Generation calledFromGeneration) {
-		listOfPropertyMetaInfo = new ArrayList<StringPair>();
+		listOfPropertyMetaInfo = new ArrayList<StringTupel>();
 		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
 			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}
 	}
 	
-	public List<StringPair> getPropertiesMetaInfos() {
-		return new ArrayList<StringPair>(listOfPropertyMetaInfo);
+	public List<StringTupel> getPropertiesMetaInfos() {
+		return new ArrayList<StringTupel>(listOfPropertyMetaInfo);
 	}
 	
-	public List<StringPair> getPropMethodsMetaInfos() {
-		return new ArrayList<StringPair>();
+	public List<StringTupel> getPropMethodsMetaInfos() {
+		return new ArrayList<StringTupel>();
 	}
 	
 ///////////////////////////////////////////////////////////////////////////////////////////

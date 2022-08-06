@@ -35,7 +35,7 @@ import org.socialworld.objects.concrete.animals.Mammal;
 import org.socialworld.objects.concrete.animals.StateBody;
 import org.socialworld.objects.concrete.animals.StateInventory;
 import org.socialworld.objects.concrete.animals.StateSeer;
-import org.socialworld.tools.StringPair;
+import org.socialworld.tools.StringTupel;
 import org.socialworld.conversation.Talk_SentenceType;
 import org.socialworld.core.IEventParam;
 
@@ -51,18 +51,19 @@ import org.socialworld.core.IEventParam;
  * 
  */
  public class Human extends Mammal {
-	private StateHuman state;
+	
+	 private StateHuman state;
 	private boolean initialized;
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////meta information    ////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	private static StringPair[] propertiesMetaInfos = new StringPair[]{
+	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{
 		} ;
 	
-	public static List<StringPair> getPropertiesMetaInfos() {
-		List<StringPair> listOfPropertyMetaInfo = Mammal.getPropertiesMetaInfos();
+	public static List<StringTupel> getPropertiesMetaInfos() {
+		List<StringTupel> listOfPropertyMetaInfo = Mammal.getPropertiesMetaInfos();
 		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
 			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}
@@ -133,6 +134,8 @@ import org.socialworld.core.IEventParam;
 		return null;
 		
 	}
+	
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    TALK       ///////////////////////////////////////////////
@@ -187,6 +190,8 @@ import org.socialworld.core.IEventParam;
 		paramObject.answerPropertiesRequest(propertiesAsValueList);
 		
 	}
+
+
 		
 	
 }

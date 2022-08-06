@@ -10,22 +10,23 @@ import org.socialworld.objects.Item;
 import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.StateEatable;
 import org.socialworld.objects.properties.IEatable;
-import org.socialworld.tools.StringPair;
+import org.socialworld.tools.StringTupel;
 
 public abstract class Fruit extends Item implements IEatable {
 
 	private StateEatable stateEatable;
 	
+	
 ///////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////meta information    ////////////////////////////////////
+///////////////////////////////    meta information    ////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	private static StringPair[] propertiesMetaInfos = new StringPair[]{
-			new StringPair("stateEatable", PropertyName.stateEatable.name())
+	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{
+			new StringTupel("stateEatable", PropertyName.stateEatable.name())
 			} ;
 	
-	public static List<StringPair> getPropertiesMetaInfos() {
-		List<StringPair> listOfPropertyMetaInfo = Item.getPropertiesMetaInfos();
+	public static List<StringTupel> getPropertiesMetaInfos() {
+		List<StringTupel> listOfPropertyMetaInfo = Item.getPropertiesMetaInfos();
 		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
 			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}
@@ -74,7 +75,7 @@ public abstract class Fruit extends Item implements IEatable {
 	}
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////    implementing IEatable     ////////////////////////////////
+///////////////////////////      implementing IEatable     ////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
 	public  NutrientProperty getNutrientProperties() {

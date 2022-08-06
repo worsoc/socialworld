@@ -1,5 +1,5 @@
 /*
-* Social World
+//* Social World
 * Copyright (C) 2021  Philipp Haack
 *
 * This program is free software; you can redistribute it and/or
@@ -635,8 +635,8 @@ public abstract class Cube {
     public static void main(String args[]) {
     	byte detailDepth = 4;
     	byte heightOffset = 0;
-       // Cube cube = new CubeStandard(CUBE_SIZE_TILE_LARGE, heightOffset);
-        Cube cube = new CubeAdapterEast(CUBE_SIZE_TILE_SMALL, heightOffset);
+       // Cube cube = new CubeStandard(CUBE_SIZE_TILE_SMALL, heightOffset);
+        Cube cube = new CubeAdapterWest(CUBE_SIZE_TILE_SMALL, heightOffset);
 
         byte setFullyFilledMinDepth = 1;
         switch (cube.size) {
@@ -650,7 +650,7 @@ public abstract class Cube {
 
         cube.initPlanes();
         cube.fillTheGround(heightOffset);
-        cube.splitCube( 359, detailDepth, false);
+        cube.splitCube( 141, detailDepth, false);
 
       
         cube.setFullyFilled( (byte) (detailDepth - 1), (byte) 14); 

@@ -45,7 +45,7 @@ import org.socialworld.objects.access.HiddenAnimal;
 import org.socialworld.objects.concrete.eatable.fruits.Apple;
 import org.socialworld.objects.concrete.spells.Lightning;
 import org.socialworld.tools.Generation;
-import org.socialworld.tools.StringPair;
+import org.socialworld.tools.StringTupel;
 
 /**
  * @author Mathias Sikos
@@ -75,12 +75,12 @@ public class StateAnimal extends StateSimulationObject {
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 	private static StateAnimal singletonDummyForGenerationTools;
-	private static StringPair[] propertiesMetaInfos = new StringPair[]{
-			new StringPair(Type.attributeArray.getIndexWithSWTPraefix(), PropertyName.simobj_attributeArray.name()),
-			new StringPair("Inventory", PropertyName.simobj_inventory.name()),
-			new StringPair("Knowledge", PropertyName.simobj_knowledge.name()),
-			new StringPair("Direction", PropertyName.simobj_directionChest.name()),
-			new StringPair("Direction", PropertyName.simobj_directionActiveMove.name())
+	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{
+			new StringTupel(Type.attributeArray.getIndexWithSWTPraefix(), PropertyName.simobj_attributeArray.name()),
+			new StringTupel("Inventory", PropertyName.simobj_inventory.name()),
+			new StringTupel("Knowledge", PropertyName.simobj_knowledge.name()),
+			new StringTupel("Direction", PropertyName.simobj_directionChest.name()),
+			new StringTupel("Direction", PropertyName.simobj_directionActiveMove.name())
 		} ;
 	
 	public static StateAnimal getInstance(Generation calledFromGeneration) {

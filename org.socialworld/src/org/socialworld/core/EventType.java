@@ -198,6 +198,39 @@ public enum EventType {
 		}
 	}
 
+	public boolean isRelevantForChangingPosition() {
+		
+		// selfMoveWalk(8), selfMoveRun(9), selfMoveSneak(10), selfMoveJump(11), selfMoveSwim(12), selfMoveFly(13),
+		if (this.index >= 8 || this.index <= 13) return true;
+		
+		// targetInventoryTake(160), targetInventoryDrop(161), targetInventorySwitch(162), targetInventorySet(163), targetInventoryGet(164),
+		if (this.index >= 160 || this.index <= 164) return true;
+		
+		// targetHandleItemUse2(168), targetHandleItemUseLeft(169), targetHandleItemUseRight(170), targetHandleItemAddRtoL(171), targetHandleItemAddLtoR(172), targetHandleItemPull(173),targetHandleItemPush(174),
+		if (this.index >= 168 || this.index <= 174) return true;
+		
+		// targetWeaponLeftStab(176), targetWeaponLeftStroke(177), targetWeaponLeftBackhand(178), targetWeaponRightStab(179), targetWeaponRightStroke(180), targetWeaponRightBackhand(181), targetWeaponClub(182),
+		if (this.index >= 176 || this.index <= 182) return true;
+
+		// targetPunchLeftFistStraight(184),  targetPunchLeftFistSideways(185), targetPunchLeftFistUpward(186), targetPunchRightFistStraight(187),  targetPunchRightFistSideways(188), targetPunchRightFistUpward(189),
+		if (this.index >= 184 || this.index <= 189) return true;
+
+		
+		
+		// candidatesMoveWalk(264), candidatesMoveRun(265), candidatesMoveSneak(266), candidatesMoveJump(267), candidatesMoveSwim(268), candidatesMoveFly(269),
+		if (this.index >= 264 || this.index <= 269) return true;
+
+		// candidatesWeaponLeftStab(304), candidatesWeaponLeftStroke(305), candidatesWeaponLeftBackhand(306), candidatesWeaponRightStab(307), candidatesWeaponRightStroke(308), candidatesWeaponRightBackhand(309), candidatesWeaponClub(310),
+		if (this.index >= 304 || this.index <= 310) return true;
+		
+		// candidatesPunchLeftFistStraight(312),  candidatesPunchLeftFistSideways(313), candidatesPunchLeftFistUpward(314), candidatesPunchRightFistStraight(315),  candidatesPunchRightFistSideways(316), candidatesPunchRightFistUpward(317),
+		if (this.index >= 312 || this.index <= 317) return true;
+		
+				
+		return false;
+	}
+	
+
 	public boolean isRelevantForEffectiveCheck() {
 		
 		// pull and push with effective check
@@ -212,7 +245,7 @@ public enum EventType {
 		if (this.index <= 128) return false;
 		// all events to percipients
 		if (this.index >= 385 && this.index <= 511) return false;
-		// all events to explicit targets (instead defined above)
+		// all events to explicit targets (instead defined above)  (there is no check needed, because there IS!!! an effect (it's an event to target !!!) 
 		if (this.index >= 129 && this.index <= 256) return false;
 		// there are no candidates for body functions
 		if (this.index >= 257 && this.index <= 263) return false;
@@ -230,10 +263,12 @@ public enum EventType {
 	}
 	
 	public float getEffectDistance() {
+		//return 1000000.0F;
+		
 		switch (this) {
 		// TODO getEffectDistance()
 		case candidatesMoveWalk: return 5000.0F;
-		case candidatesMoveRun: return 10000.0F;
+		case candidatesMoveRun: return 5000.0F;
 		case candidatesMoveSneak: return 1000.0F; 
 		case candidatesMoveJump: return 3000.0F;
 		case candidatesMoveSwim: return 3000.0F;
@@ -280,11 +315,12 @@ public enum EventType {
 		case candidatesSayScream: return 40000.0F; 
 		case candidatesSayWhisper: return 1000.0F; 
 
-		case percipientExists: return 100000.0F;
+		case percipientExists: return 5000.0F;
 			
 		default:
-			return 1000000.0F;
+			return 10000.0F;
 		}
+		
 	}
 
 	public float getEffectAngle() {

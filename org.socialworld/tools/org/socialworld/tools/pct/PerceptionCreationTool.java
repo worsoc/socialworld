@@ -74,13 +74,14 @@ public class PerceptionCreationTool extends JFrame{
 		
 		for (String description : result) {
 			System.out.println(description);
-			dot_elem_line_id = pct.addDotElementLine(description);
-			pct.addParseInputString(newIDOffset + lfdNr, dot_elem_line_id, description);
+			//dot_elem_line_id = pct.addDotElementLine(description);
+			//pct.addParseInputString(newIDOffset + lfdNr, dot_elem_line_id, description);
 			lfdNr++;
 		}
 
 		System.out.println(lfdNr);
 
+		
 /*
 		String result = pg.generatePerceptionDescription("gfjg48gtdzi57ugjjgkt");
 		//String result = pg.generatePerceptionDescription("bnthnhiut8ub849206u0bu0");
@@ -118,8 +119,8 @@ public class PerceptionCreationTool extends JFrame{
 		
 		int dot_elem_line_id = 0;
 		int dotelemline_function = 0;
-		String dotElemLineResultValueName;
-		String dotElemLineResultType;
+		String dotElemLineResultValueName = "";
+		String dotElemLineResultType = "";
 		
 		String main[];
 		main = dotElementLine.split(":");
@@ -132,19 +133,26 @@ public class PerceptionCreationTool extends JFrame{
 		// new entry for SWPOOL_DOTELEMLINE
 		if (elems.length > 0) {
 			
-			String fct = main[0].substring(0) ; // later perhaps: substring(0,  main[0].indexOf("("));
-			if (fct.equals(CreateKnowledgeElementExpression.LABEL_KNOWLEDGEVALUE)) {
+			String fct = main[0].substring(0) ; 
+			if (fct.indexOf(CreateKnowledgeElementExpression.LABEL_KNOWLEDGEVALUE) >= 0) {
 				dotelemline_function = 1;
+				
+				if (main[0].indexOf("(") > 0) {
+					String[] typeAndName = main[0].substring(main[0].indexOf("(") + 1, main[0].indexOf(")")).split(",");
+					if (typeAndName.length > 0)		dotElemLineResultType = typeAndName[0];
+					if (typeAndName.length > 1)		dotElemLineResultValueName = typeAndName[1];
+				}
+
 			}
 			else if (fct.indexOf(CreateKnowledgeElementExpression.LABEL_KNOWLEDGEPROPERTY) >= 0) {
 				dotelemline_function = 2;
+				if (main[0].indexOf("(") > 0) {
+					String[] kfcAndName = main[0].substring(main[0].indexOf("(") + 1, main[0].indexOf(")")).split(",");
+					if (kfcAndName.length > 0)		dotElemLineResultType = kfcAndName[0];
+					if (kfcAndName.length > 1)		dotElemLineResultValueName = kfcAndName[1];
+				}
 			}
 
-			dotElemLineResultValueName = "";
-			//later perhaps:
-			//main[0].substring( main[0].indexOf("(") + 1, main[0].indexOf(")"));
-			
-			dotElemLineResultType = "";
 			
 
 			// insert new line to table SWPOOL_DOTELEMLINE

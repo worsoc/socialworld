@@ -53,9 +53,9 @@ public class SimulationMetaInformation {
 		return instance;
 	}
 	
-	public List<StringPair> getPropertiesMetaInfosForClass(String className) {
+	public List<StringTupel> getPropertiesMetaInfosForClass(String className) {
 
-		List<StringPair> result;
+		List<StringTupel> result;
 		Type classNameToType = Type.getTypeForSWTPraefixedName(className);
 		
 		if (classNameToType != Type.nothing) {
@@ -65,13 +65,13 @@ public class SimulationMetaInformation {
 			//case floatingpoint: result = new ArrayList<String>(); break;
 				
 			default:	
-				result = new ArrayList<StringPair>();
+				result = new ArrayList<StringTupel>();
 			}
 		}
 		else {
 			if (className.startsWith(PRAEFIX_GROUPING_NUMBER)) {
-				List<StringPair> resultA;
-				List<StringPair> resultB;
+				List<StringTupel> resultA;
+				List<StringTupel> resultB;
 				int groupingNumber = (int) Integer.parseInt(className.substring(4)); 
 				switch (groupingNumber) {
 					case GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_OBJECTS: result = SimulationObject.getPropertiesMetaInfos(); break;
@@ -118,7 +118,7 @@ public class SimulationMetaInformation {
 						// TEMP_SOLUTION
 						result = Fruit.getPropertiesMetaInfos(); break;
 
-					default: result = new ArrayList<StringPair>();
+					default: result = new ArrayList<StringTupel>();
 				}
 			}
 			else {
@@ -135,7 +135,7 @@ public class SimulationMetaInformation {
 					case "StateEatable":	result = StateEatable.getPropertiesMetaInfos(); break;
 					case "StatePerceptible":	result = StatePerceptible.getPropertiesMetaInfos(); break;
 					default:
-						result = new ArrayList<StringPair>();
+						result = new ArrayList<StringTupel>();
 				}
 			}
 		}
@@ -143,9 +143,9 @@ public class SimulationMetaInformation {
 		return result;
 	}
 	
-	public List<StringPair> getPropMethodsMetaInfosForClass(String className) {
+	public List<StringTupel> getPropMethodsMetaInfosForClass(String className) {
 		
-		List<StringPair> result;
+		List<StringTupel> result;
 		Type classNameToType = Type.getTypeForSWTPraefixedName(className);
 		
 		if (classNameToType != Type.nothing) {
@@ -153,7 +153,7 @@ public class SimulationMetaInformation {
 			case attributeArray: result = AttributeArray.getPropMethodsMetaInfos(); break;
 				
 			default:	
-				result = new ArrayList<StringPair>();
+				result = new ArrayList<StringTupel>();
 			}
 		}
 		else {
@@ -166,7 +166,7 @@ public class SimulationMetaInformation {
 			case "StateBody":	result = StateBody.getPropMethodsMetaInfos(); break;
 			case "StateInventory":	result = StateInventory.getPropMethodsMetaInfos(); break;
 			default:
-				result = new ArrayList<StringPair>();
+				result = new ArrayList<StringTupel>();
 			}
 		}
 		
@@ -279,10 +279,18 @@ public class SimulationMetaInformation {
 
 	}
 
+	public boolean checkIsKFCPropertyOnly(String className) {
+		switch (className) {
+			case "Colour":	return true;
+			case "Material":	return true;
+			default:
+				return false;
+		}
+
+	}
 	
-	
-	private List<StringPair> getPropertiesMetaInfosIntersect(List<StringPair> a, List<StringPair> b) {
-		List<StringPair> result = new ArrayList<StringPair>();
+	private List<StringTupel> getPropertiesMetaInfosIntersect(List<StringTupel> a, List<StringTupel> b) {
+		List<StringTupel> result = new ArrayList<StringTupel>();
 		int indexA;
 		int indexB;
 		String a_right;

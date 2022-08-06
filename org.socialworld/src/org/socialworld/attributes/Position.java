@@ -27,7 +27,7 @@ import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
-import org.socialworld.tools.StringPair;
+import org.socialworld.tools.StringTupel;
 
 /**
  * The class holds information about the position
@@ -81,11 +81,11 @@ public class Position extends SimProperty {
 //////////////////	static instance for meta information    ///////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	private static StringPair[] propertiesMetaInfos = new StringPair[]{
-				new StringPair("SVVector", PropertyName.position_vector.name())} ;
+	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{
+				new StringTupel("SVVector", PropertyName.position_vector.name())} ;
 
-	public static List<StringPair> getPropertiesMetaInfos() {
-		List<StringPair> listOfPropertyMetaInfo = SimProperty.getPropertiesMetaInfos();
+	public static List<StringTupel> getPropertiesMetaInfos() {
+		List<StringTupel> listOfPropertyMetaInfo = SimProperty.getPropertiesMetaInfos();
 		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
 			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}

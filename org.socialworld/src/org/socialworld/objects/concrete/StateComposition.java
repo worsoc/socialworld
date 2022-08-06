@@ -11,7 +11,7 @@ import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.State;
-import org.socialworld.tools.StringPair;
+import org.socialworld.tools.StringTupel;
 
 public class StateComposition extends State {
 
@@ -23,20 +23,20 @@ public class StateComposition extends State {
 	//////////////////static instance for meta information    ///////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 
-	private static StringPair[] propertiesMetaInfos = new StringPair[]{};
-	private static StringPair[] propMethodsMetaInfos = new StringPair[] {
-		new StringPair("Material", METHODNAME_GET_MAIN_MATERIAL)} ;
+	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{};
+	private static StringTupel[] propMethodsMetaInfos = new StringTupel[] {
+		new StringTupel("Material", METHODNAME_GET_MAIN_MATERIAL)} ;
 	
-	public static List<StringPair> getPropertiesMetaInfos() {
-		List<StringPair> listOfPropertyMetaInfo = State.getPropertiesMetaInfos();
+	public static List<StringTupel> getPropertiesMetaInfos() {
+		List<StringTupel> listOfPropertyMetaInfo = State.getPropertiesMetaInfos();
 		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
 			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}
 		return listOfPropertyMetaInfo;
 	}
 
-	public static List<StringPair> getPropMethodsMetaInfos() {
-		List<StringPair> listOfPropMethodMetaInfo = State.getPropMethodsMetaInfos();
+	public static List<StringTupel> getPropMethodsMetaInfos() {
+		List<StringTupel> listOfPropMethodMetaInfo = State.getPropMethodsMetaInfos();
 		for (int indexAdd = 0; indexAdd < propMethodsMetaInfos.length; indexAdd++) {
 			listOfPropMethodMetaInfo.add(propMethodsMetaInfos[indexAdd]);
 		}

@@ -30,19 +30,20 @@ import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.StatePerceptible;
 import org.socialworld.objects.concrete.animals.Mammal;
 import org.socialworld.objects.concrete.animals.StateSeer;
-import org.socialworld.tools.StringPair;
+import org.socialworld.tools.StringTupel;
 
-public class Dog extends Mammal {
+public abstract class Dog extends Mammal {
+	
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////meta information    ////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	private static StringPair[] propertiesMetaInfos = new StringPair[]{
+	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{
 		} ;
 
-	public static List<StringPair> getPropertiesMetaInfos() {
-		List<StringPair> listOfPropertyMetaInfo = Mammal.getPropertiesMetaInfos();
+	public static List<StringTupel> getPropertiesMetaInfos() {
+		List<StringTupel> listOfPropertyMetaInfo = Mammal.getPropertiesMetaInfos();
 		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
 			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}

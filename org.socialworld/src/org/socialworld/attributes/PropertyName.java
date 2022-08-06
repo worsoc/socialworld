@@ -74,6 +74,18 @@ public enum PropertyName {
 	
 	stateEatable(1107000),
 	
+	stateRunnable(1108000),
+	stateRunnable_speed(1108001),
+	stateRunnable_numberLegs(1108002),
+	stateRunnable_directionRun(1108003),
+	
+	
+	stateDispersibility(1109000),
+	stateDispersibility_widthWings(1109001),
+	stateDispersibility_numberWings(1109002),
+	stateDispersibility_directionFly(1109003),
+	
+	
 	event_position(2001001),
 	event_direction(2001020),
 	
@@ -98,6 +110,7 @@ public enum PropertyName {
 	private PropertyName(int index) {
 		this.index = index;
 	}
+
 	
 	public int getIndex() {
 		return index;
@@ -163,6 +176,7 @@ public enum PropertyName {
 
 
 	}
+	
 	
 	public PropertyName parentState() {
 	
