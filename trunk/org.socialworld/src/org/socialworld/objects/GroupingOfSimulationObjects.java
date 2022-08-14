@@ -5,6 +5,9 @@ import org.socialworld.objects.concrete.eatable.Fruit;
 
 public final class GroupingOfSimulationObjects {
 
+	public static final String PRAEFIX_SIMOBJECT_GROUPING_NUMBER = "SOGN_";
+	
+	
 	public static final int GROUPING_NUMBER_ALL_OBJECTS 
 								= 0b00111110111111111111111111111111;	// 1056964607
 	public static final int GROUPING_NUMBER_ALL_ANIMALS_AND_ITEMS 
@@ -55,6 +58,8 @@ public final class GroupingOfSimulationObjects {
 	
 	private static final short GROUPING_NUMBER_PRAEFIX_FRUIT		 = 0b0000100000010001; // 	2065
 
+	
+	
 	
 	
 	static boolean checkObjectBelongsToGroup(SimulationObject simObject, int groupNumber) {

@@ -21,12 +21,15 @@
 */
 package org.socialworld.knowledge;
 
+import java.util.List;
+
 public abstract class KnowledgeAtom {
 
 	private int itemAccessCount;
 	private boolean itemIsValid;
 
 	private KnowledgeSource source;
+	private List<String> notes; 
 	
 	abstract KnowledgeAtom copy();
 
@@ -42,6 +45,10 @@ public abstract class KnowledgeAtom {
 		return this.source;
 	}
 	
+	void addNote(String note) {
+		this.notes.add(note);
+	}
+
 	KnowledgeSource getSourceAsCopy() {
 		return new KnowledgeSource(this.source);
 	}

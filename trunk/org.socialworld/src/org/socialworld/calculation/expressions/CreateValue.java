@@ -33,7 +33,7 @@ import org.socialworld.calculation.Value;
 import org.socialworld.calculation.application.ActionCreator;
 import org.socialworld.calculation.application.KnowledgeCalculator;
 import org.socialworld.collections.ValueArrayList;
-import org.socialworld.knowledge.KnowledgeAtomType;
+import org.socialworld.knowledge.KnowledgeFact_Type;
 
 public class CreateValue extends Expression {
 
@@ -177,8 +177,8 @@ public class CreateValue extends Expression {
 			break;
 		case knowledgeAtom:
 
-			KnowledgeAtomType kat;
-			kat = KnowledgeAtomType.getName(subType);
+			KnowledgeFact_Type kat;
+			kat = KnowledgeFact_Type.getName(subType);
 			firstCreateArgument = arguments.size();
 			evaluateExpression2(arguments);
 			size = arguments.size();
@@ -208,8 +208,8 @@ public class CreateValue extends Expression {
 			break;
 		case knowledgeAtom:
 			
-			KnowledgeAtomType kat;
-			kat = KnowledgeAtomType.getName(subType);
+			KnowledgeFact_Type kat;
+			kat = KnowledgeFact_Type.getName(subType);
 			
 			createdObject  = KnowledgeCalculator.createKnowledgeAtom(kat, arguments);
 			break;

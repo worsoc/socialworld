@@ -42,7 +42,7 @@ public class AnswerProperty extends KnowledgeProperty implements IAnswer {
 		super(subject);
 	}
 	*/
-	public KnowledgeAtomType getType() { return KnowledgeAtomType.property; }
+	public KnowledgeFact_Type getType() { return KnowledgeFact_Type.property; }
 	
 	public void setSubject(Lexem subject, Numerus numerus) {
 		this.subject = subject;

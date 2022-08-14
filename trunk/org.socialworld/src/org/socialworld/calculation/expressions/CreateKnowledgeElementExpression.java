@@ -29,7 +29,7 @@ import org.socialworld.calculation.PropertyUsingAs;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
-import org.socialworld.knowledge.KnowledgeAtomType;
+import org.socialworld.knowledge.KnowledgeFact_Type;
 
 public class CreateKnowledgeElementExpression extends CreateValue {
 
@@ -96,7 +96,7 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 					String descriptionKnowledgeAtomPart;
 					Expression value;
 					
-					KnowledgeAtomType knowledgeAtomType = null;
+					KnowledgeFact_Type knowledgeFact_Type = null;
 					List<Expression> expressions = new ArrayList<Expression>();
 					
 					for (int indexSub = 0; indexSub < descriptionKnowledgeAtomList.length; indexSub++) {
@@ -108,7 +108,7 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 							knowledgeFactCriterion = new Constant(new Value(Type.integer, Value.VALUE_NAME_KNOWLEDGE_PROPERTY_CRITERION, Integer.parseInt(descriptionKnowledgeAtomPart) ));
 							expressions.add(knowledgeFactCriterion);
 							if (knowledgeAtomType == null ) {
-								knowledgeAtomType = KnowledgeAtomType.property;
+								knowledgeAtomType = KnowledgeFact_Type.property;
 							}
 						}
 */
@@ -135,8 +135,8 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 							value = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeProperty, descriptionKnowledgeAtomPart, valueName);
 							expressions.add(value);
 							
-							if (knowledgeAtomType == null ) {
-								knowledgeAtomType = KnowledgeAtomType.property;
+							if (knowledgeFact_Type == null ) {
+								knowledgeFact_Type = KnowledgeFact_Type.property;
 							}
 						}
 						else if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGEVALUE) >= 0) {
@@ -154,8 +154,8 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 							value = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeValue, descriptionKnowledgeAtomPart, valueName);
 							expressions.add(value);
 							
-							if (knowledgeAtomType == null ) {
-								knowledgeAtomType = KnowledgeAtomType.value;
+							if (knowledgeFact_Type == null ) {
+								knowledgeFact_Type = KnowledgeFact_Type.value;
 							}
 						}
 						else if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGERELATIONSUBJECT) >= 0) {
@@ -169,8 +169,8 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 								expressions.add(Nothing.getInstance());
 							}
 							expressions.set(0, value);
-							if (knowledgeAtomType == null) {
-								knowledgeAtomType = KnowledgeAtomType.relationUnaer;
+							if (knowledgeFact_Type == null) {
+								knowledgeFact_Type = KnowledgeFact_Type.relationUnaer;
 							}
 						}
 						else if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGERELATIONVERB) >= 0) {
@@ -184,8 +184,8 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 								expressions.add(Nothing.getInstance());
 							}
 							expressions.set(1, value);
-							if (knowledgeAtomType == null) {
-								knowledgeAtomType = KnowledgeAtomType.relationUnaer;
+							if (knowledgeFact_Type == null) {
+								knowledgeFact_Type = KnowledgeFact_Type.relationUnaer;
 							}
 						}
 						else if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGERELATIONADVERB) >= 0) {
@@ -199,8 +199,8 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 								expressions.add(Nothing.getInstance());
 							}
 							expressions.set(2, value);
-							if (knowledgeAtomType == null) {
-								knowledgeAtomType = KnowledgeAtomType.relationUnaer;
+							if (knowledgeFact_Type == null) {
+								knowledgeFact_Type = KnowledgeFact_Type.relationUnaer;
 							}
 						}
 						else if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGERELATIONOBJECT1) >= 0) {
@@ -214,8 +214,8 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 								expressions.add(Nothing.getInstance());
 							}
 							expressions.set(3, value);
-							if (knowledgeAtomType == null || knowledgeAtomType.equals(KnowledgeAtomType.relationUnaer)) {
-								knowledgeAtomType = KnowledgeAtomType.relationBinaer;
+							if (knowledgeFact_Type == null || knowledgeFact_Type.equals(KnowledgeFact_Type.relationUnaer)) {
+								knowledgeFact_Type = KnowledgeFact_Type.relationBinaer;
 							}
 						}
 						else if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGERELATIONOBJECT2) >= 0) {
@@ -229,12 +229,12 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 								expressions.add(Nothing.getInstance());
 							}
 							expressions.set(4, value);
-							knowledgeAtomType = KnowledgeAtomType.relationTrinaer;
+							knowledgeFact_Type = KnowledgeFact_Type.relationTrinaer;
 						}
 						
 					}
 					
-					Expression creationKnowledgeAtom = new CreateKnowledgeAtomExpression(knowledgeAtomType, expressions);
+					Expression creationKnowledgeAtom = new CreateKnowledgeAtomExpression(knowledgeFact_Type, expressions);
 					
 					if (creationKnowledgeSource.isValid() && creationKnowledgeAtom.isValid() ) {
 						
