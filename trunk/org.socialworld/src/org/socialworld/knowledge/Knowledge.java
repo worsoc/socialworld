@@ -182,7 +182,7 @@ public class Knowledge extends SimProperty {
 		int countFacts = 0;
 		int indexFact;
 		
-		KnowledgeAtom atom;
+		KnowledgeItem atom;
 		KnowledgeFact fact;
 		KnowledgeSource source;
 		KnowledgeElement knowledgeElement;
@@ -356,7 +356,7 @@ public class Knowledge extends SimProperty {
 			return null;
 	}
 	
-	public KnowledgeAtom getFact (int knowledgeElementIndex, int factIndex) {
+	public KnowledgeItem getFact (int knowledgeElementIndex, int factIndex) {
 		if ( knowledgeElementIndex >= 0 & knowledgeElementIndex < MAXIMUM_KNOWLEDGE_POOL_CAPACITY) {
 			accessCount[knowledgeElementIndex]++;
 			if (accessCount[knowledgeElementIndex] > maxAccessCount) {

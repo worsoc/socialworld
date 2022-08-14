@@ -30,7 +30,7 @@ public class KnowledgeItemList  {
 	
 	final int MAXIMUM_KNOWLEDGE_CAPACITY = 100;
 	
-	private ArrayList<KnowledgeAtom> atomSearchList;
+	private ArrayList<KnowledgeItem> atomSearchList;
 	
 	private int validItemCount = 0;
 	
@@ -40,11 +40,11 @@ public class KnowledgeItemList  {
 	
 	public KnowledgeItemList() {
 		
-		atomSearchList = new ArrayList<KnowledgeAtom>();
+		atomSearchList = new ArrayList<KnowledgeItem>();
 		
 		// add invalid KnowledgeValue as first dummy element (ensure there is always an element in the list)
 		
-		KnowledgeAtom dummy = new KnowledgeValue();
+		KnowledgeItem dummy = new KnowledgeValue();
 		atomSearchList.add(dummy);
 		
 	}
@@ -67,14 +67,14 @@ public class KnowledgeItemList  {
 			 
 	}
 
-	protected KnowledgeAtom getAtom(int index) {
+	protected KnowledgeItem getAtom(int index) {
 		if ((index >= 0) & (index < size()) )
 			return atomSearchList.get(index);
 		else
 			return null;
 	}
 
-	protected KnowledgeAtom getAtomAsCopy(int index) {
+	protected KnowledgeItem getAtomAsCopy(int index) {
 		if ((index >= 0) & (index < size()) )
 			return atomSearchList.get(index).copy();
 		else
@@ -85,7 +85,7 @@ public class KnowledgeItemList  {
 	
 
 	public KnowledgeFact find(Lexem  value) {
-		KnowledgeAtom atom;
+		KnowledgeItem atom;
 		KnowledgeFact fact = null;
 		
 		List<Lexem> lexems;
@@ -146,11 +146,11 @@ public class KnowledgeItemList  {
 		return fact;
 	}
 	
-	private void add (KnowledgeAtom atom) {
+	private void add (KnowledgeItem atom) {
 		atomSearchList.add(atom);
 	}
 	
-	protected void add(KnowledgeAtom atom, KnowledgeSource source) {
+	protected void add(KnowledgeItem atom, KnowledgeSource source) {
 		int 	replacableIndex;
 		
 		if (atom.isItemValid()) {
@@ -183,7 +183,7 @@ public class KnowledgeItemList  {
 	
 	protected void remove(int index) {
 		
-		KnowledgeAtom kaTmp;
+		KnowledgeItem kaTmp;
 		
 		kaTmp = this.atomSearchList.get(index);
 		
@@ -202,7 +202,7 @@ public class KnowledgeItemList  {
 		int count = 0;
 		int index;
 		
-		KnowledgeAtom atom;
+		KnowledgeItem atom;
 		KnowledgeFact fact;
 
 		for (index = 0; index < size(); index++) {
@@ -245,7 +245,7 @@ public class KnowledgeItemList  {
 		int indexLexem;
 		int countLexems;
 
-		KnowledgeAtom atom;
+		KnowledgeItem atom;
 		KnowledgeFact fact;
 
 		for (index = 0; index < size(); index++) {
@@ -397,7 +397,7 @@ public class KnowledgeItemList  {
 		int length;
 		int index;
 		
-		KnowledgeAtom tmpCopyKF;
+		KnowledgeItem tmpCopyKF;
 		
 		length = size();
 		
@@ -410,7 +410,7 @@ public class KnowledgeItemList  {
 			
 			if (!atomSearchList.get(index).equals(tmpCopyKF)) 
 				return false;
-			// TODO compare source too, in implementation KnowledgeAtom.equals()
+			// TODO compare source too, in implementation KnowledgeItem.equals()
 			if (!atomSearchList.get(index).getSource().equals(b.getAtom(index).getSource())) 
 				return false;
 			if (atomSearchList.get(index).isItemValid() != tmpCopyKF.isItemValid()) 

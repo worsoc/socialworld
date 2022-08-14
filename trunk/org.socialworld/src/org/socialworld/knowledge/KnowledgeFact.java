@@ -28,7 +28,7 @@ import org.socialworld.calculation.Value;
 //import org.socialworld.collections.ValueArrayList;
 import org.socialworld.conversation.Lexem;
 
-public abstract class KnowledgeFact extends KnowledgeAtom {
+public abstract class KnowledgeFact extends KnowledgeItem {
 	
 	
 	

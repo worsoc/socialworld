@@ -33,7 +33,7 @@ import org.socialworld.collections.ValueArrayList;
 import org.socialworld.conversation.Lexem;
 import org.socialworld.core.Event;
 import org.socialworld.core.SocialWorldThread;
-import org.socialworld.knowledge.KnowledgeAtom;
+import org.socialworld.knowledge.KnowledgeItem;
 import org.socialworld.knowledge.KnowledgeFact_Type;
 import org.socialworld.knowledge.KnowledgeElement;
 import org.socialworld.knowledge.KnowledgeProperty;
@@ -214,7 +214,7 @@ public class KnowledgeCalculator extends SocialWorldThread {
 				
 				KnowledgeElement knowledgeElement = new KnowledgeElement(lexemSubject);
 				KnowledgeSource source = null;
-				KnowledgeAtom atom = null;
+				KnowledgeItem atom = null;
 				
 				for (int index = 1; index < size; index++) {
 				
@@ -222,7 +222,7 @@ public class KnowledgeCalculator extends SocialWorldThread {
 						source = (KnowledgeSource) knowledgeElementProperties.get(index).getValue();
 					}
 					else {
-						atom = (KnowledgeAtom) knowledgeElementProperties.get(index).getValue();
+						atom = (KnowledgeItem) knowledgeElementProperties.get(index).getValue();
 						knowledgeElement.add(atom, source);
 					}
 					
@@ -264,9 +264,9 @@ public class KnowledgeCalculator extends SocialWorldThread {
 		
 	}
 
-	public static KnowledgeAtom createKnowledgeAtom(KnowledgeFact_Type type, ValueArrayList knowledgeAtomProperties) {
+	public static KnowledgeItem createKnowledgeAtom(KnowledgeFact_Type type, ValueArrayList knowledgeAtomProperties) {
 		
-		KnowledgeAtom result = new KnowledgeValue(Calculation.getNothing());
+		KnowledgeItem result = new KnowledgeValue(Calculation.getNothing());
 		
 		int size;
 		int find;

@@ -58,7 +58,7 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 		// at main index > 1: expressions for KnowledgeAtomcombinations  --> KnowledgeItemList
 
 		// for any sub entry (element of the KnowledgeItemList):
-		// at sub index >= 0: one or more expressions, describing the KnowledgeAtom
+		// at sub index >= 0: one or more expressions, describing the KnowledgeItem
 
 		if (main.length > 1) {
 			
