@@ -26,7 +26,7 @@ import java.util.List;
 
 import org.socialworld.conversation.Lexem;
 
-public class KnowledgeAtomList  {
+public class KnowledgeItemList  {
 	
 	final int MAXIMUM_KNOWLEDGE_CAPACITY = 100;
 	
@@ -38,7 +38,7 @@ public class KnowledgeAtomList  {
 
 	
 	
-	public KnowledgeAtomList() {
+	public KnowledgeItemList() {
 		
 		atomSearchList = new ArrayList<KnowledgeAtom>();
 		
@@ -352,7 +352,7 @@ public class KnowledgeAtomList  {
 		return index ;
 	}
 
-	protected void combineWith(KnowledgeAtomList kalB) {
+	protected void combineWith(KnowledgeItemList kalB) {
 		
 		for (int j = 0; j < kalB.size(); j++) {
 			if (kalB.isItemValid(j)) {
@@ -370,7 +370,7 @@ public class KnowledgeAtomList  {
 		}
 	}
 
-	protected int compareTo(KnowledgeAtomList kalB) {
+	protected int compareTo(KnowledgeItemList kalB) {
 		
 		int countEqual = 0;
 		
@@ -391,7 +391,7 @@ public class KnowledgeAtomList  {
 		
 	}
 
-	public boolean equals(KnowledgeAtomList b) {
+	public boolean equals(KnowledgeItemList b) {
 		// we only check all atoms , sources and itemIsValid
 		
 		int length;
