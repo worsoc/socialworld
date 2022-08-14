@@ -22,18 +22,18 @@
 package org.socialworld.knowledge;
 
 
-public enum KnowledgeAtomType {
+public enum KnowledgeFact_Type {
 
 	relationUnaer(21), relationBinaer(22), relationTrinaer(23), property(11), value(1);
 	
 	private int index;
 
-	private KnowledgeAtomType(int index) {
+	private KnowledgeFact_Type(int index) {
 		this.index = index;
 	}
 	
 	/**
-	 * The method returns the index of the KnowledgeAtomType.
+	 * The method returns the index of the KnowledgeFact_Type.
 	 * 
 	 * @return type's index
 	 */
@@ -49,8 +49,8 @@ public enum KnowledgeAtomType {
 	 *            type index
 	 * @return type name
 	 */
-	public static KnowledgeAtomType getName(int index) {
-		for (KnowledgeAtomType type : KnowledgeAtomType.values())
+	public static KnowledgeFact_Type getName(int index) {
+		for (KnowledgeFact_Type type : KnowledgeFact_Type.values())
 			if (type.index == index)
 				return type;
 		return null;

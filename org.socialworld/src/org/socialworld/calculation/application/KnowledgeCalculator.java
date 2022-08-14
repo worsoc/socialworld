@@ -34,7 +34,7 @@ import org.socialworld.conversation.Lexem;
 import org.socialworld.core.Event;
 import org.socialworld.core.SocialWorldThread;
 import org.socialworld.knowledge.KnowledgeAtom;
-import org.socialworld.knowledge.KnowledgeAtomType;
+import org.socialworld.knowledge.KnowledgeFact_Type;
 import org.socialworld.knowledge.KnowledgeElement;
 import org.socialworld.knowledge.KnowledgeProperty;
 import org.socialworld.knowledge.KnowledgeRelationBinaer;
@@ -264,7 +264,7 @@ public class KnowledgeCalculator extends SocialWorldThread {
 		
 	}
 
-	public static KnowledgeAtom createKnowledgeAtom(KnowledgeAtomType type, ValueArrayList knowledgeAtomProperties) {
+	public static KnowledgeAtom createKnowledgeAtom(KnowledgeFact_Type type, ValueArrayList knowledgeAtomProperties) {
 		
 		KnowledgeAtom result = new KnowledgeValue(Calculation.getNothing());
 		

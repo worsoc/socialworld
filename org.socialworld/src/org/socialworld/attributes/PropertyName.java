@@ -165,6 +165,9 @@ public enum PropertyName {
 		}
 	}
 	
+	public String toString() {
+		return this.name();
+	}
 
 	public static PropertyName forString(String name) {
 		

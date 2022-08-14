@@ -28,16 +28,16 @@ import java.util.List;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
-import org.socialworld.knowledge.KnowledgeAtomType;
+import org.socialworld.knowledge.KnowledgeFact_Type;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 
 public class CreateKnowledgeAtomExpression extends CreateValue {
 
-	public CreateKnowledgeAtomExpression(KnowledgeAtomType knowledgeAtomType, List<Expression> listExpressions) {
+	public CreateKnowledgeAtomExpression(KnowledgeFact_Type knowledgeFact_Type, List<Expression> listExpressions) {
 		
 		super(Type.knowledgeAtom);
 
-		switch (knowledgeAtomType) {
+		switch (knowledgeFact_Type) {
 		case property:
 			if (listExpressions.size() > 1) {
 				
@@ -178,7 +178,7 @@ public class CreateKnowledgeAtomExpression extends CreateValue {
 		names.add(Value.VALUE_NAME_KNOWLEDGE_RELATION_ADVERB);
 		
 		// setting the knowledge atom sub type 
-		setExpression1(new Constant(new Value(Type.integer, KnowledgeAtomType.relationUnaer.getIndex())));
+		setExpression1(new Constant(new Value(Type.integer, KnowledgeFact_Type.relationUnaer.getIndex())));
 
 		setExpression2(new AddOrSetValuesToArguments(listExpressions, names));
 		
@@ -203,7 +203,7 @@ public class CreateKnowledgeAtomExpression extends CreateValue {
 		names.add(Value.VALUE_NAME_KNOWLEDGE_RELATION_OBJECT1);
 
 		// setting the knowledge atom sub type 
-		setExpression1(new Constant(new Value(Type.integer, KnowledgeAtomType.relationBinaer.getIndex())));
+		setExpression1(new Constant(new Value(Type.integer, KnowledgeFact_Type.relationBinaer.getIndex())));
 
 		setExpression2(new AddOrSetValuesToArguments(listExpressions, names));
 		
@@ -232,7 +232,7 @@ public class CreateKnowledgeAtomExpression extends CreateValue {
 		
 
 		// setting the knowledge atom sub type 
-		setExpression1(new Constant(new Value(Type.integer, KnowledgeAtomType.relationTrinaer.getIndex())));
+		setExpression1(new Constant(new Value(Type.integer, KnowledgeFact_Type.relationTrinaer.getIndex())));
 
 		setExpression2(new AddOrSetValuesToArguments(listExpressions, names));
 		
@@ -252,7 +252,7 @@ public class CreateKnowledgeAtomExpression extends CreateValue {
 		}
 
 		// sub type property
-		setExpression1(new Constant(new Value(Type.integer, KnowledgeAtomType.property.getIndex())));
+		setExpression1(new Constant(new Value(Type.integer, KnowledgeFact_Type.property.getIndex())));
 
 		setExpression2(new AddOrSetValuesToArguments(listExpressionsWithCriterion, names));
 		
@@ -273,7 +273,7 @@ public class CreateKnowledgeAtomExpression extends CreateValue {
 		}
 
 		// sub type property
-		setExpression1(new Constant(new Value(Type.integer, KnowledgeAtomType.property.getIndex())));
+		setExpression1(new Constant(new Value(Type.integer, KnowledgeFact_Type.property.getIndex())));
 
 		setExpression2(new AddOrSetValuesToArguments(listExpressionsWithCriterion, names));
 		
@@ -288,7 +288,7 @@ public class CreateKnowledgeAtomExpression extends CreateValue {
 		names.add(Value.VALUE_NAME_KNOWLEDGE_VALUE_VALUE + "0");
 
 		// setting the knowledge atom sub type 
-		setExpression1(new Constant(new Value(Type.integer, KnowledgeAtomType.value.getIndex())));
+		setExpression1(new Constant(new Value(Type.integer, KnowledgeFact_Type.value.getIndex())));
 		
 		setExpression2(new AddOrSetValuesToArguments(listExpressions, names));
 		

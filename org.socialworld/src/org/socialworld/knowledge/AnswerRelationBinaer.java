@@ -33,7 +33,7 @@ public class AnswerRelationBinaer extends KnowledgeRelationBinaer implements IAn
 		super(original);
 	}
 
-	public KnowledgeAtomType getType() { return KnowledgeAtomType.relationBinaer; }
+	public KnowledgeFact_Type getType() { return KnowledgeFact_Type.relationBinaer; }
 
 	public void setSubject(Lexem subject, Numerus numerus) {
 		setLexemSubject(subject);

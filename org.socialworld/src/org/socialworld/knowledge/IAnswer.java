@@ -6,7 +6,7 @@ import org.socialworld.conversation.Word;
 
 public interface IAnswer {
 
-	public KnowledgeAtomType getType();
+	public KnowledgeFact_Type getType();
 
 	public void setSubject(Lexem subject, Numerus numerus);
 	public void setSource(KnowledgeSource source);
