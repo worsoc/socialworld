@@ -93,4 +93,10 @@ public abstract class KnowledgeRelation extends KnowledgeFact {
 		return true;
 	}
 	
+	protected Lexem translateToLexem(Value value) {
+		Lexem result = null;
+		// TODO KNOWLEDGE translate from value to Lexem
+		return result;
+	}
+
 }

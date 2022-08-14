@@ -280,7 +280,8 @@ public class LoadHuman extends LoadAnimal {
 				lexems = new ArrayList<Lexem>();
 				lexems.add(word.getLexem());
 				
-				fact = new KnowledgeProperty(kfc, new KnowledgeFact_Atoms(lexems));
+				fact = new KnowledgeProperty(kfc, 
+						new KnowledgeFact_Atoms(KnowledgeFact_Atoms.translateToAtoms(lexems)));
 				source = new KnowledgeSource(sourceType, origin);
 				
 				knowledgeElement.add(fact, source);

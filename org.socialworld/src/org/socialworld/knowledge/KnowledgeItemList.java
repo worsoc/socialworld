@@ -30,7 +30,7 @@ public class KnowledgeItemList  {
 	
 	final int MAXIMUM_KNOWLEDGE_CAPACITY = 100;
 	
-	private ArrayList<KnowledgeItem> atomSearchList;
+	private ArrayList<KnowledgeItem> itemSearchList;
 	
 	private int validItemCount = 0;
 	
@@ -40,17 +40,17 @@ public class KnowledgeItemList  {
 	
 	public KnowledgeItemList() {
 		
-		atomSearchList = new ArrayList<KnowledgeItem>();
+		itemSearchList = new ArrayList<KnowledgeItem>();
 		
 		// add invalid KnowledgeValue as first dummy element (ensure there is always an element in the list)
 		
 		KnowledgeItem dummy = new KnowledgeValue();
-		atomSearchList.add(dummy);
+		itemSearchList.add(dummy);
 		
 	}
 	
 	protected int size() {
-		return this.atomSearchList.size();
+		return this.itemSearchList.size();
 	}
 
 	protected int countValidItems() {
@@ -59,7 +59,7 @@ public class KnowledgeItemList  {
 
 	protected boolean isItemValid(int index) {
 		if (index < size()) {
-			return atomSearchList.get(index).isItemValid();
+			return itemSearchList.get(index).isItemValid();
 		}
 		else {
 			return false;
@@ -69,14 +69,14 @@ public class KnowledgeItemList  {
 
 	protected KnowledgeItem getAtom(int index) {
 		if ((index >= 0) & (index < size()) )
-			return atomSearchList.get(index);
+			return itemSearchList.get(index);
 		else
 			return null;
 	}
 
 	protected KnowledgeItem getAtomAsCopy(int index) {
 		if ((index >= 0) & (index < size()) )
-			return atomSearchList.get(index).copy();
+			return itemSearchList.get(index).copy();
 		else
 			return null;
 	}
@@ -85,41 +85,39 @@ public class KnowledgeItemList  {
 	
 
 	public KnowledgeFact find(Lexem  value) {
-		KnowledgeItem atom;
+		KnowledgeItem item;
 		KnowledgeFact fact = null;
 		
-		List<Lexem> lexems;
-		int indexLexem;
-		int countLexems;
+		List<KnowledgeFactAtom> atoms;
 		
 		int index = 0;
 		int count;
 		
 		boolean found = false;
 		
-		count = atomSearchList.size();
+		count = itemSearchList.size();
 		
 		// finding the element with the specified value wordID
 		do
 		{
-			atom = atomSearchList.get(index);
+			item = itemSearchList.get(index);
 			index++;
 			
-			if (atom.isItemValid()) {
+			if (item.isItemValid()) {
 				
-				if (atom instanceof KnowledgeFact ) {
+				if (item instanceof KnowledgeFact ) {
 	
-					fact = (KnowledgeFact) atom;
-// TODO KNOWLEDGE
-/*					
-					lexems = fact.getLexems();
-					countLexems = lexems.size();
+					fact = (KnowledgeFact) item;
+					
+					atoms = fact.getAtoms();
 					
 					found = false;
-					for (indexLexem = 0; indexLexem < countLexems; indexLexem++) {
-						if (lexems.get(indexLexem) == value) found = true;
+					for (KnowledgeFactAtom atom : atoms) {
+						if ((atom.getType() == KnowledgeFactAtom_Type.lexem) 
+								&& (atom.getLexem() == value)) 
+							found = true;
 					}
-*/				
+				
 				}
 			
 			}
@@ -131,14 +129,14 @@ public class KnowledgeItemList  {
 		index--;
 		
 		// exchange the element for the previous one
-		// the knowledge fact is changed to any knowledge atom
+		// the knowledge fact is changed to any knowledge item
 		if ( found && index > 0)  {
 			
 			// the previous list element
-			atom = atomSearchList.get(index - 1);
+			item = itemSearchList.get(index - 1);
 					
-			atomSearchList.set(index - 1, fact);
-			atomSearchList.set(index , atom);
+			itemSearchList.set(index - 1, fact);
+			itemSearchList.set(index , item);
 			
 		}
 		
@@ -148,7 +146,7 @@ public class KnowledgeItemList  {
 	}
 	
 	private void add (KnowledgeItem atom) {
-		atomSearchList.add(atom);
+		itemSearchList.add(atom);
 	}
 	
 	protected void add(KnowledgeItem atom, KnowledgeSource source) {
@@ -165,15 +163,15 @@ public class KnowledgeItemList  {
 			atom.setSource(source);
 			
 			if (replacableIndex  == size()) {
-				this.atomSearchList.add( atom);
+				this.itemSearchList.add( atom);
 			}
 			else {
 				
-				if (this.atomSearchList.get(replacableIndex).isItemValid() == true) {
+				if (this.itemSearchList.get(replacableIndex).isItemValid() == true) {
 					this.validItemCount--;
 				}
 	
-				this.atomSearchList.set(replacableIndex, atom);
+				this.itemSearchList.set(replacableIndex, atom);
 			}
 			
 			this.validItemCount++;
@@ -186,7 +184,7 @@ public class KnowledgeItemList  {
 		
 		KnowledgeItem kaTmp;
 		
-		kaTmp = this.atomSearchList.get(index);
+		kaTmp = this.itemSearchList.get(index);
 		
 		if (kaTmp.isItemValid()) {
 			kaTmp.setValid( false);
@@ -208,7 +206,7 @@ public class KnowledgeItemList  {
 
 		for (index = 0; index < size(); index++) {
 			
-			atom = atomSearchList.get(index);
+			atom = itemSearchList.get(index);
 			if (atom.isItemValid()) {
 				
 				if (atom instanceof KnowledgeFact ) {
@@ -242,37 +240,35 @@ public class KnowledgeItemList  {
 		int count = 0;
 		int index;
 		
-		List<Lexem> lexems;
+		List<KnowledgeFactAtom> atoms;
 		int indexLexem;
 		int countLexems;
 
-		KnowledgeItem atom;
+		KnowledgeItem item;
 		KnowledgeFact fact;
 
 		for (index = 0; index < size(); index++) {
 			
-			atom = atomSearchList.get(index);
-			if (atom.isItemValid()) { 
+			item = itemSearchList.get(index);
+			if (item.isItemValid()) { 
 				
-				if (atom instanceof KnowledgeFact ) {
+				if (item instanceof KnowledgeFact ) {
 			
-					fact = (KnowledgeFact) atom;
+					fact = (KnowledgeFact) item;
 					
-					// TODO KNOWLEDGE
-/*					lexems = fact.getLexems();
-					countLexems = lexems.size();
 					
-					for (indexLexem = 0; indexLexem < countLexems; indexLexem++) {
-						
-						if (lexems.get(indexLexem) == value)  	{
-							
+					atoms = fact.getAtoms();
+					
+					for (KnowledgeFactAtom atom : atoms) {
+						if ((atom.getType() == KnowledgeFactAtom_Type.lexem) 
+								&& (atom.getLexem() == value)) 
 							result_tmp[count] = index;
 							count++;
 							break;
-						}
-						
 					}
-*/	
+					
+					
+					
 				}
 				
 			}
@@ -296,8 +292,8 @@ public class KnowledgeItemList  {
 		if (result == -1) return -1;
 	
 		for (index = result + 1; index < size(); index++) {
-			if (atomSearchList.get(index).isItemValid() == true) {
-				 if (atomSearchList.get(result).getItemAccessCount() < atomSearchList.get(index).getItemAccessCount()) 	result = index;
+			if (itemSearchList.get(index).isItemValid() == true) {
+				 if (itemSearchList.get(result).getItemAccessCount() < itemSearchList.get(index).getItemAccessCount()) 	result = index;
 			}
 		}
 		return result;
@@ -313,8 +309,8 @@ public class KnowledgeItemList  {
 		if (result == -1) return -1;
 
 		for (index = result + 1; index < size(); index++) {
-			if (atomSearchList.get(index).isItemValid() == true) {
-			 if (atomSearchList.get(result).getItemAccessCount() > atomSearchList.get(index).getItemAccessCount()) 	result = index;
+			if (itemSearchList.get(index).isItemValid() == true) {
+			 if (itemSearchList.get(result).getItemAccessCount() > itemSearchList.get(index).getItemAccessCount()) 	result = index;
 			}
 		}
 		return result;
@@ -325,7 +321,7 @@ public class KnowledgeItemList  {
 		int index;
 	
 		for (index = 0; index < size(); index++) {
-			if (atomSearchList.get(index).isItemValid() == true)			  	return index;
+			if (itemSearchList.get(index).isItemValid() == true)			  	return index;
 		}
 		return -1;
 		
@@ -343,11 +339,11 @@ public class KnowledgeItemList  {
 		
 		index = 0;
 		for (i = 0; i < count; i++) {
-			if (atomSearchList.get(i).isItemValid() == false) {
+			if (itemSearchList.get(i).isItemValid() == false) {
 				index = i;
 				return index;
 			}
-			else if (atomSearchList.get(i).getItemAccessCount() < atomSearchList.get(index).getItemAccessCount()) 	index = i;
+			else if (itemSearchList.get(i).getItemAccessCount() < itemSearchList.get(index).getItemAccessCount()) 	index = i;
 			
 		}
 		
@@ -360,7 +356,7 @@ public class KnowledgeItemList  {
 			if (kalB.isItemValid(j)) {
 				for (int i = 0; i < size(); i++) {
 					if (isItemValid(i))
-						if (atomSearchList.get(i).equals(kalB.getAtom(j))) {
+						if (itemSearchList.get(i).equals(kalB.getAtom(j))) {
 							break;
 						}
 						else {
@@ -380,7 +376,7 @@ public class KnowledgeItemList  {
 			if (isItemValid(i)) {
 				for (int j = 0; j < kalB.size(); j++) {
 					if (kalB.isItemValid(j)) {
-						if (atomSearchList.get(i).equals(kalB.getAtom(j)))  {
+						if (itemSearchList.get(i).equals(kalB.getAtom(j)))  {
 							countEqual++;
 							break;
 						}
@@ -410,12 +406,12 @@ public class KnowledgeItemList  {
 			
 			tmpCopyKF = b.getAtomAsCopy(index);
 			
-			if (!atomSearchList.get(index).equals(tmpCopyKF)) 
+			if (!itemSearchList.get(index).equals(tmpCopyKF)) 
 				return false;
 			// TODO compare source too, in implementation KnowledgeItem.equals()
-			if (!atomSearchList.get(index).getSource().equals(b.getAtom(index).getSource())) 
+			if (!itemSearchList.get(index).getSource().equals(b.getAtom(index).getSource())) 
 				return false;
-			if (atomSearchList.get(index).isItemValid() != tmpCopyKF.isItemValid()) 
+			if (itemSearchList.get(index).isItemValid() != tmpCopyKF.isItemValid()) 
 				return false;
 
 		}

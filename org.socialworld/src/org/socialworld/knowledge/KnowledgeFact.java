@@ -21,12 +21,9 @@
 */
 package org.socialworld.knowledge;
 
-//import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.calculation.Value;
-//import org.socialworld.collections.ValueArrayList;
-import org.socialworld.conversation.Lexem;
 
 public abstract class KnowledgeFact extends KnowledgeItem {
 	
@@ -36,9 +33,9 @@ public abstract class KnowledgeFact extends KnowledgeItem {
 	abstract KnowledgeFact_Criterion getCriterion();
 
 	
-	protected Lexem translateToLexem(Value value) {
-		Lexem result = null;
-		// TODO translate from value to lexem
+	protected KnowledgeFactAtom translateToKnowledgeFactAtom(Value value) {
+		KnowledgeFactAtom result = null;
+		// TODO KNOWLEDGE translate from value to KnowledgeFactAtom
 		return result;
 	}
 	
