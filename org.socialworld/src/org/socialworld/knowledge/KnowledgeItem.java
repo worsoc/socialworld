@@ -23,7 +23,7 @@ package org.socialworld.knowledge;
 
 import java.util.List;
 
-public abstract class KnowledgeAtom {
+public abstract class KnowledgeItem {
 
 	private int itemAccessCount;
 	private boolean itemIsValid;
@@ -31,7 +31,7 @@ public abstract class KnowledgeAtom {
 	private KnowledgeSource source;
 	private List<String> notes; 
 	
-	abstract KnowledgeAtom copy();
+	abstract KnowledgeItem copy();
 
 	void setValid(boolean isValid) {
 		this.itemIsValid = isValid;

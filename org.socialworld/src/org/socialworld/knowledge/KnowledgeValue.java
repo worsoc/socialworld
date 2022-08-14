@@ -24,7 +24,7 @@ package org.socialworld.knowledge;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 
-public class KnowledgeValue extends KnowledgeAtom {
+public class KnowledgeValue extends KnowledgeItem {
 
 	private Value value;
 	
@@ -50,7 +50,7 @@ public class KnowledgeValue extends KnowledgeAtom {
 		}
 	}
 
-	KnowledgeAtom copy() {	
+	KnowledgeItem copy() {	
 		return new KnowledgeValue(this);
 	}
 	
