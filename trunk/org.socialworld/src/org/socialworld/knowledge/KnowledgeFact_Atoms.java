@@ -25,14 +25,14 @@ import java.util.List;
 
 import org.socialworld.conversation.Lexem;
 
-public class KnowledgeFact_Lexems {
+public class KnowledgeFact_Atoms {
 	private List<Lexem> lexems;
 	
-	public KnowledgeFact_Lexems(List<Lexem> lexems) {
+	public KnowledgeFact_Atoms(List<Lexem> lexems) {
 		this.lexems = lexems;
 	}
 	
-	KnowledgeFact_Lexems(KnowledgeFact_Lexems original) {
+	KnowledgeFact_Atoms(KnowledgeFact_Atoms original) {
 		this.lexems = original.getLexems();
 	}
 	
@@ -42,7 +42,7 @@ public class KnowledgeFact_Lexems {
 	
 
 
-	protected boolean equals(KnowledgeFact_Lexems b) {
+	protected boolean equals(KnowledgeFact_Atoms b) {
 		return this.lexems.equals(b.lexems);
 	}
 }

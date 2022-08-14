@@ -38,7 +38,7 @@ import org.socialworld.knowledge.Acquaintance;
 import org.socialworld.knowledge.KnowledgeElement;
 import org.socialworld.knowledge.KnowledgeFact;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
-import org.socialworld.knowledge.KnowledgeFact_Lexems;
+import org.socialworld.knowledge.KnowledgeFact_Atoms;
 import org.socialworld.knowledge.KnowledgeProperty;
 import org.socialworld.knowledge.KnowledgeSource;
 import org.socialworld.knowledge.KnowledgeSource_Type;
@@ -280,7 +280,7 @@ public class LoadHuman extends LoadAnimal {
 				lexems = new ArrayList<Lexem>();
 				lexems.add(word.getLexem());
 				
-				fact = new KnowledgeProperty(kfc, new KnowledgeFact_Lexems(lexems));
+				fact = new KnowledgeProperty(kfc, new KnowledgeFact_Atoms(lexems));
 				source = new KnowledgeSource(sourceType, origin);
 				
 				knowledgeElement.add(fact, source);
