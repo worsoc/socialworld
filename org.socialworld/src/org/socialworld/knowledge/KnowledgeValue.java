@@ -21,6 +21,9 @@
 */
 package org.socialworld.knowledge;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 
@@ -53,7 +56,11 @@ public class KnowledgeValue extends KnowledgeItem {
 	KnowledgeItem copy() {	
 		return new KnowledgeValue(this);
 	}
-	
+		
+	List<String> getNotes(int index) {
+		return new ArrayList<String>();  // TODO KNOWLEDGE this.lexems.getLexems();
+	}
+
 	Value getValue() {
 		return this.value;
 	}

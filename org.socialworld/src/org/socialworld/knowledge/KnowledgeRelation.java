@@ -68,7 +68,6 @@ public abstract class KnowledgeRelation extends KnowledgeFact {
 	Lexem getLexemSubject() { return subject; }
 	Numerus getNumerusSubject() { return numerusSubject; }
 	
-	abstract List<Lexem> getLexems();
 	
 	KnowledgeFact_Criterion getCriterion() {
 		return KnowledgeFact_Criterion.relation;

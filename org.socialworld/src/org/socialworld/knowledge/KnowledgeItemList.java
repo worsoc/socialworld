@@ -110,7 +110,8 @@ public class KnowledgeItemList  {
 				if (atom instanceof KnowledgeFact ) {
 	
 					fact = (KnowledgeFact) atom;
-					
+// TODO KNOWLEDGE
+/*					
 					lexems = fact.getLexems();
 					countLexems = lexems.size();
 					
@@ -118,7 +119,7 @@ public class KnowledgeItemList  {
 					for (indexLexem = 0; indexLexem < countLexems; indexLexem++) {
 						if (lexems.get(indexLexem) == value) found = true;
 					}
-				
+*/				
 				}
 			
 			}
@@ -257,7 +258,8 @@ public class KnowledgeItemList  {
 			
 					fact = (KnowledgeFact) atom;
 					
-					lexems = fact.getLexems();
+					// TODO KNOWLEDGE
+/*					lexems = fact.getLexems();
 					countLexems = lexems.size();
 					
 					for (indexLexem = 0; indexLexem < countLexems; indexLexem++) {
@@ -270,7 +272,7 @@ public class KnowledgeItemList  {
 						}
 						
 					}
-	
+*/	
 				}
 				
 			}
