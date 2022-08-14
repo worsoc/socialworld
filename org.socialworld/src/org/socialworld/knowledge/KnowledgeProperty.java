@@ -31,7 +31,7 @@ import org.socialworld.conversation.Lexem;
 public class KnowledgeProperty extends KnowledgeFact {
 
 	private KnowledgeFact_Criterion criterion;
-	private KnowledgeFact_Lexems lexems;
+	private KnowledgeFact_Atoms lexems;
 	
 	public KnowledgeProperty(Value criterion, ValueArrayList values ) {
 		this.criterion = KnowledgeFact_Criterion.getName( (int) criterion.getValue());
@@ -39,10 +39,10 @@ public class KnowledgeProperty extends KnowledgeFact {
 		for (int index =  0; index < values.size(); index++) {
 			lexems.add(translateToLexem(values.get(index)));
 		}
-		this.lexems = new KnowledgeFact_Lexems(lexems);
+		this.lexems = new KnowledgeFact_Atoms(lexems);
 	}
 
-	public KnowledgeProperty(KnowledgeFact_Criterion criterion, KnowledgeFact_Lexems lexems ) {
+	public KnowledgeProperty(KnowledgeFact_Criterion criterion, KnowledgeFact_Atoms lexems ) {
 		this.criterion = criterion;
 		this.lexems = lexems;
 	}
@@ -50,7 +50,7 @@ public class KnowledgeProperty extends KnowledgeFact {
 	protected KnowledgeProperty(KnowledgeProperty original) {
 		if (original != null) {
 			this.criterion  = original.getCriterion();
-			// TODO KNOWLEDGE this.lexems = new KnowledgeFact_Lexems(original.getLexems());
+			// TODO KNOWLEDGE this.lexems = new KnowledgeFact_Atoms(original.getLexems());
 			this.setSource(original.getSource());
 			this.setValid(original.isItemValid());
 			this.resetAccessCount();
