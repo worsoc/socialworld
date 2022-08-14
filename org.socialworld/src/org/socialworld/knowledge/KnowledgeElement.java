@@ -29,7 +29,7 @@ public class KnowledgeElement {
 
 	private Lexem subject;
 	
-	private KnowledgeAtomList knowledgeAtomList;
+	private KnowledgeItemList knowledgeItemList;
 
 	public KnowledgeElement(Lexem subject) {
 		
@@ -39,11 +39,11 @@ public class KnowledgeElement {
 	}
 
 	private void init() {
-		this.knowledgeAtomList = new KnowledgeAtomList();
+		this.knowledgeItemList = new KnowledgeItemList();
 	}
 	
 	protected void setSubject(Lexem subject) {
-		if (knowledgeAtomList.countValidItems() == 0)		this.subject = subject;
+		if (knowledgeItemList.countValidItems() == 0)		this.subject = subject;
 	}
 	
 	Lexem getLexemSubject() {
@@ -55,16 +55,16 @@ public class KnowledgeElement {
 	}
 
 	public void add(KnowledgeAtom atom, KnowledgeSource source) {
-		this.knowledgeAtomList.add(atom, source);
+		this.knowledgeItemList.add(atom, source);
 	}
 	
 	KnowledgeAtom getAtomAsCopy(int index) {
-		return this.knowledgeAtomList.getAtomAsCopy(index);
+		return this.knowledgeItemList.getAtomAsCopy(index);
 	}
 
 	KnowledgeSource getSourceAsCopy(int index) {
 		KnowledgeAtom ka;
-		ka = this.knowledgeAtomList.getAtom(index);
+		ka = this.knowledgeItemList.getAtom(index);
 		if (ka != null) {
 			return ka.getSourceAsCopy();
 		}
@@ -74,15 +74,15 @@ public class KnowledgeElement {
 	}
 
 	int[] findFactsForCriterion(KnowledgeFact_Criterion criterion) {
-		return this.knowledgeAtomList.findFactsForCriterion(criterion);
+		return this.knowledgeItemList.findFactsForCriterion(criterion);
 	}
 
-	private KnowledgeAtomList getAtomList() {
-		return this.knowledgeAtomList;		
+	private KnowledgeItemList getAtomList() {
+		return this.knowledgeItemList;		
 	}
 	
 	int countValidFacts() {
-		return this.knowledgeAtomList.countValidItems();
+		return this.knowledgeItemList.countValidItems();
 	}
 	
 	public boolean isValid() {
@@ -94,7 +94,7 @@ public class KnowledgeElement {
 		int countEqual = 0;
 		
 		if (this.subject == keB.getLexemSubject()) {
-			countEqual = knowledgeAtomList.compareTo(keB.getAtomList());
+			countEqual = knowledgeItemList.compareTo(keB.getAtomList());
 		}
 		
 		return countEqual;
