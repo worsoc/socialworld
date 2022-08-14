@@ -50,6 +50,17 @@ public class KnowledgeRelationBinaer extends KnowledgeRelation {
 		return new KnowledgeRelationBinaer(this);
 	}
 
+	List<KnowledgeFactAtom> getAtoms() {
+		List<KnowledgeFactAtom> result = new ArrayList<KnowledgeFactAtom>();
+		// TODO KNOWLEDGE result.add(getLexemSubject());
+		
+		return result;
+	}
+	
+	List<String> getNotes(int index) {
+		return new ArrayList<String>();  // TODO KNOWLEDGE this.lexems.getLexems();
+	}
+
 	@Override
 	public Word getVerb() {
 		return getLexemVerb().getWord(getTense());

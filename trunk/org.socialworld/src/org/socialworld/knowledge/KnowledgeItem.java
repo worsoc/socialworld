@@ -29,10 +29,10 @@ public abstract class KnowledgeItem {
 	private boolean itemIsValid;
 
 	private KnowledgeSource source;
-	private List<String> notes; 
 	
 	abstract KnowledgeItem copy();
-
+	abstract List<String> getNotes(int index);
+	
 	void setValid(boolean isValid) {
 		this.itemIsValid = isValid;
 	}
@@ -45,9 +45,6 @@ public abstract class KnowledgeItem {
 		return this.source;
 	}
 	
-	void addNote(String note) {
-		this.notes.add(note);
-	}
 
 	KnowledgeSource getSourceAsCopy() {
 		return new KnowledgeSource(this.source);

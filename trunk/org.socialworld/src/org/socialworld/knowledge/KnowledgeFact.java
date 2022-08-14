@@ -32,7 +32,7 @@ public abstract class KnowledgeFact extends KnowledgeItem {
 	
 	
 	
-	abstract List<Lexem> getLexems();
+	abstract List<KnowledgeFactAtom> getAtoms();
 	abstract KnowledgeFact_Criterion getCriterion();
 
 	
