@@ -21,28 +21,48 @@
 */
 package org.socialworld.knowledge;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.conversation.Lexem;
 
 public class KnowledgeFact_Atoms {
-	private List<Lexem> lexems;
+	private List<KnowledgeFactAtom> atoms;
 	
-	public KnowledgeFact_Atoms(List<Lexem> lexems) {
-		this.lexems = lexems;
+	public KnowledgeFact_Atoms(List<KnowledgeFactAtom> atoms) {
+		this.atoms = atoms;
+	}
+
+	public static List<KnowledgeFactAtom> translateToAtoms(List<Lexem> lexems) {
+		List<KnowledgeFactAtom> atoms = new ArrayList<KnowledgeFactAtom>();
+		for (Lexem lexem : lexems) {
+			atoms.add(new KnowledgeFactAtom(lexem));
+		}
+		return atoms;
 	}
 	
 	KnowledgeFact_Atoms(KnowledgeFact_Atoms original) {
-		this.lexems = original.getLexems();
+		this.atoms = original.getAtoms();
+	}
+
+	List<KnowledgeFactAtom> getAtoms() {
+		return this.atoms;
 	}
 	
+
 	List<Lexem> getLexems() {
-		return this.lexems;
+		List<Lexem> lexems = new ArrayList<Lexem>();
+		for (KnowledgeFactAtom atom : this.atoms) {
+			if (atom.getType() == KnowledgeFactAtom_Type.lexem) {
+				lexems.add(atom.getLexem());
+			}
+		}
+		return lexems;
 	}
 	
 
 
 	protected boolean equals(KnowledgeFact_Atoms b) {
-		return this.lexems.equals(b.lexems);
+		return this.atoms.equals(b.atoms);
 	}
 }

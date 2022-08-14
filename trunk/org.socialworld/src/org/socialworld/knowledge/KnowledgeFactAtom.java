@@ -31,8 +31,8 @@ public class KnowledgeFactAtom {
 
 	private KnowledgeFactAtom_Type type;
 	
-	private Value value;
-	private Lexem lexem;
+	private Value value = null;
+	private Lexem lexem = null;
 	
 	private List<String> notes;
 	
@@ -75,4 +75,17 @@ public class KnowledgeFactAtom {
 		this.notes = notes;
 	}
 
+	
+	public KnowledgeFactAtom_Type getType() {
+		return this.type;
+	}
+	
+	public Value getValue() {
+		return this.value;
+	}
+
+	public Lexem getLexem() {
+		return this.lexem;
+	}
+	
 }

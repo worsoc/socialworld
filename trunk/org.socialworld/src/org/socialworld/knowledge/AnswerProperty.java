@@ -64,15 +64,18 @@ public class AnswerProperty extends KnowledgeProperty implements IAnswer {
 	}
 	
 	public Word getAnswerValue() {
-		// TODO choose from lexem list
-		// TODO KNOWLEDGE
-		/*
-		List<Lexem> lexems = getLexems();
-		if (lexems.size() > 0)
-			return lexems.get(0).getWord();
-		else
-		*/
-			return Word.getNoWord();
+		// TODO choose from  list
+		
+		List<KnowledgeFactAtom> atoms = getAtoms();
+		if (atoms.size() > 0) {
+			for (KnowledgeFactAtom atom : atoms ) {
+				if (atom.getType() == KnowledgeFactAtom_Type.lexem) {
+					return atom.getLexem().getWord();
+				}
+			}
+		}
+		
+		return Word.getNoWord();
 		
 	}
 

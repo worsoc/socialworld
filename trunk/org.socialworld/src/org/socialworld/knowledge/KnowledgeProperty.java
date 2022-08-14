@@ -26,31 +26,30 @@ import java.util.List;
 
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
-import org.socialworld.conversation.Lexem;
 
 public class KnowledgeProperty extends KnowledgeFact {
 
 	private KnowledgeFact_Criterion criterion;
-	private KnowledgeFact_Atoms lexems;
+	private KnowledgeFact_Atoms atoms;
 	
 	public KnowledgeProperty(Value criterion, ValueArrayList values ) {
 		this.criterion = KnowledgeFact_Criterion.getName( (int) criterion.getValue());
-		List<Lexem> lexems = new ArrayList<Lexem>();
+		List<KnowledgeFactAtom> atoms = new ArrayList<KnowledgeFactAtom>();
 		for (int index =  0; index < values.size(); index++) {
-			lexems.add(translateToLexem(values.get(index)));
+			atoms.add(translateToKnowledgeFactAtom(values.get(index)));
 		}
-		this.lexems = new KnowledgeFact_Atoms(lexems);
+		this.atoms = new KnowledgeFact_Atoms(atoms);
 	}
 
-	public KnowledgeProperty(KnowledgeFact_Criterion criterion, KnowledgeFact_Atoms lexems ) {
+	public KnowledgeProperty(KnowledgeFact_Criterion criterion, KnowledgeFact_Atoms atoms ) {
 		this.criterion = criterion;
-		this.lexems = lexems;
+		this.atoms = atoms;
 	}
 	
 	protected KnowledgeProperty(KnowledgeProperty original) {
 		if (original != null) {
 			this.criterion  = original.getCriterion();
-			// TODO KNOWLEDGE this.lexems = new KnowledgeFact_Atoms(original.getLexems());
+			this.atoms = new KnowledgeFact_Atoms(original.getAtoms());
 			this.setSource(original.getSource());
 			this.setValid(original.isItemValid());
 			this.resetAccessCount();
@@ -74,7 +73,7 @@ public class KnowledgeProperty extends KnowledgeFact {
 	}
 	
 	protected boolean equals(KnowledgeProperty b) {
-		return ( this.criterion == b.criterion & this.lexems.equals(b.lexems) );
+		return ( this.criterion == b.criterion & this.atoms.equals(b.atoms) );
 	}
 	
 
