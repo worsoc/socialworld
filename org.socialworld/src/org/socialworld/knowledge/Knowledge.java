@@ -217,11 +217,13 @@ public class Knowledge extends SimProperty {
 				
 				if (atom instanceof KnowledgeFact ) {
 					fact = (KnowledgeFact) atom;
-					source = knowledgeElement.getSourceAsCopy(indexesForCriterion[indexFact]);
 					
 					answer = new AnswerProperty((KnowledgeProperty)fact);
-					answer.setSubject(lexemSubject, numerusSubject);
-					answer.setSource(source);
+					answer.setSpeechRecognitionsSubjectWord(subject);
+					
+					// redundant because the copy constructor sets a source copy
+					source = knowledgeElement.getSourceAsCopy(indexesForCriterion[indexFact]);
+					answer.changeSource(source);
 					
 					answers.add(answer);
 					withAnswer = true;

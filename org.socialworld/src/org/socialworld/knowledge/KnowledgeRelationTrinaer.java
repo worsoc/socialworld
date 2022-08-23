@@ -65,32 +65,18 @@ public class KnowledgeRelationTrinaer extends KnowledgeRelation {
 		return new ArrayList<String>();  // TODO KNOWLEDGE this.lexems.getLexems();
 	}
 
-	@Override
-	public Word getVerb() {
-		return getLexemVerb().getWord(getTense());
-	}
 
-	@Override
-	public Word getAdverb() {
-		return getLexemAdverb().getWord();
-	}
-	
-	@Override
-	public Word getSubject() {
-		return getLexemSubject().getWord(getNumerusSubject());
-	}
-
-	public Word getObject1() {
+	public Word getObject1AsWord() {
 		return object1.getWord(numerusObject1);
 	}
 
-	public Word getObject2() {
+	public Word getObject2AsWord() {
 		return object2.getWord(numerusObject2);
 	}
 	
 	List<Lexem> getLexems() {
 		List<Lexem> result = new ArrayList<Lexem>();
-		result.add(getLexemSubject());
+		result.add(getSubjectsLexem());
 		result.add(this.object1);
 		result.add(this.object2);
 		

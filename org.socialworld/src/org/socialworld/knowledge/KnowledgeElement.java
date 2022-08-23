@@ -55,6 +55,7 @@ public class KnowledgeElement {
 	}
 
 	public void add(KnowledgeItem atom, KnowledgeSource source) {
+		atom.setSubject(this.subject);
 		this.knowledgeItemList.add(atom, source);
 	}
 	

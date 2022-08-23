@@ -23,12 +23,15 @@ package org.socialworld.knowledge;
 
 import java.util.List;
 
+import org.socialworld.conversation.Lexem;
+
 public abstract class KnowledgeItem {
 
 	private int itemAccessCount;
 	private boolean itemIsValid;
 
 	private KnowledgeSource source;
+	private Lexem subject;
 	
 	abstract KnowledgeItem copy();
 	abstract List<String> getNotes(int index);
@@ -41,7 +44,7 @@ public abstract class KnowledgeItem {
 		this.source = source;
 	}
 	
-	KnowledgeSource getSource() {
+	public KnowledgeSource getSource() {
 		return this.source;
 	}
 	
@@ -50,6 +53,14 @@ public abstract class KnowledgeItem {
 		return new KnowledgeSource(this.source);
 	}
 
+	protected void setSubject(Lexem subject) {
+		this.subject = subject;
+	}
+	
+	protected Lexem getSubject() {
+		return this.subject;
+	}
+	
 	boolean isItemValid() {
 		return this.itemIsValid;
 	}
