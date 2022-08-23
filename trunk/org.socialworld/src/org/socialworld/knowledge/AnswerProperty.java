@@ -30,11 +30,11 @@ import org.socialworld.conversation.Word;
 public class AnswerProperty extends KnowledgeProperty implements IAnswer {
 	
 
-	private Lexem subject;
-	private KnowledgeSource source;
+	private KnowledgeProperty originalProperty;
 	
 	public AnswerProperty(KnowledgeProperty original) {
 		super(original);
+		this.originalProperty = original;
 	}
 	
 	/*
@@ -44,20 +44,19 @@ public class AnswerProperty extends KnowledgeProperty implements IAnswer {
 	*/
 	public KnowledgeFact_Type getType() { return KnowledgeFact_Type.property; }
 	
-	public void setSubject(Lexem subject, Numerus numerus) {
-		this.subject = subject;
+	public void changeSubject(Lexem subject) {
+		setSubject(subject);
 	}
 	
-	public Word getSubject() { return this.subject.getWord(); }
-	
+	public Word getSubjectAsWord() { return getSubject().getWord(); }
 
-	public void setSource(KnowledgeSource source) {
-		this.source = source;
+	public void setSpeechRecognitionsSubjectWord(Word subject) {
+		changeSubject(subject.getLexem());
 	}
-	
-	public KnowledgeSource getSource() { return this.source; }
 
-
+	public void changeSource(KnowledgeSource newSource) {
+		this.setSource(newSource);
+	}
 	
 	public KnowledgeFact_Criterion getAnswerCriterion() {
 		return getCriterion();
@@ -79,9 +78,6 @@ public class AnswerProperty extends KnowledgeProperty implements IAnswer {
 		
 	}
 
-	public KnowledgeSource getAnswerSource() {
-		return this.source;
-	}
 
 	public void sortBySource() {
 		

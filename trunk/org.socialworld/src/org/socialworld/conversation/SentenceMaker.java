@@ -36,8 +36,8 @@ public class SentenceMaker {
 		Word subject;
 		Word verb;
 
-		subject = answer.getSubject();
-		verb = answer.getVerb();
+		subject = answer.getSubjectAsWord();
+		verb = answer.getVerbAsWord();
 
 		if (lastSubject == subject)
 			sentence = subject.getPronoun().getWord();
@@ -61,9 +61,9 @@ public class SentenceMaker {
 		Word verb;
 		Word object;
 
-		subject = answer.getSubject();
-		verb = answer.getVerb();
-		object = answer.getObject();
+		subject = answer.getSubjectAsWord();
+		verb = answer.getVerbAsWord();
+		object = answer.getObjectAsWord();
 	
 		if (lastSubject == subject)
 			sentence = subject.getPronoun().getWord();
@@ -94,10 +94,10 @@ public class SentenceMaker {
 		Word object1;
 		Word object2;
 
-		subject = answer.getSubject();
-		verb = answer.getVerb();
-		object1 = answer.getObject1();
-		object2 = answer.getObject2();
+		subject = answer.getSubjectAsWord();
+		verb = answer.getVerbAsWord();
+		object1 = answer.getObject1AsWord();
+		object2 = answer.getObject2AsWord();
 	
 		if (lastSubject == subject)
 			sentence = subject.getPronoun().getWord();
@@ -134,7 +134,7 @@ public class SentenceMaker {
 		
 		
 	// TODO implement getStatementSentenceForFact()
-		subject = answer.getSubject();
+		subject = answer.getSubjectAsWord();
 		criterion = answer.getAnswerCriterion();
 		value = answer.getAnswerValue();
 	

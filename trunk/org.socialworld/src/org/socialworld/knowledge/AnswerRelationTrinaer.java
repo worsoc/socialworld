@@ -23,26 +23,35 @@ package org.socialworld.knowledge;
 
 import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Numerus;
+import org.socialworld.conversation.Word;
 
 public class AnswerRelationTrinaer extends KnowledgeRelationTrinaer implements IAnswer{
 
-	private KnowledgeSource source;
+	private KnowledgeRelationTrinaer originalRelation;
 
 	public AnswerRelationTrinaer(KnowledgeRelationTrinaer original) {
 		super(original);
+		this.originalRelation = original;
 	}
 
 	public KnowledgeFact_Type getType() { return KnowledgeFact_Type.relationTrinaer; }
 
-	public void setSubject(Lexem subject, Numerus numerus) {
-		setLexemSubject(subject);
-		setNumerusSubject(numerus);
+
+	public void changeSubject(Lexem subject) {
+		setSubject(subject);
 	}
 
-	public void setSource(KnowledgeSource source) {
-		this.source = source;
+	public void setSpeechRecognitionsSubjectWord(Word subject) {
+		setSubject(subject.getLexem(), subject.getNumerus());
 	}
 
-	public KnowledgeSource getSource() { return this.source; }
+	public void changeSource(KnowledgeSource source) {
+		setSource( source);
+	}
+
+	private void setSubject(Lexem subject, Numerus numerus) {
+		setSubjectsLexem(subject);
+		setSubjectsNumerus(numerus);
+	}
 
 }

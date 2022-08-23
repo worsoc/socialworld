@@ -26,7 +26,6 @@ import java.util.List;
 
 import org.socialworld.calculation.Value;
 import org.socialworld.conversation.Lexem;
-import org.socialworld.conversation.Word;
 
 public class KnowledgeRelationUnaer extends KnowledgeRelation {
 
@@ -57,25 +56,10 @@ public class KnowledgeRelationUnaer extends KnowledgeRelation {
 	}
 	
 
-	@Override
-	public Word getVerb() {
-		return getLexemVerb().getWord(getTense());
-	}
-
-	@Override
-	public Word getAdverb() {
-		return getLexemAdverb().getWord();
-	}
-	
-	@Override
-	public Word getSubject() {
-		return getLexemSubject().getWord(getNumerusSubject());
-	}
-
 	
 	List<Lexem> getLexems() {
 		List<Lexem> result = new ArrayList<Lexem>();
-		result.add(getLexemSubject());
+		result.add(getSubjectsLexem());
 		
 		return result;
 	}

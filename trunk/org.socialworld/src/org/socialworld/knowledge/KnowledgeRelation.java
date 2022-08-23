@@ -21,7 +21,6 @@
 */
 package org.socialworld.knowledge;
 
-import java.util.List;
 
 import org.socialworld.calculation.Value;
 import org.socialworld.conversation.Lexem;
@@ -38,11 +37,10 @@ public abstract class KnowledgeRelation extends KnowledgeFact {
 	
 	private Lexem adverb;
 	
-	private Lexem subject;
 	private Numerus numerusSubject;
 	
 	protected KnowledgeRelation(Value subject, Value verb, Value adverb) {
-		this.subject = translateToLexem(subject);
+		setSubject(translateToLexem(subject));
 		this.verb = translateToLexem(verb);
 		this.adverb = translateToLexem(adverb);
 		// TODO set tense and numerus
@@ -54,30 +52,39 @@ public abstract class KnowledgeRelation extends KnowledgeFact {
 		}
 	}
 
-	abstract Word getSubject();
-	abstract Word getVerb();
-	abstract Word getAdverb();
+	public Word getVerbAsWord() {
+		return verb.getWord(tense);
+	}
+
+	public Word getAdverbAsWord() {
+		return adverb.getWord();
+	}
+	
+	public Word getSubjectAsWord() {
+		return getSubjectsLexem().getWord(getSubjectsNumerus());
+	}
 	
 	boolean isSelfRelation() {return isSelfRelation;}
 
-	Lexem getLexemVerb() { return verb; }
-	Tense getTense() { return tense; }
+	Lexem getVerbsLexem() { return verb; }
+	Tense getVerbsTense() { return tense; }
 
-	Lexem getLexemAdverb() { return adverb; }
+	Lexem getAdverbsLexem() { return adverb; }
 	
-	Lexem getLexemSubject() { return subject; }
-	Numerus getNumerusSubject() { return numerusSubject; }
+	Lexem getSubjectsLexem() { return getSubject(); }
+	Numerus getSubjectsNumerus() { return numerusSubject; }
 	
 	
 	KnowledgeFact_Criterion getCriterion() {
 		return KnowledgeFact_Criterion.relation;
 	}
 	
-	void setLexemSubject(Lexem subject) {
-		this.subject = subject;
+	
+	void setSubjectsLexem(Lexem subject) {
+		setSubject(subject);
 	}
 
-	void setNumerusSubject(Numerus numerus) {
+	void setSubjectsNumerus(Numerus numerus) {
 		this.numerusSubject = numerus;
 	}
 	

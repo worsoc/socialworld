@@ -61,28 +61,14 @@ public class KnowledgeRelationBinaer extends KnowledgeRelation {
 		return new ArrayList<String>();  // TODO KNOWLEDGE this.lexems.getLexems();
 	}
 
-	@Override
-	public Word getVerb() {
-		return getLexemVerb().getWord(getTense());
-	}
 
-	@Override
-	public Word getAdverb() {
-		return getLexemAdverb().getWord();
-	}
-	
-	@Override
-	public Word getSubject() {
-		return getLexemSubject().getWord(getNumerusSubject());
-	}
-
-	public Word getObject() {
+	public Word getObjectAsWord() {
 		return object.getWord(numerusObject);
 	}
 	
 	List<Lexem> getLexems() {
 		List<Lexem> result = new ArrayList<Lexem>();
-		result.add(getLexemSubject());
+		result.add(getSubjectsLexem());
 		result.add(this.object);
 		
 		return result;

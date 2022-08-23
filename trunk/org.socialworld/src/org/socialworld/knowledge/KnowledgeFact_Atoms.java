@@ -42,7 +42,14 @@ public class KnowledgeFact_Atoms {
 	}
 	
 	KnowledgeFact_Atoms(KnowledgeFact_Atoms original) {
-		this.atoms = original.getAtoms();
+		
+		List<KnowledgeFactAtom> originalAtoms = original.getAtoms();
+		this.atoms = new ArrayList<KnowledgeFactAtom>();
+		
+		for (KnowledgeFactAtom atom : originalAtoms) {
+			this.atoms.add(atom);
+		}
+				
 	}
 
 	List<KnowledgeFactAtom> getAtoms() {

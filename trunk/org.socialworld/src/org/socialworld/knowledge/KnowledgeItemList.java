@@ -26,7 +26,7 @@ import java.util.List;
 
 import org.socialworld.conversation.Lexem;
 
-public class KnowledgeItemList  {
+final class KnowledgeItemList  {
 	
 	final int MAXIMUM_KNOWLEDGE_CAPACITY = 100;
 	
@@ -38,7 +38,7 @@ public class KnowledgeItemList  {
 
 	
 	
-	public KnowledgeItemList() {
+	KnowledgeItemList() {
 		
 		itemSearchList = new ArrayList<KnowledgeItem>();
 		
@@ -49,15 +49,15 @@ public class KnowledgeItemList  {
 		
 	}
 	
-	protected int size() {
+	int size() {
 		return this.itemSearchList.size();
 	}
 
-	protected int countValidItems() {
+	int countValidItems() {
 		return validItemCount;
 	}
 
-	protected boolean isItemValid(int index) {
+	boolean isItemValid(int index) {
 		if (index < size()) {
 			return itemSearchList.get(index).isItemValid();
 		}
@@ -67,14 +67,14 @@ public class KnowledgeItemList  {
 			 
 	}
 
-	protected KnowledgeItem getAtom(int index) {
+	KnowledgeItem getAtom(int index) {
 		if ((index >= 0) & (index < size()) )
 			return itemSearchList.get(index);
 		else
 			return null;
 	}
 
-	protected KnowledgeItem getAtomAsCopy(int index) {
+	KnowledgeItem getAtomAsCopy(int index) {
 		if ((index >= 0) & (index < size()) )
 			return itemSearchList.get(index).copy();
 		else
@@ -84,7 +84,7 @@ public class KnowledgeItemList  {
 
 	
 
-	public KnowledgeFact find(Lexem  value) {
+	KnowledgeFact find(Lexem  value) {
 		KnowledgeItem item;
 		KnowledgeFact fact = null;
 		
@@ -149,7 +149,7 @@ public class KnowledgeItemList  {
 		itemSearchList.add(atom);
 	}
 	
-	protected void add(KnowledgeItem atom, KnowledgeSource source) {
+	void add(KnowledgeItem atom, KnowledgeSource source) {
 		int 	replacableIndex;
 		
 		if (atom.isItemValid()) {
@@ -180,7 +180,7 @@ public class KnowledgeItemList  {
 		
 	}
 	
-	protected void remove(int index) {
+	void remove(int index) {
 		
 		KnowledgeItem kaTmp;
 		
@@ -194,7 +194,7 @@ public class KnowledgeItemList  {
 	}
 
 
-	protected int[] findFactsForCriterion(KnowledgeFact_Criterion criterion) {
+	int[] findFactsForCriterion(KnowledgeFact_Criterion criterion) {
 
 		int result_tmp[] = new int[MAXIMUM_KNOWLEDGE_CAPACITY];
 		int result[];
@@ -233,7 +233,7 @@ public class KnowledgeItemList  {
 	}
 
 	
-	protected int[] findFactsForValue(Lexem value) {
+	int[] findFactsForValue(Lexem value) {
 		
 		int result_tmp[] = new int[MAXIMUM_KNOWLEDGE_CAPACITY];
 		int result[];
@@ -284,7 +284,7 @@ public class KnowledgeItemList  {
 	}
 
 	
-	protected int getIndexForValidWithMaxAccessCount() {
+	int getIndexForValidWithMaxAccessCount() {
 		int index;
 		int result;
 		
@@ -301,7 +301,7 @@ public class KnowledgeItemList  {
 
 	
 	
-	protected int getIndexForValidWithMinAccessCount() {
+	int getIndexForValidWithMinAccessCount() {
 		int index;
 		int result;
 	
@@ -317,7 +317,7 @@ public class KnowledgeItemList  {
 	}
 
 	
-	protected int getIndexForFirstValid() {
+	int getIndexForFirstValid() {
 		int index;
 	
 		for (index = 0; index < size(); index++) {
@@ -350,7 +350,7 @@ public class KnowledgeItemList  {
 		return index ;
 	}
 
-	protected void combineWith(KnowledgeItemList kalB) {
+	void combineWith(KnowledgeItemList kalB) {
 		
 		for (int j = 0; j < kalB.size(); j++) {
 			if (kalB.isItemValid(j)) {
@@ -368,7 +368,7 @@ public class KnowledgeItemList  {
 		}
 	}
 
-	protected int compareTo(KnowledgeItemList kalB) {
+	int compareTo(KnowledgeItemList kalB) {
 		
 		int countEqual = 0;
 		
@@ -389,7 +389,7 @@ public class KnowledgeItemList  {
 		
 	}
 
-	public boolean equals(KnowledgeItemList b) {
+	boolean equals(KnowledgeItemList b) {
 		// we only check all atoms , sources and itemIsValid
 		
 		int length;
