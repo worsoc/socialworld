@@ -45,9 +45,6 @@ public class AnswerRelationBinaer extends KnowledgeRelationBinaer implements IAn
 		setSubject(subject.getLexem(), subject.getNumerus());
 	}
 
-	public void changeSource(KnowledgeSource source) {
-		setSource( source);
-	}
 
 	private void setSubject(Lexem subject, Numerus numerus) {
 		setSubjectsLexem(subject);

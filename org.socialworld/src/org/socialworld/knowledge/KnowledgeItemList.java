@@ -34,11 +34,11 @@ final class KnowledgeItemList  {
 	
 	private int validItemCount = 0;
 	
-
+	private KnowledgeElement myParent;
 
 	
 	
-	KnowledgeItemList() {
+	KnowledgeItemList(KnowledgeElement myParent) {
 		
 		itemSearchList = new ArrayList<KnowledgeItem>();
 		
@@ -145,11 +145,11 @@ final class KnowledgeItemList  {
 		return fact;
 	}
 	
-	private void add (KnowledgeItem atom) {
+	private void addAtom(KnowledgeItem atom) {
 		itemSearchList.add(atom);
 	}
 	
-	void add(KnowledgeItem atom, KnowledgeSource source) {
+	void add(KnowledgeItem atom) {
 		int 	replacableIndex;
 		
 		if (atom.isItemValid()) {
@@ -160,7 +160,6 @@ final class KnowledgeItemList  {
 			atom.incrementAccessCount();
 			atom.incrementAccessCount();
 			
-			atom.setSource(source);
 			
 			if (replacableIndex  == size()) {
 				this.itemSearchList.add( atom);
@@ -390,7 +389,7 @@ final class KnowledgeItemList  {
 	}
 
 	boolean equals(KnowledgeItemList b) {
-		// we only check all atoms , sources and itemIsValid
+		// we only check all atoms  and itemIsValid
 		
 		int length;
 		int index;
@@ -408,12 +407,10 @@ final class KnowledgeItemList  {
 			
 			if (!itemSearchList.get(index).equals(tmpCopyKF)) 
 				return false;
-			// TODO compare source too, in implementation KnowledgeItem.equals()
-			if (!itemSearchList.get(index).getSource().equals(b.getAtom(index).getSource())) 
-				return false;
 			if (itemSearchList.get(index).isItemValid() != tmpCopyKF.isItemValid()) 
 				return false;
 
+			// TODO KNOWLEDGE compare sources, too?
 		}
 		
 		return true;

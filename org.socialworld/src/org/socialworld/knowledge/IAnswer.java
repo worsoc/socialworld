@@ -10,9 +10,7 @@ public interface IAnswer {
 	public void changeSubject(Lexem subject);
 	public void setSpeechRecognitionsSubjectWord(Word subject);
 
-	public void changeSource(KnowledgeSource source);
 	
 	
 	public Word getSubjectAsWord();
-	public KnowledgeSource getSource();
 }

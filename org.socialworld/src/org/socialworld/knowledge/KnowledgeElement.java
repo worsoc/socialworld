@@ -27,21 +27,36 @@ import org.socialworld.conversation.Word;
 public class KnowledgeElement {
 
 
+	private KnowledgeSource source;
 	private Lexem subject;
 	
 	private KnowledgeItemList knowledgeItemList;
 
-	public KnowledgeElement(Lexem subject) {
+	public KnowledgeElement(KnowledgeSource source, Lexem subject) {
 		
-		init();
 		this.subject = subject;
+		this.source = source;
+		init();
 		
 	}
 
 	private void init() {
-		this.knowledgeItemList = new KnowledgeItemList();
+		this.knowledgeItemList = new KnowledgeItemList(this);
 	}
 	
+	void setSource(KnowledgeSource source) {
+		this.source = source;
+	}
+	
+	public KnowledgeSource getSource() {
+		return this.source;
+	}
+	
+
+	KnowledgeSource getSourceAsCopy() {
+		return new KnowledgeSource(this.source);
+	}
+
 	protected void setSubject(Lexem subject) {
 		if (knowledgeItemList.countValidItems() == 0)		this.subject = subject;
 	}
@@ -54,25 +69,15 @@ public class KnowledgeElement {
 		return this.subject.getWord();
 	}
 
-	public void add(KnowledgeItem atom, KnowledgeSource source) {
+	public void add(KnowledgeItem atom) {
 		atom.setSubject(this.subject);
-		this.knowledgeItemList.add(atom, source);
+		this.knowledgeItemList.add(atom);
 	}
 	
 	KnowledgeItem getAtomAsCopy(int index) {
 		return this.knowledgeItemList.getAtomAsCopy(index);
 	}
 
-	KnowledgeSource getSourceAsCopy(int index) {
-		KnowledgeItem ka;
-		ka = this.knowledgeItemList.getAtom(index);
-		if (ka != null) {
-			return ka.getSourceAsCopy();
-		}
-		else {
-			return null;
-		}
-	}
 
 	int[] findFactsForCriterion(KnowledgeFact_Criterion criterion) {
 		return this.knowledgeItemList.findFactsForCriterion(criterion);

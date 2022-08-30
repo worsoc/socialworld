@@ -51,7 +51,6 @@ public class KnowledgeProperty extends KnowledgeFact {
 			this.setSubject(original.getSubject() );
 			this.criterion  = original.getCriterion();
 			this.atoms = new KnowledgeFact_Atoms(original.getAtoms());
-			this.setSource(original.getSourceAsCopy());
 			this.setValid(original.isItemValid());
 			this.resetAccessCount();
 		}
@@ -62,7 +61,7 @@ public class KnowledgeProperty extends KnowledgeFact {
 	}
 	
 	List<KnowledgeFactAtom> getAtoms() {
-		return null;  // TODO KNOWLEDGE this.lexems.getLexems();
+		return atoms.getAtoms(); 
 	}
 	
 	List<String> getNotes(int index) {
@@ -72,7 +71,7 @@ public class KnowledgeProperty extends KnowledgeFact {
 	protected KnowledgeFact_Criterion getCriterion() {
 		return criterion;
 	}
-	
+
 	protected boolean equals(KnowledgeProperty b) {
 		return ( this.criterion == b.criterion & this.atoms.equals(b.atoms) );
 	}

@@ -45,9 +45,6 @@ public class AnswerRelationTrinaer extends KnowledgeRelationTrinaer implements I
 		setSubject(subject.getLexem(), subject.getNumerus());
 	}
 
-	public void changeSource(KnowledgeSource source) {
-		setSource( source);
-	}
 
 	private void setSubject(Lexem subject, Numerus numerus) {
 		setSubjectsLexem(subject);

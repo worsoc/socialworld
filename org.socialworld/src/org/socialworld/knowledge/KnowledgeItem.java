@@ -30,7 +30,6 @@ public abstract class KnowledgeItem {
 	private int itemAccessCount;
 	private boolean itemIsValid;
 
-	private KnowledgeSource source;
 	private Lexem subject;
 	
 	abstract KnowledgeItem copy();
@@ -40,18 +39,6 @@ public abstract class KnowledgeItem {
 		this.itemIsValid = isValid;
 	}
 	
-	void setSource(KnowledgeSource source) {
-		this.source = source;
-	}
-	
-	public KnowledgeSource getSource() {
-		return this.source;
-	}
-	
-
-	KnowledgeSource getSourceAsCopy() {
-		return new KnowledgeSource(this.source);
-	}
 
 	protected void setSubject(Lexem subject) {
 		this.subject = subject;
