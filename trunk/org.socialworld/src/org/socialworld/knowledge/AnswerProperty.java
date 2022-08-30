@@ -54,9 +54,6 @@ public class AnswerProperty extends KnowledgeProperty implements IAnswer {
 		changeSubject(subject.getLexem());
 	}
 
-	public void changeSource(KnowledgeSource newSource) {
-		this.setSource(newSource);
-	}
 	
 	public KnowledgeFact_Criterion getAnswerCriterion() {
 		return getCriterion();

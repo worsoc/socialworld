@@ -34,6 +34,7 @@ import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Numerus;
 import org.socialworld.conversation.SpeechRecognition;
 import org.socialworld.conversation.SpeechRecognition_Function;
+import org.socialworld.conversation.SubjectOrObject;
 import org.socialworld.conversation.Word;
 
 public class Knowledge extends SimProperty {
@@ -101,80 +102,83 @@ public class Knowledge extends SimProperty {
 	}
 	
 	public void addFactsFromSentence(String sentence, KnowledgeSource source) {
-		Word subject;
-		Word object1;
-		Word object2;
 		
-		KnowledgeFact fact;
+		SubjectOrObject subject;
+		SubjectOrObject object1;
+		SubjectOrObject object2;
+		
+		List<KnowledgeFact> facts;
 		
 		int countFacts = 0;
 		int knowledgeIndex = 0;
 	
+		Lexem lexemMain;
 		
 		speechRecognition.analyseSentence(sentence);
 		
 		// add facts for the sentece's subject
 		subject = speechRecognition.getSubject();
-		do
-		{
-			fact = speechRecognition.getNextFact(SpeechRecognition_Function.subject);
-			if (fact != null) {
-				countFacts++;
-				if (countFacts == 1)
-					knowledgeIndex = addNewKnowledgeElement(subject, fact, source);
-				else
-					addToKnowledgeElement(knowledgeIndex, fact, source);
-				
+		do	{
+			lexemMain = subject.nextMain();
+			if (lexemMain != null) {
+				countFacts = 0;
+				do {
+					facts = subject.getNextFacts();
+					if (!facts.isEmpty()) {
+						countFacts++;
+						if (countFacts == 1)
+							knowledgeIndex = addNewKnowledgeElement(lexemMain, facts.get(0), source);
+						else
+							addToKnowledgeElement(knowledgeIndex, facts.get(0));
+					}
+				} while (!facts.isEmpty());
 			}
-		}
-		while(fact != null);
+		} while(lexemMain != null);
 		
 		// add facts for the sentece's first object
 		object1 = speechRecognition.getObject1();
-		if (object1 != null) {
-			speechRecognition.resetCriterions();
-			countFacts = 0;
-			do
-			{
-				fact = speechRecognition.getNextFact(SpeechRecognition_Function.object1);
-				if (fact != null) {
-					countFacts++;
-					if (countFacts == 1)
-						knowledgeIndex = addNewKnowledgeElement(object1, fact, source);
-					else
-						addToKnowledgeElement(knowledgeIndex, fact, source);
-					
-				}
+		do {
+			lexemMain = object1.nextMain();
+			if (lexemMain != null) {
+				countFacts = 0;
+				do {
+					facts = object1.getNextFacts();
+					if (!facts.isEmpty()) {
+						countFacts++;
+						if (countFacts == 1)
+							knowledgeIndex = addNewKnowledgeElement(lexemMain, facts.get(0), source);
+						else
+							addToKnowledgeElement(knowledgeIndex, facts.get(0));
+					}
+				} while (!facts.isEmpty());
 			}
-			while(fact != null);
-		}
+		} while(lexemMain != null);
 		
 		// add facts for the sentece's second object
 		object2 = speechRecognition.getObject2();
-		if (object2 != null) {
-			speechRecognition.resetCriterions();
-			countFacts = 0;
-			do
-			{
-				fact = speechRecognition.getNextFact(SpeechRecognition_Function.object2);
-				if (fact != null) {
-					countFacts++;
-					if (countFacts == 1)
-						knowledgeIndex = addNewKnowledgeElement(object2, fact, source);
-					else
-						addToKnowledgeElement(knowledgeIndex, fact, source);
-					
-				}
+		do {
+			lexemMain = object2.nextMain();
+			if (lexemMain != null) {
+				countFacts = 0;
+				do {
+					facts = object2.getNextFacts();
+					if (!facts.isEmpty()) {
+						countFacts++;
+						if (countFacts == 1)
+							knowledgeIndex = addNewKnowledgeElement(lexemMain, facts.get(0), source);
+						else
+							addToKnowledgeElement(knowledgeIndex, facts.get(0));
+					}
+				} while (!facts.isEmpty());
 			}
-			while(fact != null);		
-		}
+		} while(lexemMain != null);
 		
 	}
 	
 	public List<IAnswer> getAnswersForQuestion(String question){
-		Word subject;
+
+		SubjectOrObject subject;
 		Lexem lexemSubject;
-		Numerus numerusSubject;
 		int indexesForSubject[];
 		int indexesForCriterion[];
 		int countKnowledges = 0;
@@ -183,56 +187,67 @@ public class Knowledge extends SimProperty {
 		int indexFact;
 		
 		KnowledgeItem atom;
-		KnowledgeFact fact;
 		KnowledgeSource source;
 		KnowledgeElement knowledgeElement;
+		
 		ReadOnlyIterator<KnowledgeFact_Criterion> criterions = null;
+		KnowledgeFact_Criterion criterion;
 		
 		IAnswer answer;
 		List<IAnswer> answers;
 		boolean withAnswer = false;
-		
+
+		answers = new ArrayList<IAnswer>();
+
 		speechRecognition.analyseSentence(question);
 
 		subject = speechRecognition.getSubject();
-		lexemSubject = subject.getLexem();
-		numerusSubject = subject.getNumerus();
-		
-		criterions = speechRecognition.getCriterions(SpeechRecognition_Function.subject);
-		
-		indexesForSubject = findAllKnowledgeElementsForSubject(lexemSubject);
-		countKnowledges = indexesForSubject.length;
-		
-		answers = new ArrayList<IAnswer>();
-		
-		// TODO iterate over criterions
-		for (indexKnowledge = 0;indexKnowledge < countKnowledges; indexKnowledge++) {
-			
-			knowledgeElement = getKnowledgeElement(indexesForSubject[indexKnowledge]);
-			indexesForCriterion = knowledgeElement.findFactsForCriterion(criterions.next());
-			countFacts = indexesForCriterion.length;
-			
-			for (indexFact = 0;indexFact < countFacts; indexFact++) {
-				atom = knowledgeElement.getAtomAsCopy(indexesForCriterion[indexFact]);
+		do	{
+			lexemSubject = subject.nextMain();
+			if (lexemSubject != null) {
 				
-				if (atom instanceof KnowledgeFact ) {
-					fact = (KnowledgeFact) atom;
-					
-					answer = new AnswerProperty((KnowledgeProperty)fact);
-					answer.setSpeechRecognitionsSubjectWord(subject);
-					
-					// redundant because the copy constructor sets a source copy
-					source = knowledgeElement.getSourceAsCopy(indexesForCriterion[indexFact]);
-					answer.changeSource(source);
-					
-					answers.add(answer);
-					withAnswer = true;
-				}
-			}
-		}
 
-		if (withAnswer) return answers;
-		else return null;
+				indexesForSubject = findAllKnowledgeElementsForSubject(lexemSubject);
+				countKnowledges = indexesForSubject.length;
+
+				for (indexKnowledge = 0;indexKnowledge < countKnowledges; indexKnowledge++) {
+					
+					knowledgeElement = getKnowledgeElement(indexesForSubject[indexKnowledge]);
+					
+					criterions = lexemSubject.getKnowledgeFact_Criterions();
+				
+					while (criterions.hasNext()) {
+						
+						criterion = criterions.next();
+						
+						indexesForCriterion = knowledgeElement.findFactsForCriterion(criterion);
+						countFacts = indexesForCriterion.length;
+						
+						for (indexFact = 0;indexFact < countFacts; indexFact++) {
+							
+							atom = knowledgeElement.getAtomAsCopy(indexesForCriterion[indexFact]);
+							
+							if (atom instanceof KnowledgeProperty ) {
+								
+								answer = new AnswerProperty((KnowledgeProperty)atom);
+								answer.setSpeechRecognitionsSubjectWord(lexemSubject.getWord());
+								
+								
+								answers.add(answer);
+								withAnswer = true;
+							}
+						}
+						
+					}
+					
+				}
+				
+				
+			}
+		} while(lexemSubject != null);
+
+		return answers;
+		
 	}
 	
 	public void combine() {
@@ -267,20 +282,15 @@ public class Knowledge extends SimProperty {
 		next_combine_index = next_combine_index % MAXIMUM_KNOWLEDGE_POOL_CAPACITY;
 	}
 	
-	private int addNewKnowledgeElement(Word subject, KnowledgeFact fact, KnowledgeSource source) {
+	private int addNewKnowledgeElement(Lexem subject, KnowledgeFact fact, KnowledgeSource source) {
 		
 		KnowledgeElement knowledgeElement;
 		int index;
 
-		Lexem lexemSubject;
-		Numerus numerusSubject;
-
-		lexemSubject = subject.getLexem();
-		numerusSubject = subject.getNumerus();
 		
-		knowledgeElement = new KnowledgeElement(lexemSubject);
+		knowledgeElement = new KnowledgeElement(source, subject );
 		
-		knowledgeElement.add(fact, source);
+		knowledgeElement.add(fact);
 		
 		index = indexForNewEntry();
 		knowledgeElementList[index] = knowledgeElement;
@@ -289,9 +299,9 @@ public class Knowledge extends SimProperty {
 		return index;
 	}
 	
-	private void addToKnowledgeElement(int knowledgeElementIndex, KnowledgeFact fact, KnowledgeSource source) {
+	private void addToKnowledgeElement(int knowledgeElementIndex, KnowledgeFact fact) {
 		if (knowledgeElementIndex < MAXIMUM_KNOWLEDGE_POOL_CAPACITY) {
-			knowledgeElementList[knowledgeElementIndex].add(fact, source);
+			knowledgeElementList[knowledgeElementIndex].add(fact);
 		}
 	}
 	

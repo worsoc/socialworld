@@ -46,9 +46,8 @@ public class KnowledgeValue extends KnowledgeItem {
 		if (original != null) {
 			this.setValid(original.isItemValid());
 			this.resetAccessCount();
-			// TODO copy value and source?
+			// TODO copy value ?
 			this.value = original.value;
-			this.setSource(original.getSource());
 
 		}
 	}

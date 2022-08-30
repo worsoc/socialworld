@@ -66,7 +66,6 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 			
 			String descriptionSubject = main[0].substring(LABEL_SUBJECT.length() + ":".length());
 			Expression subject = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeSubject, descriptionSubject, Value.VALUE_NAME_KNOWLEDGE_SUBJECT);
-			
 			listExpressions.add(subject);
 			
 			
@@ -80,6 +79,7 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 			Expression knowledgeSource = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeSource, descriptionKnowledgeSourceOrigin, Value.VALUE_NAME_KNOWLEDGE_SOURCE);
 			
 			Expression creationKnowledgeSource = new CreateKnowledgeSourceExpression(knowledgeSourcetype, knowledgeSource);
+			listExpressions.add(creationKnowledgeSource);
 				
 		
 			
@@ -236,9 +236,8 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 					
 					Expression creationKnowledgeAtom = new CreateKnowledgeAtomExpression(knowledgeFact_Type, expressions);
 					
-					if (creationKnowledgeSource.isValid() && creationKnowledgeAtom.isValid() ) {
+					if ( creationKnowledgeAtom.isValid() ) {
 						
-						listExpressions.add(creationKnowledgeSource);
 						listExpressions.add(creationKnowledgeAtom);
 						
 					}

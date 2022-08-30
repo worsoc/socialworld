@@ -194,7 +194,9 @@ public class KnowledgeCalculator extends SocialWorldThread {
 	
 	public static KnowledgeElement createKnowledgeElement(ValueArrayList knowledgeElementProperties) {
 		
+		KnowledgeSource source;
 		SimulationObject subject;
+		
 		Lexem lexemSubject;
 		
 		Value getFromVAL;
@@ -210,21 +212,16 @@ public class KnowledgeCalculator extends SocialWorldThread {
 			if (getFromVAL.isValid() && getFromVAL.getName().equals(Value.VALUE_NAME_KNOWLEDGE_SUBJECT)) {
 				
 				subject = (SimulationObject) knowledgeElementProperties.get(0).getValue();
+				source = (KnowledgeSource) knowledgeElementProperties.get(1).getValue();
 				lexemSubject = subject.getLexem();
 				
-				KnowledgeElement knowledgeElement = new KnowledgeElement(lexemSubject);
-				KnowledgeSource source = null;
+				KnowledgeElement knowledgeElement = new KnowledgeElement(source, lexemSubject);
 				KnowledgeItem atom = null;
 				
-				for (int index = 1; index < size; index++) {
+				for (int index = 2; index < size; index++) {
 				
-					if ((index % 2) == 1) {
-						source = (KnowledgeSource) knowledgeElementProperties.get(index).getValue();
-					}
-					else {
-						atom = (KnowledgeItem) knowledgeElementProperties.get(index).getValue();
-						knowledgeElement.add(atom, source);
-					}
+					atom = (KnowledgeItem) knowledgeElementProperties.get(index).getValue();
+					knowledgeElement.add(atom);
 					
 				}
 				return knowledgeElement;

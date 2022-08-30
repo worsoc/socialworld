@@ -24,6 +24,7 @@ package org.socialworld.knowledge;
 import java.util.List;
 
 import org.socialworld.calculation.Value;
+import org.socialworld.conversation.Lexem;
 
 public abstract class KnowledgeFact extends KnowledgeItem {
 	
@@ -31,8 +32,30 @@ public abstract class KnowledgeFact extends KnowledgeItem {
 	
 	abstract List<KnowledgeFactAtom> getAtoms();
 	abstract KnowledgeFact_Criterion getCriterion();
-
 	
+	protected boolean checkForLexems(List<Lexem> lexems) {
+		
+		boolean lexemExists = false;
+		if (lexems.isEmpty()) return false;
+		
+		List<KnowledgeFactAtom> atoms = getAtoms();
+		
+		for (Lexem lexem : lexems) {
+			
+			lexemExists = false;
+			for (KnowledgeFactAtom atom : atoms) {
+				if (atom.getType() == KnowledgeFactAtom_Type.lexem &&
+						atom.getLexem().equals(lexem)	) {
+					lexemExists = true;
+					break;
+				}
+			}
+			if (!lexemExists) return false;
+		}
+		
+		return true;
+	}
+
 	protected KnowledgeFactAtom translateToKnowledgeFactAtom(Value value) {
 		KnowledgeFactAtom result = null;
 		// TODO KNOWLEDGE translate from value to KnowledgeFactAtom

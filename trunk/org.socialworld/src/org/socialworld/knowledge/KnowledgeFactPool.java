@@ -20,18 +20,22 @@
 *
 */
 package org.socialworld.knowledge;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.socialworld.conversation.Lexem;
 
 
 public class KnowledgeFactPool {
 	
 	private static KnowledgeFactPool instance;
-	KnowledgeItemList[] factListsByCriterion;
+	List<List<KnowledgeProperty>> propertyListsByCriterion;
+	List<List<KnowledgeRelation>> relationListsByCriterion;
 	
 	private KnowledgeFactPool() {
-		factListsByCriterion = new KnowledgeItemList[KnowledgeFact_Criterion.NUMBER_OF_KNOWLEDGE_FACT_CRITERION];
-		
+
 		createPool();
+		
 	}
 
 	/**
@@ -44,15 +48,44 @@ public class KnowledgeFactPool {
 		return instance;
 	}
 	
-	public KnowledgeFact find(KnowledgeFact_Criterion criterion, Lexem value) {
+	public List<KnowledgeFact> findLexems(KnowledgeFact_Criterion criterion, List<Lexem> lexems) {
+		
+		List<KnowledgeFact> result = new ArrayList<KnowledgeFact>();
 		KnowledgeFact fact;
 		
-		fact = factListsByCriterion[criterion.getIndex()].find(value);
+		List<KnowledgeProperty> propertyList;
+		propertyList = propertyListsByCriterion.get(criterion.getIndex());
 		
-		return fact;
+		for (KnowledgeProperty property : propertyList) {
+			
+			if (property.checkForLexems(lexems)) {
+				result.add(property);
+			}
+			
+		}
+		
+		List<KnowledgeRelation> relationList;
+		relationList = relationListsByCriterion.get(criterion.getIndex());
+		
+		for (KnowledgeRelation relation : relationList) {
+			
+			if (relation.checkForLexems(lexems)) {
+				result.add(relation);
+			}
+			
+		}
+
+		return result;
 	}
 	
 	private void createPool() {
+		
+		propertyListsByCriterion = new ArrayList<List<KnowledgeProperty>>(KnowledgeFact_Criterion.NUMBER_OF_KNOWLEDGE_FACT_CRITERION);
+		for (int i = 0; i < KnowledgeFact_Criterion.NUMBER_OF_KNOWLEDGE_FACT_CRITERION; i++) {
+			List<KnowledgeProperty> propertyList = new ArrayList<KnowledgeProperty>();
+			propertyListsByCriterion.set(i, propertyList);
+		}
+
 	}
 	
 }

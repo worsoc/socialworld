@@ -46,7 +46,7 @@ public class Lexem {
 		return this.allowedAsKnowledgeSubject;
 	}
 	
-	protected ReadOnlyIterator<KnowledgeFact_Criterion> getKnowledgeFact_Criterions() {
+	public ReadOnlyIterator<KnowledgeFact_Criterion> getKnowledgeFact_Criterions() {
 		return new ReadOnlyIterator<KnowledgeFact_Criterion>(criterions.iterator());
 	}
 	
