@@ -27,17 +27,12 @@ import org.socialworld.conversation.Lexem;
 
 public abstract class KnowledgeItem {
 
-	private int itemAccessCount;
-	private boolean itemIsValid;
 
 	private Lexem subject;
 	
 	abstract KnowledgeItem copy();
 	abstract List<String> getNotes(int index);
 	
-	void setValid(boolean isValid) {
-		this.itemIsValid = isValid;
-	}
 	
 
 	protected void setSubject(Lexem subject) {
@@ -48,21 +43,6 @@ public abstract class KnowledgeItem {
 		return this.subject;
 	}
 	
-	boolean isItemValid() {
-		return this.itemIsValid;
-	}
-	
-	void resetAccessCount() {
-		this.itemAccessCount = 0;
-	}
-	
-	void incrementAccessCount() {
-		this.itemAccessCount++;
-	}
-	
-	int getItemAccessCount() {
-		return this.itemAccessCount;
-	}
 	
 	// TODO implement equals()
 

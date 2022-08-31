@@ -51,8 +51,6 @@ public class KnowledgeProperty extends KnowledgeFact {
 			this.setSubject(original.getSubject() );
 			this.criterion  = original.getCriterion();
 			this.atoms = new KnowledgeFact_Atoms(original.getAtoms());
-			this.setValid(original.isItemValid());
-			this.resetAccessCount();
 		}
 	}
 	
