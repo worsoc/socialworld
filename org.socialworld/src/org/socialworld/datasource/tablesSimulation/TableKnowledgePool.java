@@ -32,13 +32,14 @@ import org.socialworld.datasource.mariaDB.Table;
  */
 public class TableKnowledgePool extends Table {
 
-	public final  String 	ALL_COLUMNS 		=	" id, lfd_nr, subject, kfs_id  ";
+	public final  String 	ALL_COLUMNS 		=	" id, lfd_nr, subject, ks_id, , kf_id  ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
 	int id[];
 	int lfd_nr[];
 	int subject[];
-	int kfs_id[];
+	int ks_id[];
+	int kf_id[];
 
 	@Override
 	protected String getTableName() {
@@ -75,19 +76,19 @@ public class TableKnowledgePool extends Table {
 		setPK2(lfd_nr);
 	}
 
-	public void insert(int id, int lfd_nr, int subject, int kfs_id) {
+	public void insert(int id, int lfd_nr, int subject, int ks_id, int kf_id) {
 		String statement;
 			
 		if ((id > 0) & (lfd_nr > 0) ) {
 			
-			statement 	= "INSERT INTO sw_knowledgepool (id, lfd_nr, subject, kfs_id) VALUES (" + 
-			id + ", " + lfd_nr + ", " + subject + ", " + kfs_id + ")";
+			statement 	= "INSERT INTO sw_knowledgepool (id, lfd_nr, subject, ks_id, kf_id) VALUES (" + 
+			id + ", " + lfd_nr + ", " + subject + ", " + ks_id + ", " + kf_id + ")";
 			
 			insert(statement);
 		}
 	}
 
-	public void update(int id, int lfd_nr, int subject, int kfs_id) {
+	public void update(int id, int lfd_nr, int subject, int ks_id, int kf_id) {
 		String statement;
 			
 		if ( (id > 0) & (lfd_nr > 0) ) {
@@ -95,7 +96,8 @@ public class TableKnowledgePool extends Table {
 
 			statement 	= "UPDATE sw_knowledgepool SET " +
 					"subject = " + subject  + ", " +
-					"kfs_id = " + kfs_id  + " " +
+					"ks_id = " + ks_id  + ", " +
+					"kf_id = " + kf_id  + " " +
 				"WHERE id = " + id + " AND lfd_nr = " + lfd_nr ;
 			
 			update(statement);
@@ -118,7 +120,8 @@ public class TableKnowledgePool extends Table {
 		id = new int[rowCount];
 		lfd_nr = new int[rowCount];
 		subject = new int[rowCount];
-		kfs_id = new int[rowCount];
+		ks_id = new int[rowCount];
+		kf_id = new int[rowCount];
 
 
 		try {
@@ -127,7 +130,8 @@ public class TableKnowledgePool extends Table {
 				id[row] = rs.getInt(1);
 				lfd_nr[row] = rs.getInt(2);
 				subject[row] = rs.getInt(3);
-				kfs_id[row] = rs.getInt(4);
+				ks_id[row] = rs.getInt(4);
+				kf_id[row] = rs.getInt(5);
 					
 				row++;
 			}
@@ -144,7 +148,12 @@ public class TableKnowledgePool extends Table {
 		return subject[index];
 	}
 
-	public int getKFSID(int index) {
-		return kfs_id[index];
+	public int getKSID(int index) {
+		return ks_id[index];
 	}
+	
+	public int getKFID(int index) {
+		return kf_id[index];
+	}
+	
 }

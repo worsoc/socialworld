@@ -30,21 +30,19 @@ import org.socialworld.datasource.mariaDB.Table;
  * @author Mathias Sikos
  *
  */
-public class TableKnowledgeFactAndSource extends Table {
+public class TableKnowledgeFact extends Table {
 
-	public final  String 	ALL_COLUMNS 		=	" kfs_id, lfd_nr, kfc, value, sourceType, origin ";
+	public final  String 	ALL_COLUMNS 		=	" kf_id, lfd_nr, kfc, value ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
-	int kfs_id[];
+	int kf_id[];
 	int lfd_nr[];
 	int kfc[];
 	int value[];
-	int sourceType[];
-	int origin[];
 	
 	@Override
 	protected String getTableName() {
-		return "sw_knowledgefactandsource";
+		return "sw_knowledgefact";
 	}
 
 	@Override
@@ -72,63 +70,49 @@ public class TableKnowledgeFactAndSource extends Table {
 		default:
 			selectAllColumns(rs);
 		}
-		setPK1(kfs_id);
+		setPK1(kf_id);
 		setPK2(lfd_nr);
 
 	}
 
-	public void insert(int kfs_id, int lfd_nr, int kfc, int value, int sourceType, int origin) {
+	public void insert(int kf_id, int lfd_nr, int kfc, int value) {
 		String statement;
 			
-		if ((kfs_id > 0) & (lfd_nr > 0) ) {
+		if ((kf_id > 0) & (lfd_nr > 0) ) {
 			
-			statement 	= "INSERT INTO sw_knowledgefactandsource (kfd_id, lfd_nr, kfc, value, sourceType, origin) " +
-					"VALUES (" + kfs_id + ", " + lfd_nr + ", " + kfc + ", " + value + ", " + sourceType + ", " + origin + ")";
+			statement 	= "INSERT INTO sw_knowledgefact (kf_id, lfd_nr, kfc, value) " +
+					"VALUES (" + kf_id + ", " + lfd_nr + ", " + kfc + ", " + value +  ")";
 			
 			insert(statement);
 		}
 	}
 
-	public void insert(int kfs_id, int lfd_nr) {
+	public void insert(int kf_id, int lfd_nr) {
 		String statement;
 			
-		if ((kfs_id > 0) & (lfd_nr > 0) ) {
+		if ((kf_id > 0) & (lfd_nr > 0) ) {
 			
-			statement 	= "INSERT INTO sw_knowledgefactandsource (kfd_id, lfd_nr) VALUES (" + kfs_id + ", " + lfd_nr + ")";
+			statement 	= "INSERT INTO sw_knowledgefact (kf_id, lfd_nr) VALUES (" + kf_id + ", " + lfd_nr + ")";
 			
 			insert(statement);
 		}
 	}
 
-	public void updateValue(int kfs_id, int lfd_nr, int kfc, int value) {
+	public void updateValue(int kf_id, int lfd_nr, int kfc, int value) {
 		String statement;
 			
-		if ( (kfs_id > 0) & (lfd_nr > 0) ) {
+		if ( (kf_id > 0) & (lfd_nr > 0) ) {
 	
 
-			statement 	= "UPDATE sw_knowledgefactandsource SET " +
+			statement 	= "UPDATE sw_knowledgefact SET " +
 					"kfc = " + kfc  + ", " +
 					"value = " + value  + " " +
-				"WHERE kfs_id = " + kfs_id + " AND lfd_nr = " + lfd_nr ;
+				"WHERE kf_id = " + kf_id + " AND lfd_nr = " + lfd_nr ;
 			
 			update(statement);
 		}
 	}
 
-	public void updateSource(int kfs_id, int lfd_nr, int sourceType, int origin) {
-		String statement;
-			
-		if ( (kfs_id > 0) & (lfd_nr > 0) ) {
-	
-
-			statement 	= "UPDATE sw_knowledgefactandsource SET " +
-					"sourceType = " + sourceType  + ", " +
-					"origin = " + origin  + " " +
-				"WHERE kfs_id = " + kfs_id + " AND lfd_nr = " + lfd_nr ;
-			
-			update(statement);
-		}
-	}
 
 	public void delete(int kfs_id, int lfd_nr) {
 		String statement;
@@ -143,23 +127,19 @@ public class TableKnowledgeFactAndSource extends Table {
 
 	private void selectAllColumns(ResultSet rs) {
 		int row = 0;
-		kfs_id = new int[rowCount];
+		kf_id = new int[rowCount];
 		lfd_nr = new int[rowCount];
 		kfc = new int[rowCount];
 		value = new int[rowCount];
-		sourceType = new int[rowCount];
-		origin = new int[rowCount];
 
 
 		try {
 			while (rs.next()) {
 				
-				kfs_id[row] = rs.getInt(1);
+				kf_id[row] = rs.getInt(1);
 				lfd_nr[row] = rs.getInt(2);
 				kfc[row] = rs.getInt(3);
 				value[row] = rs.getInt(4);
-				sourceType[row] = rs.getInt(5);
-				origin[row] = rs.getInt(6);
 				
 				row++;
 			}
@@ -171,13 +151,6 @@ public class TableKnowledgeFactAndSource extends Table {
 
 	}
 
-	public int getSourceType(int index) {
-		return sourceType[index];
-	}
-	
-	public int getOrigin(int index) {
-		return origin[index];
-	}
 
 	public int getKFC(int index) {
 		return kfc[index];
