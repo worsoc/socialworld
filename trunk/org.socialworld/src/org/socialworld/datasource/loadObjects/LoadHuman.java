@@ -31,8 +31,9 @@ import org.socialworld.core.AllWords;
 import org.socialworld.datasource.tablesSimulation.TableAcquaintance;
 import org.socialworld.datasource.tablesSimulation.TableHuman;
 import org.socialworld.datasource.tablesSimulation.TableInventory;
-import org.socialworld.datasource.tablesSimulation.TableKnowledgeFactAndSource;
+import org.socialworld.datasource.tablesSimulation.TableKnowledgeFact;
 import org.socialworld.datasource.tablesSimulation.TableKnowledgePool;
+import org.socialworld.datasource.tablesSimulation.TableKnowledgeSource;
 import org.socialworld.datasource.tablesSimulation.TableSentenceList;
 import org.socialworld.knowledge.Acquaintance;
 import org.socialworld.knowledge.KnowledgeElement;
@@ -72,7 +73,8 @@ public class LoadHuman extends LoadAnimal {
 	int rowTableInventory;
 	
 	TableKnowledgePool tableKnowledgePool;
-	TableKnowledgeFactAndSource tableKnowledgeFactAndSource;
+	TableKnowledgeSource tableKnowledgeSource;
+	TableKnowledgeFact tableKnowledgeFact;
 	int allLfdNrForObjectID[];
 		
 	TableAcquaintance tableAcquaintance;
@@ -92,7 +94,8 @@ public class LoadHuman extends LoadAnimal {
 		tableHuman = new TableHuman();
 		tableInventory = new TableInventory();
 		tableKnowledgePool = new TableKnowledgePool();
-		tableKnowledgeFactAndSource = new TableKnowledgeFactAndSource();
+		tableKnowledgeSource = new TableKnowledgeSource();
+		tableKnowledgeFact = new TableKnowledgeFact();
 		tableAcquaintance = new TableAcquaintance();
 		tableTalk = new TableSentenceList();
 	}
@@ -223,22 +226,24 @@ public class LoadHuman extends LoadAnimal {
 		int index;
 		int rowTableKnowledgePool;
 		int word_id;
-		int kfs_id;
+		int ks_id;
+		int kf_id;
 		
 		size = allLfdNrForObjectID.length;
 		for (index = 0; index < size; index++) {
 			rowTableKnowledgePool = tableKnowledgePool.getIndexFor2PK(objectID, allLfdNrForObjectID[index]);
 			if (rowTableKnowledgePool >= 0) {
 				word_id = tableKnowledgePool.getSubject(rowTableKnowledgePool);
-				kfs_id = tableKnowledgePool.getKFSID(rowTableKnowledgePool);
-				setKnowledge(hiddenHuman, word_id, kfs_id);
+				ks_id = tableKnowledgePool.getKSID(rowTableKnowledgePool);
+				kf_id = tableKnowledgePool.getKFID(rowTableKnowledgePool);
+				setKnowledge(hiddenHuman, word_id, ks_id, kf_id);
 			}
 		}
 		
 	}
 	
-	private void setKnowledge(HiddenHuman hiddenHuman, int subject, int kfs_id) {
-		int allLfdNrForKFSID[];
+	private void setKnowledge(HiddenHuman hiddenHuman, int subject, int ks_id, int kf_id) {
+		int allLfdNrForKFID[];
 		int size;
 		int index;
 		int row;
@@ -257,34 +262,37 @@ public class LoadHuman extends LoadAnimal {
 		KnowledgeElement knowledgeElement;
 		
 		List<Lexem> lexems;
+	
+		tableKnowledgeSource.select(tableKnowledgeSource.SELECT_ALL_COLUMNS, " WHERE ks_id = " + ks_id, "");
+		sourceType_id = tableKnowledgeSource.getSourceType(0);
+		sourceType = KnowledgeSource_Type.getName(sourceType_id);
+		origin_id = tableKnowledgeSource.getOrigin(0);
+		origin = allObjects.get(origin_id);
+		source = new KnowledgeSource(sourceType, origin);
+
 		
-		tableKnowledgeFactAndSource.select(tableKnowledgeFactAndSource.SELECT_ALL_COLUMNS, " WHERE kfs_id = " + kfs_id, "");
-		allLfdNrForKFSID = tableKnowledgeFactAndSource.getAllPK2ForPK1(kfs_id);
-		size = allLfdNrForKFSID.length;
+		tableKnowledgeFact.select(tableKnowledgeFact.SELECT_ALL_COLUMNS, " WHERE kf_id = " + kf_id, "");
+		allLfdNrForKFID = tableKnowledgeFact.getAllPK2ForPK1(kf_id);
+		size = allLfdNrForKFID.length;
 		
 		
-		knowledgeElement = new KnowledgeElement(AllWords.getWord(subject).getLexem());
+		knowledgeElement = new KnowledgeElement(source, AllWords.getWord(subject).getLexem());
 
 		for (index = 0; index < size; index++) {
-			row = tableKnowledgeFactAndSource.getIndexFor2PK(kfs_id, allLfdNrForKFSID[index]);
+			row = tableKnowledgeFact.getIndexFor2PK(kf_id, allLfdNrForKFID[index]);
 			if (row >= 0) {
-				kfc_id = tableKnowledgeFactAndSource.getKFC(row);
+				kfc_id = tableKnowledgeFact.getKFC(row);
 				kfc = KnowledgeFact_Criterion.getName(kfc_id);
-				word_id = tableKnowledgeFactAndSource.getValue(row);
+				word_id = tableKnowledgeFact.getValue(row);
 				word = AllWords.getWord(word_id);
-				sourceType_id = tableKnowledgeFactAndSource.getSourceType(row);
-				sourceType = KnowledgeSource_Type.getName(sourceType_id);
-				origin_id = tableKnowledgeFactAndSource.getOrigin(row);
-				origin = allObjects.get(origin_id);
 				
 				lexems = new ArrayList<Lexem>();
 				lexems.add(word.getLexem());
 				
 				fact = new KnowledgeProperty(kfc, 
 						new KnowledgeFact_Atoms(KnowledgeFact_Atoms.translateToAtoms(lexems)));
-				source = new KnowledgeSource(sourceType, origin);
 				
-				knowledgeElement.add(fact, source);
+				knowledgeElement.add(fact);
 
 			}
 		}
