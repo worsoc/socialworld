@@ -32,6 +32,7 @@ public class KnowledgeElement {
 	
 	private KnowledgeItemList knowledgeItemList;
 
+
 	public KnowledgeElement(KnowledgeSource source, Lexem subject) {
 		
 		this.subject = subject;
@@ -44,6 +45,8 @@ public class KnowledgeElement {
 		this.knowledgeItemList = new KnowledgeItemList(this);
 	}
 	
+	
+
 	void setSource(KnowledgeSource source) {
 		this.source = source;
 	}
