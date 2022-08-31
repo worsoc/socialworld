@@ -65,7 +65,7 @@ public class PerceptionCreationTool extends JFrame{
  
 		System.out.println("Hello World");
 
-		
+/*		
 		List<String> result = pg.generateAllPerceptionKnowledgeAtomDescriptions();
 
 		int lfdNr = 0;
@@ -74,21 +74,21 @@ public class PerceptionCreationTool extends JFrame{
 		
 		for (String description : result) {
 			System.out.println(description);
-			//dot_elem_line_id = pct.addDotElementLine(description);
-			//pct.addParseInputString(newIDOffset + lfdNr, dot_elem_line_id, description);
+			dot_elem_line_id = pct.addDotElementLine(description);
+			pct.addParseInputString(newIDOffset + lfdNr, dot_elem_line_id, description);
 			lfdNr++;
 		}
 
 		System.out.println(lfdNr);
 
-		
-/*
+*/		
+
 		String result = pg.generatePerceptionDescription("gfjg48gtdzi57ugjjgkt");
 		//String result = pg.generatePerceptionDescription("bnthnhiut8ub849206u0bu0");
 		System.out.println(result);
 		exp = new CreateKnowledgeElementExpression(result);
 		System.out.println(exp.toString());
-*/		
+	
 		System.out.println("Bye, Bye, World");
 
 	}

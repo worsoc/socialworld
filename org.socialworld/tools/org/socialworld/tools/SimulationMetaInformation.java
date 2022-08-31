@@ -37,8 +37,6 @@ public class SimulationMetaInformation {
 
 	public static final String CLASSNAME_SWT_SIMOBJECT = Type.simulationObject.getIndexWithSWTPraefix();
 
-	public static final String PRAEFIX_GROUPING_NUMBER = "GN__";
-
 	private static SimulationMetaInformation instance;
 	
 	
@@ -69,10 +67,10 @@ public class SimulationMetaInformation {
 			}
 		}
 		else {
-			if (className.startsWith(PRAEFIX_GROUPING_NUMBER)) {
+			if (className.startsWith(GroupingOfSimulationObjects.PRAEFIX_SIMOBJECT_GROUPING_NUMBER)) {
 				List<StringTupel> resultA;
 				List<StringTupel> resultB;
-				int groupingNumber = (int) Integer.parseInt(className.substring(4)); 
+				int groupingNumber = (int) Integer.parseInt(className.substring(5)); 
 				switch (groupingNumber) {
 					case GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_OBJECTS: result = SimulationObject.getPropertiesMetaInfos(); break;
 					case GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_ANIMALS_AND_ITEMS: 
@@ -189,10 +187,10 @@ public class SimulationMetaInformation {
 			}
 		}
 		else {
-			if (className.startsWith(PRAEFIX_GROUPING_NUMBER)) {
+			if (className.startsWith(GroupingOfSimulationObjects.PRAEFIX_SIMOBJECT_GROUPING_NUMBER)) {
 				List<KnowledgeFact_Criterion> returnableKFCsA;
 				List<KnowledgeFact_Criterion> returnableKFCsB;
-				int groupingNumber = (int) Integer.parseInt(className.substring(4)); 
+				int groupingNumber = (int) Integer.parseInt(className.substring(5)); 
 				switch (groupingNumber) {
 					case GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_OBJECTS: returnableKFCs = SimulationObject.getResultingKFCs(); break;
 					case GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_ANIMALS_AND_ITEMS: 
