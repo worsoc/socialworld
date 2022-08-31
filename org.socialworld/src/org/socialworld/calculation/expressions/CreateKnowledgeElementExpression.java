@@ -53,8 +53,8 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 		String main[];
 		main = description.split(";");
 		
-		// at main index = 0: expression for subject lexem  (GetLexem)
-		// at main index = 1: expressions for KnowledgeSource
+		// at main index = 0: expressions for KnowledgeSource
+		// at main index = 1: expression for subject lexem  (GetLexem)
 		// at main index > 1: expressions for KnowledgeAtomcombinations  --> KnowledgeItemList
 
 		// for any sub entry (element of the KnowledgeItemList):
@@ -64,13 +64,13 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 			
 			List<Expression> listExpressions = new ArrayList<Expression>();
 			
-			String descriptionSubject = main[0].substring(LABEL_SUBJECT.length() + ":".length());
+			String descriptionSubject = main[1].substring(LABEL_SUBJECT.length() + ":".length());
 			Expression subject = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeSubject, descriptionSubject, Value.VALUE_NAME_KNOWLEDGE_SUBJECT);
 			listExpressions.add(subject);
 			
 			
 			
-			String[] descriptionKnowledgeSourceElements = main[1].split("&");
+			String[] descriptionKnowledgeSourceElements = main[0].split("&");
 			
 			String descriptionKnowledgeSourceType = descriptionKnowledgeSourceElements[0].substring(LABEL_KNOWLEDGESOURCETYPE.length() + ":".length());
 			Expression knowledgeSourcetype = new Constant(new Value(Type.integer, Value.VALUE_NAME_KNOWLEDGE_SOURCE_TYPE, Integer.parseInt(descriptionKnowledgeSourceType) ));
