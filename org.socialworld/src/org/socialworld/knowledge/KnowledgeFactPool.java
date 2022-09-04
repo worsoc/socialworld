@@ -47,32 +47,75 @@ public class KnowledgeFactPool {
 		if (instance == null) instance = new KnowledgeFactPool();
 		return instance;
 	}
+
 	
-	public List<KnowledgeFact> findLexems(KnowledgeFact_Criterion criterion, List<Lexem> lexems) {
+	public KnowledgeFact getFactForLexems(KnowledgeFact_Criterion criterion, List<Lexem> lexems) {
 		
-		List<KnowledgeFact> result = new ArrayList<KnowledgeFact>();
-		KnowledgeFact fact;
+		KnowledgeFact result;
 		
-		List<KnowledgeProperty> propertyList;
-		propertyList = propertyListsByCriterion.get(criterion.getIndex());
+		List<KnowledgeFact> facts = findLexems(criterion,  lexems, false);
 		
-		for (KnowledgeProperty property : propertyList) {
-			
-			if (property.checkForLexems(lexems)) {
-				result.add(property);
-			}
-			
+		if (facts.size() >= 1 ) {
+			result = facts.get(0);
+		}
+		else {
+			// TODO new entry in pool
+			result = newEntry(criterion, lexems);
 		}
 		
-		List<KnowledgeRelation> relationList;
-		relationList = relationListsByCriterion.get(criterion.getIndex());
+		return result;
+	}
+	
+	
+	public List<KnowledgeFact> findLexems(KnowledgeFact_Criterion criterion, List<Lexem> lexems) {
+		return findLexems(criterion, lexems, true);
+	}
+
+	private List<KnowledgeFact> findLexems(KnowledgeFact_Criterion criterion, List<Lexem> lexems, boolean lexemsBeingSubsetToo) {
 		
-		for (KnowledgeRelation relation : relationList) {
+		int criterionsIndex = criterion.getIndex();
+		
+		List<KnowledgeFact> result = new ArrayList<KnowledgeFact>();
+		
+		if (criterionsIndex <= KnowledgeFact_Criterion.MAX_INDEX_PROPERTY) {
+		
+			List<KnowledgeProperty> propertyList;
+			propertyList = propertyListsByCriterion.get(criterionsIndex - KnowledgeFact_Criterion.MIN_INDEX_PROPERTY);
 			
-			if (relation.checkForLexems(lexems)) {
-				result.add(relation);
+			for (KnowledgeProperty property : propertyList) {
+				
+				if (lexemsBeingSubsetToo) {
+					if (property.checkForLexems(lexems)) {
+						result.add(property);
+					}
+				}
+				else {
+					if (property.checkForLexems(lexems)) {
+						result.add(property);
+					}
+				}
 			}
+		}
+		else if (criterionsIndex <= KnowledgeFact_Criterion.MAX_INDEX_RELATION) {
+		
+			List<KnowledgeRelation> relationList;
+			relationList = relationListsByCriterion.get(criterionsIndex - KnowledgeFact_Criterion.MIN_INDEX_RELATION);
 			
+			for (KnowledgeRelation relation : relationList) {
+				
+				if (lexemsBeingSubsetToo) {
+					if (relation.checkForLexems(lexems)) {
+						result.add(relation);
+					}
+				}
+				else {
+					if (relation.checkForLexems(lexems)) {
+						result.add(relation);
+					}
+				}
+				
+			}
+
 		}
 
 		return result;
@@ -80,10 +123,20 @@ public class KnowledgeFactPool {
 	
 	private void createPool() {
 		
-		propertyListsByCriterion = new ArrayList<List<KnowledgeProperty>>(KnowledgeFact_Criterion.NUMBER_OF_KNOWLEDGE_FACT_CRITERION);
-		for (int i = 0; i < KnowledgeFact_Criterion.NUMBER_OF_KNOWLEDGE_FACT_CRITERION; i++) {
+		int size;
+		
+		size = KnowledgeFact_Criterion.MAX_INDEX_PROPERTY + 1;
+		propertyListsByCriterion = new ArrayList<List<KnowledgeProperty>>(size);
+		for (int i = 0; i < size; i++) {
 			List<KnowledgeProperty> propertyList = new ArrayList<KnowledgeProperty>();
 			propertyListsByCriterion.set(i, propertyList);
+		}
+
+		size = KnowledgeFact_Criterion.MAX_INDEX_RELATION - KnowledgeFact_Criterion.MIN_INDEX_RELATION + 1;
+		relationListsByCriterion = new ArrayList<List<KnowledgeRelation>>(size) ;
+		for (int i = 0; i < size; i++) {
+			List<KnowledgeRelation> relationList = new ArrayList<KnowledgeRelation>();
+			relationListsByCriterion.set(i, relationList);
 		}
 
 	}
