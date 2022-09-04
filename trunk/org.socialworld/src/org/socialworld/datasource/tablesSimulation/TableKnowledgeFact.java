@@ -1,4 +1,5 @@
 /*
+
 * Social World
 * Copyright (C) 2015  Mathias Sikos
 *
@@ -119,7 +120,7 @@ public class TableKnowledgeFact extends Table {
 			
 		if ( (kfs_id > 0) & (lfd_nr > 0) ) {
 	
-			statement 	= "DELETE FROM sw_knowledgefactandsource WHERE kfs_id = " + kfs_id + " AND lfd_nr = " + lfd_nr ;
+			statement 	= "DELETE FROM sw_knowledgefact WHERE kfs_id = " + kfs_id + " AND lfd_nr = " + lfd_nr ;
 			
 			delete(statement);
 		}
