@@ -319,53 +319,6 @@ public class SpeechRecognition {
 		return criterions;
 	}
 	
-	public KnowledgeFact getNextFact(SpeechRecognition_Function function) {
-		
-		KnowledgeFact_Criterion criterion;
-		
-		List<KnowledgeFact> facts = new ArrayList<KnowledgeFact>();
-		KnowledgeFact fact = null;
-		
-		Word word = null;
-		
-		List<Lexem> lexems = new ArrayList<Lexem>();
-		Lexem lexem;
-		
-		// continue with last criterion list (according to last sentence function)
-		// or start with a new one (according to the next sentence function)
-		if (iteratorCriterions.hasNext() == false)	iteratorCriterions = getCriterions(function);
-		if (iteratorCriterions.hasNext()) {
-			
-			criterion = iteratorCriterions.next();
-			
-			for (int index = 0; index < wordList.size(); index++) {
-				if (functionList[index] == function) {
-					
-					word = foundWordList[index];
-					lexem = word.getLexem();
-					ReadOnlyIterator<KnowledgeFact_Criterion> kfcs = lexem.getKnowledgeFact_Criterions();
-					while (kfcs.hasNext()) {
-						if (criterion == kfcs.next()) {
-							lexems.add(lexem);
-							break;
-						}
-					}
-					
-				}
-			}
-			facts = KnowledgeFactPool.getInstance().findLexems(criterion , lexems);
-				
-		}
-		
-		if (facts.isEmpty()) {
-			return null;
-		}
-		else {
-			return facts.get(0);
-		}
-
-		
-	}
 	
 	private int divideIntoParts(String sentence)  {
 		String words[];

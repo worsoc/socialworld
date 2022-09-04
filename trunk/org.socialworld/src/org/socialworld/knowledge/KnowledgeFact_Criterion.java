@@ -26,9 +26,14 @@ public enum KnowledgeFact_Criterion {
 	relation(1000);
 
 	/**
-	 * The constant holds the informations how many knowledge fact criterions exist.
-	 * The constant is used for iteration about all criterions 
+	 * The constants hold the informations how many knowledge fact criteria exist.
+	 * The constants are used for iteration about all criteria 
 	 */
+	public static final int MIN_INDEX_PROPERTY = 0;
+	public static final int MAX_INDEX_PROPERTY = 1;
+	public static final int MIN_INDEX_RELATION = 1000;
+	public static final int MAX_INDEX_RELATION = 1000;
+	
 	public static final int NUMBER_OF_KNOWLEDGE_FACT_CRITERION = 2;
 
 	/**
