@@ -32,7 +32,7 @@ import org.socialworld.datasource.mariaDB.Table;
  */
 public class TableKnowledgePool extends Table {
 
-	public final  String 	ALL_COLUMNS 		=	" id, lfd_nr, subject, ks_id, , kf_id  ";
+	public final  String 	ALL_COLUMNS 		=	" id, lfd_nr, subject, ks_id, kf_id  ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
 	int id[];
