@@ -23,25 +23,16 @@ package org.socialworld.knowledge;
 
 import java.util.List;
 
-import org.socialworld.conversation.Lexem;
 
 public abstract class KnowledgeItem {
 
 
-	private Lexem subject;
 	
 	abstract KnowledgeItem copy();
 	abstract List<String> getNotes(int index);
 	
 	
 
-	protected void setSubject(Lexem subject) {
-		this.subject = subject;
-	}
-	
-	protected Lexem getSubject() {
-		return this.subject;
-	}
 	
 	
 	// TODO implement equals()

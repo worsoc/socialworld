@@ -29,6 +29,9 @@ public class AnswerRelationTrinaer extends KnowledgeRelationTrinaer implements I
 
 	private KnowledgeRelationTrinaer originalRelation;
 
+	private Lexem subjectOriginal;
+	private Lexem subjectChanged;
+
 	public AnswerRelationTrinaer(KnowledgeRelationTrinaer original) {
 		super(original);
 		this.originalRelation = original;
@@ -38,8 +41,10 @@ public class AnswerRelationTrinaer extends KnowledgeRelationTrinaer implements I
 
 
 	public void changeSubject(Lexem subject) {
-		setSubject(subject);
+		this.subjectChanged = subject;
 	}
+	
+	public Word getSubjectAsWord() { return this.subjectChanged.getWord(); }
 
 	public void setSpeechRecognitionsSubjectWord(Word subject) {
 		setSubject(subject.getLexem(), subject.getNumerus());
@@ -47,8 +52,7 @@ public class AnswerRelationTrinaer extends KnowledgeRelationTrinaer implements I
 
 
 	private void setSubject(Lexem subject, Numerus numerus) {
-		setSubjectsLexem(subject);
-		setSubjectsNumerus(numerus);
+		this.subjectOriginal = subject;
 	}
 
 }

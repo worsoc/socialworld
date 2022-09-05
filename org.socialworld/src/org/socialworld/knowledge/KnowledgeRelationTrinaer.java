@@ -37,12 +37,22 @@ public class KnowledgeRelationTrinaer extends KnowledgeRelation {
 	private Lexem object2;
 	private Numerus numerusObject2;
 	
-	public KnowledgeRelationTrinaer(Value subject, Value verb, Value adverb, Value object1, Value object2) {
-		super(subject, verb, adverb);
+	public KnowledgeRelationTrinaer( Value verb, Value adverb, Value object1, Value object2) {
+		super(verb, adverb);
 		this.object1 = translateToLexem(object1);
 		this.object2 = translateToLexem(object2);
 	}
 	
+	public KnowledgeRelationTrinaer(List<Lexem> lexems) {
+		super(lexems);
+		if (lexems.size() > 2) {
+			this.object1 = lexems.get(2);
+		}
+		if (lexems.size() > 3) {
+			this.object2 = lexems.get(3);
+		}
+	}
+
 	KnowledgeRelationTrinaer(KnowledgeRelationTrinaer original) {
 		super(original);
 		if (original != null) {
@@ -50,6 +60,10 @@ public class KnowledgeRelationTrinaer extends KnowledgeRelation {
 		}
 	}
 	
+	KnowledgeFact_Criterion getCriterion() {
+		return KnowledgeFact_Criterion.relationTrinaer;
+	}
+
 	KnowledgeFact copy() {
 		return new KnowledgeRelationTrinaer(this);
 	}
@@ -76,7 +90,6 @@ public class KnowledgeRelationTrinaer extends KnowledgeRelation {
 	
 	List<Lexem> getLexems() {
 		List<Lexem> result = new ArrayList<Lexem>();
-		result.add(getSubjectsLexem());
 		result.add(this.object1);
 		result.add(this.object2);
 		

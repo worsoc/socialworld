@@ -23,7 +23,9 @@ package org.socialworld.knowledge;
 
 public enum KnowledgeFact_Criterion {
 	colour(0), material(1),
-	relation(1000);
+	relationUnaer(1000),
+	relationBinaer(2000),
+	relationTrinaer(3000);
 
 	/**
 	 * The constants hold the informations how many knowledge fact criteria exist.
@@ -31,8 +33,12 @@ public enum KnowledgeFact_Criterion {
 	 */
 	public static final int MIN_INDEX_PROPERTY = 0;
 	public static final int MAX_INDEX_PROPERTY = 1;
-	public static final int MIN_INDEX_RELATION = 1000;
-	public static final int MAX_INDEX_RELATION = 1000;
+	public static final int MIN_INDEX_RELATION_UNAER = 1000;
+	public static final int MAX_INDEX_RELATION_UNAER = 1000;
+	public static final int MIN_INDEX_RELATION_BINAER = 2000;
+	public static final int MAX_INDEX_RELATION_BINAER = 2000;
+	public static final int MIN_INDEX_RELATION_TRINAER = 3000;
+	public static final int MAX_INDEX_RELATION_TRINAER = 3000;
 	
 	public static final int NUMBER_OF_KNOWLEDGE_FACT_CRITERION = 2;
 

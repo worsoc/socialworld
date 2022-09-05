@@ -73,7 +73,6 @@ public class KnowledgeElement {
 	}
 
 	public void add(KnowledgeItem atom) {
-		atom.setSubject(this.subject);
 		this.knowledgeItemList.add(atom);
 	}
 	

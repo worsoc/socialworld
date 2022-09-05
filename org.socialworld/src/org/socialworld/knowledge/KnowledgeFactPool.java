@@ -141,4 +141,34 @@ public class KnowledgeFactPool {
 
 	}
 	
+	private KnowledgeFact newEntry(KnowledgeFact_Criterion criterion, List<Lexem> lexems) {
+		
+		KnowledgeFact newFact;
+		KnowledgeFact_Atoms atoms;
+		
+		int criterionsIndex = criterion.getIndex();
+
+		if (criterionsIndex <= KnowledgeFact_Criterion.MAX_INDEX_PROPERTY) {
+
+			atoms = new KnowledgeFact_Atoms(KnowledgeFact_Atoms.translateToAtoms(lexems));
+			newFact = new KnowledgeProperty(criterion, atoms);
+		
+		}
+		else if (criterionsIndex <= KnowledgeFact_Criterion.MAX_INDEX_RELATION_UNAER) {
+			
+			newFact = new KnowledgeRelationUnaer(lexems);
+
+		}
+		else if (criterionsIndex <= KnowledgeFact_Criterion.MAX_INDEX_RELATION_BINAER) {
+			
+			newFact = new KnowledgeRelationBinaer(lexems);
+
+		}
+		else if (criterionsIndex <= KnowledgeFact_Criterion.MAX_INDEX_RELATION_TRINAER) {
+			
+			newFact = new KnowledgeRelationTrinaer(lexems);
+
+		}
+	}
+	
 }

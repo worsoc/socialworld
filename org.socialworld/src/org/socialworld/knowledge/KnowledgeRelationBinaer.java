@@ -34,11 +34,18 @@ public class KnowledgeRelationBinaer extends KnowledgeRelation {
 	private Lexem object;
 	private Numerus numerusObject;
 
-	public KnowledgeRelationBinaer(Value subject, Value verb, Value adverb, Value object) {
-		super(subject, verb, adverb);
+	public KnowledgeRelationBinaer(Value verb, Value adverb, Value object) {
+		super( verb, adverb);
 		this.object = translateToLexem(object);
 	}
-	
+
+	public KnowledgeRelationBinaer(List<Lexem> lexems) {
+		super(lexems);
+		if (lexems.size() == 3) {
+			this.object = lexems.get(2);
+		}
+	}
+
 	KnowledgeRelationBinaer(KnowledgeRelationBinaer original) {
 		super(original);
 		if (original != null) {
@@ -46,6 +53,10 @@ public class KnowledgeRelationBinaer extends KnowledgeRelation {
 		}
 	}
 	
+	KnowledgeFact_Criterion getCriterion() {
+		return KnowledgeFact_Criterion.relationBinaer;
+	}
+
 	KnowledgeFact copy() {
 		return new KnowledgeRelationBinaer(this);
 	}
@@ -68,7 +79,6 @@ public class KnowledgeRelationBinaer extends KnowledgeRelation {
 	
 	List<Lexem> getLexems() {
 		List<Lexem> result = new ArrayList<Lexem>();
-		result.add(getSubjectsLexem());
 		result.add(this.object);
 		
 		return result;

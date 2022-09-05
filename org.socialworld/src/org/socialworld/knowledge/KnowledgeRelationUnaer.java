@@ -29,10 +29,14 @@ import org.socialworld.conversation.Lexem;
 
 public class KnowledgeRelationUnaer extends KnowledgeRelation {
 
-	public KnowledgeRelationUnaer(Value subject, Value verb, Value adverb) {
-		super(subject, verb, adverb);
+	public KnowledgeRelationUnaer( Value verb, Value adverb) {
+		super(verb, adverb);
 	}
 	
+	public KnowledgeRelationUnaer(List<Lexem> lexems) {
+		super(lexems);
+	}
+
 	KnowledgeRelationUnaer(KnowledgeRelationUnaer original) {
 		super(original);
 		if (original != null) {
@@ -40,6 +44,10 @@ public class KnowledgeRelationUnaer extends KnowledgeRelation {
 		}
 	}
 	
+	KnowledgeFact_Criterion getCriterion() {
+		return KnowledgeFact_Criterion.relationUnaer;
+	}
+
 	KnowledgeFact copy() {
 		return new KnowledgeRelationUnaer(this);
 	}
@@ -59,7 +67,6 @@ public class KnowledgeRelationUnaer extends KnowledgeRelation {
 	
 	List<Lexem> getLexems() {
 		List<Lexem> result = new ArrayList<Lexem>();
-		result.add(getSubjectsLexem());
 		
 		return result;
 	}

@@ -48,7 +48,6 @@ public class KnowledgeProperty extends KnowledgeFact {
 	
 	protected KnowledgeProperty(KnowledgeProperty original) {
 		if (original != null) {
-			this.setSubject(original.getSubject() );
 			this.criterion  = original.getCriterion();
 			this.atoms = new KnowledgeFact_Atoms(original.getAtoms());
 		}
