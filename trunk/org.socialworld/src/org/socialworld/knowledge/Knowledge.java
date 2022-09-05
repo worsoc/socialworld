@@ -229,7 +229,7 @@ public class Knowledge extends SimProperty {
 							
 							if (atom instanceof KnowledgeProperty ) {
 								
-								answer = new AnswerProperty((KnowledgeProperty)atom);
+								answer = new AnswerProperty((KnowledgeProperty)atom, lexemSubject);
 								answer.setSpeechRecognitionsSubjectWord(lexemSubject.getWord());
 								
 								

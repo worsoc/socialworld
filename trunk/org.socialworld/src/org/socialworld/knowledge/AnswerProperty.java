@@ -24,31 +24,31 @@ package org.socialworld.knowledge;
 import java.util.List;
 
 import org.socialworld.conversation.Lexem;
-import org.socialworld.conversation.Numerus;
 import org.socialworld.conversation.Word;
 
 public class AnswerProperty extends KnowledgeProperty implements IAnswer {
 	
-
+	
 	private KnowledgeProperty originalProperty;
 	
-	public AnswerProperty(KnowledgeProperty original) {
+	private Lexem subjectOriginal;
+	private Lexem subjectChanged;
+
+	public AnswerProperty(KnowledgeProperty original, Lexem subject) {
 		super(original);
 		this.originalProperty = original;
+		this.subjectOriginal = subject;
+		this.subjectChanged = subject;
 	}
 	
-	/*
-	public AnswerProperty(Lexem subject) {
-		super(subject);
-	}
-	*/
+
 	public KnowledgeFact_Type getType() { return KnowledgeFact_Type.property; }
 	
 	public void changeSubject(Lexem subject) {
-		setSubject(subject);
+		this.subjectChanged = subject;
 	}
 	
-	public Word getSubjectAsWord() { return getSubject().getWord(); }
+	public Word getSubjectAsWord() { return this.subjectChanged.getWord(); }
 
 	public void setSpeechRecognitionsSubjectWord(Word subject) {
 		changeSubject(subject.getLexem());

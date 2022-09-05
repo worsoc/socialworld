@@ -268,7 +268,6 @@ public class KnowledgeCalculator extends SocialWorldThread {
 		int size;
 		int find;
 		
-		Value subject = Calculation.getNothing();
 		Value verb = Calculation.getNothing();
 		Value adverb = Calculation.getNothing();
 		Value object1 = Calculation.getNothing();
@@ -285,11 +284,6 @@ public class KnowledgeCalculator extends SocialWorldThread {
 		switch (type) {
 		case relationTrinaer:
 	
-			find = knowledgeAtomProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_RELATION_SUBJECT);
-			if (find >= 0) {
-				
-				subject = knowledgeAtomProperties.get(find);
-				
 				find = knowledgeAtomProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_RELATION_VERB);
 				if (find >= 0) {
 					verb = knowledgeAtomProperties.get(find);
@@ -310,63 +304,50 @@ public class KnowledgeCalculator extends SocialWorldThread {
 					object2 = knowledgeAtomProperties.get(find);
 				}
 
-				result = new KnowledgeRelationTrinaer(subject, verb, adverb, object1, object2);
-			
-			}
+				result = new KnowledgeRelationTrinaer(verb, adverb, object1, object2);
 			
 			break;
 			
 		case relationBinaer:
 			
-			find = knowledgeAtomProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_RELATION_SUBJECT);
+				
+			find = knowledgeAtomProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_RELATION_VERB);
 			if (find >= 0) {
-				
-				subject = knowledgeAtomProperties.get(find);
-				
-				find = knowledgeAtomProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_RELATION_VERB);
-				if (find >= 0) {
-					verb = knowledgeAtomProperties.get(find);
-				}
-
-				find = knowledgeAtomProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_RELATION_ADVERB);
-				if (find >= 0) {
-					adverb = knowledgeAtomProperties.get(find);
-				}
-
-				find = knowledgeAtomProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_RELATION_OBJECT1);
-				if (find >= 0) {
-					object1 = knowledgeAtomProperties.get(find);
-				}
-				
-				result = new KnowledgeRelationBinaer(subject, verb, adverb, object1);
-
-
+				verb = knowledgeAtomProperties.get(find);
 			}
+
+			find = knowledgeAtomProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_RELATION_ADVERB);
+			if (find >= 0) {
+				adverb = knowledgeAtomProperties.get(find);
+			}
+
+			find = knowledgeAtomProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_RELATION_OBJECT1);
+			if (find >= 0) {
+				object1 = knowledgeAtomProperties.get(find);
+			}
+			
+			result = new KnowledgeRelationBinaer( verb, adverb, object1);
+
+
 			
 			break;
 			
 		case relationUnaer:
-			
-			find = knowledgeAtomProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_RELATION_SUBJECT);
+				
+			find = knowledgeAtomProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_RELATION_VERB);
 			if (find >= 0) {
-				
-				subject = knowledgeAtomProperties.get(find);
-				
-				find = knowledgeAtomProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_RELATION_VERB);
-				if (find >= 0) {
-					verb = knowledgeAtomProperties.get(find);
-				
-				}
-
-				find = knowledgeAtomProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_RELATION_ADVERB);
-				if (find >= 0) {
-					adverb = knowledgeAtomProperties.get(find);
-				
-				}
-
-				result = new KnowledgeRelationUnaer(subject, verb, adverb);
-
+				verb = knowledgeAtomProperties.get(find);
+			
 			}
+
+			find = knowledgeAtomProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_RELATION_ADVERB);
+			if (find >= 0) {
+				adverb = knowledgeAtomProperties.get(find);
+			
+			}
+
+			result = new KnowledgeRelationUnaer(verb, adverb);
+
 			
 			break;
 			
