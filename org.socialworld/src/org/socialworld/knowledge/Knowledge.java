@@ -33,9 +33,7 @@ import org.socialworld.collections.ReadOnlyIterator;
 import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Numerus;
 import org.socialworld.conversation.SpeechRecognition;
-import org.socialworld.conversation.SpeechRecognition_Function;
 import org.socialworld.conversation.SubjectOrObject;
-import org.socialworld.conversation.Word;
 
 public class Knowledge extends SimProperty {
 
@@ -107,7 +105,7 @@ public class Knowledge extends SimProperty {
 		SubjectOrObject object1;
 		SubjectOrObject object2;
 		
-		List<KnowledgeFact> facts;
+		KnowledgeFact fact;
 		
 		int countFacts = 0;
 		int knowledgeIndex = 0;
@@ -123,15 +121,15 @@ public class Knowledge extends SimProperty {
 			if (lexemMain != null) {
 				countFacts = 0;
 				do {
-					facts = subject.getNextFacts();
-					if (!facts.isEmpty()) {
+					fact = subject.getNextFact();
+					if (fact != null) {
 						countFacts++;
 						if (countFacts == 1)
-							knowledgeIndex = addNewKnowledgeElement(lexemMain, facts.get(0), source);
+							knowledgeIndex = addNewKnowledgeElement(lexemMain, fact, source);
 						else
-							addToKnowledgeElement(knowledgeIndex, facts.get(0));
+							addToKnowledgeElement(knowledgeIndex, fact);
 					}
-				} while (!facts.isEmpty());
+				} while (fact != null);
 			}
 		} while(lexemMain != null);
 		
@@ -142,15 +140,15 @@ public class Knowledge extends SimProperty {
 			if (lexemMain != null) {
 				countFacts = 0;
 				do {
-					facts = object1.getNextFacts();
-					if (!facts.isEmpty()) {
+					fact = object1.getNextFact();
+					if (fact != null) {
 						countFacts++;
 						if (countFacts == 1)
-							knowledgeIndex = addNewKnowledgeElement(lexemMain, facts.get(0), source);
+							knowledgeIndex = addNewKnowledgeElement(lexemMain, fact, source);
 						else
-							addToKnowledgeElement(knowledgeIndex, facts.get(0));
+							addToKnowledgeElement(knowledgeIndex, fact);
 					}
-				} while (!facts.isEmpty());
+				} while (fact != null);
 			}
 		} while(lexemMain != null);
 		
@@ -161,15 +159,15 @@ public class Knowledge extends SimProperty {
 			if (lexemMain != null) {
 				countFacts = 0;
 				do {
-					facts = object2.getNextFacts();
-					if (!facts.isEmpty()) {
+					fact = object2.getNextFact();
+					if (fact != null) {
 						countFacts++;
 						if (countFacts == 1)
-							knowledgeIndex = addNewKnowledgeElement(lexemMain, facts.get(0), source);
+							knowledgeIndex = addNewKnowledgeElement(lexemMain, fact, source);
 						else
-							addToKnowledgeElement(knowledgeIndex, facts.get(0));
+							addToKnowledgeElement(knowledgeIndex, fact);
 					}
-				} while (!facts.isEmpty());
+				} while (fact != null);
 			}
 		} while(lexemMain != null);
 		

@@ -61,7 +61,7 @@ public class SubjectOrObject {
 				
 	}
 	
-	public List<KnowledgeFact> getNextFacts() {
+	public KnowledgeFact getNextFact() {
 		
 		KnowledgeFact_Criterion criterion = null;
 		boolean handleCriterion = false;
@@ -82,7 +82,7 @@ public class SubjectOrObject {
 			
 		}
 
-		List<KnowledgeFact> facts = new ArrayList<KnowledgeFact>();
+		KnowledgeFact fact = null;
 		
 		if (handleCriterion) {
 			
@@ -95,11 +95,11 @@ public class SubjectOrObject {
 				}
 			}
 			
-			facts = KnowledgeFactPool.getInstance().findLexems(criterion , lexemsWithCriterion);
+			fact = KnowledgeFactPool.getInstance().getFactForLexems(criterion , lexemsWithCriterion);
 			
 		}
 				
-		return facts;
+		return fact;
 	
 	}
 
