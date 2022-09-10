@@ -79,7 +79,8 @@ final class KnowledgeItemList  {
 		
 	}
 	
-	void replaceFactsWithFactsFromPool() {
+	
+	private void replaceFactsWithFactsFromPool() {
 		
 
 		moveNotesFromItems();
@@ -500,6 +501,88 @@ final class KnowledgeItemList  {
 		}
 		
 		return true;
+	}
+
+	void deriveKnowledgeItemsFromNotes() {
+		
+		replaceFactsWithFactsFromPool();
+		
+		List<KnowledgeItem> items = new ArrayList<KnowledgeItem>();
+		
+		for (KnowledgeItemNotes kiNotes : itemNotes) {
+			
+			List<List<String>> listOfNotes = kiNotes.getNotes();
+			
+			for (int index = 0; index < listOfNotes.size(); index++) {
+				
+				List<String> notes = listOfNotes.get(index);
+				for (String note : notes) {
+					
+					List<KnowledgeItem> oneNoteItems;
+					oneNoteItems = deriveKnowledgeItemsFromNote(note);
+					
+					addIfNotContainsYet(oneNoteItems, items);
+				}
+			}
+			
+		}
+		
+	}
+	
+	private List<KnowledgeItem> deriveKnowledgeItemsFromNote(String note) {
+		
+		List<KnowledgeItem> oneNoteItems = new ArrayList<KnowledgeItem>();
+		
+		return oneNoteItems;
+		
+	}
+	
+	private void addIfNotContainsYet(List<KnowledgeItem> someItems, List<KnowledgeItem> totalItems ) {
+		
+		boolean addToDistinctList = false;
+		
+		List<KnowledgeItem> someDistinctItems = new ArrayList<KnowledgeItem>();
+		
+		for (KnowledgeItem item : someItems) {
+			
+			addToDistinctList = true;
+			
+			for (KnowledgeItem itemInDistinctList : someDistinctItems) {
+				
+				
+				if (item.equals(itemInDistinctList)) {
+					addToDistinctList = false;
+					continue;
+				}
+				
+			}
+			
+			if (addToDistinctList) {
+				someDistinctItems.add(item);
+			}
+		}
+		
+		boolean addToTotalList = false;
+		
+		for (KnowledgeItem itemInDistinctList : someDistinctItems) {
+			
+			addToTotalList = true;
+			
+			for (KnowledgeItem itemInTotalList : totalItems) {
+				
+				
+				if (itemInDistinctList.equals(itemInTotalList)) {
+					addToTotalList = false;
+					continue;
+				}
+				
+			}
+			
+			if (addToTotalList) {
+				totalItems.add(itemInDistinctList);
+			}
+		}
+
 	}
 
 	

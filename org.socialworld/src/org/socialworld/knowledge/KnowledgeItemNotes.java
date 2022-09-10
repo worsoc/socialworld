@@ -42,4 +42,8 @@ class KnowledgeItemNotes {
 		
 	}
 	
+	List<List<String>> getNotes() {
+		return this.notes;
+	}
+	
 }
