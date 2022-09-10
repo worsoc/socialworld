@@ -88,4 +88,14 @@ public class KnowledgeFactAtom {
 		return this.lexem;
 	}
 	
+	public boolean hasNotes() {
+		return (notes.size() > 0);
+	}
+	
+	public List<String> removeNotes() {
+		List<String> notes = new ArrayList<String>(this.notes);
+		this.notes.clear();
+		return notes;
+	}
+	
 }

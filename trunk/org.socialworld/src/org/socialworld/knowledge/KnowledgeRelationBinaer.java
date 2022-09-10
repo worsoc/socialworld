@@ -68,10 +68,6 @@ public class KnowledgeRelationBinaer extends KnowledgeRelation {
 		return result;
 	}
 	
-	List<String> getNotes(int index) {
-		return new ArrayList<String>();  // TODO KNOWLEDGE this.lexems.getLexems();
-	}
-
 
 	public Word getObjectAsWord() {
 		return object.getWord(numerusObject);

@@ -62,6 +62,48 @@ public class KnowledgeFactPool {
 	}
 
 	
+	public KnowledgeProperty getPropertyFromPool(KnowledgeProperty property) {
+		
+		KnowledgeFact_Criterion criterion = property.getCriterion();
+		int indexInPool = getPoolsIndex(criterion);
+
+		List<KnowledgeProperty> propertyListForCriterion = propertyListsByCriterion.get(indexInPool);
+		
+		for (KnowledgeProperty propertyFromPool : propertyListForCriterion) {
+			
+			if (propertyFromPool.equals(property)) {
+				return propertyFromPool;
+			}
+		}
+		
+		// property is not in pool yet. Add to pool
+		propertyListsByCriterion.get(indexInPool).add(property);
+		
+		return property;
+		
+	}
+	
+	public KnowledgeRelation getRelationFromPool(KnowledgeRelation relation) {
+		
+		KnowledgeFact_Criterion criterion = relation.getCriterion();
+		int indexInPool = getPoolsIndex(criterion);
+
+		List<KnowledgeRelation> relationListForCriterion = relationListsByCriterion.get(indexInPool);
+		
+		for (KnowledgeRelation relationFromPool : relationListForCriterion) {
+			
+			if (relationFromPool.equals(relation)) {
+				return relationFromPool;
+			}
+		}
+		
+		// relation is not in pool yet. Add to pool
+		relationListsByCriterion.get(indexInPool).add(relation);
+		
+		return relation;
+		
+	}
+
 	public KnowledgeFact getFactForLexems(KnowledgeFact_Criterion criterion, List<Lexem> lexems) {
 		
 		KnowledgeFact result;
@@ -170,43 +212,57 @@ public class KnowledgeFactPool {
 		KnowledgeFact newFact = null;
 		KnowledgeFact_Atoms atoms;
 		
-		int indexInPool = 0;
-
 		int criterionsIndex = criterion.getIndex();
+		int indexInPool = getPoolsIndex(criterion) ;
 
 		if (criterionsIndex <= KnowledgeFact_Criterion.MAX_INDEX_PROPERTY) {
 
 			atoms = new KnowledgeFact_Atoms(KnowledgeFact_Atoms.translateToAtoms(lexems));
 			newFact = new KnowledgeProperty(criterion, atoms);
-			indexInPool = criterionsIndex - KnowledgeFact_Criterion.MIN_INDEX_PROPERTY;
 			propertyListsByCriterion.get(indexInPool).add((KnowledgeProperty)newFact);
 		
 		}
 		else if (criterionsIndex <= KnowledgeFact_Criterion.MAX_INDEX_RELATION_TRINAER) {
 			
 			if (criterionsIndex <= KnowledgeFact_Criterion.MAX_INDEX_RELATION_UNAER) {
-			
 				newFact = new KnowledgeRelationUnaer(lexems);
-				indexInPool = criterionsIndex - KnowledgeFact_Criterion.MIN_INDEX_RELATION_UNAER;
-
 			}
 			else if (criterionsIndex <= KnowledgeFact_Criterion.MAX_INDEX_RELATION_BINAER) {
-				
 				newFact = new KnowledgeRelationBinaer(lexems);
-				indexInPool = criterionsIndex + offsetIndexRelationBinaer;
-	
 			}
 			else if (criterionsIndex <= KnowledgeFact_Criterion.MAX_INDEX_RELATION_TRINAER) {
-				
 				newFact = new KnowledgeRelationTrinaer(lexems);
-				indexInPool = criterionsIndex + offsetIndexRelationTrinaer;
-	
 			}
 			
 			if (newFact != null)	relationListsByCriterion.get(indexInPool).add((KnowledgeRelation)newFact);			
 		}
 
 		return newFact;
+		
+	}
+	
+	private int getPoolsIndex(KnowledgeFact_Criterion criterion) {
+		
+		int indexInPool = -1;
+		int criterionsIndex = criterion.getIndex();
+		
+		if (criterionsIndex <= KnowledgeFact_Criterion.MAX_INDEX_PROPERTY) {
+			indexInPool = criterionsIndex - KnowledgeFact_Criterion.MIN_INDEX_PROPERTY;
+		}
+		else if (criterionsIndex <= KnowledgeFact_Criterion.MAX_INDEX_RELATION_TRINAER) {
+			
+			if (criterionsIndex <= KnowledgeFact_Criterion.MAX_INDEX_RELATION_UNAER) {
+				indexInPool = criterionsIndex - KnowledgeFact_Criterion.MIN_INDEX_RELATION_UNAER;
+			}
+			else if (criterionsIndex <= KnowledgeFact_Criterion.MAX_INDEX_RELATION_BINAER) {
+				indexInPool = criterionsIndex + offsetIndexRelationBinaer;
+			}
+			else if (criterionsIndex <= KnowledgeFact_Criterion.MAX_INDEX_RELATION_TRINAER) {
+				indexInPool = criterionsIndex + offsetIndexRelationTrinaer;
+			}
+		}
+
+		return indexInPool;
 		
 	}
 	

@@ -38,6 +38,11 @@ final class KnowledgeItemList  {
 			this.item = item;
 		}
 		
+		private void setValid() {
+			resetAccessCount();
+			this.isValid = true;
+		}
+
 		private void resetAccessCount() {
 			this.accessCount = 0;
 		}
@@ -55,23 +60,87 @@ final class KnowledgeItemList  {
 	final int MAXIMUM_KNOWLEDGE_CAPACITY = 100;
 	
 	private ArrayList<KnowledgeItemWithMetaInfo> itemSearchList;
-//	private ArrayList<KnowledgeItem> itemSearchList;
+	
+	private ArrayList<KnowledgeItemNotes> itemNotes;
 	
 	private int validItemCount = 0;
 	
 	private KnowledgeElement myParent;
 
+	private boolean notesHasBeenMovedFromItems = false;
 	
+	KnowledgeFactPool poolInstance;
 	
 	KnowledgeItemList(KnowledgeElement myParent) {
 		
 		itemSearchList = new ArrayList<KnowledgeItemWithMetaInfo>();
-		//itemSearchList = new ArrayList<KnowledgeItem>();
 		
-		// add invalid KnowledgeValue as first dummy element (ensure there is always an element in the list)
+		poolInstance = KnowledgeFactPool.getInstance();
 		
-//		KnowledgeItem dummy = new KnowledgeValue();
-//		itemSearchList.add(dummy);
+	}
+	
+	void replaceFactsWithFactsFromPool() {
+		
+
+		moveNotesFromItems();
+		
+		int size = size();
+		
+		for (int index = 0; index < size; index++) {
+			
+			KnowledgeItemWithMetaInfo itemWMI = itemSearchList.get(index);
+			
+			if (itemWMI != null) {
+				
+				KnowledgeItem item = itemWMI.item;
+				
+				KnowledgeItemWithMetaInfo newItemWMI = null;
+				
+				if (item instanceof KnowledgeProperty) {
+					KnowledgeProperty property = (KnowledgeProperty) item;
+					KnowledgeProperty propertyFromPool = poolInstance.getPropertyFromPool(property);
+					newItemWMI = new KnowledgeItemWithMetaInfo(propertyFromPool);
+				}
+				else if (item instanceof KnowledgeRelation) {
+					KnowledgeRelation relation = (KnowledgeRelation) item;
+					KnowledgeRelation relationFromPool = poolInstance.getRelationFromPool(relation);
+					newItemWMI = new KnowledgeItemWithMetaInfo(relationFromPool);
+				}
+
+				if (newItemWMI != null) {
+					
+					newItemWMI.setValid();
+					itemSearchList.set(index, newItemWMI);
+
+				}
+
+			}
+			
+			index++;
+			
+		}
+	}
+	
+	private void moveNotesFromItems() {
+	
+		if (!notesHasBeenMovedFromItems) {
+			
+
+			int size = size();
+			
+			itemNotes = new ArrayList<KnowledgeItemNotes>(size);
+			
+			for (int index = 0; index < size; index++) {
+			
+				KnowledgeItemWithMetaInfo itemWMI = itemSearchList.get(index);
+				KnowledgeItemNotes itemsNotes = itemWMI.item.removeNotes();
+				
+				itemNotes.set(index, itemsNotes);
+			}
+			
+			notesHasBeenMovedFromItems = true;
+			
+		}
 		
 	}
 	
