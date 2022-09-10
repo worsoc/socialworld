@@ -61,8 +61,8 @@ public class KnowledgeProperty extends KnowledgeFact {
 		return atoms.getAtoms(); 
 	}
 	
-	List<String> getNotes(int index) {
-		return new ArrayList<String>();  // TODO KNOWLEDGE this.lexems.getLexems();
+	KnowledgeItemNotes removeNotes() {
+		return atoms.removeNotes();
 	}
 	
 	protected KnowledgeFact_Criterion getCriterion() {

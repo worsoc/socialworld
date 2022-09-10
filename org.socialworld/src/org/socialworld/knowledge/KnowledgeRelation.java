@@ -112,5 +112,10 @@ public abstract class KnowledgeRelation extends KnowledgeFact {
 		// TODO KNOWLEDGE translate from value to Lexem
 		return result;
 	}
+	
+	KnowledgeItemNotes removeNotes() {
+		return new KnowledgeItemNotes(0);  // TODO KNOWLEDGE removeNotes();
+	}
+
 
 }

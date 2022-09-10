@@ -48,8 +48,8 @@ public class KnowledgeValue extends KnowledgeItem {
 		return new KnowledgeValue(this);
 	}
 		
-	List<String> getNotes(int index) {
-		return new ArrayList<String>();  // TODO KNOWLEDGE this.lexems.getLexems();
+	KnowledgeItemNotes removeNotes() {
+		return new KnowledgeItemNotes(0);  // TODO KNOWLEDGE removeNotes();
 	}
 
 	Value getValue() {

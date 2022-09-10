@@ -67,6 +67,20 @@ public class KnowledgeFact_Atoms {
 		return lexems;
 	}
 	
+	KnowledgeItemNotes removeNotes() {
+		
+		KnowledgeItemNotes notes = new KnowledgeItemNotes(this.atoms.size());
+		int index = 0;
+		
+		for (KnowledgeFactAtom atom : this.atoms) {
+			List<String> atomsNotes = atom.removeNotes();
+			for (String atomsNote : atomsNotes) {
+				notes.addNoteToIndex(index, atomsNote);
+			}
+			index++;
+		}
+		return notes;
+	}
 
 
 	protected boolean equals(KnowledgeFact_Atoms b) {

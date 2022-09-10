@@ -21,19 +21,12 @@
 */
 package org.socialworld.knowledge;
 
-import java.util.List;
 
 
 public abstract class KnowledgeItem {
 
-
-	
 	abstract KnowledgeItem copy();
-	abstract List<String> getNotes(int index);
-	
-	
-
-	
+	abstract KnowledgeItemNotes removeNotes();
 	
 	// TODO implement equals()
 
