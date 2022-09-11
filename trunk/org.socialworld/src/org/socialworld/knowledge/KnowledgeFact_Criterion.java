@@ -84,6 +84,10 @@ public enum KnowledgeFact_Criterion {
 			if (criterion.arrayIndex == arrayIndex)
 				return criterion;
 		return null;
-	}	
+	}
+	
+	public boolean equals(KnowledgeFact_Criterion criterion) {
+		return this.arrayIndex == criterion.arrayIndex;
+	}
 
 }

@@ -98,4 +98,26 @@ public class KnowledgeFactAtom {
 		return notes;
 	}
 	
+	boolean equals(KnowledgeFactAtom b) {
+		
+		// !!! notes are ignored for checking whether two knowledge fact atoms are equal
+		
+		boolean isEqual = (this.type == b.type);
+		
+		if (isEqual) {
+			
+			switch(this.type) {
+			case value: 
+				isEqual = this.value.equals(b.value); break;
+			case lexem:
+				isEqual = this.lexem.equals(b.lexem); break;
+			default:
+				isEqual = false;
+				
+			}
+		}
+		
+		return isEqual;
+	}
+
 }
