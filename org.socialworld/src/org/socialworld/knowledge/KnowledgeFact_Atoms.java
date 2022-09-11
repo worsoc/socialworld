@@ -83,7 +83,30 @@ public class KnowledgeFact_Atoms {
 	}
 
 
-	protected boolean equals(KnowledgeFact_Atoms b) {
-		return this.atoms.equals(b.atoms);
+	boolean equals(KnowledgeFact_Atoms b) {
+		
+		boolean isEqual = true;
+		int index;
+		int size = this.atoms.size();
+		
+		if ( size == b.atoms.size()) {
+			
+			for (index = 0; index < size; index++) {
+				
+				KnowledgeFactAtom atomA = this.atoms.get(index);
+				KnowledgeFactAtom atomB = b.atoms.get(index);
+
+				if (!atomA.equals(atomB)) {
+					isEqual = false;
+					break;
+				}
+			}
+
+		}
+		else {
+			isEqual = false;
+		}
+		
+		return isEqual;
 	}
 }
