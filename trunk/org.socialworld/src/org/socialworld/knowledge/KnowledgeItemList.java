@@ -24,7 +24,10 @@ package org.socialworld.knowledge;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.conversation.Lexem;
+import org.socialworld.conversation.Relation;
+import org.socialworld.objects.GroupingOfSimulationObjects;
 
 final class KnowledgeItemList  {
 	
@@ -531,10 +534,80 @@ final class KnowledgeItemList  {
 	
 	private List<KnowledgeItem> deriveKnowledgeItemsFromNote(String note) {
 		
+		String[] noteParts = note.split("\\.");
+		String part;
+		PropertyName propName;
+		List<Relation> possibleRelations = new ArrayList<Relation>();
+		
 		List<KnowledgeItem> oneNoteItems = new ArrayList<KnowledgeItem>();
+		
+		for (int index = 0; index < noteParts.length; index++) {
+			
+			part = noteParts[index];
+			
+			if (possibleRelations.size() > 0) {
+				
+				Relation choosenRelation = chooseRelationForObject(possibleRelations, part);
+				
+				if (!choosenRelation.equals(Relation.unknown)) {
+					Lexem object = getObjectLexem(part);
+					if (object != null) {
+						KnowledgeItem ki = new KnowledgeRelationBinaer(choosenRelation, object);
+						oneNoteItems.add(ki);
+					}
+				}
+				
+				possibleRelations = new ArrayList<Relation>();
+				continue;
+				
+			}
+			
+			propName = PropertyName.forString(part);
+			if ( propName != PropertyName.unknown) {
+				
+				if (propName.checkIsUsableAsRelationObject(Relation.carry)) {
+					possibleRelations.add(Relation.carry);
+				}
+			}
+			
+		}
 		
 		return oneNoteItems;
 		
+	}
+	
+	private Relation chooseRelationForObject(List<Relation> possibleRelations, String object) {
+		Relation relation = Relation.unknown;
+		
+		// TODO KNOWLEDGE chooseRelationForObject
+		if (possibleRelations.size() > 0) {
+			relation = possibleRelations.get(0);
+		}
+		
+		return relation;
+	}
+	
+	private Lexem getObjectLexem(String part) {
+		
+		Lexem lexem = null;
+		Lexem noObject = null;
+		
+		int sogn  = GroupingOfSimulationObjects.getGroupNumber(part);
+		
+		if (sogn >= 0) {
+			
+			lexem = GroupingOfSimulationObjects.getLexemForGroupingNumber(sogn);
+
+			if  (GroupingOfSimulationObjects.checkIsLexemSomething(lexem)) {
+				lexem = noObject;
+			}
+			else if  (GroupingOfSimulationObjects.checkIsLexemNothing(lexem)) {
+				lexem = noObject;
+			}
+			
+		}
+		
+		return lexem;
 	}
 	
 	private void addIfNotContainsYet(List<KnowledgeItem> someItems, List<KnowledgeItem> totalItems ) {
