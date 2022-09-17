@@ -24,6 +24,7 @@ package org.socialworld.attributes;
 
 import org.socialworld.calculation.PropertyUsingAs;
 import org.socialworld.calculation.Type;
+import org.socialworld.conversation.Relation;
 
 public enum PropertyName {
 
@@ -206,6 +207,14 @@ public enum PropertyName {
 		
 	}
 
+	public boolean checkIsUsableAsRelationObject(Relation relation) {
+		
+		switch (relation) {
+			case carry: return (this.index >= 1102031 && this.index <= 1102021) ;
+			default: return false;
+		}
+	}
+	
 	private static PropertyUsingAs emptyPermissions[] = {};
 	private static PropertyUsingAs only_pathToKnowledgeValue[] = {PropertyUsingAs.pathToKnowledgeValue };
 	private static PropertyUsingAs only_knowledgeValue[] = {PropertyUsingAs.knowledgeValue };
@@ -224,4 +233,6 @@ public enum PropertyName {
 		default:			return emptyPermissions;
 		}
 	}
+	
+	
 }
