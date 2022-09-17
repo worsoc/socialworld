@@ -26,11 +26,7 @@ import java.util.List;
 
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.collections.ReadOnlyIterator;
-import org.socialworld.knowledge.KnowledgeFact;
-import org.socialworld.knowledge.KnowledgeFactPool;
 
-//workaround
-import org.socialworld.datasource.tablesSimulation.ViewWordJoinLexem;
 import org.socialworld.core.AllWords;
 
 public class SpeechRecognition {
@@ -52,7 +48,6 @@ public class SpeechRecognition {
 	private SubjectOrObject lastSubject;
 
 	private PunctuationMark finalPunctuationMark;
-	private WordSearchTree allWords;
 	
 	private boolean isPassive;
 	
@@ -61,7 +56,6 @@ public class SpeechRecognition {
 	ReadOnlyIterator<KnowledgeFact_Criterion> iteratorCriterions;
 	
 	public SpeechRecognition() {
-		allWords = new WordSearchTree();
 		lastSubject= null;
 	
 		iteratorForEmptyCriterionsList = new ReadOnlyIterator<KnowledgeFact_Criterion>(new ArrayList<KnowledgeFact_Criterion>().iterator()) ;
@@ -581,20 +575,7 @@ public class SpeechRecognition {
 		Word foundWord;
 		
 		word = wordList.get(indexWordList);
-		
-		// TODO lokaler workaround zur Wortsuche weg
-		
-//		foundWord = allWords.findAndGetWord(word);
-//		if (foundWord != null) {
-//			isOK = (foundWord.getType() == type);
-//			if (isOK) {
-//				functionList[indexWordList] = function;
-//				
-//				foundWordList[indexWordList] = foundWord;
-//				indexWordList++;
-//			}
-//		}
-	
+			
 		foundWord = findAndGetWord(word, type);
 		if (foundWord != null) {
 				
@@ -916,42 +897,16 @@ public class SpeechRecognition {
 		return finalPunctuationMark;
 	}
 	
-// workaround	
 	private Word findAndGetWord(String word, Word_Type type) {
 		
-		ViewWordJoinLexem words;
-		
-		int rowCount;
-		int index;
-		
-		
-		int word_id;
 		Word element;
 		
-//		int lexem_id;
-//		Lexem lexem;
+		element = AllWords.findAndGetWord(word, type);
 		
-		words = new ViewWordJoinLexem();
-		words.select(words.SELECT_ALL_COLUMNS, " WHERE word = '" + word + "' AND word_type = " + type.getIndex(), " ORDER BY word_id");
-		rowCount = words.rowCount();
-		
-		element = null;
-//		for (index = 0; index < rowCount; index++) {
-		// assumption: only one result entry for combination word and word_type
-		if (rowCount > 0)
-			
-			for (index = 0; index < 1; index++) {
-				word_id = words.getWordID(index);
-	//			lexem_id = words.getLexemID(index);
-	//			lexem = AllWords.getLexem(lexem_id);
-				element = AllWords.getWord(word_id);
+		if (element != null) {
+			wordTypeList[indexWordList] = type;
+		}
 				
-				wordTypeList[indexWordList] = type;
-	
-				
-				
-			}
-		
 		return element;
 		
 	}	
