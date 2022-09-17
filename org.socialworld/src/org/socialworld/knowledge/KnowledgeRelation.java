@@ -27,6 +27,7 @@ import java.util.List;
 import org.socialworld.calculation.Value;
 import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Numerus;
+import org.socialworld.conversation.Relation;
 import org.socialworld.conversation.Tense;
 import org.socialworld.conversation.Word;
 
@@ -34,6 +35,8 @@ public abstract class KnowledgeRelation extends KnowledgeFact {
 
 	private boolean isSelfRelation;		// knowledge of its own relations (subject ist "I")
 
+	private Relation relation;
+	
 	private Lexem verb;
 	private Tense tense;
 	
@@ -54,12 +57,20 @@ public abstract class KnowledgeRelation extends KnowledgeFact {
 		}
 	}
 
+	protected KnowledgeRelation(Relation relation) {
+		this.relation = relation;
+	}
+	
 	protected KnowledgeRelation(KnowledgeRelation original) {
 		if (original != null) {
 			// TODO copy
 		}
 	}
 
+	protected void setRelation(Relation relation) {
+		this.relation = relation;
+	}
+	
 	protected void setVerb(Lexem verb) {
 		this.verb = verb;
 	}

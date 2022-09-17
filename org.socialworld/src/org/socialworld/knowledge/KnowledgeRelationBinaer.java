@@ -27,6 +27,7 @@ import java.util.List;
 import org.socialworld.calculation.Value;
 import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Numerus;
+import org.socialworld.conversation.Relation;
 import org.socialworld.conversation.Word;
 
 public class KnowledgeRelationBinaer extends KnowledgeRelation {
@@ -44,6 +45,11 @@ public class KnowledgeRelationBinaer extends KnowledgeRelation {
 		if (lexems.size() == 3) {
 			this.object = lexems.get(2);
 		}
+	}
+
+	KnowledgeRelationBinaer(Relation relation, Lexem object) {
+		super(relation);
+		this.object = object;
 	}
 
 	KnowledgeRelationBinaer(KnowledgeRelationBinaer original) {
