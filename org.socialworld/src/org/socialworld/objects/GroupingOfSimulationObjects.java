@@ -1,5 +1,8 @@
 package org.socialworld.objects;
 
+import org.socialworld.conversation.Lexem;
+import org.socialworld.conversation.Word_Type;
+import org.socialworld.core.AllWords;
 import org.socialworld.objects.concrete.animals.mammals.*;
 import org.socialworld.objects.concrete.eatable.Fruit;
 
@@ -59,8 +62,46 @@ public final class GroupingOfSimulationObjects {
 	private static final short GROUPING_NUMBER_PRAEFIX_FRUIT		 = 0b0000100000010001; // 	2065
 
 	
+	private static final Lexem LEXEM_ANIMAL = AllWords.findAndGetWord("animal", Word_Type.noun).getLexem();
+	
+	private static final Lexem LEXEM_SOMETHING = AllWords.findAndGetWord("something", Word_Type.noun).getLexem();
+	private static final Lexem LEXEM_NOTHING = AllWords.findAndGetWord("nothing", Word_Type.noun).getLexem();
 	
 	
+	
+	public static  int getGroupNumber(String sogn_element) {
+		
+		if (sogn_element.startsWith(PRAEFIX_SIMOBJECT_GROUPING_NUMBER)) {
+			String number = sogn_element.substring(PRAEFIX_SIMOBJECT_GROUPING_NUMBER.length());
+			return Integer.parseInt(number);
+		}
+		else {
+			return -1;
+		}
+		
+	}
+	
+	public static Lexem getLexemForGroupingNumber(int groupNumber) {
+
+		switch (groupNumber) {
+			case GROUPING_NUMBER_ALL_ANIMALS: return LEXEM_ANIMAL;
+			
+			default:
+				if (checkIsValidGroupNumber(groupNumber)) {
+					return LEXEM_SOMETHING;
+				}
+				else
+					return LEXEM_NOTHING;
+		}
+	}
+	
+	public static boolean checkIsLexemSomething(Lexem lexem) {
+		return lexem.equals(LEXEM_SOMETHING);
+	}
+	
+	public static boolean checkIsLexemNothing(Lexem lexem) {
+		return lexem.equals(LEXEM_NOTHING);
+	}
 	
 	static boolean checkObjectBelongsToGroup(SimulationObject simObject, int groupNumber) {
 		//String className = simObject.getClass().getSimpleName();
@@ -113,4 +154,7 @@ public final class GroupingOfSimulationObjects {
 		return ( short) (number >> 16);
 	}
 
+	private static boolean checkIsValidGroupNumber(int groupNumber) {
+		return true;
+	}
 }
