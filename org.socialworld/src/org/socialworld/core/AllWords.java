@@ -24,7 +24,9 @@ package org.socialworld.core;
 import org.socialworld.collections.Array;
 import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Word;
+import org.socialworld.conversation.Word_Type;
 import org.socialworld.datasource.loadFromDB.LoadWords;
+import org.socialworld.datasource.tablesSimulation.ViewWordJoinLexem;
 
 /**
  * @author Mathias Sikos
@@ -59,5 +61,35 @@ public class AllWords {
 		}
 		return allWordsbyWordID.get(wordID);
 	}
+	
+	public static Word findAndGetWord(String word, Word_Type type) {
+		
+		ViewWordJoinLexem words;
+		
+		int rowCount;
+		int index;
+		
+		
+		int word_id;
+		Word element;
+		
+		
+		words = new ViewWordJoinLexem();
+		words.select(words.SELECT_ALL_COLUMNS, " WHERE word = '" + word + "' AND word_type = " + type.getIndex(), " ORDER BY word_id");
+		rowCount = words.rowCount();
+		
+		element = null;
+		// assumption: only one result entry for combination word and word_type
+		if (rowCount > 0)
+			
+			for (index = 0; index < 1; index++) {
+				word_id = words.getWordID(index);
+				element = AllWords.getWord(word_id);
+			}
+		
+		return element;
+		
+	}	
+
 	
 }
