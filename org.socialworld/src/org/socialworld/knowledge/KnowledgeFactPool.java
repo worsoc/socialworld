@@ -61,6 +61,19 @@ public class KnowledgeFactPool {
 		return instance;
 	}
 
+	public KnowledgeItem getItemFromPool(KnowledgeItem item) {
+		
+		if (item instanceof KnowledgeProperty) {
+			return getPropertyFromPool((KnowledgeProperty) item);
+		}
+		else if (item instanceof KnowledgeRelation) {
+			return getRelationFromPool((KnowledgeRelation) item);
+		}
+		else {
+			return item;
+		}
+			 
+	}
 	
 	public KnowledgeProperty getPropertyFromPool(KnowledgeProperty property) {
 		

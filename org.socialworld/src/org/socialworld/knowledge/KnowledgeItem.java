@@ -21,7 +21,7 @@
 */
 package org.socialworld.knowledge;
 
-
+import org.socialworld.conversation.Lexem;
 
 public abstract class KnowledgeItem {
 
@@ -30,4 +30,14 @@ public abstract class KnowledgeItem {
 	
 	// TODO implement equals()
 
+	protected boolean checkWhetherTwoLexemsAreEqual(Lexem a, Lexem b) {
+		
+		if (a == null && b == null) return true;
+		if (a == null && b != null) return false;
+		if (a != null && b == null) return false;
+		
+		return a.equals(b);
+		
+		
+	}
 }
