@@ -13,7 +13,7 @@ public class Lexem {
 	private int lexemID;
 	private boolean allowedAsKnowledgeSubject = false;
 	private Word_Type wordType;
-
+	private Relation relation;
 	List<KnowledgeFact_Criterion> criterions;
 
 	
@@ -24,6 +24,13 @@ public class Lexem {
 		
 		if (allowedAsKnowledgeSubject)		criterions = new ArrayList<KnowledgeFact_Criterion>() ;
 		
+	}
+
+	public Lexem( Relation relation) {
+		this.relation = relation;
+		this.lexemID = relation.getLexemID();
+		this.wordType = relation.getTense().getWordType();
+		this.allowedAsKnowledgeSubject = false;
 	}
 
 	public Word getWord() {
@@ -49,5 +56,5 @@ public class Lexem {
 	public ReadOnlyIterator<KnowledgeFact_Criterion> getKnowledgeFact_Criterions() {
 		return new ReadOnlyIterator<KnowledgeFact_Criterion>(criterions.iterator());
 	}
-	
+
 }

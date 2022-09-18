@@ -6,7 +6,8 @@ public enum Tense {
 	 present_perfect_active, present_perfect_passive,
 	 past_perfect_active,  past_perfect_passive,
 	 will_future_active, will_future_passive,
-	 going_to_future_active, going_to_future_passive
+	 going_to_future_active, going_to_future_passive,
+	 ignore;
 	 
 	 
 	//
@@ -30,4 +31,22 @@ public enum Tense {
 //			return null;
 //		}
 
+		public Word_Type getWordType() {
+			
+			switch (this) {
+			case simple_present_active: return Word_Type.finitive;
+			case simple_present_passive:  return Word_Type.past_participle;
+			case simple_past_active: return Word_Type.simple_past;
+			case simple_past_passive: return Word_Type.past_participle;
+			case present_perfect_active: return Word_Type.past_participle;
+			case present_perfect_passive: return Word_Type.past_participle;
+			case past_perfect_active: return Word_Type.past_participle;
+			case past_perfect_passive: return Word_Type.past_participle;
+			case will_future_active: return Word_Type.infinitive;
+			case will_future_passive: return Word_Type.past_participle;
+			case going_to_future_active: return Word_Type.infinitive;
+			case going_to_future_passive: return Word_Type.past_participle;
+			default: return Word_Type.ignore;
+			}
+		}
 }
