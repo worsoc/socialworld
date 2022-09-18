@@ -86,6 +86,21 @@ public class KnowledgeRelationBinaer extends KnowledgeRelation {
 		return result;
 	}
 
+	protected boolean equals(KnowledgeRelation b) {
+		boolean isEqual = false;
+		
+		if (b instanceof KnowledgeRelationBinaer) {
+			
+			isEqual = super.equals(b);
+			if (isEqual) {
+				isEqual = checkWhetherTwoLexemsAreEqual(this.object, ((KnowledgeRelationBinaer) b).object);
+				if (isEqual) {
+					isEqual = checkWhetherTwoNumerusAreEqual(this.numerusObject, ((KnowledgeRelationBinaer) b).numerusObject);
+				}
+			}
+		}
+		return isEqual;
+	}
 
 
 }

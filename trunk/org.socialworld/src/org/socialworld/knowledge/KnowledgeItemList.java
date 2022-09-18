@@ -245,31 +245,55 @@ final class KnowledgeItemList  {
 			return fact;
 	}
 		
-	void add(KnowledgeItem atom) {
-		int 	replacableIndex;
+	void add(KnowledgeItem item) {
 		
-		KnowledgeItemWithMetaInfo newItem = new KnowledgeItemWithMetaInfo(atom);
-		newItem.resetAccessCount();
-		newItem.incrementAccessCount();
-		newItem.incrementAccessCount();
+		boolean isAlreadyInList = false;
+	
+		isAlreadyInList = checkWhetherItemIsAlreadyInList(item);
 		
-		replacableIndex = getReplacableIndex();
+		if (!isAlreadyInList) {
 			
+			int 	replacableIndex;
 			
+			KnowledgeItem itemFromPool = poolInstance.getItemFromPool(item);
 			
-		if (replacableIndex  == size()) {
-			this.itemSearchList.add( newItem);
-		}
-		else {
+			KnowledgeItemWithMetaInfo newItem = new KnowledgeItemWithMetaInfo(itemFromPool);
+			newItem.resetAccessCount();
+			newItem.incrementAccessCount();
+			newItem.incrementAccessCount();
 			
-			if (this.itemSearchList.get(replacableIndex).isValid == true) {
-				this.validItemCount--;
+			replacableIndex = getReplacableIndex();
+				
+				
+				
+			if (replacableIndex  == size()) {
+				this.itemSearchList.add( newItem);
 			}
+			else {
+				
+				if (this.itemSearchList.get(replacableIndex).isValid == true) {
+					this.validItemCount--;
+				}
 
-			this.itemSearchList.set(replacableIndex, newItem);
+				this.itemSearchList.set(replacableIndex, newItem);
+			}
+			
+			this.validItemCount++;
+
 		}
 		
-		this.validItemCount++;
+	}
+	
+	private boolean checkWhetherItemIsAlreadyInList(KnowledgeItem item) {
+		
+		boolean isAlreadyInList = false;
+		for (KnowledgeItemWithMetaInfo itemWMI : itemSearchList) {
+			if (itemWMI.item.equals(item)) {
+				isAlreadyInList = true;
+				break;
+			}
+		}
+		return isAlreadyInList;
 		
 	}
 	
@@ -506,6 +530,8 @@ final class KnowledgeItemList  {
 		return true;
 	}
 
+	// derives knowledge items for the same knowledge item list
+	// that means or the same source and subject
 	void deriveKnowledgeItemsFromNotes() {
 		
 		replaceFactsWithFactsFromPool();
@@ -528,6 +554,10 @@ final class KnowledgeItemList  {
 				}
 			}
 			
+		}
+		
+		for (KnowledgeItem item : items) {
+				add(item);
 		}
 		
 	}

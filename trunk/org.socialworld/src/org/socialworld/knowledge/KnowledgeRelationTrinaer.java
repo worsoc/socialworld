@@ -96,4 +96,26 @@ public class KnowledgeRelationTrinaer extends KnowledgeRelation {
 		return result;
 	}
 
+	protected boolean equals(KnowledgeRelation b) {
+		boolean isEqual = false;
+		
+		if (b instanceof KnowledgeRelationTrinaer) {
+			
+			isEqual = super.equals(b);
+			if (isEqual) {
+				isEqual = checkWhetherTwoLexemsAreEqual(this.object1, ((KnowledgeRelationTrinaer) b).object1);
+				if (isEqual) {
+					isEqual = checkWhetherTwoLexemsAreEqual(this.object2, ((KnowledgeRelationTrinaer) b).object2);
+					if (isEqual) {
+						isEqual = checkWhetherTwoNumerusAreEqual(this.numerusObject1, ((KnowledgeRelationTrinaer) b).numerusObject1);
+						if (isEqual) {
+							isEqual = checkWhetherTwoNumerusAreEqual(this.numerusObject2, ((KnowledgeRelationTrinaer) b).numerusObject2);
+						}
+					}
+				}
+			}
+		}
+		return isEqual;
+	}
+
 }

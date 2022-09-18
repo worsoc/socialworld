@@ -70,7 +70,7 @@ public class KnowledgeProperty extends KnowledgeFact {
 	}
 
 	protected boolean equals(KnowledgeProperty b) {
-		return ( this.criterion == b.criterion & this.atoms.equals(b.atoms) );
+		return ( this.criterion == b.criterion && this.atoms.equals(b.atoms) );
 	}
 	
 
