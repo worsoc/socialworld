@@ -27,6 +27,7 @@ import java.util.List;
 import org.socialworld.calculation.Value;
 import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Numerus;
+import org.socialworld.conversation.Tense;
 import org.socialworld.conversation.Word;
 
 public class KnowledgeRelationTrinaer extends KnowledgeRelation {
@@ -43,8 +44,8 @@ public class KnowledgeRelationTrinaer extends KnowledgeRelation {
 		this.object2 = translateToLexem(object2);
 	}
 	
-	public KnowledgeRelationTrinaer(List<Lexem> lexems) {
-		super(lexems);
+	public KnowledgeRelationTrinaer(Tense tense, List<Lexem> lexems) {
+		super(tense, lexems);
 		if (lexems.size() > 2) {
 			this.object1 = lexems.get(2);
 		}

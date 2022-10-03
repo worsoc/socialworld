@@ -30,6 +30,11 @@ public enum Relation {
 			return ignore;
 		}
 		
+		public static Relation getName(Lexem lexem, Tense tense) {
+			// TODO Knowledge getting relation for lexem and tense
+			return ignore;
+		}
+		
 		public Tense getTense() {
 			
 			if (this.index > 0 && this.index < FIRST_INDEX_PAST) {

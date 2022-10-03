@@ -21,6 +21,8 @@
 */
 package org.socialworld.knowledge;
 
+import org.socialworld.conversation.Tense;
+
 public enum KnowledgeFact_Criterion {
 	colour(0), material(1),
 	relationUnaer(1000),
@@ -71,6 +73,38 @@ public enum KnowledgeFact_Criterion {
 		return arrayIndex + CRITERION_WORD_ID_OFFSET;
 	}
 	
+	public boolean isRelation() {
+		if ((this.arrayIndex >= MIN_INDEX_RELATION_UNAER) && 
+				(this.arrayIndex <= MAX_INDEX_RELATION_TRINAER))
+			return true;
+		else
+			return false;
+	}
+
+	/**
+	 * The method returns the tense of the knowledge fact criterion (if it is a relation).
+	 * 
+	 * @return relation's tense
+	 */
+	public Tense getTense() {
+		
+		if (this.isRelation()) {
+			switch (lastDigit()) {
+			case 0:
+				return Tense.simple_present_active;
+			case 1:
+				return Tense.simple_past_active;
+			case 2:
+				return Tense.will_future_active;
+			default:	
+				return Tense.simple_present_active;
+			}
+		}
+		else
+			return Tense.ignore;
+	}
+	
+	
 	/**
 	 * The method returns the knowledge fact criterion name which belongs to the parameter
 	 * criterion index.
@@ -90,4 +124,7 @@ public enum KnowledgeFact_Criterion {
 		return this.arrayIndex == criterion.arrayIndex;
 	}
 
+	private int lastDigit() {
+		return this.arrayIndex % 10;
+	}
 }
