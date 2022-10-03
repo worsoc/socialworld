@@ -28,6 +28,7 @@ import org.socialworld.calculation.Value;
 import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Numerus;
 import org.socialworld.conversation.Relation;
+import org.socialworld.conversation.Tense;
 import org.socialworld.conversation.Word;
 
 public class KnowledgeRelationBinaer extends KnowledgeRelation {
@@ -40,8 +41,8 @@ public class KnowledgeRelationBinaer extends KnowledgeRelation {
 		this.object = translateToLexem(object);
 	}
 
-	public KnowledgeRelationBinaer(List<Lexem> lexems) {
-		super(lexems);
+	public KnowledgeRelationBinaer(Tense tense, List<Lexem> lexems) {
+		super(tense, lexems);
 		if (lexems.size() == 3) {
 			this.object = lexems.get(2);
 		}

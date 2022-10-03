@@ -26,6 +26,7 @@ import java.util.List;
 
 import org.socialworld.calculation.Value;
 import org.socialworld.conversation.Lexem;
+import org.socialworld.conversation.Tense;
 
 public class KnowledgeRelationUnaer extends KnowledgeRelation {
 
@@ -33,8 +34,8 @@ public class KnowledgeRelationUnaer extends KnowledgeRelation {
 		super(verb, adverb);
 	}
 	
-	public KnowledgeRelationUnaer(List<Lexem> lexems) {
-		super(lexems);
+	public KnowledgeRelationUnaer(Tense tense, List<Lexem> lexems) {
+		super(tense, lexems);
 	}
 
 	KnowledgeRelationUnaer(KnowledgeRelationUnaer original) {

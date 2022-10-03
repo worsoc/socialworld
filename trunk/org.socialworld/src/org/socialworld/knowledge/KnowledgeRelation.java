@@ -24,46 +24,62 @@ package org.socialworld.knowledge;
 
 import java.util.List;
 
+import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Numerus;
 import org.socialworld.conversation.Relation;
 import org.socialworld.conversation.Tense;
 import org.socialworld.conversation.Word;
+import org.socialworld.core.AllWords;
 
 public abstract class KnowledgeRelation extends KnowledgeFact {
 
 	private boolean isSelfRelation;		// knowledge of its own relations (subject ist "I")
 
-	private Relation relation;
+	private Relation relation = Relation.ignore;
 	
 	private Lexem verb;
-	private Tense tense;
+	private Tense tense = Tense.ignore;
 	
 	private Lexem adverb;
 	
 	private Numerus numerusSubject;
 	
 	protected KnowledgeRelation( Value verb, Value adverb) {
-		this.verb = translateToLexem(verb);
+		this.relation = translateToRelation(verb);
+		setLexemAndTenseFromRelation();
 		this.adverb = translateToLexem(adverb);
-		// TODO set tense and numerus
+		// TODO set numerus
 	}
 	
-	protected KnowledgeRelation(List<Lexem> lexems) {
+	protected KnowledgeRelation(Tense tense, List<Lexem> lexems) {
 		if (lexems.size() >= 2) {
+			this.tense = tense;
 			setVerb(lexems.get(0));
 			setAdverb(lexems.get(1));
+			setRelationFromLexemAndTense();
 		}
 	}
 
 	protected KnowledgeRelation(Relation relation) {
 		this.relation = relation;
+		setLexemAndTenseFromRelation();
 	}
 	
 	protected KnowledgeRelation(KnowledgeRelation original) {
 		if (original != null) {
-			// TODO copy
+			
+			this.isSelfRelation = original.isSelfRelation;	
+			this.relation = original.relation;
+			
+			this.verb = original.verb;
+			this.tense = original.tense;
+			
+			this.adverb = original.adverb;
+			
+			this.numerusSubject = original.numerusSubject;
+			
 		}
 	}
 
@@ -118,12 +134,51 @@ public abstract class KnowledgeRelation extends KnowledgeFact {
 		return true;
 	}
 	
-	protected Lexem translateToLexem(Value value) {
-		Lexem result = null;
-		// TODO KNOWLEDGE translate from value to Lexem
+	private Relation translateToRelation(Value value) {
+		Relation result = Relation.ignore;
+		if (value.getType() == Type.sentenceElement) {
+			Object o = value.getValue();
+			if (o instanceof Relation)	{
+				result = (Relation) o;
+			}
+		}
 		return result;
 	}
+
+	protected Lexem translateToLexem(Value value) {
+		Lexem result = null;
+		if (value.getType() == Type.sentenceElement) {
+			Object o = value.getValue();
+			if (o instanceof Lexem)	{
+				result = (Lexem) o;
+			}
+			else if (o instanceof Integer) {
+				int lexemID = ((Integer) o).intValue();
+				result = AllWords.getLexem(lexemID);
+			}
+			else if (Integer.class.isInstance(o)) {
+				int lexemID  = (int) o;
+				result = AllWords.getLexem(lexemID);
+			}
+			
+		}
+		return result;
+	}
+
+	private void setLexemAndTenseFromRelation() {
+		if (this.relation != null) {
+			int lexemID = 	this.relation.getLexemID();
+			this.verb = AllWords.getLexem(lexemID);
+			this.tense = this.relation.getTense();
+		}
+	}
 	
+	private void setRelationFromLexemAndTense() {
+		if (this.verb != null && this.tense != Tense.ignore) {
+			this.relation = Relation.getName(this.verb, this.tense);
+		}
+	}
+
 	KnowledgeItemNotes removeNotes() {
 		return new KnowledgeItemNotes(0);  // TODO KNOWLEDGE removeNotes();
 	}

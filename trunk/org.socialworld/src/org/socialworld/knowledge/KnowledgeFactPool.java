@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.conversation.Lexem;
+import org.socialworld.conversation.Tense;
 
 
 public class KnowledgeFactPool {
@@ -237,17 +238,20 @@ public class KnowledgeFactPool {
 		}
 		else if (criterionsIndex <= KnowledgeFact_Criterion.MAX_INDEX_RELATION_TRINAER) {
 			
+			Tense tense = criterion.getTense();
+			
 			if (criterionsIndex <= KnowledgeFact_Criterion.MAX_INDEX_RELATION_UNAER) {
-				newFact = new KnowledgeRelationUnaer(lexems);
+				newFact = new KnowledgeRelationUnaer(tense, lexems);
 			}
 			else if (criterionsIndex <= KnowledgeFact_Criterion.MAX_INDEX_RELATION_BINAER) {
-				newFact = new KnowledgeRelationBinaer(lexems);
+				newFact = new KnowledgeRelationBinaer(tense, lexems);
 			}
 			else if (criterionsIndex <= KnowledgeFact_Criterion.MAX_INDEX_RELATION_TRINAER) {
-				newFact = new KnowledgeRelationTrinaer(lexems);
+				newFact = new KnowledgeRelationTrinaer(tense, lexems);
 			}
 			
-			if (newFact != null)	relationListsByCriterion.get(indexInPool).add((KnowledgeRelation)newFact);			
+			if (newFact != null)	relationListsByCriterion.get(indexInPool).add((KnowledgeRelation)newFact);	
+			
 		}
 
 		return newFact;
