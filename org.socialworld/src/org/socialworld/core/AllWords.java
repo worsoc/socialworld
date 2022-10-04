@@ -23,6 +23,8 @@ package org.socialworld.core;
 
 import org.socialworld.collections.Array;
 import org.socialworld.conversation.Lexem;
+import org.socialworld.conversation.Relation;
+import org.socialworld.conversation.Tense;
 import org.socialworld.conversation.Word;
 import org.socialworld.conversation.Word_Type;
 import org.socialworld.datasource.loadFromDB.LoadWords;
@@ -62,6 +64,21 @@ public class AllWords {
 		return allWordsbyWordID.get(wordID);
 	}
 	
+	public static Relation getRelation(int lexemID, int tenseID) {
+		int relationID = LoadWords.getInstance().getRelation(lexemID, tenseID);
+		return Relation.getName(relationID);
+	}
+	
+	public static void getLexemAndTense(int relationID, Lexem lexem, Tense tense) {
+		int[] ids = LoadWords.getInstance().getLexemAndTense(relationID);
+		if  (instance == null) {
+			instance = new AllWords();
+		}
+		lexem = allLexemsbyLexemID.get(ids[0]);
+		tense = Tense.getName(ids[1]);
+		return;
+	}
+
 	public static Word findAndGetWord(String word, Word_Type type) {
 		
 		ViewWordJoinLexem words;
