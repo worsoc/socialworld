@@ -167,8 +167,7 @@ public abstract class KnowledgeRelation extends KnowledgeFact {
 
 	private void setLexemAndTenseFromRelation() {
 		if (this.relation != null) {
-			int lexemID = 	this.relation.getLexemID();
-			this.verb = AllWords.getLexem(lexemID);
+			this.verb = this.relation.getLexem();
 			this.tense = this.relation.getTense();
 		}
 	}

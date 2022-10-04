@@ -27,6 +27,7 @@ import org.socialworld.conversation.Word;
 import org.socialworld.conversation.Word_Type;
 import org.socialworld.core.AllWords;
 import org.socialworld.datasource.tablesSimulation.TableLexem;
+import org.socialworld.datasource.tablesSimulation.TableRelation;
 import org.socialworld.datasource.tablesSimulation.ViewWordJoinLexem;
 
 /**
@@ -39,10 +40,15 @@ public class LoadWords {
 	
 	ViewWordJoinLexem viewWordJoinLexem;
 	TableLexem tableLexem;
+	TableRelation tableRelation;
 	
 	private LoadWords() {
 		tableLexem = new TableLexem();
+		tableRelation = new TableRelation();
 		viewWordJoinLexem = new ViewWordJoinLexem();
+		
+		tableRelation.select(tableRelation.SELECT_ALL_COLUMNS, "", " ORDER BY relation_id");
+
 	}
 	
 	/**
@@ -56,6 +62,51 @@ public class LoadWords {
 		return instance;
 	}
 
+	public int[] getLexemAndTense(int relationID) {
+		int[] result = new int[2];
+		
+		int rowCount = tableRelation.rowCount();
+		int index;
+		
+		int relation_id;
+		for (index = 0; index < rowCount; index++) {
+			relation_id = tableRelation.getRelationID(index);
+			if (relation_id == relationID) 	{
+				result[0] = tableRelation.getLexemID(index);
+				result[1] = tableRelation.getTenseID(index);
+				break;
+			}
+			else if (relation_id > relationID) {
+				break;
+			}
+		}
+
+		return result;
+	}
+
+	public int getRelation(int lexemID, int tenseID) {
+		int result = 0;
+
+		int rowCount = tableRelation.rowCount();
+		int index;
+		
+		int lexem_id;
+		int tense_id;
+		
+		for (index = 0; index < rowCount; index++) {
+			lexem_id = tableRelation.getLexemID(index);
+			if (lexem_id == lexemID) 	{
+				tense_id = tableRelation.getTenseID(index);
+				if (tense_id == tenseID) 	{
+					result = tableRelation.getRelationID(index);
+					break;
+				}
+			}
+		}
+
+		return result;
+	}
+	
 	public Array<Lexem> getAllLexems() {
 
 		int rowCount;

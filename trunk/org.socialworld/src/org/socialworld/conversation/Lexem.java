@@ -28,11 +28,16 @@ public class Lexem {
 
 	public Lexem( Relation relation) {
 		this.relation = relation;
-		this.lexemID = relation.getLexemID();
+		this.lexemID = relation.getLexem().getLexemID();
 		this.wordType = relation.getTense().getWordType();
 		this.allowedAsKnowledgeSubject = false;
 	}
 
+	
+	public int getLexemID() {
+		return lexemID;
+	}
+	
 	public Word getWord() {
 		return null;
 	}
