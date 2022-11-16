@@ -25,4 +25,18 @@ public interface IWearable {
 
 	public static final String NAME = "IWearable";
 
+	
+	public abstract boolean isLeftHandGlove();
+	public abstract boolean isRightHandGlove();
+
+	public abstract boolean isLeftFootSock();
+	public abstract boolean isRightFootSock();
+
+	public abstract boolean isLeftFootShoe();
+	public abstract boolean isRightFootShoe();
+
+	public abstract boolean isShirt();
+	public abstract boolean isTrousers();
+	public abstract boolean isCap();
+
 }

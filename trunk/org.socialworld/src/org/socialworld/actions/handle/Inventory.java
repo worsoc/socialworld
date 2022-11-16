@@ -33,7 +33,13 @@ import org.socialworld.core.ObjectMaster;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.SimulationObject_Type;
+import org.socialworld.objects.concrete.clothes.Cap;
+import org.socialworld.objects.concrete.clothes.Shirt;
+import org.socialworld.objects.concrete.clothes.Shoe;
+import org.socialworld.objects.concrete.clothes.Sock;
+import org.socialworld.objects.concrete.clothes.Trousers;
 import org.socialworld.objects.properties.IWeapon;
+import org.socialworld.objects.properties.IWearable;
 import org.socialworld.tools.StringTupel;
 
 /**
@@ -50,10 +56,13 @@ public class Inventory extends SimProperty {
 	protected SimulationObject rightHand;
 	protected SimulationObject mouth;
 
-	protected SimulationObject shirt;
-	protected SimulationObject trousers;
-	protected SimulationObject shoes;
-	protected SimulationObject cap;
+	protected Shirt shirt;
+	protected Trousers trousers;
+	protected Shoe leftFootShoe;
+	protected Shoe rightFootShoe;
+	protected Sock leftFootSock;
+	protected Sock rightFootSock;
+	protected Cap cap;
 
 	private int leftHandID;
 	private int rightHandID;
@@ -61,7 +70,10 @@ public class Inventory extends SimProperty {
 
 	private int shirtID;
 	private int trousersID;
-	private int shoesID;
+	private int leftShoeID;
+	private int rightShoeID;
+	private int leftSockID;
+	private int rightSockID;
 	private int capID;
 	
 	private boolean complete;
@@ -74,7 +86,10 @@ public class Inventory extends SimProperty {
 	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{
 			new StringTupel(new String[] {Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_shirt.name(), PropertyName.inventory_shirt.toString()}),
 			new StringTupel(new String[] {Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_trousers.name(), PropertyName.inventory_trousers.toString()}),
-			new StringTupel(new String[] {Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_shoes.name(), PropertyName.inventory_shoes.toString()}),
+			new StringTupel(new String[] {Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_leftShoe.name(), PropertyName.inventory_leftShoe.toString()}),
+			new StringTupel(new String[] {Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_rightShoe.name(), PropertyName.inventory_rightShoe.toString()}),
+			new StringTupel(new String[] {Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_leftSock.name(), PropertyName.inventory_leftSock.toString()}),
+			new StringTupel(new String[] {Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_rightSock.name(), PropertyName.inventory_rightSock.toString()}),
 			new StringTupel(new String[] {Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_cap.name(), PropertyName.inventory_cap.toString()}),
 			new StringTupel(new String[] {Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_leftHand.name(), PropertyName.inventory_leftHand.toString()}),
 			new StringTupel(new String[] {Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_rightHand.name(), PropertyName.inventory_rightHand.toString()})
@@ -139,8 +154,14 @@ public class Inventory extends SimProperty {
 			return new ValueProperty(Type.simulationObject, valueName, this.shirt);
 		case inventory_trousers:
 			return new ValueProperty(Type.simulationObject, valueName, this.trousers);
-		case inventory_shoes:
-			return new ValueProperty(Type.simulationObject, valueName, this.shoes);
+		case inventory_leftShoe:
+			return new ValueProperty(Type.simulationObject, valueName, this.leftFootShoe);
+		case inventory_rightShoe:
+			return new ValueProperty(Type.simulationObject, valueName, this.rightFootShoe);
+		case inventory_leftSock:
+			return new ValueProperty(Type.simulationObject, valueName, this.leftFootSock);
+		case inventory_rightSock:
+			return new ValueProperty(Type.simulationObject, valueName, this.rightFootSock);
 		case inventory_cap:
 			return new ValueProperty(Type.simulationObject, valueName, this.cap);
 		case inventory_leftHand:
@@ -244,19 +265,41 @@ public class Inventory extends SimProperty {
 	}
 
 	
-	public void setShirt(final SimulationObject shirt) {
+	public void setShirt(final Shirt shirt) {
 		this.shirt = shirt;
 	}
 
-	public void setTrousers(final SimulationObject trousers) {
+	public void setTrousers(final Trousers trousers) {
 		this.trousers = trousers;
 	}
 
-	public void setShoes(final SimulationObject shoes) {
-		this.shoes = shoes;
+	public void setShoes(final Shoe leftShoe, final Shoe rightShoe) {
+		this.leftFootShoe = leftShoe;
+		this.rightFootShoe = rightShoe;
 	}
 
-	public void setCap(final SimulationObject cap) {
+	public void setLeftShoe(final Shoe shoe) {
+		this.leftFootShoe = shoe;
+	}
+
+	public void setRightShoe(final Shoe shoe) {
+		this.rightFootShoe = shoe;
+	}
+
+	public void setSocks(final Sock leftSock, final Sock rightSock) {
+		this.leftFootSock = leftSock;
+		this.rightFootSock = rightSock;
+	}
+
+	public void setLeftSock(final Sock sock) {
+		this.leftFootSock = sock;
+	}
+
+	public void setRightSock(final Sock sock) {
+		this.rightFootSock = sock;
+	}
+
+	public void setCap(final Cap cap) {
 		this.cap = cap;
 	}
 
