@@ -23,8 +23,10 @@ package org.socialworld.knowledge;
 
 import java.util.List;
 
+import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.conversation.Lexem;
+import org.socialworld.core.AllWords;
 
 public abstract class KnowledgeFact extends KnowledgeItem {
 	
@@ -58,10 +60,33 @@ public abstract class KnowledgeFact extends KnowledgeItem {
 
 	protected KnowledgeFactAtom translateToKnowledgeFactAtom(Value value) {
 		KnowledgeFactAtom result = null;
-		// TODO KNOWLEDGE translate from value to KnowledgeFactAtom
+		Lexem lexem = translateToLexem(value);
+		if (lexem != null) {
+			result = new KnowledgeFactAtom(lexem);
+		}
 		return result;
 	}
 	
+	protected Lexem translateToLexem(Value value) {
+		Lexem result = null;
+		if (value.getType() == Type.sentenceElement) {
+			Object o = value.getValue();
+			if (o instanceof Lexem)	{
+				result = (Lexem) o;
+			}
+			else if (o instanceof Integer) {
+				int lexemID = ((Integer) o).intValue();
+				result = AllWords.getLexem(lexemID);
+			}
+			else if (Integer.class.isInstance(o)) {
+				int lexemID  = (int) o;
+				result = AllWords.getLexem(lexemID);
+			}
+			
+		}
+		return result;
+	}
+
 	/*
 	protected List<Lexem> translateToLexems(ValueArrayList values) {
 		List<Lexem> result = new ArrayList<Lexem>();
