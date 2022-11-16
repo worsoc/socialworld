@@ -177,8 +177,8 @@ public class CreateValue extends Expression {
 			break;
 		case knowledgeAtom:
 
-			KnowledgeFact_Type kat;
-			kat = KnowledgeFact_Type.getName(subType);
+			KnowledgeFact_Type kft;
+			kft = KnowledgeFact_Type.getName(subType);
 			firstCreateArgument = arguments.size();
 			evaluateExpression2(arguments);
 			size = arguments.size();
@@ -191,7 +191,7 @@ public class CreateValue extends Expression {
 					return Calculation.getNothing();
 				}
 			}
-			createdObject  = KnowledgeCalculator.createKnowledgeAtom(kat, localArguments);
+			createdObject  = KnowledgeCalculator.createKnowledgeAtom(kft, localArguments);
 			break;
 
 		default:
