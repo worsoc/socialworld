@@ -10,8 +10,13 @@ import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
-import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.State;
+import org.socialworld.objects.concrete.clothes.Cap;
+import org.socialworld.objects.concrete.clothes.Shirt;
+import org.socialworld.objects.concrete.clothes.Shoe;
+import org.socialworld.objects.concrete.clothes.Sock;
+import org.socialworld.objects.concrete.clothes.Trousers;
+import org.socialworld.objects.properties.IWearable;
 import org.socialworld.tools.StringTupel;
 
 public class StateInventory extends State {
@@ -26,7 +31,10 @@ public class StateInventory extends State {
 	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{
 		new StringTupel(new String[] {Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_shirt.name(), PropertyName.inventory_shirt.toString()}),
 		new StringTupel(new String[] {Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_trousers.name(), PropertyName.inventory_trousers.toString()}),
-		new StringTupel(new String[] {Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_shoes.name(), PropertyName.inventory_shoes.toString()}),
+		new StringTupel(new String[] {Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_leftShoe.name(), PropertyName.inventory_leftShoe.toString()}),
+		new StringTupel(new String[] {Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_rightShoe.name(), PropertyName.inventory_rightShoe.toString()}),
+		new StringTupel(new String[] {Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_leftSock.name(), PropertyName.inventory_leftSock.toString()}),
+		new StringTupel(new String[] {Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_rightSock.name(), PropertyName.inventory_rightSock.toString()}),
 		new StringTupel(new String[] {Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_cap.name(), PropertyName.inventory_cap.toString()}),
 		new StringTupel(new String[] {Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_leftHand.name(), PropertyName.inventory_leftHand.toString()}),
 		new StringTupel(new String[] {Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_rightHand.name(), PropertyName.inventory_rightHand.toString()})
@@ -96,7 +104,13 @@ public class StateInventory extends State {
 			return this.inventory.getProperty(cluster, propName, valueName);
 		case inventory_trousers:
 			return this.inventory.getProperty(cluster, propName, valueName);
-		case inventory_shoes:
+		case inventory_leftShoe:
+			return this.inventory.getProperty(cluster, propName, valueName);
+		case inventory_rightShoe:
+			return this.inventory.getProperty(cluster, propName, valueName);
+		case inventory_leftSock:
+			return this.inventory.getProperty(cluster, propName, valueName);
+		case inventory_rightSock:
 			return this.inventory.getProperty(cluster, propName, valueName);
 		case inventory_cap:
 			return this.inventory.getProperty(cluster, propName, valueName);
@@ -121,23 +135,38 @@ public class StateInventory extends State {
 			}
 			break;
 		case inventory_shirt:
-			if (value instanceof SimulationObject) {
-				this.inventory.setShirt((SimulationObject) value );
+			if (value instanceof Shirt) {
+				this.inventory.setShirt((Shirt) value );
 			}
 			break;
 		case inventory_trousers:
-			if (value instanceof SimulationObject) {
-				this.inventory.setTrousers((SimulationObject) value );
+			if (value instanceof Trousers) {
+				this.inventory.setTrousers((Trousers) value );
 			}
 			break;
-		case inventory_shoes:
-			if (value instanceof SimulationObject) {
-				this.inventory.setShoes((SimulationObject) value );
+		case inventory_leftShoe:
+			if (value instanceof Shoe) {
+				this.inventory.setLeftShoe((Shoe) value );
+			}
+			break;
+		case inventory_rightShoe:
+			if (value instanceof Shoe) {
+				this.inventory.setRightShoe((Shoe) value );
+			}
+			break;
+		case inventory_leftSock:
+			if (value instanceof Sock) {
+				this.inventory.setLeftSock((Sock) value );
+			}
+			break;
+		case inventory_rightSock:
+			if (value instanceof Sock) {
+				this.inventory.setRightSock((Sock) value );
 			}
 			break;
 		case inventory_cap:
-			if (value instanceof SimulationObject) {
-				this.inventory.setCap((SimulationObject) value );
+			if (value instanceof Cap) {
+				this.inventory.setCap((Cap) value );
 			}
 			break;
 		default:
