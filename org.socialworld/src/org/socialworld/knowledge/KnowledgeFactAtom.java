@@ -36,20 +36,20 @@ public class KnowledgeFactAtom {
 	
 	private List<String> notes;
 	
-	public KnowledgeFactAtom(Value value) {
+	private KnowledgeFactAtom(Value value) {
 		this.type = KnowledgeFactAtom_Type.value;
 		this.value = value;
 		this.notes = new ArrayList<String>();
 	}
 	
-	public KnowledgeFactAtom(Value value, String note) {
+	private KnowledgeFactAtom(Value value, String note) {
 		this.type = KnowledgeFactAtom_Type.value;
 		this.value = value;
 		this.notes = new ArrayList<String>();
 		this.notes.add(note);
 	}
 	
-	public KnowledgeFactAtom(Value value, List<String> notes) {
+	private KnowledgeFactAtom(Value value, List<String> notes) {
 		this.type = KnowledgeFactAtom_Type.value;
 		this.value = value;
 		this.notes = notes;
