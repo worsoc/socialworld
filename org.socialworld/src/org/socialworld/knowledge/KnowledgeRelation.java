@@ -31,7 +31,6 @@ import org.socialworld.conversation.Numerus;
 import org.socialworld.conversation.Relation;
 import org.socialworld.conversation.Tense;
 import org.socialworld.conversation.Word;
-import org.socialworld.core.AllWords;
 
 public abstract class KnowledgeRelation extends KnowledgeFact {
 
@@ -145,25 +144,6 @@ public abstract class KnowledgeRelation extends KnowledgeFact {
 		return result;
 	}
 
-	protected Lexem translateToLexem(Value value) {
-		Lexem result = null;
-		if (value.getType() == Type.sentenceElement) {
-			Object o = value.getValue();
-			if (o instanceof Lexem)	{
-				result = (Lexem) o;
-			}
-			else if (o instanceof Integer) {
-				int lexemID = ((Integer) o).intValue();
-				result = AllWords.getLexem(lexemID);
-			}
-			else if (Integer.class.isInstance(o)) {
-				int lexemID  = (int) o;
-				result = AllWords.getLexem(lexemID);
-			}
-			
-		}
-		return result;
-	}
 
 	private void setLexemAndTenseFromRelation() {
 		if (this.relation != null) {
