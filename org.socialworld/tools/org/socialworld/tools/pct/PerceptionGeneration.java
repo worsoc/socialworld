@@ -674,9 +674,34 @@ public class PerceptionGeneration extends Generation{
 		allGroupingNumbers[14] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_FRUITS;
 		allGroupingNumbers[15] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_VEGGIES;
 		allGroupingNumbers[16] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_MEATS;
-				
+
+		allGroupingNumbers[17] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_CLOTHES;
+		allGroupingNumbers[18] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_CAPS;
+		allGroupingNumbers[19] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_SHIRTS;
+		allGroupingNumbers[20] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_TROUSERS;
+		allGroupingNumbers[21] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_SHOES;
+		allGroupingNumbers[22] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_SOCKS;
+		allGroupingNumbers[23] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_GLOVES;
+
+		// for GROUPING_NUMBER_ALL_BIRDS (allGroupingNumbers[11])
+		allGroupingNumbers[24] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_PALAEOGNATHAE;
+		allGroupingNumbers[25] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_GALLOANSERAE;
+		allGroupingNumbers[26] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_STRISORES;
+		allGroupingNumbers[27] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_OTIDIMORPHAE;
+		allGroupingNumbers[28] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_COLUMBIMORPHAE;
+		allGroupingNumbers[29] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_GRUIFORMES;
+		allGroupingNumbers[30] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_AEQUORLITHORNIHES;
+		allGroupingNumbers[31] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_ACCIPITRIFORMES;
+		allGroupingNumbers[32] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_STRIGIFORMES;
+		allGroupingNumbers[33] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_CORACIIMORPHAE;
+		allGroupingNumbers[34] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_FALCONIFORMES;
+		allGroupingNumbers[35] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_PSITTACIFORMES;
+		allGroupingNumbers[36] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_SUBOSCINES;
+		allGroupingNumbers[37] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_OSCINES;
+		
+
 	}
-	
+
 	private int getGroupingNumberForIndex(int index) {
 		int indexModuloSize = index % GroupingOfSimulationObjects.COUNT_GROUPING_NUMBERS;
 		return allGroupingNumbers[indexModuloSize];
