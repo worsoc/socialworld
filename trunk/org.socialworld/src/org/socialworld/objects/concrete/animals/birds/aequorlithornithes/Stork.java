@@ -1,15 +1,19 @@
-package org.socialworld.objects.concrete.animals;
+package org.socialworld.objects.concrete.animals.birds.aequorlithornithes;
 
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
+import org.socialworld.objects.concrete.animals.IRunnable;
+import org.socialworld.objects.concrete.animals.StateDispersibility;
+import org.socialworld.objects.concrete.animals.StateRunnable;
+import org.socialworld.objects.concrete.animals.birds.Aequorlithornithes;
 import org.socialworld.objects.properties.IDispersibility;
 
 
 
-public class Stork extends Bird implements IDispersibility , IRunnable{
+public class Stork extends Aequorlithornithes implements IDispersibility , IRunnable{
 
 	// add on states
 	private StateDispersibility stateDispersibility;

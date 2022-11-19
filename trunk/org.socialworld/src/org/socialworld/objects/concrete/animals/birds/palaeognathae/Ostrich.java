@@ -1,12 +1,15 @@
-package org.socialworld.objects.concrete.animals;
+package org.socialworld.objects.concrete.animals.birds.palaeognathae;
 
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
+import org.socialworld.objects.concrete.animals.IRunnable;
+import org.socialworld.objects.concrete.animals.StateRunnable;
+import org.socialworld.objects.concrete.animals.birds.Palaeognathae;
 
-public class Ostrich extends Bird implements IRunnable{
+public class Ostrich extends Palaeognathae implements IRunnable{
 	
 	private StateRunnable stateRunnable;
 	
