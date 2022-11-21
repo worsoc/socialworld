@@ -9,6 +9,7 @@ import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
+import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.State;
 import org.socialworld.tools.StringTupel;
 
@@ -62,8 +63,13 @@ public class StateBody extends State {
 	////////////////// creating instance for simulation    ///////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
-	public StateBody() {
-		super();
+	public StateBody(SimulationObject object) 
+	{
+		super(object);
+	}
+
+	protected  void init() {
+		
 	}
 
 	protected  void initPropertyName() {

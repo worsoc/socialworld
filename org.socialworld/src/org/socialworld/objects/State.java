@@ -46,19 +46,27 @@ public abstract class State implements ISimProperty, ISavedValues {
 
 	private PropertyName propertyName = PropertyName.unknown;
 	private PropertyProtection protection;
-	
+	private SimulationObject object;
 		
-	protected State() {
+	protected State(SimulationObject object) {
 		initPropertyName();
 		this.protection = new PropertyProtection(this);
+		init();
 	}
 
 	protected State(PropertyProtection protectionOriginal, SimulationCluster clusterNew) {
 		initPropertyName();
 		this.protection = new PropertyProtection(protectionOriginal, clusterNew, this);
+		init();
 	}
 
 	protected abstract void initPropertyName();
+	
+	protected abstract void init();
+	
+	final protected SimulationObject getObject() {
+		return this.object;
+	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////meta information    ////////////////////////////////////

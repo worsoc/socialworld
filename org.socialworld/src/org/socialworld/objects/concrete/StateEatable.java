@@ -32,6 +32,7 @@ import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
+import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.State;
 import org.socialworld.tools.StringTupel;
 
@@ -89,8 +90,13 @@ public class StateEatable extends State {
 	////////////////// creating instance for simulation    ///////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
-	public StateEatable() {
-		super();
+	public StateEatable(SimulationObject object) 
+	{
+		super(object);
+	}
+
+	protected  void init() {
+		
 	}
 
 	private StateEatable( StateEatable original, PropertyProtection protectionOriginal, SimulationCluster cluster) {

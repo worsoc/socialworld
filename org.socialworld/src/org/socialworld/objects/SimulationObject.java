@@ -48,6 +48,7 @@ import org.socialworld.core.SearchActionDescription;
 import org.socialworld.core.Simulation;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.access.GrantedAccessToProperty;
+import org.socialworld.objects.access.HiddenSimulationObject;
 import org.socialworld.objects.concrete.*;
 import org.socialworld.objects.connections.Connection;
 import org.socialworld.objects.connections.ConnectionType;
@@ -268,6 +269,7 @@ public abstract class SimulationObject implements IPerceptible {
 		return result;
 		
 	};
+	
 	
 	protected abstract State getInitState(String stateClassName);
 	
