@@ -33,6 +33,7 @@ import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.calculation.geometry.VectorMapper;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
+import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.State;
 import org.socialworld.tools.StringTupel;
 
@@ -94,17 +95,19 @@ public class StateSeer extends State {
 	////////////////// creating instance for simulation    ///////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
-	public StateSeer() {
-		super();
-		setPropertyName(PropertyName.stateSeer);
+	public StateSeer(SimulationObject object) {
+		super(object);
+	}
+	
+	protected  void init() {
 		setDirectionView( new Vector(2,1,0));
 		setAngleViewPerceivingObjects(20.0F);
 		setAngleViewPerceivingEvents(60.0F);
+		
 	}
-	
+
 	private StateSeer( StateSeer original, PropertyProtection protectionOriginal, SimulationCluster cluster) {
 		super(protectionOriginal, cluster);
-		setPropertyName(PropertyName.stateSeer);
 		this.angleViewPerceivingEvents = original.getAngleViewPerceivingEvents();
 	}
 	

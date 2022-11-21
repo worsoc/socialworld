@@ -27,12 +27,14 @@ import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.attributes.percipience.Percipience;
+import org.socialworld.attributes.percipience.PercipienceType;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.Animal;
+import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.State;
 import org.socialworld.tools.StringTupel;
 
@@ -86,12 +88,19 @@ public class StatePerceptible extends State {
 	////////////////// creating instance for simulation    ///////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
-	
-	public StatePerceptible(Percipience percipience) {
-		super();
-		this.percipience = percipience;
+	public StatePerceptible(SimulationObject object) 
+	{
+		super(object);
 	}
-	
+
+	protected  void init() {
+		this.percipience = new Percipience(PercipienceType.simobject, 100);
+
+		//this.percipience = new Percipience(PercipienceType.simobject, 100); // for human
+		//this.percipience = new Percipience(PercipienceType.dynamic); // for Lightning, Weather
+
+	}
+
 	private StatePerceptible( StatePerceptible original, PropertyProtection protectionOriginal, SimulationCluster cluster) {
 		super(protectionOriginal, cluster);
 	}

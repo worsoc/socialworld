@@ -24,8 +24,6 @@ package org.socialworld.objects;
 
 import java.util.List;
 
-import org.socialworld.attributes.percipience.Percipience;
-import org.socialworld.attributes.percipience.PercipienceType;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.knowledge.Acquaintance;
@@ -112,23 +110,22 @@ import org.socialworld.core.IEventParam;
 
 	protected State getInitState(String stateClassName) {
 		if (stateClassName.equals(StatePerceptible.class.getName())) {
-			Percipience percipience = new Percipience(PercipienceType.simobject, 2000);
-			return new StatePerceptible(percipience);
+			return new StatePerceptible(this);
 		}
 		else if (stateClassName.equals(StateAppearance.class.getName())) {
-			return new StateAppearance();
+			return new StateAppearance(this);
 		}
 		else if (stateClassName.equals(StateComposition.class.getName())) {
-			return new StateComposition();
+			return new StateComposition(this);
 		}
 		else if (stateClassName.equals(StateSeer.class.getName())) {
-			return new StateSeer();
+			return new StateSeer(this);
 		}
 		else if (stateClassName.equals(StateBody.class.getName())) {
-			return new StateBody();
+			return new StateBody(this);
 		}
 		else if (stateClassName.equals(StateInventory.class.getName())) {
-			return new StateInventory();
+			return new StateInventory(this);
 		}
 		
 		return null;

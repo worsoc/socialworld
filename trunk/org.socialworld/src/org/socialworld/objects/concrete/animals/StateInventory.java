@@ -10,13 +10,14 @@ import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
+import org.socialworld.objects.SimulationObject;
+import org.socialworld.objects.SimulationObject_Type;
 import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.clothes.Cap;
 import org.socialworld.objects.concrete.clothes.Shirt;
 import org.socialworld.objects.concrete.clothes.Shoe;
 import org.socialworld.objects.concrete.clothes.Sock;
 import org.socialworld.objects.concrete.clothes.Trousers;
-import org.socialworld.objects.properties.IWearable;
 import org.socialworld.tools.StringTupel;
 
 public class StateInventory extends State {
@@ -75,12 +76,19 @@ public class StateInventory extends State {
 	////////////////// creating instance for simulation    ///////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
-	public StateInventory() {
-		super();
+	public StateInventory(SimulationObject object) 
+	{
+		super(object);
 	}
-	
+
+	protected  void init() {
+		this.inventory = Inventory.getTestInventory(SimulationObject_Type.human);
+		
+	}
+
 	private StateInventory( StateInventory original, PropertyProtection protectionOriginal, SimulationCluster cluster) {
 		super(protectionOriginal, cluster);
+		this.inventory = Inventory.getTestInventory(SimulationObject_Type.human);
 		setPropertyName(PropertyName.stateInventory);
 	}
 

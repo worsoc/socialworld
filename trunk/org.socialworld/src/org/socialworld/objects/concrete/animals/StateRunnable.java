@@ -30,6 +30,7 @@ import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
+import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.State;
 import org.socialworld.tools.StringTupel;
 
@@ -78,6 +79,26 @@ public class StateRunnable extends State {
 		return listOfResultingKFCs;
 	}
 	
+	///////////////////////////////////////////////////////////////////////////////////////////
+	////////////////// creating instance for simulation    ///////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
+	
+	public StateRunnable(SimulationObject object) 
+	{
+		super(object);
+	}
+
+	protected  void init() {
+		
+	}
+
+	protected  void initPropertyName() {
+		setPropertyName(PropertyName.stateRunnable);
+	}
+
+	///////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////  implementing  ISavedValues  ////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
 	
 	
 	
@@ -95,11 +116,6 @@ public class StateRunnable extends State {
 		return null;
 	}
 
-	@Override
-	protected void initPropertyName() {
-		// TODO Auto-generated method stub
-
-	}
 
 	@Override
 	protected void setProperty(PropertyName propName, ValueProperty property) {

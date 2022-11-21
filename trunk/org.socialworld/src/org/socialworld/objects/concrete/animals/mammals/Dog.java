@@ -24,8 +24,6 @@ package org.socialworld.objects.concrete.animals.mammals;
 
 import java.util.List;
 
-import org.socialworld.attributes.percipience.Percipience;
-import org.socialworld.attributes.percipience.PercipienceType;
 import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.StatePerceptible;
 import org.socialworld.objects.concrete.animals.Mammal;
@@ -62,11 +60,10 @@ public abstract class Dog extends Mammal {
 
 	protected State getInitState(String stateClassName) {
 		if (stateClassName.equals(StatePerceptible.class.getName())) {
-			Percipience percipience = new Percipience(PercipienceType.simobject);
-			return new StatePerceptible(percipience);
+			return new StatePerceptible(this);
 		}
 		else if (stateClassName.equals(StateSeer.class.getName())) {
-			return new StateSeer();
+			return new StateSeer(this);
 		}
 		
 		return null;
