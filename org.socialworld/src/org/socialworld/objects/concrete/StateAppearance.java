@@ -3,9 +3,11 @@ package org.socialworld.objects.concrete;
 import org.socialworld.attributes.ISavedValues;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.properties.Colour;
+import org.socialworld.attributes.properties.ColourSet;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
+import org.socialworld.datasource.tablesSimulation.TableStateAppearance;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.State;
@@ -62,13 +64,17 @@ public class StateAppearance extends State {
 	////////////////// creating instance for simulation    ///////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
+	private ColourSet colourSet;
+	private TableStateAppearance table;
+	
 	public StateAppearance(SimulationObject object) 
 	{
 		super(object);
+		table = new TableStateAppearance();
 	}
 
 	protected  void init() {
-		
+		table.select(table.SELECT_ALL_COLUMNS, " WHERE id = " + getObjectID() , "");
 	}
 	
 	protected  void initPropertyName() {
@@ -87,6 +93,11 @@ public class StateAppearance extends State {
 	@Override
 	public ValueProperty getProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
 		switch (propName) {
+		case stateAppearance_ColourSet:
+			return new ValueProperty(Type.simObjProp, valueName, colourSet.copyForProperty(cluster));
+		case stateAppearance_mainColour:
+			return getMainColour(cluster, valueName);
+
 		default:
 			return ValueProperty.getInvalid();
 		}
@@ -103,6 +114,16 @@ public class StateAppearance extends State {
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
 	protected ValueProperty getMainColour() {
-		return new ValueProperty(Type.object, VALUENAME_MAIN_COLOR, Colour.black);
+		return getColourSetProperty(getPropertyProtection().getCluster(), PropertyName.colourSet_mainColour, VALUENAME_MAIN_COLOR);
+	//	return new ValueProperty(Type.object, VALUENAME_MAIN_COLOR, Colour.black);
 	}
+
+	private ValueProperty getMainColour(SimulationCluster cluster, String valueName) {
+		return getColourSetProperty(cluster, PropertyName.colourSet_mainColour, valueName);
+	}
+
+	private ValueProperty getColourSetProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
+		return this.colourSet.getProperty(cluster, propName, valueName);
+	}
+
 }
