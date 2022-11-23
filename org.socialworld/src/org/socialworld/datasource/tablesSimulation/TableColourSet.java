@@ -3,6 +3,8 @@ package org.socialworld.datasource.tablesSimulation;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.socialworld.attributes.properties.Colour;
+import org.socialworld.attributes.properties.ColourSet;
 import org.socialworld.datasource.mariaDB.Table;
 
 public class TableColourSet extends Table {
@@ -130,6 +132,27 @@ public class TableColourSet extends Table {
 			
 			update(statement);
 		}
+	}
+
+	public int getColour(int index) {
+		return colour[index];
+	}
+
+	public int getPortion(int index) {
+		return portion[index];
+	}
+	
+	public int getType(int index) {
+		return type[index];
+	}
+
+	public ColourSet getColourSet(int colour_set_id) {
+		select(SELECT_ALL_COLUMNS, " WHERE colour_set_id = " + colour_set_id, " ORDER BY lfd_nr"); 
+		ColourSet colourSet = new ColourSet();
+		for (int row = 0; row < lfd_nr.length; row++) {
+				colourSet.add(Colour.getName(colour[row]), type[row], portion[row]);
+		}
+		return colourSet;
 	}
 
 }

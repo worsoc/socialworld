@@ -68,8 +68,13 @@ public enum PropertyName {
 	stateComposition(1104000),
 	
 	stateAppearance(1105000),
-	stateAppearance_mainColour(1105001),
-
+	stateAppearance_ColourSet(1105001),
+	stateAppearance_mainColour(1105002),
+	colourSet_colours(1105101),
+	//colourSet_portions(1105102),
+	//colourSet_types(1105103),
+	colourSet_mainColour(1105104),
+	
 	statePerceptible(1106000),
 	statePerceptible_position(1106001),
 	statePerceptible_cuboid(1106002),
