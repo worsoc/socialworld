@@ -17,8 +17,8 @@ public class MaterialSet extends PropPortionSet {
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{
-		new StringTupel(new String[] {"Material", PropertyName.compositionSet_mainMaterial.name(), PropertyName.compositionSet_mainMaterial.toString()}),
-		new StringTupel(new String[] {Type.valueList.getIndexWithSWTPraefix(), PropertyName.compositionSet_materials.name(), PropertyName.compositionSet_materials.toString()})
+		new StringTupel(new String[] {"Material", PropertyName.materialSet_mainMaterial.name(), PropertyName.materialSet_mainMaterial.toString()}),
+		new StringTupel(new String[] {Type.valueList.getIndexWithSWTPraefix(), PropertyName.materialSet_materials.name(), PropertyName.materialSet_materials.toString()})
 	};
 	
 	public static List<StringTupel> getPropertiesMetaInfos() {
@@ -54,9 +54,9 @@ public class MaterialSet extends PropPortionSet {
 	@Override
 	public ValueProperty getProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
 		switch (propName) {
-		case compositionSet_mainMaterial:
+		case materialSet_mainMaterial:
 			return new ValueProperty(Type.object, valueName, getMain());
-		case compositionSet_materials:
+		case materialSet_materials:
 			return new ValueProperty(Type.valueList, valueName, getObjectsAsValueArrayList());
 		default:
 			return ValueProperty.getInvalid();
