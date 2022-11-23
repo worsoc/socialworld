@@ -5,10 +5,13 @@ import java.util.List;
 
 import org.socialworld.attributes.ISavedValues;
 import org.socialworld.attributes.PropertyName;
+import org.socialworld.attributes.properties.MaterialSet;
 import org.socialworld.attributes.properties.Material;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
+import org.socialworld.datasource.tablesSimulation.TableMaterialSet;
+import org.socialworld.datasource.tablesSimulation.TableStateComposition;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.State;
@@ -20,6 +23,10 @@ public class StateComposition extends State {
 
 	public static final String METHODNAME_GET_MAIN_MATERIAL = "getMainMaterial";
 	
+	private MaterialSet materialSet;
+	private TableStateComposition tableComposition;
+	private TableMaterialSet tableMaterialSet;
+
 	///////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////static instance for meta information    ///////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
@@ -66,9 +73,20 @@ public class StateComposition extends State {
 	public StateComposition(SimulationObject object) 
 	{
 		super(object);
+		tableComposition = new TableStateComposition();
 	}
 
 	protected  void init() {
+		int objectID = getObjectID();
+		int materialSetID;
+		
+		tableComposition.select(tableComposition.SELECT_ALL_COLUMNS, " WHERE id = " + objectID , "");
+		int rowTableComposition = tableComposition.getIndexFor1PK(objectID);
+		if (rowTableComposition >= 0) {
+			tableMaterialSet = new TableMaterialSet();
+			materialSetID =tableComposition.getMaterialSetID(rowTableComposition);
+			materialSet = tableMaterialSet.getMaterialSet(materialSetID);
+		}
 		
 	}
 
@@ -87,7 +105,15 @@ public class StateComposition extends State {
 
 	@Override
 	public ValueProperty getProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
-		return null;
+		switch (propName) {
+		case stateComposition_materialSet:
+			return new ValueProperty(Type.simObjProp, valueName, materialSet.copyForProperty(cluster));
+		case stateComposition_mainMaterial:
+			return getMainMaterial(cluster, valueName);
+
+		default:
+			return ValueProperty.getInvalid();
+		}
 	}
 
 	@Override
@@ -97,10 +123,18 @@ public class StateComposition extends State {
 
 
 	///////////////////////////////////////////////////////////////////////////////////////////
-	/////////////////////////  implementing  StateCopmosition methods  ////////////////////////////////////
+	/////////////////////////  implementing  StateComposition methods  ////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
-	public ValueProperty getMainMaterial() {
-		return new ValueProperty(Type.object, VALUENAME_MAIN_MATERIAL, Material.leather);
+	protected ValueProperty getMainMaterial() {
+		return getMaterialSetProperty(getPropertyProtection().getCluster(), PropertyName.materialSet_mainMaterial, VALUENAME_MAIN_MATERIAL);
+	}
+
+	private ValueProperty getMainMaterial(SimulationCluster cluster, String valueName) {
+		return getMaterialSetProperty(cluster, PropertyName.materialSet_mainMaterial, valueName);
+	}
+
+	private ValueProperty getMaterialSetProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
+		return this.materialSet.getProperty(cluster, propName, valueName);
 	}
 }
