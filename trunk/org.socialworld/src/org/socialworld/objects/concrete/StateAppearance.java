@@ -103,6 +103,7 @@ public class StateAppearance extends State {
 		tableAppearance.select(tableAppearance.SELECT_ALL_COLUMNS, " WHERE id = " + objectID , "");
 		int rowTableAppearance = tableAppearance.getIndexFor1PK(objectID);
 		if (rowTableAppearance >= 0) {
+			tableColourSet = new TableColourSet();
 			colourSetID =tableAppearance.getColourSetID(rowTableAppearance);
 			colourSet = tableColourSet.getColourSet(colourSetID);
 		}
