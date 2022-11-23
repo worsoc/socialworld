@@ -126,7 +126,7 @@ public class StateAppearance extends State {
 	@Override
 	public ValueProperty getProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
 		switch (propName) {
-		case stateAppearance_ColourSet:
+		case stateAppearance_colourSet:
 			return new ValueProperty(Type.simObjProp, valueName, colourSet.copyForProperty(cluster));
 		case stateAppearance_mainColour:
 			return getMainColour(cluster, valueName);
