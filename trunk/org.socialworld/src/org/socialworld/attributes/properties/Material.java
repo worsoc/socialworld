@@ -9,7 +9,10 @@ import org.socialworld.tools.StringTupel;
 
 public enum Material {
 
-	leather(1);
+	leather(1),
+	glas(2),
+	cotton(3),
+	iron(4);
 	
 	private int arrayIndex;
 
