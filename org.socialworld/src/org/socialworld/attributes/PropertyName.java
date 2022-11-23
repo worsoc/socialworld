@@ -66,9 +66,13 @@ public enum PropertyName {
 	stateBody(1103000),
 	
 	stateComposition(1104000),
+	stateComposition_compositionSet(1104001),
+	stateComposition_mainMaterial(1104002),
+	compositionSet_materials(1104101),
+	compositionSet_mainMaterial(1104102),
 	
 	stateAppearance(1105000),
-	stateAppearance_ColourSet(1105001),
+	stateAppearance_colourSet(1105001),
 	stateAppearance_mainColour(1105002),
 	colourSet_colours(1105101),
 	//colourSet_portions(1105102),
