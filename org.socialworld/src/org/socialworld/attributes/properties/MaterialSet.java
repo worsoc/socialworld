@@ -10,7 +10,7 @@ import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.tools.StringTupel;
 
-public class CompositionSet extends PropPortionSet {
+public class MaterialSet extends PropPortionSet {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //////////////////static instance for meta information    ///////////////////////////////
@@ -34,11 +34,11 @@ public class CompositionSet extends PropPortionSet {
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 
-	protected  CompositionSet(PropPortionSet original, PropertyProtection protectionOriginal, SimulationCluster cluster ) {
+	protected  MaterialSet(PropPortionSet original, PropertyProtection protectionOriginal, SimulationCluster cluster ) {
 		super(original, protectionOriginal, cluster);
 	}
 	
-	public  CompositionSet() {
+	public  MaterialSet() {
 		super();
 	}
 	
@@ -48,7 +48,7 @@ public class CompositionSet extends PropPortionSet {
 
 	@Override
 	public SimProperty copyForProperty(SimulationCluster cluster) {
-		return new CompositionSet(this, getPropertyProtection(), cluster);
+		return new MaterialSet(this, getPropertyProtection(), cluster);
 	}
 	
 	@Override
@@ -64,7 +64,7 @@ public class CompositionSet extends PropPortionSet {
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////    CompositionSet  ///////////////////////////////////////////////
+/////////////////////////////    MaterialSet  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 	
