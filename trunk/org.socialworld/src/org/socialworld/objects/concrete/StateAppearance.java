@@ -1,12 +1,33 @@
+/*
+* Social World
+* Copyright (C) 2014  Mathias Sikos
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
+*
+* or see http://www.gnu.org/licenses/gpl-2.0.html
+*
+*/
 package org.socialworld.objects.concrete;
 
 import org.socialworld.attributes.ISavedValues;
 import org.socialworld.attributes.PropertyName;
-import org.socialworld.attributes.properties.Colour;
 import org.socialworld.attributes.properties.ColourSet;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
+import org.socialworld.datasource.tablesSimulation.TableColourSet;
 import org.socialworld.datasource.tablesSimulation.TableStateAppearance;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.SimulationObject;
@@ -20,6 +41,10 @@ public class StateAppearance extends State {
 	public static final String VALUENAME_MAIN_COLOR = "mainColour";
 
 	public static final String METHODNAME_GET_MAIN_COLOR = "getMainColour";
+
+	private ColourSet colourSet;
+	private TableStateAppearance tableAppearance;
+	private TableColourSet tableColourSet;
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////  static instance for meta information    ///////////////////////////////
@@ -64,17 +89,24 @@ public class StateAppearance extends State {
 	////////////////// creating instance for simulation    ///////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
-	private ColourSet colourSet;
-	private TableStateAppearance table;
 	
 	public StateAppearance(SimulationObject object) 
 	{
 		super(object);
-		table = new TableStateAppearance();
+		tableAppearance = new TableStateAppearance();
 	}
 
 	protected  void init() {
-		table.select(table.SELECT_ALL_COLUMNS, " WHERE id = " + getObjectID() , "");
+		int objectID = getObjectID();
+		int colourSetID;
+		
+		tableAppearance.select(tableAppearance.SELECT_ALL_COLUMNS, " WHERE id = " + objectID , "");
+		int rowTableAppearance = tableAppearance.getIndexFor1PK(objectID);
+		if (rowTableAppearance >= 0) {
+			colourSetID =tableAppearance.getColourSetID(rowTableAppearance);
+			colourSet = tableColourSet.getColourSet(colourSetID);
+		}
+
 	}
 	
 	protected  void initPropertyName() {

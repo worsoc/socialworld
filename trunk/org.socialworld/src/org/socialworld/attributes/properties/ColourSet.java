@@ -1,3 +1,24 @@
+/*
+* Social World
+* Copyright (C) 2022  Mathias Sikos
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
+*
+* or see http://www.gnu.org/licenses/gpl-2.0.html
+*
+*/
 package org.socialworld.attributes.properties;
 
 import java.util.ArrayList;
@@ -9,12 +30,31 @@ import org.socialworld.attributes.SimProperty;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
+import org.socialworld.collections.ValueArrayList;
+import org.socialworld.tools.StringTupel;
 
 public class ColourSet extends SimProperty {
 
 	private List<Colour> colours;
 	private List<Integer> portions;
 	private List<Integer> types;
+
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////static instance for meta information    ///////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{
+		new StringTupel(new String[] {"Colour", PropertyName.colourSet_mainColour.name(), PropertyName.colourSet_mainColour.toString()}),
+		new StringTupel(new String[] {Type.valueList.getIndexWithSWTPraefix(), PropertyName.colourSet_colours.name(), PropertyName.colourSet_colours.toString()})
+	};
+	
+	public static List<StringTupel> getPropertiesMetaInfos() {
+		List<StringTupel> listOfPropertyMetaInfo = SimProperty.getPropertiesMetaInfos();
+		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
+			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
+		}
+		return listOfPropertyMetaInfo;
+	}
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 //////////////////creating instance for simulation    ///////////////////////////////
@@ -28,6 +68,22 @@ public class ColourSet extends SimProperty {
 		setPropertyName(original.getPropertyName());
 	}
 
+	public  ColourSet() {
+		colours = new ArrayList<Colour>();
+		portions = new ArrayList<Integer>();
+		types = new ArrayList<Integer>();
+	}
+			
+	public void add(		Colour colour, int type, int portion) {
+		colours.add(colour);
+		portions.add(portion);
+		types.add(type);
+	}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    ISavedValues  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+	
 	@Override
 	public SimProperty copyForProperty(SimulationCluster cluster) {
 		return new ColourSet(this, getPropertyProtection(), cluster);
@@ -38,10 +94,9 @@ public class ColourSet extends SimProperty {
 		switch (propName) {
 		case colourSet_mainColour:
 			return new ValueProperty(Type.object, valueName, getMainColour());
-		
-/*		case colourSet_colours:
-			return new ValueProperty(Type.vector, valueName, getVector());
-		case colourSet_portions:
+		case colourSet_colours:
+			return new ValueProperty(Type.valueList, valueName, getColoursAsValueArrayList());
+/*		case colourSet_portions:
 			return new ValueProperty(Type.floatingpoint, valueName, this.power);
 		case colourSet_types:
 			return new ValueProperty(Type.floatingpoint, valueName, this.power);
@@ -51,6 +106,10 @@ public class ColourSet extends SimProperty {
 		}
 	}
 
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    ColourSet  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+	
 	private List<Colour> getColours( ) {
 		List<Colour> copy = new ArrayList<Colour>();
 		for (Colour colour : this.colours) {
@@ -87,5 +146,10 @@ public class ColourSet extends SimProperty {
 			}
 		}
 		return colour;
+	}
+	
+	private ValueArrayList getColoursAsValueArrayList() {
+		ValueArrayList list = new ValueArrayList(colours, Type.object);
+		return list;
 	}
 }
