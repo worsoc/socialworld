@@ -1,10 +1,31 @@
+/*
+* Social World
+* Copyright (C) 2020  Mathias Sikos
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
+*
+* or see http://www.gnu.org/licenses/gpl-2.0.html
+*
+*/
 package org.socialworld.objects.concrete.eatable;
 
 import java.util.List;
 
 import org.socialworld.attributes.PropertyName;
-import org.socialworld.attributes.properties.NutrientProperty;
-import org.socialworld.attributes.properties.TasteProperty;
+import org.socialworld.attributes.properties.NutrientSet;
+import org.socialworld.attributes.properties.TasteSet;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.objects.Item;
 import org.socialworld.objects.State;
@@ -78,12 +99,12 @@ public abstract class Fruit extends Item implements IEatable {
 ///////////////////////////      implementing IEatable     ////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
-	public  NutrientProperty getNutrientProperties() {
-		return (NutrientProperty) 	this.stateEatable.getPropertyFromMethod(SimulationCluster.todo, StateEatable.METHODNAME_GET_NUTRIENT_PROPERTIES, StateEatable.VALUENAME_NUTRIENT_PROPERTIES).getValue();
+	public  NutrientSet getNutrientSet() {
+		return (NutrientSet) 	this.stateEatable.getPropertyFromMethod(SimulationCluster.todo, StateEatable.METHODNAME_GET_NUTRIENT_SET, StateEatable.VALUENAME_NUTRIENT_SET).getValue();
 	}
 	
-	public  TasteProperty getTasteProperties() {
-		return (TasteProperty) 	this.stateEatable.getPropertyFromMethod(SimulationCluster.todo, StateEatable.METHODNAME_GET_TASTE_PROPERTIES, StateEatable.VALUENAME_TASTE_PROPERTIES).getValue();
+	public  TasteSet getTasteSet() {
+		return (TasteSet) 	this.stateEatable.getPropertyFromMethod(SimulationCluster.todo, StateEatable.METHODNAME_GET_TASTE_SET, StateEatable.VALUENAME_TASTE_SET).getValue();
 	}
 
 	

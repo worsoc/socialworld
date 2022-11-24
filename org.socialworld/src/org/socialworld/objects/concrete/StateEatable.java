@@ -26,8 +26,8 @@ import java.util.List;
 
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
-import org.socialworld.attributes.properties.NutrientProperty;
-import org.socialworld.attributes.properties.TasteProperty;
+import org.socialworld.attributes.properties.NutrientSet;
+import org.socialworld.attributes.properties.TasteSet;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
@@ -38,24 +38,36 @@ import org.socialworld.tools.StringTupel;
 
 public class StateEatable extends State {
 
-	public static final String VALUENAME_NUTRIENT_PROPERTIES = "nutritionProps";
-	public static final String VALUENAME_TASTE_PROPERTIES = "tasteProps";
+	public static final String VALUENAME_MAIN_NUTRIENT = "mainNutrient";
+	public static final String VALUENAME_MAIN_TASTE = "mainTaste";
 
-	public static final String METHODNAME_GET_NUTRIENT_PROPERTIES = "getNutrientProperties";
-	public static final String METHODNAME_GET_TASTE_PROPERTIES = "getTasteProperties";
+	public static final String VALUENAME_NUTRIENT_SET = "nutrientSet";
+	public static final String VALUENAME_TASTE_SET = "tasteSet";
 
-	public static final String METHODNAME_SET_NUTRIENT_PROPERTIES = "setNutrientProperties";
-	public static final String METHODNAME_SET_TASTE_PROPERTIES = "setTasteProperties";
+	public static final String METHODNAME_GET_MAIN_NUTRIENT = "getMainNutrient";
+	public static final String METHODNAME_GET_MAIN_TASTE = "getMainTaste";
 
-	private NutrientProperty nutrientProps;
-	private TasteProperty tasteProps;
+	public static final String METHODNAME_GET_NUTRIENT_SET = "getNutrientSet";
+	public static final String METHODNAME_GET_TASTE_SET = "getTasteSet";
+
+	public static final String METHODNAME_SET_NUTRIENT_SET = "setNutrientSet";
+	public static final String METHODNAME_SET_TASTE_SET = "setTasteSet";
+
+	private NutrientSet nutrientSet;
+	private TasteSet tasteSet;
+	
 	
 	///////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////static instance for meta information    ///////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 
 	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{};
-	private static StringTupel[] propMethodsMetaInfos = new StringTupel[] {} ;
+	private static StringTupel[] propMethodsMetaInfos = new StringTupel[] {
+		new StringTupel(new String[] {"Nutrient", METHODNAME_GET_MAIN_NUTRIENT, VALUENAME_MAIN_NUTRIENT}),
+		new StringTupel(new String[] {"Taste", METHODNAME_GET_MAIN_TASTE, VALUENAME_MAIN_TASTE}),
+		new StringTupel(new String[] {Type.simObjProp.getIndexWithSWTPraefix(), METHODNAME_GET_NUTRIENT_SET, VALUENAME_NUTRIENT_SET}),
+		new StringTupel(new String[] {Type.simObjProp.getIndexWithSWTPraefix(), METHODNAME_GET_TASTE_SET, VALUENAME_TASTE_SET})
+		};
 	
 	public static List<StringTupel> getPropertiesMetaInfos() {
 		List<StringTupel> listOfPropertyMetaInfo = State.getPropertiesMetaInfos();
@@ -115,8 +127,20 @@ public class StateEatable extends State {
 		return new StateEatable(this, getPropertyProtection(), cluster);
 	}
 
-	public  ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String name) {
-		return ValueProperty.getInvalid();
+	public  ValueProperty getProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
+		switch (propName) {
+		case stateEatable_tasteSet:
+			return new ValueProperty(Type.simObjProp, valueName, tasteSet.copyForProperty(cluster));
+		case stateEatable_mainTaste:
+			return getMainTaste(cluster, valueName);
+		case stateEatable_nutrientSet:
+			return new ValueProperty(Type.simObjProp, valueName, nutrientSet.copyForProperty(cluster));
+		case stateEatable_mainNutrient:
+			return getMainNutrient(cluster, valueName);
+
+		default:
+			return ValueProperty.getInvalid();
+		}
 	}
 
 	protected void setProperty(PropertyName propName, ValueProperty property) {
@@ -127,16 +151,46 @@ public class StateEatable extends State {
 	/////////////////////////  implementing  StateEatable methods  ////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
-	protected ValueProperty getNutrientProperties() {
-		return new ValueProperty(Type.object, VALUENAME_NUTRIENT_PROPERTIES, nutrientProps);
+	
+
+	
+	protected ValueProperty getMainTaste() {
+		return getTasteSetProperty(getPropertyProtection().getCluster(), PropertyName.tasteSet_mainTaste, VALUENAME_MAIN_TASTE);
+	}
+
+	private ValueProperty getMainTaste(SimulationCluster cluster, String valueName) {
+		return getTasteSetProperty(cluster, PropertyName.tasteSet_mainTaste, valueName);
+	}
+
+	private ValueProperty getTasteSetProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
+		return this.tasteSet.getProperty(cluster, propName, valueName);
 	}
 	
-	protected void setNutrientProperties(NutrientProperty changed) {  }
 	
-	protected ValueProperty getTasteProperties() {
-		return new ValueProperty(Type.object, VALUENAME_TASTE_PROPERTIES, tasteProps);
+	protected ValueProperty getMainNutrient() {
+		return getNutrientSetProperty(getPropertyProtection().getCluster(), PropertyName.nutrientSet_mainNutrient, VALUENAME_MAIN_NUTRIENT);
+	}
+
+	private ValueProperty getMainNutrient(SimulationCluster cluster, String valueName) {
+		return getNutrientSetProperty(cluster, PropertyName.nutrientSet_mainNutrient, valueName);
+	}
+
+	private ValueProperty getNutrientSetProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
+		return this.nutrientSet.getProperty(cluster, propName, valueName);
 	}
 	
-	protected void setTasteProperties(TasteProperty changed) {  }
+	
+	protected ValueProperty getNutrientSet() {
+		return new ValueProperty(Type.simObjProp, VALUENAME_NUTRIENT_SET, nutrientSet.copyForProperty(getPropertyProtection().getCluster()));
+	}
+	
+	protected void setNutrientSet(NutrientSet changed) {  }
+	
+	
+	protected ValueProperty getTasteSet() {
+		return new ValueProperty(Type.simObjProp, VALUENAME_TASTE_SET, tasteSet.copyForProperty(getPropertyProtection().getCluster()));
+	}
+	
+	protected void setTasteSet(TasteSet changed) {  }
 
 }
