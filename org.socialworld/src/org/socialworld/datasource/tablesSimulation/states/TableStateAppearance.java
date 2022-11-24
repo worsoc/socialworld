@@ -1,17 +1,17 @@
-package org.socialworld.datasource.tablesSimulation;
+package org.socialworld.datasource.tablesSimulation.states;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.socialworld.datasource.mariaDB.Table;
 
-public class TableStateComposition extends Table {
+public class TableStateAppearance extends Table {
 
-	public final  String 	ALL_COLUMNS 		=	" id, material_set_id ";
+	public final  String 	ALL_COLUMNS 		=	" id, colour_set_id ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
 	int id[];
-	int material_set_id[];
+	int colour_set_id[];
 
 	@Override
 	protected String getTableName() {
@@ -50,13 +50,13 @@ public class TableStateComposition extends Table {
 	private void selectAllColumns(ResultSet rs) {
 		int row = 0;
 		id = new int[rowCount];
-		material_set_id = new int[rowCount];
+		colour_set_id = new int[rowCount];
 
 		try {
 			while (rs.next()) {
 				
 				id[row] = rs.getInt(1);
-				material_set_id[row] = rs.getInt(2);
+				colour_set_id[row] = rs.getInt(2);
 				
 				row++;
 			}
@@ -68,25 +68,25 @@ public class TableStateComposition extends Table {
 
 	}
 
-	public void insert(int id, int material_set_id) {
+	public void insert(int id, int colour_set_id) {
 		String statement;
 			
 		if (id > 0) {
 			
-			statement 	= "INSERT INTO " + getTableName() + " (id, material_set_id) VALUES (" + id + ", " + material_set_id + ")";
+			statement 	= "INSERT INTO " + getTableName() + " (id, colour_set_id) VALUES (" + id + ", " + colour_set_id + ")";
 			
 			insert(statement);
 		}
 	}
 
-	public void updateMaterialSetID(int id, int material_set_id) {
+	public void updateColourSetID(int id, int colour_set_id) {
 		String statement;
 			
 		if (id > 0) {
 	
 
 			statement 	= "UPDATE " + getTableName() + " SET " +
-					"material_set_id = " + material_set_id  + " " +
+					"colour_set_id = " + colour_set_id  + " " +
 					"WHERE id = " + id  ;
 			
 			update(statement);
@@ -104,8 +104,8 @@ public class TableStateComposition extends Table {
 		}
 	}
 
-	public int getMaterialSetID(int index) {
-		return material_set_id[index];
+	public int getColourSetID(int index) {
+		return colour_set_id[index];
 	}
 
 }

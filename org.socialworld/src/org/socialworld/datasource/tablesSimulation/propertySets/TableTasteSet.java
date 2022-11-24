@@ -19,28 +19,28 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.datasource.tablesSimulation;
+package org.socialworld.datasource.tablesSimulation.propertySets;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.socialworld.attributes.properties.Material;
-import org.socialworld.attributes.properties.MaterialSet;
+import org.socialworld.attributes.properties.Taste;
+import org.socialworld.attributes.properties.TasteSet;
 import org.socialworld.datasource.mariaDB.Table;
 
-public class TableMaterialSet extends Table {
+public class TableTasteSet extends Table {
 
-	public final  String 	ALL_COLUMNS 		=	" material_set_id, lfd_nr, material, portion ";
+	public final  String 	ALL_COLUMNS 		=	" taste_set_id, lfd_nr,  taste, portion ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
-	int material_set_id[];
+	int taste_set_id[];
 	int lfd_nr[];
-	int material[];
+	int taste[];
 	int portion[];
 
 	@Override
 	protected String getTableName() {
-		return "sw_materialset";
+		return "sw_tasteset";
 	}
 
 	@Override
@@ -69,23 +69,23 @@ public class TableMaterialSet extends Table {
 			selectAllColumns(rs);
 		}
 
-		setPK1(material_set_id);
+		setPK1(taste_set_id);
 		setPK2(lfd_nr);
 
 	}
 	private void selectAllColumns(ResultSet rs) {
 		int row = 0;
-		material_set_id = new int[rowCount];
+		taste_set_id = new int[rowCount];
 		lfd_nr = new int[rowCount];
-		material = new int[rowCount];
+		taste = new int[rowCount];
 		portion = new int[rowCount];
 
 		try {
 			while (rs.next()) {
 				
-				material_set_id[row] = rs.getInt(1);
+				taste_set_id[row] = rs.getInt(1);
 				lfd_nr[row] = rs.getInt(2);
-				material[row] = rs.getInt(3);
+				taste[row] = rs.getInt(3);
 				portion[row] = rs.getInt(4);
 				
 				row++;
@@ -98,49 +98,49 @@ public class TableMaterialSet extends Table {
 
 	}
 
-	public void insert(int material_set_id, int lfd_nr, int material,  int portion) {
+	public void insert(int taste_set_id, int lfd_nr, int taste,  int portion) {
 		String statement;
 			
-		if (material_set_id > 0 && lfd_nr > 0) {
+		if (taste_set_id > 0 && lfd_nr > 0) {
 			
 			statement 	= "INSERT INTO " + getTableName() + " (" + ALL_COLUMNS + ") VALUES (" 
-					+ material_set_id  + ", " + lfd_nr  + ", " + material + ", " + portion + ")";
+					+ taste_set_id  + ", " + lfd_nr  + ", " + taste + ", " + portion + ")";
 			
 			insert(statement);
 		}
 	}
 	
-	public void updateMaterial( int material_set_id, int lfd_nr, int material) {
+	public void updateTaste( int taste_set_id, int lfd_nr, int taste) {
 		String statement;
 			
-		if (material_set_id > 0 && lfd_nr > 0) {
+		if (taste_set_id > 0 && lfd_nr > 0) {
 	
 
 			statement 	= "UPDATE " + getTableName() + " SET " +
-					"material = " + material  + " " +
-					"WHERE material_set_id = " + material_set_id  + " and lfd_nr = " + lfd_nr ;
+					"taste = " + taste  + " " +
+					"WHERE taste_set_id = " + taste_set_id  + " and lfd_nr = " + lfd_nr ;
 			
 			update(statement);
 		}
 	}
 	
 
-	public void updatePortion( int material_set_id, int lfd_nr, int portion) {
+	public void updatePortion( int taste_set_id, int lfd_nr, int portion) {
 		String statement;
 			
-		if (material_set_id > 0 && lfd_nr > 0) {
+		if (taste_set_id > 0 && lfd_nr > 0) {
 	
 
 			statement 	= "UPDATE " + getTableName() + " SET " +
 					"portion = " + portion  + " " +
-					"WHERE material_set_id = " + material_set_id  + " and lfd_nr = " + lfd_nr ;
+					"WHERE taste_set_id = " + taste_set_id  + " and lfd_nr = " + lfd_nr ;
 			
 			update(statement);
 		}
 	}
 
-	public int getMaterial(int index) {
-		return material[index];
+	public int getTaste(int index) {
+		return taste[index];
 	}
 
 	public int getPortion(int index) {
@@ -148,13 +148,13 @@ public class TableMaterialSet extends Table {
 	}
 	
 
-	public MaterialSet getMaterialSet(int material_set_id) {
-		select(SELECT_ALL_COLUMNS, " WHERE material_set_id = " + material_set_id, " ORDER BY lfd_nr"); 
-		MaterialSet MaterialSet = new MaterialSet();
+	public TasteSet getTasteSet(int taste_set_id) {
+		select(SELECT_ALL_COLUMNS, " WHERE taste_set_id = " + taste_set_id, " ORDER BY lfd_nr"); 
+		TasteSet tasteSet = new TasteSet();
 		for (int row = 0; row < lfd_nr.length; row++) {
-				MaterialSet.add(Material.getName(material[row]), portion[row]);
+				tasteSet.add(Taste.getName(taste[row]),  portion[row]);
 		}
-		return MaterialSet;
+		return tasteSet;
 	}
 
 }

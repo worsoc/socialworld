@@ -19,28 +19,28 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.datasource.tablesSimulation;
+package org.socialworld.datasource.tablesSimulation.propertySets;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.socialworld.attributes.properties.Nutrient;
-import org.socialworld.attributes.properties.NutrientSet;
+import org.socialworld.attributes.properties.Colour;
+import org.socialworld.attributes.properties.ColourSet;
 import org.socialworld.datasource.mariaDB.Table;
 
-public class TableNutrientSet extends Table {
+public class TableColourSet extends Table {
 
-	public final  String 	ALL_COLUMNS 		=	" nutrient_set_id, lfd_nr,  nutrient, portion ";
+	public final  String 	ALL_COLUMNS 		=	" colour_set_id, lfd_nr, colour, portion ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
-	int nutrient_set_id[];
+	int colour_set_id[];
 	int lfd_nr[];
-	int nutrient[];
+	int colour[];
 	int portion[];
 
 	@Override
 	protected String getTableName() {
-		return "sw_nutrientset";
+		return "sw_colourset";
 	}
 
 	@Override
@@ -69,23 +69,23 @@ public class TableNutrientSet extends Table {
 			selectAllColumns(rs);
 		}
 
-		setPK1(nutrient_set_id);
+		setPK1(colour_set_id);
 		setPK2(lfd_nr);
 
 	}
 	private void selectAllColumns(ResultSet rs) {
 		int row = 0;
-		nutrient_set_id = new int[rowCount];
+		colour_set_id = new int[rowCount];
 		lfd_nr = new int[rowCount];
-		nutrient = new int[rowCount];
+		colour = new int[rowCount];
 		portion = new int[rowCount];
 
 		try {
 			while (rs.next()) {
 				
-				nutrient_set_id[row] = rs.getInt(1);
+				colour_set_id[row] = rs.getInt(1);
 				lfd_nr[row] = rs.getInt(2);
-				nutrient[row] = rs.getInt(3);
+				colour[row] = rs.getInt(3);
 				portion[row] = rs.getInt(4);
 				
 				row++;
@@ -98,49 +98,49 @@ public class TableNutrientSet extends Table {
 
 	}
 
-	public void insert(int nutrient_set_id, int lfd_nr, int nutrient,  int portion) {
+	public void insert(int colour_set_id, int lfd_nr, int colour,  int portion) {
 		String statement;
 			
-		if (nutrient_set_id > 0 && lfd_nr > 0) {
+		if (colour_set_id > 0 && lfd_nr > 0) {
 			
 			statement 	= "INSERT INTO " + getTableName() + " (" + ALL_COLUMNS + ") VALUES (" 
-					+ nutrient_set_id  + ", " + lfd_nr  + ", " + nutrient + ", " + portion + ")";
+					+ colour_set_id  + ", " + lfd_nr + ", " + colour + ", " + portion + ")";
 			
 			insert(statement);
 		}
 	}
 	
-	public void updateNutrient( int nutrient_set_id, int lfd_nr, int nutrient) {
+	public void updateColour( int colour_set_id, int lfd_nr, int colour) {
 		String statement;
 			
-		if (nutrient_set_id > 0 && lfd_nr > 0) {
+		if (colour_set_id > 0 && lfd_nr > 0) {
 	
 
 			statement 	= "UPDATE " + getTableName() + " SET " +
-					"nutrient = " + nutrient  + " " +
-					"WHERE nutrient_set_id = " + nutrient_set_id  + " and lfd_nr = " + lfd_nr ;
+					"colour = " + colour  + " " +
+					"WHERE colour_set_id = " + colour_set_id  + " and lfd_nr = " + lfd_nr ;
 			
 			update(statement);
 		}
 	}
 	
 
-	public void updatePortion( int nutrient_set_id, int lfd_nr, int portion) {
+	public void updatePortion( int colour_set_id, int lfd_nr, int portion) {
 		String statement;
 			
-		if (nutrient_set_id > 0 && lfd_nr > 0) {
+		if (colour_set_id > 0 && lfd_nr > 0) {
 	
 
 			statement 	= "UPDATE " + getTableName() + " SET " +
 					"portion = " + portion  + " " +
-					"WHERE nutrient_set_id = " + nutrient_set_id  + " and lfd_nr = " + lfd_nr ;
+					"WHERE colour_set_id = " + colour_set_id  + " and lfd_nr = " + lfd_nr ;
 			
 			update(statement);
 		}
 	}
 
-	public int getNutrient(int index) {
-		return nutrient[index];
+	public int getColour(int index) {
+		return colour[index];
 	}
 
 	public int getPortion(int index) {
@@ -148,13 +148,13 @@ public class TableNutrientSet extends Table {
 	}
 	
 
-	public NutrientSet getNutrientSet(int nutrient_set_id) {
-		select(SELECT_ALL_COLUMNS, " WHERE nutrient_set_id = " + nutrient_set_id, " ORDER BY lfd_nr"); 
-		NutrientSet nutrientSet = new NutrientSet();
+	public ColourSet getColourSet(int colour_set_id) {
+		select(SELECT_ALL_COLUMNS, " WHERE colour_set_id = " + colour_set_id, " ORDER BY lfd_nr"); 
+		ColourSet colourSet = new ColourSet();
 		for (int row = 0; row < lfd_nr.length; row++) {
-				nutrientSet.add(Nutrient.getName(nutrient[row]),  portion[row]);
+				colourSet.add(Colour.getName(colour[row]), portion[row]);
 		}
-		return nutrientSet;
+		return colourSet;
 	}
 
 }
