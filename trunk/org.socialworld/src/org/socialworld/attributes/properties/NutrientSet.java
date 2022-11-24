@@ -31,15 +31,16 @@ import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.tools.StringTupel;
 
-public class MaterialSet extends PropPortionSet {
+public class NutrientSet extends PropPortionSet {
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //////////////////static instance for meta information    ///////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{
-		new StringTupel(new String[] {"Material", PropertyName.materialSet_mainMaterial.name(), PropertyName.materialSet_mainMaterial.toString()}),
-		new StringTupel(new String[] {Type.valueList.getIndexWithSWTPraefix(), PropertyName.materialSet_materials.name(), PropertyName.materialSet_materials.toString()})
+		new StringTupel(new String[] {"Nutrient", PropertyName.nutrientSet_mainNutrient.name(), PropertyName.nutrientSet_mainNutrient.toString()}),
+		new StringTupel(new String[] {Type.valueList.getIndexWithSWTPraefix(), PropertyName.nutrientSet_nutrients.name(), PropertyName.nutrientSet_nutrients.toString()})
 	};
 	
 	public static List<StringTupel> getPropertiesMetaInfos() {
@@ -49,46 +50,48 @@ public class MaterialSet extends PropPortionSet {
 		}
 		return listOfPropertyMetaInfo;
 	}
-
+	
 ///////////////////////////////////////////////////////////////////////////////////////////
 //////////////////creating instance for simulation    ///////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
-
-
-	protected  MaterialSet(PropPortionSet original, PropertyProtection protectionOriginal, SimulationCluster cluster ) {
+	
+	private NutrientSet(NutrientSet original, PropertyProtection protectionOriginal, SimulationCluster cluster ) {
 		super(original, protectionOriginal, cluster);
 	}
-	
-	public  MaterialSet() {
+
+	public  NutrientSet() {
 		super();
 	}
-	
+			
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    ISavedValues  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
-
+	
 	@Override
 	public SimProperty copyForProperty(SimulationCluster cluster) {
-		return new MaterialSet(this, getPropertyProtection(), cluster);
+		return new NutrientSet(this, getPropertyProtection(), cluster);
 	}
-	
+
 	@Override
 	public ValueProperty getProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
 		switch (propName) {
-		case materialSet_mainMaterial:
+		case nutrientSet_mainNutrient:
 			return new ValueProperty(Type.object, valueName, getMain());
-		case materialSet_materials:
+		case nutrientSet_nutrients:
 			return new ValueProperty(Type.valueList, valueName, getObjectsAsValueArrayList());
+/*		case NutrientSet_portions:
+			return new ValueProperty(Type.floatingpoint, valueName, this.power);
+		case NutrientSet_types:
+			return new ValueProperty(Type.floatingpoint, valueName, this.power);
+*/			
 		default:
 			return ValueProperty.getInvalid();
 		}
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////    MaterialSet  ///////////////////////////////////////////////
+/////////////////////////////    NutrientSet  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
-
 	
-	
-
 }

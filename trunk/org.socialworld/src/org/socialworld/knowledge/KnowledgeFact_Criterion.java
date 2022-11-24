@@ -24,7 +24,7 @@ package org.socialworld.knowledge;
 import org.socialworld.conversation.Tense;
 
 public enum KnowledgeFact_Criterion {
-	colour(0), material(1),
+	colour(0), material(1), nutrient(2), taste(3),
 	relationUnaer(1000),
 	relationBinaer(2000),
 	relationTrinaer(3000);

@@ -84,6 +84,14 @@ public enum PropertyName {
 	statePerceptible_cuboid(1106002),
 	
 	stateEatable(1107000),
+	stateEatable_nutrientSet(1107001),
+	stateEatable_tasteSet(1107002),
+	stateEatable_mainNutrient(1107003),
+	stateEatable_mainTaste(1107004),
+	nutrientSet_nutrients(1107101),
+	nutrientSet_mainNutrient(1107102),
+	tasteSet_tastes(1107201),
+	tasteSet_mainTaste(1107202),
 	
 	stateRunnable(1108000),
 	stateRunnable_speed(1108001),

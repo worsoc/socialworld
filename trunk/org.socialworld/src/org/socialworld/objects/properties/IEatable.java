@@ -21,8 +21,8 @@
 */
 package org.socialworld.objects.properties;
 
-import org.socialworld.attributes.properties.NutrientProperty;
-import org.socialworld.attributes.properties.TasteProperty;
+import org.socialworld.attributes.properties.NutrientSet;
+import org.socialworld.attributes.properties.TasteSet;
 
 public interface IEatable {
 
@@ -32,9 +32,9 @@ public interface IEatable {
 	public abstract float getConsistence();
 	public abstract float getFirmness();
 	
-	public abstract NutrientProperty getNutrientProperties();
+	public abstract NutrientSet getNutrientSet();
 	
-	public abstract TasteProperty getTasteProperties();
+	public abstract TasteSet getTasteSet();
 	
 
 }
