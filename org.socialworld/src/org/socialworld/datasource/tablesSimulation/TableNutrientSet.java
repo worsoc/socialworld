@@ -3,23 +3,23 @@ package org.socialworld.datasource.tablesSimulation;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.socialworld.attributes.properties.Material;
-import org.socialworld.attributes.properties.MaterialSet;
+import org.socialworld.attributes.properties.Nutrient;
+import org.socialworld.attributes.properties.NutrientSet;
 import org.socialworld.datasource.mariaDB.Table;
 
-public class TableMaterialSet extends Table {
+public class TableNutrientSet extends Table {
 
-	public final  String 	ALL_COLUMNS 		=	" material_set_id, lfd_nr, material, portion ";
+	public final  String 	ALL_COLUMNS 		=	" nutrient_set_id, lfd_nr,  nutrient, portion ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
-	int material_set_id[];
+	int nutrient_set_id[];
 	int lfd_nr[];
-	int material[];
+	int nutrient[];
 	int portion[];
 
 	@Override
 	protected String getTableName() {
-		return "sw_materialset";
+		return "sw_nutrientset";
 	}
 
 	@Override
@@ -48,23 +48,23 @@ public class TableMaterialSet extends Table {
 			selectAllColumns(rs);
 		}
 
-		setPK1(material_set_id);
+		setPK1(nutrient_set_id);
 		setPK2(lfd_nr);
 
 	}
 	private void selectAllColumns(ResultSet rs) {
 		int row = 0;
-		material_set_id = new int[rowCount];
+		nutrient_set_id = new int[rowCount];
 		lfd_nr = new int[rowCount];
-		material = new int[rowCount];
+		nutrient = new int[rowCount];
 		portion = new int[rowCount];
 
 		try {
 			while (rs.next()) {
 				
-				material_set_id[row] = rs.getInt(1);
+				nutrient_set_id[row] = rs.getInt(1);
 				lfd_nr[row] = rs.getInt(2);
-				material[row] = rs.getInt(3);
+				nutrient[row] = rs.getInt(3);
 				portion[row] = rs.getInt(4);
 				
 				row++;
@@ -77,49 +77,49 @@ public class TableMaterialSet extends Table {
 
 	}
 
-	public void insert(int material_set_id, int lfd_nr, int material,  int portion) {
+	public void insert(int nutrient_set_id, int lfd_nr, int nutrient,  int portion) {
 		String statement;
 			
-		if (material_set_id > 0 && lfd_nr > 0) {
+		if (nutrient_set_id > 0 && lfd_nr > 0) {
 			
 			statement 	= "INSERT INTO " + getTableName() + " (" + ALL_COLUMNS + ") VALUES (" 
-					+ material_set_id  + ", " + lfd_nr  + ", " + material + ", " + portion + ")";
+					+ nutrient_set_id  + ", " + lfd_nr  + ", " + nutrient + ", " + portion + ")";
 			
 			insert(statement);
 		}
 	}
 	
-	public void updateMaterial( int material_set_id, int lfd_nr, int material) {
+	public void updateNutrient( int nutrient_set_id, int lfd_nr, int nutrient) {
 		String statement;
 			
-		if (material_set_id > 0 && lfd_nr > 0) {
+		if (nutrient_set_id > 0 && lfd_nr > 0) {
 	
 
 			statement 	= "UPDATE " + getTableName() + " SET " +
-					"material = " + material  + " " +
-					"WHERE material_set_id = " + material_set_id  + " and lfd_nr = " + lfd_nr ;
+					"nutrient = " + nutrient  + " " +
+					"WHERE nutrient_set_id = " + nutrient_set_id  + " and lfd_nr = " + lfd_nr ;
 			
 			update(statement);
 		}
 	}
 	
 
-	public void updatePortion( int material_set_id, int lfd_nr, int portion) {
+	public void updatePortion( int nutrient_set_id, int lfd_nr, int portion) {
 		String statement;
 			
-		if (material_set_id > 0 && lfd_nr > 0) {
+		if (nutrient_set_id > 0 && lfd_nr > 0) {
 	
 
 			statement 	= "UPDATE " + getTableName() + " SET " +
 					"portion = " + portion  + " " +
-					"WHERE material_set_id = " + material_set_id  + " and lfd_nr = " + lfd_nr ;
+					"WHERE nutrient_set_id = " + nutrient_set_id  + " and lfd_nr = " + lfd_nr ;
 			
 			update(statement);
 		}
 	}
 
-	public int getMaterial(int index) {
-		return material[index];
+	public int getNutrient(int index) {
+		return nutrient[index];
 	}
 
 	public int getPortion(int index) {
@@ -127,13 +127,13 @@ public class TableMaterialSet extends Table {
 	}
 	
 
-	public MaterialSet getMaterialSet(int material_set_id) {
-		select(SELECT_ALL_COLUMNS, " WHERE material_set_id = " + material_set_id, " ORDER BY lfd_nr"); 
-		MaterialSet MaterialSet = new MaterialSet();
+	public NutrientSet getNutrientSet(int nutrient_set_id) {
+		select(SELECT_ALL_COLUMNS, " WHERE nutrient_set_id = " + nutrient_set_id, " ORDER BY lfd_nr"); 
+		NutrientSet nutrientSet = new NutrientSet();
 		for (int row = 0; row < lfd_nr.length; row++) {
-				MaterialSet.add(Material.getName(material[row]), portion[row]);
+				nutrientSet.add(Nutrient.getName(nutrient[row]),  portion[row]);
 		}
-		return MaterialSet;
+		return nutrientSet;
 	}
 
 }

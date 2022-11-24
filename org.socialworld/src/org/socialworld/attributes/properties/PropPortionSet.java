@@ -34,8 +34,6 @@ public abstract class PropPortionSet extends SimProperty {
 
 	private List<Object> objects;
 	private List<Integer> portions;
-	private List<Integer> types;
-
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 //////////////////creating instance for simulation    ///////////////////////////////
@@ -45,20 +43,17 @@ public abstract class PropPortionSet extends SimProperty {
 		super(protectionOriginal, cluster);
 		this.objects = original.getObjects();
 		this.portions = original.getPortions();
-		this.types = original.getTypes();
 		setPropertyName(original.getPropertyName());
 	}
 
 	public  PropPortionSet() {
 		objects = new ArrayList<Object>();
 		portions = new ArrayList<Integer>();
-		types = new ArrayList<Integer>();
 	}
 			
-	public void add(		Object object, int type, int portion) {
+	public void add(		Object object, int portion) {
 		objects.add(object);
 		portions.add(portion);
-		types.add(type);
 	}
 
 
@@ -82,23 +77,14 @@ public abstract class PropPortionSet extends SimProperty {
 		return copy;
 	}
 	
-	protected List<Integer> getTypes( ) {
-		List<Integer> copy = new ArrayList<Integer>();
-		for (Integer type : this.types) {
-			copy.add(type);
-		}
-		return copy;
-	}
 
 	public Object getMain() {
 		int maxPortion = 0;
 		Object object = null;
-		for (int index = 0; index < types.size() ; index++) {
-			if (types.get(index) == 1) {
-				if (portions.get(index) > maxPortion) {
-					maxPortion = portions.get(index);
-					object = objects.get(index);
-				}
+		for (int index = 0; index < portions.size() ; index++) {
+			if (portions.get(index) > maxPortion) {
+				maxPortion = portions.get(index);
+				object = objects.get(index);
 			}
 		}
 		return object;
