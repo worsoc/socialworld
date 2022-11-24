@@ -19,28 +19,25 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.datasource.tablesSimulation;
+package org.socialworld.datasource.tablesSimulation.states;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.socialworld.attributes.properties.Colour;
-import org.socialworld.attributes.properties.ColourSet;
 import org.socialworld.datasource.mariaDB.Table;
 
-public class TableColourSet extends Table {
+public class TableStateEatable extends Table {
 
-	public final  String 	ALL_COLUMNS 		=	" colour_set_id, lfd_nr, colour, portion ";
+	public final  String 	ALL_COLUMNS 		=	" id, nutrient_set_id, taste_set_id ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
-	int colour_set_id[];
-	int lfd_nr[];
-	int colour[];
-	int portion[];
+	int id[];
+	int nutrient_set_id[];
+	int taste_set_id[];
 
 	@Override
 	protected String getTableName() {
-		return "sw_colourset";
+		return "sw_state_appearance";
 	}
 
 	@Override
@@ -69,24 +66,21 @@ public class TableColourSet extends Table {
 			selectAllColumns(rs);
 		}
 
-		setPK1(colour_set_id);
-		setPK2(lfd_nr);
-
+		setPK1(id);
 	}
+
 	private void selectAllColumns(ResultSet rs) {
 		int row = 0;
-		colour_set_id = new int[rowCount];
-		lfd_nr = new int[rowCount];
-		colour = new int[rowCount];
-		portion = new int[rowCount];
+		id = new int[rowCount];
+		nutrient_set_id = new int[rowCount];
+		taste_set_id = new int[rowCount];
 
 		try {
 			while (rs.next()) {
 				
-				colour_set_id[row] = rs.getInt(1);
-				lfd_nr[row] = rs.getInt(2);
-				colour[row] = rs.getInt(3);
-				portion[row] = rs.getInt(4);
+				id[row] = rs.getInt(1);
+				nutrient_set_id[row] = rs.getInt(2);
+				taste_set_id[row] = rs.getInt(3);
 				
 				row++;
 			}
@@ -98,63 +92,62 @@ public class TableColourSet extends Table {
 
 	}
 
-	public void insert(int colour_set_id, int lfd_nr, int colour,  int portion) {
+	public void insert(int id, int nutrient_set_id, int taste_set_id) {
 		String statement;
 			
-		if (colour_set_id > 0 && lfd_nr > 0) {
+		if (id > 0) {
 			
-			statement 	= "INSERT INTO " + getTableName() + " (" + ALL_COLUMNS + ") VALUES (" 
-					+ colour_set_id  + ", " + lfd_nr + ", " + colour + ", " + portion + ")";
+			statement 	= "INSERT INTO " + getTableName() + " (" + ALL_COLUMNS + ") VALUES (" + id + ", " + nutrient_set_id + ", " + taste_set_id + ")";
 			
 			insert(statement);
 		}
 	}
-	
-	public void updateColour( int colour_set_id, int lfd_nr, int colour) {
+
+	public void updateNutrientSetID(int id, int nutrient_set_id) {
 		String statement;
 			
-		if (colour_set_id > 0 && lfd_nr > 0) {
+		if (id > 0) {
 	
 
 			statement 	= "UPDATE " + getTableName() + " SET " +
-					"colour = " + colour  + " " +
-					"WHERE colour_set_id = " + colour_set_id  + " and lfd_nr = " + lfd_nr ;
-			
-			update(statement);
-		}
-	}
-	
-
-	public void updatePortion( int colour_set_id, int lfd_nr, int portion) {
-		String statement;
-			
-		if (colour_set_id > 0 && lfd_nr > 0) {
-	
-
-			statement 	= "UPDATE " + getTableName() + " SET " +
-					"portion = " + portion  + " " +
-					"WHERE colour_set_id = " + colour_set_id  + " and lfd_nr = " + lfd_nr ;
+					"nutrient_set_id = " + nutrient_set_id  + " " +
+					"WHERE id = " + id  ;
 			
 			update(statement);
 		}
 	}
 
-	public int getColour(int index) {
-		return colour[index];
-	}
-
-	public int getPortion(int index) {
-		return portion[index];
-	}
+	public void updateTasteSetID(int id, int taste_set_id) {
+		String statement;
+			
+		if (id > 0) {
 	
 
-	public ColourSet getColourSet(int colour_set_id) {
-		select(SELECT_ALL_COLUMNS, " WHERE colour_set_id = " + colour_set_id, " ORDER BY lfd_nr"); 
-		ColourSet colourSet = new ColourSet();
-		for (int row = 0; row < lfd_nr.length; row++) {
-				colourSet.add(Colour.getName(colour[row]), portion[row]);
+			statement 	= "UPDATE " + getTableName() + " SET " +
+					"taste_set_id = " + taste_set_id  + " " +
+					"WHERE id = " + id  ;
+			
+			update(statement);
 		}
-		return colourSet;
+	}
+
+	public void delete(int id) {
+		String statement;
+			
+		if (id > 0) {
+	
+			statement 	= "DELETE FROM " + getTableName() + " WHERE id = " + id  ;
+			
+			delete(statement);
+		}
+	}
+
+	public int getNutrientSetID(int index) {
+		return nutrient_set_id[index];
+	}
+
+	public int getTasteSetID(int index) {
+		return taste_set_id[index];
 	}
 
 }
