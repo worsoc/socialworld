@@ -27,11 +27,16 @@ import java.util.List;
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
+import org.socialworld.attributes.percipience.PropsSeer;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.calculation.geometry.VectorMapper;
+import org.socialworld.datasource.tablesSimulation.properties.TableDirection;
+import org.socialworld.datasource.tablesSimulation.propertySets.TablePropsSeer;
+import org.socialworld.datasource.tablesSimulation.states.TableStateEatable;
+import org.socialworld.datasource.tablesSimulation.states.TableStateSeer;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.State;
@@ -40,15 +45,13 @@ import org.socialworld.tools.StringTupel;
 public class StateSeer extends State {
 
 	private Direction directionView ;
-
-	private float angleViewPerceivingEvents;
-	private double  angleViewPerceivingEventsInRadians;
-	private float angleViewPerceivingObjects;
-	private double  angleViewPerceivingObjectsInRadians;
+	private PropsSeer propsSeer;
 
 	private int bestPercipiencePerpendicular;
 
-	private double sizeDistanceRelationThreshold;
+	private TableStateSeer tableSeer;
+	private TableDirection tableDirection;
+	private TablePropsSeer tablePropsSeer;
 	
 	///////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////static instance for meta information    ///////////////////////////////
@@ -56,12 +59,9 @@ public class StateSeer extends State {
 
 	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{
 			new StringTupel("Direction", PropertyName.stateSeer_directionView.name()),
-			new StringTupel(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.stateSeer_angleViewPerceivingEvents.name()),
-			new StringTupel(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.stateSeer_angleViewPerceivingEventsInRadians.name()),
-			new StringTupel(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.stateSeer_angleViewPerceivingObjects.name()),
-			new StringTupel(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.stateSeer_angleViewPerceivingObjectsInRadians.name()),
 			new StringTupel(Type.integer.getIndexWithSWTPraefix(), PropertyName.stateSeer_bestPercipiencePerpendicular.name()),
-			new StringTupel(Type.floatingpoint.getIndexWithSWTPraefix(), PropertyName.stateSeer_sizeDistanceRelationThreshold.name())} ;
+			new StringTupel("PropsSeer", PropertyName.stateSeer_propsSeer.name())};
+	
 	private static StringTupel[] propMethodsMetaInfos = new StringTupel[] {} ;
 	
 	public static List<StringTupel> getPropertiesMetaInfos() {
@@ -100,15 +100,27 @@ public class StateSeer extends State {
 	}
 	
 	protected  void init() {
-		setDirectionView( new Vector(2,1,0));
-		setAngleViewPerceivingObjects(20.0F);
-		setAngleViewPerceivingEvents(60.0F);
+		int objectID = getObjectID();
 		
+		tableSeer.select(tableSeer.SELECT_ALL_COLUMNS, " WHERE id = " + objectID , "");
+		int rowTableAppearance = tableSeer.getIndexFor1PK(objectID);
+		if (rowTableAppearance >= 0) {
+			
+			bestPercipiencePerpendicular = tableSeer.getBestPercipiencePerpendicular(rowTableAppearance);
+			
+			tableDirection = new TableDirection();
+			directionView = tableDirection.getDirection(rowTableAppearance, PropertyName.stateSeer_directionView);
+			
+			tablePropsSeer = new TablePropsSeer();
+			propsSeerID = tableSeer.getTasteSetID(rowTableAppearance);
+			propsSeer = tablePropsSeer.getPropsSeer(propsSeerID);
+			
+		}
+
 	}
 
 	private StateSeer( StateSeer original, PropertyProtection protectionOriginal, SimulationCluster cluster) {
 		super(protectionOriginal, cluster);
-		this.angleViewPerceivingEvents = original.getAngleViewPerceivingEvents();
 	}
 	
 	protected  void initPropertyName() {
@@ -129,18 +141,10 @@ public class StateSeer extends State {
 		switch (propName) {
 		case stateSeer_directionView:
 			return this.directionView.getAsValue(cluster, valueName);
-		case stateSeer_angleViewPerceivingEvents:
-			return new ValueProperty(Type.floatingpoint, valueName, this.angleViewPerceivingEvents);
-		case stateSeer_angleViewPerceivingEventsInRadians:
-			return new ValueProperty(Type.floatingpoint, valueName, this.angleViewPerceivingEventsInRadians);
-		case stateSeer_angleViewPerceivingObjects:
-			return new ValueProperty(Type.floatingpoint, valueName, this.angleViewPerceivingObjects);
-		case stateSeer_angleViewPerceivingObjectsInRadians:
-			return new ValueProperty(Type.floatingpoint, valueName, this.angleViewPerceivingObjectsInRadians);
 		case stateSeer_bestPercipiencePerpendicular:
 			return new ValueProperty(Type.integer, valueName, this.bestPercipiencePerpendicular);
-		case stateSeer_sizeDistanceRelationThreshold:
-			return new ValueProperty(Type.floatingpoint, valueName, this.sizeDistanceRelationThreshold);
+		case stateSeer_propsSeer:
+			return this.propsSeer.getAsValue(cluster, valueName);
 		default:
 			return ValueProperty.getInvalid();
 		}
@@ -172,48 +176,15 @@ public class StateSeer extends State {
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
 
-	public double getSizeDistanceRelationThreshold() {
-		return this.sizeDistanceRelationThreshold;
+	private void setBestPercipiencePerpendicular() {
+		this.bestPercipiencePerpendicular =  
+				VectorMapper.getInstance().getBestVisibleAreaPerpendicular(this.directionView.getVector(SimulationCluster.todo));
 	}
 	
-
-	
-	public void setAngleViewPerceivingObjects(float angleView) {
-		this.angleViewPerceivingObjects = angleView;
-		this.angleViewPerceivingObjectsInRadians = Math.toRadians(angleView);
-	}
-
-	public void setAngleViewPerceivingEvents(float angleView) {
-		this.angleViewPerceivingEvents = angleView;
-		this.angleViewPerceivingEventsInRadians = Math.toRadians(angleView);
-	}
-
-	public float getAngleViewPerceivingObjects() {
-		return this.angleViewPerceivingObjects;
-	}
-
-	public double getAngleViewPerceivingObjectsInRadians() {
-		return this.angleViewPerceivingObjectsInRadians;
-	}
-
-	public float getAngleViewPerceivingEvents() {
-		return this.angleViewPerceivingEvents;
-	}
-
-	public double getAngleViewPerceivingEventsInRadians() {
-		return this.angleViewPerceivingEventsInRadians;
-	}
-
 	public int getBestPercipiencePerpendicular() {
 		return this.bestPercipiencePerpendicular;
 	}
 
-	private void setBestPercipiencePerpendicular() {
-		this.bestPercipiencePerpendicular =  
-				VectorMapper.getInstance().getBestVisibleAreaPerpendicular(this.directionView.getVector(SimulationCluster.todo));
-
-	}
-	
 	
 	private void setDirectionView(Vector directionView) {
 		this.directionView = new Direction(PropertyName.stateSeer_directionView, directionView);

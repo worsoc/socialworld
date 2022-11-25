@@ -21,14 +21,14 @@
 */
 package org.socialworld.objects.concrete;
 
-import org.socialworld.attributes.ISavedValues;
 import org.socialworld.attributes.PropertyName;
+import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.attributes.properties.ColourSet;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
-import org.socialworld.datasource.tablesSimulation.TableColourSet;
-import org.socialworld.datasource.tablesSimulation.TableStateAppearance;
+import org.socialworld.datasource.tablesSimulation.propertySets.TableColourSet;
+import org.socialworld.datasource.tablesSimulation.states.TableStateAppearance;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.State;
@@ -110,6 +110,10 @@ public class StateAppearance extends State {
 
 	}
 	
+	private StateAppearance( StateAppearance original, PropertyProtection protectionOriginal, SimulationCluster cluster) {
+		super(protectionOriginal, cluster);
+	}
+
 	protected  void initPropertyName() {
 		setPropertyName(PropertyName.stateAppearance);
 	}
@@ -119,8 +123,8 @@ public class StateAppearance extends State {
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
 	@Override
-	public ISavedValues copyForProperty(SimulationCluster cluster) {
-		return null;
+	public State copyForProperty(SimulationCluster cluster) {
+		return new StateAppearance(this, getPropertyProtection(), cluster);
 	}
 
 	@Override
