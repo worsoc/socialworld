@@ -178,19 +178,6 @@ public abstract class Table {
 			this.pk2 = pk;
 		}
 
-		public int getIndexFor1PK(int pk1) {
-			int size;
-			int index;
-			
-			size = this.pk1.length;
-			
-			for (index = 0; index < size; index++) {
-				if (this.pk1[index] == pk1) return index;
-			}
-			
-			return -1;
-		}
-
 		public int getIndexFor2PK(int pk1, int pk2) {
 			int size;
 			int index;
@@ -243,5 +230,19 @@ public abstract class Table {
 			}
 			
 			return result;
+		}
+
+
+		public int getIndexFor1PK(int pk1) {
+			int size;
+			int index;
+			
+			size = this.pk1.length;
+			
+			for (index = 0; index < size; index++) {
+				if (this.pk1[index] == pk1) return index;
+			}
+			
+			return -1;
 		}		
 }
