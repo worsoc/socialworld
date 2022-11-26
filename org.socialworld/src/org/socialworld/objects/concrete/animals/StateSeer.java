@@ -34,8 +34,7 @@ import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.calculation.geometry.VectorMapper;
 import org.socialworld.datasource.tablesSimulation.properties.TableDirection;
-import org.socialworld.datasource.tablesSimulation.propertySets.TablePropsSeer;
-import org.socialworld.datasource.tablesSimulation.states.TableStateEatable;
+import org.socialworld.datasource.tablesSimulation.properties.TablePropsSeer;
 import org.socialworld.datasource.tablesSimulation.states.TableStateSeer;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.SimulationObject;
@@ -101,6 +100,8 @@ public class StateSeer extends State {
 	
 	protected  void init() {
 		int objectID = getObjectID();
+		int directionID;
+		int propsSeerID;
 		
 		tableSeer.select(tableSeer.SELECT_ALL_COLUMNS, " WHERE id = " + objectID , "");
 		int rowTableAppearance = tableSeer.getIndexFor1PK(objectID);
@@ -109,11 +110,12 @@ public class StateSeer extends State {
 			bestPercipiencePerpendicular = tableSeer.getBestPercipiencePerpendicular(rowTableAppearance);
 			
 			tableDirection = new TableDirection();
-			directionView = tableDirection.getDirection(rowTableAppearance, PropertyName.stateSeer_directionView);
+			directionID = tableSeer.getDirectionID(rowTableAppearance);
+			directionView = tableDirection.getDirection(directionID, PropertyName.stateSeer_directionView);
 			
 			tablePropsSeer = new TablePropsSeer();
-			propsSeerID = tableSeer.getTasteSetID(rowTableAppearance);
-			propsSeer = tablePropsSeer.getPropsSeer(propsSeerID);
+			propsSeerID = tableSeer.getPropsSeerID(rowTableAppearance);
+			propsSeer = tablePropsSeer.getPropsSeer(propsSeerID,  PropertyName.stateSeer_propsSeer);
 			
 		}
 
