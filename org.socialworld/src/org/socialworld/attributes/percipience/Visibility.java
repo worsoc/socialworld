@@ -173,10 +173,12 @@ public class Visibility {
 			stateSeer = seer.getSavedStateSeer(SimulationCluster.todo);
 			nrPerpendicular = stateSeer.getBestPercipiencePerpendicular();
 
-			ValueProperty vp;
+			ValueProperty vpPropsSeer;
+			ValueProperty vpSDRT;
 			//vp = possibleSeer.getStatePropertyFromMethod(SimulationCluster.todo, PropertyName.stateSeer, ISeer.METHODNAME_SIZEDISTANCERELATIONTHRESHOLD, "sizeDistanceRelThreashold");
-			vp = possibleSeer.getStateProperty(SimulationCluster.todo, PropertyName.stateSeer, PropertyName.stateSeer_sizeDistanceRelationThreshold, PropertyName.stateSeer_sizeDistanceRelationThreshold.toString());
-			sizeDistanceRelationThreshold = (double) vp.getValue();			
+			vpPropsSeer = possibleSeer.getStateProperty(SimulationCluster.todo, PropertyName.stateSeer, PropertyName.stateSeer_propsSeer, PropertyName.stateSeer_propsSeer.toString());
+			vpSDRT = vpPropsSeer.getSubProperty(PropertyName.propsSeer_sizeDistanceRelationThreshold, PropertyName.propsSeer_sizeDistanceRelationThreshold.toString());
+			sizeDistanceRelationThreshold = (double) vpSDRT.getValue();			
 			/*
 			nrPerpendicular = possibleSeer.getBestPercipiencePerpendicular();
 			sizeDistanceRelationThreshold = possibleSeer.getSizeDistanceRelationThreshold();
