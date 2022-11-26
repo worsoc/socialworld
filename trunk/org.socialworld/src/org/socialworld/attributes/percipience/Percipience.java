@@ -149,8 +149,10 @@ public class Percipience {
 				vpDirectionView = possibleSeer.getStateProperty(SimulationCluster.todo, PropertyName.stateSeer, PropertyName.stateSeer_directionView, PropertyName.stateSeer_directionView.toString());
 				Vector directionView = ((Direction)vpDirectionView.getValue()).getVector(SimulationCluster.todo);
 	
+				ValueProperty vpPropsSeer;
 				ValueProperty vpAngleView;
-				vpAngleView = possibleSeer.getStateProperty(SimulationCluster.todo, PropertyName.stateSeer, PropertyName.stateSeer_angleViewPerceivingObjectsInRadians, PropertyName.stateSeer_angleViewPerceivingObjectsInRadians.toString());
+				vpPropsSeer = possibleSeer.getStateProperty(SimulationCluster.todo, PropertyName.stateSeer, PropertyName.stateSeer_propsSeer, PropertyName.stateSeer_propsSeer.toString());
+				vpAngleView = vpPropsSeer.getSubProperty(PropertyName.propsSeer_angleViewPerceivingObjectsInRadians, PropertyName.propsSeer_angleViewPerceivingObjectsInRadians.toString());
 				double angleViewInRadians = (double) vpAngleView.getValue();
 				
 			/*	
@@ -195,8 +197,10 @@ public class Percipience {
 				Vector directionView = (Vector) (vpDirectionView.getSubProperty(PropertyName.direction_vector)).getValue();
 		//		Vector directionView = ((Direction)vpDirectionView.getValue()).getVector();
 	
+				ValueProperty vpPropsSeer;
 				ValueProperty vpAngleView;
-				vpAngleView = possibleSeer.getStateProperty(SimulationCluster.todo, PropertyName.stateSeer, PropertyName.stateSeer_angleViewPerceivingObjectsInRadians, PropertyName.stateSeer_angleViewPerceivingObjectsInRadians.toString());
+				vpPropsSeer = possibleSeer.getStateProperty(SimulationCluster.todo, PropertyName.stateSeer, PropertyName.stateSeer_propsSeer, PropertyName.stateSeer_propsSeer.toString());
+				vpAngleView = vpPropsSeer.getSubProperty(PropertyName.propsSeer_angleViewPerceivingEventsInRadians, PropertyName.propsSeer_angleViewPerceivingEventsInRadians.toString());
 				double angleViewInRadians = (double) vpAngleView.getValue();
 	
 				
