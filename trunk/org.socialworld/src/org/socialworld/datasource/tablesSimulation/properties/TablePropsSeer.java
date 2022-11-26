@@ -24,25 +24,27 @@ package org.socialworld.datasource.tablesSimulation.properties;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.PropertyName;
-import org.socialworld.calculation.geometry.Vector;
+import org.socialworld.attributes.percipience.PropsSeer;
 import org.socialworld.datasource.mariaDB.Table;
 
-public class TableDirection extends Table {
+public class TablePropsSeer extends Table {
 
-	public final  String 	ALL_COLUMNS 		=	" direction_id, x, y, z, power ";
+
+	// avpe ... angleViewPerceivingEvents
+	// avpo ... angleViewPerceivingObjects
+	// sdrt ... sizeDistanceRelationThreshold
+	public final  String 	ALL_COLUMNS 		=	" props_seer_id, avpe,  avpo,  sdrt  ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
-	int direction_id[];
-	float x[];
-	float y[];
-	float z[];
-	float power[];
+	int props_seer_id[];
+	float avpe[];
+	float avpo[];
+	double sdrt[];
 	
 	@Override
 	protected String getTableName() {
-		return "sw_direction";
+		return "sw_propsseer";
 	}
 
 	@Override
@@ -71,25 +73,23 @@ public class TableDirection extends Table {
 			selectAllColumns(rs);
 		}
 
-		setPK1(direction_id);
+		setPK1(props_seer_id);
 
 	}
 	private void selectAllColumns(ResultSet rs) {
 		int row = 0;
-		direction_id = new int[rowCount];
-		x = new float[rowCount];
-		y = new float[rowCount];
-		z = new float[rowCount];
-		power = new float[rowCount];
+		props_seer_id = new int[rowCount];
+		avpe = new float[rowCount];
+		avpo = new float[rowCount];
+		sdrt = new double[rowCount];
 
 		try {
 			while (rs.next()) {
 				
-				direction_id[row] = rs.getInt(1);
-				x[row] = rs.getFloat(2);
-				y[row] = rs.getFloat(3);
-				z[row] = rs.getFloat(4);
-				power[row] = rs.getFloat(5);
+				props_seer_id[row] = rs.getInt(1);
+				avpe[row] = rs.getFloat(2);
+				avpo[row] = rs.getFloat(3);
+				sdrt[row] = rs.getDouble(4);
 				
 				row++;
 			}
@@ -101,62 +101,67 @@ public class TableDirection extends Table {
 
 	}
 
-	public void insert(int direction_id, float x, float y,  float z, float power) {
+	public void insert(int props_seer_id, float avpe, float avpo,  double sdrt) {
 		String statement;
 			
-		if (direction_id > 0) {
+		if (props_seer_id > 0) {
 			
 			statement 	= "INSERT INTO " + getTableName() + " (" + ALL_COLUMNS + ") VALUES (" 
-					+ direction_id  + ", " + x + ", " + y + ", " + z + ", " + power  + ")";
+					+ props_seer_id  + ", " + avpe +  ", " + avpo + ", " + sdrt  + ")";
 			
 			insert(statement);
 		}
 	}
 	
-	public void updateVector( int direction_id, float x, float y, float z) {
+	public void updateAngleViewPerceivingEvents( int props_seer_id, float avpe) {
 		String statement;
 			
-		if (direction_id > 0) {
+		if (props_seer_id > 0) {
 	
 
 			statement 	= "UPDATE " + getTableName() + " SET " +
-					"x = " + x  + " " + ", y = " + y  + " " + "z = " + z  + " " +
-					"WHERE direction_id = " + direction_id  ;
+					"avpe = " + avpe  + " " +
+					"WHERE props_seer_id = " + props_seer_id  ;
 			
 			update(statement);
 		}
 	}
 	
-
-	public void updatePower( int direction_id, float power) {
+	public void updateAngleViewPerceivingObjects( int props_seer_id, float avpo) {
 		String statement;
 			
-		if (direction_id > 0 ) {
+		if (props_seer_id > 0) {
 	
 
 			statement 	= "UPDATE " + getTableName() + " SET " +
-					"power = " + power  + " " +
-					"WHERE direction_id = " + direction_id  ;
+					"avpo = " + avpo  + " "  +
+					"WHERE props_seer_id = " + props_seer_id  ;
 			
 			update(statement);
 		}
 	}
 
-	public Vector getVector(int index) {
-		return new Vector(x[index], y[index], z[index]);
-	}
-
-	public float getPower(int index) {
-		return power[index];
-	}
+	public void updateSizeDistanceRelationThreshold( int props_seer_id, double sdrt) {
+		String statement;
+			
+		if (props_seer_id > 0 ) {
 	
 
-	public Direction getDirection(int direction_id, PropertyName propName) {
+			statement 	= "UPDATE " + getTableName() + " SET " +
+					"sdrt = " + sdrt  + " " +
+					"WHERE props_seer_id = " + props_seer_id  ;
+			
+			update(statement);
+		}
+	}
+
+
+	public PropsSeer getPropsSeer(int props_seer_id, PropertyName propName) {
 		int index;
-		select(SELECT_ALL_COLUMNS, " WHERE direction_id = " + direction_id, "");
-		index = getIndexFor1PK(direction_id);
-		Direction direction = new Direction(propName, getVector(index), power[index]);
-		return direction;
+		select(SELECT_ALL_COLUMNS, " WHERE props_seer_id = " + props_seer_id, "");
+		index = getIndexFor1PK(props_seer_id);
+		PropsSeer propsSeer = new PropsSeer(propName, avpe[index], avpo[index], sdrt[index]);
+		return propsSeer;
 	}
 
 }
