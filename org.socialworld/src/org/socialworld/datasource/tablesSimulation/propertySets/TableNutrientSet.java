@@ -30,13 +30,13 @@ import org.socialworld.datasource.mariaDB.Table;
 
 public class TableNutrientSet extends Table {
 
-	public final  String 	ALL_COLUMNS 		=	" nutrient_set_id, lfd_nr,  nutrient, portion ";
+	public final  String 	ALL_COLUMNS 		=	" nutrient_set_id, lfd_nr,  nutrient, share ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
 	int nutrient_set_id[];
 	int lfd_nr[];
 	int nutrient[];
-	int portion[];
+	int share[];
 
 	@Override
 	protected String getTableName() {
@@ -78,7 +78,7 @@ public class TableNutrientSet extends Table {
 		nutrient_set_id = new int[rowCount];
 		lfd_nr = new int[rowCount];
 		nutrient = new int[rowCount];
-		portion = new int[rowCount];
+		share = new int[rowCount];
 
 		try {
 			while (rs.next()) {
@@ -86,7 +86,7 @@ public class TableNutrientSet extends Table {
 				nutrient_set_id[row] = rs.getInt(1);
 				lfd_nr[row] = rs.getInt(2);
 				nutrient[row] = rs.getInt(3);
-				portion[row] = rs.getInt(4);
+				share[row] = rs.getInt(4);
 				
 				row++;
 			}
@@ -98,13 +98,13 @@ public class TableNutrientSet extends Table {
 
 	}
 
-	public void insert(int nutrient_set_id, int lfd_nr, int nutrient,  int portion) {
+	public void insert(int nutrient_set_id, int lfd_nr, int nutrient,  int share) {
 		String statement;
 			
 		if (nutrient_set_id > 0 && lfd_nr > 0) {
 			
 			statement 	= "INSERT INTO " + getTableName() + " (" + ALL_COLUMNS + ") VALUES (" 
-					+ nutrient_set_id  + ", " + lfd_nr  + ", " + nutrient + ", " + portion + ")";
+					+ nutrient_set_id  + ", " + lfd_nr  + ", " + nutrient + ", " + share + ")";
 			
 			insert(statement);
 		}
@@ -125,14 +125,14 @@ public class TableNutrientSet extends Table {
 	}
 	
 
-	public void updatePortion( int nutrient_set_id, int lfd_nr, int portion) {
+	public void updateShare( int nutrient_set_id, int lfd_nr, int share) {
 		String statement;
 			
 		if (nutrient_set_id > 0 && lfd_nr > 0) {
 	
 
 			statement 	= "UPDATE " + getTableName() + " SET " +
-					"portion = " + portion  + " " +
+					"share = " + share  + " " +
 					"WHERE nutrient_set_id = " + nutrient_set_id  + " and lfd_nr = " + lfd_nr ;
 			
 			update(statement);
@@ -143,8 +143,8 @@ public class TableNutrientSet extends Table {
 		return nutrient[index];
 	}
 
-	public int getPortion(int index) {
-		return portion[index];
+	public int getShare(int index) {
+		return share[index];
 	}
 	
 
@@ -152,7 +152,7 @@ public class TableNutrientSet extends Table {
 		select(SELECT_ALL_COLUMNS, " WHERE nutrient_set_id = " + nutrient_set_id, " ORDER BY lfd_nr"); 
 		NutrientSet nutrientSet = new NutrientSet();
 		for (int row = 0; row < lfd_nr.length; row++) {
-				nutrientSet.add(Nutrient.getName(nutrient[row]),  portion[row]);
+				nutrientSet.add(Nutrient.getName(nutrient[row]),  share[row]);
 		}
 		return nutrientSet;
 	}

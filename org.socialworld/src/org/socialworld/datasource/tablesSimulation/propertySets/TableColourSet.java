@@ -30,13 +30,13 @@ import org.socialworld.datasource.mariaDB.Table;
 
 public class TableColourSet extends Table {
 
-	public final  String 	ALL_COLUMNS 		=	" colour_set_id, lfd_nr, colour, portion ";
+	public final  String 	ALL_COLUMNS 		=	" colour_set_id, lfd_nr, colour, share ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
 	int colour_set_id[];
 	int lfd_nr[];
 	int colour[];
-	int portion[];
+	int share[];
 
 	@Override
 	protected String getTableName() {
@@ -78,7 +78,7 @@ public class TableColourSet extends Table {
 		colour_set_id = new int[rowCount];
 		lfd_nr = new int[rowCount];
 		colour = new int[rowCount];
-		portion = new int[rowCount];
+		share = new int[rowCount];
 
 		try {
 			while (rs.next()) {
@@ -86,7 +86,7 @@ public class TableColourSet extends Table {
 				colour_set_id[row] = rs.getInt(1);
 				lfd_nr[row] = rs.getInt(2);
 				colour[row] = rs.getInt(3);
-				portion[row] = rs.getInt(4);
+				share[row] = rs.getInt(4);
 				
 				row++;
 			}
@@ -98,13 +98,13 @@ public class TableColourSet extends Table {
 
 	}
 
-	public void insert(int colour_set_id, int lfd_nr, int colour,  int portion) {
+	public void insert(int colour_set_id, int lfd_nr, int colour,  int share) {
 		String statement;
 			
 		if (colour_set_id > 0 && lfd_nr > 0) {
 			
 			statement 	= "INSERT INTO " + getTableName() + " (" + ALL_COLUMNS + ") VALUES (" 
-					+ colour_set_id  + ", " + lfd_nr + ", " + colour + ", " + portion + ")";
+					+ colour_set_id  + ", " + lfd_nr + ", " + colour + ", " + share + ")";
 			
 			insert(statement);
 		}
@@ -125,14 +125,14 @@ public class TableColourSet extends Table {
 	}
 	
 
-	public void updatePortion( int colour_set_id, int lfd_nr, int portion) {
+	public void updateShare( int colour_set_id, int lfd_nr, int share) {
 		String statement;
 			
 		if (colour_set_id > 0 && lfd_nr > 0) {
 	
 
 			statement 	= "UPDATE " + getTableName() + " SET " +
-					"portion = " + portion  + " " +
+					"share = " + share  + " " +
 					"WHERE colour_set_id = " + colour_set_id  + " and lfd_nr = " + lfd_nr ;
 			
 			update(statement);
@@ -143,8 +143,8 @@ public class TableColourSet extends Table {
 		return colour[index];
 	}
 
-	public int getPortion(int index) {
-		return portion[index];
+	public int getShare(int index) {
+		return share[index];
 	}
 	
 
@@ -152,7 +152,7 @@ public class TableColourSet extends Table {
 		select(SELECT_ALL_COLUMNS, " WHERE colour_set_id = " + colour_set_id, " ORDER BY lfd_nr"); 
 		ColourSet colourSet = new ColourSet();
 		for (int row = 0; row < lfd_nr.length; row++) {
-				colourSet.add(Colour.getName(colour[row]), portion[row]);
+				colourSet.add(Colour.getName(colour[row]), share[row]);
 		}
 		return colourSet;
 	}

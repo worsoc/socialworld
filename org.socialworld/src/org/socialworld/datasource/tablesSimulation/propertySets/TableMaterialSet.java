@@ -30,13 +30,13 @@ import org.socialworld.datasource.mariaDB.Table;
 
 public class TableMaterialSet extends Table {
 
-	public final  String 	ALL_COLUMNS 		=	" material_set_id, lfd_nr, material, portion ";
+	public final  String 	ALL_COLUMNS 		=	" material_set_id, lfd_nr, material, share ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
 	int material_set_id[];
 	int lfd_nr[];
 	int material[];
-	int portion[];
+	int share[];
 
 	@Override
 	protected String getTableName() {
@@ -78,7 +78,7 @@ public class TableMaterialSet extends Table {
 		material_set_id = new int[rowCount];
 		lfd_nr = new int[rowCount];
 		material = new int[rowCount];
-		portion = new int[rowCount];
+		share = new int[rowCount];
 
 		try {
 			while (rs.next()) {
@@ -86,7 +86,7 @@ public class TableMaterialSet extends Table {
 				material_set_id[row] = rs.getInt(1);
 				lfd_nr[row] = rs.getInt(2);
 				material[row] = rs.getInt(3);
-				portion[row] = rs.getInt(4);
+				share[row] = rs.getInt(4);
 				
 				row++;
 			}
@@ -98,13 +98,13 @@ public class TableMaterialSet extends Table {
 
 	}
 
-	public void insert(int material_set_id, int lfd_nr, int material,  int portion) {
+	public void insert(int material_set_id, int lfd_nr, int material,  int share) {
 		String statement;
 			
 		if (material_set_id > 0 && lfd_nr > 0) {
 			
 			statement 	= "INSERT INTO " + getTableName() + " (" + ALL_COLUMNS + ") VALUES (" 
-					+ material_set_id  + ", " + lfd_nr  + ", " + material + ", " + portion + ")";
+					+ material_set_id  + ", " + lfd_nr  + ", " + material + ", " + share + ")";
 			
 			insert(statement);
 		}
@@ -125,14 +125,14 @@ public class TableMaterialSet extends Table {
 	}
 	
 
-	public void updatePortion( int material_set_id, int lfd_nr, int portion) {
+	public void updateShare( int material_set_id, int lfd_nr, int share) {
 		String statement;
 			
 		if (material_set_id > 0 && lfd_nr > 0) {
 	
 
 			statement 	= "UPDATE " + getTableName() + " SET " +
-					"portion = " + portion  + " " +
+					"share = " + share  + " " +
 					"WHERE material_set_id = " + material_set_id  + " and lfd_nr = " + lfd_nr ;
 			
 			update(statement);
@@ -143,8 +143,8 @@ public class TableMaterialSet extends Table {
 		return material[index];
 	}
 
-	public int getPortion(int index) {
-		return portion[index];
+	public int getShare(int index) {
+		return share[index];
 	}
 	
 
@@ -152,7 +152,7 @@ public class TableMaterialSet extends Table {
 		select(SELECT_ALL_COLUMNS, " WHERE material_set_id = " + material_set_id, " ORDER BY lfd_nr"); 
 		MaterialSet MaterialSet = new MaterialSet();
 		for (int row = 0; row < lfd_nr.length; row++) {
-				MaterialSet.add(Material.getName(material[row]), portion[row]);
+				MaterialSet.add(Material.getName(material[row]), share[row]);
 		}
 		return MaterialSet;
 	}
