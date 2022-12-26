@@ -26,7 +26,7 @@ public class Stork extends Aequorlithornithes implements IFlying , IRunning{
 	public  float getWidthWings() {return 30; };
 	public  float getNumberWings() {return 2; };
 	public Direction getDirectionFly() {
-		return new Direction(PropertyName.stateDispersibility_directionFly , new Vector(1.2F, 1.3F, 1.4F), 30.5F );
+		return new Direction(PropertyName.stateFlying_directionFly , new Vector(1.2F, 1.3F, 1.4F), 30.5F );
 	}
 
 	public StateFlying getSavedStateFlying(SimulationCluster cluster) {
