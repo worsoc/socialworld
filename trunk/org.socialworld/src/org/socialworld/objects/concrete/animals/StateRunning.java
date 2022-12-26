@@ -34,7 +34,7 @@ import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.State;
 import org.socialworld.tools.StringTupel;
 
-public class StateRunnable extends State {
+public class StateRunning extends State {
 
 	private double speed;
 	private int numberLegs;
@@ -83,7 +83,7 @@ public class StateRunnable extends State {
 	////////////////// creating instance for simulation    ///////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
-	public StateRunnable(SimulationObject object) 
+	public StateRunning(SimulationObject object) 
 	{
 		super(object);
 	}

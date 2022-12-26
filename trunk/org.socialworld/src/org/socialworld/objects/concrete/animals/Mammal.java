@@ -38,9 +38,9 @@ import org.socialworld.tools.StringTupel;
  * @author Mathias Sikos (tyloesand)
  * 
  */
-public abstract class Mammal extends Animal implements IRunnable{
+public abstract class Mammal extends Animal implements IRunning{
 
-	private StateRunnable stateRunnable;
+	private StateRunning stateRunning;
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////meta information    ////////////////////////////////////
@@ -79,7 +79,7 @@ public abstract class Mammal extends Animal implements IRunnable{
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////// implementing IRunnable ///////////////////////////////////
+/////////////////////////////// implementing IRunning ///////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 	public  float getSpeed() {return 27; };
@@ -90,15 +90,15 @@ public abstract class Mammal extends Animal implements IRunnable{
 	}
 	
 	
-	public StateRunnable getSavedStateRunnable(SimulationCluster cluster) {
+	public StateRunning getSavedStateRunning(SimulationCluster cluster) {
 		//make a copy as ValueProperty
-		ValueProperty vp = this.stateRunnable.getAsValue(cluster);
+		ValueProperty vp = this.stateRunning.getAsValue(cluster);
 		//the copy is permitted for cluster only
-		return (StateRunnable) vp.getValue();
+		return (StateRunning) vp.getValue();
 	}
 	
-	public ValueProperty getStateRunnableAsProperty(SimulationCluster cluster, String name) {
-		return this.stateRunnable.getAsValue(cluster, name);
+	public ValueProperty getStateRunningAsProperty(SimulationCluster cluster, String name) {
+		return this.stateRunning.getAsValue(cluster, name);
 	}
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
