@@ -20,7 +20,7 @@ public class Ostrich extends Palaeognathae implements IRunning{
 	public  float getSpeed() {return 70; };
 	public  float getNumberLegs() {return 2; };
 	public Direction getDirectionRun() {
-		return new Direction(PropertyName.stateRunnable_directionRun , new Vector(1.6F, 1.7F, 1.8F),30.7F);
+		return new Direction(PropertyName.stateRunning_directionRun , new Vector(1.6F, 1.7F, 1.8F),30.7F);
 	}
 	
 	

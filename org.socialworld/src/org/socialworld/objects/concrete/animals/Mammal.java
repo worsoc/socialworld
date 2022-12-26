@@ -86,7 +86,7 @@ public abstract class Mammal extends Animal implements IRunning{
 	public  float getNumberLegs() {return 2; };
 	
 	public Direction getDirectionRun() {
-		return new Direction(PropertyName.stateRunnable_directionRun , new Vector(1.3F, 1.4F, 1.5F),30.6F);
+		return new Direction(PropertyName.stateRunning_directionRun , new Vector(1.3F, 1.4F, 1.5F),30.6F);
 	}
 	
 	
