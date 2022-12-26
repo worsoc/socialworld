@@ -13,7 +13,7 @@ import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.State;
 import org.socialworld.tools.StringTupel;
 
-public class StateDispersibility extends State {
+public class StateFlying extends State {
 
 	private double widthWings;
 	private int numberWings;
@@ -62,7 +62,7 @@ public class StateDispersibility extends State {
 	////////////////// creating instance for simulation    ///////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
-	public StateDispersibility(SimulationObject object) 
+	public StateFlying(SimulationObject object) 
 	{
 		super(object);
 	}

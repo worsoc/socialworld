@@ -5,22 +5,22 @@ import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
+import org.socialworld.objects.concrete.animals.IFlying;
 import org.socialworld.objects.concrete.animals.IRunning;
-import org.socialworld.objects.concrete.animals.StateDispersibility;
+import org.socialworld.objects.concrete.animals.StateFlying;
 import org.socialworld.objects.concrete.animals.StateRunning;
 import org.socialworld.objects.concrete.animals.birds.Aequorlithornithes;
-import org.socialworld.objects.properties.IDispersibility;
 
 
 
-public class Stork extends Aequorlithornithes implements IDispersibility , IRunning{
+public class Stork extends Aequorlithornithes implements IFlying , IRunning{
 
 	// add on states
-	private StateDispersibility stateDispersibility;
+	private StateFlying stateFlying;
 	private StateRunning stateRunning;
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////// implementing IDispersibility ///////////////////////////////////
+/////////////////////////////// implementing IFlying ///////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 	public  float getWidthWings() {return 30; };
@@ -29,15 +29,15 @@ public class Stork extends Aequorlithornithes implements IDispersibility , IRunn
 		return new Direction(PropertyName.stateDispersibility_directionFly , new Vector(1.2F, 1.3F, 1.4F), 30.5F );
 	}
 
-	public StateDispersibility getSavedStateDispersibility(SimulationCluster cluster) {
+	public StateFlying getSavedStateFlying(SimulationCluster cluster) {
 		// make a copy as ValueProperty
-		ValueProperty vp = this.stateDispersibility.getAsValue(cluster);
+		ValueProperty vp = this.stateFlying.getAsValue(cluster);
 		// the copy is permitted for cluster only
-		return (StateDispersibility) vp.getValue();
+		return (StateFlying) vp.getValue();
 	}
 	
-	public ValueProperty getStateDispersibilityAsProperty(SimulationCluster cluster, String name) {
-		return this.stateDispersibility.getAsValue(cluster, name);
+	public ValueProperty getStateFlyingAsProperty(SimulationCluster cluster, String name) {
+		return this.stateFlying.getAsValue(cluster, name);
 	}
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
