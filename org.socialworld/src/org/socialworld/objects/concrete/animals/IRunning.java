@@ -25,14 +25,14 @@ import org.socialworld.attributes.Direction;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.ValueProperty;
 
-public interface IRunnable {
+public interface IRunning {
 	
-	public static final String NAME = "IRunnable";
+	public static final String NAME = "IRunning";
 	
 	public abstract float getSpeed();
 	public abstract float getNumberLegs();
 	public Direction getDirectionRun();
 	
-	public StateRunnable getSavedStateRunnable(SimulationCluster cluster);
-	public ValueProperty getStateRunnableAsProperty(SimulationCluster cluster, String name);
+	public StateRunning getSavedStateRunning(SimulationCluster cluster);
+	public ValueProperty getStateRunningAsProperty(SimulationCluster cluster, String name);
 }

@@ -36,7 +36,7 @@ import org.socialworld.calculation.ValueProperty;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.IEventParam;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
-import org.socialworld.objects.concrete.animals.IRunnable;
+import org.socialworld.objects.concrete.animals.IRunning;
 import org.socialworld.objects.concrete.animals.ISeer;
 import org.socialworld.objects.concrete.animals.StateBody;
 import org.socialworld.objects.concrete.animals.StateInventory;
@@ -50,7 +50,7 @@ import org.socialworld.tools.StringTupel;
  * @author Mathias Sikos (tyloesand)
  * 
  */
-public abstract class Animal extends SimulationObject implements ISeer, IRunnable {
+public abstract class Animal extends SimulationObject implements ISeer, IRunning {
 
 	private StateAnimal state;
 

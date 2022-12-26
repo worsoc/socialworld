@@ -5,7 +5,7 @@ import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.animals.Bird;
-import org.socialworld.objects.concrete.animals.StateRunnable;
+import org.socialworld.objects.concrete.animals.StateRunning;
 
 public abstract class Columbimorphae extends Bird {
 
@@ -46,13 +46,13 @@ public abstract class Columbimorphae extends Bird {
 	}
 
 	@Override
-	public StateRunnable getSavedStateRunnable(SimulationCluster cluster) {
+	public StateRunning getSavedStateRunning(SimulationCluster cluster) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ValueProperty getStateRunnableAsProperty(SimulationCluster cluster, String name) {
+	public ValueProperty getStateRunningAsProperty(SimulationCluster cluster, String name) {
 		// TODO Auto-generated method stub
 		return null;
 	}

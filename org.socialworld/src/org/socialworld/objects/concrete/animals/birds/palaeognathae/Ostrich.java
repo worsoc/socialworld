@@ -5,16 +5,16 @@ import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
-import org.socialworld.objects.concrete.animals.IRunnable;
-import org.socialworld.objects.concrete.animals.StateRunnable;
+import org.socialworld.objects.concrete.animals.IRunning;
+import org.socialworld.objects.concrete.animals.StateRunning;
 import org.socialworld.objects.concrete.animals.birds.Palaeognathae;
 
-public class Ostrich extends Palaeognathae implements IRunnable{
+public class Ostrich extends Palaeognathae implements IRunning{
 	
-	private StateRunnable stateRunnable;
+	private StateRunning stateRunning;
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////// implementing IRunnable ///////////////////////////////////
+/////////////////////////////// implementing IRunning ///////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
 	public  float getSpeed() {return 70; };
@@ -24,15 +24,15 @@ public class Ostrich extends Palaeognathae implements IRunnable{
 	}
 	
 	
-	public StateRunnable getSavedStateRunnable(SimulationCluster cluster) {
+	public StateRunning getSavedStateRunning(SimulationCluster cluster) {
 	// make a copy as ValueProperty
-	ValueProperty vp = this.stateRunnable.getAsValue(cluster);
+	ValueProperty vp = this.stateRunning.getAsValue(cluster);
 	// the copy is permitted for cluster only
-	return (StateRunnable) vp.getValue();
+	return (StateRunning) vp.getValue();
 	}
 	
-	public ValueProperty getStateRunnableAsProperty(SimulationCluster cluster, String name) {
-	return this.stateRunnable.getAsValue(cluster, name);
+	public ValueProperty getStateRunningAsProperty(SimulationCluster cluster, String name) {
+	return this.stateRunning.getAsValue(cluster, name);
 	}
 
 
