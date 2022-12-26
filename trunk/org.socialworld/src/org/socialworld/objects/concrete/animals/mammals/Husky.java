@@ -19,7 +19,7 @@ public class Husky extends Dog implements IRunning {
 	public  float getSpeed() {return 50; };
 	public  float getNumberLegs() {return 4; };
 	public Direction getDirectionRun() {
-		return new Direction(PropertyName.stateRunnable_directionRun , new Vector(1.7F, 1.8F, 1.9F),30.8F);
+		return new Direction(PropertyName.stateRunning_directionRun , new Vector(1.7F, 1.8F, 1.9F),30.8F);
 	}
 	
 	

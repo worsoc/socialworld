@@ -19,7 +19,7 @@ public class Chihuahua extends Dog implements IRunning{
 	public  float getSpeed() {return 15; };
 	public  float getNumberLegs() {return 4; };
 	public Direction getDirectionRun() {
-		return new Direction(PropertyName.stateRunnable_directionRun , new Vector(1.4F, 1.5F, 1.6F),30.4F);
+		return new Direction(PropertyName.stateRunning_directionRun , new Vector(1.4F, 1.5F, 1.6F),30.4F);
 	}
 	
 	public StateRunning getSavedStateRunning(SimulationCluster cluster) {

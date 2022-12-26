@@ -45,9 +45,9 @@ public class StateRunning extends State {
 	///////////////////////////////////////////////////////////////////////////////////////////
 
 	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{
-			new StringTupel(new String[] {Type.floatingpoint.getIndexWithSWTPraefix(),PropertyName.stateRunnable_speed.name(),PropertyName.stateRunnable_speed.toString()}),
-			new StringTupel(new String[] {Type.integer.getIndexWithSWTPraefix(), PropertyName.stateRunnable_numberLegs.name(), PropertyName.stateRunnable_numberLegs.toString()}),
-			new StringTupel(new String[] {"Direction", PropertyName.stateRunnable_directionRun.name(), PropertyName.stateRunnable_directionRun.toString()})
+			new StringTupel(new String[] {Type.floatingpoint.getIndexWithSWTPraefix(),PropertyName.stateRunning_speed.name(),PropertyName.stateRunning_speed.toString()}),
+			new StringTupel(new String[] {Type.integer.getIndexWithSWTPraefix(), PropertyName.stateRunning_numberLegs.name(), PropertyName.stateRunning_numberLegs.toString()}),
+			new StringTupel(new String[] {"Direction", PropertyName.stateRunning_directionRun.name(), PropertyName.stateRunning_directionRun.toString()})
 			};
 	
 	private static StringTupel[] propMethodsMetaInfos = new StringTupel[] {} ;
@@ -93,7 +93,7 @@ public class StateRunning extends State {
 	}
 
 	protected  void initPropertyName() {
-		setPropertyName(PropertyName.stateRunnable);
+		setPropertyName(PropertyName.stateRunning);
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////

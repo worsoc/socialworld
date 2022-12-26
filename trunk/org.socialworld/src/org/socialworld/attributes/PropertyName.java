@@ -94,10 +94,10 @@ public enum PropertyName {
 	tasteSet_tastes(1107201),
 	tasteSet_mainTaste(1107202),
 	
-	stateRunnable(1108000),
-	stateRunnable_speed(1108001),
-	stateRunnable_numberLegs(1108002),
-	stateRunnable_directionRun(1108003),
+	stateRunning(1108000),
+	stateRunning_speed(1108001),
+	stateRunning_numberLegs(1108002),
+	stateRunning_directionRun(1108003),
 	
 	
 	stateFlying(1109000),
