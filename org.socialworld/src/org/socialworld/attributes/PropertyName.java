@@ -100,10 +100,10 @@ public enum PropertyName {
 	stateRunnable_directionRun(1108003),
 	
 	
-	stateDispersibility(1109000),
-	stateDispersibility_widthWings(1109001),
-	stateDispersibility_numberWings(1109002),
-	stateDispersibility_directionFly(1109003),
+	stateFlying(1109000),
+	stateFlying_widthWings(1109001),
+	stateFlying_numberWings(1109002),
+	stateFlying_directionFly(1109003),
 	
 	
 	event_position(2001001),

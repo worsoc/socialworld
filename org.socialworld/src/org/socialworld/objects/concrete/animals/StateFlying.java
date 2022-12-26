@@ -24,9 +24,9 @@ public class StateFlying extends State {
 	///////////////////////////////////////////////////////////////////////////////////////////
 
 	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{
-			new StringTupel(new String[] {Type.floatingpoint.getIndexWithSWTPraefix(),PropertyName.stateDispersibility_widthWings.name(),PropertyName.stateDispersibility_widthWings.toString()}),
-			new StringTupel(new String[] {Type.integer.getIndexWithSWTPraefix(), PropertyName.stateDispersibility_numberWings.name(), PropertyName.stateDispersibility_numberWings.toString()}),
-			new StringTupel(new String[] {"Direction", PropertyName.stateDispersibility_directionFly.name(), PropertyName.stateDispersibility_directionFly.toString()})
+			new StringTupel(new String[] {Type.floatingpoint.getIndexWithSWTPraefix(),PropertyName.stateFlying_widthWings.name(),PropertyName.stateFlying_widthWings.toString()}),
+			new StringTupel(new String[] {Type.integer.getIndexWithSWTPraefix(), PropertyName.stateFlying_numberWings.name(), PropertyName.stateFlying_numberWings.toString()}),
+			new StringTupel(new String[] {"Direction", PropertyName.stateFlying_directionFly.name(), PropertyName.stateFlying_directionFly.toString()})
 			} ;
 	
 	private static StringTupel[] propMethodsMetaInfos = new StringTupel[] {} ;
@@ -73,7 +73,7 @@ public class StateFlying extends State {
 	
 	@Override
 	protected void initPropertyName() {
-		setPropertyName(PropertyName.stateDispersibility);
+		setPropertyName(PropertyName.stateFlying);
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////
