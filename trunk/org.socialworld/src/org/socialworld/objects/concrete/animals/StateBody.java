@@ -8,6 +8,7 @@ import org.socialworld.attributes.properties.Colour;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
+import org.socialworld.core.ReturnCode;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.State;
@@ -68,8 +69,9 @@ public class StateBody extends State {
 		super(object);
 	}
 
-	protected  void init() {
+	protected  ReturnCode init() {
 		
+		return ReturnCode.todo;
 	}
 
 	protected  void initPropertyName() {

@@ -6,11 +6,10 @@ import java.util.List;
 import org.socialworld.attributes.ISavedValues;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.properties.MaterialSet;
-import org.socialworld.attributes.properties.Material;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
-import org.socialworld.datasource.tablesSimulation.propertySets.TableMaterialSet;
+import org.socialworld.core.ReturnCode;
 import org.socialworld.datasource.tablesSimulation.states.TableStateComposition;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.SimulationObject;
@@ -24,8 +23,6 @@ public class StateComposition extends State {
 	public static final String METHODNAME_GET_MAIN_MATERIAL = "getMainMaterial";
 	
 	private MaterialSet materialSet;
-	private TableStateComposition tableComposition;
-	private TableMaterialSet tableMaterialSet;
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////static instance for meta information    ///////////////////////////////
@@ -73,21 +70,23 @@ public class StateComposition extends State {
 	public StateComposition(SimulationObject object) 
 	{
 		super(object);
-		tableComposition = new TableStateComposition();
 	}
 
-	protected  void init() {
+
+	protected  ReturnCode init() {
 		int objectID = getObjectID();
-		int materialSetID;
 		
-		tableComposition.select(tableComposition.SELECT_ALL_COLUMNS, " WHERE id = " + objectID , "");
-		int rowTableComposition = tableComposition.getIndexFor1PK(objectID);
-		if (rowTableComposition >= 0) {
-			tableMaterialSet = new TableMaterialSet();
-			materialSetID =tableComposition.getMaterialSetID(rowTableComposition);
-			materialSet = tableMaterialSet.getMaterialSet(materialSetID);
+		TableStateComposition tableState = null;
+		long lockingID = 0;
+		while (lockingID == 0) {
+			tableState = TableStateComposition.getInstance();
+			lockingID = tableState.lock();
 		}
-		
+		int rowTable = tableState.loadForObjectID(objectID) ;
+		if (rowTable >= 0) {
+			materialSet = tableState.getMaterialSetFromRow(rowTable);
+		}
+		return returnFromInit(tableState, lockingID, rowTable);
 	}
 
 	protected  void initPropertyName() {

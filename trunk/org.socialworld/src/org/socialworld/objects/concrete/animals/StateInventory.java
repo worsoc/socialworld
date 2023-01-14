@@ -9,6 +9,7 @@ import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
+import org.socialworld.core.ReturnCode;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.SimulationObject_Type;
@@ -81,8 +82,9 @@ public class StateInventory extends State {
 		super(object);
 	}
 
-	protected  void init() {
+	protected  ReturnCode init() {
 		this.inventory = Inventory.getTestInventory(SimulationObject_Type.human);
+		return ReturnCode.todo;
 		
 	}
 
