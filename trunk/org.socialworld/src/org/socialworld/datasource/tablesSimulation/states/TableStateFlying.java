@@ -23,10 +23,25 @@ package org.socialworld.datasource.tablesSimulation.states;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.socialworld.datasource.mariaDB.Table;
 
 public class TableStateFlying extends Table {
+
+	private static List<TableStateFlying> instances = new ArrayList<TableStateFlying>();
+
+	public static TableStateFlying getInstance() {
+		for ( TableStateFlying instance : instances) {
+			if (!instance.isLocked()) {
+				return instance;
+			}
+		}
+		TableStateFlying newInstance = new TableStateFlying();
+		instances.add(newInstance);
+		return newInstance;
+	}
 
 	public final  String 	ALL_COLUMNS 		=	" id, direction_id, widthWings, numberWings ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
@@ -38,7 +53,7 @@ public class TableStateFlying extends Table {
 
 	@Override
 	protected String getTableName() {
-		return "swstate_dispersibility";
+		return "swstate_flying";
 	}
 
 	@Override

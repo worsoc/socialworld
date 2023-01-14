@@ -23,11 +23,31 @@ package org.socialworld.datasource.tablesSimulation.states;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.socialworld.attributes.properties.NutrientSet;
+import org.socialworld.attributes.properties.TasteSet;
 import org.socialworld.datasource.mariaDB.Table;
+import org.socialworld.datasource.tablesSimulation.propertySets.TableNutrientSet;
+import org.socialworld.datasource.tablesSimulation.propertySets.TableTasteSet;
 
 public class TableStateEatable extends Table {
 
+	private static List<TableStateEatable> instances = new ArrayList<TableStateEatable>();
+
+	public static TableStateEatable getInstance() {
+		for ( TableStateEatable instance : instances) {
+			if (!instance.isLocked()) {
+				return instance;
+			}
+		}
+		TableStateEatable newInstance = new TableStateEatable();
+		instances.add(newInstance);
+		return newInstance;
+	}
+	
+	
 	public final  String 	ALL_COLUMNS 		=	" id, nutrient_set_id, taste_set_id ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
@@ -37,7 +57,7 @@ public class TableStateEatable extends Table {
 
 	@Override
 	protected String getTableName() {
-		return "sw_state_appearance";
+		return "swstate_eatable";
 	}
 
 	@Override
@@ -148,6 +168,41 @@ public class TableStateEatable extends Table {
 
 	public int getTasteSetID(int index) {
 		return taste_set_id[index];
+	}
+
+	
+	
+	public int loadForObjectID(int objectID) {
+
+		select(SELECT_ALL_COLUMNS, " WHERE id = " + objectID , "");
+
+		int row = getIndexFor1PK(objectID);
+		return row;
+		
+	}
+
+	public NutrientSet getNutrientSetFromRow (int row) {
+		
+		int setID;
+		NutrientSet set = null;
+		if (row >= 0) {
+			TableNutrientSet tableSet = new TableNutrientSet();
+			setID = getNutrientSetID(row);
+			set = tableSet.getNutrientSet(setID);
+		}
+		return set;
+	}
+	
+	public TasteSet getTasteSetFromRow (int row) {
+		
+		int setID;
+		TasteSet set = null;
+		if (row >= 0) {
+			TableTasteSet tableSet = new TableTasteSet();
+			setID = getTasteSetID(row);
+			set = tableSet.getTasteSet(setID);
+		}
+		return set;
 	}
 
 }
