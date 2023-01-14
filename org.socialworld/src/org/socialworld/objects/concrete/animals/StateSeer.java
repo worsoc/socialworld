@@ -33,8 +33,7 @@ import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.calculation.geometry.VectorMapper;
-import org.socialworld.datasource.tablesSimulation.properties.TableDirection;
-import org.socialworld.datasource.tablesSimulation.properties.TablePropsSeer;
+import org.socialworld.core.ReturnCode;
 import org.socialworld.datasource.tablesSimulation.states.TableStateSeer;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.SimulationObject;
@@ -48,10 +47,7 @@ public class StateSeer extends State {
 
 	private int bestPercipiencePerpendicular;
 
-	private TableStateSeer tableSeer;
-	private TableDirection tableDirection;
-	private TablePropsSeer tablePropsSeer;
-	
+
 	///////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////static instance for meta information    ///////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
@@ -98,27 +94,23 @@ public class StateSeer extends State {
 		super(object);
 	}
 	
-	protected  void init() {
-		int objectID = getObjectID();
-		int directionID;
-		int propsSeerID;
+	protected  ReturnCode init() {
 		
-		tableSeer.select(tableSeer.SELECT_ALL_COLUMNS, " WHERE id = " + objectID , "");
-		int rowTableAppearance = tableSeer.getIndexFor1PK(objectID);
-		if (rowTableAppearance >= 0) {
-			
-			bestPercipiencePerpendicular = tableSeer.getBestPercipiencePerpendicular(rowTableAppearance);
-			
-			tableDirection = new TableDirection();
-			directionID = tableSeer.getDirectionID(rowTableAppearance);
-			directionView = tableDirection.getDirection(directionID, PropertyName.stateSeer_directionView);
-			
-			tablePropsSeer = new TablePropsSeer();
-			propsSeerID = tableSeer.getPropsSeerID(rowTableAppearance);
-			propsSeer = tablePropsSeer.getPropsSeer(propsSeerID,  PropertyName.stateSeer_propsSeer);
-			
+		int objectID = getObjectID();
+		
+		TableStateSeer tableState = null;
+		long lockingID = 0;
+		while (lockingID == 0) {
+			tableState = TableStateSeer.getInstance();
+			lockingID = tableState.lock();
 		}
-
+		int rowTable = tableState.loadForObjectID(objectID) ;
+		if (rowTable >= 0) {
+			directionView = tableState.getDirectionViewFromRow(rowTable);
+			propsSeer = tableState.getPropsSeerFromRow(rowTable);
+		}
+		return returnFromInit(tableState, lockingID, rowTable);
+		
 	}
 
 	private StateSeer( StateSeer original, PropertyProtection protectionOriginal, SimulationCluster cluster) {

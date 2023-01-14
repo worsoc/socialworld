@@ -32,6 +32,7 @@ import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
+import org.socialworld.core.ReturnCode;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.Animal;
 import org.socialworld.objects.SimulationObject;
@@ -93,12 +94,13 @@ public class StatePerceptible extends State {
 		super(object);
 	}
 
-	protected  void init() {
+	protected  ReturnCode init() {
 		this.percipience = new Percipience(PercipienceType.simobject, 100);
 
 		//this.percipience = new Percipience(PercipienceType.simobject, 100); // for human
 		//this.percipience = new Percipience(PercipienceType.dynamic); // for Lightning, Weather
 
+		return ReturnCode.todo;
 	}
 
 	private StatePerceptible( StatePerceptible original, PropertyProtection protectionOriginal, SimulationCluster cluster) {

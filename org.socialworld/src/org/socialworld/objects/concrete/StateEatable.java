@@ -31,8 +31,7 @@ import org.socialworld.attributes.properties.TasteSet;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
-import org.socialworld.datasource.tablesSimulation.propertySets.TableNutrientSet;
-import org.socialworld.datasource.tablesSimulation.propertySets.TableTasteSet;
+import org.socialworld.core.ReturnCode;
 import org.socialworld.datasource.tablesSimulation.states.TableStateEatable;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.SimulationObject;
@@ -58,10 +57,6 @@ public class StateEatable extends State {
 
 	private NutrientSet nutrientSet;
 	private TasteSet tasteSet;
-	
-	private TableStateEatable tableEatable;
-	private TableNutrientSet tableNutrientSet;
-	private TableTasteSet tableTasteSet;
 	
 	///////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////static instance for meta information    ///////////////////////////////
@@ -111,29 +106,25 @@ public class StateEatable extends State {
 	public StateEatable(SimulationObject object) 
 	{
 		super(object);
-		tableEatable = new TableStateEatable();
 	}
 
-	protected  void init() {
+	protected  ReturnCode init() {
 		
 		int objectID = getObjectID();
-		int nutrientSetID;
-		int tasteSetID;
 		
-		tableEatable.select(tableEatable.SELECT_ALL_COLUMNS, " WHERE id = " + objectID , "");
-		int rowTableAppearance = tableEatable.getIndexFor1PK(objectID);
-		if (rowTableAppearance >= 0) {
-			
-			tableNutrientSet = new TableNutrientSet();
-			nutrientSetID = tableEatable.getNutrientSetID(rowTableAppearance);
-			nutrientSet = tableNutrientSet.getNutrientSet(nutrientSetID);
-			
-			tableTasteSet = new TableTasteSet();
-			tasteSetID = tableEatable.getTasteSetID(rowTableAppearance);
-			tasteSet = tableTasteSet.getTasteSet(tasteSetID);
-			
+		TableStateEatable tableState = null;
+		long lockingID = 0;
+		while (lockingID == 0) {
+			tableState = TableStateEatable.getInstance();
+			lockingID = tableState.lock();
 		}
-		
+		int rowTable = tableState.loadForObjectID(objectID) ;
+		if (rowTable >= 0) {
+			nutrientSet = tableState.getNutrientSetFromRow(rowTable);
+			tasteSet = tableState.getTasteSetFromRow(rowTable);
+		}
+		return returnFromInit(tableState, lockingID, rowTable);
+	
 	}
 
 	private StateEatable( StateEatable original, PropertyProtection protectionOriginal, SimulationCluster cluster) {

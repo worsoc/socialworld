@@ -27,7 +27,7 @@ import org.socialworld.attributes.properties.ColourSet;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
-import org.socialworld.datasource.tablesSimulation.propertySets.TableColourSet;
+import org.socialworld.core.ReturnCode;
 import org.socialworld.datasource.tablesSimulation.states.TableStateAppearance;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.SimulationObject;
@@ -43,8 +43,6 @@ public class StateAppearance extends State {
 	public static final String METHODNAME_GET_MAIN_COLOR = "getMainColour";
 
 	private ColourSet colourSet;
-	private TableStateAppearance tableAppearance;
-	private TableColourSet tableColourSet;
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////  static instance for meta information    ///////////////////////////////
@@ -93,21 +91,22 @@ public class StateAppearance extends State {
 	public StateAppearance(SimulationObject object) 
 	{
 		super(object);
-		tableAppearance = new TableStateAppearance();
 	}
 
-	protected  void init() {
+	protected  ReturnCode init() {
 		int objectID = getObjectID();
-		int colourSetID;
 		
-		tableAppearance.select(tableAppearance.SELECT_ALL_COLUMNS, " WHERE id = " + objectID , "");
-		int rowTableAppearance = tableAppearance.getIndexFor1PK(objectID);
-		if (rowTableAppearance >= 0) {
-			tableColourSet = new TableColourSet();
-			colourSetID =tableAppearance.getColourSetID(rowTableAppearance);
-			colourSet = tableColourSet.getColourSet(colourSetID);
+		TableStateAppearance tableState = null;
+		long lockingID = 0;
+		while (lockingID == 0) {
+			tableState = TableStateAppearance.getInstance();
+			lockingID = tableState.lock();
 		}
-
+		int rowTable = tableState.loadForObjectID(objectID) ;
+		if (rowTable >= 0) {
+			colourSet = tableState.getColourSetFromRow(rowTable);
+		}
+		return returnFromInit(tableState, lockingID, rowTable);
 	}
 	
 	private StateAppearance( StateAppearance original, PropertyProtection protectionOriginal, SimulationCluster cluster) {
