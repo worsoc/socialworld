@@ -35,6 +35,8 @@ import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueProperty;
+import org.socialworld.core.ReturnCode;
+import org.socialworld.datasource.mariaDB.Table;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.tools.StringTupel;
 
@@ -52,6 +54,7 @@ public abstract class State implements ISimProperty, ISavedValues {
 		this.object = object;
 		initPropertyName();
 		this.protection = new PropertyProtection(this);
+		init();
 	}
 
 	protected State(PropertyProtection protectionOriginal, SimulationCluster clusterNew) {
@@ -61,7 +64,7 @@ public abstract class State implements ISimProperty, ISavedValues {
 
 	protected abstract void initPropertyName();
 	
-	protected abstract void init();
+	protected abstract ReturnCode init();
 	
 	final protected SimulationObject getObject() {
 		return this.object;
@@ -71,6 +74,21 @@ public abstract class State implements ISimProperty, ISavedValues {
 		return this.object.getObjectID();
 	}
 
+	
+	protected ReturnCode returnFromInit(Table table, long lockingID, int tableRow) {
+		if (table.unlock(lockingID)) {
+			if (tableRow < 0) {
+				return ReturnCode.noRowForObjectID;
+			}
+			else {
+				return  ReturnCode.success;
+			}
+		}
+		else {
+			return ReturnCode.tableNotLockedFromCaller;
+		}
+	}
+	
 	///////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////meta information    ////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
