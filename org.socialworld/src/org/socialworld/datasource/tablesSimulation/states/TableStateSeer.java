@@ -23,10 +23,30 @@ package org.socialworld.datasource.tablesSimulation.states;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.socialworld.attributes.Direction;
+import org.socialworld.attributes.PropertyName;
+import org.socialworld.attributes.percipience.PropsSeer;
 import org.socialworld.datasource.mariaDB.Table;
+import org.socialworld.datasource.tablesSimulation.properties.TableDirection;
+import org.socialworld.datasource.tablesSimulation.properties.TablePropsSeer;
 
 public class TableStateSeer extends Table {
+
+	private static List<TableStateSeer> instances = new ArrayList<TableStateSeer>();
+
+	public static TableStateSeer getInstance() {
+		for ( TableStateSeer instance : instances) {
+			if (!instance.isLocked()) {
+				return instance;
+			}
+		}
+		TableStateSeer newInstance = new TableStateSeer();
+		instances.add(newInstance);
+		return newInstance;
+	}
 
 	//bestPercPerp ... bestPercipiencePerpendicular
 	public final  String 	ALL_COLUMNS 		=	" id, direction_id, props_seer_id, bestPercPerp ";
@@ -39,7 +59,7 @@ public class TableStateSeer extends Table {
 
 	@Override
 	protected String getTableName() {
-		return "sw_state_seer";
+		return "swstate_seer";
 	}
 
 	@Override
@@ -172,4 +192,37 @@ public class TableStateSeer extends Table {
 		return bestPercPerp[index];
 	}
 	
+	public int loadForObjectID(int objectID) {
+
+		select(SELECT_ALL_COLUMNS, " WHERE id = " + objectID , "");
+
+		int row = getIndexFor1PK(objectID);
+		return row;
+		
+	}
+
+	public Direction getDirectionViewFromRow (int row) {
+		
+		int id;
+		Direction direction = null;
+		if (row >= 0) {
+			TableDirection tableDirection = new TableDirection();
+			id = getDirectionID(row);
+			direction = tableDirection.getDirection(id, PropertyName.stateSeer_directionView);
+		}
+		return direction;
+	}
+
+	public PropsSeer getPropsSeerFromRow (int row) {
+		
+		int id;
+		PropsSeer propsSeer = null;
+		if (row >= 0) {
+			TablePropsSeer tablePropsSeer = new TablePropsSeer();
+			id = getPropsSeerID(row);
+			propsSeer = tablePropsSeer.getPropsSeer(id,  PropertyName.stateSeer_propsSeer);
+		}
+		return propsSeer;
+	}
+
 }

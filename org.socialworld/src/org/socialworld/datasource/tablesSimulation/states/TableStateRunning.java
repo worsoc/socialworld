@@ -23,10 +23,25 @@ package org.socialworld.datasource.tablesSimulation.states;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.socialworld.datasource.mariaDB.Table;
 
 public class TableStateRunning extends Table {
+
+	private static List<TableStateRunning> instances = new ArrayList<TableStateRunning>();
+
+	public static TableStateRunning getInstance() {
+		for ( TableStateRunning instance : instances) {
+			if (!instance.isLocked()) {
+				return instance;
+			}
+		}
+		TableStateRunning newInstance = new TableStateRunning();
+		instances.add(newInstance);
+		return newInstance;
+	}
 
 	public final  String 	ALL_COLUMNS 		=	" id, direction_id, speed, numberLegs ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
@@ -38,7 +53,7 @@ public class TableStateRunning extends Table {
 
 	@Override
 	protected String getTableName() {
-		return "swstate_runnable";
+		return "swstate_running";
 	}
 
 	@Override

@@ -2,11 +2,28 @@ package org.socialworld.datasource.tablesSimulation.states;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.socialworld.attributes.properties.ColourSet;
 import org.socialworld.datasource.mariaDB.Table;
+import org.socialworld.datasource.tablesSimulation.propertySets.TableColourSet;
 
 public class TableStateAppearance extends Table {
 
+	private static List<TableStateAppearance> instances = new ArrayList<TableStateAppearance>();
+
+	public static TableStateAppearance getInstance() {
+		for ( TableStateAppearance instance : instances) {
+			if (!instance.isLocked()) {
+				return instance;
+			}
+		}
+		TableStateAppearance newInstance = new TableStateAppearance();
+		instances.add(newInstance);
+		return newInstance;
+	}
+	
 	public final  String 	ALL_COLUMNS 		=	" id, colour_set_id ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
@@ -15,7 +32,7 @@ public class TableStateAppearance extends Table {
 
 	@Override
 	protected String getTableName() {
-		return "sw_state_appearance";
+		return "swstate_appearance";
 	}
 
 	@Override
@@ -108,4 +125,27 @@ public class TableStateAppearance extends Table {
 		return colour_set_id[index];
 	}
 
+	public int loadForObjectID(int objectID) {
+
+		select(SELECT_ALL_COLUMNS, " WHERE id = " + objectID , "");
+
+		int row = getIndexFor1PK(objectID);
+		return row;
+		
+	}
+
+	public ColourSet getColourSetFromRow (int row) {
+		
+		int setID;
+		ColourSet set = null;
+		if (row >= 0) {
+			TableColourSet tableSet = new TableColourSet();
+			setID = getColourSetID(row);
+			set = tableSet.getColourSet(setID);
+		}
+		return set;
+	}
+	
+	
+	
 }
