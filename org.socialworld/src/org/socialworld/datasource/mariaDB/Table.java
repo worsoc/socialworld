@@ -31,11 +31,15 @@ import java.sql.SQLException;
  */
 public abstract class Table {
 
+
+	
 		protected ConnectionMariaDB connection;
 		protected int selectList;
 		protected int rowCount;
 		protected int rowsAffected;
 		
+		boolean isLocked = false;
+		long lockingID = 1;
 		
 		protected int pk1[];
 		protected int pk2[];
@@ -57,6 +61,31 @@ public abstract class Table {
 			connection = new ConnectionMariaDB();
 		}
 
+		public long lock() {
+			if (isLocked) {
+				return 0;
+			}
+			else {
+				lockingID++;
+				isLocked = true;
+				return lockingID;
+			}
+		}
+		
+		public boolean unlock(long lockingID) {
+			if (lockingID == this.lockingID) {
+				isLocked = false;
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+		
+		protected boolean isLocked() {
+			return this.isLocked;
+		}
+		
 		public boolean executionWasSuccessful() {
 			return (rowsAffected >= 0);
 		}
