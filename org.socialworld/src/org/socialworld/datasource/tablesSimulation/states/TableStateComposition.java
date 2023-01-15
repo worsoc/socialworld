@@ -33,7 +33,7 @@ public class TableStateComposition extends Table {
 
 	@Override
 	protected String getTableName() {
-		return "swstate_appearance";
+		return "swstate_composition";
 	}
 
 	@Override

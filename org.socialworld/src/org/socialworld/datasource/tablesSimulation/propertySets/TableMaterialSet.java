@@ -40,7 +40,7 @@ public class TableMaterialSet extends Table {
 
 	@Override
 	protected String getTableName() {
-		return "sw_materialset";
+		return "swset_material";
 	}
 
 	@Override
