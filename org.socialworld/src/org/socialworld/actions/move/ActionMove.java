@@ -132,7 +132,7 @@ public class ActionMove extends AbstractAction {
 		
 		boolean moveCompleted = false;
 		
-		if (actor == null) return;
+		if (!this.actor.isSimulationObject()) return;
 
 		firstStep = firstPerforming;
 		

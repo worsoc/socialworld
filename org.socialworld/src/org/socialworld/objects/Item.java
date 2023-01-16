@@ -75,6 +75,9 @@ public abstract class Item extends SimulationObject {
 		super();
 	}
 
+	@Override
+	public final boolean isSimulationObject() {return true;}
+
 	protected SimulationObject_Type getSimObjectType() {
 		return SimulationObject_Type.item;
 	}

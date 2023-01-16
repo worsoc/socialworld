@@ -102,6 +102,9 @@ public abstract class Animal extends SimulationObject implements ISeer, IRunning
 		super();
 	}
 	
+	@Override
+	public final boolean isSimulationObject() {return true;}
+
 	protected SimulationObject_Type getSimObjectType() {
 		return SimulationObject_Type.animal;
 	}

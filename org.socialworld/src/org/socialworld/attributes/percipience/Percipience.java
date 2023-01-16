@@ -221,7 +221,7 @@ public class Percipience {
 
 	public void setCuboid(Vector cuboid) {
 		this.cuboid = cuboid;
-		if (this.position != null) {
+		if (!this.position.checkIsObjectNothing()) {
 			setVisibility();
 		}
 	}

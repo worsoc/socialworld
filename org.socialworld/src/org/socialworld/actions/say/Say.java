@@ -37,10 +37,10 @@ import org.socialworld.objects.SimulationObject;
  * Die Klasse Say ist von der abstrakten Klasse ActionPerformer abgeleitet.
  * 
  * Die Klasse Say dient der Wirksamwerdung der Aktion,
- *  nämlich als Argument für das zur Aktion gehörende Ereignis.
+ *  nï¿½mlich als Argument fï¿½r das zur Aktion gehï¿½rende Ereignis.
  *
- *   Für die Bereitstellung der Parameter ist es unerheblich, ob 
- *    normal gesprochen, geflüstert oder geschrien wird.
+ *   Fï¿½r die Bereitstellung der Parameter ist es unerheblich, ob 
+ *    normal gesprochen, geflï¿½stert oder geschrien wird.
  *     Diese Unterscheidung steckt bereits im EventType des Ereignisses.
  *    
  *  
@@ -136,7 +136,7 @@ public class Say extends ActionPerformer {
     	SimulationObject target;
 
        	target =  ((ActionSay) this.getOriginalActionObject()).getTarget();
-    	if (target != null) {
+    	if (target.isSimulationObject()) {
     		targets.add(target);
     	}
 

@@ -40,21 +40,21 @@ import org.socialworld.objects.SimulationObject;
  * Die Klasse Answer ist von der abstrakten Klasse ActionPerformer abgeleitet.
  * 
  * Die Klasse Answer dient der Wirksamwerdung der Aktion,
- *  nämlich als Argument für das zur Aktion gehörende Ereignis.
+ *  nï¿½mlich als Argument fï¿½r das zur Aktion gehï¿½rende Ereignis.
  *
- *  In der Ausführungsmethode perform() werden 
- *   - der (Gesprächs)partner (ein Objekt der Klasse Human)
+ *  In der Ausfï¿½hrungsmethode perform() werden 
+ *   - der (Gesprï¿½chs)partner (ein Objekt der Klasse Human)
  *   - die Richtung (in die gesprochen wird)
  *   - die Antwort
- *   für den Standardzugriff aus dem Ereignis heraus bereitgestellt.
+ *   fï¿½r den Standardzugriff aus dem Ereignis heraus bereitgestellt.
  *   
- *   Für die Bereitstellung der Parameter ist es unerheblich, ob die Antwort 
- *    normal gesprochen, geflüstert oder geschrien wird.
+ *   Fï¿½r die Bereitstellung der Parameter ist es unerheblich, ob die Antwort 
+ *    normal gesprochen, geflï¿½stert oder geschrien wird.
  *     Diese Unterscheidung steckt bereits im EventType des Ereignisses.
  *    
- * Die Antwort auf eine Frage wird in Abhängigkeit der Beziehung zum Gesprächspartner
- *  (also die Qualität der Bekanntschaft) manipuliert.
- *  Dadurch wird erreicht, dass der Antworter auf eine Frage nicht grundsätzlich gleich antwortet.
+ * Die Antwort auf eine Frage wird in Abhï¿½ngigkeit der Beziehung zum Gesprï¿½chspartner
+ *  (also die Qualitï¿½t der Bekanntschaft) manipuliert.
+ *  Dadurch wird erreicht, dass der Antworter auf eine Frage nicht grundsï¿½tzlich gleich antwortet.
  *  
  * @author Mathias Sikos
  *
@@ -193,7 +193,7 @@ public class Answer extends ActionPerformer {
     	SimulationObject target;
 
        	target =  ((ActionSay) this.getOriginalActionObject()).getTarget();
-    	if (target != null) {
+    	if (target.isSimulationObject()) {
     		targets.add(target);
     	}
 

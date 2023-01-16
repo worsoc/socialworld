@@ -23,7 +23,7 @@ package org.socialworld.objects;
 
 
 public enum SimulationObject_Type {
-	object(0), animal(1),human(2), god(3), item(4), magic(5);
+	noObject(0), animal(1),human(2), god(3), item(4), magic(5);
 
 	private int arrayIndex;
 

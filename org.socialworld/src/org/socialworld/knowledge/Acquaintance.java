@@ -22,9 +22,11 @@
 package org.socialworld.knowledge;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.objects.Human;
+import org.socialworld.objects.NoSimulationObject;
+import org.socialworld.objects.SimulationObject;
 
 public class Acquaintance {
-	private Human human;
+	private SimulationObject human = NoSimulationObject.getObjectNothing();
 	
 	AttributeArray attributes = AttributeArray.getObjectNothing();
 	
@@ -45,7 +47,7 @@ public class Acquaintance {
 	}
 	
 	protected boolean isValid() {
-		return (human != null);
+		return (human.isSimulationObject());
 	}
 	
 	public boolean isAcquaintanceOfHuman(Human human) {
