@@ -76,6 +76,10 @@ public class StateComposition extends State {
 		return objectNothing;
 	}
 	
+	public boolean checkIsObjectNothing() {
+		return (this == objectNothing);
+	}
+
 	private StateComposition() {
 	
 	}

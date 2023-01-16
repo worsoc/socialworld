@@ -204,7 +204,7 @@ public class TableStateSeer extends Table {
 	public Direction getDirectionViewFromRow (int row) {
 		
 		int id;
-		Direction direction = null;
+		Direction direction = Direction.getObjectNothing();
 		if (row >= 0) {
 			TableDirection tableDirection = new TableDirection();
 			id = getDirectionID(row);

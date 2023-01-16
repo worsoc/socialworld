@@ -68,6 +68,9 @@ public class Knowledge extends SimProperty {
 		return objectNothing;
 	}
 	
+	public boolean checkIsObjectNothing() {
+		return (this == objectNothing);
+	}
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////

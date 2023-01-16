@@ -155,6 +155,10 @@ public class Inventory extends SimProperty {
 		return objectNothing;
 	}
 	
+	public boolean checkIsObjectNothing() {
+		return (this == objectNothing);
+	}
+
 	private Inventory() {
 	
 	}
