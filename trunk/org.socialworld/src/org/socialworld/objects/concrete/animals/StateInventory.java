@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.socialworld.actions.handle.Inventory;
 import org.socialworld.attributes.ISavedValues;
+import org.socialworld.attributes.ISimProperty;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.calculation.SimulationCluster;
@@ -73,6 +74,24 @@ public class StateInventory extends State {
 		return listOfResultingKFCs;
 	}
 
+	///////////////////////////////////////////////////////////////////////////////////////////
+	///////////// object nothing (abstract method from ISimProperty)    ///////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
+	
+	private static StateInventory objectNothing;
+	
+	public  ISimProperty getObjectNothing() {
+		if (objectNothing == null) {
+			objectNothing = new StateInventory();
+			objectNothing.setToObjectNothing();
+		}
+		return objectNothing;
+	}
+	
+	private StateInventory() {
+	
+	}
+	
 	///////////////////////////////////////////////////////////////////////////////////////////
 	////////////////// creating instance for simulation    ///////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////

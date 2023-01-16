@@ -23,6 +23,7 @@ package org.socialworld.attributes.properties;
 
 import java.util.List;
 
+import org.socialworld.attributes.ISimProperty;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.attributes.SimProperty;
@@ -51,6 +52,23 @@ public class ColourSet extends PropPortionSet {
 		return listOfPropertyMetaInfo;
 	}
 	
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+///////////// object nothing (abstract method from ISimProperty)    ///////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	private static ColourSet objectNothing;
+	
+	public  ISimProperty getObjectNothing() {
+		if (objectNothing == null) {
+			objectNothing = new ColourSet();
+			objectNothing.setToObjectNothing();
+		}
+		return objectNothing;
+	}
+	
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 //////////////////creating instance for simulation    ///////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////

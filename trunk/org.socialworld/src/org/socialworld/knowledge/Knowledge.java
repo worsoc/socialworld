@@ -24,6 +24,7 @@ package org.socialworld.knowledge;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.attributes.ISimProperty;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.attributes.SimProperty;
@@ -53,6 +54,26 @@ public class Knowledge extends SimProperty {
 
 	private SpeechRecognition speechRecognition;
 	
+///////////////////////////////////////////////////////////////////////////////////////////
+///////////// object nothing (abstract method from ISimProperty)    ///////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	private static Knowledge objectNothing;
+	
+	public  ISimProperty getObjectNothing() {
+		if (objectNothing == null) {
+			objectNothing = new Knowledge();
+			objectNothing.setToObjectNothing();
+		}
+		return objectNothing;
+	}
+	
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+///////////// creating instance for simulation   ///////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
 	public Knowledge() {
 		knowledgeElementList = new KnowledgeElement[MAXIMUM_KNOWLEDGE_POOL_CAPACITY];
 		accessCount = new int[MAXIMUM_KNOWLEDGE_POOL_CAPACITY];
@@ -68,6 +89,7 @@ public class Knowledge extends SimProperty {
 	private Knowledge(Knowledge original, PropertyProtection protectionOriginal, SimulationCluster cluster ) {
 		super(protectionOriginal, cluster);
 	}
+	
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    ISavedValues  ///////////////////////////////////////////////

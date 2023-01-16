@@ -27,5 +27,5 @@ public interface ISimProperty {
 	public abstract void setPropertyName(PropertyName prop);
 	public abstract PropertyName getPropertyName();
 
-
+	public abstract ISimProperty getObjectNothing();
 }

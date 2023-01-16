@@ -23,6 +23,7 @@ package org.socialworld.actions.handle;
 
 import java.util.List;
 
+import org.socialworld.attributes.ISimProperty;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.attributes.SimProperty;
@@ -38,8 +39,13 @@ import org.socialworld.objects.concrete.clothes.Shirt;
 import org.socialworld.objects.concrete.clothes.Shoe;
 import org.socialworld.objects.concrete.clothes.Sock;
 import org.socialworld.objects.concrete.clothes.Trousers;
+import org.socialworld.objects.concrete.clothes.caps.TestCap;
+import org.socialworld.objects.concrete.clothes.shirts.TestShirt;
+import org.socialworld.objects.concrete.clothes.shoes.TestShoeLeft;
+import org.socialworld.objects.concrete.clothes.shoes.TestShoeRight;
+import org.socialworld.objects.concrete.clothes.socks.TestSockLeft;
+import org.socialworld.objects.concrete.clothes.socks.TestSockRight;
 import org.socialworld.objects.properties.IWeapon;
-import org.socialworld.objects.properties.IWearable;
 import org.socialworld.tools.StringTupel;
 
 /**
@@ -51,6 +57,24 @@ import org.socialworld.tools.StringTupel;
  */
 public class Inventory extends SimProperty {
 
+///////////////////////////////////////////////////////////////////////////////////////////
+////////////////// static method for creating test instances   ///////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public static Inventory getTestInventory(SimulationObject_Type objectType) {
+		Inventory inventory = new Inventory(objectType);
+		inventory.cap = new TestCap();
+		inventory.shirt = new TestShirt();
+		inventory.leftFootShoe = new TestShoeLeft();
+		inventory.rightFootShoe = new TestShoeRight();
+		inventory.leftFootSock = new TestSockLeft();
+		inventory.rightFootSock = new TestSockRight();
+		return inventory;
+	}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+////////////////// inventory properties   ///////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 	
 	protected SimulationObject leftHand;
 	protected SimulationObject rightHand;
@@ -116,6 +140,25 @@ public class Inventory extends SimProperty {
 		return listOfResultingKFCs;
 	}
 	
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+///////////// object nothing (abstract method from ISimProperty)    ///////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	private static Inventory objectNothing;
+	
+	public  ISimProperty getObjectNothing() {
+		if (objectNothing == null) {
+			objectNothing = new Inventory();
+			objectNothing.setToObjectNothing();
+		}
+		return objectNothing;
+	}
+	
+	private Inventory() {
+	
+	}
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 ////////////////// creating instance for simulation    ///////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////

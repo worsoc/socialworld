@@ -21,6 +21,7 @@
 */
 package org.socialworld.objects.concrete;
 
+import org.socialworld.attributes.ISimProperty;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.attributes.properties.ColourSet;
@@ -82,6 +83,23 @@ public class StateAppearance extends State {
 	}
 
 
+	///////////////////////////////////////////////////////////////////////////////////////////
+	///////////// object nothing (abstract method from ISimProperty)    ///////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
+
+	private static StateAppearance objectNothing;
+	
+	public  ISimProperty getObjectNothing() {
+		if (objectNothing == null) {
+			objectNothing = new StateAppearance();
+			objectNothing.setToObjectNothing();
+		}
+		return objectNothing;
+	}
+	
+	private StateAppearance() {
+	
+	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////////
 	////////////////// creating instance for simulation    ///////////////////////////////
