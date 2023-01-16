@@ -67,6 +67,9 @@ public class ColourSet extends PropPortionSet {
 		return objectNothing;
 	}
 	
+	public boolean checkIsObjectNothing() {
+		return (this == objectNothing);
+	}
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////

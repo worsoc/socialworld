@@ -112,6 +112,10 @@ public class StateEatable extends State {
 		return objectNothing;
 	}
 	
+	public boolean checkIsObjectNothing() {
+		return (this == objectNothing);
+	}
+
 	private StateEatable() {
 	
 	}

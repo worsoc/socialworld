@@ -107,6 +107,10 @@ public class Position extends SimProperty {
 		return objectNothing;
 	}
 	
+	public boolean checkIsObjectNothing() {
+		return (this == objectNothing);
+	}
+
 	private Position() {
 	
 	}

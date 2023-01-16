@@ -88,6 +88,10 @@ public class AttributeArray extends SimProperty {
 		return objectNothing;
 	}
 	
+	public boolean checkIsObjectNothing() {
+		return (this == objectNothing);
+	}
+
 	private AttributeArray() {
 	
 	}

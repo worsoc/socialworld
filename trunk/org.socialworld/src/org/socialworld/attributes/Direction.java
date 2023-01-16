@@ -38,12 +38,16 @@ public class Direction extends SimProperty {
 
 	private static Direction objectNothing;
 	
-	public  ISimProperty getObjectNothing() {
+	public static Direction getObjectNothing() {
 		if (objectNothing == null) {
 			objectNothing = new Direction();
 			objectNothing.setToObjectNothing();
 		}
 		return objectNothing;
+	}
+
+	public boolean checkIsObjectNothing() {
+		return (this == objectNothing);
 	}
 
 	private Direction() {

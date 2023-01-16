@@ -70,7 +70,7 @@ public abstract class State implements ISimProperty, ISavedValues {
 	}
 
 	protected final void setToObjectNothing() {
-		if (this == getObjectNothing()) {
+		if (checkIsObjectNothing()) {
 			isObjectNothing = true;
 		}
 	}
