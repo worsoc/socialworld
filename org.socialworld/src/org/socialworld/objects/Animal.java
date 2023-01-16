@@ -55,9 +55,9 @@ public abstract class Animal extends SimulationObject implements ISeer, IRunning
 	private StateAnimal state;
 
 	// add on states
-	private StateSeer stateSeer;
-	private StateBody stateBody;
-	private StateInventory stateInventory;
+	private StateSeer stateSeer = StateSeer.getObjectNothing();
+	private StateBody stateBody = StateBody.getObjectNothing();
+	private StateInventory stateInventory = StateInventory.getObjectNothing();
 	
 	private PathFinder pathFinder;
 

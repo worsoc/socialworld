@@ -25,7 +25,6 @@ package org.socialworld.objects.concrete.animals;
 import java.util.List;
 
 import org.socialworld.attributes.Direction;
-import org.socialworld.attributes.ISimProperty;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.attributes.percipience.PropsSeer;
@@ -93,7 +92,7 @@ public class StateSeer extends State {
 
 	private static StateSeer objectNothing;
 	
-	public  ISimProperty getObjectNothing() {
+	public static StateSeer getObjectNothing() {
 		if (objectNothing == null) {
 			objectNothing = new StateSeer();
 			objectNothing.setToObjectNothing();

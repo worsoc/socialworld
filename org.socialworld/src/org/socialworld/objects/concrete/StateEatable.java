@@ -24,7 +24,6 @@ package org.socialworld.objects.concrete;
 
 import java.util.List;
 
-import org.socialworld.attributes.ISimProperty;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.attributes.properties.NutrientSet;
@@ -104,7 +103,7 @@ public class StateEatable extends State {
 
 	private static StateEatable objectNothing;
 	
-	public  ISimProperty getObjectNothing() {
+	public static StateEatable getObjectNothing() {
 		if (objectNothing == null) {
 			objectNothing = new StateEatable();
 			objectNothing.setToObjectNothing();

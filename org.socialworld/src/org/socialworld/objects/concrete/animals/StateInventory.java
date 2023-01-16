@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.socialworld.actions.handle.Inventory;
 import org.socialworld.attributes.ISavedValues;
-import org.socialworld.attributes.ISimProperty;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.calculation.SimulationCluster;
@@ -80,7 +79,7 @@ public class StateInventory extends State {
 	
 	private static StateInventory objectNothing;
 	
-	public  ISimProperty getObjectNothing() {
+	public static StateInventory getObjectNothing() {
 		if (objectNothing == null) {
 			objectNothing = new StateInventory();
 			objectNothing.setToObjectNothing();

@@ -11,7 +11,7 @@ import org.socialworld.objects.concrete.animals.birds.Palaeognathae;
 
 public class Ostrich extends Palaeognathae implements IRunning{
 	
-	private StateRunning stateRunning;
+	private StateRunning stateRunning = StateRunning.getObjectNothing();
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// implementing IRunning ///////////////////////////////////

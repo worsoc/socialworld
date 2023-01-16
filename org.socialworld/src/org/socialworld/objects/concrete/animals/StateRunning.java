@@ -25,7 +25,6 @@ import java.util.List;
 
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.ISavedValues;
-import org.socialworld.attributes.ISimProperty;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
@@ -40,7 +39,7 @@ public class StateRunning extends State {
 
 	private double speed;
 	private int numberLegs;
-	private Direction directionRun;
+	private Direction directionRun = Direction.getObjectNothing();
 	
 	///////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////static instance for meta information    ///////////////////////////////
@@ -87,7 +86,7 @@ public class StateRunning extends State {
 
 	private static StateRunning objectNothing;
 	
-	public  ISimProperty getObjectNothing() {
+	public static StateRunning getObjectNothing() {
 		if (objectNothing == null) {
 			objectNothing = new StateRunning();
 			objectNothing.setToObjectNothing();
