@@ -23,7 +23,7 @@ public class StateComposition extends State {
 
 	public static final String METHODNAME_GET_MAIN_MATERIAL = "getMainMaterial";
 	
-	private MaterialSet materialSet;
+	private MaterialSet materialSet = MaterialSet.getObjectNothing();
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////static instance for meta information    ///////////////////////////////

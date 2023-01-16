@@ -138,7 +138,7 @@ public class TableStateComposition extends Table {
 	public MaterialSet getMaterialSetFromRow (int row) {
 		
 		int setID;
-		MaterialSet set = null;
+		MaterialSet set = MaterialSet.getObjectNothing();
 		if (row >= 0) {
 			TableMaterialSet tableSet = new TableMaterialSet();
 			setID = getMaterialSetID(row);

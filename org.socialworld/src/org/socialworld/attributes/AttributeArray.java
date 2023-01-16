@@ -80,7 +80,7 @@ public class AttributeArray extends SimProperty {
 
 	private static AttributeArray objectNothing;
 	
-	public  ISimProperty getObjectNothing() {
+	public static AttributeArray getObjectNothing() {
 		if (objectNothing == null) {
 			objectNothing = new AttributeArray();
 			objectNothing.setToObjectNothing();

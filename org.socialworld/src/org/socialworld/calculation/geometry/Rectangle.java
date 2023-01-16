@@ -25,7 +25,7 @@ import org.socialworld.attributes.Position;
 
 public class Rectangle {
 
-	private Position m;  
+	private Position m = Position.getObjectNothing();  
 	private Vector p1;
 	private Vector p2;
 	private Vector p3;

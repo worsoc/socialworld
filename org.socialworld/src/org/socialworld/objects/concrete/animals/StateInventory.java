@@ -25,7 +25,7 @@ import org.socialworld.tools.StringTupel;
 public class StateInventory extends State {
 
 	
-	private Inventory inventory;
+	private Inventory inventory = Inventory.getObjectNothing();
 	
 	///////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////static instance for meta information    ///////////////////////////////

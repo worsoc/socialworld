@@ -137,7 +137,7 @@ public class TableStateAppearance extends Table {
 	public ColourSet getColourSetFromRow (int row) {
 		
 		int setID;
-		ColourSet set = null;
+		ColourSet set = ColourSet.getObjectNothing();
 		if (row >= 0) {
 			TableColourSet tableSet = new TableColourSet();
 			setID = getColourSetID(row);

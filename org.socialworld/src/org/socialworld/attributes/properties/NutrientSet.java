@@ -23,7 +23,6 @@ package org.socialworld.attributes.properties;
 
 import java.util.List;
 
-import org.socialworld.attributes.ISimProperty;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.attributes.SimProperty;
@@ -59,7 +58,7 @@ public class NutrientSet extends PropPortionSet {
 
 	private static NutrientSet objectNothing;
 	
-	public  ISimProperty getObjectNothing() {
+	public static NutrientSet getObjectNothing() {
 		if (objectNothing == null) {
 			objectNothing = new NutrientSet();
 			objectNothing.setToObjectNothing();

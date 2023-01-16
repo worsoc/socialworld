@@ -185,7 +185,7 @@ public class Expression {
 					return calculation.copy(value);
 										
 				case attributeValue:
-					AttributeArray attributeArray;
+					AttributeArray attributeArray = AttributeArray.getObjectNothing();
 					attributeArray = (AttributeArray) getFromValueArrayList( arguments, Type.attributeArray, 1);
 					index = (int) value.getValue();
 					return calculation.createValue(

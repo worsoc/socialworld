@@ -58,7 +58,7 @@ public abstract class Event implements Comparable<Event> {
 	private int priority;
 	private SimulationObject causer;
 	private Time time;
-	private Position position;
+	private Position position = Position.getObjectNothing();
 
 	private IEventParam optionalParam;
 	private boolean hasOptionalParams = false;

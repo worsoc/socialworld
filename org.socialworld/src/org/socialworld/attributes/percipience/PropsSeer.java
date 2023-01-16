@@ -3,7 +3,6 @@ package org.socialworld.attributes.percipience;
 import java.util.List;
 
 import org.socialworld.attributes.ISavedValues;
-import org.socialworld.attributes.ISimProperty;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.SimProperty;
 import org.socialworld.calculation.SimulationCluster;
@@ -57,7 +56,7 @@ public class PropsSeer extends SimProperty {
 
 	private static PropsSeer objectNothing;
 	
-	public  ISimProperty getObjectNothing() {
+	public static PropsSeer getObjectNothing() {
 		if (objectNothing == null) {
 			objectNothing = new PropsSeer();
 			objectNothing.setToObjectNothing();

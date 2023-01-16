@@ -98,7 +98,7 @@ public class EventMaster extends SocialWorldThread {
 	/**
 	 * the event's position
 	 */
-	private Position eventPosition;
+	private Position eventPosition = Position.getObjectNothing();
 	
 	/**
 	 * the direction how the event has effects.
@@ -285,7 +285,7 @@ public class EventMaster extends SocialWorldThread {
 	 * @return 0 ... DON'T IGNORE : if the event may have effects to the candidate,
 	 * 			1 ... IGNORE: if the event has no effect to the candidate because of angle
 	 * 			2 ... IGNORE: if the event position is the same to candidate position
-	 * 			3 ... IGNORE: if the event direction is the 0-vector (0,0,0) (and the effect angle is not 360°)
+	 * 			3 ... IGNORE: if the event direction is the 0-vector (0,0,0) (and the effect angle is not 360ï¿½)
 	 * 			4 ... IGNORE: if there is no event direction ( ERROR!!!)
 	 *          -1 ... IGNORE: if the event has no effect to the candidate because of distance
 	 *                (and in consequence there are no further candidates with effect 
@@ -294,7 +294,7 @@ public class EventMaster extends SocialWorldThread {
 	 */
 	private int checkIgnoreCandidate(SimulationObject candidate) {
 		
-		Position position;
+		Position position = Position.getObjectNothing();
 		Vector direction;
 		double distance;
 		
