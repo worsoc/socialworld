@@ -257,7 +257,7 @@ public class ObjectMaster {
 		
 		theNextOne = next(simObjType);
 		
-		if (theNextOne != null) {
+		if (theNextOne.isSimulationObject()) {
 			theNextOne.refreshState();
 			return simObjType.getIndex();
 		}
@@ -274,7 +274,7 @@ public class ObjectMaster {
 		
 		theNextOne = this.simulationObjects.get(this.nextIndexForPerceive);
 		
-		if (theNextOne != null) {
+		if (theNextOne.isSimulationObject()) {
 			theNextOne.letBePerceived();
 		}
 
@@ -286,7 +286,7 @@ public class ObjectMaster {
 	}
 
 	private void addObjectToList(SimulationObject_Type simulationObjectType, SimulationObject object) {
-		// TODO (tyloesand) weitere Objekttypen hinzufügen
+		// TODO (tyloesand) weitere Objekttypen hinzufï¿½gen
 		switch (simulationObjectType) {
 		case animal:
 			this.animals.add((Animal)object);
@@ -360,10 +360,10 @@ public class ObjectMaster {
 			else
 				break;
 		default:
-			return null;
+			return NoSimulationObject.getObjectNothing() ;
 		}		
 		
-		return null;
+		return NoSimulationObject.getObjectNothing() ;
 		
 	}
 	

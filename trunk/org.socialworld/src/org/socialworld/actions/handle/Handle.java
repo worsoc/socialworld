@@ -35,23 +35,23 @@ import org.socialworld.objects.SimulationObject;
  * Die Klasse Handle ist von der abstrakten Klasse ActionPerformer abgeleitet.
  * 
  * Die Klasse Handle dient der Wirksamwerdung der Aktion,
- *  nämlich als Argument für das zur Aktion gehörende Ereignis.
+ *  nï¿½mlich als Argument fï¿½r das zur Aktion gehï¿½rende Ereignis.
  *
- *  In der Ausführungsmethode perform() werden 
+ *  In der Ausfï¿½hrungsmethode perform() werden 
  *   - die Richtung der Handhabe
- *   - die Intensität des Akteurs
- *   - die Intensität des Akteurs auf globaler Skala
+ *   - die Intensitï¿½t des Akteurs
+ *   - die Intensitï¿½t des Akteurs auf globaler Skala
  *   - der Gegenstand 1
  *   - der Gegenstand 2
- *   für den Standardzugriff aus dem Ereignis heraus bereitgestellt.
+ *   fï¿½r den Standardzugriff aus dem Ereignis heraus bereitgestellt.
  *   
  *  Im Falle einer Bewegung eines Objektes (Ziehen oder Schieben) wird KEIN Gegenstand 2 angegeben.
- *  Im Falle einer Berührung eines Objektes wird gar kein Gegenstand angegeben. 
- *   Die Richtung der Berührung ist entweder explizit angegeben 
+ *  Im Falle einer Berï¿½hrung eines Objektes wird gar kein Gegenstand angegeben. 
+ *   Die Richtung der Berï¿½hrung ist entweder explizit angegeben 
  *   oder sie wird aus der Richtung zum Zielobjekt ermittelt. 
  *  Im Falle einer Benutzung eines Objektes wird KEIN Gegenstand 2 angegeben.
  *  Im Falle einer gleichzeitigen Benutzung zweier Objekte werden alle 5 Eigenschaften angegeben.
- *  Im Falle einer Kombination zweier Gegenstände werden alle 5 Eigenschaften gesetzt.
+ *  Im Falle einer Kombination zweier Gegenstï¿½nde werden alle 5 Eigenschaften gesetzt.
  *  
  * @author Mathias Sikos
  *
@@ -132,17 +132,17 @@ public class Handle extends ActionPerformer {
 	    	SimulationObject target;
 	    	
 	    	target =  ((ActionHandle) this.getOriginalActionObject()).getItem1();
-	    	if (target != null) {
+	    	if (target.isSimulationObject()) {
 	    		targets.add(target);
 	    	}
 
 	    	target =  ((ActionHandle) this.getOriginalActionObject()).getItem2();
-	    	if (target != null) {
+	    	if (target.isSimulationObject()) {
 	    		targets.add(target);
 	    	}
 
 	    	target =  ((ActionHandle) this.getOriginalActionObject()).getTarget();
-	    	if (target != null) {
+	    	if (target.isSimulationObject()) {
 	    		targets.add(target);
 	    	}
 	    	
@@ -160,7 +160,7 @@ public class Handle extends ActionPerformer {
 		
 		switch (type) {
 		case touch:
-			if (originalAction.getTarget() != null)
+			if (originalAction.getTarget().isSimulationObject())
 				return HANDLEKIND_TOUCH_WITHTARGET;
 			else
 				return HANDLEKIND_TOUCH_WITHDIRECTION;
@@ -168,7 +168,7 @@ public class Handle extends ActionPerformer {
 			switch (mode) {
 			case useItemLeftHand:
 			case useItemRightHand:
-				if (originalAction.getTarget() != null)
+				if (originalAction.getTarget().isSimulationObject())
 					return HANDLEKIND_USE_WITHTARGET;
 				else
 					return HANDLEKIND_USE_WITHDIRECTION;

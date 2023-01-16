@@ -36,7 +36,7 @@ import org.socialworld.core.EventToTarget;
 import org.socialworld.core.EventType;
 import org.socialworld.core.IEventParam;
 import org.socialworld.objects.Animal;
-import org.socialworld.objects.Human;
+import org.socialworld.objects.NoSimulationObject;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.properties.IDrinkable;
 import org.socialworld.objects.properties.IEatable;
@@ -44,22 +44,22 @@ import org.socialworld.objects.properties.IEatable;
 /**
  * German:
  * Die Klasse ActionBodilyFunction ist von der abstrakten Klasse AbstractAction abgeleitet.
- * Alle Aktionsobjekte, die Schlafen beschreiben, gehören zu dieser Klasse.
+ * Alle Aktionsobjekte, die Schlafen beschreiben, gehï¿½ren zu dieser Klasse.
  * 
- * Die Ausführung der Aktion wird in der Klasse BodilyFunction geregelt, 
+ * Die Ausfï¿½hrung der Aktion wird in der Klasse BodilyFunction geregelt, 
  *   von der ein Objekt als Eigenschaft der Klasse ActionBodilyFunction abgelegt ist.
- * Zur Beschreibung des Schlafens führt die Klasse keine weiteren Eigenschaften.
+ * Zur Beschreibung des Schlafens fï¿½hrt die Klasse keine weiteren Eigenschaften.
  * 
  * Die Klasse ActionBodilyFunction dient der Verwaltung der Aktion.
- * Die zugehörige Klasse BodilyFunction dient der Wirksamwerdung der Aktion, 
- *  nämlich als Argument für das zur Aktion gehörende Event.
+ * Die zugehï¿½rige Klasse BodilyFunction dient der Wirksamwerdung der Aktion, 
+ *  nï¿½mlich als Argument fï¿½r das zur Aktion gehï¿½rende Event.
  *
- *  In der Ausführungsmethode perform() wird das Ausführungsobjekt der Klasse BodilyFunction erzeugt.
- *  Außerdem wird das Ereignis zur Aktion erzeugt, mit dem Ausführungsobjekt als Argument.
+ *  In der Ausfï¿½hrungsmethode perform() wird das Ausfï¿½hrungsobjekt der Klasse BodilyFunction erzeugt.
+ *  Auï¿½erdem wird das Ereignis zur Aktion erzeugt, mit dem Ausfï¿½hrungsobjekt als Argument.
  *  Das Ereignis wird in die Ereignisverwaltung (EventMaster) eingetragen.
  *  
  *  Der Name des Ereignis (EventType) 
- *   wird in Abhängigkeit von Aktionsmodus (ActionMode) ermittelt.
+ *   wird in Abhï¿½ngigkeit von Aktionsmodus (ActionMode) ermittelt.
  *   
  *  Eine Aktion der Klasse ActionBodilyFunction ist 
  *  a) Schlafen
@@ -74,7 +74,7 @@ import org.socialworld.objects.properties.IEatable;
 public class ActionBodilyFunction extends AbstractAction {
 
 	BodilyFunction bodilyFunction;
-	private SimulationObject item = null;
+	private SimulationObject item = NoSimulationObject.getObjectNothing();
 	
 	public ActionBodilyFunction(ValueArrayList actionProperties) {
 		super(actionProperties);
@@ -179,7 +179,7 @@ public class ActionBodilyFunction extends AbstractAction {
 	}
 	
 	public Value getItemAsValue(String valueName) {
-		if (this.item == null) {
+		if (!this.item.isSimulationObject()) {
 			return new Value();
 		}
 		else {
@@ -188,7 +188,7 @@ public class ActionBodilyFunction extends AbstractAction {
 	}
 
 	public Value getItemDrinkAsValue(String valueName) { 
-		if (this.item == null) {
+		if (!this.item.isSimulationObject()) {
 			return new Value();
 		}
 		else {
@@ -202,7 +202,7 @@ public class ActionBodilyFunction extends AbstractAction {
 	}
 
 	public Value getItemEatAsValue(String valueName) { 
-		if (this.item == null) {
+		if (!this.item.isSimulationObject()) {
 			return new Value();
 		}
 		else {

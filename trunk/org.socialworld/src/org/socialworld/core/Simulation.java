@@ -188,14 +188,14 @@ public class Simulation extends SocialWorldThread {
 		int incompleteObjectIndex;
 		int objectID;
 		HiddenSimulationObject hiddenObject;
-		SimulationObject createdObject = null;
-		
+		SimulationObject createdObject = NoSimulationObject.getObjectNothing() ;
+	
 		incompleteObjectIndex = this.objectMaster.createSimulationObject(simulationObjectType);
 		if (incompleteObjectIndex >= 0) {
 			objectID = this.objectMaster.getObjectIDForIncompleteObjectIndex(incompleteObjectIndex);
 			if (objectID > 0) {
 				createdObject = this.objectMaster.getObjectForIncompleteObjectIndex(incompleteObjectIndex, objectID);
-				if (createdObject != null) {
+				if (createdObject.isSimulationObject()) {
 					this.searchByPosition.addObject(createdObject);
 				}
 				hiddenObject = this.objectMaster.getHiddenObjectForIncompleteObjectIndex(incompleteObjectIndex, objectID);

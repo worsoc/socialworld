@@ -57,6 +57,9 @@ public abstract class God extends SimulationObject {
 /////////////////////////    creating instance for simulation    //////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
+	@Override
+	public final boolean isSimulationObject() {return true;}
+
 	protected SimulationObject_Type getSimObjectType() {
 		return SimulationObject_Type.god;
 	}

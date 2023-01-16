@@ -45,31 +45,31 @@ import org.socialworld.objects.SimulationObject;
  * 
  * German:
  * Die Klasse ActionHandle ist von der abstrakten Klasse AbstractAction abgeleitet.
- * Alle Aktionsobjekte, die Handhabe mit einem Simulationsobjekt beschreiben, gehören zu dieser Klasse.
- * Zur Beschreibung einer Handhabe führt die Klasse die zusätzlichen Eigenschaften
- * für die verwendeten Gegenstände aus dem Inventar , das Zielobjekt und die Richtung der Tätigkeit.
- * Die Ausführung der Aktion wird in der Klasse Handle geregelt, 
+ * Alle Aktionsobjekte, die Handhabe mit einem Simulationsobjekt beschreiben, gehï¿½ren zu dieser Klasse.
+ * Zur Beschreibung einer Handhabe fï¿½hrt die Klasse die zusï¿½tzlichen Eigenschaften
+ * fï¿½r die verwendeten Gegenstï¿½nde aus dem Inventar , das Zielobjekt und die Richtung der Tï¿½tigkeit.
+ * Die Ausfï¿½hrung der Aktion wird in der Klasse Handle geregelt, 
  * von der ein Objekt als Eigenschaft der Klasse ActionHandle abgelegt ist.
  * 
  * Die Klasse ActionHandle dient der Verwaltung der Aktion.
- * Die zugehörige Klasse Handle dient der Ausführung der Aktion, 
- *  nämlich als Argument für das zur Aktion gehörende Event.
+ * Die zugehï¿½rige Klasse Handle dient der Ausfï¿½hrung der Aktion, 
+ *  nï¿½mlich als Argument fï¿½r das zur Aktion gehï¿½rende Event.
  *
- *  In der Ausführungsmethode perform() wird für den Fall einer Handhabe mit Gegenständen,
- *   der Gegenstand oder die Gegenstände der Hände des Akteurs ermittelt und in den Instanzvariablen item1 und item2 abgelegt. 
- *  Danach wird das Ausführungsobjekt der Klasse Handle erzeugt.
- *  Schließlich wird das Ereignis zur Aktion erzeugt, mit dem Ausführungsobjekt als Argument.
+ *  In der Ausfï¿½hrungsmethode perform() wird fï¿½r den Fall einer Handhabe mit Gegenstï¿½nden,
+ *   der Gegenstand oder die Gegenstï¿½nde der Hï¿½nde des Akteurs ermittelt und in den Instanzvariablen item1 und item2 abgelegt. 
+ *  Danach wird das Ausfï¿½hrungsobjekt der Klasse Handle erzeugt.
+ *  Schlieï¿½lich wird das Ereignis zur Aktion erzeugt, mit dem Ausfï¿½hrungsobjekt als Argument.
  *  Das Ereignis wird in die Ereignisverwaltung (EventMaster) eingetragen.
  *  
  *  Der Name des Ereignis (EventType) 
- *   wird in Abhängigkeit des Aktionsmodus (ActionMode) ermittelt.
+ *   wird in Abhï¿½ngigkeit des Aktionsmodus (ActionMode) ermittelt.
  *   
  *  Eine Aktion der Klasse ActionHandle ist 
- *  a) eine Handhabe mit dem/den Gegenstand/Gegenständen in der linken oder rechten Hand, oder beide
+ *  a) eine Handhabe mit dem/den Gegenstand/Gegenstï¿½nden in der linken oder rechten Hand, oder beide
  *  oder
  *  b) das Ziehen oder Schieben eines Gegenstandes/Lebewesen, der/das sich nicht im Besitz des Akteurs befindet
  *  oder
- *  c) das Berühren eines Gegenstandes/Lebewesen, der/das sich nicht im Besitz des Akteurs befindet
+ *  c) das Berï¿½hren eines Gegenstandes/Lebewesen, der/das sich nicht im Besitz des Akteurs befindet
  *
  */
 public class ActionHandle extends AbstractAction {
@@ -130,41 +130,41 @@ public class ActionHandle extends AbstractAction {
 		case useItemLeftHand:
 			item1 = (SimulationObject) ((Human) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_leftHand, PropertyName.inventory_leftHand.toString()).getValue();
 // vormals:			item1 = ((Human) actor).getLeftHandItem();
-			if (item1 == null) return;
+			if (!this.item1.isSimulationObject()) return;
 			break;
 		case useItemRightHand:
 			item1 = (SimulationObject) ((Human) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_rightHand, PropertyName.inventory_rightHand.toString()).getValue();
 //			item1 = ((Human) actor).getRightHandItem();
-			if (item1 == null) return;
+			if (!this.item1.isSimulationObject()) return;
 			break;
 		case useTwoItems:
 			item1 = (SimulationObject) ((Human) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_rightHand, PropertyName.inventory_rightHand.toString()).getValue();
 			item2 = (SimulationObject) ((Human) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_leftHand, PropertyName.inventory_leftHand.toString()).getValue();
 //			item1 = ((Human) actor).getRightHandItem();
 //			item2 = ((Human) actor).getLeftHandItem();
-			if (item1 == null | item2 == null) return;
+			if (!this.item1.isSimulationObject() | !this.item2.isSimulationObject()) return;
 			break;
 		case combineItems_AddLeftToRight:
 			item1 = (SimulationObject) ((Human) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_rightHand, PropertyName.inventory_rightHand.toString()).getValue();
 			item2 = (SimulationObject) ((Human) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_leftHand, PropertyName.inventory_leftHand.toString()).getValue();
 //			item1 = ((Human) actor).getRightHandItem();
 //			item2 = ((Human) actor).getLeftHandItem();
-			if (item1 == null | item2 == null) return;
+			if (!this.item1.isSimulationObject() | !this.item2.isSimulationObject()) return;
 			break;
 		case combineItems_AddRightToLeft:
 			item1 = (SimulationObject) ((Human) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_leftHand, PropertyName.inventory_leftHand.toString()).getValue();
 			item2 = (SimulationObject) ((Human) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_rightHand, PropertyName.inventory_rightHand.toString()).getValue();
 //			item1 = ((Human) actor).getLeftHandItem();
 //			item2 = ((Human) actor).getRightHandItem();
-			if (item1 == null | item2 == null) return;
+			if (!this.item1.isSimulationObject() | !this.item2.isSimulationObject()) return;
 			break;
 		case pull:
 		case push:
-			if (this.target == null) return;
+			if (!this.target.isSimulationObject()) return;
 			break;
 		case hand:
 		case foot:
-			if (this.target == null) {
+			if (!this.target.isSimulationObject()) {
 				withEventToTarget = false;
 			}
 			break;
@@ -286,7 +286,7 @@ public class ActionHandle extends AbstractAction {
 	 */
 	public Value getDirectionAsValue(String valueName) {
 		Vector direction;
-		if (this.target == null) {
+		if (!this.target.isSimulationObject()) {
 			direction = new Vector(this.direction);
 		}
 		else {

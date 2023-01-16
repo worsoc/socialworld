@@ -36,22 +36,22 @@ import org.socialworld.objects.SimulationObject;
  * Die Klasse Attack ist von der abstrakten Klasse ActionPerformer abgeleitet.
   * 
  * Die Klasse Attack dient der Wirksamwerdung der Aktion,
- *  nämlich als Argument für das zur Aktion gehörende Ereignis.
+ *  nï¿½mlich als Argument fï¿½r das zur Aktion gehï¿½rende Ereignis.
  *
- *  In der Ausführungsmethode perform() werden für den Fall eines Waffenangriffs/Faustschlags
+ *  In der Ausfï¿½hrungsmethode perform() werden fï¿½r den Fall eines Waffenangriffs/Faustschlags
  *   - die Richtung des Angriffs
- *   - die Intensität des Akteurs
- *   - die Intensität des Akteurs auf globaler Skala
+ *   - die Intensitï¿½t des Akteurs
+ *   - die Intensitï¿½t des Akteurs auf globaler Skala
  *   - die Waffe (das als Waffe verwendete Objekt)
  *   - die Richtung (Ausrichtung) der Brust
  *   - die Blickrichtung
- *   für den Standardzugriff aus dem Ereignis heraus bereitgestellt.
+ *   fï¿½r den Standardzugriff aus dem Ereignis heraus bereitgestellt.
  *   
-*  In der Ausführungsmethode perform() werden für den Fall eines tierischen Angriffs
+*  In der Ausfï¿½hrungsmethode perform() werden fï¿½r den Fall eines tierischen Angriffs
  *   - die Richtung des Angriffs
- *   - die Intensität des Akteurs
- *   - die Intensität des Akteurs auf globaler Skala
- *   für den Standardzugriff aus dem Ereignis heraus bereitgestellt.
+ *   - die Intensitï¿½t des Akteurs
+ *   - die Intensitï¿½t des Akteurs auf globaler Skala
+ *   fï¿½r den Standardzugriff aus dem Ereignis heraus bereitgestellt.
  *   
  * 
  * @author Mathias Sikos
@@ -145,7 +145,7 @@ public class Attack extends ActionPerformer {
     	SimulationObject target;
     	
     	target = (SimulationObject) ((ActionAttack) this.getOriginalActionObject()).getWeapon();
-    	if (target != null) {
+    	if (target.isSimulationObject()) {
     		targets.add(target);
     	}
     	

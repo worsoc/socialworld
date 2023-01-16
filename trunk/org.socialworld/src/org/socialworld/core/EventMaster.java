@@ -260,7 +260,7 @@ public class EventMaster extends SocialWorldThread {
 
 		Simulation simulation = SocialWorld.getCurrent().getSimulation();
 		candidate = simulation.getFirstByPosition(this.eventPosition );
-		while (candidate != null) {
+		while (candidate.isSimulationObject()) {
 			
 			ignoreCandidate = checkIgnoreCandidate(candidate);
 			if ( ignoreCandidate == 0) 	candidates.add(candidate);
@@ -319,9 +319,9 @@ public class EventMaster extends SocialWorldThread {
 				Direction directionEvent;
 				if (this.eventDirection != null) {
 					directionEvent = (Direction) this.eventDirection.getValue();
-					if (directionEvent == null) {
-						// TODO directionEvent == null: that shouldn't be possible
-						System.out.println("EventMaster.checkIgnoreCandidate(): this.eventDirection.getValue() is null ");
+					if (directionEvent.isObjectNothing()) {
+						// TODO directionEvent is not object: that shouldn't be possible
+						System.out.println("EventMaster.checkIgnoreCandidate(): this.eventDirection.getValue() is no direction object ");
 						return 4;
 					}
 					vectorDirectionEvent = directionEvent.getVector(SimulationCluster.event);

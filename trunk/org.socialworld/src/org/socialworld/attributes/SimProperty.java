@@ -57,7 +57,7 @@ public abstract class SimProperty implements ISimProperty, ISavedValues {
 		}
 	}
 
-	protected final boolean isObjectNothing() {
+	public final boolean isObjectNothing() {
 		return this.isObjectNothing;
 	}
 	

@@ -74,7 +74,7 @@ public class Equip extends ActionPerformer {
     	SimulationObject target;
     	
     	target =  ((ActionEquip) this.getOriginalActionObject()).getItem();
-    	if (target != null) {
+    	if (target.isSimulationObject()) {
     		targets.add(target);
     	}
     	
