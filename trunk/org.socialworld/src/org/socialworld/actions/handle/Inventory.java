@@ -23,7 +23,6 @@ package org.socialworld.actions.handle;
 
 import java.util.List;
 
-import org.socialworld.attributes.ISimProperty;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.attributes.SimProperty;
@@ -147,7 +146,7 @@ public class Inventory extends SimProperty {
 
 	private static Inventory objectNothing;
 	
-	public  ISimProperty getObjectNothing() {
+	public static Inventory getObjectNothing() {
 		if (objectNothing == null) {
 			objectNothing = new Inventory();
 			objectNothing.setToObjectNothing();

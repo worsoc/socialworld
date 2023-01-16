@@ -26,7 +26,7 @@ import org.socialworld.objects.Human;
 public class Acquaintance {
 	private Human human;
 	
-	AttributeArray attributes;
+	AttributeArray attributes = AttributeArray.getObjectNothing();
 	
 	public Acquaintance(Human human){
 		this.human = human;

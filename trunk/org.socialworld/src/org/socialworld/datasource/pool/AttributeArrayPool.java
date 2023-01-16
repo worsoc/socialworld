@@ -83,7 +83,7 @@ public class AttributeArrayPool {
 		
 		
 		int values[];
-		AttributeArray array;
+		AttributeArray array = AttributeArray.getObjectNothing();
 		
 		table = new TablePoolAttribute();
 		

@@ -71,7 +71,7 @@ public class GaussPoolAttributeArray {
 	
 	private void loadTestData() {
 		
-		AttributeArray attribs;
+		AttributeArray attribs = AttributeArray.getObjectNothing();
 		
 		int j=0;
 		for (int i = -CAPACITY_GPAA_ARRAY + 1; i < CAPACITY_GPAA_ARRAY; i++) {
@@ -94,7 +94,7 @@ public class GaussPoolAttributeArray {
 		int gauss_index;
 		int aa_id;
 		
-		AttributeArray array;
+		AttributeArray array = AttributeArray.getObjectNothing();
 		
 		table = new TableGaussAA();
 		

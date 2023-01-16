@@ -183,7 +183,7 @@ public class LoadHuman extends LoadAnimal {
 			hiddenHuman.setLastSaidSentence(lastSentence);
 		}
 		if (rowTableInventory >= 0) {
-			Inventory inventory;
+			Inventory inventory = Inventory.getObjectNothing();
 			boolean inventoryComplete = true;
 			
 			int leftHandID;

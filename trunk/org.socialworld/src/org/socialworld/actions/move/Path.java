@@ -28,21 +28,21 @@ import org.socialworld.knowledge.KnownPaths;
 
 /**
  * German:
- * Die Klasse Path enthält eine Wegbeschreibung, 
- *  über welche Zwischenpositionen jemand vom Startpunkt zum Endpunkt (Zielposition) gelangt.
+ * Die Klasse Path enthï¿½lt eine Wegbeschreibung, 
+ *  ï¿½ber welche Zwischenpositionen jemand vom Startpunkt zum Endpunkt (Zielposition) gelangt.
  *  
- * Ein Index zeigt an, auf welcher Etappe (Teilstück des Pfades) sich das Objekt befindet.
+ * Ein Index zeigt an, auf welcher Etappe (Teilstï¿½ck des Pfades) sich das Objekt befindet.
  * 
- * Es gibt eine Kennung, die angibt, ob der Pfad komplett bekannt ist oder ob es unbekannte Teilstücke gibt.
+ * Es gibt eine Kennung, die angibt, ob der Pfad komplett bekannt ist oder ob es unbekannte Teilstï¿½cke gibt.
  * 
- * Die Beschreibung enthält außerdem die gesamte Weglänge.
+ * Die Beschreibung enthï¿½lt auï¿½erdem die gesamte Weglï¿½nge.
  * 
- * Außerdem gibt es eine Referenz auf die Wissensbasis des Objektes (KnownPaths),
- *  über die die Wissensbasis bei Nutzung des Pfades aktualisiert wird.
+ * Auï¿½erdem gibt es eine Referenz auf die Wissensbasis des Objektes (KnownPaths),
+ *  ï¿½ber die die Wissensbasis bei Nutzung des Pfades aktualisiert wird.
  *
  * Weiterhin werden zu einem Pfad die Kindpfade angegeben.
- *  Dies sind die beiden Pfade, aus denen der neue Pfad durch Verknüpfung entstanden ist.
- *   Durch rekursive Aufrufe kann die Aktualisierung der Wissensbasis auch für die Teilabschnitte realisiert werden.
+ *  Dies sind die beiden Pfade, aus denen der neue Pfad durch Verknï¿½pfung entstanden ist.
+ *   Durch rekursive Aufrufe kann die Aktualisierung der Wissensbasis auch fï¿½r die Teilabschnitte realisiert werden.
  *
  * @author Mathias Sikos
  *
@@ -51,8 +51,8 @@ public class Path {
 	public static final int LOCATION_BASE25_ACCURACY = 7;
 	private static final int STOP_CHILD_INCREMETUSAGE_CALL = 10;
 	
-	private Position start;
-	private Position end;
+	private Position start = Position.getObjectNothing();
+	private Position end = Position.getObjectNothing();
 
 	private ArrayList<Position> points;
 	int indexPointToPassNext = 0;

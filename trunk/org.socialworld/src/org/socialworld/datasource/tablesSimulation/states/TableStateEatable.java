@@ -184,7 +184,7 @@ public class TableStateEatable extends Table {
 	public NutrientSet getNutrientSetFromRow (int row) {
 		
 		int setID;
-		NutrientSet set = null;
+		NutrientSet set = NutrientSet.getObjectNothing();
 		if (row >= 0) {
 			TableNutrientSet tableSet = new TableNutrientSet();
 			setID = getNutrientSetID(row);
@@ -196,7 +196,7 @@ public class TableStateEatable extends Table {
 	public TasteSet getTasteSetFromRow (int row) {
 		
 		int setID;
-		TasteSet set = null;
+		TasteSet set = TasteSet.getObjectNothing();
 		if (row >= 0) {
 			TableTasteSet tableSet = new TableTasteSet();
 			setID = getTasteSetID(row);

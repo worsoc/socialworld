@@ -43,8 +43,8 @@ import org.socialworld.tools.StringTupel;
 
 public class StateSeer extends State {
 
-	private Direction directionView ;
-	private PropsSeer propsSeer;
+	private Direction directionView = Direction.getObjectNothing();
+	private PropsSeer propsSeer = PropsSeer.getObjectNothing();
 
 	private int bestPercipiencePerpendicular;
 

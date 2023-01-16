@@ -45,7 +45,7 @@ public class Percipience {
 	
 	private PercipienceType type;
 	
-	private Position position;
+	private Position position = Position.getObjectNothing();
 	private Vector cuboid;
 	
 	private Visibility visibility;

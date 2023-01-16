@@ -216,7 +216,7 @@ public class TableStateSeer extends Table {
 	public PropsSeer getPropsSeerFromRow (int row) {
 		
 		int id;
-		PropsSeer propsSeer = null;
+		PropsSeer propsSeer = PropsSeer.getObjectNothing();
 		if (row >= 0) {
 			TablePropsSeer tablePropsSeer = new TablePropsSeer();
 			id = getPropsSeerID(row);

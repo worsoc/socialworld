@@ -135,7 +135,7 @@ public class ObjectByPositionSearch {
 		ObjectByPositionSearch_Nodes nodes;
 
 		int objectID;
-		Position position;
+		Position position = Position.getObjectNothing();
 		int x;
 		int y;
 		

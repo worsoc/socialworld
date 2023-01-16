@@ -56,8 +56,8 @@ public class StateEatable extends State {
 	public static final String METHODNAME_SET_NUTRIENT_SET = "setNutrientSet";
 	public static final String METHODNAME_SET_TASTE_SET = "setTasteSet";
 
-	private NutrientSet nutrientSet;
-	private TasteSet tasteSet;
+	private NutrientSet nutrientSet = NutrientSet.getObjectNothing();
+	private TasteSet tasteSet = TasteSet.getObjectNothing();
 	
 	///////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////static instance for meta information    ///////////////////////////////

@@ -122,9 +122,9 @@ public class PositionCalculator extends SocialWorldThread {
 			EventType eventType;
 			
 			
-			Position positionOriginal;
+			Position positionOriginal = Position.getObjectNothing();
 			Vector position;
-			Position newPosition;
+			Position newPosition = Position.getObjectNothing();
 			
 			Direction directionMoveObject;
 			Vector vectorMoveObject;

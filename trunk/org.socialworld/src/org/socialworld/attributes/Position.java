@@ -99,7 +99,7 @@ public class Position extends SimProperty {
 
 	private static Position objectNothing;
 	
-	public  ISimProperty getObjectNothing() {
+	public static Position getObjectNothing() {
 		if (objectNothing == null) {
 			objectNothing = new Position();
 			objectNothing.setToObjectNothing();

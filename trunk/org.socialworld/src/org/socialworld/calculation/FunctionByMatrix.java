@@ -89,8 +89,8 @@ public class FunctionByMatrix extends FunctionBase {
 		switch (arguments.get(0).getType() ) {
 		
 			case attributeArray:
-				AttributeArray attributesOld;
-				AttributeArray attributesNew;
+				AttributeArray attributesOld = AttributeArray.getObjectNothing();
+				AttributeArray attributesNew = AttributeArray.getObjectNothing();
 				attributesOld = (AttributeArray) arguments.get(0).getValue();
 				
 				int calculationMode = (int) arguments.get(1).getValue();

@@ -42,8 +42,6 @@ import org.socialworld.knowledge.KnownPathsPool;
 import org.socialworld.knowledge.LastPerceivedObjects;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenAnimal;
-import org.socialworld.objects.concrete.eatable.fruits.Apple;
-import org.socialworld.objects.concrete.spells.Lightning;
 import org.socialworld.tools.Generation;
 import org.socialworld.tools.StringTupel;
 
@@ -56,14 +54,14 @@ public class StateAnimal extends StateSimulationObject {
 	private final AttributeArray attributes;
 	private FunctionByMatrix attributeCalculatorMatrix;
 
-	private Direction directionChest;
-	private Direction directionActiveMove;
+	private Direction directionChest = Direction.getObjectNothing();
+	private Direction directionActiveMove = Direction.getObjectNothing();
 
 	private LastPerceivedObjects lastPerceivedObjects;
 	protected Knowledge knowledge;
 	private KnownPathsPool knownPathsPool;
 
-	private Inventory inventory;
+	private Inventory inventory = Inventory.getObjectNothing();
 	
 	private GrantedAccessToProperty grantAccessToPropertyAttributes[];
 	private GrantedAccessToProperty grantAccessToPropertyAction[];

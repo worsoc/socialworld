@@ -45,32 +45,32 @@ import org.socialworld.objects.access.HiddenAnimal;
  * 
  * German:
  * Die Klasse ActionMove ist von der abstrakten Klasse AbstractAction abgeleitet.
- * Alle Aktionsobjekte, die Bewegung (also Positionsänderung) beschreiben, gehören zu dieser Klasse.
- * Zur Beschreibung der Bewegung führt die Klasse die zusätzlichen Eigenschaften
- *   Anzahl der Zeiteinheiten für die Fortsetzung der Bewegung,
+ * Alle Aktionsobjekte, die Bewegung (also Positionsï¿½nderung) beschreiben, gehï¿½ren zu dieser Klasse.
+ * Zur Beschreibung der Bewegung fï¿½hrt die Klasse die zusï¿½tzlichen Eigenschaften
+ *   Anzahl der Zeiteinheiten fï¿½r die Fortsetzung der Bewegung,
  *   die Kennung, ob es sich um den ersten Schritt handelt,
  *   den Pfad, dem entlang die Bewegung vorgenommen wird,
  *   die Position, an dem die Bewegung abgeschlossen ist,
  *   die Gesamtrichtung der Bewegung und
  *   die Richtung eines Teilsbschnittes.
- * Die Ausführung der Aktion wird in der Klasse Move geregelt, 
+ * Die Ausfï¿½hrung der Aktion wird in der Klasse Move geregelt, 
  * von der ein Objekt als Eigenschaft der Klasse ActionMove abgelegt ist.
  * 
  * Die Klasse ActionMove dient der Verwaltung der Aktion.
- * Die zugehörige Klasse Move dient der Wirksamwerdung der Aktion, 
- *  nämlich als Argument für das zur Aktion gehörende Event.
+ * Die zugehï¿½rige Klasse Move dient der Wirksamwerdung der Aktion, 
+ *  nï¿½mlich als Argument fï¿½r das zur Aktion gehï¿½rende Event.
  *
- *  In der Ausführungsmethode perform() werden Pfad, Richtungen und die weitern Eigenschaften
+ *  In der Ausfï¿½hrungsmethode perform() werden Pfad, Richtungen und die weitern Eigenschaften
  *    in den Instanzvariablen abgelegt. 
- *  Falls es sich um den ersten Schritt handelt, wird das Ausführungsobjekt der Klasse Move erzeugt,
+ *  Falls es sich um den ersten Schritt handelt, wird das Ausfï¿½hrungsobjekt der Klasse Move erzeugt,
  *  andernfalls existiert es bereits.
- *  Schließlich wird das Ereignis zur Aktion erzeugt, mit dem Ausführungsobjekt als Argument.
+ *  Schlieï¿½lich wird das Ereignis zur Aktion erzeugt, mit dem Ausfï¿½hrungsobjekt als Argument.
  *  Das Ereignis wird in die Ereignisverwaltung (EventMaster) eingetragen.
  *  
- *  Ist ein Pfad abgeschlossen, wird das Wissen über ihn beim Akteur abgelegt/angepasst.
+ *  Ist ein Pfad abgeschlossen, wird das Wissen ï¿½ber ihn beim Akteur abgelegt/angepasst.
  *  
  *  Der Name des Ereignis (EventType) 
- *   wird in Abhängigkeit von Aktionsmodus (ActionMode) ermittelt.
+ *   wird in Abhï¿½ngigkeit von Aktionsmodus (ActionMode) ermittelt.
  *   
  *  Eine Aktion der Klasse ActionMove ist 
  *  a) die Bewegung hin zu einer Zielposition (hergeleitet Richtung)
@@ -86,7 +86,7 @@ public class ActionMove extends AbstractAction {
 	private boolean firstPerforming = true;
 	
 	private Path path;
-	private Position end;
+	private Position end = Position.getObjectNothing();
 	
 	private Vector direction;
 	

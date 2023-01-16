@@ -55,7 +55,7 @@ public abstract class StateSimulationObject extends ListenedBase {
 	
 	private List<State> stateAddOns;
 	
-	private 	Position 		position;
+	private 	Position 		position = Position.getObjectNothing();
 	private		Direction	 directionMove;
 	
 	private ConnectionList connections;

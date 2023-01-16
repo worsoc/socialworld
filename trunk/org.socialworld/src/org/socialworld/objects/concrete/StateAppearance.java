@@ -43,7 +43,7 @@ public class StateAppearance extends State {
 
 	public static final String METHODNAME_GET_MAIN_COLOR = "getMainColour";
 
-	private ColourSet colourSet;
+	private ColourSet colourSet = ColourSet.getObjectNothing();
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////  static instance for meta information    ///////////////////////////////
