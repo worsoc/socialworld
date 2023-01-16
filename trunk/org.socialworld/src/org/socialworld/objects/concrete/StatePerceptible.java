@@ -23,7 +23,6 @@ package org.socialworld.objects.concrete;
 
 import java.util.List;
 
-import org.socialworld.attributes.ISimProperty;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
@@ -90,7 +89,7 @@ public class StatePerceptible extends State {
 
 	private static StatePerceptible objectNothing;
 	
-	public  ISimProperty getObjectNothing() {
+	public static StatePerceptible getObjectNothing() {
 		if (objectNothing == null) {
 			objectNothing = new StatePerceptible();
 			objectNothing.setToObjectNothing();

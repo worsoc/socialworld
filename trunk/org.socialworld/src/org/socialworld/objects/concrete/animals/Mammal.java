@@ -40,7 +40,7 @@ import org.socialworld.tools.StringTupel;
  */
 public abstract class Mammal extends Animal implements IRunning{
 
-	private StateRunning stateRunning;
+	private StateRunning stateRunning = StateRunning.getObjectNothing();
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////meta information    ////////////////////////////////////

@@ -10,7 +10,7 @@ import org.socialworld.objects.concrete.animals.StateRunning;
 
 public class Husky extends Dog implements IRunning {
 	
-	private StateRunning stateRunning;
+	private StateRunning stateRunning = StateRunning.getObjectNothing();
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// implementing IRunning ///////////////////////////////////

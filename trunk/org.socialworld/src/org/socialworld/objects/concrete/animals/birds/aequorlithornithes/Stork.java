@@ -16,8 +16,8 @@ import org.socialworld.objects.concrete.animals.birds.Aequorlithornithes;
 public class Stork extends Aequorlithornithes implements IFlying , IRunning{
 
 	// add on states
-	private StateFlying stateFlying;
-	private StateRunning stateRunning;
+	private StateFlying stateFlying = StateFlying.getObjectNothing();
+	private StateRunning stateRunning = StateRunning.getObjectNothing();
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// implementing IFlying ///////////////////////////////////

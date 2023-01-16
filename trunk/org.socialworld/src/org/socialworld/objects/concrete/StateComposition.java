@@ -4,7 +4,6 @@ package org.socialworld.objects.concrete;
 import java.util.List;
 
 import org.socialworld.attributes.ISavedValues;
-import org.socialworld.attributes.ISimProperty;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.properties.MaterialSet;
 import org.socialworld.calculation.SimulationCluster;
@@ -68,7 +67,7 @@ public class StateComposition extends State {
 
 	private static StateComposition objectNothing;
 	
-	public  ISimProperty getObjectNothing() {
+	public static StateComposition getObjectNothing() {
 		if (objectNothing == null) {
 			objectNothing = new StateComposition();
 			objectNothing.setToObjectNothing();

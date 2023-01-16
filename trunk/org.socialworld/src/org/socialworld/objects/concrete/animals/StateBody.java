@@ -3,7 +3,6 @@ package org.socialworld.objects.concrete.animals;
 import java.util.List;
 
 import org.socialworld.attributes.ISavedValues;
-import org.socialworld.attributes.ISimProperty;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.properties.Colour;
 import org.socialworld.calculation.SimulationCluster;
@@ -67,7 +66,7 @@ public class StateBody extends State {
 
 	private static StateBody objectNothing;
 	
-	public  ISimProperty getObjectNothing() {
+	public static StateBody getObjectNothing() {
 		if (objectNothing == null) {
 			objectNothing = new StateBody();
 			objectNothing.setToObjectNothing();
