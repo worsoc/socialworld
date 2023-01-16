@@ -23,6 +23,7 @@ package org.socialworld.attributes.properties;
 
 import java.util.List;
 
+import org.socialworld.attributes.ISimProperty;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.attributes.SimProperty;
@@ -48,6 +49,20 @@ public class MaterialSet extends PropPortionSet {
 			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}
 		return listOfPropertyMetaInfo;
+	}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+///////////// object nothing (abstract method from ISimProperty)    ///////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	private static MaterialSet objectNothing;
+	
+	public  ISimProperty getObjectNothing() {
+		if (objectNothing == null) {
+			objectNothing = new MaterialSet();
+			objectNothing.setToObjectNothing();
+		}
+		return objectNothing;
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////

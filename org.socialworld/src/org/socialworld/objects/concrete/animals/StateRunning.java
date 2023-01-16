@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.ISavedValues;
+import org.socialworld.attributes.ISimProperty;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
@@ -78,6 +79,24 @@ public class StateRunning extends State {
 		listOfResultingKFCs.add(resultingKFCs[indexAdd]);
 		}
 		return listOfResultingKFCs;
+	}
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+///////////// object nothing (abstract method from ISimProperty)    ///////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	private static StateRunning objectNothing;
+	
+	public  ISimProperty getObjectNothing() {
+		if (objectNothing == null) {
+			objectNothing = new StateRunning();
+			objectNothing.setToObjectNothing();
+		}
+		return objectNothing;
+	}
+	
+	private StateRunning() {
+	
 	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////////

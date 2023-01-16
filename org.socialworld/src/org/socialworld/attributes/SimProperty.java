@@ -38,6 +38,8 @@ import org.socialworld.tools.StringTupel;
 
 public abstract class SimProperty implements ISimProperty, ISavedValues {
 
+	private boolean isObjectNothing = false;
+	
 	private PropertyName propertyName = PropertyName.unknown;
 	private PropertyProtection protection;
 
@@ -47,6 +49,16 @@ public abstract class SimProperty implements ISimProperty, ISavedValues {
 
 	protected SimProperty(PropertyProtection protectionOriginal, SimulationCluster clusterNew) {
 		this.protection = new PropertyProtection(protectionOriginal, clusterNew, this);
+	}
+	
+	protected final void setToObjectNothing() {
+		if (this == getObjectNothing()) {
+			isObjectNothing = true;
+		}
+	}
+
+	protected final boolean isObjectNothing() {
+		return this.isObjectNothing;
 	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////////
