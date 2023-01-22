@@ -155,7 +155,7 @@ public enum EventType {
 		for (EventType type : EventType.values())
 			if (type.index == index)
 				return type;
-		return null;
+		return nothing; // instead of null
 	}
 	
 	

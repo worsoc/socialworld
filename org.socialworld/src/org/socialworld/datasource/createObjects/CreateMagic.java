@@ -58,7 +58,7 @@ public class CreateMagic extends CreateSimulationObjects {
 		HiddenMagic hiddenMagic = null;
 
 		Object createdObject = createObjectForName(fullClassName);
-		if (createdObject == null) return null;
+		if (createdObject == null) return new IncompleteSimulationObject();
 		
 		Magic createdMagic = (Magic) createdObject;
 		createdMagic.setObjectID(objectID);

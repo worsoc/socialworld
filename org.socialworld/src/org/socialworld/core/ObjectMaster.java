@@ -223,7 +223,7 @@ public class ObjectMaster {
 			return incompleteObject.getObject();
 		}
 		else {
-			return null;
+			return NoSimulationObject.getObjectNothing();
 		}
 		
 	}
@@ -237,9 +237,8 @@ public class ObjectMaster {
 			return incompleteObject.getHiddenObject();
 		}
 		else {
-			return null;
+			return new HiddenSimulationObject(); // instead of null
 		}
-		
 	}
 
 	void setSimulationObjectComplete(int  incompleteObjectsIndex, int objectID) {
