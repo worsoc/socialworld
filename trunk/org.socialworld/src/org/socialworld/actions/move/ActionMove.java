@@ -222,7 +222,7 @@ public class ActionMove extends AbstractAction {
 		}
 		else {
 			Position nextPoint = path.getNextPoint();
-			if (nextPoint != null) {
+			if (!nextPoint.checkIsObjectNothing()) {
 				this.directionForSection = this.actor.getPosition(SimulationCluster.action).getDirectionTo(nextPoint);
 			}
 			else {

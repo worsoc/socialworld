@@ -28,6 +28,7 @@ package org.socialworld.attributes;
  * @author Mathias Sikos (tyloesand)
  */
 public enum Attribute {
+	ignore(-1),
 	mood(0), courage(1), morals(2), materialism(3), tiredness(4),
 	curiosity(5), spirituality(6), hunger(7), power(8);
 
@@ -65,7 +66,7 @@ public enum Attribute {
 		for (Attribute attribute : Attribute.values())
 			if (attribute.arrayIndex == arrayIndex)
 				return attribute;
-		return null;
+		return ignore;
 	}
 	
 	public String toString() {

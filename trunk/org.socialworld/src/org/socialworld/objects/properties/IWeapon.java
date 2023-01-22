@@ -28,14 +28,14 @@ import org.socialworld.attributes.properties.WeaponProperty;
  * Das Interface IWeapon definiert die Methoden zum Ermitteln der Waffeneigenschaft von Simulationsobjekten.
  * Jedes Simulationsobjekt (insbesondere Gegenstand), 
  *  der als Waffe verwendet werden kann, implementiert dieses Interface.
- * Da die Methoden ein Objekt der Klasse WeaponProperty zurückgeben, erfordert es,
- *  dass Objekte mit Waffeneigenschaft die entsprechenden Ausprägungen der WeaponProperty haben.
+ * Da die Methoden ein Objekt der Klasse WeaponProperty zurï¿½ckgeben, erfordert es,
+ *  dass Objekte mit Waffeneigenschaft die entsprechenden Ausprï¿½gungen der WeaponProperty haben.
  *  
- * Die Methoden liefern die Beschreibung für folgende Anwendungsarten der Waffe:
+ * Die Methoden liefern die Beschreibung fï¿½r folgende Anwendungsarten der Waffe:
  *  - Stechen (eine streckende Armbewegung)
- *  - Keule (beidhändiges Draufhauen, Bewegung von oben auf den Gegner herab)
+ *  - Keule (beidhï¿½ndiges Draufhauen, Bewegung von oben auf den Gegner herab)
  *  - Schlag (eine geschwungene Armbewegung von der Seite)
- *  - Rückhandschlag (eine geschwungeneArmbewegung von der anderen Seite)
+ *  - Rï¿½ckhandschlag (eine geschwungeneArmbewegung von der anderen Seite)
  *   
  * @author Mathias Sikos
  *
@@ -48,4 +48,33 @@ public interface IWeapon {
 	public abstract WeaponProperty getClubProperties();
 	public abstract WeaponProperty getStrokeProperties();
 	public abstract WeaponProperty getBackhandProperties();
+	
+	public default boolean isObjectNothing() {return true;}
+	
+	static final IWeapon objectNothing = new NoIWeapon();
+
+	public static IWeapon getObjectNothing() {
+		return objectNothing;
+	}
+	
+	static class NoIWeapon implements IWeapon {
+		
+		public boolean isObjectNothing() {
+			return false;
+		}
+		public WeaponProperty getStabProperties() {
+			return null;
+		}
+		public WeaponProperty getClubProperties() {
+			return null;
+		}
+		public WeaponProperty getStrokeProperties() {
+			return null;
+		}
+		public WeaponProperty getBackhandProperties() {
+			return null;
+		}
+
+	}
+
 }

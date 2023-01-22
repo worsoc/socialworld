@@ -212,7 +212,7 @@ public enum PropertyName {
 			return forString(parentStateName);
 		}
 		else {
-			return null;
+			return unknown;
 		}
 	}
 	

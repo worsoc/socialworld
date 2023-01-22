@@ -24,6 +24,7 @@ package org.socialworld.actions.handle;
 
 public enum InventoryPlace {
 
+	noWhere(0),
 	leftHand(1),
 	rightHand(2),
 	mouth(3),
@@ -45,7 +46,7 @@ public enum InventoryPlace {
 		for (InventoryPlace place : InventoryPlace.values())
 			if (place.index == index)
 				return place;
-		return null;
+		return noWhere;
 	}
 	
 	public int getIndex() {

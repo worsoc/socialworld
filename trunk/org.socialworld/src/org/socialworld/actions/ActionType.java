@@ -27,23 +27,23 @@ import org.socialworld.calculation.Value;
  * The enumeration collects all action types.
  * 
  * German:
- * Die Enumeration ActionType enthält alle Aktionstypen,
- *   die für eine Aktion gesetzt werden können.
+ * Die Enumeration ActionType enthï¿½lt alle Aktionstypen,
+ *   die fï¿½r eine Aktion gesetzt werden kï¿½nnen.
  *   
  * Es sind 11 Aktionstypen umgesetzt:
- *  - Körperfunktionen (Schlafen,Essen,...)
+ *  - Kï¿½rperfunktionen (Schlafen,Essen,...)
  *  - Bewegung (Positionswechsel)
  *  - untersuchung von Simulationsobjekten
- *  - Berührung von Simulationsobjekten
+ *  - Berï¿½hrung von Simulationsobjekten
  *  - Ausstatten 
  *  - Gegenstandshandhabung
  *  - Waffenbenutzung 
  *  - Schlag 
- *  - Hören/Zuhören
- *  - Gespräche führen
+ *  - Hï¿½ren/Zuhï¿½ren
+ *  - Gesprï¿½che fï¿½hren
  *  - Sprechen
  *  
- * Zur Ablaufsteuerung wird zusätzlich der Aktionstyp Ignorieren angeboten. 
+ * Zur Ablaufsteuerung wird zusï¿½tzlich der Aktionstyp Ignorieren angeboten. 
  *  Dieser soll Vergleiche auf NULL verhindern.
  *  
  * @author Mathias Sikos (tyloesand) 
@@ -72,7 +72,7 @@ public enum ActionType {
 		for (ActionType actiontype : ActionType.values())
 			if (actiontype.index == index)
 				return actiontype;
-		return null;
+		return ignore;
 	}
 
 	/**
