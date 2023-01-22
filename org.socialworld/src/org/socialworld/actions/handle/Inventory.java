@@ -293,8 +293,9 @@ public class Inventory extends SimProperty {
 		if (this.leftHand instanceof IWeapon) {
 			return (IWeapon) this.leftHand;
 		} else {
-			return null;
+			return IWeapon.getObjectNothing();
 		}
+		
 	}
 
 	/**
@@ -306,7 +307,7 @@ public class Inventory extends SimProperty {
 		if (this.rightHand instanceof IWeapon) {
 			return (IWeapon) this.rightHand;
 		} else {
-			return null;
+			return IWeapon.getObjectNothing();
 		}
 	}
 

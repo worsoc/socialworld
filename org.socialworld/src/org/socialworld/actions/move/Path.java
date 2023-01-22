@@ -136,7 +136,7 @@ public class Path {
 		if (indexPointToPassNext < length)
 			return points.get(indexPointToPassNext);
 		else
-			return null;
+			return Position.getObjectNothing();
 	}
 	
 	public void completeSection(Position position) {

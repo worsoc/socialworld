@@ -90,7 +90,7 @@ public class PropsSeer extends SimProperty {
 	@Override
 	public ISavedValues copyForProperty(SimulationCluster cluster) {
 		// TODO Auto-generated method stub
-		return null;
+		return getObjectNothing();
 	}
 
 	@Override

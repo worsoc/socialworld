@@ -65,7 +65,7 @@ public enum Taste {
 		for (Taste element : Taste.values())
 			if (element.arrayIndex == arrayIndex)
 				return element;
-		return null;
+		return nothing;  // instead of null
 	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////////

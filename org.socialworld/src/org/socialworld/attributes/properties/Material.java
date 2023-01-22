@@ -30,6 +30,7 @@ import org.socialworld.tools.StringTupel;
 
 public enum Material {
 
+	nothing(0),  
 	leather(1),
 	glas(2),
 	cotton(3),
@@ -62,7 +63,7 @@ public enum Material {
 		for (Material element : Material.values())
 			if (element.arrayIndex == arrayIndex)
 				return element;
-		return null;
+		return nothing;  // instead of null 
 	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////////
