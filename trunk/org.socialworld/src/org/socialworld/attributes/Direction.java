@@ -11,7 +11,7 @@ import org.socialworld.tools.StringTupel;
 
 public class Direction extends SimProperty {
 
-	private SVVector vector;
+	private SVVector vector = SVVector.getObjectNothing();
 	
 	float power;
 

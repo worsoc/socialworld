@@ -60,7 +60,7 @@ public class CreateItem extends CreateSimulationObjects {
 		HiddenItem hiddenItem = null;
 
 		Object createdObject = createObjectForName(fullClassName);
-		if (createdObject == null) return null;
+		if (createdObject == null) return new IncompleteSimulationObject();
 		
 		Item createdItem = (Item) createdObject;
 		createdItem.setObjectID(objectID);

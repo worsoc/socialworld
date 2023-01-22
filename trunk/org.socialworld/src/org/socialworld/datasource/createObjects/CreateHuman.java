@@ -59,7 +59,7 @@ public class CreateHuman extends CreateAnimal {
 		HiddenHuman hiddenHuman = null;
 
 		Object createdObject = createObjectForName(fullClassName);
-		if (createdObject == null) return null;
+		if (createdObject == null) return new IncompleteSimulationObject();
 		
 		Human createdHuman = (Human) createdObject;
 		createdHuman.setObjectID(objectID);

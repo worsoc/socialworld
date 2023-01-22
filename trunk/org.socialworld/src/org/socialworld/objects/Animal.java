@@ -209,7 +209,11 @@ public abstract class Animal extends SimulationObject implements ISeer, IRunning
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 	final public Path findPath(Position end) {
-		return this.pathFinder.findPath(end);
+		// TODO NULL WEG
+		if (pathFinder != null)
+			return this.pathFinder.findPath(end);
+		else
+			return null;
 	}
 	
 

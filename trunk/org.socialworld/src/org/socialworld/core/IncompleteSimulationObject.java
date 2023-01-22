@@ -1,5 +1,6 @@
 package org.socialworld.core;
 
+import org.socialworld.objects.NoSimulationObject;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.access.HiddenSimulationObject;
 
@@ -49,14 +50,14 @@ public class IncompleteSimulationObject {
 		if (!this.isCompleted) {
 			return this.object;
 		}
-		return null;
+		return NoSimulationObject.getObjectNothing();
 	}
 	
 	HiddenSimulationObject getHiddenObject() {
 		if (!this.isCompleted) {
 			return this.hiddenObject;
 		}
-		return null;
+		return new HiddenSimulationObject();
 	}
 	
 	public boolean checkForHiddenObject(HiddenSimulationObject hiddenObject) {

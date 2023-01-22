@@ -64,7 +64,7 @@ public class CreateAnimal extends CreateSimulationObjects {
 		HiddenAnimal hiddenAnimal = null;
 		
 		Object createdObject = createObjectForName(fullClassName);
-		if (createdObject == null) return null;
+		if (createdObject == null) return new IncompleteSimulationObject();
 
 		Animal createdAnimal = (Animal) createdObject;
 		createdAnimal.setObjectID(objectID);

@@ -58,7 +58,7 @@ public class CreateGod extends CreateSimulationObjects {
 		HiddenGod hiddenGod = null;
 		
 		Object createdObject = createObjectForName(fullClassName);
-		if (createdObject == null) return null;
+		if (createdObject == null) return new IncompleteSimulationObject();;
 		
 		God createdGod = (God) createdObject;
 		createdGod.setObjectID(objectID);

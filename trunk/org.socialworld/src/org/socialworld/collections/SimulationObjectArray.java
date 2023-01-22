@@ -20,6 +20,7 @@
 *
 */
 package org.socialworld.collections;
+import org.socialworld.objects.NoSimulationObject;
 import org.socialworld.objects.SimulationObject;
 
 public class SimulationObjectArray {
@@ -57,8 +58,16 @@ public class SimulationObjectArray {
 	}
 	
 	public SimulationObject get(int index){
-		if (index < this.capacity) return array[index];
-		else return null;
+		SimulationObject result = NoSimulationObject.getObjectNothing();
+		if (index < this.capacity) {
+			if (array[index] == null) {
+				
+			}
+			else {
+				result = array[index];
+			}
+		}
+		return result;
 	}
 	
 	public void delete(int index) {

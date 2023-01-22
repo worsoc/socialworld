@@ -48,4 +48,6 @@ public interface ISavedValues {
 	public abstract ValueProperty getProperty(SimulationCluster cluster, PropertyName propName, String valueName);
 	public abstract ValueProperty getPropertyFromMethod(SimulationCluster cluster, String methodName, String valueName);
 
+	public abstract boolean checkIsObjectNothing();
+
 }

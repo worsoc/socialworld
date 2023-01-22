@@ -35,6 +35,8 @@ import org.socialworld.tools.StringTupel;
 
 public abstract class SavedValue implements ISavedValues {
 
+	private boolean isObjectNothing = false;
+	
 	private PropertyName propertyName = PropertyName.unknown;
 	private PropertyProtection protection;
 
@@ -59,6 +61,16 @@ public abstract class SavedValue implements ISavedValues {
 
 	public abstract Object getReleased(SimulationCluster cluster);
 	
+	protected final void setToObjectNothing() {
+		if (checkIsObjectNothing()) {
+			isObjectNothing = true;
+		}
+	}
+
+	public final boolean isObjectNothing() {
+		return this.isObjectNothing;
+	}
+
 	///////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////  meta information   //////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////

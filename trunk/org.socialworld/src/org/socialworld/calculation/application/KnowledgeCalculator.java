@@ -227,7 +227,7 @@ public class KnowledgeCalculator extends SocialWorldThread {
 				return knowledgeElement;
 			
 			}
-			
+// TODO NULL WEG			
 			return null;
 			
 		}

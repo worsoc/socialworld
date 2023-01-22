@@ -21,6 +21,7 @@
 */
 package org.socialworld.datasource.createObjects;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -31,7 +32,7 @@ import org.socialworld.datasource.pool.GaussPoolPerceptionType;
 import org.socialworld.datasource.pool.GaussPoolPosition;
 import org.socialworld.datasource.pool.GaussPoolReactionType;
 import org.socialworld.datasource.pool.GaussPoolState2ActionType;
-import org.socialworld.objects.SimulationObject;
+import org.socialworld.objects.NoSimulationObject;
 import org.socialworld.objects.access.HiddenSimulationObject;
 
 /**
@@ -57,21 +58,31 @@ public abstract class CreateSimulationObjects {
 	
 	protected final Object createObjectForName(String fullClassName) {
 		
-		Object createdObject;
+		
+		Object createdObject = NoSimulationObject.getObjectNothing();
+		Object noObject = NoSimulationObject.getObjectNothing();
 		try {
-			createdObject = Class.forName(fullClassName).newInstance();
+			createdObject = Class.forName(fullClassName).getDeclaredConstructor().newInstance();
 		}
 		catch (ClassNotFoundException cnfe ) {
 			System.out.println(cnfe.getMessage());
-			return null;
+			return noObject;
+		}
+		catch (InvocationTargetException ite ) {
+			System.out.println(ite.getMessage());
+			return noObject;
+		}
+		catch (NoSuchMethodException nsme ) {
+			System.out.println(nsme.getMessage());
+			return noObject;
 		}
 		catch (IllegalAccessException iae ) {
 			System.out.println(iae.getMessage());
-			return null;
+			return noObject;
 		}
 		catch (InstantiationException ie) {
 			ie.printStackTrace();
-			return null;
+			return noObject;
 		}
 		
 		return createdObject;
