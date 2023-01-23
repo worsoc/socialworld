@@ -46,6 +46,8 @@ import org.socialworld.tools.StringTupel;
 
 public abstract class State implements ISimProperty, ISavedValues {
 
+	
+	
 	private boolean isObjectNothing = false;
 
 	private PropertyName propertyName = PropertyName.unknown;
@@ -69,6 +71,10 @@ public abstract class State implements ISimProperty, ISavedValues {
 		// object nothing
 	}
 
+	///////////////////////////////////////////////////////////////////////////////////////////
+	///////////// object nothing 									    ///////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
+
 	protected final void setToObjectNothing() {
 		if (checkIsObjectNothing()) {
 			isObjectNothing = true;
@@ -79,11 +85,35 @@ public abstract class State implements ISimProperty, ISavedValues {
 		return this.isObjectNothing;
 	}
 	
+	static final State objectNothing = new NoState();
+
+	public static State getObjectNothing() {
+		return objectNothing;
+	}
+
+	static class NoState extends State {
+		public boolean checkIsObjectNothing() {return true;}
+		
+		public  ValueProperty getProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
+			return ValueProperty.getInvalid();
+		}
+
+		protected void initPropertyName() {};
+		protected ReturnCode init() {return ReturnCode.ignore; };
+		protected void setProperty(PropertyName propName, ValueProperty property) {};
+		public ISavedValues copyForProperty(SimulationCluster cluster) {return objectNothing; }
+	}
+	
+	///////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////		State				    ////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
 
 	protected abstract void initPropertyName();
 	
 	protected abstract ReturnCode init();
-	
+
+	protected abstract void setProperty(PropertyName propName, ValueProperty property);
+
 	final protected SimulationObject getObject() {
 		return this.object;
 	}
@@ -373,7 +403,6 @@ public abstract class State implements ISimProperty, ISavedValues {
 		}
 	}
 
-	protected abstract void setProperty(PropertyName propName, ValueProperty property);
 	
 	
 }

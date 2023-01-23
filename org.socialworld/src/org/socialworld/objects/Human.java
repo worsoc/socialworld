@@ -128,7 +128,7 @@ import org.socialworld.core.IEventParam;
 			return new StateInventory(this);
 		}
 		
-		return null;
+		return State.getObjectNothing();
 		
 	}
 	

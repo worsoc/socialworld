@@ -62,7 +62,7 @@ public class Lightning extends Magic {
 			return new StatePerceptible(this);
 		}
 		
-		return null;
+		return State.getObjectNothing();
 		
 	}
 

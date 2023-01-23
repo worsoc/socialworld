@@ -37,12 +37,12 @@ public class GaussPoolAttributeArray {
 		if (index >= 0)
 			if (CAPACITY_GPAA_ARRAY > index ) 
 				return attributesForPositiveIndex[index];
-			else return null;
+			else return AttributeArray.getObjectNothing();
 		else {
 			index = index * -1;
 			if (CAPACITY_GPAA_ARRAY > index ) 
 				return attributesForNegativeIndex[index];
-			else return null;
+			else return AttributeArray.getObjectNothing();
 		}	
 		
 	}

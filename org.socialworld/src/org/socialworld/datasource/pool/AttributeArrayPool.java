@@ -38,7 +38,7 @@ public class AttributeArrayPool {
 	public AttributeArray getArray(int index) {
 		if (index >= 0)
 			if (CAPACITY_AAP_ARRAY > index ) 	return attributeArrays[index];
-	   return null;
+	   return AttributeArray.getObjectNothing();
 	}
 
 	private void initialize() {

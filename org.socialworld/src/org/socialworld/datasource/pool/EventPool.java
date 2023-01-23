@@ -1,10 +1,5 @@
 package org.socialworld.datasource.pool;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.net.URL;
 
 import org.socialworld.core.Event;
 
@@ -32,6 +27,7 @@ public class EventPool {
 	public Event getEvent(int index) {
 		if (size > index) 	return events[index];
 		else return null;
+		// TODO NULL WEG
 	}
 	
 	private void initialize() {

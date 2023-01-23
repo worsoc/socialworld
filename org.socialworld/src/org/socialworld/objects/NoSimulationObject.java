@@ -37,8 +37,7 @@ public class NoSimulationObject extends SimulationObject {
 
 	@Override
 	protected State getInitState(String stateClassName) {
-		// TODO return NoState instance
-		return null;
+		return State.getObjectNothing();
 	}
 
 }
