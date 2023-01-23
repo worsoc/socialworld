@@ -61,7 +61,7 @@ public enum SimulationObject_Type {
 		for (SimulationObject_Type type : SimulationObject_Type.values())
 			if (type.arrayIndex == arrayIndex)
 				return type;
-		return null;
+		return noObject;
 	}
 	
 	public int getPercipiencePriority() {

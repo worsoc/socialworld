@@ -35,7 +35,7 @@ public class PositionPool {
 	public Position getPosition(int index) {
 		if (index >= 0)
 			if (CAPACITY_PP_ARRAY > index ) 	return positions[index];
-	   return null;
+	   return Position.getObjectNothing();
 	}
 	
 	private void initialize() {

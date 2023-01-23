@@ -24,6 +24,7 @@ package org.socialworld.objects.connections;
 
 public enum ConnectionType {
 
+	ignore(-1),
 	inside(0),
 	around(1),
 	above(2),
@@ -40,7 +41,7 @@ public enum ConnectionType {
 		for (ConnectionType type : ConnectionType.values())
 			if (type.index == index)
 				return type;
-		return null;
+		return ignore;
 	}
 	
 	public int getIndex() {

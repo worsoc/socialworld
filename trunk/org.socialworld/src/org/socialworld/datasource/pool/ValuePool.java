@@ -58,6 +58,7 @@ public class ValuePool {
 		if (index >= 0)
 			if (CAPACITY_VP_ARRAY > index ) 	return values[index];
 	   return null;
+	   // TODO NULL WEG
 	}
 
 	private void initialize() {

@@ -57,12 +57,12 @@ public class GaussPoolPosition {
 		if (index >= 0)
 			if (capacityForPositiveIndex > index ) 
 				return positionsForPositiveIndex[index];
-			else return null;
+			else return Position.getObjectNothing();
 		else {
 			index = index * -1;
 			if (capacityForNegativeIndex > index ) 
 				return positionsForNegativeIndex[index];
-			else return null;
+			else return Position.getObjectNothing();
 		}	
 	}
 	

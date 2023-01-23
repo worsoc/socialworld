@@ -77,6 +77,7 @@ public class FunctionPool {
 		if (index >= 0)
 			if (CAPACITY_FP_ARRAY > index ) 	return functions[index];
 	   return null;
+	   // TODO NULL WEG
 	}
 
 	private void initializeWithTestData_FunctionByMatrix() {

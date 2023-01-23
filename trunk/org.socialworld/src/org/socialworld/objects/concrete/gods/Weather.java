@@ -62,7 +62,7 @@ public class Weather extends God {
 			return new StatePerceptible(this);
 		}
 		
-		return null;
+		return State.getObjectNothing();
 		
 	}
 

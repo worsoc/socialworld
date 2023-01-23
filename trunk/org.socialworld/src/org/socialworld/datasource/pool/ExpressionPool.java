@@ -77,6 +77,7 @@ public class ExpressionPool {
 		if (index >= 0)
 			if (CAPACITY_EP_ARRAY > index ) 	return expressions[index];
 	   return null;
+	   // TODO NULL WEG
 	}
 
 	private void setExpression(int index, Expression exp) {

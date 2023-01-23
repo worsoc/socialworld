@@ -66,7 +66,7 @@ public abstract class Dog extends Mammal {
 			return new StateSeer(this);
 		}
 		
-		return null;
+		return State.getObjectNothing();
 		
 	}
 

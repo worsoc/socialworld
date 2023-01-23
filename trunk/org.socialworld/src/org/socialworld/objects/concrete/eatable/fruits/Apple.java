@@ -78,7 +78,7 @@ public class Apple extends Fruit implements IEatable, IThrowable {
 			return new StateComposition(this);
 		}
 		
-		return null;
+		return State.getObjectNothing();
 		
 	}
 	

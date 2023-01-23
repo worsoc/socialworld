@@ -28,6 +28,7 @@ package org.socialworld.knowledge;
  * @author Mathias Sikos (tyloesand)
  */
 public enum Acquaintance_Attribute {
+	ignore(-1),
 	friendship(0), love(1), sympathy(2), responsibility(3), respect(4), trust(5), obedience(6);
 	
 	/**
@@ -64,7 +65,7 @@ public enum Acquaintance_Attribute {
 		for (Acquaintance_Attribute attribute : Acquaintance_Attribute.values())
 			if (attribute.arrayIndex == arrayIndex)
 				return attribute;
-		return null;
+		return ignore;
 	}
 
 }

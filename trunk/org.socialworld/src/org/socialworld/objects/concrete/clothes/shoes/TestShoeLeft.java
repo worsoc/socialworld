@@ -32,7 +32,7 @@ public class TestShoeLeft extends Shoe {
 	@Override
 	protected State getInitState(String stateClassName) {
 		// TODO Auto-generated method stub
-		return null;
+		return State.getObjectNothing();
 	}
 
 }

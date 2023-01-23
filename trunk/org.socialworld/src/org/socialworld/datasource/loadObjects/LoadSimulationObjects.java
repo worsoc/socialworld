@@ -22,6 +22,8 @@
 package org.socialworld.datasource.loadObjects;
 
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.geometry.Vector;
@@ -30,6 +32,7 @@ import org.socialworld.datasource.tablesSimulation.TableInfluenceByEvent;
 import org.socialworld.datasource.tablesSimulation.TableObject;
 import org.socialworld.datasource.tablesSimulation.TablePosition;
 import org.socialworld.datasource.tablesSimulation.TableReactionByEvent;
+import org.socialworld.objects.NoSimulationObject;
 import org.socialworld.objects.access.HiddenSimulationObject;
 
 /**
@@ -74,21 +77,30 @@ public abstract class LoadSimulationObjects {
 	
 	protected final Object createObjectForName(String fullClassName) {
 		
-		Object createdObject;
+		Object createdObject = NoSimulationObject.getObjectNothing();
+		Object noObject = NoSimulationObject.getObjectNothing();
 		try {
-			createdObject = Class.forName(fullClassName).newInstance();
-		}
+			createdObject = Class.forName(fullClassName).getDeclaredConstructor().newInstance();
+					}
 		catch (ClassNotFoundException cnfe ) {
 			System.out.println(cnfe.getMessage());
-			return null;
+			return noObject;
+		}
+		catch (InvocationTargetException ite ) {
+			System.out.println(ite.getMessage());
+			return noObject;
+		}
+		catch (NoSuchMethodException nsme ) {
+			System.out.println(nsme.getMessage());
+			return noObject;
 		}
 		catch (IllegalAccessException iae ) {
 			System.out.println(iae.getMessage());
-			return null;
+			return noObject;
 		}
 		catch (InstantiationException ie) {
 			ie.printStackTrace();
-			return null;
+			return noObject;
 		}
 		
 		return createdObject;
