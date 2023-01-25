@@ -1,9 +1,9 @@
 package org.socialworld.objects.concrete.clothes.caps;
 
 import org.socialworld.objects.State;
-import org.socialworld.objects.WriteAccessToSimulationObject;
-import org.socialworld.objects.access.HiddenSimulationObject;
 import org.socialworld.objects.concrete.StateAppearance;
+import org.socialworld.objects.concrete.StateComposition;
+import org.socialworld.objects.concrete.StatePerceptible;
 import org.socialworld.objects.concrete.clothes.Cap;
 
 public class TestCap extends Cap {
@@ -22,15 +22,19 @@ public class TestCap extends Cap {
 
 	@Override
 	protected State getInitState(String stateClassName) {
-		State initState = null;
 		
-		switch (stateClassName) {
-			case "StateAppearance":
-				initState = new StateAppearance(this);
-				
-					
-				
+		State initState = State.getObjectNothing();
+		
+		if (stateClassName.equals(StatePerceptible.class.getName())) {
+			initState = new StatePerceptible(this);
 		}
+		else if (stateClassName.equals(StateAppearance.class.getName())) {
+			initState = new StateAppearance(this);
+		}
+		else if (stateClassName.equals(StateComposition.class.getName())) {
+			initState = new StateComposition(this);
+		}
+		
 		return initState;
 	}
 
