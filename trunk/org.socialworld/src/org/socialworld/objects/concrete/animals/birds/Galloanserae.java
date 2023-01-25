@@ -24,7 +24,7 @@ public abstract class Galloanserae extends Bird {
 	@Override
 	protected State getInitState(String stateClassName) {
 		// TODO Auto-generated method stub
-		return null;
+		return State.getObjectNothing();
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public abstract class Galloanserae extends Bird {
 	@Override
 	public StateRunning getSavedStateRunning(SimulationCluster cluster) {
 		// TODO Auto-generated method stub
-		return null;
+		return StateRunning.getObjectNothing();
 	}
 
 	@Override
