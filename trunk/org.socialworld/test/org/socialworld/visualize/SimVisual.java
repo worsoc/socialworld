@@ -22,7 +22,6 @@
 */
 package org.socialworld.visualize;
 
-
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -97,7 +96,6 @@ public class SimVisual extends SocialWorldThread {
 
 	public static final Color COLOR_LIGHTCYAN = new Color(224,255,255);
 	public static final Color COLOR_CYAN = new Color(0,255,255) ;
-	public static final Color COLOR_AQUA = new Color(0,255,255) ;
 	public static final Color COLOR_AQUAMARINE = new Color(127,255,212) ;
 	public static final Color COLOR_MEDIUMAQUAMARINE = new Color(102,205,170);	 
 	public static final Color COLOR_PALETURQUOISE = new Color(175,238,238);
@@ -435,10 +433,10 @@ public class SimVisual extends SocialWorldThread {
 					color = COLOR_CYAN;
 					break;
 				case sneak:
-					color = COLOR_AQUA;
+					color = COLOR_MEDIUMAQUAMARINE;
 					break;
 				case jump:
-					color = COLOR_MEDIUMAQUAMARINE;
+					color = COLOR_TURQUOISE;
 					break;
 				case swim:
 					color = COLOR_AQUAMARINE;
