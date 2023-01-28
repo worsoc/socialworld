@@ -26,9 +26,8 @@ import java.sql.SQLException;
 
 import org.socialworld.attributes.properties.Nutrient;
 import org.socialworld.attributes.properties.NutrientSet;
-import org.socialworld.datasource.mariaDB.Table;
 
-public class TableNutrientSet extends Table {
+public class TableNutrientSet extends TableSet {
 
 	public final  String 	ALL_COLUMNS 		=	" nutrient_set_id, lfd_nr,  nutrient, share ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;

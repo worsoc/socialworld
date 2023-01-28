@@ -26,9 +26,8 @@ import java.sql.SQLException;
 
 import org.socialworld.attributes.properties.Taste;
 import org.socialworld.attributes.properties.TasteSet;
-import org.socialworld.datasource.mariaDB.Table;
 
-public class TableTasteSet extends Table {
+public class TableTasteSet extends TableSet {
 
 	public final  String 	ALL_COLUMNS 		=	" taste_set_id, lfd_nr,  taste, share ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
