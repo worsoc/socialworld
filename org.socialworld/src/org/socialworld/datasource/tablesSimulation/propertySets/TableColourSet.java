@@ -26,9 +26,8 @@ import java.sql.SQLException;
 
 import org.socialworld.attributes.properties.Colour;
 import org.socialworld.attributes.properties.ColourSet;
-import org.socialworld.datasource.mariaDB.Table;
 
-public class TableColourSet extends Table {
+public class TableColourSet extends TableSet {
 
 	public final  String 	ALL_COLUMNS 		=	" colour_set_id, lfd_nr, colour, share ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;

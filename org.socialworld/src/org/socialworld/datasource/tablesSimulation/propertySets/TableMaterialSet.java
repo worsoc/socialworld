@@ -26,9 +26,8 @@ import java.sql.SQLException;
 
 import org.socialworld.attributes.properties.Material;
 import org.socialworld.attributes.properties.MaterialSet;
-import org.socialworld.datasource.mariaDB.Table;
 
-public class TableMaterialSet extends Table {
+public class TableMaterialSet extends TableSet {
 
 	public final  String 	ALL_COLUMNS 		=	" material_set_id, lfd_nr, material, share ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
