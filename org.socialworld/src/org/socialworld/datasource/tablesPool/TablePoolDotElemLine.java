@@ -83,7 +83,7 @@ public class TablePoolDotElemLine extends Table {
 		
 		if ( dotelemline_function > 0 ) {
 			
-			dot_elem_line_id = getNewID("swpool_dotelemline", "dot_elem_line_id");
+			dot_elem_line_id = getNewID( "dot_elem_line_id");
 
 			if (dot_elem_line_id > 0) {
 				
