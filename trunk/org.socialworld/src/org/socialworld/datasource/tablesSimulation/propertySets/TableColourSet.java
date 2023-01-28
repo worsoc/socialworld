@@ -39,7 +39,7 @@ public class TableColourSet extends TableSet {
 
 	@Override
 	protected String getTableName() {
-		return "sw_colourset";
+		return "swset_colour";
 	}
 
 	@Override

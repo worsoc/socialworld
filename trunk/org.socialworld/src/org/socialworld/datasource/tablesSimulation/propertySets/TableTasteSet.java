@@ -39,7 +39,7 @@ public class TableTasteSet extends TableSet {
 
 	@Override
 	protected String getTableName() {
-		return "sw_tasteset";
+		return "swset_taste";
 	}
 
 	@Override

@@ -39,7 +39,7 @@ public class TableNutrientSet extends TableSet {
 
 	@Override
 	protected String getTableName() {
-		return "sw_nutrientset";
+		return "swset_nutrient";
 	}
 
 	@Override
