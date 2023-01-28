@@ -114,7 +114,7 @@ public class TablePoolDotElement extends Table {
 		int dot_element_id = 0;	
 		if ( (dotelem_function > 0) & (dotelem_value_name.length() > 0)) {
 			
-			dot_element_id = getNewID("swpool_dotelement", "dot_element_id");
+			dot_element_id = getNewID( "dot_element_id");
 			
 			if (dot_element_id > 0) {
 				statement 	= "INSERT INTO swpool_dotelement (" + ALL_COLUMNS + ") VALUES (" + 

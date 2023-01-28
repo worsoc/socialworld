@@ -186,7 +186,12 @@ public abstract class Table {
 			String selectGetNewId = "SELECT IFNULL(max(" + idName + "), 0) + 1 FROM " + tableName;
 			return selectScalarInt(selectGetNewId);
 		}
-		
+
+		public int getNewID(String idName) {
+			String selectGetNewId = "SELECT IFNULL(max(" + idName + "), 0) + 1 FROM " + getTableName();
+			return selectScalarInt(selectGetNewId);
+		}
+
 		protected void insert(String statement) {
 			rowsAffected = connection.executeUpdate(statement);
 		}
