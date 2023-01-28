@@ -42,6 +42,10 @@ public enum Material {
 		this.arrayIndex = index;
 	}
 
+	public static int getMaxIndex() {
+		return 4;
+	}
+	
 	/**
 	 * The method returns the index of the material.
 	 * 
