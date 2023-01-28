@@ -45,6 +45,10 @@ public enum Nutrient {
 		this.arrayIndex = index;
 	}
 
+	public static int getMaxIndex() {
+		return 7;
+	}
+
 	/**
 	 * The method returns the index of the Nutrient.
 	 * 

@@ -44,6 +44,10 @@ public enum Taste {
 		this.arrayIndex = index;
 	}
 
+	public static int getMaxIndex() {
+		return 5;
+	}
+
 	/**
 	 * The method returns the index of the Taste.
 	 * 
