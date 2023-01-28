@@ -31,7 +31,15 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 
+import org.socialworld.attributes.properties.Colour;
 import org.socialworld.attributes.properties.Material;
+import org.socialworld.attributes.properties.Nutrient;
+import org.socialworld.attributes.properties.Taste;
+import org.socialworld.datasource.tablesSimulation.propertySets.TableColourSet;
+import org.socialworld.datasource.tablesSimulation.propertySets.TableMaterialSet;
+import org.socialworld.datasource.tablesSimulation.propertySets.TableNutrientSet;
+import org.socialworld.datasource.tablesSimulation.propertySets.TableSet;
+import org.socialworld.datasource.tablesSimulation.propertySets.TableTasteSet;
 
 
 public class PropertySetCreationTool {
@@ -47,6 +55,7 @@ public class PropertySetCreationTool {
 	
 	List sets = new List();
 	
+	TableSet tableSet;
 	
 
 	/**
@@ -99,7 +108,7 @@ public class PropertySetCreationTool {
 				input=textInput.getText();
 			
 				
-				generatePropertySets(input);
+				generatePropertySets(input, "Nutrient");
 	
 				
 			}
@@ -130,8 +139,37 @@ public class PropertySetCreationTool {
 	//Input -> generate property set  //
 	///////////////////////////////
 
-	private void generatePropertySets(String input) {
+	private void generatePropertySets(String input, String propName) {
 
+		int set_id = 0;
+		int maxSetElementValue = 0;
+
+		switch(propName) {
+		case "Colour":
+			tableSet = new TableColourSet();
+			set_id = tableSet.getNewID("colour_set_id");
+			maxSetElementValue = Colour.getMaxIndex();
+			break;
+		case "Material":
+			tableSet = new TableMaterialSet();
+			set_id = tableSet.getNewID("material_set_id");
+			maxSetElementValue = Material.getMaxIndex();
+			break;
+		case "Nutrient":
+			tableSet = new TableNutrientSet();
+			set_id = tableSet.getNewID("nutrient_set_id");
+			maxSetElementValue = Nutrient.getMaxIndex();
+			break;
+		case "Taste":
+			tableSet = new TableTasteSet();
+			set_id = tableSet.getNewID("taste_set_id");
+			maxSetElementValue = Taste.getMaxIndex();
+			break;
+		default:
+			return;
+		}
+
+		
 		int[][] resultPropertySets;
 		int laengeTeil = 100;
 		int zero = 0; 
@@ -139,7 +177,6 @@ public class PropertySetCreationTool {
 		int startTeil = 0;                              
 		int endeTeil = 100;   						  
 
-		int maxSetElementValue = Material.getMaxIndex();
 		
 		input = input.toLowerCase();	
 		
@@ -148,7 +185,6 @@ public class PropertySetCreationTool {
 
 		String[] tab = new String [anzahlTeileGesamnt];
 
-		int laengeTextGesamt = (input.length());        		  
            
 		for(iteratorTeile = zero; iteratorTeile < anzahlTeileGesamnt; ++iteratorTeile)
 		{	            	
@@ -173,12 +209,28 @@ public class PropertySetCreationTool {
 				if (output.length() > 0) output = output + ";";
 				output = output + "(" + resultPropertySets[i][0] + "," + resultPropertySets[i][1] + ")";
 			}
-			output = "{" + output + "}";
-			sets.add(output);
+			addToTableSet(set_id, output ) ;
+			set_id++;
+			sets.add("{" + output + "}");
 		}		    
 
 	}
 	
-	
+	private void addToTableSet(int set_id, String set) {
+		int lfd_nr;
+		
+		String[] elements;
+		String[] pair;
+		
+		elements = set.split(";");
+		lfd_nr = 0;
+		for (String elem : elements) {
+			pair = elem.split(",");
+			lfd_nr++;
+			tableSet.insert(set_id, lfd_nr, 
+					Integer.parseInt(pair[0].substring(1, pair[0].length())), 
+					Integer.parseInt(pair[1].substring(0, pair[1].length()-1)));
+		}
+	}
 	
 }
