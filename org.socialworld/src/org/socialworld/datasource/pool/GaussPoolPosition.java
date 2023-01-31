@@ -26,7 +26,7 @@ import org.socialworld.attributes.Position;
 import org.socialworld.datasource.tablesPool.TableGaussPosition;
 
 public class GaussPoolPosition {
-	public static final int CAPACITY_GPPos_ARRAY = 100;
+	public static final int CAPACITY_GPPos_ARRAY = 400;
 
 	private static GaussPoolPosition instance;
 	
