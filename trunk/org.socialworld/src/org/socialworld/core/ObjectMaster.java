@@ -165,7 +165,7 @@ public class ObjectMaster {
 	
 	
 	int createSimulationObject(
-			SimulationObject_Type simulationObjectType) {
+			SimulationObject_Type simulationObjectType, String fullClassName) {
 		
 		IncompleteSimulationObject incompleteObject;
 		SimulationObject object;
@@ -173,19 +173,11 @@ public class ObjectMaster {
 		int objectID;
 		int incompleteObjectIndex;
 		
-		String fullClassName;
 
 		maxObjectID = maxObjectID + 1;
 		objectID =  maxObjectID;
 		
-		switch (simulationObjectType) {
-			case animal: fullClassName = "org.socialworld.objects.concrete.animals.mammals.Dog"; break;
-			case human: fullClassName = "org.socialworld.objects.Human"; break;
-			case god: fullClassName = "org.socialworld.objects.concrete.gods.Weather"; break;
-			case item: fullClassName = "org.socialworld.objects.concrete.eatable.fruits.Apple"; break;
-			case magic: fullClassName = "org.socialworld.objects.concrete.spells.Lightning"; break;
-			default: return -1;
-		}
+
 
 		incompleteObject = creators[simulationObjectType.getIndex()].getObject(objectID, fullClassName);
 		
