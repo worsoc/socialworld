@@ -38,7 +38,6 @@ public enum PropertyName {
 	simobj_position(1001001),
 	simobj_attributeArray(1001011),
 	simobj_directionMove(1001021), simobj_directionChest(1001022), simobj_directionActiveMove(1001023),
-	simobj_inventory(1001031),  // subs see under stateInventory
 	simobj_knowledge(1001041),
 
 	stateSeer(1101000),
@@ -151,7 +150,7 @@ public enum PropertyName {
 		case simobj_attributeArray:
 			return Type.attributeArray;
 		case simobj_position:
-		case simobj_inventory:  
+//		case simobj_inventory:  
 		case simobj_knowledge:
 		case simobj_directionMove: 
 		case simobj_directionChest: 
@@ -243,7 +242,7 @@ public enum PropertyName {
 	public  PropertyUsingAs[] getUsingAsPermissions() {
 		switch (this) {
 		case simobj_position: return only_pathToKnowledgeValue;
-		case simobj_inventory: return only_knowledgeRelationSubjectOrObject;
+//		case simobj_inventory: return only_knowledgeRelationSubjectOrObject;
 		case simobj_directionMove: return only_pathToKnowledgeValue;
 		case simobj_directionChest: return only_pathToKnowledgeValue;
 		case stateSeer_directionView: return only_pathToKnowledgeValue;

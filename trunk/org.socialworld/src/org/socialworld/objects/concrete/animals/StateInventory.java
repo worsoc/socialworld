@@ -31,6 +31,7 @@ public class StateInventory extends State {
 	///////////////////////////////////////////////////////////////////////////////////////////
 
 	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{
+		new StringTupel("Inventory", PropertyName.stateInventory_inventory.name()),
 		new StringTupel(new String[] {Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_shirt.name(), PropertyName.inventory_shirt.toString()}),
 		new StringTupel(new String[] {Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_trousers.name(), PropertyName.inventory_trousers.toString()}),
 		new StringTupel(new String[] {Type.simulationObject.getIndexWithSWTPraefix(), PropertyName.inventory_leftShoe.name(), PropertyName.inventory_leftShoe.toString()}),
@@ -132,6 +133,8 @@ public class StateInventory extends State {
 	@Override
 	public ValueProperty getProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
 		switch (propName) {
+		case stateInventory_inventory:
+			return this.inventory.getAsValue(cluster, valueName);
 		case inventory_shirt:
 			return this.inventory.getProperty(cluster, propName, valueName);
 		case inventory_trousers:

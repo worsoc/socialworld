@@ -61,7 +61,6 @@ public class StateAnimal extends StateSimulationObject {
 	protected Knowledge knowledge;
 	private KnownPathsPool knownPathsPool;
 
-	private Inventory inventory = Inventory.getObjectNothing();
 	
 	private GrantedAccessToProperty grantAccessToPropertyAttributes[];
 	private GrantedAccessToProperty grantAccessToPropertyAction[];
@@ -75,7 +74,6 @@ public class StateAnimal extends StateSimulationObject {
 	private static StateAnimal singletonDummyForGenerationTools;
 	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{
 			new StringTupel(Type.attributeArray.getIndexWithSWTPraefix(), PropertyName.simobj_attributeArray.name()),
-			new StringTupel("Inventory", PropertyName.simobj_inventory.name()),
 			new StringTupel("Knowledge", PropertyName.simobj_knowledge.name()),
 			new StringTupel(new String[] {"Direction", PropertyName.simobj_directionChest.name(), PropertyName.simobj_directionChest.toString()}),
 			new StringTupel(new String[] {"Direction", PropertyName.simobj_directionActiveMove.name(), PropertyName.simobj_directionActiveMove.toString()})
@@ -134,8 +132,6 @@ public class StateAnimal extends StateSimulationObject {
 		switch (prop) {
 		case simobj_attributeArray:
 			return this.attributes.getAsValue(cluster, name);
-		case simobj_inventory:
-			return this.inventory.getAsValue(cluster, name);
 		case simobj_knowledge:
 			return this.knowledge.getAsValue(cluster, name);
 		case simobj_directionChest:
@@ -267,7 +263,6 @@ public class StateAnimal extends StateSimulationObject {
 
 	final void setInventory(Inventory inventory, WriteAccessToAnimal guard) {
 		if (checkGuard(guard)) {
-			this.inventory = inventory;
 			setStateProperty(PropertyName.stateInventory, PropertyName.stateInventory_inventory, new ValueProperty(Type.object, PropertyName.stateInventory_inventory.name(), inventory), guard);
 		}
 	}
