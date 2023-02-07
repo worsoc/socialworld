@@ -141,7 +141,6 @@ public abstract class Animal extends SimulationObject implements ISeer, IRunning
 	public ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String name) {
 		switch (prop) {
 		case simobj_attributeArray:
-		case simobj_inventory:
 		case simobj_knowledge:
 		case simobj_directionChest:
 		case simobj_directionActiveMove:
