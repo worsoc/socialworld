@@ -35,11 +35,14 @@ import org.socialworld.attributes.properties.Colour;
 import org.socialworld.attributes.properties.Material;
 import org.socialworld.attributes.properties.Nutrient;
 import org.socialworld.attributes.properties.Taste;
+import org.socialworld.datasource.tablesSimulation.TableObject;
 import org.socialworld.datasource.tablesSimulation.propertySets.TableColourSet;
 import org.socialworld.datasource.tablesSimulation.propertySets.TableMaterialSet;
 import org.socialworld.datasource.tablesSimulation.propertySets.TableNutrientSet;
 import org.socialworld.datasource.tablesSimulation.propertySets.TableSet;
 import org.socialworld.datasource.tablesSimulation.propertySets.TableTasteSet;
+import org.socialworld.datasource.tablesSimulation.states.TableStateAppearance;
+import org.socialworld.datasource.tablesSimulation.states.TableStateComposition;
 
 
 public class PropertySetCreationTool {
@@ -52,6 +55,11 @@ public class PropertySetCreationTool {
 	
 	TextArea textInput = new TextArea();
 	Button buttonGenerate = new Button("Generieren");
+
+	Button buttonFillStatesWithSets = new Button("FillStates");
+
+	Button buttonFillObjectWithDummy = new Button("FillObject");
+
 	
 	List sets = new List();
 	
@@ -108,7 +116,7 @@ public class PropertySetCreationTool {
 				input=textInput.getText();
 			
 				
-				generatePropertySets(input, "Nutrient");
+				generatePropertySets(input, "Colour");
 	
 				
 			}
@@ -116,12 +124,56 @@ public class PropertySetCreationTool {
 		buttonGenerate.setBounds(938, 30, 77, 26);
 		frame.getContentPane().add(buttonGenerate);
 		
+		buttonFillStatesWithSets.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			
+			{
+				int maxSetID;
+				int setID;
+				
+				TableStateAppearance tableAppearance = new TableStateAppearance();
+				tableAppearance.clear();
+				maxSetID = tableAppearance.getNewID( "swset_colour", "colour_set_id") - 1;
+				for (int id = 1; id < 1000; id++) {
+					setID = (id % maxSetID) + 1;
+					tableAppearance.insert(id, setID);
+				}
+				
+				TableStateComposition tableComposition = new TableStateComposition();
+				tableComposition.clear();
+				maxSetID = tableComposition.getNewID( "swset_material", "material_set_id") - 1;
+				for (int id = 1; id < 1000; id++) {
+					setID = (id % maxSetID) + 1;
+					tableComposition.insert(id, setID);
+				}
+
+			}
+		});
+		buttonFillStatesWithSets.setBounds(938, 230, 77, 26);
+		frame.getContentPane().add(buttonFillStatesWithSets);
 		
+		buttonFillObjectWithDummy.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			
+			{
+				
+				TableObject table = new TableObject();
+				table.clear();
+				for (int id = 1; id < 1000; id++) {
+					table.insert(id, 4);
+				}
+				
+			}
+		});
+		buttonFillObjectWithDummy.setBounds(938, 430, 77, 26);
+		frame.getContentPane().add(buttonFillObjectWithDummy);
 		
 		JLabel lblPropertySets = new JLabel("PropertySets:");
 		lblPropertySets.setBounds(10, 240, 77, 14);
 		frame.getContentPane().add(lblPropertySets);
-		sets.setBounds(10, 260, 225, 388);
+		sets.setBounds(10, 260, 800, 388);
 		frame.getContentPane().add(sets);
 		
 		
