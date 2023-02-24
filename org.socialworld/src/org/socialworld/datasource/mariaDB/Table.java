@@ -278,5 +278,11 @@ public abstract class Table {
 			}
 			
 			return -1;
-		}		
+		}	
+		
+		public void clear() {
+			String statement 	= "DELETE FROM " + getTableName();
+			delete(statement);
+		}
+
 }
