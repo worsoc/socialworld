@@ -118,21 +118,35 @@ public class Simulation extends SocialWorldThread {
 		myCalcScheduler = Scheduler.getInstance();
 		myCalcScheduler.startThreads();
 		
-		this.objectMaster.loadSimulationObjects();
+		// TODO das muss irgendwann wieder rein
+		//this.objectMaster.loadSimulationObjects();
 
 	
 		this.startThread();
 		
 		Human myHuman;
 		Item myItem;
+
+		
+
 		for (int i = 0; i < 100; i++ ) {
-			myHuman = (Human) createSimulationObject(SimulationObject_Type.human);
-			System.out.println("Human: " + myHuman.getPosition(SimulationCluster.test).toString());
+			myHuman = (Human) createSimulationObject(SimulationObject_Type.human, "org.socialworld.objects.Human");
+			System.out.println("Human(" + myHuman.getObjectID() + "): " + myHuman.getPosition(SimulationCluster.test).toString());
 		}
 		
+		for (int i = 0; i < 100; i++ ) {
+			myItem = (Item) createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.caps.TestCap");
+			myItem = (Item) createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.shirts.TestShirt");
+			myItem = (Item) createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.shoes.TestShoeLeft");
+			myItem = (Item) createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.shoes.TestShoeRight");
+			myItem = (Item) createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.socks.TestSockLeft");
+			myItem = (Item) createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.socks.TestSockRight");
+			myItem = (Item) createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.trousers.TestTrousers");
+		}
+
 		for (int i = 0; i < 75; i++ ) {
-			myItem = (Item) createSimulationObject(SimulationObject_Type.item);
-			System.out.println("Apple:" + myItem.getPosition(SimulationCluster.test).toString());
+			myItem = (Item) createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.eatable.fruits.Apple");
+			System.out.println("Apple(" + myItem.getObjectID() + "):" + myItem.getPosition(SimulationCluster.test).toString());
 		}
 		
 	}
@@ -182,15 +196,16 @@ public class Simulation extends SocialWorldThread {
 		return this.objectMaster;
 	}
 	
-	public SimulationObject createSimulationObject(
-			SimulationObject_Type simulationObjectType) {
+	private SimulationObject createSimulationObject(
+			SimulationObject_Type simulationObjectType,
+			String fullClassName) {
 		
 		int incompleteObjectIndex;
 		int objectID;
 		HiddenSimulationObject hiddenObject;
 		SimulationObject createdObject = NoSimulationObject.getObjectNothing() ;
 	
-		incompleteObjectIndex = this.objectMaster.createSimulationObject(simulationObjectType);
+		incompleteObjectIndex = this.objectMaster.createSimulationObject(simulationObjectType, fullClassName);
 		if (incompleteObjectIndex >= 0) {
 			objectID = this.objectMaster.getObjectIDForIncompleteObjectIndex(incompleteObjectIndex);
 			if (objectID > 0) {
