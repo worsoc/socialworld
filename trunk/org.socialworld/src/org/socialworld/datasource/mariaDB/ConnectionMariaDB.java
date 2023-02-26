@@ -23,6 +23,7 @@ package org.socialworld.datasource.mariaDB;
 
 import java.sql.*;
 
+
 /**
  * @author Mathias Sikos
  *
@@ -37,10 +38,20 @@ public class ConnectionMariaDB {
 	final int ER_BAD_FIELD_ERROR = -1054;
 	final int ER_NO_SUCH_TABLE = -1146;
 	
+
 	Connection connection;
 	Statement stmt;
-	
-	public ConnectionMariaDB() {
+
+	private static ConnectionMariaDB instance;
+
+	public static ConnectionMariaDB getInstance() {
+		if (instance == null) {
+			instance = new ConnectionMariaDB();
+		}
+		return instance;
+	}
+
+	private ConnectionMariaDB() {
 		
 		try {		
 			connection = DriverManager.getConnection("jdbc:mariadb://localhost:3306/sw1", "sw", "sw");	
