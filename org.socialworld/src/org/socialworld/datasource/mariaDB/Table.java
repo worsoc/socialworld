@@ -45,7 +45,7 @@ public abstract class Table {
 		protected int pk2[];
 		
 		public Table() {
-			connection = new ConnectionMariaDB();
+			connection = ConnectionMariaDB.getInstance();
 		}
 		
 		
@@ -58,7 +58,7 @@ public abstract class Table {
 		}
 
 		public void open() {
-			connection = new ConnectionMariaDB();
+			connection = ConnectionMariaDB.getInstance();
 		}
 
 		public long lock() {
