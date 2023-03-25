@@ -44,6 +44,7 @@ import org.socialworld.datasource.tablesSimulation.propertySets.TableSet;
 import org.socialworld.datasource.tablesSimulation.propertySets.TableTasteSet;
 import org.socialworld.datasource.tablesSimulation.states.TableStateAppearance;
 import org.socialworld.datasource.tablesSimulation.states.TableStateComposition;
+import org.socialworld.datasource.tablesSimulation.states.TableStateEatable;
 
 
 public class PropertySetCreationTool {
@@ -141,25 +142,38 @@ public class PropertySetCreationTool {
 			public void actionPerformed(ActionEvent e) 
 			
 			{
-				int maxSetID;
-				int setID;
+				int maxSetID_1;
+				int maxSetID_2;
+				int setID_1;
+				int setID_2;
 				
 				TableStateAppearance tableAppearance = new TableStateAppearance();
 				tableAppearance.clear();
-				maxSetID = tableAppearance.getNewID( "swset_colour", "colour_set_id") - 1;
+				maxSetID_1 = tableAppearance.getNewID( "swset_colour", "colour_set_id") - 1;
 				for (int id = 1; id < 1000; id++) {
-					setID = (id % maxSetID) + 1;
-					tableAppearance.insert(id, setID);
+					setID_1 = (id % maxSetID_1) + 1;
+					tableAppearance.insert(id, setID_1);
 				}
 				
 				TableStateComposition tableComposition = new TableStateComposition();
 				tableComposition.clear();
-				maxSetID = tableComposition.getNewID( "swset_material", "material_set_id") - 1;
+				maxSetID_1 = tableComposition.getNewID( "swset_material", "material_set_id") - 1;
 				for (int id = 1; id < 1000; id++) {
-					setID = (id % maxSetID) + 1;
-					tableComposition.insert(id, setID);
+					setID_1 = (id % maxSetID_1) + 1;
+					tableComposition.insert(id, setID_1);
 				}
 
+				TableStateEatable tableEatable = new TableStateEatable();
+				tableEatable.clear();
+				maxSetID_1 = tableEatable.getNewID( "swset_nutrient", "nutrient_set_id") - 1;
+				maxSetID_2 = tableEatable.getNewID( "swset_taste", "taste_set_id") - 1;
+				for (int id = 1; id < 1000; id++) {
+					setID_1 = (id % maxSetID_1) + 1;
+					setID_2 = (id % maxSetID_2) + 1;
+					tableEatable.insert(id, setID_1, setID_2);
+				}
+
+				
 			}
 		});
 		buttonFillStatesWithSets.setBounds(938, 230, 77, 26);
