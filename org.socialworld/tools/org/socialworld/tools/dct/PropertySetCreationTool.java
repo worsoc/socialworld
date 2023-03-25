@@ -30,6 +30,7 @@ import java.awt.Button;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
+import javax.swing.JComboBox;
 
 import org.socialworld.attributes.properties.Colour;
 import org.socialworld.attributes.properties.Material;
@@ -60,7 +61,9 @@ public class PropertySetCreationTool {
 
 	Button buttonFillObjectWithDummy = new Button("FillObject");
 
-	
+	private String[] comboBoxSetsEntrys = {
+			    "Colour", "Material", "Nutrient", "Taste"  };
+
 	List sets = new List();
 	
 	TableSet tableSet;
@@ -100,11 +103,19 @@ public class PropertySetCreationTool {
 		frame.getContentPane().setLayout(null);
 		
 		JLabel lblTexteingabe = new JLabel("Texteingabe:");
-		lblTexteingabe.setBounds(10, 10, 77, 14);
+		lblTexteingabe.setBounds(10, 10, 177, 14);
 		frame.getContentPane().add(lblTexteingabe);
 		textInput.setBounds(10, 30, 900, 200);
 		frame.getContentPane().add(textInput);
 
+		JLabel lblChooseSet = new JLabel("Auswahl Sets:");
+		lblChooseSet.setBounds(938, 10, 177, 14);
+		frame.getContentPane().add(lblChooseSet);
+		JComboBox comboBoxSets = new JComboBox();
+		for(int i = 0; i < comboBoxSetsEntrys.length; i++)
+			comboBoxSets.addItem(comboBoxSetsEntrys[i]);
+		comboBoxSets.setBounds(938, 30, 177, 24);
+		frame.getContentPane().add(comboBoxSets);
 	
 		buttonGenerate.addActionListener(new ActionListener() 
 		{
@@ -116,12 +127,13 @@ public class PropertySetCreationTool {
 				input=textInput.getText();
 			
 				
-				generatePropertySets(input, "Colour");
+				generatePropertySets(input, comboBoxSets.getSelectedItem().toString());
+						//"Colour");
 	
 				
 			}
 		});
-		buttonGenerate.setBounds(938, 30, 77, 26);
+		buttonGenerate.setBounds(938, 60, 77, 26);
 		frame.getContentPane().add(buttonGenerate);
 		
 		buttonFillStatesWithSets.addActionListener(new ActionListener() 
