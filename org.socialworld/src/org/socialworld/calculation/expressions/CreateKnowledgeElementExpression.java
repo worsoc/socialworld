@@ -29,6 +29,9 @@ import org.socialworld.calculation.PropertyUsingAs;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
+import org.socialworld.datasource.tablesPool.TablePoolDotElemLine;
+import org.socialworld.datasource.tablesPool.ViewDotElementJoinDotElem;
+import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.knowledge.KnowledgeFact_Type;
 
 public class CreateKnowledgeElementExpression extends CreateValue {
@@ -45,6 +48,128 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 	public static String LABEL_KNOWLEDGERELATIONADVERB = "KRelAdv";
 	public static String LABEL_KNOWLEDGERELATIONOBJECT1 = "KRelObj1";
 	public static String LABEL_KNOWLEDGERELATIONOBJECT2 = "KRelObj2";
+	
+	public CreateKnowledgeElementExpression(int[] dotElemLineIDs) {
+		super(Type.knowledgeElement);
+		
+		if (dotElemLineIDs.length > 0) {
+			
+			List<Expression> listExpressions = new ArrayList<Expression>();
+			
+			String descriptionSubject = "GETVal(" + Value.VALUE_BY_NAME_EVENT_PARAMS + ").GETVal(" + Value.VALUE_BY_NAME_EVENT_CAUSER + ")";
+			Expression subject = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeSubject, descriptionSubject, Value.VALUE_NAME_KNOWLEDGE_SUBJECT);
+			listExpressions.add(subject);
+		
+			Expression knowledgeSourcetype = new Constant(new Value(Type.integer, Value.VALUE_NAME_KNOWLEDGE_SOURCE_TYPE, 1 ));
+			Expression knowledgeSource = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeSource, "GETVal(" + Value.VALUE_NAME_KNOWLEDGE_SOURCE_MYSELF + ")", Value.VALUE_NAME_KNOWLEDGE_SOURCE);
+			Expression creationKnowledgeSource = new CreateKnowledgeSourceExpression(knowledgeSourcetype, knowledgeSource);
+			listExpressions.add(creationKnowledgeSource);
+			
+			ViewDotElementJoinDotElem dotElements = new ViewDotElementJoinDotElem();
+			int dot_element_id;
+			int dotelem_function; 		
+			String dotelem_value_name; 
+//			int dotelem_addon; 
+//			int dotelem_addon_intarg; 
+//			String dotelem_addon_charsarg; 
+
+			
+			int indexTablePoolDotElemLine;
+			int function;
+			String resultType;
+			int kfc;
+			String resultValueName;
+			TablePoolDotElemLine dotElemLine = new TablePoolDotElemLine();
+			dotElemLine.select(dotElemLine.SELECT_ALL_COLUMNS , "", "");
+			for (int id : dotElemLineIDs) {
+				
+				indexTablePoolDotElemLine = dotElemLine.getIndexFor1PK(id);
+				function = dotElemLine.getFunction(indexTablePoolDotElemLine);
+				resultType = dotElemLine.getResultType(indexTablePoolDotElemLine);
+				resultValueName = dotElemLine.getResultValueName(indexTablePoolDotElemLine);
+
+				Expression value;
+				List<Expression> expressions = new ArrayList<Expression>();
+
+				KnowledgeFact_Type knowledgeFact_Type = null;
+				switch (function) {
+				case 1:
+					knowledgeFact_Type = KnowledgeFact_Type.value;
+					break;
+				case 2:
+					knowledgeFact_Type = KnowledgeFact_Type.property;
+					break;
+				}
+				
+				Expression knowledgeFactCriterion;
+				switch (resultType) {
+				case "StateAppearance":
+					kfc = KnowledgeFact_Criterion.colour.getIndex();
+					break;
+				case "StateComposition":
+					kfc = KnowledgeFact_Criterion.material.getIndex();
+					break;
+				default:
+					kfc = -1;
+				}
+				if (resultType.length() > 0 ) {
+					knowledgeFactCriterion = new Constant(new Value(Type.integer, Value.VALUE_NAME_KNOWLEDGE_PROPERTY_CRITERION, kfc ));
+					expressions.add(knowledgeFactCriterion);
+				}
+
+				dotElements.select(dotElemLine.SELECT_ALL_COLUMNS , " WHERE dot_elem_line_id = " + id, " ORDER BY lfd_nr");
+				for (int i = 0; i < dotElements.rowCount(); i++) {
+					dot_element_id = dotElements.getDotElementID(i);
+					dotelem_function = dotElements.getFunction(i); 		
+					dotelem_value_name = dotElements.getValueName(i); 		
+				/*	dotelem_addon = dotElements.getAddon(i); 		
+					dotelem_addon_intarg = dotElements.getAddon_IntArg(i); 		
+					dotelem_addon_charsarg = dotElements.getAddon_CharsArg(i); 		
+				*/
+									
+					switch (dotelem_function) {
+					case 1:  // GetValue
+						
+						value = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeValue, dotElements, i, dotelem_value_name);
+						expressions.add(value);
+						
+						
+					
+					case 2: // GetProperty
+						
+
+						
+						value = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeProperty, dotElements, i, dotelem_value_name);
+						expressions.add(value);
+						
+						
+						
+					}
+					
+				}
+				
+				Expression creationKnowledgeAtom = new CreateKnowledgeAtomExpression(knowledgeFact_Type, expressions);
+				
+				if ( creationKnowledgeAtom.isValid() ) {
+					
+					listExpressions.add(creationKnowledgeAtom);
+					
+				}
+
+			}
+			
+			if (listExpressions.size() > 1) {
+				
+				Expression sequence = new	AddOrSetValuesToArguments(Value.VALUE_NAME_KNOWLEDGE_ELEMENT_PROPS, listExpressions);
+				setExpression2(sequence);
+	
+				setValid();
+			
+			}
+
+		}
+		
+	}
 	
 	public CreateKnowledgeElementExpression(String description) {
 		

@@ -28,6 +28,7 @@ import org.socialworld.calculation.PropertyUsingAs;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
+import org.socialworld.datasource.tablesPool.ViewDotElementJoinDotElem;
 
 public class GetValue extends Expression {
 
@@ -37,6 +38,9 @@ public class GetValue extends Expression {
 	public static String GETISA = "IsA";
 	public static String GETCHECK = "Check";
 	public static String GETISELEMENTOF = "IsElem";
+	
+	
+	
 	
 	public GetValue(SimulationCluster cluster, PropertyUsingAs usablePermission, String getValuePath, String valueAliasName) {
 		
@@ -187,4 +191,102 @@ public class GetValue extends Expression {
 		return result;
 	}
 
+	
+	GetValue(SimulationCluster cluster, PropertyUsingAs usablePermission, ViewDotElementJoinDotElem dotElements, int row, String valueAliasName) {
+
+		Expression exp1 = Nothing.getInstance();
+		Expression exp2 = Nothing.getInstance();
+		
+		Value checkPermission;
+		
+		exp1 = getStepExpression(cluster, usablePermission, dotElements, row, valueAliasName);
+
+		if (dotElements.rowCount() == row + 1) {
+			
+			// that is the value from expression 1,
+			// because the expression 1 evaluation result
+			// is forwarded (as argument value list array with that one element)  to expression 2 evaluation
+			exp2 = new GetArgumentByName(valueAliasName, valueAliasName);
+			checkPermission = new Value(Type.integer, usablePermission.getIndex());
+			
+		}
+		else {
+			if (dotElements.rowCount() == row + 2) {
+				
+				exp2 = getStepExpression(cluster, usablePermission, dotElements, row + 1, valueAliasName);
+				checkPermission = new Value(Type.integer, usablePermission.getIndex() - 1);
+				
+			}
+			else {
+					
+				exp2 = new GetValue(cluster, usablePermission, dotElements, row  + 1, valueAliasName);
+				checkPermission = new Value(Type.integer, usablePermission.getIndex() - 1);
+	
+			}
+		}
+
+		setOperation(Expression_Function.get);
+		setValue(checkPermission);
+		setExpression1(exp1);
+		setExpression2(exp2);
+		setExpression3(Nothing.getInstance());
+		
+		setValid();
+		
+	}
+
+	private Expression getStepExpression(SimulationCluster cluster, PropertyUsingAs usablePermission, ViewDotElementJoinDotElem dotElements, int row, String valueAliasName) {
+		Expression result = Nothing.getInstance();
+		
+		String name;
+		int dotElemFunction;
+		int dotElemAddOn;
+		int dotElemAdooOnIntArg;
+		
+		name = dotElements.getValueName(row);
+		dotElemFunction = dotElements.getFunction(row);
+		dotElemAddOn = dotElements.getAddon(row);
+		dotElemAdooOnIntArg = dotElements.getAddon_IntArg(row);
+		
+		if (dotElemFunction == 1 ) {
+			// GetValue
+			if (dotElemAddOn == 1 /* IsElem */ ) {
+				result = new  Branching (new GetProperty(cluster, GetPropertyMode.isElem, "" + dotElemAdooOnIntArg, valueAliasName),
+						new GetArgumentByName(name, valueAliasName), 
+						Nothing.getInstance());
+			}
+			else {
+				result = new GetArgumentByName(name, valueAliasName);
+			}
+			
+		}
+		else if (dotElemFunction == 2 ) {
+			// GetProperty
+			if (dotElemAddOn == 1 /* IsElem */ ) {
+				result = new  Branching (new GetProperty(cluster, GetPropertyMode.isElem, "" + dotElemAdooOnIntArg, valueAliasName),
+						new GetProperty(cluster, GetPropertyMode.property, name, valueAliasName), 
+						Nothing.getInstance());
+			}
+			else {
+				result = new GetProperty(cluster, GetPropertyMode.property, name, valueAliasName);
+			}
+			
+		}
+		/*
+		else if (step.indexOf(GETFUNCTIONVALUE + "(") >= 0 ) {
+			result = new GetProperty(cluster, GetPropertyMode.method, name, valueAliasName);
+		}
+		else if (step.indexOf(GETISA + "(") >= 0 ) {
+			result = new GetProperty(cluster, GetPropertyMode.isA, name, valueAliasName);
+		}
+		else if (step.indexOf(GETCHECK + "(") >= 0 ) {
+			result = new GetProperty(cluster, GetPropertyMode.check, name, valueAliasName);
+		}
+		else if (step.indexOf(GETISELEMENTOF + "(") >= 0 ) {
+			result = new GetProperty(cluster, GetPropertyMode.isElem, name, valueAliasName);
+		}
+*/
+		return result;
+	}
+	
 }
