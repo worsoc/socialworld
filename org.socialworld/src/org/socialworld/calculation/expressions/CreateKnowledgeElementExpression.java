@@ -77,7 +77,7 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 			int indexTablePoolDotElemLine;
 			int function;
 			String resultType;
-			int kfc;
+			int kfc = -1;
 			String resultValueName;
 			TablePoolDotElemLine dotElemLine = new TablePoolDotElemLine();
 			dotElemLine.select(dotElemLine.SELECT_ALL_COLUMNS , "", "");
@@ -88,6 +88,8 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 				resultType = dotElemLine.getResultType(indexTablePoolDotElemLine);
 				resultValueName = dotElemLine.getResultValueName(indexTablePoolDotElemLine);
 
+				Expression knowledgeFactCriterion;
+
 				Expression value;
 				List<Expression> expressions = new ArrayList<Expression>();
 
@@ -95,23 +97,23 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 				switch (function) {
 				case 1:
 					knowledgeFact_Type = KnowledgeFact_Type.value;
+					switch (resultType) {
+					case "StateAppearance":
+						kfc = KnowledgeFact_Criterion.colour.getIndex();
+						break;
+					case "StateComposition":
+						kfc = KnowledgeFact_Criterion.material.getIndex();
+						break;
+					default:
+						kfc = -1;
+					}
 					break;
 				case 2:
 					knowledgeFact_Type = KnowledgeFact_Type.property;
+					kfc = Integer.parseInt(resultType);
 					break;
 				}
 				
-				Expression knowledgeFactCriterion;
-				switch (resultType) {
-				case "StateAppearance":
-					kfc = KnowledgeFact_Criterion.colour.getIndex();
-					break;
-				case "StateComposition":
-					kfc = KnowledgeFact_Criterion.material.getIndex();
-					break;
-				default:
-					kfc = -1;
-				}
 				if (resultType.length() > 0 ) {
 					knowledgeFactCriterion = new Constant(new Value(Type.integer, Value.VALUE_NAME_KNOWLEDGE_PROPERTY_CRITERION, kfc ));
 					expressions.add(knowledgeFactCriterion);
@@ -132,7 +134,7 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 						
 						value = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeValue, dotElements, i, dotelem_value_name);
 						expressions.add(value);
-						
+						break;
 						
 					
 					case 2: // GetProperty
@@ -141,7 +143,7 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 						
 						value = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeProperty, dotElements, i, dotelem_value_name);
 						expressions.add(value);
-						
+						break;
 						
 						
 					}
