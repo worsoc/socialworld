@@ -80,8 +80,8 @@ public class PerceptionCreationTool extends JFrame{
 		}
 
 		System.out.println(lfdNr);
-
-*/		
+*/
+/*	
 
 		String result = pg.generatePerceptionDescription("gfjg48gtdzi57ugjjgkt");
 		System.out.println(result);
@@ -92,7 +92,21 @@ public class PerceptionCreationTool extends JFrame{
 		System.out.println(result);
 		exp = new CreateKnowledgeElementExpression(result);
 		System.out.println(exp.toString());
+
+*/	
+		
+		int[] dotElemLineIDs = new int[1];
+		dotElemLineIDs[0] = 8607;
+		exp = new CreateKnowledgeElementExpression(dotElemLineIDs);
+		System.out.println(exp.toString());
+
+		String gegenProbezuLineID_6 =		"KSrcT:1&KSrc:GETVal(myself);KSbj:GETVal(event_params).GETVal(event_causer);KVal(StateAppearance):GETVal(event_params).GETVal(event_causer)#IsElem(1056964607).GETProp(stateAppearance)";
+		String gegenProbezuLineID_8607 =		"KSrcT:1&KSrc:GETVal(myself);KSbj:GETVal(event_params).GETVal(event_causer);KProp(0,inventory_shirt.SOGN_184549375.mainColour):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_shirt)#IsElem(184549375).GETProp(stateAppearance).GETFctVal(getMainColour).GETFctVal(getIndex)";
+		exp = new CreateKnowledgeElementExpression(gegenProbezuLineID_8607);
+		System.out.println(exp.toString());
 	
+		
+
 		System.out.println("Bye, Bye, World");
 
 	}

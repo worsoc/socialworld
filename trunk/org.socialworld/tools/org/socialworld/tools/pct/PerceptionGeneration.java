@@ -68,8 +68,8 @@ public class PerceptionGeneration extends Generation{
 			
 			switch (k_a_t) {
 			case value: 
-				descriptionsKnowledgeValue = generateAllPerceptionKnowledgeValueDescriptions();
-				allDescriptions.addAll(descriptionsKnowledgeValue);
+				//descriptionsKnowledgeValue = generateAllPerceptionKnowledgeValueDescriptions();
+				//allDescriptions.addAll(descriptionsKnowledgeValue);
 				break;
 			case property: 
 				//descriptionsKnowledgeProperty = generateAllPerceptionKnowledgePropertyDescriptions();
