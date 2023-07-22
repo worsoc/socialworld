@@ -22,11 +22,20 @@
 package org.socialworld.datasource.createObjects;
 
 import org.socialworld.SimpleClientActionHandler;
+import org.socialworld.actions.handle.Inventory;
 import org.socialworld.core.IncompleteSimulationObject;
+import org.socialworld.datasource.pool.GaussPoolAttributeArray;
+import org.socialworld.datasource.pool.GaussPoolAttributeCalculatorMatrix;
+import org.socialworld.datasource.pool.GaussPoolInfluenceType;
+import org.socialworld.datasource.pool.GaussPoolPerceptionType;
+import org.socialworld.datasource.pool.GaussPoolPosition;
+import org.socialworld.datasource.pool.GaussPoolReactionType;
+import org.socialworld.datasource.pool.GaussPoolState2ActionType;
 import org.socialworld.objects.Human;
 import org.socialworld.objects.StateHuman;
 import org.socialworld.objects.WriteAccessToHuman;
 import org.socialworld.objects.access.GrantedAccessToProperty;
+import org.socialworld.objects.access.HiddenAnimal;
 import org.socialworld.objects.access.HiddenHuman;
 
 /**
@@ -37,6 +46,8 @@ public class CreateHuman extends CreateAnimal {
 
 	private static CreateHuman instance;
 	private static boolean hasBeenCreatedYet = false;
+	
+	private static int positionCounter = 0;
 	
 	/**
 	 * The method returns the only instance of the CreateHuman class to first caller.
@@ -78,4 +89,78 @@ public class CreateHuman extends CreateAnimal {
 		return new IncompleteSimulationObject(createdHuman, hiddenHuman);
 	}
 
+	// overrides for testing 3 human
+	// TEMP_SOLUTION
+	// holds the parent class implementations --> clear the parent implementations
+	protected void initState(HiddenHuman hiddenHuman) {
+
+		int indexPosition;
+
+		int indexGPIT; 
+		int indexGPRT; 
+		int indexGPS2A; 
+		int indexGPPT; 
+		
+		double gauss_value;
+		
+	
+		gauss_value = random.nextGaussian();
+		while ((gauss_value > THRESHOLD_RANDOM_GAUSSIAN_VALUE) || (gauss_value < -THRESHOLD_RANDOM_GAUSSIAN_VALUE))
+			gauss_value = random.nextGaussian();
+		indexGPIT = mapGaussToIndex(gauss_value, GaussPoolInfluenceType.CAPACITY_GPIT_ARRAY);
+		hiddenHuman.setInfluenceTypes(GaussPoolInfluenceType.getInstance().getInfluenceTypes(indexGPIT));
+
+		gauss_value = random.nextGaussian();
+		while ((gauss_value > THRESHOLD_RANDOM_GAUSSIAN_VALUE) || (gauss_value < -THRESHOLD_RANDOM_GAUSSIAN_VALUE))
+			gauss_value = random.nextGaussian();
+		indexGPRT = mapGaussToIndex(gauss_value, GaussPoolReactionType.CAPACITY_GPRT_ARRAY);
+		hiddenHuman.setReactionTypes(GaussPoolReactionType.getInstance().getReactionTypes(indexGPRT));
+
+		gauss_value = random.nextGaussian();
+		while ((gauss_value > THRESHOLD_RANDOM_GAUSSIAN_VALUE) || (gauss_value < -THRESHOLD_RANDOM_GAUSSIAN_VALUE)) 
+			gauss_value = random.nextGaussian();
+		indexGPS2A = mapGaussToIndex(gauss_value, GaussPoolState2ActionType.CAPACITY_GPS2A_ARRAY);
+		hiddenHuman.setState2ActionType(GaussPoolState2ActionType.getInstance().getState2ActionType(indexGPS2A));
+
+		gauss_value = random.nextGaussian();
+		while ((gauss_value > THRESHOLD_RANDOM_GAUSSIAN_VALUE) || (gauss_value < -THRESHOLD_RANDOM_GAUSSIAN_VALUE)) 
+			gauss_value = random.nextGaussian();
+		indexGPPT = mapGaussToIndex(gauss_value, GaussPoolPerceptionType.CAPACITY_GPPT_ARRAY);
+		hiddenHuman.setPerceptionTypes(GaussPoolPerceptionType.getInstance().getPerceptionTypes(indexGPPT));
+
+/*		
+		do {
+			indexPosition = random.nextInt(GaussPoolPosition.CAPACITY_GPPos_ARRAY);
+			if (random.nextBoolean() == false) indexPosition = indexPosition * -1;
+		} while (checkArrayContainsValue(usedPositionIndex, indexPosition));
+		usedPositionIndex.add(indexPosition);
+		hiddenHuman.setPosition(GaussPoolPosition.getInstance().getPosition(indexPosition));
+*/
+		if (positionCounter < 3) {
+			hiddenHuman.setPosition(GaussPoolPosition.getInstance().getPosition(positionCounter));
+		}
+		positionCounter++;
+		
+		int indexGPAA;
+		int indexGPACM;
+	
+		gauss_value = random.nextGaussian();
+		while ((gauss_value > THRESHOLD_RANDOM_GAUSSIAN_VALUE) || (gauss_value < -THRESHOLD_RANDOM_GAUSSIAN_VALUE))
+			gauss_value = random.nextGaussian();
+		indexGPAA = mapGaussToIndex(gauss_value, GaussPoolAttributeArray.CAPACITY_GPAA_ARRAY);
+		hiddenHuman.setAttributes(
+				GaussPoolAttributeArray.getInstance().getArrayAsValue(indexGPAA));
+		
+		gauss_value = random.nextGaussian();
+		while ((gauss_value > THRESHOLD_RANDOM_GAUSSIAN_VALUE) || (gauss_value < -THRESHOLD_RANDOM_GAUSSIAN_VALUE))
+			gauss_value = random.nextGaussian();
+		indexGPACM = mapGaussToIndex(gauss_value, GaussPoolAttributeCalculatorMatrix.CAPACITY_GPACM_ARRAY);
+		hiddenHuman.setMatrix(	
+				GaussPoolAttributeCalculatorMatrix.getInstance().getMatrix(indexGPACM));
+
+		hiddenHuman.setInventory(new Inventory(hiddenHuman.getSimObjectType()));
+		
+	}
+
+	
 }
