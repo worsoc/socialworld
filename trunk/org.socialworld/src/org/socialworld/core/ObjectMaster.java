@@ -206,6 +206,7 @@ public class ObjectMaster {
 		}
 	}
 	
+/*	
 	SimulationObject getObjectForIncompleteObjectIndex(int  incompleteObjectsIndex, int objectID) {
 		
 		IncompleteSimulationObject incompleteObject;
@@ -219,7 +220,8 @@ public class ObjectMaster {
 		}
 		
 	}
-
+*/
+/*
 	HiddenSimulationObject getHiddenObjectForIncompleteObjectIndex(int  incompleteObjectsIndex, int objectID) {
 		
 		IncompleteSimulationObject incompleteObject;
@@ -230,6 +232,19 @@ public class ObjectMaster {
 		}
 		else {
 			return new HiddenSimulationObject(); // instead of null
+		}
+	}
+*/
+	IncompleteSimulationObject getIncompleteObject(int  incompleteObjectsIndex, int objectID) {
+		
+		IncompleteSimulationObject incompleteObject;
+		incompleteObject = this.incompleteObjects.get(incompleteObjectsIndex);
+		
+		if (incompleteObject.isValid() && incompleteObject.getObjectID() == objectID) {
+			return incompleteObject;
+		}
+		else {
+			return new IncompleteSimulationObject(); // instead of null
 		}
 	}
 
