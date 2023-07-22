@@ -9,7 +9,7 @@ import org.socialworld.objects.concrete.eatable.Fruit;
 public final class GroupingOfSimulationObjects {
 
 	public static final String PRAEFIX_SIMOBJECT_GROUPING_NUMBER = "SOGN_";
-	
+	public static final int GROUPING_NUMBER_SUFFIX_TEST = 0;
 	
 	public static final int GROUPING_NUMBER_ALL_OBJECTS 
 								= 0b00111110111111111111111111111111;	// 1056964607
