@@ -281,7 +281,7 @@ public class SimVisual extends SocialWorldThread {
 
 	
 	public void setAttributes(int objID, AttributeArray attributes) {
-
+		if (objID > 100) return;
 		this.attributeLines[this.lastChangedObjID - 1].setBackground(Color.WHITE);
 		this.attributeLines[objID-1].setBackground(Color.CYAN);
 		this.attributeLines[objID-1].setText(objID + " - " + attributes.toString());
