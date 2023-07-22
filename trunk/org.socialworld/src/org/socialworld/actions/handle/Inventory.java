@@ -102,6 +102,8 @@ public class Inventory extends SimProperty {
 	private boolean complete;
 	private boolean isHumanInventory;
 	
+	private SimulationObject parent = null;
+	
 ///////////////////////////////////////////////////////////////////////////////////////////
 //////////////////  static instance for meta information    ///////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -186,6 +188,10 @@ public class Inventory extends SimProperty {
 		super(protectionOriginal, cluster);
 	}
 	
+	public void setParentObject(SimulationObject parent) {
+		this.parent = parent;
+	}
+	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    ISavedValues  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -233,13 +239,13 @@ public class Inventory extends SimProperty {
 // TODO getting the objects	according to the ids	
 			
 			if (leftHandID > 0) {
-				leftHand = ObjectMaster.getInstance().getSimulationObject(leftHandID);
+				setLeftHand(ObjectMaster.getInstance().getSimulationObject(leftHandID));
 			}
 			if (rightHandID > 0) {
-				rightHand = ObjectMaster.getInstance().getSimulationObject(rightHandID);
+				setRightHand(ObjectMaster.getInstance().getSimulationObject(rightHandID));
 			}
 			if (mouthID > 0) {
-				mouth = ObjectMaster.getInstance().getSimulationObject(mouthID);
+				setMouth(ObjectMaster.getInstance().getSimulationObject(mouthID));
 			}
 			
 			complete = true;
@@ -253,6 +259,7 @@ public class Inventory extends SimProperty {
 		return this.leftHand;
 	}
 
+	
 	/**
 	 * @param leftHand
 	 *            the leftHand to set
@@ -348,6 +355,14 @@ public class Inventory extends SimProperty {
 
 	public void setCap(final Cap cap) {
 		this.cap = cap;
+	}
+
+	/**
+	 * @param mouth
+	 *            the mouth input (eating, drinking...) to set
+	 */
+	public void setMouth(final SimulationObject mouth) {
+		this.mouth = mouth;
 	}
 
 	/**
