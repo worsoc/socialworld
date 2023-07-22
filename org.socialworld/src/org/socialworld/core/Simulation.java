@@ -144,6 +144,7 @@ public class Simulation extends SocialWorldThread {
 		Item myItem;
 
 		List<HiddenHuman> hiddenHumans= new ArrayList<HiddenHuman>();
+		List<Human> humans= new ArrayList<Human>();
 		
 	//	ValueProperty propInventory[] = new ValueProperty[3];
 
@@ -155,17 +156,23 @@ public class Simulation extends SocialWorldThread {
 			
 			
 			hiddenHumans.add(myHiddenHuman);
+			humans.add(myHuman);
 			
 			System.out.println("Human(" + myHuman.getObjectID() + "): " + myHuman.getPosition(SimulationCluster.test).toString());
 		}
 		
 		for (int i = 0; i < 3; i++ ) {
-
+			Human human = humans.get(i);
+			Position positionParentHuman = human.getPosition(SimulationCluster.test);
+			
 			Inventory inventory = new Inventory(SimulationObject_Type.human);
+			hiddenHumans.get(i).setInventory(inventory);
 
 			incompleteObject = createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.caps.TestCap");
 			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
 			myItem = (Item) incompleteObject.getObject();
+			// set the human's position to the inventory item
+			myHiddenItem.setPosition(positionParentHuman);
 			
 			inventory.setCap( (Cap) myItem) ;
 
@@ -173,6 +180,8 @@ public class Simulation extends SocialWorldThread {
 			incompleteObject =  createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.shirts.TestShirt");
 			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
 			myItem = (Item) incompleteObject.getObject();
+			// set the human's position to the inventory item
+			myHiddenItem.setPosition(positionParentHuman);
 
 			inventory.setShirt((Shirt) myItem);
 			
@@ -180,11 +189,15 @@ public class Simulation extends SocialWorldThread {
 			incompleteObject =  createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.shoes.TestShoeLeft");
 			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
 			shoeLeft = (Shoe) incompleteObject.getObject();
+			// set the human's position to the inventory item
+			myHiddenItem.setPosition(positionParentHuman);
 			
 			Shoe shoeRight;
 			incompleteObject = createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.shoes.TestShoeRight");
 			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
 			shoeRight = (Shoe) incompleteObject.getObject();
+			// set the human's position to the inventory item
+			myHiddenItem.setPosition(positionParentHuman);
 
 			inventory.setShoes(shoeLeft, shoeRight);
 
@@ -192,24 +205,29 @@ public class Simulation extends SocialWorldThread {
 			incompleteObject = createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.socks.TestSockLeft");
 			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
 			sockLeft = (Sock) incompleteObject.getObject();
+			// set the human's position to the inventory item
+			myHiddenItem.setPosition(positionParentHuman);
 			
 			Sock sockRight;
 			incompleteObject = createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.socks.TestSockRight");
 			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
 			sockRight = (Sock) incompleteObject.getObject();
+			// set the human's position to the inventory item
+			myHiddenItem.setPosition(positionParentHuman);
 
 			inventory.setSocks(sockLeft, sockRight);
 
 			incompleteObject = createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.trousers.TestTrousers");
 			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
 			myItem = (Item) incompleteObject.getObject();
+			// set the human's position to the inventory item
+			myHiddenItem.setPosition(positionParentHuman);
 	
 			inventory.setTrousers((Trousers) myItem) ;
 			
 //			inventory.setLeftHand(leftHand);
 //			inventory.setRightHand(rightHand);
 			
-			hiddenHumans.get(i).setInventory(inventory);
 
 		}
 /*
