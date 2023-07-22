@@ -22,17 +22,28 @@
 package org.socialworld.core;
 
 import org.socialworld.objects.*;
-import org.socialworld.objects.access.HiddenSimulationObject;
+import org.socialworld.objects.access.HiddenHuman;
+import org.socialworld.objects.access.HiddenItem;
+import org.socialworld.objects.concrete.clothes.Cap;
+import org.socialworld.objects.concrete.clothes.Shirt;
+import org.socialworld.objects.concrete.clothes.Shoe;
+import org.socialworld.objects.concrete.clothes.Sock;
+import org.socialworld.objects.concrete.clothes.Trousers;
 import org.socialworld.propertyChange.ChangedProperty;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.socialworld.SocialWorld;
+import org.socialworld.actions.handle.Inventory;
 import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Position;
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.Time;
 import org.socialworld.calculation.SimulationCluster;
+import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.collections.ObjectByPositionSearch;
 
@@ -124,31 +135,89 @@ public class Simulation extends SocialWorldThread {
 	
 		this.startThread();
 		
+		IncompleteSimulationObject incompleteObject;
+		
+		HiddenHuman myHiddenHuman; 
 		Human myHuman;
+		
+		HiddenItem myHiddenItem;
 		Item myItem;
 
+		List<HiddenHuman> hiddenHumans= new ArrayList<HiddenHuman>();
 		
+	//	ValueProperty propInventory[] = new ValueProperty[3];
 
-		for (int i = 0; i < 100; i++ ) {
-			myHuman = (Human) createSimulationObject(SimulationObject_Type.human, "org.socialworld.objects.Human");
+		for (int i = 0; i < 3; i++ ) {
+			incompleteObject = createSimulationObject(SimulationObject_Type.human, "org.socialworld.objects.Human");
+			
+			myHiddenHuman = (HiddenHuman) incompleteObject.getHiddenObject();
+			myHuman = (Human) incompleteObject.getObject();
+			
+			
+			hiddenHumans.add(myHiddenHuman);
+			
 			System.out.println("Human(" + myHuman.getObjectID() + "): " + myHuman.getPosition(SimulationCluster.test).toString());
 		}
 		
-		for (int i = 0; i < 100; i++ ) {
-			myItem = (Item) createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.caps.TestCap");
-			myItem = (Item) createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.shirts.TestShirt");
-			myItem = (Item) createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.shoes.TestShoeLeft");
-			myItem = (Item) createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.shoes.TestShoeRight");
-			myItem = (Item) createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.socks.TestSockLeft");
-			myItem = (Item) createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.socks.TestSockRight");
-			myItem = (Item) createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.trousers.TestTrousers");
-		}
+		for (int i = 0; i < 3; i++ ) {
 
+			Inventory inventory = new Inventory(SimulationObject_Type.human);
+
+			incompleteObject = createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.caps.TestCap");
+			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
+			myItem = (Item) incompleteObject.getObject();
+			
+			inventory.setCap( (Cap) myItem) ;
+
+			
+			incompleteObject =  createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.shirts.TestShirt");
+			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
+			myItem = (Item) incompleteObject.getObject();
+
+			inventory.setShirt((Shirt) myItem);
+			
+			Shoe shoeLeft;
+			incompleteObject =  createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.shoes.TestShoeLeft");
+			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
+			shoeLeft = (Shoe) incompleteObject.getObject();
+			
+			Shoe shoeRight;
+			incompleteObject = createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.shoes.TestShoeRight");
+			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
+			shoeRight = (Shoe) incompleteObject.getObject();
+
+			inventory.setShoes(shoeLeft, shoeRight);
+
+			Sock sockLeft;
+			incompleteObject = createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.socks.TestSockLeft");
+			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
+			sockLeft = (Sock) incompleteObject.getObject();
+			
+			Sock sockRight;
+			incompleteObject = createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.socks.TestSockRight");
+			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
+			sockRight = (Sock) incompleteObject.getObject();
+
+			inventory.setSocks(sockLeft, sockRight);
+
+			incompleteObject = createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.trousers.TestTrousers");
+			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
+			myItem = (Item) incompleteObject.getObject();
+	
+			inventory.setTrousers((Trousers) myItem) ;
+			
+//			inventory.setLeftHand(leftHand);
+//			inventory.setRightHand(rightHand);
+			
+			hiddenHumans.get(i).setInventory(inventory);
+
+		}
+/*
 		for (int i = 0; i < 75; i++ ) {
 			myItem = (Item) createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.eatable.fruits.Apple");
 			System.out.println("Apple(" + myItem.getObjectID() + "):" + myItem.getPosition(SimulationCluster.test).toString());
 		}
-		
+*/		
 	}
 	
 	public void stopSimulation() {
@@ -196,28 +265,30 @@ public class Simulation extends SocialWorldThread {
 		return this.objectMaster;
 	}
 	
-	private SimulationObject createSimulationObject(
+	private IncompleteSimulationObject createSimulationObject(
 			SimulationObject_Type simulationObjectType,
 			String fullClassName) {
 		
 		int incompleteObjectIndex;
 		int objectID;
-		HiddenSimulationObject hiddenObject;
+		IncompleteSimulationObject incompleteObject = new IncompleteSimulationObject();
+//		HiddenSimulationObject hiddenObject = NoHiddenSimulationObject.getObjectNothing();
 		SimulationObject createdObject = NoSimulationObject.getObjectNothing() ;
 	
 		incompleteObjectIndex = this.objectMaster.createSimulationObject(simulationObjectType, fullClassName);
 		if (incompleteObjectIndex >= 0) {
 			objectID = this.objectMaster.getObjectIDForIncompleteObjectIndex(incompleteObjectIndex);
 			if (objectID > 0) {
-				createdObject = this.objectMaster.getObjectForIncompleteObjectIndex(incompleteObjectIndex, objectID);
+				incompleteObject = this.objectMaster.getIncompleteObject(incompleteObjectIndex, objectID);
+				createdObject = incompleteObject.getObject();
 				if (createdObject.isSimulationObject()) {
 					this.searchByPosition.addObject(createdObject);
 				}
-				hiddenObject = this.objectMaster.getHiddenObjectForIncompleteObjectIndex(incompleteObjectIndex, objectID);
+//				hiddenObject = incompleteObject.getHiddenObject();
 			}
 		}
 		
-		return createdObject;
+		return incompleteObject; 
 	}
 
 	
