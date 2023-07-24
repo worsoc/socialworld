@@ -73,11 +73,42 @@ public class EventPerceptionDescriptionPool extends DescriptionPool {
 		return new EventPerceptionDescription();
 	}
 
-	protected final Expression getStartExpression(List<String> lines4OneExpression) {
+	protected final Expression getStartExpressionForLines(List<String> lines4OneExpression) {
 		return new CreateKnowledgeElementExpression(lines4OneExpression.get(0));
+	}
+
+	protected final Expression getStartExpressionForIDs(List<Integer> ids4OneExpression) {
+		int[] ids = new int[ids4OneExpression.size()];
+		int index = 0;
+		for (int id : ids4OneExpression) {
+			ids[index] = id;
+			index++;
+		}
+		return  new CreateKnowledgeElementExpression(ids);
 	}
 	
 	protected void initializeWithTestData_FunctionByExpression() {
+
+		List<DescriptionIDs> allIDs;
+		allIDs = new ArrayList<DescriptionIDs>();
+		
+		DescriptionIDs4EventType ids4EventType;
+		int perceptionType;
+	
+		// TODO for other event types
+		ids4EventType = new DescriptionIDs4EventType(EventType.percipientExists, rangeSecondIndex);
+		
+		for ( perceptionType = 0; perceptionType < rangeSecondIndex; perceptionType++) {
+			ids4EventType.add(perceptionType, 0, 8607);
+		}
+		
+		allIDs.add(ids4EventType);
+		
+		createExpressionsForIDs(allIDs);
+		
+	}
+	
+	protected void _20230724_initializeWithTestData_FunctionByExpression() {
 
 		List<Lines> allLines;
 		allLines = new ArrayList<Lines>();
