@@ -54,7 +54,8 @@ public abstract class DescriptionPool {
 	}
 	
 	protected abstract DescriptionBase getNewDescription();
-	protected abstract Expression getStartExpression(List<String> lines4OneExpression);
+	protected abstract Expression getStartExpressionForLines(List<String> lines4OneExpression);
+	protected abstract Expression getStartExpressionForIDs(List<Integer> ids4OneExpression);
 	protected abstract void initializeWithTestData_FunctionByExpression();
 
 	protected void initialize() {
@@ -108,10 +109,37 @@ public abstract class DescriptionPool {
 		return description;
 	}
 	
+	protected final void createExpressionsForIDs(List<DescriptionIDs> dbTableIDs) {
+		
+		int indexExpressions;
+		int lfdNr;
+		Expression startExpression;
+		List<FunctionByExpression> oneDescriptionExpressions;
+		List<List<Integer>> ids4OneDescriptionExpressions;
+		DescriptionIDs ids;
+		int secondIndex;
+		
+		for (int index = 0; index < dbTableIDs.size(); index++ ) {
+			ids = dbTableIDs.get(index);
+			indexExpressions = ids.getMainIndex() * rangeSecondIndex;
+			for ( secondIndex = 0; secondIndex < rangeSecondIndex; secondIndex++) {
+				ids4OneDescriptionExpressions = ids.getIDs(secondIndex);
+				oneDescriptionExpressions = new ArrayList<FunctionByExpression>();
+				for (lfdNr = 0; lfdNr < ids4OneDescriptionExpressions.size(); lfdNr++) {
+					startExpression = getStartExpressionForIDs(ids4OneDescriptionExpressions.get(lfdNr));
+					oneDescriptionExpressions.add(new FunctionByExpression(startExpression));
+				}
+				this.expressions.set(indexExpressions + secondIndex, oneDescriptionExpressions);
+			}
+		}
+	
+	}
+	
+	
 	protected final void createExpressions(List<Lines> allLines) {
 		
 		int indexExpressions;
-		int i;
+		int lfdNr;
 		Expression startExpression;
 		List<FunctionByExpression> oneDescriptionExpressions;
 		List<List<String>> lines4OneDescriptionExpressions;
@@ -124,8 +152,8 @@ public abstract class DescriptionPool {
 			for ( secondIndex = 0; secondIndex < rangeSecondIndex; secondIndex++) {
 				lines4OneDescriptionExpressions = lines.getLines(secondIndex);
 				oneDescriptionExpressions = new ArrayList<FunctionByExpression>();
-				for (i = 0; i < lines4OneDescriptionExpressions.size(); i++) {
-					startExpression = getStartExpression(lines4OneDescriptionExpressions.get(i));
+				for (lfdNr = 0; lfdNr < lines4OneDescriptionExpressions.size(); lfdNr++) {
+					startExpression = getStartExpressionForLines(lines4OneDescriptionExpressions.get(lfdNr));
 					oneDescriptionExpressions.add(new FunctionByExpression(startExpression));
 				}
 				this.expressions.set(indexExpressions + secondIndex, oneDescriptionExpressions);
