@@ -1,5 +1,6 @@
 package org.socialworld.objects.concrete.clothes.shoes;
 
+import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.StateAppearance;
 import org.socialworld.objects.concrete.StateComposition;
@@ -10,14 +11,12 @@ public class TestShoeRight extends Shoe {
 
 	@Override
 	public boolean isLeftFootShoe() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean isRightFootShoe() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
@@ -28,7 +27,9 @@ public class TestShoeRight extends Shoe {
 
 	@Override
 	public boolean checkObjectBelongsToGroup(short groupNumberSuffix) {
-		// TODO Auto-generated method stub
+		if (groupNumberSuffix == GroupingOfSimulationObjects.GROUPING_NUMBER_SUFFIX_TEST) {
+			return true;
+		}
 		return false;
 	}
 

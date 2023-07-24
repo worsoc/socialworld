@@ -1,5 +1,6 @@
 package org.socialworld.objects.concrete.clothes.socks;
 
+import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.StateAppearance;
 import org.socialworld.objects.concrete.StateComposition;
@@ -10,13 +11,11 @@ public class TestSockLeft extends Sock {
 
 	@Override
 	public boolean isLeftFootSock() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isRightFootSock() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -28,7 +27,9 @@ public class TestSockLeft extends Sock {
 
 	@Override
 	public boolean checkObjectBelongsToGroup(short groupNumberSuffix) {
-		// TODO Auto-generated method stub
+		if (groupNumberSuffix == GroupingOfSimulationObjects.GROUPING_NUMBER_SUFFIX_TEST) {
+			return true;
+		}
 		return false;
 	}
 

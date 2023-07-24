@@ -1,5 +1,6 @@
 package org.socialworld.objects.concrete.clothes.shirts;
 
+import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.StateAppearance;
 import org.socialworld.objects.concrete.StateComposition;
@@ -16,7 +17,9 @@ public class TestShirt extends Shirt {
 
 	@Override
 	public boolean checkObjectBelongsToGroup(short groupNumberSuffix) {
-		// TODO Auto-generated method stub
+		if (groupNumberSuffix == GroupingOfSimulationObjects.GROUPING_NUMBER_SUFFIX_TEST) {
+			return true;
+		}
 		return false;
 	}
 
