@@ -28,6 +28,7 @@ import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.descriptions.DescriptionBase;
 import org.socialworld.calculation.descriptions.EventInfluenceDescription;
 import org.socialworld.calculation.expressions.ChangeAttributes;
+import org.socialworld.calculation.expressions.Nothing;
 import org.socialworld.core.EventType;
 
 public class EventInfluenceDescriptionPool extends DescriptionPool {
@@ -67,8 +68,12 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 		return new EventInfluenceDescription();
 	}
 
-	protected final Expression getStartExpression(List<String> lines4OneExpression) {
+	protected final Expression getStartExpressionForLines(List<String> lines4OneExpression) {
 		return new ChangeAttributes(lines4OneExpression);
+	}
+	
+	protected final Expression getStartExpressionForIDs(List<Integer> ids4OneExpression) {
+		return  Nothing.getInstance();
 	}
 	
 	protected void initializeWithTestData_FunctionByExpression() {

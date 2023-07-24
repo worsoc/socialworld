@@ -29,6 +29,7 @@ import org.socialworld.calculation.Value;
 import org.socialworld.calculation.descriptions.DescriptionBase;
 import org.socialworld.calculation.descriptions.EventReactionDescription;
 import org.socialworld.calculation.expressions.CreateActionExpression;
+import org.socialworld.calculation.expressions.Nothing;
 import org.socialworld.core.EventType;
 
 public class EventReactionDescriptionPool extends DescriptionPool {
@@ -56,10 +57,14 @@ public class EventReactionDescriptionPool extends DescriptionPool {
 		return new EventReactionDescription();
 	}
 
-	protected final Expression getStartExpression(List<String> lines4OneExpression) {
+	protected final Expression getStartExpressionForLines(List<String> lines4OneExpression) {
 		return new CreateActionExpression(lines4OneExpression);
 	}
 
+	protected final Expression getStartExpressionForIDs(List<Integer> ids4OneExpression) {
+		return  Nothing.getInstance();
+	}
+	
 	protected void initializeWithTestData_FunctionByExpression() {
 		
 		List<Lines> allLines;

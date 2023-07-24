@@ -7,6 +7,7 @@ import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.descriptions.DescriptionBase;
 import org.socialworld.calculation.descriptions.State2ActionDescription;
 import org.socialworld.calculation.expressions.CreateActionExpression;
+import org.socialworld.calculation.expressions.Nothing;
 
 public class State2ActionDescriptionPool extends DescriptionPool {
 	
@@ -36,10 +37,13 @@ public class State2ActionDescriptionPool extends DescriptionPool {
 		return new State2ActionDescription();
 	}
 
-	protected final Expression getStartExpression(List<String> lines4OneExpression) {
+	protected final Expression getStartExpressionForLines(List<String> lines4OneExpression) {
 		return new CreateActionExpression(lines4OneExpression);
 	}
 
+	protected final Expression getStartExpressionForIDs(List<Integer> ids4OneExpression) {
+		return  Nothing.getInstance();
+	}
 	
 	protected void initializeWithTestData_FunctionByExpression() {
 		

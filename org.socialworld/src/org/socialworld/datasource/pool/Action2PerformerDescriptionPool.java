@@ -7,7 +7,6 @@ import org.socialworld.actions.ActionMode;
 import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.Expression;
-import org.socialworld.calculation.FunctionByExpression;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.descriptions.Action2PerformerDescription;
 import org.socialworld.calculation.descriptions.DescriptionBase;
@@ -43,10 +42,14 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 		return new Action2PerformerDescription();
 	}
 
-	protected final Expression getStartExpression(List<String> lines4OneExpression) {
+	protected final Expression getStartExpressionForLines(List<String> lines4OneExpression) {
 		return new Calculate(lines4OneExpression.get(0), lines4OneExpression.get(1));
 	}
 
+	protected final Expression getStartExpressionForIDs(List<Integer> ids4OneExpression) {
+		return  Nothing.getInstance();
+	}
+	
 	/*
 	public Action2PerformerDescription getDescription(ActionMode actionMode ) {
 		int index;
