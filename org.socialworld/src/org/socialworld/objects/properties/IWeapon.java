@@ -22,6 +22,7 @@
 package org.socialworld.objects.properties;
 
 import org.socialworld.attributes.properties.WeaponProperty;
+import org.socialworld.objects.NoSimulationObject;
 
 /**
  * German:
@@ -57,7 +58,7 @@ public interface IWeapon {
 		return objectNothing;
 	}
 	
-	static class NoIWeapon implements IWeapon {
+	static class NoIWeapon extends NoSimulationObject implements IWeapon {
 		
 		public boolean isObjectNothing() {
 			return false;
