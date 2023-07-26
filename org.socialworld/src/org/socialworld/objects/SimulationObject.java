@@ -62,7 +62,8 @@ import org.socialworld.tools.StringTupel;
  */
 public abstract class SimulationObject implements IPerceptible {
 	
-
+	//private GroupingOfSimulationObjects goso = GroupingOfSimulationObjects.getInstance();
+	
 	private		int 			objectID;
 	private boolean 			justCreated;
 	private Lexem				lexem;
@@ -351,7 +352,9 @@ public abstract class SimulationObject implements IPerceptible {
 	}
 	
 	private boolean belongsToGroup(int groupNr) {
-		return GroupingOfSimulationObjects.checkObjectBelongsToGroup(this, groupNr);
+		GroupingOfSimulationObjects goso;
+		goso = GroupingOfSimulationObjects.getInstance();
+		return goso.checkObjectBelongsToGroup(this, groupNr);
 	}
 	
 ///////////////////////////////////////////////////////////////////////////////////////////

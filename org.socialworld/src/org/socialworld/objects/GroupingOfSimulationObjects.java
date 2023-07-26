@@ -1,6 +1,7 @@
 package org.socialworld.objects;
 
 import org.socialworld.conversation.Lexem;
+import org.socialworld.conversation.Word;
 import org.socialworld.conversation.Word_Type;
 import org.socialworld.core.AllWords;
 import org.socialworld.objects.concrete.animals.mammals.*;
@@ -8,6 +9,28 @@ import org.socialworld.objects.concrete.eatable.Fruit;
 
 public final class GroupingOfSimulationObjects {
 
+	private static GroupingOfSimulationObjects instance;
+	public static GroupingOfSimulationObjects getInstance() {
+		if (instance == null) {
+			instance = new GroupingOfSimulationObjects();
+		}
+		return instance;
+	}
+
+	private GroupingOfSimulationObjects() {
+		Word word;
+		
+		word = AllWords.findAndGetWord("animal", Word_Type.noun);
+		if (word != null) LEXEM_ANIMAL = word.getLexem();
+		
+		word = AllWords.findAndGetWord("something", Word_Type.noun);
+		if (word != null) LEXEM_SOMETHING = word.getLexem();
+
+		word = AllWords.findAndGetWord("nothing", Word_Type.noun);
+		if (word != null) LEXEM_NOTHING = word.getLexem();
+
+	}
+	
 	public static final String PRAEFIX_SIMOBJECT_GROUPING_NUMBER = "SOGN_";
 	public static final int GROUPING_NUMBER_SUFFIX_TEST = 0;
 	
@@ -127,10 +150,10 @@ public final class GroupingOfSimulationObjects {
 	private static final short GROUPING_NUMBER_PRAEFIX_SOCK		 	 = 0b0000100000100101; // 	2085
 	private static final short GROUPING_NUMBER_PRAEFIX_GLOVE		 = 0b0000100000100110; // 	2086
 	
-	private static final Lexem LEXEM_ANIMAL = AllWords.findAndGetWord("animal", Word_Type.noun).getLexem();
+	private static  Lexem LEXEM_ANIMAL; 
 	
-	private static final Lexem LEXEM_SOMETHING = AllWords.findAndGetWord("something", Word_Type.noun).getLexem();
-	private static final Lexem LEXEM_NOTHING = AllWords.findAndGetWord("nothing", Word_Type.noun).getLexem();
+	private static  Lexem LEXEM_SOMETHING;
+	private static  Lexem LEXEM_NOTHING; 
 	
 	
 	
@@ -146,7 +169,7 @@ public final class GroupingOfSimulationObjects {
 		
 	}
 	
-	public static Lexem getLexemForGroupingNumber(int groupNumber) {
+	public  Lexem getLexemForGroupingNumber(int groupNumber) {
 
 		switch (groupNumber) {
 			case GROUPING_NUMBER_ALL_ANIMALS: return LEXEM_ANIMAL;
@@ -160,15 +183,15 @@ public final class GroupingOfSimulationObjects {
 		}
 	}
 	
-	public static boolean checkIsLexemSomething(Lexem lexem) {
+	public  boolean checkIsLexemSomething(Lexem lexem) {
 		return lexem.equals(LEXEM_SOMETHING);
 	}
 	
-	public static boolean checkIsLexemNothing(Lexem lexem) {
+	public  boolean checkIsLexemNothing(Lexem lexem) {
 		return lexem.equals(LEXEM_NOTHING);
 	}
 	
-	static boolean checkObjectBelongsToGroup(SimulationObject simObject, int groupNumber) {
+	boolean checkObjectBelongsToGroup(SimulationObject simObject, int groupNumber) {
 		//String className = simObject.getClass().getSimpleName();
 
 		
@@ -194,7 +217,7 @@ public final class GroupingOfSimulationObjects {
 		}
 	}
 	
-	private static boolean checkObjectBelongsToGroup(SimulationObject simObject, short groupNumberPreafix,  short groupNumberSuffix) {
+	private  boolean checkObjectBelongsToGroup(SimulationObject simObject, short groupNumberPreafix,  short groupNumberSuffix) {
 		
 		switch (groupNumberPreafix) {
 		case GROUPING_NUMBER_PRAEFIX_DOG:
