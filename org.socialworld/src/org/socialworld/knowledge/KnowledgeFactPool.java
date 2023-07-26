@@ -209,14 +209,14 @@ public class KnowledgeFactPool {
 		propertyListsByCriterion = new ArrayList<List<KnowledgeProperty>>(size);
 		for (int i = 0; i < size; i++) {
 			List<KnowledgeProperty> propertyList = new ArrayList<KnowledgeProperty>();
-			propertyListsByCriterion.set(i, propertyList);
+			propertyListsByCriterion.add(propertyList);
 		}
 		
 		size = sizeRelationLists;
 		relationListsByCriterion = new ArrayList<List<KnowledgeRelation>>(size) ;
 		for (int i = 0; i < size; i++) {
 			List<KnowledgeRelation> relationList = new ArrayList<KnowledgeRelation>();
-			relationListsByCriterion.set(i, relationList);
+			relationListsByCriterion.add( relationList);
 		}
 
 	}
