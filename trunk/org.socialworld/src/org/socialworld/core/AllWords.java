@@ -92,7 +92,7 @@ public class AllWords {
 		
 		
 		words = new ViewWordJoinLexem();
-		words.select(words.SELECT_ALL_COLUMNS, " WHERE word = '" + word + "' AND word_type = " + type.getIndex(), " ORDER BY word_id");
+		words.select(words.SELECT_ALL_COLUMNS, " WHERE word = '" + word + "' AND type = " + type.getIndex(), " ORDER BY word_id");
 		rowCount = words.rowCount();
 		
 		element = null;
