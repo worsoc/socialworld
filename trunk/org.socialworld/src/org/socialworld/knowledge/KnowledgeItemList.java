@@ -445,10 +445,7 @@ final class KnowledgeItemList  {
 		int index;
 		int i;
 		
-		if (size() == MAXIMUM_KNOWLEDGE_CAPACITY )
-			count = size();		
-		else
-			count = size() + 1;
+		count = size();		
 		
 		index = 0;
 		for (i = 0; i < count; i++) {
@@ -459,8 +456,14 @@ final class KnowledgeItemList  {
 			else if (itemSearchList.get(i).accessCount < itemSearchList.get(index).accessCount) 	index = i;
 			
 		}
+
+		if (size() == MAXIMUM_KNOWLEDGE_CAPACITY ) {
+			return index ;
+		}
+		else {
+			return count;
+		}
 		
-		return index ;
 	}
 
 	void combineWith(KnowledgeItemList kalB) {
@@ -619,6 +622,8 @@ final class KnowledgeItemList  {
 	
 	private Lexem getObjectLexem(String part) {
 		
+		GroupingOfSimulationObjects goso = GroupingOfSimulationObjects.getInstance();
+		
 		Lexem lexem = null;
 		Lexem noObject = null;
 		
@@ -626,12 +631,12 @@ final class KnowledgeItemList  {
 		
 		if (sogn >= 0) {
 			
-			lexem = GroupingOfSimulationObjects.getLexemForGroupingNumber(sogn);
+			lexem = goso.getLexemForGroupingNumber(sogn);
 
-			if  (GroupingOfSimulationObjects.checkIsLexemSomething(lexem)) {
+			if  (goso.checkIsLexemSomething(lexem)) {
 				lexem = noObject;
 			}
-			else if  (GroupingOfSimulationObjects.checkIsLexemNothing(lexem)) {
+			else if  (goso.checkIsLexemNothing(lexem)) {
 				lexem = noObject;
 			}
 			
