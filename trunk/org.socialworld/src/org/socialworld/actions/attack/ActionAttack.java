@@ -40,33 +40,34 @@ import org.socialworld.core.IEventParam;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.properties.IWeapon;
 import org.socialworld.objects.Animal;
+import org.socialworld.objects.NoSimulationObject;
 
 /**
  * German:
  * Die Klasse ActionAttack ist von der abstrakten Klasse AbstractAction abgeleitet.
- * Alle Aktionsobjekte, die Angriffe beschreiben, gehören zu dieser Klasse.
- * Zur Beschreibung eines Angriffs führt die Klasse die zusätzlichen Eigenschaften
- * für die ggf. verwendete Waffe und das Zielobjekt.
- * Die Ausführung der Aktion wird in der Klasse Attack geregelt, 
+ * Alle Aktionsobjekte, die Angriffe beschreiben, gehï¿½ren zu dieser Klasse.
+ * Zur Beschreibung eines Angriffs fï¿½hrt die Klasse die zusï¿½tzlichen Eigenschaften
+ * fï¿½r die ggf. verwendete Waffe und das Zielobjekt.
+ * Die Ausfï¿½hrung der Aktion wird in der Klasse Attack geregelt, 
  * von der ein Objekt als Eigenschaft der Klasse ActionAttack abgelegt ist.
  * 
  * Die Klasse ActionAttack dient der Verwaltung der Aktion.
- * Die zugehörige Klasse Attack dient der Ausführung der Aktion, 
- *  nämlich als Argument für das zur Aktion gehörende Event.
+ * Die zugehï¿½rige Klasse Attack dient der Ausfï¿½hrung der Aktion, 
+ *  nï¿½mlich als Argument fï¿½r das zur Aktion gehï¿½rende Event.
  *
- *  In der Ausführungsmethode perform() wird für den Fall eines Waffenangriffs
+ *  In der Ausfï¿½hrungsmethode perform() wird fï¿½r den Fall eines Waffenangriffs
  *   die Waffe des Akteurs ermittelt und in der Instanzvariablen weapon abgelegt. 
- *  Danach wird das Ausführungsobjekt der Klasse Attack erzeugt.
- *  Schließlich wird das Ereignis zur Aktion erzeugt, mit dem Ausführungsobjekt als Argument.
+ *  Danach wird das Ausfï¿½hrungsobjekt der Klasse Attack erzeugt.
+ *  Schlieï¿½lich wird das Ereignis zur Aktion erzeugt, mit dem Ausfï¿½hrungsobjekt als Argument.
  *  Das Ereignis wird in die Ereignisverwaltung (EventMaster) eingetragen.
  *  
  *  Der Name des Ereignis (EventType) 
- *   wird in Abhängigkeit von Aktionstyp (ActionType) und Aktionsmodus (ActionMode) ermittelt.
+ *   wird in Abhï¿½ngigkeit von Aktionstyp (ActionType) und Aktionsmodus (ActionMode) ermittelt.
  *   
  *  Eine Aktion der Klasse ActionAttack ist 
  *  a) ein Angriff mit einer Waffe in der linken oder rechten Hand, oder beide
  *  oder
- *  b) ein Fausschlag (Gerade, Seitwärtshaken oder  Aufwärtshaken) mit links oder rechts
+ *  b) ein Fausschlag (Gerade, Seitwï¿½rtshaken oder  Aufwï¿½rtshaken) mit links oder rechts
  * 
  * @author Mathias Sikos
  * 
@@ -168,7 +169,7 @@ public class ActionAttack extends AbstractAction {
 					weapon = (IWeapon) itemLeft;
 				}
 				else {
-					return;
+					weapon = IWeapon.getObjectNothing();
 				}
 				break;
 			case punchRightFistStraight:
@@ -180,7 +181,7 @@ public class ActionAttack extends AbstractAction {
 					weapon = (IWeapon) itemRight;
 				}
 				else {
-					weapon = null;
+					weapon = IWeapon.getObjectNothing();
 				}
 				break;
 			default:
