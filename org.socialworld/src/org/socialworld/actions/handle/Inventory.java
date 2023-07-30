@@ -186,6 +186,16 @@ public class Inventory extends SimProperty {
 
 	private Inventory(Inventory original, PropertyProtection protectionOriginal, SimulationCluster cluster) {
 		super(protectionOriginal, cluster);
+		this.cap = original.cap;
+		this.leftFootShoe = original.leftFootShoe;
+		this.rightFootShoe = original.rightFootShoe;
+		this.leftFootSock = original.leftFootSock;
+		this.rightFootSock = original.rightFootSock;
+		this.leftHand = original.leftHand;
+		this.rightHand = original.rightHand;
+		this.mouth = original.mouth;
+		this.shirt = original.shirt;
+		this.trousers = original.trousers;
 	}
 	
 	public void setParentObject(SimulationObject parent) {
