@@ -66,6 +66,8 @@ public class ActionMaster extends SocialWorldThread {
 	private int sleepTime = 50;
 	private boolean executeAllowed = true;
 	
+	private boolean isBlockedByAddingActionHandler = false;
+	
 	private static ActionMaster instance;
 	
 	
@@ -214,6 +216,10 @@ public class ActionMaster extends SocialWorldThread {
 			if (!handlerFromPriorityList) {
 				// if continue and priority lists are iterated the action handler is chosen from all action handler list.
 				
+				if (isBlockedByAddingActionHandler) {
+					return ACTIONMASTER_RETURN_SLEEP_LESS;
+				}
+				
 				if (allHandlersIterator.nextIndex() == allActionHandlers.size()) 
 					allHandlersIterator = allActionHandlers.listIterator();
 				
@@ -352,10 +358,11 @@ public class ActionMaster extends SocialWorldThread {
 	 */
 	public void addActionHandler(ActionHandler handler) {
 		int nextIndex;
-		
+		isBlockedByAddingActionHandler = true;
 		nextIndex = allHandlersIterator.nextIndex();
 		allActionHandlers.add(handler);
 		allHandlersIterator = allActionHandlers.listIterator(nextIndex);
+		isBlockedByAddingActionHandler = false;
 	}
 	
 	/**
