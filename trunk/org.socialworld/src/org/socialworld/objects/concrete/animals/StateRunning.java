@@ -39,7 +39,7 @@ public class StateRunning extends State {
 
 	private double speed;
 	private int numberLegs;
-	private Direction directionRun = Direction.getObjectNothing();
+	private Direction directionRun;
 	
 	///////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////static instance for meta information    ///////////////////////////////
@@ -99,7 +99,7 @@ public class StateRunning extends State {
 	}
 
 	private StateRunning() {
-	
+		directionRun = Direction.getObjectNothing();
 	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////////
@@ -109,6 +109,7 @@ public class StateRunning extends State {
 	public StateRunning(SimulationObject object) 
 	{
 		super(object);
+		if (this.directionRun == null) this.directionRun = Direction.getObjectNothing();
 	}
 
 	protected  ReturnCode init() {
