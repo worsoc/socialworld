@@ -42,7 +42,7 @@ public class StateAppearance extends State {
 
 	public static final String METHODNAME_GET_MAIN_COLOR = "getMainColour";
 
-	private ColourSet colourSet = ColourSet.getObjectNothing();
+	private ColourSet colourSet;
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////  static instance for meta information    ///////////////////////////////
@@ -101,7 +101,7 @@ public class StateAppearance extends State {
 	}
 
 	private StateAppearance() {
-	
+		this.colourSet = ColourSet.getObjectNothing();
 	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////////
@@ -112,6 +112,7 @@ public class StateAppearance extends State {
 	public StateAppearance(SimulationObject object) 
 	{
 		super(object);
+		if (this.colourSet == null) this.colourSet = ColourSet.getObjectNothing();
 	}
 
 	protected  ReturnCode init() {
@@ -126,12 +127,18 @@ public class StateAppearance extends State {
 		int rowTable = tableState.loadForObjectID(objectID) ;
 		if (rowTable >= 0) {
 			colourSet = tableState.getColourSetFromRow(rowTable);
+			if (objectID > 3) {
+				int myBreakpoint = 0;
+				myBreakpoint++;
+			}
 		}
 		return returnFromInit(tableState, lockingID, rowTable);
 	}
 	
 	private StateAppearance( StateAppearance original, PropertyProtection protectionOriginal, SimulationCluster cluster) {
 		super(protectionOriginal, cluster);
+		// TODO copy colourSet?
+		this.colourSet = original.colourSet;
 	}
 
 	protected  void initPropertyName() {

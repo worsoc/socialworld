@@ -3,8 +3,8 @@ package org.socialworld.objects.concrete;
 
 import java.util.List;
 
-import org.socialworld.attributes.ISavedValues;
 import org.socialworld.attributes.PropertyName;
+import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.attributes.properties.MaterialSet;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
@@ -80,7 +80,7 @@ public class StateComposition extends State {
 	}
 
 	private StateComposition() {
-	
+		materialSet = MaterialSet.getObjectNothing();
 	}
 	
 
@@ -91,6 +91,7 @@ public class StateComposition extends State {
 	public StateComposition(SimulationObject object) 
 	{
 		super(object);
+		if (this.materialSet == null) this.materialSet = MaterialSet.getObjectNothing();
 	}
 
 
@@ -110,6 +111,12 @@ public class StateComposition extends State {
 		return returnFromInit(tableState, lockingID, rowTable);
 	}
 
+	private StateComposition( StateComposition original, PropertyProtection protectionOriginal, SimulationCluster cluster) {
+		super(protectionOriginal, cluster);
+		// TODO copy materialSet?
+		this.materialSet = original.materialSet;
+	}
+	
 	protected  void initPropertyName() {
 		setPropertyName(PropertyName.stateComposition);
 	}
@@ -119,8 +126,8 @@ public class StateComposition extends State {
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
 	@Override
-	public ISavedValues copyForProperty(SimulationCluster cluster) {
-		return null;
+	public State copyForProperty(SimulationCluster cluster) {
+		return new StateComposition(this, getPropertyProtection(), cluster);
 	}
 
 	@Override

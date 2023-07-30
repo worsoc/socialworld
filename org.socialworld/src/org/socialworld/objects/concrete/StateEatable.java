@@ -26,6 +26,7 @@ import java.util.List;
 
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
+import org.socialworld.attributes.properties.MaterialSet;
 import org.socialworld.attributes.properties.NutrientSet;
 import org.socialworld.attributes.properties.TasteSet;
 import org.socialworld.calculation.SimulationCluster;
@@ -116,7 +117,8 @@ public class StateEatable extends State {
 	}
 
 	private StateEatable() {
-	
+		nutrientSet = NutrientSet.getObjectNothing();
+		tasteSet = TasteSet.getObjectNothing();
 	}
 
 
@@ -127,6 +129,8 @@ public class StateEatable extends State {
 	public StateEatable(SimulationObject object) 
 	{
 		super(object);
+		if (this.nutrientSet == null) this.nutrientSet = NutrientSet.getObjectNothing();
+		if (this.tasteSet == null) this.tasteSet = TasteSet.getObjectNothing();
 	}
 
 	protected  ReturnCode init() {

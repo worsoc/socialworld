@@ -24,7 +24,7 @@ import org.socialworld.tools.StringTupel;
 public class StateInventory extends State {
 
 	
-	private Inventory inventory = Inventory.getObjectNothing();
+	private Inventory inventory;
 	
 	///////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////static instance for meta information    ///////////////////////////////
@@ -93,7 +93,7 @@ public class StateInventory extends State {
 	}
 
 	private StateInventory() {
-	
+		inventory = Inventory.getObjectNothing();
 	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////////
@@ -103,6 +103,7 @@ public class StateInventory extends State {
 	public StateInventory(SimulationObject object) 
 	{
 		super(object);
+		if (this.inventory == null) this.inventory = Inventory.getObjectNothing();
 	}
 
 	protected  ReturnCode init() {
@@ -113,7 +114,8 @@ public class StateInventory extends State {
 
 	private StateInventory( StateInventory original, PropertyProtection protectionOriginal, SimulationCluster cluster) {
 		super(protectionOriginal, cluster);
-		this.inventory = Inventory.getTestInventory(SimulationObject_Type.human);
+		// TODO copy inventory?
+		this.inventory = original.inventory;
 		setPropertyName(PropertyName.stateInventory);
 	}
 
