@@ -87,7 +87,35 @@ public class EventPerceptionDescriptionPool extends DescriptionPool {
 		return  new CreateKnowledgeElementExpression(ids);
 	}
 	
+/*	
+	String gegenProbezuLineID_8607 =		"KSrcT:1&KSrc:GETVal(myself);KSbj:GETVal(event_params).GETVal(event_causer);KProp(0,inventory_shirt.SOGN_184549375.mainColour):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_shirt)#IsElem(184549375).GETProp(stateAppearance).GETFctVal(getMainColour).GETFctVal(getIndex)";
+	exp = new CreateKnowledgeElementExpression(gegenProbezuLineID_8607);
+*/
+	
 	protected void initializeWithTestData_FunctionByExpression() {
+
+		List<Lines> allLines;
+		allLines = new ArrayList<Lines>();
+		
+		Lines4EventType lines4EventType;
+		int perceptionType;
+
+		String gegenProbezuLineID_8607 =		"KSrcT:1&KSrc:GETVal(myself);KSbj:GETVal(event_params).GETVal(event_causer);KProp(0,inventory_shirt.SOGN_184549375.mainColour):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_shirt)#IsElem(184549375).GETProp(stateAppearance).GETFctVal(getMainColour).GETFctVal(getIndex)";
+
+		lines4EventType = new Lines4EventType(EventType.percipientExists, rangeSecondIndex);
+		for ( perceptionType = 0; perceptionType < rangeSecondIndex; perceptionType++) {
+			lines4EventType.add(perceptionType, 0, gegenProbezuLineID_8607);
+		}
+		allLines.add(lines4EventType);
+
+		
+		
+		createExpressions(allLines);
+		
+	}
+	
+	
+	protected void _20230729_initializeWithTestData_FunctionByExpression() {
 
 		List<DescriptionIDs> allIDs;
 		allIDs = new ArrayList<DescriptionIDs>();
