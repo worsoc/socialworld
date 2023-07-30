@@ -128,7 +128,7 @@ public class ActionAttack extends AbstractAction {
 					weapon = (IWeapon) itemLeft;
 				}
 				else {
-					return;
+					weapon = IWeapon.getObjectNothing();
 				}
 				break;
 			case weaponRightStab:
@@ -139,24 +139,24 @@ public class ActionAttack extends AbstractAction {
 					weapon = (IWeapon) itemRight;
 				}
 				else {
-					return;
+					weapon = IWeapon.getObjectNothing();
 				}
 				break;
 			case weaponClub:
 				itemLeft = (SimulationObject) ((Animal) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_leftHand, PropertyName.inventory_leftHand.toString()).getValue();
 				itemRight = (SimulationObject) ((Animal) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_rightHand, PropertyName.inventory_rightHand.toString()).getValue();
-/*				if (itemLeft != null && itemRight != null && !itemLeft.equals(itemRight)) {
-					return;
+				if (itemLeft != null && itemRight != null && !itemLeft.equals(itemRight)) {
+					weapon = IWeapon.getObjectNothing();
 				}
 				if (itemLeft instanceof IWeapon) {
 					weapon = (IWeapon) itemLeft;
 				}
 				else {
-					return;
-				}*/
+					weapon = IWeapon.getObjectNothing();
+				}
 		  		break;
 			default:
-				return;
+				weapon = IWeapon.getObjectNothing();
 			}
 	   		break;
 		case punch:
@@ -185,16 +185,20 @@ public class ActionAttack extends AbstractAction {
 				}
 				break;
 			default:
-				return;
+				weapon = IWeapon.getObjectNothing();
 			
 			}
 			break;
 	   	default:
-	   		return;
+	   		weapon = IWeapon.getObjectNothing();
 		}
 		
- 
+		
    		this.weapon = weapon;
+   		
+   		// if no weapon --> no attack --> break 
+   		if (weapon.isObjectNothing()) return;
+   		
       	this.attack = new Attack( this);
       				
       	Event event;
