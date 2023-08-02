@@ -24,6 +24,7 @@ package org.socialworld.calculation.expressions;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.ISavedValues;
 import org.socialworld.attributes.PropertyName;
+import org.socialworld.attributes.properties.IEnumProperty;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
 import org.socialworld.calculation.SimulationCluster;
@@ -91,6 +92,13 @@ public class GetProperty extends Expression {
 					ISavedValues savedValue;
 					savedValue = (ISavedValues) object;
 					result = savedValue.getPropertyFromMethod(cluster, methodName, valueName);
+				}
+				else if (object instanceof IEnumProperty) {
+					IEnumProperty enumProperty;
+					enumProperty = (IEnumProperty) object;
+					if (methodName.equals("getIndex")) {
+						result = new ValueProperty(Type.integer,  valueName, enumProperty.getIndex());
+					}
 				}
 				
 			}
