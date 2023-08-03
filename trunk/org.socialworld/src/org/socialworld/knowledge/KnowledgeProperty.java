@@ -24,11 +24,11 @@ package org.socialworld.knowledge;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.attributes.properties.IEnumProperty;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.conversation.Lexem;
-import org.socialworld.core.AllWords;
 
 public class KnowledgeProperty extends KnowledgeFact {
 
@@ -87,12 +87,11 @@ public class KnowledgeProperty extends KnowledgeFact {
 
 	protected Lexem translateToLexem(Value value) {
 		Lexem result = null;
-		if (value.getType() == Type.integer) {
+		if (value.getType() == Type.enumProp) {
 			Object o = value.getValue();
-			if (o instanceof Integer) {
-				int propIndex = ((Integer) o).intValue();
-				result = Lexem.getTestLexem();
-						//AllWords.getLexem(lexemID);
+			if (o instanceof IEnumProperty) {
+				IEnumProperty enumProp = (IEnumProperty) o;
+				result = enumProp.getLexem();
 			}
 			
 		}
