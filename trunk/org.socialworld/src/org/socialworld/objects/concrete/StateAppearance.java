@@ -160,7 +160,7 @@ public class StateAppearance extends State {
 		case stateAppearance_colourSet:
 			return new ValueProperty(Type.simObjProp, valueName, colourSet.copyForProperty(cluster));
 		case stateAppearance_mainColour:
-			return getMainColour(cluster, valueName);
+			return getMainColour_(cluster, valueName);
 
 		default:
 			return ValueProperty.getInvalid();
@@ -182,7 +182,7 @@ public class StateAppearance extends State {
 	//	return new ValueProperty(Type.object, VALUENAME_MAIN_COLOR, Colour.black);
 	}
 
-	private ValueProperty getMainColour(SimulationCluster cluster, String valueName) {
+	private ValueProperty getMainColour_(SimulationCluster cluster, String valueName) {
 		return getColourSetProperty(cluster, PropertyName.colourSet_mainColour, valueName);
 	}
 

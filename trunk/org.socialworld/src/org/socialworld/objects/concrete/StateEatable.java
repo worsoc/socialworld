@@ -173,11 +173,11 @@ public class StateEatable extends State {
 		case stateEatable_tasteSet:
 			return new ValueProperty(Type.simObjProp, valueName, tasteSet.copyForProperty(cluster));
 		case stateEatable_mainTaste:
-			return getMainTaste(cluster, valueName);
+			return getMainTaste_(cluster, valueName);
 		case stateEatable_nutrientSet:
 			return new ValueProperty(Type.simObjProp, valueName, nutrientSet.copyForProperty(cluster));
 		case stateEatable_mainNutrient:
-			return getMainNutrient(cluster, valueName);
+			return getMainNutrient_(cluster, valueName);
 
 		default:
 			return ValueProperty.getInvalid();
@@ -199,7 +199,7 @@ public class StateEatable extends State {
 		return getTasteSetProperty(getPropertyProtection().getCluster(), PropertyName.tasteSet_mainTaste, VALUENAME_MAIN_TASTE);
 	}
 
-	private ValueProperty getMainTaste(SimulationCluster cluster, String valueName) {
+	private ValueProperty getMainTaste_(SimulationCluster cluster, String valueName) {
 		return getTasteSetProperty(cluster, PropertyName.tasteSet_mainTaste, valueName);
 	}
 
@@ -212,7 +212,7 @@ public class StateEatable extends State {
 		return getNutrientSetProperty(getPropertyProtection().getCluster(), PropertyName.nutrientSet_mainNutrient, VALUENAME_MAIN_NUTRIENT);
 	}
 
-	private ValueProperty getMainNutrient(SimulationCluster cluster, String valueName) {
+	private ValueProperty getMainNutrient_(SimulationCluster cluster, String valueName) {
 		return getNutrientSetProperty(cluster, PropertyName.nutrientSet_mainNutrient, valueName);
 	}
 
