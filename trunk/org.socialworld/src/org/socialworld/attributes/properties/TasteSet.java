@@ -96,7 +96,7 @@ public class TasteSet extends PropPortionSet {
 	public ValueProperty getProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
 		switch (propName) {
 		case tasteSet_mainTaste:
-			return new ValueProperty(Type.object, valueName, getMain());
+			return new ValueProperty(Type.enumProp, valueName, getMain());
 		case tasteSet_tastes:
 			return new ValueProperty(Type.valueList, valueName, getObjectsAsValueArrayList());
 /*		case TasteSet_portions:

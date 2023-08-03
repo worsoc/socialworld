@@ -94,7 +94,7 @@ public class MaterialSet extends PropPortionSet {
 	public ValueProperty getProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
 		switch (propName) {
 		case materialSet_mainMaterial:
-			return new ValueProperty(Type.object, valueName, getMain());
+			return new ValueProperty(Type.enumProp, valueName, getMain());
 		case materialSet_materials:
 			return new ValueProperty(Type.valueList, valueName, getObjectsAsValueArrayList());
 		default:
