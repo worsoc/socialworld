@@ -8,6 +8,8 @@ import org.socialworld.knowledge.KnowledgeFact_Criterion;
 
 public class Lexem {
 
+	private static Lexem testLexem;
+	
 	public static int newLexemID = 0;
 	
 	private int lexemID;
@@ -16,6 +18,16 @@ public class Lexem {
 	private Relation relation;
 	List<KnowledgeFact_Criterion> criterions;
 
+	public  static Lexem getTestLexem() {
+		if (testLexem == null) {
+			testLexem = new Lexem();
+		}
+		return testLexem;
+	}
+	
+	private Lexem() {
+		
+	}
 	
 	public Lexem(int lexemID,  Word_Type type , boolean allowedAsKnowledgeSubject) {
 		this.lexemID = lexemID;
