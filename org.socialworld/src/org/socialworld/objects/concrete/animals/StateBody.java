@@ -125,11 +125,11 @@ public class StateBody extends State {
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
 	protected ValueProperty getFaceColour() {
-		return new ValueProperty(Type.object,  VALUENAME_FACE_COLOUR, Colour.black);
+		return new ValueProperty(Type.enumProp,  VALUENAME_FACE_COLOUR, Colour.black);
 	}
 
 	protected ValueProperty getHairColour() {
-		return new ValueProperty(Type.object,  VALUENAME_HAIR_COLOUR, Colour.silver);
+		return new ValueProperty(Type.enumProp,  VALUENAME_HAIR_COLOUR, Colour.silver);
 	}
 	
 }

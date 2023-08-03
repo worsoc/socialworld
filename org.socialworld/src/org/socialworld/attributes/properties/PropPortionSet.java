@@ -32,7 +32,7 @@ import org.socialworld.collections.ValueArrayList;
 
 public abstract class PropPortionSet extends SimProperty {
 
-	private List<Object> objects;
+	private List<IEnumProperty> objects;
 	private List<Integer> portions;
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -47,11 +47,11 @@ public abstract class PropPortionSet extends SimProperty {
 	}
 
 	public  PropPortionSet() {
-		objects = new ArrayList<Object>();
+		objects = new ArrayList<IEnumProperty>();
 		portions = new ArrayList<Integer>();
 	}
 			
-	public void add(		Object object, int portion) {
+	public void add(		IEnumProperty object, int portion) {
 		objects.add(object);
 		portions.add(portion);
 	}
@@ -61,9 +61,9 @@ public abstract class PropPortionSet extends SimProperty {
 /////////////////////////////    PropPortionSet  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
-	protected final List<Object> getObjects() {
-		List<Object> copy = new ArrayList<Object>();
-		for (Object object : this.objects) {
+	protected final List<IEnumProperty> getObjects() {
+		List<IEnumProperty> copy = new ArrayList<IEnumProperty>();
+		for (IEnumProperty object : this.objects) {
 			copy.add(object);
 		}
 		return copy;
@@ -80,7 +80,7 @@ public abstract class PropPortionSet extends SimProperty {
 
 	public Object getMain() {
 		int maxPortion = 0;
-		Object object = null;
+		IEnumProperty object = null;
 		for (int index = 0; index < portions.size() ; index++) {
 			if (portions.get(index) > maxPortion) {
 				maxPortion = portions.get(index);
@@ -91,7 +91,7 @@ public abstract class PropPortionSet extends SimProperty {
 	}
 	
 	protected ValueArrayList getObjectsAsValueArrayList() {
-		ValueArrayList list = new ValueArrayList(objects, Type.object);
+		ValueArrayList list = new ValueArrayList(objects, Type.enumProp);
 		return list;
 	}
 }
