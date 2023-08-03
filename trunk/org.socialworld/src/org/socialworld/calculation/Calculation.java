@@ -25,6 +25,7 @@ package org.socialworld.calculation;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.Time;
+import org.socialworld.attributes.properties.IEnumProperty;
 import org.socialworld.calculation.geometry.Vector;
 
 public class Calculation {
@@ -122,6 +123,9 @@ public class Calculation {
 		case vector:
 			created = new Value(type, value);
 			break;
+		case enumProp:
+			if (value instanceof IEnumProperty) created = new Value(type, value);
+			else created = new Value();
 		default: 
 			created = new Value(type, value);
 		}

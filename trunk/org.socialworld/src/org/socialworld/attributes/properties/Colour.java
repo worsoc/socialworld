@@ -25,12 +25,14 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.conversation.Lexem;
+import org.socialworld.conversation.Word_Type;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.tools.SimulationMetaInformation;
 import org.socialworld.tools.StringTupel;
 import org.socialworld.visualize.SimVisual;
 
-public enum Colour {
+public enum Colour implements IEnumProperty{
 
 	nothing(0,-1),
 	black(1,0000000),  
@@ -376,6 +378,11 @@ public enum Colour {
 		return index;
 	}
 
+	public Lexem getLexem() {
+		// TEMP_SOLUTION  index as lexem_id
+		return new Lexem(index, Word_Type.adjective, false);
+	}
+
 	/**
 	 * The method returns the material name which belongs to the parameter
 	 * material index.
@@ -391,6 +398,7 @@ public enum Colour {
 		return null;
 	}
 	
+
 	///////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////meta information    ////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
