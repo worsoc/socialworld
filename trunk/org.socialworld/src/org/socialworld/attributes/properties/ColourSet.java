@@ -97,7 +97,7 @@ public class ColourSet extends PropPortionSet {
 	public ValueProperty getProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
 		switch (propName) {
 		case colourSet_mainColour:
-			return new ValueProperty(Type.object, valueName, getMain());
+			return new ValueProperty(Type.enumProp, valueName, (Colour) getMain());
 		case colourSet_colours:
 			return new ValueProperty(Type.valueList, valueName, getObjectsAsValueArrayList());
 /*		case colourSet_portions:

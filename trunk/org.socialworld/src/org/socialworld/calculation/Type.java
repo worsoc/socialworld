@@ -36,6 +36,7 @@ public enum Type {
 	simPropName(101), simObjProp(102), eventProp(103), actionProp(104),
 	sentenceElement(111), answer(112),
 	knowledgeElement(121), knowledgeSource(122), knowledgeAtom(123),
+	enumProp(131),
 	valueList(8888), 
 	object(9999);
 

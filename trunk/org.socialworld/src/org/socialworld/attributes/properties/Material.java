@@ -24,11 +24,13 @@ package org.socialworld.attributes.properties;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.conversation.Lexem;
+import org.socialworld.conversation.Word_Type;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.tools.SimulationMetaInformation;
 import org.socialworld.tools.StringTupel;
 
-public enum Material {
+public enum Material implements IEnumProperty {
 
 	nothing(0),  
 	leather(1),
@@ -36,10 +38,10 @@ public enum Material {
 	cotton(3),
 	iron(4);
 	
-	private int arrayIndex;
+	private int index;
 
 	private Material(int index) {
-		this.arrayIndex = index;
+		this.index = index;
 	}
 
 	public static int getMaxIndex() {
@@ -52,20 +54,25 @@ public enum Material {
 	 * @return material's index
 	 */
 	public int getIndex() {
-		return arrayIndex;
+		return index;
+	}
+
+	public Lexem getLexem() {
+		// TEMP_SOLUTION  index+3000 as lexem_id
+		return new Lexem(index+3000, Word_Type.adjective, false);
 	}
 
 	/**
 	 * The method returns the material name which belongs to the parameter
 	 * material index.
 	 * 
-	 * @param arrayIndex
+	 * @param index
 	 *            material index
 	 * @return material name
 	 */
-	public static Material getName(int arrayIndex) {
+	public static Material getName(int index) {
 		for (Material element : Material.values())
-			if (element.arrayIndex == arrayIndex)
+			if (element.index == index)
 				return element;
 		return nothing;  // instead of null 
 	}

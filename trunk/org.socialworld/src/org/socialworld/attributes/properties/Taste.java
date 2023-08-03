@@ -24,11 +24,13 @@ package org.socialworld.attributes.properties;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.conversation.Lexem;
+import org.socialworld.conversation.Word_Type;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.tools.SimulationMetaInformation;
 import org.socialworld.tools.StringTupel;
 
-public enum Taste {
+public enum Taste implements IEnumProperty {
 
 
 	nothing(0),
@@ -38,15 +40,16 @@ public enum Taste {
 	bitter(4),
 	umami(5);
 
-	private int arrayIndex;
-
-	private Taste(int index) {
-		this.arrayIndex = index;
-	}
+	private int index;
 
 	public static int getMaxIndex() {
 		return 5;
 	}
+
+	private Taste(int index) {
+		this.index = index;
+	}
+
 
 	/**
 	 * The method returns the index of the Taste.
@@ -54,20 +57,25 @@ public enum Taste {
 	 * @return Taste's index
 	 */
 	public int getIndex() {
-		return arrayIndex;
+		return index;
+	}
+
+	public Lexem getLexem() {
+		// TEMP_SOLUTION  index+1000 as lexem_id
+		return new Lexem(index+1000, Word_Type.adjective, false);
 	}
 
 	/**
 	 * The method returns the taste name which belongs to the parameter
 	 * taste index.
 	 * 
-	 * @param arrayIndex
+	 * @param index
 	 *            taste index
 	 * @return taste name
 	 */
-	public static Taste getName(int arrayIndex) {
+	public static Taste getName(int index) {
 		for (Taste element : Taste.values())
-			if (element.arrayIndex == arrayIndex)
+			if (element.index == index)
 				return element;
 		return nothing;  // instead of null
 	}

@@ -24,11 +24,13 @@ package org.socialworld.attributes.properties;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.conversation.Lexem;
+import org.socialworld.conversation.Word_Type;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.tools.SimulationMetaInformation;
 import org.socialworld.tools.StringTupel;
 
-public enum Nutrient {
+public enum Nutrient implements IEnumProperty {
 
 	nothing(0),
 	fat(1),
@@ -39,10 +41,10 @@ public enum Nutrient {
 	vitamins(6),
 	minerals(7);
 
-	private int arrayIndex;
+	private int index;
 
 	private Nutrient(int index) {
-		this.arrayIndex = index;
+		this.index = index;
 	}
 
 	public static int getMaxIndex() {
@@ -55,20 +57,25 @@ public enum Nutrient {
 	 * @return Nutrient's index
 	 */
 	public int getIndex() {
-		return arrayIndex;
+		return index;
+	}
+
+	public Lexem getLexem() {
+		// TEMP_SOLUTION  index+2000 as lexem_id
+		return new Lexem(index+2000, Word_Type.adjective, false);
 	}
 
 	/**
 	 * The method returns the nutrient name which belongs to the parameter
 	 * nutrient index.
 	 * 
-	 * @param arrayIndex
+	 * @param index
 	 *            nutrient index
 	 * @return nutrient name
 	 */
-	public static Nutrient getName(int arrayIndex) {
+	public static Nutrient getName(int index) {
 		for (Nutrient element : Nutrient.values())
-			if (element.arrayIndex == arrayIndex)
+			if (element.index == index)
 				return element;
 		return nothing;  // instead of null
 	}
