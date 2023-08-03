@@ -24,8 +24,11 @@ package org.socialworld.knowledge;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
+import org.socialworld.conversation.Lexem;
+import org.socialworld.core.AllWords;
 
 public class KnowledgeProperty extends KnowledgeFact {
 
@@ -73,5 +76,27 @@ public class KnowledgeProperty extends KnowledgeFact {
 		return ( this.criterion == b.criterion && this.atoms.equals(b.atoms) );
 	}
 	
+	protected KnowledgeFactAtom translateToKnowledgeFactAtom(Value value) {
+		KnowledgeFactAtom result = null;
+		Lexem lexem = translateToLexem(value);
+		if (lexem != null) {
+			result = new KnowledgeFactAtom(lexem);
+		}
+		return result;
+	}
+
+	protected Lexem translateToLexem(Value value) {
+		Lexem result = null;
+		if (value.getType() == Type.integer) {
+			Object o = value.getValue();
+			if (o instanceof Integer) {
+				int propIndex = ((Integer) o).intValue();
+				result = Lexem.getTestLexem();
+						//AllWords.getLexem(lexemID);
+			}
+			
+		}
+		return result;
+	}
 
 }
