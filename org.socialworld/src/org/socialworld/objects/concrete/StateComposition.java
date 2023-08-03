@@ -136,7 +136,7 @@ public class StateComposition extends State {
 		case stateComposition_materialSet:
 			return new ValueProperty(Type.simObjProp, valueName, materialSet.copyForProperty(cluster));
 		case stateComposition_mainMaterial:
-			return getMainMaterial(cluster, valueName);
+			return getMainMaterial_(cluster, valueName);
 
 		default:
 			return ValueProperty.getInvalid();
@@ -157,7 +157,7 @@ public class StateComposition extends State {
 		return getMaterialSetProperty(getPropertyProtection().getCluster(), PropertyName.materialSet_mainMaterial, VALUENAME_MAIN_MATERIAL);
 	}
 
-	private ValueProperty getMainMaterial(SimulationCluster cluster, String valueName) {
+	private ValueProperty getMainMaterial_(SimulationCluster cluster, String valueName) {
 		return getMaterialSetProperty(cluster, PropertyName.materialSet_mainMaterial, valueName);
 	}
 
