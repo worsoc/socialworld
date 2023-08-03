@@ -96,7 +96,7 @@ public class NutrientSet extends PropPortionSet {
 	public ValueProperty getProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
 		switch (propName) {
 		case nutrientSet_mainNutrient:
-			return new ValueProperty(Type.object, valueName, getMain());
+			return new ValueProperty(Type.enumProp, valueName, getMain());
 		case nutrientSet_nutrients:
 			return new ValueProperty(Type.valueList, valueName, getObjectsAsValueArrayList());
 /*		case NutrientSet_portions:
