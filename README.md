@@ -19,6 +19,10 @@ Run:
 > ./gradlew cleEcl ecl # Shortcut for doing both
 ```
 
+The open _Eclipse_ and **import the project** into your workspace. If you already had imported the project and you have problems, delete the projects and **re-import** them.
+
+It's a good advice to have your workspace not in the project folder but outside.
+
 ### With VSCode
 
 Install the recommended plugins from `.vscode/extensions.json`.
