@@ -2,6 +2,8 @@
 
 SocialWorld is a simulation of humans interaction.
 
+![Project Status](https://github.com/MatWorsoc/socialworld/actions/workflows/build-gradle-project.yml/badge.svg?event=push)
+
 ## How to start
 
 1. Clone the project with `git clone https://github.com/MatWorsoc/socialworld.git`
