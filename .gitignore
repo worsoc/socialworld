@@ -6,3 +6,14 @@ build
 
 # Ignore VSCode bin folder
 bin
+
+# Ignore VSCode config
+.vscode
+
+.DS_store
+
+# Linux start script should use lf
+/gradlew        text eol=lf
+
+# These are Windows script files and should use crlf
+*.bat           text eol=crlf
