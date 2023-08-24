@@ -10,7 +10,13 @@ bin
 # Ignore VSCode config
 .vscode
 
+# Ignore system specific meta files
 .DS_store
+
+# Ignore Eclipse specific files that can be generated via ./gradlew eclipse
+.settings
+.project
+.classpath
 
 # Linux start script should use lf
 /gradlew        text eol=lf
