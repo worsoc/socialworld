@@ -1,0 +1,56 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Current File",
+      "request": "launch",
+      "mainClass": "${file}"
+    },
+    {
+      "type": "java",
+      "name": "SocialWorld",
+      "request": "launch",
+      "mainClass": "org.socialworld.SocialWorld",
+      "projectName": "socialworld"
+    },
+    {
+      "type": "java",
+      "name": "Cube",
+      "request": "launch",
+      "mainClass": "org.socialworld.map.cubes.Cube",
+      "projectName": "socialworld"
+    },
+    {
+      "type": "java",
+      "name": "DataCreationTool",
+      "request": "launch",
+      "mainClass": "org.socialworld.tools.dct.DataCreationTool",
+      "projectName": "socialworld"
+    },
+    {
+      "type": "java",
+      "name": "PropertySetCreationTool",
+      "request": "launch",
+      "mainClass": "org.socialworld.tools.dct.PropertySetCreationTool",
+      "projectName": "socialworld"
+    },
+    {
+      "type": "java",
+      "name": "MapCreationTool",
+      "request": "launch",
+      "mainClass": "org.socialworld.tools.mct.MapCreationTool",
+      "projectName": "socialworld"
+    },
+    {
+      "type": "java",
+      "name": "PerceptionCreationTool",
+      "request": "launch",
+      "mainClass": "org.socialworld.tools.pct.PerceptionCreationTool",
+      "projectName": "socialworld"
+    }
+  ]
+}
