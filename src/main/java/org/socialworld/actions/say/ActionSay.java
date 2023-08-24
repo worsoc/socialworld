@@ -47,35 +47,35 @@ import org.socialworld.objects.SimulationObject;
 /**
  * German:
  * Die Klasse ActionSay ist von der abstrakten Klasse AbstractAction abgeleitet.
- * Alle Aktionsobjekte, die Sprechen beschreiben, gehören zu dieser Klasse.
+ * Alle Aktionsobjekte, die Sprechen beschreiben, gehÃ¶ren zu dieser Klasse.
  * 
- * Zur Beschreibung des Sprechens führt die Klasse die zusätzlichen Eigenschaften
- *   die Frage, die im Falle eines Gesprächs (Frage-Antwort-Wechsel) gestellt bzw. beantwortet wird,
+ * Zur Beschreibung des Sprechens fÃ¼hrt die Klasse die zusÃ¤tzlichen Eigenschaften
+ *   die Frage, die im Falle eines GesprÃ¤chs (Frage-Antwort-Wechsel) gestellt bzw. beantwortet wird,
  *   der Satz, der im Falle von Sagen/Reden gesprochen wird,
- *   den Gesprächspartner,
+ *   den GesprÃ¤chspartner,
  *   die Richtung.
- * Die Ausführung der Aktion wird in der Klasse Say geregelt, 
+ * Die AusfÃ¼hrung der Aktion wird in der Klasse Say geregelt, 
  * von der ein Objekt als Eigenschaft der Klasse ActionSay abgelegt ist.
  * 
  * Die Klasse ActionSay dient der Verwaltung der Aktion.
- * Die zugehörige Klasse Say dient der Wirksamwerdung der Aktion, 
- *  nämlich als Argument für das zur Aktion gehörende Event.
+ * Die zugehÃ¶rige Klasse Say dient der Wirksamwerdung der Aktion, 
+ *  nÃ¤mlich als Argument fÃ¼r das zur Aktion gehÃ¶rende Event.
  *
- *  In der Ausführungsmethode perform() werden Frage bzw. Satz in den entsprechenden Instanzvariablen abgelegt.
+ *  In der AusfÃ¼hrungsmethode perform() werden Frage bzw. Satz in den entsprechenden Instanzvariablen abgelegt.
  *   
- *  Danach wird das Ausführungsobjekt der Klasse Say erzeugt.
+ *  Danach wird das AusfÃ¼hrungsobjekt der Klasse Say erzeugt.
  *
- *  Schließlich wird das Ereignis zur Aktion erzeugt, mit dem Ausführungsobjekt als Argument.
+ *  SchlieÃŸlich wird das Ereignis zur Aktion erzeugt, mit dem AusfÃ¼hrungsobjekt als Argument.
  *  Das Ereignis wird in die Ereignisverwaltung (EventMaster) eingetragen.
  *  
  *  Der Name des Ereignis (EventType) 
- *   wird in Abhängigkeit von Aktionsmodus (ActionMode) ermittelt.
+ *   wird in AbhÃ¤ngigkeit von Aktionsmodus (ActionMode) ermittelt.
  *   
  *  Eine Aktion der Klasse ActionSay ist 
- *  a) das Sagen eines Satzes (Antwort oder Frage) in einem Gespräch 
+ *  a) das Sagen eines Satzes (Antwort oder Frage) in einem GesprÃ¤ch 
  *  oder
- *  b) das Sagen eines Satzes ohne direkten Bezug eines Gesprächs (also ohne Erwartung einer Erwiderung),
- *   aber ggf. durchaus zu einem Gesprächsparnter, mit dem man gleichzeitig ein Gespräch führt
+ *  b) das Sagen eines Satzes ohne direkten Bezug eines GesprÃ¤chs (also ohne Erwartung einer Erwiderung),
+ *   aber ggf. durchaus zu einem GesprÃ¤chsparnter, mit dem man gleichzeitig ein GesprÃ¤ch fÃ¼hrt
  *  
  * 
  * @author Mathias Sikos

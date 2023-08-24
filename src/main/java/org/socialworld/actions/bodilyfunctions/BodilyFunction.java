@@ -35,12 +35,12 @@ import org.socialworld.objects.SimulationObject;
  * Die Klasse BodilyFunction ist von der abstrakten Klasse ActionPerformer abgeleitet.
  * 
  * Die Klasse BodilyFunction dient der Wirksamwerdung der Aktion,
- *  nämlich als Argument für das zur Aktion gehörende Ereignis.
+ *  nÃ¤mlich als Argument fÃ¼r das zur Aktion gehÃ¶rende Ereignis.
  *
  *   
  *  In der Ausfuehrungsmethode perform() wird
  *   - die Intensitaet des Schlafens (also die Tiefe des Schlafs)
- *   für den Standardzugriff aus dem Ereignis heraus bereitgestellt.
+ *   fÃ¼r den Standardzugriff aus dem Ereignis heraus bereitgestellt.
  *   
  * @author Mathias Sikos
  *

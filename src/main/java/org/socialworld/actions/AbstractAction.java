@@ -42,40 +42,40 @@ import org.socialworld.objects.access.HiddenSimulationObject;
  * 
  * 
  * German:
- * AbstractAction ist die Basisklasse (abstrakte Klasse) für Aktionen der Simlationsobjekte.
+ * AbstractAction ist die Basisklasse (abstrakte Klasse) fÃ¼r Aktionen der Simlationsobjekte.
  * Die Aktionsobjekte von abgeleiteten Klassen werden im ActionMaster verwaltet 
- * und vom ActionHandler zur Ausführung gebracht.
+ * und vom ActionHandler zur AusfÃ¼hrung gebracht.
  * 
- * Die Ausführung besteht dabei aus 2 Schritten
- * a) Einleitung der Ausführung
+ * Die AusfÃ¼hrung besteht dabei aus 2 Schritten
+ * a) Einleitung der AusfÃ¼hrung
  * b) Wirksamwerden der Aktion
  * 
- * a) Einleitung der Ausführung:
- * Der ActionMaster führt die ActionHandler aller Simulationsobjekte
- *  und weist den jeweiligen ActionHandler an, mit der Ausführung einer Aktion zu beginnen bzw. eine Aktion fortzusetzen.
- * Der ActionHandler sorgt dafür, 
- *  dass für das auszuführende Aktionsobjekt (Ableitung von AbstractAction) die Methode perform() aufgerufen wird.
+ * a) Einleitung der AusfÃ¼hrung:
+ * Der ActionMaster fÃ¼hrt die ActionHandler aller Simulationsobjekte
+ *  und weist den jeweiligen ActionHandler an, mit der AusfÃ¼hrung einer Aktion zu beginnen bzw. eine Aktion fortzusetzen.
+ * Der ActionHandler sorgt dafÃ¼r, 
+ *  dass fÃ¼r das auszufÃ¼hrende Aktionsobjekt (Ableitung von AbstractAction) die Methode perform() aufgerufen wird.
  * Die Methode perform() ist abstract und muss in allen Ableitungen implementiert werden/sein.
- * Die Methode perform() führt Vorabprüfungen der Daten zur Aktion durch, 
- *  erzeugt das zugehörige Performer-Objekt (siehe Schritt b),
- *  erzeugt die auszulösenden Ereignisse, 
- *  fügt den Ereignissen das Performerobjekt als Ereigniseigenschaft hinzu,
- *  und trägt diese in die Ereignisverwaltung (EventMaster) ein (siehe Schritt b).
+ * Die Methode perform() fÃ¼hrt VorabprÃ¼fungen der Daten zur Aktion durch, 
+ *  erzeugt das zugehÃ¶rige Performer-Objekt (siehe Schritt b),
+ *  erzeugt die auszulÃ¶senden Ereignisse, 
+ *  fÃ¼gt den Ereignissen das Performerobjekt als Ereigniseigenschaft hinzu,
+ *  und trÃ¤gt diese in die Ereignisverwaltung (EventMaster) ein (siehe Schritt b).
  *  
  * b)  Wirksamwerden der Aktion
  * Es gilt der Grundsatz, dass alle Aktionen durch ihre Ereignisverarbeitung wirksam werden.
  * Im Schritt a) wurden Ereignisse zu den Aktionen in die Ereignisverwaltung eingetragen.
  * Die Ereignisverwaltung arbeitet die Ereignisse nach ihren Regeln ab.
- * Für jedes Event wird die evaluate-Methode des dem Ereignis zugeordenten Performers (Ableitung der Klasse ActionPerformer) aufgerufen.
+ * FÃ¼r jedes Event wird die evaluate-Methode des dem Ereignis zugeordenten Performers (Ableitung der Klasse ActionPerformer) aufgerufen.
  * Diese wiederum ruft die Methode perform im Performerobjekt auf.
- * Diese Methode ermittelt die für die Ereignisverarbeitung benötigten Werte 
- * 	aus dem Aktionsobjekt, dem ausführenden Objekt (also dem Akteur) und ggf. dem Zielobjekt. 
+ * Diese Methode ermittelt die fÃ¼r die Ereignisverarbeitung benÃ¶tigten Werte 
+ * 	aus dem Aktionsobjekt, dem ausfÃ¼hrenden Objekt (also dem Akteur) und ggf. dem Zielobjekt. 
  * Diese Werte werden standardisiert in einer Liste abgelegt 
- *  und können vom Ereignis über Standardmethoden ausgelesen werden.
- * Schließlich werden für die Ereignisse ihre Wirkung auf die Simulationsobjekte und ggf. Reaktionen ermittelt.
+ *  und kÃ¶nnen vom Ereignis Ã¼ber Standardmethoden ausgelesen werden.
+ * SchlieÃŸlich werden fÃ¼r die Ereignisse ihre Wirkung auf die Simulationsobjekte und ggf. Reaktionen ermittelt.
  *  
- * Die Klasse AbstractAction ist die Basisklasse für die Aktionsobjekte des Schrittes a), 
- *  enthält also die Daten für die Einleitung der Ausführung (Erzeugung von Performer und Event).
+ * Die Klasse AbstractAction ist die Basisklasse fÃ¼r die Aktionsobjekte des Schrittes a), 
+ *  enthÃ¤lt also die Daten fÃ¼r die Einleitung der AusfÃ¼hrung (Erzeugung von Performer und Event).
  *  
  */
 public abstract class AbstractAction {

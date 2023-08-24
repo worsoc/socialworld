@@ -36,45 +36,45 @@ import org.socialworld.objects.SimulationObject;
  * @author Mathias Sikos
  * 
  * German:
- * ActionPerformer ist die Basisklasse (abstrakte Klasse) für die Wirksamwerdung von Aktionen der Simlationsobjekte.
+ * ActionPerformer ist die Basisklasse (abstrakte Klasse) fÃ¼r die Wirksamwerdung von Aktionen der Simlationsobjekte.
  * Sie implementiert das Interface IEventParam
  *  und funktioniert damit als Eigenschaft von aus Aktionen abgeleiteten Ereignissen.
  * 
- * Die Ausführung von Aktionen besteht aus 2 Schritten
- * a) Einleitung der Ausführung
+ * Die AusfÃ¼hrung von Aktionen besteht aus 2 Schritten
+ * a) Einleitung der AusfÃ¼hrung
  * b) Wirksamwerden der Aktion
  * 
- * a) Einleitung der Ausführung:
- * Der ActionMaster führt die ActionHandler aller Simulationsobjekte
- *  und weist den jeweiligen ActionHandler an, mit der Ausführung einer Aktion zu beginnen bzw. eine Aktion fortzusetzen.
- * Der ActionHandler sorgt dafür, 
- *  dass für das auszuführende Aktionsobjekt (Ableitung von AbstractAction) die Methode perform() aufgerufen wird.
+ * a) Einleitung der AusfÃ¼hrung:
+ * Der ActionMaster fÃ¼hrt die ActionHandler aller Simulationsobjekte
+ *  und weist den jeweiligen ActionHandler an, mit der AusfÃ¼hrung einer Aktion zu beginnen bzw. eine Aktion fortzusetzen.
+ * Der ActionHandler sorgt dafÃ¼r, 
+ *  dass fÃ¼r das auszufÃ¼hrende Aktionsobjekt (Ableitung von AbstractAction) die Methode perform() aufgerufen wird.
  * Die Methode perform() ist abstract und muss in allen Ableitungen implementiert werden/sein.
- * Die Methode perform() führt Vorabprüfungen der Daten zur Aktion durch, 
- *  erzeugt das zugehörige Performer-Objekt von Unterklassen von ActionPerformer (siehe Schritt b),
- *  erzeugt die auszulösenden Ereignisse, 
- *  fügt den Ereignissen das Performerobjekt als Ereigniseigenschaft hinzu,
- *  und trägt diese in die Ereignisverwaltung (EventMaster) ein (siehe Schritt b).
+ * Die Methode perform() fÃ¼hrt VorabprÃ¼fungen der Daten zur Aktion durch, 
+ *  erzeugt das zugehÃ¶rige Performer-Objekt von Unterklassen von ActionPerformer (siehe Schritt b),
+ *  erzeugt die auszulÃ¶senden Ereignisse, 
+ *  fÃ¼gt den Ereignissen das Performerobjekt als Ereigniseigenschaft hinzu,
+ *  und trÃ¤gt diese in die Ereignisverwaltung (EventMaster) ein (siehe Schritt b).
  *  
  * b)  Wirksamwerden der Aktion
  * Es gilt der Grundsatz, dass alle Aktionen durch ihre Ereignisverarbeitung wirksam werden.
  * Im Schritt a) wurden Ereignisse zu den Aktionen in die Ereignisverwaltung eingetragen.
  * Die Ereignisverwaltung arbeitet die Ereignisse nach ihren Regeln ab.
- * Für jedes Event der Klasse EventToCandidates, also von Aktionen ausgelöste Ereignisse, 
+ * FÃ¼r jedes Event der Klasse EventToCandidates, also von Aktionen ausgelÃ¶ste Ereignisse, 
  *  wird die evaluate-Methode des dem Ereignis zugeordenten Performers (Ableitung der Klasse ActionPerformer) aufgerufen.
  * Diese wiederum ruft die (in der Klasse ActionPerformer abstrakte) Methode perform() im Performerobjekt auf.
- * Diese Methode ermittelt die für die Ereignisverarbeitung benötigten Werte 
- * 	aus dem Aktionsobjekt, dem ausführenden Objekt (also dem Akteur) und ggf. dem Zielobjekt. 
+ * Diese Methode ermittelt die fÃ¼r die Ereignisverarbeitung benÃ¶tigten Werte 
+ * 	aus dem Aktionsobjekt, dem ausfÃ¼hrenden Objekt (also dem Akteur) und ggf. dem Zielobjekt. 
  * Diese Werte werden standardisiert in einer Liste abgelegt 
- *  und können vom Ereignis über Standardmethoden ausgelesen werden.
- * Schließlich werden für die Ereignisse ihre Wirkung auf die Simulationsobjekte und ggf. Reaktionen ermittelt.
+ *  und kÃ¶nnen vom Ereignis Ã¼ber Standardmethoden ausgelesen werden.
+ * SchlieÃŸlich werden fÃ¼r die Ereignisse ihre Wirkung auf die Simulationsobjekte und ggf. Reaktionen ermittelt.
  *  
- * Die Klasse ActionPerformer ist die Basisklasse für die Aktionsobjekte des Schrittes b), 
- *  enthält also die Daten zur von der Ereignisverarbeitung ausgelösten Berechnung der Auswirkungen.
+ * Die Klasse ActionPerformer ist die Basisklasse fÃ¼r die Aktionsobjekte des Schrittes b), 
+ *  enthÃ¤lt also die Daten zur von der Ereignisverarbeitung ausgelÃ¶sten Berechnung der Auswirkungen.
  *  
  * Die Daten werden in der Liste eventParams (eine ValueArrayList (List<Value>)) abgelegt.
- * Jeder Value dieser List hat einen Namen, über den das Event genau auf den gewünschten Wert zugreifen kann.
- * Damit kann die Ereignisverarbeitung standardisiert auf notwendige Daten zur auslösenden Aktion zugreifen.
+ * Jeder Value dieser List hat einen Namen, Ã¼ber den das Event genau auf den gewÃ¼nschten Wert zugreifen kann.
+ * Damit kann die Ereignisverarbeitung standardisiert auf notwendige Daten zur auslÃ¶senden Aktion zugreifen.
  *
  */
 public abstract class ActionPerformer implements IEventParam {

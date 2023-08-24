@@ -1,6 +1,11 @@
 plugins {
   id 'java'
   id 'eclipse'
+  id 'application'
+}
+
+tasks.withType(JavaCompile) {
+  options.release = 8
 }
 
 repositories {
@@ -17,4 +22,8 @@ dependencies {
 
 test {
   useJUnitPlatform()
+}
+
+application {
+   mainClass = 'org.socialworld.SocialWorld'
 }

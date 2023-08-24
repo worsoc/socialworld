@@ -35,15 +35,15 @@ import org.socialworld.objects.SimulationObject;
  * Die Klasse Hear ist von der abstrakten Klasse ActionPerformer abgeleitet.
  * 
  * Die Klasse Hear dient der Wirksamwerdung der Aktion,
- *  nämlich als Argument für das zur Aktion gehörende Ereignis.
+ *  nÃ¤mlich als Argument fÃ¼r das zur Aktion gehÃ¶rende Ereignis.
  *
- *  In der Ausführungsmethode perform() werden 
- *   - der (Gesprächs)partner (ein Objekt der Klasse Human)
+ *  In der AusfÃ¼hrungsmethode perform() werden 
+ *   - der (GesprÃ¤chs)partner (ein Objekt der Klasse Human)
  *   - der Satz
- *   für den Standardzugriff aus dem Ereignis heraus bereitgestellt.
+ *   fÃ¼r den Standardzugriff aus dem Ereignis heraus bereitgestellt.
  *   
- *  Bei der Bereitstellung der beiden Eigenschaften werden die Fälle
- *   - Zuhören/Hinhören
+ *  Bei der Bereitstellung der beiden Eigenschaften werden die FÃ¤lle
+ *   - ZuhÃ¶ren/HinhÃ¶ren
  *   - Verstehen
  *  gleich behandelt (beide leiten Partner und Satz auf die gleiche Weise her).
  * 

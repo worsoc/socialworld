@@ -26,7 +26,7 @@ package org.socialworld.map;
  *
  */
 public class Ground_Consistency implements IMapProp {
-		float springiness;   // German: Federung, Elastizit‰t
+		float springiness;   // German: Federung, Elastizit√§t
 		float penetration;   // German: Durchdringung, Eindringen, Tiefenwirkung
 		
 	

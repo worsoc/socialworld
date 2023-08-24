@@ -42,29 +42,29 @@ import org.socialworld.objects.SimulationObject;
  * 
  * German:
  * Die Klasse ActionHear ist von der abstrakten Klasse AbstractAction abgeleitet.
- * Alle Aktionsobjekte, die Zuhören und Verstegen beschreiben, gehören zu dieser Klasse.
- * Zur Beschreibung des Hörens führt die Klasse die zusätzlichen Eigenschaften
- * für den gehörten Satz und das Zielobjekt.
- * Die Ausführung der Aktion wird in der Klasse Hear geregelt, 
+ * Alle Aktionsobjekte, die ZuhÃ¶ren und Verstegen beschreiben, gehÃ¶ren zu dieser Klasse.
+ * Zur Beschreibung des HÃ¶rens fÃ¼hrt die Klasse die zusÃ¤tzlichen Eigenschaften
+ * fÃ¼r den gehÃ¶rten Satz und das Zielobjekt.
+ * Die AusfÃ¼hrung der Aktion wird in der Klasse Hear geregelt, 
  * von der ein Objekt als Eigenschaft der Klasse ActionHear abgelegt ist.
  * 
  * Die Klasse ActionHear dient der Verwaltung der Aktion.
- * Die zugehörige Klasse Hear dient der Ausführung der Aktion, 
- *  nämlich als Argument für das zur Aktion gehörende Event.
+ * Die zugehÃ¶rige Klasse Hear dient der AusfÃ¼hrung der Aktion, 
+ *  nÃ¤mlich als Argument fÃ¼r das zur Aktion gehÃ¶rende Event.
  *
- *  In der Ausführungsmethode perform() wird der vom Zielobjekt gesprochene Satz ermittelt
+ *  In der AusfÃ¼hrungsmethode perform() wird der vom Zielobjekt gesprochene Satz ermittelt
  *   und in der Instanzvariablen sentence abgelegt. 
- *  Dabei wird im Falle des Zuhörens direkt beim Zielobjekt ausgelesen, 
+ *  Dabei wird im Falle des ZuhÃ¶rens direkt beim Zielobjekt ausgelesen, 
  *   im Falle des Verstehens in der eigenen Stuktur (Talk) des Akteurs.
- *  Danach wird das Ausführungsobjekt der Klasse Hear erzeugt.
- *  Schließlich wird das Ereignis zur Aktion erzeugt, mit dem Ausführungsobjekt als Argument.
+ *  Danach wird das AusfÃ¼hrungsobjekt der Klasse Hear erzeugt.
+ *  SchlieÃŸlich wird das Ereignis zur Aktion erzeugt, mit dem AusfÃ¼hrungsobjekt als Argument.
  *  Das Ereignis wird in die Ereignisverwaltung (EventMaster) eingetragen.
  *  
  *  Der Name des Ereignis (EventType) 
- *   wird in Abhängigkeit von Aktionsmodus (ActionMode) und Satz ermittelt.
+ *   wird in AbhÃ¤ngigkeit von Aktionsmodus (ActionMode) und Satz ermittelt.
  *   
  *  Eine Aktion der Klasse ActionHear ist 
- *  a) das Zuhören (das Aufnehmen eines Satzes)
+ *  a) das ZuhÃ¶ren (das Aufnehmen eines Satzes)
  *  oder
  *  b) das Verstehen eines Satzes (Information extrahieren und als Wissen ablegen)
  *

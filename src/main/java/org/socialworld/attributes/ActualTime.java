@@ -25,8 +25,8 @@ package org.socialworld.attributes;
  * German:
  * Die Klasse ActualTime ist  von der Klasse Time abgeleitet.
  * 
- * Über die statischen Methoden asTime() und inMilliseconds() liefert die Klasse die aktuelle Zeit,
- * 	einmal als Objekt der Klasse Time und einmal als Zahl für die Millisekunden.
+ * Ãœber die statischen Methoden asTime() und inMilliseconds() liefert die Klasse die aktuelle Zeit,
+ * 	einmal als Objekt der Klasse Time und einmal als Zahl fÃ¼r die Millisekunden.
  * 
  * @author Mathias Sikos (tyloesand)
  */

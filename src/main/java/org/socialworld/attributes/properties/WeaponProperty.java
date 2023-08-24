@@ -33,26 +33,26 @@ import org.socialworld.collections.ValueArrayList;
  *   
  * Diese Eigenschaften sind:
  * - Masse
- * - Härte(grad)
- * - Schärfe
+ * - HÃ¤rte(grad)
+ * - SchÃ¤rfe
  * 
  *   Anhand dieser Eigenschaften wird die Wirkung der Waffe auf das Ziel des Angriffs ermittelt.
  *   
- *   Außerdem führt die Klasse eine lineare Funktion, 
- *     mit der (in Abhängigkeit der intensität des Angriffs) 
- *     die Überwindung des (Rüstungsschutzes) des Zielobjektes ermittelt werden kann.
- *     Nur Wenn der Schwellwert des Schutzes des Ziels überwunden ist, 
+ *   AuÃŸerdem fÃ¼hrt die Klasse eine lineare Funktion, 
+ *     mit der (in AbhÃ¤ngigkeit der intensitÃ¤t des Angriffs) 
+ *     die Ãœberwindung des (RÃ¼stungsschutzes) des Zielobjektes ermittelt werden kann.
+ *     Nur Wenn der Schwellwert des Schutzes des Ziels Ã¼berwunden ist, 
  *       kann die Waffe ihre Wirkung auf das Ziel entfalten.
  *       
- *   Die Methode  getOvercomeThresholdForIntensity(float intensity) liefert anhand der Intensität den Schwellwert,
- *    der überwunden wird.
- *   Wenn das Ziel also einen Schutz kleiner gleich des Ergbnissees der Funktion hat, gilt der Rüstungsscutz als überwunden.
+ *   Die Methode  getOvercomeThresholdForIntensity(float intensity) liefert anhand der IntensitÃ¤t den Schwellwert,
+ *    der Ã¼berwunden wird.
+ *   Wenn das Ziel also einen Schutz kleiner gleich des Ergbnissees der Funktion hat, gilt der RÃ¼stungsscutz als Ã¼berwunden.
  *  
  *   Alternativ zur Berechnung des Schwellwertes hier, kann auch die Funktion selnbst erfragt werden.
- *   Diese wird mit der Methode getFunctionForThresholdOvercomeProtection() zurückgegeben.
+ *   Diese wird mit der Methode getFunctionForThresholdOvercomeProtection() zurÃ¼ckgegeben.
  *      
- *   Mit der Methode getAsValues() werden die Eigenschaften Masse,Härte und Schärfe 
- *       als ValueArrayList und damit als Argumente für Berechnungsmethoden der Berechnungsklassen bereitgestellt.
+ *   Mit der Methode getAsValues() werden die Eigenschaften Masse,HÃ¤rte und SchÃ¤rfe 
+ *       als ValueArrayList und damit als Argumente fÃ¼r Berechnungsmethoden der Berechnungsklassen bereitgestellt.
  *           
  * @author Mathias Sikos
  *

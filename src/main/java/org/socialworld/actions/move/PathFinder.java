@@ -33,20 +33,20 @@ import org.socialworld.objects.Animal;
 /**
  * German:
  * Die Klasse PathFinder dient dem Finden des zu nutzenden Pfades,
- *  also der Klärung der Frage, auf welchem Weg ein Tier zum Ziel kommt.
+ *  also der KlÃ¤rung der Frage, auf welchem Weg ein Tier zum Ziel kommt.
  *  
  * Jedes PathFinder-Objekt hat eine Referenz auf sein Tier.
  * Jedes PathFinder-Objekt hat eine Referenz auf die Wissensbasis des Tieres, 
- *  nämlich die Gesamtheit aller bekannten Wege.
+ *  nÃ¤mlich die Gesamtheit aller bekannten Wege.
  *  
  * Beim Finden eines Pfades wird als Startpunkt die aktuelle Position des Tieres genommen.
  *  Die Zielposition wird angegeben.
  *  
- * Aus den bereits bekannten Pfaden werden unter Berücksichtigung von Bewertungen der bekannten Pfade, 
+ * Aus den bereits bekannten Pfaden werden unter BerÃ¼cksichtigung von Bewertungen der bekannten Pfade, 
  *  der neue Pfad hergeleitet.
  * Ein neuer Pfad entsteht dabei 
- *  - aus Verknüpfung zweier bekannter Pfade 
- *  - oder aus Verknüpfung eines bekannten Pfades 
+ *  - aus VerknÃ¼pfung zweier bekannter Pfade 
+ *  - oder aus VerknÃ¼pfung eines bekannten Pfades 
  *      mit einem  neu erzeugten Pfad, bei dem nur Start- und Zielposition angegeben sind.
  *  
  * @author Mathias Sikos
