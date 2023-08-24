@@ -1,0 +1,17 @@
+{
+  "recommendations": [
+    "vscjava.vscode-java-pack",
+    "streetsidesoftware.code-spell-checker",
+    "github.vscode-pull-request-github",
+    "vscjava.vscode-gradle",
+    "eamodio.gitlens",
+    "naco-siren.gradle-language",
+    "visualstudioexptteam.vscodeintellicode",
+    "visualstudioexptteam.intellicode-api-usage-examples",
+    "sohibe.java-generate-setters-getters",
+    "dgileadi.java-decompiler",
+    "davidanson.vscode-markdownlint",
+    "gruntfuggly.todo-tree",
+    "wayou.vscode-todo-highlight"
+  ]
+}

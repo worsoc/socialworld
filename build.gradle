@@ -1,0 +1,29 @@
+plugins {
+  id 'java'
+  id 'eclipse'
+  id 'application'
+}
+
+tasks.withType(JavaCompile) {
+  options.release = 8
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+  implementation 'org.mariadb.jdbc:mariadb-java-client:3.1.4'
+
+  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.3'
+  testImplementation 'org.assertj:assertj-core:3.24.2'
+  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.3'
+}
+
+test {
+  useJUnitPlatform()
+}
+
+application {
+   mainClass = 'org.socialworld.SocialWorld'
+}

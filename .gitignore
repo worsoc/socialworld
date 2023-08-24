@@ -1,0 +1,19 @@
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build
+
+# Ignore VSCode bin folder
+bin
+
+# Ignore VSCode config
+.vscode
+
+# Ignore system specific meta files
+.DS_store
+
+# Ignore Eclipse specific files that can be generated via ./gradlew eclipse
+.settings
+.project
+.classpath
