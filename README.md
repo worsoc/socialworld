@@ -16,12 +16,15 @@ As this is a _Gradle Project_ Gradle provides tasks for creating _Eclipse_ speci
 
 Run:
 ```bash
-> ./gradlew cleanEclipse # For cleaning Eclipse specific stuff (sometime neseccary)
+> ./gradlew cleanEclipse # For cleaning Eclipse specific stuff (sometimes necessary)
+
+
+
 > ./gradlew eclipse # For creating files
 > ./gradlew cleEcl ecl # Shortcut for doing both
 ```
 
-The open _Eclipse_ and **import the project** into your workspace. If you already had imported the project and you have problems, delete the projects and **re-import** them.
+Then open _Eclipse_ and **import the project** into your workspace. If you already had imported the project and you have problems, delete the project and **re-import** it.
 
 It's a good advice to have your workspace not in the project folder but outside.
 
@@ -31,7 +34,7 @@ Install the recommended plugins from `.vscode/extensions.json`.
 
 ## How to contribute
 
-1. Clone the project to your local maschine (as described above)
+1. Clone the project to your local machine (as described above)
 1. Create a new branch with `git checkout -B my-new-feature-branch`
 1. Check if you are on your branch with `git status`
 1. Make changes to your code
