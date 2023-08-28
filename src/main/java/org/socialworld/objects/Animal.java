@@ -47,7 +47,7 @@ import org.socialworld.tools.StringTupel;
 /**
  * An animal is a simulation object with extensions to express the living kind.
  * There are methods for action handling and event effects.
- * @author Mathias Sikos (tyloesand)
+ * @author Mathias Sikos (MatWorsoc)
  * 
  */
 public abstract class Animal extends SimulationObject implements ISeer, IRunning {

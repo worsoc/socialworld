@@ -45,7 +45,7 @@ import org.socialworld.core.IEventParam;
  * differentiation of action handling an event influence. A human is the only
  * simulation object that has an inventory. So it can carry items and use them.
  * 
- * @author Mathias Sikos (tyloesand)
+ * @author Mathias Sikos (MatWorsoc)
  * 
  */
  public class Human extends Mammal {

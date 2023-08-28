@@ -26,7 +26,7 @@ package org.socialworld.calculation.descriptions;
  * The class holds all informations for
  *         describing how an event influences a simulation object.
 
- * @author Mathias Sikos (tyloesand)   
+ * @author Mathias Sikos (MatWorsoc)   
  */
 public class EventInfluenceDescription extends DescriptionBase {
 

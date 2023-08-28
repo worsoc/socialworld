@@ -26,7 +26,7 @@ package org.socialworld.core;
  * description is needed for searching action objects in the action list. The
  * flag shows whether an action attribute is search criteria or not.
  * 
- * @author Mathias Sikos (tyloesand)
+ * @author Mathias Sikos (MatWorsoc)
  * 
  */
 public enum ActionDescriptionFlag {

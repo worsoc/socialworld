@@ -59,7 +59,7 @@ import org.socialworld.actions.handle.Inventory;
  *         The instance is responsible for creating human objects
  *         Therefore the object data is loaded from a data source
  *         and put to a new created instance of class Human
- * @author Mathias Sikos (tyloesand) 
+ * @author Mathias Sikos (MatWorsoc) 
  */
 public class LoadHuman extends LoadAnimal {
 	

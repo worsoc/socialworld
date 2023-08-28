@@ -37,7 +37,7 @@ import org.socialworld.actions.ActionNothing;
 /**
  * Manages the actions of an {@link SimulationObject}.
  * 
- * @author Mathias Sikos (tyloesand)
+ * @author Mathias Sikos (MatWorsoc)
  */
 public class ActionHandler  {
 

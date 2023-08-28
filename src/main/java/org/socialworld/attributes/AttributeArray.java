@@ -35,7 +35,7 @@ import org.socialworld.tools.StringTupel;
  *         methods to manipulate and assign the values.
  *         There also is an array for the difference of every attribute's new value
  *         to its old value, that means how the attribute has changed by the last calculation
- * @author Mathias Sikos (tyloesand) 
+ * @author Mathias Sikos (MatWorsoc) 
  */
 public class AttributeArray extends SimProperty {
 	/**

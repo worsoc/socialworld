@@ -25,7 +25,7 @@ package org.socialworld.calculation;
  *  The enumeration holds all operators that
  *         can be used in conditions.
 
- * @author Mathias Sikos (tyloesand) 
+ * @author Mathias Sikos (MatWorsoc) 
  */
 public enum Expression_ConditionOperator {
 	notEqual(0), equal(1), less(2), lessEqual(3), greaterEqual(4), greater(5),

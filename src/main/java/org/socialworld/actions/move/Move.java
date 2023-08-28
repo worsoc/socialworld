@@ -49,7 +49,7 @@ import org.socialworld.objects.SimulationObject;
  * Aus der Länge des zurückzulegenden Weges und der Geschwindigkeit wird die Zahl der Fortsetzungen ermittelt.
  * 
  *
- * @author Mathias Sikos (tyloesand) 
+ * @author Mathias Sikos (MatWorsoc) 
  */
 public class Move extends ActionPerformer {
 	

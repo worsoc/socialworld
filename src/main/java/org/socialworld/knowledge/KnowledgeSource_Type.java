@@ -23,7 +23,7 @@ package org.socialworld.knowledge;
 
 /**
  * The enumeration collects all knowledge source types.
- * @author Mathias Sikos (tyloesand) 
+ * @author Mathias Sikos (MatWorsoc) 
 */
 public enum KnowledgeSource_Type {
 	ownExperience(1), heardOf(2), readAbout(3);

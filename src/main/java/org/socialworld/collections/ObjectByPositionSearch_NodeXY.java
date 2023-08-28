@@ -34,7 +34,7 @@ package org.socialworld.collections;
  *  Every leaf node has a value for the objectID. 
  *  Here the x and y values are the position values of the object according to objectID.
  * 
- * @author Mathias Sikos (tyloesand)
+ * @author Mathias Sikos (MatWorsoc)
  * 
  */
 public class ObjectByPositionSearch_NodeXY {

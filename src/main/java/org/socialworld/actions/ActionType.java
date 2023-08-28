@@ -46,7 +46,7 @@ import org.socialworld.calculation.Value;
  * Zur Ablaufsteuerung wird zus�tzlich der Aktionstyp Ignorieren angeboten. 
  *  Dieser soll Vergleiche auf NULL verhindern.
  *  
- * @author Mathias Sikos (tyloesand) 
+ * @author Mathias Sikos (MatWorsoc) 
  */
 public enum ActionType {
 	bodilyFunction(0),

@@ -25,7 +25,7 @@ package org.socialworld.attributes;
  * The enumeration Attribute holds all attribute names and collects an index for every
  * attribute. So an attribute is addressable in arrays.
  * 
- * @author Mathias Sikos (tyloesand)
+ * @author Mathias Sikos (MatWorsoc)
  */
 public enum Attribute {
 	ignore(-1),

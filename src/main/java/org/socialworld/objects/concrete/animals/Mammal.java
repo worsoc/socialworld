@@ -35,7 +35,7 @@ import org.socialworld.objects.State;
 import org.socialworld.tools.StringTupel;
 
 /**
- * @author Mathias Sikos (tyloesand)
+ * @author Mathias Sikos (MatWorsoc)
  * 
  */
 public abstract class Mammal extends Animal implements IRunning{

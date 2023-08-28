@@ -33,7 +33,7 @@ import org.socialworld.tools.StringTupel;
  * spells releases events that change the environment and effect simulation
  * objects.
  * 
- * @author Mathias Sikos (tyloesand)
+ * @author Mathias Sikos (MatWorsoc)
  * 
  */
 public abstract class Magic extends SimulationObject {

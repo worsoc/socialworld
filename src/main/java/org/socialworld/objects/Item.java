@@ -34,7 +34,7 @@ import org.socialworld.tools.StringTupel;
  * for handling an item. That implements what happens (in simulation sense) if
  * an item is used by a (living) simulation object.
  * 
- * @author Mathias Sikos (tyloesand)
+ * @author Mathias Sikos (MatWorsoc)
  * 
  */
 public abstract class Item extends SimulationObject {

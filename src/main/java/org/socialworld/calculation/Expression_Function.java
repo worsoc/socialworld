@@ -27,7 +27,7 @@ package org.socialworld.calculation;
  *         expression types. There are mathematical comparison to a constant, an
  *         addition or multiplication by a constant or the replacement by a
  *         constant.
- * @author Mathias Sikos (tyloesand)
+ * @author Mathias Sikos (MatWorsoc)
  */
 public enum Expression_Function {
 	oneExpression(1), branching(2), condition(3), comparison(4), replacement(5),	sequence(6), skip (9),

@@ -45,7 +45,7 @@ import org.socialworld.objects.SimulationObject;
  * position, the direction, the strength and distanced and ranges where the
  * event has effects to other objects.
  * 
- * @author Andre Schade (circlesmiler), Mathias Sikos (tyloesand)
+ * @author Andre Schade (circlesmiler), Mathias Sikos (MatWorsoc)
  */
 public abstract class Event implements Comparable<Event> {
 

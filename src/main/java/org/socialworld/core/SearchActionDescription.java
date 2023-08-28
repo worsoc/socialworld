@@ -34,7 +34,7 @@ import org.socialworld.attributes.Time;
  * criteria may be found. Every action property has an flag whether the property
  * is a search criteria.
  * 
- * @author Mathias Sikos (tyloesand)
+ * @author Mathias Sikos (MatWorsoc)
  * 
  */
 public class SearchActionDescription extends ActionNothing {

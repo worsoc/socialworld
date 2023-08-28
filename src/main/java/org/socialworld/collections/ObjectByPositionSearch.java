@@ -68,7 +68,7 @@ import org.socialworld.objects.SimulationObject;
  *    (a letter sequence with length 9) 
  *    The sector number 0 means, that there is no more detailed description.
  *    
- * @author Mathias Sikos (tyloesand)
+ * @author Mathias Sikos (MatWorsoc)
  * 
  */
 public class ObjectByPositionSearch {

@@ -57,7 +57,7 @@ import org.socialworld.tools.StringTupel;
 /**
  * Every simulation object (actor in the simulation) is inherited by the abstract class SimulationObject.
  * 
- * @author Mathias Sikos (tyloesand)
+ * @author Mathias Sikos (MatWorsoc)
  * 
  */
 public abstract class SimulationObject implements IPerceptible {

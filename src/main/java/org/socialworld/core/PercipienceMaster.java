@@ -27,7 +27,7 @@ package org.socialworld.core;
  *  that will be handled from other objects as percipient event.
  *  The result is the possibility / chance to be percieved / noticed 
  * 
- * @author Mathias Sikos (tyloesand)
+ * @author Mathias Sikos (MatWorsoc)
  */
 public class PercipienceMaster extends SocialWorldThread {
 

@@ -28,7 +28,7 @@ package org.socialworld.attributes;
  * Über die statischen Methoden asTime() und inMilliseconds() liefert die Klasse die aktuelle Zeit,
  * 	einmal als Objekt der Klasse Time und einmal als Zahl für die Millisekunden.
  * 
- * @author Mathias Sikos (tyloesand)
+ * @author Mathias Sikos (MatWorsoc)
  */
 public class ActualTime extends Time {
 	private static ActualTime instance;

@@ -40,7 +40,7 @@ import org.socialworld.objects.access.HiddenSimulationObject;
  * for inherited classes of class SimulationObject
  *  there exists an inherited class of LoadSimulationObjects.
  *  
- * @author Mathias Sikos (tyloesand) 
+ * @author Mathias Sikos (MatWorsoc) 
  */
 public abstract class LoadSimulationObjects {
 	

@@ -32,7 +32,7 @@ import org.socialworld.tools.StringTupel;
  * The God is an special simulation object that is responsible for global
  * events. The god is responsible for weather for example.
  * 
- * @author Mathias Sikos (tyloesand)
+ * @author Mathias Sikos (MatWorsoc)
  * 
  */
 public abstract class God extends SimulationObject {

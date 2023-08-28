@@ -61,7 +61,7 @@ import org.socialworld.tools.StringTupel;
  *  -   getDirectionTo() zur Ermittlung eines Richtungsverktors von der "eigenen" zu einer zweiten Position hin
  *  -   getX(), getY() und getZ() zur Abfrage der einzenen Koordianten desVektors
  *  
- * @author Mathias Sikos (tyloesand)  
+ * @author Mathias Sikos (MatWorsoc)  
  */
 public class Position extends SimProperty {
 

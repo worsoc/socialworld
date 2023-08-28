@@ -25,7 +25,7 @@ package org.socialworld.calculation.geometry;
 /**
  * The class is the base for all simulation
  *         position and directions. The vector has 3 dimensions.
- * @author Mathias Sikos (tyloesand) 
+ * @author Mathias Sikos (MatWorsoc) 
  */
 public class Vector {
 

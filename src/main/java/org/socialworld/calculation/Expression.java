@@ -39,7 +39,7 @@ import org.socialworld.objects.SimulationObject;
  *         further expressions for the boolean evaluation result of the
  *         comparison. So a expression evaluates an expression recursively.
 
- * @author Mathias Sikos (tyloesand)
+ * @author Mathias Sikos (MatWorsoc)
  */
 public class Expression {
 	int ID;

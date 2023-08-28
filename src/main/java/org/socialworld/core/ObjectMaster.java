@@ -43,7 +43,7 @@ import org.socialworld.collections.IncompleteObjects;
 import org.socialworld.collections.SimulationObjectArray;
 
 /**
- * @author Mathias Sikos (tyloesand)
+ * @author Mathias Sikos (MatWorsoc)
  *
  */
 public class ObjectMaster {
@@ -292,7 +292,7 @@ public class ObjectMaster {
 	}
 
 	private void addObjectToList(SimulationObject_Type simulationObjectType, SimulationObject object) {
-		// TODO (tyloesand) weitere Objekttypen hinzuf�gen
+		// TODO (MatWorsoc) weitere Objekttypen hinzuf�gen
 		switch (simulationObjectType) {
 		case animal:
 			this.animals.add((Animal)object);

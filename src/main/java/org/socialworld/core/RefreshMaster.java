@@ -28,7 +28,7 @@ import org.socialworld.objects.SimulationObject_Type;
  * Therefore there is a calculation of a new attribute array (for animals only), depending only on the former attribute array and a calculation matrix.
  * The calculation doesn't depend on actions or events according to the simulation object. 
  * 
- * @author Mathias Sikos (tyloesand)
+ * @author Mathias Sikos (MatWorsoc)
  */
 public class RefreshMaster extends SocialWorldThread {
 

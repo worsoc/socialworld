@@ -33,7 +33,7 @@ package org.socialworld.attributes;
  *  - oder als Gesamtzahl Millisekunden
  * 
  *         
- * @author Mathias Sikos (tyloesand) 
+ * @author Mathias Sikos (MatWorsoc) 
  */
 public class Time {
 	

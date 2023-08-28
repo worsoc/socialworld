@@ -52,7 +52,7 @@ import org.socialworld.tools.StringTupel;
  *         simulation object's inventory. There are set methods for manipulating
  *         the inventory and get methods for access to object's items.
 
- * @author Mathias Sikos (tyloesand)
+ * @author Mathias Sikos (MatWorsoc)
  */
 public class Inventory extends SimProperty {
 

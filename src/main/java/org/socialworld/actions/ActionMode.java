@@ -26,7 +26,7 @@ package org.socialworld.actions;
  * are (for example) modes for the action type move and for the action
  * type handleItem.
  * 
- * @author Mathias Sikos (tyloesand)
+ * @author Mathias Sikos (MatWorsoc)
  */
 public enum ActionMode {
 	

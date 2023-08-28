@@ -44,7 +44,7 @@ import org.socialworld.objects.properties.IPerceptible;
  * effected by the event, will be found. For these simulation objects the
  * effects (attribute changes) and reactions are calculated.
  * 
- * @author Mathias Sikos (tyloesand)
+ * @author Mathias Sikos (MatWorsoc)
  */
 public class EventMaster extends SocialWorldThread {
 

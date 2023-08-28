@@ -33,7 +33,7 @@ import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.access.HiddenSimulationObject;
 
 /**
- * @author Mathias Sikos (tyloesand)
+ * @author Mathias Sikos (MatWorsoc)
  * 
  * It's the base class for all simulation actions (actions done by simulation
  * objects). It collects all base action attributes. That are action type,

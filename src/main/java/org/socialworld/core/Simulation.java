@@ -52,7 +52,7 @@ import org.socialworld.collections.ObjectByPositionSearch;
 /**
  * The class Simulation holds all simulation objects and runs the simulation
  * 
- * @author Mathias Sikos (tyloesand)
+ * @author Mathias Sikos (MatWorsoc)
  * 
  */
 public class Simulation extends SocialWorldThread {

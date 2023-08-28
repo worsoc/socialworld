@@ -25,7 +25,7 @@ package org.socialworld.knowledge;
  * The enumeration holds all acquaintance attribute names and collects an index for every
  * attribute. So an attribute is addressable in arrays.
  * 
- * @author Mathias Sikos (tyloesand)
+ * @author Mathias Sikos (MatWorsoc)
  */
 public enum Acquaintance_Attribute {
 	ignore(-1),

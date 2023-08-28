@@ -23,7 +23,7 @@ package org.socialworld.calculation;
 
 /**
  * The enumeration collects all calculation input types.
- * @author Mathias Sikos (tyloesand)
+ * @author Mathias Sikos (MatWorsoc)
  *   NewAttributeValue - the input value is a new attribute value,
  *   	 that means it is the attribute of the last attribute calculation
  *   	it corresponds to AttributeArray.attributes[i]	

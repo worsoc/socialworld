@@ -38,7 +38,7 @@ import org.socialworld.visualize.SimVisual;
 
 
 /**
- * @author Mathias Sikos (tyloesand)
+ * @author Mathias Sikos (MatWorsoc)
  * 
  */
 public class SocialWorld  {

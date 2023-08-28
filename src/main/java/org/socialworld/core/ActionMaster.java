@@ -51,7 +51,7 @@ import org.socialworld.attributes.Time;
  *    
  *  Note that the action master doesn't hold action elements. It holds the action handler elements.
  *  
- * @author Mathias Sikos (tyloesand)
+ * @author Mathias Sikos (MatWorsoc)
  */
 public class ActionMaster extends SocialWorldThread {
 	
@@ -390,7 +390,7 @@ public class ActionMaster extends SocialWorldThread {
 		handlersIterator = actionHandlersNow.listIterator();
 
 		
-		//TODO (tyloesand) there must be a call to "all" ActionHandler.reset() somewhere 
+		//TODO (MatWorsoc) there must be a call to "all" ActionHandler.reset() somewhere 
 		// if  the counting of seconds starts with 0
 
 	}
