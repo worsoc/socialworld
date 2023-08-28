@@ -30,6 +30,13 @@ import org.socialworld.knowledge.KnowledgeFact_Criterion;
 public class Lexem {
 
 	private static Lexem testLexem;
+
+	public static final int LEXEMID_RANGE_PROPERTIES_1 = 1000;
+
+	public static final int OFFSET_LEXEMID_COLOUR = 10000;
+	public static final int OFFSET_LEXEMID_MATERIAL = 11000;
+	public static final int OFFSET_LEXEMID_NUTRIENT = 12000;
+	public static final int OFFSET_LEXEMID_TASTE = 13000;
 	
 	public static int newLexemID = 0;
 	
@@ -57,13 +64,6 @@ public class Lexem {
 		
 		if (allowedAsKnowledgeSubject)		criterions = new ArrayList<KnowledgeFact_Criterion>() ;
 		
-	}
-
-	public Lexem( Relation relation) {
-		this.relation = relation;
-		this.lexemID = relation.getLexem().getLexemID();
-		this.wordType = relation.getTense().getWordType();
-		this.allowedAsKnowledgeSubject = false;
 	}
 
 	

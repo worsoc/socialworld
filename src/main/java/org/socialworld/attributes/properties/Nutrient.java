@@ -26,6 +26,7 @@ import java.util.List;
 
 import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Word_Type;
+import org.socialworld.core.AllWords;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.tools.SimulationMetaInformation;
 import org.socialworld.tools.StringTupel;
@@ -60,9 +61,22 @@ public enum Nutrient implements IEnumProperty {
 		return index;
 	}
 
+	public int getLexemID() {
+		int lexemID;
+		lexemID = this.index + Lexem.OFFSET_LEXEMID_NUTRIENT;
+		
+		return lexemID;
+	}
+
 	public Lexem getLexem() {
-		// TEMP_SOLUTION  index+2000 as lexem_id
-		return new Lexem(index+2000, Word_Type.adjective, false);
+		Lexem lexem;
+		int lexemID = getLexemID();
+		
+		lexem = AllWords.getLexem(lexemID);
+		if (lexem == null) {
+			lexem = new Lexem( lexemID,  Word_Type.adjective , false);
+		}
+		return lexem;
 	}
 
 	/**

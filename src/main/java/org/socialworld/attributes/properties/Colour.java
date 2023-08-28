@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Word_Type;
+import org.socialworld.core.AllWords;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.tools.SimulationMetaInformation;
 import org.socialworld.tools.StringTupel;
@@ -116,13 +117,12 @@ public enum Colour implements IEnumProperty{
 	mediumspringgreen(79,0250154),
 	lightgreen(80,144238144),
 	palegreen(81,152251152),
-	darkseagreen(81,143188143),
-	mediumseagreen(82,60179113),
-	seagreen(83,46139087),
-	olive(84,128128000),
-	darkolivegreen(85,85107047),
-	olivedrab(86,107142035),
-	gainsboro(87,220220220),
+	darkseagreen(82,143188143),
+	mediumseagreen(83,60179113),
+	seagreen(84,46139087),
+	olive(85,128128000),
+	darkolivegreen(86,85107047),
+	olivedrab(87,107142035),
 	lightgray(88,211211211),
 	lightslategray(89,119136153),
 	slategray(90,112128144),
@@ -189,10 +189,11 @@ public enum Colour implements IEnumProperty{
 	dark_yellow1(151,204204000),
 	dark_yellow2(152,153153000),
 	dark_yellow3(153,102102000),
-	dark_yellow4(154,051051000);
+	dark_yellow4(154,051051000),
+	gainsboro(155,220220220);
 	
 	public static int getMaxIndex() {
-		return 154;
+		return 155;
 	}
 
 	public Color getColour(Colour colour) {
@@ -378,9 +379,22 @@ public enum Colour implements IEnumProperty{
 		return index;
 	}
 
+	public int getLexemID() {
+		int lexemID;
+		lexemID = this.index + Lexem.OFFSET_LEXEMID_COLOUR;
+		
+		return lexemID;
+	}
+
 	public Lexem getLexem() {
-		// TEMP_SOLUTION  index as lexem_id
-		return new Lexem(index, Word_Type.adjective, false);
+		Lexem lexem;
+		int lexemID = getLexemID();
+		
+		lexem = AllWords.getLexem(lexemID);
+		if (lexem == null) {
+			lexem = new Lexem( lexemID,  Word_Type.adjective , false);
+		}
+		return lexem;
 	}
 
 	/**
@@ -398,7 +412,7 @@ public enum Colour implements IEnumProperty{
 		return null;
 	}
 	
-
+	
 	///////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////meta information    ////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////

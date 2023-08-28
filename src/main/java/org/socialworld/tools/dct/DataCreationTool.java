@@ -27,6 +27,8 @@ import javax.swing.JFrame;
 import java.awt.TextArea;
 import javax.swing.JSlider;
 
+import org.socialworld.datasource.tablesSimulation.TableLexem;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -379,6 +381,19 @@ public class DataCreationTool {
 		});
 		ButtonPath.setBounds(815, 657, 96, 26);
 		frame.getContentPane().add(ButtonPath);
+		
+		
+		Button ButtonFillTableLexem = new Button("Fill Lexems");
+		ButtonFillTableLexem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) 
+			{
+				TableLexem tableLexem = new TableLexem();
+				tableLexem.fillTableForEnumProperties();
+			}
+		});
+		ButtonFillTableLexem.setBounds(815, 557, 96, 26);
+		frame.getContentPane().add(ButtonFillTableLexem);
+
 	}
 	
 	/////////////////////////////////////////
