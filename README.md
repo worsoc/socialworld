@@ -2,11 +2,11 @@
 
 SocialWorld is a software project for simulation people's social behaviour. Therefore the actions, the speech and the physical and mental constitution are part of a simulation process that calculates, how attributes of creatures and characters change and how they act and react.
 
-![Project Status](https://github.com/MatWorsoc/socialworld/actions/workflows/build-gradle-project.yml/badge.svg?event=push)
+![Project Status](https://github.com/worsoc/socialworld/actions/workflows/build-gradle-project.yml/badge.svg?event=push)
 
 ## How to start
 
-1. Clone the project with `git clone https://github.com/MatWorsoc/socialworld.git`
+1. Clone the project with `git clone https://github.com/worsoc/socialworld.git`
 1. Build the project with `./gradlew build`
 1. Run the project with `./gradlew run`
 
@@ -40,7 +40,7 @@ Install the recommended plugins from `.vscode/extensions.json`.
 1. Make changes to your code
 1. Commit your changes with `git commit -am "Commit Message"`
 1. Push your changes to the remote with `git push`
-1. Create a new pull request on Github here: <https://github.com/MatWorsoc/socialworld/pulls>
+1. Create a new pull request on Github here: <https://github.com/worsoc/socialworld/pulls>
    1. Select `master` as _base_ and your branch `my-new-feature-branch` as _compare_
    1. Add some meaningful description
 1. Assign someone to the PR for review.
