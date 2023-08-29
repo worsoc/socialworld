@@ -117,42 +117,60 @@ public class TableLexem extends Table {
 	}	
 	
 	public void fillTableForEnumProperties() {
+
 		String statement;
+		int wordTypeAdjective = Word_Type.adjective.getIndex();
 		
 		// Colour
+		statement 	= "DELETE FROM sw_word WHERE " +
+				" lexem_id >= " + 	Colour.nothing.getLexemID() +  
+				" and lexem_id < " + (Colour.nothing.getLexemID() + Lexem.LEXEMID_RANGE_PROPERTIES_1);
+		delete(statement);
 		statement 	= "DELETE FROM sw_lexem WHERE " +
 				" lexem_id >= " + 	Colour.nothing.getLexemID() +  
 				" and lexem_id < " + (Colour.nothing.getLexemID() + Lexem.LEXEMID_RANGE_PROPERTIES_1);
 		delete(statement);
 		for(Colour prop : Colour.values()) {
-			insert(prop.getLexemID(),  0,  Word_Type.adjective.getIndex());
+			insert(prop.getLexemID(),  0,  wordTypeAdjective);
 		}
 
 		// Material
+		statement 	= "DELETE FROM sw_word WHERE " +
+				" lexem_id >= " + 	Material.nothing.getLexemID() +  
+				" and lexem_id < " + (Material.nothing.getLexemID() + Lexem.LEXEMID_RANGE_PROPERTIES_1);
+		delete(statement);
 		statement 	= "DELETE FROM sw_lexem WHERE " +
 				" lexem_id >= " + 	Material.nothing.getLexemID() +  
 				" and lexem_id < " + (Material.nothing.getLexemID() + Lexem.LEXEMID_RANGE_PROPERTIES_1);
 		delete(statement);
 		for(Material prop : Material.values()) {
-			insert(prop.getLexemID(),  0,  Word_Type.adjective.getIndex());
+			insert(prop.getLexemID(),  0,  wordTypeAdjective);
 		}
 
 		// Nutrient
+		statement 	= "DELETE FROM sw_word WHERE " +
+				" lexem_id >= " + 	Nutrient.nothing.getLexemID() +  
+				" and lexem_id < " + (Nutrient.nothing.getLexemID() + Lexem.LEXEMID_RANGE_PROPERTIES_1);
+		delete(statement);
 		statement 	= "DELETE FROM sw_lexem WHERE " +
 				" lexem_id >= " + 	Nutrient.nothing.getLexemID() +  
 				" and lexem_id < " + (Nutrient.nothing.getLexemID() + Lexem.LEXEMID_RANGE_PROPERTIES_1);
 		delete(statement);
 		for(Nutrient prop : Nutrient.values()) {
-			insert(prop.getLexemID(),  0,  Word_Type.adjective.getIndex());
+			insert(prop.getLexemID(),  0,  wordTypeAdjective);
 		}
 
 		// Taste
+		statement 	= "DELETE FROM sw_word WHERE " +
+				" lexem_id >= " + 	Taste.nothing.getLexemID() +  
+				" and lexem_id < " + (Taste.nothing.getLexemID() + Lexem.LEXEMID_RANGE_PROPERTIES_1);
+		delete(statement);
 		statement 	= "DELETE FROM sw_lexem WHERE " +
 				" lexem_id >= " + 	Taste.nothing.getLexemID() +  
 				" and lexem_id < " + (Taste.nothing.getLexemID() + Lexem.LEXEMID_RANGE_PROPERTIES_1);
 		delete(statement);
 		for(Taste prop : Taste.values()) {
-			insert(prop.getLexemID(),  0,  Word_Type.adjective.getIndex());
+			insert(prop.getLexemID(),  0,  wordTypeAdjective);
 		}
 
 	}

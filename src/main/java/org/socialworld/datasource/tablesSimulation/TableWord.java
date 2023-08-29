@@ -24,6 +24,12 @@ package org.socialworld.datasource.tablesSimulation;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.socialworld.attributes.properties.Colour;
+import org.socialworld.attributes.properties.Material;
+import org.socialworld.attributes.properties.Nutrient;
+import org.socialworld.attributes.properties.Taste;
+import org.socialworld.conversation.Lexem;
+import org.socialworld.conversation.Word_Type;
 import org.socialworld.datasource.mariaDB.Table;
 
 /**
@@ -32,13 +38,12 @@ import org.socialworld.datasource.mariaDB.Table;
  */
 public class TableWord extends Table {
 
-	public final  String 	ALL_COLUMNS 		=	" word_id, word, lexem_id, word_type, numerus, pronoun_word_id ";
+	public final  String 	ALL_COLUMNS 		=	" word_id, word, lexem_id, numerus, pronoun_word_id ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
 	int word_id[];
 	String word[];
 	int lexem_id[];
-	int word_type[];
 	int numerus[];
 	int pronoun_word_id[];
 	
@@ -76,14 +81,27 @@ public class TableWord extends Table {
 		setPK1(word_id);
 	}
 
-	public void insert(int word_id, String word,  int lexem_id, int word_type, int numerus, int pronoun_word_id) {
+	public void insert(int word_id, String word,  int lexem_id,  int numerus, int pronoun_word_id) {
 		String statement;
 			
 		if (word_id > 0) {
 	
 
-			statement 	= "INSERT INTO sw_word (word_id, word, lexem_id, word_type, numerus, pronoun_word_id) VALUES (" + 
-					word_id + ", '" + word + "', " + lexem_id + ", " + word_type + ", " + numerus + ", " + pronoun_word_id  +")";
+			statement 	= "INSERT INTO sw_word (word_id, word, lexem_id, numerus, pronoun_word_id) VALUES (" + 
+					word_id + ", '" + word + "', " + lexem_id + ", " + numerus + ", " + pronoun_word_id  +")";
+			
+			insert(statement);
+		}
+	}
+
+	public void insert(int word_id, String word,  int lexem_id) {
+		String statement;
+			
+		if (word_id > 0) {
+	
+
+			statement 	= "INSERT INTO sw_word (word_id, word, lexem_id) VALUES (" + 
+					word_id + ", '" + word + "', " + lexem_id + ")";
 			
 			insert(statement);
 		}
@@ -105,7 +123,6 @@ public class TableWord extends Table {
 		word_id = new int[rowCount];
 		word = new String[rowCount];
 		lexem_id = new int[rowCount];
-		word_type = new int[rowCount];
 		numerus = new int[rowCount];
 		pronoun_word_id = new int[rowCount];
 
@@ -115,9 +132,8 @@ public class TableWord extends Table {
 				word_id[row] = rs.getInt(1);
 				word[row] = rs.getString(2);
 				lexem_id[row] = rs.getInt(3);
-				word_type[row] = rs.getInt(4);
-				numerus[row] = rs.getInt(5);
-				pronoun_word_id[row] = rs.getInt(6);
+				numerus[row] = rs.getInt(4);
+				pronoun_word_id[row] = rs.getInt(5);
 				
 				row++;
 			}
@@ -143,9 +159,6 @@ public class TableWord extends Table {
 		return lexem_id[index];
 	}
 
-	public int getTense(int index) {
-		return word_type[index];
-	}
 	
 	public int getNumerus(int index) {
 		return numerus[index];
@@ -155,4 +168,63 @@ public class TableWord extends Table {
 		return pronoun_word_id[index];
 	}
 
+	public void fillTableForEnumProperties() {
+		
+		String statement;
+		
+		int lexemID;
+		int wordID;
+		String word;
+		
+		int wordTypeAdjective = Word_Type.adjective.getIndex();
+		
+		// Colour
+		statement 	= "DELETE FROM sw_word WHERE " +
+				" lexem_id >= " + 	Colour.nothing.getLexemID() +  
+				" and lexem_id < " + (Colour.nothing.getLexemID() + Lexem.LEXEMID_RANGE_PROPERTIES_1);
+		delete(statement);
+		for(Colour prop : Colour.values()) {
+			lexemID = prop.getLexemID();
+			wordID = lexemID * 100;
+			word = prop.toString();
+			insert(wordID, word, lexemID );
+		}
+		
+		// Material
+		statement 	= "DELETE FROM sw_word WHERE " +
+				" lexem_id >= " + 	Material.nothing.getLexemID() +  
+				" and lexem_id < " + (Material.nothing.getLexemID() + Lexem.LEXEMID_RANGE_PROPERTIES_1);
+		delete(statement);
+		for(Material prop : Material.values()) {
+			lexemID = prop.getLexemID();
+			wordID = lexemID * 100;
+			word = prop.toString();
+			insert(wordID, word, lexemID );
+		}
+
+		// Nutrient
+		statement 	= "DELETE FROM sw_word WHERE " +
+				" lexem_id >= " + 	Nutrient.nothing.getLexemID() +  
+				" and lexem_id < " + (Nutrient.nothing.getLexemID() + Lexem.LEXEMID_RANGE_PROPERTIES_1);
+		delete(statement);
+		for(Nutrient prop : Nutrient.values()) {
+			lexemID = prop.getLexemID();
+			wordID = lexemID * 100;
+			word = prop.toString();
+			insert(wordID, word, lexemID );
+		}
+
+		// Taste
+		statement 	= "DELETE FROM sw_word WHERE " +
+				" lexem_id >= " + 	Taste.nothing.getLexemID() +  
+				" and lexem_id < " + (Taste.nothing.getLexemID() + Lexem.LEXEMID_RANGE_PROPERTIES_1);
+		delete(statement);
+		for(Taste prop : Taste.values()) {
+			lexemID = prop.getLexemID();
+			wordID = lexemID * 100;
+			word = prop.toString();
+			insert(wordID, word, lexemID );
+		}
+
+	}
 }

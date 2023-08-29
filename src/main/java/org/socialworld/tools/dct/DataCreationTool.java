@@ -28,6 +28,7 @@ import java.awt.TextArea;
 import javax.swing.JSlider;
 
 import org.socialworld.datasource.tablesSimulation.TableLexem;
+import org.socialworld.datasource.tablesSimulation.TableWord;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -40,7 +41,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-
 
 public class DataCreationTool {
 	
@@ -387,13 +387,35 @@ public class DataCreationTool {
 		ButtonFillTableLexem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
+				long timeStart;
+				long timeEnde;
 				TableLexem tableLexem = new TableLexem();
+				timeStart = java.lang.System.currentTimeMillis();
 				tableLexem.fillTableForEnumProperties();
+				timeEnde = java.lang.System.currentTimeMillis();
+				System.out.println(timeStart + "  --->  " + timeEnde);
 			}
 		});
 		ButtonFillTableLexem.setBounds(815, 557, 96, 26);
 		frame.getContentPane().add(ButtonFillTableLexem);
 
+		Button ButtonFillTableWord = new Button("Fill Words");
+		ButtonFillTableWord.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) 
+			{
+				long timeStart;
+				long timeEnde;
+				TableWord tableWord = new TableWord();
+				timeStart = java.lang.System.currentTimeMillis();
+				tableWord.fillTableForEnumProperties();
+				timeEnde = java.lang.System.currentTimeMillis();
+				System.out.println(timeStart + "  --->  " + timeEnde);
+			}
+		});
+		ButtonFillTableWord.setBounds(815, 607, 96, 26);
+		frame.getContentPane().add(ButtonFillTableWord);
+		
+		//
 	}
 	
 	/////////////////////////////////////////
