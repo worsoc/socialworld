@@ -36,7 +36,7 @@ public abstract class KnowledgeRelation extends KnowledgeFact {
 
 	private boolean isSelfRelation;		// knowledge of its own relations (subject ist "I")
 
-	private Relation relation = Relation.ignore;
+	private Relation relation = Relation.nothing;
 	
 	private Lexem verb;
 	private Tense tense = Tense.ignore;
@@ -134,7 +134,7 @@ public abstract class KnowledgeRelation extends KnowledgeFact {
 	}
 	
 	private Relation translateToRelation(Value value) {
-		Relation result = Relation.ignore;
+		Relation result = Relation.nothing;
 		if (value.getType() == Type.sentenceElement) {
 			Object o = value.getValue();
 			if (o instanceof Relation)	{

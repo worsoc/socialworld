@@ -32,6 +32,9 @@ public class Lexem {
 	private static Lexem testLexem;
 
 	public static final int LEXEMID_RANGE_PROPERTIES_1 = 1000;
+	public static final int LEXEMID_RANGE_RELATION = 2000;
+
+	public static final int OFFSET_LEXEMID_RELATION = 100000;
 
 	public static final int OFFSET_LEXEMID_COLOUR = 10000;
 	public static final int OFFSET_LEXEMID_MATERIAL = 11000;
@@ -43,7 +46,7 @@ public class Lexem {
 	private int lexemID;
 	private boolean allowedAsKnowledgeSubject = false;
 	private Word_Type wordType;
-	private Relation relation;
+
 	List<KnowledgeFact_Criterion> criterions;
 
 	public  static Lexem getTestLexem() {

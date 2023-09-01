@@ -582,7 +582,7 @@ final class KnowledgeItemList  {
 				
 				Relation choosenRelation = chooseRelationForObject(possibleRelations, part);
 				
-				if (!choosenRelation.equals(Relation.ignore)) {
+				if (!choosenRelation.equals(Relation.nothing)) {
 					Lexem object = getObjectLexem(part);
 					if (object != null) {
 						KnowledgeItem ki = new KnowledgeRelationBinaer(choosenRelation, object);
@@ -610,7 +610,7 @@ final class KnowledgeItemList  {
 	}
 	
 	private Relation chooseRelationForObject(List<Relation> possibleRelations, String object) {
-		Relation relation = Relation.ignore;
+		Relation relation = Relation.nothing;
 		
 		// TODO KNOWLEDGE chooseRelationForObject
 		if (possibleRelations.size() > 0) {

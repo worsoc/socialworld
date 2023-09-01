@@ -28,6 +28,7 @@ import java.awt.TextArea;
 import javax.swing.JSlider;
 
 import org.socialworld.datasource.tablesSimulation.TableLexem;
+import org.socialworld.datasource.tablesSimulation.TableRelation;
 import org.socialworld.datasource.tablesSimulation.TableWord;
 
 import java.io.BufferedWriter;
@@ -383,37 +384,43 @@ public class DataCreationTool {
 		frame.getContentPane().add(ButtonPath);
 		
 		
-		Button ButtonFillTableLexem = new Button("Fill Lexems");
-		ButtonFillTableLexem.addActionListener(new ActionListener() {
+		Button ButtonFillTablesForProperties = new Button("Fill 4 Props");
+		ButtonFillTablesForProperties.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
 				long timeStart;
 				long timeEnde;
 				TableLexem tableLexem = new TableLexem();
-				timeStart = java.lang.System.currentTimeMillis();
-				tableLexem.fillTableForEnumProperties();
-				timeEnde = java.lang.System.currentTimeMillis();
-				System.out.println(timeStart + "  --->  " + timeEnde);
-			}
-		});
-		ButtonFillTableLexem.setBounds(815, 557, 96, 26);
-		frame.getContentPane().add(ButtonFillTableLexem);
-
-		Button ButtonFillTableWord = new Button("Fill Words");
-		ButtonFillTableWord.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) 
-			{
-				long timeStart;
-				long timeEnde;
 				TableWord tableWord = new TableWord();
 				timeStart = java.lang.System.currentTimeMillis();
+				tableLexem.fillTableForEnumProperties();
 				tableWord.fillTableForEnumProperties();
 				timeEnde = java.lang.System.currentTimeMillis();
 				System.out.println(timeStart + "  --->  " + timeEnde);
 			}
 		});
-		ButtonFillTableWord.setBounds(815, 607, 96, 26);
-		frame.getContentPane().add(ButtonFillTableWord);
+		ButtonFillTablesForProperties.setBounds(815, 557, 96, 26);
+		frame.getContentPane().add(ButtonFillTablesForProperties);
+
+		Button ButtonFillTablesForRelations = new Button("Fill 4 Rels");
+		ButtonFillTablesForRelations.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) 
+			{
+				long timeStart;
+				long timeEnde;
+				TableLexem tableLexem = new TableLexem();
+				TableWord tableWord = new TableWord();
+				TableRelation tableRelation = new TableRelation();
+				timeStart = java.lang.System.currentTimeMillis();
+				tableLexem.fillTableForRelations();
+				tableWord.fillTableForRelations();
+				tableRelation.fillTableForRelations();
+				timeEnde = java.lang.System.currentTimeMillis();
+				System.out.println(timeStart + "  --->  " + timeEnde);
+			}
+		});
+		ButtonFillTablesForRelations.setBounds(815, 607, 96, 26);
+		frame.getContentPane().add(ButtonFillTablesForRelations);
 		
 		//
 	}

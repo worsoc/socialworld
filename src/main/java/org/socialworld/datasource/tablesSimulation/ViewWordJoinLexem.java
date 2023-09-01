@@ -7,17 +7,18 @@ import org.socialworld.datasource.mariaDB.Table;
 
 public class ViewWordJoinLexem extends Table {
 
-	public final  String 	ALL_COLUMNS 		=	" word_id, word, lexem_id, tense, numerus, pronoun_word_id, subjectable, type ";
+	public final  String 	ALL_COLUMNS 		=	" word_id, word, lexem_id, numerus, pronoun_word_id, subjectable, type, tense_id, cardinality_id ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
 	int word_id[];
 	String word[];
 	int lexem_id[];
-	int tense[];
 	int numerus[];
 	int pronoun_word_id[];
 	int type[];
 	int subjectable[];
+	int tense_id[];
+	int cardinality_id[];
 	
 	@Override
 	protected String getTableName() {
@@ -59,11 +60,12 @@ public class ViewWordJoinLexem extends Table {
 		word_id = new int[rowCount];
 		word = new String[rowCount];
 		lexem_id = new int[rowCount];
-		tense = new int[rowCount];
 		numerus = new int[rowCount];
 		pronoun_word_id = new int[rowCount];
 		subjectable = new int[rowCount];
 		type = new int[rowCount];
+		tense_id = new int[rowCount];
+		cardinality_id = new int[rowCount];
 
 		try {
 			while (rs.next()) {
@@ -71,11 +73,12 @@ public class ViewWordJoinLexem extends Table {
 				word_id[row] = rs.getInt(1);
 				word[row] = rs.getString(2);
 				lexem_id[row] = rs.getInt(3);
-				tense[row] = rs.getInt(4);
-				numerus[row] = rs.getInt(5);
-				pronoun_word_id[row] = rs.getInt(6);
-				subjectable[row] = rs.getInt(7);
-				type[row] = rs.getInt(8);
+				numerus[row] = rs.getInt(4);
+				pronoun_word_id[row] = rs.getInt(5);
+				subjectable[row] = rs.getInt(6);
+				type[row] = rs.getInt(7);
+				tense_id[row] = rs.getInt(8);
+				cardinality_id[row] = rs.getInt(9);
 				
 				row++;
 			}
@@ -101,9 +104,6 @@ public class ViewWordJoinLexem extends Table {
 		return lexem_id[index];
 	}
 
-	public int getTense(int index) {
-		return tense[index];
-	}
 	
 	public int getNumerus(int index) {
 		return numerus[index];
@@ -119,6 +119,14 @@ public class ViewWordJoinLexem extends Table {
 	
 	public int getType(int index) {
 		return type[index];
+	}
+
+	public int getTenseID(int index) {
+		return tense_id[index];
+	}
+
+	public int getCardinalityID(int index) {
+		return cardinality_id[index];
 	}
 
 }

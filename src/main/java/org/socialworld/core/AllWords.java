@@ -69,8 +69,16 @@ public class AllWords {
 		return Relation.getName(relationID);
 	}
 	
-	public static void getLexemAndTense(int relationID, Lexem lexem, Tense tense) {
-		int[] ids = LoadWords.getInstance().getLexemAndTense(relationID);
+	public static Lexem getRelationsLexem(int relationID) {
+		int lexemID = LoadWords.getInstance().getRelationsLexemID(relationID);
+		if  (instance == null) {
+			instance = new AllWords();
+		}
+		return allLexemsbyLexemID.get(lexemID);
+	}
+
+	public static void getRelationsLexemAndTense(int relationID, Lexem lexem, Tense tense) {
+		int[] ids = LoadWords.getInstance().getRelationsLexemIDAndTenseID(relationID);
 		if  (instance == null) {
 			instance = new AllWords();
 		}

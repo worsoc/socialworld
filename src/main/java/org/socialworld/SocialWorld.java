@@ -75,7 +75,7 @@ public class SocialWorld  {
 		simulation = Simulation.getInstance();
 		
 		Simulation.showMessage("myPrint", "Bitte Geduld. Wir starten bei Sekunde 0.");
-		
+/*		
 		Position position0 = new Position(PropertyName.position_vector, new Vector(0, 0, 0));
 		System.out.println("Position(0, 0, 0) --> " + position0.getLocationByBase25());
 		Position position1 = new Position(PropertyName.position_vector, new Vector(100000, 0, 0));
@@ -90,7 +90,7 @@ public class SocialWorld  {
 		System.out.println("Position(0, 100000, 0) --> " + position5.getLocationByBase25());
 		Position position6 = new Position(PropertyName.position_vector, new Vector(0, -100000, 0));
 		System.out.println("Position(0, -100000, 0) --> " + position6.getLocationByBase25());
-		
+*/		
 	//	System.out.println(Cube.getDelta_(0, 45, 1234, 0.005F, 0.000F));
 		
 /*		

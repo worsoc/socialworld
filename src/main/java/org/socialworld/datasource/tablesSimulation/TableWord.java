@@ -29,7 +29,7 @@ import org.socialworld.attributes.properties.Material;
 import org.socialworld.attributes.properties.Nutrient;
 import org.socialworld.attributes.properties.Taste;
 import org.socialworld.conversation.Lexem;
-import org.socialworld.conversation.Word_Type;
+import org.socialworld.conversation.Relation;
 import org.socialworld.datasource.mariaDB.Table;
 
 /**
@@ -168,6 +168,26 @@ public class TableWord extends Table {
 		return pronoun_word_id[index];
 	}
 
+	public void fillTableForRelations() {
+
+		String statement;
+
+		int lexemID;
+		int wordID;
+		String word;
+
+		statement 	= "DELETE FROM sw_word WHERE " +
+				" lexem_id >= " + 	Relation.nothing.getLexemID() +  
+				" and lexem_id < " + (Relation.nothing.getLexemID() + Lexem.LEXEMID_RANGE_RELATION);
+		delete(statement);
+		for(Relation relation : Relation.values()) {
+			lexemID = relation.getLexemID();
+			wordID = lexemID * 100;
+			word = relation.toString();
+			insert(wordID, word, lexemID );
+		}
+	}
+
 	public void fillTableForEnumProperties() {
 		
 		String statement;
@@ -176,7 +196,6 @@ public class TableWord extends Table {
 		int wordID;
 		String word;
 		
-		int wordTypeAdjective = Word_Type.adjective.getIndex();
 		
 		// Colour
 		statement 	= "DELETE FROM sw_word WHERE " +

@@ -62,7 +62,27 @@ public class LoadWords {
 		return instance;
 	}
 
-	public int[] getLexemAndTense(int relationID) {
+	public int getRelationsLexemID(int relationID) {
+		
+		int rowCount = tableRelation.rowCount();
+		int index;
+		
+		int relation_id;
+		for (index = 0; index < rowCount; index++) {
+			relation_id = tableRelation.getRelationID(index);
+			if (relation_id == relationID) 	{
+				return tableRelation.getLexemID(index);
+			}
+			else if (relation_id > relationID) {
+				break;
+			}
+		}
+
+		return 0;
+	}
+
+	
+	public int[] getRelationsLexemIDAndTenseID(int relationID) {
 		int[] result = new int[2];
 		
 		int rowCount = tableRelation.rowCount();
