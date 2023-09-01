@@ -177,6 +177,8 @@ public class Expression {
 			
 			
 				switch (this.operation) {
+				case skip:
+					return arguments.get(arguments.size() - 1);
 				case nothing:
 					//return invalid dummy-Value
 					return Calculation.getNothing();
@@ -384,8 +386,12 @@ public class Expression {
 					
 				case sequence:
 					expression1.evaluate(arguments);
-					expression2.evaluate(arguments);
-					tmp = expression3.evaluate(arguments);
+					tmp = expression2.evaluate(arguments);
+					if (expression3.operation != Expression_Function.skip
+							&& expression3.operation != Expression_Function.nothing) {
+						tmp = expression3.evaluate(arguments);
+					}
+					
 					if (tmp.isValid()) {
 						tmp = calculation.copy(tmp);
 						if (this.value != null) {
@@ -463,6 +469,12 @@ public class Expression {
 					
 					int subType;
 					type = Type.getName((int) value.getValue());
+					
+					// DEBUG
+					if (type == Type.knowledgeAtom) {
+						int myBreakPoint = 0;
+						myBreakPoint = 1;
+					}
 					subType = (int) expression1.evaluate().getValue();
 					name = (String) expression3.evaluate().getValue();
 					
@@ -476,6 +488,7 @@ public class Expression {
 			
 			}
 			catch (Exception e) {
+				System.out.println("evaluation expression: " + e.toString());
 				return Calculation.getNothing();
 			}
 		
@@ -534,25 +547,42 @@ public class Expression {
 		
 		String result;
 		
+		String val = "";
 		String exp1 = "";
 		String exp2 = "";
 		String exp3 = "";
 		
-		if (expression1.operation == Expression_Function.nothing) {
+		if (value == null) {
+			val = "NULL";
+		}
+		else {
+			val = value.toString();
+		}
+		
+		if (expression1.operation == Expression_Function.skip) {
+			exp1 = "Skip";
+		}
+		else if (expression1.operation == Expression_Function.nothing) {
 			exp1 = "Nothing";
 		}
 		else {
 			exp1 = expression1.toString();
 		}
 		
-		if (expression2.operation == Expression_Function.nothing) {
+		if (expression2.operation == Expression_Function.skip) {
+			exp2 = "Skip";
+		}
+		else if (expression2.operation == Expression_Function.nothing) {
 			exp2 = "Nothing";
 		}
 		else {
 			exp2 = expression2.toString();
 		}
 		
-		if (expression3.operation == Expression_Function.nothing) {
+		if (expression3.operation == Expression_Function.skip) {
+			exp3 = "Skip";
+		}
+		else if (expression3.operation == Expression_Function.nothing) {
 			exp3 = "Nothing";
 		}
 		else {
@@ -560,10 +590,10 @@ public class Expression {
 		}
 
 		if (exp1.equals("Nothing") && exp2.equals("Nothing") && exp3.equals("Nothing")) {
-			result = operation.name() + "(" + value.toString() + ")";
+			result = operation.name() + "(" + val + ")";
 		}
 		else {
-			result = operation.name() + "(" + exp1 + ", " + exp2 + ", " + exp3 + ")" ;
+			result = operation.name() + "(" + val + ", " + exp1 + ", " + exp2 + ", " + exp3 + ")" ;
 		}
 		
 		return result;

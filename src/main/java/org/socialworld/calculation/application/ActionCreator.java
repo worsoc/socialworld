@@ -148,6 +148,8 @@ public class ActionCreator extends SocialWorldThread {
 			
 			Event event = reactor.getEvent();
 			
+/*
+// DEBUG
 
 			if ((event.getEventType() == EventType.candidatesMoveWalk) ||
 					(event.getEventType() == EventType.candidatesMoveRun) )
@@ -155,7 +157,7 @@ public class ActionCreator extends SocialWorldThread {
 					int breakpoint = 0;
 					breakpoint++;
 				}
-			
+*/			
 			
 			
 			StateSimulationObject stateReactor  = reactor.getState();

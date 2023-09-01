@@ -120,7 +120,7 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 				}
 
 				dotElements.select(dotElemLine.SELECT_ALL_COLUMNS , " WHERE dot_elem_line_id = " + id, " ORDER BY lfd_nr");
-				for (int i = 0; i < dotElements.rowCount(); i++) {
+				for (int i = 0; i < 1 /*dotElements.rowCount()*/; i++) {
 					dot_element_id = dotElements.getDotElementID(i);
 					dotelem_function = dotElements.getFunction(i); 		
 					dotelem_value_name = dotElements.getValueName(i); 		

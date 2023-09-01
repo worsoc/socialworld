@@ -59,7 +59,7 @@ public class GetValue extends Expression {
 			
 		}
 		else {
-			setOperation(Expression_Function.nothing);
+			setOperation(Expression_Function.skip);
 		}
 			
 	}

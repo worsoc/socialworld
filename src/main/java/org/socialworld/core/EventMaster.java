@@ -34,6 +34,7 @@ import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.objects.Animal;
+import org.socialworld.objects.NoSimulationObject;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.properties.IPerceptible;
 
@@ -266,7 +267,7 @@ public class EventMaster extends SocialWorldThread {
 			if ( ignoreCandidate == 0) 	candidates.add(candidate);
 			if ( ignoreCandidate < 0)
 				// exit loop
-				candidate = null;
+				candidate = NoSimulationObject.getObjectNothing();
 			else
 				// continue
 				candidate = simulation.getNextByPosition();
@@ -448,6 +449,9 @@ public class EventMaster extends SocialWorldThread {
 					isPossiblePercipient = causer.checkIsPossiblePercipient((Animal) percipient);
 					if ( isPossiblePercipient ) {
 						percipients.add(percipient);
+						
+						// TEMP_SOLUTION für Test Abbruch nach erstem Percipient
+						return;
 					}
 					
 					percipient = simulation.getNextByPosition();

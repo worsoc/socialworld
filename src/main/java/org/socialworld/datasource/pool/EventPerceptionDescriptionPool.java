@@ -100,7 +100,8 @@ public class EventPerceptionDescriptionPool extends DescriptionPool {
 		Lines4EventType lines4EventType;
 		int perceptionType;
 
-		String gegenProbezuLineID_8607 =		"KSrcT:1&KSrc:GETVal(myself);KSbj:GETVal(event_params).GETVal(event_causer);KProp(0,inventory_shirt.SOGN_184549375.mainColour):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_shirt)#IsElem(184549375).GETProp(stateAppearance).GETFctVal(getMainColour).GETFctVal(getIndex)";
+//		String gegenProbezuLineID_8607_with_getIndex =		"KSrcT:1&KSrc:GETVal(myself);KSbj:GETVal(event_params).GETVal(event_causer);KProp(0,inventory_shirt.SOGN_184549375.mainColour):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_shirt)#IsElem(184549375).GETProp(stateAppearance).GETFctVal(getMainColour).GETFctVal(getIndex)";
+		String gegenProbezuLineID_8607 =		"KSrcT:1&KSrc:GETVal(myself);KSbj:GETVal(event_params).GETVal(event_causer);KProp(0,inventory_shirt.SOGN_184549375.mainColour):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_shirt)#IsElem(184549375).GETProp(stateAppearance).GETFctVal(getMainColour)";
 
 		lines4EventType = new Lines4EventType(EventType.percipientExists, rangeSecondIndex);
 		for ( perceptionType = 0; perceptionType < rangeSecondIndex; perceptionType++) {
