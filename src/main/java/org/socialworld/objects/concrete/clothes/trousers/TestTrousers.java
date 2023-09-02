@@ -9,11 +9,6 @@ import org.socialworld.objects.concrete.clothes.Trousers;
 
 public class TestTrousers extends Trousers {
 
-	@Override
-	protected int getLexemID() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
 	@Override
 	public boolean checkObjectBelongsToGroup(short groupNumberSuffix) {

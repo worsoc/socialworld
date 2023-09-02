@@ -37,7 +37,6 @@ import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.conversation.Lexem;
-import org.socialworld.conversation.Word_Type;
 import org.socialworld.core.ActionHandler;
 import org.socialworld.core.AllWords;
 import org.socialworld.core.Event;
@@ -139,7 +138,7 @@ public abstract class SimulationObject implements IPerceptible {
 		this.justCreated = true;
 		this.guard = null;
 		
-		this.lexem = AllWords.getLexem(getLexemID());
+		this.lexem = AllWords.getLexem(Lexem.OFFSET_LEXEMID_NOUN_SIMOBJ + getGNP() * GroupingOfSimulationObjects.RANGE_FOR_LOWER_VALUE + getGNS());
 		
 		this.actionHandler = new ActionHandler(this);
 		
@@ -201,14 +200,19 @@ public abstract class SimulationObject implements IPerceptible {
 		return objectID;
 	}
 	
-	protected abstract int getLexemID();
-	// TODO set lexemID in getLexemID() method in sub classes
+	protected abstract int getGNP();  // GroupingNumberPraefix
+	// TODO assign GroupingOfSimulation.GROUPING_NUMBER_PRAEFIX... in getGNP() in sub classes
+
+	protected /*abstract*/ int getGNS()  // GroupingNumberSuffix
+	{
+		return 0;
+	}
+	// TODO assign grouping number lower value ... in getGNS() in sub classes
 
 	
 	public final Lexem getLexem() {
-//		return this.lexem;
-		return new Lexem(Lexem.newLexemID++,  Word_Type.noun , true);
-	}
+		return this.lexem;
+}
 	
 	public abstract boolean checkObjectBelongsToGroup(short groupNumberSuffix);
 	

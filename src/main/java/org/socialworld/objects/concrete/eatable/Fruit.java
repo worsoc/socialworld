@@ -27,6 +27,7 @@ import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.properties.NutrientSet;
 import org.socialworld.attributes.properties.TasteSet;
 import org.socialworld.calculation.SimulationCluster;
+import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.Item;
 import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.StateEatable;
@@ -72,6 +73,10 @@ public abstract class Fruit extends Item implements IEatable {
 		
 		return result;
 		
+	}
+
+	protected int getGNP() {
+		return GroupingOfSimulationObjects.GROUPING_NUMBER_PRAEFIX_FRUIT;
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////

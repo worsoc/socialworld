@@ -1,14 +1,14 @@
 package org.socialworld.objects.concrete.eatable;
 
+import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.Item;
 import org.socialworld.objects.State;
 
 public abstract class Liquid extends Item {
 
 	@Override
-	protected int getLexemID() {
-		// TODO Auto-generated method stub
-		return 0;
+	protected int getGNP() {
+		return GroupingOfSimulationObjects.GROUPING_NUMBER_PRAEFIX_LIQUID;
 	}
 
 	@Override

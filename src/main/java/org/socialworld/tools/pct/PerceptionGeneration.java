@@ -32,7 +32,7 @@ public class PerceptionGeneration extends Generation{
 	public static final String CHAINED_NAME_SEPARATOR = ".";
 	
 	
-	private int[] allGroupingNumbers; 
+	private List<Integer> allGroupingNumbers; 
 
 	List<String> dotElementConcats;
 	
@@ -102,14 +102,14 @@ public class PerceptionGeneration extends Generation{
 		String knowledgeAtomName = "";
 		List<String> ignoreNDEs = new ArrayList<String> ();
 		
-		for (int indexGN = 0; indexGN < allGroupingNumbers.length;  indexGN++ ) {
+		for (int indexGN = 0; indexGN < allGroupingNumbers.size();  indexGN++ ) {
 			
 			dotElementConcats = new ArrayList<String>();
 			
-			lastClassName = GroupingOfSimulationObjects.PRAEFIX_SIMOBJECT_GROUPING_NUMBER + allGroupingNumbers[indexGN];
+			lastClassName = GroupingOfSimulationObjects.PRAEFIX_SIMOBJECT_GROUPING_NUMBER + allGroupingNumbers.get(indexGN);
 			
 			description = descriptionTemplate.replaceFirst("<GETVALUE_GETISELEMENTOF_NUMBER>", 
-					GetValue.getIsElementOf(allGroupingNumbers[indexGN]));
+					GetValue.getIsElementOf(allGroupingNumbers.get(indexGN)));
 
 			knowledgeAtomName = "";
 			
@@ -148,14 +148,14 @@ public class PerceptionGeneration extends Generation{
 			String description;
 			List<String> ignoreNDEs = new ArrayList<String> ();
 			
-			for (int indexGN = 0; indexGN < allGroupingNumbers.length;  indexGN++ ) {
+			for (int indexGN = 0; indexGN < allGroupingNumbers.size();  indexGN++ ) {
 				
 				dotElementConcats = new ArrayList<String>();
 				
-				lastClassName = GroupingOfSimulationObjects.PRAEFIX_SIMOBJECT_GROUPING_NUMBER + allGroupingNumbers[indexGN];
+				lastClassName = GroupingOfSimulationObjects.PRAEFIX_SIMOBJECT_GROUPING_NUMBER + allGroupingNumbers.get(indexGN);
 				
 				description = descriptionTemplate.replaceFirst("<GETVALUE_GETISELEMENTOF_NUMBER>", 
-						GetValue.getIsElementOf(allGroupingNumbers[indexGN]));
+						GetValue.getIsElementOf(allGroupingNumbers.get(indexGN)));
 				
 				knowledgeAtomName = "";
 				
@@ -280,10 +280,10 @@ public class PerceptionGeneration extends Generation{
 				nextDotElement = GetValue.getProperty(selectedProperty.getRight());
 				knowledgeAtomNamePart = selectedProperty.get(2);
 				
-				for (int indexGN = 0; indexGN < allGroupingNumbers.length;  indexGN++ ) {
+				for (int indexGN = 0; indexGN < allGroupingNumbers.size();  indexGN++ ) {
 					
 					addToResult = true;
-					propertyClassName = GroupingOfSimulationObjects.PRAEFIX_SIMOBJECT_GROUPING_NUMBER + allGroupingNumbers[indexGN];
+					propertyClassName = GroupingOfSimulationObjects.PRAEFIX_SIMOBJECT_GROUPING_NUMBER + allGroupingNumbers.get(indexGN);
 					
 					if (nrKFC >= 0) {
 
@@ -295,8 +295,8 @@ public class PerceptionGeneration extends Generation{
 					if (addToResult) {
 						nde = new NextDotElement();
 						nde.className = propertyClassName;
-						nde.nextDotElement = nextDotElement + "#" + GetValue.getIsElementOf(allGroupingNumbers[indexGN]);
-						nde.knowledgeAtomNamePart = knowledgeAtomNamePart + CHAINED_NAME_SEPARATOR + GroupingOfSimulationObjects.PRAEFIX_SIMOBJECT_GROUPING_NUMBER + Integer.toString(allGroupingNumbers[indexGN]);
+						nde.nextDotElement = nextDotElement + "#" + GetValue.getIsElementOf(allGroupingNumbers.get(indexGN));
+						nde.knowledgeAtomNamePart = knowledgeAtomNamePart + CHAINED_NAME_SEPARATOR + GroupingOfSimulationObjects.PRAEFIX_SIMOBJECT_GROUPING_NUMBER + Integer.toString(allGroupingNumbers.get(indexGN));
 						nextDotElements.add(nde);
 					}
 				}
@@ -336,10 +336,10 @@ public class PerceptionGeneration extends Generation{
 				
 				nextDotElement = GetValue.getFctValue(selectedPropertyFromMethod.getRight());
 				
-				for (int indexGN = 0; indexGN < allGroupingNumbers.length;  indexGN++ ) {
+				for (int indexGN = 0; indexGN < allGroupingNumbers.size();  indexGN++ ) {
 					
 					addToResult = true;
-					propertyClassName = GroupingOfSimulationObjects.PRAEFIX_SIMOBJECT_GROUPING_NUMBER + allGroupingNumbers[indexGN];
+					propertyClassName = GroupingOfSimulationObjects.PRAEFIX_SIMOBJECT_GROUPING_NUMBER + allGroupingNumbers.get(indexGN);
 					
 					if (nrKFC >= 0) {
 
@@ -351,9 +351,9 @@ public class PerceptionGeneration extends Generation{
 					
 					if (addToResult) {
 						nde = new NextDotElement();
-						nde.className = GroupingOfSimulationObjects.PRAEFIX_SIMOBJECT_GROUPING_NUMBER + allGroupingNumbers[indexGN];
-						nde.nextDotElement = nextDotElement + "#" + GetValue.getIsElementOf(allGroupingNumbers[indexGN]);
-						nde.knowledgeAtomNamePart = GroupingOfSimulationObjects.PRAEFIX_SIMOBJECT_GROUPING_NUMBER + Integer.toString(allGroupingNumbers[indexGN]);
+						nde.className = GroupingOfSimulationObjects.PRAEFIX_SIMOBJECT_GROUPING_NUMBER + allGroupingNumbers.get(indexGN);
+						nde.nextDotElement = nextDotElement + "#" + GetValue.getIsElementOf(allGroupingNumbers.get(indexGN));
+						nde.knowledgeAtomNamePart = GroupingOfSimulationObjects.PRAEFIX_SIMOBJECT_GROUPING_NUMBER + Integer.toString(allGroupingNumbers.get(indexGN));
 						nextDotElements.add(nde);
 					}
 					
@@ -652,59 +652,61 @@ public class PerceptionGeneration extends Generation{
 	
 	private void initArrayAllGroupingNumbers() {
 		
-		allGroupingNumbers = new int[GroupingOfSimulationObjects.COUNT_GROUPING_NUMBERS];
+		allGroupingNumbers = new ArrayList<Integer>();
 		
-		allGroupingNumbers[0] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_OBJECTS; 
-		allGroupingNumbers[1] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_ANIMALS_AND_ITEMS; 
-		allGroupingNumbers[2] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_PLANTS_AND_ITEMS; 
-		allGroupingNumbers[3] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_ANIMALS;
-		allGroupingNumbers[4] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_PLANTS; 	
-		allGroupingNumbers[5] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_ITEMS; 	
-		allGroupingNumbers[6] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_GODS;
-		allGroupingNumbers[7] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_MAGICS;
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_OBJECTS); 
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_ANIMALS_AND_ITEMS); 
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_PLANTS_AND_ITEMS); 
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_ANIMALS);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_PLANTS); 	
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_ITEMS); 	
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_GODS);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_MAGICS);
 
 
-		allGroupingNumbers[8] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_MAMMALS;
-		allGroupingNumbers[9] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_DOGS;
-		allGroupingNumbers[10] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_CATS;
-		allGroupingNumbers[11] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_BIRDS;
-		allGroupingNumbers[12] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_FISHS;
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_MAMMALS);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_HUMANS);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_DOGS);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_CATS);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_BIRDS);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_FISHS);
 
-		allGroupingNumbers[13] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_EATABLES;
-		allGroupingNumbers[14] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_FRUITS;
-		allGroupingNumbers[15] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_VEGGIES;
-		allGroupingNumbers[16] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_MEATS;
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_EATABLES);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_FRUITS);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_VEGGIES);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_MEATS);
 
-		allGroupingNumbers[17] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_CLOTHES;
-		allGroupingNumbers[18] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_CAPS;
-		allGroupingNumbers[19] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_SHIRTS;
-		allGroupingNumbers[20] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_TROUSERS;
-		allGroupingNumbers[21] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_SHOES;
-		allGroupingNumbers[22] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_SOCKS;
-		allGroupingNumbers[23] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_GLOVES;
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_CLOTHES);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_CAPS);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_SHIRTS);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_TROUSERS);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_SHOES);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_SOCKS);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_GLOVES);
 
-		// for GROUPING_NUMBER_ALL_BIRDS (allGroupingNumbers[11])
-		allGroupingNumbers[24] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_PALAEOGNATHAE;
-		allGroupingNumbers[25] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_GALLOANSERAE;
-		allGroupingNumbers[26] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_STRISORES;
-		allGroupingNumbers[27] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_OTIDIMORPHAE;
-		allGroupingNumbers[28] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_COLUMBIMORPHAE;
-		allGroupingNumbers[29] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_GRUIFORMES;
-		allGroupingNumbers[30] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_AEQUORLITHORNIHES;
-		allGroupingNumbers[31] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_ACCIPITRIFORMES;
-		allGroupingNumbers[32] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_STRIGIFORMES;
-		allGroupingNumbers[33] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_CORACIIMORPHAE;
-		allGroupingNumbers[34] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_FALCONIFORMES;
-		allGroupingNumbers[35] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_PSITTACIFORMES;
-		allGroupingNumbers[36] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_SUBOSCINES;
-		allGroupingNumbers[37] = GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_OSCINES;
+		// for GROUPING_NUMBER_ALL_BIRDS 
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_PALAEOGNATHAE);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_GALLOANSERAE);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_STRISORES);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_OTIDIMORPHAE);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_COLUMBIMORPHAE);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_GRUIFORMES);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_AEQUORLITHORNIHES);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_ACCIPITRIFORMES);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_STRIGIFORMES);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_CORACIIMORPHAE);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_FALCONIFORMES);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_PSITTACIFORMES);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_SUBOSCINES);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_OSCINES);
 		
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_LIQUIDS);
 
 	}
 
 	private int getGroupingNumberForIndex(int index) {
-		int indexModuloSize = index % GroupingOfSimulationObjects.COUNT_GROUPING_NUMBERS;
-		return allGroupingNumbers[indexModuloSize];
+		int indexModuloSize = index % allGroupingNumbers.size();
+		return allGroupingNumbers.get(indexModuloSize);
 	}
 	
 }

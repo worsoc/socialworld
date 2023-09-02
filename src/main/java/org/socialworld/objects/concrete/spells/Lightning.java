@@ -53,9 +53,6 @@ public class Lightning extends Magic {
 /////////////////////////    creating instance for simulation    //////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
-	protected int getLexemID() {
-		return 0;
-	}
 
 	protected State getInitState(String stateClassName) {
 		if (stateClassName.equals(StatePerceptible.class.getName())) {

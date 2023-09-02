@@ -20,12 +20,6 @@ public class TestShoeRight extends Shoe {
 	}
 
 	@Override
-	protected int getLexemID() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
 	public boolean checkObjectBelongsToGroup(short groupNumberSuffix) {
 		if (groupNumberSuffix == GroupingOfSimulationObjects.GROUPING_NUMBER_SUFFIX_TEST) {
 			return true;

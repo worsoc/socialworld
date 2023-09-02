@@ -24,6 +24,7 @@ package org.socialworld.objects.concrete.animals.mammals;
 
 import java.util.List;
 
+import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.StatePerceptible;
 import org.socialworld.objects.concrete.animals.Mammal;
@@ -54,8 +55,8 @@ public abstract class Dog extends Mammal {
 /////////////////////////    creating instance for simulation    //////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
-	protected int getLexemID() {
-		return 0;
+	protected int getGNP() {
+		return GroupingOfSimulationObjects.GROUPING_NUMBER_PRAEFIX_DOG;
 	}
 
 	protected State getInitState(String stateClassName) {

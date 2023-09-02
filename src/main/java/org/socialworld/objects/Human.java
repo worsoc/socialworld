@@ -89,8 +89,8 @@ import org.socialworld.core.IEventParam;
 	}
 
 	
-	protected int getLexemID() {
-		return 0;
+	protected int getGNP() {
+		return GroupingOfSimulationObjects.GROUPING_NUMBER_PRAEFIX_HUMAN;
 	}
 
 	public boolean checkObjectBelongsToGroup(short groupNumberSuffix) {

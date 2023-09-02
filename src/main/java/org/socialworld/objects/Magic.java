@@ -67,6 +67,10 @@ public abstract class Magic extends SimulationObject {
 	protected SimulationObject_Type getSimObjectType() {
 		return SimulationObject_Type.magic;
 	}
+	
+	protected int getGNP() {
+		return GroupingOfSimulationObjects.GROUPING_NUMBER_PRAEFIX_MAGIC;
+	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    STATE  ///////////////////////////////////////////////////

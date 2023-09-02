@@ -64,6 +64,10 @@ public abstract class God extends SimulationObject {
 		return SimulationObject_Type.god;
 	}
 
+	protected int getGNP() {
+		return GroupingOfSimulationObjects.GROUPING_NUMBER_PRAEFIX_GOD;
+	}
+
 	protected void assignState(StateSimulationObject state) {
 		//if (checkIsMyState(state) ) this.state = (StateGod) state;
 	}

@@ -59,8 +59,9 @@ public class Apple extends Fruit implements IEatable, IThrowable {
 		super();
 	}
 
-	protected int getLexemID() {
-		return 0;
+	protected int getGNS()  // GroupingNumberSuffix
+	{
+		return 1;
 	}
 
 	

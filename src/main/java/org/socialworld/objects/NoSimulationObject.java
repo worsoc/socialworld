@@ -21,8 +21,8 @@ public class NoSimulationObject extends SimulationObject {
 	}
 
 	@Override
-	protected int getLexemID() {
-		return 0;
+	protected int getGNP() {
+		return GroupingOfSimulationObjects.GROUPING_NUMBER_PRAEFIX_NOSIMOBJ;
 	}
 
 	@Override

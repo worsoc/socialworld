@@ -5,16 +5,17 @@ import org.socialworld.objects.State;
 
 public class Sea extends God {
 
-	@Override
-	protected int getLexemID() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+
 
 	@Override
 	public boolean checkObjectBelongsToGroup(short groupNumberSuffix) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	protected int getGNS()  // GroupingNumberSuffix
+	{
+		return 1;
 	}
 
 	@Override

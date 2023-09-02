@@ -34,6 +34,8 @@ public class Lexem {
 	public static final int LEXEMID_RANGE_PROPERTIES_1 = 1000;
 	public static final int LEXEMID_RANGE_RELATION = 2000;
 
+	public static final int OFFSET_LEXEMID_NOUN_SIMOBJ = 1000000000;
+
 	public static final int OFFSET_LEXEMID_RELATION = 100000;
 
 	public static final int OFFSET_LEXEMID_COLOUR = 10000;

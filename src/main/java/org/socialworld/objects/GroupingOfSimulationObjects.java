@@ -32,6 +32,9 @@ public final class GroupingOfSimulationObjects {
 	}
 	
 	public static final String PRAEFIX_SIMOBJECT_GROUPING_NUMBER = "SOGN_";
+	
+	public static final int RANGE_FOR_LOWER_VALUE = 1000;
+	
 	public static final int GROUPING_NUMBER_SUFFIX_TEST = 0;
 	
 	public static final int GROUPING_NUMBER_ALL_OBJECTS 
@@ -58,6 +61,8 @@ public final class GroupingOfSimulationObjects {
 								= 0b00000010000100011111111111111111;	// 34734079
 	public static final int GROUPING_NUMBER_ALL_CATS
 								= 0b00000010000100101111111111111111;	// 34799615
+	public static final int GROUPING_NUMBER_ALL_HUMANS
+								= 0b00000010000100111111111111111111;	// 34865151
 	
 	public static final int GROUPING_NUMBER_ALL_BIRDS
 								= 0b00000010001011111111111111111111;	// 36700159
@@ -120,38 +125,52 @@ public final class GroupingOfSimulationObjects {
 	public static final int GROUPING_NUMBER_ALL_GLOVES 	
 								= 0b00001000001001101111111111111111;	// 136773631
 	
-	public static final int COUNT_GROUPING_NUMBERS = 38;
-	
-	
-	private static final short GROUPING_NUMBER_PRAEFIX_DOG			 = 0b0000001000010001; // 	529
-	private static final short GROUPING_NUMBER_PRAEFIX_CAT			 = 0b0000001000010010; // 	530
-	
-	private static final short GROUPING_NUMBER_PRAEFIX_PALAEOGNATHAE	 = 0b0000001000100001; // 	545
-	private static final short GROUPING_NUMBER_PRAEFIX_GALLOANSERAE		 = 0b0000001000100010; // 	546
-	private static final short GROUPING_NUMBER_PRAEFIX_STRISORES		 = 0b0000001000100011; // 	547
-	private static final short GROUPING_NUMBER_PRAEFIX_OTIDIMORPHAE		 = 0b0000001000100100; // 	548
-	private static final short GROUPING_NUMBER_PRAEFIX_COLUMBIMORPHAE	 = 0b0000001000100101; // 	549
-	private static final short GROUPING_NUMBER_PRAEFIX_GRUIFORMES		 = 0b0000001000100110; // 	550
-	private static final short GROUPING_NUMBER_PRAEFIX_AEQUORLITHORNIHES = 0b0000001000100111; // 	551
-	private static final short GROUPING_NUMBER_PRAEFIX_ACCIPITRIFORMES	 = 0b0000001000101000; // 	552
-	private static final short GROUPING_NUMBER_PRAEFIX_STRIGIFORMES		 = 0b0000001000101001; // 	553
-	private static final short GROUPING_NUMBER_PRAEFIX_CORACIIMORPHAE	 = 0b0000001000101010; // 	554
-	private static final short GROUPING_NUMBER_PRAEFIX_FALCONIFORMES	 = 0b0000001000101011; // 	555
-	private static final short GROUPING_NUMBER_PRAEFIX_PSITTACIFORMES	 = 0b0000001000101100; // 	556
-	private static final short GROUPING_NUMBER_PRAEFIX_SUBOSCINES		 = 0b0000001000101101; // 	557
-	private static final short GROUPING_NUMBER_PRAEFIX_OSCINES			 = 0b0000001000101110; // 	558
-	
-	private static final short GROUPING_NUMBER_PRAEFIX_FRUIT		 = 0b0000100000010001; // 	2065
 
-	private static final short GROUPING_NUMBER_PRAEFIX_CAP		 	 = 0b0000100000100001; // 	2081
-	private static final short GROUPING_NUMBER_PRAEFIX_SHIRT		 = 0b0000100000100010; // 	2082
-	private static final short GROUPING_NUMBER_PRAEFIX_TROUSERS		 = 0b0000100000100011; // 	2083
-	private static final short GROUPING_NUMBER_PRAEFIX_SHOE		 	 = 0b0000100000100100; // 	2084
-	private static final short GROUPING_NUMBER_PRAEFIX_SOCK		 	 = 0b0000100000100101; // 	2085
-	private static final short GROUPING_NUMBER_PRAEFIX_GLOVE		 = 0b0000100000100110; // 	2086
+	public static final int GROUPING_NUMBER_ALL_LIQUIDS 	
+								= 0b00001000001111111111111111111111;	// 138412031
+	
+	
+	public static final short GROUPING_NUMBER_PRAEFIX_NOSIMOBJ			 = 0b0000000000000000; // 	0
+
+	public static final short GROUPING_NUMBER_PRAEFIX_GOD			 = 0b0001000011111111; // 	4351
+	public static final short GROUPING_NUMBER_PRAEFIX_MAGIC			 = 0b0010000011111111; // 	8447
+
+	public static final short GROUPING_NUMBER_PRAEFIX_DOG			 = 0b0000001000010001; // 	529
+	public static final short GROUPING_NUMBER_PRAEFIX_CAT			 = 0b0000001000010010; // 	530
+	public static final short GROUPING_NUMBER_PRAEFIX_HUMAN		 	= 0b0000001000010011; // 	531
+	
+	public static final short GROUPING_NUMBER_PRAEFIX_PALAEOGNATHAE	 	= 0b0000001000100001; // 	545
+	public static final short GROUPING_NUMBER_PRAEFIX_GALLOANSERAE		 = 0b0000001000100010; // 	546
+	public static final short GROUPING_NUMBER_PRAEFIX_STRISORES		 	= 0b0000001000100011; // 	547
+	public static final short GROUPING_NUMBER_PRAEFIX_OTIDIMORPHAE		 = 0b0000001000100100; // 	548
+	public static final short GROUPING_NUMBER_PRAEFIX_COLUMBIMORPHAE	 = 0b0000001000100101; // 	549
+	public static final short GROUPING_NUMBER_PRAEFIX_GRUIFORMES		 = 0b0000001000100110; // 	550
+	public static final short GROUPING_NUMBER_PRAEFIX_AEQUORLITHORNIHES = 0b0000001000100111; // 	551
+	public static final short GROUPING_NUMBER_PRAEFIX_ACCIPITRIFORMES	 = 0b0000001000101000; // 	552
+	public static final short GROUPING_NUMBER_PRAEFIX_STRIGIFORMES		 = 0b0000001000101001; // 	553
+	public static final short GROUPING_NUMBER_PRAEFIX_CORACIIMORPHAE	 = 0b0000001000101010; // 	554
+	public static final short GROUPING_NUMBER_PRAEFIX_FALCONIFORMES	 	= 0b0000001000101011; // 	555
+	public static final short GROUPING_NUMBER_PRAEFIX_PSITTACIFORMES	 = 0b0000001000101100; // 	556
+	public static final short GROUPING_NUMBER_PRAEFIX_SUBOSCINES		 = 0b0000001000101101; // 	557
+	public static final short GROUPING_NUMBER_PRAEFIX_OSCINES			 = 0b0000001000101110; // 	558
+	
+	public static final short GROUPING_NUMBER_PRAEFIX_FRUIT		 = 0b0000100000010001; // 	2065
+
+	
+	public static final short GROUPING_NUMBER_PRAEFIX_CAP		 	 = 0b0000100000100001; // 	2081
+	public static final short GROUPING_NUMBER_PRAEFIX_SHIRT		 	= 0b0000100000100010; // 	2082
+	public static final short GROUPING_NUMBER_PRAEFIX_TROUSERS		 = 0b0000100000100011; // 	2083
+	public static final short GROUPING_NUMBER_PRAEFIX_SHOE		 	 = 0b0000100000100100; // 	2084
+	public static final short GROUPING_NUMBER_PRAEFIX_SOCK		 	 = 0b0000100000100101; // 	2085
+	public static final short GROUPING_NUMBER_PRAEFIX_GLOVE		 = 0b0000100000100110; // 	2086
+	
+	public static final short GROUPING_NUMBER_PRAEFIX_LIQUID		 	 = 0b0000100000111111; // 	2111
+	
 	
 	private static  Lexem LEXEM_ANIMAL; 
-	
+	private static  Lexem LEXEM_HUMAN; 
+
+
 	private static  Lexem LEXEM_SOMETHING;
 	private static  Lexem LEXEM_NOTHING; 
 	
@@ -173,6 +192,7 @@ public final class GroupingOfSimulationObjects {
 
 		switch (groupNumber) {
 			case GROUPING_NUMBER_ALL_ANIMALS: return LEXEM_ANIMAL;
+			case GROUPING_NUMBER_ALL_HUMANS: return LEXEM_HUMAN;
 			
 			default:
 				if (checkIsValidGroupNumber(groupNumber)) {
@@ -210,6 +230,8 @@ public final class GroupingOfSimulationObjects {
 			if (simObject instanceof Magic) return true;
 		case GROUPING_NUMBER_ALL_DOGS:
 			if (simObject instanceof Dog) return true;
+		case GROUPING_NUMBER_ALL_HUMANS:
+			if (simObject instanceof Human) return true;
 		default:
 			short preafix = getHigherShort(groupNumber);
 			short suffix = getLowerShort(groupNumber);
@@ -222,6 +244,9 @@ public final class GroupingOfSimulationObjects {
 		switch (groupNumberPreafix) {
 		case GROUPING_NUMBER_PRAEFIX_DOG:
 			if (simObject instanceof Dog) return simObject.checkObjectBelongsToGroup(groupNumberSuffix);
+			break;
+		case GROUPING_NUMBER_PRAEFIX_HUMAN:
+			if (simObject instanceof Human) return simObject.checkObjectBelongsToGroup(groupNumberSuffix);
 			break;
 		case GROUPING_NUMBER_PRAEFIX_FRUIT:
 			if (simObject instanceof Fruit) return simObject.checkObjectBelongsToGroup(groupNumberSuffix);

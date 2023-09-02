@@ -26,11 +26,6 @@ public class Banana extends Fruit implements IEatable, IThrowable{
 
 
 
-	@Override
-	protected int getLexemID() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
 	@Override
 	public boolean checkObjectBelongsToGroup(short groupNumberSuffix) {
@@ -38,6 +33,12 @@ public class Banana extends Fruit implements IEatable, IThrowable{
 		return false;
 	}
 
+	protected int getGNS()  // GroupingNumberSuffix
+	{
+		return 2;
+	}
+
+	
 	@Override
 	protected State getInitState(String stateClassName) {
 		// TODO Auto-generated method stub
