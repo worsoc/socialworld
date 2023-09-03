@@ -138,7 +138,7 @@ public abstract class SimulationObject implements IPerceptible {
 		this.justCreated = true;
 		this.guard = null;
 		
-		this.lexem = AllWords.getLexem(Lexem.OFFSET_LEXEMID_NOUN_SIMOBJ + getGNP() * GroupingOfSimulationObjects.RANGE_FOR_LOWER_VALUE + getGNS());
+		this.lexem = AllWords.getLexem(Lexem.OFFSET_LEXEMID_NOUN_SIMOBJ + getLexemIdHigherValue() * GroupingOfSimulationObjects.RANGE_FOR_LOWER_VALUE + getLexemIdLowerValue());
 		
 		this.actionHandler = new ActionHandler(this);
 		
@@ -200,22 +200,17 @@ public abstract class SimulationObject implements IPerceptible {
 		return objectID;
 	}
 	
-//	protected  static int getGNP() {return 0;}  // GroupingNumberPraefix
-	protected abstract int getGNP();  // GroupingNumberPraefix
-	// TODO assign GroupingOfSimulation.GROUPING_NUMBER_PRAEFIX... in getGNP() in sub classes
+	protected static int getLexemIdHigherValue() {return 0; }  
 
-	protected /*abstract*/ int getGNS()  // GroupingNumberSuffix
-	{
-		return 0;
-	}
-	// TODO assign grouping number lower value ... in getGNS() in sub classes
+	protected static int getLexemIdLowerValue() {return 0;}  // GroupingNumberSuffix
+	// TODO assign grouping number lower value ... in getLexemIdLowerValue() in sub classes
 
 	
 	public final Lexem getLexem() {
 		return this.lexem;
 }
 	
-	public abstract boolean checkObjectBelongsToGroup(short groupNumberSuffix);
+	public abstract boolean checkObjectBelongsToGroup(int groupNumberSuffix);
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    STATE      ///////////////////////////////////////////////

@@ -29,7 +29,7 @@ import org.socialworld.collections.ValueArrayList;
 import org.socialworld.knowledge.Acquaintance;
 import org.socialworld.knowledge.IAnswer;
 import org.socialworld.objects.concrete.*;
-import org.socialworld.objects.concrete.animals.Mammal;
+import org.socialworld.objects.concrete.animals.Primate;
 import org.socialworld.objects.concrete.animals.StateBody;
 import org.socialworld.objects.concrete.animals.StateInventory;
 import org.socialworld.objects.concrete.animals.StateSeer;
@@ -48,7 +48,7 @@ import org.socialworld.core.IEventParam;
  * @author Mathias Sikos (MatWorsoc)
  * 
  */
- public class Human extends Mammal {
+ public class Human extends Primate {
 	
 	 private StateHuman state;
 	private boolean initialized;
@@ -61,7 +61,7 @@ import org.socialworld.core.IEventParam;
 		} ;
 	
 	public static List<StringTupel> getPropertiesMetaInfos() {
-		List<StringTupel> listOfPropertyMetaInfo = Mammal.getPropertiesMetaInfos();
+		List<StringTupel> listOfPropertyMetaInfo = Primate.getPropertiesMetaInfos();
 		for (int indexAdd = 0; indexAdd < propertiesMetaInfos.length; indexAdd++) {
 			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}
@@ -81,6 +81,10 @@ import org.socialworld.core.IEventParam;
 		return SimulationObject_Type.human;
 	}
 
+	protected static int getLexemIdLowerValue() {
+		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_HUMAN;
+	}
+
 	
 	protected void init() {
 		if (initialized == false) {
@@ -89,11 +93,8 @@ import org.socialworld.core.IEventParam;
 	}
 
 	
-	protected int getGNP() {
-		return GroupingOfSimulationObjects.GROUPING_NUMBER_PRAEFIX_HUMAN;
-	}
 
-	public boolean checkObjectBelongsToGroup(short groupNumberSuffix) {
+	public boolean checkObjectBelongsToGroup(int groupNumberSuffix) {
 		// SUB_CLASS_IMPLEMENTATION checkObjectBelongsToGroup()
 		// TEMP_SOLUTION
 		return true;

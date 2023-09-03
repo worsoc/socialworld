@@ -664,27 +664,30 @@ public class PerceptionGeneration extends Generation{
 		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_MAGICS);
 
 
+
+
+		// for GROUPING_NUMBER_ALL_MAMMALS 
 		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_MAMMALS);
+		
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_MARSUPIALS);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_PRIMATES);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_RODENTS);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_BATS);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_PREDATORS);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_WHALES);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_UNGULATES);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_ELSEMAMMALS);
+
 		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_HUMANS);
 		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_DOGS);
 		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_CATS);
-		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_BIRDS);
-		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_FISHS);
-
-		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_EATABLES);
-		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_FRUITS);
-		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_VEGGIES);
-		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_MEATS);
-
-		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_CLOTHES);
-		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_CAPS);
-		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_SHIRTS);
-		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_TROUSERS);
-		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_SHOES);
-		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_SOCKS);
-		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_GLOVES);
-
+		
 		// for GROUPING_NUMBER_ALL_BIRDS 
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_BIRDS);
+		
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_RAPTORS);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_COLUMBAVES);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_PASSERIFORMES);
 		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_PALAEOGNATHAE);
 		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_GALLOANSERAE);
 		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_STRISORES);
@@ -699,8 +702,33 @@ public class PerceptionGeneration extends Generation{
 		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_PSITTACIFORMES);
 		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_SUBOSCINES);
 		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_OSCINES);
+	
 		
+		// for GROUPING_NUMBER_ALL_FISHS 
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_FISHS);
+		
+		// for GROUPING_NUMBER_ALL_LIQUIDS 
 		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_LIQUIDS);
+		
+		// for GROUPING_NUMBER_ALL_EATABLES 
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_EATABLES);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_FRUITS);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_VEGGIES);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_MEATS);
+
+		
+		// for GROUPING_NUMBER_ALL_HUMANCRAFTEDS 
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_HUMANCRAFTEDS);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_CLOTHES);
+		
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_CAPS);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_SHIRTS);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_TROUSERS);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_SHOES);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_SOCKS);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_GLOVES);
+		
+		
 
 	}
 

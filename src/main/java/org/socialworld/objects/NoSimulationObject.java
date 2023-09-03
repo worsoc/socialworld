@@ -20,13 +20,9 @@ public class NoSimulationObject extends SimulationObject {
 		return SimulationObject_Type.noObject;
 	}
 
-	@Override
-	protected int getGNP() {
-		return GroupingOfSimulationObjects.GROUPING_NUMBER_PRAEFIX_NOSIMOBJ;
-	}
 
 	@Override
-	public boolean checkObjectBelongsToGroup(short groupNumberSuffix) {
+	public boolean checkObjectBelongsToGroup(int groupNumberSuffix) {
 		return false;
 	}
 

@@ -28,7 +28,7 @@ public class Banana extends Fruit implements IEatable, IThrowable{
 
 
 	@Override
-	public boolean checkObjectBelongsToGroup(short groupNumberSuffix) {
+	public boolean checkObjectBelongsToGroup(int groupNumberSuffix) {
 		// TODO Auto-generated method stub
 		return false;
 	}

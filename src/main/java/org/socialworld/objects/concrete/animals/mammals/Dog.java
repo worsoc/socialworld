@@ -55,8 +55,8 @@ public abstract class Dog extends Mammal {
 /////////////////////////    creating instance for simulation    //////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
-	protected int getGNP() {
-		return GroupingOfSimulationObjects.GROUPING_NUMBER_PRAEFIX_DOG;
+	protected static int getLexemIdLowerValue() {
+		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_DOG;
 	}
 
 	protected State getInitState(String stateClassName) {
@@ -75,7 +75,7 @@ public abstract class Dog extends Mammal {
 //////////    checking whether the class belongs to a sub set of classes //////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
-	public boolean checkObjectBelongsToGroup(short groupNumberSuffix) {
+	public boolean checkObjectBelongsToGroup(int groupNumberSuffix) {
 		// SUB_CLASS_IMPLEMENTATION checkObjectBelongsToGroup()
 		// TEMP_SOLUTION
 		return true;

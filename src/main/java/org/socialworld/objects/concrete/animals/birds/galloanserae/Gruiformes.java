@@ -11,13 +11,12 @@ import org.socialworld.objects.concrete.animals.birds.Galloanserae;
 
 public abstract class Gruiformes extends Galloanserae {
 
-	@Override
-	protected int getGNP() {
-		return GroupingOfSimulationObjects.GROUPING_NUMBER_PRAEFIX_GRUIFORMES;
+	protected static int getLexemIdLowerValue() {
+		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_GRUIFORMES;
 	}
 
 	@Override
-	public boolean checkObjectBelongsToGroup(short groupNumberSuffix) {
+	public boolean checkObjectBelongsToGroup(int groupNumberSuffix) {
 		// TODO Auto-generated method stub
 		return false;
 	}

@@ -10,13 +10,12 @@ import org.socialworld.objects.concrete.animals.StateRunning;
 
 public abstract class Galloanserae extends Bird {
 
-	@Override
-	protected int getGNP() {
-		return GroupingOfSimulationObjects.GROUPING_NUMBER_PRAEFIX_GALLOANSERAE;
+	protected static int getLexemIdLowerValue() {
+		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_GALLOANSERAE;
 	}
 
 	@Override
-	public boolean checkObjectBelongsToGroup(short groupNumberSuffix) {
+	public boolean checkObjectBelongsToGroup(int groupNumberSuffix) {
 		// TODO Auto-generated method stub
 		return false;
 	}

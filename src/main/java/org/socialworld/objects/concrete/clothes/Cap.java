@@ -6,8 +6,8 @@ import org.socialworld.objects.properties.IWearable;
 
 public abstract class Cap extends Item implements IWearable {
 
-	protected int getGNP() {
-		return GroupingOfSimulationObjects.GROUPING_NUMBER_PRAEFIX_CAP;
+	protected static int getLexemIdLowerValue() {
+		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_CAP;
 	}
 	
 	

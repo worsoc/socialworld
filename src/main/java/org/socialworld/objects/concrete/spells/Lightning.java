@@ -25,6 +25,7 @@ package org.socialworld.objects.concrete.spells;
 
 import java.util.List;
 
+import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.Magic;
 import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.StatePerceptible;
@@ -53,6 +54,7 @@ public class Lightning extends Magic {
 /////////////////////////    creating instance for simulation    //////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
+	protected static int getLexemIdHigherValue() {return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_LIGHTNING; }
 
 	protected State getInitState(String stateClassName) {
 		if (stateClassName.equals(StatePerceptible.class.getName())) {
@@ -67,7 +69,7 @@ public class Lightning extends Magic {
 //////////    checking whether the class belongs to a sub set of classes //////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
-	public boolean checkObjectBelongsToGroup(short groupNumberSuffix) {
+	public boolean checkObjectBelongsToGroup(int groupNumberSuffix) {
 		// SUB_CLASS_IMPLEMENTATION checkObjectBelongsToGroup()
 		// TEMP_SOLUTION
 		return true;

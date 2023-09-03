@@ -11,10 +11,14 @@ public class TestCap extends Cap {
 
 
 	@Override
-	public boolean checkObjectBelongsToGroup(short groupNumberSuffix) {
+	public boolean checkObjectBelongsToGroup(int groupNumberSuffix) {
 		if (groupNumberSuffix == GroupingOfSimulationObjects.GROUPING_NUMBER_SUFFIX_TEST) {
 			return true;
 		}
+		if (groupNumberSuffix == GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_CAP) {
+			return true;
+		}
+		
 		return false;
 	}
 

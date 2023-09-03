@@ -6,13 +6,12 @@ import org.socialworld.objects.State;
 
 public abstract class Liquid extends Item {
 
-	@Override
-	protected int getGNP() {
-		return GroupingOfSimulationObjects.GROUPING_NUMBER_PRAEFIX_LIQUID;
+	protected static int getLexemIdHigherValue() {
+		return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_LIQUID;
 	}
 
 	@Override
-	public boolean checkObjectBelongsToGroup(short groupNumberSuffix) {
+	public boolean checkObjectBelongsToGroup(int groupNumberSuffix) {
 		// TODO Auto-generated method stub
 		return false;
 	}

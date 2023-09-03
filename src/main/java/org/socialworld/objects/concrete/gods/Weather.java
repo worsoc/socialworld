@@ -26,6 +26,7 @@ package org.socialworld.objects.concrete.gods;
 import java.util.List;
 
 import org.socialworld.objects.God;
+import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.StatePerceptible;
 import org.socialworld.tools.StringTupel;
@@ -53,10 +54,7 @@ public class Weather extends God {
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
 
-	protected int getGNS()  // GroupingNumberSuffix
-	{
-		return 2;
-	}
+	protected static int getLexemIdHigherValue() {return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_WEATHER; }
 
 	protected State getInitState(String stateClassName) {
 		if (stateClassName.equals(StatePerceptible.class.getName())) {
@@ -71,7 +69,7 @@ public class Weather extends God {
 //////////    checking whether the class belongs to a sub set of classes //////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
-	public boolean checkObjectBelongsToGroup(short groupNumberSuffix) {
+	public boolean checkObjectBelongsToGroup(int groupNumberSuffix) {
 		// SUB_CLASS_IMPLEMENTATION checkObjectBelongsToGroup()
 		// TEMP_SOLUTION
 		return true;

@@ -11,13 +11,12 @@ import org.socialworld.objects.concrete.animals.birds.Raptor;
 
 public abstract class Accipitriformes extends Raptor {
 
-	@Override
-	protected int getGNP() {
-		return GroupingOfSimulationObjects.GROUPING_NUMBER_PRAEFIX_ACCIPITRIFORMES;
+	protected static int getLexemIdLowerValue() {
+		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_ACCIPITRIFORMES;
 	}
 
 	@Override
-	public boolean checkObjectBelongsToGroup(short groupNumberSuffix) {
+	public boolean checkObjectBelongsToGroup(int groupNumberSuffix) {
 		// TODO Auto-generated method stub
 		return false;
 	}

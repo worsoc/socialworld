@@ -10,13 +10,13 @@ import org.socialworld.objects.concrete.animals.StateRunning;
 
 public abstract class Aequorlithornithes extends Bird {
 
-	@Override
-	protected int getGNP() {
-		return GroupingOfSimulationObjects.GROUPING_NUMBER_PRAEFIX_AEQUORLITHORNIHES;
+	protected static int getLexemIdLowerValue() {
+		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_AEQUORLITHORNIHES;
 	}
 
+
 	@Override
-	public boolean checkObjectBelongsToGroup(short groupNumberSuffix) {
+	public boolean checkObjectBelongsToGroup(int groupNumberSuffix) {
 		// TODO Auto-generated method stub
 		return false;
 	}

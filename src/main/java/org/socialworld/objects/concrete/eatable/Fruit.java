@@ -75,9 +75,10 @@ public abstract class Fruit extends Item implements IEatable {
 		
 	}
 
-	protected int getGNP() {
-		return GroupingOfSimulationObjects.GROUPING_NUMBER_PRAEFIX_FRUIT;
+	protected static int getLexemIdLowerValue() {
+		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_FRUIT;
 	}
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //////////    checking whether the class belongs to a sub set of classes //////////////////

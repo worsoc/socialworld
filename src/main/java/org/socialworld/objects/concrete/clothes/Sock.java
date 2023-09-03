@@ -6,8 +6,8 @@ import org.socialworld.objects.properties.IWearable;
 
 public abstract class Sock extends Item implements IWearable {
 
-	protected int getGNP() {
-		return GroupingOfSimulationObjects.GROUPING_NUMBER_PRAEFIX_SOCK;
+	protected static int getLexemIdLowerValue() {
+		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_SOCK;
 	}
 
 	public boolean isLeftHandGlove() {return false; }

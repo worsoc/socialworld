@@ -82,6 +82,8 @@ public abstract class Item extends SimulationObject {
 		return SimulationObject_Type.item;
 	}
 
+	protected static int getLexemIdHigherValue() {return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_ITEM; }
+
 	protected void assignState(StateSimulationObject state) {
 		//if (checkIsMyState(state) ) this.state = (StateItem) state;
 	}

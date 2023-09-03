@@ -1,14 +1,16 @@
 package org.socialworld.objects.concrete.gods;
 
 import org.socialworld.objects.God;
+import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.State;
 
 public class Sea extends God {
 
 
+	protected static int getLexemIdHigherValue() {return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_SEA; }
 
 	@Override
-	public boolean checkObjectBelongsToGroup(short groupNumberSuffix) {
+	public boolean checkObjectBelongsToGroup(int groupNumberSuffix) {
 		// TODO Auto-generated method stub
 		return false;
 	}
