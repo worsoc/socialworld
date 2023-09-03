@@ -1,3 +1,24 @@
+/*
+* Social World
+* Copyright (C) 2023  Mathias Sikos
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
+*
+* or see http://www.gnu.org/licenses/gpl-2.0.html
+*
+*/
 package org.socialworld.objects;
 
 import org.socialworld.conversation.Lexem;
@@ -22,8 +43,6 @@ public final class GroupingOfSimulationObjects {
 	private GroupingOfSimulationObjects() {
 		Word word;
 		
-		word = AllWords.findAndGetWord("animal", Word_Type.noun);
-		if (word != null) LEXEM_ANIMAL = word.getLexem();
 		
 		word = AllWords.findAndGetWord("something", Word_Type.noun);
 		if (word != null) LEXEM_SOMETHING = word.getLexem();
@@ -35,7 +54,7 @@ public final class GroupingOfSimulationObjects {
 	
 	public static final String PRAEFIX_SIMOBJECT_GROUPING_NUMBER = "SOGN_";
 	
-	public static final int RANGE_FOR_LOWER_VALUE = 1000;
+	public static final int RANGE_FOR_LOWER_VALUE = 100000;
 	
 	public static final int GROUPING_NUMBER_SUFFIX_TEST = 0;
 
@@ -194,7 +213,7 @@ public final class GroupingOfSimulationObjects {
 	 * 	lexem id higher values
 	 *
 	 ***************************************************************************************************/
-	
+		
 	public static final short LEXEMID_HIGHERVALUE_ANIMAL			= 20;
 	public static final short LEXEMID_HIGHERVALUE_MAMMAL			= 21;
 	public static final short LEXEMID_HIGHERVALUE_BIRD				= 22;
@@ -267,10 +286,6 @@ public final class GroupingOfSimulationObjects {
 	public static final int LEXEMID_LOWERVALUE_SOCK		 	 			= 0b0000000101010000; // 	336
 	public static final int LEXEMID_LOWERVALUE_GLOVE	 	 			= 0b0000000101100000; // 	352
 	
-	
-	
-	private static  Lexem LEXEM_ANIMAL; 
-	private static  Lexem LEXEM_HUMAN; 
 
 
 	private static  Lexem LEXEM_SOMETHING;
@@ -292,17 +307,23 @@ public final class GroupingOfSimulationObjects {
 	
 	public  Lexem getLexemForGroupingNumber(int groupNumber) {
 
-		switch (groupNumber) {
-			case GROUPING_NUMBER_ALL_ANIMALS: return LEXEM_ANIMAL;
-			case GROUPING_NUMBER_ALL_HUMANS: return LEXEM_HUMAN;
-			
-			default:
-				if (checkIsValidGroupNumber(groupNumber)) {
-					return LEXEM_SOMETHING;
-				}
-				else
-					return LEXEM_NOTHING;
+		int gnp = getHigherPart(groupNumber); // grouping number praefix
+		int gns = getLowerPart(groupNumber);	// grouping number suffix --> lexem ID lower value
+		
+		int lexemIdHigherValue = translateGNP2lexemIdHigherPart(gnp);
+		
+		if (lexemIdHigherValue > 0) {
+			Lexem lexem = AllWords.getLexem(Lexem.OFFSET_LEXEMID_NOUN_SIMOBJ + lexemIdHigherValue * RANGE_FOR_LOWER_VALUE + gns);
+			return lexem;
 		}
+		else {
+			if (checkIsValidGroupNumber(groupNumber)) {
+				return LEXEM_SOMETHING;
+			}
+			else
+				return LEXEM_NOTHING;
+		}
+		
 	}
 	
 	public  boolean checkIsLexemSomething(Lexem lexem) {
@@ -369,6 +390,43 @@ public final class GroupingOfSimulationObjects {
 		return ( int) (number >> 16);
 	}
 
+	private static int translateGNP2lexemIdHigherPart(int groupNumberPraefix) {
+		
+		short firstByte = (short) (groupNumberPraefix >> 8);
+		short secondByte = (short) (groupNumberPraefix % 0b100000000);
+		
+		int valueSimObjType = 0;
+		int valueFirstLevel = 0;
+		
+		
+		switch (firstByte) {
+			case 1: valueSimObjType = 10; break;
+			case 2: valueSimObjType = 20; break;
+			case 4: valueSimObjType = 30; break;
+			case 8: valueSimObjType = 40; break;
+			case 16: valueSimObjType = 50; break;
+			case 32: valueSimObjType = 60; break;
+			case 64: valueSimObjType = 70; break;
+			case 128: valueSimObjType = 80; break;
+			default: return 0;
+		}
+		
+		switch (secondByte) {
+			case 1: valueFirstLevel = 1; break;
+			case 2: valueFirstLevel = 2; break;
+			case 4: valueFirstLevel = 3; break;
+			case 8: valueFirstLevel = 4; break;
+			case 16: valueFirstLevel = 5; break;
+			case 32: valueFirstLevel = 6; break;
+			case 64: valueFirstLevel = 7; break;
+			case 128: valueFirstLevel = 8; break;
+			default: return 0;
+		}
+		
+		return valueSimObjType + valueFirstLevel;
+		
+	}
+	
 	private static boolean checkIsValidGroupNumber(int groupNumber) {
 		return true;
 	}
