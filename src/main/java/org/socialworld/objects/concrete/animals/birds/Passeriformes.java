@@ -7,7 +7,7 @@ import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.animals.Bird;
 import org.socialworld.objects.concrete.animals.StateRunning;
 
-public class Passeriformes extends Bird {
+public abstract class Passeriformes extends Bird {
 
 	@Override
 	public float getSpeed() {
