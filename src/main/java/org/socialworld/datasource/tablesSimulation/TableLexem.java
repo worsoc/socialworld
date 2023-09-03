@@ -24,6 +24,8 @@ package org.socialworld.datasource.tablesSimulation;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+//import org.reflections;
+
 import org.socialworld.datasource.mariaDB.Table;
 
 import org.socialworld.attributes.properties.Colour;
@@ -216,4 +218,27 @@ public class TableLexem extends Table {
 		}
 
 	}
+	
+	public void fillTableForSimObjects() {
+		
+		String statement;
+		int wordTypeNoun = Word_Type.noun.getIndex();
+		
+		statement 	= "DELETE FROM sw_word WHERE " +
+				" lexem_id >= " + Lexem.OFFSET_LEXEMID_NOUN_SIMOBJ +  
+				" and lexem_id < " + (2 *  Lexem.OFFSET_LEXEMID_NOUN_SIMOBJ );
+		delete(statement);
+		statement 	= "DELETE FROM sw_lexem WHERE " +
+				" lexem_id >= " + Lexem.OFFSET_LEXEMID_NOUN_SIMOBJ +  
+				" and lexem_id < " + (2 *  Lexem.OFFSET_LEXEMID_NOUN_SIMOBJ );
+		delete(statement);
+
+		
+		
+		//Reflections reflections = new Reflections("my.package", classLoader, new SubTypesScanner(false));
+		
+		
+		
+	}
+
 }

@@ -1,18 +1,19 @@
-package org.socialworld.objects.concrete.animals.birds;
+package org.socialworld.objects.concrete.animals.birds.columbaves;
 
 import org.socialworld.attributes.Direction;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.State;
-import org.socialworld.objects.concrete.animals.Bird;
 import org.socialworld.objects.concrete.animals.StateRunning;
 
-public abstract class Strigiformes extends Bird {
+import org.socialworld.objects.concrete.animals.birds.Columbaves;
+
+public abstract class Columbimorphae extends Columbaves {
 
 	@Override
 	protected int getGNP() {
-		return GroupingOfSimulationObjects.GROUPING_NUMBER_PRAEFIX_STRIGIFORMES;
+		return GroupingOfSimulationObjects.GROUPING_NUMBER_PRAEFIX_COLUMBIMORPHAE;
 	}
 
 	@Override

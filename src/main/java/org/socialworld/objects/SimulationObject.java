@@ -200,6 +200,7 @@ public abstract class SimulationObject implements IPerceptible {
 		return objectID;
 	}
 	
+//	protected  static int getGNP() {return 0;}  // GroupingNumberPraefix
 	protected abstract int getGNP();  // GroupingNumberPraefix
 	// TODO assign GroupingOfSimulation.GROUPING_NUMBER_PRAEFIX... in getGNP() in sub classes
 

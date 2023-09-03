@@ -1,14 +1,15 @@
-package org.socialworld.objects.concrete.animals.birds;
+package org.socialworld.objects.concrete.animals.birds.galloanserae;
 
 import org.socialworld.attributes.Direction;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.State;
-import org.socialworld.objects.concrete.animals.Bird;
 import org.socialworld.objects.concrete.animals.StateRunning;
 
-public abstract class Gruiformes extends Bird {
+import org.socialworld.objects.concrete.animals.birds.Galloanserae;
+
+public abstract class Gruiformes extends Galloanserae {
 
 	@Override
 	protected int getGNP() {
