@@ -235,8 +235,13 @@ public class TableLexem extends Table {
 
 		
 		
-		//Reflections reflections = new Reflections("my.package", classLoader, new SubTypesScanner(false));
-		
+		try (ScanResult result = new ClassGraph().enableClassInfo().enableAnnotationInfo()
+				  .whitelistPackages(getClass().getPackage().getName()).scan()) {
+				    
+				    ClassInfoList classInfos = result.getClassesWithAnnotation(TestAnnotation.class.getName());
+				    
+				    assertThat(classInfos).extracting(ClassInfo::getName).contains(ClassWithAnnotation.class.getName());
+				}		
 		
 		
 	}
