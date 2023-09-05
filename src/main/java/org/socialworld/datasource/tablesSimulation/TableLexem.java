@@ -24,7 +24,9 @@ package org.socialworld.datasource.tablesSimulation;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-//import org.reflections;
+import io.github.classgraph.ScanResult;
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ClassInfoList;
 
 import org.socialworld.datasource.mariaDB.Table;
 
@@ -235,12 +237,11 @@ public class TableLexem extends Table {
 
 		
 		
-		try (ScanResult result = new ClassGraph().enableClassInfo().enableAnnotationInfo()
-				  .whitelistPackages(getClass().getPackage().getName()).scan()) {
+		try (ScanResult result = new ClassGraph().enableClassInfo().enableAnnotationInfo().scan()) {
+//			  .whitelistPackages(getClass().getPackage().getName()).scan()) {
 				    
-				    ClassInfoList classInfos = result.getClassesWithAnnotation(TestAnnotation.class.getName());
+				    ClassInfoList classInfos = result.getSubclasses("org.socialworld.objects.SimulationObject");
 				    
-				    assertThat(classInfos).extracting(ClassInfo::getName).contains(ClassWithAnnotation.class.getName());
 				}		
 		
 		
