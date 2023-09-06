@@ -384,8 +384,8 @@ public class DataCreationTool {
 		frame.getContentPane().add(ButtonPath);
 		
 		
-		Button ButtonFillTablesForProperties = new Button("Fill 4 Props");
-		ButtonFillTablesForProperties.addActionListener(new ActionListener() {
+		Button buttonFillTablesForProperties = new Button("Fill 4 Props");
+		buttonFillTablesForProperties.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
 				long timeStart;
@@ -399,11 +399,11 @@ public class DataCreationTool {
 				System.out.println(timeStart + "  --->  " + timeEnde);
 			}
 		});
-		ButtonFillTablesForProperties.setBounds(815, 557, 96, 26);
-		frame.getContentPane().add(ButtonFillTablesForProperties);
+		buttonFillTablesForProperties.setBounds(815, 557, 96, 26);
+		frame.getContentPane().add(buttonFillTablesForProperties);
 
-		Button ButtonFillTablesForRelations = new Button("Fill 4 Rels");
-		ButtonFillTablesForRelations.addActionListener(new ActionListener() {
+		Button buttonFillTablesForRelations = new Button("Fill 4 Rels");
+		buttonFillTablesForRelations.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
 				long timeStart;
@@ -419,8 +419,29 @@ public class DataCreationTool {
 				System.out.println(timeStart + "  --->  " + timeEnde);
 			}
 		});
-		ButtonFillTablesForRelations.setBounds(815, 607, 96, 26);
-		frame.getContentPane().add(ButtonFillTablesForRelations);
+		buttonFillTablesForRelations.setBounds(815, 607, 96, 26);
+		frame.getContentPane().add(buttonFillTablesForRelations);
+
+		Button buttonFillTablesForSimObjects = new Button("Fill 4 SimObjs");
+		buttonFillTablesForSimObjects.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) 
+			{
+				long timeStart;
+				long timeEnde;
+				TableLexem tableLexem = new TableLexem();
+//				TableWord tableWord = new TableWord();
+//				TableRelation tableRelation = new TableRelation();
+				timeStart = java.lang.System.currentTimeMillis();
+				tableLexem.fillTableForSimObjects();
+//				tableWord.fillTableForRelations();
+//				tableRelation.fillTableForRelations();
+				timeEnde = java.lang.System.currentTimeMillis();
+				System.out.println(timeStart + "  --->  " + timeEnde);
+			}
+		});
+		buttonFillTablesForSimObjects.setBounds(815, 507, 96, 26);
+		frame.getContentPane().add(buttonFillTablesForSimObjects);
+
 		
 		//
 	}

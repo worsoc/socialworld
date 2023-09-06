@@ -21,15 +21,19 @@
 */
 package org.socialworld.datasource.tablesSimulation;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import io.github.classgraph.ScanResult;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfoList;
 
 import org.socialworld.datasource.mariaDB.Table;
-
+import org.socialworld.objects.GroupingOfSimulationObjects;
+import org.socialworld.objects.SimulationObject;
 import org.socialworld.attributes.properties.Colour;
 import org.socialworld.attributes.properties.Material;
 import org.socialworld.attributes.properties.Nutrient;
@@ -37,6 +41,7 @@ import org.socialworld.attributes.properties.Taste;
 import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Relation;
 import org.socialworld.conversation.Word_Type;
+import org.socialworld.core.AllWords;
 
 public class TableLexem extends Table {
 
@@ -222,7 +227,7 @@ public class TableLexem extends Table {
 	}
 	
 	public void fillTableForSimObjects() {
-		
+/*		
 		String statement;
 		int wordTypeNoun = Word_Type.noun.getIndex();
 		
@@ -234,14 +239,48 @@ public class TableLexem extends Table {
 				" lexem_id >= " + Lexem.OFFSET_LEXEMID_NOUN_SIMOBJ +  
 				" and lexem_id < " + (2 *  Lexem.OFFSET_LEXEMID_NOUN_SIMOBJ );
 		delete(statement);
-
+*/
 		
 		
 		try (ScanResult result = new ClassGraph().enableClassInfo().enableAnnotationInfo().scan()) {
 //			  .whitelistPackages(getClass().getPackage().getName()).scan()) {
 				    
 				    ClassInfoList classInfos = result.getSubclasses("org.socialworld.objects.SimulationObject");
-				    
+				     	classInfos = classInfos.getStandardClasses();
+				     	List<Class<?>> list = classInfos.loadClasses();
+				     	for (Class<?> simObjClass : list) {
+				     		
+				     		System.out.println(simObjClass.getName());
+/*				     		
+ 
+				     		Method methodGetHigherValue;
+				     		Method methodGetLowerValue;
+
+				      		int lexemIdHigherValue = 0;
+				      		int lexemIdLowerValue = 0;
+				     		
+				     		try {
+				     			 methodGetHigherValue = simObjClass.getMethod("getLexemIdHigherValue");
+					      		 methodGetHigherValue.invoke(null);
+				     		} catch (SecurityException e) {  }
+				     		  catch (NoSuchMethodException e) { }
+				     		  catch (IllegalArgumentException e) {  }
+				      		  catch (IllegalAccessException e) { }
+				      		  catch (InvocationTargetException e) {  }
+				  
+				      		try {
+				     			 methodGetLowerValue = simObjClass.getMethod("getLexemIdLowerValue");
+				     			methodGetLowerValue.invoke(null);
+				     		} catch (SecurityException e) {  }
+				     		  catch (NoSuchMethodException e) { }
+				     		  catch (IllegalArgumentException e) {  }
+				      		  catch (IllegalAccessException e) { }
+				      		  catch (InvocationTargetException e) {  }
+				    	
+			      		
+						    int lexemID = Lexem.OFFSET_LEXEMID_NOUN_SIMOBJ + lexemIdHigherValue * GroupingOfSimulationObjects.RANGE_FOR_LOWER_VALUE + lexemIdLowerValue;
+*/
+				     	}
 				}		
 		
 		
