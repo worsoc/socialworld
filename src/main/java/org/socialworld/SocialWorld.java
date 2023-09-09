@@ -27,9 +27,6 @@ import java.util.ListIterator;
 
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.AttributeArray;
-import org.socialworld.attributes.Position;
-import org.socialworld.attributes.PropertyName;
-import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.core.Simulation;
 import org.socialworld.data.FillWithTestData_ACM;
 import org.socialworld.data.FillWithTestData_Position;
@@ -74,7 +71,7 @@ public class SocialWorld  {
 			
 		simulation = Simulation.getInstance();
 		
-		Simulation.showMessage("myPrint", "Bitte Geduld. Wir starten bei Sekunde 0.");
+		Simulation.show Message("myPrint", "Bitte Geduld. Wir starten bei Sekunde 0.");
 /*		
 		Position position0 = new Position(PropertyName.position_vector, new Vector(0, 0, 0));
 		System.out.println("Position(0, 0, 0) --> " + position0.getLocationByBase25());
