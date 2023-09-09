@@ -71,7 +71,7 @@ public class SocialWorld  {
 			
 		simulation = Simulation.getInstance();
 		
-		Simulation.show Message("myPrint", "Bitte Geduld. Wir starten bei Sekunde 0.");
+		Simulation.showMessage("myPrint", "Bitte Geduld. Wir starten bei Sekunde 0.");
 /*		
 		Position position0 = new Position(PropertyName.position_vector, new Vector(0, 0, 0));
 		System.out.println("Position(0, 0, 0) --> " + position0.getLocationByBase25());
