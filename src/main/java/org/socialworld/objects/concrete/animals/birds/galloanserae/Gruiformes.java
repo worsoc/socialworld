@@ -11,7 +11,12 @@ import org.socialworld.objects.concrete.animals.birds.Galloanserae;
 
 public abstract class Gruiformes extends Galloanserae {
 
-	protected static int getLexemIdLowerValue() {
+	public static int getLexemIdLowerValue() {
+		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_GRUIFORMES;
+	}
+	
+	@Override
+	protected int getLexemIdLowValue() {
 		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_GRUIFORMES;
 	}
 

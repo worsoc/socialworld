@@ -88,6 +88,7 @@ public class Simulation extends SocialWorldThread {
 		
 		this.searchByPosition = new ObjectByPositionSearch(1);
 
+		AllWords.init();
 	}
 	
 	/**

@@ -26,6 +26,9 @@ public abstract class Primate extends Mammal {
 		return listOfPropertyMetaInfo;
 	}
 
+	public static int getLexemIdLowerValue() {
+		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_PRIMATE;
+	}
 
 	@Override
 	public boolean checkObjectBelongsToGroup(int groupNumberSuffix) {
@@ -33,11 +36,6 @@ public abstract class Primate extends Mammal {
 		return false;
 	}
 
-	@Override
-	protected State getInitState(String stateClassName) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////    creating instance for simulation    //////////////////////////
@@ -48,9 +46,15 @@ public abstract class Primate extends Mammal {
 	}
 	
 	
-
-	protected static int getLexemIdLowerValue() {
+	@Override
+	protected int getLexemIdLowValue() {
 		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_PRIMATE;
+	}
+
+	@Override
+	protected State getInitState(String stateClassName) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 

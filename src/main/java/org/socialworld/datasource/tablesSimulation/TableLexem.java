@@ -227,7 +227,7 @@ public class TableLexem extends Table {
 	}
 	
 	public void fillTableForSimObjects() {
-/*		
+		
 		String statement;
 		int wordTypeNoun = Word_Type.noun.getIndex();
 		
@@ -239,9 +239,10 @@ public class TableLexem extends Table {
 				" lexem_id >= " + Lexem.OFFSET_LEXEMID_NOUN_SIMOBJ +  
 				" and lexem_id < " + (2 *  Lexem.OFFSET_LEXEMID_NOUN_SIMOBJ );
 		delete(statement);
-*/
+
 		
-		
+ 		System.out.println("-------------------------------");
+	
 		try (ScanResult result = new ClassGraph().enableClassInfo().enableAnnotationInfo().scan()) {
 //			  .whitelistPackages(getClass().getPackage().getName()).scan()) {
 				    
@@ -250,8 +251,8 @@ public class TableLexem extends Table {
 				     	List<Class<?>> list = classInfos.loadClasses();
 				     	for (Class<?> simObjClass : list) {
 				     		
-				     		System.out.println(simObjClass.getName());
-/*				     		
+				     		System.out.print(simObjClass.getName());
+				     		
  
 				     		Method methodGetHigherValue;
 				     		Method methodGetLowerValue;
@@ -261,7 +262,7 @@ public class TableLexem extends Table {
 				     		
 				     		try {
 				     			 methodGetHigherValue = simObjClass.getMethod("getLexemIdHigherValue");
-					      		 methodGetHigherValue.invoke(null);
+				     			 lexemIdHigherValue = (int) methodGetHigherValue.invoke(null);
 				     		} catch (SecurityException e) {  }
 				     		  catch (NoSuchMethodException e) { }
 				     		  catch (IllegalArgumentException e) {  }
@@ -270,16 +271,22 @@ public class TableLexem extends Table {
 				  
 				      		try {
 				     			 methodGetLowerValue = simObjClass.getMethod("getLexemIdLowerValue");
-				     			methodGetLowerValue.invoke(null);
+				     			 lexemIdLowerValue = (int) methodGetLowerValue.invoke(null);
 				     		} catch (SecurityException e) {  }
 				     		  catch (NoSuchMethodException e) { }
 				     		  catch (IllegalArgumentException e) {  }
 				      		  catch (IllegalAccessException e) { }
 				      		  catch (InvocationTargetException e) {  }
 				    	
-			      		
+				      		
 						    int lexemID = Lexem.OFFSET_LEXEMID_NOUN_SIMOBJ + lexemIdHigherValue * GroupingOfSimulationObjects.RANGE_FOR_LOWER_VALUE + lexemIdLowerValue;
-*/
+				     		System.out.println(" : " + lexemID);
+
+				     		// ignore if both id parts are 0
+				      		if (lexemIdHigherValue  == 0 && lexemIdLowerValue == 0) continue;
+
+							insert(lexemID,  1,  wordTypeNoun);
+
 				     	}
 				}		
 		

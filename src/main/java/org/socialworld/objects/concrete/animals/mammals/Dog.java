@@ -49,13 +49,17 @@ public abstract class Dog extends Mammal {
 		return listOfPropertyMetaInfo;
 	}
 
+	public static int getLexemIdLowerValue() {
+		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_DOG;
+	}
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
-	protected static int getLexemIdLowerValue() {
+	@Override
+	protected int getLexemIdLowValue() {
 		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_DOG;
 	}
 

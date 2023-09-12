@@ -23,6 +23,7 @@ package org.socialworld.objects.concrete.eatable.fruits;
 
 import java.util.List;
 
+import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.StateAppearance;
 import org.socialworld.objects.concrete.StateComposition;
@@ -50,6 +51,7 @@ public class Apple extends Fruit implements IEatable, IThrowable {
 		return listOfPropertyMetaInfo;
 	}
 	
+	public static int getLexemIdLowerValue() {return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_APPLE; }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////
@@ -59,12 +61,11 @@ public class Apple extends Fruit implements IEatable, IThrowable {
 		super();
 	}
 
-	protected int getGNS()  // GroupingNumberSuffix
-	{
-		return 1;
-	}
+	@Override
+	protected int getLexemIdLowValue() {return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_BANANA; }
 
 	
+	@Override
 	protected State getInitState(String stateClassName) {
 		if (stateClassName.equals(StatePerceptible.class.getName())) {
 			return new StatePerceptible(this);
@@ -83,11 +84,6 @@ public class Apple extends Fruit implements IEatable, IThrowable {
 		
 	}
 	
-	public boolean checkObjectBelongsToGroup(int groupNumberSuffix) {
-		// SUB_CLASS_IMPLEMENTATION checkObjectBelongsToGroup()
-		// TEMP_SOLUTION
-		return false;
-	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// implementing IEatable ///////////////////////////////////
@@ -127,10 +123,11 @@ public class Apple extends Fruit implements IEatable, IThrowable {
 	
 	}
 	
-	public boolean checkObjectBelongsToGroup(short groupNumberSuffix) {
+
+	public boolean checkObjectBelongsToGroup(int groupNumberSuffix) {
 		// SUB_CLASS_IMPLEMENTATION checkObjectBelongsToGroup()
 		// TEMP_SOLUTION
-		return true;
+		return false;
 	}
-
+	
 }

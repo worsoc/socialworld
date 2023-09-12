@@ -55,6 +55,9 @@ public abstract class Fruit extends Item implements IEatable {
 		return listOfPropertyMetaInfo;
 	}
 	
+	public static int getLexemIdLowerValue() {
+		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_FRUIT;
+	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////
@@ -75,7 +78,7 @@ public abstract class Fruit extends Item implements IEatable {
 		
 	}
 
-	protected static int getLexemIdLowerValue() {
+	protected int getLexemIdLowValue() {
 		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_FRUIT;
 	}
 

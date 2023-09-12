@@ -53,6 +53,7 @@ public abstract class Magic extends SimulationObject {
 		return listOfPropertyMetaInfo;
 	}
 	
+	public static int getLexemIdHigherValue() {return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_MAGIC; }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////
@@ -68,7 +69,7 @@ public abstract class Magic extends SimulationObject {
 		return SimulationObject_Type.magic;
 	}
 	
-	protected static int getLexemIdHigherValue() {return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_MAGIC; }
+	protected int getLexemIdHighValue() {return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_MAGIC; }
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////

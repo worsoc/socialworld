@@ -11,7 +11,12 @@ import org.socialworld.objects.concrete.animals.birds.Raptor;
 
 public abstract class Accipitriformes extends Raptor {
 
-	protected static int getLexemIdLowerValue() {
+	public static int getLexemIdLowerValue() {
+		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_ACCIPITRIFORMES;
+	}
+	
+	@Override
+	protected int getLexemIdLowValue() {
 		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_ACCIPITRIFORMES;
 	}
 

@@ -68,6 +68,9 @@ import org.socialworld.core.IEventParam;
 		return listOfPropertyMetaInfo;
 	}
 
+	public static int getLexemIdLowerValue() {
+		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_HUMAN;
+	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////
@@ -81,7 +84,8 @@ import org.socialworld.core.IEventParam;
 		return SimulationObject_Type.human;
 	}
 
-	protected static int getLexemIdLowerValue() {
+	@Override
+	protected int getLexemIdLowValue() {
 		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_HUMAN;
 	}
 

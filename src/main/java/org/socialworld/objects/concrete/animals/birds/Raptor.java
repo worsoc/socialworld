@@ -9,8 +9,13 @@ import org.socialworld.objects.concrete.animals.Bird;
 import org.socialworld.objects.concrete.animals.StateRunning;
 
 public abstract class Raptor extends Bird {
-	
-	protected static int getLexemIdLowerValue() {
+
+	public static int getLexemIdLowerValue() {
+		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_RAPTOR;
+	}
+
+	@Override
+	protected int getLexemIdLowValue() {
 		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_RAPTOR;
 	}
 

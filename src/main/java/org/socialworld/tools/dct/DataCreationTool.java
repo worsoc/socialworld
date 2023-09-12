@@ -429,12 +429,10 @@ public class DataCreationTool {
 				long timeStart;
 				long timeEnde;
 				TableLexem tableLexem = new TableLexem();
-//				TableWord tableWord = new TableWord();
-//				TableRelation tableRelation = new TableRelation();
+				TableWord tableWord = new TableWord();
 				timeStart = java.lang.System.currentTimeMillis();
 				tableLexem.fillTableForSimObjects();
-//				tableWord.fillTableForRelations();
-//				tableRelation.fillTableForRelations();
+				tableWord.fillTableForSimObjects();
 				timeEnde = java.lang.System.currentTimeMillis();
 				System.out.println(timeStart + "  --->  " + timeEnde);
 			}

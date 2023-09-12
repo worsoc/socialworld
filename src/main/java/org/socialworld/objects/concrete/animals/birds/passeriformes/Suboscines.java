@@ -11,7 +11,12 @@ import org.socialworld.objects.concrete.animals.birds.Passeriformes;
 
 public abstract class Suboscines extends Passeriformes {
 
-	protected static int getLexemIdLowerValue() {
+	public static int getLexemIdLowerValue() {
+		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_SUBOSCINES;
+	}
+
+	@Override
+	protected int getLexemIdLowValue() {
 		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_SUBOSCINES;
 	}
 

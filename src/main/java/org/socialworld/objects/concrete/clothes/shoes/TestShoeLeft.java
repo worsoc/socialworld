@@ -9,6 +9,23 @@ import org.socialworld.objects.concrete.clothes.Shoe;
 
 public class TestShoeLeft extends Shoe {
 
+	public static int getLexemIdHigherValue() {
+		return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_IGNORE;
+	}
+	public static int getLexemIdLowerValue() {
+		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_IGNORE;
+	}
+
+	@Override
+	protected int getLexemIdHighValue() {
+		return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_IGNORE;
+	}
+	@Override
+	protected int getLexemIdLowValue() {
+		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_IGNORE;
+	}
+	
+
 	@Override
 	public boolean isLeftFootShoe() {
 		return true;

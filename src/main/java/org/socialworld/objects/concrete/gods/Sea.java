@@ -6,19 +6,22 @@ import org.socialworld.objects.State;
 
 public class Sea extends God {
 
+///////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////meta information    ////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 
-	protected static int getLexemIdHigherValue() {return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_SEA; }
+	public static int getLexemIdHigherValue() {return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_SEA; }
+	public static int getLexemIdLowerValue() {return 0; }
+
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////    creating instance for simulation    //////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 
 	@Override
-	public boolean checkObjectBelongsToGroup(int groupNumberSuffix) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	protected int getLexemIdHighValue() {return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_SEA; }
 
-	protected int getGNS()  // GroupingNumberSuffix
-	{
-		return 1;
-	}
+	@Override
+	protected int getLexemIdLowValue() {return 0; }
 
 	@Override
 	protected State getInitState(String stateClassName) {
@@ -26,4 +29,14 @@ public class Sea extends God {
 		return State.getObjectNothing();
 	}
 
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////checking whether the class belongs to a sub set of classes //////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	@Override
+	public boolean checkObjectBelongsToGroup(int groupNumberSuffix) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
 }

@@ -213,7 +213,10 @@ public final class GroupingOfSimulationObjects {
 	 * 	lexem id higher values
 	 *
 	 ***************************************************************************************************/
-		
+
+	public static final short LEXEMID_HIGHERVALUE_IGNORE			= 0;
+
+	
 	public static final short LEXEMID_HIGHERVALUE_ANIMAL			= 20;
 	public static final short LEXEMID_HIGHERVALUE_MAMMAL			= 21;
 	public static final short LEXEMID_HIGHERVALUE_BIRD				= 22;
@@ -247,9 +250,11 @@ public final class GroupingOfSimulationObjects {
 	 *
 	 ***************************************************************************************************/
 
+	public static final int LEXEMID_LOWERVALUE_IGNORE				 	= 0b0000000000000000; // 	0
+
 	public static final int LEXEMID_LOWERVALUE_PRIMATE				 	= 0b0000001000000000; // 	512
 	
-	public static final int LEXEMID_LOWERVALUE_HUMAN				 	= 0b0000001000010000; // 	4128
+	public static final int LEXEMID_LOWERVALUE_HUMAN				 	= 0b0000001000010000; // 	528
 	
 	public static final int LEXEMID_LOWERVALUE_DOG				 		= 0b0001000000010000; // 	4112
 	public static final int LEXEMID_LOWERVALUE_CAT				 		= 0b0001000000100000; // 	4128
@@ -286,8 +291,18 @@ public final class GroupingOfSimulationObjects {
 	public static final int LEXEMID_LOWERVALUE_SOCK		 	 			= 0b0000000101010000; // 	336
 	public static final int LEXEMID_LOWERVALUE_GLOVE	 	 			= 0b0000000101100000; // 	352
 	
+	public static final int LEXEMID_LOWERVALUE_APPLE		 			= 0b0000000100010000; // 	272
+	public static final int LEXEMID_LOWERVALUE_BANANA		 			= 0b0000000100100000; // 	288
 
+	public static final int LEXEMID_LOWERVALUE_WATER		 			= 0b0000000100010000; // 	272
 
+	public static final int LEXEMID_LOWERVALUE_HUSKY				 	= 0b0001000000010001; // 	4113
+	public static final int LEXEMID_LOWERVALUE_CHIHUAHUA			 	= 0b0001000000010010; // 	4114
+	
+	public static final int LEXEMID_LOWERVALUE_OSTRICH	 				= 0b0000000100010001; // 	273
+
+	public static final int LEXEMID_LOWERVALUE_STORK			 		= 0b0000100000010001; // 	2065
+	
 	private static  Lexem LEXEM_SOMETHING;
 	private static  Lexem LEXEM_NOTHING; 
 	

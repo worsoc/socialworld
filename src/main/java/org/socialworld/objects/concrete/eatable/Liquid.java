@@ -6,7 +6,11 @@ import org.socialworld.objects.State;
 
 public abstract class Liquid extends Item {
 
-	protected static int getLexemIdHigherValue() {
+///////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////meta information    ////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+	
+	public static int getLexemIdHigherValue() {
 		return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_LIQUID;
 	}
 
@@ -16,6 +20,12 @@ public abstract class Liquid extends Item {
 		return false;
 	}
 
+	
+	@Override
+	protected int getLexemIdHighValue() {
+		return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_LIQUID;
+	}
+	
 	@Override
 	protected State getInitState(String stateClassName) {
 		// TODO Auto-generated method stub

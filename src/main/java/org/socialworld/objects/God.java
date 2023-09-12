@@ -52,6 +52,7 @@ public abstract class God extends SimulationObject {
 		return listOfPropertyMetaInfo;
 	}
 
+	public static int getLexemIdHigherValue() {return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_GOD; }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////
@@ -64,7 +65,8 @@ public abstract class God extends SimulationObject {
 		return SimulationObject_Type.god;
 	}
 
-	protected static int getLexemIdHigherValue() {return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_GOD; }
+	@Override
+	protected int getLexemIdHighValue() {return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_GOD; }
 
 	protected void assignState(StateSimulationObject state) {
 		//if (checkIsMyState(state) ) this.state = (StateGod) state;

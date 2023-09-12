@@ -11,7 +11,12 @@ import org.socialworld.objects.concrete.animals.birds.Coraciimorphae;
 
 public abstract class Psittaciformes extends Coraciimorphae {
 
-	protected static int getLexemIdLowerValue() {
+	public static int getLexemIdLowerValue() {
+		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_PSITTACIFORMES;
+	}
+	
+	@Override
+	protected int getLexemIdLowValue() {
 		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_PSITTACIFORMES;
 	}
 

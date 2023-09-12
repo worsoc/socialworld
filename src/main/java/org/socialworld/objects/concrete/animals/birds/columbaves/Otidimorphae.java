@@ -11,7 +11,12 @@ import org.socialworld.objects.concrete.animals.birds.Columbaves;
 
 public abstract class Otidimorphae extends Columbaves {
 
-	protected static int getLexemIdLowerValue() {
+	public static int getLexemIdLowerValue() {
+		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_OTIDIMORPHAE;
+	}
+
+	@Override
+	protected int getLexemIdLowValue() {
 		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_OTIDIMORPHAE;
 	}
 

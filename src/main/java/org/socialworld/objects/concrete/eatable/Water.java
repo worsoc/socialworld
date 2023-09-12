@@ -2,10 +2,23 @@ package org.socialworld.objects.concrete.eatable;
 
 import org.socialworld.attributes.properties.NutrientSet;
 import org.socialworld.attributes.properties.TasteSet;
+import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.properties.IDrinkable;
 
 public class Water extends Liquid implements IDrinkable{
 
+///////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////meta information    ////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public static int getLexemIdLowerValue() {return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_WATER; }
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////    creating instance for simulation    //////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+	
+	@Override
+	protected int getLexemIdLowValue() {return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_WATER; }
 	
 	@Override
 	public float getTemperature() {

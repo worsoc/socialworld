@@ -21,8 +21,11 @@
 */
 package org.socialworld.datasource.tablesSimulation;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import org.socialworld.attributes.properties.Colour;
 import org.socialworld.attributes.properties.Material;
@@ -30,7 +33,13 @@ import org.socialworld.attributes.properties.Nutrient;
 import org.socialworld.attributes.properties.Taste;
 import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Relation;
+import org.socialworld.conversation.Word_Type;
 import org.socialworld.datasource.mariaDB.Table;
+import org.socialworld.objects.GroupingOfSimulationObjects;
+
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ClassInfoList;
+import io.github.classgraph.ScanResult;
 
 /**
  * @author Mathias Sikos
@@ -182,7 +191,7 @@ public class TableWord extends Table {
 		delete(statement);
 		for(Relation relation : Relation.values()) {
 			lexemID = relation.getLexemID();
-			wordID = lexemID * 100;
+			wordID = lexemID;
 			word = relation.toString();
 			insert(wordID, word, lexemID );
 		}
@@ -204,7 +213,7 @@ public class TableWord extends Table {
 		delete(statement);
 		for(Colour prop : Colour.values()) {
 			lexemID = prop.getLexemID();
-			wordID = lexemID * 100;
+			wordID = lexemID;
 			word = prop.toString();
 			insert(wordID, word, lexemID );
 		}
@@ -216,7 +225,7 @@ public class TableWord extends Table {
 		delete(statement);
 		for(Material prop : Material.values()) {
 			lexemID = prop.getLexemID();
-			wordID = lexemID * 100;
+			wordID = lexemID;
 			word = prop.toString();
 			insert(wordID, word, lexemID );
 		}
@@ -228,7 +237,7 @@ public class TableWord extends Table {
 		delete(statement);
 		for(Nutrient prop : Nutrient.values()) {
 			lexemID = prop.getLexemID();
-			wordID = lexemID * 100;
+			wordID = lexemID;
 			word = prop.toString();
 			insert(wordID, word, lexemID );
 		}
@@ -240,10 +249,82 @@ public class TableWord extends Table {
 		delete(statement);
 		for(Taste prop : Taste.values()) {
 			lexemID = prop.getLexemID();
-			wordID = lexemID * 100;
+			wordID = lexemID;
 			word = prop.toString();
 			insert(wordID, word, lexemID );
 		}
 
 	}
+	
+	public void fillTableForSimObjects() {
+		
+		String statement;
+		int wordTypeNoun = Word_Type.noun.getIndex();
+		
+		statement 	= "DELETE FROM sw_word WHERE " +
+				" lexem_id >= " + Lexem.OFFSET_LEXEMID_NOUN_SIMOBJ +  
+				" and lexem_id < " + (2 *  Lexem.OFFSET_LEXEMID_NOUN_SIMOBJ );
+		delete(statement);
+
+ 		System.out.println("-------------------------------");
+		
+		
+		try (ScanResult result = new ClassGraph().enableClassInfo().enableAnnotationInfo().scan()) {
+//			  .whitelistPackages(getClass().getPackage().getName()).scan()) {
+				    
+				    ClassInfoList classInfos = result.getSubclasses("org.socialworld.objects.SimulationObject");
+				     	classInfos = classInfos.getStandardClasses();
+				     	List<Class<?>> list = classInfos.loadClasses();
+				     	for (Class<?> simObjClass : list) {
+				     		
+				     		String className = simObjClass.getName();
+				     		System.out.print(simObjClass.getName());
+				     		
+ 
+				     		Method methodGetHigherValue;
+				     		Method methodGetLowerValue;
+
+				      		int lexemIdHigherValue = 0;
+				      		int lexemIdLowerValue = 0;
+				     		
+				     		try {
+				     			 methodGetHigherValue = simObjClass.getMethod("getLexemIdHigherValue");
+				     			 lexemIdHigherValue = (int) methodGetHigherValue.invoke(null);
+				     		} catch (SecurityException e) {  }
+				     		  catch (NoSuchMethodException e) { }
+				     		  catch (IllegalArgumentException e) {  }
+				      		  catch (IllegalAccessException e) { }
+				      		  catch (InvocationTargetException e) {  }
+				  
+				      		try {
+				     			 methodGetLowerValue = simObjClass.getMethod("getLexemIdLowerValue");
+				     			 lexemIdLowerValue = (int) methodGetLowerValue.invoke(null);
+				     		} catch (SecurityException e) {  }
+				     		  catch (NoSuchMethodException e) { }
+				     		  catch (IllegalArgumentException e) {  }
+				      		  catch (IllegalAccessException e) { }
+				      		  catch (InvocationTargetException e) {  }
+				    	
+				      		
+						    int lexemID = Lexem.OFFSET_LEXEMID_NOUN_SIMOBJ + lexemIdHigherValue * GroupingOfSimulationObjects.RANGE_FOR_LOWER_VALUE + lexemIdLowerValue;
+				     		System.out.println(" : " + lexemID);
+
+				     		// ignore if both id parts are 0
+				      		if (lexemIdHigherValue  == 0 && lexemIdLowerValue == 0) continue;
+
+				      		// TODO word for the simulation object class
+				      		if (className.length() > 45) {
+								insert(lexemID, className.substring(className.length() - 40) ,  lexemID); 			
+				      		}
+				      		else {
+								insert(lexemID, className ,  lexemID); 					      			
+				      		}
+				     	}
+				}		
+		
+		
+	}
+	
+	
+	
 }

@@ -21,7 +21,7 @@
 */
 package org.socialworld.core;
 
-import org.socialworld.collections.Array;
+import org.socialworld.collections.IntHashMap;
 import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Relation;
 import org.socialworld.conversation.Tense;
@@ -38,8 +38,8 @@ public class AllWords {
 
 	private static AllWords instance;
 
-	private static Array<Lexem> allLexemsbyLexemID;
-	private static Array<Word> allWordsbyWordID;
+	private static IntHashMap allLexemsbyLexemID;
+	private static IntHashMap allWordsbyWordID;
 	
 	private static boolean isLoading = false;
 	
@@ -50,18 +50,25 @@ public class AllWords {
 		isLoading = false;
 	}
 	
+	public static void init() {
+		if ( (instance == null) && (isLoading == false) ) {
+			instance = new AllWords();
+		}
+
+	}
+	
 	public static Lexem getLexem(int lexemID) {
 		if ( (instance == null) && (isLoading == false) ) {
 			instance = new AllWords();
 		}
-		return allLexemsbyLexemID.get(lexemID);
+		return (Lexem) allLexemsbyLexemID.get(lexemID);
 	}
 	
 	public static Word getWord(int wordID) {
 		if  (instance == null) {
 			instance = new AllWords();
 		}
-		return allWordsbyWordID.get(wordID);
+		return (Word) allWordsbyWordID.get(wordID);
 	}
 	
 	public static Relation getRelation(int lexemID, int tenseID) {
@@ -74,7 +81,7 @@ public class AllWords {
 		if  (instance == null) {
 			instance = new AllWords();
 		}
-		return allLexemsbyLexemID.get(lexemID);
+		return (Lexem) allLexemsbyLexemID.get(lexemID);
 	}
 
 	public static void getRelationsLexemAndTense(int relationID, Lexem lexem, Tense tense) {
@@ -82,7 +89,7 @@ public class AllWords {
 		if  (instance == null) {
 			instance = new AllWords();
 		}
-		lexem = allLexemsbyLexemID.get(ids[0]);
+		lexem =  (Lexem) allLexemsbyLexemID.get(ids[0]);
 		tense = Tense.getName(ids[1]);
 		return;
 	}

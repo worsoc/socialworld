@@ -21,7 +21,8 @@
 */
 package org.socialworld.datasource.loadFromDB;
 
-import org.socialworld.collections.Array;
+
+import org.socialworld.collections.IntHashMap;
 import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Word;
 import org.socialworld.conversation.Word_Type;
@@ -127,12 +128,12 @@ public class LoadWords {
 		return result;
 	}
 	
-	public Array<Lexem> getAllLexems() {
+	public IntHashMap getAllLexems() {
 
 		int rowCount;
 		int index;
 
-		Array<Lexem> allLexems;
+		IntHashMap allLexems;
 		
 		int lexem_id;
 		Lexem element;
@@ -145,7 +146,7 @@ public class LoadWords {
 		tableLexem.select(tableLexem.SELECT_ALL_COLUMNS, "", " ORDER BY type");
 		rowCount = tableLexem.rowCount();
 		
-		allLexems = new Array<Lexem>(rowCount);
+		allLexems = new IntHashMap();
 	
 		for (index = 0; index < rowCount; index++) {
 			lexem_id = tableLexem.getLexemID(index);
@@ -157,19 +158,20 @@ public class LoadWords {
 			element = new Lexem(
 					lexem_id, 
 					word_type,
-					 subjectable);					
+					 subjectable);	
+			
 			allLexems.set(lexem_id, element);
 		}
 		
 		return allLexems;
 	}
 
-	public Array<Word> getAllWords() {
+	public IntHashMap getAllWords() {
 		
 		int rowCount;
 		int index;
 		
-		Array<Word> allWords;
+		IntHashMap allWords;
 		
 		int word_id;
 		Word element;
@@ -185,7 +187,7 @@ public class LoadWords {
 		viewWordJoinLexem.select(viewWordJoinLexem.SELECT_ALL_COLUMNS, "", " ORDER BY type");
 		rowCount = viewWordJoinLexem.rowCount();
 		
-		allWords = new Array<Word>(rowCount);
+		allWords = new IntHashMap();
 		
 		for (index = 0; index < rowCount; index++) {
 			word_id = viewWordJoinLexem.getWordID(index);
@@ -194,13 +196,14 @@ public class LoadWords {
 			pronoun_word_id = viewWordJoinLexem.getPronounWordID(index);
 
 			lexem = AllWords.getLexem(lexem_id);
-			pronoun = allWords.get(pronoun_word_id);
+			pronoun = (Word) allWords.get(pronoun_word_id);
 			
 			element = new Word(
 					 word_id, 
 					 word,
 					 lexem,
-					 pronoun);					
+					 pronoun);	
+			
 			allWords.set(word_id, element);
 		}
 		return allWords;

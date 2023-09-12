@@ -10,7 +10,12 @@ import org.socialworld.objects.concrete.animals.StateRunning;
 
 public abstract class Passeriformes extends Bird {
 
-	protected static int getLexemIdLowerValue() {
+	public static int getLexemIdLowerValue() {
+		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_PASSERIFORMES;
+	}
+	
+	@Override
+	protected int getLexemIdLowValue() {
 		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_PASSERIFORMES;
 	}
 

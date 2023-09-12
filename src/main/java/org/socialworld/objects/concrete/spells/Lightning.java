@@ -49,13 +49,20 @@ public class Lightning extends Magic {
 		return listOfPropertyMetaInfo;
 	}
 	
+	public static int getLexemIdHigherValue() {return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_LIGHTNING; }
+	public static int getLexemIdLowerValue() {return 0; }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
-	protected static int getLexemIdHigherValue() {return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_LIGHTNING; }
+	@Override
+	protected int getLexemIdHighValue() {return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_LIGHTNING; }
 
+	@Override
+	protected int getLexemIdLowValue() {return 0; }
+	
+	@Override
 	protected State getInitState(String stateClassName) {
 		if (stateClassName.equals(StatePerceptible.class.getName())) {
 			return new StatePerceptible(this);

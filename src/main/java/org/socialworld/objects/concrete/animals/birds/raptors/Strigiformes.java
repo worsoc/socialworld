@@ -11,10 +11,15 @@ import org.socialworld.objects.concrete.animals.birds.Raptor;
 
 public abstract class Strigiformes extends Raptor {
 
-	protected static int getLexemIdLowerValue() {
+	public static int getLexemIdLowerValue() {
 		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_STRIGIFORMES;
 	}
 
+	@Override
+	protected int getLexemIdLowValue() {
+		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_STRIGIFORMES;
+	}
+	
 	@Override
 	public boolean checkObjectBelongsToGroup(int groupNumberSuffix) {
 		// TODO Auto-generated method stub

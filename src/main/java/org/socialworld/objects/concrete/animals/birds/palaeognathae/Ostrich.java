@@ -5,6 +5,7 @@ import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
+import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.concrete.animals.IRunning;
 import org.socialworld.objects.concrete.animals.StateRunning;
 import org.socialworld.objects.concrete.animals.birds.Palaeognathae;
@@ -12,6 +13,15 @@ import org.socialworld.objects.concrete.animals.birds.Palaeognathae;
 public class Ostrich extends Palaeognathae implements IRunning{
 	
 	private StateRunning stateRunning = StateRunning.getObjectNothing();
+
+	public static int getLexemIdLowerValue() {
+		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_OSTRICH;
+	}
+	
+	@Override
+	protected int getLexemIdLowValue() {
+		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_OSTRICH;
+	}
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// implementing IRunning ///////////////////////////////////

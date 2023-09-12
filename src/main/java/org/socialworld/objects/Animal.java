@@ -94,6 +94,8 @@ public abstract class Animal extends SimulationObject implements ISeer, IRunning
 		return listOfResultingKFCs;
 	}
 
+	public static int getLexemIdHigherValue() {return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_ANIMAL; }
+	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -109,7 +111,8 @@ public abstract class Animal extends SimulationObject implements ISeer, IRunning
 		return SimulationObject_Type.animal;
 	}
 
-	protected static int getLexemIdHigherValue() {return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_ANIMAL; }
+	@Override
+	protected int getLexemIdHighValue() {return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_ANIMAL; }
 
 	protected void assignState(StateSimulationObject state) {
 		if (checkIsMyState(state) ) this.state = (StateAnimal) state;

@@ -1,5 +1,6 @@
 package org.socialworld.objects.concrete.eatable.fruits;
 
+import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.eatable.Fruit;
 import org.socialworld.objects.properties.IEatable;
@@ -7,6 +8,27 @@ import org.socialworld.objects.properties.IThrowable;
 
 public class Banana extends Fruit implements IEatable, IThrowable{
 
+///////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////meta information    ////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+	
+	public static int getLexemIdLowerValue() {return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_BANANA; }
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////    creating instance for simulation    //////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+
+	@Override
+	protected int getLexemIdLowValue() {return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_BANANA; }
+	
+	
+	@Override
+	protected State getInitState(String stateClassName) {
+		// TODO Auto-generated method stub
+		return State.getObjectNothing();
+	}
+	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// implementing IEatable ///////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -27,23 +49,14 @@ public class Banana extends Fruit implements IEatable, IThrowable{
 
 
 
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////checking whether the class belongs to a sub set of classes //////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+	
 	@Override
 	public boolean checkObjectBelongsToGroup(int groupNumberSuffix) {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
-	protected int getGNS()  // GroupingNumberSuffix
-	{
-		return 2;
-	}
-
-	
-	@Override
-	protected State getInitState(String stateClassName) {
-		// TODO Auto-generated method stub
-		return State.getObjectNothing();
-	}
-
 	
 }
