@@ -470,11 +470,6 @@ public class Expression {
 					int subType;
 					type = Type.getName((int) value.getValue());
 					
-					// DEBUG
-					if (type == Type.knowledgeAtom) {
-						int myBreakPoint = 0;
-						myBreakPoint = 1;
-					}
 					subType = (int) expression1.evaluate().getValue();
 					name = (String) expression3.evaluate().getValue();
 					

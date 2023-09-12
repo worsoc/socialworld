@@ -127,10 +127,6 @@ public class StateAppearance extends State {
 		int rowTable = tableState.loadForObjectID(objectID) ;
 		if (rowTable >= 0) {
 			colourSet = tableState.getColourSetFromRow(rowTable);
-			if (objectID > 3) {
-				int myBreakpoint = 0;
-				myBreakpoint++;
-			}
 		}
 		return returnFromInit(tableState, lockingID, rowTable);
 	}

@@ -6,9 +6,6 @@ public class IntHashMap {
 	
 	public void set(int id, Object value) {
 	
-		if (id == 1002100528) {
-			int myBreakpoint = 0;
-		}
 		byte[] idsPerLevel = getIDsPerLevel(id);
 
 		IntHashMapNode node = this.startNode;
@@ -36,9 +33,6 @@ public class IntHashMap {
 	
 	public Object get(int id) {
 		
-		if (id == 1002100528) {
-			int myBreakpoint = 0;
-		}
 		byte[] idsPerLevel = getIDsPerLevel(id);
 		
 		IntHashMapNode node = this.startNode;
