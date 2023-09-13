@@ -214,4 +214,11 @@ public abstract class KnowledgeRelation extends KnowledgeFact {
 		
 	}
 
+	public String toString() {
+		String output;
+		output = (verb == null ? "" : verb.toString()) + ", " +
+				 (tense == null ? "" : tense.toString()) + ", " +
+				 (adverb == null ? "" : adverb.toString()) ;
+		return output;
+	}
 }

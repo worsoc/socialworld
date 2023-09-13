@@ -21,8 +21,6 @@
 */
 package org.socialworld.knowledge;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
@@ -64,5 +62,10 @@ public class KnowledgeValue extends KnowledgeItem {
 		return this.value.getName();
 	}
 
+	public String toString() {
+		String output = "";
+		output =  (value == null ? "" : value.toString());
+		return output;
+	}
 
 }

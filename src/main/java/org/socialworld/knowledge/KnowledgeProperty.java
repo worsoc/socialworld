@@ -98,4 +98,10 @@ public class KnowledgeProperty extends KnowledgeFact {
 		return result;
 	}
 
+	public String toString() {
+		String output = "";
+		output = output + criterion.toString() + ":" + atoms.toString();
+		return output;
+	}
+
 }

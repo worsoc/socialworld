@@ -113,5 +113,16 @@ public class KnowledgeElement {
 		this.getAtomList().combineWith(keB.getAtomList());
 	}
 
-
+	public String toString() {
+		String output;
+		if (source == null || subject == null) {
+			output = "---\n";
+		}
+		else {
+			output = source.toString() + ", subject: " + subject.toString() + "\n";
+			output = output + knowledgeItemList.toString();
+			output = output + "\n";
+		}
+		return output;
+	}
 }

@@ -693,5 +693,12 @@ final class KnowledgeItemList  {
 
 	}
 
-	
+	public String toString() {
+		String output = "[";
+		for (KnowledgeItemWithMetaInfo ki : itemSearchList) {
+			output = output + "\n" + ki.item.toString();
+		}
+		output = output + "\n" + "]";
+		return output;
+	}	
 }

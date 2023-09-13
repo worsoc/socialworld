@@ -119,4 +119,12 @@ public class KnowledgeRelationTrinaer extends KnowledgeRelation {
 		return isEqual;
 	}
 
+	public String toString() {
+		String output;
+		output = super.toString() + ", " +
+				(object1 == null ? "" : object1.toString()) + ", " +
+				(object2 == null ? "" : object2.toString()) ;
+		return output;
+	}
+
 }

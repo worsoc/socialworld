@@ -48,4 +48,15 @@ public class KnowledgeSource {
 	public boolean equals(KnowledgeSource b) {
 		return (this.type == b.type & this.origin.equals(b.origin));
 	}
+	
+	public String toString() {
+		String output;
+		if (type == null || origin == null) {
+			output = "()";
+		}
+		else {
+			output = "(" + type.toString() + ", OID: " + origin.toString() + ")";
+		}
+		return output;
+	}
 }

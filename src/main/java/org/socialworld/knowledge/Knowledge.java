@@ -32,7 +32,6 @@ import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.collections.ReadOnlyIterator;
 import org.socialworld.conversation.Lexem;
-import org.socialworld.conversation.Numerus;
 import org.socialworld.conversation.SpeechRecognition;
 import org.socialworld.conversation.SubjectOrObject;
 
@@ -122,6 +121,7 @@ public class Knowledge extends SimProperty {
 		knowledgeElementList[index] = knowledgeElement;
 		accessCount[index] = 0;
 		
+	
 	}
 	
 	public void addFactsFromSentence(String sentence, KnowledgeSource source) {
@@ -437,5 +437,15 @@ public class Knowledge extends SimProperty {
 		}
 		return indexWithFewestAccess;
 		
+	}
+	
+	public String toString() {
+		String output = "{";
+		for (KnowledgeElement ke : knowledgeElementList) {
+			if (ke == null) continue;
+			output = output + "\n" + ke.toString();
+		}
+		output = output + "}";
+		return output;
 	}
 }

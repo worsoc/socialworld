@@ -109,4 +109,17 @@ public class KnowledgeFact_Atoms {
 		
 		return isEqual;
 	}
+	
+	public String toString() {
+		String output = "<";
+		int index = 0;
+		for (KnowledgeFactAtom kfa : atoms) {
+			if (index > 0) output = output + ","; 
+			output = output +  kfa.toString();
+			index++;
+		}
+		output = output + ">";
+		return output;
+	}
+	
 }

@@ -72,6 +72,11 @@ public class KnowledgeRelationUnaer extends KnowledgeRelation {
 		return result;
 	}
 
+	public String toString() {
+		String output;
+		output = super.toString() ;
+		return output;
+	}
 
 	
 }

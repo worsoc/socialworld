@@ -120,4 +120,20 @@ public class KnowledgeFactAtom {
 		return isEqual;
 	}
 
+	public String toString() {
+		String output = "";
+		if (value == null && lexem == null) output = "(---)";
+		else {
+			output = output + "(" + type.toString() + ": ";
+			switch (type) {
+			case value:	
+				output = output + (value == null ? "" : value.toString());
+			case lexem:	
+				output = output + (lexem == null ? "" : lexem.toString());
+			}
+			output = output + ")";
+		}
+		return output;
+	}
+		
 }

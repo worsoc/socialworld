@@ -100,4 +100,10 @@ public class Lexem {
 		return new ReadOnlyIterator<KnowledgeFact_Criterion>(criterions.iterator());
 	}
 
+	public String toString() {
+		String output;
+		output = "" + lexemID;
+		return output;
+	}
+	
 }

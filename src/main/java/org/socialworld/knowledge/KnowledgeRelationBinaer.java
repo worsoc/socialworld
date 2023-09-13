@@ -103,5 +103,11 @@ public class KnowledgeRelationBinaer extends KnowledgeRelation {
 		return isEqual;
 	}
 
+	public String toString() {
+		String output;
+		output = super.toString() + ", " +
+				(object == null ? "" : object.toString());
+		return output;
+	}
 
 }
