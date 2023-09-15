@@ -37,6 +37,7 @@ import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.enums.EnumLiquid;
 import org.socialworld.objects.enums.EnumMammal;
 import org.socialworld.objects.statics.GetEnumSimObjForClassName;
+import org.socialworld.objects.statics.GetLexemIDHigherPartFromMapping;
 import org.socialworld.objects.statics.GetLexemIDLowerPartFromMapping;
 import org.socialworld.objects.statics.Mapping_Bird2LexemIDLowerPart;
 import org.socialworld.objects.statics.Mapping_Food2LexemIDLowerPart;
@@ -182,33 +183,19 @@ public class SimObjectsCompletelyImplemented {
 		     		
 		     		className = simObjClass.getName();
 		     		
-		     		Method methodGetHigherValue;
-
 		      		int lexemIdLowerValue  = GetLexemIDLowerPartFromMapping.getForClassName(className);
 		     		if (lexemIdLowerValue == Constants.MAPPING_NO_ENTRY_FOR_KEY) continue;
 	      		 
 		     		
-		      		int lexemIdHigherValue = Constants.MAPPING_NO_ENTRY_FOR_KEY;
-		      		
-		     		
-		     		try {
-		     			 methodGetHigherValue = simObjClass.getMethod(METHOD_NAME_GetLexemIdHigherValue);
-		     			 lexemIdHigherValue = (int) methodGetHigherValue.invoke(null);
-		     		} catch (SecurityException e) {  }
-		     		  catch (NoSuchMethodException e) { }
-		     		  catch (IllegalArgumentException e) {  }
-		      		  catch (IllegalAccessException e) { }
-		      		  catch (InvocationTargetException e) {  }
-		     		
+		      		int lexemIdHigherValue = GetLexemIDHigherPartFromMapping.getForClassName(className);
 		     		if (lexemIdHigherValue == Constants.MAPPING_NO_ENTRY_FOR_KEY) continue;
-		  
-		    	
+	    	
 		     		// ignore if both id parts are 0
 		      		if (lexemIdHigherValue  == GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_IGNORE &&
 		      				lexemIdLowerValue == GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_IGNORE) continue;
 		      		
 				    int lexemID = Lexem.OFFSET_LEXEMID_NOUN_SIMOBJ + lexemIdHigherValue * GroupingOfSimulationObjects.RANGE_FOR_LOWER_VALUE + lexemIdLowerValue;
-				    	
+			    	
 				    Object firstSimObjClassWithLexemID =  simObjClassNameForLexemID.get(lexemID);
 				    String firstClassName =  (firstSimObjClassWithLexemID == null ? "" : (String) firstSimObjClassWithLexemID);
 

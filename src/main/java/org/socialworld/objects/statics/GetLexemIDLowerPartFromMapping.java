@@ -22,6 +22,8 @@
 package org.socialworld.objects.statics;
 
 import org.socialworld.Constants;
+import org.socialworld.objects.GroupingOfSimulationObjects;
+import org.socialworld.objects.enums.EnumBaseSimObj;
 import org.socialworld.objects.enums.EnumBird;
 import org.socialworld.objects.enums.EnumFood;
 import org.socialworld.objects.enums.EnumHumanCrafted;
@@ -33,6 +35,14 @@ public class GetLexemIDLowerPartFromMapping {
 	
 	public static int getForClassName(String className) {
 		
+		{
+			EnumBaseSimObj key = EnumBaseSimObj.getName(className);
+			if (key != EnumBaseSimObj.ignore) {
+				return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_IGNORE;
+			}
+		}
+
+
 		{
 			EnumBird key = EnumBird.getName(className);
 			if (key != EnumBird.ignore) {
