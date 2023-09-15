@@ -3,6 +3,7 @@ package org.socialworld.objects.concrete.eatable.fruits;
 import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.eatable.Fruit;
+import org.socialworld.objects.enums.EnumFood;
 import org.socialworld.objects.properties.IEatable;
 import org.socialworld.objects.properties.IThrowable;
 
@@ -18,9 +19,11 @@ public class Banana extends Fruit implements IEatable, IThrowable{
 /////////////////////////    creating instance for simulation    //////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
+	public Banana() {
+		super();
+		belongsTo = EnumFood.Banana;
+	}
 
-	@Override
-	protected int getLexemIdLowValue() {return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_BANANA; }
 	
 	
 	@Override

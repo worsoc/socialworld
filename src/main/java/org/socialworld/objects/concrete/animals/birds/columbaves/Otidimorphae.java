@@ -8,17 +8,24 @@ import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.animals.StateRunning;
 
 import org.socialworld.objects.concrete.animals.birds.Columbaves;
+import org.socialworld.objects.enums.EnumBird;
 
 public abstract class Otidimorphae extends Columbaves {
 
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////    creating instance for simulation    //////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+	
+	public Otidimorphae() {
+		super();
+		belongsTo = EnumBird.Otidimorphae;
+	}
+	
 	public static int getLexemIdLowerValue() {
 		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_OTIDIMORPHAE;
 	}
 
-	@Override
-	protected int getLexemIdLowValue() {
-		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_OTIDIMORPHAE;
-	}
+
 
 	@Override
 	public boolean checkObjectBelongsToGroup(int groupNumberSuffix) {

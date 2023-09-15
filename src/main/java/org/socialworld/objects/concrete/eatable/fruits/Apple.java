@@ -30,6 +30,7 @@ import org.socialworld.objects.concrete.StateComposition;
 import org.socialworld.objects.concrete.StateEatable;
 import org.socialworld.objects.concrete.StatePerceptible;
 import org.socialworld.objects.concrete.eatable.Fruit;
+import org.socialworld.objects.enums.EnumFood;
 import org.socialworld.objects.properties.IEatable;
 import org.socialworld.objects.properties.IThrowable;
 import org.socialworld.tools.StringTupel;
@@ -59,10 +60,9 @@ public class Apple extends Fruit implements IEatable, IThrowable {
 
 	public Apple() {
 		super();
+		belongsTo = EnumFood.Apple;
 	}
 
-	@Override
-	protected int getLexemIdLowValue() {return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_BANANA; }
 
 	
 	@Override

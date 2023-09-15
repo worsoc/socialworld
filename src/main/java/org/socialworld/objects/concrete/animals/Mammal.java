@@ -33,6 +33,8 @@ import org.socialworld.core.IEventParam;
 import org.socialworld.objects.Animal;
 import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.State;
+import org.socialworld.objects.enums.EnumMammal;
+import org.socialworld.objects.statics.Mapping_Mammal2LexemIDLowerPart;
 import org.socialworld.tools.StringTupel;
 
 /**
@@ -41,6 +43,8 @@ import org.socialworld.tools.StringTupel;
  */
 public abstract class Mammal extends Animal implements IRunning{
 
+	protected EnumMammal belongsTo;
+	
 	private StateRunning stateRunning = StateRunning.getObjectNothing();
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -73,6 +77,11 @@ public abstract class Mammal extends Animal implements IRunning{
 	@Override
 	protected int getLexemIdHighValue() {
 		return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_MAMMAL;
+	}
+
+	@Override
+	protected final int getLexemIdLowPart() {
+		return Mapping_Mammal2LexemIDLowerPart.getInstance().get(belongsTo);
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////

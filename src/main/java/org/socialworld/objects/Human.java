@@ -84,10 +84,6 @@ import org.socialworld.core.IEventParam;
 		return SimulationObject_Type.human;
 	}
 
-	@Override
-	protected int getLexemIdLowValue() {
-		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_HUMAN;
-	}
 
 	
 	protected void init() {

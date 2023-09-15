@@ -29,6 +29,7 @@ import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.StatePerceptible;
 import org.socialworld.objects.concrete.animals.Mammal;
 import org.socialworld.objects.concrete.animals.StateSeer;
+import org.socialworld.objects.enums.EnumMammal;
 import org.socialworld.tools.StringTupel;
 
 public abstract class Dog extends Mammal {
@@ -58,10 +59,12 @@ public abstract class Dog extends Mammal {
 /////////////////////////    creating instance for simulation    //////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
-	@Override
-	protected int getLexemIdLowValue() {
-		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_DOG;
+	public Dog() {
+		super();
+		belongsTo = EnumMammal.Dog;
 	}
+
+
 
 	protected State getInitState(String stateClassName) {
 		if (stateClassName.equals(StatePerceptible.class.getName())) {

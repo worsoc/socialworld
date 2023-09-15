@@ -7,17 +7,24 @@ import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.animals.Bird;
 import org.socialworld.objects.concrete.animals.StateRunning;
+import org.socialworld.objects.enums.EnumBird;
 
 public abstract class Strisores extends Bird {
 
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////    creating instance for simulation    //////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+	
+	public Strisores() {
+		super();
+		belongsTo = EnumBird.Strisores;
+	}
+	
 	public static int getLexemIdLowerValue() {
 		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_STRISORES;
 	}
 	
-	@Override
-	protected int getLexemIdLowValue() {
-		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_STRISORES;
-	}
+
 
 	@Override
 	public boolean checkObjectBelongsToGroup(int groupNumberSuffix) {

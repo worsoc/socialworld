@@ -11,11 +11,21 @@ import org.socialworld.objects.concrete.animals.IRunning;
 import org.socialworld.objects.concrete.animals.StateFlying;
 import org.socialworld.objects.concrete.animals.StateRunning;
 import org.socialworld.objects.concrete.animals.birds.Aequorlithornithes;
+import org.socialworld.objects.enums.EnumBird;
 
 
 
 public class Stork extends Aequorlithornithes implements IFlying , IRunning{
 
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////    creating instance for simulation    //////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+	
+	public Stork() {
+		super();
+		belongsTo = EnumBird.Stork;
+	}
+	
 	// add on states
 	private StateFlying stateFlying = StateFlying.getObjectNothing();
 	private StateRunning stateRunning = StateRunning.getObjectNothing();
@@ -24,10 +34,7 @@ public class Stork extends Aequorlithornithes implements IFlying , IRunning{
 		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_STORK;
 	}
 	
-	@Override
-	protected int getLexemIdLowValue() {
-		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_STORK;
-	}
+
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// implementing IFlying ///////////////////////////////////

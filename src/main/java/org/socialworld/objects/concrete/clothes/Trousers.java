@@ -2,6 +2,7 @@ package org.socialworld.objects.concrete.clothes;
 
 import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.concrete.HumanCrafted;
+import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.IWearable;
 
 public abstract class Trousers extends HumanCrafted implements IWearable {
@@ -10,10 +11,16 @@ public abstract class Trousers extends HumanCrafted implements IWearable {
 		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_TROUSERS;
 	}
 
-	@Override
-	protected int getLexemIdLowValue() {
-		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_TROUSERS;
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////    creating instance for simulation    //////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+	
+	public Trousers() {
+		super();
+		belongsTo = EnumHumanCrafted.Trousers;
 	}
+
+
 
 	public boolean isLeftHandGlove() {return false; }
 	public boolean isRightHandGlove() {return false; }

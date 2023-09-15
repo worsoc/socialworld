@@ -8,17 +8,24 @@ import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.animals.StateRunning;
 
 import org.socialworld.objects.concrete.animals.birds.Passeriformes;
+import org.socialworld.objects.enums.EnumBird;
 
 public abstract class Oscines extends Passeriformes {
 
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////    creating instance for simulation    //////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+	
+	public Oscines() {
+		super();
+		belongsTo = EnumBird.Oscines;
+	}
+	
 	public static int getLexemIdLowerValue() {
 		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_OSCINES;
 	}
 	
-	@Override
-	protected int getLexemIdLowValue() {
-		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_OSCINES;
-	}
+
 
 	@Override
 	public boolean checkObjectBelongsToGroup(int groupNumberSuffix) {

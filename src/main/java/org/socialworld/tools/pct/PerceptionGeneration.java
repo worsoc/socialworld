@@ -711,7 +711,7 @@ public class PerceptionGeneration extends Generation{
 		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_LIQUIDS);
 		
 		// for GROUPING_NUMBER_ALL_EATABLES 
-		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_EATABLES);
+		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_FOODS);
 		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_FRUITS);
 		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_VEGGIES);
 		allGroupingNumbers.add(GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_MEATS);

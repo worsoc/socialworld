@@ -8,17 +8,24 @@ import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.animals.StateRunning;
 
 import org.socialworld.objects.concrete.animals.birds.Coraciimorphae;
+import org.socialworld.objects.enums.EnumBird;
 
 public abstract class Psittaciformes extends Coraciimorphae {
 
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////    creating instance for simulation    //////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+	
+	public Psittaciformes() {
+		super();
+		belongsTo = EnumBird.Psittaciformes;
+	}
+	
 	public static int getLexemIdLowerValue() {
 		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_PSITTACIFORMES;
 	}
 	
-	@Override
-	protected int getLexemIdLowValue() {
-		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_PSITTACIFORMES;
-	}
+
 
 	@Override
 	public boolean checkObjectBelongsToGroup(int groupNumberSuffix) {

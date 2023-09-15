@@ -8,20 +8,29 @@ import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.concrete.animals.IRunning;
 import org.socialworld.objects.concrete.animals.StateRunning;
+import org.socialworld.objects.enums.EnumMammal;
 
 public class Chihuahua extends Dog implements IRunning{
 
 	private StateRunning stateRunning = StateRunning.getObjectNothing();
 
+	
+	
 	public static int getLexemIdLowerValue() {
 		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_CHIHUAHUA;
 	}
 	
-	@Override
-	protected int getLexemIdLowValue() {
-		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_CHIHUAHUA;
-	}
+
 	
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////    creating instance for simulation    //////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public Chihuahua() {
+		super();
+		belongsTo = EnumMammal.Chihuahua;
+	}
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// implementing IRunning ///////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////

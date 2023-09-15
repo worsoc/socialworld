@@ -130,7 +130,7 @@ public class SimulationMetaInformation {
 						// TEMP_SOLUTION
 						result = Animal.getPropertiesMetaInfos(); break;
 
-					case GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_EATABLES: 
+					case GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_FOODS: 
 						// TEMP_SOLUTION
 						result = Fruit.getPropertiesMetaInfos(); break;
 					case GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_FRUITS: result = Fruit.getPropertiesMetaInfos(); break;
@@ -250,7 +250,7 @@ public class SimulationMetaInformation {
 						// TEMP_SOLUTION
 						returnableKFCs = Animal.getResultingKFCs(); break;
 
-					case GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_EATABLES: 
+					case GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_FOODS: 
 						// TEMP_SOLUTION
 						returnableKFCs = Fruit.getResultingKFCs(); break;
 					case GroupingOfSimulationObjects.GROUPING_NUMBER_ALL_FRUITS: returnableKFCs = Fruit.getResultingKFCs(); break;

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.State;
+import org.socialworld.objects.enums.EnumMammal;
 import org.socialworld.tools.StringTupel;
 
 public abstract class Primate extends Mammal {
@@ -43,13 +44,10 @@ public abstract class Primate extends Mammal {
 	
 	public Primate() {
 		super();
+		belongsTo = EnumMammal.Primate;
 	}
 	
 	
-	@Override
-	protected int getLexemIdLowValue() {
-		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_PRIMATE;
-	}
 
 	@Override
 	protected State getInitState(String stateClassName) {

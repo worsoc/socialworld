@@ -60,7 +60,7 @@ public class Weather extends God {
 	protected int getLexemIdHighValue() {return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_WEATHER; }
 
 	@Override
-	protected int getLexemIdLowValue() {return 0; }
+	protected int getLexemIdLowPart() {return 0; }
 	
 	@Override
 	protected State getInitState(String stateClassName) {

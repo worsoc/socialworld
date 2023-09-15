@@ -16,7 +16,7 @@ public class NoSimulationObject extends SimulationObject {
 	public static int getLexemIdLowerValue() {return 0;}  // GroupingNumberSuffix
 
 	protected int getLexemIdHighValue() { return 0;}
-	protected int getLexemIdLowValue() { return 0;}
+	protected int getLexemIdLowPart() { return 0;}
 
 	@Override
 	public final boolean isSimulationObject() {return false;}

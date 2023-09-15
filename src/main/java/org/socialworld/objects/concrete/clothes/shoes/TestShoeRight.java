@@ -20,11 +20,7 @@ public class TestShoeRight extends Shoe {
 	protected int getLexemIdHighValue() {
 		return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_IGNORE;
 	}
-	@Override
-	protected int getLexemIdLowValue() {
-		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_IGNORE;
-	}
-	
+
 	
 	@Override
 	public boolean isLeftFootShoe() {

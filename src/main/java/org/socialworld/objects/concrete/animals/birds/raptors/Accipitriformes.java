@@ -8,17 +8,23 @@ import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.animals.StateRunning;
 
 import org.socialworld.objects.concrete.animals.birds.Raptor;
+import org.socialworld.objects.enums.EnumBird;
 
 public abstract class Accipitriformes extends Raptor {
 
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////    creating instance for simulation    //////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+	
+	public Accipitriformes() {
+		super();
+		belongsTo = EnumBird.Accipitriformes;
+	}
+	
 	public static int getLexemIdLowerValue() {
 		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_ACCIPITRIFORMES;
 	}
-	
-	@Override
-	protected int getLexemIdLowValue() {
-		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_ACCIPITRIFORMES;
-	}
+
 
 	@Override
 	public boolean checkObjectBelongsToGroup(int groupNumberSuffix) {

@@ -7,17 +7,23 @@ import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.animals.Bird;
 import org.socialworld.objects.concrete.animals.StateRunning;
+import org.socialworld.objects.enums.EnumBird;
 
 public abstract class Coraciimorphae extends Bird {
+
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////    creating instance for simulation    //////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+	
+	public Coraciimorphae() {
+		super();
+		belongsTo = EnumBird.Coraciimorphae;
+	}
 
 	public static int getLexemIdLowerValue() {
 		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_CORACIIMORPHAE;
 	}
 	
-	@Override
-	protected int getLexemIdLowValue() {
-		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_CORACIIMORPHAE;
-	}
 
 	@Override
 	public boolean checkObjectBelongsToGroup(int groupNumberSuffix) {

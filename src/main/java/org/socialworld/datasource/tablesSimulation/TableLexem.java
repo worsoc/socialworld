@@ -33,7 +33,8 @@ import io.github.classgraph.ClassInfoList;
 
 import org.socialworld.datasource.mariaDB.Table;
 import org.socialworld.objects.GroupingOfSimulationObjects;
-import org.socialworld.objects.SimulationObject;
+import org.socialworld.objects.statics.GetLexemIDLowerPartFromMapping;
+import org.socialworld.Constants;
 import org.socialworld.attributes.properties.Colour;
 import org.socialworld.attributes.properties.Material;
 import org.socialworld.attributes.properties.Nutrient;
@@ -41,7 +42,6 @@ import org.socialworld.attributes.properties.Taste;
 import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Relation;
 import org.socialworld.conversation.Word_Type;
-import org.socialworld.core.AllWords;
 
 public class TableLexem extends Table {
 
@@ -246,20 +246,23 @@ public class TableLexem extends Table {
 		try (ScanResult result = new ClassGraph().enableClassInfo().enableAnnotationInfo().scan()) {
 //			  .whitelistPackages(getClass().getPackage().getName()).scan()) {
 				    
+					String className;
+					
 				    ClassInfoList classInfos = result.getSubclasses("org.socialworld.objects.SimulationObject");
 				     	classInfos = classInfos.getStandardClasses();
 				     	List<Class<?>> list = classInfos.loadClasses();
 				     	for (Class<?> simObjClass : list) {
 				     		
-				     		System.out.print(simObjClass.getName());
+				     		className = simObjClass.getName();
+				     		System.out.print(className);
 				     		
- 
+				     		int lexemIdLowerValue = GetLexemIDLowerPartFromMapping.getForClassName(className);
+				     		if (lexemIdLowerValue == Constants.MAPPING_NO_ENTRY_FOR_KEY) continue;
+				     		
 				     		Method methodGetHigherValue;
-				     		Method methodGetLowerValue;
-
-				      		int lexemIdHigherValue = 0;
-				      		int lexemIdLowerValue = 0;
-				     		
+		
+				      		int lexemIdHigherValue = Constants.MAPPING_NO_ENTRY_FOR_KEY;
+ 		
 				     		try {
 				     			 methodGetHigherValue = simObjClass.getMethod("getLexemIdHigherValue");
 				     			 lexemIdHigherValue = (int) methodGetHigherValue.invoke(null);
@@ -269,21 +272,15 @@ public class TableLexem extends Table {
 				      		  catch (IllegalAccessException e) { }
 				      		  catch (InvocationTargetException e) {  }
 				  
-				      		try {
-				     			 methodGetLowerValue = simObjClass.getMethod("getLexemIdLowerValue");
-				     			 lexemIdLowerValue = (int) methodGetLowerValue.invoke(null);
-				     		} catch (SecurityException e) {  }
-				     		  catch (NoSuchMethodException e) { }
-				     		  catch (IllegalArgumentException e) {  }
-				      		  catch (IllegalAccessException e) { }
-				      		  catch (InvocationTargetException e) {  }
-				    	
+				     		if (lexemIdHigherValue == Constants.MAPPING_NO_ENTRY_FOR_KEY) continue;
+			    	
 				      		
 						    int lexemID = Lexem.OFFSET_LEXEMID_NOUN_SIMOBJ + lexemIdHigherValue * GroupingOfSimulationObjects.RANGE_FOR_LOWER_VALUE + lexemIdLowerValue;
 				     		System.out.println(" : " + lexemID);
 
 				     		// ignore if both id parts are 0
-				      		if (lexemIdHigherValue  == 0 && lexemIdLowerValue == 0) continue;
+				      		if (lexemIdHigherValue  == GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_IGNORE &&
+				      				lexemIdLowerValue == GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_IGNORE) continue;
 
 							insert(lexemID,  1,  wordTypeNoun);
 

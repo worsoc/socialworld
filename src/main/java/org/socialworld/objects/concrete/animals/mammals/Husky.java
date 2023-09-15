@@ -8,6 +8,7 @@ import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.concrete.animals.IRunning;
 import org.socialworld.objects.concrete.animals.StateRunning;
+import org.socialworld.objects.enums.EnumMammal;
 
 public class Husky extends Dog implements IRunning {
 	
@@ -18,11 +19,17 @@ public class Husky extends Dog implements IRunning {
 		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_HUSKY;
 	}
 	
-	@Override
-	protected int getLexemIdLowValue() {
-		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_HUSKY;
-	}
+
 	
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////    creating instance for simulation    //////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public Husky() {
+		super();
+		belongsTo = EnumMammal.Husky;
+	}
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// implementing IRunning ///////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////

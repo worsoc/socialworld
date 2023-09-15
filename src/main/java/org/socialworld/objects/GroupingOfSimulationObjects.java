@@ -165,7 +165,7 @@ public final class GroupingOfSimulationObjects {
 	public static final int GROUPING_NUMBER_ALL_LIQUIDS 			= 0b00001000000000011111111111111111;	// 134348799
 	
 	
-	public static final int GROUPING_NUMBER_ALL_EATABLES 			= 0b00001000000100001111111111111111;	// 135331839
+	public static final int GROUPING_NUMBER_ALL_FOODS 				= 0b00001000000100001111111111111111;	// 135331839
 	public static final int GROUPING_NUMBER_ALL_FRUITS 				= 0b00001000000100000000000111111111;	// 135266815
 	public static final int GROUPING_NUMBER_ALL_VEGGIES 			= 0b00001000000100000000001011111111;	// 135267071
 	public static final int GROUPING_NUMBER_ALL_MEATS 				= 0b00001000000100000000001111111111;	// 135267327
@@ -234,7 +234,7 @@ public final class GroupingOfSimulationObjects {
 	public static final short LEXEMID_HIGHERVALUE_SOLID		 		= 42;
 	public static final short LEXEMID_HIGHERVALUE_ANIMALPART		= 43;
 	public static final short LEXEMID_HIGHERVALUE_PLANTPART		 	= 44;
-	public static final short LEXEMID_HIGHERVALUE_EATABLE		 	= 45;
+	public static final short LEXEMID_HIGHERVALUE_FOOD		 		= 45;
 	public static final short LEXEMID_HIGHERVALUE_HUMANCRAFTED	 	= 46;
 	
 	public static final short LEXEMID_HIGHERVALUE_GOD			 	= 50;

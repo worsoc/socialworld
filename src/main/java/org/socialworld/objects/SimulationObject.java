@@ -138,7 +138,7 @@ public abstract class SimulationObject implements IPerceptible {
 		this.justCreated = true;
 		this.guard = null;
 		
-		this.lexem = AllWords.getLexem(Lexem.OFFSET_LEXEMID_NOUN_SIMOBJ + getLexemIdHighValue() * GroupingOfSimulationObjects.RANGE_FOR_LOWER_VALUE + getLexemIdLowValue());
+		this.lexem = AllWords.getLexem(Lexem.OFFSET_LEXEMID_NOUN_SIMOBJ + getLexemIdHighValue() * GroupingOfSimulationObjects.RANGE_FOR_LOWER_VALUE + getLexemIdLowPart());
 		
 		this.actionHandler = new ActionHandler(this);
 		
@@ -201,7 +201,7 @@ public abstract class SimulationObject implements IPerceptible {
 	}
 	
 	protected abstract int getLexemIdHighValue();
-	protected abstract int getLexemIdLowValue() ;  // GroupingNumberSuffix
+	protected abstract int getLexemIdLowPart() ;  // GroupingNumberSuffix
 	// TODO assign grouping number lower value ... in getLexemIdLowValue() in sub classes
 	public static int getLexemIdHigherValue() {return 0;}  
 	public static int getLexemIdLowerValue() {return 0;}  // GroupingNumberSuffix

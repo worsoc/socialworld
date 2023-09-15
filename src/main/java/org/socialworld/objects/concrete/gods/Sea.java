@@ -21,7 +21,7 @@ public class Sea extends God {
 	protected int getLexemIdHighValue() {return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_SEA; }
 
 	@Override
-	protected int getLexemIdLowValue() {return 0; }
+	protected int getLexemIdLowPart() {return 0; }
 
 	@Override
 	protected State getInitState(String stateClassName) {
