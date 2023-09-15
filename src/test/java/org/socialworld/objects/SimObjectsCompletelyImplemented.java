@@ -23,14 +23,13 @@ package org.socialworld.objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.socialworld.Constants;
 import org.socialworld.collections.IntHashMap;
 import org.socialworld.conversation.Lexem;
+import org.socialworld.objects.enums.EnumBaseSimObj;
 import org.socialworld.objects.enums.EnumBird;
 import org.socialworld.objects.enums.EnumFood;
 import org.socialworld.objects.enums.EnumHumanCrafted;
@@ -39,6 +38,7 @@ import org.socialworld.objects.enums.EnumMammal;
 import org.socialworld.objects.statics.GetEnumSimObjForClassName;
 import org.socialworld.objects.statics.GetLexemIDHigherPartFromMapping;
 import org.socialworld.objects.statics.GetLexemIDLowerPartFromMapping;
+import org.socialworld.objects.statics.Mapping_Base2LexemIDHigherPart;
 import org.socialworld.objects.statics.Mapping_Bird2LexemIDLowerPart;
 import org.socialworld.objects.statics.Mapping_Food2LexemIDLowerPart;
 import org.socialworld.objects.statics.Mapping_HumanCrafted2LexemIDLowerPart;
@@ -50,6 +50,11 @@ import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ScanResult;
 
 public class SimObjectsCompletelyImplemented {
+
+	  @Test
+	  void existsMappingToLexemIDHigherPart() {
+	    assertThat(TestSimObjectsCompletelyImplemented.existsMappingToLexemIDHigherPart()).isTrue();
+	  }
 
 	  @Test
 	  void existsMappingToLexemIDLowerPart() {
@@ -76,9 +81,25 @@ public class SimObjectsCompletelyImplemented {
 		private static  String  SIM_OBJ_ROOT_CLASS_NAME = "org.socialworld.objects.SimulationObject";
 		private static  String  NO_SIM_OBJ_ROOT_CLASS_NAME = "org.socialworld.objects.NoSimulationObject";
 		
-		private static String METHOD_NAME_GetLexemIdLowerValue = "getLexemIdLowerValue";
-		private static String METHOD_NAME_GetLexemIdHigherValue = "getLexemIdHigherValue";
-		
+	
+		private static boolean existsMappingToLexemIDHigherPart() {
+			
+			boolean resultCheck = true;
+			
+			int lexemIDhigherPart;
+	
+			for (EnumBaseSimObj elem : EnumBaseSimObj.values()) {
+				lexemIDhigherPart = Mapping_Base2LexemIDHigherPart.getInstance().get(elem);
+				
+				if (lexemIDhigherPart == Constants.MAPPING_NO_ENTRY_FOR_KEY) {
+     				resultCheck = false; 
+     				System.out.println(elem.toString() + ": no mapping in Mapping_Base2LexemIDHigherPart");
+				}
+			}
+								
+			return resultCheck;
+		}
+
 		private static boolean existsMappingToLexemIDLowerPart() {
 			
 			boolean resultCheck = true;
