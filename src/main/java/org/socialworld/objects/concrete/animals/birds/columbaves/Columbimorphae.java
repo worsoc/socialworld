@@ -3,7 +3,6 @@ package org.socialworld.objects.concrete.animals.birds.columbaves;
 import org.socialworld.attributes.Direction;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.ValueProperty;
-import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.animals.StateRunning;
 
@@ -19,10 +18,6 @@ public abstract class Columbimorphae extends Columbaves {
 	public Columbimorphae() {
 		super();
 		belongsTo = EnumBird.Columbimorphae;
-	}
-	
-	public static int getLexemIdLowerValue() {
-		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_COLUMBIMORPHAE;
 	}
 	
 

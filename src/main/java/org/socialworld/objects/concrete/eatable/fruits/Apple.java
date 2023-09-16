@@ -23,7 +23,6 @@ package org.socialworld.objects.concrete.eatable.fruits;
 
 import java.util.List;
 
-import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.StateAppearance;
 import org.socialworld.objects.concrete.StateComposition;
@@ -52,7 +51,6 @@ public class Apple extends Fruit implements IEatable, IThrowable {
 		return listOfPropertyMetaInfo;
 	}
 	
-	public static int getLexemIdLowerValue() {return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_APPLE; }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////

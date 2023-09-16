@@ -3,7 +3,6 @@ package org.socialworld.objects.concrete.animals.birds.passeriformes;
 import org.socialworld.attributes.Direction;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.ValueProperty;
-import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.animals.StateRunning;
 
@@ -21,9 +20,6 @@ public abstract class Suboscines extends Passeriformes {
 		belongsTo = EnumBird.Suboscines;
 	}
 	
-	public static int getLexemIdLowerValue() {
-		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_SUBOSCINES;
-	}
 
 
 

@@ -3,7 +3,6 @@ package org.socialworld.objects.concrete.animals.birds.coraciimorphae;
 import org.socialworld.attributes.Direction;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.ValueProperty;
-import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.animals.StateRunning;
 
@@ -21,11 +20,6 @@ public abstract class Psittaciformes extends Coraciimorphae {
 		belongsTo = EnumBird.Psittaciformes;
 	}
 	
-	public static int getLexemIdLowerValue() {
-		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_PSITTACIFORMES;
-	}
-	
-
 
 	@Override
 	public boolean checkObjectBelongsToGroup(int groupNumberSuffix) {

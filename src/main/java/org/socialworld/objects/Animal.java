@@ -41,6 +41,7 @@ import org.socialworld.objects.concrete.animals.ISeer;
 import org.socialworld.objects.concrete.animals.StateBody;
 import org.socialworld.objects.concrete.animals.StateInventory;
 import org.socialworld.objects.concrete.animals.StateSeer;
+import org.socialworld.objects.enums.EnumBaseSimObj;
 import org.socialworld.tools.StringTupel;
 
 
@@ -94,7 +95,6 @@ public abstract class Animal extends SimulationObject implements ISeer, IRunning
 		return listOfResultingKFCs;
 	}
 
-	public static int getLexemIdHigherValue() {return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_ANIMAL; }
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////
@@ -102,6 +102,7 @@ public abstract class Animal extends SimulationObject implements ISeer, IRunning
 	
 	public Animal() {
 		super();
+		setBaseSimObjEnum(EnumBaseSimObj.Animal);
 	}
 	
 	@Override
@@ -111,8 +112,6 @@ public abstract class Animal extends SimulationObject implements ISeer, IRunning
 		return SimulationObject_Type.animal;
 	}
 
-	@Override
-	protected int getLexemIdHighValue() {return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_ANIMAL; }
 
 	protected void assignState(StateSimulationObject state) {
 		if (checkIsMyState(state) ) this.state = (StateAnimal) state;

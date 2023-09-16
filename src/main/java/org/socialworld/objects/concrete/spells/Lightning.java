@@ -25,10 +25,10 @@ package org.socialworld.objects.concrete.spells;
 
 import java.util.List;
 
-import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.Magic;
 import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.StatePerceptible;
+import org.socialworld.objects.enums.EnumBaseSimObj;
 import org.socialworld.tools.StringTupel;
 
 public class Lightning extends Magic {
@@ -49,18 +49,22 @@ public class Lightning extends Magic {
 		return listOfPropertyMetaInfo;
 	}
 	
-	public static int getLexemIdHigherValue() {return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_LIGHTNING; }
-	public static int getLexemIdLowerValue() {return 0; }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
-	@Override
-	protected int getLexemIdHighValue() {return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_LIGHTNING; }
+	public Lightning() {
+		super();
+		setBaseSimObjEnum(EnumBaseSimObj.Lightning);
+	}
+
 
 	@Override
-	protected int getLexemIdLowPart() {return 0; }
+	protected int getLexemIdLowPart() {
+		return 0; 
+		//return Mapping_Lightning2LexemIDLowerPart.getInstance().get(belongsTo);
+	}
 	
 	@Override
 	protected State getInitState(String stateClassName) {

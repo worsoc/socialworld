@@ -2,7 +2,6 @@ package org.socialworld.objects.concrete.animals;
 
 import java.util.List;
 
-import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.State;
 import org.socialworld.objects.enums.EnumMammal;
 import org.socialworld.tools.StringTupel;
@@ -27,9 +26,6 @@ public abstract class Primate extends Mammal {
 		return listOfPropertyMetaInfo;
 	}
 
-	public static int getLexemIdLowerValue() {
-		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_PRIMATE;
-	}
 
 	@Override
 	public boolean checkObjectBelongsToGroup(int groupNumberSuffix) {

@@ -1,8 +1,8 @@
 package org.socialworld.objects.concrete.gods;
 
 import org.socialworld.objects.God;
-import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.State;
+import org.socialworld.objects.enums.EnumBaseSimObj;
 
 public class Sea extends God {
 
@@ -10,18 +10,22 @@ public class Sea extends God {
 ////////////////////////////////meta information    ////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	public static int getLexemIdHigherValue() {return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_SEA; }
-	public static int getLexemIdLowerValue() {return 0; }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	@Override
-	protected int getLexemIdHighValue() {return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_SEA; }
+	public Sea() {
+		super();
+		setBaseSimObjEnum(EnumBaseSimObj.Sea);
+	}
+
 
 	@Override
-	protected int getLexemIdLowPart() {return 0; }
+	protected int getLexemIdLowPart() {
+		return 0;
+		//return Mapping_Sea2LexemIDLowerPart.getInstance().get(belongsTo);
+	}
 
 	@Override
 	protected State getInitState(String stateClassName) {

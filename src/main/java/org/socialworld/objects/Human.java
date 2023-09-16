@@ -33,6 +33,7 @@ import org.socialworld.objects.concrete.animals.Primate;
 import org.socialworld.objects.concrete.animals.StateBody;
 import org.socialworld.objects.concrete.animals.StateInventory;
 import org.socialworld.objects.concrete.animals.StateSeer;
+import org.socialworld.objects.enums.EnumMammal;
 import org.socialworld.tools.StringTupel;
 import org.socialworld.conversation.Talk_SentenceType;
 import org.socialworld.core.IEventParam;
@@ -68,9 +69,6 @@ import org.socialworld.core.IEventParam;
 		return listOfPropertyMetaInfo;
 	}
 
-	public static int getLexemIdLowerValue() {
-		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_HUMAN;
-	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////
@@ -78,6 +76,7 @@ import org.socialworld.core.IEventParam;
 
 	public Human() {
 		super();
+		this.belongsTo = EnumMammal.Human;
 	}
 
 	protected SimulationObject_Type getSimObjectType() {

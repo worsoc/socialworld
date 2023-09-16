@@ -31,8 +31,8 @@ import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.IEventParam;
 import org.socialworld.objects.Animal;
-import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.State;
+import org.socialworld.objects.enums.EnumBaseSimObj;
 import org.socialworld.objects.enums.EnumMammal;
 import org.socialworld.objects.statics.Mapping_Mammal2LexemIDLowerPart;
 import org.socialworld.tools.StringTupel;
@@ -62,9 +62,6 @@ public abstract class Mammal extends Animal implements IRunning{
 		return listOfPropertyMetaInfo;
 	}
 
-	public static int getLexemIdHigherValue() {
-		return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_MAMMAL;
-	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////
@@ -72,12 +69,9 @@ public abstract class Mammal extends Animal implements IRunning{
    
 	public Mammal() {
 		super();
+		setBaseSimObjEnum(EnumBaseSimObj.Mammal);
 	}
 
-	@Override
-	protected int getLexemIdHighValue() {
-		return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_MAMMAL;
-	}
 
 	@Override
 	protected final int getLexemIdLowPart() {

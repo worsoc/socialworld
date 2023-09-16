@@ -5,7 +5,6 @@ import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
-import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.concrete.animals.IFlying;
 import org.socialworld.objects.concrete.animals.IRunning;
 import org.socialworld.objects.concrete.animals.StateFlying;
@@ -29,10 +28,6 @@ public class Stork extends Aequorlithornithes implements IFlying , IRunning{
 	// add on states
 	private StateFlying stateFlying = StateFlying.getObjectNothing();
 	private StateRunning stateRunning = StateRunning.getObjectNothing();
-	
-	public static int getLexemIdLowerValue() {
-		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_STORK;
-	}
 	
 
 	

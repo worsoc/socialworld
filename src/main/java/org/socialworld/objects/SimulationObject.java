@@ -50,7 +50,9 @@ import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.concrete.*;
 import org.socialworld.objects.connections.Connection;
 import org.socialworld.objects.connections.ConnectionType;
+import org.socialworld.objects.enums.EnumBaseSimObj;
 import org.socialworld.objects.properties.IPerceptible;
+import org.socialworld.objects.statics.Mapping_Base2LexemIDHigherPart;
 import org.socialworld.tools.StringTupel;
 
 /**
@@ -63,6 +65,7 @@ public abstract class SimulationObject implements IPerceptible {
 	
 	//private GroupingOfSimulationObjects goso = GroupingOfSimulationObjects.getInstance();
 	
+	private   EnumBaseSimObj	belongsTo;
 	private		int 			objectID;
 	private boolean 			justCreated;
 	private Lexem				lexem;
@@ -138,7 +141,7 @@ public abstract class SimulationObject implements IPerceptible {
 		this.justCreated = true;
 		this.guard = null;
 		
-		this.lexem = AllWords.getLexem(Lexem.OFFSET_LEXEMID_NOUN_SIMOBJ + getLexemIdHighValue() * GroupingOfSimulationObjects.RANGE_FOR_LOWER_VALUE + getLexemIdLowPart());
+		this.lexem = AllWords.getLexem(Lexem.OFFSET_LEXEMID_NOUN_SIMOBJ + getLexemIdHighPart() * GroupingOfSimulationObjects.RANGE_FOR_LOWER_VALUE + getLexemIdLowPart());
 		
 		this.actionHandler = new ActionHandler(this);
 		
@@ -200,14 +203,16 @@ public abstract class SimulationObject implements IPerceptible {
 		return objectID;
 	}
 	
-	protected abstract int getLexemIdHighValue();
 	protected abstract int getLexemIdLowPart() ;  // GroupingNumberSuffix
-	// TODO assign grouping number lower value ... in getLexemIdLowValue() in sub classes
-	public static int getLexemIdHigherValue() {return 0;}  
-	public static int getLexemIdLowerValue() {return 0;}  // GroupingNumberSuffix
-	// TODO implement two static methods getLexemIdHigherValue() and getLexemIdLowerValue() in sub classes
-	// and return concrete grouping number lower value 
+	// TODO assign Enum to belongsTo ... in getLexemIdLowPart() in sub classes
 
+	protected final void setBaseSimObjEnum(EnumBaseSimObj belongsTo) {
+		this.belongsTo = belongsTo;
+	}
+	
+	private int getLexemIdHighPart() {
+		return Mapping_Base2LexemIDHigherPart.getInstance().get(belongsTo);
+	}
 	
 	public final Lexem getLexem() {
 		return this.lexem;

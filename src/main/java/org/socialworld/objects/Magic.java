@@ -26,6 +26,7 @@ import java.util.List;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.IEventParam;
+import org.socialworld.objects.enums.EnumBaseSimObj;
 import org.socialworld.tools.StringTupel;
 
 /**
@@ -53,13 +54,16 @@ public abstract class Magic extends SimulationObject {
 		return listOfPropertyMetaInfo;
 	}
 	
-	public static int getLexemIdHigherValue() {return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_MAGIC; }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
-	
+	public Magic() {
+		super();
+		setBaseSimObjEnum(EnumBaseSimObj.Magic);
+	}
+
 // TODO implement Magic class functionality
 
 	@Override
@@ -69,7 +73,6 @@ public abstract class Magic extends SimulationObject {
 		return SimulationObject_Type.magic;
 	}
 	
-	protected int getLexemIdHighValue() {return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_MAGIC; }
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////

@@ -9,17 +9,7 @@ import org.socialworld.objects.concrete.clothes.Cap;
 
 public class TestCap extends Cap {
 
-	public static int getLexemIdHigherValue() {
-		return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_IGNORE;
-	}
-	public static int getLexemIdLowerValue() {
-		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_IGNORE;
-	}
 
-	@Override
-	protected int getLexemIdHighValue() {
-		return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_IGNORE;
-	}
 
 	@Override
 	public boolean checkObjectBelongsToGroup(int groupNumberSuffix) {

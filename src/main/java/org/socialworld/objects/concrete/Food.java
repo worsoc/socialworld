@@ -8,6 +8,7 @@ import org.socialworld.attributes.properties.TasteSet;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.objects.Item;
 import org.socialworld.objects.State;
+import org.socialworld.objects.enums.EnumBaseSimObj;
 import org.socialworld.objects.enums.EnumFood;
 import org.socialworld.objects.properties.IEatable;
 import org.socialworld.objects.statics.Mapping_Food2LexemIDLowerPart;
@@ -41,6 +42,7 @@ public abstract class Food extends Item implements IEatable {
 
 	public Food() {
 		super();
+		setBaseSimObjEnum(EnumBaseSimObj.Food);
 	}
 	
 	protected List<State> createAddOnStates() {

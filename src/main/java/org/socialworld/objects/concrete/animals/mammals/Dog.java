@@ -24,7 +24,6 @@ package org.socialworld.objects.concrete.animals.mammals;
 
 import java.util.List;
 
-import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.StatePerceptible;
 import org.socialworld.objects.concrete.animals.Mammal;
@@ -48,10 +47,6 @@ public abstract class Dog extends Mammal {
 			listOfPropertyMetaInfo.add(propertiesMetaInfos[indexAdd]);
 		}
 		return listOfPropertyMetaInfo;
-	}
-
-	public static int getLexemIdLowerValue() {
-		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_DOG;
 	}
 
 

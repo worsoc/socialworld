@@ -26,9 +26,9 @@ package org.socialworld.objects.concrete.gods;
 import java.util.List;
 
 import org.socialworld.objects.God;
-import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.StatePerceptible;
+import org.socialworld.objects.enums.EnumBaseSimObj;
 import org.socialworld.tools.StringTupel;
 
 public class Weather extends God {
@@ -48,19 +48,22 @@ public class Weather extends God {
 		return listOfPropertyMetaInfo;
 	}
 	
-	public static int getLexemIdHigherValue() {return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_WEATHER; }
-	public static int getLexemIdLowerValue() {return 0; }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
+	public Weather() {
+		super();
+		setBaseSimObjEnum(EnumBaseSimObj.Weather);
+	}
+
 
 	@Override
-	protected int getLexemIdHighValue() {return GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_WEATHER; }
-
-	@Override
-	protected int getLexemIdLowPart() {return 0; }
+	protected int getLexemIdLowPart() {
+		return 0; 
+		//return Mapping_Weather2LexemIDLowerPart.getInstance().get(belongsTo);
+	}
 	
 	@Override
 	protected State getInitState(String stateClassName) {

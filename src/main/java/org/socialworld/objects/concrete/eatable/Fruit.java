@@ -21,17 +21,10 @@
 */
 package org.socialworld.objects.concrete.eatable;
 
-import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.concrete.Food;
 import org.socialworld.objects.enums.EnumFood;
 
 public abstract class Fruit extends Food  {
-
-	
-	public static int getLexemIdLowerValue() {
-		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_FRUIT;
-	}
-
 
 	
 ///////////////////////////////////////////////////////////////////////////////////////////

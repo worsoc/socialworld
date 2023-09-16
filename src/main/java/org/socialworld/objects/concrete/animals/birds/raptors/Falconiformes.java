@@ -3,7 +3,6 @@ package org.socialworld.objects.concrete.animals.birds.raptors;
 import org.socialworld.attributes.Direction;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.ValueProperty;
-import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.animals.StateRunning;
 
@@ -19,10 +18,6 @@ public abstract class Falconiformes extends Raptor {
 	public Falconiformes() {
 		super();
 		belongsTo = EnumBird.Falconiformes;
-	}
-
-	public static int getLexemIdLowerValue() {
-		return GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_FALCONIFORMES;
 	}
 
 	
