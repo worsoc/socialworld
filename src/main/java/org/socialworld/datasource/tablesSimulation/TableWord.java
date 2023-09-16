@@ -36,6 +36,7 @@ import org.socialworld.datasource.mariaDB.Table;
 import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.objects.statics.GetLexemIDHigherPartFromMapping;
 import org.socialworld.objects.statics.GetLexemIDLowerPartFromMapping;
+import org.socialworld.objects.statics.GetWordStringFromMapping;
 
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfoList;
@@ -267,6 +268,7 @@ public class TableWord extends Table {
 
  		System.out.println("-------------------------------");
 		
+		String word;
 		
 		try (ScanResult result = new ClassGraph().enableClassInfo().enableAnnotationInfo().scan()) {
 //			  .whitelistPackages(getClass().getPackage().getName()).scan()) {
@@ -302,12 +304,10 @@ public class TableWord extends Table {
 				      		if (lexemIdHigherValue  == GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_IGNORE &&
 				      				lexemIdLowerValue == GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_IGNORE) continue;
 
-				      		// TODO word for the simulation object class
-				      		if (className.length() > 45) {
-								insert(lexemID, className.substring(className.length() - 40) ,  lexemID); 			
-				      		}
-				      		else {
-								insert(lexemID, className ,  lexemID); 					      			
+				      		// word for the simulation object class
+				      		word = GetWordStringFromMapping.getForClassName(className);
+				      		if (word.length() > 0) {
+								insert(lexemID, word ,  lexemID); 			
 				      		}
 				     	}
 				}		
