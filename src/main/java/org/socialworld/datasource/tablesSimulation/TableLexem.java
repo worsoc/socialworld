@@ -21,8 +21,6 @@
 */
 package org.socialworld.datasource.tablesSimulation;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -33,6 +31,7 @@ import io.github.classgraph.ClassInfoList;
 
 import org.socialworld.datasource.mariaDB.Table;
 import org.socialworld.objects.GroupingOfSimulationObjects;
+import org.socialworld.objects.statics.GetLexemIDHigherPartFromMapping;
 import org.socialworld.objects.statics.GetLexemIDLowerPartFromMapping;
 import org.socialworld.Constants;
 import org.socialworld.attributes.properties.Colour;
@@ -257,24 +256,17 @@ public class TableLexem extends Table {
 				     		System.out.print(className);
 				     		
 				     		int lexemIdLowerValue = GetLexemIDLowerPartFromMapping.getForClassName(className);
-				     		if (lexemIdLowerValue == Constants.MAPPING_NO_ENTRY_FOR_KEY) continue;
-				     		
-				     		Method methodGetHigherValue;
+				     		if (lexemIdLowerValue == Constants.MAPPING_NO_ENTRY_FOR_KEY) {
+					     		System.out.println(" --> ignore");
+				     			continue;
+				     		}
+				     				
+				      		int lexemIdHigherValue = GetLexemIDHigherPartFromMapping.getForClassName(className);
+				     		if (lexemIdHigherValue == Constants.MAPPING_NO_ENTRY_FOR_KEY) {
+					     		System.out.println(" --> ignore");
+				     			continue;
+				     		}
 		
-				      		int lexemIdHigherValue = Constants.MAPPING_NO_ENTRY_FOR_KEY;
- 		
-				     		try {
-				     			 methodGetHigherValue = simObjClass.getMethod("getLexemIdHigherValue");
-				     			 lexemIdHigherValue = (int) methodGetHigherValue.invoke(null);
-				     		} catch (SecurityException e) {  }
-				     		  catch (NoSuchMethodException e) { }
-				     		  catch (IllegalArgumentException e) {  }
-				      		  catch (IllegalAccessException e) { }
-				      		  catch (InvocationTargetException e) {  }
-				  
-				     		if (lexemIdHigherValue == Constants.MAPPING_NO_ENTRY_FOR_KEY) continue;
-			    	
-				      		
 						    int lexemID = Lexem.OFFSET_LEXEMID_NOUN_SIMOBJ + lexemIdHigherValue * GroupingOfSimulationObjects.RANGE_FOR_LOWER_VALUE + lexemIdLowerValue;
 				     		System.out.println(" : " + lexemID);
 
