@@ -103,6 +103,11 @@ public class EventPerceptionDescriptionPool extends DescriptionPool {
 //		String gegenProbezuLineID_8607_with_getIndex =		"KSrcT:1&KSrc:GETVal(myself);KSbj:GETVal(event_params).GETVal(event_causer);KProp(0,inventory_shirt.SOGN_184549375.mainColour):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_shirt)#IsElem(184549375).GETProp(stateAppearance).GETFctVal(getMainColour).GETFctVal(getIndex)";
 		String gegenProbezuLineID_8607 =		"KSrcT:1&KSrc:GETVal(myself);KSbj:GETVal(event_params).GETVal(event_causer);KProp(0,inventory_shirt.SOGN_184549375.mainColour):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_shirt)#IsElem(184549375).GETProp(stateAppearance).GETFctVal(getMainColour)";
 
+		// aus 8607 um eine weitere Farbe erweitert
+//		String lineWithTwoColours =		"KSrcT:1&KSrc:GETVal(myself);KSbj:GETVal(event_params).GETVal(event_causer);" +
+//				"KProp(0,inventory_shirt.SOGN_184549375.mainColour):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_shirt)#IsElem(184549375).GETProp(stateAppearance).GETFctVal(getMainColour);" +
+//				"KProp(0,inventory_cap.SOGN_184549375.mainColour):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_cap)#IsElem(184549375).GETProp(stateAppearance).GETFctVal(getMainColour)";
+
 		lines4EventType = new Lines4EventType(EventType.percipientExists, rangeSecondIndex);
 		for ( perceptionType = 0; perceptionType < rangeSecondIndex; perceptionType++) {
 			lines4EventType.add(perceptionType, 0, gegenProbezuLineID_8607);

@@ -24,6 +24,7 @@ package org.socialworld.knowledge;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.GlobalSwitches;
 import org.socialworld.attributes.ISimProperty;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
@@ -117,11 +118,23 @@ public class Knowledge extends SimProperty {
 		
 		int index;
 		
-		index = indexForNewEntry();
-		knowledgeElementList[index] = knowledgeElement;
-		accessCount[index] = 0;
+		// 16.09.2023 by Mathias Sikos:
+		// only knowledge elements with item list will be inserted
+		// because a knowledge element just with source and subject isn't a knowledge element
+		// what is known about the subject? --> nothing! --> ignore !!!
+		// if it shall be an unaer relation --> then the relation is in the item list!
 		
-	
+		if (knowledgeElement.countValidFacts() > 0) {
+			index = indexForNewEntry();
+			knowledgeElementList[index] = knowledgeElement;
+			accessCount[index] = 0;
+			
+			if (GlobalSwitches.OUTPUT_KNOWLEDGE_ADDKNOWLEDGE) {
+				System.out.println("output Knowledge:");
+				System.out.println(this.toString());
+			}
+		}
+		
 	}
 	
 	public void addFactsFromSentence(String sentence, KnowledgeSource source) {
@@ -441,9 +454,13 @@ public class Knowledge extends SimProperty {
 	
 	public String toString() {
 		String output = "{";
+		String elem;
 		for (KnowledgeElement ke : knowledgeElementList) {
 			if (ke == null) continue;
-			output = output + "\n" + ke.toString();
+			elem = ke.toString();
+			if (elem.length() > 0) {
+				output = output + "\n" + elem;
+			}
 		}
 		output = output + "}";
 		return output;

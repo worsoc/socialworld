@@ -115,12 +115,14 @@ public class KnowledgeElement {
 
 	public String toString() {
 		String output;
-		if (source == null || subject == null) {
-			output = "---\n";
+		String itemList = knowledgeItemList.toString();
+		
+		if (source == null || subject == null || itemList.length() == 0) {
+			output = "";
 		}
 		else {
 			output = source.toString() + ", subject: " + subject.toString() + "\n";
-			output = output + knowledgeItemList.toString();
+			output = output + itemList;
 			output = output + "\n";
 		}
 		return output;
