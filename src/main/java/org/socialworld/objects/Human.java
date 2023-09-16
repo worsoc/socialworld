@@ -52,7 +52,6 @@ import org.socialworld.core.IEventParam;
  public class Human extends Primate {
 	
 	 private StateHuman state;
-	private boolean initialized;
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////meta information    ////////////////////////////////////
@@ -83,15 +82,6 @@ import org.socialworld.core.IEventParam;
 		return SimulationObject_Type.human;
 	}
 
-
-	
-	protected void init() {
-		if (initialized == false) {
-			initialized = true;
-		}
-	}
-
-	
 
 	public boolean checkObjectBelongsToGroup(int groupNumberSuffix) {
 		// SUB_CLASS_IMPLEMENTATION checkObjectBelongsToGroup()

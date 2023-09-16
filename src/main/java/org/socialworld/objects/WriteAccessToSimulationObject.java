@@ -57,6 +57,8 @@ public class WriteAccessToSimulationObject {
 		addOnStates = object.createAddOnStates();
 		state.initAddOnStates(addOnStates, this);
 		
+		object.init();
+		
 	}
 	
 	// Dummy

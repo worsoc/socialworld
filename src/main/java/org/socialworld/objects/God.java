@@ -70,6 +70,10 @@ public abstract class God extends SimulationObject {
 		return SimulationObject_Type.god;
 	}
 
+	protected void initialize() {
+		if (!isInitialized()) {
+		}
+	}
 
 	protected void assignState(StateSimulationObject state) {
 		//if (checkIsMyState(state) ) this.state = (StateGod) state;

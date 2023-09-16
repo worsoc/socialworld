@@ -24,6 +24,11 @@ public class NoSimulationObject extends SimulationObject {
 		return SimulationObject_Type.noObject;
 	}
 
+	protected void initialize() {
+		if (!isInitialized()) {
+		}
+	}
+
 
 	@Override
 	public boolean checkObjectBelongsToGroup(int groupNumberSuffix) {

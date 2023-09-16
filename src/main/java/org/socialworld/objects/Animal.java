@@ -62,7 +62,6 @@ public abstract class Animal extends SimulationObject implements ISeer, IRunning
 	
 	private PathFinder pathFinder;
 
-	private boolean initialized = false;
 	
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -112,18 +111,17 @@ public abstract class Animal extends SimulationObject implements ISeer, IRunning
 		return SimulationObject_Type.animal;
 	}
 
+	protected void initialize() {
+		if (!isInitialized()) {
+			pathFinder = new PathFinder(this, this.state.getKnownPathsPool());
+		}
+	}
+
 
 	protected void assignState(StateSimulationObject state) {
 		if (checkIsMyState(state) ) this.state = (StateAnimal) state;
 	}
 	
-	protected void init() {
-		if (initialized == false) {
-			pathFinder = new PathFinder(this, this.state.getKnownPathsPool());
-			initialized = true;
-		}
-	}
-
 	protected List<State> createAddOnStates() {
 		
 		List<State> result = super.createAddOnStates();

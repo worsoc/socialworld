@@ -73,6 +73,10 @@ public abstract class Magic extends SimulationObject {
 		return SimulationObject_Type.magic;
 	}
 	
+	protected void initialize() {
+		if (!isInitialized()) {
+		}
+	}
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////

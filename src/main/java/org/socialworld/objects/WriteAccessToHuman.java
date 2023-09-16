@@ -42,7 +42,6 @@ public class WriteAccessToHuman extends WriteAccessToAnimal {
 		super(human, state);
 		this.human = human;
 		this.humanState = state;
-		this.human.init();
 	}
 
 	public HiddenHuman getMeHidden(GrantedAccessToProperty properties[]) {

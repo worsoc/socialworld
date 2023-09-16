@@ -85,6 +85,10 @@ public abstract class Item extends SimulationObject {
 		return SimulationObject_Type.item;
 	}
 
+	protected void initialize() {
+		if (!isInitialized()) {
+		}
+	}
 
 	protected void assignState(StateSimulationObject state) {
 		//if (checkIsMyState(state) ) this.state = (StateItem) state;

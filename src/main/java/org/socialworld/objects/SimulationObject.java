@@ -67,7 +67,10 @@ public abstract class SimulationObject implements IPerceptible {
 	
 	private   EnumBaseSimObj	belongsTo;
 	private		int 			objectID;
+	
 	private boolean 			justCreated;
+	private boolean 			initialized = false;
+	
 	private Lexem				lexem;
 	
 	
@@ -141,7 +144,6 @@ public abstract class SimulationObject implements IPerceptible {
 		this.justCreated = true;
 		this.guard = null;
 		
-		this.lexem = AllWords.getLexem(Lexem.OFFSET_LEXEMID_NOUN_SIMOBJ + getLexemIdHighPart() * GroupingOfSimulationObjects.RANGE_FOR_LOWER_VALUE + getLexemIdLowPart());
 		
 		this.actionHandler = new ActionHandler(this);
 		
@@ -153,6 +155,22 @@ public abstract class SimulationObject implements IPerceptible {
 
 	}
 
+	public void init() {
+		
+		if (justCreated) {
+			this.lexem = AllWords.getLexem(Lexem.OFFSET_LEXEMID_NOUN_SIMOBJ + getLexemIdHighPart() * GroupingOfSimulationObjects.RANGE_FOR_LOWER_VALUE + getLexemIdLowPart());
+			//System.out.println(this.belongsTo.toString() + ". " +  this.lexem.getLexemID());
+			
+			if (!initialized) {
+				initialize();
+				initialized = true;
+			}
+		}
+		
+	}
+	
+	protected abstract void initialize();
+	
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    SIMULATION OBJECT TYPE     ///////////////////////////////
@@ -187,6 +205,10 @@ public abstract class SimulationObject implements IPerceptible {
 
 	public final boolean isJustCreated() {
 		return this.justCreated;
+	}
+
+	public final boolean isInitialized() {
+		return this.initialized;
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
