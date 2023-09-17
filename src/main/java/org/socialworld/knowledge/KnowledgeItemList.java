@@ -35,7 +35,7 @@ final class KnowledgeItemList  {
 		
 		private KnowledgeItem item;
 		private int accessCount = 0;
-		private boolean isValid = false;
+		private boolean isValid = true;  // TODO for development set to true, must be false
 		
 		private KnowledgeItemWithMetaInfo(KnowledgeItem item) {
 			this.item = item;
@@ -698,7 +698,7 @@ final class KnowledgeItemList  {
 		String item;
 		for (KnowledgeItemWithMetaInfo ki : itemSearchList) {
 			item = ki.item.toString();
-			if (item.length() == 0) continue;
+			if (item.length() == 0 || item.contains("<>")) continue;
 			output = output + "\n" + item;
 		}
 		if (output.length() > 0) {

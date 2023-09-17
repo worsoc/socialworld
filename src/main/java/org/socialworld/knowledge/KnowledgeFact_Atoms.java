@@ -36,6 +36,7 @@ public class KnowledgeFact_Atoms {
 	public static List<KnowledgeFactAtom> translateToAtoms(List<Lexem> lexems) {
 		List<KnowledgeFactAtom> atoms = new ArrayList<KnowledgeFactAtom>();
 		for (Lexem lexem : lexems) {
+			if (lexem == null) continue;
 			atoms.add(new KnowledgeFactAtom(lexem));
 		}
 		return atoms;
@@ -96,6 +97,13 @@ public class KnowledgeFact_Atoms {
 				KnowledgeFactAtom atomA = this.atoms.get(index);
 				KnowledgeFactAtom atomB = b.atoms.get(index);
 
+				if (atomA == null) {
+					if (atomB == null) continue;
+					else {
+						isEqual = false;
+						break;
+					}
+				}
 				if (!atomA.equals(atomB)) {
 					isEqual = false;
 					break;
@@ -114,6 +122,7 @@ public class KnowledgeFact_Atoms {
 		String output = "<";
 		int index = 0;
 		for (KnowledgeFactAtom kfa : atoms) {
+			if (kfa == null) continue;
 			if (index > 0) output = output + ","; 
 			output = output +  kfa.toString();
 			index++;

@@ -29,9 +29,7 @@ import org.socialworld.calculation.PropertyUsingAs;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
-import org.socialworld.datasource.tablesPool.TablePoolDotElemLine;
-import org.socialworld.datasource.tablesPool.ViewDotElementJoinDotElem;
-import org.socialworld.knowledge.KnowledgeFact_Criterion;
+import org.socialworld.calculation.application.KnowledgeCalculator;
 import org.socialworld.knowledge.KnowledgeFact_Type;
 
 public class CreateKnowledgeElementExpression extends CreateValue {
@@ -49,129 +47,6 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 	public static String LABEL_KNOWLEDGERELATIONOBJECT1 = "KRelObj1";
 	public static String LABEL_KNOWLEDGERELATIONOBJECT2 = "KRelObj2";
 	
-	public CreateKnowledgeElementExpression(int[] dotElemLineIDs) {
-		super(Type.knowledgeElement);
-		
-		if (dotElemLineIDs.length > 0) {
-			
-			List<Expression> listExpressions = new ArrayList<Expression>();
-			
-			String descriptionSubject = "GETVal(" + Value.VALUE_BY_NAME_EVENT_PARAMS + ").GETVal(" + Value.VALUE_BY_NAME_EVENT_CAUSER + ")";
-			Expression subject = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeSubject, descriptionSubject, Value.VALUE_NAME_KNOWLEDGE_SUBJECT);
-			listExpressions.add(subject);
-		
-			Expression knowledgeSourcetype = new Constant(new Value(Type.integer, Value.VALUE_NAME_KNOWLEDGE_SOURCE_TYPE, 1 ));
-			Expression knowledgeSource = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeSource, "GETVal(" + Value.VALUE_NAME_KNOWLEDGE_SOURCE_MYSELF + ")", Value.VALUE_NAME_KNOWLEDGE_SOURCE);
-			Expression creationKnowledgeSource = new CreateKnowledgeSourceExpression(knowledgeSourcetype, knowledgeSource);
-			listExpressions.add(creationKnowledgeSource);
-			
-			ViewDotElementJoinDotElem dotElements = new ViewDotElementJoinDotElem();
-			int dot_element_id;
-			int dotelem_function; 		
-			String dotelem_value_name; 
-//			int dotelem_addon; 
-//			int dotelem_addon_intarg; 
-//			String dotelem_addon_charsarg; 
-
-			
-			int indexTablePoolDotElemLine;
-			int function;
-			String resultType;
-			int kfc = -1;
-			String resultValueName;
-			TablePoolDotElemLine dotElemLine = new TablePoolDotElemLine();
-			dotElemLine.select(dotElemLine.SELECT_ALL_COLUMNS , "", "");
-			for (int id : dotElemLineIDs) {
-				
-				indexTablePoolDotElemLine = dotElemLine.getIndexFor1PK(id);
-				function = dotElemLine.getFunction(indexTablePoolDotElemLine);
-				resultType = dotElemLine.getResultType(indexTablePoolDotElemLine);
-				resultValueName = dotElemLine.getResultValueName(indexTablePoolDotElemLine);
-
-				Expression knowledgeFactCriterion;
-
-				Expression value;
-				List<Expression> expressions = new ArrayList<Expression>();
-
-				KnowledgeFact_Type knowledgeFact_Type = null;
-				switch (function) {
-				case 1:
-					knowledgeFact_Type = KnowledgeFact_Type.value;
-					switch (resultType) {
-					case "StateAppearance":
-						kfc = KnowledgeFact_Criterion.colour.getIndex();
-						break;
-					case "StateComposition":
-						kfc = KnowledgeFact_Criterion.material.getIndex();
-						break;
-					default:
-						kfc = -1;
-					}
-					break;
-				case 2:
-					knowledgeFact_Type = KnowledgeFact_Type.property;
-					kfc = Integer.parseInt(resultType);
-					break;
-				}
-				
-				if (resultType.length() > 0 ) {
-					knowledgeFactCriterion = new Constant(new Value(Type.integer, Value.VALUE_NAME_KNOWLEDGE_PROPERTY_CRITERION, kfc ));
-					expressions.add(knowledgeFactCriterion);
-				}
-
-				dotElements.select(dotElemLine.SELECT_ALL_COLUMNS , " WHERE dot_elem_line_id = " + id, " ORDER BY lfd_nr");
-				for (int i = 0; i < 1 /*dotElements.rowCount()*/; i++) {
-					dot_element_id = dotElements.getDotElementID(i);
-					dotelem_function = dotElements.getFunction(i); 		
-					dotelem_value_name = dotElements.getValueName(i); 		
-				/*	dotelem_addon = dotElements.getAddon(i); 		
-					dotelem_addon_intarg = dotElements.getAddon_IntArg(i); 		
-					dotelem_addon_charsarg = dotElements.getAddon_CharsArg(i); 		
-				*/
-									
-					switch (dotelem_function) {
-					case 1:  // GetValue
-						
-						value = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeValue, dotElements, i, dotelem_value_name);
-						expressions.add(value);
-						break;
-						
-					
-					case 2: // GetProperty
-						
-
-						
-						value = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeProperty, dotElements, i, dotelem_value_name);
-						expressions.add(value);
-						break;
-						
-						
-					}
-					
-				}
-				
-				Expression creationKnowledgeAtom = new CreateKnowledgeAtomExpression(knowledgeFact_Type, expressions);
-				
-				if ( creationKnowledgeAtom.isValid() ) {
-					
-					listExpressions.add(creationKnowledgeAtom);
-					
-				}
-
-			}
-			
-			if (listExpressions.size() > 1) {
-				
-				Expression sequence = new	AddOrSetValuesToArguments(Value.VALUE_NAME_KNOWLEDGE_ELEMENT_PROPS, listExpressions);
-				setExpression2(sequence);
-	
-				setValid();
-			
-			}
-
-		}
-		
-	}
 	
 	public CreateKnowledgeElementExpression(String description) {
 		
@@ -225,29 +100,26 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 					
 					KnowledgeFact_Type knowledgeFact_Type = null;
 					List<Expression> expressions = new ArrayList<Expression>();
-					
+					List<String> listValueNames = new ArrayList<String>();
+
+					String criterionValueName = "";
+
 					for (int indexSub = 0; indexSub < descriptionKnowledgeAtomList.length; indexSub++) {
 						
 						String valueName = "";
 						
-/*						if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGEFACTCRITERION) >= 0) {
-							descriptionKnowledgeAtomPart = descriptionKnowledgeAtomList[indexSub].substring(LABEL_KNOWLEDGEFACTCRITERION.length());
-							knowledgeFactCriterion = new Constant(new Value(Type.integer, Value.VALUE_NAME_KNOWLEDGE_PROPERTY_CRITERION, Integer.parseInt(descriptionKnowledgeAtomPart) ));
-							expressions.add(knowledgeFactCriterion);
-							if (knowledgeAtomType == null ) {
-								knowledgeAtomType = KnowledgeFact_Type.property;
-							}
-						}
-*/
+
 						if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGEPROPERTY) >= 0) {
+							
+							criterionValueName = Value.VALUE_NAME_KNOWLEDGE_PROPERTY_CRITERION + "_" + indexMain;
 							
 							descriptionKnowledgeAtomPart = descriptionKnowledgeAtomList[indexSub].substring(descriptionKnowledgeAtomList[indexSub].indexOf(":") + 1);
 //							System.out.println(descriptionKnowledgeAtomList[indexSub]);
-							valueName = Value.VALUE_NAME_KNOWLEDGE_PROPERTY_VALUE + indexSub;
+							valueName = KnowledgeCalculator.PRAEFIX_VALUE_NAME + Value.VALUE_NAME_KNOWLEDGE_PROPERTY_VALUE + indexMain + "_" + indexSub;
 							if ((descriptionKnowledgeAtomList[indexSub].indexOf(",") < descriptionKnowledgeAtomList[indexSub].indexOf(":")) 
 								&& (descriptionKnowledgeAtomList[indexSub].indexOf(",") < descriptionKnowledgeAtomList[indexSub].indexOf(")"))
 									&& (descriptionKnowledgeAtomList[indexSub].indexOf(",") > descriptionKnowledgeAtomList[indexSub].indexOf("("))) {
-								valueName =		descriptionKnowledgeAtomList[indexSub].
+								valueName =		KnowledgeCalculator.PRAEFIX_VALUE_NAME + descriptionKnowledgeAtomList[indexSub].
 												substring(descriptionKnowledgeAtomList[indexSub].indexOf(",") + 1, descriptionKnowledgeAtomList[indexSub].indexOf(")"));
 							
 								kfc = descriptionKnowledgeAtomList[indexSub].substring(descriptionKnowledgeAtomList[indexSub].indexOf("(") + 1, descriptionKnowledgeAtomList[indexSub].indexOf(","));
@@ -255,13 +127,15 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 							else {
 								kfc = descriptionKnowledgeAtomList[indexSub].substring(descriptionKnowledgeAtomList[indexSub].indexOf("(") + 1, descriptionKnowledgeAtomList[indexSub].indexOf(")"));
 							}
-
-							knowledgeFactCriterion = new Constant(new Value(Type.integer, Value.VALUE_NAME_KNOWLEDGE_PROPERTY_CRITERION, Integer.parseInt(kfc) ));
-							expressions.add(knowledgeFactCriterion);
 							
+							knowledgeFactCriterion = new Constant(new Value(Type.integer, criterionValueName , Integer.parseInt(kfc) ));
+							expressions.add(knowledgeFactCriterion);
+							listValueNames.add(criterionValueName);
+												
 							value = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeProperty, descriptionKnowledgeAtomPart, valueName);
 							expressions.add(value);
-							
+							listValueNames.add(valueName);
+												
 							if (knowledgeFact_Type == null ) {
 								knowledgeFact_Type = KnowledgeFact_Type.property;
 							}
@@ -270,14 +144,15 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 							
 							descriptionKnowledgeAtomPart = descriptionKnowledgeAtomList[indexSub].substring(descriptionKnowledgeAtomList[indexSub].indexOf(":") + 1);
 		
-							valueName = Value.VALUE_NAME_KNOWLEDGE_VALUE_VALUE + indexSub;
+							valueName = KnowledgeCalculator.PRAEFIX_VALUE_NAME + Value.VALUE_NAME_KNOWLEDGE_VALUE_VALUE + indexMain + "_" + indexSub;
 							if ((descriptionKnowledgeAtomList[indexSub].indexOf(",") < descriptionKnowledgeAtomList[indexSub].indexOf(":")) 
 									&& (descriptionKnowledgeAtomList[indexSub].indexOf(",") < descriptionKnowledgeAtomList[indexSub].indexOf(")"))
 										&& (descriptionKnowledgeAtomList[indexSub].indexOf(",") > descriptionKnowledgeAtomList[indexSub].indexOf("("))) {
-									valueName =		descriptionKnowledgeAtomList[indexSub].
+									valueName =	KnowledgeCalculator.PRAEFIX_VALUE_NAME +	descriptionKnowledgeAtomList[indexSub].
 													substring(descriptionKnowledgeAtomList[indexSub].indexOf(",") + 1, descriptionKnowledgeAtomList[indexSub].indexOf(")"));
 							}	
-								
+							listValueNames.add(valueName);
+							
 							value = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeValue, descriptionKnowledgeAtomPart, valueName);
 							expressions.add(value);
 							
@@ -361,7 +236,9 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 						
 					}
 					
-					Expression creationKnowledgeAtom = new CreateKnowledgeAtomExpression(knowledgeFact_Type, expressions);
+					// listValueNames just uses for property and value , for other types the list is empty (is not be needed for other types)
+					// TODO different constructors CreateKnowledgeAtomExpression
+					Expression creationKnowledgeAtom = new CreateKnowledgeAtomExpression(knowledgeFact_Type, expressions, listValueNames );
 					
 					if ( creationKnowledgeAtom.isValid() ) {
 						

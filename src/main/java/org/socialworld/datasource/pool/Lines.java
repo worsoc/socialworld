@@ -61,4 +61,18 @@ public class Lines {
 			
 		}
 	}
+	
+	void add(int secondIndex, String line) {
+		// second index ... the int value for the mapped type (reaction type, influence type, perception type ...)
+		// there is not argument int nr in this alternative --> always increment nr (nr := size)
+		if (secondIndex >= 0 & secondIndex < this.capacity) {
+			
+			List<List<String>> forSecondIndex = this.lines.get(secondIndex);
+			int nr = forSecondIndex.size();
+			
+			forSecondIndex.add(new ArrayList<String>());
+			forSecondIndex.get(nr).add(line);
+			
+		}
+	}
 }

@@ -179,7 +179,7 @@ public class CreateValue extends Expression {
 
 			KnowledgeFact_Type kft;
 			kft = KnowledgeFact_Type.getName(subType);
-			firstCreateArgument = arguments.size();
+			firstCreateArgument = arguments.size(); 
 			evaluateExpression2(arguments);
 			size = arguments.size();
 			for ( indexOrigArgs = firstCreateArgument; indexOrigArgs < size; indexOrigArgs++) {

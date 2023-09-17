@@ -26,7 +26,6 @@ import java.util.List;
 
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
-import org.socialworld.attributes.properties.MaterialSet;
 import org.socialworld.attributes.properties.NutrientSet;
 import org.socialworld.attributes.properties.TasteSet;
 import org.socialworld.calculation.SimulationCluster;
@@ -56,8 +55,8 @@ public class StateEatable extends State {
 	public static final String METHODNAME_SET_NUTRIENT_SET = "setNutrientSet";
 	public static final String METHODNAME_SET_TASTE_SET = "setTasteSet";
 
-	private NutrientSet nutrientSet = NutrientSet.getObjectNothing();
-	private TasteSet tasteSet = TasteSet.getObjectNothing();
+	private NutrientSet nutrientSet;
+	private TasteSet tasteSet;
 	
 	///////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////static instance for meta information    ///////////////////////////////

@@ -36,10 +36,13 @@ public class KnowledgeProperty extends KnowledgeFact {
 	private KnowledgeFact_Atoms atoms;
 	
 	public KnowledgeProperty(Value criterion, ValueArrayList values ) {
+		KnowledgeFactAtom kfa;
 		this.criterion = KnowledgeFact_Criterion.getName( (int) criterion.getValue());
 		List<KnowledgeFactAtom> atoms = new ArrayList<KnowledgeFactAtom>();
 		for (int index =  0; index < values.size(); index++) {
-			atoms.add(translateToKnowledgeFactAtom(values.get(index)));
+			kfa = translateToKnowledgeFactAtom(values.get(index));
+			if (kfa == null) continue;
+			atoms.add(kfa);
 		}
 		this.atoms = new KnowledgeFact_Atoms(atoms);
 	}

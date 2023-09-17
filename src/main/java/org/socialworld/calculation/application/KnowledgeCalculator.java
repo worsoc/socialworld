@@ -54,6 +54,7 @@ public class KnowledgeCalculator extends SocialWorldThread {
 	public static final int KNOWLEDGE_CALCULATOR_RETURNS_INVALID_RESULT = 3;
 	public static final int KNOWLEDGE_CALCULATOR_RETURNS_CONTAINS_INVALIDS = 4;
 
+	public static final String PRAEFIX_VALUE_NAME = "VALNAM_";
 	
 	private static KnowledgeCalculator instance;
 
@@ -353,7 +354,7 @@ public class KnowledgeCalculator extends SocialWorldThread {
 			
 		case property:
 			
-			find = knowledgeAtomProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_PROPERTY_CRITERION);
+			find = knowledgeAtomProperties.findValueNameStartingWith(Value.VALUE_NAME_KNOWLEDGE_PROPERTY_CRITERION);
 			
 			if (find >= 0) {
 				
@@ -364,8 +365,8 @@ public class KnowledgeCalculator extends SocialWorldThread {
 					
 					for (find = 0; find < size; find++) {
 						value = knowledgeAtomProperties.get(find);
-						if (value.getName().equals(Value.VALUE_NAME_KNOWLEDGE_PROPERTY_CRITERION)) continue;
-						if (value.getName().indexOf(Value.VALUE_NAME_KNOWLEDGE_PROPERTY_VALUE) == 0) {
+						if (value.getName().indexOf(Value.VALUE_NAME_KNOWLEDGE_PROPERTY_CRITERION) == 0 ) continue;
+						if (value.getName().contains(PRAEFIX_VALUE_NAME)) {
 							values.add(value);
 						}
 						

@@ -117,7 +117,7 @@ public class KnowledgeElement {
 		String output;
 		String itemList = knowledgeItemList.toString();
 		
-		if (source == null || subject == null || itemList.length() == 0) {
+		if (source == null || subject == null || itemList.length() == 0 ) {
 			output = "";
 		}
 		else {

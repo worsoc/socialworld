@@ -28,12 +28,13 @@ import java.util.List;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
+import org.socialworld.calculation.application.KnowledgeCalculator;
 import org.socialworld.knowledge.KnowledgeFact_Type;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 
 public class CreateKnowledgeAtomExpression extends CreateValue {
 
-	public CreateKnowledgeAtomExpression(KnowledgeFact_Type knowledgeFact_Type, List<Expression> listExpressions) {
+	public CreateKnowledgeAtomExpression(KnowledgeFact_Type knowledgeFact_Type, List<Expression> listExpressions, List<String> valueNames) {
 		
 		super(Type.knowledgeAtom);
 
@@ -41,7 +42,7 @@ public class CreateKnowledgeAtomExpression extends CreateValue {
 		case property:
 			if (listExpressions.size() > 1) {
 				
-				initProperty(listExpressions);
+				initProperty(listExpressions, valueNames);
 				
 				setValid();
 				
@@ -139,11 +140,10 @@ public class CreateKnowledgeAtomExpression extends CreateValue {
 		super(Type.knowledgeAtom);
 
 		if (listExpressions.size() > 1) {
-		
-			initProperty(listExpressions);
+			List<String> noNames = new ArrayList<String>();
+			initProperty(listExpressions, noNames);
 			
 			setValid();
-			
 		}
 		
 	}
@@ -238,17 +238,25 @@ public class CreateKnowledgeAtomExpression extends CreateValue {
 		
 	}
 	
-	private void initProperty(List<Expression> listExpressions) {
+	private void initProperty(List<Expression> listExpressions, List<String> valueNames) {
 		
 		List<Expression> listExpressionsWithCriterion = new ArrayList<Expression>();
 		List<String> names = new ArrayList<String>();
 
-		names.add(Value.VALUE_NAME_KNOWLEDGE_PROPERTY_CRITERION);
-		listExpressionsWithCriterion.add(listExpressions.get(0));
+		if (listExpressions.size() == valueNames.size()) {
+			for (int index = 0; index < listExpressions.size(); index++) {
+				names.add(valueNames.get(index));
+				listExpressionsWithCriterion.add(listExpressions.get(index));
+			}
+		}
+		else {
+			names.add(Value.VALUE_NAME_KNOWLEDGE_PROPERTY_CRITERION);
+			listExpressionsWithCriterion.add(listExpressions.get(0));
 
-		for (int index = 1; index < listExpressions.size(); index++) {
-			names.add(Value.VALUE_NAME_KNOWLEDGE_PROPERTY_VALUE + index);
-			listExpressionsWithCriterion.add(listExpressions.get(index));
+			for (int index = 1; index < listExpressions.size(); index++) {
+				names.add(KnowledgeCalculator.PRAEFIX_VALUE_NAME + Value.VALUE_NAME_KNOWLEDGE_PROPERTY_VALUE + index);
+				listExpressionsWithCriterion.add(listExpressions.get(index));
+			}
 		}
 
 		// sub type property

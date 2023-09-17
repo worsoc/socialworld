@@ -86,6 +86,23 @@ public class ValueArrayList {
 
 	}
 
+	public int findValueNameStartingWith(String nameStartingWith) {
+		
+		int argumentsCount;
+		int index;
+		
+		String name;
+		argumentsCount = size();
+		
+		for (index = 0; index < argumentsCount; index++) {
+			name = get(index).getName();
+			if (name.indexOf(nameStartingWith) == 0) return index;
+		}
+		
+		return -1;
+
+	}
+
 	public Value getValue(String name) {
 		
 		int argumentsCount;
