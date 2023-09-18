@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.collections.ReadOnlyIterator;
+import org.socialworld.core.AllWords;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 
 public class Lexem {
@@ -102,7 +103,9 @@ public class Lexem {
 
 	public String toString() {
 		String output;
-		output = "" + lexemID;
+		Word lexemsWord  = AllWords.getWord(lexemID);
+		String word = lexemsWord.getWord();
+		output = "" + (word.equals("") ? lexemID : word);
 		return output;
 	}
 	

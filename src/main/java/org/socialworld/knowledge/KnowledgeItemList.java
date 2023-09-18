@@ -35,7 +35,7 @@ final class KnowledgeItemList  {
 		
 		private KnowledgeItem item;
 		private int accessCount = 0;
-		private boolean isValid = true;  // TODO for development set to true, must be false
+		private boolean isValid = false; 
 		
 		private KnowledgeItemWithMetaInfo(KnowledgeItem item) {
 			this.item = item;
@@ -44,6 +44,11 @@ final class KnowledgeItemList  {
 		private void setValid() {
 			resetAccessCount();
 			this.isValid = true;
+		}
+
+		private void setInValid() {
+			resetAccessCount();
+			this.isValid = false;
 		}
 
 		private void resetAccessCount() {
@@ -258,7 +263,7 @@ final class KnowledgeItemList  {
 			KnowledgeItem itemFromPool = poolInstance.getItemFromPool(item);
 			
 			KnowledgeItemWithMetaInfo newItem = new KnowledgeItemWithMetaInfo(itemFromPool);
-			newItem.resetAccessCount();
+			newItem.setValid();
 			newItem.incrementAccessCount();
 			newItem.incrementAccessCount();
 			

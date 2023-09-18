@@ -115,8 +115,10 @@ public class EventPerceptionDescriptionPool extends DescriptionPool {
 
 		String lines4OneKE =		"KSrcT:1&KSrc:GETVal(myself);KSbj:GETVal(event_params).GETVal(event_causer);" +
 				"KProp(0,inventory_shirt.SOGN_184549375.mainColour):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_shirt)#IsElem(184549375).GETProp(stateAppearance).GETFctVal(getMainColour)&" +
+				"KProp(0,inventory_trousers.SOGN_184549375.mainColour):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_trousers)#IsElem(184549375).GETProp(stateAppearance).GETFctVal(getMainColour)&" +
 				"KProp(0,inventory_cap.SOGN_184549375.mainColour):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_cap)#IsElem(184549375).GETProp(stateAppearance).GETFctVal(getMainColour);" +
-				"KProp(1,inventory_shirt.SOGN_184549375.mainMaterial):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_shirt)#IsElem(184549375).GETProp(stateComposition).GETFctVal(getMainMaterial)";
+				"KProp(1,inventory_shirt.SOGN_184549375.mainMaterial):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_shirt)#IsElem(184549375).GETProp(stateComposition).GETFctVal(getMainMaterial)&" +
+				"KProp(1,inventory_cap.SOGN_184549375.mainMaterial):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_cap)#IsElem(184549375).GETProp(stateComposition).GETFctVal(getMainMaterial)";
 
 //		String lines4OneKE =		"KSrcT:1&KSrc:GETVal(myself);KSbj:GETVal(event_params).GETVal(event_causer);" +
 //				"KProp(1,inventory_shirt.SOGN_184549375.mainMaterial):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_shirt)#IsElem(184549375).GETProp(stateComposition).GETFctVal(getMainMaterial)";

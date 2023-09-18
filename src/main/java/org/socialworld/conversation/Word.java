@@ -70,7 +70,7 @@ public class Word {
 	
 	
 	public String getWord() {
-		return word;
+		return (word == null ? "" : word);
 	}
 	
 	public int getWordID() {

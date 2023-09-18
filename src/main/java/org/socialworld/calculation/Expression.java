@@ -442,13 +442,6 @@ public class Expression {
 									System.out.println("Expression.evaluate: action target: " + ((SimulationObject)tmp.getValue()).getObjectID()  );
 						}
 
-						// just for debugging
-						if (name.contains("SOGN_1845")) {
-
-								int myBreakpoint = 0;
-								myBreakpoint++;
-						}
-
 						if (name.length() > 0) {
 							tmp.changeName(name);
 							index = valueList.findValue(name);
@@ -472,7 +465,6 @@ public class Expression {
 					
 					Type type;
 					Value createdValue;;
-					int size;
 					
 					int subType;
 					type = Type.getName((int) value.getValue());

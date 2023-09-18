@@ -37,7 +37,8 @@ public enum Material implements IEnumProperty {
 	leather(1),
 	glas(2),
 	cotton(3),
-	iron(4);
+	iron(4),
+	paper(5);
 	
 	private int index;
 
