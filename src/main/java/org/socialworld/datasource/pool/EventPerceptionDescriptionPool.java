@@ -105,27 +105,36 @@ public class EventPerceptionDescriptionPool extends DescriptionPool {
 		Lines4EventType lines4EventType;
 		int perceptionType;
 
-//		String gegenProbezuLineID_8607_with_getIndex =		"KSrcT:1&KSrc:GETVal(myself);KSbj:GETVal(event_params).GETVal(event_causer);KProp(0,inventory_shirt.SOGN_184549375.mainColour):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_shirt)#IsElem(184549375).GETProp(stateAppearance).GETFctVal(getMainColour).GETFctVal(getIndex)";
-//		String gegenProbezuLineID_8607 =		"KSrcT:1&KSrc:GETVal(myself);KSbj:GETVal(event_params).GETVal(event_causer);KProp(0,inventory_shirt.SOGN_184549375.mainColour):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_shirt)#IsElem(184549375).GETProp(stateAppearance).GETFctVal(getMainColour)";
-
-		// aus 8607 
-//		String lines4OneKE =		"KSrcT:1&KSrc:GETVal(myself);KSbj:GETVal(event_params).GETVal(event_causer);" +
-//				"KProp(0,inventory_shirt.SOGN_184549375.mainColour):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_shirt)#IsElem(184549375).GETProp(stateAppearance).GETFctVal(getMainColour)&" +
-//				"KProp(0,inventory_cap.SOGN_184549375.mainColour):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_cap)#IsElem(184549375).GETProp(stateAppearance).GETFctVal(getMainColour)";
-
-		String lines4OneKE =		"KSrcT:1&KSrc:GETVal(myself);KSbj:GETVal(event_params).GETVal(event_causer);" +
+		List<String> lines4OneKE = new ArrayList<String>();
+		
+		lines4OneKE.add("KSrcT:1&KSrc:GETVal(myself);KSbj:GETVal(event_params).GETVal(event_causer);" +
 				"KProp(0,inventory_shirt.SOGN_184549375.mainColour):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_shirt)#IsElem(184549375).GETProp(stateAppearance).GETFctVal(getMainColour)&" +
 				"KProp(0,inventory_trousers.SOGN_184549375.mainColour):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_trousers)#IsElem(184549375).GETProp(stateAppearance).GETFctVal(getMainColour)&" +
 				"KProp(0,inventory_cap.SOGN_184549375.mainColour):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_cap)#IsElem(184549375).GETProp(stateAppearance).GETFctVal(getMainColour);" +
 				"KProp(1,inventory_shirt.SOGN_184549375.mainMaterial):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_shirt)#IsElem(184549375).GETProp(stateComposition).GETFctVal(getMainMaterial)&" +
-				"KProp(1,inventory_cap.SOGN_184549375.mainMaterial):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_cap)#IsElem(184549375).GETProp(stateComposition).GETFctVal(getMainMaterial)";
+				"KProp(1,inventory_cap.SOGN_184549375.mainMaterial):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_cap)#IsElem(184549375).GETProp(stateComposition).GETFctVal(getMainMaterial)");
 
-//		String lines4OneKE =		"KSrcT:1&KSrc:GETVal(myself);KSbj:GETVal(event_params).GETVal(event_causer);" +
-//				"KProp(1,inventory_shirt.SOGN_184549375.mainMaterial):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_shirt)#IsElem(184549375).GETProp(stateComposition).GETFctVal(getMainMaterial)";
+		lines4OneKE.add("KSrcT:1&KSrc:GETVal(myself);KSbj:GETVal(event_params).GETVal(event_causer);" +
+				"KProp(0,inventory_cap.SOGN_184549375.mainColour):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_cap)#IsElem(184549375).GETProp(stateAppearance).GETFctVal(getMainColour);" +
+				"KProp(1,inventory_cap.SOGN_184549375.mainMaterial):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_cap)#IsElem(184549375).GETProp(stateComposition).GETFctVal(getMainMaterial)");
+		
+		lines4OneKE.add("KSrcT:1&KSrc:GETVal(myself);KSbj:GETVal(event_params).GETVal(event_causer);" +
+				"KProp(1,inventory_shirt.SOGN_184549375.mainMaterial):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_shirt)#IsElem(184549375).GETProp(stateComposition).GETFctVal(getMainMaterial)&" +
+				"KProp(1,inventory_cap.SOGN_184549375.mainMaterial):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_cap)#IsElem(184549375).GETProp(stateComposition).GETFctVal(getMainMaterial)");
+	
+		lines4OneKE.add("KSrcT:1&KSrc:GETVal(myself);KSbj:GETVal(event_params).GETVal(event_causer);" +
+		"KProp(0,inventory_cap.SOGN_184549375.mainColour):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_cap)#IsElem(184549375).GETProp(stateAppearance).GETFctVal(getMainColour)&" +
+		"KProp(0,inventory_shirt.SOGN_184549375.mainColour):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_shirt)#IsElem(184549375).GETProp(stateAppearance).GETFctVal(getMainColour)") ;
+
+		
+		
+		int index;
+		int sizeListOfLines = lines4OneKE.size();
 		
 		lines4EventType = new Lines4EventType(EventType.percipientExists, rangeSecondIndex);
 		for ( perceptionType = 0; perceptionType < rangeSecondIndex; perceptionType++) {
-			lines4EventType.add(perceptionType, lines4OneKE);
+			index = perceptionType % sizeListOfLines;
+			lines4EventType.add(perceptionType, lines4OneKE.get(index));
 		}
 		allLines.add(lines4EventType);
 

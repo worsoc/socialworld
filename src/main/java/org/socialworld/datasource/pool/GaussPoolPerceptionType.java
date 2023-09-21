@@ -18,8 +18,8 @@ public class GaussPoolPerceptionType {
 		// initial values
 		for (int i = 0; i < CAPACITY_GPPT_ARRAY; i++) 
 			for (int j = 0; j < EventType.MAX_EVENT_TYPE; j++) {				
-				perceptionTypesForPositiveIndex[i][j] = 1;
-				perceptionTypesForNegativeIndex[i][j] = 1;
+				perceptionTypesForPositiveIndex[i][j] = i;
+				perceptionTypesForNegativeIndex[i][j] = i;
 			}
 	}
 
