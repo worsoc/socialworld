@@ -62,6 +62,15 @@ public class KnowledgeValue extends KnowledgeItem {
 		return this.value.getName();
 	}
 
+	protected boolean isEqual(KnowledgeItem item) {
+		if (item instanceof KnowledgeValue) {
+			KnowledgeValue kv = (KnowledgeValue) item;
+			return this.value.equals(kv.value);
+		}
+		return false;
+	}
+	
+
 	public String toString() {
 		String output = "";
 		output =  (value == null ? "" : value.toString());

@@ -24,6 +24,7 @@ package org.socialworld.knowledge;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.GlobalSwitches;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Relation;
@@ -286,17 +287,20 @@ final class KnowledgeItemList  {
 			this.validItemCount++;
 
 		}
-		
+		else {
+			if (GlobalSwitches.OUTPUT_KNOWLEDGE_ADDKNOWLEDGE) {
+				System.out.println("KnowledgeItem is already in KnowledgeItemList: " + item.toString());
+			}
+		}
 	}
 	
 	private boolean checkWhetherItemIsAlreadyInList(KnowledgeItem item) {
 		
 		boolean isAlreadyInList = false;
 		for (KnowledgeItemWithMetaInfo itemWMI : itemSearchList) {
-			if (itemWMI.item.equals(item)) {
-				isAlreadyInList = true;
-				break;
-			}
+			KnowledgeItem itemFromSearachList = itemWMI.item;
+			isAlreadyInList = itemFromSearachList.isEqual(item);
+			if (isAlreadyInList) break;
 		}
 		return isAlreadyInList;
 		

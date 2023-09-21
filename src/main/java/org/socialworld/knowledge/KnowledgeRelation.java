@@ -162,27 +162,6 @@ public abstract class KnowledgeRelation extends KnowledgeFact {
 		return new KnowledgeItemNotes(0);  // TODO KNOWLEDGE removeNotes();
 	}
 
-	protected boolean equals(KnowledgeRelation b) {
-		boolean isEqual = false;
-		
-		isEqual = checkWhetherTwoLexemsAreEqual(this.adverb, b.adverb);
-		if (isEqual) {
-			isEqual = checkWhetherTwoLexemsAreEqual(this.verb, b.verb);
-			if (isEqual) {
-				isEqual = checkWhetherTwoTensesAreEqual(this.tense, b.tense);
-				if (isEqual) {
-					isEqual = checkWhetherTwoRelationsAreEqual(this.relation, b.relation);
-					if (isEqual) {
-						isEqual = checkWhetherTwoNumerusAreEqual(this.numerusSubject, b.numerusSubject);
-						if (isEqual) {
-							isEqual = this.isSelfRelation == b.isSelfRelation;
-						}
-					}
-				}
-			}
-		}
-		return isEqual;
-	}
 	
 	protected boolean checkWhetherTwoTensesAreEqual(Tense a, Tense b) {
 		
@@ -212,6 +191,30 @@ public abstract class KnowledgeRelation extends KnowledgeFact {
 		
 		return a.equals(b);
 		
+	}
+
+
+
+	protected boolean relsAreEqual(KnowledgeRelation b) {
+		boolean isEqual = false;
+		
+		isEqual = checkWhetherTwoLexemsAreEqual(this.adverb, b.adverb);
+		if (isEqual) {
+			isEqual = checkWhetherTwoLexemsAreEqual(this.verb, b.verb);
+			if (isEqual) {
+				isEqual = checkWhetherTwoTensesAreEqual(this.tense, b.tense);
+				if (isEqual) {
+					isEqual = checkWhetherTwoRelationsAreEqual(this.relation, b.relation);
+					if (isEqual) {
+						isEqual = checkWhetherTwoNumerusAreEqual(this.numerusSubject, b.numerusSubject);
+						if (isEqual) {
+							isEqual = this.isSelfRelation == b.isSelfRelation;
+						}
+					}
+				}
+			}
+		}
+		return isEqual;
 	}
 
 	public String toString() {

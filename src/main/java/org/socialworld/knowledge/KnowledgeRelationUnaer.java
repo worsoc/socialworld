@@ -72,6 +72,13 @@ public class KnowledgeRelationUnaer extends KnowledgeRelation {
 		return result;
 	}
 
+	protected boolean isEqual(KnowledgeItem item) {
+		if (item instanceof KnowledgeRelationUnaer) {
+			return relsAreEqual((KnowledgeRelationUnaer)item);
+		}
+		return false;
+	}
+
 	public String toString() {
 		String output;
 		output = super.toString() ;

@@ -27,6 +27,7 @@ public abstract class KnowledgeItem {
 
 	abstract KnowledgeItem copy();
 	abstract KnowledgeItemNotes removeNotes();
+	protected abstract boolean isEqual(KnowledgeItem item);
 	
 	// TODO implement equals()
 

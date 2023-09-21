@@ -97,25 +97,30 @@ public class KnowledgeRelationTrinaer extends KnowledgeRelation {
 		return result;
 	}
 
-	protected boolean equals(KnowledgeRelation b) {
+	protected boolean isEqual(KnowledgeItem item) {
+		if (item instanceof KnowledgeRelationTrinaer) {
+			return relsAreEqual((KnowledgeRelationTrinaer)item);
+		}
+		return false;
+	}
+
+	protected boolean relsAreEqual(KnowledgeRelationTrinaer b) {
 		boolean isEqual = false;
-		
-		if (b instanceof KnowledgeRelationTrinaer) {
 			
-			isEqual = super.equals(b);
+		isEqual = super.equals(b);
+		if (isEqual) {
+			isEqual = checkWhetherTwoLexemsAreEqual(this.object1,  b.object1);
 			if (isEqual) {
-				isEqual = checkWhetherTwoLexemsAreEqual(this.object1, ((KnowledgeRelationTrinaer) b).object1);
+				isEqual = checkWhetherTwoLexemsAreEqual(this.object2, b.object2);
 				if (isEqual) {
-					isEqual = checkWhetherTwoLexemsAreEqual(this.object2, ((KnowledgeRelationTrinaer) b).object2);
+					isEqual = checkWhetherTwoNumerusAreEqual(this.numerusObject1, b.numerusObject1);
 					if (isEqual) {
-						isEqual = checkWhetherTwoNumerusAreEqual(this.numerusObject1, ((KnowledgeRelationTrinaer) b).numerusObject1);
-						if (isEqual) {
-							isEqual = checkWhetherTwoNumerusAreEqual(this.numerusObject2, ((KnowledgeRelationTrinaer) b).numerusObject2);
-						}
+						isEqual = checkWhetherTwoNumerusAreEqual(this.numerusObject2, b.numerusObject2);
 					}
 				}
 			}
 		}
+			
 		return isEqual;
 	}
 

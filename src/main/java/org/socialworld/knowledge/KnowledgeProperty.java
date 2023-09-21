@@ -75,9 +75,14 @@ public class KnowledgeProperty extends KnowledgeFact {
 		return criterion;
 	}
 
-	protected boolean equals(KnowledgeProperty b) {
-		return ( this.criterion == b.criterion && this.atoms.equals(b.atoms) );
+	protected boolean isEqual(KnowledgeItem item) {
+		if (item instanceof KnowledgeProperty) {
+			KnowledgeProperty kp = (KnowledgeProperty)item;
+			return this.criterion == kp.criterion && this.atoms.equals(kp.atoms);
+		}
+		return false;
 	}
+	
 	
 	protected KnowledgeFactAtom translateToKnowledgeFactAtom(Value value) {
 		KnowledgeFactAtom result = null;

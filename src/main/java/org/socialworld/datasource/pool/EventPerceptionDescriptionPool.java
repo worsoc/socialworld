@@ -121,10 +121,15 @@ public class EventPerceptionDescriptionPool extends DescriptionPool {
 		lines4OneKE.add("KSrcT:1&KSrc:GETVal(myself);KSbj:GETVal(event_params).GETVal(event_causer);" +
 				"KProp(1,inventory_shirt.SOGN_184549375.mainMaterial):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_shirt)#IsElem(184549375).GETProp(stateComposition).GETFctVal(getMainMaterial)&" +
 				"KProp(1,inventory_cap.SOGN_184549375.mainMaterial):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_cap)#IsElem(184549375).GETProp(stateComposition).GETFctVal(getMainMaterial)");
+
+		lines4OneKE.add("KSrcT:1&KSrc:GETVal(myself);KSbj:GETVal(event_params).GETVal(event_causer);" +
+				"KProp(0,inventory_cap.SOGN_184549375.mainColour):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_cap)#IsElem(184549375).GETProp(stateAppearance).GETFctVal(getMainColour)&" +
+				"KProp(0,inventory_shirt.SOGN_184549375.mainColour):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_shirt)#IsElem(184549375).GETProp(stateAppearance).GETFctVal(getMainColour)") ;
+	
 	
 		lines4OneKE.add("KSrcT:1&KSrc:GETVal(myself);KSbj:GETVal(event_params).GETVal(event_causer);" +
-		"KProp(0,inventory_cap.SOGN_184549375.mainColour):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_cap)#IsElem(184549375).GETProp(stateAppearance).GETFctVal(getMainColour)&" +
-		"KProp(0,inventory_shirt.SOGN_184549375.mainColour):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_shirt)#IsElem(184549375).GETProp(stateAppearance).GETFctVal(getMainColour)") ;
+				"KProp(0,inventory_cap.SOGN_184549375.mainColour):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_cap)#IsElem(184549375).GETProp(stateAppearance).GETFctVal(getMainColour);" +
+				"KProp(0,inventory_cap.SOGN_184549375.mainColour_2):GETVal(event_params).GETVal(event_causer)#IsElem(50331647).GETProp(stateInventory).GETProp(stateInventory_inventory).GETProp(inventory_cap)#IsElem(184549375).GETProp(stateAppearance).GETFctVal(getMainColour)") ;
 
 		
 		

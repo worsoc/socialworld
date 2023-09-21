@@ -216,15 +216,21 @@ public class Value {
 			
 
 	public boolean equals(Value anotherValue) {
-		
+		if (anotherValue == null) return false;
 		if (this.type.equals(anotherValue.type) ) {
+
+			Object valueThis  = this.getValue();
+			Object valueThat  = anotherValue.getValue();
+			
+			// TODO are to nulls equal or not?
+			if (valueThis == null || valueThat == null) return false;
 			
 			// TODO call concrete equals() implementations
 			switch (this.type) {
 				case attributeArray:
-					return ( ((AttributeArray) this.getValue()).equals((AttributeArray) anotherValue.getValue()) ) ;
+					return ( ((AttributeArray) valueThis).equals((AttributeArray) valueThat) ) ;
 				default:
-					return (  this.getValue().equals(anotherValue.getValue()) ) ;
+					return (  valueThis.equals(valueThat) ) ;
 			}
 		}
 		
