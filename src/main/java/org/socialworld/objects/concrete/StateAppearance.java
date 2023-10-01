@@ -34,6 +34,7 @@ import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.State;
 import org.socialworld.tools.StringTupel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class StateAppearance extends State {
@@ -42,8 +43,19 @@ public class StateAppearance extends State {
 
 	public static final String METHODNAME_GET_MAIN_COLOR = "getMainColour";
 
-	private ColourSet colourSet;
-
+	private short heightInMeters;
+	private byte heightInCentiMeters;
+	private short widthInMeters;
+	private byte widthInCentiMeters;
+	
+	private List<ColourSet> colourSets;
+/*	private ColourSet colourSet_2;
+	private ColourSet colourSet_3;
+	private ColourSet colourSet_4;
+	private ColourSet colourSet_5;
+	private ColourSet colourSet_6;
+	private ColourSet colourSet_7;
+*/
 	///////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////  static instance for meta information    ///////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
@@ -101,7 +113,14 @@ public class StateAppearance extends State {
 	}
 
 	private StateAppearance() {
-		this.colourSet = ColourSet.getObjectNothing();
+		
+		if (this.colourSets == null) {
+			this.colourSets = new ArrayList<ColourSet>();
+			for (int i = 0; i < 7; i++) {
+				this.colourSets.add(ColourSet.getObjectNothing());
+			}
+		}
+
 	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////////
@@ -112,11 +131,25 @@ public class StateAppearance extends State {
 	public StateAppearance(SimulationObject object) 
 	{
 		super(object);
-		if (this.colourSet == null) this.colourSet = ColourSet.getObjectNothing();
+		
+		if (this.colourSets == null) {
+			this.colourSets = new ArrayList<ColourSet>();
+			for (int i = 0; i < 7; i++) {
+				this.colourSets.add(ColourSet.getObjectNothing());
+			}
+		}
+		
 	}
 
 	protected  ReturnCode init() {
 		int objectID = getObjectID();
+		
+		if (this.colourSets == null) {
+			this.colourSets = new ArrayList<ColourSet>();
+			for (int i = 0; i < 7; i++) {
+				this.colourSets.add(ColourSet.getObjectNothing());
+			}
+		}
 		
 		TableStateAppearance tableState = null;
 		long lockingID = 0;
@@ -126,21 +159,58 @@ public class StateAppearance extends State {
 		}
 		int rowTable = tableState.loadForObjectID(objectID) ;
 		if (rowTable >= 0) {
-			colourSet = tableState.getColourSetFromRow(rowTable);
+			this.colourSets.set(mapCSN2CSN(PropertyName.stateAppearance_colourSkin) - 1,  tableState.getColourSetFromRow(rowTable, PropertyName.stateAppearance_colourSkin));
+			this.colourSets.set(mapCSN2CSN(PropertyName.stateAppearance_colourHair) - 1,  tableState.getColourSetFromRow(rowTable, PropertyName.stateAppearance_colourHair));
+			this.colourSets.set(mapCSN2CSN(PropertyName.stateAppearance_colourBeard) - 1,  tableState.getColourSetFromRow(rowTable, PropertyName.stateAppearance_colourBeard));
+			this.colourSets.set(mapCSN2CSN(PropertyName.stateAppearance_colourEye) - 1,  tableState.getColourSetFromRow(rowTable, PropertyName.stateAppearance_colourEye));
+/*
+ 			this.colourSets.set(mapCSN2CSN(PropertyName.stateAppearance_colourLeave) - 1,  tableState.getColourSetFromRow(rowTable, PropertyName.stateAppearance_colourLeave));
+			this.colourSets.set(mapCSN2CSN(PropertyName.stateAppearance_colourFruit) - 1,  tableState.getColourSetFromRow(rowTable, PropertyName.stateAppearance_colourFruit));
+			this.colourSets.set(mapCSN2CSN(PropertyName.stateAppearance_colourBlossom) - 1,  tableState.getColourSetFromRow(rowTable, PropertyName.stateAppearance_colourBlossom));
+*/
 		}
 		return returnFromInit(tableState, lockingID, rowTable);
 	}
 	
 	private StateAppearance( StateAppearance original, PropertyProtection protectionOriginal, SimulationCluster cluster) {
 		super(protectionOriginal, cluster);
+		if (this.colourSets == null) {
+			this.colourSets = new ArrayList<ColourSet>();
+		}
 		// TODO copy colourSet?
-		this.colourSet = original.colourSet;
+		for (int i = 0; i < 7; i++) {
+			this.colourSets.add(original.colourSets.get(i));
+		}
 	}
 
 	protected  void initPropertyName() {
 		setPropertyName(PropertyName.stateAppearance);
 	}
 
+	// mapColourSetPropName2ColourSetNumber
+	private int mapCSN2CSN(PropertyName colourSetPropName) {
+		switch (colourSetPropName) {
+		case stateAppearance_colourSkin:
+			return 1;
+		case stateAppearance_colourHair:
+			return 2;
+		case stateAppearance_colourBeard:
+			return 3;
+		case stateAppearance_colourEye:
+			return 4;
+		case stateAppearance_colourLeave:
+			return 1;
+		case stateAppearance_colourFruit:
+			return 2;
+		case stateAppearance_colourBlossom:
+			return 3;
+
+		default:
+			return 1;
+		}
+
+	}
+	
 	///////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////  implementing  ISavedValues  ////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
@@ -153,8 +223,27 @@ public class StateAppearance extends State {
 	@Override
 	public ValueProperty getProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
 		switch (propName) {
-		case stateAppearance_colourSet:
-			return new ValueProperty(Type.simObjProp, valueName, colourSet.copyForProperty(cluster));
+		case stateAppearance_colourSkin:
+			return new ValueProperty(Type.simObjProp, valueName, 
+					this.colourSets.get(mapCSN2CSN(PropertyName.stateAppearance_colourSkin) - 1).copyForProperty(cluster));
+		case stateAppearance_colourHair:
+			return new ValueProperty(Type.simObjProp, valueName, 
+					this.colourSets.get(mapCSN2CSN(PropertyName.stateAppearance_colourHair) - 1).copyForProperty(cluster));
+		case stateAppearance_colourBeard:
+			return new ValueProperty(Type.simObjProp, valueName, 
+					this.colourSets.get(mapCSN2CSN(PropertyName.stateAppearance_colourBeard) - 1).copyForProperty(cluster));
+		case stateAppearance_colourEye:
+			return new ValueProperty(Type.simObjProp, valueName, 
+					this.colourSets.get(mapCSN2CSN(PropertyName.stateAppearance_colourEye) - 1).copyForProperty(cluster));
+		case stateAppearance_colourLeave:
+			return new ValueProperty(Type.simObjProp, valueName, 
+					this.colourSets.get(mapCSN2CSN(PropertyName.stateAppearance_colourLeave) - 1).copyForProperty(cluster));
+		case stateAppearance_colourFruit:
+			return new ValueProperty(Type.simObjProp, valueName, 
+					this.colourSets.get(mapCSN2CSN(PropertyName.stateAppearance_colourFruit) - 1).copyForProperty(cluster));
+		case stateAppearance_colourBlossom:
+			return new ValueProperty(Type.simObjProp, valueName, 
+					this.colourSets.get(mapCSN2CSN(PropertyName.stateAppearance_colourBlossom) - 1).copyForProperty(cluster));
 		case stateAppearance_mainColour:
 			return getMainColour_(cluster, valueName);
 
@@ -183,7 +272,7 @@ public class StateAppearance extends State {
 	}
 
 	private ValueProperty getColourSetProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
-		return this.colourSet.getProperty(cluster, propName, valueName);
+		return this.colourSets.get(0).getProperty(cluster, propName, valueName);
 	}
 
 }

@@ -146,13 +146,31 @@ public class PropertySetCreationTool {
 				int maxSetID_2;
 				int setID_1;
 				int setID_2;
+				int setID_3;
+				int setID_4;
+				int setID_5;
+				int setID_6;
+				int setID_7;
 				
 				TableStateAppearance tableAppearance = new TableStateAppearance();
 				tableAppearance.clear();
 				maxSetID_1 = tableAppearance.getNewID( "swset_colour", "colour_set_id") - 1;
 				for (int id = 1; id < 1000; id++) {
 					setID_1 = (id % maxSetID_1) + 1;
-					tableAppearance.insert(id, setID_1);
+					setID_2 = ((id + 1) % maxSetID_1) + 1;
+					setID_3 = ((id + 3) % maxSetID_1) + 1;
+					setID_4 = ((id + 5) % maxSetID_1) + 1;
+					setID_5 = ((id + 7) % maxSetID_1) + 1;
+					setID_6 = ((id + 11) % maxSetID_1) + 1;
+					setID_7 = ((id + 13) % maxSetID_1) + 1;
+					tableAppearance.insert(id);
+					tableAppearance.updateColourSetID(id,  1, setID_1);
+					tableAppearance.updateColourSetID(id,  2, setID_2);
+					tableAppearance.updateColourSetID(id,  3, setID_3);
+					tableAppearance.updateColourSetID(id,  4, setID_4);
+					tableAppearance.updateColourSetID(id,  5, setID_5);
+					tableAppearance.updateColourSetID(id,  6, setID_6);
+					tableAppearance.updateColourSetID(id,  7, setID_7);
 				}
 				
 				TableStateComposition tableComposition = new TableStateComposition();
