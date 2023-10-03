@@ -23,6 +23,7 @@ package org.socialworld.objects;
 
 import java.util.List;
 
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.IEventParam;
@@ -54,6 +55,9 @@ public abstract class Magic extends SimulationObject {
 		return listOfPropertyMetaInfo;
 	}
 	
+	private static PropertyName[] usedStateAppearanceColourPropertyNames = new PropertyName[] {
+			PropertyName.stateAppearance_colourSkin
+		};
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////
@@ -93,6 +97,11 @@ public abstract class Magic extends SimulationObject {
 	}
 */
 
+
+	public PropertyName[] getUsedStateAppearanceColourPropertyNames() {
+		return usedStateAppearanceColourPropertyNames;
+	}
+	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    PROPERTY LIST  ///////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////

@@ -153,15 +153,15 @@ public class TableStateAppearance extends Table {
 		}
 	}
 
-	public int getColourSetID(int index, PropertyName colourSetPropName) {
-		switch (colourSetPropName) {
-		case stateAppearance_colourSkin: return colour_set_id_1[index];
-		case stateAppearance_colourHair: return colour_set_id_2[index];
-		case stateAppearance_colourBeard: return colour_set_id_3[index];
-		case stateAppearance_colourEye: return colour_set_id_4[index];
-		case stateAppearance_colourLeave: return colour_set_id_1[index];
-		case stateAppearance_colourFruit: return colour_set_id_2[index];
-		case stateAppearance_colourBlossom: return colour_set_id_3[index];
+	public int getColourSetID(int index, int colourSetColumnNumber) {
+		switch (colourSetColumnNumber) {
+		case 1: return colour_set_id_1[index];
+		case 2: return colour_set_id_2[index];
+		case 3: return colour_set_id_3[index];
+		case 4: return colour_set_id_4[index];
+		case 5: return colour_set_id_5[index];
+		case 6: return colour_set_id_6[index];
+		case 7: return colour_set_id_7[index];
 		default:
 			return 0;
 		}
@@ -193,13 +193,13 @@ public class TableStateAppearance extends Table {
 		
 	}
 
-	public ColourSet getColourSetFromRow (int row, PropertyName colourSetPropName) {
+	public ColourSet getColourSetFromRow (int row, int colourSetColumnNumber ) {
 		
 		int setID;
 		ColourSet set = ColourSet.getObjectNothing();
 		if (row >= 0) {
 			TableColourSet tableSet = new TableColourSet();
-			setID = getColourSetID(row, colourSetPropName);
+			setID = getColourSetID(row, colourSetColumnNumber);
 			if (setID > 0) set = tableSet.getColourSet(setID);
 		}
 		return set;

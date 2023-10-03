@@ -339,6 +339,7 @@ public abstract class SimulationObject implements IPerceptible {
 		 return this.state.getState2ActionType();
 		} 
 	
+	public abstract PropertyName[] getUsedStateAppearanceColourPropertyNames();
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    checking for interface  ///////////////////////////////////////////////

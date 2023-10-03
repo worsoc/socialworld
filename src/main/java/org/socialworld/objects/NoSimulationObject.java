@@ -1,5 +1,6 @@
 package org.socialworld.objects;
 
+import org.socialworld.attributes.PropertyName;
 
 public class NoSimulationObject extends SimulationObject {
 
@@ -12,7 +13,9 @@ public class NoSimulationObject extends SimulationObject {
 		return objectNothing;
 	}
 	
+	private static PropertyName[] usedStateAppearanceColourPropertyNames = new PropertyName[0];
 
+	
 	protected int getLexemIdHighPart() { return 0;}
 	protected int getLexemIdLowPart() { return 0;}
 
@@ -35,6 +38,14 @@ public class NoSimulationObject extends SimulationObject {
 		return false;
 	}
 
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    STATE      ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public PropertyName[] getUsedStateAppearanceColourPropertyNames() {
+		return usedStateAppearanceColourPropertyNames;
+	}
+	
 	@Override
 	protected void assignState(StateSimulationObject state) {
 	

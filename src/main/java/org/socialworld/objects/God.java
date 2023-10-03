@@ -23,6 +23,7 @@ package org.socialworld.objects;
 
 import java.util.List;
 
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.IEventParam;
@@ -53,6 +54,12 @@ public abstract class God extends SimulationObject {
 		return listOfPropertyMetaInfo;
 	}
 
+	private static PropertyName[] usedStateAppearanceColourPropertyNames = new PropertyName[] {
+			PropertyName.stateAppearance_colourSkin,
+			PropertyName.stateAppearance_colourHair,
+			PropertyName.stateAppearance_colourBeard,
+			PropertyName.stateAppearance_colourEye
+		};
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////
@@ -79,6 +86,14 @@ public abstract class God extends SimulationObject {
 		//if (checkIsMyState(state) ) this.state = (StateGod) state;
 	}
 
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    STATE      ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public PropertyName[] getUsedStateAppearanceColourPropertyNames() {
+		return usedStateAppearanceColourPropertyNames;
+	}
+	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    PROPERTY LIST  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////

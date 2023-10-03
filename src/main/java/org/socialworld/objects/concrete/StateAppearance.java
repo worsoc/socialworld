@@ -49,13 +49,9 @@ public class StateAppearance extends State {
 	private byte widthInCentiMeters;
 	
 	private List<ColourSet> colourSets;
-/*	private ColourSet colourSet_2;
-	private ColourSet colourSet_3;
-	private ColourSet colourSet_4;
-	private ColourSet colourSet_5;
-	private ColourSet colourSet_6;
-	private ColourSet colourSet_7;
-*/
+
+	private PropertyName[] colourSetPropNames;
+
 	///////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////  static instance for meta information    ///////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
@@ -151,6 +147,8 @@ public class StateAppearance extends State {
 			}
 		}
 		
+		this.colourSetPropNames = getObject().getUsedStateAppearanceColourPropertyNames();
+		
 		TableStateAppearance tableState = null;
 		long lockingID = 0;
 		while (lockingID == 0) {
@@ -159,15 +157,15 @@ public class StateAppearance extends State {
 		}
 		int rowTable = tableState.loadForObjectID(objectID) ;
 		if (rowTable >= 0) {
-			this.colourSets.set(mapCSN2CSN(PropertyName.stateAppearance_colourSkin) - 1,  tableState.getColourSetFromRow(rowTable, PropertyName.stateAppearance_colourSkin));
-			this.colourSets.set(mapCSN2CSN(PropertyName.stateAppearance_colourHair) - 1,  tableState.getColourSetFromRow(rowTable, PropertyName.stateAppearance_colourHair));
-			this.colourSets.set(mapCSN2CSN(PropertyName.stateAppearance_colourBeard) - 1,  tableState.getColourSetFromRow(rowTable, PropertyName.stateAppearance_colourBeard));
-			this.colourSets.set(mapCSN2CSN(PropertyName.stateAppearance_colourEye) - 1,  tableState.getColourSetFromRow(rowTable, PropertyName.stateAppearance_colourEye));
-/*
- 			this.colourSets.set(mapCSN2CSN(PropertyName.stateAppearance_colourLeave) - 1,  tableState.getColourSetFromRow(rowTable, PropertyName.stateAppearance_colourLeave));
-			this.colourSets.set(mapCSN2CSN(PropertyName.stateAppearance_colourFruit) - 1,  tableState.getColourSetFromRow(rowTable, PropertyName.stateAppearance_colourFruit));
-			this.colourSets.set(mapCSN2CSN(PropertyName.stateAppearance_colourBlossom) - 1,  tableState.getColourSetFromRow(rowTable, PropertyName.stateAppearance_colourBlossom));
-*/
+			
+			int colourSetNumber;
+			
+			for (PropertyName propName : colourSetPropNames) {
+				
+				colourSetNumber = mapCSPN2CSN(propName);
+				this.colourSets.set(colourSetNumber,  tableState.getColourSetFromRow(rowTable, colourSetNumber + 1));
+				
+			}
 		}
 		return returnFromInit(tableState, lockingID, rowTable);
 	}
@@ -188,26 +186,11 @@ public class StateAppearance extends State {
 	}
 
 	// mapColourSetPropName2ColourSetNumber
-	private int mapCSN2CSN(PropertyName colourSetPropName) {
-		switch (colourSetPropName) {
-		case stateAppearance_colourSkin:
-			return 1;
-		case stateAppearance_colourHair:
-			return 2;
-		case stateAppearance_colourBeard:
-			return 3;
-		case stateAppearance_colourEye:
-			return 4;
-		case stateAppearance_colourLeave:
-			return 1;
-		case stateAppearance_colourFruit:
-			return 2;
-		case stateAppearance_colourBlossom:
-			return 3;
-
-		default:
-			return 1;
+	private int mapCSPN2CSN(PropertyName colourSetPropName) {
+		for (int i = 0; i < colourSetPropNames.length; i++) {
+			if (colourSetPropNames[i].equals(colourSetPropName)) return i;
 		}
+		return 0;
 
 	}
 	
@@ -225,25 +208,25 @@ public class StateAppearance extends State {
 		switch (propName) {
 		case stateAppearance_colourSkin:
 			return new ValueProperty(Type.simObjProp, valueName, 
-					this.colourSets.get(mapCSN2CSN(PropertyName.stateAppearance_colourSkin) - 1).copyForProperty(cluster));
+					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourSkin)).copyForProperty(cluster));
 		case stateAppearance_colourHair:
 			return new ValueProperty(Type.simObjProp, valueName, 
-					this.colourSets.get(mapCSN2CSN(PropertyName.stateAppearance_colourHair) - 1).copyForProperty(cluster));
+					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourHair)).copyForProperty(cluster));
 		case stateAppearance_colourBeard:
 			return new ValueProperty(Type.simObjProp, valueName, 
-					this.colourSets.get(mapCSN2CSN(PropertyName.stateAppearance_colourBeard) - 1).copyForProperty(cluster));
+					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourBeard)).copyForProperty(cluster));
 		case stateAppearance_colourEye:
 			return new ValueProperty(Type.simObjProp, valueName, 
-					this.colourSets.get(mapCSN2CSN(PropertyName.stateAppearance_colourEye) - 1).copyForProperty(cluster));
+					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourEye)).copyForProperty(cluster));
 		case stateAppearance_colourLeave:
 			return new ValueProperty(Type.simObjProp, valueName, 
-					this.colourSets.get(mapCSN2CSN(PropertyName.stateAppearance_colourLeave) - 1).copyForProperty(cluster));
+					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourLeave)).copyForProperty(cluster));
 		case stateAppearance_colourFruit:
 			return new ValueProperty(Type.simObjProp, valueName, 
-					this.colourSets.get(mapCSN2CSN(PropertyName.stateAppearance_colourFruit) - 1).copyForProperty(cluster));
+					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourFruit)).copyForProperty(cluster));
 		case stateAppearance_colourBlossom:
 			return new ValueProperty(Type.simObjProp, valueName, 
-					this.colourSets.get(mapCSN2CSN(PropertyName.stateAppearance_colourBlossom) - 1).copyForProperty(cluster));
+					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourBlossom)).copyForProperty(cluster));
 		case stateAppearance_mainColour:
 			return getMainColour_(cluster, valueName);
 
