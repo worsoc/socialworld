@@ -70,9 +70,23 @@ public abstract class Item extends SimulationObject {
 	}
 
 	private static PropertyName[] usedStateAppearanceColourPropertyNames = new PropertyName[] {
-			PropertyName.stateAppearance_colourSkin
+			PropertyName.stateAppearance_colourFrontside,
+			PropertyName.stateAppearance_colourBackside,
+			PropertyName.stateAppearance_colourLeftside,
+			PropertyName.stateAppearance_colourRightside,
+			PropertyName.stateAppearance_colourUpperside,
+			PropertyName.stateAppearance_colourLowerside
 		};
 	
+	private static byte[] stateAppearanceMainColourCalculationColourSetsShares = new byte[] {
+			17,
+			17,
+			17,
+			17,
+			16,
+			16
+	};
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -115,6 +129,10 @@ public abstract class Item extends SimulationObject {
 		return usedStateAppearanceColourPropertyNames;
 	}
 	
+	public byte[] getStateAppearanceMainColourCalculationColourSetsShares() {
+		return stateAppearanceMainColourCalculationColourSetsShares;
+	}
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    PROPERTY LIST  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////

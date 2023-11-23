@@ -24,6 +24,7 @@ package org.socialworld.objects;
 
 import java.util.List;
 
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.knowledge.Acquaintance;
@@ -68,6 +69,31 @@ import org.socialworld.core.IEventParam;
 		return listOfPropertyMetaInfo;
 	}
 
+	private static PropertyName[] usedStateAppearanceColourPropertyNames = new PropertyName[] {
+			PropertyName.stateAppearance_colourHead,
+			PropertyName.stateAppearance_colourBreast,
+			PropertyName.stateAppearance_colourBack,
+			PropertyName.stateAppearance_colourTail,
+			PropertyName.stateAppearance_colourLegs,
+			PropertyName.stateAppearance_colourArms,
+			PropertyName.stateAppearance_colourSkin,
+			PropertyName.stateAppearance_colourHair,
+			PropertyName.stateAppearance_colourBeard,
+			PropertyName.stateAppearance_colourEye
+	};
+
+	private static byte[] stateAppearanceMainColourCalculationColourSetsShares = new byte[] {
+			10,
+			15,
+			20,
+			0,
+			35,
+			20,
+			0,
+			0,
+			0,
+			0
+	};
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////
@@ -123,6 +149,13 @@ import org.socialworld.core.IEventParam;
 	}
 	
 
+	public PropertyName[] getUsedStateAppearanceColourPropertyNames() {
+		return usedStateAppearanceColourPropertyNames;
+	}
+
+	public byte[] getStateAppearanceMainColourCalculationColourSetsShares() {
+		return stateAppearanceMainColourCalculationColourSetsShares;
+	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    TALK       ///////////////////////////////////////////////

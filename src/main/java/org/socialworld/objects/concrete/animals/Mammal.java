@@ -62,6 +62,14 @@ public abstract class Mammal extends Animal implements IRunning{
 		return listOfPropertyMetaInfo;
 	}
 
+	private static PropertyName[] usedStateAppearanceColourPropertyNames = new PropertyName[] {
+			PropertyName.stateAppearance_colourHead,
+			PropertyName.stateAppearance_colourBreast,
+			PropertyName.stateAppearance_colourBack,
+			PropertyName.stateAppearance_colourTail,
+			PropertyName.stateAppearance_colourLegs,
+			PropertyName.stateAppearance_colourArms
+	};
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////
@@ -90,6 +98,10 @@ public abstract class Mammal extends Animal implements IRunning{
 		
 	}
 
+	public PropertyName[] getUsedStateAppearanceColourPropertyNames() {
+		return usedStateAppearanceColourPropertyNames;
+	}
+	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// implementing IRunning ///////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////

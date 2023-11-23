@@ -5,10 +5,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.properties.ColourSet;
 import org.socialworld.datasource.mariaDB.Table;
 import org.socialworld.datasource.tablesSimulation.propertySets.TableColourSet;
+import org.socialworld.objects.concrete.StateAppearance;
 
 public class TableStateAppearance extends Table {
 
@@ -25,7 +25,10 @@ public class TableStateAppearance extends Table {
 		return newInstance;
 	}
 	
-	public final  String 	ALL_COLUMNS 		=	" id, width_m, width_cm, height_m, height_cm, colour_set_id_1, colour_set_id_2, colour_set_id_3, colour_set_id_4, colour_set_id_5, colour_set_id_6, colour_set_id_7 ";
+	public final  String 	ALL_COLUMNS 		=	" id, width_m, width_cm, height_m, height_cm, "
+			+ "colour_set_id_1, colour_set_id_2, colour_set_id_3, colour_set_id_4, colour_set_id_5, colour_set_id_6, colour_set_id_7, "
+			+ "colour_set_id_8, colour_set_id_9, colour_set_id_10, colour_set_id_11, colour_set_id_12, colour_set_id_13, colour_set_id_14 "
+			+ "colour_set_id_15 ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
 	int id[];
@@ -40,6 +43,14 @@ public class TableStateAppearance extends Table {
 	int colour_set_id_5[];
 	int colour_set_id_6[];
 	int colour_set_id_7[];
+	int colour_set_id_8[];
+	int colour_set_id_9[];
+	int colour_set_id_10[];
+	int colour_set_id_11[];
+	int colour_set_id_12[];
+	int colour_set_id_13[];
+	int colour_set_id_14[];
+	int colour_set_id_15[];
 
 	@Override
 	protected String getTableName() {
@@ -89,6 +100,14 @@ public class TableStateAppearance extends Table {
 		colour_set_id_5 = new int[rowCount];
 		colour_set_id_6 = new int[rowCount];
 		colour_set_id_7 = new int[rowCount];
+		colour_set_id_8 = new int[rowCount];
+		colour_set_id_9 = new int[rowCount];
+		colour_set_id_10 = new int[rowCount];
+		colour_set_id_11 = new int[rowCount];
+		colour_set_id_12 = new int[rowCount];
+		colour_set_id_13 = new int[rowCount];
+		colour_set_id_14 = new int[rowCount];
+		colour_set_id_15 = new int[rowCount];
 
 		try {
 			while (rs.next()) {
@@ -105,6 +124,14 @@ public class TableStateAppearance extends Table {
 				colour_set_id_5[row] = rs.getInt(10);
 				colour_set_id_6[row] = rs.getInt(11);
 				colour_set_id_7[row] = rs.getInt(12);
+				colour_set_id_8[row] = rs.getInt(13);
+				colour_set_id_9[row] = rs.getInt(14);
+				colour_set_id_10[row] = rs.getInt(15);
+				colour_set_id_11[row] = rs.getInt(16);
+				colour_set_id_12[row] = rs.getInt(17);
+				colour_set_id_13[row] = rs.getInt(18);
+				colour_set_id_14[row] = rs.getInt(19);
+				colour_set_id_15[row] = rs.getInt(20);
 				
 				row++;
 			}
@@ -130,7 +157,7 @@ public class TableStateAppearance extends Table {
 	public void updateColourSetID(int id, int colourSetColumnNr, int coloursetid) {
 		String statement;
 			
-		if (id > 0 && colourSetColumnNr > 0 && colourSetColumnNr < 8) {
+		if (id > 0 && colourSetColumnNr > 0 && colourSetColumnNr <= StateAppearance.COUNT_COLOUR_SETS) {
 	
 
 			statement 	= "UPDATE " + getTableName() + " SET " +
@@ -162,6 +189,14 @@ public class TableStateAppearance extends Table {
 		case 5: return colour_set_id_5[index];
 		case 6: return colour_set_id_6[index];
 		case 7: return colour_set_id_7[index];
+		case 8: return colour_set_id_8[index];
+		case 9: return colour_set_id_9[index];
+		case 10: return colour_set_id_10[index];
+		case 11: return colour_set_id_11[index];
+		case 12: return colour_set_id_12[index];
+		case 13: return colour_set_id_13[index];
+		case 14: return colour_set_id_14[index];
+		case 15: return colour_set_id_15[index];
 		default:
 			return 0;
 		}

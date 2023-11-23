@@ -21,6 +21,7 @@
 */
 package org.socialworld.objects.concrete.animals;
 
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.objects.Animal;
 import org.socialworld.objects.enums.EnumBaseSimObj;
 import org.socialworld.objects.enums.EnumBird;
@@ -28,6 +29,23 @@ import org.socialworld.objects.statics.Mapping_Bird2LexemIDLowerPart;
 
 public abstract class Bird extends Animal {
 
+///////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////meta information    ////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	private static PropertyName[] usedStateAppearanceColourPropertyNames = new PropertyName[] {
+			PropertyName.stateAppearance_colourHead,
+			PropertyName.stateAppearance_colourBreast,
+			PropertyName.stateAppearance_colourBack,
+			PropertyName.stateAppearance_colourTail,
+			PropertyName.stateAppearance_colourLegs,
+			PropertyName.stateAppearance_colourArms
+	};
+
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////    creating instance for simulation    //////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+	
 	protected EnumBird belongsTo;
 	
 	public Bird() {
@@ -41,4 +59,13 @@ public abstract class Bird extends Animal {
 	protected final int getLexemIdLowPart() {
 		return Mapping_Bird2LexemIDLowerPart.getInstance().get(belongsTo);
 	}
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    STATE      ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public PropertyName[] getUsedStateAppearanceColourPropertyNames() {
+		return usedStateAppearanceColourPropertyNames;
+	}
+	
 }

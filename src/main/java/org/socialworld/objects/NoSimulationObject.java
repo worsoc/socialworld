@@ -14,6 +14,7 @@ public class NoSimulationObject extends SimulationObject {
 	}
 	
 	private static PropertyName[] usedStateAppearanceColourPropertyNames = new PropertyName[0];
+	private static byte[] stateAppearanceMainColourCalculationColourSetsShares = new byte[0];
 
 	
 	protected int getLexemIdHighPart() { return 0;}
@@ -46,6 +47,10 @@ public class NoSimulationObject extends SimulationObject {
 		return usedStateAppearanceColourPropertyNames;
 	}
 	
+	public byte[] getStateAppearanceMainColourCalculationColourSetsShares() {
+		return stateAppearanceMainColourCalculationColourSetsShares;
+	}
+
 	@Override
 	protected void assignState(StateSimulationObject state) {
 	

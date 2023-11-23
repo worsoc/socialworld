@@ -340,6 +340,7 @@ public abstract class SimulationObject implements IPerceptible {
 		} 
 	
 	public abstract PropertyName[] getUsedStateAppearanceColourPropertyNames();
+	public abstract byte[] getStateAppearanceMainColourCalculationColourSetsShares();
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    checking for interface  ///////////////////////////////////////////////
