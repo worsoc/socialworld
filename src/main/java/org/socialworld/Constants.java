@@ -24,4 +24,5 @@ package org.socialworld;
 public class Constants {
 
 	public static  int MAPPING_NO_ENTRY_FOR_KEY = -1;
+	
 }
