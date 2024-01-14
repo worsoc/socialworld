@@ -21,6 +21,7 @@
 */
 package org.socialworld.objects.concrete;
 
+import org.socialworld.attributes.Dimension;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.attributes.properties.ColourSet;
@@ -45,11 +46,7 @@ public class StateAppearance extends State {
 
 	public static final String METHODNAME_GET_MAIN_COLOR = "getMainColour";
 
-	private short heightInMeters;
-	private byte heightInCentiMeters;
-	private short widthInMeters;
-	private byte widthInCentiMeters;
-	
+	private Dimension dimension;
 	private List<ColourSet> colourSets;
 
 	private PropertyName[] colourSetPropNames;
@@ -118,6 +115,9 @@ public class StateAppearance extends State {
 				this.colourSets.add(ColourSet.getObjectNothing());
 			}
 		}
+		if (this.dimension == null) {
+			this.dimension = Dimension.getObjectNothing();
+		}
 
 	}
 	
@@ -130,12 +130,15 @@ public class StateAppearance extends State {
 	{
 		super(object);
 		
-		// assumption: init() is called bei base class constructor --> this.colourSets is already initialized
+		// assumption: init() is called by base class constructor --> this.colourSets is already initialized
 		if (this.colourSets == null) {
 			this.colourSets = new ArrayList<ColourSet>();
 			for (int i = 0; i < COUNT_COLOUR_SETS; i++) {
 				this.colourSets.add(ColourSet.getObjectNothing());
 			}
+		}
+		if (this.dimension == null) {
+			this.dimension = Dimension.getObjectNothing();
 		}
 		
 	}
@@ -170,6 +173,9 @@ public class StateAppearance extends State {
 				this.colourSets.set(colourSetNumber,  tableState.getColourSetFromRow(rowTable, colourSetNumber + 1));
 				
 			}
+			
+			this.dimension = tableState.getDimensionFromRow(rowTable);
+			
 		}
 		return returnFromInit(tableState, lockingID, rowTable);
 	}
@@ -179,10 +185,13 @@ public class StateAppearance extends State {
 		if (this.colourSets == null) {
 			this.colourSets = new ArrayList<ColourSet>();
 		}
-		// TODO copy colourSet?
+		
+		// TODO using copy constructors?
+		
 		for (int i = 0; i < original.colourSetPropNames.length; i++) {
 			this.colourSets.add(original.colourSets.get(i));
 		}
+		this.dimension = original.dimension;
 	}
 
 	protected  void initPropertyName() {
@@ -273,8 +282,12 @@ public class StateAppearance extends State {
 		case stateAppearance_colourBlossom:
 			return new ValueProperty(Type.simObjProp, valueName, 
 					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourBlossom)).copyForProperty(cluster));
+			
 		case stateAppearance_mainColour:
 			return getMainColour_(cluster, valueName);
+			
+		case stateAppearance_dimension:
+			return new ValueProperty(Type.simObjProp, valueName, this.dimension.copyForProperty(cluster));
 
 		default:
 			return ValueProperty.getInvalid();

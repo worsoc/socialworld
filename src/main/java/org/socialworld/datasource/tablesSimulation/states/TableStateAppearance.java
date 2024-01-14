@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.attributes.Dimension;
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.properties.ColourSet;
 import org.socialworld.datasource.mariaDB.Table;
 import org.socialworld.datasource.tablesSimulation.propertySets.TableColourSet;
@@ -25,7 +27,7 @@ public class TableStateAppearance extends Table {
 		return newInstance;
 	}
 	
-	public final  String 	ALL_COLUMNS 		=	" id, width_m, width_cm, height_m, height_cm, "
+	public final  String 	ALL_COLUMNS 		=	" id, width_m, width_mm, height_m, height_mm, depth_m, depth_mm, "
 			+ "colour_set_id_1, colour_set_id_2, colour_set_id_3, colour_set_id_4, colour_set_id_5, colour_set_id_6, colour_set_id_7, "
 			+ "colour_set_id_8, colour_set_id_9, colour_set_id_10, colour_set_id_11, colour_set_id_12, colour_set_id_13, colour_set_id_14 "
 			+ "colour_set_id_15 ";
@@ -33,9 +35,11 @@ public class TableStateAppearance extends Table {
 
 	int id[];
 	short width_m[];
-	byte width_cm[];
+	short width_mm[];
 	short height_m[];
-	byte height_cm[];
+	short height_mm[];
+	short depth_m[];
+	short depth_mm[];
 	int colour_set_id_1[];
 	int colour_set_id_2[];
 	int colour_set_id_3[];
@@ -90,9 +94,11 @@ public class TableStateAppearance extends Table {
 		int row = 0;
 		id = new int[rowCount];
 		width_m = new short[rowCount];
-		width_cm = new byte[rowCount];
+		width_mm = new short[rowCount];
 		height_m = new short[rowCount];
-		height_cm = new byte[rowCount];
+		height_mm = new short[rowCount];
+		depth_m = new short[rowCount];
+		depth_mm = new short[rowCount];
 		colour_set_id_1 = new int[rowCount];
 		colour_set_id_2 = new int[rowCount];
 		colour_set_id_3 = new int[rowCount];
@@ -114,24 +120,26 @@ public class TableStateAppearance extends Table {
 				
 				id[row] = rs.getInt(1);
 				width_m[row] = rs.getShort(2);
-				width_cm[row] = rs.getByte(3);
+				width_mm[row] = rs.getShort(3);
 				height_m[row] = rs.getShort(4);
-				height_cm[row] = rs.getByte(5);
-				colour_set_id_1[row] = rs.getInt(6);
-				colour_set_id_2[row] = rs.getInt(7);
-				colour_set_id_3[row] = rs.getInt(8);
-				colour_set_id_4[row] = rs.getInt(9);
-				colour_set_id_5[row] = rs.getInt(10);
-				colour_set_id_6[row] = rs.getInt(11);
-				colour_set_id_7[row] = rs.getInt(12);
-				colour_set_id_8[row] = rs.getInt(13);
-				colour_set_id_9[row] = rs.getInt(14);
-				colour_set_id_10[row] = rs.getInt(15);
-				colour_set_id_11[row] = rs.getInt(16);
-				colour_set_id_12[row] = rs.getInt(17);
-				colour_set_id_13[row] = rs.getInt(18);
-				colour_set_id_14[row] = rs.getInt(19);
-				colour_set_id_15[row] = rs.getInt(20);
+				height_mm[row] = rs.getShort(5);
+				depth_m[row] = rs.getShort(6);
+				depth_mm[row] = rs.getShort(7);
+				colour_set_id_1[row] = rs.getInt(8);
+				colour_set_id_2[row] = rs.getInt(9);
+				colour_set_id_3[row] = rs.getInt(10);
+				colour_set_id_4[row] = rs.getInt(11);
+				colour_set_id_5[row] = rs.getInt(12);
+				colour_set_id_6[row] = rs.getInt(13);
+				colour_set_id_7[row] = rs.getInt(14);
+				colour_set_id_8[row] = rs.getInt(15);
+				colour_set_id_9[row] = rs.getInt(16);
+				colour_set_id_10[row] = rs.getInt(17);
+				colour_set_id_11[row] = rs.getInt(18);
+				colour_set_id_12[row] = rs.getInt(19);
+				colour_set_id_13[row] = rs.getInt(20);
+				colour_set_id_14[row] = rs.getInt(21);
+				colour_set_id_15[row] = rs.getInt(22);
 				
 				row++;
 			}
@@ -168,6 +176,41 @@ public class TableStateAppearance extends Table {
 		}
 	}
 	
+	public void updateHeight(int id, short height_m, short height_mm) {
+		String statement;
+			
+		if (id > 0) {
+			statement 	= "UPDATE " + getTableName() + " SET " +
+					"height_m = " + height_m  + ", height_mm = " + height_mm + " " +
+					"WHERE id = " + id  ;
+			
+			update(statement);
+		}
+	}
+
+	public void updateWidth(int id, short width_m, short width_mm) {
+		String statement;
+			
+		if (id > 0) {
+			statement 	= "UPDATE " + getTableName() + " SET " +
+					"width_m = " + width_m  + ", width_mm = " + width_mm + " " +
+					"WHERE id = " + id  ;
+			
+			update(statement);
+		}
+	}
+
+	public void updateDepth(int id, short depth_m, short depth_mm) {
+		String statement;
+			
+		if (id > 0) {
+			statement 	= "UPDATE " + getTableName() + " SET " +
+					"depth_m = " + depth_m  + ", depth_mm = " + depth_mm + " " +
+					"WHERE id = " + id  ;
+			
+			update(statement);
+		}
+	}
 
 	public void delete(int id) {
 		String statement;
@@ -207,16 +250,24 @@ public class TableStateAppearance extends Table {
 			return width_m[index];
 	}
 
-	public byte getWidthInCentiMeters(int index) {
-		return width_cm[index];
+	public short getWidthMilliMeters(int index) {
+		return width_mm[index];
 	}
 
 	public short getHeightInMeters(int index) {
 		return height_m[index];
 	}
 	
-	public byte getHeightInCentiMeters(int index) {
-		return height_cm[index];
+	public short getHeightInMilliMeters(int index) {
+		return height_mm[index];
+	}
+
+	public short getDepthInMeters(int index) {
+		return depth_m[index];
+	}
+	
+	public short getDepthInMilliMeters(int index) {
+		return depth_mm[index];
 	}
 
 	public int loadForObjectID(int objectID) {
@@ -240,6 +291,10 @@ public class TableStateAppearance extends Table {
 		return set;
 	}
 	
-	
+	public Dimension getDimensionFromRow(int row) {
+		Dimension dimension = new Dimension(PropertyName.stateAppearance_dimension, 
+				height_m[row], height_mm[row], width_m[row], width_mm[row], depth_m[row], depth_mm[row]);
+		return dimension;
+	}
 	
 }

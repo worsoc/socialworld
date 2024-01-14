@@ -97,6 +97,13 @@ public enum PropertyName {
 	//colourSet_portions(1105102),
 	//colourSet_types(1105103),
 	colourSet_mainColour(1105104),
+	stateAppearance_dimension(1105200),
+	dimension_height_m(1105201),
+	dimension_height_mm(1105202),
+	dimension_width_m(1105203),
+	dimension_width_mm(1105204),
+	dimension_depth_m(1105205),
+	dimension_depth_mm(1105206),
 	
 	statePerceptible(1106000),
 	statePerceptible_position(1106001),
