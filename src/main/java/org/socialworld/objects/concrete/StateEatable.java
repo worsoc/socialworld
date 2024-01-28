@@ -153,6 +153,8 @@ public class StateEatable extends State {
 
 	private StateEatable( StateEatable original, PropertyProtection protectionOriginal, SimulationCluster cluster) {
 		super(protectionOriginal, cluster);
+		this.nutrientSet = (NutrientSet) original.nutrientSet.copyForProperty(cluster);
+		this.tasteSet = (TasteSet) original.tasteSet.copyForProperty(cluster);
 	}
 
 	protected  void initPropertyName() {

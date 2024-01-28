@@ -125,6 +125,7 @@ public class StatePerceptible extends State {
 
 	private StatePerceptible( StatePerceptible original, PropertyProtection protectionOriginal, SimulationCluster cluster) {
 		super(protectionOriginal, cluster);
+		this.percipience = (Percipience) original.percipience.copy();
 	}
 	
 	

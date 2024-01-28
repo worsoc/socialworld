@@ -101,6 +101,13 @@ public class Percipience {
 		setDistancesOfNotice();
 	}
 	
+	private Percipience(Percipience original) {
+		// TODO copy percipience
+	}
+
+	public Percipience copy() {
+		return new Percipience(this);
+	}
 	
 	public boolean checkIsPossiblePercipient(Animal possiblePercipient) {
 		

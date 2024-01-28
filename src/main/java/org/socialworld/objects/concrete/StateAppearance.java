@@ -185,13 +185,11 @@ public class StateAppearance extends State {
 		if (this.colourSets == null) {
 			this.colourSets = new ArrayList<ColourSet>();
 		}
-		
-		// TODO using copy constructors?
-		
+			
 		for (int i = 0; i < original.colourSetPropNames.length; i++) {
-			this.colourSets.add(original.colourSets.get(i));
+			this.colourSets.add((ColourSet) original.colourSets.get(i).copyForProperty(cluster));
 		}
-		this.dimension = original.dimension;
+		this.dimension = (Dimension) original.dimension.copyForProperty(cluster);
 	}
 
 	protected  void initPropertyName() {

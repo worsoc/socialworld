@@ -113,8 +113,7 @@ public class StateComposition extends State {
 
 	private StateComposition( StateComposition original, PropertyProtection protectionOriginal, SimulationCluster cluster) {
 		super(protectionOriginal, cluster);
-		// TODO copy materialSet?
-		this.materialSet = original.materialSet;
+		this.materialSet = (MaterialSet) original.materialSet.copyForProperty(cluster);
 	}
 	
 	protected  void initPropertyName() {
