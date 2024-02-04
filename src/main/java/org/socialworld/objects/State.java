@@ -26,7 +26,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.socialworld.attributes.ISavedValues;
+import org.socialworld.attributes.ISavedValue;
 import org.socialworld.attributes.ISimProperty;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
@@ -44,7 +44,7 @@ import org.socialworld.tools.StringTupel;
 // TODO implement copy constructor in sub classes
 // TODO implement getProperty() and setProperty() in sub classes
 
-public abstract class State implements ISimProperty, ISavedValues {
+public abstract class State implements ISimProperty, ISavedValue {
 
 	
 	
@@ -58,13 +58,13 @@ public abstract class State implements ISimProperty, ISavedValues {
 	protected State(SimulationObject object) {
 		this.object = object;
 		initPropertyName();
-		this.protection = new PropertyProtection(this);
+		this.protection =  PropertyProtection.getProtection(this);
 		init();
 	}
 
 	protected State(PropertyProtection protectionOriginal, SimulationCluster clusterNew) {
 		initPropertyName();
-		this.protection = new PropertyProtection(protectionOriginal, clusterNew, this);
+		this.protection = PropertyProtection.getProtection(protectionOriginal, clusterNew, this);
 	}
 
 	protected State() {
@@ -101,7 +101,7 @@ public abstract class State implements ISimProperty, ISavedValues {
 		protected void initPropertyName() {};
 		protected ReturnCode init() {return ReturnCode.ignore; };
 		protected void setProperty(PropertyName propName, ValueProperty property) {};
-		public ISavedValues copyForProperty(SimulationCluster cluster) {return objectNothing; }
+		public ISavedValue copyForProperty(SimulationCluster cluster) {return objectNothing; }
 	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////////
@@ -186,9 +186,15 @@ public abstract class State implements ISimProperty, ISavedValues {
 	
 
 	///////////////////////////////////////////////////////////////////////////////////////////
-	/////////////////////////  implementing  ISavedValues  ////////////////////////////////////
+	/////////////////////////  implementing  ISavedValue  ////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 
+	public final boolean isProtected() {
+		if (this.protection == null) return false;
+		if (!this.protection.hasRestrictions()) return false;
+		if (this.protection.hasUnknownCluster()) return false;
+		return true;
+	}
 
 	public final boolean hasPropertyProtection() {
 		
@@ -205,7 +211,7 @@ public abstract class State implements ISimProperty, ISavedValues {
 	}
 
 	public final PropertyProtection getPropertyProtection() {
-		return new PropertyProtection(this.protection);
+		return  PropertyProtection.getProtection(this.protection);
 	};
 	
 	public final void setPropertyProtection(PropertyProtection propertyProtection) {
@@ -220,22 +226,42 @@ public abstract class State implements ISimProperty, ISavedValues {
 		return this.protection.checkHasUseAsPermission(useAsPermission);
 	}
 
+	public final PropertyUsingAs[] getReducedUseAsPermissions(PropertyUsingAs[] useAsPermissions) {
+		PropertyUsingAs[] result = null;
+		// TODO implement getReducedUseAsPermissions
+		return result;
+	}
+	
+	public final boolean checkUseAsPermissionsReductionNecessary(PropertyUsingAs[] useAsPermissions) {
+		// TODO implement checkUseAsPermissionsReductionNecessary
+		return true;
+	}
 	
 	
 	
 	public final  ValueProperty getAsValue(SimulationCluster cluster) {
-		Type propertyType;
-		propertyType = this.propertyName.getType();
-		return new ValueProperty(propertyType,   this.propertyName.toString(), copyForProperty(cluster));
+		if (protection.checkHasGetPermission(cluster)) {
+			Type propertyType;
+			propertyType = this.propertyName.getType();
+			return new ValueProperty(propertyType,   this.propertyName.toString(), copyForProperty(cluster));
+		}
+		else {
+			return ValueProperty.getInvalid();
+		}
 	}
 	
 	public final ValueProperty getAsValue(SimulationCluster cluster, String valueName) {
-		Type propertyType;
-		propertyType = this.propertyName.getType();
-		return new ValueProperty(propertyType,   valueName, copyForProperty(cluster));
+		if (protection.checkHasGetPermission(cluster)) {
+			Type propertyType;
+			propertyType = this.propertyName.getType();
+			return new ValueProperty(propertyType,   valueName, copyForProperty(cluster));
+		}
+		else {
+			return ValueProperty.getInvalid();
+		}
 	}
 
-	// ISavedValues copyForProperty(SimulationCluster cluster) will be implemented in inherited classes
+	// ISavedValue copyForProperty(SimulationCluster cluster) will be implemented in inherited classes
 
 	
 	

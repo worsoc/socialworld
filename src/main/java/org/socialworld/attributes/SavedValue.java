@@ -33,7 +33,7 @@ import org.socialworld.calculation.ValueProperty;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.tools.StringTupel;
 
-public abstract class SavedValue implements ISavedValues {
+public abstract class SavedValue implements ISavedValue {
 
 	private boolean isObjectNothing = false;
 	
@@ -41,11 +41,11 @@ public abstract class SavedValue implements ISavedValues {
 	private PropertyProtection protection;
 
 	protected SavedValue() {
-		this.protection = new PropertyProtection(this);
+		this.protection = PropertyProtection.getProtection(this);
 	}
 
 	protected SavedValue(PropertyProtection protectionOriginal, SimulationCluster clusterNew) {
-		this.protection = new PropertyProtection(protectionOriginal, clusterNew, this);
+		this.protection = PropertyProtection.getProtection(protectionOriginal, clusterNew, this);
 	}
 
 	
@@ -106,9 +106,15 @@ public abstract class SavedValue implements ISavedValues {
 	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////////
-	/////////////////////////  implementing  ISavedValues  ////////////////////////////////////
+	/////////////////////////  implementing  ISavedValue  ////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 
+	public final boolean isProtected() {
+		if (this.protection == null) return false;
+		if (!this.protection.hasRestrictions()) return false;
+		if (this.protection.hasUnknownCluster()) return false;
+		return true;
+	}
 
 	public final boolean hasPropertyProtection() {
 		
@@ -125,7 +131,7 @@ public abstract class SavedValue implements ISavedValues {
 	}
 
 	public final PropertyProtection getPropertyProtection() {
-		return new PropertyProtection(this.protection);
+		return PropertyProtection.getProtection(this.protection);
 	};
 	
 	public final void setPropertyProtection(PropertyProtection propertyProtection) {
@@ -140,22 +146,42 @@ public abstract class SavedValue implements ISavedValues {
 		return this.protection.checkHasUseAsPermission(useAsPermission);
 	}
 
+	public final PropertyUsingAs[] getReducedUseAsPermissions(PropertyUsingAs[] useAsPermissions) {
+		PropertyUsingAs[] result = null;
+		// TODO implement getReducedUseAsPermissions
+		return result;
+	}
 	
+	public final boolean checkUseAsPermissionsReductionNecessary(PropertyUsingAs[] useAsPermissions) {
+		// TODO implement checkUseAsPermissionsReductionNecessary
+		return true;
+	}
+
 	
 	
 	public final  ValueProperty getAsValue(SimulationCluster cluster) {
-		Type propertyType;
-		propertyType = this.propertyName.getType();
-		return new ValueProperty(propertyType,   this.propertyName.toString(), copyForProperty(cluster));
+		if (protection.checkHasGetPermission(cluster)) {
+			Type propertyType;
+			propertyType = this.propertyName.getType();
+			return new ValueProperty(propertyType,   this.propertyName.toString(), copyForProperty(cluster));
+		}
+		else {
+			return ValueProperty.getInvalid();
+		}
 	}
 	
 	public final ValueProperty getAsValue(SimulationCluster cluster, String valueName) {
-		Type propertyType;
-		propertyType = this.propertyName.getType();
-		return new ValueProperty(propertyType,   valueName, copyForProperty(cluster));
+		if (protection.checkHasGetPermission(cluster)) {
+			Type propertyType;
+			propertyType = this.propertyName.getType();
+			return new ValueProperty(propertyType,   valueName, copyForProperty(cluster));
+		}
+		else {
+			return ValueProperty.getInvalid();
+		}
 	}
 
-	// ISavedValues copyForProperty(SimulationCluster cluster) will be implemented in inherited classes
+	// ISavedValue copyForProperty(SimulationCluster cluster) will be implemented in inherited classes
 
 	
 	

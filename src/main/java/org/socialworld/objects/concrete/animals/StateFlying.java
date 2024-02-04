@@ -3,7 +3,7 @@ package org.socialworld.objects.concrete.animals;
 import java.util.List;
 
 import org.socialworld.attributes.Direction;
-import org.socialworld.attributes.ISavedValues;
+import org.socialworld.attributes.ISavedValue;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
@@ -102,12 +102,12 @@ public class StateFlying extends State {
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////
-	/////////////////////////  implementing  ISavedValues  ////////////////////////////////////
+	/////////////////////////  implementing  ISavedValue  ////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
 	
 	@Override
-	public ISavedValues copyForProperty(SimulationCluster cluster) {
+	public ISavedValue copyForProperty(SimulationCluster cluster) {
 		// TODO Auto-generated method stub
 		return null;
 	}

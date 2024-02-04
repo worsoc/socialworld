@@ -58,5 +58,14 @@ public enum SimulationCluster {
 		return GetSimulationClustersPropUsingAs.getPossibleUsingAs(this);
 	}
 
-
+	public boolean isWithoutRestrictions() {
+		switch (this) {
+		case unknown:
+		case toBeSet:
+		case total:
+			return true;
+		default:
+			return false;
+		}
+	}
 }

@@ -3,7 +3,7 @@ package org.socialworld.objects.concrete.animals;
 import java.util.List;
 
 import org.socialworld.actions.handle.Inventory;
-import org.socialworld.attributes.ISavedValues;
+import org.socialworld.attributes.ISavedValue;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.calculation.SimulationCluster;
@@ -124,11 +124,11 @@ public class StateInventory extends State {
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////
-	/////////////////////////  implementing  ISavedValues  ////////////////////////////////////
+	/////////////////////////  implementing  ISavedValue  ////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
 	@Override
-	public ISavedValues copyForProperty(SimulationCluster cluster) {
+	public ISavedValue copyForProperty(SimulationCluster cluster) {
 		return new StateInventory(this, getPropertyProtection(), cluster);
 	}
 

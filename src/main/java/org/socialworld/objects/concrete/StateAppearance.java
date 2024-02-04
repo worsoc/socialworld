@@ -206,7 +206,7 @@ public class StateAppearance extends State {
 	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////////
-	/////////////////////////  implementing  ISavedValues  ////////////////////////////////////
+	/////////////////////////  implementing  ISavedValue  ////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
 	@Override
@@ -294,6 +294,36 @@ public class StateAppearance extends State {
 
 	@Override
 	protected void setProperty(PropertyName propName, ValueProperty property) {
+		switch (propName) {
+		case stateAppearance_colourFrontside:
+		case stateAppearance_colourBackside:
+		case stateAppearance_colourLeftside:
+		case stateAppearance_colourRightside:
+		case stateAppearance_colourUpperside:
+		case stateAppearance_colourLowerside:
+		case stateAppearance_colourInside:
+		case stateAppearance_colourHead:
+		case stateAppearance_colourBreast:
+		case stateAppearance_colourBack:
+		case stateAppearance_colourTail:
+		case stateAppearance_colourLegs:
+		case stateAppearance_colourArms:
+		case stateAppearance_colourSkin:
+		case stateAppearance_colourHair:
+		case stateAppearance_colourBeard:
+		case stateAppearance_colourEye:
+		case stateAppearance_colourLeave:
+		case stateAppearance_colourFruit:
+		case stateAppearance_colourBlossom:
+			this.colourSets.set(mapCSPN2CSN(propName),(ColourSet)property.getValue());
+
+			
+		case stateAppearance_dimension:
+			this.dimension = (Dimension) property.getValue();
+		default:
+			break;
+
+		}
 
 	}
 	

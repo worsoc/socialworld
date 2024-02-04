@@ -26,6 +26,7 @@ import java.util.List;
 
 import org.socialworld.calculation.PropertyUsingAs;
 import org.socialworld.calculation.SimulationCluster;
+import org.socialworld.calculation.ValueProperty;
 
 public class PropertyProtection {
 
@@ -33,56 +34,113 @@ public class PropertyProtection {
 	private PropertyUsingAs[] useAsPermissions;
 	private PropertyUsingAs usedAs = null;
  
+	boolean withTotalPermissions = false;
 	
-	public PropertyProtection(SimulationCluster cluster) {
-		
-		if (cluster == SimulationCluster.total) {
-			// TODO what to do for SimulationCluster.total
-			this.cluster = SimulationCluster.unknown;
-		}
-		else {
-			this.cluster = cluster;
-			this.useAsPermissions = cluster.getPossibleUsingAs();
-		}
-	}
+	List<ValueProperty> protectedValues;
+	boolean allowOneAdding = false;
 	
-	public PropertyProtection(PropertyProtection original, SimulationCluster cluster, ISavedValues savedValue) {
-		
-		if (!savedValue.hasPropertyProtection()) {
-			this.cluster = cluster;
-			this.useAsPermissions = original.getIntersection(cluster.getPossibleUsingAs());
-			savedValue.setPropertyProtection(this);
+	private static PropertyProtection totalPermission;
+
+	public static PropertyProtection getTotalPermission() {
+		if (totalPermission == null) {
+			totalPermission = new PropertyProtection();
 		}
-		else {
-			this.cluster = SimulationCluster.unknown;
-			this.useAsPermissions = new PropertyUsingAs[0];
-		}
-	}
-	
-	public PropertyProtection(ISavedValues savedValue) {
-		
-		if (!savedValue.hasPropertyProtection()) {
-			this.cluster = SimulationCluster.total;
-			this.useAsPermissions = this.cluster.getPossibleUsingAs();
-			savedValue.setPropertyProtection(this);
-		}
-		else {
-			this.cluster = SimulationCluster.unknown;
-			this.useAsPermissions = new PropertyUsingAs[0];
-		}
+		return totalPermission;
 	}
 
-	public PropertyProtection(PropertyProtection original) {
-
-		this.cluster = original.cluster;
-		
-		int size = original.useAsPermissions.length;
-		this.useAsPermissions = new PropertyUsingAs[size];
-		for (int index = 0; index < size; index++) {
-			this.useAsPermissions[index] = original.useAsPermissions[index];
-		}
+	private PropertyProtection() {
+		cluster = SimulationCluster.total;
+		withTotalPermissions = true;
+		this.allowOneAdding = false;
+	}
+	
+	
+	private PropertyProtection(SimulationCluster cluster, PropertyUsingAs[] useAsPermissions) {
+		this.cluster = cluster;
+		this.useAsPermissions = useAsPermissions;
 		this.usedAs = null;
+		this.allowOneAdding = true;
+	}
+	
+	public static PropertyProtection getProtection(SimulationCluster cluster) {
 		
+		return new PropertyProtection(cluster, cluster.getPossibleUsingAs());
+		
+	}
+
+	public static PropertyProtection getProtection(PropertyUsingAs[] useAsPermissions) {
+		
+		return new PropertyProtection(SimulationCluster.total, useAsPermissions);
+		
+	}
+
+	public static PropertyProtection getProtection(PropertyProtection original) {
+		
+		PropertyUsingAs[] useAsPermissionsOriginal = original.getUseAsPermissions();
+		return getProtection(useAsPermissionsOriginal);
+		
+	}
+
+	public static PropertyProtection getProtection(ISavedValue value) {
+		
+		if (!value.isProtected()) {
+			return getTotalPermission();
+		}
+		else {
+			return new PropertyProtection(SimulationCluster.total, SimulationCluster.total.getPossibleUsingAs());
+		}
+		
+	}
+
+	public static PropertyProtection getProtection(SimulationCluster cluster, ISavedValue value) {
+		
+		if (!value.isProtected() && cluster.isWithoutRestrictions()) {
+			return getTotalPermission();
+		}
+		else {
+			PropertyUsingAs[] useAsPermissionsCluster = cluster.getPossibleUsingAs();
+			PropertyUsingAs[] reducedUseAsPermissions = value.getReducedUseAsPermissions(useAsPermissionsCluster);
+			return new PropertyProtection(cluster, reducedUseAsPermissions);
+		}
+		
+	}
+	
+	public static PropertyProtection getProtection(PropertyUsingAs[] useAsPermissions, ISavedValue value) {
+				
+		PropertyUsingAs[] reducedUseAsPermissions = value.getReducedUseAsPermissions(useAsPermissions);
+		return new PropertyProtection(SimulationCluster.total, reducedUseAsPermissions);
+		
+	}
+
+	public static PropertyProtection getProtection(PropertyProtection original, ISavedValue value) {
+		
+		
+		PropertyUsingAs[] useAsPermissionsOriginal = original.getUseAsPermissions();
+		boolean noMatch = value.checkUseAsPermissionsReductionNecessary(useAsPermissionsOriginal);
+		if (noMatch) {
+			return getProtection(useAsPermissionsOriginal, value);
+		}
+		else {
+			original.allowOneAdding = true;
+			return original;
+		}
+		
+	}
+	
+	public static PropertyProtection getProtection(PropertyProtection original, SimulationCluster cluster, ISavedValue value) {
+		
+		PropertyUsingAs[] useAsPermissionsCluster = cluster.getPossibleUsingAs();
+		PropertyUsingAs[] useAsPermissionsIntersect = original.getIntersection(useAsPermissionsCluster);
+		PropertyUsingAs[] reducedUseAsPermissions = value.getReducedUseAsPermissions(useAsPermissionsIntersect);
+		return new PropertyProtection(cluster, reducedUseAsPermissions);
+		
+	}
+
+	public void addProtectedValueProperty(ValueProperty vp) {
+		if (allowOneAdding) {
+			protectedValues.add(vp);
+		}
+		allowOneAdding = false;
 	}
 	
 	private PropertyUsingAs[] getIntersection(PropertyUsingAs[] toIntersectWith) {
@@ -110,6 +168,22 @@ public class PropertyProtection {
 		
 	}
 	
+	private PropertyUsingAs[] getUseAsPermissions() {
+		
+		PropertyUsingAs[] copy = new PropertyUsingAs[this.useAsPermissions.length];
+		
+		for (int index = 0; index < this.useAsPermissions.length; index++) {
+			copy[index] = useAsPermissions[index];
+		}
+		
+		return copy;
+		
+	}
+
+	public boolean hasRestrictions() {
+		return (!withTotalPermissions);
+	}
+
 	public boolean hasUnknownCluster() {
 		return (this.cluster == SimulationCluster.unknown);
 	}

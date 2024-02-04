@@ -26,19 +26,22 @@ import org.socialworld.calculation.PropertyUsingAs;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.ValueProperty;
 
-public interface ISavedValues {
+public interface ISavedValue {
 
 	// protection
+	public abstract boolean isProtected();
 	public abstract boolean hasPropertyProtection();
 	public abstract PropertyProtection getPropertyProtection();
 	public abstract void setPropertyProtection(PropertyProtection propertyProtection);
 	public abstract boolean checkHasGetPermission(SimulationCluster cluster);
 	public abstract boolean checkHasUseAsPermission(PropertyUsingAs useAsPermission);
+	public abstract PropertyUsingAs[] getReducedUseAsPermissions(PropertyUsingAs[] useAsPermissions);
+	public abstract boolean checkUseAsPermissionsReductionNecessary(PropertyUsingAs[] useAsPermissions);
 
 	// getting a copy as ValueProperty for a simulation cluster (intersection from argument cluster and the "parent" protection)
 	public abstract ValueProperty getAsValue(SimulationCluster cluster);
 	public abstract ValueProperty getAsValue(SimulationCluster cluster, String valueName);
-	public abstract ISavedValues copyForProperty(SimulationCluster cluster); 
+	public abstract ISavedValue copyForProperty(SimulationCluster cluster); 
 	
 	// getting a property with inherited protection
 	public abstract ValueProperty getProperty (PropertyName propName, String valueName);

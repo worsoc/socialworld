@@ -22,25 +22,31 @@
 package org.socialworld.calculation;
 
 
-import org.socialworld.attributes.ISavedValues;
+import org.socialworld.attributes.ISavedValue;
 import org.socialworld.attributes.ISimProperty;
+import org.socialworld.attributes.NoSavedValue;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
+import org.socialworld.objects.NoSimulationObject;
 import org.socialworld.objects.SimulationObject;
 
 public class ValueProperty extends Value {
 
-	private static ValueProperty invalid = new ValueProperty();
+	private static ValueProperty invalid;
 	
-	private PropertyProtection propertyProtection;
+	private PropertyProtection protection;
 	private boolean isSavedValues = false;
 	private boolean isSimProperty = false;
 	
-//	private SimulationCluster cluster = SimulationCluster.toBeSet;;
-	
-//	private PropertyUsingAs[] useAsPermissions;
 	private PropertyUsingAs usedAs = null;
 	
+	public static ValueProperty getInvalid() {
+		if (invalid == null) {
+			invalid = new ValueProperty();
+		}
+		return invalid;
+	}
+
 	private ValueProperty() {
 		super();
 	}
@@ -50,20 +56,38 @@ public class ValueProperty extends Value {
 
 		super(type, name, value);
 		
+		protection = PropertyProtection.getTotalPermission();
 		
-		init(value);
+		if (value instanceof ISavedValue) {
+			isSavedValues = true;
+			protection =  PropertyProtection.getProtection((ISavedValue) value);
+		}
+		protection.addProtectedValueProperty(this);
+		
+		if (value instanceof ISimProperty) {
+			isSimProperty = true;
+		}
 
 		valid = true;
 	}
 
-/*	
+	
 	public ValueProperty(Type type, PropertyProtection protection, String name, Object value) {
 
 		super(type, name, value);
 		
-		this.propertyProtection = protection;
+		if (value instanceof ISavedValue) {
+			isSavedValues = true;
+			protection =  PropertyProtection.getProtection(protection, (ISavedValue)value);
+		}
+		else {
+			this.protection = protection;
+		}
+		protection.addProtectedValueProperty(this);
 		
-		init(value);
+		if (value instanceof ISimProperty) {
+			isSimProperty = true;
+		}
 
 		valid = true;
 	}
@@ -72,12 +96,19 @@ public class ValueProperty extends Value {
 
 		super(type, name, value);
 		
-		// TODO PropertyProtection
-//		this.cluster = cluster;
-		setUseAsPermissions(cluster, propertyName);
+		if (value instanceof ISavedValue) {
+			isSavedValues = true;
+			protection =  PropertyProtection.getProtection(cluster, (ISavedValue)value);
+		}
+		else {
+			protection =  PropertyProtection.getProtection(cluster);
+		}
+		protection.addProtectedValueProperty(this);
 		
-		init(value);
-
+		if (value instanceof ISimProperty) {
+			isSimProperty = true;
+		}
+		
 		valid = true;
 	}
 	
@@ -86,52 +117,71 @@ public class ValueProperty extends Value {
 
 		super(type, name, value);
 
-		// TO DO PropertyProtection
-//		this.useAsPermissions = useAsPermissions;
-		
-		init(value);
-
-		valid = true;
-	}
-	
-*/	
-	public static ValueProperty getInvalid() {
-		return invalid;
-	}
-
-	
-	private void init(Object value) {
-		
-		if (value instanceof ISavedValues) {
+		if (value instanceof ISavedValue) {
 			isSavedValues = true;
+			protection =  PropertyProtection.getProtection(useAsPermissions, (ISavedValue)value);
 		}
-		
+		else {
+			protection =  PropertyProtection.getProtection(useAsPermissions);
+		}
+		protection.addProtectedValueProperty(this);
+
 		if (value instanceof ISimProperty) {
 			isSimProperty = true;
 		}
 
+		valid = true;
 	}
 	
-	private void setUseAsPermissions(SimulationCluster cluster, PropertyName propertyName) {
-		
-	}
 	
-/*	03.06.2020
+
+	
+	
 	public Object getValue() { 
 		
-		Object result = super.getValue();
-		
-		if (isSavedValues) {
-			ISavedValues savedValues = (ISavedValues) result;
-			if (!savedValues.hasPropertyProtection()) {
-				savedValues.setPropertyProtection(this);
+		if (isProtected()) {
+			if (isSavedValues) {
+				return NoSavedValue.getValueNothing();
 			}
+			return null;
 		}
 		
+		Object result = super.getValue();
 		return result;
 		
 	}
-*/
+
+	public Object getValue(SimulationCluster cluster) {
+		
+		Object result; 
+		if (isProtected()) {
+			if (checkHasPermission(cluster)) {
+				result = super.getValue();
+			}
+			else {
+				if (isSavedValues) {
+					result = NoSavedValue.getValueNothing();
+				}
+				else {
+					result = null;
+				}
+			}
+		}
+		else {
+			result = super.getValue();
+		}
+		
+		return result;
+
+	}
+	
+	public boolean isProtected() {
+		return true;
+	}
+	
+	public boolean checkHasPermission(SimulationCluster cluster)  {
+		return true;
+	}
 	
 	public ValueProperty getSubProperty(PropertyName propName) {
 		
@@ -141,11 +191,11 @@ public class ValueProperty extends Value {
 
 	public ValueProperty getSubProperty(PropertyName propName, String valueName) {
 		// QUESTION ??? must be protected by SimulationCluster???
-		ValueProperty result = invalid;
+		ValueProperty result = getInvalid();
 		
 		if (isSavedValues) {
-			ISavedValues savedValues = (ISavedValues) super.getValue();
-			result = savedValues.getProperty(propName, valueName);
+			ISavedValue savedValue = (ISavedValue) super.getValue();
+			result = savedValue.getProperty(propName, valueName);
 		}
 
 /* 	03.06.2020	
@@ -160,11 +210,11 @@ public class ValueProperty extends Value {
 	
 	public ValueProperty getSubPropertyFromMethod(String methodName, String valueName) {
 		
-		ValueProperty result = invalid;
+		ValueProperty result = getInvalid();
 		
 		if (isSavedValues) {
-			ISavedValues savedValues = (ISavedValues) super.getValue();
-			result = savedValues.getPropertyFromMethod(methodName, valueName);
+			ISavedValue savedValue = (ISavedValue) super.getValue();
+			result = savedValue.getPropertyFromMethod(methodName, valueName);
 		}
 
 /* 	03.06.2020	
@@ -180,13 +230,14 @@ public class ValueProperty extends Value {
 	public boolean checkHasUseAsPermission(PropertyUsingAs useAsPermission) {
 		
 		if (isSavedValues) {
-			return ((ISavedValues) super.getValue()).checkHasUseAsPermission(useAsPermission);
+			return ((ISavedValue) super.getValue()).checkHasUseAsPermission(useAsPermission);
 		}
 		if (super.getValue() instanceof SimulationObject) {
 			// TODO checkHasUseAsPermission for SimulationObject(s)
 			return true;
 		}
 		return true;
+		// TODO return false
 		//return false;
 		
 	}

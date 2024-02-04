@@ -89,7 +89,7 @@ public class Direction extends SimProperty {
 	}
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////    ISavedValues  ///////////////////////////////////////////////
+/////////////////////////////    ISavedValue  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 	public SimProperty copyForProperty(SimulationCluster cluster) {
@@ -100,7 +100,7 @@ public class Direction extends SimProperty {
 		switch (prop) {
 		case direction_vector:
 			return new ValueProperty(Type.vector, valueName, getVector());
-			// TODO Vector as ISavedValues
+			// TODO Vector as ISavedValue
 			// return this.vector.getAsValue(cluster, valueName);
 		case direction_power:
 			return new ValueProperty(Type.floatingpoint, valueName, this.power);

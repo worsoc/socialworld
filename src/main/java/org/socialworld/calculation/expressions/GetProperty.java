@@ -22,7 +22,7 @@
 package org.socialworld.calculation.expressions;
 
 import org.socialworld.actions.AbstractAction;
-import org.socialworld.attributes.ISavedValues;
+import org.socialworld.attributes.ISavedValue;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.properties.IEnumProperty;
 import org.socialworld.calculation.Expression;
@@ -88,9 +88,9 @@ public class GetProperty extends Expression {
 				
 				// use reflection for calling the method
 				
-				if (object instanceof ISavedValues) {
-					ISavedValues savedValue;
-					savedValue = (ISavedValues) object;
+				if (object instanceof ISavedValue) {
+					ISavedValue savedValue;
+					savedValue = (ISavedValue) object;
 					result = savedValue.getPropertyFromMethod(cluster, methodName, valueName);
 				}
 				else if (object instanceof IEnumProperty) {
@@ -165,9 +165,9 @@ public class GetProperty extends Expression {
 				stateSimObj = (StateSimulationObject) object;
 				result = stateSimObj.getProperty(cluster, simPropName, valueName);
 			}
-			else if (object instanceof ISavedValues) {
-				ISavedValues savedValue;
-				savedValue = (ISavedValues) object;
+			else if (object instanceof ISavedValue) {
+				ISavedValue savedValue;
+				savedValue = (ISavedValue) object;
 				result = savedValue.getProperty(cluster, simPropName, valueName);
 			}
 			else if (object instanceof Event) {
