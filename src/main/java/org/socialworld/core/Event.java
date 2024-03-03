@@ -271,11 +271,11 @@ public abstract class Event implements Comparable<Event> {
 		
 		if (hasOptionalParam()) {
 			direction = optionalParam.getParam(Value.VALUE_BY_NAME_EVENT_DIRECTION);
-			if (direction.getValue() == null) {
+			if (direction.getObject() == null) {
 				direction = new Value(Type.eventProp, new Direction(PropertyName.event_direction, new Vector(0,0,0)));
 			}
 			if (direction.getType().equals(Type.vector)) {
-				Vector vectorDirection = (Vector) direction.getValue();
+				Vector vectorDirection = (Vector) direction.getObject();
 				if (vectorDirection == null) {
 					vectorDirection = new Vector(0,0,0);
 				}
@@ -287,7 +287,7 @@ public abstract class Event implements Comparable<Event> {
 		
 		if (this.causer instanceof Animal){
 			direction = ((Animal) causer).getProperty(SimulationCluster.todo, PropertyName.simobj_directionChest);
-			if (direction.getValue() == null) {
+			if (direction.getObject() == null) {
 				direction = new Value(Type.eventProp, new Direction(PropertyName.event_direction, new Vector(0,0,0)));
 			}
 			return direction;
@@ -305,7 +305,7 @@ public abstract class Event implements Comparable<Event> {
 		if (hasOptionalParam()) {
 			strength = optionalParam.getParam(Value.VALUE_BY_NAME_EVENT_INTENSITY);
 			if (strength.isValid()) 
-				return (float) strength.getValue();
+				return (float) strength.getObject();
 			
 		}
 		return 0;

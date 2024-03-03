@@ -27,11 +27,12 @@ import org.socialworld.attributes.ISimProperty;
 import org.socialworld.attributes.NoSavedValue;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
-import org.socialworld.objects.NoSimulationObject;
 import org.socialworld.objects.SimulationObject;
+
 
 public class ValueProperty extends Value {
 
+	
 	private static ValueProperty invalid;
 	
 	private PropertyProtection protection;
@@ -134,19 +135,24 @@ public class ValueProperty extends Value {
 	}
 	
 	
-
 	
 	
 	public Object getValue() { 
 		
+		Object result;
+		
 		if (isProtected()) {
 			if (isSavedValues) {
-				return NoSavedValue.getValueNothing();
+				result = NoSavedValue.getValueNothing();
 			}
-			return null;
+			else {
+				result = NoObject.getNoObject(NoObjectReason.valueIsProtectedAndNotPermitted);
+			}
+		}
+		else {
+			result = super.getObject();
 		}
 		
-		Object result = super.getValue();
 		return result;
 		
 	}
@@ -156,25 +162,75 @@ public class ValueProperty extends Value {
 		Object result; 
 		if (isProtected()) {
 			if (checkHasPermission(cluster)) {
-				result = super.getValue();
+				result = super.getObject();
 			}
 			else {
 				if (isSavedValues) {
 					result = NoSavedValue.getValueNothing();
 				}
 				else {
-					result = null;
+					result = NoObject.getNoObject(NoObjectReason.valueIsProtectedAndNotPermitted);
 				}
 			}
 		}
 		else {
-			result = super.getValue();
+			result = super.getObject();
 		}
+		
 		
 		return result;
 
 	}
 	
+	public int requestValue(IObjectReceiver receiver, int requestID, Type type) {
+
+		if (this.getType().equals(type)) {
+		
+			IObjectSender object;
+			
+			if (isProtected()) {
+				return IObjectSender.OBJECT_NOT_SENDED_BECAUSE_PROTECTED;
+			}
+			else {
+				object = super.getObjectSender();
+				return object.sendYourselfTo(receiver, requestID);
+			}
+			
+		}
+		else {
+			return IObjectSender.OBJECT_NOT_SENDED_BECAUSE_WRONG_TYPE;
+		}
+		
+	}
+
+	public int requestValue(SimulationCluster cluster, IObjectReceiver receiver, int requestID, Type type) {
+
+		if (this.getType().equals(type)) {
+		
+			IObjectSender object;
+			
+			if (isProtected()) {
+				if (checkHasPermission(cluster)) {
+					object = super.getObjectSender();
+					return object.sendYourselfTo(cluster, receiver, requestID);
+				}
+				else {
+					return IObjectSender.OBJECT_NOT_SENDED_BECAUSE_NO_PERMISSION;
+				}
+			}
+			else {
+				object = super.getObjectSender();
+				return object.sendYourselfTo(cluster, receiver, requestID);
+			}
+
+		}
+		else {
+			return IObjectSender.OBJECT_NOT_SENDED_BECAUSE_WRONG_TYPE;
+		}
+		
+		
+	}
+
 	public boolean isProtected() {
 		return true;
 	}
@@ -194,13 +250,13 @@ public class ValueProperty extends Value {
 		ValueProperty result = getInvalid();
 		
 		if (isSavedValues) {
-			ISavedValue savedValue = (ISavedValue) super.getValue();
+			ISavedValue savedValue = (ISavedValue) super.getOriginalValue();
 			result = savedValue.getProperty(propName, valueName);
 		}
 
 /* 	03.06.2020	
 		if (isSimProperty) {
-			ISimProperty simProperty = (ISimProperty) super.getValue();
+			ISimProperty simProperty = (ISimProperty) super.getOriginalValue();
 			result = simProperty.getProperty(cluster, propName, valueName);
 		}
 */		
@@ -213,13 +269,13 @@ public class ValueProperty extends Value {
 		ValueProperty result = getInvalid();
 		
 		if (isSavedValues) {
-			ISavedValue savedValue = (ISavedValue) super.getValue();
+			ISavedValue savedValue = (ISavedValue) super.getOriginalValue();
 			result = savedValue.getPropertyFromMethod(methodName, valueName);
 		}
 
 /* 	03.06.2020	
 		if (isSimProperty) {
-			ISimProperty simProperty = (ISimProperty) super.getValue();
+			ISimProperty simProperty = (ISimProperty) super.getOriginalValue();
 			result = simProperty.getPropertyFromMethod(cluster, methodName, valueName);
 		}
 */		
@@ -230,9 +286,9 @@ public class ValueProperty extends Value {
 	public boolean checkHasUseAsPermission(PropertyUsingAs useAsPermission) {
 		
 		if (isSavedValues) {
-			return ((ISavedValue) super.getValue()).checkHasUseAsPermission(useAsPermission);
+			return ((ISavedValue) super.getObject()).checkHasUseAsPermission(useAsPermission);
 		}
-		if (super.getValue() instanceof SimulationObject) {
+		if (super.getObject() instanceof SimulationObject) {
 			// TODO checkHasUseAsPermission for SimulationObject(s)
 			return true;
 		}

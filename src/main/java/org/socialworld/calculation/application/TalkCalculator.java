@@ -162,13 +162,13 @@ public class TalkCalculator  extends SocialWorldThread {
 			
 			value = params.getParam("partner");
 			if (value.isValid())
-				partner = (Human) value.getValue();
+				partner = (Human) value.getObject();
 			else
 				return;
 	
 			value = params.getParam("sentence");
 			if (value.isValid())
-				sentence = (String) value.getValue();
+				sentence = (String) value.getObject();
 			else
 				return;
 	
@@ -205,13 +205,13 @@ public class TalkCalculator  extends SocialWorldThread {
 			
 			value = params.getParam("partner");
 			if (value.isValid())
-				partner = (Human) value.getValue();
+				partner = (Human) value.getObject();
 			else
 				return;
 	
 			value = params.getParam("sentence");
 			if (value.isValid())
-				sentence = (String) value.getValue();
+				sentence = (String) value.getObject();
 			else
 				return;
 			
@@ -237,13 +237,13 @@ public class TalkCalculator  extends SocialWorldThread {
 			
 			value = params.getParam(Value.VALUE_BY_NAME_ACTION_TARGET);
 			if (value.isValid())
-				partner = (Human) value.getValue();
+				partner = (Human) value.getObject();
 			else
 				return;
 	
 			value = params.getParam(Value.VALUE_BY_NAME_ACTION_ANSWERS);
 			if (value.isValid())
-				answers = (ValueArrayList) value.getValue();
+				answers = (ValueArrayList) value.getObject();
 			else
 				return;
 			
@@ -254,7 +254,7 @@ public class TalkCalculator  extends SocialWorldThread {
 			acquaintance = stateHuman.getAcquaintance(partner);
 
 			for (int i = 0; i < answers.size(); i++) {
-				answer = (IAnswer) answers.get(i).getValue();
+				answer = (IAnswer) answers.get(i).getObject();
 				manipulateAnswer(answer, acquaintance, stateHuman,  partner);
 				hiddenWriteAccess.addAnswer(answer,  partner); 
 			}

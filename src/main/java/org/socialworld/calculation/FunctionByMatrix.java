@@ -22,16 +22,21 @@
 package org.socialworld.calculation;
 
 
+import java.util.Hashtable;
+
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.collections.ValueArrayList;
 
-public class FunctionByMatrix extends FunctionBase {
+public class FunctionByMatrix extends FunctionBase implements IObjectReceiver{
 
 	ValueInterpreteAs interpreteResultAs;
 
 	private FunctionByMatrix_Matrix matrix;
 	private static Value hundred;
 	private static Value aHalf;
+	
+	private int requestValueID = 0;
+	Hashtable<Integer, Object> receivedObjects = new Hashtable<Integer, Object>();
 	
 	public FunctionByMatrix(ValueInterpreteAs interpreteResultAs) {
 		
@@ -80,6 +85,7 @@ public class FunctionByMatrix extends FunctionBase {
 	public Value calculate(ValueArrayList arguments) {
 
 		Value result;
+		int requestID;
 		
 		if (returnInvalidNothingvalue) 
 			return new Value();
@@ -91,9 +97,31 @@ public class FunctionByMatrix extends FunctionBase {
 			case attributeArray:
 				AttributeArray attributesOld = AttributeArray.getObjectNothing();
 				AttributeArray attributesNew = AttributeArray.getObjectNothing();
-				attributesOld = (AttributeArray) arguments.get(0).getValue();
-				
-				int calculationMode = (int) arguments.get(1).getValue();
+				requestValueID++;
+				requestID = requestValueID;
+				Value value = arguments.get(0);
+				int requestResult;
+				if (value instanceof ValueProperty) {
+					requestResult = ((ValueProperty) value).requestValue(SimulationCluster.total, this, requestID, Type.attributeArray);
+					if (requestResult == IObjectSender.OBJECT_SENDED) {
+						attributesOld = (AttributeArray) receivedObjects.get(requestID);
+					}
+					else {
+						System.out.println("FunctionByMatrix.calculate for ValueProperty: no valid attributeArray received");
+						return new Value();
+					}
+				}
+				else {
+					requestResult = value.requestValue(this, requestID, Type.attributeArray);
+					if (requestResult == IObjectSender.OBJECT_SENDED) {
+						attributesOld = (AttributeArray) receivedObjects.get(requestID);
+					}
+					else {
+						System.out.println("FunctionByMatrix.calculate for Value: no valid attributeArray received");
+						return new Value();
+					}
+				}
+				int calculationMode = (int) arguments.get(1).getObject();
 				
 				switch (calculationMode)
 				{
@@ -166,7 +194,7 @@ public class FunctionByMatrix extends FunctionBase {
 					calculation.addition(
 							calculation.multiplication(share, function.calculate(arguments)),
 							offset)
-					.getValue();
+					.getObject();
 			
 
 			result += change;
@@ -249,7 +277,7 @@ public class FunctionByMatrix extends FunctionBase {
 			
 			if (this.matrix.isWithDiv100() ) attributesNew[row] = calculation.division(attributesNew[row] , hundred);
 			attributesNew[row] = calculation.addition(attributesNew[row], aHalf);
-			result.set(row, ((Float) (attributesNew[row].getValue())).intValue());
+			result.set(row, ((Float) (attributesNew[row].getObject())).intValue());
 			
 		}
 
@@ -320,7 +348,7 @@ public class FunctionByMatrix extends FunctionBase {
 						calculation.addition(
 								calculation.multiplication(share, function.calculate(arguments)),
 								offset)
-						.getValue();
+						.getObject();
 				
 
 				if (change != 0)
@@ -361,6 +389,12 @@ public class FunctionByMatrix extends FunctionBase {
 			return calculation.subtraction(attributeValue , attributeChangeValue);
 		}
 		return Calculation.getNothing();
+	}
+
+	@Override
+	public int receiveObject(int requestID, Object object) {
+		receivedObjects.put(requestID, object);
+		return 0;
 	}
 
 }

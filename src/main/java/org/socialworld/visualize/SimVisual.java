@@ -645,10 +645,10 @@ public class SimVisual extends SocialWorldThread {
 			
 			human = Simulation.getInstance().getObjectMaster().getHumans().get(index);
 			prop = human.getProperty(SimulationCluster.test, PropertyName.stateSeer);
-			state = (org.socialworld.objects.State) prop.getValue();
+			state = (org.socialworld.objects.State) prop.getObject();
 			if (state != null) {
 				propSub = state.getValue("getAngleViewPerceivingEvents", "angleViewPerceivingEvents");
-				myPrint("Button " + index + " clicked: " + propSub.getValue().toString() );
+				myPrint("Button " + index + " clicked: " + propSub.getObject().toString() );
 			}
 			else {
 				myPrint("Button " + index + " clicked "  );

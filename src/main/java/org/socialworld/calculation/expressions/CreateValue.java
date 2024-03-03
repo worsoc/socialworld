@@ -159,11 +159,11 @@ public class CreateValue extends Expression {
 			createdObject = ActionCreator.createAction(localArguments) ;
 			break;
 		case time:
-			createdObject = evaluateExpression2(localArguments).getValue();
+			createdObject = evaluateExpression2(localArguments).getObject();
 			break;
 		case knowledgeElement:
 			evaluateExpression2(arguments);
-			localArguments =  (ValueArrayList) arguments.getValue(Value.VALUE_NAME_KNOWLEDGE_ELEMENT_PROPS).getValue();
+			localArguments =  (ValueArrayList) arguments.getValue(Value.VALUE_NAME_KNOWLEDGE_ELEMENT_PROPS).getObject();
 			createdObject  = KnowledgeCalculator.createKnowledgeElement(localArguments);
 			break;
 		case knowledgeSource:

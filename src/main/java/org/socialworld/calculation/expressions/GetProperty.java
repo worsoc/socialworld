@@ -21,19 +21,13 @@
 */
 package org.socialworld.calculation.expressions;
 
-import org.socialworld.actions.AbstractAction;
-import org.socialworld.attributes.ISavedValue;
 import org.socialworld.attributes.PropertyName;
-import org.socialworld.attributes.properties.IEnumProperty;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueProperty;
-import org.socialworld.core.Event;
-import org.socialworld.objects.SimulationObject;
-import org.socialworld.objects.StateSimulationObject;
 
 public class GetProperty extends Expression {
 
@@ -75,12 +69,18 @@ public class GetProperty extends Expression {
 			
 	}
 	
-	protected ValueProperty getProperty(Value valueObject, SimulationCluster cluster, PropertyName simPropName, String methodName, String valueName) {
+	protected final ValueProperty getProperty(Value valueObject, SimulationCluster cluster, PropertyName simPropName, String methodName, String valueName) {
 		
 		ValueProperty result;
 		result = ValueProperty.getInvalid();
-		Object object = valueObject.getValue();
-		
+		if (valueObject instanceof ValueProperty) {
+			result = ((ValueProperty)valueObject).getProperty(cluster, simPropName, methodName,  valueName) ;
+		}
+		else {
+			result = valueObject.getProperty(cluster, simPropName, methodName,  valueName) ;
+		}
+
+/*		
 		switch (simPropName) {
 		case method:
 			
@@ -179,7 +179,7 @@ public class GetProperty extends Expression {
 			break;
 			
 		}
-
+*/
 		return result;
 		
 	}

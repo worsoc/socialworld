@@ -43,7 +43,7 @@ public class FunctionByTable extends FunctionBase {
 		Value value;
 		value = arguments.get(0);
 		if (value.getType() == Type.integer) {
-			return calculation.createValue(Type.integer, calculate((int) value.getValue()));
+			return calculation.createValue(Type.integer, calculate((int) value.getObject()));
 		}
 		return null;
 	}

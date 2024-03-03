@@ -21,9 +21,16 @@
 */
 package org.socialworld.calculation;
 
+import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.AttributeArray;
+import org.socialworld.attributes.ISavedValue;
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.Time;
+import org.socialworld.attributes.properties.IEnumProperty;
+import org.socialworld.core.Event;
+import org.socialworld.objects.SimulationObject;
+import org.socialworld.objects.StateSimulationObject;
 
 public class Value {
 
@@ -193,7 +200,7 @@ public class Value {
 
 	public String getName() { return name; };
 
-	public Object getValue() { 
+	public Object getObject() { 
 		switch (type) {
 		case integer:
 			return (int) value;
@@ -210,17 +217,185 @@ public class Value {
 			else
 				return (Time) value;
 		default:
-			return value;
+			if ((value instanceof IObjectSender) && (this instanceof ValueProperty)) {
+				return ((IObjectSender) value).copy();
+			}
+			else {
+				return value;
+			}
 		}
-	}		
+	}	
+	
+	protected Object getOriginalValue() {
+		if (this instanceof ValueProperty) {
+			return this.value;
+		}
+		else {
+			return NoObject.getNoObject(NoObjectReason.valueIsNoValueProperty);
+		}
+	}
+		
+	public int requestValue(IObjectReceiver receiver, int requestID, Type type) {
+		
+		if (this.type.equals(type)) {
+			IObjectSender object;
+			object = getObjectSender();
+			return object.sendYourselfTo(receiver, requestID);
+		}
+		else {
+			return IObjectSender.OBJECT_NOT_SENDED_BECAUSE_WRONG_TYPE;
+		}
+	}
+
+	
+	public final ValueProperty getProperty(SimulationCluster cluster, PropertyName simPropName, String methodName, String valueName) {
+		
+		ValueProperty result;
+		result = ValueProperty.getInvalid();
+		
+		boolean returnInvalidVP = false;
+		
+		// check permission for a value property
+		if (this instanceof ValueProperty) {
 			
+			ValueProperty thisAsVP = (ValueProperty)this;
+			if (thisAsVP.isProtected()) {
+				if (thisAsVP.checkHasPermission(cluster)) {
+
+				}
+				else {
+					returnInvalidVP = true;
+				}
+			}
+		}
+		
+		if (!returnInvalidVP) {
+			
+			Object object = value;
+
+			switch (simPropName) {
+			case method:
+				
+				if (methodName.length() > 0) {
+					
+					// use reflection for calling the method
+					
+					if (object instanceof ISavedValue) {
+						ISavedValue savedValue;
+						savedValue = (ISavedValue) object;
+						result = savedValue.getPropertyFromMethod(cluster, methodName, valueName);
+					}
+					else if (object instanceof IEnumProperty) {
+						IEnumProperty enumProperty;
+						enumProperty = (IEnumProperty) object;
+						if (methodName.equals("getIndex")) {
+							result = new ValueProperty(Type.integer,  valueName, enumProperty.getIndex());
+						}
+					}
+					
+				}
+				break;
+				
+			case isA:
+				
+				if (methodName.length() > 0) {
+					
+					
+					if (object instanceof SimulationObject) {
+						SimulationObject simObj;
+						simObj = (SimulationObject) object;
+						result = simObj.isA(methodName, valueName);
+					}
+					
+				}
+				break;
+	
+			case check:
+				
+				if (methodName.length() > 0) {
+					
+					
+					if (object instanceof SimulationObject) {
+						SimulationObject simObj;
+						simObj = (SimulationObject) object;
+						result = simObj.check(methodName, valueName);
+					}
+					
+				}
+				break;
+	
+			case isElem:
+				
+				if (methodName.length() > 0) {
+					
+					
+					if (object instanceof SimulationObject) {
+						SimulationObject simObj;
+						simObj = (SimulationObject) object;
+						// the methodName variable holds the setNumber as string
+						result = simObj.isElementOf(methodName, valueName);
+					}
+					
+				}
+				break;
+				
+			case unknown:
+				
+				break;
+				
+			default:
+				
+				// call getProperty()
+				
+				if (object instanceof SimulationObject) {
+					SimulationObject simObj;
+					simObj = (SimulationObject) object;
+					result = simObj.getProperty(cluster, simPropName, valueName);
+				}
+				else if (object instanceof StateSimulationObject) {
+					StateSimulationObject stateSimObj;
+					stateSimObj = (StateSimulationObject) object;
+					result = stateSimObj.getProperty(cluster, simPropName, valueName);
+				}
+				else if (object instanceof ISavedValue) {
+					ISavedValue savedValue;
+					savedValue = (ISavedValue) object;
+					result = savedValue.getProperty(cluster, simPropName, valueName);
+				}
+				else if (object instanceof Event) {
+					
+				}
+				else if (object instanceof AbstractAction) {
+					
+				}
+				break;
+				
+			}
+			
+		}
+		
+		return result;
+		
+	}
+
+	
+	
+	
+	protected IObjectSender getObjectSender() {
+		if (value instanceof IObjectSender) {
+			return (IObjectSender) value;
+		}
+		else {
+			return NoObjectSender.getObjectNothing();
+		}
+	}
 
 	public boolean equals(Value anotherValue) {
 		if (anotherValue == null) return false;
 		if (this.type.equals(anotherValue.type) ) {
 
-			Object valueThis  = this.getValue();
-			Object valueThat  = anotherValue.getValue();
+			Object valueThis  = this.getObject();
+			Object valueThat  = anotherValue.getObject();
 			
 			// TODO are to nulls equal or not?
 			if (valueThis == null || valueThat == null) return false;

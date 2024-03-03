@@ -70,7 +70,7 @@ public abstract class KnowledgeFact extends KnowledgeItem {
 	protected Lexem translateToLexem(Value value) {
 		Lexem result = null;
 		if (value.getType() == Type.sentenceElement) {
-			Object o = value.getValue();
+			Object o = value.getObject();
 			if (o instanceof Lexem)	{
 				result = (Lexem) o;
 			}

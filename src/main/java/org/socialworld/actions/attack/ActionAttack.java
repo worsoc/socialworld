@@ -96,7 +96,7 @@ public class ActionAttack extends AbstractAction {
 		value =  actionProperties.getValue(furtherPropertyNames[0]);
 		// TODO there is no target, why?
 		if (value.isValid()) {
-			target =  (SimulationObject) value.getValue() ;
+			target =  (SimulationObject) value.getObject() ;
 			this.setTarget(target);
 		}
 

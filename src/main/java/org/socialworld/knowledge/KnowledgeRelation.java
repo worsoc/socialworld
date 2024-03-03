@@ -136,7 +136,7 @@ public abstract class KnowledgeRelation extends KnowledgeFact {
 	private Relation translateToRelation(Value value) {
 		Relation result = Relation.nothing;
 		if (value.getType() == Type.sentenceElement) {
-			Object o = value.getValue();
+			Object o = value.getObject();
 			if (o instanceof Relation)	{
 				result = (Relation) o;
 			}

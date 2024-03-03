@@ -166,7 +166,7 @@ public class StateAnimal extends StateSimulationObject {
 
 		if (checkGuard(guard)) {
 			
-			SocialWorld.showAttributeChanges(getObject().getObjectID(), (AttributeArray) attributes.getValue());
+			SocialWorld.showAttributeChanges(getObject().getObjectID(), (AttributeArray) attributes.getObject());
 
 			this.attributes.set(attributes);
 			

@@ -271,7 +271,7 @@ public class ActionCreator extends SocialWorldThread {
 		}
 		
 		Value result = f_CreateReaction.calculate(arguments);
-		return (AbstractAction) result.getValue();
+		return (AbstractAction) result.getObject();
 
 	}
 
@@ -300,7 +300,7 @@ public class ActionCreator extends SocialWorldThread {
 		arguments.add( stateActor.getProperty(SimulationCluster.action, PropertyName.simobj_attributeArray) );
 		
 		Value result = f_CreateAction.calculate(arguments);
-		return (AbstractAction) result.getValue();
+		return (AbstractAction) result.getObject();
 		
 
 	}
@@ -322,7 +322,7 @@ public class ActionCreator extends SocialWorldThread {
 		AbstractAction action;
 		ActionType type;
 		
-		type = (ActionType) actionProperties.getValue(namePropertyActionType).getValue();
+		type = (ActionType) actionProperties.getValue(namePropertyActionType).getObject();
 		
 		switch (type) {
 		case bodilyFunction: 

@@ -115,7 +115,7 @@ public class Move extends ActionPerformer {
 		
 		tmp = getParam(Value.VALUE_BY_NAME_ACTION_MOVE_ACCELERATION);
 		if (tmp.isValid()) {
-			this.acceleration = (Float) tmp.getValue();
+			this.acceleration = (Float) tmp.getObject();
 		}
 		else {
 			setParam( new Value(Type.floatingpoint, Value.VALUE_BY_NAME_ACTION_MOVE_ACCELERATION, this.acceleration));
@@ -123,7 +123,7 @@ public class Move extends ActionPerformer {
 		
 		tmp = getParam(Value.VALUE_BY_NAME_ACTION_MOVE_VELOCITY);
 		if (tmp.isValid()) {
-			this.velocity = (Float) tmp.getValue();
+			this.velocity = (Float) tmp.getObject();
 		}
 		else {
 			this.velocity = this.velocity + this.acceleration;

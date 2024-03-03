@@ -99,13 +99,13 @@ public class ActionHandle extends AbstractAction {
 
 		value =  actionProperties.getValue(furtherPropertyNames[0]);
 		if (value.isValid()) {
-			target =  (SimulationObject) value.getValue() ;
+			target =  (SimulationObject) value.getObject() ;
 			this.setTarget(target);
 		}
 
 		value =  actionProperties.getValue(furtherPropertyNames[1]);
 		if (value.isValid()) {
-			direction = (Vector) value.getValue();
+			direction = (Vector) value.getObject();
 			this.setDirection(direction);
 		}
 

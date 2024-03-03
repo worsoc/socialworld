@@ -37,7 +37,7 @@ public class KnowledgeProperty extends KnowledgeFact {
 	
 	public KnowledgeProperty(Value criterion, ValueArrayList values ) {
 		KnowledgeFactAtom kfa;
-		this.criterion = KnowledgeFact_Criterion.getName( (int) criterion.getValue());
+		this.criterion = KnowledgeFact_Criterion.getName( (int) criterion.getObject());
 		List<KnowledgeFactAtom> atoms = new ArrayList<KnowledgeFactAtom>();
 		for (int index =  0; index < values.size(); index++) {
 			kfa = translateToKnowledgeFactAtom(values.get(index));
@@ -96,7 +96,7 @@ public class KnowledgeProperty extends KnowledgeFact {
 	protected Lexem translateToLexem(Value value) {
 		Lexem result = null;
 		if (value.getType() == Type.enumProp) {
-			Object o = value.getValue();
+			Object o = value.getObject();
 			if (o instanceof IEnumProperty) {
 				IEnumProperty enumProp = (IEnumProperty) o;
 				result = enumProp.getLexem();

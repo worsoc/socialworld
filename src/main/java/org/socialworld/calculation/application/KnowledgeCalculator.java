@@ -174,7 +174,7 @@ public class KnowledgeCalculator extends SocialWorldThread {
 		{
 			f_CreatePerception = descGetKE.getFunction(index);
 			valueKE = f_CreatePerception.calculate(arguments);
-			knowledgeElement = (KnowledgeElement) valueKE.getValue();	
+			knowledgeElement = (KnowledgeElement) valueKE.getObject();	
 			
 			if (knowledgeElement != null) {
 				if (knowledgeElement.isValid())	{
@@ -212,8 +212,8 @@ public class KnowledgeCalculator extends SocialWorldThread {
 			
 			if (getFromVAL.isValid() && getFromVAL.getName().equals(Value.VALUE_NAME_KNOWLEDGE_SUBJECT)) {
 				
-				subject = (SimulationObject) knowledgeElementProperties.get(0).getValue();
-				source = (KnowledgeSource) knowledgeElementProperties.get(1).getValue();
+				subject = (SimulationObject) knowledgeElementProperties.get(0).getObject();
+				source = (KnowledgeSource) knowledgeElementProperties.get(1).getObject();
 				lexemSubject = subject.getLexem();
 				
 				KnowledgeElement knowledgeElement = new KnowledgeElement(source, lexemSubject);
@@ -221,7 +221,7 @@ public class KnowledgeCalculator extends SocialWorldThread {
 				
 				for (int index = 2; index < size; index++) {
 				
-					atom = (KnowledgeItem) knowledgeElementProperties.get(index).getValue();
+					atom = (KnowledgeItem) knowledgeElementProperties.get(index).getObject();
 					knowledgeElement.add(atom);
 					
 				}
@@ -250,10 +250,10 @@ public class KnowledgeCalculator extends SocialWorldThread {
 		find = knowledgeSourceProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_SOURCE_TYPE);
 		
 		if (find >= 0) {
-			type = KnowledgeSource_Type.getName((int) knowledgeSourceProperties.get(find).getValue());
+			type = KnowledgeSource_Type.getName((int) knowledgeSourceProperties.get(find).getObject());
 			find = knowledgeSourceProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_SOURCE);
 			if (find >= 0) {
-				origin = (SimulationObject) knowledgeSourceProperties.get(find).getValue();
+				origin = (SimulationObject) knowledgeSourceProperties.get(find).getObject();
 				result = new KnowledgeSource(type, origin);
 			}
 		}

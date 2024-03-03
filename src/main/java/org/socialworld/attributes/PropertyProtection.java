@@ -52,6 +52,8 @@ public class PropertyProtection {
 		cluster = SimulationCluster.total;
 		withTotalPermissions = true;
 		this.allowOneAdding = false;
+		this.useAsPermissions = new PropertyUsingAs[0];
+		this.protectedValues = new ArrayList<ValueProperty>();
 	}
 	
 	
@@ -60,6 +62,7 @@ public class PropertyProtection {
 		this.useAsPermissions = useAsPermissions;
 		this.usedAs = null;
 		this.allowOneAdding = true;
+		this.protectedValues = new ArrayList<ValueProperty>();
 	}
 	
 	public static PropertyProtection getProtection(SimulationCluster cluster) {
@@ -210,6 +213,11 @@ public class PropertyProtection {
 		
 		// there is a get permission if this.useAsPermissions and cluster's useAsPermissions are not intersection-free
 		
+		
+		// TEMP_SOLUTION
+		return true;
+
+/*	--> wieder rein	
 		PropertyUsingAs[] tmp;
 		tmp = cluster.getPossibleUsingAs();
 		
@@ -227,10 +235,8 @@ public class PropertyProtection {
 			
 		}
 
-		// TEMP_SOLUTION
-		return true;
-		// --> return false;
-		
+		return false;
+*/		
 	}
 
 }

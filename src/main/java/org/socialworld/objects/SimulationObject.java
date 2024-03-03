@@ -323,7 +323,7 @@ public abstract class SimulationObject implements IPerceptible {
 	 * @return position
 	 */
 	public final Position getPosition(SimulationCluster cluster) {
-		return (Position) getProperty(cluster, PropertyName.simobj_position).getValue();
+		return (Position) getProperty(cluster, PropertyName.simobj_position).getValue(cluster);
 	}
 	
 	
