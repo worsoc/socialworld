@@ -102,7 +102,7 @@ public class FunctionByMatrix extends FunctionBase implements IObjectReceiver{
 				Value value = arguments.get(0);
 				int requestResult;
 				if (value instanceof ValueProperty) {
-					requestResult = ((ValueProperty) value).requestValue(SimulationCluster.total, this, requestID, Type.attributeArray);
+					requestResult = ((ValueProperty) value).requestObject(SimulationCluster.total, this, requestID, Type.attributeArray);
 					if (requestResult == IObjectSender.OBJECT_SENDED) {
 						attributesOld = (AttributeArray) receivedObjects.get(requestID);
 					}
@@ -112,7 +112,7 @@ public class FunctionByMatrix extends FunctionBase implements IObjectReceiver{
 					}
 				}
 				else {
-					requestResult = value.requestValue(this, requestID, Type.attributeArray);
+					requestResult = value.requestObject(this, requestID, Type.attributeArray);
 					if (requestResult == IObjectSender.OBJECT_SENDED) {
 						attributesOld = (AttributeArray) receivedObjects.get(requestID);
 					}

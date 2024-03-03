@@ -45,7 +45,7 @@ public class Stork extends Aequorlithornithes implements IFlying , IRunning{
 		// make a copy as ValueProperty
 		ValueProperty vp = this.stateFlying.getAsValue(cluster);
 		// the copy is permitted for cluster only
-		return (StateFlying) vp.getValue();
+		return (StateFlying) vp.getObject();
 	}
 	
 	public ValueProperty getStateFlyingAsProperty(SimulationCluster cluster, String name) {
@@ -67,7 +67,7 @@ public class Stork extends Aequorlithornithes implements IFlying , IRunning{
 	// make a copy as ValueProperty
 	ValueProperty vp = this.stateRunning.getAsValue(cluster);
 	// the copy is permitted for cluster only
-	return (StateRunning) vp.getValue();
+	return (StateRunning) vp.getObject();
 	}
 	
 	public ValueProperty getStateRunningAsProperty(SimulationCluster cluster, String name) {

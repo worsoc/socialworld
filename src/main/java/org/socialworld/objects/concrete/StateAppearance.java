@@ -315,11 +315,11 @@ public class StateAppearance extends State {
 		case stateAppearance_colourLeave:
 		case stateAppearance_colourFruit:
 		case stateAppearance_colourBlossom:
-			this.colourSets.set(mapCSPN2CSN(propName),(ColourSet)property.getValue());
+			this.colourSets.set(mapCSPN2CSN(propName),(ColourSet)property.getObject());
 
 			
 		case stateAppearance_dimension:
-			this.dimension = (Dimension) property.getValue();
+			this.dimension = (Dimension) property.getObject();
 		default:
 			break;
 

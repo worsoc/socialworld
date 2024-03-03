@@ -137,7 +137,7 @@ public class ValueProperty extends Value {
 	
 	
 	
-	public Object getValue() { 
+	public Object getObject() { 
 		
 		Object result;
 		
@@ -157,7 +157,7 @@ public class ValueProperty extends Value {
 		
 	}
 
-	public Object getValue(SimulationCluster cluster) {
+	public Object getObject(SimulationCluster cluster) {
 		
 		Object result; 
 		if (isProtected()) {
@@ -182,7 +182,7 @@ public class ValueProperty extends Value {
 
 	}
 	
-	public int requestValue(IObjectReceiver receiver, int requestID, Type type) {
+	public int requestObject(IObjectReceiver receiver, int requestID, Type type) {
 
 		if (this.getType().equals(type)) {
 		
@@ -203,7 +203,7 @@ public class ValueProperty extends Value {
 		
 	}
 
-	public int requestValue(SimulationCluster cluster, IObjectReceiver receiver, int requestID, Type type) {
+	public int requestObject(SimulationCluster cluster, IObjectReceiver receiver, int requestID, Type type) {
 
 		if (this.getType().equals(type)) {
 		
@@ -250,7 +250,7 @@ public class ValueProperty extends Value {
 		ValueProperty result = getInvalid();
 		
 		if (isSavedValues) {
-			ISavedValue savedValue = (ISavedValue) super.getOriginalValue();
+			ISavedValue savedValue = (ISavedValue) super.getOriginal();
 			result = savedValue.getProperty(propName, valueName);
 		}
 
@@ -269,7 +269,7 @@ public class ValueProperty extends Value {
 		ValueProperty result = getInvalid();
 		
 		if (isSavedValues) {
-			ISavedValue savedValue = (ISavedValue) super.getOriginalValue();
+			ISavedValue savedValue = (ISavedValue) super.getOriginal();
 			result = savedValue.getPropertyFromMethod(methodName, valueName);
 		}
 

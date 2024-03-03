@@ -226,7 +226,7 @@ public class Value {
 		}
 	}	
 	
-	protected Object getOriginalValue() {
+	protected Object getOriginal() {
 		if (this instanceof ValueProperty) {
 			return this.value;
 		}
@@ -235,7 +235,7 @@ public class Value {
 		}
 	}
 		
-	public int requestValue(IObjectReceiver receiver, int requestID, Type type) {
+	public int requestObject(IObjectReceiver receiver, int requestID, Type type) {
 		
 		if (this.type.equals(type)) {
 			IObjectSender object;

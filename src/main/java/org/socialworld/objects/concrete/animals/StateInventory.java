@@ -163,7 +163,7 @@ public class StateInventory extends State {
 	protected void setProperty(PropertyName propName, ValueProperty property) {
 
 		Object value;
-		value = property.getValue();
+		value = property.getObject();
 		
 		switch (propName) {
 		case stateInventory_inventory:

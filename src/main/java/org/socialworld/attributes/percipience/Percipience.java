@@ -154,13 +154,13 @@ public class Percipience {
 	
 				ValueProperty vpDirectionView;
 				vpDirectionView = possibleSeer.getStateProperty(SimulationCluster.todo, PropertyName.stateSeer, PropertyName.stateSeer_directionView, PropertyName.stateSeer_directionView.toString());
-				Vector directionView = ((Direction)vpDirectionView.getValue()).getVector(SimulationCluster.todo);
+				Vector directionView = ((Direction)vpDirectionView.getObject()).getVector(SimulationCluster.todo);
 	
 				ValueProperty vpPropsSeer;
 				ValueProperty vpAngleView;
 				vpPropsSeer = possibleSeer.getStateProperty(SimulationCluster.todo, PropertyName.stateSeer, PropertyName.stateSeer_propsSeer, PropertyName.stateSeer_propsSeer.toString());
 				vpAngleView = vpPropsSeer.getSubProperty(PropertyName.propsSeer_angleViewPerceivingObjectsInRadians, PropertyName.propsSeer_angleViewPerceivingObjectsInRadians.toString());
-				double angleViewInRadians = (double) vpAngleView.getValue();
+				double angleViewInRadians = (double) vpAngleView.getObject();
 				
 			/*	
 				Vector directionView =  possibleSeer.getDirectionView().getVector();
@@ -201,14 +201,14 @@ public class Percipience {
 	
 				ValueProperty vpDirectionView;
 				vpDirectionView = possibleSeer.getStateProperty(SimulationCluster.todo, PropertyName.stateSeer, PropertyName.stateSeer_directionView, PropertyName.stateSeer_directionView.toString());
-				Vector directionView = (Vector) (vpDirectionView.getSubProperty(PropertyName.direction_vector)).getValue();
+				Vector directionView = (Vector) (vpDirectionView.getSubProperty(PropertyName.direction_vector)).getObject();
 		//		Vector directionView = ((Direction)vpDirectionView.getValue()).getVector();
 	
 				ValueProperty vpPropsSeer;
 				ValueProperty vpAngleView;
 				vpPropsSeer = possibleSeer.getStateProperty(SimulationCluster.todo, PropertyName.stateSeer, PropertyName.stateSeer_propsSeer, PropertyName.stateSeer_propsSeer.toString());
 				vpAngleView = vpPropsSeer.getSubProperty(PropertyName.propsSeer_angleViewPerceivingEventsInRadians, PropertyName.propsSeer_angleViewPerceivingEventsInRadians.toString());
-				double angleViewInRadians = (double) vpAngleView.getValue();
+				double angleViewInRadians = (double) vpAngleView.getObject();
 	
 				
 				double cosineBetweenDirections = direction.getCosPhi(directionView);

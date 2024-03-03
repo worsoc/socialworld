@@ -58,7 +58,7 @@ public class Chihuahua extends Dog implements IRunning{
 	//make a copy as ValueProperty
 	ValueProperty vp = this.stateRunning.getAsValue(cluster);
 	//the copy is permitted for cluster only
-	return (StateRunning) vp.getValue();
+	return (StateRunning) vp.getObject();
 	}
 	
 	public ValueProperty getStateRunningAsProperty(SimulationCluster cluster, String name) {
