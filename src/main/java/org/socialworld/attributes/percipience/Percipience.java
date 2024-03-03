@@ -25,6 +25,7 @@ import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.SimulationCluster;
+import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.objects.Animal;
@@ -159,7 +160,7 @@ public class Percipience {
 				ValueProperty vpPropsSeer;
 				ValueProperty vpAngleView;
 				vpPropsSeer = possibleSeer.getStateProperty(SimulationCluster.todo, PropertyName.stateSeer, PropertyName.stateSeer_propsSeer, PropertyName.stateSeer_propsSeer.toString());
-				vpAngleView = vpPropsSeer.getSubProperty(PropertyName.propsSeer_angleViewPerceivingObjectsInRadians, PropertyName.propsSeer_angleViewPerceivingObjectsInRadians.toString());
+				vpAngleView = vpPropsSeer.getProperty(SimulationCluster.todo, PropertyName.propsSeer_angleViewPerceivingObjectsInRadians, Value.NO_METHOD_NAME, PropertyName.propsSeer_angleViewPerceivingObjectsInRadians.toString());
 				double angleViewInRadians = (double) vpAngleView.getObject();
 				
 			/*	
@@ -201,13 +202,13 @@ public class Percipience {
 	
 				ValueProperty vpDirectionView;
 				vpDirectionView = possibleSeer.getStateProperty(SimulationCluster.todo, PropertyName.stateSeer, PropertyName.stateSeer_directionView, PropertyName.stateSeer_directionView.toString());
-				Vector directionView = (Vector) (vpDirectionView.getSubProperty(PropertyName.direction_vector)).getObject();
+				Vector directionView = (Vector) (vpDirectionView.getProperty(SimulationCluster.todo, PropertyName.direction_vector, Value.NO_METHOD_NAME, PropertyName.direction_vector.toString())).getObject();
 		//		Vector directionView = ((Direction)vpDirectionView.getValue()).getVector();
 	
 				ValueProperty vpPropsSeer;
 				ValueProperty vpAngleView;
 				vpPropsSeer = possibleSeer.getStateProperty(SimulationCluster.todo, PropertyName.stateSeer, PropertyName.stateSeer_propsSeer, PropertyName.stateSeer_propsSeer.toString());
-				vpAngleView = vpPropsSeer.getSubProperty(PropertyName.propsSeer_angleViewPerceivingEventsInRadians, PropertyName.propsSeer_angleViewPerceivingEventsInRadians.toString());
+				vpAngleView = vpPropsSeer.getProperty(SimulationCluster.todo, PropertyName.propsSeer_angleViewPerceivingEventsInRadians, Value.NO_METHOD_NAME, PropertyName.propsSeer_angleViewPerceivingEventsInRadians.toString());
 				double angleViewInRadians = (double) vpAngleView.getObject();
 	
 				

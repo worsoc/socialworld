@@ -24,6 +24,7 @@ package org.socialworld.attributes.percipience;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.SimulationCluster;
+import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Rectangle;
 import org.socialworld.calculation.geometry.Vector;
@@ -177,7 +178,7 @@ public class Visibility {
 			ValueProperty vpSDRT;
 			//vp = possibleSeer.getStatePropertyFromMethod(SimulationCluster.todo, PropertyName.stateSeer, ISeer.METHODNAME_SIZEDISTANCERELATIONTHRESHOLD, "sizeDistanceRelThreashold");
 			vpPropsSeer = possibleSeer.getStateProperty(SimulationCluster.todo, PropertyName.stateSeer, PropertyName.stateSeer_propsSeer, PropertyName.stateSeer_propsSeer.toString());
-			vpSDRT = vpPropsSeer.getSubProperty(PropertyName.propsSeer_sizeDistanceRelationThreshold, PropertyName.propsSeer_sizeDistanceRelationThreshold.toString());
+			vpSDRT = vpPropsSeer.getProperty(SimulationCluster.todo, PropertyName.propsSeer_sizeDistanceRelationThreshold, Value.NO_METHOD_NAME, PropertyName.propsSeer_sizeDistanceRelationThreshold.toString());
 			sizeDistanceRelationThreshold = (double) vpSDRT.getObject();			
 			/*
 			nrPerpendicular = possibleSeer.getBestPercipiencePerpendicular();

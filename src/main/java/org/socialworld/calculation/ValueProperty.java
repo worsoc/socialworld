@@ -239,30 +239,7 @@ public class ValueProperty extends Value {
 		return true;
 	}
 	
-	public ValueProperty getSubProperty(PropertyName propName) {
-		
-		return getSubProperty(propName, propName.toString());
-		
-	}
 
-	public ValueProperty getSubProperty(PropertyName propName, String valueName) {
-		// QUESTION ??? must be protected by SimulationCluster???
-		ValueProperty result = getInvalid();
-		
-		if (isSavedValues) {
-			ISavedValue savedValue = (ISavedValue) super.getOriginal();
-			result = savedValue.getProperty(propName, valueName);
-		}
-
-/* 	03.06.2020	
-		if (isSimProperty) {
-			ISimProperty simProperty = (ISimProperty) super.getOriginalValue();
-			result = simProperty.getProperty(cluster, propName, valueName);
-		}
-*/		
-		return result;
-		
-	}
 	
 	public ValueProperty getSubPropertyFromMethod(String methodName, String valueName) {
 		

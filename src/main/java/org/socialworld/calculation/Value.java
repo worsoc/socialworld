@@ -116,6 +116,8 @@ public class Value {
 	
 	public static final String VALUE_NAME_UNUSED_BECAUSE_TEMPORARY = "temp";
 
+	public static final String NO_METHOD_NAME = "";
+	
 	private Type type;
 	private String name = "";
 	private Object value;
