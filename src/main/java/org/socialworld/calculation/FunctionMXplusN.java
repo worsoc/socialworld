@@ -86,7 +86,7 @@ public class FunctionMXplusN extends FunctionBase {
 			Value result;
 			Value x;
 			
-			if ( arguments.size() < 1) return new Value();
+			if ( arguments.size() < 1) return Value.getValueNothing();
 			x = arguments.get(0);
 			
 			if (!x.isValid()) return x;
@@ -105,7 +105,7 @@ public class FunctionMXplusN extends FunctionBase {
 			}
 
 			
-			if (x.getType() != n.getType()) return new Value();
+			if (x.getType() != n.getType()) return Value.getValueNothing();
 					
 			result = calculation.addition(
 							calculation.multiplication(
@@ -113,7 +113,7 @@ public class FunctionMXplusN extends FunctionBase {
 											x),
 							n);
 
-			if (result.getType() != n.getType()) return new Value();
+			if (result.getType() != n.getType()) return Value.getValueNothing();
 
 			result = getMinMaxedValue(result);
 			return result;

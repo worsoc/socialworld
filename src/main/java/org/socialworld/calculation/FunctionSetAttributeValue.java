@@ -49,7 +49,7 @@ public class FunctionSetAttributeValue extends FunctionBase {
 			return arguments.get(0);
 		}
 		
-		return new Value();
+		return Value.getValueNothing();
 	}
 
 

@@ -39,6 +39,8 @@ public class ValueProperty extends Value {
 	private boolean isSavedValues = false;
 	private boolean isSimProperty = false;
 	
+	//private boolean isCopy = false;
+	
 	private PropertyUsingAs usedAs = null;
 	
 	public static ValueProperty getInvalid() {

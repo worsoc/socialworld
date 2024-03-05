@@ -46,7 +46,7 @@ public class FunctionByExpression extends FunctionBase {
 	
 	public Value calculate(ValueArrayList arguments) {
 		if (returnInvalidNothingvalue) 
-			return new Value();
+			return Value.getValueNothing();
 		else
 			return startExpression.evaluate(arguments);
 	}

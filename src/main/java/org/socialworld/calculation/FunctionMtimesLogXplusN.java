@@ -67,12 +67,12 @@ public class FunctionMtimesLogXplusN extends FunctionBase {
 	public Value calculate(ValueArrayList arguments) {
 		Value x;
 		float result;
-		if ( arguments.size() < 1) return new Value();
+		if ( arguments.size() < 1) return Value.getValueNothing();
 		x = arguments.get(0);
 		
 		if (!x.isValid()) return x;
 		 
-		if (!(x.hasType(Type.floatingpoint))) return new Value();
+		if (!(x.hasType(Type.floatingpoint))) return Value.getValueNothing();
 	
 		result = calculateFloatingPoint((float) calculation.createValue(Type.floatingpoint, x.getObject()).getObject());
 		return  calculation.createValue(this.type, result);

@@ -47,7 +47,7 @@ public class Calculation {
 	}
 	
 	private Calculation() {
-		nothing = new Value();
+		nothing = Value.getValueNothing();
 		
 		// TODO implement methods for further types
 		zeroInteger = new Value(Type.integer, 0);
@@ -125,7 +125,7 @@ public class Calculation {
 			break;
 		case enumProp:
 			if (value instanceof IEnumProperty) created = new Value(type, value);
-			else created = new Value();
+			else created = Value.getValueNothing();
 		default: 
 			created = new Value(type, value);
 		}

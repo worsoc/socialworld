@@ -12,7 +12,7 @@ public class FunctionNothing extends FunctionBase {
 	
 	@Override
 	public Value calculate(ValueArrayList arguments) {
-		return new Value();
+		return Value.getValueNothing();
 	}
 
 

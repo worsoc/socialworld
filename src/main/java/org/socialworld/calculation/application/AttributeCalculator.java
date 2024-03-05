@@ -196,7 +196,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 		int eventType;
 		int eventInfluenceType;
 		Value oldAttributes;
-		Value newAttributes = new Value();
+		Value newAttributes = Value.getValueNothing();
 		
 		FunctionByExpression f_EventInfluence = null;
 		ValueArrayList arguments;
@@ -271,7 +271,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 		FunctionByMatrix f_AttributesByMatrix;
 		ValueArrayList arguments;
 		Value oldAttributes;
-		Value newAttributes = new Value();
+		Value newAttributes = Value.getValueNothing();
 	
 		oldAttributes =  stateAnimal.getProperty(SimulationCluster.attributeArray, PropertyName.simobj_attributeArray);
 
@@ -332,7 +332,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 		FunctionByMatrix f_AttributesByMatrix;
 		ValueArrayList arguments;
 		Value oldAttributes;
-		Value newAttributes = new Value();
+		Value newAttributes = Value.getValueNothing();
 	
 		oldAttributes =  stateAnimal.getProperty(SimulationCluster.attributeArray, PropertyName.simobj_attributeArray);
 

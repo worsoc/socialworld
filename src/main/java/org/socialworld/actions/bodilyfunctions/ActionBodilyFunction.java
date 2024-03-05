@@ -180,7 +180,7 @@ public class ActionBodilyFunction extends AbstractAction {
 	
 	public Value getItemAsValue(String valueName) {
 		if (!this.item.isSimulationObject()) {
-			return new Value();
+			return Value.getValueNothing();
 		}
 		else {
 			return new Value(Type.simulationObject, valueName, this.item);
@@ -189,28 +189,28 @@ public class ActionBodilyFunction extends AbstractAction {
 
 	public Value getItemDrinkAsValue(String valueName) { 
 		if (!this.item.isSimulationObject()) {
-			return new Value();
+			return Value.getValueNothing();
 		}
 		else {
 			if 	 (this.item instanceof IDrinkable) {
 				return new Value(Type.simulationObject, valueName, this.item);
 			}
 			else {
-				return new Value();
+				return Value.getValueNothing();
 			}
 		}
 	}
 
 	public Value getItemEatAsValue(String valueName) { 
 		if (!this.item.isSimulationObject()) {
-			return new Value();
+			return Value.getValueNothing();
 		}
 		else {
 			if 	 (this.item instanceof IEatable) {
 				return new Value(Type.simulationObject, valueName, this.item);
 			}
 			else {
-				return new Value();
+				return Value.getValueNothing();
 			}
 		}
 	}

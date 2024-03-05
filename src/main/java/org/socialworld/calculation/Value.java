@@ -125,8 +125,17 @@ public class Value {
 	boolean valid;
 	ValueTransferCode transferCode = ValueTransferCode.noFurtherInformation; 
 	
+	private static Value valueNothing;
+	
+	public static Value getValueNothing() {
+		if (valueNothing == null) {
+			valueNothing = new Value();
+		}
+		return valueNothing;
+	}
+	
 	//Dummy-Value
-	public Value() {
+	protected Value() {
 		this.type = Type.nothing;
 		valid = false;
 	}

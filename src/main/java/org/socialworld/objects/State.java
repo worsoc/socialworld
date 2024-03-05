@@ -360,7 +360,7 @@ public abstract class State implements ISimProperty, ISavedValue {
 	public final Value getValue(String methodName, String name) {
 		
 		Object got = null;
-		Value result = new Value();
+		Value result = Value.getValueNothing();
 		Method method;
 		method = getMethod(methodName);
 		

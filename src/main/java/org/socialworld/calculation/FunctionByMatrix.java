@@ -22,7 +22,6 @@
 package org.socialworld.calculation;
 
 
-import java.util.Hashtable;
 
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.collections.ValueArrayList;
@@ -36,7 +35,7 @@ public class FunctionByMatrix extends FunctionBase implements IObjectReceiver{
 	private static Value aHalf;
 	
 	private int requestValueID = 0;
-	Hashtable<Integer, Object> receivedObjects = new Hashtable<Integer, Object>();
+	ObjectRequester objectRequester = new ObjectRequester();
 	
 	public FunctionByMatrix(ValueInterpreteAs interpreteResultAs) {
 		
@@ -88,7 +87,7 @@ public class FunctionByMatrix extends FunctionBase implements IObjectReceiver{
 		int requestID;
 		
 		if (returnInvalidNothingvalue) 
-			return new Value();
+			return Value.getValueNothing();
 		
 		calculation = Calculation.getInstance();
 
@@ -97,30 +96,11 @@ public class FunctionByMatrix extends FunctionBase implements IObjectReceiver{
 			case attributeArray:
 				AttributeArray attributesOld = AttributeArray.getObjectNothing();
 				AttributeArray attributesNew = AttributeArray.getObjectNothing();
+				
 				requestValueID++;
-				requestID = requestValueID;
-				Value value = arguments.get(0);
-				int requestResult;
-				if (value instanceof ValueProperty) {
-					requestResult = ((ValueProperty) value).requestObject(SimulationCluster.total, this, requestID, Type.attributeArray);
-					if (requestResult == IObjectSender.OBJECT_SENDED) {
-						attributesOld = (AttributeArray) receivedObjects.get(requestID);
-					}
-					else {
-						System.out.println("FunctionByMatrix.calculate for ValueProperty: no valid attributeArray received");
-						return new Value();
-					}
-				}
-				else {
-					requestResult = value.requestObject(this, requestID, Type.attributeArray);
-					if (requestResult == IObjectSender.OBJECT_SENDED) {
-						attributesOld = (AttributeArray) receivedObjects.get(requestID);
-					}
-					else {
-						System.out.println("FunctionByMatrix.calculate for Value: no valid attributeArray received");
-						return new Value();
-					}
-				}
+				attributesOld = objectRequester.requestAttributeArray(SimulationCluster.total, arguments.get(0), this, requestValueID);
+				if (attributesOld == AttributeArray.getObjectNothing()) return Value.getValueNothing();
+				
 				int calculationMode = (int) arguments.get(1).getObject();
 				
 				switch (calculationMode)
@@ -140,13 +120,13 @@ public class FunctionByMatrix extends FunctionBase implements IObjectReceiver{
 						result = calculation.createValue(Type.floatingpoint, calculateScalar(attributesOld));
 					break;
 				default:
-					result = new Value();
+					result = Value.getValueNothing();
 				}
 				
 				break;
 				
 			default:
-				result = new Value();
+				result = Value.getValueNothing();
 				
 		}
 		
@@ -393,7 +373,7 @@ public class FunctionByMatrix extends FunctionBase implements IObjectReceiver{
 
 	@Override
 	public int receiveObject(int requestID, Object object) {
-		receivedObjects.put(requestID, object);
+		objectRequester.receive(requestID, object);
 		return 0;
 	}
 

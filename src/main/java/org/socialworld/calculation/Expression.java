@@ -517,12 +517,12 @@ public class Expression {
 
 	// will be overridden in inherited Expressions dedicated to creating values
 	protected Value createValue(Type valueType, int subType, String name, ValueArrayList arguments) {
-		return new Value();
+		return Value.getValueNothing();
 	}
 	
 	// will be overridden in inherited Expressions dedicated to creating values
 	protected Value createValue(Type valueType, String name, ValueArrayList arguments) {
-		return new Value();
+		return Value.getValueNothing();
 	}
 
 	protected final Value evaluateExpression1(ValueArrayList arguments) {

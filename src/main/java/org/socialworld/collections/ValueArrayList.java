@@ -34,7 +34,7 @@ public class ValueArrayList {
 	
 	public ValueArrayList() {
 		this.values = new ArrayList<Value>();
-		this.nothing = new Value();
+		this.nothing = Value.getValueNothing();
 	}
 	
 	public ValueArrayList(List values, Type type) {
@@ -42,13 +42,13 @@ public class ValueArrayList {
 		for (int i = 0; i < values.size(); i++) {
 			add(new Value(type, values.get(i)));
 		}
-		this.nothing = new Value();
+		this.nothing = Value.getValueNothing();
 	}
 	
 	public ValueArrayList(int size) {
 		
 		this.values = new ArrayList<Value>();
-		this.nothing = new Value();
+		this.nothing = Value.getValueNothing();
 		
 		for (int i = 0; i < size; i++) {
 			values.add(nothing);
