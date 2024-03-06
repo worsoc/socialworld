@@ -23,6 +23,8 @@ package org.socialworld.actions;
 
 import java.util.List;
 
+import org.socialworld.calculation.IObjectReceiver;
+import org.socialworld.calculation.ObjectRequester;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
@@ -77,7 +79,7 @@ import org.socialworld.objects.SimulationObject;
  * Damit kann die Ereignisverarbeitung standardisiert auf notwendige Daten zur auslösenden Aktion zugreifen.
  *
  */
-public abstract class ActionPerformer implements IEventParam {
+public abstract class ActionPerformer implements IEventParam , IObjectReceiver{
 
 
     private ValueArrayList eventParams;
@@ -88,6 +90,9 @@ public abstract class ActionPerformer implements IEventParam {
     		
     private AbstractAction action;
     
+	protected int requestValueID = 0;
+	protected ObjectRequester objectRequester = new ObjectRequester();
+
     public ActionPerformer (AbstractAction action) {
     	this.action = action;
     	this.actionAndActorProperties = new ValueArrayList();
@@ -209,5 +214,11 @@ public abstract class ActionPerformer implements IEventParam {
 
 	
     public abstract List<SimulationObject> getTargets();
+
+	@Override
+	public int receiveObject(int requestID, Object object) {
+		objectRequester.receive(requestID, object);
+		return 0;
+	}
 
 }

@@ -108,7 +108,8 @@ public class ActionSay extends AbstractAction {
 
 		value =  actionProperties.getValue(furtherPropertyNames[0]);
 		if (value.isValid()) {
-			target =  (SimulationObject) value.getObject() ;
+			requestValueID++;
+			target = objectRequester.requestSimulationObject(SimulationCluster.total, value, this, requestValueID);
 			this.setTarget(target);
 		}
 

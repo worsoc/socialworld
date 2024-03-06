@@ -22,6 +22,7 @@
 package org.socialworld.calculation.application;
 
 
+import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.CapacityQueue;
 import org.socialworld.collections.ValueArrayList;
@@ -168,7 +169,7 @@ public class TalkCalculator  extends SocialWorldThread {
 	
 			value = params.getParam("sentence");
 			if (value.isValid())
-				sentence = (String) value.getObject();
+				sentence = (String) value.getObject(Type.string);
 			else
 				return;
 	
@@ -211,7 +212,7 @@ public class TalkCalculator  extends SocialWorldThread {
 	
 			value = params.getParam("sentence");
 			if (value.isValid())
-				sentence = (String) value.getObject();
+				sentence = (String) value.getObject(Type.string);
 			else
 				return;
 			

@@ -225,7 +225,10 @@ public class AttributeArray extends SimProperty {
 	
 	public void set(Value attributeArray) {
 		if (attributeArray.isValid() && (attributeArray.getType() == Type.attributeArray)) {
-			set((AttributeArray)attributeArray.getObject());
+			AttributeArray attributes;
+			requestValueID++;
+			attributes = objectRequester.requestAttributeArray(SimulationCluster.total, attributeArray, this, requestValueID);
+			set((AttributeArray)attributes);
 		}
 	}
 	

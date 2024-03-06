@@ -139,7 +139,7 @@ public class ValueProperty extends Value {
 	
 	
 	
-	public Object getObject() { 
+	public Object getObject(Type type) { 
 		
 		Object result;
 		
@@ -152,19 +152,19 @@ public class ValueProperty extends Value {
 			}
 		}
 		else {
-			result = super.getObject();
+			result = super.getObject(type);
 		}
 		
 		return result;
 		
 	}
 
-	public Object getObject(SimulationCluster cluster) {
+	public Object getObject(SimulationCluster cluster, Type type) {
 		
 		Object result; 
 		if (isProtected()) {
 			if (checkHasPermission(cluster)) {
-				result = super.getObject();
+				result = super.getObject(type);
 			}
 			else {
 				if (isSavedValues) {
@@ -176,7 +176,7 @@ public class ValueProperty extends Value {
 			}
 		}
 		else {
-			result = super.getObject();
+			result = super.getObject(type);
 		}
 		
 		
@@ -265,9 +265,9 @@ public class ValueProperty extends Value {
 	public boolean checkHasUseAsPermission(PropertyUsingAs useAsPermission) {
 		
 		if (isSavedValues) {
-			return ((ISavedValue) super.getObject()).checkHasUseAsPermission(useAsPermission);
+			return ((ISavedValue) super.getObject(getType())).checkHasUseAsPermission(useAsPermission);
 		}
-		if (super.getObject() instanceof SimulationObject) {
+		if (super.getObject(getType()) instanceof SimulationObject) {
 			// TODO checkHasUseAsPermission for SimulationObject(s)
 			return true;
 		}

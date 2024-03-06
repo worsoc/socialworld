@@ -94,11 +94,11 @@ public class FunctionMXplusN extends FunctionBase {
 			if (this.useFloatingPointCalculation) {
 				
 				if (type == Type.floatingpoint)  {
-					result = calculation.createValue(Type.floatingpoint, calculateFloatingPoint((float) calculation.createValue(Type.floatingpoint, x.getObject()).getObject()));
+					result = calculation.createValue(Type.floatingpoint, calculateFloatingPoint((float) calculation.createValue(Type.floatingpoint, x.getObject(Type.floatingpoint)).getObject(Type.floatingpoint)));
 					return result;
 				}
 				if (type == Type.integer) {
-					result = calculation.createValue(Type.integer, calculateFloatingPoint((float) calculation.createValue(Type.floatingpoint, x.getObject()).getObject()));
+					result = calculation.createValue(Type.integer, calculateFloatingPoint((float) calculation.createValue(Type.floatingpoint, x.getObject(Type.floatingpoint)).getObject(Type.floatingpoint)));
 					return result;
 				}
 				

@@ -211,7 +211,10 @@ public class Value {
 
 	public String getName() { return name; };
 
-	public Object getObject() { 
+	public Object getObject(Type type) { 
+		
+		if (this.type != type) return NoObject.getNoObject(NoObjectReason.typeMismatchForGetObject);
+		
 		switch (type) {
 		case integer:
 			return (int) value;
@@ -405,8 +408,8 @@ public class Value {
 		if (anotherValue == null) return false;
 		if (this.type.equals(anotherValue.type) ) {
 
-			Object valueThis  = this.getObject();
-			Object valueThat  = anotherValue.getObject();
+			Object valueThis  = this.getObject(this.type);
+			Object valueThat  = anotherValue.getObject(anotherValue.type);
 			
 			// TODO are to nulls equal or not?
 			if (valueThis == null || valueThat == null) return false;

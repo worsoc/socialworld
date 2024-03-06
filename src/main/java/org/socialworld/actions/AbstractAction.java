@@ -23,6 +23,8 @@ package org.socialworld.actions;
 
 
 import org.socialworld.attributes.Time;
+import org.socialworld.calculation.IObjectReceiver;
+import org.socialworld.calculation.ObjectRequester;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
@@ -78,7 +80,7 @@ import org.socialworld.objects.access.HiddenSimulationObject;
  *  enthält also die Daten für die Einleitung der Ausführung (Erzeugung von Performer und Event).
  *  
  */
-public abstract class AbstractAction {
+public abstract class AbstractAction implements IObjectReceiver {
 	public static final int MAX_ACTION_PRIORITY = 256;
 	
 	
@@ -105,7 +107,9 @@ public abstract class AbstractAction {
 	static private String[] standardPropertyNames = ActionType.getStandardPropertyNames();
 	protected final String[] furtherPropertyNames;
 
-	
+	protected int requestValueID = 0;
+	protected ObjectRequester objectRequester = new ObjectRequester();
+
 	protected AbstractAction() {
 		this.type = ActionType.ignore;
 		this.furtherPropertyNames = this.type.getFurtherPropertyNames();
@@ -158,11 +162,11 @@ public abstract class AbstractAction {
 		
 		type = (ActionType) actionProperties.getValue( standardPropertyNames[0]).getObject();
 		mode = (ActionMode) actionProperties.getValue( standardPropertyNames[1]).getObject();
-		intensity = (float) actionProperties.getValue( standardPropertyNames[2]).getObject();
+		intensity = (float) actionProperties.getValue( standardPropertyNames[2]).getObject(Type.floatingpoint);
 		minTime = (Time) actionProperties.getValue( standardPropertyNames[3]).getObject();
 		maxTime = (Time) actionProperties.getValue( standardPropertyNames[4]).getObject();
-		priority = (int) actionProperties.getValue( standardPropertyNames[5]).getObject();
-		duration = (long) actionProperties.getValue( standardPropertyNames[6]).getObject();
+		priority = (int) actionProperties.getValue( standardPropertyNames[5]).getObject(Type.integer);
+		duration = (long) actionProperties.getValue( standardPropertyNames[6]).getObject(Type.longinteger);
 		
 		this.setType(type);
 		this.setMode(mode);
@@ -422,6 +426,11 @@ public abstract class AbstractAction {
 		return  "(" + this.type.toString() + ")"; //$NON-NLS-1$
 	}
 	
+	@Override
+	public int receiveObject(int requestID, Object object) {
+		objectRequester.receive(requestID, object);
+		return 0;
+	}
 
 
 }

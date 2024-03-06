@@ -37,7 +37,7 @@ public class KnowledgeProperty extends KnowledgeFact {
 	
 	public KnowledgeProperty(Value criterion, ValueArrayList values ) {
 		KnowledgeFactAtom kfa;
-		this.criterion = KnowledgeFact_Criterion.getName( (int) criterion.getObject());
+		this.criterion = KnowledgeFact_Criterion.getName( (int) criterion.getObject(Type.integer));
 		List<KnowledgeFactAtom> atoms = new ArrayList<KnowledgeFactAtom>();
 		for (int index =  0; index < values.size(); index++) {
 			kfa = translateToKnowledgeFactAtom(values.get(index));

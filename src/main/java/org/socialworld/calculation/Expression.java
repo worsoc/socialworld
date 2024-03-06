@@ -189,19 +189,19 @@ public class Expression {
 				case attributeValue:
 					AttributeArray attributeArray = AttributeArray.getObjectNothing();
 					attributeArray = (AttributeArray) getFromValueArrayList( arguments, Type.attributeArray, 1);
-					index = (int) value.getObject();
+					index = (int) value.getObject(Type.integer);
 					return calculation.createValue(
 						Type.integer,
 						attributeArray.get(index ));
 						
 				case argumentValueByName:
 					
-					name = (String) value.getObject();
+					name = (String) value.getObject(Type.string);
 					tmp = arguments.getValue(name );
 					if (tmp.isValid()) {
 						tmp = calculation.copy(tmp);
 					
-						name = (String) expression1.evaluate(arguments).getObject();
+						name = (String) expression1.evaluate(arguments).getObject(Type.string);
 						if (name != null && name.length() > 0) {
 								tmp.changeName(name);
 						}
@@ -211,14 +211,14 @@ public class Expression {
 										
 				case valueFromValueList:
 					// get value list's name
-					name =  (String) expression1.evaluate(arguments).getObject();
+					name =  (String) expression1.evaluate(arguments).getObject(Type.string);
 					// get the value list
 					tmp = arguments.getValue(name);
 					if (tmp.isValid()) {
 
 						valueList = (ValueArrayList) tmp.getObject();
 						// get the value list element's name
-						name = (String) expression2.evaluate(arguments).getObject();
+						name = (String) expression2.evaluate(arguments).getObject(Type.string);
 						// get the result value from the value list
 						return valueList.getValue(name);
 						
@@ -230,8 +230,8 @@ public class Expression {
 					Value object = arguments.get(0);
 					PropertyName simPropName = (PropertyName) value.getObject();
 					SimulationCluster cluster = SimulationCluster.getName((int) expression1.evaluate(arguments).getObject());
-					String methodName = (String) expression2.evaluate(arguments).getObject();
-					name = (String) expression3.evaluate(arguments).getObject();
+					String methodName = (String) expression2.evaluate(arguments).getObject(Type.string);
+					name = (String) expression3.evaluate(arguments).getObject(Type.string);
 					
 					return getProperty(object, cluster, simPropName, methodName, name);
 				
@@ -244,7 +244,7 @@ public class Expression {
 					tmp = expression1.evaluate(arguments);
 					int checkUseAsPermission = 0;
 					if (tmp.isValid()) {
-						checkUseAsPermission = (int) value.getObject();
+						checkUseAsPermission = (int) value.getObject(Type.integer);
 						if (checkUseAsPermission > 0) {
 							if (tmp instanceof ValueProperty) {
 								property = (ValueProperty) tmp;
@@ -395,7 +395,7 @@ public class Expression {
 					if (tmp.isValid()) {
 						tmp = calculation.copy(tmp);
 						if (this.value != null) {
-							name = (String)this.value.getObject();
+							name = (String)this.value.getObject(Type.string);
 							if (name.length() > 0) {
 								tmp.changeName(name);
 							}
@@ -411,7 +411,7 @@ public class Expression {
 						tmp = calculation.copy(tmp);
 						
 						// is there a name for a sub list
-						name = (String) expression2.evaluate().getObject();
+						name = (String) expression2.evaluate().getObject(Type.string);
 						if (name.length() > 0) {
 							if (arguments.findValue(name) < 0) {
 								// if the sub list doesn't exist, then create it and add it to arguments
@@ -429,7 +429,7 @@ public class Expression {
 						}
 						
 						// get the name for the (expression1) evaluated value 
-						name = (String) value.getObject();
+						name = (String) value.getObject(Type.string);
 						
 						// just for debugging
 						if (name.equals(Value.VALUE_BY_NAME_ACTION_TARGET)) {
@@ -467,10 +467,10 @@ public class Expression {
 					Value createdValue;;
 					
 					int subType;
-					type = Type.getName((int) value.getObject());
+					type = Type.getName((int) value.getObject(Type.integer));
 					
-					subType = (int) expression1.evaluate().getObject();
-					name = (String) expression3.evaluate().getObject();
+					subType = (int) expression1.evaluate().getObject(Type.integer);
+					name = (String) expression3.evaluate().getObject(Type.string);
 					
 					createdValue = createValue(type, subType, name, arguments);
 

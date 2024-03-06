@@ -127,10 +127,13 @@ public class Answer extends ActionPerformer {
 				case answerWhisper:
 					
 					Value tmp;
-
+					
 					tmp = getParam(Value.VALUE_BY_NAME_ACTION_TARGET);
 					if (tmp.isValid()) {
-						partner = (Human) tmp.getObject();
+						// TODO partner is not used until now
+						//SimulationObject simObject;
+						//simObject = objectRequester.requestSimulationObject(SimulationCluster.total, tmp, this, requestValueID);
+						//if (simObject instanceof Human) partner = (Human) simObject;
 					}
 					else {
 						partner = (Human) originalAction.getTarget();
@@ -142,7 +145,7 @@ public class Answer extends ActionPerformer {
 					
 					tmp = getParam(Value.VALUE_BY_NAME_ACTION_SENTENCETYPE);
 					if (tmp.isValid()) {
-						sentenceType = SentenceType.getSentenceType((int) tmp.getObject());
+						sentenceType = SentenceType.getSentenceType((int) tmp.getObject(Type.integer));
 					}
 					else {
 						sentenceType = originalAction.getSentenceType();
@@ -151,7 +154,7 @@ public class Answer extends ActionPerformer {
 					
 					tmp = getParam(Value.VALUE_BY_NAME_ACTION_SENTENCE);
 					if (tmp.isValid()) {
-						sentence = (String) tmp.getObject();
+						sentence = (String) tmp.getObject(Type.string);
 					}
 					else {
 						sentence = originalAction.getSentence();

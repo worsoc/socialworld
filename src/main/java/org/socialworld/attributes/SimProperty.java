@@ -26,6 +26,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.calculation.IObjectReceiver;
+import org.socialworld.calculation.ObjectRequester;
 import org.socialworld.calculation.PropertyUsingAs;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
@@ -36,12 +38,15 @@ import org.socialworld.tools.StringTupel;
 // TODO implement copy constructor in sub classes
 
 
-public abstract class SimProperty implements ISimProperty, ISavedValue {
+public abstract class SimProperty implements ISimProperty, ISavedValue , IObjectReceiver{
 
 	private boolean isObjectNothing = false;
 	
 	private PropertyName propertyName = PropertyName.unknown;
 	private PropertyProtection protection;
+
+	protected int requestValueID = 0;
+	protected ObjectRequester objectRequester = new ObjectRequester();
 
 	protected SimProperty() {
 		this.protection =  PropertyProtection.getProtection(this);
@@ -278,6 +283,12 @@ public abstract class SimProperty implements ISimProperty, ISavedValue {
 			if (mname.equals(method)) return m;
 		}
 		return null;
+	}
+
+	@Override
+	public int receiveObject(int requestID, Object object) {
+		objectRequester.receive(requestID, object);
+		return 0;
 	}
 
 }

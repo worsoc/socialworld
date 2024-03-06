@@ -35,7 +35,7 @@ public class FunctionByMatrix extends FunctionBase implements IObjectReceiver{
 	private static Value aHalf;
 	
 	private int requestValueID = 0;
-	ObjectRequester objectRequester = new ObjectRequester();
+	private ObjectRequester objectRequester = new ObjectRequester();
 	
 	public FunctionByMatrix(ValueInterpreteAs interpreteResultAs) {
 		
@@ -101,7 +101,7 @@ public class FunctionByMatrix extends FunctionBase implements IObjectReceiver{
 				attributesOld = objectRequester.requestAttributeArray(SimulationCluster.total, arguments.get(0), this, requestValueID);
 				if (attributesOld == AttributeArray.getObjectNothing()) return Value.getValueNothing();
 				
-				int calculationMode = (int) arguments.get(1).getObject();
+				int calculationMode = (int) arguments.get(1).getObject(Type.integer);
 				
 				switch (calculationMode)
 				{
@@ -174,7 +174,7 @@ public class FunctionByMatrix extends FunctionBase implements IObjectReceiver{
 					calculation.addition(
 							calculation.multiplication(share, function.calculate(arguments)),
 							offset)
-					.getObject();
+					.getObject(Type.floatingpoint);
 			
 
 			result += change;
@@ -257,7 +257,7 @@ public class FunctionByMatrix extends FunctionBase implements IObjectReceiver{
 			
 			if (this.matrix.isWithDiv100() ) attributesNew[row] = calculation.division(attributesNew[row] , hundred);
 			attributesNew[row] = calculation.addition(attributesNew[row], aHalf);
-			result.set(row, ((Float) (attributesNew[row].getObject())).intValue());
+			result.set(row, ((Float) (attributesNew[row].getObject(Type.floatingpoint))).intValue());
 			
 		}
 
@@ -328,7 +328,7 @@ public class FunctionByMatrix extends FunctionBase implements IObjectReceiver{
 						calculation.addition(
 								calculation.multiplication(share, function.calculate(arguments)),
 								offset)
-						.getObject();
+						.getObject(Type.floatingpoint);
 				
 
 				if (change != 0)

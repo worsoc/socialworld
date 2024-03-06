@@ -24,7 +24,7 @@ package org.socialworld.attributes;
 /**
  * The class implements the simulation time.
  *         Because of being a real time simulation the simulation time should be
- *         mapped to real time. An object of class Type must be seen as a time
+ *         mapped to real time. An object of class Time must be seen as a time
  *         point.
  *         
  * German:

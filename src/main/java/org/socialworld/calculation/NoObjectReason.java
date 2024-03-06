@@ -26,5 +26,6 @@ public enum NoObjectReason {
 	valueIsNull,
 	valueIsProtectedAndNotPermitted,
 	valueIsNoValueProperty,
+	typeMismatchForGetObject,
 	isNull
 }

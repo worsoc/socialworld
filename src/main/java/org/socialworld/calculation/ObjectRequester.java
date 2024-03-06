@@ -3,6 +3,8 @@ package org.socialworld.calculation;
 import java.util.Hashtable;
 
 import org.socialworld.attributes.AttributeArray;
+import org.socialworld.objects.NoSimulationObject;
+import org.socialworld.objects.SimulationObject;
 
 public class ObjectRequester {
 
@@ -40,4 +42,31 @@ public class ObjectRequester {
 
 		return result;
 	}
+	public SimulationObject requestSimulationObject(SimulationCluster cluster, Value value, IObjectReceiver receiver, int requestID) {
+		
+		SimulationObject result;
+		int requestResult;
+		
+		if (value instanceof ValueProperty) {
+			requestResult = ((ValueProperty) value).requestObject(SimulationCluster.total, receiver, requestID, Type.simulationObject);
+			if (requestResult == IObjectSender.OBJECT_SENDED) {
+				result = (SimulationObject) receivedObjects.remove(requestID);
+			}
+			else {
+				return NoSimulationObject.getObjectNothing();
+			}
+		}
+		else {
+			requestResult = value.requestObject(receiver, requestID, Type.simulationObject);
+			if (requestResult == IObjectSender.OBJECT_SENDED) {
+				result = (SimulationObject) receivedObjects.remove(requestID);
+			}
+			else {
+				return NoSimulationObject.getObjectNothing();
+			}
+		}
+
+		return result;
+	}
+
 }

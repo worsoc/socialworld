@@ -59,13 +59,14 @@ public class ActionEquip extends AbstractAction {
 
 		value =  actionProperties.getValue(furtherPropertyNames[0]);
 		if (value.isValid()) {
-			item =  (SimulationObject) value.getObject() ;
+			requestValueID++;
+			item = objectRequester.requestSimulationObject(SimulationCluster.total, value, this, requestValueID);
 			this.setItem(item);
 		}
 
 		value =  actionProperties.getValue(furtherPropertyNames[1]);
 		if (value.isValid()) {
-			inventoryPlace = InventoryPlace.getName((int) value.getObject());
+			inventoryPlace = InventoryPlace.getName((int) value.getObject(Type.integer));
 			this.setInventoryPlace(inventoryPlace);
 		}
 

@@ -250,7 +250,7 @@ public class KnowledgeCalculator extends SocialWorldThread {
 		find = knowledgeSourceProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_SOURCE_TYPE);
 		
 		if (find >= 0) {
-			type = KnowledgeSource_Type.getName((int) knowledgeSourceProperties.get(find).getObject());
+			type = KnowledgeSource_Type.getName((int) knowledgeSourceProperties.get(find).getObject(Type.integer));
 			find = knowledgeSourceProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_SOURCE);
 			if (find >= 0) {
 				origin = (SimulationObject) knowledgeSourceProperties.get(find).getObject();
