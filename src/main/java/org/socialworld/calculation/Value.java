@@ -211,6 +211,11 @@ public class Value {
 
 	public String getName() { return name; };
 
+	// TODO wieder weg, nur einsetzen, um festzustellen, ob andere Fehler als die Umstellung von getObject() zu getObject(Type)
+	public Object getObject() { 
+		return value;
+	}
+
 	public Object getObject(Type type) { 
 		
 		if (this.type != type) return NoObject.getNoObject(NoObjectReason.typeMismatchForGetObject);

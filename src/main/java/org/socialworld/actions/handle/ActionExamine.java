@@ -35,8 +35,7 @@ public class ActionExamine extends AbstractAction {
 
 		value =  actionProperties.getValue(furtherPropertyNames[0]);
 		if (value.isValid()) {
-			requestValueID++;
-			target = objectRequester.requestSimulationObject(SimulationCluster.total, value, this, requestValueID);
+			target = objectRequester.requestSimulationObject(SimulationCluster.total, value, this);
 			this.setTarget(target);
 		}
 

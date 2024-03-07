@@ -29,6 +29,7 @@ import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
+import org.socialworld.calculation.ValueProperty;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.Event;
 import org.socialworld.core.EventToCauser;
@@ -100,11 +101,14 @@ public class ActionBodilyFunction extends AbstractAction {
 		
 		boolean withEventTotarget = false;
 		
+		ValueProperty vp;
+
    		switch (mode) {
 		case sleep:
 			break;
 		case drink:
-			this.item = (SimulationObject) ((Animal) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_mouth, PropertyName.inventory_mouth.toString()).getObject();
+			vp =  ((Animal) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_mouth, PropertyName.inventory_mouth.toString());
+			this.item = objectRequester.requestSimulationObject(SimulationCluster.todo, vp, this);
 //			this.item = ((Animal) actor).getMouthItem();
 			if 	(!(this.item instanceof IDrinkable)) {
 				return;
@@ -112,7 +116,8 @@ public class ActionBodilyFunction extends AbstractAction {
 			withEventTotarget = true;
 			break;
 		case eat:
-			this.item = (SimulationObject) ((Animal) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_mouth, PropertyName.inventory_mouth.toString()).getObject();
+			vp =  ((Animal) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_mouth, PropertyName.inventory_mouth.toString());
+			this.item = objectRequester.requestSimulationObject(SimulationCluster.todo, vp, this);
 //			this.item = ((Animal) actor).getMouthItem();
 			if 	(!(this.item instanceof IEatable)) {
 				return;

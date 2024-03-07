@@ -34,7 +34,6 @@ public class FunctionByMatrix extends FunctionBase implements IObjectReceiver{
 	private static Value hundred;
 	private static Value aHalf;
 	
-	private int requestValueID = 0;
 	private ObjectRequester objectRequester = new ObjectRequester();
 	
 	public FunctionByMatrix(ValueInterpreteAs interpreteResultAs) {
@@ -84,7 +83,6 @@ public class FunctionByMatrix extends FunctionBase implements IObjectReceiver{
 	public Value calculate(ValueArrayList arguments) {
 
 		Value result;
-		int requestID;
 		
 		if (returnInvalidNothingvalue) 
 			return Value.getValueNothing();
@@ -97,8 +95,7 @@ public class FunctionByMatrix extends FunctionBase implements IObjectReceiver{
 				AttributeArray attributesOld = AttributeArray.getObjectNothing();
 				AttributeArray attributesNew = AttributeArray.getObjectNothing();
 				
-				requestValueID++;
-				attributesOld = objectRequester.requestAttributeArray(SimulationCluster.total, arguments.get(0), this, requestValueID);
+				attributesOld = objectRequester.requestAttributeArray(SimulationCluster.total, arguments.get(0), this);
 				if (attributesOld == AttributeArray.getObjectNothing()) return Value.getValueNothing();
 				
 				int calculationMode = (int) arguments.get(1).getObject(Type.integer);

@@ -107,7 +107,6 @@ public abstract class AbstractAction implements IObjectReceiver {
 	static private String[] standardPropertyNames = ActionType.getStandardPropertyNames();
 	protected final String[] furtherPropertyNames;
 
-	protected int requestValueID = 0;
 	protected ObjectRequester objectRequester = new ObjectRequester();
 
 	protected AbstractAction() {
@@ -160,11 +159,11 @@ public abstract class AbstractAction implements IObjectReceiver {
 		int priority;
 		long duration;
 		
-		type = (ActionType) actionProperties.getValue( standardPropertyNames[0]).getObject();
-		mode = (ActionMode) actionProperties.getValue( standardPropertyNames[1]).getObject();
+		type = (ActionType) actionProperties.getValue( standardPropertyNames[0]).getObject(Type.actionType);
+		mode = (ActionMode) actionProperties.getValue( standardPropertyNames[1]).getObject(Type.actionMode);
 		intensity = (float) actionProperties.getValue( standardPropertyNames[2]).getObject(Type.floatingpoint);
-		minTime = (Time) actionProperties.getValue( standardPropertyNames[3]).getObject();
-		maxTime = (Time) actionProperties.getValue( standardPropertyNames[4]).getObject();
+		minTime = (Time) actionProperties.getValue( standardPropertyNames[3]).getObject(Type.time);
+		maxTime = (Time) actionProperties.getValue( standardPropertyNames[4]).getObject(Type.time);
 		priority = (int) actionProperties.getValue( standardPropertyNames[5]).getObject(Type.integer);
 		duration = (long) actionProperties.getValue( standardPropertyNames[6]).getObject(Type.longinteger);
 		

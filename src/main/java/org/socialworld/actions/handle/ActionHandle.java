@@ -30,6 +30,7 @@ import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
+import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.Event;
@@ -99,8 +100,7 @@ public class ActionHandle extends AbstractAction {
 
 		value =  actionProperties.getValue(furtherPropertyNames[0]);
 		if (value.isValid()) {
-			requestValueID++;
-			target = objectRequester.requestSimulationObject(SimulationCluster.total, value, this, requestValueID);
+			target = objectRequester.requestSimulationObject(SimulationCluster.total, value, this);
 			this.setTarget(target);
 		}
 
@@ -127,36 +127,46 @@ public class ActionHandle extends AbstractAction {
 		
 		boolean withEventToTarget = true;
 		
+		ValueProperty vp;
+
    		switch (mode) {
 		case useItemLeftHand:
-			item1 = (SimulationObject) ((Human) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_leftHand, PropertyName.inventory_leftHand.toString()).getObject();
+			vp =  ((Human) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_leftHand, PropertyName.inventory_leftHand.toString());
+			this.item1 = objectRequester.requestSimulationObject(SimulationCluster.todo, vp, this);
 // vormals:			item1 = ((Human) actor).getLeftHandItem();
 			if (!this.item1.isSimulationObject()) return;
 			break;
 		case useItemRightHand:
-			item1 = (SimulationObject) ((Human) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_rightHand, PropertyName.inventory_rightHand.toString()).getObject();
-//			item1 = ((Human) actor).getRightHandItem();
+			vp =  ((Human) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_rightHand, PropertyName.inventory_rightHand.toString());
+			this.item1 = objectRequester.requestSimulationObject(SimulationCluster.todo, vp, this);
+//vormals:			item1 = ((Human) actor).getRightHandItem();
 			if (!this.item1.isSimulationObject()) return;
 			break;
 		case useTwoItems:
-			item1 = (SimulationObject) ((Human) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_rightHand, PropertyName.inventory_rightHand.toString()).getObject();
-			item2 = (SimulationObject) ((Human) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_leftHand, PropertyName.inventory_leftHand.toString()).getObject();
-//			item1 = ((Human) actor).getRightHandItem();
-//			item2 = ((Human) actor).getLeftHandItem();
+			vp =  ((Human) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_rightHand, PropertyName.inventory_rightHand.toString());
+			this.item1 = objectRequester.requestSimulationObject(SimulationCluster.todo, vp, this);
+			vp =  ((Human) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_leftHand, PropertyName.inventory_leftHand.toString());
+			this.item2 = objectRequester.requestSimulationObject(SimulationCluster.todo, vp, this);
+//	vormals:		item1 = ((Human) actor).getRightHandItem();
+//	vormals:		item2 = ((Human) actor).getLeftHandItem();
 			if (!this.item1.isSimulationObject() | !this.item2.isSimulationObject()) return;
 			break;
 		case combineItems_AddLeftToRight:
-			item1 = (SimulationObject) ((Human) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_rightHand, PropertyName.inventory_rightHand.toString()).getObject();
-			item2 = (SimulationObject) ((Human) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_leftHand, PropertyName.inventory_leftHand.toString()).getObject();
+			vp =  ((Human) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_rightHand, PropertyName.inventory_rightHand.toString());
+			this.item1 = objectRequester.requestSimulationObject(SimulationCluster.todo, vp, this);
+			vp =  ((Human) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_leftHand, PropertyName.inventory_leftHand.toString());
+			this.item2 = objectRequester.requestSimulationObject(SimulationCluster.todo, vp, this);
 //			item1 = ((Human) actor).getRightHandItem();
 //			item2 = ((Human) actor).getLeftHandItem();
 			if (!this.item1.isSimulationObject() | !this.item2.isSimulationObject()) return;
 			break;
 		case combineItems_AddRightToLeft:
-			item1 = (SimulationObject) ((Human) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_leftHand, PropertyName.inventory_leftHand.toString()).getObject();
-			item2 = (SimulationObject) ((Human) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_rightHand, PropertyName.inventory_rightHand.toString()).getObject();
-//			item1 = ((Human) actor).getLeftHandItem();
-//			item2 = ((Human) actor).getRightHandItem();
+			vp =  ((Human) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_leftHand, PropertyName.inventory_leftHand.toString());
+			this.item2 = objectRequester.requestSimulationObject(SimulationCluster.todo, vp, this);
+			vp =  ((Human) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_rightHand, PropertyName.inventory_rightHand.toString());
+			this.item2 = objectRequester.requestSimulationObject(SimulationCluster.todo, vp, this);
+//	vormals:		item1 = ((Human) actor).getLeftHandItem();
+//	vormals:		item2 = ((Human) actor).getRightHandItem();
 			if (!this.item1.isSimulationObject() | !this.item2.isSimulationObject()) return;
 			break;
 		case pull:

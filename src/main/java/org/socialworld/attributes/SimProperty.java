@@ -45,7 +45,6 @@ public abstract class SimProperty implements ISimProperty, ISavedValue , IObject
 	private PropertyName propertyName = PropertyName.unknown;
 	private PropertyProtection protection;
 
-	protected int requestValueID = 0;
 	protected ObjectRequester objectRequester = new ObjectRequester();
 
 	protected SimProperty() {

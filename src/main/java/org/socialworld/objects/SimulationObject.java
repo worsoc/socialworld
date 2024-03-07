@@ -31,6 +31,8 @@ import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionNothing;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
+import org.socialworld.calculation.IObjectReceiver;
+import org.socialworld.calculation.IObjectSender;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
@@ -61,7 +63,7 @@ import org.socialworld.tools.StringTupel;
  * @author Mathias Sikos (MatWorsoc)
  * 
  */
-public abstract class SimulationObject implements IPerceptible {
+public abstract class SimulationObject implements IObjectSender, IPerceptible {
 	
 	//private GroupingOfSimulationObjects goso = GroupingOfSimulationObjects.getInstance();
 	
@@ -573,7 +575,20 @@ public abstract class SimulationObject implements IPerceptible {
 	
 	}
 	
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////   implementing IObjectSender ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 	
+	public int sendYourselfTo(IObjectReceiver receiver, int requestID) {
+		return receiver.receiveObject(requestID, this);
+	}
+	public int sendYourselfTo(SimulationCluster cluster, IObjectReceiver receiver, int requestID) {
+		return receiver.receiveObject(requestID, this);
+	}
+
+	public IObjectSender copy() {
+		return this;
+	}
 
 	
 ///////////////////////////////////////////////////////////////////////////////////////////

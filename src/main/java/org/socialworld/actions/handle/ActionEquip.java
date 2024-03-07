@@ -59,8 +59,7 @@ public class ActionEquip extends AbstractAction {
 
 		value =  actionProperties.getValue(furtherPropertyNames[0]);
 		if (value.isValid()) {
-			requestValueID++;
-			item = objectRequester.requestSimulationObject(SimulationCluster.total, value, this, requestValueID);
+			item = objectRequester.requestSimulationObject(SimulationCluster.total, value, this);
 			this.setItem(item);
 		}
 
