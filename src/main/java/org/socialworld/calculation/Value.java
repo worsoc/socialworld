@@ -179,6 +179,13 @@ public class Value {
 		
 	}
 	
+	public Value (Value original) {
+		this.name = original.name;
+		this.type = original.type;
+		// TODO deep copy original.value
+		this.value = original.value;
+	}
+	
 	public void setTransferCode(ValueTransferCode code) {
 		this.transferCode = code;
 	}

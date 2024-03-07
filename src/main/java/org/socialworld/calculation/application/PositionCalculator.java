@@ -138,14 +138,14 @@ public class PositionCalculator extends SocialWorldThread {
 				
 			
 			eventType = event.getEventType();
-			positionOriginal = (Position) state.getProperty(SimulationCluster.position, PropertyName.simobj_position).getObject();
+			positionOriginal = objectRequester.requestPosition(SimulationCluster.position, state.getProperty(SimulationCluster.position, PropertyName.simobj_position), this);
 			position = positionOriginal.getVector(SimulationCluster.position);
 			
-			directionMoveObject = (Direction) state.getProperty(SimulationCluster.position, PropertyName.simobj_directionMove).getObject();
+			directionMoveObject = objectRequester.requestDirection(SimulationCluster.position, state.getProperty(SimulationCluster.position, PropertyName.simobj_directionMove), this);
 			vectorMoveObject = directionMoveObject.getVector(SimulationCluster.position);
 			powerMoveObject = directionMoveObject.getPower();
 			
-			directionEvent = (Direction) event.getDirection().getObject();
+			directionEvent = objectRequester.requestDirection(SimulationCluster.position, event.getDirection(), this);
 			if (directionEvent != null) {
 				vectorEvent = directionEvent.getVector(SimulationCluster.position);
 			}

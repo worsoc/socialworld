@@ -21,10 +21,12 @@
 */
 package org.socialworld.attributes.percipience;
 
-import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
+import org.socialworld.calculation.IObjectReceiver;
+import org.socialworld.calculation.ObjectRequester;
 import org.socialworld.calculation.SimulationCluster;
+import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
@@ -35,7 +37,7 @@ import org.socialworld.objects.concrete.animals.ISeer;
  * @author Mathias Sikos
  *
  */
-public class Percipience {
+public class Percipience implements IObjectReceiver{
 	
 	public static int PERCIPIENCE_TOTAL = 0;
 	public static int PERCIPIENCE_SEE = 1;
@@ -56,6 +58,8 @@ public class Percipience {
 	private float maxHear;
 	private float maxSmell;
 	private float maxFeel;
+
+	protected ObjectRequester objectRequester = new ObjectRequester();
 
 	public Percipience(PercipienceType type, float maxDistance, float maxSee, float maxHear, float maxSmell, float maxFeel) {
 		this.type = type;
@@ -155,13 +159,13 @@ public class Percipience {
 	
 				ValueProperty vpDirectionView;
 				vpDirectionView = possibleSeer.getStateProperty(SimulationCluster.todo, PropertyName.stateSeer, PropertyName.stateSeer_directionView, PropertyName.stateSeer_directionView.toString());
-				Vector directionView = ((Direction)vpDirectionView.getObject()).getVector(SimulationCluster.todo);
+				Vector directionView = objectRequester.requestDirection(SimulationCluster.todo, vpDirectionView, this).getVector(SimulationCluster.todo);
 	
 				ValueProperty vpPropsSeer;
 				ValueProperty vpAngleView;
 				vpPropsSeer = possibleSeer.getStateProperty(SimulationCluster.todo, PropertyName.stateSeer, PropertyName.stateSeer_propsSeer, PropertyName.stateSeer_propsSeer.toString());
 				vpAngleView = vpPropsSeer.getProperty(SimulationCluster.todo, PropertyName.propsSeer_angleViewPerceivingObjectsInRadians, Value.NO_METHOD_NAME, PropertyName.propsSeer_angleViewPerceivingObjectsInRadians.toString());
-				double angleViewInRadians = (double) vpAngleView.getObject();
+				double angleViewInRadians = (double) vpAngleView.getObject(Type.floatingpoint);
 				
 			/*	
 				Vector directionView =  possibleSeer.getDirectionView().getVector();
@@ -202,14 +206,14 @@ public class Percipience {
 	
 				ValueProperty vpDirectionView;
 				vpDirectionView = possibleSeer.getStateProperty(SimulationCluster.todo, PropertyName.stateSeer, PropertyName.stateSeer_directionView, PropertyName.stateSeer_directionView.toString());
-				Vector directionView = (Vector) (vpDirectionView.getProperty(SimulationCluster.todo, PropertyName.direction_vector, Value.NO_METHOD_NAME, PropertyName.direction_vector.toString())).getObject();
+				Vector directionView = objectRequester.requestVector(SimulationCluster.todo, vpDirectionView.getProperty(SimulationCluster.todo, PropertyName.direction_vector, Value.NO_METHOD_NAME, PropertyName.direction_vector.toString()), this);
 		//		Vector directionView = ((Direction)vpDirectionView.getValue()).getVector();
 	
 				ValueProperty vpPropsSeer;
 				ValueProperty vpAngleView;
 				vpPropsSeer = possibleSeer.getStateProperty(SimulationCluster.todo, PropertyName.stateSeer, PropertyName.stateSeer_propsSeer, PropertyName.stateSeer_propsSeer.toString());
 				vpAngleView = vpPropsSeer.getProperty(SimulationCluster.todo, PropertyName.propsSeer_angleViewPerceivingEventsInRadians, Value.NO_METHOD_NAME, PropertyName.propsSeer_angleViewPerceivingEventsInRadians.toString());
-				double angleViewInRadians = (double) vpAngleView.getObject();
+				double angleViewInRadians = (double) vpAngleView.getObject(Type.floatingpoint);
 	
 				
 				double cosineBetweenDirections = direction.getCosPhi(directionView);
@@ -345,5 +349,14 @@ public class Percipience {
 		
 	}
 
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////implementing IObjectReceiver ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	@Override
+	public int receiveObject(int requestID, Object object) {
+		objectRequester.receive(requestID, object);
+		return 0;
+	}
 
 }

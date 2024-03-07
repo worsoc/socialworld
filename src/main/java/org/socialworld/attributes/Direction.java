@@ -117,6 +117,8 @@ public class Direction extends SimProperty {
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
 	public final Vector getVector(SimulationCluster cluster) {
+		if (checkIsObjectNothing()) return Vector.getObjectNothing();
+		
 		SVVector copy = (SVVector) this.vector.copyForProperty(cluster);
 		Vector released = copy.getReleased(cluster);
 		return released;

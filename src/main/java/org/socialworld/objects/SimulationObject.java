@@ -33,6 +33,7 @@ import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.IObjectReceiver;
 import org.socialworld.calculation.IObjectSender;
+import org.socialworld.calculation.ObjectRequester;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
@@ -63,7 +64,7 @@ import org.socialworld.tools.StringTupel;
  * @author Mathias Sikos (MatWorsoc)
  * 
  */
-public abstract class SimulationObject implements IObjectSender, IPerceptible {
+public abstract class SimulationObject implements IObjectSender, IObjectReceiver, IPerceptible {
 	
 	//private GroupingOfSimulationObjects goso = GroupingOfSimulationObjects.getInstance();
 	
@@ -86,7 +87,8 @@ public abstract class SimulationObject implements IObjectSender, IPerceptible {
 	private 	ActionHandler 	actionHandler;
 	
 	
-	
+	protected ObjectRequester objectRequester = new ObjectRequester();
+
 	
 	private	WriteAccessToSimulationObject guard;
 	private GrantedAccessToProperty grantAccessToAllProperties[];
@@ -325,7 +327,10 @@ public abstract class SimulationObject implements IObjectSender, IPerceptible {
 	 * @return position
 	 */
 	public final Position getPosition(SimulationCluster cluster) {
-		return (Position) getProperty(cluster, PropertyName.simobj_position).getObject(cluster);
+		Position position;
+		ValueProperty vp = getProperty(cluster, PropertyName.simobj_position);
+		position = objectRequester.requestPosition(cluster, vp, this);
+		return position;
 	}
 	
 	
@@ -590,7 +595,16 @@ public abstract class SimulationObject implements IObjectSender, IPerceptible {
 		return this;
 	}
 
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////implementing IObjectReceiver ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 	
+	@Override
+	public int receiveObject(int requestID, Object object) {
+		objectRequester.receive(requestID, object);
+		return 0;
+	}
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    toString()  //////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////

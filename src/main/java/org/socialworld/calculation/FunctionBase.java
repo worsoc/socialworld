@@ -24,7 +24,7 @@ package org.socialworld.calculation;
 
 import org.socialworld.collections.ValueArrayList;
 
-public abstract class FunctionBase {
+public abstract class FunctionBase  implements IObjectReceiver {
 	
 	private boolean valid = true;
 
@@ -38,6 +38,8 @@ public abstract class FunctionBase {
 	private float min_as_float;
 	
 	protected Calculation calculation = Calculation.getInstance();
+
+	protected ObjectRequester objectRequester = new ObjectRequester();
 
 	boolean returnInvalidNothingvalue;
 	
@@ -85,4 +87,15 @@ public abstract class FunctionBase {
 	protected void setInvalid() {
 		valid = false;
 	}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////implementing IObjectReceiver ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+	
+	@Override
+	public int receiveObject(int requestID, Object object) {
+		objectRequester.receive(requestID, object);
+		return 0;
+	}
+
 }

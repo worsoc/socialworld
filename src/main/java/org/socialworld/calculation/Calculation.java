@@ -28,7 +28,7 @@ import org.socialworld.attributes.Time;
 import org.socialworld.attributes.properties.IEnumProperty;
 import org.socialworld.calculation.geometry.Vector;
 
-public class Calculation {
+public class Calculation implements IObjectReceiver{
 
 	private static Calculation instance;
 	
@@ -37,6 +37,8 @@ public class Calculation {
 	static Value zeroInteger;
 	static Value zeroFloatingPoint;
 	static Value zeroVector;
+	
+	protected ObjectRequester objectRequester = new ObjectRequester();
 	
 	public static Calculation getInstance() {
 		if (instance == null) {
@@ -230,7 +232,7 @@ public class Calculation {
 			return ( (float) op1.getObject(Type.floatingpoint) == 0F /*(float) getZero(Type.floatingpoint).getObject(Type.floatingpoint) */ );
 		case vector:
 			Vector tmp;
-			tmp = (Vector) op1.getObject();
+			tmp = objectRequester.requestVector(SimulationCluster.total, op1, this);
 			return (tmp.getX() == 0F & tmp.getY() == 0F & tmp.getZ() == 0F);
 		default:
 			return false;
@@ -251,7 +253,7 @@ public class Calculation {
 			return ( (float) op1.getObject(Type.floatingpoint) > 0F/* (float) getZero(Type.floatingpoint).getObject(Type.floatingpoint) */ );
 		case vector:
 			Vector tmp;
-			tmp = (Vector) op1.getObject();
+			tmp = objectRequester.requestVector(SimulationCluster.total, op1, this);
 			return tmp.length() > 0F /* ((Vector) getZero(Type.vector).getObject()).length() */;
 		default:
 			return false;
@@ -382,8 +384,7 @@ public class Calculation {
 		Value result;
 		
 		if (original.isValid()) {
-			result = createValue(original.getType(), original.getObject() );
-			result.setName(original.getName());
+			result = new Value(original);
 		}
 		else {
 			result = nothing;
@@ -413,5 +414,14 @@ public class Calculation {
 		}
 	}
 	
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////implementing IObjectReceiver ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	@Override
+	public int receiveObject(int requestID, Object object) {
+		objectRequester.receive(requestID, object);
+		return 0;
+	}
 	
 }

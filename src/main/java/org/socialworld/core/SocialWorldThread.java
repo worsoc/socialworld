@@ -21,7 +21,10 @@
 */
 package org.socialworld.core;
 
-public class SocialWorldThread extends Thread{
+import org.socialworld.calculation.IObjectReceiver;
+import org.socialworld.calculation.ObjectRequester;
+
+public class SocialWorldThread extends Thread implements IObjectReceiver{
 
 	
 	/**
@@ -29,6 +32,8 @@ public class SocialWorldThread extends Thread{
 	 */
 	private boolean isRunning;
 	
+	protected ObjectRequester objectRequester = new ObjectRequester();
+
 	protected boolean isRunning() {return this.isRunning;}
 	
 	/**
@@ -48,5 +53,14 @@ public class SocialWorldThread extends Thread{
 	
 	// TODO what shall happen if the queues in concrete sub class simulations are filled
 
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////implementing IObjectReceiver ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	@Override
+	public int receiveObject(int requestID, Object object) {
+		objectRequester.receive(requestID, object);
+		return 0;
+	}
 
 }

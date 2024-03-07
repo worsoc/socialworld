@@ -21,14 +21,29 @@
 */
 package org.socialworld.calculation.geometry;
 
+import org.socialworld.calculation.IObjectReceiver;
+import org.socialworld.calculation.IObjectSender;
+import org.socialworld.calculation.SimulationCluster;
 
 /**
  * The class is the base for all simulation
  *         position and directions. The vector has 3 dimensions.
  * @author Mathias Sikos (MatWorsoc) 
  */
-public class Vector {
+public class Vector implements IObjectSender{
 
+	private static Vector objectNothing;
+	
+	public static Vector getObjectNothing() {
+		if (objectNothing == null) {
+			objectNothing = new Vector();
+		}
+		return objectNothing;
+	}
+	
+	public boolean checkIsObjectNothing() {
+		return (this == objectNothing);
+	}
 	
 	protected float x = 0;
 	protected float y = 0;
@@ -286,4 +301,20 @@ public class Vector {
 	        return cross_P;
 	}
 
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////implementing IObjectSender ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public int sendYourselfTo(IObjectReceiver receiver, int requestID) {
+		return receiver.receiveObject(requestID, this);
+	}
+	public int sendYourselfTo(SimulationCluster cluster, IObjectReceiver receiver, int requestID) {
+		return receiver.receiveObject(requestID, this);
+	}
+	
+	public IObjectSender copy() {
+		return this;
+	}
+	
+	
 }

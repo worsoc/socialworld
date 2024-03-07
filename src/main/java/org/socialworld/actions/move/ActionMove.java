@@ -111,13 +111,14 @@ public class ActionMove extends AbstractAction {
 
 		value =  actionProperties.getValue(furtherPropertyNames[0]);
 		if (value.isValid()) {
-			endPosition = new Position(PropertyName.action_position, (Vector) value.getObject() );
+			Vector vectorEndposition = 	objectRequester.requestVector(SimulationCluster.total, value, this);
+			endPosition = new Position(PropertyName.action_position, vectorEndposition);
 			this.setEnd(endPosition);
 		}
 
 		value =  actionProperties.getValue(furtherPropertyNames[1]);
 		if (value.isValid()) {
-			direction = (Vector) value.getObject();
+			direction = objectRequester.requestVector(SimulationCluster.total, value, this);
 			this.setDirection(direction);
 		}
 		

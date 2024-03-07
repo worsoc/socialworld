@@ -106,7 +106,7 @@ public class ActionHandle extends AbstractAction {
 
 		value =  actionProperties.getValue(furtherPropertyNames[1]);
 		if (value.isValid()) {
-			direction = (Vector) value.getObject();
+			direction = objectRequester.requestVector(SimulationCluster.total, value, this);
 			this.setDirection(direction);
 		}
 

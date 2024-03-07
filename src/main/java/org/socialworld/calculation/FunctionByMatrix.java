@@ -26,7 +26,7 @@ package org.socialworld.calculation;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.collections.ValueArrayList;
 
-public class FunctionByMatrix extends FunctionBase implements IObjectReceiver{
+public class FunctionByMatrix extends FunctionBase{
 
 	ValueInterpreteAs interpreteResultAs;
 
@@ -34,7 +34,6 @@ public class FunctionByMatrix extends FunctionBase implements IObjectReceiver{
 	private static Value hundred;
 	private static Value aHalf;
 	
-	private ObjectRequester objectRequester = new ObjectRequester();
 	
 	public FunctionByMatrix(ValueInterpreteAs interpreteResultAs) {
 		
@@ -368,10 +367,5 @@ public class FunctionByMatrix extends FunctionBase implements IObjectReceiver{
 		return Calculation.getNothing();
 	}
 
-	@Override
-	public int receiveObject(int requestID, Object object) {
-		objectRequester.receive(requestID, object);
-		return 0;
-	}
 
 }
