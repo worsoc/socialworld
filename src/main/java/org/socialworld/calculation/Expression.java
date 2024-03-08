@@ -26,6 +26,7 @@ import org.socialworld.attributes.AttributeArray;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.expressions.Nothing;
 import org.socialworld.collections.ValueArrayList;
+import org.socialworld.objects.NoSimulationObject;
 import org.socialworld.objects.SimulationObject;
 
 /**
@@ -41,7 +42,7 @@ import org.socialworld.objects.SimulationObject;
 
  * @author Mathias Sikos (MatWorsoc)
  */
-public class Expression {
+public class Expression implements IObjectReceiver{
 	int ID;
 	
 	Expression_Function operation;
@@ -66,6 +67,8 @@ public class Expression {
 	
 	protected Calculation calculation;
 	protected Functions functions;
+
+	protected ObjectRequester objectRequester = new ObjectRequester();
 
 	protected Expression(Expression_Function nothing) {
 		if (nothing.equals(Expression_Function.nothing)) {
@@ -216,7 +219,7 @@ public class Expression {
 					tmp = arguments.getValue(name);
 					if (tmp.isValid()) {
 
-						valueList = (ValueArrayList) tmp.getObject();
+						valueList =  objectRequester.requestValueArrayList(SimulationCluster.total, tmp, this);
 						// get the value list element's name
 						name = (String) expression2.evaluate(arguments).getObject(Type.string);
 						// get the result value from the value list
@@ -229,7 +232,7 @@ public class Expression {
 					
 					Value object = arguments.get(0);
 					PropertyName simPropName = (PropertyName) value.getObject();
-					SimulationCluster cluster = SimulationCluster.getName((int) expression1.evaluate(arguments).getObject());
+					SimulationCluster cluster = SimulationCluster.getName((int) expression1.evaluate(arguments).getObject(Type.integer));
 					String methodName = (String) expression2.evaluate(arguments).getObject(Type.string);
 					name = (String) expression3.evaluate(arguments).getObject(Type.string);
 					
@@ -268,8 +271,8 @@ public class Expression {
 					}
 					
 					if (checkSuccess) {
-						if ((tmp.hasType(Type.valueList)) && (tmp.getObject() instanceof ValueArrayList)) {
-							valueList = (ValueArrayList) tmp.getObject();
+						if (tmp.hasType(Type.valueList))  {
+							valueList = objectRequester.requestValueArrayList(SimulationCluster.total, tmp, this);
 						}
 						else {
 							valueList	= new ValueArrayList();
@@ -376,7 +379,7 @@ public class Expression {
 					if (tmp.isValid()) {
 						tmp = calculation.copy(tmp);
 						if (this.value != null) {
-							name = (String)this.value.getObject();
+							name = (String)this.value.getObject(Type.string);
 							if (name.length() > 0) {
 								tmp.changeName(name);
 							}
@@ -420,7 +423,7 @@ public class Expression {
 							}
 							else {
 								// get the sub list from arguments
-								valueList = (ValueArrayList) arguments.getValue(name).getObject();
+								valueList = objectRequester.requestValueArrayList(SimulationCluster.total, arguments.getValue(name), this); 
 							}
 						}
 						else {
@@ -433,13 +436,15 @@ public class Expression {
 						
 						// just for debugging
 						if (name.equals(Value.VALUE_BY_NAME_ACTION_TARGET)) {
-							if (tmp.getObject() == null )
-								System.out.println("Expression.evaluate: action target ist null "  );
-							else 
-								if ( tmp.getType() != Type.simulationObject)
-									System.out.println("Expression.evaluate: action target ist nicht vom Type.simulationObject "  );
-								else
-									System.out.println("Expression.evaluate: action target: " + ((SimulationObject)tmp.getObject()).getObjectID()  );
+							if ( tmp.getType() != Type.simulationObject)
+								System.out.println("Expression.evaluate: action target ist nicht vom Type.simulationObject "  );
+							else {
+								SimulationObject target = objectRequester.requestSimulationObject(SimulationCluster.total, tmp, this);
+								if (target == NoSimulationObject.getObjectNothing() )
+									System.out.println("Expression.evaluate: action target ist NoSimulationobject "  );
+								else 
+									System.out.println("Expression.evaluate: action target: " + target.getObjectID()  );								
+							}
 						}
 
 						if (name.length() > 0) {
@@ -501,10 +506,10 @@ public class Expression {
 		value = arguments.getValue(type, wantedOccurence);
 		
 		if (value.isValid()) {
-			return value.getObject();
+			return objectRequester.requestObject(SimulationCluster.total, value, type, this);
 		}
 		else {
-			return null;
+			return NoObject.getNoObject(NoObjectReason.valueIsNotValid);
 		}
 		
 	}
@@ -592,6 +597,18 @@ public class Expression {
 		
 		return result;
 	}
+	
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////implementing IObjectReceiver ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	@Override
+	public int receiveObject(int requestID, Object object) {
+		objectRequester.receive(requestID, object);
+		return 0;
+	}
+
 }
 
 

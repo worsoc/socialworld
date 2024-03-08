@@ -194,6 +194,10 @@ public class Value {
 		return this.transferCode;
 	}
 	
+	public boolean checkObjectIsNull() {
+		return (value == null);
+	}
+	
 	public void setInvalid() {
 		valid = false;
 	}

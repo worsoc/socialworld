@@ -29,6 +29,8 @@ import java.util.List;
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
+import org.socialworld.calculation.IObjectReceiver;
+import org.socialworld.calculation.ObjectRequester;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
@@ -48,7 +50,7 @@ import org.socialworld.tools.StringTupel;
  * @author Mathias Sikos
  *
  */
-public abstract class StateSimulationObject extends ListenedBase {
+public abstract class StateSimulationObject extends ListenedBase implements IObjectReceiver {
 	
 	private SimulationObject object;
 	private	WriteAccessToSimulationObject guard;
@@ -69,6 +71,8 @@ public abstract class StateSimulationObject extends ListenedBase {
 	private GrantedAccessToProperty grantAccessToPropertyAction[];
 	
 	
+	protected ObjectRequester objectRequester = new ObjectRequester();
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////meta information    ////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -502,4 +506,14 @@ public abstract class StateSimulationObject extends ListenedBase {
 		}
 	}
 		
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////implementing IObjectReceiver ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	@Override
+	public int receiveObject(int requestID, Object object) {
+		objectRequester.receive(requestID, object);
+		return 0;
+	}
+	
 }

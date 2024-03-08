@@ -24,6 +24,7 @@ package org.socialworld.calculation.application;
 
 import org.socialworld.calculation.Calculation;
 import org.socialworld.calculation.FunctionByExpression;
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.descriptions.EventPerceptionAssignment;
@@ -212,7 +213,7 @@ public class KnowledgeCalculator extends SocialWorldThread {
 			
 			if (getFromVAL.isValid() && getFromVAL.getName().equals(Value.VALUE_NAME_KNOWLEDGE_SUBJECT)) {
 				
-				subject = (SimulationObject) knowledgeElementProperties.get(0).getObject();
+				subject = getInstance().objectRequester.requestSimulationObject(SimulationCluster.knowledge, knowledgeElementProperties.get(0), getInstance());
 				source = (KnowledgeSource) knowledgeElementProperties.get(1).getObject();
 				lexemSubject = subject.getLexem();
 				
@@ -253,7 +254,7 @@ public class KnowledgeCalculator extends SocialWorldThread {
 			type = KnowledgeSource_Type.getName((int) knowledgeSourceProperties.get(find).getObject(Type.integer));
 			find = knowledgeSourceProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_SOURCE);
 			if (find >= 0) {
-				origin = (SimulationObject) knowledgeSourceProperties.get(find).getObject();
+				origin = getInstance().objectRequester.requestSimulationObject(SimulationCluster.knowledge, knowledgeSourceProperties.get(find), getInstance());
 				result = new KnowledgeSource(type, origin);
 			}
 		}

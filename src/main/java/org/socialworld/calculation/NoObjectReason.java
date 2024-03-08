@@ -24,8 +24,10 @@ package org.socialworld.calculation;
 public enum NoObjectReason {
 
 	valueIsNull,
+	valueIsNotValid,
 	valueIsProtectedAndNotPermitted,
 	valueIsNoValueProperty,
 	typeMismatchForGetObject,
-	isNull
+	isNull,
+	objectRequesterGetObjectNothingNotImplementedForType,
 }

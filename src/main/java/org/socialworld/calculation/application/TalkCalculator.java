@@ -22,6 +22,7 @@
 package org.socialworld.calculation.application;
 
 
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.CapacityQueue;
@@ -36,6 +37,7 @@ import org.socialworld.knowledge.IAnswer;
 import org.socialworld.knowledge.KnowledgeSource;
 import org.socialworld.knowledge.KnowledgeSource_Type;
 import org.socialworld.objects.Human;
+import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.StateHuman;
 import org.socialworld.objects.access.HiddenHuman;
 
@@ -162,8 +164,12 @@ public class TalkCalculator  extends SocialWorldThread {
 			params = event.getOptionalParam();
 			
 			value = params.getParam("partner");
-			if (value.isValid())
-				partner = (Human) value.getObject();
+			if (value.isValid()) {
+				SimulationObject simObject;
+				simObject = getInstance().objectRequester.requestSimulationObject(SimulationCluster.todo, value, getInstance());
+				if (simObject instanceof Human) partner = (Human) simObject;
+				else return;
+			}
 			else
 				return;
 	
@@ -205,8 +211,12 @@ public class TalkCalculator  extends SocialWorldThread {
 			params = event.getOptionalParam();
 			
 			value = params.getParam("partner");
-			if (value.isValid())
-				partner = (Human) value.getObject();
+			if (value.isValid()) {
+				SimulationObject simObject;
+				simObject = getInstance().objectRequester.requestSimulationObject(SimulationCluster.todo, value, getInstance());
+				if (simObject instanceof Human) partner = (Human) simObject;
+				else return;
+			}
 			else
 				return;
 	
@@ -237,14 +247,18 @@ public class TalkCalculator  extends SocialWorldThread {
 			params = event.getOptionalParam();
 			
 			value = params.getParam(Value.VALUE_BY_NAME_ACTION_TARGET);
-			if (value.isValid())
-				partner = (Human) value.getObject();
+			if (value.isValid()) {
+				SimulationObject simObject;
+				simObject = getInstance().objectRequester.requestSimulationObject(SimulationCluster.todo, value, getInstance());
+				if (simObject instanceof Human) partner = (Human) simObject;
+				else return;
+			}
 			else
 				return;
 	
 			value = params.getParam(Value.VALUE_BY_NAME_ACTION_ANSWERS);
 			if (value.isValid())
-				answers = (ValueArrayList) value.getObject();
+				answers = getInstance().objectRequester.requestValueArrayList(SimulationCluster.todo, value, getInstance());
 			else
 				return;
 			

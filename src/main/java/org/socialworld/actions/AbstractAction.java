@@ -24,7 +24,9 @@ package org.socialworld.actions;
 
 import org.socialworld.attributes.Time;
 import org.socialworld.calculation.IObjectReceiver;
+import org.socialworld.calculation.IObjectSender;
 import org.socialworld.calculation.ObjectRequester;
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
@@ -80,7 +82,7 @@ import org.socialworld.objects.access.HiddenSimulationObject;
  *  enthält also die Daten für die Einleitung der Ausführung (Erzeugung von Performer und Event).
  *  
  */
-public abstract class AbstractAction implements IObjectReceiver {
+public abstract class AbstractAction implements IObjectSender, IObjectReceiver {
 	public static final int MAX_ACTION_PRIORITY = 256;
 	
 	
@@ -423,6 +425,21 @@ public abstract class AbstractAction implements IObjectReceiver {
 	@Override
 	public String toString() {
 		return  "(" + this.type.toString() + ")"; //$NON-NLS-1$
+	}
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////implementing IObjectSender ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public int sendYourselfTo(IObjectReceiver receiver, int requestID) {
+		return receiver.receiveObject(requestID, this);
+	}
+	public int sendYourselfTo(SimulationCluster cluster, IObjectReceiver receiver, int requestID) {
+		return receiver.receiveObject(requestID, this);
+	}
+	
+	public IObjectSender copy() {
+		return this;
 	}
 	
 ///////////////////////////////////////////////////////////////////////////////////////////

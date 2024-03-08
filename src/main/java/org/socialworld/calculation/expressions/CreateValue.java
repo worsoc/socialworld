@@ -28,6 +28,7 @@ import org.socialworld.attributes.Time;
 import org.socialworld.calculation.Calculation;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.application.ActionCreator;
@@ -159,11 +160,11 @@ public class CreateValue extends Expression {
 			createdObject = ActionCreator.createAction(localArguments) ;
 			break;
 		case time:
-			createdObject = evaluateExpression2(localArguments).getObject();
+			createdObject = evaluateExpression2(localArguments).getObject(Type.time);
 			break;
 		case knowledgeElement:
 			evaluateExpression2(arguments);
-			localArguments =  (ValueArrayList) arguments.getValue(Value.VALUE_NAME_KNOWLEDGE_ELEMENT_PROPS).getObject();
+			localArguments = objectRequester.requestValueArrayList(SimulationCluster.total, arguments.getValue(Value.VALUE_NAME_KNOWLEDGE_ELEMENT_PROPS), this); 
 			createdObject  = KnowledgeCalculator.createKnowledgeElement(localArguments);
 			break;
 		case knowledgeSource:

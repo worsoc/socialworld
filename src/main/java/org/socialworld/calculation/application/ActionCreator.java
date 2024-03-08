@@ -49,7 +49,6 @@ import org.socialworld.calculation.descriptions.State2ActionDescription;
 import org.socialworld.collections.CapacityQueue;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.Event;
-import org.socialworld.core.EventType;
 import org.socialworld.core.SocialWorldThread;
 
 public class ActionCreator extends SocialWorldThread {
@@ -271,7 +270,7 @@ public class ActionCreator extends SocialWorldThread {
 		}
 		
 		Value result = f_CreateReaction.calculate(arguments);
-		return (AbstractAction) result.getObject();
+		return objectRequester.requestAction(SimulationCluster.action, result, this);
 
 	}
 
@@ -300,7 +299,7 @@ public class ActionCreator extends SocialWorldThread {
 		arguments.add( stateActor.getProperty(SimulationCluster.action, PropertyName.simobj_attributeArray) );
 		
 		Value result = f_CreateAction.calculate(arguments);
-		return (AbstractAction) result.getObject();
+		return objectRequester.requestAction(SimulationCluster.action, result, this);
 		
 
 	}
@@ -322,7 +321,7 @@ public class ActionCreator extends SocialWorldThread {
 		AbstractAction action;
 		ActionType type;
 		
-		type = (ActionType) actionProperties.getValue(namePropertyActionType).getObject();
+		type = (ActionType) actionProperties.getValue(namePropertyActionType).getObject(Type.actionType);
 		
 		switch (type) {
 		case bodilyFunction: 

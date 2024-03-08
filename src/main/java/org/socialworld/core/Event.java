@@ -21,6 +21,8 @@
 */
 package org.socialworld.core;
 
+import org.socialworld.calculation.IObjectReceiver;
+import org.socialworld.calculation.ObjectRequester;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
@@ -47,7 +49,7 @@ import org.socialworld.objects.SimulationObject;
  * 
  * @author Andre Schade (circlesmiler), Mathias Sikos (MatWorsoc)
  */
-public abstract class Event implements Comparable<Event> {
+public abstract class Event implements Comparable<Event>, IObjectReceiver {
 
 	final static int LOWEST_EVENT_PRIORITY = 0;
 	final static int HIGHEST_EVENT_PRIORITY = 100;
@@ -68,7 +70,9 @@ public abstract class Event implements Comparable<Event> {
 	protected boolean eventToTarget = false;
 
 	private static Value noDirection = new Value(Type.eventProp, new Direction(PropertyName.event_direction, new Vector(0,0,0)));
-	
+
+	private ObjectRequester objectRequester = new ObjectRequester();
+
 	/**
 	 * Constructor
 	 */
@@ -271,12 +275,12 @@ public abstract class Event implements Comparable<Event> {
 		
 		if (hasOptionalParam()) {
 			direction = optionalParam.getParam(Value.VALUE_BY_NAME_EVENT_DIRECTION);
-			if (direction.getObject() == null) {
+			if (direction.checkObjectIsNull() == true) {
 				direction = new Value(Type.eventProp, new Direction(PropertyName.event_direction, new Vector(0,0,0)));
 			}
 			if (direction.getType().equals(Type.vector)) {
-				Vector vectorDirection = (Vector) direction.getObject();
-				if (vectorDirection == null) {
+				Vector vectorDirection = objectRequester.requestVector(SimulationCluster.total, direction, this);
+				if (vectorDirection == Vector.getObjectNothing()) {
 					vectorDirection = new Vector(0,0,0);
 				}
 				direction = new Value(Type.eventProp, new Direction(PropertyName.event_direction, vectorDirection));
@@ -287,7 +291,7 @@ public abstract class Event implements Comparable<Event> {
 		
 		if (this.causer instanceof Animal){
 			direction = ((Animal) causer).getProperty(SimulationCluster.todo, PropertyName.simobj_directionChest);
-			if (direction.getObject() == null) {
+			if (direction.checkObjectIsNull() == true) {
 				direction = new Value(Type.eventProp, new Direction(PropertyName.event_direction, new Vector(0,0,0)));
 			}
 			return direction;
@@ -348,6 +352,17 @@ public abstract class Event implements Comparable<Event> {
 	public List<SimulationObject> getTargetObjects() {
 		return new ArrayList<SimulationObject>(0);
 	}
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////implementing IObjectReceiver ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	@Override
+	public int receiveObject(int requestID, Object object) {
+		objectRequester.receive(requestID, object);
+		return 0;
+	}
+
 	
 	public String toString() {
 		return this.eventType + " , " + this.position.toString();

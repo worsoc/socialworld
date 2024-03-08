@@ -24,10 +24,22 @@ package org.socialworld.collections;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.calculation.IObjectReceiver;
+import org.socialworld.calculation.IObjectSender;
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 
-public class ValueArrayList {
+public class ValueArrayList implements IObjectSender{
+
+	private static ValueArrayList objectNothing;
+	
+	public static ValueArrayList getObjectNothing() {
+		if (objectNothing == null) {
+			objectNothing = new ValueArrayList();
+		}
+		return objectNothing;
+	}
 
 	private List<Value> values;
 	private Value nothing;
@@ -141,5 +153,19 @@ public class ValueArrayList {
 		return nothing;
 	}
 	
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////implementing IObjectSender ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public int sendYourselfTo(IObjectReceiver receiver, int requestID) {
+		return receiver.receiveObject(requestID, this);
+	}
+	public int sendYourselfTo(SimulationCluster cluster, IObjectReceiver receiver, int requestID) {
+		return receiver.receiveObject(requestID, this);
+	}
+	
+	public IObjectSender copy() {
+		return this;
+	}
 	
 }

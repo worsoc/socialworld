@@ -37,7 +37,7 @@ public enum Type {
 	sentenceElement(111), answer(112),
 	knowledgeElement(121), knowledgeSource(122), knowledgeAtom(123),
 	enumProp(131),
-	valueList(8888), 
+	valueList(8888), /* ValueArrayList */
 	object(9999);
 
 	private int index;

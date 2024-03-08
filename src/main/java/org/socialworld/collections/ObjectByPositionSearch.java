@@ -141,7 +141,7 @@ public class ObjectByPositionSearch {
 		
 		
 		// if there is no position, no object is added to the position search tree
-		if (object.getPosition(SimulationCluster.objectMaster) == null) return;
+		if (object.getPosition(SimulationCluster.objectMaster) == Position.getObjectNothing()) return;
 				
 		objectID = object.getObjectID();
 		if (size <= objectID) 	ensureCapacity(objectID + 1000);
