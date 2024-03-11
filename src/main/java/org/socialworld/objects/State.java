@@ -30,6 +30,8 @@ import org.socialworld.attributes.ISavedValue;
 import org.socialworld.attributes.ISimProperty;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
+import org.socialworld.calculation.IObjectReceiver;
+import org.socialworld.calculation.IObjectSender;
 import org.socialworld.calculation.PropertyUsingAs;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
@@ -44,7 +46,7 @@ import org.socialworld.tools.StringTupel;
 // TODO implement copy constructor in sub classes
 // TODO implement getProperty() and setProperty() in sub classes
 
-public abstract class State implements ISimProperty, ISavedValue {
+public abstract class State implements ISimProperty, ISavedValue, IObjectSender {
 
 	
 	
@@ -429,6 +431,20 @@ public abstract class State implements ISimProperty, ISavedValue {
 		}
 	}
 
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////implementing IObjectSender ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public int sendYourselfTo(IObjectReceiver receiver, int requestID) {
+		return receiver.receiveObject(requestID, this);
+	}
+	public int sendYourselfTo(SimulationCluster cluster, IObjectReceiver receiver, int requestID) {
+		return receiver.receiveObject(requestID, this);
+	}
+	
+	public IObjectSender copy() {
+		return this;
+	}
 	
 	
 }

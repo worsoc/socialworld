@@ -21,18 +21,32 @@
 */
 package org.socialworld.knowledge;
 
+import org.socialworld.calculation.IObjectReceiver;
+import org.socialworld.calculation.IObjectSender;
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Word;
 
-public class KnowledgeElement {
+public class KnowledgeElement implements IObjectSender{
 
+	private static KnowledgeElement objectNothing;
+	
+	public static KnowledgeElement getObjectNothing() {
+		if (objectNothing == null) {
+			objectNothing = new KnowledgeElement();
+		}
+		return objectNothing;
+	}
 
 	private KnowledgeSource source;
 	private Lexem subject;
 	
 	private KnowledgeItemList knowledgeItemList;
 
-
+	private KnowledgeElement () {
+		
+	}
+	
 	public KnowledgeElement(KnowledgeSource source, Lexem subject) {
 		
 		this.subject = subject;
@@ -113,6 +127,22 @@ public class KnowledgeElement {
 		this.getAtomList().combineWith(keB.getAtomList());
 	}
 
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////implementing IObjectSender ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public int sendYourselfTo(IObjectReceiver receiver, int requestID) {
+		return receiver.receiveObject(requestID, this);
+	}
+	public int sendYourselfTo(SimulationCluster cluster, IObjectReceiver receiver, int requestID) {
+		return receiver.receiveObject(requestID, this);
+	}
+	
+	public IObjectSender copy() {
+		return this;
+	}
+	
+	
 	public String toString() {
 		String output;
 		String itemList = knowledgeItemList.toString();

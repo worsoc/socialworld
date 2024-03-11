@@ -21,9 +21,26 @@
 */
 package org.socialworld.knowledge;
 
+import org.socialworld.calculation.IObjectReceiver;
+import org.socialworld.calculation.IObjectSender;
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.objects.SimulationObject;
 
-public class KnowledgeSource {
+public class KnowledgeSource implements IObjectSender {
+	
+	private static KnowledgeSource objectNothing;
+	
+	public static KnowledgeSource getObjectNothing() {
+		if (objectNothing == null) {
+			objectNothing = new KnowledgeSource();
+		}
+		return objectNothing;
+	}
+
+	private KnowledgeSource() {
+		
+	}
+	
 	KnowledgeSource_Type type = null;
 	SimulationObject origin = null;
 	
@@ -47,6 +64,22 @@ public class KnowledgeSource {
 	
 	public boolean equals(KnowledgeSource b) {
 		return (this.type == b.type & this.origin.equals(b.origin));
+	}
+	
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////implementing IObjectSender ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public int sendYourselfTo(IObjectReceiver receiver, int requestID) {
+		return receiver.receiveObject(requestID, this);
+	}
+	public int sendYourselfTo(SimulationCluster cluster, IObjectReceiver receiver, int requestID) {
+		return receiver.receiveObject(requestID, this);
+	}
+	
+	public IObjectSender copy() {
+		return this;
 	}
 	
 	public String toString() {

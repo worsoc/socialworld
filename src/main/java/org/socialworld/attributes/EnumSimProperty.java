@@ -4,5 +4,6 @@ public enum EnumSimProperty {
 	
 	noSimProperty,
 	position,
-	direction;
+	direction,
+	stateSeer;
 }

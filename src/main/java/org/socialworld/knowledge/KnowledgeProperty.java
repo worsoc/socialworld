@@ -96,7 +96,7 @@ public class KnowledgeProperty extends KnowledgeFact {
 	protected Lexem translateToLexem(Value value) {
 		Lexem result = null;
 		if (value.getType() == Type.enumProp) {
-			Object o = value.getObject();
+			Object o = value.getObject(Type.enumProp);
 			if (o instanceof IEnumProperty) {
 				IEnumProperty enumProp = (IEnumProperty) o;
 				result = enumProp.getLexem();

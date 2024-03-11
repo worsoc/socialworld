@@ -231,7 +231,7 @@ public class Expression implements IObjectReceiver{
 				case property:
 					
 					Value object = arguments.get(0);
-					PropertyName simPropName = (PropertyName) value.getObject();
+					PropertyName simPropName = (PropertyName) value.getObject(Type.simPropName);
 					SimulationCluster cluster = SimulationCluster.getName((int) expression1.evaluate(arguments).getObject(Type.integer));
 					String methodName = (String) expression2.evaluate(arguments).getObject(Type.string);
 					name = (String) expression3.evaluate(arguments).getObject(Type.string);

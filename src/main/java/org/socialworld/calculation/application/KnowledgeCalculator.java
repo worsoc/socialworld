@@ -175,9 +175,9 @@ public class KnowledgeCalculator extends SocialWorldThread {
 		{
 			f_CreatePerception = descGetKE.getFunction(index);
 			valueKE = f_CreatePerception.calculate(arguments);
-			knowledgeElement = (KnowledgeElement) valueKE.getObject();	
+			knowledgeElement = objectRequester.requestKnowledgeElement(SimulationCluster.knowledge, valueKE, this);	
 			
-			if (knowledgeElement != null) {
+			if (knowledgeElement != KnowledgeElement.getObjectNothing()) {
 				if (knowledgeElement.isValid())	{
 					resultTmp = hiddenWriteAccess.addKnowledgeElement(knowledgeElement);
 					if (resultTmp > 0) {
@@ -214,7 +214,7 @@ public class KnowledgeCalculator extends SocialWorldThread {
 			if (getFromVAL.isValid() && getFromVAL.getName().equals(Value.VALUE_NAME_KNOWLEDGE_SUBJECT)) {
 				
 				subject = getInstance().objectRequester.requestSimulationObject(SimulationCluster.knowledge, knowledgeElementProperties.get(0), getInstance());
-				source = (KnowledgeSource) knowledgeElementProperties.get(1).getObject();
+				source = getInstance().objectRequester.requestKnowledgeSource(SimulationCluster.knowledge, knowledgeElementProperties.get(1), getInstance());
 				lexemSubject = subject.getLexem();
 				
 				KnowledgeElement knowledgeElement = new KnowledgeElement(source, lexemSubject);
@@ -222,7 +222,7 @@ public class KnowledgeCalculator extends SocialWorldThread {
 				
 				for (int index = 2; index < size; index++) {
 				
-					atom = (KnowledgeItem) knowledgeElementProperties.get(index).getObject();
+					atom = getInstance().objectRequester.requestKnowledgeItem(SimulationCluster.knowledge, knowledgeElementProperties.get(index), getInstance());
 					knowledgeElement.add(atom);
 					
 				}

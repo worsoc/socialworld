@@ -5,6 +5,7 @@ import java.util.Hashtable;
 import java.util.List;
 
 import org.socialworld.actions.AbstractAction;
+import org.socialworld.actions.NoAction;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.EnumSimProperty;
@@ -12,8 +13,13 @@ import org.socialworld.attributes.Position;
 import org.socialworld.attributes.SimProperty;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.collections.ValueArrayList;
+import org.socialworld.knowledge.KnowledgeElement;
+import org.socialworld.knowledge.KnowledgeItem;
+import org.socialworld.knowledge.KnowledgeSource;
+import org.socialworld.knowledge.NoKnowledgeItem;
 import org.socialworld.objects.NoSimulationObject;
 import org.socialworld.objects.SimulationObject;
+import org.socialworld.objects.concrete.animals.StateSeer;
 
 public class ObjectRequester {
 
@@ -38,11 +44,21 @@ public class ObjectRequester {
 						return Position.getObjectNothing();
 					case direction:
 						return Direction.getObjectNothing();
+					case stateSeer:
+						return StateSeer.getObjectNothing();
 					default:
 						return NoObject.getNoObject(NoObjectReason.objectRequesterGetObjectNothingNotImplementedForType);
 				}
 			case simulationObject:
 				return NoSimulationObject.getObjectNothing();
+			case action:
+				return NoAction.getObjectNothing();
+			case knowledgeElement:
+				return KnowledgeElement.getObjectNothing();
+			case knowledgeSource:
+				return KnowledgeSource.getObjectNothing();
+			case knowledgeAtom:
+				return NoKnowledgeItem.getObjectNothing();
 
 			default:
 				return NoObject.getNoObject(NoObjectReason.objectRequesterGetObjectNothingNotImplementedForType);
@@ -88,6 +104,22 @@ public class ObjectRequester {
 	
 	public AbstractAction requestAction(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
 		return (AbstractAction) requestObject(value, Type.action, EnumSimProperty.noSimProperty, cluster, receiver);
+	}
+
+	public KnowledgeElement requestKnowledgeElement(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
+		return (KnowledgeElement) requestObject(value, Type.knowledgeElement, EnumSimProperty.noSimProperty, cluster, receiver);
+	}
+	
+	public KnowledgeSource requestKnowledgeSource(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
+		return (KnowledgeSource) requestObject(value, Type.knowledgeSource, EnumSimProperty.noSimProperty, cluster, receiver);
+	}
+	
+	public KnowledgeItem requestKnowledgeItem(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
+		return (KnowledgeItem) requestObject(value, Type.knowledgeAtom, EnumSimProperty.noSimProperty, cluster, receiver);
+	}
+
+	public StateSeer requestStateSeer(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
+		return (StateSeer) requestObject(value, Type.simObjProp, EnumSimProperty.stateSeer, cluster, receiver);
 	}
 
 	public ValueArrayList requestValueArrayList(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
