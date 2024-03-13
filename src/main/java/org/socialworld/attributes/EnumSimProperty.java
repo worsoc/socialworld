@@ -5,5 +5,8 @@ public enum EnumSimProperty {
 	noSimProperty,
 	position,
 	direction,
-	stateSeer;
+	stateSeer,
+	nutrientSet,
+	tasteSet,
+	colourSet;
 }

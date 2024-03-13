@@ -99,11 +99,11 @@ public abstract class Food extends Item implements IEatable {
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
 	public  NutrientSet getNutrientSet() {
-		return (NutrientSet) 	this.stateEatable.getPropertyFromMethod(SimulationCluster.todo, StateEatable.METHODNAME_GET_NUTRIENT_SET, StateEatable.VALUENAME_NUTRIENT_SET).getObject();
+		return objectRequester.requestNutrientSet(SimulationCluster.todo, this.stateEatable.getPropertyFromMethod(SimulationCluster.todo, StateEatable.METHODNAME_GET_NUTRIENT_SET, StateEatable.VALUENAME_NUTRIENT_SET), this);
 	}
 	
 	public  TasteSet getTasteSet() {
-		return (TasteSet) 	this.stateEatable.getPropertyFromMethod(SimulationCluster.todo, StateEatable.METHODNAME_GET_TASTE_SET, StateEatable.VALUENAME_TASTE_SET).getObject();
+		return objectRequester.requestTasteSet(SimulationCluster.todo, this.stateEatable.getPropertyFromMethod(SimulationCluster.todo, StateEatable.METHODNAME_GET_TASTE_SET, StateEatable.VALUENAME_TASTE_SET), this);
 	}
 
 

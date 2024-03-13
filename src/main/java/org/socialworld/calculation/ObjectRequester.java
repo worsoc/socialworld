@@ -11,6 +11,9 @@ import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.EnumSimProperty;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.SimProperty;
+import org.socialworld.attributes.properties.ColourSet;
+import org.socialworld.attributes.properties.NutrientSet;
+import org.socialworld.attributes.properties.TasteSet;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.knowledge.KnowledgeElement;
@@ -38,6 +41,17 @@ public class ObjectRequester {
 				return ValueArrayList.getObjectNothing();
 			case attributeArray:
 				return AttributeArray.getObjectNothing();
+			case enumProp:
+				switch (simProperty) {
+					case nutrientSet:
+						return NutrientSet.getObjectNothing();
+					case tasteSet:
+						return TasteSet.getObjectNothing();
+					case colourSet:
+						return ColourSet.getObjectNothing();
+					default:
+						return NoObject.getNoObject(NoObjectReason.objectRequesterGetObjectNothingNotImplementedForType);
+				}
 			case simObjProp:
 				switch (simProperty) {
 					case position:
@@ -74,6 +88,30 @@ public class ObjectRequester {
 		return (SimulationObject) requestObject(value, Type.simulationObject, EnumSimProperty.noSimProperty, cluster, receiver);
 	}
 
+	public NutrientSet requestNutrientSet(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
+		
+		SimProperty simProperty = (SimProperty) requestObject(value, Type.enumProp, EnumSimProperty.nutrientSet, cluster, receiver);
+		if (simProperty instanceof NutrientSet) {
+			return (NutrientSet) simProperty;
+		}
+		else {
+			return NutrientSet.getObjectNothing();
+		}
+		
+	}
+	
+	public TasteSet requestTasteSet(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
+		
+		SimProperty simProperty = (SimProperty) requestObject(value, Type.enumProp, EnumSimProperty.tasteSet, cluster, receiver);
+		if (simProperty instanceof TasteSet) {
+			return (TasteSet) simProperty;
+		}
+		else {
+			return TasteSet.getObjectNothing();
+		}
+		
+	}
+	
 	public Position requestPosition(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
 		
 		SimProperty simProperty = (SimProperty) requestObject(value, Type.simObjProp, EnumSimProperty.position, cluster, receiver);
