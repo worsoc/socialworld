@@ -6,7 +6,9 @@ import java.util.List;
 
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.NoAction;
+import org.socialworld.actions.handle.Inventory;
 import org.socialworld.attributes.AttributeArray;
+import org.socialworld.attributes.Dimension;
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.EnumSimProperty;
 import org.socialworld.attributes.Position;
@@ -22,6 +24,7 @@ import org.socialworld.knowledge.KnowledgeSource;
 import org.socialworld.knowledge.NoKnowledgeItem;
 import org.socialworld.objects.NoSimulationObject;
 import org.socialworld.objects.SimulationObject;
+import org.socialworld.objects.concrete.animals.StateRunning;
 import org.socialworld.objects.concrete.animals.StateSeer;
 
 public class ObjectRequester {
@@ -58,8 +61,14 @@ public class ObjectRequester {
 						return Position.getObjectNothing();
 					case direction:
 						return Direction.getObjectNothing();
+					case dimension:
+						return Dimension.getObjectNothing();
+					case inventory:
+						return Inventory.getObjectNothing();
 					case stateSeer:
 						return StateSeer.getObjectNothing();
+					case stateRunning:
+						return StateRunning.getObjectNothing();
 					default:
 						return NoObject.getNoObject(NoObjectReason.objectRequesterGetObjectNothingNotImplementedForType);
 				}
@@ -112,6 +121,18 @@ public class ObjectRequester {
 		
 	}
 	
+	public ColourSet requestColourSet(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
+		
+		SimProperty simProperty = (SimProperty) requestObject(value, Type.enumProp, EnumSimProperty.colourSet, cluster, receiver);
+		if (simProperty instanceof ColourSet) {
+			return (ColourSet) simProperty;
+		}
+		else {
+			return ColourSet.getObjectNothing();
+		}
+		
+	}
+	
 	public Position requestPosition(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
 		
 		SimProperty simProperty = (SimProperty) requestObject(value, Type.simObjProp, EnumSimProperty.position, cluster, receiver);
@@ -132,6 +153,30 @@ public class ObjectRequester {
 		}
 		else {
 			return Direction.getObjectNothing();
+		}
+		
+	}
+	
+	public Dimension requestDimension(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
+		
+		SimProperty simProperty = (SimProperty) requestObject(value, Type.simObjProp, EnumSimProperty.dimension, cluster, receiver);
+		if (simProperty instanceof Dimension) {
+			return (Dimension) simProperty;
+		}
+		else {
+			return Dimension.getObjectNothing();
+		}
+		
+	}
+	
+	public Inventory requestInventory(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
+		
+		SimProperty simProperty = (SimProperty) requestObject(value, Type.simObjProp, EnumSimProperty.inventory, cluster, receiver);
+		if (simProperty instanceof Inventory) {
+			return (Inventory) simProperty;
+		}
+		else {
+			return Inventory.getObjectNothing();
 		}
 		
 	}
@@ -158,6 +203,10 @@ public class ObjectRequester {
 
 	public StateSeer requestStateSeer(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
 		return (StateSeer) requestObject(value, Type.simObjProp, EnumSimProperty.stateSeer, cluster, receiver);
+	}
+
+	public StateRunning requestStateRunning(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
+		return (StateRunning) requestObject(value, Type.simObjProp, EnumSimProperty.stateRunning, cluster, receiver);
 	}
 
 	public ValueArrayList requestValueArrayList(SimulationCluster cluster, Value value, IObjectReceiver receiver) {

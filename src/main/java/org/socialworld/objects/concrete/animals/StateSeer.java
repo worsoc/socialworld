@@ -168,17 +168,18 @@ public class StateSeer extends State {
 
 	protected void setProperty(PropertyName propName, ValueProperty property) {
 		
-		Object value;
-		value = property.getObject();
 	
 		switch (propName) {
 		case stateSeer_directionView:
-			if (value instanceof Vector) {
-				this.directionView = new Direction(PropertyName.stateSeer_directionView, (Vector) value);
+			Vector vector = objectRequester.requestVector(SimulationCluster.todo, property, this);
+			if (vector.checkIsObjectNothing()) {
+				Direction direction = objectRequester.requestDirection(SimulationCluster.todo, property, this);
+				this.directionView = direction;
 			}
-			if (value instanceof Direction) {
-				this.directionView = (Direction) value;
+			else {
+				this.directionView = new Direction(PropertyName.stateSeer_directionView, vector);
 			}
+			
 			setBestPercipiencePerpendicular();
 			
 		default:

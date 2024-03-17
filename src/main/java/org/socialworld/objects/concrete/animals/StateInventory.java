@@ -162,53 +162,60 @@ public class StateInventory extends State {
 
 	protected void setProperty(PropertyName propName, ValueProperty property) {
 
-		Object value;
-		value = property.getObject();
 		
 		switch (propName) {
 		case stateInventory_inventory:
-			if (value instanceof Inventory) {
-				this.inventory = (Inventory) value;
-			}
+			Inventory inventory = objectRequester.requestInventory(SimulationCluster.todo, property, this);
+			this.inventory = inventory;
 			break;
 		case inventory_shirt:
-			if (value instanceof Shirt) {
-				this.inventory.setShirt((Shirt) value );
-			}
-			break;
 		case inventory_trousers:
-			if (value instanceof Trousers) {
-				this.inventory.setTrousers((Trousers) value );
-			}
-			break;
 		case inventory_leftShoe:
-			if (value instanceof Shoe) {
-				this.inventory.setLeftShoe((Shoe) value );
-			}
-			break;
 		case inventory_rightShoe:
-			if (value instanceof Shoe) {
-				this.inventory.setRightShoe((Shoe) value );
-			}
-			break;
 		case inventory_leftSock:
-			if (value instanceof Sock) {
-				this.inventory.setLeftSock((Sock) value );
-			}
-			break;
 		case inventory_rightSock:
-			if (value instanceof Sock) {
-				this.inventory.setRightSock((Sock) value );
-			}
-			break;
 		case inventory_cap:
-			if (value instanceof Cap) {
-				this.inventory.setCap((Cap) value );
+			SimulationObject object = objectRequester.requestSimulationObject(SimulationCluster.todo, property, this);
+			switch (propName) {
+			case inventory_shirt:
+				if (object instanceof Shirt) {
+					this.inventory.setShirt((Shirt) object );
+				}
+				break;
+			case inventory_trousers:
+				if (object instanceof Trousers) {
+					this.inventory.setTrousers((Trousers) object );
+				}
+				break;
+			case inventory_leftShoe:
+				if (object instanceof Shoe) {
+					this.inventory.setLeftShoe((Shoe) object );
+				}
+				break;
+			case inventory_rightShoe:
+				if (object instanceof Shoe) {
+					this.inventory.setRightShoe((Shoe) object );
+				}
+				break;
+			case inventory_leftSock:
+				if (object instanceof Sock) {
+					this.inventory.setLeftSock((Sock) object );
+				}
+				break;
+			case inventory_rightSock:
+				if (object instanceof Sock) {
+					this.inventory.setRightSock((Sock) object );
+				}
+				break;
+			case inventory_cap:
+				if (object instanceof Cap) {
+					this.inventory.setCap((Cap) object );
+				}
+				break;
+			default:
 			}
 			break;
 		default:
-
-
 		}
 		
 	}

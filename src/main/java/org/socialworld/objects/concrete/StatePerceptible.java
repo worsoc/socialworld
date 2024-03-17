@@ -149,20 +149,18 @@ public class StatePerceptible extends State {
 	}
 
 	protected void setProperty(PropertyName propName, ValueProperty property) {
-		Object value;
-		value = property.getObject();
 		
 		switch (propName) {
 		case statePerceptible_position:
-			if (value instanceof Position) {
-				this.percipience.setPosition((Position) value);
-			}
+			Position position = objectRequester.requestPosition(SimulationCluster.todo, property, this);
+			this.percipience.setPosition(position);
+			break;
 		case statePerceptible_cuboid:
-			if (value instanceof Vector) {
-				this.percipience.setCuboid((Vector) value);
-			}
+			Vector vector = objectRequester.requestVector(SimulationCluster.todo, property, this);
+			this.percipience.setCuboid(vector);
+			break;
 		default:
-			
+					
 		}
 	}
 	
