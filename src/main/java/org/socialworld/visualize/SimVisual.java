@@ -39,6 +39,9 @@ import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.attributes.PropertyName;
+import org.socialworld.attributes.percipience.PropsSeer;
+import org.socialworld.calculation.IObjectReceiver;
+import org.socialworld.calculation.ObjectRequester;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Value;
 import org.socialworld.core.Simulation;
@@ -354,11 +357,12 @@ public class SimVisual extends SocialWorldThread {
 	}
 	
 	
-	private class RasterField extends JButton {
+	private class RasterField extends JButton implements IObjectReceiver {
 		int index;
 		
 		static final long serialVersionUID = 1;
 		
+		private ObjectRequester objectRequester = new ObjectRequester();
 		
 		private RasterField(int index) {
 			super();
@@ -645,15 +649,29 @@ public class SimVisual extends SocialWorldThread {
 			
 			human = Simulation.getInstance().getObjectMaster().getHumans().get(index);
 			prop = human.getProperty(SimulationCluster.test, PropertyName.stateSeer);
-			state = (org.socialworld.objects.State) prop.getObject();
+			state = objectRequester.requestStateSeer(SimulationCluster.test, prop, this);
 			if (state != null) {
-				propSub = state.getValue("getAngleViewPerceivingEvents", "angleViewPerceivingEvents");
-				myPrint("Button " + index + " clicked: " + propSub.getObject().toString() );
+				propSub = state.getProperty(SimulationCluster.test, PropertyName.stateSeer_propsSeer, PropertyName.stateSeer_propsSeer.toString());
+				PropsSeer propsSeer = objectRequester.requestPropsSeer(SimulationCluster.test, propSub, this);
+				propSub = propsSeer.getProperty(SimulationCluster.test, PropertyName.propsSeer_angleViewPerceivingEvents, PropertyName.propsSeer_angleViewPerceivingEvents.toString());
+				myPrint("Button " + index + " clicked: " + objectRequester.requestPropsSeer(SimulationCluster.test, propSub, this).toString() );
 			}
 			else {
 				myPrint("Button " + index + " clicked "  );
 			}
 		}
+		
+		
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////implementing IObjectReceiver ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+		@Override
+		public int receiveObject(int requestID, Object object) {
+			objectRequester.receive(requestID, object);
+			return 0;
+		}
+
 	}
 
 	private void clickRasterField(int index) {

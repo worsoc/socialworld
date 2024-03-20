@@ -13,6 +13,7 @@ import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.EnumSimProperty;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.SimProperty;
+import org.socialworld.attributes.percipience.PropsSeer;
 import org.socialworld.attributes.properties.ColourSet;
 import org.socialworld.attributes.properties.NutrientSet;
 import org.socialworld.attributes.properties.TasteSet;
@@ -24,6 +25,7 @@ import org.socialworld.knowledge.KnowledgeSource;
 import org.socialworld.knowledge.NoKnowledgeItem;
 import org.socialworld.objects.NoSimulationObject;
 import org.socialworld.objects.SimulationObject;
+import org.socialworld.objects.concrete.animals.StateFlying;
 import org.socialworld.objects.concrete.animals.StateRunning;
 import org.socialworld.objects.concrete.animals.StateSeer;
 
@@ -65,10 +67,14 @@ public class ObjectRequester {
 						return Dimension.getObjectNothing();
 					case inventory:
 						return Inventory.getObjectNothing();
+					case propsSeer:
+						return PropsSeer.getObjectNothing();
 					case stateSeer:
 						return StateSeer.getObjectNothing();
 					case stateRunning:
 						return StateRunning.getObjectNothing();
+					case stateFlying:
+						return StateFlying.getObjectNothing();
 					default:
 						return NoObject.getNoObject(NoObjectReason.objectRequesterGetObjectNothingNotImplementedForType);
 				}
@@ -181,6 +187,18 @@ public class ObjectRequester {
 		
 	}
 	
+	public PropsSeer requestPropsSeer(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
+		
+		SimProperty simProperty = (SimProperty) requestObject(value, Type.simObjProp, EnumSimProperty.propsSeer, cluster, receiver);
+		if (simProperty instanceof PropsSeer) {
+			return (PropsSeer) simProperty;
+		}
+		else {
+			return PropsSeer.getObjectNothing();
+		}
+		
+	}
+
 	public Vector requestVector(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
 		return (Vector) requestObject(value, Type.vector, EnumSimProperty.noSimProperty, cluster, receiver);
 	}
@@ -207,6 +225,10 @@ public class ObjectRequester {
 
 	public StateRunning requestStateRunning(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
 		return (StateRunning) requestObject(value, Type.simObjProp, EnumSimProperty.stateRunning, cluster, receiver);
+	}
+
+	public StateFlying requestStateFlyng(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
+		return (StateFlying) requestObject(value, Type.simObjProp, EnumSimProperty.stateFlying, cluster, receiver);
 	}
 
 	public ValueArrayList requestValueArrayList(SimulationCluster cluster, Value value, IObjectReceiver receiver) {

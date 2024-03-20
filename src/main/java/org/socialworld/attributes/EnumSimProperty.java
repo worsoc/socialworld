@@ -7,8 +7,10 @@ public enum EnumSimProperty {
 	direction,
 	dimension,
 	inventory,
+	propsSeer,
 	stateSeer,
 	stateRunning,
+	stateFlying,
 	nutrientSet,
 	tasteSet,
 	colourSet;
