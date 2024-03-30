@@ -34,9 +34,10 @@ public enum Type {
 	action(81),
 	simulationObject(91),
 	simPropName(101), simObjProp(102), eventProp(103), actionProp(104),
-	sentenceElement(111), answer(112),
+	lexem(111), relation(112),
 	knowledgeElement(121), knowledgeSource(122), knowledgeAtom(123),
-	enumProp(131),
+	answer(131),
+	enumProp(1001),
 	valueList(8888), /* ValueArrayList */
 	object(9999);
 

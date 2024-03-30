@@ -21,9 +21,13 @@
 */
 package org.socialworld.knowledge;
 
+import org.socialworld.calculation.IObjectReceiver;
+import org.socialworld.calculation.ObjectRequester;
 import org.socialworld.conversation.Lexem;
 
-public abstract class KnowledgeItem {
+public abstract class KnowledgeItem implements IObjectReceiver{
+
+	protected ObjectRequester objectRequester = new ObjectRequester();
 
 	abstract KnowledgeItem copy();
 	abstract KnowledgeItemNotes removeNotes();
@@ -41,4 +45,15 @@ public abstract class KnowledgeItem {
 		
 		
 	}
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////implementing IObjectReceiver ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	@Override
+	public int receiveObject(int requestID, Object object) {
+		objectRequester.receive(requestID, object);
+		return 0;
+	}
+	
 }

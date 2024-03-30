@@ -28,6 +28,9 @@ import org.socialworld.attributes.ISavedValue;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.Time;
 import org.socialworld.attributes.properties.IEnumProperty;
+import org.socialworld.conversation.Lexem;
+import org.socialworld.conversation.Relation;
+import org.socialworld.core.AllWords;
 import org.socialworld.core.Event;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.StateSimulationObject;
@@ -223,7 +226,7 @@ public class Value {
 	public String getName() { return name; };
 
 	// TODO wieder weg, nur einsetzen, um festzustellen, ob andere Fehler als die Umstellung von getObject() zu getObject(Type)
-	public Object getObject() { 
+	private Object getObject() { 
 		return value;
 	}
 
@@ -246,6 +249,31 @@ public class Value {
 			}
 			else
 				return (Time) value;
+		case lexem:
+			if (value instanceof Lexem)	{
+				return (Lexem) value;
+			}
+			else if (value instanceof Integer) {
+				int lexemID = ((Integer) value).intValue();
+				return AllWords.getLexem(lexemID);
+			}
+			else if (Integer.class.isInstance(value)) {
+				int lexemID  = (int) value;
+				return AllWords.getLexem(lexemID);
+			}
+		case relation:
+			if (value instanceof Relation)	{
+				return (Relation) value;
+			}
+			else if (value instanceof Integer) {
+				int relationID = ((Integer) value).intValue();
+				return Relation.getName(relationID);
+			}
+			else if (Integer.class.isInstance(value)) {
+				int relationID  = (int) value;
+				return Relation.getName(relationID);
+			}
+			
 		default:
 			if ((value instanceof IObjectSender) && (this instanceof ValueProperty)) {
 				return ((IObjectSender) value).copy();

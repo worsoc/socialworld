@@ -19,6 +19,7 @@ import org.socialworld.attributes.properties.NutrientSet;
 import org.socialworld.attributes.properties.TasteSet;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.collections.ValueArrayList;
+import org.socialworld.knowledge.IAnswer;
 import org.socialworld.knowledge.KnowledgeElement;
 import org.socialworld.knowledge.KnowledgeItem;
 import org.socialworld.knowledge.KnowledgeSource;
@@ -88,6 +89,8 @@ public class ObjectRequester {
 				return KnowledgeSource.getObjectNothing();
 			case knowledgeAtom:
 				return NoKnowledgeItem.getObjectNothing();
+			case answer:
+				return (IAnswer) NoKnowledgeItem.getObjectNothing();
 
 			default:
 				return NoObject.getNoObject(NoObjectReason.objectRequesterGetObjectNothingNotImplementedForType);
@@ -219,6 +222,10 @@ public class ObjectRequester {
 		return (KnowledgeItem) requestObject(value, Type.knowledgeAtom, EnumSimProperty.noSimProperty, cluster, receiver);
 	}
 
+	public IAnswer requestAnswer(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
+		return (IAnswer) requestObject(value, Type.answer, EnumSimProperty.noSimProperty, cluster, receiver);
+	}
+
 	public StateSeer requestStateSeer(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
 		return (StateSeer) requestObject(value, Type.simObjProp, EnumSimProperty.stateSeer, cluster, receiver);
 	}
@@ -230,6 +237,7 @@ public class ObjectRequester {
 	public StateFlying requestStateFlyng(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
 		return (StateFlying) requestObject(value, Type.simObjProp, EnumSimProperty.stateFlying, cluster, receiver);
 	}
+
 
 	public ValueArrayList requestValueArrayList(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
 		return (ValueArrayList) requestObject(value, Type.valueList, EnumSimProperty.noSimProperty, cluster, receiver);

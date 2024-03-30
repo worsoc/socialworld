@@ -26,7 +26,6 @@ import java.util.List;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.conversation.Lexem;
-import org.socialworld.core.AllWords;
 
 public abstract class KnowledgeFact extends KnowledgeItem {
 	
@@ -69,20 +68,11 @@ public abstract class KnowledgeFact extends KnowledgeItem {
 	
 	protected Lexem translateToLexem(Value value) {
 		Lexem result = null;
-		if (value.getType() == Type.sentenceElement) {
-			Object o = value.getObject();
+		if (value.getType() == Type.lexem) {
+			Object o = value.getObject(Type.lexem);
 			if (o instanceof Lexem)	{
 				result = (Lexem) o;
 			}
-			else if (o instanceof Integer) {
-				int lexemID = ((Integer) o).intValue();
-				result = AllWords.getLexem(lexemID);
-			}
-			else if (Integer.class.isInstance(o)) {
-				int lexemID  = (int) o;
-				result = AllWords.getLexem(lexemID);
-			}
-			
 		}
 		return result;
 	}

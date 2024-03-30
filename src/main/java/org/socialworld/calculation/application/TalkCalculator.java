@@ -269,7 +269,7 @@ public class TalkCalculator  extends SocialWorldThread {
 			acquaintance = stateHuman.getAcquaintance(partner);
 
 			for (int i = 0; i < answers.size(); i++) {
-				answer = (IAnswer) answers.get(i).getObject();
+				answer = getInstance().objectRequester.requestAnswer(SimulationCluster.todo, answers.get(i), getInstance());
 				manipulateAnswer(answer, acquaintance, stateHuman,  partner);
 				hiddenWriteAccess.addAnswer(answer,  partner); 
 			}
