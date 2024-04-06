@@ -59,7 +59,7 @@ public class KnowledgeProperty extends KnowledgeFact {
 		}
 	}
 	
-	KnowledgeFact copy() {
+	KnowledgeFact getCopy() {
 		return new KnowledgeProperty(this);
 	}
 	

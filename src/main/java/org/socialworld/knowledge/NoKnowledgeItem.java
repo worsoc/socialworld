@@ -15,7 +15,7 @@ public class NoKnowledgeItem extends KnowledgeItem implements IAnswer{
 	}
 	
 	@Override
-	KnowledgeItem copy() {
+	KnowledgeItem getCopy() {
 		// TODO Auto-generated method stub
 		return null;
 	}

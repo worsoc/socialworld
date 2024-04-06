@@ -105,6 +105,7 @@ public class KnowledgeCalculator extends SocialWorldThread {
 	final void calculatePerception(Event event, StateAnimal stateAnimal, HiddenAnimal hiddenWriteAccess) {
 		if (event != null && stateAnimal != null && hiddenWriteAccess != null) {
 			if (!this.perceptions.add(new CollectionElementSimObjInfluenced(event, stateAnimal, hiddenWriteAccess))) {
+//				System.out.println("KnowledgeCalculator.calculatePerception/3: CollectionElementSimObjInfluenced not added");
 				// SUB_THREAD_IMPLEMENTATION what shall happen if the queue is filled
 			};
 		}

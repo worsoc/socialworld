@@ -82,7 +82,7 @@ public class AttributeArray extends SimProperty {
 	
 	public static AttributeArray getObjectNothing() {
 		if (objectNothing == null) {
-			objectNothing = new AttributeArray();
+			objectNothing = new AttributeArray(0);
 			objectNothing.setToObjectNothing();
 		}
 		return objectNothing;
@@ -92,9 +92,6 @@ public class AttributeArray extends SimProperty {
 		return (this == objectNothing);
 	}
 
-	private AttributeArray() {
-	
-	}
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 //////////////////      creating instance for simulation    ///////////////////////////////
@@ -238,8 +235,10 @@ public class AttributeArray extends SimProperty {
 	 */
 	private void set(AttributeArray attributeArray) {
 		
-		for (int i = 0; i < numberOfAttributes; i++ ) {
-			set(i, attributeArray.get(i));
+		if (attributeArray.numberOfAttributes == this.numberOfAttributes) {
+			for (int i = 0; i < numberOfAttributes; i++ ) {
+				set(i, attributeArray.get(i));
+			}
 		}
 	}
 
@@ -306,9 +305,14 @@ public class AttributeArray extends SimProperty {
 	public String toString() {
 		String returnValue = "("; 
 		
-		for (int i = 0; i < numberOfAttributes - 1; i++ ) 
-			returnValue = returnValue + attributes[i] + ", ";
-		returnValue = returnValue + attributes[numberOfAttributes - 1] + ")";
+		for (int i = 0; i < numberOfAttributes; i++ ) {
+			if (i > 0) {
+				returnValue = returnValue +  ", ";
+			}
+			returnValue = returnValue + attributes[i];
+			
+		}
+		returnValue = returnValue  + ")";
 		return returnValue;
 		
 	}

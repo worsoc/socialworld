@@ -266,7 +266,7 @@ public class StateAnimal extends StateSimulationObject {
 
 	final void setInventory(Inventory inventory, WriteAccessToAnimal guard) {
 		if (checkGuard(guard)) {
-			setStateProperty(PropertyName.stateInventory, PropertyName.stateInventory_inventory, new ValueProperty(Type.object, PropertyName.stateInventory_inventory.name(), inventory), guard);
+			setStateProperty(PropertyName.stateInventory, PropertyName.stateInventory_inventory, new ValueProperty(Type.simObjProp, PropertyName.stateInventory_inventory.name(), inventory), guard);
 		}
 	}
 

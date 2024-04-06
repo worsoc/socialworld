@@ -42,7 +42,7 @@ public class KnowledgeValue extends KnowledgeItem {
 		}
 	}
 
-	KnowledgeItem copy() {	
+	KnowledgeItem getCopy() {	
 		return new KnowledgeValue(this);
 	}
 		

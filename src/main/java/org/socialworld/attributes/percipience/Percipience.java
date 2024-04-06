@@ -21,9 +21,11 @@
 */
 package org.socialworld.attributes.percipience;
 
+import org.socialworld.GlobalSwitches;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.IObjectReceiver;
+import org.socialworld.calculation.NoObject;
 import org.socialworld.calculation.ObjectRequester;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
@@ -38,13 +40,7 @@ import org.socialworld.objects.concrete.animals.ISeer;
  *
  */
 public class Percipience implements IObjectReceiver{
-	
-	public static int PERCIPIENCE_TOTAL = 0;
-	public static int PERCIPIENCE_SEE = 1;
-	public static int PERCIPIENCE_HEAR = 2;
-	public static int PERCIPIENCE_SMELL = 3;
-	public static int PERCIPIENCE_FEEL = 4;
-	
+
 	
 	private PercipienceType type;
 	
@@ -100,7 +96,7 @@ public class Percipience implements IObjectReceiver{
 	
 	public Percipience(PercipienceType type, Position position, Vector cuboid) {
 		this.type = type;
-		this.position = position;
+		setPos(position);
 		this.cuboid = cuboid;
 		this.visibility = new Visibility(position, cuboid);
 		setDistancesOfNotice();
@@ -164,8 +160,29 @@ public class Percipience implements IObjectReceiver{
 				ValueProperty vpPropsSeer;
 				ValueProperty vpAngleView;
 				vpPropsSeer = possibleSeer.getStateProperty(SimulationCluster.todo, PropertyName.stateSeer, PropertyName.stateSeer_propsSeer, PropertyName.stateSeer_propsSeer.toString());
+				if (vpPropsSeer.isInvalidOrNothing()) {
+					if (GlobalSwitches.OUTPUT_DEBUG_GETPROPERTY) {
+						System.out.println("Percipience.checkMaySeeingObject: vpPropsSeer isInvalidOrNothing");
+					}
+					// TEMP_SOLUTION return true raus
+					return true;
+					//--> return false;
+				}
 				vpAngleView = vpPropsSeer.getProperty(SimulationCluster.todo, PropertyName.propsSeer_angleViewPerceivingObjectsInRadians, Value.NO_METHOD_NAME, PropertyName.propsSeer_angleViewPerceivingObjectsInRadians.toString());
-				double angleViewInRadians = (double) vpAngleView.getObject(Type.floatingpoint);
+				double angleViewInRadians;
+				Object o = vpAngleView.getObject(Type.floatingpoint);
+				if (o instanceof NoObject) {
+					if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+						System.out.println("Percipience.checkMaySeeingObject: o (vpAngleView.getObject(Type.floatingpoint)) is NoObject " + ((NoObject)o).getReason().toString() + " instead of double");
+					}
+					// TEMP_SOLUTION return true raus
+					return true;
+					//--> return false;
+				}
+				else {
+					angleViewInRadians = (double) o;
+				}
+	
 				
 			/*	
 				Vector directionView =  possibleSeer.getDirectionView().getVector();
@@ -239,7 +256,7 @@ public class Percipience implements IObjectReceiver{
 	}
 
 	public void setPosition(Position position) {
-		this.position = position;
+		setPos(position);
 		if (this.cuboid != null) {
 			setVisibility();
 		}
@@ -347,6 +364,10 @@ public class Percipience implements IObjectReceiver{
 		this.maxSmell = 2000;
 		this.maxFeel = 1000;
 		
+	}
+	
+	private void setPos(Position position) {
+		this.position = position;
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////

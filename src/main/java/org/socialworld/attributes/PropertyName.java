@@ -200,9 +200,12 @@ public enum PropertyName {
 		}
 		switch (propertyType) {
 		case simObjProp:
-			return simobj_position;
+			if (this.name().contains("position"))	return simobj_position;
+			else if (this.name().contains("direction"))	return simobj_directionMove;
+			else if (this.name().contains("dimension"))	return stateAppearance_dimension;
 		case eventProp:
-			return event_position;
+			if (this.name().contains("position"))	return event_position;
+			else if (this.name().contains("direction"))	return event_direction;
 		case actionProp:
 			return action_position;
 		default:

@@ -49,7 +49,7 @@ public class KnowledgeRelationUnaer extends KnowledgeRelation {
 		return KnowledgeFact_Criterion.relationUnaer;
 	}
 
-	KnowledgeFact copy() {
+	KnowledgeFact getCopy() {
 		return new KnowledgeRelationUnaer(this);
 	}
 

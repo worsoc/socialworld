@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.socialworld.attributes.Position;
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.core.IncompleteSimulationObject;
 import org.socialworld.datasource.pool.GaussPoolInfluenceType;
 import org.socialworld.datasource.pool.GaussPoolPerceptionType;
@@ -142,7 +144,9 @@ public abstract class CreateSimulationObjects {
 			if (random.nextBoolean() == false) indexPosition = indexPosition * -1;
 		} while (checkArrayContainsValue(usedPositionIndex, indexPosition));
 		usedPositionIndex.add(indexPosition);
-		hiddenObject.setPosition(GaussPoolPosition.getInstance().getPosition(indexPosition));
+		Position position = GaussPoolPosition.getInstance().getPosition(indexPosition);
+		position.setPropertyName(PropertyName.simobj_position);
+		hiddenObject.setPosition(position);
 
 	}
 	

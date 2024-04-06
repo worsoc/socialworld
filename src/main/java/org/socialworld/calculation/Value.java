@@ -25,6 +25,7 @@ import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.attributes.ISavedValue;
+import org.socialworld.attributes.NoSavedValue;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.Time;
 import org.socialworld.attributes.properties.IEnumProperty;
@@ -187,6 +188,7 @@ public class Value {
 		this.type = original.type;
 		// TODO deep copy original.value
 		this.value = original.value;
+		this.valid = original.valid;
 	}
 	
 	public void setTransferCode(ValueTransferCode code) {
@@ -207,6 +209,15 @@ public class Value {
 	
 	public boolean isValid() {
 		return valid;
+	}
+	
+	public boolean isInvalidOrNothing() {
+		if (!valid) return true;
+		
+		if (value == null) return true;
+		if (value instanceof NoSavedValue) return true;
+		
+		return false;
 	}
 	
 	public void setName(String name) {
@@ -451,12 +462,16 @@ public class Value {
 			Object valueThis  = this.getObject(this.type);
 			Object valueThat  = anotherValue.getObject(anotherValue.type);
 			
-			// TODO are to nulls equal or not?
+			// TODO are two nulls (two invalids, two nothings) equal or not?
 			if (valueThis == null || valueThat == null) return false;
+			if (this.isInvalidOrNothing()) return false;
+			if (anotherValue.isInvalidOrNothing()) return false;
 			
 			// TODO call concrete equals() implementations
 			switch (this.type) {
 				case attributeArray:
+					if (valueThis instanceof NoSavedValue) return false;
+					if (valueThat instanceof NoSavedValue) return false;
 					return ( ((AttributeArray) valueThis).equals((AttributeArray) valueThat) ) ;
 				default:
 					return (  valueThis.equals(valueThat) ) ;

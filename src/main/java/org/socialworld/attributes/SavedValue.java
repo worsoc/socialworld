@@ -147,7 +147,7 @@ public abstract class SavedValue implements ISavedValue {
 	}
 
 	public final PropertyUsingAs[] getReducedUseAsPermissions(PropertyUsingAs[] useAsPermissions) {
-		PropertyUsingAs[] result = null;
+		PropertyUsingAs[] result = useAsPermissions;
 		// TODO implement getReducedUseAsPermissions
 		return result;
 	}

@@ -181,7 +181,7 @@ final class KnowledgeItemList  {
 
 	KnowledgeItem getAtomAsCopy(int index) {
 		if ((index >= 0) & (index < size()) )
-			return itemSearchList.get(index).item.copy();
+			return itemSearchList.get(index).item.getCopy();
 		else
 			return null;
 	}

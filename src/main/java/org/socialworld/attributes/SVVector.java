@@ -71,7 +71,8 @@ public class SVVector extends SavedValue {
 	}
 	
 	private SVVector() {
-	
+		super();
+		this.savedVector =  Vector.getObjectNothing();
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////

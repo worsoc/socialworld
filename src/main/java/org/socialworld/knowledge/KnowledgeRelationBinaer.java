@@ -64,7 +64,7 @@ public class KnowledgeRelationBinaer extends KnowledgeRelation {
 		return KnowledgeFact_Criterion.relationBinaer;
 	}
 
-	KnowledgeFact copy() {
+	KnowledgeFact getCopy() {
 		return new KnowledgeRelationBinaer(this);
 	}
 

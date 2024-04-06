@@ -112,7 +112,7 @@ public class Position extends SimProperty {
 	}
 
 	private Position() {
-	
+		this.vector = SVVector.getObjectNothing();
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////

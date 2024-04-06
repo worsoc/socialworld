@@ -26,6 +26,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.GlobalSwitches;
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
@@ -207,7 +208,7 @@ public abstract class StateSimulationObject extends ListenedBase implements IObj
 	final void setPosition(Position position, WriteAccessToSimulationObject guard) {
 		if (checkGuard(guard)) {
 			this.position = position;
-			setStateProperty(PropertyName.statePerceptible, PropertyName.statePerceptible_position, new ValueProperty(Type.object, PropertyName.statePerceptible_position.name(), position),  guard);
+			setStateProperty(PropertyName.statePerceptible, PropertyName.statePerceptible_position, new ValueProperty(Type.simObjProp, PropertyName.statePerceptible_position.name(), position),  guard);
 		}
 	}
 	
@@ -327,7 +328,9 @@ public abstract class StateSimulationObject extends ListenedBase implements IObj
 			stateAddOn = stateAddOns.get(nrStateAddOn);
 		
 			if (stateAddOn == null) {
-				System.out.println("StateSimulationObject.getStateProperty(): stateAddon ist null !!!!!!!!!!! PropertyName: " + propSub.toString());
+				if (GlobalSwitches.OUTPUT_DEBUG_VARIABLE_IS_NULL) {
+					System.out.println("StateSimulationObject.getStateProperty(): stateAddon ist null !!!!!!!!!!! PropertyName: " + propSub.toString());
+				}
 			}
 			else {
 				if (stateAddOn.getPropertyName() == propState) {

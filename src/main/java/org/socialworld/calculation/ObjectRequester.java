@@ -257,15 +257,22 @@ public class ObjectRequester {
 		Object result;
 		int requestResult;
 		
-		int requestID;
-		for (requestID = 1; requestID <= reservedRequestIDs.size(); requestID++) {
-			if (!reservedRequestIDs.contains(requestID)) {
+		boolean replaceInReservedList = false;
+		int requestID = 0;
+		for (requestID = 0; requestID < reservedRequestIDs.size(); requestID++) {
+			if (reservedRequestIDs.get(requestID) == -1) {
+				replaceInReservedList = true;
 				break;
 			}
 		}
 		// reserve key in hash table
-		reservedRequestIDs.add(requestID);
-
+		if (replaceInReservedList) {
+			reservedRequestIDs.set(requestID, requestID);
+		}
+		else {
+			reservedRequestIDs.add(requestID);
+		}
+		
 		if (value instanceof ValueProperty) {
 			requestResult = ((ValueProperty) value).requestObject(SimulationCluster.total, receiver, requestID, type);
 			if (requestResult == IObjectSender.OBJECT_SENDED) {
@@ -292,8 +299,7 @@ public class ObjectRequester {
 	
 	private Object remove(int requestID) {
 		Object requestedObject = receivedObjects.remove(requestID);
-		int index = reservedRequestIDs.indexOf(requestID);
-		if (index >= 0)		reservedRequestIDs.remove(index);
+		reservedRequestIDs.set(requestID, -1);
 		return requestedObject;
 	}
 

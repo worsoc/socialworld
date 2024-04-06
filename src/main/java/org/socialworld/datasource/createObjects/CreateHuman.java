@@ -23,6 +23,8 @@ package org.socialworld.datasource.createObjects;
 
 import org.socialworld.SimpleClientActionHandler;
 import org.socialworld.actions.handle.Inventory;
+import org.socialworld.attributes.Position;
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.core.IncompleteSimulationObject;
 import org.socialworld.datasource.pool.GaussPoolAttributeArray;
 import org.socialworld.datasource.pool.GaussPoolAttributeCalculatorMatrix;
@@ -35,7 +37,6 @@ import org.socialworld.objects.Human;
 import org.socialworld.objects.StateHuman;
 import org.socialworld.objects.WriteAccessToHuman;
 import org.socialworld.objects.access.GrantedAccessToProperty;
-import org.socialworld.objects.access.HiddenAnimal;
 import org.socialworld.objects.access.HiddenHuman;
 
 /**
@@ -134,10 +135,14 @@ public class CreateHuman extends CreateAnimal {
 			if (random.nextBoolean() == false) indexPosition = indexPosition * -1;
 		} while (checkArrayContainsValue(usedPositionIndex, indexPosition));
 		usedPositionIndex.add(indexPosition);
-		hiddenHuman.setPosition(GaussPoolPosition.getInstance().getPosition(indexPosition));
+		Position position = GaussPoolPosition.getInstance().getPosition(indexPosition);
+		position.setPropertyName(PropertyName.simobj_position);
+		hiddenHuman.setPosition(position);
 */
 		if (positionCounter < 3) {
-			hiddenHuman.setPosition(GaussPoolPosition.getInstance().getPosition(positionCounter));
+			Position position = GaussPoolPosition.getInstance().getPosition(positionCounter);
+			position.setPropertyName(PropertyName.simobj_position);
+			hiddenHuman.setPosition(position);
 		}
 		positionCounter++;
 		

@@ -65,7 +65,7 @@ public class KnowledgeRelationTrinaer extends KnowledgeRelation {
 		return KnowledgeFact_Criterion.relationTrinaer;
 	}
 
-	KnowledgeFact copy() {
+	KnowledgeFact getCopy() {
 		return new KnowledgeRelationTrinaer(this);
 	}
 

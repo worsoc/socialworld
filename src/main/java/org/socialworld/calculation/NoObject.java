@@ -57,4 +57,8 @@ public class NoObject {
 	public static boolean checkNoObjectMatchesReason(NoObject object, NoObjectReason reason) {
 		return (object.reason.equals(reason));
 	}
+	
+	public NoObjectReason getReason() {
+		return reason;
+	}
 }

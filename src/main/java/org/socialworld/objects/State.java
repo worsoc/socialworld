@@ -231,7 +231,7 @@ public abstract class State implements ISimProperty, ISavedValue, IObjectSender,
 	}
 
 	public final PropertyUsingAs[] getReducedUseAsPermissions(PropertyUsingAs[] useAsPermissions) {
-		PropertyUsingAs[] result = null;
+		PropertyUsingAs[] result = useAsPermissions;
 		// TODO implement getReducedUseAsPermissions
 		return result;
 	}

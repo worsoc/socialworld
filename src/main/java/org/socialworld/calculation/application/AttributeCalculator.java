@@ -343,7 +343,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 		f_AttributesByMatrix = stateAnimal.getMatrix();
 		newAttributes = f_AttributesByMatrix.calculate(arguments);;
 		
-		if (newAttributes.isValid()){
+		if (!newAttributes.isInvalidOrNothing()){
 			if (oldAttributes.equals(newAttributes)) {
 				newAttributes.setTransferCode(ValueTransferCode.noChanges);
 			}

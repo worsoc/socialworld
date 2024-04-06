@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.calculation.IObjectReceiver;
+import org.socialworld.calculation.IObjectSender;
 import org.socialworld.calculation.ObjectRequester;
 import org.socialworld.calculation.PropertyUsingAs;
 import org.socialworld.calculation.SimulationCluster;
@@ -38,7 +39,7 @@ import org.socialworld.tools.StringTupel;
 // TODO implement copy constructor in sub classes
 
 
-public abstract class SimProperty implements ISimProperty, ISavedValue , IObjectReceiver{
+public abstract class SimProperty implements ISimProperty, ISavedValue , IObjectSender, IObjectReceiver {
 
 	private boolean isObjectNothing = false;
 	
@@ -150,7 +151,7 @@ public abstract class SimProperty implements ISimProperty, ISavedValue , IObject
 	
 	
 	public final PropertyUsingAs[] getReducedUseAsPermissions(PropertyUsingAs[] useAsPermissions) {
-		PropertyUsingAs[] result = null;
+		PropertyUsingAs[] result = useAsPermissions;
 		// TODO implement getReducedUseAsPermissions
 		return result;
 	}
@@ -284,6 +285,27 @@ public abstract class SimProperty implements ISimProperty, ISavedValue , IObject
 		return null;
 	}
 
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////implementing IObjectSender ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public int sendYourselfTo(IObjectReceiver receiver, int requestID) {
+		return receiver.receiveObject(requestID, this);
+	}
+	
+	public int sendYourselfTo(SimulationCluster cluster, IObjectReceiver receiver, int requestID) {
+		return receiver.receiveObject(requestID, this);
+	}
+	
+	public IObjectSender copy() {
+		return this;
+	}
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////implementing IObjectReceiver ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+	
 	@Override
 	public int receiveObject(int requestID, Object object) {
 		objectRequester.receive(requestID, object);

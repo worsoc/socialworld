@@ -22,14 +22,16 @@
 package org.socialworld.knowledge;
 
 import org.socialworld.calculation.IObjectReceiver;
+import org.socialworld.calculation.IObjectSender;
 import org.socialworld.calculation.ObjectRequester;
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.conversation.Lexem;
 
-public abstract class KnowledgeItem implements IObjectReceiver{
+public abstract class KnowledgeItem implements IObjectSender, IObjectReceiver{
 
 	protected ObjectRequester objectRequester = new ObjectRequester();
 
-	abstract KnowledgeItem copy();
+	abstract KnowledgeItem getCopy();
 	abstract KnowledgeItemNotes removeNotes();
 	protected abstract boolean isEqual(KnowledgeItem item);
 	
@@ -45,6 +47,23 @@ public abstract class KnowledgeItem implements IObjectReceiver{
 		
 		
 	}
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////implementing IObjectSender ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public int sendYourselfTo(IObjectReceiver receiver, int requestID) {
+		return receiver.receiveObject(requestID, this);
+	}
+	
+	public int sendYourselfTo(SimulationCluster cluster, IObjectReceiver receiver, int requestID) {
+		return receiver.receiveObject(requestID, this);
+	}
+	
+	public IObjectSender copy() {
+		return this;
+	}
+	
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////implementing IObjectReceiver ///////////////////////////////////////
