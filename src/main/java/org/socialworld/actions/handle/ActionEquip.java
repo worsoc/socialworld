@@ -21,11 +21,13 @@
 */
 package org.socialworld.actions.handle;
 
+import org.socialworld.GlobalSwitches;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.Time;
+import org.socialworld.calculation.NoObject;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
@@ -65,7 +67,17 @@ public class ActionEquip extends AbstractAction {
 
 		value =  actionProperties.getValue(furtherPropertyNames[1]);
 		if (value.isValid()) {
-			inventoryPlace = InventoryPlace.getName((int) value.getObject(Type.integer));
+			Object o = value.getObject(Type.integer);
+			if (o instanceof NoObject) {
+				if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+					System.out.println("ActionEquip.setFurtherProperties > inventoryPlace: o (getObject(Type.integer)) is NoObject " + ((NoObject)o).getReason().toString() );
+				}
+				inventoryPlace = InventoryPlace.getName(0);
+			}
+			else {
+				inventoryPlace = InventoryPlace.getName((int)o);
+			}
+
 			this.setInventoryPlace(inventoryPlace);
 		}
 

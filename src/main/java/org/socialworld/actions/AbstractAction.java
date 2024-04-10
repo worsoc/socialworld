@@ -22,9 +22,11 @@
 package org.socialworld.actions;
 
 
+import org.socialworld.GlobalSwitches;
 import org.socialworld.attributes.Time;
 import org.socialworld.calculation.IObjectReceiver;
 import org.socialworld.calculation.IObjectSender;
+import org.socialworld.calculation.NoObject;
 import org.socialworld.calculation.ObjectRequester;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
@@ -161,13 +163,93 @@ public abstract class AbstractAction implements IObjectSender, IObjectReceiver {
 		int priority;
 		long duration;
 		
-		type = (ActionType) actionProperties.getValue( standardPropertyNames[0]).getObject(Type.actionType);
-		mode = (ActionMode) actionProperties.getValue( standardPropertyNames[1]).getObject(Type.actionMode);
-		intensity = (float) actionProperties.getValue( standardPropertyNames[2]).getObject(Type.floatingpoint);
-		minTime = (Time) actionProperties.getValue( standardPropertyNames[3]).getObject(Type.time);
-		maxTime = (Time) actionProperties.getValue( standardPropertyNames[4]).getObject(Type.time);
-		priority = (int) actionProperties.getValue( standardPropertyNames[5]).getObject(Type.integer);
-		duration = (long) actionProperties.getValue( standardPropertyNames[6]).getObject(Type.longinteger);
+		Value v;
+		Object o;
+		
+		v = actionProperties.getValue( standardPropertyNames[0]);
+		o = v.getObject(Type.actionType);
+		if (o instanceof NoObject) {
+			if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+				System.out.println("AbstractAction.setBaseProperties > type: o (getObject(Type.actionType)) is NoObject " + ((NoObject)o).getReason().toString() );
+			}
+			return;
+		}
+		else {
+			type = (ActionType) o;
+		}
+
+		v = actionProperties.getValue( standardPropertyNames[1]);
+		o = v.getObject(Type.actionMode);
+		if (o instanceof NoObject) {
+			if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+				System.out.println("AbstractAction.setBaseProperties > mode: o (getObject(Type.actionMode)) is NoObject " + ((NoObject)o).getReason().toString() );
+			}
+			return;
+		}
+		else {
+			mode = (ActionMode) o;
+		}
+	
+		v = actionProperties.getValue( standardPropertyNames[2]);
+		o = v.getObject(Type.floatingpoint);
+		if (o instanceof NoObject) {
+			if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+				System.out.println("AbstractAction.setBaseProperties > intensity: o (getObject(Type.floatingpoint)) is NoObject " + ((NoObject)o).getReason().toString() );
+			}
+			intensity = 0;
+		}
+		else {
+			intensity = (float) o;
+		}
+	
+		v = actionProperties.getValue( standardPropertyNames[3]);
+		o = v.getObject(Type.time);
+		if (o instanceof NoObject) {
+			if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+				System.out.println("AbstractAction.setBaseProperties > minTime: o (getObject(Type.time)) is NoObject " + ((NoObject)o).getReason().toString() );
+			}
+			minTime = new Time();
+		}
+		else {
+			minTime = (Time) o;
+		}
+	
+		v = actionProperties.getValue( standardPropertyNames[4]);
+		o = v.getObject(Type.time);
+		if (o instanceof NoObject) {
+			if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+				System.out.println("AbstractAction.setBaseProperties > maxTime: o (getObject(Type.time)) is NoObject " + ((NoObject)o).getReason().toString() );
+			}
+			maxTime = new Time();
+		}
+		else {
+			maxTime = (Time) o;
+		}
+		
+		v = actionProperties.getValue( standardPropertyNames[5]);
+		o = v.getObject(Type.integer);
+		if (o instanceof NoObject) {
+			if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+				System.out.println("AbstractAction.setBaseProperties > priority: o (getObject(Type.integer)) is NoObject " + ((NoObject)o).getReason().toString() );
+			}
+			priority = 0;
+		}
+		else {
+			priority = (int) o;
+		}
+		
+		v = actionProperties.getValue( standardPropertyNames[6]);
+		o = v.getObject(Type.longinteger);
+		if (o instanceof NoObject) {
+			if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+				System.out.println("AbstractAction.setBaseProperties > duration: o (getObject(Type.longinteger)) is NoObject " + ((NoObject)o).getReason().toString() );
+			}
+			duration = 0;
+		}
+		else {
+			duration = (long) o;
+		}
+
 		
 		this.setType(type);
 		this.setMode(mode);

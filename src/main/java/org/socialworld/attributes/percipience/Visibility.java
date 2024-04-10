@@ -21,8 +21,10 @@
 */
 package org.socialworld.attributes.percipience;
 
+import org.socialworld.GlobalSwitches;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
+import org.socialworld.calculation.NoObject;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
@@ -180,7 +182,14 @@ public class Visibility {
 			//vp = possibleSeer.getStatePropertyFromMethod(SimulationCluster.todo, PropertyName.stateSeer, ISeer.METHODNAME_SIZEDISTANCERELATIONTHRESHOLD, "sizeDistanceRelThreashold");
 			vpPropsSeer = possibleSeer.getStateProperty(SimulationCluster.todo, PropertyName.stateSeer, PropertyName.stateSeer_propsSeer, PropertyName.stateSeer_propsSeer.toString());
 			vpSDRT = vpPropsSeer.getProperty(SimulationCluster.todo, PropertyName.propsSeer_sizeDistanceRelationThreshold, Value.NO_METHOD_NAME, PropertyName.propsSeer_sizeDistanceRelationThreshold.toString());
-			sizeDistanceRelationThreshold = (double) vpSDRT.getObject(Type.floatingpoint);			
+			Object o = vpSDRT.getObject(Type.floatingpoint);
+			if (o instanceof NoObject) {
+				if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+					System.out.println("Visibility.checkIsPossibleSeer: o (getObject(Type.floatingpoint)) is NoObject " + ((NoObject)o).getReason().toString() + " instead of double");
+				}
+				return false;
+			}
+			sizeDistanceRelationThreshold = (double) o;			
 			/*
 			nrPerpendicular = possibleSeer.getBestPercipiencePerpendicular();
 			sizeDistanceRelationThreshold = possibleSeer.getSizeDistanceRelationThreshold();

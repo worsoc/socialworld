@@ -24,8 +24,10 @@ package org.socialworld.actions.move;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.GlobalSwitches;
 import org.socialworld.actions.ActionPerformer;
 import org.socialworld.attributes.PropertyName;
+import org.socialworld.calculation.NoObject;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
@@ -112,10 +114,21 @@ public class Move extends ActionPerformer {
     protected void perform() {
 		
 		Value tmp;
+		Object o;
 		
 		tmp = getParam(Value.VALUE_BY_NAME_ACTION_MOVE_ACCELERATION);
 		if (tmp.isValid()) {
-			this.acceleration = (Float) tmp.getObject(Type.floatingpoint);
+			o = tmp.getObject(Type.floatingpoint);
+			if (o instanceof NoObject) {
+				if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+					System.out.println("Move.perform > acceleration: o (getObject(Type.floatingpoint)) is NoObject " + ((NoObject)o).getReason().toString() + " instead of float");
+				}
+				this.acceleration = 0;
+				return;
+			}
+			else {
+				this.acceleration = (Float) o ;
+			}
 		}
 		else {
 			setParam( new Value(Type.floatingpoint, Value.VALUE_BY_NAME_ACTION_MOVE_ACCELERATION, this.acceleration));
@@ -123,7 +136,17 @@ public class Move extends ActionPerformer {
 		
 		tmp = getParam(Value.VALUE_BY_NAME_ACTION_MOVE_VELOCITY);
 		if (tmp.isValid()) {
-			this.velocity = (Float) tmp.getObject(Type.floatingpoint);
+			o = tmp.getObject(Type.floatingpoint);
+			if (o instanceof NoObject) {
+				if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+					System.out.println("Move.perform > velocity: o (getObject(Type.floatingpoint)) is NoObject " + ((NoObject)o).getReason().toString() + " instead of float");
+				}
+				this.velocity = this.velocity + this.acceleration;
+				setParam( new Value(Type.floatingpoint, Value.VALUE_BY_NAME_ACTION_MOVE_VELOCITY, this.velocity));
+			}
+			else {
+				this.velocity = (Float) o ;
+			}
 		}
 		else {
 			this.velocity = this.velocity + this.acceleration;

@@ -170,7 +170,7 @@ public class Percipience implements IObjectReceiver{
 				}
 				vpAngleView = vpPropsSeer.getProperty(SimulationCluster.todo, PropertyName.propsSeer_angleViewPerceivingObjectsInRadians, Value.NO_METHOD_NAME, PropertyName.propsSeer_angleViewPerceivingObjectsInRadians.toString());
 				double angleViewInRadians;
-				Object o = vpAngleView.getObject(Type.floatingpoint);
+				Object o = vpAngleView.getObject(SimulationCluster.percipience, Type.floatingpoint);
 				if (o instanceof NoObject) {
 					if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
 						System.out.println("Percipience.checkMaySeeingObject: o (vpAngleView.getObject(Type.floatingpoint)) is NoObject " + ((NoObject)o).getReason().toString() + " instead of double");
@@ -230,8 +230,15 @@ public class Percipience implements IObjectReceiver{
 				ValueProperty vpAngleView;
 				vpPropsSeer = possibleSeer.getStateProperty(SimulationCluster.todo, PropertyName.stateSeer, PropertyName.stateSeer_propsSeer, PropertyName.stateSeer_propsSeer.toString());
 				vpAngleView = vpPropsSeer.getProperty(SimulationCluster.todo, PropertyName.propsSeer_angleViewPerceivingEventsInRadians, Value.NO_METHOD_NAME, PropertyName.propsSeer_angleViewPerceivingEventsInRadians.toString());
-				double angleViewInRadians = (double) vpAngleView.getObject(Type.floatingpoint);
-	
+
+				Object o = vpAngleView.getObject(SimulationCluster.percipience, Type.floatingpoint);
+				if (o instanceof NoObject) {
+					if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+						System.out.println("Percipience.checkMaySeeingEvent: o (vpAngleView.getObject(Type.floatingpoint)) is NoObject " + ((NoObject)o).getReason().toString() + " instead of double");
+					}
+					return false;
+				}
+				double angleViewInRadians = (double) o;
 				
 				double cosineBetweenDirections = direction.getCosPhi(directionView);
 				double angleBetweenDirectionsInRadians = Math.acos(cosineBetweenDirections);

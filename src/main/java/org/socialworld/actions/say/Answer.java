@@ -24,9 +24,11 @@ package org.socialworld.actions.say;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.GlobalSwitches;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionPerformer;
 import org.socialworld.attributes.PropertyName;
+import org.socialworld.calculation.NoObject;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
@@ -145,7 +147,16 @@ public class Answer extends ActionPerformer {
 					
 					tmp = getParam(Value.VALUE_BY_NAME_ACTION_SENTENCETYPE);
 					if (tmp.isValid()) {
-						sentenceType = SentenceType.getSentenceType((int) tmp.getObject(Type.integer));
+						Object o = tmp.getObject(Type.integer);
+						if (o instanceof NoObject) {
+							if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+								System.out.println("Answer.perform > sentenceType: o (getObject(Type.integer)) is NoObject " + ((NoObject)o).getReason().toString() + " instead of float");
+							}
+							sentenceType = SentenceType.getSentenceType(0);
+						}
+						else {
+							sentenceType = SentenceType.getSentenceType((int) o);
+						}
 					}
 					else {
 						sentenceType = originalAction.getSentenceType();
@@ -154,7 +165,16 @@ public class Answer extends ActionPerformer {
 					
 					tmp = getParam(Value.VALUE_BY_NAME_ACTION_SENTENCE);
 					if (tmp.isValid()) {
-						sentence = (String) tmp.getObject(Type.string);
+						Object o = tmp.getObject(Type.string);
+						if (o instanceof NoObject) {
+							if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+								System.out.println("Answer.perform > sentence: o (getObject(Type.string)) is NoObject " + ((NoObject)o).getReason().toString() + " instead of float");
+							}
+							sentence = "";
+						}
+						else {
+							sentence = (String) o;
+						}
 					}
 					else {
 						sentence = originalAction.getSentence();
