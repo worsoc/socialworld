@@ -24,7 +24,9 @@ package org.socialworld.knowledge;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.GlobalSwitches;
 import org.socialworld.attributes.properties.IEnumProperty;
+import org.socialworld.calculation.NoObject;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
@@ -37,7 +39,18 @@ public class KnowledgeProperty extends KnowledgeFact {
 	
 	public KnowledgeProperty(Value criterion, ValueArrayList values ) {
 		KnowledgeFactAtom kfa;
-		this.criterion = KnowledgeFact_Criterion.getName( (int) criterion.getObject(Type.integer));
+		
+		Object o = criterion.getObject(Type.integer);
+		if (o instanceof NoObject) {
+			if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+				System.out.println("KnowledgeProperty.KnowledgeProperty > criterion: o (getObject(Type.integer)) is NoObject " + ((NoObject)o).getReason().toString() );
+			}
+			this.criterion = KnowledgeFact_Criterion.nothing;
+		}
+		else {
+			this.criterion = KnowledgeFact_Criterion.getName((int) o);
+		}
+		
 		List<KnowledgeFactAtom> atoms = new ArrayList<KnowledgeFactAtom>();
 		for (int index =  0; index < values.size(); index++) {
 			kfa = translateToKnowledgeFactAtom(values.get(index));
@@ -95,14 +108,20 @@ public class KnowledgeProperty extends KnowledgeFact {
 
 	protected Lexem translateToLexem(Value value) {
 		Lexem result = null;
-		if (value.getType() == Type.enumProp) {
-			Object o = value.getObject(Type.enumProp);
+		
+		Object o = value.getObject(Type.enumProp);
+		if (o instanceof NoObject) {
+			if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+				System.out.println("KnowledgeProperty.translateToLexem > result: o (getObject(Type.enumProp)) is NoObject " + ((NoObject)o).getReason().toString() );
+			}
+		}
+		else {
 			if (o instanceof IEnumProperty) {
 				IEnumProperty enumProp = (IEnumProperty) o;
 				result = enumProp.getLexem();
 			}
-			
 		}
+
 		return result;
 	}
 

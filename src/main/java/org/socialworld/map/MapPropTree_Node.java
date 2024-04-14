@@ -23,6 +23,8 @@ package org.socialworld.map;
 
 import java.util.ArrayList;
 
+import org.socialworld.GlobalSwitches;
+
 
 
 /**
@@ -85,7 +87,17 @@ public class MapPropTree_Node {
 		
 		sector = tree.getSector(locationRest);
 		if ( (sector == -1) | (sector == 0) )    		return null;
-		else return sectorNodes[sector - 1].getProperty(locationRest.substring(1));
+		else {
+			if (sectorNodes[sector - 1] == null) {
+				if (GlobalSwitches.OUTPUT_DEBUG_VARIABLE_IS_NULL) {
+					System.out.println("MapPropTree_Node.getProperty(): sectorNodes[sector - 1] is null ");
+				}
+				return null;
+			}
+			else {
+				return sectorNodes[sector - 1].getProperty(locationRest.substring(1));
+			}
+		}
 
 		
 	}

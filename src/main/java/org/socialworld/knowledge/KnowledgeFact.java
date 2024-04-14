@@ -23,6 +23,8 @@ package org.socialworld.knowledge;
 
 import java.util.List;
 
+import org.socialworld.GlobalSwitches;
+import org.socialworld.calculation.NoObject;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.conversation.Lexem;
@@ -68,12 +70,19 @@ public abstract class KnowledgeFact extends KnowledgeItem {
 	
 	protected Lexem translateToLexem(Value value) {
 		Lexem result = null;
-		if (value.getType() == Type.lexem) {
-			Object o = value.getObject(Type.lexem);
+		
+		Object o = value.getObject(Type.lexem);
+		if (o instanceof NoObject) {
+			if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+				System.out.println("KnowledgeFact.translateToLexem > result: o (getObject(Type.lexem)) is NoObject " + ((NoObject)o).getReason().toString() );
+			}
+		}
+		else {
 			if (o instanceof Lexem)	{
 				result = (Lexem) o;
 			}
 		}
+
 		return result;
 	}
 

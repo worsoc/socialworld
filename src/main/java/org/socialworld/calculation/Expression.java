@@ -22,6 +22,7 @@
 package org.socialworld.calculation;
 
 
+import org.socialworld.GlobalSwitches;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.expressions.Nothing;
@@ -172,6 +173,10 @@ public class Expression implements IObjectReceiver{
 		String name;
 		int index;
 		
+		
+		Value v;
+		Object o;
+		
 		ValueArrayList valueList;
 		
 		if (this.isValid()) {
@@ -192,21 +197,51 @@ public class Expression implements IObjectReceiver{
 				case attributeValue:
 					AttributeArray attributeArray = AttributeArray.getObjectNothing();
 					attributeArray = (AttributeArray) getFromValueArrayList( arguments, Type.attributeArray, 1);
-					index = (int) value.getObject(Type.integer);
+					
+					o = value.getObject(Type.integer);
+					if (o instanceof NoObject) {
+						if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+							System.out.println("Expression.evaluate.attributeValue > index: o (getObject(Type.integer)) is NoObject " + ((NoObject)o).getReason().toString() );
+						}
+						return Calculation.getNothing();
+					}
+					else {
+						index = (int)o;
+					}
+
 					return calculation.createValue(
 						Type.integer,
 						attributeArray.get(index ));
 						
 				case argumentValueByName:
 					
-					name = (String) value.getObject(Type.string);
+					o = value.getObject(Type.string);
+					if (o instanceof NoObject) {
+						if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+							System.out.println("Expression.evaluate.argumentValueByName > name (1): o (getObject(Type.string)) is NoObject " + ((NoObject)o).getReason().toString() );
+						}
+						return Calculation.getNothing();
+					}
+					else {
+						name = (String) o;
+					}
+					
 					tmp = arguments.getValue(name );
 					if (tmp.isValid()) {
 						tmp = calculation.copy(tmp);
 					
-						name = (String) expression1.evaluate(arguments).getObject(Type.string);
-						if (name != null && name.length() > 0) {
+						v = expression1.evaluate(arguments);
+						o = v.getObject(Type.string);
+						if (o instanceof NoObject) {
+							if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+								System.out.println("Expression.evaluate.argumentValueByName > name (2): o (getObject(Type.string)) is NoObject " + ((NoObject)o).getReason().toString() );
+							}
+						}
+						else {
+							name = (String) o;
+							if (name != null && name.length() > 0) {
 								tmp.changeName(name);
+							}
 						}
 					}
  					return tmp;
@@ -214,14 +249,35 @@ public class Expression implements IObjectReceiver{
 										
 				case valueFromValueList:
 					// get value list's name
-					name =  (String) expression1.evaluate(arguments).getObject(Type.string);
+					v = expression1.evaluate(arguments);
+					o = v.getObject(Type.string);
+					if (o instanceof NoObject) {
+						if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+							System.out.println("Expression.evaluate.valueFromValueList > name (1): o (getObject(Type.string)) is NoObject " + ((NoObject)o).getReason().toString() );
+						}
+						name = "";
+					}
+					else {
+						name = (String) o;
+					}
+	
 					// get the value list
 					tmp = arguments.getValue(name);
 					if (tmp.isValid()) {
 
 						valueList =  objectRequester.requestValueArrayList(SimulationCluster.total, tmp, this);
 						// get the value list element's name
-						name = (String) expression2.evaluate(arguments).getObject(Type.string);
+						v = expression2.evaluate(arguments);
+						o = v.getObject(Type.string);
+						if (o instanceof NoObject) {
+							if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+								System.out.println("Expression.evaluate.valueFromValueList > name (2): o (getObject(Type.string)) is NoObject " + ((NoObject)o).getReason().toString() );
+							}
+							name = "";
+						}
+						else {
+							name = (String) o;
+						}
 						// get the result value from the value list
 						return valueList.getValue(name);
 						
@@ -231,10 +287,57 @@ public class Expression implements IObjectReceiver{
 				case property:
 					
 					Value object = arguments.get(0);
-					PropertyName simPropName = (PropertyName) value.getObject(Type.simPropName);
-					SimulationCluster cluster = SimulationCluster.getName((int) expression1.evaluate(arguments).getObject(Type.integer));
-					String methodName = (String) expression2.evaluate(arguments).getObject(Type.string);
-					name = (String) expression3.evaluate(arguments).getObject(Type.string);
+					
+					PropertyName simPropName;
+					o = value.getObject(Type.simPropName);
+					if (o instanceof NoObject) {
+						if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+							System.out.println("Expression.evaluate.property > simPropName: o (getObject(Type.simPropName)) is NoObject " + ((NoObject)o).getReason().toString() );
+						}
+						simPropName = PropertyName.unknown;
+					}
+					else {
+						simPropName = (PropertyName) o;
+					}
+
+					SimulationCluster cluster;
+					v = expression1.evaluate(arguments);
+					o = v.getObject(Type.integer);
+					if (o instanceof NoObject) {
+						if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+							System.out.println("Expression.evaluate.property > cluster: o (getObject(Type.integer)) is NoObject " + ((NoObject)o).getReason().toString() );
+						}
+						cluster = SimulationCluster.unknown;
+					}
+					else {
+						cluster = SimulationCluster.getName((int) o);
+					}
+
+					String methodName;
+					v = expression2.evaluate(arguments);
+					o = v.getObject(Type.string);
+					if (o instanceof NoObject) {
+						if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+							System.out.println("Expression.evaluate.property > methodName: o (getObject(Type.string)) is NoObject " + ((NoObject)o).getReason().toString() );
+						}
+						methodName = "";
+					}
+					else {
+						methodName = (String) o;
+					}
+					
+					v = expression3.evaluate(arguments);
+					o = v.getObject(Type.string);
+					if (o instanceof NoObject) {
+						if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+							System.out.println("Expression.evaluate.property > name: o (getObject(Type.string)) is NoObject " + ((NoObject)o).getReason().toString() );
+						}
+						name = "";
+					}
+					else {
+						name = (String) o;
+					}
+
 					
 					return getProperty(object, cluster, simPropName, methodName, name);
 				
@@ -247,7 +350,16 @@ public class Expression implements IObjectReceiver{
 					tmp = expression1.evaluate(arguments);
 					int checkUseAsPermission = 0;
 					if (tmp.isValid()) {
-						checkUseAsPermission = (int) value.getObject(Type.integer);
+						o = value.getObject(Type.integer);
+						if (o instanceof NoObject) {
+							if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+								System.out.println("Expression.evaluate.get > checkUseAsPermission: o (getObject(Type.integer)) is NoObject " + ((NoObject)o).getReason().toString() );
+							}
+							checkUseAsPermission = 123456;
+						}
+						else {
+							checkUseAsPermission = (int) o;
+						}
 						if (checkUseAsPermission > 0) {
 							if (tmp instanceof ValueProperty) {
 								property = (ValueProperty) tmp;

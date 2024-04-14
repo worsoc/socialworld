@@ -22,16 +22,20 @@
 package org.socialworld.core;
 
 import org.socialworld.calculation.IObjectReceiver;
+import org.socialworld.calculation.NoObject;
 import org.socialworld.calculation.ObjectRequester;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.collections.ValueArrayList;
+import org.socialworld.knowledge.KnowledgeSource;
+import org.socialworld.knowledge.KnowledgeSource_Type;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.GlobalSwitches;
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
@@ -308,8 +312,19 @@ public abstract class Event implements Comparable<Event>, IObjectReceiver {
 		Value strength;
 		if (hasOptionalParam()) {
 			strength = optionalParam.getParam(Value.VALUE_BY_NAME_EVENT_INTENSITY);
-			if (strength.isValid()) 
-				return (float) strength.getObject(Type.floatingpoint);
+			if (strength.isValid()) {
+				Object o = strength.getObject(Type.floatingpoint);
+				if (o instanceof NoObject) {
+					if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+						System.out.println("Event.getStrength(): o (getObject(Type.floatingpoint)) is NoObject " + ((NoObject)o).getReason().toString() );
+					}
+					return 0;
+				}
+				else {
+					return (float) o;
+				}
+
+			}
 			
 		}
 		return 0;

@@ -22,12 +22,14 @@
 package org.socialworld.calculation.expressions;
 
 
+import org.socialworld.GlobalSwitches;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.Time;
 import org.socialworld.calculation.Calculation;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
+import org.socialworld.calculation.NoObject;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
@@ -160,7 +162,20 @@ public class CreateValue extends Expression {
 			createdObject = ActionCreator.createAction(localArguments) ;
 			break;
 		case time:
-			createdObject = evaluateExpression2(localArguments).getObject(Type.time);
+			
+			
+			Value v = evaluateExpression2(localArguments);
+			Object o = v.getObject(Type.time);
+			if (o instanceof NoObject) {
+				if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+					System.out.println("CreateValue.createValue > createdObject: o (getObject(Type.time)) is NoObject " + ((NoObject)o).getReason().toString() );
+				}
+				return Calculation.getNothing();
+			}
+			else {
+				createdObject = (Time) o;
+			}
+
 			break;
 		case knowledgeElement:
 			evaluateExpression2(arguments);

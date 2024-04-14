@@ -22,6 +22,7 @@
 package org.socialworld.calculation;
 
 
+import org.socialworld.GlobalSwitches;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.collections.ValueArrayList;
 
@@ -42,10 +43,18 @@ public class FunctionByTable extends FunctionBase {
 	public Value calculate(ValueArrayList arguments) {
 		Value value;
 		value = arguments.get(0);
-		if (value.getType() == Type.integer) {
-			return calculation.createValue(Type.integer, calculate((int) value.getObject(Type.integer)));
+		
+		Object o = value.getObject(Type.integer);
+		if (o instanceof NoObject) {
+			if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+				System.out.println("FunctionByTable.calculate > calculation.createValue: o (getObject(Type.integer)) is NoObject " + ((NoObject)o).getReason().toString() );
+			}
+			return Value.getValueNothing();
 		}
-		return null;
+		else {
+			return calculation.createValue(Type.integer, (int) o);
+		}
+		
 	}
 
 

@@ -22,6 +22,7 @@
 package org.socialworld.calculation;
 
 
+import org.socialworld.GlobalSwitches;
 import org.socialworld.collections.ValueArrayList;
 
 /**
@@ -85,20 +86,37 @@ public class FunctionMXplusN extends FunctionBase {
 			// assumption: value is at index 0 
 			Value result;
 			Value x;
+			Object o;
+			float resultFloat;
 			
 			if ( arguments.size() < 1) return Value.getValueNothing();
 			x = arguments.get(0);
 			
 			if (!x.isValid()) return x;
 			
+
+			
 			if (this.useFloatingPointCalculation) {
 				
+				
+				o = x.getObject(Type.floatingpoint);
+				if (o instanceof NoObject) {
+					if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+						System.out.println("FunctionMXplusN.calculate > result: o (getObject(Type.floatingpoint)) is NoObject " + ((NoObject)o).getReason().toString() );
+					}
+					resultFloat = 0;
+				}
+				else {
+					resultFloat = calculateFloatingPoint((float) calculation.createValue(Type.floatingpoint, (float) (o)).getObject(Type.floatingpoint));
+				}
+
+				
 				if (type == Type.floatingpoint)  {
-					result = calculation.createValue(Type.floatingpoint, calculateFloatingPoint((float) calculation.createValue(Type.floatingpoint, x.getObject(Type.floatingpoint)).getObject(Type.floatingpoint)));
+					result = calculation.createValue(Type.floatingpoint, resultFloat);
 					return result;
 				}
 				if (type == Type.integer) {
-					result = calculation.createValue(Type.integer, calculateFloatingPoint((float) calculation.createValue(Type.floatingpoint, x.getObject(Type.floatingpoint)).getObject(Type.floatingpoint)));
+					result = calculation.createValue(Type.integer, resultFloat);
 					return result;
 				}
 				

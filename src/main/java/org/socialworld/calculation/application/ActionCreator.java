@@ -24,8 +24,7 @@ package org.socialworld.calculation.application;
 import org.socialworld.objects.StateAnimal;
 import org.socialworld.objects.StateSimulationObject;
 import org.socialworld.objects.access.HiddenSimulationObject;
-
-
+import org.socialworld.GlobalSwitches;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionNothing;
 import org.socialworld.actions.ActionType;
@@ -41,6 +40,7 @@ import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.FunctionByExpression;
+import org.socialworld.calculation.NoObject;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.descriptions.EventReactionAssignment;
 import org.socialworld.calculation.descriptions.EventReactionDescription;
@@ -321,8 +321,18 @@ public class ActionCreator extends SocialWorldThread {
 		AbstractAction action;
 		ActionType type;
 		
-		type = (ActionType) actionProperties.getValue(namePropertyActionType).getObject(Type.actionType);
-		
+		Value v = actionProperties.getValue(namePropertyActionType);
+		Object o = v.getObject(Type.actionType);
+		if (o instanceof NoObject) {
+			if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+				System.out.println("ActionCreator.createAction > type: o (getObject(Type.actionType)) is NoObject " + ((NoObject)o).getReason().toString() );
+			}
+			type = ActionType.ignore;
+		}
+		else {
+			type = (ActionType) o;
+		}
+
 		switch (type) {
 		case bodilyFunction: 
 			action = new ActionBodilyFunction(actionProperties); break;

@@ -24,6 +24,8 @@ package org.socialworld.knowledge;
 
 import java.util.List;
 
+import org.socialworld.GlobalSwitches;
+import org.socialworld.calculation.NoObject;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.conversation.Lexem;
@@ -135,8 +137,13 @@ public abstract class KnowledgeRelation extends KnowledgeFact {
 	
 	private Relation translateToRelation(Value value) {
 		Relation result = Relation.nothing;
-		if (value.getType() == Type.relation) {
-			Object o =  value.getObject(Type.relation);
+		Object o = value.getObject(Type.relation);
+		if (o instanceof NoObject) {
+			if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+				System.out.println("KnowledgeRelation.translateToRelation > result: o (getObject(Type.relation)) is NoObject " + ((NoObject)o).getReason().toString() );
+			}
+		}
+		else {
 			if (o instanceof Relation)	{
 				result = (Relation) o;
 			}

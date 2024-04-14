@@ -23,6 +23,7 @@ package org.socialworld.calculation;
 
 
 
+import org.socialworld.GlobalSwitches;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.collections.ValueArrayList;
 
@@ -97,26 +98,37 @@ public class FunctionByMatrix extends FunctionBase{
 				attributesOld = objectRequester.requestAttributeArray(SimulationCluster.total, arguments.get(0), this);
 				if (attributesOld == AttributeArray.getObjectNothing()) return Value.getValueNothing();
 				
-				int calculationMode = (int) arguments.get(1).getObject(Type.integer);
+				int calculationMode;
+				Value v = arguments.get(1);
+				Object o = v.getObject(Type.integer);
+				if (o instanceof NoObject) {
+					if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+						System.out.println("FunctionByMatrix.calculate > calculationMode: o (getObject(Type.integer)) is NoObject " + ((NoObject)o).getReason().toString() );
+					}
+					calculationMode = 0;
+				}
+				else {
+					calculationMode = (int) o;
+				}
 				
 				switch (calculationMode)
 				{
-				case FunctionByMatrix_Matrix.CALCULATION_MODE_MATRIX_X_VECTOR_SIMPLE:
-					attributesNew = calculateAttributesSimply(attributesOld);
-					result = calculation.createValue(Type.attributeArray, attributesNew );
-					break;
-				case FunctionByMatrix_Matrix.CALCULATION_MODE_MATRIX_X_VECTOR_COMPLEX:
-					attributesNew = calculateAttributes(attributesOld, this.matrix.isWithOffset());
-					result = calculation.createValue(Type.attributeArray, attributesNew );
-					break;
-				case FunctionByMatrix_Matrix.CALCULATION_MODE_VECTOR_X_VECTOR:
-					if (interpreteResultAs == ValueInterpreteAs.attributeValue) 
-						result = calculation.createValue(Type.integer, calculateScalar(attributesOld));
-					else
-						result = calculation.createValue(Type.floatingpoint, calculateScalar(attributesOld));
-					break;
-				default:
-					result = Value.getValueNothing();
+					case FunctionByMatrix_Matrix.CALCULATION_MODE_MATRIX_X_VECTOR_SIMPLE:
+						attributesNew = calculateAttributesSimply(attributesOld);
+						result = calculation.createValue(Type.attributeArray, attributesNew );
+						break;
+					case FunctionByMatrix_Matrix.CALCULATION_MODE_MATRIX_X_VECTOR_COMPLEX:
+						attributesNew = calculateAttributes(attributesOld, this.matrix.isWithOffset());
+						result = calculation.createValue(Type.attributeArray, attributesNew );
+						break;
+					case FunctionByMatrix_Matrix.CALCULATION_MODE_VECTOR_X_VECTOR:
+						if (interpreteResultAs == ValueInterpreteAs.attributeValue) 
+							result = calculation.createValue(Type.integer, calculateScalar(attributesOld));
+						else
+							result = calculation.createValue(Type.floatingpoint, calculateScalar(attributesOld));
+						break;
+					default:
+						result = Value.getValueNothing();
 				}
 				
 				break;
@@ -166,12 +178,20 @@ public class FunctionByMatrix extends FunctionBase{
 			inputValue = attributes.getAsValue(column);
 
 			arguments.set(0, inputValue);
-			change = (float)
-					calculation.addition(
-							calculation.multiplication(share, function.calculate(arguments)),
-							offset)
-					.getObject(Type.floatingpoint);
 			
+			Value v = calculation.addition(
+					calculation.multiplication(share, function.calculate(arguments)),
+					offset);
+			Object o = v.getObject(Type.floatingpoint);
+			if (o instanceof NoObject) {
+				if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+					System.out.println("FunctionByMatrix.calculateScalar > change: o (getObject(Type.floatingpoint)) is NoObject " + ((NoObject)o).getReason().toString() );
+				}
+				change = 0;
+			}
+			else {
+				change = (float) o;
+			}
 
 			result += change;
 
@@ -253,7 +273,18 @@ public class FunctionByMatrix extends FunctionBase{
 			
 			if (this.matrix.isWithDiv100() ) attributesNew[row] = calculation.division(attributesNew[row] , hundred);
 			attributesNew[row] = calculation.addition(attributesNew[row], aHalf);
-			result.set(row, ((Float) (attributesNew[row].getObject(Type.floatingpoint))).intValue());
+			
+			Value v = attributesNew[row];
+			Object o = v.getObject(Type.floatingpoint);
+			if (o instanceof NoObject) {
+				if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+					System.out.println("FunctionByMatrix.calculateAttributesSimply > set: o (getObject(Type.floatingpoint)) is NoObject " + ((NoObject)o).getReason().toString() );
+				}
+				// do nothing
+			}
+			else {
+				result.set(row, ((Float) o).intValue());
+			}
 			
 		}
 
@@ -319,13 +350,21 @@ public class FunctionByMatrix extends FunctionBase{
 				function = functions.get(functionIndex);
 				inputValue = getInputValue(inputType, attributeValue, attributeChangeValue);
 
-				arguments.set(0,  inputValue) ;
-				change = (float)
-						calculation.addition(
-								calculation.multiplication(share, function.calculate(arguments)),
-								offset)
-						.getObject(Type.floatingpoint);
+				arguments.set(0,  inputValue);
 				
+				Value v = calculation.addition(
+						calculation.multiplication(share, function.calculate(arguments)),
+						offset);
+				Object o = v.getObject(Type.floatingpoint);
+				if (o instanceof NoObject) {
+					if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+						System.out.println("FunctionByMatrix.calculateAttributes > change: o (getObject(Type.floatingpoint)) is NoObject " + ((NoObject)o).getReason().toString() );
+					}
+					change = 0;
+				}
+				else {
+					change = (float) o;
+				}
 
 				if (change != 0)
 					attributesNew[column] += change;

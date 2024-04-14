@@ -24,6 +24,7 @@ package org.socialworld.knowledge;
 
 import java.util.ArrayList;
 
+import org.socialworld.GlobalSwitches;
 import org.socialworld.actions.move.Path;
 import org.socialworld.attributes.Position;
 import org.socialworld.map.MapPropTree;
@@ -44,9 +45,16 @@ public class KnownPathsPool {
 	public ArrayList<Path> findPaths(Position start, Position end) {	
 		ArrayList<Path> paths;
 		KnownPaths pathsWithStartPoint = (KnownPaths) startPointsTree.getProperty(start.getLocationByBase25());
-		paths = pathsWithStartPoint.getPathsWithEnd(end);
-		
-		return paths;
+		if (pathsWithStartPoint == null) {
+			if (GlobalSwitches.OUTPUT_DEBUG_VARIABLE_IS_NULL) {
+				System.out.println("KnownPathsPool.findPaths(): pathsWithStartPoint is null ");
+			}
+			return new ArrayList<Path>();
+		}
+		else {
+			paths = pathsWithStartPoint.getPathsWithEnd(end);
+			return paths;
+		}
 	}
 
 	public ArrayList<Path> findPathsForStart(Position start) {	

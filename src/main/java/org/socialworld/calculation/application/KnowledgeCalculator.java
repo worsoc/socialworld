@@ -22,8 +22,10 @@
 package org.socialworld.calculation.application;
 
 
+import org.socialworld.GlobalSwitches;
 import org.socialworld.calculation.Calculation;
 import org.socialworld.calculation.FunctionByExpression;
+import org.socialworld.calculation.NoObject;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
@@ -252,7 +254,19 @@ public class KnowledgeCalculator extends SocialWorldThread {
 		find = knowledgeSourceProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_SOURCE_TYPE);
 		
 		if (find >= 0) {
-			type = KnowledgeSource_Type.getName((int) knowledgeSourceProperties.get(find).getObject(Type.integer));
+			
+			Value v = knowledgeSourceProperties.get(find);
+			Object o = v.getObject(Type.integer);
+			if (o instanceof NoObject) {
+				if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+					System.out.println("KnowledgeCalculator.createKnowledgeSource > type: o (getObject(Type.integer)) is NoObject " + ((NoObject)o).getReason().toString() );
+				}
+				return KnowledgeSource.getObjectNothing();
+			}
+			else {
+				type = KnowledgeSource_Type.getName((int) o);
+			}
+			
 			find = knowledgeSourceProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_SOURCE);
 			if (find >= 0) {
 				origin = getInstance().objectRequester.requestSimulationObject(SimulationCluster.knowledge, knowledgeSourceProperties.get(find), getInstance());

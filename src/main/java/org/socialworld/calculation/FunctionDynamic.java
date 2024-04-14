@@ -21,6 +21,7 @@
 */
 package org.socialworld.calculation;
 
+import org.socialworld.GlobalSwitches;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.datasource.pool.FunctionPool;
 
@@ -46,7 +47,20 @@ public class FunctionDynamic extends FunctionBase {
 	public  Value calculate(ValueArrayList arguments) {
 
 		if (arguments.size() >= 2) {
-			int func_id = (int) arguments.get(0).getObject(Type.integer);
+			
+			int func_id;
+			Value v = arguments.get(0);
+			Object o = v.getObject(Type.integer);
+			if (o instanceof NoObject) {
+				if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+					System.out.println("FunctionDynamic.calculate > func_id: o (getObject(Type.integer)) is NoObject " + ((NoObject)o).getReason().toString() );
+				}
+				return calculation.nothing;
+			}
+			else {
+				func_id = (int) o;
+			}
+
 			FunctionBase function = functions.getFunction(func_id);
 			
 			if (function != null) {

@@ -22,6 +22,8 @@
 package org.socialworld.calculation.application;
 
 
+import org.socialworld.GlobalSwitches;
+import org.socialworld.calculation.NoObject;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
@@ -175,7 +177,18 @@ public class TalkCalculator  extends SocialWorldThread {
 	
 			value = params.getParam("sentence");
 			if (value.isValid())
-				sentence = (String) value.getObject(Type.string);
+			{	
+				Object o = value.getObject(Type.string);
+				if (o instanceof NoObject) {
+					if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+						System.out.println("TalkCalculator.calculateListenTo > sentence: o (getObject(Type.string)) is NoObject " + ((NoObject)o).getReason().toString() );
+					}
+					return;
+				}
+				else {
+					sentence = (String) o;
+				}
+			}
 			else
 				return;
 	
@@ -222,7 +235,18 @@ public class TalkCalculator  extends SocialWorldThread {
 	
 			value = params.getParam("sentence");
 			if (value.isValid())
-				sentence = (String) value.getObject(Type.string);
+			{	
+				Object o = value.getObject(Type.string);
+				if (o instanceof NoObject) {
+					if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+						System.out.println("TalkCalculator.calculateUnderstand > sentence: o (getObject(Type.string)) is NoObject " + ((NoObject)o).getReason().toString() );
+					}
+					return;
+				}
+				else {
+					sentence = (String) o;
+				}
+			}
 			else
 				return;
 			

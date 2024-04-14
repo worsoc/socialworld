@@ -22,6 +22,7 @@
 package org.socialworld.calculation;
 
 
+import org.socialworld.GlobalSwitches;
 import org.socialworld.collections.ValueArrayList;
 
 /**
@@ -65,6 +66,7 @@ public class FunctionMtimesExpXplusN extends FunctionBase {
 	@Override
 	public Value calculate(ValueArrayList arguments) {
 		Value x;
+		Object o;
 		float result;
 		
 		if ( arguments.size() < 1) return Value.getValueNothing();
@@ -72,9 +74,18 @@ public class FunctionMtimesExpXplusN extends FunctionBase {
 		
 		if (!x.isValid()) return x;
 		 
-		if (!(x.hasType(Type.floatingpoint))) return Value.getValueNothing();
 		
-		result = calculateFloatingPoint((float) calculation.createValue(Type.floatingpoint, x.getObject(Type.floatingpoint)).getObject(Type.floatingpoint));
+		o = x.getObject(Type.floatingpoint);
+		if (o instanceof NoObject) {
+			if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+				System.out.println("FunctionMtimesExpXplusN.calculate > result: o (getObject(Type.floatingpoint)) is NoObject " + ((NoObject)o).getReason().toString() );
+			}
+			return Value.getValueNothing();
+		}
+		else {
+			result = calculateFloatingPoint((float) calculation.createValue(Type.floatingpoint, (float) (o)).getObject(Type.floatingpoint));
+		}
+		
 		return calculation.createValue(this.type, result);
 			
 		
