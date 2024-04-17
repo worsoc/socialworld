@@ -30,4 +30,5 @@ public enum NoObjectReason {
 	typeMismatchForGetObject,
 	isNull,
 	objectRequesterGetObjectNothingNotImplementedForType,
+	instanceOfCheckFailed
 }

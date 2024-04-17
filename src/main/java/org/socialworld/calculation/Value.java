@@ -236,12 +236,13 @@ public class Value {
 
 	public String getName() { return name; };
 
-
+	
 	public Object getObject(Type type) { 
 		
-		if (this.type != type) return NoObject.getNoObject(NoObjectReason.typeMismatchForGetObject);
+		Type typeUsing	= checkType(type);
+		if (typeUsing == null) return NoObject.getNoObject(NoObjectReason.typeMismatchForGetObject);
 		
-		switch (type) {
+		switch (typeUsing) {
 		case integer:
 			return (int) value;
 		case longinteger:
@@ -249,6 +250,7 @@ public class Value {
 			return (long) value;
 		case floatingpoint:
 			if (value instanceof Double) return (double)value;
+			if (value instanceof Integer)	return (float) ((Integer) value).longValue();
 			else return (float) value;
 		case time:
 			if (!(value instanceof Time)) {
@@ -268,6 +270,7 @@ public class Value {
 				int lexemID  = (int) value;
 				return AllWords.getLexem(lexemID);
 			}
+			return NoObject.getNoObject(NoObjectReason.instanceOfCheckFailed);
 		case relation:
 			if (value instanceof Relation)	{
 				return (Relation) value;
@@ -280,7 +283,7 @@ public class Value {
 				int relationID  = (int) value;
 				return Relation.getName(relationID);
 			}
-			
+			return NoObject.getNoObject(NoObjectReason.instanceOfCheckFailed);
 		default:
 			if ((value instanceof IObjectSender) && (this instanceof ValueProperty)) {
 				return ((IObjectSender) value).copy();
@@ -290,6 +293,30 @@ public class Value {
 			}
 		}
 	}	
+	
+	private Type checkType(Type type) {
+		
+		switch (this.type) {
+		case integer:
+			if ( type == Type.integer) return Type.integer;
+			if ( type == Type.longinteger) return Type.longinteger;
+			if ( type == Type.floatingpoint) return Type.floatingpoint;
+			break;
+		case longinteger:
+			if ( type == Type.longinteger) return Type.longinteger;
+			if ( type == Type.floatingpoint) return Type.floatingpoint;
+			break;
+		case floatingpoint:
+			if ( type == Type.floatingpoint) return Type.floatingpoint;
+			break;
+		default:
+			return type;
+		}
+		
+		// no matching types !!!
+		return null;
+	}
+	
 	
 	protected Object getOriginal() {
 		if (this instanceof ValueProperty) {

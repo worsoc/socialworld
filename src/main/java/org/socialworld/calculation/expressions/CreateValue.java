@@ -163,19 +163,47 @@ public class CreateValue extends Expression {
 			break;
 		case time:
 			
-			
+			Object o;
 			Value v = evaluateExpression2(localArguments);
-			Object o = v.getObject(Type.time);
-			if (o instanceof NoObject) {
-				if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
-					System.out.println("CreateValue.createValue > createdObject: o (getObject(Type.time)) is NoObject " + ((NoObject)o).getReason().toString() );
+			if (v.getType() == Type.longinteger) {
+				o = v.getObject(Type.longinteger);
+				if (o instanceof NoObject) {
+					if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+						System.out.println("CreateValue.createValue > createdObject: o (getObject(Type.longinteger)) is NoObject " + ((NoObject)o).getReason().toString() );
+					}
+					return Calculation.getNothing();
 				}
-				return Calculation.getNothing();
+				else {
+					createdObject = new Time(false, (long) o);
+				}
+			}
+			else if (v.getType() == Type.integer) {
+				o = v.getObject(Type.integer);
+				if (o instanceof NoObject) {
+					if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+						System.out.println("CreateValue.createValue > createdObject: o (getObject(Type.integer)) is NoObject " + ((NoObject)o).getReason().toString() );
+					}
+					return Calculation.getNothing();
+				}
+				else {
+					createdObject = new Time(false, (long) o);
+				}
+			}
+			else if (v.getType() == Type.time) {
+				o = v.getObject(Type.time);
+				if (o instanceof NoObject) {
+					if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+						System.out.println("CreateValue.createValue > createdObject: o (getObject(Type.time)) is NoObject " + ((NoObject)o).getReason().toString() );
+					}
+					return Calculation.getNothing();
+				}
+				else {
+					createdObject = (Time) o;
+				}
 			}
 			else {
-				createdObject = (Time) o;
+				return Calculation.getNothing();
 			}
-
 			break;
 		case knowledgeElement:
 			evaluateExpression2(arguments);

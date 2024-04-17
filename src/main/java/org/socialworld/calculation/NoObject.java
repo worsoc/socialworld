@@ -26,9 +26,15 @@ public class NoObject {
 	private NoObjectReason reason;
 	
 	private static NoObject noObjectBecauseValueIsNull = new NoObject(NoObjectReason.valueIsNull);
+	private static NoObject noObjectBecauseValueIsNotValid = new NoObject(NoObjectReason.valueIsNotValid);
 	private static NoObject noObjectBecauseValueIsProtectedAndNotPermitted = new NoObject(NoObjectReason.valueIsProtectedAndNotPermitted);
 	private static NoObject noObjectBecauseValueIsNoValueProperty = new NoObject(NoObjectReason.valueIsNoValueProperty);
+	private static NoObject noObjectBecauseTypeMismatchForGetObject = new NoObject(NoObjectReason.typeMismatchForGetObject);
+	private static NoObject noObjectBecauseInstanceOfCheckFailed = new NoObject(NoObjectReason.instanceOfCheckFailed);
+	private static NoObject noObjectBecauseObjectRequesterGetObjectNothingNotImplementedForType = new NoObject(NoObjectReason.objectRequesterGetObjectNothingNotImplementedForType);
 	private static NoObject noObjectBecauseIsNull = new NoObject(NoObjectReason.isNull);
+	
+	
 	
 	private NoObject(NoObjectReason reason) {
 		this.reason = reason;
@@ -40,6 +46,9 @@ public class NoObject {
 			case valueIsNull: 
 				if (noObjectBecauseValueIsNull == null) noObjectBecauseValueIsNull = new NoObject(NoObjectReason.valueIsNull);
 				return noObjectBecauseValueIsNull;
+			case valueIsNotValid: 
+				if (noObjectBecauseValueIsNotValid == null) noObjectBecauseValueIsNotValid = new NoObject(NoObjectReason.valueIsNotValid);
+				return noObjectBecauseValueIsNotValid;
 			case valueIsProtectedAndNotPermitted: 
 				if (noObjectBecauseValueIsProtectedAndNotPermitted == null) 
 					noObjectBecauseValueIsProtectedAndNotPermitted = new NoObject(NoObjectReason.valueIsProtectedAndNotPermitted);
@@ -47,6 +56,15 @@ public class NoObject {
 			case valueIsNoValueProperty: 
 				if (noObjectBecauseValueIsNoValueProperty == null) noObjectBecauseValueIsNoValueProperty = new NoObject(NoObjectReason.valueIsNoValueProperty);
 				return noObjectBecauseValueIsNoValueProperty;
+			case typeMismatchForGetObject: 
+				if (noObjectBecauseTypeMismatchForGetObject == null) noObjectBecauseTypeMismatchForGetObject = new NoObject(NoObjectReason.typeMismatchForGetObject);
+				return noObjectBecauseTypeMismatchForGetObject;
+			case instanceOfCheckFailed: 
+				if (noObjectBecauseInstanceOfCheckFailed == null) noObjectBecauseInstanceOfCheckFailed = new NoObject(NoObjectReason.instanceOfCheckFailed);
+				return noObjectBecauseInstanceOfCheckFailed;
+			case objectRequesterGetObjectNothingNotImplementedForType: 
+				if (noObjectBecauseObjectRequesterGetObjectNothingNotImplementedForType == null) noObjectBecauseObjectRequesterGetObjectNothingNotImplementedForType = new NoObject(NoObjectReason.objectRequesterGetObjectNothingNotImplementedForType);
+				return noObjectBecauseObjectRequesterGetObjectNothingNotImplementedForType;
 			default:
 				if (noObjectBecauseIsNull == null) noObjectBecauseIsNull = new NoObject(NoObjectReason.isNull);
 				return noObjectBecauseIsNull;
