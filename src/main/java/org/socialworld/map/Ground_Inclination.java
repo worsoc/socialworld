@@ -26,6 +26,20 @@ package org.socialworld.map;
  *
  */
 public class Ground_Inclination implements IMapProp {
+	
+	private static Ground_Inclination objectNothing;
+	
+	public static Ground_Inclination getObjectNothing() {
+		if (objectNothing == null) {
+			objectNothing = new Ground_Inclination();
+		}
+		return objectNothing;
+	}	
+	
+	private Ground_Inclination() {isNothing = true;}
+	
+	private boolean isNothing;
+	
 	private float inclination;
 
 	protected Ground_Inclination(float inclination) {
@@ -43,6 +57,7 @@ public class Ground_Inclination implements IMapProp {
 	 * @param inclination the inclination to set
 	 */
 	protected void setInclination(float inclination) {
+		if (isNothing) return;
 		this.inclination = inclination;
 	}
 	

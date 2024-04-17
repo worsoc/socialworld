@@ -38,8 +38,8 @@ public class KnownPathsPool {
 	MapPropTree endPointsTree;
 
 	public KnownPathsPool () {
-		startPointsTree = new MapPropTree(Position.LOCATIONBASE25, Path.LOCATION_BASE25_ACCURACY);
-		endPointsTree = new MapPropTree(Position.LOCATIONBASE25, Path.LOCATION_BASE25_ACCURACY);
+		startPointsTree = new MapPropTree(Position.LOCATIONBASE25, Path.LOCATION_BASE25_ACCURACY, KnownPaths.getObjectNothing());
+		endPointsTree = new MapPropTree(Position.LOCATIONBASE25, Path.LOCATION_BASE25_ACCURACY, KnownPaths.getObjectNothing());
 	}
 	
 	public ArrayList<Path> findPaths(Position start, Position end) {	
@@ -59,14 +59,33 @@ public class KnownPathsPool {
 
 	public ArrayList<Path> findPathsForStart(Position start) {	
 		KnownPaths pathsWithStartPoint = (KnownPaths) startPointsTree.getProperty(start.getLocationByBase25());
-		
-		return pathsWithStartPoint.getPaths();
+
+		if (pathsWithStartPoint == null) {
+			if (GlobalSwitches.OUTPUT_DEBUG_VARIABLE_IS_NULL) {
+				System.out.println("KnownPathsPool.findPathsForStart(): pathsWithStartPoint is null ");
+			}
+			return new ArrayList<Path>();
+		}
+		else {
+			return pathsWithStartPoint.getPaths();
+		}
+
 	}
 
 	public ArrayList<Path> findPathsForEnd(Position end) {	
+		
 		KnownPaths pathsWithEndPoint = (KnownPaths) endPointsTree.getProperty(end.getLocationByBase25());
 		
-		return pathsWithEndPoint.getPaths();
+		if (pathsWithEndPoint == null) {
+			if (GlobalSwitches.OUTPUT_DEBUG_VARIABLE_IS_NULL) {
+				System.out.println("KnownPathsPool.findPathsForEnd(): pathsWithEndPoint is null ");
+			}
+			return new ArrayList<Path>();
+		}
+		else {
+			return pathsWithEndPoint.getPaths();
+		}
+
 	}
 
 	public void addPath(Path path) {

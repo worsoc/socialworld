@@ -21,22 +21,39 @@
 */
 package org.socialworld.map;
 
+
 /**
  * @author Mathias Sikos
  *
  */
 public class Ground_Height implements IMapProp {
+	
+	private static Ground_Height objectNothing;
+	
+	public static Ground_Height getObjectNothing() {
+		if (objectNothing == null) {
+			objectNothing = new Ground_Height();
+		}
+		return objectNothing;
+	}	
+	
+	private Ground_Height() {isNothing = true;}
+	
+	private boolean isNothing;
+	
 	private float minHeight;
 	private float maxHeight;
 	private float avgHeight;
 
 	boolean calculateAvg;
 	
+
 	protected Ground_Height(float avg, float min, float max) {
 		this.minHeight = min;
 		this.maxHeight = max;
 		this.avgHeight = avg;
 		this.calculateAvg  = false;
+		this.isNothing = false;
 	}
 
 	protected Ground_Height(float min, float max) {
@@ -44,6 +61,7 @@ public class Ground_Height implements IMapProp {
 		this.maxHeight = max;
 		this.avgHeight = (this.minHeight + this.maxHeight) / 2;
 		this.calculateAvg  = true;
+		this.isNothing = false;
 	}
 
 	public float min() { return minHeight; }
@@ -51,16 +69,19 @@ public class Ground_Height implements IMapProp {
 	public float avg() { return avgHeight; }
 	
 	protected void setMinHeight(float minHeight ) {
+		if (isNothing) return;
 		this.minHeight = minHeight;
 		if (calculateAvg) this.avgHeight = (this.minHeight + this.maxHeight) / 2;
 	}
 	
 	protected void setMaxHeight(float maxHeight) {
+		if (isNothing) return;
 		this.maxHeight = maxHeight;
 		if (calculateAvg) this.avgHeight = (this.minHeight + this.maxHeight) / 2;
 	}
 	
 	protected void setAvgHeight(float avgHeight) {
+		if (isNothing) return;
 		this.avgHeight = avgHeight;
 	}
 }

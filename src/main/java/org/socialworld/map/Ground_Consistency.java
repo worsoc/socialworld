@@ -26,6 +26,21 @@ package org.socialworld.map;
  *
  */
 public class Ground_Consistency implements IMapProp {
+	
+	private static Ground_Consistency objectNothing;
+	
+	public static Ground_Consistency getObjectNothing() {
+		if (objectNothing == null) {
+			objectNothing = new Ground_Consistency();
+		}
+		return objectNothing;
+	}	
+	
+	private Ground_Consistency() {isNothing = true;}
+	
+	private boolean isNothing;
+	
+	
 		float springiness;   // German: Federung, Elastizität
 		float penetration;   // German: Durchdringung, Eindringen, Tiefenwirkung
 		
@@ -52,6 +67,7 @@ public class Ground_Consistency implements IMapProp {
 		 * @param springiness the springiness to set
 		 */
 		protected void setSpringiness(float springiness) {
+			if (isNothing) return;
 			this.springiness = springiness;
 		}
 
@@ -68,6 +84,7 @@ public class Ground_Consistency implements IMapProp {
 		 * @param penetration the penetration to set
 		 */
 		protected void setPenetration(float penetration) {
+			if (isNothing) return;
 			this.penetration = penetration;
 		}
 }

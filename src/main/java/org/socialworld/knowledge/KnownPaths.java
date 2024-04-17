@@ -33,6 +33,18 @@ import org.socialworld.map.IMapProp;
  *
  */
 public class KnownPaths implements IMapProp {
+	
+	private static KnownPaths objectNothing;
+	
+	public static KnownPaths getObjectNothing() {
+		if (objectNothing == null) {
+			objectNothing = new KnownPaths();
+			objectNothing.isNothing = true;
+		}
+		return objectNothing;
+	}
+
+	private boolean isNothing = false;
 	ArrayList<Path> knownPaths;
 	
 	int countUses[];
@@ -43,6 +55,8 @@ public class KnownPaths implements IMapProp {
 	}
 	
 	public void addPath(Path path) {
+		if (isNothing) return;
+		
 		int index;
 		knownPaths.add(path);
 		index = knownPaths.size() - 1;
@@ -55,10 +69,14 @@ public class KnownPaths implements IMapProp {
 	
 	public ArrayList<Path> getPathsWithEnd(Position end) {
 		
+		if (isNothing) return knownPaths;
+		
 		Path path;
 		ArrayList<Path> result;
 		
 		result = new ArrayList<Path>();
+		
+		
 		ListIterator<Path> iterator = knownPaths.listIterator();
 		
 		while (iterator.hasNext()) {
@@ -70,6 +88,8 @@ public class KnownPaths implements IMapProp {
 	}
 
 	public ArrayList<Path> getPathsWithStart(Position start) {
+		
+		if (isNothing) return knownPaths;
 		
 		Path path;
 		ArrayList<Path> result;
@@ -86,6 +106,9 @@ public class KnownPaths implements IMapProp {
 	}
 
 	public void incrementWalkCounter(Path path) {
+		
+		if (isNothing) return;
+
 		int index;
 		
 		index = getIndex(path);

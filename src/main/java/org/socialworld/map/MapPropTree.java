@@ -32,13 +32,24 @@ public class MapPropTree {
 	private int base;
 	private int accuracy;
 	
+	private IMapProp propertyNothing;
+
+	
+	
+	public MapPropTree(int base, int accuracy, IMapProp propertyNothing) {
+		this.base = base;
+		this.accuracy = accuracy;
+		this.propertyNothing = propertyNothing;
+		createRoot();
+	}
 	
 	public MapPropTree(int base, int accuracy) {
 		this.base = base;
 		this.accuracy = accuracy;
+		this.propertyNothing = null;
 		createRoot();
 	}
-	
+
 	protected void createRoot() {
 		setRoot( new MapPropTree_Node(this, 1));
 	}
@@ -63,6 +74,7 @@ public class MapPropTree {
 	
 	protected int getBase() {return base;}
 	protected int getAccuracy() {return accuracy;}
+	IMapProp getPropertyNothing() {return  propertyNothing;}
 	
 	protected int getSector(String locationRest) {
 
@@ -70,7 +82,7 @@ public class MapPropTree {
 		int firstSign2Int;
 		int sector = -1;
 		
-		if (locationRest.length() > 0) {
+		if (locationRest != null && locationRest.length() > 0) {
 			firstSign = locationRest.charAt(0);
 			
 			if (firstSign == '0') sector = 0;

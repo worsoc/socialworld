@@ -37,10 +37,10 @@ public class Ground {
 	MapPropTree map_GroundConsistency;
 	
 	private Ground() {
-		map_GroundHeight = new MapPropTree(25, 7);
-		map_GroundInclination = new MapPropTree(25, 7);
-		map_GroundMaterial = new MapPropTree(25, 7);
-		map_GroundConsistency = new MapPropTree(25, 7);
+		map_GroundHeight = new MapPropTree(25, 7, Ground_Height.getObjectNothing());
+		map_GroundInclination = new MapPropTree(25, 7, Ground_Inclination.getObjectNothing());
+		map_GroundMaterial = new MapPropTree(25, 7, Ground_Material.getObjectNothing());
+		map_GroundConsistency = new MapPropTree(25, 7, Ground_Consistency.getObjectNothing());
 	}
 	
 	public  static Ground getInstance() {

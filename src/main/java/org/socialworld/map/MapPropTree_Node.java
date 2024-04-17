@@ -86,13 +86,13 @@ public class MapPropTree_Node {
 		if ( this.isLeaf  ) return property;
 		
 		sector = tree.getSector(locationRest);
-		if ( (sector == -1) | (sector == 0) )    		return null;
+		if ( (sector == -1) | (sector == 0) )    		return tree.getPropertyNothing();
 		else {
 			if (sectorNodes[sector - 1] == null) {
 				if (GlobalSwitches.OUTPUT_DEBUG_VARIABLE_IS_NULL) {
 					System.out.println("MapPropTree_Node.getProperty(): sectorNodes[sector - 1] is null ");
 				}
-				return null;
+				return tree.getPropertyNothing();
 			}
 			else {
 				return sectorNodes[sector - 1].getProperty(locationRest.substring(1));
@@ -114,7 +114,11 @@ public class MapPropTree_Node {
 		}
 		
 		sector = tree.getSector(locationRest);
-		if (sector == -1) 		return null;
+		if (sector == -1) {
+			collection = new ArrayList<IMapProp>(1);
+			collection.add(tree.getPropertyNothing());
+			return collection;
+		}
 
 		if (sector == 0) return getCollection();
 		else return sectorNodes[sector - 1].getCollection(locationRest.substring(1));

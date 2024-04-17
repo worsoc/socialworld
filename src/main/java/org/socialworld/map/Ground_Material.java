@@ -28,6 +28,20 @@ import org.socialworld.attributes.GroundMaterial;
  *
  */
 public class Ground_Material implements IMapProp {
+	
+	private static Ground_Material objectNothing;
+	
+	public static Ground_Material getObjectNothing() {
+		if (objectNothing == null) {
+			objectNothing = new Ground_Material();
+		}
+		return objectNothing;
+	}	
+	
+	private Ground_Material() {isNothing = true;}
+	
+	private boolean isNothing;
+	
 	private GroundMaterial firstMaterial;
 	private GroundMaterial secondMaterial;
 	
@@ -65,6 +79,7 @@ public class Ground_Material implements IMapProp {
 	 * percentageFirst the percentageFirst to set
 	 */
 	protected void setFirstMaterial(GroundMaterial firstMaterial, float percentageFirst) {
+		if (isNothing) return;
 		this.firstMaterial = firstMaterial;
 		this.percentageFirst = percentageFirst;
 	}
@@ -75,6 +90,7 @@ public class Ground_Material implements IMapProp {
 	 * percentageSecond the percentageSecond to set
 	 */
 	protected void setSecondMaterial(GroundMaterial secondMaterial, float percentageSecond) {
+		if (isNothing) return;
 		this.secondMaterial = secondMaterial;
 		this.percentageSecond = percentageSecond;
 	}
@@ -83,6 +99,7 @@ public class Ground_Material implements IMapProp {
 	 * @param firstMaterial the firstMaterial to set
 	 */
 	protected void setFirstMaterial(GroundMaterial firstMaterial) {
+		if (isNothing) return;
 		this.firstMaterial = firstMaterial;
 		this.percentageFirst = 1F;
 	}
@@ -98,6 +115,7 @@ public class Ground_Material implements IMapProp {
 	 * @param secondMaterial the secondMaterial to set
 	 */
 	public void setSecondMaterial(GroundMaterial secondMaterial) {
+		if (isNothing) return;
 		this.secondMaterial = secondMaterial;
 	}
 	
@@ -112,6 +130,7 @@ public class Ground_Material implements IMapProp {
 	 * @param percentageFirst the percentageFirst to set
 	 */
 	public void setPercentageFirst(float percentageFirst) {
+		if (isNothing) return;
 		this.percentageFirst = percentageFirst;
 	}
 	
@@ -126,6 +145,7 @@ public class Ground_Material implements IMapProp {
 	 * @param percentageSecond the percentageSecond to set
 	 */
 	public void setPercentageSecond(float percentageSecond) {
+		if (isNothing) return;
 		this.percentageSecond = percentageSecond;
 	}
 }
