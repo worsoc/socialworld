@@ -144,9 +144,15 @@ public class ObjectRequester {
 	
 	public Position requestPosition(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
 		
-		SimProperty simProperty = (SimProperty) requestObject(value, Type.simObjProp, EnumSimProperty.position, cluster, receiver);
-		if (simProperty instanceof Position) {
-			return (Position) simProperty;
+		Type type = value.getType();
+		if ((type == Type.simObjProp) || (type == Type.eventProp)) {
+			SimProperty simProperty = (SimProperty) requestObject(value, type, EnumSimProperty.position, cluster, receiver);
+			if (simProperty instanceof Position) {
+				return (Position) simProperty;
+			}
+			else {
+				return Position.getObjectNothing();
+			}
 		}
 		else {
 			return Position.getObjectNothing();
@@ -156,14 +162,20 @@ public class ObjectRequester {
 	
 	public Direction requestDirection(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
 		
-		SimProperty simProperty = (SimProperty) requestObject(value, Type.simObjProp, EnumSimProperty.direction, cluster, receiver);
-		if (simProperty instanceof Position) {
-			return (Direction) simProperty;
+		Type type = value.getType();
+		if ((type == Type.simObjProp) || (type == Type.eventProp)) {
+		
+			SimProperty simProperty = (SimProperty) requestObject(value, type, EnumSimProperty.direction, cluster, receiver);
+			if (simProperty instanceof Direction) {
+				return (Direction) simProperty;
+			}
+			else {
+				return Direction.getObjectNothing();
+			}
 		}
 		else {
 			return Direction.getObjectNothing();
 		}
-		
 	}
 	
 	public Dimension requestDimension(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
