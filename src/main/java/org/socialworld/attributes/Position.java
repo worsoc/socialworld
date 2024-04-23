@@ -231,11 +231,14 @@ public class Position extends SimProperty {
 	}
 	
 	public boolean equals(Position b, int locationBase, int accuracyLevel) {
+		if (checkIsObjectNothing()) return false;
 		if (locationBase == LOCATIONBASE25)  {
+			if (b.checkIsObjectNothing()) return false;
 			return (locationByBase25.substring(0, accuracyLevel - 1).
 					compareTo(b.getLocationByBase25().substring(0, accuracyLevel - 1)) == 0 );
 		}
 		if (locationBase == LOCATIONBASE9)  {
+			if (b.checkIsObjectNothing()) return false;
 			return (Integer.toString(locationByBase9).substring(0, accuracyLevel - 1).
 					compareTo(Integer.toString(b.getLocationByBase9()).substring(0, accuracyLevel - 1)) == 0 );
 		}
