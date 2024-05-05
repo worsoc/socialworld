@@ -63,7 +63,7 @@ public class MapPropTree_Node {
 		return new MapPropTree_Node(this.tree, level + 1);
 	}
 
-	protected void setNode(int sector, MapPropTree_Node node ) {
+	private void setNode(int sector, MapPropTree_Node node ) {
 		int base = tree.getBase();
 		
 		if (base == 9)
@@ -156,7 +156,7 @@ public class MapPropTree_Node {
 	}
 
 	
-	protected MapPropTree_Node setProperty(IMapProp property) {
+	private MapPropTree_Node setProperty(IMapProp property) {
 		isLeaf = true;
 		this.property = property;
 
