@@ -106,8 +106,10 @@ public class Path extends SimProperty {
 		this.start = start;
 		this.end = end;
 		
-		this.points.add(start);
-		this.points.add(end);
+		if (!start.isObjectNothing() && !end.isObjectNothing() ) {
+			this.points.add(start);
+			this.points.add(end);
+		}
 		
 		this.completelyKnown = false;
 		
@@ -166,8 +168,8 @@ public class Path extends SimProperty {
 	
 	
 	public void resetCildPaths() {
-		this.pathA = null;
-		this.pathB = null;
+		this.pathA = Path.getObjectNothing();
+		this.pathB = Path.getObjectNothing();
 	}
 	
 	public float costs() {
@@ -177,19 +179,23 @@ public class Path extends SimProperty {
 	
 	
 	public void add (Path b) {
-		points.addAll(b.getPoints());
-		
-		this.end = b.getEndPoint();
-		this.completelyKnown = this.completelyKnown & b.isCompletelyKnown();
-
-		this.pathB = b;
-
-		refresh();
+		if (!b.isObjectNothing()) {
+			points.addAll(b.getPoints());
+			
+			this.end = b.getEndPoint();
+			this.completelyKnown = this.completelyKnown & b.isCompletelyKnown();
+	
+			this.pathB = b;
+	
+			refresh();
+		}
 	}
 
 	public void concat (Path b) {
-		points.remove(points.size());
-		add(b);
+		if (!b.isObjectNothing()) {
+			points.remove(points.size());
+			add(b);
+		}
 	}
 
 	public Position getEndPoint() {
@@ -208,9 +214,11 @@ public class Path extends SimProperty {
 	}
 	
 	public void completeSection(Position position) {
-		if (position.equals(getNextPoint(), Position.LOCATIONBASE25, LOCATION_BASE25_ACCURACY))
-			if (indexPointToPassNext < length)
-				indexPointToPassNext++;
+		if (!position.isObjectNothing()) {
+			if (position.equals(getNextPoint(), Position.LOCATIONBASE25, LOCATION_BASE25_ACCURACY))
+				if (indexPointToPassNext < length)
+					indexPointToPassNext++;
+		}
 	}
 	
 	public boolean isCompleted() {
@@ -234,9 +242,9 @@ public class Path extends SimProperty {
 		
 		if (countCalls < STOP_CHILD_INCREMETUSAGE_CALL) {
 			countCalls = countCalls + 1;
-			if (this.pathA != null)
+			if (!this.pathA.isObjectNothing())
 				this.pathA.incrementUsageCounter(countCalls);
-			if (this.pathB != null)
+			if (!this.pathB.isObjectNothing())
 				this.pathB.incrementUsageCounter(countCalls);
 		}
 	}
@@ -266,7 +274,7 @@ public class Path extends SimProperty {
 	private void refresh() {
 		length = points.size();
 		
-		if ((length > 1) & (indexPointToPassNext == 0)) 
-			indexPointToPassNext = 1;
+		if ((length > 1) & (indexPointToPassNext == 0)) 			indexPointToPassNext = 1;
+		else if (length == 0) indexPointToPassNext = -1;
 	}
 }

@@ -42,72 +42,96 @@ public class KnownPathsPool {
 		endPointsTree = new MapPropTree(Position.LOCATIONBASE25, Path.LOCATION_BASE25_ACCURACY, KnownPaths.getObjectNothing());
 	}
 	
-	public ArrayList<Path> findPaths(Position start, Position end) {	
-		ArrayList<Path> paths;
-		KnownPaths pathsWithStartPoint = (KnownPaths) startPointsTree.getProperty(start.getLocationByBase25());
-		if (pathsWithStartPoint == null) {
-			if (GlobalSwitches.OUTPUT_DEBUG_VARIABLE_IS_NULL) {
-				System.out.println("KnownPathsPool.findPaths(): pathsWithStartPoint is null ");
+	public ArrayList<Path> findPaths(Position start, Position end) {
+		
+		ArrayList<Path> paths = new ArrayList<Path>();
+		
+		if (!start.isObjectNothing() && !end.isObjectNothing()) {
+			KnownPaths pathsWithStartPoint = (KnownPaths) startPointsTree.getProperty(start.getLocationByBase25());
+			if (pathsWithStartPoint == null) {
+				if (GlobalSwitches.OUTPUT_DEBUG_VARIABLE_IS_NULL) {
+					System.out.println("KnownPathsPool.findPaths(): pathsWithStartPoint is null ");
+				}
 			}
-			return new ArrayList<Path>();
+			else {
+				paths = pathsWithStartPoint.getPathsWithEnd(end);
+			}
 		}
-		else {
-			paths = pathsWithStartPoint.getPathsWithEnd(end);
-			return paths;
-		}
+		
+		return paths;
 	}
 
 	public ArrayList<Path> findPathsForStart(Position start) {	
-		KnownPaths pathsWithStartPoint = (KnownPaths) startPointsTree.getProperty(start.getLocationByBase25());
+		
+		ArrayList<Path> paths = new ArrayList<Path>();
+		
+		if (!start.isObjectNothing() ) {
 
-		if (pathsWithStartPoint == null) {
-			if (GlobalSwitches.OUTPUT_DEBUG_VARIABLE_IS_NULL) {
-				System.out.println("KnownPathsPool.findPathsForStart(): pathsWithStartPoint is null ");
+			KnownPaths pathsWithStartPoint = (KnownPaths) startPointsTree.getProperty(start.getLocationByBase25());
+	
+			if (pathsWithStartPoint == null) {
+				if (GlobalSwitches.OUTPUT_DEBUG_VARIABLE_IS_NULL) {
+					System.out.println("KnownPathsPool.findPathsForStart(): pathsWithStartPoint is null ");
+				}
 			}
-			return new ArrayList<Path>();
+			else {
+				paths = pathsWithStartPoint.getPaths();
+			}
 		}
-		else {
-			return pathsWithStartPoint.getPaths();
-		}
-
+		
+		return paths;
 	}
 
 	public ArrayList<Path> findPathsForEnd(Position end) {	
 		
-		KnownPaths pathsWithEndPoint = (KnownPaths) endPointsTree.getProperty(end.getLocationByBase25());
+		ArrayList<Path> paths = new ArrayList<Path>();
 		
-		if (pathsWithEndPoint == null) {
-			if (GlobalSwitches.OUTPUT_DEBUG_VARIABLE_IS_NULL) {
-				System.out.println("KnownPathsPool.findPathsForEnd(): pathsWithEndPoint is null ");
+		if (!end.isObjectNothing() ) {
+
+			KnownPaths pathsWithEndPoint = (KnownPaths) endPointsTree.getProperty(end.getLocationByBase25());
+		
+			if (pathsWithEndPoint == null) {
+				if (GlobalSwitches.OUTPUT_DEBUG_VARIABLE_IS_NULL) {
+					System.out.println("KnownPathsPool.findPathsForEnd(): pathsWithEndPoint is null ");
+				}
 			}
-			return new ArrayList<Path>();
+			else {
+				paths = pathsWithEndPoint.getPaths();
+			}
 		}
-		else {
-			return pathsWithEndPoint.getPaths();
-		}
+		
+		return paths;
 
 	}
 
 	public void addPath(Path path) {
-		addPathByStartPoint(path, path.getStartPoint());
-		addPathByEndPoint(path, path.getEndPoint());
+		if (!path.isObjectNothing()) {
+			addPathByStartPoint(path, path.getStartPoint());
+			addPathByEndPoint(path, path.getEndPoint());
+		}
 	}
 	
 	private void addPathByStartPoint(Path path, Position start) {
 		
-		KnownPaths paths = (KnownPaths) startPointsTree.getProperty(start.getLocationByBase25());
-		paths.addPath(path);
-		path.setRefToKnownPathsWithStartingPoint(paths);
+		if (!path.isObjectNothing() && !start.isObjectNothing()) {
+			KnownPaths paths = (KnownPaths) startPointsTree.getProperty(start.getLocationByBase25());
+			paths.addPath(path);
+			path.setRefToKnownPathsWithStartingPoint(paths);
+		}
 	}
 
 	private void addPathByEndPoint(Path path, Position end) {
 		
-		KnownPaths paths = (KnownPaths) endPointsTree.getProperty(end.getLocationByBase25());
-		paths.addPath(path);
-		path.setRefToKnownPathsWithEndPoint(paths);
+		if (!path.isObjectNothing() && !end.isObjectNothing()) {
+			KnownPaths paths = (KnownPaths) endPointsTree.getProperty(end.getLocationByBase25());
+			paths.addPath(path);
+			path.setRefToKnownPathsWithEndPoint(paths);
+		}
 	}
 
 	public void incrementWalkCounter(Path path) {
+		
+		if (path.isObjectNothing()) return;
 		
 		KnownPaths paths;
 		

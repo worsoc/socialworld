@@ -56,6 +56,7 @@ public class KnownPaths implements IMapProp {
 	
 	public void addPath(Path path) {
 		if (isNothing) return;
+		if (path.isObjectNothing() ) return;
 		
 		int index;
 		knownPaths.add(path);
@@ -71,12 +72,11 @@ public class KnownPaths implements IMapProp {
 		
 		if (isNothing) return knownPaths;
 		
-		Path path;
 		ArrayList<Path> result;
-		
 		result = new ArrayList<Path>();
+		if (end.isObjectNothing()) return result;
 		
-		
+		Path path;
 		ListIterator<Path> iterator = knownPaths.listIterator();
 		
 		while (iterator.hasNext()) {
@@ -91,10 +91,11 @@ public class KnownPaths implements IMapProp {
 		
 		if (isNothing) return knownPaths;
 		
-		Path path;
 		ArrayList<Path> result;
-		
 		result = new ArrayList<Path>();
+		if (start.isObjectNothing()) return result;
+		
+		Path path;
 		ListIterator<Path> iterator = knownPaths.listIterator();
 		
 		while (iterator.hasNext()) {
@@ -108,6 +109,7 @@ public class KnownPaths implements IMapProp {
 	public void incrementWalkCounter(Path path) {
 		
 		if (isNothing) return;
+		if (path.isObjectNothing()) return;
 
 		int index;
 		
@@ -118,6 +120,8 @@ public class KnownPaths implements IMapProp {
 
 	private int getIndex(Path path) {
 		
+		if (path.isObjectNothing()) return -1;
+		
 		int index;
 		ListIterator<Path> iterator = knownPaths.listIterator();
 		
@@ -126,6 +130,6 @@ public class KnownPaths implements IMapProp {
 			if (iterator.next().equals(path)) return index;
 		}
 		
-		return -1;
+		return -2;
 	}
 }
