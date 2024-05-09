@@ -144,8 +144,10 @@ public enum PropertyName {
 	vector(5001010),
 	vector_x(5001011),
 	vector_y(5001012),
-	vector_z(5001013);
+	vector_z(5001013),
 
+	pathFromPathFinder(6001001),
+	pathFromPathFinder_result(6001002);
 	
 	private final static int THREASHOLD_SIMPROPERTY = 2000000;
 

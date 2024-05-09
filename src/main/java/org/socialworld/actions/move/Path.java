@@ -24,30 +24,35 @@ package org.socialworld.actions.move;
 import java.util.ArrayList;
 
 import org.socialworld.attributes.Position;
+import org.socialworld.attributes.PropertyName;
+import org.socialworld.attributes.PropertyProtection;
+import org.socialworld.attributes.SimProperty;
+import org.socialworld.calculation.SimulationCluster;
+import org.socialworld.calculation.ValueProperty;
 import org.socialworld.knowledge.KnownPaths;
 
 /**
  * German:
- * Die Klasse Path enth�lt eine Wegbeschreibung, 
- *  �ber welche Zwischenpositionen jemand vom Startpunkt zum Endpunkt (Zielposition) gelangt.
+ * Die Klasse Path enthaelt eine Wegbeschreibung, 
+ *  ueber welche Zwischenpositionen jemand vom Startpunkt zum Endpunkt (Zielposition) gelangt.
  *  
- * Ein Index zeigt an, auf welcher Etappe (Teilst�ck des Pfades) sich das Objekt befindet.
+ * Ein Index zeigt an, auf welcher Etappe (Teilstueck des Pfades) sich das Objekt befindet.
  * 
- * Es gibt eine Kennung, die angibt, ob der Pfad komplett bekannt ist oder ob es unbekannte Teilst�cke gibt.
+ * Es gibt eine Kennung, die angibt, ob der Pfad komplett bekannt ist oder ob es unbekannte Teilstuecke gibt.
  * 
- * Die Beschreibung enth�lt au�erdem die gesamte Wegl�nge.
+ * Die Beschreibung enthaelt ausserdem die gesamte Weglaenge.
  * 
- * Au�erdem gibt es eine Referenz auf die Wissensbasis des Objektes (KnownPaths),
- *  �ber die die Wissensbasis bei Nutzung des Pfades aktualisiert wird.
+ * Ausserdem gibt es eine Referenz auf die Wissensbasis des Objektes (KnownPaths),
+ *  ueber die die Wissensbasis bei Nutzung des Pfades aktualisiert wird.
  *
  * Weiterhin werden zu einem Pfad die Kindpfade angegeben.
- *  Dies sind die beiden Pfade, aus denen der neue Pfad durch Verkn�pfung entstanden ist.
- *   Durch rekursive Aufrufe kann die Aktualisierung der Wissensbasis auch f�r die Teilabschnitte realisiert werden.
+ *  Dies sind die beiden Pfade, aus denen der neue Pfad durch Verknuepfung entstanden ist.
+ *   Durch rekursive Aufrufe kann die Aktualisierung der Wissensbasis auch fuer die Teilabschnitte realisiert werden.
  *
  * @author Mathias Sikos
  *
  */
-public class Path {
+public class Path extends SimProperty {
 	public static final int LOCATION_BASE25_ACCURACY = 7;
 	private static final int STOP_CHILD_INCREMETUSAGE_CALL = 10;
 	
@@ -67,8 +72,35 @@ public class Path {
 	private Path pathA;
 	private Path pathB;
 	
+///////////////////////////////////////////////////////////////////////////////////////////
+///////////// object nothing (abstract method from ISimProperty)    ///////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	private static Path objectNothing;
 	
-	public Path(Position start, Position end) {
+	public static Path getObjectNothing() {
+		if (objectNothing == null) {
+			objectNothing = new Path();
+			objectNothing.setToObjectNothing();
+		}
+		return objectNothing;
+	}
+	
+	public boolean checkIsObjectNothing() {
+		return (this == objectNothing);
+	}
+	
+	private Path() {
+	}
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////creating instance for simulation    ///////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public Path(PropertyName prop, Position start, Position end) {
+		super();
+		setPropertyName(prop);
+		
 		points = new ArrayList<Position>();
 		
 		this.start = start;
@@ -83,7 +115,10 @@ public class Path {
 	}
 	
 	// copy constructor
-	public Path(Path original) {
+	public Path(PropertyName prop, Path original) {
+		super();
+		setPropertyName(prop);
+		
 		this.start = original.start;
 		this.end = original.end;
 		
@@ -96,6 +131,39 @@ public class Path {
 		
 		refresh();
 	}
+	
+	public Path(Path original, PropertyProtection protectionOriginal, SimulationCluster cluster ) {
+		super(protectionOriginal, cluster);
+		setPropertyName(original.getPropertyName());
+		
+		this.start = original.start;
+		this.end = original.end;
+		
+		this.points = new ArrayList<Position>();
+		this.points.addAll(original.getPoints());
+		
+		this.completelyKnown = original.completelyKnown;
+		
+		this.pathA = original;
+		
+		refresh();
+	}
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    ISavedValue  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public SimProperty copyForProperty(SimulationCluster cluster) {
+		return new Path(this, getPropertyProtection(), cluster);
+	}
+	
+	public  ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String valueName) {
+		switch (prop) {
+		default:
+		return ValueProperty.getInvalid();
+		}
+	}
+	
 	
 	public void resetCildPaths() {
 		this.pathA = null;

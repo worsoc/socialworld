@@ -85,7 +85,7 @@ public class ActionMove extends AbstractAction {
 	private boolean firstStep = true;
 	private boolean firstPerforming = true;
 	
-	private Path path;
+	private Path path = Path.getObjectNothing();
 	private Position end = Position.getObjectNothing();
 	
 	private Vector direction;
@@ -137,7 +137,7 @@ public class ActionMove extends AbstractAction {
 
 		firstStep = firstPerforming;
 		
-		if ((!firstStep) && (path != null)) {
+		if ((!firstStep) && (!path.isObjectNothing())) {
 			moveCompleted = !move.checkContinueMove();
 			
 			if (moveCompleted) path.completeSection(actor.getPosition(SimulationCluster.action));
@@ -216,9 +216,9 @@ public class ActionMove extends AbstractAction {
 	
 	private void createMove() {
 		
-		if (path == null & end != null) createPath();
+		if (path.isObjectNothing() & !end.isObjectNothing()) createPath();
 		
-		if (path == null) { 
+		if (path.isObjectNothing()) { 
 			this.directionForSection = new Vector(this.direction);
 		}
 		else {

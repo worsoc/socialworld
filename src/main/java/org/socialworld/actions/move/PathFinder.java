@@ -24,12 +24,12 @@ package org.socialworld.actions.move;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.Position;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.knowledge.KnownPathsPool;
 import org.socialworld.objects.Animal;
-
 /**
  * German:
  * Die Klasse PathFinder dient dem Finden des zu nutzenden Pfades,
@@ -65,28 +65,28 @@ public class PathFinder {
 		// TODO more complex and better pathfinding
 		
 		
-		Path result;
-		Path pathStart;
-		Path pathEnd;
+		Path result = Path.getObjectNothing();
+		Path pathStart = Path.getObjectNothing();
+		Path pathEnd = Path.getObjectNothing();
 		
 		Position actorsPosition = actor.getPosition(SimulationCluster.pathFinder);
 		
 		result = findPathWithStartAndEnd(actorsPosition, end);
 		
-		if (result == null) {
+		if (result.isObjectNothing()) {
 			pathStart = findPathWithStartAndNearestEnd(actorsPosition, end);
 			pathEnd = findPathWithNearestStartAndEnd(actorsPosition, end);
 			
-			if (pathStart == null) 
-				if (pathEnd != null) {
+			if (pathStart.isObjectNothing()) 
+				if (!pathEnd.isObjectNothing()) {
 					result = createPath(actorsPosition, pathEnd.getStartPoint());
 					result.concat(pathEnd);
 				}
 				else 
 					result = createPath(actorsPosition, end);
 			else
-				if (pathEnd == null) {
-					result = new Path(pathStart);
+				if (pathEnd.isObjectNothing()) {
+					result = new Path(PropertyName.pathFromPathFinder_result, pathStart);
 					result.concat(createPath(result.getEndPoint(), end));
 				}
 				else {
@@ -98,7 +98,7 @@ public class PathFinder {
 					
 					if (partStart.length() > beelineToStartOfPathEnd.length()) {
 						if (pathStart.costs() < pathEnd.costs() ) {
-							result = new Path( pathStart);
+							result = new Path(PropertyName.pathFromPathFinder_result, pathStart);
 							result.concat(createPath(result.getEndPoint(), end));
 						}
 						else {
@@ -107,7 +107,7 @@ public class PathFinder {
 						}
 					}
 					else {
-						result = new Path(pathStart);
+						result = new Path(PropertyName.pathFromPathFinder_result,pathStart);
 						result.concat(createPath(pathStart.getEndPoint(), pathEnd.getStartPoint()));
 						result.concat(pathEnd);
 					}
@@ -127,8 +127,8 @@ public class PathFinder {
 	}
 	
 	private Path findPathWithStartAndNearestEnd(Position start, Position end) {
-		Path path;
-		Path bestPath = null;
+		Path path = Path.getObjectNothing();
+		Path bestPath = Path.getObjectNothing();
 		float distance;
 		float smallestDistance;
 		
@@ -150,8 +150,8 @@ public class PathFinder {
 	}
 
 	private Path findPathWithNearestStartAndEnd(Position start, Position end) {
-		Path path;
-		Path bestPath = null;
+		Path path = Path.getObjectNothing();
+		Path bestPath = Path.getObjectNothing();
 		float distance;
 		float smallestDistance;
 		
@@ -182,7 +182,7 @@ public class PathFinder {
 	}
 	
 	private Path createPath(Position start, Position end) {
-		Path path = new Path(start, end);
+		Path path = new Path(PropertyName.pathFromPathFinder, start, end);
 		return path;
 	}
 	
