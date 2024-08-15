@@ -74,6 +74,10 @@ public class EventPerceptionDescriptionPool extends DescriptionPool {
 		return new EventPerceptionDescription();
 	}
 
+	protected final DescriptionBase getDescription(String description) {
+		return new EventPerceptionDescription(getGsonInstance(), description);
+	}
+
 	protected final Expression getStartExpressionForLines(List<String> lines4OneExpression) {
 		return new CreateKnowledgeElementExpression(lines4OneExpression.get(0));
 	}

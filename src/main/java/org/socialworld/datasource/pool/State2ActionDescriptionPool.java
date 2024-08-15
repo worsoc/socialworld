@@ -37,6 +37,10 @@ public class State2ActionDescriptionPool extends DescriptionPool {
 		return new State2ActionDescription();
 	}
 
+	protected final DescriptionBase getDescription(String description) {
+		return new State2ActionDescription(getGsonInstance(), description);
+	}
+
 	protected final Expression getStartExpressionForLines(List<String> lines4OneExpression) {
 		return new CreateActionExpression(lines4OneExpression);
 	}

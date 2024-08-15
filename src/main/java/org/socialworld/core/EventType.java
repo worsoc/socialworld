@@ -158,7 +158,13 @@ public enum EventType {
 		return nothing; // instead of null
 	}
 	
-	
+	public static EventType fromName(String name) {
+		for (EventType type : EventType.values())
+			if (type.toString().equals(name))
+				return type;
+		return null;
+	}
+
 	/**
 	 * The method returns the index of event type.
 	 * 

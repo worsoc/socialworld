@@ -165,6 +165,13 @@ public enum ActionType {
 
 	}
 	
+	public static ActionType fromName(String name) {
+		for (ActionType type : ActionType.values())
+			if (type.toString().equals(name))
+				return type;
+		return null;
+	}
+
 	public  String getPraefix() {
 		return name() + "_";
 	}

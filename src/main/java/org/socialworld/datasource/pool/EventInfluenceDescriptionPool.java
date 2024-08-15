@@ -68,6 +68,10 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 		return new EventInfluenceDescription();
 	}
 
+	protected final DescriptionBase getDescription(String description) {
+		return new EventInfluenceDescription(getGsonInstance(), description);
+	}
+	
 	protected final Expression getStartExpressionForLines(List<String> lines4OneExpression) {
 		return new ChangeAttributes(lines4OneExpression);
 	}

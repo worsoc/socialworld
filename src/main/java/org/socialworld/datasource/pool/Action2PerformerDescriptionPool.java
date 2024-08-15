@@ -42,6 +42,10 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 		return new Action2PerformerDescription();
 	}
 
+	protected final DescriptionBase getDescription(String description) {
+		return new Action2PerformerDescription(getGsonInstance(), description);
+	}
+
 	protected final Expression getStartExpressionForLines(List<String> lines4OneExpression) {
 		return new Calculate(lines4OneExpression.get(0), lines4OneExpression.get(1));
 	}

@@ -26,7 +26,7 @@ import java.util.List;
 
 import org.socialworld.calculation.FunctionByExpression;
 
-public class DescriptionBase {
+public abstract class DescriptionBase {
 
 	private List<FunctionByExpression> functions;
 	
@@ -36,7 +36,13 @@ public class DescriptionBase {
 		
 	}
 	
+	public abstract void setFunctions();
+	
+	public List<FunctionByExpression> getFunctions() {
+		return functions;
+	}
 
+	
 	public void addFunction(FunctionByExpression function) {
 
 		functions.add(function);

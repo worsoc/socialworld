@@ -21,7 +21,25 @@
 */
 package org.socialworld.calculation.descriptions;
 
+import com.google.gson.Gson;
+
 public class Action2PerformerDescription extends DescriptionBase {
 
-	
+	public Action2PerformerDescription() {
+		super();
+	}
+
+	public Action2PerformerDescription(Gson gson, String json) {
+		super();
+		
+		//loadFromJson(gson, json);
+	}
+
+	@Override
+	public void setFunctions() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
 }

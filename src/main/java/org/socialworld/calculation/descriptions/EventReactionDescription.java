@@ -21,8 +21,81 @@
 */
 package org.socialworld.calculation.descriptions;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.socialworld.core.EventType;
+import org.socialworld.calculation.Expression_ConditionOperator;
+import org.socialworld.calculation.Type;
+import org.socialworld.calculation.Value;
+import org.socialworld.actions.ActionType;
+import org.socialworld.actions.ActionMode;
+
+import org.socialworld.datasource.parsing.JsonEventReactionDescriptionEntry;
+import org.socialworld.datasource.parsing.JsonEventReactionDescription;
+import com.google.gson.Gson;
 
 public class EventReactionDescription extends DescriptionBase {
 	
 
+	
+	public class EventReactionDescriptionEntry {
+		
+		String valueName;
+		Type valueType;
+		Expression_ConditionOperator operator;
+		Value comparisonValue;
+		
+//		AttributeConditions attributeConditions;
+		
+		ActionType actionType;
+		ActionMode actionMode;
+
+		public EventReactionDescriptionEntry(JsonEventReactionDescriptionEntry json) {
+			this.valueName = json.valueName;
+			this.valueType = Type.fromName(json.valueType);
+			this.operator = Expression_ConditionOperator.fromName(json.operator);
+			this.comparisonValue = new Value(json.comparisonValue, this.valueType);
+			
+			this.actionType = ActionType.fromName(json.actionType);
+			this.actionMode = ActionMode.fromName(json.actionMode);
+		}
+	}
+	
+	private EventType eventType;
+	private int reactionType;
+	
+	private List<EventReactionDescriptionEntry> entrys;
+	
+	public EventReactionDescription() {
+		super();
+	}
+
+	public EventReactionDescription(Gson gson, String json) {
+		super();
+		
+		loadFromJson(gson, json);
+	}
+
+	private void loadFromJson(Gson gson, String json) {
+		JsonEventReactionDescription jsonObject;
+		jsonObject = gson.fromJson(json, JsonEventReactionDescription.class);
+		
+		this.eventType = EventType.fromName(jsonObject.eventType);
+		this.reactionType = jsonObject.reactionType;
+		
+		this.entrys = new ArrayList<EventReactionDescriptionEntry>();
+		for (String entry : jsonObject.entrys) {
+			this.entrys.add(new EventReactionDescriptionEntry(gson.fromJson(entry, JsonEventReactionDescriptionEntry.class)));
+		}
+	}
+
+	@Override
+	public void setFunctions() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+
+	
 }

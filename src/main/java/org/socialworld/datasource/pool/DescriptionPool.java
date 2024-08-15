@@ -27,6 +27,7 @@ import java.util.List;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.FunctionByExpression;
 import org.socialworld.calculation.descriptions.DescriptionBase;
+import com.google.gson.Gson;
 
 public abstract class DescriptionPool {
 
@@ -35,8 +36,16 @@ public abstract class DescriptionPool {
 	protected int sizeDescriptionsArray;
 
 	protected DescriptionBase descriptions[];
-	protected List<List<FunctionByExpression>> expressions;
+	private List<List<FunctionByExpression>> expressions;
 
+	private static Gson gson = null;
+	protected static Gson getGsonInstance() {
+		if (gson == null) {
+			gson = new Gson();
+		}
+		return gson;
+	}
+	
 	protected DescriptionPool(int rangeMainIndex, int rangeSecondIndex) {
 		
 		this.rangeMainIndex = rangeMainIndex;
@@ -54,11 +63,47 @@ public abstract class DescriptionPool {
 	}
 	
 	protected abstract DescriptionBase getNewDescription();
+	protected abstract DescriptionBase getDescription(String description);
 	protected abstract Expression getStartExpressionForLines(List<String> lines4OneExpression);
 	protected abstract Expression getStartExpressionForIDs(List<Integer> ids4OneExpression);
 	protected abstract void initializeWithTestData_FunctionByExpression();
 
 	protected void initialize() {
+
+		int index;
+		
+		DescriptionBase description;
+		List<FunctionByExpression> oneDescriptionExpressions;
+		
+		initializeWithTestData_FunctionByExpression();
+//		initializeFromFile();
+
+		for (int mainIndex = 0; mainIndex < rangeMainIndex; mainIndex++) {
+		
+			for (int secondIndex = 0; secondIndex < rangeSecondIndex; secondIndex++) {
+				
+				index = mainIndex * rangeSecondIndex + secondIndex;
+				oneDescriptionExpressions = this.expressions.get(index);
+				
+				description = getNewDescription();
+				
+				if (oneDescriptionExpressions != null) {
+					
+					for (int i = 0; i < oneDescriptionExpressions.size(); i++) {
+						description.addFunction(oneDescriptionExpressions.get(i));
+					}
+					
+				}
+				
+				descriptions[index] = description;
+		
+			}
+			
+		}
+			
+	}
+
+	protected void _initialize() {
 
 		int index;
 		
@@ -108,6 +153,32 @@ public abstract class DescriptionPool {
 			
 		return description;
 	}
+	
+	protected final void createDescriptionsAndExpressions(List<Jsons> allJsons) {
+		
+		int indexDescriptions;
+		int lfdNr;
+		DescriptionBase description;
+		Expression startExpression;
+		List<FunctionByExpression> oneDescriptionExpressions;
+		List<String> jsons4OneDescription;
+		Jsons jsons;
+		int secondIndex;
+		
+		for (int index = 0; index < allJsons.size(); index++ ) {
+			jsons = allJsons.get(index);
+			indexDescriptions = jsons.getMainIndex() * rangeSecondIndex;
+			for ( secondIndex = 0; secondIndex < rangeSecondIndex; secondIndex++) {
+				jsons4OneDescription = jsons.getJsons(secondIndex);
+				for (lfdNr = 0; lfdNr < jsons4OneDescription.size(); lfdNr++) {
+					description = getDescription(jsons4OneDescription.get(lfdNr));
+					description.setFunctions();
+				}
+			}
+		}
+	
+	}
+
 	
 	protected final void createExpressionsForIDs(List<DescriptionIDs> dbTableIDs) {
 		
@@ -161,6 +232,7 @@ public abstract class DescriptionPool {
 		}
 	
 	}
+	
 	
 /*
 	protected void addExpression(Expression expression) {

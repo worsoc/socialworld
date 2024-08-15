@@ -70,4 +70,12 @@ public enum Expression_ConditionOperator {
 		
 	}
 	
+	public static Expression_ConditionOperator fromName(String name) {
+		for (Expression_ConditionOperator op : Expression_ConditionOperator.values())
+			if (op.toString().equals(name))
+				return op;
+		return null;
+	}
+
+	
 }

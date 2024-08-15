@@ -21,8 +21,24 @@
 */
 package org.socialworld.calculation.descriptions;
 
+import com.google.gson.Gson;
 
 public class State2ActionDescription extends DescriptionBase {
 	
+	public State2ActionDescription() {
+		super();
+	}
+
+	public State2ActionDescription(Gson gson, String json) {
+		super();
+		
+	//	loadFromJson(gson, json);
+	}
+
+	@Override
+	public void setFunctions() {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

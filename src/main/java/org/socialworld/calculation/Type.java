@@ -106,4 +106,10 @@ public enum Type {
 		}
 	}
 
+	public static Type fromName(String name) {
+		for (Type type : Type.values())
+			if (type.toString().equals(name))
+				return type;
+		return null;
+	}
 }

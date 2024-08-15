@@ -21,6 +21,7 @@
 */
 package org.socialworld.calculation.descriptions;
 
+import com.google.gson.Gson;
 
 /**
  * The class holds all informations for
@@ -29,6 +30,22 @@ package org.socialworld.calculation.descriptions;
  * @author Mathias Sikos (MatWorsoc)   
  */
 public class EventInfluenceDescription extends DescriptionBase {
+
+	public EventInfluenceDescription() {
+		super();
+	}
+	public EventInfluenceDescription(Gson gson, String json) {
+		super();
+		
+		//loadFromJson(gson, json);
+	}
+
+	@Override
+	public void setFunctions() {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 
 }

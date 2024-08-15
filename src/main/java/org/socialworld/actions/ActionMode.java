@@ -21,6 +21,7 @@
 */
 package org.socialworld.actions;
 
+
 /**
  * The enumeration holds all specialization modes of an action type. So there
  * are (for example) modes for the action type move and for the action
@@ -87,6 +88,13 @@ public enum ActionMode {
 	 */
 	public int getIndex() {
 		return index;
+	}
+
+	public static ActionMode fromName(String name) {
+		for (ActionMode mode : ActionMode.values())
+			if (mode.toString().equals(name))
+				return mode;
+		return null;
 	}
 
 	public static int maxIndex() {

@@ -21,7 +21,24 @@
 */
 package org.socialworld.calculation.descriptions;
 
+import com.google.gson.Gson;
 
 public class EventPerceptionDescription extends DescriptionBase {
+
+	public EventPerceptionDescription() {
+		super();
+	}
+
+	public EventPerceptionDescription(Gson gson, String json) {
+		super();
+		
+		//loadFromJson(gson, json);
+	}
+
+	@Override
+	public void setFunctions() {
+		// TODO Auto-generated method stub
+		
+	}
 
 }
