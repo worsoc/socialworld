@@ -45,7 +45,6 @@ public class EventPerceptionDescriptionPool extends DescriptionPool {
 		super(EventType.MAX_EVENT_TYPE, GaussPoolPerceptionType.CAPACITY_GPPT_ARRAY);
 
 		this.descriptions = new EventPerceptionDescription[sizeDescriptionsArray];
-
 		
 		initialize();
 		
@@ -69,6 +68,22 @@ public class EventPerceptionDescriptionPool extends DescriptionPool {
 		
 	}
 */
+
+	protected final void initialize() {
+		initializeFromLines();
+	}
+
+	@Override
+	protected void initializeWithTestData(InitializeDataModus modus) {
+		
+		switch (modus) {
+		case lines: 
+			initializeWithTestData_Lines();
+		
+		default:
+			// do nothing
+		}
+	}
 
 	protected  final DescriptionBase getNewDescription() {
 		return new EventPerceptionDescription();
@@ -101,7 +116,7 @@ public class EventPerceptionDescriptionPool extends DescriptionPool {
 	exp = new CreateKnowledgeElementExpression(gegenProbezuLineID_8607);
 */
 	
-	protected void initializeWithTestData_FunctionByExpression() {
+	private void initializeWithTestData_Lines() {
 
 		List<Lines> allLines;
 		allLines = new ArrayList<Lines>();

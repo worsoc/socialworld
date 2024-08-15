@@ -38,6 +38,23 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 		return instance;
 	}
 
+	protected final void initialize() {
+		initializeFromLines();
+	}
+
+	@Override
+	protected void initializeWithTestData(InitializeDataModus modus) {
+		
+		switch (modus) {
+		case lines: 
+			initializeWithTestData_Lines();
+		
+		default:
+			// do nothing
+		}
+	}
+	
+
 	protected  final DescriptionBase getNewDescription() {
 		return new Action2PerformerDescription();
 	}
@@ -70,44 +87,8 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 		return description;
 	}
 */
-	/*
-	@Override
-	protected void initialize() {
-
-		Action2PerformerDescription description;
-		List<FunctionByExpression> expressions;
-		
-		for (int index = 0; index < sizeDescriptionsArray; index++) {
-			
-			if (ActionMode.getName(index) == ActionMode.ignore) {
-				continue;
-			}
-			else {
-				
-				expressions = initializeWithTestData(ActionMode.getName(index));
-				
-				if (expressions.size() > 0) {
-					
-					description = new Action2PerformerDescription();
-					
-					for (int i = 0; i < expressions.size(); i++) {
-						description.addFunction(expressions.get(i));
-					}
-					descriptions[index] = description;
-					
-				}
-				else {
-					// empty description
-					descriptions[index] = new Action2PerformerDescription();
-				}
-			}
 	
-		}
-
-	}
-	*/
-	
-	protected void initializeWithTestData_FunctionByExpression() {
+	private void initializeWithTestData_Lines() {
 		
 		List<Lines> allLines;
 		allLines = new ArrayList<Lines>();
@@ -649,7 +630,7 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 		return;
 		
 	}
-	
+
 
 	
 }

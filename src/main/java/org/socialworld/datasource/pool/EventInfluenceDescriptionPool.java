@@ -64,6 +64,23 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 		
 	}
 */
+	
+	protected final void initialize() {
+		initializeFromLines();
+	}
+
+	@Override
+	protected void initializeWithTestData(InitializeDataModus modus) {
+		
+		switch (modus) {
+		case lines: 
+			initializeWithTestData_Lines();
+		
+		default:
+			// do nothing
+		}
+	}
+
 	protected  final DescriptionBase getNewDescription() {
 		return new EventInfluenceDescription();
 	}
@@ -80,7 +97,7 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 		return  Nothing.getInstance();
 	}
 	
-	protected void initializeWithTestData_FunctionByExpression() {
+	private void initializeWithTestData_Lines() {
 		
 		List<Lines> allLines;
 		allLines = new ArrayList<Lines>();

@@ -62,21 +62,21 @@ public abstract class DescriptionPool {
 
 	}
 	
+	protected abstract void initialize();
 	protected abstract DescriptionBase getNewDescription();
 	protected abstract DescriptionBase getDescription(String description);
 	protected abstract Expression getStartExpressionForLines(List<String> lines4OneExpression);
 	protected abstract Expression getStartExpressionForIDs(List<Integer> ids4OneExpression);
-	protected abstract void initializeWithTestData_FunctionByExpression();
+	protected abstract void initializeWithTestData(InitializeDataModus modus);
 
-	protected void initialize() {
+	protected void initializeFromLines() {
 
 		int index;
 		
 		DescriptionBase description;
 		List<FunctionByExpression> oneDescriptionExpressions;
 		
-		initializeWithTestData_FunctionByExpression();
-//		initializeFromFile();
+		initializeWithTestData(InitializeDataModus.lines);
 
 		for (int mainIndex = 0; mainIndex < rangeMainIndex; mainIndex++) {
 		
@@ -103,15 +103,14 @@ public abstract class DescriptionPool {
 			
 	}
 
-	protected void _initialize() {
+	protected void initializeFromJson() {
 
 		int index;
 		
 		DescriptionBase description;
 		List<FunctionByExpression> oneDescriptionExpressions;
 		
-		initializeWithTestData_FunctionByExpression();
-//		initializeFromFile();
+		initializeWithTestData(InitializeDataModus.json);
 
 		for (int mainIndex = 0; mainIndex < rangeMainIndex; mainIndex++) {
 		
@@ -159,7 +158,6 @@ public abstract class DescriptionPool {
 		int indexDescriptions;
 		int lfdNr;
 		DescriptionBase description;
-		Expression startExpression;
 		List<FunctionByExpression> oneDescriptionExpressions;
 		List<String> jsons4OneDescription;
 		Jsons jsons;

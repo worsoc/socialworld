@@ -32,6 +32,21 @@ public class State2ActionDescriptionPool extends DescriptionPool {
 		return instance;
 	}
 	
+	protected final void initialize() {
+		initializeFromLines();
+	}
+
+	@Override
+	protected void initializeWithTestData(InitializeDataModus modus) {
+		
+		switch (modus) {
+		case lines: 
+			initializeWithTestData_Lines();
+		
+		default:
+			// do nothing
+		}
+	}
 
 	protected  final DescriptionBase getNewDescription() {
 		return new State2ActionDescription();
@@ -49,7 +64,7 @@ public class State2ActionDescriptionPool extends DescriptionPool {
 		return  Nothing.getInstance();
 	}
 	
-	protected void initializeWithTestData_FunctionByExpression() {
+	private void initializeWithTestData_Lines() {
 		
 		
 		List<Lines> allLines;
