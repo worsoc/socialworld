@@ -53,5 +53,11 @@ public enum InventoryPlace {
 		return index;
 	}
 
+	public static InventoryPlace fromName(String name) {
+		for (InventoryPlace place : InventoryPlace.values())
+			if (place.toString().equals(name))
+				return place;
+		return null;
+	}
 
 }

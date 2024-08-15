@@ -30,6 +30,7 @@ import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.actions.ActionType;
 import org.socialworld.actions.ActionMode;
+import org.socialworld.actions.handle.InventoryPlace;
 
 import org.socialworld.datasource.parsing.JsonEventReactionDescriptionEntry;
 import org.socialworld.datasource.parsing.JsonEventReactionDescription;
@@ -50,7 +51,15 @@ public class EventReactionDescription extends DescriptionBase {
 		
 		ActionType actionType;
 		ActionMode actionMode;
-
+		String minTime;
+		String maxTime;
+		String priority;
+		String intensity;
+		String duration;
+		String target;
+		String item;
+		InventoryPlace inventoryPlace;
+		
 		public EventReactionDescriptionEntry(JsonEventReactionDescriptionEntry json) {
 			this.valueName = json.valueName;
 			this.valueType = Type.fromName(json.valueType);
@@ -59,6 +68,14 @@ public class EventReactionDescription extends DescriptionBase {
 			
 			this.actionType = ActionType.fromName(json.actionType);
 			this.actionMode = ActionMode.fromName(json.actionMode);
+			this.minTime = json.minTime;
+			this.maxTime = json.maxTime;
+			this.priority = json.priority;
+			this.intensity = json.intensity;
+			this.duration = json.duration;
+			this.target = json.target;
+			this.item = json.item;
+			this.inventoryPlace = InventoryPlace.fromName(json.inventoryPlace);
 		}
 	}
 	
@@ -85,9 +102,10 @@ public class EventReactionDescription extends DescriptionBase {
 		this.reactionType = jsonObject.reactionType;
 		
 		this.entrys = new ArrayList<EventReactionDescriptionEntry>();
-		for (String entry : jsonObject.entrys) {
-			this.entrys.add(new EventReactionDescriptionEntry(gson.fromJson(entry, JsonEventReactionDescriptionEntry.class)));
+		for (JsonEventReactionDescriptionEntry entry : jsonObject.entrys) {
+			this.entrys.add(new EventReactionDescriptionEntry(entry));
 		}
+
 	}
 
 	@Override

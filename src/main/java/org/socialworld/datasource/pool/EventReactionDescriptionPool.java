@@ -32,6 +32,9 @@ import org.socialworld.calculation.expressions.CreateActionExpression;
 import org.socialworld.calculation.expressions.Nothing;
 import org.socialworld.core.EventType;
 
+
+import org.socialworld.datasource.parsing.JsonEventReactionDescription;
+
 public class EventReactionDescriptionPool extends DescriptionPool {
 
 	
@@ -145,40 +148,37 @@ public class EventReactionDescriptionPool extends DescriptionPool {
 
 		int reactionType;
 		
+		String json;
+		JsonEventReactionDescription jsonObject;
 		jsons4EventType = new Jsons4EventType(EventType.candidatesMoveWalk, rangeSecondIndex);
-		for ( reactionType = 0; reactionType < rangeSecondIndex; reactionType++) 
-			jsons4EventType.set(reactionType, 0, "WENN 3 " + Value.VALUE_BY_NAME_EVENT_MOVE_VELOCITY + " > 11 &mood >= 0 & mood < 90 DANN <TYPE><Const>6</Const></TYPE><MODE><Const>67</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>10000</Now+N></MAXTIME><PRIORITY><Const>155</Const></PRIORITY><INTENSITY><MX+N>8;1.5;0</MX+N></INTENSITY><DURATION><Const>2000</Const></DURATION><TARGET><GetEvParm>" + Value.VALUE_BY_NAME_EVENT_CAUSER + "</GetEvParm></TARGET>");
-		allJsons.add(jsons4EventType);
-		
-		jsons4EventType = new Jsons4EventType(EventType.candidatesMoveRun, rangeSecondIndex);
-		for ( reactionType = 0; reactionType < rangeSecondIndex; reactionType++) 
-			jsons4EventType.set(reactionType, 0, "WENN 3 " + Value.VALUE_BY_NAME_EVENT_MOVE_VELOCITY + " > 11 &mood >= 0 & mood < 99 DANN <TYPE><Const>7</Const></TYPE><MODE><Const>74</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>10000</Now+N></MAXTIME><PRIORITY><Const>162</Const></PRIORITY><INTENSITY><MX+N>8;0.1;0</MX+N></INTENSITY><DURATION><Const>2000</Const></DURATION><TARGET><GetEvParm>" + Value.VALUE_BY_NAME_EVENT_CAUSER + "</GetEvParm></TARGET>");
-		allJsons.add(jsons4EventType);
-/*
-		jsons4EventType = new Jsons4EventType(EventType.candidatesSayScream, rangeSecondIndex);
 		for ( reactionType = 0; reactionType < rangeSecondIndex; reactionType++) {
-			jsons4EventType.set(reactionType, 0, "WENN 3 " + Value.VALUE_BY_NAME_EVENT_SAY_LOUDNESS + " > 50 & mood >= 20 & mood < 55 DANN <TYPE><Const>2</Const></TYPE><MODE><Const>21</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>10000</Now+N></MAXTIME><PRIORITY><Const>160</Const></PRIORITY><INTENSITY><Const>1</Const></INTENSITY><DURATION><Const>5000</Const></DURATION><TARGET><GetEvParm>" + Value.VALUE_BY_NAME_EVENT_CAUSER + "</GetEvParm></TARGET>");
-			jsons4EventType.set(reactionType, 1, "WENN 3 " + Value.VALUE_BY_NAME_EVENT_SAY_LOUDNESS + " > 50 & mood >= 20 & mood < 55 DANN <TYPE><Const>3</Const></TYPE><MODE><Const>31</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>10000</Now+N></MAXTIME><PRIORITY><Const>158</Const></PRIORITY><INTENSITY><MX+N>8;1.3;23</MX+N></INTENSITY><DURATION><Const>2000</Const></DURATION>");
-		}
-		allJsons.add(jsons4EventType);
-*/
-/*
-		jsons4EventType = new Jsons4EventType(EventType.percipientExists, rangeSecondIndex);
-		for ( reactionType = 0; reactionType < rangeSecondIndex; reactionType++) 
-			jsons4EventType.set(reactionType, 0, "WENN hunger >= 45 & courage >= 35 DANN <TYPE><Const>4</Const></TYPE><MODE><Const>41</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>50000</Now+N></MAXTIME><PRIORITY><Const>100</Const></PRIORITY><INTENSITY><MX+N>7;1;0</MX+N></INTENSITY><DURATION><Const>1000</Const></DURATION><ITEM><GetEvParm>" + Value.VALUE_BY_NAME_EVENT_CAUSER + "</GetEvParm></ITEM>");
-		allJsons.add(jsons4EventType);
+//			json = "{\"eventType\":\"candidatesMoveWalk\",\"reactionTypeType\":" + reactionType + "," +
+//					"\"entrys\":[" +
+//					"\"WENN 3 " + Value.VALUE_BY_NAME_EVENT_MOVE_VELOCITY + " > 11 &mood >= 0 & mood < 90 DANN <TYPE><Const>6</Const></TYPE><MODE><Const>67</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>10000</Now+N></MAXTIME><PRIORITY><Const>155</Const></PRIORITY><INTENSITY><MX+N>8;1.5;0</MX+N></INTENSITY><DURATION><Const>2000</Const></DURATION><TARGET><GetEvParm>" + Value.VALUE_BY_NAME_EVENT_CAUSER + "</GetEvParm></TARGET>\"" +
+//					"]}";
+			json = "{" + 
+					"\"eventType\":\"candidatesMoveWalk\"," +
+					"\"reactionTypeType\":" + reactionType + "," +
+					"\"entrys\":[" +
+						"{" +
+						"\"valueName\":\"" + Value.VALUE_BY_NAME_EVENT_MOVE_VELOCITY + "\"," +
+						"\"valueType\":\"floatingpoint\"," +
+						"\"actionType\":\"useWeapon\"," +
+						"\"actionMode\":\"weaponClub\"," +
+						"\"minTime\":\"<Now+N>1000</Now+N>\"," +
+						"\"maxTime\":\"<Now+N>10000</Now+N>\"," +
+						"\"priority\":\"<Const>155</Const>\"," +
+						"\"intensity\":\"<MX+N>8;1.5;0</MX+N>\"," +
+						"\"duration\":\"<Const>2000</Const>\"," +
+						"\"target\":\"<GetEvParm>" + Value.VALUE_BY_NAME_EVENT_CAUSER + "</GetEvParm>\"" +
+						"}" +
+					"]" +
+					"}";
+			
+			jsonObject = EventReactionDescriptionPool.getGsonInstance().fromJson(json, JsonEventReactionDescription.class);
 
-		
-		jsons4EventType = new Jsons4EventType(EventType.selfInventoryTake, rangeSecondIndex);
-		for ( reactionType = 0; reactionType < rangeSecondIndex; reactionType++) 
-			jsons4EventType.set(reactionType, 0, "WENN hunger >= 60 & courage >= 45 DANN <TYPE><Const>4</Const></TYPE><MODE><Const>44</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>50000</Now+N></MAXTIME><PRIORITY><Const>99</Const></PRIORITY><INTENSITY><MX+N>7;1;0</MX+N></INTENSITY><DURATION><Const>1000</Const></DURATION><ITEM><GetEvParm>" + Value.VALUE_BY_NAME_EVENT_EQUIP_ITEM + "</GetEvParm></ITEM><INVENTORYPLACE><Const>3</Const></INVENTORYPLACE>");
-		allJsons.add(jsons4EventType);
-*/		
-		jsons4EventType = new Jsons4EventType(EventType.selfInventorySet, rangeSecondIndex);
-		for ( reactionType = 0; reactionType < rangeSecondIndex; reactionType++) 
-			jsons4EventType.set(reactionType, 0, "WENN 21 " + Value.VALUE_BY_NAME_EVENT_EQUIP_ITEMISEATABLE + " == false & hunger >= 70 DANN <TYPE><Const>0</Const></TYPE><MODE><Const>3</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>2000</Now+N></MAXTIME><PRIORITY><Const>165</Const></PRIORITY><INTENSITY><MX+N>7;1;0</MX+N></INTENSITY><DURATION><Const>1000</Const></DURATION>");
-		allJsons.add(jsons4EventType);
-		
+		}
+			
 		createDescriptionsAndExpressions(allJsons);
 
 	}

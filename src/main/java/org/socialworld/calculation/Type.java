@@ -21,6 +21,7 @@
 */
 package org.socialworld.calculation;
 
+
 public enum Type {
 	nothing(0),
 	integer(1), longinteger(2), floatingpoint(3),
@@ -71,6 +72,7 @@ public enum Type {
 		return null;
 	}	
 	
+
 	public boolean isAllowedAsKnowledgeValue() {
 		
 		switch (this){
