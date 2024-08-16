@@ -31,6 +31,9 @@ import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.geometry.Vector;
+
+import org.socialworld.calculation.descriptions.EventReactionDescriptionEntry;
+
 import org.socialworld.datasource.parsing.ParseExpressionStrings;
 
 public class CreateActionExpression extends Branching {
@@ -38,6 +41,17 @@ public class CreateActionExpression extends Branching {
 	public static final int MODUS_CREATE_STATE2ACTION = 1;
 	public static final int MODUS_CREATE_REACTION = 2;
 	
+	public CreateActionExpression(EventReactionDescriptionEntry desc) {
+		
+		super();
+		
+		Expression exp1;  // WENN
+		Expression exp2;  // DANN
+		Expression exp3;  // SONST
+ 
+		exp1 = parseWenn(SimulationCluster.todo, PropertyUsingAs.todo, desc.conditions, false /* without WENN/DANN */);
+
+	}
 	
 	public CreateActionExpression(List<String> lines) {
 		
@@ -53,7 +67,7 @@ public class CreateActionExpression extends Branching {
 			Expression exp3;  // SONST
 				
 			line = lines.get(0);
-			exp1 = parseWenn(SimulationCluster.todo, PropertyUsingAs.todo, line);
+			exp1 = parseWenn(SimulationCluster.todo, PropertyUsingAs.todo, line, true /* with WENN/DANN */);
 			exp2 = parseDann(line);
 			
 			if (lines.size() > 1) {
@@ -87,7 +101,7 @@ public class CreateActionExpression extends Branching {
 		Expression tail;
 		
 		line = lines.get(index);
-		wenn = parseWenn(SimulationCluster.todo, PropertyUsingAs.todo, line);
+		wenn = parseWenn(SimulationCluster.todo, PropertyUsingAs.todo, line, true /* with WENN/DANN */);
 		dann = parseDann(line);
 		
 		if (index == (lines.size() - 1)) 

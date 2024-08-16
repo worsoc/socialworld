@@ -48,7 +48,7 @@ public class ChangeAttributes extends Branching {
 			Expression exp3;  // SONST
 				
 			line = lines.get(0);
-			exp1 = parseWenn(SimulationCluster.todo, PropertyUsingAs.todo, line);
+			exp1 = parseWenn(SimulationCluster.todo, PropertyUsingAs.todo, line, true /* with WENN/DANN */);
 			exp2 = parseDann(line);
 			
 			if (lines.size() > 1) {
@@ -78,7 +78,7 @@ public class ChangeAttributes extends Branching {
 		Expression tail;
 		
 		line = lines.get(index);
-		wenn = parseWenn(SimulationCluster.todo, PropertyUsingAs.todo, line);
+		wenn = parseWenn(SimulationCluster.todo, PropertyUsingAs.todo, line, true /* with WENN/DANN */);
 		dann = parseDann(line);
 		
 		if (index == (lines.size() - 1)) 

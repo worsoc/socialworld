@@ -25,12 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.core.EventType;
-import org.socialworld.calculation.Expression_ConditionOperator;
-import org.socialworld.calculation.Type;
-import org.socialworld.calculation.Value;
-import org.socialworld.actions.ActionType;
-import org.socialworld.actions.ActionMode;
-import org.socialworld.actions.handle.InventoryPlace;
 
 import org.socialworld.datasource.parsing.JsonEventReactionDescriptionEntry;
 import org.socialworld.datasource.parsing.JsonEventReactionDescription;
@@ -40,44 +34,6 @@ public class EventReactionDescription extends DescriptionBase {
 	
 
 	
-	public class EventReactionDescriptionEntry {
-		
-		String valueName;
-		Type valueType;
-		Expression_ConditionOperator operator;
-		Value comparisonValue;
-		
-//		AttributeConditions attributeConditions;
-		
-		ActionType actionType;
-		ActionMode actionMode;
-		String minTime;
-		String maxTime;
-		String priority;
-		String intensity;
-		String duration;
-		String target;
-		String item;
-		InventoryPlace inventoryPlace;
-		
-		public EventReactionDescriptionEntry(JsonEventReactionDescriptionEntry json) {
-			this.valueName = json.valueName;
-			this.valueType = Type.fromName(json.valueType);
-			this.operator = Expression_ConditionOperator.fromName(json.operator);
-			this.comparisonValue = new Value(json.comparisonValue, this.valueType);
-			
-			this.actionType = ActionType.fromName(json.actionType);
-			this.actionMode = ActionMode.fromName(json.actionMode);
-			this.minTime = json.minTime;
-			this.maxTime = json.maxTime;
-			this.priority = json.priority;
-			this.intensity = json.intensity;
-			this.duration = json.duration;
-			this.target = json.target;
-			this.item = json.item;
-			this.inventoryPlace = InventoryPlace.fromName(json.inventoryPlace);
-		}
-	}
 	
 	private EventType eventType;
 	private int reactionType;

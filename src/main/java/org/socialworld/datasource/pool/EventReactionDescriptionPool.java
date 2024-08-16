@@ -161,8 +161,7 @@ public class EventReactionDescriptionPool extends DescriptionPool {
 					"\"reactionTypeType\":" + reactionType + "," +
 					"\"entrys\":[" +
 						"{" +
-						"\"valueName\":\"" + Value.VALUE_BY_NAME_EVENT_MOVE_VELOCITY + "\"," +
-						"\"valueType\":\"floatingpoint\"," +
+						"\"conditions\":\"3 " + Value.VALUE_BY_NAME_EVENT_MOVE_VELOCITY + " > 11 & mood >= 0 & mood < 90\"," +
 						"\"actionType\":\"useWeapon\"," +
 						"\"actionMode\":\"weaponClub\"," +
 						"\"minTime\":\"<Now+N>1000</Now+N>\"," +

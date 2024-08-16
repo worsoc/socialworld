@@ -51,14 +51,19 @@ public class Branching extends Expression {
 		super();
 	}
 	
-	protected Expression parseWenn(SimulationCluster cluster, PropertyUsingAs usablePermission, String line) {
+	protected Expression parseWenn(SimulationCluster cluster, PropertyUsingAs usablePermission, String line, boolean withWENNDANN ) {
 		
 		String partWENN;
 		
-		int posWenn = line.indexOf("WENN");
-		int posDann = line.indexOf("DANN");
-		
-		partWENN = line.substring(posWenn + 4, posDann);
+		if (withWENNDANN) {
+			int posWenn = line.indexOf("WENN");
+			int posDann = line.indexOf("DANN");
+			
+			partWENN = line.substring(posWenn + 4, posDann);
+		}
+		else {
+			partWENN = line;
+		}
 		
 		String[] listORs = partWENN.split("\\|");
 		int countORs = listORs.length;
