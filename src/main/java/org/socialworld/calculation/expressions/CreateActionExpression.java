@@ -41,16 +41,40 @@ public class CreateActionExpression extends Branching {
 	public static final int MODUS_CREATE_STATE2ACTION = 1;
 	public static final int MODUS_CREATE_REACTION = 2;
 	
-	public CreateActionExpression(EventReactionDescriptionEntry desc) {
+	public CreateActionExpression(List<EventReactionDescriptionEntry> descEntrys, boolean dummy) {
 		
 		super();
 		
-		Expression exp1;  // WENN
-		Expression exp2;  // DANN
-		Expression exp3;  // SONST
- 
-		exp1 = parseWenn(SimulationCluster.todo, PropertyUsingAs.todo, desc.conditions, false /* without WENN/DANN */);
+		if (descEntrys.size() > 0)
+		{
 
+			EventReactionDescriptionEntry entry;
+			
+			Expression exp1;  // WENN
+			Expression exp2;  // DANN
+			Expression exp3;  // SONST
+	 
+			entry = descEntrys.get(0);
+			exp1 = parseWenn(SimulationCluster.todo, PropertyUsingAs.todo, entry.conditions, false /* without WENN/DANN */);
+			exp2 = parseDann(entry);
+	
+			if (descEntrys.size() > 1) {
+				exp3 = parseFurtherEntrys(1, descEntrys);
+			}
+			else {
+				exp3 = new CreateValue(Type.action, Nothing.getInstance());
+			}
+			setExpression1(exp1);
+			setExpression2(exp2);
+			setExpression3(exp3);
+
+			setOperation(Expression_Function.branching);
+
+			setValid();
+		}
+		else {
+			System.out.println("CreateActionExpression.constructor(): entrys ist leer!");
+		}
 	}
 	
 	public CreateActionExpression(List<String> lines) {
@@ -71,7 +95,7 @@ public class CreateActionExpression extends Branching {
 			exp2 = parseDann(line);
 			
 			if (lines.size() > 1) {
-				exp3 = parseLinesTail(1, lines);
+				exp3 = parseFurtherLines(1, lines);
 			}
 			else {
 				exp3 = new CreateValue(Type.action, Nothing.getInstance());
@@ -92,7 +116,29 @@ public class CreateActionExpression extends Branching {
 	}
 
 	
-	private Expression parseLinesTail(int index, List<String> lines) {
+	private Expression parseFurtherEntrys(int index, List<EventReactionDescriptionEntry> descEntrys) {
+		
+		EventReactionDescriptionEntry entry;
+		
+		Expression wenn;
+		Expression dann;
+		Expression tail;
+		
+		entry = descEntrys.get(index);
+		wenn = parseWenn(SimulationCluster.todo, PropertyUsingAs.todo, entry.conditions, false /* without WENN/DANN */);
+		dann = parseDann(entry);
+		
+		if (index == (descEntrys.size() - 1)) 
+			 tail = new Expression();
+		else
+			 tail = parseFurtherEntrys(index + 1, descEntrys);
+		
+		return new Branching(wenn, dann, tail);
+			
+	}
+	
+	
+	private Expression parseFurtherLines(int index, List<String> lines) {
 		
 		String line;
 		
@@ -107,11 +153,101 @@ public class CreateActionExpression extends Branching {
 		if (index == (lines.size() - 1)) 
 			 tail = new Expression();
 		else
-			 tail = parseLinesTail(index + 1, lines);
+			 tail = parseFurtherLines(index + 1, lines);
 		
 		return new Branching(wenn, dann, tail);
 			
 	}
+	
+	
+	private Expression parseDann(EventReactionDescriptionEntry descEntry) {
+		
+		
+		Expression actionValue;
+		Expression replacementChain = null;
+		Expression[] sequence = new Expression[2];
+		Expression createAction;
+		
+		String[] functionTags = {"Const", "Table", "VSPE", "MX+N","MLogX+N", "MExpX+N","Now+N", "GetEvParm"};
+		String[] function;
+		
+		
+		
+		String[] propertyNames;
+		String propertyName;
+		String tagValue = "";
+		ActionType actionType = ActionType.ignore;
+		
+		for (int i = 0; i < 2; i++)
+		{
+			if (i == 0) {
+				propertyNames = ActionType.getStandardPropertyNames();
+			}
+			else {
+				propertyNames = actionType.getFurtherPropertyNames();
+			}
+			
+			for (int indexPropertyNames = 0; indexPropertyNames < propertyNames.length; indexPropertyNames++) {
+				
+				propertyName = propertyNames[indexPropertyNames];
+				
+				tagValue = getTagValue(descEntry, propertyName);
+				if (tagValue.length() == 0) continue;
+				
+				function = ParseExpressionStrings.getTagValue(tagValue, functionTags);
+				actionValue = getFunctionExpression(propertyName, function);
+				
+				if (( i == 0) && ( indexPropertyNames == 0 )) 
+				{
+					// first iteration: the first property has to be the action type as constant expression
+					replacementChain = new Replacement(propertyName, actionValue);
+					actionType = ActionType.getName(Integer.parseInt(function[1]) );
+				}
+				else
+				{
+					sequence[0] = new Replacement(propertyName, actionValue);
+					sequence[1] = replacementChain;
+					replacementChain = new Sequence(sequence);
+
+				}
+			}
+		}
+	
+		createAction = new CreateValue(Type.action, replacementChain);
+		return createAction;
+	}
+
+	private String getTagValue(EventReactionDescriptionEntry descEntry, String propertyName) {
+		
+		switch (propertyName) {
+			case Value.VALUE_BY_NAME_ACTION_TYPE:
+				return descEntry.actionType;
+			case Value.VALUE_BY_NAME_ACTION_MODE:
+				return descEntry.actionMode;
+			case Value.VALUE_BY_NAME_ACTION_INTENSITY:
+				return descEntry.intensity;
+			case Value.VALUE_BY_NAME_ACTION_MINTIME:
+				return descEntry.minTime;
+			case Value.VALUE_BY_NAME_ACTION_MAXTIME:
+				return descEntry.maxTime;
+			case Value.VALUE_BY_NAME_ACTION_PRIORITY:
+				return descEntry.priority;
+			case Value.VALUE_BY_NAME_ACTION_DURATION:
+				return descEntry.duration;
+			case Value.VALUE_BY_NAME_ACTION_MOVE_ENDPOSITION:
+				return descEntry.endPosition;
+			case Value.VALUE_BY_NAME_ACTION_DIRECTION:
+				return descEntry.direction;
+			case Value.VALUE_BY_NAME_ACTION_TARGET:
+				return descEntry.target;
+			case Value.VALUE_BY_NAME_ACTION_EQUIP_ITEM:
+				return descEntry.item;
+			case Value.VALUE_BY_NAME_ACTION_EQUIP_PLACE:
+				return descEntry.inventoryPlace;
+		}
+		return "";
+	}
+	
 	private Expression parseDann(String line) {
 		
 		String partDANN;

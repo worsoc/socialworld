@@ -21,12 +21,10 @@
 */
 package org.socialworld.calculation.descriptions;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.core.EventType;
 
-import org.socialworld.datasource.parsing.JsonEventReactionDescriptionEntry;
 import org.socialworld.datasource.parsing.JsonEventReactionDescription;
 import com.google.gson.Gson;
 
@@ -56,11 +54,7 @@ public class EventReactionDescription extends DescriptionBase {
 		
 		this.eventType = EventType.fromName(jsonObject.eventType);
 		this.reactionType = jsonObject.reactionType;
-		
-		this.entrys = new ArrayList<EventReactionDescriptionEntry>();
-		for (JsonEventReactionDescriptionEntry entry : jsonObject.entrys) {
-			this.entrys.add(new EventReactionDescriptionEntry(entry));
-		}
+		this.entrys = jsonObject.entrys;
 
 	}
 

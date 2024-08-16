@@ -172,7 +172,7 @@ public enum ActionType {
 		return null;
 	}
 
-	public  String getPraefix() {
+	public String getPraefix() {
 		return name() + "_";
 	}
 

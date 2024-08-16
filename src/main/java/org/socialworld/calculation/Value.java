@@ -62,14 +62,14 @@ public class Value {
 	public static final String VALUE_BY_NAME_ACTION_SENTENCETYPE = PRAEFIX_ACTION + "sentenceType";
 	public static final String VALUE_BY_NAME_ACTION_ANSWERS = PRAEFIX_ACTION + "answers";
 	
-	public static final String VALUE_BY_NAME_ACTION_MOVE_ACCELERATION = ActionType.move.getPraefix() + "acceleration";
-	public static final String VALUE_BY_NAME_ACTION_MOVE_VELOCITY = ActionType.move.getPraefix() + "velocity";
-	public static final String VALUE_BY_NAME_ACTION_MOVE_ENDPOSITION = ActionType.move.getPraefix() + "endposition";
-	public static final String VALUE_BY_NAME_ACTION_EQUIP_ITEM = ActionType.equip.getPraefix() + "item";
-	public static final String VALUE_BY_NAME_ACTION_EQUIP_PLACE = ActionType.equip.getPraefix() + "inventoryPlace";
-	public static final String VALUE_BY_NAME_ACTION_BF_ITEM =  ActionType.bodilyFunction.getPraefix() + "item";  
-	public static final String VALUE_BY_NAME_ACTION_BF_ITEMDRINK = ActionType.bodilyFunction.getPraefix() + "itemDrink";
-	public static final String VALUE_BY_NAME_ACTION_BF_ITEMEAT = ActionType.bodilyFunction.getPraefix() + "itemEat";
+	public static final String VALUE_BY_NAME_ACTION_MOVE_ACCELERATION = "move_acceleration";
+	public static final String VALUE_BY_NAME_ACTION_MOVE_VELOCITY = "move_velocity";
+	public static final String VALUE_BY_NAME_ACTION_MOVE_ENDPOSITION = "move_endposition";
+	public static final String VALUE_BY_NAME_ACTION_EQUIP_ITEM = "equip_item";
+	public static final String VALUE_BY_NAME_ACTION_EQUIP_PLACE = "equip_inventoryPlace";
+	public static final String VALUE_BY_NAME_ACTION_BF_ITEM =  "bodilyFunction_item";  
+	public static final String VALUE_BY_NAME_ACTION_BF_ITEMDRINK = "bodilyFunction_itemDrink";
+	public static final String VALUE_BY_NAME_ACTION_BF_ITEMEAT = "bodilyFunction_itemEat";
 
 	
 	public static final String VALUE_BY_NAME_EVENT = "event";
