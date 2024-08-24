@@ -10,6 +10,28 @@ import org.socialworld.calculation.Value;
 
 public class Calculate extends Expression {
 
+	public static Calculate getCalculateExpression(String functionDescription, String nameResultValue) {
+		String term = getTermConstruction(functionDescription);
+		return new Calculate(term,  nameResultValue);
+	}
+	
+	private static String getDotOperator(String description) {
+		if (description.indexOf(">>>") > 0) {
+			return ">>>";
+		}
+		else if (description.indexOf(">>") > 0) {
+			return ">>";
+		}
+		else if (description.indexOf(">") > 0) {
+			return ">";
+		}
+		else {
+			return "\\.";
+		}
+	}
+	
+
+
 	public Calculate(String term, String nameResultValue) {
 		
 		Expression main = parseTerm(term, this);
@@ -24,7 +46,7 @@ public class Calculate extends Expression {
 		
 	}
 	
-	private Expression parseTerm(String term, Expression parent) {
+	private Expression parseTerm(String term,  Expression parent) {
 		
 		String functionName = getFunctionName(term).toLowerCase();
 		Expression result;
@@ -35,10 +57,9 @@ public class Calculate extends Expression {
 			
 			String subString = term.substring(term.indexOf("(") + 1, term.lastIndexOf(")") ).trim();
 			
-			
 			if (functionName.equals("get")) {
-				
-				result = new GetValue(SimulationCluster.todo, PropertyUsingAs.todo, subString, Value.VALUE_NAME_UNUSED_BECAUSE_TEMPORARY);
+				String separator = Calculate.getDotOperator(subString);
+				result = new GetValue(SimulationCluster.todo, PropertyUsingAs.todo, subString, separator, Value.VALUE_NAME_UNUSED_BECAUSE_TEMPORARY);
 				return result;
 			}
 			else {
@@ -176,12 +197,12 @@ public class Calculate extends Expression {
 			// 2 operands
 			result = new Expression[2];
 			result[0] = parseTerm(oneOreTwoTerms.substring(0, positionComma ).trim(), parent);
-			result[1] = parseTerm(oneOreTwoTerms.substring(positionComma + 1, oneOreTwoTerms.length() ).trim(), parent);
+			result[1] = parseTerm(oneOreTwoTerms.substring(positionComma + 1, oneOreTwoTerms.length() ).trim(),  parent);
 		}
 		else {
 			// 1 operand
 			result = new Expression[1];
-			result[0] = parseTerm(oneOreTwoTerms.substring(0, oneOreTwoTerms.length() ).trim(), parent);
+			result[0] = parseTerm(oneOreTwoTerms.substring(0, oneOreTwoTerms.length() ).trim(),  parent);
 		}
 		
 		return result;
@@ -207,6 +228,27 @@ public class Calculate extends Expression {
 		}
 		
 		return -1;
+	}
+	
+	private static String getTermConstruction(String functionDescription) {
+		String term = "";
+		
+		if (functionDescription.equals("function:distance(event,simObj)")) {
+
+			term = "get(SUB(" + 
+					"get(GETVal(" + Value.VALUE_BY_NAME_EVENT_PARAMS + ")>" + GetValue.GETVALUE + "(" + Value.VALUE_BY_NAME_EVENT_POSITION + "))," +
+					"get(GETVal(" + Value.VALUE_BY_NAME_SIMOBJECT + ")>" + GetValue.GETPROPERTY + "(simobj_position)))>>>" + 
+					GetValue.GETPROPERTY + "(direction_vector)>>>" + GetValue.GETPROPERTY + "(vector_length))"
+					;
+/*			
+			term = "SUB(" + 
+					"get(GETVal(" + Value.VALUE_BY_NAME_EVENT + ")." + GetValue.GETPROPERTY + "(event_position))," +
+					"get(GETVal(" + Value.VALUE_BY_NAME_SIMOBJECT + ")." + GetValue.GETPROPERTY + "(simobj_position)))" //." + 
+//					GetValue.GETPROPERTY + "(direction_vector)." + GetValue.GETPROPERTY + "(vector_length)"
+					;
+*/
+		}
+		return term;
 	}
 	
 }

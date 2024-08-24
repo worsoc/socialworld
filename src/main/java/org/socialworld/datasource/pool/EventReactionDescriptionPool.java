@@ -75,6 +75,7 @@ public class EventReactionDescriptionPool extends DescriptionPool {
 		}
 	}
 
+
 	protected  final DescriptionBase getNewDescription() {
 		return new EventReactionDescription();
 	}
@@ -152,33 +153,178 @@ public class EventReactionDescriptionPool extends DescriptionPool {
 		JsonEventReactionDescription jsonObject;
 		jsons4EventType = new Jsons4EventType(EventType.candidatesMoveWalk, rangeSecondIndex);
 		for ( reactionType = 0; reactionType < rangeSecondIndex; reactionType++) {
-//			json = "{\"eventType\":\"candidatesMoveWalk\",\"reactionTypeType\":" + reactionType + "," +
-//					"\"entrys\":[" +
-//					"\"WENN 3 " + Value.VALUE_BY_NAME_EVENT_MOVE_VELOCITY + " > 11 &mood >= 0 & mood < 90 DANN <TYPE><Const>6</Const></TYPE><MODE><Const>67</Const></MODE><MINTIME><Now+N>1000</Now+N></MINTIME><MAXTIME><Now+N>10000</Now+N></MAXTIME><PRIORITY><Const>155</Const></PRIORITY><INTENSITY><MX+N>8;1.5;0</MX+N></INTENSITY><DURATION><Const>2000</Const></DURATION><TARGET><GetEvParm>" + Value.VALUE_BY_NAME_EVENT_CAUSER + "</GetEvParm></TARGET>\"" +
-//					"]}";
 			json = "{" + 
 					"\"eventType\":\"candidatesMoveWalk\"," +
-					"\"reactionTypeType\":" + reactionType + "," +
+					"\"reactionType\":" + reactionType + "," +
 					"\"entrys\":[" +
 						"{" +
-						"\"conditions\":\"3 " + Value.VALUE_BY_NAME_EVENT_MOVE_VELOCITY + " > 11 & mood >= 0 & mood < 90\"," +
-						"\"actionType\":\"useWeapon\"," +
-						"\"actionMode\":\"weaponClub\"," +
+						"\"conditions\":\"3 " + Value.VALUE_BY_NAME_EVENT_MOVE_VELOCITY + " > 1 & mood >= 0 & mood < 90\"," +
+						"\"actionType\":\"<Const>6</Const>\"," +
+						"\"actionMode\":\"<Const>67</Const>\"," +
 						"\"minTime\":\"<Now+N>1000</Now+N>\"," +
 						"\"maxTime\":\"<Now+N>10000</Now+N>\"," +
-						"\"priority\":\"<Const>155</Const>\"," +
+						"\"priority\":\"<Const>55</Const>\"," +
 						"\"intensity\":\"<MX+N>8;1.5;0</MX+N>\"," +
 						"\"duration\":\"<Const>2000</Const>\"," +
 						"\"target\":\"<GetEvParm>" + Value.VALUE_BY_NAME_EVENT_CAUSER + "</GetEvParm>\"" +
 						"}" +
 					"]" +
 					"}";
-			
-			jsonObject = EventReactionDescriptionPool.getGsonInstance().fromJson(json, JsonEventReactionDescription.class);
-
+			jsons4EventType.set(reactionType, json);
 		}
-			
+//		allJsons.add(jsons4EventType);
+		
+		jsons4EventType = new Jsons4EventType(EventType.candidatesMoveRun, rangeSecondIndex);
+		for ( reactionType = 0; reactionType < rangeSecondIndex; reactionType++) {
+			json = "{" + 
+					"\"eventType\":\"candidatesMoveRun\"," +
+					"\"reactionType\":" + reactionType + "," +
+					"\"entrys\":[" +
+						"{" +
+						"\"conditions\":\"3 " + Value.VALUE_BY_NAME_EVENT_MOVE_VELOCITY + " > 1 & mood >= 0 & mood < 90\"," +
+						"\"actionType\":\"<Const>7</Const>\"," +
+						"\"actionMode\":\"<Const>74</Const>\"," +
+						"\"minTime\":\"<Now+N>1000</Now+N>\"," +
+						"\"maxTime\":\"<Now+N>10000</Now+N>\"," +
+						"\"priority\":\"<Const>62</Const>\"," +
+						"\"intensity\":\"<MX+N>8;0.1;0</MX+N>\"," +
+						"\"duration\":\"<Const>2000</Const>\"," +
+						"\"target\":\"<GetEvParm>" + Value.VALUE_BY_NAME_EVENT_CAUSER + "</GetEvParm>\"" +
+						"}" +
+					"]" +
+					"}";
+			jsons4EventType.set(reactionType, json);
+		}
+//		allJsons.add(jsons4EventType);
+
+		jsons4EventType = new Jsons4EventType(EventType.candidatesSayScream, rangeSecondIndex);
+		for ( reactionType = 0; reactionType < rangeSecondIndex; reactionType++) {
+			json = "{" + 
+					"\"eventType\":\"candidatesSayScream\"," +
+					"\"reactionType\":" + reactionType + "," +
+					"\"entrys\":[" +
+						"{" +
+						"\"conditions\":\"3 " + Value.VALUE_BY_NAME_EVENT_SAY_LOUDNESS + " > 50 & mood >= 20 & mood < 55\"," +
+						"\"actionType\":\"<Const>2</Const>\"," +
+						"\"actionMode\":\"<Const>21</Const>\"," +
+						"\"minTime\":\"<Now+N>1000</Now+N>\"," +
+						"\"maxTime\":\"<Now+N>10000</Now+N>\"," +
+						"\"priority\":\"<Const>60</Const>\"," +
+						"\"intensity\":\"<Const>1</Const>\"," +
+						"\"duration\":\"<Const>5000</Const>\"," +
+						"\"target\":\"<GetEvParm>" + Value.VALUE_BY_NAME_EVENT_CAUSER + "</GetEvParm>\"" +
+						"}," +
+						"{" +
+						"\"conditions\":\"3 " + Value.VALUE_BY_NAME_EVENT_SAY_LOUDNESS + " > 30 & mood >= 10 & mood < 65\"," +
+						"\"actionType\":\"<Const>3</Const>\"," +
+						"\"actionMode\":\"<Const>31</Const>\"," +
+						"\"minTime\":\"<Now+N>1000</Now+N>\"," +
+						"\"maxTime\":\"<Now+N>10000</Now+N>\"," +
+						"\"priority\":\"<Const>58</Const>\"," +
+						"\"intensity\":\"<MX+N>8;1.3;23</MX+N>\"," +
+						"\"duration\":\"<Const>2000</Const>\"" +
+						"}" +
+					"]" +
+					"}";
+			jsons4EventType.set(reactionType, json);
+		}
+//		allJsons.add(jsons4EventType);
+		
+		jsons4EventType = new Jsons4EventType(EventType.percipientExistsDistance1000, rangeSecondIndex);
+		for ( reactionType = 0; reactionType < rangeSecondIndex; reactionType++) {
+			json = "{" + 
+					"\"eventType\":\"percipientExistsDistance1000\"," +
+					"\"reactionType\":" + reactionType + "," +
+					"\"entrys\":[" +
+						"{" +
+						"\"conditions\":\"curiosity > 50 & hunger >= 35 & courage >= 35 & power >= 35\"," +
+						"\"actionType\":\"<Const>4</Const>\"," +
+						"\"actionMode\":\"<Const>41</Const>\"," +
+						"\"minTime\":\"<Now+N>1000</Now+N>\"," +
+						"\"maxTime\":\"<Now+N>5000</Now+N>\"," +
+						"\"priority\":\"<Const>100</Const>\"," +
+						"\"intensity\":\"<MX+N>7;1;0</MX+N>\"," +
+						"\"duration\":\"<Const>1000</Const>\"," +
+						"\"item\":\"<GetEvParm>" + Value.VALUE_BY_NAME_EVENT_CAUSER + "</GetEvParm>\"" +
+						"}" +
+					"]" +
+					"}";
+			jsons4EventType.set(reactionType, json);
+		}
+//		allJsons.add(jsons4EventType);
+
+		jsons4EventType = new Jsons4EventType(EventType.percipientExistsDistance5000, rangeSecondIndex);
+		for ( reactionType = 0; reactionType < rangeSecondIndex; reactionType++) {
+			json = "{" + 
+					"\"eventType\":\"percipientExistsDistance5000\"," +
+					"\"reactionType\":" + reactionType + "," +
+					"\"entrys\":[" +
+						"{" +
+						"\"conditions\":\"function:distance(event,simObj) < 2000 & morals < 35 & power >= 65\"," +
+						"\"actionType\":\"<Const>6</Const>\"," +
+						"\"actionMode\":\"<Const>67</Const>\"," +
+						"\"minTime\":\"<Now+N>1000</Now+N>\"," +
+						"\"maxTime\":\"<Now+N>5000</Now+N>\"," +
+						"\"priority\":\"<Const>105</Const>\"," +
+						"\"intensity\":\"<MX+N>8;1.5;0</MX+N>\"," +
+						"\"duration\":\"<Const>1000</Const>\"," +
+						"\"target\":\"<GetEvParm>" + Value.VALUE_BY_NAME_EVENT_CAUSER + "</GetEvParm>\"" +
+						"}" +
+					"]" +
+					"}";
+			jsons4EventType.set(reactionType, json);
+		}
+		allJsons.add(jsons4EventType);
+		
+		jsons4EventType = new Jsons4EventType(EventType.selfInventoryTake, rangeSecondIndex);
+		for ( reactionType = 0; reactionType < rangeSecondIndex; reactionType++) {
+			json = "{" + 
+					"\"eventType\":\"selfInventoryTake\"," +
+					"\"reactionType\":" + reactionType + "," +
+					"\"entrys\":[" +
+						"{" +
+						"\"conditions\":\"materialism >= 50 & courage >= 25\"," +
+						"\"actionType\":\"<Const>4</Const>\"," +
+						"\"actionMode\":\"<Const>44</Const>\"," +
+						"\"minTime\":\"<Now+N>1000</Now+N>\"," +
+						"\"maxTime\":\"<Now+N>50000</Now+N>\"," +
+						"\"priority\":\"<Const>188</Const>\"," +
+						"\"intensity\":\"<MX+N>7;1;0</MX+N>\"," +
+						"\"duration\":\"<Const>1000</Const>\"," +
+						"\"item\":\"<GetEvParm>" + Value.VALUE_BY_NAME_EVENT_EQUIP_ITEM + "</GetEvParm>\"," +
+						"\"inventoryPlace\":\"<Const>3</Const>\"" +
+						"}" +
+					"]" +
+					"}";
+			jsons4EventType.set(reactionType, json);
+		}
+//		allJsons.add(jsons4EventType);
+		
+		jsons4EventType = new Jsons4EventType(EventType.selfInventorySet, rangeSecondIndex);
+//		"\"conditions\":\"21 " + Value.VALUE_BY_NAME_EVENT_EQUIP_ITEMISEATABLE + " == true & hunger >= 70 \"," +
+		for ( reactionType = 0; reactionType < rangeSecondIndex; reactionType++) {
+			json = "{" + 
+					"\"eventType\":\"selfInventorySet\"," +
+					"\"reactionType\":" + reactionType + "," +
+					"\"entrys\":[" +
+						"{" +
+						"\"conditions\":\"hunger > 70\"," +
+						"\"actionType\":\"<Const>0</Const>\"," +
+						"\"actionMode\":\"<Const>3</Const>\"," +
+						"\"minTime\":\"<Now+N>1000</Now+N>\"," +
+						"\"maxTime\":\"<Now+N>20000</Now+N>\"," +
+						"\"priority\":\"<Const>165</Const>\"," +
+						"\"intensity\":\"<MX+N>7;1;0</MX+N>\"," +
+						"\"duration\":\"<Const>1000</Const>\"" +
+						"}" +
+					"]" +
+					"}";
+			jsons4EventType.set(reactionType, json);
+		}
+//		allJsons.add(jsons4EventType);
+		
 		createDescriptionsAndExpressions(allJsons);
+//		jsonObject = EventReactionDescriptionPool.getGsonInstance().fromJson(json, JsonEventReactionDescription.class);
 
 	}
 

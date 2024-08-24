@@ -45,6 +45,8 @@ public class Value {
 
 	public static final String PRAEFIX_WEAPON = "weapon_";
 
+	public static final String VALUE_BY_NAME_SIMOBJECT = "simObj";
+
 	public static final String VALUE_BY_NAME_ACTION_TYPE = PRAEFIX_ACTION + "type";
 	public static final String VALUE_BY_NAME_ACTION_MODE = PRAEFIX_ACTION + "mode";
 	public static final String VALUE_BY_NAME_ACTION_INTENSITY = PRAEFIX_ACTION + "intensity";
@@ -74,6 +76,7 @@ public class Value {
 	
 	public static final String VALUE_BY_NAME_EVENT = "event";
 	public static final String VALUE_BY_NAME_EVENT_PARAMS = PRAEFIX_EVENT + "params";
+	public static final String VALUE_BY_NAME_EVENT_POSITION = PRAEFIX_EVENT + "position";
 	public static final String VALUE_BY_NAME_EVENT_CAUSER = PRAEFIX_EVENT + "causer";
 	public static final String VALUE_BY_NAME_EVENT_TARGET = PRAEFIX_EVENT + "target";
 	public static final String VALUE_BY_NAME_EVENT_DIRECTION = PRAEFIX_EVENT + "direction";
@@ -309,6 +312,21 @@ public class Value {
 		case floatingpoint:
 			if ( type == Type.floatingpoint) return Type.floatingpoint;
 			break;
+		case simPropName:
+			if ( type == Type.simPropName) return Type.simPropName;
+			break;
+		case simObjProp:
+			if ( type == Type.simObjProp) return Type.simPropName;
+			if ( type == Type.simPropName) return Type.simPropName;
+			break;
+		case eventProp:
+			if ( type == Type.eventProp) return Type.eventProp;
+			if ( type == Type.simPropName) return Type.simPropName;
+			break;
+		case actionProp:
+			if ( type == Type.actionProp) return Type.actionProp;
+			if ( type == Type.simPropName) return Type.simPropName;
+			break;
 		default:
 			return type;
 		}
@@ -344,6 +362,7 @@ public class Value {
 		
 		ValueProperty result;
 		result = ValueProperty.getInvalid();
+		Object object = value;
 		
 		boolean returnInvalidVP = false;
 		
@@ -363,7 +382,6 @@ public class Value {
 		
 		if (!returnInvalidVP) {
 			
-			Object object = value;
 
 			switch (simPropName) {
 			case method:
@@ -455,7 +473,9 @@ public class Value {
 					result = savedValue.getProperty(cluster, simPropName, valueName);
 				}
 				else if (object instanceof Event) {
-					
+					Event event;
+					event = (Event) object;
+//					result = event.getProperty(cluster, simPropName, valueName);
 				}
 				else if (object instanceof AbstractAction) {
 					

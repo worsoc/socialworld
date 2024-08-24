@@ -155,7 +155,7 @@ public class EventPerceptionDescriptionPool extends DescriptionPool {
 		int index;
 		int sizeListOfLines = lines4OneKE.size();
 		
-		lines4EventType = new Lines4EventType(EventType.percipientExists, rangeSecondIndex);
+		lines4EventType = new Lines4EventType(EventType.percipientExistsDistance5000, rangeSecondIndex);
 		for ( perceptionType = 0; perceptionType < rangeSecondIndex; perceptionType++) {
 			index = perceptionType % sizeListOfLines;
 			lines4EventType.add(perceptionType, lines4OneKE.get(index));
@@ -178,7 +178,7 @@ public class EventPerceptionDescriptionPool extends DescriptionPool {
 		int perceptionType;
 	
 		// TODO for other event types
-		ids4EventType = new DescriptionIDs4EventType(EventType.percipientExists, rangeSecondIndex);
+		ids4EventType = new DescriptionIDs4EventType(EventType.percipientExistsDistance5000, rangeSecondIndex);
 		
 		for ( perceptionType = 0; perceptionType < rangeSecondIndex; perceptionType++) {
 			ids4EventType.add(perceptionType, 0, 8607);

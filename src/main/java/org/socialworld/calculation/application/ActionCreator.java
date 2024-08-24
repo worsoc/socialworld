@@ -61,7 +61,6 @@ public class ActionCreator extends SocialWorldThread {
 	
 	private static String namePropertyActionType = Value.VALUE_BY_NAME_ACTION_TYPE;
 	
-	private int sleepTime = 2;
 	private int sizeThreashold;
 	
 	/**
@@ -69,8 +68,9 @@ public class ActionCreator extends SocialWorldThread {
 	 */
 	private ActionCreator() {
 		
-		this.reactors = new CapacityQueue<CollectionElementReactor>("reactors", 10000);
-		this.actors = new CapacityQueue<CollectionElementActor>("actors", 10000);
+		this.sleepTime = SocialWorldThread.SLEEPTIME_ACTION_CREATOR;
+		this.reactors = new CapacityQueue<CollectionElementReactor>("reactors", 1000);
+		this.actors = new CapacityQueue<CollectionElementActor>("actors", 1000);
 		
 		String[] actionPropertyNames;
 		actionPropertyNames = ActionType.getStandardPropertyNames();
@@ -96,7 +96,7 @@ public class ActionCreator extends SocialWorldThread {
 			if (this.reactors.size() > 0) calculateReaction();
 			
 			try {
-				sleep(sleepTime);
+				sleep(this.sleepTime);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -135,11 +135,11 @@ public class ActionCreator extends SocialWorldThread {
 
 		// DEBUG Output falls size zu groß
 
-/*		
+		
 		if (this.reactors.size() > sizeThreashold) {
 			System.out.println("ActionCreator.calculateReaction(): this.reactors.size() " + this.reactors.size());
 		}
-*/		
+		
 		
 		CollectionElementReactor reactor = this.reactors.remove();
 		if (reactor != null) {
@@ -147,17 +147,18 @@ public class ActionCreator extends SocialWorldThread {
 			
 			Event event = reactor.getEvent();
 			
-	
-			
-			
 			StateSimulationObject stateReactor  = reactor.getState();
 			HiddenSimulationObject hiddenReactor =  reactor.getHidden();
 
 			int eventType = event.getEventTypeAsInt();
 			int eventReactionType = stateReactor.getReactionType(eventType);
+			
 			EventReactionDescription eventReactionDescription = 
 					EventReactionAssignment.getInstance().getEventReactionDescription(
 						eventType, eventReactionType	);
+				
+			
+			// TODO try catch
 			int count = eventReactionDescription.countFunctions();
 			
 			
@@ -191,13 +192,14 @@ public class ActionCreator extends SocialWorldThread {
 						hiddenReactor.setAction(reaction);
 					}
 				}
-				
 			}
+				
 			
 		}
 		else {
-			System.out.println("ActionCreator.calculateReaction(): reactor is null");
-
+			if (GlobalSwitches.OUTPUT_DEBUG_ACTIONCREATOR_VARIABLE_IS_NULL) {
+				System.out.println("ActionCreator.calculateReaction(): reactor is null");
+			}
 		}
 	}
 	
@@ -268,6 +270,7 @@ public class ActionCreator extends SocialWorldThread {
 		else {
 			arguments.add(new Value(Type.valueList, Value.VALUE_BY_NAME_EVENT_PARAMS, event.getProperties()));
 		}
+		arguments.add( new Value(Type.simulationObject, Value.VALUE_BY_NAME_SIMOBJECT, stateReactor.getObject()) );
 		
 		Value result = f_CreateReaction.calculate(arguments);
 		return objectRequester.requestAction(SimulationCluster.action, result, this);

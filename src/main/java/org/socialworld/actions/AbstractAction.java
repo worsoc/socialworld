@@ -95,7 +95,7 @@ public abstract class AbstractAction implements IObjectSender, IObjectReceiver {
 	protected ActionMode mode;
 	protected Time minTime;
 	protected Time maxTime;
-	protected int priority;
+	protected int priority;   // higher value --> higher priority (better chance for perform the action)
 	protected float intensity;
 	protected long duration;
 	protected long remainedDuration;

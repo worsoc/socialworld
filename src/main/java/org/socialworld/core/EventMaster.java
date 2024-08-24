@@ -54,7 +54,6 @@ public class EventMaster extends SocialWorldThread {
 	
 	private static EventMaster instance;
 	
-	private int sleepTime = 50;
 	
 	private boolean blockedByAdd = false;
 	private boolean blockedByCalculate = false;
@@ -112,6 +111,7 @@ public class EventMaster extends SocialWorldThread {
 	 */
 	private EventMaster() {
 
+		this.sleepTime = 50;
 		candidates = new ArrayList<SimulationObject>();
 		percipients = new ArrayList<SimulationObject>();
 		eventQueue = new PriorityBlockingQueue<Event>();

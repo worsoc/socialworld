@@ -36,7 +36,6 @@ public class RefreshMaster extends SocialWorldThread {
 	
 	ObjectMaster myObjectMaster;
 	
-	private int sleepTime = 100;
 	
 	SimulationObject_Type simObjType;
 	
@@ -48,6 +47,7 @@ public class RefreshMaster extends SocialWorldThread {
 	}
 	
 	private RefreshMaster(ObjectMaster objectMaster) {
+		this.sleepTime = 100;
 		myObjectMaster = objectMaster;
 		simObjType = SimulationObject_Type.human;
 	}

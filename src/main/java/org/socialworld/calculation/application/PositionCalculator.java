@@ -58,6 +58,8 @@ public class PositionCalculator extends SocialWorldThread {
 	 */
 	private PositionCalculator() {
 
+		this.sleepTime = SocialWorldThread.SLEEPTIME_POSITION_CALCULATOR;
+
 		this.moved = new CapacityQueue<CollectionElementSimObjInfluenced>("moved", 1000);
 /*		this.events = new ArrayList<Event>();
 		this.states = new ArrayList<StateSimulationObject>();
@@ -79,7 +81,7 @@ public class PositionCalculator extends SocialWorldThread {
 			if (this.moved.size() > 0) calculatePositionChangedByEvent();
 			
 			try {
-				sleep(5);
+				sleep(this.sleepTime);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

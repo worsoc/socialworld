@@ -46,9 +46,9 @@ public class CapacityQueue<Type> {
 	public boolean add(Type element) {
 		
 		if (this.size == this.capacity) {
-	//		System.out.println("------------------------");
-	//		System.out.println("CapacityQueue " + this.name + " is full!!!");
-	//		System.out.println("------------------------");
+			System.out.println("------------------------");
+			System.out.println("CapacityQueue " + this.name + " is full!!!");
+			System.out.println("------------------------");
 			return false;
 		}
 		else {
@@ -56,11 +56,15 @@ public class CapacityQueue<Type> {
 			this.indexAdd++;
 			if (this.indexAdd == this.capacity) {
 				this.indexAdd = 0;
+				setSize();
 				System.out.println("------------------------");
-				System.out.println("CapacityQueue " + this.name + " starts from index 0 (indexRemove: " + this.indexRemove + ")");
+				System.out.println("CapacityQueue " + this.name + "(Add; size = " + this.size + ") starts from index 0 (indexRemove: " + this.indexRemove + ")");
 				System.out.println("------------------------");
 			}
-			this.size++;
+			else {
+				setSize();
+			}
+			
 			if (this.size > this.capacity) {
 				System.out.println("------------------------");
 				System.out.println("CapacityQueue " + this.name + " is SUPER FULL (size > capacity)");
@@ -82,17 +86,29 @@ public class CapacityQueue<Type> {
 			this.indexRemove++;
 			if (this.indexRemove == this.capacity) {
 				this.indexRemove = 0;
+				setSize();
+				System.out.println("------------------------");
+				System.out.println("CapacityQueue " + this.name + "(Remove; size = " + this.size + ") starts from index 0 (indexAdd: " + this.indexAdd + ")");
+				System.out.println("------------------------");
 			}
-			this.size--;
-
+			else {
+				setSize();
+			}
 		}
+		
 		if (this.size < 0) {
 			System.out.println("------------------------");
 			System.out.println("CapacityQueue " + this.name + " is SUPER EMPTY (size < 0)");
 			System.out.println("------------------------");
 		}
+		
 		return remove;
 		
+	}
+	
+	private void setSize() {
+		if (this.indexAdd >= this.indexRemove) this.size = this.indexAdd - this.indexRemove;
+		else  this.size = this.capacity + this.indexAdd - this.indexRemove;
 	}
 	
 	public int size() {

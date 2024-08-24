@@ -122,9 +122,16 @@ public class Branching extends Expression {
 		String[] conditionElements = condition.trim().split("\\s+");
 		
 		// in case of 3 elements --> (attribute name, operator, value)
+		//						 --> (float function, operator, value)
 		if (conditionElements.length == 3) {
 			
-			return parseAttributeCondition(conditionElements);
+			if (conditionElements[0].indexOf("function:") >= 0) {
+				// the function is a term construction with triples (function name, operator1, operator2)+-----
+				return parseFunctionCondition(cluster, usablePermission, conditionElements);
+			}
+			else {
+				return parseAttributeCondition(conditionElements);
+			}
 			
 		}
 		
@@ -181,6 +188,36 @@ public class Branching extends Expression {
 			
 	}
 	
+	private Expression parseFunctionCondition(SimulationCluster cluster, PropertyUsingAs usablePermission, String[] conditionElements) {
+		
+	
+		// the function description
+		String functionDescription = conditionElements[0];
+		
+		// the operator for comparison (here always in data type floating point
+		String operator = conditionElements[1];
+		
+		// the value the event's property is compared to (here always type floating point
+		String value = conditionElements[2];
+		
+		Expression calculateFuntionResult = Calculate.getCalculateExpression(functionDescription,  Value.VALUE_NAME_UNUSED_BECAUSE_TEMPORARY); 
+
+		Expression constant = new Constant(new Value(value, Type.floatingpoint ));
+
+		Expression comparison = new Expression();
+		
+		for (int i = 0; i < Expression_ConditionOperator.NUMBER_OF_COMPARISON_OPERATORS; i++) {
+			
+			if (Expression_ConditionOperator.getName(i).toString().equals(operator) ) {
+				comparison = new Comparison(Expression_ConditionOperator.getName(i), calculateFuntionResult, constant );
+				break;
+			}
+		}
+		
+		return comparison;
+			
+	}
+
 	private Expression parseEventPropsCondition(SimulationCluster cluster, PropertyUsingAs usablePermission, String[] conditionElements) {
 		
 		// type as Type's index (look at the enum Type)

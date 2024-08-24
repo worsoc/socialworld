@@ -62,6 +62,8 @@ public class TalkCalculator  extends SocialWorldThread {
 	 */
 	private TalkCalculator() {
 
+		this.sleepTime = SocialWorldThread.SLEEPTIME_TALK_CALCULATOR;
+		
 		this.influencedTalks = new CapacityQueue<CollectionElementSimObjInfluenced>("influencedTalks", 1000);
 
 /*		this.events = new ArrayList<Event>();
@@ -84,7 +86,7 @@ public class TalkCalculator  extends SocialWorldThread {
 			if (this.influencedTalks.size() > 0) calculateTalkInfluencedByEvent();
 			
 			try {
-				sleep(5);
+				sleep(this.sleepTime);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

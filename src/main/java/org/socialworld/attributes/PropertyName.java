@@ -138,6 +138,7 @@ public enum PropertyName {
 	
 	position_vector(4001001),
 	
+	direction(4002000),
 	direction_vector(4002001),
 	direction_power(4002002),
 	
@@ -145,6 +146,7 @@ public enum PropertyName {
 	vector_x(5001011),
 	vector_y(5001012),
 	vector_z(5001013),
+	vector_length(5001014),
 
 	pathFromPathFinder(6001001),
 	pathFromPathFinder_result(6001002);
@@ -191,6 +193,8 @@ public enum PropertyName {
 			return Type.eventProp; 
 		case action_position:
 			return Type.actionProp; 
+		case direction:
+			return Type.simPropName;
 		default:
 			return Type.nothing;
 		}

@@ -39,6 +39,7 @@ import org.socialworld.core.EventToTarget;
 import org.socialworld.core.EventType;
 import org.socialworld.core.IEventParam;
 import org.socialworld.objects.Human;
+import org.socialworld.objects.NoSimulationObject;
 import org.socialworld.objects.SimulationObject;
 
 /**
@@ -78,10 +79,10 @@ public class ActionHandle extends AbstractAction {
 	private Handle handle;
 	
 	private Vector direction;
-    private SimulationObject target;
+    private SimulationObject target = NoSimulationObject.getObjectNothing();
     
-	private SimulationObject item1;
-	private SimulationObject item2;
+	private SimulationObject item1 = NoSimulationObject.getObjectNothing();
+	private SimulationObject item2 = NoSimulationObject.getObjectNothing();
 
 	public ActionHandle(ValueArrayList actionProperties) {
 		super(actionProperties);

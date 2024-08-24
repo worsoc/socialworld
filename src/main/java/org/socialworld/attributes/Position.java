@@ -25,7 +25,9 @@ import java.util.List;
 
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
+import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueProperty;
+import org.socialworld.calculation.ICalculatable;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.tools.StringTupel;
 
@@ -63,7 +65,7 @@ import org.socialworld.tools.StringTupel;
  *  
  * @author Mathias Sikos (MatWorsoc)  
  */
-public class Position extends SimProperty {
+public class Position extends SimProperty implements ICalculatable {
 
 	public final int LOCATIONBYBASEMAXLENGTH = 9;
 	public final int TRANSLATE = 2000000;
@@ -249,6 +251,24 @@ public class Position extends SimProperty {
 	public boolean equals(Position b) {
 		return this.vector.equals(b.getVector());
 	}
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////    implementing  ICalculatable /////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public   Value getSubtraction(Value op2) {
+		if (op2.getObject(Type.simPropName) instanceof Position) {
+			return new Value(Type.simPropName, new Direction( PropertyName.direction, getDirectionFrom((Position) op2.getObject(Type.simPropName) )) );
+		}
+		else {
+			return Value.getValueNothing();
+		}
+	}
+
+	
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////// Position private /////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 	
 	private void setLocationByBases(Vector position)
 	{

@@ -105,35 +105,7 @@ public abstract class DescriptionPool {
 
 	protected void initializeFromJson() {
 
-		int index;
-		
-		DescriptionBase description;
-		List<FunctionByExpression> oneDescriptionExpressions;
-		
 		initializeWithTestData(InitializeDataModus.json);
-
-		for (int mainIndex = 0; mainIndex < rangeMainIndex; mainIndex++) {
-		
-			for (int secondIndex = 0; secondIndex < rangeSecondIndex; secondIndex++) {
-				
-				index = mainIndex * rangeSecondIndex + secondIndex;
-				oneDescriptionExpressions = this.expressions.get(index);
-				
-				description = getNewDescription();
-				
-				if (oneDescriptionExpressions != null) {
-					
-					for (int i = 0; i < oneDescriptionExpressions.size(); i++) {
-						description.addFunction(oneDescriptionExpressions.get(i));
-					}
-					
-				}
-				
-				descriptions[index] = description;
-		
-			}
-			
-		}
 			
 	}
 
@@ -144,11 +116,14 @@ public abstract class DescriptionPool {
 		
 		index = mainIndex *  rangeSecondIndex + secondIndex ;
 		
-		if (index >= 0 & sizeDescriptionsArray > index) 	
+		if (index >= 0 & sizeDescriptionsArray > index) {	
 			description = descriptions[index];
-		else
+		}
+		
+		if (description == null) {
 			// create a dummy description with an expression that returns the invalid "nothing" value
 			description = getNewDescription();
+		}
 			
 		return description;
 	}
@@ -171,6 +146,7 @@ public abstract class DescriptionPool {
 				for (lfdNr = 0; lfdNr < jsons4OneDescription.size(); lfdNr++) {
 					description = getDescription(jsons4OneDescription.get(lfdNr));
 					description.setFunctions();
+					descriptions[indexDescriptions+secondIndex] = description;
 				}
 			}
 		}

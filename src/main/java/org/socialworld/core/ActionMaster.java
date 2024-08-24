@@ -63,7 +63,7 @@ public class ActionMaster extends SocialWorldThread {
 	private static final int ACTIONMASTER_RETURN_SLEEP_MUCH = 2;
 	private static final int ACTIONMASTER_RETURN_SLEEP_LESS = 1;
 	private static final int ACTIONMASTER_RETURN_SLEEP_ZERO = 0;
-	private int sleepTime = 50;
+
 	private boolean executeAllowed = true;
 	
 	private boolean isBlockedByAddingActionHandler = false;
@@ -108,6 +108,9 @@ public class ActionMaster extends SocialWorldThread {
 	 *  For every list there is a list iterator.
 	 */
 	private ActionMaster() {
+		
+		this.sleepTime = 50;
+		
 		// list (b):
 		reportedActionHandlers = new ArrayList<List<ActionHandler>>();
 		for (int i = 0; i < ActionHandler.MAX_ACTION_WAIT_SECONDS; i++) {

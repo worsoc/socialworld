@@ -117,6 +117,8 @@ public class SVVector extends SavedValue {
 				return new ValueProperty(Type.floatingpoint, valueName, this.savedVector.getY());
 			case vector_z:
 				return new ValueProperty(Type.floatingpoint, valueName, this.savedVector.getZ());
+			case vector_length:
+				return new ValueProperty(Type.floatingpoint, valueName, this.savedVector.length());
 			default:	
 				return ValueProperty.getInvalid();
 			}

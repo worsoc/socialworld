@@ -502,11 +502,15 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 		
      	Event event;
      	
-		event = new EventToPercipient(EventType.percipientExists ,   this /* as causer*/, 
+		event = new EventToPercipient(EventType.percipientExistsDistance5000 ,   this /* as causer*/, 
 				getSimObjectType().getPercipiencePriority(), this.getPosition(SimulationCluster.percipience));
 		//System.out.println("SimulationObject.letBePerceived: " + getObjectID() + "'sending' percipientExists" );
 		Simulation.getInstance().getEventMaster().addEvent(event);
 
+		event = new EventToPercipient(EventType.percipientExistsDistance1000 ,   this /* as causer*/, 
+				getSimObjectType().getPercipiencePriority(), this.getPosition(SimulationCluster.percipience));
+		//System.out.println("SimulationObject.letBePerceived: " + getObjectID() + "'sending' percipientExists" );
+		Simulation.getInstance().getEventMaster().addEvent(event);
 
 	}
 	
@@ -535,7 +539,7 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 	 */
 	public final void reactToEvent(final Event simulationEvent) {
 	
-		if (simulationEvent.getEventType() == EventType.percipientExists) {
+		if (simulationEvent.getEventType().isLetMeBePerceivedEvent()) {
 //			System.out.println("SimulationObject.reactToEvent: "+ getObjectID() + "reacting to percipientExists" );
 		}
 		Scheduler.getInstance().createReaction(simulationEvent, state, guard.getMeHidden(grantAccessToPropertyAction));

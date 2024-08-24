@@ -71,6 +71,8 @@ public  class AttributeCalculator extends SocialWorldThread {
 	 */
 	private AttributeCalculator() {
 
+		this.sleepTime = SocialWorldThread.SLEEPTIME_ATTRIBUTE_CALCULATOR;
+		
 		this.influenced = new CapacityQueue<CollectionElementSimObjInfluenced>("influenced", 1000);
 /*
 		this.events = new ArrayList<Event>();
@@ -103,7 +105,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 			if (this.refreshed.size() > 0) calculateAttributesChangedBySimpleMatrix();
 			
 			try {
-				sleep(5);
+				sleep(this.sleepTime);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

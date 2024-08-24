@@ -73,6 +73,8 @@ public class KnowledgeCalculator extends SocialWorldThread {
 	 */
 	private KnowledgeCalculator() {
 
+		this.sleepTime = SocialWorldThread.SLEEPTIME_KNOWLEDGE_CALCULATOR;
+		
 		this.perceptions = new CapacityQueue<CollectionElementSimObjInfluenced>("perceptions", 1000);
 
 /*		this.events4Perception = new ArrayList<Event>();
@@ -96,7 +98,7 @@ public class KnowledgeCalculator extends SocialWorldThread {
 			if (this.perceptions.size() > 0) calculatePerception();
 			
 			try {
-				sleep(5);
+				sleep(this.sleepTime);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

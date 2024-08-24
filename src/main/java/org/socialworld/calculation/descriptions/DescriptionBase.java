@@ -60,5 +60,9 @@ public abstract class DescriptionBase {
 		return functions.size();
 		
 	}
+	
+	public boolean isEmpty() {
+		return (functions.size() == 0);
+	}
 
 }

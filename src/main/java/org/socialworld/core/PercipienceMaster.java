@@ -35,7 +35,6 @@ public class PercipienceMaster extends SocialWorldThread {
 	
 	private ObjectMaster myObjectMaster;
 
-	int sleepTime = 100;
 
 	public static PercipienceMaster getInstance(ObjectMaster objectMaster) {
 		if (instance == null) {
@@ -45,6 +44,7 @@ public class PercipienceMaster extends SocialWorldThread {
 	}
 
 	private PercipienceMaster(ObjectMaster objectMaster) {
+		this.sleepTime = 100;
 		myObjectMaster = objectMaster;
 	}
 

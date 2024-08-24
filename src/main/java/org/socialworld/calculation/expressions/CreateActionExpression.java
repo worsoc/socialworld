@@ -192,6 +192,7 @@ public class CreateActionExpression extends Branching {
 				propertyName = propertyNames[indexPropertyNames];
 				
 				tagValue = getTagValue(descEntry, propertyName);
+				if (tagValue == null) continue;
 				if (tagValue.length() == 0) continue;
 				
 				function = ParseExpressionStrings.getTagValue(tagValue, functionTags);

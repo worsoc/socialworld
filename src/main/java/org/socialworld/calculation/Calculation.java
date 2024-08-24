@@ -262,6 +262,7 @@ public class Calculation implements IObjectReceiver{
 	
 	public Value addition(Value op1, Value op2){
 	
+		
 		if (op1.isValid() & op2.isValid())
 		{
 
@@ -284,7 +285,6 @@ public class Calculation implements IObjectReceiver{
 				default:
 					return nothing;
 				}
-				
 			default:
 				return nothing;
 			}
@@ -294,9 +294,22 @@ public class Calculation implements IObjectReceiver{
 
 	public Value subtraction(Value op1, Value op2) {
 		
+		Object o1;
 		if (op1.isValid() & op2.isValid())
 		{
-			return addition(op1, negate(op2));
+			switch (op1.getType() ) {
+				case simPropName:
+				case simObjProp:
+				case eventProp:
+				case actionProp:
+					o1 = op1.getObject(Type.simPropName);
+					if (o1 instanceof ICalculatable) {
+						return ((ICalculatable) o1).getSubtraction(op2);
+					}
+					break;
+				default:
+					return addition(op1, negate(op2));
+			}
 		}
 		
 		return nothing;

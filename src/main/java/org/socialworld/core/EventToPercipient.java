@@ -42,7 +42,7 @@ public class EventToPercipient extends Event implements IPerceptible {
 	}
 
 	public boolean checkIsEvent_LetMeBePerceived() {
-		return this.getEventType() == EventType.percipientExists;
+		return this.getEventType().isLetMeBePerceivedEvent();
 	}
 	
 	
@@ -56,6 +56,7 @@ public class EventToPercipient extends Event implements IPerceptible {
 		else {
 			result = new ValueArrayList();
 			result.add(new Value(Type.simulationObject, Value.VALUE_BY_NAME_EVENT_CAUSER, this.getCauser()));
+			result.add(new Value(Type.simPropName, Value.VALUE_BY_NAME_EVENT_POSITION, this.getPosition()));
 		}
 		return result;
 		

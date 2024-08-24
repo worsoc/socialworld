@@ -26,11 +26,17 @@ import org.socialworld.calculation.ObjectRequester;
 
 public class SocialWorldThread extends Thread implements IObjectReceiver{
 
+	public static final int SLEEPTIME_ACTION_CREATOR = 2;
+	public static final int SLEEPTIME_ATTRIBUTE_CALCULATOR = 5;
+	public static final int SLEEPTIME_KNOWLEDGE_CALCULATOR = 5;
+	public static final int SLEEPTIME_POSITION_CALCULATOR = 5;
+	public static final int SLEEPTIME_TALK_CALCULATOR = 5;
 	
 	/**
 	 * says whether the thread is running or not
 	 */
 	private boolean isRunning;
+	protected int sleepTime;
 	
 	protected ObjectRequester objectRequester = new ObjectRequester();
 

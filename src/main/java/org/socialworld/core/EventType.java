@@ -134,7 +134,12 @@ public enum EventType {
 
 	/*percipientSayNormal(464), percipientSayScream(465), percipientSayWhisper(466), */
 	
-	percipientExists(511);
+	percipientExistsDistance100000(506),
+	percipientExistsDistance10000(507),
+	percipientExistsDistance5000(508),
+	percipientExistsDistance2000(509),
+	percipientExistsDistance1000(510),
+	percipientExistsDistance100(511);
 	
 	public static final int MAX_EVENT_TYPE =  512;
 
@@ -196,7 +201,7 @@ public enum EventType {
 	
 	public boolean isEventToPercipient() {
 		
-		if (this.index > 384  & this.index < 512) {
+		if (this.index > 384  & this.index < MAX_EVENT_TYPE) {
 			return true;
 		}
 		else {
@@ -268,13 +273,17 @@ public enum EventType {
 		
 	}
 	
+	public boolean isLetMeBePerceivedEvent() {
+		return this.index >= 506;
+	}
+
 	public float getEffectDistance() {
 		//return 1000000.0F;
 		
 		switch (this) {
 		// TODO getEffectDistance()
-		case candidatesMoveWalk: return 5000.0F;
-		case candidatesMoveRun: return 5000.0F;
+		case candidatesMoveWalk: return 10000.0F;
+		case candidatesMoveRun: return 15000.0F;
 		case candidatesMoveSneak: return 1000.0F; 
 		case candidatesMoveJump: return 3000.0F;
 		case candidatesMoveSwim: return 3000.0F;
@@ -321,7 +330,12 @@ public enum EventType {
 		case candidatesSayScream: return 40000.0F; 
 		case candidatesSayWhisper: return 1000.0F; 
 
-		case percipientExists: return 5000.0F;
+		case percipientExistsDistance100000: return 100000.0F;
+		case percipientExistsDistance10000: return 10000.0F;
+		case percipientExistsDistance5000: return 5000.0F;
+		case percipientExistsDistance2000: return 2000.0F;
+		case percipientExistsDistance1000: return 1000.0F;
+		case percipientExistsDistance100: return 100.0F;
 			
 		default:
 			return 10000.0F;
@@ -382,7 +396,12 @@ public enum EventType {
 		case candidatesSayWhisper:
 			return 360.0F;
 		
-		case percipientExists:
+		case percipientExistsDistance100000: 
+		case percipientExistsDistance10000: 
+		case percipientExistsDistance5000:
+		case percipientExistsDistance2000: 
+		case percipientExistsDistance1000: 
+		case percipientExistsDistance100: 
 			return 0.0F;
 			
 		default:
