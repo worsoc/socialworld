@@ -32,6 +32,7 @@ public class GlobalSwitches {
 	public static boolean OUTPUT_DEBUG_GETOBJECT = true;
 	public static boolean OUTPUT_DEBUG_GETPROPERTY = true;
 	
+	public static boolean OUTPUT_EVENTMASTER_DETERMINE_CANDIDATES = true;
 	public static boolean OUTPUT_CREATE_OBJECT = false;
 
 }

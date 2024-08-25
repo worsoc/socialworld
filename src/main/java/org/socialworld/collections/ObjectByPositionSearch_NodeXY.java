@@ -21,6 +21,7 @@
 */
 package org.socialworld.collections;
 
+import org.socialworld.core.ObjectMaster;
 /**
  * The class ObjectByPositionSearch_NodeXY describes a node of a search tree for simulation objects.
  * The tree's basis is 4 for four directions which can be described by position's X and Y value
@@ -58,6 +59,9 @@ public class ObjectByPositionSearch_NodeXY {
 	private int[] done = {0,0,0,0};
 	private int objectID;
 
+	// just for debugging
+	private  ObjectMaster objectMaster = ObjectMaster.getInstance();
+	
 	public ObjectByPositionSearch_NodeXY(ObjectByPositionSearch_NodeXY parent, int childNr, int objectID) {
 		
 		this.parent = parent;

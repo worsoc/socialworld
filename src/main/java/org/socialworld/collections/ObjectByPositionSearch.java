@@ -164,6 +164,7 @@ public class ObjectByPositionSearch {
 		addObject(object);
 	}
 
+	/*
 	public void reset() {
 		while (found != root) {
 			found.resetGetNode();
@@ -171,6 +172,7 @@ public class ObjectByPositionSearch {
 		}
 		found.resetGetNode();
 	}
+	*/
 	
 	public void findNearestObject (double findX, double findY) {
 		found = findNearestNoLeaf(findX, findY);

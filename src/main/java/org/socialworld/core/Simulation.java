@@ -179,6 +179,7 @@ public class Simulation extends SocialWorldThread {
 			myItem = (Item) incompleteObject.getObject();
 			// set the human's position to the inventory item
 			myHiddenItem.setPosition(positionParentHuman);
+			changePosition(myItem);
 			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Cap(" + myItem.getObjectID() + "):" + myItem.getPosition(SimulationCluster.test).toString());
 			
 			inventory.setCap( (Cap) myItem) ;
@@ -189,6 +190,7 @@ public class Simulation extends SocialWorldThread {
 			myItem = (Item) incompleteObject.getObject();
 			// set the human's position to the inventory item
 			myHiddenItem.setPosition(positionParentHuman);
+			changePosition(myItem);
 			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Shirt(" + myItem.getObjectID() + "):" + myItem.getPosition(SimulationCluster.test).toString());
 
 			inventory.setShirt((Shirt) myItem);
@@ -199,6 +201,7 @@ public class Simulation extends SocialWorldThread {
 			shoeLeft = (Shoe) incompleteObject.getObject();
 			// set the human's position to the inventory item
 			myHiddenItem.setPosition(positionParentHuman);
+			changePosition(shoeLeft);
 			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Shoe(" + shoeLeft.getObjectID() + "):" + myItem.getPosition(SimulationCluster.test).toString());
 			
 			Shoe shoeRight;
@@ -207,6 +210,7 @@ public class Simulation extends SocialWorldThread {
 			shoeRight = (Shoe) incompleteObject.getObject();
 			// set the human's position to the inventory item
 			myHiddenItem.setPosition(positionParentHuman);
+			changePosition(shoeRight);
 			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Shoe(" + shoeRight.getObjectID() + "):" + myItem.getPosition(SimulationCluster.test).toString());
 
 			inventory.setShoes(shoeLeft, shoeRight);
@@ -217,6 +221,7 @@ public class Simulation extends SocialWorldThread {
 			sockLeft = (Sock) incompleteObject.getObject();
 			// set the human's position to the inventory item
 			myHiddenItem.setPosition(positionParentHuman);
+			changePosition(sockLeft);
 			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Sock(" + sockLeft.getObjectID() + "):" + myItem.getPosition(SimulationCluster.test).toString());
 			
 			Sock sockRight;
@@ -225,6 +230,7 @@ public class Simulation extends SocialWorldThread {
 			sockRight = (Sock) incompleteObject.getObject();
 			// set the human's position to the inventory item
 			myHiddenItem.setPosition(positionParentHuman);
+			changePosition(sockRight);
 			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Sock(" + sockRight.getObjectID() + "):" + myItem.getPosition(SimulationCluster.test).toString());
 
 			inventory.setSocks(sockLeft, sockRight);
@@ -234,6 +240,7 @@ public class Simulation extends SocialWorldThread {
 			myItem = (Item) incompleteObject.getObject();
 			// set the human's position to the inventory item
 			myHiddenItem.setPosition(positionParentHuman);
+			changePosition(myItem);
 			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Trousers(" + myItem.getObjectID() + "):" + myItem.getPosition(SimulationCluster.test).toString());
 	
 			inventory.setTrousers((Trousers) myItem) ;
@@ -338,6 +345,11 @@ public class Simulation extends SocialWorldThread {
 		int objectID;
 		objectID = this.searchByPosition.getNextObjectID();
 		return this.objectMaster.getSimulationObject(objectID);
+	}
+	
+	
+	public void changePosition(SimulationObject objectWithNewosition) {
+		this.searchByPosition.changePosition(objectWithNewosition);
 	}
 	
 	public void propertyChanged(SimulationObject changedObject, ChangedProperty property) {

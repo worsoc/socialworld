@@ -28,6 +28,7 @@ import java.util.ListIterator;
 
 
 import org.socialworld.SocialWorld;
+import org.socialworld.GlobalSwitches;
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
 import org.socialworld.calculation.SimulationCluster;
@@ -49,7 +50,7 @@ import org.socialworld.objects.properties.IPerceptible;
  */
 public class EventMaster extends SocialWorldThread {
 
-	private static final int MAX_SLEEP_TIME_FOR_DECREASING_PRIORITY = 10;
+	private static final int MAX_SLEEP_TIME_FOR_DECREASING_PRIORITY = 3;
 	private static final int MAX_SLEEP_TIME_FOR_EMPTY_QUEUE = 10;
 	
 	private static EventMaster instance;
@@ -111,7 +112,7 @@ public class EventMaster extends SocialWorldThread {
 	 */
 	private EventMaster() {
 
-		this.sleepTime = 50;
+		this.sleepTime = MAX_SLEEP_TIME_FOR_EMPTY_QUEUE;
 		candidates = new ArrayList<SimulationObject>();
 		percipients = new ArrayList<SimulationObject>();
 		eventQueue = new PriorityBlockingQueue<Event>();
@@ -148,7 +149,6 @@ public class EventMaster extends SocialWorldThread {
 				
 			}
 			
-			sleepTime = 50;
 			try {
 				sleep(sleepTime);
 			} catch (InterruptedException e) {
@@ -178,6 +178,8 @@ public class EventMaster extends SocialWorldThread {
 
 		if (!eventQueue.isEmpty()) {
 			
+			blockedByCalculate = true;
+			
 			Event event = null;
 			try {
 				event = this.eventQueue.take();
@@ -185,8 +187,8 @@ public class EventMaster extends SocialWorldThread {
 				e.printStackTrace();
 			}
 		
-			
-			blockedByCalculate = true;
+			//blockedByCalculate = true;
+
 			if ( loadEvent( event ) == true ) {
 				
 				if (event.isEventToTarget()) {
@@ -264,13 +266,33 @@ public class EventMaster extends SocialWorldThread {
 		while (candidate.isSimulationObject()) {
 			
 			ignoreCandidate = checkIgnoreCandidate(candidate);
-			if ( ignoreCandidate == 0) 	candidates.add(candidate);
-			if ( ignoreCandidate < 0)
+			if ( ignoreCandidate == 0) {
+				if (candidates.indexOf(candidate) >= 0) {
+					if (GlobalSwitches.OUTPUT_EVENTMASTER_DETERMINE_CANDIDATES) {
+						System.out.println("EventMaster.determineCandidates: Event " + this.event.toString() + ": Kandidat " + candidate.getObjectID() + " is has already been added to candidates list");
+					}
+				}
+				else {
+					candidates.add(candidate);
+				}
+				if (GlobalSwitches.OUTPUT_EVENTMASTER_DETERMINE_CANDIDATES) {
+					System.out.println("EventMaster.determineCandidates: Event " + this.event.toString() + ": Kandidat " + candidate.getObjectID() + " " + candidate.getPosition(SimulationCluster.test).toString() + " added to candidates list");
+				}
+			}
+			else {
+				if (GlobalSwitches.OUTPUT_EVENTMASTER_DETERMINE_CANDIDATES) {
+					System.out.println("EventMaster.determineCandidates: Event " + this.event.toString() + ": Kandidat " + candidate.getObjectID() + " " + candidate.getPosition(SimulationCluster.test).toString() + " ignored with ignoreCandidate = " + ignoreCandidate);
+				}
+			}
+			if ( ignoreCandidate < 0) {
 				// exit loop
-				candidate = NoSimulationObject.getObjectNothing();
-			else
+				candidate = simulation.getNextByPosition();
+				//candidate = NoSimulationObject.getObjectNothing();
+			}
+			else {
 				// continue
 				candidate = simulation.getNextByPosition();
+			}
 		}
 
 	}

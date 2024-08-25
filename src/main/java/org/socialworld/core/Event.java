@@ -380,6 +380,6 @@ public abstract class Event implements Comparable<Event>, IObjectReceiver {
 
 	
 	public String toString() {
-		return this.eventType + " , " + this.position.toString();
+		return this.eventType + " , " + this.causer.toString()  + " , " + this.time.toString() + " , " + this.position.toString();
 	}
 }
