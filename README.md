@@ -1,6 +1,6 @@
 # Social World
 
-SocialWorld is a software project for simulation people's social behaviour. Therefore the actions, the speech and the physical and mental constitution are part of a simulation process that calculates, how attributes of creatures and characters change and how they act and react.
+SocialWorld is a software project for simulation people's social behaviour. Therefore the actions, the speech and the physical and mental constitution are part of a simulation process that calculates, how attributes of creatures and characters change and how they act and react. Furthermore the simulation focuses on perception, interests, relations and knowledge.
 
 ![Project Status](https://github.com/worsoc/socialworld/actions/workflows/build-gradle-project.yml/badge.svg?event=push)
 
