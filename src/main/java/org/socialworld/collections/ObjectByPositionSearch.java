@@ -21,14 +21,19 @@
 */
 package org.socialworld.collections;
 
-import java.util.ArrayList;
 
 import org.socialworld.attributes.Position;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.objects.SimulationObject;
+import org.socialworld.objects.God;
+import org.socialworld.objects.Human;
+import org.socialworld.objects.Animal;
+import org.socialworld.objects.SimulationObject_Type;
 import org.socialworld.core.Event;
 import org.socialworld.core.EventDistanceCategory;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -131,14 +136,56 @@ public class ObjectByPositionSearch {
 		return sectorTreeBase25.getObjects(location);
 	}
 
-	public ArrayList<SimulationObject> getObjects(Event event) {
-		Position position = event.getPosition();
-		float distance = event.getEventType().getEffectDistance();
+	public LinkedList<LinkedList<SimulationObject>> getObjects(Event event) {
 		
+		Position position = event.getPosition();
+		float distance = event.getEventType().getEffectDistance();		
 		ArrayList<String> praefixs = getPraefixs(position, distance);
 		
+		LinkedList<LinkedList<SimulationObject>> result = new LinkedList<LinkedList<SimulationObject>>();
+
+		LinkedList<SimulationObject> gods = new LinkedList<SimulationObject>();
+		LinkedList<SimulationObject> humans = new LinkedList<SimulationObject>();
+		LinkedList<SimulationObject> animals = new LinkedList<SimulationObject>();
+		LinkedList<SimulationObject> others = new LinkedList<SimulationObject>();
+
 		ArrayList<SimulationObject> objects = null;
-		return objects;
+		String firstLetter;
+		for (String praefix : praefixs) {
+			firstLetter = praefix.substring(0,1);
+			if (firstLetter.equals("1") || firstLetter.equals("2") || firstLetter.equals("3") || firstLetter.equals("4")
+					|| firstLetter.equals("5") || firstLetter.equals("6") || firstLetter.equals("7")
+					|| firstLetter.equals("8") || firstLetter.equals("9")) {
+				// base 9
+				objects = getObjectsByBase9(praefix);
+			}
+			else {
+				// base 25
+				objects = getObjectsByBase25(praefix);
+			}
+			
+			for (SimulationObject object : objects) {
+				if (object instanceof Human) {
+					if (humans.contains(object) == false) humans.add(object);
+				}
+				else if (object instanceof God) {
+					if (gods.contains(object) == false) gods.add(object);
+				}
+				else if (object instanceof Animal) {
+					if (animals.contains(object) == false) animals.add(object);
+				}
+				else {
+					if (others.contains(object) == false) others.add(object);
+				};
+			}
+		}
+		
+		result.add(humans);
+		result.add(gods);
+		result.add(animals);
+		result.add(others);
+
+		return result;
 	}
 	
 	public void removeObject(SimulationObject object) {
