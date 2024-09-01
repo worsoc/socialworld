@@ -326,33 +326,273 @@ public class ObjectByPositionSearch {
 		String sector25;
 		String sector9;
 		
+		int substringCountLettersBase25 = 0;
+		int substringCountLettersBase9 = 0;
+		
 		List<String> sectorLetters;
 		
 		switch (category) {
 		case less_1_m:
-			offset25 = locationBase25.substring(0,4);
-			sector25 = locationBase25.substring(4,1);
+			substringCountLettersBase25 = 4;
+			substringCountLettersBase9 = 6;
+			break;
+		case less_2_m:
+			substringCountLettersBase25 = 4;
+			substringCountLettersBase9 = 6;
+			break;
+		case less_5_m:
+			substringCountLettersBase25 = 3;
+			substringCountLettersBase9 = 5;
+			break;
+		case less_10_m:
+			substringCountLettersBase25 = 2;
+			substringCountLettersBase9 = 4;
+			break;
+		case less_100_m:
+			substringCountLettersBase25 = 1;
+			substringCountLettersBase9 = 2;
+			break;
+		}
+		
+		
+		switch (category) {
+		case less_2_m:
+			offset25 = locationBase25.substring(0,substringCountLettersBase25);
+			offset9 = locationBase9.substring(0,substringCountLettersBase9);
+			result.add(offset25);
+			result.add(offset9);
+			break;
+		case less_1_m:
+		case less_5_m:
+		case less_10_m:
+		case less_100_m:
+			offset25 = locationBase25.substring(0,substringCountLettersBase25);
+			sector25 = locationBase25.substring(substringCountLettersBase25,1);
 			
 			switch(sector25) {
-			case "M":
-				String letters_M[] = {"Q", "R", "S", "L", "M", "N", "G", "H", "I"};
-				sectorLetters = Arrays.asList(letters_M);
+			case "A":
+				String letters_A[] = {"A", "B", "F", "G"};
+				sectorLetters = Arrays.asList(letters_A);
 				result = getStrings(offset25, sectorLetters);
+				offset9 = locationBase9.substring(0,substringCountLettersBase9);
+				sector9 = locationBase9.substring(substringCountLettersBase9,1);
+				switch(sector9) {
+				case "3":
+					String letters_A3[] = {"2", "3", "5", "6"};
+					sectorLetters = Arrays.asList(letters_A3);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "6":
+					String letters_A6[] = {"8", "9", "5", "6", "2","3"};
+					sectorLetters = Arrays.asList(letters_A6);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "7":
+					String letters_A7[] = {"7", "8", "4", "5"};
+					sectorLetters = Arrays.asList(letters_A7);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "8":
+					String letters_A8[] = {"7","8","9","4", "5", "6"};
+					sectorLetters = Arrays.asList(letters_A8);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "9":
+					String letters_A9[] = {"8", "9", "5", "6"};
+					sectorLetters = Arrays.asList(letters_A9);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				}
 				break;
-			case "Q":
-				String letters_Q[] = {"U", "V", "W", "P", "Q", "R", "K", "L", "M"};
-				sectorLetters = Arrays.asList(letters_Q);
+			case "B":
+				String letters_B[] = {"A", "B", "C", "F", "G", "H"};
+				sectorLetters = Arrays.asList(letters_B);
 				result = getStrings(offset25, sectorLetters);
+				offset9 = locationBase9.substring(0,substringCountLettersBase9);
+				sector9 = locationBase9.substring(substringCountLettersBase9,1);
+				switch(sector9) {
+				case "4":
+					String letters_B4[] = {"7", "8", "4", "5"};
+					sectorLetters = Arrays.asList(letters_B4);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "5":
+					String letters_B5[] = {"7", "8", "9", "4", "5", "6"};
+					sectorLetters = Arrays.asList(letters_B5);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "6":
+					String letters_B6[] = {"8", "9", "5", "6"};
+					sectorLetters = Arrays.asList(letters_B6);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "1":
+					String letters_B1[] = {"4", "5", "1", "2"};
+					sectorLetters = Arrays.asList(letters_B1);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "2":
+					String letters_B2[] = {"4", "5", "6", "1", "2", "3"};
+					sectorLetters = Arrays.asList(letters_B2);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "3":
+					String letters_B3[] = {"5", "6", "2", "3"};
+					sectorLetters = Arrays.asList(letters_B3);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				}
 				break;
-			case "R":
-				String letters_R[] = {"V", "W", "X", "Q", "R", "S", "L", "M", "N"};
-				sectorLetters = Arrays.asList(letters_R);
+			case "C":
+				String letters_C[] = { "B", "C", "D", "G", "H", "I"};
+				sectorLetters = Arrays.asList(letters_C);
 				result = getStrings(offset25, sectorLetters);
+				offset9 = locationBase9.substring(0,substringCountLettersBase9);
+				sector9 = locationBase9.substring(substringCountLettersBase9,1);
+				switch(sector9) {
+				case "4":
+					String letters_C4[] = {"7", "8", "4", "5"};
+					sectorLetters = Arrays.asList(letters_C4);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "5":
+					String letters_C5[] = {"7", "8", "9", "4", "5", "6"};
+					sectorLetters = Arrays.asList(letters_C5);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "6":
+					String letters_C6[] = {"8", "9", "5", "6"};
+					sectorLetters = Arrays.asList(letters_C6);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "1":
+					String letters_C1[] = {"4", "5", "1", "2"};
+					sectorLetters = Arrays.asList(letters_C1);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "2":
+					String letters_C2[] = {"4", "5", "6", "1", "2", "3"};
+					sectorLetters = Arrays.asList(letters_C2);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "3":
+					String letters_W3[] = {"5", "6", "2", "3"};
+					sectorLetters = Arrays.asList(letters_W3);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				}
 				break;
-			case "S":
-				String letters_S[] = {"W", "X", "Y", "R", "S", "T", "M", "N", "O"};
-				sectorLetters = Arrays.asList(letters_S);
+			case "D":
+				String letters_D[] = {"C", "D", "E", "H", "I", "J"};
+				sectorLetters = Arrays.asList(letters_D);
 				result = getStrings(offset25, sectorLetters);
+				offset9 = locationBase9.substring(0,substringCountLettersBase9);
+				sector9 = locationBase9.substring(substringCountLettersBase9,1);
+				switch(sector9) {
+				case "4":
+					String letters_D4[] = {"1", "2", "4", "5"};
+					sectorLetters = Arrays.asList(letters_D4);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "5":
+					String letters_D5[] = {"1", "2", "3", "4", "5", "6"};
+					sectorLetters = Arrays.asList(letters_D5);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "6":
+					String letters_D6[] = {"2", "3", "5", "6"};
+					sectorLetters = Arrays.asList(letters_D6);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "7":
+					String letters_D7[] = {"4", "5", "7", "8"};
+					sectorLetters = Arrays.asList(letters_D7);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "8":
+					String letters_D8[] = {"4", "5", "6", "7", "8", "9"};
+					sectorLetters = Arrays.asList(letters_D8);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "9":
+					String letters_D9[] = {"5", "6", "8", "9"};
+					sectorLetters = Arrays.asList(letters_D9);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				}
+				break;
+			case "E":
+				String letters_E[] = {"D", "E", "I", "J"};
+				sectorLetters = Arrays.asList(letters_E);
+				result = getStrings(offset25, sectorLetters);
+				offset9 = locationBase9.substring(0,substringCountLettersBase9);
+				sector9 = locationBase9.substring(substringCountLettersBase9,1);
+				switch(sector9) {
+				case "7":
+					String letters_E7[] = {"7", "8", "4", "5"};
+					sectorLetters = Arrays.asList(letters_E7);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "8":
+					String letters_E8[] = {"7", "8", "9", "4", "5", "6"};
+					sectorLetters = Arrays.asList(letters_E8);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "9":
+					String letters_E9[] = {"8", "9", "5", "6"};
+					sectorLetters = Arrays.asList(letters_E9);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "4":
+					String letters_E4[] = {"7", "8", "4", "5","1","2"};
+					sectorLetters = Arrays.asList(letters_E4);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "1":
+					String letters_E1[] = {"1", "2", "4", "5"};
+					sectorLetters = Arrays.asList(letters_E1);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				}
+				break;
+			case "F":
+				String letters_F[] = {"K", "L", "F", "G", "A", "B"};
+				sectorLetters = Arrays.asList(letters_F);
+				result = getStrings(offset25, sectorLetters);
+				offset9 = locationBase9.substring(0,substringCountLettersBase9);
+				sector9 = locationBase9.substring(substringCountLettersBase9,1);
+				switch(sector9) {
+				case "8":
+					String letters_F8[] = {"7", "8", "4", "5"};
+					sectorLetters = Arrays.asList(letters_F8);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "9":
+					String letters_F9[] = {"8", "9", "5", "6"};
+					sectorLetters = Arrays.asList(letters_F9);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "5":
+					String letters_F5[] = {"7", "8", "4", "5", "1", "2"};
+					sectorLetters = Arrays.asList(letters_F5);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "6":
+					String letters_F6[] = {"8", "9", "5", "6", "2", "3"};
+					sectorLetters = Arrays.asList(letters_F6);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "2":
+					String letters_F2[] = {"4", "5", "1", "2"};
+					sectorLetters = Arrays.asList(letters_F2);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "3":
+					String letters_F3[] = {"5", "6", "2", "3"};
+					sectorLetters = Arrays.asList(letters_F3);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				}
 				break;
 			case "G":
 				String letters_G[] = {"K", "L", "M", "F", "G", "H", "A", "B", "C"};
@@ -369,25 +609,245 @@ public class ObjectByPositionSearch {
 				sectorLetters = Arrays.asList(letters_I);
 				result = getStrings(offset25, sectorLetters);
 				break;
+			case "J":
+				String letters_J[] = {"N", "O", "I", "J", "B", "C"};
+				sectorLetters = Arrays.asList(letters_J);
+				result = getStrings(offset25, sectorLetters);
+				offset9 = locationBase9.substring(0,substringCountLettersBase9);
+				sector9 = locationBase9.substring(substringCountLettersBase9,1);
+				switch(sector9) {
+				case "7":
+					String letters_J7[] = {"7","8","4", "5"};
+					sectorLetters = Arrays.asList(letters_J7);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "8":
+					String letters_J8[] = {"8", "9", "5", "6"};
+					sectorLetters = Arrays.asList(letters_J8);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "4":
+					String letters_J4[] = {"7", "8", "4", "5", "1", "2"};
+					sectorLetters = Arrays.asList(letters_J4);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "5":
+					String letters_J5[] = {"8", "9", "5", "6", "2", "3"};
+					sectorLetters = Arrays.asList(letters_J5);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "1":
+					String letters_J1[] = {"4", "5", "1", "2"};
+					sectorLetters = Arrays.asList(letters_J1);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "2":
+					String letters_J2[] = {"5", "6", "2", "3"};
+					sectorLetters = Arrays.asList(letters_J2);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				}
+				break;
+			case "K":
+				String letters_K[] = {"P", "Q", "K", "L", "F", "G"};
+				sectorLetters = Arrays.asList(letters_K);
+				result = getStrings(offset25, sectorLetters);
+				offset9 = locationBase9.substring(0,substringCountLettersBase9);
+				sector9 = locationBase9.substring(substringCountLettersBase9,1);
+				switch(sector9) {
+				case "8":
+					String letters_K8[] = {"7", "8", "4", "5"};
+					sectorLetters = Arrays.asList(letters_K8);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "9":
+					String letters_K9[] = {"8", "9", "5", "6"};
+					sectorLetters = Arrays.asList(letters_K9);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "5":
+					String letters_K5[] = {"7", "8", "4", "5", "1", "2"};
+					sectorLetters = Arrays.asList(letters_K5);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "6":
+					String letters_K6[] = {"8", "9", "5", "6", "2", "3"};
+					sectorLetters = Arrays.asList(letters_K6);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "2":
+					String letters_K2[] = {"4", "5", "1", "2"};
+					sectorLetters = Arrays.asList(letters_K2);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "3":
+					String letters_K3[] = {"5", "6", "2", "3"};
+					sectorLetters = Arrays.asList(letters_K3);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				}
+				break;
+			case "L":
+				String letters_L[] = {"P", "Q", "R", "K", "L", "M", "F", "G", "H"};
+				sectorLetters = Arrays.asList(letters_L);
+				result = getStrings(offset25, sectorLetters);
+				break;
+			case "M":
+				String letters_M[] = {"Q", "R", "S", "L", "M", "N", "G", "H", "I"};
+				sectorLetters = Arrays.asList(letters_M);
+				result = getStrings(offset25, sectorLetters);
+				break;
+			case "N":
+				String letters_N[] = {"R", "S", "T", "M", "N", "O", "H", "I", "J"};
+				sectorLetters = Arrays.asList(letters_N);
+				result = getStrings(offset25, sectorLetters);
+				break;
+			case "O":
+				String letters_O[] = {"N", "O", "I", "J", "S", "T"};
+				sectorLetters = Arrays.asList(letters_O);
+				result = getStrings(offset25, sectorLetters);
+				offset9 = locationBase9.substring(0,substringCountLettersBase9);
+				sector9 = locationBase9.substring(substringCountLettersBase9,1);
+				switch(sector9) {
+				case "7":
+					String letters_O7[] = {"7","8", "4", "5"};
+					sectorLetters = Arrays.asList(letters_O7);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "8":
+					String letters_O8[] = {"8", "9", "5", "6"};
+					sectorLetters = Arrays.asList(letters_O8);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "4":
+					String letters_O4[] = {"7", "8", "4", "5", "1", "2"};
+					sectorLetters = Arrays.asList(letters_O4);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "5":
+					String letters_O5[] = {"8", "9", "5", "6", "2", "3"};
+					sectorLetters = Arrays.asList(letters_O5);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "1":
+					String letters_O1[] = {"4", "5", "1", "2"};
+					sectorLetters = Arrays.asList(letters_O1);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "2":
+					String letters_O2[] = {"5", "6", "2", "3"};
+					sectorLetters = Arrays.asList(letters_O2);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				}
+				break;
+			case "P":
+				String letters_P[] = {"U", "V", "P", "Q", "K", "L"};
+				sectorLetters = Arrays.asList(letters_P);
+				result = getStrings(offset25, sectorLetters);
+				offset9 = locationBase9.substring(0,substringCountLettersBase9);
+				sector9 = locationBase9.substring(substringCountLettersBase9,1);
+				switch(sector9) {
+				case "8":
+					String letters_P8[] = {"7", "8", "4", "5"};
+					sectorLetters = Arrays.asList(letters_P8);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "9":
+					String letters_P9[] = {"8", "9", "5", "6"};
+					sectorLetters = Arrays.asList(letters_P9);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "5":
+					String letters_P5[] = {"7", "8", "4", "5", "1", "2"};
+					sectorLetters = Arrays.asList(letters_P5);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "6":
+					String letters_P6[] = {"8", "9", "5", "6", "2", "3"};
+					sectorLetters = Arrays.asList(letters_P6);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "2":
+					String letters_P2[] = {"4", "5", "1", "2"};
+					sectorLetters = Arrays.asList(letters_P2);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "3":
+					String letters_P3[] = {"5", "6", "2", "3"};
+					sectorLetters = Arrays.asList(letters_P3);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				}
+				break;
+			case "Q":
+				String letters_Q[] = {"U", "V", "W", "P", "Q", "R", "K", "L", "M"};
+				sectorLetters = Arrays.asList(letters_Q);
+				result = getStrings(offset25, sectorLetters);
+				break;
+			case "R":
+				String letters_R[] = {"V", "W", "X", "Q", "R", "S", "L", "M", "N"};
+				sectorLetters = Arrays.asList(letters_R);
+				result = getStrings(offset25, sectorLetters);
+				break;
+			case "S":
+				String letters_S[] = {"W", "X", "Y", "R", "S", "T", "M", "N", "O"};
+				sectorLetters = Arrays.asList(letters_S);
+				result = getStrings(offset25, sectorLetters);
+				break;
+			case "T":
+				String letters_T[] = {"X", "Y", "S", "T", "N", "O"};
+				sectorLetters = Arrays.asList(letters_T);
+				result = getStrings(offset25, sectorLetters);
+				offset9 = locationBase9.substring(0,substringCountLettersBase9);
+				sector9 = locationBase9.substring(substringCountLettersBase9,1);
+				switch(sector9) {
+				case "7":
+					String letters_T7[] = {"7","8","4", "5"};
+					sectorLetters = Arrays.asList(letters_T7);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "8":
+					String letters_T8[] = {"8", "9", "5", "6"};
+					sectorLetters = Arrays.asList(letters_T8);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "4":
+					String letters_T4[] = {"7", "8", "4", "5", "1", "2"};
+					sectorLetters = Arrays.asList(letters_T4);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "5":
+					String letters_T5[] = {"8", "9", "5", "6", "2", "3"};
+					sectorLetters = Arrays.asList(letters_T5);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "1":
+					String letters_T1[] = {"4", "5", "1", "2"};
+					sectorLetters = Arrays.asList(letters_T1);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "2":
+					String letters_T2[] = {"5", "6", "2", "3"};
+					sectorLetters = Arrays.asList(letters_T2);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				}
+				break;
 			case "U":
 				String letters_U[] = {"U", "V", "P", "Q"};
 				sectorLetters = Arrays.asList(letters_U);
 				result = getStrings(offset25, sectorLetters);
-				offset9 = locationBase9.substring(0,6);
-				sector9 = locationBase9.substring(6,1);
+				offset9 = locationBase9.substring(0,substringCountLettersBase9);
+				sector9 = locationBase9.substring(substringCountLettersBase9,1);
 				switch(sector9) {
-				case "4":
-					String letters_U4[] = {"7", "8", "4", "5"};
-					sectorLetters = Arrays.asList(letters_U4);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				case "5":
-					String letters_U5[] = {"7", "8", "9", "4", "5", "6", "1"};
-					sectorLetters = Arrays.asList(letters_U5);
+				case "9":
+					String letters_U9[] = {"8", "9", "5", "6"};
+					sectorLetters = Arrays.asList(letters_U9);
 					result.addAll(getStrings(offset9, sectorLetters));
 					break;
 				case "6":
-					String letters_U6[] = {"8", "9", "5", "6", "2"};
+					String letters_U6[] = {"8", "9", "5", "6", "2", "3"};
 					sectorLetters = Arrays.asList(letters_U6);
 					result.addAll(getStrings(offset9, sectorLetters));
 					break;
@@ -397,7 +857,7 @@ public class ObjectByPositionSearch {
 					result.addAll(getStrings(offset9, sectorLetters));
 					break;
 				case "2":
-					String letters_U2[] = {"4", "5", "6", "1", "2"};
+					String letters_U2[] = {"4", "5", "6", "1", "2", "3"};
 					sectorLetters = Arrays.asList(letters_U2);
 					result.addAll(getStrings(offset9, sectorLetters));
 					break;
@@ -412,8 +872,8 @@ public class ObjectByPositionSearch {
 				String letters_V[] = {"U", "V", "W", "P", "Q", "R"};
 				sectorLetters = Arrays.asList(letters_V);
 				result = getStrings(offset25, sectorLetters);
-				offset9 = locationBase9.substring(0,6);
-				sector9 = locationBase9.substring(6,1);
+				offset9 = locationBase9.substring(0,substringCountLettersBase9);
+				sector9 = locationBase9.substring(substringCountLettersBase9,1);
 				switch(sector9) {
 				case "4":
 					String letters_V4[] = {"7", "8", "4", "5"};
@@ -451,8 +911,8 @@ public class ObjectByPositionSearch {
 				String letters_W[] = { "V", "W", "X", "Q", "R", "S"};
 				sectorLetters = Arrays.asList(letters_W);
 				result = getStrings(offset25, sectorLetters);
-				offset9 = locationBase9.substring(0,6);
-				sector9 = locationBase9.substring(6,1);
+				offset9 = locationBase9.substring(0,substringCountLettersBase9);
+				sector9 = locationBase9.substring(substringCountLettersBase9,1);
 				switch(sector9) {
 				case "4":
 					String letters_W4[] = {"7", "8", "4", "5"};
@@ -490,8 +950,8 @@ public class ObjectByPositionSearch {
 				String letters_X[] = {"W", "X", "Y", "R", "S", "T"};
 				sectorLetters = Arrays.asList(letters_X);
 				result = getStrings(offset25, sectorLetters);
-				offset9 = locationBase9.substring(0,6);
-				sector9 = locationBase9.substring(6,1);
+				offset9 = locationBase9.substring(0,substringCountLettersBase9);
+				sector9 = locationBase9.substring(substringCountLettersBase9,1);
 				switch(sector9) {
 				case "4":
 					String letters_X4[] = {"7", "8", "4", "5"};
@@ -529,276 +989,50 @@ public class ObjectByPositionSearch {
 				String letters_Y[] = {"X", "Y", "S", "T"};
 				sectorLetters = Arrays.asList(letters_Y);
 				result = getStrings(offset25, sectorLetters);
-				offset9 = locationBase9.substring(0,6);
-				sector9 = locationBase9.substring(6,1);
+				offset9 = locationBase9.substring(0,substringCountLettersBase9);
+				sector9 = locationBase9.substring(substringCountLettersBase9,1);
 				switch(sector9) {
 				case "4":
-					String letters_U4[] = {"7", "8", "4", "5", "2"};
-					sectorLetters = Arrays.asList(letters_U4);
+					String letters_Y4[] = {"7", "8", "4", "5","1", "2"};
+					sectorLetters = Arrays.asList(letters_Y4);
 					result.addAll(getStrings(offset9, sectorLetters));
 					break;
-				case "5":
-					String letters_U5[] = {"7", "8", "9", "4", "5", "6", "3"};
-					sectorLetters = Arrays.asList(letters_U5);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				case "6":
-					String letters_U6[] = {"8", "9", "5", "6"};
-					sectorLetters = Arrays.asList(letters_U6);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				case "1":
-					String letters_U1[] = {"4", "5", "1", "2"};
-					sectorLetters = Arrays.asList(letters_U1);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				case "2":
-					String letters_U2[] = {"4", "5", "6", "2", "3"};
-					sectorLetters = Arrays.asList(letters_U2);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				case "3":
-					String letters_U3[] = {"5", "6", "2", "3"};
-					sectorLetters = Arrays.asList(letters_U3);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				}
-				break;
-			case "P":
-				String letters_P[] = {"U", "V", "P", "Q", "K", "L"};
-				sectorLetters = Arrays.asList(letters_P);
-				result = getStrings(offset25, sectorLetters);
-				offset9 = locationBase9.substring(0,6);
-				sector9 = locationBase9.substring(6,1);
-				switch(sector9) {
-				case "8":
-					String letters_P8[] = {"7", "8", "4", "5"};
-					sectorLetters = Arrays.asList(letters_P8);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				case "9":
-					String letters_P9[] = {"8", "9", "5", "6"};
-					sectorLetters = Arrays.asList(letters_P9);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				case "5":
-					String letters_P5[] = {"7", "8", "4", "5", "1", "2"};
-					sectorLetters = Arrays.asList(letters_P5);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				case "6":
-					String letters_P6[] = {"8", "9", "5", "6", "2", "3"};
-					sectorLetters = Arrays.asList(letters_P6);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				case "2":
-					String letters_P2[] = {"4", "5", "1", "2"};
-					sectorLetters = Arrays.asList(letters_P2);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				case "3":
-					String letters_P3[] = {"5", "6", "2", "3"};
-					sectorLetters = Arrays.asList(letters_P3);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				}
-				break;
-			case "K":
-				String letters_K[] = {"P", "Q", "K", "L", "F", "G"};
-				sectorLetters = Arrays.asList(letters_K);
-				result = getStrings(offset25, sectorLetters);
-				offset9 = locationBase9.substring(0,6);
-				sector9 = locationBase9.substring(6,1);
-				switch(sector9) {
-				case "8":
-					String letters_K8[] = {"7", "8", "4", "5"};
-					sectorLetters = Arrays.asList(letters_K8);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				case "9":
-					String letters_K9[] = {"8", "9", "5", "6"};
-					sectorLetters = Arrays.asList(letters_K9);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				case "5":
-					String letters_K5[] = {"7", "8", "4", "5", "1", "2"};
-					sectorLetters = Arrays.asList(letters_K5);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				case "6":
-					String letters_K6[] = {"8", "9", "5", "6", "2", "3"};
-					sectorLetters = Arrays.asList(letters_K6);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				case "2":
-					String letters_K2[] = {"4", "5", "1", "2"};
-					sectorLetters = Arrays.asList(letters_K2);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				case "3":
-					String letters_K3[] = {"5", "6", "2", "3"};
-					sectorLetters = Arrays.asList(letters_K3);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				}
-				break;
-			case "F":
-				String letters_F[] = {"K", "L", "F", "G", "A", "B"};
-				sectorLetters = Arrays.asList(letters_F);
-				result = getStrings(offset25, sectorLetters);
-				offset9 = locationBase9.substring(0,6);
-				sector9 = locationBase9.substring(6,1);
-				switch(sector9) {
-				case "8":
-					String letters_F8[] = {"7", "8", "4", "5"};
-					sectorLetters = Arrays.asList(letters_F8);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				case "9":
-					String letters_F9[] = {"8", "9", "5", "6"};
-					sectorLetters = Arrays.asList(letters_F9);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				case "5":
-					String letters_F5[] = {"7", "8", "4", "5", "1", "2"};
-					sectorLetters = Arrays.asList(letters_F5);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				case "6":
-					String letters_F6[] = {"8", "9", "5", "6", "2", "3"};
-					sectorLetters = Arrays.asList(letters_F6);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				case "2":
-					String letters_F2[] = {"4", "5", "1", "2"};
-					sectorLetters = Arrays.asList(letters_F2);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				case "3":
-					String letters_F3[] = {"5", "6", "2", "3"};
-					sectorLetters = Arrays.asList(letters_F3);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				}
-				break;
-			case "J":
-				String letters_J[] = {"N", "O", "I", "J", "B", "C"};
-				sectorLetters = Arrays.asList(letters_J);
-				result = getStrings(offset25, sectorLetters);
-				offset9 = locationBase9.substring(0,6);
-				sector9 = locationBase9.substring(6,1);
-				switch(sector9) {
 				case "7":
-					String letters_J7[] = {"7","8","4", "5"};
-					sectorLetters = Arrays.asList(letters_J7);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				case "8":
-					String letters_J8[] = {"8", "9", "5", "6"};
-					sectorLetters = Arrays.asList(letters_J8);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				case "4":
-					String letters_J4[] = {"7", "8", "4", "5", "1", "2"};
-					sectorLetters = Arrays.asList(letters_J4);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				case "5":
-					String letters_J5[] = {"8", "9", "5", "6", "2", "3"};
-					sectorLetters = Arrays.asList(letters_J5);
+					String letters_Y7[] = {"8", "9", "5", "6"};
+					sectorLetters = Arrays.asList(letters_Y7);
 					result.addAll(getStrings(offset9, sectorLetters));
 					break;
 				case "1":
-					String letters_J1[] = {"4", "5", "1", "2"};
-					sectorLetters = Arrays.asList(letters_J1);
+					String letters_Y1[] = {"4", "5", "1", "2"};
+					sectorLetters = Arrays.asList(letters_Y1);
 					result.addAll(getStrings(offset9, sectorLetters));
 					break;
 				case "2":
-					String letters_J2[] = {"5", "6", "2", "3"};
-					sectorLetters = Arrays.asList(letters_J2);
+					String letters_Y2[] = {"4", "5", "6", "1", "2", "3"};
+					sectorLetters = Arrays.asList(letters_Y2);
+					result.addAll(getStrings(offset9, sectorLetters));
+					break;
+				case "3":
+					String letters_Y3[] = {"5", "6", "2", "3"};
+					sectorLetters = Arrays.asList(letters_Y3);
 					result.addAll(getStrings(offset9, sectorLetters));
 					break;
 				}
 				break;
-			case "O":
-				String letters_O[] = {"N", "O", "I", "J", "S", "T"};
-				sectorLetters = Arrays.asList(letters_O);
-				result = getStrings(offset25, sectorLetters);
-				offset9 = locationBase9.substring(0,6);
-				sector9 = locationBase9.substring(6,1);
-				switch(sector9) {
-				case "7":
-					String letters_O7[] = {"7","8", "4", "5"};
-					sectorLetters = Arrays.asList(letters_O7);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				case "8":
-					String letters_O8[] = {"8", "9", "5", "6"};
-					sectorLetters = Arrays.asList(letters_O8);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				case "4":
-					String letters_O4[] = {"7", "8", "4", "5", "1", "2"};
-					sectorLetters = Arrays.asList(letters_O4);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				case "5":
-					String letters_O5[] = {"8", "9", "5", "6", "2", "3"};
-					sectorLetters = Arrays.asList(letters_O5);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				case "1":
-					String letters_O1[] = {"4", "5", "1", "2"};
-					sectorLetters = Arrays.asList(letters_O1);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				case "2":
-					String letters_O2[] = {"5", "6", "2", "3"};
-					sectorLetters = Arrays.asList(letters_O2);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				}
-				break;
-			case "T":
-				String letters_T[] = {"X", "Y", "S", "T", "N", "O"};
-				sectorLetters = Arrays.asList(letters_T);
-				result = getStrings(offset25, sectorLetters);
-				offset9 = locationBase9.substring(0,6);
-				sector9 = locationBase9.substring(6,1);
-				switch(sector9) {
-				case "7":
-					String letters_T7[] = {"7","8","4", "5"};
-					sectorLetters = Arrays.asList(letters_T7);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				case "8":
-					String letters_T8[] = {"8", "9", "5", "6"};
-					sectorLetters = Arrays.asList(letters_T8);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				case "4":
-					String letters_T4[] = {"7", "8", "4", "5", "1", "2"};
-					sectorLetters = Arrays.asList(letters_T4);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				case "5":
-					String letters_T5[] = {"8", "9", "5", "6", "2", "3"};
-					sectorLetters = Arrays.asList(letters_T5);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				case "1":
-					String letters_T1[] = {"4", "5", "1", "2"};
-					sectorLetters = Arrays.asList(letters_T1);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				case "2":
-					String letters_T2[] = {"5", "6", "2", "3"};
-					sectorLetters = Arrays.asList(letters_T2);
-					result.addAll(getStrings(offset9, sectorLetters));
-					break;
-				}
+			default:
 				break;
 			}
+			break;
+		default:
+			result.add("1");
+			result.add("2");
+			result.add("3");
+			result.add("4");
+			result.add("5");
+			result.add("6");
+			result.add("7");
+			result.add("8");
+			result.add("9");
 		}
 		return result;
 	}
