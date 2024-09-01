@@ -679,7 +679,6 @@ public class ObjectByPositionSearch {
 					break;
 				}
 				break;
-			}
 			case "J":
 				String letters_J[] = {"N", "O", "I", "J", "B", "C"};
 				sectorLetters = Arrays.asList(letters_J);
@@ -797,6 +796,7 @@ public class ObjectByPositionSearch {
 					break;
 				}
 				break;
+			}
 		}
 		return result;
 	}
