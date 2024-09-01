@@ -27,6 +27,8 @@ import org.socialworld.attributes.Position;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.core.Event;
+import org.socialworld.core.EventDistanceCategory;
+
 import java.util.Arrays;
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package org.socialworld.collections;
+package org.socialworld.core;
 
 public enum EventDistanceCategory {
 
