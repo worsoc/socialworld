@@ -28,7 +28,6 @@ import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.God;
 import org.socialworld.objects.Human;
 import org.socialworld.objects.Animal;
-import org.socialworld.objects.SimulationObject_Type;
 import org.socialworld.core.Event;
 import org.socialworld.core.EventDistanceCategory;
 
@@ -398,6 +397,8 @@ public class ObjectByPositionSearch {
 		case less_100_m:
 			substringCountLettersBase25 = 1;
 			substringCountLettersBase9 = 2;
+			break;
+		default:
 			break;
 		}
 		

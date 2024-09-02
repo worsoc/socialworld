@@ -335,7 +335,10 @@ public class Simulation extends SocialWorldThread {
 		return incompleteObject; 
 	}
 
-	
+	public ObjectByPositionSearch getObjectSearch() {
+		return this.searchByPosition;
+	}
+
 	public SimulationObject getFirstByPosition(Position position) {
 		this.searchByPosition.findNearestObject(position.getX(SimulationCluster.objectMaster), position.getY(SimulationCluster.objectMaster));
 		return getNextByPosition();
