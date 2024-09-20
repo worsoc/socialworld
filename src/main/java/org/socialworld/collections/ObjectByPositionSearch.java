@@ -127,11 +127,11 @@ public class ObjectByPositionSearch {
 		
 	}
 	
-	public ArrayList<SimulationObject> getObjectsByBase9(String location) {
+	public LinkedList<SimulationObject> getObjectsByBase9(String location) {
 		return sectorTreeBase9.getObjects(location);
 	}
 
-	public ArrayList<SimulationObject> getObjectsByBase25(String location) {
+	public LinkedList<SimulationObject> getObjectsByBase25(String location) {
 		return sectorTreeBase25.getObjects(location);
 	}
 
@@ -148,13 +148,14 @@ public class ObjectByPositionSearch {
 		LinkedList<SimulationObject> animals = new LinkedList<SimulationObject>();
 		LinkedList<SimulationObject> others = new LinkedList<SimulationObject>();
 
-		ArrayList<SimulationObject> objects = null;
-		String firstLetter;
+		LinkedList<SimulationObject> objects = null;
+		char firstLetter;
 		for (String praefix : praefixs) {
-			firstLetter = praefix.substring(0,1);
-			if (firstLetter.equals("1") || firstLetter.equals("2") || firstLetter.equals("3") || firstLetter.equals("4")
-					|| firstLetter.equals("5") || firstLetter.equals("6") || firstLetter.equals("7")
-					|| firstLetter.equals("8") || firstLetter.equals("9")) {
+			praefix = praefix + "0";
+			firstLetter = praefix.charAt(0);
+			if (firstLetter == '1' || firstLetter == '2' || firstLetter == '3' || firstLetter == '4'
+					|| firstLetter == '5' || firstLetter == '6' || firstLetter == '7'
+					|| firstLetter == '8' || firstLetter == '9') {
 				// base 9
 				objects = getObjectsByBase9(praefix);
 			}
@@ -210,8 +211,8 @@ public class ObjectByPositionSearch {
 				oldParent.clearChild(oldChildNr);
 			}
 			
-			nodes.getBase9Node().removeObject();
-			nodes.getBase25Node().removeObject();
+			nodes.getBase9Node().removeObject(object);
+			nodes.getBase25Node().removeObject(object);
 			
 			nodes.setInvalid();
 		}
@@ -415,7 +416,7 @@ public class ObjectByPositionSearch {
 		case less_10_m:
 		case less_100_m:
 			offset25 = locationBase25.substring(0,substringCountLettersBase25);
-			sector25 = locationBase25.substring(substringCountLettersBase25,1);
+			sector25 = locationBase25.substring(substringCountLettersBase25,substringCountLettersBase25 + 1);
 			
 			switch(sector25) {
 			case "A":
@@ -423,7 +424,7 @@ public class ObjectByPositionSearch {
 				sectorLetters = Arrays.asList(letters_A);
 				result = getStrings(offset25, sectorLetters);
 				offset9 = locationBase9.substring(0,substringCountLettersBase9);
-				sector9 = locationBase9.substring(substringCountLettersBase9,1);
+				sector9 = locationBase9.substring(substringCountLettersBase9, substringCountLettersBase9 + 1);
 				switch(sector9) {
 				case "3":
 					String letters_A3[] = {"2", "3", "5", "6"};
@@ -457,7 +458,7 @@ public class ObjectByPositionSearch {
 				sectorLetters = Arrays.asList(letters_B);
 				result = getStrings(offset25, sectorLetters);
 				offset9 = locationBase9.substring(0,substringCountLettersBase9);
-				sector9 = locationBase9.substring(substringCountLettersBase9,1);
+				sector9 = locationBase9.substring(substringCountLettersBase9, substringCountLettersBase9 + 1);
 				switch(sector9) {
 				case "4":
 					String letters_B4[] = {"7", "8", "4", "5"};
@@ -496,7 +497,7 @@ public class ObjectByPositionSearch {
 				sectorLetters = Arrays.asList(letters_C);
 				result = getStrings(offset25, sectorLetters);
 				offset9 = locationBase9.substring(0,substringCountLettersBase9);
-				sector9 = locationBase9.substring(substringCountLettersBase9,1);
+				sector9 = locationBase9.substring(substringCountLettersBase9, substringCountLettersBase9 + 1);
 				switch(sector9) {
 				case "4":
 					String letters_C4[] = {"7", "8", "4", "5"};
@@ -535,7 +536,7 @@ public class ObjectByPositionSearch {
 				sectorLetters = Arrays.asList(letters_D);
 				result = getStrings(offset25, sectorLetters);
 				offset9 = locationBase9.substring(0,substringCountLettersBase9);
-				sector9 = locationBase9.substring(substringCountLettersBase9,1);
+				sector9 = locationBase9.substring(substringCountLettersBase9, substringCountLettersBase9 + 1);
 				switch(sector9) {
 				case "4":
 					String letters_D4[] = {"1", "2", "4", "5"};
@@ -574,7 +575,7 @@ public class ObjectByPositionSearch {
 				sectorLetters = Arrays.asList(letters_E);
 				result = getStrings(offset25, sectorLetters);
 				offset9 = locationBase9.substring(0,substringCountLettersBase9);
-				sector9 = locationBase9.substring(substringCountLettersBase9,1);
+				sector9 = locationBase9.substring(substringCountLettersBase9, substringCountLettersBase9 + 1);
 				switch(sector9) {
 				case "7":
 					String letters_E7[] = {"7", "8", "4", "5"};
@@ -608,7 +609,7 @@ public class ObjectByPositionSearch {
 				sectorLetters = Arrays.asList(letters_F);
 				result = getStrings(offset25, sectorLetters);
 				offset9 = locationBase9.substring(0,substringCountLettersBase9);
-				sector9 = locationBase9.substring(substringCountLettersBase9,1);
+				sector9 = locationBase9.substring(substringCountLettersBase9, substringCountLettersBase9 + 1);
 				switch(sector9) {
 				case "8":
 					String letters_F8[] = {"7", "8", "4", "5"};
@@ -662,7 +663,7 @@ public class ObjectByPositionSearch {
 				sectorLetters = Arrays.asList(letters_J);
 				result = getStrings(offset25, sectorLetters);
 				offset9 = locationBase9.substring(0,substringCountLettersBase9);
-				sector9 = locationBase9.substring(substringCountLettersBase9,1);
+				sector9 = locationBase9.substring(substringCountLettersBase9, substringCountLettersBase9 + 1);
 				switch(sector9) {
 				case "7":
 					String letters_J7[] = {"7","8","4", "5"};
@@ -701,7 +702,7 @@ public class ObjectByPositionSearch {
 				sectorLetters = Arrays.asList(letters_K);
 				result = getStrings(offset25, sectorLetters);
 				offset9 = locationBase9.substring(0,substringCountLettersBase9);
-				sector9 = locationBase9.substring(substringCountLettersBase9,1);
+				sector9 = locationBase9.substring(substringCountLettersBase9, substringCountLettersBase9 + 1);
 				switch(sector9) {
 				case "8":
 					String letters_K8[] = {"7", "8", "4", "5"};
@@ -755,7 +756,7 @@ public class ObjectByPositionSearch {
 				sectorLetters = Arrays.asList(letters_O);
 				result = getStrings(offset25, sectorLetters);
 				offset9 = locationBase9.substring(0,substringCountLettersBase9);
-				sector9 = locationBase9.substring(substringCountLettersBase9,1);
+				sector9 = locationBase9.substring(substringCountLettersBase9, substringCountLettersBase9 + 1);
 				switch(sector9) {
 				case "7":
 					String letters_O7[] = {"7","8", "4", "5"};
@@ -794,7 +795,7 @@ public class ObjectByPositionSearch {
 				sectorLetters = Arrays.asList(letters_P);
 				result = getStrings(offset25, sectorLetters);
 				offset9 = locationBase9.substring(0,substringCountLettersBase9);
-				sector9 = locationBase9.substring(substringCountLettersBase9,1);
+				sector9 = locationBase9.substring(substringCountLettersBase9, substringCountLettersBase9 + 1);
 				switch(sector9) {
 				case "8":
 					String letters_P8[] = {"7", "8", "4", "5"};
@@ -848,7 +849,7 @@ public class ObjectByPositionSearch {
 				sectorLetters = Arrays.asList(letters_T);
 				result = getStrings(offset25, sectorLetters);
 				offset9 = locationBase9.substring(0,substringCountLettersBase9);
-				sector9 = locationBase9.substring(substringCountLettersBase9,1);
+				sector9 = locationBase9.substring(substringCountLettersBase9, substringCountLettersBase9 + 1);
 				switch(sector9) {
 				case "7":
 					String letters_T7[] = {"7","8","4", "5"};
@@ -887,7 +888,7 @@ public class ObjectByPositionSearch {
 				sectorLetters = Arrays.asList(letters_U);
 				result = getStrings(offset25, sectorLetters);
 				offset9 = locationBase9.substring(0,substringCountLettersBase9);
-				sector9 = locationBase9.substring(substringCountLettersBase9,1);
+				sector9 = locationBase9.substring(substringCountLettersBase9, substringCountLettersBase9 + 1);
 				switch(sector9) {
 				case "9":
 					String letters_U9[] = {"8", "9", "5", "6"};
@@ -921,7 +922,7 @@ public class ObjectByPositionSearch {
 				sectorLetters = Arrays.asList(letters_V);
 				result = getStrings(offset25, sectorLetters);
 				offset9 = locationBase9.substring(0,substringCountLettersBase9);
-				sector9 = locationBase9.substring(substringCountLettersBase9,1);
+				sector9 = locationBase9.substring(substringCountLettersBase9, substringCountLettersBase9 + 1);
 				switch(sector9) {
 				case "4":
 					String letters_V4[] = {"7", "8", "4", "5"};
@@ -960,7 +961,7 @@ public class ObjectByPositionSearch {
 				sectorLetters = Arrays.asList(letters_W);
 				result = getStrings(offset25, sectorLetters);
 				offset9 = locationBase9.substring(0,substringCountLettersBase9);
-				sector9 = locationBase9.substring(substringCountLettersBase9,1);
+				sector9 = locationBase9.substring(substringCountLettersBase9, substringCountLettersBase9 + 1);
 				switch(sector9) {
 				case "4":
 					String letters_W4[] = {"7", "8", "4", "5"};
@@ -999,7 +1000,7 @@ public class ObjectByPositionSearch {
 				sectorLetters = Arrays.asList(letters_X);
 				result = getStrings(offset25, sectorLetters);
 				offset9 = locationBase9.substring(0,substringCountLettersBase9);
-				sector9 = locationBase9.substring(substringCountLettersBase9,1);
+				sector9 = locationBase9.substring(substringCountLettersBase9, substringCountLettersBase9 + 1);
 				switch(sector9) {
 				case "4":
 					String letters_X4[] = {"7", "8", "4", "5"};
@@ -1038,7 +1039,7 @@ public class ObjectByPositionSearch {
 				sectorLetters = Arrays.asList(letters_Y);
 				result = getStrings(offset25, sectorLetters);
 				offset9 = locationBase9.substring(0,substringCountLettersBase9);
-				sector9 = locationBase9.substring(substringCountLettersBase9,1);
+				sector9 = locationBase9.substring(substringCountLettersBase9, substringCountLettersBase9 + 1);
 				switch(sector9) {
 				case "4":
 					String letters_Y4[] = {"7", "8", "4", "5","1", "2"};

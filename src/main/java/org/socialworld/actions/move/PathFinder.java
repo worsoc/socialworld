@@ -21,7 +21,7 @@
 */
 package org.socialworld.actions.move;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.ListIterator;
 
 import org.socialworld.attributes.PropertyName;
@@ -121,7 +121,7 @@ public class PathFinder {
 	
 	private Path findPathWithStartAndEnd(Position start, Position end) {
 		
-		ArrayList<Path> paths = knownPathsPool.findPaths(start, end);
+		LinkedList<Path> paths = knownPathsPool.findPaths(start, end);
 		
 		return choosePathFromList(paths);
 	}
@@ -134,7 +134,7 @@ public class PathFinder {
 		
 		smallestDistance = start.getDistance(end);
 		
-		ArrayList<Path> paths = knownPathsPool.findPathsForStart(start);
+		LinkedList<Path> paths = knownPathsPool.findPathsForStart(start);
 		
 		ListIterator<Path> iterator = paths.listIterator();
 		while (iterator.hasNext()) {
@@ -157,7 +157,7 @@ public class PathFinder {
 		
 		smallestDistance = start.getDistance(end);
 		
-		ArrayList<Path> paths = knownPathsPool.findPathsForEnd(end);
+		LinkedList<Path> paths = knownPathsPool.findPathsForEnd(end);
 		
 		ListIterator<Path> iterator = paths.listIterator();
 		while (iterator.hasNext()) {
@@ -172,7 +172,7 @@ public class PathFinder {
 		return bestPath;
 	}
 
-	private Path choosePathFromList(ArrayList<Path> paths) {
+	private Path choosePathFromList(LinkedList<Path> paths) {
 		if (paths.size() == 0) 
 			return null;
 		if (paths.size() == 1) 

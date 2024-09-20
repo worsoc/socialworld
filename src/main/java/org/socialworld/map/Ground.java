@@ -22,6 +22,7 @@
 package org.socialworld.map;
 
 import org.socialworld.attributes.Position;
+import java.util.LinkedList;
 
 /**
  * @author Mathias Sikos
@@ -50,24 +51,36 @@ public class Ground {
 		return instance;
 	}
 	
-	public Ground_Height height(Position position) {
-		
-		return (Ground_Height) map_GroundHeight.getProperty(position.getLocationByBase25());
+	public LinkedList<Ground_Height> height(Position position) {
+		LinkedList<Ground_Height> result = new LinkedList<Ground_Height>();
+		for (IMapProp prop : map_GroundHeight.getProperties(position.getLocationByBase25())) {
+			result.add((Ground_Height) prop);
+		}
+		return result;
 	}
 	
-	public Ground_Material material(Position position) {
-		
-		return (Ground_Material) map_GroundMaterial.getProperty(position.getLocationByBase25());
+	public LinkedList<Ground_Material> material(Position position) {
+		LinkedList<Ground_Material> result = new LinkedList<Ground_Material>();
+		for (IMapProp prop : map_GroundMaterial.getProperties(position.getLocationByBase25())) {
+			result.add((Ground_Material) prop);
+		}
+		return result;
 	}
 
-	public Ground_Inclination inclination(Position position) {
-		
-		return (Ground_Inclination) map_GroundInclination.getProperty(position.getLocationByBase25());
+	public LinkedList<Ground_Inclination> inclination(Position position) {
+		LinkedList<Ground_Inclination> result = new LinkedList<Ground_Inclination>();
+		for (IMapProp prop : map_GroundInclination.getProperties(position.getLocationByBase25())) {
+			result.add((Ground_Inclination) prop);
+		}
+		return result;
 	}
 
-	public Ground_Consistency consistency(Position position) {
-		
-		return (Ground_Consistency) map_GroundConsistency.getProperty(position.getLocationByBase25());
+	public LinkedList<Ground_Consistency> consistency(Position position) {
+		LinkedList<Ground_Consistency> result = new LinkedList<Ground_Consistency>();
+		for (IMapProp prop : map_GroundConsistency.getProperties(position.getLocationByBase25())) {
+			result.add((Ground_Consistency) prop);
+		}
+		return result;
 	}
 
 }

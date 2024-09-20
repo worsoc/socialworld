@@ -22,17 +22,17 @@
 package org.socialworld.knowledge;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.ListIterator;
 
 import org.socialworld.actions.move.Path;
 import org.socialworld.attributes.Position;
-import org.socialworld.map.IMapProp;
 
 /**
  * @author Mathias Sikos
  *
  */
-public class KnownPaths implements IMapProp {
+public class KnownPaths  {
 	
 	private static KnownPaths objectNothing;
 	
@@ -45,15 +45,22 @@ public class KnownPaths implements IMapProp {
 	}
 
 	private boolean isNothing = false;
-	ArrayList<Path> knownPaths;
+	LinkedList<Path> knownPaths;
 	
-	int countUses[];
+	ArrayList<Integer> countUses;
+	
 	long LastUsingTimeInMilliSeconds;
 	
 	public KnownPaths() {
-		knownPaths = new ArrayList<Path>();
+		knownPaths = new LinkedList<Path>();
+		countUses = new ArrayList<Integer>(10);
 	}
 	
+	public KnownPaths(LinkedList<Path> paths) {
+		knownPaths = paths;
+		countUses = new ArrayList<Integer>(paths.size());
+	}
+
 	public void addPath(Path path) {
 		if (isNothing) return;
 		if (path.isObjectNothing() ) return;
@@ -61,19 +68,20 @@ public class KnownPaths implements IMapProp {
 		int index;
 		knownPaths.add(path);
 		index = knownPaths.size() - 1;
-		countUses[index] = 1;
+		countUses.ensureCapacity(index + 1);
+		countUses.set(index, 1);
 	}
 	
-	public ArrayList<Path> getPaths() {
+	public LinkedList<Path> getPaths() {
 		return knownPaths;
 	}
 	
-	public ArrayList<Path> getPathsWithEnd(Position end) {
+	public LinkedList<Path> getPathsWithEnd(Position end) {
 		
 		if (isNothing) return knownPaths;
 		
-		ArrayList<Path> result;
-		result = new ArrayList<Path>();
+		LinkedList<Path> result;
+		result = new LinkedList<Path>();
 		if (end.isObjectNothing()) return result;
 		
 		Path path;
@@ -87,12 +95,12 @@ public class KnownPaths implements IMapProp {
 		return result;
 	}
 
-	public ArrayList<Path> getPathsWithStart(Position start) {
+	public LinkedList<Path> getPathsWithStart(Position start) {
 		
 		if (isNothing) return knownPaths;
 		
-		ArrayList<Path> result;
-		result = new ArrayList<Path>();
+		LinkedList<Path> result;
+		result = new LinkedList<Path>();
 		if (start.isObjectNothing()) return result;
 		
 		Path path;
@@ -112,9 +120,13 @@ public class KnownPaths implements IMapProp {
 		if (path.isObjectNothing()) return;
 
 		int index;
-		
+		int count;
 		index = getIndex(path);
-		if (index >= 0 & index < countUses.length) countUses[index]++;
+		if (index >= 0 & index < countUses.size()) {
+			count = countUses.get(index);
+			count++;
+			countUses.set(index, count);
+		}
 	}
 
 

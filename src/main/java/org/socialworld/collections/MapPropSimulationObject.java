@@ -21,6 +21,9 @@
 */
 package org.socialworld.collections;
 
+import java.util.ArrayList;
+
+import org.socialworld.actions.move.Path;
 import org.socialworld.map.IMapProp;
 import org.socialworld.objects.SimulationObject;
 
@@ -31,6 +34,8 @@ import org.socialworld.objects.SimulationObject;
 public class MapPropSimulationObject implements IMapProp {
 	private SimulationObject object;
 	
+	private ArrayList<SimulationObject> objects;
+
 	public MapPropSimulationObject(SimulationObject object) {
 		this.object = object;
 	}

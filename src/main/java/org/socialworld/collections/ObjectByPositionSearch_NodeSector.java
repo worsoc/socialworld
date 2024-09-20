@@ -22,7 +22,7 @@
 package org.socialworld.collections;
 
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.ListIterator;
 
 import org.socialworld.calculation.SimulationCluster;
@@ -62,29 +62,37 @@ public class ObjectByPositionSearch_NodeSector extends MapPropTree_Node{
 		else
 			 return null;
 		
-		return (ObjectByPositionSearch_NodeSector) setProperty(new MapPropSimulationObject(object), location);
+		return (ObjectByPositionSearch_NodeSector) addProperty(new MapPropSimulationObject(object), location);
 
 	}
 	
-	protected ArrayList<SimulationObject> getObjects(String location) {
-		ArrayList<SimulationObject> result;
+	protected LinkedList<SimulationObject> getObjects(String location) {
+		LinkedList<SimulationObject> result;
 		
-		ArrayList<IMapProp> tmpCollection;
+		IMapProp elem;
+		
+		LinkedList<IMapProp> tmpCollection;
 		tmpCollection = getCollection(location);
 
-		result = new ArrayList<SimulationObject>(tmpCollection.size());
+		
+		result = new LinkedList<SimulationObject>();
 
-		ListIterator<IMapProp> iterator = tmpCollection.listIterator();
-		while (iterator.hasNext()) {
-			result.add( ( (MapPropSimulationObject) iterator.next() ).getObject() );
+		if (tmpCollection.size() > 0) {
+			ListIterator<IMapProp> iterator = tmpCollection.listIterator();
+			while (iterator.hasNext()) {
+				elem = iterator.next();
+				if (elem != null) {
+					result.add( ( (MapPropSimulationObject)elem ).getObject() );
+				}
+			}
 		}
 		
 		return result;
 		
 	}
 	
-	protected void removeObject() {
-		removeProperty();
+	protected void removeObject(SimulationObject object) {
+		removeProperty(new MapPropSimulationObject(object));
 	}
 	
 

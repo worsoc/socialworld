@@ -21,7 +21,7 @@
 */
 package org.socialworld.collections;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 import org.socialworld.map.MapPropTree;
 import org.socialworld.objects.SimulationObject;
@@ -45,7 +45,7 @@ public class ObjectByPositionSearch_TreeSector extends MapPropTree {
 	}
 	
 	
-	protected ArrayList<SimulationObject> getObjects(String location) {
+	protected LinkedList<SimulationObject> getObjects(String location) {
 		return  ((ObjectByPositionSearch_NodeSector) getRoot()).getObjects(location);
 	}
 	

@@ -21,7 +21,7 @@
 */
 package org.socialworld.map;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 import org.socialworld.GlobalSwitches;
 
@@ -37,13 +37,14 @@ public class MapPropTree_Node {
 	
 	private int level;
 
-	private IMapProp property;
+	private LinkedList<IMapProp> properties;
 	private boolean isLeaf = false;
 	
 	
 	protected MapPropTree_Node(MapPropTree tree, int level)  {
 		this.tree = tree;
 		this.level = level;
+		properties = new LinkedList<IMapProp>();
 		createSectorNodesArray(tree.getBase());
 	}
 	
@@ -79,63 +80,79 @@ public class MapPropTree_Node {
 	
 	protected int getLevel() { return level; }
 	
-	protected IMapProp getProperty(String locationRest) {
+	protected LinkedList<IMapProp> getProperties(String locationRest) {
 		
 		int sector;
 		
-		if ( this.isLeaf  ) return property;
+		if ( this.isLeaf  ) return properties;
 		
 		sector = tree.getSector(locationRest);
-		if ( (sector == -1) | (sector == 0) )    		return tree.getPropertyNothing();
+		if ( (sector == -1) | (sector == 0) )    		return getPropertyNothingList();
 		else {
 			if (sectorNodes[sector - 1] == null) {
 				if (GlobalSwitches.OUTPUT_DEBUG_VARIABLE_IS_NULL) {
 					System.out.println("MapPropTree_Node.getProperty(): sectorNodes[sector - 1] is null ");
 				}
-				return tree.getPropertyNothing();
+				return getPropertyNothingList();
 			}
 			else {
-				return sectorNodes[sector - 1].getProperty(locationRest.substring(1));
+				return sectorNodes[sector - 1].getProperties(locationRest.substring(1));
 			}
 		}
 
 		
 	}
 
-	protected ArrayList<IMapProp> getCollection(String locationRest) {
+	protected LinkedList<IMapProp> getCollection(String locationRest) {
 		
 		int sector;
-		ArrayList<IMapProp> collection;
+		LinkedList<IMapProp> collection;
 		
 		if ( (locationRest.length() == 0) | (this.isLeaf) ) {
-			collection = new ArrayList<IMapProp>(1);
-			collection.add(property);
+			collection = new LinkedList<IMapProp>();
+			collection.addAll(properties);
 			return collection;
 		}
 		
 		sector = tree.getSector(locationRest);
 		if (sector == -1) {
-			collection = new ArrayList<IMapProp>(1);
-			collection.add(tree.getPropertyNothing());
+			collection = getPropertyNothingList();
 			return collection;
 		}
 
-		if (sector == 0) return getCollection();
-		else return sectorNodes[sector - 1].getCollection(locationRest.substring(1));
-
+		if (sector == 0) {
+			return getCollection();
+		}
+		else {
+			if  (sectorNodes[sector - 1] == null) {
+				// return empty collection, 
+				// because  there is no child sector
+				// in consequence there are no properties in the calculated sector
+				return new LinkedList<IMapProp>();
+			}
+			else {
+				if (locationRest.length() == 1)
+					return sectorNodes[sector - 1].getCollection("");
+				else
+					return sectorNodes[sector - 1].getCollection(locationRest.substring(1));
+			}
+		}
+			
 	}
 	
-	protected ArrayList<IMapProp> getCollection() {
+	protected LinkedList<IMapProp> getCollection() {
 		int index;
 		int base;
-		ArrayList<IMapProp> collection = new ArrayList<IMapProp>();
+		LinkedList<IMapProp> collection = new LinkedList<IMapProp>();
 		
-		if (this.property != null) collection.add(this.property);
+		if (this.properties != null) collection.addAll(this.properties);
 		
 		base = tree.getBase();
 		
 		for (index = 0; index < base; index++) {
-			collection.addAll(sectorNodes[index].getCollection());
+			if (sectorNodes[index] != null) {
+				collection.addAll(sectorNodes[index].getCollection());
+			}
 		}
 		
 		return collection;
@@ -143,30 +160,50 @@ public class MapPropTree_Node {
 
 	
 
-	protected MapPropTree_Node setProperty(IMapProp property, String locationRest) {
+	protected MapPropTree_Node addProperty(IMapProp property, String locationRest) {
 		int sector;
 
 		sector = tree.getSector(locationRest);
 		
-		if ( (sector == 0) | locationRest.length() == 0 ) return setProperty(property);
+		if ( (sector == 0) | locationRest.length() == 0 ) return addProperty(property);
 		
 		if (sectorNodes[sector - 1] == null) setNewNode(sector);
-		return sectorNodes[sector - 1].setProperty(property, locationRest.substring(1));
+		return sectorNodes[sector - 1].addProperty(property, locationRest.substring(1));
 		
 	}
 
 	
-	private MapPropTree_Node setProperty(IMapProp property) {
+	private MapPropTree_Node addProperty(IMapProp property) {
 		isLeaf = true;
-		this.property = property;
+		
+		this.properties.add(property);
 
 		return this;
 	}
 	
 
-	protected void removeProperty() {
+	protected void removeProperties() {
 		isLeaf = false;
-		this.property = null;
+		this.properties.clear();
 	}
 
-}
+	protected void removeProperty(IMapProp propLike) {
+		IMapProp propToRemove = null;
+		for (IMapProp prop: properties) {
+			if (prop.equals(propLike)) {
+				propToRemove = prop;
+				break;
+			}
+		}
+		if (propToRemove != null) {
+			properties.remove(propToRemove);
+		}
+		isLeaf = properties.isEmpty();
+	}
+	
+	private LinkedList<IMapProp> getPropertyNothingList() {
+		LinkedList<IMapProp> list = new LinkedList<IMapProp>();
+		list.add(tree.getPropertyNothing());
+		return list;
+	}
+} 

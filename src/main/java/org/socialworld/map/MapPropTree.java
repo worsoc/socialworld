@@ -21,7 +21,7 @@
 */
 package org.socialworld.map;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * @author Mathias Sikos
@@ -60,15 +60,15 @@ public class MapPropTree {
 
 	protected MapPropTree_Node getRoot() {return this.root;}
 	
-	public IMapProp getProperty(String location) {
-		return root.getProperty(location);
+	public LinkedList<IMapProp> getProperties(String location) {
+		return root.getProperties(location);
 	}
 	
-	public void setProperty (IMapProp property, String location) {
-		root.setProperty(property, location);
+	public void addProperty (IMapProp property, String location) {
+		root.addProperty(property, location);
 	}
 	
-	public ArrayList<IMapProp> getCollection(String location) {
+	public LinkedList<IMapProp> getCollection(String location) {
 		return root.getCollection(location);
 	}
 	

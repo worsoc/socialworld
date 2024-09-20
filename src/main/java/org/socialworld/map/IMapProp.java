@@ -26,4 +26,5 @@ package org.socialworld.map;
  *
  */
 public interface IMapProp {
+	
 }

@@ -30,7 +30,7 @@ import org.socialworld.attributes.SimProperty;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.knowledge.KnownPaths;
-
+import org.socialworld.map.IMapProp;
 /**
  * German:
  * Die Klasse Path enthaelt eine Wegbeschreibung, 
@@ -52,7 +52,7 @@ import org.socialworld.knowledge.KnownPaths;
  * @author Mathias Sikos
  *
  */
-public class Path extends SimProperty {
+public class Path extends SimProperty implements IMapProp{
 	public static final int LOCATION_BASE25_ACCURACY = 7;
 	private static final int STOP_CHILD_INCREMETUSAGE_CALL = 10;
 	

@@ -22,11 +22,11 @@
 package org.socialworld.knowledge;
 
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
-import org.socialworld.GlobalSwitches;
 import org.socialworld.actions.move.Path;
 import org.socialworld.attributes.Position;
+import org.socialworld.map.IMapProp;
 import org.socialworld.map.MapPropTree;
 
 /**
@@ -38,66 +38,57 @@ public class KnownPathsPool {
 	MapPropTree endPointsTree;
 
 	public KnownPathsPool () {
-		startPointsTree = new MapPropTree(Position.LOCATIONBASE25, Path.LOCATION_BASE25_ACCURACY, KnownPaths.getObjectNothing());
-		endPointsTree = new MapPropTree(Position.LOCATIONBASE25, Path.LOCATION_BASE25_ACCURACY, KnownPaths.getObjectNothing());
+		startPointsTree = new MapPropTree(Position.LOCATIONBASE25, Path.LOCATION_BASE25_ACCURACY, Path.getObjectNothing());
+		endPointsTree = new MapPropTree(Position.LOCATIONBASE25, Path.LOCATION_BASE25_ACCURACY, Path.getObjectNothing());
 	}
 	
-	public ArrayList<Path> findPaths(Position start, Position end) {
+	public LinkedList<Path> findPaths(Position start, Position end) {
 		
-		ArrayList<Path> paths = new ArrayList<Path>();
+		LinkedList<Path> paths = new LinkedList<Path>();
 		
 		if (!start.isObjectNothing() && !end.isObjectNothing()) {
-			KnownPaths pathsWithStartPoint = (KnownPaths) startPointsTree.getProperty(start.getLocationByBase25());
-			if (pathsWithStartPoint == null) {
-				if (GlobalSwitches.OUTPUT_DEBUG_VARIABLE_IS_NULL) {
-					System.out.println("KnownPathsPool.findPaths(): pathsWithStartPoint is null ");
-				}
+			LinkedList<Path> pathsForStart = new LinkedList<Path>();
+			for (IMapProp prop : startPointsTree.getProperties(start.getLocationByBase25())) {
+				pathsForStart.add((Path) prop);
 			}
-			else {
-				paths = pathsWithStartPoint.getPathsWithEnd(end);
-			}
+			KnownPaths pathsWithStartPoint = new KnownPaths(pathsForStart);
+			paths = pathsWithStartPoint.getPathsWithEnd(end);
 		}
 		
 		return paths;
 	}
 
-	public ArrayList<Path> findPathsForStart(Position start) {	
+	public LinkedList<Path> findPathsForStart(Position start) {	
 		
-		ArrayList<Path> paths = new ArrayList<Path>();
+		LinkedList<Path> paths = new LinkedList<Path>();
 		
 		if (!start.isObjectNothing() ) {
 
-			KnownPaths pathsWithStartPoint = (KnownPaths) startPointsTree.getProperty(start.getLocationByBase25());
-	
-			if (pathsWithStartPoint == null) {
-				if (GlobalSwitches.OUTPUT_DEBUG_VARIABLE_IS_NULL) {
-					System.out.println("KnownPathsPool.findPathsForStart(): pathsWithStartPoint is null ");
-				}
+			LinkedList<Path> pathsForStart = new LinkedList<Path>();
+			for (IMapProp prop : startPointsTree.getProperties(start.getLocationByBase25())) {
+				pathsForStart.add((Path) prop);
 			}
-			else {
-				paths = pathsWithStartPoint.getPaths();
-			}
+			KnownPaths pathsWithStartPoint = new KnownPaths(pathsForStart);
+				
+			paths = pathsWithStartPoint.getPaths();
 		}
 		
 		return paths;
 	}
 
-	public ArrayList<Path> findPathsForEnd(Position end) {	
+	public LinkedList<Path> findPathsForEnd(Position end) {	
 		
-		ArrayList<Path> paths = new ArrayList<Path>();
+		LinkedList<Path> paths = new LinkedList<Path>();
 		
 		if (!end.isObjectNothing() ) {
 
-			KnownPaths pathsWithEndPoint = (KnownPaths) endPointsTree.getProperty(end.getLocationByBase25());
+			LinkedList<Path> pathsForEnd = new LinkedList<Path>();
+			for (IMapProp prop : endPointsTree.getProperties(end.getLocationByBase25())) {
+				pathsForEnd.add((Path) prop);
+			}
+			KnownPaths pathsWithEndPoint = new KnownPaths(pathsForEnd);
 		
-			if (pathsWithEndPoint == null) {
-				if (GlobalSwitches.OUTPUT_DEBUG_VARIABLE_IS_NULL) {
-					System.out.println("KnownPathsPool.findPathsForEnd(): pathsWithEndPoint is null ");
-				}
-			}
-			else {
-				paths = pathsWithEndPoint.getPaths();
-			}
+			paths = pathsWithEndPoint.getPaths();
 		}
 		
 		return paths;
@@ -114,7 +105,12 @@ public class KnownPathsPool {
 	private void addPathByStartPoint(Path path, Position start) {
 		
 		if (!path.isObjectNothing() && !start.isObjectNothing()) {
-			KnownPaths paths = (KnownPaths) startPointsTree.getProperty(start.getLocationByBase25());
+			LinkedList<Path> pathsForStart = new LinkedList<Path>();
+			for (IMapProp prop : startPointsTree.getProperties(start.getLocationByBase25())) {
+				pathsForStart.add((Path) prop);
+			}
+			KnownPaths paths = new KnownPaths(pathsForStart);
+
 			paths.addPath(path);
 			path.setRefToKnownPathsWithStartingPoint(paths);
 		}
@@ -123,7 +119,11 @@ public class KnownPathsPool {
 	private void addPathByEndPoint(Path path, Position end) {
 		
 		if (!path.isObjectNothing() && !end.isObjectNothing()) {
-			KnownPaths paths = (KnownPaths) endPointsTree.getProperty(end.getLocationByBase25());
+			LinkedList<Path> pathsForEnd = new LinkedList<Path>();
+			for (IMapProp prop : endPointsTree.getProperties(end.getLocationByBase25())) {
+				pathsForEnd.add((Path) prop);
+			}
+			KnownPaths paths = new KnownPaths(pathsForEnd);
 			paths.addPath(path);
 			path.setRefToKnownPathsWithEndPoint(paths);
 		}
