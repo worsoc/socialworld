@@ -67,9 +67,13 @@ public class MapPropTree {
 	public void addProperty (IMapProp property, String location) {
 		root.addProperty(property, location);
 	}
-	
+
 	public LinkedList<IMapProp> getCollection(String location) {
-		return root.getCollection(location);
+		return root.getCollection(location, 99);
+	}
+
+	public LinkedList<IMapProp> getCollection(String location, int higherLevelToAdd) {
+		return root.getCollection(location, higherLevelToAdd);
 	}
 	
 	protected int getBase() {return base;}
@@ -81,6 +85,8 @@ public class MapPropTree {
 		char firstSign;
 		int firstSign2Int;
 		int sector = -1;
+		
+		if (locationRest.length() == 0) sector = 0;
 		
 		if (locationRest != null && locationRest.length() > 0) {
 			firstSign = locationRest.charAt(0);

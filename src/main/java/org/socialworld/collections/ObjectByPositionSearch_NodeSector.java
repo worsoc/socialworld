@@ -72,7 +72,7 @@ public class ObjectByPositionSearch_NodeSector extends MapPropTree_Node{
 		IMapProp elem;
 		
 		LinkedList<IMapProp> tmpCollection;
-		tmpCollection = getCollection(location);
+		tmpCollection = getCollection(location, 0);
 
 		
 		result = new LinkedList<SimulationObject>();
