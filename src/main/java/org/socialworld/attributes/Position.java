@@ -331,6 +331,8 @@ public class Position extends SimProperty implements ICalculatable {
 	}
 	
 	public String toString() {
-		return this.vector.toString();
+		return this.vector.toString() + " --> " + this.locationByBase25;
+		//return this.locationByBase25;
+		//return this.vector.toString();
 	}
 }

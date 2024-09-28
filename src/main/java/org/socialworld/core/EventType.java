@@ -282,8 +282,8 @@ public enum EventType {
 		
 		switch (this) {
 		// TODO getEffectDistance()
-		case candidatesMoveWalk: return 10000.0F;
-		case candidatesMoveRun: return 15000.0F;
+		case candidatesMoveWalk: return 5000.0F;
+		case candidatesMoveRun: return 10000.0F;
 		case candidatesMoveSneak: return 1000.0F; 
 		case candidatesMoveJump: return 3000.0F;
 		case candidatesMoveSwim: return 3000.0F;
@@ -326,8 +326,8 @@ public enum EventType {
 			return 1000.0F; 
 			
 					
-		case candidatesSayNormal: return 10000.0F; 
-		case candidatesSayScream: return 40000.0F; 
+		case candidatesSayNormal: return 5000.0F; 
+		case candidatesSayScream: return 10000.0F; 
 		case candidatesSayWhisper: return 1000.0F; 
 
 		case percipientExistsDistance100000: return 100000.0F;
@@ -338,7 +338,7 @@ public enum EventType {
 		case percipientExistsDistance100: return 100.0F;
 			
 		default:
-			return 10000.0F;
+			return 5000.0F;
 		}
 		
 	}

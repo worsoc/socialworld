@@ -351,8 +351,8 @@ public class Simulation extends SocialWorldThread {
 	}
 	
 	
-	public void changePosition(SimulationObject objectWithNewosition) {
-		this.searchByPosition.changePosition(objectWithNewosition);
+	public void changePosition(SimulationObject objectWithNewPosition) {
+		this.searchByPosition.changePosition(objectWithNewPosition);
 	}
 	
 	public void propertyChanged(SimulationObject changedObject, ChangedProperty property) {
