@@ -84,4 +84,19 @@ public class Ground_Height implements IMapProp {
 		if (isNothing) return;
 		this.avgHeight = avgHeight;
 	}
+	
+	public boolean equals(IMapProp propLike) {
+		if (propLike instanceof Ground_Height) {
+			 
+			Ground_Height gh = (Ground_Height) propLike;
+
+			if ((this.minHeight == gh.minHeight) && 
+				(this.maxHeight == gh.maxHeight) &&
+				(this.avgHeight == gh.avgHeight)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 }

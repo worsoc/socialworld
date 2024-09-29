@@ -21,7 +21,6 @@
 */
 package org.socialworld.core;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.PriorityBlockingQueue;
@@ -113,8 +112,8 @@ public class EventMaster extends SocialWorldThread {
 	private EventMaster() {
 
 		this.sleepTime = MAX_SLEEP_TIME_FOR_EMPTY_QUEUE;
-		candidates = new ArrayList<SimulationObject>();
-		percipients = new ArrayList<SimulationObject>();
+		candidates = new LinkedList<SimulationObject>();
+		percipients = new LinkedList<SimulationObject>();
 		eventQueue = new PriorityBlockingQueue<Event>();
 		
 	}
@@ -259,7 +258,7 @@ public class EventMaster extends SocialWorldThread {
 		int ignoreCandidate;
 		
 		int maxSize = 10000;
-		this.candidates = new ArrayList<SimulationObject>(maxSize);
+		this.candidates = new LinkedList<SimulationObject>();
 		int index = 0;
 		
 		Simulation simulation = SocialWorld.getCurrent().getSimulation();
@@ -274,7 +273,7 @@ public class EventMaster extends SocialWorldThread {
 					ignoreCandidate = checkIgnoreCandidate(candidate);
 					if ( ignoreCandidate == 0) {
 						// assumption: list doesn't (better lists don't) contain duplicate objects
-						candidates.set(index, candidate);
+						candidates.add(candidate);
 						index++;
 						if (GlobalSwitches.OUTPUT_EVENTMASTER_DETERMINE_CANDIDATES) {
 							System.out.println("EventMaster.determineCandidates: Event " + this.event.toString() + ": Kandidat " + candidate.getObjectID() + " " + candidate.getPosition(SimulationCluster.test).toString() + " added to candidates list");
@@ -293,9 +292,6 @@ public class EventMaster extends SocialWorldThread {
 			if (index == maxSize) break;
 
 		}
-		
-
-		
 
 	}
 
@@ -451,7 +447,7 @@ public class EventMaster extends SocialWorldThread {
 		boolean isPossiblePercipient;
 		EventToPercipient event;
 
-		this.percipients = new ArrayList<SimulationObject>();
+		this.percipients = new LinkedList<SimulationObject>();
 
 		if (this.event instanceof EventToPercipient) {
 			event = (EventToPercipient) this.event;

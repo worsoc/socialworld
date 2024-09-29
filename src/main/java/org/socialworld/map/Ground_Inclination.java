@@ -61,5 +61,16 @@ public class Ground_Inclination implements IMapProp {
 		this.inclination = inclination;
 	}
 	
+	public boolean equals(IMapProp propLike) {
+		if (propLike instanceof Ground_Inclination) {
+			 
+			Ground_Inclination gi = (Ground_Inclination) propLike;
+
+			if ((this.inclination == gi.inclination)) {
+				return true;
+			}
+		}
+		return false;
+	}
 	
 }

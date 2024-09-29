@@ -115,6 +115,7 @@ public class Position extends SimProperty implements ICalculatable {
 
 	private Position() {
 		this.vector = SVVector.getObjectNothing();
+		locationByBase25 = "";
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -328,6 +329,15 @@ public class Position extends SimProperty implements ICalculatable {
 		else
 			return Integer.toString(0);
 		
+	}
+	
+	public boolean equals(Object position) {
+		if (position instanceof Position) {
+			if (locationByBase25.equals(((Position) position).locationByBase25)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public String toString() {

@@ -21,6 +21,7 @@
 */
 package org.socialworld.map;
 
+
 /**
  * @author Mathias Sikos
  *
@@ -86,5 +87,18 @@ public class Ground_Consistency implements IMapProp {
 		protected void setPenetration(float penetration) {
 			if (isNothing) return;
 			this.penetration = penetration;
+		}
+		
+		public boolean equals(IMapProp propLike) {
+			if (propLike instanceof Ground_Consistency) {
+				 
+				Ground_Consistency gc = (Ground_Consistency) propLike;
+				
+				if ((this.springiness == gc.springiness) && 
+					(this.penetration == gc.penetration)) {
+					return true;
+				}
+			}
+			return false;
 		}
 }

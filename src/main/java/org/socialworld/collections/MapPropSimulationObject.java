@@ -21,9 +21,7 @@
 */
 package org.socialworld.collections;
 
-import java.util.ArrayList;
 
-import org.socialworld.actions.move.Path;
 import org.socialworld.map.IMapProp;
 import org.socialworld.objects.SimulationObject;
 
@@ -34,7 +32,6 @@ import org.socialworld.objects.SimulationObject;
 public class MapPropSimulationObject implements IMapProp {
 	private SimulationObject object;
 	
-	private ArrayList<SimulationObject> objects;
 
 	public MapPropSimulationObject(SimulationObject object) {
 		this.object = object;
@@ -42,5 +39,13 @@ public class MapPropSimulationObject implements IMapProp {
 	
 	protected SimulationObject getObject() {
 		return this.object;
+	}
+	
+	public boolean equals(IMapProp propLike) {
+		if (propLike instanceof MapPropSimulationObject) {
+			if (this.object == ((MapPropSimulationObject)propLike).object)
+				return true;
+		}
+		return false;
 	}
 }

@@ -27,4 +27,5 @@ package org.socialworld.map;
  */
 public interface IMapProp {
 	
+	public boolean equals(IMapProp propLike);
 }

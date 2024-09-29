@@ -148,4 +148,20 @@ public class Ground_Material implements IMapProp {
 		if (isNothing) return;
 		this.percentageSecond = percentageSecond;
 	}
+	
+	public boolean equals(IMapProp propLike) {
+		if (propLike instanceof Ground_Material) {
+			 
+			Ground_Material gm = (Ground_Material) propLike;
+
+			if ((this.firstMaterial == gm.firstMaterial) && 
+				(this.secondMaterial == gm.secondMaterial) &&
+				(this.percentageFirst == gm.percentageFirst) &&
+				(this.percentageSecond == gm.percentageSecond)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 }

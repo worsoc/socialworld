@@ -277,4 +277,33 @@ public class Path extends SimProperty implements IMapProp{
 		if ((length > 1) & (indexPointToPassNext == 0)) 			indexPointToPassNext = 1;
 		else if (length == 0) indexPointToPassNext = -1;
 	}
+	
+	
+	public boolean equals(IMapProp propLike) {
+		if (propLike instanceof Path) {
+			 
+			Path path = (Path) propLike;
+
+			if ((this.start.equals(path.start)) && 
+				(this.end.equals(path.end))  &&
+				(checkPointsAreEqual(this.points, path.points))) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean checkPointsAreEqual(ArrayList<Position> a, ArrayList<Position> b) {
+		if (a.size() == b.size()  ) {
+			int size = a.size();
+			int index = 0;
+			while (a.get(index).equals(b.get(index))) {
+				index++;
+				if (index == size) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 }
