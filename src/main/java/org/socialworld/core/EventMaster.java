@@ -29,6 +29,7 @@ import java.util.ListIterator;
 
 import org.socialworld.SocialWorld;
 import org.socialworld.GlobalSwitches;
+import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
 import org.socialworld.calculation.SimulationCluster;
@@ -377,6 +378,9 @@ public class EventMaster extends SocialWorldThread {
 	private void determineInfluenceToCandidates() {
 		SimulationObject candidate;
 		ListIterator<SimulationObject> iterator;
+	
+		if (GlobalSwitches.OUTPUT_EVENTMASTER_DETERMINE_INFLUENCE_TO_CANDIDATES)
+			System.out.println("Start determine infuence to candidates (" + this.candidates.size() + "): "+ ActualTime.asTime().toString());
 		
 		// two iterations because of asynchronous calculations
 		// there is a better chance to react on the event (second iteration) using the newer state (just calculated in first iteration)
@@ -393,9 +397,14 @@ public class EventMaster extends SocialWorldThread {
 		while (iterator.hasNext()) {
 			candidate = iterator.next();			
 			candidate.reactToEvent(this.event);
-			iterator.remove();
+			
+			// don't remove because the list is created new for the next event
+			//iterator.remove();
 		}
 
+		if (GlobalSwitches.OUTPUT_EVENTMASTER_DETERMINE_INFLUENCE_TO_CANDIDATES)
+			System.out.println("End determine infuence to candidates "+ ActualTime.asTime().toString());
+		
 	}
 	
 	
@@ -412,6 +421,9 @@ public class EventMaster extends SocialWorldThread {
 			SimulationObject target;
 			ListIterator<SimulationObject> iterator;
 			
+			if (GlobalSwitches.OUTPUT_EVENTMASTER_DETERMINE_INFLUENCE_TO_TARGETS)
+				System.out.println("Start determine infuence to targets (" + targets.size() + "): "+ ActualTime.asTime().toString());
+			
 			// two iterations because of asynchronous calculations
 			// there is a better chance to react on the event (second iteration) using the newer state (just calculated in first iteration)
 			
@@ -427,9 +439,13 @@ public class EventMaster extends SocialWorldThread {
 			while (iterator.hasNext()) {
 				target = iterator.next();			
 				target.reactToEvent(this.event);
-				iterator.remove();
+				
+				//iterator.remove();
 			}
 		
+			if (GlobalSwitches.OUTPUT_EVENTMASTER_DETERMINE_INFLUENCE_TO_TARGETS)
+				System.out.println("End determine infuence to targets " + ActualTime.asTime().toString());
+
 		}
 		
 	}
@@ -443,7 +459,6 @@ public class EventMaster extends SocialWorldThread {
 	private void determinePossiblePercipients() {
 		
 		IPerceptible causer;
-		SimulationObject percipient;
 		boolean isPossiblePercipient;
 		EventToPercipient event;
 
@@ -458,30 +473,27 @@ public class EventMaster extends SocialWorldThread {
 			
 	//		System.out.println("Position Event: " + this.eventPosition.toString());
 	
-			
 			Simulation simulation = SocialWorld.getCurrent().getSimulation();
-			percipient = simulation.getFirstByPosition(this.eventPosition );
-			while (percipient != null) {
+			LinkedList<LinkedList<SimulationObject>> lists = simulation.getObjectSearch().getObjects(event);
+			for (LinkedList<SimulationObject> list : lists) {
 				
-				if (percipient instanceof Animal ) {
+				for (SimulationObject percipient : list) {
+					
+					if (percipient.isSimulationObject() && (percipient instanceof Animal)) {
+			
 	//				System.out.println("Position Human: " + percipient.getPosition().toString());
 	
-					isPossiblePercipient = causer.checkIsPossiblePercipient((Animal) percipient);
-					if ( isPossiblePercipient ) {
-						percipients.add(percipient);
-						
-						// TEMP_SOLUTION für Test Abbruch nach erstem Percipient
-						return;
+						isPossiblePercipient = causer.checkIsPossiblePercipient((Animal) percipient);
+						if ( isPossiblePercipient ) {
+							percipients.add(percipient);
+						}
+
 					}
-					
-					percipient = simulation.getNextByPosition();
-					
+					else {
+						// assumption: in the list are no animals (incl. humans)
+						break;
+					}
 				}
-				else {
-	//				System.out.println("Position Apple: " + percipient.getPosition().toString());
-					percipient = simulation.getNextByPosition();
-				}
-	
 			}
 		}
 	}
@@ -494,6 +506,8 @@ public class EventMaster extends SocialWorldThread {
 		SimulationObject percipient;
 		ListIterator<SimulationObject> iterator;
 		
+		if (GlobalSwitches.OUTPUT_EVENTMASTER_DETERMINE_INFLUENCE_TO_PERCIPIENTS)
+			System.out.println("Start determine infuence to percipients (" + this.percipients.size() + "): "+ ActualTime.asTime().toString());
 		
 		// two iterations because of asynchronous calculations
 		// there is a better chance to react on the event (second iteration) using the newer state (just calculated in first iteration)
@@ -510,8 +524,13 @@ public class EventMaster extends SocialWorldThread {
 		while (iterator.hasNext()) {
 			percipient = iterator.next();			
 			percipient.reactToEvent(this.event);
-			iterator.remove();
+			
+			// don't remove because the list is created new for the next event
+			//iterator.remove();
 		}
+
+		if (GlobalSwitches.OUTPUT_EVENTMASTER_DETERMINE_INFLUENCE_TO_PERCIPIENTS)
+			System.out.println("End determine infuence to percipients " + ActualTime.asTime().toString());
 
 	}
 	

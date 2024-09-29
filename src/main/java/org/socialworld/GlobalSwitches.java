@@ -33,6 +33,11 @@ public class GlobalSwitches {
 	public static boolean OUTPUT_DEBUG_GETPROPERTY = false;
 	
 	public static boolean OUTPUT_EVENTMASTER_DETERMINE_CANDIDATES = false;
+	public static boolean OUTPUT_EVENTMASTER_DETERMINE_INFLUENCE_TO_CANDIDATES = true;
+	public static boolean OUTPUT_EVENTMASTER_DETERMINE_INFLUENCE_TO_TARGETS = true;
+	public static boolean OUTPUT_EVENTMASTER_DETERMINE_INFLUENCE_TO_PERCIPIENTS = true;
+
 	public static boolean OUTPUT_CREATE_OBJECT = true;
 
+	
 }

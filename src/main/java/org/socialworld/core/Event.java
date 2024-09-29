@@ -29,8 +29,6 @@ import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.collections.ValueArrayList;
-import org.socialworld.knowledge.KnowledgeSource;
-import org.socialworld.knowledge.KnowledgeSource_Type;
 
 import java.util.ArrayList;
 import java.util.List;
