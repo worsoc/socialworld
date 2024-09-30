@@ -55,10 +55,13 @@ public class ObjectByPositionSearch_NodeSector extends MapPropTree_Node{
 
 		if ( ((ObjectByPositionSearch_TreeSector) getTree()).getBase() == 9) {
 			location = 	Integer.toString(object.getPosition(SimulationCluster.objectMaster).getLocationByBase9());	
-			}
+			// reduce location string to object's object search Level
+			location = location.substring(0, object.getLevelObjectSearchBase9());
+		}
 		else if ( ((ObjectByPositionSearch_TreeSector) getTree()).getBase() == 25) {
 			location = 	object.getPosition(SimulationCluster.objectMaster).getLocationByBase25();	
-			}
+			location = location.substring(0, object.getLevelObjectSearchBase25());
+		}
 		else
 			 return null;
 		

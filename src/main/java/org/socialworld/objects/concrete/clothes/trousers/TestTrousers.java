@@ -18,6 +18,15 @@ public class TestTrousers extends Trousers {
 		return false;
 	}
 
+	///////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////    creating instance for simulation    //////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
+	
+	public TestTrousers() {
+		super();
+		setLevelObjectSearch(9 /* base 8: 0.6 meters */ , 5 /* base 25: 1.3 meters */);
+	}
+	
 	@Override
 	protected State getInitState(String stateClassName) {
 		State initState = State.getObjectNothing();

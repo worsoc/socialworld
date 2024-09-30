@@ -140,7 +140,7 @@ public class MapPropTree_Node {
 						collection = sectorNodes[sector - 1].getCollection(locationRest.substring(1), higherLevelToAdd);
 				}
 				
-				if (this.level >= higherLevelToAdd && this.properties != null) {
+				if (this.level > higherLevelToAdd && this.properties != null) {
 					collection.addAll(this.properties);
 				}
 

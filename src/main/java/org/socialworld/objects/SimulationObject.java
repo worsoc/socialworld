@@ -89,6 +89,8 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 	
 	protected ObjectRequester objectRequester = new ObjectRequester();
 
+	private int levelObjectSearchBase25;
+	private int levelObjectSearchBase9;
 	
 	private	WriteAccessToSimulationObject guard;
 	private GrantedAccessToProperty grantAccessToAllProperties[];
@@ -242,8 +244,21 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 	
 	public final Lexem getLexem() {
 		return this.lexem;
-}
+	}
 	
+	public void setLevelObjectSearch(int levelBase9, int levelBase25) {
+		this.levelObjectSearchBase25 = levelBase25;
+		this.levelObjectSearchBase9 = levelBase9;
+	}
+
+	public int getLevelObjectSearchBase25() {
+		return this.levelObjectSearchBase25;
+	}
+
+	public int getLevelObjectSearchBase9() {
+		return this.levelObjectSearchBase9;
+	}
+
 	public abstract boolean checkObjectBelongsToGroup(int groupNumberSuffix);
 	
 ///////////////////////////////////////////////////////////////////////////////////////////

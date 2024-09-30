@@ -51,7 +51,7 @@ public class MapPropTree {
 	}
 
 	protected void createRoot() {
-		setRoot( new MapPropTree_Node(this, 1));
+		setRoot( new MapPropTree_Node(this, 0));
 	}
 	
 	protected final void setRoot(MapPropTree_Node root) {

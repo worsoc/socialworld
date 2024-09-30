@@ -102,6 +102,8 @@ import org.socialworld.core.IEventParam;
 	public Human() {
 		super();
 		this.belongsTo = EnumMammal.Human;
+		setLevelObjectSearch(8 /* base 9: 0.6 meters */ , 5 /* base 25: 1.3 meters */);
+		 
 	}
 
 	protected SimulationObject_Type getSimObjectType() {

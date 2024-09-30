@@ -29,6 +29,15 @@ public class TestShoeLeft extends Shoe {
 		return false;
 	}
 
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////    creating instance for simulation    //////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public TestShoeLeft() {
+		super();
+		setLevelObjectSearch(9 /* base 9: 0.2 meters */ , 6 /* base 25: 0.26 meters */);
+	}
+	
 	@Override
 	protected State getInitState(String stateClassName) {
 		State initState = State.getObjectNothing();
