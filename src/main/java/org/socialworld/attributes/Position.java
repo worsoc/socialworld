@@ -150,6 +150,18 @@ public class Position extends SimProperty implements ICalculatable {
 		locationByBase25 = original.getLocationByBase25();
 	}
 
+	public Position getCopy(PropertyName prop, int addToX, int addToY, int addToZ) {
+		int x;
+		int y;
+		int z;
+		
+		x = vector.getX(SimulationCluster.position);
+		y = vector.getY(SimulationCluster.position);
+		z = vector.getZ(SimulationCluster.position);
+		Vector v = new Vector(x + addToX, y + addToY, z + addToZ);
+		Position position = new Position(prop, v);
+		return position;
+	}
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    ISavedValue  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////

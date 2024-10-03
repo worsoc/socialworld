@@ -177,8 +177,8 @@ public class Simulation extends SocialWorldThread {
 			incompleteObject = createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.caps.TestCap");
 			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
 			myItem = (Item) incompleteObject.getObject();
-			// set the human's position to the inventory item
-			myHiddenItem.setPosition(positionParentHuman);
+			// set the human's position (with added 800 mm to z) to the inventory item
+			myHiddenItem.setPosition(positionParentHuman.getCopy(PropertyName.simobj_position, 0, 0, 800 ));
 			changePosition(myItem);
 			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Cap(" + myItem.getObjectID() + "):" + myItem.getPosition(SimulationCluster.test).toString());
 			
@@ -188,8 +188,8 @@ public class Simulation extends SocialWorldThread {
 			incompleteObject =  createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.shirts.TestShirt");
 			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
 			myItem = (Item) incompleteObject.getObject();
-			// set the human's position to the inventory item
-			myHiddenItem.setPosition(positionParentHuman);
+			// set the human's position (with added 300 mm to z) to the inventory item
+			myHiddenItem.setPosition(positionParentHuman.getCopy(PropertyName.simobj_position, 0, 0, 300 ));
 			changePosition(myItem);
 			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Shirt(" + myItem.getObjectID() + "):" + myItem.getPosition(SimulationCluster.test).toString());
 
@@ -199,19 +199,19 @@ public class Simulation extends SocialWorldThread {
 			incompleteObject =  createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.shoes.TestShoeLeft");
 			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
 			shoeLeft = (Shoe) incompleteObject.getObject();
-			// set the human's position to the inventory item
-			myHiddenItem.setPosition(positionParentHuman);
+			// set the human's position (with added -800 mm to z) to the inventory item
+			myHiddenItem.setPosition(positionParentHuman.getCopy(PropertyName.simobj_position, 150, 0, -800 ));
 			changePosition(shoeLeft);
-			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Shoe(" + shoeLeft.getObjectID() + "):" + myItem.getPosition(SimulationCluster.test).toString());
+			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Shoe(" + shoeLeft.getObjectID() + "):" + shoeLeft.getPosition(SimulationCluster.test).toString());
 			
 			Shoe shoeRight;
 			incompleteObject = createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.shoes.TestShoeRight");
 			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
 			shoeRight = (Shoe) incompleteObject.getObject();
-			// set the human's position to the inventory item
-			myHiddenItem.setPosition(positionParentHuman);
+			// set the human's position (with added -800 mm to z) to the inventory item
+			myHiddenItem.setPosition(positionParentHuman.getCopy(PropertyName.simobj_position, -150, 0, -800 ));
 			changePosition(shoeRight);
-			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Shoe(" + shoeRight.getObjectID() + "):" + myItem.getPosition(SimulationCluster.test).toString());
+			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Shoe(" + shoeRight.getObjectID() + "):" + shoeRight.getPosition(SimulationCluster.test).toString());
 
 			inventory.setShoes(shoeLeft, shoeRight);
 
@@ -219,27 +219,27 @@ public class Simulation extends SocialWorldThread {
 			incompleteObject = createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.socks.TestSockLeft");
 			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
 			sockLeft = (Sock) incompleteObject.getObject();
-			// set the human's position to the inventory item
-			myHiddenItem.setPosition(positionParentHuman);
+			// set the human's position (with added -800 mm to z) to the inventory item
+			myHiddenItem.setPosition(positionParentHuman.getCopy(PropertyName.simobj_position, 150, 0, -800 ));
 			changePosition(sockLeft);
-			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Sock(" + sockLeft.getObjectID() + "):" + myItem.getPosition(SimulationCluster.test).toString());
+			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Sock(" + sockLeft.getObjectID() + "):" + sockLeft.getPosition(SimulationCluster.test).toString());
 			
 			Sock sockRight;
 			incompleteObject = createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.socks.TestSockRight");
 			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
 			sockRight = (Sock) incompleteObject.getObject();
-			// set the human's position to the inventory item
-			myHiddenItem.setPosition(positionParentHuman);
+			// set the human's position (with added -800 mm to z) to the inventory item
+			myHiddenItem.setPosition(positionParentHuman.getCopy(PropertyName.simobj_position, -150, 0, -800 ));
 			changePosition(sockRight);
-			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Sock(" + sockRight.getObjectID() + "):" + myItem.getPosition(SimulationCluster.test).toString());
+			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Sock(" + sockRight.getObjectID() + "):" + sockRight.getPosition(SimulationCluster.test).toString());
 
 			inventory.setSocks(sockLeft, sockRight);
 
 			incompleteObject = createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.trousers.TestTrousers");
 			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
 			myItem = (Item) incompleteObject.getObject();
-			// set the human's position to the inventory item
-			myHiddenItem.setPosition(positionParentHuman);
+			// set the human's position (with added -400 mm to z) to the inventory item
+			myHiddenItem.setPosition(positionParentHuman.getCopy(PropertyName.simobj_position, 0, 0, -400 ));
 			changePosition(myItem);
 			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Trousers(" + myItem.getObjectID() + "):" + myItem.getPosition(SimulationCluster.test).toString());
 	

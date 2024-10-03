@@ -347,7 +347,7 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 		position = objectRequester.requestPosition(cluster, vp, this);
 		return position;
 	}
-	
+
 	
 	public final int getReactionType(int eventType) {
 	 return this.state.getReactionType(eventType);
