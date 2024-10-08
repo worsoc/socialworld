@@ -35,6 +35,7 @@ public class FunctionByMatrix extends FunctionBase{
 	private static Value hundred;
 	private static Value aHalf;
 	
+	private static AccessTokenFunction token = AccessTokenFunction.getValid();
 	
 	public FunctionByMatrix(ValueInterpreteAs interpreteResultAs) {
 		
@@ -95,7 +96,7 @@ public class FunctionByMatrix extends FunctionBase{
 				AttributeArray attributesOld = AttributeArray.getObjectNothing();
 				AttributeArray attributesNew = AttributeArray.getObjectNothing();
 				
-				attributesOld = objectRequester.requestAttributeArray(SimulationCluster.total, arguments.get(0), this);
+				attributesOld = objectRequester.requestAttributeArray(token, arguments.get(0), this);
 				if (attributesOld == AttributeArray.getObjectNothing()) return Value.getValueNothing();
 				
 				int calculationMode;

@@ -37,6 +37,7 @@ import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.application.Scheduler;
+import org.socialworld.core.IAccessToken;
 import org.socialworld.core.Event;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenSimulationObject;
@@ -173,30 +174,32 @@ public abstract class StateSimulationObject extends ListenedBase implements IObj
 	}
 	
 
-	public final ValueProperty getProperty(SimulationCluster cluster, PropertyName prop) {
+	public final ValueProperty getProperty(IAccessToken token, PropertyName prop) {
 		String name;
 		name = prop.toString();
-		return getProperty(cluster, prop, name);
+		return getProperty(token, prop, name);
 	}
 	
-	public ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String name) {
+	public ValueProperty getProperty(IAccessToken token, PropertyName prop, String name) {
 		
 		ValueProperty result;
 		PropertyName parentStatePropName;
 		
+		SimulationCluster todo = SimulationCluster.todo;
+		
 		switch (prop) {
 		case simobj_position:
-			result = this.position.getAsValue(cluster, name); break;
+			result = this.position.getAsValue(token, name); break;
 		case simobj_directionMove:
-			result = this.directionMove.getAsValue(cluster, name); break;
+			result = this.directionMove.getAsValue(token, name); break;
 		default:
 			
-			parentStatePropName = getParentStatePropertyName ( cluster, prop,  name);
+			parentStatePropName = getParentStatePropertyName ( todo, prop,  name);
 			if (parentStatePropName != PropertyName.unknown) {
-				result = getStateProperty( cluster, parentStatePropName, prop,  name);
+				result = getStateProperty( token, parentStatePropName, prop,  name);
 			}
 			else {
-				result = getStateAsProperty( cluster,  prop,  name);
+				result = getStateAsProperty( token,  prop,  name);
 			}
 			
 		}
@@ -318,7 +321,7 @@ public abstract class StateSimulationObject extends ListenedBase implements IObj
 ///////////////////////////    State Add Ons  /////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
-	ValueProperty getStateProperty(SimulationCluster cluster, PropertyName propState, PropertyName propSub, String name) {
+	ValueProperty getStateProperty(IAccessToken token, PropertyName propState, PropertyName propSub, String name) {
 		
 		State stateAddOn;
 		ValueProperty result = ValueProperty.getInvalid();
@@ -334,7 +337,7 @@ public abstract class StateSimulationObject extends ListenedBase implements IObj
 			}
 			else {
 				if (stateAddOn.getPropertyName() == propState) {
-					result = stateAddOn.getProperty(cluster, propSub, name);
+					result = stateAddOn.getProperty(token, propSub, name);
 					break;
 				}
 				
@@ -345,7 +348,7 @@ public abstract class StateSimulationObject extends ListenedBase implements IObj
 
 	}
 
-	ValueProperty getStateProperty(SimulationCluster cluster, PropertyName propSubToTry, String name) {
+	ValueProperty getStateProperty(IAccessToken token, PropertyName propSubToTry, String name) {
 		
 		State stateAddOn;
 		ValueProperty result = ValueProperty.getInvalid();
@@ -354,7 +357,7 @@ public abstract class StateSimulationObject extends ListenedBase implements IObj
 			
 			stateAddOn = stateAddOns.get(nrStateAddOn);
 		
-			result = stateAddOn.getProperty(cluster, propSubToTry, name);
+			result = stateAddOn.getProperty(token, propSubToTry, name);
 			
 			if (result.isValid()) {
 				break;
@@ -366,7 +369,7 @@ public abstract class StateSimulationObject extends ListenedBase implements IObj
 
 	}
 	
-	ValueProperty getStatePropertyFromMethod(SimulationCluster cluster, PropertyName propState, String methodName, String name) {
+	ValueProperty getStatePropertyFromMethod(IAccessToken token, PropertyName propState, String methodName, String name) {
 		
 		State stateAddOn;
 		ValueProperty result = ValueProperty.getInvalid();
@@ -376,7 +379,7 @@ public abstract class StateSimulationObject extends ListenedBase implements IObj
 			stateAddOn = stateAddOns.get(nrStateAddOn);
 		
 			if (stateAddOn.getPropertyName() == propState) {
-				result = stateAddOn.getPropertyFromMethod(cluster, methodName, name);
+				result = stateAddOn.getPropertyFromMethod(token, methodName, name);
 				break;
 			}
 			
@@ -421,7 +424,7 @@ public abstract class StateSimulationObject extends ListenedBase implements IObj
 	}
 
 	
-	private ValueProperty getStateAsProperty(SimulationCluster cluster, PropertyName prop, String name) {
+	private ValueProperty getStateAsProperty(IAccessToken token, PropertyName prop, String name) {
 		State stateAddOn;
 		ValueProperty result = ValueProperty.getInvalid();
 		
@@ -431,7 +434,7 @@ public abstract class StateSimulationObject extends ListenedBase implements IObj
 			stateAddOn = stateAddOns.get(nrStateAddOn);
 		
 			if ( stateAddOn.getPropertyName() == prop) {
-				result = stateAddOn.getAsValue(cluster, name);
+				result = stateAddOn.getAsValue(token, name);
 				break;
 			}
 			

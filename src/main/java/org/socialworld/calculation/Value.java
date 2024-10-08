@@ -32,6 +32,7 @@ import org.socialworld.attributes.properties.IEnumProperty;
 import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Relation;
 import org.socialworld.core.AllWords;
+import org.socialworld.core.IAccessToken;
 import org.socialworld.core.Event;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.StateSimulationObject;
@@ -358,7 +359,7 @@ public class Value {
 	}
 
 	
-	public final ValueProperty getProperty(SimulationCluster cluster, PropertyName simPropName, String methodName, String valueName) {
+	public final ValueProperty getProperty(IAccessToken token, PropertyName simPropName, String methodName, String valueName) {
 		
 		ValueProperty result;
 		result = ValueProperty.getInvalid();
@@ -371,7 +372,7 @@ public class Value {
 			
 			ValueProperty thisAsVP = (ValueProperty)this;
 			if (thisAsVP.isProtected()) {
-				if (thisAsVP.checkHasPermission(cluster)) {
+				if (thisAsVP.checkHasPermission(token)) {
 
 				}
 				else {
@@ -393,7 +394,7 @@ public class Value {
 					if (object instanceof ISavedValue) {
 						ISavedValue savedValue;
 						savedValue = (ISavedValue) object;
-						result = savedValue.getPropertyFromMethod(cluster, methodName, valueName);
+						result = savedValue.getPropertyFromMethod(token, methodName, valueName);
 					}
 					else if (object instanceof IEnumProperty) {
 						IEnumProperty enumProperty;
@@ -460,17 +461,17 @@ public class Value {
 				if (object instanceof SimulationObject) {
 					SimulationObject simObj;
 					simObj = (SimulationObject) object;
-					result = simObj.getProperty(cluster, simPropName, valueName);
+					result = simObj.getProperty(token, simPropName, valueName);
 				}
 				else if (object instanceof StateSimulationObject) {
 					StateSimulationObject stateSimObj;
 					stateSimObj = (StateSimulationObject) object;
-					result = stateSimObj.getProperty(cluster, simPropName, valueName);
+					result = stateSimObj.getProperty(token, simPropName, valueName);
 				}
 				else if (object instanceof ISavedValue) {
 					ISavedValue savedValue;
 					savedValue = (ISavedValue) object;
-					result = savedValue.getProperty(cluster, simPropName, valueName);
+					result = savedValue.getProperty(token, simPropName, valueName);
 				}
 				else if (object instanceof Event) {
 					Event event;

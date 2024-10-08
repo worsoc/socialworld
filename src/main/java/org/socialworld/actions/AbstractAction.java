@@ -28,11 +28,11 @@ import org.socialworld.calculation.IObjectReceiver;
 import org.socialworld.calculation.IObjectSender;
 import org.socialworld.calculation.NoObject;
 import org.socialworld.calculation.ObjectRequester;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.Event;
+import org.socialworld.core.IAccessToken;
 import org.socialworld.core.IEventParam;
 import org.socialworld.core.Simulation;
 import org.socialworld.objects.SimulationObject;
@@ -516,7 +516,7 @@ public abstract class AbstractAction implements IObjectSender, IObjectReceiver {
 	public int sendYourselfTo(IObjectReceiver receiver, int requestID) {
 		return receiver.receiveObject(requestID, this);
 	}
-	public int sendYourselfTo(SimulationCluster cluster, IObjectReceiver receiver, int requestID) {
+	public int sendYourselfTo(IAccessToken token, IObjectReceiver receiver, int requestID) {
 		return receiver.receiveObject(requestID, this);
 	}
 	

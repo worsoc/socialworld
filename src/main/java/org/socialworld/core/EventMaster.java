@@ -32,7 +32,6 @@ import org.socialworld.GlobalSwitches;
 import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.objects.Animal;
@@ -55,6 +54,7 @@ public class EventMaster extends SocialWorldThread {
 	
 	private static EventMaster instance;
 	
+	private static AccessTokenCore tokenCore = AccessTokenCore.getValid();
 	
 	private boolean blockedByAdd = false;
 	private boolean blockedByCalculate = false;
@@ -277,14 +277,14 @@ public class EventMaster extends SocialWorldThread {
 						candidates.add(candidate);
 						index++;
 						if (GlobalSwitches.OUTPUT_EVENTMASTER_DETERMINE_CANDIDATES) {
-							System.out.println("EventMaster.determineCandidates: Event " + this.event.toString() + ": Kandidat " + candidate.getObjectID() + " " + candidate.getPosition(SimulationCluster.test).toString() + " added to candidates list");
+							System.out.println("EventMaster.determineCandidates: Event " + this.event.toString() + ": Kandidat " + candidate.getObjectID() + " " + candidate.getPosition(tokenCore).toString() + " added to candidates list");
 						}
 						
 						if (index == maxSize) break;
 					}
 					else {
 						if (GlobalSwitches.OUTPUT_EVENTMASTER_DETERMINE_CANDIDATES) {
-							System.out.println("EventMaster.determineCandidates: Event " + this.event.toString() + ": Kandidat " + candidate.getObjectID() + " " + candidate.getPosition(SimulationCluster.test).toString() + " ignored with ignoreCandidate = " + ignoreCandidate);
+							System.out.println("EventMaster.determineCandidates: Event " + this.event.toString() + ": Kandidat " + candidate.getObjectID() + " " + candidate.getPosition(tokenCore).toString() + " ignored with ignoreCandidate = " + ignoreCandidate);
 						}
 					}
 					
@@ -324,7 +324,7 @@ public class EventMaster extends SocialWorldThread {
 		double angleBetweenDirectionsToRadians;
 		double effectAngleToRadians;
 		
-		position = candidate.getPosition(SimulationCluster.todo);
+		position = candidate.getPosition(tokenCore);
 
 		direction = position.getDirectionFrom(this.eventPosition);
 		if (direction.is000()) return 2;
@@ -340,13 +340,13 @@ public class EventMaster extends SocialWorldThread {
 				Vector vectorDirectionEvent;
 				Direction directionEvent;
 				if (this.eventDirection != null) {
-					directionEvent = objectRequester.requestDirection(SimulationCluster.event, this.eventDirection, this);
+					directionEvent = objectRequester.requestDirection(tokenCore, this.eventDirection, this);
 					if (directionEvent.isObjectNothing()) {
 						// TODO directionEvent is not object: that shouldn't be possible
 						System.out.println("EventMaster.checkIgnoreCandidate(): this.eventDirection.getValue() is no direction object ");
 						return 4;
 					}
-					vectorDirectionEvent = directionEvent.getVector(SimulationCluster.event);
+					vectorDirectionEvent = directionEvent.getVector(tokenCore);
 					if (vectorDirectionEvent.is000()) {
 						return 3;
 					}

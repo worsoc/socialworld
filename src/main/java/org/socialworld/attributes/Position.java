@@ -23,7 +23,7 @@ package org.socialworld.attributes;
 
 import java.util.List;
 
-import org.socialworld.calculation.SimulationCluster;
+import org.socialworld.core.IAccessToken;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueProperty;
@@ -72,6 +72,7 @@ public class Position extends SimProperty implements ICalculatable {
 	public static final int LOCATIONBASE9 = 9;
 	public static final int LOCATIONBASE25 = 25;
 	
+	private static AccessTokenPosition tokenPos = AccessTokenPosition.getValid();
 
 	private SVVector vector;  // (x,y,z) millimeters
 	
@@ -141,8 +142,8 @@ public class Position extends SimProperty implements ICalculatable {
 		locationByBase25 = position.getLocationByBase25();
 	}
 
-	private Position(Position original, PropertyProtection protectionOriginal, SimulationCluster cluster ) {
-		super(protectionOriginal, cluster);
+	private Position(Position original, PropertyProtection protectionOriginal, IAccessToken token) {
+		super(protectionOriginal, token);
 		setPropertyName(original.getPropertyName());
 		this.vector =  original.getVector();
 		
@@ -155,9 +156,9 @@ public class Position extends SimProperty implements ICalculatable {
 		int y;
 		int z;
 		
-		x = vector.getX(SimulationCluster.position);
-		y = vector.getY(SimulationCluster.position);
-		z = vector.getZ(SimulationCluster.position);
+		x = vector.getX(tokenPos);
+		y = vector.getY(tokenPos);
+		z = vector.getZ(tokenPos);
 		Vector v = new Vector(x + addToX, y + addToY, z + addToZ);
 		Position position = new Position(prop, v);
 		return position;
@@ -166,14 +167,14 @@ public class Position extends SimProperty implements ICalculatable {
 /////////////////////////////    ISavedValue  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	public SimProperty copyForProperty(SimulationCluster cluster) {
-		return new Position(this, getPropertyProtection(), cluster);
+	public SimProperty copyForProperty(IAccessToken token) {
+		return new Position(this, getPropertyProtection(), token);
 	}
 
-	public  ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String valueName) {
+	public  ValueProperty getProperty(IAccessToken token, PropertyName prop, String valueName) {
 		switch (prop) {
 		case position_vector:
-			return this.vector.getAsValue(cluster, valueName);
+			return this.vector.getAsValue(token, valueName);
 		default:
 			return ValueProperty.getInvalid();
 		}
@@ -189,14 +190,14 @@ public class Position extends SimProperty implements ICalculatable {
 	public int getLocationByBase9() { return locationByBase9; }
 	public String getLocationByBase25() { return locationByBase25 ; }
 
-	public final Vector getVector(SimulationCluster cluster) {
-		SVVector copy = (SVVector) this.vector.copyForProperty(cluster);
-		Vector released = copy.getReleased(cluster);
+	public final Vector getVector(IAccessToken token) {
+		SVVector copy = (SVVector) this.vector.copyForProperty(token);
+		Vector released = copy.getReleased(token);
 		return released;
 	}
 	
 	private SVVector getVector() {
-		return (SVVector) this.vector.copyForProperty(getPropertyProtection().getCluster());
+		return (SVVector) this.vector.copyForProperty(getPropertyProtection().getToken());
 	}
 			
 	
@@ -235,14 +236,14 @@ public class Position extends SimProperty implements ICalculatable {
 	}
 
 
-	public int getX(SimulationCluster cluster) { 
-		return  this.vector.getX(cluster); 
+	public int getX(IAccessToken token) { 
+		return  this.vector.getX(tokenPos); 
 	}
-	public int getY(SimulationCluster cluster) { 
-		return  this.vector.getY(cluster); 
+	public int getY(IAccessToken token) { 
+		return  this.vector.getY(tokenPos); 
 	}
-	public int getZ(SimulationCluster cluster) { 
-		return  this.vector.getZ(cluster); 
+	public int getZ(IAccessToken token) { 
+		return  this.vector.getZ(tokenPos); 
 	}
 	
 	public boolean equals(Position b, int locationBase, int accuracyLevel) {

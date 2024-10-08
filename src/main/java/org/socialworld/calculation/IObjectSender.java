@@ -21,6 +21,8 @@
 */
 package org.socialworld.calculation;
 
+import org.socialworld.core.IAccessToken;
+
 public interface IObjectSender {
 	public static final int NO_OBJECT_SENDER = -1;
 	public static final int OBJECT_SENDED = 0;
@@ -30,7 +32,7 @@ public interface IObjectSender {
 	public static final int OBJECT_NOT_SENDED_BECAUSE_WRONG_TYPE = 4;
 	
 	public int sendYourselfTo(IObjectReceiver receiver, int requestID);
-	public int sendYourselfTo(SimulationCluster cluster, IObjectReceiver receiver, int requestID);
+	public int sendYourselfTo(IAccessToken token, IObjectReceiver receiver, int requestID);
 
 	public IObjectSender copy();
 

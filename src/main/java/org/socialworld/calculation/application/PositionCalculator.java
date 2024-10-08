@@ -25,7 +25,6 @@ package org.socialworld.calculation.application;
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.collections.CapacityQueue;
 import org.socialworld.core.Event;
@@ -48,6 +47,8 @@ public class PositionCalculator extends SocialWorldThread {
 	private static PositionCalculator instance;
 
 	private CapacityQueue<CollectionElementSimObjInfluenced> moved;
+
+	private static AccessTokenPositionCalculator token = AccessTokenPositionCalculator.getValid();
 
 /*	private List<Event> events;
 	private List<StateSimulationObject> states;
@@ -140,16 +141,16 @@ public class PositionCalculator extends SocialWorldThread {
 				
 			
 			eventType = event.getEventType();
-			positionOriginal = objectRequester.requestPosition(SimulationCluster.position, state.getProperty(SimulationCluster.position, PropertyName.simobj_position), this);
-			position = positionOriginal.getVector(SimulationCluster.position);
+			positionOriginal = objectRequester.requestPosition(token, state.getProperty(token, PropertyName.simobj_position), this);
+			position = positionOriginal.getVector(token);
 			
-			directionMoveObject = objectRequester.requestDirection(SimulationCluster.position, state.getProperty(SimulationCluster.position, PropertyName.simobj_directionMove), this);
-			vectorMoveObject = directionMoveObject.getVector(SimulationCluster.position);
+			directionMoveObject = objectRequester.requestDirection(token, state.getProperty(token, PropertyName.simobj_directionMove), this);
+			vectorMoveObject = directionMoveObject.getVector(token);
 			powerMoveObject = directionMoveObject.getPower();
 			
-			directionEvent = objectRequester.requestDirection(SimulationCluster.position, event.getDirection(), this);
+			directionEvent = objectRequester.requestDirection(token, event.getDirection(), this);
 			if (directionEvent != null) {
-				vectorEvent = directionEvent.getVector(SimulationCluster.position);
+				vectorEvent = directionEvent.getVector(token);
 			}
 			else {
 				// TODO directionEvent is null

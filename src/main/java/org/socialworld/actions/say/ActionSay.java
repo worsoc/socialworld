@@ -28,7 +28,6 @@ import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionPerformer;
 import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.ActualTime;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.geometry.Vector;
@@ -91,6 +90,8 @@ public class ActionSay extends AbstractAction {
 	private SimulationObject target;
 	private Vector direction;
 	
+	private static AccessTokenActionSay token = AccessTokenActionSay.getValid();
+	
 	public ActionSay(ValueArrayList actionProperties) {
 		super(actionProperties);
 	}
@@ -108,13 +109,13 @@ public class ActionSay extends AbstractAction {
 
 		value =  actionProperties.getValue(furtherPropertyNames[0]);
 		if (value.isValid()) {
-			target = objectRequester.requestSimulationObject(SimulationCluster.total, value, this);
+			target = objectRequester.requestSimulationObject(token, value, this);
 			this.setTarget(target);
 		}
 
 		value =  actionProperties.getValue(furtherPropertyNames[1]);
 		if (value.isValid()) {
-			direction = objectRequester.requestVector(SimulationCluster.total, value, this);
+			direction = objectRequester.requestVector(token, value, this);
 			this.setDirection(direction);
 		}
 
@@ -182,7 +183,7 @@ public class ActionSay extends AbstractAction {
 		 		eventType = getEventType(type, mode);
 				if (eventType != EventType.nothing) {
 					event = new EventToTarget(eventType,    actor /* as causer*/,  ActualTime.asTime(),
-						actor.getPosition(SimulationCluster.action ),  say /* as performer */);
+						actor.getPosition(token ),  say /* as performer */);
 				}
 				break;
 				
@@ -209,7 +210,7 @@ public class ActionSay extends AbstractAction {
 		 		eventType = getEventType(type, mode);
 				if (eventType != EventType.nothing) {
 					event = new EventToCandidates(eventType,    actor /* as causer*/,  ActualTime.asTime(),
-						actor.getPosition(SimulationCluster.action),  say /* as performer */);
+						actor.getPosition(token),  say /* as performer */);
 				}
 		 		break;
 				
@@ -224,7 +225,7 @@ public class ActionSay extends AbstractAction {
  		eventType = getEventToCauserType(type, mode);
 		if (eventType != EventType.nothing) {
 			event = new EventToCauser(eventType,    actor /* as causer*/,  ActualTime.asTime(),
-				actor.getPosition(SimulationCluster.action),  say /* as performer */);
+				actor.getPosition(token),  say /* as performer */);
 			addEvent(event);
 		}
 

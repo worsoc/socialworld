@@ -29,13 +29,13 @@ import org.socialworld.attributes.AttributeArray;
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.FunctionByMatrix;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.core.Event;
+import org.socialworld.core.IAccessToken;
 import org.socialworld.knowledge.Knowledge;
 import org.socialworld.knowledge.KnowledgeElement;
 import org.socialworld.knowledge.KnownPathsPool;
@@ -66,6 +66,7 @@ public class StateAnimal extends StateSimulationObject {
 	private GrantedAccessToProperty grantAccessToPropertyAction[];
 	private GrantedAccessToProperty grantAccessToPropertyKnowledge[];
 	
+	private static AccessTokenStateSimulationObject token = AccessTokenStateSimulationObject.getValid();
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////meta information    ////////////////////////////////////
@@ -128,18 +129,19 @@ public class StateAnimal extends StateSimulationObject {
 /////////////////////////////    ATTRIBUTES  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
-	public ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String name) {
+	public ValueProperty getProperty(IAccessToken token, PropertyName prop, String name) {
+
 		switch (prop) {
 		case simobj_attributeArray:
-			return this.attributes.getAsValue(cluster, name);
+			return this.attributes.getAsValue(token, name);
 		case simobj_knowledge:
-			return this.knowledge.getAsValue(cluster, name);
+			return this.knowledge.getAsValue(token, name);
 		case simobj_directionChest:
-			return this.directionChest.getAsValue(cluster, name);
+			return this.directionChest.getAsValue(token, name);
 		case simobj_directionActiveMove:
-			return this.directionActiveMove.getAsValue(cluster, name);
+			return this.directionActiveMove.getAsValue(token, name);
 		default:
-			return super.getProperty(cluster, prop, name);
+			return super.getProperty(token, prop, name);
 		}
 	}
 
@@ -167,7 +169,7 @@ public class StateAnimal extends StateSimulationObject {
 		if (checkGuard(guard)) {
 
 			AttributeArray attributeArray;
-			attributeArray = objectRequester.requestAttributeArray(SimulationCluster.total, attributes, this);
+			attributeArray = objectRequester.requestAttributeArray(token, attributes, this);
 
 			SocialWorld.showAttributeChanges(getObject().getObjectID(), attributeArray);
 

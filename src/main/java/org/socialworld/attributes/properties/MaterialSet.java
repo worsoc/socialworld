@@ -26,9 +26,9 @@ import java.util.List;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.attributes.SimProperty;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
+import org.socialworld.core.IAccessToken;
 import org.socialworld.tools.StringTupel;
 
 public class MaterialSet extends PropPortionSet {
@@ -73,8 +73,8 @@ public class MaterialSet extends PropPortionSet {
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 
-	protected  MaterialSet(PropPortionSet original, PropertyProtection protectionOriginal, SimulationCluster cluster ) {
-		super(original, protectionOriginal, cluster);
+	protected  MaterialSet(PropPortionSet original, PropertyProtection protectionOriginal, IAccessToken token) {
+		super(original, protectionOriginal, token);
 	}
 	
 	public  MaterialSet() {
@@ -86,12 +86,12 @@ public class MaterialSet extends PropPortionSet {
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 	@Override
-	public SimProperty copyForProperty(SimulationCluster cluster) {
-		return new MaterialSet(this, getPropertyProtection(), cluster);
+	public SimProperty copyForProperty(IAccessToken token) {
+		return new MaterialSet(this, getPropertyProtection(), token);
 	}
 	
 	@Override
-	public ValueProperty getProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
+	public ValueProperty getProperty(IAccessToken token, PropertyName propName, String valueName) {
 		switch (propName) {
 		case materialSet_mainMaterial:
 			return new ValueProperty(Type.enumProp, valueName, (Material) getMain());

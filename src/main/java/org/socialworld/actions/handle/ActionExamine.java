@@ -3,7 +3,6 @@ package org.socialworld.actions.handle;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.attributes.ActualTime;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
@@ -16,6 +15,8 @@ public class ActionExamine extends AbstractAction {
 	private Examine examine;
 	
 	private SimulationObject target;
+
+	private static AccessTokenActionHandle token = AccessTokenActionHandle.getValid();
 
 	public ActionExamine(ValueArrayList actionProperties) {
 		super(actionProperties);
@@ -35,7 +36,7 @@ public class ActionExamine extends AbstractAction {
 
 		value =  actionProperties.getValue(furtherPropertyNames[0]);
 		if (value.isValid()) {
-			target = objectRequester.requestSimulationObject(SimulationCluster.total, value, this);
+			target = objectRequester.requestSimulationObject(token, value, this);
 			this.setTarget(target);
 		}
 
@@ -61,7 +62,7 @@ public class ActionExamine extends AbstractAction {
   		this.examine = new Examine(this);
   		
 		event = new EventToCauser(eventType,    actor /* as causer*/,  ActualTime.asTime(),
-				actor.getPosition(SimulationCluster.action),  examine /* as performer */);
+				actor.getPosition(token),  examine /* as performer */);
 
 		addEvent(event);
 

@@ -5,6 +5,7 @@ import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
+import org.socialworld.core.IAccessToken;
 import org.socialworld.objects.concrete.animals.IFlying;
 import org.socialworld.objects.concrete.animals.IRunning;
 import org.socialworld.objects.concrete.animals.StateFlying;
@@ -41,15 +42,15 @@ public class Stork extends Aequorlithornithes implements IFlying , IRunning{
 		return new Direction(PropertyName.stateFlying_directionFly , new Vector(1.2F, 1.3F, 1.4F), 30.5F );
 	}
 
-	public StateFlying getSavedStateFlying(SimulationCluster cluster) {
+	public StateFlying getSavedStateFlying(IAccessToken token) {
 		// make a copy as ValueProperty
-		ValueProperty vp = this.stateFlying.getAsValue(cluster);
+		ValueProperty vp = this.stateFlying.getAsValue(token);
 		// the copy is permitted for cluster only
-		return objectRequester.requestStateFlyng(cluster, vp, this);
+		return objectRequester.requestStateFlyng(token, vp, this);
 	}
 	
-	public ValueProperty getStateFlyingAsProperty(SimulationCluster cluster, String name) {
-		return this.stateFlying.getAsValue(cluster, name);
+	public ValueProperty getStateFlyingAsProperty(IAccessToken token, String name) {
+		return this.stateFlying.getAsValue(token, name);
 	}
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -63,15 +64,15 @@ public class Stork extends Aequorlithornithes implements IFlying , IRunning{
 	}
 	
 	
-	public StateRunning getSavedStateRunning(SimulationCluster cluster) {
+	public StateRunning getSavedStateRunning(IAccessToken token) {
 	// make a copy as ValueProperty
-	ValueProperty vp = this.stateRunning.getAsValue(cluster);
+	ValueProperty vp = this.stateRunning.getAsValue(token);
 	// the copy is permitted for cluster only
-	return objectRequester.requestStateRunning(cluster, vp, this);
+	return objectRequester.requestStateRunning(token, vp, this);
 	}
 	
-	public ValueProperty getStateRunningAsProperty(SimulationCluster cluster, String name) {
-	return this.stateRunning.getAsValue(cluster, name);
+	public ValueProperty getStateRunningAsProperty(IAccessToken token, String name) {
+	return this.stateRunning.getAsValue(token, name);
 	}
 
 

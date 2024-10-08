@@ -29,12 +29,12 @@ import org.socialworld.attributes.ISimProperty;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.attributes.SimProperty;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.collections.ReadOnlyIterator;
 import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.SpeechRecognition;
 import org.socialworld.conversation.SubjectOrObject;
+import org.socialworld.core.IAccessToken;
 
 public class Knowledge extends SimProperty {
 
@@ -89,8 +89,8 @@ public class Knowledge extends SimProperty {
 		
 	}
 
-	private Knowledge(Knowledge original, PropertyProtection protectionOriginal, SimulationCluster cluster ) {
-		super(protectionOriginal, cluster);
+	private Knowledge(Knowledge original, PropertyProtection protectionOriginal, IAccessToken token ) {
+		super(protectionOriginal, token);
 	}
 	
 	
@@ -98,11 +98,11 @@ public class Knowledge extends SimProperty {
 /////////////////////////////    ISavedValue  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	public SimProperty copyForProperty(SimulationCluster cluster) {
-		return new Knowledge(this, getPropertyProtection(), cluster);
+	public SimProperty copyForProperty(IAccessToken token) {
+		return new Knowledge(this, getPropertyProtection(), token);
 	}
 
-	public  ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String valueName) {
+	public  ValueProperty getProperty(IAccessToken token, PropertyName prop, String valueName) {
 		switch (prop) {
 		default:
 			return ValueProperty.getInvalid();

@@ -42,7 +42,6 @@ import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.percipience.PropsSeer;
 import org.socialworld.calculation.IObjectReceiver;
 import org.socialworld.calculation.ObjectRequester;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Value;
 import org.socialworld.core.Simulation;
 import org.socialworld.core.SocialWorldThread;
@@ -236,7 +235,9 @@ public class SimVisual extends SocialWorldThread {
 	
 	private int sleepTime = 100;
 	private int state; 
-	
+
+	private static AccessTokenVisualize token = AccessTokenVisualize.getValid();
+
 	public SimVisual() {
 		state = 0;
 		init();
@@ -648,13 +649,13 @@ public class SimVisual extends SocialWorldThread {
 			Value propSub;
 			
 			human = Simulation.getInstance().getObjectMaster().getHumans().get(index);
-			prop = human.getProperty(SimulationCluster.test, PropertyName.stateSeer);
-			state = objectRequester.requestStateSeer(SimulationCluster.test, prop, this);
+			prop = human.getProperty(token, PropertyName.stateSeer);
+			state = objectRequester.requestStateSeer(token, prop, this);
 			if (state != null) {
-				propSub = state.getProperty(SimulationCluster.test, PropertyName.stateSeer_propsSeer, PropertyName.stateSeer_propsSeer.toString());
-				PropsSeer propsSeer = objectRequester.requestPropsSeer(SimulationCluster.test, propSub, this);
-				propSub = propsSeer.getProperty(SimulationCluster.test, PropertyName.propsSeer_angleViewPerceivingEvents, PropertyName.propsSeer_angleViewPerceivingEvents.toString());
-				myPrint("Button " + index + " clicked: " + objectRequester.requestPropsSeer(SimulationCluster.test, propSub, this).toString() );
+				propSub = state.getProperty(token, PropertyName.stateSeer_propsSeer, PropertyName.stateSeer_propsSeer.toString());
+				PropsSeer propsSeer = objectRequester.requestPropsSeer(token, propSub, this);
+				propSub = propsSeer.getProperty(token, PropertyName.propsSeer_angleViewPerceivingEvents, PropertyName.propsSeer_angleViewPerceivingEvents.toString());
+				myPrint("Button " + index + " clicked: " + objectRequester.requestPropsSeer(token, propSub, this).toString() );
 			}
 			else {
 				myPrint("Button " + index + " clicked "  );

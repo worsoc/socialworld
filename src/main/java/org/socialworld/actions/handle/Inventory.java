@@ -26,9 +26,9 @@ import java.util.List;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.attributes.SimProperty;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
+import org.socialworld.core.IAccessToken;
 import org.socialworld.core.ObjectMaster;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.SimulationObject;
@@ -184,8 +184,8 @@ public class Inventory extends SimProperty {
 	}
 
 
-	private Inventory(Inventory original, PropertyProtection protectionOriginal, SimulationCluster cluster) {
-		super(protectionOriginal, cluster);
+	private Inventory(Inventory original, PropertyProtection protectionOriginal, IAccessToken token) {
+		super(protectionOriginal, token);
 		this.cap = original.cap;
 		this.leftFootShoe = original.leftFootShoe;
 		this.rightFootShoe = original.rightFootShoe;
@@ -206,11 +206,11 @@ public class Inventory extends SimProperty {
 /////////////////////////////    ISavedValue  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	public SimProperty copyForProperty(SimulationCluster cluster) {
-		return new Inventory(this, getPropertyProtection(), cluster);
+	public SimProperty copyForProperty(IAccessToken token) {
+		return new Inventory(this, getPropertyProtection(), token);
 	}
 	
-	public  ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String valueName) {
+	public  ValueProperty getProperty(IAccessToken token, PropertyName prop, String valueName) {
 		switch (prop) {
   		case inventory_shirt:
 			return new ValueProperty(Type.simulationObject, valueName, this.shirt);

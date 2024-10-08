@@ -27,7 +27,6 @@ import org.socialworld.actions.ActionMode;
 import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.geometry.Vector;
@@ -92,6 +91,8 @@ public class ActionMove extends AbstractAction {
 	
 	private Vector directionForSection;
 	
+	private static AccessTokenActionMove token = AccessTokenActionMove.getValid();
+	
 	public ActionMove(ValueArrayList actionProperties) {
 		super(actionProperties);
 	}
@@ -111,14 +112,14 @@ public class ActionMove extends AbstractAction {
 
 		value =  actionProperties.getValue(furtherPropertyNames[0]);
 		if (value.isValid()) {
-			Vector vectorEndposition = 	objectRequester.requestVector(SimulationCluster.total, value, this);
+			Vector vectorEndposition = 	objectRequester.requestVector(token, value, this);
 			endPosition = new Position(PropertyName.action_position, vectorEndposition);
 			this.setEnd(endPosition);
 		}
 
 		value =  actionProperties.getValue(furtherPropertyNames[1]);
 		if (value.isValid()) {
-			direction = objectRequester.requestVector(SimulationCluster.total, value, this);
+			direction = objectRequester.requestVector(token, value, this);
 			this.setDirection(direction);
 		}
 		
@@ -140,7 +141,7 @@ public class ActionMove extends AbstractAction {
 		if ((!firstStep) && (!path.isObjectNothing())) {
 			moveCompleted = !move.checkContinueMove();
 			
-			if (moveCompleted) path.completeSection(actor.getPosition(SimulationCluster.action));
+			if (moveCompleted) path.completeSection(actor.getPosition(token));
 			
 			if (path.isCompleted()) {
 				if (path.hasRefToKnownPaths()) {
@@ -162,14 +163,14 @@ public class ActionMove extends AbstractAction {
 		eventType = getEventToCauserType(mode);
 		if (eventType != EventType.nothing) {
 			event = new EventToCauser( eventType,    actor /* as causer*/,  ActualTime.asTime(),
-						actor.getPosition(SimulationCluster.action),  move /* as performer */);	
+						actor.getPosition(token),  move /* as performer */);	
 			addEvent(event);
 		}
 		
 		eventType = getEventToCandidatesType(mode);
 		if (eventType != EventType.nothing) {
 			event = new EventToCandidates( eventType,    actor /* as causer*/,  ActualTime.asTime(),
-						actor.getPosition(SimulationCluster.action),  move /* as performer */);	
+						actor.getPosition(token),  move /* as performer */);	
 			addEvent(event);
 		}
 
@@ -224,7 +225,7 @@ public class ActionMove extends AbstractAction {
 		else {
 			Position nextPoint = path.getNextPoint();
 			if (!nextPoint.checkIsObjectNothing()) {
-				this.directionForSection = this.actor.getPosition(SimulationCluster.action).getDirectionTo(nextPoint);
+				this.directionForSection = this.actor.getPosition(token).getDirectionTo(nextPoint);
 			}
 			else {
 				this.directionForSection = new Vector(this.direction);

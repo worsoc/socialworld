@@ -23,9 +23,9 @@ package org.socialworld.knowledge;
 
 import org.socialworld.calculation.IObjectReceiver;
 import org.socialworld.calculation.IObjectSender;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Word;
+import org.socialworld.core.IAccessToken;
 
 public class KnowledgeElement implements IObjectSender{
 
@@ -134,7 +134,7 @@ public class KnowledgeElement implements IObjectSender{
 	public int sendYourselfTo(IObjectReceiver receiver, int requestID) {
 		return receiver.receiveObject(requestID, this);
 	}
-	public int sendYourselfTo(SimulationCluster cluster, IObjectReceiver receiver, int requestID) {
+	public int sendYourselfTo(IAccessToken token, IObjectReceiver receiver, int requestID) {
 		return receiver.receiveObject(requestID, this);
 	}
 	

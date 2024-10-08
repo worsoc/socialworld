@@ -26,9 +26,9 @@ import java.util.List;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.attributes.SimProperty;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
+import org.socialworld.core.IAccessToken;
 import org.socialworld.tools.StringTupel;
 
 public class TasteSet extends PropPortionSet {
@@ -74,8 +74,8 @@ public class TasteSet extends PropPortionSet {
 //////////////////creating instance for simulation    ///////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
-	private TasteSet(TasteSet original, PropertyProtection protectionOriginal, SimulationCluster cluster ) {
-		super(original, protectionOriginal, cluster);
+	private TasteSet(TasteSet original, PropertyProtection protectionOriginal, IAccessToken token ) {
+		super(original, protectionOriginal, token);
 	}
 
 	public  TasteSet() {
@@ -88,12 +88,12 @@ public class TasteSet extends PropPortionSet {
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
 	@Override
-	public SimProperty copyForProperty(SimulationCluster cluster) {
-		return new TasteSet(this, getPropertyProtection(), cluster);
+	public SimProperty copyForProperty(IAccessToken token) {
+		return new TasteSet(this, getPropertyProtection(), token);
 	}
 
 	@Override
-	public ValueProperty getProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
+	public ValueProperty getProperty(IAccessToken token, PropertyName propName, String valueName) {
 		switch (propName) {
 		case tasteSet_mainTaste:
 			return new ValueProperty(Type.enumProp, valueName, getMain());

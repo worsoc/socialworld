@@ -26,7 +26,6 @@ import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.PropertyName;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueProperty;
@@ -77,6 +76,8 @@ public class ActionBodilyFunction extends AbstractAction {
 	BodilyFunction bodilyFunction;
 	private SimulationObject item = NoSimulationObject.getObjectNothing();
 	
+	private static AccessTokenActionBodilyFunctions token = AccessTokenActionBodilyFunctions.getValid();
+
 	public ActionBodilyFunction(ValueArrayList actionProperties) {
 		super(actionProperties);
 	}
@@ -107,8 +108,8 @@ public class ActionBodilyFunction extends AbstractAction {
 		case sleep:
 			break;
 		case drink:
-			vp =  ((Animal) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_mouth, PropertyName.inventory_mouth.toString());
-			this.item = objectRequester.requestSimulationObject(SimulationCluster.todo, vp, this);
+			vp =  ((Animal) actor).getStateProperty(token, PropertyName.stateInventory, PropertyName.inventory_mouth, PropertyName.inventory_mouth.toString());
+			this.item = objectRequester.requestSimulationObject(token, vp, this);
 //			this.item = ((Animal) actor).getMouthItem();
 			if 	(!(this.item instanceof IDrinkable)) {
 				return;
@@ -116,8 +117,8 @@ public class ActionBodilyFunction extends AbstractAction {
 			withEventTotarget = true;
 			break;
 		case eat:
-			vp =  ((Animal) actor).getStateProperty(SimulationCluster.todo, PropertyName.stateInventory, PropertyName.inventory_mouth, PropertyName.inventory_mouth.toString());
-			this.item = objectRequester.requestSimulationObject(SimulationCluster.todo, vp, this);
+			vp =  ((Animal) actor).getStateProperty(token, PropertyName.stateInventory, PropertyName.inventory_mouth, PropertyName.inventory_mouth.toString());
+			this.item = objectRequester.requestSimulationObject(token, vp, this);
 //			this.item = ((Animal) actor).getMouthItem();
 			if 	(!(this.item instanceof IEatable)) {
 				return;
@@ -140,7 +141,7 @@ public class ActionBodilyFunction extends AbstractAction {
 		eventType = getEventToCauserType(mode);
 		if (eventType != EventType.nothing) {
 			event = new EventToCauser(eventType,    actor /* as causer*/,  ActualTime.asTime(),
-						actor.getPosition(SimulationCluster.action),  bodilyFunction /* as performer */);
+						actor.getPosition(token),  bodilyFunction /* as performer */);
 			addEvent(event);
 		}
 		
@@ -148,7 +149,7 @@ public class ActionBodilyFunction extends AbstractAction {
 			eventType = getEventToTargetType(mode);
 			if (eventType != EventType.nothing) {
 				event = new EventToTarget(eventType,    actor /* as causer*/,  ActualTime.asTime(),
-							actor.getPosition(SimulationCluster.action),  bodilyFunction /* as performer */);
+							actor.getPosition(token),  bodilyFunction /* as performer */);
 				addEvent(event);
 			}
 		}

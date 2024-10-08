@@ -30,9 +30,9 @@ import org.socialworld.calculation.IObjectReceiver;
 import org.socialworld.calculation.IObjectSender;
 import org.socialworld.calculation.ObjectRequester;
 import org.socialworld.calculation.PropertyUsingAs;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
+import org.socialworld.core.IAccessToken;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.tools.StringTupel;
 
@@ -52,8 +52,8 @@ public abstract class SimProperty implements ISimProperty, ISavedValue , IObject
 		this.protection =  PropertyProtection.getProtection(this);
 	}
 
-	protected SimProperty(PropertyProtection protectionOriginal, SimulationCluster clusterNew) {
-		this.protection =  PropertyProtection.getProtection(protectionOriginal, clusterNew, this);
+	protected SimProperty(PropertyProtection protectionOriginal, IAccessToken tokenNew) {
+		this.protection =  PropertyProtection.getProtection(protectionOriginal, tokenNew, this);
 	}
 	
 	protected final void setToObjectNothing() {
@@ -121,14 +121,12 @@ public abstract class SimProperty implements ISimProperty, ISavedValue , IObject
 	public final boolean isProtected() {
 		if (this.protection == null) return false;
 		if (!this.protection.hasRestrictions()) return false;
-		if (this.protection.hasUnknownCluster()) return false;
 		return true;
 	}
 
 	public final boolean hasPropertyProtection() {
 		
 		if (this.protection == null) 	return false;
-		if (this.protection.hasUnknownCluster()) return false;
 		return true;
 		
 	}
@@ -141,8 +139,8 @@ public abstract class SimProperty implements ISimProperty, ISavedValue , IObject
 		this.protection = propertyProtection;
 	}
 
-	public final boolean checkHasGetPermission(SimulationCluster cluster) {
-		return this.protection.checkHasGetPermission(cluster);
+	public final boolean checkHasGetPermission(IAccessToken token) {
+		return this.protection.checkHasGetPermission(token);
 	}
 
 	public final boolean checkHasUseAsPermission(PropertyUsingAs useAsPermission) {
@@ -162,37 +160,37 @@ public abstract class SimProperty implements ISimProperty, ISavedValue , IObject
 	}
 	
 		
-	public final  ValueProperty getAsValue(SimulationCluster cluster) {
-		if (protection.checkHasGetPermission(cluster)) {
+	public final  ValueProperty getAsValue(IAccessToken token) {
+		if (protection.checkHasGetPermission(token)) {
 			Type propertyType;
 			propertyType = this.propertyName.getType();
-			return new ValueProperty(propertyType,   this.propertyName.toString(), copyForProperty(cluster));
+			return new ValueProperty(propertyType,   this.propertyName.toString(), copyForProperty(token));
 		}
 		else {
 			return ValueProperty.getInvalid();
 		}
 	}
 	
-	public final ValueProperty getAsValue(SimulationCluster cluster, String valueName) {
-		if (protection.checkHasGetPermission(cluster)) {
+	public final ValueProperty getAsValue(IAccessToken token, String valueName) {
+		if (protection.checkHasGetPermission(token)) {
 			Type propertyType;
 			propertyType = this.propertyName.getType();
-			return new ValueProperty(propertyType,   valueName, copyForProperty(cluster));
+			return new ValueProperty(propertyType,   valueName, copyForProperty(token));
 		}
 		else {
 			return ValueProperty.getInvalid();
 		}
 	}
 
-	// ISavedValue copyForProperty(SimulationCluster cluster) will be implemented in inherited classes
+	// ISavedValue copyForProperty(IAccessToken token) will be implemented in inherited classes
 	
 	
 	
 	
 	public ValueProperty getProperty(PropertyName propName, String valueName) {
 		if (hasPropertyProtection()) {
-			SimulationCluster cluster = this.protection.getCluster();
-			return getProperty(cluster, propName, valueName);
+			IAccessToken token = this.protection.getToken();
+			return getProperty(token, propName, valueName);
 		}
 		else {
 			return ValueProperty.getInvalid();
@@ -202,8 +200,8 @@ public abstract class SimProperty implements ISimProperty, ISavedValue , IObject
 
 	public ValueProperty getPropertyFromMethod(String methodName, String valueName) {
 		if (hasPropertyProtection()) {
-			SimulationCluster cluster = this.protection.getCluster();
-			return getPropertyFromMethod(cluster, methodName, valueName);
+			IAccessToken token = this.protection.getToken();
+			return getPropertyFromMethod(token, methodName, valueName);
 		}
 		else {
 			return ValueProperty.getInvalid();
@@ -217,16 +215,16 @@ public abstract class SimProperty implements ISimProperty, ISavedValue , IObject
 	 // TODO 		 switch property names in getProperty() method in sub classes
 	// TEMP_SOLUTION
 	// --> wieder freigeben 
-		public  ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String valueName) {
+		public  ValueProperty getProperty(IAccessToken token, PropertyName prop, String valueName) {
 			return ValueProperty.getInvalid();
 		}
 		
-		public  ValueProperty getPropertyFromMethod(SimulationCluster cluster, String methodName, String valueName){
+		public  ValueProperty getPropertyFromMethod(IAccessToken token, String methodName, String valueName){
 			return ValueProperty.getInvalid();
 		}
 	*/
 
-	public final ValueProperty getPropertyFromMethod(SimulationCluster cluster, String methodName, String valueName) {
+	public final ValueProperty getPropertyFromMethod(IAccessToken token, String methodName, String valueName) {
 		
 		Object got = null;
 		ValueProperty result = ValueProperty.getInvalid();
@@ -269,10 +267,10 @@ public abstract class SimProperty implements ISimProperty, ISavedValue , IObject
 
 	/////////////////////////////////////////////
 	
-	public final ValueProperty getProperty(SimulationCluster cluster, PropertyName propName) {
+	public final ValueProperty getProperty(IAccessToken token, PropertyName propName) {
 		String valueName;
 		valueName = propName.toString();
-		return getProperty(cluster, propName, valueName);
+		return getProperty(token, propName, valueName);
 	}
 	
 	protected final Method getMethod(String method) {
@@ -294,7 +292,7 @@ public abstract class SimProperty implements ISimProperty, ISavedValue , IObject
 		return receiver.receiveObject(requestID, this);
 	}
 	
-	public int sendYourselfTo(SimulationCluster cluster, IObjectReceiver receiver, int requestID) {
+	public int sendYourselfTo(IAccessToken token, IObjectReceiver receiver, int requestID) {
 		return receiver.receiveObject(requestID, this);
 	}
 	

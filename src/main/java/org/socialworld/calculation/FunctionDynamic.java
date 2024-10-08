@@ -31,7 +31,9 @@ public class FunctionDynamic extends FunctionBase {
 	private static FunctionPool functions = FunctionPool.getInstance();
 	
 	private static FunctionDynamic instance;
- 
+
+	private static AccessTokenFunction token = AccessTokenFunction.getValid();
+	
 	private FunctionDynamic() {
 		
 	}
@@ -64,7 +66,7 @@ public class FunctionDynamic extends FunctionBase {
 			FunctionBase function = functions.getFunction(func_id);
 			
 			if (function != null) {
-				return function.calculate(objectRequester.requestValueArrayList(SimulationCluster.todo, arguments.get(1), this));
+				return function.calculate(objectRequester.requestValueArrayList(token, arguments.get(1), this));
 			}
 			else {
 				return calculation.nothing;

@@ -6,9 +6,9 @@ import java.util.List;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.attributes.properties.MaterialSet;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
+import org.socialworld.core.IAccessToken;
 import org.socialworld.core.ReturnCode;
 import org.socialworld.datasource.tablesSimulation.states.TableStateComposition;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
@@ -111,9 +111,9 @@ public class StateComposition extends State {
 		return returnFromInit(tableState, lockingID, rowTable);
 	}
 
-	private StateComposition( StateComposition original, PropertyProtection protectionOriginal, SimulationCluster cluster) {
-		super(protectionOriginal, cluster);
-		this.materialSet = (MaterialSet) original.materialSet.copyForProperty(cluster);
+	private StateComposition( StateComposition original, PropertyProtection protectionOriginal, IAccessToken token) {
+		super(protectionOriginal, token);
+		this.materialSet = (MaterialSet) original.materialSet.copyForProperty(token);
 	}
 	
 	protected  void initPropertyName() {
@@ -125,17 +125,17 @@ public class StateComposition extends State {
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
 	@Override
-	public State copyForProperty(SimulationCluster cluster) {
-		return new StateComposition(this, getPropertyProtection(), cluster);
+	public State copyForProperty(IAccessToken token) {
+		return new StateComposition(this, getPropertyProtection(), token);
 	}
 
 	@Override
-	public ValueProperty getProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
+	public ValueProperty getProperty(IAccessToken token, PropertyName propName, String valueName) {
 		switch (propName) {
 		case stateComposition_materialSet:
-			return new ValueProperty(Type.simObjProp, valueName, materialSet.copyForProperty(cluster));
+			return new ValueProperty(Type.simObjProp, valueName, materialSet.copyForProperty(token));
 		case stateComposition_mainMaterial:
-			return getMainMaterial_(cluster, valueName);
+			return getMainMaterial_(token, valueName);
 
 		default:
 			return ValueProperty.getInvalid();
@@ -153,14 +153,14 @@ public class StateComposition extends State {
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
 	protected ValueProperty getMainMaterial() {
-		return getMaterialSetProperty(getPropertyProtection().getCluster(), PropertyName.materialSet_mainMaterial, VALUENAME_MAIN_MATERIAL);
+		return getMaterialSetProperty(getPropertyProtection().getToken(), PropertyName.materialSet_mainMaterial, VALUENAME_MAIN_MATERIAL);
 	}
 
-	private ValueProperty getMainMaterial_(SimulationCluster cluster, String valueName) {
-		return getMaterialSetProperty(cluster, PropertyName.materialSet_mainMaterial, valueName);
+	private ValueProperty getMainMaterial_(IAccessToken token, String valueName) {
+		return getMaterialSetProperty(token, PropertyName.materialSet_mainMaterial, valueName);
 	}
 
-	private ValueProperty getMaterialSetProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
-		return this.materialSet.getProperty(cluster, propName, valueName);
+	private ValueProperty getMaterialSetProperty(IAccessToken token, PropertyName propName, String valueName) {
+		return this.materialSet.getProperty(token, propName, valueName);
 	}
 }

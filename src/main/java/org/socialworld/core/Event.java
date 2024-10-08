@@ -24,7 +24,6 @@ package org.socialworld.core;
 import org.socialworld.calculation.IObjectReceiver;
 import org.socialworld.calculation.NoObject;
 import org.socialworld.calculation.ObjectRequester;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.geometry.Vector;
@@ -74,6 +73,8 @@ public abstract class Event implements Comparable<Event>, IObjectReceiver {
 	private static Value noDirection = new Value(Type.eventProp, new Direction(PropertyName.event_direction, new Vector(0,0,0)));
 
 	private ObjectRequester objectRequester = new ObjectRequester();
+
+	private static AccessTokenCore tokenCore = AccessTokenCore.getValid();
 
 	/**
 	 * Constructor
@@ -281,7 +282,7 @@ public abstract class Event implements Comparable<Event>, IObjectReceiver {
 				direction = new Value(Type.eventProp, new Direction(PropertyName.event_direction, new Vector(0,0,0)));
 			}
 			if (direction.getType().equals(Type.vector)) {
-				Vector vectorDirection = objectRequester.requestVector(SimulationCluster.total, direction, this);
+				Vector vectorDirection = objectRequester.requestVector(tokenCore, direction, this);
 				if (vectorDirection == Vector.getObjectNothing()) {
 					vectorDirection = new Vector(0,0,0);
 				}
@@ -292,7 +293,7 @@ public abstract class Event implements Comparable<Event>, IObjectReceiver {
 		}
 		
 		if (this.causer instanceof Animal){
-			direction = ((Animal) causer).getProperty(SimulationCluster.todo, PropertyName.simobj_directionChest);
+			direction = ((Animal) causer).getProperty(tokenCore, PropertyName.simobj_directionChest);
 			if (direction.checkObjectIsNull() == true) {
 				direction = new Value(Type.eventProp, new Direction(PropertyName.event_direction, new Vector(0,0,0)));
 			}

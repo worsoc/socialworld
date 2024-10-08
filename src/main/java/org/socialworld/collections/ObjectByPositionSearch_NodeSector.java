@@ -25,7 +25,6 @@ package org.socialworld.collections;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.map.IMapProp;
 import org.socialworld.map.MapPropTree_Node;
 import org.socialworld.objects.SimulationObject;
@@ -36,6 +35,7 @@ import org.socialworld.objects.SimulationObject;
  */
 public class ObjectByPositionSearch_NodeSector extends MapPropTree_Node{
 
+	private static AccessTokenObjectByPositionSearch token = AccessTokenObjectByPositionSearch.getValid();
 	
 	protected ObjectByPositionSearch_NodeSector(ObjectByPositionSearch_TreeSector tree, int level)  {
 			
@@ -54,12 +54,12 @@ public class ObjectByPositionSearch_NodeSector extends MapPropTree_Node{
 		String location;
 
 		if ( ((ObjectByPositionSearch_TreeSector) getTree()).getBase() == 9) {
-			location = 	Integer.toString(object.getPosition(SimulationCluster.objectMaster).getLocationByBase9());	
+			location = 	Integer.toString(object.getPosition(token).getLocationByBase9());	
 			// reduce location string to object's object search Level
 			location = location.substring(0, object.getLevelObjectSearchBase9());
 		}
 		else if ( ((ObjectByPositionSearch_TreeSector) getTree()).getBase() == 25) {
-			location = 	object.getPosition(SimulationCluster.objectMaster).getLocationByBase25();	
+			location = 	object.getPosition(token).getLocationByBase25();	
 			location = location.substring(0, object.getLevelObjectSearchBase25());
 		}
 		else

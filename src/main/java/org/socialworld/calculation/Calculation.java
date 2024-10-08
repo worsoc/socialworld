@@ -39,6 +39,8 @@ public class Calculation implements IObjectReceiver{
 	static Value zeroVector;
 	
 	protected ObjectRequester objectRequester = new ObjectRequester();
+
+	private static AccessTokenExpression token = AccessTokenExpression.getValid();
 	
 	public static Calculation getInstance() {
 		if (instance == null) {
@@ -232,7 +234,7 @@ public class Calculation implements IObjectReceiver{
 			return ( (float) op1.getObject(Type.floatingpoint) == 0F /*(float) getZero(Type.floatingpoint).getObject(Type.floatingpoint) */ );
 		case vector:
 			Vector tmp;
-			tmp = objectRequester.requestVector(SimulationCluster.total, op1, this);
+			tmp = objectRequester.requestVector(token, op1, this);
 			return (tmp.getX() == 0F & tmp.getY() == 0F & tmp.getZ() == 0F);
 		default:
 			return false;
@@ -253,7 +255,7 @@ public class Calculation implements IObjectReceiver{
 			return ( (float) op1.getObject(Type.floatingpoint) > 0F/* (float) getZero(Type.floatingpoint).getObject(Type.floatingpoint) */ );
 		case vector:
 			Vector tmp;
-			tmp = objectRequester.requestVector(SimulationCluster.total, op1, this);
+			tmp = objectRequester.requestVector(token, op1, this);
 			return tmp.length() > 0F /* ((Vector) getZero(Type.vector).getObject()).length() */;
 		default:
 			return false;

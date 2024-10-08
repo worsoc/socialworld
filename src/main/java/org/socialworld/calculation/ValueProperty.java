@@ -27,6 +27,7 @@ import org.socialworld.attributes.ISimProperty;
 import org.socialworld.attributes.NoSavedValue;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
+import org.socialworld.core.IAccessToken;
 import org.socialworld.objects.SimulationObject;
 
 
@@ -95,16 +96,16 @@ public class ValueProperty extends Value {
 		valid = true;
 	}
 
-	public ValueProperty(Type type, SimulationCluster cluster, PropertyName propertyName, String name, Object value) {
+	public ValueProperty(Type type, IAccessToken token, PropertyName propertyName, String name, Object value) {
 
 		super(type, name, value);
 		
 		if (value instanceof ISavedValue) {
 			isSavedValues = true;
-			protection =  PropertyProtection.getProtection(cluster, (ISavedValue)value);
+			protection =  PropertyProtection.getProtection(token, (ISavedValue)value);
 		}
 		else {
-			protection =  PropertyProtection.getProtection(cluster);
+			protection =  PropertyProtection.getProtection(token);
 		}
 		protection.addProtectedValueProperty(this);
 		
@@ -159,11 +160,11 @@ public class ValueProperty extends Value {
 		
 	}
 
-	public Object getObject(SimulationCluster cluster, Type type) {
+	public Object getObject(IAccessToken token, Type type) {
 		
 		Object result; 
 		if (isProtected()) {
-			if (checkHasPermission(cluster)) {
+			if (checkHasPermission(token)) {
 				result = super.getObject(type);
 			}
 			else {
@@ -205,16 +206,16 @@ public class ValueProperty extends Value {
 		
 	}
 
-	public int requestObject(SimulationCluster cluster, IObjectReceiver receiver, int requestID, Type type) {
+	public int requestObject(IAccessToken token, IObjectReceiver receiver, int requestID, Type type) {
 
 		if (this.getType().equals(type)) {
 		
 			IObjectSender object;
 			
 			if (isProtected()) {
-				if (checkHasPermission(cluster)) {
+				if (checkHasPermission(token)) {
 					object = super.getObjectSender();
-					return object.sendYourselfTo(cluster, receiver, requestID);
+					return object.sendYourselfTo(token, receiver, requestID);
 				}
 				else {
 					return IObjectSender.OBJECT_NOT_SENDED_BECAUSE_NO_PERMISSION;
@@ -222,7 +223,7 @@ public class ValueProperty extends Value {
 			}
 			else {
 				object = super.getObjectSender();
-				return object.sendYourselfTo(cluster, receiver, requestID);
+				return object.sendYourselfTo(token, receiver, requestID);
 			}
 
 		}
@@ -237,7 +238,7 @@ public class ValueProperty extends Value {
 		return true;
 	}
 	
-	public boolean checkHasPermission(SimulationCluster cluster)  {
+	public boolean checkHasPermission(IAccessToken token)  {
 		return true;
 	}
 	

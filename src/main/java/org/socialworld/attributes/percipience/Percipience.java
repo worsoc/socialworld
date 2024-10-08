@@ -27,7 +27,6 @@ import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.IObjectReceiver;
 import org.socialworld.calculation.NoObject;
 import org.socialworld.calculation.ObjectRequester;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueProperty;
@@ -56,6 +55,7 @@ public class Percipience implements IObjectReceiver{
 	private float maxFeel;
 
 	protected ObjectRequester objectRequester = new ObjectRequester();
+	private static AccessTokenPercipience token = AccessTokenPercipience.getValid();
 
 	public Percipience(PercipienceType type, float maxDistance, float maxSee, float maxHear, float maxSmell, float maxFeel) {
 		this.type = type;
@@ -144,7 +144,7 @@ public class Percipience implements IObjectReceiver{
 		if (possibleSeer instanceof ISeer) {
 
 		
-			Position positionSeer = possibleSeer.getPosition(SimulationCluster.percipience);
+			Position positionSeer = possibleSeer.getPosition(token);
 			Vector direction = this.position.getDirectionFrom(positionSeer);
 	
 			if (direction.is000()) return false;
@@ -154,12 +154,12 @@ public class Percipience implements IObjectReceiver{
 			if (distance <= this.maxSee) {
 	
 				ValueProperty vpDirectionView;
-				vpDirectionView = possibleSeer.getStateProperty(SimulationCluster.todo, PropertyName.stateSeer, PropertyName.stateSeer_directionView, PropertyName.stateSeer_directionView.toString());
-				Vector directionView = objectRequester.requestDirection(SimulationCluster.todo, vpDirectionView, this).getVector(SimulationCluster.todo);
+				vpDirectionView = possibleSeer.getStateProperty(token, PropertyName.stateSeer, PropertyName.stateSeer_directionView, PropertyName.stateSeer_directionView.toString());
+				Vector directionView = objectRequester.requestDirection(token, vpDirectionView, this).getVector(token);
 	
 				ValueProperty vpPropsSeer;
 				ValueProperty vpAngleView;
-				vpPropsSeer = possibleSeer.getStateProperty(SimulationCluster.todo, PropertyName.stateSeer, PropertyName.stateSeer_propsSeer, PropertyName.stateSeer_propsSeer.toString());
+				vpPropsSeer = possibleSeer.getStateProperty(token, PropertyName.stateSeer, PropertyName.stateSeer_propsSeer, PropertyName.stateSeer_propsSeer.toString());
 				if (vpPropsSeer.isInvalidOrNothing()) {
 					if (GlobalSwitches.OUTPUT_DEBUG_GETPROPERTY) {
 						System.out.println("Percipience.checkMaySeeingObject: vpPropsSeer isInvalidOrNothing");
@@ -168,9 +168,9 @@ public class Percipience implements IObjectReceiver{
 					return true;
 					//--> return false;
 				}
-				vpAngleView = vpPropsSeer.getProperty(SimulationCluster.todo, PropertyName.propsSeer_angleViewPerceivingObjectsInRadians, Value.NO_METHOD_NAME, PropertyName.propsSeer_angleViewPerceivingObjectsInRadians.toString());
+				vpAngleView = vpPropsSeer.getProperty(token, PropertyName.propsSeer_angleViewPerceivingObjectsInRadians, Value.NO_METHOD_NAME, PropertyName.propsSeer_angleViewPerceivingObjectsInRadians.toString());
 				double angleViewInRadians;
-				Object o = vpAngleView.getObject(SimulationCluster.percipience, Type.floatingpoint);
+				Object o = vpAngleView.getObject(token, Type.floatingpoint);
 				if (o instanceof NoObject) {
 					if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
 						System.out.println("Percipience.checkMaySeeingObject: o (vpAngleView.getObject(Type.floatingpoint)) is NoObject " + ((NoObject)o).getReason().toString() + " instead of double");
@@ -212,7 +212,7 @@ public class Percipience implements IObjectReceiver{
 		
 		if (possibleSeer instanceof ISeer) {
 
-			Position positionSeer = possibleSeer.getPosition(SimulationCluster.percipience);
+			Position positionSeer = possibleSeer.getPosition(token);
 			Vector direction = this.position.getDirectionFrom(positionSeer);
 	
 			if (direction.is000()) return false;
@@ -222,16 +222,16 @@ public class Percipience implements IObjectReceiver{
 			if (distance <= this.maxSee) {
 	
 				ValueProperty vpDirectionView;
-				vpDirectionView = possibleSeer.getStateProperty(SimulationCluster.todo, PropertyName.stateSeer, PropertyName.stateSeer_directionView, PropertyName.stateSeer_directionView.toString());
-				Vector directionView = objectRequester.requestVector(SimulationCluster.todo, vpDirectionView.getProperty(SimulationCluster.todo, PropertyName.direction_vector, Value.NO_METHOD_NAME, PropertyName.direction_vector.toString()), this);
+				vpDirectionView = possibleSeer.getStateProperty(token, PropertyName.stateSeer, PropertyName.stateSeer_directionView, PropertyName.stateSeer_directionView.toString());
+				Vector directionView = objectRequester.requestVector(token, vpDirectionView.getProperty(token, PropertyName.direction_vector, Value.NO_METHOD_NAME, PropertyName.direction_vector.toString()), this);
 		//		Vector directionView = ((Direction)vpDirectionView.getValue()).getVector();
 	
 				ValueProperty vpPropsSeer;
 				ValueProperty vpAngleView;
-				vpPropsSeer = possibleSeer.getStateProperty(SimulationCluster.todo, PropertyName.stateSeer, PropertyName.stateSeer_propsSeer, PropertyName.stateSeer_propsSeer.toString());
-				vpAngleView = vpPropsSeer.getProperty(SimulationCluster.todo, PropertyName.propsSeer_angleViewPerceivingEventsInRadians, Value.NO_METHOD_NAME, PropertyName.propsSeer_angleViewPerceivingEventsInRadians.toString());
+				vpPropsSeer = possibleSeer.getStateProperty(token, PropertyName.stateSeer, PropertyName.stateSeer_propsSeer, PropertyName.stateSeer_propsSeer.toString());
+				vpAngleView = vpPropsSeer.getProperty(token, PropertyName.propsSeer_angleViewPerceivingEventsInRadians, Value.NO_METHOD_NAME, PropertyName.propsSeer_angleViewPerceivingEventsInRadians.toString());
 
-				Object o = vpAngleView.getObject(SimulationCluster.percipience, Type.floatingpoint);
+				Object o = vpAngleView.getObject(token, Type.floatingpoint);
 				if (o instanceof NoObject) {
 					if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
 						System.out.println("Percipience.checkMaySeeingEvent: o (vpAngleView.getObject(Type.floatingpoint)) is NoObject " + ((NoObject)o).getReason().toString() + " instead of double");

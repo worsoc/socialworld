@@ -5,9 +5,9 @@ import java.util.List;
 import org.socialworld.attributes.ISavedValue;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.properties.Colour;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
+import org.socialworld.core.IAccessToken;
 import org.socialworld.core.ReturnCode;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.SimulationObject;
@@ -105,12 +105,12 @@ public class StateBody extends State {
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
 	@Override
-	public ISavedValue copyForProperty(SimulationCluster cluster) {
+	public ISavedValue copyForProperty(IAccessToken token) {
 		return null;
 	}
 
 	@Override
-	public ValueProperty getProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
+	public ValueProperty getProperty(IAccessToken token, PropertyName propName, String valueName) {
 		return null;
 	}
 

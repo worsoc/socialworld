@@ -30,7 +30,6 @@ import org.socialworld.calculation.Calculation;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
 import org.socialworld.calculation.NoObject;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.application.ActionCreator;
@@ -39,6 +38,8 @@ import org.socialworld.collections.ValueArrayList;
 import org.socialworld.knowledge.KnowledgeFact_Type;
 
 public class CreateValue extends Expression {
+
+	private static AccessTokenExpressions4Knowledge tokenKnowledge = AccessTokenExpressions4Knowledge.getValid();
 
 	public CreateValue(Type type, Expression exp2) {
 		
@@ -207,7 +208,7 @@ public class CreateValue extends Expression {
 			break;
 		case knowledgeElement:
 			evaluateExpression2(arguments);
-			localArguments = objectRequester.requestValueArrayList(SimulationCluster.total, arguments.getValue(Value.VALUE_NAME_KNOWLEDGE_ELEMENT_PROPS), this); 
+			localArguments = objectRequester.requestValueArrayList(tokenKnowledge, arguments.getValue(Value.VALUE_NAME_KNOWLEDGE_ELEMENT_PROPS), this); 
 			createdObject  = KnowledgeCalculator.createKnowledgeElement(localArguments);
 			break;
 		case knowledgeSource:

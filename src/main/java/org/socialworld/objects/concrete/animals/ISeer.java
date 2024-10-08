@@ -21,15 +21,15 @@
 */
 package org.socialworld.objects.concrete.animals;
 
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.ValueProperty;
+import org.socialworld.core.IAccessToken;
 
 public interface ISeer {
 
 	public static final String NAME = "ISeer";
 
-	public StateSeer getSavedStateSeer(SimulationCluster cluster);
-	public ValueProperty getStateSeerAsProperty(SimulationCluster cluster, String name);
+	public StateSeer getSavedStateSeer(IAccessToken token);
+	public ValueProperty getStateSeerAsProperty(IAccessToken token, String name);
 
 	
 	

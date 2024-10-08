@@ -25,7 +25,6 @@ import java.util.List;
 
 import org.socialworld.calculation.IObjectReceiver;
 import org.socialworld.calculation.ObjectRequester;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.descriptions.Action2PerformerAssignment;
@@ -92,6 +91,8 @@ public abstract class ActionPerformer implements IEventParam , IObjectReceiver{
     
 	protected int requestValueID = 0;
 	protected ObjectRequester objectRequester = new ObjectRequester();
+	
+	private static AccessTokenAction token = AccessTokenAction.getValid();
 
     public ActionPerformer (AbstractAction action) {
     	this.action = action;
@@ -132,7 +133,7 @@ public abstract class ActionPerformer implements IEventParam , IObjectReceiver{
 			ActionMode actionMode = this.action.getMode();
 			
 			actionPropertiesAreRequested = true;
-			actor.requestPropertyList(SimulationCluster.action, this);
+			actor.requestPropertyList(token, this);
 			this.action.requestPropertyList(this);
 			actionPropertiesAreRequested = false;
 			

@@ -5,9 +5,9 @@ import java.util.List;
 import org.socialworld.attributes.ISavedValue;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.SimProperty;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
+import org.socialworld.core.IAccessToken;
 import org.socialworld.objects.State;
 import org.socialworld.tools.StringTupel;
 
@@ -88,13 +88,13 @@ public class PropsSeer extends SimProperty {
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
 	@Override
-	public ISavedValue copyForProperty(SimulationCluster cluster) {
+	public ISavedValue copyForProperty(IAccessToken token) {
 		// TODO Auto-generated method stub
 		return getObjectNothing();
 	}
 
 	@Override
-	public ValueProperty getProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
+	public ValueProperty getProperty(IAccessToken token, PropertyName propName, String valueName) {
 			
 		switch (propName) {
 		case propsSeer_angleViewPerceivingEvents:

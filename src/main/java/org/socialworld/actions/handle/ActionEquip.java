@@ -28,7 +28,6 @@ import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.Time;
 import org.socialworld.calculation.NoObject;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
@@ -47,6 +46,8 @@ public class ActionEquip extends AbstractAction {
     
     private InventoryPlace inventoryPlace;
 
+	private static AccessTokenActionHandle token = AccessTokenActionHandle.getValid();
+  
 	public ActionEquip(ValueArrayList actionProperties) {
 		super(actionProperties);
 	}
@@ -61,7 +62,7 @@ public class ActionEquip extends AbstractAction {
 
 		value =  actionProperties.getValue(furtherPropertyNames[0]);
 		if (value.isValid()) {
-			item = objectRequester.requestSimulationObject(SimulationCluster.total, value, this);
+			item = objectRequester.requestSimulationObject(token, value, this);
 			this.setItem(item);
 		}
 
@@ -95,7 +96,7 @@ public class ActionEquip extends AbstractAction {
 
       	this.equip = new Equip( this);
       	
-		Position position = actor.getPosition(SimulationCluster.action);
+		Position position = actor.getPosition(token);
 		Time actualTime = ActualTime.asTime();
 
       	Event event;

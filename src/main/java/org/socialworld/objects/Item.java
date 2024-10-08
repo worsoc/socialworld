@@ -24,8 +24,8 @@ package org.socialworld.objects;
 import java.util.List;
 
 import org.socialworld.attributes.PropertyName;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.collections.ValueArrayList;
+import org.socialworld.core.IAccessToken;
 import org.socialworld.core.IEventParam;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.enums.EnumBaseSimObj;
@@ -137,9 +137,9 @@ public abstract class Item extends SimulationObject {
 /////////////////////////////    PROPERTY LIST  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	public void requestPropertyList(SimulationCluster cluster, IEventParam paramObject) {
+	public void requestPropertyList(IAccessToken token, IEventParam paramObject) {
 	
-		super.requestPropertyList(cluster, paramObject);
+		super.requestPropertyList(token, paramObject);
 		
 		ValueArrayList propertiesAsValueList = new ValueArrayList();
 		paramObject.answerPropertiesRequest(propertiesAsValueList);

@@ -28,6 +28,7 @@ import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueProperty;
+import org.socialworld.core.IAccessToken;
 
 public class GetProperty extends Expression {
 
@@ -69,15 +70,15 @@ public class GetProperty extends Expression {
 			
 	}
 	
-	protected final ValueProperty getProperty(Value valueObject, SimulationCluster cluster, PropertyName simPropName, String methodName, String valueName) {
+	protected final ValueProperty getProperty(Value valueObject, IAccessToken token, PropertyName simPropName, String methodName, String valueName) {
 		
 		ValueProperty result;
 		result = ValueProperty.getInvalid();
 		if (valueObject instanceof ValueProperty) {
-			result = ((ValueProperty)valueObject).getProperty(cluster, simPropName, methodName,  valueName) ;
+			result = ((ValueProperty)valueObject).getProperty(token, simPropName, methodName,  valueName) ;
 		}
 		else {
-			result = valueObject.getProperty(cluster, simPropName, methodName,  valueName) ;
+			result = valueObject.getProperty(token, simPropName, methodName,  valueName) ;
 		}
 
 /*		

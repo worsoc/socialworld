@@ -34,10 +34,10 @@ import org.socialworld.calculation.IObjectReceiver;
 import org.socialworld.calculation.IObjectSender;
 import org.socialworld.calculation.ObjectRequester;
 import org.socialworld.calculation.PropertyUsingAs;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueProperty;
+import org.socialworld.core.IAccessToken;
 import org.socialworld.core.ReturnCode;
 import org.socialworld.datasource.mariaDB.Table;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
@@ -66,9 +66,9 @@ public abstract class State implements ISimProperty, ISavedValue, IObjectSender,
 		init();
 	}
 
-	protected State(PropertyProtection protectionOriginal, SimulationCluster clusterNew) {
+	protected State(PropertyProtection protectionOriginal, IAccessToken tokenNew) {
 		initPropertyName();
-		this.protection = PropertyProtection.getProtection(protectionOriginal, clusterNew, this);
+		this.protection = PropertyProtection.getProtection(protectionOriginal, tokenNew, this);
 	}
 
 	protected State() {
@@ -98,14 +98,14 @@ public abstract class State implements ISimProperty, ISavedValue, IObjectSender,
 	static class NoState extends State {
 		public boolean checkIsObjectNothing() {return true;}
 		
-		public  ValueProperty getProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
+		public  ValueProperty getProperty(IAccessToken token, PropertyName propName, String valueName) {
 			return ValueProperty.getInvalid();
 		}
 
 		protected void initPropertyName() {};
 		protected ReturnCode init() {return ReturnCode.ignore; };
 		protected void setProperty(PropertyName propName, ValueProperty property) {};
-		public ISavedValue copyForProperty(SimulationCluster cluster) {return objectNothing; }
+		public ISavedValue copyForProperty(IAccessToken token) {return objectNothing; }
 	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////////
@@ -196,7 +196,6 @@ public abstract class State implements ISimProperty, ISavedValue, IObjectSender,
 	public final boolean isProtected() {
 		if (this.protection == null) return false;
 		if (!this.protection.hasRestrictions()) return false;
-		if (this.protection.hasUnknownCluster()) return false;
 		return true;
 	}
 
@@ -206,9 +205,6 @@ public abstract class State implements ISimProperty, ISavedValue, IObjectSender,
 			return false;
 		}
 		
-		if (this.protection.hasUnknownCluster()) {
-			return false;
-		}
 		
 		return true;
 		
@@ -222,8 +218,8 @@ public abstract class State implements ISimProperty, ISavedValue, IObjectSender,
 		this.protection = propertyProtection;
 	}
 	
-	public final boolean checkHasGetPermission(SimulationCluster cluster) {
-		return this.protection.checkHasGetPermission(cluster);
+	public final boolean checkHasGetPermission(IAccessToken token) {
+		return this.protection.checkHasGetPermission(token);
 	}
 
 	public final boolean checkHasUseAsPermission(PropertyUsingAs useAsPermission) {
@@ -243,22 +239,22 @@ public abstract class State implements ISimProperty, ISavedValue, IObjectSender,
 	
 	
 	
-	public final  ValueProperty getAsValue(SimulationCluster cluster) {
-		if (protection.checkHasGetPermission(cluster)) {
+	public final  ValueProperty getAsValue(IAccessToken token) {
+		if (protection.checkHasGetPermission(token)) {
 			Type propertyType;
 			propertyType = this.propertyName.getType();
-			return new ValueProperty(propertyType,   this.propertyName.toString(), copyForProperty(cluster));
+			return new ValueProperty(propertyType,   this.propertyName.toString(), copyForProperty(token));
 		}
 		else {
 			return ValueProperty.getInvalid();
 		}
 	}
 	
-	public final ValueProperty getAsValue(SimulationCluster cluster, String valueName) {
-		if (protection.checkHasGetPermission(cluster)) {
+	public final ValueProperty getAsValue(IAccessToken token, String valueName) {
+		if (protection.checkHasGetPermission(token)) {
 			Type propertyType;
 			propertyType = this.propertyName.getType();
-			return new ValueProperty(propertyType,   valueName, copyForProperty(cluster));
+			return new ValueProperty(propertyType,   valueName, copyForProperty(token));
 		}
 		else {
 			return ValueProperty.getInvalid();
@@ -272,8 +268,8 @@ public abstract class State implements ISimProperty, ISavedValue, IObjectSender,
 	
 	public ValueProperty getProperty(PropertyName propName, String valueName) {
 		if (hasPropertyProtection()) {
-			SimulationCluster cluster = this.protection.getCluster();
-			return getProperty(cluster, propName, valueName);
+			IAccessToken token = this.protection.getToken();
+			return getProperty(token, propName, valueName);
 		}
 		else {
 			return ValueProperty.getInvalid();
@@ -283,8 +279,8 @@ public abstract class State implements ISimProperty, ISavedValue, IObjectSender,
 
 	public ValueProperty getPropertyFromMethod(String methodName, String valueName) {
 		if (hasPropertyProtection()) {
-			SimulationCluster cluster = this.protection.getCluster();
-			return getPropertyFromMethod(cluster, methodName, valueName);
+			IAccessToken token  = this.protection.getToken();
+			return getPropertyFromMethod(token, methodName, valueName);
 		}
 		else {
 			return ValueProperty.getInvalid();
@@ -308,7 +304,7 @@ public abstract class State implements ISimProperty, ISavedValue, IObjectSender,
 		}
 	*/
 
-	public final ValueProperty getPropertyFromMethod(SimulationCluster cluster, String methodName, String valueName) {
+	public final ValueProperty getPropertyFromMethod(IAccessToken token, String methodName, String valueName) {
 		
 		Object got = null;
 		ValueProperty result = ValueProperty.getInvalid();
@@ -354,10 +350,10 @@ public abstract class State implements ISimProperty, ISavedValue, IObjectSender,
 
 	/////////////////////////////////////////////
 
-	public final ValueProperty getProperty(SimulationCluster cluster, PropertyName propName) {
+	public final ValueProperty getProperty(IAccessToken token, PropertyName propName) {
 		String valueName;
 		valueName = propName.toString();
-		return getProperty(cluster, propName, valueName);
+		return getProperty(token, propName, valueName);
 	}
 		
 
@@ -440,7 +436,7 @@ public abstract class State implements ISimProperty, ISavedValue, IObjectSender,
 	public int sendYourselfTo(IObjectReceiver receiver, int requestID) {
 		return receiver.receiveObject(requestID, this);
 	}
-	public int sendYourselfTo(SimulationCluster cluster, IObjectReceiver receiver, int requestID) {
+	public int sendYourselfTo(IAccessToken token, IObjectReceiver receiver, int requestID) {
 		return receiver.receiveObject(requestID, this);
 	}
 	

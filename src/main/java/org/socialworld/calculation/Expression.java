@@ -70,6 +70,7 @@ public class Expression implements IObjectReceiver{
 	protected Functions functions;
 
 	protected ObjectRequester objectRequester = new ObjectRequester();
+	private static AccessTokenExpression token = AccessTokenExpression.getValid();
 
 	protected Expression(Expression_Function nothing) {
 		if (nothing.equals(Expression_Function.nothing)) {
@@ -265,7 +266,7 @@ public class Expression implements IObjectReceiver{
 					tmp = arguments.getValue(name);
 					if (tmp.isValid()) {
 
-						valueList =  objectRequester.requestValueArrayList(SimulationCluster.total, tmp, this);
+						valueList =  objectRequester.requestValueArrayList(token, tmp, this);
 						// get the value list element's name
 						v = expression2.evaluate(arguments);
 						o = v.getObject(Type.string);
@@ -384,7 +385,7 @@ public class Expression implements IObjectReceiver{
 					
 					if (checkSuccess) {
 						if (tmp.hasType(Type.valueList))  {
-							valueList = objectRequester.requestValueArrayList(SimulationCluster.total, tmp, this);
+							valueList = objectRequester.requestValueArrayList(token, tmp, this);
 						}
 						else {
 							valueList	= new ValueArrayList();
@@ -535,7 +536,7 @@ public class Expression implements IObjectReceiver{
 							}
 							else {
 								// get the sub list from arguments
-								valueList = objectRequester.requestValueArrayList(SimulationCluster.total, arguments.getValue(name), this); 
+								valueList = objectRequester.requestValueArrayList(token, arguments.getValue(name), this); 
 							}
 						}
 						else {
@@ -551,7 +552,7 @@ public class Expression implements IObjectReceiver{
 							if ( tmp.getType() != Type.simulationObject)
 								System.out.println("Expression.evaluate: action target ist nicht vom Type.simulationObject "  );
 							else {
-								SimulationObject target = objectRequester.requestSimulationObject(SimulationCluster.total, tmp, this);
+								SimulationObject target = objectRequester.requestSimulationObject(token, tmp, this);
 								if (target == NoSimulationObject.getObjectNothing() )
 									System.out.println("Expression.evaluate: action target ist NoSimulationobject "  );
 								else 
@@ -618,7 +619,7 @@ public class Expression implements IObjectReceiver{
 		value = arguments.getValue(type, wantedOccurence);
 		
 		if (value.isValid()) {
-			return objectRequester.requestObject(SimulationCluster.total, value, type, this);
+			return objectRequester.requestObject(token, value, type, this);
 		}
 		else {
 			return NoObject.getNoObject(NoObjectReason.valueIsNotValid);

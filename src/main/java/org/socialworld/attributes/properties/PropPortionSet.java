@@ -26,9 +26,9 @@ import java.util.List;
 
 import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.attributes.SimProperty;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.collections.ValueArrayList;
+import org.socialworld.core.IAccessToken;
 
 public abstract class PropPortionSet extends SimProperty {
 
@@ -39,8 +39,8 @@ public abstract class PropPortionSet extends SimProperty {
 //////////////////creating instance for simulation    ///////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
-	protected  PropPortionSet(PropPortionSet original, PropertyProtection protectionOriginal, SimulationCluster cluster ) {
-		super(protectionOriginal, cluster);
+	protected  PropPortionSet(PropPortionSet original, PropertyProtection protectionOriginal, IAccessToken token ) {
+		super(protectionOriginal, token);
 		this.objects = original.getObjects();
 		this.portions = original.getPortions();
 		setPropertyName(original.getPropertyName());

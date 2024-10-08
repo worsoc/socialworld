@@ -21,6 +21,7 @@
 */
 package org.socialworld.calculation.expressions;
 
+import org.socialworld.core.IAccessToken;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
@@ -40,6 +41,27 @@ public class GetValue extends Expression {
 	public static String GETISELEMENTOF = "IsElem";
 	
 	
+	public GetValue(IAccessToken token, PropertyUsingAs usablePermission, String getValuePath, String valueAliasName) {
+		
+		super();
+		
+		String steps[];
+		steps = getValuePath.split("\\.");
+
+		if (steps.length > 0) {
+			setOperation(Expression_Function.oneExpression);
+			
+			Expression exp1 = new GetValue(/* token */ SimulationCluster.todo, usablePermission, steps, 0, valueAliasName);
+			
+			setExpression1(exp1);
+			setValid();
+			
+		}
+		else {
+			setOperation(Expression_Function.skip);
+		}
+			
+	}
 	
 	
 	public GetValue(SimulationCluster cluster, PropertyUsingAs usablePermission, String getValuePath, String valueAliasName) {
@@ -53,6 +75,28 @@ public class GetValue extends Expression {
 			setOperation(Expression_Function.oneExpression);
 			
 			Expression exp1 = new GetValue(cluster, usablePermission, steps, 0, valueAliasName);
+			
+			setExpression1(exp1);
+			setValid();
+			
+		}
+		else {
+			setOperation(Expression_Function.skip);
+		}
+			
+	}
+
+	 GetValue(IAccessToken token, PropertyUsingAs usablePermission, String getValuePath, String separator, String valueAliasName) {
+			
+		super();
+		
+		String steps[];
+		steps = getValuePath.split(separator);
+
+		if (steps.length > 0) {
+			setOperation(Expression_Function.oneExpression);
+			
+			Expression exp1 = new GetValue(/* token */ SimulationCluster.todo, usablePermission, steps, 0, valueAliasName);
 			
 			setExpression1(exp1);
 			setValid();

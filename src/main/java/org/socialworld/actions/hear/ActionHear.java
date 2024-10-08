@@ -25,7 +25,6 @@ package org.socialworld.actions.hear;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.attributes.ActualTime;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
@@ -77,6 +76,8 @@ public class ActionHear extends AbstractAction {
 
 	private SimulationObject target;
 
+	private static AccessTokenActionHear token = AccessTokenActionHear.getValid();
+
 	public ActionHear(ValueArrayList actionProperties) {
 		super(actionProperties);
 	}
@@ -94,7 +95,7 @@ public class ActionHear extends AbstractAction {
 
 		value =  actionProperties.getValue(furtherPropertyNames[0]);
 		if (value.isValid()) {
-			target = objectRequester.requestSimulationObject(SimulationCluster.total, value, this);
+			target = objectRequester.requestSimulationObject(token, value, this);
 			this.setTarget(target);
 		}
 
@@ -136,7 +137,7 @@ public class ActionHear extends AbstractAction {
   		this.hear = new Hear(this);
   		
 		event = new EventToCauser(eventType,    actor /* as causer*/,  ActualTime.asTime(),
-				actor.getPosition(SimulationCluster.action),  hear /* as performer */);
+				actor.getPosition(token),  hear /* as performer */);
 
 		addEvent(event);
 	

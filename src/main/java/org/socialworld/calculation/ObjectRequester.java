@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
+import org.socialworld.core.IAccessToken;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.NoAction;
 import org.socialworld.actions.handle.Inventory;
@@ -98,17 +99,17 @@ public class ObjectRequester {
 	}
 	
 	
-	public AttributeArray requestAttributeArray(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
-		return (AttributeArray) requestObject(value, Type.attributeArray, EnumSimProperty.noSimProperty, cluster, receiver);
+	public AttributeArray requestAttributeArray(IAccessToken token, Value value, IObjectReceiver receiver) {
+		return (AttributeArray) requestObject(value, Type.attributeArray, EnumSimProperty.noSimProperty, token, receiver);
 	}
 	
-	public SimulationObject requestSimulationObject(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
-		return (SimulationObject) requestObject(value, Type.simulationObject, EnumSimProperty.noSimProperty, cluster, receiver);
+	public SimulationObject requestSimulationObject(IAccessToken token, Value value, IObjectReceiver receiver) {
+		return (SimulationObject) requestObject(value, Type.simulationObject, EnumSimProperty.noSimProperty, token, receiver);
 	}
 
-	public NutrientSet requestNutrientSet(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
+	public NutrientSet requestNutrientSet(IAccessToken token, Value value, IObjectReceiver receiver) {
 		
-		SimProperty simProperty = (SimProperty) requestObject(value, Type.enumProp, EnumSimProperty.nutrientSet, cluster, receiver);
+		SimProperty simProperty = (SimProperty) requestObject(value, Type.enumProp, EnumSimProperty.nutrientSet, token, receiver);
 		if (simProperty instanceof NutrientSet) {
 			return (NutrientSet) simProperty;
 		}
@@ -118,9 +119,9 @@ public class ObjectRequester {
 		
 	}
 	
-	public TasteSet requestTasteSet(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
+	public TasteSet requestTasteSet(IAccessToken token, Value value, IObjectReceiver receiver) {
 		
-		SimProperty simProperty = (SimProperty) requestObject(value, Type.enumProp, EnumSimProperty.tasteSet, cluster, receiver);
+		SimProperty simProperty = (SimProperty) requestObject(value, Type.enumProp, EnumSimProperty.tasteSet, token, receiver);
 		if (simProperty instanceof TasteSet) {
 			return (TasteSet) simProperty;
 		}
@@ -130,9 +131,9 @@ public class ObjectRequester {
 		
 	}
 	
-	public ColourSet requestColourSet(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
+	public ColourSet requestColourSet(IAccessToken token, Value value, IObjectReceiver receiver) {
 		
-		SimProperty simProperty = (SimProperty) requestObject(value, Type.enumProp, EnumSimProperty.colourSet, cluster, receiver);
+		SimProperty simProperty = (SimProperty) requestObject(value, Type.enumProp, EnumSimProperty.colourSet, token, receiver);
 		if (simProperty instanceof ColourSet) {
 			return (ColourSet) simProperty;
 		}
@@ -142,11 +143,11 @@ public class ObjectRequester {
 		
 	}
 	
-	public Position requestPosition(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
+	public Position requestPosition(IAccessToken token, Value value, IObjectReceiver receiver) {
 		
 		Type type = value.getType();
 		if ((type == Type.simObjProp) || (type == Type.eventProp)) {
-			SimProperty simProperty = (SimProperty) requestObject(value, type, EnumSimProperty.position, cluster, receiver);
+			SimProperty simProperty = (SimProperty) requestObject(value, type, EnumSimProperty.position, token, receiver);
 			if (simProperty instanceof Position) {
 				return (Position) simProperty;
 			}
@@ -160,12 +161,12 @@ public class ObjectRequester {
 		
 	}
 	
-	public Direction requestDirection(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
+	public Direction requestDirection(IAccessToken token, Value value, IObjectReceiver receiver) {
 		
 		Type type = value.getType();
 		if ((type == Type.simObjProp) || (type == Type.eventProp)) {
 		
-			SimProperty simProperty = (SimProperty) requestObject(value, type, EnumSimProperty.direction, cluster, receiver);
+			SimProperty simProperty = (SimProperty) requestObject(value, type, EnumSimProperty.direction, token, receiver);
 			if (simProperty instanceof Direction) {
 				return (Direction) simProperty;
 			}
@@ -178,9 +179,9 @@ public class ObjectRequester {
 		}
 	}
 	
-	public Dimension requestDimension(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
+	public Dimension requestDimension(IAccessToken token, Value value, IObjectReceiver receiver) {
 		
-		SimProperty simProperty = (SimProperty) requestObject(value, Type.simObjProp, EnumSimProperty.dimension, cluster, receiver);
+		SimProperty simProperty = (SimProperty) requestObject(value, Type.simObjProp, EnumSimProperty.dimension, token, receiver);
 		if (simProperty instanceof Dimension) {
 			return (Dimension) simProperty;
 		}
@@ -190,9 +191,9 @@ public class ObjectRequester {
 		
 	}
 	
-	public Inventory requestInventory(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
+	public Inventory requestInventory(IAccessToken token, Value value, IObjectReceiver receiver) {
 		
-		SimProperty simProperty = (SimProperty) requestObject(value, Type.simObjProp, EnumSimProperty.inventory, cluster, receiver);
+		SimProperty simProperty = (SimProperty) requestObject(value, Type.simObjProp, EnumSimProperty.inventory, token, receiver);
 		if (simProperty instanceof Inventory) {
 			return (Inventory) simProperty;
 		}
@@ -202,9 +203,9 @@ public class ObjectRequester {
 		
 	}
 	
-	public PropsSeer requestPropsSeer(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
+	public PropsSeer requestPropsSeer(IAccessToken token, Value value, IObjectReceiver receiver) {
 		
-		SimProperty simProperty = (SimProperty) requestObject(value, Type.simObjProp, EnumSimProperty.propsSeer, cluster, receiver);
+		SimProperty simProperty = (SimProperty) requestObject(value, Type.simObjProp, EnumSimProperty.propsSeer, token, receiver);
 		if (simProperty instanceof PropsSeer) {
 			return (PropsSeer) simProperty;
 		}
@@ -214,57 +215,57 @@ public class ObjectRequester {
 		
 	}
 
-	public Vector requestVector(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
-		return (Vector) requestObject(value, Type.vector, EnumSimProperty.noSimProperty, cluster, receiver);
+	public Vector requestVector(IAccessToken token, Value value, IObjectReceiver receiver) {
+		return (Vector) requestObject(value, Type.vector, EnumSimProperty.noSimProperty, token, receiver);
 	}
 	
-	public AbstractAction requestAction(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
-		return (AbstractAction) requestObject(value, Type.action, EnumSimProperty.noSimProperty, cluster, receiver);
+	public AbstractAction requestAction(IAccessToken token, Value value, IObjectReceiver receiver) {
+		return (AbstractAction) requestObject(value, Type.action, EnumSimProperty.noSimProperty, token, receiver);
 	}
 
-	public KnowledgeElement requestKnowledgeElement(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
-		return (KnowledgeElement) requestObject(value, Type.knowledgeElement, EnumSimProperty.noSimProperty, cluster, receiver);
+	public KnowledgeElement requestKnowledgeElement(IAccessToken token, Value value, IObjectReceiver receiver) {
+		return (KnowledgeElement) requestObject(value, Type.knowledgeElement, EnumSimProperty.noSimProperty, token, receiver);
 	}
 	
-	public KnowledgeSource requestKnowledgeSource(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
-		return (KnowledgeSource) requestObject(value, Type.knowledgeSource, EnumSimProperty.noSimProperty, cluster, receiver);
+	public KnowledgeSource requestKnowledgeSource(IAccessToken token, Value value, IObjectReceiver receiver) {
+		return (KnowledgeSource) requestObject(value, Type.knowledgeSource, EnumSimProperty.noSimProperty, token, receiver);
 	}
 	
-	public KnowledgeItem requestKnowledgeItem(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
-		return (KnowledgeItem) requestObject(value, Type.knowledgeAtom, EnumSimProperty.noSimProperty, cluster, receiver);
+	public KnowledgeItem requestKnowledgeItem(IAccessToken token, Value value, IObjectReceiver receiver) {
+		return (KnowledgeItem) requestObject(value, Type.knowledgeAtom, EnumSimProperty.noSimProperty, token, receiver);
 	}
 
-	public IAnswer requestAnswer(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
-		return (IAnswer) requestObject(value, Type.answer, EnumSimProperty.noSimProperty, cluster, receiver);
+	public IAnswer requestAnswer(IAccessToken token, Value value, IObjectReceiver receiver) {
+		return (IAnswer) requestObject(value, Type.answer, EnumSimProperty.noSimProperty, token, receiver);
 	}
 
-	public StateSeer requestStateSeer(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
-		return (StateSeer) requestObject(value, Type.simObjProp, EnumSimProperty.stateSeer, cluster, receiver);
+	public StateSeer requestStateSeer(IAccessToken token, Value value, IObjectReceiver receiver) {
+		return (StateSeer) requestObject(value, Type.simObjProp, EnumSimProperty.stateSeer, token, receiver);
 	}
 
-	public StateRunning requestStateRunning(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
-		return (StateRunning) requestObject(value, Type.simObjProp, EnumSimProperty.stateRunning, cluster, receiver);
+	public StateRunning requestStateRunning(IAccessToken token, Value value, IObjectReceiver receiver) {
+		return (StateRunning) requestObject(value, Type.simObjProp, EnumSimProperty.stateRunning, token, receiver);
 	}
 
-	public StateFlying requestStateFlyng(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
-		return (StateFlying) requestObject(value, Type.simObjProp, EnumSimProperty.stateFlying, cluster, receiver);
+	public StateFlying requestStateFlyng(IAccessToken token, Value value, IObjectReceiver receiver) {
+		return (StateFlying) requestObject(value, Type.simObjProp, EnumSimProperty.stateFlying, token, receiver);
 	}
 
 
-	public ValueArrayList requestValueArrayList(SimulationCluster cluster, Value value, IObjectReceiver receiver) {
-		return (ValueArrayList) requestObject(value, Type.valueList, EnumSimProperty.noSimProperty, cluster, receiver);
+	public ValueArrayList requestValueArrayList(IAccessToken token, Value value, IObjectReceiver receiver) {
+		return (ValueArrayList) requestObject(value, Type.valueList, EnumSimProperty.noSimProperty, token, receiver);
 	}
 	
 	
 	
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 	
-	public Object requestObject(SimulationCluster cluster, Value value, Type type, IObjectReceiver receiver) {
-		return  requestObject(value, type, EnumSimProperty.noSimProperty, cluster, receiver);
+	public Object requestObject(IAccessToken token, Value value, Type type, IObjectReceiver receiver) {
+		return  requestObject(value, type, EnumSimProperty.noSimProperty, token, receiver);
 	}
 
 	
-	private Object requestObject(Value value, Type type, EnumSimProperty simProperty, SimulationCluster cluster, IObjectReceiver receiver) {
+	private Object requestObject(Value value, Type type, EnumSimProperty simProperty, IAccessToken token, IObjectReceiver receiver) {
 		
 		Object result;
 		int requestResult;
@@ -286,7 +287,7 @@ public class ObjectRequester {
 		}
 		
 		if (value instanceof ValueProperty) {
-			requestResult = ((ValueProperty) value).requestObject(SimulationCluster.total, receiver, requestID, type);
+			requestResult = ((ValueProperty) value).requestObject(token, receiver, requestID, type);
 			if (requestResult == IObjectSender.OBJECT_SENDED) {
 				result =  remove(requestID);
 				if (result == null) result = getObjectNothing(type, simProperty);

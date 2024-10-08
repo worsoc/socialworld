@@ -21,6 +21,7 @@
 */
 package org.socialworld.calculation;
 
+import org.socialworld.core.IAccessToken;
 
 public class NoObjectSender implements IObjectSender {
 
@@ -37,7 +38,7 @@ public class NoObjectSender implements IObjectSender {
 		return IObjectSender.NO_OBJECT_SENDER;
 	}
 
-	public final int sendYourselfTo(SimulationCluster cluster, IObjectReceiver receiver, int requestID) {
+	public final int sendYourselfTo(IAccessToken token, IObjectReceiver receiver, int requestID) {
 		return IObjectSender.NO_OBJECT_SENDER;
 	}
 

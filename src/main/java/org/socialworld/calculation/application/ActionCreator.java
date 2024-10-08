@@ -41,7 +41,6 @@ import org.socialworld.calculation.Value;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.FunctionByExpression;
 import org.socialworld.calculation.NoObject;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.descriptions.EventReactionAssignment;
 import org.socialworld.calculation.descriptions.EventReactionDescription;
 import org.socialworld.calculation.descriptions.State2ActionAssignment;
@@ -58,6 +57,7 @@ public class ActionCreator extends SocialWorldThread {
 	private CapacityQueue<CollectionElementReactor> reactors;
 
 	private CapacityQueue<CollectionElementActor> actors;
+	private static AccessTokenActionCreator token = AccessTokenActionCreator.getValid();
 	
 	private static String namePropertyActionType = Value.VALUE_BY_NAME_ACTION_TYPE;
 	
@@ -262,7 +262,7 @@ public class ActionCreator extends SocialWorldThread {
 		ValueArrayList arguments;
 		arguments = new ValueArrayList();
 		
-		arguments.add( stateReactor.getProperty(SimulationCluster.action, PropertyName.simobj_attributeArray) );
+		arguments.add( stateReactor.getProperty(token, PropertyName.simobj_attributeArray) );
 		arguments.add( new Value(Type.event, Value.VALUE_BY_NAME_EVENT, event) );
 		if (event.hasOptionalParam()) {
 			arguments.add( event.getOptionalParam().getParamListAsValue());
@@ -273,7 +273,7 @@ public class ActionCreator extends SocialWorldThread {
 		arguments.add( new Value(Type.simulationObject, Value.VALUE_BY_NAME_SIMOBJECT, stateReactor.getObject()) );
 		
 		Value result = f_CreateReaction.calculate(arguments);
-		return objectRequester.requestAction(SimulationCluster.action, result, this);
+		return objectRequester.requestAction(token, result, this);
 
 	}
 
@@ -299,10 +299,10 @@ public class ActionCreator extends SocialWorldThread {
 		ValueArrayList arguments;
 		arguments = new ValueArrayList();
 		
-		arguments.add( stateActor.getProperty(SimulationCluster.action, PropertyName.simobj_attributeArray) );
+		arguments.add( stateActor.getProperty(token, PropertyName.simobj_attributeArray) );
 		
 		Value result = f_CreateAction.calculate(arguments);
-		return objectRequester.requestAction(SimulationCluster.action, result, this);
+		return objectRequester.requestAction(token, result, this);
 		
 
 	}

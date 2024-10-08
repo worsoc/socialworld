@@ -25,12 +25,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.calculation.PropertyUsingAs;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.ValueProperty;
+import org.socialworld.core.IAccessToken;
 
 public class PropertyProtection {
 
-	private SimulationCluster cluster;
+	private static AccessTokenWithoutRestrictions tokenWithoutRestrictions = AccessTokenWithoutRestrictions.getValid();
+	private IAccessToken token;
 	private PropertyUsingAs[] useAsPermissions;
 	private PropertyUsingAs usedAs = null;
  
@@ -49,7 +50,7 @@ public class PropertyProtection {
 	}
 
 	private PropertyProtection() {
-		cluster = SimulationCluster.total;
+		this.token = tokenWithoutRestrictions;
 		withTotalPermissions = true;
 		this.allowOneAdding = false;
 		this.useAsPermissions = new PropertyUsingAs[0];
@@ -57,23 +58,23 @@ public class PropertyProtection {
 	}
 	
 	
-	private PropertyProtection(SimulationCluster cluster, PropertyUsingAs[] useAsPermissions) {
-		this.cluster = cluster;
+	private PropertyProtection(IAccessToken token, PropertyUsingAs[] useAsPermissions) {
+		this.token = token;
 		this.useAsPermissions = useAsPermissions;
 		this.usedAs = null;
 		this.allowOneAdding = true;
 		this.protectedValues = new ArrayList<ValueProperty>();
 	}
 	
-	public static PropertyProtection getProtection(SimulationCluster cluster) {
+	public static PropertyProtection getProtection(IAccessToken token) {
 		
-		return new PropertyProtection(cluster, cluster.getPossibleUsingAs());
+		return new PropertyProtection(token, token.getPossibleUsingAs());
 		
 	}
 
 	public static PropertyProtection getProtection(PropertyUsingAs[] useAsPermissions) {
 		
-		return new PropertyProtection(SimulationCluster.total, useAsPermissions);
+		return new PropertyProtection(tokenWithoutRestrictions, useAsPermissions);
 		
 	}
 
@@ -90,20 +91,20 @@ public class PropertyProtection {
 			return getTotalPermission();
 		}
 		else {
-			return new PropertyProtection(SimulationCluster.total, SimulationCluster.total.getPossibleUsingAs());
+			return new PropertyProtection(tokenWithoutRestrictions, tokenWithoutRestrictions.getPossibleUsingAs());
 		}
 		
 	}
 
-	public static PropertyProtection getProtection(SimulationCluster cluster, ISavedValue value) {
+	public static PropertyProtection getProtection(IAccessToken token, ISavedValue value) {
 		
-		if (!value.isProtected() && cluster.isWithoutRestrictions()) {
+		if (!value.isProtected() && token.isWithoutRestrictions()) {
 			return getTotalPermission();
 		}
 		else {
-			PropertyUsingAs[] useAsPermissionsCluster = cluster.getPossibleUsingAs();
+			PropertyUsingAs[] useAsPermissionsCluster = token.getPossibleUsingAs();
 			PropertyUsingAs[] reducedUseAsPermissions = value.getReducedUseAsPermissions(useAsPermissionsCluster);
-			return new PropertyProtection(cluster, reducedUseAsPermissions);
+			return new PropertyProtection(token, reducedUseAsPermissions);
 		}
 		
 	}
@@ -111,7 +112,7 @@ public class PropertyProtection {
 	public static PropertyProtection getProtection(PropertyUsingAs[] useAsPermissions, ISavedValue value) {
 				
 		PropertyUsingAs[] reducedUseAsPermissions = value.getReducedUseAsPermissions(useAsPermissions);
-		return new PropertyProtection(SimulationCluster.total, reducedUseAsPermissions);
+		return new PropertyProtection(tokenWithoutRestrictions, reducedUseAsPermissions);
 		
 	}
 
@@ -130,12 +131,12 @@ public class PropertyProtection {
 		
 	}
 	
-	public static PropertyProtection getProtection(PropertyProtection original, SimulationCluster cluster, ISavedValue value) {
+	public static PropertyProtection getProtection(PropertyProtection original, IAccessToken token, ISavedValue value) {
 		
-		PropertyUsingAs[] useAsPermissionsCluster = cluster.getPossibleUsingAs();
+		PropertyUsingAs[] useAsPermissionsCluster = token.getPossibleUsingAs();
 		PropertyUsingAs[] useAsPermissionsIntersect = original.getIntersection(useAsPermissionsCluster);
 		PropertyUsingAs[] reducedUseAsPermissions = value.getReducedUseAsPermissions(useAsPermissionsIntersect);
-		return new PropertyProtection(cluster, reducedUseAsPermissions);
+		return new PropertyProtection(token, reducedUseAsPermissions);
 		
 	}
 
@@ -187,12 +188,10 @@ public class PropertyProtection {
 		return (!withTotalPermissions);
 	}
 
-	public boolean hasUnknownCluster() {
-		return (this.cluster == SimulationCluster.unknown);
-	}
 	
-	public SimulationCluster getCluster() {
-		return this.cluster;
+
+	public IAccessToken getToken() {
+		return this.token;
 	}
 
 	public boolean checkHasUseAsPermission(PropertyUsingAs useAsPermission) {
@@ -206,7 +205,7 @@ public class PropertyProtection {
 		
 	}
 	
-	public boolean checkHasGetPermission(SimulationCluster cluster) {
+	public boolean checkHasGetPermission(IAccessToken token) {
 		
 		
 		// TODO check whether there is needed an extra method for checking get permission

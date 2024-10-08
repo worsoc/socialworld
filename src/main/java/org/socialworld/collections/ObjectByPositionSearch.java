@@ -23,7 +23,6 @@ package org.socialworld.collections;
 
 
 import org.socialworld.attributes.Position;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.God;
 import org.socialworld.objects.Human;
@@ -116,6 +115,7 @@ public class ObjectByPositionSearch {
 	
 	private int size;
 	
+	private static AccessTokenObjectByPositionSearch token = AccessTokenObjectByPositionSearch.getValid();
 	
 	public ObjectByPositionSearch (int capacity) {
 		root = new ObjectByPositionSearch_NodeXY(null, 0, 0, 0, null,null,null,null);;
@@ -226,16 +226,16 @@ public class ObjectByPositionSearch {
 		int x;
 		int y;
 		
+		position = object.getPosition(token);
 		
 		// if there is no position, no object is added to the position search tree
-		if (object.getPosition(SimulationCluster.objectMaster) == Position.getObjectNothing()) return;
+		if (position == Position.getObjectNothing()) return;
 				
 		objectID = object.getObjectID();
 		if (size <= objectID) 	ensureCapacity(objectID + 1000);
 		
-		position = object.getPosition(SimulationCluster.objectMaster);
-		x = position.getX(SimulationCluster.objectMaster);
-		y = position.getY(SimulationCluster.objectMaster);
+		x = position.getX(token);
+		y = position.getY(token);
 		
 		nodes = new ObjectByPositionSearch_Nodes(
 					addNode(objectID, x, y),

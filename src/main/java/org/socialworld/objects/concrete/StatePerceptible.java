@@ -28,10 +28,10 @@ import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.attributes.percipience.Percipience;
 import org.socialworld.attributes.percipience.PercipienceType;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
+import org.socialworld.core.IAccessToken;
 import org.socialworld.core.ReturnCode;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.Animal;
@@ -45,6 +45,7 @@ public class StatePerceptible extends State {
 	
 	private Percipience percipience;
 	
+	private static AccessTokenPackageConcrete token = AccessTokenPackageConcrete.getValid();
 	
 	///////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////static instance for meta information    ///////////////////////////////
@@ -123,8 +124,8 @@ public class StatePerceptible extends State {
 		return ReturnCode.todo;
 	}
 
-	private StatePerceptible( StatePerceptible original, PropertyProtection protectionOriginal, SimulationCluster cluster) {
-		super(protectionOriginal, cluster);
+	private StatePerceptible( StatePerceptible original, PropertyProtection protectionOriginal, IAccessToken token) {
+		super(protectionOriginal, token);
 		this.percipience = (Percipience) original.percipience.copy();
 	}
 	
@@ -137,11 +138,11 @@ public class StatePerceptible extends State {
 	/////////////////////////  implementing  ISavedValue  ////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
-	public State copyForProperty(SimulationCluster cluster) {
-		return new StatePerceptible(this, getPropertyProtection(), cluster);
+	public State copyForProperty(IAccessToken token) {
+		return new StatePerceptible(this, getPropertyProtection(), token);
 	}
 
-	public  ValueProperty getProperty(SimulationCluster cluster, PropertyName propName, String name) {
+	public  ValueProperty getProperty(IAccessToken token, PropertyName propName, String name) {
 		switch (propName) {
 		default:
 			return ValueProperty.getInvalid();
@@ -152,11 +153,11 @@ public class StatePerceptible extends State {
 		
 		switch (propName) {
 		case statePerceptible_position:
-			Position position = objectRequester.requestPosition(SimulationCluster.todo, property, this);
+			Position position = objectRequester.requestPosition(token, property, this);
 			this.percipience.setPosition(position);
 			break;
 		case statePerceptible_cuboid:
-			Vector vector = objectRequester.requestVector(SimulationCluster.todo, property, this);
+			Vector vector = objectRequester.requestVector(token, property, this);
 			this.percipience.setCuboid(vector);
 			break;
 		default:

@@ -34,6 +34,7 @@ import org.socialworld.calculation.FunctionByMatrix;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.collections.ValueArrayList;
+import org.socialworld.core.IAccessToken;
 import org.socialworld.core.IEventParam;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.concrete.animals.IRunning;
@@ -157,15 +158,15 @@ public abstract class Animal extends SimulationObject implements ISeer, IRunning
 	};
 
 
-	public ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String name) {
+	public ValueProperty getProperty(IAccessToken token, PropertyName prop, String name) {
 		switch (prop) {
 		case simobj_attributeArray:
 		case simobj_knowledge:
 		case simobj_directionChest:
 		case simobj_directionActiveMove:
-			return this.state.getProperty(cluster, prop, name);
+			return this.state.getProperty(token, prop, name);
 		default:
-			return super.getProperty(cluster, prop, name);
+			return super.getProperty(token, prop, name);
 		}
 	}
 	
@@ -208,15 +209,15 @@ public abstract class Animal extends SimulationObject implements ISeer, IRunning
 //////////////////////////////    implementing ISeer     //////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	public StateSeer getSavedStateSeer(SimulationCluster cluster) {
+	public StateSeer getSavedStateSeer(IAccessToken token) {
 		// make a copy as ValueProperty
-		ValueProperty vp = this.stateSeer.getAsValue(cluster);
+		ValueProperty vp = this.stateSeer.getAsValue(token);
 		// the copy is permitted for cluster only
-		return objectRequester.requestStateSeer(cluster, vp, this);
+		return objectRequester.requestStateSeer(token, vp, this);
 	}
 	
-	public ValueProperty getStateSeerAsProperty(SimulationCluster cluster, String name) {
-		return this.stateSeer.getAsValue(cluster, name);
+	public ValueProperty getStateSeerAsProperty(IAccessToken token, String name) {
+		return this.stateSeer.getAsValue(token, name);
 	}
 
 
@@ -302,16 +303,16 @@ public abstract class Animal extends SimulationObject implements ISeer, IRunning
 /////////////////////////////    PROPERTY LIST  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	public void requestPropertyList(SimulationCluster cluster, IEventParam paramObject) {
+	public void requestPropertyList(IAccessToken token, IEventParam paramObject) {
 	
-		super.requestPropertyList(cluster, paramObject);
+		super.requestPropertyList(token, paramObject);
 		
 		ValueArrayList propertiesAsValueList = new ValueArrayList();
 		
-		propertiesAsValueList.add(getProperty(cluster, PropertyName.simobj_attributeArray));
-		propertiesAsValueList.add(getProperty(cluster, PropertyName.simobj_directionChest));
-		propertiesAsValueList.add(getProperty(cluster, PropertyName.stateSeer_directionView));
-		propertiesAsValueList.add(getProperty(cluster, PropertyName.simobj_directionActiveMove));
+		propertiesAsValueList.add(getProperty(token, PropertyName.simobj_attributeArray));
+		propertiesAsValueList.add(getProperty(token, PropertyName.simobj_directionChest));
+		propertiesAsValueList.add(getProperty(token, PropertyName.stateSeer_directionView));
+		propertiesAsValueList.add(getProperty(token, PropertyName.simobj_directionActiveMove));
 		paramObject.answerPropertiesRequest(propertiesAsValueList);
 	
 	}

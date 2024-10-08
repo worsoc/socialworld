@@ -23,10 +23,10 @@ package org.socialworld.attributes;
 
 import java.util.List;
 
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueProperty;
+import org.socialworld.core.IAccessToken;
 import org.socialworld.tools.StringTupel;
 
 /**
@@ -59,6 +59,8 @@ public class AttributeArray extends SimProperty {
 	 */
 	private int differences[];
 	          
+	private static AccessTokenAttributeArray token = AccessTokenAttributeArray.getValid();
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 //////////////////  static instance for meta information    ///////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -152,8 +154,8 @@ public class AttributeArray extends SimProperty {
 		}
 	}
 	
-	private AttributeArray(AttributeArray original, PropertyProtection protectionOriginal, SimulationCluster cluster ) {
-		super(protectionOriginal, cluster);
+	private AttributeArray(AttributeArray original, PropertyProtection protectionOriginal, IAccessToken token ) {
+		super(protectionOriginal, token);
 		setPropertyName(PropertyName.simobj_attributeArray);
 		numberOfAttributes = original.length();
 		attributes 	= new int[numberOfAttributes];
@@ -170,11 +172,11 @@ public class AttributeArray extends SimProperty {
 /////////////////////////////  implementing  ISavedValue  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	public SimProperty copyForProperty(SimulationCluster cluster) {
-		return new AttributeArray(this, getPropertyProtection(), cluster);
+	public SimProperty copyForProperty(IAccessToken token) {
+		return new AttributeArray(this, getPropertyProtection(), token);
 	}
 
-	public  ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String valueName) {
+	public  ValueProperty getProperty(IAccessToken token, PropertyName prop, String valueName) {
 		switch (prop) {
 		default:
 			return ValueProperty.getInvalid();
@@ -223,7 +225,7 @@ public class AttributeArray extends SimProperty {
 	public void set(Value attributeArray) {
 		if (attributeArray.isValid() && (attributeArray.getType() == Type.attributeArray)) {
 			AttributeArray attributes;
-			attributes = objectRequester.requestAttributeArray(SimulationCluster.total, attributeArray, this);
+			attributes = objectRequester.requestAttributeArray(token, attributeArray, this);
 			set((AttributeArray)attributes);
 		}
 	}

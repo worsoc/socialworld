@@ -1,8 +1,8 @@
 package org.socialworld.objects.concrete.animals.birds.passeriformes;
 
 import org.socialworld.attributes.Direction;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.ValueProperty;
+import org.socialworld.core.IAccessToken;
 import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.animals.StateRunning;
 
@@ -54,13 +54,13 @@ public abstract class Suboscines extends Passeriformes {
 	}
 
 	@Override
-	public StateRunning getSavedStateRunning(SimulationCluster cluster) {
+	public StateRunning getSavedStateRunning(IAccessToken token) {
 		// TODO Auto-generated method stub
 		return StateRunning.getObjectNothing();
 	}
 
 	@Override
-	public ValueProperty getStateRunningAsProperty(SimulationCluster cluster, String name) {
+	public ValueProperty getStateRunningAsProperty(IAccessToken token, String name) {
 		// TODO Auto-generated method stub
 		return null;
 	}

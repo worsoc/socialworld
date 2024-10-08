@@ -25,7 +25,6 @@ package org.socialworld.objects;
 import java.util.List;
 
 import org.socialworld.attributes.PropertyName;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.knowledge.Acquaintance;
 import org.socialworld.knowledge.IAnswer;
@@ -37,6 +36,7 @@ import org.socialworld.objects.concrete.animals.StateSeer;
 import org.socialworld.objects.enums.EnumMammal;
 import org.socialworld.tools.StringTupel;
 import org.socialworld.conversation.Talk_SentenceType;
+import org.socialworld.core.IAccessToken;
 import org.socialworld.core.IEventParam;
 
 /**
@@ -204,9 +204,9 @@ import org.socialworld.core.IEventParam;
 /////////////////////////////    PROPERTY LIST  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	public void requestPropertyList(SimulationCluster cluster, IEventParam paramObject) {
+	public void requestPropertyList(IAccessToken token, IEventParam paramObject) {
 		
-		super.requestPropertyList(cluster, paramObject);
+		super.requestPropertyList(token, paramObject);
 		
 		ValueArrayList propertiesAsValueList = new ValueArrayList();
 		paramObject.answerPropertiesRequest(propertiesAsValueList);

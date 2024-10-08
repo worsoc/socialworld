@@ -29,6 +29,7 @@ import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.collections.ValueArrayList;
+import org.socialworld.core.IAccessToken;
 import org.socialworld.core.IEventParam;
 import org.socialworld.objects.Animal;
 import org.socialworld.objects.State;
@@ -46,6 +47,8 @@ public abstract class Mammal extends Animal implements IRunning{
 	protected EnumMammal belongsTo;
 	
 	private StateRunning stateRunning = StateRunning.getObjectNothing();
+
+	private static AccessTokenPackageConreteAnimals token = AccessTokenPackageConreteAnimals.getValid();
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////meta information    ////////////////////////////////////
@@ -114,24 +117,24 @@ public abstract class Mammal extends Animal implements IRunning{
 	}
 	
 	
-	public StateRunning getSavedStateRunning(SimulationCluster cluster) {
+	public StateRunning getSavedStateRunning(IAccessToken token) {
 		//make a copy as ValueProperty
-		ValueProperty vp = this.stateRunning.getAsValue(cluster);
+		ValueProperty vp = this.stateRunning.getAsValue(token);
 		//the copy is permitted for cluster only
-		return objectRequester.requestStateRunning(cluster, vp, this);
+		return objectRequester.requestStateRunning(token, vp, this);
 	}
 	
-	public ValueProperty getStateRunningAsProperty(SimulationCluster cluster, String name) {
-		return this.stateRunning.getAsValue(cluster, name);
+	public ValueProperty getStateRunningAsProperty(IAccessToken token, String name) {
+		return this.stateRunning.getAsValue(token, name);
 	}
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    PROPERTY LIST  ///////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	public void requestPropertyList(SimulationCluster cluster, IEventParam paramObject) {
+	public void requestPropertyList(IAccessToken token, IEventParam paramObject) {
 	
-		super.requestPropertyList(cluster, paramObject);
+		super.requestPropertyList(token, paramObject);
 		
 		ValueArrayList propertiesAsValueList = new ValueArrayList();
 		paramObject.answerPropertiesRequest(propertiesAsValueList);

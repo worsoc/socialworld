@@ -34,12 +34,12 @@ import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.IObjectReceiver;
 import org.socialworld.calculation.IObjectSender;
 import org.socialworld.calculation.ObjectRequester;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.conversation.Lexem;
+import org.socialworld.core.IAccessToken;
 import org.socialworld.core.ActionHandler;
 import org.socialworld.core.AllWords;
 import org.socialworld.core.Event;
@@ -88,6 +88,7 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 	
 	
 	protected ObjectRequester objectRequester = new ObjectRequester();
+	private static AccessTokenSimulationObject token = AccessTokenSimulationObject.getValid();
 
 	private int levelObjectSearchBase25;
 	private int levelObjectSearchBase9;
@@ -267,26 +268,26 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 	
 
 	
-	public final ValueProperty getProperty(SimulationCluster cluster, PropertyName prop) {
+	public final ValueProperty getProperty(IAccessToken token, PropertyName prop) {
 		String name;
 		name = prop.toString();
-		return getProperty(cluster, prop, name);
+		return getProperty(token, prop, name);
 	}
 	
-	public ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String name) {
+	public ValueProperty getProperty(IAccessToken token, PropertyName prop, String name) {
 		switch (prop) {
 		default:
-			return this.state.getProperty(cluster, prop, name);
+			return this.state.getProperty(token, prop, name);
 		}
 	}
 	
 	
-	public ValueProperty getStateProperty(SimulationCluster cluster, PropertyName propState, PropertyName propSub, String name) {
-		return this.state.getStateProperty(cluster, propState, propSub, name);
+	public ValueProperty getStateProperty(IAccessToken token, PropertyName propState, PropertyName propSub, String name) {
+		return this.state.getStateProperty(token, propState, propSub, name);
 	}
 	
-	public ValueProperty getStatePropertyFromMethod(SimulationCluster cluster, PropertyName propState, String methodName, String name) {
-		return this.state.getStatePropertyFromMethod(cluster, propState, methodName, name);
+	public ValueProperty getStatePropertyFromMethod(IAccessToken token, PropertyName propState, String methodName, String name) {
+		return this.state.getStatePropertyFromMethod(token, propState, methodName, name);
 	}
 
 	
@@ -335,18 +336,19 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 			return null;
 		
 	}
-	
+
 	/**
 	 * The method returns the object's position.
 	 * 
 	 * @return position
 	 */
-	public final Position getPosition(SimulationCluster cluster) {
+	public final Position getPosition(IAccessToken token) {
 		Position position;
-		ValueProperty vp = getProperty(cluster, PropertyName.simobj_position);
-		position = objectRequester.requestPosition(cluster, vp, this);
+		ValueProperty vp = getProperty(token, PropertyName.simobj_position);
+		position = objectRequester.requestPosition(token, vp, this);
 		return position;
 	}
+	
 
 	
 	public final int getReactionType(int eventType) {
@@ -518,12 +520,12 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
      	Event event;
      	
 		event = new EventToPercipient(EventType.percipientExistsDistance5000 ,   this /* as causer*/, 
-				getSimObjectType().getPercipiencePriority(), this.getPosition(SimulationCluster.percipience));
+				getSimObjectType().getPercipiencePriority(), this.getPosition(token));
 		//System.out.println("SimulationObject.letBePerceived: " + getObjectID() + "'sending' percipientExists" );
 		Simulation.getInstance().getEventMaster().addEvent(event);
 
 		event = new EventToPercipient(EventType.percipientExistsDistance1000 ,   this /* as causer*/, 
-				getSimObjectType().getPercipiencePriority(), this.getPosition(SimulationCluster.percipience));
+				getSimObjectType().getPercipiencePriority(), this.getPosition(token));
 		//System.out.println("SimulationObject.letBePerceived: " + getObjectID() + "'sending' percipientExists" );
 		Simulation.getInstance().getEventMaster().addEvent(event);
 
@@ -590,12 +592,12 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 /////////////////////////////    PROPERTY LIST  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	public void requestPropertyList(SimulationCluster cluster, IEventParam paramObject) {
+	public void requestPropertyList(IAccessToken token, IEventParam paramObject) {
 	
 		ValueArrayList propertiesAsValueList = new ValueArrayList();
 		
-		propertiesAsValueList.add(getProperty(cluster, PropertyName.simobj_position));
-		propertiesAsValueList.add(getProperty(cluster, PropertyName.simobj_directionMove));
+		propertiesAsValueList.add(getProperty(token, PropertyName.simobj_position));
+		propertiesAsValueList.add(getProperty(token, PropertyName.simobj_directionMove));
 
 		paramObject.answerPropertiesRequest(propertiesAsValueList);
 	
@@ -608,7 +610,7 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 	public int sendYourselfTo(IObjectReceiver receiver, int requestID) {
 		return receiver.receiveObject(requestID, this);
 	}
-	public int sendYourselfTo(SimulationCluster cluster, IObjectReceiver receiver, int requestID) {
+	public int sendYourselfTo(IAccessToken token, IObjectReceiver receiver, int requestID) {
 		return receiver.receiveObject(requestID, this);
 	}
 

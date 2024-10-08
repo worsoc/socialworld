@@ -9,6 +9,7 @@ import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
+import org.socialworld.core.IAccessToken;
 import org.socialworld.core.ReturnCode;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.SimulationObject;
@@ -26,6 +27,8 @@ public class StateInventory extends State {
 	
 	private Inventory inventory;
 	
+	private static AccessTokenPackageConreteAnimals token = AccessTokenPackageConreteAnimals.getValid();
+
 	///////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////static instance for meta information    ///////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
@@ -112,8 +115,8 @@ public class StateInventory extends State {
 		
 	}
 
-	private StateInventory( StateInventory original, PropertyProtection protectionOriginal, SimulationCluster cluster) {
-		super(protectionOriginal, cluster);
+	private StateInventory( StateInventory original, PropertyProtection protectionOriginal, IAccessToken token) {
+		super(protectionOriginal, token);
 		// TODO copy inventory?
 		this.inventory = original.inventory;
 		setPropertyName(PropertyName.stateInventory);
@@ -128,33 +131,33 @@ public class StateInventory extends State {
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
 	@Override
-	public ISavedValue copyForProperty(SimulationCluster cluster) {
-		return new StateInventory(this, getPropertyProtection(), cluster);
+	public ISavedValue copyForProperty(IAccessToken token) {
+		return new StateInventory(this, getPropertyProtection(), token);
 	}
 
 	@Override
-	public ValueProperty getProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
+	public ValueProperty getProperty(IAccessToken token, PropertyName propName, String valueName) {
 		switch (propName) {
 		case stateInventory_inventory:
-			return this.inventory.getAsValue(cluster, valueName);
+			return this.inventory.getAsValue(token, valueName);
 		case inventory_shirt:
-			return this.inventory.getProperty(cluster, propName, valueName);
+			return this.inventory.getProperty(token, propName, valueName);
 		case inventory_trousers:
-			return this.inventory.getProperty(cluster, propName, valueName);
+			return this.inventory.getProperty(token, propName, valueName);
 		case inventory_leftShoe:
-			return this.inventory.getProperty(cluster, propName, valueName);
+			return this.inventory.getProperty(token, propName, valueName);
 		case inventory_rightShoe:
-			return this.inventory.getProperty(cluster, propName, valueName);
+			return this.inventory.getProperty(token, propName, valueName);
 		case inventory_leftSock:
-			return this.inventory.getProperty(cluster, propName, valueName);
+			return this.inventory.getProperty(token, propName, valueName);
 		case inventory_rightSock:
-			return this.inventory.getProperty(cluster, propName, valueName);
+			return this.inventory.getProperty(token, propName, valueName);
 		case inventory_cap:
-			return this.inventory.getProperty(cluster, propName, valueName);
+			return this.inventory.getProperty(token, propName, valueName);
 		case inventory_leftHand:
-			return this.inventory.getProperty(cluster, propName, valueName);
+			return this.inventory.getProperty(token, propName, valueName);
 		case inventory_rightHand:
-			return this.inventory.getProperty(cluster, propName, valueName);
+			return this.inventory.getProperty(token, propName, valueName);
 		default:
 			return ValueProperty.getInvalid();
 		}
@@ -165,7 +168,7 @@ public class StateInventory extends State {
 		
 		switch (propName) {
 		case stateInventory_inventory:
-			Inventory inventory = objectRequester.requestInventory(SimulationCluster.todo, property, this);
+			Inventory inventory = objectRequester.requestInventory(token, property, this);
 			this.inventory = inventory;
 			break;
 		case inventory_shirt:
@@ -175,7 +178,7 @@ public class StateInventory extends State {
 		case inventory_leftSock:
 		case inventory_rightSock:
 		case inventory_cap:
-			SimulationObject object = objectRequester.requestSimulationObject(SimulationCluster.todo, property, this);
+			SimulationObject object = objectRequester.requestSimulationObject(token, property, this);
 			switch (propName) {
 			case inventory_shirt:
 				if (object instanceof Shirt) {

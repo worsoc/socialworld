@@ -22,8 +22,8 @@
 package org.socialworld.objects.concrete.animals;
 
 import org.socialworld.attributes.Direction;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.ValueProperty;
+import org.socialworld.core.IAccessToken;
 
 public interface IRunning {
 	
@@ -33,6 +33,6 @@ public interface IRunning {
 	public abstract float getNumberLegs();
 	public Direction getDirectionRun();
 	
-	public StateRunning getSavedStateRunning(SimulationCluster cluster);
-	public ValueProperty getStateRunningAsProperty(SimulationCluster cluster, String name);
+	public StateRunning getSavedStateRunning(IAccessToken token);
+	public ValueProperty getStateRunningAsProperty(IAccessToken token, String name);
 }

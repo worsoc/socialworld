@@ -27,9 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.calculation.PropertyUsingAs;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
+import org.socialworld.core.IAccessToken;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.tools.StringTupel;
 
@@ -44,8 +44,8 @@ public abstract class SavedValue implements ISavedValue {
 		this.protection = PropertyProtection.getProtection(this);
 	}
 
-	protected SavedValue(PropertyProtection protectionOriginal, SimulationCluster clusterNew) {
-		this.protection = PropertyProtection.getProtection(protectionOriginal, clusterNew, this);
+	protected SavedValue(PropertyProtection protectionOriginal, IAccessToken tokenNew) {
+		this.protection = PropertyProtection.getProtection(protectionOriginal, tokenNew, this);
 	}
 
 	
@@ -59,7 +59,7 @@ public abstract class SavedValue implements ISavedValue {
 		return this.propertyName;
 	}
 
-	public abstract Object getReleased(SimulationCluster cluster);
+	public abstract Object getReleased(IAccessToken token);
 	
 	protected final void setToObjectNothing() {
 		if (checkIsObjectNothing()) {
@@ -112,7 +112,6 @@ public abstract class SavedValue implements ISavedValue {
 	public final boolean isProtected() {
 		if (this.protection == null) return false;
 		if (!this.protection.hasRestrictions()) return false;
-		if (this.protection.hasUnknownCluster()) return false;
 		return true;
 	}
 
@@ -122,9 +121,6 @@ public abstract class SavedValue implements ISavedValue {
 			return false;
 		}
 		
-		if (this.protection.hasUnknownCluster()) {
-			return false;
-		}
 		
 		return true;
 		
@@ -138,8 +134,8 @@ public abstract class SavedValue implements ISavedValue {
 		this.protection = propertyProtection;
 	}
 
-	public final boolean checkHasGetPermission(SimulationCluster cluster) {
-		return this.protection.checkHasGetPermission(cluster);
+	public final boolean checkHasGetPermission(IAccessToken token) {
+		return this.protection.checkHasGetPermission(token);
 	}
 
 	public final boolean checkHasUseAsPermission(PropertyUsingAs useAsPermission) {
@@ -159,37 +155,37 @@ public abstract class SavedValue implements ISavedValue {
 
 	
 	
-	public final  ValueProperty getAsValue(SimulationCluster cluster) {
-		if (protection.checkHasGetPermission(cluster)) {
+	public final  ValueProperty getAsValue(IAccessToken token) {
+		if (protection.checkHasGetPermission(token)) {
 			Type propertyType;
 			propertyType = this.propertyName.getType();
-			return new ValueProperty(propertyType,   this.propertyName.toString(), copyForProperty(cluster));
+			return new ValueProperty(propertyType,   this.propertyName.toString(), copyForProperty(token));
 		}
 		else {
 			return ValueProperty.getInvalid();
 		}
 	}
 	
-	public final ValueProperty getAsValue(SimulationCluster cluster, String valueName) {
-		if (protection.checkHasGetPermission(cluster)) {
+	public final ValueProperty getAsValue(IAccessToken token, String valueName) {
+		if (protection.checkHasGetPermission(token)) {
 			Type propertyType;
 			propertyType = this.propertyName.getType();
-			return new ValueProperty(propertyType,   valueName, copyForProperty(cluster));
+			return new ValueProperty(propertyType,   valueName, copyForProperty(token));
 		}
 		else {
 			return ValueProperty.getInvalid();
 		}
 	}
 
-	// ISavedValue copyForProperty(SimulationCluster cluster) will be implemented in inherited classes
+	// ISavedValue copyForProperty(IAccessToken token) will be implemented in inherited classes
 
 	
 	
 	
 	public ValueProperty getProperty(PropertyName propName, String valueName) {
 		if (hasPropertyProtection()) {
-			SimulationCluster cluster = this.protection.getCluster();
-			return getProperty(cluster, propName, valueName);
+			IAccessToken token = this.protection.getToken();
+			return getProperty(token, propName, valueName);
 		}
 		else {
 			return ValueProperty.getInvalid();
@@ -199,8 +195,8 @@ public abstract class SavedValue implements ISavedValue {
 
 	public ValueProperty getPropertyFromMethod(String methodName, String valueName) {
 		if (hasPropertyProtection()) {
-			SimulationCluster cluster = this.protection.getCluster();
-			return getPropertyFromMethod(cluster, methodName, valueName);
+			IAccessToken token = this.protection.getToken();
+			return getPropertyFromMethod(token, methodName, valueName);
 		}
 		else {
 			return ValueProperty.getInvalid();
@@ -215,16 +211,16 @@ public abstract class SavedValue implements ISavedValue {
 	 // TODO implement getProperty in sub classes
 	 // TEMP_SOLUTION wieder freigeben
 	 // -->
-		public  ValueProperty getProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
+		public  ValueProperty getProperty(IAccessToken token, PropertyName propName, String valueName) {
 			return ValueProperty.getInvalid();
 		}
 		
-		public  ValueProperty getPropertyFromMethod(SimulationCluster cluster, String methodName, String valueName){
+		public  ValueProperty getPropertyFromMethod(IAccessToken token, String methodName, String valueName){
 			return ValueProperty.getInvalid();
 		}
 	*/
 
-	public final ValueProperty getPropertyFromMethod(SimulationCluster cluster, String methodName, String valueName) {
+	public final ValueProperty getPropertyFromMethod(IAccessToken token, String methodName, String valueName) {
 		
 		Object got = null;
 		ValueProperty result = ValueProperty.getInvalid();

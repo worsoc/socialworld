@@ -26,7 +26,6 @@ import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.FunctionByExpression;
 import org.socialworld.calculation.FunctionByMatrix;
 import org.socialworld.calculation.FunctionByMatrix_Matrix;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueTransferCode;
@@ -49,6 +48,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 	private static AttributeCalculator instance;
 
 	private CapacityQueue<CollectionElementSimObjInfluenced> influenced;
+	private static AccessTokenTalkCalculator token = AccessTokenTalkCalculator.getValid();
 
 /*	
 	private List<Event> events;
@@ -212,7 +212,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 
 		int count = eventInfluenceDescription.countFunctions();
 		
-		oldAttributes =  stateAnimal.getProperty(SimulationCluster.attributeArray, PropertyName.simobj_attributeArray);
+		oldAttributes =  stateAnimal.getProperty(token, PropertyName.simobj_attributeArray);
 		arguments = new ValueArrayList();
 		arguments.add( oldAttributes );
 		
@@ -275,7 +275,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 		Value oldAttributes;
 		Value newAttributes = Value.getValueNothing();
 	
-		oldAttributes =  stateAnimal.getProperty(SimulationCluster.attributeArray, PropertyName.simobj_attributeArray);
+		oldAttributes =  stateAnimal.getProperty(token, PropertyName.simobj_attributeArray);
 
 		arguments = new ValueArrayList();
 		arguments.add( oldAttributes );
@@ -336,7 +336,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 		Value oldAttributes;
 		Value newAttributes = Value.getValueNothing();
 	
-		oldAttributes =  stateAnimal.getProperty(SimulationCluster.attributeArray, PropertyName.simobj_attributeArray);
+		oldAttributes =  stateAnimal.getProperty(token, PropertyName.simobj_attributeArray);
 
 		arguments = new ValueArrayList();
 		arguments.add( oldAttributes );

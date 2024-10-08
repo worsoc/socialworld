@@ -26,7 +26,6 @@ import java.util.List;
 
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.PropertyUsingAs;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.application.KnowledgeCalculator;
@@ -47,6 +46,7 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 	public static String LABEL_KNOWLEDGERELATIONOBJECT1 = "KRelObj1";
 	public static String LABEL_KNOWLEDGERELATIONOBJECT2 = "KRelObj2";
 	
+	private static AccessTokenExpressions4Knowledge token = AccessTokenExpressions4Knowledge.getValid();
 	
 	public CreateKnowledgeElementExpression(String description) {
 		
@@ -67,7 +67,7 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 			List<Expression> listExpressions = new ArrayList<Expression>();
 			
 			String descriptionSubject = main[1].substring(LABEL_SUBJECT.length() + ":".length());
-			Expression subject = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeSubject, descriptionSubject, Value.VALUE_NAME_KNOWLEDGE_SUBJECT);
+			Expression subject = new GetValue(token, PropertyUsingAs.knowledgeSubject, descriptionSubject, Value.VALUE_NAME_KNOWLEDGE_SUBJECT);
 			listExpressions.add(subject);
 			
 			
@@ -78,7 +78,7 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 			Expression knowledgeSourcetype = new Constant(new Value(Type.integer, Value.VALUE_NAME_KNOWLEDGE_SOURCE_TYPE, Integer.parseInt(descriptionKnowledgeSourceType) ));
 			
 			String descriptionKnowledgeSourceOrigin = descriptionKnowledgeSourceElements[1].substring(LABEL_KNOWLEDGESOURCE.length() + ":".length());
-			Expression knowledgeSource = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeSource, descriptionKnowledgeSourceOrigin, Value.VALUE_NAME_KNOWLEDGE_SOURCE);
+			Expression knowledgeSource = new GetValue(token, PropertyUsingAs.knowledgeSource, descriptionKnowledgeSourceOrigin, Value.VALUE_NAME_KNOWLEDGE_SOURCE);
 			
 			Expression creationKnowledgeSource = new CreateKnowledgeSourceExpression(knowledgeSourcetype, knowledgeSource);
 			listExpressions.add(creationKnowledgeSource);
@@ -132,7 +132,7 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 							expressions.add(knowledgeFactCriterion);
 							listValueNames.add(criterionValueName);
 												
-							value = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeProperty, descriptionKnowledgeAtomPart, valueName);
+							value = new GetValue(token, PropertyUsingAs.knowledgeProperty, descriptionKnowledgeAtomPart, valueName);
 							expressions.add(value);
 							listValueNames.add(valueName);
 												
@@ -153,7 +153,7 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 							}	
 							listValueNames.add(valueName);
 							
-							value = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeValue, descriptionKnowledgeAtomPart, valueName);
+							value = new GetValue(token, PropertyUsingAs.knowledgeValue, descriptionKnowledgeAtomPart, valueName);
 							expressions.add(value);
 							
 							if (knowledgeFact_Type == null ) {
@@ -162,7 +162,7 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 						}
 						else if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGERELATIONSUBJECT) >= 0) {
 							descriptionKnowledgeAtomPart = descriptionKnowledgeAtomList[indexSub].substring(descriptionKnowledgeAtomList[indexSub].indexOf(":") + 1);
-							value = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeRelationSubject, descriptionKnowledgeAtomPart, Value.VALUE_NAME_KNOWLEDGE_RELATION_SUBJECT);
+							value = new GetValue(token, PropertyUsingAs.knowledgeRelationSubject, descriptionKnowledgeAtomPart, Value.VALUE_NAME_KNOWLEDGE_RELATION_SUBJECT);
 							if (expressions.size() == 0) {
 								expressions.add(Nothing.getInstance());
 								expressions.add(Nothing.getInstance());
@@ -177,7 +177,7 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 						}
 						else if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGERELATIONVERB) >= 0) {
 							descriptionKnowledgeAtomPart = descriptionKnowledgeAtomList[indexSub].substring(descriptionKnowledgeAtomList[indexSub].indexOf(":") + 1);
-							value = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeRelationVerb, descriptionKnowledgeAtomPart, Value.VALUE_NAME_KNOWLEDGE_RELATION_VERB);
+							value = new GetValue(token, PropertyUsingAs.knowledgeRelationVerb, descriptionKnowledgeAtomPart, Value.VALUE_NAME_KNOWLEDGE_RELATION_VERB);
 							if (expressions.size() == 0) {
 								expressions.add(Nothing.getInstance());
 								expressions.add(Nothing.getInstance());
@@ -192,7 +192,7 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 						}
 						else if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGERELATIONADVERB) >= 0) {
 							descriptionKnowledgeAtomPart = descriptionKnowledgeAtomList[indexSub].substring(descriptionKnowledgeAtomList[indexSub].indexOf(":") + 1);
-							value = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeRelationAdverb, descriptionKnowledgeAtomPart, Value.VALUE_NAME_KNOWLEDGE_RELATION_ADVERB);
+							value = new GetValue(token, PropertyUsingAs.knowledgeRelationAdverb, descriptionKnowledgeAtomPart, Value.VALUE_NAME_KNOWLEDGE_RELATION_ADVERB);
 							if (expressions.size() == 0) {
 								expressions.add(Nothing.getInstance());
 								expressions.add(Nothing.getInstance());
@@ -207,7 +207,7 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 						}
 						else if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGERELATIONOBJECT1) >= 0) {
 							descriptionKnowledgeAtomPart = descriptionKnowledgeAtomList[indexSub].substring(descriptionKnowledgeAtomList[indexSub].indexOf(":") + 1);
-							value = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeRelationObject, descriptionKnowledgeAtomPart, Value.VALUE_NAME_KNOWLEDGE_RELATION_OBJECT1);
+							value = new GetValue(token, PropertyUsingAs.knowledgeRelationObject, descriptionKnowledgeAtomPart, Value.VALUE_NAME_KNOWLEDGE_RELATION_OBJECT1);
 							if (expressions.size() == 0) {
 								expressions.add(Nothing.getInstance());
 								expressions.add(Nothing.getInstance());
@@ -222,7 +222,7 @@ public class CreateKnowledgeElementExpression extends CreateValue {
 						}
 						else if ( descriptionKnowledgeAtomList[indexSub].indexOf(LABEL_KNOWLEDGERELATIONOBJECT2) >= 0) {
 							descriptionKnowledgeAtomPart = descriptionKnowledgeAtomList[indexSub].substring(descriptionKnowledgeAtomList[indexSub].indexOf(":") + 1);
-							value = new GetValue(SimulationCluster.knowledge, PropertyUsingAs.knowledgeRelationObject, descriptionKnowledgeAtomPart, Value.VALUE_NAME_KNOWLEDGE_RELATION_OBJECT2);
+							value = new GetValue(token, PropertyUsingAs.knowledgeRelationObject, descriptionKnowledgeAtomPart, Value.VALUE_NAME_KNOWLEDGE_RELATION_OBJECT2);
 							if (expressions.size() == 0) {
 								expressions.add(Nothing.getInstance());
 								expressions.add(Nothing.getInstance());

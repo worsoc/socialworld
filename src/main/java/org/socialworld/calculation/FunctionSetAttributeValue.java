@@ -10,6 +10,8 @@ public class FunctionSetAttributeValue extends FunctionBase {
 
 	private int indexAttribute;
 	
+	private static AccessTokenFunction token = AccessTokenFunction.getValid();
+	
 	public FunctionSetAttributeValue(int indexAttribute) {
 		this.indexAttribute = indexAttribute;
 	}
@@ -30,7 +32,7 @@ public class FunctionSetAttributeValue extends FunctionBase {
 				(arguments.get(1).getType() == Type.integer) && 
 				(arguments.get(2).getType() == Type.nothing)) 
 			{	
-				AttributeArray attributes = new AttributeArray(objectRequester.requestAttributeArray(SimulationCluster.total, arguments.get(0), this));
+				AttributeArray attributes = new AttributeArray(objectRequester.requestAttributeArray(token, arguments.get(0), this));
 				
 				v = arguments.get(1);
 				o = v.getObject(Type.integer);
@@ -40,12 +42,12 @@ public class FunctionSetAttributeValue extends FunctionBase {
 					}
 					
 					// return the unchanged attribute array as ValueProperty
-					return attributes.getAsValue(SimulationCluster.toBeSet);
+					return attributes.getAsValue(token);
 				}
 				else {
 					newAttributeValue = (int) o;
 					attributes.set(this.indexAttribute, newAttributeValue);
-					return attributes.getAsValue(SimulationCluster.toBeSet);
+					return attributes.getAsValue(token);
 				}
 
 			}
@@ -54,7 +56,7 @@ public class FunctionSetAttributeValue extends FunctionBase {
 			if ((arguments.get(0).getType() == Type.attributeArray) &&
 				(arguments.get(1).getType() == Type.integer)) 
 			{	
-				AttributeArray attributes = new AttributeArray(objectRequester.requestAttributeArray(SimulationCluster.total, arguments.get(0), this));
+				AttributeArray attributes = new AttributeArray(objectRequester.requestAttributeArray(token, arguments.get(0), this));
 				
 				v = arguments.get(1);
 				o = v.getObject(Type.integer);
@@ -64,12 +66,12 @@ public class FunctionSetAttributeValue extends FunctionBase {
 					}
 					
 					// return the unchanged attribute array as ValueProperty
-					return attributes.getAsValue(SimulationCluster.toBeSet);
+					return attributes.getAsValue(token);
 				}
 				else {
 					newAttributeValue = (int) o;
 					attributes.set(this.indexAttribute, newAttributeValue);
-					return attributes.getAsValue(SimulationCluster.toBeSet);
+					return attributes.getAsValue(token);
 				}
 				
 			}

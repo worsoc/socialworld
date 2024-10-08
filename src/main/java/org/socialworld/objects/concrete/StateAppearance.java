@@ -25,9 +25,9 @@ import org.socialworld.attributes.Dimension;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.attributes.properties.ColourSet;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
+import org.socialworld.core.IAccessToken;
 import org.socialworld.core.ReturnCode;
 import org.socialworld.datasource.tablesSimulation.states.TableStateAppearance;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
@@ -50,6 +50,8 @@ public class StateAppearance extends State {
 	private List<ColourSet> colourSets;
 
 	private PropertyName[] colourSetPropNames;
+
+	private static AccessTokenPackageConcrete token = AccessTokenPackageConcrete.getValid();
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////  static instance for meta information    ///////////////////////////////
@@ -180,16 +182,16 @@ public class StateAppearance extends State {
 		return returnFromInit(tableState, lockingID, rowTable);
 	}
 	
-	private StateAppearance( StateAppearance original, PropertyProtection protectionOriginal, SimulationCluster cluster) {
-		super(protectionOriginal, cluster);
+	private StateAppearance( StateAppearance original, PropertyProtection protectionOriginal, IAccessToken token) {
+		super(protectionOriginal, token);
 		if (this.colourSets == null) {
 			this.colourSets = new ArrayList<ColourSet>();
 		}
 			
 		for (int i = 0; i < original.colourSetPropNames.length; i++) {
-			this.colourSets.add((ColourSet) original.colourSets.get(i).copyForProperty(cluster));
+			this.colourSets.add((ColourSet) original.colourSets.get(i).copyForProperty(token));
 		}
-		this.dimension = (Dimension) original.dimension.copyForProperty(cluster);
+		this.dimension = (Dimension) original.dimension.copyForProperty(token);
 	}
 
 	protected  void initPropertyName() {
@@ -210,82 +212,82 @@ public class StateAppearance extends State {
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
 	@Override
-	public State copyForProperty(SimulationCluster cluster) {
-		return new StateAppearance(this, getPropertyProtection(), cluster);
+	public State copyForProperty(IAccessToken token) {
+		return new StateAppearance(this, getPropertyProtection(), token);
 	}
 
 	@Override
-	public ValueProperty getProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
+	public ValueProperty getProperty(IAccessToken token, PropertyName propName, String valueName) {
 		switch (propName) {
 		case stateAppearance_colourFrontside:
 			return new ValueProperty(Type.simObjProp, valueName, 
-					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourFrontside)).copyForProperty(cluster));
+					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourFrontside)).copyForProperty(token));
 		case stateAppearance_colourBackside:
 			return new ValueProperty(Type.simObjProp, valueName, 
-					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourBackside)).copyForProperty(cluster));
+					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourBackside)).copyForProperty(token));
 		case stateAppearance_colourLeftside:
 			return new ValueProperty(Type.simObjProp, valueName, 
-					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourLeftside)).copyForProperty(cluster));
+					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourLeftside)).copyForProperty(token));
 		case stateAppearance_colourRightside:
 			return new ValueProperty(Type.simObjProp, valueName, 
-					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourRightside)).copyForProperty(cluster));
+					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourRightside)).copyForProperty(token));
 		case stateAppearance_colourUpperside:
 			return new ValueProperty(Type.simObjProp, valueName, 
-					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourUpperside)).copyForProperty(cluster));
+					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourUpperside)).copyForProperty(token));
 		case stateAppearance_colourLowerside:
 			return new ValueProperty(Type.simObjProp, valueName, 
-					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourLowerside)).copyForProperty(cluster));
+					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourLowerside)).copyForProperty(token));
 		case stateAppearance_colourInside:
 			return new ValueProperty(Type.simObjProp, valueName, 
-					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourInside)).copyForProperty(cluster));
+					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourInside)).copyForProperty(token));
 			
 		case stateAppearance_colourHead:
 			return new ValueProperty(Type.simObjProp, valueName, 
-					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourHead)).copyForProperty(cluster));
+					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourHead)).copyForProperty(token));
 		case stateAppearance_colourBreast:
 			return new ValueProperty(Type.simObjProp, valueName, 
-					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourBreast)).copyForProperty(cluster));
+					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourBreast)).copyForProperty(token));
 		case stateAppearance_colourBack:
 			return new ValueProperty(Type.simObjProp, valueName, 
-					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourBack)).copyForProperty(cluster));
+					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourBack)).copyForProperty(token));
 		case stateAppearance_colourTail:
 			return new ValueProperty(Type.simObjProp, valueName, 
-					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourTail)).copyForProperty(cluster));
+					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourTail)).copyForProperty(token));
 		case stateAppearance_colourLegs:
 			return new ValueProperty(Type.simObjProp, valueName, 
-					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourLegs)).copyForProperty(cluster));
+					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourLegs)).copyForProperty(token));
 		case stateAppearance_colourArms:
 			return new ValueProperty(Type.simObjProp, valueName, 
-					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourArms)).copyForProperty(cluster));
+					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourArms)).copyForProperty(token));
 
 		case stateAppearance_colourSkin:
 			return new ValueProperty(Type.simObjProp, valueName, 
-					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourSkin)).copyForProperty(cluster));
+					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourSkin)).copyForProperty(token));
 		case stateAppearance_colourHair:
 			return new ValueProperty(Type.simObjProp, valueName, 
-					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourHair)).copyForProperty(cluster));
+					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourHair)).copyForProperty(token));
 		case stateAppearance_colourBeard:
 			return new ValueProperty(Type.simObjProp, valueName, 
-					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourBeard)).copyForProperty(cluster));
+					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourBeard)).copyForProperty(token));
 		case stateAppearance_colourEye:
 			return new ValueProperty(Type.simObjProp, valueName, 
-					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourEye)).copyForProperty(cluster));
+					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourEye)).copyForProperty(token));
 			
 		case stateAppearance_colourLeave:
 			return new ValueProperty(Type.simObjProp, valueName, 
-					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourLeave)).copyForProperty(cluster));
+					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourLeave)).copyForProperty(token));
 		case stateAppearance_colourFruit:
 			return new ValueProperty(Type.simObjProp, valueName, 
-					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourFruit)).copyForProperty(cluster));
+					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourFruit)).copyForProperty(token));
 		case stateAppearance_colourBlossom:
 			return new ValueProperty(Type.simObjProp, valueName, 
-					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourBlossom)).copyForProperty(cluster));
+					this.colourSets.get(mapCSPN2CSN(PropertyName.stateAppearance_colourBlossom)).copyForProperty(token));
 			
 		case stateAppearance_mainColour:
-			return getMainColour_(cluster, valueName);
+			return getMainColour_(token, valueName);
 			
 		case stateAppearance_dimension:
-			return new ValueProperty(Type.simObjProp, valueName, this.dimension.copyForProperty(cluster));
+			return new ValueProperty(Type.simObjProp, valueName, this.dimension.copyForProperty(token));
 
 		default:
 			return ValueProperty.getInvalid();
@@ -315,10 +317,10 @@ public class StateAppearance extends State {
 		case stateAppearance_colourLeave:
 		case stateAppearance_colourFruit:
 		case stateAppearance_colourBlossom:
-			this.colourSets.set(mapCSPN2CSN(propName),objectRequester.requestColourSet(SimulationCluster.todo, property, this) );
+			this.colourSets.set(mapCSPN2CSN(propName),objectRequester.requestColourSet(token, property, this) );
 			break;
 		case stateAppearance_dimension:
-			this.dimension = objectRequester.requestDimension(SimulationCluster.todo, property, this);
+			this.dimension = objectRequester.requestDimension(token, property, this);
 			break;
 		default:
 			break;
@@ -333,16 +335,16 @@ public class StateAppearance extends State {
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
 	protected ValueProperty getMainColour() {
-		return getColourSetProperty(getPropertyProtection().getCluster(), PropertyName.colourSet_mainColour, VALUENAME_MAIN_COLOR);
+		return getColourSetProperty(getPropertyProtection().getToken(), PropertyName.colourSet_mainColour, VALUENAME_MAIN_COLOR);
 	//	return new ValueProperty(Type.object, VALUENAME_MAIN_COLOR, Colour.black);
 	}
 
-	private ValueProperty getMainColour_(SimulationCluster cluster, String valueName) {
-		return getColourSetProperty(cluster, PropertyName.colourSet_mainColour, valueName);
+	private ValueProperty getMainColour_(IAccessToken token, String valueName) {
+		return getColourSetProperty(token, PropertyName.colourSet_mainColour, valueName);
 	}
 
-	private ValueProperty getColourSetProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
-		return this.colourSets.get(0).getProperty(cluster, propName, valueName);
+	private ValueProperty getColourSetProperty(IAccessToken token, PropertyName propName, String valueName) {
+		return this.colourSets.get(0).getProperty(token, propName, valueName);
 	}
 
 }

@@ -23,7 +23,7 @@ package org.socialworld.knowledge;
 
 import org.socialworld.calculation.IObjectReceiver;
 import org.socialworld.calculation.IObjectSender;
-import org.socialworld.calculation.SimulationCluster;
+import org.socialworld.core.IAccessToken;
 import org.socialworld.objects.SimulationObject;
 
 public class KnowledgeSource implements IObjectSender {
@@ -74,7 +74,7 @@ public class KnowledgeSource implements IObjectSender {
 	public int sendYourselfTo(IObjectReceiver receiver, int requestID) {
 		return receiver.receiveObject(requestID, this);
 	}
-	public int sendYourselfTo(SimulationCluster cluster, IObjectReceiver receiver, int requestID) {
+	public int sendYourselfTo(IAccessToken token, IObjectReceiver receiver, int requestID) {
 		return receiver.receiveObject(requestID, this);
 	}
 	

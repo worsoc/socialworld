@@ -27,8 +27,8 @@ import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.attributes.SimProperty;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.ValueProperty;
+import org.socialworld.core.IAccessToken;
 import org.socialworld.knowledge.KnownPaths;
 import org.socialworld.map.IMapProp;
 /**
@@ -134,8 +134,8 @@ public class Path extends SimProperty implements IMapProp{
 		refresh();
 	}
 	
-	public Path(Path original, PropertyProtection protectionOriginal, SimulationCluster cluster ) {
-		super(protectionOriginal, cluster);
+	public Path(Path original, PropertyProtection protectionOriginal, IAccessToken token ) {
+		super(protectionOriginal, token);
 		setPropertyName(original.getPropertyName());
 		
 		this.start = original.start;
@@ -155,11 +155,11 @@ public class Path extends SimProperty implements IMapProp{
 /////////////////////////////    ISavedValue  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	public SimProperty copyForProperty(SimulationCluster cluster) {
-		return new Path(this, getPropertyProtection(), cluster);
+	public SimProperty copyForProperty(IAccessToken token) {
+		return new Path(this, getPropertyProtection(), token);
 	}
 	
-	public  ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String valueName) {
+	public  ValueProperty getProperty(IAccessToken token, PropertyName prop, String valueName) {
 		switch (prop) {
 		default:
 		return ValueProperty.getInvalid();

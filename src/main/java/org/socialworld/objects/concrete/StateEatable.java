@@ -28,9 +28,9 @@ import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.attributes.properties.NutrientSet;
 import org.socialworld.attributes.properties.TasteSet;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
+import org.socialworld.core.IAccessToken;
 import org.socialworld.core.ReturnCode;
 import org.socialworld.datasource.tablesSimulation.states.TableStateEatable;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
@@ -151,10 +151,10 @@ public class StateEatable extends State {
 	
 	}
 
-	private StateEatable( StateEatable original, PropertyProtection protectionOriginal, SimulationCluster cluster) {
-		super(protectionOriginal, cluster);
-		this.nutrientSet = (NutrientSet) original.nutrientSet.copyForProperty(cluster);
-		this.tasteSet = (TasteSet) original.tasteSet.copyForProperty(cluster);
+	private StateEatable( StateEatable original, PropertyProtection protectionOriginal, IAccessToken token) {
+		super(protectionOriginal, token);
+		this.nutrientSet = (NutrientSet) original.nutrientSet.copyForProperty(token);
+		this.tasteSet = (TasteSet) original.tasteSet.copyForProperty(token);
 	}
 
 	protected  void initPropertyName() {
@@ -165,20 +165,20 @@ public class StateEatable extends State {
 	/////////////////////////  implementing  ISavedValue  ////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
-	public State copyForProperty(SimulationCluster cluster) {
-		return new StateEatable(this, getPropertyProtection(), cluster);
+	public State copyForProperty(IAccessToken token) {
+		return new StateEatable(this, getPropertyProtection(), token);
 	}
 
-	public  ValueProperty getProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
+	public  ValueProperty getProperty(IAccessToken token, PropertyName propName, String valueName) {
 		switch (propName) {
 		case stateEatable_tasteSet:
-			return new ValueProperty(Type.simObjProp, valueName, tasteSet.copyForProperty(cluster));
+			return new ValueProperty(Type.simObjProp, valueName, tasteSet.copyForProperty(token));
 		case stateEatable_mainTaste:
-			return getMainTaste_(cluster, valueName);
+			return getMainTaste_(token, valueName);
 		case stateEatable_nutrientSet:
-			return new ValueProperty(Type.simObjProp, valueName, nutrientSet.copyForProperty(cluster));
+			return new ValueProperty(Type.simObjProp, valueName, nutrientSet.copyForProperty(token));
 		case stateEatable_mainNutrient:
-			return getMainNutrient_(cluster, valueName);
+			return getMainNutrient_(token, valueName);
 
 		default:
 			return ValueProperty.getInvalid();
@@ -197,40 +197,40 @@ public class StateEatable extends State {
 
 	
 	protected ValueProperty getMainTaste() {
-		return getTasteSetProperty(getPropertyProtection().getCluster(), PropertyName.tasteSet_mainTaste, VALUENAME_MAIN_TASTE);
+		return getTasteSetProperty(getPropertyProtection().getToken(), PropertyName.tasteSet_mainTaste, VALUENAME_MAIN_TASTE);
 	}
 
-	private ValueProperty getMainTaste_(SimulationCluster cluster, String valueName) {
-		return getTasteSetProperty(cluster, PropertyName.tasteSet_mainTaste, valueName);
+	private ValueProperty getMainTaste_(IAccessToken token, String valueName) {
+		return getTasteSetProperty(token, PropertyName.tasteSet_mainTaste, valueName);
 	}
 
-	private ValueProperty getTasteSetProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
-		return this.tasteSet.getProperty(cluster, propName, valueName);
+	private ValueProperty getTasteSetProperty(IAccessToken token, PropertyName propName, String valueName) {
+		return this.tasteSet.getProperty(token, propName, valueName);
 	}
 	
 	
 	protected ValueProperty getMainNutrient() {
-		return getNutrientSetProperty(getPropertyProtection().getCluster(), PropertyName.nutrientSet_mainNutrient, VALUENAME_MAIN_NUTRIENT);
+		return getNutrientSetProperty(getPropertyProtection().getToken(), PropertyName.nutrientSet_mainNutrient, VALUENAME_MAIN_NUTRIENT);
 	}
 
-	private ValueProperty getMainNutrient_(SimulationCluster cluster, String valueName) {
-		return getNutrientSetProperty(cluster, PropertyName.nutrientSet_mainNutrient, valueName);
+	private ValueProperty getMainNutrient_(IAccessToken token, String valueName) {
+		return getNutrientSetProperty(token, PropertyName.nutrientSet_mainNutrient, valueName);
 	}
 
-	private ValueProperty getNutrientSetProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
-		return this.nutrientSet.getProperty(cluster, propName, valueName);
+	private ValueProperty getNutrientSetProperty(IAccessToken token, PropertyName propName, String valueName) {
+		return this.nutrientSet.getProperty(token, propName, valueName);
 	}
 	
 	
 	protected ValueProperty getNutrientSet() {
-		return new ValueProperty(Type.simObjProp, VALUENAME_NUTRIENT_SET, nutrientSet.copyForProperty(getPropertyProtection().getCluster()));
+		return new ValueProperty(Type.simObjProp, VALUENAME_NUTRIENT_SET, nutrientSet.copyForProperty(getPropertyProtection().getToken()));
 	}
 	
 	protected void setNutrientSet(NutrientSet changed) {  }
 	
 	
 	protected ValueProperty getTasteSet() {
-		return new ValueProperty(Type.simObjProp, VALUENAME_TASTE_SET, tasteSet.copyForProperty(getPropertyProtection().getCluster()));
+		return new ValueProperty(Type.simObjProp, VALUENAME_TASTE_SET, tasteSet.copyForProperty(getPropertyProtection().getToken()));
 	}
 	
 	protected void setTasteSet(TasteSet changed) {  }

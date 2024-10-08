@@ -33,6 +33,7 @@ import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.calculation.geometry.VectorMapper;
+import org.socialworld.core.IAccessToken;
 import org.socialworld.core.ReturnCode;
 import org.socialworld.datasource.tablesSimulation.states.TableStateSeer;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
@@ -47,6 +48,7 @@ public class StateSeer extends State {
 
 	private int bestPercipiencePerpendicular;
 
+	private static AccessTokenPackageConreteAnimals token = AccessTokenPackageConreteAnimals.getValid();
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////static instance for meta information    ///////////////////////////////
@@ -135,8 +137,8 @@ public class StateSeer extends State {
 		
 	}
 
-	private StateSeer( StateSeer original, PropertyProtection protectionOriginal, SimulationCluster cluster) {
-		super(protectionOriginal, cluster);
+	private StateSeer( StateSeer original, PropertyProtection protectionOriginal, IAccessToken token) {
+		super(protectionOriginal, token);
 	}
 	
 	protected  void initPropertyName() {
@@ -147,20 +149,20 @@ public class StateSeer extends State {
 	/////////////////////////  implementing  ISavedValue  ////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
-	public State copyForProperty(SimulationCluster cluster) {
-		return new StateSeer(this, getPropertyProtection(), cluster);
+	public State copyForProperty(IAccessToken token) {
+		return new StateSeer(this, getPropertyProtection(), token);
 	}
 
 	
-	public ValueProperty getProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
+	public ValueProperty getProperty(IAccessToken token, PropertyName propName, String valueName) {
 		
 		switch (propName) {
 		case stateSeer_directionView:
-			return this.directionView.getAsValue(cluster, valueName);
+			return this.directionView.getAsValue(token, valueName);
 		case stateSeer_bestPercipiencePerpendicular:
 			return new ValueProperty(Type.integer, valueName, this.bestPercipiencePerpendicular);
 		case stateSeer_propsSeer:
-			return this.propsSeer.getAsValue(cluster, valueName);
+			return this.propsSeer.getAsValue(token, valueName);
 		default:
 			return ValueProperty.getInvalid();
 		}
@@ -171,9 +173,9 @@ public class StateSeer extends State {
 	
 		switch (propName) {
 		case stateSeer_directionView:
-			Vector vector = objectRequester.requestVector(SimulationCluster.todo, property, this);
+			Vector vector = objectRequester.requestVector(token, property, this);
 			if (vector.checkIsObjectNothing()) {
-				Direction direction = objectRequester.requestDirection(SimulationCluster.todo, property, this);
+				Direction direction = objectRequester.requestDirection(token, property, this);
 				this.directionView = direction;
 			}
 			else {
@@ -195,7 +197,7 @@ public class StateSeer extends State {
 
 	private void setBestPercipiencePerpendicular() {
 		this.bestPercipiencePerpendicular =  
-				VectorMapper.getInstance().getBestVisibleAreaPerpendicular(this.directionView.getVector(SimulationCluster.todo));
+				VectorMapper.getInstance().getBestVisibleAreaPerpendicular(this.directionView.getVector(token));
 	}
 	
 	public int getBestPercipiencePerpendicular() {

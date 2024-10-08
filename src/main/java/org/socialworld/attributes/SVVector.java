@@ -23,11 +23,11 @@ package org.socialworld.attributes;
 
 import java.util.List;
 
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.tools.StringTupel;
+import org.socialworld.core.IAccessToken;
 
 public class SVVector extends SavedValue {
 
@@ -84,8 +84,8 @@ public class SVVector extends SavedValue {
 		this.savedVector = vector;
 	}
 	
-	private SVVector( SVVector original, PropertyProtection protectionOriginal, SimulationCluster cluster) {
-		super(protectionOriginal, cluster);
+	private SVVector( SVVector original, PropertyProtection protectionOriginal, IAccessToken token) {
+		super(protectionOriginal, token);
 		setPropertyName(original.getPropertyName());
 		this.savedVector = original.getVector();
 	}
@@ -94,7 +94,7 @@ public class SVVector extends SavedValue {
 	//////////////////  implementing  SavedValues abstract methods  ///////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 
-	public Vector getReleased(SimulationCluster cluster) {
+	public Vector getReleased(IAccessToken token) {
 		return getVector();
 	}
 
@@ -102,12 +102,12 @@ public class SVVector extends SavedValue {
 	/////////////////////////  implementing  ISavedValue  ////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
-	public ISavedValue copyForProperty(SimulationCluster cluster) {
-		return new SVVector(this, getPropertyProtection(), cluster);
+	public ISavedValue copyForProperty(IAccessToken token) {
+		return new SVVector(this, getPropertyProtection(), token);
 	}
 	
-	public  ValueProperty getProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
-		if (checkHasGetPermission(cluster)) {
+	public  ValueProperty getProperty(IAccessToken token, PropertyName propName, String valueName) {
+		if (checkHasGetPermission(token)) {
 			switch (propName) {
 			case vector:
 				return new ValueProperty(Type.vector, valueName, getVector());
@@ -133,15 +133,15 @@ public class SVVector extends SavedValue {
 	/////////////////////////  implementing  Vector methods  ////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
-	public int getX(SimulationCluster cluster) { 
+	public int getX(IAccessToken token) { 
 		return (int) savedVector.getX(); 
 	}
 	
-	public int getY(SimulationCluster cluster) {
+	public int getY(IAccessToken token) {
 		return (int) savedVector.getY(); 
 	}
 	
-	public int getZ(SimulationCluster cluster) { 
+	public int getZ(IAccessToken token) { 
 		return (int) savedVector.getZ();
 	}
 	

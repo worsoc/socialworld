@@ -24,7 +24,6 @@ package org.socialworld.calculation.application;
 
 import org.socialworld.GlobalSwitches;
 import org.socialworld.calculation.NoObject;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.CapacityQueue;
@@ -52,6 +51,8 @@ public class TalkCalculator  extends SocialWorldThread {
 	private static TalkCalculator instance;
 
 	private CapacityQueue<CollectionElementSimObjInfluenced> influencedTalks;
+	
+	private static AccessTokenTalkCalculator token = AccessTokenTalkCalculator.getValid();
 	
 /*	private List<Event> events;
 	private List<StateHuman> states;
@@ -170,7 +171,7 @@ public class TalkCalculator  extends SocialWorldThread {
 			value = params.getParam("partner");
 			if (value.isValid()) {
 				SimulationObject simObject;
-				simObject = getInstance().objectRequester.requestSimulationObject(SimulationCluster.todo, value, getInstance());
+				simObject = getInstance().objectRequester.requestSimulationObject(token, value, getInstance());
 				if (simObject instanceof Human) partner = (Human) simObject;
 				else return;
 			}
@@ -228,7 +229,7 @@ public class TalkCalculator  extends SocialWorldThread {
 			value = params.getParam("partner");
 			if (value.isValid()) {
 				SimulationObject simObject;
-				simObject = getInstance().objectRequester.requestSimulationObject(SimulationCluster.todo, value, getInstance());
+				simObject = getInstance().objectRequester.requestSimulationObject(token, value, getInstance());
 				if (simObject instanceof Human) partner = (Human) simObject;
 				else return;
 			}
@@ -275,7 +276,7 @@ public class TalkCalculator  extends SocialWorldThread {
 			value = params.getParam(Value.VALUE_BY_NAME_ACTION_TARGET);
 			if (value.isValid()) {
 				SimulationObject simObject;
-				simObject = getInstance().objectRequester.requestSimulationObject(SimulationCluster.todo, value, getInstance());
+				simObject = getInstance().objectRequester.requestSimulationObject(token, value, getInstance());
 				if (simObject instanceof Human) partner = (Human) simObject;
 				else return;
 			}
@@ -284,7 +285,7 @@ public class TalkCalculator  extends SocialWorldThread {
 	
 			value = params.getParam(Value.VALUE_BY_NAME_ACTION_ANSWERS);
 			if (value.isValid())
-				answers = getInstance().objectRequester.requestValueArrayList(SimulationCluster.todo, value, getInstance());
+				answers = getInstance().objectRequester.requestValueArrayList(token, value, getInstance());
 			else
 				return;
 			
@@ -295,7 +296,7 @@ public class TalkCalculator  extends SocialWorldThread {
 			acquaintance = stateHuman.getAcquaintance(partner);
 
 			for (int i = 0; i < answers.size(); i++) {
-				answer = getInstance().objectRequester.requestAnswer(SimulationCluster.todo, answers.get(i), getInstance());
+				answer = getInstance().objectRequester.requestAnswer(token, answers.get(i), getInstance());
 				manipulateAnswer(answer, acquaintance, stateHuman,  partner);
 				hiddenWriteAccess.addAnswer(answer,  partner); 
 			}

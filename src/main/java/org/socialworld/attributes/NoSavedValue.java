@@ -1,7 +1,7 @@
 package org.socialworld.attributes;
 
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.ValueProperty;
+import org.socialworld.core.IAccessToken;
 
 public class NoSavedValue extends SavedValue {
 
@@ -14,12 +14,12 @@ public class NoSavedValue extends SavedValue {
 		return valueNothing;
 	}
 	@Override
-	public ISavedValue copyForProperty(SimulationCluster cluster) {
+	public ISavedValue copyForProperty(IAccessToken token) {
 		return valueNothing;
 	}
 
 	@Override
-	public ValueProperty getProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
+	public ValueProperty getProperty(IAccessToken token, PropertyName propName, String valueName) {
 		return ValueProperty.getInvalid();
 	}
 
@@ -29,7 +29,7 @@ public class NoSavedValue extends SavedValue {
 	}
 
 	@Override
-	public Object getReleased(SimulationCluster cluster) {
+	public Object getReleased(IAccessToken token) {
 		// TODO Auto-generated method stub
 		return null;
 	}

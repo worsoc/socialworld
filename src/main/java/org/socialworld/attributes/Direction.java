@@ -3,10 +3,10 @@ package org.socialworld.attributes;
 
 import java.util.List;
 
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
+import org.socialworld.core.IAccessToken;
 import org.socialworld.tools.StringTupel;
 
 public class Direction extends SimProperty {
@@ -81,8 +81,8 @@ public class Direction extends SimProperty {
 		setPropertyName(prop);
 	}
 
-	private Direction(Direction original, PropertyProtection protectionOriginal, SimulationCluster cluster ) {
-		super(protectionOriginal, cluster);
+	private Direction(Direction original, PropertyProtection protectionOriginal, IAccessToken token ) {
+		super(protectionOriginal, token);
 		this.vector = original.getVector();
 		this.power = original.getPower();
 		setPropertyName(original.getPropertyName());
@@ -92,11 +92,11 @@ public class Direction extends SimProperty {
 /////////////////////////////    ISavedValue  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	public SimProperty copyForProperty(SimulationCluster cluster) {
-		return new Direction(this, getPropertyProtection(), cluster);
+	public SimProperty copyForProperty(IAccessToken token) {
+		return new Direction(this, getPropertyProtection(), token);
 	}
 	
-	public  ValueProperty getProperty(SimulationCluster cluster, PropertyName prop, String valueName) {
+	public  ValueProperty getProperty(IAccessToken token, PropertyName prop, String valueName) {
 		switch (prop) {
 		case direction_vector:
 			return new ValueProperty(Type.vector, valueName, getVector());
@@ -116,17 +116,17 @@ public class Direction extends SimProperty {
 /////////////////////////////    Direction  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
-	public final Vector getVector(SimulationCluster cluster) {
+	public final Vector getVector(IAccessToken token) {
 		if (checkIsObjectNothing()) return Vector.getObjectNothing();
 		
-		SVVector copy = (SVVector) this.vector.copyForProperty(cluster);
-		Vector released = copy.getReleased(cluster);
+		SVVector copy = (SVVector) this.vector.copyForProperty(token);
+		Vector released = copy.getReleased(token);
 		return released;
 	}
 
 	
 	private SVVector getVector() {
-		return (SVVector) this.vector.copyForProperty(getPropertyProtection().getCluster());
+		return (SVVector) this.vector.copyForProperty(getPropertyProtection().getToken());
 	}
 
 	public final float getPower() {

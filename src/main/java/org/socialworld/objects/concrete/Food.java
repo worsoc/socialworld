@@ -5,7 +5,6 @@ import java.util.List;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.properties.NutrientSet;
 import org.socialworld.attributes.properties.TasteSet;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.objects.Item;
 import org.socialworld.objects.State;
 import org.socialworld.objects.enums.EnumBaseSimObj;
@@ -19,6 +18,7 @@ public abstract class Food extends Item implements IEatable {
 	protected EnumFood belongsTo;
 	private StateEatable stateEatable;
 	
+	private static AccessTokenPackageConcrete token = AccessTokenPackageConcrete.getValid();
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////    meta information    ////////////////////////////////////
@@ -99,11 +99,11 @@ public abstract class Food extends Item implements IEatable {
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
 	public  NutrientSet getNutrientSet() {
-		return objectRequester.requestNutrientSet(SimulationCluster.todo, this.stateEatable.getPropertyFromMethod(SimulationCluster.todo, StateEatable.METHODNAME_GET_NUTRIENT_SET, StateEatable.VALUENAME_NUTRIENT_SET), this);
+		return objectRequester.requestNutrientSet(token, this.stateEatable.getPropertyFromMethod(token, StateEatable.METHODNAME_GET_NUTRIENT_SET, StateEatable.VALUENAME_NUTRIENT_SET), this);
 	}
 	
 	public  TasteSet getTasteSet() {
-		return objectRequester.requestTasteSet(SimulationCluster.todo, this.stateEatable.getPropertyFromMethod(SimulationCluster.todo, StateEatable.METHODNAME_GET_TASTE_SET, StateEatable.VALUENAME_TASTE_SET), this);
+		return objectRequester.requestTasteSet(token, this.stateEatable.getPropertyFromMethod(token, StateEatable.METHODNAME_GET_TASTE_SET, StateEatable.VALUENAME_TASTE_SET), this);
 	}
 
 

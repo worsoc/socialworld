@@ -25,7 +25,6 @@ import org.socialworld.GlobalSwitches;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.NoObject;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueProperty;
@@ -39,6 +38,7 @@ import org.socialworld.objects.concrete.animals.StateSeer;
 public class Visibility {
 
 	private Rectangle visibilityRectangles[];
+	private static AccessTokenPercipience token = AccessTokenPercipience.getValid();
 	
 	public Visibility() {
 		
@@ -174,14 +174,14 @@ public class Visibility {
 			ISeer seer = (ISeer) possibleSeer;
 			StateSeer stateSeer;
 			
-			stateSeer = seer.getSavedStateSeer(SimulationCluster.todo);
+			stateSeer = seer.getSavedStateSeer(token);
 			nrPerpendicular = stateSeer.getBestPercipiencePerpendicular();
 
 			ValueProperty vpPropsSeer;
 			ValueProperty vpSDRT;
-			//vp = possibleSeer.getStatePropertyFromMethod(SimulationCluster.todo, PropertyName.stateSeer, ISeer.METHODNAME_SIZEDISTANCERELATIONTHRESHOLD, "sizeDistanceRelThreashold");
-			vpPropsSeer = possibleSeer.getStateProperty(SimulationCluster.todo, PropertyName.stateSeer, PropertyName.stateSeer_propsSeer, PropertyName.stateSeer_propsSeer.toString());
-			vpSDRT = vpPropsSeer.getProperty(SimulationCluster.todo, PropertyName.propsSeer_sizeDistanceRelationThreshold, Value.NO_METHOD_NAME, PropertyName.propsSeer_sizeDistanceRelationThreshold.toString());
+			//vp = possibleSeer.getStatePropertyFromMethod(token, PropertyName.stateSeer, ISeer.METHODNAME_SIZEDISTANCERELATIONTHRESHOLD, "sizeDistanceRelThreashold");
+			vpPropsSeer = possibleSeer.getStateProperty(token, PropertyName.stateSeer, PropertyName.stateSeer_propsSeer, PropertyName.stateSeer_propsSeer.toString());
+			vpSDRT = vpPropsSeer.getProperty(token, PropertyName.propsSeer_sizeDistanceRelationThreshold, Value.NO_METHOD_NAME, PropertyName.propsSeer_sizeDistanceRelationThreshold.toString());
 			Object o = vpSDRT.getObject(Type.floatingpoint);
 			if (o instanceof NoObject) {
 				if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {

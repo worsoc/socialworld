@@ -26,7 +26,6 @@ import java.util.ListIterator;
 
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.Position;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.knowledge.KnownPathsPool;
 import org.socialworld.objects.Animal;
@@ -56,6 +55,8 @@ public class PathFinder {
 	private Animal actor;
 	private KnownPathsPool knownPathsPool;
 
+	private static AccessTokenActionMove token = AccessTokenActionMove.getValid();
+	
 	public PathFinder(Animal actor, KnownPathsPool knownPathsPool) {
 		this.actor = actor;
 		this.knownPathsPool = knownPathsPool;
@@ -69,7 +70,7 @@ public class PathFinder {
 		Path pathStart = Path.getObjectNothing();
 		Path pathEnd = Path.getObjectNothing();
 		
-		Position actorsPosition = actor.getPosition(SimulationCluster.pathFinder);
+		Position actorsPosition = actor.getPosition(token);
 		
 		result = findPathWithStartAndEnd(actorsPosition, end);
 		
