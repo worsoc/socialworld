@@ -635,8 +635,8 @@ public abstract class Cube {
     public static void main(String args[]) {
     	byte detailDepth = 4;
     	byte heightOffset = 0;
-       // Cube cube = new CubeStandard(CUBE_SIZE_TILE_SMALL, heightOffset);
-        Cube cube = new CubeAdapterWest(CUBE_SIZE_TILE_SMALL, heightOffset);
+        Cube cube = new CubeStandard(CUBE_SIZE_TILE_SMALL, heightOffset);
+       // Cube cube = new CubeAdapterWest(CUBE_SIZE_TILE_SMALL, heightOffset);
 
         byte setFullyFilledMinDepth = 1;
         switch (cube.size) {
@@ -650,7 +650,7 @@ public abstract class Cube {
 
         cube.initPlanes();
         cube.fillTheGround(heightOffset);
-        cube.splitCube( 141, detailDepth, false);
+        cube.splitCube( 5, detailDepth, false);
 
       
         cube.setFullyFilled( (byte) (detailDepth - 1), (byte) 14); 

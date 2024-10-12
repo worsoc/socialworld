@@ -24,9 +24,9 @@ package org.socialworld.tools.mct;
 public enum TileType {
 	smallStandard, smallAdapter, smallSpecial, smallSpecialAdapter, mediumStandard, mediumAdapter, largeStandard, sub, todo;
 	
-	static final int TILE_LEVEL_LARGE = 0;
-	static final int TILE_LEVEL_MEDIUM = 1;
-	static final int TILE_LEVEL_SMALL = 2;
+	public static final int TILE_LEVEL_LARGE = 0;
+	public static final int TILE_LEVEL_MEDIUM = 1;
+	public static final int TILE_LEVEL_SMALL = 2;
 	
 	
 	static final int OFFSET_LARGE_STANDARD = 100000;
@@ -144,7 +144,7 @@ public enum TileType {
 		return todo;
 	}
 
-	int getTileTypeLevel() {
+	public int getTileTypeLevel() {
 		switch(this) {
 		case smallStandard:
 		case smallAdapter:

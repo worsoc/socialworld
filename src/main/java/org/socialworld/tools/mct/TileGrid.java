@@ -169,6 +169,9 @@ public class TileGrid extends Tile {
 		return this.isleHeightChange;
 	}
 	
+	public int getTileTypeLevel() {
+		return tileTypeLevel;
+	}
 	
 	void setBorderAdapterTypeNorth(TileGridBorderAdapterType type) {
 		this.borderAdapterTypeNorth = type;
@@ -201,7 +204,7 @@ public class TileGrid extends Tile {
 		
 		for (index = 0; index < 81; index++) {
 			blocked[index] = false;
-			addTile(Tile.getInstance(), index);
+			addTile(Tile.getNothing(), index);
 		}
 
 		
@@ -408,12 +411,12 @@ public class TileGrid extends Tile {
 /*	
 			if (!isComplete) {
 				for (int index = 0; index < 81; index++) {
-					addTile(Tile.getInstance(), index);
+					addTile(Tile.getNothing(), index);
 				}
 				if (!setFirstInnerCircle()) {
 			  		System.out.println("setFirstInnerCircle liefert keine Belegung"  );
 					for (int index = 0; index < 81; index++) {
-						addTile(Tile.getInstance(), index);
+						addTile(Tile.getNothing(), index);
 					}
 				}
 				else {
@@ -421,7 +424,7 @@ public class TileGrid extends Tile {
 					if (!backtrackTileGrid((short) 20, (short) 0 ) ) {
 				  		System.out.println("BackTracking liefert keine Lösung"  );
 						for (int index = 0; index < 81; index++) {
-							addTile(Tile.getInstance(), index);
+							addTile(Tile.getNothing(), index);
 						}
 					}
 					else {
@@ -484,77 +487,77 @@ public class TileGrid extends Tile {
 //		System.out.println("setError for tileTypeLevel = " + tileTypeLevel + " and actualTileIndex = " + actualTileIndex);
 /*	
 		for (int index = 0; index < 81; index++) {
-			addTile(Tile.getInstance(), index);
+			addTile(Tile.getNothing(), index);
 		}
 */
 		
 		
 		
 			if (actualTileIndex > 17) {
-				addTile(Tile.getInstance(), actualTileIndex - 9);
+				addTile(Tile.getNothing(), actualTileIndex - 9);
 				if ((actualTileIndex % 9) > 1) {
-					addTile(Tile.getInstance(), actualTileIndex - 10);
+					addTile(Tile.getNothing(), actualTileIndex - 10);
 				}
 				if ((actualTileIndex % 9) > 2) {
-					addTile(Tile.getInstance(), actualTileIndex - 11);
+					addTile(Tile.getNothing(), actualTileIndex - 11);
 				}
 				if ((actualTileIndex % 9) < 7) {
-					addTile(Tile.getInstance(), actualTileIndex - 8);
+					addTile(Tile.getNothing(), actualTileIndex - 8);
 				}
 				if ((actualTileIndex % 9) < 6) {
-					addTile(Tile.getInstance(), actualTileIndex - 7);
+					addTile(Tile.getNothing(), actualTileIndex - 7);
 				}
 			}
 			if ((actualTileIndex % 9) > 1) {
-				addTile(Tile.getInstance(), actualTileIndex - 1);
+				addTile(Tile.getNothing(), actualTileIndex - 1);
 			}
 			
 			if (actualTileIndex > 36) {
 				if ((actualTileIndex % 9) > 2) {
-					addTile(Tile.getInstance(), actualTileIndex - 20);
-					addTile(Tile.getInstance(), actualTileIndex - 19);
-					addTile(Tile.getInstance(), actualTileIndex - 18);
+					addTile(Tile.getNothing(), actualTileIndex - 20);
+					addTile(Tile.getNothing(), actualTileIndex - 19);
+					addTile(Tile.getNothing(), actualTileIndex - 18);
 				}
 				if ((actualTileIndex % 9) < 6) {
-					addTile(Tile.getInstance(), actualTileIndex - 17);
-					addTile(Tile.getInstance(), actualTileIndex - 16);
+					addTile(Tile.getNothing(), actualTileIndex - 17);
+					addTile(Tile.getNothing(), actualTileIndex - 16);
 				}
 			}
 			if ((actualTileIndex > 8) &&  (actualTileIndex % 9) > 1) {
-				addTile(Tile.getInstance(), actualTileIndex - 2);
+				addTile(Tile.getNothing(), actualTileIndex - 2);
 			}
 		
 			if (actualTileIndex < 63) {
-				addTile(Tile.getInstance(), actualTileIndex + 9);
+				addTile(Tile.getNothing(), actualTileIndex + 9);
 				if ((actualTileIndex % 9) > 1) {
-					addTile(Tile.getInstance(), actualTileIndex + 8);
+					addTile(Tile.getNothing(), actualTileIndex + 8);
 				}
 				if ((actualTileIndex % 9) > 2) {
-					addTile(Tile.getInstance(), actualTileIndex + 7);
+					addTile(Tile.getNothing(), actualTileIndex + 7);
 				}
 				if ((actualTileIndex % 9) < 7) {
-					addTile(Tile.getInstance(), actualTileIndex + 10);
+					addTile(Tile.getNothing(), actualTileIndex + 10);
 				}
 				if ((actualTileIndex % 9) < 6) {
-					addTile(Tile.getInstance(), actualTileIndex + 11);
+					addTile(Tile.getNothing(), actualTileIndex + 11);
 				}
 			}
 			if ((actualTileIndex < 72) && (actualTileIndex % 9) < 7) {
-				addTile(Tile.getInstance(), actualTileIndex + 1);
+				addTile(Tile.getNothing(), actualTileIndex + 1);
 			}
 			if ((actualTileIndex < 72) && (actualTileIndex % 9) < 6) {
-				addTile(Tile.getInstance(), actualTileIndex + 2);
+				addTile(Tile.getNothing(), actualTileIndex + 2);
 			}
 			
 			if (actualTileIndex < 54) {
 				if ((actualTileIndex % 9) > 2) {
-					addTile(Tile.getInstance(), actualTileIndex + 16);
-					addTile(Tile.getInstance(), actualTileIndex + 17);
-					addTile(Tile.getInstance(), actualTileIndex + 18);
+					addTile(Tile.getNothing(), actualTileIndex + 16);
+					addTile(Tile.getNothing(), actualTileIndex + 17);
+					addTile(Tile.getNothing(), actualTileIndex + 18);
 				}
 				if ((actualTileIndex % 9) < 6) {
-					addTile(Tile.getInstance(), actualTileIndex + 19);
-					addTile(Tile.getInstance(), actualTileIndex + 20);
+					addTile(Tile.getNothing(), actualTileIndex + 19);
+					addTile(Tile.getNothing(), actualTileIndex + 20);
 				}
 			}
 
@@ -572,7 +575,7 @@ public class TileGrid extends Tile {
 			if (tileTypeLevel == 2) {
 				for (int index = 0; index < 81; index++) {
 					if (tiles[index].globalNumber == -2) {
-						addTile(Tile.getInstance(), index);
+						addTile(Tile.getNothing(), index);
 						isComplete = false;
 					}
 				}
@@ -641,7 +644,7 @@ public class TileGrid extends Tile {
 		
 		for (int index = 0; index < 81; index++) {
 			if (pattern[index] < 0) {
-				addTile(Tile.getInstance(), index);
+				addTile(Tile.getNothing(), index);
 			}
 		}
 		
@@ -752,7 +755,7 @@ public class TileGrid extends Tile {
 			tileFromEast = tiles[indexEast];
 		}
 		else {
-			tileFromEast = Tile.getInstance();
+			tileFromEast = Tile.getNothing();
 		}
 	
 		Tile tileFromWest; 
@@ -760,7 +763,7 @@ public class TileGrid extends Tile {
 			tileFromWest = tiles[indexWest];
 		}
 		else {
-			tileFromWest = Tile.getInstance();
+			tileFromWest = Tile.getNothing();
 		}
 
 		Tile tileFromNorth; 
@@ -768,7 +771,7 @@ public class TileGrid extends Tile {
 			tileFromNorth = tiles[indexNorth];
 		}
 		else {
-			tileFromNorth = Tile.getInstance();
+			tileFromNorth = Tile.getNothing();
 		}
 		
 		Tile tileFromSouth;
@@ -776,7 +779,7 @@ public class TileGrid extends Tile {
 			tileFromSouth = tiles[indexSouth];
 		}
 		else {
-			tileFromSouth = Tile.getInstance();
+			tileFromSouth = Tile.getNothing();
 		}
 		
 		
@@ -2079,8 +2082,8 @@ public class TileGrid extends Tile {
 
         // get index of next writeable Tile
 
-        addTile(Tile.getInstance(), iterationIndex + 1);
-        addTile(Tile.getInstance(), iterationIndex + 9);
+        addTile(Tile.getNothing(), iterationIndex + 1);
+        addTile(Tile.getNothing(), iterationIndex + 9);
         Set<Integer> possibleTiles = CalculatePossibleTiles.getReducedSet(TileType.getTileTypeForLevel(tileTypeLevel), 0,
                 tiles[iterationIndex + 1], tiles[iterationIndex - 1], tiles[iterationIndex - 9],
                 tiles[iterationIndex + 9]);

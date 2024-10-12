@@ -62,7 +62,7 @@ public class Tile {
     	this.type = TileType.todo;
     }
     
-    public static Tile getInstance () {
+    public static Tile getNothing () {
 	    if (Tile.nothing == null) {
 	    	Tile.nothing = new Tile ();
 	    }
@@ -134,7 +134,7 @@ public class Tile {
 		number = -1;
 	}
 	
-	TileType getType() {
+	public TileType getType() {
 		return type;
 	}
 

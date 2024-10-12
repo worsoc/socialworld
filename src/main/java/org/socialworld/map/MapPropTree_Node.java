@@ -79,6 +79,34 @@ public class MapPropTree_Node {
 	
 	protected int getLevel() { return level; }
 	
+	protected MapPropTree_Node getSubTreeNode(String locationRest) {
+		int sector;
+		sector = tree.getSector(locationRest);
+		if ( (sector == -1) | (sector == 0) ) {
+			return null;
+		}
+		else {
+			
+			if (locationRest.length() == 1) {
+				// last address sign --> return node itself
+				return sectorNodes[sector - 1];
+			}
+			else {
+				if (sectorNodes[sector - 1] == null) {
+					if (GlobalSwitches.OUTPUT_DEBUG_VARIABLE_IS_NULL) {
+						System.out.println("MapPropTree_Node.getProperty(): sectorNodes[sector - 1] is null ");
+					}
+				}
+				else {
+					return sectorNodes[sector - 1].getSubTreeNode(locationRest.substring(1));
+				}
+			}
+		}
+
+		return null;
+		
+	}
+	
 	protected LinkedList<IMapProp> getProperties(String locationRest) {
 		
 		int sector;
@@ -91,23 +119,30 @@ public class MapPropTree_Node {
 		}
 		else {
 			
-			if (locationRest.length() == 1) {
-				// last address sign --> return node's properties
-				list.addAll(this.properties);
+			if (sectorNodes[sector - 1] == null) {
+				if (GlobalSwitches.OUTPUT_DEBUG_VARIABLE_IS_NULL) {
+					System.out.println("MapPropTree_Node.getProperty(): sectorNodes[sector - 1] is null ");
+				}
+			//	list.add(tree.getPropertyNothing());
 			}
 			else {
-				if (sectorNodes[sector - 1] == null) {
-					if (GlobalSwitches.OUTPUT_DEBUG_VARIABLE_IS_NULL) {
-						System.out.println("MapPropTree_Node.getProperty(): sectorNodes[sector - 1] is null ");
-					}
-				//	list.add(tree.getPropertyNothing());
+				if (locationRest.length() == 1) {
+					// last address sign --> return sector's properties
+					list = sectorNodes[sector - 1].getProperties();
 				}
 				else {
 					list = sectorNodes[sector - 1].getProperties(locationRest.substring(1));
 				}
 			}
+			
 		}
 
+		return list;
+	}
+
+	private LinkedList<IMapProp> getProperties() {
+		LinkedList<IMapProp> list = new LinkedList<IMapProp>();
+		list.addAll(this.properties);
 		return list;
 	}
 

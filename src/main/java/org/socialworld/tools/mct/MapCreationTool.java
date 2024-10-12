@@ -48,7 +48,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.awt.event.ActionEvent;
 
 
@@ -597,7 +596,7 @@ public class MapCreationTool {
 			 tileFromEast = raster[indexEast].tile;
 		}
 		else {
-			tileFromEast = Tile.getInstance();
+			tileFromEast = Tile.getNothing();
 		}
 	
 		Tile tileFromWest; 
@@ -605,7 +604,7 @@ public class MapCreationTool {
 			tileFromWest = raster[indexWest].tile;
 		}
 		else {
-			tileFromWest = Tile.getInstance();
+			tileFromWest = Tile.getNothing();
 		}
 
 		Tile tileFromNorth; 
@@ -613,7 +612,7 @@ public class MapCreationTool {
 			tileFromNorth = raster[indexNorth].tile;
 		}
 		else {
-			tileFromNorth = Tile.getInstance();
+			tileFromNorth = Tile.getNothing();
 		}
 		
 		Tile tileFromSouth; 
@@ -621,7 +620,7 @@ public class MapCreationTool {
 			tileFromSouth = raster[indexSouth].tile;
 		}
 		else {
-			tileFromSouth = Tile.getInstance();
+			tileFromSouth = Tile.getNothing();
 		}
 		
 		return CalculatePossibleTiles.getReducedSet(type, tileTypeAlternative, 
