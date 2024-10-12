@@ -27,8 +27,35 @@ import org.socialworld.tools.mct.Tile;
 
 public class TileSearchTree extends MapPropTree {
 
-	public TileSearchTree(int base, int accuracy) {
-		super(base, accuracy);
+	/*
+	 *  a map for tiles
+	 *  The tree's basis is 9 for 9 sectors similar to the number keypad
+	 *      7    8    9
+	 *      4    5    6
+	 *      1    2    3
+	 *    A tile position is described by a code that holds 9 sector numbers. 
+	 *    (a number sequence with length 9) 
+	 *    
+	 *  level		  m
+	 *   		 	6561
+	 *   1 		 	2187
+	 *   2		  	 729
+	 *   3		  	 243
+	 *   4		   	  81		large tiles
+	 *   5		   	  27
+	 *   6             9		medium tiles
+	 *   7			   3
+	 *   8			   1		small tiles
+	 *   9		 	   0,333333333...
+	 *   			  	
+	 * tile search map always with base 9
+	 * so we are able to address a base-27-tile (3D (3x3x3)) on a 3x3-raster (2D)
+	 * a large tile must be addressed by location string with length 4
+	 * a medium tile must be addressed by location string with length 6
+	 * a small tile must be addressed by location string with length 8
+*/	
+	public TileSearchTree(int accuracy) {
+		super(9, accuracy);
 	}
 	
 	protected void createRoot() {
