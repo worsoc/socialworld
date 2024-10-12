@@ -60,15 +60,15 @@ import org.socialworld.tools.StringTupel;
  *           hier wird in den Argumenten angegeben welche Basis (9 oder 25) und welche Genauigkeit (wieviele Schritte durch den Suchbaum) verwendet werden soll 
  *  -   getDistance() zur Berechnung des Abstandes (also L�nge des Weges zu) einer zweiten Position
  *  -   getDirectionFrom() zur Ermittlung eines Richtungsverktors von einer zweiten Position zur "eigenen"
- *  -   getDirectionTo() zur Ermittlung eines Richtungsverktors von der "eigenen" zu einer zweiten Position hin
- *  -   getX(), getY() und getZ() zur Abfrage der einzenen Koordianten desVektors
+ *  -   getDirectionTo() zur Ermittlung eines Richtungsvektors von der "eigenen" zu einer zweiten Position hin
+ *  -   getX(), getY() und getZ() zur Abfrage der einzelnen Koordinaten des Vektors
  *  
  * @author Mathias Sikos (MatWorsoc)  
  */
 public class Position extends SimProperty implements ICalculatable {
 
 	public final int LOCATIONBYBASEMAXLENGTH = 9;
-	public final int TRANSLATE = 2000000;
+	public final int TRANSLATE = 3280500;
 	public static final int LOCATIONBASE9 = 9;
 	public static final int LOCATIONBASE25 = 25;
 	
