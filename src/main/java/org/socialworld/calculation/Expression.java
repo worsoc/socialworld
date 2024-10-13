@@ -21,12 +21,14 @@
 */
 package org.socialworld.calculation;
 
+import java.util.LinkedList;
 
 import org.socialworld.GlobalSwitches;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.expressions.Nothing;
 import org.socialworld.collections.ValueArrayList;
+import org.socialworld.core.IAccessToken;
 import org.socialworld.objects.NoSimulationObject;
 import org.socialworld.objects.SimulationObject;
 
@@ -628,11 +630,21 @@ public class Expression implements IObjectReceiver{
 	}
 
 	
-	// will be overridden in inherited Expressions dedicated to getting ValueProperty
-	protected ValueProperty getProperty(Value valueObject, SimulationCluster cluster, PropertyName simPropName, String methodName, String valueName) {
-		return new ValueProperty(Type.nothing, "", null );
+	private final ValueProperty getProperty(Value valueObject, SimulationCluster cluster, PropertyName simPropName, String methodName, String valueName) {
+		ValueProperty vp = ValueProperty.getInvalid();
+		LinkedList<IAccessToken> tokens = cluster.getTokens();
+		for (IAccessToken token : tokens) {
+			vp = getProperty(valueObject, token, simPropName, methodName, valueName);
+			if (vp.getType() != Type.nothing) break;
+		}
+		return vp;
 	}
 
+	// will be overridden in inherited Expressions dedicated to getting ValueProperty
+	protected ValueProperty getProperty(Value valueObject, IAccessToken token, PropertyName simPropName, String methodName, String valueName) {
+		return ValueProperty.getInvalid();
+	}
+	
 	// will be overridden in inherited Expressions dedicated to creating values
 	protected Value createValue(Type valueType, int subType, String name, ValueArrayList arguments) {
 		return Value.getValueNothing();

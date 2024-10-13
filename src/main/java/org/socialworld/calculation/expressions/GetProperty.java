@@ -24,7 +24,6 @@ package org.socialworld.calculation.expressions;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueProperty;
@@ -35,7 +34,7 @@ public class GetProperty extends Expression {
 	
 	
 
-	public GetProperty(SimulationCluster cluster, GetPropertyMode mode, String name, String propertyName) {
+	public GetProperty(IAccessToken token, GetPropertyMode mode, String name, String propertyName) {
 		
 		super();
 		
@@ -59,7 +58,7 @@ public class GetProperty extends Expression {
 			break;
 		}
 		
-		Expression exp1 = new Constant(new Value(Type.integer, cluster.getIndex()));
+		Expression exp1 = new Constant(new Value(Type.integer, token.getSimulationCluster().getIndex()));
 		Expression exp2 = new Constant(new Value(Type.string, name));
 		Expression exp3 = new Constant(new Value(Type.string, propertyName));
 		

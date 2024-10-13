@@ -3,12 +3,13 @@ package org.socialworld.calculation.expressions;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
 import org.socialworld.calculation.PropertyUsingAs;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.functions.FunctionCheckType;
 
 public class Calculate extends Expression {
+
+	private static AccessTokenExpressions4Value token = AccessTokenExpressions4Value.getValid();
 
 	public static Calculate getCalculateExpression(String functionDescription, String nameResultValue) {
 		String term = getTermConstruction(functionDescription);
@@ -59,7 +60,7 @@ public class Calculate extends Expression {
 			
 			if (functionName.equals("get")) {
 				String separator = Calculate.getDotOperator(subString);
-				result = new GetValue(SimulationCluster.todo, PropertyUsingAs.todo, subString, separator, Value.VALUE_NAME_UNUSED_BECAUSE_TEMPORARY);
+				result = new GetValue(token, PropertyUsingAs.todo, subString, separator, Value.VALUE_NAME_UNUSED_BECAUSE_TEMPORARY);
 				return result;
 			}
 			else {

@@ -26,7 +26,6 @@ import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
 import org.socialworld.calculation.PropertyUsingAs;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.datasource.tablesPool.ViewDotElementJoinDotElem;
@@ -51,7 +50,7 @@ public class GetValue extends Expression {
 		if (steps.length > 0) {
 			setOperation(Expression_Function.oneExpression);
 			
-			Expression exp1 = new GetValue(/* token */ SimulationCluster.todo, usablePermission, steps, 0, valueAliasName);
+			Expression exp1 = new GetValue(token, usablePermission, steps, 0, valueAliasName);
 			
 			setExpression1(exp1);
 			setValid();
@@ -64,27 +63,6 @@ public class GetValue extends Expression {
 	}
 	
 	
-	public GetValue(SimulationCluster cluster, PropertyUsingAs usablePermission, String getValuePath, String valueAliasName) {
-		
-		super();
-		
-		String steps[];
-		steps = getValuePath.split("\\.");
-
-		if (steps.length > 0) {
-			setOperation(Expression_Function.oneExpression);
-			
-			Expression exp1 = new GetValue(cluster, usablePermission, steps, 0, valueAliasName);
-			
-			setExpression1(exp1);
-			setValid();
-			
-		}
-		else {
-			setOperation(Expression_Function.skip);
-		}
-			
-	}
 
 	 GetValue(IAccessToken token, PropertyUsingAs usablePermission, String getValuePath, String separator, String valueAliasName) {
 			
@@ -96,7 +74,7 @@ public class GetValue extends Expression {
 		if (steps.length > 0) {
 			setOperation(Expression_Function.oneExpression);
 			
-			Expression exp1 = new GetValue(/* token */ SimulationCluster.todo, usablePermission, steps, 0, valueAliasName);
+			Expression exp1 = new GetValue(token, usablePermission, steps, 0, valueAliasName);
 			
 			setExpression1(exp1);
 			setValid();
@@ -108,30 +86,9 @@ public class GetValue extends Expression {
 			
 	}
 	
-	 GetValue(SimulationCluster cluster, PropertyUsingAs usablePermission, String getValuePath, String separator, String valueAliasName) {
-		
-		super();
-		
-		String steps[];
-		steps = getValuePath.split(separator);
-
-		if (steps.length > 0) {
-			setOperation(Expression_Function.oneExpression);
-			
-			Expression exp1 = new GetValue(cluster, usablePermission, steps, 0, valueAliasName);
-			
-			setExpression1(exp1);
-			setValid();
-			
-		}
-		else {
-			setOperation(Expression_Function.skip);
-		}
-			
-	}
 
 	
-	private GetValue(SimulationCluster cluster, PropertyUsingAs usablePermission, String[] steps, int indexContinue, String valueAliasName) {
+	private GetValue(IAccessToken token, PropertyUsingAs usablePermission, String[] steps, int indexContinue, String valueAliasName) {
 		
 		Expression exp1 = Nothing.getInstance();
 		Expression exp2 = Nothing.getInstance();
@@ -140,7 +97,7 @@ public class GetValue extends Expression {
 		Value checkPermission;
 		
 		step = steps[indexContinue];
-		exp1 = getStepExpression(cluster, usablePermission, step, valueAliasName);
+		exp1 = getStepExpression(token, usablePermission, step, valueAliasName);
 
 		if (steps.length == indexContinue + 1) {
 			
@@ -155,13 +112,13 @@ public class GetValue extends Expression {
 			if (steps.length == indexContinue + 2) {
 				
 				step = steps[indexContinue + 1];
-				exp2 = getStepExpression(cluster, usablePermission, step, valueAliasName);
+				exp2 = getStepExpression(token, usablePermission, step, valueAliasName);
 				checkPermission = new Value(Type.integer, usablePermission.getIndex() - 1);
 				
 			}
 			else {
 					
-				exp2 = new GetValue(cluster, usablePermission, steps, indexContinue + 1, valueAliasName);
+				exp2 = new GetValue(token, usablePermission, steps, indexContinue + 1, valueAliasName);
 				checkPermission = new Value(Type.integer, usablePermission.getIndex() - 1);
 	
 			}
@@ -209,7 +166,7 @@ public class GetValue extends Expression {
 		return GETISELEMENTOF + "(" + setNumber + ")"; 
 	}
 	
-	private Expression getStepExpression(SimulationCluster cluster, PropertyUsingAs usablePermission, String step, String valueAliasName) {
+	private Expression getStepExpression(IAccessToken token, PropertyUsingAs usablePermission, String step, String valueAliasName) {
 		Expression result = Nothing.getInstance();
 		String name;
 		
@@ -223,7 +180,7 @@ public class GetValue extends Expression {
 				if (step.indexOf("#" + GETISELEMENTOF + "(") >= 0 ) {
 					String stepCopy = new String(step);
 					stepCopy = stepCopy.replace("#", ".");
-					result = new  Branching (new GetValue(cluster, usablePermission, stepCopy, valueAliasName), 
+					result = new  Branching (new GetValue(token, usablePermission, stepCopy, valueAliasName), 
 							new GetArgumentByName(name, valueAliasName), 
 							Nothing.getInstance());
 				}
@@ -237,40 +194,40 @@ public class GetValue extends Expression {
 				if (step.indexOf("#" + GETISELEMENTOF + "(") >= 0 ) {
 					String stepCopy = new String(step);
 					stepCopy = stepCopy.replace("#", ".");
-					result = new  Branching (new GetValue(cluster, usablePermission, stepCopy, valueAliasName), 
-							new GetProperty(cluster, GetPropertyMode.property, name, valueAliasName), 
+					result = new  Branching (new GetValue(token, usablePermission, stepCopy, valueAliasName), 
+							new GetProperty(token, GetPropertyMode.property, name, valueAliasName), 
 							Nothing.getInstance());
 				}
 				else {
-					result = new GetProperty(cluster, GetPropertyMode.property, name, valueAliasName);
+					result = new GetProperty(token, GetPropertyMode.property, name, valueAliasName);
 				}
 				
 			}
 			else if (step.indexOf(GETFUNCTIONVALUE + "(") >= 0 ) {
-				result = new GetProperty(cluster, GetPropertyMode.method, name, valueAliasName);
+				result = new GetProperty(token, GetPropertyMode.method, name, valueAliasName);
 			}
 			else if (step.indexOf(GETISA + "(") >= 0 ) {
-				result = new GetProperty(cluster, GetPropertyMode.isA, name, valueAliasName);
+				result = new GetProperty(token, GetPropertyMode.isA, name, valueAliasName);
 			}
 			else if (step.indexOf(GETCHECK + "(") >= 0 ) {
-				result = new GetProperty(cluster, GetPropertyMode.check, name, valueAliasName);
+				result = new GetProperty(token, GetPropertyMode.check, name, valueAliasName);
 			}
 			else if (step.indexOf(GETISELEMENTOF + "(") >= 0 ) {
-				result = new GetProperty(cluster, GetPropertyMode.isElem, name, valueAliasName);
+				result = new GetProperty(token, GetPropertyMode.isElem, name, valueAliasName);
 			}
 		}
 		return result;
 	}
 
 	
-	GetValue(SimulationCluster cluster, PropertyUsingAs usablePermission, ViewDotElementJoinDotElem dotElements, int row, String valueAliasName) {
+	GetValue(IAccessToken token, PropertyUsingAs usablePermission, ViewDotElementJoinDotElem dotElements, int row, String valueAliasName) {
 
 		Expression exp1 = Nothing.getInstance();
 		Expression exp2 = Nothing.getInstance();
 		
 		Value checkPermission;
 		
-		exp1 = getStepExpression(cluster, usablePermission, dotElements, row, valueAliasName);
+		exp1 = getStepExpression(token, usablePermission, dotElements, row, valueAliasName);
 
 		if (dotElements.rowCount() == row + 1) {
 			
@@ -284,13 +241,13 @@ public class GetValue extends Expression {
 		else {
 			if (dotElements.rowCount() == row + 2) {
 				
-				exp2 = getStepExpression(cluster, usablePermission, dotElements, row + 1, valueAliasName);
+				exp2 = getStepExpression(token, usablePermission, dotElements, row + 1, valueAliasName);
 				checkPermission = new Value(Type.integer, usablePermission.getIndex() - 1);
 				
 			}
 			else {
 					
-				exp2 = new GetValue(cluster, usablePermission, dotElements, row  + 1, valueAliasName);
+				exp2 = new GetValue(token, usablePermission, dotElements, row  + 1, valueAliasName);
 				checkPermission = new Value(Type.integer, usablePermission.getIndex() - 1);
 	
 			}
@@ -306,7 +263,7 @@ public class GetValue extends Expression {
 		
 	}
 
-	private Expression getStepExpression(SimulationCluster cluster, PropertyUsingAs usablePermission, ViewDotElementJoinDotElem dotElements, int row, String valueAliasName) {
+	private Expression getStepExpression(IAccessToken token, PropertyUsingAs usablePermission, ViewDotElementJoinDotElem dotElements, int row, String valueAliasName) {
 		Expression result = Nothing.getInstance();
 		
 		String name;
@@ -322,7 +279,7 @@ public class GetValue extends Expression {
 		if (dotElemFunction == 1 ) {
 			// GetValue
 			if (dotElemAddOn == 1 /* IsElem */ ) {
-				result = new  Branching (new GetProperty(cluster, GetPropertyMode.isElem, "" + dotElemAdooOnIntArg, valueAliasName),
+				result = new  Branching (new GetProperty(token, GetPropertyMode.isElem, "" + dotElemAdooOnIntArg, valueAliasName),
 						new GetArgumentByName(name, valueAliasName), 
 						Nothing.getInstance());
 			}
@@ -334,27 +291,27 @@ public class GetValue extends Expression {
 		else if (dotElemFunction == 2 ) {
 			// GetProperty
 			if (dotElemAddOn == 1 /* IsElem */ ) {
-				result = new  Branching (new GetProperty(cluster, GetPropertyMode.isElem, "" + dotElemAdooOnIntArg, valueAliasName),
-						new GetProperty(cluster, GetPropertyMode.property, name, valueAliasName), 
+				result = new  Branching (new GetProperty(token, GetPropertyMode.isElem, "" + dotElemAdooOnIntArg, valueAliasName),
+						new GetProperty(token, GetPropertyMode.property, name, valueAliasName), 
 						Nothing.getInstance());
 			}
 			else {
-				result = new GetProperty(cluster, GetPropertyMode.property, name, valueAliasName);
+				result = new GetProperty(token, GetPropertyMode.property, name, valueAliasName);
 			}
 			
 		}
 		/*
 		else if (step.indexOf(GETFUNCTIONVALUE + "(") >= 0 ) {
-			result = new GetProperty(cluster, GetPropertyMode.method, name, valueAliasName);
+			result = new GetProperty(token, GetPropertyMode.method, name, valueAliasName);
 		}
 		else if (step.indexOf(GETISA + "(") >= 0 ) {
-			result = new GetProperty(cluster, GetPropertyMode.isA, name, valueAliasName);
+			result = new GetProperty(token, GetPropertyMode.isA, name, valueAliasName);
 		}
 		else if (step.indexOf(GETCHECK + "(") >= 0 ) {
-			result = new GetProperty(cluster, GetPropertyMode.check, name, valueAliasName);
+			result = new GetProperty(token, GetPropertyMode.check, name, valueAliasName);
 		}
 		else if (step.indexOf(GETISELEMENTOF + "(") >= 0 ) {
-			result = new GetProperty(cluster, GetPropertyMode.isElem, name, valueAliasName);
+			result = new GetProperty(token, GetPropertyMode.isElem, name, valueAliasName);
 		}
 */
 		return result;

@@ -21,7 +21,6 @@ class GetSimulationClustersPropUsingAs {
 		
 		switch(cluster) {
 		case total:
-		case todo:
 		case test:
 		case toBeSet:
 			result = possibleUsingAs4ClusterKnowledge;

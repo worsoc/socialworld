@@ -27,9 +27,9 @@ import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_ConditionOperator;
 import org.socialworld.calculation.Expression_Function;
 import org.socialworld.calculation.PropertyUsingAs;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
+import org.socialworld.core.IAccessToken;
 
 public class Branching extends Expression {
 
@@ -51,7 +51,7 @@ public class Branching extends Expression {
 		super();
 	}
 	
-	protected Expression parseWenn(SimulationCluster cluster, PropertyUsingAs usablePermission, String line, boolean withWENNDANN ) {
+	protected Expression parseWenn(IAccessToken token, PropertyUsingAs usablePermission, String line, boolean withWENNDANN ) {
 		
 		String partWENN;
 		
@@ -74,7 +74,7 @@ public class Branching extends Expression {
 	
 			for (int i = 0; i < countORs; i++) {
 				
-				disjunctionParts[i] = parseConjunction(cluster, usablePermission, listORs[i]);
+				disjunctionParts[i] = parseConjunction(token, usablePermission, listORs[i]);
 				
 			}
 			
@@ -83,13 +83,13 @@ public class Branching extends Expression {
 		}
 		else {
 			
-			return parseConjunction(cluster, usablePermission, listORs[0]);
+			return parseConjunction(token, usablePermission, listORs[0]);
 			
 		}
 		
 	}
 	
-	private Expression parseConjunction(SimulationCluster cluster, PropertyUsingAs usablePermission, String conjunction) {
+	private Expression parseConjunction(IAccessToken token, PropertyUsingAs usablePermission, String conjunction) {
 		
 		String[] listANDs = conjunction.split("&");
 		int countANDs = listANDs.length;
@@ -100,7 +100,7 @@ public class Branching extends Expression {
 			
 			for (int i = 0; i < countANDs; i++) {
 				
-				conjunctionParts[i] = parseCondition(cluster, usablePermission, listANDs[i].trim());
+				conjunctionParts[i] = parseCondition(token, usablePermission, listANDs[i].trim());
 				
 			}
 			
@@ -109,7 +109,7 @@ public class Branching extends Expression {
 		}
 		else {
 			
-			return parseCondition(cluster, usablePermission, listANDs[0]);
+			return parseCondition(token, usablePermission, listANDs[0]);
 			
 		}
 		
@@ -117,7 +117,7 @@ public class Branching extends Expression {
 	
 	
 	
-	private Expression parseCondition(SimulationCluster cluster, PropertyUsingAs usablePermission, String condition) {
+	private Expression parseCondition(IAccessToken token, PropertyUsingAs usablePermission, String condition) {
 
 		String[] conditionElements = condition.trim().split("\\s+");
 		
@@ -127,7 +127,7 @@ public class Branching extends Expression {
 			
 			if (conditionElements[0].indexOf("function:") >= 0) {
 				// the function is a term construction with triples (function name, operator1, operator2)+-----
-				return parseFunctionCondition(cluster, usablePermission, conditionElements);
+				return parseFunctionCondition(token, usablePermission, conditionElements);
 			}
 			else {
 				return parseAttributeCondition(conditionElements);
@@ -141,10 +141,10 @@ public class Branching extends Expression {
 			
 			if (conditionElements[1].indexOf("(") > 0) {
 				// the get value path contains at least one "(" for GETVal(...), GETProp(...) or  GETFctVal(...)
-				return parseStateCondition(cluster, usablePermission, conditionElements);
+				return parseStateCondition(token, usablePermission, conditionElements);
 			}
 			else {
-				return parseEventPropsCondition(cluster, usablePermission, conditionElements);
+				return parseEventPropsCondition(token, usablePermission, conditionElements);
 			}
 			
 		}
@@ -188,7 +188,7 @@ public class Branching extends Expression {
 			
 	}
 	
-	private Expression parseFunctionCondition(SimulationCluster cluster, PropertyUsingAs usablePermission, String[] conditionElements) {
+	private Expression parseFunctionCondition(IAccessToken token, PropertyUsingAs usablePermission, String[] conditionElements) {
 		
 	
 		// the function description
@@ -218,7 +218,7 @@ public class Branching extends Expression {
 			
 	}
 
-	private Expression parseEventPropsCondition(SimulationCluster cluster, PropertyUsingAs usablePermission, String[] conditionElements) {
+	private Expression parseEventPropsCondition(IAccessToken token, PropertyUsingAs usablePermission, String[] conditionElements) {
 		
 		// type as Type's index (look at the enum Type)
 		String type = conditionElements[0];
@@ -249,7 +249,7 @@ public class Branching extends Expression {
 			
 	}
 
-	private Expression parseStateCondition(SimulationCluster cluster, PropertyUsingAs usablePermission, String[] conditionElements) {
+	private Expression parseStateCondition(IAccessToken token, PropertyUsingAs usablePermission, String[] conditionElements) {
 		
 		// type as Type's index (look at the enum Type)
 		String type = conditionElements[0];
@@ -262,7 +262,7 @@ public class Branching extends Expression {
 		// the value the event's property is compared to
 		String value = conditionElements[3];
 		
-		Expression getValue = new GetValue(cluster, usablePermission, getValuePath, Value.VALUE_NAME_UNUSED_BECAUSE_TEMPORARY);
+		Expression getValue = new GetValue(token, usablePermission, getValuePath, Value.VALUE_NAME_UNUSED_BECAUSE_TEMPORARY);
 		
 		Expression constant = new Constant(new Value(value, Type.getName(Integer.parseInt(type)) ) );
 		

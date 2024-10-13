@@ -2,7 +2,6 @@ package org.socialworld.objects.concrete.animals.birds.palaeognathae;
 
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.PropertyName;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.core.IAccessToken;

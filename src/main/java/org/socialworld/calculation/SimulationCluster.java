@@ -32,12 +32,12 @@ public enum SimulationCluster {
 	knowledge(11),
 	_percipience(21),
 	_position(31), _pathFinder(32),
-	_attributeArray(41),
-	_action(51),
+	attributeArray(41),
+	action(51),
 	_event(61),
 	_objectMaster(1001),
+	expressionEvaluate(2001),
 	total(8888),
-	todo(9998),
 	test(9999);
 	
 	private int index;

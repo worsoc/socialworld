@@ -261,7 +261,7 @@ public abstract class State implements ISimProperty, ISavedValue, IObjectSender,
 		}
 	}
 
-	// ISavedValue copyForProperty(SimulationCluster cluster) will be implemented in inherited classes
+	// ISavedValue copyForProperty(IAccessToken token) will be implemented in inherited classes
 
 	
 	
@@ -295,11 +295,11 @@ public abstract class State implements ISimProperty, ISavedValue, IObjectSender,
 	 // TODO implement getProperty() in sub classes
 	 // TEMP_SOLUTION wieder freigeben
 	 // -->
-		public  ValueProperty getProperty(SimulationCluster cluster, PropertyName propName, String valueName) {
+		public  ValueProperty getProperty(IAccessToken token, PropertyName propName, String valueName) {
 			return ValueProperty.getInvalid();
 		}
 		
-		public  ValueProperty getPropertyFromMethod(SimulationCluster cluster, String methodName, String valueName){
+		public  ValueProperty getPropertyFromMethod(IAccessToken token, String methodName, String valueName){
 			return ValueProperty.getInvalid();
 		}
 	*/

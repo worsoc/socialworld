@@ -27,7 +27,6 @@ import org.socialworld.actions.ActionType;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
 import org.socialworld.calculation.PropertyUsingAs;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.geometry.Vector;
@@ -40,6 +39,8 @@ public class CreateActionExpression extends Branching {
 	
 	public static final int MODUS_CREATE_STATE2ACTION = 1;
 	public static final int MODUS_CREATE_REACTION = 2;
+
+	private static AccessTokenExpressions4Action token = AccessTokenExpressions4Action.getValid();
 	
 	public CreateActionExpression(List<EventReactionDescriptionEntry> descEntrys, boolean dummy) {
 		
@@ -55,7 +56,7 @@ public class CreateActionExpression extends Branching {
 			Expression exp3;  // SONST
 	 
 			entry = descEntrys.get(0);
-			exp1 = parseWenn(SimulationCluster.todo, PropertyUsingAs.todo, entry.conditions, false /* without WENN/DANN */);
+			exp1 = parseWenn(token, PropertyUsingAs.todo, entry.conditions, false /* without WENN/DANN */);
 			exp2 = parseDann(entry);
 	
 			if (descEntrys.size() > 1) {
@@ -91,7 +92,7 @@ public class CreateActionExpression extends Branching {
 			Expression exp3;  // SONST
 				
 			line = lines.get(0);
-			exp1 = parseWenn(SimulationCluster.todo, PropertyUsingAs.todo, line, true /* with WENN/DANN */);
+			exp1 = parseWenn(token, PropertyUsingAs.todo, line, true /* with WENN/DANN */);
 			exp2 = parseDann(line);
 			
 			if (lines.size() > 1) {
@@ -125,7 +126,7 @@ public class CreateActionExpression extends Branching {
 		Expression tail;
 		
 		entry = descEntrys.get(index);
-		wenn = parseWenn(SimulationCluster.todo, PropertyUsingAs.todo, entry.conditions, false /* without WENN/DANN */);
+		wenn = parseWenn(token, PropertyUsingAs.todo, entry.conditions, false /* without WENN/DANN */);
 		dann = parseDann(entry);
 		
 		if (index == (descEntrys.size() - 1)) 
@@ -147,7 +148,7 @@ public class CreateActionExpression extends Branching {
 		Expression tail;
 		
 		line = lines.get(index);
-		wenn = parseWenn(SimulationCluster.todo, PropertyUsingAs.todo, line, true /* with WENN/DANN */);
+		wenn = parseWenn(token, PropertyUsingAs.todo, line, true /* with WENN/DANN */);
 		dann = parseDann(line);
 		
 		if (index == (lines.size() - 1)) 

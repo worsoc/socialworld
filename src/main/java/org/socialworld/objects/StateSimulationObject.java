@@ -32,7 +32,6 @@ import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.IObjectReceiver;
 import org.socialworld.calculation.ObjectRequester;
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueProperty;
@@ -184,9 +183,7 @@ public abstract class StateSimulationObject extends ListenedBase implements IObj
 		
 		ValueProperty result;
 		PropertyName parentStatePropName;
-		
-		SimulationCluster todo = SimulationCluster.todo;
-		
+				
 		switch (prop) {
 		case simobj_position:
 			result = this.position.getAsValue(token, name); break;
@@ -194,7 +191,7 @@ public abstract class StateSimulationObject extends ListenedBase implements IObj
 			result = this.directionMove.getAsValue(token, name); break;
 		default:
 			
-			parentStatePropName = getParentStatePropertyName ( todo, prop,  name);
+			parentStatePropName = getParentStatePropertyName ( token, prop,  name);
 			if (parentStatePropName != PropertyName.unknown) {
 				result = getStateProperty( token, parentStatePropName, prop,  name);
 			}
@@ -442,7 +439,7 @@ public abstract class StateSimulationObject extends ListenedBase implements IObj
 		return result;
 	}
 	
-	private PropertyName getParentStatePropertyName(SimulationCluster cluster, PropertyName prop, String name) {
+	private PropertyName getParentStatePropertyName(IAccessToken token, PropertyName prop, String name) {
 		State stateAddOn;
 		
 		
