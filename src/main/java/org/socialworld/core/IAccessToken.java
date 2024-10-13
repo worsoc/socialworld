@@ -8,4 +8,5 @@ public interface IAccessToken {
 	
 	default  PropertyUsingAs[] getPossibleUsingAs() {return new PropertyUsingAs[0];}
 	default boolean isWithoutRestrictions() {return true;}
+	
 }

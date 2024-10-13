@@ -163,7 +163,7 @@ public class Expression implements IObjectReceiver{
 	}
 	
 		
-	Value evaluate() {
+	protected Value evaluate() {
 		ValueArrayList noArguments = null;
 		return evaluate(noArguments);
 	}

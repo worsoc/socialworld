@@ -2,11 +2,11 @@ package org.socialworld.calculation.expressions;
 
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
-import org.socialworld.calculation.FunctionCheckType;
 import org.socialworld.calculation.PropertyUsingAs;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
+import org.socialworld.calculation.functions.FunctionCheckType;
 
 public class Calculate extends Expression {
 

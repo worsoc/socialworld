@@ -21,6 +21,10 @@
 */
 package org.socialworld.calculation;
 
+import java.util.LinkedList;
+
+import org.socialworld.core.IAccessToken;
+
 public enum SimulationCluster {
 	
 	unknown(0),
@@ -38,6 +42,7 @@ public enum SimulationCluster {
 	
 	private int index;
 
+	private LinkedList<IAccessToken>  tokens = null;
 	
 	private SimulationCluster(int index) {
 		this.index = index;
@@ -47,11 +52,25 @@ public enum SimulationCluster {
 		return index;
 	}
 
+	
 	static SimulationCluster getName(int index) {
 		for (SimulationCluster cluster : SimulationCluster.values())
 			if (cluster.index == index)
 				return cluster;
 		return unknown;
+	}
+	
+	public void addToken(IAccessToken token) {
+		if (this.tokens == null) {
+			this.tokens = new LinkedList<IAccessToken>();
+		}
+		if (!this.tokens.contains(token)) {
+			this.tokens.add(token);
+		}
+	}
+
+	LinkedList<IAccessToken> getTokens() {
+		return tokens;
 	}
 	
 	public  PropertyUsingAs[] getPossibleUsingAs() {

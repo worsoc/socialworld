@@ -19,10 +19,14 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.calculation;
+package org.socialworld.calculation.functions;
 
 
 import org.socialworld.GlobalSwitches;
+import org.socialworld.calculation.FunctionBase;
+import org.socialworld.calculation.NoObject;
+import org.socialworld.calculation.Type;
+import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
 
 /**

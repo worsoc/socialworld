@@ -24,7 +24,7 @@ package org.socialworld.calculation.descriptions;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.socialworld.calculation.FunctionByExpression;
+import org.socialworld.calculation.functions.FunctionByExpression;
 
 public abstract class DescriptionBase {
 

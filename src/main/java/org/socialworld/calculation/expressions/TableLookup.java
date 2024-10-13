@@ -24,8 +24,8 @@ package org.socialworld.calculation.expressions;
 import org.socialworld.attributes.Attribute;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
-import org.socialworld.calculation.FunctionByTable;
-import org.socialworld.calculation.FunctionByTable_Type;
+import org.socialworld.calculation.functions.FunctionByTable;
+import org.socialworld.calculation.functions.FunctionByTable_Type;
 
 public class TableLookup extends Expression {
 

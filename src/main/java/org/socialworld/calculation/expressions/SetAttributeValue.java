@@ -24,7 +24,7 @@ package org.socialworld.calculation.expressions;
 import org.socialworld.attributes.Attribute;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
-import org.socialworld.calculation.FunctionSetAttributeValue;
+import org.socialworld.calculation.functions.FunctionSetAttributeValue;
 
 public class SetAttributeValue extends Expression {
 

@@ -41,7 +41,7 @@ public abstract class FunctionBase  implements IObjectReceiver {
 
 	protected ObjectRequester objectRequester = new ObjectRequester();
 
-	boolean returnInvalidNothingvalue;
+	protected boolean returnInvalidNothingvalue;
 	
 	
 	public abstract Value calculate(ValueArrayList arguments);

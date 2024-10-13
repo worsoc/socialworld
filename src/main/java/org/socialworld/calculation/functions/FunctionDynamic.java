@@ -19,9 +19,13 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.calculation;
+package org.socialworld.calculation.functions;
 
 import org.socialworld.GlobalSwitches;
+import org.socialworld.calculation.FunctionBase;
+import org.socialworld.calculation.NoObject;
+import org.socialworld.calculation.Type;
+import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.datasource.pool.FunctionPool;
 
@@ -57,7 +61,7 @@ public class FunctionDynamic extends FunctionBase {
 				if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
 					System.out.println("FunctionDynamic.calculate > func_id: o (getObject(Type.integer)) is NoObject " + ((NoObject)o).getReason().toString() );
 				}
-				return calculation.nothing;
+				return Value.getValueNothing();
 			}
 			else {
 				func_id = (int) o;
@@ -69,11 +73,11 @@ public class FunctionDynamic extends FunctionBase {
 				return function.calculate(objectRequester.requestValueArrayList(token, arguments.get(1), this));
 			}
 			else {
-				return calculation.nothing;
+				return Value.getValueNothing();
 			}
 		}
 		else {
-			return calculation.nothing;
+			return Value.getValueNothing();
 		}
 		
 	}

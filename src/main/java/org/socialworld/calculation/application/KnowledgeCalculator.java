@@ -24,12 +24,12 @@ package org.socialworld.calculation.application;
 
 import org.socialworld.GlobalSwitches;
 import org.socialworld.calculation.Calculation;
-import org.socialworld.calculation.FunctionByExpression;
 import org.socialworld.calculation.NoObject;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.descriptions.EventPerceptionAssignment;
 import org.socialworld.calculation.descriptions.EventPerceptionDescription;
+import org.socialworld.calculation.functions.FunctionByExpression;
 import org.socialworld.collections.CapacityQueue;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.conversation.Lexem;

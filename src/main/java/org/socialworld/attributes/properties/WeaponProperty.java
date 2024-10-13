@@ -21,9 +21,9 @@
 */
 package org.socialworld.attributes.properties;
 
-import org.socialworld.calculation.FunctionMXplusN;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
+import org.socialworld.calculation.functions.FunctionMXplusN;
 import org.socialworld.collections.ValueArrayList;
 
 /**

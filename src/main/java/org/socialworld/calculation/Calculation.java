@@ -415,7 +415,7 @@ public class Calculation implements IObjectReceiver{
 	
 	
 	
-	Value getZero(Type type) {
+	public Value getZero(Type type) {
 		switch (type) {
 		case integer:
 			return zeroInteger;

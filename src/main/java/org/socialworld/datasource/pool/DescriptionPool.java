@@ -25,8 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.calculation.Expression;
-import org.socialworld.calculation.FunctionByExpression;
 import org.socialworld.calculation.descriptions.DescriptionBase;
+import org.socialworld.calculation.functions.FunctionByExpression;
+
 import com.google.gson.Gson;
 
 public abstract class DescriptionPool {

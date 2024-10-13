@@ -1,9 +1,13 @@
-package org.socialworld.calculation;
+package org.socialworld.calculation.functions;
 
 
 import org.socialworld.GlobalSwitches;
 import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.AttributeArray;
+import org.socialworld.calculation.FunctionBase;
+import org.socialworld.calculation.NoObject;
+import org.socialworld.calculation.Type;
+import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
 
 public class FunctionSetAttributeValue extends FunctionBase {

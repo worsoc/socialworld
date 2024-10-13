@@ -19,7 +19,10 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.calculation;
+package org.socialworld.calculation.functions;
+
+import org.socialworld.calculation.Type;
+import org.socialworld.calculation.Value;
 
 public class FunctionByMatrix_Matrix {
 	public static final int CALCULATION_MODE_MATRIX_X_VECTOR_SIMPLE = 1; //MATRIX_CALCULATION_SIMPLE = 1;

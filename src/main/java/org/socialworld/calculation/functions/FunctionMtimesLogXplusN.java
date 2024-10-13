@@ -19,44 +19,49 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.calculation;
+package org.socialworld.calculation.functions;
 
 
 import org.socialworld.GlobalSwitches;
+import org.socialworld.calculation.FunctionBase;
+import org.socialworld.calculation.NoObject;
+import org.socialworld.calculation.Type;
+import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
 
 /**
  * @author Mathias Sikos
  *
  */
-public class FunctionMtimesExpXplusN extends FunctionBase {
+public class FunctionMtimesLogXplusN extends FunctionBase {
 
 	Type type;
-	
+
 	private float base;
 	private float m;
 	private float n;
 	
-	
-	public FunctionMtimesExpXplusN(Type type,  float base, float m, float n ) {
+
+	public FunctionMtimesLogXplusN(Type type,  float base, float m, float n) {
 		
 		this.type = type;
-
+		
 		this.base = base;
 		this.m = m;
 		this.n = n;
-		
+			
 	}
-	
-	public FunctionMtimesExpXplusN(Type type, float base, float m, float n, float min, float max) {
+
+	public FunctionMtimesLogXplusN(Type type, float base, float m, float n, float min, float max) {
 		
 		this.type = type;
-
+		
 		this.base = base;
 		this.m = m;
 		this.n = n;
 		
 		setMinMaxCheckFloat(min, max);
+
 		
 	}
 
@@ -68,17 +73,18 @@ public class FunctionMtimesExpXplusN extends FunctionBase {
 		Value x;
 		Object o;
 		float result;
-		
 		if ( arguments.size() < 1) return Value.getValueNothing();
 		x = arguments.get(0);
 		
 		if (!x.isValid()) return x;
 		 
+		if (!(x.hasType(Type.floatingpoint))) return Value.getValueNothing();
+	
 		
 		o = x.getObject(Type.floatingpoint);
 		if (o instanceof NoObject) {
 			if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
-				System.out.println("FunctionMtimesExpXplusN.calculate > result: o (getObject(Type.floatingpoint)) is NoObject " + ((NoObject)o).getReason().toString() );
+				System.out.println("FunctionMtimesLogXplusN.calculate > result: o (getObject(Type.floatingpoint)) is NoObject " + ((NoObject)o).getReason().toString() );
 			}
 			return Value.getValueNothing();
 		}
@@ -86,18 +92,17 @@ public class FunctionMtimesExpXplusN extends FunctionBase {
 			result = calculateFloatingPoint((float) calculation.createValue(Type.floatingpoint, (float) (o)).getObject(Type.floatingpoint));
 		}
 		
-		return calculation.createValue(this.type, result);
-			
-		
+		return  calculation.createValue(this.type, result);
+
 	}
 
-	
+
 	public float calculateFloatingPoint(float x) {
 		
 		double resultD;
 		float resultF;
 		
-		resultD = m * Math.pow(base, x) + n;
+		resultD = m * Math.log(x) / Math.log(base) + n;
 		
 		resultF = getMinMaxedFloat((float)resultD);
 		

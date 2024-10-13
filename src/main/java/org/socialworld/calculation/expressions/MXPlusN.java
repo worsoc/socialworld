@@ -25,9 +25,9 @@ import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
-import org.socialworld.calculation.FunctionMXplusN;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueInterpreteAs;
+import org.socialworld.calculation.functions.FunctionMXplusN;
 
 public class MXPlusN extends Expression {
 

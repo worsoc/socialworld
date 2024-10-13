@@ -23,14 +23,14 @@ package org.socialworld.datasource.pool;
 
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.FunctionBase;
-import org.socialworld.calculation.FunctionByExpression;
-import org.socialworld.calculation.FunctionByMatrix;
-import org.socialworld.calculation.FunctionByMatrix_Matrix;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueInterpreteAs;
 import org.socialworld.calculation.expressions.CreateActionExpression;
 import org.socialworld.calculation.expressions.Nothing;
+import org.socialworld.calculation.functions.FunctionByExpression;
+import org.socialworld.calculation.functions.FunctionByMatrix;
+import org.socialworld.calculation.functions.FunctionByMatrix_Matrix;
 import org.socialworld.datasource.tablesPool.TablePoolFunctionExpression;
 import org.socialworld.datasource.tablesPool.TablePoolMatrix;
 import org.socialworld.datasource.tablesPool.TablePoolMatrixRowCol;

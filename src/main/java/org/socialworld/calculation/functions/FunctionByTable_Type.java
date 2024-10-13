@@ -19,7 +19,7 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.calculation;
+package org.socialworld.calculation.functions;
 
 public enum FunctionByTable_Type {
 	horizontal_min(0), identical(1), negative_raise(2), 

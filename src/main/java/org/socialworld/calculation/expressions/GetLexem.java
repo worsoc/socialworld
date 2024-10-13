@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
-import org.socialworld.calculation.FunctionDynamic;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
+import org.socialworld.calculation.functions.FunctionDynamic;
 import org.socialworld.datasource.pool.FunctionPool;
 
 public class GetLexem extends Expression {

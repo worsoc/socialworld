@@ -37,4 +37,5 @@ public final class AccessTokenCore implements IAccessToken
 	public boolean isValid() {
 		return this == valid;
 	}
+	
 }

@@ -24,11 +24,9 @@ package org.socialworld.calculation.descriptions;
 import java.util.List;
 
 import org.socialworld.core.EventType;
-
-import org.socialworld.calculation.FunctionByExpression;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.expressions.CreateActionExpression;
-
+import org.socialworld.calculation.functions.FunctionByExpression;
 import org.socialworld.datasource.parsing.JsonEventReactionDescription;
 import com.google.gson.Gson;
 

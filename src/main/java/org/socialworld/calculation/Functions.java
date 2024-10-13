@@ -24,6 +24,10 @@ package org.socialworld.calculation;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.calculation.functions.FunctionByTable;
+import org.socialworld.calculation.functions.FunctionByTable_Type;
+import org.socialworld.calculation.functions.FunctionNothing;
+
 public class Functions {
 
 	//QUESTION ? is the class obsolete: use FunctionsPool instead ?

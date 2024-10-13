@@ -1,7 +1,7 @@
 package org.socialworld.datasource.pool;
 
 
-import org.socialworld.calculation.FunctionByMatrix;
+import org.socialworld.calculation.functions.FunctionByMatrix;
 import org.socialworld.datasource.tablesPool.TableGaussACM;
 
 public class GaussPoolAttributeCalculatorMatrix {

@@ -1,4 +1,4 @@
-package org.socialworld.calculation;
+package org.socialworld.calculation.functions;
 
 import org.socialworld.core.IAccessToken;
 

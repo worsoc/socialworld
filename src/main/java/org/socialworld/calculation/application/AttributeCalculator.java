@@ -23,14 +23,14 @@ package org.socialworld.calculation.application;
 
 
 import org.socialworld.attributes.PropertyName;
-import org.socialworld.calculation.FunctionByExpression;
-import org.socialworld.calculation.FunctionByMatrix;
-import org.socialworld.calculation.FunctionByMatrix_Matrix;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueTransferCode;
 import org.socialworld.calculation.descriptions.EventInfluenceAssignment;
 import org.socialworld.calculation.descriptions.EventInfluenceDescription;
+import org.socialworld.calculation.functions.FunctionByExpression;
+import org.socialworld.calculation.functions.FunctionByMatrix;
+import org.socialworld.calculation.functions.FunctionByMatrix_Matrix;
 import org.socialworld.collections.CapacityQueue;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.Event;

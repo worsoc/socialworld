@@ -24,9 +24,9 @@ package org.socialworld.calculation.expressions;
 import org.socialworld.attributes.Attribute;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
-import org.socialworld.calculation.FunctionMtimesLogXplusN;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueInterpreteAs;
+import org.socialworld.calculation.functions.FunctionMtimesLogXplusN;
 
 public class MLogXPlusN extends Expression {
 

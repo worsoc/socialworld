@@ -25,11 +25,11 @@ package org.socialworld.calculation.expressions;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
-import org.socialworld.calculation.FunctionByMatrix;
-import org.socialworld.calculation.FunctionByMatrix_Matrix;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueInterpreteAs;
+import org.socialworld.calculation.functions.FunctionByMatrix;
+import org.socialworld.calculation.functions.FunctionByMatrix_Matrix;
 
 public class VectorScalarProduct extends Expression {
 

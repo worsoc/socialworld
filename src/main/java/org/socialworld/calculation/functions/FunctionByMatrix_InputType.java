@@ -19,7 +19,7 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.calculation;
+package org.socialworld.calculation.functions;
 
 /**
  * The enumeration collects all calculation input types.
