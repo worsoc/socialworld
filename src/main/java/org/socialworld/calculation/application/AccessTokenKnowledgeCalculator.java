@@ -1,5 +1,6 @@
 package org.socialworld.calculation.application;
 
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.core.IAccessToken;
 
 public final class AccessTokenKnowledgeCalculator implements IAccessToken
@@ -10,6 +11,7 @@ public final class AccessTokenKnowledgeCalculator implements IAccessToken
 	static AccessTokenKnowledgeCalculator getValid() {
 		if (valid == null) {
 			valid = new AccessTokenKnowledgeCalculator();
+			SimulationCluster.knowledge.addToken(valid);
 		}
 		return valid;
 	}
@@ -17,6 +19,11 @@ public final class AccessTokenKnowledgeCalculator implements IAccessToken
 	public boolean isValid() {
 		return this == valid;
 	}
+	
+	public SimulationCluster getSimulationCluster() {
+		return SimulationCluster.knowledge;
+	}
+	
 }
 
 

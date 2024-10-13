@@ -21,6 +21,7 @@
 */
 package org.socialworld.collections;
 
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.core.IAccessToken;
 
 public final class AccessTokenObjectByPositionSearch implements IAccessToken
@@ -31,6 +32,7 @@ public final class AccessTokenObjectByPositionSearch implements IAccessToken
 	static AccessTokenObjectByPositionSearch getValid() {
 		if (valid == null) {
 			valid = new AccessTokenObjectByPositionSearch();
+			SimulationCluster.objectMaster.addToken(valid);
 		}
 		return valid;
 	}
@@ -38,4 +40,9 @@ public final class AccessTokenObjectByPositionSearch implements IAccessToken
 	public boolean isValid() {
 		return this == valid;
 	}
+	
+	public SimulationCluster getSimulationCluster() {
+		return SimulationCluster.objectMaster;
+	}
+	
 }

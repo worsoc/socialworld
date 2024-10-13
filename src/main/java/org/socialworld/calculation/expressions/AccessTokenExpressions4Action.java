@@ -20,4 +20,9 @@ public final class AccessTokenExpressions4Action implements IAccessToken
 		return this == valid;
 	}
 	
+	public SimulationCluster getSimulationCluster() {
+		return SimulationCluster.action;
+	}
+	
+	
 } 

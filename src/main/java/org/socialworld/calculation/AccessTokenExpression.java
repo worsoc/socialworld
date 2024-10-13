@@ -10,6 +10,7 @@ public final class AccessTokenExpression implements IAccessToken
 	static AccessTokenExpression getValid() {
 		if (valid == null) {
 			valid = new AccessTokenExpression();
+			SimulationCluster.expressionEvaluate.addToken(valid);
 		}
 		return valid;
 	}
@@ -17,5 +18,10 @@ public final class AccessTokenExpression implements IAccessToken
 	public boolean isValid() {
 		return this == valid;
 	}
+	
+	public SimulationCluster getSimulationCluster() {
+		return SimulationCluster.expressionEvaluate;
+	}
+	
 }
 

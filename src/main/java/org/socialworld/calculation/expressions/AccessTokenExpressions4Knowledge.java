@@ -20,4 +20,8 @@ public final class AccessTokenExpressions4Knowledge implements IAccessToken
 		return this == valid;
 	}
 	
+	public SimulationCluster getSimulationCluster() {
+		return SimulationCluster.knowledge;
+	}
+
 }

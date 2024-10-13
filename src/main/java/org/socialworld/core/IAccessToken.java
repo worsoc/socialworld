@@ -8,6 +8,8 @@ public interface IAccessToken {
 	public boolean isValid();
 	
 	default public SimulationCluster getSimulationCluster() {return SimulationCluster.expressionEvaluate;}
+	//public SimulationCluster getSimulationCluster() ;
+	
 	default  PropertyUsingAs[] getPossibleUsingAs() {return new PropertyUsingAs[0];}
 	default boolean isWithoutRestrictions() {return true;}
 	

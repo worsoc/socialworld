@@ -20,5 +20,9 @@ public final class AccessTokenExpressions4Attributes implements IAccessToken
 		return this == valid;
 	}
 	
+	public SimulationCluster getSimulationCluster() {
+		return SimulationCluster.attributeArray;
+	}
+
 }
 

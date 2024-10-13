@@ -21,6 +21,7 @@
 */
 package org.socialworld.attributes;
 
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.core.IAccessToken;
 
 public final class AccessTokenPosition implements IAccessToken
@@ -31,6 +32,7 @@ public final class AccessTokenPosition implements IAccessToken
 	static AccessTokenPosition getValid() {
 		if (valid == null) {
 			valid = new AccessTokenPosition();
+			SimulationCluster.position.addToken(valid);
 		}
 		return valid;
 	}
@@ -38,4 +40,9 @@ public final class AccessTokenPosition implements IAccessToken
 	public boolean isValid() {
 		return this == valid;
 	}
+	
+	public SimulationCluster getSimulationCluster() {
+		return SimulationCluster.position;
+	}
+
 }

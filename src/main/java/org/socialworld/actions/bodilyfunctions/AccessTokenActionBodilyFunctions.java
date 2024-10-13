@@ -1,5 +1,6 @@
 package org.socialworld.actions.bodilyfunctions;
 
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.core.IAccessToken;
 
 public final class AccessTokenActionBodilyFunctions implements IAccessToken
@@ -10,6 +11,7 @@ public final class AccessTokenActionBodilyFunctions implements IAccessToken
 	static AccessTokenActionBodilyFunctions getValid() {
 		if (valid == null) {
 			valid = new AccessTokenActionBodilyFunctions();
+			SimulationCluster.action.addToken(valid);
 		}
 		return valid;
 	}
@@ -17,5 +19,10 @@ public final class AccessTokenActionBodilyFunctions implements IAccessToken
 	public boolean isValid() {
 		return this == valid;
 	}
+	
+	public SimulationCluster getSimulationCluster() {
+		return SimulationCluster.action;
+	}
+	
 }
 

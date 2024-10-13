@@ -30,13 +30,15 @@ public enum SimulationCluster {
 	unknown(0),
 	toBeSet(1),
 	knowledge(11),
-	_percipience(21),
-	_position(31), _pathFinder(32),
+	talk(12),
+	percipience(21),
+	position(31), _pathFinder(32),
 	attributeArray(41),
 	action(51),
 	_event(61),
-	_objectMaster(1001),
+	objectMaster(1001),
 	expressionEvaluate(2001),
+	expressionCalculate(2002),
 	total(8888),
 	test(9999);
 	
