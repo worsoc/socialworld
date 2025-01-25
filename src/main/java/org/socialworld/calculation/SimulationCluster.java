@@ -36,10 +36,14 @@ public enum SimulationCluster {
 	attributeArray(41),
 	action(51),
 	_event(61),
+	simulationObject(71),
 	objectMaster(1001),
 	expressionEvaluate(2001),
 	expressionCalculate(2002),
+	function(2003),
+	core(7001),
 	total(8888),
+	visualize(9998),
 	test(9999);
 	
 	private int index;

@@ -1,5 +1,6 @@
 package org.socialworld.calculation.functions;
 
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.core.IAccessToken;
 
 public final class AccessTokenFunction implements IAccessToken
@@ -10,6 +11,7 @@ public final class AccessTokenFunction implements IAccessToken
 	static AccessTokenFunction getValid() {
 		if (valid == null) {
 			valid = new AccessTokenFunction();
+			SimulationCluster.function.addToken(valid);
 		}
 		return valid;
 	}
@@ -17,4 +19,9 @@ public final class AccessTokenFunction implements IAccessToken
 	public boolean isValid() {
 		return this == valid;
 	}
+	
+	public SimulationCluster getSimulationCluster() {
+		return SimulationCluster.function;
+	}
+
 }

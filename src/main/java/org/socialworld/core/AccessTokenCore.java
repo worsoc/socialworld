@@ -21,15 +21,18 @@
 */
 package org.socialworld.core;
 
+import org.socialworld.calculation.SimulationCluster;
 
 public final class AccessTokenCore implements IAccessToken
 {
 
 	private static AccessTokenCore valid;
 	
+
 	static AccessTokenCore getValid() {
 		if (valid == null) {
 			valid = new AccessTokenCore();
+			SimulationCluster.core.addToken(valid);
 		}
 		return valid;
 	}
@@ -38,4 +41,9 @@ public final class AccessTokenCore implements IAccessToken
 		return this == valid;
 	}
 	
+	public SimulationCluster getSimulationCluster() {
+		return SimulationCluster.core;
+	}
+
+
 }
