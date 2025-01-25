@@ -29,9 +29,13 @@ public interface IAccessToken {
 	public boolean isValid();
 	
 	//default public SimulationCluster getSimulationCluster() {return SimulationCluster.expressionEvaluate;}
-	public SimulationCluster getSimulationCluster() ;
+	public SimulationCluster getSimulationCluster();
 	
+	// DEFAULT_INTERFACE_METHOD
 	default  PropertyUsingAs[] getPossibleUsingAs() {return new PropertyUsingAs[0];}
+	//PropertyUsingAs[] getPossibleUsingAs();
+	
 	default boolean isWithoutRestrictions() {return true;}
+	//boolean isWithoutRestrictions();
 	
 }
