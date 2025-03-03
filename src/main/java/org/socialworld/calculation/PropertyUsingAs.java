@@ -25,15 +25,30 @@ package org.socialworld.calculation;
 public enum PropertyUsingAs {
 	
 	dontCheck(0),
-	pathToKnowledgeSubject(1), knowledgeSubject(2),
-	pathToKnowledgeSource(11), knowledgeSource(12),
-	pathToKnowledgeValue(21), knowledgeValue(22),
-	pathToKnowledgeProperty(31), knowledgeProperty(32),
-	pathToKnowledgeRelationSubject(41), knowledgeRelationSubject(42),
-	pathToKnowledgeRelationVerb(51), knowledgeRelationVerb(52),
-	pathToKnowledgeRelationAdverb(61), knowledgeRelationAdverb(62),
-	pathToKnowledgeRelationObject(71), knowledgeRelationObject(72),
-	todo(9998);
+
+	pathToKnowledge(11001), knowledge(11002),
+	pathToKnowledgeSubject(11021), knowledgeSubject(11022),
+	pathToKnowledgeSource(11011), knowledgeSource(11012),
+	pathToKnowledgeProperty(11031), knowledgeProperty(11032),
+	pathToKnowledgeRelationSubject(11041), knowledgeRelationSubject(11042),
+	pathToKnowledgeRelationVerb(11051), knowledgeRelationVerb(11052),
+	pathToKnowledgeRelationAdverb(11061), knowledgeRelationAdverb(11062),
+	pathToKnowledgeRelationObject(11071), knowledgeRelationObject(11072),
+	pathToKnowledgeValue(11081), knowledgeValue(11082),
+
+	pathToPosition(31001), position(31002),
+
+	pathToAttributeArray(41001), attributeArray(41002),
+
+	pathToAction(51001), action(51002),
+	pathToActionAttack(51011), actionAttack(41012),
+	pathToActionBodilyFunction(51021), actionBodilyFunction(51022),
+	pathToActionHandle(51031), actionHandle(51032),
+	pathToActionHear(51041), actionHear(51042),
+	pathToActionMove(51051), actionMove(51052),
+	pathToActionSay(51061), actionSay(51062),
+
+	todo(9999999);
 
 
 	private int index;

@@ -32,7 +32,7 @@ public interface IAccessToken {
 	public SimulationCluster getSimulationCluster();
 	
 	// DEFAULT_INTERFACE_METHOD
-	default  PropertyUsingAs[] getPossibleUsingAs() {return new PropertyUsingAs[0];}
+	default  PropertyUsingAs[] getPossibleUsingAs() {return getSimulationCluster().getPossibleUsingAs();}
 	//PropertyUsingAs[] getPossibleUsingAs();
 	
 	default boolean isWithoutRestrictions() {return true;}

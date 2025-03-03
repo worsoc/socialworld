@@ -1,6 +1,7 @@
 package org.socialworld.actions;
 
 import org.socialworld.calculation.SimulationCluster;
+import org.socialworld.calculation.PropertyUsingAs;
 import org.socialworld.core.IAccessToken;
 
 public final class AccessTokenAction implements IAccessToken
@@ -23,6 +24,7 @@ public final class AccessTokenAction implements IAccessToken
 	public SimulationCluster getSimulationCluster() {
 		return SimulationCluster.action;
 	}
+
 
 }
 
