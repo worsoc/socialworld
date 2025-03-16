@@ -26,7 +26,9 @@ public enum PropertyUsingAs {
 	
 	dontCheck(0),
 
-	pathToKnowledge(11001), knowledge(11002),
+	object(1001),
+	
+	pathToKnowledge(11001), knowledge(11002), // knowledgeCalculator(11003),
 	pathToKnowledgeSubject(11021), knowledgeSubject(11022),
 	pathToKnowledgeSource(11011), knowledgeSource(11012),
 	pathToKnowledgeProperty(11031), knowledgeProperty(11032),
@@ -36,12 +38,14 @@ public enum PropertyUsingAs {
 	pathToKnowledgeRelationObject(11071), knowledgeRelationObject(11072),
 	pathToKnowledgeValue(11081), knowledgeValue(11082),
 
-	pathToPosition(31001), position(31002),
+	pathToPercipience(21001), percipience(21002),
 
-	pathToAttributeArray(41001), attributeArray(41002),
+	pathToPosition(31001), position(31002), //positionCalculator(31003),
 
-	pathToAction(51001), action(51002),
-	pathToActionAttack(51011), actionAttack(41012),
+	pathToAttributeArray(41001), attributeArray(41002), //attributeArrayCalculator(41003),
+
+	pathToAction(51001), action(51002), //actionCreator(51003),
+	pathToActionAttack(51011), actionAttack(51012),
 	pathToActionBodilyFunction(51021), actionBodilyFunction(51022),
 	pathToActionHandle(51031), actionHandle(51032),
 	pathToActionHear(51041), actionHear(51042),

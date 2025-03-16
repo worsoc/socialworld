@@ -21,6 +21,8 @@
 */
 package org.socialworld.core;
 
+import java.util.List;
+
 import org.socialworld.calculation.PropertyUsingAs;
 import org.socialworld.calculation.SimulationCluster;
 
@@ -32,8 +34,8 @@ public interface IAccessToken {
 	public SimulationCluster getSimulationCluster();
 	
 	// DEFAULT_INTERFACE_METHOD
-	default  PropertyUsingAs[] getPossibleUsingAs() {return getSimulationCluster().getPossibleUsingAs();}
-	//PropertyUsingAs[] getPossibleUsingAs();
+	default  List<PropertyUsingAs> getPossibleUsingAs() {return getSimulationCluster().getPossibleUsingAs();}
+	//List<PropertyUsingAs> getPossibleUsingAs();
 	
 	default boolean isWithoutRestrictions() {return true;}
 	//boolean isWithoutRestrictions();

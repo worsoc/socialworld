@@ -32,7 +32,7 @@ public class PropertyProtection {
 
 	private static AccessTokenWithoutRestrictions tokenWithoutRestrictions = AccessTokenWithoutRestrictions.getValid();
 	private IAccessToken token;
-	private PropertyUsingAs[] useAsPermissions;
+	private List<PropertyUsingAs> useAsPermissions;
 	private PropertyUsingAs usedAs = null;
  
 	boolean withTotalPermissions = false;
@@ -53,12 +53,12 @@ public class PropertyProtection {
 		this.token = tokenWithoutRestrictions;
 		withTotalPermissions = true;
 		this.allowOneAdding = false;
-		this.useAsPermissions = new PropertyUsingAs[0];
+		this.useAsPermissions = new ArrayList<PropertyUsingAs>();
 		this.protectedValues = new ArrayList<ValueProperty>();
 	}
 	
 	
-	private PropertyProtection(IAccessToken token, PropertyUsingAs[] useAsPermissions) {
+	private PropertyProtection(IAccessToken token, List<PropertyUsingAs> useAsPermissions) {
 		this.token = token;
 		this.useAsPermissions = useAsPermissions;
 		this.usedAs = null;
@@ -72,7 +72,7 @@ public class PropertyProtection {
 		
 	}
 
-	public static PropertyProtection getProtection(PropertyUsingAs[] useAsPermissions) {
+	public static PropertyProtection getProtection(List<PropertyUsingAs> useAsPermissions) {
 		
 		return new PropertyProtection(tokenWithoutRestrictions, useAsPermissions);
 		
@@ -80,7 +80,7 @@ public class PropertyProtection {
 
 	public static PropertyProtection getProtection(PropertyProtection original) {
 		
-		PropertyUsingAs[] useAsPermissionsOriginal = original.getUseAsPermissions();
+		List<PropertyUsingAs> useAsPermissionsOriginal = original.getUseAsPermissions();
 		return getProtection(useAsPermissionsOriginal);
 		
 	}
@@ -102,16 +102,16 @@ public class PropertyProtection {
 			return getTotalPermission();
 		}
 		else {
-			PropertyUsingAs[] useAsPermissionsCluster = token.getPossibleUsingAs();
-			PropertyUsingAs[] reducedUseAsPermissions = value.getReducedUseAsPermissions(useAsPermissionsCluster);
+			List<PropertyUsingAs> useAsPermissionsCluster = token.getPossibleUsingAs();
+			List<PropertyUsingAs> reducedUseAsPermissions = value.getReducedUseAsPermissions(useAsPermissionsCluster);
 			return new PropertyProtection(token, reducedUseAsPermissions);
 		}
 		
 	}
 	
-	public static PropertyProtection getProtection(PropertyUsingAs[] useAsPermissions, ISavedValue value) {
+	public static PropertyProtection getProtection(List<PropertyUsingAs> useAsPermissions, ISavedValue value) {
 				
-		PropertyUsingAs[] reducedUseAsPermissions = value.getReducedUseAsPermissions(useAsPermissions);
+		List<PropertyUsingAs> reducedUseAsPermissions = value.getReducedUseAsPermissions(useAsPermissions);
 		return new PropertyProtection(tokenWithoutRestrictions, reducedUseAsPermissions);
 		
 	}
@@ -119,7 +119,7 @@ public class PropertyProtection {
 	public static PropertyProtection getProtection(PropertyProtection original, ISavedValue value) {
 		
 		
-		PropertyUsingAs[] useAsPermissionsOriginal = original.getUseAsPermissions();
+		List<PropertyUsingAs> useAsPermissionsOriginal = original.getUseAsPermissions();
 		boolean noMatch = value.checkUseAsPermissionsReductionNecessary(useAsPermissionsOriginal);
 		if (noMatch) {
 			return getProtection(useAsPermissionsOriginal, value);
@@ -133,9 +133,9 @@ public class PropertyProtection {
 	
 	public static PropertyProtection getProtection(PropertyProtection original, IAccessToken token, ISavedValue value) {
 		
-		PropertyUsingAs[] useAsPermissionsCluster = token.getPossibleUsingAs();
-		PropertyUsingAs[] useAsPermissionsIntersect = original.getIntersection(useAsPermissionsCluster);
-		PropertyUsingAs[] reducedUseAsPermissions = value.getReducedUseAsPermissions(useAsPermissionsIntersect);
+		List<PropertyUsingAs> useAsPermissionsCluster = token.getPossibleUsingAs();
+		List<PropertyUsingAs> useAsPermissionsIntersect = original.getIntersection(useAsPermissionsCluster);
+		List<PropertyUsingAs> reducedUseAsPermissions = value.getReducedUseAsPermissions(useAsPermissionsIntersect);
 		return new PropertyProtection(token, reducedUseAsPermissions);
 		
 	}
@@ -147,37 +147,28 @@ public class PropertyProtection {
 		allowOneAdding = false;
 	}
 	
-	private PropertyUsingAs[] getIntersection(PropertyUsingAs[] toIntersectWith) {
+	private List<PropertyUsingAs> getIntersection(List<PropertyUsingAs> toIntersectWith) {
 		
-		PropertyUsingAs[] result;
 		List<PropertyUsingAs> intersection = new ArrayList<PropertyUsingAs>();
 		
-		for (int indexA = 0; indexA < this.useAsPermissions.length; indexA++) {
-			
-			for (int indexB = 0; indexB < toIntersectWith.length; indexB++) {
-			
-				if (this.useAsPermissions[indexA].equals(toIntersectWith[indexB])) {
-					
-					intersection.add(toIntersectWith[indexB]);
-					
+		for (PropertyUsingAs a : this.useAsPermissions) {
+			for (PropertyUsingAs b : toIntersectWith) {
+				if (a.equals(b)) {
+					intersection.add(b);
 				}
-				
 			}
-			
 		}
 		
-		result = intersection.toArray(new PropertyUsingAs[intersection.size()]);
-		
-		return result;
+		return intersection;
 		
 	}
 	
-	private PropertyUsingAs[] getUseAsPermissions() {
+	private List<PropertyUsingAs> getUseAsPermissions() {
 		
-		PropertyUsingAs[] copy = new PropertyUsingAs[this.useAsPermissions.length];
+		List<PropertyUsingAs> copy = new ArrayList<PropertyUsingAs>();
 		
-		for (int index = 0; index < this.useAsPermissions.length; index++) {
-			copy[index] = useAsPermissions[index];
+		for (PropertyUsingAs uap : this.useAsPermissions) {
+			copy.add(uap);
 		}
 		
 		return copy;
@@ -196,8 +187,8 @@ public class PropertyProtection {
 
 	public boolean checkHasUseAsPermission(PropertyUsingAs useAsPermission) {
 		
-		for (int index = 0; index < this.useAsPermissions.length; index++) {
-			if  (this.useAsPermissions[index].equals(useAsPermission)) return true;
+		for (PropertyUsingAs uap : this.useAsPermissions) {
+			if  (uap.equals(useAsPermission)) return true;
 		}
 		// TEMP_SOLUTION
 		return true;
@@ -217,7 +208,7 @@ public class PropertyProtection {
 		return true;
 
 /*	--> wieder rein	
-		PropertyUsingAs[] tmp;
+		List<PropertyUsingAs> tmp;
 		tmp = cluster.getPossibleUsingAs();
 		
 		for (int indexA = 0; indexA < this.useAsPermissions.length; indexA++) {

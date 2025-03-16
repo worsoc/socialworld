@@ -142,13 +142,13 @@ public abstract class SavedValue implements ISavedValue {
 		return this.protection.checkHasUseAsPermission(useAsPermission);
 	}
 
-	public final PropertyUsingAs[] getReducedUseAsPermissions(PropertyUsingAs[] useAsPermissions) {
-		PropertyUsingAs[] result = useAsPermissions;
+	public final List<PropertyUsingAs>getReducedUseAsPermissions(List<PropertyUsingAs> useAsPermissions) {
+		List<PropertyUsingAs> result = useAsPermissions;
 		// TODO implement getReducedUseAsPermissions
 		return result;
 	}
 	
-	public final boolean checkUseAsPermissionsReductionNecessary(PropertyUsingAs[] useAsPermissions) {
+	public final boolean checkUseAsPermissionsReductionNecessary(List<PropertyUsingAs> useAsPermissions) {
 		// TODO implement checkUseAsPermissionsReductionNecessary
 		return true;
 	}

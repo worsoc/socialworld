@@ -22,6 +22,8 @@
 package org.socialworld.calculation;
 
 
+import java.util.List;
+
 import org.socialworld.attributes.ISavedValue;
 import org.socialworld.attributes.ISimProperty;
 import org.socialworld.attributes.NoSavedValue;
@@ -117,7 +119,7 @@ public class ValueProperty extends Value {
 	}
 	
 
-	public ValueProperty(Type type, PropertyUsingAs[] useAsPermissions, String name, Object value) {
+	public ValueProperty(Type type, List<PropertyUsingAs> useAsPermissions, String name, Object value) {
 
 		super(type, name, value);
 
@@ -298,7 +300,7 @@ public class ValueProperty extends Value {
 	}
 	/*	03.06.2020
 	
-	private void overridePermissions(SimulationCluster cluster, PropertyUsingAs[] useAsPermissions) {
+	private void overridePermissions(SimulationCluster cluster, List<PropertyUsingAs> useAsPermissions) {
 		
 		this.cluster = cluster;
 		this.useAsPermissions = useAsPermissions;

@@ -21,6 +21,8 @@
 */
 package org.socialworld.attributes;
 
+import java.util.List;
+import java.util.ArrayList;
 
 import org.socialworld.calculation.PropertyUsingAs;
 import org.socialworld.calculation.Type;
@@ -268,21 +270,21 @@ public enum PropertyName {
 		}
 	}
 	
-	private static PropertyUsingAs emptyPermissions[] = {};
-	private static PropertyUsingAs only_pathToKnowledgeValue[] = {PropertyUsingAs.pathToKnowledgeValue };
-	private static PropertyUsingAs only_knowledgeValue[] = {PropertyUsingAs.knowledgeValue };
-	private static PropertyUsingAs only_knowledgeRelationSubjectOrObject[] =  {PropertyUsingAs.knowledgeRelationSubject, PropertyUsingAs.knowledgeRelationObject };
+	private static List<PropertyUsingAs> emptyPermissions = new ArrayList<PropertyUsingAs>();
+//	private static PropertyUsingAs only_pathToKnowledgeValue[] = {PropertyUsingAs.pathToKnowledgeValue };
+//	private static PropertyUsingAs only_knowledgeValue[] = {PropertyUsingAs.knowledgeValue };
+//	private static PropertyUsingAs only_knowledgeRelationSubjectOrObject[] =  {PropertyUsingAs.knowledgeRelationSubject, PropertyUsingAs.knowledgeRelationObject };
 
 	
-	public  PropertyUsingAs[] getUsingAsPermissions() {
+	public  List<PropertyUsingAs> getUsingAsPermissions() {
 		switch (this) {
-		case simobj_position: return only_pathToKnowledgeValue;
+		case simobj_position: return emptyPermissions;
 //		case simobj_inventory: return only_knowledgeRelationSubjectOrObject;
-		case simobj_directionMove: return only_pathToKnowledgeValue;
-		case simobj_directionChest: return only_pathToKnowledgeValue;
-		case stateSeer_directionView: return only_pathToKnowledgeValue;
-		case simobj_directionActiveMove: return only_pathToKnowledgeValue;
-		case position_vector: return only_knowledgeValue;
+		case simobj_directionMove: return emptyPermissions;
+		case simobj_directionChest: return emptyPermissions;
+		case stateSeer_directionView: return emptyPermissions;
+		case simobj_directionActiveMove: return emptyPermissions;
+		case position_vector: return emptyPermissions;
 		default:			return emptyPermissions;
 		}
 	}

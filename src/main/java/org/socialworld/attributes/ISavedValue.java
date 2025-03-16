@@ -21,6 +21,7 @@
 */
 package org.socialworld.attributes;
 
+import java.util.List;
 
 import org.socialworld.calculation.PropertyUsingAs;
 import org.socialworld.calculation.ValueProperty;
@@ -35,8 +36,8 @@ public interface ISavedValue {
 	public abstract void setPropertyProtection(PropertyProtection propertyProtection);
 	public abstract boolean checkHasGetPermission(IAccessToken token);
 	public abstract boolean checkHasUseAsPermission(PropertyUsingAs useAsPermission);
-	public abstract PropertyUsingAs[] getReducedUseAsPermissions(PropertyUsingAs[] useAsPermissions);
-	public abstract boolean checkUseAsPermissionsReductionNecessary(PropertyUsingAs[] useAsPermissions);
+	public abstract List<PropertyUsingAs> getReducedUseAsPermissions(List<PropertyUsingAs> useAsPermissions);
+	public abstract boolean checkUseAsPermissionsReductionNecessary(List<PropertyUsingAs> useAsPermissions);
 
 	// getting a copy as ValueProperty for an access token (intersection from argument token and the "parent" protection)
 	public abstract ValueProperty getAsValue(IAccessToken token);

@@ -21,6 +21,7 @@
 */
 package org.socialworld.calculation;
 
+import java.util.List;
 import java.util.LinkedList;
 
 import org.socialworld.core.IAccessToken;
@@ -79,7 +80,7 @@ public enum SimulationCluster {
 		return tokens;
 	}
 	
-	public  PropertyUsingAs[] getPossibleUsingAs() {
+	public  List<PropertyUsingAs> getPossibleUsingAs() {
 		return GetSimulationClustersPropUsingAs.getPossibleUsingAs(this);
 	}
 
