@@ -24,6 +24,8 @@ package org.socialworld.datasource.tablesSimulation.propertySets;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.socialworld.GlobalSwitches;
+import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.properties.Material;
 import org.socialworld.attributes.properties.MaterialSet;
 
@@ -32,11 +34,29 @@ public class TableMaterialSet extends TableSet {
 	public final  String 	ALL_COLUMNS 		=	" material_set_id, lfd_nr, material, share ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
+	private final int MATERIAL_SETS_ARRAY_MAX_COUNT = 1000;
+	
+	private static TableMaterialSet instance;
+	
+	private MaterialSet[] materialSets;
+	
 	int material_set_id[];
 	int lfd_nr[];
 	int material[];
 	int share[];
 
+	public static TableMaterialSet getInstance() {
+		if (instance == null) {
+				instance = new TableMaterialSet();
+		}
+		return instance;
+	}
+
+	private TableMaterialSet() {
+		materialSets = new MaterialSet[MATERIAL_SETS_ARRAY_MAX_COUNT];
+		load();
+	}
+	
 	@Override
 	protected String getTableName() {
 		return "swset_material";
@@ -146,7 +166,7 @@ public class TableMaterialSet extends TableSet {
 		return share[index];
 	}
 	
-
+/*
 	public MaterialSet getMaterialSet(int material_set_id) {
 		select(SELECT_ALL_COLUMNS, " WHERE material_set_id = " + material_set_id, " ORDER BY lfd_nr"); 
 		MaterialSet MaterialSet = new MaterialSet();
@@ -155,5 +175,56 @@ public class TableMaterialSet extends TableSet {
 		}
 		return MaterialSet;
 	}
+*/
+	public MaterialSet getMaterialSet(int material_set_id) {
+		if (material_set_id > 0 && material_set_id <= materialSets.length) {
+			return materialSets[material_set_id];
+		}
+		return MaterialSet.getObjectNothing();
+	}
 
+	private void load() {
+		if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Erstellen SimObj > TableColourSet.load() Start " + ActualTime.asTime().toString());
+		long lockingID = 0;
+		int sleepMillis = 0;
+		while (lockingID == 0) {
+			lockingID = lock();
+			if (lockingID == 0) {
+				sleepMillis++;
+				try {
+					Thread.sleep(sleepMillis);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		int id = 0;
+		int lastID = 0;
+		int colour;
+		int share;
+		MaterialSet materialSet = null;
+		
+		select(SELECT_ALL_COLUMNS, "", " ORDER BY material_set_id, lfd_nr"); 
+		
+		if (lfd_nr.length > 0) {
+			for (int row = 0; row < lfd_nr.length; row++) {
+				id  = this.material_set_id[row];
+				if (id > lastID) {
+					if (lastID > 0) {
+						materialSets[lastID] = materialSet;
+						lastID = id;
+					}
+					materialSet = new MaterialSet();
+				}
+				colour = this.material[row];
+				share = this.share[row];
+				materialSet.add(Material.getName(colour), share);
+			}
+			materialSets[id] = materialSet;
+		}
+		
+		unlock(lockingID);
+		if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Erstellen SimObj > TableColourSet.load() Ende " + ActualTime.asTime().toString());
+	}
+	
 }

@@ -271,7 +271,7 @@ public class PropertySetCreationTool {
 			maxSetElementValue = Colour.getMaxIndex();
 			break;
 		case "Material":
-			tableSet = new TableMaterialSet();
+			tableSet =  TableMaterialSet.getInstance();
 			set_id = tableSet.getNewID("material_set_id");
 			maxSetElementValue = Material.getMaxIndex();
 			break;

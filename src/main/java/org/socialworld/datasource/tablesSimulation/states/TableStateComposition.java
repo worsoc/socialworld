@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.GlobalSwitches;
+import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.properties.MaterialSet;
 import org.socialworld.datasource.mariaDB.Table;
 import org.socialworld.datasource.tablesSimulation.propertySets.TableMaterialSet;
@@ -140,9 +142,11 @@ public class TableStateComposition extends Table {
 		int setID;
 		MaterialSet set = MaterialSet.getObjectNothing();
 		if (row >= 0) {
-			TableMaterialSet tableSet = new TableMaterialSet();
+			if (GlobalSwitches.OUTPUT_CREATE_OBJECT_DETAILS) System.out.println("Erstellen SimObj > TableStateComposition.getMaterialSetFromRow() Start " + ActualTime.asTime().toString());
+			TableMaterialSet tableSet =  TableMaterialSet.getInstance();
 			setID = getMaterialSetID(row);
 			set = tableSet.getMaterialSet(setID);
+			if (GlobalSwitches.OUTPUT_CREATE_OBJECT_DETAILS) System.out.println("Erstellen SimObj > TableStateComposition.getMaterialSetFromRow() Ende " + ActualTime.asTime().toString());
 		}
 		return set;
 	}
