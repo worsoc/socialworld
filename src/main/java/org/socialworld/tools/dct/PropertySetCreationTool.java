@@ -266,7 +266,7 @@ public class PropertySetCreationTool {
 
 		switch(propName) {
 		case "Colour":
-			tableSet = new TableColourSet();
+			tableSet = TableColourSet.getInstance();
 			set_id = tableSet.getNewID("colour_set_id");
 			maxSetElementValue = Colour.getMaxIndex();
 			break;

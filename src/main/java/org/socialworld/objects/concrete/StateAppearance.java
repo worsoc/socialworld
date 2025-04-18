@@ -21,6 +21,8 @@
 */
 package org.socialworld.objects.concrete;
 
+import org.socialworld.GlobalSwitches;
+import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Dimension;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
@@ -171,7 +173,9 @@ public class StateAppearance extends State {
 			
 			for (PropertyName propName : colourSetPropNames) {
 				
+				if (GlobalSwitches.OUTPUT_CREATE_OBJECT_DETAILS) System.out.println("Erstellen SimObj > StateAppearance.init().mapCSPN2CSN " + propName.toString() +  " "+ ActualTime.asTime().toString());
 				colourSetNumber = mapCSPN2CSN(propName);
+				if (GlobalSwitches.OUTPUT_CREATE_OBJECT_DETAILS) System.out.println("Erstellen SimObj > StateAppearance.init().getColourSetFromRow() " + ActualTime.asTime().toString());
 				this.colourSets.set(colourSetNumber,  tableState.getColourSetFromRow(rowTable, colourSetNumber + 1));
 				
 			}
@@ -179,6 +183,7 @@ public class StateAppearance extends State {
 			this.dimension = tableState.getDimensionFromRow(rowTable);
 			
 		}
+		if (GlobalSwitches.OUTPUT_CREATE_OBJECT_DETAILS) System.out.println("Erstellen SimObj > StateAppearance.init() vor returnFromInit() " + ActualTime.asTime().toString());
 		return returnFromInit(tableState, lockingID, rowTable);
 	}
 	

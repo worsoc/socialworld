@@ -38,6 +38,7 @@ public class GlobalSwitches {
 	public static boolean OUTPUT_EVENTMASTER_DETERMINE_INFLUENCE_TO_PERCIPIENTS = false;
 
 	public static boolean OUTPUT_CREATE_OBJECT = true;
+	public static boolean OUTPUT_CREATE_OBJECT_DETAILS = false;
 
 	
 }

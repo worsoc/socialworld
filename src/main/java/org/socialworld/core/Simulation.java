@@ -255,6 +255,7 @@ public class Simulation extends SocialWorldThread {
 		System.out.println("Start Erstellen Aepfel "+ ActualTime.asTime().toString());
 
 		for (int i = 0; i < 75; i++ ) {
+			System.out.println("Erstellen Apfel Nummer " + (i+1) + ": " + ActualTime.asTime().toString());
 			incompleteObject = createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.eatable.fruits.Apple");
 			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
 			myItem = (Item) incompleteObject.getObject();
@@ -316,17 +317,22 @@ public class Simulation extends SocialWorldThread {
 		
 		int incompleteObjectIndex;
 		int objectID;
+		
 		IncompleteSimulationObject incompleteObject = new IncompleteSimulationObject();
 //		HiddenSimulationObject hiddenObject = NoHiddenSimulationObject.getObjectNothing();
 		SimulationObject createdObject = NoSimulationObject.getObjectNothing() ;
 	
+		if (GlobalSwitches.OUTPUT_CREATE_OBJECT_DETAILS) System.out.println("Erstellen SimObj > this.objectMaster.createSimulationObject: " + ActualTime.asTime().toString());
 		incompleteObjectIndex = this.objectMaster.createSimulationObject(simulationObjectType, fullClassName);
 		if (incompleteObjectIndex >= 0) {
+		//	if (GlobalSwitches.OUTPUT_CREATE_OBJECT_DETAILS) System.out.println("Erstellen SimObj > getObjectIDForIncompleteObjectIndex: " + ActualTime.asTime().toString());
 			objectID = this.objectMaster.getObjectIDForIncompleteObjectIndex(incompleteObjectIndex);
 			if (objectID > 0) {
+				//	if (GlobalSwitches.OUTPUT_CREATE_OBJECT_DETAILS) System.out.println("Erstellen SimObj > this.objectMaster.getIncompleteObject: " + ActualTime.asTime().toString());
 				incompleteObject = this.objectMaster.getIncompleteObject(incompleteObjectIndex, objectID);
 				createdObject = incompleteObject.getObject();
 				if (createdObject.isSimulationObject()) {
+					//	if (GlobalSwitches.OUTPUT_CREATE_OBJECT_DETAILS) System.out.println("Erstellen SimObj > this.searchByPosition.addObject: " + ActualTime.asTime().toString());
 					this.searchByPosition.addObject(createdObject);
 				}
 //				hiddenObject = incompleteObject.getHiddenObject();

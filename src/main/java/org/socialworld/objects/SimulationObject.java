@@ -317,7 +317,7 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 
 		this.stateComposition = (StateComposition) getInitState(StateComposition.class.getName());
 		result.add(this.stateComposition);
-
+	
 		return result;
 		
 	};

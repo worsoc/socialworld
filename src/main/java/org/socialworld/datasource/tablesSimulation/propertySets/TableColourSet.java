@@ -24,6 +24,8 @@ package org.socialworld.datasource.tablesSimulation.propertySets;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.socialworld.GlobalSwitches;
+import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.properties.Colour;
 import org.socialworld.attributes.properties.ColourSet;
 
@@ -32,11 +34,29 @@ public class TableColourSet extends TableSet {
 	public final  String 	ALL_COLUMNS 		=	" colour_set_id, lfd_nr, colour, share ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
+	private final int COLOUR_SETS_ARRAY_MAX_COUNT = 1000;
+	
+	private static TableColourSet instance;
+	
+	private ColourSet[] colourSets;
+	
 	int colour_set_id[];
 	int lfd_nr[];
 	int colour[];
 	int share[];
 
+	public static TableColourSet getInstance() {
+		if (instance == null) {
+				instance = new TableColourSet();
+		}
+		return instance;
+	}
+
+	private TableColourSet() {
+		colourSets = new ColourSet[COLOUR_SETS_ARRAY_MAX_COUNT];
+		load();
+	}
+	
 	@Override
 	protected String getTableName() {
 		return "swset_colour";
@@ -146,7 +166,7 @@ public class TableColourSet extends TableSet {
 		return share[index];
 	}
 	
-
+/*
 	public ColourSet getColourSet(int colour_set_id) {
 		select(SELECT_ALL_COLUMNS, " WHERE colour_set_id = " + colour_set_id, " ORDER BY lfd_nr"); 
 		ColourSet colourSet = new ColourSet();
@@ -155,5 +175,55 @@ public class TableColourSet extends TableSet {
 		}
 		return colourSet;
 	}
+*/
+	public ColourSet getColourSet(int colour_set_id) {
+		if (colour_set_id > 0 && colour_set_id <= colourSets.length) {
+			return colourSets[colour_set_id];
+		}
+		return ColourSet.getObjectNothing();
+	}
 
+	private void load() {
+		if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Erstellen SimObj > TableColourSet.load() Start " + ActualTime.asTime().toString());
+		long lockingID = 0;
+		int sleepMillis = 0;
+		while (lockingID == 0) {
+			lockingID = lock();
+			if (lockingID == 0) {
+				sleepMillis++;
+				try {
+					Thread.sleep(sleepMillis);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		int id = 0;
+		int lastID = 0;
+		int colour;
+		int share;
+		ColourSet colourSet = null;
+		
+		select(SELECT_ALL_COLUMNS, "", " ORDER BY colour_set_id, lfd_nr"); 
+		
+		if (lfd_nr.length > 0) {
+			for (int row = 0; row < lfd_nr.length; row++) {
+				id  = this.colour_set_id[row];
+				if (id > lastID) {
+					if (lastID > 0) {
+						colourSets[lastID] = colourSet;
+						lastID = id;
+					}
+					colourSet = new ColourSet();
+				}
+				colour = this.colour[row];
+				share = this.share[row];
+				colourSet.add(Colour.getName(colour), share);
+			}
+			colourSets[id] = colourSet;
+		}
+		
+		unlock(lockingID);
+		if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Erstellen SimObj > TableColourSet.load() Ende " + ActualTime.asTime().toString());
+	}
 }

@@ -24,7 +24,6 @@ package org.socialworld.core;
 import java.util.ListIterator;
 
 import org.socialworld.objects.*;
-import org.socialworld.objects.access.HiddenSimulationObject;
 import org.socialworld.propertyChange.ListenedList;
 import org.socialworld.datasource.createObjects.CreateAnimal;
 import org.socialworld.datasource.createObjects.CreateGod;
@@ -176,8 +175,6 @@ public class ObjectMaster {
 
 		maxObjectID = maxObjectID + 1;
 		objectID =  maxObjectID;
-		
-
 
 		incompleteObject = creators[simulationObjectType.getIndex()].getObject(objectID, fullClassName);
 		

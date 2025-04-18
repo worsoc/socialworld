@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.GlobalSwitches;
+import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Dimension;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.properties.ColourSet;
@@ -284,9 +286,11 @@ public class TableStateAppearance extends Table {
 		int setID;
 		ColourSet set = ColourSet.getObjectNothing();
 		if (row >= 0) {
-			TableColourSet tableSet = new TableColourSet();
+			if (GlobalSwitches.OUTPUT_CREATE_OBJECT_DETAILS) System.out.println("Erstellen SimObj > TableStateAppearance.getColourSetFromRow() Start " + ActualTime.asTime().toString());
+			TableColourSet tableSet = TableColourSet.getInstance();
 			setID = getColourSetID(row, colourSetColumnNumber);
 			if (setID > 0) set = tableSet.getColourSet(setID);
+			if (GlobalSwitches.OUTPUT_CREATE_OBJECT_DETAILS) System.out.println("Erstellen SimObj > TableStateAppearance.getColourSetFromRow() Ende " + ActualTime.asTime().toString());
 		}
 		return set;
 	}
