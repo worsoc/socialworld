@@ -66,6 +66,7 @@ public class Apple extends Fruit implements IEatable, IThrowable {
 	
 	@Override
 	protected State getInitState(String stateClassName) {
+		
 		if (stateClassName.equals(StatePerceptible.class.getName())) {
 			return new StatePerceptible(this);
 		}

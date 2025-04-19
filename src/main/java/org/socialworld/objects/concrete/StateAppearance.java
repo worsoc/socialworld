@@ -161,12 +161,10 @@ public class StateAppearance extends State {
 		
 		
 		TableStateAppearance tableState = null;
-		long lockingID = 0;
-		while (lockingID == 0) {
-			tableState = TableStateAppearance.getInstance();
-			lockingID = tableState.lock();
-		}
-		int rowTable = tableState.loadForObjectID(objectID) ;
+		tableState = TableStateAppearance.getInstance();
+		if (GlobalSwitches.OUTPUT_CREATE_OBJECT_DETAILS) System.out.println("Erstellen SimObj > StateAppearance.init().loadForObjectID Start " + ActualTime.asTime().toString());
+		int rowTable = tableState.getRowForID(objectID);
+		if (GlobalSwitches.OUTPUT_CREATE_OBJECT_DETAILS) System.out.println("Erstellen SimObj > StateAppearance.init().loadForObjectID Ende " + ActualTime.asTime().toString());
 		if (rowTable >= 0) {
 			
 			int colourSetNumber;
@@ -184,7 +182,7 @@ public class StateAppearance extends State {
 			
 		}
 		if (GlobalSwitches.OUTPUT_CREATE_OBJECT_DETAILS) System.out.println("Erstellen SimObj > StateAppearance.init() vor returnFromInit() " + ActualTime.asTime().toString());
-		return returnFromInit(tableState, lockingID, rowTable);
+		return returnFromInit(tableState, rowTable);
 	}
 	
 	private StateAppearance( StateAppearance original, PropertyProtection protectionOriginal, IAccessToken token) {

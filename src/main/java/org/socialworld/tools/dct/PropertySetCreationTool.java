@@ -160,7 +160,7 @@ public class PropertySetCreationTool {
 				int setID_14;
 				int setID_15;
 				
-				TableStateAppearance tableAppearance = new TableStateAppearance();
+				TableStateAppearance tableAppearance = TableStateAppearance.getInstance();
 				tableAppearance.clear();
 				maxSetID_1 = tableAppearance.getNewID( "swset_colour", "colour_set_id") - 1;
 				for (int id = 1; id < 1000; id++) {

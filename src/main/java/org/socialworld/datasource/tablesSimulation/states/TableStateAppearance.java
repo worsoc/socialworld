@@ -2,8 +2,6 @@ package org.socialworld.datasource.tablesSimulation.states;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.socialworld.GlobalSwitches;
 import org.socialworld.attributes.ActualTime;
@@ -16,25 +14,31 @@ import org.socialworld.objects.concrete.StateAppearance;
 
 public class TableStateAppearance extends Table {
 
-	private static List<TableStateAppearance> instances = new ArrayList<TableStateAppearance>();
 
-	public static TableStateAppearance getInstance() {
-		for ( TableStateAppearance instance : instances) {
-			if (!instance.isLocked()) {
-				return instance;
-			}
-		}
-		TableStateAppearance newInstance = new TableStateAppearance();
-		instances.add(newInstance);
-		return newInstance;
-	}
-	
+
 	public final  String 	ALL_COLUMNS 		=	" id, width_m, width_mm, height_m, height_mm, depth_m, depth_mm, "
 			+ "colour_set_id_1, colour_set_id_2, colour_set_id_3, colour_set_id_4, colour_set_id_5, colour_set_id_6, colour_set_id_7, "
 			+ "colour_set_id_8, colour_set_id_9, colour_set_id_10, colour_set_id_11, colour_set_id_12, colour_set_id_13, colour_set_id_14, "
 			+ "colour_set_id_15 ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
+	private final int STATE_APPEARANCE_ARRAY_MAX_COUNT = 100000;
+	
+	private static TableStateAppearance instanceMain;
+	private int[] mapId2Index;
+
+	public static TableStateAppearance getInstance() {
+		if (instanceMain == null) {
+				instanceMain = new TableStateAppearance();
+		}
+		return instanceMain;
+	}
+
+	private TableStateAppearance() {
+			mapId2Index = new int[STATE_APPEARANCE_ARRAY_MAX_COUNT];
+			load();
+	}
+	
 	int id[];
 	short width_m[];
 	short width_mm[];
@@ -225,7 +229,9 @@ public class TableStateAppearance extends Table {
 		}
 	}
 
-	public int getColourSetID(int index, int colourSetColumnNumber) {
+	private int getColourSetID(int index, int colourSetColumnNumber) {
+		if (index < 0  || index >= id.length) return 0;
+
 		switch (colourSetColumnNumber) {
 		case 1: return colour_set_id_1[index];
 		case 2: return colour_set_id_2[index];
@@ -247,45 +253,63 @@ public class TableStateAppearance extends Table {
 		}
 		
 	}
-	
+/*	
 	public short getWidthInMeters(int index) {
+		if (index >= 0 && index < id.length) {
 			return width_m[index];
+		}
+		else return 0;
 	}
 
 	public short getWidthMilliMeters(int index) {
-		return width_mm[index];
+		if (index >= 0 && index < id.length) {
+			return width_mm[index];
+		}
+		else return 0;
 	}
 
 	public short getHeightInMeters(int index) {
-		return height_m[index];
+		if (index >= 0 && index < id.length) {
+			return height_m[index];
+		}
+		else return 0;
 	}
 	
 	public short getHeightInMilliMeters(int index) {
-		return height_mm[index];
+		if (index >= 0 && index < id.length) {
+			return height_mm[index];
+		}
+		else return 0;
 	}
 
 	public short getDepthInMeters(int index) {
-		return depth_m[index];
+		if (index >= 0 && index < id.length) {
+			return depth_m[index];
+		}
+		else return 0;
 	}
 	
 	public short getDepthInMilliMeters(int index) {
-		return depth_mm[index];
+		if (index >= 0 && index < id.length) {
+			return depth_mm[index];
+		}
+		else return 0;
 	}
 
 	public int loadForObjectID(int objectID) {
-
-		select(SELECT_ALL_COLUMNS, " WHERE id = " + objectID , "");
-
-		int row = getIndexFor1PK(objectID);
-		return row;
+		
+			select(SELECT_ALL_COLUMNS, " WHERE id = " + objectID , "");
+	
+			int row = getIndexFor1PK(objectID);
+			return row;
 		
 	}
-
+*/
 	public ColourSet getColourSetFromRow (int row, int colourSetColumnNumber ) {
 		
 		int setID;
 		ColourSet set = ColourSet.getObjectNothing();
-		if (row >= 0) {
+		if (row >= 0 && row < id.length) {
 			if (GlobalSwitches.OUTPUT_CREATE_OBJECT_DETAILS) System.out.println("Erstellen SimObj > TableStateAppearance.getColourSetFromRow() Start " + ActualTime.asTime().toString());
 			TableColourSet tableSet = TableColourSet.getInstance();
 			setID = getColourSetID(row, colourSetColumnNumber);
@@ -296,9 +320,38 @@ public class TableStateAppearance extends Table {
 	}
 	
 	public Dimension getDimensionFromRow(int row) {
-		Dimension dimension = new Dimension(PropertyName.stateAppearance_dimension, 
+		Dimension dimension = Dimension.getObjectNothing();
+		if (row >= 0 && row < id.length) {
+			dimension = new Dimension(PropertyName.stateAppearance_dimension, 
 				height_m[row], height_mm[row], width_m[row], width_mm[row], depth_m[row], depth_mm[row]);
+		}
 		return dimension;
 	}
 	
+	
+	private void load() {
+			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Erstellen SimObj > TableStateAppearance.load() Start " + ActualTime.asTime().toString());
+			long lockingID = lockWithWait();
+			
+			select(SELECT_ALL_COLUMNS, "", " ORDER BY id"); 
+			
+			if (this.id.length > 0) {
+				for (int index = 0; index < this.id.length; index++) {
+					mapId2Index[this.id[index]] = index;
+				}	
+			}
+			
+			unlock(lockingID);
+			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Erstellen SimObj > TableStateAppearance.load() Ende " + ActualTime.asTime().toString());
+	}
+	
+	public int getRowForID(int id) {
+		if (mapId2Index.length >  id) {
+			return mapId2Index[id];
+		}
+		else {
+			return -1;
+		}
+	}
+
 }
