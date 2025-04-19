@@ -72,6 +72,23 @@ public abstract class Table {
 			}
 		}
 		
+		protected long lockWithWait() {
+			long lockingID = 0;
+			int sleepMillis = 0;
+			while (lockingID == 0) {
+				lockingID = lock();
+				if (lockingID == 0) {
+					sleepMillis++;
+					try {
+						Thread.sleep(sleepMillis);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			return lockingID;
+		}
+		
 		public boolean unlock(long lockingID) {
 			if (lockingID == this.lockingID) {
 				isLocked = false;

@@ -39,6 +39,7 @@ public class GlobalSwitches {
 
 	public static boolean OUTPUT_CREATE_OBJECT = false;
 	public static boolean OUTPUT_CREATE_OBJECT_DETAILS = false;
+	public static boolean OUTPUT_CREATE_OBJECT_CLASS_FOR_NAME = false;
 
 	
 }

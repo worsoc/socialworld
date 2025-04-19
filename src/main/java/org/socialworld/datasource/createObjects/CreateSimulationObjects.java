@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.socialworld.GlobalSwitches;
+import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.core.IncompleteSimulationObject;
@@ -64,7 +66,9 @@ public abstract class CreateSimulationObjects {
 		Object createdObject = NoSimulationObject.getObjectNothing();
 		Object noObject = NoSimulationObject.getObjectNothing();
 		try {
+			if (GlobalSwitches.OUTPUT_CREATE_OBJECT_CLASS_FOR_NAME) System.out.println("Erstellen SimObj > CreateSimulationObject.createObjectForName(" + fullClassName + ") Start " + ActualTime.asTime().toString());
 			createdObject = Class.forName(fullClassName).getDeclaredConstructor().newInstance();
+			if (GlobalSwitches.OUTPUT_CREATE_OBJECT_CLASS_FOR_NAME) System.out.println("Erstellen SimObj > CreateSimulationObject.createObjectForName(" + fullClassName + ") Ende " + ActualTime.asTime().toString());
 		}
 		catch (ClassNotFoundException cnfe ) {
 			System.out.println(cnfe.getMessage());

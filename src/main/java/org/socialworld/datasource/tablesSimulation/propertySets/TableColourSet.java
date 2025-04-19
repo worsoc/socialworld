@@ -185,19 +185,7 @@ public class TableColourSet extends TableSet {
 
 	private void load() {
 		if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Erstellen SimObj > TableColourSet.load() Start " + ActualTime.asTime().toString());
-		long lockingID = 0;
-		int sleepMillis = 0;
-		while (lockingID == 0) {
-			lockingID = lock();
-			if (lockingID == 0) {
-				sleepMillis++;
-				try {
-					Thread.sleep(sleepMillis);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+		long lockingID = lockWithWait();
 		int id = 0;
 		int lastID = 0;
 		int colour;

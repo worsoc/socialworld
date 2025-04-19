@@ -276,12 +276,12 @@ public class PropertySetCreationTool {
 			maxSetElementValue = Material.getMaxIndex();
 			break;
 		case "Nutrient":
-			tableSet = new TableNutrientSet();
+			tableSet =  TableNutrientSet.getInstance();
 			set_id = tableSet.getNewID("nutrient_set_id");
 			maxSetElementValue = Nutrient.getMaxIndex();
 			break;
 		case "Taste":
-			tableSet = new TableTasteSet();
+			tableSet =  TableTasteSet.getInstance();
 			set_id = tableSet.getNewID("taste_set_id");
 			maxSetElementValue = Taste.getMaxIndex();
 			break;

@@ -26,6 +26,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.GlobalSwitches;
+import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.properties.NutrientSet;
 import org.socialworld.attributes.properties.TasteSet;
 import org.socialworld.datasource.mariaDB.Table;
@@ -186,9 +188,11 @@ public class TableStateEatable extends Table {
 		int setID;
 		NutrientSet set = NutrientSet.getObjectNothing();
 		if (row >= 0) {
-			TableNutrientSet tableSet = new TableNutrientSet();
+			if (GlobalSwitches.OUTPUT_CREATE_OBJECT_DETAILS) System.out.println("Erstellen SimObj > TableStateEatable.getNutrientSetFromRow() Start " + ActualTime.asTime().toString());
+			TableNutrientSet tableSet = TableNutrientSet.getInstance();
 			setID = getNutrientSetID(row);
 			set = tableSet.getNutrientSet(setID);
+			if (GlobalSwitches.OUTPUT_CREATE_OBJECT_DETAILS) System.out.println("Erstellen SimObj > TableStateEatable.getNutrientSetFromRow() Ende " + ActualTime.asTime().toString());
 		}
 		return set;
 	}
@@ -198,9 +202,11 @@ public class TableStateEatable extends Table {
 		int setID;
 		TasteSet set = TasteSet.getObjectNothing();
 		if (row >= 0) {
-			TableTasteSet tableSet = new TableTasteSet();
+			if (GlobalSwitches.OUTPUT_CREATE_OBJECT_DETAILS) System.out.println("Erstellen SimObj > TableStateEatable.getTasteSetFromRow() Start " + ActualTime.asTime().toString());
+			TableTasteSet tableSet =  TableTasteSet.getInstance();
 			setID = getTasteSetID(row);
 			set = tableSet.getTasteSet(setID);
+			if (GlobalSwitches.OUTPUT_CREATE_OBJECT_DETAILS) System.out.println("Erstellen SimObj > TableStateEatable.getTasteSetFromRow() Ende " + ActualTime.asTime().toString());
 		}
 		return set;
 	}

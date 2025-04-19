@@ -24,6 +24,8 @@ package org.socialworld.datasource.tablesSimulation.propertySets;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.socialworld.GlobalSwitches;
+import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.properties.Taste;
 import org.socialworld.attributes.properties.TasteSet;
 
@@ -32,6 +34,23 @@ public class TableTasteSet extends TableSet {
 	public final  String 	ALL_COLUMNS 		=	" taste_set_id, lfd_nr,  taste, share ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
+	private final int TASTE_SETS_ARRAY_MAX_COUNT = 1000;
+	
+	private static TableTasteSet instance;
+	
+	private TasteSet[] tasteSets;
+
+	public static TableTasteSet getInstance() {
+		if (instance == null) {
+				instance = new TableTasteSet();
+		}
+		return instance;
+	}
+
+	private TableTasteSet() {
+		tasteSets = new TasteSet[TASTE_SETS_ARRAY_MAX_COUNT];
+		load();
+	}	
 	int taste_set_id[];
 	int lfd_nr[];
 	int taste[];
@@ -146,7 +165,7 @@ public class TableTasteSet extends TableSet {
 		return share[index];
 	}
 	
-
+/*
 	public TasteSet getTasteSet(int taste_set_id) {
 		select(SELECT_ALL_COLUMNS, " WHERE taste_set_id = " + taste_set_id, " ORDER BY lfd_nr"); 
 		TasteSet tasteSet = new TasteSet();
@@ -155,5 +174,44 @@ public class TableTasteSet extends TableSet {
 		}
 		return tasteSet;
 	}
+*/
+	public TasteSet getTasteSet(int taste_set_id) {
+		if (taste_set_id > 0 && taste_set_id <= tasteSets.length) {
+			return tasteSets[taste_set_id];
+		}
+		return TasteSet.getObjectNothing();
+	}
 
+	private void load() {
+		if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Erstellen SimObj > TableTasteSet.load() Start " + ActualTime.asTime().toString());
+		long lockingID = lockWithWait();
+		int id = 0;
+		int lastID = 0;
+		int taste;
+		int share;
+		TasteSet tasteSet = null;
+		
+		select(SELECT_ALL_COLUMNS, "", " ORDER BY taste_set_id, lfd_nr"); 
+		
+		if (lfd_nr.length > 0) {
+			for (int row = 0; row < lfd_nr.length; row++) {
+				id  = this.taste_set_id[row];
+				if (id > lastID) {
+					if (lastID > 0) {
+						tasteSets[lastID] = tasteSet;
+						lastID = id;
+					}
+					tasteSet = new TasteSet();
+				}
+				taste = this.taste[row];
+				share = this.share[row];
+				tasteSet.add(Taste.getName(taste), share);
+			}
+			tasteSets[id] = tasteSet;
+		}
+		
+		unlock(lockingID);
+		if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Erstellen SimObj > TableTasteSet.load() Ende " + ActualTime.asTime().toString());
+	}
+	
 }

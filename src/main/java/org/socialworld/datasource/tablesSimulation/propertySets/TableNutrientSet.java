@@ -24,6 +24,8 @@ package org.socialworld.datasource.tablesSimulation.propertySets;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.socialworld.GlobalSwitches;
+import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.properties.Nutrient;
 import org.socialworld.attributes.properties.NutrientSet;
 
@@ -32,11 +34,29 @@ public class TableNutrientSet extends TableSet {
 	public final  String 	ALL_COLUMNS 		=	" nutrient_set_id, lfd_nr,  nutrient, share ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
+	private final int NUTRIENT_SETS_ARRAY_MAX_COUNT = 1000;
+	
+	private static TableNutrientSet instance;
+	
+	private NutrientSet[] nutrientSets;
+	
 	int nutrient_set_id[];
 	int lfd_nr[];
 	int nutrient[];
 	int share[];
 
+	public static TableNutrientSet getInstance() {
+		if (instance == null) {
+				instance = new TableNutrientSet();
+		}
+		return instance;
+	}
+
+	private TableNutrientSet() {
+		nutrientSets = new NutrientSet[NUTRIENT_SETS_ARRAY_MAX_COUNT];
+		load();
+	}
+	
 	@Override
 	protected String getTableName() {
 		return "swset_nutrient";
@@ -146,7 +166,7 @@ public class TableNutrientSet extends TableSet {
 		return share[index];
 	}
 	
-
+/*
 	public NutrientSet getNutrientSet(int nutrient_set_id) {
 		select(SELECT_ALL_COLUMNS, " WHERE nutrient_set_id = " + nutrient_set_id, " ORDER BY lfd_nr"); 
 		NutrientSet nutrientSet = new NutrientSet();
@@ -155,5 +175,44 @@ public class TableNutrientSet extends TableSet {
 		}
 		return nutrientSet;
 	}
-
+*/
+	public NutrientSet getNutrientSet(int nutrient_set_id) {
+		if (nutrient_set_id > 0 && nutrient_set_id <= nutrientSets.length) {
+			return nutrientSets[nutrient_set_id];
+		}
+		return NutrientSet.getObjectNothing();
+	}
+	
+	private void load() {
+		if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Erstellen SimObj > TableNutrientSet.load() Start " + ActualTime.asTime().toString());
+		long lockingID = lockWithWait();
+		int id = 0;
+		int lastID = 0;
+		int nutrient;
+		int share;
+		NutrientSet nutrientSet = null;
+		
+		select(SELECT_ALL_COLUMNS, "", " ORDER BY nutrient_set_id, lfd_nr"); 
+		
+		if (lfd_nr.length > 0) {
+			for (int row = 0; row < lfd_nr.length; row++) {
+				id  = this.nutrient_set_id[row];
+				if (id > lastID) {
+					if (lastID > 0) {
+						nutrientSets[lastID] = nutrientSet;
+						lastID = id;
+					}
+					nutrientSet = new NutrientSet();
+				}
+				nutrient = this.nutrient[row];
+				share = this.share[row];
+				nutrientSet.add(Nutrient.getName(nutrient), share);
+			}
+			nutrientSets[id] = nutrientSet;
+		}
+		
+		unlock(lockingID);
+		if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Erstellen SimObj > TableNutrientet.load() Ende " + ActualTime.asTime().toString());
+	}
+	
 }

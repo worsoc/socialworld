@@ -184,20 +184,8 @@ public class TableMaterialSet extends TableSet {
 	}
 
 	private void load() {
-		if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Erstellen SimObj > TableColourSet.load() Start " + ActualTime.asTime().toString());
-		long lockingID = 0;
-		int sleepMillis = 0;
-		while (lockingID == 0) {
-			lockingID = lock();
-			if (lockingID == 0) {
-				sleepMillis++;
-				try {
-					Thread.sleep(sleepMillis);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+		if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Erstellen SimObj > TableMaterialSet.load() Start " + ActualTime.asTime().toString());
+		long lockingID = lockWithWait();
 		int id = 0;
 		int lastID = 0;
 		int colour;
@@ -224,7 +212,7 @@ public class TableMaterialSet extends TableSet {
 		}
 		
 		unlock(lockingID);
-		if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Erstellen SimObj > TableColourSet.load() Ende " + ActualTime.asTime().toString());
+		if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Erstellen SimObj > TableMaterialSet.load() Ende " + ActualTime.asTime().toString());
 	}
 	
 }
