@@ -10,17 +10,15 @@ import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Dimension;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.properties.ColourSet;
-import org.socialworld.datasource.mariaDB.Table;
 import org.socialworld.datasource.tablesSimulation.propertySets.TableColourSet;
 import org.socialworld.objects.concrete.StateAppearance;
 
-public class TableStateAppearance extends Table {
+public class TableStateAppearance extends TableState {
 	
 	public final  String 	ALL_COLUMNS 		=	" id, width_m, width_mm, height_m, height_mm, depth_m, depth_mm, "
 			+ "colour_set_id_1, colour_set_id_2, colour_set_id_3, colour_set_id_4, colour_set_id_5, colour_set_id_6, colour_set_id_7, "
 			+ "colour_set_id_8, colour_set_id_9, colour_set_id_10, colour_set_id_11, colour_set_id_12, colour_set_id_13, colour_set_id_14, "
 			+ "colour_set_id_15 ";
-	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
 	private static List<TableStateAppearance> instances = new ArrayList<TableStateAppearance>();
 
@@ -39,7 +37,6 @@ public class TableStateAppearance extends Table {
 		
 	}
 	
-	protected int id[];
 	protected short width_m[];
 	protected short width_mm[];
 	protected short height_m[];

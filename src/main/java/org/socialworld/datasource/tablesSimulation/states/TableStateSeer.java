@@ -29,11 +29,10 @@ import java.util.List;
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.percipience.PropsSeer;
-import org.socialworld.datasource.mariaDB.Table;
 import org.socialworld.datasource.tablesSimulation.properties.TableDirection;
 import org.socialworld.datasource.tablesSimulation.properties.TablePropsSeer;
 
-public class TableStateSeer extends Table {
+public class TableStateSeer extends TableState {
 
 	private static List<TableStateSeer> instances = new ArrayList<TableStateSeer>();
 
@@ -50,9 +49,7 @@ public class TableStateSeer extends Table {
 
 	//bestPercPerp ... bestPercipiencePerpendicular
 	public final  String 	ALL_COLUMNS 		=	" id, direction_id, props_seer_id, bestPercPerp ";
-	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
-	int id[];
 	int direction_id[];
 	int props_seer_id[];
 	int bestPercPerp[];

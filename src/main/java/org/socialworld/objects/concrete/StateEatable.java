@@ -32,7 +32,7 @@ import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.core.IAccessToken;
 import org.socialworld.core.ReturnCode;
-import org.socialworld.datasource.tablesSimulation.states.TableStateEatable;
+import org.socialworld.datasource.tablesSimulation.states.CacheTableStateEatable;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.State;
@@ -136,18 +136,14 @@ public class StateEatable extends State {
 		
 		int objectID = getObjectID();
 		
-		TableStateEatable tableState = null;
-		long lockingID = 0;
-		while (lockingID == 0) {
-			tableState = TableStateEatable.getInstance();
-			lockingID = tableState.lock();
-		}
-		int rowTable = tableState.loadForObjectID(objectID) ;
+		CacheTableStateEatable tableState = null;
+		tableState = CacheTableStateEatable.getInstance();
+		int rowTable = tableState.getRowForID(objectID) ;
 		if (rowTable >= 0) {
 			nutrientSet = tableState.getNutrientSetFromRow(rowTable);
 			tasteSet = tableState.getTasteSetFromRow(rowTable);
 		}
-		return returnFromInit(tableState, lockingID, rowTable);
+		return returnFromInit(tableState,  rowTable);
 	
 	}
 

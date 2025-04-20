@@ -30,11 +30,10 @@ import org.socialworld.GlobalSwitches;
 import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.properties.NutrientSet;
 import org.socialworld.attributes.properties.TasteSet;
-import org.socialworld.datasource.mariaDB.Table;
 import org.socialworld.datasource.tablesSimulation.propertySets.TableNutrientSet;
 import org.socialworld.datasource.tablesSimulation.propertySets.TableTasteSet;
 
-public class TableStateEatable extends Table {
+public class TableStateEatable extends TableState {
 
 	private static List<TableStateEatable> instances = new ArrayList<TableStateEatable>();
 
@@ -51,11 +50,9 @@ public class TableStateEatable extends Table {
 	
 	
 	public final  String 	ALL_COLUMNS 		=	" id, nutrient_set_id, taste_set_id ";
-	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
-	int id[];
-	int nutrient_set_id[];
-	int taste_set_id[];
+	protected int nutrient_set_id[];
+	protected int taste_set_id[];
 
 	@Override
 	protected String getTableName() {

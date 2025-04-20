@@ -26,9 +26,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.socialworld.datasource.mariaDB.Table;
 
-public class TableStateRunning extends Table {
+public class TableStateRunning extends TableState {
 
 	private static List<TableStateRunning> instances = new ArrayList<TableStateRunning>();
 
@@ -44,9 +43,7 @@ public class TableStateRunning extends Table {
 	}
 
 	public final  String 	ALL_COLUMNS 		=	" id, direction_id, speed, numberLegs ";
-	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
-	int id[];
 	int direction_id[];
 	double speed[];
 	int numberLegs[];

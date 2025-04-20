@@ -26,9 +26,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.socialworld.datasource.mariaDB.Table;
 
-public class TableStateFlying extends Table {
+public class TableStateFlying extends TableState {
 
 	private static List<TableStateFlying> instances = new ArrayList<TableStateFlying>();
 
@@ -44,9 +43,7 @@ public class TableStateFlying extends Table {
 	}
 
 	public final  String 	ALL_COLUMNS 		=	" id, direction_id, widthWings, numberWings ";
-	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
-	int id[];
 	int direction_id[];
 	double widthWings[];
 	int numberWings[];

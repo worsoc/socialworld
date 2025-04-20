@@ -162,9 +162,7 @@ public class StateAppearance extends State {
 		
 		CacheTableStateAppearance tableState = null;
 		tableState = CacheTableStateAppearance.getInstance();
-		if (GlobalSwitches.OUTPUT_CREATE_OBJECT_DETAILS) System.out.println("Erstellen SimObj > StateAppearance.init().loadForObjectID Start " + ActualTime.asTime().toString());
 		int rowTable = tableState.getRowForID(objectID);
-		if (GlobalSwitches.OUTPUT_CREATE_OBJECT_DETAILS) System.out.println("Erstellen SimObj > StateAppearance.init().loadForObjectID Ende " + ActualTime.asTime().toString());
 		if (rowTable >= 0) {
 			
 			int colourSetNumber;

@@ -8,10 +8,9 @@ import java.util.List;
 import org.socialworld.GlobalSwitches;
 import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.properties.MaterialSet;
-import org.socialworld.datasource.mariaDB.Table;
 import org.socialworld.datasource.tablesSimulation.propertySets.TableMaterialSet;
 
-public class TableStateComposition extends Table {
+public class TableStateComposition extends TableState {
 
 	private static List<TableStateComposition> instances = new ArrayList<TableStateComposition>();
 
@@ -28,10 +27,8 @@ public class TableStateComposition extends Table {
 	
 	
 	public final  String 	ALL_COLUMNS 		=	" id, material_set_id ";
-	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
-	int id[];
-	int material_set_id[];
+	protected int material_set_id[];
 
 	@Override
 	protected String getTableName() {

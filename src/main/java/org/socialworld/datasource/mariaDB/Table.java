@@ -31,6 +31,7 @@ import java.sql.SQLException;
  */
 public abstract class Table {
 
+	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
 	
 		protected ConnectionMariaDB connection;
@@ -44,6 +45,7 @@ public abstract class Table {
 		protected int pk1[];
 		protected int pk2[];
 		
+
 		public Table() {
 			connection = ConnectionMariaDB.getInstance();
 		}
@@ -302,4 +304,6 @@ public abstract class Table {
 			delete(statement);
 		}
 
+		
+		
 }

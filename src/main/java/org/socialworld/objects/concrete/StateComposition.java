@@ -10,7 +10,7 @@ import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.core.IAccessToken;
 import org.socialworld.core.ReturnCode;
-import org.socialworld.datasource.tablesSimulation.states.TableStateComposition;
+import org.socialworld.datasource.tablesSimulation.states.CacheTableStateComposition;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.State;
@@ -98,17 +98,13 @@ public class StateComposition extends State {
 	protected  ReturnCode init() {
 		int objectID = getObjectID();
 		
-		TableStateComposition tableState = null;
-		long lockingID = 0;
-		while (lockingID == 0) {
-			tableState = TableStateComposition.getInstance();
-			lockingID = tableState.lock();
-		}
-		int rowTable = tableState.loadForObjectID(objectID) ;
+		CacheTableStateComposition tableState = null;
+		tableState = CacheTableStateComposition.getInstance();
+		int rowTable = tableState.getRowForID(objectID) ;
 		if (rowTable >= 0) {
 			materialSet = tableState.getMaterialSetFromRow(rowTable);
 		}
-		return returnFromInit(tableState, lockingID, rowTable);
+		return returnFromInit(tableState, rowTable);
 	}
 
 	private StateComposition( StateComposition original, PropertyProtection protectionOriginal, IAccessToken token) {

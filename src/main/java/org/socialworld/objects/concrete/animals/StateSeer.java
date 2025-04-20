@@ -34,7 +34,7 @@ import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.calculation.geometry.VectorMapper;
 import org.socialworld.core.IAccessToken;
 import org.socialworld.core.ReturnCode;
-import org.socialworld.datasource.tablesSimulation.states.TableStateSeer;
+import org.socialworld.datasource.tablesSimulation.states.CacheTableStateSeer;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.State;
@@ -121,18 +121,14 @@ public class StateSeer extends State {
 		
 		int objectID = getObjectID();
 		
-		TableStateSeer tableState = null;
-		long lockingID = 0;
-		while (lockingID == 0) {
-			tableState = TableStateSeer.getInstance();
-			lockingID = tableState.lock();
-		}
-		int rowTable = tableState.loadForObjectID(objectID) ;
+		CacheTableStateSeer tableState = null;
+		tableState = CacheTableStateSeer.getInstance();
+		int rowTable = tableState.getRowForID(objectID) ;
 		if (rowTable >= 0) {
 			directionView = tableState.getDirectionViewFromRow(rowTable);
 			propsSeer = tableState.getPropsSeerFromRow(rowTable);
 		}
-		return returnFromInit(tableState, lockingID, rowTable);
+		return returnFromInit(tableState,  rowTable);
 		
 	}
 
