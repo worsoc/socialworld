@@ -2,6 +2,8 @@ package org.socialworld.datasource.tablesSimulation.states;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.socialworld.GlobalSwitches;
 import org.socialworld.attributes.ActualTime;
@@ -13,54 +15,52 @@ import org.socialworld.datasource.tablesSimulation.propertySets.TableColourSet;
 import org.socialworld.objects.concrete.StateAppearance;
 
 public class TableStateAppearance extends Table {
-
-
-
+	
 	public final  String 	ALL_COLUMNS 		=	" id, width_m, width_mm, height_m, height_mm, depth_m, depth_mm, "
 			+ "colour_set_id_1, colour_set_id_2, colour_set_id_3, colour_set_id_4, colour_set_id_5, colour_set_id_6, colour_set_id_7, "
 			+ "colour_set_id_8, colour_set_id_9, colour_set_id_10, colour_set_id_11, colour_set_id_12, colour_set_id_13, colour_set_id_14, "
 			+ "colour_set_id_15 ";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
-	private final int STATE_APPEARANCE_ARRAY_MAX_COUNT = 100000;
-	
-	private static TableStateAppearance instanceMain;
-	private int[] mapId2Index;
+	private static List<TableStateAppearance> instances = new ArrayList<TableStateAppearance>();
 
 	public static TableStateAppearance getInstance() {
-		if (instanceMain == null) {
-				instanceMain = new TableStateAppearance();
+		for ( TableStateAppearance instance : instances) {
+			if (!instance.isLocked()) {
+				return instance;
+			}
 		}
-		return instanceMain;
+		TableStateAppearance newInstance = new TableStateAppearance();
+		instances.add(newInstance);
+		return newInstance;
 	}
 
-	private TableStateAppearance() {
-			mapId2Index = new int[STATE_APPEARANCE_ARRAY_MAX_COUNT];
-			load();
+	protected TableStateAppearance() {
+		
 	}
 	
-	int id[];
-	short width_m[];
-	short width_mm[];
-	short height_m[];
-	short height_mm[];
-	short depth_m[];
-	short depth_mm[];
-	int colour_set_id_1[];
-	int colour_set_id_2[];
-	int colour_set_id_3[];
-	int colour_set_id_4[];
-	int colour_set_id_5[];
-	int colour_set_id_6[];
-	int colour_set_id_7[];
-	int colour_set_id_8[];
-	int colour_set_id_9[];
-	int colour_set_id_10[];
-	int colour_set_id_11[];
-	int colour_set_id_12[];
-	int colour_set_id_13[];
-	int colour_set_id_14[];
-	int colour_set_id_15[];
+	protected int id[];
+	protected short width_m[];
+	protected short width_mm[];
+	protected short height_m[];
+	protected short height_mm[];
+	protected short depth_m[];
+	protected short depth_mm[];
+	protected int colour_set_id_1[];
+	protected int colour_set_id_2[];
+	protected int colour_set_id_3[];
+	protected int colour_set_id_4[];
+	protected int colour_set_id_5[];
+	protected int colour_set_id_6[];
+	protected int colour_set_id_7[];
+	protected int colour_set_id_8[];
+	protected int colour_set_id_9[];
+	protected int colour_set_id_10[];
+	protected int colour_set_id_11[];
+	protected int colour_set_id_12[];
+	protected int colour_set_id_13[];
+	protected int colour_set_id_14[];
+	protected int colour_set_id_15[];
 
 	@Override
 	protected String getTableName() {
@@ -253,7 +253,7 @@ public class TableStateAppearance extends Table {
 		}
 		
 	}
-/*	
+	
 	public short getWidthInMeters(int index) {
 		if (index >= 0 && index < id.length) {
 			return width_m[index];
@@ -304,7 +304,7 @@ public class TableStateAppearance extends Table {
 			return row;
 		
 	}
-*/
+
 	public ColourSet getColourSetFromRow (int row, int colourSetColumnNumber ) {
 		
 		int setID;
@@ -329,29 +329,5 @@ public class TableStateAppearance extends Table {
 	}
 	
 	
-	private void load() {
-			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Erstellen SimObj > TableStateAppearance.load() Start " + ActualTime.asTime().toString());
-			long lockingID = lockWithWait();
-			
-			select(SELECT_ALL_COLUMNS, "", " ORDER BY id"); 
-			
-			if (this.id.length > 0) {
-				for (int index = 0; index < this.id.length; index++) {
-					mapId2Index[this.id[index]] = index;
-				}	
-			}
-			
-			unlock(lockingID);
-			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Erstellen SimObj > TableStateAppearance.load() Ende " + ActualTime.asTime().toString());
-	}
-	
-	public int getRowForID(int id) {
-		if (mapId2Index.length >  id) {
-			return mapId2Index[id];
-		}
-		else {
-			return -1;
-		}
-	}
 
 }

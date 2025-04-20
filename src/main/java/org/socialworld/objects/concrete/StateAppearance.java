@@ -31,7 +31,7 @@ import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.core.IAccessToken;
 import org.socialworld.core.ReturnCode;
-import org.socialworld.datasource.tablesSimulation.states.TableStateAppearance;
+import org.socialworld.datasource.tablesSimulation.states.CacheTableStateAppearance;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.State;
@@ -160,8 +160,8 @@ public class StateAppearance extends State {
 		}
 		
 		
-		TableStateAppearance tableState = null;
-		tableState = TableStateAppearance.getInstance();
+		CacheTableStateAppearance tableState = null;
+		tableState = CacheTableStateAppearance.getInstance();
 		if (GlobalSwitches.OUTPUT_CREATE_OBJECT_DETAILS) System.out.println("Erstellen SimObj > StateAppearance.init().loadForObjectID Start " + ActualTime.asTime().toString());
 		int rowTable = tableState.getRowForID(objectID);
 		if (GlobalSwitches.OUTPUT_CREATE_OBJECT_DETAILS) System.out.println("Erstellen SimObj > StateAppearance.init().loadForObjectID Ende " + ActualTime.asTime().toString());
