@@ -178,10 +178,14 @@ public class TableStateSeer extends TableState {
 	}
 
 	public int getDirectionID(int index) {
+		if (direction_id == null) return 0;
+		if (direction_id.length == 0) return 0;
 		return direction_id[index];
 	}
 
 	public int getPropsSeerID(int index) {
+		if (props_seer_id == null) return 0;
+		if (props_seer_id.length == 0) return 0;
 		return props_seer_id[index];
 	}
 
@@ -203,7 +207,7 @@ public class TableStateSeer extends TableState {
 		int id;
 		Direction direction = Direction.getObjectNothing();
 		if (row >= 0) {
-			TableDirection tableDirection = new TableDirection();
+			TableDirection tableDirection =  TableDirection.getInstance();
 			id = getDirectionID(row);
 			direction = tableDirection.getDirection(id, PropertyName.stateSeer_directionView);
 		}
@@ -215,7 +219,7 @@ public class TableStateSeer extends TableState {
 		int id;
 		PropsSeer propsSeer = PropsSeer.getObjectNothing();
 		if (row >= 0) {
-			TablePropsSeer tablePropsSeer = new TablePropsSeer();
+			TablePropsSeer tablePropsSeer =  TablePropsSeer.getInstance();
 			id = getPropsSeerID(row);
 			propsSeer = tablePropsSeer.getPropsSeer(id,  PropertyName.stateSeer_propsSeer);
 		}

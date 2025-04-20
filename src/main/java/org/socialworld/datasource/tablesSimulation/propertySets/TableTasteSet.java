@@ -32,7 +32,6 @@ import org.socialworld.attributes.properties.TasteSet;
 public class TableTasteSet extends TableSet {
 
 	public final  String 	ALL_COLUMNS 		=	" taste_set_id, lfd_nr,  taste, share ";
-	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
 	private final int TASTE_SETS_ARRAY_MAX_COUNT = 1000;
 	

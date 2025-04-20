@@ -32,7 +32,6 @@ import org.socialworld.attributes.properties.MaterialSet;
 public class TableMaterialSet extends TableSet {
 
 	public final  String 	ALL_COLUMNS 		=	" material_set_id, lfd_nr, material, share ";
-	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
 	private final int MATERIAL_SETS_ARRAY_MAX_COUNT = 1000;
 	

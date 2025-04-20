@@ -32,7 +32,6 @@ import org.socialworld.attributes.properties.NutrientSet;
 public class TableNutrientSet extends TableSet {
 
 	public final  String 	ALL_COLUMNS 		=	" nutrient_set_id, lfd_nr,  nutrient, share ";
-	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
 	private final int NUTRIENT_SETS_ARRAY_MAX_COUNT = 1000;
 	

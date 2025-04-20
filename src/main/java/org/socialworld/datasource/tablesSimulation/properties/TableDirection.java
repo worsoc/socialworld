@@ -24,6 +24,8 @@ package org.socialworld.datasource.tablesSimulation.properties;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.socialworld.GlobalSwitches;
+import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.geometry.Vector;
@@ -32,13 +34,30 @@ import org.socialworld.datasource.mariaDB.Table;
 public class TableDirection extends Table {
 
 	public final  String 	ALL_COLUMNS 		=	" direction_id, x, y, z, power ";
-	public final  int 		SELECT_ALL_COLUMNS 	= 1;
+
+	private final int DIRECTION_ARRAY_MAX_COUNT = 1000;
+	
+	private static TableDirection instance;
+	
+	private Direction[] directions;
 
 	int direction_id[];
 	float x[];
 	float y[];
 	float z[];
 	float power[];
+	
+	public static TableDirection getInstance() {
+		if (instance == null) {
+				instance = new TableDirection();
+		}
+		return instance;
+	}
+
+	private TableDirection() {
+		directions = new Direction[DIRECTION_ARRAY_MAX_COUNT];
+		load();
+	}
 	
 	@Override
 	protected String getTableName() {
@@ -150,7 +169,7 @@ public class TableDirection extends Table {
 		return power[index];
 	}
 	
-
+/*
 	public Direction getDirection(int direction_id, PropertyName propName) {
 		int index;
 		select(SELECT_ALL_COLUMNS, " WHERE direction_id = " + direction_id, "");
@@ -158,5 +177,33 @@ public class TableDirection extends Table {
 		Direction direction = new Direction(propName, getVector(index), power[index]);
 		return direction;
 	}
+*/
+	public Direction getDirection(int direction_id, PropertyName propName) {
+		if (direction_id > 0 && direction_id <= directions.length) {
+			Direction directionWithProoName = new Direction(propName, directions[direction_id]);
+			return directionWithProoName;
+		}
+		return Direction.getObjectNothing();
+	}
 
+	private void load() {
+		if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Erstellen SimObj > TableDirection.load() Start " + ActualTime.asTime().toString());
+		long lockingID = lockWithWait();
+		int id = 0;
+		Direction direction = null;
+		
+		select(SELECT_ALL_COLUMNS, "", " ORDER BY direction_id"); 
+		
+		if (direction_id.length > 0) {
+			for (int row = 0; row < direction_id.length; row++) {
+				id  = this.direction_id[row];
+				direction = new Direction(PropertyName.direction, getVector(row), this.power[row]);
+			}
+			directions[id] = direction;
+		}
+		
+		unlock(lockingID);
+		if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Erstellen SimObj > TableDirection.load() Ende " + ActualTime.asTime().toString());
+	}
+	
 }

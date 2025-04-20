@@ -76,6 +76,12 @@ public class Direction extends SimProperty {
 		setPropertyName(original.getPropertyName().toType(propertyType));
 	}
 	
+	public Direction (PropertyName prop, Direction original) {
+		this.vector = original.getVector();
+		this.power = original.getPower();
+		setPropertyName(prop);
+	}
+
 	public Direction (PropertyName prop) {
 		this.vector = new SVVector(Vector.get0Vector(), prop);
 		setPropertyName(prop);

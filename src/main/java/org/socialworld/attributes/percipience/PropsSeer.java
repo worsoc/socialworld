@@ -83,6 +83,13 @@ public class PropsSeer extends SimProperty {
 		this.sizeDistanceRelationThreshold = sizeDistanceRelationThreshold;
 	}
 	
+	public PropsSeer (float angleViewPerceivingEvents, float angleViewPerceivingObjects, 
+			double sizeDistanceRelationThreshold) {
+		setAngleViewPerceivingEvents(angleViewPerceivingEvents);
+		setAngleViewPerceivingObjects(angleViewPerceivingObjects);
+		this.sizeDistanceRelationThreshold = sizeDistanceRelationThreshold;
+	}
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    ISavedValue  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////

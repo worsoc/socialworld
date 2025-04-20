@@ -24,6 +24,8 @@ package org.socialworld.datasource.tablesSimulation.properties;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.socialworld.GlobalSwitches;
+import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.percipience.PropsSeer;
 import org.socialworld.datasource.mariaDB.Table;
@@ -35,13 +37,30 @@ public class TablePropsSeer extends Table {
 	// avpo ... angleViewPerceivingObjects
 	// sdrt ... sizeDistanceRelationThreshold
 	public final  String 	ALL_COLUMNS 		=	" props_seer_id, avpe,  avpo,  sdrt  ";
-	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
+	private final int PROPS_SEER_ARRAY_MAX_COUNT = 1000;
+	
+	private static TablePropsSeer instance;
+	
+	private PropsSeer[] propsSeers;
+	
 	int props_seer_id[];
 	float avpe[];
 	float avpo[];
 	double sdrt[];
 	
+	public static TablePropsSeer getInstance() {
+		if (instance == null) {
+				instance = new TablePropsSeer();
+		}
+		return instance;
+	}
+
+	private TablePropsSeer() {
+		propsSeers = new PropsSeer[PROPS_SEER_ARRAY_MAX_COUNT];
+		load();
+	}
+
 	@Override
 	protected String getTableName() {
 		return "sw_propsseer";
@@ -155,7 +174,7 @@ public class TablePropsSeer extends Table {
 		}
 	}
 
-
+/*
 	public PropsSeer getPropsSeer(int props_seer_id, PropertyName propName) {
 		int index;
 		select(SELECT_ALL_COLUMNS, " WHERE props_seer_id = " + props_seer_id, "");
@@ -163,5 +182,39 @@ public class TablePropsSeer extends Table {
 		PropsSeer propsSeer = new PropsSeer(propName, avpe[index], avpo[index], sdrt[index]);
 		return propsSeer;
 	}
+*/
+	public PropsSeer getPropsSeer(int props_seer_id, PropertyName propName) {
+		// ignore property name for now
+		if (props_seer_id > 0 && props_seer_id <= propsSeers.length) {
+			return propsSeers[props_seer_id];
+		}
+		return PropsSeer.getObjectNothing();
+	}
 
+	private void load() {
+		if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Erstellen SimObj > TablePropsSeer.load() Start " + ActualTime.asTime().toString());
+		long lockingID = lockWithWait();
+		int id = 0;
+		float avpe;
+		float avpo;
+		double sdrt;
+		PropsSeer propsSeer = null;
+		
+		select(SELECT_ALL_COLUMNS, "", " ORDER BY props_seer_id"); 
+		
+		if (props_seer_id.length > 0) {
+			for (int row = 0; row < props_seer_id.length; row++) {
+				id  = this.props_seer_id[row];
+				avpe =  this.avpe[row];
+				avpo = this.avpo[row];
+				sdrt = this.sdrt[row];
+				propsSeer = new PropsSeer(avpe, avpo, sdrt);
+			}
+			propsSeers[id] = propsSeer;
+		}
+		
+		unlock(lockingID);
+		if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Erstellen SimObj > TablePropsSeer.load() Ende " + ActualTime.asTime().toString());
+	}
+	
 }

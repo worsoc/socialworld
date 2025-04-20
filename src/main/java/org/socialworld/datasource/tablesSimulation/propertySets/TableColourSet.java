@@ -32,7 +32,6 @@ import org.socialworld.attributes.properties.ColourSet;
 public class TableColourSet extends TableSet {
 
 	public final  String 	ALL_COLUMNS 		=	" colour_set_id, lfd_nr, colour, share ";
-	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
 	private final int COLOUR_SETS_ARRAY_MAX_COUNT = 1000;
 	
