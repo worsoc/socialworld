@@ -30,7 +30,7 @@ import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.collections.SimulationObjectArray;
 import org.socialworld.datasource.tablesSimulation.TableInfluenceByEvent;
 import org.socialworld.datasource.tablesSimulation.TableObject;
-import org.socialworld.datasource.tablesSimulation.TablePosition;
+import org.socialworld.datasource.tablesSimulation.CacheTablePosition;
 import org.socialworld.datasource.tablesSimulation.TableReactionByEvent;
 import org.socialworld.objects.NoSimulationObject;
 import org.socialworld.objects.access.HiddenSimulationObject;
@@ -50,7 +50,7 @@ public abstract class LoadSimulationObjects {
 	TableObject tableObjects;
 	int rowTableObjects;	
 
-	TablePosition tablePositions;
+	CacheTablePosition tablePositions;
 	int rowTablePositions;	
 
 	TableInfluenceByEvent tableInfluenceByEvent;
@@ -64,7 +64,7 @@ public abstract class LoadSimulationObjects {
 		this.allObjects = allObjects;
 		
 		tableObjects = new TableObject();
-		tablePositions = new TablePosition();
+		tablePositions =  CacheTablePosition.getInstance();
 		tableInfluenceByEvent = new TableInfluenceByEvent();
 		tableReactionByEvent = new TableReactionByEvent();
 
@@ -135,8 +135,7 @@ public abstract class LoadSimulationObjects {
 			hiddenObject.setState2ActionType(state2ActionType);
 			
 			pos_id = tableObjects.getPosition(rowTableObjects);
-			tablePositions.select(tablePositions.SELECT_ALL_COLUMNS, " WHERE pos_id = " + pos_id, "");
-			rowTablePositions = tablePositions.getIndexFor1PK(pos_id);
+			rowTablePositions = tablePositions.getRowForPosID(pos_id);
 
 		}	
 		if (rowTableInfluenceByEvent >= 0) {

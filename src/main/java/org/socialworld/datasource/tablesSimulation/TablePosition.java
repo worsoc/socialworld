@@ -33,7 +33,6 @@ import org.socialworld.datasource.mariaDB.Table;
 public class TablePosition extends Table {
 
 	public final  String 	ALL_COLUMNS 		= " pos_id, x, y, z, locBase9, locBase25 ";
-	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 
 	public final  String 	COLUMNS_XYZ			= "  x, y, z ";
 	public final  int 		SELECT_COLUMNS_XYZ 	= 2;

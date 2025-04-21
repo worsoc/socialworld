@@ -239,11 +239,11 @@ public class TableObject extends Table {
 		return state2act[index];
 	}
 	
-	public int getLocBase9(int index) {
+	public int _getLocBase9(int index) {
 		return locBase9[index];
 	}
 
-	public String getLocBase25(int index) {
+	public String _getLocBase25(int index) {
 		return locBase25[index];
 	}
 

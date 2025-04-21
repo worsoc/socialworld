@@ -154,7 +154,9 @@ public class Simulation extends SocialWorldThread {
 	//	ValueProperty propInventory[] = new ValueProperty[3];
 
 		for (int i = 0; i < 100; i++ ) {
+			if (GlobalSwitches.OUTPUT_CREATE_OBJECT_HUMANS) System.out.println("Start createSimulationObject Human " + i + " " +  ActualTime.asTime().toString());
 			incompleteObject = createSimulationObject(SimulationObject_Type.human, "org.socialworld.objects.Human");
+			if (GlobalSwitches.OUTPUT_CREATE_OBJECT_HUMANS) System.out.println("Ende createSimulationObject Human " + i + " " +  ActualTime.asTime().toString());
 			
 			myHiddenHuman = (HiddenHuman) incompleteObject.getHiddenObject();
 			myHuman = (Human) incompleteObject.getObject();
@@ -163,7 +165,7 @@ public class Simulation extends SocialWorldThread {
 			hiddenHumans.add(myHiddenHuman);
 			humans.add(myHuman);
 			
-			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Human(" + myHuman.getObjectID() + "): " + myHuman.getPosition(tokenCore).toString());
+			if (GlobalSwitches.OUTPUT_CREATE_OBJECT_HUMANS) System.out.println("Human(" + myHuman.getObjectID() + "): " + myHuman.getPosition(tokenCore).toString() + " " +  ActualTime.asTime().toString());
 		}
 	
 		System.out.println("Start Erstellen Objekte Inventar "+ ActualTime.asTime().toString());
@@ -255,7 +257,6 @@ public class Simulation extends SocialWorldThread {
 		System.out.println("Start Erstellen Aepfel "+ ActualTime.asTime().toString());
 
 		for (int i = 0; i < 75; i++ ) {
-			System.out.println("Erstellen Apfel Nummer " + (i+1) + ": " + ActualTime.asTime().toString());
 			incompleteObject = createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.eatable.fruits.Apple");
 			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
 			myItem = (Item) incompleteObject.getObject();
