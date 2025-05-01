@@ -400,6 +400,7 @@ public abstract class StateSimulationObject extends ListenedBase implements IObj
 				}
 				if (stateAddOn.getPropertyName() == propState) {
 					stateAddOn.setProperty(propSub, something );
+					break;
 				}
 				
 			}

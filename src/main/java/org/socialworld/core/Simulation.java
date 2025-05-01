@@ -154,9 +154,9 @@ public class Simulation extends SocialWorldThread {
 	//	ValueProperty propInventory[] = new ValueProperty[3];
 
 		for (int i = 0; i < 100; i++ ) {
-			if (GlobalSwitches.OUTPUT_CREATE_OBJECT_HUMANS) System.out.println("Start createSimulationObject Human " + i + " " +  ActualTime.asTime().toString());
+	//		if (GlobalSwitches.OUTPUT_CREATE_OBJECT_HUMANS) System.out.println("Start createSimulationObject Human " + i + " " +  ActualTime.asTime().toString());
 			incompleteObject = createSimulationObject(SimulationObject_Type.human, "org.socialworld.objects.Human");
-			if (GlobalSwitches.OUTPUT_CREATE_OBJECT_HUMANS) System.out.println("Ende createSimulationObject Human " + i + " " +  ActualTime.asTime().toString());
+//			if (GlobalSwitches.OUTPUT_CREATE_OBJECT_HUMANS) System.out.println("Ende createSimulationObject Human " + i + " " +  ActualTime.asTime().toString());
 			
 			myHiddenHuman = (HiddenHuman) incompleteObject.getHiddenObject();
 			myHuman = (Human) incompleteObject.getObject();

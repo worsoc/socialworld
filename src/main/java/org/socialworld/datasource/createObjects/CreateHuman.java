@@ -21,7 +21,9 @@
 */
 package org.socialworld.datasource.createObjects;
 
+import org.socialworld.GlobalSwitches;
 import org.socialworld.SimpleClientActionHandler;
+import org.socialworld.attributes.ActualTime;
 import org.socialworld.core.IncompleteSimulationObject;
 import org.socialworld.objects.Human;
 import org.socialworld.objects.StateHuman;
@@ -58,6 +60,7 @@ public class CreateHuman extends CreateAnimal {
 		WriteAccessToHuman wa;
 		GrantedAccessToProperty propertiesToInit[];
 		HiddenHuman hiddenHuman = null;
+		if (GlobalSwitches.OUTPUT_CREATE_OBJECT_HUMANS) System.out.println("Start CreateHuman.getObject() " +  ActualTime.asTime().toString());
 
 		Object createdObject = createObjectForName(fullClassName);
 		if (createdObject == null) return new IncompleteSimulationObject();
@@ -70,11 +73,14 @@ public class CreateHuman extends CreateAnimal {
 		propertiesToInit = new GrantedAccessToProperty[1];
 		propertiesToInit[0] = GrantedAccessToProperty.all;
 		hiddenHuman = wa.getMeHidden(propertiesToInit);
-
+		
+		if (GlobalSwitches.OUTPUT_CREATE_OBJECT_HUMANS) System.out.println("vor initState CreateHuman.getObject() " +  ActualTime.asTime().toString());
 		initState(hiddenHuman);
+		if (GlobalSwitches.OUTPUT_CREATE_OBJECT_HUMANS) System.out.println("nach initState CreateHuman.getObject() " +  ActualTime.asTime().toString());
 		initObject(hiddenHuman);	
 
 		SimpleClientActionHandler.getInstance().setHumanWrite(objectID, hiddenHuman);
+		if (GlobalSwitches.OUTPUT_CREATE_OBJECT_HUMANS) System.out.println("Ende CreateHuman.getObject() " +  ActualTime.asTime().toString());
 
 		return new IncompleteSimulationObject(createdHuman, hiddenHuman);
 	}

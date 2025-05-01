@@ -27,9 +27,6 @@ import java.util.ListIterator;
 
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.AttributeArray;
-import org.socialworld.attributes.Position;
-import org.socialworld.attributes.PropertyName;
-import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.core.Simulation;
 import org.socialworld.data.FillWithTestData_ACM;
 import org.socialworld.data.FillWithTestData_Position;
@@ -50,6 +47,7 @@ public class SocialWorld  {
 
 	private static Simulation simulation;
 	
+	private static boolean  visualize = false;
 	private static SimVisual visualizeSimulation;
 
 /*	private SocialWorld() {
@@ -107,7 +105,7 @@ public class SocialWorld  {
 //		fillTestData();
 		
 		simulation.startSimulation();
-		
+		visualize = true;
 		simulation.stopSimulation();
 		
 	}
@@ -122,7 +120,9 @@ public class SocialWorld  {
 	}
 	
 	public static void showAttributeChanges(int objID, AttributeArray attributes) {
-		visualizeSimulation.setAttributes(objID, attributes);
+		if (visualize) {
+			visualizeSimulation.setAttributes(objID, attributes);
+		}
 	}
 
 	public static SocialWorld getCurrent() {

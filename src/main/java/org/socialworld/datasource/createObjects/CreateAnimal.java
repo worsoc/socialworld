@@ -21,7 +21,9 @@
 */
 package org.socialworld.datasource.createObjects;
 
+import org.socialworld.GlobalSwitches;
 import org.socialworld.actions.handle.Inventory;
+import org.socialworld.attributes.ActualTime;
 import org.socialworld.core.IncompleteSimulationObject;
 import org.socialworld.datasource.pool.GaussPoolAttributeArray;
 import org.socialworld.datasource.pool.GaussPoolAttributeCalculatorMatrix;
@@ -96,7 +98,7 @@ public class CreateAnimal extends CreateSimulationObjects {
 		int indexGPAA;
 		int indexGPACM;
 		double gauss_value;
-
+		
 		gauss_value = random.nextGaussian();
 		while ((gauss_value > THRESHOLD_RANDOM_GAUSSIAN_VALUE) || (gauss_value < -THRESHOLD_RANDOM_GAUSSIAN_VALUE))
 			gauss_value = random.nextGaussian();
@@ -111,8 +113,11 @@ public class CreateAnimal extends CreateSimulationObjects {
 		hiddenAnimal.setMatrix(	
 				GaussPoolAttributeCalculatorMatrix.getInstance().getMatrix(indexGPACM));
 
+		if (GlobalSwitches.OUTPUT_CREATE_OBJECT_HUMANS) System.out.println("CreateAnimal.initState() vor setInventory " +  ActualTime.asTime().toString());
 		hiddenAnimal.setInventory(new Inventory(hiddenAnimal.getSimObjectType()));
-		
+
+		if (GlobalSwitches.OUTPUT_CREATE_OBJECT_HUMANS) System.out.println("CreateAnimal.initState() Ende " +  ActualTime.asTime().toString());
+
 	}
 
 }
