@@ -171,9 +171,14 @@ public class StateAnimal extends StateSimulationObject {
 			AttributeArray attributeArray;
 			attributeArray = objectRequester.requestAttributeArray(token, attributes, this);
 
-			SocialWorld.showAttributeChanges(getObject().getObjectID(), attributeArray);
-
-			this.attributes.set(attributes);
+			if (checkChangeRelevance_AttributeArray(attributeArray)) {
+				this.attributes.set(attributes);
+				SocialWorld.showAttributeChanges(getObject().getObjectID(), attributeArray);
+			}
+			else {
+				SocialWorld.showNoAttributeChanges(getObject().getObjectID(), this.attributes);
+			}
+			
 			
 		}
 	}
@@ -182,6 +187,14 @@ public class StateAnimal extends StateSimulationObject {
 		return this.attributes.get(attributeName);
 	}
 	
+	protected boolean checkChangeRelevance_AttributeArray(AttributeArray newValue) {
+		if (this.attributes.equals(newValue)) {
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
 	
 	final void setMatrix(FunctionByMatrix matrix, WriteAccessToAnimal guard) {
 		if (checkGuard(guard)) {

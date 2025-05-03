@@ -224,6 +224,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 			
 		}
 	  
+		
 		if (newAttributes.isValid()){
 			if (oldAttributes.equals(newAttributes)) {
 				newAttributes.setTransferCode(ValueTransferCode.noChanges);
@@ -232,8 +233,10 @@ public  class AttributeCalculator extends SocialWorldThread {
 			}
 			return newAttributes;
 		}
-		else
+		else {
+			oldAttributes.setTransferCode(ValueTransferCode.noChanges);
 			return oldAttributes;
+		}
 	}
 
 	private final int calculateAttributesChangedByComplexMatrix() {
@@ -292,9 +295,10 @@ public  class AttributeCalculator extends SocialWorldThread {
 			}
 			return newAttributes;
 		}
-		else
+		else {
+			oldAttributes.setTransferCode(ValueTransferCode.noChanges);
 			return oldAttributes;
-
+		}
 	}
 	
 	private final int calculateAttributesChangedBySimpleMatrix() {
@@ -320,8 +324,9 @@ public  class AttributeCalculator extends SocialWorldThread {
 				}
 				return hiddenWriteAccess.setAttributes(resultAttributeArray);
 			}
-			else
+			else {
 				return ATTRIBUTE_CALCULATOR_RETURNS_INVALID_RESULT;
+			}
 		}
 		else {
 			System.out.println("AttributeCalculator.calculateAttributesChangedBySimpleMatrix(): refreshed is null");
@@ -353,8 +358,10 @@ public  class AttributeCalculator extends SocialWorldThread {
 			}
 			return newAttributes;
 		}
-		else
+		else {
+			oldAttributes.setTransferCode(ValueTransferCode.noChanges);
 			return oldAttributes;
+		}
 	}
 
 	/**

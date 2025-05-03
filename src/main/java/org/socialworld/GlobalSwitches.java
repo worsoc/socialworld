@@ -33,8 +33,8 @@ public class GlobalSwitches {
 	public static boolean OUTPUT_DEBUG_GETPROPERTY = false;
 	
 	public static boolean OUTPUT_EVENTMASTER_DETERMINE_CANDIDATES = false;
-	public static boolean OUTPUT_EVENTMASTER_DETERMINE_INFLUENCE_TO_CANDIDATES = true;
-	public static boolean OUTPUT_EVENTMASTER_DETERMINE_INFLUENCE_TO_TARGETS = true;
+	public static boolean OUTPUT_EVENTMASTER_DETERMINE_INFLUENCE_TO_CANDIDATES = false;
+	public static boolean OUTPUT_EVENTMASTER_DETERMINE_INFLUENCE_TO_TARGETS = false;
 	public static boolean OUTPUT_EVENTMASTER_DETERMINE_INFLUENCE_TO_PERCIPIENTS = false;
 
 	public static boolean OUTPUT_CREATE_OBJECT = false;
@@ -42,5 +42,5 @@ public class GlobalSwitches {
 	public static boolean OUTPUT_CREATE_OBJECT_DETAILS = false;
 	public static boolean OUTPUT_CREATE_OBJECT_CLASS_FOR_NAME = false;
 
-	
+	public static int SLEEP_TIME_REFRESH_MASTER = 100;
 }

@@ -61,6 +61,7 @@ public class SimVisual extends SocialWorldThread {
 
 	private JTextField attributeLines[];
 	private int orderNrForObjectID[];
+	private int nrCallForObjectID[];
 	private int lastChangedObjID = 100;
 	int[] objIDforRow;
 	
@@ -116,39 +117,19 @@ public class SimVisual extends SocialWorldThread {
 	}
 
 	
-	public void setAttributes(int objID, AttributeArray attributes) {
+	public void setAttributes(int objID, AttributeArray attributes, boolean withChange) {
 		if (objID > 100) return;
-		orderNrForObjectID[objID-1]++;
+		if (withChange) orderNrForObjectID[objID-1]++;
+		nrCallForObjectID[objID-1]++;
 		if (orderNrForObjectID[objID-1] == 155) orderNrForObjectID[objID-1] = 1;
 		this.attributeLines[objID-1].setBackground(SimColorConstants.getColorForOrderNr(orderNrForObjectID[objID-1]));
 //		this.attributeLines[this.lastChangedObjID - 1].setBackground(Color.WHITE);
 //		this.attributeLines[objID-1].setBackground(Color.CYAN);
-		this.attributeLines[objID-1].setText(objID + " - " + attributes.toString());
+		this.attributeLines[objID-1].setText("(" + nrCallForObjectID[objID-1] + ") - " + attributes.toString());
+//		this.attributeLines[objID-1].setText(objID + " (" + nrCallForObjectID[objID-1] + ") - " + attributes.toString());
 		this.lastChangedObjID = objID;
 		
-/*		
-		int row = 0;
-		String entry;
-		
-				
-		// find row for objID
-		for (int i = 0; i < 100; i++) {
-			if (objIDforRow[i] == objID) {
-				row = i;
-				break;
-			}
-		}
-		
-		// move all entries before the found row to the next row
-		for (int i = row; i > 0; i--) {
-			objIDforRow[i] = objIDforRow[i-1] ;
-			entry = this.attributeLines[i-1].getText();
-			this.attributeLines[i].setText(entry);
-		}
-		
-		this.attributeLines[0].setText(objID + " - " + attributes.toString());
-		this.objIDforRow[0] = objID;
-*/
+
 		
 	}
 	
@@ -176,12 +157,14 @@ public class SimVisual extends SocialWorldThread {
 		panelAttributeList.setLayout(new GridLayout(25,4));
 		objIDforRow = new int[100];
 		orderNrForObjectID = new int[100];
+		nrCallForObjectID = new int[100];
 		attributeLines = new JTextField[100];
 		for (int i = 0; i < 100; i++) {
 			objIDforRow[i] = i + 1;
 			attributeLines[i] = new JTextField("" + (i + 1));
 			panelAttributeList.add(attributeLines[i]);
 			orderNrForObjectID[i] = 0;
+			nrCallForObjectID[i] = 0;
 // only for showing the colors 			
 //			this.attributeLines[i].setBackground(SimColorConstants.getColorForOrderNr(i+1));
 		}

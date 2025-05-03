@@ -121,7 +121,13 @@ public class SocialWorld  {
 	
 	public static void showAttributeChanges(int objID, AttributeArray attributes) {
 		if (visualize) {
-			visualizeSimulation.setAttributes(objID, attributes);
+			visualizeSimulation.setAttributes(objID, attributes, true /* with changes */);
+		}
+	}
+
+	public static void showNoAttributeChanges(int objID, AttributeArray attributes) {
+		if (visualize) {
+			visualizeSimulation.setAttributes(objID, attributes, false /* without changes */);
 		}
 	}
 

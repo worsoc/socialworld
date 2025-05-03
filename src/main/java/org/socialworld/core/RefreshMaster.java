@@ -22,6 +22,7 @@
 package org.socialworld.core;
 
 import org.socialworld.objects.SimulationObject_Type;
+import org.socialworld.GlobalSwitches;
 
 /**
  * The refresh master is a thread that calculates the change of state of all simulation objects one time in a given time period.
@@ -47,7 +48,7 @@ public class RefreshMaster extends SocialWorldThread {
 	}
 	
 	private RefreshMaster(ObjectMaster objectMaster) {
-		this.sleepTime = 100;
+		this.sleepTime = GlobalSwitches.SLEEP_TIME_REFRESH_MASTER;
 		myObjectMaster = objectMaster;
 		simObjType = SimulationObject_Type.human;
 	}
