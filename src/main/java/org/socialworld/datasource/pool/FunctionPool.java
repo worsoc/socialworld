@@ -26,8 +26,7 @@ import org.socialworld.calculation.FunctionBase;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueInterpreteAs;
-import org.socialworld.calculation.expressions.CreateActionExpression;
-import org.socialworld.calculation.expressions.Nothing;
+import org.socialworld.calculation.functions.FunctionNothing;
 import org.socialworld.calculation.functions.FunctionByExpression;
 import org.socialworld.calculation.functions.FunctionByMatrix;
 import org.socialworld.calculation.functions.FunctionByMatrix_Matrix;
@@ -41,7 +40,7 @@ import org.socialworld.datasource.tablesPool.TablePoolMatrixRowCol;
  */
 public class FunctionPool {
 
-	public static final int COUNT_FbM_TEST_ENTRIES = 54;		// Anzahl Testeintraege FunctionByMatrix
+	public static final int COUNT_FbM_TEST_ENTRIES = 55;		// Anzahl Testeintraege FunctionByMatrix
 	public static final int COUNT_FbE_TEST_ENTRIES = 2;		// Anzahl Testeintraege FunctionByExpression
 	
 	public static final int CAPACITY_FP_ARRAY = 1000;
@@ -75,9 +74,11 @@ public class FunctionPool {
 	
 	public FunctionBase getFunction(int index) {
 		if (index >= 0)
-			if (CAPACITY_FP_ARRAY > index ) 	return functions[index];
-	   return null;
-	   // TODO NULL WEG
+			if (CAPACITY_FP_ARRAY > index ) {
+//			     System.out.println("FunctonPool.getFunction: Index " + index);
+				 return functions[index];
+			}
+	   return FunctionNothing.getInstance();
 	}
 
 	private void initializeWithTestData_FunctionByMatrix() {
@@ -140,6 +141,7 @@ public class FunctionPool {
 		shareLines[51] = "83 2 1 2 2 4 2 2 2 0 76 0 5 7 8 2 2 0 2 8 67 8 1 0 8 2 4 0 2 0 82 0 1 5 0 10 0 1 1 0 75 0 6 8 9 5 2 5 8 1 69 3 4 3 1 9 2 0 3 10 68 4 3 4 0 0 1 0 0 6 88 1 3 0 2 1 0 0 0 0 94"; 
 		shareLines[52] = "77 2 4 3 3 4 1 4 2 0 67 0 6 2 14 6 3 2 5 2 69 18 2 0 0 0 4 0 0 0 89 0 0 2 0 9 0 0 2 1 73 2 8 3 11 3 6 0 10 0 71 1 1 8 2 12 0 1 2 8 63 10 2 6 0 2 0 0 4 1 84 3 5 2 2 0 0 0 0 0 91"; 
 		shareLines[53] = "84 2 3 1 1 4 1 2 2 0 91 0 2 0 4 0 3 0 2 2 85 7 1 0 0 0 3 0 0 0 95 0 0 0 1 4 1 0 0 0 90 2 0 5 2 4 2 2 2 0 83 1 0 6 0 1 0 0 0 4 86 7 2 6 0 0 0 0 3 2 87 2 2 0 2 0 0 0 0 1 95"; 
+		shareLines[54] = "100 0 0 0 0 0 0 0 0 0 100 0 0 0 0 0 0 0 0 0 100 0 0 0 0 0 0 0 0 0 100 0 0 0 0 0 0 0 0 0 100 0 0 0 0 0 0 0 0 0 100 0 0 0 0 0 0 0 0 0 100 0 0 0 0 0 0 0 0 0 100 0 0 0 0 0 0 0 0 0 100"; 
 		
 		String functionLines[] = new String[1];
 		functionLines[0] = "1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1";
@@ -156,7 +158,6 @@ public class FunctionPool {
 				
 	}
 
-	
 	private void initialize() {
 		
 		loadMatrixFromDB();

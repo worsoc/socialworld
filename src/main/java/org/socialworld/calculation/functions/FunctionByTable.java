@@ -56,7 +56,7 @@ public class FunctionByTable extends FunctionBase {
 			return Value.getValueNothing();
 		}
 		else {
-			return calculation.createValue(Type.integer, (int) o);
+			return calculation.createValue(Type.integer, calculate((int) o));
 		}
 		
 	}

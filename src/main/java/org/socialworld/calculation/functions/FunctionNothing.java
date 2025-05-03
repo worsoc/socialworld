@@ -7,7 +7,17 @@ import org.socialworld.collections.ValueArrayList;
 
 public class FunctionNothing extends FunctionBase {
 
-	public FunctionNothing() {
+	private static FunctionNothing instance;
+
+	public static FunctionNothing getInstance() {
+		if (instance == null) {
+			instance = new FunctionNothing();
+		}
+		return instance;
+		
+	}
+
+	private FunctionNothing() {
 		super();
 		setInvalid();
 	}

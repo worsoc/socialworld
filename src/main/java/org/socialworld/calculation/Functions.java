@@ -48,7 +48,7 @@ public class Functions {
 	}
 
 	private Functions() {
-		nothing = new FunctionNothing();
+		nothing =  FunctionNothing.getInstance();
 	}
 
 	public  boolean checkPlaceIsFree(int index) {
