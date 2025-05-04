@@ -174,10 +174,18 @@ public  class AttributeCalculator extends SocialWorldThread {
 
 		int count = eventInfluenceDescription.countFunctions();
 		
-		oldAttributes =  stateAnimal.getProperty(token, PropertyName.simobj_attributeArray);
 		arguments = new ValueArrayList();
+
+		oldAttributes =  stateAnimal.getProperty(token, PropertyName.simobj_attributeArray);
 		arguments.add( oldAttributes );
-		
+
+		if (event.hasOptionalParam()) {
+			arguments.add( event.getOptionalParam().getParamListAsValue());
+		}
+		else {
+			arguments.add(new Value(Type.valueList, Value.VALUE_BY_NAME_EVENT_PARAMS, event.getProperties()));
+		}
+
 		for (int index = 0; index < count; index++){
 			
 			f_EventInfluence = eventInfluenceDescription.getFunction(index);
