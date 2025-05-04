@@ -63,8 +63,6 @@ public class SocialWorld  {
 		visualizeSimulation = new SimVisual();
 		visualizeSimulation.show();
 
-//		GetAttributeValue value3 = GetAttributeValue.getInstance(3);
-//		GetAttributeValue value6 = GetAttributeValue.getInstance(6);
 		
 //		int a = (int) Float.parseFloat("1" );
 //		int b = (int) Float.parseFloat("3.87" );
@@ -73,23 +71,10 @@ public class SocialWorld  {
 			
 		simulation = Simulation.getInstance();
 		
+		Simulation.showMessage("myPrint", "!!! AttributeCalculator.calculateAttributesChangedByEvent verwendet getAttributesChangedBySimpleMatrix");
 		Simulation.showMessage("myPrint", "Bitte Geduld. Wir starten bei Sekunde 0.");
-/*		
-		Position position0 = new Position(PropertyName.position_vector, new Vector(0, 0, 0));
-		System.out.println("Position(0, 0, 0) --> " + position0.getLocationByBase25());
-		Position position1 = new Position(PropertyName.position_vector, new Vector(100000, 0, 0));
-		System.out.println("Position(100000, 0, 0) --> " + position1.getLocationByBase25());
-		Position position2 = new Position(PropertyName.position_vector, new Vector(100000, 100000, 0));
-		System.out.println("Position(100000, 100000, 0) --> " + position2.getLocationByBase25());
-		Position position3 = new Position(PropertyName.position_vector, new Vector(100000, 200000, 0));
-		System.out.println("Position(100000, 200000, 0) --> " + position3.getLocationByBase25());
-		Position position4 = new Position(PropertyName.position_vector, new Vector(-100000, 0, 0));
-		System.out.println("Position(-100000, 0, 0) --> " + position4.getLocationByBase25());
-		Position position5 = new Position(PropertyName.position_vector, new Vector(0, 100000, 0));
-		System.out.println("Position(0, 100000, 0) --> " + position5.getLocationByBase25());
-		Position position6 = new Position(PropertyName.position_vector, new Vector(0, -100000, 0));
-		System.out.println("Position(0, -100000, 0) --> " + position6.getLocationByBase25());
-*/		
+		
+	
 	//	System.out.println(Cube.getDelta_(0, 45, 1234, 0.005F, 0.000F));
 		
 /*		
