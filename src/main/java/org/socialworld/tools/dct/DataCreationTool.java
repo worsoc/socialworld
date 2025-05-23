@@ -116,7 +116,7 @@ public class DataCreationTool {
 		frame.getContentPane().setLayout(null);
 		
 		JLabel lblTexteingabe = new JLabel("Texteingabe:");
-		lblTexteingabe.setBounds(10, 10, 77, 14);
+		lblTexteingabe.setBounds(10, 10, 100, 14);
 		frame.getContentPane().add(lblTexteingabe);
 		textInput.setBounds(10, 30, 900, 75);
 		frame.getContentPane().add(textInput);
@@ -155,14 +155,14 @@ public class DataCreationTool {
 
 		
 		JLabel lblAttribute = new JLabel("Attribute:");
-		lblAttribute.setBounds(350, 240, 57, 14);
+		lblAttribute.setBounds(370, 240, 100, 14);
 		frame.getContentPane().add(lblAttribute);
 
 		JLabel lblMood = new JLabel("mood");
-		lblMood.setBounds(12, 260, 46, 14);
+		lblMood.setBounds(12, 260, 66, 14);
 		frame.getContentPane().add(lblMood);
 		sliders4Attribs[0] = new JSlider();
-		sliders4Attribs[0].setBounds(70, 260, 274, 39);
+		sliders4Attribs[0].setBounds(90, 260, 274, 39);
 		frame.getContentPane().add(sliders4Attribs[0]);
 		sliders4Attribs[0].setMajorTickSpacing(10);
 		sliders4Attribs[0].setMinorTickSpacing(1);
@@ -170,10 +170,10 @@ public class DataCreationTool {
 		sliders4Attribs[0].setPaintTicks(true);
 			
 		JLabel lblCourage = new JLabel("courage");
-		lblCourage.setBounds(12, 312, 46, 14);
+		lblCourage.setBounds(12, 312, 66, 14);
 		frame.getContentPane().add(lblCourage);
 		sliders4Attribs[1] = new JSlider();
-		sliders4Attribs[1].setBounds(70, 310, 274, 37);
+		sliders4Attribs[1].setBounds(90, 310, 274, 37);
 		frame.getContentPane().add(sliders4Attribs[1]);
 		sliders4Attribs[1].setMajorTickSpacing(10);
 		sliders4Attribs[1].setMinorTickSpacing(1);
@@ -181,10 +181,10 @@ public class DataCreationTool {
 		sliders4Attribs[1].setPaintTicks(true);
 
 		JLabel lblMoral = new JLabel("moral");
-		lblMoral.setBounds(12, 354, 46, 14);
+		lblMoral.setBounds(12, 354, 66, 14);
 		frame.getContentPane().add(lblMoral);
 		sliders4Attribs[2] = new JSlider();
-		sliders4Attribs[2].setBounds(70, 358, 274, 37);
+		sliders4Attribs[2].setBounds(90, 358, 274, 37);
 		frame.getContentPane().add(sliders4Attribs[2]);
 		sliders4Attribs[2].setMajorTickSpacing(10);
 		sliders4Attribs[2].setMinorTickSpacing(1);
@@ -192,10 +192,10 @@ public class DataCreationTool {
 		sliders4Attribs[2].setPaintTicks(true);
 				
 		JLabel lblMaterialism = new JLabel("materialism");
-		lblMaterialism.setBounds(12, 406, 57, 14);
+		lblMaterialism.setBounds(12, 406, 86, 14);
 		frame.getContentPane().add(lblMaterialism);
 		sliders4Attribs[3] = new JSlider();
-		sliders4Attribs[3].setBounds(70, 406, 274, 37);
+		sliders4Attribs[3].setBounds(90, 406, 274, 37);
 		frame.getContentPane().add(sliders4Attribs[3]);
 		sliders4Attribs[3].setMajorTickSpacing(10);
 		sliders4Attribs[3].setMinorTickSpacing(1);
@@ -203,10 +203,10 @@ public class DataCreationTool {
 		sliders4Attribs[3].setPaintTicks(true);
 
 		JLabel lblTiredness = new JLabel("tiredness");
-		lblTiredness.setBounds(12, 455, 46, 14);
+		lblTiredness.setBounds(12, 455, 66, 14);
 		frame.getContentPane().add(lblTiredness);
 		sliders4Attribs[4] = new JSlider();
-		sliders4Attribs[4].setBounds(70, 454, 274, 37);
+		sliders4Attribs[4].setBounds(90, 454, 274, 37);
 		frame.getContentPane().add(sliders4Attribs[4]);
 		sliders4Attribs[4].setMajorTickSpacing(10);
 		sliders4Attribs[4].setMinorTickSpacing(1);
@@ -214,10 +214,10 @@ public class DataCreationTool {
 		sliders4Attribs[4].setPaintTicks(true);
 				
 		JLabel lblCuriosity = new JLabel("curiosity");
-		lblCuriosity.setBounds(12, 503, 46, 14);
+		lblCuriosity.setBounds(12, 503, 66, 14);
 		frame.getContentPane().add(lblCuriosity);
 		sliders4Attribs[5] = new JSlider();
-		sliders4Attribs[5].setBounds(70, 502, 274, 37);
+		sliders4Attribs[5].setBounds(90, 502, 274, 37);
 		frame.getContentPane().add(sliders4Attribs[5]);
 		sliders4Attribs[5].setMajorTickSpacing(10);
 		sliders4Attribs[5].setMinorTickSpacing(1);
@@ -225,10 +225,10 @@ public class DataCreationTool {
 		sliders4Attribs[5].setPaintTicks(true);
 				
 		JLabel lblSpirituality = new JLabel("spirituality");
-		lblSpirituality.setBounds(10, 553, 59, 14);
+		lblSpirituality.setBounds(12, 553, 86, 14);
 		frame.getContentPane().add(lblSpirituality);
 		sliders4Attribs[6] = new JSlider();
-		sliders4Attribs[6].setBounds(70, 550, 274, 37);
+		sliders4Attribs[6].setBounds(90, 550, 274, 37);
 		frame.getContentPane().add(sliders4Attribs[6]);
 		sliders4Attribs[6].setMajorTickSpacing(10);
 		sliders4Attribs[6].setMinorTickSpacing(1);
@@ -236,10 +236,10 @@ public class DataCreationTool {
 		sliders4Attribs[6].setPaintTicks(true);
 				
 		JLabel lblHunger = new JLabel("hunger");
-		lblHunger.setBounds(12, 597, 46, 14);
+		lblHunger.setBounds(12, 597, 66, 14);
 		frame.getContentPane().add(lblHunger);
 		sliders4Attribs[7] = new JSlider();
-		sliders4Attribs[7].setBounds(70, 598, 274, 37);
+		sliders4Attribs[7].setBounds(90, 598, 274, 37);
 		frame.getContentPane().add(sliders4Attribs[7]);
 		sliders4Attribs[7].setMajorTickSpacing(10);
 		sliders4Attribs[7].setMinorTickSpacing(1);
@@ -247,10 +247,10 @@ public class DataCreationTool {
 		sliders4Attribs[7].setPaintTicks(true);
 				
 		JLabel lblPower = new JLabel("power");
-		lblPower.setBounds(12, 647, 46, 14);
+		lblPower.setBounds(12, 647, 66, 14);
 		frame.getContentPane().add(lblPower);
 		sliders4Attribs[8] = new JSlider();
-		sliders4Attribs[8].setBounds(70, 646, 274, 37);
+		sliders4Attribs[8].setBounds(90, 646, 274, 37);
 		frame.getContentPane().add(sliders4Attribs[8]);
 		sliders4Attribs[8].setMajorTickSpacing(10);
 		sliders4Attribs[8].setMinorTickSpacing(1);
@@ -258,7 +258,7 @@ public class DataCreationTool {
 		sliders4Attribs[8].setPaintTicks(true);
 		
 		
-		attributes.setBounds(350, 260, 175, 388);
+		attributes.setBounds(370, 260, 175, 388);
 		frame.getContentPane().add(attributes);
 		
 		Button buttonSliders2Attribs = new Button("-->");
@@ -275,7 +275,7 @@ public class DataCreationTool {
 				attributes.add(entry);
 			}
 		});
-		buttonSliders2Attribs.setBounds(350, 657, 40, 26);
+		buttonSliders2Attribs.setBounds(370, 657, 40, 26);
 		frame.getContentPane().add(buttonSliders2Attribs);
 		
 		Button buttonAttribs2Sliders = new Button("<--");
@@ -289,10 +289,10 @@ public class DataCreationTool {
 				}
 			}
 		});
-		buttonAttribs2Sliders.setBounds(400, 657, 40, 26);
+		buttonAttribs2Sliders.setBounds(420, 657, 40, 26);
 		frame.getContentPane().add(buttonAttribs2Sliders);
 		
-		Button buttonDeleteAttribsEntry = new Button("L�schen");
+		Button buttonDeleteAttribsEntry = new Button("Löschen");
 		buttonDeleteAttribsEntry.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				attributes.remove(	attributes.getSelectedIndex());	}
@@ -301,9 +301,9 @@ public class DataCreationTool {
 		frame.getContentPane().add(buttonDeleteAttribsEntry);
 		
 		JLabel lblPositionen = new JLabel("Positionen:");
-		lblPositionen.setBounds(531, 240, 77, 14);
+		lblPositionen.setBounds(551, 240, 77, 14);
 		frame.getContentPane().add(lblPositionen);
-		positions.setBounds(531, 260, 225, 388);
+		positions.setBounds(551, 260, 225, 388);
 		frame.getContentPane().add(positions);
 		
 		
