@@ -36,6 +36,7 @@ import org.socialworld.core.IAccessToken;
 import org.socialworld.core.Event;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.StateSimulationObject;
+import org.socialworld.datasource.parsing.JsonValue;
 
 public class Value {
 
@@ -148,6 +149,12 @@ public class Value {
 		valid = false;
 	}
 	
+	public Value(JsonValue jsonObject) {
+		this.type = Type.fromName(jsonObject.type);
+		this.name = jsonObject.name;
+		initValueFromString(jsonObject.value, this.type);
+	}
+	
 	public Value(Type type, String name, Object value) {
 		this.type = type;
 		this.name = name;
@@ -163,7 +170,19 @@ public class Value {
 	
 	public Value(String valueAsString, Type castToType) {
 		this.type = castToType;
-
+		initValueFromString(valueAsString, castToType);
+	}
+	
+	public Value (Value original) {
+		this.name = original.name;
+		this.type = original.type;
+		// TODO deep copy original.value
+		this.value = original.value;
+		this.valid = original.valid;
+	}
+	
+	private void initValueFromString(String valueAsString, Type castToType) {
+		
 		switch (castToType) {
 		case integer:
 			this.value = Integer.parseInt(valueAsString);
@@ -185,14 +204,6 @@ public class Value {
 			
 		}
 		
-	}
-	
-	public Value (Value original) {
-		this.name = original.name;
-		this.type = original.type;
-		// TODO deep copy original.value
-		this.value = original.value;
-		this.valid = original.valid;
 	}
 	
 	public void setTransferCode(ValueTransferCode code) {

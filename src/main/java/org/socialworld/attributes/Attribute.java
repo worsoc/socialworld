@@ -21,6 +21,7 @@
 */
 package org.socialworld.attributes;
 
+
 /**
  * The enumeration Attribute holds all attribute names and collects an index for every
  * attribute. So an attribute is addressable in arrays.
@@ -69,6 +70,13 @@ public enum Attribute {
 		return ignore;
 	}
 	
+	public static Attribute fromName(String name) {
+		for (Attribute attribute : Attribute.values())
+			if (attribute.toString().toUpperCase().equals(name.toUpperCase()))
+				return attribute;
+		return null;
+	}
+
 	public String toString() {
 		
 		switch (this.arrayIndex) {

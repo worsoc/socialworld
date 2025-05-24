@@ -1,6 +1,6 @@
 /*
 * Social World
-* Copyright (C) 2024  Mathias Sikos
+* Copyright (C) 2025  Mathias Sikos
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -19,13 +19,28 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.datasource.parsing;
+package org.socialworld.calculation.descriptions;
 
 import java.util.List;
-import org.socialworld.calculation.descriptions.EventReactionDescriptionEntry;
+import java.util.ArrayList;
 
-public class JsonEventReactionDescription {
-	public String eventType;
-	public int  reactionType;
-	public List<EventReactionDescriptionEntry>   entrys;
+import org.socialworld.attributes.Attribute;
+
+import org.socialworld.datasource.parsing.JsonEventInfluencesAttributeDescription;
+import org.socialworld.datasource.parsing.JsonTerm;
+
+public class EventInfluencesAttributeEntry {
+
+	public int orderNr;
+	public Attribute attribute;
+	public List<Term> term;
+
+	public EventInfluencesAttributeEntry(JsonEventInfluencesAttributeDescription jsonObject) {
+		orderNr = jsonObject.orderNr;
+		attribute = Attribute.fromName(jsonObject.attribute);
+		term = new ArrayList<Term>();
+		for (JsonTerm t : jsonObject.term) {
+			term.add(new Term(t));
+		}
+	}
 }

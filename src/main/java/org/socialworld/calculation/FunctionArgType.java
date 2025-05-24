@@ -1,6 +1,6 @@
 /*
 * Social World
-* Copyright (C) 2024  Mathias Sikos
+* Copyright (C) 2025  Mathias Sikos
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -19,13 +19,17 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.datasource.parsing;
+package org.socialworld.calculation;
 
-import java.util.List;
-import org.socialworld.calculation.descriptions.EventReactionDescriptionEntry;
 
-public class JsonEventReactionDescription {
-	public String eventType;
-	public int  reactionType;
-	public List<EventReactionDescriptionEntry>   entrys;
+public enum FunctionArgType {
+	Const, Attribute, EventProperty, TermNr;
+	
+	public static FunctionArgType fromName(String name) {
+		for (FunctionArgType type : FunctionArgType.values())
+			if (type.toString().toUpperCase().equals(name.toUpperCase()))
+				return type;
+		return null;
+	}
+
 }

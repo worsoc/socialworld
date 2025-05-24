@@ -1,6 +1,6 @@
 /*
 * Social World
-* Copyright (C) 2024  Mathias Sikos
+* Copyright (C) 2025  Mathias Sikos
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -21,11 +21,8 @@
 */
 package org.socialworld.datasource.parsing;
 
-import java.util.List;
-import org.socialworld.calculation.descriptions.EventReactionDescriptionEntry;
-
-public class JsonEventReactionDescription {
-	public String eventType;
-	public int  reactionType;
-	public List<EventReactionDescriptionEntry>   entrys;
+public class JsonValue {
+	public String type;
+	public String name;
+	public String value;
 }

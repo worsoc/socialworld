@@ -21,6 +21,13 @@
 */
 package org.socialworld.calculation.descriptions;
 
+import java.util.List;
+import java.util.ArrayList;
+
+import org.socialworld.core.EventType;
+import org.socialworld.datasource.parsing.JsonEventInfluenceDescription;
+import org.socialworld.datasource.parsing.JsonEventInfluencesAttributeDescription;
+
 import com.google.gson.Gson;
 
 /**
@@ -31,13 +38,19 @@ import com.google.gson.Gson;
  */
 public class EventInfluenceDescription extends DescriptionBase {
 
+	
+	private EventType eventType;
+	private int influenceType;
+	
+	private List<EventInfluencesAttributeEntry> entrysEIA;
+
 	public EventInfluenceDescription() {
 		super();
 	}
 	public EventInfluenceDescription(Gson gson, String json) {
 		super();
 		
-		//loadFromJson(gson, json);
+		loadFromJson(gson, json);
 	}
 
 	@Override
@@ -46,6 +59,21 @@ public class EventInfluenceDescription extends DescriptionBase {
 		
 	}
 
+	private void loadFromJson(Gson gson, String json) {
+		
+		JsonEventInfluenceDescription jsonObject;
+		jsonObject = gson.fromJson(json, JsonEventInfluenceDescription.class);
+		
+		this.eventType = EventType.fromName(jsonObject.eventType);
+		this.influenceType = jsonObject.influenceType;
+		
+		List<JsonEventInfluencesAttributeDescription> listEIA = jsonObject.attributeChanges;
+		this.entrysEIA = new ArrayList<EventInfluencesAttributeEntry>();
+		for (JsonEventInfluencesAttributeDescription jeiad : listEIA) {
+			entrysEIA.add(new EventInfluencesAttributeEntry(jeiad));
+		}
+
+	}
 
 
 }

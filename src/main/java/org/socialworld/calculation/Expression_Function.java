@@ -58,4 +58,11 @@ public enum Expression_Function {
 		return null;
 	}	
 	
+	public static Expression_Function fromName(String name) {
+		for (Expression_Function f : Expression_Function.values())
+			if (f.toString().toUpperCase().equals(name.toUpperCase()))
+				return f;
+		return null;
+	}
+
 }
