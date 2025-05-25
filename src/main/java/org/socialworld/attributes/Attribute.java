@@ -21,6 +21,8 @@
 */
 package org.socialworld.attributes;
 
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * The enumeration Attribute holds all attribute names and collects an index for every
@@ -78,6 +80,15 @@ public enum Attribute {
 		return null;
 	}
 
+	public static List<String> getNameList() {
+		List<String> nameList = new ArrayList<String>();
+		for (Attribute elem : Attribute.values()) {
+			if (elem == ignore) continue;
+			nameList.add(elem.toString());
+		}
+		return nameList;
+	}
+	
 	public String toString() {
 		
 		switch (this.arrayIndex) {
