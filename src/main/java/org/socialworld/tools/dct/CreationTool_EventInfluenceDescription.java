@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.attributes.Attribute;
+import org.socialworld.calculation.Expression_Function;
+import org.socialworld.core.EventType;
+import org.socialworld.datasource.pool.GaussPoolInfluenceType;
 
 public class CreationTool_EventInfluenceDescription {
 	
@@ -29,14 +32,18 @@ public class CreationTool_EventInfluenceDescription {
 	JComboBox<String> chooseInfluenceType;
 	JComboBox<String> chooseOrderNr;
 	JComboBox<String> chooseAttribute;
+	JComboBox<String> chooseFunction;
 
+	JButton btnDeleteTerm;
+	JButton btnAddTerm;
+	
 	JPanel panelTermsLeftSettingsRight;
 	JPanel panelTerms;
 	JPanel panelSettings;
 	
 	List<JLabel> termLabels;
 	
-	private List<String> entrysComboBoxAttributes;
+	//private List<String> entrysComboBoxAttributes;
 
 	/**
 	 * Create the application.
@@ -60,22 +67,15 @@ public class CreationTool_EventInfluenceDescription {
 		panelEventTypeAndInfluenceType.add(lblEventType);
 	
 		chooseEventType = new JComboBox<String>();
-		chooseEventType.addItem("Hello");
-		chooseEventType.addItem("World");
-		chooseEventType.addItem("and");
-		chooseEventType.addItem("Folk");
 		panelEventTypeAndInfluenceType.add(chooseEventType);
 
 		JLabel lblInfluenceType = new JLabel("InfluenceType:");
 		panelEventTypeAndInfluenceType.add(lblInfluenceType);
 
 		chooseInfluenceType = new JComboBox<String>();
-		chooseInfluenceType.addItem("1");
-		chooseInfluenceType.addItem("2");
-		chooseInfluenceType.addItem("3");
-		chooseInfluenceType.addItem("4");
 		panelEventTypeAndInfluenceType.add(chooseInfluenceType);
 
+		
 		
 		panelOrderNrAndAttribute = new JPanel();
 		panelOrderNrAndAttribute.setLayout(new GridLayout(1,4,30,0));
@@ -85,10 +85,6 @@ public class CreationTool_EventInfluenceDescription {
 		panelOrderNrAndAttribute.add(lblOrderNr);
 	
 		chooseOrderNr = new JComboBox<String>();
-		chooseOrderNr.addItem("1");
-		chooseOrderNr.addItem("2");
-		chooseOrderNr.addItem("3");
-		chooseOrderNr.addItem("4");
 		panelOrderNrAndAttribute.add(chooseOrderNr);
 
 		JLabel lblAttribute = new JLabel("Attribut:");
@@ -104,6 +100,17 @@ public class CreationTool_EventInfluenceDescription {
 		panelFunctionAddOrDelete.setLayout(new GridLayout(1,3,30,0));
 		panelFunctionAddOrDelete.setBackground(Color.GRAY);
 
+		chooseFunction = new JComboBox<String>();
+		panelFunctionAddOrDelete.add(chooseFunction);
+		
+		btnAddTerm = new JButton("Add");
+		panelFunctionAddOrDelete.add(btnAddTerm);
+
+		btnDeleteTerm = new JButton("Remove");
+		panelFunctionAddOrDelete.add(btnDeleteTerm);
+		
+		
+		
 		panel3LinesAbove = new JPanel();
 		panel3LinesAbove.setLayout(new GridLayout(3,1));
 		panel3LinesAbove.setBackground(Color.PINK);
@@ -154,12 +161,32 @@ public class CreationTool_EventInfluenceDescription {
 	
 	private void fillComboBoxes() {
 		
-		entrysComboBoxAttributes = Attribute.getNameList();
 		
-		chooseAttribute.addItem("");
-		for(String name : entrysComboBoxAttributes)
-			chooseAttribute.addItem(name);
+		for (int influenceType = 0; influenceType < GaussPoolInfluenceType.CAPACITY_GPIT_ARRAY; influenceType++) {
+			chooseInfluenceType.addItem(Integer.toString(influenceType));
+		}
+		
+		for (int orderNr = 0; orderNr < 100; orderNr++) {
+			chooseOrderNr.addItem(Integer.toString(orderNr));
+		}
 
+		List<String> entrysComboBoxEventTypes = EventType.getNameList();
+		chooseEventType.addItem("");
+		for(String name : entrysComboBoxEventTypes) {
+			chooseEventType.addItem(name);
+		}
+
+		List<String> entrysComboBoxAttributes = Attribute.getNameList();
+		chooseAttribute.addItem("");
+		for(String name : entrysComboBoxAttributes) {
+			chooseAttribute.addItem(name);
+		}
+
+		List<String> entrysComboBoxFunctions = Expression_Function.getNameList();
+		for(String name : entrysComboBoxFunctions) {
+			chooseFunction.addItem(name);
+		}
+		
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

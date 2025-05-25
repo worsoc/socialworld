@@ -21,6 +21,9 @@
 */
 package org.socialworld.core;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * @author Mathias Sikos
@@ -168,6 +171,15 @@ public enum EventType {
 			if (type.toString().toUpperCase().equals(name.toUpperCase()))
 				return type;
 		return null;
+	}
+
+	public static List<String> getNameList() {
+		List<String> nameList = new ArrayList<String>();
+		for (EventType elem : EventType.values()) {
+			if (elem == nothing) continue;
+			nameList.add(elem.toString());
+		}
+		return nameList;
 	}
 
 	/**

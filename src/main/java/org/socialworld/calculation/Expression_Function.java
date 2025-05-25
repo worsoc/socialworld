@@ -21,6 +21,9 @@
 */
 package org.socialworld.calculation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  *  The enumeration holds all possible
@@ -52,17 +55,27 @@ public enum Expression_Function {
 	 * @return expression function name
 	 */
 	public static Expression_Function getName(int index) {
-		for (Expression_Function function : Expression_Function.values())
-			if (function.index == index)
-				return function;
+		for (Expression_Function elem : Expression_Function.values())
+			if (elem.index == index)
+				return elem;
 		return null;
 	}	
 	
 	public static Expression_Function fromName(String name) {
-		for (Expression_Function f : Expression_Function.values())
-			if (f.toString().toUpperCase().equals(name.toUpperCase()))
-				return f;
+		for (Expression_Function elem : Expression_Function.values())
+			if (elem.toString().toUpperCase().equals(name.toUpperCase()))
+				return elem;
 		return null;
 	}
+	
+	public static List<String> getNameList() {
+		List<String> nameList = new ArrayList<String>();
+		for (Expression_Function elem : Expression_Function.values()) {
+			if (elem == nothing) continue;
+			nameList.add(elem.toString());
+		}
+		return nameList;
+	}
+
 
 }
