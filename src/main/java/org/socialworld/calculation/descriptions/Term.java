@@ -41,4 +41,10 @@ public class Term {
 			functionArgs.add(new FunctionArg(jfa));
 		}
 	}
+	
+	public String toString() {
+		return "termNr:" + termNr + ",function:" + function.toString() +  ",functionArgs:" + functionArgs.toString();
+		
+	}
+	
 }

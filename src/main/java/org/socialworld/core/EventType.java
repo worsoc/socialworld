@@ -165,7 +165,7 @@ public enum EventType {
 	
 	public static EventType fromName(String name) {
 		for (EventType type : EventType.values())
-			if (type.toString().equals(name))
+			if (type.toString().toUpperCase().equals(name.toUpperCase()))
 				return type;
 		return null;
 	}

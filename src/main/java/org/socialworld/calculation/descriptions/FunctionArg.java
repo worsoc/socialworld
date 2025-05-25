@@ -35,4 +35,9 @@ public class FunctionArg {
 		type = FunctionArgType.fromName(jsonObject.type);
 		value = new Value(jsonObject.value);
 	}
+	
+	public String toString() {
+		return "faNr:" + faNr + ",type:" + type.toString() +  ",value:" + value.toString();
+		
+	}
 }

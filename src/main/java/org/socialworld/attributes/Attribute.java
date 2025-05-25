@@ -72,8 +72,9 @@ public enum Attribute {
 	
 	public static Attribute fromName(String name) {
 		for (Attribute attribute : Attribute.values())
-			if (attribute.toString().toUpperCase().equals(name.toUpperCase()))
+			if (attribute.toString().toUpperCase().equals(name.toUpperCase())) {
 				return attribute;
+			}
 		return null;
 	}
 

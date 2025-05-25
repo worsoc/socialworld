@@ -135,23 +135,8 @@ public class SocialWorld  {
 	}
 
 	private static void test()	{
-		 List<String> events;
-		 ListIterator<String> iteratorEvents;
 		 
-		 events = 		 new ArrayList<String>();
-//		 iteratorEvents = events.listIterator();
-		 
-		 events.add("1");
-		 events.add("2");
-		 events.add("3");
-		 System.out.println(events.size());
-		 System.out.println(events.remove(0));
-		 events.add("4");
-		 System.out.println(events.size());
-		 System.out.println(events.get(0));
-		 System.out.println(events);
-		 
-		 
+		 TryItOut.tryItOut();
 	}
 	
 	

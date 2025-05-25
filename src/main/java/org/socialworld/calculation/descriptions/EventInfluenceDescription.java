@@ -75,5 +75,7 @@ public class EventInfluenceDescription extends DescriptionBase {
 
 	}
 
-
+	public String toString() {
+		return "IT:" + influenceType + ",ET:" + eventType.toString() +  ",entrysEIA:" + entrysEIA.toString();
+	}
 }

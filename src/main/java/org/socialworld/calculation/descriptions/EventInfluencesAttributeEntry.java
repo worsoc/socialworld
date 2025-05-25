@@ -43,4 +43,9 @@ public class EventInfluencesAttributeEntry {
 			term.add(new Term(t));
 		}
 	}
+	
+	public String toString() {
+		return "orderNr:" + orderNr + ",Attribute:" + attribute.toString() +  ",term:" + term.toString();
+		
+	}
 }

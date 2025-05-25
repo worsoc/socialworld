@@ -110,7 +110,7 @@ public enum Type {
 
 	public static Type fromName(String name) {
 		for (Type type : Type.values())
-			if (type.toString().equals(name))
+			if (type.toString().toUpperCase().equals(name.toUpperCase()))
 				return type;
 		return null;
 	}
