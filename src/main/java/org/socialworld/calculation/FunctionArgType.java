@@ -21,6 +21,8 @@
 */
 package org.socialworld.calculation;
 
+import java.util.ArrayList;
+import java.util.List;
 
 public enum FunctionArgType {
 	Const, Attribute, EventProperty, TermNr;
@@ -31,5 +33,18 @@ public enum FunctionArgType {
 				return type;
 		return null;
 	}
+	
+	public static List<String> getNameList() {
+		List<String> nameList = new ArrayList<String>();
+		for (FunctionArgType elem : FunctionArgType.values()) {
+			nameList.add(elem.toString());
+		}
+		return nameList;
+	}
+	
+	public static int count() {
+		return FunctionArgType.values().length;
+	}
+
 
 }

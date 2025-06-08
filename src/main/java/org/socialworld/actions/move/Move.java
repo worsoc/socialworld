@@ -69,7 +69,13 @@ public class Move extends ActionPerformer {
 		this.remainedDistance = action.getSectionLength();
 
 	}
-	
+
+	public static List<String> getEventParamNameList() {
+ 		List<String> result = new ArrayList<String>();
+ 		result.add("TODO");
+ 		return result;
+ 	}
+
     protected final void choosePropertiesFromPropertyList(ValueArrayList properties) {
     	
     	Value property;

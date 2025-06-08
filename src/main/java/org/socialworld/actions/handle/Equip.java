@@ -36,14 +36,11 @@ public class Equip extends ActionPerformer {
 		super(action);
 	}
 	
-	@Override
-	protected void perform() {
-
-		if (!isEvaluated()) {
-			setEvaluated();
-		}
-
-	}
+	public static List<String> getEventParamNameList() {
+ 		List<String> result = new ArrayList<String>();
+ 		result.add("TODO");
+ 		return result;
+ 	}
 
 	@Override
 	protected void choosePropertiesFromPropertyList(ValueArrayList properties) {
@@ -68,6 +65,15 @@ public class Equip extends ActionPerformer {
 
 	}
 
+	@Override
+	protected void perform() {
+
+		if (!isEvaluated()) {
+			setEvaluated();
+		}
+
+	}
+	
    public List<SimulationObject> getTargets() {
 
     	List<SimulationObject> targets = new ArrayList<SimulationObject>();

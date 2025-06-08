@@ -24,6 +24,17 @@ package org.socialworld.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.actions.attack.Attack;
+import org.socialworld.actions.bodilyfunctions.BodilyFunction;
+import org.socialworld.actions.handle.Equip;
+import org.socialworld.actions.handle.Examine;
+import org.socialworld.actions.handle.Handle;
+import org.socialworld.actions.hear.Hear;
+import org.socialworld.actions.move.Move;
+import org.socialworld.actions.say.Answer;
+import org.socialworld.actions.say.Ask;
+import org.socialworld.actions.say.Say;
+
 
 /**
  * @author Mathias Sikos
@@ -421,31 +432,71 @@ public enum EventType {
 		}
 	}
 	
+	public List<String> getEventParamNameList() {
+		
+		switch (EventTypeGeneral.getGeneralEventType(this)) {
+		
+			case sleep: 
+			case drink: 
+			case eat: 
+			case piss: 
+			case shit: return BodilyFunction.getEventParamNameList();
+			case moveWalk: 
+			case moveRun: 
+			case moveSneak: 
+			case moveJump: 
+			case moveSwim: 
+			case moveFly: return Move.getEventParamNameList();
+			case examineByLook: 
+			case examineBySmell: 
+			case examineByTaste: 
+			case examineByTouch: return Examine.getEventParamNameList();
+			case inventoryTake: 
+			case inventoryDrop:
+			case inventorySwitch: 
+			case inventorySet: 
+			case inventoryGet: return Equip.getEventParamNameList();
+			case touchByHand: 
+			case touchByFoot: 
+			case handleItemUse2: 
+			case handleItemUseLeft: 
+			case handleItemUseRight: 
+			case handleItemAddRtoL: 
+			case handleItemAddLtoR: 
+			case handleItemPull: 
+			case handleItemPush: return Handle.getEventParamNameList();
+			case weaponLeftStab: 
+			case weaponLeftStroke: 
+			case weaponLeftBackhand: 
+			case weaponRightStab: 
+			case weaponRightStroke: 
+			case weaponRightBackhand: 
+			case weaponClub: 
+			case punchLeftFistStraight: 
+			case punchLeftFistSideways: 
+			case punchLeftFistUpward: 
+			case punchRightFistStraight: 
+			case punchRightFistSideways: 
+			case punchRightFistUpward: return Attack.getEventParamNameList();
+			case listenToStatement: 
+			case listenToQuestion: 
+			case listenToInstruction: 
+			case understand: return Hear.getEventParamNameList();
+			case askNormal: 
+			case askScream: 
+			case askWhisper: return Ask.getEventParamNameList();
+			case answerNormal: 
+			case answerScream: 
+			case answerWhisper: return Answer.getEventParamNameList();
+			case sayNormal: 
+			case sayScream: 
+			case sayWhisper: return Say.getEventParamNameList();
+		
+		}
+
+		return new ArrayList<String>();
+	}
+	
 }
 
-/*
-nothing(0),
-
-sleep(1), drink(2), eat(3), piss(4), shit(5), 	
-
-moveWalk(8), moveRun(9), moveSneak(10), moveJump(11), moveSwim(12), moveFly(13),
-
-examineByLook(16), examineBySmell(17), examineByTaste(18), examineByTouch(19),
-
-touchByHand(24), touchByFoot(25),
-
-inventoryTake(32), inventoryDrop(33), inventorySwitch(34), inventorySet(35), inventoryGet(36),
-
-handleItemUse2(40), handleItemUseLeft(41), handleItemUseRight(42), handleItemAddRtoL(43), handleItemAddLtoR(44), handleItemPull(45), handleItemPush(46),
-
-weaponLeftStab(48), weaponLeftStroke(49), weaponLeftBackhand(50), weaponRightStab(51), weaponRightStroke(52), weaponRightBackhand(53), weaponClub(54),
-
-punchLeftFistStraight(56),  punchLeftFistSideways(57), punchLeftFistUpward(58), punchRightFistStraight(59),  punchRightFistSideways(60), punchRightFistUpward(61),
-
-listenToStatement(64), listenToQuestion(65), listenToInstruction(66), understand(67),
-
-askNormal(72), askScream(73), askWhisper(74), answerNormal(75), answerScream(76), answerWhisper(77),
-
-sayNormal(80), sayScream(81), sayWhisper(82),
-*/
 

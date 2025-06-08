@@ -64,6 +64,12 @@ public class Attack extends ActionPerformer {
  		super(action);
  	}
  	
+ 	public static List<String> getEventParamNameList() {
+ 		List<String> result = new ArrayList<String>();
+ 		result.add("TODO");
+ 		return result;
+ 	}
+ 	
     protected final void choosePropertiesFromPropertyList(ValueArrayList properties) {
     	
     	Value property;

@@ -15,14 +15,12 @@ public class Examine extends ActionPerformer {
 		super(action);
 	}
 
-	@Override
-	protected void perform() {
-		
-		if (!isEvaluated()) {
-			setEvaluated();
-		}
+	public static List<String> getEventParamNameList() {
+ 		List<String> result = new ArrayList<String>();
+ 		result.add("TODO");
+ 		return result;
+ 	}
 
-	}
 
 	@Override
 	protected void choosePropertiesFromPropertyList(ValueArrayList properties) {
@@ -39,6 +37,15 @@ public class Examine extends ActionPerformer {
     	if (property.isValid()) {
     		addProperty(property);
     	}
+
+	}
+
+	@Override
+	protected void perform() {
+		
+		if (!isEvaluated()) {
+			setEvaluated();
+		}
 
 	}
 
