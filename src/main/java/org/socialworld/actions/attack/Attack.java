@@ -25,10 +25,12 @@ package org.socialworld.actions.attack;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionPerformer;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
+import org.socialworld.core.EventTypeGeneral;
 import org.socialworld.objects.SimulationObject;
 
 /**
@@ -64,10 +66,16 @@ public class Attack extends ActionPerformer {
  		super(action);
  	}
  	
- 	public static List<String> getEventParamNameList() {
+ 	public static List<String> getEventParamNameList(EventTypeGeneral etg) {
+		ActionMode mode = ActionMode.fromEventTypeGeneral(etg);
  		List<String> result = new ArrayList<String>();
- 		result.add("TODO");
- 		return result;
+ 		result.add(Value.VALUE_BY_NAME_EVENT_PUNCH_DIRECTION);
+		result.add(Value.VALUE_BY_NAME_ACTION_INTENSITY);
+		result.add(Value.VALUE_BY_NAME_EVENT_PUNCH_INTENSITY);
+		result.add(PropertyName.simobj_directionChest.toString());
+		result.add(PropertyName.stateSeer_directionView.toString());
+		result.add(PropertyName.stateSeer_directionView.toString());
+		return result;
  	}
  	
     protected final void choosePropertiesFromPropertyList(ValueArrayList properties) {

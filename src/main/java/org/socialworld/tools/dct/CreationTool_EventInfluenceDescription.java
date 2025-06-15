@@ -25,6 +25,16 @@ import org.socialworld.datasource.pool.GaussPoolInfluenceType;
 
 public class CreationTool_EventInfluenceDescription {
 	
+	private class MyComboBox<String> extends JComboBox<String> {
+		private int index;
+		
+		
+		private MyComboBox(int index) {
+			super();
+			this.index = index;
+		}
+		
+	}
 	
 	private JFrame frame;
 	
@@ -48,15 +58,21 @@ public class CreationTool_EventInfluenceDescription {
 	JPanel panelSettings;
 	
 	List<JPanel> panelsArguments;
-	List<JComboBox<String>> listChooseArgumentType;
+	List<MyComboBox<String>> listChooseArgumentType;
+	MyComboBox<String> chooseArgType1;
+	MyComboBox<String> chooseArgType2;
+	MyComboBox<String> chooseArgType3;
+	MyComboBox<String> chooseArgType4;
 	List<JPanel> panelsArgumentValue;
 	List<JComboBox<String>> listArgValueAttribute;
 	List<JTextArea> listTextFieldsInputConst;
 	List<JComboBox<String>> listArgTermNr;
+	List<JComboBox<String>> listArgEventProp;
 	
 	List<JLabel> termLabels;
 	
 	private static int termNr;
+	private static EventType eventType;
 	
 	/**
 	 * Create the application.
@@ -155,19 +171,28 @@ public class CreationTool_EventInfluenceDescription {
 		panelTermsLeftSettingsRight.setBackground(Color.GREEN);
 		panelTermsLeftSettingsRight.add(panelTerms,BorderLayout.CENTER);
 
-		listChooseArgumentType = new ArrayList<JComboBox<String>>();
+		listChooseArgumentType = new ArrayList<MyComboBox<String>>();
 		listTextFieldsInputConst = new ArrayList<JTextArea>();
 		listArgValueAttribute = new ArrayList<JComboBox<String>>();
 		listArgTermNr = new ArrayList<JComboBox<String>>();
+		listArgEventProp = new ArrayList<JComboBox<String>>();
 		panelsArguments = new ArrayList<JPanel>(4);
 		panelsArgumentValue = new ArrayList<JPanel>(4);
+
+		chooseArgType1 = new MyComboBox<String>(0);
+		listChooseArgumentType.add(chooseArgType1);
+		chooseArgType2 = new MyComboBox<String>(1);
+		listChooseArgumentType.add(chooseArgType2);
+		chooseArgType3 = new MyComboBox<String>(2);
+		listChooseArgumentType.add(chooseArgType3);
+		chooseArgType4 = new MyComboBox<String>(3);
+		listChooseArgumentType.add(chooseArgType4);
+
 		for (int i = 0; i < 4; i++) {
 			JPanel panelArgument = new JPanel();
 			panelArgument.setLayout(new BorderLayout());
 			panelArgument.setBackground(Color.YELLOW);
 			
-			JComboBox<String> chooseArgType = new JComboBox<String>();
-			listChooseArgumentType.add(chooseArgType);
 
 			JTextArea tfValueConst = new JTextArea();
 			listTextFieldsInputConst.add(tfValueConst);
@@ -175,9 +200,11 @@ public class CreationTool_EventInfluenceDescription {
 			JComboBox<String> chooseValueAttribute = new JComboBox<String>();
 			listArgValueAttribute.add(chooseValueAttribute);
 
-			JComboBox<String> chooseValueATermNr = new JComboBox<String>();
-			listArgTermNr.add(chooseValueATermNr);
+			JComboBox<String> chooseValueTermNr = new JComboBox<String>();
+			listArgTermNr.add(chooseValueTermNr);
 
+			JComboBox<String> chooseValueEventTypeProp = new JComboBox<String>();
+			listArgEventProp.add(chooseValueEventTypeProp);
 			
 			JPanel panelArgumenValue = new JPanel();
 			panelArgumenValue.setLayout(new GridLayout(FunctionArgType.count(),2,0,0));
@@ -186,7 +213,7 @@ public class CreationTool_EventInfluenceDescription {
 			panelsArgumentValue.add(panelArgumenValue);
 			
 			
-			panelArgument.add(chooseArgType, BorderLayout.NORTH);
+			panelArgument.add(listChooseArgumentType.get(i), BorderLayout.NORTH);
 			panelArgument.add(panelArgumenValue, BorderLayout.CENTER);
 			
 			panelsArguments.add(panelArgument);
@@ -244,8 +271,8 @@ public class CreationTool_EventInfluenceDescription {
             public void actionPerformed(ActionEvent e) {
 
                 String s = (String) chooseTerm.getSelectedItem();//get the selected item
-                String stermNr = s.substring(5,6);
-                int termNr = Integer.parseInt(stermNr);
+                String sTermNr = s.substring(5,6);
+                int termNr = Integer.parseInt(sTermNr);
                 CreationTool_EventInfluenceDescription.termNr = termNr;
                 highlightTerm(termNr);
              }
@@ -253,8 +280,59 @@ public class CreationTool_EventInfluenceDescription {
         chooseTerm.addActionListener(chooseTermActionListener);
 
 		
+        ActionListener chooseEventTypeActionListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                String eventTypeName = (String) chooseEventType.getSelectedItem();//get the selected item
+                EventType eventType = EventType.fromName(eventTypeName);
+                CreationTool_EventInfluenceDescription.eventType = eventType;
+                fillEventTypePropsComboBox();
+             }
+        };
+        chooseEventType.addActionListener(chooseEventTypeActionListener);
 		
+        ActionListener chooseArgTypeActionListener;
+       	chooseArgTypeActionListener = new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String argTypeName =  (String) chooseArgType1.getSelectedItem();//get the selected item
+                    FunctionArgType argType = FunctionArgType.fromName(argTypeName);
+                    enableChooseValue(chooseArgType1.index, argType);
+                 }
+            };
+        chooseArgType1.addActionListener(chooseArgTypeActionListener);
+       	chooseArgTypeActionListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String argTypeName =  (String) chooseArgType2.getSelectedItem();//get the selected item
+                FunctionArgType argType = FunctionArgType.fromName(argTypeName);
+                enableChooseValue(chooseArgType2.index, argType);
+             }
+        };
+        chooseArgType2.addActionListener(chooseArgTypeActionListener);
+       	chooseArgTypeActionListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String argTypeName =  (String) chooseArgType3.getSelectedItem();//get the selected item
+                FunctionArgType argType = FunctionArgType.fromName(argTypeName);
+                enableChooseValue(chooseArgType3.index, argType);
+             }
+        };
+        chooseArgType3.addActionListener(chooseArgTypeActionListener);
+       	chooseArgTypeActionListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String argTypeName =  (String) chooseArgType4.getSelectedItem();//get the selected item
+                FunctionArgType argType = FunctionArgType.fromName(argTypeName);
+                enableChooseValue(chooseArgType4.index, argType);
+             }
+        };
+        chooseArgType4.addActionListener(chooseArgTypeActionListener);
+     
+        
 		
+
 		
 		
 
@@ -284,7 +362,7 @@ public class CreationTool_EventInfluenceDescription {
 			panel.add(new JLabel(entrysComboBoxArgTypes.get(1)));
 			panel.add(listArgValueAttribute.get(index));
 			panel.add(new JLabel(entrysComboBoxArgTypes.get(2)));
-			panel.add(new JLabel("TODO"));
+			panel.add(listArgEventProp.get(index));
 			panel.add(new JLabel(entrysComboBoxArgTypes.get(3)));
 			panel.add(listArgTermNr.get(index));
 			
@@ -313,6 +391,49 @@ public class CreationTool_EventInfluenceDescription {
 		
 	}
 	
+	private void fillEventTypePropsComboBox() {
+		List<String> eventPropNames = eventType.getEventParamNameList();
+		for (int j = 0; j < 4; j++) {
+			JComboBox cb = listArgEventProp.get(j);
+			cb.removeAllItems();
+			for (String evPropname  : eventPropNames) {
+				cb.addItem(evPropname);
+			}
+		}
+
+	}
+	
+	public void enableChooseValue(int indexArg, FunctionArgType selectedArgType) {
+		if (selectedArgType != null) {
+			switch (selectedArgType) {
+			case Const:
+				listTextFieldsInputConst.get(indexArg).setEnabled(true);
+				listArgValueAttribute.get(indexArg).setEnabled(false);
+				listArgEventProp.get(indexArg).setEnabled(false);
+				listArgTermNr.get(indexArg).setEnabled(false);
+				return;
+			case Attribute:
+				listTextFieldsInputConst.get(indexArg).setEnabled(false);
+				listArgValueAttribute.get(indexArg).setEnabled(true);
+				listArgEventProp.get(indexArg).setEnabled(false);
+				listArgTermNr.get(indexArg).setEnabled(false);
+				return;
+			case EventProperty:
+				listTextFieldsInputConst.get(indexArg).setEnabled(false);
+				listArgValueAttribute.get(indexArg).setEnabled(false);
+				listArgEventProp.get(indexArg).setEnabled(true);
+				listArgTermNr.get(indexArg).setEnabled(false);
+				return;
+			case TermNr:
+				listTextFieldsInputConst.get(indexArg).setEnabled(false);
+				listArgValueAttribute.get(indexArg).setEnabled(false);
+				listArgEventProp.get(indexArg).setEnabled(false);
+				listArgTermNr.get(indexArg).setEnabled(true);
+				return;
+			}
+		}
+	}
+
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**

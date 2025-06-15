@@ -114,7 +114,9 @@ public class ActionHear extends AbstractAction {
 		partner = (Human) this.target;
 
 		switch (mode) {
-		case listenTo:
+		case listenToStatement:
+		case listenToQuestion:
+		case listenToInstruction:
 			
 			sentence = partner.getLastSaidSentence();
 			eventType = getEventType( mode, sentence);
@@ -146,7 +148,14 @@ public class ActionHear extends AbstractAction {
 	private EventType getEventType(ActionMode mode, String sentence) {
 		
 		switch (mode) {
-		case listenTo:
+		case listenToStatement:
+			return EventType.selfListenToStatement;
+		case listenToQuestion:
+			return EventType.selfListenToQuestion;
+		case listenToInstruction:
+			return EventType.selfListenToInstruction;
+
+/*		case listenTo:
 			switch (PunctuationMark.getPunctuationMark(sentence)) {
 			case dot: 
 				return EventType.selfListenToStatement;
@@ -157,6 +166,7 @@ public class ActionHear extends AbstractAction {
 			default:
 				return EventType.nothing;
 			}
+*/
 		case understand:
 			return EventType.selfUnderstand;
 		default:

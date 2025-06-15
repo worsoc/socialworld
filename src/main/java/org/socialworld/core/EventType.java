@@ -434,28 +434,30 @@ public enum EventType {
 	
 	public List<String> getEventParamNameList() {
 		
-		switch (EventTypeGeneral.getGeneralEventType(this)) {
+		EventTypeGeneral etg = EventTypeGeneral.getGeneralEventType(this);
+		// TODO mapping EventTypeGeneral <-> ActionMode
+		switch (etg) {
 		
 			case sleep: 
 			case drink: 
 			case eat: 
 			case piss: 
-			case shit: return BodilyFunction.getEventParamNameList();
+			case shit: return BodilyFunction.getEventParamNameList(etg);
 			case moveWalk: 
 			case moveRun: 
 			case moveSneak: 
 			case moveJump: 
 			case moveSwim: 
-			case moveFly: return Move.getEventParamNameList();
+			case moveFly: return Move.getEventParamNameList(etg);
 			case examineByLook: 
 			case examineBySmell: 
 			case examineByTaste: 
-			case examineByTouch: return Examine.getEventParamNameList();
+			case examineByTouch: return Examine.getEventParamNameList(etg);
 			case inventoryTake: 
 			case inventoryDrop:
 			case inventorySwitch: 
 			case inventorySet: 
-			case inventoryGet: return Equip.getEventParamNameList();
+			case inventoryGet: return Equip.getEventParamNameList(etg);
 			case touchByHand: 
 			case touchByFoot: 
 			case handleItemUse2: 
@@ -464,7 +466,7 @@ public enum EventType {
 			case handleItemAddRtoL: 
 			case handleItemAddLtoR: 
 			case handleItemPull: 
-			case handleItemPush: return Handle.getEventParamNameList();
+			case handleItemPush: return Handle.getEventParamNameList(etg);
 			case weaponLeftStab: 
 			case weaponLeftStroke: 
 			case weaponLeftBackhand: 
@@ -477,20 +479,20 @@ public enum EventType {
 			case punchLeftFistUpward: 
 			case punchRightFistStraight: 
 			case punchRightFistSideways: 
-			case punchRightFistUpward: return Attack.getEventParamNameList();
+			case punchRightFistUpward: return Attack.getEventParamNameList(etg);
 			case listenToStatement: 
 			case listenToQuestion: 
 			case listenToInstruction: 
-			case understand: return Hear.getEventParamNameList();
+			case understand: return Hear.getEventParamNameList(etg);
 			case askNormal: 
 			case askScream: 
-			case askWhisper: return Ask.getEventParamNameList();
+			case askWhisper: return Ask.getEventParamNameList(etg);
 			case answerNormal: 
 			case answerScream: 
-			case answerWhisper: return Answer.getEventParamNameList();
+			case answerWhisper: return Answer.getEventParamNameList(etg);
 			case sayNormal: 
 			case sayScream: 
-			case sayWhisper: return Say.getEventParamNameList();
+			case sayWhisper: return Say.getEventParamNameList(etg);
 		
 		}
 

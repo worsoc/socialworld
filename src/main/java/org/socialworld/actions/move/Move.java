@@ -25,12 +25,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.GlobalSwitches;
+import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionPerformer;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.NoObject;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
+import org.socialworld.core.EventTypeGeneral;
 import org.socialworld.objects.SimulationObject;
 
 
@@ -70,8 +72,9 @@ public class Move extends ActionPerformer {
 
 	}
 
-	public static List<String> getEventParamNameList() {
- 		List<String> result = new ArrayList<String>();
+	public static List<String> getEventParamNameList(EventTypeGeneral etg) {
+		ActionMode mode = ActionMode.fromEventTypeGeneral(etg);
+		List<String> result = new ArrayList<String>();
  		result.add("TODO");
  		return result;
  	}

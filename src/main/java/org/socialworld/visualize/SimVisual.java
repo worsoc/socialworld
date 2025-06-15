@@ -406,7 +406,9 @@ public class SimVisual extends SocialWorldThread {
 			case hear:
 				
 				switch(mode) {
-				case listenTo:
+				case listenToStatement:
+				case listenToQuestion:
+				case listenToInstruction:
 					color = SimColorConstants.COLOR_SNOW;
 					break; 
 				case understand:
@@ -442,13 +444,13 @@ public class SimVisual extends SocialWorldThread {
 			case say:
 			
 				switch(mode) {
-				case normal:
+				case sayNormal:
 					color = SimColorConstants.COLOR_LINEN;
 					break;
-				case scream:
+				case sayScream:
 					color = SimColorConstants.COLOR_LAVENDERBLUSH;
 					break;
-				case whisper:
+				case sayWhisper:
 					color = SimColorConstants.COLOR_MISTYROSE;
 					break;
 				default:

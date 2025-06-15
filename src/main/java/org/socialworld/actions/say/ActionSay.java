@@ -191,13 +191,13 @@ public class ActionSay extends AbstractAction {
 				// TODO implement action type say
 				
 				switch (mode) {
-					case normal:
+					case sayNormal:
 						sentence = "i love it.";
 						break;
-					case scream:
+					case sayScream:
 						sentence = "Help me.";
 						break;
-					case whisper:
+					case sayWhisper:
 						sentence = "That sucks.";
 						break;
 					default:
@@ -258,11 +258,11 @@ public class ActionSay extends AbstractAction {
 		case say:
 			
 			switch (mode) {
-				case normal:
+				case sayNormal:
 					return EventType.candidatesSayNormal;
-				case scream:
+				case sayScream:
 					return EventType.candidatesSayScream;
-				case whisper:
+				case sayWhisper:
 					return EventType.candidatesSayWhisper;
 				default:
 					return EventType.nothing;
@@ -299,11 +299,11 @@ public class ActionSay extends AbstractAction {
 		case say:
 			
 			switch (mode) {
-				case normal:
+				case sayNormal:
 					return EventType.selfSayNormal;
-				case scream:
+				case sayScream:
 					return EventType.selfSayScream;
-				case whisper:
+				case sayWhisper:
 					return EventType.selfSayWhisper;
 				default:
 					return EventType.nothing;

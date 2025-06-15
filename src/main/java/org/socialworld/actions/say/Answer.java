@@ -33,6 +33,7 @@ import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.conversation.SentenceType;
+import org.socialworld.core.EventTypeGeneral;
 import org.socialworld.knowledge.IAnswer;
 import org.socialworld.objects.Human;
 import org.socialworld.objects.SimulationObject;
@@ -69,8 +70,9 @@ public class Answer extends ActionPerformer {
     	
     }
 
-	public static List<String> getEventParamNameList() {
- 		List<String> result = new ArrayList<String>();
+	public static List<String> getEventParamNameList(EventTypeGeneral etg) {
+		ActionMode mode = ActionMode.fromEventTypeGeneral(etg);
+		List<String> result = new ArrayList<String>();
  		result.add("TODO");
  		return result;
  	}

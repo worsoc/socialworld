@@ -392,7 +392,9 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				
 				break;
 				
-			case listenTo:
+			case listenToStatement:
+			case listenToQuestion:
+			case listenToInstruction:
 			case understand:
 				
 				// Sentence
@@ -475,7 +477,7 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				
 				break;
 			
-			case normal:
+			case sayNormal:
 				
 				// directionEvent
 //				startExpression = new Calculate("GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_DIRECTION + "))", Value.VALUE_BY_NAME_EVENT_DIRECTION );
@@ -503,7 +505,7 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				
 				break;
 				
-			case scream:
+			case sayScream:
 				
 				// loudness
 //				startExpression = new Calculate("GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_INTENSITY + "))", Value.VALUE_BY_NAME_EVENT_SAY_LOUDNESS);
@@ -537,7 +539,7 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				
 				break;
 				
-			case whisper:
+			case sayWhisper:
 	
 				// directionEvent
 //				startExpression = new Calculate("GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_DIRECTION + "))", Value.VALUE_BY_NAME_EVENT_DIRECTION );

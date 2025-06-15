@@ -24,10 +24,12 @@ package org.socialworld.actions.bodilyfunctions;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionPerformer;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
+import org.socialworld.core.EventTypeGeneral;
 import org.socialworld.objects.SimulationObject;
 
 /**
@@ -51,9 +53,10 @@ public class BodilyFunction extends ActionPerformer {
     	super(action);
     }
 	
-	public static List<String> getEventParamNameList() {
+	public static List<String> getEventParamNameList(EventTypeGeneral etg) {
+		ActionMode mode = ActionMode.fromEventTypeGeneral(etg);
  		List<String> result = new ArrayList<String>();
- 		result.add("TODO");
+ 		result.add("ToDo");
  		return result;
  	}
 
