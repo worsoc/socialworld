@@ -26,6 +26,7 @@ import java.util.List;
 
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionPerformer;
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
@@ -56,7 +57,20 @@ public class BodilyFunction extends ActionPerformer {
 	public static List<String> getEventParamNameList(EventTypeGeneral etg) {
 		ActionMode mode = ActionMode.fromEventTypeGeneral(etg);
  		List<String> result = new ArrayList<String>();
- 		result.add("ToDo");
+		switch (mode) {
+		case sleep:
+	 		break;
+		case drink:
+	 		result.add(Value.VALUE_BY_NAME_EVENT_BF_ITEMDRINK);
+	 		break;
+		case eat:
+	 		result.add(Value.VALUE_BY_NAME_EVENT_BF_ITEMEAT);
+	 		break;
+		case piss:
+	 		break;
+		case shit:
+	 		break;
+		}
  		return result;
  	}
 

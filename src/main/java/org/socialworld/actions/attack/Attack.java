@@ -69,12 +69,28 @@ public class Attack extends ActionPerformer {
  	public static List<String> getEventParamNameList(EventTypeGeneral etg) {
 		ActionMode mode = ActionMode.fromEventTypeGeneral(etg);
  		List<String> result = new ArrayList<String>();
- 		result.add(Value.VALUE_BY_NAME_EVENT_PUNCH_DIRECTION);
-		result.add(Value.VALUE_BY_NAME_ACTION_INTENSITY);
-		result.add(Value.VALUE_BY_NAME_EVENT_PUNCH_INTENSITY);
-		result.add(PropertyName.simobj_directionChest.toString());
-		result.add(PropertyName.stateSeer_directionView.toString());
-		result.add(PropertyName.stateSeer_directionView.toString());
+		switch (mode) {
+		case punchLeftFistStraight:
+		case punchRightFistStraight:
+		case punchLeftFistSideways:
+		case punchRightFistSideways:
+		case punchLeftFistUpward:
+		case punchRightFistUpward:
+	 		result.add(Value.VALUE_BY_NAME_EVENT_PUNCH_DIRECTION);
+			result.add(Value.VALUE_BY_NAME_ACTION_INTENSITY);
+			result.add(Value.VALUE_BY_NAME_EVENT_PUNCH_INTENSITY);
+			result.add(PropertyName.simobj_directionChest.toString());
+			result.add(PropertyName.stateSeer_directionView.toString());
+			break;
+		case weaponClub:
+	 		result.add(Value.VALUE_BY_NAME_EVENT_USEWEAPON_DIRECTION);
+			result.add(Value.VALUE_BY_NAME_ACTION_INTENSITY);
+			result.add(Value.VALUE_BY_NAME_EVENT_USEWEAPON_INTENSITY);
+			result.add(Value.VALUE_BY_NAME_EVENT_WEAPON);
+			result.add(PropertyName.simobj_directionChest.toString());
+			result.add(PropertyName.stateSeer_directionView.toString());
+			break;
+		}
 		return result;
  	}
  	

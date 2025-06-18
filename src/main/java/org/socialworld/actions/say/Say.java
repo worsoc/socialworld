@@ -59,7 +59,16 @@ public class Say extends ActionPerformer {
 	public static List<String> getEventParamNameList(EventTypeGeneral etg) {
 		ActionMode mode = ActionMode.fromEventTypeGeneral(etg);
  		List<String> result = new ArrayList<String>();
- 		result.add("TODO");
+		switch (mode) {
+		case sayNormal:
+		case sayScream:
+		case sayWhisper:
+	 		result.add(Value.VALUE_BY_NAME_EVENT_DIRECTION);
+			result.add(Value.VALUE_BY_NAME_EVENT_TARGET);
+	 		result.add(Value.VALUE_BY_NAME_EVENT_SENTENCE);
+	 		result.add(Value.VALUE_BY_NAME_EVENT_SENTENCETYPE);
+			break;
+		}
  		return result;
  	}
 

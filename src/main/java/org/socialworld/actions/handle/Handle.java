@@ -60,16 +60,6 @@ import org.socialworld.objects.SimulationObject;
  */
 public class Handle extends ActionPerformer {
 
-/*
-	public final int HANDLEKIND_MOVEOBJECT = 1;
-	public final int HANDLEKIND_TOUCH_WITHTARGET = 2;
-	public final int HANDLEKIND_TOUCH_WITHDIRECTION = 3;
-	public final int HANDLEKIND_USE = 4;
-	public final int HANDLEKIND_USE_WITHTARGET = 5;
-	public final int HANDLEKIND_USE_WITHDIRECTION = 6;
-	
-	public final int OTHER_HANDLEKIND = 0;
-*/
 
     public Handle (ActionHandle action) {
     	super(action);
@@ -78,7 +68,42 @@ public class Handle extends ActionPerformer {
 	public static List<String> getEventParamNameList(EventTypeGeneral etg) {
 		ActionMode mode = ActionMode.fromEventTypeGeneral(etg);
 		List<String> result = new ArrayList<String>();
- 		result.add("TODO");
+		switch (mode) {
+		case useItemLeftHand:
+	 		result.add(Value.VALUE_BY_NAME_EVENT_DIRECTION);
+			result.add(Value.VALUE_BY_NAME_ACTION_INTENSITY);
+			result.add(Value.VALUE_BY_NAME_EVENT_INTENSITY);
+			result.add(Value.VALUE_BY_NAME_EVENT_HANDLE_ITEM1);
+			break;
+		case useItemRightHand:
+	 		result.add(Value.VALUE_BY_NAME_EVENT_DIRECTION);
+			result.add(Value.VALUE_BY_NAME_ACTION_INTENSITY);
+			result.add(Value.VALUE_BY_NAME_EVENT_INTENSITY);
+			result.add(Value.VALUE_BY_NAME_EVENT_HANDLE_ITEM1);
+			break;
+		case useTwoItems:
+		case combineItems_AddRightToLeft:
+		case combineItems_AddLeftToRight:
+	 		result.add(Value.VALUE_BY_NAME_EVENT_DIRECTION);
+			result.add(Value.VALUE_BY_NAME_ACTION_INTENSITY);
+			result.add(Value.VALUE_BY_NAME_EVENT_HANDLE_INTENSITY);
+			result.add(Value.VALUE_BY_NAME_EVENT_HANDLE_ITEM1);
+			result.add(Value.VALUE_BY_NAME_EVENT_HANDLE_ITEM2);
+			break;
+
+		case pull:
+	 		result.add(Value.VALUE_BY_NAME_EVENT_DIRECTION);
+			result.add(Value.VALUE_BY_NAME_ACTION_INTENSITY);
+			result.add(Value.VALUE_BY_NAME_EVENT_INTENSITY);
+			result.add(Value.VALUE_BY_NAME_EVENT_HANDLE_ITEM1);
+			break;
+		case push:
+	 		result.add(Value.VALUE_BY_NAME_EVENT_DIRECTION);
+			result.add(Value.VALUE_BY_NAME_ACTION_INTENSITY);
+			result.add(Value.VALUE_BY_NAME_EVENT_INTENSITY);
+			result.add(Value.VALUE_BY_NAME_EVENT_HANDLE_ITEM1);
+			break;
+		}
  		return result;
  	}
 

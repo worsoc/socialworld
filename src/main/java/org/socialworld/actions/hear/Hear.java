@@ -61,7 +61,16 @@ public class Hear extends ActionPerformer {
 	public static List<String> getEventParamNameList(EventTypeGeneral etg) {
 		ActionMode mode = ActionMode.fromEventTypeGeneral(etg);
 		List<String> result = new ArrayList<String>();
- 		result.add("TODO");
+		switch (mode) {
+		case listenToStatement:
+		case listenToQuestion:
+		case listenToInstruction:
+		case understand:
+	 		result.add(Value.VALUE_BY_NAME_EVENT_SENTENCE);
+			result.add(Value.VALUE_BY_NAME_EVENT_TARGET);
+			result.add(PropertyName.stateSeer_directionView.toString());
+			break;
+		}
  		return result;
  	}
 

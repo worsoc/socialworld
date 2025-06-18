@@ -20,7 +20,20 @@ public class Examine extends ActionPerformer {
 	public static List<String> getEventParamNameList(EventTypeGeneral etg) {
 		ActionMode mode = ActionMode.fromEventTypeGeneral(etg);
 		List<String> result = new ArrayList<String>();
- 		result.add("TODO");
+		switch (mode) {
+		case look:
+	 		result.add(Value.VALUE_BY_NAME_EVENT_TARGET);
+			break;
+		case smell:
+	 		result.add(Value.VALUE_BY_NAME_EVENT_TARGET);
+			break;
+		case taste:
+	 		result.add(Value.VALUE_BY_NAME_EVENT_TARGET);
+			break;
+		case touch:
+	 		result.add(Value.VALUE_BY_NAME_EVENT_TARGET);
+			break;
+		}
  		return result;
  	}
 

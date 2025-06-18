@@ -75,7 +75,18 @@ public class Move extends ActionPerformer {
 	public static List<String> getEventParamNameList(EventTypeGeneral etg) {
 		ActionMode mode = ActionMode.fromEventTypeGeneral(etg);
 		List<String> result = new ArrayList<String>();
- 		result.add("TODO");
+		switch (mode) {
+		case walk:
+		case run:
+		case sneak:
+		case jump:
+		case swim:
+		case fly:
+	 		result.add(Value.VALUE_BY_NAME_EVENT_DIRECTION);
+			result.add(Value.VALUE_BY_NAME_EVENT_MOVE_ACCELERATION);
+	 		result.add(Value.VALUE_BY_NAME_EVENT_MOVE_VELOCITY);
+			break;
+		}
  		return result;
  	}
 

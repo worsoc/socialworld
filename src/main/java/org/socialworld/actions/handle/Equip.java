@@ -41,7 +41,21 @@ public class Equip extends ActionPerformer {
 	public static List<String> getEventParamNameList(EventTypeGeneral etg) {
 		ActionMode mode = ActionMode.fromEventTypeGeneral(etg);
  		List<String> result = new ArrayList<String>();
- 		result.add("tOdO");
+		switch (mode) {
+		case takeItem:
+	 		result.add(Value.VALUE_BY_NAME_EVENT_EQUIP_ITEM);
+	 		break;
+		case dropItem:
+			break;
+		case switchItemToOtherHand:
+			break;
+		case setItemToInventory:
+	 		result.add(Value.VALUE_BY_NAME_EVENT_EQUIP_ITEMISDRINKABLE);
+	 		result.add(Value.VALUE_BY_NAME_EVENT_EQUIP_ITEMISEATABLE);
+	 		break;
+		case getItemFromInventory:
+			break;
+		}
  		return result;
  	}
 
