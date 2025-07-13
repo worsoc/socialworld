@@ -454,6 +454,11 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				break;
 				
 			case sleep:
+
+				// intensity
+				lines.add(0, 0, "GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_INTENSITY + "))");
+				lines.add(0, 0, Value.VALUE_BY_NAME_EVENT_INTENSITY);
+				
 				break;
 				
 			case drink:
