@@ -342,14 +342,14 @@ public class CreationTool_EventInfluenceDescription {
 		}
 		
 		List<String> entrysComboBoxArgTypes = FunctionArgType.getNameList();
-		for (JComboBox comboBox : listChooseArgumentType) {
+		for (JComboBox<String> comboBox : listChooseArgumentType) {
 			comboBox.addItem("");
 			for(String name : entrysComboBoxArgTypes) {
 				comboBox.addItem(name);
 			}
 		}
 
-		for (JComboBox comboBox : listArgValueAttribute) {
+		for (JComboBox<String> comboBox : listArgValueAttribute) {
 			for(String name : entrysComboBoxAttributes) {
 				comboBox.addItem(name);
 			}
@@ -378,7 +378,7 @@ public class CreationTool_EventInfluenceDescription {
 	
 	private void highlightTerm(int termNr) {
 		for (int j = 0; j < 4; j++) {
-			JComboBox cb = listArgTermNr.get(j);
+			JComboBox<String> cb = listArgTermNr.get(j);
 			cb.removeAllItems();
 			for (int i = 1; i < termNr; i++) {
 				cb.addItem("Term " + i);
@@ -394,7 +394,7 @@ public class CreationTool_EventInfluenceDescription {
 	private void fillEventTypePropsComboBox() {
 		List<String> eventPropNames = eventType.getEventParamNameList();
 		for (int j = 0; j < 4; j++) {
-			JComboBox cb = listArgEventProp.get(j);
+			JComboBox<String> cb = listArgEventProp.get(j);
 			cb.removeAllItems();
 			for (String evPropname  : eventPropNames) {
 				cb.addItem(evPropname);
