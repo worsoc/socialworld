@@ -47,11 +47,18 @@ public class EventInfluenceDescription extends DescriptionBase {
 	public EventInfluenceDescription() {
 		super();
 	}
+	
 	public EventInfluenceDescription(Gson gson, String json) {
 		super();
 		
 		loadFromJson(gson, json);
 	}
+
+	public EventInfluenceDescription(JsonEventInfluenceDescription jeid) {
+		super();
+		create(jeid);
+	}
+
 
 	@Override
 	public void setFunctions() {
@@ -63,18 +70,21 @@ public class EventInfluenceDescription extends DescriptionBase {
 		
 		JsonEventInfluenceDescription jsonObject;
 		jsonObject = gson.fromJson(json, JsonEventInfluenceDescription.class);
+
+		create(jsonObject);
+	}
+
+	private void create(JsonEventInfluenceDescription jeid) {
+		this.eventType = EventType.fromName(jeid.eventType);
+		this.influenceType = jeid.influenceType;
 		
-		this.eventType = EventType.fromName(jsonObject.eventType);
-		this.influenceType = jsonObject.influenceType;
-		
-		List<JsonEventInfluencesAttributeDescription> listEIA = jsonObject.attributeChanges;
+		List<JsonEventInfluencesAttributeDescription> listEIA = jeid.attributeChanges;
 		this.entrysEIA = new ArrayList<EventInfluencesAttributeEntry>();
 		for (JsonEventInfluencesAttributeDescription jeiad : listEIA) {
 			entrysEIA.add(new EventInfluencesAttributeEntry(jeiad));
 		}
-
 	}
-
+	
 	public String toString() {
 		return "IT:" + influenceType + ",ET:" + eventType.toString() +  ",entrysEIA:" + entrysEIA.toString();
 	}

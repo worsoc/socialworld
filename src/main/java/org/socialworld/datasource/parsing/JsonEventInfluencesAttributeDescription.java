@@ -23,9 +23,18 @@ package org.socialworld.datasource.parsing;
 
 import java.util.List;
 
+import com.google.gson.Gson;
+
 public class JsonEventInfluencesAttributeDescription {
 	public int orderNr;
 	public String attribute;
 	public List<JsonTerm> term;
+	
+	public String toString() {
+		String json;
+		Gson gson = new Gson();
+		json = gson.toJson(this);
+		return json;
+	}
 	
 }

@@ -23,8 +23,18 @@ package org.socialworld.datasource.parsing;
 
 import java.util.List;
 
+import com.google.gson.Gson;
+
 public class JsonEventInfluenceDescription {
 	public String eventType;
 	public int  influenceType;
 	public List<JsonEventInfluencesAttributeDescription> attributeChanges;
+	
+	public String toString() {
+		String json;
+		Gson gson = new Gson();
+		json = gson.toJson(this);
+		return json;
+	}
+
 }

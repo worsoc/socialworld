@@ -24,6 +24,7 @@ package org.socialworld.tools.dct;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
@@ -33,15 +34,21 @@ import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.socialworld.attributes.Attribute;
 import org.socialworld.calculation.Expression_Function;
 import org.socialworld.calculation.FunctionArgType;
 import org.socialworld.core.EventType;
+import org.socialworld.datasource.parsing.JsonEventInfluenceDescription;
+import org.socialworld.datasource.parsing.JsonEventInfluencesAttributeDescription;
+import org.socialworld.datasource.parsing.JsonTerm;
 import org.socialworld.datasource.pool.GaussPoolInfluenceType;
 
 public class CreationTool_EventInfluenceDescription {
@@ -62,7 +69,7 @@ public class CreationTool_EventInfluenceDescription {
 	JPanel panel3LinesAbove;
 	JPanel panelEventTypeAndInfluenceType;
 	JPanel panelOrderNrAndAttribute;
-	JPanel panelFunctionAddOrDelete;
+	JPanel panelTermUpOrDown;
 	
 	JComboBox<String> chooseEventType;
 	JComboBox<String> chooseInfluenceType;
@@ -73,6 +80,8 @@ public class CreationTool_EventInfluenceDescription {
 
 	JButton btnTermDown;
 	JButton btnTermUp;
+	JButton btnCreateDescription;
+	JButton btnCreateAttributeDescription;
 	
 	JPanel panelTermsLeftSettingsRight;
 	JPanel panelTerms;
@@ -95,6 +104,8 @@ public class CreationTool_EventInfluenceDescription {
 	private static int termNr;
 	private static EventType eventType;
 	
+	private HashMap<Integer, JsonEventInfluencesAttributeDescription> inflAttrDescs = new HashMap<Integer, JsonEventInfluencesAttributeDescription>(); 
+	
 	/**
 	 * Create the application.
 	 */
@@ -110,25 +121,47 @@ public class CreationTool_EventInfluenceDescription {
 		
 		
 		panelEventTypeAndInfluenceType = new JPanel();
-		panelEventTypeAndInfluenceType.setLayout(new GridLayout(1,4,30,0));
+		panelEventTypeAndInfluenceType.setLayout(new GridLayout(1,5,30,0));
 		panelEventTypeAndInfluenceType.setBackground(Color.ORANGE);
 
 		JLabel lblEventType = new JLabel("EventType:");
 		panelEventTypeAndInfluenceType.add(lblEventType);
 	
 		chooseEventType = new JComboBox<String>();
+		chooseEventType.addItemListener(new ItemListener() {
+	            public void itemStateChanged(ItemEvent e) {
+	                if(e.getStateChange() == ItemEvent.SELECTED) {
+	                	chooseEventTypeStateChanged();
+	                }
+	            }
+	        });
 		panelEventTypeAndInfluenceType.add(chooseEventType);
 
 		JLabel lblInfluenceType = new JLabel("InfluenceType:");
 		panelEventTypeAndInfluenceType.add(lblInfluenceType);
 
 		chooseInfluenceType = new JComboBox<String>();
+		chooseInfluenceType.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                	chooseInfluenceTypeStateChanged();
+                }
+            }
+        });
 		panelEventTypeAndInfluenceType.add(chooseInfluenceType);
 
+		btnCreateDescription 		 = new JButton("Create Desc");
+		btnCreateDescription.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+			    btnCreateDescriptionPressed();
+			  } 
+			} );
+		panelEventTypeAndInfluenceType.add(btnCreateDescription);
+		
 		
 		
 		panelOrderNrAndAttribute = new JPanel();
-		panelOrderNrAndAttribute.setLayout(new GridLayout(1,4,30,0));
+		panelOrderNrAndAttribute.setLayout(new GridLayout(1,5,30,0));
 		panelOrderNrAndAttribute.setBackground(Color.WHITE);
 		
 		JLabel lblOrderNr = new JLabel("OrderNr:");
@@ -143,24 +176,41 @@ public class CreationTool_EventInfluenceDescription {
 		chooseAttribute = new JComboBox<String>();
 		panelOrderNrAndAttribute.add(chooseAttribute);
 		
+		btnCreateAttributeDescription 		 = new JButton("Create Attrib Desc");
+		btnCreateAttributeDescription.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				  btnCreateAttributeDescriptionPressed();
+			  } 
+			} );
+		panelOrderNrAndAttribute.add(btnCreateAttributeDescription);
 		
 		
 		
-		panelFunctionAddOrDelete = new JPanel();
-		panelFunctionAddOrDelete.setLayout(new GridLayout(1,4,10,0));
-		panelFunctionAddOrDelete.setBackground(Color.GRAY);
+		panelTermUpOrDown = new JPanel();
+		panelTermUpOrDown.setLayout(new GridLayout(1,4,10,0));
+		panelTermUpOrDown.setBackground(Color.GRAY);
 
 		chooseTerm = new JComboBox<String>();
-		panelFunctionAddOrDelete.add(chooseTerm);
+		panelTermUpOrDown.add(chooseTerm);
 
 		chooseFunction = new JComboBox<String>();
-		panelFunctionAddOrDelete.add(chooseFunction);
+		panelTermUpOrDown.add(chooseFunction);
 		
 		btnTermUp = new JButton("Up");
-		panelFunctionAddOrDelete.add(btnTermUp);
+		btnTermUp.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				  btnTermUpPressed();
+			  } 
+			} );
+		panelTermUpOrDown.add(btnTermUp);
 
 		btnTermDown = new JButton("Down");
-		panelFunctionAddOrDelete.add(btnTermDown);
+		btnTermDown.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				  btnTermDownPressed();
+			  } 
+			} );
+		panelTermUpOrDown.add(btnTermDown);
 		
 		
 		
@@ -170,7 +220,7 @@ public class CreationTool_EventInfluenceDescription {
 		panel3LinesAbove.setPreferredSize(new Dimension(0, 100));
 		panel3LinesAbove.add(panelEventTypeAndInfluenceType);
 		panel3LinesAbove.add(panelOrderNrAndAttribute);
-		panel3LinesAbove.add(panelFunctionAddOrDelete);
+		panel3LinesAbove.add(panelTermUpOrDown);
 		
 		
 		panelTerms = new JPanel();
@@ -453,8 +503,58 @@ public class CreationTool_EventInfluenceDescription {
 				return;
 			}
 		}
+		
+	}
+	
+	private void btnCreateAttributeDescriptionPressed() {
+		JsonEventInfluencesAttributeDescription attribDesc = createEvInfAttrDesc();
+		inflAttrDescs.put(Integer.valueOf(attribDesc.orderNr), attribDesc);
+		infoBox(attribDesc.toString(), "EventInfluencesAttributeDescription");
+	} 
+
+	private void btnCreateDescriptionPressed() {
+		JsonEventInfluenceDescription desc = createEvInfDesc();
+		infoBox(desc.toString(), "EventInfluenceDescription");
 	}
 
+	private void btnTermDownPressed() {
+		
+	}
+
+	private void btnTermUpPressed() {
+		
+	}
+
+	private void chooseEventTypeStateChanged() {
+		clearHashmap();
+	}
+	
+	private void chooseInfluenceTypeStateChanged() {
+		clearHashmap();
+	}
+
+	private JsonEventInfluencesAttributeDescription createEvInfAttrDesc() {
+		JsonEventInfluencesAttributeDescription attribDesc = new JsonEventInfluencesAttributeDescription();
+		attribDesc.orderNr = Integer.parseInt(chooseOrderNr.getSelectedItem().toString());
+		attribDesc.attribute =  chooseAttribute.getSelectedItem().toString();
+		attribDesc.term = new ArrayList<JsonTerm>();
+	
+		return attribDesc;
+	}
+	
+	private JsonEventInfluenceDescription createEvInfDesc() {
+		JsonEventInfluenceDescription desc = new JsonEventInfluenceDescription();
+		desc.eventType = chooseEventType.getSelectedItem().toString();
+		desc.influenceType = Integer.parseInt(chooseInfluenceType.getSelectedItem().toString());
+		desc.attributeChanges = new ArrayList<JsonEventInfluencesAttributeDescription>();
+		inflAttrDescs.forEach( (orderNr,attrDesc) -> {desc.attributeChanges.add(attrDesc);});
+		return desc;
+	}
+
+	private void clearHashmap() {
+		inflAttrDescs.clear(); 
+	}
+	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
@@ -474,6 +574,12 @@ public class CreationTool_EventInfluenceDescription {
 		});
 			
 	}	
+	
+    public static void infoBox(String infoMessage, String titleBar)
+    {
+        JOptionPane.showMessageDialog(null, infoMessage, titleBar, JOptionPane.INFORMATION_MESSAGE);
+    }
+
 
 /*
  *               switch (s) {//check for a match
