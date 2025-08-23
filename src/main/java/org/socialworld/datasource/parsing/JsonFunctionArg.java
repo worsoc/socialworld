@@ -21,7 +21,7 @@
 */
 package org.socialworld.datasource.parsing;
 
-public class JsonFunctionArg {
+public class JsonFunctionArg extends Json {
 	public int faNr;  // order number function argument
 	public String type; // element of {Const, Attribute, EventProperty, TermNr}
 	public JsonValue value;

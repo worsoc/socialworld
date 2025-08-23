@@ -32,6 +32,9 @@ import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -48,7 +51,9 @@ import org.socialworld.calculation.FunctionArgType;
 import org.socialworld.core.EventType;
 import org.socialworld.datasource.parsing.JsonEventInfluenceDescription;
 import org.socialworld.datasource.parsing.JsonEventInfluencesAttributeDescription;
+import org.socialworld.datasource.parsing.JsonFunctionArg;
 import org.socialworld.datasource.parsing.JsonTerm;
+import org.socialworld.datasource.parsing.JsonValue;
 import org.socialworld.datasource.pool.GaussPoolInfluenceType;
 
 public class CreationTool_EventInfluenceDescription {
@@ -101,11 +106,13 @@ public class CreationTool_EventInfluenceDescription {
 	
 	List<JLabel> termLabels;
 	
+	private boolean argTypeComboBoxesFilled = false;
+	
 	private static int termNr;
 	private static EventType eventType;
 	
 	private HashMap<Integer, JsonEventInfluencesAttributeDescription> inflAttrDescs = new HashMap<Integer, JsonEventInfluencesAttributeDescription>(); 
-	
+	private HashMap<Integer, JsonTerm> terms = new HashMap<Integer, JsonTerm>();
 	/**
 	 * Create the application.
 	 */
@@ -168,12 +175,26 @@ public class CreationTool_EventInfluenceDescription {
 		panelOrderNrAndAttribute.add(lblOrderNr);
 	
 		chooseOrderNr = new JComboBox<String>();
+		chooseOrderNr.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                	chooseOrderNrStateChanged();
+                }
+            }
+        });
 		panelOrderNrAndAttribute.add(chooseOrderNr);
 
 		JLabel lblAttribute = new JLabel("Attribut:");
 		panelOrderNrAndAttribute.add(lblAttribute);
 
 		chooseAttribute = new JComboBox<String>();
+		chooseAttribute.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                	chooseAttributeStateChanged();
+                }
+            }
+        });
 		panelOrderNrAndAttribute.add(chooseAttribute);
 		
 		btnCreateAttributeDescription 		 = new JButton("Create Attrib Desc");
@@ -191,6 +212,13 @@ public class CreationTool_EventInfluenceDescription {
 		panelTermUpOrDown.setBackground(Color.GRAY);
 
 		chooseTerm = new JComboBox<String>();
+		chooseTerm.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                	chooseTermStateChanged();
+                }
+            }
+        });
 		panelTermUpOrDown.add(chooseTerm);
 
 		chooseFunction = new JComboBox<String>();
@@ -341,10 +369,16 @@ public class CreationTool_EventInfluenceDescription {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+            	int termNrOld = CreationTool_EventInfluenceDescription.termNr;
                 String s = (String) chooseTerm.getSelectedItem();//get the selected item
                 String sTermNr = s.substring(5,6);
                 int termNr = Integer.parseInt(sTermNr);
+                if (termNrOld > 0) {
+                	terms.put(termNrOld, createTerm(termNrOld));
+                }
                 CreationTool_EventInfluenceDescription.termNr = termNr;
+        		loadFunctionArgs();
+
                 highlightTerm(termNr);
              }
         };
@@ -419,7 +453,8 @@ public class CreationTool_EventInfluenceDescription {
 				comboBox.addItem(name);
 			}
 		}
-
+		argTypeComboBoxesFilled = true;
+		
 		for (JComboBox<String> comboBox : listArgValueAttribute) {
 			for(String name : entrysComboBoxAttributes) {
 				comboBox.addItem(name);
@@ -509,7 +544,12 @@ public class CreationTool_EventInfluenceDescription {
 	private void btnCreateAttributeDescriptionPressed() {
 		JsonEventInfluencesAttributeDescription attribDesc = createEvInfAttrDesc();
 		inflAttrDescs.put(Integer.valueOf(attribDesc.orderNr), attribDesc);
-		infoBox(attribDesc.toString(), "EventInfluencesAttributeDescription");
+		
+		StringSelection selection = new StringSelection(attribDesc.toString());
+		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+		clipboard.setContents(selection, selection);
+
+		//infoBox(attribDesc.toString(), "EventInfluencesAttributeDescription");
 	} 
 
 	private void btnCreateDescriptionPressed() {
@@ -526,11 +566,22 @@ public class CreationTool_EventInfluenceDescription {
 	}
 
 	private void chooseEventTypeStateChanged() {
-		clearHashmap();
+		clearHashmapInflAttrDescs();
 	}
 	
 	private void chooseInfluenceTypeStateChanged() {
-		clearHashmap();
+		clearHashmapInflAttrDescs();
+	}
+
+	private void chooseOrderNrStateChanged() {
+		clearHashmapTerms();
+	}
+	
+	private void chooseAttributeStateChanged() {
+		clearHashmapTerms();
+	}
+
+	private void chooseTermStateChanged() {
 	}
 
 	private JsonEventInfluencesAttributeDescription createEvInfAttrDesc() {
@@ -538,6 +589,8 @@ public class CreationTool_EventInfluenceDescription {
 		attribDesc.orderNr = Integer.parseInt(chooseOrderNr.getSelectedItem().toString());
 		attribDesc.attribute =  chooseAttribute.getSelectedItem().toString();
 		attribDesc.term = new ArrayList<JsonTerm>();
+		terms.forEach( (termNr,term) -> {attribDesc.term.add(term);});
+		
 	
 		return attribDesc;
 	}
@@ -551,9 +604,113 @@ public class CreationTool_EventInfluenceDescription {
 		return desc;
 	}
 
-	private void clearHashmap() {
+	private JsonTerm createTerm(int termNr) {
+		JsonTerm term = new JsonTerm();
+		term.termNr = termNr;
+		term.function = chooseFunction.getSelectedItem().toString();
+		term.functionArgs = new ArrayList<JsonFunctionArg>();
+		if (!chooseArgType1.getSelectedItem().toString().equals("")) {
+			term.functionArgs.add(createFunctionArg(1));
+		}
+		if (!chooseArgType2.getSelectedItem().toString().equals("")) {
+			term.functionArgs.add(createFunctionArg(2));
+		}
+		if (!chooseArgType3.getSelectedItem().toString().equals("")) {
+			term.functionArgs.add(createFunctionArg(3));
+		}
+		if (!chooseArgType4.getSelectedItem().toString().equals("")) {
+			term.functionArgs.add(createFunctionArg(4));
+		}
+		return term;
+	}
+
+	private JsonFunctionArg createFunctionArg(int faNr) {
+		JsonFunctionArg functionArg = new JsonFunctionArg();
+		functionArg.faNr = faNr;
+		switch (faNr) {
+		case 1:
+			functionArg.type = chooseArgType1.getSelectedItem().toString();
+			break;
+		case 2:
+			functionArg.type = chooseArgType2.getSelectedItem().toString();
+			break;
+		case 3:
+			functionArg.type = chooseArgType3.getSelectedItem().toString();
+			break;
+		case 4:
+			functionArg.type = chooseArgType4.getSelectedItem().toString();
+			break;
+		}
+		functionArg.value = createValue(faNr, functionArg.type);
+		return functionArg;
+	}
+
+	private JsonValue createValue(int faNr, String faType) {
+		JsonValue value = new JsonValue();
+		value.type = "";
+		value.name = "";
+		value.value ="";
+		return value;
+	}
+
+	private void clearHashmapInflAttrDescs() {
 		inflAttrDescs.clear(); 
 	}
+	
+	private void clearHashmapTerms() {
+		terms.clear(); 
+	}
+
+	private void loadFunctionArgs() {
+		if (argTypeComboBoxesFilled) {
+			resetArgType(1);
+			resetArgType(2);
+			resetArgType(3);
+			resetArgType(4);
+			
+			Integer selectedTermNr = Integer.valueOf(CreationTool_EventInfluenceDescription.termNr);
+			if (!terms.containsKey(selectedTermNr)) return;
+			List<JsonFunctionArg> funcArgs = terms.get(selectedTermNr).functionArgs;
+			int faNr;
+			for (JsonFunctionArg jfa : funcArgs) {
+				faNr = jfa.faNr;
+				switch (faNr) {
+				case 1:
+					chooseArgType1.setSelectedItem(jfa.type);
+					break;
+				case 2:
+					chooseArgType2.setSelectedItem(jfa.type);
+					break;
+				case 3:
+					chooseArgType3.setSelectedItem(jfa.type);
+					break;
+				case 4:
+					chooseArgType4.setSelectedItem(jfa.type);
+					break;
+				}
+			}
+		}
+	}
+	
+	private void resetArgType(int faNr) {
+		if (argTypeComboBoxesFilled) {
+			switch (faNr) {
+			case 1:
+				chooseArgType1.setSelectedIndex(0);
+				break;
+			case 2:
+				chooseArgType2.setSelectedIndex(0);
+				break;
+			case 3:
+				chooseArgType3.setSelectedIndex(0);
+				break;
+			case 4:
+				chooseArgType4.setSelectedIndex(0);
+				break;
+			}
+		}
+	}
+	
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	

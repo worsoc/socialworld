@@ -23,7 +23,7 @@ package org.socialworld.datasource.parsing;
 
 import java.util.List;
 
-public class JsonTerm {
+public class JsonTerm extends Json {
 	public int termNr; // number sub term (calculation/evaluation order)
 	public String function;
 	public List<JsonFunctionArg>  functionArgs;
