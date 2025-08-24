@@ -377,6 +377,8 @@ public class CreationTool_EventInfluenceDescription {
                 	terms.put(termNrOld, createTerm(termNrOld));
                 }
                 CreationTool_EventInfluenceDescription.termNr = termNr;
+                
+                chooseFunction.setSelectedIndex(0);
         		loadFunctionArgs();
 
                 highlightTerm(termNr);
@@ -442,6 +444,7 @@ public class CreationTool_EventInfluenceDescription {
 		
 
 		List<String> entrysComboBoxFunctions = Expression_Function.getNameList();
+		chooseFunction.addItem("");
 		for(String name : entrysComboBoxFunctions) {
 			chooseFunction.addItem(name);
 		}
@@ -589,7 +592,7 @@ public class CreationTool_EventInfluenceDescription {
 		attribDesc.orderNr = Integer.parseInt(chooseOrderNr.getSelectedItem().toString());
 		attribDesc.attribute =  chooseAttribute.getSelectedItem().toString();
 		attribDesc.term = new ArrayList<JsonTerm>();
-		terms.forEach( (termNr,term) -> {attribDesc.term.add(term);});
+		terms.forEach( (termNr,term) -> {if (term.termNr > 0) attribDesc.term.add(term);});
 		
 	
 		return attribDesc;
@@ -606,21 +609,26 @@ public class CreationTool_EventInfluenceDescription {
 
 	private JsonTerm createTerm(int termNr) {
 		JsonTerm term = new JsonTerm();
-		term.termNr = termNr;
-		term.function = chooseFunction.getSelectedItem().toString();
-		term.functionArgs = new ArrayList<JsonFunctionArg>();
-		if (!chooseArgType1.getSelectedItem().toString().equals("")) {
-			term.functionArgs.add(createFunctionArg(1));
+		term.termNr  = 0;
+		
+		if (chooseFunction.getSelectedItem() != null && chooseFunction.getSelectedItem().toString().length() > 0) {
+			term.termNr = termNr;
+			term.function = chooseFunction.getSelectedItem().toString();
+			term.functionArgs = new ArrayList<JsonFunctionArg>();
+			if (!chooseArgType1.getSelectedItem().toString().equals("")) {
+				term.functionArgs.add(createFunctionArg(1));
+			}
+			if (!chooseArgType2.getSelectedItem().toString().equals("")) {
+				term.functionArgs.add(createFunctionArg(2));
+			}
+			if (!chooseArgType3.getSelectedItem().toString().equals("")) {
+				term.functionArgs.add(createFunctionArg(3));
+			}
+			if (!chooseArgType4.getSelectedItem().toString().equals("")) {
+				term.functionArgs.add(createFunctionArg(4));
+			}
 		}
-		if (!chooseArgType2.getSelectedItem().toString().equals("")) {
-			term.functionArgs.add(createFunctionArg(2));
-		}
-		if (!chooseArgType3.getSelectedItem().toString().equals("")) {
-			term.functionArgs.add(createFunctionArg(3));
-		}
-		if (!chooseArgType4.getSelectedItem().toString().equals("")) {
-			term.functionArgs.add(createFunctionArg(4));
-		}
+		
 		return term;
 	}
 
@@ -649,7 +657,29 @@ public class CreationTool_EventInfluenceDescription {
 		JsonValue value = new JsonValue();
 		value.type = "";
 		value.name = "";
-		value.value ="";
+		value.value = "";
+		
+		if (faNr > 0) {
+			switch (faType) {
+			case "Const":
+				value.type = "integer";
+				value.value = listTextFieldsInputConst.get(faNr - 1).getText();
+				break;
+			case "Attribute":
+				value.type = "string";
+				value.value = listArgValueAttribute.get(faNr - 1).getSelectedItem().toString();
+				break;
+			case "EventProperty":
+				value.type = "string";
+				value.value = listArgEventProp.get(faNr - 1).getSelectedItem().toString();
+				break;
+			case "TermNr":
+				value.type = "integer";
+				value.value = listArgTermNr.get(faNr - 1).getSelectedItem().toString().substring(5,6);
+				break;
+			}
+			
+		}
 		return value;
 	}
 
@@ -670,24 +700,29 @@ public class CreationTool_EventInfluenceDescription {
 			
 			Integer selectedTermNr = Integer.valueOf(CreationTool_EventInfluenceDescription.termNr);
 			if (!terms.containsKey(selectedTermNr)) return;
+			chooseFunction.setSelectedItem(terms.get(selectedTermNr).function);
 			List<JsonFunctionArg> funcArgs = terms.get(selectedTermNr).functionArgs;
-			int faNr;
-			for (JsonFunctionArg jfa : funcArgs) {
-				faNr = jfa.faNr;
-				switch (faNr) {
-				case 1:
-					chooseArgType1.setSelectedItem(jfa.type);
-					break;
-				case 2:
-					chooseArgType2.setSelectedItem(jfa.type);
-					break;
-				case 3:
-					chooseArgType3.setSelectedItem(jfa.type);
-					break;
-				case 4:
-					chooseArgType4.setSelectedItem(jfa.type);
-					break;
+			
+			if (funcArgs != null) {
+				int faNr;
+				for (JsonFunctionArg jfa : funcArgs) {
+					faNr = jfa.faNr;
+					switch (faNr) {
+					case 1:
+						chooseArgType1.setSelectedItem(jfa.type);
+						break;
+					case 2:
+						chooseArgType2.setSelectedItem(jfa.type);
+						break;
+					case 3:
+						chooseArgType3.setSelectedItem(jfa.type);
+						break;
+					case 4:
+						chooseArgType4.setSelectedItem(jfa.type);
+						break;
+					}
 				}
+			
 			}
 		}
 	}
