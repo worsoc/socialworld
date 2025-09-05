@@ -14,9 +14,7 @@ public abstract class Json {
 	
 	public String toString() {
 		String json;
-//		Gson gson = new Gson();
-		json = gson.toJson(this);
+		json = getGsonInstance().toJson(this);
 		return json;
 	}
-
 }

@@ -172,7 +172,7 @@ public abstract class Table {
 			select(select);
 		}
 		
-		private int selectScalarInt(String completeSelect) {
+		protected int selectScalarInt(String completeSelect) {
 			
 			int result = 0;
 			ResultSet rs;

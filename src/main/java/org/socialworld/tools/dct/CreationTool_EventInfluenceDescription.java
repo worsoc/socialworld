@@ -56,6 +56,7 @@ import org.socialworld.datasource.parsing.JsonFunctionArg;
 import org.socialworld.datasource.parsing.JsonTerm;
 import org.socialworld.datasource.parsing.JsonValue;
 import org.socialworld.datasource.pool.GaussPoolInfluenceType;
+import org.socialworld.datasource.tablesPool.TablePoolEID;
 
 public class CreationTool_EventInfluenceDescription {
 	
@@ -558,12 +559,16 @@ public class CreationTool_EventInfluenceDescription {
 
 	private void btnCreateDescriptionPressed() {
 		JsonEventInfluenceDescription desc = createEvInfDesc();
+		String jsonEID = desc.toString();
 
 		EventInfluenceDescription eid = new EventInfluenceDescription(desc);
 		
-		StringSelection selection = new StringSelection(eid.toString());
+/*		StringSelection selection = new StringSelection(eid.toString());
 		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 		clipboard.setContents(selection, selection);
+*/		
+		TablePoolEID table = new TablePoolEID();
+		table.insert(eid.getNrEventType(), eid.getNrInfluenceType(), jsonEID);
 	}
 
 	private void btnTermDownPressed() {

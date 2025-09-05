@@ -98,15 +98,28 @@ public class TablePoolEID extends Table {
 		
 	}
 
+	public int count(int eventType, int influenceType) {
+		int count = 0;
+		if ((eventType > 0) & (influenceType > 0) ) {
+			count = selectScalarInt("SELECT count(*) FROM swpool_eid  WHERE eventType = " + eventType  + " AND influenceType = " + influenceType);
+		}
+		return count;
+	}
+	
 	public void insert(int eventType, int influenceType, String jsonEID) {
 		String statement;
 			
 		if ((eventType > 0) & (influenceType > 0) ) {
 			
-			statement 	= "INSERT INTO swpool_eid (eventType, influenceType , jsonEID) VALUES (" + 
-					eventType + ", " + influenceType + ", '" + jsonEID +"')";
-			
-			insert(statement);
+			if (count(eventType, influenceType) > 0) {
+				update(eventType, influenceType, jsonEID);
+			}
+			else {
+				statement 	= "INSERT INTO swpool_eid (eventType, influenceType , jsonEID) VALUES (" + 
+						eventType + ", " + influenceType + ", '" + jsonEID +"')";
+				
+				insert(statement);
+			}
 		}
 	}
 

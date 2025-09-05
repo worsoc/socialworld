@@ -66,6 +66,14 @@ public class EventInfluenceDescription extends DescriptionBase {
 		
 	}
 
+	public int getNrEventType() {
+		return eventType.getIndex();
+	}
+
+	public int getNrInfluenceType() {
+		return influenceType;
+	}
+
 	private void loadFromJson(String json) {
 		
 		JsonEventInfluenceDescription jsonObject;
