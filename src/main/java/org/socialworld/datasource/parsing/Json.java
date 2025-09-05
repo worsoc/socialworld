@@ -4,7 +4,13 @@ import com.google.gson.Gson;
 
 public abstract class Json {
 
-	protected static Gson gson = new Gson();
+	private static Gson gson = null;
+	protected static Gson getGsonInstance() {
+		if (gson == null) {
+			gson = new Gson();
+		}
+		return gson;
+	}
 	
 	public String toString() {
 		String json;

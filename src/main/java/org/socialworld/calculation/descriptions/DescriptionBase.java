@@ -26,7 +26,17 @@ import java.util.List;
 
 import org.socialworld.calculation.functions.FunctionByExpression;
 
+import com.google.gson.Gson;
+
 public abstract class DescriptionBase {
+
+	private static Gson gson = null;
+	protected static Gson getGsonInstance() {
+		if (gson == null) {
+			gson = new Gson();
+		}
+		return gson;
+	}
 
 	private List<FunctionByExpression> functions;
 	

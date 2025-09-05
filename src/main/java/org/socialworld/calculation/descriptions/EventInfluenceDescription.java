@@ -48,10 +48,10 @@ public class EventInfluenceDescription extends DescriptionBase {
 		super();
 	}
 	
-	public EventInfluenceDescription(Gson gson, String json) {
+	public EventInfluenceDescription(String json) {
 		super();
 		
-		loadFromJson(gson, json);
+		loadFromJson(json);
 	}
 
 	public EventInfluenceDescription(JsonEventInfluenceDescription jeid) {
@@ -66,10 +66,10 @@ public class EventInfluenceDescription extends DescriptionBase {
 		
 	}
 
-	private void loadFromJson(Gson gson, String json) {
+	private void loadFromJson(String json) {
 		
 		JsonEventInfluenceDescription jsonObject;
-		jsonObject = gson.fromJson(json, JsonEventInfluenceDescription.class);
+		jsonObject = getGsonInstance().fromJson(json, JsonEventInfluenceDescription.class);
 
 		create(jsonObject);
 	}

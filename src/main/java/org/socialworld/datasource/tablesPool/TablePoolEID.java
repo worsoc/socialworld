@@ -32,13 +32,12 @@ import org.socialworld.datasource.mariaDB.Table;
  */
 public class TablePoolEID extends Table {
 
-	public final  String 	ALL_COLUMNS 		=	" eventType, influenceType, exp_lfd_nr, exp_id ";
+	public final  String 	ALL_COLUMNS 		=	" eventType, influenceType, jsonEID";
 	public final  int 		SELECT_ALL_COLUMNS 	= 1;
 	
 	int eventType[];
 	int influenceType[];
-	int exp_lfd_nr[]; 		
-	int exp_id[]; 		
+	String jsonEID[]; 		
 
 	@Override
 	protected String getTableName() {
@@ -80,16 +79,14 @@ public class TablePoolEID extends Table {
 		
 		eventType = new int[rowCount];
 		influenceType = new int[rowCount];
-		exp_lfd_nr = new int[rowCount];
-		exp_id = new int[rowCount];
+		jsonEID = new String[rowCount];
 
 		try {
 			while (rs.next()) {
 				
 				eventType[row] = rs.getInt(1);
 				influenceType[row] = rs.getInt(2);
-				exp_lfd_nr[row] = rs.getInt(3);
-				exp_id[row] = rs.getInt(4);
+				jsonEID[row] = rs.getString(3);
 					
 				row++;
 			}
@@ -101,38 +98,38 @@ public class TablePoolEID extends Table {
 		
 	}
 
-	public void insert(int eventType, int influenceType, int exp_lfd_nr, int exp_id) {
+	public void insert(int eventType, int influenceType, String jsonEID) {
 		String statement;
 			
-		if ((eventType > 0) & (influenceType > 0) & (exp_lfd_nr > 0)) {
+		if ((eventType > 0) & (influenceType > 0) ) {
 			
-			statement 	= "INSERT INTO swpool_eid (eventType, influenceType , exp_lfd_nr, exp_id) VALUES (" + 
-					eventType + ", " + influenceType + ", " + exp_lfd_nr + ", " + exp_id +")";
+			statement 	= "INSERT INTO swpool_eid (eventType, influenceType , jsonEID) VALUES (" + 
+					eventType + ", " + influenceType + ", '" + jsonEID +"')";
 			
 			insert(statement);
 		}
 	}
 
-	public void update(int eventType, int influenceType, int exp_lfd_nr, int exp_id) {
+	public void update(int eventType, int influenceType, String jsonEID) {
 		String statement;
 			
-		if ((eventType > 0) & (influenceType > 0) & (exp_lfd_nr > 0)) {
+		if ((eventType > 0) & (influenceType > 0) ) {
 	
 			statement 	= "UPDATE swpool_eid SET " +
-					"exp_id = " + exp_id  + 
-					" WHERE eventType = " + eventType  + " AND influenceType = " + influenceType + " AND exp_lfd_nr = " + exp_lfd_nr;
+					"jsonEID = '" + jsonEID  + "'" + 
+					" WHERE eventType = " + eventType  + " AND influenceType = " + influenceType;
 			
 			update(statement);
 		}
 	}
 
-	public void delete(int eventType, int influenceType, int exp_lfd_nr) {
+	public void delete(int eventType, int influenceType) {
 		String statement;
 			
-		if ((eventType > 0) & (influenceType > 0) & (exp_lfd_nr > 0)) {
+		if ((eventType > 0) & (influenceType > 0) ) {
 	
 			statement 	= "DELETE FROM swpool_eid " +
-					" WHERE eventType = " + eventType  + " AND influenceType = " + influenceType + " AND exp_lfd_nr = " + exp_lfd_nr;
+					" WHERE eventType = " + eventType  + " AND influenceType = " + influenceType;
 						
 			delete(statement);
 		}
@@ -146,12 +143,9 @@ public class TablePoolEID extends Table {
 		return this.influenceType[index];
 	}
 
-	public int getExpLfdNr(int index) {
-		return this.exp_lfd_nr[index];
+	public String getJsonEID(int index) {
+		return this.jsonEID[index];
 	}
 	
-	public int getExpression(int index) {
-		return this.exp_id[index];
-	}
 
 }

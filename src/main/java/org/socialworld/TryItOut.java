@@ -2,7 +2,6 @@ package org.socialworld;
 
 import org.socialworld.calculation.descriptions.EventInfluenceDescription;
 
-import com.google.gson.Gson;
 
 public class TryItOut {
 
@@ -19,11 +18,10 @@ public class TryItOut {
 		
         System.out.println(json);
  
-    	Gson gson =  new Gson();
-    	
+   	
     	EventInfluenceDescription eid = null;
     	try {
-    		 eid = new EventInfluenceDescription(gson, json);
+    		 eid = new EventInfluenceDescription(json);
     	} catch (Exception e) {
             System.out.println(e.toString());
 			e.printStackTrace();
