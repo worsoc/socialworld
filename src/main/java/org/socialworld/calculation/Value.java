@@ -200,6 +200,11 @@ public class Value {
 			this.value = Boolean.parseBoolean(valueAsString);
 			valid = true;
 			break;
+		case string:
+			this.value = valueAsString;
+			valid = true;
+			break;
+			
 		default:
 			
 		}

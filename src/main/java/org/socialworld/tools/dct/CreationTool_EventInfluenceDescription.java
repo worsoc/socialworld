@@ -48,6 +48,7 @@ import java.util.List;
 import org.socialworld.attributes.Attribute;
 import org.socialworld.calculation.Expression_Function;
 import org.socialworld.calculation.FunctionArgType;
+import org.socialworld.calculation.descriptions.EventInfluenceDescription;
 import org.socialworld.core.EventType;
 import org.socialworld.datasource.parsing.JsonEventInfluenceDescription;
 import org.socialworld.datasource.parsing.JsonEventInfluencesAttributeDescription;
@@ -557,7 +558,12 @@ public class CreationTool_EventInfluenceDescription {
 
 	private void btnCreateDescriptionPressed() {
 		JsonEventInfluenceDescription desc = createEvInfDesc();
-		infoBox(desc.toString(), "EventInfluenceDescription");
+
+		EventInfluenceDescription eid = new EventInfluenceDescription(desc);
+		
+		StringSelection selection = new StringSelection(eid.toString());
+		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+		clipboard.setContents(selection, selection);
 	}
 
 	private void btnTermDownPressed() {
@@ -773,26 +779,6 @@ public class CreationTool_EventInfluenceDescription {
     }
 
 
-/*
- *               switch (s) {//check for a match
-                    case "Day":
-                        emailvalue = 1.1;
-                        System.out.println("Day selected, emailvalue:" + emailvalue);
-                        break;
-                    case "Week":
-                        emailvalue = 2.2;
-                        System.out.println("Week selected, emailvalue:" + emailvalue);
-                        break;
-                    case "Month":
-                        emailvalue = 3.3;
-                        System.out.println("Month selected, emailvalue:" + emailvalue);
-                        break;
-                    default:
-                        emailvalue = 4.4;
-                        System.out.println("No match selected, emailvalue:" + emailvalue);
-                        break;
-                }
-	
- */
+
 	
 }
