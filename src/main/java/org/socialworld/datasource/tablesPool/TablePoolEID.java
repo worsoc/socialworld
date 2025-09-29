@@ -160,5 +160,17 @@ public class TablePoolEID extends Table {
 		return this.jsonEID[index];
 	}
 	
+	public String getJsonEID(int eventType, int influenceType) {
+		if ((eventType > 0) & (influenceType > 0) ) {
+			select(SELECT_ALL_COLUMNS, " WHERE eventType = " + eventType  + " AND influenceType = " + influenceType, "");
+			
+			int index = getIndexFor2PK(eventType, influenceType);
+			
+			if (index >= 0) {
+				return getJsonEID(index);
+			}
+		}
+		return "";
+	}
 
 }

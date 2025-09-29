@@ -5,7 +5,7 @@ import com.google.gson.Gson;
 public abstract class Json {
 
 	private static Gson gson = null;
-	protected static Gson getGsonInstance() {
+	public static Gson getGsonInstance() {
 		if (gson == null) {
 			gson = new Gson();
 		}

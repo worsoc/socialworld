@@ -50,6 +50,7 @@ import org.socialworld.calculation.Expression_Function;
 import org.socialworld.calculation.FunctionArgType;
 import org.socialworld.calculation.descriptions.EventInfluenceDescription;
 import org.socialworld.core.EventType;
+import org.socialworld.datasource.parsing.Json;
 import org.socialworld.datasource.parsing.JsonEventInfluenceDescription;
 import org.socialworld.datasource.parsing.JsonEventInfluencesAttributeDescription;
 import org.socialworld.datasource.parsing.JsonFunctionArg;
@@ -112,6 +113,7 @@ public class CreationTool_EventInfluenceDescription {
 	
 	private static int termNr;
 	private static EventType eventType;
+	private static int influenceType;
 	
 	private HashMap<Integer, JsonEventInfluencesAttributeDescription> inflAttrDescs = new HashMap<Integer, JsonEventInfluencesAttributeDescription>(); 
 	private HashMap<Integer, JsonTerm> terms = new HashMap<Integer, JsonTerm>();
@@ -137,26 +139,12 @@ public class CreationTool_EventInfluenceDescription {
 		panelEventTypeAndInfluenceType.add(lblEventType);
 	
 		chooseEventType = new JComboBox<String>();
-		chooseEventType.addItemListener(new ItemListener() {
-	            public void itemStateChanged(ItemEvent e) {
-	                if(e.getStateChange() == ItemEvent.SELECTED) {
-	                	chooseEventTypeStateChanged();
-	                }
-	            }
-	        });
 		panelEventTypeAndInfluenceType.add(chooseEventType);
 
 		JLabel lblInfluenceType = new JLabel("InfluenceType:");
 		panelEventTypeAndInfluenceType.add(lblInfluenceType);
 
 		chooseInfluenceType = new JComboBox<String>();
-		chooseInfluenceType.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                if(e.getStateChange() == ItemEvent.SELECTED) {
-                	chooseInfluenceTypeStateChanged();
-                }
-            }
-        });
 		panelEventTypeAndInfluenceType.add(chooseInfluenceType);
 
 		btnCreateDescription 		 = new JButton("Create Desc");
@@ -396,11 +384,22 @@ public class CreationTool_EventInfluenceDescription {
                 String eventTypeName = (String) chooseEventType.getSelectedItem();//get the selected item
                 EventType eventType = EventType.fromName(eventTypeName);
                 CreationTool_EventInfluenceDescription.eventType = eventType;
-                fillEventTypePropsComboBox();
+                chooseEventTypeStateChanged();
              }
         };
         chooseEventType.addActionListener(chooseEventTypeActionListener);
 		
+        ActionListener chooseInfluenceTypeActionListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                String influenceTypeNr = (String) chooseInfluenceType.getSelectedItem();//get the selected item
+                CreationTool_EventInfluenceDescription.influenceType = Integer. parseInt( influenceTypeNr);
+                chooseInfluenceTypeStateChanged();
+               }
+        };
+        chooseInfluenceType.addActionListener(chooseInfluenceTypeActionListener);
+
         ActionListener chooseArgTypeActionListener;
        	chooseArgTypeActionListener = new ActionListener() {
                 @Override
@@ -580,12 +579,17 @@ public class CreationTool_EventInfluenceDescription {
 	}
 
 	private void chooseEventTypeStateChanged() {
+        fillEventTypePropsComboBox();
 		clearHashmapInflAttrDescs();
+		clearHashmapTerms();
+		loadFromDB();
 	}
 	
 	private void chooseInfluenceTypeStateChanged() {
 		clearHashmapInflAttrDescs();
-	}
+		clearHashmapTerms();
+		loadFromDB();
+		}
 
 	private void chooseOrderNrStateChanged() {
 		clearHashmapTerms();
@@ -757,6 +761,45 @@ public class CreationTool_EventInfluenceDescription {
 		}
 	}
 	
+	
+	private void loadFromDB() {
+		
+		if (CreationTool_EventInfluenceDescription.eventType == null || CreationTool_EventInfluenceDescription.influenceType == 0) return;
+		
+		TablePoolEID table = new TablePoolEID();
+		
+		String jsonEID = table.getJsonEID(
+				CreationTool_EventInfluenceDescription.eventType.getIndex(), 
+				CreationTool_EventInfluenceDescription.influenceType);
+		JsonEventInfluenceDescription jeid = Json.getGsonInstance().fromJson(jsonEID, JsonEventInfluenceDescription.class);
+		List<JsonEventInfluencesAttributeDescription> attributeChanges = jeid.attributeChanges;
+		for (JsonEventInfluencesAttributeDescription jeiad : attributeChanges) {
+			int orderNr = jeiad.orderNr;
+			this.inflAttrDescs.put(orderNr, jeiad);
+		}
+		if (attributeChanges.size() > 0) {
+			JsonEventInfluencesAttributeDescription jeiad;
+			jeiad = attributeChanges.get(0);
+			List<JsonTerm> terms = jeiad.term;
+			for (JsonTerm term : terms) {
+				int termNr = term.termNr;
+				this.terms.put(termNr, term);
+			}
+			
+			if (terms.size() > 0) {
+	            CreationTool_EventInfluenceDescription.termNr = terms.get(0).termNr;
+	            
+	            chooseTerm.setSelectedIndex(CreationTool_EventInfluenceDescription.termNr - 1);
+	            chooseFunction.setSelectedIndex(0);
+	        	loadFunctionArgs();
+	
+	            highlightTerm(CreationTool_EventInfluenceDescription.termNr);
+				
+			}
+
+		}
+		
+	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
