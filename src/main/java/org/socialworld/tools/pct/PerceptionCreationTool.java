@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.border.*;
 
-import org.socialworld.calculation.Value;
 import org.socialworld.calculation.expressions.CreateKnowledgeElementExpression;
 import org.socialworld.calculation.expressions.GetValue;
 import org.socialworld.datasource.tablesPool.TablePoolDotElem;
