@@ -205,15 +205,13 @@ public class CreationTool_EventInfluenceDescription {
 		panelTermUpOrDown.setBackground(Color.GRAY);
 
 		chooseTerm = new JComboBox<String>();
-		/*
-		chooseTerm.addItemListener(new ItemListener() {
+/*		chooseTerm.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if(e.getStateChange() == ItemEvent.SELECTED) {
                 	chooseTermStateChanged();
                 }
             }
-        });
-        */
+        });*/
 		panelTermUpOrDown.add(chooseTerm);
 
 		chooseFunction = new JComboBox<String>();
@@ -363,20 +361,7 @@ public class CreationTool_EventInfluenceDescription {
        ActionListener chooseTermActionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-            	int termNrOld = CreationTool_EventInfluenceDescription.termNr;
-                String s = (String) chooseTerm.getSelectedItem();//get the selected item
-                String sTermNr = s.substring(5,6);
-                int termNr = Integer.parseInt(sTermNr);
-                if (termNrOld > 0 && !isLoadingFromDB) {
-                	terms.put(termNrOld, createTerm(termNrOld));
-                }
-                CreationTool_EventInfluenceDescription.termNr = termNr;
-                
-                chooseFunction.setSelectedIndex(0);
-        		loadFunctionArgs();
-
-                highlightTerm(termNr);
+            	chooseTermStateChanged();
              }
         };
         chooseTerm.addActionListener(chooseTermActionListener);
@@ -605,6 +590,25 @@ public class CreationTool_EventInfluenceDescription {
 	}
 
 	private void chooseTermStateChanged() {
+		
+       	int termNrOld = CreationTool_EventInfluenceDescription.termNr;
+        String s = (String) chooseTerm.getSelectedItem();//get the selected item
+        String sTermNr = s.substring(5,6);
+        int lTermNr = Integer.parseInt(sTermNr);
+		if (lTermNr > 0) {
+	       if (termNrOld > 0 && !isLoadingFromDB) {
+	        	terms.put(termNrOld, createTerm(termNrOld));
+	        }
+	        CreationTool_EventInfluenceDescription.termNr = lTermNr;
+	        
+	        chooseFunction.setSelectedIndex(0);
+			loadFunctionArgs();
+	
+	        highlightTerm(lTermNr);
+			JLabel label = termLabels.get(lTermNr - 1);
+			label.setText("HelloWorld");
+
+		}
 	}
 
 	private JsonEventInfluencesAttributeDescription createEvInfAttrDesc() {
