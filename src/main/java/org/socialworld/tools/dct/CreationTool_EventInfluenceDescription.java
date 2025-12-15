@@ -117,6 +117,9 @@ public class CreationTool_EventInfluenceDescription {
 	
 	private HashMap<Integer, JsonEventInfluencesAttributeDescription> inflAttrDescs = new HashMap<Integer, JsonEventInfluencesAttributeDescription>(); 
 	private HashMap<Integer, JsonTerm> terms = new HashMap<Integer, JsonTerm>();
+	
+	boolean isLoadingFromDB = false;
+	
 	/**
 	 * Create the application.
 	 */
@@ -202,6 +205,7 @@ public class CreationTool_EventInfluenceDescription {
 		panelTermUpOrDown.setBackground(Color.GRAY);
 
 		chooseTerm = new JComboBox<String>();
+		/*
 		chooseTerm.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if(e.getStateChange() == ItemEvent.SELECTED) {
@@ -209,6 +213,7 @@ public class CreationTool_EventInfluenceDescription {
                 }
             }
         });
+        */
 		panelTermUpOrDown.add(chooseTerm);
 
 		chooseFunction = new JComboBox<String>();
@@ -363,7 +368,7 @@ public class CreationTool_EventInfluenceDescription {
                 String s = (String) chooseTerm.getSelectedItem();//get the selected item
                 String sTermNr = s.substring(5,6);
                 int termNr = Integer.parseInt(sTermNr);
-                if (termNrOld > 0) {
+                if (termNrOld > 0 && !isLoadingFromDB) {
                 	terms.put(termNrOld, createTerm(termNrOld));
                 }
                 CreationTool_EventInfluenceDescription.termNr = termNr;
@@ -766,7 +771,11 @@ public class CreationTool_EventInfluenceDescription {
 		
 		if (CreationTool_EventInfluenceDescription.eventType == null || CreationTool_EventInfluenceDescription.influenceType == 0) return;
 		
+		isLoadingFromDB = true;
+		
+		int termNr;
 		TablePoolEID table = new TablePoolEID();
+		
 		
 		String jsonEID = table.getJsonEID(
 				CreationTool_EventInfluenceDescription.eventType.getIndex(), 
@@ -780,16 +789,19 @@ public class CreationTool_EventInfluenceDescription {
 		if (attributeChanges.size() > 0) {
 			JsonEventInfluencesAttributeDescription jeiad;
 			jeiad = attributeChanges.get(0);
-			List<JsonTerm> terms = jeiad.term;
-			for (JsonTerm term : terms) {
-				int termNr = term.termNr;
+			List<JsonTerm> lTerms = jeiad.term;
+			for (JsonTerm term : lTerms) {
+				termNr = term.termNr;
 				this.terms.put(termNr, term);
 			}
 			
-			if (terms.size() > 0) {
-	            CreationTool_EventInfluenceDescription.termNr = terms.get(0).termNr;
+			
+			if (lTerms.size() > 0) {
+				termNr = lTerms.get(0).termNr;
+	            CreationTool_EventInfluenceDescription.termNr = termNr;
 	            
-	            chooseTerm.setSelectedIndex(CreationTool_EventInfluenceDescription.termNr - 1);
+	            // TODO hier geht der Term verloren!!! --> Fehler finden und korrigieren
+	            chooseTerm.setSelectedIndex(termNr - 1);
 	            chooseFunction.setSelectedIndex(0);
 	        	loadFunctionArgs();
 	
@@ -798,6 +810,8 @@ public class CreationTool_EventInfluenceDescription {
 			}
 
 		}
+		
+		isLoadingFromDB = false;
 		
 	}
 	
