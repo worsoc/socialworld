@@ -72,6 +72,20 @@ public class CreationTool_EventInfluenceDescription {
 		
 	}
 	
+	private class MyTextArea extends JTextArea
+	{
+		private MyTextArea(String initialText) {
+			setEditable(false);        // Verhindert Bearbeitung
+			setCursor(null);          // Entfernt den Text-Cursor
+			setOpaque(false);          // Macht den Hintergrund transparent
+			setFocusable(false);       // Verhindert Fokus
+			setLineWrap(true);         // Aktiviert Zeilenumbruch
+			setWrapStyleWord(true);    // Umbruch nur an Wortgrenzen
+
+			setText(initialText);
+		}
+	} 
+	
 	private JFrame frame;
 	
 	JPanel panel3LinesAbove;
@@ -107,7 +121,7 @@ public class CreationTool_EventInfluenceDescription {
 	List<JComboBox<String>> listArgTermNr;
 	List<JComboBox<String>> listArgEventProp;
 	
-	List<JLabel> termLabels;
+	List<MyTextArea> termLabels;
 	
 	private boolean argTypeComboBoxesFilled = false;
 	
@@ -248,9 +262,9 @@ public class CreationTool_EventInfluenceDescription {
 		panelTerms.setLayout(new GridLayout(7,1,5,5));
 		panelTerms.setBackground(Color.BLUE);
 		
-		termLabels = new ArrayList<JLabel>(7);
+		termLabels = new ArrayList<MyTextArea>(7);
 		for (int i = 1; i <= 7; i++) {
-			JLabel label = new JLabel("Term " + i);
+			MyTextArea label = new MyTextArea("Term " + i);
 			label.setOpaque(true);
 			label.setBackground(Color.GREEN);
 			panelTerms.add(label);
@@ -488,7 +502,17 @@ public class CreationTool_EventInfluenceDescription {
 			termLabels.get(i - 1).setBackground(Color.GREEN);
 		}
 		termLabels.get(termNr - 1).setBackground(Color.BLUE);
-		
+	}
+	
+	private void setTermTexts() {
+		for (int termNr = 1; termNr <= 7; termNr++) {
+			if (this.terms.get(termNr) != null) {
+				termLabels.get(termNr - 1).setText(this.terms.get(termNr).toString());
+			}
+			else {
+				termLabels.get(termNr - 1).setText("not defined");
+			}
+		}
 	}
 	
 	private void fillEventTypePropsComboBox() {
@@ -605,8 +629,6 @@ public class CreationTool_EventInfluenceDescription {
 			loadFunctionArgs();
 	
 	        highlightTerm(lTermNr);
-			JLabel label = termLabels.get(lTermNr - 1);
-			label.setText("HelloWorld");
 
 		}
 	}
@@ -784,36 +806,39 @@ public class CreationTool_EventInfluenceDescription {
 		String jsonEID = table.getJsonEID(
 				CreationTool_EventInfluenceDescription.eventType.getIndex(), 
 				CreationTool_EventInfluenceDescription.influenceType);
-		JsonEventInfluenceDescription jeid = Json.getGsonInstance().fromJson(jsonEID, JsonEventInfluenceDescription.class);
-		List<JsonEventInfluencesAttributeDescription> attributeChanges = jeid.attributeChanges;
-		for (JsonEventInfluencesAttributeDescription jeiad : attributeChanges) {
-			int orderNr = jeiad.orderNr;
-			this.inflAttrDescs.put(orderNr, jeiad);
-		}
-		if (attributeChanges.size() > 0) {
-			JsonEventInfluencesAttributeDescription jeiad;
-			jeiad = attributeChanges.get(0);
-			List<JsonTerm> lTerms = jeiad.term;
-			for (JsonTerm term : lTerms) {
-				termNr = term.termNr;
-				this.terms.put(termNr, term);
+		if (jsonEID.length() > 0) {
+			JsonEventInfluenceDescription jeid = Json.getGsonInstance().fromJson(jsonEID, JsonEventInfluenceDescription.class);
+			List<JsonEventInfluencesAttributeDescription> attributeChanges = jeid.attributeChanges;
+			for (JsonEventInfluencesAttributeDescription jeiad : attributeChanges) {
+				int orderNr = jeiad.orderNr;
+				this.inflAttrDescs.put(orderNr, jeiad);
 			}
-			
-			
-			if (lTerms.size() > 0) {
-				termNr = lTerms.get(0).termNr;
-	            CreationTool_EventInfluenceDescription.termNr = termNr;
-	            
-	            // TODO hier geht der Term verloren!!! --> Fehler finden und korrigieren
-	            chooseTerm.setSelectedIndex(termNr - 1);
-	            chooseFunction.setSelectedIndex(0);
-	        	loadFunctionArgs();
-	
-	            highlightTerm(CreationTool_EventInfluenceDescription.termNr);
+			if (attributeChanges.size() > 0) {
+				JsonEventInfluencesAttributeDescription jeiad;
+				jeiad = attributeChanges.get(0);
+				List<JsonTerm> lTerms = jeiad.term;
+				for (JsonTerm term : lTerms) {
+					termNr = term.termNr;
+					this.terms.put(termNr, term);
+				}
 				
-			}
+				
+				if (lTerms.size() > 0) {
+					termNr = lTerms.get(0).termNr;
+		            CreationTool_EventInfluenceDescription.termNr = termNr;
+		            
+		            chooseTerm.setSelectedIndex(termNr - 1);
+		            chooseFunction.setSelectedIndex(0);
+		        	loadFunctionArgs();
+		
+		            highlightTerm(CreationTool_EventInfluenceDescription.termNr);
+					
+				}
 
+			}
+			
 		}
+		setTermTexts();
 		
 		isLoadingFromDB = false;
 		
