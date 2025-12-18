@@ -737,12 +737,18 @@ public class CreationTool_EventInfluenceDescription {
 		terms.clear(); 
 	}
 
-	private void loadFunctionArgs() {
+	private void resetFunctionArgs() {
 		if (argTypeComboBoxesFilled) {
 			resetArgType(1);
 			resetArgType(2);
 			resetArgType(3);
 			resetArgType(4);
+		}
+	}
+	
+	private void loadFunctionArgs() {
+		resetFunctionArgs();
+		if (argTypeComboBoxesFilled) {
 			
 			Integer selectedTermNr = Integer.valueOf(CreationTool_EventInfluenceDescription.termNr);
 			if (!terms.containsKey(selectedTermNr)) return;
@@ -751,11 +757,19 @@ public class CreationTool_EventInfluenceDescription {
 			
 			if (funcArgs != null) {
 				int faNr;
+				String type;
 				for (JsonFunctionArg jfa : funcArgs) {
 					faNr = jfa.faNr;
+					type = jfa.type;
 					switch (faNr) {
 					case 1:
 						chooseArgType1.setSelectedItem(jfa.type);
+						
+						switch (type) {
+						case "Attribute":
+							listArgValueAttribute.get(0).setSelectedItem(jfa.value.value);
+							break;
+						}
 						break;
 					case 2:
 						chooseArgType2.setSelectedItem(jfa.type);
@@ -837,6 +851,9 @@ public class CreationTool_EventInfluenceDescription {
 
 			}
 			
+		}
+		else {
+			resetFunctionArgs();
 		}
 		setTermTexts();
 		
