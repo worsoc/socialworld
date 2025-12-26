@@ -729,13 +729,6 @@ public class CreationTool_EventInfluenceDescription {
 		return value;
 	}
 
-	private void clearHashmapInflAttrDescs() {
-		inflAttrDescs.clear(); 
-	}
-	
-	private void clearHashmapTerms() {
-		terms.clear(); 
-	}
 
 	private void resetFunctionArgs() {
 		if (argTypeComboBoxesFilled) {
@@ -766,19 +759,73 @@ public class CreationTool_EventInfluenceDescription {
 						chooseArgType1.setSelectedItem(jfa.type);
 						
 						switch (type) {
+						case "Const":
+							listTextFieldsInputConst.get(0).setText(jfa.value.value);
+							break;
 						case "Attribute":
 							listArgValueAttribute.get(0).setSelectedItem(jfa.value.value);
+							break;
+						case "EventProperty":
+							listArgEventProp.get(0).setSelectedItem(jfa.value.value);
+							break;
+						case "TermNr":
+							listArgTermNr.get(0).setSelectedItem(jfa.value.value);
 							break;
 						}
 						break;
 					case 2:
 						chooseArgType2.setSelectedItem(jfa.type);
+						
+						switch (type) {
+						case "Const":
+							listTextFieldsInputConst.get(1).setText(jfa.value.value);
+							break;
+						case "Attribute":
+							listArgValueAttribute.get(1).setSelectedItem(jfa.value.value);
+							break;
+						case "EventProperty":
+							listArgEventProp.get(1).setSelectedItem(jfa.value.value);
+							break;
+						case "TermNr":
+							listArgTermNr.get(1).setSelectedItem(jfa.value.value);
+							break;
+						}
 						break;
 					case 3:
 						chooseArgType3.setSelectedItem(jfa.type);
+						
+						switch (type) {
+						case "Const":
+							listTextFieldsInputConst.get(2).setText(jfa.value.value);
+							break;
+						case "Attribute":
+							listArgValueAttribute.get(2).setSelectedItem(jfa.value.value);
+							break;
+						case "EventProperty":
+							listArgEventProp.get(2).setSelectedItem(jfa.value.value);
+							break;
+						case "TermNr":
+							listArgTermNr.get(2).setSelectedItem(jfa.value.value);
+							break;
+						}
 						break;
 					case 4:
 						chooseArgType4.setSelectedItem(jfa.type);
+						
+						switch (type) {
+						case "Const":
+							listTextFieldsInputConst.get(3).setText(jfa.value.value);
+							break;
+						case "Attribute":
+							listArgValueAttribute.get(3).setSelectedItem(jfa.value.value);
+							break;
+						case "EventProperty":
+							listArgEventProp.get(3).setSelectedItem(jfa.value.value);
+							break;
+						case "TermNr":
+							listArgTermNr.get(3).setSelectedItem(jfa.value.value);
+							break;
+						}
 						break;
 					}
 				}
@@ -806,6 +853,13 @@ public class CreationTool_EventInfluenceDescription {
 		}
 	}
 	
+	private void clearHashmapInflAttrDescs() {
+		inflAttrDescs.clear(); 
+	}
+	
+	private void clearHashmapTerms() {
+		terms.clear(); 
+	}
 	
 	private void loadFromDB() {
 		
