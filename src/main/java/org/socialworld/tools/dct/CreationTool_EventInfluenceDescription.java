@@ -125,14 +125,16 @@ public class CreationTool_EventInfluenceDescription {
 	
 	private boolean argTypeComboBoxesFilled = false;
 	
-	private static int termNr;
 	private static EventType eventType;
 	private static int influenceType;
+	private static int orderNr;
+	private static String attribute;
+	private static int termNr;
 	
 	private HashMap<Integer, JsonEventInfluencesAttributeDescription> inflAttrDescs = new HashMap<Integer, JsonEventInfluencesAttributeDescription>(); 
 	private HashMap<Integer, JsonTerm> terms = new HashMap<Integer, JsonTerm>();
 	
-	boolean isLoadingFromDB = false;
+	boolean isLoading = false;
 	
 	/**
 	 * Create the application.
@@ -182,26 +184,26 @@ public class CreationTool_EventInfluenceDescription {
 		panelOrderNrAndAttribute.add(lblOrderNr);
 	
 		chooseOrderNr = new JComboBox<String>();
-		chooseOrderNr.addItemListener(new ItemListener() {
+/*		chooseOrderNr.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if(e.getStateChange() == ItemEvent.SELECTED) {
                 	chooseOrderNrStateChanged();
                 }
             }
-        });
+        });*/
 		panelOrderNrAndAttribute.add(chooseOrderNr);
 
 		JLabel lblAttribute = new JLabel("Attribut:");
 		panelOrderNrAndAttribute.add(lblAttribute);
 
 		chooseAttribute = new JComboBox<String>();
-		chooseAttribute.addItemListener(new ItemListener() {
+/*		chooseAttribute.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if(e.getStateChange() == ItemEvent.SELECTED) {
                 	chooseAttributeStateChanged();
                 }
             }
-        });
+        });*/
 		panelOrderNrAndAttribute.add(chooseAttribute);
 		
 		btnCreateAttributeDescription 		 = new JButton("Create Attrib Desc");
@@ -404,6 +406,28 @@ public class CreationTool_EventInfluenceDescription {
         };
         chooseInfluenceType.addActionListener(chooseInfluenceTypeActionListener);
 
+        ActionListener chooseOrderNrActionListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                String orderNr = (String) chooseOrderNr.getSelectedItem();//get the selected item
+                CreationTool_EventInfluenceDescription.orderNr = Integer. parseInt( orderNr);
+                chooseOrderNrStateChanged();
+               }
+        };
+        chooseOrderNr.addActionListener(chooseOrderNrActionListener);
+
+        ActionListener chooseAttribActionListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                String attribute = (String) chooseAttribute.getSelectedItem();//get the selected item
+                CreationTool_EventInfluenceDescription.attribute = attribute;
+                chooseAttributeStateChanged();
+               }
+        };
+        chooseAttribute.addActionListener(chooseAttribActionListener);
+
         ActionListener chooseArgTypeActionListener;
        	chooseArgTypeActionListener = new ActionListener() {
                 @Override
@@ -560,6 +584,7 @@ public class CreationTool_EventInfluenceDescription {
 	}
 	
 	private void btnCreateAttributeDescriptionPressed() {
+		saveTerm();
 		JsonEventInfluencesAttributeDescription attribDesc = createEvInfAttrDesc();
 		inflAttrDescs.put(Integer.valueOf(attribDesc.orderNr), attribDesc);
 		
@@ -571,15 +596,16 @@ public class CreationTool_EventInfluenceDescription {
 	} 
 
 	private void btnCreateDescriptionPressed() {
+		saveTerm();
+		
+		JsonEventInfluencesAttributeDescription attribDesc = createEvInfAttrDesc();
+		inflAttrDescs.put(Integer.valueOf(attribDesc.orderNr), attribDesc);
+
 		JsonEventInfluenceDescription desc = createEvInfDesc();
 		String jsonEID = desc.toString();
 
 		EventInfluenceDescription eid = new EventInfluenceDescription(desc);
 		
-/*		StringSelection selection = new StringSelection(eid.toString());
-		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-		clipboard.setContents(selection, selection);
-*/		
 		TablePoolEID table = new TablePoolEID();
 		table.insert(eid.getNrEventType(), eid.getNrInfluenceType(), jsonEID);
 	}
@@ -607,6 +633,9 @@ public class CreationTool_EventInfluenceDescription {
 
 	private void chooseOrderNrStateChanged() {
 		clearHashmapTerms();
+        String sOrderNr = (String) chooseOrderNr.getSelectedItem();//get the selected item
+        int lOrderNr = Integer.parseInt(sOrderNr);
+		loadForOrderNr(lOrderNr);
 	}
 	
 	private void chooseAttributeStateChanged() {
@@ -620,7 +649,7 @@ public class CreationTool_EventInfluenceDescription {
         String sTermNr = s.substring(5,6);
         int lTermNr = Integer.parseInt(sTermNr);
 		if (lTermNr > 0) {
-	       if (termNrOld > 0 && !isLoadingFromDB) {
+	       if (termNrOld > 0 && !isLoading) {
 	        	terms.put(termNrOld, createTerm(termNrOld));
 	        }
 	        CreationTool_EventInfluenceDescription.termNr = lTermNr;
@@ -631,6 +660,13 @@ public class CreationTool_EventInfluenceDescription {
 	        highlightTerm(lTermNr);
 
 		}
+	}
+	
+	private void saveTerm() {
+       	int termNr = CreationTool_EventInfluenceDescription.termNr;
+       	if (termNr > 0) { 
+       		terms.put(termNr, createTerm(termNr));
+       	}
 	}
 
 	private JsonEventInfluencesAttributeDescription createEvInfAttrDesc() {
@@ -861,11 +897,55 @@ public class CreationTool_EventInfluenceDescription {
 		terms.clear(); 
 	}
 	
+	private void loadForOrderNr(int orderNr) {
+		
+		CreationTool_EventInfluenceDescription.orderNr = orderNr;
+
+		isLoading = true;
+
+		if (!this.terms.isEmpty()) clearHashmapTerms();
+		
+		resetFunctionArgs();
+		
+		JsonEventInfluencesAttributeDescription jeiad = this.inflAttrDescs.get(orderNr);
+		if (jeiad != null) {
+		
+			List<JsonTerm> lTerms = jeiad.term;
+	
+			String attrib = jeiad.attribute;
+			if (attrib == null) attrib = "";
+			chooseAttribute.setSelectedItem(attrib);
+			
+			int termNr;
+			
+			for (JsonTerm term : lTerms) {
+				termNr = term.termNr;
+				this.terms.put(termNr, term);
+			}
+			
+			if (lTerms.size() > 0) {
+				termNr = lTerms.get(0).termNr;
+	            CreationTool_EventInfluenceDescription.termNr = termNr;
+	            
+	            chooseTerm.setSelectedIndex(termNr - 1);
+	            chooseFunction.setSelectedIndex(0);
+	        	loadFunctionArgs();
+	
+	            highlightTerm(CreationTool_EventInfluenceDescription.termNr);
+				
+			}
+		}
+		setTermTexts();
+		
+		isLoading = false;
+
+	}
+	
 	private void loadFromDB() {
 		
 		if (CreationTool_EventInfluenceDescription.eventType == null || CreationTool_EventInfluenceDescription.influenceType == 0) return;
 		
-		isLoadingFromDB = true;
+		isLoading = true;
 		
 		int termNr;
 		TablePoolEID table = new TablePoolEID();
@@ -882,8 +962,13 @@ public class CreationTool_EventInfluenceDescription {
 				this.inflAttrDescs.put(orderNr, jeiad);
 			}
 			if (attributeChanges.size() > 0) {
+				
 				JsonEventInfluencesAttributeDescription jeiad;
 				jeiad = attributeChanges.get(0);
+				
+				CreationTool_EventInfluenceDescription.orderNr = jeiad.orderNr;
+	            chooseOrderNr.setSelectedIndex(jeiad.orderNr);
+
 				List<JsonTerm> lTerms = jeiad.term;
 				for (JsonTerm term : lTerms) {
 					termNr = term.termNr;
@@ -911,7 +996,7 @@ public class CreationTool_EventInfluenceDescription {
 		}
 		setTermTexts();
 		
-		isLoadingFromDB = false;
+		isLoading = false;
 		
 	}
 	
