@@ -618,7 +618,8 @@ public class CreationTool_EventInfluenceDescription {
 	}
 	
 	private void chooseAttributeStateChanged() {
-		clearHashmapTerms();
+         String s = (String) chooseAttribute.getSelectedItem();//get the selected item
+         CreationTool_EventInfluenceDescription.attribute = s;
 	}
 
 	private void chooseTermStateChanged() {
