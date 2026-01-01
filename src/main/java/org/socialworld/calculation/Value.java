@@ -185,19 +185,19 @@ public class Value {
 		
 		switch (castToType) {
 		case integer:
-			this.value = Integer.parseInt(valueAsString);
+			this.value = Integer.parseInt(valueAsString.trim());
 			valid = true;
 			break;
 		case longinteger:
-			this.value = Integer.parseInt(valueAsString);
+			this.value = Integer.parseInt(valueAsString.trim());
 			valid = true;
 			break;
 		case floatingpoint:
-			this.value = Float.parseFloat(valueAsString);
+			this.value = Float.parseFloat(valueAsString.trim());
 			valid = true;
 			break;
 		case bool:
-			this.value = Boolean.parseBoolean(valueAsString);
+			this.value = Boolean.parseBoolean(valueAsString.trim());
 			valid = true;
 			break;
 		case string:

@@ -184,26 +184,12 @@ public class CreationTool_EventInfluenceDescription {
 		panelOrderNrAndAttribute.add(lblOrderNr);
 	
 		chooseOrderNr = new JComboBox<String>();
-/*		chooseOrderNr.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                if(e.getStateChange() == ItemEvent.SELECTED) {
-                	chooseOrderNrStateChanged();
-                }
-            }
-        });*/
 		panelOrderNrAndAttribute.add(chooseOrderNr);
 
 		JLabel lblAttribute = new JLabel("Attribut:");
 		panelOrderNrAndAttribute.add(lblAttribute);
 
 		chooseAttribute = new JComboBox<String>();
-/*		chooseAttribute.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                if(e.getStateChange() == ItemEvent.SELECTED) {
-                	chooseAttributeStateChanged();
-                }
-            }
-        });*/
 		panelOrderNrAndAttribute.add(chooseAttribute);
 		
 		btnCreateAttributeDescription 		 = new JButton("Create Attrib Desc");
@@ -221,13 +207,6 @@ public class CreationTool_EventInfluenceDescription {
 		panelTermUpOrDown.setBackground(Color.GRAY);
 
 		chooseTerm = new JComboBox<String>();
-/*		chooseTerm.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                if(e.getStateChange() == ItemEvent.SELECTED) {
-                	chooseTermStateChanged();
-                }
-            }
-        });*/
 		panelTermUpOrDown.add(chooseTerm);
 
 		chooseFunction = new JComboBox<String>();
@@ -658,6 +637,7 @@ public class CreationTool_EventInfluenceDescription {
 			loadFunctionArgs();
 	
 	        highlightTerm(lTermNr);
+			setTermTexts();
 
 		}
 	}
