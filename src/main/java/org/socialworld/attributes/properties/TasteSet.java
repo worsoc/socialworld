@@ -51,6 +51,9 @@ public class TasteSet extends PropPortionSet {
 		return listOfPropertyMetaInfo;
 	}
 	
+	protected  String getSetsPropertyName() {
+		return "Taste";
+	}
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 ///////////// object nothing (abstract method from ISimProperty)    ///////////////////////

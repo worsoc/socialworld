@@ -1,6 +1,6 @@
 /*
 * Social World
-* Copyright (C) 2025  Mathias Sikos
+* Copyright (C) 2026  Mathias Sikos
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -19,32 +19,33 @@
 * or see http://www.gnu.org/licenses/gpl-2.0.html
 *
 */
-package org.socialworld.calculation;
+package org.socialworld.attributes.properties;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public enum FunctionArgType {
-	Const, Attribute, EventPropertyNumericValue, TermNr;
+public class PairMemberPortion {
+	private IEnumProperty property;
+	private Integer portion;
 	
-	public static FunctionArgType fromName(String name) {
-		for (FunctionArgType type : FunctionArgType.values())
-			if (type.toString().toUpperCase().equals(name.toUpperCase()))
-				return type;
-		return null;
+	public PairMemberPortion(IEnumProperty property, Integer portion) {
+		this.property = property;
+		this.portion = portion;
 	}
 	
-	public static List<String> getNameList() {
-		List<String> nameList = new ArrayList<String>();
-		for (FunctionArgType elem : FunctionArgType.values()) {
-			nameList.add(elem.toString());
-		}
-		return nameList;
+	private PairMemberPortion() {
 	}
 	
-	public static int count() {
-		return FunctionArgType.values().length;
+	
+	public IEnumProperty getProperty() {
+		return property;
 	}
 
+	public Integer getPortion() {
+		return portion;
+	}
 
+	public PairMemberPortion copy() {
+		PairMemberPortion copy = new PairMemberPortion();
+		copy.property = property;
+		copy.portion = portion;
+		return copy;
+	}
 }

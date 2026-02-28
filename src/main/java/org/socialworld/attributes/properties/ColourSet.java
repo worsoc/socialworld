@@ -51,6 +51,9 @@ public class ColourSet extends PropPortionSet {
 		return listOfPropertyMetaInfo;
 	}
 	
+	protected  String getSetsPropertyName() {
+		return "Colour";
+	}
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 ///////////// object nothing (abstract method from ISimProperty)    ///////////////////////

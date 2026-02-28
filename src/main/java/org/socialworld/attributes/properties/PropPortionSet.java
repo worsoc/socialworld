@@ -32,8 +32,8 @@ import org.socialworld.core.IAccessToken;
 
 public abstract class PropPortionSet extends SimProperty {
 
-	private List<IEnumProperty> objects;
-	private List<Integer> portions;
+	private List<PairMemberPortion> pairs;
+
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 //////////////////creating instance for simulation    ///////////////////////////////
@@ -41,19 +41,16 @@ public abstract class PropPortionSet extends SimProperty {
 	
 	protected  PropPortionSet(PropPortionSet original, PropertyProtection protectionOriginal, IAccessToken token ) {
 		super(protectionOriginal, token);
-		this.objects = original.getObjects();
-		this.portions = original.getPortions();
+		this.pairs = original.getPairs();
 		setPropertyName(original.getPropertyName());
 	}
 
 	public  PropPortionSet() {
-		objects = new ArrayList<IEnumProperty>();
-		portions = new ArrayList<Integer>();
+		pairs = new ArrayList<PairMemberPortion>();
 	}
 			
-	public void add(		IEnumProperty object, int portion) {
-		objects.add(object);
-		portions.add(portion);
+	public void add(		IEnumProperty property, int portion) {
+		pairs.add(new PairMemberPortion(property, portion));
 	}
 
 
@@ -61,37 +58,50 @@ public abstract class PropPortionSet extends SimProperty {
 /////////////////////////////    PropPortionSet  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
-	protected final List<IEnumProperty> getObjects() {
-		List<IEnumProperty> copy = new ArrayList<IEnumProperty>();
-		for (IEnumProperty object : this.objects) {
-			copy.add(object);
+	protected abstract String getSetsPropertyName();
+	
+	protected List<PairMemberPortion> getPairs() {
+		List<PairMemberPortion> copy = new ArrayList<PairMemberPortion>();
+		for (PairMemberPortion pair : this.pairs) {
+			copy.add(pair);
 		}
 		return copy;
 	}
 	
-	protected List<Integer> getPortions( ) {
-		List<Integer> copy = new ArrayList<Integer>();
-		for (Integer portion : this.portions) {
-			copy.add(portion);
+	public List<String> getPortionValueNames() {
+		List<String> names = new ArrayList<String>();
+		String preafixPropertyName;
+		preafixPropertyName = getSetsPropertyName() + "_";
+		String propertyName;
+		for (PairMemberPortion pair : pairs) {
+			propertyName = preafixPropertyName + pair.getProperty().getClass().getSimpleName()+ "_portion";
+			names.add(propertyName);
 		}
-		return copy;
+		return names;
 	}
-	
 
 	public Object getMain() {
 		int maxPortion = 0;
 		IEnumProperty object = null;
-		for (int index = 0; index < portions.size() ; index++) {
-			if (portions.get(index) > maxPortion) {
-				maxPortion = portions.get(index);
-				object = objects.get(index);
+		for (PairMemberPortion pair : this.pairs) {
+			if (pair.getPortion() > maxPortion) {
+				maxPortion = pair.getPortion();
+				object = pair.getProperty();
 			}
 		}
 		return object;
 	}
 	
 	protected ValueArrayList getObjectsAsValueArrayList() {
-		ValueArrayList list = new ValueArrayList(objects, Type.enumProp);
+		ValueArrayList list = new ValueArrayList(extractPropertyList(), Type.enumProp);
 		return list;
+	}
+	
+	private List<IEnumProperty> extractPropertyList() {
+		List<IEnumProperty> properties = new ArrayList<IEnumProperty>();
+		for (PairMemberPortion pair : this.pairs) {
+			properties.add(pair.getProperty());
+		}
+		return properties;
 	}
 }

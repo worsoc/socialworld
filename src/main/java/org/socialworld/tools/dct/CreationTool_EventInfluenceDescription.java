@@ -126,7 +126,7 @@ public class CreationTool_EventInfluenceDescription {
 	private boolean argTypeComboBoxesFilled = false;
 	
 	private static EventType eventType;
-	private static int influenceType;
+	private static int influenceType;  // > 0 ( see TablePoolEID)
 	private static int orderNr;
 	private static String attribute;
 	private static int termNr;
@@ -309,7 +309,7 @@ public class CreationTool_EventInfluenceDescription {
 		panelSettings = new JPanel();
 		panelSettings.setLayout(new GridLayout(4,1,0,0));
 		panelSettings.setBackground(Color.RED);
-		panelSettings.setPreferredSize(new Dimension(400, 0));
+		panelSettings.setPreferredSize(new Dimension(800, 0));
 		for (JPanel panelArgument : panelsArguments) {
 			panelSettings.add(panelArgument);
 		}
@@ -545,7 +545,7 @@ public class CreationTool_EventInfluenceDescription {
 				listArgEventProp.get(indexArg).setEnabled(false);
 				listArgTermNr.get(indexArg).setEnabled(false);
 				return;
-			case EventProperty:
+			case EventPropertyNumericValue:
 				listTextFieldsInputConst.get(indexArg).setEnabled(false);
 				listArgValueAttribute.get(indexArg).setEnabled(false);
 				listArgEventProp.get(indexArg).setEnabled(true);

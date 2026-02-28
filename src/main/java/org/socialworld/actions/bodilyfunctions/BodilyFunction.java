@@ -74,6 +74,27 @@ public class BodilyFunction extends ActionPerformer {
  		return result;
  	}
 
+	public static List<String> getEventParamNumericValueNameList(EventTypeGeneral etg) {
+		ActionMode mode = ActionMode.fromEventTypeGeneral(etg);
+ 		List<String> result = new ArrayList<String>();
+		switch (mode) {
+		case sleep:
+	 		result.add(Value.VALUE_BY_NAME_EVENT_INTENSITY);
+	 		break;
+		case drink:
+	 		result.add(Value.VALUE_BY_NAME_EVENT_BF_ITEMDRINK);
+	 		break;
+		case eat:
+	 		result.add(Value.VALUE_BY_NAME_EVENT_BF_ITEMEAT);
+	 		break;
+		case piss:
+	 		break;
+		case shit:
+	 		break;
+		}
+ 		return result;
+ 	}
+
     protected final void choosePropertiesFromPropertyList(ValueArrayList properties) {
     	
 		for (int i = 0; i < properties.size(); i++) {
