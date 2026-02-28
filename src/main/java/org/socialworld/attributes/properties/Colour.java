@@ -193,7 +193,11 @@ public enum Colour implements IEnumProperty{
 	gainsboro(155,220220220);
 	
 	public static int getMaxIndex() {
-		return 155;
+		int i = 1;
+		while (getName(i) != nothing) {
+			i++;
+		}
+		return i - 1;
 	}
 
 	public Color getColour(Colour colour) {
@@ -398,12 +402,12 @@ public enum Colour implements IEnumProperty{
 	}
 
 	/**
-	 * The method returns the material name which belongs to the parameter
-	 * material index.
+	 * The method returns the colour which belongs to the parameter
+	 * colour index.
 	 * 
 	 * @param index
-	 *            material index
-	 * @return material name
+	 *            colour index
+	 * @return colour
 	 */
 	public static Colour getName(int index) {
 		for (Colour element : Colour.values())
@@ -412,6 +416,20 @@ public enum Colour implements IEnumProperty{
 		return null;
 	}
 	
+	/**
+	 * The method returns the colour which belongs to the string representation
+	 * 
+	 * @param String 
+	 *            colour 
+	 * @return colour 
+	 */
+	public static Colour fromName(String name) {
+		for (Colour element : Colour.values())
+			if (element.toString().equals(name)) {
+				return element;
+			}
+		return nothing;  // instead of null 
+	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////meta information    ////////////////////////////////////

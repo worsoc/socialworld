@@ -49,7 +49,11 @@ public enum Nutrient implements IEnumProperty {
 	}
 
 	public static int getMaxIndex() {
-		return 7;
+		int i = 1;
+		while (getName(i) != nothing) {
+			i++;
+		}
+		return i - 1;
 	}
 
 	/**
@@ -80,12 +84,12 @@ public enum Nutrient implements IEnumProperty {
 	}
 
 	/**
-	 * The method returns the nutrient name which belongs to the parameter
+	 * The method returns the nutrient which belongs to the parameter
 	 * nutrient index.
 	 * 
 	 * @param index
 	 *            nutrient index
-	 * @return nutrient name
+	 * @return nutrient 
 	 */
 	public static Nutrient getName(int index) {
 		for (Nutrient element : Nutrient.values())
@@ -94,6 +98,21 @@ public enum Nutrient implements IEnumProperty {
 		return nothing;  // instead of null
 	}
 	
+	/**
+	 * The method returns the nutrient which belongs to the string representation
+	 * 
+	 * @param String 
+	 *            nutrient 
+	 * @return nutrient 
+	 */
+	public static Nutrient fromName(String name) {
+		for (Nutrient element : Nutrient.values())
+			if (element.toString().equals(name)) {
+				return element;
+			}
+		return nothing;  // instead of null 
+	}
+
 	///////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////meta information    ////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////

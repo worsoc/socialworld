@@ -47,7 +47,11 @@ public enum Material implements IEnumProperty {
 	}
 
 	public static int getMaxIndex() {
-		return 4;
+		int i = 1;
+		while (getName(i) != nothing) {
+			i++;
+		}
+		return i - 1;
 	}
 	
 	/**
@@ -78,7 +82,7 @@ public enum Material implements IEnumProperty {
 	}
 
 	/**
-	 * The method returns the material name which belongs to the parameter
+	 * The method returns the material which belongs to the parameter
 	 * material index.
 	 * 
 	 * @param index
@@ -92,6 +96,21 @@ public enum Material implements IEnumProperty {
 		return nothing;  // instead of null 
 	}
 	
+	/**
+	 * The method returns the material which belongs to the string representation
+	 * 
+	 * @param String 
+	 *            material 
+	 * @return material 
+	 */
+	public static Material fromName(String name) {
+		for (Material element : Material.values())
+			if (element.toString().equals(name)) {
+				return element;
+			}
+		return nothing;  // instead of null 
+	}
+
 	///////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////meta information    ////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////

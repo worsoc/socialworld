@@ -22,11 +22,14 @@
 package org.socialworld.attributes.properties;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.attributes.SimProperty;
 import org.socialworld.calculation.Type;
+import org.socialworld.calculation.ValueProperty;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.IAccessToken;
 
@@ -53,7 +56,65 @@ public abstract class PropPortionSet extends SimProperty {
 		pairs.add(new PairMemberPortion(property, portion));
 	}
 
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    ISavedValue  ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 
+	@Override
+	public ValueProperty getProperty(IAccessToken token, PropertyName propName, String valueName) {
+		
+		switch (propName) {
+		case event_property_numeric_value:
+			return getNumericValueProperty(valueName);
+		default:
+			
+			
+			return ValueProperty.getInvalid();
+		}
+	}
+	
+	private ValueProperty getNumericValueProperty(String valueName) {
+		// from general property name event_property_numeric_value 
+		// get the concrete numeric value property by taking apart the valueName
+		// valueName for portions consists of prefix "portion_" ,  PropPortionSer Property name, the property member name
+		//     for example: portion_Colour_silver, portion_Material_leather, portion_Nutrient_protein ...
+
+		// take part the value name
+		List<String> valueNameParts = Arrays.asList(valueName.split("_"));
+		 
+		// there are 3 parts --> may be a PropPoertionSet member portion value 
+		if (valueNameParts.size() == 3) {
+			// checking whether it is a portion
+			if (valueNameParts.get(0).equals("portion")) {
+				// --> it is a portion
+				String propName = valueNameParts.get(1);
+				String member = valueNameParts.get(2);
+				IEnumProperty prop = null;
+				switch (propName) {
+				case "Colour":
+					prop = Colour.fromName(member);
+				case "Material":
+					prop = Material.fromName(member);
+				case "Nutrient":
+					prop = Nutrient.fromName(member);
+				case "Taste":
+					prop = Taste.fromName(member);
+				}
+				if (prop != null) {
+					//checking whether it is the addressed member
+					for (PairMemberPortion pair : pairs) {
+						if (pair.getProperty() == prop) {
+							// it is --> return the according portion as integer value property
+							return new ValueProperty(Type.integer, valueName, pair.getPortion());
+						}
+					}
+				}
+			}
+		}
+		
+		return ValueProperty.getInvalid();
+	}
+	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    PropPortionSet  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -71,10 +132,10 @@ public abstract class PropPortionSet extends SimProperty {
 	public List<String> getPortionValueNames() {
 		List<String> names = new ArrayList<String>();
 		String preafixPropertyName;
-		preafixPropertyName = getSetsPropertyName() + "_";
+		preafixPropertyName = "portion_" + getSetsPropertyName() + "_";
 		String propertyName;
 		for (PairMemberPortion pair : pairs) {
-			propertyName = preafixPropertyName + pair.getProperty().getClass().getSimpleName()+ "_portion";
+			propertyName = preafixPropertyName + pair.getProperty().getClass().getSimpleName() ;
 			names.add(propertyName);
 		}
 		return names;

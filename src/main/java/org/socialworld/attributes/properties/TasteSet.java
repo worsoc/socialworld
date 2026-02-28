@@ -102,13 +102,8 @@ public class TasteSet extends PropPortionSet {
 			return new ValueProperty(Type.enumProp, valueName, getMain());
 		case tasteSet_tastes:
 			return new ValueProperty(Type.valueList, valueName, getObjectsAsValueArrayList());
-/*		case TasteSet_portions:
-			return new ValueProperty(Type.floatingpoint, valueName, this.power);
-		case TasteSet_types:
-			return new ValueProperty(Type.floatingpoint, valueName, this.power);
-*/			
 		default:
-			return ValueProperty.getInvalid();
+			return super.getProperty(token, propName, valueName);
 		}
 	}
 

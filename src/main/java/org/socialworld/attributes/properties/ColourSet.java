@@ -103,13 +103,8 @@ public class ColourSet extends PropPortionSet {
 			return new ValueProperty(Type.enumProp, valueName, (Colour) getMain());
 		case colourSet_colours:
 			return new ValueProperty(Type.valueList, valueName, getObjectsAsValueArrayList());
-/*		case colourSet_portions:
-			return new ValueProperty(Type.floatingpoint, valueName, this.power);
-		case colourSet_types:
-			return new ValueProperty(Type.floatingpoint, valueName, this.power);
-*/			
 		default:
-			return ValueProperty.getInvalid();
+			return super.getProperty(token, propName, valueName);
 		}
 	}
 

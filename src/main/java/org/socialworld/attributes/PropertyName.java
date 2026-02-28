@@ -135,6 +135,7 @@ public enum PropertyName {
 	
 	event_position(2001001),
 	event_direction(2001020),
+	event_property_numeric_value(2002001),
 	
 	action_position(3001001),
 	

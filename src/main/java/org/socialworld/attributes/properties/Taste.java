@@ -44,7 +44,11 @@ public enum Taste implements IEnumProperty {
 	private int index;
 
 	public static int getMaxIndex() {
-		return 5;
+		int i = 1;
+		while (getName(i) != nothing) {
+			i++;
+		}
+		return i - 1;
 	}
 
 	private Taste(int index) {
@@ -94,6 +98,21 @@ public enum Taste implements IEnumProperty {
 		return nothing;  // instead of null
 	}
 	
+	/**
+	 * The method returns the taste which belongs to the string representation
+	 * 
+	 * @param String 
+	 *            taste 
+	 * @return taste 
+	 */
+	public static Taste fromName(String name) {
+		for (Taste element : Taste.values())
+			if (element.toString().equals(name)) {
+				return element;
+			}
+		return nothing;  // instead of null 
+	}
+
 	///////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////meta information    ////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////

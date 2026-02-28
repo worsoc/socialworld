@@ -9,4 +9,6 @@ public interface IEnumProperty {
 	public int getLexemID();
 	public Lexem getLexem();
 	
+	
+	
 }

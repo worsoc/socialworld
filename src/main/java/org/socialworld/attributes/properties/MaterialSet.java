@@ -102,7 +102,7 @@ public class MaterialSet extends PropPortionSet {
 		case materialSet_materials:
 			return new ValueProperty(Type.valueList, valueName, getObjectsAsValueArrayList());
 		default:
-			return ValueProperty.getInvalid();
+			return super.getProperty(token, propName, valueName);
 		}
 	}
 

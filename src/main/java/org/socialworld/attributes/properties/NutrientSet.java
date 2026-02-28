@@ -102,13 +102,8 @@ public class NutrientSet extends PropPortionSet {
 			return new ValueProperty(Type.enumProp, valueName, getMain());
 		case nutrientSet_nutrients:
 			return new ValueProperty(Type.valueList, valueName, getObjectsAsValueArrayList());
-/*		case NutrientSet_portions:
-			return new ValueProperty(Type.floatingpoint, valueName, this.power);
-		case NutrientSet_types:
-			return new ValueProperty(Type.floatingpoint, valueName, this.power);
-*/			
 		default:
-			return ValueProperty.getInvalid();
+			return super.getProperty(token, propName, valueName);
 		}
 	}
 
