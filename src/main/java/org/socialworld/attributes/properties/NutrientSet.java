@@ -51,7 +51,7 @@ public class NutrientSet extends PropPortionSet {
 		return listOfPropertyMetaInfo;
 	}
 	
-	protected  String getSetsPropertyName() {
+	public static String getSetsPropertyName() {
 		return "Nutrient";
 	}
 

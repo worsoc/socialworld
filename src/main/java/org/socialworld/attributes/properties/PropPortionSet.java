@@ -119,7 +119,8 @@ public abstract class PropPortionSet extends SimProperty {
 /////////////////////////////    PropPortionSet  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
-	protected abstract String getSetsPropertyName();
+	public static String getSetsPropertyName() {return "";}
+	
 	
 	protected List<PairMemberPortion> getPairs() {
 		List<PairMemberPortion> copy = new ArrayList<PairMemberPortion>();
@@ -136,6 +137,19 @@ public abstract class PropPortionSet extends SimProperty {
 		String propertyName;
 		for (PairMemberPortion pair : pairs) {
 			propertyName = preafixPropertyName + pair.getProperty().getClass().getSimpleName() ;
+			names.add(propertyName);
+		}
+		return names;
+	}
+
+	public static List<String> getTotalPortionValueNames(String setsPropertyName) {
+		List<String> names = new ArrayList<String>();
+		String preafixPropertyName;
+		preafixPropertyName = "portion_" + setsPropertyName + "_";
+		String propertyName;
+		List<String> allMembers = getMemberNames(setsPropertyName);
+		for (String member : allMembers) {
+			propertyName = preafixPropertyName + member ;
 			names.add(propertyName);
 		}
 		return names;
@@ -164,5 +178,59 @@ public abstract class PropPortionSet extends SimProperty {
 			properties.add(pair.getProperty());
 		}
 		return properties;
+	}
+	
+	private final static List<IEnumProperty> getMembers(String propName) {
+		List<IEnumProperty> members = new ArrayList<IEnumProperty>();
+		String enumClassName = "org.socialworld.attributes.properties." + propName;
+		try {
+		    // 1. finding the class by name
+		    Class<?> clazz = Class.forName(enumClassName);
+
+		    if (clazz.isEnum()) {
+		        // 2. get all enum constants
+		        Object[] constants = clazz.getEnumConstants();
+
+		        // 3. transfer to list
+		        if (constants != null) {
+		            for (Object obj : constants) {
+		            	members.add((IEnumProperty) obj);
+		            }
+		        }
+		    }
+		} catch (ClassNotFoundException e) {
+		    // class not found
+		    e.printStackTrace();
+		}
+		
+		return members;
+	}
+
+	private final static List<String> getMemberNames(String propName) {
+		List<String> members = new ArrayList<String>();
+		String enumClassName = "org.socialworld.attributes.properties." + propName;
+		String memberName;
+		try {
+		    // 1. finding the class by name
+		    Class<?> clazz = Class.forName(enumClassName);
+
+		    if (clazz.isEnum()) {
+		        // 2. get all enum constants
+		        Object[] constants = clazz.getEnumConstants();
+
+		        // 3. transfer to list
+		        if (constants != null) {
+		            for (Object obj : constants) {
+		            	memberName = ((Enum<?>) obj).name();
+		            	if (!memberName.equals("nothing"))	members.add(memberName);
+		            }
+		        }
+		    }
+		} catch (ClassNotFoundException e) {
+		    // class not found
+		    e.printStackTrace();
+		}
+		
+		return members;
 	}
 }

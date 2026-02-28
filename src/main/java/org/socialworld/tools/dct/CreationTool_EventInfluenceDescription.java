@@ -519,7 +519,7 @@ public class CreationTool_EventInfluenceDescription {
 	}
 	
 	private void fillEventTypePropsComboBox() {
-		List<String> eventPropNames = eventType.getEventParamNameList();
+		List<String> eventPropNames = eventType.getEventNumericParamNameList();
 		for (int j = 0; j < 4; j++) {
 			JComboBox<String> cb = listArgEventProp.get(j);
 			cb.removeAllItems();

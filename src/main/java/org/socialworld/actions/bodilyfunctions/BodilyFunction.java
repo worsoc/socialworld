@@ -26,6 +26,9 @@ import java.util.List;
 
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionPerformer;
+import org.socialworld.attributes.properties.MaterialSet;
+import org.socialworld.attributes.properties.NutrientSet;
+import org.socialworld.attributes.properties.TasteSet;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
@@ -82,10 +85,16 @@ public class BodilyFunction extends ActionPerformer {
 	 		result.add(Value.VALUE_BY_NAME_EVENT_INTENSITY);
 	 		break;
 		case drink:
-	 		result.add(Value.VALUE_BY_NAME_EVENT_BF_ITEMDRINK);
+//	 		result.add(Value.VALUE_BY_NAME_EVENT_BF_ITEMDRINK);
+	 		result.addAll(NutrientSet.getTotalPortionValueNames(NutrientSet.getSetsPropertyName()));
+	 		result.addAll(MaterialSet.getTotalPortionValueNames(MaterialSet.getSetsPropertyName()));
+	 		result.addAll(TasteSet.getTotalPortionValueNames(TasteSet.getSetsPropertyName()));
 	 		break;
 		case eat:
-	 		result.add(Value.VALUE_BY_NAME_EVENT_BF_ITEMEAT);
+	 		//result.add(Value.VALUE_BY_NAME_EVENT_BF_ITEMEAT);
+	 		result.addAll(NutrientSet.getTotalPortionValueNames(NutrientSet.getSetsPropertyName()));
+	 		result.addAll(MaterialSet.getTotalPortionValueNames(MaterialSet.getSetsPropertyName()));
+	 		result.addAll(TasteSet.getTotalPortionValueNames(TasteSet.getSetsPropertyName()));
 	 		break;
 		case piss:
 	 		break;

@@ -51,7 +51,7 @@ public class TasteSet extends PropPortionSet {
 		return listOfPropertyMetaInfo;
 	}
 	
-	protected  String getSetsPropertyName() {
+	public static String getSetsPropertyName() {
 		return "Taste";
 	}
 	

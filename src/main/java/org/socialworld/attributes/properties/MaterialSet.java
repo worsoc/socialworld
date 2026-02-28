@@ -50,7 +50,7 @@ public class MaterialSet extends PropPortionSet {
 		return listOfPropertyMetaInfo;
 	}
 
-	protected  String getSetsPropertyName() {
+	public static String getSetsPropertyName() {
 		return "Material";
 	}
 

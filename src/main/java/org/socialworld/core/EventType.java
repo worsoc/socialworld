@@ -499,6 +499,73 @@ public enum EventType {
 		return new ArrayList<String>();
 	}
 	
+	public List<String> getEventNumericParamNameList() {
+		
+		EventTypeGeneral etg = EventTypeGeneral.getGeneralEventType(this);
+		// TODO mapping EventTypeGeneral <-> ActionMode
+		switch (etg) {
+		
+			case sleep: 
+			case drink: 
+			case eat: 
+			case piss: 
+			case shit: return BodilyFunction.getEventParamNumericValueNameList(etg);
+			case moveWalk: 
+			case moveRun: 
+			case moveSneak: 
+			case moveJump: 
+			case moveSwim: 
+			case moveFly: return Move.getEventParamNameList(etg);
+			case examineByLook: 
+			case examineBySmell: 
+			case examineByTaste: 
+			case examineByTouch: return Examine.getEventParamNumericValueNameList(etg);
+			case inventoryTake: 
+			case inventoryDrop:
+			case inventorySwitch: 
+			case inventorySet: 
+			case inventoryGet: return Equip.getEventParamNameList(etg);
+			case touchByHand: 
+			case touchByFoot: 
+			case handleItemUse2: 
+			case handleItemUseLeft: 
+			case handleItemUseRight: 
+			case handleItemAddRtoL: 
+			case handleItemAddLtoR: 
+			case handleItemPull: 
+			case handleItemPush: return Handle.getEventParamNameList(etg);
+			case weaponLeftStab: 
+			case weaponLeftStroke: 
+			case weaponLeftBackhand: 
+			case weaponRightStab: 
+			case weaponRightStroke: 
+			case weaponRightBackhand: 
+			case weaponClub: 
+			case punchLeftFistStraight: 
+			case punchLeftFistSideways: 
+			case punchLeftFistUpward: 
+			case punchRightFistStraight: 
+			case punchRightFistSideways: 
+			case punchRightFistUpward: return Attack.getEventParamNameList(etg);
+			case listenToStatement: 
+			case listenToQuestion: 
+			case listenToInstruction: 
+			case understand: return Hear.getEventParamNameList(etg);
+			case askNormal: 
+			case askScream: 
+			case askWhisper: return Ask.getEventParamNameList(etg);
+			case answerNormal: 
+			case answerScream: 
+			case answerWhisper: return Answer.getEventParamNameList(etg);
+			case sayNormal: 
+			case sayScream: 
+			case sayWhisper: return Say.getEventParamNameList(etg);
+		
+		}
+
+		return new ArrayList<String>();
+	}
+
 }
 
 
