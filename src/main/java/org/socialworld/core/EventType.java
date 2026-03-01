@@ -533,7 +533,7 @@ public enum EventType {
 			case handleItemAddRtoL: 
 			case handleItemAddLtoR: 
 			case handleItemPull: 
-			case handleItemPush: return Handle.getEventParamNameList(etg);
+			case handleItemPush: return Handle.getEventParamNumericValueNameList(etg);
 			case weaponLeftStab: 
 			case weaponLeftStroke: 
 			case weaponLeftBackhand: 
@@ -546,7 +546,7 @@ public enum EventType {
 			case punchLeftFistUpward: 
 			case punchRightFistStraight: 
 			case punchRightFistSideways: 
-			case punchRightFistUpward: return Attack.getEventParamNameList(etg);
+			case punchRightFistUpward: return Attack.getEventParamNumericValueNameList(etg);
 			case listenToStatement: 
 			case listenToQuestion: 
 			case listenToInstruction: 

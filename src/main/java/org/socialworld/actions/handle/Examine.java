@@ -13,6 +13,7 @@ import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.EventTypeGeneral;
 import org.socialworld.objects.SimulationObject;
+import org.socialworld.tools.ListOperations;
 
 public class Examine extends ActionPerformer {
 
@@ -46,18 +47,24 @@ public class Examine extends ActionPerformer {
 		switch (mode) {
 		case look:
 //	 		result.add(Value.VALUE_BY_NAME_EVENT_TARGET);
-	 		result.addAll(ColourSet.getTotalPortionValueNames(ColourSet.getSetsPropertyName()));
+	 		result.addAll(ListOperations.addPrefixToElements(
+	 				Value.VALUE_BY_NAME_EVENT_TARGET +  "." ,
+	 				ColourSet.getTotalPortionValueNames(ColourSet.getSetsPropertyName())));
 			break;
 		case smell:
 	 		result.add(Value.VALUE_BY_NAME_EVENT_TARGET);
 			break;
 		case taste:
 //	 		result.add(Value.VALUE_BY_NAME_EVENT_TARGET);
-	 		result.addAll(TasteSet.getTotalPortionValueNames(TasteSet.getSetsPropertyName()));
+	 		result.addAll(ListOperations.addPrefixToElements(
+	 				Value.VALUE_BY_NAME_EVENT_TARGET +  "." ,
+	 				TasteSet.getTotalPortionValueNames(TasteSet.getSetsPropertyName())));
 			break;
 		case touch:
 //	 		result.add(Value.VALUE_BY_NAME_EVENT_TARGET);
-	 		result.addAll(MaterialSet.getTotalPortionValueNames(MaterialSet.getSetsPropertyName()));
+	 		result.addAll(ListOperations.addPrefixToElements(
+	 				Value.VALUE_BY_NAME_EVENT_TARGET +  "." ,
+	 				MaterialSet.getTotalPortionValueNames(MaterialSet.getSetsPropertyName())));
 			break;
 		}
  		return result;

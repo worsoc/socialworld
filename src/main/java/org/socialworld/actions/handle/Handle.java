@@ -27,10 +27,12 @@ import java.util.List;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionPerformer;
 import org.socialworld.attributes.PropertyName;
+import org.socialworld.attributes.properties.MaterialSet;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.EventTypeGeneral;
 import org.socialworld.objects.SimulationObject;
+import org.socialworld.tools.ListOperations;
 
 /**
  * German:
@@ -107,6 +109,55 @@ public class Handle extends ActionPerformer {
  		return result;
  	}
 
+	public static List<String> getEventParamNumericValueNameList(EventTypeGeneral etg) {
+		ActionMode mode = ActionMode.fromEventTypeGeneral(etg);
+		List<String> result = new ArrayList<String>();
+		switch (mode) {
+		case useItemLeftHand:
+			result.add(Value.VALUE_BY_NAME_ACTION_INTENSITY);
+			result.add(Value.VALUE_BY_NAME_EVENT_INTENSITY);
+	 		result.addAll(ListOperations.addPrefixToElements(
+	 				Value.VALUE_BY_NAME_EVENT_HANDLE_ITEM1 +  "." ,
+	 				MaterialSet.getTotalPortionValueNames(MaterialSet.getSetsPropertyName())));
+			break;
+		case useItemRightHand:
+			result.add(Value.VALUE_BY_NAME_ACTION_INTENSITY);
+			result.add(Value.VALUE_BY_NAME_EVENT_INTENSITY);
+	 		result.addAll(ListOperations.addPrefixToElements(
+	 				Value.VALUE_BY_NAME_EVENT_HANDLE_ITEM1 +  "." ,
+	 				MaterialSet.getTotalPortionValueNames(MaterialSet.getSetsPropertyName())));
+			break;
+		case useTwoItems:
+		case combineItems_AddRightToLeft:
+		case combineItems_AddLeftToRight:
+			result.add(Value.VALUE_BY_NAME_ACTION_INTENSITY);
+			result.add(Value.VALUE_BY_NAME_EVENT_HANDLE_INTENSITY);
+	 		result.addAll(ListOperations.addPrefixToElements(
+	 				Value.VALUE_BY_NAME_EVENT_HANDLE_ITEM1 +  "." ,
+	 				MaterialSet.getTotalPortionValueNames(MaterialSet.getSetsPropertyName())));
+	 		result.addAll(ListOperations.addPrefixToElements(
+	 				Value.VALUE_BY_NAME_EVENT_HANDLE_ITEM2 +  "." ,
+	 				MaterialSet.getTotalPortionValueNames(MaterialSet.getSetsPropertyName())));
+			break;
+
+		case pull:
+			result.add(Value.VALUE_BY_NAME_ACTION_INTENSITY);
+			result.add(Value.VALUE_BY_NAME_EVENT_INTENSITY);
+	 		result.addAll(ListOperations.addPrefixToElements(
+	 				Value.VALUE_BY_NAME_EVENT_HANDLE_ITEM1 +  "." ,
+	 				MaterialSet.getTotalPortionValueNames(MaterialSet.getSetsPropertyName())));
+			break;
+		case push:
+			result.add(Value.VALUE_BY_NAME_ACTION_INTENSITY);
+			result.add(Value.VALUE_BY_NAME_EVENT_INTENSITY);
+	 		result.addAll(ListOperations.addPrefixToElements(
+	 				Value.VALUE_BY_NAME_EVENT_HANDLE_ITEM1 +  "." ,
+	 				MaterialSet.getTotalPortionValueNames(MaterialSet.getSetsPropertyName())));
+			break;
+		}
+ 		return result;
+ 	}
+	
     protected final void choosePropertiesFromPropertyList(ValueArrayList properties) {
     	
     	Value property;

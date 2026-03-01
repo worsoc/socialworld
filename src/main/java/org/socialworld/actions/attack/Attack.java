@@ -28,10 +28,12 @@ import java.util.List;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionPerformer;
 import org.socialworld.attributes.PropertyName;
+import org.socialworld.attributes.properties.MaterialSet;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.EventTypeGeneral;
 import org.socialworld.objects.SimulationObject;
+import org.socialworld.tools.ListOperations;
 
 /**
  * German:
@@ -82,6 +84,12 @@ public class Attack extends ActionPerformer {
 			result.add(PropertyName.simobj_directionChest.toString());
 			result.add(PropertyName.stateSeer_directionView.toString());
 			break;
+		case weaponLeftStab:
+		case weaponRightStab:
+		case weaponLeftStroke:
+		case weaponRightStroke:
+		case weaponLeftBackhand:
+		case weaponRightBackhand:
 		case weaponClub:
 	 		result.add(Value.VALUE_BY_NAME_EVENT_USEWEAPON_DIRECTION);
 			result.add(Value.VALUE_BY_NAME_ACTION_INTENSITY);
@@ -89,6 +97,36 @@ public class Attack extends ActionPerformer {
 			result.add(Value.VALUE_BY_NAME_EVENT_WEAPON);
 			result.add(PropertyName.simobj_directionChest.toString());
 			result.add(PropertyName.stateSeer_directionView.toString());
+			break;
+		}
+		return result;
+ 	}
+ 
+ 	public static List<String> getEventParamNumericValueNameList(EventTypeGeneral etg) {
+		ActionMode mode = ActionMode.fromEventTypeGeneral(etg);
+ 		List<String> result = new ArrayList<String>();
+		switch (mode) {
+		case punchLeftFistStraight:
+		case punchRightFistStraight:
+		case punchLeftFistSideways:
+		case punchRightFistSideways:
+		case punchLeftFistUpward:
+		case punchRightFistUpward:
+			result.add(Value.VALUE_BY_NAME_ACTION_INTENSITY);
+			result.add(Value.VALUE_BY_NAME_EVENT_PUNCH_INTENSITY);
+			break;
+		case weaponLeftStab:
+		case weaponRightStab:
+		case weaponLeftStroke:
+		case weaponRightStroke:
+		case weaponLeftBackhand:
+		case weaponRightBackhand:
+		case weaponClub:
+			result.add(Value.VALUE_BY_NAME_ACTION_INTENSITY);
+			result.add(Value.VALUE_BY_NAME_EVENT_USEWEAPON_INTENSITY);
+	 		result.addAll(ListOperations.addPrefixToElements(
+	 				Value.VALUE_BY_NAME_EVENT_WEAPON +  "." ,
+	 				MaterialSet.getTotalPortionValueNames(MaterialSet.getSetsPropertyName())));
 			break;
 		}
 		return result;

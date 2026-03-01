@@ -34,6 +34,7 @@ import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.EventTypeGeneral;
 import org.socialworld.objects.SimulationObject;
+import org.socialworld.tools.ListOperations;
 
 /**
  * German:
@@ -86,15 +87,24 @@ public class BodilyFunction extends ActionPerformer {
 	 		break;
 		case drink:
 //	 		result.add(Value.VALUE_BY_NAME_EVENT_BF_ITEMDRINK);
-	 		result.addAll(NutrientSet.getTotalPortionValueNames(NutrientSet.getSetsPropertyName()));
-	 		result.addAll(MaterialSet.getTotalPortionValueNames(MaterialSet.getSetsPropertyName()));
-	 		result.addAll(TasteSet.getTotalPortionValueNames(TasteSet.getSetsPropertyName()));
+	 		result.addAll(ListOperations.addPrefixToElements(
+	 				Value.VALUE_BY_NAME_EVENT_BF_ITEMDRINK +  "." ,
+	 				TasteSet.getTotalPortionValueNames(TasteSet.getSetsPropertyName())));
+	 		result.addAll(ListOperations.addPrefixToElements(
+	 				Value.VALUE_BY_NAME_EVENT_BF_ITEMDRINK +  "." ,
+	 				NutrientSet.getTotalPortionValueNames(NutrientSet.getSetsPropertyName())));
 	 		break;
 		case eat:
 	 		//result.add(Value.VALUE_BY_NAME_EVENT_BF_ITEMEAT);
-	 		result.addAll(NutrientSet.getTotalPortionValueNames(NutrientSet.getSetsPropertyName()));
-	 		result.addAll(MaterialSet.getTotalPortionValueNames(MaterialSet.getSetsPropertyName()));
-	 		result.addAll(TasteSet.getTotalPortionValueNames(TasteSet.getSetsPropertyName()));
+	 		result.addAll(ListOperations.addPrefixToElements(
+	 				Value.VALUE_BY_NAME_EVENT_BF_ITEMEAT +  "." ,
+	 				NutrientSet.getTotalPortionValueNames(NutrientSet.getSetsPropertyName())));
+	 		result.addAll(ListOperations.addPrefixToElements(
+	 				Value.VALUE_BY_NAME_EVENT_BF_ITEMEAT +  "." ,
+	 				TasteSet.getTotalPortionValueNames(TasteSet.getSetsPropertyName())));
+	 		result.addAll(ListOperations.addPrefixToElements(
+	 				Value.VALUE_BY_NAME_EVENT_BF_ITEMEAT +  "." ,
+	 				MaterialSet.getTotalPortionValueNames(MaterialSet.getSetsPropertyName())));
 	 		break;
 		case piss:
 	 		break;
