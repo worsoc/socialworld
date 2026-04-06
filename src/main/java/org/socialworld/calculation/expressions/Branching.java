@@ -197,7 +197,7 @@ public class Branching extends Expression {
 		// the operator for comparison (here always in data type floating point
 		String operator = conditionElements[1];
 		
-		// the value the event's property is compared to (here always type floating point
+		// the value the function result is compared to (here always type floating point
 		String value = conditionElements[2];
 		
 		Expression calculateFuntionResult = Calculate.getCalculateExpression(functionDescription,  Value.VALUE_NAME_UNUSED_BECAUSE_TEMPORARY); 
@@ -259,7 +259,7 @@ public class Branching extends Expression {
 		
 		String operator = conditionElements[2];
 		
-		// the value the event's property is compared to
+		// the value the state's property is compared to
 		String value = conditionElements[3];
 		
 		Expression getValue = new GetValue(token, usablePermission, getValuePath, Value.VALUE_NAME_UNUSED_BECAUSE_TEMPORARY);

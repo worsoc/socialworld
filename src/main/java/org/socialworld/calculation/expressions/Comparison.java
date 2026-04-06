@@ -40,4 +40,13 @@ public class Comparison extends Expression {
 
 	}
 	
+	public String toString() {
+		String result;
+	
+		result = getOperation().name() + "(" + getOperatorToString() + ", " + getExpressionToString(1) + ", " + getExpressionToString(2) + ")" ;
+
+		return result;
+	}
+
+	
 }

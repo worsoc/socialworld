@@ -146,7 +146,6 @@ public class Expression implements IObjectReceiver{
 	public void setExpression3(Expression expression) {
 		if (!isValid) this.expression3 = expression;
 	}
-
 	
 	public void setTrueExpression(Expression expressionForTrue) {
 		if (!isValid) setExpression2(expressionForTrue);
@@ -156,6 +155,24 @@ public class Expression implements IObjectReceiver{
 		if (!isValid) setExpression3(expressionForFalse);
 	}
 
+	protected String getExpressionToString(int nrExp) {
+		switch (nrExp) {
+		case 1: return this.expression1.toString();
+		case 2: return this.expression2.toString();
+		case 3: return this.expression3.toString();
+		default: return "Nothing";
+		}
+	}
+
+	protected String getOperatorToString() {
+		if (this.operator != null) {
+			return this.operator.toString();
+		}
+		else {
+			return "Nothing";
+		}
+	}
+	
 	public void setValue(Value value) {
 		if (!isValid) this.value = value;
 	}
