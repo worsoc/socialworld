@@ -5,7 +5,7 @@ plugins {
 }
 
 tasks.withType(JavaCompile) {
-  options.release = 8
+  options.release = 21
 }
 
 repositories {
@@ -16,6 +16,7 @@ dependencies {
   implementation 'org.mariadb.jdbc:mariadb-java-client:3.1.4'
   implementation 'io.github.classgraph:classgraph:4.8.162'
   implementation 'com.google.code.gson:gson:2.11.0'
+  implementation 'org.slf4j:slf4j-simple:1.7.36'
 
   testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.3'
   testImplementation 'org.assertj:assertj-core:3.24.2'

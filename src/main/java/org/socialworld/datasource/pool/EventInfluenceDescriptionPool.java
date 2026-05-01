@@ -120,7 +120,6 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 		}
 		allLines.add(lines4EventType);
 		
-
 		createExpressions(allLines);
 		
 	}

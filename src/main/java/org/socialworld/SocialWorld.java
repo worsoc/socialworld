@@ -59,7 +59,8 @@ public class SocialWorld  {
 	
 	public static void main(String[] args)
 	{
-				
+		//System.out.println("Headless: " + java.awt.GraphicsEnvironment.isHeadless());
+	
 		visualizeSimulation = new SimVisual();
 		visualizeSimulation.show();
 

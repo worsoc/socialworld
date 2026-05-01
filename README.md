@@ -4,11 +4,24 @@ SocialWorld is a software project for simulation people's social behaviour. Ther
 
 ![Project Status](https://github.com/worsoc/socialworld/actions/workflows/build-gradle-project.yml/badge.svg?event=push)
 
+## Prerequisites
+
+* **Java SDK 21** or higher.
+* **X11 / Graphical Environment** (The simulation requires a display to run the GUI).
+
 ## How to start
 
 1. Clone the project with `git clone https://github.com/worsoc/socialworld.git`
 1. Build the project with `./gradlew build`
 1. Run the project with `./gradlew run`
+
+### With Eclipse Gradle Project
+
+This is a **Gradle Project**. The recommended way to develop is using the Eclipse Gradle integration:
+
+1. In Eclipse, go to **File -> Import... -> Gradle -> Existing Gradle Project**.
+2. Select the project root folder.
+3. This automatically manages all dependencies and the Java 21 build path.
 
 ### With Eclipse
 
@@ -31,6 +44,10 @@ It's a good advice to have your workspace not in the project folder but outside.
 ### With VSCode
 
 Install the recommended plugins from `.vscode/extensions.json`.
+
+## License
+
+This project is licensed under the **GNU General Public License v3.0 or later**. See the [LICENSE](LICENSE) file for details.
 
 ## How to contribute
 

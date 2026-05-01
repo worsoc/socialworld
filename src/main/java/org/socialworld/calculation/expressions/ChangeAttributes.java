@@ -66,6 +66,8 @@ public class ChangeAttributes extends Branching {
 			setOperation(Expression_Function.branching);
 
 			setValid();
+			
+			System.out.println(this.toString());
 		}
 		
 	}

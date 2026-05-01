@@ -17,3 +17,6 @@ bin
 .settings
 .project
 .classpath
+
+# Ignore lib folder
+lib/

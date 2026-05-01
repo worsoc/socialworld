@@ -72,6 +72,7 @@ public class CreateActionExpression extends Branching {
 			setOperation(Expression_Function.branching);
 
 			setValid();
+			
 		}
 		else {
 			System.out.println("CreateActionExpression.constructor(): entrys ist leer!");
