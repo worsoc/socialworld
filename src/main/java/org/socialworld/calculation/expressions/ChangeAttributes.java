@@ -67,7 +67,6 @@ public class ChangeAttributes extends Branching {
 
 			setValid();
 			
-			System.out.println(this.toString());
 		}
 		
 	}
