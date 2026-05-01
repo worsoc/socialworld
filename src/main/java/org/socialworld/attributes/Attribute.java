@@ -24,6 +24,12 @@ package org.socialworld.attributes;
 import java.util.List;
 import java.util.ArrayList;
 
+import java.util.Set;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.HashMap;
+
 /**
  * The enumeration Attribute holds all attribute names and collects an index for every
  * attribute. So an attribute is addressable in arrays.
@@ -41,6 +47,35 @@ public enum Attribute {
 	 * of attribute arrays.
 	 */
 	public static final int NUMBER_OF_ATTRIBUTES = 9;
+	
+	// static caches
+    private static final Set<String> UPPERCASE_NAMES;
+    private static final Set<String> LOWERCASE_NAMES;
+    private static final Map<Integer, Attribute> INDEX_MAP;
+    private static final List<String> CACHED_NAME_LIST;
+
+    static {
+        Set<String> upper = new HashSet<>();
+        Set<String> lower = new HashSet<>();
+        Map<Integer, Attribute> indices = new HashMap<>();
+        List<String> list = new ArrayList<>();
+
+        for (Attribute a : Attribute.values()) {
+            String name = a.toString();
+            if (a != ignore) {
+                upper.add(name.toUpperCase());
+                lower.add(name.toLowerCase());
+                list.add(name);
+            }
+            indices.put(a.getIndex(), a);
+        }
+
+        UPPERCASE_NAMES = Collections.unmodifiableSet(upper);
+        LOWERCASE_NAMES = Collections.unmodifiableSet(lower);
+        INDEX_MAP = Collections.unmodifiableMap(indices);
+        CACHED_NAME_LIST = Collections.unmodifiableList(list);
+    }
+	
 	
 	private int arrayIndex;
 
@@ -66,27 +101,32 @@ public enum Attribute {
 	 * @return attribute name
 	 */
 	public static Attribute getAttributeName(int arrayIndex) {
-		for (Attribute attribute : Attribute.values())
-			if (attribute.arrayIndex == arrayIndex)
-				return attribute;
-		return ignore;
+        return INDEX_MAP.getOrDefault(arrayIndex, ignore);
 	}
-	
+
+	public static boolean isAttributeName(String name) {
+	        return name != null && UPPERCASE_NAMES.contains(name.toUpperCase());
+	}
+
+    public static boolean isUpperAttributeName(String name) {
+        return name != null && UPPERCASE_NAMES.contains(name);
+    }
+
+    public static boolean isLowerAttributeName(String name) {
+        return name != null && LOWERCASE_NAMES.contains(name);
+    }
+
 	public static Attribute fromName(String name) {
-		for (Attribute attribute : Attribute.values())
-			if (attribute.toString().toUpperCase().equals(name.toUpperCase())) {
-				return attribute;
-			}
-		return null;
+        if (name == null) return null;
+        try {
+            return Attribute.valueOf(name.toLowerCase());
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
 	}
 
 	public static List<String> getNameList() {
-		List<String> nameList = new ArrayList<String>();
-		for (Attribute elem : Attribute.values()) {
-			if (elem == ignore) continue;
-			nameList.add(elem.toString());
-		}
-		return nameList;
+        return CACHED_NAME_LIST;
 	}
 	
 	public String toString() {

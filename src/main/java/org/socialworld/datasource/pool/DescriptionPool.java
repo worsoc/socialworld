@@ -117,7 +117,7 @@ public abstract class DescriptionPool {
 		
 		index = mainIndex *  rangeSecondIndex + secondIndex ;
 		
-		if (index >= 0 & sizeDescriptionsArray > index) {	
+		if (index >= 0 && sizeDescriptionsArray > index) {	
 			description = descriptions[index];
 		}
 		

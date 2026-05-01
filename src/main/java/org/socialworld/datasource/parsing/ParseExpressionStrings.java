@@ -21,19 +21,37 @@
 */
 package org.socialworld.datasource.parsing;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
+
 public class ParseExpressionStrings {
 
+    public static final Pattern TAG_PATTERN = Pattern.compile("<([^/ >]+)>");
+
+    private static final Map<String, String[]> tagCache = new ConcurrentHashMap<>();
+
 	public static String getTagValue(String text, String tagName) {
-		
-		String openTag = "<" + tagName + ">";
-		String closeTag = "</" + tagName + ">";
-		
-		int posOpenTag = text.indexOf(openTag);
-		int posCloseTag = text.indexOf(closeTag);
+	
+        if (text == null || text.isEmpty()) return "";
+
+        String[] tags = tagCache.computeIfAbsent(tagName, name -> 
+        	new String[] { "<" + name + ">", "</" + name + ">" }
+        		);
+    
+	    String openTag = tags[0];
+	    String closeTag = tags[1];
+	
+        int posOpenTag = text.indexOf(openTag);
+        if (posOpenTag == -1) return ""; 
+
+        int posValue =  posOpenTag + openTag.length();
+        int posCloseTag = text.indexOf(closeTag, posValue);
+	    
 		
 		String tagValue;
-		if ((posOpenTag >= 0) && (posCloseTag >= 0)) 		
-			tagValue = text.substring(posOpenTag + openTag.length(), posCloseTag);
+		if (posCloseTag >= 0)	
+			tagValue = text.substring(posValue, posCloseTag);
 		else
 			tagValue = "";
 		
@@ -43,22 +61,20 @@ public class ParseExpressionStrings {
 	
 	
 	public static String[] getTagValue(String text, String[] tagNames) {
+	
+	    if (text == null || text.isEmpty()) return new String[] {"", ""};
+
 		
-		String tagValue;
-		String[] result = {"",""}; 
-		
-		for (int i = 0; i < tagNames.length; i++ ) {
-			
-			tagValue = getTagValue(text, tagNames[i]);
-			
-			if (tagValue.length() > 0) {
-				result[0] = tagNames[i];
-				result[1] = tagValue;
-				break;
-			}
+	    for (String tagName : tagNames) {
+	        if (text.contains(tagName)) { 
+	            String tagValue = getTagValue(text, tagName);
+	            if (!tagValue.isEmpty()) {
+	                return new String[] { tagName, tagValue };
+	            }
+	        }
 		}
-		
-		return result;
+
+	    return new String[] {"", ""};
 	}
 	
 }

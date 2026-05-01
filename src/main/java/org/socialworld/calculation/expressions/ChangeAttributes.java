@@ -22,6 +22,7 @@
 package org.socialworld.calculation.expressions;
 
 import java.util.List;
+import java.util.regex.Matcher;
 
 import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.PropertyName;
@@ -104,44 +105,47 @@ public class ChangeAttributes extends Branching {
 		SetAttributeValue expressionSetAttributeValue;
 		
 		String[] functionTags = {"Const", "Table", "VSPE", "MX+N","MLogX+N", "MExpX+N"};
-		String[] function;
 		
 		int posDann = line.indexOf("DANN");
 		
 		partDANN = line.substring(posDann);
-				
-		String tag;
-		String tagValue;
+	
+	    Matcher matcher = ParseExpressionStrings.TAG_PATTERN.matcher(partDANN);
+
 		
-		for (Attribute attribute : Attribute.values()) {
-			
-			tag = attribute.toString().toUpperCase();
-			tagValue = ParseExpressionStrings.getTagValue(partDANN, tag);
-			
-			if (tagValue.length() > 0)
-			{
-				
-				function = ParseExpressionStrings.getTagValue(tagValue, functionTags);
-				
-				expressionCalculateNewAttributeValue = getFunctionExpression(function);
-				
-				expressionSetAttributeValue = 
+		
+	    while (matcher.find()) {
+
+	        String tagName = matcher.group(1); 
+	
+	        if (Attribute.isUpperAttributeName(tagName)) {
+		
+	            Attribute attribute = Attribute.fromName(tagName);
+	
+	            String tagContent = ParseExpressionStrings.getTagValue(partDANN, tagName);
+		
+	            if (!tagContent.isEmpty()) {
+
+	                String[] function = ParseExpressionStrings.getTagValue(tagContent, functionTags);
+
+					expressionCalculateNewAttributeValue = getFunctionExpression(function);
+	
+					expressionSetAttributeValue = 
 							new SetAttributeValue(attribute, 
 									new GetArgumentByName(PropertyName.simobj_attributeArray.toString()), 
 									expressionCalculateNewAttributeValue);
 				
-				if (isFirstExpression) {
-					replacementChain = new Replacement(PropertyName.simobj_attributeArray.toString(), expressionSetAttributeValue);
-					isFirstExpression = false;
-				}
-				else {
-					sequence[0] = replacementChain;
-					sequence[1] = new Replacement(PropertyName.simobj_attributeArray.toString(), expressionSetAttributeValue);
-					replacementChain = new Sequence(sequence);
-
-				}
-					
-			}
+					if (isFirstExpression) {
+						replacementChain = new Replacement(PropertyName.simobj_attributeArray.toString(), expressionSetAttributeValue);
+						isFirstExpression = false;
+					}
+					else {
+						sequence[0] = replacementChain;
+						sequence[1] = new Replacement(PropertyName.simobj_attributeArray.toString(), expressionSetAttributeValue);
+						replacementChain = new Sequence(sequence);
+					}
+	            }
+	        }
 			
 		}
 		
@@ -168,5 +172,6 @@ public class ChangeAttributes extends Branching {
 		return result;
 		
 	}
+	
 
 }

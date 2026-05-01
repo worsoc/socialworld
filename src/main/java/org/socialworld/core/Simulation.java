@@ -47,7 +47,7 @@ import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.collections.ObjectByPositionSearch;
 
-
+import org.socialworld.datasource.pool.EventInfluenceDescriptionPool;
 
 /**
  * The class Simulation holds all simulation objects and runs the simulation
@@ -265,6 +265,7 @@ public class Simulation extends SocialWorldThread {
 		
 		System.out.println("Ende Erstellen Objekte "+ ActualTime.asTime().toString());
 
+		EventInfluenceDescriptionPool.getInstance();
 	}
 	
 	public void stopSimulation() {

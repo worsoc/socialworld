@@ -24,6 +24,7 @@ package org.socialworld.datasource.pool;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.attributes.Attribute;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.descriptions.DescriptionBase;
 import org.socialworld.calculation.descriptions.EventInfluenceDescription;
@@ -99,31 +100,106 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 	}
 	
 	private void initializeWithTestData_Lines() {
-		
-		List<Lines> allLines;
-		allLines = new ArrayList<Lines>();
-		
-		Lines4EventType lines4EventType;
+	    List<Lines> allLines = new ArrayList<Lines>();
+	    Lines4EventType lines4EventType;
 
-		int influenceType;
+	    int totalRulesGenerated = 0;
 
-		lines4EventType = new Lines4EventType(EventType.candidatesMoveWalk, rangeSecondIndex);
-		for ( influenceType = 0; influenceType < rangeSecondIndex; influenceType++) {
-			lines4EventType.add(influenceType, 0, "WENN mood >= 45 & mood < 52  DANN <MOOD><MX+N>0;1.2;23</MX+N></MOOD><COURAGE><MX+1>1;1;1</MX+N></COURAGE>");
-			lines4EventType.add(influenceType, 1, "WENN mood >= 70 & mood < 85  DANN <MOOD><MX+N>0;0.9;-10</MX+N></MOOD><COURAGE><MX+1>1;1;-1</MX+N></COURAGE>");
-		}
-		allLines.add(lines4EventType);
-		
-		lines4EventType = new Lines4EventType(EventType.candidatesMoveWalk, rangeSecondIndex);
-		for ( influenceType = 0; influenceType < rangeSecondIndex; influenceType++) {
-			lines4EventType.add(influenceType, 0, "WENN power >= 80 & morals >= 60 DANN <POWER><MX+N>8;1;-1</MX+N></POWER><MORALS><MX+1>2;1;-1</MX+N></MORALS>");
-		}
-		allLines.add(lines4EventType);
-		
-		createExpressions(allLines);
-		
+	    // 1. Get Runtime instance and trigger GC for a clean baseline
+	    Runtime runtime = Runtime.getRuntime();
+	    runtime.gc(); 
+	    long memoryBefore = runtime.totalMemory() - runtime.freeMemory();
+
+	    // 2. Capture start time and current wall-clock time
+	    long startTime = System.currentTimeMillis();
+	    java.time.LocalDateTime now = java.time.LocalDateTime.now();
+	    java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+	    System.out.println("--- Starting Rule Generation for EventInfluenceDescriptionPool ---");
+	    
+	    for (EventType type : EventType.values()) {
+	        if (type == EventType.nothing) continue;
+
+	        // rangeSecondIndex is the number of influence types (usually 100)
+	        lines4EventType = new Lines4EventType(type, rangeSecondIndex);
+
+	        // Evaluate event nature for meaningful value generation
+	        String typeName = type.name().toLowerCase();
+	        boolean isAggressive = typeName.contains("punch") || typeName.contains("attack") || typeName.contains("weapon");
+	        boolean isUnpleasant = typeName.contains("scream") || typeName.contains("piss") || typeName.contains("shit");
+
+	        for (int influenceType = 0; influenceType < rangeSecondIndex; influenceType++) {
+	            
+	            // 1. Condition Attribute (The trigger for the "IF" part, e.g., hunger)
+	            Attribute condAttr = Attribute.getAttributeName(influenceType % 9);
+	            
+	            // 2. Target Attribute (The one that will be modified, e.g., morals)
+	            // Offset by 2 to ensure it's usually different from condAttr
+	            Attribute targetAttr = Attribute.getAttributeName((influenceType + 2) % 9);
+	            String targetTag = targetAttr.toString().toUpperCase();
+
+	            // 3. Calculation Basis (The "X" in MX+N, e.g., courage)
+	            // Offset by 5 to create cross-attribute dependencies
+	            int basisAttrIndex = (influenceType + 5) % 9;
+
+	            // 4. Value Logic and Range
+	            int seed = type.ordinal() + influenceType;
+	            int min = 20 + (seed % 40); // Thresholds between 20 and 60
+	            int max = min + 20;
+
+	            // Linear parameters: m (slope) and n (offset)
+	            double m = 0.4 + ((seed % 10) * 0.2); // m between 0.4 and 2.4
+	            double n = -10.0 + (seed % 20);      // n between -10.0 and +10.0
+	            
+	            // Apply qualitative adjustments based on event nature
+	            if (isAggressive || isUnpleasant) {
+	                n -= 15.0; // Negative events cause significantly larger drops
+	                m *= 0.7;  // And dampen positive growth
+	            }
+
+	            // 5. Construct line: WENN <cond> >= <min> & <cond> < <max> DANN <TARGET><MX+N>basisIndex;m;n</MX+N></TARGET>
+	            String line = String.format(
+	                "WENN %s >= %d & %s < %d DANN <%s><MX+N>%d;%.2f;%.2f</MX+N></%s>",
+	                condAttr.toString(), min, condAttr.toString(), max, 
+	                targetTag, basisAttrIndex, m, n, targetTag
+	            );
+
+	            // Add the generated rule to the event type's collection
+	            lines4EventType.add(influenceType, 0, line);
+
+	            totalRulesGenerated++;
+
+	            // OPTIONAL: Log a sample rule for every 500th generation to keep console clean
+	            if (totalRulesGenerated % 500 == 0) {
+	                System.out.println(String.format("[Sample %d] Type: %s | Rule: %s", totalRulesGenerated, type.name(), line));
+	            }
+	        
+	        }
+	        allLines.add(lines4EventType);
+	    }
+
+	    // Capture time AFTER string generation but BEFORE parsing
+	    long afterGenTime = System.currentTimeMillis();
+	    System.out.println(String.format("--- Strings generated in %d ms. Now parsing expressions... ---", (afterGenTime - startTime)));
+	    
+	    // Finalize by creating expressions from the collected lines
+	    createExpressions(allLines);
+	    
+	    // Capture final time
+	    long endTime = System.currentTimeMillis();
+	    System.out.println("--- Finished: " + new java.util.Date() + " ---");
+	    System.out.println(String.format("--- Total duration (Gen + Parse): %d ms ---", (endTime - startTime)));
+
+	    long memoryAfter = runtime.totalMemory() - runtime.freeMemory();
+	    long memoryUsedKBytes = (memoryAfter - memoryBefore) / 1024;
+	    double memoryUsedMBytes = memoryUsedKBytes / 1024.0;
+
+	    System.out.println(String.format("--- Memory Check ---"));
+	    System.out.println(String.format("Rules in Memory: %d", totalRulesGenerated));
+	    System.out.println(String.format("Memory Consumed: %.2f MB (%d KB)", memoryUsedMBytes, memoryUsedKBytes));
+	    System.out.println(String.format("Avg per Rule: %.1f Bytes", (double)(memoryAfter - memoryBefore) / totalRulesGenerated));
+
 	}
-	
 
 
 	
