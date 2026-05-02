@@ -40,11 +40,34 @@ public class FunctionMXplusN extends FunctionBase {
 	private float m;
 	private Value n;
 	
-	
-	private boolean useFloatingPointCalculation = false;
-	
 	// special floatingpoint
+	private boolean useFloatingPointCalculation = false;
 	private float n_as_float;
+
+	
+	private static final java.util.Map<String, FunctionMXplusN> pool = new java.util.concurrent.ConcurrentHashMap<>();
+	public static int getPoolSize() {
+	    return pool.size();
+	}
+	
+	public static FunctionMXplusN getInstance(Type type, float m, float n, float min, float max) {
+	    // 1. Kappung auf 2 Nachkommastellen für höhere Cache-Treffer
+	    float rm = Math.round(m * 100.0f) / 100.0f;
+	    float rn = Math.round(n * 100.0f) / 100.0f;
+	    float rMin = Math.round(min * 100.0f) / 100.0f;
+	    float rMax = Math.round(max * 100.0f) / 100.0f;
+
+	    // 2. Eindeutiger Key (Typ + Parameter)
+	    String key = type.getIndex() + ":" + rm + ":" + rn + ":" + rMin + ":" + rMax;
+
+	    // 3. Bestehende Instanz nutzen oder neue erstellen
+	    return pool.computeIfAbsent(key, k -> new FunctionMXplusN(type, rm, rn, rMin, rMax));
+	}	
+	
+	
+	
+	
+	
 	
 	//special constructor for float values
 	public FunctionMXplusN( float m, float n) {
@@ -111,8 +134,9 @@ public class FunctionMXplusN extends FunctionBase {
 					resultFloat = 0;
 				}
 				else {
-					resultFloat = calculateFloatingPoint((float) calculation.createValue(Type.floatingpoint, (float) (o)).getObject(Type.floatingpoint));
-				}
+// muss wohl nicht so kompluiertsein:					resultFloat = calculateFloatingPoint((float) calculation.createValue(Type.floatingpoint, (float) (o)).getObject(Type.floatingpoint));
+					resultFloat = calculateFloatingPoint((float) o);
+			}
 
 				
 				if (type == Type.floatingpoint)  {

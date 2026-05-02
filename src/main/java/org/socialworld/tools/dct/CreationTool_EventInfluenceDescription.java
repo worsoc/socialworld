@@ -1,1012 +1,343 @@
-/*
-* Social World
-* Copyright (C) 2025  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
 package org.socialworld.tools.dct;
 
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.JButton;
-
-import java.awt.Color;
-import java.awt.EventQueue;
-import java.awt.GridLayout;
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.tree.*;
+import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.Enumeration;
+import java.util.function.Consumer;
 
+import org.socialworld.core.EventType;
 import org.socialworld.attributes.Attribute;
-import org.socialworld.calculation.Expression_Function;
 import org.socialworld.calculation.FunctionArgType;
 import org.socialworld.calculation.descriptions.EventInfluenceDescription;
-import org.socialworld.core.EventType;
-import org.socialworld.datasource.parsing.Json;
-import org.socialworld.datasource.parsing.JsonEventInfluenceDescription;
-import org.socialworld.datasource.parsing.JsonEventInfluencesAttributeDescription;
-import org.socialworld.datasource.parsing.JsonFunctionArg;
-import org.socialworld.datasource.parsing.JsonTerm;
-import org.socialworld.datasource.parsing.JsonValue;
-import org.socialworld.datasource.pool.GaussPoolInfluenceType;
+import org.socialworld.calculation.Expression_Function;
+import org.socialworld.calculation.Expression_ConditionOperator;
+import org.socialworld.datasource.parsing.*;
 import org.socialworld.datasource.tablesPool.TablePoolEID;
 
-public class CreationTool_EventInfluenceDescription {
-	
-	private class MyComboBox<String> extends JComboBox<String> {
-		private int index;
-		
-		
-		private MyComboBox(int index) {
-			super();
-			this.index = index;
-		}
-		
-	}
-	
-	private class MyTextArea extends JTextArea
-	{
-		private MyTextArea(String initialText) {
-			setEditable(false);        // Verhindert Bearbeitung
-			setCursor(null);          // Entfernt den Text-Cursor
-			setOpaque(false);          // Macht den Hintergrund transparent
-			setFocusable(false);       // Verhindert Fokus
-			setLineWrap(true);         // Aktiviert Zeilenumbruch
-			setWrapStyleWord(true);    // Umbruch nur an Wortgrenzen
+/**
+ * SocialWorld Logic Designer - Final Production Build
+ * Visual Node Editor with integrated JSON/DB Export and Live-Synchronized UI.
+ */
+public class CreationTool_EventInfluenceDescription extends JFrame {
 
-			setText(initialText);
-		}
-	} 
-	
-	private JFrame frame;
-	
-	JPanel panel3LinesAbove;
-	JPanel panelEventTypeAndInfluenceType;
-	JPanel panelOrderNrAndAttribute;
-	JPanel panelTermUpOrDown;
-	
-	JComboBox<String> chooseEventType;
-	JComboBox<String> chooseInfluenceType;
-	JComboBox<String> chooseOrderNr;
-	JComboBox<String> chooseAttribute;
-	JComboBox<String> chooseTerm;
-	JComboBox<String> chooseFunction;
+    // --- State Variables ---
+    private String currentConditionAttr = "mood";
+    private String currentOperator = ">=";
+    private String currentThreshold = "50";
+    private String currentTargetAttr = "health";
+    private String currentBasisAttr = "power";
+    private String currentM = "1.0";
+    private String currentN = "0.0";
+    private boolean isConstantMode = false;
+    private String currentConstValue = "100";
+    private String currentContext = "Select a Rule";
+    private EventType currentEventType;
+    private int currentInfluenceTypeNr = 0;
 
-	JButton btnTermDown;
-	JButton btnTermUp;
-	JButton btnCreateDescription;
-	JButton btnCreateAttributeDescription;
-	
-	JPanel panelTermsLeftSettingsRight;
-	JPanel panelTerms;
-	JPanel panelSettings;
-	
-	List<JPanel> panelsArguments;
-	List<MyComboBox<String>> listChooseArgumentType;
-	MyComboBox<String> chooseArgType1;
-	MyComboBox<String> chooseArgType2;
-	MyComboBox<String> chooseArgType3;
-	MyComboBox<String> chooseArgType4;
-	List<JPanel> panelsArgumentValue;
-	List<JComboBox<String>> listArgValueAttribute;
-	List<JTextArea> listTextFieldsInputConst;
-	List<JComboBox<String>> listArgTermNr;
-	List<JComboBox<String>> listArgEventProp;
-	
-	List<MyTextArea> termLabels;
-	
-	private boolean argTypeComboBoxesFilled = false;
-	
-	private static EventType eventType;
-	private static int influenceType;  // > 0 ( see TablePoolEID)
-	private static int orderNr;
-	private static String attribute;
-	private static int termNr;
-	
-	private HashMap<Integer, JsonEventInfluencesAttributeDescription> inflAttrDescs = new HashMap<Integer, JsonEventInfluencesAttributeDescription>(); 
-	private HashMap<Integer, JsonTerm> terms = new HashMap<Integer, JsonTerm>();
-	
-	boolean isLoading = false;
-	
-	/**
-	 * Create the application.
-	 */
-	public	CreationTool_EventInfluenceDescription() {
-		initialize();
-	}
+    // --- UI Components ---
+    private JTree eventNavigator;
+    private JPanel logicCanvas;
+    private JPanel propertyInspector;
+    private JTextField searchField;
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize() {
-		
-		
-		
-		panelEventTypeAndInfluenceType = new JPanel();
-		panelEventTypeAndInfluenceType.setLayout(new GridLayout(1,5,30,0));
-		panelEventTypeAndInfluenceType.setBackground(Color.ORANGE);
-
-		JLabel lblEventType = new JLabel("EventType:");
-		panelEventTypeAndInfluenceType.add(lblEventType);
-	
-		chooseEventType = new JComboBox<String>();
-		panelEventTypeAndInfluenceType.add(chooseEventType);
-
-		JLabel lblInfluenceType = new JLabel("InfluenceType:");
-		panelEventTypeAndInfluenceType.add(lblInfluenceType);
-
-		chooseInfluenceType = new JComboBox<String>();
-		panelEventTypeAndInfluenceType.add(chooseInfluenceType);
-
-		btnCreateDescription 		 = new JButton("Create Desc");
-		btnCreateDescription.addActionListener(new ActionListener() { 
-			  public void actionPerformed(ActionEvent e) { 
-			    btnCreateDescriptionPressed();
-			  } 
-			} );
-		panelEventTypeAndInfluenceType.add(btnCreateDescription);
-		
-		
-		
-		panelOrderNrAndAttribute = new JPanel();
-		panelOrderNrAndAttribute.setLayout(new GridLayout(1,5,30,0));
-		panelOrderNrAndAttribute.setBackground(Color.WHITE);
-		
-		JLabel lblOrderNr = new JLabel("OrderNr:");
-		panelOrderNrAndAttribute.add(lblOrderNr);
-	
-		chooseOrderNr = new JComboBox<String>();
-		panelOrderNrAndAttribute.add(chooseOrderNr);
-
-		JLabel lblAttribute = new JLabel("Attribut:");
-		panelOrderNrAndAttribute.add(lblAttribute);
-
-		chooseAttribute = new JComboBox<String>();
-		panelOrderNrAndAttribute.add(chooseAttribute);
-		
-		btnCreateAttributeDescription 		 = new JButton("Create Attrib Desc");
-		btnCreateAttributeDescription.addActionListener(new ActionListener() { 
-			  public void actionPerformed(ActionEvent e) { 
-				  btnCreateAttributeDescriptionPressed();
-			  } 
-			} );
-		panelOrderNrAndAttribute.add(btnCreateAttributeDescription);
-		
-		
-		
-		panelTermUpOrDown = new JPanel();
-		panelTermUpOrDown.setLayout(new GridLayout(1,4,10,0));
-		panelTermUpOrDown.setBackground(Color.GRAY);
-
-		chooseTerm = new JComboBox<String>();
-		panelTermUpOrDown.add(chooseTerm);
-
-		chooseFunction = new JComboBox<String>();
-		panelTermUpOrDown.add(chooseFunction);
-		
-		btnTermUp = new JButton("Up");
-		btnTermUp.addActionListener(new ActionListener() { 
-			  public void actionPerformed(ActionEvent e) { 
-				  btnTermUpPressed();
-			  } 
-			} );
-		panelTermUpOrDown.add(btnTermUp);
-
-		btnTermDown = new JButton("Down");
-		btnTermDown.addActionListener(new ActionListener() { 
-			  public void actionPerformed(ActionEvent e) { 
-				  btnTermDownPressed();
-			  } 
-			} );
-		panelTermUpOrDown.add(btnTermDown);
-		
-		
-		
-		panel3LinesAbove = new JPanel();
-		panel3LinesAbove.setLayout(new GridLayout(3,1));
-		panel3LinesAbove.setBackground(Color.PINK);
-		panel3LinesAbove.setPreferredSize(new Dimension(0, 100));
-		panel3LinesAbove.add(panelEventTypeAndInfluenceType);
-		panel3LinesAbove.add(panelOrderNrAndAttribute);
-		panel3LinesAbove.add(panelTermUpOrDown);
-		
-		
-		panelTerms = new JPanel();
-		panelTerms.setLayout(new GridLayout(7,1,5,5));
-		panelTerms.setBackground(Color.BLUE);
-		
-		termLabels = new ArrayList<MyTextArea>(7);
-		for (int i = 1; i <= 7; i++) {
-			MyTextArea label = new MyTextArea("Term " + i);
-			label.setOpaque(true);
-			label.setBackground(Color.GREEN);
-			panelTerms.add(label);
-			termLabels.add(label);
-		}
-		
-		
-		panelTermsLeftSettingsRight = new JPanel();
-		panelTermsLeftSettingsRight.setLayout(new BorderLayout());
-		panelTermsLeftSettingsRight.setBackground(Color.GREEN);
-		panelTermsLeftSettingsRight.add(panelTerms,BorderLayout.CENTER);
-
-		listChooseArgumentType = new ArrayList<MyComboBox<String>>();
-		listTextFieldsInputConst = new ArrayList<JTextArea>();
-		listArgValueAttribute = new ArrayList<JComboBox<String>>();
-		listArgTermNr = new ArrayList<JComboBox<String>>();
-		listArgEventProp = new ArrayList<JComboBox<String>>();
-		panelsArguments = new ArrayList<JPanel>(4);
-		panelsArgumentValue = new ArrayList<JPanel>(4);
-
-		chooseArgType1 = new MyComboBox<String>(0);
-		listChooseArgumentType.add(chooseArgType1);
-		chooseArgType2 = new MyComboBox<String>(1);
-		listChooseArgumentType.add(chooseArgType2);
-		chooseArgType3 = new MyComboBox<String>(2);
-		listChooseArgumentType.add(chooseArgType3);
-		chooseArgType4 = new MyComboBox<String>(3);
-		listChooseArgumentType.add(chooseArgType4);
-
-		for (int i = 0; i < 4; i++) {
-			JPanel panelArgument = new JPanel();
-			panelArgument.setLayout(new BorderLayout());
-			panelArgument.setBackground(Color.YELLOW);
-			
-
-			JTextArea tfValueConst = new JTextArea();
-			listTextFieldsInputConst.add(tfValueConst);
-			
-			JComboBox<String> chooseValueAttribute = new JComboBox<String>();
-			listArgValueAttribute.add(chooseValueAttribute);
-
-			JComboBox<String> chooseValueTermNr = new JComboBox<String>();
-			listArgTermNr.add(chooseValueTermNr);
-
-			JComboBox<String> chooseValueEventTypeProp = new JComboBox<String>();
-			listArgEventProp.add(chooseValueEventTypeProp);
-			
-			JPanel panelArgumenValue = new JPanel();
-			panelArgumenValue.setLayout(new GridLayout(FunctionArgType.count(),2,0,0));
-			panelArgumenValue.setBackground(Color.YELLOW);
-			
-			panelsArgumentValue.add(panelArgumenValue);
-			
-			
-			panelArgument.add(listChooseArgumentType.get(i), BorderLayout.NORTH);
-			panelArgument.add(panelArgumenValue, BorderLayout.CENTER);
-			
-			panelsArguments.add(panelArgument);
-		}
-		
-		panelSettings = new JPanel();
-		panelSettings.setLayout(new GridLayout(4,1,0,0));
-		panelSettings.setBackground(Color.RED);
-		panelSettings.setPreferredSize(new Dimension(800, 0));
-		for (JPanel panelArgument : panelsArguments) {
-			panelSettings.add(panelArgument);
-		}
-		panelTermsLeftSettingsRight.add(panelSettings,BorderLayout.EAST);
-
-		frame = new JFrame();
-		frame.setBounds(50, 50, 1300, 750);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(new BorderLayout());
-		
-		frame.getContentPane().add(panel3LinesAbove,BorderLayout.NORTH);
-
-		frame.getContentPane().add(panelTermsLeftSettingsRight,BorderLayout.CENTER);
-
-		fillComboBoxes();
-	}
-	
-	private void fillComboBoxes() {
-		
-		
-		for (int influenceType = 0; influenceType < GaussPoolInfluenceType.CAPACITY_GPIT_ARRAY; influenceType++) {
-			chooseInfluenceType.addItem(Integer.toString(influenceType));
-		}
-		
-		for (int orderNr = 0; orderNr < 100; orderNr++) {
-			chooseOrderNr.addItem(Integer.toString(orderNr));
-		}
-
-		List<String> entrysComboBoxEventTypes = EventType.getNameList();
-		chooseEventType.addItem("");
-		for(String name : entrysComboBoxEventTypes) {
-			chooseEventType.addItem(name);
-		}
-
-		List<String> entrysComboBoxAttributes = Attribute.getNameList();
-		chooseAttribute.addItem("");
-		for(String name : entrysComboBoxAttributes) {
-			chooseAttribute.addItem(name);
-		}
-
-		for(int termNr = 1; termNr <= 7; termNr++) {
-			chooseTerm.addItem("Term " + termNr);
-		}
-       ActionListener chooseTermActionListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            	chooseTermStateChanged();
-             }
-        };
-        chooseTerm.addActionListener(chooseTermActionListener);
-
-		
-        ActionListener chooseEventTypeActionListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                String eventTypeName = (String) chooseEventType.getSelectedItem();//get the selected item
-                EventType eventType = EventType.fromName(eventTypeName);
-                CreationTool_EventInfluenceDescription.eventType = eventType;
-                chooseEventTypeStateChanged();
-             }
-        };
-        chooseEventType.addActionListener(chooseEventTypeActionListener);
-		
-        ActionListener chooseInfluenceTypeActionListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                String influenceTypeNr = (String) chooseInfluenceType.getSelectedItem();//get the selected item
-                CreationTool_EventInfluenceDescription.influenceType = Integer. parseInt( influenceTypeNr);
-                chooseInfluenceTypeStateChanged();
-               }
-        };
-        chooseInfluenceType.addActionListener(chooseInfluenceTypeActionListener);
-
-        ActionListener chooseOrderNrActionListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                String orderNr = (String) chooseOrderNr.getSelectedItem();//get the selected item
-                CreationTool_EventInfluenceDescription.orderNr = Integer. parseInt( orderNr);
-                chooseOrderNrStateChanged();
-               }
-        };
-        chooseOrderNr.addActionListener(chooseOrderNrActionListener);
-
-        ActionListener chooseAttribActionListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                String attribute = (String) chooseAttribute.getSelectedItem();//get the selected item
-                CreationTool_EventInfluenceDescription.attribute = attribute;
-                chooseAttributeStateChanged();
-               }
-        };
-        chooseAttribute.addActionListener(chooseAttribActionListener);
-
-        ActionListener chooseArgTypeActionListener;
-       	chooseArgTypeActionListener = new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    String argTypeName =  (String) chooseArgType1.getSelectedItem();//get the selected item
-                    FunctionArgType argType = FunctionArgType.fromName(argTypeName);
-                    enableChooseValue(chooseArgType1.index, argType);
-                 }
-            };
-        chooseArgType1.addActionListener(chooseArgTypeActionListener);
-       	chooseArgTypeActionListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String argTypeName =  (String) chooseArgType2.getSelectedItem();//get the selected item
-                FunctionArgType argType = FunctionArgType.fromName(argTypeName);
-                enableChooseValue(chooseArgType2.index, argType);
-             }
-        };
-        chooseArgType2.addActionListener(chooseArgTypeActionListener);
-       	chooseArgTypeActionListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String argTypeName =  (String) chooseArgType3.getSelectedItem();//get the selected item
-                FunctionArgType argType = FunctionArgType.fromName(argTypeName);
-                enableChooseValue(chooseArgType3.index, argType);
-             }
-        };
-        chooseArgType3.addActionListener(chooseArgTypeActionListener);
-       	chooseArgTypeActionListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String argTypeName =  (String) chooseArgType4.getSelectedItem();//get the selected item
-                FunctionArgType argType = FunctionArgType.fromName(argTypeName);
-                enableChooseValue(chooseArgType4.index, argType);
-             }
-        };
-        chooseArgType4.addActionListener(chooseArgTypeActionListener);
-     
-        
-		
-
-		
-		
-
-		List<String> entrysComboBoxFunctions = Expression_Function.getNameList();
-		chooseFunction.addItem("");
-		for(String name : entrysComboBoxFunctions) {
-			chooseFunction.addItem(name);
-		}
-		
-		List<String> entrysComboBoxArgTypes = FunctionArgType.getNameList();
-		for (JComboBox<String> comboBox : listChooseArgumentType) {
-			comboBox.addItem("");
-			for(String name : entrysComboBoxArgTypes) {
-				comboBox.addItem(name);
-			}
-		}
-		argTypeComboBoxesFilled = true;
-		
-		for (JComboBox<String> comboBox : listArgValueAttribute) {
-			for(String name : entrysComboBoxAttributes) {
-				comboBox.addItem(name);
-			}
-		}
-
-		int index = 0;
-		for (JPanel panel : panelsArgumentValue) {
-			panel.add(new JLabel(entrysComboBoxArgTypes.get(0)));
-			panel.add(listTextFieldsInputConst.get(index));
-			panel.add(new JLabel(entrysComboBoxArgTypes.get(1)));
-			panel.add(listArgValueAttribute.get(index));
-			panel.add(new JLabel(entrysComboBoxArgTypes.get(2)));
-			panel.add(listArgEventProp.get(index));
-			panel.add(new JLabel(entrysComboBoxArgTypes.get(3)));
-			panel.add(listArgTermNr.get(index));
-			
-			index++;
-		}
-		
-
-
-
-		
-	}
-	
-	
-	private void highlightTerm(int termNr) {
-		for (int j = 0; j < 4; j++) {
-			JComboBox<String> cb = listArgTermNr.get(j);
-			cb.removeAllItems();
-			for (int i = 1; i < termNr; i++) {
-				cb.addItem("Term " + i);
-			}
-		}
-		for (int i = 1; i <= 7; i++) {
-			termLabels.get(i - 1).setBackground(Color.GREEN);
-		}
-		termLabels.get(termNr - 1).setBackground(Color.BLUE);
-	}
-	
-	private void setTermTexts() {
-		for (int termNr = 1; termNr <= 7; termNr++) {
-			if (this.terms.get(termNr) != null) {
-				termLabels.get(termNr - 1).setText(this.terms.get(termNr).toString());
-			}
-			else {
-				termLabels.get(termNr - 1).setText("not defined");
-			}
-		}
-	}
-	
-	private void fillEventTypePropsComboBox() {
-		List<String> eventPropNames = eventType.getEventNumericParamNameList();
-		for (int j = 0; j < 4; j++) {
-			JComboBox<String> cb = listArgEventProp.get(j);
-			cb.removeAllItems();
-			for (String evPropname  : eventPropNames) {
-				cb.addItem(evPropname);
-			}
-		}
-
-	}
-	
-	public void enableChooseValue(int indexArg, FunctionArgType selectedArgType) {
-		if (selectedArgType != null) {
-			switch (selectedArgType) {
-			case Const:
-				listTextFieldsInputConst.get(indexArg).setEnabled(true);
-				listArgValueAttribute.get(indexArg).setEnabled(false);
-				listArgEventProp.get(indexArg).setEnabled(false);
-				listArgTermNr.get(indexArg).setEnabled(false);
-				return;
-			case Attribute:
-				listTextFieldsInputConst.get(indexArg).setEnabled(false);
-				listArgValueAttribute.get(indexArg).setEnabled(true);
-				listArgEventProp.get(indexArg).setEnabled(false);
-				listArgTermNr.get(indexArg).setEnabled(false);
-				return;
-			case EventPropertyNumericValue:
-				listTextFieldsInputConst.get(indexArg).setEnabled(false);
-				listArgValueAttribute.get(indexArg).setEnabled(false);
-				listArgEventProp.get(indexArg).setEnabled(true);
-				listArgTermNr.get(indexArg).setEnabled(false);
-				return;
-			case TermNr:
-				listTextFieldsInputConst.get(indexArg).setEnabled(false);
-				listArgValueAttribute.get(indexArg).setEnabled(false);
-				listArgEventProp.get(indexArg).setEnabled(false);
-				listArgTermNr.get(indexArg).setEnabled(true);
-				return;
-			}
-		}
-		
-	}
-	
-	private void btnCreateAttributeDescriptionPressed() {
-		saveTerm();
-		JsonEventInfluencesAttributeDescription attribDesc = createEvInfAttrDesc();
-		inflAttrDescs.put(Integer.valueOf(attribDesc.orderNr), attribDesc);
-		
-		StringSelection selection = new StringSelection(attribDesc.toString());
-		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-		clipboard.setContents(selection, selection);
-
-		//infoBox(attribDesc.toString(), "EventInfluencesAttributeDescription");
-	} 
-
-	private void btnCreateDescriptionPressed() {
-		saveTerm();
-		
-		JsonEventInfluencesAttributeDescription attribDesc = createEvInfAttrDesc();
-		inflAttrDescs.put(Integer.valueOf(attribDesc.orderNr), attribDesc);
-
-		JsonEventInfluenceDescription desc = createEvInfDesc();
-		String jsonEID = desc.toString();
-
-		EventInfluenceDescription eid = new EventInfluenceDescription(desc);
-		
-		TablePoolEID table = new TablePoolEID();
-		table.insert(eid.getNrEventType(), eid.getNrInfluenceType(), jsonEID);
-	}
-
-	private void btnTermDownPressed() {
-		
-	}
-
-	private void btnTermUpPressed() {
-		
-	}
-
-	private void chooseEventTypeStateChanged() {
-        fillEventTypePropsComboBox();
-		clearHashmapInflAttrDescs();
-		clearHashmapTerms();
-		loadFromDB();
-	}
-	
-	private void chooseInfluenceTypeStateChanged() {
-		clearHashmapInflAttrDescs();
-		clearHashmapTerms();
-		loadFromDB();
-		}
-
-	private void chooseOrderNrStateChanged() {
-		clearHashmapTerms();
-        String sOrderNr = (String) chooseOrderNr.getSelectedItem();//get the selected item
-        int lOrderNr = Integer.parseInt(sOrderNr);
-		loadForOrderNr(lOrderNr);
-	}
-	
-	private void chooseAttributeStateChanged() {
-         String s = (String) chooseAttribute.getSelectedItem();//get the selected item
-         CreationTool_EventInfluenceDescription.attribute = s;
-	}
-
-	private void chooseTermStateChanged() {
-		
-       	int termNrOld = CreationTool_EventInfluenceDescription.termNr;
-        String s = (String) chooseTerm.getSelectedItem();//get the selected item
-        String sTermNr = s.substring(5,6);
-        int lTermNr = Integer.parseInt(sTermNr);
-		if (lTermNr > 0) {
-	       if (termNrOld > 0 && !isLoading) {
-	        	terms.put(termNrOld, createTerm(termNrOld));
-	        }
-	        CreationTool_EventInfluenceDescription.termNr = lTermNr;
-	        
-	        chooseFunction.setSelectedIndex(0);
-			loadFunctionArgs();
-	
-	        highlightTerm(lTermNr);
-			setTermTexts();
-
-		}
-	}
-	
-	private void saveTerm() {
-       	int termNr = CreationTool_EventInfluenceDescription.termNr;
-       	if (termNr > 0) { 
-       		terms.put(termNr, createTerm(termNr));
-       	}
-	}
-
-	private JsonEventInfluencesAttributeDescription createEvInfAttrDesc() {
-		JsonEventInfluencesAttributeDescription attribDesc = new JsonEventInfluencesAttributeDescription();
-		attribDesc.orderNr = Integer.parseInt(chooseOrderNr.getSelectedItem().toString());
-		attribDesc.attribute =  chooseAttribute.getSelectedItem().toString();
-		attribDesc.term = new ArrayList<JsonTerm>();
-		terms.forEach( (termNr,term) -> {if (term.termNr > 0) attribDesc.term.add(term);});
-		
-	
-		return attribDesc;
-	}
-	
-	private JsonEventInfluenceDescription createEvInfDesc() {
-		JsonEventInfluenceDescription desc = new JsonEventInfluenceDescription();
-		desc.eventType = chooseEventType.getSelectedItem().toString();
-		desc.influenceType = Integer.parseInt(chooseInfluenceType.getSelectedItem().toString());
-		desc.attributeChanges = new ArrayList<JsonEventInfluencesAttributeDescription>();
-		inflAttrDescs.forEach( (orderNr,attrDesc) -> {desc.attributeChanges.add(attrDesc);});
-		return desc;
-	}
-
-	private JsonTerm createTerm(int termNr) {
-		JsonTerm term = new JsonTerm();
-		term.termNr  = 0;
-		
-		if (chooseFunction.getSelectedItem() != null && chooseFunction.getSelectedItem().toString().length() > 0) {
-			term.termNr = termNr;
-			term.function = chooseFunction.getSelectedItem().toString();
-			term.functionArgs = new ArrayList<JsonFunctionArg>();
-			if (!chooseArgType1.getSelectedItem().toString().equals("")) {
-				term.functionArgs.add(createFunctionArg(1));
-			}
-			if (!chooseArgType2.getSelectedItem().toString().equals("")) {
-				term.functionArgs.add(createFunctionArg(2));
-			}
-			if (!chooseArgType3.getSelectedItem().toString().equals("")) {
-				term.functionArgs.add(createFunctionArg(3));
-			}
-			if (!chooseArgType4.getSelectedItem().toString().equals("")) {
-				term.functionArgs.add(createFunctionArg(4));
-			}
-		}
-		
-		return term;
-	}
-
-	private JsonFunctionArg createFunctionArg(int faNr) {
-		JsonFunctionArg functionArg = new JsonFunctionArg();
-		functionArg.faNr = faNr;
-		switch (faNr) {
-		case 1:
-			functionArg.type = chooseArgType1.getSelectedItem().toString();
-			break;
-		case 2:
-			functionArg.type = chooseArgType2.getSelectedItem().toString();
-			break;
-		case 3:
-			functionArg.type = chooseArgType3.getSelectedItem().toString();
-			break;
-		case 4:
-			functionArg.type = chooseArgType4.getSelectedItem().toString();
-			break;
-		}
-		functionArg.value = createValue(faNr, functionArg.type);
-		return functionArg;
-	}
-
-	private JsonValue createValue(int faNr, String faType) {
-		JsonValue value = new JsonValue();
-		value.type = "";
-		value.name = "";
-		value.value = "";
-		
-		if (faNr > 0) {
-			switch (faType) {
-			case "Const":
-				value.type = "integer";
-				value.value = listTextFieldsInputConst.get(faNr - 1).getText();
-				break;
-			case "Attribute":
-				value.type = "string";
-				value.value = listArgValueAttribute.get(faNr - 1).getSelectedItem().toString();
-				break;
-			case "EventProperty":
-				value.type = "string";
-				value.value = listArgEventProp.get(faNr - 1).getSelectedItem().toString();
-				break;
-			case "TermNr":
-				value.type = "integer";
-				value.value = listArgTermNr.get(faNr - 1).getSelectedItem().toString().substring(5,6);
-				break;
-			}
-			
-		}
-		return value;
-	}
-
-
-	private void resetFunctionArgs() {
-		if (argTypeComboBoxesFilled) {
-			resetArgType(1);
-			resetArgType(2);
-			resetArgType(3);
-			resetArgType(4);
-		}
-	}
-	
-	private void loadFunctionArgs() {
-		resetFunctionArgs();
-		if (argTypeComboBoxesFilled) {
-			
-			Integer selectedTermNr = Integer.valueOf(CreationTool_EventInfluenceDescription.termNr);
-			if (!terms.containsKey(selectedTermNr)) return;
-			chooseFunction.setSelectedItem(terms.get(selectedTermNr).function);
-			List<JsonFunctionArg> funcArgs = terms.get(selectedTermNr).functionArgs;
-			
-			if (funcArgs != null) {
-				int faNr;
-				String type;
-				for (JsonFunctionArg jfa : funcArgs) {
-					faNr = jfa.faNr;
-					type = jfa.type;
-					switch (faNr) {
-					case 1:
-						chooseArgType1.setSelectedItem(jfa.type);
-						
-						switch (type) {
-						case "Const":
-							listTextFieldsInputConst.get(0).setText(jfa.value.value);
-							break;
-						case "Attribute":
-							listArgValueAttribute.get(0).setSelectedItem(jfa.value.value);
-							break;
-						case "EventProperty":
-							listArgEventProp.get(0).setSelectedItem(jfa.value.value);
-							break;
-						case "TermNr":
-							listArgTermNr.get(0).setSelectedItem(jfa.value.value);
-							break;
-						}
-						break;
-					case 2:
-						chooseArgType2.setSelectedItem(jfa.type);
-						
-						switch (type) {
-						case "Const":
-							listTextFieldsInputConst.get(1).setText(jfa.value.value);
-							break;
-						case "Attribute":
-							listArgValueAttribute.get(1).setSelectedItem(jfa.value.value);
-							break;
-						case "EventProperty":
-							listArgEventProp.get(1).setSelectedItem(jfa.value.value);
-							break;
-						case "TermNr":
-							listArgTermNr.get(1).setSelectedItem(jfa.value.value);
-							break;
-						}
-						break;
-					case 3:
-						chooseArgType3.setSelectedItem(jfa.type);
-						
-						switch (type) {
-						case "Const":
-							listTextFieldsInputConst.get(2).setText(jfa.value.value);
-							break;
-						case "Attribute":
-							listArgValueAttribute.get(2).setSelectedItem(jfa.value.value);
-							break;
-						case "EventProperty":
-							listArgEventProp.get(2).setSelectedItem(jfa.value.value);
-							break;
-						case "TermNr":
-							listArgTermNr.get(2).setSelectedItem(jfa.value.value);
-							break;
-						}
-						break;
-					case 4:
-						chooseArgType4.setSelectedItem(jfa.type);
-						
-						switch (type) {
-						case "Const":
-							listTextFieldsInputConst.get(3).setText(jfa.value.value);
-							break;
-						case "Attribute":
-							listArgValueAttribute.get(3).setSelectedItem(jfa.value.value);
-							break;
-						case "EventProperty":
-							listArgEventProp.get(3).setSelectedItem(jfa.value.value);
-							break;
-						case "TermNr":
-							listArgTermNr.get(3).setSelectedItem(jfa.value.value);
-							break;
-						}
-						break;
-					}
-				}
-			
-			}
-		}
-	}
-	
-	private void resetArgType(int faNr) {
-		if (argTypeComboBoxesFilled) {
-			switch (faNr) {
-			case 1:
-				chooseArgType1.setSelectedIndex(0);
-				break;
-			case 2:
-				chooseArgType2.setSelectedIndex(0);
-				break;
-			case 3:
-				chooseArgType3.setSelectedIndex(0);
-				break;
-			case 4:
-				chooseArgType4.setSelectedIndex(0);
-				break;
-			}
-		}
-	}
-	
-	private void clearHashmapInflAttrDescs() {
-		inflAttrDescs.clear(); 
-	}
-	
-	private void clearHashmapTerms() {
-		terms.clear(); 
-	}
-	
-	private void loadForOrderNr(int orderNr) {
-		
-		CreationTool_EventInfluenceDescription.orderNr = orderNr;
-
-		isLoading = true;
-
-		if (!this.terms.isEmpty()) clearHashmapTerms();
-		
-		resetFunctionArgs();
-		
-		JsonEventInfluencesAttributeDescription jeiad = this.inflAttrDescs.get(orderNr);
-		if (jeiad != null) {
-		
-			List<JsonTerm> lTerms = jeiad.term;
-	
-			String attrib = jeiad.attribute;
-			if (attrib == null) attrib = "";
-			chooseAttribute.setSelectedItem(attrib);
-			
-			int termNr;
-			
-			for (JsonTerm term : lTerms) {
-				termNr = term.termNr;
-				this.terms.put(termNr, term);
-			}
-			
-			if (lTerms.size() > 0) {
-				termNr = lTerms.get(0).termNr;
-	            CreationTool_EventInfluenceDescription.termNr = termNr;
-	            
-	            chooseTerm.setSelectedIndex(termNr - 1);
-	            chooseFunction.setSelectedIndex(0);
-	        	loadFunctionArgs();
-	
-	            highlightTerm(CreationTool_EventInfluenceDescription.termNr);
-				
-			}
-		}
-		setTermTexts();
-		
-		isLoading = false;
-
-	}
-	
-	private void loadFromDB() {
-		
-		if (CreationTool_EventInfluenceDescription.eventType == null || CreationTool_EventInfluenceDescription.influenceType == 0) return;
-		
-		isLoading = true;
-		
-		int termNr;
-		TablePoolEID table = new TablePoolEID();
-		
-		
-		String jsonEID = table.getJsonEID(
-				CreationTool_EventInfluenceDescription.eventType.getIndex(), 
-				CreationTool_EventInfluenceDescription.influenceType);
-		if (jsonEID.length() > 0) {
-			JsonEventInfluenceDescription jeid = Json.getGsonInstance().fromJson(jsonEID, JsonEventInfluenceDescription.class);
-			List<JsonEventInfluencesAttributeDescription> attributeChanges = jeid.attributeChanges;
-			for (JsonEventInfluencesAttributeDescription jeiad : attributeChanges) {
-				int orderNr = jeiad.orderNr;
-				this.inflAttrDescs.put(orderNr, jeiad);
-			}
-			if (attributeChanges.size() > 0) {
-				
-				JsonEventInfluencesAttributeDescription jeiad;
-				jeiad = attributeChanges.get(0);
-				
-				CreationTool_EventInfluenceDescription.orderNr = jeiad.orderNr;
-	            chooseOrderNr.setSelectedIndex(jeiad.orderNr);
-
-				List<JsonTerm> lTerms = jeiad.term;
-				for (JsonTerm term : lTerms) {
-					termNr = term.termNr;
-					this.terms.put(termNr, term);
-				}
-				
-				
-				if (lTerms.size() > 0) {
-					termNr = lTerms.get(0).termNr;
-		            CreationTool_EventInfluenceDescription.termNr = termNr;
-		            
-		            chooseTerm.setSelectedIndex(termNr - 1);
-		            chooseFunction.setSelectedIndex(0);
-		        	loadFunctionArgs();
-		
-		            highlightTerm(CreationTool_EventInfluenceDescription.termNr);
-					
-				}
-
-			}
-			
-		}
-		else {
-			resetFunctionArgs();
-		}
-		setTermTexts();
-		
-		isLoading = false;
-		
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					CreationTool_EventInfluenceDescription window = new CreationTool_EventInfluenceDescription();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-			
-	}	
-	
-    public static void infoBox(String infoMessage, String titleBar)
-    {
-        JOptionPane.showMessageDialog(null, infoMessage, titleBar, JOptionPane.INFORMATION_MESSAGE);
+    public CreationTool_EventInfluenceDescription() {
+        setupMainFrame();
+        initComponents();
+        refreshUI();
+        setVisible(true);
     }
 
+    private void setupMainFrame() {
+        setTitle("SocialWorld Logic Designer - JSON Factory");
+        setSize(1400, 950);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout(2, 2));
+        try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); } catch (Exception e) {}
+    }
 
+    private void initComponents() {
+        // --- WEST: NAVIGATION (250px) ---
+        JPanel westPanel = new JPanel(new BorderLayout());
+        westPanel.setPreferredSize(new Dimension(250, 0));
+        searchField = new JTextField();
+        addChangeListener(searchField, e -> filterTree(searchField.getText()));
+        westPanel.add(searchField, BorderLayout.NORTH);
 
-	
+        eventNavigator = new JTree(buildEventTree());
+        eventNavigator.setRootVisible(false);
+        eventNavigator.addTreeSelectionListener(e -> {
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) eventNavigator.getLastSelectedPathComponent();
+            if (node != null && node.isLeaf()) {
+                String eventName = node.getParent().toString();
+                currentEventType = EventType.valueOf(eventName);
+                currentInfluenceTypeNr = Integer.parseInt(node.toString().replaceAll("\\D+", ""));
+                currentContext = eventName + " / ID " + currentInfluenceTypeNr;
+                refreshUI();
+            }
+        });
+        westPanel.add(new JScrollPane(eventNavigator), BorderLayout.CENTER);
+        add(westPanel, BorderLayout.WEST);
+
+        // --- CENTER: CANVAS ---
+        logicCanvas = new JPanel(new BorderLayout());
+        logicCanvas.setBackground(new Color(60, 63, 65));
+        add(new JScrollPane(logicCanvas), BorderLayout.CENTER);
+
+        // --- EAST: INSPECTOR (300px) ---
+        propertyInspector = new JPanel();
+        propertyInspector.setPreferredSize(new Dimension(300, 0));
+        add(propertyInspector, BorderLayout.EAST);
+    }
+
+    private void refreshUI() {
+        setupInspectorFields();
+        updateVisualCanvas();
+    }
+
+    private void updateVisualCanvas() {
+        logicCanvas.removeAll();
+        logicCanvas.setLayout(new BorderLayout());
+        
+        JPanel header = new JPanel(new BorderLayout());
+        header.setBackground(new Color(45, 47, 49));
+        header.setPreferredSize(new Dimension(0, 45));
+        JLabel lbl = new JLabel("  " + currentContext);
+        lbl.setForeground(Color.ORANGE);
+        lbl.setFont(new Font("SansSerif", Font.BOLD, 13));
+        header.add(lbl, BorderLayout.WEST);
+        logicCanvas.add(header, BorderLayout.NORTH);
+
+        JPanel nodes = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 20));
+        nodes.setBackground(new Color(60, 63, 65));
+        
+        addNode(nodes, "Term 1: Condition", String.format("IF: %s\nOP: %s\nVAL: %s", currentConditionAttr, currentOperator, currentThreshold), false);
+        nodes.add(new JLabel(" \u2794 ") {{ setForeground(Color.WHITE); setFont(new Font("SansSerif", Font.BOLD, 25)); }});
+        
+        String actionInfo = isConstantMode ? 
+            String.format("Type: Constant\nTarget: %s\nValue: %s", currentTargetAttr, currentConstValue) :
+            String.format("Type: MX+N\nTarget: %s\nBasis: %s\n%s*%s + %s", currentTargetAttr, currentBasisAttr, currentM, currentBasisAttr, currentN);
+        addNode(nodes, "Term 2: Action", actionInfo, isConstantMode);
+        
+        logicCanvas.add(nodes, BorderLayout.CENTER);
+
+        JTextField lineField = new JTextField(generateLineString());
+        lineField.setEditable(false);
+        lineField.setBackground(Color.BLACK);
+        lineField.setForeground(new Color(150, 255, 150));
+        lineField.setFont(new Font("Monospaced", Font.BOLD, 12));
+        logicCanvas.add(lineField, BorderLayout.SOUTH);
+
+        logicCanvas.revalidate(); logicCanvas.repaint();
+    }
+
+    private String generateLineString() {
+        String targetTag = currentTargetAttr.toUpperCase();
+        String actionPart = isConstantMode ? 
+            String.format("<Const>%s</Const>", currentConstValue) :
+            String.format("<MX+N>%d;%s;%s</MX+N>", Attribute.valueOf(currentBasisAttr).getIndex(), currentM, currentN);
+        return String.format("WENN %s %s %s DANN <%s>%s</%s>", currentConditionAttr, currentOperator, currentThreshold, targetTag, actionPart, targetTag);
+    }
+
+    private void btnSaveToDatabasePressed() {
+        if (currentEventType == null) return;
+        JsonEventInfluenceDescription root = new JsonEventInfluenceDescription();
+        root.eventType = currentEventType.name();
+        root.influenceType = currentInfluenceTypeNr;
+        root.attributeChanges = new ArrayList<>();
+
+        JsonEventInfluencesAttributeDescription attrDesc = new JsonEventInfluencesAttributeDescription();
+        attrDesc.orderNr = 0;
+        attrDesc.attribute = currentTargetAttr;
+        attrDesc.term = new ArrayList<>();
+
+        JsonTerm t1 = new JsonTerm();
+        t1.termNr = 1;
+        t1.function = Expression_Function.condition.toString();
+        t1.functionArgs = new ArrayList<>();
+        t1.functionArgs.add(createArg(1, FunctionArgType.Attribute, org.socialworld.calculation.Type.integer, String.valueOf(Attribute.valueOf(currentConditionAttr).getIndex())));
+        t1.functionArgs.add(createArg(2, FunctionArgType.Const, org.socialworld.calculation.Type.string, currentOperator));
+        t1.functionArgs.add(createArg(3, FunctionArgType.Const, org.socialworld.calculation.Type.integer, currentThreshold));
+        attrDesc.term.add(t1);
+
+        JsonTerm t2 = new JsonTerm();
+        t2.termNr = 2;
+        t2.functionArgs = new ArrayList<>();
+        if (isConstantMode) {
+            t2.function = Expression_Function.value.toString();
+            t2.functionArgs.add(createArg(1, FunctionArgType.Const, org.socialworld.calculation.Type.integer, currentConstValue));
+        } else {
+            t2.function = "MX+N";
+            t2.functionArgs.add(createArg(1, FunctionArgType.Attribute, org.socialworld.calculation.Type.integer, String.valueOf(Attribute.valueOf(currentBasisAttr).getIndex())));
+            t2.functionArgs.add(createArg(2, FunctionArgType.Const, org.socialworld.calculation.Type.floatingpoint, currentM));
+            t2.functionArgs.add(createArg(3, FunctionArgType.Const, org.socialworld.calculation.Type.floatingpoint, currentN));
+        }
+        attrDesc.term.add(t2);
+
+        attrDesc.term.forEach(t -> t.functionArgs.forEach(a -> a.value.name = "arg_" + a.faNr));
+        root.attributeChanges.add(attrDesc);
+
+        //new TablePoolEID().insert(currentEventType.ordinal(), currentInfluenceTypeNr, root.toString());
+ 
+        EventInfluenceDescription eid = new EventInfluenceDescription(root);
+
+        // Test-Ausgabe in die Konsole
+        System.out.println("Engine-Objekt erfolgreich erzeugt: " + eid.toString());
+
+    }
+
+    private JsonFunctionArg createArg(int nr, FunctionArgType argType, org.socialworld.calculation.Type swType, String val) {
+        JsonFunctionArg arg = new JsonFunctionArg();
+        arg.faNr = nr;
+        arg.type = argType.toString();
+        arg.value = new JsonValue();
+        arg.value.type = swType.getIndexWithSWTPraefix(); 
+        arg.value.value = val;
+        return arg;
+    }
+
+    private void setupInspectorFields() {
+        propertyInspector.removeAll();
+        propertyInspector.setLayout(new BoxLayout(propertyInspector, BoxLayout.Y_AXIS));
+        
+        String[] attrs = Attribute.getNameList().toArray(String[]::new);
+        String[] ops = new ArrayList<String>() {{
+            for(Expression_ConditionOperator op : Expression_ConditionOperator.values()) add(op.toString());
+        }}.toArray(String[]::new);
+
+        // --- 1. CONDITION ---
+        addHeader("1. Condition (WENN)");
+        JComboBox<String> cAttr = new JComboBox<>(attrs);
+        cAttr.setSelectedItem(currentConditionAttr);
+        cAttr.addActionListener(e -> { currentConditionAttr = (String)cAttr.getSelectedItem(); updateVisualCanvas(); });
+        propertyInspector.add(cAttr);
+
+        JComboBox<String> opBox = new JComboBox<>(ops);
+        opBox.setSelectedItem(currentOperator);
+        opBox.addActionListener(e -> { currentOperator = (String)opBox.getSelectedItem(); updateVisualCanvas(); });
+        propertyInspector.add(opBox);
+
+        JTextField thresh = new JTextField(currentThreshold);
+        addChangeListener(thresh, e -> { currentThreshold = thresh.getText(); updateVisualCanvas(); });
+        propertyInspector.add(thresh);
+
+        propertyInspector.add(Box.createVerticalStrut(20));
+
+        // --- 2. ACTION ---
+        addHeader("2. Action (DANN)");
+        JComboBox<String> target = new JComboBox<>(attrs);
+        target.setSelectedItem(currentTargetAttr);
+        target.addActionListener(e -> { currentTargetAttr = (String)target.getSelectedItem(); updateVisualCanvas(); });
+        propertyInspector.add(new JLabel("Target Attribute:")); propertyInspector.add(target);
+
+        // STRATEGY (Jetzt oben platziert)
+        JComboBox<String> strat = new JComboBox<>(new String[]{"Linear Function (MX+N)", "Fixed Constant"});
+        strat.setSelectedIndex(isConstantMode ? 1 : 0);
+        propertyInspector.add(new JLabel("Strategy:")); propertyInspector.add(strat);
+        propertyInspector.add(Box.createVerticalStrut(10));
+
+        CardLayout cl = new CardLayout();
+        JPanel cardPanel = new JPanel(cl);
+        
+        // MXN Panel
+        JPanel mxn = new JPanel();
+        mxn.setLayout(new BoxLayout(mxn, BoxLayout.Y_AXIS));
+        JComboBox<String> basis = new JComboBox<>(attrs);
+        basis.setSelectedItem(currentBasisAttr);
+        basis.addActionListener(e -> { currentBasisAttr = (String)basis.getSelectedItem(); updateVisualCanvas(); });
+        JTextField mF = new JTextField(currentM); addChangeListener(mF, e -> { currentM = mF.getText(); updateVisualCanvas(); });
+        JTextField nF = new JTextField(currentN); addChangeListener(nF, e -> { currentN = nF.getText(); updateVisualCanvas(); });
+        mxn.add(new JLabel("Basis (X):")); mxn.add(basis);
+        mxn.add(new JLabel("Slope m:")); mxn.add(mF);
+        mxn.add(new JLabel("Offset n:")); mxn.add(nF);
+
+        // CST Panel
+        JPanel cst = new JPanel();
+        cst.setLayout(new BoxLayout(cst, BoxLayout.Y_AXIS));
+        JTextField cF = new JTextField(currentConstValue); addChangeListener(cF, e -> { currentConstValue = cF.getText(); updateVisualCanvas(); });
+        cst.add(new JLabel("Value:")); cst.add(cF);
+
+        cardPanel.add(mxn, "MXN"); cardPanel.add(cst, "CST");
+        propertyInspector.add(cardPanel);
+
+        strat.addActionListener(e -> { 
+            isConstantMode = strat.getSelectedIndex() == 1; 
+            cl.show(cardPanel, isConstantMode ? "CST" : "MXN"); 
+            updateVisualCanvas(); 
+        });
+        cl.show(cardPanel, isConstantMode ? "CST" : "MXN");
+
+        propertyInspector.add(Box.createVerticalGlue());
+        JButton saveBtn = new JButton("SAVE TO DB");
+        saveBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
+        saveBtn.setBackground(new Color(0, 80, 0)); saveBtn.setForeground(Color.WHITE);
+        saveBtn.setFont(new Font("SansSerif", Font.BOLD, 12));
+        saveBtn.addActionListener(e -> btnSaveToDatabasePressed());
+        propertyInspector.add(saveBtn);
+        propertyInspector.revalidate(); propertyInspector.repaint();
+    }
+
+    private void addHeader(String t) { JLabel l = new JLabel("<html><b>" + t + "</b></html>"); propertyInspector.add(l); }
+    private void addNode(JPanel c, String t, String co, boolean gold) {
+        JPanel n = new JPanel(new BorderLayout());
+        n.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        n.setPreferredSize(new Dimension(180, 110));
+        JLabel h = new JLabel(t, SwingConstants.CENTER); h.setOpaque(true);
+        h.setBackground(gold ? new Color(218, 165, 32) : new Color(70, 140, 140));
+        h.setForeground(Color.WHITE);
+        JTextArea b = new JTextArea(co); b.setEditable(false); b.setBackground(new Color(245, 245, 245));
+        b.setFont(new Font("Monospaced", Font.PLAIN, 10));
+        n.add(h, BorderLayout.NORTH); n.add(b, BorderLayout.CENTER);
+        c.add(n);
+    }
+    private void filterTree(String text) {
+        if (text.length() < 2) return;
+        DefaultMutableTreeNode root = (DefaultMutableTreeNode) eventNavigator.getModel().getRoot();
+        Enumeration<TreeNode> e = root.breadthFirstEnumeration();
+        while (e.hasMoreElements()) {
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
+            if (node.toString().toLowerCase().contains(text.toLowerCase())) {
+                TreePath path = new TreePath(node.getPath());
+                eventNavigator.setSelectionPath(path);
+                eventNavigator.scrollPathToVisible(path);
+                break;
+            }
+        }
+    }
+    private void addChangeListener(JTextField tf, Consumer<DocumentEvent> c) {
+        tf.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) { c.accept(e); }
+            public void removeUpdate(DocumentEvent e) { c.accept(e); }
+            public void changedUpdate(DocumentEvent e) { c.accept(e); }
+        });
+    }
+    private DefaultMutableTreeNode buildEventTree() {
+        DefaultMutableTreeNode r = new DefaultMutableTreeNode("Rules");
+        for (EventType et : EventType.values()) {
+            if (et == EventType.nothing) continue;
+            DefaultMutableTreeNode n = new DefaultMutableTreeNode(et.name());
+            for (int i = 0; i < 5; i++) n.add(new DefaultMutableTreeNode("ID " + i));
+            r.add(n);
+        }
+        return r;
+    }
+    
+    private void loadRuleFromDB(int eventTypeNr, int influenceTypeNr) {
+        TablePoolEID table = new TablePoolEID();
+         String jsonFromDB = table.getJsonEID(eventTypeNr, influenceTypeNr); 
+
+        if (jsonFromDB != null && !jsonFromDB.isEmpty()) {
+              EventInfluenceDescription eid = new EventInfluenceDescription(jsonFromDB);
+            
+            // Jetzt müssen wir die GUI-Variablen mit den Werten aus dem EID-Objekt füllen
+            // Hierzu brauchen wir eine Mapper-Logik (siehe unten)
+         //   mapEngineObjectToGUI(eid);
+        }
+    }
+
+    
+    public static void main(String[] args) { SwingUtilities.invokeLater(CreationTool_EventInfluenceDescription::new); }
 }

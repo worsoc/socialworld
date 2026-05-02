@@ -7,7 +7,9 @@ public abstract class Json {
 	private static Gson gson = null;
 	public static Gson getGsonInstance() {
 		if (gson == null) {
-			gson = new Gson();
+	        gson = new com.google.gson.GsonBuilder()
+	                .disableHtmlEscaping()
+	                .create();
 		}
 		return gson;
 	}

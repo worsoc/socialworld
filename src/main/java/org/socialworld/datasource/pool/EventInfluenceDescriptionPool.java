@@ -30,6 +30,7 @@ import org.socialworld.calculation.descriptions.DescriptionBase;
 import org.socialworld.calculation.descriptions.EventInfluenceDescription;
 import org.socialworld.calculation.expressions.ChangeAttributes;
 import org.socialworld.calculation.expressions.Nothing;
+import org.socialworld.calculation.functions.FunctionMXplusN;
 import org.socialworld.core.EventType;
 import org.socialworld.datasource.tablesPool.TablePoolEID;
 
@@ -102,105 +103,102 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 	private void initializeWithTestData_Lines() {
 	    List<Lines> allLines = new ArrayList<Lines>();
 	    Lines4EventType lines4EventType;
-
 	    int totalRulesGenerated = 0;
 
-	    // 1. Get Runtime instance and trigger GC for a clean baseline
+	    // 1. Prepare Memory and Time Measurement
 	    Runtime runtime = Runtime.getRuntime();
 	    runtime.gc(); 
 	    long memoryBefore = runtime.totalMemory() - runtime.freeMemory();
-
-	    // 2. Capture start time and current wall-clock time
 	    long startTime = System.currentTimeMillis();
-	    java.time.LocalDateTime now = java.time.LocalDateTime.now();
-	    java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-	    System.out.println("--- Starting Rule Generation for EventInfluenceDescriptionPool ---");
-	    
+	    System.out.println("--- Starting Role-Aware Generation with Fine-Tuning ---");
+
 	    for (EventType type : EventType.values()) {
 	        if (type == EventType.nothing) continue;
 
-	        // rangeSecondIndex is the number of influence types (usually 100)
 	        lines4EventType = new Lines4EventType(type, rangeSecondIndex);
+	        String typeName = type.name();
 
-	        // Evaluate event nature for meaningful value generation
-	        String typeName = type.name().toLowerCase();
-	        boolean isAggressive = typeName.contains("punch") || typeName.contains("attack") || typeName.contains("weapon");
-	        boolean isUnpleasant = typeName.contains("scream") || typeName.contains("piss") || typeName.contains("shit");
+	        // Identify role
+	        boolean isSelf = typeName.startsWith("self");
+	        boolean isTarget = typeName.startsWith("target");
+	        boolean isCandidate = typeName.startsWith("candidates");
+	        boolean isPercipient = typeName.startsWith("percipient");
 
 	        for (int influenceType = 0; influenceType < rangeSecondIndex; influenceType++) {
 	            
-	            // 1. Condition Attribute (The trigger for the "IF" part, e.g., hunger)
-	            Attribute condAttr = Attribute.getAttributeName(influenceType % 9);
-	            
-	            // 2. Target Attribute (The one that will be modified, e.g., morals)
-	            // Offset by 2 to ensure it's usually different from condAttr
-	            Attribute targetAttr = Attribute.getAttributeName((influenceType + 2) % 9);
-	            String targetTag = targetAttr.toString().toUpperCase();
+	            // 2. Fine-Tuning: Attribute Selection based on Role
+	            Attribute condAttr;
+	            Attribute targetAttr;
 
-	            // 3. Calculation Basis (The "X" in MX+N, e.g., courage)
-	            // Offset by 5 to create cross-attribute dependencies
-	            int basisAttrIndex = (influenceType + 5) % 9;
-
-	            // 4. Value Logic and Range
-	            int seed = type.ordinal() + influenceType;
-	            int min = 20 + (seed % 40); // Thresholds between 20 and 60
-	            int max = min + 20;
-
-	            // Linear parameters: m (slope) and n (offset)
-	            double m = 0.4 + ((seed % 10) * 0.2); // m between 0.4 and 2.4
-	            double n = -10.0 + (seed % 20);      // n between -10.0 and +10.0
-	            
-	            // Apply qualitative adjustments based on event nature
-	            if (isAggressive || isUnpleasant) {
-	                n -= 15.0; // Negative events cause significantly larger drops
-	                m *= 0.7;  // And dampen positive growth
+	            if (isPercipient) {
+	                // Observers react to social/mental triggers and change their mind/mood
+	                condAttr = (influenceType % 2 == 0) ? Attribute.curiosity : Attribute.spirituality;
+	                targetAttr = (influenceType % 2 == 0) ? Attribute.mood : Attribute.morals;
+	            } else if (isSelf) {
+	                // Actors are triggered by and change physical needs
+	                condAttr = (influenceType % 2 == 0) ? Attribute.hunger : Attribute.tiredness;
+	                targetAttr = (influenceType % 2 == 0) ? Attribute.power : Attribute.courage;
+	            } else {
+	                // Targets and Candidates use the full spectrum
+	                condAttr = Attribute.getAttributeName(influenceType % 9);
+	                targetAttr = Attribute.getAttributeName((influenceType + 3) % 9);
 	            }
 
-	            // 5. Construct line: WENN <cond> >= <min> & <cond> < <max> DANN <TARGET><MX+N>basisIndex;m;n</MX+N></TARGET>
+	            String targetTag = targetAttr.toString().toUpperCase();
+	            int basisAttrIndex = (influenceType + 5) % 9;
+
+	            // 3. Mathematical Logic with Qualitative Bias
+	            int seed = type.ordinal() + influenceType;
+	            int min = 10 + (seed % 50);
+	            int max = min + 20;
+
+	            double m = 0.5 + ((seed % 15) * 0.1);
+	            double n = -10.0 + (seed % 21);
+
+	            // Role-based scaling
+	            if (isSelf) {
+	                m *= 1.3; n += 2.0; // Strong impact on self
+	            } else if (isTarget) {
+	                m *= 0.7; n -= 12.0; // Significant negative impact for targets
+	            } else if (isPercipient) {
+	                m *= 0.3; n *= 0.5; // Very subtle ripples for observers
+	            }
+
 	            String line = String.format(
 	                "WENN %s >= %d & %s < %d DANN <%s><MX+N>%d;%.2f;%.2f</MX+N></%s>",
 	                condAttr.toString(), min, condAttr.toString(), max, 
 	                targetTag, basisAttrIndex, m, n, targetTag
 	            );
 
-	            // Add the generated rule to the event type's collection
 	            lines4EventType.add(influenceType, 0, line);
-
 	            totalRulesGenerated++;
-
+	            
 	            // OPTIONAL: Log a sample rule for every 500th generation to keep console clean
 	            if (totalRulesGenerated % 500 == 0) {
 	                System.out.println(String.format("[Sample %d] Type: %s | Rule: %s", totalRulesGenerated, type.name(), line));
 	            }
-	        
+
 	        }
 	        allLines.add(lines4EventType);
 	    }
 
-	    // Capture time AFTER string generation but BEFORE parsing
-	    long afterGenTime = System.currentTimeMillis();
-	    System.out.println(String.format("--- Strings generated in %d ms. Now parsing expressions... ---", (afterGenTime - startTime)));
-	    
-	    // Finalize by creating expressions from the collected lines
+	    // 4. Heavy Parsing Step
 	    createExpressions(allLines);
 	    
-	    // Capture final time
-	    long endTime = System.currentTimeMillis();
-	    System.out.println("--- Finished: " + new java.util.Date() + " ---");
-	    System.out.println(String.format("--- Total duration (Gen + Parse): %d ms ---", (endTime - startTime)));
-
+	    // 5. Final Analytics
+	    long duration = System.currentTimeMillis() - startTime;
+	    System.gc();
 	    long memoryAfter = runtime.totalMemory() - runtime.freeMemory();
-	    long memoryUsedKBytes = (memoryAfter - memoryBefore) / 1024;
-	    double memoryUsedMBytes = memoryUsedKBytes / 1024.0;
+	    double memoryUsedMB = (memoryAfter - memoryBefore) / (1024.0 * 1024.0);
 
-	    System.out.println(String.format("--- Memory Check ---"));
-	    System.out.println(String.format("Rules in Memory: %d", totalRulesGenerated));
-	    System.out.println(String.format("Memory Consumed: %.2f MB (%d KB)", memoryUsedMBytes, memoryUsedKBytes));
-	    System.out.println(String.format("Avg per Rule: %.1f Bytes", (double)(memoryAfter - memoryBefore) / totalRulesGenerated));
-
+	    System.out.println(String.format("--- Generation Finished ---"));
+	    System.out.println(String.format("Rules: %d | Time: %d ms", totalRulesGenerated, duration));
+	    System.out.println(String.format("Memory Used: %.2f MB (Avg: %.1f Bytes/Rule)", 
+	                       memoryUsedMB, (double)(memoryAfter - memoryBefore) / totalRulesGenerated));
+	    System.out.println(String.format("Unique MX+N Instances: %d", FunctionMXplusN.getPoolSize()));
+	    System.out.println(String.format("Reduction Factor: %.2f", (double)totalRulesGenerated / FunctionMXplusN.getPoolSize()));
 	}
-
 
 	
 	private void loadFromDB() {

@@ -65,24 +65,25 @@ public class MXPlusN extends Expression {
 					float n = Float.parseFloat(elements[2].trim());
 					float min = Float.parseFloat(elements[3].trim());
 					float max = Float.parseFloat(elements[4].trim());
-					
-					if (interpreteResultAs == ValueInterpreteAs.attributeValue) 
-						function = new FunctionMXplusN( Type.integer, m, n, min,  max);
-					else
-						function = new FunctionMXplusN( Type.floatingpoint, m, n, min,  max);
-					
+
+					if (interpreteResultAs == ValueInterpreteAs.attributeValue) {
+					    function = FunctionMXplusN.getInstance(Type.integer, m, n, min, max);
+					} else {
+					    function = FunctionMXplusN.getInstance(Type.floatingpoint, m, n, min, max);
+					}
 				}
 				
 				if (elements.length == 3) {
 					
 					float m = Float.parseFloat(elements[1].trim());
 					float n = Float.parseFloat(elements[2].trim());
-					
-					if (interpreteResultAs == ValueInterpreteAs.attributeValue) 
-						function = new FunctionMXplusN(Type.integer, m, n, 0, AttributeArray.ATTRIBUTE_VALUE_MAX);
-					else
-						function = new FunctionMXplusN(m, n);
-					
+	
+					if (interpreteResultAs == ValueInterpreteAs.attributeValue) {
+					    function = FunctionMXplusN.getInstance(Type.integer, m, n, 0, AttributeArray.ATTRIBUTE_VALUE_MAX);
+					} else {
+					    function = FunctionMXplusN.getInstance(Type.floatingpoint, m, n, -1000000f, 1000000f);
+					}
+								
 				}
 	
 				int freeFunctionIndex = functions.findNextFree(10000, 99999);

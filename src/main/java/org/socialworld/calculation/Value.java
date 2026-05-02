@@ -149,6 +149,18 @@ public class Value {
 		valid = false;
 	}
 	
+	private static final Value[] INTEGER_CACHE = new Value[101]; // Cache für 0 bis 100
+
+	public static Value getInteger(int value) {
+	    if (value >= 0 && value <= 100) {
+	        if (INTEGER_CACHE[value] == null) {
+	            INTEGER_CACHE[value] = new Value(Type.integer, value);
+	        }
+	        return INTEGER_CACHE[value];
+	    }
+	    return new Value(Type.integer, value);
+	}
+	
 	public Value(JsonValue jsonObject) {
 		this.type = Type.fromName(jsonObject.type);
 		this.name = jsonObject.name;
