@@ -24,18 +24,28 @@ package org.socialworld.calculation.descriptions;
 import org.socialworld.calculation.FunctionArgType;
 import org.socialworld.calculation.Value;
 import org.socialworld.datasource.parsing.JsonFunctionArg;
+import org.socialworld.datasource.parsing.JsonValue;
 
 public class FunctionArg {
+	
 	int faNr;
 	FunctionArgType type;
 	Value value;
 	
+	// temporary needed for creation time
+	JsonValue jsonSource; 
+	 
 	public FunctionArg(JsonFunctionArg jsonObject) {
-		faNr = jsonObject.faNr;
-		type = FunctionArgType.fromName(jsonObject.type);
-		value = new Value(jsonObject.value);
+		this.faNr = jsonObject.faNr;
+		this.type = FunctionArgType.fromName(jsonObject.type);
+	    this.jsonSource = jsonObject.value; 
+		this.value = new Value(jsonObject.value);
 	}
 	
+    public String getRawValue() {
+        return (jsonSource != null) ? jsonSource.value : "";
+    }
+
 	public String toString() {
 		return "faNr:" + faNr + ",type:" + type.toString() +  ",value:" + value.toString();
 		

@@ -131,6 +131,7 @@ public class Value {
 	private String name = "";
 	private Object value;
 	
+
 	boolean valid;
 	ValueTransferCode transferCode = ValueTransferCode.noFurtherInformation; 
 	
@@ -164,7 +165,7 @@ public class Value {
 	public Value(JsonValue jsonObject) {
 		this.type = Type.fromName(jsonObject.type);
 		this.name = jsonObject.name;
-		initValueFromString(jsonObject.value, this.type);
+	    initValueFromString(jsonObject.value, this.type);
 	}
 	
 	public Value(Type type, String name, Object value) {
@@ -195,13 +196,20 @@ public class Value {
 	
 	private void initValueFromString(String valueAsString, Type castToType) {
 		
+	    if (castToType == null) {
+	        // Wir versuchen zu retten, was zu retten ist, oder loggen den Fehler
+	        System.err.println("WARNUNG: castToType ist null für Wert: " + valueAsString);
+	        this.valid = false;
+	        return; 
+	    }
+
 		switch (castToType) {
 		case integer:
 			this.value = Integer.parseInt(valueAsString.trim());
 			valid = true;
 			break;
 		case longinteger:
-			this.value = Integer.parseInt(valueAsString.trim());
+			this.value = Long.parseLong(valueAsString.trim());
 			valid = true;
 			break;
 		case floatingpoint:
@@ -572,6 +580,7 @@ public class Value {
 			return false;
 		}
 	}
+	
 	
 	public String toString() {
 		if (value != null)

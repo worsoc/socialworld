@@ -24,6 +24,11 @@ package org.socialworld.calculation.descriptions;
 import java.util.List;
 import java.util.ArrayList;
 
+import org.socialworld.calculation.Expression;
+import org.socialworld.calculation.expressions.Branching;
+import org.socialworld.calculation.expressions.ChangeAttributes;
+import org.socialworld.calculation.expressions.CreateActionExpression;
+import org.socialworld.calculation.functions.FunctionByExpression;
 import org.socialworld.core.EventType;
 import org.socialworld.datasource.parsing.JsonEventInfluenceDescription;
 import org.socialworld.datasource.parsing.JsonEventInfluencesAttributeDescription;
@@ -57,13 +62,15 @@ public class EventInfluenceDescription extends DescriptionBase {
 	public EventInfluenceDescription(JsonEventInfluenceDescription jeid) {
 		super();
 		create(jeid);
+		
 	}
 
 
 	@Override
 	public void setFunctions() {
-		// TODO Auto-generated method stub
-		
+		Expression startExpression = ChangeAttributes.fromJsonEntries(this.entrysEIA);
+		addFunction(new FunctionByExpression(startExpression));
+	
 	}
 
 	public int getNrEventType() {

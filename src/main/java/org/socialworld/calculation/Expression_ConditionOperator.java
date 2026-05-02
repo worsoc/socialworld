@@ -28,35 +28,68 @@ package org.socialworld.calculation;
  * @author Mathias Sikos (MatWorsoc) 
  */
 public enum Expression_ConditionOperator {
+	
 	notEqual(0), equal(1), less(2), lessEqual(3), greaterEqual(4), greater(5),
 	and(6), or(7);
 
 	public static final int NUMBER_OF_COMPARISON_OPERATORS = 6;
 	
-	private int arrayIndex;
+	
+    private static final java.util.Map<String, Expression_ConditionOperator> NAME_CACHE;
+    private static final java.util.Map<Integer, Expression_ConditionOperator> INDEX_CACHE;
+
+    static {
+        java.util.Map<String, Expression_ConditionOperator> nCache = new java.util.HashMap<>();
+        java.util.Map<Integer, Expression_ConditionOperator> iCache = new java.util.HashMap<>();
+        
+        for (Expression_ConditionOperator op : Expression_ConditionOperator.values()) {
+            nCache.put(op.name().toLowerCase(), op);
+            iCache.put(op.index, op);
+        }
+        
+        // Symbole für den String-Lookup hinzufügen
+        nCache.put("==", equal);
+        nCache.put("!=", notEqual);
+        nCache.put("<",  less);
+        nCache.put("<=", lessEqual);
+        nCache.put(">",  greater);
+        nCache.put(">=", greaterEqual);
+        nCache.put("&",  and);
+        nCache.put("|",  or);
+
+        NAME_CACHE = java.util.Collections.unmodifiableMap(nCache);
+        INDEX_CACHE = java.util.Collections.unmodifiableMap(iCache);
+    }
+	
+	private int index;
 
 	private Expression_ConditionOperator(int index) {
-		this.arrayIndex = index;
+		this.index = index;
 	}
+	
+	public int getIndex() { return this.index;}
 	
 	/**
 	 * The method returns the expression condition operator name which belongs to the parameter
 	 * operator index.
 	 * 
-	 * @param arrayIndex
+	 * @param index
 	 *            operator index
 	 * @return expression condition operator name
 	 */
-	public static Expression_ConditionOperator getName(int arrayIndex) {
-		for (Expression_ConditionOperator operator : Expression_ConditionOperator.values())
-			if (operator.arrayIndex == arrayIndex)
-				return operator;
-		return null;
+	public static Expression_ConditionOperator getName(int index) {
+        return INDEX_CACHE.get(index);
 	}	
 	
-	public String toString() {
 	
-		switch (this.arrayIndex) {
+	public static Expression_ConditionOperator fromName(String name) {
+	      if (name == null || name.isEmpty()) return null; 
+        return  NAME_CACHE.get(name.toLowerCase().trim());
+	}
+
+	public String toString() {
+		
+		switch (this.index) {
 		case 0: return "!="; 
 		case 1: return "==";
 		case 2: return "<"; 
@@ -69,13 +102,5 @@ public enum Expression_ConditionOperator {
 		}
 		
 	}
-	
-	public static Expression_ConditionOperator fromName(String name) {
-		for (Expression_ConditionOperator op : Expression_ConditionOperator.values())
-			if (op.toString().equals(name))
-				return op;
-		return null;
-	}
 
-	
 }

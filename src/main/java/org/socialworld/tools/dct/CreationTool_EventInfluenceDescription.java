@@ -164,59 +164,7 @@ public class CreationTool_EventInfluenceDescription extends JFrame {
         });
     }
     
-    
- /*   
-    private void initComponents() {
-        // --- WEST: NAVIGATION (250px) ---
-        JPanel westPanel = new JPanel(new BorderLayout());
-        westPanel.setPreferredSize(new Dimension(250, 0));
-        searchField = new JTextField();
-        addChangeListener(searchField, e -> filterTree(searchField.getText()));
-        westPanel.add(searchField, BorderLayout.NORTH);
 
-        eventNavigator = new JTree(buildEventTree());
-        eventNavigator.setRootVisible(false);
-        
-        // --- AKTUALISIERTER LISTENER ZUM LADEN AUS DER DB ---
-        eventNavigator.addTreeSelectionListener(e -> {
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode) eventNavigator.getLastSelectedPathComponent();
-            
-            if (node != null && node.isLeaf()) {
-                try {
-                    // 1. Kontext extrahieren
-                    String eventName = node.getParent().toString();
-                    currentEventType = EventType.valueOf(eventName);
-                    
-                    // Filtert die Zahl aus "ID 5" oder "Influence 5"
-                    currentInfluenceTypeNr = Integer.parseInt(node.toString().replaceAll("\\D+", ""));
-                    currentContext = eventName + " / ID " + currentInfluenceTypeNr;
-                    
-                    // 2. DATENBANK-LADEVORGANG AUSLÖSEN
-                    // nutzt den Index des Enums und die extrahierte ID
-                    loadRuleFromDB(currentEventType.getIndex(), currentInfluenceTypeNr);
-                    
-                } catch (Exception ex) {
-                    System.err.println("Fehler beim Selektieren/Laden: " + ex.getMessage());
-                    // Falls das Laden fehlschlägt, zumindest die UI leeren/refreshen
-                    refreshUI();
-                }
-            }
-        });
-        
-        westPanel.add(new JScrollPane(eventNavigator), BorderLayout.CENTER);
-        add(westPanel, BorderLayout.WEST);
-
-        // --- CENTER: CANVAS ---
-        logicCanvas = new JPanel(new BorderLayout());
-        logicCanvas.setBackground(new Color(60, 63, 65));
-        add(new JScrollPane(logicCanvas), BorderLayout.CENTER);
-
-        // --- EAST: INSPECTOR (300px) ---
-        propertyInspector = new JPanel();
-        propertyInspector.setPreferredSize(new Dimension(300, 0));
-        add(propertyInspector, BorderLayout.EAST);
-    }
-*/
     private void refreshUI() {
         setupInspectorFields();
         updateVisualCanvas();

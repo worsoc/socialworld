@@ -42,6 +42,16 @@ public enum Type {
 	valueList(8888), /* ValueArrayList */
 	object(9999);
 
+	private static final java.util.Map<String, Type> NAME_CACHE;
+
+	static {
+	    java.util.Map<String, Type> cache = new java.util.HashMap<>();
+	    for (Type t : Type.values()) {
+	        cache.put(t.name().toLowerCase(), t);
+	    }
+	    NAME_CACHE = java.util.Collections.unmodifiableMap(cache);
+	}
+
 	private int index;
 
 	private Type(int index) {
@@ -109,9 +119,12 @@ public enum Type {
 	}
 
 	public static Type fromName(String name) {
-		for (Type type : Type.values())
-			if (type.toString().toUpperCase().equals(name.toUpperCase()))
-				return type;
-		return null;
+	    if (name == null || name.isEmpty()) return Type.nothing;
+	    
+	    Type found = NAME_CACHE.get(name.toLowerCase().trim());
+	    
+	    return (found != null) ? found : Type.nothing; // never return null!
 	}
+	
+
 }

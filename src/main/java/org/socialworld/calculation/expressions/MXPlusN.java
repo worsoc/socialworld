@@ -32,8 +32,7 @@ import org.socialworld.calculation.functions.FunctionMXplusN;
 public class MXPlusN extends Expression {
 
 	
-	public MXPlusN(String formula) {
-		
+	public MXPlusN(String formula) {	
 		super();
 		// init without type casting (using floating point)
 		init(formula,  ValueInterpreteAs.nothing);
@@ -55,8 +54,22 @@ public class MXPlusN extends Expression {
 		
 			FunctionMXplusN function = null;
 
-			int attributeIndex = Integer.parseInt(elements[0].trim());
-			
+			int attributeIndex = -1;
+
+	       String attrPart = elements[0].trim();
+
+	        // 1. Check: name or index?
+	        if (attrPart.matches("\\d+")) { 
+	            // Index
+	            attributeIndex = Integer.parseInt(attrPart);
+	        } else {
+	            // string -> name
+	            Attribute attr = Attribute.fromName(attrPart);
+	            if (attr != null) {
+	                attributeIndex = attr.getIndex();
+	            }
+	        }
+
 			if ((attributeIndex >= 0) & (attributeIndex < Attribute.NUMBER_OF_ATTRIBUTES)) {
 				
 				if (elements.length == 5) {

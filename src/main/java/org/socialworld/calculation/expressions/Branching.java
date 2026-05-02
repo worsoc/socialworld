@@ -161,28 +161,22 @@ public class Branching extends Expression {
 		String value = conditionElements[2];
 		
 		Expression attributeValue = new Expression();
-		
-		for (int i = 0; i < Attribute.NUMBER_OF_ATTRIBUTES; i++) {
-			
-			if (Attribute.getAttributeName(i).toString().equals(attributeName.toLowerCase()) ) {
-				attributeValue = GetAttributeValue.getInstance(i);
-				break;
-			}
-		}
+	
+	    Attribute attr = Attribute.fromName(attributeName);
+	    if (attr != null && attr != Attribute.ignore) {
+	        attributeValue = GetAttributeValue.getInstance(attr.getIndex());
+	    }
 		
 		if (!attributeValue.isValid()) return attributeValue;
 
 		Expression constant = new Constant(new Value(value, Type.integer ));
 		
 		Expression comparison = new Expression();
-		
-		for (int i = 0; i < Expression_ConditionOperator.NUMBER_OF_COMPARISON_OPERATORS; i++) {
-			
-			if (Expression_ConditionOperator.getName(i).toString().equals(operator) ) {
-				comparison = new Comparison(Expression_ConditionOperator.getName(i), attributeValue, constant );
-				break;
-			}
-		}
+
+		Expression_ConditionOperator foundOperator = Expression_ConditionOperator.fromName(operator);
+		if (foundOperator != null && foundOperator.getIndex() < Expression_ConditionOperator.NUMBER_OF_COMPARISON_OPERATORS) {
+		    comparison = new Comparison(foundOperator, attributeValue, constant);
+		} 
 		
 		return comparison;
 			

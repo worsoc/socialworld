@@ -42,6 +42,26 @@ public class Term {
 		}
 	}
 	
+
+	/**
+	 * Liefert den Typ der Funktion (z.B. "condition" oder "function")
+	 */
+	public Expression_Function getFunction() {
+	    return this.function;
+	}
+
+	/**
+	 * Liefert den Wert eines Arguments als String
+	 */
+	public String getArgValueAsString(int index) {
+	    if (this.functionArgs != null && index >= 0 && index < this.functionArgs.size()) {
+	        // get the raw value from FunctionArg
+	        return this.functionArgs.get(index).getRawValue();
+	    }
+	    return "";
+	}
+
+	
 	public String toString() {
 		return "termNr:" + termNr + ",function:" + function.toString() +  ",functionArgs:" + functionArgs.toString();
 		

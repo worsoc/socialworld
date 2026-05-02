@@ -69,7 +69,8 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 
 	
 	protected final void initialize() {
-		initializeFromLines();
+		//initializeFromLines();
+		initializeFromJson();
 	}
 
 	@Override
@@ -78,6 +79,8 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 		switch (modus) {
 		case lines: 
 			initializeWithTestData_Lines();
+		case json: 
+			initializeWithTestData_Json();
 		
 		default:
 			// do nothing
@@ -200,8 +203,64 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 	    System.out.println(String.format("Reduction Factor: %.2f", (double)totalRulesGenerated / FunctionMXplusN.getPoolSize()));
 	}
 
+	private void initializeWithTestData_Json() {
+	    TablePoolEID tableEID = new TablePoolEID();
+	    
+	    // 1. Messung vorbereiten
+	    Runtime runtime = Runtime.getRuntime();
+	    runtime.gc(); 
+	    long memoryBefore = runtime.totalMemory() - runtime.freeMemory();
+	    long startTime = System.currentTimeMillis();
+	    int totalRulesLoaded = 0;
+
+	    System.out.println("--- Starting JSON-DB Loading & Parsing ---");
+
+	    // Datenbank-Abfrage
+	    tableEID.select(tableEID.SELECT_ALL_COLUMNS, "", "ORDER BY eventType, influenceType");
+	    int rowCountEID = tableEID.rowCount();
+	    
+	    if (rowCountEID > 0) {
+	        for (int rowEID = 0; rowEID < rowCountEID; rowEID++) {
+	            
+	            int eventType = tableEID.getEventType(rowEID);
+	            int influenceType = tableEID.getInfluenceType(rowEID);
+	            String jsonEID = tableEID.getJsonEID(rowEID); // Holt das JSON-Feld
+
+	            if (jsonEID != null && !jsonEID.isEmpty()) {
+	                // Erstellung der EID basierend auf dem JSON-String
+	                // Hier greift im Hintergrund dein JEID-Mechanismus
+	                EventInfluenceDescription eid = new EventInfluenceDescription(jsonEID);
+	                eid.setFunctions();
+	                
+	                // In den Pool speichern
+	                setDescription(eventType, influenceType, eid);
+	                totalRulesLoaded++;
+	            }
+
+	            // Fortschritts-Log alle 1000 Regeln
+	            if (totalRulesLoaded % 1000 == 0) {
+	                System.out.println(String.format("[DB-Load] %d / %d Regeln verarbeitet...", totalRulesLoaded, rowCountEID));
+	            }
+	        }
+	    }
+
+	    // 2. Finales Benchmarking
+	    long duration = System.currentTimeMillis() - startTime;
+	    runtime.gc(); // Kurze Pause für den GC, um echte Belegung zu sehen
+	    long memoryAfter = runtime.totalMemory() - runtime.freeMemory();
+	    double memoryUsedMB = (memoryAfter - memoryBefore) / (1024.0 * 1024.0);
+
+	    System.out.println("--- JSON Loading Finished ---");
+	    System.out.println(String.format("Rules Loaded: %d | Time: %d ms", totalRulesLoaded, duration));
+	    System.out.println(String.format("Memory Used: %.2f MB (Avg: %.1f Bytes/Rule)", 
+	                       memoryUsedMB, (double)(memoryAfter - memoryBefore) / totalRulesLoaded));
+	    
+	    // Vergleichswert zum MX+N Pool
+	    System.out.println(String.format("Unique MX+N Instances: %d", FunctionMXplusN.getPoolSize()));
+	}
 	
-	private void loadFromDB() {
+/*	
+	private void initializeWithTestData_Json() {
 		TablePoolEID tableEID;
 
 		int rowCountEID;
@@ -235,7 +294,7 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 			}
 		}
 	}
-
+*/
 	
 
 }

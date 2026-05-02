@@ -157,6 +157,21 @@ public enum EventType {
 	
 	public static final int MAX_EVENT_TYPE =  512;
 
+	private static final java.util.Map<String, EventType> NAME_CACHE;
+	private static final java.util.Map<Integer, EventType> INDEX_CACHE;
+
+    static {
+        java.util.Map<String, EventType> nameMap = new java.util.HashMap<>();
+        java.util.Map<Integer, EventType> indexMap = new java.util.HashMap<>();
+        
+        for (EventType type : EventType.values()) {
+            nameMap.put(type.name().toLowerCase(), type);
+            indexMap.put(type.index, type);
+        }
+        NAME_CACHE = java.util.Collections.unmodifiableMap(nameMap);
+        INDEX_CACHE = java.util.Collections.unmodifiableMap(indexMap);
+    }
+
 	private int index;
 
 	private EventType(int index) {
@@ -178,12 +193,14 @@ public enum EventType {
 	}
 	
 	public static EventType fromName(String name) {
-		for (EventType type : EventType.values())
-			if (type.toString().toUpperCase().equals(name.toUpperCase()))
-				return type;
-		return null;
+        if (name == null || name.isEmpty()) return nothing;
+        return NAME_CACHE.getOrDefault(name.toLowerCase().trim(), nothing);
 	}
 
+    public static EventType getName(int index) {
+        return INDEX_CACHE.getOrDefault(index, nothing);
+    }
+    
 	public static List<String> getNameList() {
 		List<String> nameList = new ArrayList<String>();
 		for (EventType elem : EventType.values()) {
