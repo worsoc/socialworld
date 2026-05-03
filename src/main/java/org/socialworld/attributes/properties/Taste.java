@@ -22,7 +22,9 @@
 package org.socialworld.attributes.properties;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Word_Type;
@@ -41,14 +43,20 @@ public enum Taste implements IEnumProperty {
 	bitter(4),
 	umami(5);
 
+	private static final Map<String, Taste> NAME_CACHE = new HashMap<>();
+	private static final Map<Integer, Taste> INDEX_CACHE = new HashMap<>();
+
+	static {
+		for (Taste t : values()) {
+			NAME_CACHE.put(t.name(), t);
+			INDEX_CACHE.put(t.index, t);
+		}
+	}
+
 	private int index;
 
 	public static int getMaxIndex() {
-		int i = 1;
-		while (getName(i) != nothing) {
-			i++;
-		}
-		return i - 1;
+		return INDEX_CACHE.size() - 1;
 	}
 
 	private Taste(int index) {
@@ -92,10 +100,8 @@ public enum Taste implements IEnumProperty {
 	 * @return taste name
 	 */
 	public static Taste getName(int index) {
-		for (Taste element : Taste.values())
-			if (element.index == index)
-				return element;
-		return nothing;  // instead of null
+		Taste t = INDEX_CACHE.get(index);
+		return (t != null) ? t : nothing;
 	}
 	
 	/**
@@ -106,11 +112,8 @@ public enum Taste implements IEnumProperty {
 	 * @return taste 
 	 */
 	public static Taste fromName(String name) {
-		for (Taste element : Taste.values())
-			if (element.toString().equals(name)) {
-				return element;
-			}
-		return nothing;  // instead of null 
+		Taste t = NAME_CACHE.get(name);
+		return (t != null) ? t : nothing;
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////

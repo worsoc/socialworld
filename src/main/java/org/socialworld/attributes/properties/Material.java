@@ -22,7 +22,9 @@
 package org.socialworld.attributes.properties;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Word_Type;
@@ -40,6 +42,16 @@ public enum Material implements IEnumProperty {
 	iron(4),
 	paper(5);
 	
+	private static final Map<String, Material> NAME_CACHE = new HashMap<>();
+	private static final Map<Integer, Material> INDEX_CACHE = new HashMap<>();
+
+	static {
+		for (Material m : values()) {
+			NAME_CACHE.put(m.name(), m);
+			INDEX_CACHE.put(m.index, m);
+		}
+	}
+
 	private int index;
 
 	private Material(int index) {
@@ -47,11 +59,7 @@ public enum Material implements IEnumProperty {
 	}
 
 	public static int getMaxIndex() {
-		int i = 1;
-		while (getName(i) != nothing) {
-			i++;
-		}
-		return i - 1;
+		return INDEX_CACHE.size() - 1;
 	}
 	
 	/**
@@ -90,10 +98,8 @@ public enum Material implements IEnumProperty {
 	 * @return material name
 	 */
 	public static Material getName(int index) {
-		for (Material element : Material.values())
-			if (element.index == index)
-				return element;
-		return nothing;  // instead of null 
+		Material m = INDEX_CACHE.get(index);
+		return (m != null) ? m : nothing;
 	}
 	
 	/**
@@ -104,11 +110,8 @@ public enum Material implements IEnumProperty {
 	 * @return material 
 	 */
 	public static Material fromName(String name) {
-		for (Material element : Material.values())
-			if (element.toString().equals(name)) {
-				return element;
-			}
-		return nothing;  // instead of null 
+		Material m = NAME_CACHE.get(name);
+		return (m != null) ? m : nothing;
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////

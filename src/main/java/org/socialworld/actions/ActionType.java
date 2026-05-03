@@ -21,6 +21,9 @@
 */
 package org.socialworld.actions;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.socialworld.calculation.Value;
 
 /**
@@ -62,6 +65,15 @@ public enum ActionType {
 	say(10),
 	ignore(11);
 
+	private static final Map<String, ActionType> NAME_CACHE = new HashMap<>();
+	private static final Map<Integer, ActionType> INDEX_CACHE = new HashMap<>();
+
+	static {
+		for (ActionType type : values()) {
+			NAME_CACHE.put(type.name(), type);
+			INDEX_CACHE.put(type.index, type);
+		}
+	}
 	private int index;
 
 	private ActionType(int index) {
@@ -69,10 +81,13 @@ public enum ActionType {
 	}
 
 	public static ActionType getName(int index) {
-		for (ActionType actiontype : ActionType.values())
-			if (actiontype.index == index)
-				return actiontype;
-		return ignore;
+		ActionType type = INDEX_CACHE.get(index);
+		return (type != null) ? type : ignore;
+	}
+
+	public static ActionType fromName(String name) {
+		ActionType type = NAME_CACHE.get(name);
+		return (type != null) ? type : ignore;
 	}
 
 	/**
@@ -103,74 +118,25 @@ public enum ActionType {
 	private static String[] FURTHER_PROPERTY_NAMES___SAY = {Value.VALUE_BY_NAME_ACTION_TARGET,Value.VALUE_BY_NAME_ACTION_DIRECTION};
 	
 	public static String[] getStandardPropertyNames() {
-		String[] copy;
-		
-		copy = new String[STANDARD_PROPERTY_NAMES.length];
-		for (int i = 0; i < STANDARD_PROPERTY_NAMES.length;i++) {
-			copy[i] = new String(STANDARD_PROPERTY_NAMES[i]);
-		}
-		return copy;
+		return STANDARD_PROPERTY_NAMES.clone(); 
 	}
 	
 	public String[] getFurtherPropertyNames() {
-	
-		String[] original;
-		String[] copy;
-
-		switch (index) {
-		case 0: // bodily functions
-			original = FURTHER_PROPERTY_NAMES___BODILYFUNCTIONS;
-			break;
-		case 1: // move
-			original = FURTHER_PROPERTY_NAMES___MOVE;
-			break;
-		case 2: // examine
-			original = FURTHER_PROPERTY_NAMES___EXAMINE;
-			break;
-		case 3: // touch
-			original = FURTHER_PROPERTY_NAMES___TOUCH;
-			break;
-		case 4: // equip
-			original = FURTHER_PROPERTY_NAMES___EQUIP;
-			break;
-		case 5: // handleItem
-			original = FURTHER_PROPERTY_NAMES___HANDLEITEM;
-			break;
-		case 6: // useWeapon
-			original = FURTHER_PROPERTY_NAMES___USEWEAPON;
-			break;
-		case 7: // punch
-			original = FURTHER_PROPERTY_NAMES___PUNCH;
-			break;
-		case 8: // hear
-			original = FURTHER_PROPERTY_NAMES___HEAR;
-			break;
-		case 9: // talk
-			original = FURTHER_PROPERTY_NAMES___TALK;
-			break;
-		case 10: // say
-			original = FURTHER_PROPERTY_NAMES___SAY;
-			break;
-		default:
-			original = NO_FURTHER_PROPERTY_NAMES;
-			break;
+		switch (this) { 
+			case move: return FURTHER_PROPERTY_NAMES___MOVE.clone();
+			case examine: return FURTHER_PROPERTY_NAMES___EXAMINE.clone();
+			case touch: return FURTHER_PROPERTY_NAMES___TOUCH.clone();
+			case equip: return FURTHER_PROPERTY_NAMES___EQUIP.clone();
+			case handleItem: return FURTHER_PROPERTY_NAMES___HANDLEITEM.clone();
+			case useWeapon: return FURTHER_PROPERTY_NAMES___USEWEAPON.clone();
+			case punch: return FURTHER_PROPERTY_NAMES___PUNCH.clone();
+			case hear: return FURTHER_PROPERTY_NAMES___HEAR.clone();
+			case talk: return FURTHER_PROPERTY_NAMES___TALK.clone();
+			case say: return FURTHER_PROPERTY_NAMES___SAY.clone();
+			default: return NO_FURTHER_PROPERTY_NAMES.clone();
 		}
-		
-		copy = new String[original.length];
-		for (int i = 0; i < original.length;i++) {
-			copy[i] = new String(original[i]);
-		}
-
-		return copy;
-
 	}
 	
-	public static ActionType fromName(String name) {
-		for (ActionType type : ActionType.values())
-			if (type.toString().equals(name))
-				return type;
-		return null;
-	}
 
 	public String getPraefix() {
 		return name() + "_";

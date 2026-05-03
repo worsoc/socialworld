@@ -21,14 +21,26 @@
 */
 package org.socialworld.objects;
 
+import java.util.HashMap;
+import java.util.Map;
 
 public enum SimulationObject_Type {
 	noObject(0), animal(1),human(2), god(3), item(4), magic(5);
 
-	private int arrayIndex;
+	private static final Map<Integer, SimulationObject_Type> INDEX_CACHE = new HashMap<>();
+	private static final Map<String, SimulationObject_Type> NAME_CACHE = new HashMap<>();
+
+	static {
+		for (SimulationObject_Type type : values()) {
+			INDEX_CACHE.put(type.index, type);
+			NAME_CACHE.put(type.name(), type);
+		}
+	}
+
+	private final int index;
 
 	private SimulationObject_Type(int index) {
-		this.arrayIndex = index;
+		this.index = index;
 	}
 	
 	/**
@@ -37,33 +49,38 @@ public enum SimulationObject_Type {
 	 * @return type's index
 	 */
 	public int getIndex() {
-		return arrayIndex;
+		return index;
 	}
 	
 	public int next() {
-		switch (arrayIndex) {
-		case 2: return 1; 
-		case 1: return 3; 
-		case 3: return 4; 
-		case 4: return 5; 
-		case 5: return 2; 
-		default:return 0;
+		switch (this) {
+			case human:  return 1; // to animal
+			case animal: return 3; // to god
+			case god:    return 4; // to item
+			case item:   return 5; // to magic
+			case magic:  return 2; // to human
+			default:     return 0;
 		}
 	}
+
+
 	/**
 	 * The method returns the simulation object type which belongs to the parameter index.
 	 * 
-	 * @param arrayIndex
+	 * @param index
 	 *            type index
 	 * @return simulation object type
 	 */
-	public static SimulationObject_Type getSimulationObjectType(int arrayIndex) {
-		for (SimulationObject_Type type : SimulationObject_Type.values())
-			if (type.arrayIndex == arrayIndex)
-				return type;
-		return noObject;
+	public static SimulationObject_Type getSimulationObjectType(int index) {
+		SimulationObject_Type type = INDEX_CACHE.get(index);
+		return (type != null) ? type : noObject;
 	}
-	
+
+	public static SimulationObject_Type fromName(String name) {
+		SimulationObject_Type type = NAME_CACHE.get(name);
+		return (type != null) ? type : noObject;
+	}
+
 	public int getPercipiencePriority() {
 		
 		switch(this){

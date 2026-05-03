@@ -21,6 +21,9 @@
 */
 package org.socialworld.actions;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.socialworld.core.EventTypeGeneral;
 
 /**
@@ -78,6 +81,19 @@ public enum ActionMode {
 	// for ActionType say
 	sayNormal(101, EventTypeGeneral.sayNormal), sayScream(102, EventTypeGeneral.sayScream), sayWhisper(103, EventTypeGeneral.sayWhisper);	
 
+	private static final Map<String, ActionMode> NAME_CACHE = new HashMap<>();
+	private static final Map<Integer, ActionMode> INDEX_CACHE = new HashMap<>();
+	private static final Map<EventTypeGeneral, ActionMode> ETG_CACHE = new HashMap<>();
+
+	static {
+		for (ActionMode mode : values()) {
+			NAME_CACHE.put(mode.name(), mode);
+			INDEX_CACHE.put(mode.index, mode);
+			ETG_CACHE.put(mode.etg, mode);
+		}
+	}
+	
+	
 	private int index;
 	private EventTypeGeneral etg;
 
@@ -87,10 +103,8 @@ public enum ActionMode {
 	}
 	
 	public static ActionMode getName(int index) {
-		for (ActionMode actionmode : ActionMode.values())
-			if (actionmode.index == index)
-				return actionmode;
-		return ignore;
+		ActionMode mode = INDEX_CACHE.get(index);
+		return (mode != null) ? mode : ignore;
 	}
 
 	/**
@@ -103,17 +117,13 @@ public enum ActionMode {
 	}
 
 	public static ActionMode fromName(String name) {
-		for (ActionMode mode : ActionMode.values())
-			if (mode.toString().equals(name))
-				return mode;
-		return null;
+		ActionMode mode = NAME_CACHE.get(name);
+		return (mode != null) ? mode : ignore;
 	}
 
 	public static ActionMode fromEventTypeGeneral(EventTypeGeneral etg) {
-		for (ActionMode mode : ActionMode.values())
-			if (mode.etg == etg)
-				return mode;
-		return ignore;
+		ActionMode mode = ETG_CACHE.get(etg);
+		return (mode != null) ? mode : ignore;
 	}
 
 	public static int maxIndex() {

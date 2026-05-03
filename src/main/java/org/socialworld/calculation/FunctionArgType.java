@@ -22,16 +22,24 @@
 package org.socialworld.calculation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public enum FunctionArgType {
 	Const, Attribute, EventPropertyNumericValue, TermNr;
 	
+	private static final Map<String, FunctionArgType> NAME_CACHE = new HashMap<>();
+
+	static {
+		for (FunctionArgType type : values()) {
+			NAME_CACHE.put(type.name().toUpperCase(), type);
+		}
+	}
+
 	public static FunctionArgType fromName(String name) {
-		for (FunctionArgType type : FunctionArgType.values())
-			if (type.toString().toUpperCase().equals(name.toUpperCase()))
-				return type;
-		return null;
+		if (name == null) return null;
+		return NAME_CACHE.get(name.toUpperCase());
 	}
 	
 	public static List<String> getNameList() {

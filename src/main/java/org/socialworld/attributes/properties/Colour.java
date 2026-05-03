@@ -23,7 +23,9 @@ package org.socialworld.attributes.properties;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Word_Type;
@@ -192,15 +194,22 @@ public enum Colour implements IEnumProperty{
 	dark_yellow4(154,051051000),
 	gainsboro(155,220220220);
 	
+    private static final Map<String, Colour> NAME_CACHE = new HashMap<>();
+    private static final Map<Integer, Colour> INDEX_CACHE = new HashMap<>();
+
+    static {
+        for (Colour c : values()) {
+            NAME_CACHE.put(c.name(), c);
+            INDEX_CACHE.put(c.index, c);
+        }
+    }
+	
+	
 	public static int getMaxIndex() {
-		int i = 1;
-		while (getName(i) != nothing) {
-			i++;
-		}
-		return i - 1;
+        return INDEX_CACHE.size() - 1; 
 	}
 
-	public Color getColour(Colour colour) {
+	public Color getAWTColour(Colour colour) {
 		switch(colour) {
 		case black: return SimColorConstants.COLOR_BLACK;
 		case dimgray: return SimColorConstants.COLOR_DIMGRAY;
@@ -358,7 +367,7 @@ public enum Colour implements IEnumProperty{
 		case dark_yellow3: return SimColorConstants.COLOR_DARK_YELLOW3;			
 		case dark_yellow4: return SimColorConstants.COLOR_DARK_YELLOW4;	
 		
-		default:return SimColorConstants.COLOR_BLACK;
+		default:return SimColorConstants.COLOR_NOTHING;
 		}
 	}
 	
@@ -410,10 +419,8 @@ public enum Colour implements IEnumProperty{
 	 * @return colour
 	 */
 	public static Colour getName(int index) {
-		for (Colour element : Colour.values())
-			if (element.index == index)
-				return element;
-		return null;
+        Colour c = INDEX_CACHE.get(index);
+        return (c != null) ? c : nothing;
 	}
 	
 	/**
@@ -424,12 +431,10 @@ public enum Colour implements IEnumProperty{
 	 * @return colour 
 	 */
 	public static Colour fromName(String name) {
-		for (Colour element : Colour.values())
-			if (element.toString().equals(name)) {
-				return element;
-			}
-		return nothing;  // instead of null 
+	    Colour c = NAME_CACHE.get(name);
+	    return (c != null) ? c : nothing;
 	}
+	
 	
 	///////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////meta information    ////////////////////////////////////

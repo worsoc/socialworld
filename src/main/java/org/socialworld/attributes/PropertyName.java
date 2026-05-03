@@ -22,7 +22,9 @@
 package org.socialworld.attributes;
 
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.socialworld.calculation.PropertyUsingAs;
 import org.socialworld.calculation.Type;
@@ -156,8 +158,22 @@ public enum PropertyName {
 	
 	private final static int THREASHOLD_SIMPROPERTY = 2000000;
 
+	private static final Map<String, PropertyName> NAME_CACHE = new HashMap<>();
+	private static final Map<Integer, PropertyName> INDEX_CACHE = new HashMap<>();
+	private static final Map<PropertyName, PropertyName> PARENT_STATE_CACHE = new HashMap<>();
+
+	static {
+		for (PropertyName prop : values()) {
+			NAME_CACHE.put(prop.name(), prop);
+			INDEX_CACHE.put(prop.index, prop);
+		}
+		// Parent-States vorab berechnen, um String-Operationen zur Laufzeit zu vermeiden
+		for (PropertyName prop : values()) {
+			PARENT_STATE_CACHE.put(prop, computeParentState(prop));
+		}
+	}
 	
-	private int index;
+	private final int index;
 
 	private PropertyName(int index) {
 		this.index = index;
@@ -169,77 +185,68 @@ public enum PropertyName {
 	}
 
 	public static PropertyName getName(int index) {
-		for (PropertyName prop : PropertyName.values())
-			if (prop.index == index)
-				return prop;
-		return unknown;
+		PropertyName prop = INDEX_CACHE.get(index);
+		return (prop != null) ? prop : unknown;
 	}
 
+	public static PropertyName fromName(String name) {
+		PropertyName prop = NAME_CACHE.get(name);
+		return (prop != null) ? prop : unknown;
+	}
 	
 	public Type getType() {
 		switch (this) {
-		case unknown:
-			return Type.nothing; 
-		case simobj_attributeArray:
-			return Type.attributeArray;
-		case simobj_position:
-//		case simobj_inventory:  
-		case simobj_knowledge:
-		case simobj_directionMove: 
-		case simobj_directionChest: 
-		case stateSeer_directionView: 
-		case simobj_directionActiveMove: 
-		case stateSeer: 
-			return Type.simObjProp; 
-		case event_position:
-		case event_direction:
-			return Type.eventProp; 
-		case action_position:
-			return Type.actionProp; 
-		case direction:
-			return Type.simPropName;
-		default:
-			return Type.nothing;
+			case unknown: return Type.nothing; 
+			case simobj_attributeArray: return Type.attributeArray;
+			case simobj_position:
+			case simobj_knowledge:
+			case simobj_directionMove: 
+			case simobj_directionChest: 
+			case stateSeer_directionView: 
+			case simobj_directionActiveMove: 
+			case stateSeer: return Type.simObjProp; 
+			case event_position:
+			case event_direction: return Type.eventProp; 
+			case action_position: return Type.actionProp; 
+			case direction: return Type.simPropName;
+			default: return Type.nothing;
 		}
-	}
+	}	
+
 	
 	public PropertyName toType(Type propertyType) {
-		if (getType() == propertyType ){
-			return this;
-		}
+		if (getType() == propertyType) return this;
+		
 		switch (propertyType) {
-		case simObjProp:
-			if (this.name().contains("position"))	return simobj_position;
-			else if (this.name().contains("direction"))	return simobj_directionMove;
-			else if (this.name().contains("dimension"))	return stateAppearance_dimension;
-		case eventProp:
-			if (this.name().contains("position"))	return event_position;
-			else if (this.name().contains("direction"))	return event_direction;
-		case actionProp:
-			return action_position;
-		default:
-			return unknown;
+			case simObjProp:
+				if (this.name().contains("position")) return simobj_position;
+				if (this.name().contains("direction")) return simobj_directionMove;
+				if (this.name().contains("dimension")) return stateAppearance_dimension;
+				break;
+			case eventProp:
+				if (this.name().contains("position")) return event_position;
+				if (this.name().contains("direction")) return event_direction;
+				break;
+			case actionProp:
+				return action_position;
 		}
+		return unknown;
 	}
 	
 	public String toString() {
 		return this.name();
 	}
 
+
 	public static PropertyName forString(String name) {
-		
-		
-		for (PropertyName prop : PropertyName.values())
-			if (prop.name().equals( name))
-				return prop;
-		return unknown;
-
-
+		return fromName(name);
 	}
 	
 	
 	public PropertyName parentState() {
 	
+		return PARENT_STATE_CACHE.getOrDefault(this, unknown);
+/*
 		int index_ = name().indexOf("_");
 		int indexState = name().indexOf("state");
 		String parentStateName;
@@ -251,6 +258,7 @@ public enum PropertyName {
 		else {
 			return unknown;
 		}
+*/
 	}
 	
 	public boolean isSimProperty() {
@@ -290,5 +298,14 @@ public enum PropertyName {
 		}
 	}
 	
-	
+	private static PropertyName computeParentState(PropertyName prop) {
+		String name = prop.name();
+		int index_ = name.indexOf("_");
+		if (index_ > 0 && name.startsWith("state")) {
+			String parentStateName = name.substring(0, index_);
+			return NAME_CACHE.getOrDefault(parentStateName, unknown);
+		}
+		return unknown;
+	}
+
 }

@@ -172,7 +172,7 @@ public enum EventType {
         INDEX_CACHE = java.util.Collections.unmodifiableMap(indexMap);
     }
 
-	private int index;
+	private final int index;
 
 	private EventType(int index) {
 		this.index = index;

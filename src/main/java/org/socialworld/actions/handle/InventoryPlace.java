@@ -21,6 +21,8 @@
 */
 package org.socialworld.actions.handle;
 
+import java.util.HashMap;
+import java.util.Map;
 
 public enum InventoryPlace {
 
@@ -35,18 +37,29 @@ public enum InventoryPlace {
 	leftFootShoe(15),
 	rightFootShoe(16);
 	
-	
-	private int index;
+	private static final Map<String, InventoryPlace> NAME_CACHE = new HashMap<>();
+	private static final Map<Integer, InventoryPlace> INDEX_CACHE = new HashMap<>();
+
+	static {
+		for (InventoryPlace place : values()) {
+			NAME_CACHE.put(place.name(), place);
+			INDEX_CACHE.put(place.index, place);
+		}
+	}
+
+	private final int index;
 
 	private InventoryPlace(int index) {
 		this.index = index;
 	}
 
+	public static int getMaxIndex() {
+		return INDEX_CACHE.size() - 1;
+	}
+
 	public static InventoryPlace getName(int index) {
-		for (InventoryPlace place : InventoryPlace.values())
-			if (place.index == index)
-				return place;
-		return noWhere;
+		InventoryPlace place = INDEX_CACHE.get(index);
+		return (place != null) ? place : noWhere;
 	}
 	
 	public int getIndex() {
@@ -54,10 +67,8 @@ public enum InventoryPlace {
 	}
 
 	public static InventoryPlace fromName(String name) {
-		for (InventoryPlace place : InventoryPlace.values())
-			if (place.toString().equals(name))
-				return place;
-		return null;
+		InventoryPlace place = NAME_CACHE.get(name);
+		return (place != null) ? place : noWhere;
 	}
 
 }

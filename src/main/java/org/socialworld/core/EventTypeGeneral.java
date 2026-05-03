@@ -1,7 +1,9 @@
 package org.socialworld.core;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public enum EventTypeGeneral {
 
@@ -30,6 +32,20 @@ public enum EventTypeGeneral {
 	
 	sayNormal(80), sayScream(81), sayWhisper(82);
 
+	
+	private static final Map<String, EventTypeGeneral> NAME_CACHE = new HashMap<>();
+	private static final Map<Integer, EventTypeGeneral> INDEX_CACHE = new HashMap<>();
+	private static final Map<EventType, EventTypeGeneral> EVENT_TYPE_MAP = new HashMap<>();
+
+	static {
+		for (EventTypeGeneral type : values()) {
+			NAME_CACHE.put(type.name().toUpperCase(), type);
+			INDEX_CACHE.put(type.index, type);
+		}
+		// Initialize  EventType mappings 
+		initializeEventTypeMap();
+	}
+
 	private int index;
 
 	private EventTypeGeneral(int index) {
@@ -44,17 +60,14 @@ public enum EventTypeGeneral {
 	 * @return general event type name
 	 */
 	public static EventTypeGeneral getEventType(int index) {
-		for (EventTypeGeneral type : EventTypeGeneral.values())
-			if (type.index == index)
-				return type;
-		return nothing; // instead of null
+		EventTypeGeneral type = INDEX_CACHE.get(index);
+		return (type != null) ? type : nothing;
 	}
 	
 	public static EventTypeGeneral fromName(String name) {
-		for (EventTypeGeneral type : EventTypeGeneral.values())
-			if (type.toString().toUpperCase().equals(name.toUpperCase()))
-				return type;
-		return null;
+		if (name == null) return nothing;
+		EventTypeGeneral type = NAME_CACHE.get(name.toUpperCase());
+		return (type != null) ? type : nothing;
 	}
 
 	public static List<String> getNameList() {
@@ -67,198 +80,69 @@ public enum EventTypeGeneral {
 	}
 	
 	static EventTypeGeneral getGeneralEventType(EventType type) {
-		switch (type) {
-		case selfSleep:
-		case candidatesSleep:
-		case percipientSleep: return sleep;
-		case selfDrink:
-		case targetDrink:
-		case candidatesDrink:
-		case percipientDrink: return drink;
-		case selfEat:
-		case targetEat:
-		case candidatesEat:
-		case percipientEat: return eat;
-		case selfPiss:
-		case candidatesPiss:
-		case percipientPiss: return piss;
-		case selfShit:
-		case candidatesShit:
-		case percipientShit: return shit;
-		case selfMoveWalk:
-		case candidatesMoveWalk:
-		case percipientMoveWalk: return moveWalk;
-		case selfMoveRun:
-		case candidatesMoveRun:
-		case percipientMoveRun: return moveRun;
-		case selfMoveSneak:
-		case candidatesMoveSneak:
-		case percipientMoveSneak: return moveSneak;
-		case selfMoveJump:
-		case candidatesMoveJump:
-		case percipientMoveJump: return moveJump;
-		case selfMoveSwim:
-		case candidatesMoveSwim:
-		case percipientMoveSwim: return moveSwim;
-		case selfMoveFly:
-		case candidatesMoveFly:
-		case percipientMoveFly: return moveFly;
-		case selfExamineByLook:
-		case targetExamineByLook:
-		case candidatesExamineByLook:
-		case percipientExamineByLook: return examineByLook;
-		case selfExamineBySmell:
-		case targetExamineBySmell:
-		case candidatesExamineBySmell:
-		case percipientExamineBySmell: return examineBySmell;
-		case selfExamineByTaste:
-		case targetExamineByTaste:
-		case candidatesExamineByTaste:
-		case percipientExamineByTaste: return examineByTaste;
-		case selfExamineByTouch:
-		case targetExamineByTouch:
-		case candidatesExamineByTouch:
-		case percipientExamineByTouch: return examineByTouch;
-		case selfTouchByHand:
-		case targetTouchByHand:
-		case candidatesTouchByHand:
-		case percipientTouchByHand: return touchByHand;
-		case selfTouchByFoot:
-		case targetTouchByFoot:
-		case candidatesTouchByFoot:
-		case percipientTouchByFoot: return touchByFoot;
-		case selfInventoryTake:
-		case targetInventoryTake:
-		case candidatesInventoryTake:
-		case percipientInventoryTake: return inventoryTake;
-		case selfInventoryDrop:
-		case targetInventoryDrop:
-		case candidatesInventoryDrop:
-		case percipientInventoryDrop: return inventoryDrop;
-		case selfInventorySwitch:
-		case targetInventorySwitch:
-		case candidatesInventorySwitch:
-		case percipientInventorySwitch: return inventorySwitch;
-		case selfInventorySet:
-		case targetInventorySet:
-		case candidatesInventorySet:
-		case percipientInventorySet: return inventorySet;
-		case selfInventoryGet:
-		case targetInventoryGet:
-		case candidatesInventoryGet:
-		case percipientInventoryGet: return inventoryGet;
-		case selfHandleItemUse2:
-		case targetHandleItemUse2:
-		case candidatesHandleItemUse2:
-		case percipientHandleItemUse2: return handleItemUse2;
-		case selfHandleItemUseLeft:
-		case targetHandleItemUseLeft:
-		case candidatesHandleItemUseLeft:
-		case percipientHandleItemUseLeft: return handleItemUseLeft;
-		case selfHandleItemUseRight:
-		case targetHandleItemUseRight:
-		case candidatesHandleItemUseRight:
-		case percipientHandleItemUseRight: return handleItemUseRight;
-		case selfHandleItemAddRtoL:
-		case targetHandleItemAddRtoL:
-		case candidatesHandleItemAddRtoL:
-		case percipientHandleItemAddRtoL: return handleItemAddRtoL;
-		case selfHandleItemAddLtoR:
-		case targetHandleItemAddLtoR:
-		case candidatesHandleItemAddLtoR:
-		case percipientHandleItemAddLtoR: return handleItemAddLtoR;
-		case selfHandleItemPull:
-		case targetHandleItemPull:
-		case candidatesHandleItemPull:
-		case percipientHandleItemPull: return handleItemPull;
-		case selfHandleItemPush:
-		case targetHandleItemPush:
-		case candidatesHandleItemPush:
-		case percipientHandleItemPush: return handleItemPush;
-		case selfWeaponLeftStab:
-		case targetWeaponLeftStab:
-		case candidatesWeaponLeftStab:
-		case percipientWeaponLeftStab: return weaponLeftStab;
-		case selfWeaponLeftStroke:
-		case targetWeaponLeftStroke:
-		case candidatesWeaponLeftStroke:
-		case percipientWeaponLeftStroke: return weaponLeftStroke;
-		case selfWeaponLeftBackhand:
-		case targetWeaponLeftBackhand:
-		case candidatesWeaponLeftBackhand:
-		case percipientWeaponLeftBackhand: return weaponLeftBackhand;
-		case selfWeaponRightStab:
-		case targetWeaponRightStab:
-		case candidatesWeaponRightStab:
-		case percipientWeaponRightStab: return weaponRightStab;
-		case selfWeaponRightStroke:
-		case targetWeaponRightStroke:
-		case candidatesWeaponRightStroke:
-		case percipientWeaponRightStroke: return weaponRightStroke;
-		case selfWeaponRightBackhand:
-		case targetWeaponRightBackhand:
-		case candidatesWeaponRightBackhand:
-		case percipientWeaponRightBackhand: return weaponRightBackhand;
-		case selfWeaponClub:
-		case targetWeaponClub:
-		case candidatesWeaponClub:
-		case percipientWeaponClub: return weaponClub;
-		case selfPunchLeftFistStraight:
-		case targetPunchLeftFistStraight:
-		case candidatesPunchLeftFistStraight:
-		case percipientPunchLeftFistStraight: return punchLeftFistStraight;
-		case selfPunchLeftFistSideways:
-		case targetPunchLeftFistSideways:
-		case candidatesPunchLeftFistSideways:
-		case percipientPunchLeftFistSideways: return punchLeftFistSideways;
-		case selfPunchLeftFistUpward:
-		case targetPunchLeftFistUpward:
-		case candidatesPunchLeftFistUpward:
-		case percipientPunchLeftFistUpward: return punchLeftFistUpward;
-		case selfPunchRightFistStraight:
-		case targetPunchRightFistStraight:
-		case candidatesPunchRightFistStraight:
-		case percipientPunchRightFistStraight: return punchRightFistStraight;
-		case selfPunchRightFistSideways:
-		case targetPunchRightFistSideways:
-		case candidatesPunchRightFistSideways:
-		case percipientPunchRightFistSideways: return punchRightFistSideways;
-		case selfPunchRightFistUpward:
-		case targetPunchRightFistUpward:
-		case candidatesPunchRightFistUpward:
-		case percipientPunchRightFistUpward: return punchRightFistUpward;
-		case selfListenToStatement: return listenToStatement;
-		case selfListenToQuestion: return listenToQuestion;
-		case selfListenToInstruction: return listenToInstruction;
-		case selfUnderstand: return understand;
-		case selfAskNormal:
-		case targetAskNormal:
-		case percipientAskNormal: return askNormal;
-		case selfAskScream:
-		case targetAskScream:
-		case percipientAskScream: return askScream;
-		case selfAskWhisper:
-		case targetAskWhisper:
-		case percipientAskWhisper: return askWhisper;
-		case selfAnswerNormal:
-		case targetAnswerNormal:
-		case percipientAnswerNormal: return answerNormal;
-		case selfAnswerScream:
-		case targetAnswerScream:
-		case percipientAnswerScream: return answerScream;
-		case selfAnswerWhisper:
-		case targetAnswerWhisper:
-		case percipientAnswerWhisper: return answerWhisper;
-		case selfSayNormal:
-		case candidatesSayNormal: return sayNormal;
-		case selfSayScream:
-		case candidatesSayScream: return sayScream;
-		case selfSayWhisper:
-		case candidatesSayWhisper: return sayWhisper;
-		
-		}
-		
-		return nothing;
+		EventTypeGeneral genType = EVENT_TYPE_MAP.get(type);
+		return (genType != null) ? genType : nothing;
 	}
 	
+	private static void initializeEventTypeMap() {
+		map(sleep, EventType.selfSleep, EventType.candidatesSleep, EventType.percipientSleep);
+		map(drink, EventType.selfDrink, EventType.targetDrink, EventType.candidatesDrink, EventType.percipientDrink);
+		map(eat, EventType.selfEat, EventType.targetEat, EventType.candidatesEat, EventType.percipientEat);
+		map(piss, EventType.selfPiss, EventType.candidatesPiss, EventType.percipientPiss);
+		map(shit, EventType.selfShit, EventType.candidatesShit, EventType.percipientShit);
+		map(moveWalk, EventType.selfMoveWalk, EventType.candidatesMoveWalk, EventType.percipientMoveWalk);
+		map(moveRun, EventType.selfMoveRun, EventType.candidatesMoveRun, EventType.percipientMoveRun);
+		map(moveSneak, EventType.selfMoveSneak, EventType.candidatesMoveSneak, EventType.percipientMoveSneak);
+		map(moveJump, EventType.selfMoveJump, EventType.candidatesMoveJump, EventType.percipientMoveJump);
+		map(moveSwim, EventType.selfMoveSwim, EventType.candidatesMoveSwim, EventType.percipientMoveSwim);
+		map(moveFly, EventType.selfMoveFly, EventType.candidatesMoveFly, EventType.percipientMoveFly);
+		map(examineByLook, EventType.selfExamineByLook, EventType.targetExamineByLook, EventType.candidatesExamineByLook, EventType.percipientExamineByLook);
+		map(examineBySmell, EventType.selfExamineBySmell, EventType.targetExamineBySmell, EventType.candidatesExamineBySmell, EventType.percipientExamineBySmell);
+		map(examineByTaste, EventType.selfExamineByTaste, EventType.targetExamineByTaste, EventType.candidatesExamineByTaste, EventType.percipientExamineByTaste);
+		map(examineByTouch, EventType.selfExamineByTouch, EventType.targetExamineByTouch, EventType.candidatesExamineByTouch, EventType.percipientExamineByTouch);
+		map(touchByHand, EventType.selfTouchByHand, EventType.targetTouchByHand, EventType.candidatesTouchByHand, EventType.percipientTouchByHand);
+		map(touchByFoot, EventType.selfTouchByFoot, EventType.targetTouchByFoot, EventType.candidatesTouchByFoot, EventType.percipientTouchByFoot);
+		map(inventoryTake, EventType.selfInventoryTake, EventType.targetInventoryTake, EventType.candidatesInventoryTake, EventType.percipientInventoryTake);
+		map(inventoryDrop, EventType.selfInventoryDrop, EventType.targetInventoryDrop, EventType.candidatesInventoryDrop, EventType.percipientInventoryDrop);
+		map(inventorySwitch, EventType.selfInventorySwitch, EventType.targetInventorySwitch, EventType.candidatesInventorySwitch, EventType.percipientInventorySwitch);
+		map(inventorySet, EventType.selfInventorySet, EventType.targetInventorySet, EventType.candidatesInventorySet, EventType.percipientInventorySet);
+		map(inventoryGet, EventType.selfInventoryGet, EventType.targetInventoryGet, EventType.candidatesInventoryGet, EventType.percipientInventoryGet);
+		map(handleItemUse2, EventType.selfHandleItemUse2, EventType.targetHandleItemUse2, EventType.candidatesHandleItemUse2, EventType.percipientHandleItemUse2);
+		map(handleItemUseLeft, EventType.selfHandleItemUseLeft, EventType.targetHandleItemUseLeft, EventType.candidatesHandleItemUseLeft, EventType.percipientHandleItemUseLeft);
+		map(handleItemUseRight, EventType.selfHandleItemUseRight, EventType.targetHandleItemUseRight, EventType.candidatesHandleItemUseRight, EventType.percipientHandleItemUseRight);
+		map(handleItemAddRtoL, EventType.selfHandleItemAddRtoL, EventType.targetHandleItemAddRtoL, EventType.candidatesHandleItemAddRtoL, EventType.percipientHandleItemAddRtoL);
+		map(handleItemAddLtoR, EventType.selfHandleItemAddLtoR, EventType.targetHandleItemAddLtoR, EventType.candidatesHandleItemAddLtoR, EventType.percipientHandleItemAddLtoR);
+		map(handleItemPull, EventType.selfHandleItemPull, EventType.targetHandleItemPull, EventType.candidatesHandleItemPull, EventType.percipientHandleItemPull);
+		map(handleItemPush, EventType.selfHandleItemPush, EventType.targetHandleItemPush, EventType.candidatesHandleItemPush, EventType.percipientHandleItemPush);
+		map(weaponLeftStab, EventType.selfWeaponLeftStab, EventType.targetWeaponLeftStab, EventType.candidatesWeaponLeftStab, EventType.percipientWeaponLeftStab);
+		map(weaponLeftStroke, EventType.selfWeaponLeftStroke, EventType.targetWeaponLeftStroke, EventType.candidatesWeaponLeftStroke, EventType.percipientWeaponLeftStroke);
+		map(weaponLeftBackhand, EventType.selfWeaponLeftBackhand, EventType.targetWeaponLeftBackhand, EventType.candidatesWeaponLeftBackhand, EventType.percipientWeaponLeftBackhand);
+		map(weaponRightStab, EventType.selfWeaponRightStab, EventType.targetWeaponRightStab, EventType.candidatesWeaponRightStab, EventType.percipientWeaponRightStab);
+		map(weaponRightStroke, EventType.selfWeaponRightStroke, EventType.targetWeaponRightStroke, EventType.candidatesWeaponRightStroke, EventType.percipientWeaponRightStroke);
+		map(weaponRightBackhand, EventType.selfWeaponRightBackhand, EventType.targetWeaponRightBackhand, EventType.candidatesWeaponRightBackhand, EventType.percipientWeaponRightBackhand);
+		map(weaponClub, EventType.selfWeaponClub, EventType.targetWeaponClub, EventType.candidatesWeaponClub, EventType.percipientWeaponClub);
+		map(punchLeftFistStraight, EventType.selfPunchLeftFistStraight, EventType.targetPunchLeftFistStraight, EventType.candidatesPunchLeftFistStraight, EventType.percipientPunchLeftFistStraight);
+		map(punchLeftFistSideways, EventType.selfPunchLeftFistSideways, EventType.targetPunchLeftFistSideways, EventType.candidatesPunchLeftFistSideways, EventType.percipientPunchLeftFistSideways);
+		map(punchLeftFistUpward, EventType.selfPunchLeftFistUpward, EventType.targetPunchLeftFistUpward, EventType.candidatesPunchLeftFistUpward, EventType.percipientPunchLeftFistUpward);
+		map(punchRightFistStraight, EventType.selfPunchRightFistStraight, EventType.targetPunchRightFistStraight, EventType.candidatesPunchRightFistStraight, EventType.percipientPunchRightFistStraight);
+		map(punchRightFistSideways, EventType.selfPunchRightFistSideways, EventType.targetPunchRightFistSideways, EventType.candidatesPunchRightFistSideways, EventType.percipientPunchRightFistSideways);
+		map(punchRightFistUpward, EventType.selfPunchRightFistUpward, EventType.targetPunchRightFistUpward, EventType.candidatesPunchRightFistUpward, EventType.percipientPunchRightFistUpward);
+		map(listenToStatement, EventType.selfListenToStatement);
+		map(listenToQuestion, EventType.selfListenToQuestion);
+		map(listenToInstruction, EventType.selfListenToInstruction);
+		map(understand, EventType.selfUnderstand);
+		map(askNormal, EventType.selfAskNormal);
+		map(askScream, EventType.selfAskScream);
+		map(askWhisper, EventType.selfAskWhisper);
+		map(answerNormal, EventType.selfAnswerNormal);
+		map(answerScream, EventType.selfAnswerScream);
+		map(answerWhisper, EventType.selfAnswerWhisper);
+		map(sayNormal, EventType.selfSayNormal);
+		map(sayScream, EventType.selfSayScream);
+		map(sayWhisper, EventType.selfSayWhisper);
+	}
+	private static void map(EventTypeGeneral target, EventType... sources) {
+		for (EventType s : sources) EVENT_TYPE_MAP.put(s, target);
+	}
+
 }

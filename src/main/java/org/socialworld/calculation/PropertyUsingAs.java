@@ -21,6 +21,8 @@
 */
 package org.socialworld.calculation;
 
+import java.util.HashMap;
+import java.util.Map;
 
 public enum PropertyUsingAs {
 	
@@ -54,8 +56,17 @@ public enum PropertyUsingAs {
 
 	todo(9999999);
 
+	private static final Map<String, PropertyUsingAs> NAME_CACHE = new HashMap<>();
+	private static final Map<Integer, PropertyUsingAs> INDEX_CACHE = new HashMap<>();
 
-	private int index;
+	static {
+		for (PropertyUsingAs p : values()) {
+			NAME_CACHE.put(p.name(), p);
+			INDEX_CACHE.put(p.index, p);
+		}
+	}
+
+	private final int index;
 
 	private PropertyUsingAs(int index) {
 		this.index = index;
@@ -66,22 +77,32 @@ public enum PropertyUsingAs {
 	}
 
 	public static PropertyUsingAs getName(int index) {
-		for (PropertyUsingAs permission : PropertyUsingAs.values())
-			if (permission.index == index)
-				return permission;
-		return dontCheck;
+		PropertyUsingAs permission = INDEX_CACHE.get(index);
+		return (permission != null) ? permission : dontCheck;
 	}
 	
+	public static PropertyUsingAs fromName(String name) {
+		PropertyUsingAs permission = NAME_CACHE.get(name);
+		return (permission != null) ? permission : dontCheck;
+	}
+
 	public PropertyUsingAs getPathPermission(PropertyUsingAs finalValuePermission) {
 		return getName(finalValuePermission.index - 1);
 	}
 	
 	public SimulationCluster getSimulationCluster() {
-		
 		if (this.index == 0) return SimulationCluster.unknown;
-		else if (this.index < 100) return SimulationCluster.knowledge;
-		else return SimulationCluster.unknown;
 		
+		int clusterPrefix = this.index / 1000; 
+		switch (clusterPrefix) {
+			case 11: return SimulationCluster.knowledge;
+			case 21: return SimulationCluster.percipience;
+			case 31: return SimulationCluster.position;
+			case 41: return SimulationCluster.attributeArray;
+			case 51: return SimulationCluster.action;
+			case 1:  return SimulationCluster.simulationObject; // für 'object' (1001)
+			default: return SimulationCluster.unknown;
+		}
 	}
 
 }

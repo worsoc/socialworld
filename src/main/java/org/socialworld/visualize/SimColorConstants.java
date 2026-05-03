@@ -4,6 +4,8 @@ import java.awt.Color;
 
 public class SimColorConstants {
 
+	public static final Color COLOR_NOTHING = new Color(0, 0, 0, 0);
+	
 	public static final Color COLOR_BLACK = new Color(0,0,0);
 	public static final Color COLOR_DIMGRAY = new Color(105,105,105);
 	public static final Color COLOR_GRAY = new Color(128,128,128);

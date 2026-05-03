@@ -21,7 +21,7 @@
 */
 package org.socialworld.calculation.descriptions;
 
-import org.socialworld.calculation.FunctionArgType;
+//import org.socialworld.calculation.FunctionArgType;
 import org.socialworld.calculation.Value;
 import org.socialworld.datasource.parsing.JsonFunctionArg;
 import org.socialworld.datasource.parsing.JsonValue;
@@ -29,7 +29,7 @@ import org.socialworld.datasource.parsing.JsonValue;
 public class FunctionArg {
 	
 	int faNr;
-	FunctionArgType type;
+//	FunctionArgType type;
 	Value value;
 	
 	// temporary needed for creation time
@@ -37,7 +37,7 @@ public class FunctionArg {
 	 
 	public FunctionArg(JsonFunctionArg jsonObject) {
 		this.faNr = jsonObject.faNr;
-		this.type = FunctionArgType.fromName(jsonObject.type);
+//		this.type = FunctionArgType.fromName(jsonObject.type);
 	    this.jsonSource = jsonObject.value; 
 		this.value = new Value(jsonObject.value);
 	}
@@ -47,7 +47,8 @@ public class FunctionArg {
     }
 
 	public String toString() {
-		return "faNr:" + faNr + ",type:" + type.toString() +  ",value:" + value.toString();
+	//	return "faNr:" + faNr + ",type:" + type.toString() +  ",value:" + value.toString();
+		return "faNr:" + faNr + ",value:" + value.toString();
 		
 	}
 }

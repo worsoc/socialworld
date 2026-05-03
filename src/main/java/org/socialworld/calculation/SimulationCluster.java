@@ -22,6 +22,8 @@
 package org.socialworld.calculation;
 
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 import org.socialworld.core.IAccessToken;
@@ -47,7 +49,17 @@ public enum SimulationCluster {
 	visualize(9998),
 	test(9999);
 	
-	private int index;
+	private static final Map<String, SimulationCluster> NAME_CACHE = new HashMap<>();
+	private static final Map<Integer, SimulationCluster> INDEX_CACHE = new HashMap<>();
+
+	static {
+		for (SimulationCluster cluster : values()) {
+			NAME_CACHE.put(cluster.name(), cluster);
+			INDEX_CACHE.put(cluster.index, cluster);
+		}
+	}
+
+	private final int index;
 
 	private LinkedList<IAccessToken>  tokens = null;
 	
@@ -61,12 +73,15 @@ public enum SimulationCluster {
 
 	
 	static SimulationCluster getName(int index) {
-		for (SimulationCluster cluster : SimulationCluster.values())
-			if (cluster.index == index)
-				return cluster;
-		return unknown;
+		SimulationCluster cluster = INDEX_CACHE.get(index);
+		return (cluster != null) ? cluster : unknown;
 	}
 	
+	public static SimulationCluster fromName(String name) {
+		SimulationCluster cluster = NAME_CACHE.get(name);
+		return (cluster != null) ? cluster : unknown;
+	}
+
 	public void addToken(IAccessToken token) {
 		if (this.tokens == null) {
 			this.tokens = new LinkedList<IAccessToken>();

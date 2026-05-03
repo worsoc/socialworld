@@ -22,7 +22,9 @@
 package org.socialworld.attributes.properties;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Word_Type;
@@ -42,6 +44,15 @@ public enum Nutrient implements IEnumProperty {
 	vitamins(6),
 	minerals(7);
 
+	private static final Map<String, Nutrient> NAME_CACHE = new HashMap<>();
+	private static final Map<Integer, Nutrient> INDEX_CACHE = new HashMap<>();
+
+	static {
+		for (Nutrient n : values()) {
+			NAME_CACHE.put(n.name(), n);
+			INDEX_CACHE.put(n.index, n);
+		}
+	}
 	private int index;
 
 	private Nutrient(int index) {
@@ -49,11 +60,7 @@ public enum Nutrient implements IEnumProperty {
 	}
 
 	public static int getMaxIndex() {
-		int i = 1;
-		while (getName(i) != nothing) {
-			i++;
-		}
-		return i - 1;
+		return INDEX_CACHE.size() - 1;
 	}
 
 	/**
@@ -92,10 +99,8 @@ public enum Nutrient implements IEnumProperty {
 	 * @return nutrient 
 	 */
 	public static Nutrient getName(int index) {
-		for (Nutrient element : Nutrient.values())
-			if (element.index == index)
-				return element;
-		return nothing;  // instead of null
+		Nutrient n = INDEX_CACHE.get(index);
+		return (n != null) ? n : nothing;
 	}
 	
 	/**
@@ -106,11 +111,8 @@ public enum Nutrient implements IEnumProperty {
 	 * @return nutrient 
 	 */
 	public static Nutrient fromName(String name) {
-		for (Nutrient element : Nutrient.values())
-			if (element.toString().equals(name)) {
-				return element;
-			}
-		return nothing;  // instead of null 
+		Nutrient n = NAME_CACHE.get(name);
+		return (n != null) ? n : nothing;
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////
