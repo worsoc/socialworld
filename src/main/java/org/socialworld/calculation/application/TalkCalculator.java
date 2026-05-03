@@ -54,10 +54,6 @@ public class TalkCalculator  extends SocialWorldThread {
 	
 	private static AccessTokenTalkCalculator token = AccessTokenTalkCalculator.getValid();
 	
-/*	private List<Event> events;
-	private List<StateHuman> states;
-	private List<HiddenHuman> hiddenHumans;
-*/
 	/**
 	 * private Constructor. 
 	 */
@@ -65,12 +61,8 @@ public class TalkCalculator  extends SocialWorldThread {
 
 		this.sleepTime = SocialWorldThread.SLEEPTIME_TALK_CALCULATOR;
 		
-		this.influencedTalks = new CapacityQueue<CollectionElementSimObjInfluenced>("influencedTalks", 1000);
+		this.influencedTalks = new CapacityQueue<CollectionElementSimObjInfluenced>("influencedTalks", 5000);
 
-/*		this.events = new ArrayList<Event>();
-		this.states = new ArrayList<StateHuman>();
-		this.hiddenHumans = new ArrayList<HiddenHuman>();
-*/		
 	}
 
 	public static TalkCalculator getInstance() {
@@ -80,19 +72,30 @@ public class TalkCalculator  extends SocialWorldThread {
 		return instance;
 	}
 	
+	@Override
 	public void run() {
+	    while (isRunning()) {
+	        try {
+	            // Warten auf das nächste Gesprächs-Event (
+	            CollectionElementSimObjInfluenced talk =
+	            		influencedTalks.poll(SocialWorldThread.SLEEPTIME_TALK_CALCULATOR, java.util.concurrent.TimeUnit.MILLISECONDS);
+	            
+	            if (talk != null) {
+	                // Das erste Element direkt verarbeiten
+	                calculateTalkInfluencedByEvent(talk);
+	                
+	                // Sobald wir wach sind: Alles wegarbeiten, was sich angestaut hat
+	                CollectionElementSimObjInfluenced nextTalk;
+	                while ((nextTalk = influencedTalks.remove()) != null) {
+	                    calculateTalkInfluencedByEvent(nextTalk);
+	                }
+	            }
 
-		while (isRunning()) {
-			
-			if (this.influencedTalks.size() > 0) calculateTalkInfluencedByEvent();
-			
-			try {
-				sleep(this.sleepTime);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			
-		}
+	        } catch (InterruptedException e) {
+	            Thread.currentThread().interrupt();
+	            break;
+	        }
+	    }
 	}
 	
 	
@@ -103,21 +106,10 @@ public class TalkCalculator  extends SocialWorldThread {
 				// SUB_THREAD_IMPLEMENTATION what shall happen if the queue is filled
 			};
 		}
-/*		this.events.add(event);
-		this.states.add(stateHuman);
-		this.hiddenHumans.add( hiddenWriteAccess);
-*/
 	}
 
-	private final void calculateTalkInfluencedByEvent() {
+	private final void calculateTalkInfluencedByEvent(CollectionElementSimObjInfluenced influencedTalk) {
 		
-/*		if (this.hiddenHumans.size() == 0) return;
-		
-		Event event = this.events.remove(0);
-		StateHuman stateHuman  = this.states.remove(0);
-		HiddenHuman hiddenWriteAccess = this.hiddenHumans.remove(0);
-*/		
-		CollectionElementSimObjInfluenced influencedTalk = this.influencedTalks.remove();
 		if (influencedTalk != null) {
 
 			Event event = influencedTalk.getEvent();

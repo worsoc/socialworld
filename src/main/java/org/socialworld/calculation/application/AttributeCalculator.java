@@ -60,11 +60,11 @@ public  class AttributeCalculator extends SocialWorldThread {
 
 		this.sleepTime = SocialWorldThread.SLEEPTIME_ATTRIBUTE_CALCULATOR;
 		
-		this.influenced = new CapacityQueue<CollectionElementSimObjInfluenced>("influenced", 1000);
+		this.influenced = new CapacityQueue<CollectionElementSimObjInfluenced>("influenced", 5000);
 
-		this.changed = new CapacityQueue<CollectionElementSimObjChanged>("changed", 1000);
+		this.changed = new CapacityQueue<CollectionElementSimObjChanged>("changed", 5000);
 
-		this.refreshed = new CapacityQueue<CollectionElementSimObjRefreshed>("refreshed", 1000);
+		this.refreshed = new CapacityQueue<CollectionElementSimObjRefreshed>("refreshed", 5000);
 
 	}
 
@@ -75,23 +75,44 @@ public  class AttributeCalculator extends SocialWorldThread {
 		return instance;
 	}
 	
-	public void run() {
-
-		while (isRunning()) {
-			
-			if (this.influenced.size() > 0) calculateAttributesChangedByEvent();
-			if (this.changed.size() > 0) calculateAttributesChangedByComplexMatrix();
-			if (this.refreshed.size() > 0) calculateAttributesChangedBySimpleMatrix();
-			
-			try {
-				sleep(this.sleepTime);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			
-		}
-	}
 	
+	@Override
+	public void run() {
+	    // Kurzer Hinweis: TimeUnit muss importiert werden (java.util.concurrent.TimeUnit)
+	    while (isRunning()) {
+	        try {
+	            // 1. DER WECKER (Hauptlast): 
+	            // Wartet hocheffizient bis zu 10ms auf ein Event. 
+	            // Sobald eines reinkommt, wacht der Thread SOFORT auf.
+	            CollectionElementSimObjInfluenced inf = influenced.poll(10, java.util.concurrent.TimeUnit.MILLISECONDS);
+	            
+	            if (inf != null) {
+	                // Verarbeitet das Element, das wir gerade aus influenced geholt haben
+	                calculateAttributesChangedByEvent(inf);
+	            }
+
+	            // 2. DIE MITLÄUFER (Opportunistisches Polling):
+	            // Da der Thread gerade sowieso wach ist, leeren wir die anderen Queues 
+	            // ohne zu warten (poll() ohne Parameter liefert sofort null, wenn leer).
+	            
+	            CollectionElementSimObjChanged chg = changed.remove();
+	            if (chg != null) {
+	                calculateAttributesChangedByComplexMatrix(chg);
+	            }
+
+	            CollectionElementSimObjRefreshed ref = refreshed.remove();
+	            if (ref != null) {
+	                calculateAttributesChangedBySimpleMatrix(ref);
+	            }
+
+	        } catch (InterruptedException e) {
+	            // Sauberes Beenden des Threads bei Simulations-Stopp
+	            Thread.currentThread().interrupt();
+	            break;
+	        }
+	    }
+	}
+		
 	final void calculateAttributesChangedByEvent(Event event, StateAnimal stateAnimal, HiddenAnimal hiddenWriteAccess) {
 		if (event != null && stateAnimal != null && hiddenWriteAccess != null) {
 			if (!this.influenced.add(new CollectionElementSimObjInfluenced(event, stateAnimal, hiddenWriteAccess))) {
@@ -116,9 +137,8 @@ public  class AttributeCalculator extends SocialWorldThread {
 		}
 	}
 	
-	private final int calculateAttributesChangedByEvent() {
+	private final int calculateAttributesChangedByEvent(CollectionElementSimObjInfluenced influenced) {
 		
-		CollectionElementSimObjInfluenced influenced = this.influenced.remove();
 		if (influenced != null) {
 
 			Event event = influenced.getEvent();
@@ -128,9 +148,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 			Value resultAttributeArray;
 
 			
-//			resultAttributeArray = getAttributesChangedByEvent(event, stateAnimal);
-//			TEMP_SOLUTION
-			resultAttributeArray = getAttributesChangedBySimpleMatrix(stateAnimal);
+			resultAttributeArray = getAttributesChangedByEvent(event, stateAnimal);
 			
 			if (resultAttributeArray.isValid()) {
 				if (resultAttributeArray.getTransferCode() == ValueTransferCode.noChanges) {
@@ -173,7 +191,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 				eventType, eventInfluenceType	);
 
 		int count = eventInfluenceDescription.countFunctions();
-		
+				
 		arguments = new ValueArrayList();
 
 		oldAttributes =  stateAnimal.getProperty(token, PropertyName.simobj_attributeArray);
@@ -209,9 +227,8 @@ public  class AttributeCalculator extends SocialWorldThread {
 		}
 	}
 
-	private final int calculateAttributesChangedByComplexMatrix() {
+	private final int calculateAttributesChangedByComplexMatrix(CollectionElementSimObjChanged changed) {
 		
-		CollectionElementSimObjChanged changed = this.changed.remove();
 		if (changed != null) {
 
 			StateAnimal stateAnimal  = (StateAnimal) changed.getState();
@@ -266,9 +283,8 @@ public  class AttributeCalculator extends SocialWorldThread {
 		}
 	}
 	
-	private final int calculateAttributesChangedBySimpleMatrix() {
+	private final int calculateAttributesChangedBySimpleMatrix(CollectionElementSimObjRefreshed refreshed) {
 		
-		CollectionElementSimObjRefreshed refreshed = this.refreshed.remove();
 		if (refreshed != null) {
 
 			StateAnimal stateAnimal  = (StateAnimal) refreshed.getState();

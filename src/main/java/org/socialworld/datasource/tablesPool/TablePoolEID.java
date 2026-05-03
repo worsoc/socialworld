@@ -100,7 +100,7 @@ public class TablePoolEID extends Table {
 
 	public int count(int eventType, int influenceType) {
 		int count = 0;
-		if ((eventType > 0) & (influenceType > 0) ) {
+		if (eventType > 0 && influenceType >= 0) {
 			count = selectScalarInt("SELECT count(*) FROM swpool_eid  WHERE eventType = " + eventType  + " AND influenceType = " + influenceType);
 		}
 		return count;
@@ -109,7 +109,7 @@ public class TablePoolEID extends Table {
 	public void insert(int eventType, int influenceType, String jsonEID) {
 		String statement;
 			
-		if ((eventType > 0) & (influenceType > 0) ) {
+		if (eventType > 0 && influenceType >= 0) {
 			
 			if (count(eventType, influenceType) > 0) {
 				update(eventType, influenceType, jsonEID);
@@ -126,7 +126,7 @@ public class TablePoolEID extends Table {
 	public void update(int eventType, int influenceType, String jsonEID) {
 		String statement;
 			
-		if ((eventType > 0) & (influenceType > 0) ) {
+		if (eventType > 0 && influenceType >= 0) {
 	
 			statement 	= "UPDATE swpool_eid SET " +
 					"jsonEID = '" + jsonEID  + "'" + 
@@ -139,7 +139,7 @@ public class TablePoolEID extends Table {
 	public void delete(int eventType, int influenceType) {
 		String statement;
 			
-		if ((eventType > 0) & (influenceType > 0) ) {
+		if (eventType > 0 && influenceType >= 0) {
 	
 			statement 	= "DELETE FROM swpool_eid " +
 					" WHERE eventType = " + eventType  + " AND influenceType = " + influenceType;
@@ -161,7 +161,8 @@ public class TablePoolEID extends Table {
 	}
 	
 	public String getJsonEID(int eventType, int influenceType) {
-		if ((eventType > 0) & (influenceType > 0) ) {
+		if (eventType > 0 && influenceType >= 0) {
+			
 			select(SELECT_ALL_COLUMNS, " WHERE eventType = " + eventType  + " AND influenceType = " + influenceType, "");
 			
 			int index = getIndexFor2PK(eventType, influenceType);

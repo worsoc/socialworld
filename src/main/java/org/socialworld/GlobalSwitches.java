@@ -42,5 +42,8 @@ public class GlobalSwitches {
 	public static boolean OUTPUT_CREATE_OBJECT_DETAILS = false;
 	public static boolean OUTPUT_CREATE_OBJECT_CLASS_FOR_NAME = false;
 
+	public static boolean OUTPUT_CALCULATE_ACTION = true;
+	public static boolean OUTPUT_CALCULATE_REACTION = true;
+	
 	public static int SLEEP_TIME_REFRESH_MASTER = 5;
 }

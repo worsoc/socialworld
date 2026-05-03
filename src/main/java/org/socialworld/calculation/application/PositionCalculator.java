@@ -50,10 +50,6 @@ public class PositionCalculator extends SocialWorldThread {
 
 	private static AccessTokenPositionCalculator token = AccessTokenPositionCalculator.getValid();
 
-/*	private List<Event> events;
-	private List<StateSimulationObject> states;
-	private List<HiddenSimulationObject> hiddenSimObjects;
-*/
 	/**
 	 * private Constructor. 
 	 */
@@ -61,11 +57,7 @@ public class PositionCalculator extends SocialWorldThread {
 
 		this.sleepTime = SocialWorldThread.SLEEPTIME_POSITION_CALCULATOR;
 
-		this.moved = new CapacityQueue<CollectionElementSimObjInfluenced>("moved", 1000);
-/*		this.events = new ArrayList<Event>();
-		this.states = new ArrayList<StateSimulationObject>();
-		this.hiddenSimObjects = new ArrayList<HiddenSimulationObject>();
-*/		
+		this.moved = new CapacityQueue<CollectionElementSimObjInfluenced>("moved", 5000);
 	}
 
 	public static PositionCalculator getInstance() {
@@ -74,20 +66,33 @@ public class PositionCalculator extends SocialWorldThread {
 		}
 		return instance;
 	}
-	
-	public void run() {
 
-		while (isRunning()) {
-			
-			if (this.moved.size() > 0) calculatePositionChangedByEvent();
-			
-			try {
-				sleep(this.sleepTime);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			
-		}
+	@Override
+	public void run() {
+	    while (isRunning()) {
+	        try {
+	            // Warten auf die nächste Positionsänderung 
+	            // Sobald ein Objekt sich bewegt, wacht der Calculator SOFORT auf.
+	            CollectionElementSimObjInfluenced moved = 
+	            		this.moved.poll( SocialWorldThread.SLEEPTIME_POSITION_CALCULATOR, java.util.concurrent.TimeUnit.MILLISECONDS);
+	            
+	            if (moved != null) {
+	                // Verarbeitet das entnommene Element direkt
+	                calculatePositionChangedByEvent(moved);
+	            }
+
+	            // Optional: Ein kleiner Loop, um bei Massenbewegungen die Queue 
+	            // sofort komplett leerzufressen, bevor wir wieder schlafen gehen.
+	            CollectionElementSimObjInfluenced nextMoved;
+	            while ((nextMoved = this.moved.remove()) != null) {
+	                calculatePositionChangedByEvent(nextMoved);
+	            }
+
+	        } catch (InterruptedException e) {
+	            Thread.currentThread().interrupt();
+	            break;
+	        }
+	    }
 	}
 	
 	final void calculatePositionChangedByEvent(final Event event, final StateSimulationObject state, final HiddenSimulationObject hiddenWriteAccess) {
@@ -97,21 +102,10 @@ public class PositionCalculator extends SocialWorldThread {
 				// SUB_THREAD_IMPLEMENTATION what shall happen if the queue is filled
 			};
 		}
-/*		this.events.add(event);
-		this.states.add(state);
-		this.hiddenSimObjects.add( hiddenWriteAccess);
-*/
 	}
 	
-	private final int calculatePositionChangedByEvent() {
+	private final int calculatePositionChangedByEvent(CollectionElementSimObjInfluenced moved) {
 
-/*		if (this.hiddenSimObjects.size() == 0) return POSITION_CALCULATOR_RETURNS_EMPTY_LISTS;
-		
-		Event event = this.events.remove(0);
-		StateSimulationObject state  = this.states.remove(0);
-		HiddenSimulationObject hiddenWriteAccess = this.hiddenSimObjects.remove(0);
-*/		
-		CollectionElementSimObjInfluenced moved = this.moved.remove();
 		if (moved != null) {
 
 			Event event = moved.getEvent();

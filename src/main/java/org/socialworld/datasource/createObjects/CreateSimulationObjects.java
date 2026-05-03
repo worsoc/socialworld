@@ -22,9 +22,9 @@
 package org.socialworld.datasource.createObjects;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 import org.socialworld.GlobalSwitches;
 import org.socialworld.attributes.ActualTime;
@@ -51,11 +51,11 @@ public abstract class CreateSimulationObjects {
 	protected static final int THRESHOLD_RANDOM_GAUSSIAN_VALUE = 4;
 	protected Random random;
 
-	private List<Integer> usedPositionIndex;
+    private Set<Integer> usedPositionIndex;
 	
 	CreateSimulationObjects() {
 		random = new Random();
-		usedPositionIndex = new ArrayList<Integer>();
+        usedPositionIndex = new HashSet<Integer>();
 	}
 
 	public abstract IncompleteSimulationObject getObject(int objectID, String fullClassName) ;
@@ -143,10 +143,10 @@ public abstract class CreateSimulationObjects {
 		indexGPPT = mapGaussToIndex(gauss_value, GaussPoolPerceptionType.CAPACITY_GPPT_ARRAY);
 		hiddenObject.setPerceptionTypes(GaussPoolPerceptionType.getInstance().getPerceptionTypes(indexGPPT));
 		
-		do {
-			indexPosition = random.nextInt(GaussPoolPosition.CAPACITY_GPPos_ARRAY);
-			if (random.nextBoolean() == false) indexPosition = indexPosition * -1;
-		} while (checkArrayContainsValue(usedPositionIndex, indexPosition));
+        do {
+            indexPosition = random.nextInt(GaussPoolPosition.CAPACITY_GPPos_ARRAY);
+            if (random.nextBoolean() == false) indexPosition = indexPosition * -1;
+        } while (usedPositionIndex.contains(indexPosition)); 
 		usedPositionIndex.add(indexPosition);
 		Position position = GaussPoolPosition.getInstance().getPosition(indexPosition);
 		position.setPropertyName(PropertyName.simobj_position);
@@ -154,14 +154,5 @@ public abstract class CreateSimulationObjects {
 
 	}
 	
-	private boolean checkArrayContainsValue(List<Integer> array, int value) {
-		
-		int size = array.size();
-		
-		for (int index = 0; index < size; index++) {
-			if (array.get(index) == value) return true;
-		}
-		
-		return false;
-	}
+
 }

@@ -20,6 +20,11 @@
 *
 */
 package org.socialworld.datasource.pool;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+
 import org.socialworld.core.EventType;
 
 public class GaussPoolInfluenceType {
@@ -34,16 +39,30 @@ public class GaussPoolInfluenceType {
 		influenceTypesForPositiveIndex = new int[CAPACITY_GPIT_ARRAY][ EventType.MAX_EVENT_TYPE];
 		influenceTypesForNegativeIndex = new int[CAPACITY_GPIT_ARRAY][ EventType.MAX_EVENT_TYPE];
 		
-		// initial values
-		for (int i = 0; i < CAPACITY_GPIT_ARRAY; i++) 
-			for (int j = 0; j < EventType.MAX_EVENT_TYPE; j++) {				
-				influenceTypesForPositiveIndex[i][j] = 1;
-				influenceTypesForNegativeIndex[i][j] = 1;
-			}
+		 Random random = new Random();
 
+		    for (int j = 0; j < EventType.MAX_EVENT_TYPE; j++) {
+		        // 1. Erstelle eine Liste mit allen Zahlen von 0 bis 99
+		        List<Integer> coverageList = new ArrayList<>(100);
+		        for (int n = 0; n < 100; n++) coverageList.add(n);
+		        
+		        // 2. Mische die Liste (Shuffling)
+		        Collections.shuffle(coverageList, random);
+		        
+		        for (int i = 0; i < CAPACITY_GPIT_ARRAY; i++) {
+		            // Da CAPACITY_GPIT_ARRAY = 100 ist, kriegt jeder Gauss-Index 
+		            // genau eine der Zahlen aus der gemischten Liste.
+		            // Damit ist JEDE Zahl zwischen 0-99 genau EINMAL pro EventType vertreten.
+		            influenceTypesForPositiveIndex[i][j] = coverageList.get(i);
+		            
+		            // Für die negative Seite mischen wir neu
+		            if (i == 0) Collections.shuffle(coverageList, random);
+		            influenceTypesForNegativeIndex[i][j] = coverageList.get(i);
+		        }
+		    }
 	}
 	
-	public static GaussPoolInfluenceType getInstance() {
+	public static synchronized GaussPoolInfluenceType getInstance() {
 		if (instance == null) {
 			instance = new GaussPoolInfluenceType();
 		}
@@ -51,17 +70,17 @@ public class GaussPoolInfluenceType {
 	}
 
 	public int[] getInfluenceTypes(int indexByGauss) {
-		int types[];
 		
+	       if (indexByGauss >= 0) {
+	            // Schutz gegen IndexOutOfBounds
+	            int idx = Math.min(indexByGauss, CAPACITY_GPIT_ARRAY - 1);
+	            return influenceTypesForPositiveIndex[idx];
+	        } else {
+	            // Umwandlung in positiven Index und Deckelung
+	            int idx = Math.min(Math.abs(indexByGauss), CAPACITY_GPIT_ARRAY - 1);
+	            return influenceTypesForNegativeIndex[idx];
+	        }    
 		
-		if (indexByGauss >= 0)
-			types = influenceTypesForPositiveIndex[indexByGauss];
-		else {
-			indexByGauss = indexByGauss * -1;
-			types = influenceTypesForNegativeIndex[indexByGauss];
-		}	
-
-		return types;
 	}
 	
 }

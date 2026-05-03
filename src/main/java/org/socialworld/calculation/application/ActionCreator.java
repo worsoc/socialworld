@@ -69,8 +69,8 @@ public class ActionCreator extends SocialWorldThread {
 	private ActionCreator() {
 		
 		this.sleepTime = SocialWorldThread.SLEEPTIME_ACTION_CREATOR;
-		this.reactors = new CapacityQueue<CollectionElementReactor>("reactors", 1000);
-		this.actors = new CapacityQueue<CollectionElementActor>("actors", 1000);
+		this.reactors = new CapacityQueue<CollectionElementReactor>("reactors", 5000);
+		this.actors = new CapacityQueue<CollectionElementActor>("actors", 5000);
 		
 		String[] actionPropertyNames;
 		actionPropertyNames = ActionType.getStandardPropertyNames();
@@ -86,22 +86,32 @@ public class ActionCreator extends SocialWorldThread {
 		return instance;
 	}
 	
+	@Override
 	public void run() {
 
-		while (isRunning()) {
-			
-			if (this.reactors.size() > 0) calculateReaction();
-			if (this.actors.size() > 0) calculateAction();
-			if (this.reactors.size() > 0) calculateReaction();
-			if (this.reactors.size() > 0) calculateReaction();
-			
-			try {
-				sleep(this.sleepTime);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			
-		}
+	    while (isRunning()) {
+	        try {
+
+	        	CollectionElementReactor reactor  = this.reactors.poll(
+	        			SocialWorldThread.SLEEPTIME_ACTION_CREATOR, java.util.concurrent.TimeUnit.MILLISECONDS);
+	            
+	            if (reactor != null) {
+	            	calculateReaction(reactor);
+	            }
+
+	            
+	            CollectionElementActor actor  = this.actors.remove();
+	            if (actor != null) {
+	            	calculateAction(actor);
+	            }
+
+
+	        } catch (InterruptedException e) {
+	            // Sauberes Beenden des Threads bei Simulations-Stopp
+	            Thread.currentThread().interrupt();
+	            break;
+	        }
+	    }
 	}
 	
 	
@@ -131,17 +141,8 @@ public class ActionCreator extends SocialWorldThread {
 	 * 
 	 * 
 	 */
-	private void calculateReaction() {
+	private void calculateReaction(CollectionElementReactor reactor) {
 
-		// DEBUG Output falls size zu groß
-
-		
-		if (this.reactors.size() > sizeThreashold) {
-			System.out.println("ActionCreator.calculateReaction(): this.reactors.size() " + this.reactors.size());
-		}
-		
-		
-		CollectionElementReactor reactor = this.reactors.remove();
 		if (reactor != null) {
 
 			
@@ -177,14 +178,19 @@ public class ActionCreator extends SocialWorldThread {
 					
 				if (reaction != null) {
 					if (!reaction.isToBeIgnored())	{
-						// Logging ...
-						System.out.println("ActionCreator.calculateReaction(): Obj " + stateReactor.getObjectID() + ": " + reaction.getType().toString() +  "." + reaction.getMode().toString());
+						if (GlobalSwitches.OUTPUT_CALCULATE_REACTION) {
+							System.out.println("ActionCreator.calculateReaction(): Obj " + stateReactor.getObjectID() + ": " + reaction.getType().toString() +  "." + reaction.getMode().toString());
+						}
 						if (reaction.getType() == ActionType.useWeapon) {
 							if (((ActionAttack) reaction).getTarget() == null) {
-								System.out.println("UseWeapon from object " + stateReactor.getObjectID() + " to target object null"  );
+								if (GlobalSwitches.OUTPUT_CALCULATE_REACTION) {
+									System.out.println("UseWeapon from object " + stateReactor.getObjectID() + " to target object null"  );
+								}
 							}
 							else {
-								System.out.println("UseWeapon from object " + stateReactor.getObjectID() + " to target object " + ((ActionAttack) reaction).getTarget().getObjectID() );
+								if (GlobalSwitches.OUTPUT_CALCULATE_REACTION) {
+									System.out.println("UseWeapon from object " + stateReactor.getObjectID() + " to target object " + ((ActionAttack) reaction).getTarget().getObjectID() );
+								}
 							}
 						}
 						// ... Logging
@@ -207,10 +213,8 @@ public class ActionCreator extends SocialWorldThread {
 	 * The method creates a new action as a consequence of an simulation object's state and adds it to the reactor's action handler.
 	 *
 	 */
-	private void calculateAction() {
+	private void calculateAction(CollectionElementActor actor) {
 		
-
-		CollectionElementActor actor = this.actors.remove();
 		if (actor != null) {
 			
 			HiddenSimulationObject hiddenActor = actor.getHidden();
@@ -235,7 +239,9 @@ public class ActionCreator extends SocialWorldThread {
 				
 				if (!action.isToBeIgnored()) {	
 					
-					System.out.println("ActionCreator.calculateAction(): Obj " + stateActor.getObjectID() + ": " + action.getType().toString() +  "." + action.getMode().toString());
+					if (GlobalSwitches.OUTPUT_CALCULATE_ACTION) {
+						System.out.println("ActionCreator.calculateAction(): Obj " + stateActor.getObjectID() + ": " + action.getType().toString() +  "." + action.getMode().toString());
+					}
 					hiddenActor.setAction(action);
 				}
 				
@@ -243,8 +249,9 @@ public class ActionCreator extends SocialWorldThread {
 			
 		}
 		else {
-			System.out.println("ActionCreator.calculateAction(): actor is null");
-
+			if (GlobalSwitches.OUTPUT_CALCULATE_ACTION) {
+				System.out.println("ActionCreator.calculateAction(): actor is null");
+			}
 		}
 
 	}
