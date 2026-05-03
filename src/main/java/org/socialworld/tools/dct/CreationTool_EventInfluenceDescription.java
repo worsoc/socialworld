@@ -582,14 +582,13 @@ public class CreationTool_EventInfluenceDescription extends JFrame {
         String op = ">=";
         String threshold = "50";
 
+        table.clear();
+        
         for (EventType et : EventType.values()) {
             if (et == EventType.nothing) continue;
-            if (et.getIndex() == 0) continue;
-            if (et.getIndex() == 1) continue;
-            if (et.getIndex() == 2) continue;
-
+ 
             for (int inflType = 0; inflType < 100; inflType++) {
-                // --- Deine Modulo-Logik von gestern ---
+
                 // Ziel-Attribut (Y)
                 int targetIdx = (et.getIndex() + inflType) % Attribute.NUMBER_OF_ATTRIBUTES;
                 String targetAttr = Attribute.getAttributeName(targetIdx).toString();
