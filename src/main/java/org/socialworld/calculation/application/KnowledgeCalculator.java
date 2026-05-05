@@ -21,6 +21,7 @@
 */
 package org.socialworld.calculation.application;
 
+import java.util.concurrent.TimeUnit;
 
 import org.socialworld.GlobalSwitches;
 import org.socialworld.calculation.Calculation;
@@ -64,10 +65,6 @@ public class KnowledgeCalculator extends SocialWorldThread {
 
 	private static AccessTokenKnowledgeCalculator token = AccessTokenKnowledgeCalculator.getValid();
 	
-/*	private List<Event> events4Perception;
-	private List<StateAnimal> states4Perception;
-	private List<HiddenAnimal> hiddenAnimals4Perception;
-*/
 	
 	/**
 	 * private Constructor. 
@@ -76,12 +73,8 @@ public class KnowledgeCalculator extends SocialWorldThread {
 
 		this.sleepTime = SocialWorldThread.SLEEPTIME_KNOWLEDGE_CALCULATOR;
 		
-		this.perceptions = new CapacityQueue<CollectionElementSimObjInfluenced>("perceptions", 1000);
+		this.perceptions = new CapacityQueue<CollectionElementSimObjInfluenced>("perceptions", 5000);
 
-/*		this.events4Perception = new ArrayList<Event>();
-		this.states4Perception = new ArrayList<StateAnimal>();
-		this.hiddenAnimals4Perception = new ArrayList<HiddenAnimal>();
-*/
 		
 	}
 
@@ -92,18 +85,23 @@ public class KnowledgeCalculator extends SocialWorldThread {
 		return instance;
 	}
 
+	@Override
 	public void run() {
-
 		while (isRunning()) {
-			
-			if (this.perceptions.size() > 0) calculatePerception();
-			
 			try {
-				sleep(this.sleepTime);
+
+				CollectionElementSimObjInfluenced perception = perceptions.poll(
+						SocialWorldThread.SLEEPTIME_KNOWLEDGE_CALCULATOR, TimeUnit.MILLISECONDS);
+				
+				if (perception != null) {
+					calculatePerception(perception);
+				}
+
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				// Sauberes Beenden bei Simulations-Stopp
+				Thread.currentThread().interrupt();
+				break;
 			}
-			
 		}
 	}
 
@@ -114,28 +112,10 @@ public class KnowledgeCalculator extends SocialWorldThread {
 				// SUB_THREAD_IMPLEMENTATION what shall happen if the queue is filled
 			};
 		}
-/*		if (event != null && stateAnimal != null && hiddenWriteAccess != null) {
-			this.events4Perception.add(event);
-			this.states4Perception.add(stateAnimal);
-			this.hiddenAnimals4Perception.add( hiddenWriteAccess);
-		}
-*/
 	}
 
-	private final int calculatePerception() {
+	private final int calculatePerception(CollectionElementSimObjInfluenced perception) {
 		
-/*		if ((this.events4Perception.size() == 0) || 
-				(this.states4Perception.size() == 0) ||
-				(this.hiddenAnimals4Perception.size() == 0)) 
-		{
-				return KNOWLEDGE_CALCULATOR_RETURNS_EMPTY_LISTS;
-		}
-
-		Event event = this.events4Perception.remove(0);
-		StateAnimal stateAnimal  = this.states4Perception.remove(0);
-		HiddenAnimal hiddenWriteAccess = this.hiddenAnimals4Perception.remove(0);
-*/
-		CollectionElementSimObjInfluenced perception = this.perceptions.remove();
 		if (perception != null) {
 
 			Event event = perception.getEvent();

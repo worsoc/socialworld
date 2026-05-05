@@ -21,6 +21,7 @@
 */
 package org.socialworld.calculation.application;
 
+import java.util.concurrent.TimeUnit;
 
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.Type;
@@ -84,7 +85,8 @@ public  class AttributeCalculator extends SocialWorldThread {
 	            // 1. DER WECKER (Hauptlast): 
 	            // Wartet hocheffizient bis zu 10ms auf ein Event. 
 	            // Sobald eines reinkommt, wacht der Thread SOFORT auf.
-	            CollectionElementSimObjInfluenced inf = influenced.poll(10, java.util.concurrent.TimeUnit.MILLISECONDS);
+	            CollectionElementSimObjInfluenced inf = influenced.poll(
+	            		SocialWorldThread.SLEEPTIME_ATTRIBUTE_CALCULATOR, TimeUnit.MILLISECONDS);
 	            
 	            if (inf != null) {
 	                // Verarbeitet das Element, das wir gerade aus influenced geholt haben
@@ -216,8 +218,10 @@ public  class AttributeCalculator extends SocialWorldThread {
 		if (newAttributes.isValid()){
 			if (oldAttributes.equals(newAttributes)) {
 				newAttributes.setTransferCode(ValueTransferCode.noChanges);
+				System.out.println("AttributeCalculator...ChangedByEvent(): " + oldAttributes.toString() + " bleibt gleich");
 			}
 			else {
+				System.out.println("AttributeCalculator...ChangedByEvent(): " + oldAttributes.toString() + " --> "+ newAttributes.toString());
 			}
 			return newAttributes;
 		}

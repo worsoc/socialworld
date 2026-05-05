@@ -294,14 +294,15 @@ public class AttributeArray extends SimProperty {
 		return numberOfAttributes;
 	}
 	
-	public boolean equals(AttributeArray anotherOne) {
-		
+
+	public boolean isEqualTo(AttributeArray anotherOne) {
 		for (int i = 0; i < numberOfAttributes; i++) {
-			if (this.attributes[i] != anotherOne.attributes[i]) return false;
+			if (this.attributes[i] != anotherOne.attributes[i]) {
+				return false;
+			}
 		}
 		
 		return true;
-		
 	}
 	
 	public String toString() {

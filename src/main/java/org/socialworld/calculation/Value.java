@@ -278,6 +278,10 @@ public class Value {
 
 	
 	public Object getObject(Type type) { 
+		return getObjectPrivate(type);
+	}	
+	
+	private final Object getObjectPrivate(Type type) {
 		
 		Type typeUsing	= checkType(type);
 		if (typeUsing == null) return NoObject.getNoObject(NoObjectReason.typeMismatchForGetObject);
@@ -324,6 +328,11 @@ public class Value {
 				return Relation.getName(relationID);
 			}
 			return NoObject.getNoObject(NoObjectReason.instanceOfCheckFailed);
+		case attributeArray:
+			if (value instanceof AttributeArray) {
+				return (AttributeArray) value;
+			}
+			return NoObject.getNoObject(NoObjectReason.instanceOfCheckFailed);
 		default:
 			if ((value instanceof IObjectSender) && (this instanceof ValueProperty)) {
 				return ((IObjectSender) value).copy();
@@ -332,7 +341,7 @@ public class Value {
 				return value;
 			}
 		}
-	}	
+	}
 	
 	private Type checkType(Type type) {
 		
@@ -539,29 +548,46 @@ public class Value {
 		}
 	}
 
-	public boolean equals(Value anotherValue) {
+	@Override
+	public boolean equals(Object object) {
+	    if (this == object) return true;
+
+	    if (!(object instanceof Value)) return false;
+
+	    Value other = (Value) object;
+	    
+	    return isEqualTo(other);
+	}
+	
+
+	public boolean isEqualTo(Value anotherValue) {
+
 		if (anotherValue == null) return false;
 		if (this.type.equals(anotherValue.type) ) {
 
-			Object valueThis  = this.getObject(this.type);
-			Object valueThat  = anotherValue.getObject(anotherValue.type);
+			Object valueThis  = this.getObjectPrivate(this.type);
+			Object valueThat  = anotherValue.getObjectPrivate(anotherValue.type);
 			
 			// TODO are two nulls (two invalids, two nothings) equal or not?
 			if (valueThis == null || valueThat == null) return false;
 			if (this.isInvalidOrNothing()) return false;
 			if (anotherValue.isInvalidOrNothing()) return false;
 			
-			// TODO call concrete equals() implementations
+			// TODO call concrete isEqualTo() implementations
 			switch (this.type) {
 				case attributeArray:
 					if (valueThis instanceof NoSavedValue) return false;
 					if (valueThat instanceof NoSavedValue) return false;
-					return ( ((AttributeArray) valueThis).equals((AttributeArray) valueThat) ) ;
+					return ( ((AttributeArray) valueThis).isEqualTo((AttributeArray) valueThat) ) ;
 				default:
+				    if (valueThis != null && valueThat != null) {
+				        System.out.println("DEBUG Value.equals: valueThis Klasse: " + valueThis.getClass().getName());
+				        System.out.println("DEBUG Value.equals: valueThat Klasse: " + valueThat.getClass().getName());
+				    }
 					return (  valueThis.equals(valueThat) ) ;
 			}
 		}
-		
+	
 		return false;
 		
 	}

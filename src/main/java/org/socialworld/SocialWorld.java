@@ -68,7 +68,6 @@ public class SocialWorld  {
 			
 		simulation = Simulation.getInstance();
 		
-		Simulation.showMessage("myPrint", "!!! AttributeCalculator.calculateAttributesChangedByEvent verwendet getAttributesChangedBySimpleMatrix");
 		Simulation.showMessage("myPrint", "Bitte Geduld. Wir starten bei Sekunde 0.");
 		
 	
