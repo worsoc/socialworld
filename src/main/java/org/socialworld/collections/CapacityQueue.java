@@ -20,6 +20,8 @@ package org.socialworld.collections;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import org.socialworld.GlobalSwitches;
+
 public class CapacityQueue<Type> {
 
     private final String name;
@@ -37,7 +39,7 @@ public class CapacityQueue<Type> {
         // offer() versucht das Element hinzuzufügen und gibt sofort false zurück, wenn voll
         boolean success = this.queue.offer(element);
         
-        if (!success) {
+        if (!success && GlobalSwitches.OUTPUT_CAPACITY_QUEUE_IS_FULL == true) {
             System.err.println("CapacityQueue " + this.name + " is full!!!");
         }
         return success;
