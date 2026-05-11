@@ -96,7 +96,7 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 	}
 	
 	protected final Expression getStartExpressionForLines(List<String> lines4OneExpression) {
-		return new ChangeAttributes(lines4OneExpression);
+		return  ChangeAttributes.fromLines(lines4OneExpression);
 	}
 	
 	protected final Expression getStartExpressionForIDs(List<Integer> ids4OneExpression) {

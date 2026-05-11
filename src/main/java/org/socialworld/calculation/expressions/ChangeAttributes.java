@@ -51,13 +51,7 @@ public class ChangeAttributes extends Sequence {
         return new ChangeAttributes(attributeChanges);
     }
 
-    /**
-     * Privater Konstruktor, nutzt die Logik der Basisklasse Sequence
-     */
-    private ChangeAttributes(List<Expression> expressions) {
-        super(expressions);
-    }
-
+ 
     /**
      * Alternativ: Erzeugung aus der alten List<String> Struktur
      */
@@ -76,5 +70,13 @@ public class ChangeAttributes extends Sequence {
 
         return new ChangeAttributes(attributeChanges);
     }
+    
+    /**
+     * Privater Konstruktor, nutzt die Logik der Basisklasse Sequence
+     */
+    private ChangeAttributes(List<Expression> expressions) {
+        super(expressions);
+    }
+
 }
 
