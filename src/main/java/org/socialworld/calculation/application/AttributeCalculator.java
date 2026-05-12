@@ -23,6 +23,7 @@ package org.socialworld.calculation.application;
 
 import java.util.concurrent.TimeUnit;
 
+import org.socialworld.GlobalSwitches;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
@@ -218,10 +219,12 @@ public  class AttributeCalculator extends SocialWorldThread {
 		if (newAttributes.isValid()){
 			if (oldAttributes.equals(newAttributes)) {
 				newAttributes.setTransferCode(ValueTransferCode.noChanges);
-				System.out.println("AttributeCalculator...ChangedByEvent(): " + oldAttributes.toString() + " bleibt gleich");
+				if (GlobalSwitches.OUTPUT_CALCULATE_ATTRIBUTE_BY_EVENT == true)
+					System.out.println("AttributeCalculator...ChangedByEvent(): " + oldAttributes.toString() + " bleibt gleich");
 			}
 			else {
-				System.out.println("AttributeCalculator...ChangedByEvent(): " + oldAttributes.toString() + " --> "+ newAttributes.toString());
+				if (GlobalSwitches.OUTPUT_CALCULATE_ATTRIBUTE_BY_EVENT == true)
+					System.out.println("AttributeCalculator...ChangedByEvent(): " + oldAttributes.toString() + " --> "+ newAttributes.toString());
 			}
 			return newAttributes;
 		}

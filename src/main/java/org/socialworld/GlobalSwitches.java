@@ -45,6 +45,8 @@ public class GlobalSwitches {
 	public static boolean OUTPUT_CALCULATE_ACTION = false;
 	public static boolean OUTPUT_CALCULATE_REACTION = false;
 
+	public static boolean OUTPUT_CALCULATE_ATTRIBUTE_BY_EVENT = false;
+
 	public static boolean OUTPUT_CAPACITY_QUEUE_IS_FULL = false;
 
 	public static int SLEEP_TIME_REFRESH_MASTER = 5;
