@@ -135,8 +135,9 @@ public class FunctionMXplusN extends FunctionBase {
 				}
 				else {
 // muss wohl nicht so kompluiertsein:					resultFloat = calculateFloatingPoint((float) calculation.createValue(Type.floatingpoint, (float) (o)).getObject(Type.floatingpoint));
-					resultFloat = calculateFloatingPoint((float) o);
-			}
+					float o_as_float = (float) o;
+					resultFloat = calculateFloatingPoint(o_as_float);
+				}
 
 				
 				if (type == Type.floatingpoint)  {

@@ -62,65 +62,55 @@ public class ChangeAttribute extends Branching {
 
 	/////// creation from EventInfluenceAttributeEntry (from JSON)
 
-    private void initFromJson(EventInfluencesAttributeEntry entry) {
-        if (entry == null) return;
+	private void initFromJson(EventInfluencesAttributeEntry entry) {
+	    if (entry == null) return;
 
-        // Die Logik für genau dieses eine Attribut bauen
-        // convertTermsToExpression erstellt das Branching: WENN (Term0) DANN (Term1) SONST (Term2)
-        Expression calculateValue = convertTermsToExpression(entry.term);
+	    List<Term> terms = entry.term;
+	    if (terms == null || terms.isEmpty()) return;
 
-        // Der Befehl, dieses spezifische Attribut im Array zu setzen
-        SetAttributeValue setAttr = new SetAttributeValue(
-            entry.attribute, 
-            new GetArgumentByName(org.socialworld.attributes.PropertyName.simobj_attributeArray.toString()), 
-            calculateValue
-        );
-
-        // Wir kapseln das Ganze als Replacement, damit das Attribut-Array aktualisiert wird
-        Expression replacement = new Replacement(
-            org.socialworld.attributes.PropertyName.simobj_attributeArray.toString(), 
-            setAttr
-        );
-
-        // In diesem Modus ist das Replacement unser Haupt-Ausdruck
-        setExpression2(replacement); 
-        
-        // Standard-Rückgabe des Arrays, falls nichts passiert
-        setExpression3(new GetArgumentByName(org.socialworld.attributes.PropertyName.simobj_attributeArray.toString()));
-        
-        setOperation(Expression_Function.branching);
-        setValid();
-    }
-
-	private Expression convertTermsToExpression(List<Term> terms) {
-	    if (terms == null || terms.isEmpty()) {
-	        return Nothing.getInstance();
-	    }
-
-	    // Fall 1: Nur ein Term vorhanden -> Direkt als Action (DANN) werten
-	    if (terms.size() == 1) {
-	        return createActionExpression(terms.get(0));
-	    }
-
-	    // Fall 2: Mindestens zwei Terms -> Branching (WENN - DANN)
-	    // Term 1 (Index 0) ist die Condition
-	    Expression condition = createConditionExpression(terms.get(0));
-	    
-	    // Term 2 (Index 1) ist die Action (hier wird MX+N geladen!)
-	    Expression action = createActionExpression(terms.get(1));
-	    
-	    // Term 3 (Index 2) ist optional der Sonst-Zweig
-	    Expression otherwise;
-	    if (terms.size() > 2) {
-	        otherwise = createActionExpression(terms.get(2));
+	    // 1. Bedingung (WENN) -> expression1
+	    if (terms.size() >= 2) {
+	        setExpression1(createConditionExpression(terms.get(0)));
 	    } else {
-	        // Default: Aktuellen Attributwert beibehalten, falls Bedingung nicht erfüllt
-	        otherwise = new GetArgumentByName(org.socialworld.attributes.PropertyName.simobj_attributeArray.toString());
+	        // Falls nur ein Term (keine Bedingung), setzen wir die Bedingung auf TRUE (Constant 1)
+	        setExpression1(new Constant(new Value(Type.integer, 1)));
 	    }
 
-	    // Wir geben ein fertiges Branching-Objekt zurück
-	    return new Branching(condition, action, otherwise);
+	    // 2. Berechnung & Zuweisung (DANN) -> expression2
+	    // Hier nutzen wir nun das SetAttributeValue direkt als Action
+	    Expression calculateValue = (terms.size() >= 2) ? createActionExpression(terms.get(1)) : createActionExpression(terms.get(0));
+	    
+	    SetAttributeValue setAttrAction = new SetAttributeValue(
+	        entry.attribute, 
+	        new GetArgumentByName(PropertyName.simobj_attributeArray.toString()), 
+	        calculateValue
+	    );
+	    
+	    // Das Replacement kapselt das Setzen des Attributs
+	    setExpression2(new Replacement(
+	        PropertyName.simobj_attributeArray.toString(), 
+	        setAttrAction
+	    ));
+
+	    // 3. Fallback (SONST) -> expression3
+	    if (terms.size() > 2) {
+	        // Falls ein SONST-Term existiert (MX+N etc.)
+	        Expression otherwiseValue = createActionExpression(terms.get(2));
+	        SetAttributeValue setAttrOtherwise = new SetAttributeValue(
+	            entry.attribute, 
+	            new GetArgumentByName(PropertyName.simobj_attributeArray.toString()), 
+	            otherwiseValue
+	        );
+	        setExpression3(new Replacement(PropertyName.simobj_attributeArray.toString(), setAttrOtherwise));
+	    } else {
+	        // Default: Einfach das bestehende Array zurückgeben (keine Änderung)
+	        setExpression3(new GetArgumentByName(PropertyName.simobj_attributeArray.toString()));
+	    }
+
+	    setOperation(Expression_Function.branching);
+	    setValid();
 	}
+
 	
 	
 	private Expression createConditionExpression(Term term) {
