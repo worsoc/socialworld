@@ -17,9 +17,6 @@
  */
 package org.socialworld;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ListIterator;
 
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.AttributeArray;

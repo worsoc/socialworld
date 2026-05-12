@@ -123,10 +123,14 @@ public class SimVisual extends SocialWorldThread {
 		nrCallForObjectID[objID-1]++;
 		if (orderNrForObjectID[objID-1] == 155) orderNrForObjectID[objID-1] = 1;
 		this.attributeLines[objID-1].setBackground(SimColorConstants.getColorForOrderNr(orderNrForObjectID[objID-1]));
+
+// old: toggle between white and cyan		
 //		this.attributeLines[this.lastChangedObjID - 1].setBackground(Color.WHITE);
 //		this.attributeLines[objID-1].setBackground(Color.CYAN);
-		this.attributeLines[objID-1].setText("(" + nrCallForObjectID[objID-1] + ") - " + attributes.toString());
-//		this.attributeLines[objID-1].setText(objID + " (" + nrCallForObjectID[objID-1] + ") - " + attributes.toString());
+
+//		this.attributeLines[objID-1].setText("(" + nrCallForObjectID[objID-1] + ") - " + attributes.toString());
+		this.attributeLines[objID-1].setText("(" + orderNrForObjectID[objID-1] + ") - " + attributes.toString());
+
 		this.lastChangedObjID = objID;
 		
 

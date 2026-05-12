@@ -21,6 +21,7 @@
 */
 package org.socialworld.objects;
 
+import org.socialworld.GlobalSwitches;
 import org.socialworld.SocialWorld;
 import org.socialworld.actions.handle.Inventory;
 import org.socialworld.actions.move.Path;
@@ -149,8 +150,11 @@ public class StateAnimal extends StateSimulationObject {
 	void refresh() {
 		
 		super.refresh();
-		Scheduler.getInstance().calculateAttributesChangedBySimpleMatrix((StateAnimal)getMeReadableOnly(), (HiddenAnimal)getMeWritableButHidden(grantAccessToPropertyAttributes));
-		Scheduler.getInstance().createAction((StateAnimal)getMeReadableOnly(), (HiddenAnimal)getMeWritableButHidden(grantAccessToPropertyAction));
+		
+		if (GlobalSwitches.STATE_ANIMAL_CALCULATE_REFRESH_ATTRIBUTES == true)
+			Scheduler.getInstance().calculateAttributesChangedBySimpleMatrix((StateAnimal)getMeReadableOnly(), (HiddenAnimal)getMeWritableButHidden(grantAccessToPropertyAttributes));
+		if (GlobalSwitches.STATE_ANIMAL_CALCULATE_REFRESH_ACTION == true)
+			Scheduler.getInstance().createAction((StateAnimal)getMeReadableOnly(), (HiddenAnimal)getMeWritableButHidden(grantAccessToPropertyAction));
 
 	}
 	
@@ -158,8 +162,11 @@ public class StateAnimal extends StateSimulationObject {
 	void calculateEventInfluence(Event event) {
 		
 		super.calculateEventInfluence(event);
-		Scheduler.getInstance().calculateAttributesChangedByEvent(event, (StateAnimal)getMeReadableOnly(), (HiddenAnimal)getMeWritableButHidden(grantAccessToPropertyAttributes) );
-		Scheduler.getInstance().calculatePerception(event, (StateAnimal)getMeReadableOnly(), (HiddenAnimal)getMeWritableButHidden(grantAccessToPropertyKnowledge) );
+
+		if (GlobalSwitches.STATE_ANIMAL_CALCULATE_EVENTINFLUENCE_ATTRIBUTES == true)
+			Scheduler.getInstance().calculateAttributesChangedByEvent(event, (StateAnimal)getMeReadableOnly(), (HiddenAnimal)getMeWritableButHidden(grantAccessToPropertyAttributes) );
+		if (GlobalSwitches.STATE_ANIMAL_CALCULATE_EVENTINFLUENCE_PERCEPTION == true)
+			Scheduler.getInstance().calculatePerception(event, (StateAnimal)getMeReadableOnly(), (HiddenAnimal)getMeWritableButHidden(grantAccessToPropertyKnowledge) );
 		
 	}
 
@@ -188,7 +195,7 @@ public class StateAnimal extends StateSimulationObject {
 	}
 	
 	protected boolean checkChangeRelevance_AttributeArray(AttributeArray newValue) {
-		if (this.attributes.equals(newValue)) {
+		if (this.attributes.isEqualTo(newValue)) {
 			return false;
 		}
 		else {

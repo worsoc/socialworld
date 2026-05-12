@@ -23,7 +23,12 @@ package org.socialworld;
 
 public class GlobalSwitches {
 
+	public static boolean STATE_ANIMAL_CALCULATE_REFRESH_ATTRIBUTES = false;
+	public static boolean STATE_ANIMAL_CALCULATE_REFRESH_ACTION = true;
+	public static boolean STATE_ANIMAL_CALCULATE_EVENTINFLUENCE_ATTRIBUTES = true;
+	public static boolean STATE_ANIMAL_CALCULATE_EVENTINFLUENCE_PERCEPTION = false;
 
+	
 	public static boolean OUTPUT_KNOWLEDGE_ADDKNOWLEDGE = false;
 
 	public static boolean OUTPUT_DEBUG_VARIABLE_IS_NULL = false;
