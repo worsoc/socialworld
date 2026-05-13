@@ -21,10 +21,10 @@
 */
 package org.socialworld.core;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.ListIterator;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeUnit;
 
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.Time;
@@ -55,6 +55,12 @@ import org.socialworld.attributes.Time;
  */
 public class ActionMaster extends SocialWorldThread {
 	
+	private enum ActionHandlerListType {
+		continueList,
+		priorityList,
+		allList
+	}
+	
 	// a reported action handler is rejected because its best action element's execution time is too far in the future
 	public static final int ACTIONMASTER_RETURN_REJECT_TOOMUCHWAIT = 1;
 	// a reported action handler element has been inserted into the priority list (list (b))
@@ -66,30 +72,30 @@ public class ActionMaster extends SocialWorldThread {
 
 	private boolean executeAllowed = true;
 	
-	private boolean isBlockedByAddingActionHandler = false;
 	
 	private static ActionMaster instance;
 	
+	// REAKTIV: Eine Queue für neu anzumeldende Handler von außen (ersetzt das blockierende Flag)
+    private final ConcurrentLinkedQueue<ActionHandler> newHandlersQueue = new ConcurrentLinkedQueue<>();
 	
 	// queue for action handlers that execute an action that must be continued (list (c))
 	// it is iterated from first to last element and starts at the first element again (while elements remain in the list)
-	private List<ActionHandler> continueActionHandlers;
-	private  ListIterator<ActionHandler> continueHandlersIterator;
+    // Erlaubt blitzschnelles Einfügen hinten und Entnehmen vorne ohne Sperren
+    private final ConcurrentLinkedQueue<ActionHandler> continueActionHandlers = new ConcurrentLinkedQueue<>();
 
 	// priority list for reported action handlers (list (b))
 	// it is iterated one time from first to last element
 	// after a complete iteration the list is cleared and will be filled with new reported action handler elements
-	private ArrayList<List<ActionHandler>> reportedActionHandlers;
-	private int[][] indexBySecondAndPriority;
-	private  List<ActionHandler> actionHandlersNow;
-	private  ListIterator<ActionHandler> handlersIterator;
-	private int[] minPriorityBySecond;
+    // Definition als festes Array von ConcurrentLinkedQueues
+    private final ConcurrentLinkedQueue<ActionHandler>[][] reportedActionHandlers;
+	// Ein einfaches boolean-Array für jede Sekunde: true = es gibt mindestens einen ActionHandler
+	private final boolean[] secondHasActions = new boolean[ActionHandler.MAX_ACTION_WAIT_SECONDS];
 
 	// queue for all action handlers  (list (a))
 	// it is iterated from first to last element and starts at the first element again 	
-	private List<ActionHandler> allActionHandlers;
-	private  ListIterator<ActionHandler> allHandlersIterator;
-	
+    private final List<ActionHandler> allActionHandlers = new CopyOnWriteArrayList<>();
+    private int currentAllHandlersIndex = 0;
+
 	// the actual time measured in milliseconds
 	private long nowInMilliseconds;
 	// the actual time step (measured in seconds per minute)
@@ -107,35 +113,25 @@ public class ActionMaster extends SocialWorldThread {
 	 *  
 	 *  For every list there is a list iterator.
 	 */
+	@SuppressWarnings("unchecked")
 	private ActionMaster() {
 		
 		this.sleepTime = 50;
 		
+	    int maxSeconds = ActionHandler.MAX_ACTION_WAIT_SECONDS;
+	    int maxPriorities = AbstractAction.MAX_ACTION_PRIORITY; 
+
 		// list (b):
-		reportedActionHandlers = new ArrayList<List<ActionHandler>>();
-		for (int i = 0; i < ActionHandler.MAX_ACTION_WAIT_SECONDS; i++) {
-			reportedActionHandlers.add(Collections.synchronizedList(new ArrayList<ActionHandler>()));
-		}
+	    // Initialisierung des Arrays mit der festen Sekunden-Größe
+	    reportedActionHandlers = new ConcurrentLinkedQueue[maxSeconds][maxPriorities];
+	    
+	    for (int s = 0; s < maxSeconds; s++) {
+	    	secondHasActions[s] = false; 
+	        for (int p = 0; p < maxPriorities; p++) {
+	            reportedActionHandlers[s][p] = new ConcurrentLinkedQueue<ActionHandler>();
+	        }
+	    }
 		
-		indexBySecondAndPriority = new int[ActionHandler.MAX_ACTION_WAIT_SECONDS][AbstractAction.MAX_ACTION_PRIORITY];
-		minPriorityBySecond = new int[ActionHandler.MAX_ACTION_WAIT_SECONDS];
-
-		for (int i = 0; i < ActionHandler.MAX_ACTION_WAIT_SECONDS; i++) {
-			minPriorityBySecond[i] = AbstractAction.MAX_ACTION_PRIORITY;
-		}
-
-		actionHandlersNow = reportedActionHandlers.get(0);
-		handlersIterator = actionHandlersNow.listIterator();
-
-		// list (c):
-		continueActionHandlers = new ArrayList<ActionHandler>();
-		continueHandlersIterator = continueActionHandlers.listIterator();
-		
-		// list (a):
-		allActionHandlers = new ArrayList<ActionHandler>();
-		allHandlersIterator = allActionHandlers.listIterator();
-		
-
 	}
 
 	/**
@@ -143,38 +139,49 @@ public class ActionMaster extends SocialWorldThread {
 	 * 
 	 * @return singleton object of ActionMaster
 	 */
-	public static ActionMaster getInstance() {
+	public static synchronized ActionMaster getInstance() {
 		if (instance == null) instance = new ActionMaster();
 		return instance;
 	}
 	
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Thread#run()
-	 */
-	@Override
-	public void run() {
-		
-		while (isRunning()) {
-			
-			if (executeAllowed) 
-				sleepTime = executeAction();
-			else
-				System.out.println("ActionMaster run(): execute not allowed");
-
-			
-			try {
-				sleep(sleepTime);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-
-		}
-		
-	}
+	  /**
+     * Reaktiver Thread-Loop 
+     */
+    @Override
+    public void run() {
+        while (isRunning()) {
+            if (executeAllowed) {
+                // Verarbeite wartende Registrierungen direkt atomar
+                processIncomingHandlers();
+                
+                // Führe die nächste anstehende Aktion aus
+                executeAction();
+            } else {
+                // Falls pausiert, nutzen wir ein kurzes reaktives Poll-Timeout statt hartem Sleep
+                try {
+                    TimeUnit.MILLISECONDS.sleep(ACTIONMASTER_RETURN_SLEEP_LESS); 
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }
+    }
 	
+	
+	
+	   /**
+     * Verarbeitet asynchron hinzugefügte Handler aus der Queue
+     */
+    private void processIncomingHandlers() {
+        ActionHandler newHandler;
+        while ((newHandler = newHandlersQueue.poll()) != null) {
+            if (!allActionHandlers.contains(newHandler)) {
+                allActionHandlers.add(newHandler);
+            }
+        }
+    }
+
 	/**
 	 * The method lets "the next" action handler execute its best action.
 	 * "The next" action handler is:
@@ -192,85 +199,74 @@ public class ActionMaster extends SocialWorldThread {
 	 */
 	private int executeAction() {
 		
-		int returnSleepTime = ACTIONMASTER_RETURN_SLEEP_ZERO;
+		int returnSleepTime = ACTIONMASTER_RETURN_SLEEP_LESS;
 		
 		ActionHandler handler = null;
-		boolean handlerFromPriorityList = false;
-		boolean handlerFromContinueList = false;
-
-
-		// if there is a further action handler in continue list this action handler is chosen to execute its action.
-		if (continueHandlersIterator.hasNext()) {
-			handler = continueHandlersIterator.next();
-			handlerFromContinueList = true;
-		}
-		else {
-			
-			synchronized (handlersIterator) {
-			
-				// if there is a further action handler in priority list this action handler is chosen to execute its action.
-				if (handlersIterator.hasNext()) {
-					handler = handlersIterator.next();
-					handlerFromPriorityList = true;
-				}
-				
-			}
 		
-			if (!handlerFromPriorityList) {
-				// if continue and priority lists are iterated the action handler is chosen from all action handler list.
-				
-				if (isBlockedByAddingActionHandler) {
-					return ACTIONMASTER_RETURN_SLEEP_LESS;
-				}
-				
-				if (allHandlersIterator.nextIndex() == allActionHandlers.size()) 
-					allHandlersIterator = allActionHandlers.listIterator();
-				
-				if (allHandlersIterator.hasNext())
-					handler = allHandlersIterator.next();
-				else
-					return ACTIONMASTER_RETURN_SLEEP_MUCH;
-			}
+        // Prio 1: Continue-Liste (Liste c) - Lock-freie Iteration
+        if (!continueActionHandlers.isEmpty()) {
+            handler = continueActionHandlers.poll(); 
+            return executeHandler(handler, ActionHandlerListType.continueList);
+        }
+		
+        // Prio 2: Reported-Liste (Liste b)
+        if (secondHasActions[secondOfTheActualMinute]) {
+	        ConcurrentLinkedQueue<ActionHandler> actionHandlersNow = getFromSecondPriorityMatrix((byte)secondOfTheActualMinute, 0);
+	        if (!actionHandlersNow.isEmpty()) {
+	            handler = actionHandlersNow.poll();
+	            return executeHandler(handler, ActionHandlerListType.priorityList);
+	        }
+        }
+        
+	    // Prio 3: Alle Handler (Liste a) - Index-basiert und resilient gegen Größenänderungen
+        if (!allActionHandlers.isEmpty()) {
+            if (currentAllHandlersIndex >= allActionHandlers.size()) {
+                currentAllHandlersIndex = 0; // Ring-Reset
+            }
+            handler = allActionHandlers.get(currentAllHandlersIndex++);
+            return executeHandler(handler, ActionHandlerListType.allList);
+        }
 
-		}
+		
+		
+		return returnSleepTime;
+		
+	}
+	
+	private int executeHandler(ActionHandler handler, ActionHandlerListType type) {
+		
+		int returnSleepTime = 0;
 		
 		//  According to the return code of the action handler that executes its best rated action,
 		//   the action master changes its lists.
 		switch (handler.doActualAction(secondOfTheActualMinute)) {
 		case ActionHandler.ACTIONHANDLER_RETURN_ACTIONDONE:
-			if (handlerFromContinueList) {
-				handler.removeFromContinueIterator();
-				//continueHandlersIterator.remove();
-			}
-			returnSleepTime = ACTIONMASTER_RETURN_SLEEP_LESS;
+			//  nothing to do, because handler element has already been removed (from continue or priority list)
+			//			returnSleepTime = ACTIONMASTER_RETURN_SLEEP_LESS;
 			break;
 		case ActionHandler.ACTIONHANDLER_RETURN_ACTIONISGOINGON:
-			if (handlerFromPriorityList) {
-				//continueActionHandlers.add(handler);
-				executeAllowed = false;
-				continueHandlersIterator.add(handler);
-				executeAllowed = true;
-				//continueHandlersIterator  = continueActionHandlers.listIterator();
+			if (type == ActionHandlerListType.priorityList || 
+					type == ActionHandlerListType.continueList) {
+				// it has already been removed from priority or continue list
+				// handler must be added to continue list !
+	             continueActionHandlers.add(handler);
 			}
-			// because of iterating the priority list, there mustn't be reseted the continue list iterator
-			// It will be reseted if the next iteration process of continue list starts
-			returnSleepTime = ACTIONMASTER_RETURN_SLEEP_LESS;
+//			returnSleepTime = ACTIONMASTER_RETURN_SLEEP_LESS;
 			break;
 		case ActionHandler.ACTIONHANDLER_RETURN_NOACTION:
-			if (handlerFromContinueList) {
-				handler.removeFromContinueIterator();
-				//continueHandlersIterator.remove();
-			}
-			returnSleepTime = ACTIONMASTER_RETURN_SLEEP_LESS;
+			//  nothing to do, because handler element has already been removed (from continue or priority list)
+//			returnSleepTime = ACTIONMASTER_RETURN_SLEEP_LESS;
 			break;
 		case ActionHandler.ACTIONHANDLER_RETURN_ACTIONYETEXECUTED:
-			returnSleepTime = ACTIONMASTER_RETURN_SLEEP_LESS;
+//			returnSleepTime = ACTIONMASTER_RETURN_SLEEP_LESS;
 			break;
 		}
-		
+
 		return returnSleepTime;
-		
 	}
+	
+	
+	
 	
 	/**
 	 * The method inserts an action handler into the priority list for reported action handlers.
@@ -285,8 +281,6 @@ public class ActionMaster extends SocialWorldThread {
 	public int reportBetterAction(
 			ActionHandler handler, long timeInMilliseconds, int priority) {
 
-		int indexPrio;
-		int iteratorIndex;
 		byte second;
 		long waitMilliseconds;
 		long waitSeconds;
@@ -313,43 +307,23 @@ public class ActionMaster extends SocialWorldThread {
 		// (that holds the starting indexes for every second and every priority)
 		// the insert position into the priority list for reported action handlers is determined
 		second = (byte) ((secondOfTheActualMinute + (byte) waitSeconds ) % ActionHandler.MAX_ACTION_WAIT_SECONDS);
-		indexPrio = indexBySecondAndPriority[second][priority];
 
 		
-		// list of action handlers for the calculated second
-		List<ActionHandler> actionHandlersAtSecond = reportedActionHandlers.get(second);
 		
 		// insert the reported action handler at the determined position
-		if (actionHandlersAtSecond == this.actionHandlersNow)
+		if (second == this.secondOfTheActualMinute)
 		{
-			
 			executeAllowed = false;
-
-			iteratorIndex = handlersIterator.nextIndex();
-		
-			actionHandlersNow.add(indexPrio, handler);
-
-			if (indexPrio <= iteratorIndex)
-				handlersIterator = actionHandlersNow.listIterator(indexPrio);
-			else
-				handlersIterator = actionHandlersNow.listIterator(iteratorIndex);
-			
+			addHandlerToPSecondriorityMatrix(second,priority, handler);
 			executeAllowed = true;
-
 		}
-		else
-			actionHandlersAtSecond.add(indexPrio, handler);
-		
-		
-
-		// because an element has been inserted other elements' index has to be increased
-		// (only the elements that are listed behind the inserted one, that are the elements with lower priority)
-		for (int i = minPriorityBySecond[second]; i < priority; i++) {
-			indexBySecondAndPriority[second][i]++;
+		else {
+			addHandlerToPSecondriorityMatrix(second,priority, handler);
 		}
-		
-		// if there is a lower priority than before then change the start value for index shifting after insertion
-		if (priority < minPriorityBySecond[second]) minPriorityBySecond[second] = priority;
+
+	    // Flag für diese Sekunde atomar/sicher auf true setzen (Primitives Schreiben ist thread-safe)
+	    secondHasActions[second] = true; 
+
 		
 		return ACTIONMASTER_RETURN_INSERTED;
 	}
@@ -360,12 +334,9 @@ public class ActionMaster extends SocialWorldThread {
 	 * @param handler
 	 */
 	public void addActionHandler(ActionHandler handler) {
-		int nextIndex;
-		isBlockedByAddingActionHandler = true;
-		nextIndex = allHandlersIterator.nextIndex();
-		allActionHandlers.add(handler);
-		allHandlersIterator = allActionHandlers.listIterator(nextIndex);
-		isBlockedByAddingActionHandler = false;
+	       if (handler != null) {
+	            newHandlersQueue.offer(handler);
+	        }
 	}
 	
 	/**
@@ -377,36 +348,33 @@ public class ActionMaster extends SocialWorldThread {
 	 */
 	public void nextSecond(Time time) {
 		
-		// reset the start value (for index shifting after insertion) for the last second
-		minPriorityBySecond[secondOfTheActualMinute] = AbstractAction.MAX_ACTION_PRIORITY;
 
-		// if the iterator for the continue list points to the end the pointer is set to the list's start
-		if (continueHandlersIterator.nextIndex() == continueActionHandlers.size() ) {
-			clearContinueIterator();
-			continueHandlersIterator = continueActionHandlers.listIterator();
-		}
-		
 		nowInMilliseconds = time.getTotalMilliseconds();
 		secondOfTheActualMinute = time.getSecond();
 		
-		actionHandlersNow = reportedActionHandlers.get(secondOfTheActualMinute);
-		handlersIterator = actionHandlersNow.listIterator();
-
 		
 		//TODO (MatWorsoc) there must be a call to "all" ActionHandler.reset() somewhere 
 		// if  the counting of seconds starts with 0
 
 	}
 	
-	private void clearContinueIterator() {
-		ActionHandler handler;
-		for (continueHandlersIterator = continueActionHandlers.listIterator(); continueHandlersIterator.hasNext();) {
-			handler = continueHandlersIterator.next();
-		    if (handler.isToBeRemovedFromContinueIterator()) {
-		    	continueHandlersIterator.remove();
-		    	handler.dontRemoveFromContinueIterator();
-		    }
-		}
+	private ConcurrentLinkedQueue<ActionHandler> getFromSecondPriorityMatrix(byte second, int priority) {
+	
+		 if (second >= 0 && second < ActionHandler.MAX_ACTION_WAIT_SECONDS 
+			        && priority >= 0 && priority <= AbstractAction.MAX_ACTION_PRIORITY) {
+
+			int indexPrio = AbstractAction.MAX_ACTION_PRIORITY - priority ;
+			return reportedActionHandlers[second][indexPrio];
+			
+		 }
+		 else
+			 return new ConcurrentLinkedQueue<ActionHandler>();
+		 
+	}
+	
+	private void addHandlerToPSecondriorityMatrix(byte second, int priority, ActionHandler handler) {
+		int indexPrio = AbstractAction.MAX_ACTION_PRIORITY - priority ;
+		reportedActionHandlers[second][indexPrio].add(handler);
 	}
 	
 }

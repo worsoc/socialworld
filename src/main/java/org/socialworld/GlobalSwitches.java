@@ -23,7 +23,7 @@ package org.socialworld;
 
 public class GlobalSwitches {
 
-	public static boolean STATE_ANIMAL_CALCULATE_REFRESH_ATTRIBUTES = false;
+	public static boolean STATE_ANIMAL_CALCULATE_REFRESH_ATTRIBUTES = true;
 	public static boolean STATE_ANIMAL_CALCULATE_REFRESH_ACTION = true;
 	public static boolean STATE_ANIMAL_CALCULATE_EVENTINFLUENCE_ATTRIBUTES = true;
 	public static boolean STATE_ANIMAL_CALCULATE_EVENTINFLUENCE_PERCEPTION = false;
@@ -47,8 +47,8 @@ public class GlobalSwitches {
 	public static boolean OUTPUT_CREATE_OBJECT_DETAILS = false;
 	public static boolean OUTPUT_CREATE_OBJECT_CLASS_FOR_NAME = false;
 
-	public static boolean OUTPUT_CALCULATE_ACTION = false;
-	public static boolean OUTPUT_CALCULATE_REACTION = false;
+	public static boolean OUTPUT_CALCULATE_ACTION = true;
+	public static boolean OUTPUT_CALCULATE_REACTION = true;
 
 	public static boolean OUTPUT_CALCULATE_ATTRIBUTE_BY_EVENT = false;
 
