@@ -21,10 +21,10 @@
 */
 package org.socialworld.core;
 
-import java.util.ListIterator;
+
 
 import org.socialworld.objects.*;
-import org.socialworld.propertyChange.ListenedList;
+import org.socialworld.propertyChange.ListenedMap;
 import org.socialworld.datasource.createObjects.CreateAnimal;
 import org.socialworld.datasource.createObjects.CreateGod;
 import org.socialworld.datasource.createObjects.CreateHuman;
@@ -41,13 +41,23 @@ import org.socialworld.datasource.tablesSimulation.TableObject;
 import org.socialworld.collections.IncompleteObjects;
 import org.socialworld.collections.SimulationObjectArray;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * @author Mathias Sikos (MatWorsoc)
  *
  */
 public class ObjectMaster {
 
-	private static final int SIMULATION_OBJECTS_START_CAPACITY = 1000;
+    // Logger-Instanz SLF4J für die Klasse registrieren
+	private static final Logger log = LoggerFactory.getLogger(ObjectMaster.class);
+
+	// Jeder Typ erhält ein exklusives ID-Band von 1.000 IDs
+	private static final int RANGE_SIZE = 1000;
+
+
+	private static final int SIMULATION_OBJECTS_START_CAPACITY = 10000;
 	
 	private static ObjectMaster instance;
 	
@@ -56,51 +66,69 @@ public class ObjectMaster {
 		
 	private IncompleteObjects incompleteObjects;
 	
-	private final ListenedList<God> gods;
-	private final ListenedList<Human> humans;
-	private final ListenedList<Item> items;
-	private final ListenedList<Magic> magics;
-	private final ListenedList<Animal> animals;
+	private final ListenedMap<God> gods;
+	private final ListenedMap<Human> humans;
+	private final ListenedMap<Item> items;
+	private final ListenedMap<Magic> magics;
+	private final ListenedMap<Animal> animals;
 	
 	private final SimulationObjectArray simulationObjects;
 	private int maxObjectID = 0;
 	private int nextIndexForPerceive = 0;
 	
-	private  ListIterator<God> godsIterator;
-	private  ListIterator<Human> humansIterator;
-	private  ListIterator<Item> itemsIterator;
-	private  ListIterator<Magic> magicsIterator;
-	private  ListIterator<Animal> animalsIterator;
-	
-	
+	private final int[] typeMaxIDs = new int[SimulationObject_Type.values().length];
+	private final int[] typeIdCursors = new int[SimulationObject_Type.values().length];
+	private final int[] typeStartIDs = new int[SimulationObject_Type.values().length];
+	private final int[] typeEndIDs = new int[SimulationObject_Type.values().length];
+
 	private ObjectMaster() {
 
 		this.simulationObjects = new SimulationObjectArray(SIMULATION_OBJECTS_START_CAPACITY);
 		
-		this.gods = new ListenedList<God>();
-		this.humans = new ListenedList<Human>();
-		this.animals = new ListenedList<Animal>();
-		this.magics = new ListenedList<Magic>();
-		this.items = new ListenedList<Item>();
-		resetIterators();
+		this.gods = new ListenedMap<God>();
+		this.humans = new ListenedMap<Human>();
+		this.animals = new ListenedMap<Animal>();
+		this.magics = new ListenedMap<Magic>();
+		this.items = new ListenedMap<Item>();
 		
 		this.incompleteObjects = new IncompleteObjects();
 		
 		
 		loaders = new LoadSimulationObjects[8];
-		loaders[1] = LoadAnimal.getExlusiveInstance(simulationObjects);
-		loaders[2] = LoadHuman.getExlusiveInstance(simulationObjects);
+		loaders[1] = LoadHuman.getExlusiveInstance(simulationObjects);
+		loaders[2] = LoadAnimal.getExlusiveInstance(simulationObjects);
 		loaders[3] = LoadGod.getExlusiveInstance(simulationObjects);
 		loaders[4] = LoadItem.getExlusiveInstance(simulationObjects);
 		loaders[5] = LoadMagic.getExlusiveInstance(simulationObjects);
 
 		creators = new CreateSimulationObjects[8];
-		creators[1] = CreateAnimal.getExlusiveInstance();
-		creators[2] = CreateHuman.getExlusiveInstance();
+		creators[1] = CreateHuman.getExlusiveInstance();
+		creators[2] = CreateAnimal.getExlusiveInstance();
 		creators[3] = CreateGod.getExlusiveInstance();
 		creators[4] = CreateItem.getExlusiveInstance();
 		creators[5] = CreateMagic.getExlusiveInstance();
 		
+		    
+	    for (SimulationObject_Type type : SimulationObject_Type.values()) {
+	    	
+	    	// noObject ignorieren
+	    	if (type == SimulationObject_Type.noObject) continue;
+	    	
+	        int idx = type.getIndex();
+	        
+	        // Jedes Band startet exklusiv 
+	        int startID = (idx - 1) * RANGE_SIZE;
+	        
+	        this.typeStartIDs[idx] = startID;
+	        this.typeEndIDs[idx] = startID + RANGE_SIZE - 1;
+	        
+	        // Cursor direkt auf den Startwert des jeweiligen Nummernkreises setzen
+	        this.typeIdCursors[idx] = startID;
+
+	        // max. IDs direkt auf den Startwert des jeweiligen Nummernkreises setzen
+	        this.typeMaxIDs[idx] = startID;
+	    }
+
 	}	
 	
 	public static ObjectMaster getInstance() {
@@ -115,6 +143,9 @@ public class ObjectMaster {
 	}
 	
 	public void loadSimulationObjects() {
+		
+		
+		// TODO typeMaxIDs  belegen
 		
 		int allIDs[];
 		int length;
@@ -138,8 +169,8 @@ public class ObjectMaster {
 			type = tableObjects.getType(index);
 
 			switch (type) {
-				case 1: fullClassName = "org.socialworld.objects.concrete.animals.mammals.Dog"; break;
-				case 2: fullClassName = "org.socialworld.objects.Human"; break;
+				case 1: fullClassName = "org.socialworld.objects.Human"; break;
+				case 2: fullClassName = "org.socialworld.objects.concrete.animals.mammals.Dog"; break;
 				case 3: fullClassName = "org.socialworld.objects.concrete.gods.Weather"; break;
 				case 4: fullClassName = "org.socialworld.objects.concrete.eatable.fruits.Apple"; break;
 				case 5: fullClassName = "org.socialworld.objects.concrete.spells.Lightning"; break;
@@ -156,10 +187,8 @@ public class ObjectMaster {
 			addObjectToList(SimulationObject_Type.getSimulationObjectType(type), simulationObjects.get(objectID));
 		}
 		
-		if (allIDs.length > 0) {
-			this.maxObjectID = allIDs[allIDs.length - 1];
-		}
 		
+		this.maxObjectID = getMaxObjectId();
 	}
 	
 	
@@ -173,8 +202,10 @@ public class ObjectMaster {
 		int incompleteObjectIndex;
 		
 
+		objectID = typeMaxIDs[simulationObjectType.getIndex()] + 1;
+		typeMaxIDs[simulationObjectType.getIndex()] = objectID;
+		if (objectID > maxObjectID) maxObjectID = objectID;
 		maxObjectID = maxObjectID + 1;
-		objectID =  maxObjectID;
 
 		incompleteObject = creators[simulationObjectType.getIndex()].getObject(objectID, fullClassName);
 		
@@ -256,21 +287,67 @@ public class ObjectMaster {
 	
 	public int refreshNextObjectsState(SimulationObject_Type simObjType) {
 		
-		SimulationObject theNextOne;
-		
-		theNextOne = next(simObjType);
-		
-		if (theNextOne.isSimulationObject()) {
-			theNextOne.refreshState();
-			return simObjType.getIndex();
-		}
-		else {
-			resetIterator(simObjType);
-			return  simObjType.next();
-		}
+	    SimulationObject theNextOne = next(simObjType);
+	    
+	    if (theNextOne != null && theNextOne.isSimulationObject()) {
+	        theNextOne.refreshState();
+	        return simObjType.getIndex(); // Erfolg: Zustand aktualisiert
+	    }
+	    
+	    // Keine passende ID gefunden oder Lücke -> Weiterschalten zum nächsten Typ/Schritt
+	    return simObjType.next();
 
 	}
 
+	private SimulationObject next(SimulationObject_Type simObjType) {
+	    if (this.maxObjectID == 0) {
+	        return null;
+	    }
+
+	    int typeIndex = simObjType.getIndex();
+	
+	    // Blitzschneller Array-Lookup statt switch-case-Berechnung
+	    int startID = this.typeStartIDs[typeIndex];
+	    int endID   = this.typeEndIDs[typeIndex];
+	    
+	    // Cursor im eigenen Nummernkreis hochzählen
+	    this.typeIdCursors[typeIndex]++;
+	    if (this.typeIdCursors[typeIndex] > endID) {
+	        log.info("[Nummernkreis-Reset] Typ {} hat das Ende des ID-Bands ({}) erreicht. Springe zurück zu {}", 
+	                 simObjType, endID, startID);
+	        this.typeIdCursors[typeIndex] = startID; // Ringpuffer innerhalb des Nummernkreises
+	    }
+
+	    int currentID = this.typeIdCursors[typeIndex];
+	    SimulationObject result = null;
+	
+	                 
+        switch (simObjType) {
+            case god:   result = this.gods.get(currentID); break;
+            case human: result = this.humans.get(currentID); break;
+            case animal:result = this.animals.get(currentID); break;
+            case magic: result = this.magics.get(currentID); break;
+            case item:  result = this.items.get(currentID); break;
+            default: result = null;
+        }
+
+        // --- DIAGNOSE-LOGS ---
+        if (result != null) {
+            // Ein Treffer: Zeigt uns, dass wir ein Objekt im richtigen ID-Band gefunden haben
+ //           log.info("[Zonierung-HIT] Typ: {} | ID: {} | Band: [{} - {}] -> Objekt '{}' geladen.", 
+//                     simObjType, currentID, startID, endID, result.getClass().getSimpleName());
+        } else {
+            // Optionale Ausgabe für ungenutzte IDs im Kreis (für den Test)
+            // Sollte im Dauerlauf deaktiviert werden, um die Konsole nicht zu fluten
+            log.debug("[Zonierung-EMPTY-SLOT] Typ: {} | ID: {} -> Unbelegte ID im eigenen Band.", 
+                      simObjType, currentID);
+        }
+
+        return result;
+
+	}
+
+	
 	public void perceiveNextObject() {
 		
 		SimulationObject theNextOne;
@@ -289,85 +366,39 @@ public class ObjectMaster {
 	}
 
 	private void addObjectToList(SimulationObject_Type simulationObjectType, SimulationObject object) {
-		// TODO (MatWorsoc) weitere Objekttypen hinzuf�gen
+		// TODO (MatWorsoc) weitere Objekttypen hinzufuegen
+		int objectID = object.getObjectID();
 		switch (simulationObjectType) {
 		case animal:
-			this.animals.add((Animal)object);
-			animalsIterator = animals.listIterator(animalsIterator.nextIndex());
+			this.animals.put(objectID, (Animal)object);
 			break;
 		case human:
-			this.humans.add((Human)object);
-			humansIterator = humans.listIterator(humansIterator.nextIndex());
+			this.humans.put(objectID, (Human)object);
 			break;
 		case god:
-			this.gods.add((God)object);
-			godsIterator = gods.listIterator(godsIterator.nextIndex());
+			this.gods.put(objectID, (God)object);
 			break;
 		case item:
-			this.items.add((Item)object);
-			itemsIterator = items.listIterator(itemsIterator.nextIndex());
+			this.items.put(objectID, (Item)object);
 			break;
 		case magic:
-			this.magics.add((Magic)object);
-			magicsIterator = magics.listIterator(magicsIterator.nextIndex());
+			this.magics.put(objectID, (Magic)object);
 			break;
 		default:
 			object = null;
 		}		
 	}
 	
-	private boolean hasNext(SimulationObject_Type simulationObjectType) {
-
-		switch (simulationObjectType) {
-		case animal:
-			return this.animalsIterator.hasNext();
-		case human:
-			return this.humansIterator.hasNext();
-		case god:
-			return this.godsIterator.hasNext();
-		case item:
-			return this.itemsIterator.hasNext();
-		case magic:
-			return this.magicsIterator.hasNext();
-		default:
-			return false;
-		}		
+	private int getMaxObjectId() {
+		int maxObjectID = 0;
+//		if (maxObjectID < typeMaxIDs[0]) maxObjectID = typeMaxIDs[0];
+		if (maxObjectID < typeMaxIDs[1]) maxObjectID = typeMaxIDs[1];
+		if (maxObjectID < typeMaxIDs[2]) maxObjectID = typeMaxIDs[2];
+		if (maxObjectID < typeMaxIDs[3]) maxObjectID = typeMaxIDs[3];
+		if (maxObjectID < typeMaxIDs[4]) maxObjectID = typeMaxIDs[4];
+		if (maxObjectID < typeMaxIDs[5]) maxObjectID = typeMaxIDs[4];
 		
-	}
-	
-	private SimulationObject next(SimulationObject_Type simulationObjectType) {
-		switch (simulationObjectType) {
-		case animal:
-			if (this.animalsIterator.hasNext())
-				return this.animalsIterator.next();
-			else
-				break;
-		case human:
-			if (this.humansIterator.hasNext())
-				return this.humansIterator.next();
-			else
-				break;
-		case god:
-			if (this.godsIterator.hasNext())
-				return this.godsIterator.next();
-			else
-				break;
-		case item:
-			if (this.itemsIterator.hasNext())
-				return this.itemsIterator.next();
-			else
-				break;
-		case magic:
-			if (this.magicsIterator.hasNext())
-				return this.magicsIterator.next();
-			else
-				break;
-		default:
-			return NoSimulationObject.getObjectNothing() ;
-		}		
-		
-		return NoSimulationObject.getObjectNothing() ;
-		
+		return maxObjectID;
 	}
 	
 	/**
@@ -375,7 +406,7 @@ public class ObjectMaster {
 	 * 
 	 * @return
 	 */
-	public ListenedList<God> getGods() {
+	public ListenedMap<God> getGods() {
 		return this.gods;
 	}
 
@@ -384,7 +415,7 @@ public class ObjectMaster {
 	 * 
 	 * @return
 	 */
-	public ListenedList<Human> getHumans() {
+	public ListenedMap<Human> getHumans() {
 		return this.humans;
 	}
 
@@ -393,7 +424,7 @@ public class ObjectMaster {
 	 * 
 	 * @return
 	 */
-	public ListenedList<Item> getItems() {
+	public ListenedMap<Item> getItems() {
 		return this.items;
 	}
 
@@ -403,37 +434,10 @@ public class ObjectMaster {
 	 * 
 	 * @return
 	 */
-	public ListenedList<Magic> getMagics() {
+	public ListenedMap<Magic> getMagics() {
 		return this.magics;
 	}	
 	
-	private void resetIterator(SimulationObject_Type simObjType) {
 	
-		switch (simObjType) {
-		case animal:
-			 this.animalsIterator = this.animals.listIterator(); break;
-		case human:
-			 this.humansIterator = this.humans.listIterator(); break;
-		case god:
-			 this.godsIterator = this.gods.listIterator(); break;
-		case item:
-			 this.itemsIterator = this.items.listIterator(); break;
-		case magic:
-			 this.magicsIterator = this.magics.listIterator(); break;
-		default:
-		}		
-
-	}
-	
-	private void resetIterators() {
-		this.godsIterator = this.gods.listIterator();
-		this.humansIterator = this.humans.listIterator();
-		this.animalsIterator = this.animals.listIterator();
-		this.magicsIterator = this.magics.listIterator();
-//		this.positionsIterator = this.positions.listIterator();
-		this.itemsIterator = this.items.listIterator();
-//		this.inventorysIterator = this.inventories.listIterator();
-
-	}
 	
 }

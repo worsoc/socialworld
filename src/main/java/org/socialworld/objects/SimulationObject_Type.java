@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum SimulationObject_Type {
-	noObject(0), animal(1),human(2), god(3), item(4), magic(5);
+	noObject(0), human(1), animal(2), god(3), item(4), magic(5);
 
 	private static final Map<Integer, SimulationObject_Type> INDEX_CACHE = new HashMap<>();
 	private static final Map<String, SimulationObject_Type> NAME_CACHE = new HashMap<>();
@@ -54,11 +54,11 @@ public enum SimulationObject_Type {
 	
 	public int next() {
 		switch (this) {
-			case human:  return 1; // to animal
+			case human:  return 2; // to animal
 			case animal: return 3; // to god
 			case god:    return 4; // to item
 			case item:   return 5; // to magic
-			case magic:  return 2; // to human
+			case magic:  return 1; // to human
 			default:     return 0;
 		}
 	}
