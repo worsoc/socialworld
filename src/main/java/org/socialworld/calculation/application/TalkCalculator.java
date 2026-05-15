@@ -54,6 +54,10 @@ public class TalkCalculator  extends SocialWorldThread {
 	
 	private static AccessTokenTalkCalculator token = AccessTokenTalkCalculator.getValid();
 	
+	private static final int TALK_POOL_SIZE = 8192;
+	private final CollectionElementSimObjInfluenced[] talkPool = new CollectionElementSimObjInfluenced[TALK_POOL_SIZE];
+	private int talkWriteIndex = 0;
+
 	/**
 	 * private Constructor. 
 	 */
@@ -63,6 +67,10 @@ public class TalkCalculator  extends SocialWorldThread {
 		
 		this.influencedTalks = new CapacityQueue<CollectionElementSimObjInfluenced>("influencedTalks", 5000);
 
+		for (int i = 0; i < TALK_POOL_SIZE; i++) {
+			this.talkPool[i] = new CollectionElementSimObjInfluenced(null, null, null);
+		}
+		
 	}
 
 	public static TalkCalculator getInstance() {
@@ -83,11 +91,21 @@ public class TalkCalculator  extends SocialWorldThread {
 	            if (talk != null) {
 	                // Das erste Element direkt verarbeiten
 	                calculateTalkInfluencedByEvent(talk);
-	                
+	 
+	                // Speicher-Referenzen kappen gegen Memory Loitering (Besitzerrecht liegt beim run-Loop)
+	                talk.setEvent(null);
+	                talk.setState(null);
+	                talk.setHidden(null);
+
 	                // Sobald wir wach sind: Alles wegarbeiten, was sich angestaut hat
 	                CollectionElementSimObjInfluenced nextTalk;
-	                while ((nextTalk = influencedTalks.remove()) != null) {
+	                while ((nextTalk = influencedTalks.poll()) != null) {
 	                    calculateTalkInfluencedByEvent(nextTalk);
+	                    
+	                    // Auch hier Speicher-Referenzen sofort freigeben
+	                    nextTalk.setEvent(null);
+	                    nextTalk.setState(null);
+	                    nextTalk.setHidden(null);
 	                }
 	            }
 
@@ -102,9 +120,19 @@ public class TalkCalculator  extends SocialWorldThread {
 	
 	public final void calculateTalkInfluencedByEvent(Event event, StateHuman stateHuman, HiddenHuman hiddenWriteAccess) {
 		if (event != null && stateHuman != null && hiddenWriteAccess != null) {
-			if (!this.influencedTalks.add(new CollectionElementSimObjInfluenced(event, stateHuman, hiddenWriteAccess))) {
-				// SUB_THREAD_IMPLEMENTATION what shall happen if the queue is filled
-			};
+			// Bitmasken-Recycling statt 'new'
+			int targetIdx = talkWriteIndex & (TALK_POOL_SIZE - 1);
+			CollectionElementSimObjInfluenced pooledTalk = this.talkPool[targetIdx];
+			
+			pooledTalk.setEvent(event);
+			pooledTalk.setState(stateHuman);
+			pooledTalk.setHidden(hiddenWriteAccess);
+			
+			talkWriteIndex++;
+
+			if (!this.influencedTalks.add(pooledTalk)) {
+				talkWriteIndex--; // Rollback bei voller Queue
+			}
 		}
 	}
 

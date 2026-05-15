@@ -55,6 +55,18 @@ public  class AttributeCalculator extends SocialWorldThread {
 	private CapacityQueue<CollectionElementSimObjChanged> changed;
 	private CapacityQueue<CollectionElementSimObjRefreshed> refreshed;
 
+	private static final int INFLUENCED_POOL_SIZE = 8192;
+	private final CollectionElementSimObjInfluenced[] influencedPool = new CollectionElementSimObjInfluenced[INFLUENCED_POOL_SIZE];
+	private int influencedWriteIndex = 0;
+
+	private static final int CHANGED_POOL_SIZE = 8192;
+	private final CollectionElementSimObjChanged[] changedPool = new CollectionElementSimObjChanged[CHANGED_POOL_SIZE];
+	private int changedWriteIndex = 0;
+
+	private static final int REFRESHED_POOL_SIZE = 8192;
+	private final CollectionElementSimObjRefreshed[] refreshedPool = new CollectionElementSimObjRefreshed[REFRESHED_POOL_SIZE];
+	private int refreshedWriteIndex = 0;
+
 	/**
 	 * private Constructor. 
 	 */
@@ -67,6 +79,16 @@ public  class AttributeCalculator extends SocialWorldThread {
 		this.changed = new CapacityQueue<CollectionElementSimObjChanged>("changed", 5000);
 
 		this.refreshed = new CapacityQueue<CollectionElementSimObjRefreshed>("refreshed", 5000);
+
+		for (int i = 0; i < INFLUENCED_POOL_SIZE; i++) {
+			this.influencedPool[i] = new CollectionElementSimObjInfluenced(null, null, null);
+		}
+		for (int i = 0; i < CHANGED_POOL_SIZE; i++) {
+			this.changedPool[i] = new CollectionElementSimObjChanged(null, null);
+		}
+		for (int i = 0; i < REFRESHED_POOL_SIZE; i++) {
+			this.refreshedPool[i] = new CollectionElementSimObjRefreshed(null, null);
+		}
 
 	}
 
@@ -92,20 +114,33 @@ public  class AttributeCalculator extends SocialWorldThread {
 	            if (inf != null) {
 	                // Verarbeitet das Element, das wir gerade aus influenced geholt haben
 	                calculateAttributesChangedByEvent(inf);
+
+					// Speicher-Referenzen kappen gegen Memory Loitering
+	                inf.setEvent(null);
+	                inf.setState(null);
+	                inf.setHidden(null);
 	            }
 
 	            // 2. DIE MITLÄUFER (Opportunistisches Polling):
 	            // Da der Thread gerade sowieso wach ist, leeren wir die anderen Queues 
 	            // ohne zu warten (poll() ohne Parameter liefert sofort null, wenn leer).
 	            
-	            CollectionElementSimObjChanged chg = changed.remove();
+	            CollectionElementSimObjChanged chg = changed.poll();
 	            if (chg != null) {
 	                calculateAttributesChangedByComplexMatrix(chg);
+
+					// Speicher-Referenzen kappen gegen Memory Loitering
+	                chg.setState(null);
+	                chg.setHidden(null);
 	            }
 
-	            CollectionElementSimObjRefreshed ref = refreshed.remove();
+	            CollectionElementSimObjRefreshed ref = refreshed.poll();
 	            if (ref != null) {
 	                calculateAttributesChangedBySimpleMatrix(ref);
+
+					// Speicher-Referenzen kappen gegen Memory Loitering
+	                ref.setState(null);
+	                ref.setHidden(null);
 	            }
 
 	        } catch (InterruptedException e) {
@@ -118,25 +153,53 @@ public  class AttributeCalculator extends SocialWorldThread {
 		
 	final void calculateAttributesChangedByEvent(Event event, StateAnimal stateAnimal, HiddenAnimal hiddenWriteAccess) {
 		if (event != null && stateAnimal != null && hiddenWriteAccess != null) {
-			if (!this.influenced.add(new CollectionElementSimObjInfluenced(event, stateAnimal, hiddenWriteAccess))) {
-				// SUB_THREAD_IMPLEMENTATION what shall happen if the queue is filled
-			};
+			// Bitmasken-Recycling statt 'new'
+			int targetIdx = influencedWriteIndex & (INFLUENCED_POOL_SIZE - 1);
+			CollectionElementSimObjInfluenced pooledInfluenced = this.influencedPool[targetIdx];
+			
+			pooledInfluenced.setEvent(event);
+			pooledInfluenced.setState(stateAnimal);
+			pooledInfluenced.setHidden(hiddenWriteAccess);
+			
+			influencedWriteIndex++;
+
+			if (!this.influenced.add(pooledInfluenced)) {
+				influencedWriteIndex--; // Rollback bei voller Queue
+			}
 		}
 	}
 
 	final void calculateAttributesChangedByComplexMatrix(StateAnimal stateAnimal, HiddenAnimal hiddenWriteAccess) {
 		if (stateAnimal != null && hiddenWriteAccess != null) {
-			if (!this.changed.add(new CollectionElementSimObjChanged(stateAnimal, hiddenWriteAccess))) {
-				// SUB_THREAD_IMPLEMENTATION what shall happen if the queue is filled
-			};
+			// Bitmasken-Recycling statt 'new'
+			int targetIdx = (int) (changedWriteIndex & (CHANGED_POOL_SIZE - 1));
+			CollectionElementSimObjChanged pooledChanged = this.changedPool[targetIdx];
+			
+			pooledChanged.setState(stateAnimal);
+			pooledChanged.setHidden(hiddenWriteAccess);
+			
+			changedWriteIndex++;
+
+			if (!this.changed.add(pooledChanged)) {
+				changedWriteIndex--; // Rollback bei voller Queue
+			}
 		}
 	}
 	
 	final void calculateAttributesChangedBySimpleMatrix(StateAnimal stateAnimal, HiddenAnimal hiddenWriteAccess) {
 		if (stateAnimal != null && hiddenWriteAccess != null) {
-			if (!this.refreshed.add(new CollectionElementSimObjRefreshed(stateAnimal, hiddenWriteAccess))) {
-				// SUB_THREAD_IMPLEMENTATION what shall happen if the queue is filled
-			};
+			// Bitmasken-Recycling statt 'new'
+			int targetIdx = (int) (refreshedWriteIndex & (REFRESHED_POOL_SIZE - 1));
+			CollectionElementSimObjRefreshed pooledRefreshed = this.refreshedPool[targetIdx];
+			
+			pooledRefreshed.setState(stateAnimal);
+			pooledRefreshed.setHidden(hiddenWriteAccess);
+			
+			refreshedWriteIndex++;
+
+			if (!this.refreshed.add(pooledRefreshed)) {
+				refreshedWriteIndex--; // Rollback bei voller Queue
+			}
 		}
 	}
 	
