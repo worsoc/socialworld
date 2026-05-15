@@ -34,6 +34,9 @@ public class CollectionElementActor {
 		this.hidden = hidden;
 	}
 	
+	void setState(StateSimulationObject state) {this.state = state;}
+	void setHidden(HiddenSimulationObject hidden) {this.hidden = hidden;}
+
 	StateSimulationObject getState() {
 		return this.state;
 	}

@@ -49,6 +49,10 @@ public class CapacityQueue<Type> {
         return this.queue.poll(timeout, unit);
     }
 
+    public Type poll() throws InterruptedException {
+        return this.queue.poll();
+    }
+
     public Type remove() {
         // poll() gibt das erste Element zurück oder null, wenn die Queue leer ist
         return this.queue.poll();

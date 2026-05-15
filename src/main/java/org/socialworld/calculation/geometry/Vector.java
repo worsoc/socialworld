@@ -33,6 +33,7 @@ import org.socialworld.core.IAccessToken;
 public class Vector implements IObjectSender{
 
 	private static Vector objectNothing;
+    private static final Vector VECTOR_0 = new Vector(0, 0, 0);
 	
 	public static Vector getObjectNothing() {
 		if (objectNothing == null) {
@@ -51,7 +52,6 @@ public class Vector implements IObjectSender{
 
 	boolean normalized = false;
 	
-	public static Vector vector0;
 	
 	public Vector() {
 
@@ -96,11 +96,17 @@ public class Vector implements IObjectSender{
 		}
 	}
 	
-	public static Vector get0Vector() {
-		if (vector0 == null) {
-			vector0 = new Vector(0,0,0);
+	public void set(Vector original) {
+		if (original != null) {
+			this.x = original.getX();
+			this.y = original.getY();
+			this.z = original.getZ();
+			normalized = false;
 		}
-		return vector0;
+	}
+	
+	public static Vector get0Vector() {
+		 return VECTOR_0; 
 	}
 	
 	public void normalize() {

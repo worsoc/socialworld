@@ -1,24 +1,20 @@
 /*
-* Social World
-* Copyright (C) 2014  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2014  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.core;
 
 
@@ -95,18 +91,18 @@ public class ObjectMaster {
 		
 		
 		loaders = new LoadSimulationObjects[8];
-		loaders[1] = LoadHuman.getExlusiveInstance(simulationObjects);
-		loaders[2] = LoadAnimal.getExlusiveInstance(simulationObjects);
-		loaders[3] = LoadGod.getExlusiveInstance(simulationObjects);
-		loaders[4] = LoadItem.getExlusiveInstance(simulationObjects);
-		loaders[5] = LoadMagic.getExlusiveInstance(simulationObjects);
+		loaders[SimulationObject_Type.human.getIndex()] = LoadHuman.getExlusiveInstance(simulationObjects);
+		loaders[SimulationObject_Type.animal.getIndex()] = LoadAnimal.getExlusiveInstance(simulationObjects);
+		loaders[SimulationObject_Type.god.getIndex()] = LoadGod.getExlusiveInstance(simulationObjects);
+		loaders[SimulationObject_Type.item.getIndex()] = LoadItem.getExlusiveInstance(simulationObjects);
+		loaders[SimulationObject_Type.magic.getIndex()] = LoadMagic.getExlusiveInstance(simulationObjects);
 
 		creators = new CreateSimulationObjects[8];
-		creators[1] = CreateHuman.getExlusiveInstance();
-		creators[2] = CreateAnimal.getExlusiveInstance();
-		creators[3] = CreateGod.getExlusiveInstance();
-		creators[4] = CreateItem.getExlusiveInstance();
-		creators[5] = CreateMagic.getExlusiveInstance();
+		creators[SimulationObject_Type.human.getIndex()] = CreateHuman.getExlusiveInstance();
+		creators[SimulationObject_Type.animal.getIndex()] = CreateAnimal.getExlusiveInstance();
+		creators[SimulationObject_Type.god.getIndex()] = CreateGod.getExlusiveInstance();
+		creators[SimulationObject_Type.item.getIndex()] = CreateItem.getExlusiveInstance();
+		creators[SimulationObject_Type.magic.getIndex()] = CreateMagic.getExlusiveInstance();
 		
 		    
 	    for (SimulationObject_Type type : SimulationObject_Type.values()) {
@@ -145,8 +141,6 @@ public class ObjectMaster {
 	public void loadSimulationObjects() {
 		
 		
-		// TODO typeMaxIDs  belegen
-		
 		int allIDs[];
 		int length;
 		int index;
@@ -155,6 +149,7 @@ public class ObjectMaster {
 		
 		int objectID;
 		int type;
+		SimulationObject_Type simObjType;
 		
 		TableObject tableObjects;
 		tableObjects = new TableObject();
@@ -167,13 +162,14 @@ public class ObjectMaster {
 		for (index = 0; index < length; index++) {
 			objectID = allIDs[index];
 			type = tableObjects.getType(index);
-
-			switch (type) {
-				case 1: fullClassName = "org.socialworld.objects.Human"; break;
-				case 2: fullClassName = "org.socialworld.objects.concrete.animals.mammals.Dog"; break;
-				case 3: fullClassName = "org.socialworld.objects.concrete.gods.Weather"; break;
-				case 4: fullClassName = "org.socialworld.objects.concrete.eatable.fruits.Apple"; break;
-				case 5: fullClassName = "org.socialworld.objects.concrete.spells.Lightning"; break;
+			simObjType = SimulationObject_Type.getSimulationObjectType(type);
+			
+			switch (simObjType) {
+				case human: fullClassName = "org.socialworld.objects.Human"; break;
+				case animal: fullClassName = "org.socialworld.objects.concrete.animals.mammals.Dog"; break;
+				case god: fullClassName = "org.socialworld.objects.concrete.gods.Weather"; break;
+				case item: fullClassName = "org.socialworld.objects.concrete.eatable.fruits.Apple"; break;
+				case magic: fullClassName = "org.socialworld.objects.concrete.spells.Lightning"; break;
 				default: continue;
 			}
 			this.loaders[type].createObject(objectID, fullClassName);
@@ -187,8 +183,6 @@ public class ObjectMaster {
 			addObjectToList(SimulationObject_Type.getSimulationObjectType(type), simulationObjects.get(objectID));
 		}
 		
-		
-		this.maxObjectID = getMaxObjectId();
 	}
 	
 	
@@ -200,12 +194,8 @@ public class ObjectMaster {
 		
 		int objectID;
 		int incompleteObjectIndex;
-		
 
 		objectID = typeMaxIDs[simulationObjectType.getIndex()] + 1;
-		typeMaxIDs[simulationObjectType.getIndex()] = objectID;
-		if (objectID > maxObjectID) maxObjectID = objectID;
-		maxObjectID = maxObjectID + 1;
 
 		incompleteObject = creators[simulationObjectType.getIndex()].getObject(objectID, fullClassName);
 		
@@ -213,6 +203,7 @@ public class ObjectMaster {
 			incompleteObjectIndex = incompleteObjects.add(incompleteObject);
 			object = incompleteObject.getObject();
 			this.simulationObjects.set(objectID, object);
+			// erst hier werden die max IDs hochgezählt
 			addObjectToList(simulationObjectType, object);
 		}
 		else {
@@ -221,6 +212,131 @@ public class ObjectMaster {
 		
 		return incompleteObjectIndex;
 	}
+	
+	public void perceiveNextObject() {
+		
+		SimulationObject theNextOne;
+		
+		theNextOne = this.simulationObjects.get(this.nextIndexForPerceive);
+		
+		if (theNextOne.isSimulationObject()) {
+			theNextOne.letBePerceived();
+		}
+
+		this.nextIndexForPerceive++;
+		if (this.nextIndexForPerceive > this.maxObjectID) {
+			this.nextIndexForPerceive = 0;
+		}
+		
+	}
+	
+	public int refreshNextObjectsState(SimulationObject_Type simObjType) {
+		
+	    SimulationObject theNextOne = next(simObjType);
+	    
+	    if (theNextOne != null && theNextOne.isSimulationObject()) {
+	        theNextOne.refreshState();
+	        return simObjType.getIndex(); // Erfolg: Zustand aktualisiert
+	    }
+	    
+	    // Keine passende ID gefunden oder Lücke -> Weiterschalten zum nächsten Typ/Schritt
+	    return simObjType.next();
+
+	}
+
+	private SimulationObject next(SimulationObject_Type simObjType) {
+	    if (this.maxObjectID == 0) {
+	        return null;
+	    }
+
+	    int typeIndex = simObjType.getIndex();
+	
+	    // Blitzschneller Array-Lookup statt switch-case-Berechnung
+	    int startID = this.typeStartIDs[typeIndex];
+//	    int endID   = this.typeEndIDs[typeIndex];
+	    int maxID	= this.typeMaxIDs[typeIndex];
+	    
+	    // Cursor im eigenen Nummernkreis hochzählen
+	    this.typeIdCursors[typeIndex]++;
+	    if (this.typeIdCursors[typeIndex] > maxID) {
+	    	if (maxID > startID) {
+		        log.info("[Nummernkreis-Reset] Typ {} hat das Ende des ID-Bands ({}) erreicht. Springe zurück zu {}", 
+		                 simObjType, maxID, startID);
+	    	}
+		    this.typeIdCursors[typeIndex] = startID; // Ringpuffer innerhalb des Nummernkreises
+	    }
+
+	    int currentID = this.typeIdCursors[typeIndex];
+	    SimulationObject result = null;
+	
+	                 
+        switch (simObjType) {
+            case god:   result = this.gods.get(currentID); break;
+            case human: result = this.humans.get(currentID); break;
+            case animal:result = this.animals.get(currentID); break;
+            case magic: result = this.magics.get(currentID); break;
+            case item:  result = this.items.get(currentID); break;
+            default: result = null;
+        }
+
+        // --- DIAGNOSE-LOGS ---
+        if (result != null) {
+            // Ein Treffer: Zeigt uns, dass wir ein Objekt im richtigen ID-Band gefunden haben
+ //           log.info("[Zonierung-HIT] Typ: {} | ID: {} | Band: [{} - {}] -> Objekt '{}' geladen.", 
+//                     simObjType, currentID, startID, endID, result.getClass().getSimpleName());
+        } else {
+            // Optionale Ausgabe für ungenutzte IDs im Kreis (für den Test)
+            // Sollte im Dauerlauf deaktiviert werden, um die Konsole nicht zu fluten
+            log.debug("[Zonierung-EMPTY-SLOT] Typ: {} | ID: {} -> Unbelegte ID im eigenen Band.", 
+                      simObjType, currentID);
+        }
+
+        return result;
+
+	}
+
+	private void addObjectToList(SimulationObject_Type simulationObjectType, SimulationObject object) {
+
+		// TODO (MatWorsoc) weitere Objekttypen hinzufuegen
+		int objectID = object.getObjectID();
+		switch (simulationObjectType) {
+		case animal:
+			this.animals.put(objectID, (Animal)object);
+			break;
+		case human:
+			this.humans.put(objectID, (Human)object);
+			break;
+		case god:
+			this.gods.put(objectID, (God)object);
+			break;
+		case item:
+			this.items.put(objectID, (Item)object);
+			break;
+		case magic:
+			this.magics.put(objectID, (Magic)object);
+			break;
+		default:
+			object = null;
+			return;
+		}	
+		
+		typeMaxIDs[simulationObjectType.getIndex()] = objectID;
+		if (objectID > maxObjectID) maxObjectID = objectID;
+
+	}
+	
+	private int getMaxObjectId() {
+		int maxObjectID = 0;
+//		if (maxObjectID < typeMaxIDs[0]) maxObjectID = typeMaxIDs[0];
+		if (maxObjectID < typeMaxIDs[1]) maxObjectID = typeMaxIDs[1];
+		if (maxObjectID < typeMaxIDs[2]) maxObjectID = typeMaxIDs[2];
+		if (maxObjectID < typeMaxIDs[3]) maxObjectID = typeMaxIDs[3];
+		if (maxObjectID < typeMaxIDs[4]) maxObjectID = typeMaxIDs[4];
+		if (maxObjectID < typeMaxIDs[5]) maxObjectID = typeMaxIDs[4];
+		
+		return maxObjectID;
+	}
+	
 	
 	int getObjectIDForIncompleteObjectIndex(int  incompleteObjectsIndex) {
 		IncompleteSimulationObject incompleteObject;
@@ -283,122 +399,6 @@ public class ObjectMaster {
 		if (removedObject.isValid()) {
 			removedObject.setComplete();
 		}
-	}
-	
-	public int refreshNextObjectsState(SimulationObject_Type simObjType) {
-		
-	    SimulationObject theNextOne = next(simObjType);
-	    
-	    if (theNextOne != null && theNextOne.isSimulationObject()) {
-	        theNextOne.refreshState();
-	        return simObjType.getIndex(); // Erfolg: Zustand aktualisiert
-	    }
-	    
-	    // Keine passende ID gefunden oder Lücke -> Weiterschalten zum nächsten Typ/Schritt
-	    return simObjType.next();
-
-	}
-
-	private SimulationObject next(SimulationObject_Type simObjType) {
-	    if (this.maxObjectID == 0) {
-	        return null;
-	    }
-
-	    int typeIndex = simObjType.getIndex();
-	
-	    // Blitzschneller Array-Lookup statt switch-case-Berechnung
-	    int startID = this.typeStartIDs[typeIndex];
-	    int endID   = this.typeEndIDs[typeIndex];
-	    
-	    // Cursor im eigenen Nummernkreis hochzählen
-	    this.typeIdCursors[typeIndex]++;
-	    if (this.typeIdCursors[typeIndex] > endID) {
-	        log.info("[Nummernkreis-Reset] Typ {} hat das Ende des ID-Bands ({}) erreicht. Springe zurück zu {}", 
-	                 simObjType, endID, startID);
-	        this.typeIdCursors[typeIndex] = startID; // Ringpuffer innerhalb des Nummernkreises
-	    }
-
-	    int currentID = this.typeIdCursors[typeIndex];
-	    SimulationObject result = null;
-	
-	                 
-        switch (simObjType) {
-            case god:   result = this.gods.get(currentID); break;
-            case human: result = this.humans.get(currentID); break;
-            case animal:result = this.animals.get(currentID); break;
-            case magic: result = this.magics.get(currentID); break;
-            case item:  result = this.items.get(currentID); break;
-            default: result = null;
-        }
-
-        // --- DIAGNOSE-LOGS ---
-        if (result != null) {
-            // Ein Treffer: Zeigt uns, dass wir ein Objekt im richtigen ID-Band gefunden haben
- //           log.info("[Zonierung-HIT] Typ: {} | ID: {} | Band: [{} - {}] -> Objekt '{}' geladen.", 
-//                     simObjType, currentID, startID, endID, result.getClass().getSimpleName());
-        } else {
-            // Optionale Ausgabe für ungenutzte IDs im Kreis (für den Test)
-            // Sollte im Dauerlauf deaktiviert werden, um die Konsole nicht zu fluten
-            log.debug("[Zonierung-EMPTY-SLOT] Typ: {} | ID: {} -> Unbelegte ID im eigenen Band.", 
-                      simObjType, currentID);
-        }
-
-        return result;
-
-	}
-
-	
-	public void perceiveNextObject() {
-		
-		SimulationObject theNextOne;
-		
-		theNextOne = this.simulationObjects.get(this.nextIndexForPerceive);
-		
-		if (theNextOne.isSimulationObject()) {
-			theNextOne.letBePerceived();
-		}
-
-		this.nextIndexForPerceive++;
-		if (this.nextIndexForPerceive > this.maxObjectID) {
-			this.nextIndexForPerceive = 0;
-		}
-		
-	}
-
-	private void addObjectToList(SimulationObject_Type simulationObjectType, SimulationObject object) {
-		// TODO (MatWorsoc) weitere Objekttypen hinzufuegen
-		int objectID = object.getObjectID();
-		switch (simulationObjectType) {
-		case animal:
-			this.animals.put(objectID, (Animal)object);
-			break;
-		case human:
-			this.humans.put(objectID, (Human)object);
-			break;
-		case god:
-			this.gods.put(objectID, (God)object);
-			break;
-		case item:
-			this.items.put(objectID, (Item)object);
-			break;
-		case magic:
-			this.magics.put(objectID, (Magic)object);
-			break;
-		default:
-			object = null;
-		}		
-	}
-	
-	private int getMaxObjectId() {
-		int maxObjectID = 0;
-//		if (maxObjectID < typeMaxIDs[0]) maxObjectID = typeMaxIDs[0];
-		if (maxObjectID < typeMaxIDs[1]) maxObjectID = typeMaxIDs[1];
-		if (maxObjectID < typeMaxIDs[2]) maxObjectID = typeMaxIDs[2];
-		if (maxObjectID < typeMaxIDs[3]) maxObjectID = typeMaxIDs[3];
-		if (maxObjectID < typeMaxIDs[4]) maxObjectID = typeMaxIDs[4];
-		if (maxObjectID < typeMaxIDs[5]) maxObjectID = typeMaxIDs[4];
-		
-		return maxObjectID;
 	}
 	
 	/**

@@ -52,6 +52,9 @@ import org.socialworld.objects.access.HiddenAnimal;
 
 public class KnowledgeCalculator extends SocialWorldThread {
 
+	
+	private static final int POOL_SIZE = 8192; // Zweierpotenz für schnelles Bitmasking
+
 	public static final int KNOWLEDGE_CALCULATOR_RETURNS_EMPTY_LISTS = 2;
 	public static final int KNOWLEDGE_CALCULATOR_RETURNS_NO_CHANGES = 1;
 	public static final int KNOWLEDGE_CALCULATOR_RETURNS_INVALID_RESULT = 3;
@@ -60,6 +63,9 @@ public class KnowledgeCalculator extends SocialWorldThread {
 	public static final String PRAEFIX_VALUE_NAME = "VALNAM_";
 	
 	private static KnowledgeCalculator instance;
+
+	private final CollectionElementSimObjInfluenced[] perceptionPool = new CollectionElementSimObjInfluenced[POOL_SIZE];
+	private int poolWriteIndex = 0;
 
 	private CapacityQueue<CollectionElementSimObjInfluenced> perceptions;
 
@@ -75,6 +81,10 @@ public class KnowledgeCalculator extends SocialWorldThread {
 		
 		this.perceptions = new CapacityQueue<CollectionElementSimObjInfluenced>("perceptions", 5000);
 
+	    // Vorallokation des gesamten Pools beim Engine-Start (0 Byte zur Laufzeit)
+	    for (int i = 0; i < POOL_SIZE; i++) {
+	        this.perceptionPool[i] = new CollectionElementSimObjInfluenced(null, null, null);
+	    }
 		
 	}
 
@@ -95,6 +105,12 @@ public class KnowledgeCalculator extends SocialWorldThread {
 				
 				if (perception != null) {
 					calculatePerception(perception);
+	                
+	                // WICHTIG: Referenzen nach der Verarbeitung sofort nullen, 
+	                // um "Memory Loitering" (unbeabsichtigtes Festhalten von Alt-Objekten) zu verhindern.
+	                perception.setEvent(null);
+	                perception.setState(null);
+	                perception.setHidden(null);
 				}
 
 			} catch (InterruptedException e) {
@@ -106,13 +122,27 @@ public class KnowledgeCalculator extends SocialWorldThread {
 	}
 
 	final void calculatePerception(Event event, StateAnimal stateAnimal, HiddenAnimal hiddenWriteAccess) {
-		if (event != null && stateAnimal != null && hiddenWriteAccess != null) {
-			if (!this.perceptions.add(new CollectionElementSimObjInfluenced(event, stateAnimal, hiddenWriteAccess))) {
-//				System.out.println("KnowledgeCalculator.calculatePerception/3: CollectionElementSimObjInfluenced not added");
-				// SUB_THREAD_IMPLEMENTATION what shall happen if the queue is filled
-			};
-		}
+	    if (event != null && stateAnimal != null && hiddenWriteAccess != null) {
+	        
+	        // Ringpuffer-Index ohne Division berechnen (Bitmaske für POOL_SIZE = 8192)
+	        int targetIdx = poolWriteIndex & (POOL_SIZE - 1);
+	        CollectionElementSimObjInfluenced pooledElement = this.perceptionPool[targetIdx];
+	        
+	        // Bestehendes Objekt neu beschreiben, statt ein neues zu erzeugen!
+	        pooledElement.setEvent(event);
+	        pooledElement.setState(stateAnimal);
+	        pooledElement.setHidden(hiddenWriteAccess);
+	        
+	        poolWriteIndex++;
+
+	        // Das vorallokierte Objekt in die Queue schieben
+	        if (!this.perceptions.add(pooledElement)) {
+	            // Falls die Queue voll ist, greift die Fallback-Logik
+	            poolWriteIndex--; // Cursor zurücksetzen
+	        }
+	    }
 	}
+	
 
 	private final int calculatePerception(CollectionElementSimObjInfluenced perception) {
 		

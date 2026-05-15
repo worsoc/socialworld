@@ -50,6 +50,15 @@ public class PositionCalculator extends SocialWorldThread {
 
 	private static AccessTokenPositionCalculator token = AccessTokenPositionCalculator.getValid();
 
+	private static final int MOVED_POOL_SIZE = 8192; // Zweierpotenz (2^13)
+	private final CollectionElementSimObjInfluenced[] movedPool = new CollectionElementSimObjInfluenced[MOVED_POOL_SIZE];
+	private int poolWriteIndex = 0;
+	
+	private final Vector zeroVector = Vector.get0Vector();
+	private final Vector workingVectorEvent = new Vector(0, 0, 0);
+	private final Vector workingVectorMove = new Vector(0, 0, 0);
+
+
 	/**
 	 * private Constructor. 
 	 */
@@ -58,6 +67,11 @@ public class PositionCalculator extends SocialWorldThread {
 		this.sleepTime = SocialWorldThread.SLEEPTIME_POSITION_CALCULATOR;
 
 		this.moved = new CapacityQueue<CollectionElementSimObjInfluenced>("moved", 5000);
+		
+		for (int i = 0; i < MOVED_POOL_SIZE; i++) {
+			this.movedPool[i] = new CollectionElementSimObjInfluenced(null, null, null);
+		}
+		
 	}
 
 	public static PositionCalculator getInstance() {
@@ -79,13 +93,21 @@ public class PositionCalculator extends SocialWorldThread {
 	            if (moved != null) {
 	                // Verarbeitet das entnommene Element direkt
 	                calculatePositionChangedByEvent(moved);
+
+	                moved.setEvent(null);
+	                moved.setState(null);
+	                moved.setHidden(null);
 	            }
 
 	            // Optional: Ein kleiner Loop, um bei Massenbewegungen die Queue 
 	            // sofort komplett leerzufressen, bevor wir wieder schlafen gehen.
 	            CollectionElementSimObjInfluenced nextMoved;
-	            while ((nextMoved = this.moved.remove()) != null) {
+	            while ((nextMoved = this.moved.poll()) != null) {
 	                calculatePositionChangedByEvent(nextMoved);
+	                
+					nextMoved.setEvent(null);
+					nextMoved.setState(null);
+					nextMoved.setHidden(null);
 	            }
 
 	        } catch (InterruptedException e) {
@@ -98,9 +120,19 @@ public class PositionCalculator extends SocialWorldThread {
 	final void calculatePositionChangedByEvent(final Event event, final StateSimulationObject state, final HiddenSimulationObject hiddenWriteAccess) {
 
 		if (event != null && state != null && hiddenWriteAccess != null) {
-			if (!this.moved.add(new CollectionElementSimObjInfluenced(event, state, hiddenWriteAccess))) {
-				// SUB_THREAD_IMPLEMENTATION what shall happen if the queue is filled
-			};
+			// Bitmasken-Recycling statt 'new'
+			int targetIdx = poolWriteIndex & (MOVED_POOL_SIZE - 1);
+			CollectionElementSimObjInfluenced pooledElement = this.movedPool[targetIdx];
+			
+			pooledElement.setEvent(event);
+			pooledElement.setState(state);
+			pooledElement.setHidden(hiddenWriteAccess);
+			
+			poolWriteIndex++;
+
+			if (!this.moved.add(pooledElement)) {
+				poolWriteIndex--; // Rollback bei voller Queue
+			}
 		}
 	}
 	
@@ -124,11 +156,11 @@ public class PositionCalculator extends SocialWorldThread {
 			Position newPosition = Position.getObjectNothing();
 			
 			Direction directionMoveObject;
-			Vector vectorMoveObject;
+//			Vector vectorMoveObject;
 			float powerMoveObject;
 	
 			Direction directionEvent;
-			Vector vectorEvent;
+//			Vector vectorEvent;
 			float powerEvent;
 			
 			float resultingPowerMoveObject;
@@ -139,26 +171,26 @@ public class PositionCalculator extends SocialWorldThread {
 			position = positionOriginal.getVector(token);
 			
 			directionMoveObject = objectRequester.requestDirection(token, state.getProperty(token, PropertyName.simobj_directionMove), this);
-			vectorMoveObject = directionMoveObject.getVector(token);
+			workingVectorMove.set(directionMoveObject.getVector(token)); 
 			powerMoveObject = directionMoveObject.getPower();
 			
 			directionEvent = objectRequester.requestDirection(token, event.getDirection(), this);
 			if (directionEvent != null) {
-				vectorEvent = directionEvent.getVector(token);
+				workingVectorEvent.set(directionEvent.getVector(token));
 			}
 			else {
 				// TODO directionEvent is null
-				vectorEvent = new Vector(0,0,0);
+				workingVectorEvent.set(zeroVector);
 			}
 			powerEvent = event.getStrength();
 			
-			if (!vectorEvent.isNormalized()) vectorEvent.normalize();
-			if (!vectorMoveObject.isNormalized()) vectorMoveObject.normalize();
+			if (!workingVectorEvent.isNormalized()) workingVectorEvent.normalize();
+			if (!workingVectorMove.isNormalized()) workingVectorMove.normalize();
 			
 			switch (eventType) {
 			// TODO cases and implementations
 			case selfSleep:
-				vectorEvent = new Vector(0,0,0);
+				workingVectorEvent.set(zeroVector);
 				powerMoveObject = 0;
 				break;
 			default:
@@ -168,13 +200,13 @@ public class PositionCalculator extends SocialWorldThread {
 			// TODO calculate resulting direction and power
 			
 			
-			vectorMoveObject.mul(powerMoveObject);
-			vectorEvent.mul(powerEvent);
-			vectorMoveObject.add(vectorEvent);
+			workingVectorMove.mul(powerMoveObject);
+			workingVectorEvent.mul(powerEvent);
+			workingVectorMove.add(workingVectorEvent);
 			
-			resultingPowerMoveObject = vectorMoveObject.length();
-			position.add(vectorMoveObject);
-			vectorMoveObject.normalize();
+			resultingPowerMoveObject = workingVectorMove.length();
+			position.add(workingVectorMove);
+			workingVectorMove.normalize();
 			
 			newPosition = new Position(PropertyName.simobj_position, position);
 			
@@ -182,10 +214,11 @@ public class PositionCalculator extends SocialWorldThread {
 			returnSetPosition = hiddenWriteAccess.setPosition(newPosition);
 			if (returnSetPosition != WriteAccessToSimulationObject.WRITE_ACCESS_RETURNS_SUCCESS) return returnSetPosition;
 			
-			returnSetMove = hiddenWriteAccess.setMove(new Direction(PropertyName.simobj_directionMove, vectorMoveObject, resultingPowerMoveObject));
+			// hier kann man mit einem workingVector arbeiten weil im Direction-Konstruktor der Vektor nur lokal verwendet wird
+			returnSetMove = hiddenWriteAccess.setMove(new Direction(PropertyName.simobj_directionMove, workingVectorMove, resultingPowerMoveObject));
 			if (returnSetMove != WriteAccessToSimulationObject.WRITE_ACCESS_RETURNS_SUCCESS) return returnSetMove;
 	
-			if (vectorMoveObject.equals(new Vector(0,0,0)))
+			if (workingVectorMove.equals(zeroVector))
 				return POSITION_CALCULATOR_RETURNS_NO_CHANGE;
 			else
 				return POSITION_CALCULATOR_RETURNS_CHANGE;

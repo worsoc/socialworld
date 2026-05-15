@@ -63,6 +63,14 @@ public class ActionCreator extends SocialWorldThread {
 	
 	private int sizeThreashold;
 	
+	private static final int REACTOR_POOL_SIZE = 8192;
+	private final CollectionElementReactor[] reactorPool = new CollectionElementReactor[REACTOR_POOL_SIZE];
+	private int reactorWriteIndex = 0;
+
+	private static final int ACTOR_POOL_SIZE = 8192;
+	private final CollectionElementActor[] actorPool = new CollectionElementActor[ACTOR_POOL_SIZE];
+	private int actorWriteIndex = 0;
+
 	/**
 	 * private Constructor. 
 	 */
@@ -77,6 +85,14 @@ public class ActionCreator extends SocialWorldThread {
 		namePropertyActionType = actionPropertyNames[0];
 
 		sizeThreashold = (int) 1000 / sleepTime;
+		
+		for (int i = 0; i < REACTOR_POOL_SIZE; i++) {
+			this.reactorPool[i] = new CollectionElementReactor(null, null, null);
+		}
+		for (int i = 0; i < ACTOR_POOL_SIZE; i++) {
+			this.actorPool[i] = new CollectionElementActor(null, null);
+		}
+
 	}
 
 	public static ActionCreator getInstance() {
@@ -97,12 +113,21 @@ public class ActionCreator extends SocialWorldThread {
 	            
 	            if (reactor != null) {
 	            	calculateReaction(reactor);
-	            }
+	            	
+					// Speicher-Referenzen kappen gegen Memory Loitering
+					reactor.setEvent(null);
+					reactor.setState(null);
+					reactor.setHidden(null);
+            }
 
 	            
 	            CollectionElementActor actor  = this.actors.remove();
 	            if (actor != null) {
 	            	calculateAction(actor);
+	            	
+					// Speicher-Referenzen kappen
+					actor.setState(null);
+					actor.setHidden(null);
 	            }
 
 
@@ -118,21 +143,40 @@ public class ActionCreator extends SocialWorldThread {
 	final void  createReaction( final Event event,	final StateSimulationObject stateSimObj,	final HiddenSimulationObject hiddenSimObj) {
 		if (event != null && stateSimObj != null && hiddenSimObj != null) {
 			if (this.reactors.size() > sizeThreashold && event.getEventType().isEventToPercipient()) {
-				
+				// Event gedrosselt/verworfen
 			}
 			else {
-				if (!this.reactors.add(new CollectionElementReactor(event, stateSimObj, hiddenSimObj))) {
-					// SUB_THREAD_IMPLEMENTATION what shall happen if the queue is filled
-				};
+				// Bitmasken-Recycling statt 'new'
+				int targetIdx = reactorWriteIndex & (REACTOR_POOL_SIZE - 1);
+				CollectionElementReactor pooledReactor = this.reactorPool[targetIdx];
+				
+				pooledReactor.setEvent(event);
+				pooledReactor.setState(stateSimObj);
+				pooledReactor.setHidden(hiddenSimObj);
+				
+				reactorWriteIndex++;
+
+				if (!this.reactors.add(pooledReactor)) {
+					reactorWriteIndex--; // Rollback bei voller Queue
+				}
 			}
 		}
 	}
 	
 	final void createAction(	final StateSimulationObject stateSimObj, final HiddenSimulationObject hiddenSimObj) {
 		if (stateSimObj != null && hiddenSimObj != null) {
-			if (!this.actors.add(new CollectionElementActor(stateSimObj, hiddenSimObj))) {
-				// SUB_THREAD_IMPLEMENTATION what shall happen if the queue is filled
-			};
+			// Bitmasken-Recycling statt 'new'
+			int targetIdx = actorWriteIndex & (ACTOR_POOL_SIZE - 1);
+			CollectionElementActor pooledActor = this.actorPool[targetIdx];
+			
+			pooledActor.setState(stateSimObj);
+			pooledActor.setHidden(hiddenSimObj);
+			
+			actorWriteIndex++;
+
+			if (!this.actors.add(pooledActor)) {
+				actorWriteIndex--; // Rollback bei voller Queue
+			}
 		}
 	}
 

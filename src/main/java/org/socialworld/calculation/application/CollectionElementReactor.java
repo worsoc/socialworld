@@ -37,6 +37,10 @@ public class CollectionElementReactor {
 		this.hidden = hidden;
 	}
 	
+	void setEvent(Event event) {this.event = event;}
+	void setState(StateSimulationObject state) {this.state = state;}
+	void setHidden(HiddenSimulationObject hidden) {this.hidden = hidden;}
+
 	Event getEvent() {
 		return this.event;
 	}
