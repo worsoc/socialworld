@@ -67,6 +67,24 @@ public  class AttributeCalculator extends SocialWorldThread {
 	private final CollectionElementSimObjRefreshed[] refreshedPool = new CollectionElementSimObjRefreshed[REFRESHED_POOL_SIZE];
 	private int refreshedWriteIndex = 0;
 
+	// Wiederverwendbare Argumentenliste 
+	private final ValueArrayList workingByEventArguments = new ValueArrayList();
+
+	// Wiederverwendbares Arbeits-Value für die Event-Properties (Fallback-Pfad)
+	private final Value workingEventParamValue = Value.getMutable(
+			Type.valueList, Value.VALUE_BY_NAME_EVENT_PARAMS, null);
+
+	// Wiederverwendbare Argumentenliste für die Matrix-Berechnungen
+	private final ValueArrayList workingByMatrixArguments = new ValueArrayList();
+
+	// Wiederverwendbarer, unveränderlicher Modus-Wrapper (Eager-Loading Singleton für diese Klasse)
+	private final Value calculationModeMatrixXVectorComplex =  Value.getMutable(
+			Type.integer, FunctionByMatrix_Matrix.CALCULATION_MODE_MATRIX_X_VECTOR_COMPLEX);
+	
+	// Wiederverwendbarer, unveränderlicher Modus-Wrapper (Eager-Loading Singleton für diese Klasse)
+	private final Value calculationModeMatrixXVectorSimple =  Value.getMutable(
+			Type.integer, FunctionByMatrix_Matrix.CALCULATION_MODE_MATRIX_X_VECTOR_SIMPLE);
+
 	/**
 	 * private Constructor. 
 	 */
@@ -239,7 +257,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 	 * @param eventInfluence
 	 *            the informations how an event effects to the attributes.
 	 */
-	private static Value getAttributesChangedByEvent(Event event, StateAnimal stateAnimal) {
+	private final Value getAttributesChangedByEvent(Event event, StateAnimal stateAnimal) {
 		EventInfluenceDescription eventInfluenceDescription = null;
 		int eventType;
 		int eventInfluenceType;
@@ -247,7 +265,6 @@ public  class AttributeCalculator extends SocialWorldThread {
 		Value newAttributes = Value.getValueNothing();
 		
 		FunctionByExpression f_EventInfluence = null;
-		ValueArrayList arguments;
 	
 		eventType = event.getEventTypeAsInt();
 		eventInfluenceType = stateAnimal.getInfluenceType(eventType);
@@ -257,24 +274,28 @@ public  class AttributeCalculator extends SocialWorldThread {
 				eventType, eventInfluenceType	);
 
 		int count = eventInfluenceDescription.countFunctions();
-				
-		arguments = new ValueArrayList();
+
+		// 1. ALLOKATIONSFREIES RECYCLING 
+		workingByEventArguments.clear();
 
 		oldAttributes =  stateAnimal.getProperty(token, PropertyName.simobj_attributeArray);
-		arguments.add( oldAttributes );
+		workingByEventArguments.add( oldAttributes );
 
+		// 2. ALLOKATIONSFREIES RECYCLING DES FALLBACK-VALUES
 		if (event.hasOptionalParam()) {
-			arguments.add( event.getOptionalParam().getParamListAsValue());
+			workingByEventArguments.add( event.getOptionalParam().getParamListAsValue());
 		}
 		else {
-			arguments.add(new Value(Type.valueList, Value.VALUE_BY_NAME_EVENT_PARAMS, event.getProperties()));
+			// Ändert nur die interne Referenz im bestehenden Value-Objekt, statt 'new' zu rufen
+	        workingEventParamValue.changeValue(event.getProperties()); 
+	        workingByEventArguments.add(workingEventParamValue);
 		}
 
 		for (int index = 0; index < count; index++){
 			
 			f_EventInfluence = eventInfluenceDescription.getFunction(index);
-			newAttributes = f_EventInfluence.calculate(arguments);
-			arguments.set(0,  newAttributes);
+			newAttributes = f_EventInfluence.calculate(workingByEventArguments);
+			workingByEventArguments.set(0,  newAttributes);
 			
 		}
 	  
@@ -324,20 +345,22 @@ public  class AttributeCalculator extends SocialWorldThread {
 		
 	}
 
-	private static Value getAttributesChangedByComplexMatrix(StateAnimal stateAnimal) {
+	private final Value getAttributesChangedByComplexMatrix(StateAnimal stateAnimal) {
 		FunctionByMatrix f_AttributesByMatrix;
-		ValueArrayList arguments;
 		Value oldAttributes;
 		Value newAttributes = Value.getValueNothing();
 	
 		oldAttributes =  stateAnimal.getProperty(token, PropertyName.simobj_attributeArray);
 
-		arguments = new ValueArrayList();
-		arguments.add( oldAttributes );
-		arguments.add( new Value(Type.integer, FunctionByMatrix_Matrix.CALCULATION_MODE_MATRIX_X_VECTOR_COMPLEX ) );
+		// 1. ALLOKATIONSFREIES RECYCLING DER LISTE
+		workingByMatrixArguments.clear();
+		workingByMatrixArguments.add(oldAttributes);
+
+		// 2. ABSOLUT ALLOKATIONSFREI: Nutzung des vorallokierten Modus-Values
+		workingByMatrixArguments.add(calculationModeMatrixXVectorComplex);
 		
 		f_AttributesByMatrix = stateAnimal.getMatrix();
-		newAttributes = f_AttributesByMatrix.calculate(arguments);;
+		newAttributes = f_AttributesByMatrix.calculate(workingByMatrixArguments);
 		
 		if (newAttributes.isValid()){
 			if (oldAttributes.equals(newAttributes)) {
@@ -381,20 +404,22 @@ public  class AttributeCalculator extends SocialWorldThread {
 		
 	}
 	
-	private static Value getAttributesChangedBySimpleMatrix(StateAnimal stateAnimal) {
+	private final Value getAttributesChangedBySimpleMatrix(StateAnimal stateAnimal) {
 		FunctionByMatrix f_AttributesByMatrix;
-		ValueArrayList arguments;
 		Value oldAttributes;
 		Value newAttributes = Value.getValueNothing();
 	
 		oldAttributes =  stateAnimal.getProperty(token, PropertyName.simobj_attributeArray);
 
-		arguments = new ValueArrayList();
-		arguments.add( oldAttributes );
-		arguments.add( new Value(Type.integer, FunctionByMatrix_Matrix.CALCULATION_MODE_MATRIX_X_VECTOR_SIMPLE) );
-		
+		// 1. ALLOKATIONSFREIES RECYCLING 
+		workingByMatrixArguments.clear();
+		workingByMatrixArguments.add(oldAttributes);
+
+		// 2. ABSOLUT ALLOKATIONSFREI: Vorallokierter Simple-Modus
+		workingByMatrixArguments.add(calculationModeMatrixXVectorSimple);
+			
 		f_AttributesByMatrix = stateAnimal.getMatrix();
-		newAttributes = f_AttributesByMatrix.calculate(arguments);;
+		newAttributes = f_AttributesByMatrix.calculate(workingByMatrixArguments);
 		
 		if (!newAttributes.isInvalidOrNothing()){
 			if (oldAttributes.equals(newAttributes)) {

@@ -43,7 +43,6 @@ import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.Time;
-import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.collections.ObjectByPositionSearch;
 
@@ -282,9 +281,18 @@ public class Simulation extends SocialWorldThread {
 	private void nextTimeStep() {
 		Time actualTime = ActualTime.asTime();
 		System.out.println("Zeit: " + actualTime.toString());
+		if (GlobalSwitches.OUTPUT_MEMORY_TELEMETRY)		printMemoryTelemetry();
 		actionMaster.nextSecond(actualTime);
 	}
 
+	private static void printMemoryTelemetry() {
+	    Runtime runtime = Runtime.getRuntime();
+	    // Berechnet den aktuell belegten Speicher
+	    long memoryUsed = runtime.totalMemory() - runtime.freeMemory();
+	    
+	    System.out.println("--- Telemetrie ---");
+	    System.out.println("Genutzter Heap-Speicher: " + (memoryUsed / 1024 / 1024) + " MB");
+	}
 
 	private void waitForStartTime() {
 		Time time = ActualTime.asTime();

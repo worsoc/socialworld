@@ -131,7 +131,8 @@ public class Value {
 	private String name = "";
 	private Object value;
 	
-
+	private boolean isMutableBySet = false;
+	
 	boolean valid;
 	ValueTransferCode transferCode = ValueTransferCode.noFurtherInformation; 
 	
@@ -192,6 +193,22 @@ public class Value {
 		// TODO deep copy original.value
 		this.value = original.value;
 		this.valid = original.valid;
+	}
+	
+	public static Value getMutable(Type type, String name, Object value) {
+		Value mutable = new Value(type, name, value);
+		mutable.isMutableBySet = true;
+		return mutable;
+	}
+	
+	public static Value getMutable(Type type, Object value) {
+		Value mutable = new Value(type, value);
+		mutable.isMutableBySet = true;
+		return mutable;
+	}
+
+	public void changeValue(Object changed) {
+		if (isMutableBySet)		this.value = changed;
 	}
 	
 	private void initValueFromString(String valueAsString, Type castToType) {
