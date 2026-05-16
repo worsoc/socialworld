@@ -565,7 +565,7 @@ public class Expression implements IObjectReceiver{
 						
 						// get the name for the (expression1) evaluated value 
 						name = (String) value.getObject(Type.string);
-						
+/*						
 						// just for debugging
 						if (name.equals(Value.VALUE_BY_NAME_ACTION_TARGET)) {
 							if ( tmp.getType() != Type.simulationObject)
@@ -578,7 +578,7 @@ public class Expression implements IObjectReceiver{
 									System.out.println("Expression.evaluate: action target: " + target.getObjectID()  );								
 							}
 						}
-
+*/
 						if (name.length() > 0) {
 							tmp.changeName(name);
 							index = valueList.findValue(name);

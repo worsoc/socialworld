@@ -36,7 +36,7 @@ public class SocialWorldThread extends Thread implements IObjectReceiver{
 	 * says whether the thread is running or not
 	 */
 	private boolean isRunning;
-	protected int sleepTime;
+	private int sleepTime;
 	
 	protected ObjectRequester objectRequester = new ObjectRequester();
 

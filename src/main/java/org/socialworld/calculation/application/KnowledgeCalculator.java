@@ -77,7 +77,6 @@ public class KnowledgeCalculator extends SocialWorldThread {
 	 */
 	private KnowledgeCalculator() {
 
-		this.sleepTime = SocialWorldThread.SLEEPTIME_KNOWLEDGE_CALCULATOR;
 		
 		this.perceptions = new CapacityQueue<CollectionElementSimObjInfluenced>("perceptions", 5000);
 

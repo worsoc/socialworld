@@ -61,7 +61,7 @@ public class ActionCreator extends SocialWorldThread {
 	
 	private static String namePropertyActionType = Value.VALUE_BY_NAME_ACTION_TYPE;
 	
-	private int sizeThreashold;
+	private int sizeThreashold = 1000;
 	
 	private static final int REACTOR_POOL_SIZE = 8192;
 	private final CollectionElementReactor[] reactorPool = new CollectionElementReactor[REACTOR_POOL_SIZE];
@@ -76,7 +76,6 @@ public class ActionCreator extends SocialWorldThread {
 	 */
 	private ActionCreator() {
 		
-		this.sleepTime = SocialWorldThread.SLEEPTIME_ACTION_CREATOR;
 		this.reactors = new CapacityQueue<CollectionElementReactor>("reactors", 5000);
 		this.actors = new CapacityQueue<CollectionElementActor>("actors", 5000);
 		
@@ -84,7 +83,6 @@ public class ActionCreator extends SocialWorldThread {
 		actionPropertyNames = ActionType.getStandardPropertyNames();
 		namePropertyActionType = actionPropertyNames[0];
 
-		sizeThreashold = (int) 1000 / sleepTime;
 		
 		for (int i = 0; i < REACTOR_POOL_SIZE; i++) {
 			this.reactorPool[i] = new CollectionElementReactor(null, null, null);

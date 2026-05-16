@@ -24,7 +24,6 @@ package org.socialworld.core;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.TimeUnit;
 
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.Time;
@@ -65,10 +64,6 @@ public class ActionMaster extends SocialWorldThread {
 	public static final int ACTIONMASTER_RETURN_REJECT_TOOMUCHWAIT = 1;
 	// a reported action handler element has been inserted into the priority list (list (b))
 	public static final int ACTIONMASTER_RETURN_INSERTED = 0;
-
-	private static final int ACTIONMASTER_RETURN_SLEEP_MUCH = 2;
-	private static final int ACTIONMASTER_RETURN_SLEEP_LESS = 1;
-	private static final int ACTIONMASTER_RETURN_SLEEP_ZERO = 0;
 
 	private boolean executeAllowed = true;
 	
@@ -116,8 +111,7 @@ public class ActionMaster extends SocialWorldThread {
 	@SuppressWarnings("unchecked")
 	private ActionMaster() {
 		
-		this.sleepTime = 50;
-		
+	
 	    int maxSeconds = ActionHandler.MAX_ACTION_WAIT_SECONDS;
 	    int maxPriorities = AbstractAction.MAX_ACTION_PRIORITY; 
 
@@ -158,12 +152,8 @@ public class ActionMaster extends SocialWorldThread {
                 // Führe die nächste anstehende Aktion aus
                 executeAction();
             } else {
-                // Falls pausiert, nutzen wir ein kurzes reaktives Poll-Timeout statt hartem Sleep
-                try {
-                    TimeUnit.MILLISECONDS.sleep(ACTIONMASTER_RETURN_SLEEP_LESS); 
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
+                // Falls pausiert, geben wir freiwillig ab
+                Thread.yield();
             }
         }
     }
@@ -197,16 +187,16 @@ public class ActionMaster extends SocialWorldThread {
 	 *  There needn't be a remove from priority list for reported action handlers because that list is iterated only one time.
 	 *  
 	 */
-	private int executeAction() {
+	private void executeAction() {
 		
-		int returnSleepTime = ACTIONMASTER_RETURN_SLEEP_LESS;
 		
 		ActionHandler handler = null;
 		
         // Prio 1: Continue-Liste (Liste c) - Lock-freie Iteration
         if (!continueActionHandlers.isEmpty()) {
             handler = continueActionHandlers.poll(); 
-            return executeHandler(handler, ActionHandlerListType.continueList);
+            executeHandler(handler, ActionHandlerListType.continueList);
+            return ;
         }
 		
         // Prio 2: Reported-Liste (Liste b)
@@ -214,7 +204,8 @@ public class ActionMaster extends SocialWorldThread {
 	        ConcurrentLinkedQueue<ActionHandler> actionHandlersNow = getFromSecondPriorityMatrix((byte)secondOfTheActualMinute, 0);
 	        if (!actionHandlersNow.isEmpty()) {
 	            handler = actionHandlersNow.poll();
-	            return executeHandler(handler, ActionHandlerListType.priorityList);
+	            executeHandler(handler, ActionHandlerListType.priorityList);
+	            return;
 	        }
         }
         
@@ -224,18 +215,16 @@ public class ActionMaster extends SocialWorldThread {
                 currentAllHandlersIndex = 0; // Ring-Reset
             }
             handler = allActionHandlers.get(currentAllHandlersIndex++);
-            return executeHandler(handler, ActionHandlerListType.allList);
+            executeHandler(handler, ActionHandlerListType.allList);
+            return;
         }
-
 		
-		
-		return returnSleepTime;
+		return;
 		
 	}
 	
-	private int executeHandler(ActionHandler handler, ActionHandlerListType type) {
+	private void executeHandler(ActionHandler handler, ActionHandlerListType type) {
 		
-		int returnSleepTime = 0;
 		
 		//  According to the return code of the action handler that executes its best rated action,
 		//   the action master changes its lists.
@@ -262,7 +251,7 @@ public class ActionMaster extends SocialWorldThread {
 			break;
 		}
 
-		return returnSleepTime;
+		return;
 	}
 	
 	

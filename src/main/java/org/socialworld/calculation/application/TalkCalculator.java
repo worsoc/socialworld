@@ -63,8 +63,7 @@ public class TalkCalculator  extends SocialWorldThread {
 	 */
 	private TalkCalculator() {
 
-		this.sleepTime = SocialWorldThread.SLEEPTIME_TALK_CALCULATOR;
-		
+	
 		this.influencedTalks = new CapacityQueue<CollectionElementSimObjInfluenced>("influencedTalks", 5000);
 
 		for (int i = 0; i < TALK_POOL_SIZE; i++) {

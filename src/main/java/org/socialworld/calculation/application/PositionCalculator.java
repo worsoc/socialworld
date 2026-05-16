@@ -64,8 +64,6 @@ public class PositionCalculator extends SocialWorldThread {
 	 */
 	private PositionCalculator() {
 
-		this.sleepTime = SocialWorldThread.SLEEPTIME_POSITION_CALCULATOR;
-
 		this.moved = new CapacityQueue<CollectionElementSimObjInfluenced>("moved", 5000);
 		
 		for (int i = 0; i < MOVED_POOL_SIZE; i++) {

@@ -44,7 +44,6 @@ public class PercipienceMaster extends SocialWorldThread {
 	}
 
 	private PercipienceMaster(ObjectMaster objectMaster) {
-		this.sleepTime = 100;
 		myObjectMaster = objectMaster;
 	}
 
@@ -60,11 +59,7 @@ public class PercipienceMaster extends SocialWorldThread {
 			
 			calculateNextObject();
 			
-			try {
-				sleep(sleepTime);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			Thread.yield();
 
 		}
 		

@@ -21,10 +21,9 @@
 */
 package org.socialworld.core;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.PriorityBlockingQueue;
-import java.util.ListIterator;
 
 
 import org.socialworld.SocialWorld;
@@ -49,15 +48,11 @@ import org.socialworld.objects.properties.IPerceptible;
  */
 public class EventMaster extends SocialWorldThread {
 
-	private static final int MAX_SLEEP_TIME_FOR_DECREASING_PRIORITY = 3;
-	private static final int MAX_SLEEP_TIME_FOR_EMPTY_QUEUE = 10;
+	private boolean doYield = false;
 	
 	private static EventMaster instance;
 	
 	private static AccessTokenCore tokenCore = AccessTokenCore.getValid();
-	
-	private boolean blockedByAdd = false;
-	private boolean blockedByCalculate = false;
 	
 	/**
 	 * a queue of events ordered by event's priority
@@ -65,15 +60,18 @@ public class EventMaster extends SocialWorldThread {
 	private PriorityBlockingQueue<Event> eventQueue;
 	private int lastPriority = Event.LOWEST_EVENT_PRIORITY;
 	
+	private static final int CANDIDATES_POOL_SIZE = 8192;
+	private static final int PERCIPIENTS_POOL_SIZE = 8192;
+
 	/**
 	 * a list of simulation objects which may be affected by the event
 	 */
-	private List<SimulationObject> candidates;
+	private final List<SimulationObject> candidates;
 
 	/**
 	 * a list of simulation objects which may perceive the event
 	 */
-	private List<SimulationObject> percipients;
+	private final List<SimulationObject> percipients;
 
 	/**
 	 * the actually treated event
@@ -112,10 +110,10 @@ public class EventMaster extends SocialWorldThread {
 	 */
 	private EventMaster() {
 
-		this.sleepTime = MAX_SLEEP_TIME_FOR_EMPTY_QUEUE;
-		candidates = new LinkedList<SimulationObject>();
-		percipients = new LinkedList<SimulationObject>();
-		eventQueue = new PriorityBlockingQueue<Event>();
+		// Puffer-Kapazitäten großzügig wählen, um internes Array-Resize zur Laufzeit zu verhindern
+		this.candidates = new ArrayList<SimulationObject>(CANDIDATES_POOL_SIZE);
+		this.percipients = new ArrayList<SimulationObject>(PERCIPIENTS_POOL_SIZE);
+		this.eventQueue = new PriorityBlockingQueue<Event>();
 		
 	}
 
@@ -134,31 +132,19 @@ public class EventMaster extends SocialWorldThread {
 	 */
 	@Override
 	public void run() {
-		
 		while (isRunning()) {
+			// Absolut thread-sicher und ressourcenschonend: 
+			// Schläft ohne CPU-Last, bis ein Event in die Queue gepusht wird.
+			calculateNextEvent();
 			
-			// calculating the next event from event queue
-			// !!! the sleepTime may change
-			
-			if (!blockedByAdd && !blockedByCalculate) {
-//				System.out.println("EventMaster.run(): Aufruf calculateNextEvent()");
-				calculateNextEvent();
+			// Freiwilliges Nachgeben für Prioritäts-Gleichlauf auswerten
+			if (doYield) {
+				Thread.yield(); // Braucht KEIN try-catch, da es keine Exception wirft!
+				doYield = false; // WICHTIG: Das Flag wieder zurücksetzen für den nächsten Durchlauf
 			}
-			else {
-//				System.out.println("EventMaster.run(): blockiert Aufruf calculateNextEvent()");
-				
-			}
-			
-			try {
-				sleep(sleepTime);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-
 		}
-		
 	}
-
+	
 	/**
 	 * Adds a new {@link Event} to the event queue.
 	 * 
@@ -166,51 +152,45 @@ public class EventMaster extends SocialWorldThread {
 	 *            The event, which should add to the event queue.
 	 */
 	public void addEvent(Event event) {
-		blockedByAdd = true;
-		eventQueue.add(event);
-		blockedByAdd = false;
+		if (event != null) {
+			this.eventQueue.add(event);
+		}
 	}
 	
 	/**
 	 * Calculates the influences of the event to other simulation objects.
 	 */
 	private void calculateNextEvent() {
-
-		if (!eventQueue.isEmpty()) {
-			
-			blockedByCalculate = true;
-			
-			Event event = null;
-			try {
-				event = this.eventQueue.take();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		
-			//blockedByCalculate = true;
-
-			if ( loadEvent( event ) == true ) {
-				
-				if (event.isEventToTarget()) {
-					determineInfluenceToTargets();
-				}
-				if (event.isEventToCauserItself()) {
-					determineInfluenceToCauser();
-				}
-				if (isRelevantForEffectiveCheck) {
-					determineCandidates();
-					determineInfluenceToCandidates();
-				}
-				if (isRelevantForPercipienceCheck) {
-					determinePossiblePercipients();
-					determineInfluenceToPercipients();
-				}
-			}
-			blockedByCalculate = false;
+		Event currentEvent = null;
+		try {
+			// Der hocheffiziente Wecker: Blockiert synchron, bis Daten da sind
+			currentEvent = this.eventQueue.take();
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			return;
 		}
-		else
-			sleepTime = MAX_SLEEP_TIME_FOR_EMPTY_QUEUE;
 
+		if (loadEvent(currentEvent)) {
+			if (currentEvent.isEventToTarget()) {
+				determineInfluenceToTargets();
+			}
+			if (currentEvent.isEventToCauserItself()) {
+				determineInfluenceToCauser();
+			}
+			if (isRelevantForEffectiveCheck) {
+				determineCandidates();
+				determineInfluenceToCandidates();
+			}
+			if (isRelevantForPercipienceCheck) {
+				determinePossiblePercipients();
+				determineInfluenceToPercipients();
+			}
+			
+			// WICHTIG: Speicher-Referenzen kappen gegen Memory Loitering
+			this.event = null;
+			this.candidates.clear();
+			this.percipients.clear();
+		}
 	}
 
 
@@ -219,9 +199,9 @@ public class EventMaster extends SocialWorldThread {
 		
 		this.event = event;
 		if (isLowerPriorityThanEventBefore()) 
-			sleepTime = MAX_SLEEP_TIME_FOR_DECREASING_PRIORITY;
-		else if (sleepTime > 0)
-			sleepTime--;
+			doYield = true;
+		else 
+			doYield = false;
 		
 		if (event.hasOptionalParam()) {
 			event.evaluateOptionalParam();
@@ -257,19 +237,34 @@ public class EventMaster extends SocialWorldThread {
 	
 	private void determineCandidates() {
 		int ignoreCandidate;
-		
 		int maxSize = 10000;
-		this.candidates = new LinkedList<SimulationObject>();
 		int index = 0;
-		
+
+		// 1. ALLOKATIONSFREIES LEEREN STATT NEW
+		this.candidates.clear();
+
 		Simulation simulation = SocialWorld.getCurrent().getSimulation();
 		
-		LinkedList<LinkedList<SimulationObject>> lists = simulation.getObjectSearch().getObjects(this.event);
-		for (LinkedList<SimulationObject> list : lists) {
+		// Typsichere Zuweisung ohne Warnungen
+		Object searchResult = simulation.getObjectSearch().getObjects(this.event);
+		if (!(searchResult instanceof List)) return;
+
+		@SuppressWarnings("unchecked")
+		List<List<SimulationObject>> lists = (List<List<SimulationObject>>) searchResult;
+
+		// Äußere Schleife über die ObjektTypen
+		int listsSize = lists.size();
+		for (int i = 0; i < listsSize; i++) {
 			
-			for (SimulationObject candidate : list) {
+			List<SimulationObject> list = lists.get(i);
+			if (list == null) continue;
 				
-				if (candidate.isSimulationObject()) {
+			// Innere Schleife über die konkreten Kandidaten im Cluster
+			int listSize = list.size();
+			for (int j = 0; j < listSize; j++) {
+				
+				SimulationObject candidate = list.get(j);
+				if (candidate != null && candidate.isSimulationObject()) {
 					
 					ignoreCandidate = checkIgnoreCandidate(candidate);
 					if ( ignoreCandidate == 0) {
@@ -377,7 +372,7 @@ public class EventMaster extends SocialWorldThread {
 	 */
 	private void determineInfluenceToCandidates() {
 		SimulationObject candidate;
-		ListIterator<SimulationObject> iterator;
+		int size = this.candidates.size();
 	
 		if (GlobalSwitches.OUTPUT_EVENTMASTER_DETERMINE_INFLUENCE_TO_CANDIDATES)
 			System.out.println("Start determine infuence to candidates (" + this.candidates.size() + "): "+ ActualTime.asTime().toString());
@@ -386,20 +381,20 @@ public class EventMaster extends SocialWorldThread {
 		// there is a better chance to react on the event (second iteration) using the newer state (just calculated in first iteration)
 		
 		// first iteration for calculating the effect to the simulation object's state
-		iterator = this.candidates.listIterator();
-		while (iterator.hasNext()) {
-			candidate = iterator.next();
-			candidate.changeByEvent(this.event);
+		for (int i = 0; i < size; i++) {
+			candidate = this.candidates.get(i);
+			if (candidate != null) {
+				candidate.changeByEvent(this.event);
+			}
 		}
 		
 		// second iteration for creating the reaction
-		iterator = this.candidates.listIterator();
-		while (iterator.hasNext()) {
-			candidate = iterator.next();			
-			candidate.reactToEvent(this.event);
-			
-			// don't remove because the list is created new for the next event
-			//iterator.remove();
+		for (int i = 0; i < size; i++) {
+			candidate = this.candidates.get(i);			
+			if (candidate != null) {
+				candidate.reactToEvent(this.event);
+			}
+			// don't remove because the list is created new for the next event -> Ist durch .clear() gelöst!
 		}
 
 		if (GlobalSwitches.OUTPUT_EVENTMASTER_DETERMINE_INFLUENCE_TO_CANDIDATES)
@@ -416,10 +411,12 @@ public class EventMaster extends SocialWorldThread {
 		
 		List<SimulationObject> targets = this.event.getTargetObjects();
 		
-		if (targets.size() > 0){
+		if (targets == null) return;
+		
+		int size = targets.size();
+		if (size > 0){
 			
 			SimulationObject target;
-			ListIterator<SimulationObject> iterator;
 			
 			if (GlobalSwitches.OUTPUT_EVENTMASTER_DETERMINE_INFLUENCE_TO_TARGETS)
 				System.out.println("Start determine infuence to targets (" + targets.size() + "): "+ ActualTime.asTime().toString());
@@ -428,19 +425,19 @@ public class EventMaster extends SocialWorldThread {
 			// there is a better chance to react on the event (second iteration) using the newer state (just calculated in first iteration)
 			
 			// first iteration for calculating the effect to the simulation object's state
-			iterator = targets.listIterator();
-			while (iterator.hasNext()) {
-				target = iterator.next();
-				target.changeByEvent(this.event);
+			for (int i = 0; i < size; i++) {
+				target = targets.get(i);
+				if (target != null) {
+					target.changeByEvent(this.event);
+				}
 			}
 			
 			// second iteration for creating the reaction
-			iterator = targets.listIterator();
-			while (iterator.hasNext()) {
-				target = iterator.next();			
-				target.reactToEvent(this.event);
-				
-				//iterator.remove();
+			for (int i = 0; i < size; i++) {
+				target = targets.get(i);			
+				if (target != null) {
+					target.reactToEvent(this.event);
+				}
 			}
 		
 			if (GlobalSwitches.OUTPUT_EVENTMASTER_DETERMINE_INFLUENCE_TO_TARGETS)
@@ -462,7 +459,8 @@ public class EventMaster extends SocialWorldThread {
 		boolean isPossiblePercipient;
 		EventToPercipient event;
 
-		this.percipients = new LinkedList<SimulationObject>();
+		// 1. ALLOKATIONSFREIES LEEREN STATT NEW
+				this.percipients.clear();
 
 		if (this.event instanceof EventToPercipient) {
 			event = (EventToPercipient) this.event;
@@ -471,15 +469,27 @@ public class EventMaster extends SocialWorldThread {
 			else
 				causer = event;
 			
-	//		System.out.println("Position Event: " + this.eventPosition.toString());
 	
 			Simulation simulation = SocialWorld.getCurrent().getSimulation();
-			LinkedList<LinkedList<SimulationObject>> lists = simulation.getObjectSearch().getObjects(event);
-			for (LinkedList<SimulationObject> list : lists) {
+			// Typsichere Zuweisung ohne Warnungen
+			Object searchResult = simulation.getObjectSearch().getObjects(this.event);
+			if (!(searchResult instanceof List)) return;
+
+			@SuppressWarnings("unchecked")
+			List<List<SimulationObject>> lists = (List<List<SimulationObject>>) searchResult;			
+			
+			// Äußere Schleife über die Suchcluster via Index (Verhindert Iterator-Allokation)
+			int listsSize = lists.size();
+			for (int i = 0; i < listsSize; i++) {
+				List<SimulationObject> list = lists.get(i);
+				if (list == null) continue;
 				
-				for (SimulationObject percipient : list) {
+				// Innere Schleife über die konkreten Wahrnehmenden (Percipients) im Cluster
+				int listSize = list.size();
+				for (int j = 0; j < listSize; j++) {
+					SimulationObject percipient = list.get(j);
 					
-					if (percipient.isSimulationObject() && (percipient instanceof Animal)) {
+					if (percipient != null && percipient.isSimulationObject() && (percipient instanceof Animal)) {
 			
 	//				System.out.println("Position Human: " + percipient.getPosition().toString());
 	
@@ -504,8 +514,8 @@ public class EventMaster extends SocialWorldThread {
 	private void determineInfluenceToPercipients() {
 		
 		SimulationObject percipient;
-		ListIterator<SimulationObject> iterator;
-		
+		int size = this.percipients.size();
+				
 		if (GlobalSwitches.OUTPUT_EVENTMASTER_DETERMINE_INFLUENCE_TO_PERCIPIENTS)
 			System.out.println("Start determine infuence to percipients (" + this.percipients.size() + "): "+ ActualTime.asTime().toString());
 		
@@ -513,20 +523,20 @@ public class EventMaster extends SocialWorldThread {
 		// there is a better chance to react on the event (second iteration) using the newer state (just calculated in first iteration)
 		
 		// first iteration for calculating the effect to the simulation object's state
-		iterator = this.percipients.listIterator();
-		while (iterator.hasNext()) {
-			percipient = iterator.next();
-			percipient.changeByEvent(this.event);
+		for (int i = 0; i < size; i++) {
+			percipient = this.percipients.get(i);
+			if (percipient != null) {
+				percipient.changeByEvent(this.event);
+			}
 		}
 		
 		// second iteration for creating the reaction
-		iterator = this.percipients.listIterator();
-		while (iterator.hasNext()) {
-			percipient = iterator.next();			
-			percipient.reactToEvent(this.event);
-			
-			// don't remove because the list is created new for the next event
-			//iterator.remove();
+		for (int i = 0; i < size; i++) {
+			percipient = this.percipients.get(i);			
+			if (percipient != null) {
+				percipient.reactToEvent(this.event);
+			}
+			// don't remove because the list is created new for the next event -> Durch .clear() gelöst!
 		}
 
 		if (GlobalSwitches.OUTPUT_EVENTMASTER_DETERMINE_INFLUENCE_TO_PERCIPIENTS)

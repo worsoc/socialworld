@@ -90,7 +90,6 @@ public  class AttributeCalculator extends SocialWorldThread {
 	 */
 	private AttributeCalculator() {
 
-		this.sleepTime = SocialWorldThread.SLEEPTIME_ATTRIBUTE_CALCULATOR;
 		
 		this.influenced = new CapacityQueue<CollectionElementSimObjInfluenced>("influenced", 5000);
 
