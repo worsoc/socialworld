@@ -265,10 +265,13 @@ public class AttributeArray extends SimProperty {
 	 *            attribute array index
 	 * @return attribute value
 	 */
-	public int get(int attibuteIndex) {
-		return attributes[attibuteIndex];
+	public int get(int attributeIndex) {
+		if (attributeIndex >= 0 && attributeIndex < this.attributes.length) {
+			return attributes[attributeIndex];
+		}
+		// Signalisiert der aufrufenden Expression: "Ungültiger Index!"
+		return -1; 
 	}
-
 
 	public Value getAsValue(int attributeIndex) {
 		return new Value(Type.integer, get(attributeIndex));

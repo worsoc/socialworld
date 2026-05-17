@@ -85,6 +85,12 @@ public  class AttributeCalculator extends SocialWorldThread {
 	private final Value calculationModeMatrixXVectorSimple =  Value.getMutable(
 			Type.integer, FunctionByMatrix_Matrix.CALCULATION_MODE_MATRIX_X_VECTOR_SIMPLE);
 
+	
+	// Allokationsfreier Sandbox-Puffer für die Thread-Isolierung
+	private final ThreadLocal<ValueArrayList> localEvalArgs = 
+	    ThreadLocal.withInitial(() -> new ValueArrayList(16));
+
+	
 	/**
 	 * private Constructor. 
 	 */
@@ -290,14 +296,34 @@ public  class AttributeCalculator extends SocialWorldThread {
 	        workingByEventArguments.add(workingEventParamValue);
 		}
 
-		for (int index = 0; index < count; index++){
+		
+		// --- STRATEGISCHER FREEZE AM KETTENSTART ---
+		ValueArrayList localArgs = localEvalArgs.get();
+		localArgs.clear(); // Alten Puffer-Inhalt restlos leeren
+		
+		// Start-Argumente allokationsfrei in die thread-sichere Sandbox kopieren
+		int startSize = workingByEventArguments.size();
+		for (int i = 0; i < startSize; i++) {
+			localArgs.add(workingByEventArguments.get(i));
+		}
+		
+		// Die Schleife arbeitet jetzt zu 100% isoliert und autark in ihrer lokalen Kopie der Argumente
+		for (int index = 0; index < count; index++) {
 			
 			f_EventInfluence = eventInfluenceDescription.getFunction(index);
-			newAttributes = f_EventInfluence.calculate(workingByEventArguments);
-			workingByEventArguments.set(0,  newAttributes);
 			
+			// Berechnung auf der isolierten Kopie ausführen
+			newAttributes = f_EventInfluence.calculate(localArgs);
+			
+			// Das Ergebnis direkt für den nächsten Schleifendurchlauf in die lokale Argumentliste füttern
+			if (newAttributes != null && newAttributes.isValid()) {
+				localArgs.set(0, newAttributes);
+			}
 		}
-	  
+	
+		// Speicherhygiene gegen Memory Loitering: Kappt alle Objekt-Referenzen im Puffer
+		localArgs.clear();
+
 		
 		if (newAttributes.isValid()){
 			if (oldAttributes.equals(newAttributes)) {

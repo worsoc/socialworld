@@ -260,8 +260,8 @@ public class ObjectMaster {
 	    this.typeIdCursors[typeIndex]++;
 	    if (this.typeIdCursors[typeIndex] > maxID) {
 	    	if (maxID > startID) {
-		        log.info("[Nummernkreis-Reset] Typ {} hat das Ende des ID-Bands ({}) erreicht. Springe zurück zu {}", 
-		                 simObjType, maxID, startID);
+	//	        log.info("[Nummernkreis-Reset] Typ {} hat das Ende des ID-Bands ({}) erreicht. Springe zurück zu {}", 
+	//	                 simObjType, maxID, startID);
 	    	}
 		    this.typeIdCursors[typeIndex] = startID; // Ringpuffer innerhalb des Nummernkreises
 	    }

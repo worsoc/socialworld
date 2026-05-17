@@ -29,8 +29,6 @@ import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.expressions.Nothing;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.IAccessToken;
-import org.socialworld.objects.NoSimulationObject;
-import org.socialworld.objects.SimulationObject;
 
 /**
  * The class is an implementation of an
@@ -46,6 +44,8 @@ import org.socialworld.objects.SimulationObject;
  * @author Mathias Sikos (MatWorsoc)
  */
 public class Expression implements IObjectReceiver{
+	
+
 	int ID;
 	
 	Expression_Function operation;
@@ -74,6 +74,11 @@ public class Expression implements IObjectReceiver{
 	protected ObjectRequester objectRequester = new ObjectRequester();
 	private static AccessTokenExpression token = AccessTokenExpression.getValid();
 
+/*	
+	private static final ThreadLocal<ValueArrayList> threadLocalArgsCopy = 
+		    ThreadLocal.withInitial(() -> new ValueArrayList(32)); // Großzügige Startkapazität
+*/
+	
 	protected Expression(Expression_Function nothing) {
 		if (nothing.equals(Expression_Function.nothing)) {
 			setNothing();
@@ -183,8 +188,7 @@ public class Expression implements IObjectReceiver{
 	
 		
 	protected Value evaluate() {
-		ValueArrayList noArguments = null;
-		return evaluate(noArguments);
+		return evaluate(ValueArrayList.EMPTY_ARGUMENTS);
 	}
 
 	public Value evaluate(ValueArrayList arguments) {
@@ -197,26 +201,51 @@ public class Expression implements IObjectReceiver{
 		Value v;
 		Object o;
 		
-		ValueArrayList valueList;
+		ValueArrayList valueList = null;
+	
+		// absichern:statt null leere Argument-Liste
+		if (arguments == null) {
+		    arguments = ValueArrayList.EMPTY_ARGUMENTS;
+		}
+
 		
 		if (this.isValid()) {
 			
 			try {
 			
+
+				int argsSize = arguments.size();
+				
+				
+				
 			
 				switch (this.operation) {
 				case skip:
-					return arguments.get(arguments.size() - 1);
+					
+				    if (argsSize > 0) {
+				        return arguments.get(argsSize - 1);
+				    }
+				    return Calculation.getNothing();
 				case nothing:
+					
 					//return invalid dummy-Value
 					return Calculation.getNothing();
 					
 				case value:
+					
 					return calculation.copy(value);
 										
 				case attributeValue:
-					AttributeArray attributeArray = AttributeArray.getObjectNothing();
-					attributeArray = (AttributeArray) getFromValueArrayList( arguments, Type.attributeArray, 1);
+					
+					// SCHUTZ: Nur zugreifen, wenn Index 1 im aktuellen Thread-Context existiert
+					if (argsSize <= 1) {
+						return Calculation.getNothing();
+					}
+					
+					AttributeArray attributeArray = (AttributeArray) getFromValueArrayList(arguments, Type.attributeArray, 1);
+					if (attributeArray == null) {
+						return Calculation.getNothing();
+					}
 					
 					o = value.getObject(Type.integer);
 					if (o instanceof NoObject) {
@@ -229,10 +258,13 @@ public class Expression implements IObjectReceiver{
 						index = (int)o;
 					}
 
-					return calculation.createValue(
-						Type.integer,
-						attributeArray.get(index ));
-						
+					// Array-Grenzen des Attribut-Arrays validieren
+					if (index >= 0 && index < attributeArray.length()) {
+						return calculation.createValue(Type.integer, attributeArray.get(index));
+					}
+					return Calculation.getNothing();
+					
+											
 				case argumentValueByName:
 					
 					o = value.getObject(Type.string);
@@ -266,10 +298,12 @@ public class Expression implements IObjectReceiver{
 					}
  					return tmp;
 					
-										
 				case valueFromValueList:
+					
 					// get value list's name
 					v = expression1.evaluate(arguments);
+					if (v == null) return Calculation.getNothing();
+					
 					o = v.getObject(Type.string);
 					if (o instanceof NoObject) {
 						if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
@@ -283,11 +317,15 @@ public class Expression implements IObjectReceiver{
 	
 					// get the value list
 					tmp = arguments.getValue(name);
-					if (tmp.isValid()) {
+					if (tmp != null && tmp.isValid()) {
 
-						valueList =  objectRequester.requestValueArrayList(token, tmp, this);
+						valueList = objectRequester.requestValueArrayList(token, tmp, this);
+						if (valueList == null) return Calculation.getNothing();
+						
 						// get the value list element's name
 						v = expression2.evaluate(arguments);
+						if (v == null) return Calculation.getNothing();
+						
 						o = v.getObject(Type.string);
 						if (o instanceof NoObject) {
 							if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
@@ -298,14 +336,19 @@ public class Expression implements IObjectReceiver{
 						else {
 							name = (String) o;
 						}
-						// get the result value from the value list
-						return valueList.getValue(name);
 						
+						// get the result value from the value list
+						Value resultVal = valueList.getValue(name);
+						return resultVal != null ? resultVal : Calculation.getNothing();
 					}
+					
 					return Calculation.getNothing();
-	
+											
 				case property:
 					
+					if (argsSize == 0) {
+						return Calculation.getNothing();
+					}
 					Value object = arguments.get(0);
 					
 					PropertyName simPropName;
@@ -322,42 +365,56 @@ public class Expression implements IObjectReceiver{
 
 					SimulationCluster cluster;
 					v = expression1.evaluate(arguments);
-					o = v.getObject(Type.integer);
-					if (o instanceof NoObject) {
-						if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
-							System.out.println("Expression.evaluate.property > cluster: o (getObject(Type.integer)) is NoObject " + ((NoObject)o).getReason().toString() );
+					if (v != null) {
+						o = v.getObject(Type.integer);
+						if (o instanceof NoObject) {
+							if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+								System.out.println("Expression.evaluate.property > cluster: o (getObject(Type.integer)) is NoObject " + ((NoObject)o).getReason().toString() );
+							}
+							cluster = SimulationCluster.unknown;
 						}
+						else {
+							cluster = SimulationCluster.getName((int) o);
+						}
+					}
+					else {
 						cluster = SimulationCluster.unknown;
 					}
-					else {
-						cluster = SimulationCluster.getName((int) o);
-					}
-
+					
 					String methodName;
 					v = expression2.evaluate(arguments);
-					o = v.getObject(Type.string);
-					if (o instanceof NoObject) {
-						if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
-							System.out.println("Expression.evaluate.property > methodName: o (getObject(Type.string)) is NoObject " + ((NoObject)o).getReason().toString() );
+					if (v != null) {
+						o = v.getObject(Type.string);
+						if (o instanceof NoObject) {
+							if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+								System.out.println("Expression.evaluate.property > methodName: o (getObject(Type.string)) is NoObject " + ((NoObject)o).getReason().toString() );
+							}
+							methodName = "";
 						}
-						methodName = "";
+						else {
+							methodName = (String) o;
+						}
 					}
 					else {
-						methodName = (String) o;
+						methodName = "";
 					}
 					
 					v = expression3.evaluate(arguments);
-					o = v.getObject(Type.string);
-					if (o instanceof NoObject) {
-						if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
-							System.out.println("Expression.evaluate.property > name: o (getObject(Type.string)) is NoObject " + ((NoObject)o).getReason().toString() );
+					if (v != null) {
+						o = v.getObject(Type.string);
+						if (o instanceof NoObject) {
+							if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
+								System.out.println("Expression.evaluate.property > name: o (getObject(Type.string)) is NoObject " + ((NoObject)o).getReason().toString() );
+							}
+							name = "";
 						}
-						name = "";
+						else {
+							name = (String) o;
+						}
 					}
 					else {
-						name = (String) o;
+						name = "";
 					}
-
 					
 					return getProperty(object, cluster, simPropName, methodName, name);
 				
@@ -407,7 +464,9 @@ public class Expression implements IObjectReceiver{
 							valueList = objectRequester.requestValueArrayList(token, tmp, this);
 						}
 						else {
-							valueList	= new ValueArrayList();
+							// ALLOKATIONSFREI: ThreadLocal-Puffer recyclen statt 'new'
+							valueList = calculation.getSharedValueListBuffer(); 
+							valueList.clear();
 							valueList.add(tmp);
 						}
 						tmp = expression2.evaluate(valueList);
@@ -422,6 +481,9 @@ public class Expression implements IObjectReceiver{
 						tmp = ValueProperty.getInvalid();
 					}
 					
+					if (valueList != null && valueList == calculation.getSharedValueListBuffer()) {
+					    valueList.clear(); // Kappt die Referenz auf das 'tmp'-Objekt im Puffer!
+					}
 					return tmp;
 					
 				case branching:
@@ -500,11 +562,18 @@ public class Expression implements IObjectReceiver{
 							expression2.evaluate(arguments)   );
 					
 				case function:
-					valueList = new ValueArrayList();
+					
+					// ALLOKATIONSFREI: ThreadLocal-Puffer recyclen statt 'new'
+					valueList = calculation.getSharedValueListBuffer();
+					valueList.clear();
+					
 					valueList.add( expression1.evaluate(arguments) );
 					valueList.add( expression2.evaluate(arguments) );
 					valueList.add( expression3.evaluate(arguments) );
-					return function.calculate(valueList);
+					
+					Value result = function.calculate(valueList);
+					valueList.clear(); // ZERSTÖRT illegale langlebige Referenzen sofort!
+					return result;
 					
 				case oneExpression:
 					tmp = expression1.evaluate(arguments);
@@ -541,21 +610,23 @@ public class Expression implements IObjectReceiver{
 				case replacement:
 				
 					tmp = expression1.evaluate(arguments);
-					if (tmp.isValid()) {
+					if (tmp != null && tmp.isValid()) {
 						
 						tmp = calculation.copy(tmp);
 						
 						// is there a name for a sub list
-						name = (String) expression2.evaluate().getObject(Type.string);
+						Value exp2Val = expression2.evaluate(arguments);
+						Object nameObj = (exp2Val != null) ? exp2Val.getObject(Type.string) : null;
+						name = (nameObj instanceof String) ? (String) nameObj : "";
 						if (name.length() > 0) {
-							if (arguments.findValue(name) < 0) {
+							if (argsSize > 0 && arguments.findValue(name) >= 0) {
+								// get the sub list from arguments
+								valueList = objectRequester.requestValueArrayList(token, arguments.getValue(name), this); 
+							}
+							else {
 								// if the sub list doesn't exist, then create it and add it to arguments
 								valueList = new ValueArrayList();
 								arguments.add(new Value(Type.valueList, name, valueList));
-							}
-							else {
-								// get the sub list from arguments
-								valueList = objectRequester.requestValueArrayList(token, arguments.getValue(name), this); 
 							}
 						}
 						else {
@@ -564,7 +635,9 @@ public class Expression implements IObjectReceiver{
 						}
 						
 						// get the name for the (expression1) evaluated value 
-						name = (String) value.getObject(Type.string);
+						Object valObj = value.getObject(Type.string);
+						name = (valObj instanceof String) ? (String) valObj : "";
+						
 /*						
 						// just for debugging
 						if (name.equals(Value.VALUE_BY_NAME_ACTION_TARGET)) {
@@ -592,9 +665,11 @@ public class Expression implements IObjectReceiver{
 						else {
 							valueList.add(tmp);
 						}
-						
+
 					}
-					return tmp;
+					
+					
+					return tmp != null ? tmp : Calculation.getNothing();
 				
 				case create:
 					
@@ -602,16 +677,34 @@ public class Expression implements IObjectReceiver{
 					
 					Type type;
 					Value createdValue;;
+					int subType = 0;  // ??? 0 richtig?
 					
-					int subType;
-					type = Type.getName((int) value.getObject(Type.integer));
+					// 1. Haupt-Typ sicher ermitteln
+					Object typeObj = value.getObject(Type.integer);
+					if (typeObj instanceof Integer) {
+						type = Type.getName((int) typeObj);
+					} else {
+						return Calculation.getNothing();
+					}
 					
-					subType = (int) expression1.evaluate().getObject(Type.integer);
-					name = (String) expression3.evaluate().getObject(Type.string);
+					// 2. Sub-Typ sicher ermitteln (Kontext arguments durchreichen!)
+					Value subTypeVal = expression1.evaluate(arguments);
+					if (subTypeVal != null) {
+						Object subTypeObj = subTypeVal.getObject(Type.integer);
+						if (subTypeObj instanceof Integer) {
+							subType = (int) subTypeObj;
+						}
+					}
 					
+					// 3. Name sicher ermitteln (Kontext arguments durchreichen!)
+					Value nameVal = expression3.evaluate(arguments);
+					Object nameStrObj = (nameVal != null) ? nameVal.getObject(Type.string) : null;
+					name = (nameStrObj instanceof String) ? (String) nameStrObj : "";
+					
+						
+					// 4. Fabrikmethode aufrufen
 					createdValue = createValue(type, subType, name, arguments);
-
-					return createdValue;
+					return createdValue != null ? createdValue : Calculation.getNothing();
 					
 				default:
 					return Calculation.getNothing();
@@ -620,6 +713,7 @@ public class Expression implements IObjectReceiver{
 			}
 			catch (Exception e) {
 				System.out.println("evaluation expression: " + e.toString());
+				e.printStackTrace(); 
 				return Calculation.getNothing();
 			}
 		

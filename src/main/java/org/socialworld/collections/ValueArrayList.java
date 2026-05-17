@@ -32,6 +32,7 @@ import org.socialworld.core.IAccessToken;
 
 public class ValueArrayList implements IObjectSender{
 
+	public static final ValueArrayList EMPTY_ARGUMENTS = new ValueArrayList(0);
 	private static ValueArrayList objectNothing;
 	
 	public static ValueArrayList getObjectNothing() {
