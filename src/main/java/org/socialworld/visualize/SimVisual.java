@@ -129,7 +129,8 @@ public class SimVisual extends SocialWorldThread {
 //		this.attributeLines[objID-1].setBackground(Color.CYAN);
 
 //		this.attributeLines[objID-1].setText("(" + nrCallForObjectID[objID-1] + ") - " + attributes.toString());
-		this.attributeLines[objID-1].setText("(" + orderNrForObjectID[objID-1] + ") - " + attributes.toString());
+//		this.attributeLines[objID-1].setText("(" + orderNrForObjectID[objID-1] + ") - " + attributes.toString());
+		this.attributeLines[objID-1].setText("(" + orderNrForObjectID[objID-1] + "/" + nrCallForObjectID[objID-1] + ") - " + attributes.toString());
 
 		this.lastChangedObjID = objID;
 		

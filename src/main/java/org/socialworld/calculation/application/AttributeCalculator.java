@@ -85,6 +85,9 @@ public  class AttributeCalculator extends SocialWorldThread {
 	private final Value calculationModeMatrixXVectorSimple =  Value.getMutable(
 			Type.integer, FunctionByMatrix_Matrix.CALCULATION_MODE_MATRIX_X_VECTOR_SIMPLE);
 
+	// Wiederverwendbarer, veränderlicher Value für objectID 
+	private final Value objectID =  Value.getMutable(
+			Type.integer, Value.VALUE_BY_NAME_OBJECTID, -1);
 	
 	// Allokationsfreier Sandbox-Puffer für die Thread-Isolierung
 	private final ThreadLocal<ValueArrayList> localEvalArgs = 
@@ -266,12 +269,14 @@ public  class AttributeCalculator extends SocialWorldThread {
 		EventInfluenceDescription eventInfluenceDescription = null;
 		int eventType;
 		int eventInfluenceType;
+		int animalsObjectID;
 		Value oldAttributes;
 		Value newAttributes = Value.getValueNothing();
 		
 		FunctionByExpression f_EventInfluence = null;
 	
 		eventType = event.getEventTypeAsInt();
+		
 		eventInfluenceType = stateAnimal.getInfluenceType(eventType);
 		
 		eventInfluenceDescription = 
@@ -283,6 +288,12 @@ public  class AttributeCalculator extends SocialWorldThread {
 		// 1. ALLOKATIONSFREIES RECYCLING 
 		workingByEventArguments.clear();
 
+		// objectID zum stateAnimal als Argument setzeb
+		animalsObjectID = stateAnimal.getObjectID();
+		objectID.changeValue(animalsObjectID);
+		workingByEventArguments.add( objectID );
+
+		// AttributeArray des stateAnimal als Argumetn setzeb
 		oldAttributes =  stateAnimal.getProperty(token, PropertyName.simobj_attributeArray);
 		workingByEventArguments.add( oldAttributes );
 
@@ -460,6 +471,10 @@ public  class AttributeCalculator extends SocialWorldThread {
 		}
 	}
 
+	public void printInfluencedQueueCounts() {
+		influenced.printCounts();
+	}
+	
 	/**
 	 * The method checks whether the calculation loop continues. The calculation
 	 * loop stops if for every attribute the value changes by less than 1.

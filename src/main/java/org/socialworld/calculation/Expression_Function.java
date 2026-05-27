@@ -33,9 +33,9 @@ import java.util.List;
  * @author Mathias Sikos (MatWorsoc)
  */
 public enum Expression_Function {
-	oneExpression(1), branching(2), condition(3), comparison(4), replacement(5),	sequence(6), skip (9),
+	oneExpression(1), branching(2), condition(3), comparison(4), replacement(5), sequence(6), probability(7),  skip (9),
 	addition(11), subtraction(12), multiplication(13), division(14),
-	function(21), property(22), get(23),
+	function(21), property(22), get(23), sigmoid(24),
 	create(31),
 	value(41), attributeValue(42), argumentValueByName(43), valueFromValueList(44),
 	nothing(0);

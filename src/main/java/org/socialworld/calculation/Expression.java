@@ -29,6 +29,7 @@ import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.expressions.Nothing;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.IAccessToken;
+import org.socialworld.core.Simulation;
 
 /**
  * The class is an implementation of an
@@ -68,6 +69,7 @@ public class Expression implements IObjectReceiver{
 		
 	private boolean isValid;
 	
+	protected Simulation simulation ;
 	protected Calculation calculation;
 	protected Functions functions;
 
@@ -89,6 +91,8 @@ public class Expression implements IObjectReceiver{
 	}
 	
 	public Expression() {
+		
+		simulation = Simulation.getInstance();
 		calculation = Calculation.getInstance();
 		functions = Functions.getInstance();
 		operation = Expression_Function.nothing;
@@ -200,6 +204,8 @@ public class Expression implements IObjectReceiver{
 		
 		Value v;
 		Object o;
+		
+		int objectID;
 		
 		ValueArrayList valueList = null;
 	
@@ -541,6 +547,19 @@ public class Expression implements IObjectReceiver{
 						return calculation.createValue(Type.bool,  false);
 					}
 					
+				case probability:
+					double p = (double) expression1.evaluate(arguments).getObject(Type.floatingpoint);
+					tmp = arguments.getValue(Value.VALUE_BY_NAME_OBJECTID);
+					objectID = (int) tmp.getObject(Type.integer);
+					double r = simulation.getRandom(objectID);
+					
+					if (r < p) {
+						return expression2.evaluate(arguments);
+					}
+					else {
+						return expression3.evaluate(arguments);
+					}
+					
 				case addition:
 					return calculation.addition(
 							expression1.evaluate(arguments) ,
@@ -560,6 +579,14 @@ public class Expression implements IObjectReceiver{
 					return calculation.division(
 							expression1.evaluate(arguments) ,
 							expression2.evaluate(arguments)   );
+					
+				case sigmoid:
+					
+					double x = (double) expression1.evaluate(arguments).getObject(Type.floatingpoint);
+					double center = (double) expression2.evaluate(arguments).getObject(Type.floatingpoint);
+					double k = (double) expression3.evaluate(arguments).getObject(Type.floatingpoint);
+					double pSigmoid = 1.0 / (1.0 + Math.exp((x - center) / k));
+					return calculation.createValue(Type.floatingpoint, pSigmoid);
 					
 				case function:
 					

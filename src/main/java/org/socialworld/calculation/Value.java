@@ -48,6 +48,7 @@ public class Value {
 	public static final String PRAEFIX_WEAPON = "weapon_";
 
 	public static final String VALUE_BY_NAME_SIMOBJECT = "simObj";
+	public static final String VALUE_BY_NAME_OBJECTID = "objectID";
 
 	public static final String VALUE_BY_NAME_ACTION_TYPE = PRAEFIX_ACTION + "type";
 	public static final String VALUE_BY_NAME_ACTION_MODE = PRAEFIX_ACTION + "mode";

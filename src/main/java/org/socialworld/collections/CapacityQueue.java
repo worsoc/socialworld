@@ -27,7 +27,11 @@ public class CapacityQueue<Type> {
     private final String name;
     private final ArrayBlockingQueue<Type> queue;
     private final int capacity;
-
+    private long countCallPoll = 0;
+    private long countCallAdd = 0;
+    private long countFinishedPoll = 0;
+    private long countFinishedAdd = 0;
+   
     public CapacityQueue(String name, int capacity) {
         this.name = name;
         this.capacity = capacity;
@@ -36,26 +40,38 @@ public class CapacityQueue<Type> {
     }
 
     public boolean add(Type element) {
-        // offer() versucht das Element hinzuzufügen und gibt sofort false zurück, wenn voll
+       	incCountCallAdd();
+       // offer() versucht das Element hinzuzufügen und gibt sofort false zurück, wenn voll
         boolean success = this.queue.offer(element);
         
         if (!success && GlobalSwitches.OUTPUT_CAPACITY_QUEUE_IS_FULL == true) {
             System.err.println("CapacityQueue " + this.name + " is full!!!");
         }
+        else {
+           	incCountFinishAdd();
+        }
         return success;
     }
 
     public Type poll(long timeout, TimeUnit unit) throws InterruptedException {
-        return this.queue.poll(timeout, unit);
+       	incCountCallPoll();
+       	Type elem = this.queue.poll(timeout, unit);
+       	incCountFinishPoll();
+       return elem;
     }
 
     public Type poll() throws InterruptedException {
-        return this.queue.poll();
+       	incCountCallPoll();
+      	Type elem = this.queue.poll();
+       	incCountFinishPoll();
+       return elem;
     }
 
     public Type remove() {
-        // poll() gibt das erste Element zurück oder null, wenn die Queue leer ist
-        return this.queue.poll();
+       	incCountCallPoll();
+      	Type elem = this.queue.poll();
+       	incCountFinishPoll();
+       return elem;
     }
     
     /**
@@ -63,8 +79,11 @@ public class CapacityQueue<Type> {
      * Das würde das manuelle sleep() im Calculator ersetzen.
      */
     public Type take() throws InterruptedException {
-        return this.queue.take();
-    }
+    	incCountCallPoll();
+      	Type elem = this.queue.take();
+       	incCountFinishPoll();
+       return elem;
+   }
 
     public int size() {
         return this.queue.size();
@@ -73,4 +92,30 @@ public class CapacityQueue<Type> {
     public int getCapacity() {
         return this.capacity;
     }
+    
+    private void incCountCallPoll() {
+    	countCallPoll++;
+    }
+    
+    private void incCountCallAdd() {
+    	countCallAdd++;
+    }
+  
+    private void incCountFinishPoll() {
+    	countFinishedPoll++;
+    }
+    
+    private void incCountFinishAdd() {
+    	countFinishedAdd++;
+    }
+
+    public long getCountCallPoll() {return countCallPoll;}
+    public long getCountCallAdd() {return countCallAdd;}
+    
+	public void printCounts() {
+		System.out.println("CapacityQueue " + name +
+				" - adds: " + countFinishedAdd + "/"+ countCallAdd + " - polls: " + countFinishedPoll + "/"+ countCallPoll );
+	}
+
+
 }

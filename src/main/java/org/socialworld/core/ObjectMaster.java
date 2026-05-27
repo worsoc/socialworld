@@ -52,6 +52,7 @@ public class ObjectMaster {
 	// Jeder Typ erhält ein exklusives ID-Band von 1.000 IDs
 	private static final int RANGE_SIZE = 1000;
 
+	static final int LIVING_SIM_OBJECTS_MAX_NUMBER = 100000;
 
 	private static final int SIMULATION_OBJECTS_START_CAPACITY = 10000;
 	
@@ -77,6 +78,7 @@ public class ObjectMaster {
 	private final int[] typeStartIDs = new int[SimulationObject_Type.values().length];
 	private final int[] typeEndIDs = new int[SimulationObject_Type.values().length];
 
+	
 	private ObjectMaster() {
 
 		this.simulationObjects = new SimulationObjectArray(SIMULATION_OBJECTS_START_CAPACITY);

@@ -43,6 +43,7 @@ import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.Time;
+import org.socialworld.calculation.application.AttributeCalculator;
 import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.collections.ObjectByPositionSearch;
 
@@ -74,6 +75,8 @@ public class Simulation extends SocialWorldThread {
 	
 	private boolean run = false;
 	private int sleepTime = 500;
+	
+	private TickRandomCache randomCache = new TickRandomCache(ObjectMaster.LIVING_SIM_OBJECTS_MAX_NUMBER);
 	
 	private static AccessTokenCore tokenCore = AccessTokenCore.getValid();
 
@@ -281,6 +284,8 @@ public class Simulation extends SocialWorldThread {
 	private void nextTimeStep() {
 		Time actualTime = ActualTime.asTime();
 		System.out.println("Zeit: " + actualTime.toString());
+		randomCache.nextTick();
+		AttributeCalculator.getInstance().printInfluencedQueueCounts();
 		if (GlobalSwitches.OUTPUT_MEMORY_TELEMETRY)		printMemoryTelemetry();
 		actionMaster.nextSecond(actualTime);
 	}
@@ -367,6 +372,9 @@ public class Simulation extends SocialWorldThread {
 		return this.objectMaster.getSimulationObject(objectID);
 	}
 	
+	public double getRandom(int objectID) {
+		return randomCache.getRandom(objectID);
+	}
 	
 	public void changePosition(SimulationObject objectWithNewPosition) {
 		this.searchByPosition.changePosition(objectWithNewPosition);

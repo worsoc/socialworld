@@ -39,6 +39,7 @@ public class Calculation implements IObjectReceiver{
 	static Value zeroFloatingPoint;
 	static Value zeroVector;
 	
+	
 	// Ein permanenter, thread-spezifischer Puffer mit einer Startkapazität von 4 Elementen
 	private final ThreadLocal<ValueArrayList> sharedValueListBuffer = 
 	    ThreadLocal.withInitial(() -> new ValueArrayList(4));
@@ -62,6 +63,7 @@ public class Calculation implements IObjectReceiver{
 		zeroInteger = new Value(Type.integer, 0);
 		zeroFloatingPoint = new Value(Type.floatingpoint, 0F);
 		zeroVector = new Value(Type.vector, new Vector(0F, 0F, 0F));
+		
 	}
 	
 	public  Value createValue(Type type, String name, Object value) {
@@ -444,6 +446,7 @@ public class Calculation implements IObjectReceiver{
 			return nothing;
 		}
 	}
+	
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////implementing IObjectReceiver ///////////////////////////////////////
