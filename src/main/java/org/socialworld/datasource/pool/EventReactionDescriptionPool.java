@@ -85,7 +85,7 @@ public class EventReactionDescriptionPool extends DescriptionPool {
 	}
 
 	protected final Expression getStartExpressionForLines(List<String> lines4OneExpression) {
-		return new CreateActionExpression(lines4OneExpression);
+		return  CreateActionExpression.createActionExpression(lines4OneExpression);
 	}
 
 	protected final Expression getStartExpressionForIDs(List<Integer> ids4OneExpression) {

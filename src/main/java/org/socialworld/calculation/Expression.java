@@ -69,9 +69,9 @@ public class Expression implements IObjectReceiver{
 		
 	private boolean isValid;
 	
-	protected Simulation simulation ;
-	protected Calculation calculation;
-	protected Functions functions;
+	protected static Simulation simulation = Simulation.getInstance();;
+	protected static Calculation calculation = Calculation.getInstance();
+	protected static Functions functions = Functions.getInstance();;
 
 	protected ObjectRequester objectRequester = new ObjectRequester();
 	private static AccessTokenExpression token = AccessTokenExpression.getValid();
@@ -92,9 +92,6 @@ public class Expression implements IObjectReceiver{
 	
 	public Expression() {
 		
-		simulation = Simulation.getInstance();
-		calculation = Calculation.getInstance();
-		functions = Functions.getInstance();
 		operation = Expression_Function.nothing;
 		
 		setExpression1(Nothing.getInstance());
@@ -106,8 +103,6 @@ public class Expression implements IObjectReceiver{
 	
 	public void setNothing() {
 		
-		calculation = Calculation.getInstance();
-		functions = Functions.getInstance();
 		operation = Expression_Function.nothing;
 		isValid = true;
 		
@@ -120,6 +115,19 @@ public class Expression implements IObjectReceiver{
 		return isValid;
 	}
 	
+	public void copyFromExpression(Expression original) {
+
+		// copy is allowed for inValid expressions, that means while building the expression
+		if (isValid == false) {
+			this.expression1 = original.expression1;
+			this.expression2 = original.expression2;
+			this.expression3 = original.expression3;
+	
+			this.operation = original.operation;
+			this.operator = original.operator;
+		}
+	}
+	
 	public void setOperation(Expression_Function operation) {
 		if (!isValid) this.operation = operation;
 	}
@@ -130,6 +138,14 @@ public class Expression implements IObjectReceiver{
 	
 	public void setOperator(Expression_ConditionOperator operator) {
 		if (!isValid) this.operator = operator;
+	}
+
+	public boolean checkOperatorIsLessOrLessEqual() {
+		return (this.operator == Expression_ConditionOperator.less || this.operator == Expression_ConditionOperator.lessEqual );
+	}
+
+	public boolean checkOperatorIsGreaterOrGreaterEqual() {
+		return (this.operator == Expression_ConditionOperator.greater || this.operator == Expression_ConditionOperator.greaterEqual );
 	}
 
 	public void setFuncID(int func_id) {
@@ -173,6 +189,19 @@ public class Expression implements IObjectReceiver{
 		}
 	}
 
+	
+	protected Expression_Function getExpression1Operation() {
+		return expression1.getOperation();
+	}
+	
+	protected Expression_Function getExpression2Operation() {
+		return expression2.getOperation();
+	}
+	
+	protected Expression_Function getExpression3Operation() {
+		return expression3.getOperation();
+	}
+	
 	protected String getOperatorToString() {
 		if (this.operator != null) {
 			return this.operator.toString();

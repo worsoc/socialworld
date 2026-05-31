@@ -22,9 +22,9 @@ import java.util.regex.Matcher;
 
 import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.PropertyName;
+import org.socialworld.calculation.Calculation;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_ConditionOperator;
-import org.socialworld.calculation.Expression_Function;
 import org.socialworld.calculation.PropertyUsingAs;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
@@ -33,7 +33,9 @@ import org.socialworld.calculation.descriptions.EventInfluencesAttributeEntry;
 import org.socialworld.calculation.descriptions.Term;
 import org.socialworld.datasource.parsing.ParseExpressionStrings;
 
-public class ChangeAttribute extends Branching {
+public class ChangeAttribute {
+
+	private static Calculation calculation = Calculation.getInstance();
 
 	private static AccessTokenExpressions4Attributes token = AccessTokenExpressions4Attributes.getValid();
 
@@ -45,35 +47,35 @@ public class ChangeAttribute extends Branching {
     /**
      * Erzeugt eine Change-Logik für genau EIN Attribut aus einem JSON-Entry.
      */
-    public static ChangeAttribute fromJsonEntry(EventInfluencesAttributeEntry entry) {
-        ChangeAttribute ca = new ChangeAttribute();
-        ca.initFromJson(entry);
-        return ca;
+    public static Expression fromJsonEntry(EventInfluencesAttributeEntry entry) {
+         return initFromJson(entry);
     }
 
     /**
-     * Erzeugt eine Change-Logik für genau EIN Attribut aus einer alternativen String-Besschreibung (Liste von string).
+     * Erzeugt eine Change-Logik für genau EIN Attribut aus einer alternativen String-Beschreibung (Liste von string).
      */
-	public static ChangeAttribute fromLines(List<String> lines) {
-	    ChangeAttribute ca = new ChangeAttribute();
-		ca.initFromlines(lines);
-	    return ca;
+	public static Expression fromLines(List<String> lines) {
+		return initFromlines(lines);
 	}
 
 	/////// creation from EventInfluenceAttributeEntry (from JSON)
 
-	private void initFromJson(EventInfluencesAttributeEntry entry) {
-	    if (entry == null) return;
+	private static Expression initFromJson(EventInfluencesAttributeEntry entry) {
+	    if (entry == null) return Nothing.getInstance();;
 
 	    List<Term> terms = entry.term;
-	    if (terms == null || terms.isEmpty()) return;
+	    if (terms == null || terms.isEmpty()) return Nothing.getInstance();;
 
-	    // 1. Bedingung (WENN) -> expression1
+		Expression exp1;  // WENN
+		Expression exp2;  // DANN
+		Expression exp3;  // SONST
+
+		// 1. Bedingung (WENN) -> expression1
 	    if (terms.size() >= 2) {
-	        setExpression1(createConditionExpression(terms.get(0)));
+	    	exp1 = createConditionExpression(terms.get(0));
 	    } else {
 	        // Falls nur ein Term (keine Bedingung), setzen wir die Bedingung auf TRUE (Constant 1)
-	        setExpression1(new Constant(new Value(Type.integer, 1)));
+	    	exp1 = new Constant(new Value(Type.integer, 1));
 	    }
 
 	    // 2. Berechnung & Zuweisung (DANN) -> expression2
@@ -87,10 +89,10 @@ public class ChangeAttribute extends Branching {
 	    );
 	    
 	    // Das Replacement kapselt das Setzen des Attributs
-	    setExpression2(new Replacement(
+	    exp2 = new Replacement(
 	        PropertyName.simobj_attributeArray.toString(), 
 	        setAttrAction
-	    ));
+	    );
 
 	    // 3. Fallback (SONST) -> expression3
 	    if (terms.size() > 2) {
@@ -101,19 +103,19 @@ public class ChangeAttribute extends Branching {
 	            new GetArgumentByName(PropertyName.simobj_attributeArray.toString()), 
 	            otherwiseValue
 	        );
-	        setExpression3(new Replacement(PropertyName.simobj_attributeArray.toString(), setAttrOtherwise));
+	        exp3 = new Replacement(PropertyName.simobj_attributeArray.toString(), setAttrOtherwise);
 	    } else {
 	        // Default: Einfach das bestehende Array zurückgeben (keine Änderung)
-	        setExpression3(new GetArgumentByName(PropertyName.simobj_attributeArray.toString()));
+	    	exp3 = new GetArgumentByName(PropertyName.simobj_attributeArray.toString());
 	    }
 
-	    setOperation(Expression_Function.branching);
-	    setValid();
+		return Branching.createBranchingSmart(exp1, exp2, exp3);
+
 	}
 
 	
 	
-	private Expression createConditionExpression(Term term) {
+	private  static Expression createConditionExpression(Term term) {
 	    // faNr 1: Attribut (z.B. "mood")
 	    String attrName = term.getArgValueAsString(0); 
 	    
@@ -134,12 +136,12 @@ public class ChangeAttribute extends Branching {
 	    return new Comparison(
 	        operator,
 	        GetAttributeValue.getInstance(attrIndex),
-	        new Constant(new Value(Type.integer, 10 /*Integer.parseInt(valueStr.trim())*/))
+	        new Constant(new Value(Type.integer, Integer.parseInt(valueStr.trim())))
 	    );
 
 	}
 	
-	private Expression createActionExpression(Term term) {
+	private static Expression createActionExpression(Term term) {
 
 	    String actionType = term.getArgValueAsString(0); // z.B. "MX+N"
 
@@ -154,7 +156,7 @@ public class ChangeAttribute extends Branching {
 
 	/////// creation from lines
 	
-	private void initFromlines(List<String> lines) {
+	private static Expression initFromlines(List<String> lines) {
 	
 		if (lines.size() > 0)
 		{
@@ -165,7 +167,7 @@ public class ChangeAttribute extends Branching {
 			Expression exp3;  // SONST
 				
 			line = lines.get(0);
-			exp1 = parseWenn(token, PropertyUsingAs.todo, line, true /* with WENN/DANN */);
+			exp1 = Branching.parseWenn(token, PropertyUsingAs.todo, line, true /* with WENN/DANN */);
 			exp2 = parseDann(line);
 			
 			if (lines.size() > 1) {
@@ -175,19 +177,13 @@ public class ChangeAttribute extends Branching {
 				exp3 = new GetArgumentByName(PropertyName.simobj_attributeArray.toString());
 			}
 			
-			setExpression1(exp1);
-			setExpression2(exp2);
-			setExpression3(exp3);
+			return Branching.createBranchingSmart(exp1, exp2, exp3);
 
-			setOperation(Expression_Function.branching);
-
-			setValid();
-			
 		}
-		
+		return Nothing.getInstance();
 	}
 	
-	private Expression parseLinesTail(int index, List<String> lines) {
+	private static Expression parseLinesTail(int index, List<String> lines) {
 		
 		String line;
 		
@@ -196,7 +192,7 @@ public class ChangeAttribute extends Branching {
 		Expression tail;
 		
 		line = lines.get(index);
-		wenn = parseWenn(token, PropertyUsingAs.todo, line, true /* with WENN/DANN */);
+		wenn = Branching.parseWenn(token, PropertyUsingAs.todo, line, true /* with WENN/DANN */);
 		dann = parseDann(line);
 		
 		if (index == (lines.size() - 1)) 
@@ -204,11 +200,11 @@ public class ChangeAttribute extends Branching {
 		else
 			 tail = parseLinesTail(index + 1, lines);
 		
-		return new Branching(wenn, dann, tail);
+		return Branching.createBranchingSmart(wenn, dann, tail);
 			
 	}
 	
-	private Expression parseDann(String line) {
+	private static Expression parseDann(String line) {
 		
 		boolean isFirstExpression = true;
 		
@@ -273,7 +269,7 @@ public class ChangeAttribute extends Branching {
 
 	}
 	
-	private Expression getFunctionExpression(String[] function) {
+	private static  Expression getFunctionExpression(String[] function) {
 		
 		Expression result = Nothing.getInstance();
 		Type type;

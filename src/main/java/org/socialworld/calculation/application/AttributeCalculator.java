@@ -288,12 +288,12 @@ public  class AttributeCalculator extends SocialWorldThread {
 		// 1. ALLOKATIONSFREIES RECYCLING 
 		workingByEventArguments.clear();
 
-		// objectID zum stateAnimal als Argument setzeb
+		// objectID zum stateAnimal als Argument setzen
 		animalsObjectID = stateAnimal.getObjectID();
 		objectID.changeValue(animalsObjectID);
 		workingByEventArguments.add( objectID );
 
-		// AttributeArray des stateAnimal als Argumetn setzeb
+		// AttributeArray des stateAnimal als Argument setzen
 		oldAttributes =  stateAnimal.getProperty(token, PropertyName.simobj_attributeArray);
 		workingByEventArguments.add( oldAttributes );
 

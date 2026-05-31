@@ -63,7 +63,7 @@ public class EventReactionDescription extends DescriptionBase {
 	@Override
 	public void setFunctions() {
 		
-		Expression startExpression = new CreateActionExpression(this.entrys, true /* dummy */);
+		Expression startExpression =  CreateActionExpression.createActionExpression(this.entrys, true /* dummy */);
 		addFunction(new FunctionByExpression(startExpression));
 		
 	}

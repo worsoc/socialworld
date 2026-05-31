@@ -33,17 +33,19 @@ import org.socialworld.core.IAccessToken;
 
 public class Branching extends Expression {
 
-	public Branching (Expression expIF, Expression expTHEN, Expression expELSE) {
+	private Branching (Expression expIF, Expression expTHEN, Expression expELSE, Expression_Function operation) {
 		
 		super();
 		
-		
-		setExpression1(expIF);
-		setExpression2(expTHEN);
-		setExpression3(expELSE);
-		
-		setOperation(Expression_Function.branching);
-		setValid();
+		// chechking operation for being a branching operation
+		if (operation == Expression_Function.branching || operation == Expression_Function.probability) {
+			setExpression1(expIF);
+			setExpression2(expTHEN);
+			setExpression3(expELSE);
+			
+			setOperation(operation);
+			setValid();
+		}
 		
 	}
 	
@@ -51,7 +53,19 @@ public class Branching extends Expression {
 		super();
 	}
 	
-	protected Expression parseWenn(IAccessToken token, PropertyUsingAs usablePermission, String line, boolean withWENNDANN ) {
+	public static Expression createBranchingSmart(
+	        Expression condition,
+	        Expression thenExpr,
+	        Expression elseExpr) {
+
+	    if (Comparison.isAttributeComparison(condition)) {
+	        return buildProbability(condition, thenExpr, elseExpr);
+	    }
+
+	    return new Branching(condition, thenExpr, elseExpr, Expression_Function.branching);
+	}
+
+	static Expression parseWenn(IAccessToken token, PropertyUsingAs usablePermission, String line, boolean withWENNDANN ) {
 		
 		String partWENN;
 		
@@ -89,7 +103,7 @@ public class Branching extends Expression {
 		
 	}
 	
-	private Expression parseConjunction(IAccessToken token, PropertyUsingAs usablePermission, String conjunction) {
+	private static Expression parseConjunction(IAccessToken token, PropertyUsingAs usablePermission, String conjunction) {
 		
 		String[] listANDs = conjunction.split("&");
 		int countANDs = listANDs.length;
@@ -117,7 +131,7 @@ public class Branching extends Expression {
 	
 	
 	
-	private Expression parseCondition(IAccessToken token, PropertyUsingAs usablePermission, String condition) {
+	private static Expression parseCondition(IAccessToken token, PropertyUsingAs usablePermission, String condition) {
 
 		String[] conditionElements = condition.trim().split("\\s+");
 		
@@ -154,7 +168,7 @@ public class Branching extends Expression {
 	}
 	
 
-	private Expression parseAttributeCondition(String[] conditionElements) {
+	private static  Expression parseAttributeCondition(String[] conditionElements) {
 			
 		String attributeName = conditionElements[0];
 		String operator = conditionElements[1];
@@ -182,7 +196,7 @@ public class Branching extends Expression {
 			
 	}
 	
-	private Expression parseFunctionCondition(IAccessToken token, PropertyUsingAs usablePermission, String[] conditionElements) {
+	private static Expression parseFunctionCondition(IAccessToken token, PropertyUsingAs usablePermission, String[] conditionElements) {
 		
 	
 		// the function description
@@ -212,7 +226,7 @@ public class Branching extends Expression {
 			
 	}
 
-	private Expression parseEventPropsCondition(IAccessToken token, PropertyUsingAs usablePermission, String[] conditionElements) {
+	private static Expression parseEventPropsCondition(IAccessToken token, PropertyUsingAs usablePermission, String[] conditionElements) {
 		
 		// type as Type's index (look at the enum Type)
 		String type = conditionElements[0];
@@ -243,7 +257,7 @@ public class Branching extends Expression {
 			
 	}
 
-	private Expression parseStateCondition(IAccessToken token, PropertyUsingAs usablePermission, String[] conditionElements) {
+	private static Expression parseStateCondition(IAccessToken token, PropertyUsingAs usablePermission, String[] conditionElements) {
 		
 		// type as Type's index (look at the enum Type)
 		String type = conditionElements[0];
@@ -272,6 +286,63 @@ public class Branching extends Expression {
 		
 		return comparison;
 			
+	}
+
+	
+	
+	
+	private static Expression buildProbability(
+	        Expression cmp,
+	        Expression thenExpr,
+	        Expression elseExpr) {
+
+
+	    // k = fixe Steilheit
+	    Expression kExpr = new Constant(
+	        new Value("5", Type.floatingpoint)  // oder direkt double
+	    );
+
+	    // SIGMOID
+	    Expression sigmoid = new Expression();
+	    sigmoid.copyFromExpression(cmp);
+	    sigmoid.setOperation(Expression_Function.sigmoid);
+	    sigmoid.setExpression3(kExpr);
+	    sigmoid.setValid();
+
+	    // Richtung beachten
+	    Expression probExpr = sigmoid;
+
+	    if (cmp.checkOperatorIsLessOrLessEqual()) {
+            probExpr = invert(sigmoid);
+	    }
+	    else if (cmp.checkOperatorIsLessOrLessEqual()) {
+	    	// it stays probability mode
+	    }
+	    else {
+	    	// fallback to Branching with comparison
+            return new Branching(cmp, thenExpr, elseExpr, Expression_Function.branching);
+	    }
+
+	    // PROBABILITY Node
+	    Expression probability = new Branching(probExpr, thenExpr, elseExpr, Expression_Function.probability);
+
+	    return probability;
+	}
+
+	
+	private static Expression invert(Expression sigmoid) {
+
+	    Expression one = new Constant(
+	        new Value("1", Type.floatingpoint)
+	    );
+
+	    Expression result = new Expression();
+	    result.setOperation(Expression_Function.subtraction);
+	    result.setExpression1(one);
+	    result.setExpression2(sigmoid);
+	    result.setValid();
+
+	    return result;
 	}
 
 }

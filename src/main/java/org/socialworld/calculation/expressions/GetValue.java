@@ -180,7 +180,7 @@ public class GetValue extends Expression {
 				if (step.indexOf("#" + GETISELEMENTOF + "(") >= 0 ) {
 					String stepCopy = new String(step);
 					stepCopy = stepCopy.replace("#", ".");
-					result = new  Branching (new GetValue(token, usablePermission, stepCopy, valueAliasName), 
+					result = Branching.createBranchingSmart(new GetValue(token, usablePermission, stepCopy, valueAliasName), 
 							new GetArgumentByName(name, valueAliasName), 
 							Nothing.getInstance());
 				}
@@ -194,7 +194,7 @@ public class GetValue extends Expression {
 				if (step.indexOf("#" + GETISELEMENTOF + "(") >= 0 ) {
 					String stepCopy = new String(step);
 					stepCopy = stepCopy.replace("#", ".");
-					result = new  Branching (new GetValue(token, usablePermission, stepCopy, valueAliasName), 
+					result = Branching.createBranchingSmart (new GetValue(token, usablePermission, stepCopy, valueAliasName), 
 							new GetProperty(token, GetPropertyMode.property, name, valueAliasName), 
 							Nothing.getInstance());
 				}
@@ -279,7 +279,7 @@ public class GetValue extends Expression {
 		if (dotElemFunction == 1 ) {
 			// GetValue
 			if (dotElemAddOn == 1 /* IsElem */ ) {
-				result = new  Branching (new GetProperty(token, GetPropertyMode.isElem, "" + dotElemAdooOnIntArg, valueAliasName),
+				result = Branching.createBranchingSmart (new GetProperty(token, GetPropertyMode.isElem, "" + dotElemAdooOnIntArg, valueAliasName),
 						new GetArgumentByName(name, valueAliasName), 
 						Nothing.getInstance());
 			}
@@ -291,7 +291,7 @@ public class GetValue extends Expression {
 		else if (dotElemFunction == 2 ) {
 			// GetProperty
 			if (dotElemAddOn == 1 /* IsElem */ ) {
-				result = new  Branching (new GetProperty(token, GetPropertyMode.isElem, "" + dotElemAdooOnIntArg, valueAliasName),
+				result = Branching.createBranchingSmart (new GetProperty(token, GetPropertyMode.isElem, "" + dotElemAdooOnIntArg, valueAliasName),
 						new GetProperty(token, GetPropertyMode.property, name, valueAliasName), 
 						Nothing.getInstance());
 			}

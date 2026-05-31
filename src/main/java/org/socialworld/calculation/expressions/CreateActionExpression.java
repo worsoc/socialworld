@@ -24,8 +24,8 @@ package org.socialworld.calculation.expressions;
 import java.util.List;
 
 import org.socialworld.actions.ActionType;
+import org.socialworld.calculation.Calculation;
 import org.socialworld.calculation.Expression;
-import org.socialworld.calculation.Expression_Function;
 import org.socialworld.calculation.PropertyUsingAs;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
@@ -35,16 +35,16 @@ import org.socialworld.calculation.descriptions.EventReactionDescriptionEntry;
 
 import org.socialworld.datasource.parsing.ParseExpressionStrings;
 
-public class CreateActionExpression extends Branching {
+public class CreateActionExpression  {
 	
 	public static final int MODUS_CREATE_STATE2ACTION = 1;
 	public static final int MODUS_CREATE_REACTION = 2;
 
+	private static Calculation calculation = Calculation.getInstance();
 	private static AccessTokenExpressions4Action token = AccessTokenExpressions4Action.getValid();
 	
-	public CreateActionExpression(List<EventReactionDescriptionEntry> descEntrys, boolean dummy) {
+	public static Expression createActionExpression(List<EventReactionDescriptionEntry> descEntrys, boolean dummy) {
 		
-		super();
 		
 		if (descEntrys.size() > 0)
 		{
@@ -56,7 +56,7 @@ public class CreateActionExpression extends Branching {
 			Expression exp3;  // SONST
 	 
 			entry = descEntrys.get(0);
-			exp1 = parseWenn(token, PropertyUsingAs.todo, entry.conditions, false /* without WENN/DANN */);
+			exp1 = Branching.parseWenn(token, PropertyUsingAs.todo, entry.conditions, false /* without WENN/DANN */);
 			exp2 = parseDann(entry);
 	
 			if (descEntrys.size() > 1) {
@@ -65,23 +65,18 @@ public class CreateActionExpression extends Branching {
 			else {
 				exp3 = new CreateValue(Type.action, Nothing.getInstance());
 			}
-			setExpression1(exp1);
-			setExpression2(exp2);
-			setExpression3(exp3);
+			return Branching.createBranchingSmart(exp1, exp2, exp3);
 
-			setOperation(Expression_Function.branching);
-
-			setValid();
 			
 		}
 		else {
 			System.out.println("CreateActionExpression.constructor(): entrys ist leer!");
+		    return Nothing.getInstance();
 		}
 	}
 	
-	public CreateActionExpression(List<String> lines) {
+	public static Expression createActionExpression(List<String> lines) {
 		
-		super();
 		
 		
 		if (lines.size() > 0)
@@ -93,7 +88,7 @@ public class CreateActionExpression extends Branching {
 			Expression exp3;  // SONST
 				
 			line = lines.get(0);
-			exp1 = parseWenn(token, PropertyUsingAs.todo, line, true /* with WENN/DANN */);
+			exp1 = Branching.parseWenn(token, PropertyUsingAs.todo, line, true /* with WENN/DANN */);
 			exp2 = parseDann(line);
 			
 			if (lines.size() > 1) {
@@ -103,22 +98,17 @@ public class CreateActionExpression extends Branching {
 				exp3 = new CreateValue(Type.action, Nothing.getInstance());
 			}
 			
-			setExpression1(exp1);
-			setExpression2(exp2);
-			setExpression3(exp3);
-
-			setOperation(Expression_Function.branching);
-
-			setValid();
+			return Branching.createBranchingSmart(exp1, exp2, exp3);
 		}
 		else {
 			System.out.println("CreateActionExpression.constructor(): lines ist leer!");
+		    return Nothing.getInstance();
 		}
 		
 	}
 
 	
-	private Expression parseFurtherEntrys(int index, List<EventReactionDescriptionEntry> descEntrys) {
+	private static Expression parseFurtherEntrys(int index, List<EventReactionDescriptionEntry> descEntrys) {
 		
 		EventReactionDescriptionEntry entry;
 		
@@ -127,7 +117,7 @@ public class CreateActionExpression extends Branching {
 		Expression tail;
 		
 		entry = descEntrys.get(index);
-		wenn = parseWenn(token, PropertyUsingAs.todo, entry.conditions, false /* without WENN/DANN */);
+		wenn = Branching.parseWenn(token, PropertyUsingAs.todo, entry.conditions, false /* without WENN/DANN */);
 		dann = parseDann(entry);
 		
 		if (index == (descEntrys.size() - 1)) 
@@ -135,12 +125,12 @@ public class CreateActionExpression extends Branching {
 		else
 			 tail = parseFurtherEntrys(index + 1, descEntrys);
 		
-		return new Branching(wenn, dann, tail);
+		return Branching.createBranchingSmart(wenn, dann, tail);
 			
 	}
 	
 	
-	private Expression parseFurtherLines(int index, List<String> lines) {
+	private static Expression parseFurtherLines(int index, List<String> lines) {
 		
 		String line;
 		
@@ -149,7 +139,7 @@ public class CreateActionExpression extends Branching {
 		Expression tail;
 		
 		line = lines.get(index);
-		wenn = parseWenn(token, PropertyUsingAs.todo, line, true /* with WENN/DANN */);
+		wenn = Branching.parseWenn(token, PropertyUsingAs.todo, line, true /* with WENN/DANN */);
 		dann = parseDann(line);
 		
 		if (index == (lines.size() - 1)) 
@@ -157,12 +147,12 @@ public class CreateActionExpression extends Branching {
 		else
 			 tail = parseFurtherLines(index + 1, lines);
 		
-		return new Branching(wenn, dann, tail);
+		return Branching.createBranchingSmart(wenn, dann, tail);
 			
 	}
 	
 	
-	private Expression parseDann(EventReactionDescriptionEntry descEntry) {
+	private static Expression parseDann(EventReactionDescriptionEntry descEntry) {
 		
 		
 		Expression actionValue;
@@ -220,7 +210,7 @@ public class CreateActionExpression extends Branching {
 		return createAction;
 	}
 
-	private String getTagValue(EventReactionDescriptionEntry descEntry, String propertyName) {
+	private static String getTagValue(EventReactionDescriptionEntry descEntry, String propertyName) {
 		
 		switch (propertyName) {
 			case Value.VALUE_BY_NAME_ACTION_TYPE:
@@ -251,7 +241,7 @@ public class CreateActionExpression extends Branching {
 		return "";
 	}
 	
-	private Expression parseDann(String line) {
+	private static Expression parseDann(String line) {
 		
 		String partDANN;
 		
@@ -327,7 +317,7 @@ public class CreateActionExpression extends Branching {
 		return createAction;
 	}
 	
-	private Expression getFunctionExpression(String property, String[] function) {
+	private static Expression getFunctionExpression(String property, String[] function) {
 		
 		Expression result = Nothing.getInstance();
 		Type type;

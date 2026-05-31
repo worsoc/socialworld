@@ -48,5 +48,18 @@ public class Comparison extends Expression {
 		return result;
 	}
 
-	
+	public static boolean isAttributeComparison(Expression expr) {
+
+	    if (!(expr instanceof Comparison)) {
+	        return false;
+	    }
+
+	    Comparison cmp = (Comparison) expr;
+
+	    Expression_Function left = cmp.getExpression1Operation();
+	    Expression_Function right = cmp.getExpression2Operation();
+
+	    return left == Expression_Function.attributeValue
+	        && right == Expression_Function.value;
+	}
 }
