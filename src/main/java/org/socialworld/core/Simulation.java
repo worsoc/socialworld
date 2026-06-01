@@ -372,8 +372,8 @@ public class Simulation extends SocialWorldThread {
 		return this.objectMaster.getSimulationObject(objectID);
 	}
 	
-	public double getRandom(int objectID) {
-		return randomCache.getRandom(objectID);
+	public float getRandom(int objectID) {
+		return (float) randomCache.getRandom(objectID);
 	}
 	
 	public void changePosition(SimulationObject objectWithNewPosition) {

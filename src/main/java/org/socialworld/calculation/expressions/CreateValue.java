@@ -39,6 +39,8 @@ import org.socialworld.knowledge.KnowledgeFact_Type;
 
 public class CreateValue extends Expression {
 
+//	public static final CreateValue NOACTION =  new CreateValue(Type.action, Nothing.getInstance());
+	
 	private static AccessTokenExpressions4Knowledge tokenKnowledge = AccessTokenExpressions4Knowledge.getValid();
 
 	public CreateValue(Type type, Expression exp2) {

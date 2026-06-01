@@ -163,7 +163,7 @@ public class Branching extends Expression {
 			
 		}
 		
-		return new Expression();
+		return Expression.getDefaultInvalid();
 
 	}
 	
@@ -185,7 +185,7 @@ public class Branching extends Expression {
 
 		Expression constant = new Constant(new Value(value, Type.integer ));
 		
-		Expression comparison = new Expression();
+		Expression comparison = Expression.getDefaultInvalid();
 
 		Expression_ConditionOperator foundOperator = Expression_ConditionOperator.fromName(operator);
 		if (foundOperator != null && foundOperator.getIndex() < Expression_ConditionOperator.NUMBER_OF_COMPARISON_OPERATORS) {
@@ -212,7 +212,7 @@ public class Branching extends Expression {
 
 		Expression constant = new Constant(new Value(value, Type.floatingpoint ));
 
-		Expression comparison = new Expression();
+		Expression comparison = Expression.getDefaultInvalid();
 		
 		for (int i = 0; i < Expression_ConditionOperator.NUMBER_OF_COMPARISON_OPERATORS; i++) {
 			
@@ -243,7 +243,7 @@ public class Branching extends Expression {
 		
 		Expression constant = new Constant(new Value(value, Type.getName(Integer.parseInt(type)) ) );
 		
-		Expression comparison = new Expression();
+		Expression comparison = Expression.getDefaultInvalid();
 		
 		for (int i = 0; i < Expression_ConditionOperator.NUMBER_OF_COMPARISON_OPERATORS; i++) {
 			
@@ -274,7 +274,7 @@ public class Branching extends Expression {
 		
 		Expression constant = new Constant(new Value(value, Type.getName(Integer.parseInt(type)) ) );
 		
-		Expression comparison = new Expression();
+		Expression comparison = Expression.getDefaultInvalid();
 		
 		for (int i = 0; i < Expression_ConditionOperator.NUMBER_OF_COMPARISON_OPERATORS; i++) {
 			
@@ -298,9 +298,10 @@ public class Branching extends Expression {
 
 
 	    // k = fixe Steilheit
-	    Expression kExpr = new Constant(
-	        new Value("5", Type.floatingpoint)  // oder direkt double
-	    );
+	    //Expression kExpr = Constant.FLOATINGPOINT_5_DOT_0;
+	    Expression kExpr =new Constant(
+		        new Value(Type.floatingpoint, 5.0f)
+		    );
 
 	    // SIGMOID
 	    Expression sigmoid = new Expression();
@@ -315,7 +316,7 @@ public class Branching extends Expression {
 	    if (cmp.checkOperatorIsLessOrLessEqual()) {
             probExpr = invert(sigmoid);
 	    }
-	    else if (cmp.checkOperatorIsLessOrLessEqual()) {
+	    else if (cmp.checkOperatorIsGreaterOrGreaterEqual()) {
 	    	// it stays probability mode
 	    }
 	    else {
@@ -332,9 +333,10 @@ public class Branching extends Expression {
 	
 	private static Expression invert(Expression sigmoid) {
 
+	 //   Expression one = Constant.FLOATINGPOINT_1_DOT_0;
 	    Expression one = new Constant(
-	        new Value("1", Type.floatingpoint)
-	    );
+		        new Value(Type.floatingpoint, 1.00F)
+		    );
 
 	    Expression result = new Expression();
 	    result.setOperation(Expression_Function.subtraction);

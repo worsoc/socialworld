@@ -23,10 +23,21 @@ package org.socialworld.calculation.expressions;
 
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_Function;
+import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 
 public class Constant extends Expression {
-
+/*
+	public static final Constant INTEGER_1 = new Constant(
+	        new Value(Type.integer, 1)
+	    );
+	public static final  Constant FLOATINGPOINT_1_DOT_0 = new Constant(
+	        new Value(Type.floatingpoint, 1.0F)
+	    );
+	public static final Constant FLOATINGPOINT_5_DOT_0 = new Constant(
+	        new Value(Type.floatingpoint, 5.0F)
+	    );
+*/
 	public Constant(Value constant) {
 		
 		super();

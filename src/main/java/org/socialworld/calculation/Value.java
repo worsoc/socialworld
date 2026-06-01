@@ -306,21 +306,52 @@ public class Value {
 		
 		switch (typeUsing) {
 		case integer:
+			
 			return (int) value;
+			
 		case longinteger:
+			
 			if (value instanceof Integer)	return ((Integer) value).longValue();
 			return (long) value;
+			
 		case floatingpoint:
+			
+		    if (value instanceof Double) {
+		        return  (double)value;
+		    }
+
+		    if (value instanceof Float) {
+		        return (float) value;
+		    }
+		    if (value instanceof Integer) {
+		        return ((Integer) value).floatValue(); // Integer sicher zu float konvertieren
+		    }
+		    if (value instanceof String) {
+		        return Float.parseFloat((String) value); // Erlaubt die sichere Nutzung von Strings wie "5" oder "1"
+		    }
+		    
+		    // Allgemeiner Fallback für alle anderen Zahlentypen
+		    if (value instanceof Number) {
+		        return ((Number) value).floatValue();
+		    }
+		    
+		    return 0.0f;			
+/*			
 			if (value instanceof Double) return (double)value;
 			if (value instanceof Integer)	return (float) ((Integer) value).longValue();
 			else return (float) value;
+*/	
+			    
 		case time:
+			
 			if (!(value instanceof Time)) {
 				return new Time();
 			}
 			else
 				return (Time) value;
+			
 		case lexem:
+			
 			if (value instanceof Lexem)	{
 				return (Lexem) value;
 			}
@@ -333,7 +364,9 @@ public class Value {
 				return AllWords.getLexem(lexemID);
 			}
 			return NoObject.getNoObject(NoObjectReason.instanceOfCheckFailed);
+			
 		case relation:
+			
 			if (value instanceof Relation)	{
 				return (Relation) value;
 			}
@@ -346,18 +379,23 @@ public class Value {
 				return Relation.getName(relationID);
 			}
 			return NoObject.getNoObject(NoObjectReason.instanceOfCheckFailed);
+			
 		case attributeArray:
+			
 			if (value instanceof AttributeArray) {
 				return (AttributeArray) value;
 			}
 			return NoObject.getNoObject(NoObjectReason.instanceOfCheckFailed);
+			
 		default:
+			
 			if ((value instanceof IObjectSender) && (this instanceof ValueProperty)) {
 				return ((IObjectSender) value).copy();
 			}
 			else {
 				return value;
 			}
+			
 		}
 	}
 	

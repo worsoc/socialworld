@@ -71,6 +71,10 @@ public class ActionCreator extends SocialWorldThread {
 	private final CollectionElementActor[] actorPool = new CollectionElementActor[ACTOR_POOL_SIZE];
 	private int actorWriteIndex = 0;
 
+	// Wiederverwendbarer, veränderlicher Value für objectID 
+	private final Value objectID =  Value.getMutable(
+			Type.integer, Value.VALUE_BY_NAME_OBJECTID, -1);
+
 	/**
 	 * private Constructor. 
 	 */
@@ -307,10 +311,17 @@ public class ActionCreator extends SocialWorldThread {
 	 * @param: stateReactor
 	 */
 	private AbstractAction createAnimalReaction(Event event, StateAnimal stateReactor, FunctionByExpression f_CreateReaction ) {
-		
+
+		int animalsObjectID;
+
 		ValueArrayList arguments;
 		arguments = new ValueArrayList();
 		
+		// objectID zum stateAnimal als Argument setzen
+		animalsObjectID = stateReactor.getObjectID();
+		objectID.changeValue(animalsObjectID);
+		arguments.add(objectID);
+
 		arguments.add( stateReactor.getProperty(token, PropertyName.simobj_attributeArray) );
 		arguments.add( new Value(Type.event, Value.VALUE_BY_NAME_EVENT, event) );
 		if (event.hasOptionalParam()) {
@@ -345,8 +356,15 @@ public class ActionCreator extends SocialWorldThread {
 	 */
 	private AbstractAction createAnimalActionByState(StateAnimal stateActor, FunctionByExpression f_CreateAction) {
 
+		int animalsObjectID;
+
 		ValueArrayList arguments;
 		arguments = new ValueArrayList();
+
+		// objectID zum stateAnimal als Argument setzen
+		animalsObjectID = stateActor.getObjectID();
+		objectID.changeValue(animalsObjectID);
+		arguments.add(objectID);
 		
 		arguments.add( stateActor.getProperty(token, PropertyName.simobj_attributeArray) );
 		

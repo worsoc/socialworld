@@ -63,7 +63,7 @@ public class CreateActionExpression  {
 				exp3 = parseFurtherEntrys(1, descEntrys);
 			}
 			else {
-				exp3 = new CreateValue(Type.action, Nothing.getInstance());
+				exp3 = new CreateValue(Type.action, Nothing.getInstance()); //CreateValue.NOACTION;
 			}
 			return Branching.createBranchingSmart(exp1, exp2, exp3);
 
@@ -95,7 +95,7 @@ public class CreateActionExpression  {
 				exp3 = parseFurtherLines(1, lines);
 			}
 			else {
-				exp3 = new CreateValue(Type.action, Nothing.getInstance());
+				exp3 = new CreateValue(Type.action, Nothing.getInstance()); //CreateValue.NOACTION;
 			}
 			
 			return Branching.createBranchingSmart(exp1, exp2, exp3);

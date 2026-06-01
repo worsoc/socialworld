@@ -385,11 +385,19 @@ public  class AttributeCalculator extends SocialWorldThread {
 		FunctionByMatrix f_AttributesByMatrix;
 		Value oldAttributes;
 		Value newAttributes = Value.getValueNothing();
-	
-		oldAttributes =  stateAnimal.getProperty(token, PropertyName.simobj_attributeArray);
+		int animalsObjectID;
+
 
 		// 1. ALLOKATIONSFREIES RECYCLING DER LISTE
 		workingByMatrixArguments.clear();
+		
+		// objectID zum stateAnimal als Argument setzen
+		animalsObjectID = stateAnimal.getObjectID();
+		objectID.changeValue(animalsObjectID);
+		workingByEventArguments.add( objectID );
+
+		
+		oldAttributes =  stateAnimal.getProperty(token, PropertyName.simobj_attributeArray);
 		workingByMatrixArguments.add(oldAttributes);
 
 		// 2. ABSOLUT ALLOKATIONSFREI: Nutzung des vorallokierten Modus-Values
@@ -444,11 +452,18 @@ public  class AttributeCalculator extends SocialWorldThread {
 		FunctionByMatrix f_AttributesByMatrix;
 		Value oldAttributes;
 		Value newAttributes = Value.getValueNothing();
-	
-		oldAttributes =  stateAnimal.getProperty(token, PropertyName.simobj_attributeArray);
+		int animalsObjectID;
+
 
 		// 1. ALLOKATIONSFREIES RECYCLING 
 		workingByMatrixArguments.clear();
+		
+		// objectID zum stateAnimal als Argument setzen
+		animalsObjectID = stateAnimal.getObjectID();
+		objectID.changeValue(animalsObjectID);
+		workingByEventArguments.add( objectID );
+	
+		oldAttributes =  stateAnimal.getProperty(token, PropertyName.simobj_attributeArray);
 		workingByMatrixArguments.add(oldAttributes);
 
 		// 2. ABSOLUT ALLOKATIONSFREI: Vorallokierter Simple-Modus

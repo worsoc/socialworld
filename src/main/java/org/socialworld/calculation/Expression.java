@@ -46,6 +46,13 @@ import org.socialworld.core.Simulation;
  */
 public class Expression implements IObjectReceiver{
 	
+	private static Expression defaultInvalid;
+	public static Expression getDefaultInvalid() {
+		if (defaultInvalid == null) {
+			defaultInvalid = new Expression();
+		}
+		return defaultInvalid;
+	}
 
 	int ID;
 	
@@ -577,10 +584,10 @@ public class Expression implements IObjectReceiver{
 					}
 					
 				case probability:
-					double p = (double) expression1.evaluate(arguments).getObject(Type.floatingpoint);
+					float p = (float) expression1.evaluate(arguments).getObject(Type.floatingpoint);
 					tmp = arguments.getValue(Value.VALUE_BY_NAME_OBJECTID);
 					objectID = (int) tmp.getObject(Type.integer);
-					double r = simulation.getRandom(objectID);
+					float r = simulation.getRandom(objectID);
 					
 					if (r < p) {
 						return expression2.evaluate(arguments);
@@ -611,10 +618,10 @@ public class Expression implements IObjectReceiver{
 					
 				case sigmoid:
 					
-					double x = (double) expression1.evaluate(arguments).getObject(Type.floatingpoint);
-					double center = (double) expression2.evaluate(arguments).getObject(Type.floatingpoint);
-					double k = (double) expression3.evaluate(arguments).getObject(Type.floatingpoint);
-					double pSigmoid = 1.0 / (1.0 + Math.exp((x - center) / k));
+					float x = (float) expression1.evaluate(arguments).getObject(Type.floatingpoint);
+					float center = (float) expression2.evaluate(arguments).getObject(Type.floatingpoint);
+					float k = (float) expression3.evaluate(arguments).getObject(Type.floatingpoint);
+					float pSigmoid = (float) ( 1.0 / (1.0 + Math.exp((x - center) / k)));
 					return calculation.createValue(Type.floatingpoint, pSigmoid);
 					
 				case function:
