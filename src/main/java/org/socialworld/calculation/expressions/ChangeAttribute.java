@@ -75,9 +75,8 @@ public class ChangeAttribute {
 	    	exp1 = createConditionExpression(terms.get(0));
 	    } else {
 	        // Falls nur ein Term (keine Bedingung), setzen wir die Bedingung auf TRUE (Constant 1)
-	    	//exp1 = Constant.INTEGER_1;
-	    	exp1 =  new Constant(
-	    	        new Value(Type.integer, 1));
+	    	exp1 = Constant.INTEGER_1;
+	    	//exp1 =  new Constant(     new Value(Type.integer, 1));
 	    }
 
 	    // 2. Berechnung & Zuweisung (DANN) -> expression2

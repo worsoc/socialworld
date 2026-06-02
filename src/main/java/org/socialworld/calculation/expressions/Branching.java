@@ -298,10 +298,8 @@ public class Branching extends Expression {
 
 
 	    // k = fixe Steilheit
-	    //Expression kExpr = Constant.FLOATINGPOINT_5_DOT_0;
-	    Expression kExpr =new Constant(
-		        new Value(Type.floatingpoint, 5.0f)
-		    );
+	    Expression kExpr = Constant.FLOATINGPOINT_5_DOT_0;
+	 //   Expression kExpr =new Constant(		        new Value(Type.floatingpoint, 5.0f)		    );
 
 	    // SIGMOID
 	    Expression sigmoid = new Expression();
@@ -333,10 +331,8 @@ public class Branching extends Expression {
 	
 	private static Expression invert(Expression sigmoid) {
 
-	 //   Expression one = Constant.FLOATINGPOINT_1_DOT_0;
-	    Expression one = new Constant(
-		        new Value(Type.floatingpoint, 1.00F)
-		    );
+	    Expression one = Constant.FLOATINGPOINT_1_DOT_0;
+	 //   Expression one = new Constant(        new Value(Type.floatingpoint, 1.00F)   );
 
 	    Expression result = new Expression();
 	    result.setOperation(Expression_Function.subtraction);

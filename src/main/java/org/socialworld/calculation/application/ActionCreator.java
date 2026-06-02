@@ -71,6 +71,16 @@ public class ActionCreator extends SocialWorldThread {
 	private final CollectionElementActor[] actorPool = new CollectionElementActor[ACTOR_POOL_SIZE];
 	private int actorWriteIndex = 0;
 
+	// Wiederverwendbare Argumentenliste für Berechnungen beim Akteur
+	private final ValueArrayList workingActionArguments = new ValueArrayList();
+
+	// Wiederverwendbare Argumentenliste für Berechnungen beim Reakteur
+	private final ValueArrayList workingReactionArguments = new ValueArrayList();
+
+	// Allokationsfreier Sandbox-Puffer für die Thread-Isolierung
+	private final ThreadLocal<ValueArrayList> localEvalArgs = 
+	    ThreadLocal.withInitial(() -> new ValueArrayList(16));
+
 	// Wiederverwendbarer, veränderlicher Value für objectID 
 	private final Value objectID =  Value.getMutable(
 			Type.integer, Value.VALUE_BY_NAME_OBJECTID, -1);
@@ -312,27 +322,44 @@ public class ActionCreator extends SocialWorldThread {
 	 */
 	private AbstractAction createAnimalReaction(Event event, StateAnimal stateReactor, FunctionByExpression f_CreateReaction ) {
 
-		int animalsObjectID;
+		int reactorsObjectID;
 
-		ValueArrayList arguments;
-		arguments = new ValueArrayList();
+		// 1. ALLOKATIONSFREIES RECYCLING 
+		workingReactionArguments.clear();
 		
-		// objectID zum stateAnimal als Argument setzen
-		animalsObjectID = stateReactor.getObjectID();
-		objectID.changeValue(animalsObjectID);
-		arguments.add(objectID);
+		// objectID zum stateReactor als Argument setzen
+		reactorsObjectID = stateReactor.getObjectID();
+		objectID.changeValue(reactorsObjectID);
+		workingReactionArguments.add(objectID);
 
-		arguments.add( stateReactor.getProperty(token, PropertyName.simobj_attributeArray) );
-		arguments.add( new Value(Type.event, Value.VALUE_BY_NAME_EVENT, event) );
+		workingReactionArguments.add( stateReactor.getProperty(token, PropertyName.simobj_attributeArray) );
+		workingReactionArguments.add( new Value(Type.event, Value.VALUE_BY_NAME_EVENT, event) );
 		if (event.hasOptionalParam()) {
-			arguments.add( event.getOptionalParam().getParamListAsValue());
+			workingReactionArguments.add( event.getOptionalParam().getParamListAsValue());
 		}
 		else {
-			arguments.add(new Value(Type.valueList, Value.VALUE_BY_NAME_EVENT_PARAMS, event.getProperties()));
+			workingReactionArguments.add(new Value(Type.valueList, Value.VALUE_BY_NAME_EVENT_PARAMS, event.getProperties()));
 		}
-		arguments.add( new Value(Type.simulationObject, Value.VALUE_BY_NAME_SIMOBJECT, stateReactor.getObject()) );
+		workingReactionArguments.add( new Value(Type.simulationObject, Value.VALUE_BY_NAME_SIMOBJECT, stateReactor.getObject()) );
 		
-		Value result = f_CreateReaction.calculate(arguments);
+		
+		// --- STRATEGISCHER FREEZE AM KETTENSTART ---
+		ValueArrayList localArgs = localEvalArgs.get();
+		localArgs.clear(); // Alten Puffer-Inhalt restlos leeren
+		
+		// Start-Argumente allokationsfrei in die thread-sichere Sandbox kopieren
+		int startSize = workingReactionArguments.size();
+		for (int i = 0; i < startSize; i++) {
+			localArgs.add(workingReactionArguments.get(i));
+		}
+
+		
+		Value result = f_CreateReaction.calculate(localArgs);
+		
+		// Speicherhygiene gegen Memory Loitering: Kappt alle Objekt-Referenzen im Puffer
+		localArgs.clear();
+
+		
 		return objectRequester.requestAction(token, result, this);
 
 	}
@@ -356,19 +383,33 @@ public class ActionCreator extends SocialWorldThread {
 	 */
 	private AbstractAction createAnimalActionByState(StateAnimal stateActor, FunctionByExpression f_CreateAction) {
 
-		int animalsObjectID;
+		int actorsObjectID;
 
-		ValueArrayList arguments;
-		arguments = new ValueArrayList();
+		// 1. ALLOKATIONSFREIES RECYCLING 
+		workingActionArguments.clear();
 
-		// objectID zum stateAnimal als Argument setzen
-		animalsObjectID = stateActor.getObjectID();
-		objectID.changeValue(animalsObjectID);
-		arguments.add(objectID);
+		// objectID zum stateActor als Argument setzen
+		actorsObjectID = stateActor.getObjectID();
+		objectID.changeValue(actorsObjectID);
+		workingActionArguments.add(objectID);
 		
-		arguments.add( stateActor.getProperty(token, PropertyName.simobj_attributeArray) );
+		workingActionArguments.add( stateActor.getProperty(token, PropertyName.simobj_attributeArray) );
 		
-		Value result = f_CreateAction.calculate(arguments);
+		// --- STRATEGISCHER FREEZE AM KETTENSTART ---
+		ValueArrayList localArgs = localEvalArgs.get();
+		localArgs.clear(); // Alten Puffer-Inhalt restlos leeren
+		
+		// Start-Argumente allokationsfrei in die thread-sichere Sandbox kopieren
+		int startSize = workingActionArguments.size();
+		for (int i = 0; i < startSize; i++) {
+			localArgs.add(workingActionArguments.get(i));
+		}
+
+		Value result = f_CreateAction.calculate(localArgs);
+		
+		// Speicherhygiene gegen Memory Loitering: Kappt alle Objekt-Referenzen im Puffer
+		localArgs.clear();
+
 		return objectRequester.requestAction(token, result, this);
 		
 

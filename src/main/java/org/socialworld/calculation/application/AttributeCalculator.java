@@ -47,6 +47,8 @@ public  class AttributeCalculator extends SocialWorldThread {
 	public static final int ATTRIBUTE_CALCULATOR_RETURNS_NO_CHANGES = 1;
 	public static final int ATTRIBUTE_CALCULATOR_RETURNS_INVALID_RESULT = 3;
 
+	public static long counterAttributeCalculationsWithoutChanges = 0;
+	
 	private static AttributeCalculator instance;
 
 	private static AccessTokenTalkCalculator token = AccessTokenTalkCalculator.getValid();
@@ -244,6 +246,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 			
 			if (resultAttributeArray.isValid()) {
 				if (resultAttributeArray.getTransferCode() == ValueTransferCode.noChanges) {
+					counterAttributeCalculationsWithoutChanges++;
 					return ATTRIBUTE_CALCULATOR_RETURNS_NO_CHANGES;
 				}
 				return hiddenWriteAccess.setAttributes(resultAttributeArray);
@@ -367,6 +370,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 			
 			if (resultAttributeArray.isValid()) {
 				if (resultAttributeArray.getTransferCode() == ValueTransferCode.noChanges) {
+					counterAttributeCalculationsWithoutChanges++;
 					return ATTRIBUTE_CALCULATOR_RETURNS_NO_CHANGES;
 				}
 				return hiddenWriteAccess.setAttributes(resultAttributeArray);
@@ -433,6 +437,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 			
 			if (resultAttributeArray.isValid()) {
 				if (resultAttributeArray.getTransferCode() == ValueTransferCode.noChanges) {
+					counterAttributeCalculationsWithoutChanges++;
 					return ATTRIBUTE_CALCULATOR_RETURNS_NO_CHANGES;
 				}
 				return hiddenWriteAccess.setAttributes(resultAttributeArray);
@@ -488,6 +493,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 
 	public void printInfluencedQueueCounts() {
 		influenced.printCounts();
+		System.out.println("AttributeCalculator>counterAttributeCalculationsWithoutChanges: " + counterAttributeCalculationsWithoutChanges);
 	}
 	
 	/**
