@@ -210,7 +210,7 @@ public class CreateValue extends Expression {
 			break;
 		case knowledgeElement:
 			evaluateExpression2(arguments);
-			localArguments = objectRequester.requestValueArrayList(tokenKnowledge, arguments.getValue(Value.VALUE_NAME_KNOWLEDGE_ELEMENT_PROPS), this); 
+			localArguments = getObjectRequester().requestValueArrayList(tokenKnowledge, arguments.getValue(Value.VALUE_NAME_KNOWLEDGE_ELEMENT_PROPS), this); 
 			createdObject  = KnowledgeCalculator.createKnowledgeElement(localArguments);
 			break;
 		case knowledgeSource:

@@ -46,13 +46,15 @@ public abstract class SimProperty implements ISimProperty, ISavedValue , IObject
 	private PropertyName propertyName = PropertyName.unknown;
 	private PropertyProtection protection;
 
-	protected ObjectRequester objectRequester = new ObjectRequester();
+	
 
 	protected SimProperty() {
+		
 		this.protection =  PropertyProtection.getProtection(this);
 	}
 
 	protected SimProperty(PropertyProtection protectionOriginal, IAccessToken tokenNew) {
+		
 		this.protection =  PropertyProtection.getProtection(protectionOriginal, tokenNew, this);
 	}
 	
@@ -304,9 +306,13 @@ public abstract class SimProperty implements ISimProperty, ISavedValue , IObject
 //////////////////////implementing IObjectReceiver ///////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
+	protected final ObjectRequester getObjectRequester() {
+	    return ObjectRequester.getInstance();
+	}
+
 	@Override
 	public int receiveObject(int requestID, Object object) {
-		objectRequester.receive(requestID, object);
+		getObjectRequester().receive(requestID, object);
 		return 0;
 	}
 

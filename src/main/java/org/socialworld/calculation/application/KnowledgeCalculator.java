@@ -190,7 +190,7 @@ public class KnowledgeCalculator extends SocialWorldThread {
 		{
 			f_CreatePerception = descGetKE.getFunction(index);
 			valueKE = f_CreatePerception.calculate(arguments);
-			knowledgeElement = objectRequester.requestKnowledgeElement(token, valueKE, this);	
+			knowledgeElement = getObjectRequester().requestKnowledgeElement(token, valueKE, this);	
 			
 			if (knowledgeElement != KnowledgeElement.getObjectNothing()) {
 				if (knowledgeElement.isValid())	{
@@ -228,8 +228,8 @@ public class KnowledgeCalculator extends SocialWorldThread {
 			
 			if (getFromVAL.isValid() && getFromVAL.getName().equals(Value.VALUE_NAME_KNOWLEDGE_SUBJECT)) {
 				
-				subject = getInstance().objectRequester.requestSimulationObject(token, knowledgeElementProperties.get(0), getInstance());
-				source = getInstance().objectRequester.requestKnowledgeSource(token, knowledgeElementProperties.get(1), getInstance());
+				subject = getInstance().getObjectRequester().requestSimulationObject(token, knowledgeElementProperties.get(0), getInstance());
+				source = getInstance().getObjectRequester().requestKnowledgeSource(token, knowledgeElementProperties.get(1), getInstance());
 				lexemSubject = subject.getLexem();
 				
 				KnowledgeElement knowledgeElement = new KnowledgeElement(source, lexemSubject);
@@ -237,7 +237,7 @@ public class KnowledgeCalculator extends SocialWorldThread {
 				
 				for (int index = 2; index < size; index++) {
 				
-					atom = getInstance().objectRequester.requestKnowledgeItem(token, knowledgeElementProperties.get(index), getInstance());
+					atom = getInstance().getObjectRequester().requestKnowledgeItem(token, knowledgeElementProperties.get(index), getInstance());
 					knowledgeElement.add(atom);
 					
 				}
@@ -281,7 +281,7 @@ public class KnowledgeCalculator extends SocialWorldThread {
 			
 			find = knowledgeSourceProperties.findValue(Value.VALUE_NAME_KNOWLEDGE_SOURCE);
 			if (find >= 0) {
-				origin = getInstance().objectRequester.requestSimulationObject(token, knowledgeSourceProperties.get(find), getInstance());
+				origin = getInstance().getObjectRequester().requestSimulationObject(token, knowledgeSourceProperties.get(find), getInstance());
 				result = new KnowledgeSource(type, origin);
 			}
 		}

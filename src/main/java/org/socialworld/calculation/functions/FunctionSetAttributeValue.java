@@ -36,7 +36,7 @@ public class FunctionSetAttributeValue extends FunctionBase {
 				(arguments.get(1).getType() == Type.integer) && 
 				(arguments.get(2).getType() == Type.nothing)) 
 			{	
-				AttributeArray attributes = new AttributeArray(objectRequester.requestAttributeArray(token, arguments.get(0), this));
+				AttributeArray attributes = new AttributeArray(getObjectRequester().requestAttributeArray(token, arguments.get(0), this));
 				
 				v = arguments.get(1);
 				o = v.getObject(Type.integer);
@@ -60,7 +60,7 @@ public class FunctionSetAttributeValue extends FunctionBase {
 			if ((arguments.get(0).getType() == Type.attributeArray) &&
 				(arguments.get(1).getType() == Type.integer)) 
 			{	
-				AttributeArray attributes = new AttributeArray(objectRequester.requestAttributeArray(token, arguments.get(0), this));
+				AttributeArray attributes = new AttributeArray(getObjectRequester().requestAttributeArray(token, arguments.get(0), this));
 				
 				v = arguments.get(1);
 				o = v.getObject(Type.integer);

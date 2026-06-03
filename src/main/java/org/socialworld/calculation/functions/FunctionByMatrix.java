@@ -103,7 +103,7 @@ public class FunctionByMatrix extends FunctionBase{
 				AttributeArray attributesOld = AttributeArray.getObjectNothing();
 				AttributeArray attributesNew = AttributeArray.getObjectNothing();
 				
-				attributesOld = objectRequester.requestAttributeArray(token, arguments.get(0), this);
+				attributesOld = getObjectRequester().requestAttributeArray(token, arguments.get(0), this);
 				if (attributesOld == AttributeArray.getObjectNothing()) return Value.getValueNothing();
 				
 				int calculationMode;

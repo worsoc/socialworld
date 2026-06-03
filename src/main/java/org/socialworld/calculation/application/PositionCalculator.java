@@ -165,14 +165,14 @@ public class PositionCalculator extends SocialWorldThread {
 				
 			
 			eventType = event.getEventType();
-			positionOriginal = objectRequester.requestPosition(token, state.getProperty(token, PropertyName.simobj_position), this);
+			positionOriginal = getObjectRequester().requestPosition(token, state.getProperty(token, PropertyName.simobj_position), this);
 			position = positionOriginal.getVector(token);
 			
-			directionMoveObject = objectRequester.requestDirection(token, state.getProperty(token, PropertyName.simobj_directionMove), this);
+			directionMoveObject = getObjectRequester().requestDirection(token, state.getProperty(token, PropertyName.simobj_directionMove), this);
 			workingVectorMove.set(directionMoveObject.getVector(token)); 
 			powerMoveObject = directionMoveObject.getPower();
 			
-			directionEvent = objectRequester.requestDirection(token, event.getDirection(), this);
+			directionEvent = getObjectRequester().requestDirection(token, event.getDirection(), this);
 			if (directionEvent != null) {
 				workingVectorEvent.set(directionEvent.getVector(token));
 			}

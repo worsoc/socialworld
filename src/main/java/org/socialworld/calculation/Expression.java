@@ -80,7 +80,7 @@ public class Expression implements IObjectReceiver{
 	protected static Calculation calculation = Calculation.getInstance();
 	protected static Functions functions = Functions.getInstance();;
 
-	protected ObjectRequester objectRequester = new ObjectRequester();
+	
 	private static AccessTokenExpression token = AccessTokenExpression.getValid();
 
 /*	
@@ -89,6 +89,7 @@ public class Expression implements IObjectReceiver{
 */
 	
 	protected Expression(Expression_Function nothing) {
+		
 		if (nothing.equals(Expression_Function.nothing)) {
 			setNothing();
 		}
@@ -98,6 +99,7 @@ public class Expression implements IObjectReceiver{
 	}
 	
 	public Expression() {
+		
 		
 		operation = Expression_Function.nothing;
 		
@@ -361,7 +363,7 @@ public class Expression implements IObjectReceiver{
 					tmp = arguments.getValue(name);
 					if (tmp != null && tmp.isValid()) {
 
-						valueList = objectRequester.requestValueArrayList(token, tmp, this);
+						valueList = getObjectRequester().requestValueArrayList(token, tmp, this);
 						if (valueList == null) return Calculation.getNothing();
 						
 						// get the value list element's name
@@ -503,7 +505,7 @@ public class Expression implements IObjectReceiver{
 					
 					if (checkSuccess) {
 						if (tmp.hasType(Type.valueList))  {
-							valueList = objectRequester.requestValueArrayList(token, tmp, this);
+							valueList = getObjectRequester().requestValueArrayList(token, tmp, this);
 						}
 						else {
 							// ALLOKATIONSFREI: ThreadLocal-Puffer recyclen statt 'new'
@@ -684,7 +686,7 @@ public class Expression implements IObjectReceiver{
 						if (name.length() > 0) {
 							if (argsSize > 0 && arguments.findValue(name) >= 0) {
 								// get the sub list from arguments
-								valueList = objectRequester.requestValueArrayList(token, arguments.getValue(name), this); 
+								valueList = getObjectRequester().requestValueArrayList(token, arguments.getValue(name), this); 
 							}
 							else {
 								// if the sub list doesn't exist, then create it and add it to arguments
@@ -707,7 +709,7 @@ public class Expression implements IObjectReceiver{
 							if ( tmp.getType() != Type.simulationObject)
 								System.out.println("Expression.evaluate: action target ist nicht vom Type.simulationObject "  );
 							else {
-								SimulationObject target = objectRequester.requestSimulationObject(token, tmp, this);
+								SimulationObject target = getObjectRequester().requestSimulationObject(token, tmp, this);
 								if (target == NoSimulationObject.getObjectNothing() )
 									System.out.println("Expression.evaluate: action target ist NoSimulationobject "  );
 								else 
@@ -795,7 +797,7 @@ public class Expression implements IObjectReceiver{
 		value = arguments.getValue(type, wantedOccurence);
 		
 		if (value.isValid()) {
-			return objectRequester.requestObject(token, value, type, this);
+			return getObjectRequester().requestObject(token, value, type, this);
 		}
 		else {
 			return NoObject.getNoObject(NoObjectReason.valueIsNotValid);
@@ -902,9 +904,13 @@ public class Expression implements IObjectReceiver{
 //////////////////////implementing IObjectReceiver ///////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
+	protected final ObjectRequester getObjectRequester() {
+	    return ObjectRequester.getInstance();
+	}
+
 	@Override
 	public int receiveObject(int requestID, Object object) {
-		objectRequester.receive(requestID, object);
+		getObjectRequester().receive(requestID, object);
 		return 0;
 	}
 

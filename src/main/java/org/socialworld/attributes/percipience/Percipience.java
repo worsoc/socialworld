@@ -54,10 +54,11 @@ public class Percipience implements IObjectReceiver{
 	private float maxSmell;
 	private float maxFeel;
 
-	protected ObjectRequester objectRequester = new ObjectRequester();
+	
 	private static AccessTokenPercipience token = AccessTokenPercipience.getValid();
 
 	public Percipience(PercipienceType type, float maxDistance, float maxSee, float maxHear, float maxSmell, float maxFeel) {
+		
 		this.type = type;
 		this.maxSee = maxSee;
 		this.maxHear = maxHear;
@@ -76,12 +77,14 @@ public class Percipience implements IObjectReceiver{
 	}
 	
 	public Percipience(PercipienceType type) {
+		
 		this.type = type;
 		this.cuboid = new Vector(0, 0, 0);
 		setDistancesOfNotice();
 	}
 
 	public Percipience(PercipienceType type, float cubeDiagonal) {
+		
 		double tmp;
 		float a;
 		tmp = cubeDiagonal * cubeDiagonal;
@@ -95,6 +98,7 @@ public class Percipience implements IObjectReceiver{
 	}
 	
 	public Percipience(PercipienceType type, Position position, Vector cuboid) {
+		
 		this.type = type;
 		setPos(position);
 		this.cuboid = cuboid;
@@ -103,6 +107,7 @@ public class Percipience implements IObjectReceiver{
 	}
 	
 	private Percipience(Percipience original) {
+		
 		// TODO copy percipience
 	}
 
@@ -110,6 +115,10 @@ public class Percipience implements IObjectReceiver{
 		return new Percipience(this);
 	}
 	
+	protected final ObjectRequester getObjectRequester() {
+	    return ObjectRequester.getInstance();
+	}
+
 	public boolean checkIsPossiblePercipient(Animal possiblePercipient) {
 		
 		if (checkChanceToBeSeen(possiblePercipient)) {
@@ -155,7 +164,7 @@ public class Percipience implements IObjectReceiver{
 	
 				ValueProperty vpDirectionView;
 				vpDirectionView = possibleSeer.getStateProperty(token, PropertyName.stateSeer, PropertyName.stateSeer_directionView, PropertyName.stateSeer_directionView.toString());
-				Vector directionView = objectRequester.requestDirection(token, vpDirectionView, this).getVector(token);
+				Vector directionView = getObjectRequester().requestDirection(token, vpDirectionView, this).getVector(token);
 	
 				ValueProperty vpPropsSeer;
 				ValueProperty vpAngleView;
@@ -223,7 +232,7 @@ public class Percipience implements IObjectReceiver{
 	
 				ValueProperty vpDirectionView;
 				vpDirectionView = possibleSeer.getStateProperty(token, PropertyName.stateSeer, PropertyName.stateSeer_directionView, PropertyName.stateSeer_directionView.toString());
-				Vector directionView = objectRequester.requestVector(token, vpDirectionView.getProperty(token, PropertyName.direction_vector, Value.NO_METHOD_NAME, PropertyName.direction_vector.toString()), this);
+				Vector directionView = getObjectRequester().requestVector(token, vpDirectionView.getProperty(token, PropertyName.direction_vector, Value.NO_METHOD_NAME, PropertyName.direction_vector.toString()), this);
 		//		Vector directionView = ((Direction)vpDirectionView.getValue()).getVector();
 	
 				ValueProperty vpPropsSeer;
@@ -383,7 +392,7 @@ public class Percipience implements IObjectReceiver{
 
 	@Override
 	public int receiveObject(int requestID, Object object) {
-		objectRequester.receive(requestID, object);
+		getObjectRequester().receive(requestID, object);
 		return 0;
 	}
 

@@ -111,21 +111,24 @@ public abstract class AbstractAction implements IObjectSender, IObjectReceiver {
 	static private String[] standardPropertyNames = ActionType.getStandardPropertyNames();
 	protected final String[] furtherPropertyNames;
 
-	protected ObjectRequester objectRequester = new ObjectRequester();
+	
 
 	protected AbstractAction() {
+		
 		this.type = ActionType.ignore;
 		this.furtherPropertyNames = this.type.getFurtherPropertyNames();
 	}
 	
 	
 	public AbstractAction(AbstractAction original) {
+		
 		setBaseProperties(original);
 		this.furtherPropertyNames = this.type.getFurtherPropertyNames();
 		setFurtherProperties(original);
 	}
 	
 	protected AbstractAction(ValueArrayList actionProperties) {
+		
 		setBaseProperties(actionProperties);
 		this.furtherPropertyNames = this.type.getFurtherPropertyNames();
 		setFurtherProperties(actionProperties);
@@ -528,9 +531,13 @@ public abstract class AbstractAction implements IObjectSender, IObjectReceiver {
 //////////////////////implementing IObjectReceiver ///////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
+	protected final ObjectRequester getObjectRequester() {
+	    return ObjectRequester.getInstance();
+	}
+
 	@Override
 	public int receiveObject(int requestID, Object object) {
-		objectRequester.receive(requestID, object);
+		getObjectRequester().receive(requestID, object);
 		return 0;
 	}
 

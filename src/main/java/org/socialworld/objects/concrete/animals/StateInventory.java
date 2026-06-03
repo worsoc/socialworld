@@ -167,7 +167,7 @@ public class StateInventory extends State {
 		
 		switch (propName) {
 		case stateInventory_inventory:
-			Inventory inventory = objectRequester.requestInventory(token, property, this);
+			Inventory inventory = getObjectRequester().requestInventory(token, property, this);
 			this.inventory = inventory;
 			break;
 		case inventory_shirt:
@@ -177,7 +177,7 @@ public class StateInventory extends State {
 		case inventory_leftSock:
 		case inventory_rightSock:
 		case inventory_cap:
-			SimulationObject object = objectRequester.requestSimulationObject(token, property, this);
+			SimulationObject object = getObjectRequester().requestSimulationObject(token, property, this);
 			switch (propName) {
 			case inventory_shirt:
 				if (object instanceof Shirt) {

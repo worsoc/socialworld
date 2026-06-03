@@ -102,13 +102,13 @@ public class ActionHandle extends AbstractAction {
 
 		value =  actionProperties.getValue(furtherPropertyNames[0]);
 		if (value.isValid()) {
-			target = objectRequester.requestSimulationObject(token, value, this);
+			target = getObjectRequester().requestSimulationObject(token, value, this);
 			this.setTarget(target);
 		}
 
 		value =  actionProperties.getValue(furtherPropertyNames[1]);
 		if (value.isValid()) {
-			direction = objectRequester.requestVector(token, value, this);
+			direction = getObjectRequester().requestVector(token, value, this);
 			this.setDirection(direction);
 		}
 
@@ -134,39 +134,39 @@ public class ActionHandle extends AbstractAction {
    		switch (mode) {
 		case useItemLeftHand:
 			vp =  ((Human) actor).getStateProperty(token, PropertyName.stateInventory, PropertyName.inventory_leftHand, PropertyName.inventory_leftHand.toString());
-			this.item1 = objectRequester.requestSimulationObject(token, vp, this);
+			this.item1 = getObjectRequester().requestSimulationObject(token, vp, this);
 // vormals:			item1 = ((Human) actor).getLeftHandItem();
 			if (!this.item1.isSimulationObject()) return;
 			break;
 		case useItemRightHand:
 			vp =  ((Human) actor).getStateProperty(token, PropertyName.stateInventory, PropertyName.inventory_rightHand, PropertyName.inventory_rightHand.toString());
-			this.item1 = objectRequester.requestSimulationObject(token, vp, this);
+			this.item1 = getObjectRequester().requestSimulationObject(token, vp, this);
 //vormals:			item1 = ((Human) actor).getRightHandItem();
 			if (!this.item1.isSimulationObject()) return;
 			break;
 		case useTwoItems:
 			vp =  ((Human) actor).getStateProperty(token, PropertyName.stateInventory, PropertyName.inventory_rightHand, PropertyName.inventory_rightHand.toString());
-			this.item1 = objectRequester.requestSimulationObject(token, vp, this);
+			this.item1 = getObjectRequester().requestSimulationObject(token, vp, this);
 			vp =  ((Human) actor).getStateProperty(token, PropertyName.stateInventory, PropertyName.inventory_leftHand, PropertyName.inventory_leftHand.toString());
-			this.item2 = objectRequester.requestSimulationObject(token, vp, this);
+			this.item2 = getObjectRequester().requestSimulationObject(token, vp, this);
 //	vormals:		item1 = ((Human) actor).getRightHandItem();
 //	vormals:		item2 = ((Human) actor).getLeftHandItem();
 			if (!this.item1.isSimulationObject() | !this.item2.isSimulationObject()) return;
 			break;
 		case combineItems_AddLeftToRight:
 			vp =  ((Human) actor).getStateProperty(token, PropertyName.stateInventory, PropertyName.inventory_rightHand, PropertyName.inventory_rightHand.toString());
-			this.item1 = objectRequester.requestSimulationObject(token, vp, this);
+			this.item1 = getObjectRequester().requestSimulationObject(token, vp, this);
 			vp =  ((Human) actor).getStateProperty(token, PropertyName.stateInventory, PropertyName.inventory_leftHand, PropertyName.inventory_leftHand.toString());
-			this.item2 = objectRequester.requestSimulationObject(token, vp, this);
+			this.item2 = getObjectRequester().requestSimulationObject(token, vp, this);
 //			item1 = ((Human) actor).getRightHandItem();
 //			item2 = ((Human) actor).getLeftHandItem();
 			if (!this.item1.isSimulationObject() | !this.item2.isSimulationObject()) return;
 			break;
 		case combineItems_AddRightToLeft:
 			vp =  ((Human) actor).getStateProperty(token, PropertyName.stateInventory, PropertyName.inventory_leftHand, PropertyName.inventory_leftHand.toString());
-			this.item2 = objectRequester.requestSimulationObject(token, vp, this);
+			this.item2 = getObjectRequester().requestSimulationObject(token, vp, this);
 			vp =  ((Human) actor).getStateProperty(token, PropertyName.stateInventory, PropertyName.inventory_rightHand, PropertyName.inventory_rightHand.toString());
-			this.item2 = objectRequester.requestSimulationObject(token, vp, this);
+			this.item2 = getObjectRequester().requestSimulationObject(token, vp, this);
 //	vormals:		item1 = ((Human) actor).getLeftHandItem();
 //	vormals:		item2 = ((Human) actor).getRightHandItem();
 			if (!this.item1.isSimulationObject() | !this.item2.isSimulationObject()) return;

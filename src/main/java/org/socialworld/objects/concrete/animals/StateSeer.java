@@ -168,9 +168,9 @@ public class StateSeer extends State {
 	
 		switch (propName) {
 		case stateSeer_directionView:
-			Vector vector = objectRequester.requestVector(token, property, this);
+			Vector vector = getObjectRequester().requestVector(token, property, this);
 			if (vector.checkIsObjectNothing()) {
-				Direction direction = objectRequester.requestDirection(token, property, this);
+				Direction direction = getObjectRequester().requestDirection(token, property, this);
 				this.directionView = direction;
 			}
 			else {

@@ -62,7 +62,7 @@ public class ActionEquip extends AbstractAction {
 
 		value =  actionProperties.getValue(furtherPropertyNames[0]);
 		if (value.isValid()) {
-			item = objectRequester.requestSimulationObject(token, value, this);
+			item = getObjectRequester().requestSimulationObject(token, value, this);
 			this.setItem(item);
 		}
 

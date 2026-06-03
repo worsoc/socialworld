@@ -95,7 +95,7 @@ public class ActionHear extends AbstractAction {
 
 		value =  actionProperties.getValue(furtherPropertyNames[0]);
 		if (value.isValid()) {
-			target = objectRequester.requestSimulationObject(token, value, this);
+			target = getObjectRequester().requestSimulationObject(token, value, this);
 			this.setTarget(target);
 		}
 

@@ -109,13 +109,13 @@ public class ActionSay extends AbstractAction {
 
 		value =  actionProperties.getValue(furtherPropertyNames[0]);
 		if (value.isValid()) {
-			target = objectRequester.requestSimulationObject(token, value, this);
+			target = getObjectRequester().requestSimulationObject(token, value, this);
 			this.setTarget(target);
 		}
 
 		value =  actionProperties.getValue(furtherPropertyNames[1]);
 		if (value.isValid()) {
-			direction = objectRequester.requestVector(token, value, this);
+			direction = getObjectRequester().requestVector(token, value, this);
 			this.setDirection(direction);
 		}
 

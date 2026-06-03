@@ -109,7 +109,7 @@ public class ActionBodilyFunction extends AbstractAction {
 			break;
 		case drink:
 			vp =  ((Animal) actor).getStateProperty(token, PropertyName.stateInventory, PropertyName.inventory_mouth, PropertyName.inventory_mouth.toString());
-			this.item = objectRequester.requestSimulationObject(token, vp, this);
+			this.item = getObjectRequester().requestSimulationObject(token, vp, this);
 //			this.item = ((Animal) actor).getMouthItem();
 			if 	(!(this.item instanceof IDrinkable)) {
 				return;
@@ -118,7 +118,7 @@ public class ActionBodilyFunction extends AbstractAction {
 			break;
 		case eat:
 			vp =  ((Animal) actor).getStateProperty(token, PropertyName.stateInventory, PropertyName.inventory_mouth, PropertyName.inventory_mouth.toString());
-			this.item = objectRequester.requestSimulationObject(token, vp, this);
+			this.item = getObjectRequester().requestSimulationObject(token, vp, this);
 //			this.item = ((Animal) actor).getMouthItem();
 			if 	(!(this.item instanceof IEatable)) {
 				return;

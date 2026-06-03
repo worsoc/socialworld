@@ -72,7 +72,7 @@ public abstract class StateSimulationObject extends ListenedBase implements IObj
 	private GrantedAccessToProperty grantAccessToPropertyAction[];
 	
 	
-	protected ObjectRequester objectRequester = new ObjectRequester();
+	
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////meta information    ////////////////////////////////////
@@ -104,6 +104,8 @@ public abstract class StateSimulationObject extends ListenedBase implements IObj
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
 	public StateSimulationObject() {
+		
+		
 		
 		grantAccessToPropertyPosition = new GrantedAccessToProperty[1];
 		grantAccessToPropertyPosition[0] = GrantedAccessToProperty.position;
@@ -514,9 +516,13 @@ public abstract class StateSimulationObject extends ListenedBase implements IObj
 //////////////////////implementing IObjectReceiver ///////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
+	protected final ObjectRequester getObjectRequester() {
+	    return ObjectRequester.getInstance();
+	}
+
 	@Override
 	public int receiveObject(int requestID, Object object) {
-		objectRequester.receive(requestID, object);
+		getObjectRequester().receive(requestID, object);
 		return 0;
 	}
 	

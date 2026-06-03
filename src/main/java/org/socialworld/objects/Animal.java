@@ -212,7 +212,7 @@ public abstract class Animal extends SimulationObject implements ISeer, IRunning
 		// make a copy as ValueProperty
 		ValueProperty vp = this.stateSeer.getAsValue(token);
 		// the copy is permitted for cluster only
-		return objectRequester.requestStateSeer(token, vp, this);
+		return getObjectRequester().requestStateSeer(token, vp, this);
 	}
 	
 	public ValueProperty getStateSeerAsProperty(IAccessToken token, String name) {

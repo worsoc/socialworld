@@ -97,7 +97,7 @@ public class ActionAttack extends AbstractAction {
 		value =  actionProperties.getValue(furtherPropertyNames[0]);
 		// TODO there is no target, why?
 		if (value.isValid()) {
-			target = objectRequester.requestSimulationObject(token, value, this);
+			target = getObjectRequester().requestSimulationObject(token, value, this);
 			this.setTarget(target);
 		}
 
@@ -127,7 +127,7 @@ public class ActionAttack extends AbstractAction {
 			case weaponLeftStroke:
 			case weaponLeftBackhand:
 				vp = ((Animal) actor).getStateProperty(token, PropertyName.stateInventory, PropertyName.inventory_leftHand, PropertyName.inventory_leftHand.toString());
-				itemLeft = objectRequester.requestSimulationObject(token, vp, this);
+				itemLeft = getObjectRequester().requestSimulationObject(token, vp, this);
 				if (itemLeft instanceof IWeapon) {
 					weapon = (IWeapon) itemLeft;
 				}
@@ -139,7 +139,7 @@ public class ActionAttack extends AbstractAction {
 			case weaponRightStroke:
 			case weaponRightBackhand:
 				vp = ((Animal) actor).getStateProperty(token, PropertyName.stateInventory, PropertyName.inventory_rightHand, PropertyName.inventory_rightHand.toString());
-				itemRight = objectRequester.requestSimulationObject(token, vp, this);
+				itemRight = getObjectRequester().requestSimulationObject(token, vp, this);
 				if (itemRight instanceof IWeapon) {
 					weapon = (IWeapon) itemRight;
 				}
@@ -149,9 +149,9 @@ public class ActionAttack extends AbstractAction {
 				break;
 			case weaponClub:
 				vp = ((Animal) actor).getStateProperty(token, PropertyName.stateInventory, PropertyName.inventory_leftHand, PropertyName.inventory_leftHand.toString());
-				itemLeft = objectRequester.requestSimulationObject(token, vp, this);
+				itemLeft = getObjectRequester().requestSimulationObject(token, vp, this);
 				vp = ((Animal) actor).getStateProperty(token, PropertyName.stateInventory, PropertyName.inventory_rightHand, PropertyName.inventory_rightHand.toString());
-				itemRight = objectRequester.requestSimulationObject(token, vp, this);
+				itemRight = getObjectRequester().requestSimulationObject(token, vp, this);
 				if (itemLeft != null && itemRight != null && !itemLeft.equals(itemRight)) {
 					weapon = IWeapon.getObjectNothing();
 				}
@@ -172,7 +172,7 @@ public class ActionAttack extends AbstractAction {
 			case punchLeftFistSideways:
 			case punchLeftFistUpward:
 				vp = ((Animal) actor).getStateProperty(token, PropertyName.stateInventory, PropertyName.inventory_leftHand, PropertyName.inventory_leftHand.toString());
-				itemLeft = objectRequester.requestSimulationObject(token, vp, this);
+				itemLeft = getObjectRequester().requestSimulationObject(token, vp, this);
 				if (itemLeft instanceof IWeapon) {
 					weapon = (IWeapon) itemLeft;
 				}
@@ -185,7 +185,7 @@ public class ActionAttack extends AbstractAction {
 			case punchRightFistUpward:
 				// TODO there must not be a weapon in the fist
 				vp = ((Animal) actor).getStateProperty(token, PropertyName.stateInventory, PropertyName.inventory_rightHand, PropertyName.inventory_rightHand.toString());
-				itemRight = objectRequester.requestSimulationObject(token, vp, this);
+				itemRight = getObjectRequester().requestSimulationObject(token, vp, this);
 				if (itemRight instanceof IWeapon) {
 					weapon = (IWeapon) itemRight;
 				}

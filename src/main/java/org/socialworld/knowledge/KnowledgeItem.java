@@ -29,7 +29,7 @@ import org.socialworld.core.IAccessToken;
 
 public abstract class KnowledgeItem implements IObjectSender, IObjectReceiver{
 
-	protected ObjectRequester objectRequester = new ObjectRequester();
+	
 
 	abstract KnowledgeItem getCopy();
 	abstract KnowledgeItemNotes removeNotes();
@@ -69,9 +69,13 @@ public abstract class KnowledgeItem implements IObjectSender, IObjectReceiver{
 //////////////////////implementing IObjectReceiver ///////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
+	protected final ObjectRequester getObjectRequester() {
+	    return ObjectRequester.getInstance();
+	}
+
 	@Override
 	public int receiveObject(int requestID, Object object) {
-		objectRequester.receive(requestID, object);
+		getObjectRequester().receive(requestID, object);
 		return 0;
 	}
 	

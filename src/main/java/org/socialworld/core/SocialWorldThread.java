@@ -38,7 +38,7 @@ public class SocialWorldThread extends Thread implements IObjectReceiver{
 	private boolean isRunning;
 	private int sleepTime;
 	
-	protected ObjectRequester objectRequester = new ObjectRequester();
+	
 
 	protected boolean isRunning() {return this.isRunning;}
 	
@@ -63,9 +63,13 @@ public class SocialWorldThread extends Thread implements IObjectReceiver{
 //////////////////////implementing IObjectReceiver ///////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
+	protected final ObjectRequester getObjectRequester() {
+	    return ObjectRequester.getInstance();
+	}
+
 	@Override
 	public int receiveObject(int requestID, Object object) {
-		objectRequester.receive(requestID, object);
+		getObjectRequester().receive(requestID, object);
 		return 0;
 	}
 

@@ -151,7 +151,7 @@ public class Answer extends ActionPerformer {
 					if (tmp.isValid()) {
 						// TODO partner is not used until now
 						//SimulationObject simObject;
-						//simObject = objectRequester.requestSimulationObject(token, tmp, this, requestValueID);
+						//simObject = getObjectRequester().requestSimulationObject(token, tmp, this, requestValueID);
 						//if (simObject instanceof Human) partner = (Human) simObject;
 					}
 					else {

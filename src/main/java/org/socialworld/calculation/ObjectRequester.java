@@ -1,8 +1,26 @@
+/*
+ * Social World
+ * Copyright (C) 2020  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
+
 package org.socialworld.calculation;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
+import java.util.ArrayDeque;
+import java.util.HashMap;
+import java.util.Queue;
 
 import org.socialworld.core.IAccessToken;
 import org.socialworld.actions.AbstractAction;
@@ -33,12 +51,39 @@ import org.socialworld.objects.concrete.animals.StateSeer;
 
 public class ObjectRequester {
 
-	private Hashtable<Integer, Object> receivedObjects = new Hashtable<Integer, Object>();
-	private List<Integer> reservedRequestIDs = new ArrayList<Integer>();
+	
+	private static ObjectRequester instance;
+
+	public static synchronized ObjectRequester getInstance() {
+	    if (instance == null) {
+	        instance = new ObjectRequester();
+	    }
+	    return instance;
+	}
+
+	// 2. INTERNE KAPSELUNG: Jeder Thread bekommt seinen eigenen Daten-Container
+	private static class ThreadData {
+		final HashMap<Integer, Object> receivedObjects = new HashMap<>();
+		final Queue<Integer> freeRequestIDs = new ArrayDeque<>();
+		int maxIDCount = 0;
+	}
+	
+	// Das ThreadLocal verwaltet die Container vollautomatisch pro Thread
+	private final ThreadLocal<ThreadData> threadContainer = ThreadLocal.withInitial(ThreadData::new);
+
+	// Privater Konstruktor verhindert unkontrolliertes "ObjectRequester.getInstance()" im System
+	private ObjectRequester() {}
+
+//	private Hashtable<Integer, Object> receivedObjects = new Hashtable<Integer, Object>();
+//	private List<Integer> reservedRequestIDs = new ArrayList<Integer>();
 	
 	public void receive(int requestID, Object object) {
-		if (!receivedObjects.contains(requestID)) {
-			receivedObjects.put(requestID, object);
+		
+		// Holt automatisch den Container des aktuell aufrufenden Threads
+		ThreadData data = threadContainer.get();
+
+		if (!data.receivedObjects.containsKey(requestID)) {
+			data.receivedObjects.put(requestID, object);
 		}
 	}
 	
@@ -267,52 +312,53 @@ public class ObjectRequester {
 	
 	private Object requestObject(Value value, Type type, EnumSimProperty simProperty, IAccessToken token, IObjectReceiver receiver) {
 		
+		// Holt automatisch den Container des aktuell aufrufenden Threads
+		ThreadData data = threadContainer.get();
+
 		Object result;
 		int requestResult;
-		
-		boolean replaceInReservedList = false;
 		int requestID = 0;
-		for (requestID = 0; requestID < reservedRequestIDs.size(); requestID++) {
-			if (reservedRequestIDs.get(requestID) == -1) {
-				replaceInReservedList = true;
-				break;
-			}
-		}
-		// reserve key in hash table
-		if (replaceInReservedList) {
-			reservedRequestIDs.set(requestID, requestID);
-		}
-		else {
-			reservedRequestIDs.add(requestID);
+		
+		// O(1) RECYCLING: Nutzt die Queue des aktuellen Threads
+		if (!data.freeRequestIDs.isEmpty()) {
+			requestID = data.freeRequestIDs.poll();
+		} else {
+			requestID = data.maxIDCount++;
 		}
 		
 		if (value instanceof ValueProperty) {
 			requestResult = ((ValueProperty) value).requestObject(token, receiver, requestID, type);
-			if (requestResult == IObjectSender.OBJECT_SENDED) {
-				result =  remove(requestID);
-				if (result == null) result = getObjectNothing(type, simProperty);
-			}
-			else {
-				result = getObjectNothing(type, simProperty);
-			}
-		}
-		else {
+		} else {
 			requestResult = value.requestObject(receiver, requestID, type);
-			if (requestResult == IObjectSender.OBJECT_SENDED) {
-				result = remove(requestID);
-				if (result == null) result = getObjectNothing(type, simProperty);
-			}
-			else {
+		}
+
+		if (requestResult == IObjectSender.OBJECT_SENDED) {
+			result = remove(requestID);
+			if (result == null) {  
+				// TEST-LOG: Kam das Objekt vielleicht gar nicht synchron an?
+		        System.out.println("WARNUNG: Objekt sended, aber remove() lieferte null für ID " + requestID);
+
 				result = getObjectNothing(type, simProperty);
 			}
+		} else {
+			result = getObjectNothing(type, simProperty);
+			// ID sofort wieder in die Thread-eigene Queue freigeben
+			data.freeRequestIDs.offer(requestID);
 		}
 
 		return result;
 	}
 	
 	private Object remove(int requestID) {
-		Object requestedObject = receivedObjects.remove(requestID);
-		reservedRequestIDs.set(requestID, -1);
+		
+		// Holt automatisch den Container des aktuell aufrufenden Threads
+		ThreadData data = threadContainer.get();
+		
+		Object requestedObject = data.receivedObjects.remove(requestID);
+		
+		// ID zurück in die Thread-eigene Queue
+		data.freeRequestIDs.offer(requestID); 
+		
 		return requestedObject;
 	}
 

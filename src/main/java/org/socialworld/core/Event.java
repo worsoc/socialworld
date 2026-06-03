@@ -72,7 +72,7 @@ public abstract class Event implements Comparable<Event>, IObjectReceiver {
 
 	private static Value noDirection = new Value(Type.eventProp, new Direction(PropertyName.event_direction, new Vector(0,0,0)));
 
-	private ObjectRequester objectRequester = new ObjectRequester();
+	
 
 	private static AccessTokenCore tokenCore = AccessTokenCore.getValid();
 
@@ -80,6 +80,8 @@ public abstract class Event implements Comparable<Event>, IObjectReceiver {
 	 * Constructor
 	 */
 	public Event(int eventType,  SimulationObject causer, Time time, Position position,	 IEventParam param) {
+		
+		
 		
 		this.eventType = EventType.getEventType(eventType);
 		this.eventTypeAsInt = eventType;		
@@ -98,6 +100,8 @@ public abstract class Event implements Comparable<Event>, IObjectReceiver {
 	 * Constructor
 	 */
 	public Event(int eventType, int priority, SimulationObject causer, Time time, Position position,	 IEventParam param) {
+		
+		
 		
 		this.eventType = EventType.getEventType(eventType);
 		this.eventTypeAsInt = eventType;		
@@ -118,6 +122,8 @@ public abstract class Event implements Comparable<Event>, IObjectReceiver {
 	 */
 	public Event(int eventType,  SimulationObject causer, Time time, Position position) {
 		
+		
+
 		this.eventType = EventType.getEventType(eventType);
 		this.eventTypeAsInt = eventType;		
 		
@@ -132,6 +138,8 @@ public abstract class Event implements Comparable<Event>, IObjectReceiver {
 	 */
 	public Event(EventType eventType,  SimulationObject causer, int priority, Position position) {
 		
+		
+
 		this.eventType = eventType;
 		this.eventTypeAsInt = eventType.getIndex();		
 		
@@ -146,6 +154,8 @@ public abstract class Event implements Comparable<Event>, IObjectReceiver {
 	 */
 	public Event(int eventType, int priority) {
 		
+		
+
 		this.eventType = EventType.getEventType(eventType);
 		this.eventTypeAsInt = eventType;		
 		
@@ -282,7 +292,7 @@ public abstract class Event implements Comparable<Event>, IObjectReceiver {
 				direction = new Value(Type.eventProp, new Direction(PropertyName.event_direction, new Vector(0,0,0)));
 			}
 			if (direction.getType().equals(Type.vector)) {
-				Vector vectorDirection = objectRequester.requestVector(tokenCore, direction, this);
+				Vector vectorDirection = getObjectRequester().requestVector(tokenCore, direction, this);
 				if (vectorDirection == Vector.getObjectNothing()) {
 					vectorDirection = new Vector(0,0,0);
 				}
@@ -371,9 +381,13 @@ public abstract class Event implements Comparable<Event>, IObjectReceiver {
 //////////////////////implementing IObjectReceiver ///////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
+	protected final ObjectRequester getObjectRequester() {
+	    return ObjectRequester.getInstance();
+	}
+
 	@Override
 	public int receiveObject(int requestID, Object object) {
-		objectRequester.receive(requestID, object);
+		getObjectRequester().receive(requestID, object);
 		return 0;
 	}
 

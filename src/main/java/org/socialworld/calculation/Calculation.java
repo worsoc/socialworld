@@ -44,7 +44,7 @@ public class Calculation implements IObjectReceiver{
 	private final ThreadLocal<ValueArrayList> sharedValueListBuffer = 
 	    ThreadLocal.withInitial(() -> new ValueArrayList(4));
 
-	protected ObjectRequester objectRequester = new ObjectRequester();
+	
 
 	private static AccessTokenExpression token = AccessTokenExpression.getValid();
 	
@@ -57,6 +57,7 @@ public class Calculation implements IObjectReceiver{
 	}
 	
 	private Calculation() {
+		
 		nothing = Value.getValueNothing();
 		
 		// TODO implement methods for further types
@@ -252,7 +253,7 @@ public class Calculation implements IObjectReceiver{
 			return ( (float) op1.getObject(Type.floatingpoint) == 0F /*(float) getZero(Type.floatingpoint).getObject(Type.floatingpoint) */ );
 		case vector:
 			Vector tmp;
-			tmp = objectRequester.requestVector(token, op1, this);
+			tmp = getObjectRequester().requestVector(token, op1, this);
 			return (tmp.getX() == 0F & tmp.getY() == 0F & tmp.getZ() == 0F);
 		default:
 			return false;
@@ -273,7 +274,7 @@ public class Calculation implements IObjectReceiver{
 			return ( (float) op1.getObject(Type.floatingpoint) > 0F/* (float) getZero(Type.floatingpoint).getObject(Type.floatingpoint) */ );
 		case vector:
 			Vector tmp;
-			tmp = objectRequester.requestVector(token, op1, this);
+			tmp = getObjectRequester().requestVector(token, op1, this);
 			return tmp.length() > 0F /* ((Vector) getZero(Type.vector).getObject()).length() */;
 		default:
 			return false;
@@ -452,9 +453,13 @@ public class Calculation implements IObjectReceiver{
 //////////////////////implementing IObjectReceiver ///////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
+	protected final ObjectRequester getObjectRequester() {
+	    return ObjectRequester.getInstance();
+	}
+
 	@Override
 	public int receiveObject(int requestID, Object object) {
-		objectRequester.receive(requestID, object);
+		getObjectRequester().receive(requestID, object);
 		return 0;
 	}
 	

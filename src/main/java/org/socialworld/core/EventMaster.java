@@ -335,7 +335,7 @@ public class EventMaster extends SocialWorldThread {
 				Vector vectorDirectionEvent;
 				Direction directionEvent;
 				if (this.eventDirection != null) {
-					directionEvent = objectRequester.requestDirection(tokenCore, this.eventDirection, this);
+					directionEvent = getObjectRequester().requestDirection(tokenCore, this.eventDirection, this);
 					if (directionEvent.isObjectNothing()) {
 						// TODO directionEvent is not object: that shouldn't be possible
 						System.out.println("EventMaster.checkIgnoreCandidate(): this.eventDirection.getValue() is no direction object ");

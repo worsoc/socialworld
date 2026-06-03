@@ -112,14 +112,14 @@ public class ActionMove extends AbstractAction {
 
 		value =  actionProperties.getValue(furtherPropertyNames[0]);
 		if (value.isValid()) {
-			Vector vectorEndposition = 	objectRequester.requestVector(token, value, this);
+			Vector vectorEndposition = 	getObjectRequester().requestVector(token, value, this);
 			endPosition = new Position(PropertyName.action_position, vectorEndposition);
 			this.setEnd(endPosition);
 		}
 
 		value =  actionProperties.getValue(furtherPropertyNames[1]);
 		if (value.isValid()) {
-			direction = objectRequester.requestVector(token, value, this);
+			direction = getObjectRequester().requestVector(token, value, this);
 			this.setDirection(direction);
 		}
 		

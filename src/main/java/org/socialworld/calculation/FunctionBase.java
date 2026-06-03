@@ -39,7 +39,7 @@ public abstract class FunctionBase  implements IObjectReceiver {
 	
 	protected Calculation calculation = Calculation.getInstance();
 
-	protected ObjectRequester objectRequester = new ObjectRequester();
+	
 
 	protected boolean returnInvalidNothingvalue;
 	
@@ -92,9 +92,13 @@ public abstract class FunctionBase  implements IObjectReceiver {
 //////////////////////implementing IObjectReceiver ///////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
+	protected final ObjectRequester getObjectRequester() {
+	    return ObjectRequester.getInstance();
+	}
+
 	@Override
 	public int receiveObject(int requestID, Object object) {
-		objectRequester.receive(requestID, object);
+		getObjectRequester().receive(requestID, object);
 		return 0;
 	}
 

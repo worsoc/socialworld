@@ -57,9 +57,10 @@ public abstract class State implements ISimProperty, ISavedValue, IObjectSender,
 	private PropertyProtection protection;
 	private SimulationObject object;
 		
-	protected ObjectRequester objectRequester = new ObjectRequester();
+	
 	
 	protected State(SimulationObject object) {
+		 // Zuerst füllen!
 		this.object = object;
 		initPropertyName();
 		this.protection =  PropertyProtection.getProtection(this);
@@ -67,11 +68,13 @@ public abstract class State implements ISimProperty, ISavedValue, IObjectSender,
 	}
 
 	protected State(PropertyProtection protectionOriginal, IAccessToken tokenNew) {
+		 // Zuerst füllen!
 		initPropertyName();
 		this.protection = PropertyProtection.getProtection(protectionOriginal, tokenNew, this);
 	}
 
 	protected State() {
+		    // Zuerst füllen!
 		// object nothing
 	}
 
@@ -457,9 +460,13 @@ public abstract class State implements ISimProperty, ISavedValue, IObjectSender,
 //////////////////////implementing IObjectReceiver ///////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
+	protected final ObjectRequester getObjectRequester() {
+	    return ObjectRequester.getInstance();
+	}
+
 	@Override
 	public int receiveObject(int requestID, Object object) {
-		objectRequester.receive(requestID, object);
+		getObjectRequester().receive(requestID, object);
 		return 0;
 	}
 	

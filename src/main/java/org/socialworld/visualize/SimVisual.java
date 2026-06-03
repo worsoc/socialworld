@@ -72,6 +72,8 @@ public class SimVisual extends SocialWorldThread {
 	private static AccessTokenVisualize token = AccessTokenVisualize.getValid();
 
 	public SimVisual() {
+		
+		
 		state = 0;
 		init();
 
@@ -190,10 +192,11 @@ public class SimVisual extends SocialWorldThread {
 		
 		static final long serialVersionUID = 1;
 		
-		private ObjectRequester objectRequester = new ObjectRequester();
+		
 		
 		private RasterField(int index) {
 			super();
+			
 			//this.setFont(new Font("Arial", Font.PLAIN, 15));
 			setIndex(index);
 			
@@ -479,12 +482,12 @@ public class SimVisual extends SocialWorldThread {
 			
 			human = Simulation.getInstance().getObjectMaster().getHumans().get(index);
 			prop = human.getProperty(token, PropertyName.stateSeer);
-			state = objectRequester.requestStateSeer(token, prop, this);
+			state = getObjectRequester().requestStateSeer(token, prop, this);
 			if (state != null) {
 				propSub = state.getProperty(token, PropertyName.stateSeer_propsSeer, PropertyName.stateSeer_propsSeer.toString());
-				PropsSeer propsSeer = objectRequester.requestPropsSeer(token, propSub, this);
+				PropsSeer propsSeer = getObjectRequester().requestPropsSeer(token, propSub, this);
 				propSub = propsSeer.getProperty(token, PropertyName.propsSeer_angleViewPerceivingEvents, PropertyName.propsSeer_angleViewPerceivingEvents.toString());
-				myPrint("Button " + index + " clicked: " + objectRequester.requestPropsSeer(token, propSub, this).toString() );
+				myPrint("Button " + index + " clicked: " + getObjectRequester().requestPropsSeer(token, propSub, this).toString() );
 			}
 			else {
 				myPrint("Button " + index + " clicked "  );
@@ -498,7 +501,7 @@ public class SimVisual extends SocialWorldThread {
 
 		@Override
 		public int receiveObject(int requestID, Object object) {
-			objectRequester.receive(requestID, object);
+			getObjectRequester().receive(requestID, object);
 			return 0;
 		}
 

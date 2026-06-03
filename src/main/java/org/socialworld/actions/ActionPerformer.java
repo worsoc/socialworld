@@ -90,11 +90,12 @@ public abstract class ActionPerformer implements IEventParam , IObjectReceiver{
     private AbstractAction action;
     
 	protected int requestValueID = 0;
-	protected ObjectRequester objectRequester = new ObjectRequester();
+	
 	
 	private static AccessTokenAction token = AccessTokenAction.getValid();
 
     public ActionPerformer (AbstractAction action) {
+    	
     	this.action = action;
     	this.actionAndActorProperties = new ValueArrayList();
     	this.eventParams = new ValueArrayList();
@@ -216,9 +217,13 @@ public abstract class ActionPerformer implements IEventParam , IObjectReceiver{
 	
     public abstract List<SimulationObject> getTargets();
 
+	protected final ObjectRequester getObjectRequester() {
+	    return ObjectRequester.getInstance();
+	}
+
 	@Override
 	public int receiveObject(int requestID, Object object) {
-		objectRequester.receive(requestID, object);
+		getObjectRequester().receive(requestID, object);
 		return 0;
 	}
 

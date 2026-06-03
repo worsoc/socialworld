@@ -176,7 +176,7 @@ public class StateAnimal extends StateSimulationObject {
 		if (checkGuard(guard)) {
 
 			AttributeArray attributeArray;
-			attributeArray = objectRequester.requestAttributeArray(token, attributes, this);
+			attributeArray = getObjectRequester().requestAttributeArray(token, attributes, this);
 
 			if (checkChangeRelevance_AttributeArray(attributeArray)) {
 				this.attributes.set(attributes);

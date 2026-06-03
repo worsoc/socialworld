@@ -153,11 +153,11 @@ public class StatePerceptible extends State {
 		
 		switch (propName) {
 		case statePerceptible_position:
-			Position position = objectRequester.requestPosition(token, property, this);
+			Position position = getObjectRequester().requestPosition(token, property, this);
 			this.percipience.setPosition(position);
 			break;
 		case statePerceptible_cuboid:
-			Vector vector = objectRequester.requestVector(token, property, this);
+			Vector vector = getObjectRequester().requestVector(token, property, this);
 			this.percipience.setCuboid(vector);
 			break;
 		default:

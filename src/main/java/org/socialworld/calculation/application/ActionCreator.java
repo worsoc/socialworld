@@ -360,7 +360,7 @@ public class ActionCreator extends SocialWorldThread {
 		localArgs.clear();
 
 		
-		return objectRequester.requestAction(token, result, this);
+		return getObjectRequester().requestAction(token, result, this);
 
 	}
 
@@ -410,7 +410,7 @@ public class ActionCreator extends SocialWorldThread {
 		// Speicherhygiene gegen Memory Loitering: Kappt alle Objekt-Referenzen im Puffer
 		localArgs.clear();
 
-		return objectRequester.requestAction(token, result, this);
+		return getObjectRequester().requestAction(token, result, this);
 		
 
 	}

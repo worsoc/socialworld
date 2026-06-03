@@ -190,7 +190,7 @@ public class TalkCalculator  extends SocialWorldThread {
 			value = params.getParam("partner");
 			if (value.isValid()) {
 				SimulationObject simObject;
-				simObject = getInstance().objectRequester.requestSimulationObject(token, value, getInstance());
+				simObject = getInstance().getObjectRequester().requestSimulationObject(token, value, getInstance());
 				if (simObject instanceof Human) partner = (Human) simObject;
 				else return;
 			}
@@ -248,7 +248,7 @@ public class TalkCalculator  extends SocialWorldThread {
 			value = params.getParam("partner");
 			if (value.isValid()) {
 				SimulationObject simObject;
-				simObject = getInstance().objectRequester.requestSimulationObject(token, value, getInstance());
+				simObject = getInstance().getObjectRequester().requestSimulationObject(token, value, getInstance());
 				if (simObject instanceof Human) partner = (Human) simObject;
 				else return;
 			}
@@ -295,7 +295,7 @@ public class TalkCalculator  extends SocialWorldThread {
 			value = params.getParam(Value.VALUE_BY_NAME_ACTION_TARGET);
 			if (value.isValid()) {
 				SimulationObject simObject;
-				simObject = getInstance().objectRequester.requestSimulationObject(token, value, getInstance());
+				simObject = getInstance().getObjectRequester().requestSimulationObject(token, value, getInstance());
 				if (simObject instanceof Human) partner = (Human) simObject;
 				else return;
 			}
@@ -304,7 +304,7 @@ public class TalkCalculator  extends SocialWorldThread {
 	
 			value = params.getParam(Value.VALUE_BY_NAME_ACTION_ANSWERS);
 			if (value.isValid())
-				answers = getInstance().objectRequester.requestValueArrayList(token, value, getInstance());
+				answers = getInstance().getObjectRequester().requestValueArrayList(token, value, getInstance());
 			else
 				return;
 			
@@ -315,7 +315,7 @@ public class TalkCalculator  extends SocialWorldThread {
 			acquaintance = stateHuman.getAcquaintance(partner);
 
 			for (int i = 0; i < answers.size(); i++) {
-				answer = getInstance().objectRequester.requestAnswer(token, answers.get(i), getInstance());
+				answer = getInstance().getObjectRequester().requestAnswer(token, answers.get(i), getInstance());
 				manipulateAnswer(answer, acquaintance, stateHuman,  partner);
 				hiddenWriteAccess.addAnswer(answer,  partner); 
 			}

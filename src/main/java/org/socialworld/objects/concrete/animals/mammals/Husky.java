@@ -59,7 +59,7 @@ public class Husky extends Dog implements IRunning {
 	//make a copy as ValueProperty
 	ValueProperty vp = this.stateRunning.getAsValue(token);
 	//the copy is permitted for cluster only
-	return objectRequester.requestStateRunning(token, vp, this);
+	return getObjectRequester().requestStateRunning(token, vp, this);
 	}
 	
 	public ValueProperty getStateRunningAsProperty(IAccessToken token, String name) {

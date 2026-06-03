@@ -87,7 +87,7 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 	private 	ActionHandler 	actionHandler;
 	
 	
-	protected ObjectRequester objectRequester = new ObjectRequester();
+	
 	private static AccessTokenSimulationObject token = AccessTokenSimulationObject.getValid();
 
 	private int levelObjectSearchBase25;
@@ -147,6 +147,8 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 	 */
 	public SimulationObject() {
 		
+		
+
 		this.objectID = 0;
 		this.justCreated = true;
 		this.guard = null;
@@ -346,7 +348,7 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 	public final Position getPosition(IAccessToken token) {
 		Position position;
 		ValueProperty vp = getProperty(token, PropertyName.simobj_position);
-		position = objectRequester.requestPosition(token, vp, this);
+		position = getObjectRequester().requestPosition(token, vp, this);
 		return position;
 	}
 	
@@ -623,9 +625,13 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 //////////////////////implementing IObjectReceiver ///////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
+	protected final ObjectRequester getObjectRequester() {
+	    return ObjectRequester.getInstance();
+	}
+
 	@Override
 	public int receiveObject(int requestID, Object object) {
-		objectRequester.receive(requestID, object);
+		getObjectRequester().receive(requestID, object);
 		return 0;
 	}
 
