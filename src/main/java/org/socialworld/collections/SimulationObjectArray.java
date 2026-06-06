@@ -25,52 +25,45 @@ import org.socialworld.objects.SimulationObject;
 
 public class SimulationObjectArray {
 	private SimulationObject array[];
-	int capacity;
 	
 	public SimulationObjectArray(int capacity) {
 		array = new SimulationObject[capacity];
-		this.capacity = capacity;
 	}
 	
-	public void ensureCapacity(int capacity) {
-		SimulationObject tmpArray[];
+	public void ensureCapacity(int minCapacity) {
 		
-		if (capacity > this.capacity) {
-			tmpArray = new SimulationObject[capacity];
-			
-			for (int index = 0; index < this.capacity; index++) {
-				tmpArray[index] = this.array[index];
-			}
+		if (minCapacity > this.array.length) {
+			// Falls das Limit gesprengt wird: Großzügig erweitern (Faktor 1.5 oder 2)
+			int newCapacity = Math.max(this.array.length * 2, minCapacity);
+			SimulationObject[] tmpArray = new SimulationObject[newCapacity];
+			System.arraycopy(this.array, 0, tmpArray, 0, this.array.length);
 			this.array = tmpArray;
-			this.capacity = capacity;
+			
+			System.out.println("[WARN] SimulationObjectArray erweitert auf: " + newCapacity);
 		}
 	}
 	
 	public void increaseCapacity(int increase)  {
 		int newCapacity;
-		newCapacity = this.capacity + increase;
+		newCapacity = this.array.length + increase;
 		ensureCapacity(newCapacity);
 	}
 
 	public void set(int index, SimulationObject object) {
-		if (index >= this.capacity) ensureCapacity(index + 1);
+		if (index >= this.array.length) ensureCapacity(index + 1);
 		array[index] = object;
 	}
 	
 	public SimulationObject get(int index){
-		SimulationObject result = NoSimulationObject.getObjectNothing();
-		if (index < this.capacity) {
-			if (array[index] == null) {
-				
-			}
-			else {
-				result = array[index];
-			}
+		if (index >= 0 && index < this.array.length && array[index] != null) {
+			return array[index];
 		}
-		return result;
+		return NoSimulationObject.getObjectNothing();
 	}
 	
 	public void delete(int index) {
-		if (index < this.capacity) array[index] = null;
+		if (index >= 0 && index < this.array.length) {
+			array[index] = null;
+		}
 	}
 }
