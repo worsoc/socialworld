@@ -119,29 +119,39 @@ public class ActionCreator extends SocialWorldThread {
 
 	    while (isRunning()) {
 	        try {
+	        	
+	            boolean workDone = false;
 
-	        	CollectionElementReactor reactor  = this.reactors.poll(
-	        			SocialWorldThread.SLEEPTIME_ACTION_CREATOR, java.util.concurrent.TimeUnit.MILLISECONDS);
-	            
-	            if (reactor != null) {
-	            	calculateReaction(reactor);
-	            	
-					// Speicher-Referenzen kappen gegen Memory Loitering
-					reactor.setEvent(null);
-					reactor.setState(null);
-					reactor.setHidden(null);
-            }
-
-	            
-	            CollectionElementActor actor  = this.actors.remove();
-	            if (actor != null) {
-	            	calculateAction(actor);
-	            	
-					// Speicher-Referenzen kappen
-					actor.setState(null);
-					actor.setHidden(null);
+	            // 1. PRIORITÄT: Reaktoren komplett abarbeiten (0 Nanosekunden Wartezeit)
+	        	CollectionElementReactor reactor;
+	            while ((reactor = this.reactors.poll()) != null) {
+	                calculateReaction(reactor);
+	                reactor.clearReferences();
+	                workDone = true; // Wir haben gearbeitet!
 	            }
-
+            
+	            // 2. PRIORITÄT: Genau EINEN Akteur abarbeiten (0 Nanosekunden Wartezeit)
+	            // Erst wenn die Reaktoren-Schleife oben komplett leer ist, darf ein Akteur ran
+	            CollectionElementActor actor = this.actors.poll();
+	            if (actor != null) {
+	                calculateAction(actor);
+	                actor.clearReferences();
+	                workDone = true; // Wir haben gearbeitet!
+	            }
+            
+	            // 3. PHASE: RUHEMODUS (Verhindert das Heißlaufen der CPU)
+	            // Nur wenn BEIDE Queues in diesem Durchlauf absolut leer waren,
+	            // gönnen wir dem CPU-Kern eine Pause.
+	            // Statt blind zu schlafen, warten wir weckbar auf den nächsten Reactor!
+                // Kommt in der Wartezeit ein Reactor rein, wacht der Thread SOFORT auf.
+	            if (!workDone) {
+	               CollectionElementReactor urgentReactor = this.reactors.poll(
+	                        SocialWorldThread.SLEEPTIME_ACTION_CREATOR, java.util.concurrent.TimeUnit.MILLISECONDS);
+	                 if (urgentReactor != null) {
+	                    calculateReaction(urgentReactor);
+	                    urgentReactor.clearReferences();
+	                }
+	            }
 
 	        } catch (InterruptedException e) {
 	            // Sauberes Beenden des Threads bei Simulations-Stopp
@@ -169,6 +179,7 @@ public class ActionCreator extends SocialWorldThread {
 				reactorWriteIndex++;
 
 				if (!this.reactors.add(pooledReactor)) {
+					pooledReactor.clearReferences();
 					reactorWriteIndex--; // Rollback bei voller Queue
 				}
 			}
@@ -187,6 +198,7 @@ public class ActionCreator extends SocialWorldThread {
 			actorWriteIndex++;
 
 			if (!this.actors.add(pooledActor)) {
+				pooledActor.clearReferences();
 				actorWriteIndex--; // Rollback bei voller Queue
 			}
 		}
@@ -203,10 +215,17 @@ public class ActionCreator extends SocialWorldThread {
 
 			
 			Event event = reactor.getEvent();
-			
 			StateSimulationObject stateReactor  = reactor.getState();
 			HiddenSimulationObject hiddenReactor =  reactor.getHidden();
 
+			if (event == null || stateReactor == null || hiddenReactor == null) {
+				if (GlobalSwitches.OUTPUT_DEBUG_ACTIONCREATOR_VARIABLE_IS_NULL) {
+					System.out.println("ActionCreator.calculateReaction(): Inner elements are null (Already processed or skipped)");
+				}
+				return; 
+			}
+					
+			
 			int eventType = event.getEventTypeAsInt();
 			int eventReactionType = stateReactor.getReactionType(eventType);
 			
@@ -276,6 +295,13 @@ public class ActionCreator extends SocialWorldThread {
 			HiddenSimulationObject hiddenActor = actor.getHidden();
 			StateSimulationObject stateActor = actor.getState(); 
 
+			if (hiddenActor == null || stateActor == null) {
+				if (GlobalSwitches.OUTPUT_DEBUG_ACTIONCREATOR_VARIABLE_IS_NULL) {
+					System.out.println("ActionCreator.calculateAction(): Inner elements are null (Already processed or skipped)");
+				}
+				return; 
+			}
+			
 			int state2ActionType = stateActor.getState2ActionType();
 			State2ActionDescription state2ActionDescription = 
 				State2ActionAssignment.getInstance().getState2ActionDescription(state2ActionType);

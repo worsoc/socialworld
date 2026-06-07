@@ -45,4 +45,9 @@ public class CollectionElementSimObjRefreshed {
 		return this.hidden;
 	}
 
+	public void clearReferences() {
+	    this.state = null;
+	    this.hidden = null;
+	}
+
 }

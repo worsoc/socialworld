@@ -53,4 +53,10 @@ public class CollectionElementReactor {
 		return this.hidden;
 	}
 
+	public void clearReferences() {
+	    this.event = null;           
+	    this.state = null;    
+	    this.hidden = null;
+	}
+
 }

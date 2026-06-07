@@ -44,5 +44,10 @@ public class CollectionElementActor {
 	HiddenSimulationObject getHidden() {
 		return this.hidden;
 	}
+	
+	public void clearReferences() {
+	    this.state = null;
+	    this.hidden = null;
+	}
 
 }

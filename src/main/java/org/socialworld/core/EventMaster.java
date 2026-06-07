@@ -81,6 +81,10 @@ public class EventMaster extends SocialWorldThread {
 	private boolean isRelevantForEffectiveCheck;
 	private boolean isRelevantForPercipienceCheck;
 	
+	private long countIncomingPerceptionEvents = 0;
+	private long countAcceptedPerceptionEvents = 0;
+	private long countHandledPerceptionEvents = 0;
+	
 	/**
 	 * the angle that describes the range where the event has
 	 * effects.
@@ -153,6 +157,19 @@ public class EventMaster extends SocialWorldThread {
 	 */
 	public void addEvent(Event event) {
 		if (event != null) {
+			
+			
+           if (event.getEventType().isLetMeBePerceivedEvent()) {
+        	   this.countIncomingPerceptionEvents++;
+        	   if (this.eventQueue.size() >= 10000) {
+	                // Flüchtiges Existenz-Event bei Überlastung allokationsfrei verwerfen 
+	                return; 
+	           }
+        	   else {
+        		   this.countAcceptedPerceptionEvents++;
+        	   }
+	        }
+
 			this.eventQueue.add(event);
 		}
 	}
@@ -210,8 +227,7 @@ public class EventMaster extends SocialWorldThread {
 		this.isRelevantForEffectiveCheck = 
 				event.getEventType().isRelevantForEffectiveCheck() && !event.isEventToCauserItself();
 
-		this.isRelevantForPercipienceCheck =
-				event.getEventType().isEventToPercipient();
+		this.isRelevantForPercipienceCheck = event.getEventType().isEventToPercipient();
 		
 		if (this.isRelevantForEffectiveCheck) {
 			this.effectDistance = event.getEffectDistance();
@@ -219,6 +235,7 @@ public class EventMaster extends SocialWorldThread {
 			this.eventDirection = event.getDirection();
 		}
 
+		
 		if (this.isRelevantForPercipienceCheck) {
 			this.effectDistance = event.getEffectDistance();
 		}
@@ -539,11 +556,25 @@ public class EventMaster extends SocialWorldThread {
 			// don't remove because the list is created new for the next event -> Durch .clear() gelöst!
 		}
 
+		this.countHandledPerceptionEvents++;
+		
 		if (GlobalSwitches.OUTPUT_EVENTMASTER_DETERMINE_INFLUENCE_TO_PERCIPIENTS)
 			System.out.println("End determine infuence to percipients " + ActualTime.asTime().toString());
 
 	}
 	
 
-	
+	public void printAndResetTickStatistics() {
+	    System.out.println("--- Perception-Pipeline-Statistik (Tick-Ende) ---");
+	    System.out.println("1. Generiert (Brutto-Last addEvent): " + this.countIncomingPerceptionEvents);
+	    System.out.println("2. Akzeptiert (Durch Last-Bremse):   " + this.countAcceptedPerceptionEvents);
+	    System.out.println("3. Behandelt (Echte Abarbeitung):    " + this.countHandledPerceptionEvents);
+	    System.out.println("-> Durch Bremse verworfen:           " + (this.countIncomingPerceptionEvents - this.countAcceptedPerceptionEvents));
+	    System.out.println("-------------------------------------");
+
+	    // HIER passiert der Reset gesammelt für den ganzen Tick!
+	    this.countIncomingPerceptionEvents = 0;
+	    this.countAcceptedPerceptionEvents = 0;
+	    this.countHandledPerceptionEvents = 0;
+	}
 }

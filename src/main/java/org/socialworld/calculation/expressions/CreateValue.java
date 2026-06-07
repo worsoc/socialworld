@@ -163,6 +163,9 @@ public class CreateValue extends Expression {
 			evaluateExpression2(localArguments);
 					
 			createdObject = ActionCreator.createAction(localArguments) ;
+			
+	        localArguments.clear(); 
+
 			break;
 		case time:
 			

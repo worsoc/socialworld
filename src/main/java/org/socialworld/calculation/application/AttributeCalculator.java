@@ -144,9 +144,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 	                calculateAttributesChangedByEvent(inf);
 
 					// Speicher-Referenzen kappen gegen Memory Loitering
-	                inf.setEvent(null);
-	                inf.setState(null);
-	                inf.setHidden(null);
+	                inf.clearReferences();
 	            }
 
 	            // 2. DIE MITLÄUFER (Opportunistisches Polling):
@@ -158,8 +156,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 	                calculateAttributesChangedByComplexMatrix(chg);
 
 					// Speicher-Referenzen kappen gegen Memory Loitering
-	                chg.setState(null);
-	                chg.setHidden(null);
+	                chg.clearReferences();
 	            }
 
 	            CollectionElementSimObjRefreshed ref = refreshed.poll();
@@ -167,8 +164,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 	                calculateAttributesChangedBySimpleMatrix(ref);
 
 					// Speicher-Referenzen kappen gegen Memory Loitering
-	                ref.setState(null);
-	                ref.setHidden(null);
+	                ref.clearReferences();
 	            }
 
 	        } catch (InterruptedException e) {
@@ -192,6 +188,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 			influencedWriteIndex++;
 
 			if (!this.influenced.add(pooledInfluenced)) {
+				pooledInfluenced.clearReferences();
 				influencedWriteIndex--; // Rollback bei voller Queue
 			}
 		}
@@ -209,6 +206,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 			changedWriteIndex++;
 
 			if (!this.changed.add(pooledChanged)) {
+				pooledChanged.clearReferences();
 				changedWriteIndex--; // Rollback bei voller Queue
 			}
 		}
@@ -226,6 +224,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 			refreshedWriteIndex++;
 
 			if (!this.refreshed.add(pooledRefreshed)) {
+				pooledRefreshed.clearReferences();
 				refreshedWriteIndex--; // Rollback bei voller Queue
 			}
 		}
@@ -238,6 +237,13 @@ public  class AttributeCalculator extends SocialWorldThread {
 			Event event = influenced.getEvent();
 			StateAnimal stateAnimal  = (StateAnimal) influenced.getState();
 			HiddenAnimal hiddenWriteAccess =  (HiddenAnimal) influenced.getHidden();
+
+			if (event == null || stateAnimal == null || hiddenWriteAccess == null) {
+				if (GlobalSwitches.OUTPUT_DEBUG_ATTRIBUTECALCULATOR_VARIABLE_IS_NULL) {
+					System.out.println("AttributeCalculator.calculateAttributesChangedByEvent(): Inner elements are null (Already processed or skipped)");
+				}
+				return ATTRIBUTE_CALCULATOR_RETURNS_EMPTY_LISTS;  
+			}
 
 			Value resultAttributeArray;
 
@@ -364,6 +370,13 @@ public  class AttributeCalculator extends SocialWorldThread {
 			StateAnimal stateAnimal  = (StateAnimal) changed.getState();
 			HiddenAnimal hiddenWriteAccess = (HiddenAnimal) changed.getHidden();
 
+			if (stateAnimal == null || hiddenWriteAccess == null) {
+				if (GlobalSwitches.OUTPUT_DEBUG_ATTRIBUTECALCULATOR_VARIABLE_IS_NULL) {
+					System.out.println("AttributeCalculator.calculateAttributesChangedByComplexMatrix(): Inner elements are null (Already processed or skipped)");
+				}
+				return ATTRIBUTE_CALCULATOR_RETURNS_EMPTY_LISTS;  
+			}
+
 			Value resultAttributeArray;
 	
 			resultAttributeArray = getAttributesChangedByComplexMatrix(stateAnimal);
@@ -430,7 +443,14 @@ public  class AttributeCalculator extends SocialWorldThread {
 
 			StateAnimal stateAnimal  = (StateAnimal) refreshed.getState();
 			HiddenAnimal hiddenWriteAccess =  (HiddenAnimal) refreshed.getHidden();
-			
+
+			if (stateAnimal == null || hiddenWriteAccess == null) {
+				if (GlobalSwitches.OUTPUT_DEBUG_ATTRIBUTECALCULATOR_VARIABLE_IS_NULL) {
+					System.out.println("AttributeCalculator.calculateAttributesChangedBySimpleMatrix(): Inner elements are null (Already processed or skipped)");
+				}
+				return ATTRIBUTE_CALCULATOR_RETURNS_EMPTY_LISTS;  
+			}
+
 			Value resultAttributeArray;
 			
 			resultAttributeArray = getAttributesChangedBySimpleMatrix(stateAnimal);
