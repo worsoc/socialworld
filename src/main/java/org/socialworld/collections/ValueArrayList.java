@@ -76,6 +76,23 @@ public class ValueArrayList implements IObjectSender{
 		values.add(value);
 	}
 	
+	/**
+	 * Fügt alle Elemente einer anderen ValueArrayList allokationsfrei und 
+	 * pfeilschnell über eine indexbasierte Schleife hinzu.
+	 * 
+	 * @param other Die andere ValueArrayList, deren Werte kopiert werden sollen.
+	 */
+	public void addAll(ValueArrayList other) {
+		if (other != null) {
+			int otherSize = other.size();
+			// Indexbasierte Schleife verhindert die versteckte Instanziierung 
+			// von Iteratoren auf dem Heap!
+			for (int i = 0; i < otherSize; i++) {
+				this.values.add(other.get(i));
+			}
+		}
+	}
+
 	public void set(int index, Value value) {
 		values.set(index, value);
 	}

@@ -84,7 +84,9 @@ public class EventMaster extends SocialWorldThread {
 	private long countIncomingPerceptionEvents = 0;
 	private long countAcceptedPerceptionEvents = 0;
 	private long countHandledPerceptionEvents = 0;
-	
+	// Die maximale Spitze (High-Watermark) innerhalb des aktuellen Ticks
+	private int maxQueuePeakInCurrentTick = 0;
+
 	/**
 	 * the angle that describes the range where the event has
 	 * effects.
@@ -171,6 +173,12 @@ public class EventMaster extends SocialWorldThread {
 	        }
 
 			this.eventQueue.add(event);
+			
+	        int currentSize = this.eventQueue.size();
+	        if (currentSize > this.maxQueuePeakInCurrentTick) {
+	            this.maxQueuePeakInCurrentTick = currentSize;
+	        }
+
 		}
 	}
 	
@@ -565,16 +573,19 @@ public class EventMaster extends SocialWorldThread {
 	
 
 	public void printAndResetTickStatistics() {
-	    System.out.println("--- Perception-Pipeline-Statistik (Tick-Ende) ---");
-	    System.out.println("1. Generiert (Brutto-Last addEvent): " + this.countIncomingPerceptionEvents);
-	    System.out.println("2. Akzeptiert (Durch Last-Bremse):   " + this.countAcceptedPerceptionEvents);
-	    System.out.println("3. Behandelt (Echte Abarbeitung):    " + this.countHandledPerceptionEvents);
+	    System.out.println("--- Event Queue-Statistik (Tick-Ende) ---");
+	    System.out.println("1. Generierte Perception events (Brutto-Last addEvent): " + this.countIncomingPerceptionEvents);
+	    System.out.println("2. Akzeptierte Perception events (Durch Last-Bremse):   " + this.countAcceptedPerceptionEvents);
+	    System.out.println("3. Behandelte Perception events (Echte Abarbeitung):    " + this.countHandledPerceptionEvents);
 	    System.out.println("-> Durch Bremse verworfen:           " + (this.countIncomingPerceptionEvents - this.countAcceptedPerceptionEvents));
+	    System.out.println("Maximale Queue-Spitze (High-Watermark): " + this.maxQueuePeakInCurrentTick);
+	    System.out.println("Groesse gesamt Event-Liste:    " + this.eventQueue.size());
 	    System.out.println("-------------------------------------");
 
 	    // HIER passiert der Reset gesammelt für den ganzen Tick!
 	    this.countIncomingPerceptionEvents = 0;
 	    this.countAcceptedPerceptionEvents = 0;
 	    this.countHandledPerceptionEvents = 0;
+		this.maxQueuePeakInCurrentTick = 0;
 	}
 }

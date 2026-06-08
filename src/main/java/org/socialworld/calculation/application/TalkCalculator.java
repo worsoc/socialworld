@@ -83,31 +83,26 @@ public class TalkCalculator  extends SocialWorldThread {
 	public void run() {
 	    while (isRunning()) {
 	        try {
-	            // Warten auf das nächste Gesprächs-Event (
+	            // 1. PHASE: REAKTIVER RUHEMODUS
+	            // Der Thread schläft energiesparend, bis ein neues Gesprächs-Event eintrifft.
 	            CollectionElementSimObjInfluenced talk =
-	            		influencedTalks.poll(SocialWorldThread.SLEEPTIME_TALK_CALCULATOR, java.util.concurrent.TimeUnit.MILLISECONDS);
+	                    influencedTalks.poll(SocialWorldThread.SLEEPTIME_TALK_CALCULATOR, java.util.concurrent.TimeUnit.MILLISECONDS);
 	            
 	            if (talk != null) {
 	                // Das erste Element direkt verarbeiten
 	                calculateTalkInfluencedByEvent(talk);
-	 
-	                // Speicher-Referenzen kappen gegen Memory Loitering (Besitzerrecht liegt beim run-Loop)
-	                talk.setEvent(null);
-	                talk.setState(null);
-	                talk.setHidden(null);
+	                // Optisch sauber, gekapselt und zukunftssicher:
+	                talk.clearReferences();
 
-	                // Sobald wir wach sind: Alles wegarbeiten, was sich angestaut hat
+	                // 2. PHASE: MASSEN-KOMMUNIKATIONS-EXPEDITION (Kaskade)
+	                // Sobald wir wach sind: Alles wegarbeiten, was sich angestaut hat!
 	                CollectionElementSimObjInfluenced nextTalk;
 	                while ((nextTalk = influencedTalks.poll()) != null) {
 	                    calculateTalkInfluencedByEvent(nextTalk);
-	                    
-	                    // Auch hier Speicher-Referenzen sofort freigeben
-	                    nextTalk.setEvent(null);
-	                    nextTalk.setState(null);
-	                    nextTalk.setHidden(null);
+	                    nextTalk.clearReferences();
 	                }
 	            }
-
+	            
 	        } catch (InterruptedException e) {
 	            Thread.currentThread().interrupt();
 	            break;
@@ -130,6 +125,7 @@ public class TalkCalculator  extends SocialWorldThread {
 			talkWriteIndex++;
 
 			if (!this.influencedTalks.add(pooledTalk)) {
+			    pooledTalk.clearReferences(); 
 				talkWriteIndex--; // Rollback bei voller Queue
 			}
 		}
@@ -143,6 +139,13 @@ public class TalkCalculator  extends SocialWorldThread {
 			StateHuman stateHuman  = (StateHuman) influencedTalk.getState();
 			HiddenHuman hiddenWriteAccess =  (HiddenHuman) influencedTalk.getHidden();
 		
+			if (event == null || stateHuman == null || hiddenWriteAccess == null) {
+				if (GlobalSwitches.OUTPUT_DEBUG_TALKCALCULATOR_VARIABLE_IS_NULL) {
+					System.out.println("TalkCalculator.calculateTalkInfluencedByEvent(): Inner elements are null (Already processed or skipped)");
+				}
+				return; // Blitzschneller, crashfreier Abbruch vor dem NPE-Risiko
+			}
+			
 			EventType eventType;
 			eventType = event.getEventType();
 		

@@ -322,10 +322,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 		localArgs.clear(); // Alten Puffer-Inhalt restlos leeren
 		
 		// Start-Argumente allokationsfrei in die thread-sichere Sandbox kopieren
-		int startSize = workingByEventArguments.size();
-		for (int i = 0; i < startSize; i++) {
-			localArgs.add(workingByEventArguments.get(i));
-		}
+		localArgs.addAll(workingByEventArguments);
 		
 		// Die Schleife arbeitet jetzt zu 100% isoliert und autark in ihrer lokalen Kopie der Argumente
 		for (int index = 0; index < count; index++) {
@@ -399,43 +396,54 @@ public  class AttributeCalculator extends SocialWorldThread {
 	}
 
 	private final Value getAttributesChangedByComplexMatrix(StateAnimal stateAnimal) {
-		FunctionByMatrix f_AttributesByMatrix;
-		Value oldAttributes;
-		Value newAttributes = Value.getValueNothing();
-		int animalsObjectID;
+	    FunctionByMatrix f_AttributesByMatrix;
+	    Value oldAttributes;
+	    Value newAttributes = Value.getValueNothing();
+	    int animalsObjectID;
 
+	    // 1. ALLOKATIONSFREIES RECYCLING DER MATRIX-LISTE
+	    workingByMatrixArguments.clear();
+	    
+	    animalsObjectID = stateAnimal.getObjectID();
+	    objectID.changeValue(animalsObjectID);
+	    workingByMatrixArguments.add( objectID ); // <-- JETZT AUCH HIER SAUBER TRENNEN!
 
-		// 1. ALLOKATIONSFREIES RECYCLING DER LISTE
-		workingByMatrixArguments.clear();
-		
-		// objectID zum stateAnimal als Argument setzen
-		animalsObjectID = stateAnimal.getObjectID();
-		objectID.changeValue(animalsObjectID);
-		workingByEventArguments.add( objectID );
+	    oldAttributes = stateAnimal.getProperty(token, PropertyName.simobj_attributeArray);
+	    workingByMatrixArguments.add(oldAttributes);
 
-		
-		oldAttributes =  stateAnimal.getProperty(token, PropertyName.simobj_attributeArray);
-		workingByMatrixArguments.add(oldAttributes);
+	    // 2. ABSOLUT ALLOKATIONSFREI: Nutzung des vorallokierten Modus-Values
+	    workingByMatrixArguments.add(calculationModeMatrixXVectorComplex);
+	    
+	    // ====================================================================
+	    // THREAD-ISOLIERUNG: Übertragen in den lokalen Thread-Puffer
+	    // ====================================================================
+	    ValueArrayList localArgs = this.localEvalArgs.get();
+	    localArgs.clear(); // Sandbox allokationsfrei säubern
+	    localArgs.addAll(workingByMatrixArguments); 
+	    // ====================================================================
 
-		// 2. ABSOLUT ALLOKATIONSFREI: Nutzung des vorallokierten Modus-Values
-		workingByMatrixArguments.add(calculationModeMatrixXVectorComplex);
-		
-		f_AttributesByMatrix = stateAnimal.getMatrix();
-		newAttributes = f_AttributesByMatrix.calculate(workingByMatrixArguments);
-		
-		if (newAttributes.isValid()){
-			if (oldAttributes.equals(newAttributes)) {
-				newAttributes.setTransferCode(ValueTransferCode.noChanges);
-			}
-			else {
-			}
-			return newAttributes;
-		}
-		else {
-			oldAttributes.setTransferCode(ValueTransferCode.noChanges);
-			return oldAttributes;
-		}
+	    f_AttributesByMatrix = stateAnimal.getMatrix();
+	    
+	    newAttributes = f_AttributesByMatrix.calculate(localArgs);
+	    
+	    // SPEICHER-FALLBEIL: Sandbox sofort wieder auskehren
+	    localArgs.clear();
+
+	    if (newAttributes.isValid()){
+	        if (oldAttributes.equals(newAttributes)) {
+	            newAttributes.setTransferCode(ValueTransferCode.noChanges);
+	        }
+	        else {
+	        }
+	        return newAttributes;
+	    }
+	    else {
+	        oldAttributes.setTransferCode(ValueTransferCode.noChanges);
+	        return oldAttributes;
+	    }
 	}
+	
+	
 	
 	private final int calculateAttributesChangedBySimpleMatrix(CollectionElementSimObjRefreshed refreshed) {
 		
@@ -474,42 +482,54 @@ public  class AttributeCalculator extends SocialWorldThread {
 	}
 	
 	private final Value getAttributesChangedBySimpleMatrix(StateAnimal stateAnimal) {
-		FunctionByMatrix f_AttributesByMatrix;
-		Value oldAttributes;
-		Value newAttributes = Value.getValueNothing();
-		int animalsObjectID;
+	    FunctionByMatrix f_AttributesByMatrix;
+	    Value oldAttributes;
+	    Value newAttributes = Value.getValueNothing();
+	    int animalsObjectID;
 
+	    // 1. ALLOKATIONSFREIES RECYCLING DER MATRIX-LISTE
+	    workingByMatrixArguments.clear();
+	    
+	    animalsObjectID = stateAnimal.getObjectID();
+	    objectID.changeValue(animalsObjectID);
+	    workingByMatrixArguments.add( objectID ); // <-- JETZT IN DER RICHTIGEN LISTE!
 
-		// 1. ALLOKATIONSFREIES RECYCLING 
-		workingByMatrixArguments.clear();
-		
-		// objectID zum stateAnimal als Argument setzen
-		animalsObjectID = stateAnimal.getObjectID();
-		objectID.changeValue(animalsObjectID);
-		workingByEventArguments.add( objectID );
-	
-		oldAttributes =  stateAnimal.getProperty(token, PropertyName.simobj_attributeArray);
-		workingByMatrixArguments.add(oldAttributes);
+	    oldAttributes = stateAnimal.getProperty(token, PropertyName.simobj_attributeArray);
+	    workingByMatrixArguments.add(oldAttributes);
 
-		// 2. ABSOLUT ALLOKATIONSFREI: Vorallokierter Simple-Modus
-		workingByMatrixArguments.add(calculationModeMatrixXVectorSimple);
-			
-		f_AttributesByMatrix = stateAnimal.getMatrix();
-		newAttributes = f_AttributesByMatrix.calculate(workingByMatrixArguments);
-		
-		if (!newAttributes.isInvalidOrNothing()){
-			if (oldAttributes.equals(newAttributes)) {
-				newAttributes.setTransferCode(ValueTransferCode.noChanges);
-			}
-			else {
-			}
-			return newAttributes;
-		}
-		else {
-			oldAttributes.setTransferCode(ValueTransferCode.noChanges);
-			return oldAttributes;
-		}
+	    // 2. ABSOLUT ALLOKATIONSFREI: Vorallokierter Simple-Modus
+	    workingByMatrixArguments.add(calculationModeMatrixXVectorSimple);
+	        
+	    // ====================================================================
+	    // THREAD-ISOLIERUNG: Sicheres Überspielen in die lokale Sandbox
+	    // ====================================================================
+	    ValueArrayList localArgs = this.localEvalArgs.get();
+	    localArgs.clear(); // Sandbox allokationsfrei leeren
+	    localArgs.addAll(workingByMatrixArguments); 
+	    // ====================================================================
+
+	    f_AttributesByMatrix = stateAnimal.getMatrix();
+	    
+	    // INTERPRETER ERHÄLT DIE ISOLIERTEN LOCAL-ARGS:
+	    newAttributes = f_AttributesByMatrix.calculate(localArgs);
+	    
+	    // SPEICHER-FALLBEIL FÜR DIE NEBEN-SCHIENE:
+	    localArgs.clear(); // Die Sandbox sofort wieder sauber auskehren
+
+	    if (!newAttributes.isInvalidOrNothing()){
+	        if (oldAttributes.equals(newAttributes)) {
+	            newAttributes.setTransferCode(ValueTransferCode.noChanges);
+	        }
+	        else {
+	        }
+	        return newAttributes;
+	    }
+	    else {
+	        oldAttributes.setTransferCode(ValueTransferCode.noChanges);
+	        return oldAttributes;
+	    }
 	}
+	
 
 	public void printInfluencedQueueCounts() {
 		influenced.printCounts();

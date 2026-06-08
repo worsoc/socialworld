@@ -374,11 +374,7 @@ public class ActionCreator extends SocialWorldThread {
 		localArgs.clear(); // Alten Puffer-Inhalt restlos leeren
 		
 		// Start-Argumente allokationsfrei in die thread-sichere Sandbox kopieren
-		int startSize = workingReactionArguments.size();
-		for (int i = 0; i < startSize; i++) {
-			localArgs.add(workingReactionArguments.get(i));
-		}
-
+		localArgs.addAll(workingReactionArguments);
 		
 		Value result = f_CreateReaction.calculate(localArgs);
 		

@@ -69,6 +69,13 @@ public class KnowledgeCalculator extends SocialWorldThread {
 
 	private CapacityQueue<CollectionElementSimObjInfluenced> perceptions;
 
+	// Wiederverwendbare, allokationsfreie Argumentenliste für die Wissens-Berechnung
+	private final ValueArrayList workingKnowledgeArguments = new ValueArrayList(16);
+
+	// Allokationsfreier Sandbox-Puffer für die Thread-Isolierung im Rechenkern
+	private final ThreadLocal<ValueArrayList> localEvalArgs = 
+	    ThreadLocal.withInitial(() -> new ValueArrayList(16));
+	
 	private static AccessTokenKnowledgeCalculator token = AccessTokenKnowledgeCalculator.getValid();
 	
 	
@@ -99,19 +106,27 @@ public class KnowledgeCalculator extends SocialWorldThread {
 		while (isRunning()) {
 			try {
 
-				CollectionElementSimObjInfluenced perception = perceptions.poll(
-						SocialWorldThread.SLEEPTIME_KNOWLEDGE_CALCULATOR, TimeUnit.MILLISECONDS);
-				
-				if (perception != null) {
-					calculatePerception(perception);
-	                
-	                // WICHTIG: Referenzen nach der Verarbeitung sofort nullen, 
-	                // um "Memory Loitering" (unbeabsichtigtes Festhalten von Alt-Objekten) zu verhindern.
-	                perception.setEvent(null);
-	                perception.setState(null);
-	                perception.setHidden(null);
-				}
+		           // 1. PHASE: REAKTIVER RUHEMODUS
+	            // Der Thread schläft energiesparend, bis ein Wahrnehmungs-Event eintrifft.
+	            CollectionElementSimObjInfluenced perception = perceptions.poll(
+	                    SocialWorldThread.SLEEPTIME_KNOWLEDGE_CALCULATOR, TimeUnit.MILLISECONDS);
+	            
+	            if (perception != null) {
+	                // Das erste Element direkt verarbeiten
+	                calculatePerception(perception);
+	                // Optisch sauber, gekapselt und zukunftssicher:
+	                perception.clearReferences();
 
+	                // 2. PHASE: MASSEN-WAHRNEHMUNGS-EXPEDITION (Kaskade)
+	                // Wir fegen alle in der Zwischenzeit aufgelaufenen Wahrnehmungen 
+	                // ohne Wartezeit in einem Rutsch leer, solange Arbeit da ist!
+	                CollectionElementSimObjInfluenced nextPerception;
+	                while ((nextPerception = this.perceptions.poll()) != null) {
+	                    calculatePerception(nextPerception);
+	                    nextPerception.clearReferences();
+	                }
+	            }
+	            
 			} catch (InterruptedException e) {
 				// Sauberes Beenden bei Simulations-Stopp
 				Thread.currentThread().interrupt();
@@ -136,6 +151,7 @@ public class KnowledgeCalculator extends SocialWorldThread {
 
 	        // Das vorallokierte Objekt in die Queue schieben
 	        if (!this.perceptions.add(pooledElement)) {
+	            pooledElement.clearReferences(); 
 	            // Falls die Queue voll ist, greift die Fallback-Logik
 	            poolWriteIndex--; // Cursor zurücksetzen
 	        }
@@ -151,6 +167,13 @@ public class KnowledgeCalculator extends SocialWorldThread {
 			StateAnimal stateAnimal  = (StateAnimal) perception.getState();
 			HiddenAnimal hiddenWriteAccess =  (HiddenAnimal) perception.getHidden();
 
+			if (event == null || stateAnimal == null || hiddenWriteAccess == null) {
+				if (GlobalSwitches.OUTPUT_DEBUG_KNOWLEDGECALCULATOR_VARIABLE_IS_NULL) {
+					System.out.println("KnowledgeCalculator.calculatePerception(): Inner elements are null (Already processed)");
+				}
+				return KNOWLEDGE_CALCULATOR_RETURNS_EMPTY_LISTS; // Allokations- und crashfreier Abbruch
+			}
+			
 			return setFacts( event,  stateAnimal,  hiddenWriteAccess);
 			
 		}
@@ -163,51 +186,70 @@ public class KnowledgeCalculator extends SocialWorldThread {
 	
 	private final int setFacts(Event event, StateAnimal stateAnimal, HiddenAnimal hiddenWriteAccess) {
 		
-		KnowledgeElement knowledgeElement;
-		Value valueKE;
-		
-		ValueArrayList arguments;
-		arguments = new ValueArrayList();
+	    KnowledgeElement knowledgeElement;
+	    Value valueKE;
+	    
+	    // 1. ALLOKATIONSFREIES LEEREN DER KLASSEN-LISTE
+	    this.workingKnowledgeArguments.clear(); 
 
-		ValueArrayList eventParams;   
-		eventParams = event.getProperties();
-		
-		arguments.add(new Value(Type.valueList, Value.VALUE_BY_NAME_EVENT_PARAMS, eventParams));
-		arguments.add(new Value(Type.simulationObject, Value.VALUE_NAME_KNOWLEDGE_SOURCE_MYSELF, stateAnimal.getObject()));
-		
-		int result = KNOWLEDGE_CALCULATOR_RETURNS_NO_CHANGES;
-		int resultTmp;
-		
-		int eventType = event.getEventTypeAsInt();
-		int perceptionType = stateAnimal.getPerceptionType(eventType);
-		EventPerceptionDescription descGetKE = EventPerceptionAssignment.getInstance().getEventPerceptionDescription(
-				eventType, perceptionType	);
-		int count = descGetKE.countFunctions();
+	    ValueArrayList eventParams = event.getProperties();
+	    
+	    // Befüllen der primären Arbeitsliste
+	    this.workingKnowledgeArguments.add(new Value(Type.valueList, Value.VALUE_BY_NAME_EVENT_PARAMS, eventParams));
+	    this.workingKnowledgeArguments.add(new Value(Type.simulationObject, Value.VALUE_NAME_KNOWLEDGE_SOURCE_MYSELF, stateAnimal.getObject()));
+	    
+	    // ====================================================================
+	    // THREAD-ISOLIERUNG: Kopieren in die localArgs 
+	    // ====================================================================
+	    ValueArrayList localArgs = this.localEvalArgs.get();
+	    localArgs.clear(); // Alten Inhalt der Sandbox allokationsfrei löschen
+	    localArgs.addAll(this.workingKnowledgeArguments); // Daten sicher überspielen
+	    // ====================================================================
 
-		FunctionByExpression f_CreatePerception;
-		
-		for (int index = 0; index < count; index++) 
-		{
-			f_CreatePerception = descGetKE.getFunction(index);
-			valueKE = f_CreatePerception.calculate(arguments);
-			knowledgeElement = getObjectRequester().requestKnowledgeElement(token, valueKE, this);	
-			
-			if (knowledgeElement != KnowledgeElement.getObjectNothing()) {
-				if (knowledgeElement.isValid())	{
-					resultTmp = hiddenWriteAccess.addKnowledgeElement(knowledgeElement);
-					if (resultTmp > 0) {
-						result = KNOWLEDGE_CALCULATOR_RETURNS_CONTAINS_INVALIDS;
-					}
-					else {
-						result = resultTmp;
-					}
-				}
-			}
-			
-		}
-		
-		return result;
+	    int result = KNOWLEDGE_CALCULATOR_RETURNS_NO_CHANGES;
+	    int resultTmp;
+	    
+	    int eventType = event.getEventTypeAsInt();
+	    int perceptionType = stateAnimal.getPerceptionType(eventType);
+	    EventPerceptionDescription descGetKE = EventPerceptionAssignment.getInstance().getEventPerceptionDescription(
+	            eventType, perceptionType );
+	    int count = descGetKE.countFunctions();
+
+	    FunctionByExpression f_CreatePerception;
+	    
+	    for (int index = 0; index < count; index++) 
+	    {
+	        f_CreatePerception = descGetKE.getFunction(index);
+	        
+	        // ÜBERGABE DER ISOLIERTEN LOCAL-ARGS AN DEN INTERPRETER:
+	        valueKE = f_CreatePerception.calculate(localArgs);
+	        
+	        knowledgeElement = getObjectRequester().requestKnowledgeElement(token, valueKE, this); 
+	        
+	        if (knowledgeElement != KnowledgeElement.getObjectNothing()) {
+	            if (knowledgeElement.isValid()) {
+	                resultTmp = hiddenWriteAccess.addKnowledgeElement(knowledgeElement);
+	                if (resultTmp > 0) {
+	                    result = KNOWLEDGE_CALCULATOR_RETURNS_CONTAINS_INVALIDS;
+	                }
+	                else {
+	                    result = resultTmp;
+	                }
+	            }
+	        }
+	    }
+	    
+	    // ====================================================================
+	    // DAS SPEICHER-FALLBEIL FÜR BEIDE ENDEN:
+	    // ====================================================================
+	    this.workingKnowledgeArguments.clear();
+	    localArgs.clear(); // Auch die Sandbox wird sofort wieder ausgekehrt!
+	    // ====================================================================
+	    
+	    return result;
 	}
+	
+	
 	
 	public static KnowledgeElement createKnowledgeElement(ValueArrayList knowledgeElementProperties) {
 		

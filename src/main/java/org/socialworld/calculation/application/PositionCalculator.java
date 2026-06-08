@@ -22,6 +22,7 @@
 package org.socialworld.calculation.application;
 
 
+import org.socialworld.GlobalSwitches;
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
@@ -91,22 +92,18 @@ public class PositionCalculator extends SocialWorldThread {
 	            if (moved != null) {
 	                // Verarbeitet das entnommene Element direkt
 	                calculatePositionChangedByEvent(moved);
-
-	                moved.setEvent(null);
-	                moved.setState(null);
-	                moved.setHidden(null);
-	            }
-
-	            // Optional: Ein kleiner Loop, um bei Massenbewegungen die Queue 
-	            // sofort komplett leerzufressen, bevor wir wieder schlafen gehen.
-	            CollectionElementSimObjInfluenced nextMoved;
-	            while ((nextMoved = this.moved.poll()) != null) {
-	                calculatePositionChangedByEvent(nextMoved);
+	                moved.clearReferences();
 	                
-					nextMoved.setEvent(null);
-					nextMoved.setState(null);
-					nextMoved.setHidden(null);
+		            // Optional: Ein kleiner Loop, um bei Massenbewegungen die Queue 
+		            // sofort komplett leerzufressen, bevor wir wieder schlafen gehen.
+		            CollectionElementSimObjInfluenced nextMoved;
+		            while ((nextMoved = this.moved.poll()) != null) {
+		                calculatePositionChangedByEvent(nextMoved);
+		                nextMoved.clearReferences();
+		            }
+
 	            }
+
 
 	        } catch (InterruptedException e) {
 	            Thread.currentThread().interrupt();
@@ -129,6 +126,7 @@ public class PositionCalculator extends SocialWorldThread {
 			poolWriteIndex++;
 
 			if (!this.moved.add(pooledElement)) {
+				pooledElement.clearReferences(); 
 				poolWriteIndex--; // Rollback bei voller Queue
 			}
 		}
@@ -142,6 +140,12 @@ public class PositionCalculator extends SocialWorldThread {
 			StateSimulationObject state  =  moved.getState();
 			HiddenSimulationObject hiddenWriteAccess =   moved.getHidden();
 
+			if (event == null || state == null || hiddenWriteAccess == null) {
+				if (GlobalSwitches.OUTPUT_DEBUG_POSITIONCALCULATOR_VARIABLE_IS_NULL) {
+					System.out.println("PositionCalculator.calculatePositionChangedByEvent(): Inner elements are null (Already processed)");
+				}
+				return POSITION_CALCULATOR_RETURNS_NO_CHANGE; // Blitzschneller, sicherer Abbruch
+			}
 		
 			int returnSetPosition;
 			int returnSetMove;
