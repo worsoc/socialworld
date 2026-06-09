@@ -71,12 +71,6 @@ public class ActionCreator extends SocialWorldThread {
 	private final CollectionElementActor[] actorPool = new CollectionElementActor[ACTOR_POOL_SIZE];
 	private int actorWriteIndex = 0;
 
-	// Wiederverwendbare Argumentenliste für Berechnungen beim Akteur
-	private final ValueArrayList workingActionArguments = new ValueArrayList();
-
-	// Wiederverwendbare Argumentenliste für Berechnungen beim Reakteur
-	private final ValueArrayList workingReactionArguments = new ValueArrayList();
-
 	// Allokationsfreier Sandbox-Puffer für die Thread-Isolierung
 	private final ThreadLocal<ValueArrayList> localEvalArgs = 
 	    ThreadLocal.withInitial(() -> new ValueArrayList());
@@ -346,45 +340,41 @@ public class ActionCreator extends SocialWorldThread {
 	 * @param: event
 	 * @param: stateReactor
 	 */
-	private AbstractAction createAnimalReaction(Event event, StateAnimal stateReactor, FunctionByExpression f_CreateReaction ) {
+	private AbstractAction createAnimalReaction(Event event, StateAnimal stateReactor, FunctionByExpression f_CreateReaction) {
 
 		int reactorsObjectID;
+		
+	    // 1. STRATEGISCHER START IN DER THREAD-ISOLIERTEN SANDBOX
+	    ValueArrayList localArgs = localEvalArgs.get();
+	    localArgs.clear(); // Alten Puffer-Inhalt restlos leeren
 
-		// 1. ALLOKATIONSFREIES RECYCLING 
-		workingReactionArguments.clear();
-		
-		// objectID zum stateReactor als Argument setzen
-		reactorsObjectID = stateReactor.getObjectID();
-		objectID.changeValue(reactorsObjectID);
-		workingReactionArguments.add(objectID);
+	    // 2. DIREKTES BEFÜLLEN DER SANDBOX (ALLOKATIONSFREI)
+	    reactorsObjectID = stateReactor.getObjectID();
+	    objectID.changeValue(reactorsObjectID);
+	    localArgs.add(objectID);
 
-		workingReactionArguments.add( stateReactor.getProperty(token, PropertyName.simobj_attributeArray) );
-		workingReactionArguments.add( new Value(Type.event, Value.VALUE_BY_NAME_EVENT, event) );
-		if (event.hasOptionalParam()) {
-			workingReactionArguments.add( event.getOptionalParam().getParamListAsValue());
-		}
-		else {
-			workingReactionArguments.add(new Value(Type.valueList, Value.VALUE_BY_NAME_EVENT_PARAMS, event.getProperties()));
-		}
-		workingReactionArguments.add( new Value(Type.simulationObject, Value.VALUE_BY_NAME_SIMOBJECT, stateReactor.getObject()) );
-		
-		
-		// --- STRATEGISCHER FREEZE AM KETTENSTART ---
-		ValueArrayList localArgs = localEvalArgs.get();
-		localArgs.clear(); // Alten Puffer-Inhalt restlos leeren
-		
-		// Start-Argumente allokationsfrei in die thread-sichere Sandbox kopieren
-		localArgs.addAll(workingReactionArguments);
-		
-		Value result = f_CreateReaction.calculate(localArgs);
-		
-		// Speicherhygiene gegen Memory Loitering: Kappt alle Objekt-Referenzen im Puffer
-		localArgs.clear();
+	    localArgs.add(stateReactor.getProperty(token, PropertyName.simobj_attributeArray));
+	    
+	    localArgs.add(new Value(Type.event, Value.VALUE_BY_NAME_EVENT, event));
+	    
+	    if (event.hasOptionalParam()) {
+	        localArgs.add(event.getOptionalParam().getParamListAsValue());
+	    } else {
+	        localArgs.add(new Value(Type.valueList, Value.VALUE_BY_NAME_EVENT_PARAMS, event.getProperties()));
+	    }
+	    
+	    localArgs.add(new Value(Type.simulationObject, Value.VALUE_BY_NAME_SIMOBJECT, stateReactor.getObject()));
+	    
+	    // 3. BERECHNUNG
+	    Value result = f_CreateReaction.calculate(localArgs);
+	    
+	    // 4. SPEICHERHYGIENE
+	    // Kappt alle Objekt-Referenzen im Puffer sofort nach der Auswertung gegen Memory Loitering
+	    localArgs.clear();
 
-		
-		return getObjectRequester().requestAction(token, result, this);
-
+	    return getObjectRequester().requestAction(token, result, this);
 	}
+
 
 	/**
 	 * The method creates a new action as a reaction to an event.
@@ -397,6 +387,8 @@ public class ActionCreator extends SocialWorldThread {
 		return null;
 	}
 	
+	
+	
 	/**
 	 * The method creates a new action as a consequence of a simulation object's state.
 	 * The action depends on the object's attributes.
@@ -405,37 +397,28 @@ public class ActionCreator extends SocialWorldThread {
 	 */
 	private AbstractAction createAnimalActionByState(StateAnimal stateActor, FunctionByExpression f_CreateAction) {
 
-		int actorsObjectID;
+	    int actorsObjectID;
 
-		// 1. ALLOKATIONSFREIES RECYCLING 
-		workingActionArguments.clear();
+	    // --- STRATEGISCHER FREEZE AM KETTENSTART ---
+	    ValueArrayList localArgs = localEvalArgs.get();
+	    localArgs.clear(); // Alten Puffer-Inhalt restlos leeren
 
-		// objectID zum stateActor als Argument setzen
-		actorsObjectID = stateActor.getObjectID();
-		objectID.changeValue(actorsObjectID);
-		workingActionArguments.add(objectID);
-		
-		workingActionArguments.add( stateActor.getProperty(token, PropertyName.simobj_attributeArray) );
-		
-		// --- STRATEGISCHER FREEZE AM KETTENSTART ---
-		ValueArrayList localArgs = localEvalArgs.get();
-		localArgs.clear(); // Alten Puffer-Inhalt restlos leeren
-		
-		// Start-Argumente allokationsfrei in die thread-sichere Sandbox kopieren
-		int startSize = workingActionArguments.size();
-		for (int i = 0; i < startSize; i++) {
-			localArgs.add(workingActionArguments.get(i));
-		}
+	    // Direktes Befüllen der thread-sicheren Sandbox
+	    actorsObjectID = stateActor.getObjectID();
+	    objectID.changeValue(actorsObjectID);
+	    localArgs.add(objectID);
+	    
+	    localArgs.add( stateActor.getProperty(token, PropertyName.simobj_attributeArray) );
+	    
+	    // Berechnung direkt mit den Sandbox-Argumenten
+	    Value result = f_CreateAction.calculate(localArgs);
+	    
+	    // Speicherhygiene gegen Memory Loitering: Kappt alle Objekt-Referenzen im Puffer
+	    localArgs.clear();
 
-		Value result = f_CreateAction.calculate(localArgs);
-		
-		// Speicherhygiene gegen Memory Loitering: Kappt alle Objekt-Referenzen im Puffer
-		localArgs.clear();
-
-		return getObjectRequester().requestAction(token, result, this);
-		
-
+	    return getObjectRequester().requestAction(token, result, this);
 	}
+
 
 	/**
 	 * The method creates a new action as a consequence of a simulation object's state.

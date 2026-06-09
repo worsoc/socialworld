@@ -78,15 +78,9 @@ public  class AttributeCalculator extends SocialWorldThread {
 	private final CollectionElementSimObjRefreshed[] refreshedPool = new CollectionElementSimObjRefreshed[REFRESHED_POOL_SIZE];
 	private int refreshedWriteIndex = 0;
 
-	// Wiederverwendbare Argumentenliste 
-	private final ValueArrayList workingByEventArguments = new ValueArrayList();
-
 	// Wiederverwendbares Arbeits-Value für die Event-Properties (Fallback-Pfad)
 	private final Value workingEventParamValue = Value.getMutable(
 			Type.valueList, Value.VALUE_BY_NAME_EVENT_PARAMS, null);
-
-	// Wiederverwendbare Argumentenliste für die Matrix-Berechnungen
-	private final ValueArrayList workingByMatrixArguments = new ValueArrayList();
 
 	// Wiederverwendbarer, unveränderlicher Modus-Wrapper (Eager-Loading Singleton für diese Klasse)
 	private final Value calculationModeMatrixXVectorComplex =  Value.getMutable(

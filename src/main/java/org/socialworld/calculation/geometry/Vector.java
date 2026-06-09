@@ -110,15 +110,22 @@ public class Vector implements IObjectSender{
 	}
 	
 	public void normalize() {
-		
-		float length = length();
-		
-		this.x = this.x / length;
-		this.y = this.y / length;
-		this.z = this.z / length;
-		
-		normalized = true;
-	}
+	    float length = length();
+	    
+	    // Defensiver Schutz gegen Division durch 0 
+	    if (length > 0.00001f) {
+	        this.x = this.x / length;
+	        this.y = this.y / length;
+	        this.z = this.z / length;
+	    } else {
+	        // Ein Nullvektor bleibt ein sauberer Nullvektor und ist mathematisch "fertig"
+	        this.x = 0.0f;
+	        this.y = 0.0f;
+	        this.z = 0.0f;
+	    }
+        this.normalized = true; 
+
+	}	
 	
 	public boolean isNormalized() {
 		return normalized;

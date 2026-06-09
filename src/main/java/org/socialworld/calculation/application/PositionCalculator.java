@@ -56,8 +56,10 @@ public class PositionCalculator extends SocialWorldThread {
 	private int poolWriteIndex = 0;
 	
 	private final Vector zeroVector = Vector.get0Vector();
-	private final Vector workingVectorEvent = new Vector(0, 0, 0);
-	private final Vector workingVectorMove = new Vector(0, 0, 0);
+	
+	private final ThreadLocal<Vector> localVectorEvent = ThreadLocal.withInitial(() -> new Vector(0, 0, 0));
+	private final ThreadLocal<Vector> localVectorMove = ThreadLocal.withInitial(() -> new Vector(0, 0, 0));
+
 
 
 	/**
@@ -132,102 +134,106 @@ public class PositionCalculator extends SocialWorldThread {
 		}
 	}
 	
+	
 	private final int calculatePositionChangedByEvent(CollectionElementSimObjInfluenced moved) {
 
-		if (moved != null) {
+	    if (moved != null) {
 
-			Event event = moved.getEvent();
-			StateSimulationObject state  =  moved.getState();
-			HiddenSimulationObject hiddenWriteAccess =   moved.getHidden();
+	        Event event = moved.getEvent();
+	        StateSimulationObject state  =  moved.getState();
+	        HiddenSimulationObject hiddenWriteAccess =   moved.getHidden();
 
-			if (event == null || state == null || hiddenWriteAccess == null) {
-				if (GlobalSwitches.OUTPUT_DEBUG_POSITIONCALCULATOR_VARIABLE_IS_NULL) {
-					System.out.println("PositionCalculator.calculatePositionChangedByEvent(): Inner elements are null (Already processed)");
-				}
-				return POSITION_CALCULATOR_RETURNS_NO_CHANGE; // Blitzschneller, sicherer Abbruch
+	        if (event == null || state == null || hiddenWriteAccess == null) {
+	            if (GlobalSwitches.OUTPUT_DEBUG_POSITIONCALCULATOR_VARIABLE_IS_NULL) {
+	                System.out.println("PositionCalculator.calculatePositionChangedByEvent(): Inner elements are null (Already processed)");
+	            }
+	            return POSITION_CALCULATOR_RETURNS_NO_CHANGE; // Blitzschneller, sicherer Abbruch
+	        }
+	    
+	        // ====================================================================
+	        // THREAD-ISOLIERUNG (SANDBOX): Eigene Vektoren für diesen Thread holen
+	        // ====================================================================
+	        Vector workingVectorEvent = this.localVectorEvent.get();
+	        Vector workingVectorMove = this.localVectorMove.get();
+	        
+	        // Defensives Zurücksetzen gegen Restwerte aus alten Berechnungen
+	        workingVectorEvent.set(zeroVector);
+	        workingVectorMove.set(zeroVector);
+	        // ====================================================================
+
+	        int returnSetPosition;
+	        int returnSetMove;
+	        
+	        EventType eventType;
+	        
+	        Position positionOriginal = Position.getObjectNothing();
+	        Vector position;
+	        Position newPosition = Position.getObjectNothing();
+	        
+	        Direction directionMoveObject;
+	        float powerMoveObject;
+
+	        Direction directionEvent;
+	        float powerEvent;
+	        
+	        float resultingPowerMoveObject;
+	            
+	        eventType = event.getEventType();
+	        positionOriginal = getObjectRequester().requestPosition(token, state.getProperty(token, PropertyName.simobj_position), this);
+	        position = positionOriginal.getVector(token);
+	        
+	        directionMoveObject = getObjectRequester().requestDirection(token, state.getProperty(token, PropertyName.simobj_directionMove), this);
+	        workingVectorMove.set(directionMoveObject.getVector(token)); 
+	        powerMoveObject = directionMoveObject.getPower();
+	        
+	        directionEvent = getObjectRequester().requestDirection(token, event.getDirection(), this);
+	        if (directionEvent != null) {
+	            workingVectorEvent.set(directionEvent.getVector(token));
+	        }
+	        else {
+	            workingVectorEvent.set(zeroVector);
+	        }
+	        powerEvent = event.getStrength();
+	        
+	        if (!workingVectorEvent.isNormalized()) workingVectorEvent.normalize();
+	        if (!workingVectorMove.isNormalized()) workingVectorMove.normalize();
+	        
+	        switch (eventType) {
+	        case selfSleep:
+	            workingVectorEvent.set(zeroVector);
+	            powerMoveObject = 0;
+	            break;
+	        default:
+	        	break;
 			}
-		
-			int returnSetPosition;
-			int returnSetMove;
-			
-			EventType eventType;
-			
-			
-			Position positionOriginal = Position.getObjectNothing();
-			Vector position;
-			Position newPosition = Position.getObjectNothing();
-			
-			Direction directionMoveObject;
-//			Vector vectorMoveObject;
-			float powerMoveObject;
-	
-			Direction directionEvent;
-//			Vector vectorEvent;
-			float powerEvent;
-			
-			float resultingPowerMoveObject;
-				
-			
-			eventType = event.getEventType();
-			positionOriginal = getObjectRequester().requestPosition(token, state.getProperty(token, PropertyName.simobj_position), this);
-			position = positionOriginal.getVector(token);
-			
-			directionMoveObject = getObjectRequester().requestDirection(token, state.getProperty(token, PropertyName.simobj_directionMove), this);
-			workingVectorMove.set(directionMoveObject.getVector(token)); 
-			powerMoveObject = directionMoveObject.getPower();
-			
-			directionEvent = getObjectRequester().requestDirection(token, event.getDirection(), this);
-			if (directionEvent != null) {
-				workingVectorEvent.set(directionEvent.getVector(token));
-			}
-			else {
-				// TODO directionEvent is null
-				workingVectorEvent.set(zeroVector);
-			}
-			powerEvent = event.getStrength();
-			
-			if (!workingVectorEvent.isNormalized()) workingVectorEvent.normalize();
-			if (!workingVectorMove.isNormalized()) workingVectorMove.normalize();
-			
-			switch (eventType) {
-			// TODO cases and implementations
-			case selfSleep:
-				workingVectorEvent.set(zeroVector);
-				powerMoveObject = 0;
-				break;
-			default:
-				return POSITION_CALCULATOR_RETURNS_NO_CHANGE;
-			}
-			
-			// TODO calculate resulting direction and power
-			
-			
-			workingVectorMove.mul(powerMoveObject);
-			workingVectorEvent.mul(powerEvent);
-			workingVectorMove.add(workingVectorEvent);
-			
-			resultingPowerMoveObject = workingVectorMove.length();
-			position.add(workingVectorMove);
-			workingVectorMove.normalize();
-			
-			newPosition = new Position(PropertyName.simobj_position, position);
-			
-			
-			returnSetPosition = hiddenWriteAccess.setPosition(newPosition);
-			if (returnSetPosition != WriteAccessToSimulationObject.WRITE_ACCESS_RETURNS_SUCCESS) return returnSetPosition;
-			
-			// hier kann man mit einem workingVector arbeiten weil im Direction-Konstruktor der Vektor nur lokal verwendet wird
-			returnSetMove = hiddenWriteAccess.setMove(new Direction(PropertyName.simobj_directionMove, workingVectorMove, resultingPowerMoveObject));
-			if (returnSetMove != WriteAccessToSimulationObject.WRITE_ACCESS_RETURNS_SUCCESS) return returnSetMove;
-	
-			if (workingVectorMove.equals(zeroVector))
-				return POSITION_CALCULATOR_RETURNS_NO_CHANGE;
-			else
-				return POSITION_CALCULATOR_RETURNS_CHANGE;
-		}	
-		else {
-			System.out.println("PositionCalculator.calculatePositionChangedByEvent(): moved is null");
-			return POSITION_CALCULATOR_RETURNS_EMPTY_LISTS;
-		}
+	        
+	        // Berechnung der resultierenden Bewegung (In-Place auf dem isolierten Vektor)
+	        workingVectorMove.mul(powerMoveObject);
+	        workingVectorEvent.mul(powerEvent);
+	        workingVectorMove.add(workingVectorEvent);
+	        
+	        resultingPowerMoveObject = workingVectorMove.length();
+	        position.add(workingVectorMove);
+	        workingVectorMove.normalize();
+	        
+	        newPosition = new Position(PropertyName.simobj_position, position);
+	        
+	        returnSetPosition = hiddenWriteAccess.setPosition(newPosition);
+	        if (returnSetPosition != WriteAccessToSimulationObject.WRITE_ACCESS_RETURNS_SUCCESS) return returnSetPosition;
+	        
+	        // Verwendung des geschützten Arbeitsvektors für die finale Richtungsänderung
+	        returnSetMove = hiddenWriteAccess.setMove(new Direction(PropertyName.simobj_directionMove, workingVectorMove, resultingPowerMoveObject));
+	        if (returnSetMove != WriteAccessToSimulationObject.WRITE_ACCESS_RETURNS_SUCCESS) return returnSetMove;
+
+	        if (workingVectorMove.equals(zeroVector))
+	            return POSITION_CALCULATOR_RETURNS_NO_CHANGE;
+	        else
+	            return POSITION_CALCULATOR_RETURNS_CHANGE;
+	    }   
+	    else {
+	        System.out.println("PositionCalculator.calculatePositionChangedByEvent(): moved is null");
+	        return POSITION_CALCULATOR_RETURNS_EMPTY_LISTS;
+	    }
 	}
+	
 }

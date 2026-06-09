@@ -69,9 +69,6 @@ public class KnowledgeCalculator extends SocialWorldThread {
 
 	private CapacityQueue<CollectionElementSimObjInfluenced> perceptions;
 
-	// Wiederverwendbare, allokationsfreie Argumentenliste für die Wissens-Berechnung
-	private final ValueArrayList workingKnowledgeArguments = new ValueArrayList();
-
 	// Allokationsfreier Sandbox-Puffer für die Thread-Isolierung im Rechenkern
 	private final ThreadLocal<ValueArrayList> localEvalArgs = 
 	    ThreadLocal.withInitial(() -> new ValueArrayList());
@@ -185,27 +182,20 @@ public class KnowledgeCalculator extends SocialWorldThread {
 	}
 	
 	private final int setFacts(Event event, StateAnimal stateAnimal, HiddenAnimal hiddenWriteAccess) {
-		
+	    
 	    KnowledgeElement knowledgeElement;
 	    Value valueKE;
 	    
-	    // 1. ALLOKATIONSFREIES LEEREN DER KLASSEN-LISTE
-	    this.workingKnowledgeArguments.clear(); 
+	    // 1. STRATEGISCHER START IN DER THREAD-ISOLIERTEN SANDBOX
+	    ValueArrayList localArgs = this.localEvalArgs.get();
+	    localArgs.clear(); // Alten Inhalt der Sandbox allokationsfrei löschen
 
 	    ValueArrayList eventParams = event.getProperties();
 	    
-	    // Befüllen der primären Arbeitsliste
-	    this.workingKnowledgeArguments.add(new Value(Type.valueList, Value.VALUE_BY_NAME_EVENT_PARAMS, eventParams));
-	    this.workingKnowledgeArguments.add(new Value(Type.simulationObject, Value.VALUE_NAME_KNOWLEDGE_SOURCE_MYSELF, stateAnimal.getObject()));
+	    // 2. DIREKTES BEFÜLLEN DER SANDBOX (ALLOKATIONSFREI)
+	    localArgs.add(new Value(Type.valueList, Value.VALUE_BY_NAME_EVENT_PARAMS, eventParams));
+	    localArgs.add(new Value(Type.simulationObject, Value.VALUE_NAME_KNOWLEDGE_SOURCE_MYSELF, stateAnimal.getObject()));
 	    
-	    // ====================================================================
-	    // THREAD-ISOLIERUNG: Kopieren in die localArgs 
-	    // ====================================================================
-	    ValueArrayList localArgs = this.localEvalArgs.get();
-	    localArgs.clear(); // Alten Inhalt der Sandbox allokationsfrei löschen
-	    localArgs.addAll(this.workingKnowledgeArguments); // Daten sicher überspielen
-	    // ====================================================================
-
 	    int result = KNOWLEDGE_CALCULATOR_RETURNS_NO_CHANGES;
 	    int resultTmp;
 	    
@@ -240,15 +230,15 @@ public class KnowledgeCalculator extends SocialWorldThread {
 	    }
 	    
 	    // ====================================================================
-	    // DAS SPEICHER-FALLBEIL FÜR BEIDE ENDEN:
+	    // DAS SPEICHER-FALLBEIL:
 	    // ====================================================================
-	    this.workingKnowledgeArguments.clear();
-	    localArgs.clear(); // Auch die Sandbox wird sofort wieder ausgekehrt!
+	    // Kappt alle Objekt-Referenzen im Puffer sofort nach der Auswertung gegen Memory Loitering
+	    localArgs.clear(); 
 	    // ====================================================================
 	    
 	    return result;
 	}
-	
+
 	
 	
 	public static KnowledgeElement createKnowledgeElement(ValueArrayList knowledgeElementProperties) {
