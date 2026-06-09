@@ -70,11 +70,11 @@ public class KnowledgeCalculator extends SocialWorldThread {
 	private CapacityQueue<CollectionElementSimObjInfluenced> perceptions;
 
 	// Wiederverwendbare, allokationsfreie Argumentenliste für die Wissens-Berechnung
-	private final ValueArrayList workingKnowledgeArguments = new ValueArrayList(16);
+	private final ValueArrayList workingKnowledgeArguments = new ValueArrayList();
 
 	// Allokationsfreier Sandbox-Puffer für die Thread-Isolierung im Rechenkern
 	private final ThreadLocal<ValueArrayList> localEvalArgs = 
-	    ThreadLocal.withInitial(() -> new ValueArrayList(16));
+	    ThreadLocal.withInitial(() -> new ValueArrayList());
 	
 	private static AccessTokenKnowledgeCalculator token = AccessTokenKnowledgeCalculator.getValid();
 	

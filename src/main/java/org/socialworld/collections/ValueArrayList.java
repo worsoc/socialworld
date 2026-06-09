@@ -58,7 +58,7 @@ public class ValueArrayList implements IObjectSender{
 		this.nothing = Value.getValueNothing();
 	}
 	
-	public ValueArrayList(int size) {
+	private ValueArrayList(int size) {
 		
 		this.values = new ArrayList<Value>();
 		this.nothing = Value.getValueNothing();
@@ -68,6 +68,10 @@ public class ValueArrayList implements IObjectSender{
 		}
 	}
 	
+   public static ValueArrayList withPreFilledNothing(int size) {
+        return new ValueArrayList(size);
+    }
+
 	public int size() {
 		return values.size();
 	}

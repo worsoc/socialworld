@@ -508,9 +508,7 @@ public class Expression implements IObjectReceiver{
 							valueList = getObjectRequester().requestValueArrayList(token, tmp, this);
 						}
 						else {
-							// ALLOKATIONSFREI: ThreadLocal-Puffer recyclen statt 'new'
-							valueList = calculation.getSharedValueListBuffer(); 
-							valueList.clear();
+							valueList = new ValueArrayList(); 
 							valueList.add(tmp);
 						}
 						tmp = expression2.evaluate(valueList);
@@ -525,9 +523,6 @@ public class Expression implements IObjectReceiver{
 						tmp = ValueProperty.getInvalid();
 					}
 					
-					if (valueList != null && valueList == calculation.getSharedValueListBuffer()) {
-					    valueList.clear(); // Kappt die Referenz auf das 'tmp'-Objekt im Puffer!
-					}
 					return tmp;
 					
 				case branching:
@@ -628,16 +623,13 @@ public class Expression implements IObjectReceiver{
 					
 				case function:
 					
-					// ALLOKATIONSFREI: ThreadLocal-Puffer recyclen statt 'new'
-					valueList = calculation.getSharedValueListBuffer();
-					valueList.clear();
+					ValueArrayList localValueList = new ValueArrayList();
+					   					
+					localValueList.add( expression1.evaluate(arguments) );
+					localValueList.add( expression2.evaluate(arguments) );
+					localValueList.add( expression3.evaluate(arguments) );
 					
-					valueList.add( expression1.evaluate(arguments) );
-					valueList.add( expression2.evaluate(arguments) );
-					valueList.add( expression3.evaluate(arguments) );
-					
-					Value result = function.calculate(valueList);
-					valueList.clear(); // ZERSTÖRT illegale langlebige Referenzen sofort!
+					Value result = function.calculate(localValueList);
 					return result;
 					
 				case oneExpression:

@@ -47,7 +47,16 @@ public  class AttributeCalculator extends SocialWorldThread {
 	public static final int ATTRIBUTE_CALCULATOR_RETURNS_NO_CHANGES = 1;
 	public static final int ATTRIBUTE_CALCULATOR_RETURNS_INVALID_RESULT = 3;
 
-	public static long counterAttributeCalculationsWithoutChanges = 0;
+	// Die regulären "Alles-Ok-aber-keine-Änderung"-Zähler
+	private long counterWithChanges_Event = 0;
+	private long counterNoChanges_Event = 0;
+	private long counterNoChanges_SimpleMatrix = 0;
+	private long counterNoChanges_ComplexMatrix = 0;
+
+	// Die technischen Fehler-Zähler für fehlerhafte DSL/JSON-Regeln
+	private long counterErrors_Event = 0;
+	private long counterErrors_SimpleMatrix = 0;
+	private long counterErrors_ComplexMatrix = 0;
 	
 	private static AttributeCalculator instance;
 
@@ -93,7 +102,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 	
 	// Allokationsfreier Sandbox-Puffer für die Thread-Isolierung
 	private final ThreadLocal<ValueArrayList> localEvalArgs = 
-	    ThreadLocal.withInitial(() -> new ValueArrayList(16));
+	    ThreadLocal.withInitial(() -> new ValueArrayList());
 
 	
 	/**
@@ -252,13 +261,17 @@ public  class AttributeCalculator extends SocialWorldThread {
 			
 			if (resultAttributeArray.isValid()) {
 				if (resultAttributeArray.getTransferCode() == ValueTransferCode.noChanges) {
-					counterAttributeCalculationsWithoutChanges++;
+					counterNoChanges_Event++;
 					return ATTRIBUTE_CALCULATOR_RETURNS_NO_CHANGES;
 				}
-				return hiddenWriteAccess.setAttributes(resultAttributeArray);
+				else {
+					counterWithChanges_Event++;
+					return hiddenWriteAccess.setAttributes(resultAttributeArray);
+				}
 			}
-			else
+			else {
 				return ATTRIBUTE_CALCULATOR_RETURNS_INVALID_RESULT;
+			}
 		}
 		else {
 			System.out.println("AttributeCalculator.calculateAttributesChangedByEvent(): influenced is null");
@@ -285,65 +298,65 @@ public  class AttributeCalculator extends SocialWorldThread {
 		FunctionByExpression f_EventInfluence = null;
 	
 		eventType = event.getEventTypeAsInt();
-		
 		eventInfluenceType = stateAnimal.getInfluenceType(eventType);
 		
 		eventInfluenceDescription = 
 			EventInfluenceAssignment.getInstance().getEventInfluenceDescription(
-				eventType, eventInfluenceType	);
+				eventType, eventInfluenceType);
+
+		// GEGEN NULL ABSICHERN (Falls im JSON-Regelwerk die Beschreibung fehlt)
+		if (eventInfluenceDescription == null) {
+			this.counterErrors_Event++;
+			oldAttributes = stateAnimal.getProperty(token, PropertyName.simobj_attributeArray);
+			oldAttributes.setTransferCode(ValueTransferCode.noChanges);
+			return oldAttributes;
+		}
 
 		int count = eventInfluenceDescription.countFunctions();
 
-		// 1. ALLOKATIONSFREIES RECYCLING 
-		workingByEventArguments.clear();
+		// ====================================================================
+		// 1. ALLOKATIONSFREIES LEEREN DER LOKALEN SANDBOX (DIREKTER PFAD!)
+		// ====================================================================
+		ValueArrayList localArgs = this.localEvalArgs.get();
+		localArgs.clear(); // Sandbox klinisch rein fegen
 
-		// objectID zum stateAnimal als Argument setzen
+		// INDEX 0: Die Objekt-ID bleibt als unveränderliche Konstante ganz vorne sitzen!
 		animalsObjectID = stateAnimal.getObjectID();
 		objectID.changeValue(animalsObjectID);
-		workingByEventArguments.add( objectID );
+		localArgs.add(objectID); 
 
-		// AttributeArray des stateAnimal als Argument setzen
-		oldAttributes =  stateAnimal.getProperty(token, PropertyName.simobj_attributeArray);
-		workingByEventArguments.add( oldAttributes );
+		// INDEX 1: Die aktuellen Attribute des Tieres als Startwert für die Kaskade
+		oldAttributes = stateAnimal.getProperty(token, PropertyName.simobj_attributeArray);
+		localArgs.add(oldAttributes); 
 
-		// 2. ALLOKATIONSFREIES RECYCLING DES FALLBACK-VALUES
+		// INDEX 2: Das auslösende Event oder dessen optionale Parameter
 		if (event.hasOptionalParam()) {
-			workingByEventArguments.add( event.getOptionalParam().getParamListAsValue());
+			localArgs.add(event.getOptionalParam().getParamListAsValue());
 		}
 		else {
 			// Ändert nur die interne Referenz im bestehenden Value-Objekt, statt 'new' zu rufen
-	        workingEventParamValue.changeValue(event.getProperties()); 
-	        workingByEventArguments.add(workingEventParamValue);
+			workingEventParamValue.changeValue(event.getProperties()); 
+			localArgs.add(workingEventParamValue);
 		}
-
+		// ====================================================================
 		
-		// --- STRATEGISCHER FREEZE AM KETTENSTART ---
-		ValueArrayList localArgs = localEvalArgs.get();
-		localArgs.clear(); // Alten Puffer-Inhalt restlos leeren
-		
-		// Start-Argumente allokationsfrei in die thread-sichere Sandbox kopieren
-		localArgs.addAll(workingByEventArguments);
-		
-		// Die Schleife arbeitet jetzt zu 100% isoliert und autark in ihrer lokalen Kopie der Argumente
+		// 2. DIE SCHLEIFE RECHNET ZU 100% THREAD-ISOLIERT
 		for (int index = 0; index < count; index++) {
-			
 			f_EventInfluence = eventInfluenceDescription.getFunction(index);
 			
-			// Berechnung auf der isolierten Kopie ausführen
+			// Berechnung auf der isolierten Sandbox ausführen
 			newAttributes = f_EventInfluence.calculate(localArgs);
 			
-			// Das Ergebnis direkt für den nächsten Schleifendurchlauf in die lokale Argumentliste füttern
 			if (newAttributes != null && newAttributes.isValid()) {
-				localArgs.set(0, newAttributes);
+				localArgs.set(1, newAttributes);
 			}
 		}
 	
-		// Speicherhygiene gegen Memory Loitering: Kappt alle Objekt-Referenzen im Puffer
-		localArgs.clear();
 
-		
-		if (newAttributes.isValid()){
+		if (newAttributes.isValid()) {
 			if (oldAttributes.equals(newAttributes)) {
+				// REGULÄRER ZWEIG: Berechnung lief durch, brachte aber keine Änderung
+				this.counterNoChanges_Event++; 
 				newAttributes.setTransferCode(ValueTransferCode.noChanges);
 				if (GlobalSwitches.OUTPUT_CALCULATE_ATTRIBUTE_BY_EVENT == true)
 					System.out.println("AttributeCalculator...ChangedByEvent(): " + oldAttributes.toString() + " bleibt gleich");
@@ -352,11 +365,16 @@ public  class AttributeCalculator extends SocialWorldThread {
 				if (GlobalSwitches.OUTPUT_CALCULATE_ATTRIBUTE_BY_EVENT == true)
 					System.out.println("AttributeCalculator...ChangedByEvent(): " + oldAttributes.toString() + " --> "+ newAttributes.toString());
 			}
+			// SPEICHER-FALLBEIL: Sandbox sofort wieder restlos auskehren
+			localArgs.clear();
 			return newAttributes;
 		}
 		else {
+			// FEHLER-ZWEIG: Die DSL/Event-Regel lieferte ein ungültiges Ergebnis!
+			this.counterErrors_Event++; 
 			oldAttributes.setTransferCode(ValueTransferCode.noChanges);
-			return oldAttributes;
+            localArgs.clear();
+            return oldAttributes;
 		}
 	}
 
@@ -380,7 +398,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 			
 			if (resultAttributeArray.isValid()) {
 				if (resultAttributeArray.getTransferCode() == ValueTransferCode.noChanges) {
-					counterAttributeCalculationsWithoutChanges++;
+					counterNoChanges_ComplexMatrix++;
 					return ATTRIBUTE_CALCULATOR_RETURNS_NO_CHANGES;
 				}
 				return hiddenWriteAccess.setAttributes(resultAttributeArray);
@@ -401,48 +419,51 @@ public  class AttributeCalculator extends SocialWorldThread {
 	    Value newAttributes = Value.getValueNothing();
 	    int animalsObjectID;
 
-	    // 1. ALLOKATIONSFREIES RECYCLING DER MATRIX-LISTE
-	    workingByMatrixArguments.clear();
-	    
+	    // 1. ALLOKATIONSFREIES LEEREN DER LOKALEN SANDBOX (DIREKTER PFAD)
+	    ValueArrayList localArgs = this.localEvalArgs.get();
+	    localArgs.clear(); // Sandbox klinisch rein fegen
+
+	    // INDEX 0: Die alten Ausgangs-Attribute (Der Rechenkern braucht sie fix hier!)
+	    oldAttributes = stateAnimal.getProperty(token, PropertyName.simobj_attributeArray);
+	    localArgs.add(oldAttributes); 
+
+	    // INDEX 1: Der Berechnungs-Modus (COMPLEX)
+	    localArgs.add(calculationModeMatrixXVectorComplex); 
+
+	    // INDEX 2: Die Objekt-ID (Sicher am Ende platziert für den namentlichen Abruf)
 	    animalsObjectID = stateAnimal.getObjectID();
 	    objectID.changeValue(animalsObjectID);
-	    workingByMatrixArguments.add( objectID ); // <-- JETZT AUCH HIER SAUBER TRENNEN!
+	    localArgs.add(objectID); 
 
-	    oldAttributes = stateAnimal.getProperty(token, PropertyName.simobj_attributeArray);
-	    workingByMatrixArguments.add(oldAttributes);
-
-	    // 2. ABSOLUT ALLOKATIONSFREI: Nutzung des vorallokierten Modus-Values
-	    workingByMatrixArguments.add(calculationModeMatrixXVectorComplex);
-	    
-	    // ====================================================================
-	    // THREAD-ISOLIERUNG: Übertragen in den lokalen Thread-Puffer
-	    // ====================================================================
-	    ValueArrayList localArgs = this.localEvalArgs.get();
-	    localArgs.clear(); // Sandbox allokationsfrei säubern
-	    localArgs.addAll(workingByMatrixArguments); 
-	    // ====================================================================
-
+	    // 2. MATRIX ABHOLEN & GEGEN NULL ABSICHERN
 	    f_AttributesByMatrix = stateAnimal.getMatrix();
+	    if (f_AttributesByMatrix == null) {
+	        this.counterErrors_ComplexMatrix++; // Technische Fehlstelle (keine Matrix vorhanden)
+	        oldAttributes.setTransferCode(ValueTransferCode.noChanges);
+	        return oldAttributes;
+	    }
 	    
+	    // INTERPRETER ERHÄLT DIE ISOLIERTE, INDEX-KORREKTE SANDBOX
 	    newAttributes = f_AttributesByMatrix.calculate(localArgs);
 	    
-	    // SPEICHER-FALLBEIL: Sandbox sofort wieder auskehren
+	    // SPEICHER-FALLBEIL: Sandbox sofort wieder restlos auskehren
 	    localArgs.clear();
 
-	    if (newAttributes.isValid()){
+	    if (newAttributes.isValid()) {
 	        if (oldAttributes.equals(newAttributes)) {
+	            // REGULÄRER ZWEIG: Berechnung lief durch, aber Werte sind identisch
+	            this.counterNoChanges_ComplexMatrix++; 
 	            newAttributes.setTransferCode(ValueTransferCode.noChanges);
-	        }
-	        else {
 	        }
 	        return newAttributes;
 	    }
 	    else {
+	        // FEHLER-ZWEIG: Die DSL/JSON-Regel lieferte ein ungültiges Ergebnis!
+	        this.counterErrors_ComplexMatrix++; 
 	        oldAttributes.setTransferCode(ValueTransferCode.noChanges);
 	        return oldAttributes;
 	    }
 	}
-	
 	
 	
 	private final int calculateAttributesChangedBySimpleMatrix(CollectionElementSimObjRefreshed refreshed) {
@@ -465,7 +486,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 			
 			if (resultAttributeArray.isValid()) {
 				if (resultAttributeArray.getTransferCode() == ValueTransferCode.noChanges) {
-					counterAttributeCalculationsWithoutChanges++;
+					counterNoChanges_SimpleMatrix++;
 					return ATTRIBUTE_CALCULATOR_RETURNS_NO_CHANGES;
 				}
 				return hiddenWriteAccess.setAttributes(resultAttributeArray);
@@ -481,59 +502,79 @@ public  class AttributeCalculator extends SocialWorldThread {
 		
 	}
 	
+	
 	private final Value getAttributesChangedBySimpleMatrix(StateAnimal stateAnimal) {
 	    FunctionByMatrix f_AttributesByMatrix;
 	    Value oldAttributes;
 	    Value newAttributes = Value.getValueNothing();
 	    int animalsObjectID;
 
-	    // 1. ALLOKATIONSFREIES RECYCLING DER MATRIX-LISTE
-	    workingByMatrixArguments.clear();
-	    
+	    // 1. ALLOKATIONSFREIES LEEREN DER LOKALEN SANDBOX (DIREKTER PFAD)
+	    ValueArrayList localArgs = this.localEvalArgs.get();
+	    localArgs.clear(); // Sandbox klinisch rein fegen
+
+	    // INDEX 0: Die alten Ausgangs-Attribute (Der Rechenkern braucht sie fix hier!)
+	    oldAttributes = stateAnimal.getProperty(token, PropertyName.simobj_attributeArray);
+	    localArgs.add(oldAttributes); 
+
+	    // INDEX 1: Der Berechnungs-Modus (SIMPLE)
+	    localArgs.add(calculationModeMatrixXVectorSimple); 
+
+	    // INDEX 2: Die Objekt-ID (Sicher am Ende platziert für den namentlichen Abruf)
 	    animalsObjectID = stateAnimal.getObjectID();
 	    objectID.changeValue(animalsObjectID);
-	    workingByMatrixArguments.add( objectID ); // <-- JETZT IN DER RICHTIGEN LISTE!
+	    localArgs.add(objectID); 
 
-	    oldAttributes = stateAnimal.getProperty(token, PropertyName.simobj_attributeArray);
-	    workingByMatrixArguments.add(oldAttributes);
-
-	    // 2. ABSOLUT ALLOKATIONSFREI: Vorallokierter Simple-Modus
-	    workingByMatrixArguments.add(calculationModeMatrixXVectorSimple);
-	        
-	    // ====================================================================
-	    // THREAD-ISOLIERUNG: Sicheres Überspielen in die lokale Sandbox
-	    // ====================================================================
-	    ValueArrayList localArgs = this.localEvalArgs.get();
-	    localArgs.clear(); // Sandbox allokationsfrei leeren
-	    localArgs.addAll(workingByMatrixArguments); 
-	    // ====================================================================
-
+	    // 2. MATRIX ABHOLEN & GEGEN NULL ABSICHERN
 	    f_AttributesByMatrix = stateAnimal.getMatrix();
+	    if (f_AttributesByMatrix == null) {
+	        this.counterErrors_SimpleMatrix++; // Technische Fehlstelle (keine Matrix vorhanden)
+	        oldAttributes.setTransferCode(ValueTransferCode.noChanges);
+	        return oldAttributes;
+	    }
 	    
-	    // INTERPRETER ERHÄLT DIE ISOLIERTEN LOCAL-ARGS:
+	    // INTERPRETER ERHÄLT DIE ISOLIERTE, INDEX-KORREKTE SANDBOX
 	    newAttributes = f_AttributesByMatrix.calculate(localArgs);
 	    
-	    // SPEICHER-FALLBEIL FÜR DIE NEBEN-SCHIENE:
-	    localArgs.clear(); // Die Sandbox sofort wieder sauber auskehren
+	    // SPEICHER-FALLBEIL: Sandbox sofort wieder restlos auskehren
+	    localArgs.clear();
 
-	    if (!newAttributes.isInvalidOrNothing()){
+	    if (!newAttributes.isInvalidOrNothing()) {
 	        if (oldAttributes.equals(newAttributes)) {
+	            // REGULÄRER ZWEIG: Berechnung lief durch, aber Werte sind identisch
+	            this.counterNoChanges_SimpleMatrix++; 
 	            newAttributes.setTransferCode(ValueTransferCode.noChanges);
-	        }
-	        else {
 	        }
 	        return newAttributes;
 	    }
 	    else {
+	        // FEHLER-ZWEIG: Die DSL/JSON-Regel lieferte ein ungültiges Ergebnis!
+	        this.counterErrors_SimpleMatrix++; 
 	        oldAttributes.setTransferCode(ValueTransferCode.noChanges);
 	        return oldAttributes;
 	    }
 	}
-	
 
+	
 	public void printInfluencedQueueCounts() {
 		influenced.printCounts();
-		System.out.println("AttributeCalculator>counterAttributeCalculationsWithoutChanges: " + counterAttributeCalculationsWithoutChanges);
+		System.out.println("--- AttributeCalculator-Detaillast ---");
+		System.out.println("Regulär MIT Änderung (Event)         : " + this.counterWithChanges_Event);
+		System.out.println("Regulär ohne Änderung (Event)         : " + this.counterNoChanges_Event);
+		System.out.println("Regulär ohne Änderung (Simple Matrix) : " + this.counterNoChanges_SimpleMatrix);
+		System.out.println("Regulär ohne Änderung (Complex Matrix): " + this.counterNoChanges_ComplexMatrix);
+		System.out.println("-> DSL/Regel-Fehler (Event)   : " + this.counterErrors_Event);
+		System.out.println("-> DSL/Regel-Fehler (Simple Matrix)   : " + this.counterErrors_SimpleMatrix);
+		System.out.println("-> DSL/Regel-Fehler (Complex Matrix)  : " + this.counterErrors_ComplexMatrix);
+
+		// Allokationsfreier Reset für den nächsten Zyklus
+		this.counterWithChanges_Event = 0;
+		this.counterNoChanges_Event = 0;
+		this.counterNoChanges_SimpleMatrix = 0;
+		this.counterNoChanges_ComplexMatrix = 0;
+		this.counterErrors_Event = 0;
+		this.counterErrors_SimpleMatrix = 0;
+		this.counterErrors_ComplexMatrix = 0;
 	}
 	
 	/**

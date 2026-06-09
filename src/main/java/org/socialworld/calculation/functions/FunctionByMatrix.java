@@ -171,7 +171,7 @@ public class FunctionByMatrix extends FunctionBase{
 		float change;
 
 		length = attributes.length();
-		arguments = new ValueArrayList(1);
+		arguments =  ValueArrayList.withPreFilledNothing(1);
 		
 		offset = new Value(Type.integer,  0);
 		
@@ -246,7 +246,7 @@ public class FunctionByMatrix extends FunctionBase{
 			attributesNew[row] = calculation.getZero(Type.integer);
 		}
 
-		arguments = new ValueArrayList(1);
+		arguments =  ValueArrayList.withPreFilledNothing(1);
 			
 		for (row = 0; row < length; row++) {
 
@@ -339,7 +339,7 @@ public class FunctionByMatrix extends FunctionBase{
 
 		length = attributes.length();
 		attributesNew = new float[length];
-		arguments = new ValueArrayList(1);
+		arguments =  ValueArrayList.withPreFilledNothing(1);
 		
 		offset = new Value(Type.integer,  0);
 		

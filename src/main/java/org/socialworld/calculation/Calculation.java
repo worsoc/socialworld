@@ -39,11 +39,11 @@ public class Calculation implements IObjectReceiver{
 	static Value zeroFloatingPoint;
 	static Value zeroVector;
 	
-	
+/*	
 	// Ein permanenter, thread-spezifischer Puffer mit einer Startkapazität von 4 Elementen
 	private final ThreadLocal<ValueArrayList> sharedValueListBuffer = 
-	    ThreadLocal.withInitial(() -> new ValueArrayList(4));
-
+	    ThreadLocal.withInitial(() -> new ValueArrayList());
+*/
 	
 
 	private static AccessTokenExpression token = AccessTokenExpression.getValid();
@@ -144,16 +144,7 @@ public class Calculation implements IObjectReceiver{
 		return created;
 	}
 	
-	/**
-	 * !!! KRITISCHER HOT-PATH PUFFER !!!
-	 * Nur für TEMPORÄRE Berechnungen im selben Thread nutzen.
-	 * Die gelieferte Liste darf NIEMALS in Objekten gespeichert oder 
-	 * an langlebige Datenstrukturen übergeben werden!
-	 * Vor der Nutzung zwingend .clear() aufrufen.
-	 */
-	public ValueArrayList getSharedValueListBuffer() {
-	    return this.sharedValueListBuffer.get();
-	}
+
 
 	public Value or(Value op1, Value op2) {
 		if (op1.isValid() & op2.isValid())

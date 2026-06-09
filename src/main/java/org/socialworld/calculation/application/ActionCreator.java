@@ -79,7 +79,7 @@ public class ActionCreator extends SocialWorldThread {
 
 	// Allokationsfreier Sandbox-Puffer für die Thread-Isolierung
 	private final ThreadLocal<ValueArrayList> localEvalArgs = 
-	    ThreadLocal.withInitial(() -> new ValueArrayList(16));
+	    ThreadLocal.withInitial(() -> new ValueArrayList());
 
 	// Wiederverwendbarer, veränderlicher Value für objectID 
 	private final Value objectID =  Value.getMutable(
