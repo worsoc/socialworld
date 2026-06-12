@@ -84,6 +84,10 @@ public abstract class KnowledgeRelation extends KnowledgeFact {
 		}
 	}
 
+	protected boolean isValidRelation() {
+		return (relation != Relation.nothing);
+	}
+	
 	protected void setRelation(Relation relation) {
 		this.relation = relation;
 	}

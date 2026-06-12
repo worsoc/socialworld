@@ -61,6 +61,10 @@ public class KnowledgeRelationTrinaer extends KnowledgeRelation {
 		}
 	}
 	
+	boolean isValid() {
+		return isValidRelation() && this.object1 != null && this.object2 != null;
+	}
+
 	KnowledgeFact_Criterion getCriterion() {
 		return KnowledgeFact_Criterion.relationTrinaer;
 	}

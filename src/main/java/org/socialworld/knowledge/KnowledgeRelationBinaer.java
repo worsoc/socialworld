@@ -60,6 +60,10 @@ public class KnowledgeRelationBinaer extends KnowledgeRelation {
 		}
 	}
 	
+	boolean isValid() {
+		return isValidRelation() && this.object != null;
+	}
+
 	KnowledgeFact_Criterion getCriterion() {
 		return KnowledgeFact_Criterion.relationBinaer;
 	}

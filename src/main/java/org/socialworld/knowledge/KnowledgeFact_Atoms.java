@@ -118,6 +118,12 @@ public class KnowledgeFact_Atoms {
 		return isEqual;
 	}
 	
+	public boolean isValid() {
+		if (this.atoms == null) return false;
+		if (this.atoms.size() == 0)  return false;
+		return true;
+	}
+	
 	public String toString() {
 		String output = "<";
 		int index = 0;

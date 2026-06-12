@@ -30,7 +30,7 @@ import org.socialworld.core.IAccessToken;
 public abstract class KnowledgeItem implements IObjectSender, IObjectReceiver{
 
 	
-
+	abstract boolean isValid();
 	abstract KnowledgeItem getCopy();
 	abstract KnowledgeItemNotes removeNotes();
 	protected abstract boolean isEqual(KnowledgeItem item);

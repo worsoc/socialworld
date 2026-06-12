@@ -48,6 +48,7 @@ import org.socialworld.knowledge.KnowledgeSource_Type;
 import org.socialworld.knowledge.KnowledgeValue;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.StateAnimal;
+import org.socialworld.objects.WriteAccessToSimulationObject;
 import org.socialworld.objects.access.HiddenAnimal;
 
 public class KnowledgeCalculator extends SocialWorldThread {
@@ -75,7 +76,14 @@ public class KnowledgeCalculator extends SocialWorldThread {
 	
 	private static AccessTokenKnowledgeCalculator token = AccessTokenKnowledgeCalculator.getValid();
 	
-	
+	// Telemetrie-Counter für Wissens-Verarbeitung
+	private long counterEventsProcessed = 0;
+	private long counterFunctionsFound = 0;
+	private long counterNothingReturned = 0;
+	private long counterInvalidKnowledgeElements = 0;
+	private long counterSuccessfullyAdded = 0;
+	private long counterRejectedByWriteAccess = 0;
+
 	/**
 	 * private Constructor. 
 	 */
@@ -181,7 +189,87 @@ public class KnowledgeCalculator extends SocialWorldThread {
 		
 	}
 	
+	
 	private final int setFacts(Event event, StateAnimal stateAnimal, HiddenAnimal hiddenWriteAccess) {
+	    
+	    // Telemetrie: Event-Eingang registrieren
+	    this.counterEventsProcessed++;
+	    
+	    KnowledgeElement knowledgeElement;
+	    Value valueKE;
+	    
+	    // 1. STRATEGISCHER START IN DER THREAD-ISOLIERTEN SANDBOX
+	    ValueArrayList localArgs = this.localEvalArgs.get();
+	    localArgs.clear(); // Alten Inhalt der Sandbox allokationsfrei löschen
+
+	    ValueArrayList eventParams = event.getProperties();
+	    
+	    // 2. DIREKTES BEFÜLLEN DER SANDBOX (ALLOKATIONSFREI)
+	    localArgs.add(new Value(Type.valueList, Value.VALUE_BY_NAME_EVENT_PARAMS, eventParams));
+	    localArgs.add(new Value(Type.simulationObject, Value.VALUE_NAME_KNOWLEDGE_SOURCE_MYSELF, stateAnimal.getObject()));
+	    
+	    int result = KNOWLEDGE_CALCULATOR_RETURNS_NO_CHANGES; // Initialisiert auf 1
+	    int resultTmp;
+	    
+	    int eventType = event.getEventTypeAsInt();
+	    int perceptionType = stateAnimal.getPerceptionType(eventType);
+	    EventPerceptionDescription descGetKE = EventPerceptionAssignment.getInstance().getEventPerceptionDescription(
+	            eventType, perceptionType );
+	            
+	    int count = descGetKE.countFunctions();
+	    this.counterFunctionsFound += count; // Telemetrie: Wie viele DSL-Regeln hängen am Event?
+
+	    FunctionByExpression f_CreatePerception;
+	    
+	    for (int index = 0; index < count; index++) 
+	    {
+	        f_CreatePerception = descGetKE.getFunction(index);
+	        
+	        // ÜBERGABE DER ISOLIERTEN LOCAL-ARGS AN DEN INTERPRETER:
+	        valueKE = f_CreatePerception.calculate(localArgs);
+	        
+	        knowledgeElement = getObjectRequester().requestKnowledgeElement(token, valueKE, this); 
+	        
+	        // 1:1 IHRE LOGISCHE PRÜFUNG (ZUSÄTZLICH TELEMETRISCH ERFASST)
+	        if (knowledgeElement != KnowledgeElement.getObjectNothing()) {
+	            if (knowledgeElement.isValid()) {
+	                
+	                resultTmp = hiddenWriteAccess.addKnowledgeElement(knowledgeElement);
+	                
+	                // Telemetrie-Auswertung basierend auf Ihren Rückgabewerten:
+	                if (resultTmp == WriteAccessToSimulationObject.WRITE_ACCESS_RETURNS_SUCCESS) { // == 0
+	                    this.counterSuccessfullyAdded++;
+	                } else { // negative Fehler (-1, -2) oder positive Ausnahmezustände (> 0)
+	                    this.counterRejectedByWriteAccess++;
+	                }
+	                
+	                // 1:1 Ihr originaler Zustandsfluss für das Schleifenergebnis
+	                if (resultTmp > 0) {
+	                    result = KNOWLEDGE_CALCULATOR_RETURNS_CONTAINS_INVALIDS; // == 4
+	                }
+	                else {
+	                    result = resultTmp; // Übernimmt 0 oder negative Fehlercodes
+	                }
+	                
+	            } else {
+	                this.counterInvalidKnowledgeElements++; // Objekt generiert, aber ungültig
+	            }
+	        } else {
+	            this.counterNothingReturned++; // DSL lieferte "Nothing"
+	        }
+	    }
+	    
+	    // ====================================================================
+	    // DAS SPEICHER-FALLBEIL:
+	    // ====================================================================
+	    // Kappt alle Objekt-Referenzen im Puffer sofort nach der Auswertung gegen Memory Loitering
+	    localArgs.clear(); 
+	    // ====================================================================
+	    
+	    return result;
+	}
+	
+	private final int ___setFacts(Event event, StateAnimal stateAnimal, HiddenAnimal hiddenWriteAccess) {
 	    
 	    KnowledgeElement knowledgeElement;
 	    Value valueKE;
@@ -466,5 +554,27 @@ public class KnowledgeCalculator extends SocialWorldThread {
 		return result;
 		
 	}
+	
+	public void printKnowledgeQueueCounts() {
+	    // Falls 'influenced' im KnowledgeCalculator existiert, analog ausgeben:
+	    // influenced.printCounts(); 
+	    
+	    System.out.println("--- KnowledgeCalculator-Detaillast ---");
+	    System.out.println("Verarbeitete Wahrnehmungs-Events     : " + this.counterEventsProcessed);
+	    System.out.println("Gefundene DSL-Wahrnehmungsfunktionen : " + this.counterFunctionsFound);
+	    System.out.println("Erfolgreich gelernte Wissensfakten   : " + this.counterSuccessfullyAdded);
+	    System.out.println("-> Abbruch: DSL lieferte 'Nothing'   : " + this.counterNothingReturned);
+	    System.out.println("-> Abbruch: Wissenselement ungültig   : " + this.counterInvalidKnowledgeElements);
+	    System.out.println("-> Abbruch: Vom WriteAccess abgelehnt: " + this.counterRejectedByWriteAccess);
+
+	    // Allokationsfreier Reset für den nächsten Messzyklus
+	    this.counterEventsProcessed = 0;
+	    this.counterFunctionsFound = 0;
+	    this.counterSuccessfullyAdded = 0;
+	    this.counterNothingReturned = 0;
+	    this.counterInvalidKnowledgeElements = 0;
+	    this.counterRejectedByWriteAccess = 0;
+	}
+
 
 }

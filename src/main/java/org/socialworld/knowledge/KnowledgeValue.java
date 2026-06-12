@@ -31,7 +31,12 @@ public class KnowledgeValue extends KnowledgeItem {
 	
 	
 	public KnowledgeValue(Value value) {
-		this.value = value;
+		if (value != null) {
+			this.value = Value.getValueNothing();
+		}
+		else {
+			this.value = value;
+		}
 	}
 	
 	private KnowledgeValue(KnowledgeValue original) {
@@ -42,6 +47,10 @@ public class KnowledgeValue extends KnowledgeItem {
 		}
 	}
 
+	boolean isValid() {
+		return this.value.isValid();
+	}
+	
 	KnowledgeItem getCopy() {	
 		return new KnowledgeValue(this);
 	}

@@ -45,6 +45,10 @@ public class KnowledgeRelationUnaer extends KnowledgeRelation {
 		}
 	}
 	
+	boolean isValid() {
+		return isValidRelation();
+	}
+
 	KnowledgeFact_Criterion getCriterion() {
 		return KnowledgeFact_Criterion.relationUnaer;
 	}

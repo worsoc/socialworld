@@ -15,6 +15,11 @@ public class NoKnowledgeItem extends KnowledgeItem implements IAnswer{
 	}
 	
 	@Override
+	boolean isValid() {
+		return false;
+	}
+	
+	@Override
 	KnowledgeItem getCopy() {
 		// TODO Auto-generated method stub
 		return null;

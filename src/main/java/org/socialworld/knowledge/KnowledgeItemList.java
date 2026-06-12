@@ -253,6 +253,10 @@ final class KnowledgeItemList  {
 		
 	void add(KnowledgeItem item) {
 		
+		// item is invalid --> cancel !
+		if (item == null) return;
+		if (!item.isValid()) return;
+		
 		boolean isAlreadyInList = false;
 	
 		isAlreadyInList = checkWhetherItemIsAlreadyInList(item);

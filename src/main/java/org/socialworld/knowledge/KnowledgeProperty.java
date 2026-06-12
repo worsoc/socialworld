@@ -72,6 +72,11 @@ public class KnowledgeProperty extends KnowledgeFact {
 		}
 	}
 	
+	@Override
+	boolean isValid() {
+		return this.atoms.isValid();
+	}
+
 	KnowledgeFact getCopy() {
 		return new KnowledgeProperty(this);
 	}
