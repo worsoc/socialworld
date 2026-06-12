@@ -189,7 +189,7 @@ public class TableMaterialSet extends TableSet {
 		int lastID = 0;
 		int colour;
 		int share;
-		MaterialSet materialSet = null;
+		MaterialSet materialSet = new MaterialSet();;
 		
 		select(SELECT_ALL_COLUMNS, "", " ORDER BY material_set_id, lfd_nr"); 
 		
@@ -197,10 +197,8 @@ public class TableMaterialSet extends TableSet {
 			for (int row = 0; row < lfd_nr.length; row++) {
 				id  = this.material_set_id[row];
 				if (id > lastID) {
-					if (lastID > 0) {
-						materialSets[lastID] = materialSet;
-						lastID = id;
-					}
+					materialSets[lastID] = materialSet;
+					lastID = id;
 					materialSet = new MaterialSet();
 				}
 				colour = this.material[row];

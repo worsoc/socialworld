@@ -189,7 +189,7 @@ public class TableNutrientSet extends TableSet {
 		int lastID = 0;
 		int nutrient;
 		int share;
-		NutrientSet nutrientSet = null;
+		NutrientSet nutrientSet = new NutrientSet();
 		
 		select(SELECT_ALL_COLUMNS, "", " ORDER BY nutrient_set_id, lfd_nr"); 
 		
@@ -197,10 +197,8 @@ public class TableNutrientSet extends TableSet {
 			for (int row = 0; row < lfd_nr.length; row++) {
 				id  = this.nutrient_set_id[row];
 				if (id > lastID) {
-					if (lastID > 0) {
-						nutrientSets[lastID] = nutrientSet;
-						lastID = id;
-					}
+					nutrientSets[lastID] = nutrientSet;
+					lastID = id;
 					nutrientSet = new NutrientSet();
 				}
 				nutrient = this.nutrient[row];

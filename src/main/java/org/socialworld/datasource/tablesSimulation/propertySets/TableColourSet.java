@@ -189,7 +189,7 @@ public class TableColourSet extends TableSet {
 		int lastID = 0;
 		int colour;
 		int share;
-		ColourSet colourSet = null;
+		ColourSet colourSet = new ColourSet();
 		
 		select(SELECT_ALL_COLUMNS, "", " ORDER BY colour_set_id, lfd_nr"); 
 		
@@ -197,10 +197,8 @@ public class TableColourSet extends TableSet {
 			for (int row = 0; row < lfd_nr.length; row++) {
 				id  = this.colour_set_id[row];
 				if (id > lastID) {
-					if (lastID > 0) {
-						colourSets[lastID] = colourSet;
-						lastID = id;
-					}
+					colourSets[lastID] = colourSet;
+					lastID = id;
 					colourSet = new ColourSet();
 				}
 				colour = this.colour[row];

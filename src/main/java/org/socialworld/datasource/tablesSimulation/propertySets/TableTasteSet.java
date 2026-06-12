@@ -188,7 +188,7 @@ public class TableTasteSet extends TableSet {
 		int lastID = 0;
 		int taste;
 		int share;
-		TasteSet tasteSet = null;
+		TasteSet tasteSet = new TasteSet();
 		
 		select(SELECT_ALL_COLUMNS, "", " ORDER BY taste_set_id, lfd_nr"); 
 		
@@ -196,10 +196,8 @@ public class TableTasteSet extends TableSet {
 			for (int row = 0; row < lfd_nr.length; row++) {
 				id  = this.taste_set_id[row];
 				if (id > lastID) {
-					if (lastID > 0) {
-						tasteSets[lastID] = tasteSet;
-						lastID = id;
-					}
+					tasteSets[lastID] = tasteSet;
+					lastID = id;
 					tasteSet = new TasteSet();
 				}
 				taste = this.taste[row];
