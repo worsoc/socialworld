@@ -25,7 +25,7 @@ public class TestShirt extends Shirt {
 
 	public TestShirt() {
 		super();
-		setLevelObjectSearch(9 /* base 8: 0.6 meters */ , 5 /* base 25: 1.3 meters */);
+		setLevelObjectSearch(8 /* base 9: 0.6 meters */ , 5 /* base 25: 1.3 meters */);
 	}
 
 	@Override
