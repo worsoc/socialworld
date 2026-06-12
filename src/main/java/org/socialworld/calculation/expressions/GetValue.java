@@ -178,6 +178,8 @@ public class GetValue extends Expression {
 			if (step.indexOf(GETVALUE + "(") >= 0 ) {
 			
 				if (step.indexOf("#" + GETISELEMENTOF + "(") >= 0 ) {
+					// the name is the first part, before first ")", that means without ")IsElem(..."
+					name = name.substring(0, name.indexOf(")"));
 					String stepCopy = new String(step);
 					stepCopy = stepCopy.replace("#", ".");
 					result = Branching.createBranchingSmart(new GetValue(token, usablePermission, stepCopy, valueAliasName), 
@@ -192,6 +194,8 @@ public class GetValue extends Expression {
 			else if (step.indexOf(GETPROPERTY + "(") >= 0 ) {
 	
 				if (step.indexOf("#" + GETISELEMENTOF + "(") >= 0 ) {
+					// the name is the first part, before first ")", that means without ")IsElem(..."
+					name = name.substring(0, name.indexOf(")"));
 					String stepCopy = new String(step);
 					stepCopy = stepCopy.replace("#", ".");
 					result = Branching.createBranchingSmart (new GetValue(token, usablePermission, stepCopy, valueAliasName), 
