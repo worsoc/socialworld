@@ -2,6 +2,7 @@ package org.socialworld.datasource.tablesSimulation.states;
 
 import org.socialworld.GlobalSwitches;
 import org.socialworld.attributes.ActualTime;
+import org.socialworld.core.ObjectMaster;
 import org.socialworld.datasource.mariaDB.Table;
 
 public  abstract class TableState extends Table {
@@ -33,6 +34,11 @@ public  abstract class TableState extends Table {
 	}
 
 	public int getRowForID(int id) {
+		
+		if (GlobalSwitches.CAP_OBJECTID_TO_999  == true && id > 100) {
+			id = ObjectMaster.mapObjectIdTo_1_999(id);
+		}
+
 		if (isFilledMapId2Index && mapId2Index.length >  id) {
 			return mapId2Index[id];
 		}

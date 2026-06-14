@@ -48,4 +48,9 @@ public class PairMemberPortion {
 		copy.portion = portion;
 		return copy;
 	}
+	
+	public String toString() {
+		return property.toString() + "(" + portion.toString() + ")";
+	}
+
 }

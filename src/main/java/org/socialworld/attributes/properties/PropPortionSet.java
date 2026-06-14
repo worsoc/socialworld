@@ -233,4 +233,15 @@ public abstract class PropPortionSet extends SimProperty {
 		
 		return members;
 	}
+	
+	public String toString() {
+		String result = "";
+		
+		for (PairMemberPortion pair : pairs) {
+			if (result.length() > 0) result = result + ",";
+			result = result + pair.toString();
+		}
+		result = "[" + result + "]";
+		return result;
+	}
 }

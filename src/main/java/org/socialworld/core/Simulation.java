@@ -44,6 +44,7 @@ import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.Time;
 import org.socialworld.calculation.application.AttributeCalculator;
+import org.socialworld.calculation.application.KnowledgeCalculator;
 import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.collections.ObjectByPositionSearch;
 
@@ -286,6 +287,7 @@ public class Simulation extends SocialWorldThread {
 		System.out.println("Zeit: " + actualTime.toString());
 		randomCache.nextTick();
 		AttributeCalculator.getInstance().printInfluencedQueueCounts();
+		//KnowledgeCalculator.getInstance().printKnowledgeQueueCounts();
 		//EventMaster.getInstance().printAndResetTickStatistics();
 		if (GlobalSwitches.OUTPUT_MEMORY_TELEMETRY)		printMemoryTelemetry();
 		actionMaster.nextSecond(actualTime);

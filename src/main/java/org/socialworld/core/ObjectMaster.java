@@ -440,6 +440,17 @@ public class ObjectMaster {
 		return this.magics;
 	}	
 	
-	
+    public static int mapObjectIdTo_1_999(int objectID) {
+        // 1. Bit-Mischung (Scrambling), um aufeinanderfolgende Zahlen zu streuen
+        long hash = (long) objectID * 0x45d9f3b;
+        hash = ((hash >>> 16) ^ hash) * 0x45d9f3b;
+        hash = (hash >>> 16) ^ hash;
+
+        // 2. Mathematisch korrekter Modulo für den Bereich 1 bis 999
+        int ergebnis = (int) (Math.abs(hash) % 999) + 1;
+        
+        return ergebnis;
+    }
+
 	
 }

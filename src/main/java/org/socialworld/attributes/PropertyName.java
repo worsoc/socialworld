@@ -197,18 +197,37 @@ public enum PropertyName {
 	public Type getType() {
 		switch (this) {
 			case unknown: return Type.nothing; 
-			case simobj_attributeArray: return Type.attributeArray;
+			case inventory_shirt:
+			case inventory_trousers:
+			case inventory_cap:
+			case inventory_leftHand:
+			case inventory_rightHand:
+			case inventory_leftSock:
+			case inventory_rightSock:
+			case inventory_leftShoe:
+			case inventory_rightShoe:
+			case inventory_mouth:
+				return Type.simulationObject;
+			case simobj_attributeArray:
+				return Type.attributeArray;
 			case simobj_position:
 			case simobj_knowledge:
 			case simobj_directionMove: 
 			case simobj_directionChest: 
 			case stateSeer_directionView: 
 			case simobj_directionActiveMove: 
-			case stateSeer: return Type.simObjProp; 
+			case stateAppearance: 
+			case stateInventory: 
+			case stateSeer: 
+				return Type.simObjProp; 
 			case event_position:
-			case event_direction: return Type.eventProp; 
-			case action_position: return Type.actionProp; 
-			case direction: return Type.simPropName;
+			case event_direction:
+				return Type.eventProp; 
+			case action_position:
+				return Type.actionProp; 
+			case direction: 
+			case stateInventory_inventory: 
+				return Type.simPropName;
 			default: return Type.nothing;
 		}
 	}	

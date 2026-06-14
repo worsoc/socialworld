@@ -44,7 +44,7 @@ public class GetArgumentByName extends Expression {
 	public GetArgumentByName(String name, String aliasName) {
 		
 		super();
-		
+
 		setOperation(Expression_Function.argumentValueByName);
 		setValue(new Value(Type.string, name));
 		setExpression1(new Constant(new Value(Type.string, aliasName)));
