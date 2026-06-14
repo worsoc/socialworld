@@ -119,7 +119,7 @@ public class TableNutrientSet extends TableSet {
 	public void insert(int nutrient_set_id, int lfd_nr, int nutrient,  int share) {
 		String statement;
 			
-		if (nutrient_set_id > 0 && lfd_nr > 0) {
+		if (nutrient_set_id >= 0 && lfd_nr > 0) {
 			
 			statement 	= "INSERT INTO " + getTableName() + " (" + ALL_COLUMNS + ") VALUES (" 
 					+ nutrient_set_id  + ", " + lfd_nr  + ", " + nutrient + ", " + share + ")";
@@ -131,7 +131,7 @@ public class TableNutrientSet extends TableSet {
 	public void updateNutrient( int nutrient_set_id, int lfd_nr, int nutrient) {
 		String statement;
 			
-		if (nutrient_set_id > 0 && lfd_nr > 0) {
+		if (nutrient_set_id >= 0 && lfd_nr > 0) {
 	
 
 			statement 	= "UPDATE " + getTableName() + " SET " +
@@ -146,7 +146,7 @@ public class TableNutrientSet extends TableSet {
 	public void updateShare( int nutrient_set_id, int lfd_nr, int share) {
 		String statement;
 			
-		if (nutrient_set_id > 0 && lfd_nr > 0) {
+		if (nutrient_set_id >= 0 && lfd_nr > 0) {
 	
 
 			statement 	= "UPDATE " + getTableName() + " SET " +
@@ -176,7 +176,7 @@ public class TableNutrientSet extends TableSet {
 	}
 */
 	public NutrientSet getNutrientSet(int nutrient_set_id) {
-		if (nutrient_set_id > 0 && nutrient_set_id <= nutrientSets.length) {
+		if (nutrient_set_id >= 0 && nutrient_set_id <= nutrientSets.length) {
 			return nutrientSets[nutrient_set_id];
 		}
 		return NutrientSet.getObjectNothing();

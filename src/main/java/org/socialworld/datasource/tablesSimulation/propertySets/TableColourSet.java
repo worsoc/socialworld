@@ -119,7 +119,7 @@ public class TableColourSet extends TableSet {
 	public void insert(int colour_set_id, int lfd_nr, int colour,  int share) {
 		String statement;
 			
-		if (colour_set_id > 0 && lfd_nr > 0) {
+		if (colour_set_id >= 0 && lfd_nr > 0) {
 			
 			statement 	= "INSERT INTO " + getTableName() + " (" + ALL_COLUMNS + ") VALUES (" 
 					+ colour_set_id  + ", " + lfd_nr + ", " + colour + ", " + share + ")";
@@ -131,7 +131,7 @@ public class TableColourSet extends TableSet {
 	public void updateColour( int colour_set_id, int lfd_nr, int colour) {
 		String statement;
 			
-		if (colour_set_id > 0 && lfd_nr > 0) {
+		if (colour_set_id >= 0 && lfd_nr > 0) {
 	
 
 			statement 	= "UPDATE " + getTableName() + " SET " +
@@ -146,7 +146,7 @@ public class TableColourSet extends TableSet {
 	public void updateShare( int colour_set_id, int lfd_nr, int share) {
 		String statement;
 			
-		if (colour_set_id > 0 && lfd_nr > 0) {
+		if (colour_set_id >= 0 && lfd_nr > 0) {
 	
 
 			statement 	= "UPDATE " + getTableName() + " SET " +
@@ -176,7 +176,7 @@ public class TableColourSet extends TableSet {
 	}
 */
 	public ColourSet getColourSet(int colour_set_id) {
-		if (colour_set_id > 0 && colour_set_id <= colourSets.length) {
+		if (colour_set_id >= 0 && colour_set_id <= colourSets.length) {
 			return colourSets[colour_set_id];
 		}
 		return ColourSet.getObjectNothing();

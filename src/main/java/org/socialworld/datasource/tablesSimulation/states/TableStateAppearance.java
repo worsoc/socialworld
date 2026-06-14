@@ -310,7 +310,7 @@ public class TableStateAppearance extends TableState {
 			if (GlobalSwitches.OUTPUT_CREATE_OBJECT_DETAILS) System.out.println("Erstellen SimObj > TableStateAppearance.getColourSetFromRow() Start " + ActualTime.asTime().toString());
 			TableColourSet tableSet = TableColourSet.getInstance();
 			setID = getColourSetID(row, colourSetColumnNumber);
-			if (setID > 0) set = tableSet.getColourSet(setID);
+			if (setID >= 0) set = tableSet.getColourSet(setID);
 			if (GlobalSwitches.OUTPUT_CREATE_OBJECT_DETAILS) System.out.println("Erstellen SimObj > TableStateAppearance.getColourSetFromRow() Ende " + ActualTime.asTime().toString());
 		}
 		return set;

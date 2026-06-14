@@ -118,7 +118,7 @@ public class TableTasteSet extends TableSet {
 	public void insert(int taste_set_id, int lfd_nr, int taste,  int share) {
 		String statement;
 			
-		if (taste_set_id > 0 && lfd_nr > 0) {
+		if (taste_set_id >= 0 && lfd_nr > 0) {
 			
 			statement 	= "INSERT INTO " + getTableName() + " (" + ALL_COLUMNS + ") VALUES (" 
 					+ taste_set_id  + ", " + lfd_nr  + ", " + taste + ", " + share + ")";
@@ -130,7 +130,7 @@ public class TableTasteSet extends TableSet {
 	public void updateTaste( int taste_set_id, int lfd_nr, int taste) {
 		String statement;
 			
-		if (taste_set_id > 0 && lfd_nr > 0) {
+		if (taste_set_id >= 0 && lfd_nr > 0) {
 	
 
 			statement 	= "UPDATE " + getTableName() + " SET " +
@@ -145,7 +145,7 @@ public class TableTasteSet extends TableSet {
 	public void updateShare( int taste_set_id, int lfd_nr, int share) {
 		String statement;
 			
-		if (taste_set_id > 0 && lfd_nr > 0) {
+		if (taste_set_id >= 0 && lfd_nr > 0) {
 	
 
 			statement 	= "UPDATE " + getTableName() + " SET " +
@@ -175,7 +175,7 @@ public class TableTasteSet extends TableSet {
 	}
 */
 	public TasteSet getTasteSet(int taste_set_id) {
-		if (taste_set_id > 0 && taste_set_id <= tasteSets.length) {
+		if (taste_set_id >= 0 && taste_set_id <= tasteSets.length) {
 			return tasteSets[taste_set_id];
 		}
 		return TasteSet.getObjectNothing();

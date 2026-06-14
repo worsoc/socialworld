@@ -119,7 +119,7 @@ public class TableMaterialSet extends TableSet {
 	public void insert(int material_set_id, int lfd_nr, int material,  int share) {
 		String statement;
 			
-		if (material_set_id > 0 && lfd_nr > 0) {
+		if (material_set_id >= 0 && lfd_nr > 0) {
 			
 			statement 	= "INSERT INTO " + getTableName() + " (" + ALL_COLUMNS + ") VALUES (" 
 					+ material_set_id  + ", " + lfd_nr  + ", " + material + ", " + share + ")";
@@ -131,7 +131,7 @@ public class TableMaterialSet extends TableSet {
 	public void updateMaterial( int material_set_id, int lfd_nr, int material) {
 		String statement;
 			
-		if (material_set_id > 0 && lfd_nr > 0) {
+		if (material_set_id >= 0 && lfd_nr > 0) {
 	
 
 			statement 	= "UPDATE " + getTableName() + " SET " +
@@ -176,7 +176,7 @@ public class TableMaterialSet extends TableSet {
 	}
 */
 	public MaterialSet getMaterialSet(int material_set_id) {
-		if (material_set_id > 0 && material_set_id <= materialSets.length) {
+		if (material_set_id >= 0 && material_set_id <= materialSets.length) {
 			return materialSets[material_set_id];
 		}
 		return MaterialSet.getObjectNothing();
