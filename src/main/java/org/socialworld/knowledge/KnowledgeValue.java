@@ -31,7 +31,7 @@ public class KnowledgeValue extends KnowledgeItem {
 	
 	
 	public KnowledgeValue(Value value) {
-		if (value != null) {
+		if (value == null) {
 			this.value = Value.getValueNothing();
 		}
 		else {
