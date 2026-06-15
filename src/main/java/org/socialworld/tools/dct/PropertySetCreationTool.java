@@ -140,82 +140,99 @@ public class PropertySetCreationTool {
 		buttonFillStatesWithSets.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent e) 
-			
 			{
-				int maxSetID_1;
-				int maxSetID_2;
-				int setID_1;
-				int setID_2;
-				int setID_3;
-				int setID_4;
-				int setID_5;
-				int setID_6;
-				int setID_7;
-				int setID_8;
-				int setID_9;
-				int setID_10;
-				int setID_11;
-				int setID_12;
-				int setID_13;
-				int setID_14;
-				int setID_15;
-				
-				TableStateAppearance tableAppearance = TableStateAppearance.getInstance();
-				tableAppearance.clear();
-				maxSetID_1 = tableAppearance.getNewID( "swset_colour", "colour_set_id") - 1;
-				for (int id = 1; id < 1000; id++) {
-					setID_1 = (id % maxSetID_1) + 1;
-					setID_2 = ((id + 1) % maxSetID_1) + 1;
-					setID_3 = ((id + 3) % maxSetID_1) + 1;
-					setID_4 = ((id + 5) % maxSetID_1) + 1;
-					setID_5 = ((id + 7) % maxSetID_1) + 1;
-					setID_6 = ((id + 11) % maxSetID_1) + 1;
-					setID_7 = ((id + 13) % maxSetID_1) + 1;
-					setID_8 = ((id + 17) % maxSetID_1) + 1;
-					setID_9 = ((id + 19) % maxSetID_1) + 1;
-					setID_10 = ((id + 23) % maxSetID_1) + 1;
-					setID_11 = ((id + 29) % maxSetID_1) + 1;
-					setID_12 = ((id + 31) % maxSetID_1) + 1;
-					setID_13 = ((id + 37) % maxSetID_1) + 1;
-					setID_14 = ((id + 41) % maxSetID_1) + 1;
-					setID_15 = ((id + 43) % maxSetID_1) + 1;
-					tableAppearance.insert(id);
-					tableAppearance.updateColourSetID(id,  1, setID_1);
-					tableAppearance.updateColourSetID(id,  2, setID_2);
-					tableAppearance.updateColourSetID(id,  3, setID_3);
-					tableAppearance.updateColourSetID(id,  4, setID_4);
-					tableAppearance.updateColourSetID(id,  5, setID_5);
-					tableAppearance.updateColourSetID(id,  6, setID_6);
-					tableAppearance.updateColourSetID(id,  7, setID_7);
-					tableAppearance.updateColourSetID(id,  8, setID_8);
-					tableAppearance.updateColourSetID(id,  9, setID_9);
-					tableAppearance.updateColourSetID(id,  10, setID_10);
-					tableAppearance.updateColourSetID(id,  11, setID_11);
-					tableAppearance.updateColourSetID(id,  12, setID_12);
-					tableAppearance.updateColourSetID(id,  13, setID_13);
-					tableAppearance.updateColourSetID(id,  14, setID_14);
-					tableAppearance.updateColourSetID(id,  15, setID_15);
-				}
-				
-				TableStateComposition tableComposition = new TableStateComposition();
-				tableComposition.clear();
-				maxSetID_1 = tableComposition.getNewID( "swset_material", "material_set_id") - 1;
-				for (int id = 1; id < 1000; id++) {
-					setID_1 = (id % maxSetID_1) + 1;
-					tableComposition.insert(id, setID_1);
-				}
+			    // 1. Array für die nicht-fortlaufenden IDs dynamisch erstellen
+			    int totalIds = 100 + (3775 - 3001 + 1); // 100 + 775 = 875 IDs
+			    int[] activeIds = new int[totalIds];
+			    int index = 0;
+			    
+			    // Bereich 1 bis 100 befüllen
+			    for (int id = 1; id <= 100; id++) {
+			        activeIds[index++] = id;
+			    }
+			    // Bereich 3001 bis 3775 befüllen
+			    for (int id = 3001; id <= 3775; id++) {
+			        activeIds[index++] = id;
+			    }
 
-				TableStateEatable tableEatable = new TableStateEatable();
-				tableEatable.clear();
-				maxSetID_1 = tableEatable.getNewID( "swset_nutrient", "nutrient_set_id") - 1;
-				maxSetID_2 = tableEatable.getNewID( "swset_taste", "taste_set_id") - 1;
-				for (int id = 1; id < 1000; id++) {
-					setID_1 = (id % maxSetID_1) + 1;
-					setID_2 = (id % maxSetID_2) + 1;
-					tableEatable.insert(id, setID_1, setID_2);
-				}
+			    int maxSetID_1;
+			    int maxSetID_2;
+			    int setID_1;
+			    int setID_2;
+			    int setID_3;
+			    int setID_4;
+			    int setID_5;
+			    int setID_6;
+			    int setID_7;
+			    int setID_8;
+			    int setID_9;
+			    int setID_10;
+			    int setID_11;
+			    int setID_12;
+			    int setID_13;
+			    int setID_14;
+			    int setID_15;
+			    
+			    TableStateAppearance tableAppearance = TableStateAppearance.getInstance();
+			    tableAppearance.clear();
+			    maxSetID_1 = tableAppearance.getNewID("swset_colour", "colour_set_id") - 1;
+			    
+			    // Für jede ID aus dem Array ausführen
+			    for (int id : activeIds) {
+			        setID_1 = (id % maxSetID_1);
+			        setID_2 = ((id + 1) % maxSetID_1);
+			        setID_3 = ((id + 3) % maxSetID_1);
+			        setID_4 = ((id + 5) % maxSetID_1);
+			        setID_5 = ((id + 7) % maxSetID_1);
+			        setID_6 = ((id + 11) % maxSetID_1);
+			        setID_7 = ((id + 13) % maxSetID_1);
+			        setID_8 = ((id + 17) % maxSetID_1);
+			        setID_9 = ((id + 19) % maxSetID_1);
+			        setID_10 = ((id + 23) % maxSetID_1);
+			        setID_11 = ((id + 29) % maxSetID_1);
+			        setID_12 = ((id + 31) % maxSetID_1);
+			        setID_13 = ((id + 37) % maxSetID_1);
+			        setID_14 = ((id + 41) % maxSetID_1);
+			        setID_15 = ((id + 43) % maxSetID_1);
+			        tableAppearance.insert(id);
+			        tableAppearance.updateColourSetID(id,  1, setID_1);
+			        tableAppearance.updateColourSetID(id,  2, setID_2);
+			        tableAppearance.updateColourSetID(id,  3, setID_3);
+			        tableAppearance.updateColourSetID(id,  4, setID_4);
+			        tableAppearance.updateColourSetID(id,  5, setID_5);
+			        tableAppearance.updateColourSetID(id,  6, setID_6);
+			        tableAppearance.updateColourSetID(id,  7, setID_7);
+			        tableAppearance.updateColourSetID(id,  8, setID_8);
+			        tableAppearance.updateColourSetID(id,  9, setID_9);
+			        tableAppearance.updateColourSetID(id,  10, setID_10);
+			        tableAppearance.updateColourSetID(id,  11, setID_11);
+			        tableAppearance.updateColourSetID(id,  12, setID_12);
+			        tableAppearance.updateColourSetID(id,  13, setID_13);
+			        tableAppearance.updateColourSetID(id,  14, setID_14);
+			        tableAppearance.updateColourSetID(id,  15, setID_15);
+			    }
+			    
+			    TableStateComposition tableComposition = new TableStateComposition();
+			    tableComposition.clear();
+			    maxSetID_1 = tableComposition.getNewID("swset_material", "material_set_id") - 1;
+			    
+			    // Für jede ID aus dem Array ausführen
+			    for (int id : activeIds) {
+			        setID_1 = (id % maxSetID_1);
+			        tableComposition.insert(id, setID_1);
+			    }
 
-				
+			    TableStateEatable tableEatable = new TableStateEatable();
+			    tableEatable.clear();
+			    maxSetID_1 = tableEatable.getNewID("swset_nutrient", "nutrient_set_id") - 1;
+			    maxSetID_2 = tableEatable.getNewID("swset_taste", "taste_set_id") - 1;
+			    
+			    // Für jede ID aus dem Array ausführen
+			    for (int id : activeIds) {
+			        setID_1 = (id % maxSetID_1);
+			        setID_2 = (id % maxSetID_2);
+			        tableEatable.insert(id, setID_1, setID_2);
+			    }
 			}
 		});
 		buttonFillStatesWithSets.setBounds(938, 230, 77, 26);
@@ -224,15 +241,19 @@ public class PropertySetCreationTool {
 		buttonFillObjectWithDummy.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent e) 
-			
 			{
-				
-				TableObject table = new TableObject();
-				table.clear();
-				for (int id = 1; id < 1000; id++) {
-					table.insert(id, 4);
-				}
-				
+			    TableObject table = new TableObject();
+			    table.clear();
+			    
+			    // Bereich 1 bis 100 befüllen mit Wert 1 für Human
+			    for (int id = 1; id <= 100; id++) {
+			        table.insert(id, 1);
+			    }
+			    
+			    // Bereich 3001 bis 3775 befüllen mit Wert 4 für Item
+			    for (int id = 3001; id <= 3775; id++) {
+			        table.insert(id, 4);
+			    }
 			}
 		});
 		buttonFillObjectWithDummy.setBounds(938, 430, 77, 26);

@@ -26,7 +26,6 @@ public class GlobalSwitches {
 	// System.identityHashCode(this)
 	
 	
-	public static boolean CAP_OBJECTID_TO_999 = true;
 	
 	public static boolean STATE_ANIMAL_CALCULATE_REFRESH_ATTRIBUTES = true;
 	public static boolean STATE_ANIMAL_CALCULATE_REFRESH_ACTION = true;

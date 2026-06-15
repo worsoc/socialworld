@@ -35,10 +35,6 @@ public  abstract class TableState extends Table {
 
 	public int getRowForID(int id) {
 		
-		if (GlobalSwitches.CAP_OBJECTID_TO_999  == true && id > 100) {
-			id = ObjectMaster.mapObjectIdTo_1_999(id);
-		}
-
 		if (isFilledMapId2Index && mapId2Index.length >  id) {
 			return mapId2Index[id];
 		}
