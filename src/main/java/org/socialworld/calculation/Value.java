@@ -156,14 +156,20 @@ public class Value {
 	
 	private static final Value[] INTEGER_CACHE = new Value[101]; // Cache für 0 bis 100
 
+	// Statischer Initialisierungsblock: Befüllt den Cache komplett vorab beim Programmstart
+	static {
+		for (int value = 0; value <= 100; value++) {
+			INTEGER_CACHE[value] = new Value(Type.integer, value);
+		}
+	}
+
 	public static Value getInteger(int value) {
-	    if (value >= 0 && value <= 100) {
-	        if (INTEGER_CACHE[value] == null) {
-	            INTEGER_CACHE[value] = new Value(Type.integer, value);
-	        }
-	        return INTEGER_CACHE[value];
-	    }
-	    return new Value(Type.integer, value);
+		// Da der Cache garantiert voll ist, fällt die null-Prüfung weg.
+		// Das spart bei jedem einzelnen Aufruf einen CPU-Verzweigungsschritt (Branch)!
+		if (value >= 0 && value <= 100) {
+			return INTEGER_CACHE[value];
+		}
+		return new Value(Type.integer, value);
 	}
 	
 	public Value(JsonValue jsonObject) {

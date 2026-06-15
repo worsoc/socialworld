@@ -85,6 +85,9 @@ public class ValueArrayList implements IObjectSender{
 	}
 	
 	public void add(Value value) {
+		if (this == EMPTY_ARGUMENTS || this == objectNothing) {
+			throw new UnsupportedOperationException("Modifikation auf EMPTY_ARGUMENTS oder objectNothing ist nicht erlaubt.");
+		}
 		values.add(value);
 	}
 	
@@ -95,6 +98,9 @@ public class ValueArrayList implements IObjectSender{
 	 * @param other Die andere ValueArrayList, deren Werte kopiert werden sollen.
 	 */
 	public void addAll(ValueArrayList other) {
+		if (this == EMPTY_ARGUMENTS || this == objectNothing) {
+			throw new UnsupportedOperationException("Modifikation auf EMPTY_ARGUMENTS oder objectNothing ist nicht erlaubt.");
+		}
 		if (other != null) {
 			int otherSize = other.size();
 			// Indexbasierte Schleife verhindert die versteckte Instanziierung 
@@ -106,9 +112,12 @@ public class ValueArrayList implements IObjectSender{
 	}
 
 	public void set(int index, Value value) {
+		if (this == EMPTY_ARGUMENTS || this == objectNothing) {
+			throw new UnsupportedOperationException("Modifikation auf EMPTY_ARGUMENTS oder objectNothing ist nicht erlaubt.");
+		}
 		values.set(index, value);
 	}
-	
+
 	public Value get(int index) {
 		return values.get(index);
 	}

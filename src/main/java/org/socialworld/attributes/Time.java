@@ -102,6 +102,21 @@ public class Time {
 	}
 
 	public String toString() {
-		return "" +(this.days) + " " + this.hours + ":" + this.minutes + ":" + this.seconds + "." + this.milliseconds;
+		// Ein StringBuilder mit einer Kapazität von 24 Zeichen fängt das maximale Format 
+		// "Days HH:MM:SS.mmm" komplett ab, ohne im Hintergrund intern zu wachsen.
+		StringBuilder sb = new StringBuilder(24);
+		
+		sb.append(this.days)
+		  .append(' ')
+		  .append(this.hours)
+		  .append(':')
+		  .append(this.minutes)
+		  .append(':')
+		  .append(this.seconds)
+		  .append('.')
+		  .append(this.milliseconds);
+		
+		return sb.toString();
 	}
+
 }
