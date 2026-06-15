@@ -29,6 +29,8 @@ import org.socialworld.attributes.NoSavedValue;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.Time;
 import org.socialworld.attributes.properties.IEnumProperty;
+import org.socialworld.calculation.geometry.Vector;
+import org.socialworld.collections.ValueArrayList;
 import org.socialworld.conversation.Lexem;
 import org.socialworld.conversation.Relation;
 import org.socialworld.core.AllWords;
@@ -188,12 +190,56 @@ public class Value {
 		initValueFromString(valueAsString, castToType);
 	}
 	
-	public Value (Value original) {
-		this.name = original.name;
-		this.type = original.type;
-		// TODO deep copy original.value
-		this.value = original.value;
-		this.valid = original.valid;
+	public Value(Value original) {
+	    if (original == null) {
+	        this.type = Type.nothing;
+	        this.valid = false;
+	        return;
+	    }
+
+	    this.name = original.name;
+	    this.type = original.type;
+	    this.valid = original.valid;
+	    this.transferCode = original.transferCode;
+	    
+	    // Für die Kopie wird die Veränderbarkeit über changeValue() deaktiviert.
+	    // Das schützt die originale Referenz bei allen Typen im default-Block.
+	    this.isMutableBySet = false; 
+
+	    // Falls der Wert null ist, setzen wir ihn auf null und brechen ab
+	    if (original.value == null) {
+	        this.value = null;
+	        return;
+	    }
+
+	    // Deep Copy oder Referenz-Schutz in Abhängigkeit des Typs
+	    switch (original.type) {
+	        case vector:
+	            this.value = new Vector((Vector) original.value);
+	            break;
+
+	        case time:
+	            this.value = new Time((Time) original.value);
+	            break;
+
+	        case attributeArray:
+	            this.value = new AttributeArray((AttributeArray) original.value);
+	            break;
+
+	        case valueList:
+	            // Erzeugt eine neue ValueArrayList-Instanz, behält im Inneren aber
+	            // die exakt gleichen Objekt-Referenzen (flache Element-Kopie).
+	            this.value = new ValueArrayList((ValueArrayList) original.value);
+	            break;
+
+	        default:
+	            // Für Immutable-Typen, Enums, einmalige Objekte (event, action) 
+	            // sowie allgemeine Typen (wie object):
+	            // Hier wird die originale Referenz übergeben. Da 'isMutableBySet' oben auf
+	            // false gesetzt wurde, schützt Ihre changeValue()-Methode diesen Value nun.
+	            this.value = original.value;
+	            break;
+	    }
 	}
 	
 	public static Value getMutable(Type type, String name, Object value) {

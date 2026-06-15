@@ -58,6 +58,14 @@ public class ValueArrayList implements IObjectSender{
 		this.nothing = Value.getValueNothing();
 	}
 	
+	public ValueArrayList(ValueArrayList original) {
+	    this.values = new ArrayList<Value>();
+	    this.nothing = Value.getValueNothing();
+	    if (original != null) {
+	        this.addAll(original); // Übernimmt flach dieselben Referenzen pfeilschnell
+	    }
+	}
+	
 	private ValueArrayList(int size) {
 		
 		this.values = new ArrayList<Value>();

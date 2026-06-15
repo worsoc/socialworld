@@ -61,6 +61,13 @@ public class Time {
 		separate();
 	}
 
+	public Time(Time original) {
+	    if (original != null) {
+	        this.totalMilliseconds = original.getTotalMilliseconds();
+	        separate();
+	    }
+	}
+	
 	public long getTotalMilliseconds() {
 		return this.totalMilliseconds;
 	}
