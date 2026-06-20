@@ -37,37 +37,42 @@ package org.socialworld.attributes;
  */
 public class Time {
 	
-	int days;
-	byte hours;
-	byte minutes;
-	byte seconds;
-	short milliseconds;
-	
-	long totalMilliseconds;
-	
-	public Time() {
-		this.totalMilliseconds = now();
-		
-		separate();
-	}
+    private final int days;
+    private final byte hours;
+    private final byte minutes;
+    private final byte seconds;
+    private final short milliseconds;
+    
+    private final long totalMilliseconds;
 
-	public Time(boolean isAbsolut, long milliseconds) {
-		if (isAbsolut) {
-			this.totalMilliseconds = milliseconds;
-		}
-		else {
-			this.totalMilliseconds = now() + milliseconds;
-		}		
-		separate();
-	}
+    public Time() {
+        this(true, System.currentTimeMillis()); 
+    }
 
-	public Time(Time original) {
-	    if (original != null) {
-	        this.totalMilliseconds = original.getTotalMilliseconds();
-	        separate();
-	    }
-	}
-	
+    public Time(boolean isAbsolut, long milliseconds) {
+        this.totalMilliseconds = isAbsolut ? milliseconds : System.currentTimeMillis() + milliseconds;
+        
+        long rest = this.totalMilliseconds;
+        this.milliseconds = (short) (rest % 1000);
+        rest /= 1000;
+        this.seconds = (byte) (rest % 60);
+        rest /= 60;
+        this.minutes = (byte) (rest % 60);
+        rest /= 60;
+        this.hours = (byte) (rest % 24);
+        this.days = (int) (rest / 24);
+    }
+
+ 
+    // 3. Der Copy-Konstruktor kopiert nur noch die fertigen Werte
+    public Time(Time original) {
+        this.totalMilliseconds = original.totalMilliseconds;
+        this.days = original.days;
+        this.hours = original.hours;
+        this.minutes = original.minutes;
+        this.seconds = original.seconds;
+        this.milliseconds = original.milliseconds;
+    }	
 	public long getTotalMilliseconds() {
 		return this.totalMilliseconds;
 	}
@@ -76,32 +81,7 @@ public class Time {
 		return this.seconds;
 	}
 	
-	private void separate() {
-		long rest;
-		
-		rest = this.totalMilliseconds;
-		
-		this.milliseconds = (short) (rest % 1000);
-		rest = (long) (rest / 1000);
-		
-		this.seconds = (byte) (rest % 60);
-		rest = (long) (rest / 60);
-
-		this.minutes = (byte) (rest % 60);
-		rest = (long) (rest / 60);
-
-		this.hours = (byte) (rest % 24);
-		rest = (long) (rest / 24);
-
-		this.days = (int) rest;
-		
-	}
-	
-	private long now() { 
-		return System.currentTimeMillis();
-	}
-
-	public String toString() {
+		public String toString() {
 		// Ein StringBuilder mit einer Kapazität von 24 Zeichen fängt das maximale Format 
 		// "Days HH:MM:SS.mmm" komplett ab, ohne im Hintergrund intern zu wachsen.
 		StringBuilder sb = new StringBuilder(24);

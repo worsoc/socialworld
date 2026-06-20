@@ -31,7 +31,7 @@ import org.socialworld.core.IAccessToken;
 
 public class SVVector extends SavedValue {
 
-	private Vector savedVector;
+	private final Vector savedVector; //  final, da er nach Erstellung feststeht
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 //////////////////static instance for meta information    ///////////////////////////////
@@ -56,13 +56,9 @@ public class SVVector extends SavedValue {
 ///////////// object nothing (abstract method from ISavedValue)     ///////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	private static SVVector objectNothing;
-	
+	private static final SVVector objectNothing = new SVVector();
+		
 	public static SVVector getObjectNothing() {
-		if (objectNothing == null) {
-		objectNothing = new SVVector();
-		objectNothing.setToObjectNothing();
-		}
 		return objectNothing;
 	}
 	
@@ -73,22 +69,36 @@ public class SVVector extends SavedValue {
 	private SVVector() {
 		super();
 		this.savedVector =  Vector.getObjectNothing();
+		this.setToObjectNothing(); 
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 ////////////////// creating instance for simulation    ///////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
-	
+
 	public SVVector (Vector vector, PropertyName propNameParent) {
 		super();
-		this.savedVector = vector;
+		
+		// Barriere: Aus dem "Nichts" wird kein neuer, sinnvoller SVVector!
+		if (vector == null || vector.checkIsObjectNothing()) {
+			this.savedVector = Vector.getObjectNothing();
+		} else {
+			// Falls der übergebene Vektor im "Rechen-Labor" (mutable) war,
+			// frieren wir ihn für die Datenhaltung im SVVector als Unikat ein.
+			// Dazu erstellen wir einen neuen unmodifizierbaren Vektor (isMutable = false).
+			this.savedVector = new Vector(vector.getX(), vector.getY(), vector.getZ());
+		}
 	}
-	
-	private SVVector( SVVector original, PropertyProtection protectionOriginal, IAccessToken token) {
+
+	private SVVector(SVVector original, PropertyProtection protectionOriginal, IAccessToken token) {
 		super(protectionOriginal, token);
 		setPropertyName(original.getPropertyName());
-		this.savedVector = original.getVector();
+		
+		// Da der Vektor im originalen SVVector bereits garantiert unveränderlich ist,
+		// können wir die Referenz hier speicherschonend direkt teilen!
+		this.savedVector = original.savedVector;
 	}
+
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////  implementing  SavedValues abstract methods  ///////////////////////////
@@ -146,13 +156,11 @@ public class SVVector extends SavedValue {
 	}
 	
 	public Vector getDirectionFrom(SVVector vectorPosition) {
-		Vector direction = this.savedVector.getDirectionFrom(vectorPosition.getVector());
-		return direction;
+		return this.savedVector.getDirectionFrom(vectorPosition.getVector());
 	}
 
 	public Vector getDirectionTo(SVVector vectorPosition) {
-		Vector direction = vectorPosition.getVector().getDirectionFrom(this.savedVector);
-		return direction;
+		return vectorPosition.getVector().getDirectionFrom(this.savedVector);
 	}
 
 	public boolean equals(SVVector b) {
@@ -160,7 +168,7 @@ public class SVVector extends SavedValue {
 	}
 	
 	private Vector getVector() {
-		return new Vector(this.savedVector);
+		return this.savedVector; 
 	}
 
 	public String toString() {

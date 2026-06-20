@@ -198,24 +198,6 @@ public abstract class Event implements Comparable<Event>, IObjectReceiver {
 	}
 
 	/**
-	 * @param eventType
-	 *            the number of the event type to set
-	 */
-	public void setEventType(int eventType) {
-		this.eventType = EventType.getEventType(eventType);
-		this.eventTypeAsInt = eventType;		
-	}
-
-	/**
-	 * @param eventType
-	 *            the number of the event type to set
-	 */
-	public void setEventType(EventType eventType) {
-		this.eventType = eventType ;
-		this.eventTypeAsInt = eventType.getIndex();		
-	}
-
-	/**
 	 * @return the priority of the event
 	 */
 	public int getPriority() {
@@ -223,26 +205,10 @@ public abstract class Event implements Comparable<Event>, IObjectReceiver {
 	}
 
 	/**
-	 * @param priority
-	 *            the priority to set
-	 */
-	public void setPriority(int priority) {
-		this.priority = priority;
-	}
-
-	/**
 	 * @return the causer
 	 */
 	public SimulationObject getCauser() {
 		return causer;
-	}
-
-	/**
-	 * @param causer
-	 *            the causer to set
-	 */
-	public void setCauser(SimulationObject causer) {
-		this.causer = causer;
 	}
 
 	public boolean isEventToCauserItself() {
@@ -257,30 +223,25 @@ public abstract class Event implements Comparable<Event>, IObjectReceiver {
 	 * @return the time
 	 */
 	public Time getTime() {
-		return time;
+		// Time is immutable
+		return this.time;
 	}
 
-	/**
-	 * @param time
-	 *            the time to set
-	 */
-	public void setTime(Time time) {
-		this.time = time;
-	}
 
 	/**
 	 * @return the position
 	 */
 	public Position getPosition() {
-		return position;
-	}
-
-	/**
-	 * @param position
-	 *            the position to set
-	 */
-	public void setPosition(Position position) {
-		this.position = position;
+	    // Das globale "Nothing"-Objekt darf nicht kopiert werden!
+	    if (this.position == null || this.position.checkIsObjectNothing()) {
+	        return Position.getObjectNothing();
+	    }
+	    
+	    // Weg A: Über den bestehenden Konstruktor (falls der Typ passt)
+	    // return new Position(Type.simobj_property, this.position);
+	    
+	    // Weg B: Direkt über Ihr Sicherheits-Token-System, falls zugänglich
+	    return (Position) this.position.copyForProperty(tokenCore);
 	}
 
 	public Value getDirection() {

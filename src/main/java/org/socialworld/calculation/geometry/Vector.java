@@ -32,13 +32,11 @@ import org.socialworld.core.IAccessToken;
  */
 public class Vector implements IObjectSender{
 
-	private static Vector objectNothing;
-    private static final Vector VECTOR_0 = new Vector(0, 0, 0);
+	// Echte, unantastbare Singletons im System (isMutable = false)
+    private static final Vector objectNothing = new Vector(0, 0, 0, false);
+    private static final Vector VECTOR_0 = new Vector(0, 0, 0, false);
 	
 	public static Vector getObjectNothing() {
-		if (objectNothing == null) {
-			objectNothing = new Vector();
-		}
 		return objectNothing;
 	}
 	
@@ -52,30 +50,43 @@ public class Vector implements IObjectSender{
 
 	boolean normalized = false;
 	
+    private boolean isMutable = false; 
 	
-	public Vector() {
+  
+    // 1. Privater Hauptkonstruktor, der die Veränderbarkeit explizit setzt
+    private Vector(float x, float y, float z, boolean isMutable) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.isMutable = isMutable;
+    }
 
-	}
+    // 2. Der parameterlose Konstruktor: Offen für Modifikationen (mutable = true)
+    // Er sagt: "Ich bin leer und warte darauf, befüllt zu werden."
+    public Vector() {
+        this(0, 0, 0, true);
+    }
 
-	public Vector (Vector original) {
-		if (original != null) {
-			this.x = original.getX();
-			this.y = original.getY();
-			this.z = original.getZ();
-		}
-	}
-	
-	public Vector(float x, float y, float z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-	}
+    public Vector(float x, float y, float z) {
+        this(x, y, z, false);
+    }
 
-	public Vector(float tripel[]) {
-		this.x = tripel[0];
-		this.y = tripel[1];
-		this.z = tripel[2];
-	}
+    public Vector(Vector original) {
+        this(
+            original != null ? original.getX() : 0,
+            original != null ? original.getY() : 0,
+            original != null ? original.getZ() : 0,
+            true // Kopien sind veränderbar (das ist der Grund ihrer Erzeugung)
+        );
+        if (original != null) {
+            this.normalized = original.isNormalized();
+        }
+    }
+
+
+    public Vector(float tripel[]) {
+        this(tripel[0], tripel[1], tripel[2], false);
+    }
 	
 	public Vector(String vector) {
 		
@@ -94,23 +105,52 @@ public class Vector implements IObjectSender{
 			this.y = Float.parseFloat(values[1]);
 			this.z = Float.parseFloat(values[2]);
 		}
+        this.isMutable = false;
 	}
 	
 	public void set(Vector original) {
+		// 1. Barriere: Das globale "Nichts" darf nicht überschrieben werden
+		if (this == objectNothing) return;
+
+		// 2. Wächter: Nur im Rechen-Labor (Mutable) erlaubt
+		if (!this.isMutable) {
+			throw new UnsupportedOperationException("Set auf unveränderlichem Vektor nicht erlaubt.");
+		}
+
 		if (original != null) {
 			this.x = original.getX();
 			this.y = original.getY();
 			this.z = original.getZ();
-			normalized = false;
+			this.normalized = original.isNormalized();
 		}
 	}
 	
+    /**
+     * Fabrikmethode für einen offenen, veränderbaren Arbeitscontainer (0,0,0).
+     * Perfekt für ThreadLocal- oder Wiederverwendungs-Strukturen.
+     */
+    public static Vector getMutable() {
+        return new Vector(0, 0, 0, true);
+    }
+    
+	// Die Fabrikmethode für das Rechen-Labor (Mutable)
+    public static Vector getMutable(float x, float y, float z) {
+        return new Vector(x, y, z, true);
+    }
+
 	public static Vector get0Vector() {
 		 return VECTOR_0; 
 	}
 	
 	public void normalize() {
-	    float length = length();
+	     // Barriere: Das Nichts darf nicht normalisiert werden
+        if (this == objectNothing) return; 
+
+        if (!isMutable) {
+            throw new UnsupportedOperationException("Normalisierung auf unveränderlichem Vektor nicht erlaubt.");
+        }
+
+        float length = length();
 	    
 	    // Defensiver Schutz gegen Division durch 0 
 	    if (length > 0.00001f) {
@@ -127,6 +167,21 @@ public class Vector implements IObjectSender{
 
 	}	
 	
+    public boolean isMutable() {
+        return this.isMutable;
+    }
+
+    // 4. Die Wächter-Methode für In-Place-Änderungen
+    public void setValues(float x, float y, float z) {
+        if (!isMutable) {
+            throw new UnsupportedOperationException("Dieser Vektor ist unveränderlich!");
+        }
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.normalized = false;
+    }
+
 	public boolean isNormalized() {
 		return normalized;
 	}
@@ -143,8 +198,8 @@ public class Vector implements IObjectSender{
 	 *            the x to set
 	 */
 	public void setX(float x) {
-		this.x = x;
-		
+       if (!isMutable) throw new UnsupportedOperationException("Vektor ist unmodifizierbar.");
+       this.x = x;
 		normalized = false;
 	}
 
@@ -160,6 +215,7 @@ public class Vector implements IObjectSender{
 	 *            the y to set
 	 */
 	public void setY(float y) {
+       if (!isMutable) throw new UnsupportedOperationException("Vektor ist unmodifizierbar.");
 		this.y = y;
 		normalized = false;
 	}
@@ -176,6 +232,7 @@ public class Vector implements IObjectSender{
 	 *            the z to set
 	 */
 	public void setZ(float z) {
+       if (!isMutable) throw new UnsupportedOperationException("Vektor ist unmodifizierbar.");
 		this.z = z;
 		normalized = false;
 	}
@@ -229,23 +286,38 @@ public class Vector implements IObjectSender{
 	 * @param xyz
 	 */
 	public void add (Vector xyz) {
-		this.x = this.x + xyz.getX();
-		this.y = this.y + xyz.getY();
-		this.z = this.z + xyz.getZ();
-		normalized = false;
-		
+	    if (this == objectNothing) return; 
+	    
+       if (this.isMutable) {
+            this.x += xyz.getX();
+            this.y += xyz.getY();
+            this.z += xyz.getZ();
+            this.normalized = false;
+        } else {
+            // Aus Sicherheitsgründen im Alt-Code abgefangen: Wenn jemand versucht, 
+            // einen immutable Vektor zu manipulieren, verweigern wir die In-Place-Änderung.
+            throw new UnsupportedOperationException("Direkte Addition auf unmodifizierbarem Vektor verboten.");
+        }
 	}
+	
 	/**
 	 * The method calculates the scalar multiplication.
 	 * 
 	 * @param scalar
 	 */
 	public void mul (float scalar) {
-		this.x = this.x * scalar;
-		this.y = this.y * scalar;
-		this.z = this.z * scalar;
-		normalized = false;
-		
+		// Barriere: Das "Nichts" multipliziert mit irgendetwas bleibt "Nichts"
+		if (this == objectNothing) return;
+
+		if (this.isMutable) {
+			this.x = this.x * scalar;
+			this.y = this.y * scalar;
+			this.z = this.z * scalar;
+			this.normalized = false;
+		} else {
+			// Schutz vor unerlaubter Modifikation auf unveränderlichen Instanzen
+			throw new UnsupportedOperationException("Direkte Multiplikation auf unmodifizierbarem Vektor verboten.");
+		}
 	}
 	
 	/**
@@ -300,20 +372,36 @@ public class Vector implements IObjectSender{
 	}
 
 	public void reset() {
+		// 1. Barriere: Das globale "Nichts" darf nicht zurückgesetzt werden
+		if (this == objectNothing) return; 
+
+		// 2. Wächter: Nur im Rechen-Labor (Mutable) erlaubt
+		if (!this.isMutable) {
+			throw new UnsupportedOperationException("Reset auf unveränderlichem Vektor nicht erlaubt.");
+		}
+
+		// Zustand zurücksetzen
 		this.x = 0;
 		this.y = 0;
 		this.z = 0;
-		normalized = false;
+		this.normalized = false;
 	}
 	
 	public static Vector crossProduct(Vector vect_A, Vector vect_B) {
-	        Vector cross_P = new Vector(0, 0, 0);
-	        cross_P.x = vect_A.y * vect_B.z - vect_A.z * vect_B.y;
-	        cross_P.y = vect_A.z * vect_B.x - vect_A.x * vect_B.z;
-	        cross_P.z = vect_A.x * vect_B.y - vect_A.y * vect_B.x;
-	        return cross_P;
-	}
+		// 1. Barriere für das "Nichts"
+		if (vect_A == objectNothing || vect_B == objectNothing) {
+			return objectNothing;
+		}
 
+		// Erst die mathematischen Komponenten berechnen
+		float pX = vect_A.y * vect_B.z - vect_A.z * vect_B.y;
+		float pY = vect_A.z * vect_B.x - vect_A.x * vect_B.z;
+		float pZ = vect_A.x * vect_B.y - vect_A.y * vect_B.x;
+		
+		// Direkt als fertiges, geschütztes Daten-Unikat zurückgeben
+		return new Vector(pX, pY, pZ);
+	}
+	
 ///////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////implementing IObjectSender ///////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////

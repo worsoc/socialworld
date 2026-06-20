@@ -1,3 +1,20 @@
+/*
+ * Social World
+ * Copyright (C) 2014  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.attributes;
 
 
@@ -11,9 +28,9 @@ import org.socialworld.tools.StringTupel;
 
 public class Direction extends SimProperty {
 
-	private SVVector vector = SVVector.getObjectNothing();
-	
-	float power;
+	// Felder als final deklarieren, da Direction nach Erstellung stabil bleibt
+	private final SVVector vector;
+	private final float power;
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //////////////////  static instance for meta information    ///////////////////////////////
@@ -36,13 +53,9 @@ public class Direction extends SimProperty {
 ///////////// object nothing (abstract method from ISimProperty)    ///////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	private static Direction objectNothing;
+private static final Direction objectNothing = new Direction();
 	
 	public static Direction getObjectNothing() {
-		if (objectNothing == null) {
-			objectNothing = new Direction();
-			objectNothing.setToObjectNothing();
-		}
 		return objectNothing;
 	}
 
@@ -50,8 +63,12 @@ public class Direction extends SimProperty {
 		return (this == objectNothing);
 	}
 
+	// Privater Konstruktor exklusiv für das "Nichts"
 	private Direction() {
-		
+		super();
+		this.vector = SVVector.getObjectNothing();
+		this.power = 0.0f;
+		this.setToObjectNothing(); // Falls für die Elternklasse benötigt
 	}
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -59,46 +76,71 @@ public class Direction extends SimProperty {
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
 	// TODO Herleitung  property name (direction's vector)
-	public Direction (PropertyName prop, Vector vector ) {
-		this.vector = new SVVector(vector, prop);
+	public Direction (PropertyName prop, Vector vector) {
+		super();
 		setPropertyName(prop);
+		this.power = 0.0f;
+		
+		// Barriere: Aus dem "Nichts" wird keine sinnvolle Richtung
+		if (vector == null || vector.checkIsObjectNothing()) {
+			this.vector = SVVector.getObjectNothing();
+		} else {
+			this.vector = new SVVector(vector, prop);
+		}
 	}
 
-	public Direction (PropertyName prop, Vector vector, float power ) {
-		this.vector = new SVVector(vector, prop);
-		this.power = power;
+	public Direction (PropertyName prop, Vector vector, float power) {
+		super();
 		setPropertyName(prop);
+		this.power = power;
+		
+		if (vector == null || vector.checkIsObjectNothing()) {
+			this.vector = SVVector.getObjectNothing();
+		} else {
+			this.vector = new SVVector(vector, prop);
+		}
 	}
 
 	public Direction (Type propertyType, Direction original) {
-		this.vector = original.getVector();
-		this.power = original.getPower();
+		super();
 		setPropertyName(original.getPropertyName().toType(propertyType));
+		this.power = original.getPower();
+		
+		// PERFORMANZ: Da der SVVector im Original garantiert immutable ist,
+		// teilen wir uns einfach die Referenz! 0 Byte Allokation.
+		this.vector = original.vector; 
 	}
 	
 	public Direction (PropertyName prop, Direction original) {
-		this.vector = original.getVector();
-		this.power = original.getPower();
+		super();
 		setPropertyName(prop);
+		this.power = original.getPower();
+		this.vector = original.vector; // Direkte Referenzübernahme
 	}
 
 	public Direction (PropertyName prop) {
-		this.vector = new SVVector(Vector.get0Vector(), prop);
+		super();
 		setPropertyName(prop);
+		this.power = 0.0f;
+		// Nutzt den statischen 0-Vektor
+		this.vector = new SVVector(Vector.get0Vector(), prop); 
 	}
 
-	private Direction(Direction original, PropertyProtection protectionOriginal, IAccessToken token ) {
+	private Direction(Direction original, PropertyProtection protectionOriginal, IAccessToken token) {
 		super(protectionOriginal, token);
-		this.vector = original.getVector();
-		this.power = original.getPower();
 		setPropertyName(original.getPropertyName());
+		this.power = original.getPower();
+		this.vector = original.vector; // Direkte Referenzübernahme
 	}
+	
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    ISavedValue  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 	public SimProperty copyForProperty(IAccessToken token) {
+		// Das Singleton wird niemals kopiert, sondern direkt zurückgereicht
+		if (checkIsObjectNothing()) return objectNothing;
 		return new Direction(this, getPropertyProtection(), token);
 	}
 	
@@ -106,8 +148,6 @@ public class Direction extends SimProperty {
 		switch (prop) {
 		case direction_vector:
 			return new ValueProperty(Type.vector, valueName, getVector());
-			// TODO Vector as ISavedValue
-			// return this.vector.getAsValue(cluster, valueName);
 		case direction_power:
 			return new ValueProperty(Type.floatingpoint, valueName, this.power);
 			
@@ -125,14 +165,12 @@ public class Direction extends SimProperty {
 	public final Vector getVector(IAccessToken token) {
 		if (checkIsObjectNothing()) return Vector.getObjectNothing();
 		
-		SVVector copy = (SVVector) this.vector.copyForProperty(token);
-		Vector released = copy.getReleased(token);
-		return released;
+		return this.vector.getReleased(token);
 	}
 
 	
 	private SVVector getVector() {
-		return (SVVector) this.vector.copyForProperty(getPropertyProtection().getToken());
+		return this.vector;
 	}
 
 	public final float getPower() {

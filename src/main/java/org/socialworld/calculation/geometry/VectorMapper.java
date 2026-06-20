@@ -188,17 +188,23 @@ public class VectorMapper {
 	}
 	
 	public Vector vectorProduct(Vector a, Vector b) {
+		// 1. Barriere: Check auf objectNothing für beide Parameter
+		if (a == null || a.checkIsObjectNothing() || b == null || b.checkIsObjectNothing()) {
+			return Vector.getObjectNothing();
+		}
 		
-		Vector result = new Vector( a.getY()*b.getZ() - a.getZ()*b.getY(), 
-									a.getZ()*b.getX() - a.getX()*b.getZ(),
-									a.getX()*b.getY() - a.getY()*b.getX());
-		return result;
-		
+		// 2. Nutzung der zentralen mathematischen Methode aus Vector
+		// (Gibt gemäß unserer Variante A direkt ein geschütztes Unikat zurück)
+		return Vector.crossProduct(a, b);
 	}
 	
 	public Vector reverseVector(Vector a) {
 		
-		Vector result = new Vector(a);
+	    if (a.checkIsObjectNothing()) {
+	        return Vector.getObjectNothing();
+	    }
+	    
+	    Vector result = new Vector(a);
 		result.mul(-1);
 		return result;
 		
@@ -206,7 +212,11 @@ public class VectorMapper {
 
 	public Vector addition(Vector a, Vector b) {
 		
-		Vector result = new Vector(a);
+	    if (a.checkIsObjectNothing() || b.checkIsObjectNothing()) {
+	        return Vector.getObjectNothing();
+	    }
+
+	    Vector result = new Vector(a);
 		result.add(b);
 		return result;
 		
@@ -214,7 +224,11 @@ public class VectorMapper {
 
 	public Vector subtraction(Vector a, Vector b) {
 		
-		Vector result = new Vector(a);
+	    if (a.checkIsObjectNothing() || b.checkIsObjectNothing()) {
+	        return Vector.getObjectNothing();
+	    }
+
+	    Vector result = new Vector(a);
 		result.add(reverseVector(b));
 		return result;
 		
@@ -222,6 +236,10 @@ public class VectorMapper {
 	
 	public Vector multiplicationWithScalar(Vector a, float scalarFactor) {
 		
+	    if (a.checkIsObjectNothing()) {
+	        return Vector.getObjectNothing();
+	    }
+	    
 		Vector result = new Vector(a);
 		result.mul(scalarFactor);
 		return result;
@@ -233,7 +251,7 @@ public class VectorMapper {
 			return new Vector(standardVisibleAreaPerpendiculars[nrPerpendicular]);
 		}
 		else {
-			return new Vector();
+			return Vector.getObjectNothing();
 		}
 	}
 	
@@ -242,7 +260,7 @@ public class VectorMapper {
 			return new Vector(standardVisibleAreaANorm[nrPerpendicular]);
 		}
 		else {
-			return new Vector();
+			return Vector.getObjectNothing();
 		}
 	}
 	
@@ -251,7 +269,7 @@ public class VectorMapper {
 			return new Vector(standardVisibleAreaBNorm[nrPerpendicular]);
 		}
 		else {
-			return new Vector();
+			return Vector.getObjectNothing();
 		}
 	}
 

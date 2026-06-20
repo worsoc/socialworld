@@ -57,9 +57,9 @@ public class PositionCalculator extends SocialWorldThread {
 	
 	private final Vector zeroVector = Vector.get0Vector();
 	
-	private final ThreadLocal<Vector> localVectorEvent = ThreadLocal.withInitial(() -> new Vector(0, 0, 0));
-	private final ThreadLocal<Vector> localVectorMove = ThreadLocal.withInitial(() -> new Vector(0, 0, 0));
 
+	private final ThreadLocal<Vector> localVectorEvent = ThreadLocal.withInitial(() -> Vector.getMutable());
+	private final ThreadLocal<Vector> localVectorMove = ThreadLocal.withInitial(() -> Vector.getMutable());
 
 
 	/**
@@ -180,7 +180,7 @@ public class PositionCalculator extends SocialWorldThread {
 	            
 	        eventType = event.getEventType();
 	        positionOriginal = getObjectRequester().requestPosition(token, state.getProperty(token, PropertyName.simobj_position), this);
-	        position = positionOriginal.getVector(token);
+	        position = new Vector(positionOriginal.getVector(token));
 	        
 	        directionMoveObject = getObjectRequester().requestDirection(token, state.getProperty(token, PropertyName.simobj_directionMove), this);
 	        workingVectorMove.set(directionMoveObject.getVector(token)); 
