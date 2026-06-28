@@ -21,6 +21,7 @@
 */
 package org.socialworld.calculation;
 
+import org.socialworld.GlobalSwitches;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.AttributeArray;
@@ -196,6 +197,7 @@ public class Value {
 		initValueFromString(valueAsString, castToType);
 	}
 	
+	
 	public Value(Value original) {
 	    if (original == null) {
 	        this.type = Type.nothing;
@@ -208,45 +210,44 @@ public class Value {
 	    this.valid = original.valid;
 	    this.transferCode = original.transferCode;
 	    
-	    // Für die Kopie wird die Veränderbarkeit über changeValue() deaktiviert.
-	    // Das schützt die originale Referenz bei allen Typen im default-Block.
-	    this.isMutableBySet = false; 
+	    this.isMutableBySet = true; 
 
-	    // Falls der Wert null ist, setzen wir ihn auf null und brechen ab
 	    if (original.value == null) {
 	        this.value = null;
 	        return;
 	    }
 
-	    // Deep Copy oder Referenz-Schutz in Abhängigkeit des Typs
 	    switch (original.type) {
 	        case vector:
-	            this.value = new Vector((Vector) original.value);
+	            Vector origVector = (Vector) original.value;
+	            if (origVector.checkIsObjectNothing()) {
+	                this.value = Vector.getObjectNothing(); // Singleton bleibt Singleton
+	            } else {
+	                // Erzeugt gemäß unserem neuen Design einen beschreibbaren Vektor (isMutable = true)
+	                this.value = new Vector(origVector); 
+	            }
 	            break;
 
-	        case time:
-	            this.value = new Time((Time) original.value);
-	            break;
 
 	        case attributeArray:
 	            this.value = new AttributeArray((AttributeArray) original.value);
 	            break;
 
 	        case valueList:
-	            // Erzeugt eine neue ValueArrayList-Instanz, behält im Inneren aber
-	            // die exakt gleichen Objekt-Referenzen (flache Element-Kopie).
 	            this.value = new ValueArrayList((ValueArrayList) original.value);
 	            break;
 
 	        default:
-	            // Für Immutable-Typen, Enums, einmalige Objekte (event, action) 
-	            // sowie allgemeine Typen (wie object):
-	            // Hier wird die originale Referenz übergeben. Da 'isMutableBySet' oben auf
-	            // false gesetzt wurde, schützt Ihre changeValue()-Methode diesen Value nun.
+	            // Für Typen, die per Prinzip immutable sind (Enums, Time, Events, Actions):
+	            // Wir übergeben die originale Referenz. Da 'isMutableBySet' oben global auf 
+	            // true gesetzt wurde, ist der Value-Container zwar theoretisch modifizierbar 
+	            // (Inhalt kann per changeValue() komplett ersetzt werden), der hier übergebene 
+	            // Inhalt selbst ist jedoch strukturell vor inneren Modifikationen geschützt.
 	            this.value = original.value;
 	            break;
 	    }
 	}
+
 	
 	public static Value getMutable(Type type, String name, Object value) {
 		Value mutable = new Value(type, name, value);
@@ -486,6 +487,10 @@ public class Value {
 		}
 		
 		// no matching types !!!
+		if (GlobalSwitches.OUTPUT_DEBUG_CHECKTYPE) {
+			System.out.println("WARNUNG [checkType]: Fehlmatching! " 
+				+ "Value-Typ ist [" + this.type + "], aber abgefragt wurde [" + type + "]");
+		}
 		return null;
 	}
 	

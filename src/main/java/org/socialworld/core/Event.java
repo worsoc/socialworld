@@ -70,7 +70,11 @@ public abstract class Event implements Comparable<Event>, IObjectReceiver {
 	protected boolean eventToCauserItself = false;
 	protected boolean eventToTarget = false;
 
-	private static Value noDirection = new Value(Type.eventProp, new Direction(PropertyName.event_direction, new Vector(0,0,0)));
+	//noDirection nutzt konsequent den statischen Nullvektor
+	private static final Value noDirection = new Value(Type.eventProp, new Direction(PropertyName.event_direction, Vector.get0Vector()));
+
+	// noPosition als neues, unantastbares Gegenstück für die Positions-Fallbacks
+	private static final Value noPosition = new Value(Type.eventProp, Position.getObjectNothing());
 
 	
 
@@ -229,19 +233,17 @@ public abstract class Event implements Comparable<Event>, IObjectReceiver {
 
 
 	/**
-	 * @return the position
+	 * @return Die Position des Events, verpackt als sicherer Value-Container 
+	 *         für das Expression-System.
 	 */
-	public Position getPosition() {
-	    // Das globale "Nothing"-Objekt darf nicht kopiert werden!
-	    if (this.position == null || this.position.checkIsObjectNothing()) {
-	        return Position.getObjectNothing();
-	    }
-	    
-	    // Weg A: Über den bestehenden Konstruktor (falls der Typ passt)
-	    // return new Position(Type.simobj_property, this.position);
-	    
-	    // Weg B: Direkt über Ihr Sicherheits-Token-System, falls zugänglich
-	    return (Position) this.position.copyForProperty(tokenCore);
+	public Value getPosition() {
+		// 1. Das globale "Nichts"-Objekt abfangen
+		if (this.position == null || this.position.checkIsObjectNothing()) {
+			return noPosition;
+		}
+		
+		// 2. Konsequent als Value-Objekt verpackt an das Expression-System übergeben
+		return new Value(Type.eventProp, Value.VALUE_BY_NAME_EVENT_POSITION, this.position);
 	}
 
 	public Value getDirection() {
@@ -250,14 +252,18 @@ public abstract class Event implements Comparable<Event>, IObjectReceiver {
 		if (hasOptionalParam()) {
 			direction = optionalParam.getParam(Value.VALUE_BY_NAME_EVENT_DIRECTION);
 			if (direction.checkObjectIsNull() == true) {
-				direction = new Value(Type.eventProp, new Direction(PropertyName.event_direction, new Vector(0,0,0)));
+		        return noDirection;
 			}
 			if (direction.getType().equals(Type.vector)) {
 				Vector vectorDirection = getObjectRequester().requestVector(tokenCore, direction, this);
 				if (vectorDirection == Vector.getObjectNothing()) {
-					vectorDirection = new Vector(0,0,0);
+		            vectorDirection = Vector.getObjectNothing();
 				}
-				direction = new Value(Type.eventProp, new Direction(PropertyName.event_direction, vectorDirection));
+		        if (vectorDirection.checkIsObjectNothing()) {
+		            return noDirection;
+		        } else {
+		            direction = new Value(Type.eventProp, new Direction(PropertyName.event_direction, vectorDirection));
+		        }
 			}
 			return  direction;
 			
@@ -266,10 +272,9 @@ public abstract class Event implements Comparable<Event>, IObjectReceiver {
 		if (this.causer instanceof Animal){
 			direction = ((Animal) causer).getProperty(tokenCore, PropertyName.simobj_directionChest);
 			if (direction.checkObjectIsNull() == true) {
-				direction = new Value(Type.eventProp, new Direction(PropertyName.event_direction, new Vector(0,0,0)));
+		        return noDirection; // Direkt die sichere Konstante statt "new Value(..., new Vector(0,0,0))"
 			}
 			return direction;
-			
 		}
 		
 		return noDirection;

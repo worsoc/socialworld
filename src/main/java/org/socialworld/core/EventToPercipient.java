@@ -56,7 +56,9 @@ public class EventToPercipient extends Event implements IPerceptible {
 		else {
 			result = new ValueArrayList();
 			result.add(new Value(Type.simulationObject, Value.VALUE_BY_NAME_EVENT_CAUSER, this.getCauser()));
-			result.add(new Value(Type.simPropName, Value.VALUE_BY_NAME_EVENT_POSITION, this.getPosition()));
+//			result.add(new Value(Type.simPropName, Value.VALUE_BY_NAME_EVENT_POSITION, this.getPosition().getObject(Type.eventProp)));
+// wir versuchen gleich mit dem Ansatz es handelt sich um einen nur lesbaren Value --> also Verwendung des Originals
+			result.add(this.getPosition());
 		}
 		return result;
 		

@@ -65,7 +65,9 @@ public class CreateActionExpression  {
 			else {
 				exp3 = new CreateValue(Type.action, Nothing.getInstance()); //CreateValue.NOACTION;
 			}
-			return Branching.createBranchingSmart(exp1, exp2, exp3);
+			Expression branching = Branching.createBranchingSmart(exp1, exp2, exp3);
+//			branching.setDebugName("CreateReactionExpression");
+			return branching;
 
 			
 		}

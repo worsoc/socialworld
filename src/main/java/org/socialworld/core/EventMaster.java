@@ -31,6 +31,7 @@ import org.socialworld.GlobalSwitches;
 import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
+import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.objects.Animal;
@@ -248,7 +249,7 @@ public class EventMaster extends SocialWorldThread {
 			this.effectDistance = event.getEffectDistance();
 		}
 		
-		this.eventPosition = event.getPosition();
+		this.eventPosition = (Position) event.getPosition().getObject(Type.eventProp);
 		
 		return true;
 	}

@@ -1,24 +1,20 @@
 /*
-* Social World
-* Copyright (C) 2014  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2014  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.calculation;
 
 import java.util.LinkedList;
@@ -75,6 +71,7 @@ public class Expression implements IObjectReceiver{
 	
 		
 	private boolean isValid;
+	private String debugName = "";
 	
 	protected static Simulation simulation = Simulation.getInstance();;
 	protected static Calculation calculation = Calculation.getInstance();
@@ -116,6 +113,15 @@ public class Expression implements IObjectReceiver{
 		isValid = true;
 		
 	}
+	
+	public void setDebugName(String debugName) {
+		if (this.debugName.length() == 0) this.debugName = debugName;
+	}
+	
+	public String getDebugName() {
+		return this.debugName;
+	}
+	
 	public void setValid() {
 		isValid = true;
 	}
@@ -527,10 +533,18 @@ public class Expression implements IObjectReceiver{
 					
 				case branching:
 					tmp = expression1.evaluate(arguments);
-					if (tmp.isTrue()  ) 
+					if (tmp.isTrue()  ) {
+//						if (getDebugName().equals("CreateReactionExpression")) {
+//							System.out.println("Branching fuer CreateReactionExpression  --> true");
+//						}
 						tmp =  expression2.evaluate(arguments);
-					else
+					}
+					else {
+//						if (getDebugName().equals("CreateReactionExpression")) {
+//							System.out.println("Branching fuer CreateReactionExpression  --> false");
+//						}
 						tmp = expression3.evaluate(arguments);
+					}
 					return tmp;
 					
 				case condition:

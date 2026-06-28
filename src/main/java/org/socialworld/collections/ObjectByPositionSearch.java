@@ -23,6 +23,7 @@ package org.socialworld.collections;
 
 
 import org.socialworld.attributes.Position;
+import org.socialworld.calculation.Type;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.God;
 import org.socialworld.objects.Human;
@@ -137,7 +138,7 @@ public class ObjectByPositionSearch {
 
 	public LinkedList<LinkedList<SimulationObject>> getObjects(Event event) {
 		
-		Position position = event.getPosition();
+		Position position = (Position) event.getPosition().getObject(Type.eventProp);
 		float distance = event.getEventType().getEffectDistance();		
 		ArrayList<String> praefixs = getPraefixs(position, distance);
 		

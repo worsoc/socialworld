@@ -44,6 +44,7 @@ public class GlobalSwitches {
 	public static boolean OUTPUT_DEBUG_KNOWLEDGECALCULATOR_VARIABLE_IS_NULL = false;
 
 	public static boolean OUTPUT_DEBUG_GETOBJECT = false;
+	public static boolean OUTPUT_DEBUG_CHECKTYPE = true;
 	public static boolean OUTPUT_DEBUG_GETPROPERTY = false;
 	
 	public static boolean OUTPUT_EVENTMASTER_DETERMINE_CANDIDATES = false;

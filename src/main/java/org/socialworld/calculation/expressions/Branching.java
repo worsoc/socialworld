@@ -181,7 +181,10 @@ public class Branching extends Expression {
 	        attributeValue = GetAttributeValue.getInstance(attr.getIndex());
 	    }
 		
-		if (!attributeValue.isValid()) return attributeValue;
+		if (!attributeValue.isValid()) {
+			System.out.println("Branching>parseAttributeCondition() returns Expression nothing");
+			return attributeValue;
+		}
 
 		Expression constant = new Constant(new Value(value, Type.integer ));
 		
