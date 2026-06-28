@@ -283,7 +283,9 @@ public class Expression implements IObjectReceiver{
 					
 				case value:
 					
-					return calculation.copy(value);
+					//return calculation.copy(value);
+					// don't copy, becasue a value is readonly per default
+					return value;
 										
 				case attributeValue:
 					
