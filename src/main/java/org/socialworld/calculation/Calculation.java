@@ -96,9 +96,9 @@ public class Calculation implements IObjectReceiver{
 				created = new Value(type, false);
 			break;
 		case integer: 
-			if (value instanceof Float)			created = new Value(type, ((Float)value).intValue());
-			else if (value instanceof Double)	created = new Value(type, ((Double)value).intValue());
-			else if (value instanceof Integer)	created = new Value(type, (Integer) value);
+			if (value instanceof Float)			created = Value.getInteger(((Float)value).intValue());//new Value(type, ((Float)value).intValue());
+			else if (value instanceof Double)	created = Value.getInteger(((Double)value).intValue());//new Value(type, ((Double)value).intValue());
+			else if (value instanceof Integer)	created = Value.getInteger((Integer)value);//new Value(type, (Integer) value);
 			else created = new Value(type, value);
 			break;
 		case longinteger: 
@@ -114,17 +114,21 @@ public class Calculation implements IObjectReceiver{
 			else created = new Value(type, value);
 			break;
 		case actionType:
-			if (value instanceof Double)		created = new Value(type, ActionType.getName(((Double)value).intValue()));
-			else if (value instanceof Float)	created = new Value(type, ActionType.getName(((Float)value).intValue()));
-			else if (value instanceof Integer)	created = new Value(type, ActionType.getName((Integer) value));
+			if (value instanceof Double)		created = ActionType.getValue(((Double)value).intValue());
+			else if (value instanceof Float)	created = ActionType.getValue(((Float)value).intValue());
+			else if (value instanceof Integer)	created = ActionType.getValue((Integer) value);
+			else if (value instanceof String)	created = ActionType.getValue((String) value);
+			else if (value instanceof ActionType) created = ActionType.getValue(((ActionType) value).getIndex());
 			else created = new Value(type, value);
 			break;
 		case actionMode:
-			if (value instanceof Double)		created = new Value(type, ActionMode.getName(((Double)value).intValue()));
-			else if (value instanceof Float)	created = new Value(type, ActionMode.getName(((Float)value).intValue()));
-			else if (value instanceof Integer)	created = new Value(type, ActionMode.getName((Integer) value));
+			if (value instanceof Double)		created = ActionMode.getValue(((Double)value).intValue());
+			else if (value instanceof Float)	created = ActionMode.getValue(((Float)value).intValue());
+			else if (value instanceof Integer)	created = ActionMode.getValue((Integer) value);
+			else if (value instanceof String)	created = ActionMode.getValue((String) value);
+			else if (value instanceof ActionMode) created = ActionMode.getValue(((ActionMode) value).getIndex());
 			else created = new Value(type, value);
-			break;
+			break;		
 		case time:
 			if (value instanceof Double)		created = new Value(type, new Time(false, ((Double)value).longValue()));
 			else if (value instanceof Float)	created = new Value(type, new Time(false, ((Float)value).longValue()));
@@ -138,6 +142,7 @@ public class Calculation implements IObjectReceiver{
 		case enumProp:
 			if (value instanceof IEnumProperty) created = new Value(type, value);
 			else created = Value.getValueNothing();
+			break;
 		default: 
 			created = new Value(type, value);
 		}

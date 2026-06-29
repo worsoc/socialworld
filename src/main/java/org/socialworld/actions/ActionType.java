@@ -1,29 +1,26 @@
 /*
-* Social World
-* Copyright (C) 2014  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2014  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.actions;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 
 /**
@@ -68,12 +65,24 @@ public enum ActionType {
 	private static final Map<String, ActionType> NAME_CACHE = new HashMap<>();
 	private static final Map<Integer, ActionType> INDEX_CACHE = new HashMap<>();
 
+	private static final Map<String, Value> VALUE_NAME_CACHE = new HashMap<>();
+	private static final Map<Integer, Value> VALUE_INDEX_CACHE = new HashMap<>();
+
+	private static final Value valueIgnore;
+
 	static {
+		valueIgnore = new Value(Type.actionType, ignore.name());
+		
 		for (ActionType type : values()) {
 			NAME_CACHE.put(type.name(), type);
 			INDEX_CACHE.put(type.index, type);
+			
+			Value valueContainer = new Value(Type.actionType, type);
+			VALUE_NAME_CACHE.put(type.name(), valueContainer);
+			VALUE_INDEX_CACHE.put(type.index, valueContainer);
 		}
 	}
+	
 	private int index;
 
 	private ActionType(int index) {
@@ -88,6 +97,16 @@ public enum ActionType {
 	public static ActionType fromName(String name) {
 		ActionType type = NAME_CACHE.get(name);
 		return (type != null) ? type : ignore;
+	}
+
+	public static Value getValue(int index) {
+		Value cached = VALUE_INDEX_CACHE.get(index);
+		return (cached != null) ? cached : valueIgnore;
+	}
+
+	public static Value getValue(String name) {
+		Value cached = VALUE_NAME_CACHE.get(name);
+		return (cached != null) ? cached : valueIgnore;
 	}
 
 	/**

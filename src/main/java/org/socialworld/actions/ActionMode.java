@@ -1,29 +1,27 @@
 /*
-* Social World
-* Copyright (C) 2014  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2014  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.actions;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import org.socialworld.calculation.Type;
+import org.socialworld.calculation.Value;
 import org.socialworld.core.EventTypeGeneral;
 
 /**
@@ -85,11 +83,24 @@ public enum ActionMode {
 	private static final Map<Integer, ActionMode> INDEX_CACHE = new HashMap<>();
 	private static final Map<EventTypeGeneral, ActionMode> ETG_CACHE = new HashMap<>();
 
+	private static final Map<String, Value> VALUE_NAME_CACHE = new HashMap<>();
+	private static final Map<Integer, Value> VALUE_INDEX_CACHE = new HashMap<>();
+	private static final Map<EventTypeGeneral, Value> VALUE_ETG_CACHE = new HashMap<>();
+	
+	private static final Value valueIgnore;
+	
 	static {
+		valueIgnore = new Value(Type.actionMode, ignore);
+		
 		for (ActionMode mode : values()) {
 			NAME_CACHE.put(mode.name(), mode);
 			INDEX_CACHE.put(mode.index, mode);
 			ETG_CACHE.put(mode.etg, mode);
+
+			Value valueContainer = new Value(Type.actionMode, mode);
+			VALUE_NAME_CACHE.put(mode.name(), valueContainer);
+			VALUE_INDEX_CACHE.put(mode.index, valueContainer);
+			VALUE_ETG_CACHE.put(mode.etg, valueContainer);
 		}
 	}
 	
@@ -107,15 +118,6 @@ public enum ActionMode {
 		return (mode != null) ? mode : ignore;
 	}
 
-	/**
-	 * The method returns the index of the ActionMode.
-	 * 
-	 * @return action mode's index
-	 */
-	public int getIndex() {
-		return index;
-	}
-
 	public static ActionMode fromName(String name) {
 		ActionMode mode = NAME_CACHE.get(name);
 		return (mode != null) ? mode : ignore;
@@ -124,6 +126,32 @@ public enum ActionMode {
 	public static ActionMode fromEventTypeGeneral(EventTypeGeneral etg) {
 		ActionMode mode = ETG_CACHE.get(etg);
 		return (mode != null) ? mode : ignore;
+	}
+	
+	public static Value getValue(int index) {
+		Value cached = VALUE_INDEX_CACHE.get(index);
+		return (cached != null) ? cached : valueIgnore;
+	}
+
+	public static Value getValue(String name) {
+		Value cached = VALUE_NAME_CACHE.get(name);
+		return (cached != null) ? cached : valueIgnore;
+	}
+
+	public static Value getValue(EventTypeGeneral etg) {
+		Value cached = VALUE_ETG_CACHE.get(etg);
+		return (cached != null) ? cached : valueIgnore;
+	}
+	
+
+
+	/**
+	 * The method returns the index of the ActionMode.
+	 * 
+	 * @return action mode's index
+	 */
+	public int getIndex() {
+		return index;
 	}
 
 	public static int maxIndex() {

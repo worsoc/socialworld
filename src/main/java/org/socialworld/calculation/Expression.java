@@ -284,7 +284,7 @@ public class Expression implements IObjectReceiver{
 				case value:
 					
 					//return calculation.copy(value);
-					// don't copy, becasue a value is readonly per default
+					// don't copy, because a value is readonly per default
 					return value;
 										
 				case attributeValue:
@@ -332,8 +332,6 @@ public class Expression implements IObjectReceiver{
 					
 					tmp = arguments.getValue(name );
 					if (tmp.isValid()) {
-						tmp = calculation.copy(tmp);
-					
 						v = expression1.evaluate(arguments);
 						o = v.getObject(Type.string);
 						if (o instanceof NoObject) {
@@ -344,7 +342,11 @@ public class Expression implements IObjectReceiver{
 						else {
 							name = (String) o;
 							if (name != null && name.length() > 0) {
-								tmp.changeName(name);
+								// name shall change --> create a copy
+								if (!name.equals(tmp.getName())) {
+									tmp = calculation.copy(tmp);
+									tmp.changeName(name);
+								}
 							}
 						}
 					}

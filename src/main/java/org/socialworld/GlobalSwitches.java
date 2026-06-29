@@ -30,7 +30,7 @@ public class GlobalSwitches {
 	public static boolean STATE_ANIMAL_CALCULATE_REFRESH_ATTRIBUTES = true;
 	public static boolean STATE_ANIMAL_CALCULATE_REFRESH_ACTION = true;
 	public static boolean STATE_ANIMAL_CALCULATE_EVENTINFLUENCE_ATTRIBUTES = true;
-	public static boolean STATE_ANIMAL_CALCULATE_EVENTINFLUENCE_PERCEPTION = true;
+	public static boolean STATE_ANIMAL_CALCULATE_EVENTINFLUENCE_PERCEPTION = false;
 
 	public static boolean OUTPUT_MEMORY_TELEMETRY = true;
 	
