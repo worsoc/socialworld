@@ -275,6 +275,10 @@ public class Value {
 		if (isMutableBySet)		this.value = changed;
 	}
 	
+	public boolean isMutableBySet() {
+		return this.isMutableBySet;
+	}
+	
 	private void initValueFromString(String valueAsString, Type castToType) {
 		
 	    if (castToType == null) {

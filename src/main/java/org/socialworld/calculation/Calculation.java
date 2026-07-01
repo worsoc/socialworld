@@ -146,6 +146,30 @@ public class Calculation implements IObjectReceiver{
 		return created;
 	}
 	
+	public final Value copy(Value original) {
+	    if (original == null) {
+	        return null;
+	    }
+
+		if (!original.isValid()) {
+			return nothing;
+		}
+
+	    // Wenn die Hülle bereits beschreibbar ist, handelt es sich um eine 
+	    // Arbeitskopie. Wir reichen die Referenz allokationsfrei zurück, es bracuht nicht kopiert werden!
+	    if (original.isMutableBySet()) {
+	        return original;
+	    }
+
+	    // Nur im Ausnahmefall (unveränderbare/globale Hülle) wird real kopiert
+	    return new Value(original); 
+	}
+	
+	
+	
+	public static Value getNothing() {
+		return nothing;
+	}
 
 
 	public Value or(Value op1, Value op2) {
@@ -406,24 +430,6 @@ public class Calculation implements IObjectReceiver{
 		return nothing;
 	}
 	
-	public Value copy(Value original) {
-		
-		Value result;
-		
-		if (original.isValid()) {
-			result = new Value(original);
-		}
-		else {
-			result = nothing;
-		}
-		
-		return result;
-	}
-	
-	
-	public static Value getNothing() {
-		return nothing;
-	}
 	
 	
 	

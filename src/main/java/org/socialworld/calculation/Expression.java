@@ -657,7 +657,10 @@ public class Expression implements IObjectReceiver{
 						if (this.value != null) {
 							name = (String)this.value.getObject(Type.string);
 							if (name.length() > 0) {
-								tmp.changeName(name);
+								if (!name.equals(tmp.getName())) {
+									tmp = calculation.copy(tmp);
+									tmp.changeName(name);
+								}
 							}
 						}
 					}
@@ -676,7 +679,11 @@ public class Expression implements IObjectReceiver{
 						if (this.value != null) {
 							name = (String)this.value.getObject(Type.string);
 							if (name.length() > 0) {
-								tmp.changeName(name);
+								if (!name.equals(tmp.getName())) {
+									tmp = calculation.copy(tmp);
+									tmp.changeName(name);
+								}
+
 							}
 						}
 					}	
@@ -728,7 +735,11 @@ public class Expression implements IObjectReceiver{
 						}
 */
 						if (name.length() > 0) {
-							tmp.changeName(name);
+							if (!name.equals(tmp.getName())) {
+								tmp = calculation.copy(tmp);
+								tmp.changeName(name);
+							}
+
 							index = valueList.findValue(name);
 							if (index >= 0) {
 								valueList.set(index, tmp);
