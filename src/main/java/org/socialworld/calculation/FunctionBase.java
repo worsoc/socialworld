@@ -73,8 +73,8 @@ public abstract class FunctionBase  implements IObjectReceiver {
 	protected Value getMinMaxedValue(Value value) {
 		Value result = value;
 		if (withMinMaxCheck) {
-			if (calculation.compareGreater(value,  max).isTrue() ) result = calculation.copy(max);
-			if (calculation.compareLess(value,  min).isTrue() ) result = calculation.copy(min);
+			if (calculation.compareGreater(value,  max).isTrue() ) result = calculation.copy(max, "");
+			if (calculation.compareLess(value,  min).isTrue() ) result = calculation.copy(min, "");
 		}
 		return result;
 	}

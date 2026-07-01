@@ -332,6 +332,7 @@ public class Expression implements IObjectReceiver{
 					
 					tmp = arguments.getValue(name );
 					if (tmp.isValid()) {
+						name = "";
 						v = expression1.evaluate(arguments);
 						o = v.getObject(Type.string);
 						if (o instanceof NoObject) {
@@ -341,14 +342,8 @@ public class Expression implements IObjectReceiver{
 						}
 						else {
 							name = (String) o;
-							if (name != null && name.length() > 0) {
-								// name shall change --> create a copy
-								if (!name.equals(tmp.getName())) {
-									tmp = calculation.copy(tmp);
-									tmp.changeName(name);
-								}
-							}
 						}
+						tmp = calculation.copy(tmp, name);
 					}
  					return tmp;
 					
@@ -653,16 +648,11 @@ public class Expression implements IObjectReceiver{
 				case oneExpression:
 					tmp = expression1.evaluate(arguments);
 					if (tmp.isValid()) {
-						tmp = calculation.copy(tmp);
+						name = "";
 						if (this.value != null) {
 							name = (String)this.value.getObject(Type.string);
-							if (name.length() > 0) {
-								if (!name.equals(tmp.getName())) {
-									tmp = calculation.copy(tmp);
-									tmp.changeName(name);
-								}
-							}
 						}
+						tmp = calculation.copy(tmp, name);
 					}
 					return tmp;
 					
@@ -675,17 +665,11 @@ public class Expression implements IObjectReceiver{
 					}
 					
 					if (tmp.isValid()) {
-						tmp = calculation.copy(tmp);
+						name = "";
 						if (this.value != null) {
 							name = (String)this.value.getObject(Type.string);
-							if (name.length() > 0) {
-								if (!name.equals(tmp.getName())) {
-									tmp = calculation.copy(tmp);
-									tmp.changeName(name);
-								}
-
-							}
 						}
+						tmp = calculation.copy(tmp, name);
 					}	
 					return tmp;
 					
@@ -693,9 +677,7 @@ public class Expression implements IObjectReceiver{
 				
 					tmp = expression1.evaluate(arguments);
 					if (tmp != null && tmp.isValid()) {
-						
-						tmp = calculation.copy(tmp);
-						
+												
 						// is there a name for a sub list
 						Value exp2Val = expression2.evaluate(arguments);
 						Object nameObj = (exp2Val != null) ? exp2Val.getObject(Type.string) : null;
@@ -734,11 +716,8 @@ public class Expression implements IObjectReceiver{
 							}
 						}
 */
+						tmp = calculation.copy(tmp, name);
 						if (name.length() > 0) {
-							if (!name.equals(tmp.getName())) {
-								tmp = calculation.copy(tmp);
-								tmp.changeName(name);
-							}
 
 							index = valueList.findValue(name);
 							if (index >= 0) {

@@ -27,7 +27,6 @@ import org.socialworld.actions.ActionType;
 import org.socialworld.attributes.Time;
 import org.socialworld.attributes.properties.IEnumProperty;
 import org.socialworld.calculation.geometry.Vector;
-import org.socialworld.collections.ValueArrayList;
 
 public class Calculation implements IObjectReceiver{
 
@@ -39,6 +38,12 @@ public class Calculation implements IObjectReceiver{
 	static Value zeroFloatingPoint;
 	static Value zeroVector;
 	
+	
+	private static long countIgnores = 0;
+	private static long countCopies = 0;
+	private static long countChangeNames = 0;
+	private static long countMutableNameChanges = 0;
+
 /*	
 	// Ein permanenter, thread-spezifischer Puffer mit einer Startkapazität von 4 Elementen
 	private final ThreadLocal<ValueArrayList> sharedValueListBuffer = 
@@ -146,7 +151,7 @@ public class Calculation implements IObjectReceiver{
 		return created;
 	}
 	
-	public final Value copy(Value original) {
+	public final Value copy(Value original, String newName) {
 	    if (original == null) {
 	        return null;
 	    }
@@ -155,14 +160,31 @@ public class Calculation implements IObjectReceiver{
 			return nothing;
 		}
 
-	    // Wenn die Hülle bereits beschreibbar ist, handelt es sich um eine 
-	    // Arbeitskopie. Wir reichen die Referenz allokationsfrei zurück, es bracuht nicht kopiert werden!
-	    if (original.isMutableBySet()) {
+	    // Wenn die Hülle bereits beschreibbar ist, handelt es sich um eine Arbeitskopie. 
+		// Wenn dann noch kein neuer Name, bzw. alter undn euer Name  sind gleich
+		// Wir reichen die Referenz allokationsfrei zurück, es braucht nicht kopiert werden!
+	    if (original.isMutableBySet() && (newName == null || newName.length() == 0 || newName.equals(original.getName()))) {
+//	    	System.out.println("Calculation.copy: Verzicht auf Kopie");
+	    	countIgnores++;
 	        return original;
 	    }
 
+	    // Wenn das Objekt bereits mutable ist, aber die obige Bedingung fehlschlug,
+	    // liegt es zwingend daran, dass ein NEUER, abweichender Name gefordert wird!
+	    if (original.isMutableBySet() && newName != null && newName.length() > 0 && !newName.equals(original.getName())) {
+	        countMutableNameChanges++;
+	    }
+	    
+	    Value copy;
+	    copy = new Value(original);
+	    if (newName != null && newName.length() > 0) {
+//	    	System.out.println("Calculation.copy: old name = " + original.getName() + " --> new name = " + newName);
+	    	copy.changeName(newName);
+	    	countChangeNames++;
+	    }
 	    // Nur im Ausnahmefall (unveränderbare/globale Hülle) wird real kopiert
-	    return new Value(original); 
+	    countCopies++;
+	    return copy; 
 	}
 	
 	
@@ -447,6 +469,12 @@ public class Calculation implements IObjectReceiver{
 		}
 	}
 	
+	public void printStatistics() {
+        System.out.printf(
+                "[Value-Copy-Stats] Ignored: %,d | Real Copies: %,d | Name-Changes: %,d | MUTABLE-NAME-CHANGES: %,d%n",
+                countIgnores, countCopies, countChangeNames, countMutableNameChanges
+            );
+	}
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////implementing IObjectReceiver ///////////////////////////////////////

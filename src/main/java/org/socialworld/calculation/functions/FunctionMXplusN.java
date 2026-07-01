@@ -82,7 +82,7 @@ public class FunctionMXplusN extends FunctionBase {
 		this.useFloatingPointCalculation = true;
 	}
 
-	public FunctionMXplusN(Type type, float m, float n, float min, float max) {
+	private FunctionMXplusN(Type type, float m, float n, float min, float max) {
 		
 		this.type = type;
 		
@@ -94,16 +94,6 @@ public class FunctionMXplusN extends FunctionBase {
 			
 	}
 	
-	public FunctionMXplusN(Type type, float m, Value n, Value min, Value max, boolean withMinMaxCheck) {
-		
-		this.type = type;
-		
-		this.m = m;
-		this.n = n;
-		
-		setMinMaxCheckValue(min, max);
-		
-	}
 	
 	/* (non-Javadoc)
 	 * @see org.socialworld.calculation.FunctionBase#calculate(org.socialworld.calculation.Value[])
@@ -162,6 +152,7 @@ public class FunctionMXplusN extends FunctionBase {
 
 			if (result.getType() != n.getType()) return Value.getValueNothing();
 
+			// 01.07.2026: muss hier noch eine Kopie her? denn es könnten die min bzw. max-Werte drin stehen, die gan zsicher immutable sind
 			result = getMinMaxedValue(result);
 			return result;
 	}

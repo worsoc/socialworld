@@ -279,6 +279,7 @@ public class Value {
 		return this.isMutableBySet;
 	}
 	
+
 	private void initValueFromString(String valueAsString, Type castToType) {
 		
 	    if (castToType == null) {

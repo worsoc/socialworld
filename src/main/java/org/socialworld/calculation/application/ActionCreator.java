@@ -447,6 +447,7 @@ public class ActionCreator extends SocialWorldThread {
 		}
 		else {
 			type = (ActionType) o;
+			if (type == null) type = ActionType.ignore;
 		}
 
 		switch (type) {
