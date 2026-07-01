@@ -155,8 +155,14 @@ public class Value {
 		valid = false;
 	}
 	
+	private static final Value[] BOOLEAN_CACHE = new Value[] {
+		    new Value(Type.bool, Boolean.FALSE), // Index 0 für false
+		    new Value(Type.bool, Boolean.TRUE)   // Index 1 für true
+		};
+
 	private static final Value[] INTEGER_CACHE = new Value[101]; // Cache für 0 bis 100
 
+	
 	// Statischer Initialisierungsblock: Befüllt den Cache komplett vorab beim Programmstart
 	static {
 		for (int value = 0; value <= 100; value++) {
@@ -164,6 +170,10 @@ public class Value {
 		}
 	}
 
+	public static Value getBoolean(boolean value) {
+	    // Wandelt true in 1 und false in 0 um (Branchless-Indexzugriff)
+	    return BOOLEAN_CACHE[value ? 1 : 0];
+	}
 	public static Value getInteger(int value) {
 		// Da der Cache garantiert voll ist, fällt die null-Prüfung weg.
 		// Das spart bei jedem einzelnen Aufruf einen CPU-Verzweigungsschritt (Branch)!

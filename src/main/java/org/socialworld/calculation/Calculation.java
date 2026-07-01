@@ -90,10 +90,7 @@ public class Calculation implements IObjectReceiver{
 		
 		switch (type) {
 		case bool:
-			if ((boolean)value == true) 
-				created = new Value(type, true);
-			else
-				created = new Value(type, false);
+			created = Value.getBoolean((boolean) value);
 			break;
 		case integer: 
 			if (value instanceof Float)			created = Value.getInteger(((Float)value).intValue());//new Value(type, ((Float)value).intValue());
