@@ -98,7 +98,9 @@ public  class AttributeCalculator extends SocialWorldThread {
 	private final ThreadLocal<ValueArrayList> localEvalArgs = 
 	    ThreadLocal.withInitial(() -> new ValueArrayList());
 
-	
+	private int currentInfluencedBudget = 0;
+	private int lastCalculatedMaxBudget = 0;
+
 	/**
 	 * private Constructor. 
 	 */
@@ -133,23 +135,63 @@ public  class AttributeCalculator extends SocialWorldThread {
 	
 	@Override
 	public void run() {
+	
 	    // Kurzer Hinweis: TimeUnit muss importiert werden (java.util.concurrent.TimeUnit)
 	    while (isRunning()) {
 	        try {
+	        	
+	            // 0.a. DYNAMISCHE NEUBERECHNUNG: Nur wenn kein Guthaben mehr aus dem Vorframe existiert
+	            if (this.currentInfluencedBudget <= 0) {
+	                int sizeInf = influenced.size();
+	                // es interessiert das Maximum, damit die Mitläuder changed und refresehd nicht überbewertet werden
+	                int sizeOthers = Math.max(changed.size(), refreshed.size());
+
+	                if (sizeOthers == 0) {
+	                    // Keine Mitläufer? Maximales Schwall-Budget freigeben
+	                    this.lastCalculatedMaxBudget = Math.min(100, sizeInf);
+	                    this.currentInfluencedBudget = this.lastCalculatedMaxBudget;
+	                } else {
+	                    // Proportionale Aufteilung
+	                    this.lastCalculatedMaxBudget = Math.min(50, Math.max(5, sizeInf / sizeOthers));
+	                    this.currentInfluencedBudget = this.lastCalculatedMaxBudget;
+	                }
+	            }
+
+	            // 0.b. Sicherstellen, dass wir mindestens 1 Element verarbeiten, falls die Queue leerlauf-gefährdet ist
+	            if (this.currentInfluencedBudget <= 0) {
+	            	this.currentInfluencedBudget = 1;
+	            }
+	        	
+	            // 0.c. DER SCHWALL-ABZUG: Holt im AKTUELLEN Durchlauf exakt so viele Elemente, 
+	            // wie das Guthaben erlaubt, direkt hintereinander weg!
+	            int elementsToFetchThisRun = this.currentInfluencedBudget;
+	        	
+   	
+	        	
 	            // 1. DER WECKER (Hauptlast): 
 	            // Wartet hocheffizient bis zu 10ms auf ein Event. 
 	            // Sobald eines reinkommt, wacht der Thread SOFORT auf.
 	            CollectionElementSimObjInfluenced inf = influenced.poll(
 	            		SocialWorldThread.SLEEPTIME_ATTRIBUTE_CALCULATOR, TimeUnit.MILLISECONDS);
 	            
-	            if (inf != null) {
+	            while (inf != null && elementsToFetchThisRun > 0) {
 	                // Verarbeitet das Element, das wir gerade aus influenced geholt haben
 	                calculateAttributesChangedByEvent(inf);
-
 					// Speicher-Referenzen kappen gegen Memory Loitering
 	                inf.clearReferences();
+	                
+	                elementsToFetchThisRun--;
+	                if (elementsToFetchThisRun > 0) {
+	                    // Schneller, rein CPU-interner Poll für die restliche Schwall-Masse
+	                    inf = influenced.poll(); 
+	                }
 	            }
+	
+	            // 3. ABKLING-REDUKTION FÜR DEN NÄCHSTEN RUN: 
+	            // Beim nächsten Schleifendurchlauf wird das Schwall-Limit um genau 1 verringert!
+	            this.currentInfluencedBudget--;
 
+	            
 	            // 2. DIE MITLÄUFER (Opportunistisches Polling):
 	            // Da der Thread gerade sowieso wach ist, leeren wir die anderen Queues 
 	            // ohne zu warten (poll() ohne Parameter liefert sofort null, wenn leer).
@@ -552,14 +594,18 @@ public  class AttributeCalculator extends SocialWorldThread {
 	
 	public void printInfluencedQueueCounts() {
 		influenced.printCounts();
+		changed.printCounts();
+		refreshed.printCounts();
+		System.out.println("Influenced-Budget (aktuell / Peak-Max): " 
+			    + this.currentInfluencedBudget + " / " + this.lastCalculatedMaxBudget);
 		System.out.println("--- AttributeCalculator-Detaillast ---");
 		System.out.println("Regulär MIT Änderung (Event)         : " + this.counterWithChanges_Event);
 		System.out.println("Regulär ohne Änderung (Event)         : " + this.counterNoChanges_Event);
 		System.out.println("Regulär ohne Änderung (Simple Matrix) : " + this.counterNoChanges_SimpleMatrix);
-		System.out.println("Regulär ohne Änderung (Complex Matrix): " + this.counterNoChanges_ComplexMatrix);
-		System.out.println("-> DSL/Regel-Fehler (Event)   : " + this.counterErrors_Event);
-		System.out.println("-> DSL/Regel-Fehler (Simple Matrix)   : " + this.counterErrors_SimpleMatrix);
-		System.out.println("-> DSL/Regel-Fehler (Complex Matrix)  : " + this.counterErrors_ComplexMatrix);
+//		System.out.println("Regulär ohne Änderung (Complex Matrix): " + this.counterNoChanges_ComplexMatrix);
+//		System.out.println("-> DSL/Regel-Fehler (Event)   : " + this.counterErrors_Event);
+//		System.out.println("-> DSL/Regel-Fehler (Simple Matrix)   : " + this.counterErrors_SimpleMatrix);
+//		System.out.println("-> DSL/Regel-Fehler (Complex Matrix)  : " + this.counterErrors_ComplexMatrix);
 
 		// Allokationsfreier Reset für den nächsten Zyklus
 		this.counterWithChanges_Event = 0;

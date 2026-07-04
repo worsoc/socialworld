@@ -287,7 +287,7 @@ public class Simulation extends SocialWorldThread {
 		Time actualTime = ActualTime.asTime();
 		System.out.println("Zeit: " + actualTime.toString());
 		randomCache.nextTick();
-		//AttributeCalculator.getInstance().printInfluencedQueueCounts();
+		AttributeCalculator.getInstance().printInfluencedQueueCounts();
 		//KnowledgeCalculator.getInstance().printKnowledgeQueueCounts();
 		//EventMaster.getInstance().printAndResetTickStatistics();
 		if (GlobalSwitches.OUTPUT_MEMORY_TELEMETRY)		printMemoryTelemetry();
