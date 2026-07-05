@@ -32,6 +32,8 @@ import org.socialworld.calculation.functions.FunctionByMatrix_Matrix;
 import org.socialworld.collections.CapacityQueue;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.Event;
+import org.socialworld.core.EventPriority;
+import org.socialworld.core.EventType;
 import org.socialworld.core.Simulation;
 import org.socialworld.core.SocialWorldThread;
 import org.socialworld.core.TickObjectCooldown;
@@ -254,18 +256,34 @@ public  class AttributeCalculator extends SocialWorldThread {
 	    }
 	}
 		
+	
 	final void calculateAttributesChangedByEvent(Event event, StateAnimal stateAnimal, HiddenAnimal hiddenWriteAccess) {
 		if (event != null && stateAnimal != null && hiddenWriteAccess != null) {
 			
+			EventType type = event.getEventType();
 			int objectID = stateAnimal.getObjectID();
-			
-			if (event.getEventType().isEventToPercipient()) { 
 
-				// Prüfen, ob das Tier in diesem Tick (oder den letzten X Sekunden) 
-				// bereits ein Event in die Queue gedrückt hat. Hier testweise mit 1 Sekunde Cooldown.
-				if (!this.simulation.checkAndApplyCooldown(objectID, TickObjectCooldown.TYPE_PERCEPTION, 1)) {
-					// Event erfolgreich an der Wurzel gedrosselt!
-					return; 
+			// 1. Priorisierte Einlass-Drosselung für Wahrnehmungen
+			if (type.isEventToPercipient()) { 
+				EventPriority priority = type.getPriority();
+
+				// Nur gedrosselte Stufen (DYNAMIC & AMBIENT) rufen das Singleton an.
+				// CRITICAL (Gesehene Angriffe, Schreie) überspringt diesen Block komplett!
+				if (priority.isThrottleable()) {
+
+					// Prüfen, ob das Tier in diesem Tick (oder den letzten X Sekunden) 
+					// bereits ein Event in die Queue gedrückt hat. Hier mit 1 Sekunde Cooldown.
+		            if (priority == EventPriority.AMBIENT) {
+		                // Rigorose Drosselung
+		                if (!this.simulation.checkAndApplyCooldown(objectID, TickObjectCooldown.TYPE_PERCEPTION_AMBIENT, 1)) {
+		                    return; // Abgelehnt! Verworfen ohne Allokation
+		                }
+		            } else {
+		                // Moderate Drosselung 
+		                if (!this.simulation.checkAndApplyCooldown(objectID, TickObjectCooldown.TYPE_PERCEPTION, 1)) {
+		                    return; // Abgelehnt! Verworfen ohne Allokation
+		                }
+		            }
 				}
 			}
 			
@@ -285,7 +303,8 @@ public  class AttributeCalculator extends SocialWorldThread {
 			}
 		}
 	}
-
+	
+	
 	final void calculateAttributesChangedByComplexMatrix(StateAnimal stateAnimal, HiddenAnimal hiddenWriteAccess) {
 		if (stateAnimal != null && hiddenWriteAccess != null) {
 			// Bitmasken-Recycling statt 'new'

@@ -21,15 +21,17 @@ public class TickObjectCooldown {
 
     // Konfigurierbare Obergrenze: Wie viele Elemente dürfen pro Phase/Tick maximal durch?
     public static final int MAX_PERCEPTION_ELEMS = 5; // Hohe sensorische Varianz
+    public static final int MAX_PERCEPTION_AMBIENT_ELEMS = 1; 
     public static final int MAX_REFRESH_ELEMS    = 1; // Strikt gedeckelt,
 
     // 1. Definition der verschiedenen Cooldown-Typen als ID
     public static final int TYPE_PERCEPTION  = 0;
-    public static final int TYPE_REFRESH  = 1;
-//   public static final int TYPE_ACTION      = 2;
- //   public static final int TYPE_MOVEMENT    = 3;
+    public static final int TYPE_PERCEPTION_AMBIENT  = 1;
+    public static final int TYPE_REFRESH  = 2;
+//   public static final int TYPE_ACTION      = 3;
+ //   public static final int TYPE_MOVEMENT    = 4;
     
-    public static final int TYPE_COUNT       = 2; // Anzahl der registrierten Typen
+    public static final int TYPE_COUNT       = 3; // Anzahl der registrierten Typen
 
     // Zeile = objectId, Spalte = Cooldown-Typ -> Absolut allokationsfrei im Betrieb!
     private final long[][] cooldownMatrix;
@@ -94,6 +96,8 @@ public class TickObjectCooldown {
         switch (cooldownType) {
             case TYPE_PERCEPTION:
                 return MAX_PERCEPTION_ELEMS; 
+            case TYPE_PERCEPTION_AMBIENT:
+                return MAX_PERCEPTION_AMBIENT_ELEMS; 
             case TYPE_REFRESH:
                 return MAX_REFRESH_ELEMS;  
             default:

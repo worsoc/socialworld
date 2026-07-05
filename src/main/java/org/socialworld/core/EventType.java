@@ -126,34 +126,72 @@ public enum EventType {
 //EventToPercipient	
 //////////////////////////
 
-	percipientSleep(385), percipientDrink(386), percipientEat(387), percipientPiss(388), percipientShit(389), 	
+	   percipientSleep(385, EventPriority.AMBIENT), 
+	    percipientDrink(386, EventPriority.DYNAMIC), 
+	    percipientEat(387, EventPriority.DYNAMIC), 
+	    percipientPiss(388, EventPriority.AMBIENT), 
+	    percipientShit(389, EventPriority.AMBIENT),     
 
-	percipientMoveWalk(392), percipientMoveRun(393), percipientMoveSneak(394), percipientMoveJump(395), percipientMoveSwim(396), percipientMoveFly(397),
+	    percipientMoveWalk(392, EventPriority.AMBIENT), // Zu AMBIENT verschoben für maximale Entlastung
+	    percipientMoveRun(393, EventPriority.DYNAMIC), 
+	    percipientMoveSneak(394, EventPriority.DYNAMIC), 
+	    percipientMoveJump(395, EventPriority.DYNAMIC), 
+	    percipientMoveSwim(396, EventPriority.DYNAMIC), 
+	    percipientMoveFly(397, EventPriority.DYNAMIC),
 
-	percipientExamineByLook(400), percipientExamineBySmell(401), percipientExamineByTaste(402), percipientExamineByTouch(403),
+	    percipientExamineByLook(400, EventPriority.DYNAMIC), 
+	    percipientExamineBySmell(401, EventPriority.DYNAMIC), 
+	    percipientExamineByTaste(402, EventPriority.DYNAMIC), 
+	    percipientExamineByTouch(403, EventPriority.DYNAMIC),
 
-	percipientTouchByHand(408), percipientTouchByFoot(409),
+	    percipientTouchByHand(408, EventPriority.DYNAMIC), 
+	    percipientTouchByFoot(409, EventPriority.DYNAMIC),
 
-	percipientInventoryTake(416), percipientInventoryDrop(417), percipientInventorySwitch(418), percipientInventorySet(419), percipientInventoryGet(420),
+	    percipientInventoryTake(416, EventPriority.DYNAMIC), 
+	    percipientInventoryDrop(417, EventPriority.DYNAMIC), 
+	    percipientInventorySwitch(418, EventPriority.DYNAMIC), 
+	    percipientInventorySet(419, EventPriority.DYNAMIC), 
+	    percipientInventoryGet(420, EventPriority.DYNAMIC),
 
-	percipientHandleItemUse2(424), percipientHandleItemUseLeft(425), percipientHandleItemUseRight(426), percipientHandleItemAddRtoL(427), percipientHandleItemAddLtoR(428), percipientHandleItemPull(429),percipientHandleItemPush(430),
+	    percipientHandleItemUse2(424, EventPriority.DYNAMIC), 
+	    percipientHandleItemUseLeft(425, EventPriority.DYNAMIC), 
+	    percipientHandleItemUseRight(426, EventPriority.DYNAMIC), 
+	    percipientHandleItemAddRtoL(427, EventPriority.DYNAMIC), 
+	    percipientHandleItemAddLtoR(428, EventPriority.DYNAMIC), 
+	    percipientHandleItemPull(429, EventPriority.DYNAMIC),
+	    percipientHandleItemPush(430, EventPriority.DYNAMIC),
 
-	percipientWeaponLeftStab(432), percipientWeaponLeftStroke(433), percipientWeaponLeftBackhand(434), percipientWeaponRightStab(435), percipientWeaponRightStroke(436), percipientWeaponRightBackhand(437), percipientWeaponClub(438),
+	    percipientWeaponLeftStab(432, EventPriority.CRITICAL), 
+	    percipientWeaponLeftStroke(433, EventPriority.CRITICAL), 
+	    percipientWeaponLeftBackhand(434, EventPriority.CRITICAL), 
+	    percipientWeaponRightStab(435, EventPriority.CRITICAL), 
+	    percipientWeaponRightStroke(436, EventPriority.CRITICAL), 
+	    percipientWeaponRightBackhand(437, EventPriority.CRITICAL), 
+	    percipientWeaponClub(438, EventPriority.CRITICAL),
 
-	percipientPunchLeftFistStraight(440),  percipientPunchLeftFistSideways(441), percipientPunchLeftFistUpward(442), percipientPunchRightFistStraight(443),  percipientPunchRightFistSideways(444), percipientPunchRightFistUpward(445),
+	    percipientPunchLeftFistStraight(440, EventPriority.CRITICAL),  
+	    percipientPunchLeftFistSideways(441, EventPriority.CRITICAL), 
+	    percipientPunchLeftFistUpward(442, EventPriority.CRITICAL), 
+	    percipientPunchRightFistStraight(443, EventPriority.CRITICAL),  
+	    percipientPunchRightFistSideways(444, EventPriority.CRITICAL), 
+	    percipientPunchRightFistUpward(445, EventPriority.CRITICAL),
 
-	/*percipientListenToStatement(448), percipientListenToQuestion(449), percipientListenToInstruction(450), percipientUnderstand(451),*/
+	    percipientAskNormal(456, EventPriority.DYNAMIC), 
+	    percipientAskScream(457, EventPriority.CRITICAL), 
+	    percipientAskWhisper(458, EventPriority.DYNAMIC), 
+	    percipientAnswerNormal(459, EventPriority.DYNAMIC), 
+	    percipientAnswerScream(460, EventPriority.CRITICAL), 
+	    percipientAnswerWhisper(461, EventPriority.DYNAMIC),
+	    
+	    percipientExistsDistance100000(506, EventPriority.AMBIENT),
+	    percipientExistsDistance10000(507, EventPriority.AMBIENT),
+	    percipientExistsDistance5000(508, EventPriority.AMBIENT),
+	    percipientExistsDistance2000(509, EventPriority.AMBIENT),
+	    percipientExistsDistance1000(510, EventPriority.AMBIENT),
+	    percipientExistsDistance100(511, EventPriority.AMBIENT);
 
-	percipientAskNormal(456), percipientAskScream(457), percipientAskWhisper(458), percipientAnswerNormal(459), percipientAnswerScream(460), percipientAnswerWhisper(461),
-
-	/*percipientSayNormal(464), percipientSayScream(465), percipientSayWhisper(466), */
 	
-	percipientExistsDistance100000(506),
-	percipientExistsDistance10000(507),
-	percipientExistsDistance5000(508),
-	percipientExistsDistance2000(509),
-	percipientExistsDistance1000(510),
-	percipientExistsDistance100(511);
+	
 	
 	public static final int MAX_EVENT_TYPE =  512;
 
@@ -173,10 +211,19 @@ public enum EventType {
     }
 
 	private final int index;
+	private final EventPriority priority;
 
-	private EventType(int index) {
-		this.index = index;
-	}
+    // Standard-Konstruktor für self, target, candidates (Immer ungedrosselt = CRITICAL)
+    private EventType(int index) {
+        this.index = index;
+        this.priority = EventPriority.CRITICAL;
+    }
+
+    // Spezieller Konstruktor für die differenzierten percipient-Typen
+    private EventType(int index, EventPriority priority) {
+        this.index = index;
+        this.priority = priority;
+    }
 
 	/**
 	 * The method returns the event type name which belongs to the parameter  index.
@@ -186,10 +233,8 @@ public enum EventType {
 	 * @return event type name
 	 */
 	public static EventType getEventType(int index) {
-		for (EventType type : EventType.values())
-			if (type.index == index)
-				return type;
-		return nothing; // instead of null
+	    EventType type = INDEX_CACHE.get(index);
+	    return type != null ? type : nothing;
 	}
 	
 	public static EventType fromName(String name) {
@@ -219,9 +264,13 @@ public enum EventType {
 		return index;
 	}
 
+    public EventPriority getPriority() {
+        return this.priority;
+    }
+    
 	public boolean isEventToCauserItself() {
 		
-		if (this.index > 0  & this.index < 128) {
+		if (this.index > 0  && this.index < 128) {
 			return true;
 		}
 		else {
@@ -231,7 +280,7 @@ public enum EventType {
 	
 	public boolean isEventToTarget() {
 		
-		if (this.index > 128  & this.index < 256) {
+		if (this.index > 128  && this.index < 256) {
 			return true;
 		}
 		else {
@@ -241,7 +290,7 @@ public enum EventType {
 	
 	public boolean isEventToPercipient() {
 		
-		if (this.index > 384  & this.index < MAX_EVENT_TYPE) {
+		if (this.index > 384  && this.index < MAX_EVENT_TYPE) {
 			return true;
 		}
 		else {
@@ -585,4 +634,34 @@ public enum EventType {
 
 }
 
+/*	vormals vor Einführugn der EventPriority im Konstruktor
+percipientSleep(385), percipientDrink(386), percipientEat(387), percipientPiss(388), percipientShit(389), 	
+
+percipientMoveWalk(392), percipientMoveRun(393), percipientMoveSneak(394), percipientMoveJump(395), percipientMoveSwim(396), percipientMoveFly(397),
+
+percipientExamineByLook(400), percipientExamineBySmell(401), percipientExamineByTaste(402), percipientExamineByTouch(403),
+
+percipientTouchByHand(408), percipientTouchByFoot(409),
+
+percipientInventoryTake(416), percipientInventoryDrop(417), percipientInventorySwitch(418), percipientInventorySet(419), percipientInventoryGet(420),
+
+percipientHandleItemUse2(424), percipientHandleItemUseLeft(425), percipientHandleItemUseRight(426), percipientHandleItemAddRtoL(427), percipientHandleItemAddLtoR(428), percipientHandleItemPull(429),percipientHandleItemPush(430),
+
+percipientWeaponLeftStab(432), percipientWeaponLeftStroke(433), percipientWeaponLeftBackhand(434), percipientWeaponRightStab(435), percipientWeaponRightStroke(436), percipientWeaponRightBackhand(437), percipientWeaponClub(438),
+
+percipientPunchLeftFistStraight(440),  percipientPunchLeftFistSideways(441), percipientPunchLeftFistUpward(442), percipientPunchRightFistStraight(443),  percipientPunchRightFistSideways(444), percipientPunchRightFistUpward(445),
+
+//percipientListenToStatement(448), percipientListenToQuestion(449), percipientListenToInstruction(450), percipientUnderstand(451),
+
+percipientAskNormal(456), percipientAskScream(457), percipientAskWhisper(458), percipientAnswerNormal(459), percipientAnswerScream(460), percipientAnswerWhisper(461),
+
+//percipientSayNormal(464), percipientSayScream(465), percipientSayWhisper(466), 
+
+percipientExistsDistance100000(506),
+percipientExistsDistance10000(507),
+percipientExistsDistance5000(508),
+percipientExistsDistance2000(509),
+percipientExistsDistance1000(510),
+percipientExistsDistance100(511);
+*/	
 
