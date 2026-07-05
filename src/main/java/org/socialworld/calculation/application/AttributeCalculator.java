@@ -101,6 +101,10 @@ public  class AttributeCalculator extends SocialWorldThread {
 	private int currentInfluencedBudget = 0;
 	private int lastCalculatedMaxBudget = 0;
 
+	private long lastPollTimestamp = 0;
+	private int pollsInCurrentCpuSlice = 0;
+	private int maxPollsRecordedInCpuSlice = 0;
+
 	/**
 	 * private Constructor. 
 	 */
@@ -140,6 +144,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 	    while (isRunning()) {
 	        try {
 	        	
+	        	
 	            // 0.a. DYNAMISCHE NEUBERECHNUNG: Nur wenn kein Guthaben mehr aus dem Vorframe existiert
 	            if (this.currentInfluencedBudget <= 0) {
 	                int sizeInf = influenced.size();
@@ -175,10 +180,38 @@ public  class AttributeCalculator extends SocialWorldThread {
 	            		SocialWorldThread.SLEEPTIME_ATTRIBUTE_CALCULATOR, TimeUnit.MILLISECONDS);
 	            
 	            while (inf != null && elementsToFetchThisRun > 0) {
+	            	
+		        	// nur zur Analyse (benchmarking)
+		        	// Zeitabstand zum LETZTEN verarbeiteten Element messen
+		            long now = System.nanoTime();
+		            if (lastPollTimestamp != 0) {
+		                long gap = now - lastPollTimestamp;
+		                
+		                // Wenn die Lücke größer als 2.000.000 Nanosekunden (2 ms) ist, 
+		                // hat der Thread die CPU zwischendurch verloren!
+		                if (gap > 2000000) { 
+		                    // Protokollieren, wie viel wir in der LETZTEN Scheibe geschafft haben
+		                    if (pollsInCurrentCpuSlice > maxPollsRecordedInCpuSlice) {
+		                        maxPollsRecordedInCpuSlice = pollsInCurrentCpuSlice;
+		                    }
+		                    // CPU-Scheibe hat gewechselt -> Zähler zurücksetzen
+		                    pollsInCurrentCpuSlice = 0; 
+		                }
+		            }	        	
+	            	
+	            	
+	            	
+	            	
 	                // Verarbeitet das Element, das wir gerade aus influenced geholt haben
 	                calculateAttributesChangedByEvent(inf);
 					// Speicher-Referenzen kappen gegen Memory Loitering
 	                inf.clearReferences();
+
+	                // benchmarking
+	                pollsInCurrentCpuSlice++; // Element zur aktuellen CPU-Scheibe zählen
+	                lastPollTimestamp = System.nanoTime(); // Zeitstempel NACH der Arbeit merken
+	                
+	                
 	                
 	                elementsToFetchThisRun--;
 	                if (elementsToFetchThisRun > 0) {
@@ -598,6 +631,8 @@ public  class AttributeCalculator extends SocialWorldThread {
 		refreshed.printCounts();
 		System.out.println("Influenced-Budget (aktuell / Peak-Max): " 
 			    + this.currentInfluencedBudget + " / " + this.lastCalculatedMaxBudget);
+		System.out.printf("[TELEMETRIE] Physisches CPU-Slice-Limit: max. %d kontinuierliche Polls/Slice (Schwelle: 2.00 ms)%n", 
+			    this.maxPollsRecordedInCpuSlice);
 		System.out.println("--- AttributeCalculator-Detaillast ---");
 		System.out.println("Regulär MIT Änderung (Event)         : " + this.counterWithChanges_Event);
 		System.out.println("Regulär ohne Änderung (Event)         : " + this.counterNoChanges_Event);
