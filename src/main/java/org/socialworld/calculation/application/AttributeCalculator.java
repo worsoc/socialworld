@@ -1,24 +1,20 @@
 /*
-* Social World
-* Copyright (C) 2014  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2014  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.calculation.application;
 
 import java.util.concurrent.TimeUnit;
@@ -36,13 +32,17 @@ import org.socialworld.calculation.functions.FunctionByMatrix_Matrix;
 import org.socialworld.collections.CapacityQueue;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.Event;
+import org.socialworld.core.Simulation;
 import org.socialworld.core.SocialWorldThread;
+import org.socialworld.core.TickObjectCooldown;
 import org.socialworld.objects.StateAnimal;
 import org.socialworld.objects.access.HiddenAnimal;
 
 
 public  class AttributeCalculator extends SocialWorldThread {
 
+	private final Simulation simulation;
+	
 	public static final int ATTRIBUTE_CALCULATOR_RETURNS_EMPTY_LISTS = 2;
 	public static final int ATTRIBUTE_CALCULATOR_RETURNS_NO_CHANGES = 1;
 	public static final int ATTRIBUTE_CALCULATOR_RETURNS_INVALID_RESULT = 3;
@@ -110,7 +110,8 @@ public  class AttributeCalculator extends SocialWorldThread {
 	 */
 	private AttributeCalculator() {
 
-		
+	    this.simulation = Simulation.getInstance();
+	    
 		this.influenced = new CapacityQueue<CollectionElementSimObjInfluenced>("influenced", 5000);
 
 		this.changed = new CapacityQueue<CollectionElementSimObjChanged>("changed", 5000);
@@ -255,6 +256,19 @@ public  class AttributeCalculator extends SocialWorldThread {
 		
 	final void calculateAttributesChangedByEvent(Event event, StateAnimal stateAnimal, HiddenAnimal hiddenWriteAccess) {
 		if (event != null && stateAnimal != null && hiddenWriteAccess != null) {
+			
+			int objectID = stateAnimal.getObjectID();
+			
+			if (event.getEventType().isEventToPercipient()) { 
+
+				// Prüfen, ob das Tier in diesem Tick (oder den letzten X Sekunden) 
+				// bereits ein Event in die Queue gedrückt hat. Hier testweise mit 1 Sekunde Cooldown.
+				if (!this.simulation.checkAndApplyCooldown(objectID, TickObjectCooldown.TYPE_PERCEPTION, 1)) {
+					// Event erfolgreich an der Wurzel gedrosselt!
+					return; 
+				}
+			}
+			
 			// Bitmasken-Recycling statt 'new'
 			int targetIdx = influencedWriteIndex & (INFLUENCED_POOL_SIZE - 1);
 			CollectionElementSimObjInfluenced pooledInfluenced = this.influencedPool[targetIdx];

@@ -1,24 +1,20 @@
 /*
-* Social World
-* Copyright (C) 2014  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2014  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.core;
 
 import org.socialworld.GlobalSwitches;
@@ -79,7 +75,9 @@ public class Simulation extends SocialWorldThread {
 	private int sleepTime = 500;
 	
 	private TickRandomCache randomCache = new TickRandomCache(ObjectMaster.LIVING_SIM_OBJECTS_MAX_NUMBER);
-	
+    private TickObjectCooldown objectCooldown = new TickObjectCooldown(ObjectMaster.LIVING_SIM_OBJECTS_MAX_NUMBER);
+
+
 	private static AccessTokenCore tokenCore = AccessTokenCore.getValid();
 
 	private Simulation() {
@@ -287,6 +285,7 @@ public class Simulation extends SocialWorldThread {
 		Time actualTime = ActualTime.asTime();
 		System.out.println("Zeit: " + actualTime.toString());
 		randomCache.nextTick();
+		objectCooldown.nextTick();
 		AttributeCalculator.getInstance().printInfluencedQueueCounts();
 		//KnowledgeCalculator.getInstance().printKnowledgeQueueCounts();
 		//EventMaster.getInstance().printAndResetTickStatistics();
@@ -381,6 +380,13 @@ public class Simulation extends SocialWorldThread {
 		return (float) randomCache.getRandom(objectID);
 	}
 	
+  public boolean checkAndApplyCooldown(int objectId, int cooldownType, int cooldownInSeconds) {
+        if (this.objectCooldown != null) {
+            return this.objectCooldown.checkAndApplyCooldown(objectId, cooldownType, cooldownInSeconds);
+        }
+        return true; // Fail-safe: Im Zweifel durchlassen
+    }
+
 	public void changePosition(SimulationObject objectWithNewPosition) {
 		this.searchByPosition.changePosition(objectWithNewPosition);
 	}
