@@ -237,14 +237,27 @@ public class ObjectMaster {
 	    SimulationObject theNextOne = next(simObjType);
 	    
 	    if (theNextOne != null && theNextOne.isSimulationObject()) {
+	        
+	        // 1. BLITZSCHNELLE EINLASS-KONTROLLE AN DER WURZEL
+	        // Wir holen die ID direkt vom Basis-Objekt, ohne Casts oder Kapselungs-Overhead
+	        int objectID = theNextOne.getObjectID(); 
+	        
+	        // 2. TIMING-SCHLEUSE: Nur 1 Refresh-Schritt pro logischem Tick/Sekunde erlauben
+	        if (!Simulation.getInstance().checkAndApplyCooldown(objectID, TickObjectCooldown.TYPE_REFRESH, 1)) {
+	            // Das Objekt war in dieser Sekunde schon dran. 
+	            // Wir überspringen den kompletten Zustandshochlauf komplett allokations- und rechenfrei!
+	            return simObjType.getIndex(); 
+	        }
+	        
+	        // Erst wenn das Cooldown grünes Licht gibt, investieren wir CPU-Zeit in den Zustand:
 	        theNextOne.refreshState();
 	        return simObjType.getIndex(); // Erfolg: Zustand aktualisiert
 	    }
 	    
 	    // Keine passende ID gefunden oder Lücke -> Weiterschalten zum nächsten Typ/Schritt
 	    return simObjType.next();
-
 	}
+
 
 	private SimulationObject next(SimulationObject_Type simObjType) {
 	    if (this.maxObjectID == 0) {

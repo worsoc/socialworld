@@ -20,14 +20,16 @@ package org.socialworld.core;
 public class TickObjectCooldown {
 
     // Konfigurierbare Obergrenze: Wie viele Elemente dürfen pro Phase/Tick maximal durch?
-    public static final int MAX_ALLOWED_ELEMS_IN_COOLDOWN_PHASE = 5; 
+    public static final int MAX_PERCEPTION_ELEMS = 5; // Hohe sensorische Varianz
+    public static final int MAX_REFRESH_ELEMS    = 1; // Strikt gedeckelt,
 
     // 1. Definition der verschiedenen Cooldown-Typen als ID
     public static final int TYPE_PERCEPTION  = 0;
- //   public static final int TYPE_ACTION      = 1;
- //   public static final int TYPE_MOVEMENT    = 2;
+    public static final int TYPE_REFRESH  = 1;
+//   public static final int TYPE_ACTION      = 2;
+ //   public static final int TYPE_MOVEMENT    = 3;
     
-    public static final int TYPE_COUNT       = 1; // Anzahl der registrierten Typen
+    public static final int TYPE_COUNT       = 2; // Anzahl der registrierten Typen
 
     // Zeile = objectId, Spalte = Cooldown-Typ -> Absolut allokationsfrei im Betrieb!
     private final long[][] cooldownMatrix;
@@ -72,13 +74,31 @@ public class TickObjectCooldown {
             cooldownCounter[objectId][cooldownType] = 0; 
          }
 
+        // Dynamische Obergrenze für DIESEN spezifischen Typen holen
+        int maxAllowed = getMaxAllowedForType(cooldownType);
+
         // FALL B: Wir sind noch INNERHALB der laufenden Cooldown-Phase
         // Prüfen, ob das erlaubte Kontingent für diese Phase noch NICHT erreicht ist
-        if (cooldownCounter[objectId][cooldownType] < MAX_ALLOWED_ELEMS_IN_COOLDOWN_PHASE) {
+        if (cooldownCounter[objectId][cooldownType] < maxAllowed) {
             cooldownCounter[objectId][cooldownType]++; // Jetzt hochzählen (gilt für Fall A und B)
-            return true; // Event darf noch durch!
+            return true; // Freigabe
         }
 
         return false; // Aktion blockiert, Objekt ist noch im Cooldown
     }
+    
+    /**
+     * Ermittelt die maximale Obergrenze für den jeweiligen Typ (0 Allokation)
+     */
+    private int getMaxAllowedForType(int cooldownType) {
+        switch (cooldownType) {
+            case TYPE_PERCEPTION:
+                return MAX_PERCEPTION_ELEMS; 
+            case TYPE_REFRESH:
+                return MAX_REFRESH_ELEMS;  
+            default:
+                return 1; // Standard-Sicherheitsnetz
+        }
+    }
+
 }
