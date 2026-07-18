@@ -23,15 +23,16 @@ public class TickObjectCooldown {
     public static final int MAX_PERCEPTION_ELEMS = 5; // Hohe sensorische Varianz
     public static final int MAX_PERCEPTION_AMBIENT_ELEMS = 1; 
     public static final int MAX_REFRESH_ELEMS    = 1; // Strikt gedeckelt,
+    public static final int MAX_REACTION_ELEMS    = 3; 
 
     // 1. Definition der verschiedenen Cooldown-Typen als ID
     public static final int TYPE_PERCEPTION  = 0;
     public static final int TYPE_PERCEPTION_AMBIENT  = 1;
     public static final int TYPE_REFRESH  = 2;
-//   public static final int TYPE_ACTION      = 3;
+   public static final int TYPE_REACTION      = 3;
  //   public static final int TYPE_MOVEMENT    = 4;
     
-    public static final int TYPE_COUNT       = 3; // Anzahl der registrierten Typen
+    public static final int TYPE_COUNT       = 4; // Anzahl der registrierten Typen
 
     // Zeile = objectId, Spalte = Cooldown-Typ -> Absolut allokationsfrei im Betrieb!
     private final long[][] cooldownMatrix;
@@ -64,6 +65,16 @@ public class TickObjectCooldown {
      * @return true, wenn das Objekt bereit ist; false, wenn es noch gesperrt ist.
      */
     public boolean checkAndApplyCooldown(int objectId, int cooldownType, int cooldownInSeconds) {
+     int maxAllowed = getMaxAllowedForType(cooldownType);
+        
+        // Nutzt die Kern-Logik unter Übergabe des fixen Limits
+        return checkAndApplyCooldown(objectId, cooldownType, cooldownInSeconds, maxAllowed);
+    }
+    
+    /**
+     * Universeller allokationsfreier Guard, der die dynamische Schwelle direkt berücksichtigt.
+     */
+    public boolean checkAndApplyCooldown(int objectId, int cooldownType, int cooldownInSeconds, int currentThreshold) {
         // Index-Schutz für Objekte und Typen
         if (objectId < 0 || objectId >= cooldownMatrix.length || cooldownType < 0 || cooldownType >= TYPE_COUNT) {
             return true; 
@@ -71,24 +82,20 @@ public class TickObjectCooldown {
 
         // FALL A: Wir sind in einem NEUEN Tick / einer neuen Phase
         if (currentTick >= cooldownMatrix[objectId][cooldownType]) {
-            // Neue Phase bricht an: Ziel-Tick setzen und Zähler für dieses Objekt auf 1 zurücksetzen
             cooldownMatrix[objectId][cooldownType] = currentTick + cooldownInSeconds;
             cooldownCounter[objectId][cooldownType] = 0; 
-         }
+        }
 
-        // Dynamische Obergrenze für DIESEN spezifischen Typen holen
-        int maxAllowed = getMaxAllowedForType(cooldownType);
-
-        // FALL B: Wir sind noch INNERHALB der laufenden Cooldown-Phase
-        // Prüfen, ob das erlaubte Kontingent für diese Phase noch NICHT erreicht ist
-        if (cooldownCounter[objectId][cooldownType] < maxAllowed) {
-            cooldownCounter[objectId][cooldownType]++; // Jetzt hochzählen (gilt für Fall A und B)
+        // FALL B: Wir prüfen gegen die übergebene, hochgradig differenzierte Schwelle
+        if (cooldownCounter[objectId][cooldownType] < currentThreshold) {
+            cooldownCounter[objectId][cooldownType]++; // Gültigen Durchlauf registrieren
             return true; // Freigabe
         }
 
-        return false; // Aktion blockiert, Objekt ist noch im Cooldown
+        return false; // Blockiert, da die aktuelle Last die Schwelle erreicht/überschritten hat
     }
-    
+ 
+ 
     /**
      * Ermittelt die maximale Obergrenze für den jeweiligen Typ (0 Allokation)
      */
@@ -100,6 +107,8 @@ public class TickObjectCooldown {
                 return MAX_PERCEPTION_AMBIENT_ELEMS; 
             case TYPE_REFRESH:
                 return MAX_REFRESH_ELEMS;  
+            case TYPE_REACTION:
+                return MAX_REACTION_ELEMS;  
             default:
                 return 1; // Standard-Sicherheitsnetz
         }

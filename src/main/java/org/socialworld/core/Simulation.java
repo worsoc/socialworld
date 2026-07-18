@@ -379,14 +379,22 @@ public class Simulation extends SocialWorldThread {
 	public float getRandom(int objectID) {
 		return (float) randomCache.getRandom(objectID);
 	}
-	
-  public boolean checkAndApplyCooldown(int objectId, int cooldownType, int cooldownInSeconds) {
+
+	public boolean checkAndApplyCooldown(int objectId, int cooldownType, int cooldownInSeconds) {
         if (this.objectCooldown != null) {
             return this.objectCooldown.checkAndApplyCooldown(objectId, cooldownType, cooldownInSeconds);
         }
         return true; // Fail-safe: Im Zweifel durchlassen
     }
 
+    public boolean checkAndApplyCooldown(int objectId, int cooldownType, int cooldownInSeconds, int currentThreshold) {
+        if (this.objectCooldown != null) {
+            return this.objectCooldown.checkAndApplyCooldown(objectId, cooldownType, cooldownInSeconds, currentThreshold);
+        }
+        return true; // Fail-safe: Im Zweifel durchlassen
+    }
+    
+ 
 	public void changePosition(SimulationObject objectWithNewPosition) {
 		this.searchByPosition.changePosition(objectWithNewPosition);
 	}

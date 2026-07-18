@@ -48,9 +48,15 @@ import org.socialworld.calculation.functions.FunctionByExpression;
 import org.socialworld.collections.CapacityQueue;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.Event;
+import org.socialworld.core.EventPriority;
+import org.socialworld.core.EventType;
+import org.socialworld.core.Simulation;
 import org.socialworld.core.SocialWorldThread;
+import org.socialworld.core.TickObjectCooldown;
 
 public class ActionCreator extends SocialWorldThread {
+
+	private final Simulation simulation;
 
 	private static ActionCreator instance;
 	
@@ -84,6 +90,8 @@ public class ActionCreator extends SocialWorldThread {
 	 */
 	private ActionCreator() {
 		
+	    this.simulation = Simulation.getInstance();
+	    
 		this.reactors = new CapacityQueue<CollectionElementReactor>("reactors", 5000);
 		this.actors = new CapacityQueue<CollectionElementActor>("actors", 5000);
 		
@@ -154,31 +162,49 @@ public class ActionCreator extends SocialWorldThread {
 	        }
 	    }
 	}
-	
-	
-	final void  createReaction( final Event event,	final StateSimulationObject stateSimObj,	final HiddenSimulationObject hiddenSimObj) {
-		if (event != null && stateSimObj != null && hiddenSimObj != null) {
-			if (this.reactors.size() > sizeThreashold && event.getEventType().isEventToPercipient()) {
-				// Event gedrosselt/verworfen
-			}
-			else {
-				// Bitmasken-Recycling statt 'new'
-				int targetIdx = reactorWriteIndex & (REACTOR_POOL_SIZE - 1);
-				CollectionElementReactor pooledReactor = this.reactorPool[targetIdx];
-				
-				pooledReactor.setEvent(event);
-				pooledReactor.setState(stateSimObj);
-				pooledReactor.setHidden(hiddenSimObj);
-				
-				reactorWriteIndex++;
 
-				if (!this.reactors.add(pooledReactor)) {
-					pooledReactor.clearReferences();
-					reactorWriteIndex--; // Rollback bei voller Queue
-				}
+	
+	final void createReaction(final Event event, final StateSimulationObject stateSimObj, final HiddenSimulationObject hiddenSimObj) {
+		if (event != null && stateSimObj != null && hiddenSimObj != null) {
+		
+			EventType type = event.getEventType();
+			EventPriority priority = type.getPriority();
+			int objectID = stateSimObj.getObjectID();
+
+			// Absolute Überholspur: CRITICAL-Events 
+			if (priority.isThrottleable()) {
+                
+                 
+                // 1. Hole die dynamische Relevanz-Schwelle für genau DIESE Kombination
+                int eventTypeID = event.getEventTypeAsInt();
+        		int eventReactionType = stateSimObj.getReactionType(eventTypeID);
+                int relevanceThreshold = getRelevanceThresholdForEventType(eventTypeID, eventReactionType);
+                
+                // 2. Kombinierter Abgleich & Buchung in EINEM Schritt:
+                // Wenn die aktuelle Last kleiner als 'relevanceThreshold' ist, 
+                // zählt die Methode intern hoch und gibt true zurück. Ansonsten false.
+                if (!this.simulation.checkAndApplyCooldown(objectID, TickObjectCooldown.TYPE_REACTION, 1, relevanceThreshold)) {
+                    return; // Abgelehnt! Zu hohe Last für die Relevanz dieses Events.
+                }
+            }     
+           
+			// Bitmasken-Recycling statt 'new'
+			int targetIdx = reactorWriteIndex & (REACTOR_POOL_SIZE - 1);
+			CollectionElementReactor pooledReactor = this.reactorPool[targetIdx];
+			
+			pooledReactor.setEvent(event);
+			pooledReactor.setState(stateSimObj);
+			pooledReactor.setHidden(hiddenSimObj);
+			
+			reactorWriteIndex++;
+
+			if (!this.reactors.add(pooledReactor)) {
+				pooledReactor.clearReferences();
+				reactorWriteIndex--; // Rollback bei voller Queue
 			}
 		}
 	}
+
 	
 	final void createAction(	final StateSimulationObject stateSimObj, final HiddenSimulationObject hiddenSimObj) {
 		if (stateSimObj != null && hiddenSimObj != null) {
@@ -480,6 +506,19 @@ public class ActionCreator extends SocialWorldThread {
 		return action;
 	}
 	
+	private final int getRelevanceThresholdForEventType(int eventTypeID, int eventReactionType) {
+	    
+		EventReactionDescription eventReactionDescription = 
+				EventReactionAssignment.getInstance().getEventReactionDescription(
+						eventTypeID, eventReactionType	);
+
+	    return 100;
+	    // TODO: In Zukunft holst du hier die Schwelle aus deiner 'EventReactionDescription'
+
+		
+		
+	    //return 1; // Standard-Sicherheitsnetz für unkonfigurierte Test-Reaktionen
+	}
 
 	
 }
