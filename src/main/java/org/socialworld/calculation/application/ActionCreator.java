@@ -200,25 +200,34 @@ public class ActionCreator extends SocialWorldThread {
 		}
 	}
 
-	
-	final void createAction(	final StateSimulationObject stateSimObj, final HiddenSimulationObject hiddenSimObj) {
-		if (stateSimObj != null && hiddenSimObj != null) {
-			// Bitmasken-Recycling statt 'new'
-			int targetIdx = actorWriteIndex & (ACTOR_POOL_SIZE - 1);
-			CollectionElementActor pooledActor = this.actorPool[targetIdx];
-			
-			pooledActor.setState(stateSimObj);
-			pooledActor.setHidden(hiddenSimObj);
-			
-			actorWriteIndex++;
 
-			if (!this.actors.add(pooledActor)) {
-				pooledActor.clearReferences();
-				actorWriteIndex--; // Rollback bei voller Queue
-			}
-		}
+	final void createAction(final StateSimulationObject stateSimObj, final HiddenSimulationObject hiddenSimObj) {
+	    if (stateSimObj != null && hiddenSimObj != null) {
+	        
+	        int objectID = stateSimObj.getObjectID();
+	        
+	        // Nutzt das im TickObjectCooldown hinterlegte Standard-Limit MAX_ACTION_ELEMS (1)
+	        // und setzt eine Sperre von 1 logischen Sekunde (1 Sekunde Cooldown).
+	        if (!this.simulation.checkAndApplyCooldown(objectID, TickObjectCooldown.TYPE_ACTION, 1)) {
+	            return; // Abgelehnt! Dieses Objekt hat in diesem Zeitschlitz bereits eine Aktion erzeugt.
+	        }
+	        
+	        // Bitmasken-Recycling statt 'new' (Wird erst betreten, wenn das Go erteilt wurde!)
+	        int targetIdx = actorWriteIndex & (ACTOR_POOL_SIZE - 1);
+	        CollectionElementActor pooledActor = this.actorPool[targetIdx];
+	        
+	        pooledActor.setState(stateSimObj);
+	        pooledActor.setHidden(hiddenSimObj);
+	        
+	        actorWriteIndex++;
+
+	        if (!this.actors.add(pooledActor)) {
+	            pooledActor.clearReferences();
+	            actorWriteIndex--; // Rollback bei voller Queue
+	        }
+	    }
 	}
-
+	
 	/**
 	 * The method creates a new action as a reaction to an event and adds it to the reactor's action handler.
 	 * 

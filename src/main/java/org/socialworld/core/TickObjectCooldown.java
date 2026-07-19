@@ -24,15 +24,31 @@ public class TickObjectCooldown {
     public static final int MAX_PERCEPTION_AMBIENT_ELEMS = 1; 
     public static final int MAX_REFRESH_ELEMS    = 1; // Strikt gedeckelt,
     public static final int MAX_REACTION_ELEMS    = 3; 
+    public static final int MAX_ACTION_ELEMS    = 1; 
 
     // 1. Definition der verschiedenen Cooldown-Typen als ID
     public static final int TYPE_PERCEPTION  = 0;
     public static final int TYPE_PERCEPTION_AMBIENT  = 1;
     public static final int TYPE_REFRESH  = 2;
-   public static final int TYPE_REACTION      = 3;
- //   public static final int TYPE_MOVEMENT    = 4;
+    public static final int TYPE_REFRESH_ACTION  = 3;
+    public static final int TYPE_ACTION      = 4;
+    public static final int TYPE_REACTION      = 5;
+ //   public static final int TYPE_MOVEMENT    = 6;
     
-    public static final int TYPE_COUNT       = 4; // Anzahl der registrierten Typen
+    public static final int TYPE_COUNT       = 6; // Anzahl der registrierten Typen
+
+    // Allokationsfreies O(1)-Mapping für verknüpfte Typen.
+    // Index = Auslösender Typ, Wert = Synchronisierter Ziel-Typ (-1 = Keiner)
+    private static final int[] COOLDOWN_DEPENDENCIES = new int[TYPE_COUNT];
+    
+    static {
+        // Initialisiere alle Verknüpfungen standardmäßig mit -1 (inaktiv)
+        for (int i = 0; i < TYPE_COUNT; i++) {
+            COOLDOWN_DEPENDENCIES[i] = -1;
+        }
+        // WICHTIG: Wenn REFRESH_ACTION läuft, simuliere/synchronisiere ACTION im Hintergrund!
+        COOLDOWN_DEPENDENCIES[TYPE_REFRESH_ACTION] = TYPE_ACTION;
+    }
 
     // Zeile = objectId, Spalte = Cooldown-Typ -> Absolut allokationsfrei im Betrieb!
     private final long[][] cooldownMatrix;
@@ -89,6 +105,20 @@ public class TickObjectCooldown {
         // FALL B: Wir prüfen gegen die übergebene, hochgradig differenzierte Schwelle
         if (cooldownCounter[objectId][cooldownType] < currentThreshold) {
             cooldownCounter[objectId][cooldownType]++; // Gültigen Durchlauf registrieren
+ 
+            
+            // AUTOMATISCHER BYPASS / SIMULATION VERKNÜPFTER TYPEN
+            int linkedType = COOLDOWN_DEPENDENCIES[cooldownType];
+            if (linkedType != -1) {
+                // Wenn beim verknüpften Typen die Zeit im Hintergrund ebenfalls abgelaufen ist:
+                if (currentTick >= cooldownMatrix[objectId][linkedType]) {
+                    // Simuliere den Reset: Zeitstempel hochziehen und Counter nullen.
+                    // Wir buchen hier noch nicht (+1), damit die Endstation normal arbeiten kann.
+                    cooldownMatrix[objectId][linkedType] = currentTick + 1; 
+                    cooldownCounter[objectId][linkedType] = 0; 
+                }
+            }
+
             return true; // Freigabe
         }
 
@@ -107,8 +137,12 @@ public class TickObjectCooldown {
                 return MAX_PERCEPTION_AMBIENT_ELEMS; 
             case TYPE_REFRESH:
                 return MAX_REFRESH_ELEMS;  
+            case TYPE_REFRESH_ACTION:
+                return MAX_ACTION_ELEMS;  
             case TYPE_REACTION:
                 return MAX_REACTION_ELEMS;  
+            case TYPE_ACTION:
+                return MAX_ACTION_ELEMS;  
             default:
                 return 1; // Standard-Sicherheitsnetz
         }

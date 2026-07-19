@@ -37,6 +37,8 @@ import org.socialworld.calculation.functions.FunctionByMatrix;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.core.Event;
 import org.socialworld.core.IAccessToken;
+import org.socialworld.core.Simulation;
+import org.socialworld.core.TickObjectCooldown;
 import org.socialworld.knowledge.Knowledge;
 import org.socialworld.knowledge.KnowledgeElement;
 import org.socialworld.knowledge.KnownPathsPool;
@@ -149,13 +151,22 @@ public class StateAnimal extends StateSimulationObject {
 	
 	void refresh() {
 		
-		super.refresh();
-		
-		if (GlobalSwitches.STATE_ANIMAL_CALCULATE_REFRESH_ATTRIBUTES == true)
-			Scheduler.getInstance().calculateAttributesChangedBySimpleMatrix((StateAnimal)getMeReadableOnly(), (HiddenAnimal)getMeWritableButHidden(grantAccessToPropertyAttributes));
-		if (GlobalSwitches.STATE_ANIMAL_CALCULATE_REFRESH_ACTION == true)
-			Scheduler.getInstance().createAction((StateAnimal)getMeReadableOnly(), (HiddenAnimal)getMeWritableButHidden(grantAccessToPropertyAction));
-
+	    super.refresh();
+	    
+	    if (GlobalSwitches.STATE_ANIMAL_CALCULATE_REFRESH_ATTRIBUTES == true) {
+	        Scheduler.getInstance().calculateAttributesChangedBySimpleMatrix((StateAnimal)getMeReadableOnly(), (HiddenAnimal)getMeWritableButHidden(grantAccessToPropertyAttributes));
+	    }
+	        
+	    if (GlobalSwitches.STATE_ANIMAL_CALCULATE_REFRESH_ACTION == true) {
+	        
+	        int objectID = this.getObjectID();
+	        int refreshActionInterval = 2; // Nur jeden 2. logischen Tick berechnen
+	        
+	        // Nutzt die performante Matrix-Prüfung vor dem Scheduler-Aufruf
+	        if (Simulation.getInstance().checkAndApplyCooldown(objectID, TickObjectCooldown.TYPE_REFRESH_ACTION,  refreshActionInterval)) {
+	            Scheduler.getInstance().createAction((StateAnimal)getMeReadableOnly(), (HiddenAnimal)getMeWritableButHidden(grantAccessToPropertyAction));
+	        }
+	    }
 	}
 	
 
