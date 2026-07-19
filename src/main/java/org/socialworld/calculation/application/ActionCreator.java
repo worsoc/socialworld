@@ -1,24 +1,20 @@
 /*
-* Social World
-* Copyright (C) 2014  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2014  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.calculation.application;
 
 import org.socialworld.objects.StateAnimal;
@@ -67,7 +63,6 @@ public class ActionCreator extends SocialWorldThread {
 	
 	private static String namePropertyActionType = Value.VALUE_BY_NAME_ACTION_TYPE;
 	
-	private int sizeThreashold = 1000;
 	
 	private static final int REACTOR_POOL_SIZE = 8192;
 	private final CollectionElementReactor[] reactorPool = new CollectionElementReactor[REACTOR_POOL_SIZE];
@@ -508,16 +503,18 @@ public class ActionCreator extends SocialWorldThread {
 	
 	private final int getRelevanceThresholdForEventType(int eventTypeID, int eventReactionType) {
 	    
-		EventReactionDescription eventReactionDescription = 
-				EventReactionAssignment.getInstance().getEventReactionDescription(
-						eventTypeID, eventReactionType	);
+	    // 1. Hole die spezifische Beschreibung über das performante Singleton-Register
+	    EventReactionDescription eventReactionDescription = 
+	            EventReactionAssignment.getInstance().getEventReactionDescription(eventTypeID, eventReactionType);
 
-	    return 100;
-	    // TODO: In Zukunft holst du hier die Schwelle aus deiner 'EventReactionDescription'
+	    // 2. Defensives Sicherheitsnetz: Wenn für diese Kombination keine Reaktion 
+	    // konfiguriert ist, nutzen wir den minimalen Standardwert (verhindert Spam unfertiger Ketten)
+	    if (eventReactionDescription == null) {
+	        return 1; // Standard-Sicherheitsnetz für unkonfigurierte Test-Reaktionen
+	    }
 
-		
-		
-	    //return 1; // Standard-Sicherheitsnetz für unkonfigurierte Test-Reaktionen
+	    // 3. Dynamische Schwelle direkt aus der geladenen Konfiguration zurückgeben
+	    return eventReactionDescription.getRelevanceThreshold();
 	}
 
 	
