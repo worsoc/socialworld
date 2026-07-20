@@ -17,16 +17,29 @@
  */
 package org.socialworld.calculation.descriptions;
 
+
+import java.util.List;
+
+import org.socialworld.datasource.parsing.JsonExtractionStep;
+
 /**
- * Bildet einen einzelnen Eintrag (Element des Arrays "entrys") innerhalb 
- * der JSON-Wahrnehmungsbeschreibung ab.
+ * Repräsentiert eine kognitive Funktionseinheit (ehemals eine komplexe 'Line')
+ * innerhalb der Wahrnehmungs-Pipeline.
  */
 public class EventPerceptionDescriptionEntry {
 
-    // Die Relevanz-Schwelle dieses spezifischen Eintrags als String.
-    // Ermöglicht defensives Parsen und Leerzeichen-Toleranz in den Rohdaten.
+    // Die Last-Schwelle für calculateFinalPerceptionThreshold
     public String relevanceThreshold;
 
-    // TODO: Hier kannst du später weitere Felder hinzufügen, die für deine 
-    // Expressions oder mathematischen Funktionen der Wahrnehmung nötig sind.
+    // KSrcT: Die Art der Quelle (z. B. 1)
+    public int sourceCategory;
+
+    // KSrc: Der universelle Pfad zur Quelle (z. B. ["GETVal(myself)"])
+    public List<String> sourcePathSteps;
+
+    // KSbj: Der universelle Pfad zum Subjekt (z. B. ["GETVal(event_params)", "GETVal(event_causer)"])
+    public List<String> subjectPathSteps;
+
+    // Das Array für alle aus diesem Reiz zu extrahierenden Werte
+    public List<JsonExtractionStep> extractions;
 }

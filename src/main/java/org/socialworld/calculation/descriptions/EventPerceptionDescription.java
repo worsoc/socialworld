@@ -19,6 +19,9 @@ package org.socialworld.calculation.descriptions;
 
 import java.util.List;
 
+import org.socialworld.calculation.Expression;
+import org.socialworld.calculation.expressions.CreateKnowledgeElementExpression;
+import org.socialworld.calculation.functions.FunctionByExpression;
 import org.socialworld.core.EventType;
 import org.socialworld.datasource.parsing.JsonEventPerceptionDescription;
 import com.google.gson.Gson;
@@ -54,8 +57,23 @@ public class EventPerceptionDescription extends DescriptionBase {
 
 	@Override
 	public void setFunctions() {
-		// TODO: Hier folgt analog zu den Reactions die Verknüpfung der Expressions, 
-		// sobald die Auswertung für den KnowledgeCalculator/Wahrnehmungs-Output steht.
+		// 1. Defensiver Schutz: Gibt es überhaupt geladene Einträge im JSON?
+		if (this.entrys == null || this.entrys.isEmpty()) {
+			return;
+		}
+		
+		// 2. Wir gehen die geladenen JSON-Entries durch (analog zu den Reactions)
+		for (EventPerceptionDescriptionEntry entry : this.entrys) {
+			
+			// 3. Native Erzeugung der EINEN, kombinierten Gesamt-Expression für dieses Entry
+			// Hier übergeben wir das Entry an unseren neuen, fetten GSON-Konstruktor
+			Expression startExpression = new CreateKnowledgeElementExpression(entry);
+			
+			// 4. Die lauffähige Funktion allokationsfrei in der Basisklasse registrieren
+			if (startExpression.isValid()) {
+				addFunction(new FunctionByExpression(startExpression));
+			}
+		}
 	}
 	
 	/**
@@ -101,3 +119,45 @@ public class EventPerceptionDescription extends DescriptionBase {
 		return this.perceptionType;
 	}
 }
+
+
+/*
+{
+  "eventType": "percipientExistsDistance5000",
+  "perceptionType": 0,
+  "relevanceThreshold": 50,
+  "entrys": [
+    {
+      "relevanceThreshold": "10",
+      "knowledgeSourceType": 1,
+      "knowledgeSourcePath": ["GETVal(myself)"],
+      "knowledgeSubjectPath": [
+        "GETVal(event_params)",
+        "GETVal(event_causer)"
+      ],
+      "knowledgeProperties": [
+        {
+          "targetProperty": "inventory_shirt.mainColour",
+          "extractionPath": [
+            "GETVal(event_params)",
+            "GETVal(event_causer)#IsElem(50331647)",
+            "GETProp(stateInventory)",
+            "GETFctVal(getMainColour)"
+          ]
+        },
+        {
+          "targetProperty": "inventory_shirt.mainMaterial",
+          "extractionPath": [
+            "GETVal(event_params)",
+            "GETProp(stateInventory)",
+            "GETFctVal(getMainMaterial)"
+          ]
+        }
+      ]
+    }
+  ]
+}
+
+ */
+ 
+
