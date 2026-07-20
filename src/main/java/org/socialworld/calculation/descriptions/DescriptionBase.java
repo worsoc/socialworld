@@ -1,24 +1,20 @@
 /*
-* Social World
-* Copyright (C) 2019  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2019  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.calculation.descriptions;
 
 import java.util.ArrayList;
@@ -38,6 +34,11 @@ public abstract class DescriptionBase {
 		return gson;
 	}
 
+    // Die universelle Relevanz-Schwelle für den Cooldown-Schutz
+    private int relevanceThreshold;
+
+ 
+	
 	private List<FunctionByExpression> functions;
 	
 	public DescriptionBase() {
@@ -74,5 +75,18 @@ public abstract class DescriptionBase {
 	public boolean isEmpty() {
 		return (functions.size() == 0);
 	}
+
+	   /**
+     * Gibt die dynamische Schwelle für den Cooldown-Abgleich zurück.
+     * final verhindert Overhead und erlaubt der JVM perfektes Inlining.
+     */
+    public final int getRelevanceThreshold() {
+        return this.relevanceThreshold;
+    }
+
+    // Setter für den Konfigurations-Loader (falls benötigt)
+    protected final void setRelevanceThreshold(int relevanceThreshold) {
+        this.relevanceThreshold = relevanceThreshold;
+    }
 
 }

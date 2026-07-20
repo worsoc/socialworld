@@ -25,6 +25,7 @@ public class TickObjectCooldown {
     public static final int MAX_REFRESH_ELEMS    = 1; // Strikt gedeckelt,
     public static final int MAX_REACTION_ELEMS    = 3; 
     public static final int MAX_ACTION_ELEMS    = 1; 
+    public static final int MAX_KNOWLEDGE_ELEMS    = 10; 
 
     // 1. Definition der verschiedenen Cooldown-Typen als ID
     public static final int TYPE_PERCEPTION  = 0;
@@ -33,9 +34,9 @@ public class TickObjectCooldown {
     public static final int TYPE_REFRESH_ACTION  = 3;
     public static final int TYPE_ACTION      = 4;
     public static final int TYPE_REACTION      = 5;
- //   public static final int TYPE_MOVEMENT    = 6;
+    public static final int TYPE_KNOWLEDGE    = 6;
     
-    public static final int TYPE_COUNT       = 6; // Anzahl der registrierten Typen
+    public static final int TYPE_COUNT       = 7; // Anzahl der registrierten Typen
 
     // Allokationsfreies O(1)-Mapping für verknüpfte Typen.
     // Index = Auslösender Typ, Wert = Synchronisierter Ziel-Typ (-1 = Keiner)
@@ -143,6 +144,8 @@ public class TickObjectCooldown {
                 return MAX_REACTION_ELEMS;  
             case TYPE_ACTION:
                 return MAX_ACTION_ELEMS;  
+            case TYPE_KNOWLEDGE:
+                return MAX_KNOWLEDGE_ELEMS;  
             default:
                 return 1; // Standard-Sicherheitsnetz
         }

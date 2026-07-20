@@ -31,14 +31,12 @@ public class EventReactionDescription extends DescriptionBase {
 	private EventType eventType;
 	private int reactionType;
 	
-	// Relevanz zur Berücksichtigung im ActionCreator
-	private int relevanceThreshold;
 	
 	private List<EventReactionDescriptionEntry> entrys;
 	
 	public EventReactionDescription() {
 		super();
-		this.relevanceThreshold = 100; // Sicherer Fallback-Standardwert
+		setRelevanceThreshold(100); // Sicherer Fallback-Standardwert
 	}
 
 	public EventReactionDescription(Gson gson, String json) {
@@ -54,7 +52,7 @@ public class EventReactionDescription extends DescriptionBase {
 		this.reactionType = jsonObject.reactionType;
 		this.entrys = jsonObject.entrys;
 		
-		this.relevanceThreshold = calculateFinalThreshold(jsonObject);
+		setRelevanceThreshold(calculateFinalThreshold(jsonObject));
 	}
 
 	/**
@@ -98,10 +96,7 @@ public class EventReactionDescription extends DescriptionBase {
 		addFunction(new FunctionByExpression(startExpression));
 	}
 	
-	public int getRelevanceThreshold() {
-		return this.relevanceThreshold;
-	}
-	
+		
 	public EventType getEventType() {
 		return this.eventType;
 	}

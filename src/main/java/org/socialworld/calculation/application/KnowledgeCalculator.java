@@ -1,24 +1,20 @@
 /*
-* Social World
-* Copyright (C) 2020  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2020  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.calculation.application;
 
 import java.util.concurrent.TimeUnit;
@@ -35,7 +31,11 @@ import org.socialworld.collections.CapacityQueue;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.conversation.Lexem;
 import org.socialworld.core.Event;
+import org.socialworld.core.EventPriority;
+import org.socialworld.core.EventType;
+import org.socialworld.core.Simulation;
 import org.socialworld.core.SocialWorldThread;
+import org.socialworld.core.TickObjectCooldown;
 import org.socialworld.knowledge.KnowledgeItem;
 import org.socialworld.knowledge.KnowledgeFact_Type;
 import org.socialworld.knowledge.KnowledgeElement;
@@ -53,6 +53,7 @@ import org.socialworld.objects.access.HiddenAnimal;
 
 public class KnowledgeCalculator extends SocialWorldThread {
 
+	private final Simulation simulation;
 	
 	private static final int POOL_SIZE = 8192; // Zweierpotenz für schnelles Bitmasking
 
@@ -89,6 +90,7 @@ public class KnowledgeCalculator extends SocialWorldThread {
 	 */
 	private KnowledgeCalculator() {
 
+	    this.simulation = Simulation.getInstance();
 		
 		this.perceptions = new CapacityQueue<CollectionElementSimObjInfluenced>("perceptions", 5000);
 
@@ -140,28 +142,45 @@ public class KnowledgeCalculator extends SocialWorldThread {
 		}
 	}
 
+	
 	final void calculatePerception(Event event, StateAnimal stateAnimal, HiddenAnimal hiddenWriteAccess) {
 	    if (event != null && stateAnimal != null && hiddenWriteAccess != null) {
 	        
-	        // Ringpuffer-Index ohne Division berechnen (Bitmaske für POOL_SIZE = 8192)
+	        EventType type = event.getEventType();
+	        EventPriority priority = type.getPriority();
+	        int objectID = stateAnimal.getObjectID();
+
+	        // 1. Drossel-Schutz analog zu createReaction
+	        if (priority.isThrottleable()) {
+	            
+	            // Relevanz-Schwellen basierend auf dem Event-Typ und den Filtern des Tiers ermitteln
+	            int eventTypeID = event.getEventTypeAsInt();
+	            int eventPerceptionType = stateAnimal.getPerceptionType(eventTypeID);
+	            int relevanceThreshold = getRelevanceThresholdForEventType(eventTypeID, eventPerceptionType);
+	            
+	            if (!this.simulation.checkAndApplyCooldown(objectID, TickObjectCooldown.TYPE_KNOWLEDGE, 1, relevanceThreshold)) {
+	                return; // Abgelehnt! Wahrnehmung wird zum Schutz der Queue gedrosselt.
+	            }
+	        }
+
+	        // 2. Allokationsfreies Ringpuffer-Recycling (Greift nur, wenn Cooldown grünes Licht gibt)
 	        int targetIdx = poolWriteIndex & (POOL_SIZE - 1);
 	        CollectionElementSimObjInfluenced pooledElement = this.perceptionPool[targetIdx];
 	        
-	        // Bestehendes Objekt neu beschreiben, statt ein neues zu erzeugen!
 	        pooledElement.setEvent(event);
 	        pooledElement.setState(stateAnimal);
 	        pooledElement.setHidden(hiddenWriteAccess);
 	        
 	        poolWriteIndex++;
 
-	        // Das vorallokierte Objekt in die Queue schieben
+	        // 3. Einspeisung in die Queue
 	        if (!this.perceptions.add(pooledElement)) {
 	            pooledElement.clearReferences(); 
-	            // Falls die Queue voll ist, greift die Fallback-Logik
-	            poolWriteIndex--; // Cursor zurücksetzen
+	            poolWriteIndex--; // Rollback bei voller Queue
 	        }
 	    }
 	}
+	
 	
 
 	private final int calculatePerception(CollectionElementSimObjInfluenced perception) {
@@ -555,6 +574,23 @@ public class KnowledgeCalculator extends SocialWorldThread {
 		
 	}
 	
+	private final int getRelevanceThresholdForEventType(int eventTypeID, int eventPerceptionType) {
+	    
+	    // 1. Hole die spezifische Beschreibung über das performante Singleton-Register für Wahrnehmung
+	    EventPerceptionDescription eventPerceptionDescription = 
+	            EventPerceptionAssignment.getInstance().getEventPerceptionDescription(eventTypeID, eventPerceptionType);
+
+	    // 2. Defensives Sicherheitsnetz: Wenn für diese Kombination keine Wahrnehmung 
+	    // konfiguriert ist, nutzen wir den minimalen Standardwert (schützt vor unfertigen Ketten)
+	    if (eventPerceptionDescription == null) {
+	        return 1; // Standard-Sicherheitsnetz für unkonfigurierte Test-Wahrnehmungen
+	    }
+
+	    // 3. Dynamische Schwelle direkt aus der geladenen Wahrnehmungs-Konfiguration zurückgeben
+	    return eventPerceptionDescription.getRelevanceThreshold();
+	}
+
+
 	public void printKnowledgeQueueCounts() {
 	    // Falls 'influenced' im KnowledgeCalculator existiert, analog ausgeben:
 	    // influenced.printCounts(); 
