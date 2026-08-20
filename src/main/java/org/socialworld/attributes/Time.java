@@ -63,7 +63,10 @@ public class Time {
         this.days = (int) (rest / 24);
     }
 
- 
+    public static long getNowInMillis() {
+    	return System.currentTimeMillis();
+    }
+    
     // 3. Der Copy-Konstruktor kopiert nur noch die fertigen Werte
     public Time(Time original) {
         this.totalMilliseconds = original.totalMilliseconds;

@@ -258,8 +258,8 @@ public class ActionHandler  {
 		if (newAction.isToBeIgnored() ) return;
 		
 		
-		minTimeInMilliseconds = newAction.getMinTime().getTotalMilliseconds();
-		maxTimeInMilliseconds = newAction.getMaxTime().getTotalMilliseconds();
+		minTimeInMilliseconds = newAction.getMinStartMillis();
+		maxTimeInMilliseconds = newAction.getMaxStartMillis();
 
 		priority = newAction.getPriority();
 		duration = newAction.getDuration();
@@ -273,13 +273,13 @@ public class ActionHandler  {
 				// a higher priority value means more important
 				
 				if ( listedAction.getPriority() < priority ) 
-					if ( (listedAction.getMaxTime().getTotalMilliseconds() + listedAction.getRemainedDuration()) <
+					if ( listedAction.getExpectedMaxEndMillis() <
 							minTimeInMilliseconds )
 						continue;
 					else
 						;
 				else if ( listedAction.getPriority() == priority ) 
-					if ( (listedAction.getMaxTime().getTotalMilliseconds() + listedAction.getRemainedDuration()) <
+					if ( listedAction.getExpectedMaxEndMillis() <
 							maxTimeInMilliseconds )
 						continue;
 					else
@@ -287,7 +287,7 @@ public class ActionHandler  {
 							if ((this.actualAction != null) && (this.actionList.indexOf(this.actualAction) == 0) && (this.actualAction.isInterruptable()))
 								continue;
 				else // if ( listedAction.getPriority() > priority )
-					if ( listedAction.getMinTime().getTotalMilliseconds()  <=
+					if ( listedAction.getMinStartMillis()  <=
 							( maxTimeInMilliseconds + duration ) )
 						continue;
 					else
@@ -365,12 +365,12 @@ public class ActionHandler  {
 				}
 			}
 			if (actionDescription.isSearchByMinTime()) {
-				if (action.getMinTime() != actionDescription.getMinTime()) {
+				if (action.getMinStartMillis() != actionDescription.getMinStartMillis()) {
 					continue;
 				}
 			}
 			if (actionDescription.isSearchByMaxTime()) {
-				if (action.getMaxTime() != actionDescription.getMaxTime()) {
+				if (action.getMaxStartMillis() != actionDescription.getMaxStartMillis()) {
 					continue;
 				}
 			}

@@ -334,7 +334,7 @@ public class CreateActionExpression  {
 			case  Value.VALUE_BY_NAME_ACTION_MAXTIME: type = Type.time; break;
 			case  Value.VALUE_BY_NAME_ACTION_INTENSITY: type = Type.floatingpoint; break;
 			case  Value.VALUE_BY_NAME_ACTION_PRIORITY: type = Type.integer; break;
-			case  Value.VALUE_BY_NAME_ACTION_DURATION: type = Type.longinteger; break;
+			case  Value.VALUE_BY_NAME_ACTION_DURATION: type = Type.integer; break;
 			case  Value.VALUE_BY_NAME_ACTION_DIRECTION: type = Type.vector; break;
 			case  Value.VALUE_BY_NAME_ACTION_TARGET:
 			case  Value.VALUE_BY_NAME_ACTION_WEAPON:
@@ -379,7 +379,7 @@ public class CreateActionExpression  {
 			case "MX+N":		result = new MXPlusN(function[1]);  break;
 			case "MLogX+N":		result = new MLogXPlusN(function[1]);  break;
 			case "MExpX+N":		result = new MExpXPlusN(function[1]);  break;
-			case "Now+N":		result = new CreateValue(Type.time, property, new Constant(calculation.createValue(Type.longinteger,  Integer.parseInt(function[1] )))); break;
+			case "Now+N":		result = new CreateValue(Type.longinteger, property, new Constant(calculation.createValue(Type.integer,  Integer.parseInt(function[1] )))); break;
 			case "GetEvParm":	result = new GetValueFromValueList(Value.VALUE_BY_NAME_EVENT_PARAMS, function[1]);  break;
 			}
 		}

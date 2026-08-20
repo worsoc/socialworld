@@ -26,7 +26,6 @@ import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionNothing;
 import org.socialworld.actions.ActionType;
-import org.socialworld.attributes.Time;
 
 /**
  * It's a description of an action template that is used for searching action
@@ -73,22 +72,22 @@ public class SearchActionDescription extends ActionNothing {
 	}
 
 	/**
-	 * @param time
-	 *            the time to set
+	 * @param ms
+	 *            the minStartMillis to set
 	 */
 	@Override
-	public void setMinTime(final Time time) {
-		this.minTime = time;
+	public void setMinStartMillis(final long ms) {
+		this.minStartMillis = ms;
 		this.searchByMinTime = true;
 	}
 
 	/**
-	 * @param time
+	 * @param ms
 	 *            the time to set
 	 */
 	@Override
-	public void setMaxTime(final Time time) {
-		this.maxTime = time;
+	public void setMaxStartMillis(final long ms) {
+		this.maxStartMillis = ms;
 		this.searchByMaxTime = true;
 	}
 
@@ -119,7 +118,7 @@ public class SearchActionDescription extends ActionNothing {
 	 *            the duration to set
 	 */
 	@Override
-	public void setDuration(final long duration) {
+	public void setDuration(final int duration) {
 		this.duration = duration;
 		this.searchByDuration = true;
 	}
@@ -129,7 +128,7 @@ public class SearchActionDescription extends ActionNothing {
 	 *            the remainedDuration to set
 	 */
 	@Override
-	public void setRemainedDuration(final long remainedDuration) {
+	public void setRemainedDuration(final int remainedDuration) {
 		this.remainedDuration = remainedDuration;
 		this.searchByRemainedDuration = true;
 	}

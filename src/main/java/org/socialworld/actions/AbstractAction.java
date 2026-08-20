@@ -93,12 +93,12 @@ public abstract class AbstractAction implements IObjectSender, IObjectReceiver {
 	
 	protected ActionType type;
 	protected ActionMode mode;
-	protected Time minTime;
-	protected Time maxTime;
+	protected long minStartMillis;
+	protected long maxStartMillis;
 	protected int priority;   // higher value --> higher priority (better chance for perform the action)
 	protected float intensity;
-	protected long duration;
-	protected long remainedDuration;
+	protected int duration;
+	protected int remainedDuration;
 
 	protected boolean interruptable = false;
 	protected boolean interrupted = false;
@@ -162,9 +162,10 @@ public abstract class AbstractAction implements IObjectSender, IObjectReceiver {
 		ActionType type;
 		ActionMode mode;
 		float intensity;
-		Time minTime, maxTime;
+		long minStartMillis;
+		long maxStartMillis;
 		int priority;
-		long duration;
+		int duration;
 		
 		Value v;
 		Object o;
@@ -205,28 +206,32 @@ public abstract class AbstractAction implements IObjectSender, IObjectReceiver {
 			intensity = (float) o;
 		}
 	
+		Time time;
+		
 		v = actionProperties.getValue( standardPropertyNames[3]);
-		o = v.getObject(Type.time);
+		o = v.getObject(Type.longinteger);
 		if (o instanceof NoObject) {
 			if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
-				System.out.println("AbstractAction.setBaseProperties > minTime: o (getObject(Type.time)) is NoObject " + ((NoObject)o).getReason().toString() );
+				System.out.println("AbstractAction.setBaseProperties > minStartMillis: o (getObject(Type.longinteger)) is NoObject " + ((NoObject)o).getReason().toString() );
 			}
-			minTime = new Time();
+			time = new Time();
+			minStartMillis = time.getTotalMilliseconds();
 		}
 		else {
-			minTime = (Time) o;
+			minStartMillis = (long) o;
 		}
 	
 		v = actionProperties.getValue( standardPropertyNames[4]);
-		o = v.getObject(Type.time);
+		o = v.getObject(Type.longinteger);
 		if (o instanceof NoObject) {
 			if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
-				System.out.println("AbstractAction.setBaseProperties > maxTime: o (getObject(Type.time)) is NoObject " + ((NoObject)o).getReason().toString() );
+				System.out.println("AbstractAction.setBaseProperties > maxStartMillis: o (getObject(Type.longinteger)) is NoObject " + ((NoObject)o).getReason().toString() );
 			}
-			maxTime = new Time();
+			time = new Time();
+			maxStartMillis = time.getTotalMilliseconds();
 		}
 		else {
-			maxTime = (Time) o;
+			maxStartMillis = (long) o;
 		}
 		
 		v = actionProperties.getValue( standardPropertyNames[5]);
@@ -242,23 +247,23 @@ public abstract class AbstractAction implements IObjectSender, IObjectReceiver {
 		}
 		
 		v = actionProperties.getValue( standardPropertyNames[6]);
-		o = v.getObject(Type.longinteger);
+		o = v.getObject(Type.integer);
 		if (o instanceof NoObject) {
 			if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
-				System.out.println("AbstractAction.setBaseProperties > duration: o (getObject(Type.longinteger)) is NoObject " + ((NoObject)o).getReason().toString() );
+				System.out.println("AbstractAction.setBaseProperties > duration: o (getObject(Type.integer)) is NoObject " + ((NoObject)o).getReason().toString() );
 			}
 			duration = 0;
 		}
 		else {
-			duration = (long) o;
+			duration = (int) o;
 		}
 
 		
 		this.setType(type);
 		this.setMode(mode);
 		this.setIntensity(intensity);
-		this.setMinTime(minTime);
-		this.setMaxTime(maxTime);
+		this.setMinStartMillis(minStartMillis);
+		this.setMaxStartMillis(maxStartMillis);
 		this.setPriority(priority);
 		this.setDuration(duration);
 		this.setRemainedDuration(duration);
@@ -277,8 +282,8 @@ public abstract class AbstractAction implements IObjectSender, IObjectReceiver {
 		this.type = original.type;
 		this.mode = original.mode;
 		this.intensity = original.intensity;
-		this.minTime = original.minTime;
-		this.maxTime = original.maxTime;
+		this.minStartMillis = original.minStartMillis;
+		this.maxStartMillis = original.maxStartMillis;
 		this.priority = original.priority;
 		this.duration = original.duration;
 		
@@ -372,34 +377,42 @@ public abstract class AbstractAction implements IObjectSender, IObjectReceiver {
 		this.type = type;
 	}
 
+	public long getExpectedMinEndMillis() {
+	    return this.minStartMillis + this.remainedDuration;
+	}
+
+	public long getExpectedMaxEndMillis() {
+	    return this.maxStartMillis + this.remainedDuration;
+	}
+	
 	/**
-	 * @return the time
+	 * @return the minStartMillis
 	 */
-	public Time getMinTime() {
-		return this.minTime;
+	public long getMinStartMillis() {
+		return this.minStartMillis;
 	}
 
 	/**
-	 * @param time
-	 *            the time to set
+	 * @param minStartMillis
+	 *            the minStartMillis to set
 	 */
-	public void setMinTime(final Time time) {
-		this.minTime = time;
+	public void setMinStartMillis(final long minStartMillis) {
+		this.minStartMillis = minStartMillis;
 	}
 
 	/**
-	 * @return the time
+	 * @return the maxStartMillis
 	 */
-	public Time getMaxTime() {
-		return this.maxTime;
+	public long getMaxStartMillis() {
+		return this.maxStartMillis;
 	}
 
 	/**
-	 * @param time
-	 *            the time to set
+	 * @param long
+	 *            the maxStartMillis to set
 	 */
-	public void setMaxTime(final Time time) {
-		this.maxTime = time;
+	public void setMaxStartMillis(final long maxStartMillis) {
+		this.maxStartMillis = maxStartMillis;
 	}
 
 	/**
@@ -462,7 +475,7 @@ public abstract class AbstractAction implements IObjectSender, IObjectReceiver {
 	 * @param duration
 	 *            the duration to set
 	 */
-	public void setDuration(final long duration) {
+	public void setDuration(final int duration) {
 		this.duration = duration;
 	}
 
@@ -479,7 +492,7 @@ public abstract class AbstractAction implements IObjectSender, IObjectReceiver {
 	 * @param remainedDuration
 	 *            the remainedDuration to set
 	 */
-	public void setRemainedDuration(final long remainedDuration) {
+	public void setRemainedDuration(final int remainedDuration) {
 		this.remainedDuration = remainedDuration;
 	}
 
@@ -489,7 +502,7 @@ public abstract class AbstractAction implements IObjectSender, IObjectReceiver {
 	 * 
 	 * @param decrement
 	 */
-	public void lowerRemainedDuration(final long decrement) {
+	public void lowerRemainedDuration(final int decrement) {
 		this.remainedDuration -= decrement;
 		
 //		System.out.println("AbstractAction.lowerRemainedDuration(): " + toString() + "  " + actor.toString() + " noch offen: " + this.remainedDuration);
