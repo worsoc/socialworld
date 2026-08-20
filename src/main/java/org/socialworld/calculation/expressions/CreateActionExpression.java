@@ -330,8 +330,8 @@ public class CreateActionExpression  {
 			switch (property) {
 			case  Value.VALUE_BY_NAME_ACTION_TYPE: type = Type.actionType; break;
 			case  Value.VALUE_BY_NAME_ACTION_MODE: type = Type.actionMode; break;
-			case  Value.VALUE_BY_NAME_ACTION_MINTIME: type = Type.time; break;
-			case  Value.VALUE_BY_NAME_ACTION_MAXTIME: type = Type.time; break;
+			case  Value.VALUE_BY_NAME_ACTION_MINTIME: type = Type.longinteger; break;
+			case  Value.VALUE_BY_NAME_ACTION_MAXTIME: type = Type.longinteger; break;
 			case  Value.VALUE_BY_NAME_ACTION_INTENSITY: type = Type.floatingpoint; break;
 			case  Value.VALUE_BY_NAME_ACTION_PRIORITY: type = Type.integer; break;
 			case  Value.VALUE_BY_NAME_ACTION_DURATION: type = Type.integer; break;
