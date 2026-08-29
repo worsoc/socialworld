@@ -9,13 +9,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Das zeichenfähige Canvas des Editors. Unterstützt ein fraktales 3-Stufen-Zoom-System
- * über das dezidierte ZOOM-Werkzeug (Linksklick hinein / Rechtsklick heraus) und 
- * berechnet Maus-Ereignisse präzise in die jeweiligen Rasterkoordinaten um.
+ * Das zeichenfähige Canvas des Editors. Unterstützt ein fraktales 3-Stufen-Zoom-System,
+ * eine flexible Pinselgröße und ein zweischichtiges Vegetations-System.
+ * Ein pixelgenaues Downsampling auf der Weltkarte spiegelt die exakte Detail-Form wider.
  */
 public class GlobalTerrainEditorCanvas extends JPanel {
     private final MacroMap macroMap;
-    private final int cellSizeInPixels = 45; 
+    private final int cellSizeInPixels = 45; // Jede 729m Kachel ist 45x45 Pixel groß
 
     private enum ZoomLevel { MACRO, MESO, MIKRO }
     private ZoomLevel currentZoom = ZoomLevel.MACRO;
@@ -24,11 +24,16 @@ public class GlobalTerrainEditorCanvas extends JPanel {
     private int selectedMesoChunkX = 0;
     private int selectedMesoChunkY = 0;
 
-    // Aktueller Modus (Standardmäßig auf ZOOM gesetzt, passend zur Sidebar)
+    // Aktuelle Pinsel-Einstellungen aus der UI
     private String currentMode = "ZOOM"; 
     private double currentBrushElevation = 100.0;
     private String currentBrushTerrain = "GRAS";
-    private String currentBrushFauna = "LEER";
+    
+    // Getrennte Pinsel-Variablen für das zweischichtige Vegetationssystem
+    private String currentBrushBaum = "KEIN_BAUM";
+    private String currentBrushStrauch = "KEIN_STRAUCH";
+    
+    private int currentBrushRadius = 1; 
 
     public GlobalTerrainEditorCanvas(MacroMap macroMap) {
         this.macroMap = macroMap;
@@ -37,13 +42,11 @@ public class GlobalTerrainEditorCanvas extends JPanel {
         MouseAdapter mouseHandler = new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                // RECHTSKLICK: Zoomt immer heraus, egal welches Werkzeug aktiv ist
                 if (SwingUtilities.isRightMouseButton(e)) {
                     handleZoomOut();
                     return;
                 }
 
-                // LINKSSKLICK: Prüfen, ob wir navigieren oder zeichnen wollen
                 if (currentMode.equals("ZOOM")) {
                     handleZoomIn(e.getX(), e.getY());
                 } else {
@@ -53,7 +56,6 @@ public class GlobalTerrainEditorCanvas extends JPanel {
 
             @Override 
             public void mouseDragged(MouseEvent e) { 
-                // Beim Ziehen der Maus wird nur gezeichnet, niemals gezoomt
                 if (!currentMode.equals("ZOOM") && SwingUtilities.isLeftMouseButton(e)) {
                     handleMousePaint(e.getX(), e.getY());
                 }
@@ -96,35 +98,57 @@ public class GlobalTerrainEditorCanvas extends JPanel {
     }
 
     private void handleMousePaint(int mouseX, int mouseY) {
+        int radiusOffset = currentBrushRadius - 1;
+
         switch (currentZoom) {
             case MACRO -> {
                 int cellX = mouseX / cellSizeInPixels;
                 int cellY = mouseY / cellSizeInPixels;
-                if (cellX >= 0 && cellX < macroMap.getWidth() && cellY >= 0 && cellY < macroMap.getHeight()) {
-                    if (currentMode.equals("HÖHE")) {
-                        macroMap.updateCellElevation(cellX, cellY, currentBrushElevation);
-                    } else if (currentMode.equals("TERRAIN")) {
-                        MacroMapCell cell = macroMap.getCell(cellX, cellY);
-                        cell.setCoverType(currentBrushTerrain);
-                        for (int mx = 0; mx < 81; mx++) {
-                            for (int my = 0; my < 81; my++) {
-                                cell.setMesoTerrain(mx, my, currentBrushTerrain);
+                
+                for (int dx = -radiusOffset; dx <= radiusOffset; dx++) {
+                    for (int dy = -radiusOffset; dy <= radiusOffset; dy++) {
+                        if (dx * dx + dy * dy <= radiusOffset * radiusOffset) {
+                            int targetX = cellX + dx;
+                            int targetY = cellY + dy;
+                            
+                            if (targetX >= 0 && targetX < macroMap.getWidth() && targetY >= 0 && targetY < macroMap.getHeight()) {
+                                if (currentMode.equals("HÖHE")) {
+                                    macroMap.updateCellElevation(targetX, targetY, currentBrushElevation);
+                                } else if (currentMode.equals("TERRAIN")) {
+                                    MacroMapCell cell = macroMap.getCell(targetX, targetY);
+                                    cell.setCoverType(currentBrushTerrain);
+                                    for (int mx = 0; mx < 81; mx++) {
+                                        for (int my = 0; my < 81; my++) {
+                                            cell.setMesoTerrain(mx, my, currentBrushTerrain);
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
-                    repaint();
                 }
+                repaint();
             }
             case MESO -> {
                 int mesoCellPixels = 9;
-                int mx = mouseX / mesoCellPixels;
-                int my = mouseY / mesoCellPixels;
+                int centerMx = mouseX / mesoCellPixels;
+                int centerMy = mouseY / mesoCellPixels;
 
-                if (mx >= 0 && mx < 81 && my >= 0 && my < 81) {
-                    if (currentMode.equals("TERRAIN")) selectedMacroCell.setMesoTerrain(mx, my, currentBrushTerrain);
-                    else if (currentMode.equals("FAUNA")) selectedMacroCell.setMesoFauna(mx, my, currentBrushFauna);
-                    repaint();
+                for (int dx = -radiusOffset; dx <= radiusOffset; dx++) {
+                    for (int dy = -radiusOffset; dy <= radiusOffset; dy++) {
+                        if (dx * dx + dy * dy <= radiusOffset * radiusOffset) {
+                            int mx = centerMx + dx;
+                            int my = centerMy + dy;
+
+                            if (mx >= 0 && mx < 81 && my >= 0 && my < 81) {
+                                if (currentMode.equals("TERRAIN")) selectedMacroCell.setMesoTerrain(mx, my, currentBrushTerrain);
+                                else if (currentMode.equals("BAUM")) selectedMacroCell.setMesoBaum(mx, my, currentBrushBaum);
+                                else if (currentMode.equals("STRAUCH")) selectedMacroCell.setMesoStrauch(mx, my, currentBrushStrauch);
+                            }
+                        }
+                    }
                 }
+                repaint();
             }
             case MIKRO -> {
                 int mikroCellPixels = 81;
@@ -136,27 +160,51 @@ public class GlobalTerrainEditorCanvas extends JPanel {
                     int globalMesoY = selectedMesoChunkY + localY;
                     
                     if (currentMode.equals("TERRAIN")) selectedMacroCell.setMesoTerrain(globalMesoX, globalMesoY, currentBrushTerrain);
-                    else if (currentMode.equals("FAUNA")) selectedMacroCell.setMesoFauna(globalMesoX, globalMesoY, currentBrushFauna);
+                    else if (currentMode.equals("BAUM")) selectedMacroCell.setMesoBaum(globalMesoX, globalMesoY, currentBrushBaum);
+                    else if (currentMode.equals("STRAUCH")) selectedMacroCell.setMesoStrauch(globalMesoX, globalMesoY, currentBrushStrauch);
                     repaint();
                 }
             }
         }
     }
 
-    private Color getDominantMacroColor(MacroMapCell cell) {
-        Map<String, Integer> counts = new HashMap<>();
-        String dominantTerrain = cell.getCoverType();
-        int maxCount = 0;
+    /**
+     * Rendert eine 729m Makrokachel pixelgenau, indem die 81x81 Detailmatrix 
+     * mathematisch präzise auf die 45x45 Pixel des Bildschirms heruntergerechnet wird.
+     * Integriert zudem eine diagonale Schraffur bei vorhandener Vegetation.
+     */
+    private void renderPixelPerfectMacroCell(Graphics2D g2, MacroMapCell cell, int startX, int startY) {
+        boolean hatVegetation = false;
 
-        for (int mx = 0; mx < 81; mx++) {
-            for (int my = 0; my < 81; my++) {
-                String type = cell.getMesoTerrain(mx, my);
-                int count = counts.getOrDefault(type, 0) + 1;
-                counts.put(type, count);
-                if (count > maxCount) { maxCount = count; dominantTerrain = type; }
+        for (int px = 0; px < cellSizeInPixels; px++) {
+            int mx = (px * 81) / cellSizeInPixels;
+
+            for (int py = 0; py < cellSizeInPixels; py++) {
+                int my = (py * 81) / cellSizeInPixels;
+
+                String detailTerrain = cell.getMesoTerrain(mx, my);
+                g2.setColor(getTerrainColor(detailTerrain));
+                g2.fillRect(startX + px, startY + py, 1, 1);
+
+                if (!hatVegetation && (!cell.getMesoBaum(mx, my).equals("KEIN_BAUM") || !cell.getMesoStrauch(mx, my).equals("KEIN_STRAUCH"))) {
+                    hatVegetation = true;
+                }
             }
         }
-        return getTerrainColor(dominantTerrain);
+
+        // SCHRAFFUR bei vorhandener Vegetation (transparentes Weiß)
+        if (hatVegetation) {
+            g2.setColor(new Color(255, 255, 255, 60)); 
+            g2.setStroke(new BasicStroke(1.0f));
+            for (int i = 0; i < cellSizeInPixels; i += 6) {
+                g2.drawLine(startX + i, startY, startX, startY + i);
+                g2.drawLine(startX + cellSizeInPixels, startY + i, startX + i, startY + cellSizeInPixels);
+            }
+            g2.setStroke(new BasicStroke(1.0f)); 
+        }
+        
+        g2.setColor(new Color(0, 0, 0, 20));
+        g2.drawRect(startX, startY, cellSizeInPixels, cellSizeInPixels);
     }
 
     @Override
@@ -165,35 +213,39 @@ public class GlobalTerrainEditorCanvas extends JPanel {
         Graphics2D g2 = (Graphics2D) g;
 
         if (currentZoom == ZoomLevel.MACRO) {
+            // Weltkarte mit pixelgenauem Downsampling
             for (int x = 0; x < macroMap.getWidth(); x++) {
                 for (int y = 0; y < macroMap.getHeight(); y++) {
                     MacroMapCell cell = macroMap.getCell(x, y);
-                    g2.setColor(getDominantMacroColor(cell));
-                    g2.fillRect(x * cellSizeInPixels, y * cellSizeInPixels, cellSizeInPixels - 1, cellSizeInPixels - 1);
+                    int startX = x * cellSizeInPixels;
+                    int startY = y * cellSizeInPixels;
                     
-                    g2.setColor(cell.getCoverType().equals("SCHNEE") ? Color.DARK_GRAY : Color.WHITE);
+                    renderPixelPerfectMacroCell(g2, cell, startX, startY);
+                    
+                    g2.setColor(new Color(255, 255, 255, 180));
                     g2.setFont(new Font("Arial", Font.PLAIN, 9));
-                    g2.drawString((int)cell.getReferenceElevation() + "m", x * cellSizeInPixels + 4, y * cellSizeInPixels + 24);
+                    g2.drawString((int)cell.getReferenceElevation() + "m", startX + 4, startY + 24);
                 }
             }
         } else if (currentZoom == ZoomLevel.MESO) {
+            // Meso-Ebene (81x81 Grid)
             int mesoCellPixels = 9;
             for (int mx = 0; mx < 81; mx++) {
                 for (int my = 0; my < 81; my++) {
                     g2.setColor(getTerrainColor(selectedMacroCell.getMesoTerrain(mx, my)));
                     g2.fillRect(mx * mesoCellPixels, my * mesoCellPixels, mesoCellPixels, mesoCellPixels);
 
-                    if (!selectedMacroCell.getMesoFauna(mx, my).equals("LEER")) {
+                    if (!selectedMacroCell.getMesoBaum(mx, my).equals("KEIN_BAUM") || !selectedMacroCell.getMesoStrauch(mx, my).equals("KEIN_STRAUCH")) {
                         g2.setColor(new Color(20, 80, 30));
                         g2.fillRect(mx * mesoCellPixels + 2, my * mesoCellPixels + 2, mesoCellPixels - 4, mesoCellPixels - 4);
                     }
                 }
             }
+            // Gitterlinien zeichnen
             for (int mx = 0; mx < 81; mx++) {
                 for (int my = 0; my < 81; my++) {
                     g2.setColor(new Color(0, 0, 0, 35)); 
                     g2.drawRect(mx * mesoCellPixels, my * mesoCellPixels, mesoCellPixels, mesoCellPixels);
-                    
                     if (mx % 9 == 0 && my % 9 == 0) {
                         g2.setColor(new Color(255, 255, 255, 90));
                         g2.setStroke(new BasicStroke(1.5f));
@@ -203,40 +255,60 @@ public class GlobalTerrainEditorCanvas extends JPanel {
                 }
             }
         } else if (currentZoom == ZoomLevel.MIKRO) {
-            int mikroCellPixels = 81;
-            for (int lx = 0; lx < 9; lx++) {
-                for (int ly = 0; ly < 9; ly++) {
-                    int gmx = selectedMesoChunkX + lx;
-                    int gmy = selectedMesoChunkY + ly;
+            // Mikro-Ebene (9x9 Grid) mit getrennten Layern
+            renderMikroGrid(g2);
+        }
+    }
 
-                    g2.setColor(getTerrainColor(selectedMacroCell.getMesoTerrain(gmx, gmy)));
-                    g2.fillRect(lx * mikroCellPixels, ly * mikroCellPixels, mikroCellPixels, mikroCellPixels);
+    /**
+     * Ausgelagerte Render-Logik für das 9x9 Mikro-Grid, um das Zeichnen
+     * der geschichteten Vegetation (Baum über Strauch) sauber darzustellen.
+     */
+    private void renderMikroGrid(Graphics2D g2) {
+        int mikroCellPixels = 81;
+        for (int lx = 0; lx < 9; lx++) {
+            for (int ly = 0; ly < 9; ly++) {
+                int gmx = selectedMesoChunkX + lx;
+                int gmy = selectedMesoChunkY + ly;
 
-                    g2.setColor(new Color(255, 255, 255, 25));
-                    g2.drawRect(lx * mikroCellPixels, ly * mikroCellPixels, mikroCellPixels, mikroCellPixels);
+                g2.setColor(getTerrainColor(selectedMacroCell.getMesoTerrain(gmx, gmy)));
+                g2.fillRect(lx * mikroCellPixels, ly * mikroCellPixels, mikroCellPixels, mikroCellPixels);
 
-                    String fauna = selectedMacroCell.getMesoFauna(gmx, gmy);
-                    if (fauna.equals("BAUM")) {
-                        g2.setColor(new Color(15, 70, 25));
-                        g2.fillOval(lx * mikroCellPixels + 20, ly * mikroCellPixels + 20, mikroCellPixels - 40, mikroCellPixels - 40);
-                    }
+                g2.setColor(new Color(255, 255, 255, 25));
+                g2.drawRect(lx * mikroCellPixels, ly * mikroCellPixels, mikroCellPixels, mikroCellPixels);
+
+                // Layer 1: Strauch (unten)
+                String strauch = selectedMacroCell.getMesoStrauch(gmx, gmy);
+                if (!strauch.equals("KEIN_STRAUCH")) {
+                    g2.setColor(strauch.equals("BEERENSTRAUCH") ? new Color(130, 40, 70) : new Color(60, 130, 50));
+                    g2.fillOval(lx * mikroCellPixels + 12, ly * mikroCellPixels + 40, 30, 30); 
+                    g2.fillOval(lx * mikroCellPixels + 40, ly * mikroCellPixels + 35, 25, 25);
+                }
+
+                // Layer 2: Baum (darüber)
+                String baum = selectedMacroCell.getMesoBaum(gmx, gmy);
+                if (!baum.equals("KEIN_BAUM")) {
+                    Color baumFarbe = switch (baum) {
+                        case "EICHE" -> new Color(20, 80, 25);
+                        case "KIEFER" -> new Color(15, 60, 35);
+                        case "BIRKE" -> new Color(80, 140, 70);
+                        default -> new Color(40, 110, 40);
+                    };
+                    g2.setColor(new Color(90, 50, 20));
+                    g2.fillRect(lx * mikroCellPixels + 37, ly * mikroCellPixels + 37, 8, 8);
+                    g2.setColor(new Color(baumFarbe.getRed(), baumFarbe.getGreen(), baumFarbe.getBlue(), 210));
+                    g2.fillOval(lx * mikroCellPixels + 15, ly * mikroCellPixels + 15, 52, 52);
                 }
             }
         }
-        drawHUD(g2);
     }
 
-    private void drawHUD(Graphics2D g2) {
-        g2.setColor(new Color(0, 0, 0, 180));
-        g2.fillRect(10, 10, 520, 25);
-        g2.setColor(Color.WHITE);
-        g2.setFont(new Font("Arial", Font.BOLD, 11));
-        String status = switch (currentZoom) {
-            case MACRO -> "WELTKARTE (729m) - Werkzeug 'Zoom' aktiv: Einfacher Klick zum Hineinzoomen!";
-            case MESO -> "MESO-ANSICHT (81x81) - Werkzeug 'Zoom' aktiv: Klick für 1m Mikro-Modus | Rechtsklick zurück";
-            case MIKRO -> "MIKRO-DETAILMODUS (9x9) [Rechtsklick zurück]";
+    public String getStatusText() {
+        return switch (currentZoom) {
+            case MACRO -> " MODE: WELTKARTE (729m) | Downsampling & Schraffur aktiv | Linksklick zum Zoomen.";
+            case MESO -> " MODE: MESO-ANSICHT (81x81) | Pinsel-Radius: " + currentBrushRadius + " | Linksklick für 1m Modus | Rechtsklick zurück.";
+            case MIKRO -> " MODE: MIKRO-DETAILMODUS (1m Schärfe) | Baum und Strauch überlagerbar! | Rechtsklick zurück.";
         };
-        g2.drawString(status, 15, 27);
     }
 
     private Color getTerrainColor(String type) {
@@ -249,10 +321,12 @@ public class GlobalTerrainEditorCanvas extends JPanel {
         };
     }
 
+    // UI-Schnittstellen (Setter)
     public void setEditorMode(String mode) { this.currentMode = mode; }
+    public void setBrushRadius(int radius) { this.currentBrushRadius = radius; }
     public void setBrushElevation(double elevation) { this.currentBrushElevation = elevation; }
     public void setBrushTerrain(String terrain) { this.currentBrushTerrain = terrain; }
-    public void setBrushFauna(String fauna) { this.currentBrushFauna = fauna; }
+    public void setBrushBaum(String baum) { this.currentBrushBaum = baum; }
+    public void setBrushStrauch(String strauch) { this.currentBrushStrauch = strauch; }
     @Override public Dimension getPreferredSize() { return new Dimension(729, 729); }
 }
-    
