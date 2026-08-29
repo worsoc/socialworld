@@ -21,3 +21,5 @@ bin
 
 # Ignore lib folder
 lib/
+
+tileterm*.txt
