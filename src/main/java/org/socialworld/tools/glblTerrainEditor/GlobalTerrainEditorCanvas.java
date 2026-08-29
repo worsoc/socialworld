@@ -1,6 +1,5 @@
 package org.socialworld.tools.glblTerrainEditor;
 
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -10,8 +9,8 @@ import java.util.Map;
 
 /**
  * Das zeichenfähige Canvas des Editors. Unterstützt ein fraktales 3-Stufen-Zoom-System,
- * eine flexible Pinselgröße und ein zweischichtiges Vegetations-System.
- * Ein pixelgenaues Downsampling auf der Weltkarte spiegelt die exakte Detail-Form wider.
+ * eine flexible Pinselgröße und ein zweischichtiges Vegetations-System mit farblich
+ * differenzierten Baumarten für optimale visuelle Unterscheidung.
  */
 public class GlobalTerrainEditorCanvas extends JPanel {
     private final MacroMap macroMap;
@@ -64,7 +63,7 @@ public class GlobalTerrainEditorCanvas extends JPanel {
         addMouseListener(mouseHandler);
         addMouseMotionListener(mouseHandler);
     }
-
+    
     private void handleZoomIn(int mouseX, int mouseY) {
         if (currentZoom == ZoomLevel.MACRO) {
             int cellX = mouseX / cellSizeInPixels;
@@ -167,11 +166,11 @@ public class GlobalTerrainEditorCanvas extends JPanel {
             }
         }
     }
-
+    
     /**
      * Rendert eine 729m Makrokachel pixelgenau, indem die 81x81 Detailmatrix 
-     * mathematisch präzise auf die 45x45 Pixel des Bildschirms heruntergerechnet wird.
-     * Integriert zudem eine diagonale Schraffur bei vorhandener Vegetation.
+     * auf die 45x45 Pixel des Bildschirms heruntergerechnet wird.
+     * Integriert eine diagonale Schraffur bei vorhandener Vegetation.
      */
     private void renderPixelPerfectMacroCell(Graphics2D g2, MacroMapCell cell, int startX, int startY) {
         boolean hatVegetation = false;
@@ -228,16 +227,24 @@ public class GlobalTerrainEditorCanvas extends JPanel {
                 }
             }
         } else if (currentZoom == ZoomLevel.MESO) {
-            // Meso-Ebene (81x81 Grid)
+            // Meso-Ebene (81x81 Grid) mit farblich angepasster Baum-Vorschau
             int mesoCellPixels = 9;
             for (int mx = 0; mx < 81; mx++) {
                 for (int my = 0; my < 81; my++) {
                     g2.setColor(getTerrainColor(selectedMacroCell.getMesoTerrain(mx, my)));
                     g2.fillRect(mx * mesoCellPixels, my * mesoCellPixels, mesoCellPixels, mesoCellPixels);
 
-                    if (!selectedMacroCell.getMesoBaum(mx, my).equals("KEIN_BAUM") || !selectedMacroCell.getMesoStrauch(mx, my).equals("KEIN_STRAUCH")) {
-                        g2.setColor(new Color(20, 80, 30));
+                    String baum = selectedMacroCell.getMesoBaum(mx, my);
+                    String strauch = selectedMacroCell.getMesoStrauch(mx, my);
+                    
+                    if (!baum.equals("KEIN_BAUM")) {
+                        // NEU: Nutzt hier die spezifische Baumfarbe als kleinen Gitterpunkt
+                        g2.setColor(getBaumColor(baum));
                         g2.fillRect(mx * mesoCellPixels + 2, my * mesoCellPixels + 2, mesoCellPixels - 4, mesoCellPixels - 4);
+                    } else if (!strauch.equals("KEIN_STRAUCH")) {
+                        // Wenn kein Baum da ist, aber ein Strauch, kriegt er ein helleres Buschgrün
+                        g2.setColor(new Color(70, 140, 60));
+                        g2.fillRect(mx * mesoCellPixels + 3, my * mesoCellPixels + 3, mesoCellPixels - 6, mesoCellPixels - 6);
                     }
                 }
             }
@@ -259,7 +266,7 @@ public class GlobalTerrainEditorCanvas extends JPanel {
             renderMikroGrid(g2);
         }
     }
-
+    
     /**
      * Ausgelagerte Render-Logik für das 9x9 Mikro-Grid, um das Zeichnen
      * der geschichteten Vegetation (Baum über Strauch) sauber darzustellen.
@@ -285,17 +292,16 @@ public class GlobalTerrainEditorCanvas extends JPanel {
                     g2.fillOval(lx * mikroCellPixels + 40, ly * mikroCellPixels + 35, 25, 25);
                 }
 
-                // Layer 2: Baum (darüber)
+                // Layer 2: Baum (darüber in spezifischer Farbe)
                 String baum = selectedMacroCell.getMesoBaum(gmx, gmy);
                 if (!baum.equals("KEIN_BAUM")) {
-                    Color baumFarbe = switch (baum) {
-                        case "EICHE" -> new Color(20, 80, 25);
-                        case "KIEFER" -> new Color(15, 60, 35);
-                        case "BIRKE" -> new Color(80, 140, 70);
-                        default -> new Color(40, 110, 40);
-                    };
+                    Color baumFarbe = getBaumColor(baum);
+                    
+                    // Zeichne den Stamm (Zentrum)
                     g2.setColor(new Color(90, 50, 20));
                     g2.fillRect(lx * mikroCellPixels + 37, ly * mikroCellPixels + 37, 8, 8);
+                    
+                    // Zeichne die spezifisch gefärbte, leicht transparente Krone
                     g2.setColor(new Color(baumFarbe.getRed(), baumFarbe.getGreen(), baumFarbe.getBlue(), 210));
                     g2.fillOval(lx * mikroCellPixels + 15, ly * mikroCellPixels + 15, 52, 52);
                 }
@@ -303,10 +309,23 @@ public class GlobalTerrainEditorCanvas extends JPanel {
         }
     }
 
+    /**
+     * NEU: Zentrale Farbtabelle für die Baumarten zur konsistenten 
+     * Darstellung in der Meso- und Mikro-Zoomstufe.
+     */
+    private Color getBaumColor(String baumType) {
+        return switch (baumType) {
+            case "EICHE" -> new Color(34, 110, 34);    // Klassisches sattes Waldgrün
+            case "KIEFER" -> new Color(15, 75, 45);   // Sehr dunkles Nadelwald-Tannengrün
+            case "BIRKE" -> new Color(95, 165, 80);   // Helles, frisches Frühlings- / Laubgrün
+            default -> new Color(40, 120, 50);
+        };
+    }
+
     public String getStatusText() {
         return switch (currentZoom) {
             case MACRO -> " MODE: WELTKARTE (729m) | Downsampling & Schraffur aktiv | Linksklick zum Zoomen.";
-            case MESO -> " MODE: MESO-ANSICHT (81x81) | Pinsel-Radius: " + currentBrushRadius + " | Linksklick für 1m Modus | Rechtsklick zurück.";
+            case MESO -> " MODE: MESO-ANSICHT (81x81) | Pinsel-Radius: " + currentBrushRadius + " | Farblich getrennte Bäume! | Rechtsklick zurück.";
             case MIKRO -> " MODE: MIKRO-DETAILMODUS (1m Schärfe) | Baum und Strauch überlagerbar! | Rechtsklick zurück.";
         };
     }
