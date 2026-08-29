@@ -1,5 +1,7 @@
 package org.socialworld.tools.glblTerrainEditor;
 
+import java.io.File;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -119,6 +121,80 @@ public class GlobalTerrainEditor extends JFrame {
         contextPanel.add(panelBaum, "BAUM");
         contextPanel.add(panelStrauch, "STRAUCH");
         sidebar.add(contextPanel);
+
+        // --- SPEICHER-BUTTON IN DIE SIDEBAR EINFÜGEN ---
+        sidebar.add(Box.createVerticalStrut(20));
+        JButton saveButton = new JButton("Karte Exportieren...");
+        saveButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        saveButton.setBackground(new Color(40, 110, 45));
+        saveButton.setForeground(Color.WHITE);
+        saveButton.setFont(new Font("Arial", Font.BOLD, 12));
+        
+        saveButton.addActionListener(e -> {
+            // Öffnet den standardmäßigen Betriebssystem-Dateidialog
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Fraktale Karte separat abspeichern");
+            int userSelection = fileChooser.showSaveDialog(this);
+            
+            if (userSelection == JFileChooser.APPROVE_OPTION) {
+                File fileToSave = fileChooser.getSelectedFile();
+                
+                // Endung automatisch anhängen, falls nicht eingetippt
+                if (!fileToSave.getName().endsWith(".map")) {
+                    fileToSave = new File(fileToSave.getAbsolutePath() + ".map");
+                }
+                
+                try {
+                    // Export ausführen (Übergibt die map-Instanz aus deinem Hauptfenster)
+                    GlobalTerrainExporter.exportMap(map, fileToSave);
+                    JOptionPane.showMessageDialog(this, "Karte erfolgreich exportiert!\nDatei: " + fileToSave.getName(), "Export Erfolgreich", JOptionPane.INFORMATION_MESSAGE);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Fehler beim Speichern:\n" + ex.getMessage(), "Export Fehlgeschlagen", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+        sidebar.add(saveButton);
+
+        // --- LADEN-BUTTON IN DIE SIDEBAR EINFÜGEN ---
+        JButton loadButton = new JButton("Karte Laden...");
+        loadButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        loadButton.setBackground(new Color(50, 100, 160)); // Blaues Design
+        loadButton.setForeground(Color.WHITE);
+        loadButton.setFont(new Font("Arial", Font.BOLD, 12));
+        
+        loadButton.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Komprimierte Karte einlesen");
+            int userSelection = fileChooser.showOpenDialog(this);
+            
+            if (userSelection == JFileChooser.APPROVE_OPTION) {
+                File fileToLoad = fileChooser.getSelectedFile();
+                
+                try {
+                    // Import-Logik aufrufen und die alte Karte im Editor komplett austauschen
+                    MacroMap loadedMap = GlobalTerrainImporter.importMap(fileToLoad);
+                    
+                    // WICHTIG: Das Canvas benötigt die neue Map-Referenz und muss sich neu zeichnen
+                    // (Falls du deine Canvas-Variable im JFrame als Feld deklariert hast)
+                    this.remove(scrollPane); // Altes ScrollPane entfernen
+                    
+                    GlobalTerrainEditorCanvas newCanvas = new GlobalTerrainEditorCanvas(loadedMap);
+                    JScrollPane newScrollPane = new JScrollPane(newCanvas);
+                    add(newScrollPane, BorderLayout.CENTER);
+                    
+                    // Dem Fenster mitteilen, dass sich die UI-Struktur geändert hat
+                    this.validate();
+                    this.repaint();
+                    
+                    JOptionPane.showMessageDialog(this, "Karte erfolgreich geladen!", "Import Erfolgreich", JOptionPane.INFORMATION_MESSAGE);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Fehler beim Laden der Datei:\n" + ex.getMessage(), "Import Fehlgeschlagen", JOptionPane.ERROR_MESSAGE);
+                    ex.printStackTrace();
+                }
+            }
+        });
+        sidebar.add(Box.createVerticalStrut(5)); // Kleiner Abstand zum Export-Button
+        sidebar.add(loadButton);
 
         // --- SCHALTLOGIK FÜR DIE MENÜS ---
         CardLayout cl = (CardLayout) contextPanel.getLayout();
