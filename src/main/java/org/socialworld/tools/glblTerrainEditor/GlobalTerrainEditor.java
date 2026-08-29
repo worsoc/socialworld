@@ -1,59 +1,94 @@
 package org.socialworld.tools.glblTerrainEditor;
 
-
 import javax.swing.*;
 import java.awt.*;
 
 public class GlobalTerrainEditor extends JFrame {
     
     public GlobalTerrainEditor() {
-        setTitle("GlobalTerrain Macro Editor (720m Grid)");
+        setTitle("GlobalTerrain Layer Editor (729m Fraktales Grid)");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // HIER DIE GRÖSSE ANPASSEN: z.B. 64x64, 128x128 oder 512x512
-        int mapWidth = 64; 
-        int mapHeight = 64;
-        
-       // Erzeuge eine Karte mit mapWidth x mapHeight Makro-Kacheln (jede steht für 720m x 720m)
+        int mapWidth = 32; 
+        int mapHeight = 32;
+
         MacroMap map = new MacroMap(mapWidth, mapHeight);
         GlobalTerrainEditorCanvas canvas = new GlobalTerrainEditorCanvas(map);
-
-        // WICHTIG: Canvas in ein ScrollPane packen, damit große Karten scrollbar sind!
+        
         JScrollPane scrollPane = new JScrollPane(canvas);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Sidebar für Editor-Einstellungen
         JPanel sidebar = new JPanel();
         sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
-        sidebar.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        sidebar.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        sidebar.setPreferredSize(new Dimension(220, 729));
 
-        sidebar.add(new JLabel("Pinsel-Höhe (Meter):"));
+        sidebar.add(new JLabel("<html><b>EDITIER-MODUS SELEKTION</b></html>"));
+        sidebar.add(Box.createVerticalStrut(5));
+        
+        JRadioButton modeElevation = new JRadioButton("Höhe bearbeiten", true);
+        JRadioButton modeTerrain = new JRadioButton("Terrain zuweisen");
+        JRadioButton modeFauna = new JRadioButton("Fauna platzieren");
+        
+        ButtonGroup modeGroup = new ButtonGroup();
+        modeGroup.add(modeElevation);
+        modeGroup.add(modeTerrain);
+        modeGroup.add(modeFauna);
+        
+        sidebar.add(modeElevation);
+        sidebar.add(modeTerrain);
+        sidebar.add(modeFauna);
+        sidebar.add(Box.createVerticalStrut(20));
+
+        JPanel contextPanel = new JPanel(new CardLayout());
+        
+        JPanel panelElevation = new JPanel(new BorderLayout());
+        panelElevation.add(new JLabel("Ziel-Höhe (Meter):"), BorderLayout.NORTH);
         JSlider elevationSlider = new JSlider(0, 2000, 100);
         elevationSlider.setMajorTickSpacing(500);
         elevationSlider.setPaintTicks(true);
         elevationSlider.setPaintLabels(true);
+        panelElevation.add(elevationSlider, BorderLayout.CENTER);
         
-        elevationSlider.addChangeListener(e -> {
-            canvas.setBrushElevation(elevationSlider.getValue());
-        });
-        sidebar.add(elevationSlider);
+        JPanel panelTerrain = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panelTerrain.add(new JLabel("Boden-Typ:"));
+        String[] terrains = {"GRAS", "SAND", "WASSER", "STEIN", "SCHNEE"};
+        JComboBox<String> terrainBox = new JComboBox<>(terrains);
+        panelTerrain.add(terrainBox);
 
-        // Zusatzinfo zur Weltdimension in der Sidebar anzeigen
-        sidebar.add(Box.createVerticalStrut(20));
-        sidebar.add(new JLabel("Weltgröße: " + (mapWidth * 720 / 1000) + " km x " + (mapHeight * 720 / 1000) + " km"));
+        JPanel panelFauna = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panelFauna.add(new JLabel("Vegetation:"));
+        String[] faunaObjects = {"LEER", "BAUM", "BUSCH"};
+        JComboBox<String> faunaBox = new JComboBox<>(faunaObjects);
+        panelFauna.add(faunaBox);
+
+        contextPanel.add(panelElevation, "HÖHE");
+        contextPanel.add(panelTerrain, "TERRAIN");
+        contextPanel.add(panelFauna, "FAUNA");
+        sidebar.add(contextPanel);
+
+        CardLayout cl = (CardLayout) contextPanel.getLayout();
+        
+        modeElevation.addActionListener(e -> { canvas.setEditorMode("HÖHE"); cl.show(contextPanel, "HÖHE"); });
+        modeTerrain.addActionListener(e -> { canvas.setEditorMode("TERRAIN"); cl.show(contextPanel, "TERRAIN"); });
+        modeFauna.addActionListener(e -> { canvas.setEditorMode("FAUNA"); cl.show(contextPanel, "FAUNA"); });
+
+        elevationSlider.addChangeListener(e -> canvas.setBrushElevation(elevationSlider.getValue()));
+        terrainBox.addActionListener(e -> canvas.setBrushTerrain((String) terrainBox.getSelectedItem()));
+        faunaBox.addActionListener(e -> canvas.setBrushFauna((String) faunaBox.getSelectedItem()));
+
+        sidebar.add(Box.createVerticalStrut(30));
+        double realSizeKm = (mapWidth * 729.0) / 1000.0;
+        sidebar.add(new JLabel(String.format("Weltgröße: %.2f km x %.2f km", realSizeKm, realSizeKm)));
 
         add(sidebar, BorderLayout.EAST);
         pack();
-        setSize(1024, 768);
+        setSize(1050, 800);
         setLocationRelativeTo(null);
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new GlobalTerrainEditor().setVisible(true);
-        });
+        SwingUtilities.invokeLater(() -> new GlobalTerrainEditor().setVisible(true));
     }
 }
