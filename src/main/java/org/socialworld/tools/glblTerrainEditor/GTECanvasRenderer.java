@@ -3,8 +3,8 @@ package org.socialworld.tools.glblTerrainEditor;
 import java.awt.*;
 
 /**
- * Das aufgeteilte Grafik-Modul des Editors.
- * Nutzt GTERenderColorPalette für alle visuellen Farbberechnungen.
+ * Zeichen-Manager für den Editor.
+ * Rendert alle Straucharten (inkl. Brombeere, Heidekraut, Ginster) formgetreu auf dem Monitor.
  */
 public class GTECanvasRenderer {
     private final GlobalTerrainEditorCanvas canvas;
@@ -45,7 +45,6 @@ public class GTECanvasRenderer {
 
         for (int px = 0; px < cellSize; px++) {
             int mx = (px * 81) / cellSize;
-
             for (int py = 0; py < cellSize; py++) {
                 int my = (py * 81) / cellSize;
 
@@ -84,7 +83,6 @@ public class GTECanvasRenderer {
                 g2.fillRect(mx * mesoCellPixels, my * mesoCellPixels, mesoCellPixels, mesoCellPixels);
 
                 String baum = selectedCell.getMesoBaum(mx, my);
-                
                 if (!baum.equals("KEIN_BAUM")) {
                     g2.setColor(GTERenderColorPalette.getBaumColor(baum));
                     g2.fillRect(mx * mesoCellPixels + 2, my * mesoCellPixels + 2, mesoCellPixels - 4, mesoCellPixels - 4);
@@ -95,19 +93,21 @@ public class GTECanvasRenderer {
             }
         }
 
+        // Saubere Rasterlinien zeichnen
+        g2.setColor(new Color(0, 0, 0, 35)); 
         for (int mx = 0; mx < 81; mx++) {
             for (int my = 0; my < 81; my++) {
-                g2.setColor(new Color(0, 0, 0, 35)); 
                 g2.drawRect(mx * mesoCellPixels, my * mesoCellPixels, mesoCellPixels, mesoCellPixels);
-                
-                if (mx % 9 == 0 && my % 9 == 0) {
-                    g2.setColor(new Color(255, 255, 255, 90)); 
-                    g2.setStroke(new BasicStroke(1.5f));       
-                    g2.drawRect(mx * mesoCellPixels, my * mesoCellPixels, mesoCellPixels * 9, mesoCellPixels * 9);
-                    g2.setStroke(new BasicStroke(1.0f));       
-                }
             }
         }
+        g2.setColor(new Color(255, 255, 255, 110)); 
+        g2.setStroke(new BasicStroke(1.5f));       
+        for (int bx = 0; bx < 81; bx += 9) {
+            for (int by = 0; by < 81; by += 9) {
+                g2.drawRect(bx * mesoCellPixels, by * mesoCellPixels, mesoCellPixels * 9, mesoCellPixels * 9);
+            }
+        }
+        g2.setStroke(new BasicStroke(1.0f)); 
     }
 
     private void renderMikroLevel(Graphics2D g2) {
@@ -133,22 +133,44 @@ public class GTECanvasRenderer {
                 g2.setColor(new Color(255, 255, 255, 25));
                 g2.drawRect(lx * mikroCellPixels, ly * mikroCellPixels, mikroCellPixels, mikroCellPixels);
 
+                // --- STRAUCH-SCHABLONE RENDERN ---
                 String strauch = selectedCell.getMesoStrauchAusMischung(mx, my, lx, ly);
                 if (!strauch.equals("KEIN_STRAUCH")) {
                     g2.setColor(GTERenderColorPalette.getStrauchColor(strauch));
+                    
                     if (strauch.equals("FARNE")) {
-                        g2.fillRect(lx * mikroCellPixels + 25, ly * mikroCellPixels + 12, 30, 56);
-                        g2.fillRect(lx * mikroCellPixels + 12, ly * mikroCellPixels + 25, 56, 30);
-                    } else if (strauch.equals("ZIERSTRAUCH")) {
+                        // Farn-Kreuzwedel
+                        g2.fillRect(lx * mikroCellPixels + 32, ly * mikroCellPixels + 12, 16, 56);
+                        g2.fillRect(lx * mikroCellPixels + 12, ly * mikroCellPixels + 32, 56, 16);
+                    } else if (strauch.equals("GINSTER") || strauch.equals("HEIDEKRAUT")) {
+                        // Sternform für Blütensträucher
+                        int cx = lx * mikroCellPixels + 40;
+                        int cy = ly * mikroCellPixels + 40;
+                        g2.fillOval(cx - 20, cy - 20, 40, 40);
+                        g2.fillOval(cx - 30, cy - 5, 60, 10);
+                        g2.fillOval(cx - 5, cy - 30, 10, 60);
+                    } else {
+                        // Klassisch runde Büsche für Zierstrauch, Beere und BROMBEERE
                         g2.fillOval(lx * mikroCellPixels + 15, ly * mikroCellPixels + 15, 52, 52);
-                    } else if (strauch.equals("BEERENSTRAUCH")) {
-                        g2.fillOval(lx * mikroCellPixels + 15, ly * mikroCellPixels + 35, 35, 35);
-                        g2.fillOval(lx * mikroCellPixels + 35, ly * mikroCellPixels + 20, 30, 30);
                     }
+
+                    // Dunkle Konturlinie für maximalen optischen Kontrast im Gras
+                    g2.setColor(new Color(0, 0, 0, 120));
+                    g2.setStroke(new BasicStroke(1.5f));
+                    if (strauch.equals("FARNE")) {
+                        g2.drawRect(lx * mikroCellPixels + 32, ly * mikroCellPixels + 12, 16, 56);
+                        g2.drawRect(lx * mikroCellPixels + 12, ly * mikroCellPixels + 32, 56, 16);
+                    } else if (strauch.equals("GINSTER") || strauch.equals("HEIDEKRAUT")) {
+                        g2.drawOval(lx * mikroCellPixels + 20, ly * mikroCellPixels + 20, 40, 40);
+                    } else {
+                        g2.drawOval(lx * mikroCellPixels + 15, ly * mikroCellPixels + 15, 52, 52);
+                    }
+                    g2.setStroke(new BasicStroke(1.0f));
                 }
             }
         }
 
+        // Kronendach-Schraffur
         String baum = selectedCell.getMesoBaum(mx, my);
         if (!baum.equals("KEIN_BAUM")) {
             Color baumFarbe = GTERenderColorPalette.getBaumColor(baum);

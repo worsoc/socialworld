@@ -5,10 +5,6 @@ import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-/**
- * Korrigierter Eingabe-Controller. 
- * Zoomt nun exakt in ein einzelnes 9m x 9m Kästchen (1 Zelle des 81x81 Gitters) hinein.
- */
 public class GTECanvasInteractionListener extends MouseAdapter {
     private final GlobalTerrainEditorCanvas canvas;
 
@@ -22,7 +18,6 @@ public class GTECanvasInteractionListener extends MouseAdapter {
             handleZoomOut();
             return;
         }
-
         if (canvas.getCurrentMode().equals("ZOOM")) {
             handleZoomIn(e.getX(), e.getY());
         } else {
@@ -53,9 +48,7 @@ public class GTECanvasInteractionListener extends MouseAdapter {
             int mesoCellPixels = 9; 
             int mx = mouseX / mesoCellPixels;
             int my = mouseY / mesoCellPixels;
-            
             if (mx >= 0 && mx < 81 && my >= 0 && my < 81) {
-                // KORREKTUR: Wir merken uns exakt das gewählte 9m-Kästchen (mx, my) für den Mikro-Zoom!
                 canvas.setSelectedMesoChunkX(mx);
                 canvas.setSelectedMesoChunkY(my);
                 canvas.setCurrentZoom(GlobalTerrainEditorCanvas.ZoomLevel.MIKRO);
@@ -117,7 +110,6 @@ public class GTECanvasInteractionListener extends MouseAdapter {
                 int mikroCellPixels = 81;
                 int localX = mouseX / mikroCellPixels;
                 int localY = mouseY / mikroCellPixels;
-
                 if (localX >= 0 && localX < 9 && localY >= 0 && localY < 9) {
                     applyMikroPaint(localX, localY);
                     canvas.repaint();
@@ -140,10 +132,6 @@ public class GTECanvasInteractionListener extends MouseAdapter {
         }
     }
 
-    /**
-     * Hilfsmethode: Wendet das Zeichnen auf Meso-Ebene (9m) an.
-     * Erlaubt nun auch das flächige Platzieren von Sträuchern im Grobraster.
-     */
     private void applyMesoPaint(int mx, int my) {
         MacroMapCell selectedCell = canvas.getSelectedMacroCell();
         if (selectedCell == null) return;
@@ -153,8 +141,6 @@ public class GTECanvasInteractionListener extends MouseAdapter {
         } else if (canvas.getCurrentMode().equals("BAUM")) {
             selectedCell.setMesoBaum(mx, my, canvas.getCurrentBrushBaum());
         } else if (canvas.getCurrentMode().equals("STRAUCH")) {
-            // NEU: Wenn du auf Meso-Ebene malst, wird die komplette 9x9 Schablone 
-            // dieses Meso-Feldes (mx, my) sofort flächig mit der Strauchart gefüllt!
             String gewaehlterStrauch = canvas.getCurrentBrushStrauch();
             for (int lx = 0; lx < 9; lx++) {
                 for (int ly = 0; ly < 9; ly++) {
@@ -164,10 +150,6 @@ public class GTECanvasInteractionListener extends MouseAdapter {
         }
     }
 
-    /**
-     * Hilfsmethode: Wendet das Zeichnen auf der untersten Mikro-Ebene (1m) an.
-     * Berücksichtigt nun auch hier den Pinsel-Radius für schnelles Verfeinern.
-     */
     private void applyMikroPaint(int centerLx, int centerLy) {
         MacroMapCell selectedCell = canvas.getSelectedMacroCell();
         if (selectedCell == null) return;
@@ -176,34 +158,35 @@ public class GTECanvasInteractionListener extends MouseAdapter {
         int my = canvas.getSelectedMesoChunkY();
         int radiusOffset = canvas.getCurrentBrushRadius() - 1;
 
-        // Iteriere im Umkreis des Klicks basierend auf dem eingestellten Pinsel-Radius
         for (int dx = -radiusOffset; dx <= radiusOffset; dx++) {
             for (int dy = -radiusOffset; dy <= radiusOffset; dy++) {
-                // Mathematische Kreisprüfung für eine organische Pinselform
                 if (dx * dx + dy * dy <= radiusOffset * radiusOffset) {
                     int lx = centerLx + dx;
                     int ly = centerLy + dy;
 
-                    // Sicherstellen, dass wir innerhalb des 9x9 Mikro-Gitters bleiben
                     if (lx >= 0 && lx < 9 && ly >= 0 && ly < 9) {
-                        
-                        // Mappe die globale 1m-Koordinate für das feine Terrain-Delta (Flüsse)
                         int globalMikroX = mx * 9 + lx;
                         int globalMikroY = my * 9 + ly;
 
                         if (canvas.getCurrentMode().equals("TERRAIN")) {
                             byte code = switch (canvas.getCurrentBrushTerrain()) {
-                                case "WASSER" -> (byte) 1;
-                                case "SAND" -> (byte) 2;
-                                case "STEIN" -> (byte) 3;
-                                case "SCHNEE" -> (byte) 4;
-                                case "GRAS"   -> (byte) 5; 
-                               default -> (byte) 0;
+                                case "WATER"        -> (byte) 1;
+                                case "SAND"         -> (byte) 2;
+                                case "MUD"          -> (byte) 3;
+                                case "CRUSHED_ROCK" -> (byte) 4;
+                                case "STONES"       -> (byte) 5;
+                                case "ROCK"         -> (byte) 6;
+                                case "MOSS"         -> (byte) 7;
+                                case "GRASS"        -> (byte) 8;
+                                case "FOLIAGE"      -> (byte) 9;
+                                case "BRUSHWOOD"    -> (byte) 10;
+                                case "ASH"          -> (byte) 11;
+                                case "SNOW"         -> (byte) 12;
+                                case "ICE"          -> (byte) 13;
+                                default             -> (byte) 0;
                             };
                             selectedCell.setMikroTerrainDelta(globalMikroX, globalMikroY, code);
-                            
                         } else if (canvas.getCurrentMode().equals("STRAUCH")) {
-                            // Zeichnet die Strauch-Mischung mit dem gewählten Radius in die Schablone
                             selectedCell.setMesoStrauchInMischung(mx, my, lx, ly, canvas.getCurrentBrushStrauch());
                         }
                     }

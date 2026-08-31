@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Version 2.5 - Unterstützt das Einlesen des voll-komprimierten 6561-Meso-Layers.
+ * Version 2.8 (Final) - Korrigiert den Array-Übergabefehler beim Laden des Meso-Geländes.
  */
 public class GlobalTerrainImporter {
 
@@ -17,18 +17,20 @@ public class GlobalTerrainImporter {
         MacroMap map = null;
         MacroMapCell currentCell = null;
         String currentSection = "";
+        int mesoRowIndex = 0;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(sourceFile))) {
             String line;
 
             while ((line = reader.readLine()) != null) {
                 line = line.trim();
-
                 if (line.isEmpty() || line.startsWith("#")) continue;
 
                 if (line.startsWith("DIMENSIONS_")) {
                     String[] parts = line.split("_");
-                    map = new MacroMap(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
+                    int width = Integer.parseInt(parts[1]);
+                    int height = Integer.parseInt(parts[2]);
+                    map = new MacroMap(width, height);
                     continue;
                 }
 
@@ -38,6 +40,7 @@ public class GlobalTerrainImporter {
                     int closeBracket = line.indexOf("]");
                     String[] coords = line.substring(11, closeBracket).split(",");
                     currentCell = map.getCell(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
+                    mesoRowIndex = 0;
                     currentSection = "";
                     continue;
                 }
@@ -61,22 +64,21 @@ public class GlobalTerrainImporter {
 
                 switch (currentSection) {
                     case "MESO_LAYER" -> {
-                        // NEU: Entpackt die gigantische fortlaufende Kette
                         List<String> decompressedMeso = unpackRLEStream(line);
                         int tokenIndex = 0;
-                        
-                        // Mappe die 6.561 linearen Einträge zurück in die 81x81 Matrix
-                        for (int mx = 0; mx < 81; mx++) {
-                            for (int my = 0; my < 81; my++) {
+                        for (int my = 0; my < 81; my++) {
+                            for (int mx = 0; mx < 81; mx++) {
                                 if (tokenIndex < decompressedMeso.size()) {
                                     String[] parts = decompressedMeso.get(tokenIndex++).split("-");
                                     if (parts.length == 2) {
-                                        currentCell.setMesoTerrain(mx, my, decodeTerrain(parts[0]));
-                                        currentCell.setMesoBaum(mx, my, decodeBaum(parts[1]));
+                                        // JETZT ABSOLUT KORREKT: Wir übergeben die einzelnen String-Elemente!
+                                        currentCell.setMesoTerrain(mx, my, decodeTerrainToken(parts[0]));
+                                        currentCell.setMesoBaum(mx, my, decodeBaumToken(parts[1]));
                                     }
                                 }
                             }
                         }
+                        mesoRowIndex++;
                     }
                     case "SHRUB_SCHABLONE" -> {
                         if (line.startsWith("shrub_")) {
@@ -91,10 +93,10 @@ public class GlobalTerrainImporter {
                             List<String> decompressedShrubs = unpackRLEStream(dataStream);
 
                             int tokenIndex = 0;
-                            for (int lx = 0; lx < 9; lx++) {
-                                for (int ly = 0; ly < 9; ly++) {
+                            for (int ly = 0; ly < 9; ly++) {
+                                for (int lx = 0; lx < 9; lx++) {
                                     if (tokenIndex < decompressedShrubs.size()) {
-                                        String shrubType = decodeStrauch(decompressedShrubs.get(tokenIndex++));
+                                        String shrubType = decodeStrauchToken(decompressedShrubs.get(tokenIndex++));
                                         currentCell.setMesoStrauchInMischung(mx, my, lx, ly, shrubType);
                                     }
                                 }
@@ -118,8 +120,8 @@ public class GlobalTerrainImporter {
                                 
                                 for (String indexStr : indices) {
                                     int fieldNumber = Integer.parseInt(indexStr);
-                                    int lx = fieldNumber / 9;
-                                    int ly = fieldNumber % 9;
+                                    int ly = fieldNumber / 9;
+                                    int lx = fieldNumber % 9;
                                     currentCell.setMikroTerrainDelta(mx * 9 + lx, my * 9 + ly, code);
                                 }
                             }
@@ -149,33 +151,47 @@ public class GlobalTerrainImporter {
         return tokens;
     }
 
-    private static String decodeTerrain(String code) {
+    private static String decodeTerrainToken(String code) {
         return switch (code) {
-            case "WA", "1" -> "WASSER";
-            case "SA", "2" -> "SAND";
-            case "ST", "3" -> "STEIN";
-            case "SC", "4" -> "SCHNEE";
-            case "GR", "5" -> "GRAS";
-            default -> "GRAS";
+            case "WA", "1"  -> "WATER";
+            case "SA", "2"  -> "SAND";
+            case "MU", "3"  -> "MUD";
+            case "CR", "4"  -> "CRUSHED_ROCK";
+            case "ST", "5"  -> "STONES";
+            case "RO", "6"  -> "ROCK";
+            case "MO", "7"  -> "MOSS";
+            case "GR", "8"  -> "GRASS";
+            case "FO", "9"  -> "FOLIAGE";
+            case "BR", "10" -> "BRUSHWOOD";
+            case "AS", "11" -> "ASH";
+            case "SN", "12" -> "SNOW";
+            case "IC", "13" -> "ICE";
+            default         -> "GRASS";
         };
     }
 
-    private static String decodeBaum(String code) {
+    private static String decodeBaumToken(String code) {
         return switch (code) {
             case "EI" -> "EICHE";
             case "KI" -> "KIEFER";
             case "BI" -> "BIRKE";
-            default -> "KEIN_BAUM";
+            case "BU" -> "BUCHE";
+            case "FI" -> "FICHTE";
+            case "WE" -> "WEIDE";
+            default   -> "KEIN_BAUM";
         };
     }
 
-    private static String decodeStrauch(String token) {
+    private static String decodeStrauchToken(String token) {
         String code = token.replace("S_", "");
         return switch (code) {
             case "ZI" -> "ZIERSTRAUCH";
             case "BE" -> "BEERENSTRAUCH";
             case "FA" -> "FARNE";
-            default -> "KEIN_STRAUCH";
+            case "BR" -> "BROMBEERE";
+            case "HE" -> "HEIDEKRAUT";
+            case "GI" -> "GINSTER";
+            default   -> "KEIN_STRAUCH";
         };
     }
 }

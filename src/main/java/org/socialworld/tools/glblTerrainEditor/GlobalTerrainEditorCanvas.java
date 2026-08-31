@@ -8,7 +8,7 @@ import java.awt.*;
  * Hält den Zustand und delegiert Interaktion und Rendering an die GTE-Klassen.
  */
 public class GlobalTerrainEditorCanvas extends JPanel {
-    private final MacroMap macroMap;
+    private  MacroMap macroMap;
     private final int cellSizeInPixels = 45; 
 
     // Zoom-Zustand und Fokus-Punkte
@@ -45,6 +45,23 @@ public class GlobalTerrainEditorCanvas extends JPanel {
         super.paintComponent(g);
         // Delegiere das komplette Zeichnen an das Grafik-Modul
         renderer.render((Graphics2D) g);
+    }
+
+    /**
+     * Tauscht die aktuelle Karte im laufenden Betrieb aus (z.B. nach dem Laden).
+     * Verhindert das Erzeugen von Mehrfachinstanzen im RAM.
+     */
+    public void setMacroMap(MacroMap newMap) {
+        // Falls du eine interne Variable 'this.macroMap' als final deklariert hast,
+        // entferne das 'final' bei der Variablendeklaration oben in der Klasse!
+        this.macroMap = newMap; 
+        
+        // Setze den Zoom sicherheitshalber auf die Weltkarte zurück
+        this.currentZoom = ZoomLevel.MACRO;
+        this.selectedMacroCell = null;
+        
+        // Erzwinge ein sofortiges Neuzeichnen der neuen Karte
+        this.repaint();
     }
 
     // --- GETTER & SETTER FÜR DIE KOMMUNIKATION DER GTE-MODULE ---

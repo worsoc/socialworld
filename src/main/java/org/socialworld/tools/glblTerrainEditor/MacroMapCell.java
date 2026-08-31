@@ -6,7 +6,6 @@ import java.util.Map;
 /**
  * Speicheroptimierte Version der MacroMapCell.
  * Nutzt eine HashMap für die Strauch-Mischungen (Sparse Storage),
- * um den OutOfMemoryError durch Millionen leerer Array-Referenzen zu verhindern.
  */
 public class MacroMapCell {
     private final int gridX;
@@ -23,7 +22,6 @@ public class MacroMapCell {
     // 2. VEGETATIONS-LAYER
     private final String[][] mesoBaum; 
     
-    // JETZT SPEICHEROPTIMIERT: Keine 4D-Arrays mehr! 
     // Key ist ein komprimierter Integer-Index aus mx und my.
     // Value wird erst erzeugt, wenn tatsächlich ein Strauch gezeichnet wird.
     private final Map<Integer, String[][]> mesoStrauchMap;
