@@ -29,15 +29,49 @@ package org.socialworld.attributes;
  *
  */
 public enum GroundMaterial {
-	sand, 
-	mud,    // German: Schlamm
-	crushedRock,  // German: Schotter
-	stones, 	
-	rock,
-	moss,      // German: Moos
-	grass,
-	foliage,   // German: Laub
-	brushwood, // German: Reisig
-	ash,		// German: Asche
-	water,
+    water(1),        // GTE-ID 1 für WATER
+    sand(2), 
+    mud(3),          // German: Schlamm
+    crushedRock(4),  // German: Schotter
+    stones(5), 	
+    rock(6),
+    moss(7),         // German: Moos
+    grass(8),
+    foliage(9),      // German: Laub
+    brushwood(10),   // German: Reisig
+    ash(11),         // German: Asche
+    snow(12),
+    ice(13);
+
+    // Das feste ID-Feld für das GlobalTerrainEditor-System
+    private final int gteId;
+
+    // Konstruktor für die Zuweisung
+    GroundMaterial(int gteId) {
+        this.gteId = gteId;
+    }
+
+    /**
+     * Liefert die ID, die im GTE-Editor (Positivliste/Dateiformat) genutzt wird.
+     */
+    public int getGteId() {
+        return gteId;
+    }
+
+    /**
+     * Statische Hilfsmethode für deinen Importer im Hauptprojekt.
+     * Findet das passende GroundMaterial anhand der eingelesenen GTE-ID.
+     * 
+     * @param id Die aus der .map-Datei gelesene ID (1 bis 13)
+     * @return Das passende GroundMaterial oder grass als Fallback
+     */
+    public static GroundMaterial fromGteId(int id) {
+        for (GroundMaterial material : GroundMaterial.values()) {
+            if (material.getGteId() == id) {
+                return material;
+            }
+        }
+        return grass; // Fallback, falls ein ungültiger Code eingelesen wird
+    }
 }
+
