@@ -21,7 +21,7 @@ public class GlobalTerrainEditorCanvas extends JPanel {
     // Aktuelle Pinsel- und Werkzeug-Einstellungen
     private String currentMode = "ZOOM"; 
     private double currentBrushElevation = 100.0;
-    private String currentBrushTerrain = "GRAS";
+    private String currentBrushTerrain = GTERenderColorPalette.getTerrainNameFromCode((byte)1);
     private String currentBrushBaum = "KEIN_BAUM";
     private String currentBrushStrauch = "KEIN_STRAUCH";
     private int currentBrushRadius = 1; 

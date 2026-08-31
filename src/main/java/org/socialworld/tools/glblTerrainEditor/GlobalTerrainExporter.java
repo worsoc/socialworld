@@ -17,8 +17,8 @@ public class GlobalTerrainExporter {
             writer.write("# Extended 13 Materials support (including snow & ice)\n");
             writer.write("DIMENSIONS_" + map.getWidth() + "_" + map.getHeight() + "\n\n");
 
-            for (int x = 0; x < map.getWidth(); x++) {
-                for (int y = 0; y < map.getHeight(); y++) {
+            for (int y = 0; y < map.getHeight(); y++) {
+            	for (int x = 0; x < map.getWidth(); x++) {
                     MacroMapCell cell = map.getCell(x, y);
                     
                     writer.write("MACRO_CELL[" + x + "," + y + "] {\n");

@@ -4,9 +4,11 @@ import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.socialworld.attributes.GroundMaterial;
+
 /**
  * Farbpalette (Version 3.3).
- * Enthält alle Farben und Namen für deine 13 GroundMaterials und die erweiterte Fauna.
+ * Enthält alle Farben und Namen für  13 GroundMaterials und die erweiterte Fauna.
  */
 public class GTERenderColorPalette {
 
@@ -35,41 +37,27 @@ public class GTERenderColorPalette {
     }
 
     public static Color getTerrainColor(String type) {
-        return switch (type) {
-            case "WATER"        -> new Color(30, 100, 200);   // Blau
-            case "SAND"         -> new Color(225, 205, 135);  // Helles Gelb
-            case "MUD"          -> new Color(90, 65, 40);     // Schlamm-Braun
-            case "CRUSHED_ROCK" -> new Color(150, 145, 140);  // Helles Schotter-Grau
-            case "STONES"       -> new Color(110, 110, 110);  // Kiesel-Dunkelgrau
-            case "ROCK"         -> new Color(80, 85, 90);     // Fels-Anthrazit
-            case "MOSS"         -> new Color(35, 140, 45);    // Moos-Giftgrün
-            case "GRASS"        -> new Color(50, 150, 70);    // Standard-Gras
-            case "FOLIAGE"      -> new Color(140, 95, 40);    // Herbstlaub-Braun
-            case "BRUSHWOOD"    -> new Color(105, 85, 65);    // Reisig-Holzbraun
-            case "ASH"          -> new Color(55, 55, 55);     // Asche-Schwarzgrau
-            case "SNOW"         -> new Color(245, 245, 250);  // Reines Schnee-Weiß
-            case "ICE"          -> new Color(175, 215, 230);  // Gletscher-Eis
-            default             -> new Color(50, 150, 70);    // Fallback: GRASS
+    	int code = GroundMaterial.fromName(type).getGteId();
+        return switch (code) {
+            case 1        -> new Color(30, 100, 200);   // Blau
+            case 2         -> new Color(225, 205, 135);  // Helles Gelb
+            case 3          -> new Color(90, 65, 40);     // Schlamm-Braun
+            case 4 -> new Color(150, 145, 140);  // Helles Schotter-Grau
+            case 5       -> new Color(110, 110, 110);  // Kiesel-Dunkelgrau
+            case 6         -> new Color(80, 85, 90);     // Fels-Anthrazit
+            case 7         -> new Color(35, 140, 45);    // Moos-Giftgrün
+            case 8        -> new Color(50, 150, 70);    // Standard-Gras
+            case 9      -> new Color(140, 95, 40);    // Herbstlaub-Braun
+            case 10    -> new Color(105, 85, 65);    // Reisig-Holzbraun
+            case 11          -> new Color(55, 55, 55);     // Asche-Schwarzgrau
+            case 12         -> new Color(245, 245, 250);  // Reines Schnee-Weiß
+            case 13          -> new Color(175, 215, 230);  // Gletscher-Eis
+            default             -> new Color(30, 100, 200);    // Fallback: Water
         };
     }
 
     public static String getTerrainNameFromCode(byte code) {
-        return switch (code) {
-            case 1  -> "WATER";
-            case 2  -> "SAND";
-            case 3  -> "MUD";
-            case 4  -> "CRUSHED_ROCK";
-            case 5  -> "STONES";
-            case 6  -> "ROCK";
-            case 7  -> "MOSS";
-            case 8  -> "GRASS";
-            case 9  -> "FOLIAGE";
-            case 10 -> "BRUSHWOOD";
-            case 11 -> "ASH";
-            case 12 -> "SNOW";
-            case 13 -> "ICE";
-            default -> "GRASS";
-        };
+    	return GroundMaterial.fromGteId(code).toString().toUpperCase();
     }
 
     public static Color getDominantShrubColor(MacroMapCell cell, int mx, int my) {

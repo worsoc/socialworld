@@ -21,6 +21,14 @@
 */
 package org.socialworld.attributes;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * The enumeration GroundMaterial holds all ground materials
  *   that can be set to a map's ground property
@@ -32,7 +40,7 @@ public enum GroundMaterial {
     water(1),        // GTE-ID 1 für WATER
     sand(2), 
     mud(3),          // German: Schlamm
-    crushedRock(4),  // German: Schotter
+    crushedrock(4),  // German: Schotter
     stones(5), 	
     rock(6),
     moss(7),         // German: Moos
@@ -42,6 +50,31 @@ public enum GroundMaterial {
     ash(11),         // German: Asche
     snow(12),
     ice(13);
+
+    private static final List<String> UPPERCASE_NAMES;
+    private static final Set<String> LOWERCASE_NAMES;
+    private static final Map<Integer, GroundMaterial> INDEX_MAP;
+    private static final List<String> CACHED_NAME_LIST;
+
+    static {
+        List<String> upper = new ArrayList<>();
+        Set<String> lower = new HashSet<>();
+        Map<Integer, GroundMaterial> indices = new HashMap<>();
+        List<String> list = new ArrayList<>();
+
+        for (GroundMaterial a : GroundMaterial.values()) {
+            String name = a.toString();
+                upper.add(name.toUpperCase());
+                lower.add(name.toLowerCase());
+                list.add(name);
+            indices.put(a.getGteId(), a);
+        }
+
+        UPPERCASE_NAMES = Collections.unmodifiableList(upper);
+        LOWERCASE_NAMES = Collections.unmodifiableSet(lower);
+        INDEX_MAP = Collections.unmodifiableMap(indices);
+        CACHED_NAME_LIST = Collections.unmodifiableList(list);
+    }
 
     // Das feste ID-Feld für das GlobalTerrainEditor-System
     private final int gteId;
@@ -71,7 +104,30 @@ public enum GroundMaterial {
                 return material;
             }
         }
-        return grass; // Fallback, falls ein ungültiger Code eingelesen wird
+        return water; // Fallback, falls ein ungültiger Code eingelesen wird
+    }
+    
+	public static GroundMaterial fromName(String name) {
+        if (name == null) return null;
+        try {
+            return GroundMaterial.valueOf(name.toLowerCase());
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+	}
+
+    public static String[] getUpperCaseNames() {
+    	String[] result = new String[count()];
+    	int index = 0;
+        for (GroundMaterial material : GroundMaterial.values()) {
+        	result[index] = material.toString().toUpperCase();
+        	index++;
+        }
+        return result;
+    }
+    
+    public static int count() {
+    	return GroundMaterial.values().length;
     }
 }
 

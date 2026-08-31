@@ -3,6 +3,9 @@ package org.socialworld.tools.glblTerrainEditor;
 import java.io.File;
 
 import javax.swing.*;
+
+import org.socialworld.attributes.GroundMaterial;
+
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -72,9 +75,8 @@ public class GlobalTerrainEditor extends JFrame {
         // KORREKTUR: Alle 13 GroundMaterials gelistet
         JPanel panelTerrain = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panelTerrain.add(new JLabel("Boden-Typ:"));
-        JComboBox<String> terrainBox = new JComboBox<>(new String[]{
-            "GRASS", "SAND", "MUD", "CRUSHED_ROCK", "STONES", "ROCK", "MOSS", "FOLIAGE", "BRUSHWOOD", "ASH", "WATER", "SNOW", "ICE"
-        });
+        String[] terrainElems = GroundMaterial.getUpperCaseNames();
+        JComboBox<String> terrainBox = new JComboBox<>(terrainElems);
         panelTerrain.add(terrainBox);
 
         // KORREKTUR: Alle erweiterten Bäume gelistet

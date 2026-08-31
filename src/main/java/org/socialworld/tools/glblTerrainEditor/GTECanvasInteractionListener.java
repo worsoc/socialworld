@@ -2,6 +2,9 @@ package org.socialworld.tools.glblTerrainEditor;
 
 
 import javax.swing.*;
+
+import org.socialworld.attributes.GroundMaterial;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -169,22 +172,7 @@ public class GTECanvasInteractionListener extends MouseAdapter {
                         int globalMikroY = my * 9 + ly;
 
                         if (canvas.getCurrentMode().equals("TERRAIN")) {
-                            byte code = switch (canvas.getCurrentBrushTerrain()) {
-                                case "WATER"        -> (byte) 1;
-                                case "SAND"         -> (byte) 2;
-                                case "MUD"          -> (byte) 3;
-                                case "CRUSHED_ROCK" -> (byte) 4;
-                                case "STONES"       -> (byte) 5;
-                                case "ROCK"         -> (byte) 6;
-                                case "MOSS"         -> (byte) 7;
-                                case "GRASS"        -> (byte) 8;
-                                case "FOLIAGE"      -> (byte) 9;
-                                case "BRUSHWOOD"    -> (byte) 10;
-                                case "ASH"          -> (byte) 11;
-                                case "SNOW"         -> (byte) 12;
-                                case "ICE"          -> (byte) 13;
-                                default             -> (byte) 0;
-                            };
+                            byte code = (byte)GroundMaterial.fromName(canvas.getCurrentBrushTerrain()).getGteId();
                             selectedCell.setMikroTerrainDelta(globalMikroX, globalMikroY, code);
                         } else if (canvas.getCurrentMode().equals("STRAUCH")) {
                             selectedCell.setMesoStrauchInMischung(mx, my, lx, ly, canvas.getCurrentBrushStrauch());

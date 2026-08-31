@@ -167,7 +167,7 @@ public class MacroMapCell {
 
         // --- LAYER 2: TERRAIN (Berücksichtigt die TERRAIN_DELTA Positivliste)
         byte deltaCode = this.getMikroTerrainDelta(globalMikroX, globalMikroY);
-        String terrain = (deltaCode == 0) ? this.getMesoTerrain(mx, my) : decodeTerrainCode(deltaCode);
+        String terrain = (deltaCode == 0) ? this.getMesoTerrain(mx, my) : GTERenderColorPalette.getTerrainNameFromCode(deltaCode);
 
         // --- LAYER 3: BAUM (Meso-Ebene) ---
         String baum = this.getMesoBaum(mx, my);
@@ -189,16 +189,5 @@ public class MacroMapCell {
         );
     }
 
-    // Kleine interne Hilfsmethode für den Klartext
-    private String decodeTerrainCode(byte code) {
-        return switch (code) {
-            case 1 -> "WASSER";
-            case 2 -> "SAND";
-            case 3 -> "STEIN";
-            case 4 -> "SCHNEE";
-            case 5 -> "GRAS";
-            default -> "UNBEKANNT";
-        };
-    }
 
 }

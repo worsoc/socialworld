@@ -16,7 +16,7 @@ public class MacroMap {
         
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                matrix[x][y] = new MacroMapCell(x, y, 0.0, "GRAS");
+                matrix[x][y] = new MacroMapCell(x, y, 0.0, GTERenderColorPalette.getTerrainNameFromCode((byte)1));
             }
         }
     }

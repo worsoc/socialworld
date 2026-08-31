@@ -153,20 +153,20 @@ public class GlobalTerrainImporter {
 
     private static String decodeTerrainToken(String code) {
         return switch (code) {
-            case "WA", "1"  -> "WATER";
-            case "SA", "2"  -> "SAND";
-            case "MU", "3"  -> "MUD";
-            case "CR", "4"  -> "CRUSHED_ROCK";
-            case "ST", "5"  -> "STONES";
-            case "RO", "6"  -> "ROCK";
-            case "MO", "7"  -> "MOSS";
-            case "GR", "8"  -> "GRASS";
-            case "FO", "9"  -> "FOLIAGE";
-            case "BR", "10" -> "BRUSHWOOD";
-            case "AS", "11" -> "ASH";
-            case "SN", "12" -> "SNOW";
-            case "IC", "13" -> "ICE";
-            default         -> "GRASS";
+            case "WA", "1"  -> GTERenderColorPalette.getTerrainNameFromCode((byte)1);
+            case "SA", "2"  -> GTERenderColorPalette.getTerrainNameFromCode((byte)2);
+            case "MU", "3"  -> GTERenderColorPalette.getTerrainNameFromCode((byte)3);
+            case "CR", "4"  -> GTERenderColorPalette.getTerrainNameFromCode((byte)4);
+            case "ST", "5"  -> GTERenderColorPalette.getTerrainNameFromCode((byte)5);
+            case "RO", "6"  -> GTERenderColorPalette.getTerrainNameFromCode((byte)6);
+            case "MO", "7"  -> GTERenderColorPalette.getTerrainNameFromCode((byte)7);
+            case "GR", "8"  -> GTERenderColorPalette.getTerrainNameFromCode((byte)8);
+            case "FO", "9"  -> GTERenderColorPalette.getTerrainNameFromCode((byte)9);
+            case "BR", "10" -> GTERenderColorPalette.getTerrainNameFromCode((byte)10);
+            case "AS", "11" -> GTERenderColorPalette.getTerrainNameFromCode((byte)11);
+            case "SN", "12" -> GTERenderColorPalette.getTerrainNameFromCode((byte)12);
+            case "IC", "13" -> GTERenderColorPalette.getTerrainNameFromCode((byte)11);
+            default         -> GTERenderColorPalette.getTerrainNameFromCode((byte)1);
         };
     }
 
