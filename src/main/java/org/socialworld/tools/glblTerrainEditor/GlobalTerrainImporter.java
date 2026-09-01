@@ -153,13 +153,14 @@ public class GlobalTerrainImporter {
 
     private static String decodeTerrainToken(String code) {
         return switch (code) {
+        	case "SW", "0"  -> GTERenderColorPalette.getTerrainNameFromCode((byte)0);
             case "WA", "1"  -> GTERenderColorPalette.getTerrainNameFromCode((byte)1);
             case "SA", "2"  -> GTERenderColorPalette.getTerrainNameFromCode((byte)2);
             case "MU", "3"  -> GTERenderColorPalette.getTerrainNameFromCode((byte)3);
             case "CR", "4"  -> GTERenderColorPalette.getTerrainNameFromCode((byte)4);
             case "ST", "5"  -> GTERenderColorPalette.getTerrainNameFromCode((byte)5);
-            case "RO", "6"  -> GTERenderColorPalette.getTerrainNameFromCode((byte)6);
-            case "MO", "7"  -> GTERenderColorPalette.getTerrainNameFromCode((byte)7);
+            case "RK", "6"  -> GTERenderColorPalette.getTerrainNameFromCode((byte)6);
+            case "MS", "7"  -> GTERenderColorPalette.getTerrainNameFromCode((byte)7);
             case "GR", "8"  -> GTERenderColorPalette.getTerrainNameFromCode((byte)8);
             case "FO", "9"  -> GTERenderColorPalette.getTerrainNameFromCode((byte)9);
             case "BR", "10" -> GTERenderColorPalette.getTerrainNameFromCode((byte)10);

@@ -8,7 +8,7 @@ import org.socialworld.attributes.GroundMaterial;
 
 /**
  * Farbpalette (Version 3.3).
- * Enthält alle Farben und Namen für  13 GroundMaterials und die erweiterte Fauna.
+ * Enthält alle Farben und Namen für  14 GroundMaterials und die erweiterte Fauna.
  */
 public class GTERenderColorPalette {
 
@@ -39,6 +39,7 @@ public class GTERenderColorPalette {
     public static Color getTerrainColor(String type) {
     	int code = GroundMaterial.fromName(type).getGteId();
         return switch (code) {
+        	case 0       -> new Color(30, 100, 200);   // Blau
             case 1        -> new Color(30, 100, 200);   // Blau
             case 2         -> new Color(225, 205, 135);  // Helles Gelb
             case 3          -> new Color(90, 65, 40);     // Schlamm-Braun
@@ -52,7 +53,7 @@ public class GTERenderColorPalette {
             case 11          -> new Color(55, 55, 55);     // Asche-Schwarzgrau
             case 12         -> new Color(245, 245, 250);  // Reines Schnee-Weiß
             case 13          -> new Color(175, 215, 230);  // Gletscher-Eis
-            default             -> new Color(30, 100, 200);    // Fallback: Water
+            default             -> new Color(30, 100, 200);    // Fallback: SaltWater
         };
     }
 
@@ -76,4 +77,5 @@ public class GTERenderColorPalette {
         }
         return getStrauchColor(dominant);
     }
+    
 }

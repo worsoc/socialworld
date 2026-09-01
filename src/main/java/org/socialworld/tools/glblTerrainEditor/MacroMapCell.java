@@ -44,8 +44,16 @@ public class MacroMapCell {
             for (int y = 0; y < MESO_GRID_SIZE; y++) {
                 mesoTerrain[x][y] = coverType;
                 mesoBaum[x][y] = "KEIN_BAUM";
+             }
+        }
+        
+        // Initialisierung des Gelände-Deltas: initial 99 für kein Delta, also Erben
+        for (int x = 0; x < MESO_GRID_SIZE * 9; x++) {
+            for (int y = 0; y < MESO_GRID_SIZE * 9; y++) {
+                mikroTerrainDelta[x][y] = 99;  // für Erben von Meso
             }
         }
+
     }
 
     /**
@@ -167,7 +175,7 @@ public class MacroMapCell {
 
         // --- LAYER 2: TERRAIN (Berücksichtigt die TERRAIN_DELTA Positivliste)
         byte deltaCode = this.getMikroTerrainDelta(globalMikroX, globalMikroY);
-        String terrain = (deltaCode == 0) ? this.getMesoTerrain(mx, my) : GTERenderColorPalette.getTerrainNameFromCode(deltaCode);
+        String terrain = (deltaCode == 99) ? this.getMesoTerrain(mx, my) : GTERenderColorPalette.getTerrainNameFromCode(deltaCode);
 
         // --- LAYER 3: BAUM (Meso-Ebene) ---
         String baum = this.getMesoBaum(mx, my);
@@ -184,7 +192,7 @@ public class MacroMapCell {
             "  -> Kronendach (Baum): %s\n" +
             "  -> Unterholz (Strauch): %s",
             globalMikroX, globalMikroY, hoehe, mx, my, terrain, 
-            (deltaCode != 0 ? "(Generiert via TERRAIN_DELTA)" : "(Geerbt von Meso)"),
+            (deltaCode != 99 ? "(Generiert via TERRAIN_DELTA)" : "(Geerbt von Meso)"),
             baum, strauch
         );
     }

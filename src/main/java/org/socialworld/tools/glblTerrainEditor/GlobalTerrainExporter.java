@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.attributes.GroundMaterial;
+
 public class GlobalTerrainExporter {
 
     public static void exportMap(MacroMap map, File targetFile) throws IOException {
@@ -30,7 +32,7 @@ public class GlobalTerrainExporter {
                     List<String> allMesoTokens = new ArrayList<>();
                     for (int my = 0; my < 81; my++) {
                         for (int mx = 0; mx < 81; mx++) {
-                            String terrain = cell.getMesoTerrain(mx, my).substring(0, 2);
+                            String terrain = GroundMaterial.getAbbreviation(GroundMaterial.fromName(cell.getMesoTerrain(mx, my)).getGteId());
                             String baum = cell.getMesoBaum(mx, my).substring(0, 2);
                             allMesoTokens.add(terrain + "-" + baum);
                         }
@@ -62,7 +64,7 @@ public class GlobalTerrainExporter {
                     for (int my = 0; my < 81; my++) {
                         for (int mx = 0; mx < 81; mx++) {
                             StringBuilder cellDeltaBuilder = new StringBuilder();
-                            for (byte code = 1; code <= 13; code++) { // Scannt alle 13 IDs
+                            for (byte code = 0; code < GroundMaterial.count(); code++) { // Scannt alle  IDs
                                 List<Integer> indices = new ArrayList<>();
                                 for (int ly = 0; ly < 9; ly++) {
                                     for (int lx = 0; lx < 9; lx++) {

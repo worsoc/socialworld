@@ -37,6 +37,7 @@ import java.util.Set;
  *
  */
 public enum GroundMaterial {
+    saltwater(0),      
     water(1),        // GTE-ID 1 für WATER
     sand(2), 
     mud(3),          // German: Schlamm
@@ -129,5 +130,27 @@ public enum GroundMaterial {
     public static int count() {
     	return GroundMaterial.values().length;
     }
+    
+    public static String getAbbreviation(int code) {
+        return switch (code) {
+    	case 0       -> "SW";   // SALTWATER
+        case 1        -> "WA"; // WATER
+        case 2        -> "SA";     // SAND-Braun
+        case 3        -> "MU";     // MUD
+        case 4 		-> "CR";  // CRUSHEDROCK
+        case 5       -> "ST";  // STONE
+        case 6         -> "RK";     // ROCK
+        case 7         -> "MS";    // MOSS
+        case 8        -> "GR";    // GRASS
+        case 9      -> "FO";    // FOLIAGE
+        case 10    -> "BR";    // BRUSHWOOD
+        case 11          -> "AS";     // ASH
+        case 12         -> "SN";  // SNOW
+        case 13          -> "IC";  // ICE
+        default             -> "SW";    // Fallback: SaltWater
+        };
+   	
+    }
+
 }
 
