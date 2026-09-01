@@ -12,14 +12,15 @@ import java.awt.event.MouseEvent;
 
 public class GlobalTerrainEditor extends JFrame {
     private final JLabel statusBar;
-
+    JRadioButton rbZoom;
+    
     public GlobalTerrainEditor() {
         setTitle("GlobalTerrain Layer Editor (729m Fraktales Grid)");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
         MacroMap map = new MacroMap(32, 32); 
-        GlobalTerrainEditorCanvas canvas = new GlobalTerrainEditorCanvas(map);
+        GlobalTerrainEditorCanvas canvas = new GlobalTerrainEditorCanvas(map, this);
         JScrollPane scrollPane = new JScrollPane(canvas);
         add(scrollPane, BorderLayout.CENTER);
 
@@ -45,6 +46,7 @@ public class GlobalTerrainEditor extends JFrame {
         sidebar.add(Box.createVerticalStrut(8));
         
         JRadioButton modeZoom = new JRadioButton("Zoom / Navigation", true); 
+        this.rbZoom = modeZoom;
         JRadioButton modeElevation = new JRadioButton("Höhe bearbeiten");
         JRadioButton modeTerrain = new JRadioButton("Terrain zuweisen");
         JRadioButton modeBaum = new JRadioButton("Baum platzieren");   

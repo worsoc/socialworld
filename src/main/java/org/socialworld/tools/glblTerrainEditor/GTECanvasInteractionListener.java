@@ -10,10 +10,12 @@ import java.awt.event.MouseEvent;
 
 public class GTECanvasInteractionListener extends MouseAdapter {
     private final GlobalTerrainEditorCanvas canvas;
-
-    public GTECanvasInteractionListener(GlobalTerrainEditorCanvas canvas) {
+    private final GlobalTerrainEditor editor;
+    	
+    public GTECanvasInteractionListener(GlobalTerrainEditorCanvas canvas, GlobalTerrainEditor editor) {
         this.canvas = canvas;
-    }
+        this.editor = editor;
+   }
 
     @Override
     public void mousePressed(MouseEvent e) {
@@ -67,6 +69,8 @@ public class GTECanvasInteractionListener extends MouseAdapter {
             canvas.setCurrentZoom(GlobalTerrainEditorCanvas.ZoomLevel.MACRO);
             canvas.setSelectedMacroCell(null);
         }
+        editor.rbZoom.setSelected(true);
+        canvas.setEditorMode("ZOOM");
         canvas.repaint();
     }
 

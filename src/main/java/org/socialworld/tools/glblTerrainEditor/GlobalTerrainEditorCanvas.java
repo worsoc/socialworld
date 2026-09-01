@@ -8,7 +8,8 @@ import java.awt.*;
  * Hält den Zustand und delegiert Interaktion und Rendering an die GTE-Klassen.
  */
 public class GlobalTerrainEditorCanvas extends JPanel {
-    private  MacroMap macroMap;
+    private final GlobalTerrainEditor editor;
+   private  MacroMap macroMap;
     private final int cellSizeInPixels = 45; 
 
     // Zoom-Zustand und Fokus-Punkte
@@ -29,13 +30,14 @@ public class GlobalTerrainEditorCanvas extends JPanel {
     // Die neuen, spezialisierten GTE-Module
     private final GTECanvasRenderer renderer;
 
-    public GlobalTerrainEditorCanvas(MacroMap macroMap) {
-        this.macroMap = macroMap;
+    public GlobalTerrainEditorCanvas(MacroMap macroMap, GlobalTerrainEditor editor) {
+    	this.editor = editor;
+    	this.macroMap = macroMap;
         this.renderer = new GTECanvasRenderer(this);
         setBackground(Color.DARK_GRAY);
 
         // Instanziiere und registriere den neuen Eingabe-Controller
-        GTECanvasInteractionListener listener = new GTECanvasInteractionListener(this);
+        GTECanvasInteractionListener listener = new GTECanvasInteractionListener(this, editor);
         addMouseListener(listener);
         addMouseMotionListener(listener);
     }
