@@ -166,7 +166,7 @@ public class GlobalTerrainImporter {
             case "BR", "10" -> GTERenderColorPalette.getTerrainNameFromCode((byte)10);
             case "AS", "11" -> GTERenderColorPalette.getTerrainNameFromCode((byte)11);
             case "SN", "12" -> GTERenderColorPalette.getTerrainNameFromCode((byte)12);
-            case "IC", "13" -> GTERenderColorPalette.getTerrainNameFromCode((byte)11);
+            case "IC", "13" -> GTERenderColorPalette.getTerrainNameFromCode((byte)13);
             default         -> GTERenderColorPalette.getTerrainNameFromCode((byte)1);
         };
     }

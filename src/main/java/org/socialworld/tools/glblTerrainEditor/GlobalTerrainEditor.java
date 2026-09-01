@@ -108,7 +108,7 @@ public class GlobalTerrainEditor extends JFrame {
         baumBox.addActionListener(e -> canvas.setBrushBaum((String) baumBox.getSelectedItem()));
         strauchBox.addActionListener(e -> canvas.setBrushStrauch((String) strauchBox.getSelectedItem()));
 
-        JButton saveButton = new JButton("Karte Exportieren...");
+        JButton saveButton = new JButton("save map ...");
         saveButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         saveButton.setBackground(new Color(40, 110, 45)); 
         saveButton.setForeground(Color.WHITE);
@@ -133,7 +133,7 @@ public class GlobalTerrainEditor extends JFrame {
             }
         });
         
-        JButton loadButton = new JButton("Karte Laden...");
+        JButton loadButton = new JButton("load map ...");
         loadButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         loadButton.setBackground(new Color(50, 100, 160)); loadButton.setForeground(Color.WHITE);
  

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.socialworld.attributes.GroundMaterial;
+import org.socialworld.visualize.SimColorConstants;
 
 /**
  * Farbpalette (Version 3.3).
@@ -14,46 +15,46 @@ public class GTERenderColorPalette {
 
     public static Color getBaumColor(String baumType) {
         return switch (baumType) {
-            case "EICHE"  -> new Color(34, 110, 34);    // Sattes Waldgrün
-            case "KIEFER" -> new Color(15, 75, 45);     // Dunkles Nadelgrün
-            case "BIRKE"  -> new Color(95, 165, 80);    // Helles Frühlingsgrün
-            case "BUCHE"  -> new Color(50, 120, 20);    // Klassisches Laubgrün
-            case "FICHTE" -> new Color(20, 60, 40);     // Bläuliches Dunkelgrün
-            case "WEIDE"  -> new Color(110, 150, 100);  // Silbrig-blasses Grün
-            default       -> new Color(40, 120, 50);
+            case "EICHE"  -> SimColorConstants.COLOR_FORESTGREEN;   
+            case "KIEFER" -> SimColorConstants.COLOR_DARKGREEN;    
+            case "BIRKE"  -> SimColorConstants.COLOR_LIGHTGREEN;    
+            case "BUCHE"  -> SimColorConstants.COLOR_MEDIUMSPRINGGREEN;    
+            case "FICHTE" -> SimColorConstants.COLOR_PALEGREEN;    
+            case "WEIDE"  -> SimColorConstants.COLOR_OLIVE;  
+            default       -> SimColorConstants.COLOR_FORESTGREEN;
         };
     }
 
     public static Color getStrauchColor(String strauchType) {
         return switch (strauchType) {
-            case "FARNE"         -> new Color(0, 210, 100);     // Leuchtendes Farn-Smaragdgrün
-            case "ZIERSTRAUCH"   -> new Color(190, 240, 0);     // Knalliges Neongrün/Limette
-            case "BEERENSTRAUCH" -> new Color(220, 20, 60);     // Kräftiges Beeren-Rot
-            case "BROMBEERE"     -> new Color(160, 30, 220);    // Intensives Violett
-            case "HEIDEKRAUT"    -> new Color(240, 80, 180);    // Knalliges lila-pink
-            case "GINSTER"       -> new Color(255, 215, 0);     // Leuchtendes Goldgelb
-            default              -> new Color(60, 130, 50);
+            case "FARNE"         -> SimColorConstants.COLOR_LIMEGREEN;    
+            case "ZIERSTRAUCH"   -> SimColorConstants.COLOR_LIME;   
+            case "BEERENSTRAUCH" -> SimColorConstants.COLOR_MEDIUMORCHID;  
+            case "BROMBEERE"     -> SimColorConstants.COLOR_DARKVIOLET;    
+            case "HEIDEKRAUT"    -> SimColorConstants.COLOR_DARKMAGENTA;  
+            case "GINSTER"       -> SimColorConstants.COLOR_PEACHPUFF;   
+            default              -> SimColorConstants.COLOR_LIMEGREEN;
         };
     }
 
     public static Color getTerrainColor(String type) {
     	int code = GroundMaterial.fromName(type).getGteId();
         return switch (code) {
-        	case 0       -> new Color(30, 100, 200);   // Blau
-            case 1        -> new Color(30, 100, 200);   // Blau
-            case 2         -> new Color(225, 205, 135);  // Helles Gelb
-            case 3          -> new Color(90, 65, 40);     // Schlamm-Braun
-            case 4 -> new Color(150, 145, 140);  // Helles Schotter-Grau
-            case 5       -> new Color(110, 110, 110);  // Kiesel-Dunkelgrau
-            case 6         -> new Color(80, 85, 90);     // Fels-Anthrazit
-            case 7         -> new Color(35, 140, 45);    // Moos-Giftgrün
-            case 8        -> new Color(50, 150, 70);    // Standard-Gras
-            case 9      -> new Color(140, 95, 40);    // Herbstlaub-Braun
-            case 10    -> new Color(105, 85, 65);    // Reisig-Holzbraun
-            case 11          -> new Color(55, 55, 55);     // Asche-Schwarzgrau
-            case 12         -> new Color(245, 245, 250);  // Reines Schnee-Weiß
-            case 13          -> new Color(175, 215, 230);  // Gletscher-Eis
-            default             -> new Color(30, 100, 200);    // Fallback: SaltWater
+        	case 0       -> SimColorConstants.COLOR_MEDIUMBLUE;  
+            case 1        -> SimColorConstants.COLOR_SLATEBLUE; 
+            case 2         -> SimColorConstants.COLOR_LIGHT_YELLOW1;  
+            case 3          -> SimColorConstants.COLOR_SADDLSEBROWN;     
+            case 4 -> SimColorConstants.COLOR_LIGHTSLATEGRAY; 
+            case 5       -> SimColorConstants.COLOR_SLATEGRAY; 
+            case 6         -> SimColorConstants.COLOR_DARKGRAY;   
+            case 7         -> SimColorConstants.COLOR_MEDIUMSEAGREEN;    
+            case 8        -> SimColorConstants.COLOR_GREEN;   
+            case 9      -> SimColorConstants.COLOR_BURLYWOOD; 
+            case 10    -> SimColorConstants.COLOR_PERU;  
+            case 11          -> SimColorConstants.COLOR_DIMGRAY;    
+            case 12         -> SimColorConstants.COLOR_SNOW; 
+            case 13          -> SimColorConstants.COLOR_POWDERBLUE;  
+            default             -> SimColorConstants.COLOR_MEDIUMBLUE;    // Fallback: SaltWater
         };
     }
 
