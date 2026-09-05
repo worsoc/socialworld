@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MapPanel extends JPanel {
-    private final VisualTile[][] mapGrid;
+    private VisualTile[][] mapGrid;
     private final int gridSize;
     private final int tilePixels = 40;
     private int rotationState = 0;
@@ -17,6 +17,11 @@ public class MapPanel extends JPanel {
     public void setRotation(int rotationState) {
         this.rotationState = rotationState;
         repaint();
+    }
+
+    public void updateMapData(VisualTile[][] newGrid) {
+        this.mapGrid = newGrid; // Ersetze das alte Grid mit dem neuen
+        repaint();              // Swing anweisen, das Panel neu zu zeichnen
     }
 
     @Override
