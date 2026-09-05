@@ -8,8 +8,9 @@ public class MapVisualizer extends JFrame {
     private static final int GRID_SIZE = 9;
     
     private MapPanel mapPanel;
-    // Speicherort für das zuletzt genutzte Verzeichnis merken (Standard: aktueller Ordner ".")
-    private File lastDirectory = new File(".");
+    
+    // STARTET IM HOME-VERZEICHNIS DES BENUTZERS (z. B. /home/benutzername) statt im Git-Projektordner
+    private File lastDirectory = new File(System.getProperty("user.home"));
 
     public MapVisualizer() {
         setTitle("3D Map Visualizer");
@@ -34,13 +35,13 @@ public class MapVisualizer extends JFrame {
         fileChooser.setDialogTitle("Wähle deine Map-Datei aus");
         fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Textdateien (*.txt)", "txt"));
         
-        // Hier übergeben wir das gemerkte Verzeichnis an den FileChooser
+        // Nutzt das sicher ausgelagerte Verzeichnis
         fileChooser.setCurrentDirectory(lastDirectory);
 
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
             
-            // WICHTIG: Das übergeordnete Verzeichnis der ausgewählten Datei für das nächste Mal merken
+            // Merkt sich den Ordner außerhalb des Repos für das nächste Mal
             lastDirectory = selectedFile.getParentFile();
 
             VisualTile[][] mapGrid = MapLoader.loadMapData(selectedFile.getAbsolutePath(), GRID_SIZE);
