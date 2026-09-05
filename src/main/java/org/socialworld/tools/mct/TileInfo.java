@@ -75,13 +75,13 @@ public class TileInfo {
 			case 5:
 				return " steigend von der Kante West zur Kante Ost.";
 			case 6:
-				return " steigend von Ecke SuedWest zur Mitteldiagonalen , steigend von Ecke NordOst zur Mitteldiagonalen"; 
+				return " steigend von Ecke NordWest zur Mitteldiagonalen , steigend von Ecke SuedOst zur Mitteldiagonalen"; 
 			case 7:
 				return " steigend von der Ecke NordWest auf die Mitteldiagonale und verlaeuft eben nach SuedOst";
 			case 8:
 				return " steigend von der Mitteldiagonalen in die Ecke NordWest.";
 			case 9:
-				return " steigend von Ecke NordWest zur Mitteldiagonalen , steigend von Ecke SuedOst zur Mitteldiagonalen"; 
+				return " steigend von Ecke SuedWest zur Mitteldiagonalen , steigend von Ecke NordOst zur Mitteldiagonalen"; 
 			case 10:
 				return " steigend von der Kante Ost zur Kante West.";
 			case 11:
