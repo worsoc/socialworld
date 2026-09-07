@@ -184,6 +184,8 @@ public class HeightChangeChecker {
 	
 	private int getOffsetNumber(Tile tile) {
 		
+		if (tile == null) return -999;
+		
 		int offsetNumber = tile.getNumber();
 		
 		switch (tile.getFeelAsTileType()) {

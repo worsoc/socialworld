@@ -813,7 +813,14 @@ public class MapCreationTool {
 	////////////////////////////////////////////////////////////////
 	
 	private void saveTotal() {
+		String filename =  "tileterm_save.txt";
+		saveTotal(filename, false);
+	}
+	
+	private void saveTotal(String filename, boolean ignoreInvalid) {
 
+		boolean valid = false;
+		
 		clearInfoFieldOben();
 		clearInfoFieldMitte();
 		
@@ -832,15 +839,31 @@ public class MapCreationTool {
 	
 		infoFieldUnten.setText("");
 		
+		
+		for (int i = 0; i < 81; i++) {
+			
+			if ( (raster[i].getTileType() == TileType.todo) ) {
+				// todo --> don't save
+				return;
+			}
+		}
+
+		
+		
 		saveTileTermIntern();
 		
-		String filename =  "tileterm_save.txt";
 		try
 		{
-			// false ... replace
-			BufferedWriter writer = new BufferedWriter(new FileWriter(filename, false));
-			writer.write(tileTerm.toString());
-			writer.close();
+			
+			String filetext = tileTerm.toString();
+			valid = !filetext.contains("TODO") && !filetext.contains("-999");
+
+			if (valid || !ignoreInvalid) {
+				// false ... replace
+				BufferedWriter writer = new BufferedWriter(new FileWriter(filename, false));
+				writer.write(filetext);
+				writer.close();
+			}
 			
 		}
 		
@@ -1781,6 +1804,20 @@ public class MapCreationTool {
 	}		
 	
 	void generate() {
+		
+		String time =  java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss")) ;
+		String filename;
+		int i;
+		for (i = 1; i < 100; i++) {
+			clearRaster();
+			generate1Map();
+			
+			filename = "tileterm_save_" + String.valueOf(i) + "_" + time + ".txt";
+			saveTotal(filename, true /* don't save invalids */);
+		}
+	}
+	
+	private void generate1Map() {
 		
 		final int rasterSize = 81;
 		boolean trackBack = false;
