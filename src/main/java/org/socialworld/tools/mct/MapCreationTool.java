@@ -45,8 +45,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.awt.event.ActionEvent;
 
@@ -90,7 +92,7 @@ public class MapCreationTool {
 	JButton buttonZoomOut;
 	JButton buttonChooseTile;
 	JButton buttonReduceToChoosableTiles;
-	JButton buttonInfo;
+	JButton buttonFillMap;
 	JButton buttonClear;
 	JButton buttonGenerate;
 	JButton buttonClearAll;
@@ -544,9 +546,7 @@ public class MapCreationTool {
 			
 			
 			fillTileRaster();
-			
-			// zoomIn wieder raus, auf Info, damit man sich nix kaputt macht
-			info();
+			modus = modus.info;
 		}
 	}
 	
@@ -831,7 +831,7 @@ public class MapCreationTool {
 		
 		buttonReduceToChoosableTiles.setBorder(buttonBorder);
 		buttonChooseTile.setBorder(buttonBorder);
-		buttonInfo.setBorder(buttonBorder);
+		buttonFillMap.setBorder(buttonBorder);
 		buttonClear.setBorder(buttonBorder);
 		buttonZoomIn.setBorder(buttonBorder);
 		
@@ -887,7 +887,7 @@ public class MapCreationTool {
 		
 		buttonReduceToChoosableTiles.setBorder(buttonBorder);
 		buttonChooseTile.setBorder(buttonBorder);
-		buttonInfo.setBorder(buttonBorder);
+		buttonFillMap.setBorder(buttonBorder);
 		buttonClear.setBorder(buttonBorder);
 		buttonZoomIn.setBorder(buttonBorder);
 		
@@ -937,7 +937,7 @@ public class MapCreationTool {
 		
 		buttonReduceToChoosableTiles.setBorder(buttonBorder);
 		buttonChooseTile.setBorder(buttonBorder);
-		buttonInfo.setBorder(buttonBorder);
+		buttonFillMap.setBorder(buttonBorder);
 		buttonClear.setBorder(buttonBorder);
 		buttonZoomIn.setBorder(buttonBorder);
 		
@@ -991,7 +991,7 @@ public class MapCreationTool {
 		
 		buttonReduceToChoosableTiles.setBorder(buttonBorder);
 		buttonChooseTile.setBorder(buttonBorder);
-		buttonInfo.setBorder(buttonBorder);
+		buttonFillMap.setBorder(buttonBorder);
 		buttonClear.setBorder(buttonBorder);
 		buttonZoomIn.setBorder(buttonBorder);
 		
@@ -999,24 +999,38 @@ public class MapCreationTool {
 		
 		infoFieldUnten.setText("");
 		
+		// --- Dateiauswahl via JFileChooser ---
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setDialogTitle("Tile-Term Datei öffnen");
+		fileChooser.setCurrentDirectory(new File(".")); 
+
+		// --- NEU: Einschränkung auf .txt-Dateien ---
+		javax.swing.filechooser.FileNameExtensionFilter filter = 
+			new javax.swing.filechooser.FileNameExtensionFilter("Textdateien (*.txt)", "txt");
+		fileChooser.setFileFilter(filter);
+		fileChooser.setAcceptAllFileFilterUsed(false); // Verhindert die Auswahl von "Alle Dateien (*.*)"
+
+		int result = fileChooser.showOpenDialog(this.frame);
+		if (result != JFileChooser.APPROVE_OPTION) {
+			infoFieldUnten.setText("Ladevorgang abgebrochen.");
+			return; 
+		}
+
+		File datei = fileChooser.getSelectedFile();
 		String tileTermLoad = "";
-		String dateiname = "tileterm.txt";
 		String line;
-		try
-		{
-			File datei = new File(dateiname);
-			FileReader fr = new FileReader(datei);
-			BufferedReader br = new BufferedReader (fr);
+		
+		try (FileReader fr = new FileReader(datei);
+			 BufferedReader br = new BufferedReader(fr)) {
 			
-   			while ((line = br.readLine()) != null) {
+			while ((line = br.readLine()) != null) {
 				tileTermLoad = tileTermLoad + line;
 			}
-
-			br.close();
 		}
-		catch (IOException e1)
-		{
+		catch (IOException e1) {
+			infoFieldUnten.setText("Fehler beim Laden der Datei!");
 			e1.printStackTrace();	
+			return;
 		}
 
 		type = TileType.largeStandard;
@@ -1030,8 +1044,6 @@ public class MapCreationTool {
 		
 		setTypeComboboxEntries(comboboxEntriesLargeTiles);
 		setTileSelection(possibleTiles.getAllLargeStandardTiles());
-		
-		
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -1045,7 +1057,7 @@ public class MapCreationTool {
 		
 		buttonReduceToChoosableTiles.setBorder(buttonBorder);
 		buttonChooseTile.setBorder(buttonBorder);
-		buttonInfo.setBorder(buttonBorder);
+		buttonFillMap.setBorder(buttonBorder);
 		buttonClear.setBorder(buttonBorder);
 		buttonZoomIn.setBorder(buttonBorder);
 		
@@ -1134,7 +1146,7 @@ public class MapCreationTool {
 	
 			buttonZoomIn.setBorder(thickBorder);		
 			buttonReduceToChoosableTiles.setBorder(buttonBorder);
-			buttonInfo.setBorder(buttonBorder);
+			buttonFillMap.setBorder(buttonBorder);
 			buttonClear.setBorder(buttonBorder);
 			buttonChooseTile.setBorder(buttonBorder);
 			
@@ -1157,7 +1169,7 @@ public class MapCreationTool {
 			
 			buttonReduceToChoosableTiles.setBorder(buttonBorder);
 			buttonChooseTile.setBorder(buttonBorder);
-			buttonInfo.setBorder(buttonBorder);
+			buttonFillMap.setBorder(buttonBorder);
 			buttonClear.setBorder(buttonBorder);
 			buttonZoomIn.setBorder(buttonBorder);
 			
@@ -1212,7 +1224,7 @@ public class MapCreationTool {
 			buttonClear.setBorder(thickBorder);
 			buttonChooseTile.setBorder(buttonBorder);
 			buttonReduceToChoosableTiles.setBorder(buttonBorder);
-			buttonInfo.setBorder(buttonBorder);
+			buttonFillMap.setBorder(buttonBorder);
 			buttonZoomOut.setBorder(buttonBorder);
 			
 			resetRasterFieldSelection();
@@ -1236,7 +1248,7 @@ public class MapCreationTool {
 			buttonReduceToChoosableTiles.setBorder(buttonBorder);
 			buttonChooseTile.setBorder(buttonBorder);
 			buttonClear.setBorder(buttonBorder);
-			buttonInfo.setBorder(buttonBorder);
+			buttonFillMap.setBorder(buttonBorder);
 			buttonZoomOut.setBorder(buttonBorder);
 			
 			switch (type) {
@@ -1264,7 +1276,7 @@ public class MapCreationTool {
 			buttonReduceToChoosableTiles.setBorder(thickBorder);
 			buttonChooseTile.setBorder(buttonBorder);
 			buttonClear.setBorder(buttonBorder);
-			buttonInfo.setBorder(buttonBorder);
+			buttonFillMap.setBorder(buttonBorder);
 			buttonZoomOut.setBorder(buttonBorder);
 		
 			resetRasterFieldSelection();
@@ -1282,7 +1294,7 @@ public class MapCreationTool {
 		buttonChooseTile.setBorder(thickBorder);
 		buttonReduceToChoosableTiles.setBorder(buttonBorder);
 		buttonClear.setBorder(buttonBorder);
-		buttonInfo.setBorder(buttonBorder);
+		buttonFillMap.setBorder(buttonBorder);
 		buttonZoomIn.setBorder(buttonBorder);
 		
 		resetRasterFieldSelection();
@@ -1291,23 +1303,6 @@ public class MapCreationTool {
 		
 	}
 	
-	private void info() {
-		
-		
-		modus = Modus.info;
-		
-		buttonInfo.setBorder(thickBorder);
-		buttonReduceToChoosableTiles.setBorder(buttonBorder);
-		buttonChooseTile.setBorder(buttonBorder);
-		buttonClear.setBorder(buttonBorder);
-		buttonZoomIn.setBorder(buttonBorder);
-		
-		resetRasterFieldSelection();
-
-		infoFieldMitte.setText("");
-		infoFieldUnten.setText("bei Click auf ein Rasterfeld wird die Information zur Kachel des Rasterfeldes angezeigt");
-		
-	}
 	
 	private void resetRasterFieldSelection() {
 		if (selectedRasterField >= 0)	{
@@ -1567,9 +1562,9 @@ public class MapCreationTool {
 		buttonReduceToChoosableTiles.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) { reduce(); }	
 		} );
-		buttonInfo = new JButton("Info");
-		buttonInfo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) { info(); }	
+		buttonFillMap = new JButton("FillMap");
+		buttonFillMap.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) { fillMap(); }	
 		} );
 		buttonClear = new JButton("Loeschen");
 		buttonClear.addActionListener(new ActionListener() {
@@ -1591,7 +1586,7 @@ public class MapCreationTool {
 		panelRechtsUnten.add(buttonReduceToChoosableTiles);
 		panelRechtsUnten.add(buttonChooseTile);
 		panelRechtsUnten.add(buttonGenerate);
-		panelRechtsUnten.add(buttonInfo);
+		panelRechtsUnten.add(buttonFillMap);
 		panelRechtsUnten.add(buttonClearAll);
 		panelRechtsUnten.add(buttonClear);
 		panelRechtsUnten.add(buttonZoomOut);
@@ -1997,6 +1992,167 @@ public class MapCreationTool {
 		}
 		
 	}
+	
+	private void fillMap() {
+		
+		int rasterSize = 81; // all from raster (9x9)
+		boolean trackBack = false;
+		int countBacktracks = 0;
+		int i;
+
+	
+		List<Integer> empty = new ArrayList<Integer>();
+		
+		// a set for planning with all already used raster indexes
+		Set<Integer> alreadyPlannedRasterFields = new HashSet<Integer>();
+	
+		for (i = 0; i < rasterSize; i++)  {
+			if (raster[i].getTile().getType() == TileType.todo) {
+				empty.add(i);
+			}
+			else {
+				alreadyPlannedRasterFields.add(i);
+			}
+		}
+		rasterSize = empty.size();
+		
+
+		Integer[] rasterFieldSequence = new Integer[rasterSize]; 
+		int randomIndex;
+		
+		
+		int tileNumber;
+		
+		Set<Integer> reducedAsSet;
+		Integer[] reducedAsArray;
+	
+		Set<Integer> remainingPossibleTilesForRasterFieldAtIndex[] = new Set[rasterSize];  	
+		boolean rasterFieldAtIndexInitialized[] = new boolean[rasterSize];
+		
+		Set<Integer> possibleNeigbourRasterFieldIndexes;
+		Integer possibleNeigbourRasterFieldIndexesAsArray[];
+		
+		int maxBacktrackings = 1000;
+		
+		randomIndex = (int)(Math.random() * rasterSize); 
+		int rasterIndexForRandomIndex = empty.get(randomIndex);
+		
+		for (i = 0; i < rasterSize; i++) {
+			
+	  			possibleNeigbourRasterFieldIndexes = getNeighbourRFIs(rasterIndexForRandomIndex);
+	  			possibleNeigbourRasterFieldIndexes.removeAll(alreadyPlannedRasterFields);
+	  			
+	  			if (possibleNeigbourRasterFieldIndexes.isEmpty()) {
+		  			do {
+						randomIndex = (int)(Math.random() * rasterSize); 
+						rasterIndexForRandomIndex = empty.get(randomIndex);
+					}
+					while (alreadyPlannedRasterFields.contains(empty.get(randomIndex)));
+	  			}
+	  			else {
+	  				// temporary used 
+	  				randomIndex  = (int)(Math.random() * possibleNeigbourRasterFieldIndexes.size());
+	  				possibleNeigbourRasterFieldIndexesAsArray = 
+	  						possibleNeigbourRasterFieldIndexes.toArray(new Integer[possibleNeigbourRasterFieldIndexes.size()]);
+	  				rasterIndexForRandomIndex = possibleNeigbourRasterFieldIndexesAsArray[randomIndex];
+	  			}
+	  				
+	  			alreadyPlannedRasterFields.add(rasterIndexForRandomIndex);
+				rasterFieldSequence[i] = rasterIndexForRandomIndex; 
+				
+			
+			rasterFieldAtIndexInitialized[i] = false;
+		}	
+
+		int reducedSetIndex;
+		reducedSetIndex = 1234; // dummy for breakpoint
+		
+		
+		for (i = 0; i < rasterSize; i++) {
+		
+			rasterIndexForRandomIndex = rasterFieldSequence[i];
+		    
+			
+			if ( rasterFieldAtIndexInitialized[i] == false ) {
+				reducedAsSet = getReducedSet(rasterIndexForRandomIndex);
+				reducedAsArray = reducedAsSet.toArray(new Integer[reducedAsSet.size()]);
+				remainingPossibleTilesForRasterFieldAtIndex[i] = new HashSet<Integer>(Arrays.asList(reducedAsArray));
+				rasterFieldAtIndexInitialized[i] = true;
+			}
+			else {
+				reducedAsArray = remainingPossibleTilesForRasterFieldAtIndex[i].toArray(new Integer[remainingPossibleTilesForRasterFieldAtIndex[i].size()]);
+				reducedAsSet = remainingPossibleTilesForRasterFieldAtIndex[i];
+			}
+			
+			
+				
+			if ( reducedAsSet.size() == 0) {
+					trackBack = true;
+			}
+			else {
+				
+				trackBack = false;
+					
+				
+				reducedSetIndex = (int)(Math.random() * reducedAsSet.size());
+				tileNumber = reducedAsArray[reducedSetIndex];
+				remainingPossibleTilesForRasterFieldAtIndex[i].remove(tileNumber);
+				
+				switch (type) {
+				case smallAdapter:
+					tileNumber = tileNumber + tileTypeAlternative * 100;
+					break;
+				case smallSpecial:
+					tileNumber = tileNumber + tileTypeAlternative * 100;
+					break;
+				case smallSpecialAdapter:
+					tileNumber = tileNumber + tileTypeAlternative * 100;
+					break;
+				case mediumAdapter:
+					tileNumber = tileNumber + tileTypeAlternative * 100;
+					break;
+				default: ;
+				}
+	
+				raster[rasterIndexForRandomIndex].setTile(type,tileTypeAlternative,tileNumber);
+				raster[rasterIndexForRandomIndex].setText();
+				
+			}
+			
+			if (trackBack == true) {
+				if (i > 0) {
+					
+					// track back
+					
+					raster[rasterIndexForRandomIndex].clear();
+					rasterFieldAtIndexInitialized[i] = false;
+					
+					i = i - 2;
+					
+					countBacktracks++;
+					
+					if (countBacktracks == maxBacktrackings) {
+						// break back tracking;
+						return; // without success
+					}
+
+				}
+				else
+				{	
+					return; // without success
+				}	
+			}
+			else {
+				
+			}
+			
+		}
+
+	}
+	
+	
+	
+	
 	
 	private void clearRaster() {
 		for (int i = 0; i < 81;i++) {
