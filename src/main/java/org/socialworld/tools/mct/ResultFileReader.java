@@ -15,15 +15,12 @@ try {
 
  */
 
-
 import java.io.*;
 import java.nio.file.Files;
 import java.util.*;
-import java.util.regex.*;
 
 public class ResultFileReader {
 
-    // Container-Klasse, die alle vier rekonstruierten Maps hält
     public static class AnalysisResult {
         public final Map<String, List<String>> northBorders = new LinkedHashMap<>();
         public final Map<String, List<String>> eastBorders = new LinkedHashMap<>();
@@ -32,21 +29,16 @@ public class ResultFileReader {
     }
 
     /**
-     * Liest die 'analyzer_results.txt' ein und rekonstruiert die Maps.
-     * @param resultFile Die einzulesende Ergebnisdatei
-     * @return Ein AnalysisResult-Objekt mit den vier befüllten Maps
-     * @throws IOException Wenn beim Lesen der Datei ein Fehler auftritt
+     * Liest die 'analyzer_results.txt' ein und rekonstruiert die Maps zuverlässig im Speicher.
      */
     public static AnalysisResult readResults(File resultFile) throws IOException {
         AnalysisResult result = new AnalysisResult();
         List<String> lines = Files.readAllLines(resultFile.toPath());
 
         Map<String, List<String>> currentMap = null;
-        // Regex fängt das Format ab: [0, 0, 0...] -> [datei1.txt, datei2.txt]
-        Pattern linePattern = Pattern.compile("^(\\\\[.*?\\\\])\\s*->\\s*\\\\[(.*?)\\\\]$");
 
         for (String line : lines) {
-            line = line.trim();
+            line = line.trim(); // Entfernt alle unsichtbaren Leerzeichen am Anfang und Ende
             if (line.isEmpty()) continue;
 
             // Sektionen erkennen
@@ -64,22 +56,26 @@ public class ResultFileReader {
                 continue;
             }
 
-            // Datenzeile parsen, wenn wir uns in einer Sektion befinden
-            if (currentMap != null) {
-                Matcher matcher = linePattern.matcher(line);
-                if (matcher.matches()) {
-                    String borderKey = matcher.group(1); // Das Höhen-Array als String, z.B. "[0, 0, 0...]"
-                    String fileNamesRaw = matcher.group(2); // Die kommagetrennten Dateinamen
+            // Zeile parsen, wenn wir uns in einer Sektion befinden und der Pfeil existiert
+            if (currentMap != null && line.contains(" -> ")) {
+                String[] parts = line.split(" -> ");
+                if (parts.length == 2) {
+                    String borderKey = parts[0].trim();      // z.B. "[1, 1, 2, 2, ...]"
+                    String fileNamesRaw = parts[1].trim();   // z.B. "[onlyLs_95_20260909_214455.txt]"
+
+                    // Entfernt die eckigen Klammern von der Dateiliste
+                    if (fileNamesRaw.startsWith("[") && fileNamesRaw.endsWith("]")) {
+                        fileNamesRaw = fileNamesRaw.substring(1, fileNamesRaw.length() - 1);
+                    }
 
                     List<String> fileList = new ArrayList<>();
                     if (!fileNamesRaw.trim().isEmpty()) {
-                        // Teilt die Dateinamen am Komma und entfernt Leerzeichen
                         for (String name : fileNamesRaw.split(",")) {
                             fileList.add(name.trim());
                         }
                     }
                     
-                    // In die aktive Map eintragen
+                    // Erfolgreich zurück in die Map speichern
                     currentMap.put(borderKey, fileList);
                 }
             }

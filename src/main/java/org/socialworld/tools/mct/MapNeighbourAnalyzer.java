@@ -4,7 +4,8 @@ import javax.swing.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.*;
-import org.socialworld.tools.mct.TileGeometry.NeighbourAnalyzerTile;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MapNeighbourAnalyzer {
 
@@ -37,7 +38,7 @@ public class MapNeighbourAnalyzer {
         for (File file : files) {
             try {
                 String content = Files.readString(file.toPath());
-                List<NeighbourAnalyzerTile> grid = TileGeometry.parseGrid(content);
+                List<VisualTile> grid = parseGrid(content);
 
                 if (grid.size() != 81) {
                     System.err.println("Warnung: " + file.getName() + " übersprungen (Kachelanzahl " + grid.size() + " != 81).");
@@ -87,4 +88,16 @@ public class MapNeighbourAnalyzer {
         }
         writer.newLine();
     }
+    
+    private static List<VisualTile> parseGrid(String content) {
+        List<VisualTile> tiles = new ArrayList<>();
+        Matcher m = Pattern.compile("L_(-?\\d+)_(-?\\d+)").matcher(content);
+        while (m.find()) {
+            int type = Integer.parseInt(m.group(1));
+            int baseHeight = Integer.parseInt(m.group(2));
+            tiles.add(new VisualTile(type, baseHeight));
+        }
+        return tiles;
+    }
+
 }
