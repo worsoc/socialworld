@@ -65,13 +65,13 @@ public class MapSkeletonGenerator {
         List<String> validTiles = new ArrayList<>();
         int diff = hSecond - hFirst;
 
-        // Nachbarn im Grid ermitteln (falls vorhanden und kein "TODO")
+        // Nachbarn im Grid ermitteln (falls vorhanden)
         String tileAbove = (row > 0) ? grid[row - 1][col] : "TODO";
         String tileLeft  = (col > 0) ? grid[row][col - 1] : "TODO";
 
         for (int type = 0; type <= 19; type++) {
-            // Schutzfilter: Keine Grate (6,9) und keine Doppelsteigungen (16-19) an den Außenrändern
-            if (type == 6 || type == 9 || type >= 16) {
+            // Schutzfilter: Keine Grate (6,9)  an den Außenrändern
+            if (type == 6 || type == 9) {
                 continue;
             }
 

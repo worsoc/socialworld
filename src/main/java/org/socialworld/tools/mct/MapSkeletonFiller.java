@@ -1,16 +1,15 @@
 package org.socialworld.tools.mct;
 
-import java.io.File;
-import java.util.*;
 import javax.swing.*;
+import java.io.*;
+import java.util.*;
 
 public class MapSkeletonFiller {
-
 
     public static void main(String[] args) {
         try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); } catch (Exception ignored) {}
 
-        System.out.println("=== Starte automatischen Pipeline-Test (MapSkeletonFiller) ===");
+        System.out.println("=== Starte ecken- und richtungskonformen Pipeline-Test ===");
 
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle("Wähle die 'analyzer_results.txt' aus");
@@ -31,83 +30,84 @@ public class MapSkeletonFiller {
             System.out.println("Lese '" + resultFile.getName() + "' ein...");
             ResultFileReader.AnalysisResult data = ResultFileReader.readResults(resultFile);
 
-            // --- DIAGNOSE-CHECK ---
-            System.out.println("\n=== GELADENE DATENSÄTZE ===");
-            System.out.println("Nordränder gefunden: " + data.northBorders.size());
-            System.out.println("Ostränder gefunden:  " + data.eastBorders.size());
-            System.out.println("Südränder gefunden:  " + data.southBorders.size());
-            System.out.println("Westränder gefunden: " + data.westBorders.size());
-            System.out.println("===========================\n");
+            // --- 1. SCHRITT: Nachbar-Ränder mit Ecken-Prüfung ziehen ---
+            System.out.println("Wähle zufällige Nachbar-Randbedingungen aus...");
+            int[] neighbourNorth = null;
+            int[] neighbourEast  = null;
+            int[] neighbourSouth = null;
+            int[] neighbourWest  = null;
 
-            // Wenn überhaupt nichts geladen wurde, brechen wir sofort ab statt endlos zu laufen
-            if (data.northBorders.isEmpty() && data.eastBorders.isEmpty() && 
-                data.southBorders.isEmpty() && data.westBorders.isEmpty()) {
-                System.err.println("Abbruch: Die Maps sind leer. Bitte prüfe, ob das Format der Datei mit dem Reader übereinstimmt!");
-                return;
-            }
-
-            // 3. Randbedingungen ziehen (mit Ecken-Harmonisierung!)
-            System.out.println("Wähle zufällige, zueinander passende Randbedingungen aus...");
+            Random rand = new Random();
             
-            java.util.Random rand = new java.util.Random();
-            int[] randomNorth = null;
-            int[] randomEast  = null;
-            int[] randomSouth = null;
-            int[] randomWest  = null;
-
-            // Wir würfeln so lange, bis wir eine gültige Kombination haben
+            // Schleife läuft so lange, bis mindestens eine Nachbarbedingung aktiv ist 
+            // UND die gewürfelten Ecken mathematisch zueinander passen
             int gesamtVersuche = 0;
-            while (randomNorth == null && randomEast == null && randomSouth == null && randomWest == null && gesamtVersuche < 1000) {
+            while (neighbourNorth == null && neighbourEast == null && neighbourSouth == null && neighbourWest == null && gesamtVersuche < 1000) {
                 gesamtVersuche++;
                 
-                // 1. NORDEN: Frei würfeln (50% Chance)
+                // 1. NORDEN: Frei würfeln
                 if (!data.northBorders.isEmpty() && rand.nextBoolean()) {
-                    randomNorth = getSingleRandomBorder(data.northBorders);
+                    neighbourNorth = getSingleRandomBorder(data.northBorders);
                 }
 
-                // 2. OSTEN: Muss zum Nordrand passen, falls dieser existiert
+                // 2. OSTEN: Muss zum Nordrand passen
                 if (!data.eastBorders.isEmpty() && rand.nextBoolean()) {
                     int[] moeglicherOst = getSingleRandomBorder(data.eastBorders);
-                    if (randomNorth == null || moeglicherOst[0] == randomNorth[9]) {
-                        randomEast = moeglicherOst;
+                    if (neighbourNorth == null || moeglicherOst[0] == neighbourNorth[neighbourNorth.length - 1]) {
+                        neighbourEast = moeglicherOst;
                     }
                 }
 
-                // 3. SÜDEN: Muss zum Ostrand passen, falls dieser existiert
+                // 3. SÜDEN: Muss zum Ostrand passen
                 if (!data.southBorders.isEmpty() && rand.nextBoolean()) {
                     int[] moeglicherSued = getSingleRandomBorder(data.southBorders);
-                    if (randomEast == null || moeglicherSued[9] == randomEast[9]) {
-                        randomSouth = moeglicherSued;
+                    if (neighbourEast == null || moeglicherSued[moeglicherSued.length - 1] == neighbourEast[neighbourEast.length - 1]) {
+                        neighbourSouth = moeglicherSued;
                     }
                 }
 
                 // 4. WESTEN: Muss zum Nordrand (oben) und Südrand (unten) passen
                 if (!data.westBorders.isEmpty() && rand.nextBoolean()) {
                     int[] moeglicherWest = getSingleRandomBorder(data.westBorders);
-                    boolean passtOben = (randomNorth == null || moeglicherWest[0] == randomNorth[0]);
-                    boolean passtUnten = (randomSouth == null || moeglicherWest[9] == randomSouth[0]);
+                    boolean passtOben = (neighbourNorth == null || moeglicherWest[0] == neighbourNorth[0]);
+                    boolean passtUnten = (neighbourSouth == null || moeglicherWest[moeglicherWest.length - 1] == neighbourSouth[0]);
                     
                     if (passtOben && passtUnten) {
-                        randomWest = moeglicherWest;
+                        neighbourWest = moeglicherWest;
                     }
                 }
             }
 
-            // Notfall-Greifer: Falls der Zufall uns komplett im Stich gelassen hat, 
-            // erzwingen wir einfach fest den Nordrand, um überhaupt Daten zu haben
-            if (randomNorth == null && randomEast == null && randomSouth == null && randomWest == null) {
-                if (!data.northBorders.isEmpty()) randomNorth = getSingleRandomBorder(data.northBorders);
+            // Notfall-Greifer, falls der Zufall uns nur null geliefert hat
+            if (neighbourNorth == null && neighbourEast == null && neighbourSouth == null && neighbourWest == null) {
+                if (!data.northBorders.isEmpty()) neighbourNorth = getSingleRandomBorder(data.northBorders);
             }
 
  
-            System.out.println("-> Gewählter Nordrand: " + Arrays.toString(randomNorth));
-            System.out.println("-> Gewählter Ostrand:  " + Arrays.toString(randomEast));
-            System.out.println("-> Gewählter Südrand:  " + Arrays.toString(randomSouth));
-            System.out.println("-> Gewählter Westrand: " + Arrays.toString(randomWest));
+            System.out.println("\n=== GELADENE NACHBAR-PROFILE ===");
+            System.out.println("-> Nordrand der Nachbarkarte: " + Arrays.toString(neighbourNorth));
+            System.out.println("-> Ostrand der Nachbarkarte:  " + Arrays.toString(neighbourEast));
+            System.out.println("-> Südrand der Nachbarkarte:  " + Arrays.toString(neighbourSouth));
+            System.out.println("-> Westrand der Nachbarkarte: " + Arrays.toString(neighbourWest));
 
-            System.out.println("Generiere Skeleton-String...");
+            // --- 2. SCHRITT: Kreuzweise Übergabe an den Generator ---
+            int[] targetNorth = neighbourSouth; // Südrand der südlichen Karte wird unser Nordrand (Reihe 0)
+            int[] targetSouth = neighbourNorth; // Nordrand der nördlichen Karte wird unser Südrand (Reihe 8)
+            int[] targetWest  = neighbourEast;  // Ostrand der westlichen Karte wird unser Westrand (Spalte 0)
+            int[] targetEast  = neighbourWest;  // Westrand der östlichen Karte wird unser Ostrand (Spalte 8)
+
+            System.out.println("\n=== KREUZWEISE ZUORDNUNG FÜR DEINE NEUE SCHABLONE ===");
+            System.out.println("-> Eigener Nordrand (Reihe 0)  <- geladen von Nachbar-Südrand: " + Arrays.toString(targetNorth));
+            System.out.println("-> Eigener Ostrand  (Spalte 8) <- geladen von Nachbar-Westrand: " + Arrays.toString(targetEast));
+            System.out.println("-> Eigener Südrand  (Reihe 8)  <- geladen von Nachbar-Nordrand: " + Arrays.toString(targetSouth));
+            System.out.println("-> Eigener Westrand (Spalte 0) <- geladen von Nachbar-Ostrand:  " + Arrays.toString(targetWest));
+
+            System.out.println("\nGeneriere richtungskorrekten Skeleton-String...");
             String skeletonString = MapSkeletonGenerator.generateSkeleton(
-                randomNorth, randomEast, randomSouth, randomWest
+                targetNorth, 
+                targetEast, 
+                targetSouth, 
+                targetWest
             );
 
             System.out.println("Übergebe Schablone an MapCreationTool.fillSkeleton()...");
@@ -121,53 +121,15 @@ public class MapSkeletonFiller {
         }
     }
 
-    /**
-     * Hilfsmethode: Holt jetzt strikt einen zufälligen Eintrag aus der Map (ohne eigene 50/50 Chance).
-     */
     private static int[] getSingleRandomBorder(Map<String, List<String>> borderMap) {
-        if (borderMap == null || borderMap.isEmpty()) {
-            return null;
-        }
-        Random rand = new Random();
+        if (borderMap == null || borderMap.isEmpty()) return null;
         List<String> keys = new ArrayList<>(borderMap.keySet());
-        String randomKey = keys.get(rand.nextInt(keys.size()));
-        return parseStringToIntArray(randomKey);
+        return parseStringToIntArray(keys.get(new Random().nextInt(keys.size())));
     }
 
-    /**
-     * Hilfsmethode: Wählt zufällig einen Eintrag aus einer Border-Map.
-     * Entscheidet zudem per Zufall (50% Chance), ob die Einschränkung aktiv ist oder leer (null) bleibt.
-     */
-    private static int[] getRandomBorderArray(Map<String, List<String>> borderMap) {
-        if (borderMap == null || borderMap.isEmpty()) {
-            return null;
-        }
-
-        Random rand = new Random();
-        
-        // 50% Chance, dass diese Himmelsrichtung für den Test offen bleibt (null)
-        if (rand.nextBoolean()) {
-            return null; 
-        }
-
-        // Alle verfügbaren String-Keys ([0, 0, ...]) in eine Liste packen
-        List<String> keys = new ArrayList<>(borderMap.keySet());
-        // Zufälligen Key auswählen
-        String randomKey = keys.get(rand.nextInt(keys.size()));
-
-        // Den String zurück in ein int[] konvertieren
-        return parseStringToIntArray(randomKey);
-    }
-
-    /**
-     * Konvertiert einen String im Format "[0, -1, 2, ...]" zurück in ein echtes int[]
-     */
     private static int[] parseStringToIntArray(String arrayStr) {
         String clean = arrayStr.replace("[", "").replace("]", "").replace(" ", "");
-        if (clean.trim().isEmpty()) {
-            return new int[0];
-        }
-        
+        if (clean.trim().isEmpty()) return new int[0];
         String[] tokens = clean.split(",");
         int[] result = new int[tokens.length];
         for (int i = 0; i < tokens.length; i++) {
@@ -175,6 +137,4 @@ public class MapSkeletonFiller {
         }
         return result;
     }
-    
- 
 }
