@@ -135,42 +135,48 @@ public class MapVisualizer extends JFrame {
         int SECTOR_SIZE = 9;
         VisualTile[][] finalGrid;
 
-        // Modus-Weiche: Zeigen wir das Mega-Grid oder nur das 9x9-Raster?
         if (showMegaGrid) {
             int WORLD_SIZE = SECTOR_SIZE * 3; // 27x27 Kacheln
             VisualTile[][] megaGrid = new VisualTile[WORLD_SIZE][WORLD_SIZE];
+            String folderPath = currentFile.getParent();
 
-            // 1. Center-Map laden
-            VisualTile[][] centerGrid = MapLoader.loadMapData(currentFile.getAbsolutePath(), SECTOR_SIZE);
+            // 1. DAS ABSOLUTE ZENTRUM LADEN (Reihe 1, Spalte 1)
+            // Wir erzwingen, dass im Panorama-Modus immer die 05_zentrum.txt in der Mitte sitzt!
+            File centerFile = new File(folderPath, "onlyLs_05_zentrum.txt");
+            VisualTile[][] centerGrid;
+            
+            if (centerFile.exists()) {
+                centerGrid = MapLoader.loadMapData(centerFile.getAbsolutePath(), SECTOR_SIZE);
+            } else {
+                // Fallback: Falls die 05 nicht existiert, nimm die aktuell im FileManager ausgewählte Datei
+                centerGrid = MapLoader.loadMapData(currentFile.getAbsolutePath(), SECTOR_SIZE);
+            }
             copyGridToMega(centerGrid, megaGrid, 1, 1, SECTOR_SIZE, null);
 
-            // 2. Nachbarn aus der Dateiliste laden
-            java.util.List<File> allFiles = fileManager.getMapFiles();
-            int currentIndex = fileManager.getCurrentMapIndex();
+            // 2. DIE RECHTMÄSSIGEN NACHBARN AN IHRE FESTEN PLÄTZE SETZEN
+            // Reihe 0 (Oben)
+            loadAndAddSector(folderPath, "onlyLs_01_nordwest.txt", megaGrid, 0, 0, SECTOR_SIZE, centerGrid);
+            loadAndAddSector(folderPath, "onlyLs_02_norden.txt",   megaGrid, 0, 1, SECTOR_SIZE, centerGrid);
+            loadAndAddSector(folderPath, "onlyLs_03_nordost.txt",  megaGrid, 0, 2, SECTOR_SIZE, centerGrid);
 
-            int fileOffset = 1;
-            for (int sRow = 0; sRow < 3; sRow++) {
-                for (int sCol = 0; sCol < 3; sCol++) {
-                    if (sRow == 1 && sCol == 1) continue; // Das Zentrum haben wir schon
+            // Reihe 1 (Mitte)
+            loadAndAddSector(folderPath, "onlyLs_04_westen.txt",   megaGrid, 1, 0, SECTOR_SIZE, centerGrid);
+            // (Zentrum bei 1,1 haben wir oben schon geladen)
+            loadAndAddSector(folderPath, "onlyLs_06_osten.txt",    megaGrid, 1, 2, SECTOR_SIZE, centerGrid);
 
-                    int targetIndex = currentIndex + fileOffset;
-                    if (targetIndex >= 0 && targetIndex < allFiles.size()) {
-                        File neighborFile = allFiles.get(targetIndex);
-                        VisualTile[][] neighborGrid = MapLoader.loadMapData(neighborFile.getAbsolutePath(), SECTOR_SIZE);
-                        copyGridToMega(neighborGrid, megaGrid, sRow, sCol, SECTOR_SIZE, centerGrid);
-                        fileOffset++;
-                    }
-                }
-            }
+            // Reihe 2 (Unten)
+            loadAndAddSector(folderPath, "onlyLs_07_suedwest.txt", megaGrid, 2, 0, SECTOR_SIZE, centerGrid);
+            loadAndAddSector(folderPath, "onlyLs_08_sueden.txt",   megaGrid, 2, 1, SECTOR_SIZE, centerGrid);
+            loadAndAddSector(folderPath, "onlyLs_09_suedost.txt",  megaGrid, 2, 2, SECTOR_SIZE, centerGrid);
+
             finalGrid = megaGrid;
-            setTitle("3D World Visualizer - Panorama (3x3 Sektoren) - Zentrum: " + currentFile.getName());
+            setTitle("3D World Visualizer - Panorama (3x3) - Fokus: " + currentFile.getName());
         } else {
-            // Reines 9x9 Raster der aktuellen Datei laden
+            // Reines 9x9 Raster der aktuell durchgeblätterten Datei laden
             finalGrid = MapLoader.loadMapData(currentFile.getAbsolutePath(), SECTOR_SIZE);
             setTitle("3D World Visualizer - Einzelansicht (9x9) - Datei: " + currentFile.getName());
         }
 
-        // Grid an das MapPanel zur Darstellung übergeben
         if (mapPanel == null) {
             mapPanel = new MapPanel(finalGrid);
             add(mapPanel, BorderLayout.CENTER);
@@ -181,6 +187,24 @@ public class MapVisualizer extends JFrame {
         revalidate();
         repaint();
         updateButtons();
+    }
+
+    /**
+     * Kleine Hilfsmethode: Prüft ob die Datei existiert, lädt sie und kopiert sie an den exakten Platz.
+     */
+    private void loadAndAddSector(String folder, String filename, VisualTile[][] target, int row, int col, int size, VisualTile[][] centerGrid) {
+        File file = new File(folder, filename);
+        if (file.exists()) {
+            VisualTile[][] sectorGrid = MapLoader.loadMapData(file.getAbsolutePath(), size);
+            copyGridToMega(sectorGrid, target, row, col, size, centerGrid);
+        } else {
+            // Falls eine Datei fehlt, bleibt der Slot leer (null)
+            for (int r = 0; r < size; r++) {
+                for (int c = 0; c < size; c++) {
+                    target[(row * size) + r][(col * size) + c] = null;
+                }
+            }
+        }
     }
 
     /**

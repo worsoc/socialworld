@@ -46,9 +46,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.awt.event.ActionEvent;
 
@@ -2221,127 +2224,125 @@ public class MapCreationTool {
 		//setTileSelection(possibleTiles.getAllLargeStandardTiles());
 	}
 	
-
-	
-	// 1. Die neue überladene Methode, die wir im Verbund-Modus aufrufen
-	public static void fillSkeleton(String skeleton, String targetFilename) {
-		
-		MapCreationTool localTool = new MapCreationTool(skeleton);
-		int rasterSize = 81; 
-		int i;
-
-		List<Integer> empty = new ArrayList<Integer>();
-		Set<Integer> alreadyPlannedRasterFields = new HashSet<Integer>();
-	
-		for (i = 0; i < rasterSize; i++)  {
-			if (localTool.raster[i].getTile().getType() == TileType.todo) {
-				empty.add(i);
-			} else {
-				alreadyPlannedRasterFields.add(i);
-			}
-		}
-		Set<Integer> alreadyPlannedRasterFieldsCopy = new HashSet<Integer>(alreadyPlannedRasterFields);
-		rasterSize = empty.size();
-
-		int maxTrys = 1000000;
-		boolean nextTry;
-		boolean success = false;
-
-		for (int nrTry = 0; nrTry < maxTrys; nrTry++) {
-			nextTry = false;
-			alreadyPlannedRasterFields = new HashSet<Integer>(alreadyPlannedRasterFieldsCopy);
-			
-			for (Integer index : empty) {
-				localTool.raster[index].setToDo();
-				localTool.raster[index].setText();
-			}
-				
-			Integer[] rasterFieldSequence = new Integer[rasterSize]; 
-			int randomIndex;
-			int tileNumber;
-			
-			Set<Integer> reducedAsSet;
-			Integer[] reducedAsArray;
-			Set<Integer> remainingPossibleTilesForRasterFieldAtIndex[] = new Set[rasterSize];  	
-			boolean rasterFieldAtIndexInitialized[] = new boolean[rasterSize];
-			Set<Integer> possibleNeigbourRasterFieldIndexes;
-			Integer possibleNeigbourRasterFieldIndexesAsArray[];
-				
-			randomIndex = (int)(Math.random() * rasterSize); 
-			int rasterIndexForRandomIndex = empty.get(randomIndex);
-				
-			for (i = 0; i < rasterSize; i++) {
-				possibleNeigbourRasterFieldIndexes = localTool.getNeighbourRFIs(rasterIndexForRandomIndex);
-				possibleNeigbourRasterFieldIndexes.removeAll(alreadyPlannedRasterFields);
-			  			
-				if (possibleNeigbourRasterFieldIndexes.isEmpty()) {
-					do {
-						randomIndex = (int)(Math.random() * rasterSize); 
-						rasterIndexForRandomIndex = empty.get(randomIndex);
-					} while (alreadyPlannedRasterFields.contains(empty.get(randomIndex)));
-				} else {
-					randomIndex  = (int)(Math.random() * possibleNeigbourRasterFieldIndexes.size());
-					possibleNeigbourRasterFieldIndexesAsArray = possibleNeigbourRasterFieldIndexes.toArray(new Integer[possibleNeigbourRasterFieldIndexes.size()]);
-					rasterIndexForRandomIndex = possibleNeigbourRasterFieldIndexesAsArray[randomIndex];
-				}
-			  				
-				alreadyPlannedRasterFields.add(rasterIndexForRandomIndex);
-				rasterFieldSequence[i] = rasterIndexForRandomIndex; 
-				rasterFieldAtIndexInitialized[i] = false;
-			}	
-		
-			int reducedSetIndex = 1234; 
-				
-			for (i = 0; i < rasterSize; i++) {
-				rasterIndexForRandomIndex = rasterFieldSequence[i];
-				    
-				if (rasterFieldAtIndexInitialized[i] == false) {
-					reducedAsSet = localTool.getReducedSet(rasterIndexForRandomIndex);
-					reducedAsArray = reducedAsSet.toArray(new Integer[reducedAsSet.size()]);
-					remainingPossibleTilesForRasterFieldAtIndex[i] = new HashSet<Integer>(Arrays.asList(reducedAsArray));
-					rasterFieldAtIndexInitialized[i] = true;
-				} else {
-					reducedAsArray = remainingPossibleTilesForRasterFieldAtIndex[i].toArray(new Integer[remainingPossibleTilesForRasterFieldAtIndex[i].size()]);
-					reducedAsSet = remainingPossibleTilesForRasterFieldAtIndex[i];
-				}
-					
-				if (reducedAsSet.size() == 0) {
-					nextTry = true;
-				} else {
-					nextTry = false;
-					reducedSetIndex = (int)(Math.random() * reducedAsSet.size());
-					tileNumber = reducedAsArray[reducedSetIndex];
-					remainingPossibleTilesForRasterFieldAtIndex[i].remove(tileNumber);
-						
-					localTool.raster[rasterIndexForRandomIndex].setTile(TileType.largeStandard, localTool.tileTypeAlternative, tileNumber);
-					localTool.raster[rasterIndexForRandomIndex].setText();
-				}
-					
-				if (nextTry == true) {
-					break;
-				}
-			}
-				
-			if (nextTry == false) {
-				System.out.println("Fertig bei Versuch Nr. " + nrTry);
-				// Wir reichen den Dateinamen an den Writer weiter!
-				saveFilledSkeleton(localTool, targetFilename);
-				success = true;
-				break;
-			}
-		}
-
-		// --- NEU: FEHLERMELDUNG BEI ABBRUCH ---
-		if (!success) {
-			System.err.println("❌ ABBRUCH: Sektor konnte nach " + maxTrys + " Versuchen nicht gelöst werden!");
-		}
-	}
-
-	// 2. Deine alte Methode bleibt voll intakt als Fallback (nutzt den Zeitstempel-Namen)
+	// die alte Methode bleibt voll intakt als Fallback (nutzt den Zeitstempel-Namen)
 	public static void fillSkeleton(String skeleton) {
 		String defaultName = "onlyLs_filled_skeleton_" + java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss").format(java.time.LocalDateTime.now()) + ".txt";
 		fillSkeleton(skeleton, defaultName);
 	}
+
+    // Globale Zähler für die Status-Anzeige und die Reißleine
+    private static int backtrackSteps = 0;
+    private static int minTodosSeen = Integer.MAX_VALUE;
+    
+    // --- DIE REISSLEINE ---
+    // Wenn ein Sektor nach 5.000.000 Schritten nicht gelöst ist, brechen wir ab!
+    private static final int MAX_BACKTRACK_STEPS = 5000000; 
+
+    public static void fillSkeleton(String skeleton, String targetFilename) {
+        System.out.println("🚀 Starte rekursiven Backtracking-Solver für [" + targetFilename + "]...");
+        backtrackSteps = 0;
+        minTodosSeen = Integer.MAX_VALUE; 
+        
+        MapCreationTool localTool = new MapCreationTool(skeleton);
+        
+        List<Integer> todoIndexes = new ArrayList<>();
+        for (int i = 0; i < 81; i++) {
+            if (localTool.raster[i].getTile().getType() == TileType.todo) {
+                todoIndexes.add(i);
+            }
+        }
+
+        long startTime = System.currentTimeMillis();
+        boolean success = solveRecursive(localTool, todoIndexes);
+        long endTime = System.currentTimeMillis();
+
+        if (success) {
+            System.out.println("🟩 [ERFOLG] Sektor '" + targetFilename + "' gelöst in " + (endTime - startTime) + " ms! (Schritte: " + backtrackSteps + ")");
+            saveFilledSkeleton(localTool, targetFilename);
+        } else {
+            if (backtrackSteps >= MAX_BACKTRACK_STEPS) {
+                System.err.println("⚠️ [TIMEOUT] Sektor '" + targetFilename + "' nach " + MAX_BACKTRACK_STEPS + " Schritten abgebrochen (ÜBERSPRINGEN).");
+            } else {
+                System.err.println("❌ [UNLÖSBAR] Sektor '" + targetFilename + "' ist mathematisch absolut unmöglich!");
+            }
+        }
+    }
+
+    /**
+     * Der rekursive Kern mit integrierter Reißleinen-Prüfung.
+     */
+    private static boolean solveRecursive(MapCreationTool localTool, List<Integer> todoIndexes) {
+        // 1. REISSLEINE PRÜFEN: Wenn das Limit erreicht ist, sofort nach oben abbrechen!
+        if (backtrackSteps >= MAX_BACKTRACK_STEPS) {
+            return false;
+        }
+
+        if (todoIndexes.isEmpty()) {
+            return true;
+        }
+
+        backtrackSteps++;
+        int currentTodoCount = todoIndexes.size();
+        
+        if (currentTodoCount < minTodosSeen) {
+            minTodosSeen = currentTodoCount; 
+        }
+
+        if (backtrackSteps % 100000 == 0) {
+            System.out.println("   ⏳ Schritte: " + backtrackSteps + " | Aktuelle TODOs: " + currentTodoCount + " | Bester Tiefpunkt: " + minTodosSeen);
+        }
+
+        int minSetSize = Integer.MAX_VALUE;
+        List<Integer> candidatesWithMinSet = new ArrayList<>();
+        Map<Integer, Integer[]> validTilesMap = new HashMap<>();
+
+        // MRV-HEURISTIK
+        for (int todoIdx : todoIndexes) {
+            Set<Integer> reducedSet = localTool.getReducedSet(todoIdx);
+            int setSize = reducedSet.size();
+
+            if (setSize == 0) {
+                return false; 
+            }
+
+            validTilesMap.put(todoIdx, reducedSet.toArray(new Integer[setSize]));
+
+            if (setSize < minSetSize) {
+                minSetSize = setSize;
+                candidatesWithMinSet.clear();
+                candidatesWithMinSet.add(todoIdx);
+            } else if (setSize == minSetSize) {
+                candidatesWithMinSet.add(todoIdx);
+            }
+        }
+
+        int chosenFieldIndex = candidatesWithMinSet.get((int)(Math.random() * candidatesWithMinSet.size()));
+        Integer[] possibleTiles = validTilesMap.get(chosenFieldIndex);
+
+        List<Integer> tilesList = Arrays.asList(possibleTiles);
+        Collections.shuffle(tilesList);
+
+        // SYSTEMATISCHES DURCHPROBIEREN
+        for (int tileNum : tilesList) {
+            
+            localTool.raster[chosenFieldIndex].setTile(TileType.largeStandard, localTool.tileTypeAlternative, tileNum);
+            localTool.raster[chosenFieldIndex].setText();
+            
+            todoIndexes.remove(Integer.valueOf(chosenFieldIndex));
+
+            if (solveRecursive(localTool, todoIndexes)) {
+                return true; 
+            }
+
+            // Schritt RÜCKWÄRTS (Undo)
+            localTool.raster[chosenFieldIndex].setToDo();
+            localTool.raster[chosenFieldIndex].setText();
+            todoIndexes.add(chosenFieldIndex);
+        }
+
+        return false;
+    }
+
 	
 	// 3. Die saveFilledSkeleton-Methode, die jetzt den Wunschnamen akzeptiert
 	private static void saveFilledSkeleton(MapCreationTool skeletonFiller, String targetFilename) {
