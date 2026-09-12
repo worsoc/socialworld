@@ -2223,157 +2223,134 @@ public class MapCreationTool {
 	
 
 	
-	public static void fillSkeleton(String skeleton) {
+	// 1. Die neue überladene Methode, die wir im Verbund-Modus aufrufen
+	public static void fillSkeleton(String skeleton, String targetFilename) {
 		
 		MapCreationTool localTool = new MapCreationTool(skeleton);
-		
-		int rasterSize = 81; // all from raster (9x9)
+		int rasterSize = 81; 
 		int i;
 
-
 		List<Integer> empty = new ArrayList<Integer>();
-		
-		// a set for planning with all already used raster indexes
 		Set<Integer> alreadyPlannedRasterFields = new HashSet<Integer>();
 	
 		for (i = 0; i < rasterSize; i++)  {
 			if (localTool.raster[i].getTile().getType() == TileType.todo) {
 				empty.add(i);
-			}
-			else {
+			} else {
 				alreadyPlannedRasterFields.add(i);
 			}
 		}
 		Set<Integer> alreadyPlannedRasterFieldsCopy = new HashSet<Integer>(alreadyPlannedRasterFields);
-
 		rasterSize = empty.size();
 
-		int maxTrys = 100000;
+		int maxTrys = 1000000;
 		boolean nextTry;
-		for (int nrTry = 0; nrTry < maxTrys; nrTry++)
-		{
-			nextTry = false;
-			
-				// für jeden Durchlauf neu aus der Sicherungskopie erzeugen
-				alreadyPlannedRasterFields = new HashSet<Integer>(alreadyPlannedRasterFieldsCopy);
-			
-				// alle raster-Elemente, die eingangs leer waren, wieder auf ToDo setzen
-				for (Integer index : empty) {
-					localTool.raster[index].setToDo();
-					localTool.raster[index].setText();
-				}
-				
-				
-				Integer[] rasterFieldSequence = new Integer[rasterSize]; 
-				int randomIndex;
-				
-				
-				int tileNumber;
-				
-				Set<Integer> reducedAsSet;
-				Integer[] reducedAsArray;
-			
-				Set<Integer> remainingPossibleTilesForRasterFieldAtIndex[] = new Set[rasterSize];  	
-				boolean rasterFieldAtIndexInitialized[] = new boolean[rasterSize];
-				
-				Set<Integer> possibleNeigbourRasterFieldIndexes;
-				Integer possibleNeigbourRasterFieldIndexesAsArray[];
-				
-					
-				randomIndex = (int)(Math.random() * rasterSize); 
-				int rasterIndexForRandomIndex = empty.get(randomIndex);
-				
-				for (i = 0; i < rasterSize; i++) {
-					
-			  			possibleNeigbourRasterFieldIndexes = localTool.getNeighbourRFIs(rasterIndexForRandomIndex);
-			  			possibleNeigbourRasterFieldIndexes.removeAll(alreadyPlannedRasterFields);
-			  			
-			  			if (possibleNeigbourRasterFieldIndexes.isEmpty()) {
-				  			do {
-								randomIndex = (int)(Math.random() * rasterSize); 
-								rasterIndexForRandomIndex = empty.get(randomIndex);
-							}
-							while (alreadyPlannedRasterFields.contains(empty.get(randomIndex)));
-			  			}
-			  			else {
-			  				// temporary used 
-			  				randomIndex  = (int)(Math.random() * possibleNeigbourRasterFieldIndexes.size());
-			  				possibleNeigbourRasterFieldIndexesAsArray = 
-			  						possibleNeigbourRasterFieldIndexes.toArray(new Integer[possibleNeigbourRasterFieldIndexes.size()]);
-			  				rasterIndexForRandomIndex = possibleNeigbourRasterFieldIndexesAsArray[randomIndex];
-			  			}
-			  				
-			  			alreadyPlannedRasterFields.add(rasterIndexForRandomIndex);
-						rasterFieldSequence[i] = rasterIndexForRandomIndex; 
-						
-					
-					rasterFieldAtIndexInitialized[i] = false;
-				}	
-		
-				int reducedSetIndex;
-				reducedSetIndex = 1234; // dummy for breakpoint
-				
-				
-				for (i = 0; i < rasterSize; i++) {
-				
-					rasterIndexForRandomIndex = rasterFieldSequence[i];
-				    
-					
-					if ( rasterFieldAtIndexInitialized[i] == false ) {
-						reducedAsSet = localTool.getReducedSet(rasterIndexForRandomIndex);
-						reducedAsArray = reducedAsSet.toArray(new Integer[reducedAsSet.size()]);
-						remainingPossibleTilesForRasterFieldAtIndex[i] = new HashSet<Integer>(Arrays.asList(reducedAsArray));
-						rasterFieldAtIndexInitialized[i] = true;
-					}
-					else {
-						reducedAsArray = remainingPossibleTilesForRasterFieldAtIndex[i].toArray(new Integer[remainingPossibleTilesForRasterFieldAtIndex[i].size()]);
-						reducedAsSet = remainingPossibleTilesForRasterFieldAtIndex[i];
-					}
-					
-					
-						
-					if ( reducedAsSet.size() == 0) {
-						nextTry = true;
-					}
-					else {
-						
-						nextTry = false;
-							
-						
-						reducedSetIndex = (int)(Math.random() * reducedAsSet.size());
-						tileNumber = reducedAsArray[reducedSetIndex];
-						remainingPossibleTilesForRasterFieldAtIndex[i].remove(tileNumber);
-						
-				
-						localTool.raster[rasterIndexForRandomIndex].setTile(TileType.largeStandard,localTool.tileTypeAlternative,tileNumber);
-						localTool.raster[rasterIndexForRandomIndex].setText();
-						
-					}
-					
-					if (nextTry == true) {
-						//printRandomRasterOrder(i, rasterFieldSequence);
-						break;
-					}
+		boolean success = false;
 
+		for (int nrTry = 0; nrTry < maxTrys; nrTry++) {
+			nextTry = false;
+			alreadyPlannedRasterFields = new HashSet<Integer>(alreadyPlannedRasterFieldsCopy);
+			
+			for (Integer index : empty) {
+				localTool.raster[index].setToDo();
+				localTool.raster[index].setText();
+			}
+				
+			Integer[] rasterFieldSequence = new Integer[rasterSize]; 
+			int randomIndex;
+			int tileNumber;
+			
+			Set<Integer> reducedAsSet;
+			Integer[] reducedAsArray;
+			Set<Integer> remainingPossibleTilesForRasterFieldAtIndex[] = new Set[rasterSize];  	
+			boolean rasterFieldAtIndexInitialized[] = new boolean[rasterSize];
+			Set<Integer> possibleNeigbourRasterFieldIndexes;
+			Integer possibleNeigbourRasterFieldIndexesAsArray[];
+				
+			randomIndex = (int)(Math.random() * rasterSize); 
+			int rasterIndexForRandomIndex = empty.get(randomIndex);
+				
+			for (i = 0; i < rasterSize; i++) {
+				possibleNeigbourRasterFieldIndexes = localTool.getNeighbourRFIs(rasterIndexForRandomIndex);
+				possibleNeigbourRasterFieldIndexes.removeAll(alreadyPlannedRasterFields);
+			  			
+				if (possibleNeigbourRasterFieldIndexes.isEmpty()) {
+					do {
+						randomIndex = (int)(Math.random() * rasterSize); 
+						rasterIndexForRandomIndex = empty.get(randomIndex);
+					} while (alreadyPlannedRasterFields.contains(empty.get(randomIndex)));
+				} else {
+					randomIndex  = (int)(Math.random() * possibleNeigbourRasterFieldIndexes.size());
+					possibleNeigbourRasterFieldIndexesAsArray = possibleNeigbourRasterFieldIndexes.toArray(new Integer[possibleNeigbourRasterFieldIndexes.size()]);
+					rasterIndexForRandomIndex = possibleNeigbourRasterFieldIndexesAsArray[randomIndex];
 				}
+			  				
+				alreadyPlannedRasterFields.add(rasterIndexForRandomIndex);
+				rasterFieldSequence[i] = rasterIndexForRandomIndex; 
+				rasterFieldAtIndexInitialized[i] = false;
+			}	
+		
+			int reducedSetIndex = 1234; 
+				
+			for (i = 0; i < rasterSize; i++) {
+				rasterIndexForRandomIndex = rasterFieldSequence[i];
+				    
+				if (rasterFieldAtIndexInitialized[i] == false) {
+					reducedAsSet = localTool.getReducedSet(rasterIndexForRandomIndex);
+					reducedAsArray = reducedAsSet.toArray(new Integer[reducedAsSet.size()]);
+					remainingPossibleTilesForRasterFieldAtIndex[i] = new HashSet<Integer>(Arrays.asList(reducedAsArray));
+					rasterFieldAtIndexInitialized[i] = true;
+				} else {
+					reducedAsArray = remainingPossibleTilesForRasterFieldAtIndex[i].toArray(new Integer[remainingPossibleTilesForRasterFieldAtIndex[i].size()]);
+					reducedAsSet = remainingPossibleTilesForRasterFieldAtIndex[i];
+				}
+					
+				if (reducedAsSet.size() == 0) {
+					nextTry = true;
+				} else {
+					nextTry = false;
+					reducedSetIndex = (int)(Math.random() * reducedAsSet.size());
+					tileNumber = reducedAsArray[reducedSetIndex];
+					remainingPossibleTilesForRasterFieldAtIndex[i].remove(tileNumber);
+						
+					localTool.raster[rasterIndexForRandomIndex].setTile(TileType.largeStandard, localTool.tileTypeAlternative, tileNumber);
+					localTool.raster[rasterIndexForRandomIndex].setText();
+				}
+					
+				if (nextTry == true) {
+					break;
+				}
+			}
 				
 			if (nextTry == false) {
 				System.out.println("Fertig bei Versuch Nr. " + nrTry);
-				saveFilledSkeleton(localTool);
+				// Wir reichen den Dateinamen an den Writer weiter!
+				saveFilledSkeleton(localTool, targetFilename);
+				success = true;
 				break;
 			}
 		}
+
+		// --- NEU: FEHLERMELDUNG BEI ABBRUCH ---
+		if (!success) {
+			System.err.println("❌ ABBRUCH: Sektor konnte nach " + maxTrys + " Versuchen nicht gelöst werden!");
+		}
+	}
+
+	// 2. Deine alte Methode bleibt voll intakt als Fallback (nutzt den Zeitstempel-Namen)
+	public static void fillSkeleton(String skeleton) {
+		String defaultName = "onlyLs_filled_skeleton_" + java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss").format(java.time.LocalDateTime.now()) + ".txt";
+		fillSkeleton(skeleton, defaultName);
 	}
 	
-	private static void saveFilledSkeleton(MapCreationTool skeletonFiller) {
-		
+	// 3. Die saveFilledSkeleton-Methode, die jetzt den Wunschnamen akzeptiert
+	private static void saveFilledSkeleton(MapCreationTool skeletonFiller, String targetFilename) {
 		System.out.println("\n=== [DIAGNOSE] Starte saveFilledSkeleton ===");
 		int mapKachelnKopiert = 0;
 		int todoKachelnUebersprungen = 0;
 		int subKachelnUebersprungen = 0;
 
 		for (int i = 0; i < 81; i++) {
-			// Schutzprüfung, falls im Raster ein Element komplett null ist
 			if (skeletonFiller.raster[i] == null) {
 				System.out.println("-> [WARNUNG] Raster-Feld an Index " + i + " is komplett NULL!");
 				continue;
@@ -2381,7 +2358,7 @@ public class MapCreationTool {
 
 			TileType currentType = skeletonFiller.raster[i].getTileType();
 			
-			if ( (currentType != TileType.sub) && (currentType != TileType.todo) ) {
+			if ((currentType != TileType.sub) && (currentType != TileType.todo)) {
 				skeletonFiller.tileTerm.addTile(new Tile(currentType, skeletonFiller.raster[i].getTileNumber(), skeletonFiller.raster[i].height), i);
 				mapKachelnKopiert++;
 			} else {
@@ -2396,18 +2373,14 @@ public class MapCreationTool {
 		System.out.println("-> [INFO] Rufe skeletonFiller.tileTerm.setHeights() auf...");
 		skeletonFiller.tileTerm.setHeights();
 
-		try
-		{
+		try {
 			String filetext = skeletonFiller.tileTerm.toString();
 			
-			// Diagnose des Inhalts
 			System.out.println("\n--- [VORSCHAU GENERIERTER TEXT] ---");
 			if (filetext == null) {
 				System.out.println("FEHLER: filetext ist komplett NULL!");
 			} else {
-				// Zeigt die ersten 120 Zeichen des generierten Strings im Terminal an
-				//System.out.println(filetext.length() > 120 ? filetext.substring(0, 120) + "..." : filetext);
-				System.out.println(filetext);
+				System.out.println(filetext.length() > 120 ? filetext.substring(0, 120) + "..." : filetext);
 				System.out.println("Gesamtlänge des Textes: " + filetext.length() + " Zeichen.");
 			}
 			System.out.println("-----------------------------------\n");
@@ -2421,26 +2394,21 @@ public class MapCreationTool {
 			System.out.println("-> [VALIDIERUNG] Ergebnis 'valid' = " + valid);
 
 			if (valid) {
-				String filename = "onlyLs_filled_skeleton_" + java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss").format(java.time.LocalDateTime.now()) + ".txt";
-				System.out.println("-> [SCHREIBEN] Öffne Datei: " + filename);
-
-				BufferedWriter writer = new BufferedWriter(new FileWriter(filename, false));
+				// Hier nutzen wir jetzt den übergebenen Wunschnamen!
+				System.out.println("-> [SCHREIBEN] Öffne Datei: " + targetFilename);
+				BufferedWriter writer = new BufferedWriter(new FileWriter(targetFilename, false));
 				writer.write(filetext);
 				writer.close();
-				
 				System.out.println("🟩 [ERFOLG] Datei erfolgreich geschrieben!");
 			} else {
 				System.out.println("❌ [ABBRUCH] Datei wurde NICHT geschrieben, da die Validierung fehlgeschlagen ist.");
 			}
-		}
-		catch(IOException e1)
-		{
+		} catch(IOException e1) {
 			System.err.println("💥 [IO-AUSNAHME] Fehler beim Schreiben der Datei!");
 			e1.printStackTrace();	
 		}
 		System.out.println("=== [DIAGNOSE] saveFilledSkeleton beendet ===\n");
 	}
-
 
 }
 
