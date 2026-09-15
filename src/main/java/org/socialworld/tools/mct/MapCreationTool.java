@@ -47,11 +47,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.stream.Collectors;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.awt.event.ActionEvent;
 
@@ -2019,7 +2017,7 @@ public class MapCreationTool {
 
 		rasterSize = empty.size();
 
-		int maxTrys = 100000;
+		int maxTrys = 10000;
 		boolean nextTry;
 		for (int nrTry = 0; nrTry < maxTrys; nrTry++)
 		{
@@ -2208,20 +2206,14 @@ public class MapCreationTool {
 		
 		raster = new RasterField[81];
 		
-	//	panelRaster = new JPanel();
-		//panelRaster.setLayout(new GridLayout(9,9));
 		for (int i = 0; i < 81; i++) {
 			raster[i] = new RasterField(i);
-//			panelRaster.add(raster[i]);
 		}
-
-		
+	
 		fillTileRaster();
 	
 		possibleTiles =  PossibleTiles.getInstance();
 		heightChangeChecker = HeightChangeChecker.getInstance();
-				
-		//setTileSelection(possibleTiles.getAllLargeStandardTiles());
 	}
 	
 	// die alte Methode bleibt voll intakt als Fallback (nutzt den Zeitstempel-Namen)
@@ -2232,125 +2224,276 @@ public class MapCreationTool {
 
     // Globale Zähler für die Status-Anzeige und die Reißleine
     private static int backtrackSteps = 0;
-    private static int minTodosSeen = Integer.MAX_VALUE;
     
     // --- DIE REISSLEINE ---
     // Wenn ein Sektor nach 5.000.000 Schritten nicht gelöst ist, brechen wir ab!
-    private static final int MAX_BACKTRACK_STEPS = 5000000; 
+    private static final int MAX_BACKTRACK_STEPS = 500000000; 
 
-    public static void fillSkeleton(String skeleton, String targetFilename) {
-        System.out.println("🚀 Starte rekursiven Backtracking-Solver für [" + targetFilename + "]...");
-        backtrackSteps = 0;
-        minTodosSeen = Integer.MAX_VALUE; 
-        
+ 
+    public static boolean fillSkeleton(String skeleton, String targetFilename) {
+    	
+    	boolean success;
         MapCreationTool localTool = new MapCreationTool(skeleton);
+       
+        if (isRandHoeheKonsistent(localTool)) {
+            long startTime = System.currentTimeMillis();
+        	success = startePragmatischeSchleife(localTool);
+            long endTime = System.currentTimeMillis();
+            
+        	if (success) {
+                System.out.println("🟩 [ERFOLG] Sektor '" + targetFilename + "' gelöst in " + (endTime - startTime) + " ms! (Schritte: " + backtrackSteps + ")");
+                success = saveFilledSkeleton(localTool, targetFilename);
+        	}
+        	else {
+                System.err.println("❌ [UNLÖSBAR] Sektor '" + targetFilename + "' ist für das gegebene Skelett mathematisch absolut unmöglich!");
+        	}
+        }
+        else {
+//       	 System.out.println("Höhenänderung am Rand NICHT konsistent.");
+       	 success  = false;
+        }
         
-        List<Integer> todoIndexes = new ArrayList<>();
-        for (int i = 0; i < 81; i++) {
-            if (localTool.raster[i].getTile().getType() == TileType.todo) {
-                todoIndexes.add(i);
-            }
-        }
-
-        long startTime = System.currentTimeMillis();
-        boolean success = solveRecursive(localTool, todoIndexes);
-        long endTime = System.currentTimeMillis();
-
-        if (success) {
-            System.out.println("🟩 [ERFOLG] Sektor '" + targetFilename + "' gelöst in " + (endTime - startTime) + " ms! (Schritte: " + backtrackSteps + ")");
-            saveFilledSkeleton(localTool, targetFilename);
-        } else {
-            if (backtrackSteps >= MAX_BACKTRACK_STEPS) {
-                System.err.println("⚠️ [TIMEOUT] Sektor '" + targetFilename + "' nach " + MAX_BACKTRACK_STEPS + " Schritten abgebrochen (ÜBERSPRINGEN).");
-            } else {
-                System.err.println("❌ [UNLÖSBAR] Sektor '" + targetFilename + "' ist mathematisch absolut unmöglich!");
-            }
-        }
+        return success;
     }
+    
+ 
+    
+    private static boolean startePragmatischeSchleife(MapCreationTool localTool) {
+        int RASTER_BREITE = 9;
 
-    /**
-     * Der rekursive Kern mit integrierter Reißleinen-Prüfung.
-     */
-    private static boolean solveRecursive(MapCreationTool localTool, List<Integer> todoIndexes) {
-        // 1. REISSLEINE PRÜFEN: Wenn das Limit erreicht ist, sofort nach oben abbrechen!
-        if (backtrackSteps >= MAX_BACKTRACK_STEPS) {
+        // 1. Phase 1: Das ganz tiefe Fundament (Reihe 5, 6 und 7) -> 21 Kacheln
+        List<Integer> foundationOrder = new ArrayList<>();
+        for (int row = 7; row >= 5; row--) {
+            for (int col = 1; col <= 7; col++) {
+                foundationOrder.add((row * RASTER_BREITE) + col);
+            }
+        }
+
+        // 2. Phase 2: Die Anschluss-Reihe (Reihe 4) -> Nur 7 Kacheln!
+        List<Integer> connectorOrder = new ArrayList<>();
+        for (int col = 1; col <= 7; col++) {
+            connectorOrder.add((4 * RASTER_BREITE) + col);
+        }
+
+        // 3. Phase 3: Die obere Hälfte (Reihe 1 bis 3) -> 21 Kacheln, SPALTENWEISE befüllt!
+        List<Integer> topHalfOrder = new ArrayList<>();
+
+        // ZUERST über die Spalten laufen (von links nach rechts)
+        for (int col = 1; col <= 7; col++) {
+            // DANACH über die Reihen laufen (von oben nach unten)
+            for (int row = 1; row <= 3; row++) {
+                topHalfOrder.add((row * RASTER_BREITE) + col);
+            }
+        }
+
+ 
+        // ==========================================
+        // SCHRITT 1: Fundament EINMALIG bauen
+        // ==========================================
+        
+        clearInner7x7(localTool); 
+        
+        backtrackSteps = 0;
+        boolean foundationOk = solveStaticOrder(0, localTool, foundationOrder, 0);
+
+        if (!foundationOk) {
+            System.out.println("❌ [ABBRUCH] Schon das Fundament (Reihe 5-7) ist unlösbar zum Außenrand!");
             return false;
         }
-
-        if (todoIndexes.isEmpty()) {
-            return true;
-        }
-
-        backtrackSteps++;
-        int currentTodoCount = todoIndexes.size();
+        System.out.println("🟩 Fundament (Reihe 5-7) steht bombenfest. Starte Anschluss-Lotto...");
+        //printRaster(localTool);
         
-        if (currentTodoCount < minTodosSeen) {
-            minTodosSeen = currentTodoCount; 
-        }
+        	
+        // ==========================================
+        // SCHRITT 2 & 3: Die Schleife für den Anschluss
+        // ==========================================
+        boolean sektorGeloest = false;
+        int versuch = 0;
+        
+        List<int[]> valideReihe4Muster = Row4PatternGenerator.generiereAlleKombinationen();
+        
+        // Abbruch durch leere Liste (nur Interesse am Fundament
+//        List<int[]> valideReihe4Muster = new ArrayList<int[]>();
 
-        if (backtrackSteps % 100000 == 0) {
-            System.out.println("   ⏳ Schritte: " + backtrackSteps + " | Aktuelle TODOs: " + currentTodoCount + " | Bester Tiefpunkt: " + minTodosSeen);
-        }
+        // Innerhalb deiner Hauptschleife (Schritt 3 - Iteration über alle generierten Muster):
+        for (int[] muster : valideReihe4Muster) { // Der Generator liefert jetzt int[] statt List<Tile>
+        	versuch++;
 
-        int minSetSize = Integer.MAX_VALUE;
-        List<Integer> candidatesWithMinSet = new ArrayList<>();
-        Map<Integer, Integer[]> validTilesMap = new HashMap<>();
+            // Reihe 1 bis 4 säubern
+            clearRows1To4(localTool);
 
-        // MRV-HEURISTIK
-        for (int todoIdx : todoIndexes) {
-            Set<Integer> reducedSet = localTool.getReducedSet(todoIdx);
-            int setSize = reducedSet.size();
+            // Nutze den neuen Spezial-Solver für Reihe 4!
+            // Er setzt Reihe 4 NUR, wenn sie zu 100% mit Reihe 5 (reducedSet) harmoniert.
+            boolean connectorOk = solveWithPatternVorgabe(localTool, connectorOrder, muster, 0);
 
-            if (setSize == 0) {
-                return false; 
+            if (connectorOk) {
+                 // Reihe 4 sitzt perfekt und ist verifiziert!
+                // JETZT ERST: Phase 3  für Reihe 1 bis 3 anwerfen
+                backtrackSteps = 0;
+                boolean topOk = solveStaticOrder(versuch, localTool, topHalfOrder, 0);
+
+                if (topOk) {
+                    sektorGeloest = true;
+                    System.out.println("🟩 [ERFOLG] Sektor mit Muster Nr. " + versuch + " gelöst!");
+                    break;
+                }
+            } else {
+                // System.out.println("Schnittmenge leer: Muster " + musterIndex + " passt nicht auf Reihe 5.");
             }
-
-            validTilesMap.put(todoIdx, reducedSet.toArray(new Integer[setSize]));
-
-            if (setSize < minSetSize) {
-                minSetSize = setSize;
-                candidatesWithMinSet.clear();
-                candidatesWithMinSet.add(todoIdx);
-            } else if (setSize == minSetSize) {
-                candidatesWithMinSet.add(todoIdx);
-            }
         }
 
-        int chosenFieldIndex = candidatesWithMinSet.get((int)(Math.random() * candidatesWithMinSet.size()));
-        Integer[] possibleTiles = validTilesMap.get(chosenFieldIndex);
-
-        List<Integer> tilesList = Arrays.asList(possibleTiles);
-        Collections.shuffle(tilesList);
-
-        // SYSTEMATISCHES DURCHPROBIEREN
-        for (int tileNum : tilesList) {
-            
-            localTool.raster[chosenFieldIndex].setTile(TileType.largeStandard, localTool.tileTypeAlternative, tileNum);
-            localTool.raster[chosenFieldIndex].setText();
-            
-            todoIndexes.remove(Integer.valueOf(chosenFieldIndex));
-
-            if (solveRecursive(localTool, todoIndexes)) {
-                return true; 
-            }
-
-            // Schritt RÜCKWÄRTS (Undo)
-            localTool.raster[chosenFieldIndex].setToDo();
-            localTool.raster[chosenFieldIndex].setText();
-            todoIndexes.add(chosenFieldIndex);
+        if (!sektorGeloest) {
+            System.out.println("❌ [ABBRUCH] Sektor konnte auch nach " + versuch + " Kombinationen nicht gelöst werden.");
         }
-
-        return false;
+        
+        return sektorGeloest;
+    }
+    
+    
+    // Neue angepasste Hilfsmethode: Löscht nur Reihe 1-4, lässt 5-7 unberührt!
+    private static void clearRows1To4(MapCreationTool localTool) {
+        int RASTER_BREITE = 9;
+        for (int row = 1; row <= 4; row++) {
+            for (int col = 1; col <= 7; col++) {
+                int idx = (row * RASTER_BREITE) + col;
+                localTool.raster[idx].setToDo();
+                localTool.raster[idx].setText();
+            }
+        }
+    }
+   
+    // Hilfsmethode zum Zurücksetzen vor dem nächsten Schleifendurchlauf
+    private static void clearInner7x7(MapCreationTool localTool) {
+        int RASTER_BREITE = 9;
+        for (int row = 1; row <= 7; row++) {
+            for (int col = 1; col <= 7; col++) {
+                int idx = (row * RASTER_BREITE) + col;
+                localTool.raster[idx].setToDo();
+                localTool.raster[idx].setText();
+            }
+        }
     }
 
+    
+    
+	 // Der Aufruf startet mit index = 0
+	 // List<Integer> staticOrder enthält die 49 Indizes der 7x7 Innenkacheln, 
+	 // sortiert nach deiner gewünschten Heuristik (z.B. erst die 4 Innenecken, dann Innenkanten, etc.)
+	 private static boolean solveStaticOrder(int versuch, MapCreationTool localTool, List<Integer> staticOrder, int currentIndex) {
+	     // 1. REISSLEINE PRÜFEN
+	     if (backtrackSteps >= MAX_BACKTRACK_STEPS) {
+	         return false;
+	     }
+	
+	     // 2. ZIEL ERREICHT: Wenn wir alle Indizes der statischen Liste erfolgreich belegt haben
+	     if (currentIndex >= staticOrder.size()) {
+	         return true;
+	     }
+	
+	     backtrackSteps++;
+	     
+	
+	     // 3. Aktuelles Feld aus der fixen Reihenfolge holen
+	     int chosenFieldIndex = staticOrder.get(currentIndex);
+	
+	     // 4. NUR die für dieses Feld aktuell gültigen Kacheln holen
+	     Set<Integer> reducedSet = localTool.getReducedSet(chosenFieldIndex);
+	     
+	     // Sackgasse: Keine gültige Kachel für dieses Feld im aktuellen Zustand des Rasters
+	     if (reducedSet.isEmpty()) {
+	         return false; 
+	     }
+	
+	     // In eine Liste umwandeln, damit wir sie (optional) shuffeln oder sortieren können
+	     List<Integer> tilesList = new ArrayList<>(reducedSet);
+	     
+	     // HINWEIS: Collections.shuffle(tilesList) hier sorgt dafür, dass die Kachelauswahl pro Feld 
+	     // variiert, während die Feld-Reihenfolge absolut strikt und statisch bleibt!
+	     Collections.shuffle(tilesList); 
+	
+	     // 5. SYSTEMATISCHES DURCHPROBIEREN
+	     for (int tileNum : tilesList) {
+	         
+	         // Kachel setzen
+	         localTool.raster[chosenFieldIndex].setTile(TileType.largeStandard, localTool.tileTypeAlternative, tileNum);
+	         localTool.raster[chosenFieldIndex].setText();
+	         
+	         // Rekursion: Gehe strikt zum NÄCHSTEN Index in unserer statischen Liste (+1)
+	         if (solveStaticOrder(versuch, localTool, staticOrder, currentIndex + 1)) {
+	             return true; 
+	         }
+	
+	         // Schritt RÜCKWÄRTS (Undo)
+	         localTool.raster[chosenFieldIndex].setToDo();
+	         localTool.raster[chosenFieldIndex].setText();
+	     }
+	
+	     // Alle Kacheln für diesen Index ausprobiert und gescheitert -> Backtracking nach oben
+	     return false;
+	 }
+
+	 /**
+	  * Spezial-Solver für Reihe 4. Prüft ein exaktes Muster (7 Kachel-IDs) 
+	  * gegen die topologischen Constraints (reducedSet) des Rasters.
+	  * 
+	  * @param localTool     Die aktuelle Map-Instanz
+	  * @param connectorOrder Die Liste mit exakt 7 Feld-Indizes für Reihe 4
+	  * @param patternVorgabe Ein int-Array mit exakt 7 Kachel-IDs (Muster aus dem Generator)
+	  * @param currentIndex   Startet beim Aufruf mit 0
+	  * @return true, wenn das Muster perfekt auf Reihe 5 und die Ränder passt
+	  */
+	 private static boolean solveWithPatternVorgabe(
+	     MapCreationTool localTool, 
+	     List<Integer> connectorOrder, 
+	     int[] patternVorgabe, 
+	     int currentIndex
+	 ) {
+	     // 1. ZIEL ERREICHT: Wenn alle 7 Felder des Musters erfolgreich validiert wurden
+	     if (currentIndex >= connectorOrder.size()) {
+	         return true;
+	     }
+
+	     // 2. Aktuelles Feld aus Reihe 4 holen
+	     int chosenFieldIndex = connectorOrder.get(currentIndex);
+
+	     // 3. Gewünschte Kachel-ID aus eurer Muster-Vorgabe auslesen
+	     int targetTileNum = patternVorgabe[currentIndex];
+
+	     // 4. Topologische Constraints vom System holen (Nachbarschaft zu Reihe 5 & Rändern)
+	     Set<Integer> reducedSet = localTool.getReducedSet(chosenFieldIndex);
+
+	     // 🔥 DIE VERSCHNEIDUNG: Ist die Kachel aus dem Muster im reducedSet überhaupt erlaubt?
+	     if (!reducedSet.contains(targetTileNum)) {
+	         // Widerspruch! Das Muster kollidiert vertikal mit Reihe 5 oder dem Außenrand.
+	         // Wir brechen diesen Pfad sofort ab (kein weiteres sinnloses Probieren).
+	         return false;
+	     }
+
+	     // 5. Kachel testweise setzen (da sie laut reducedSet erlaubt ist)
+	     localTool.raster[chosenFieldIndex].setTile(TileType.largeStandard, localTool.tileTypeAlternative, targetTileNum);
+	     localTool.raster[chosenFieldIndex].setText();
+
+	     // 6. Rekursion: Gehe zum nächsten Feld in Reihe 4 (+1)
+	     if (solveWithPatternVorgabe(localTool, connectorOrder, patternVorgabe, currentIndex + 1)) {
+	         return true;
+	     }
+
+	     // Schritt RÜCKWÄRTS (Undo), falls ein späteres Feld in Reihe 4 (z.B. wegen horizontaler Konflikte) scheitert
+	     localTool.raster[chosenFieldIndex].setToDo();
+	     localTool.raster[chosenFieldIndex].setText();
+
+	     return false;
+	 }
 	
 	// 3. Die saveFilledSkeleton-Methode, die jetzt den Wunschnamen akzeptiert
-	private static void saveFilledSkeleton(MapCreationTool skeletonFiller, String targetFilename) {
+	private static boolean saveFilledSkeleton(MapCreationTool skeletonFiller, String targetFilename) {
 		System.out.println("\n=== [DIAGNOSE] Starte saveFilledSkeleton ===");
 		int mapKachelnKopiert = 0;
 		int todoKachelnUebersprungen = 0;
 		int subKachelnUebersprungen = 0;
 
+		boolean valid = false;
+		
 		for (int i = 0; i < 81; i++) {
 			if (skeletonFiller.raster[i] == null) {
 				System.out.println("-> [WARNUNG] Raster-Feld an Index " + i + " is komplett NULL!");
@@ -2388,7 +2531,7 @@ public class MapCreationTool {
 
 			boolean containsTodo = filetext != null && filetext.contains("TODO");
 			boolean containsInvalidHeight = filetext != null && filetext.contains("-999");
-			boolean valid = !containsTodo && !containsInvalidHeight;
+			valid = !containsTodo && !containsInvalidHeight;
 
 			System.out.println("-> [VALIDIERUNG] Enthält 'TODO'?: " + containsTodo);
 			System.out.println("-> [VALIDIERUNG] Enthält Fehler-Höhe '-999'?: " + containsInvalidHeight);
@@ -2409,8 +2552,107 @@ public class MapCreationTool {
 			e1.printStackTrace();	
 		}
 		System.out.println("=== [DIAGNOSE] saveFilledSkeleton beendet ===\n");
+		return valid;
+	}
+	
+	
+	public static boolean isRandHoeheKonsistent(MapCreationTool tool) {
+	    int RASTER_BREITE = 9;
+	    int akkumulierteHoehe = 0;
+
+	    // =========================================================================
+	    // 1. NORDKANTE: Von links nach rechts (Reihe 0, Spalte 0 bis Spalte 7 -> 8)
+	    // =========================================================================
+	    for (int col = 0; col < 8; col++) {
+	        int aktuellerIndex = (0 * RASTER_BREITE) + col;
+	        int rechterIndex   = (0 * RASTER_BREITE) + (col + 1);
+
+	        int kachelLinks  = tool.raster[aktuellerIndex].getTileNumber();
+	        int kachelRechts = tool.raster[rechterIndex].getTileNumber();
+
+	        // Wie viel Höhenunterschied ist zwischen der NO-Ecke links und der NW-Ecke rechts?
+	        int delta = TileInfo.getOffset(kachelLinks, "no") - TileInfo.getOffset(kachelRechts, "nw");
+	        akkumulierteHoehe += delta;
+	    }
+
+	    // =========================================================================
+	    // 2. OSTKANTE: Von oben nach unten (Spalte 8, Reihe 0 bis Reihe 7 -> 8)
+	    // =========================================================================
+	    for (int row = 0; row < 8; row++) {
+	        int aktuellerIndex = (row * RASTER_BREITE) + 8;
+	        int untererIndex   = ((row + 1) * RASTER_BREITE) + 8;
+
+	        int kachelOben  = tool.raster[aktuellerIndex].getTileNumber();
+	        int kachelUnten = tool.raster[untererIndex].getTileNumber();
+
+	        // Unterschied zwischen SO-Ecke oben und NO-Ecke unten
+	        int delta = TileInfo.getOffset(kachelOben, "so") - TileInfo.getOffset(kachelUnten, "no");
+	        akkumulierteHoehe += delta;
+	    }
+
+	    // =========================================================================
+	    // 3. SÜDKANTE: Von rechts nach links (Reihe 8, Spalte 8 bis Spalte 1 -> 0)
+	    // =========================================================================
+	    for (int col = 8; col > 0; col--) {
+	        int aktuellerIndex = (8 * RASTER_BREITE) + col;
+	        int linkerIndex    = (8 * RASTER_BREITE) + (col - 1);
+
+	        int kachelRechts = tool.raster[aktuellerIndex].getTileNumber();
+	        int kachelLinks  = tool.raster[linkerIndex].getTileNumber();
+
+	        // Unterschied zwischen SW-Ecke rechts und SO-Ecke links
+	        int delta = TileInfo.getOffset(kachelRechts, "sw") - TileInfo.getOffset(kachelLinks, "so");
+	        akkumulierteHoehe += delta;
+	    }
+
+	    // =========================================================================
+	    // 4. WESTKANTE: Von unten nach oben (Spalte 0, Reihe 8 bis Reihe 1 -> 0)
+	    // =========================================================================
+	    for (int row = 8; row > 0; row--) {
+	        int aktuellerIndex = (row * RASTER_BREITE) + 0;
+	        int obererIndex    = ((row - 1) * RASTER_BREITE) + 0;
+
+	        int kachelUnten = tool.raster[aktuellerIndex].getTileNumber();
+	        int kachelOben  = tool.raster[obererIndex].getTileNumber();
+
+	        // Unterschied zwischen NW-Ecke unten und SW-Ecke oben
+	        int delta = TileInfo.getOffset(kachelUnten, "nw") - TileInfo.getOffset(kachelOben, "sw");
+	        akkumulierteHoehe += delta;
+	    }
+
+	    // =========================================================================
+	    // DAS FINALE URTEIL
+	    // =========================================================================
+	    if (akkumulierteHoehe != 0) {
+	        System.out.println("❌ [TOPOLOGIE-FEHLER] Das Skeleton erzeugt eine unlösbare Escher-Treppe!");
+	        System.out.println("   Höhenfehler nach vollem Umlauf: " + akkumulierteHoehe + " Stufen.");
+	        return false; // Stopp! Dieser Rand ist mathematisch unlösbar.
+	    }
+
+	    System.out.println("🟩 [TOPOLOGIE-OK] Das Skeleton ist in sich geschlossen (Fehler: 0).");
+	    return true; // Grünes Licht für den Solver.
+	}
+
+	
+	private static void printRaster(MapCreationTool mct) {
+		for (int i = 0; i < 81; i++) {
+			if (mct.raster[i] == null) {
+				continue;
+			}
+
+			TileType currentType = mct.raster[i].getTileType();
+			
+			if ((currentType != TileType.sub) && (currentType != TileType.todo)) {
+				mct.tileTerm.addTile(new Tile(currentType, mct.raster[i].getTileNumber(), mct.raster[i].height), i);
+			} else {
+			}
+		}
+		mct.tileTerm.setHeights();
+		String gridtext = mct.tileTerm.toString();
+		System.out.println(gridtext);
 	}
 
 }
+
 
 

@@ -5,10 +5,25 @@ import java.util.*;
 public class MapSkeletonGenerator {
 
     private static final Random RANDOM = new Random();
+    private static List<Integer> types_0_15 = new ArrayList<>();
+    private static List<Integer> types_16_19 = new ArrayList<>();
 
     public static String generateSkeleton(int[] targetNorth, int[] targetEast, int[] targetSouth, int[] targetWest) {
         String[][] grid = new String[9][9];
+        String tile;
         
+        // Kacheltypen durchmischen
+        types_0_15 = new ArrayList<>();
+        for (int i = 0; i <= 15; i++) {
+        	types_0_15.add(i);
+        }
+        Collections.shuffle(types_0_15);
+        types_16_19 = new ArrayList<>();
+        for (int i = 16; i <= 19; i++) {
+        	types_16_19.add(i);
+        }
+        Collections.shuffle(types_16_19);
+      
         for (int r = 0; r < 9; r++) {
             Arrays.fill(grid[r], "TODO");
         }
@@ -16,14 +31,18 @@ public class MapSkeletonGenerator {
         // 1. NORDRAND (Reihe 0, von West nach Ost)
         if (targetNorth != null && targetNorth.length == 10) {
             for (int c = 0; c < 9; c++) {
-                grid[0][c] = getValidTileForGrid(grid, 0, c, "north", targetNorth[c], targetNorth[c + 1]);
+            	tile = getValidTileForGrid(grid, 0, c, "north", targetNorth[c], targetNorth[c + 1]);
+            	if (tile.equals("ERROR")) return "";
+                grid[0][c] = tile;
             }
         }
 
         // 2. SÜDRAND (Reihe 8, von West nach Ost)
         if (targetSouth != null && targetSouth.length == 10) {
             for (int c = 0; c < 9; c++) {
-                grid[8][c] = getValidTileForGrid(grid, 8, c, "south", targetSouth[c], targetSouth[c + 1]);
+            	tile = getValidTileForGrid(grid, 8, c, "south", targetSouth[c], targetSouth[c + 1]);
+            	if (tile.equals("ERROR")) return "";
+                grid[8][c] = tile;
             }
         }
 
@@ -31,7 +50,9 @@ public class MapSkeletonGenerator {
         if (targetWest != null && targetWest.length == 10) {
             for (int r = 0; r < 9; r++) {
                 if (grid[r][0].equals("TODO")) {
-                    grid[r][0] = getValidTileForGrid(grid, r, 0, "west", targetWest[r], targetWest[r + 1]);
+                	tile = getValidTileForGrid(grid, r, 0, "west", targetWest[r], targetWest[r + 1]);
+                	if (tile.equals("ERROR")) return "";
+                    grid[r][0] = tile;
                 }
             }
         }
@@ -40,7 +61,9 @@ public class MapSkeletonGenerator {
         if (targetEast != null && targetEast.length == 10) {
             for (int r = 0; r < 9; r++) {
                 if (grid[r][8].equals("TODO")) {
-                    grid[r][8] = getValidTileForGrid(grid, r, 8, "east", targetEast[r], targetEast[r + 1]);
+                	tile = getValidTileForGrid(grid, r, 8, "east", targetEast[r], targetEast[r + 1]);
+                	if (tile.equals("ERROR")) return "";
+                    grid[r][8] = tile;
                 }
             }
         }
@@ -73,11 +96,11 @@ public class MapSkeletonGenerator {
         // =====================================================================
         // STUFE 1: Suche strictly nur in den einfachen Standard-Kacheln (0 bis 15)
         // =====================================================================
-        for (int type = 0; type <= 15; type++) {
+        for (int type : types_0_15) {
             // Schutzfilter: Keine echten Grate (6,9) an den Außenrändern
-            if (type == 6 || type == 9) {
-                continue;
-            }
+ //           if (type == 6 || type == 9) {
+ //               continue;
+ //           }
 
             checkAndAddTileType(type, diff, hFirst, edge, tileAbove, tileLeft, validTiles);
         }
@@ -98,14 +121,14 @@ public class MapSkeletonGenerator {
         // weichen wir zähneknirschend auf die Doppelsteigungen (16 bis 19) aus!
         // =====================================================================
         if (validTiles.isEmpty()) {
-            for (int type = 16; type <= 19; type++) {
+        	for (int type : types_16_19)  {
                 checkAndAddTileType(type, diff, hFirst, edge, tileAbove, tileLeft, validTiles);
             }
         }
 
-        // Fallback, falls die mathematischen Bedingungen absolut unlösbar sind
+        // Abbruch, falls die mathematischen Bedingungen absolut unlösbar sind
         if (validTiles.isEmpty()) {
-            return "L_0_" + hFirst;
+            return "ERROR";
         }
 
         return validTiles.get(RANDOM.nextInt(validTiles.size()));

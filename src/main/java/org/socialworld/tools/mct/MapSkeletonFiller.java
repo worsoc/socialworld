@@ -126,20 +126,21 @@ public class MapSkeletonFiller {
      */
     private static void runMegaGridVerbundMode() {
         System.out.println("-> Modus aktiv: 3x3 Sektoren-Verbund (Testfeld)");
-        
+ /*       
         // STEUERUNG: Echtes Bergrelief mit Höhen bis zu 3!
         // Horizontale Trennlinien (West -> Ost)
         int[] h0 = {0, 0, 0, 0, 1, 1, 1, 0, 0, 0}; // Ganz oben (Nordrand Reihe 0) - Sanfter Hügel
         int[] h1 = {0, 0, 1, 2, 2, 2, 1, 1, 0, 0}; // Trennlinie Reihe 0 / Reihe 1 - Es steigt an
-        int[] h2 = {0, 1, 2, 3, 3, 3, 2, 1, 1, 1}; // Trennlinie Reihe 1 / Reihe 2 - Das Hochplateau (Höhe 3)
-        int[] h3 = {1, 1, 2, 2, 2, 2, 1, 1, 1, 1}; // Ganz unten (Südrand Reihe 2) - Sanftes Auslaufen
+        int[] h2 = {0, 1, 1, 2, 3, 2, 1, 1, 1, 0}; // Trennlinie Reihe 1 / Reihe 2 - Das Hochplateau (Höhe 3)
+        int[] h3 = {0, 1, 2, 2, 2, 2, 1, 1, 1, 0}; // Ganz unten (Südrand Reihe 2) - Sanftes Auslaufen
 
         // Vertikale Trennlinien (Nord -> Süd)
-        int[] v0 = {0, 0, 0, 0, 1, 1, 1, 1, 1, 1}; // Ganz links (Westrand Spalte 0)
-        int[] v1 = {0, 0, 1, 2, 2, 2, 1, 1, 1, 1}; // Trennlinie Spalte 0 / Spalte 1
-        int[] v2 = {0, 1, 2, 3, 3, 3, 2, 1, 1, 1}; // Trennlinie Spalte 1 / Spalte 2
-        int[] v3 = {0, 1, 1, 2, 2, 2, 1, 1, 1, 1}; // Ganz rechts (Ostrand Spalte 2)
-/*
+        int[] v0 = {0, 0, 0, 0, 1, 1, 1, 1, 1, 0}; // Ganz links (Westrand Spalte 0)
+        int[] v1 = {0, 0, 1, 2, 2, 2, 1, 1, 1, 0}; // Trennlinie Spalte 0 / Spalte 1
+        int[] v2 = {0, 1, 1, 2, 3, 3, 2, 1, 1, 0}; // Trennlinie Spalte 1 / Spalte 2
+        int[] v3 = {0, 0, 1, 2, 2, 2, 1, 1, 1, 0}; // Ganz rechts (Ostrand Spalte 2)
+ */      
+
          // ENTSPANNTE HÖHENWELLEN (0 und 1): Ecken an Index 0 und 9 sind perfekt synchronisiert!
         // Horizontale Trennlinien (West -> Ost)
         int[] h0 = {0, 0, 0, 1, 1, 1, 0, 0, 0, 0}; // Ganz oben (Nordrand Reihe 0)
@@ -152,7 +153,7 @@ public class MapSkeletonFiller {
         int[] v1 = {0, 0, 1, 1, 0, 0, 1, 1, 0, 0}; // Trennlinie Spalte 0 / Spalte 1
         int[] v2 = {0, 0, 1, 0, 0, 1, 1, 0, 0, 0}; // Trennlinie Spalte 1 / Spalte 2
         int[] v3 = {0, 0, 1, 1, 1, 1, 1, 1, 0, 0}; // Ganz rechts (Ostrand Spalte 2)
-*/
+
  /*
         // Stufenweise ansteigende Höhenprofile (je 10 Punkte von West nach Ost)
         int[] h0 = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; 
@@ -182,19 +183,17 @@ public class MapSkeletonFiller {
                     int[] west  = (sCol == 0) ? v0 : (sCol == 1) ? v1 : v2;
                     int[] east  = (sCol == 0) ? v1 : (sCol == 1) ? v2 : v3;
 
- /*                   
-                    int[] north = (sRow == 0) ? h0 : (sRow == 1) ? h1 : h2;
-                    int[] east  = (sCol == 0) ? v1 : (sCol == 1) ? v2 : v3;
-                    
-                    // --- ENTLASTUNG: Süden und Westen auf 'null' setzen ---
-                    // Dadurch docken die Sektoren nach Norden und Osten immer noch perfekt an,
-                    // aber das Backtracking kriegt genug Luft zum Atmen!
-                    int[] south = null; 
-                    int[] west  = null; 
-*/
-                    String skeletonString = MapSkeletonGenerator.generateSkeleton(north, east, south, west);
-                    System.out.println("\n" + skeletonString);
-                   MapCreationTool.fillSkeleton(skeletonString, filenames[sRow][sCol]); 
+                    boolean success = false;
+                    String skeletonString = "";
+                    while (!success) {
+                         while (skeletonString.equals("") ) {
+	                    	 skeletonString = MapSkeletonGenerator.generateSkeleton(north, east, south, west);
+	                         if (skeletonString.length() >0) System.out.println("Skeleton: " + skeletonString);
+                         }
+                    	 success = MapCreationTool.fillSkeleton(skeletonString, filenames[sRow][sCol]);
+                    	 // reset, falls noch kein success, dann mit neuem string versuchen
+                    	 skeletonString = "";
+                    }
                 }
             }
             System.out.println("\n🟩 Alle 9 Verbund-Schablonen erfolgreich an das MapCreationTool übergeben!");
