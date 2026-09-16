@@ -126,7 +126,7 @@ public class MapSkeletonFiller {
      */
     private static void runMegaGridVerbundMode() {
         System.out.println("-> Modus aktiv: 3x3 Sektoren-Verbund (Testfeld)");
- /*       
+        
         // STEUERUNG: Echtes Bergrelief mit Höhen bis zu 3!
         // Horizontale Trennlinien (West -> Ost)
         int[] h0 = {0, 0, 0, 0, 1, 1, 1, 0, 0, 0}; // Ganz oben (Nordrand Reihe 0) - Sanfter Hügel
@@ -135,12 +135,18 @@ public class MapSkeletonFiller {
         int[] h3 = {0, 1, 2, 2, 2, 2, 1, 1, 1, 0}; // Ganz unten (Südrand Reihe 2) - Sanftes Auslaufen
 
         // Vertikale Trennlinien (Nord -> Süd)
-        int[] v0 = {0, 0, 0, 0, 1, 1, 1, 1, 1, 0}; // Ganz links (Westrand Spalte 0)
-        int[] v1 = {0, 0, 1, 2, 2, 2, 1, 1, 1, 0}; // Trennlinie Spalte 0 / Spalte 1
-        int[] v2 = {0, 1, 1, 2, 3, 3, 2, 1, 1, 0}; // Trennlinie Spalte 1 / Spalte 2
-        int[] v3 = {0, 0, 1, 2, 2, 2, 1, 1, 1, 0}; // Ganz rechts (Ostrand Spalte 2)
- */      
+        int[] v0 = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; // Ganz links (Westrand Spalte 0)
+        int[] v1 = {0, 0, 1, 1, 0, 0, 1, 1, 0, 0}; // Trennlinie Spalte 0 / Spalte 1
+        int[] v2 = {0, 0, 1, 0, 0, 1, 1, 0, 0, 0}; // Trennlinie Spalte 1 / Spalte 2
+        int[] v3 = {0, 0, 1, 1, 1, 1, 1, 1, 0, 0}; // Ganz rechts (Ostrand Spalte 2)
 
+        // Vertikale Trennlinien (Nord -> Süd)
+//        int[] v0 = {0, 0, 0, 0, 1, 1, 1, 1, 1, 0}; // Ganz links (Westrand Spalte 0)
+//        int[] v1 = {0, 0, 1, 2, 2, 2, 1, 1, 1, 0}; // Trennlinie Spalte 0 / Spalte 1
+//        int[] v2 = {0, 1, 1, 2, 3, 3, 2, 1, 1, 0}; // Trennlinie Spalte 1 / Spalte 2
+//        int[] v3 = {0, 0, 1, 2, 2, 2, 1, 1, 1, 0}; // Ganz rechts (Ostrand Spalte 2)
+       
+/*
          // ENTSPANNTE HÖHENWELLEN (0 und 1): Ecken an Index 0 und 9 sind perfekt synchronisiert!
         // Horizontale Trennlinien (West -> Ost)
         int[] h0 = {0, 0, 0, 1, 1, 1, 0, 0, 0, 0}; // Ganz oben (Nordrand Reihe 0)
@@ -153,7 +159,7 @@ public class MapSkeletonFiller {
         int[] v1 = {0, 0, 1, 1, 0, 0, 1, 1, 0, 0}; // Trennlinie Spalte 0 / Spalte 1
         int[] v2 = {0, 0, 1, 0, 0, 1, 1, 0, 0, 0}; // Trennlinie Spalte 1 / Spalte 2
         int[] v3 = {0, 0, 1, 1, 1, 1, 1, 1, 0, 0}; // Ganz rechts (Ostrand Spalte 2)
-
+*/
  /*
         // Stufenweise ansteigende Höhenprofile (je 10 Punkte von West nach Ost)
         int[] h0 = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; 

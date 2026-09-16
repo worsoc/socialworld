@@ -2217,9 +2217,9 @@ public class MapCreationTool {
 	}
 	
 	// die alte Methode bleibt voll intakt als Fallback (nutzt den Zeitstempel-Namen)
-	public static void fillSkeleton(String skeleton) {
+	public static boolean fillSkeleton(String skeleton) {
 		String defaultName = "onlyLs_filled_skeleton_" + java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss").format(java.time.LocalDateTime.now()) + ".txt";
-		fillSkeleton(skeleton, defaultName);
+		return fillSkeleton(skeleton, defaultName);
 	}
 
     // Globale Zähler für die Status-Anzeige und die Reißleine
@@ -2232,14 +2232,23 @@ public class MapCreationTool {
  
     public static boolean fillSkeleton(String skeleton, String targetFilename) {
     	
-    	boolean success;
+    	boolean success = false;;
         MapCreationTool localTool = new MapCreationTool(skeleton);
-       
-        if (isRandHoeheKonsistent(localTool)) {
+         
+       List<Integer> emptyBorderTiles  = getEmptyBorders(localTool);
+        
+        // nur falls der Rand komplett ist, dann Prüfung auf konsistenten Höhenverlauf den Rand herum
+        if (emptyBorderTiles.size() > 0 || isRandHoeheKonsistent(localTool)) {
+        	
             long startTime = System.currentTimeMillis();
         	success = startePragmatischeSchleife(localTool);
+         	
+        	if (emptyBorderTiles.size() > 0) {
+        		success = completeOuterBorder(localTool, emptyBorderTiles);
+        	}
+  
             long endTime = System.currentTimeMillis();
-            
+
         	if (success) {
                 System.out.println("🟩 [ERFOLG] Sektor '" + targetFilename + "' gelöst in " + (endTime - startTime) + " ms! (Schritte: " + backtrackSteps + ")");
                 success = saveFilledSkeleton(localTool, targetFilename);
@@ -2247,6 +2256,7 @@ public class MapCreationTool {
         	else {
                 System.err.println("❌ [UNLÖSBAR] Sektor '" + targetFilename + "' ist für das gegebene Skelett mathematisch absolut unmöglich!");
         	}
+
         }
         else {
 //       	 System.out.println("Höhenänderung am Rand NICHT konsistent.");
@@ -2256,7 +2266,43 @@ public class MapCreationTool {
         return success;
     }
     
- 
+    private static List<Integer> getEmptyBorders(MapCreationTool localTool) {
+        int RASTER_BREITE = 9;
+       // 0. Phase 0: Die absoluten Randkacheln des 9x9-Grids (Reihen/Spalten 0 und 8)
+        List<Integer> borderOrder = new ArrayList<>();
+        
+        int index;
+        // Obere und untere Reihe komplett (Reihe 0 und Reihe 8)
+        for (int col = 0; col < 9; col++) {
+        	index = (0 * RASTER_BREITE) + col;
+        	if (localTool.raster[index].getTileType() == TileType.todo )   borderOrder.add(index);
+           	index = (8 * RASTER_BREITE) + col;
+        	if (localTool.raster[index].getTileType() == TileType.todo )   borderOrder.add(index);
+         }
+        
+        // Linker und rechter Rand für die mittleren Reihen (Reihe 1 bis 7)
+        for (int row = 1; row <= 7; row++) {
+        	index = (row * RASTER_BREITE) + 0;
+        	if (localTool.raster[index].getTileType() == TileType.todo )   borderOrder.add(index);
+           	index = (row * RASTER_BREITE) + 8;
+        	if (localTool.raster[index].getTileType() == TileType.todo )   borderOrder.add(index);
+        }
+        return borderOrder;
+    }
+    
+    private static boolean completeOuterBorder(MapCreationTool localTool, List<Integer> borderOrder)  {
+        
+       if (borderOrder.size() > 0) {
+    	   for (int index : borderOrder) {
+    		   localTool.raster[index].setToDo();
+    		   localTool.raster[index].setText();
+    	   }
+    	   return      solveStaticOrder(0, localTool, borderOrder, 0);
+      }
+      else
+    	   return true;
+
+    }
     
     private static boolean startePragmatischeSchleife(MapCreationTool localTool) {
         int RASTER_BREITE = 9;
