@@ -36,7 +36,6 @@ import javax.swing.border.LineBorder;
 import java.awt.Button;
 import java.awt.Color;
 import java.awt.EventQueue;
-//import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -45,8 +44,12 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.stream.Collectors;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.awt.event.ActionEvent;
 
@@ -90,7 +93,7 @@ public class MapCreationTool {
 	JButton buttonZoomOut;
 	JButton buttonChooseTile;
 	JButton buttonReduceToChoosableTiles;
-	JButton buttonInfo;
+	JButton buttonFillMap;
 	JButton buttonClear;
 	JButton buttonGenerate;
 	JButton buttonClearAll;
@@ -544,9 +547,7 @@ public class MapCreationTool {
 			
 			
 			fillTileRaster();
-			
-			// zoomIn wieder raus, auf Info, damit man sich nix kaputt macht
-			info();
+			modus = modus.info;
 		}
 	}
 	
@@ -813,7 +814,14 @@ public class MapCreationTool {
 	////////////////////////////////////////////////////////////////
 	
 	private void saveTotal() {
+		String filename =  "tileterm_save.txt";
+		saveTotal(filename, false);
+	}
+	
+	private void saveTotal(String filename, boolean ignoreInvalid) {
 
+		boolean valid = false;
+		
 		clearInfoFieldOben();
 		clearInfoFieldMitte();
 		
@@ -824,7 +832,7 @@ public class MapCreationTool {
 		
 		buttonReduceToChoosableTiles.setBorder(buttonBorder);
 		buttonChooseTile.setBorder(buttonBorder);
-		buttonInfo.setBorder(buttonBorder);
+		buttonFillMap.setBorder(buttonBorder);
 		buttonClear.setBorder(buttonBorder);
 		buttonZoomIn.setBorder(buttonBorder);
 		
@@ -832,15 +840,31 @@ public class MapCreationTool {
 	
 		infoFieldUnten.setText("");
 		
+		
+		for (int i = 0; i < 81; i++) {
+			
+			if ( (raster[i].getTileType() == TileType.todo) ) {
+				// todo --> don't save
+				return;
+			}
+		}
+
+		
+		
 		saveTileTermIntern();
 		
-		String filename =  "tileterm_save.txt";
 		try
 		{
-			// false ... replace
-			BufferedWriter writer = new BufferedWriter(new FileWriter(filename, false));
-			writer.write(tileTerm.toString());
-			writer.close();
+			
+			String filetext = tileTerm.toString();
+			valid = !filetext.contains("TODO") && !filetext.contains("-999");
+
+			if (valid || !ignoreInvalid) {
+				// false ... replace
+				BufferedWriter writer = new BufferedWriter(new FileWriter(filename, false));
+				writer.write(filetext);
+				writer.close();
+			}
 			
 		}
 		
@@ -864,7 +888,7 @@ public class MapCreationTool {
 		
 		buttonReduceToChoosableTiles.setBorder(buttonBorder);
 		buttonChooseTile.setBorder(buttonBorder);
-		buttonInfo.setBorder(buttonBorder);
+		buttonFillMap.setBorder(buttonBorder);
 		buttonClear.setBorder(buttonBorder);
 		buttonZoomIn.setBorder(buttonBorder);
 		
@@ -914,7 +938,7 @@ public class MapCreationTool {
 		
 		buttonReduceToChoosableTiles.setBorder(buttonBorder);
 		buttonChooseTile.setBorder(buttonBorder);
-		buttonInfo.setBorder(buttonBorder);
+		buttonFillMap.setBorder(buttonBorder);
 		buttonClear.setBorder(buttonBorder);
 		buttonZoomIn.setBorder(buttonBorder);
 		
@@ -968,7 +992,7 @@ public class MapCreationTool {
 		
 		buttonReduceToChoosableTiles.setBorder(buttonBorder);
 		buttonChooseTile.setBorder(buttonBorder);
-		buttonInfo.setBorder(buttonBorder);
+		buttonFillMap.setBorder(buttonBorder);
 		buttonClear.setBorder(buttonBorder);
 		buttonZoomIn.setBorder(buttonBorder);
 		
@@ -976,24 +1000,38 @@ public class MapCreationTool {
 		
 		infoFieldUnten.setText("");
 		
+		// --- Dateiauswahl via JFileChooser ---
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setDialogTitle("Tile-Term Datei öffnen");
+		fileChooser.setCurrentDirectory(new File(".")); 
+
+		// --- NEU: Einschränkung auf .txt-Dateien ---
+		javax.swing.filechooser.FileNameExtensionFilter filter = 
+			new javax.swing.filechooser.FileNameExtensionFilter("Textdateien (*.txt)", "txt");
+		fileChooser.setFileFilter(filter);
+		fileChooser.setAcceptAllFileFilterUsed(false); // Verhindert die Auswahl von "Alle Dateien (*.*)"
+
+		int result = fileChooser.showOpenDialog(this.frame);
+		if (result != JFileChooser.APPROVE_OPTION) {
+			infoFieldUnten.setText("Ladevorgang abgebrochen.");
+			return; 
+		}
+
+		File datei = fileChooser.getSelectedFile();
 		String tileTermLoad = "";
-		String dateiname = "tileterm.txt";
 		String line;
-		try
-		{
-			File datei = new File(dateiname);
-			FileReader fr = new FileReader(datei);
-			BufferedReader br = new BufferedReader (fr);
+		
+		try (FileReader fr = new FileReader(datei);
+			 BufferedReader br = new BufferedReader(fr)) {
 			
-   			while ((line = br.readLine()) != null) {
+			while ((line = br.readLine()) != null) {
 				tileTermLoad = tileTermLoad + line;
 			}
-
-			br.close();
 		}
-		catch (IOException e1)
-		{
+		catch (IOException e1) {
+			infoFieldUnten.setText("Fehler beim Laden der Datei!");
 			e1.printStackTrace();	
+			return;
 		}
 
 		type = TileType.largeStandard;
@@ -1007,8 +1045,6 @@ public class MapCreationTool {
 		
 		setTypeComboboxEntries(comboboxEntriesLargeTiles);
 		setTileSelection(possibleTiles.getAllLargeStandardTiles());
-		
-		
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -1022,7 +1058,7 @@ public class MapCreationTool {
 		
 		buttonReduceToChoosableTiles.setBorder(buttonBorder);
 		buttonChooseTile.setBorder(buttonBorder);
-		buttonInfo.setBorder(buttonBorder);
+		buttonFillMap.setBorder(buttonBorder);
 		buttonClear.setBorder(buttonBorder);
 		buttonZoomIn.setBorder(buttonBorder);
 		
@@ -1111,7 +1147,7 @@ public class MapCreationTool {
 	
 			buttonZoomIn.setBorder(thickBorder);		
 			buttonReduceToChoosableTiles.setBorder(buttonBorder);
-			buttonInfo.setBorder(buttonBorder);
+			buttonFillMap.setBorder(buttonBorder);
 			buttonClear.setBorder(buttonBorder);
 			buttonChooseTile.setBorder(buttonBorder);
 			
@@ -1134,7 +1170,7 @@ public class MapCreationTool {
 			
 			buttonReduceToChoosableTiles.setBorder(buttonBorder);
 			buttonChooseTile.setBorder(buttonBorder);
-			buttonInfo.setBorder(buttonBorder);
+			buttonFillMap.setBorder(buttonBorder);
 			buttonClear.setBorder(buttonBorder);
 			buttonZoomIn.setBorder(buttonBorder);
 			
@@ -1189,7 +1225,7 @@ public class MapCreationTool {
 			buttonClear.setBorder(thickBorder);
 			buttonChooseTile.setBorder(buttonBorder);
 			buttonReduceToChoosableTiles.setBorder(buttonBorder);
-			buttonInfo.setBorder(buttonBorder);
+			buttonFillMap.setBorder(buttonBorder);
 			buttonZoomOut.setBorder(buttonBorder);
 			
 			resetRasterFieldSelection();
@@ -1213,7 +1249,7 @@ public class MapCreationTool {
 			buttonReduceToChoosableTiles.setBorder(buttonBorder);
 			buttonChooseTile.setBorder(buttonBorder);
 			buttonClear.setBorder(buttonBorder);
-			buttonInfo.setBorder(buttonBorder);
+			buttonFillMap.setBorder(buttonBorder);
 			buttonZoomOut.setBorder(buttonBorder);
 			
 			switch (type) {
@@ -1241,7 +1277,7 @@ public class MapCreationTool {
 			buttonReduceToChoosableTiles.setBorder(thickBorder);
 			buttonChooseTile.setBorder(buttonBorder);
 			buttonClear.setBorder(buttonBorder);
-			buttonInfo.setBorder(buttonBorder);
+			buttonFillMap.setBorder(buttonBorder);
 			buttonZoomOut.setBorder(buttonBorder);
 		
 			resetRasterFieldSelection();
@@ -1259,7 +1295,7 @@ public class MapCreationTool {
 		buttonChooseTile.setBorder(thickBorder);
 		buttonReduceToChoosableTiles.setBorder(buttonBorder);
 		buttonClear.setBorder(buttonBorder);
-		buttonInfo.setBorder(buttonBorder);
+		buttonFillMap.setBorder(buttonBorder);
 		buttonZoomIn.setBorder(buttonBorder);
 		
 		resetRasterFieldSelection();
@@ -1268,23 +1304,6 @@ public class MapCreationTool {
 		
 	}
 	
-	private void info() {
-		
-		
-		modus = Modus.info;
-		
-		buttonInfo.setBorder(thickBorder);
-		buttonReduceToChoosableTiles.setBorder(buttonBorder);
-		buttonChooseTile.setBorder(buttonBorder);
-		buttonClear.setBorder(buttonBorder);
-		buttonZoomIn.setBorder(buttonBorder);
-		
-		resetRasterFieldSelection();
-
-		infoFieldMitte.setText("");
-		infoFieldUnten.setText("bei Click auf ein Rasterfeld wird die Information zur Kachel des Rasterfeldes angezeigt");
-		
-	}
 	
 	private void resetRasterFieldSelection() {
 		if (selectedRasterField >= 0)	{
@@ -1544,9 +1563,9 @@ public class MapCreationTool {
 		buttonReduceToChoosableTiles.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) { reduce(); }	
 		} );
-		buttonInfo = new JButton("Info");
-		buttonInfo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) { info(); }	
+		buttonFillMap = new JButton("FillMap");
+		buttonFillMap.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) { fillMap(); }	
 		} );
 		buttonClear = new JButton("Loeschen");
 		buttonClear.addActionListener(new ActionListener() {
@@ -1568,7 +1587,7 @@ public class MapCreationTool {
 		panelRechtsUnten.add(buttonReduceToChoosableTiles);
 		panelRechtsUnten.add(buttonChooseTile);
 		panelRechtsUnten.add(buttonGenerate);
-		panelRechtsUnten.add(buttonInfo);
+		panelRechtsUnten.add(buttonFillMap);
 		panelRechtsUnten.add(buttonClearAll);
 		panelRechtsUnten.add(buttonClear);
 		panelRechtsUnten.add(buttonZoomOut);
@@ -1782,6 +1801,20 @@ public class MapCreationTool {
 	
 	void generate() {
 		
+		String time =  java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss")) ;
+		String filename;
+		int i;
+		for (i = 1; i < 100; i++) {
+			clearRaster();
+			generate1Map();
+			
+			filename = "tileterm_save_" + String.valueOf(i) + "_" + time + ".txt";
+			saveTotal(filename, true /* don't save invalids */);
+		}
+	}
+	
+	private void generate1Map() {
+		
 		final int rasterSize = 81;
 		boolean trackBack = false;
 		int countBacktracks = 0;
@@ -1961,6 +1994,169 @@ public class MapCreationTool {
 		
 	}
 	
+	private void fillMap() {
+		
+		int rasterSize = 81; // all from raster (9x9)
+		int i;
+
+
+		List<Integer> empty = new ArrayList<Integer>();
+		
+		// a set for planning with all already used raster indexes
+		Set<Integer> alreadyPlannedRasterFields = new HashSet<Integer>();
+	
+		for (i = 0; i < rasterSize; i++)  {
+			if (raster[i].getTile().getType() == TileType.todo) {
+				empty.add(i);
+			}
+			else {
+				alreadyPlannedRasterFields.add(i);
+			}
+		}
+		Set<Integer> alreadyPlannedRasterFieldsCopy = new HashSet<Integer>(alreadyPlannedRasterFields);
+
+		rasterSize = empty.size();
+
+		int maxTrys = 10000;
+		boolean nextTry;
+		for (int nrTry = 0; nrTry < maxTrys; nrTry++)
+		{
+			nextTry = false;
+			
+				// für jeden Durchlauf neu aus der Sicherungskopie erzeugen
+				alreadyPlannedRasterFields = new HashSet<Integer>(alreadyPlannedRasterFieldsCopy);
+			
+				// alle raster-Elemente, die eingangs leer waren, wieder auf ToDo setzen
+				for (Integer index : empty) {
+					raster[index].setToDo();
+					raster[index].setText();
+				}
+				
+				
+				Integer[] rasterFieldSequence = new Integer[rasterSize]; 
+				int randomIndex;
+				
+				
+				int tileNumber;
+				
+				Set<Integer> reducedAsSet;
+				Integer[] reducedAsArray;
+			
+				Set<Integer> remainingPossibleTilesForRasterFieldAtIndex[] = new Set[rasterSize];  	
+				boolean rasterFieldAtIndexInitialized[] = new boolean[rasterSize];
+				
+				Set<Integer> possibleNeigbourRasterFieldIndexes;
+				Integer possibleNeigbourRasterFieldIndexesAsArray[];
+				
+					
+				randomIndex = (int)(Math.random() * rasterSize); 
+				int rasterIndexForRandomIndex = empty.get(randomIndex);
+				
+				for (i = 0; i < rasterSize; i++) {
+					
+			  			possibleNeigbourRasterFieldIndexes = getNeighbourRFIs(rasterIndexForRandomIndex);
+			  			possibleNeigbourRasterFieldIndexes.removeAll(alreadyPlannedRasterFields);
+			  			
+			  			if (possibleNeigbourRasterFieldIndexes.isEmpty()) {
+				  			do {
+								randomIndex = (int)(Math.random() * rasterSize); 
+								rasterIndexForRandomIndex = empty.get(randomIndex);
+							}
+							while (alreadyPlannedRasterFields.contains(empty.get(randomIndex)));
+			  			}
+			  			else {
+			  				// temporary used 
+			  				randomIndex  = (int)(Math.random() * possibleNeigbourRasterFieldIndexes.size());
+			  				possibleNeigbourRasterFieldIndexesAsArray = 
+			  						possibleNeigbourRasterFieldIndexes.toArray(new Integer[possibleNeigbourRasterFieldIndexes.size()]);
+			  				rasterIndexForRandomIndex = possibleNeigbourRasterFieldIndexesAsArray[randomIndex];
+			  			}
+			  				
+			  			alreadyPlannedRasterFields.add(rasterIndexForRandomIndex);
+						rasterFieldSequence[i] = rasterIndexForRandomIndex; 
+						
+					
+					rasterFieldAtIndexInitialized[i] = false;
+				}	
+		
+				int reducedSetIndex;
+				reducedSetIndex = 1234; // dummy for breakpoint
+				
+				
+				for (i = 0; i < rasterSize; i++) {
+				
+					rasterIndexForRandomIndex = rasterFieldSequence[i];
+				    
+					
+					if ( rasterFieldAtIndexInitialized[i] == false ) {
+						reducedAsSet = getReducedSet(rasterIndexForRandomIndex);
+						reducedAsArray = reducedAsSet.toArray(new Integer[reducedAsSet.size()]);
+						remainingPossibleTilesForRasterFieldAtIndex[i] = new HashSet<Integer>(Arrays.asList(reducedAsArray));
+						rasterFieldAtIndexInitialized[i] = true;
+					}
+					else {
+						reducedAsArray = remainingPossibleTilesForRasterFieldAtIndex[i].toArray(new Integer[remainingPossibleTilesForRasterFieldAtIndex[i].size()]);
+						reducedAsSet = remainingPossibleTilesForRasterFieldAtIndex[i];
+					}
+					
+					
+						
+					if ( reducedAsSet.size() == 0) {
+						nextTry = true;
+					}
+					else {
+						
+						nextTry = false;
+							
+						
+						reducedSetIndex = (int)(Math.random() * reducedAsSet.size());
+						tileNumber = reducedAsArray[reducedSetIndex];
+						remainingPossibleTilesForRasterFieldAtIndex[i].remove(tileNumber);
+						
+						switch (type) {
+						case smallAdapter:
+							tileNumber = tileNumber + tileTypeAlternative * 100;
+							break;
+						case smallSpecial:
+							tileNumber = tileNumber + tileTypeAlternative * 100;
+							break;
+						case smallSpecialAdapter:
+							tileNumber = tileNumber + tileTypeAlternative * 100;
+							break;
+						case mediumAdapter:
+							tileNumber = tileNumber + tileTypeAlternative * 100;
+							break;
+						default: ;
+						}
+			
+						raster[rasterIndexForRandomIndex].setTile(type,tileTypeAlternative,tileNumber);
+						raster[rasterIndexForRandomIndex].setText();
+						
+					}
+					
+					if (nextTry == true) {
+						//printRandomRasterOrder(i, rasterFieldSequence);
+						break;
+					}
+
+				}
+				
+			if (nextTry == false) {
+				System.out.println("Fertig bei Versuch Nr. " + nrTry);
+				break;
+			}
+		}
+	}
+	
+	
+	private void printRandomRasterOrder(int index, Integer[] rasterFieldSequence) {
+		String output =	"neuer Versuch bei fillMap() Schritt " + index + " nach Raster Order: ";
+		String resultString = Arrays.stream(rasterFieldSequence).map(String::valueOf)
+			    .collect(Collectors.joining(", "));
+		System.out.println(output + resultString);
+	}
+	
+	
 	private void clearRaster() {
 		for (int i = 0; i < 81;i++) {
 			raster[i].clear();
@@ -1998,6 +2194,511 @@ public class MapCreationTool {
 		visualizedMap.setVisible(true);
 	}
 	
+	
+	
+	private MapCreationTool(String skeleton) {
+		type = TileType.largeStandard;
+		
+		String tileTermWithoutSub = skeleton.replaceAll("sub","");
+
+		parseString(tileTermWithoutSub, 1, null);
+		this.tileTerm = loadedTileGridFromFile;
+		
+		raster = new RasterField[81];
+		
+		for (int i = 0; i < 81; i++) {
+			raster[i] = new RasterField(i);
+		}
+	
+		fillTileRaster();
+	
+		possibleTiles =  PossibleTiles.getInstance();
+		heightChangeChecker = HeightChangeChecker.getInstance();
+	}
+	
+	// die alte Methode bleibt voll intakt als Fallback (nutzt den Zeitstempel-Namen)
+	public static boolean fillSkeleton(String skeleton) {
+		String defaultName = "onlyLs_filled_skeleton_" + java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss").format(java.time.LocalDateTime.now()) + ".txt";
+		return fillSkeleton(skeleton, defaultName);
+	}
+
+    // Globale Zähler für die Status-Anzeige und die Reißleine
+    private static int backtrackSteps = 0;
+    
+    // --- DIE REISSLEINE ---
+    // Wenn ein Sektor nach 5.000.000 Schritten nicht gelöst ist, brechen wir ab!
+    private static final int MAX_BACKTRACK_STEPS = 500000000; 
+
+ 
+    public static boolean fillSkeleton(String skeleton, String targetFilename) {
+    	
+    	boolean success = false;;
+        MapCreationTool localTool = new MapCreationTool(skeleton);
+         
+       List<Integer> emptyBorderTiles  = getEmptyBorders(localTool);
+        
+        // nur falls der Rand komplett ist, dann Prüfung auf konsistenten Höhenverlauf den Rand herum
+        if (emptyBorderTiles.size() > 0 || isRandHoeheKonsistent(localTool)) {
+        	
+            long startTime = System.currentTimeMillis();
+        	success = startePragmatischeSchleife(localTool);
+         	
+        	if (emptyBorderTiles.size() > 0) {
+        		success = completeOuterBorder(localTool, emptyBorderTiles);
+        	}
+  
+            long endTime = System.currentTimeMillis();
+
+        	if (success) {
+                System.out.println("🟩 [ERFOLG] Sektor '" + targetFilename + "' gelöst in " + (endTime - startTime) + " ms! (Schritte: " + backtrackSteps + ")");
+                success = saveFilledSkeleton(localTool, targetFilename);
+        	}
+        	else {
+                System.err.println("❌ [UNLÖSBAR] Sektor '" + targetFilename + "' ist für das gegebene Skelett mathematisch absolut unmöglich!");
+        	}
+
+        }
+        else {
+//       	 System.out.println("Höhenänderung am Rand NICHT konsistent.");
+       	 success  = false;
+        }
+        
+        return success;
+    }
+    
+    private static List<Integer> getEmptyBorders(MapCreationTool localTool) {
+        int RASTER_BREITE = 9;
+       // 0. Phase 0: Die absoluten Randkacheln des 9x9-Grids (Reihen/Spalten 0 und 8)
+        List<Integer> borderOrder = new ArrayList<>();
+        
+        int index;
+        // Obere und untere Reihe komplett (Reihe 0 und Reihe 8)
+        for (int col = 0; col < 9; col++) {
+        	index = (0 * RASTER_BREITE) + col;
+        	if (localTool.raster[index].getTileType() == TileType.todo )   borderOrder.add(index);
+           	index = (8 * RASTER_BREITE) + col;
+        	if (localTool.raster[index].getTileType() == TileType.todo )   borderOrder.add(index);
+         }
+        
+        // Linker und rechter Rand für die mittleren Reihen (Reihe 1 bis 7)
+        for (int row = 1; row <= 7; row++) {
+        	index = (row * RASTER_BREITE) + 0;
+        	if (localTool.raster[index].getTileType() == TileType.todo )   borderOrder.add(index);
+           	index = (row * RASTER_BREITE) + 8;
+        	if (localTool.raster[index].getTileType() == TileType.todo )   borderOrder.add(index);
+        }
+        return borderOrder;
+    }
+    
+    private static boolean completeOuterBorder(MapCreationTool localTool, List<Integer> borderOrder)  {
+        
+       if (borderOrder.size() > 0) {
+    	   for (int index : borderOrder) {
+    		   localTool.raster[index].setToDo();
+    		   localTool.raster[index].setText();
+    	   }
+    	   return      solveStaticOrder(0, localTool, borderOrder, 0);
+      }
+      else
+    	   return true;
+
+    }
+    
+    private static boolean startePragmatischeSchleife(MapCreationTool localTool) {
+        int RASTER_BREITE = 9;
+
+        // 1. Phase 1: Das ganz tiefe Fundament (Reihe 5, 6 und 7) -> 21 Kacheln
+        List<Integer> foundationOrder = new ArrayList<>();
+        for (int row = 7; row >= 5; row--) {
+            for (int col = 1; col <= 7; col++) {
+                foundationOrder.add((row * RASTER_BREITE) + col);
+            }
+        }
+
+        // 2. Phase 2: Die Anschluss-Reihe (Reihe 4) -> Nur 7 Kacheln!
+        List<Integer> connectorOrder = new ArrayList<>();
+        for (int col = 1; col <= 7; col++) {
+            connectorOrder.add((4 * RASTER_BREITE) + col);
+        }
+
+        // 3. Phase 3: Die obere Hälfte (Reihe 1 bis 3) -> 21 Kacheln, SPALTENWEISE befüllt!
+        List<Integer> topHalfOrder = new ArrayList<>();
+
+        // ZUERST über die Spalten laufen (von links nach rechts)
+        for (int col = 1; col <= 7; col++) {
+            // DANACH über die Reihen laufen (von oben nach unten)
+            for (int row = 1; row <= 3; row++) {
+                topHalfOrder.add((row * RASTER_BREITE) + col);
+            }
+        }
+
+ 
+        // ==========================================
+        // SCHRITT 1: Fundament EINMALIG bauen
+        // ==========================================
+        
+        clearInner7x7(localTool); 
+        
+        backtrackSteps = 0;
+        boolean foundationOk = solveStaticOrder(0, localTool, foundationOrder, 0);
+
+        if (!foundationOk) {
+            System.out.println("❌ [ABBRUCH] Schon das Fundament (Reihe 5-7) ist unlösbar zum Außenrand!");
+            return false;
+        }
+        System.out.println("🟩 Fundament (Reihe 5-7) steht bombenfest. Starte Anschluss-Lotto...");
+        //printRaster(localTool);
+        
+        	
+        // ==========================================
+        // SCHRITT 2 & 3: Die Schleife für den Anschluss
+        // ==========================================
+        boolean sektorGeloest = false;
+        int versuch = 0;
+        
+        List<int[]> valideReihe4Muster = Row4PatternGenerator.generiereAlleKombinationen();
+        
+        // Abbruch durch leere Liste (nur Interesse am Fundament
+//        List<int[]> valideReihe4Muster = new ArrayList<int[]>();
+
+        // Innerhalb deiner Hauptschleife (Schritt 3 - Iteration über alle generierten Muster):
+        for (int[] muster : valideReihe4Muster) { // Der Generator liefert jetzt int[] statt List<Tile>
+        	versuch++;
+
+            // Reihe 1 bis 4 säubern
+            clearRows1To4(localTool);
+
+            // Nutze den neuen Spezial-Solver für Reihe 4!
+            // Er setzt Reihe 4 NUR, wenn sie zu 100% mit Reihe 5 (reducedSet) harmoniert.
+            boolean connectorOk = solveWithPatternVorgabe(localTool, connectorOrder, muster, 0);
+
+            if (connectorOk) {
+                 // Reihe 4 sitzt perfekt und ist verifiziert!
+                // JETZT ERST: Phase 3  für Reihe 1 bis 3 anwerfen
+                backtrackSteps = 0;
+                boolean topOk = solveStaticOrder(versuch, localTool, topHalfOrder, 0);
+
+                if (topOk) {
+                    sektorGeloest = true;
+                    System.out.println("🟩 [ERFOLG] Sektor mit Muster Nr. " + versuch + " gelöst!");
+                    break;
+                }
+            } else {
+                // System.out.println("Schnittmenge leer: Muster " + musterIndex + " passt nicht auf Reihe 5.");
+            }
+        }
+
+        if (!sektorGeloest) {
+            System.out.println("❌ [ABBRUCH] Sektor konnte auch nach " + versuch + " Kombinationen nicht gelöst werden.");
+        }
+        
+        return sektorGeloest;
+    }
+    
+    
+    // Neue angepasste Hilfsmethode: Löscht nur Reihe 1-4, lässt 5-7 unberührt!
+    private static void clearRows1To4(MapCreationTool localTool) {
+        int RASTER_BREITE = 9;
+        for (int row = 1; row <= 4; row++) {
+            for (int col = 1; col <= 7; col++) {
+                int idx = (row * RASTER_BREITE) + col;
+                localTool.raster[idx].setToDo();
+                localTool.raster[idx].setText();
+            }
+        }
+    }
+   
+    // Hilfsmethode zum Zurücksetzen vor dem nächsten Schleifendurchlauf
+    private static void clearInner7x7(MapCreationTool localTool) {
+        int RASTER_BREITE = 9;
+        for (int row = 1; row <= 7; row++) {
+            for (int col = 1; col <= 7; col++) {
+                int idx = (row * RASTER_BREITE) + col;
+                localTool.raster[idx].setToDo();
+                localTool.raster[idx].setText();
+            }
+        }
+    }
+
+    
+    
+	 // Der Aufruf startet mit index = 0
+	 // List<Integer> staticOrder enthält die 49 Indizes der 7x7 Innenkacheln, 
+	 // sortiert nach deiner gewünschten Heuristik (z.B. erst die 4 Innenecken, dann Innenkanten, etc.)
+	 private static boolean solveStaticOrder(int versuch, MapCreationTool localTool, List<Integer> staticOrder, int currentIndex) {
+	     // 1. REISSLEINE PRÜFEN
+	     if (backtrackSteps >= MAX_BACKTRACK_STEPS) {
+	         return false;
+	     }
+	
+	     // 2. ZIEL ERREICHT: Wenn wir alle Indizes der statischen Liste erfolgreich belegt haben
+	     if (currentIndex >= staticOrder.size()) {
+	         return true;
+	     }
+	
+	     backtrackSteps++;
+	     
+	
+	     // 3. Aktuelles Feld aus der fixen Reihenfolge holen
+	     int chosenFieldIndex = staticOrder.get(currentIndex);
+	
+	     // 4. NUR die für dieses Feld aktuell gültigen Kacheln holen
+	     Set<Integer> reducedSet = localTool.getReducedSet(chosenFieldIndex);
+	     
+	     // Sackgasse: Keine gültige Kachel für dieses Feld im aktuellen Zustand des Rasters
+	     if (reducedSet.isEmpty()) {
+	         return false; 
+	     }
+	
+	     // In eine Liste umwandeln, damit wir sie (optional) shuffeln oder sortieren können
+	     List<Integer> tilesList = new ArrayList<>(reducedSet);
+	     
+	     // HINWEIS: Collections.shuffle(tilesList) hier sorgt dafür, dass die Kachelauswahl pro Feld 
+	     // variiert, während die Feld-Reihenfolge absolut strikt und statisch bleibt!
+	     Collections.shuffle(tilesList); 
+	
+	     // 5. SYSTEMATISCHES DURCHPROBIEREN
+	     for (int tileNum : tilesList) {
+	         
+	         // Kachel setzen
+	         localTool.raster[chosenFieldIndex].setTile(TileType.largeStandard, localTool.tileTypeAlternative, tileNum);
+	         localTool.raster[chosenFieldIndex].setText();
+	         
+	         // Rekursion: Gehe strikt zum NÄCHSTEN Index in unserer statischen Liste (+1)
+	         if (solveStaticOrder(versuch, localTool, staticOrder, currentIndex + 1)) {
+	             return true; 
+	         }
+	
+	         // Schritt RÜCKWÄRTS (Undo)
+	         localTool.raster[chosenFieldIndex].setToDo();
+	         localTool.raster[chosenFieldIndex].setText();
+	     }
+	
+	     // Alle Kacheln für diesen Index ausprobiert und gescheitert -> Backtracking nach oben
+	     return false;
+	 }
+
+	 /**
+	  * Spezial-Solver für Reihe 4. Prüft ein exaktes Muster (7 Kachel-IDs) 
+	  * gegen die topologischen Constraints (reducedSet) des Rasters.
+	  * 
+	  * @param localTool     Die aktuelle Map-Instanz
+	  * @param connectorOrder Die Liste mit exakt 7 Feld-Indizes für Reihe 4
+	  * @param patternVorgabe Ein int-Array mit exakt 7 Kachel-IDs (Muster aus dem Generator)
+	  * @param currentIndex   Startet beim Aufruf mit 0
+	  * @return true, wenn das Muster perfekt auf Reihe 5 und die Ränder passt
+	  */
+	 private static boolean solveWithPatternVorgabe(
+	     MapCreationTool localTool, 
+	     List<Integer> connectorOrder, 
+	     int[] patternVorgabe, 
+	     int currentIndex
+	 ) {
+	     // 1. ZIEL ERREICHT: Wenn alle 7 Felder des Musters erfolgreich validiert wurden
+	     if (currentIndex >= connectorOrder.size()) {
+	         return true;
+	     }
+
+	     // 2. Aktuelles Feld aus Reihe 4 holen
+	     int chosenFieldIndex = connectorOrder.get(currentIndex);
+
+	     // 3. Gewünschte Kachel-ID aus eurer Muster-Vorgabe auslesen
+	     int targetTileNum = patternVorgabe[currentIndex];
+
+	     // 4. Topologische Constraints vom System holen (Nachbarschaft zu Reihe 5 & Rändern)
+	     Set<Integer> reducedSet = localTool.getReducedSet(chosenFieldIndex);
+
+	     // 🔥 DIE VERSCHNEIDUNG: Ist die Kachel aus dem Muster im reducedSet überhaupt erlaubt?
+	     if (!reducedSet.contains(targetTileNum)) {
+	         // Widerspruch! Das Muster kollidiert vertikal mit Reihe 5 oder dem Außenrand.
+	         // Wir brechen diesen Pfad sofort ab (kein weiteres sinnloses Probieren).
+	         return false;
+	     }
+
+	     // 5. Kachel testweise setzen (da sie laut reducedSet erlaubt ist)
+	     localTool.raster[chosenFieldIndex].setTile(TileType.largeStandard, localTool.tileTypeAlternative, targetTileNum);
+	     localTool.raster[chosenFieldIndex].setText();
+
+	     // 6. Rekursion: Gehe zum nächsten Feld in Reihe 4 (+1)
+	     if (solveWithPatternVorgabe(localTool, connectorOrder, patternVorgabe, currentIndex + 1)) {
+	         return true;
+	     }
+
+	     // Schritt RÜCKWÄRTS (Undo), falls ein späteres Feld in Reihe 4 (z.B. wegen horizontaler Konflikte) scheitert
+	     localTool.raster[chosenFieldIndex].setToDo();
+	     localTool.raster[chosenFieldIndex].setText();
+
+	     return false;
+	 }
+	
+	// 3. Die saveFilledSkeleton-Methode, die jetzt den Wunschnamen akzeptiert
+	private static boolean saveFilledSkeleton(MapCreationTool skeletonFiller, String targetFilename) {
+		System.out.println("\n=== [DIAGNOSE] Starte saveFilledSkeleton ===");
+		int mapKachelnKopiert = 0;
+		int todoKachelnUebersprungen = 0;
+		int subKachelnUebersprungen = 0;
+
+		boolean valid = false;
+		
+		for (int i = 0; i < 81; i++) {
+			if (skeletonFiller.raster[i] == null) {
+				System.out.println("-> [WARNUNG] Raster-Feld an Index " + i + " is komplett NULL!");
+				continue;
+			}
+
+			TileType currentType = skeletonFiller.raster[i].getTileType();
+			
+			if ((currentType != TileType.sub) && (currentType != TileType.todo)) {
+				skeletonFiller.tileTerm.addTile(new Tile(currentType, skeletonFiller.raster[i].getTileNumber(), skeletonFiller.raster[i].height), i);
+				mapKachelnKopiert++;
+			} else {
+				if (currentType == TileType.todo) todoKachelnUebersprungen++;
+				if (currentType == TileType.sub) subKachelnUebersprungen++;
+			}
+		}
+		
+		System.out.println("-> [INFO] Schleife beendet. Kopiert: " + mapKachelnKopiert + " Kacheln.");
+		System.out.println("-> [INFO] Übersprungen wegen TODO: " + todoKachelnUebersprungen + " | Wegen SUB: " + subKachelnUebersprungen);
+
+		System.out.println("-> [INFO] Rufe skeletonFiller.tileTerm.setHeights() auf...");
+		skeletonFiller.tileTerm.setHeights();
+
+		try {
+			String filetext = skeletonFiller.tileTerm.toString();
+			
+			System.out.println("\n--- [VORSCHAU GENERIERTER TEXT] ---");
+			if (filetext == null) {
+				System.out.println("FEHLER: filetext ist komplett NULL!");
+			} else {
+				System.out.println(filetext.length() > 120 ? filetext.substring(0, 120) + "..." : filetext);
+				System.out.println("Gesamtlänge des Textes: " + filetext.length() + " Zeichen.");
+			}
+			System.out.println("-----------------------------------\n");
+
+			boolean containsTodo = filetext != null && filetext.contains("TODO");
+			boolean containsInvalidHeight = filetext != null && filetext.contains("-999");
+			valid = !containsTodo && !containsInvalidHeight;
+
+			System.out.println("-> [VALIDIERUNG] Enthält 'TODO'?: " + containsTodo);
+			System.out.println("-> [VALIDIERUNG] Enthält Fehler-Höhe '-999'?: " + containsInvalidHeight);
+			System.out.println("-> [VALIDIERUNG] Ergebnis 'valid' = " + valid);
+
+			if (valid) {
+				// Hier nutzen wir jetzt den übergebenen Wunschnamen!
+				System.out.println("-> [SCHREIBEN] Öffne Datei: " + targetFilename);
+				BufferedWriter writer = new BufferedWriter(new FileWriter(targetFilename, false));
+				writer.write(filetext);
+				writer.close();
+				System.out.println("🟩 [ERFOLG] Datei erfolgreich geschrieben!");
+			} else {
+				System.out.println("❌ [ABBRUCH] Datei wurde NICHT geschrieben, da die Validierung fehlgeschlagen ist.");
+			}
+		} catch(IOException e1) {
+			System.err.println("💥 [IO-AUSNAHME] Fehler beim Schreiben der Datei!");
+			e1.printStackTrace();	
+		}
+		System.out.println("=== [DIAGNOSE] saveFilledSkeleton beendet ===\n");
+		return valid;
+	}
+	
+	
+	public static boolean isRandHoeheKonsistent(MapCreationTool tool) {
+	    int RASTER_BREITE = 9;
+	    int akkumulierteHoehe = 0;
+
+	    // =========================================================================
+	    // 1. NORDKANTE: Von links nach rechts (Reihe 0, Spalte 0 bis Spalte 7 -> 8)
+	    // =========================================================================
+	    for (int col = 0; col < 8; col++) {
+	        int aktuellerIndex = (0 * RASTER_BREITE) + col;
+	        int rechterIndex   = (0 * RASTER_BREITE) + (col + 1);
+
+	        int kachelLinks  = tool.raster[aktuellerIndex].getTileNumber();
+	        int kachelRechts = tool.raster[rechterIndex].getTileNumber();
+
+	        // Wie viel Höhenunterschied ist zwischen der NO-Ecke links und der NW-Ecke rechts?
+	        int delta = TileInfo.getOffset(kachelLinks, "no") - TileInfo.getOffset(kachelRechts, "nw");
+	        akkumulierteHoehe += delta;
+	    }
+
+	    // =========================================================================
+	    // 2. OSTKANTE: Von oben nach unten (Spalte 8, Reihe 0 bis Reihe 7 -> 8)
+	    // =========================================================================
+	    for (int row = 0; row < 8; row++) {
+	        int aktuellerIndex = (row * RASTER_BREITE) + 8;
+	        int untererIndex   = ((row + 1) * RASTER_BREITE) + 8;
+
+	        int kachelOben  = tool.raster[aktuellerIndex].getTileNumber();
+	        int kachelUnten = tool.raster[untererIndex].getTileNumber();
+
+	        // Unterschied zwischen SO-Ecke oben und NO-Ecke unten
+	        int delta = TileInfo.getOffset(kachelOben, "so") - TileInfo.getOffset(kachelUnten, "no");
+	        akkumulierteHoehe += delta;
+	    }
+
+	    // =========================================================================
+	    // 3. SÜDKANTE: Von rechts nach links (Reihe 8, Spalte 8 bis Spalte 1 -> 0)
+	    // =========================================================================
+	    for (int col = 8; col > 0; col--) {
+	        int aktuellerIndex = (8 * RASTER_BREITE) + col;
+	        int linkerIndex    = (8 * RASTER_BREITE) + (col - 1);
+
+	        int kachelRechts = tool.raster[aktuellerIndex].getTileNumber();
+	        int kachelLinks  = tool.raster[linkerIndex].getTileNumber();
+
+	        // Unterschied zwischen SW-Ecke rechts und SO-Ecke links
+	        int delta = TileInfo.getOffset(kachelRechts, "sw") - TileInfo.getOffset(kachelLinks, "so");
+	        akkumulierteHoehe += delta;
+	    }
+
+	    // =========================================================================
+	    // 4. WESTKANTE: Von unten nach oben (Spalte 0, Reihe 8 bis Reihe 1 -> 0)
+	    // =========================================================================
+	    for (int row = 8; row > 0; row--) {
+	        int aktuellerIndex = (row * RASTER_BREITE) + 0;
+	        int obererIndex    = ((row - 1) * RASTER_BREITE) + 0;
+
+	        int kachelUnten = tool.raster[aktuellerIndex].getTileNumber();
+	        int kachelOben  = tool.raster[obererIndex].getTileNumber();
+
+	        // Unterschied zwischen NW-Ecke unten und SW-Ecke oben
+	        int delta = TileInfo.getOffset(kachelUnten, "nw") - TileInfo.getOffset(kachelOben, "sw");
+	        akkumulierteHoehe += delta;
+	    }
+
+	    // =========================================================================
+	    // DAS FINALE URTEIL
+	    // =========================================================================
+	    if (akkumulierteHoehe != 0) {
+	        System.out.println("❌ [TOPOLOGIE-FEHLER] Das Skeleton erzeugt eine unlösbare Escher-Treppe!");
+	        System.out.println("   Höhenfehler nach vollem Umlauf: " + akkumulierteHoehe + " Stufen.");
+	        return false; // Stopp! Dieser Rand ist mathematisch unlösbar.
+	    }
+
+	    System.out.println("🟩 [TOPOLOGIE-OK] Das Skeleton ist in sich geschlossen (Fehler: 0).");
+	    return true; // Grünes Licht für den Solver.
+	}
+
+	
+	private static void printRaster(MapCreationTool mct) {
+		for (int i = 0; i < 81; i++) {
+			if (mct.raster[i] == null) {
+				continue;
+			}
+
+			TileType currentType = mct.raster[i].getTileType();
+			
+			if ((currentType != TileType.sub) && (currentType != TileType.todo)) {
+				mct.tileTerm.addTile(new Tile(currentType, mct.raster[i].getTileNumber(), mct.raster[i].height), i);
+			} else {
+			}
+		}
+		mct.tileTerm.setHeights();
+		String gridtext = mct.tileTerm.toString();
+		System.out.println(gridtext);
+	}
+
 }
+
 
 
