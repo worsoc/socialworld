@@ -93,14 +93,26 @@ public class MapSkeletonGenerator {
         String tileAbove = (row > 0) ? grid[row - 1][col] : "TODO";
         String tileLeft  = (col > 0) ? grid[row][col - 1] : "TODO";
 
+        // SCHUTZFILTER: Bedingungen für die beiden südlichen Ecken definieren
+        boolean isSouthWestCorner = (row == 8 && col == 0);
+        boolean isSouthEastCorner = (row == 8 && col == 8);
+
         // =====================================================================
         // STUFE 1: Suche strictly nur in den einfachen Standard-Kacheln (0 bis 15)
         // =====================================================================
         for (int type : types_0_15) {
-            // Schutzfilter: Keine echten Grate (6,9) an den Außenrändern
- //           if (type == 6 || type == 9) {
- //               continue;
- //           }
+            // Filter für Südwest-Ecke (8 und 11 und 12 wieder freigegeben!)
+            if (isSouthWestCorner) {
+                if (type == 9 || type == 13) {
+                    continue; 
+                }
+            }
+            // Filter für Südost-Ecke
+            if (isSouthEastCorner) {
+                if (type == 14) {
+                    continue;
+                }
+            }
 
             checkAndAddTileType(type, diff, hFirst, edge, tileAbove, tileLeft, validTiles);
         }
@@ -117,11 +129,21 @@ public class MapSkeletonGenerator {
         }
 
         // =====================================================================
-        // STUFE 2: Nur wenn Stufe 1 KEINE einzige Kachel gefunden hat,
-        // weichen wir zähneknirschend auf die Doppelsteigungen (16 bis 19) aus!
+        // STUFE 2: Nur wenn Stufe 1 KEINE einzige Kachel gefunden hat
         // =====================================================================
         if (validTiles.isEmpty()) {
-        	for (int type : types_16_19)  {
+            for (int type : types_16_19)  {
+                // Auch in Stufe 2 die Filter für die Ecken einhalten
+                if (isSouthWestCorner) {
+                    if (type == 9 || type == 13) {
+                        continue;
+                    }
+                }
+                if (isSouthEastCorner) {
+                    if (type == 14) {
+                        continue;
+                    }
+                }
                 checkAndAddTileType(type, diff, hFirst, edge, tileAbove, tileLeft, validTiles);
             }
         }

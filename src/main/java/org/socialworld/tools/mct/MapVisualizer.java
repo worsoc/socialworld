@@ -215,24 +215,21 @@ public class MapVisualizer extends JFrame {
         int startRowOffset = sectorRow * size;
         int startColOffset = sectorCol * size;
 
-        // 1. Höhen-Nullpunkt des Quell-Sektors ermitteln (Basishöhe des allerersten Elements [0][0])
+        // 1. Höhen-Nullpunkt des Quell-Sektors ermitteln (Basishöhe des allerersten Elements)
         int sourceNullLevel = 0;
         if (source != null && source[0][0] != null) {
             sourceNullLevel = source[0][0].baseHeight;
         }
 
         // 2. Welt-Höhen-Anker berechnen
-        // Wo muss die Basishöhe dieses Sektors in der Welt liegen, um an das Zentrum anzudocken?
         int worldHeightOffset = 0;
 
         if (centerGrid != null && centerGrid[0][0] != null) {
-            // Wir nutzen die Basishöhen der vier äußeren Eck-Kacheln des Zentrums als Anker
             int centerNW = centerGrid[0][0].baseHeight;
             int centerNE = centerGrid[0][size - 1].baseHeight;
             int centerSE = centerGrid[size - 1][size - 1].baseHeight;
             int centerSW = centerGrid[size - 1][0].baseHeight;
 
-            // Je nachdem, wo der Nachbar liegt, adaptieren wir das globale Höhen-Niveau
             if (sectorRow == 0 && sectorCol == 1) {        // NORDEN
                 worldHeightOffset = centerNW; 
             } else if (sectorRow == 1 && sectorCol == 2) {  // OSTEN
@@ -242,7 +239,7 @@ public class MapVisualizer extends JFrame {
             } else if (sectorRow == 1 && sectorCol == 0) {  // WESTEN
                 worldHeightOffset = centerNW;
             } else {
-                // Diagonale Sektoren (Ecken) orientieren sich an den Hauptecken des Zentrums
+                // Diagonale Sektoren (Ecken)
                 if (sectorRow == 0 && sectorCol == 0) worldHeightOffset = centerNW;
                 if (sectorRow == 0 && sectorCol == 2) worldHeightOffset = centerNE;
                 if (sectorRow == 2 && sectorCol == 2) worldHeightOffset = centerSE;
@@ -258,13 +255,23 @@ public class MapVisualizer extends JFrame {
 
                 // Formel: (Relative Basishöhe - Eigen-Nullpunkt) + Globaler Welt-Anker
                 int adjustedBaseHeight = (originalTile.baseHeight - sourceNullLevel) + worldHeightOffset;
-
-                // Neue VisualTile mit angepasster Basishöhe in das Riesen-Grid einsetzen
+/*
+                // Kriterium gegen den mathematischen Schrittweiten-Abschneidefehler:
+                // Tritt im Südwesten (2,0) und Südosten (2,2) auf, wenn das Gefälle ungerade Schritte macht.
+                if ((sectorRow == 2 && sectorCol == 0) || (sectorRow == 2 && sectorCol == 2)) {
+                    int heightDiff = Math.abs(worldHeightOffset - sourceNullLevel);
+                    
+                    if (heightDiff % 2 != 0) {
+                        adjustedBaseHeight += 1;
+                    }
+                }
+*/
                 target[startRowOffset + r][startColOffset + c] = new VisualTile(originalTile.type, adjustedBaseHeight);
             }
         }
     }
 
+     
     private void updateButtons() {
         int index = fileManager.getCurrentMapIndex();
         int size = fileManager.getMapFiles().size();
