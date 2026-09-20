@@ -130,6 +130,8 @@ public class MapCreationTool {
 	TileSelectionPattern pattern;
 	TileInfo tileInfo;
 	
+	String lastFileName = "";
+	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 	
 	/**
@@ -814,8 +816,34 @@ public class MapCreationTool {
 	////////////////////////////////////////////////////////////////
 	
 	private void saveTotal() {
-		String filename =  "tileterm_save.txt";
-		saveTotal(filename, false);
+		
+		String filename;
+		if (lastFileName.length() > 0) {
+			filename = lastFileName;
+		}
+		else {
+			filename =  "tileterm_save.txt";
+		}
+		
+		   // 1. JFileChooser erstellen und mit dem Standardnamen vorbelegen
+	    JFileChooser fileChooser = new JFileChooser();
+	    fileChooser.setSelectedFile(new File(filename));
+	    fileChooser.setDialogTitle("Map speichern");
+	    
+	    // 2. Dialog anzeigen (Gibt APPROVE_OPTION zurück, wenn "Speichern" geklickt wurde)
+	    int userSelection = fileChooser.showSaveDialog(null); 
+	    
+	    if (userSelection == JFileChooser.APPROVE_OPTION) {
+	        // 3. Den vom Benutzer gewählten Pfad auslesen
+	        File fileToSave = fileChooser.getSelectedFile();
+	        String selectedFilename = fileToSave.getAbsolutePath();
+	        
+	        // Optional: Den neuen Dateinamen für das nächste Mal in 'lastFileName' merken
+	        lastFileName = selectedFilename; 
+	        
+	        // 4. Interne Methode mit dem gewählten Pfad aufrufen
+	        saveTotal(selectedFilename, false);
+	    }
 	}
 	
 	private void saveTotal(String filename, boolean ignoreInvalid) {
@@ -926,60 +954,8 @@ public class MapCreationTool {
 	
 	private void generateFromText() {
 		
-		
 		generateFromTextArea();
 		
-		
-/*		
-		clearInfoFieldOben();
-		clearInfoFieldMitte();
-		
-		modus = null;
-		
-		buttonReduceToChoosableTiles.setBorder(buttonBorder);
-		buttonChooseTile.setBorder(buttonBorder);
-		buttonFillMap.setBorder(buttonBorder);
-		buttonClear.setBorder(buttonBorder);
-		buttonZoomIn.setBorder(buttonBorder);
-		
-		resetRasterFieldSelection();
-		
-		infoFieldUnten.setText("");
-		
-		String tileTermLoad = "";
-		String dateiname = "tileterm_generate.txt";
-		try
-		{
-			File datei = new File(dateiname);
-			FileReader fr = new FileReader(datei);
-			BufferedReader br = new BufferedReader (fr);
-			tileTermLoad =  br.lines().collect(Collectors.joining());
-			br.close();
-		}
-		catch (IOException e1)
-		{
-			e1.printStackTrace();	
-		}
-		System.out.println(tileTermLoad);
-		
-		type = TileType.largeStandard;
-		setTypeComboboxEntries(comboboxEntriesLargeTiles);
-		
-		System.out.println();
-		System.out.println();
-		System.out.println();
-		RandomRasterIndexOrder random = RandomRasterIndexOrder.getInstance();
-		random.initRandomIntsFromInputString(tileTermLoad);
-		TileGrid grid = new TileGrid(tileTermLoad, 0); 
-		System.out.println();
-//		System.out.println(grid.toString());
-		
-		this.tileTerm = grid;
-		
-		fillTileRaster();
-		
-		setTileSelection(possibleTiles.getAllLargeStandardTiles());
-*/
 	}
 	
 	
@@ -1018,6 +994,7 @@ public class MapCreationTool {
 		}
 
 		File datei = fileChooser.getSelectedFile();
+		lastFileName = datei.getName();
 		String tileTermLoad = "";
 		String line;
 		

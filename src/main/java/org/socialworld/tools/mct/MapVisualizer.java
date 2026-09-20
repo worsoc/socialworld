@@ -215,12 +215,26 @@ public class MapVisualizer extends JFrame {
         int startRowOffset = sectorRow * size;
         int startColOffset = sectorCol * size;
 
-        // 1. Höhen-Nullpunkt des Quell-Sektors ermitteln (Basishöhe des allerersten Elements)
+        // 1. Höhen-Nullpunkt des Quell-Sektors ermitteln 
         int sourceNullLevel = 0;
-        if (source != null && source[0][0] != null) {
+ 
+        // (Basishöhe des Eck-Elements in Richtung Zentrum ( zumindest in sektor Row 0))
+        if (sectorRow == 0) {
+        	if (sectorCol == 0) sourceNullLevel = source[8][8].baseHeight;
+        	else if (sectorCol == 1) sourceNullLevel = source[8][0].baseHeight;
+        	else if (sectorCol == 2) sourceNullLevel = source[8][0].baseHeight;
+       }
+        else {
             sourceNullLevel = source[0][0].baseHeight;
         }
 
+ /*    vorher   (Stand 16.09.2026 hier entstanden ab und zu optische Gräben zwischen Sektor Row 0 und sektor row 1)
+        if (source != null && source[0][0] != null) {
+            sourceNullLevel = source[0][0].baseHeight;
+        }
+*/
+        
+        
         // 2. Welt-Höhen-Anker berechnen
         int worldHeightOffset = 0;
 
@@ -255,17 +269,7 @@ public class MapVisualizer extends JFrame {
 
                 // Formel: (Relative Basishöhe - Eigen-Nullpunkt) + Globaler Welt-Anker
                 int adjustedBaseHeight = (originalTile.baseHeight - sourceNullLevel) + worldHeightOffset;
-/*
-                // Kriterium gegen den mathematischen Schrittweiten-Abschneidefehler:
-                // Tritt im Südwesten (2,0) und Südosten (2,2) auf, wenn das Gefälle ungerade Schritte macht.
-                if ((sectorRow == 2 && sectorCol == 0) || (sectorRow == 2 && sectorCol == 2)) {
-                    int heightDiff = Math.abs(worldHeightOffset - sourceNullLevel);
-                    
-                    if (heightDiff % 2 != 0) {
-                        adjustedBaseHeight += 1;
-                    }
-                }
-*/
+                
                 target[startRowOffset + r][startColOffset + c] = new VisualTile(originalTile.type, adjustedBaseHeight);
             }
         }
