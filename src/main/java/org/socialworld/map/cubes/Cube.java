@@ -633,7 +633,7 @@ public abstract class Cube {
     
   
     public static void main(String args[]) {
-    	byte detailDepth = 4;
+    	byte detailDepth = 3;
     	byte heightOffset = 0;
         Cube cube = new CubeStandard(CUBE_SIZE_TILE_SMALL, heightOffset);
        // Cube cube = new CubeAdapterWest(CUBE_SIZE_TILE_SMALL, heightOffset);
@@ -650,9 +650,9 @@ public abstract class Cube {
 
         cube.initPlanes();
         cube.fillTheGround(heightOffset);
-        cube.splitCube( 5, detailDepth, false);
+        cube.splitCube( 14, detailDepth, false);
 
-      
+ /*     
         cube.setFullyFilled( (byte) (detailDepth - 1), (byte) 14); 
         cube.setFullyFilled( (byte) (detailDepth - 2), (byte) 26); 
         if (cube.size < CUBE_SIZE_TILE_LARGE) {
@@ -660,7 +660,7 @@ public abstract class Cube {
 	           cube.setFullyFilled( depth, (byte) 27);
 	        }
         }
-
+*/
         ArrayList<String> addr = cube.getEndAddresses();
         Object[] sortedAddr =  addr.toArray();
         Arrays.sort(sortedAddr);

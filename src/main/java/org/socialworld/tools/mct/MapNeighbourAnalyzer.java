@@ -10,8 +10,7 @@ import java.util.regex.Pattern;
 public class MapNeighbourAnalyzer {
 
     public static void main(String[] args) {
-        try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); } catch (Exception ignored) {}
-
+ 
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle("Verzeichnis mit 'onlyLs'-Dateien auswählen");
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);

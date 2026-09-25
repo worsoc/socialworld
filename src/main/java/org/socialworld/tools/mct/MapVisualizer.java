@@ -224,9 +224,19 @@ public class MapVisualizer extends JFrame {
         	else if (sectorCol == 1) sourceNullLevel = source[8][0].baseHeight;
         	else if (sectorCol == 2) sourceNullLevel = source[8][0].baseHeight;
        }
-        else {
-            sourceNullLevel = source[0][0].baseHeight;
-        }
+       else if (sectorRow == 1) {
+        	if (sectorCol == 0) sourceNullLevel = source[0][8].baseHeight;
+        	else if (sectorCol == 1) sourceNullLevel = source[0][0].baseHeight;
+        	else if (sectorCol == 2) sourceNullLevel = source[0][0].baseHeight;
+       }
+       else if (sectorRow == 2) {
+       	if (sectorCol == 0) sourceNullLevel = source[0][8].baseHeight;
+       	else if (sectorCol == 1) sourceNullLevel = source[0][0].baseHeight;
+       	else if (sectorCol == 2) sourceNullLevel = source[0][0].baseHeight;
+      }
+ //     else {
+ //           sourceNullLevel = source[0][0].baseHeight;
+ //       }
 
  /*    vorher   (Stand 16.09.2026 hier entstanden ab und zu optische Gräben zwischen Sektor Row 0 und sektor row 1)
         if (source != null && source[0][0] != null) {
@@ -235,7 +245,7 @@ public class MapVisualizer extends JFrame {
 */
         
         
-        // 2. Welt-Höhen-Anker berechnen
+        // 2. Welt-Höhen-Anker berechnen bzgl. Sektor im Zentrum
         int worldHeightOffset = 0;
 
         if (centerGrid != null && centerGrid[0][0] != null) {
@@ -261,7 +271,15 @@ public class MapVisualizer extends JFrame {
             }
         }
 
-        // 3. Kopieren und Live-Anpassung der Basishöhe
+        // 3. Welt-Höhen-Anker setzen (korrigieren) bzgl. bereits vorhndenem Sektor
+        if (sectorRow == 2 && sectorCol == 0 && target[startRowOffset - 1][0] != null) {
+        	worldHeightOffset = target[startRowOffset - 1][0].baseHeight;
+        }
+        if (sectorRow == 2 && sectorCol == 2 && target[startRowOffset - 1][18] != null) {
+        	worldHeightOffset = target[startRowOffset - 1][18].baseHeight;
+        }
+        
+        // 4. Kopieren und Live-Anpassung der Basishöhe
         for (int r = 0; r < size; r++) {
             for (int c = 0; c < size; c++) {
                 VisualTile originalTile = source[r][c];

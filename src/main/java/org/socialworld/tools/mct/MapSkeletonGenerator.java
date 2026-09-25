@@ -32,7 +32,10 @@ public class MapSkeletonGenerator {
         if (targetNorth != null && targetNorth.length == 10) {
             for (int c = 0; c < 9; c++) {
             	tile = getValidTileForGrid(grid, 0, c, "north", targetNorth[c], targetNorth[c + 1]);
-            	if (tile.equals("ERROR")) return "";
+            	if (tile.equals("ERROR")) {
+ //           		System.out.println("Error Nordrand");
+            		return "";
+            	}
                 grid[0][c] = tile;
             }
         }
@@ -41,7 +44,10 @@ public class MapSkeletonGenerator {
         if (targetSouth != null && targetSouth.length == 10) {
             for (int c = 0; c < 9; c++) {
             	tile = getValidTileForGrid(grid, 8, c, "south", targetSouth[c], targetSouth[c + 1]);
-            	if (tile.equals("ERROR")) return "";
+            	if (tile.equals("ERROR")) {
+  //          		System.out.println("Error Südrand");
+            		return "";
+            	}
                 grid[8][c] = tile;
             }
         }
@@ -51,7 +57,10 @@ public class MapSkeletonGenerator {
             for (int r = 0; r < 9; r++) {
                 if (grid[r][0].equals("TODO")) {
                 	tile = getValidTileForGrid(grid, r, 0, "west", targetWest[r], targetWest[r + 1]);
-                	if (tile.equals("ERROR")) return "";
+                	if (tile.equals("ERROR")) {
+  //             		System.out.println("Error Westrand");
+                		return "";
+                	}
                     grid[r][0] = tile;
                 }
             }
@@ -62,7 +71,10 @@ public class MapSkeletonGenerator {
             for (int r = 0; r < 9; r++) {
                 if (grid[r][8].equals("TODO")) {
                 	tile = getValidTileForGrid(grid, r, 8, "east", targetEast[r], targetEast[r + 1]);
-                	if (tile.equals("ERROR")) return "";
+                	if (tile.equals("ERROR")) {
+   //             		System.out.println("Error Ostrand");
+                		return "";
+                	}
                     grid[r][8] = tile;
                 }
             }
@@ -200,8 +212,9 @@ public class MapSkeletonGenerator {
                 int swAbove = bhAbove + TileInfo.getOffset(typeAbove, "sw");
                 int soAbove = bhAbove + TileInfo.getOffset(typeAbove, "so");
 
-                if (nwCur != swAbove || noCur != soAbove) {
-                    return; 
+               // doesn't work:  if ((nwCur - noCur) != (swAbove - soAbove)) {
+ 	            if (nwCur != swAbove || noCur != soAbove) {
+                     return; 
                 }
             }
 
@@ -213,8 +226,9 @@ public class MapSkeletonGenerator {
                 int noLeft = bhLeft + TileInfo.getOffset(typeLeft, "no");
                 int soLeft = bhLeft + TileInfo.getOffset(typeLeft, "so");
 
+                // doesn't work: if ((nwCur - swCur) != (noLeft - soLeft)) {
                 if (nwCur != noLeft || swCur != soLeft) {
-                    return;
+                   return;
                 }
             }
 

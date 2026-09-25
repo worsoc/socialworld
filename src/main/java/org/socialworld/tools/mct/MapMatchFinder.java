@@ -211,7 +211,7 @@ public class MapMatchFinder {
                 
                 // PRÜFUNG DER KRITERIEN: 
                 // Mindestens 4, maximal 8 belegte Kacheln UND das Zentrum [1][1] darf nicht leer sein
-                if (actualCount >= 4 && actualCount <= 8 && layout[1][1] != null) {
+                if (actualCount >= 3 && actualCount <= 8 && layout[1][1] != null) {
                     layoutToComplete = layout;
                     System.out.println("Passendes Ausgangs-Layout gefunden (" + actualCount + " von 9 Kacheln belegt, Zentrum aktiv).");
                     break; // Wir nehmen das erste Layout, das alle Kriterien erfüllt
@@ -365,16 +365,27 @@ public class MapMatchFinder {
                     System.out.println("  (Keine direkten Nachbarn vorhanden. Sektor ist frei gestaltbar.)");
                 }
 
-                // Skelett generieren
-                String skeletonString = MapSkeletonGenerator.generateSkeleton(requiredNorth, requiredEast, requiredSouth, requiredWest);
-
+                
                 // Dateiname direkt aus der Matrix (ohne Suffix)
                 String targetFilename = filenames[r][c];
-
-                // Befüllen und Speichern
-                System.out.println("  -> Generiere Kachel in Datei: " + targetFilename);
-                MapCreationTool.fillSkeleton(skeletonString, targetFilename);
-            }
+                
+                boolean success = false;
+                String skeletonString = "";
+                while (!success) {
+                     while (skeletonString.equals("") ) {
+                    	 skeletonString = MapSkeletonGenerator.generateSkeleton(requiredNorth, requiredEast, requiredSouth, requiredWest);
+                         if (skeletonString.length() > 0) {
+                         	 System.out.println("Skeleton: " + skeletonString);
+                             System.out.println("  -> Generiere Kachel in Datei: " + targetFilename);
+                         }
+                     }
+                	 success = MapCreationTool.fillSkeleton(skeletonString, targetFilename);
+                	 // reset, falls noch kein success, dann mit neuem string versuchen
+                	 skeletonString = "";
+                }
+              
+                
+              }
         }
 
         if (missingCount == 0) {

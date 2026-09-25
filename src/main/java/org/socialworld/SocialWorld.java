@@ -68,24 +68,16 @@ public class SocialWorld  {
 		Simulation.showMessage("myPrint", "Bitte Geduld. Wir starten bei Sekunde 0.");
 		
 	
-	//	System.out.println(Cube.getDelta_(0, 45, 1234, 0.005F, 0.000F));
-		
-/*		
-        Cube cube = new Cube(true);
 
-        cube.splitCube(2, 45, 0, false); // 1 -> Tiefe
-        //System.out.println(cube.innerCubes[0][0][0].innerCubes[0][1][1].address);
-        cube.printAddress();
-*/
 		
 //		test();
 		
 //		fillTestData();
-		
+/*		
 		simulation.startSimulation();
 		visualize = true;
 		simulation.stopSimulation();
-		
+*/		
 	}
 	
 	
