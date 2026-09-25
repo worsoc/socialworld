@@ -3,16 +3,25 @@ package org.socialworld.tools.mct;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.JOptionPane;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
+
 
 public class MapMatchFinder {
 
     // Repräsentiert eine einzelne Map mit ihren 4 Höhenprofilen
     public static class MapsHeightLines {
+    	
+    	public static File sourceDirectory;
+
         String name;
         int[] north;
         int[] east;
@@ -22,6 +31,19 @@ public class MapMatchFinder {
         public MapsHeightLines(String name) {
             this.name = name;
         }
+        
+        /**
+         * Erzeugt das File-Objekt dynamisch aus dem statischen Verzeichnis 
+         * und dem in diesem Objekt gespeicherten Dateinamen.
+         */
+        public File getFile() {
+            if (sourceDirectory == null) {
+                return null;
+            }
+            // Kombiniert den Ordnerpfad mit dem Dateinamen
+            return new File(sourceDirectory, this.name);
+        }
+        
     }
 
     /**
@@ -64,6 +86,10 @@ public class MapMatchFinder {
         String filePath = selectedFile.getAbsolutePath();
         System.out.println("Lese Datei ein: " + selectedFile.getName() + "\n");
 
+        // Das übergeordnete Verzeichnis extrahieren und statisch hinterlegen
+        MapsHeightLines.sourceDirectory = selectedFile.getParentFile();
+        System.out.println("Quellverzeichnis gesetzt auf: " + MapsHeightLines.sourceDirectory.getAbsolutePath());
+        
         Map<String, MapsHeightLines> mapRegistry = new HashMap<>();
 
         // 2. Datei einlesen
@@ -126,45 +152,61 @@ public class MapMatchFinder {
         // HIER DIE NEUE LISTE FÜR DIE OPTIMIERUNG INITIALISIEREN:
         List<MapsHeightLines> filteredTiles = new ArrayList<>();
 
-        for (MapsHeightLines tileA : allTiles) {
-            List<String> connections = new ArrayList<>();
+        // Pfad aus der ersten Datei/Verzeichnis nutzen, um die Ergebnisdatei im selben Ordner zu erstellen
+        File outputFile = new File(MapsHeightLines.sourceDirectory, "matches_result.txt");
 
-            for (MapsHeightLines tileB : allTiles) {
-                // Sich selbst nicht als Partner zählen
-                if (tileA == tileB) continue; 
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
+            
+	        for (MapsHeightLines tileA : allTiles) {
+	            List<String> connections = new ArrayList<>();
+	
+	            for (MapsHeightLines tileB : allTiles) {
+	                // Sich selbst nicht als Partner zählen
+	                if (tileA == tileB) continue; 
+	
+	                // Nord -> Süd Match (Wenn tileA NÖRDLICH von tileB platziert wird)
+	                if (matches(tileA.south, tileB.north)) {
+	                    connections.add("  -> SÜDLICH anlegbar: " + tileB.name + " (an deren NORD-Kante)");
+	                }
+	                
+	                // Süd -> Nord Match (Wenn tileA SÜDLICH von tileB platziert wird)
+	                if (matches(tileA.north, tileB.south)) {
+	                    connections.add("  -> NÖRDLICH anlegbar: " + tileB.name + " (an deren SÜD-Kante)");
+	                }
+	
+	                // Ost -> West Match (Wenn tileA WESTLICH von tileB platziert wird)
+	                if (matches(tileA.east, tileB.west)) {
+	                    connections.add("  -> ÖSTLICH anlegbar: " + tileB.name + " (an deren WEST-Kante)");
+	                }
+	
+	                // West -> Ost Match (Wenn tileA ÖSTLICH von tileB platziert wird)
+	                if (matches(tileA.west, tileB.east)) {
+	                    connections.add("  -> WESTLICH anlegbar: " + tileB.name + " (an deren OST-Kante)");
+	                }
+	            }
+	
+	            // Schreiben in die Datei statt System.out.println
+	            if (!connections.isEmpty()) {
+	                writer.write("Map: " + tileA.name);
+	                writer.newLine();
+	                for (String conn : connections) {
+	                    writer.write(conn);
+	                    writer.newLine();
+	                }
+	                writer.write(""); // Leerzeile als Abstand
+	                writer.newLine();
+	                
+	                filteredTiles.add(tileA);
+	            }
 
-                // Nord -> Süd Match (Wenn tileA NÖRDLICH von tileB platziert wird)
-                if (matches(tileA.south, tileB.north)) {
-                    connections.add("  -> SÜDLICH anlegbar: " + tileB.name + " (an deren NORD-Kante)");
-                }
-                
-                // Süd -> Nord Match (Wenn tileA SÜDLICH von tileB platziert wird)
-                if (matches(tileA.north, tileB.south)) {
-                    connections.add("  -> NÖRDLICH anlegbar: " + tileB.name + " (an deren SÜD-Kante)");
-                }
+	        }
 
-                // Ost -> West Match (Wenn tileA WESTLICH von tileB platziert wird)
-                if (matches(tileA.east, tileB.west)) {
-                    connections.add("  -> ÖSTLICH anlegbar: " + tileB.name + " (an deren WEST-Kante)");
-                }
+	        JOptionPane.showMessageDialog(null, "Match-Analyse beendet!\nErgebnisse gespeichert unter:\n" + outputFile.getAbsolutePath(), "Erfolg", JOptionPane.INFORMATION_MESSAGE);
 
-                // West -> Ost Match (Wenn tileA ÖSTLICH von tileB platziert wird)
-                if (matches(tileA.west, tileB.east)) {
-                    connections.add("  -> WESTLICH anlegbar: " + tileB.name + " (an deren OST-Kante)");
-                }
-            }
-
-            // Die Ausgabe für diese Map erfolgt NUR, wenn die Liste nicht leer ist
-            if (!connections.isEmpty()) {
-                System.out.println("Map: " + tileA.name);
-                connections.forEach(System.out::println);
-                System.out.println(); // Leerzeile als Abstand zur nächsten Map
-                
-                // OPTIMIERUNG: Nur Kacheln mit mindestens einer Verbindung merken
-                filteredTiles.add(tileA);
-            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Fehler beim Schreiben der Match-Datei: " + e.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
         }
-
+        
         // =================================================
         // BENUTZERAUSWAHL: MODUS WÄHLEN
         // =================================================
@@ -406,22 +448,22 @@ public class MapMatchFinder {
      */
     public static void findMax3x3Sectors(List<MapsHeightLines> allTiles) {
         List<MapsHeightLines[][]> bestLayouts = new ArrayList<>();
-        int[] maxCount = new int[]{0}; // Wrapper, um das Maximum im Rekursionsbaum zu teilen
+        int[] maxCount = new int[]{0}; 
         
         MapsHeightLines[][] currentGrid = new MapsHeightLines[3][3];
         boolean[] used = new boolean[allTiles.size()];
         
-        // Starte die Suche ab Index 0 (oben links im Gitter)
         searchGrid(0, currentGrid, used, allTiles, 0, maxCount, bestLayouts);
         
         System.out.println("=================================================");
         System.out.println("   ERGEBNIS: MAXIMALE 3x3 SEKTOREN-ANORDNUNG     ");
         System.out.println("=================================================");
-        // KORREKTUR: maxCount[0] statt maxCount aufrufen
         System.out.println("Maximale Anzahl zusammenhängender Maps: " + maxCount[0]);
         System.out.println("Anzahl gefundener optimaler Layouts:   " + bestLayouts.size() + "\n");
         
-        // Maximal die ersten 5 optimalen Layouts zur Übersicht ausgeben
+        // NEU: Set zum Sammeln der eindeutigen Map-Objekte/Dateien, die ausgegeben werden
+        Set<MapsHeightLines> mapsToCopy = new HashSet<>();
+
         int displayLimit = Math.min(bestLayouts.size(), 5);
         for (int i = 0; i < displayLimit; i++) {
             System.out.println("Zusammenhängende Kombination #" + (i + 1) + ":");
@@ -429,8 +471,9 @@ public class MapMatchFinder {
             for (int r = 0; r < 3; r++) {
                 for (int c = 0; c < 3; c++) {
                     if (layout[r][c] != null) {
-                        // KORREKTUR: %-12s statt %n-12s (verhindert ungewollte Zeilenumbrüche)
                         System.out.printf("[%-12s] ", layout[r][c].name);
+                        // NEU: Objekt zur Kopierliste hinzufügen
+                        mapsToCopy.add(layout[r][c]);
                     } else {
                         System.out.print("[     -      ] ");
                     }
@@ -439,6 +482,63 @@ public class MapMatchFinder {
             }
             System.out.println();
         }
+
+        // NEU: Abfrage und Kopiervorgang starten, wenn Dateien gefunden wurden
+        if (!mapsToCopy.isEmpty()) {
+            askAndCopyFiles(mapsToCopy);
+        }
+    }
+
+    /**
+     * Hilfsmethode für die Benutzerabfrage und den anschließenden Kopiervorgang.
+     */
+    private static void askAndCopyFiles(Set<MapsHeightLines> mapsToCopy) {
+        // 1. Konsolen-/GUI-Abfrage, ob kopiert werden soll
+        int dialogResult = JOptionPane.showConfirmDialog(
+                null, 
+                "Möchten Sie die " + mapsToCopy.size() + " angezeigten Dateien in ein Verzeichnis kopieren?", 
+                "Dateien kopieren?", 
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (dialogResult != JOptionPane.YES_OPTION) {
+            System.out.println("Kopiervorgang vom Benutzer abgebrochen.");
+            return;
+        }
+
+        // 2. Verzeichnisauswahl (im gewünschten Standard-Look)
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Zielverzeichnis für den Export auswählen");
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+        if (chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION) {
+            System.out.println("Verzeichnisauswahl abgebrochen.");
+            return;
+        }
+
+        File targetDir = chooser.getSelectedFile();
+        System.out.println("Kopiere Dateien nach: " + targetDir.getAbsolutePath());
+
+        // 3. Dateien kopieren
+        int successCount = 0;
+        for (MapsHeightLines map : mapsToCopy) {
+  
+        	File sourceFile = map.getFile(); 
+
+            if (sourceFile != null && sourceFile.exists()) {
+                File destFile = new File(targetDir, sourceFile.getName());
+                try {
+                    Files.copy(sourceFile.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    successCount++;
+                } catch (IOException e) {
+                    System.err.println("Fehler beim Kopieren von " + sourceFile.getName() + ": " + e.getMessage());
+                }
+            } else {
+                System.err.println("Quelldatei für '" + map.name + "' wurde nicht gefunden.");
+            }
+        }
+
+        System.out.println("Erfolgreich " + successCount + " von " + mapsToCopy.size() + " Dateien kopiert.");
     }
 
     private static void searchGrid(int index, MapsHeightLines[][] grid, boolean[] used, 

@@ -3,43 +3,57 @@ package org.socialworld.tools.mct;
 import javax.swing.*;
 import java.io.*;
 import java.util.*;
+import java.nio.file.Files;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MapSkeletonFiller {
 
-    public static void main(String[] args) {
-        // Look and Feel an das Betriebssystem anpassen
-        try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); } catch (Exception ignored) {}
+	public static void main(String[] args) {
+		  
+	    System.out.println("=== Starte MapSkeletonFiller ===");
 
-        System.out.println("=== Starte automatischen Pipeline-Test (MapSkeletonFiller) ===");
+	    // --- NEU: MODUS-ABFRAGE UM DRITTEN MODUS ERWEITERT ---
+	    String[] options = {
+	        "1 Sektor (Zufallsauswahl aus analyzer_result.txt)", 
+	        "3x3 Verbund ",
+	        "Skelett aus Analyse generieren" 
+	    };
+	    
+	    int choice = JOptionPane.showOptionDialog(
+	            null,
+	            "Welchen Modus möchtest du starten?",
+	            "Pipeline Modus wählen",
+	            JOptionPane.DEFAULT_OPTION,
+	            JOptionPane.QUESTION_MESSAGE,
+	            null,
+	            options,
+	            options[0]
+	    );
 
-        // --- NEU: MODUS-ABFRAGE BEIM START ---
-        String[] options = {"1 Sektor (Zufall via txt)", "3x3 Verbund (Testfeld)"};
-        int choice = JOptionPane.showOptionDialog(
-                null,
-                "Welchen Test-Modus möchtest du starten?",
-                "Pipeline Test-Modus wählen",
-                JOptionPane.DEFAULT_OPTION,
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                options,
-                options[0]
-        );
+	    // Falls der Dialog geschlossen oder abgebrochen wurde
+	    if (choice == JOptionPane.CLOSED_OPTION) {
+	        System.out.println("Vorgang abgebrochen: Kein Modus ausgewählt.");
+	        return;
+	    }
 
-        // Falls der Dialog geschlossen oder abgebrochen wurde
-        if (choice == JOptionPane.CLOSED_OPTION) {
-            System.out.println("Vorgang abgebrochen: Kein Modus ausgewählt.");
-            return;
-        }
-
-        // --- ENTSCHEIDUNG AUSFÜHREN ---
-        if (choice == 0) {
-            // ALTER MODUS: Einzelner Zufallssektor aus der analyzer_results.txt
-            runSingleRandomSectorMode();
-        } else {
-            // NEUER MODUS: 9 zusammenhängende Sektoren am Stück generieren
-            runMegaGridVerbundMode();
-        }
-    }
+	    // --- ENTSCHEIDUNG AUSFÜHREN ---
+	    switch (choice) {
+	        case 0 -> {
+	            // ALTER MODUS: Einzelner Zufallssektor aus der analyzer_results.txt
+	            runSingleRandomSectorMode();
+	        }
+	        case 1 -> {
+	            // NEUER MODUS: 9 zusammenhängende Sektoren am Stück generieren
+	            runMegaGridVerbundMode();
+	        }
+	        case 2 -> {
+	            // NEUER MODUS: Skelett-Generierung anhand der Ränder-Analyse
+	            System.out.println("Starte Modus: Skelett aus Analyse generieren...");
+	            generateSkeletonFromAnalysis();
+	        }
+	    }
+	}
 
     /**
      * MODUS 1: Liest die analyzer_results.txt ein und würfelt genau einen, ecken-sicheren Rand.
@@ -162,6 +176,188 @@ public class MapSkeletonFiller {
         }
     }
 
+    /**
+     * MODUS 3: Generiert ein 9x9 Raster nach Erzeugung eines Skelettes zu einer Höhenlinie aus der analyz_result.txt.
+     */
+    private static void generateSkeletonFromAnalysis() {
+        // 1. Auswahl der analyzer_results.txt
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("analyzer_results.txt auswählen");
+        if (fileChooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION) {
+            System.out.println("Auswahl abgebrochen.");
+            return;
+        }
+
+        File resultFile = fileChooser.getSelectedFile();
+        
+        // Datenstrukturen zur Trennung der Ausrichtungen
+        Map<String, List<String>> sectionLines = new LinkedHashMap<>();
+        sectionLines.put("NORDRÄNDER", new ArrayList<>());
+        sectionLines.put("OSTRÄNDER", new ArrayList<>());
+        sectionLines.put("SÜDRÄNDER", new ArrayList<>());
+        sectionLines.put("WESTRÄNDER", new ArrayList<>());
+
+        String currentSection = null;
+        Pattern filePattern = Pattern.compile("onlyLs_[a-zA-Z0-9_]+\\.txt");
+
+        // Datei einlesen und nach Abschnitten sortieren
+        try {
+            List<String> lines = Files.readAllLines(resultFile.toPath());
+            for (String line : lines) {
+                line = line.trim();
+                if (line.isEmpty()) continue;
+
+                // Abschnittswechsel erkennen
+                if (line.contains("NORDRÄNDER")) { currentSection = "NORDRÄNDER"; continue; }
+                if (line.contains("OSTRÄNDER")) { currentSection = "OSTRÄNDER"; continue; }
+                if (line.contains("SÜDRÄNDER")) { currentSection = "SÜDRÄNDER"; continue; }
+                if (line.contains("WESTRÄNDER")) { currentSection = "WESTRÄNDER"; continue; }
+
+                // Wenn wir in einem Abschnitt sind und eine Höhenlinie finden
+                if (currentSection != null && line.startsWith("[")) {
+                    if (line.contains("->")) {
+                        String[] parts = line.split("->");
+                        String arrayPart = parts[0].trim(); // Das Array [0, 1, ...]
+                        String filePart = parts[1].trim();  // Die Dateiliste [onlyLs_...]
+                        
+                        // Den ersten Dateinamen aus der Liste extrahieren
+                        String fileName = "Unbekannt";
+                        Matcher matcher = filePattern.matcher(filePart);
+                        if (matcher.find()) {
+                            fileName = matcher.group();
+                        }
+                        
+                        // Formatierte Zeile für die Auswahl: "Array -> Datei"
+                        sectionLines.get(currentSection).add(arrayPart + "   (" + fileName + ")");
+                    }
+                }
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Fehler beim Lesen der Datei: " + e.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // 2. Dialog für die Auswahl der Ausrichtung
+        String[] directions = {"NORDRÄNDER", "OSTRÄNDER", "SÜDRÄNDER", "WESTRÄNDER"};
+        String selectedDirection = (String) JOptionPane.showInputDialog(
+                null,
+                "Wählen Sie die gewünschte Ausrichtung aus der Ergebnisdatei:",
+                "1. Ausrichtung wählen",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                directions,
+                directions[0]
+        );
+
+        if (selectedDirection == null) return;
+
+        List<String> availableLines = sectionLines.get(selectedDirection);
+        if (availableLines.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Keine Höhenlinien für diese Ausrichtung gefunden.", "Fehler", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // 3. Dialog für die Auswahl der Höhenlinie (inklusive Dateiname)
+        String selectedDisplayString = (String) JOptionPane.showInputDialog(
+                null,
+                "Wählen Sie die Höhenlinie (" + selectedDirection + "):",
+                "2. Höhenlinie & Map wählen",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                availableLines.toArray(),
+                availableLines.get(0)
+        );
+
+        if (selectedDisplayString == null) return;
+
+        // Den reinen Array-Teil wieder heraustrennen für das Parsen
+        String selectedLineString = selectedDisplayString.split("   ")[0].trim();
+
+        // Text-Array "[0, 1, 1, ...]" in ein echtes int[] konvertieren
+        int[] targetArray = parseEdgeToIntArray(selectedLineString);
+
+        // Belegung für den Methodenaufruf (Standard alle null)
+        int[] targetNorth = null;
+        int[] targetEast = null;
+        int[] targetSouth = null;
+        int[] targetWest = null;
+
+        // INVERTIERUNG DER RICHTUNG: 
+        // Ein ausgewählter Nordrand wird zum Südrand des neuen Skeletts, etc.
+        switch (selectedDirection) {
+            case "NORDRÄNDER" -> targetSouth = targetArray;
+            case "OSTRÄNDER"  -> targetWest  = targetArray;
+            case "SÜDRÄNDER"  -> targetNorth = targetArray;
+            case "WESTRÄNDER" -> targetEast  = targetArray;
+        }
+
+        // Statische Methode aufrufen und Ergebnis ausgeben
+        System.out.println("=================================================");
+        System.out.println("Gewählt aus Analyse: " + selectedDirection + " -> " + selectedDisplayString);
+        System.out.println("Invertierte Übergabe an MapSkeletonGenerator...");
+        System.out.println("=================================================");
+        
+        String skeleton = MapSkeletonGenerator.generateSkeleton(targetNorth, targetEast, targetSouth, targetWest);
+        
+        System.out.println(skeleton);
+        System.out.println("=================================================\n");
+ 
+     // --- NEU: SPEICHERDIALOG FÜR DAS BEFÜLLTE SKELETT ---
+        JFileChooser saveChooser = new JFileChooser();
+        saveChooser.setDialogTitle("Zieldatei für das befüllte Skelett festlegen");
+        
+        saveChooser.setCurrentDirectory(resultFile.getParentFile());
+        
+        // Standard-Dateiname vorschlagen (optional, kann vom Nutzer überschrieben werden)
+        saveChooser.setSelectedFile(new File("befuelltes_skelett.txt"));
+
+        int saveSelection = saveChooser.showSaveDialog(null);
+
+        if (saveSelection == JFileChooser.APPROVE_OPTION) {
+            File targetFile = saveChooser.getSelectedFile();
+            String targetFilename = targetFile.getAbsolutePath();
+
+            System.out.println("Starte Befüllung des Skeletts...");
+            System.out.println("Zielpfad: " + targetFilename);
+
+            // Aufruf der existierenden Methode im MapCreationTool
+            boolean success = MapCreationTool.fillSkeleton(skeleton, targetFilename);
+
+            // Rückmeldung an den Benutzer via GUI
+            if (success) {
+                JOptionPane.showMessageDialog(
+                        null, 
+                        "Das Skelett wurde erfolgreich befüllt und gespeichert unter:\n" + targetFilename, 
+                        "Erfolg", 
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+            } else {
+                JOptionPane.showMessageDialog(
+                        null, 
+                        "Fehler: Das Skelett konnte nicht befüllt oder gespeichert werden.\nBitte prüfen Sie die Konsolenausgabe.", 
+                        "Fehler beim Befüllen", 
+                        JOptionPane.ERROR_MESSAGE
+                );
+            }
+        } else {
+            System.out.println("Speichervorgang vom Benutzer abgebrochen. Das Skelett wurde nur in die Konsole gedruckt.");
+        }
+    } // Ende der Methode generateSkeletonFromAnalysis
+    
+    
+
+    private static int[] parseEdgeToIntArray(String arrayStr) {
+        String clean = arrayStr.replace("[", "").replace("]", "").trim();
+        String[] parts = clean.split(",");
+        
+        int[] result = new int[parts.length];
+        for (int i = 0; i < parts.length; i++) {
+            result[i] = Integer.parseInt(parts[i].trim());
+        }
+        return result;
+    }
+    
+    
     private static List<int[]> getHeightLines(List<int[]> total, int row, int col) {
     	
     	List<int[]> result = new ArrayList<int[]>();
