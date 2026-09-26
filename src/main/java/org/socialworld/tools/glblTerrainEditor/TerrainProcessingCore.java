@@ -152,6 +152,7 @@ public class TerrainProcessingCore {
 
     /**
      * Erzeugt das grobe 32x32 Macro-Raster (Klumpenbildung) inklusive aller Terrain-Elemente.
+     * Garantiert ohne isolierte Salzwasser-Pixel und ohne Salzwasser im Landesinneren.
      */
     public static int[][] generateMacroGrid(int width, int height) {
         int[][] grid = new int[height][width]; 
@@ -204,6 +205,19 @@ public class TerrainProcessingCore {
             }
         }
 
+        // 4.1 ABSICHERUNG LANDESINNERES: Eingeschlossenes Salzwasser zu Süßwasser machen
+        for (int y = 1; y < height - 1; y++) {
+            for (int x = 1; x < width - 1; x++) {
+                if (grid[y][x] == TYPE_SALTWATER) {
+                    // Wenn alle 4 direkten Nachbarn ungleich Salzwasser sind, ist es im Landesinneren gefangen
+                    if (grid[y+1][x] != TYPE_SALTWATER && grid[y-1][x] != TYPE_SALTWATER && 
+                        grid[y][x+1] != TYPE_SALTWATER && grid[y][x-1] != TYPE_SALTWATER) {
+                        grid[y][x] = TYPE_WATER; // Umwandlung in einen Süßwassersee
+                    }
+                }
+            }
+        }
+
         // 5. Details, Vegetation und Sonder-Terrain einstreuen (Geringe Häufigkeit)
         for (int y = 1; y < height - 1; y++) {
             for (int x = 1; x < width - 1; x++) {
@@ -239,7 +253,6 @@ public class TerrainProcessingCore {
         }
 
         // 6. Übergangszonen berechnen (Küste & Schotter)
-        // Wir nutzen ein temporäres Grid, um Verfälschungen während der Schleife zu verhindern
         int[][] finalGrid = new int[height][width];
         for (int y = 0; y < height; y++) System.arraycopy(grid[y], 0, finalGrid[y], 0, width);
 
@@ -268,9 +281,35 @@ public class TerrainProcessingCore {
             }
         }
         
+        // 7. EINZELPIXEL-REINIGUNG: Letzte versprengte Salzwasser-Kacheln entfernen
+        for (int y = 1; y < height - 1; y++) {
+            for (int x = 1; x < width - 1; x++) {
+                if (finalGrid[y][x] == TYPE_SALTWATER) {
+                    // Wenn kein einziger Nachbar mehr Salzwasser ist, wurde der Pixel isoliert
+                    if (finalGrid[y+1][x] != TYPE_SALTWATER && finalGrid[y-1][x] != TYPE_SALTWATER && 
+                        finalGrid[y][x+1] != TYPE_SALTWATER && finalGrid[y][x-1] != TYPE_SALTWATER) {
+                        
+                        // Intelligenten Fallback wählen: Nachbar-Häufigkeiten zählen
+                        int[] neighbors = { finalGrid[y+1][x], finalGrid[y-1][x], finalGrid[y][x+1], finalGrid[y][x-1] };
+                        int bestTerrain = TYPE_PLAINS; // Sicherer Fallback
+                        int maxCount = 0;
+                        
+                        for (int n1 : neighbors) {
+                            int count = 0;
+                            for (int n2 : neighbors) { if (n1 == n2) count++; }
+                            if (count > maxCount && n1 != TYPE_SALTWATER) {
+                                maxCount = count;
+                                bestTerrain = n1;
+                            }
+                        }
+                        finalGrid[y][x] = bestTerrain; // Pixel mit dominantem Nachbar-Terrain überschreiben
+                    }
+                }
+            }
+        }
+        
         return finalGrid;
     }
-    
   
     /**
      * Korrigiert & Multi-Terrain-Safe: Lokaler Ecken- und Zentrums-Rückbau.
