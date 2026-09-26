@@ -1,15 +1,26 @@
 package org.socialworld.tools.glblTerrainEditor;
 
 import java.util.Random;
+import org.socialworld.attributes.GroundMaterial;
 
 public class TerrainProcessingCore {
 
-    public static final int TYPE_SALTWATER = 0;
-    public static final int TYPE_WATER = 1;
-    public static final int TYPE_COAST = 2;
-    public static final int TYPE_PLAINS = 3;
-    public static final int TYPE_MOUNTAIN = 4;
+    public static final int TYPE_SALTWATER = GroundMaterial.saltwater.getGteId();
+    public static final int TYPE_WATER =  GroundMaterial.water.getGteId();
+    public static final int TYPE_COAST =  GroundMaterial.sand.getGteId();
+    public static final int TYPE_PLAINS =  GroundMaterial.grass.getGteId();
+    public static final int TYPE_MOUNTAIN =  GroundMaterial.rock.getGteId();
 
+    public static final int TYPE_SWAMP = GroundMaterial.mud.getGteId();          // Schlamm -> Sumpf
+    public static final int TYPE_GRAVEL = GroundMaterial.crushedrock.getGteId();  // Schotter
+    public static final int TYPE_SCREE = GroundMaterial.stones.getGteId();        // Steine -> Geröll/Felsboden
+    public static final int TYPE_FOREST_FLOOR = GroundMaterial.moss.getGteId();   // Moos -> Waldboden
+    public static final int TYPE_WOODLAND = GroundMaterial.foliage.getGteId();    // Laub -> Wald/Hain
+    public static final int TYPE_SHRUBLAND = GroundMaterial.brushwood.getGteId(); // Reisig -> Gestrüpp/Heide
+    public static final int TYPE_WASTELAND = GroundMaterial.ash.getGteId();       // Asche -> Ödland
+    public static final int TYPE_SNOW = GroundMaterial.snow.getGteId();           // Schnee
+    public static final int TYPE_ICE = GroundMaterial.ice.getGteId();             // Eis
+  
     /**
      * Baut das Meso-Gitter über echtes, validiertes Ecken-Wachstum auf.
      * Ein Terrain rieselt NUR ein, wenn es in den direkt anliegenden Ecken der Nachbar-Raster existiert!
@@ -140,15 +151,24 @@ public class TerrainProcessingCore {
     }
 
     /**
-     * Erzeugt das grobe 32x32 Macro-Raster (Klumpenbildung).
+     * Erzeugt das grobe 32x32 Macro-Raster (Klumpenbildung) inklusive aller Terrain-Elemente.
      */
     public static int[][] generateMacroGrid(int width, int height) {
-        int[][] grid = new int[height][width]; Random rand = new Random();
-        for (int y = 0; y < height; y++) { for (int x = 0; x < width; x++) grid[y][x] = TYPE_SALTWATER; }
+        int[][] grid = new int[height][width]; 
+        Random rand = new Random();
         
+        // 1. Ozean als Basis initialisieren
+        for (int y = 0; y < height; y++) { 
+            for (int x = 0; x < width; x++) grid[y][x] = TYPE_SALTWATER; 
+        }
+        
+        // 2. Kontinent-Samen setzen (Ebenen)
         int numSeeds = 6 + rand.nextInt(4); 
-        for (int i = 0; i < numSeeds; i++) grid[5 + rand.nextInt(22)][5 + rand.nextInt(22)] = TYPE_PLAINS;
+        for (int i = 0; i < numSeeds; i++) {
+            grid[5 + rand.nextInt(22)][5 + rand.nextInt(22)] = TYPE_PLAINS;
+        }
 
+        // 3. Kontinental-Wachstum (Ebenen breiten sich aus)
         for (int growth = 0; growth < 5; growth++) {
             int[][] tempGrid = new int[height][width];
             for (int y = 0; y < height; y++) System.arraycopy(grid[y], 0, tempGrid[y], 0, width);
@@ -165,26 +185,90 @@ public class TerrainProcessingCore {
             grid = tempGrid;
         }
 
+        // 4. Gebirge und Binnengewässer im Landesinneren platzieren
         for (int y = 2; y < height - 2; y++) {
             for (int x = 2; x < width - 2; x++) {
                 if (grid[y][x] == TYPE_PLAINS) {
-                    if (grid[y+1][x] == TYPE_PLAINS && grid[y-1][x] == TYPE_PLAINS && grid[y][x+1] == TYPE_PLAINS && grid[y][x-1] == TYPE_PLAINS) {
-                        if (rand.nextDouble() < 0.45) grid[y][x] = TYPE_MOUNTAIN;
+                    // Prüfen, ob die Zelle tief im Landesinneren liegt (umgeben von Land)
+                    if (grid[y+1][x] == TYPE_PLAINS && grid[y-1][x] == TYPE_PLAINS && 
+                        grid[y][x+1] == TYPE_PLAINS && grid[y][x-1] == TYPE_PLAINS) {
+                        
+                        double roll = rand.nextDouble();
+                        if (roll < 0.35) {
+                            grid[y][x] = TYPE_MOUNTAIN; // Berge (35% Chance im tiefen Landesinneren)
+                        } else if (roll < 0.40) {
+                            grid[y][x] = TYPE_WATER;    // Süßwasser-Seen (5% Chance)
+                        }
                     }
                 }
             }
         }
 
+        // 5. Details, Vegetation und Sonder-Terrain einstreuen (Geringe Häufigkeit)
         for (int y = 1; y < height - 1; y++) {
             for (int x = 1; x < width - 1; x++) {
-                if (grid[y][x] == TYPE_SALTWATER) {
-                    if (grid[y+1][x] >= TYPE_PLAINS || grid[y-1][x] >= TYPE_PLAINS || grid[y][x+1] >= TYPE_PLAINS || grid[y][x-1] >= TYPE_PLAINS) {
-                        grid[y][x] = TYPE_COAST;
+                
+                // Details auf den Ebenen (Wälder, Büsche, Ödland, Sumpf)
+                if (grid[y][x] == TYPE_PLAINS) {
+                    double roll = rand.nextDouble();
+                    if (roll < 0.08) {
+                        grid[y][x] = TYPE_WOODLAND;     // Laubwald (8% Chance)
+                    } else if (roll < 0.14) {
+                        grid[y][x] = TYPE_FOREST_FLOOR; // Moos/Waldboden (6% Chance)
+                    } else if (roll < 0.19) {
+                        grid[y][x] = TYPE_SHRUBLAND;    // Gestrüpp/Reisig (5% Chance)
+                    } else if (roll < 0.22) {
+                        grid[y][x] = TYPE_SWAMP;        // Sumpf (3% Chance)
+                    } else if (roll < 0.23) {
+                        grid[y][x] = TYPE_WASTELAND;    // Asche/Ödland (1% seltene Anomalie)
+                    }
+                }
+                
+                // Details in den Bergen (Schnee, Eis, Geröll)
+                else if (grid[y][x] == TYPE_MOUNTAIN) {
+                    double roll = rand.nextDouble();
+                    if (roll < 0.15) {
+                        grid[y][x] = TYPE_SNOW;         // Schneekappen (15% Chance)
+                    } else if (roll < 0.22) {
+                        grid[y][x] = TYPE_ICE;          // Gletscher/Eis (7% Chance)
+                    } else if (roll < 0.35) {
+                        grid[y][x] = TYPE_SCREE;        // Geröll/Felsboden (13% Chance)
                     }
                 }
             }
         }
-        return grid;
+
+        // 6. Übergangszonen berechnen (Küste & Schotter)
+        // Wir nutzen ein temporäres Grid, um Verfälschungen während der Schleife zu verhindern
+        int[][] finalGrid = new int[height][width];
+        for (int y = 0; y < height; y++) System.arraycopy(grid[y], 0, finalGrid[y], 0, width);
+
+        for (int y = 1; y < height - 1; y++) {
+            for (int x = 1; x < width - 1; x++) {
+                
+                // Küstenlinie (Sand zwischen Land und Ozean)
+                if (grid[y][x] == TYPE_SALTWATER) {
+                    if (grid[y+1][x] >= TYPE_WATER || grid[y-1][x] >= TYPE_WATER || 
+                        grid[y][x+1] >= TYPE_WATER || grid[y][x-1] >= TYPE_WATER) {
+                        finalGrid[y][x] = TYPE_COAST;
+                    }
+                }
+                
+                // Schotter-Gürtel (Übergang zwischen Bergen/Geröll und flachem Land)
+                else if (grid[y][x] == TYPE_PLAINS || grid[y][x] == TYPE_SHRUBLAND) {
+                    if (grid[y+1][x] == TYPE_MOUNTAIN || grid[y-1][x] == TYPE_MOUNTAIN || 
+                        grid[y][x+1] == TYPE_MOUNTAIN || grid[y][x-1] == TYPE_MOUNTAIN ||
+                        grid[y+1][x] == TYPE_SCREE    || grid[y-1][x] == TYPE_SCREE) {
+                        
+                        if (rand.nextDouble() < 0.40) { // 40% Chance auf Schotter am Bergfuß
+                            finalGrid[y][x] = TYPE_GRAVEL;
+                        }
+                    }
+                }
+            }
+        }
+        
+        return finalGrid;
     }
     
   
@@ -211,18 +295,17 @@ public class TerrainProcessingCore {
                 int startX = cx * size;
                 int startY = cy * size;
 
-                // KORREKTUR: Zähl-Array von 5 auf 14 erweitert für Schnee, Eis etc.!
+                // von 0 .. 13  für die Geländearten
                 int[] counts = new int[14];
                 for (int my = 0; my < size; my++) {
                     for (int mx = 0; mx < size; mx++) {
                         int val = (int) source[startY + my][startX + mx];
-                        // KORREKTUR: Bedingung auf < 14 erweitert
                         if (val >= 0 && val < 14) counts[val]++;
                     }
                 }
                 
                 int hauptTerrain = 0; int maxCount = -1;
-                for (int i = 0; i < 14; i++) { // KORREKTUR: Zählschleife läuft bis 14
+                for (int i = 0; i < 14; i++) { 
                     if (counts[i] > maxCount) { maxCount = counts[i]; hauptTerrain = i; }
                 }
 
@@ -430,6 +513,117 @@ public class TerrainProcessingCore {
         return output;
     }
    
+    /**
+     * Löst unnatürliche "Sanduhr"-Strukturen auf, indem das Zentrum (34..44) analysiert
+     * und das dominante Terrain asymmetrisch in eine zufällige Himmelsrichtung
+     * im Kerngebiet (25..55) ausgeweitet wird.
+     */
+    public static double[][] dissolveCenterChokePoints(double[][] source, int mapW, int mapH, int size) {
+        int totalW = mapW * size;
+        int totalH = mapH * size;
+        double[][] output = new double[totalH][totalW];
+        
+        for (int y = 0; y < totalH; y++) {
+            System.arraycopy(source[y], 0, output[y], 0, totalW);
+        }
+
+        java.util.Random rand = new java.util.Random();
+
+        for (int cy = 0; cy < mapH; cy++) {
+            for (int cx = 0; cx < mapW; cx++) {
+                
+                int startX = cx * size;
+                int startY = cy * size;
+
+                // 1. Häufigkeiten im inneren 11x11 Raster (34 bis 44) ermitteln
+                int[] counts = new int[14];
+                for (int my = 34; my <= 44; my++) {
+                    for (int mx = 34; mx <= 44; mx++) {
+                        int val = (int) source[startY + my][startX + mx];
+                        if (val >= 0 && val < 14) {
+                            counts[val]++;
+                        }
+                    }
+                }
+                
+                // Dominantes Terrain im Zentrum bestimmen
+                int zentrumsTerrain = 0; 
+                int maxCount = -1;
+                for (int i = 0; i < 14; i++) { 
+                    if (counts[i] > maxCount) { 
+                        maxCount = counts[i]; 
+                        zentrumsTerrain = i; 
+                    }
+                }
+
+                // Alle Kacheln im inneren 11x11-Bereich als Startpunkte nutzen
+                java.util.List<int[]> wachstumsFront = new java.util.ArrayList<>();
+                for (int my = 34; my <= 44; my++) {
+                    for (int mx = 34; mx <= 44; mx++) {
+                        if ((int) output[startY + my][startX + mx] == zentrumsTerrain) {
+                            wachstumsFront.add(new int[]{mx, my});
+                        }
+                    }
+                }
+
+                if (wachstumsFront.isEmpty()) {
+                    continue;
+                }
+
+                // --- RICHTUNGS-BIAS (ASYMMETRIE) ---
+                // Bestimmt für dieses Meso-Raster eine dominante Vorzugsrichtung:
+                // 0 = Norden, 1 = Süden, 2 = Westen, 3 = Osten
+                int hauptRichtung = rand.nextInt(4);
+
+                // Zufallszahl zwischen 200 und 400 für die zu ändernden Kacheln
+                int zielAnzahl = 200 + rand.nextInt(201);
+                int platziert = 0;
+                int sicherheitsBremse = 0;
+
+                // 2. Gerichtetes, zusammenhängendes Wachstum im Bereich 25 bis 55
+                while (platziert < zielAnzahl && !wachstumsFront.isEmpty() && sicherheitsBremse < 6000) {
+                    sicherheitsBremse++;
+                    
+                    // Einen zufälligen bestehenden Pixel aus der Front wählen
+                    int[] basePixel = wachstumsFront.get(rand.nextInt(wachstumsFront.size()));
+                    int nextMx = basePixel[0]; 
+                    int nextMy = basePixel[1];
+                    
+                    // Richtungsauswahl mit Gewichtung
+                    int dir;
+                    if (rand.nextDouble() < 0.60) {
+                        // Zu 60% wird die ermittelte Hauptrichtung erzwungen
+                        dir = hauptRichtung;
+                    } else {
+                        // Zu 40% bricht das Wachstum komplett frei aus
+                        dir = rand.nextInt(4);
+                    }
+                    
+                    // Koordinate basierend auf Richtung verschieben
+                    if (dir == 0) nextMy--;      // Norden (Hoch)
+                    else if (dir == 1) nextMy++; // Süden (Runter)
+                    else if (dir == 2) nextMx--; // Westen (Links)
+                    else if (dir == 3) nextMx++; // Osten (Rechts)
+                    
+                    // Prüfen, ob der Nachbar innerhalb der erlaubten 25..55 Grenzen liegt
+                    if (nextMx >= 25 && nextMx <= 55 && nextMy >= 25 && nextMy <= 55) {
+                        int gx = startX + nextMx;
+                        int gy = startY + nextMy;
+                        
+                        // Nur überschreiben, wenn es noch nicht das zentrumsTerrain ist
+                        if ((int) output[gy][gx] != zentrumsTerrain) {
+                            output[gy][gx] = zentrumsTerrain;
+                            platziert++;
+                            // Der neue Pixel erweitert die Front
+                            wachstumsFront.add(new int[]{nextMx, nextMy});
+                        }
+                    }
+                }
+            }
+        }
+        return output;
+    }
+    
     /**
      * Reaktiviert: Der fraktale Wobble-Zerstörer.
      * Nutzt das Perlin-Noise aus den MathUtils, um gerade 45-Grad-Mosaikkanten

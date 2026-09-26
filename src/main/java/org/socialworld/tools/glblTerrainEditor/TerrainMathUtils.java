@@ -65,7 +65,7 @@ public class TerrainMathUtils {
                     double se = (y < totalH - 1 && x < totalW - 1) ? current[y + 1][x + 1] : myVal;
 
                     // Zähle, wie oft die Nachbar-Terrains vorkommen
-                    int[] counts = new int[5]; // IDs 0 bis 4
+                    int[] counts = new int[14]; // IDs 0 bis 13
                     counts[(int)n]++; counts[(int)s]++; counts[(int)w]++; counts[(int)o]++;
                     counts[(int)nw]++; counts[(int)ne]++; counts[(int)sw]++; counts[(int)se]++;
 
