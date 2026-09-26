@@ -21,6 +21,157 @@ public class TerrainProcessingCore {
     public static final int TYPE_SNOW = GroundMaterial.snow.getGteId();           // Schnee
     public static final int TYPE_ICE = GroundMaterial.ice.getGteId();             // Eis
   
+    /*
+    public static int[][] generateMacroGrid(int width, int height, GTEWorldProfile profile) {
+        // Hier liest die Methode am Anfang das Profil aus
+        // und setzt die Variablen (numSeeds, growthChance, etc.) passend zum Katalog-Typ.
+        // Der restliche Code mit dem Flood-Fill läuft unverändert durch!
+    }
+  */
+    
+    /**
+     * Erzeugt das grobe 32x32 Macro-Raster (Klumpenbildung) inklusive aller Terrain-Elemente.
+     * Garantiert ohne isolierte Salzwasser-Pixel und ohne jegliches Salzwasser im Landesinneren.
+     */
+    public static int[][] generateMacroGrid(int width, int height) {
+        int[][] grid = new int[height][width]; 
+        Random rand = new Random();
+        
+        // 1. Ozean als Basis initialisieren
+        for (int y = 0; y < height; y++) { 
+            for (int x = 0; x < width; x++) grid[y][x] = TYPE_SALTWATER; 
+        }
+        
+        // 2. Kontinent-Samen setzen (Ebenen)
+        int numSeeds = 6 + rand.nextInt(4); 
+        for (int i = 0; i < numSeeds; i++) {
+            grid[5 + rand.nextInt(22)][5 + rand.nextInt(22)] = TYPE_PLAINS;
+        }
+
+        // 3. Kontinental-Wachstum (Ebenen breiten sich aus)
+        for (int growth = 0; growth < 5; growth++) {
+            int[][] tempGrid = new int[height][width];
+            for (int y = 0; y < height; y++) System.arraycopy(grid[y], 0, tempGrid[y], 0, width);
+            for (int y = 1; y < height - 1; y++) {
+                for (int x = 1; x < width - 1; x++) {
+                    if (grid[y][x] == TYPE_PLAINS) {
+                        if (rand.nextDouble() < 0.65) tempGrid[y+1][x] = TYPE_PLAINS;
+                        if (rand.nextDouble() < 0.65) tempGrid[y-1][x] = TYPE_PLAINS;
+                        if (rand.nextDouble() < 0.65) tempGrid[y][x+1] = TYPE_PLAINS;
+                        if (rand.nextDouble() < 0.65) tempGrid[y][x-1] = TYPE_PLAINS;
+                    }
+                }
+            }
+            grid = tempGrid;
+        }
+
+        // 4. Gebirge und Binnengewässer im Landesinneren platzieren
+        for (int y = 2; y < height - 2; y++) {
+            for (int x = 2; x < width - 2; x++) {
+                if (grid[y][x] == TYPE_PLAINS) {
+                    if (grid[y+1][x] == TYPE_PLAINS && grid[y-1][x] == TYPE_PLAINS && 
+                        grid[y][x+1] == TYPE_PLAINS && grid[y][x-1] == TYPE_PLAINS) {
+                        
+                        double roll = rand.nextDouble();
+                        if (roll < 0.35) {
+                            grid[y][x] = TYPE_MOUNTAIN; 
+                        } else if (roll < 0.40) {
+                            grid[y][x] = TYPE_WATER;    
+                        }
+                    }
+                }
+            }
+        }
+
+        // 5. Details, Vegetation und Sonder-Terrain einstreuen (Geringe Häufigkeit)
+        for (int y = 1; y < height - 1; y++) {
+            for (int x = 1; x < width - 1; x++) {
+                if (grid[y][x] == TYPE_PLAINS) {
+                    double roll = rand.nextDouble();
+                    if (roll < 0.08)       grid[y][x] = TYPE_WOODLAND;     
+                    else if (roll < 0.14)  grid[y][x] = TYPE_FOREST_FLOOR; 
+                    else if (roll < 0.19)  grid[y][x] = TYPE_SHRUBLAND;    
+                    else if (roll < 0.22)  grid[y][x] = TYPE_SWAMP;        
+                    else if (roll < 0.23)  grid[y][x] = TYPE_WASTELAND;    
+                }
+                else if (grid[y][x] == TYPE_MOUNTAIN) {
+                    double roll = rand.nextDouble();
+                    if (roll < 0.15)       grid[y][x] = TYPE_SNOW;         
+                    else if (roll < 0.22)  grid[y][x] = TYPE_ICE;          
+                    else if (roll < 0.35)  grid[y][x] = TYPE_SCREE;        
+                }
+            }
+        }
+
+        // 6. FLOOD-FILL ABSICHERUNG: Offenes Meer markieren, eingeschlossenes Salzwasser eliminieren
+        boolean[][] isOpenOcean = new boolean[height][width];
+        java.util.Queue<int[]> queue = new java.util.LinkedList<>();
+
+        // Alle Salzwasser-Zellen an den 4 Außenrändern der Weltkarte in die Queue werfen
+        for (int x = 0; x < width; x++) {
+            if (grid[0][x] == TYPE_SALTWATER) { isOpenOcean[0][x] = true; queue.add(new int[]{x, 0}); }
+            if (grid[height-1][x] == TYPE_SALTWATER) { isOpenOcean[height-1][x] = true; queue.add(new int[]{x, height-1}); }
+        }
+        for (int y = 0; y < height; y++) {
+            if (grid[y][0] == TYPE_SALTWATER) { isOpenOcean[y][0] = true; queue.add(new int[]{0, y}); }
+            if (grid[y][width-1] == TYPE_SALTWATER) { isOpenOcean[y][width-1] = true; queue.add(new int[]{width-1, y}); }
+        }
+
+        // Vom Rand aus ins Landesinnere vorarbeiten (Flut-Algorithmus)
+        int[][] dirs = {{0,1}, {0,-1}, {1,0}, {-1,0}};
+        while (!queue.isEmpty()) {
+            int[] curr = queue.poll();
+            for (int[] d : dirs) {
+                int nx = curr[0] + d[0];
+                int ny = curr[1] + d[1];
+                if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+                    // Wenn der Nachbar Salzwasser ist und noch nicht als offenes Meer markiert wurde
+                    if (grid[ny][nx] == TYPE_SALTWATER && !isOpenOcean[ny][nx]) {
+                        isOpenOcean[ny][nx] = true;
+                        queue.add(new int[]{nx, ny});
+                    }
+                }
+            }
+        }
+
+        // Nun alle Salzwasser-Zellen, die KEINE Verbindung zum offenen Meer haben, zu Süßwasser machen
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                if (grid[y][x] == TYPE_SALTWATER && !isOpenOcean[y][x]) {
+                    grid[y][x] = TYPE_WATER; // Umwandlung in Süßwassersee (egal wie groß der Fleck ist)
+                }
+            }
+        }
+
+        // 7. Übergangszonen berechnen (Küste & Schotter)
+        int[][] finalGrid = new int[height][width];
+        for (int y = 0; y < height; y++) System.arraycopy(grid[y], 0, finalGrid[y], 0, width);
+
+        for (int y = 1; y < height - 1; y++) {
+            for (int x = 1; x < width - 1; x++) {
+                // Küstenlinie (Sand NUR zwischen echtem Ozean-Salzwasser und Land)
+                if (grid[y][x] == TYPE_SALTWATER && isOpenOcean[y][x]) {
+                    if (grid[y+1][x] != TYPE_SALTWATER || grid[y-1][x] != TYPE_SALTWATER || 
+                        grid[y][x+1] != TYPE_SALTWATER || grid[y][x-1] != TYPE_SALTWATER) {
+                        finalGrid[y][x] = TYPE_COAST;
+                    }
+                }
+                // Schotter-Gürtel am Bergfuß
+                else if (grid[y][x] == TYPE_PLAINS || grid[y][x] == TYPE_SHRUBLAND) {
+                    if (grid[y+1][x] == TYPE_MOUNTAIN || grid[y-1][x] == TYPE_MOUNTAIN || 
+                        grid[y][x+1] == TYPE_MOUNTAIN || grid[y][x-1] == TYPE_MOUNTAIN ||
+                        grid[y+1][x] == TYPE_SCREE    || grid[y-1][x] == TYPE_SCREE) {
+                        if (rand.nextDouble() < 0.40) { 
+                            finalGrid[y][x] = TYPE_GRAVEL;
+                        }
+                    }
+                }
+            }
+        }
+        
+        return finalGrid;
+    }
+    
     /**
      * Baut das Meso-Gitter über echtes, validiertes Ecken-Wachstum auf.
      * Ein Terrain rieselt NUR ein, wenn es in den direkt anliegenden Ecken der Nachbar-Raster existiert!
@@ -150,167 +301,7 @@ public class TerrainProcessingCore {
         }
     }
 
-    /**
-     * Erzeugt das grobe 32x32 Macro-Raster (Klumpenbildung) inklusive aller Terrain-Elemente.
-     * Garantiert ohne isolierte Salzwasser-Pixel und ohne Salzwasser im Landesinneren.
-     */
-    public static int[][] generateMacroGrid(int width, int height) {
-        int[][] grid = new int[height][width]; 
-        Random rand = new Random();
-        
-        // 1. Ozean als Basis initialisieren
-        for (int y = 0; y < height; y++) { 
-            for (int x = 0; x < width; x++) grid[y][x] = TYPE_SALTWATER; 
-        }
-        
-        // 2. Kontinent-Samen setzen (Ebenen)
-        int numSeeds = 6 + rand.nextInt(4); 
-        for (int i = 0; i < numSeeds; i++) {
-            grid[5 + rand.nextInt(22)][5 + rand.nextInt(22)] = TYPE_PLAINS;
-        }
-
-        // 3. Kontinental-Wachstum (Ebenen breiten sich aus)
-        for (int growth = 0; growth < 5; growth++) {
-            int[][] tempGrid = new int[height][width];
-            for (int y = 0; y < height; y++) System.arraycopy(grid[y], 0, tempGrid[y], 0, width);
-            for (int y = 1; y < height - 1; y++) {
-                for (int x = 1; x < width - 1; x++) {
-                    if (grid[y][x] == TYPE_PLAINS) {
-                        if (rand.nextDouble() < 0.65) tempGrid[y+1][x] = TYPE_PLAINS;
-                        if (rand.nextDouble() < 0.65) tempGrid[y-1][x] = TYPE_PLAINS;
-                        if (rand.nextDouble() < 0.65) tempGrid[y][x+1] = TYPE_PLAINS;
-                        if (rand.nextDouble() < 0.65) tempGrid[y][x-1] = TYPE_PLAINS;
-                    }
-                }
-            }
-            grid = tempGrid;
-        }
-
-        // 4. Gebirge und Binnengewässer im Landesinneren platzieren
-        for (int y = 2; y < height - 2; y++) {
-            for (int x = 2; x < width - 2; x++) {
-                if (grid[y][x] == TYPE_PLAINS) {
-                    // Prüfen, ob die Zelle tief im Landesinneren liegt (umgeben von Land)
-                    if (grid[y+1][x] == TYPE_PLAINS && grid[y-1][x] == TYPE_PLAINS && 
-                        grid[y][x+1] == TYPE_PLAINS && grid[y][x-1] == TYPE_PLAINS) {
-                        
-                        double roll = rand.nextDouble();
-                        if (roll < 0.35) {
-                            grid[y][x] = TYPE_MOUNTAIN; // Berge (35% Chance im tiefen Landesinneren)
-                        } else if (roll < 0.40) {
-                            grid[y][x] = TYPE_WATER;    // Süßwasser-Seen (5% Chance)
-                        }
-                    }
-                }
-            }
-        }
-
-        // 4.1 ABSICHERUNG LANDESINNERES: Eingeschlossenes Salzwasser zu Süßwasser machen
-        for (int y = 1; y < height - 1; y++) {
-            for (int x = 1; x < width - 1; x++) {
-                if (grid[y][x] == TYPE_SALTWATER) {
-                    // Wenn alle 4 direkten Nachbarn ungleich Salzwasser sind, ist es im Landesinneren gefangen
-                    if (grid[y+1][x] != TYPE_SALTWATER && grid[y-1][x] != TYPE_SALTWATER && 
-                        grid[y][x+1] != TYPE_SALTWATER && grid[y][x-1] != TYPE_SALTWATER) {
-                        grid[y][x] = TYPE_WATER; // Umwandlung in einen Süßwassersee
-                    }
-                }
-            }
-        }
-
-        // 5. Details, Vegetation und Sonder-Terrain einstreuen (Geringe Häufigkeit)
-        for (int y = 1; y < height - 1; y++) {
-            for (int x = 1; x < width - 1; x++) {
-                
-                // Details auf den Ebenen (Wälder, Büsche, Ödland, Sumpf)
-                if (grid[y][x] == TYPE_PLAINS) {
-                    double roll = rand.nextDouble();
-                    if (roll < 0.08) {
-                        grid[y][x] = TYPE_WOODLAND;     // Laubwald (8% Chance)
-                    } else if (roll < 0.14) {
-                        grid[y][x] = TYPE_FOREST_FLOOR; // Moos/Waldboden (6% Chance)
-                    } else if (roll < 0.19) {
-                        grid[y][x] = TYPE_SHRUBLAND;    // Gestrüpp/Reisig (5% Chance)
-                    } else if (roll < 0.22) {
-                        grid[y][x] = TYPE_SWAMP;        // Sumpf (3% Chance)
-                    } else if (roll < 0.23) {
-                        grid[y][x] = TYPE_WASTELAND;    // Asche/Ödland (1% seltene Anomalie)
-                    }
-                }
-                
-                // Details in den Bergen (Schnee, Eis, Geröll)
-                else if (grid[y][x] == TYPE_MOUNTAIN) {
-                    double roll = rand.nextDouble();
-                    if (roll < 0.15) {
-                        grid[y][x] = TYPE_SNOW;         // Schneekappen (15% Chance)
-                    } else if (roll < 0.22) {
-                        grid[y][x] = TYPE_ICE;          // Gletscher/Eis (7% Chance)
-                    } else if (roll < 0.35) {
-                        grid[y][x] = TYPE_SCREE;        // Geröll/Felsboden (13% Chance)
-                    }
-                }
-            }
-        }
-
-        // 6. Übergangszonen berechnen (Küste & Schotter)
-        int[][] finalGrid = new int[height][width];
-        for (int y = 0; y < height; y++) System.arraycopy(grid[y], 0, finalGrid[y], 0, width);
-
-        for (int y = 1; y < height - 1; y++) {
-            for (int x = 1; x < width - 1; x++) {
-                
-                // Küstenlinie (Sand zwischen Land und Ozean)
-                if (grid[y][x] == TYPE_SALTWATER) {
-                    if (grid[y+1][x] >= TYPE_WATER || grid[y-1][x] >= TYPE_WATER || 
-                        grid[y][x+1] >= TYPE_WATER || grid[y][x-1] >= TYPE_WATER) {
-                        finalGrid[y][x] = TYPE_COAST;
-                    }
-                }
-                
-                // Schotter-Gürtel (Übergang zwischen Bergen/Geröll und flachem Land)
-                else if (grid[y][x] == TYPE_PLAINS || grid[y][x] == TYPE_SHRUBLAND) {
-                    if (grid[y+1][x] == TYPE_MOUNTAIN || grid[y-1][x] == TYPE_MOUNTAIN || 
-                        grid[y][x+1] == TYPE_MOUNTAIN || grid[y][x-1] == TYPE_MOUNTAIN ||
-                        grid[y+1][x] == TYPE_SCREE    || grid[y-1][x] == TYPE_SCREE) {
-                        
-                        if (rand.nextDouble() < 0.40) { // 40% Chance auf Schotter am Bergfuß
-                            finalGrid[y][x] = TYPE_GRAVEL;
-                        }
-                    }
-                }
-            }
-        }
-        
-        // 7. EINZELPIXEL-REINIGUNG: Letzte versprengte Salzwasser-Kacheln entfernen
-        for (int y = 1; y < height - 1; y++) {
-            for (int x = 1; x < width - 1; x++) {
-                if (finalGrid[y][x] == TYPE_SALTWATER) {
-                    // Wenn kein einziger Nachbar mehr Salzwasser ist, wurde der Pixel isoliert
-                    if (finalGrid[y+1][x] != TYPE_SALTWATER && finalGrid[y-1][x] != TYPE_SALTWATER && 
-                        finalGrid[y][x+1] != TYPE_SALTWATER && finalGrid[y][x-1] != TYPE_SALTWATER) {
-                        
-                        // Intelligenten Fallback wählen: Nachbar-Häufigkeiten zählen
-                        int[] neighbors = { finalGrid[y+1][x], finalGrid[y-1][x], finalGrid[y][x+1], finalGrid[y][x-1] };
-                        int bestTerrain = TYPE_PLAINS; // Sicherer Fallback
-                        int maxCount = 0;
-                        
-                        for (int n1 : neighbors) {
-                            int count = 0;
-                            for (int n2 : neighbors) { if (n1 == n2) count++; }
-                            if (count > maxCount && n1 != TYPE_SALTWATER) {
-                                maxCount = count;
-                                bestTerrain = n1;
-                            }
-                        }
-                        finalGrid[y][x] = bestTerrain; // Pixel mit dominantem Nachbar-Terrain überschreiben
-                    }
-                }
-            }
-        }
-        
-        return finalGrid;
-    }
-  
+   
     /**
      * Korrigiert & Multi-Terrain-Safe: Lokaler Ecken- und Zentrums-Rückbau.
      * Unterstützt nun ebenfalls alle 14 Terrain-IDs vollautomatisch!

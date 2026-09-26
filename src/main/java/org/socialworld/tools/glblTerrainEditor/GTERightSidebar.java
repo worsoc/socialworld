@@ -6,8 +6,8 @@ import java.awt.*;
 import java.io.File;
 
 /**
- * Lagert die komplette Sidebar-Logik aus, um die Hauptklasse übersichtlich zu halten.
- * Enthält alle Schieberegler, Kombinationsboxen und die neue Quadranten-Auswahl.
+ * Die bereinigte Sidebar. Bindet das GTEGeneratorPanel ein 
+ * und verwaltet die Werkzeuge sowie Speicher-Funktionen.
  */
 public class GTERightSidebar extends JPanel {
     
@@ -16,6 +16,15 @@ public class GTERightSidebar extends JPanel {
         setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         setPreferredSize(new Dimension(240, 729));
 
+        // 1. Das ausgelagerte Generator-Panel ganz oben einfügen
+        GTEGeneratorPanel generatorPanel = new GTEGeneratorPanel(canvas, editor);
+        add(generatorPanel);
+        
+        add(Box.createVerticalStrut(15));
+        add(new JSeparator(JSeparator.HORIZONTAL));
+        add(Box.createVerticalStrut(15));
+
+        // 2. Editier-Modus Selektion
         add(new JLabel("<html><b>EDITIER-MODUS SELEKTION</b></html>"));
         add(Box.createVerticalStrut(8));
         
@@ -38,6 +47,7 @@ public class GTERightSidebar extends JPanel {
         add(radiusSlider);
         add(Box.createVerticalStrut(15));
 
+        // 3. Kontext-Panels für die Pinsel
         JPanel contextPanel = new JPanel(new CardLayout());
         JPanel panelZoom = new JPanel(new BorderLayout());
         panelZoom.add(new JLabel("<html>Klicke links zum Hineinzoomen.<br>Klicke rechts zum Herauszoomen.</html>"), BorderLayout.NORTH);
@@ -79,7 +89,7 @@ public class GTERightSidebar extends JPanel {
         baumBox.addActionListener(e -> canvas.setBrushBaum((String) baumBox.getSelectedItem()));
         strauchBox.addActionListener(e -> canvas.setBrushStrauch((String) strauchBox.getSelectedItem()));
 
-        // --- HIER STECKT NUN DIE KOMPAKTE QUADRANTEN-AUSWAHL ---
+        // 4. Makro-Quadrant Steuerung
         add(Box.createVerticalStrut(15));
         JLabel quadLabel = new JLabel("<html><b>MAKRO-QUADRANT</b></html>");
         quadLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -105,7 +115,7 @@ public class GTERightSidebar extends JPanel {
         quadGridPanel.add(btnSW); quadGridPanel.add(btnSO);
         add(quadGridPanel);
 
-        // --- EXPORT- UND IMPORT BUTTONS ---
+        // 5. Datei-Operationen (Save / Load)
         JButton saveButton = new JButton("save map ...");
         saveButton.setAlignmentX(Component.LEFT_ALIGNMENT);
         saveButton.setBackground(new Color(40, 110, 45)); saveButton.setForeground(Color.WHITE);
@@ -118,12 +128,9 @@ public class GTERightSidebar extends JPanel {
 
             if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
-                if (!file.getName().endsWith(".map")) {
-                    file = new File(file.getAbsolutePath() + ".map");
-                }
+                if (!file.getName().endsWith(".map")) file = new File(file.getAbsolutePath() + ".map");
                 try {
-                    MacroMap activeMap = canvas.getMacroMap(); 
-                    GlobalTerrainExporter.exportMap(activeMap, file); 
+                    GlobalTerrainExporter.exportMap(canvas.getMacroMap(), file); 
                     JOptionPane.showMessageDialog(this, "Karte erfolgreich exportiert!"); 
                 } catch (Exception ex) { 
                     ex.printStackTrace(); 
@@ -162,5 +169,5 @@ public class GTERightSidebar extends JPanel {
         add(Box.createVerticalStrut(20));
         double realSizeKm = (32 * 729.0) / 1000.0;
         add(new JLabel(String.format("Weltgröße: %.2f km x %.2f km", realSizeKm, realSizeKm)));
-    }
+     }
 }
