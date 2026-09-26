@@ -6,10 +6,11 @@ import java.awt.*;
 /**
  * Der zentrale Koordinator der Editor-Ansicht.
  * Hält den Zustand und delegiert Interaktion und Rendering an die GTE-Klassen.
+ * JETZT MIT QUADRANTEN-UNTERSTÜTZUNG (16x16 Makro-Zellen Sichtfenster).
  */
 public class GlobalTerrainEditorCanvas extends JPanel {
     private final GlobalTerrainEditor editor;
-   private  MacroMap macroMap;
+    private MacroMap macroMap;
     private final int cellSizeInPixels = 45; 
 
     // Zoom-Zustand und Fokus-Punkte
@@ -18,6 +19,10 @@ public class GlobalTerrainEditorCanvas extends JPanel {
     private MacroMapCell selectedMacroCell = null;
     private int selectedMesoChunkX = 0;
     private int selectedMesoChunkY = 0;
+
+    // --- NEU: Quadranten-Offsets für das 16x16 Makro-Sichtfenster ---
+    private int currentMacroOffsetX = 0;
+    private int currentMacroOffsetY = 0;
 
     // Aktuelle Pinsel- und Werkzeug-Einstellungen
     private String currentMode = "ZOOM"; 
@@ -31,8 +36,8 @@ public class GlobalTerrainEditorCanvas extends JPanel {
     private final GTECanvasRenderer renderer;
 
     public GlobalTerrainEditorCanvas(MacroMap macroMap, GlobalTerrainEditor editor) {
-    	this.editor = editor;
-    	this.macroMap = macroMap;
+        this.editor = editor;
+        this.macroMap = macroMap;
         this.renderer = new GTECanvasRenderer(this);
         setBackground(Color.DARK_GRAY);
 
@@ -54,17 +59,23 @@ public class GlobalTerrainEditorCanvas extends JPanel {
      * Verhindert das Erzeugen von Mehrfachinstanzen im RAM.
      */
     public void setMacroMap(MacroMap newMap) {
-        // Falls du eine interne Variable 'this.macroMap' als final deklariert hast,
-        // entferne das 'final' bei der Variablendeklaration oben in der Klasse!
         this.macroMap = newMap; 
         
-        // Setze den Zoom sicherheitshalber auf die Weltkarte zurück
+        // Setze den Zoom und den Quadranten sicherheitshalber auf den Standard zurück
         this.currentZoom = ZoomLevel.MACRO;
         this.selectedMacroCell = null;
+        this.currentMacroOffsetX = 0;
+        this.currentMacroOffsetY = 0;
         
         // Erzwinge ein sofortiges Neuzeichnen der neuen Karte
         this.repaint();
     }
+
+    // --- NEU: GETTER & SETTER FÜR DIE QUADRANTEN-OFFSETS ---
+    public int getCurrentMacroOffsetX() { return currentMacroOffsetX; }
+    public void setCurrentMacroOffsetX(int offset) { this.currentMacroOffsetX = offset; }
+    public int getCurrentMacroOffsetY() { return currentMacroOffsetY; }
+    public void setCurrentMacroOffsetY(int offset) { this.currentMacroOffsetY = offset; }
 
     // --- GETTER & SETTER FÜR DIE KOMMUNIKATION DER GTE-MODULE ---
     public MacroMap getMacroMap() { return macroMap; }
@@ -92,15 +103,29 @@ public class GlobalTerrainEditorCanvas extends JPanel {
 
     /**
      * Erzeugt den Text für die Statusbar des Hauptfensters.
+     * Erweitert um den aktuellen Quadranten-Zustand auf der Weltkarte.
      */
     public String getStatusText() {
         return switch (currentZoom) {
-            case MACRO -> " MODE: WELTKARTE (729m) | Downsampling & Schraffur aktiv | Linksklick zum Zoomen.";
+            case MACRO -> {
+                String quad = "NW";
+                if (currentMacroOffsetX == 16 && currentMacroOffsetY == 0) quad = "NO";
+                else if (currentMacroOffsetX == 0 && currentMacroOffsetY == 16) quad = "SW";
+                else if (currentMacroOffsetX == 16 && currentMacroOffsetY == 16) quad = "SO";
+                yield " MODE: WELTKARTE (Quadrant " + quad + ") | Downsampling aktiv | Linksklick zum Zoomen.";
+            }
             case MESO -> " MODE: MESO-ANSICHT (81x81) | Pinsel-Radius: " + currentBrushRadius + " | Klicke für 1m Modus | Rechtsklick zurück.";
             case MIKRO -> " MODE: MIKRO-DETAILMODUS (1m Schärfe) | Baum und Strauch überlagerbar! | Rechtsklick zurück.";
         };
     }
 
+    /**
+     * KORREKTUR: Jetzt exakt auf das 16x16 Sichtfenster angepasst!
+     * 16 Zellen * 45 Pixel pro Zelle = 720 Pixel.
+     */
     @Override 
-    public Dimension getPreferredSize() { return new Dimension(729, 729); }
+    public Dimension getPreferredSize() { 
+        // Rechnet nun automatisch: 16 * 45 = 720 Pixel!
+        return new Dimension(GTEQuadrant.QUADRANT_SIZE * cellSizeInPixels, GTEQuadrant.QUADRANT_SIZE * cellSizeInPixels); 
+    }
 }

@@ -4,7 +4,8 @@ import java.awt.*;
 
 /**
  * Zeichen-Manager für den Editor.
- * Rendert alle Straucharten (inkl. Brombeere, Heidekraut, Ginster) formgetreu auf dem Monitor.
+ * Rendert alle Straucharten formgetreu auf dem Monitor.
+ * JETZT MIT 16x16 MAKRO-QUADRANTEN-UNTERSTÜTZUNG.
  */
 public class GTECanvasRenderer {
     private final GlobalTerrainEditorCanvas canvas;
@@ -25,11 +26,27 @@ public class GTECanvasRenderer {
         MacroMap macroMap = canvas.getMacroMap();
         int cellSize = canvas.getCellSizeInPixels();
 
-        for (int x = 0; x < macroMap.getWidth(); x++) {
-            for (int y = 0; y < macroMap.getHeight(); y++) {
+        // Aktuelle Quadranten-Offsets aus dem Canvas holen
+        int offsetX = canvas.getCurrentMacroOffsetX();
+        int offsetY = canvas.getCurrentMacroOffsetY();
+
+        // ANPASSUNG: Schleifen laufen nur noch über die 16 Zellen des aktiven Quadranten
+        for (int x = offsetX; x < offsetX + GTEQuadrant.QUADRANT_SIZE; x++) {
+            for (int y = offsetY; y < offsetY + GTEQuadrant.QUADRANT_SIZE; y++) {
+                
+                // Sicherheitsprüfung gegen Map-Grenzen
+                if (x >= macroMap.getWidth() || y >= macroMap.getHeight()) {
+                    continue;
+                }
+
                 MacroMapCell cell = macroMap.getCell(x, y);
-                int startX = x * cellSize;
-                int startY = y * cellSize;
+                
+                // ANPASSUNG: Auf dem Bildschirm fangen wir relativ bei (0..15) an zu zeichnen
+                int localX = GTEQuadrant.toLocal(x, offsetX);
+                int localY = GTEQuadrant.toLocal(y, offsetY);
+                
+                int startX = localX * cellSize;
+                int startY = localY * cellSize;
                 
                 renderPixelPerfectMacroCell(g2, cell, startX, startY, cellSize);
                 
@@ -93,7 +110,6 @@ public class GTECanvasRenderer {
             }
         }
 
-        // Saubere Rasterlinien zeichnen
         g2.setColor(new Color(0, 0, 0, 35)); 
         for (int mx = 0; mx < 81; mx++) {
             for (int my = 0; my < 81; my++) {
@@ -133,28 +149,23 @@ public class GTECanvasRenderer {
                 g2.setColor(new Color(255, 255, 255, 25));
                 g2.drawRect(lx * mikroCellPixels, ly * mikroCellPixels, mikroCellPixels, mikroCellPixels);
 
-                // --- STRAUCH-SCHABLONE RENDERN ---
                 String strauch = selectedCell.getMesoStrauchAusMischung(mx, my, lx, ly);
                 if (!strauch.equals("KEIN_STRAUCH")) {
                     g2.setColor(GTERenderColorPalette.getStrauchColor(strauch));
                     
                     if (strauch.equals("FARNE")) {
-                        // Farn-Kreuzwedel
                         g2.fillRect(lx * mikroCellPixels + 32, ly * mikroCellPixels + 12, 16, 56);
                         g2.fillRect(lx * mikroCellPixels + 12, ly * mikroCellPixels + 32, 56, 16);
                     } else if (strauch.equals("GINSTER") || strauch.equals("HEIDEKRAUT")) {
-                        // Sternform für Blütensträucher
                         int cx = lx * mikroCellPixels + 40;
                         int cy = ly * mikroCellPixels + 40;
                         g2.fillOval(cx - 20, cy - 20, 40, 40);
                         g2.fillOval(cx - 30, cy - 5, 60, 10);
                         g2.fillOval(cx - 5, cy - 30, 10, 60);
                     } else {
-                        // Klassisch runde Büsche für Zierstrauch, Beere und BROMBEERE
                         g2.fillOval(lx * mikroCellPixels + 15, ly * mikroCellPixels + 15, 52, 52);
                     }
 
-                    // Dunkle Konturlinie für maximalen optischen Kontrast im Gras
                     g2.setColor(new Color(0, 0, 0, 120));
                     g2.setStroke(new BasicStroke(1.5f));
                     if (strauch.equals("FARNE")) {
@@ -170,7 +181,6 @@ public class GTECanvasRenderer {
             }
         }
 
-        // Kronendach-Schraffur
         String baum = selectedCell.getMesoBaum(mx, my);
         if (!baum.equals("KEIN_BAUM")) {
             Color baumFarbe = GTERenderColorPalette.getBaumColor(baum);

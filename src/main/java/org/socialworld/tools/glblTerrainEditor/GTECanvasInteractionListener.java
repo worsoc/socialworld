@@ -1,10 +1,7 @@
 package org.socialworld.tools.glblTerrainEditor;
 
-
 import javax.swing.*;
-
 import org.socialworld.attributes.GroundMaterial;
-
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -15,7 +12,7 @@ public class GTECanvasInteractionListener extends MouseAdapter {
     public GTECanvasInteractionListener(GlobalTerrainEditorCanvas canvas, GlobalTerrainEditor editor) {
         this.canvas = canvas;
         this.editor = editor;
-   }
+    }
 
     @Override
     public void mousePressed(MouseEvent e) {
@@ -42,8 +39,13 @@ public class GTECanvasInteractionListener extends MouseAdapter {
         int cellSize = canvas.getCellSizeInPixels();
 
         if (canvas.getCurrentZoom() == GlobalTerrainEditorCanvas.ZoomLevel.MACRO) {
-            int cellX = mouseX / cellSize;
-            int cellY = mouseY / cellSize;
+            // ANPASSUNG: Berechnete lokale Zellenkoordinate um den aktiven Quadranten-Offset erweitern
+            int localCellX = mouseX / cellSize;
+            int localCellY = mouseY / cellSize;
+            
+            int cellX = GTEQuadrant.toGlobal(localCellX, canvas.getCurrentMacroOffsetX());
+            int cellY = GTEQuadrant.toGlobal(localCellY, canvas.getCurrentMacroOffsetY());
+
             if (cellX >= 0 && cellX < macroMap.getWidth() && cellY >= 0 && cellY < macroMap.getHeight()) {
                 canvas.setSelectedMacroCell(macroMap.getCell(cellX, cellY));
                 canvas.setCurrentZoom(GlobalTerrainEditorCanvas.ZoomLevel.MESO);
@@ -81,8 +83,13 @@ public class GTECanvasInteractionListener extends MouseAdapter {
 
         switch (canvas.getCurrentZoom()) {
             case MACRO -> {
-                int cellX = mouseX / cellSize;
-                int cellY = mouseY / cellSize;
+                // ANPASSUNG: Auch hier beim Malen auf der Weltkarte den Quadranten-Offset einrechnen
+                int localCellX = mouseX / cellSize;
+                int localCellY = mouseY / cellSize;
+                
+                int cellX = GTEQuadrant.toGlobal(localCellX, canvas.getCurrentMacroOffsetX());
+                int cellY = GTEQuadrant.toGlobal(localCellY, canvas.getCurrentMacroOffsetY());
+
                 for (int dx = -radiusOffset; dx <= radiusOffset; dx++) {
                     for (int dy = -radiusOffset; dy <= radiusOffset; dy++) {
                         if (dx * dx + dy * dy <= radiusOffset * radiusOffset) {
@@ -126,9 +133,10 @@ public class GTECanvasInteractionListener extends MouseAdapter {
     }
 
     private void applyMacroPaint(int tx, int ty) {
-        MacroMapCell cell = canvas.getMacroMap().getCell(tx, ty);
+        MacroMap macroMap = canvas.getMacroMap();
+        MacroMapCell cell = macroMap.getCell(tx, ty);
         if (canvas.getCurrentMode().equals("HÖHE")) {
-            canvas.getMacroMap().updateCellElevation(tx, ty, canvas.getCurrentBrushElevation());
+            macroMap.updateCellElevation(tx, ty, canvas.getCurrentBrushElevation());
         } else if (canvas.getCurrentMode().equals("TERRAIN")) {
             cell.setCoverType(canvas.getCurrentBrushTerrain());
             for (int mx = 0; mx < 81; mx++) {
