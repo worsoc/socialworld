@@ -113,7 +113,18 @@ public class GlobalTerrainEditor extends JFrame {
         saveButton.setBackground(new Color(40, 110, 45)); 
         saveButton.setForeground(Color.WHITE);
         saveButton.addActionListener(e -> {
-            JFileChooser fileChooser = new JFileChooser();
+            // 1. Hole das Eclipse-Arbeitsverzeichnis
+            String workingDir = System.getProperty("user.dir");
+            File defaultDir = new File(workingDir);
+
+            // 2. Übergib den Pfad direkt in den Konstruktor (Verhindert den Bug)
+            JFileChooser fileChooser = defaultDir.exists() ? new JFileChooser(defaultDir) : new JFileChooser();
+            
+            // 3. Komfort-Feature: Filter für .map-Dateien setzen
+            fileChooser.setDialogTitle("GlobalTerrain Karte speichern");
+            fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("GlobalTerrain Map (*.map)", "map"));
+
+            // 4. Dialog anzeigen
             if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
                 if (!file.getName().endsWith(".map")) {
@@ -121,14 +132,13 @@ public class GlobalTerrainEditor extends JFrame {
                 }
                 try {
                     // Wir holen uns die ECHTE, aktuell im Canvas aktive Karte!
-                    // Dadurch werden alle geladenen und neu gezeichneten Daten exportiert.
                     MacroMap activeMap = canvas.getMacroMap(); 
                     
                     GlobalTerrainExporter.exportMap(activeMap, file); 
                     JOptionPane.showMessageDialog(this, "Karte erfolgreich exportiert!"); 
                 } catch (Exception ex) { 
                     ex.printStackTrace(); 
-                    JOptionPane.showMessageDialog(this, "Fehler beim Exportieren: " + ex.getMessage());
+                    JOptionPane.showMessageDialog(this, "Fehler beim Exportieren: " + ex.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -137,26 +147,39 @@ public class GlobalTerrainEditor extends JFrame {
         loadButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         loadButton.setBackground(new Color(50, 100, 160)); loadButton.setForeground(Color.WHITE);
  
-	     loadButton.addActionListener(e -> {
-	         JFileChooser fileChooser = new JFileChooser();
-	         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-	             try {
-	                 // 1. Die Karte ganz normal parsen und laden
-	                 MacroMap loadedMap = GlobalTerrainImporter.importMap(fileChooser.getSelectedFile());
-	                 
-	                 // 2. Die neue Map einfach in das BESTEHENDE Canvas injizieren!
-	                 canvas.setMacroMap(loadedMap); 
-	                 
-	                 // 3. Statusleiste aktualisieren
-	                 statusBar.setText(canvas.getStatusText());
-	                 
-	                 JOptionPane.showMessageDialog(this, "Karte erfolgreich geladen!");
-	             } catch (Exception ex) {
-	                 ex.printStackTrace();
-	                 JOptionPane.showMessageDialog(this, "Fehler beim Laden: " + ex.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
-	             }
-	         }
-	     });
+        loadButton.addActionListener(e -> {
+            // 1. Hole das Eclipse-Arbeitsverzeichnis
+            String workingDir = System.getProperty("user.dir");
+            File defaultDir = new File(workingDir);
+
+            // 2. Übergib den Pfad direkt in den Konstruktor (Verhindert den Bug)
+            JFileChooser fileChooser = defaultDir.exists() ? new JFileChooser(defaultDir) : new JFileChooser();
+            
+            // 3. Komfort-Feature: Nur .map Dateien im Dialog zulassen
+            fileChooser.setDialogTitle("GlobalTerrain Karte laden");
+            fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("GlobalTerrain Map (*.map)", "map"));
+
+            // 4. Dialog anzeigen
+            if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+                try {
+                    // 1. Die Karte ganz normal parsen und laden
+                    MacroMap loadedMap = GlobalTerrainImporter.importMap(fileChooser.getSelectedFile());
+                    
+                    // 2. Die neue Map einfach in das BESTEHENDE Canvas injizieren!
+                    canvas.setMacroMap(loadedMap); 
+                    
+                    // 3. Statusleiste und Canvas aktualisieren
+                    statusBar.setText(canvas.getStatusText());
+                    canvas.repaint(); // Zwingt Swing, die neu geladene Map sofort zu zeichnen
+                    
+                    JOptionPane.showMessageDialog(this, "Karte erfolgreich geladen!");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(this, "Fehler beim Laden: " + ex.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
 
         sidebar.add(Box.createVerticalStrut(15));
         sidebar.add(saveButton); sidebar.add(Box.createVerticalStrut(5)); sidebar.add(loadButton);
