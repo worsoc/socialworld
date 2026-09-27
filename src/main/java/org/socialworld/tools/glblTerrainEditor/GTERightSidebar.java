@@ -58,12 +58,48 @@ public class GTERightSidebar extends JPanel {
         elevationSlider.setMajorTickSpacing(500); elevationSlider.setPaintTicks(true); elevationSlider.setPaintLabels(true);
         panelElevation.add(elevationSlider, BorderLayout.CENTER);
         
+        // --- SUCHE DIESE STELLE IN GTERightSidebar.java ---
+        JPanel panelTerrain = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panelTerrain.add(new JLabel("Boden-Typ:"));
+        String[] terrainElems = GroundMaterial.getUpperCaseNames();
+        JComboBox<String> terrainBox = new JComboBox<>(terrainElems);
+
+        terrainBox.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                // Basis-Komponente vom Standard-Renderer holen
+                Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                
+                if (value != null) {
+                    String terrainName = value.toString();
+                    // Holt die exakte Farbe aus Ihrer bestehenden Farbpalette
+                    Color terrainColor = GTERenderColorPalette.getTerrainColor(terrainName);
+                    
+                    if (isSelected) {
+                        // Wenn der Eintrag mit der Maus überfahren/ausgewählt ist: Leicht abgedunkelt oder mit Rahmen
+                        c.setBackground(terrainColor.darker());
+                    } else {
+                        // Im normalen Zustand: Die echte Terrain-Farbe im Hintergrund
+                        c.setBackground(terrainColor);
+                    }
+                    
+                    // Kontrast-Check: Bei sehr hellen Farben (z.B. Schnee/Sand) schwarze Schrift, sonst weiß
+                    double brightness = (0.299 * terrainColor.getRed() + 0.587 * terrainColor.getGreen() + 0.114 * terrainColor.getBlue()) / 255.0;
+                    c.setForeground(brightness > 0.65 ? Color.BLACK : Color.WHITE);
+                }
+                
+                return c;
+            }
+        });
+        panelTerrain.add(terrainBox);
+ 
+ /*       
         JPanel panelTerrain = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panelTerrain.add(new JLabel("Boden-Typ:"));
         String[] terrainElems = GroundMaterial.getUpperCaseNames();
         JComboBox<String> terrainBox = new JComboBox<>(terrainElems);
         panelTerrain.add(terrainBox);
-
+*/        
         JPanel panelBaum = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panelBaum.add(new JLabel("Baumart:"));
         JComboBox<String> baumBox = new JComboBox<>(new String[]{"KEIN_BAUM", "EICHE", "KIEFER", "BIRKE", "BUCHE", "FICHTE", "WEIDE"});

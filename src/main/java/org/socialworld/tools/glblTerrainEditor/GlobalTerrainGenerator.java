@@ -65,7 +65,7 @@ public class GlobalTerrainGenerator {
         int totalH = MAP_HEIGHT * MESO_SIZE;
        
         // 1. Makro-Basis generieren & Details einstreuen
-        int[][] macro = generateMacroGridData(w, h, profile);
+        int[][] macro = TerrainProcessingCore.generateMacroGrid(w, h, profile);
         
         // 2. Offenes Meer sichern & Binnenseen konvertieren
         boolean[][] isOpenOcean = applyFloodFillOcean(macro, w, h);
@@ -96,96 +96,7 @@ public class GlobalTerrainGenerator {
         return initializeFinalMacroMap(finalMacro, meso, w, h);
     }
 
-    private static int[][] generateMacroGridData(int w, int h, GTEWorldProfile profile) {
-        Random rand = new Random();
-        
-        // Standardwerte (werden je nach Profil überschrieben)
-        int seeds = 12; 
-        double growth = 0.82;
-        int growthRounds = 5;
-        int borderOffset = 3; // Sicherheitsabstand zum Rand beim Samenwerfen
-
-        // PROFIL-DRUCK ANPASSEN
-        if (profile == GTEWorldProfile.KONTINENTAL) {
-            seeds = 16 + rand.nextInt(5);      // 16 bis 20 massive Landkerne
-            growth = 0.88;                     // Extrem aggressiver Land-Druck
-            growthRounds = 7;                  // 7 statt 5 Runden, um das Wasser an den Rand zu drängen
-            borderOffset = 1;                  // Samen dürfen bis ganz nah an den Rand (Reihe 1)
-        } else if (profile == GTEWorldProfile.ARCHIPEL) {
-            seeds = 6 + rand.nextInt(4);
-            growth = 0.58;
-            growthRounds = 5;
-            borderOffset = 4;                  // Inseln bleiben zentral im Wasser gefangen
-        } else if (profile == GTEWorldProfile.OEDLAND) {
-            seeds = 10 + rand.nextInt(4);
-            growth = 0.72;
-            growthRounds = 5;
-            borderOffset = 3;
-        } else if (profile == GTEWorldProfile.NORDISCH) {
-            seeds = 11 + rand.nextInt(4);
-            growth = 0.76;
-            growthRounds = 6;
-            borderOffset = 2;
-        }
-
-        int[][] grid = new int[h][w];
-        for (int y = 0; y < h; y++) java.util.Arrays.fill(grid[y], TerrainProcessingCore.TYPE_SALTWATER);
-        
-        // Samenwerfen mit dynamischem Grenzabstand je nach Profil
-        int range = w - (borderOffset * 2);
-        for (int i = 0; i < seeds; i++) {
-            grid[borderOffset + rand.nextInt(range)][borderOffset + rand.nextInt(range)] = TerrainProcessingCore.TYPE_PLAINS;
-        }
-
-        // Kontinental-Wachstum mit angepasster Rundenanzahl
-        for (int g = 0; g < growthRounds; g++) {
-            int[][] temp = new int[h][w];
-            for (int y = 0; y < h; y++) System.arraycopy(grid[y], 0, temp[y], 0, w);
-            for (int y = 1; y < h - 1; y++) {
-                for (int x = 1; x < w - 1; x++) {
-                    if (grid[y][x] == TerrainProcessingCore.TYPE_PLAINS) {
-                        if (rand.nextDouble() < growth) temp[y+1][x] = TerrainProcessingCore.TYPE_PLAINS;
-                        if (rand.nextDouble() < growth) temp[y-1][x] = TerrainProcessingCore.TYPE_PLAINS;
-                        if (rand.nextDouble() < growth) temp[y][x+1] = TerrainProcessingCore.TYPE_PLAINS;
-                        if (rand.nextDouble() < growth) temp[y][x-1] = TerrainProcessingCore.TYPE_PLAINS;
-                    }
-                }
-            }
-            grid = temp;
-        }
-
-        // (Der Rest der Methode für Berge und Sub-Terrains bleibt exakt identisch)
-        for (int y = 2; y < h - 2; y++) {
-            for (int x = 2; x < w - 2; x++) {
-                if (grid[y][x] == TerrainProcessingCore.TYPE_PLAINS && grid[y+1][x] == TerrainProcessingCore.TYPE_PLAINS && grid[y-1][x] == TerrainProcessingCore.TYPE_PLAINS && grid[y][x+1] == TerrainProcessingCore.TYPE_PLAINS && grid[y][x-1] == TerrainProcessingCore.TYPE_PLAINS) {
-                    double roll = rand.nextDouble();
-                    if (roll < 0.35) grid[y][x] = TerrainProcessingCore.TYPE_MOUNTAIN; else if (roll < 0.40) grid[y][x] = TerrainProcessingCore.TYPE_WATER;
-                }
-            }
-        }
-
-        for (int y = 1; y < h - 1; y++) {
-            for (int x = 1; x < w - 1; x++) {
-                if (grid[y][x] == TerrainProcessingCore.TYPE_PLAINS) {
-                    double roll = rand.nextDouble();
-                    if (profile == GTEWorldProfile.KONTINENTAL) {
-                        if (roll < 0.12) grid[y][x] = TerrainProcessingCore.TYPE_WOODLAND; else if (roll < 0.17) grid[y][x] = TerrainProcessingCore.TYPE_FOREST_FLOOR; else if (roll < 0.19) grid[y][x] = TerrainProcessingCore.TYPE_SHRUBLAND; else if (roll < 0.20) grid[y][x] = TerrainProcessingCore.TYPE_SWAMP;
-                    } else if (profile == GTEWorldProfile.ARCHIPEL) {
-                        if (roll < 0.15) grid[y][x] = TerrainProcessingCore.TYPE_WOODLAND; else if (roll < 0.23) grid[y][x] = TerrainProcessingCore.TYPE_SWAMP; else if (roll < 0.27) grid[y][x] = TerrainProcessingCore.TYPE_SHRUBLAND; else if (roll < 0.30) grid[y][x] = TerrainProcessingCore.TYPE_FOREST_FLOOR;
-                    } else if (profile == GTEWorldProfile.OEDLAND) {
-                        if (roll < 0.40) grid[y][x] = TerrainProcessingCore.TYPE_SCREE; else if (roll < 0.55) grid[y][x] = TerrainProcessingCore.TYPE_WASTELAND; else if (roll < 0.80) grid[y][x] = TerrainProcessingCore.TYPE_SHRUBLAND;
-                    } else if (profile == GTEWorldProfile.NORDISCH) {
-                        if (roll < 0.30) grid[y][x] = TerrainProcessingCore.TYPE_FOREST_FLOOR; else if (roll < 0.45) grid[y][x] = TerrainProcessingCore.TYPE_SHRUBLAND; else if (roll < 0.52) grid[y][x] = TerrainProcessingCore.TYPE_WOODLAND; else if (roll < 0.55) grid[y][x] = TerrainProcessingCore.TYPE_SWAMP;
-                    }
-                } else if (grid[y][x] == TerrainProcessingCore.TYPE_MOUNTAIN) {
-                    double roll = rand.nextDouble();
-                    if (roll < 0.15) grid[y][x] = TerrainProcessingCore.TYPE_SNOW; else if (roll < 0.22) grid[y][x] = TerrainProcessingCore.TYPE_ICE; else if (roll < 0.35) grid[y][x] = TerrainProcessingCore.TYPE_SCREE;
-                }
-            }
-        }
-        return grid;
-    }
-
+ 
     
     private static boolean[][] applyFloodFillOcean(int[][] grid, int w, int h) {
         boolean[][] isOpenOcean = new boolean[h][w];
@@ -222,17 +133,7 @@ public class GlobalTerrainGenerator {
         for (int y = 0; y < h; y++) System.arraycopy(grid[y], 0, finalGrid[y], 0, w);
         for (int y = 1; y < h - 1; y++) {
             for (int x = 1; x < w - 1; x++) {
-                if (grid[y][x] == TerrainProcessingCore.TYPE_SALTWATER && isOpenOcean[y][x]) {
-                    if (grid[y+1][x] != TerrainProcessingCore.TYPE_SALTWATER || grid[y-1][x] != TerrainProcessingCore.TYPE_SALTWATER || 
-                        grid[y][x+1] != TerrainProcessingCore.TYPE_SALTWATER || grid[y][x-1] != TerrainProcessingCore.TYPE_SALTWATER) {
-                        
-                        // ANPASSUNG: Nur noch zu 35% entsteht Sand-Strand. 
-                        // Die restlichen 65% bleiben blaues Salzwasser, wodurch das grüne Land direkt ans Meer grenzt!
-                        if (rand.nextDouble() < 0.35) {
-                            finalGrid[y][x] = TerrainProcessingCore.TYPE_COAST;
-                        }
-                    }
-                } else if (grid[y][x] == TerrainProcessingCore.TYPE_PLAINS || grid[y][x] == TerrainProcessingCore.TYPE_SHRUBLAND) {
+            	if (grid[y][x] == TerrainProcessingCore.TYPE_PLAINS || grid[y][x] == TerrainProcessingCore.TYPE_SHRUBLAND) {
                     if (grid[y+1][x] == TerrainProcessingCore.TYPE_MOUNTAIN || grid[y-1][x] == TerrainProcessingCore.TYPE_MOUNTAIN || 
                         grid[y][x+1] == TerrainProcessingCore.TYPE_MOUNTAIN || grid[y][x-1] == TerrainProcessingCore.TYPE_MOUNTAIN || 
                         grid[y+1][x] == TerrainProcessingCore.TYPE_SCREE    || grid[y-1][x] == TerrainProcessingCore.TYPE_SCREE) {

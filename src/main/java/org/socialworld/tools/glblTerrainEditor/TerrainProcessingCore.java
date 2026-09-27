@@ -21,19 +21,76 @@ public class TerrainProcessingCore {
     public static final int TYPE_SNOW = GroundMaterial.snow.getGteId();           // Schnee
     public static final int TYPE_ICE = GroundMaterial.ice.getGteId();             // Eis
   
-    /*
+    /**
+     * Die zentrale Verteiler-Methode der Weltgenerierung.
+     * Delegiert die Kartenerstellung an die Spezialroutinen und gibt
+     * anschließend eine detaillierte Makro-Statistik in der Konsole aus.
+     */
     public static int[][] generateMacroGrid(int width, int height, GTEWorldProfile profile) {
-        // Hier liest die Methode am Anfang das Profil aus
-        // und setzt die Variablen (numSeeds, growthChance, etc.) passend zum Katalog-Typ.
-        // Der restliche Code mit dem Flood-Fill läuft unverändert durch!
+        // 1. Die Karte über das Profil generieren
+        int[][] grid = switch (profile) {
+            case KONTINENTAL -> generateContinentalMap(width, height);
+            case ARCHIPEL     -> generateArchipelagoMap(width, height);
+            case OEDLAND       -> generateWastelandMap(width, height);
+            case NORDISCH     -> generateNordicMap(width, height);
+        };
+
+        // 2. NEU: Kacheln für die Statistik auszählen
+        int[] counts = new int[14];
+        int totalLandCells = 0;
+        
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int type = grid[y][x];
+                if (type >= 0 && type < 14) {
+                    counts[type]++;
+                    if (type != TYPE_SALTWATER) {
+                        totalLandCells++;
+                    }
+                }
+            }
+        }
+
+        // 3. IHR LOGGING: Die Statistik sauber formatiert ausgeben
+        System.out.println("\n--- MAKRO-STATISTIK (" + profile.name() + ") ---");
+        double oceanPerc = (counts[TYPE_SALTWATER] / 1024.0) * 100.0;
+        System.out.printf("OZEAN (SALTWATER) Anteil an Gesamtwelt: %.2f%%\n", oceanPerc);
+        System.out.println("Verteilung auf der Landmasse (Basis: " + totalLandCells + " Kacheln):");
+        
+        // Helfer-Array für die Bezeichner (angepasst an die TYPE_-Konstanten)
+        String[] names = new String[14];
+        names[TYPE_PLAINS] = "GRASLAND (PLAINS)";
+        names[TYPE_WOODLAND] = "LAUBWALD (WOODLAND)";
+        names[TYPE_FOREST_FLOOR] = "WALDBODEN (MOSS)";
+        names[TYPE_SHRUBLAND] = "GESTRÜPP (BRUSHWOOD)";
+        names[TYPE_SWAMP] = "SUMPF (MUD)";
+        names[TYPE_WASTELAND] = "ÖDLAND (ASH)";
+        names[TYPE_MOUNTAIN] = "BERGE (ROCK)";
+        names[TYPE_WATER] = "BINNENSEEN (WATER)";
+        names[TYPE_SNOW] = "SCHNEE (SNOW)";
+        names[TYPE_ICE] = "EIS (ICE)";
+        names[TYPE_SCREE] = "GERÖLL (STONES)";
+        names[TYPE_COAST] = "SAND (SAND)";
+
+        for (int i = 0; i < 14; i++) {
+            if (i != TYPE_SALTWATER && names[i] != null && counts[i] > 0) {
+                double landPerc = (counts[i] / (double) totalLandCells) * 100.0;
+                System.out.printf(" -> %-22s: %.2f%% (%d Kacheln)\n", names[i], landPerc, counts[i]);
+            }
+        }
+        System.out.println("-----------------------------------------\n");
+
+        // 4. Das fertig ausgezählte Grid an die UI zurückgeben
+        return grid;
     }
-  */
+    
     
     /**
-     * Erzeugt das grobe 32x32 Macro-Raster (Klumpenbildung) inklusive aller Terrain-Elemente.
-     * Garantiert ohne isolierte Salzwasser-Pixel und ohne jegliches Salzwasser im Landesinneren.
+     * Erzeugt ein massives, weitläufiges Festland (ca. 25x25 km) nach dem Kontinental-Profil.
+     * Verzichtet komplett auf Strände (kein Sand/COAST auf dieser Ebene).
+     * Nutzt 7 Runden Wachstum für das Land, 2 Gebirgs-Rücken und 4 gerichtete Forste.
      */
-    public static int[][] generateMacroGrid(int width, int height) {
+    public static int[][] generateContinentalMap(int width, int height) {
         int[][] grid = new int[height][width]; 
         Random rand = new Random();
         
@@ -42,135 +99,595 @@ public class TerrainProcessingCore {
             for (int x = 0; x < width; x++) grid[y][x] = TYPE_SALTWATER; 
         }
         
-        // 2. Kontinent-Samen setzen (Ebenen)
-        int numSeeds = 6 + rand.nextInt(4); 
+        // 2. Kontinent-Samen setzen (Mehr Landkerne im Zentrum)
+        int numSeeds = 12 + rand.nextInt(5); // 12 bis 16 Samen
         for (int i = 0; i < numSeeds; i++) {
             grid[5 + rand.nextInt(22)][5 + rand.nextInt(22)] = TYPE_PLAINS;
         }
 
-        // 3. Kontinental-Wachstum (Ebenen breiten sich aus)
-        for (int growth = 0; growth < 5; growth++) {
+        // 3. Kontinental-Wachstum (7 statt 5 Runden für maximales Festland, 85% Chance, tempGrid)
+        for (int growth = 0; growth < 7; growth++) {
             int[][] tempGrid = new int[height][width];
             for (int y = 0; y < height; y++) System.arraycopy(grid[y], 0, tempGrid[y], 0, width);
+            
             for (int y = 1; y < height - 1; y++) {
                 for (int x = 1; x < width - 1; x++) {
                     if (grid[y][x] == TYPE_PLAINS) {
-                        if (rand.nextDouble() < 0.65) tempGrid[y+1][x] = TYPE_PLAINS;
-                        if (rand.nextDouble() < 0.65) tempGrid[y-1][x] = TYPE_PLAINS;
-                        if (rand.nextDouble() < 0.65) tempGrid[y][x+1] = TYPE_PLAINS;
-                        if (rand.nextDouble() < 0.65) tempGrid[y][x-1] = TYPE_PLAINS;
+                        if (rand.nextDouble() < 0.85) tempGrid[y-1][x] = TYPE_PLAINS;
+                        if (rand.nextDouble() < 0.85) tempGrid[y+1][x] = TYPE_PLAINS;
+                        if (rand.nextDouble() < 0.85) tempGrid[y][x-1] = TYPE_PLAINS;
+                        if (rand.nextDouble() < 0.85) tempGrid[y][x+1] = TYPE_PLAINS;
                     }
                 }
             }
             grid = tempGrid;
         }
 
-        // 4. Gebirge und Binnengewässer im Landesinneren platzieren
-        for (int y = 2; y < height - 2; y++) {
-            for (int x = 2; x < width - 2; x++) {
+        // 4. ZENTRALES GEBIRGSMASSIV (EXAKT 2 SAMEN, 4 Runden, Echtzeit-Bremse + Richtungs-Array)
+        int platziereBerge = 0;
+        int maxVersuche = 150;
+        while (platziereBerge < 2 && maxVersuche > 0) {
+            int rx = 8 + rand.nextInt(16);
+            int ry = 8 + rand.nextInt(16);
+            // Die Keime müssen gut im Landesinneren liegen
+            if (grid[ry][rx] == TYPE_PLAINS && grid[ry+1][rx] == TYPE_PLAINS && grid[ry-1][rx] == TYPE_PLAINS) {
+                grid[ry][rx] = TYPE_MOUNTAIN;
+                platziereBerge++;
+            }
+            maxVersuche--;
+        }
+
+        // 4 Runden kontrolliertes Gebirgswachstum
+        for (int growth = 0; growth < 4; growth++) {
+            int[][] tempGrid = new int[height][width];
+            for (int y = 0; y < height; y++) System.arraycopy(grid[y], 0, tempGrid[y], 0, width);
+            
+            double wNord = rand.nextDouble();
+            double wSued = rand.nextDouble();
+            double wWest = rand.nextDouble();
+            double wOst  = rand.nextDouble();
+            double sum   = wNord + wSued + wWest + wOst;
+            
+            double chanceNord = (wNord / sum) * 3.0;
+            double chanceSued = (wSued / sum) * 3.0;
+            double chanceWest = (wWest / sum) * 3.0;
+            double chanceOst  = (wOst / sum) * 3.0;
+
+            for (int y = 1; y < height - 1; y++) {
+                for (int x = 1; x < width - 1; x++) {
+                    if (grid[y][x] == TYPE_MOUNTAIN) {
+                        if (grid[y-1][x] == TYPE_PLAINS && rand.nextDouble() < chanceNord) tempGrid[y-1][x] = TYPE_MOUNTAIN;
+                        if (grid[y+1][x] == TYPE_PLAINS && rand.nextDouble() < chanceSued) tempGrid[y+1][x] = TYPE_MOUNTAIN;
+                        if (grid[y][x-1] == TYPE_PLAINS && rand.nextDouble() < chanceWest) tempGrid[y][x-1] = TYPE_MOUNTAIN;
+                        if (grid[y][x+1] == TYPE_PLAINS && rand.nextDouble() < chanceOst)  tempGrid[y][x+1] = TYPE_MOUNTAIN;
+                    }
+                }
+            }
+            grid = tempGrid;
+        }
+
+        // 5. REGIONALE FORSTE (EXAKT 4 SAMEN, 2 Runden, Echtzeit-Bremse + Richtungs-Array)
+        int forstePlatziert = 0;
+        maxVersuche = 150;
+        while (forstePlatziert < 4 && maxVersuche > 0) {
+            int rx = 4 + rand.nextInt(24);
+            int ry = 4 + rand.nextInt(24);
+            if (grid[ry][rx] == TYPE_PLAINS) {
+                grid[ry][rx] = TYPE_WOODLAND;
+                forstePlatziert++;
+            }
+            maxVersuche--;
+        }
+
+        // 2 kontrollierte Runden Wald-Wachstum
+        for (int growth = 0; growth < 2; growth++) {
+            int[][] tempGrid = new int[height][width];
+            for (int y = 0; y < height; y++) System.arraycopy(grid[y], 0, tempGrid[y], 0, width);
+            
+            double wNord = rand.nextDouble();
+            double wSued = rand.nextDouble();
+            double wWest = rand.nextDouble();
+            double wOst  = rand.nextDouble();
+            double sum   = wNord + wSued + wWest + wOst;
+            
+            double chanceNord = (wNord / sum) * 3.0;
+            double chanceSued = (wSued / sum) * 3.0;
+            double chanceWest = (wWest / sum) * 3.0;
+            double chanceOst  = (wOst / sum) * 3.0;
+
+            for (int y = 1; y < height - 1; y++) {
+                for (int x = 1; x < width - 1; x++) {
+                    if (grid[y][x] == TYPE_WOODLAND) {
+                        if (grid[y-1][x] == TYPE_PLAINS && rand.nextDouble() < chanceNord) tempGrid[y-1][x] = TYPE_WOODLAND;
+                        if (grid[y+1][x] == TYPE_PLAINS && rand.nextDouble() < chanceSued) tempGrid[y+1][x] = TYPE_WOODLAND;
+                        if (grid[y][x-1] == TYPE_PLAINS && rand.nextDouble() < chanceWest) tempGrid[y][x-1] = TYPE_WOODLAND;
+                        if (grid[y][x+1] == TYPE_PLAINS && rand.nextDouble() < chanceOst)  tempGrid[y][x+1] = TYPE_WOODLAND;
+                    }
+                }
+            }
+            grid = tempGrid;
+        }
+
+        // 6. Binnengewässer & Moore im Landesinneren (1 bis 2 Seen)
+        int seenSeeds = 1 + rand.nextInt(2);
+        for (int i = 0; i < seenSeeds; i++) {
+            int rx = 6 + rand.nextInt(20);
+            int ry = 6 + rand.nextInt(20);
+            if (grid[ry][rx] == TYPE_PLAINS) {
+                grid[ry][rx] = TYPE_WATER;
+                if (grid[ry+1][rx] == TYPE_PLAINS && rand.nextDouble() < 0.40) grid[ry+1][rx] = TYPE_WATER;
+                if (grid[ry-1][rx] == TYPE_PLAINS && rand.nextDouble() < 0.40) grid[ry-1][rx] = TYPE_WATER;
+                if (grid[ry][rx+1] == TYPE_PLAINS && rand.nextDouble() < 0.40) grid[ry][rx+1] = TYPE_WATER;
+                if (grid[ry][rx-1] == TYPE_PLAINS && rand.nextDouble() < 0.40) grid[ry][rx-1] = TYPE_WATER;
+            }
+        }
+
+        // Feuchtes Sumpfland lagert sich logisch an Seeufer oder schattige Waldränder an
+        for (int y = 1; y < height - 1; y++) {
+            for (int x = 1; x < width - 1; x++) {
                 if (grid[y][x] == TYPE_PLAINS) {
-                    if (grid[y+1][x] == TYPE_PLAINS && grid[y-1][x] == TYPE_PLAINS && 
-                        grid[y][x+1] == TYPE_PLAINS && grid[y][x-1] == TYPE_PLAINS) {
+                    if (grid[y+1][x] == TYPE_WATER || grid[y-1][x] == TYPE_WATER || 
+                        grid[y][x+1] == TYPE_WATER || grid[y][x-1] == TYPE_WATER) {
+                        if (rand.nextDouble() < 0.25) grid[y][x] = TYPE_SWAMP;
+                    } else if (grid[y+1][x] == TYPE_WOODLAND || grid[y-1][x] == TYPE_WOODLAND) {
+                        if (rand.nextDouble() < 0.05) grid[y][x] = TYPE_SWAMP;
+                    }
+                }
+            }
+        }
+
+        // 7. Alpine Extremzonen (Schnee & Eis tief im Gebirgskern)
+        for (int y = 1; y < height - 1; y++) {
+            for (int x = 1; x < width - 1; x++) {
+                if (grid[y][x] == TYPE_MOUNTAIN) {
+                    if (grid[y+1][x] == TYPE_MOUNTAIN && grid[y-1][x] == TYPE_MOUNTAIN && 
+                        grid[y][x+1] == TYPE_MOUNTAIN && grid[y][x-1] == TYPE_MOUNTAIN) {
                         
                         double roll = rand.nextDouble();
-                        if (roll < 0.35) {
-                            grid[y][x] = TYPE_MOUNTAIN; 
-                        } else if (roll < 0.40) {
-                            grid[y][x] = TYPE_WATER;    
-                        }
+                        if (roll < 0.40) grid[y][x] = TYPE_SNOW;      
+                        else if (roll < 0.55) grid[y][x] = TYPE_ICE;  
                     }
                 }
             }
         }
 
-        // 5. Details, Vegetation und Sonder-Terrain einstreuen (Geringe Häufigkeit)
-        for (int y = 1; y < height - 1; y++) {
-            for (int x = 1; x < width - 1; x++) {
-                if (grid[y][x] == TYPE_PLAINS) {
-                    double roll = rand.nextDouble();
-                    if (roll < 0.08)       grid[y][x] = TYPE_WOODLAND;     
-                    else if (roll < 0.14)  grid[y][x] = TYPE_FOREST_FLOOR; 
-                    else if (roll < 0.19)  grid[y][x] = TYPE_SHRUBLAND;    
-                    else if (roll < 0.22)  grid[y][x] = TYPE_SWAMP;        
-                    else if (roll < 0.23)  grid[y][x] = TYPE_WASTELAND;    
-                }
-                else if (grid[y][x] == TYPE_MOUNTAIN) {
-                    double roll = rand.nextDouble();
-                    if (roll < 0.15)       grid[y][x] = TYPE_SNOW;         
-                    else if (roll < 0.22)  grid[y][x] = TYPE_ICE;          
-                    else if (roll < 0.35)  grid[y][x] = TYPE_SCREE;        
-                }
-            }
-        }
-
-        // 6. FLOOD-FILL ABSICHERUNG: Offenes Meer markieren, eingeschlossenes Salzwasser eliminieren
-        boolean[][] isOpenOcean = new boolean[height][width];
-        java.util.Queue<int[]> queue = new java.util.LinkedList<>();
-
-        // Alle Salzwasser-Zellen an den 4 Außenrändern der Weltkarte in die Queue werfen
-        for (int x = 0; x < width; x++) {
-            if (grid[0][x] == TYPE_SALTWATER) { isOpenOcean[0][x] = true; queue.add(new int[]{x, 0}); }
-            if (grid[height-1][x] == TYPE_SALTWATER) { isOpenOcean[height-1][x] = true; queue.add(new int[]{x, height-1}); }
-        }
-        for (int y = 0; y < height; y++) {
-            if (grid[y][0] == TYPE_SALTWATER) { isOpenOcean[y][0] = true; queue.add(new int[]{0, y}); }
-            if (grid[y][width-1] == TYPE_SALTWATER) { isOpenOcean[y][width-1] = true; queue.add(new int[]{width-1, y}); }
-        }
-
-        // Vom Rand aus ins Landesinnere vorarbeiten (Flut-Algorithmus)
-        int[][] dirs = {{0,1}, {0,-1}, {1,0}, {-1,0}};
-        while (!queue.isEmpty()) {
-            int[] curr = queue.poll();
-            for (int[] d : dirs) {
-                int nx = curr[0] + d[0];
-                int ny = curr[1] + d[1];
-                if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
-                    // Wenn der Nachbar Salzwasser ist und noch nicht als offenes Meer markiert wurde
-                    if (grid[ny][nx] == TYPE_SALTWATER && !isOpenOcean[ny][nx]) {
-                        isOpenOcean[ny][nx] = true;
-                        queue.add(new int[]{nx, ny});
-                    }
-                }
-            }
-        }
-
-        // Nun alle Salzwasser-Zellen, die KEINE Verbindung zum offenen Meer haben, zu Süßwasser machen
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                if (grid[y][x] == TYPE_SALTWATER && !isOpenOcean[y][x]) {
-                    grid[y][x] = TYPE_WATER; // Umwandlung in Süßwassersee (egal wie groß der Fleck ist)
-                }
-            }
-        }
-
-        // 7. Übergangszonen berechnen (Küste & Schotter)
-        int[][] finalGrid = new int[height][width];
-        for (int y = 0; y < height; y++) System.arraycopy(grid[y], 0, finalGrid[y], 0, width);
-
-        for (int y = 1; y < height - 1; y++) {
-            for (int x = 1; x < width - 1; x++) {
-                // Küstenlinie (Sand NUR zwischen echtem Ozean-Salzwasser und Land)
-                if (grid[y][x] == TYPE_SALTWATER && isOpenOcean[y][x]) {
-                    if (grid[y+1][x] != TYPE_SALTWATER || grid[y-1][x] != TYPE_SALTWATER || 
-                        grid[y][x+1] != TYPE_SALTWATER || grid[y][x-1] != TYPE_SALTWATER) {
-                        finalGrid[y][x] = TYPE_COAST;
-                    }
-                }
-                // Schotter-Gürtel am Bergfuß
-                else if (grid[y][x] == TYPE_PLAINS || grid[y][x] == TYPE_SHRUBLAND) {
-                    if (grid[y+1][x] == TYPE_MOUNTAIN || grid[y-1][x] == TYPE_MOUNTAIN || 
-                        grid[y][x+1] == TYPE_MOUNTAIN || grid[y][x-1] == TYPE_MOUNTAIN ||
-                        grid[y+1][x] == TYPE_SCREE    || grid[y-1][x] == TYPE_SCREE) {
-                        if (rand.nextDouble() < 0.40) { 
-                            finalGrid[y][x] = TYPE_GRAVEL;
-                        }
-                    }
-                }
-            }
+        return grid;
+    }
+    
+    /**
+     * Erzeugt eine vulkanische Inselgruppe (Archipel) im Maßstab von ca. 25x25 km.
+     * Nutzt 3 Vulkanzentren und 5 Ausbreitungsrunden für eine Inselbreite von 7-8 km.
+     * Verwendet die Richtungs-Dynamik (Summe = 3.0) und das tempGrid, um die vulkanischen
+     * Schichten organisch von innen nach außen aufzubauen.
+     */
+    public static int[][] generateArchipelagoMap(int width, int height) {
+        int[][] grid = new int[height][width]; 
+        Random rand = new Random();
+        
+        // 1. Der kalte Ozean als Basis
+        for (int y = 0; y < height; y++) { 
+            for (int x = 0; x < width; x++) grid[y][x] = TYPE_SALTWATER; 
         }
         
-        return finalGrid;
+        // 2. Die 3 vulkanischen Zentren setzen (Massives Gebirge als Keim)
+        // Wir packen die drei Zonen-Basiswerte in Listen und mischen sie komplett durch
+        java.util.List<Integer> xZones = new java.util.ArrayList<>(java.util.Arrays.asList(8, 14, 20));
+        java.util.List<Integer> yZones = new java.util.ArrayList<>(java.util.Arrays.asList(8, 14, 20));
+        java.util.Collections.shuffle(xZones, rand);
+        java.util.Collections.shuffle(yZones, rand);
+        
+        // Jetzt ziehen wir die Werte ohne Zurücklegen (0, 1, 2) und fügen den Mikro-Zufall hinzu
+        int[][] volcanoSeeds = {
+            { xZones.get(0) + rand.nextInt(5), yZones.get(0) + rand.nextInt(5) }, // Vulkan 1
+            { xZones.get(1) + rand.nextInt(5), yZones.get(1) + rand.nextInt(5) }, // Vulkan 2
+            { xZones.get(2) + rand.nextInt(5), yZones.get(2) + rand.nextInt(5) }  // Vulkan 3
+        };
+        
+        for (int[] seed : volcanoSeeds) {
+            grid[seed[1]][seed[0]] = TYPE_MOUNTAIN; // seed[1] ist Y, seed[0] ist X
+        }
+        
+        // 3. Die 5 Ausbreitungsrunden mit Richtungs-Array & Echtzeit-Bremse
+        for (int round = 1; round <= 5; round++) {
+            int[][] tempGrid = new int[height][width];
+            for (int y = 0; y < height; y++) System.arraycopy(grid[y], 0, tempGrid[y], 0, width);
+            
+            // Richtungs-Wahrscheinlichkeiten für diese Runde erwürfeln (Summe = 3.0)
+            double wNord = rand.nextInt(100) + 1;
+            double wSued = rand.nextInt(100) + 1;
+            double wWest = rand.nextInt(100) + 1;
+            double wOst  = rand.nextInt(100) + 1;
+            double sum   = wNord + wSued + wWest + wOst;
+            
+            double chanceNord = (wNord / sum) * 3.0;
+            double chanceSued = (wSued / sum) * 3.0;
+            double chanceWest = (wWest / sum) * 3.0;
+            double chanceOst  = (wOst / sum) * 3.0;
+
+            for (int y = 1; y < height - 1; y++) {
+                for (int x = 1; x < width - 1; x++) {
+                    
+                    // RUNDEN 1 & 2: Der massive Felskern expandiert
+                    if (grid[y][x] == TYPE_MOUNTAIN && round <= 2) {
+                        if (grid[y-1][x] == TYPE_SALTWATER && rand.nextDouble() < chanceNord) tempGrid[y-1][x] = TYPE_MOUNTAIN;
+                        if (grid[y+1][x] == TYPE_SALTWATER && rand.nextDouble() < chanceSued) tempGrid[y+1][x] = TYPE_MOUNTAIN;
+                        if (grid[y][x-1] == TYPE_SALTWATER && rand.nextDouble() < chanceWest) tempGrid[y][x-1] = TYPE_MOUNTAIN;
+                        if (grid[y][x+1] == TYPE_SALTWATER && rand.nextDouble() < chanceOst)  tempGrid[y][x+1] = TYPE_MOUNTAIN;
+                    }
+                    
+                    // RUNDEN 3 & 4: Lava kühlt ab, Aschehänge (WASTELAND) und Geröll (SCREE) breiten sich aus
+                    else if ((grid[y][x] == TYPE_MOUNTAIN || grid[y][x] == TYPE_SCREE || grid[y][x] == TYPE_WASTELAND) && (round == 3 || round == 4)) {
+                        int current = grid[y][x];
+                        // Neue Ausläufer werden zu Asche oder Geröll
+                        if (grid[y-1][x] == TYPE_SALTWATER && rand.nextDouble() < chanceNord) tempGrid[y-1][x] = (rand.nextBoolean() ? TYPE_SCREE : TYPE_WASTELAND);
+                        if (grid[y+1][x] == TYPE_SALTWATER && rand.nextDouble() < chanceSued) tempGrid[y+1][x] = (rand.nextBoolean() ? TYPE_SCREE : TYPE_WASTELAND);
+                        if (grid[y][x-1] == TYPE_SALTWATER && rand.nextDouble() < chanceWest) tempGrid[y][x-1] = (rand.nextBoolean() ? TYPE_SCREE : TYPE_WASTELAND);
+                        if (grid[y][x+1] == TYPE_SALTWATER && rand.nextDouble() < chanceOst)  tempGrid[y][x+1] = (rand.nextBoolean() ? TYPE_SCREE : TYPE_WASTELAND);
+                    }
+                    
+                    // RUNDE 5: Die äußerste Schicht verwittert zu fruchtbarem Flachland (PLAINS)
+                    else if ((grid[y][x] == TYPE_SCREE || grid[y][x] == TYPE_WASTELAND) && round == 5) {
+                        if (grid[y-1][x] == TYPE_SALTWATER && rand.nextDouble() < chanceNord) tempGrid[y-1][x] = TYPE_PLAINS;
+                        if (grid[y+1][x] == TYPE_SALTWATER && rand.nextDouble() < chanceSued) tempGrid[y+1][x] = TYPE_PLAINS;
+                        if (grid[y][x-1] == TYPE_SALTWATER && rand.nextDouble() < chanceWest) tempGrid[y][x-1] = TYPE_PLAINS;
+                        if (grid[y][x+1] == TYPE_SALTWATER && rand.nextDouble() < chanceOst)  tempGrid[y][x+1] = TYPE_PLAINS;
+                    }
+                }
+            }
+            grid = tempGrid;
+        }
+
+        // 4. Sicherstellen, dass die Inseln einen sauberen Übergang zum Wasser haben (PLAINS als Küstensaum)
+        for (int y = 1; y < height - 1; y++) {
+            for (int x = 1; x < width - 1; x++) {
+                if (grid[y][x] == TYPE_SCREE || grid[y][x] == TYPE_WASTELAND) {
+                    if (grid[y+1][x] == TYPE_SALTWATER || grid[y-1][x] == TYPE_SALTWATER || 
+                        grid[y][x+1] == TYPE_SALTWATER || grid[y][x-1] == TYPE_SALTWATER) {
+                        grid[y][x] = TYPE_PLAINS;
+                    }
+                }
+            }
+        }
+
+        // 5. Tropischer Urwald-Gürtel (WOODLAND) auf den fruchtbaren Küstenebenen platzieren
+        int dschungelSeeds = 0;
+        int versuche = 150;
+        while (dschungelSeeds < 4 && versuche > 0) {
+            int rx = 3 + rand.nextInt(26);
+            int ry = 3 + rand.nextInt(26);
+            if (grid[ry][rx] == TYPE_PLAINS) {
+                grid[ry][rx] = TYPE_WOODLAND;
+                dschungelSeeds++;
+            }
+            versuche--;
+        }
+
+        // 2 kontrollierte Runden gerichtetes Dschungel-Wachstum (Summe = 3.0)
+        for (int growth = 0; growth < 2; growth++) {
+            int[][] tempGrid = new int[height][width];
+            for (int y = 0; y < height; y++) System.arraycopy(grid[y], 0, tempGrid[y], 0, width);
+            
+            double wNord = rand.nextDouble();
+            double wSued = rand.nextDouble();
+            double wWest = rand.nextDouble();
+            double wOst  = rand.nextDouble();
+            double sum   = wNord + wSued + wWest + wOst;
+            
+            double chanceNord = (wNord / sum) * 3.0;
+            double chanceSued = (wSued / sum) * 3.0;
+            double chanceWest = (wWest / sum) * 3.0;
+            double chanceOst  = (wOst / sum) * 3.0;
+
+            for (int y = 1; y < height - 1; y++) {
+                for (int x = 1; x < width - 1; x++) {
+                    if (grid[y][x] == TYPE_WOODLAND) {
+                        if (grid[y-1][x] == TYPE_PLAINS && rand.nextDouble() < chanceNord) tempGrid[y-1][x] = TYPE_WOODLAND;
+                        if (grid[y+1][x] == TYPE_PLAINS && rand.nextDouble() < chanceSued) tempGrid[y+1][x] = TYPE_WOODLAND;
+                        if (grid[y][x-1] == TYPE_PLAINS && rand.nextDouble() < chanceWest) tempGrid[y][x-1] = TYPE_WOODLAND;
+                        if (grid[y][x+1] == TYPE_PLAINS && rand.nextDouble() < chanceOst)  tempGrid[y][x+1] = TYPE_WOODLAND;
+                    }
+                }
+            }
+            grid = tempGrid;
+        }
+
+        return grid;
     }
+    
+    /**
+     * Erzeugt eine knochentrockene Sand-, Geröll- und Aschewüste (ca. 25x25 km).
+     * Verbannt Gras (PLAINS) vollständig. Schichtet die Karte von außen nach innen:
+     * Ozean -> WASTELAND (Ascheküste) -> COAST (Wüstensand) -> GRAVEL/SCREE (Hänge) -> MOUNTAIN (Canyons).
+     */
+    public static int[][] generateWastelandMap(int width, int height) {
+        int[][] grid = new int[height][width]; 
+        Random rand = new Random();
+        
+        // 1. Ozean als Basis initialisieren
+        for (int y = 0; y < height; y++) { 
+            for (int x = 0; x < width; x++) grid[y][x] = TYPE_SALTWATER; 
+        }
+        
+        // 2. Ödland-Samen setzen (Anfängliche Asche-Kerne für die Platte)
+        int numSeeds = 10 + rand.nextInt(5); // 10 bis 14 Samen
+        for (int i = 0; i < numSeeds; i++) {
+            grid[5 + rand.nextInt(22)][5 + rand.nextInt(22)] = TYPE_WASTELAND;
+        }
+
+        // 3. Kontinentales Wüsten-Wachstum (5 Runden, STRIKTE 85% Einzelwahrscheinlichkeit, tempGrid)
+        for (int growth = 0; growth < 5; growth++) {
+            int[][] tempGrid = new int[height][width];
+            for (int y = 0; y < height; y++) System.arraycopy(grid[y], 0, tempGrid[y], 0, width);
+            
+            for (int y = 1; y < height - 1; y++) {
+                for (int x = 1; x < width - 1; x++) {
+                    if (grid[y][x] == TYPE_WASTELAND) {
+                        if (rand.nextDouble() < 0.85) tempGrid[y-1][x] = TYPE_WASTELAND;
+                        if (rand.nextDouble() < 0.85) tempGrid[y+1][x] = TYPE_WASTELAND;
+                        if (rand.nextDouble() < 0.85) tempGrid[y][x-1] = TYPE_WASTELAND;
+                        if (rand.nextDouble() < 0.85) tempGrid[y][x+1] = TYPE_WASTELAND;
+                    }
+                }
+            }
+            grid = tempGrid;
+        }
+
+        // 4. Das Innere in Wüstensand (COAST) umwandeln (Asche bleibt nur als Küstensaum stehen)
+        int[][] sandGrid = new int[height][width];
+        for (int y = 0; y < height; y++) System.arraycopy(grid[y], 0, sandGrid[y], 0, width);
+        
+        for (int y = 2; y < height - 2; y++) {
+            for (int x = 2; x < width - 2; x++) {
+                if (grid[y][x] == TYPE_WASTELAND) {
+                    // Wenn kein Ozean in direkter 2-Kachel-Nähe ist, ist es tiefes Landesinneres -> Sand!
+                    boolean nahAmWasser = false;
+                    for (int dy = -2; dy <= 2; dy++) {
+                        for (int dx = -2; dx <= 2; dx++) {
+                            if (grid[y+dy][x+dx] == TYPE_SALTWATER) nahAmWasser = true;
+                        }
+                    }
+                    if (!nahAmWasser) {
+                        sandGrid[y][x] = TYPE_COAST;
+                    }
+                }
+            }
+        }
+        grid = sandGrid;
+
+        // 5. Nackte Felsketten im Inneren (2 längliche Canyons/Felsrücken aus MOUNTAIN)
+        for (int i = 0; i < 2; i++) {
+            int startX = 10 + rand.nextInt(12);
+            int startY = 10 + rand.nextInt(12);
+            if (grid[startY][startX] == TYPE_COAST) {
+                grid[startY][startX] = TYPE_MOUNTAIN;
+                
+                int cx = startX;
+                int cy = startY;
+                for (int step = 0; step < 3; step++) {
+                    if (rand.nextBoolean()) cx += (rand.nextBoolean() ? 1 : -1);
+                    else cy += (rand.nextBoolean() ? 1 : -1);
+                    
+                    if (cx > 5 && cx < width - 6 && cy > 5 && cy < height - 6) {
+                        if (grid[cy][cx] == TYPE_COAST) grid[cy][cx] = TYPE_MOUNTAIN;
+                    }
+                }
+            }
+        }
+
+        // 6. Thermische Verwitterung der Canyons (3 Runden mit Summe 3.0 & Echtzeit-Bremse)
+        // Runde 1 & 2: Direkt am Fels (MOUNTAIN) entsteht Schotter (GRAVEL)
+        // Runde 3: Weiter außen geht es in Steingeröll (SCREE) über, bevor der Sand beginnt
+        for (int round = 1; round <= 3; round++) {
+            int[][] tempGrid = new int[height][width];
+            for (int y = 0; y < height; y++) System.arraycopy(grid[y], 0, tempGrid[y], 0, width);
+            
+            // Ihre Richtungs-Dynamik für die Schuttrampen erwürfeln!
+            double wNord = rand.nextDouble();
+            double wSued = rand.nextDouble();
+            double wWest = rand.nextDouble();
+            double wOst  = rand.nextDouble();
+            double sum   = wNord + wSued + wWest + wOst;
+            
+            double chanceNord = (wNord / sum) * 3.0;
+            double chanceSued = (wSued / sum) * 3.0;
+            double chanceWest = (wWest / sum) * 3.0;
+            double chanceOst  = (wOst / sum) * 3.0;
+
+            for (int y = 1; y < height - 1; y++) {
+                for (int x = 1; x < width - 1; x++) {
+                    
+                    // In Runde 1 und 2 lagert sich grober Schotter (GRAVEL) direkt am Berghang an
+                    if (grid[y][x] == TYPE_MOUNTAIN && round <= 2) {
+                        if (grid[y-1][x] == TYPE_COAST && rand.nextDouble() < chanceNord) tempGrid[y-1][x] = TYPE_GRAVEL;
+                        if (grid[y+1][x] == TYPE_COAST && rand.nextDouble() < chanceSued) tempGrid[y+1][x] = TYPE_GRAVEL;
+                        if (grid[y][x-1] == TYPE_COAST && rand.nextDouble() < chanceWest) tempGrid[y][x-1] = TYPE_GRAVEL;
+                        if (grid[y][x+1] == TYPE_COAST && rand.nextDouble() < chanceOst)  tempGrid[y][x+1] = TYPE_GRAVEL;
+                    }
+                    // In Runde 3 schiebt sich feineres Steingeröll (SCREE) weiter in die Sanddünen vor
+                    else if (grid[y][x] == TYPE_GRAVEL && round == 3) {
+                        if (grid[y-1][x] == TYPE_COAST && rand.nextDouble() < chanceNord) tempGrid[y-1][x] = TYPE_SCREE;
+                        if (grid[y+1][x] == TYPE_COAST && rand.nextDouble() < chanceSued) tempGrid[y+1][x] = TYPE_SCREE;
+                        if (grid[y][x-1] == TYPE_COAST && rand.nextDouble() < chanceWest) tempGrid[y][x-1] = TYPE_SCREE;
+                        if (grid[y][x+1] == TYPE_COAST && rand.nextDouble() < chanceOst)  tempGrid[y+1][x] = TYPE_SCREE;
+                    }
+                }
+            }
+            grid = tempGrid;
+        }
+
+        return grid;
+    }
+  
+    /**
+     * Erzeugt eine raue, skandinavische Gebirgs- und Moorlandschaft (ca. 25x25 km).
+     * Nutzt ein dominantes Gebirgsmassiv (4 Runden) und zwei riesige Moos-Areale 
+     * (2 Samen, 3 Runden) als Fundament für spätere Nadelwälder. Der Rest ist Gras.
+     * Verwendet die Richtungs-Dynamik (Summe = 3.0) und das tempGrid für lochfreie Areale.
+     */
+    public static int[][] generateNordicMap(int width, int height) {
+        int[][] grid = new int[height][width]; 
+        Random rand = new Random();
+        
+        // 1. Kalter Ozean als Basis initialisieren
+        for (int y = 0; y < height; y++) { 
+            for (int x = 0; x < width; x++) grid[y][x] = TYPE_SALTWATER; 
+        }
+        
+        // 2. Landmasse-Samen setzen (Raues Grasland als Fundament)
+        int numSeeds = 6 + rand.nextInt(4); // 6 bis 9 Samen
+        for (int i = 0; i < numSeeds; i++) {
+            grid[6 + rand.nextInt(20)][6 + rand.nextInt(20)] = TYPE_PLAINS;
+        }
+
+        // 3. Wachstum der nordischen Landmasse (5 Runden Gras-Ausbreitung, 85% Chance, tempGrid)
+        for (int growth = 0; growth < 5; growth++) {
+            int[][] tempGrid = new int[height][width];
+            for (int y = 0; y < height; y++) System.arraycopy(grid[y], 0, tempGrid[y], 0, width);
+            for (int y = 1; y < height - 1; y++) {
+                for (int x = 1; x < width - 1; x++) {
+                    if (grid[y][x] == TYPE_PLAINS) {
+                        if (rand.nextDouble() < 0.85) tempGrid[y-1][x] = TYPE_PLAINS;
+                        if (rand.nextDouble() < 0.85) tempGrid[y+1][x] = TYPE_PLAINS;
+                        if (rand.nextDouble() < 0.85) tempGrid[y][x-1] = TYPE_PLAINS;
+                        if (rand.nextDouble() < 0.85) tempGrid[y][x+1] = TYPE_PLAINS;
+                    }
+                }
+            }
+            grid = tempGrid;
+        }
+
+        // 4. Vom Eis geschliffene Fjelds (Gebirge im Landesinneren - 1 Samen, 4 Runden gerichtetes Wachstum)
+        int mountainSeedX = 16, mountainSeedY = 16;
+        int versuche = 100;
+        while (versuche > 0) {
+            int rx = 10 + rand.nextInt(12);
+            int ry = 10 + rand.nextInt(12);
+            if (grid[ry][rx] == TYPE_PLAINS) {
+                mountainSeedX = rx; mountainSeedY = ry;
+                break;
+            }
+            versuche--;
+        }
+        grid[mountainSeedY][mountainSeedX] = TYPE_MOUNTAIN;
+
+        // 4 Runden Gebirgswachstum mit Richtungschancen Summe 3.0 und Echtzeit-Bremse
+        for (int growth = 0; growth < 4; growth++) {
+            int[][] tempGrid = new int[height][width];
+            for (int y = 0; y < height; y++) System.arraycopy(grid[y], 0, tempGrid[y], 0, width);
+            
+            double wNord = rand.nextDouble();
+            double wSued = rand.nextDouble();
+            double wWest = rand.nextDouble();
+            double wOst  = rand.nextDouble();
+            double sum   = wNord + wSued + wWest + wOst;
+            
+            double chanceNord = (wNord / sum) * 3.0;
+            double chanceSued = (wSued / sum) * 3.0;
+            double chanceWest = (wWest / sum) * 3.0;
+            double chanceOst  = (wOst / sum) * 3.0;
+
+            for (int y = 1; y < height - 1; y++) {
+                for (int x = 1; x < width - 1; x++) {
+                    if (grid[y][x] == TYPE_MOUNTAIN) {
+                        if (grid[y-1][x] == TYPE_PLAINS && rand.nextDouble() < chanceNord) tempGrid[y-1][x] = TYPE_MOUNTAIN;
+                        if (grid[y+1][x] == TYPE_PLAINS && rand.nextDouble() < chanceSued) tempGrid[y+1][x] = TYPE_MOUNTAIN;
+                        if (grid[y][x-1] == TYPE_PLAINS && rand.nextDouble() < chanceWest) tempGrid[y][x-1] = TYPE_MOUNTAIN;
+                        if (grid[y][x+1] == TYPE_PLAINS && rand.nextDouble() < chanceOst)  tempGrid[y][x+1] = TYPE_MOUNTAIN;
+                    }
+                }
+            }
+            grid = tempGrid;
+        }
+
+        // 5. Arktische Frostzone (Schneekappen und Gletscher auf den kalten Bergen)
+        for (int y = 1; y < height - 1; y++) {
+            for (int x = 1; x < width - 1; x++) {
+                if (grid[y][x] == TYPE_MOUNTAIN) {
+                    int bergNachbarn = 0;
+                    if (grid[y+1][x] == TYPE_MOUNTAIN) bergNachbarn++;
+                    if (grid[y-1][x] == TYPE_MOUNTAIN) bergNachbarn++;
+                    if (grid[y][x+1] == TYPE_MOUNTAIN) bergNachbarn++;
+                    if (grid[y][x-1] == TYPE_MOUNTAIN) bergNachbarn++;
+                    
+                    if (bergNachbarn >= 2) {
+                        double roll = rand.nextDouble();
+                        if (roll < 0.45) grid[y][x] = TYPE_SNOW;
+                        else if (roll < 0.65) grid[y][x] = TYPE_ICE;
+                    }
+                }
+            }
+        }
+
+        // 6. Der Moos-Teppich (FOREST_FLOOR) - 2 Samen, 3 Runden gerichtetes Wachstum
+        int moosSeeds = 0;
+        versuche = 100;
+        while (moosSeeds < 2 && versuche > 0) {
+            int rx = 4 + rand.nextInt(24);
+            int ry = 4 + rand.nextInt(24);
+            if (grid[ry][rx] == TYPE_PLAINS) {
+                grid[ry][rx] = TYPE_FOREST_FLOOR;
+                moosSeeds++;
+            }
+            versuche--;
+        }
+
+        // 3 Runden Moos-Ausbreitung mit Richtungschancen Summe 3.0 und Echtzeit-Bremse
+        for (int growth = 0; growth < 3; growth++) {
+            int[][] tempGrid = new int[height][width];
+            for (int y = 0; y < height; y++) System.arraycopy(grid[y], 0, tempGrid[y], 0, width);
+            
+            double wNord = rand.nextDouble();
+            double wSued = rand.nextDouble();
+            double wWest = rand.nextDouble();
+            double wOst  = rand.nextDouble();
+            double sum   = wNord + wSued + wWest + wOst;
+            
+            double chanceNord = (wNord / sum) * 3.0;
+            double chanceSued = (wSued / sum) * 3.0;
+            double chanceWest = (wWest / sum) * 3.0;
+            double chanceOst  = (wOst / sum) * 3.0;
+
+            for (int y = 1; y < height - 1; y++) {
+                for (int x = 1; x < width - 1; x++) {
+                    if (grid[y][x] == TYPE_FOREST_FLOOR) {
+                        if (grid[y-1][x] == TYPE_PLAINS && rand.nextDouble() < chanceNord) tempGrid[y-1][x] = TYPE_FOREST_FLOOR;
+                        if (grid[y+1][x] == TYPE_PLAINS && rand.nextDouble() < chanceSued) tempGrid[y+1][x] = TYPE_FOREST_FLOOR;
+                        if (grid[y][x-1] == TYPE_PLAINS && rand.nextDouble() < chanceWest) tempGrid[y][x-1] = TYPE_FOREST_FLOOR;
+                        if (grid[y][x+1] == TYPE_PLAINS && rand.nextDouble() < chanceOst)  tempGrid[y][x+1] = TYPE_FOREST_FLOOR;
+                    }
+                }
+            }
+            grid = tempGrid;
+        }
+
+        // 7. Nordische Hochmoore (SWAMP) im flachen Landesinneren platzieren
+        int moorSeeds = 2;
+        for (int i = 0; i < moorSeeds; i++) {
+            int rx = 5 + rand.nextInt(22);
+            int ry = 5 + rand.nextInt(22);
+            if (grid[ry][rx] == TYPE_PLAINS) {
+                grid[ry][rx] = TYPE_SWAMP;
+                if (grid[ry+1][rx] == TYPE_PLAINS && rand.nextDouble() < 0.45) grid[ry+1][rx] = TYPE_SWAMP;
+                if (grid[ry-1][rx] == TYPE_PLAINS && rand.nextDouble() < 0.45) grid[ry-1][rx] = TYPE_SWAMP;
+                if (grid[ry][rx+1] == TYPE_PLAINS && rand.nextDouble() < 0.45) grid[ry][rx+1] = TYPE_SWAMP;
+                if (grid[ry][rx-1] == TYPE_PLAINS && rand.nextDouble() < 0.45) grid[ry][rx-1] = TYPE_SWAMP;
+            }
+        }
+
+        // 8. Kristallklare Binnenseen (WATER)
+        int seeSeeds = 1 + rand.nextInt(2);
+        for (int i = 0; i < seeSeeds; i++) {
+            int rx = 6 + rand.nextInt(20);
+            int ry = 6 + rand.nextInt(20);
+            if (grid[ry][rx] == TYPE_PLAINS || grid[ry][rx] == TYPE_FOREST_FLOOR) {
+                grid[ry][rx] = TYPE_WATER;
+            }
+        }
+
+        return grid;
+    }
+    
+   //////////////////   Medo-Ebene  //////////////////////// 
     
     /**
      * Baut das Meso-Gitter über echtes, validiertes Ecken-Wachstum auf.
