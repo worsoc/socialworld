@@ -105,7 +105,7 @@ public class TerrainProcessingCore {
             grid[5 + rand.nextInt(22)][5 + rand.nextInt(22)] = TYPE_PLAINS;
         }
 
-        // 3. Kontinental-Wachstum (7 statt 5 Runden für maximales Festland, 85% Chance, tempGrid)
+        // 3. Kontinental-Wachstum (8 Runden für maximales Festland, 85% Chance, tempGrid)
         for (int growth = 0; growth < 7; growth++) {
             int[][] tempGrid = new int[height][width];
             for (int y = 0; y < height; y++) System.arraycopy(grid[y], 0, tempGrid[y], 0, width);
@@ -256,7 +256,7 @@ public class TerrainProcessingCore {
     
     /**
      * Erzeugt eine vulkanische Inselgruppe (Archipel) im Maßstab von ca. 25x25 km.
-     * Nutzt 3 Vulkanzentren und 5 Ausbreitungsrunden für eine Inselbreite von 7-8 km.
+     * Nutzt 7 Vulkanzentren und 5 Ausbreitungsrunden für eine Inselbreite von 7-8 km.
      * Verwendet die Richtungs-Dynamik (Summe = 3.0) und das tempGrid, um die vulkanischen
      * Schichten organisch von innen nach außen aufzubauen.
      */
@@ -269,19 +269,23 @@ public class TerrainProcessingCore {
             for (int x = 0; x < width; x++) grid[y][x] = TYPE_SALTWATER; 
         }
         
-        // 2. Die 3 vulkanischen Zentren setzen (Massives Gebirge als Keim)
+        // 2. Die 7 vulkanischen Zentren setzen (Massives Gebirge als Keim)
         // Wir packen die drei Zonen-Basiswerte in Listen und mischen sie komplett durch
-        java.util.List<Integer> xZones = new java.util.ArrayList<>(java.util.Arrays.asList(8, 14, 20));
-        java.util.List<Integer> yZones = new java.util.ArrayList<>(java.util.Arrays.asList(8, 14, 20));
+        java.util.List<Integer> xZones = new java.util.ArrayList<>(java.util.Arrays.asList(2, 9, 15, 20, 25, 5, 23));
+        java.util.List<Integer> yZones = new java.util.ArrayList<>(java.util.Arrays.asList(2, 9, 15, 20, 25, 5, 23));
         java.util.Collections.shuffle(xZones, rand);
         java.util.Collections.shuffle(yZones, rand);
         
-        // Jetzt ziehen wir die Werte ohne Zurücklegen (0, 1, 2) und fügen den Mikro-Zufall hinzu
+        // Jetzt ziehen wir die Werte ohne Zurücklegen (0, 1, 2, 3, 4, 5, 6) und fügen den Mikro-Zufall hinzu
         int[][] volcanoSeeds = {
-            { xZones.get(0) + rand.nextInt(5), yZones.get(0) + rand.nextInt(5) }, // Vulkan 1
-            { xZones.get(1) + rand.nextInt(5), yZones.get(1) + rand.nextInt(5) }, // Vulkan 2
-            { xZones.get(2) + rand.nextInt(5), yZones.get(2) + rand.nextInt(5) }  // Vulkan 3
-        };
+            { xZones.get(0) + rand.nextInt(3), yZones.get(0) + rand.nextInt(3) }, // Vulkan 1
+            { xZones.get(1) + rand.nextInt(3), yZones.get(1) + rand.nextInt(3) }, // Vulkan 2
+            { xZones.get(2) + rand.nextInt(3), yZones.get(2) + rand.nextInt(3) }, // Vulkan 3
+            { xZones.get(3) + rand.nextInt(3), yZones.get(3) + rand.nextInt(3) }, // Vulkan 4
+            { xZones.get(4) + rand.nextInt(3), yZones.get(4) + rand.nextInt(3) },  // Vulkan 5
+            { xZones.get(5) + rand.nextInt(3), yZones.get(5) + rand.nextInt(3) }, // Vulkan 6
+            { xZones.get(6) + rand.nextInt(3), yZones.get(6) + rand.nextInt(3) }  // Vulkan 7
+       };
         
         for (int[] seed : volcanoSeeds) {
             grid[seed[1]][seed[0]] = TYPE_MOUNTAIN; // seed[1] ist Y, seed[0] ist X
@@ -414,8 +418,8 @@ public class TerrainProcessingCore {
             grid[5 + rand.nextInt(22)][5 + rand.nextInt(22)] = TYPE_WASTELAND;
         }
 
-        // 3. Kontinentales Wüsten-Wachstum (5 Runden, STRIKTE 85% Einzelwahrscheinlichkeit, tempGrid)
-        for (int growth = 0; growth < 5; growth++) {
+        // 3. Kontinentales Wüsten-Wachstum (7 Runden, STRIKTE 85% Einzelwahrscheinlichkeit, tempGrid)
+        for (int growth = 0; growth < 7; growth++) {
             int[][] tempGrid = new int[height][width];
             for (int y = 0; y < height; y++) System.arraycopy(grid[y], 0, tempGrid[y], 0, width);
             
@@ -454,11 +458,11 @@ public class TerrainProcessingCore {
         }
         grid = sandGrid;
 
-        // 5. Nackte Felsketten im Inneren (2 längliche Canyons/Felsrücken aus MOUNTAIN)
-        for (int i = 0; i < 2; i++) {
+        // 5. Nackte Felsketten im Inneren (5 längliche Canyons/Felsrücken aus MOUNTAIN)
+        for (int i = 0; i < 5; i++) {
             int startX = 10 + rand.nextInt(12);
             int startY = 10 + rand.nextInt(12);
-            if (grid[startY][startX] == TYPE_COAST) {
+            if (grid[startY][startX] == TYPE_COAST || grid[startY][startX] == TYPE_WASTELAND) {
                 grid[startY][startX] = TYPE_MOUNTAIN;
                 
                 int cx = startX;
@@ -534,13 +538,13 @@ public class TerrainProcessingCore {
         }
         
         // 2. Landmasse-Samen setzen (Raues Grasland als Fundament)
-        int numSeeds = 6 + rand.nextInt(4); // 6 bis 9 Samen
+        int numSeeds = 8 + rand.nextInt(4); // mehr als 8 Samen
         for (int i = 0; i < numSeeds; i++) {
-            grid[6 + rand.nextInt(20)][6 + rand.nextInt(20)] = TYPE_PLAINS;
+            grid[4 + rand.nextInt(22)][4 + rand.nextInt(22)] = TYPE_PLAINS;
         }
 
-        // 3. Wachstum der nordischen Landmasse (5 Runden Gras-Ausbreitung, 85% Chance, tempGrid)
-        for (int growth = 0; growth < 5; growth++) {
+        // 3. Wachstum der nordischen Landmasse (7 Runden Gras-Ausbreitung, 85% Chance, tempGrid)
+        for (int growth = 0; growth < 7; growth++) {
             int[][] tempGrid = new int[height][width];
             for (int y = 0; y < height; y++) System.arraycopy(grid[y], 0, tempGrid[y], 0, width);
             for (int y = 1; y < height - 1; y++) {
@@ -556,20 +560,22 @@ public class TerrainProcessingCore {
             grid = tempGrid;
         }
 
-        // 4. Vom Eis geschliffene Fjelds (Gebirge im Landesinneren - 1 Samen, 4 Runden gerichtetes Wachstum)
+        // 4. Vom Eis geschliffene Fjelds (Gebirge im Landesinneren - 2 Samen, 4 Runden gerichtetes Wachstum)
         int mountainSeedX = 16, mountainSeedY = 16;
         int versuche = 100;
-        while (versuche > 0) {
-            int rx = 10 + rand.nextInt(12);
-            int ry = 10 + rand.nextInt(12);
-            if (grid[ry][rx] == TYPE_PLAINS) {
-                mountainSeedX = rx; mountainSeedY = ry;
-                break;
+        for (int samen = 1; samen <= 3; samen++) {
+            while (versuche > 0) {
+                int rx = 10 + rand.nextInt(12);
+                int ry = 10 + rand.nextInt(12);
+                if (grid[ry][rx] == TYPE_PLAINS) {
+                    mountainSeedX = rx; mountainSeedY = ry;
+                    break;
+                }
+                versuche--;
             }
-            versuche--;
+            grid[mountainSeedY][mountainSeedX] = TYPE_MOUNTAIN;
         }
-        grid[mountainSeedY][mountainSeedX] = TYPE_MOUNTAIN;
-
+ 
         // 4 Runden Gebirgswachstum mit Richtungschancen Summe 3.0 und Echtzeit-Bremse
         for (int growth = 0; growth < 4; growth++) {
             int[][] tempGrid = new int[height][width];
