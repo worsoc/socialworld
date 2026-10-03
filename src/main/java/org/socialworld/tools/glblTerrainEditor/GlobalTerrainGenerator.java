@@ -85,10 +85,13 @@ public class GlobalTerrainGenerator {
         // 4.3 : das grid-Zentrum mit dominantem Terrain belegen
         meso = TerrainProcessingCore.dissolveCenterChokePoints(meso, w, h, mesoSize);
 
-        // 4.4 : Der Zufalls-Wobble-Filter für organische Kanten
+        // 4.4: Strukturelle Ergänzungsterrains (Blobs) pro Profil einstreuen
+        meso = TerrainProcessingCore.applyMesoTerrainInfusions(meso, w, h, mesoSize, profile);
+
+        // 4.5 : Der Zufalls-Wobble-Filter für organische Kanten
         meso = TerrainProcessingCore.applyRandomWobbleFilter(meso, totalW, totalH);
  
-        // 4.5 : Der zelluläre Weichzeichner für die finalen Übergänge
+        // 4.6 : Der zelluläre Weichzeichner für die finalen Übergänge
         meso = TerrainMathUtils.applyCellularBlurFilter(meso, totalW, totalH, 2);
 
         

@@ -1,6 +1,8 @@
 package org.socialworld.tools.glblTerrainEditor;
 
 import java.util.Random;
+import java.util.ArrayList;
+import java.util.List;
 import org.socialworld.attributes.GroundMaterial;
 
 public class TerrainProcessingCore {
@@ -1204,5 +1206,176 @@ public class TerrainProcessingCore {
         }
         return output;
     }
+    
+    
+    //////////// Terrain-Ergänzungen auf Meso-Ebene ///////////////
+    
+    /**
+     * Kern-Methode zur feinen Ausgestaltung der Meso-Ebene durch strukturierte Form-Sätze.
+     * Injiziert pro Makro-Kachel passende Zusatz-Terrains und validiert diese streng gegen Fehlplatzierungen.
+     */
+    public static double[][] applyMesoTerrainInfusions(double[][] mesoGrid, int mapW, int mapH, int mesoSize, GTEWorldProfile profile) {
+        Random rand = new Random();
+        
+        // 1. Erlaubte Ergänzungsterrains nach Abstimmung
+        int[] allowedTerrains = switch (profile) {
+            case KONTINENTAL -> new int[]{ TYPE_SHRUBLAND, TYPE_GRAVEL, TYPE_WOODLAND, TYPE_SWAMP };
+            case ARCHIPEL     -> new int[]{ TYPE_SWAMP, TYPE_COAST };
+            case OEDLAND       -> new int[]{ TYPE_SHRUBLAND };
+            case NORDISCH     -> new int[]{ TYPE_SCREE, TYPE_WOODLAND, TYPE_GRAVEL };
+        };
+
+        // 2. Iteration über jede einzelne Makro-Kachel
+        for (int cy = 0; cy < mapH; cy++) {
+            for (int cx = 0; cx < mapW; cx++) {
+                
+                int numInfusions = 1 + rand.nextInt(3);
+                
+                for (int inf = 0; inf < numInfusions; inf++) {
+                    int targetTerrain = allowedTerrains[rand.nextInt(allowedTerrains.length)];
+                    
+                    // Form-Satz frisch generieren
+                    List<List<int[]>> shapeSets = generateShapeSets(rand, 50);
+                    List<int[]> chosenShape = shapeSets.get(rand.nextInt(shapeSets.size()));
+                    
+                    // Zentrum im inneren Bereich der Meso-Zelle platzieren
+                    int centerMesoX = (cx * mesoSize) + 10 + rand.nextInt(mesoSize - 20);
+                    int centerMesoY = (cy * mesoSize) + 10 + rand.nextInt(mesoSize - 20);
+                    
+                    // Sicherheits-Check für das Zentrum: Wenn der Startpunkt komplett im Ozean/See liegt, 
+                    // brechen wir ab, um keine schwebenden Inseln zu erzeugen (außer bei Archipel-Stränden/Sümpfen).
+                    int baseTerrainAtCenter = (int) mesoGrid[centerMesoY][centerMesoX];
+                    if ((baseTerrainAtCenter == TYPE_SALTWATER || baseTerrainAtCenter == TYPE_WATER) && profile != GTEWorldProfile.ARCHIPEL) {
+                        continue; 
+                    }
+
+                    // Stempple das zusammenhängende Gebilde Kachel für Kachel
+                    for (int[] offset : chosenShape) {
+                        int globalX = centerMesoX + offset[0];
+                        int globalY = centerMesoY + offset[1];
+                        
+                        // Validierung der Weltgrenzen
+                        if (globalX >= 0 && globalX < mapW * mesoSize && globalY >= 0 && globalY < mapH * mesoSize) {
+                            int currentGridType = (int) mesoGrid[globalY][globalX];
+                            
+                            // Prüfe die geographischen Regeln für das spezifische Kachel-Ziel
+                            if (isValidInfusionTarget(currentGridType, targetTerrain)) {
+                                mesoGrid[globalY][globalX] = targetTerrain;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return mesoGrid;
+    }
+
+    /**
+     * Submethode: Prüft, ob ein Zusatz-Terrain (target) auf einem bestehenden Terrain (current) platziert werden darf.
+     * Verhindert unlogische Artefakte wie Bäume im Wasser oder Sümpfe auf Bergspitzen.
+     * Nutzt if-else, da die TYPE_-Variablen keine Kompilierzeit-Konstanten sind.
+     */
+    private static boolean isValidInfusionTarget(int current, int target) {
+        // Generelle Grundregel: Ozean und Gletschereis dürfen niemals überschrieben werden
+        if (current == TYPE_SALTWATER || current == TYPE_ICE) {
+            return false;
+        }
+
+        // Spezifische biologische/geologische Sperr-Regeln per if-else
+        if (target == TYPE_SWAMP) {
+            // Sumpf darf nicht ins tiefe Wasser, nicht auf Strände und nicht ins Gebirge
+            return current != TYPE_WATER && current != TYPE_COAST && 
+                   current != TYPE_MOUNTAIN && current != TYPE_SNOW && current != TYPE_SCREE;
+        } 
+        else if (target == TYPE_WOODLAND) {
+            // Laubwald wächst nicht im Wasser, auf Sand, purem Schotter oder im Schnee
+            return current != TYPE_WATER && current != TYPE_COAST && 
+                   current != TYPE_GRAVEL && current != TYPE_SCREE && current != TYPE_SNOW;
+        } 
+        else if (target == TYPE_GRAVEL || target == TYPE_SCREE) {
+            // Schotter und Geröll verdrängen kein Wasser und versinken nicht im Moor
+            return current != TYPE_WATER && current != TYPE_SWAMP;
+        } 
+        else if (target == TYPE_SHRUBLAND) {
+            // Gestrüpp wächst fast überall, außer direkt im Wasser oder Schnee
+            return current != TYPE_WATER && current != TYPE_SNOW;
+        }
+
+        return true; // Standardmäßig erlaubt, wenn keine explizite Sperre vorliegt
+    }
+
+    /**
+     * Submethode: Generiert verschiedene Form-Sätze mit ca. 50 Kacheln.
+     */
+    private static List<List<int[]>> generateShapeSets(Random rand, int targetSize) {
+        List<List<int[]>> sets = new ArrayList<>();
+
+        // ---- SATZ 1: DER PLUMPE BLOB (Kompakt / Massiv) ----
+        List<int[]> plumpBlob = new ArrayList<>();
+        plumpBlob.add(new int[]{0, 0});
+        while (plumpBlob.size() < targetSize) {
+            int[] base = plumpBlob.get(rand.nextInt(plumpBlob.size()));
+            int nx = base[0] + (rand.nextBoolean() ? 1 : -1);
+            int ny = base[1] + (rand.nextBoolean() ? 1 : -1);
+            if (!containsCoord(plumpBlob, nx, ny)) {
+                plumpBlob.add(new int[]{nx, ny});
+            }
+        }
+        sets.add(plumpBlob);
+
+        // ---- SATZ 2: DER LÄNGLICHE STREIFEN (Gerichtete Ader) ----
+        List<int[]> longStrip = new ArrayList<>();
+        longStrip.add(new int[]{0, 0});
+        int cx = 0, cy = 0;
+        while (longStrip.size() < targetSize) {
+            // Bias in eine Richtung (z.B. primär nach rechts unten)
+            if (rand.nextDouble() < 0.70) {
+                cx += rand.nextBoolean() ? 1 : 0;
+                cy += rand.nextBoolean() ? 1 : 0;
+            } else {
+                cx += rand.nextInt(3) - 1;
+                cy += rand.nextInt(3) - 1;
+            }
+            if (!containsCoord(longStrip, cx, cy)) {
+                longStrip.add(new int[]{cx, cy});
+            }
+        }
+        sets.add(longStrip);
+
+        // ---- SATZ 3: DAS GEBILDE MIT LÖCHERN (Organische Aussparungen) ----
+        List<int[]> holedShape = new ArrayList<>();
+        int placed = 0;
+        // Wir spannen ein Feld auf und sieben es über mathematisches Perlin-Rauschen aus
+        for (int y = -5; y <= 5 && placed < targetSize; y++) {
+            for (int x = -5; x <= 5 && placed < targetSize; x++) {
+                double dist = Math.sqrt(x * x + y * y);
+                if (dist < 4.5) {
+                    // Nutzt das Rauschen für unregelmäßige Löcher im Kern
+                    double noise = (TerrainMathUtils.noise2D(x * 0.4, y * 0.4) + 1.0) / 2.0;
+                    if (noise > 0.35 && rand.nextDouble() < 0.85) {
+                        holedShape.add(new int[]{x, y});
+                        placed++;
+                    }
+                }
+            }
+        }
+        sets.add(holedShape);
+
+        return sets;
+    }
+
+    /**
+     * Kleiner Helfer, um Duplikate in den relativen Listen zu vermeiden.
+     */
+    private static boolean containsCoord(List<int[]> list, int x, int y) {
+        for (int[] c : list) {
+            if (c[0] == x && c[1] == y) return true;
+        }
+        return false;
+    }
+    
+    
+    
+    
 
 }
