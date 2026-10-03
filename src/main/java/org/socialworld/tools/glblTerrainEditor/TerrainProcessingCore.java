@@ -1211,56 +1211,148 @@ public class TerrainProcessingCore {
     //////////// Terrain-Ergänzungen auf Meso-Ebene ///////////////
     
     /**
-     * Kern-Methode zur feinen Ausgestaltung der Meso-Ebene durch strukturierte Form-Sätze.
-     * Injiziert pro Makro-Kachel passende Zusatz-Terrains und validiert diese streng gegen Fehlplatzierungen.
+     * Aktualisierte Kern-Methode: Garantiert exakt zwischen 30 und 70 gültige Kachel-Belegungen.
+     * Strände (TYPE_COAST) beim Archipel werden nun zwingend nur direkt an Ozeankanten platziert.
      */
     public static double[][] applyMesoTerrainInfusions(double[][] mesoGrid, int mapW, int mapH, int mesoSize, GTEWorldProfile profile) {
         Random rand = new Random();
         
-        // 1. Erlaubte Ergänzungsterrains nach Abstimmung
         int[] allowedTerrains = switch (profile) {
-            case KONTINENTAL -> new int[]{ TYPE_SHRUBLAND, TYPE_GRAVEL, TYPE_WOODLAND, TYPE_SWAMP };
+            case KONTINENTAL -> new int[]{ TYPE_SHRUBLAND, TYPE_GRAVEL, TYPE_WOODLAND, TYPE_SWAMP, TYPE_COAST };
             case ARCHIPEL     -> new int[]{ TYPE_SWAMP, TYPE_COAST };
             case OEDLAND       -> new int[]{ TYPE_SHRUBLAND };
             case NORDISCH     -> new int[]{ TYPE_SCREE, TYPE_WOODLAND, TYPE_GRAVEL };
         };
 
-        // 2. Iteration über jede einzelne Makro-Kachel
+        int[][] directions = {
+            {-1, 0}, {1, 0}, {0, -1}, {0, 1},
+            {-1, -1}, {-1, 1}, {1, -1}, {1, 1}
+        };
+
         for (int cy = 0; cy < mapH; cy++) {
             for (int cx = 0; cx < mapW; cx++) {
                 
-                int numInfusions = 1 + rand.nextInt(3);
+                // Seltenere Platzierung: Nur auf ca. 17% der Makro-Kacheln spawnt ein Gebilde
+                if (rand.nextDouble() > 0.17) {
+                    continue; 
+                }
                 
-                for (int inf = 0; inf < numInfusions; inf++) {
-                    int targetTerrain = allowedTerrains[rand.nextInt(allowedTerrains.length)];
+                int targetTerrain = allowedTerrains[rand.nextInt(allowedTerrains.length)];
+                int exactTargetSize = 30 + rand.nextInt(41); 
+                
+                int startX = -1;
+                int startY = -1;
+                
+                // SONDERREgel: Archipel-Strand muss an eine Ozeankante gesetzt werden
+                if (/*profile == GTEWorldProfile.ARCHIPEL && */targetTerrain == TYPE_COAST) {
+                    // Wir suchen im Meso-Block nach einer Landkachel, die an SALTWATER grenzt
+                    List<int[]> validCoastlineTiles = new ArrayList<>();
+                    int minMesoX = cx * mesoSize;
+                    int maxMesoX = minMesoX + mesoSize;
+                    int minMesoY = cy * mesoSize;
+                    int maxMesoY = minMesoY + mesoSize;
                     
-                    // Form-Satz frisch generieren
-                    List<List<int[]>> shapeSets = generateShapeSets(rand, 50);
-                    List<int[]> chosenShape = shapeSets.get(rand.nextInt(shapeSets.size()));
+                    // Wir scannen die Meso-Kachel nach potenziellen Uferpunkten
+                    for (int y = minMesoY + 5; y < maxMesoY - 5; y++) {
+                        for (int x = minMesoX + 5; x < maxMesoX - 5; x++) {
+                            int currentType = (int) mesoGrid[y][x];
+                            // Wenn hier Land ist, prüfen wir die Nachbarn auf Ozean
+                            if (currentType != TYPE_SALTWATER && currentType != TYPE_WATER) {
+                                for (int[] d : directions) {
+                                    int nx = x + d[0];
+                                    int ny = y + d[1];
+                                    if (nx >= 0 && nx < mapW * mesoSize && ny >= 0 && ny < mapH * mesoSize) {
+                                        if ((int) mesoGrid[ny][nx] == TYPE_SALTWATER) {
+                                            validCoastlineTiles.add(new int[]{x, y});
+                                            break; // Ein Ozean-Nachbar reicht aus
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                     
-                    // Zentrum im inneren Bereich der Meso-Zelle platzieren
-                    int centerMesoX = (cx * mesoSize) + 10 + rand.nextInt(mesoSize - 20);
-                    int centerMesoY = (cy * mesoSize) + 10 + rand.nextInt(mesoSize - 20);
+                    // Wenn keine Küstenlinie in dieser Makro-Kachel gefunden wurde (z.B. reines Inland), abbrechen
+                    if (validCoastlineTiles.isEmpty()) {
+                        continue;
+                    }
                     
-                    // Sicherheits-Check für das Zentrum: Wenn der Startpunkt komplett im Ozean/See liegt, 
-                    // brechen wir ab, um keine schwebenden Inseln zu erzeugen (außer bei Archipel-Stränden/Sümpfen).
-                    int baseTerrainAtCenter = (int) mesoGrid[centerMesoY][centerMesoX];
-                    if ((baseTerrainAtCenter == TYPE_SALTWATER || baseTerrainAtCenter == TYPE_WATER) && profile != GTEWorldProfile.ARCHIPEL) {
+                    // Zufälligen echten Küstenpunkt als Start wählen
+                    int[] pickedCoast = validCoastlineTiles.get(rand.nextInt(validCoastlineTiles.size()));
+                    startX = pickedCoast[0];
+                    startY = pickedCoast[1];
+                } else {
+                    // Standard-Verhalten für alle anderen Terrains: Zufälliges Zentrum im Inlands-Sicherheitsbereich
+                    startX = (cx * mesoSize) + 15 + rand.nextInt(mesoSize - 30);
+                    startY = (cy * mesoSize) + 15 + rand.nextInt(mesoSize - 30);
+                    
+                    int baseTerrainAtCenter = (int) mesoGrid[startY][startX];
+                    // Erlaube Archipel UND Kontinental, im Ozeanbereich nach Stränden zu suchen, falls der Else-Zweig doch mal greift:
+                    if ((baseTerrainAtCenter == TYPE_SALTWATER || baseTerrainAtCenter == TYPE_WATER) 
+                        && profile != GTEWorldProfile.ARCHIPEL && profile != GTEWorldProfile.KONTINENTAL) {
                         continue; 
                     }
+                }
 
-                    // Stempple das zusammenhängende Gebilde Kachel für Kachel
-                    for (int[] offset : chosenShape) {
-                        int globalX = centerMesoX + offset[0];
-                        int globalY = centerMesoY + offset[1];
-                        
-                        // Validierung der Weltgrenzen
-                        if (globalX >= 0 && globalX < mapW * mesoSize && globalY >= 0 && globalY < mapH * mesoSize) {
-                            int currentGridType = (int) mesoGrid[globalY][globalX];
+                // Listen für das dynamische Wachstum vor Ort
+                List<int[]> activeGrowthPoints = new ArrayList<>();
+                List<int[]> placedTiles = new ArrayList<>();
+                
+                if (isValidInfusionTarget((int) mesoGrid[startY][startX], targetTerrain)) {
+                    int[] startNode = new int[]{startX, startY};
+                    activeGrowthPoints.add(startNode);
+                    placedTiles.add(startNode);
+                    mesoGrid[startY][startX] = targetTerrain;
+                }
+
+                int attempts = 0;
+                while (placedTiles.size() < exactTargetSize && !activeGrowthPoints.isEmpty() && attempts < 600) {
+                    attempts++;
+                    
+                    int[] base = placedTiles.get(rand.nextInt(placedTiles.size()));
+                    
+                    // Für Strände wachsen wir bevorzugt etwas länglicher entlang der Küste
+                    int dirIndex;
+                    if (targetTerrain == TYPE_COAST || rand.nextDouble() < 0.40) {
+                        dirIndex = rand.nextInt(4); // N, S, O, W
+                    } else {
+                        dirIndex = rand.nextInt(8); // Diagonalen inkludiert
+                    }
+                    
+                    int nextX = base[0] + directions[dirIndex][0];
+                    int nextY = base[1] + directions[dirIndex][1];
+                    
+                    int minX = cx * mesoSize;
+                    int maxX = minX + mesoSize;
+                    int minY = cy * mesoSize;
+                    int maxY = minY + mesoSize;
+                    
+                    if (nextX >= minX && nextX < maxX && nextY >= minY && nextY < maxY) {
+                        if (!containsCoord(placedTiles, nextX, nextY)) {
+                            int currentGridType = (int) mesoGrid[nextY][nextX];
                             
-                            // Prüfe die geographischen Regeln für das spezifische Kachel-Ziel
+                            // Für Strände fügen wir eine zusätzliche Barriere hinzu: Sie dürfen sich nicht 
+                            // zu tief ins Inland fressen, sondern müssen in der Nähe vom Ozean bleiben.
+                            if (targetTerrain == TYPE_COAST) {
+                                boolean nearOcean = false;
+                                for (int[] d : directions) {
+                                    int ox = nextX + d[0];
+                                    int oy = nextY + d[1];
+                                    if (ox >= 0 && ox < mapW * mesoSize && oy >= 0 && oy < mapH * mesoSize) {
+                                        if ((int) mesoGrid[oy][ox] == TYPE_SALTWATER || (int) mesoGrid[oy][ox] == TYPE_COAST) {
+                                            nearOcean = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (!nearOcean) continue; // Wenn zu weit weg vom Wasser/bestehendem Strand, überspringen
+                            }
+
                             if (isValidInfusionTarget(currentGridType, targetTerrain)) {
-                                mesoGrid[globalY][globalX] = targetTerrain;
+                                int[] newNode = new int[]{nextX, nextY};
+                                placedTiles.add(newNode);
+                                activeGrowthPoints.add(newNode);
+                                mesoGrid[nextY][nextX] = targetTerrain;
                             }
                         }
                     }
@@ -1268,6 +1360,16 @@ public class TerrainProcessingCore {
             }
         }
         return mesoGrid;
+    }
+
+    /**
+     * Kleiner Helfer, um Duplikate im Koordinaten-Pool zu vermeiden.
+     */
+    private static boolean containsCoord(List<int[]> list, int x, int y) {
+        for (int[] c : list) {
+            if (c[0] == x && c[1] == y) return true;
+        }
+        return false;
     }
 
     /**
@@ -1364,17 +1466,7 @@ public class TerrainProcessingCore {
         return sets;
     }
 
-    /**
-     * Kleiner Helfer, um Duplikate in den relativen Listen zu vermeiden.
-     */
-    private static boolean containsCoord(List<int[]> list, int x, int y) {
-        for (int[] c : list) {
-            if (c[0] == x && c[1] == y) return true;
-        }
-        return false;
-    }
-    
-    
+     
     
     
 
