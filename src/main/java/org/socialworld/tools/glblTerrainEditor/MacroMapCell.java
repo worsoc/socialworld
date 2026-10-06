@@ -153,6 +153,25 @@ public class MacroMapCell {
     
     
     /**
+     * NEU: Rechnet strukturierte Meso- und Mikro-Koordinaten in das flache, 
+     * zweidimensionale 729x729 Mikro-Delta-Gitter der Zelle um.
+     *
+     * @param mx Lokale X-Koordinate der Meso-Kachel innerhalb dieser Makro-Zelle (0 bis 80)
+     * @param my Lokale Y-Koordinate der Meso-Kachel innerhalb dieser Makro-Zelle (0 bis 80)
+     * @param lx Lokale X-Koordinate auf Mikro-Ebene innerhalb des 9x9 Rasters (0 bis 8)
+     * @param ly Lokale Y-Koordinate auf Mikro-Ebene innerhalb des 9x9 Rasters (0 bis 8)
+     * @param gteId Die numerische ID aus dem GroundMaterial-Enum (z.B. für Sand, Schotter etc.)
+     */
+    public void setMikroTerrainDelta(int mx, int my, int lx, int ly, byte gteId) {
+        // 1. Berechne die globalen Mikro-Koordinaten innerhalb dieser Zelle (0 bis 728)
+        int globalMikroX = (mx * 9) + lx;
+        int globalMikroY = (my * 9) + ly;
+
+        // 2. Rufe deine bestehende, flache Methode auf
+        this.setMikroTerrainDelta(globalMikroX, globalMikroY, gteId);
+    }
+    
+    /**
      * Eine Analyse-Funktion für den Abgleich mit externen Tools.
      * Löst die komprimierte interne HashMap- und Delta-Struktur für eine 
      * exakte 1m-Koordinate sofort in Klartext auf.
