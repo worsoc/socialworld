@@ -14,13 +14,22 @@ public class TerrainProcessingDetail {
     // Beispielhafte Klartext-Namen für deine Render-Engine
     private static final String BAUM_EICHE      = "EICHE";
     private static final String BAUM_KIEFER     = "KIEFER";
-    private static final String BAUM_DSCHUNGEL  = "TROPEN_BAUM";
+    private static final String BAUM_FICHTE  	= "FICHTE";
     private static final String BAUM_BIRKE      = "BIRKE";
-    
+    private static final String BAUM_BUCHE      = "BUCHE";
+    private static final String BAUM_WEIDE      = "WEIDE";
+   
+	private static final String STRAUCH_ZIERSTRAUCH    = "ZIERSTRAUCH";
+    private static final String STRAUCH_FARN    = "FARNE";
+    private static final String STRAUCH_BEERE   = "BEERENSTRAUCH";
+    private static final String STRAUCH_BROMBEERE  = "BROMBEERE";
+    private static final String STRAUCH_HEIDEKRAUT  = "HEIDEKRAUT";
+    private static final String STRAUCH_GINSTER  = "GINSTER";
+/*
     private static final String STRAUCH_FARN    = "WALDFARN";
     private static final String STRAUCH_BEERE   = "BEERENSTRAUCH";
     private static final String STRAUCH_DORNEN  = "DORNENGEBUESCH";
-
+*/
     /**
      * Methode 1: Befüllt das Kronendach (Meso-Ebene) und das Unterholz (Mikro-Ebene)
      * basierend auf dem geerbten Gesteins- oder Bodentyp der jeweiligen Zelle.
@@ -44,63 +53,98 @@ public class TerrainProcessingDetail {
                         
                         // Welches Terrain liegt hier vor? (z.B. "WOODLAND", "FOREST_FLOOR")
                         String currentTerrain = cell.getMesoTerrain(mx, my);
+                        GroundMaterial currentGround = GroundMaterial.fromName(currentTerrain);
                         
-                        // Falls es ein Gewässer ist, überspringen wir die Vegetation
-                        if (currentTerrain.equals("SALTWATER") || currentTerrain.equals("WATER")) {
+                        // Falls es ein Sand oder Gewässer ist, überspringen wir die Vegetation
+                        if (currentGround == GroundMaterial.sand || currentGround == GroundMaterial.saltwater || currentGround == GroundMaterial.water ) {
                             continue;
                         }
 
                         // --- SCHRITT A: KRONENDACH (BAUM-PLATZIERUNG AUF MESO) ---
                         // Je nach Bodentyp würfeln wir die passende Baumart aus
-                        if (currentTerrain.equals("FOREST_FLOOR")) {
+                        if (currentGround == GroundMaterial.moss) {
                             // Dichter, dunkler Nadel-/Mischwald (Hohe Dichte)
                             if (rand.nextDouble() < 0.75) {
                                 String baumArt = (rand.nextDouble() < 0.80) ? BAUM_KIEFER : BAUM_EICHE;
                                 cell.setMesoBaum(mx, my, baumArt);
                             }
                         } 
-                        else if (currentTerrain.equals("WOODLAND")) {
+                        else if (currentGround == GroundMaterial.foliage) {
                             // Lichter Laubwald / Birkenhaine
                             if (rand.nextDouble() < 0.40) {
-                                String baumArt = (rand.nextDouble() < 0.60) ? BAUM_BIRKE : BAUM_EICHE;
+                            	double p = rand.nextDouble();
+                            	String baumArt = "";
+                                if (p < 0.35) baumArt = BAUM_BUCHE;
+                                else if (p < 0.5) baumArt = BAUM_EICHE;
+                                else if (p < 0.65) baumArt = BAUM_BIRKE;
+                                else if (p < 0.75) baumArt = BAUM_WEIDE;
+                                else if (p < 0.85) baumArt = BAUM_FICHTE;
+                                else baumArt = BAUM_KIEFER;
                                 cell.setMesoBaum(mx, my, baumArt);
                             }
                         }
-                        else if (currentTerrain.equals("SHRUBLAND")) {
+                        else if (currentGround == GroundMaterial.brushwood) {
                             // Savanne / Steppe: Nur sehr vereinzelte Bäume
-                            if (rand.nextDouble() < 0.05) {
-                                cell.setMesoBaum(mx, my, BAUM_EICHE);
-                            }
+                           double p = rand.nextDouble();
+                       		String baumArt = "";
+                           if (p < 0.015) baumArt = BAUM_EICHE;
+                           else if (p < 0.03) baumArt = BAUM_BUCHE;
+                           else if (p < 0.045) baumArt = BAUM_WEIDE;
+                           else if (p < 0.06) baumArt = BAUM_BIRKE;
+                           if (baumArt.length() > 0)      cell.setMesoBaum(mx, my, baumArt);
+                        }
+                        else if (currentGround == GroundMaterial.grass) {
+                            // Gras: Nur sehr vereinzelte Bäume
+                        	double p = rand.nextDouble();
+                        	double faktor = rand.nextDouble() * 2;
+                        	String baumArt = "";
+                            if (p < 0.01 * faktor) baumArt = BAUM_EICHE;
+                            else if (p < 0.02 * faktor) baumArt = BAUM_BIRKE;
+                            else if (p < 0.03 * faktor) baumArt = BAUM_BUCHE;
+                            else if (p < 0.04 * faktor) baumArt = BAUM_KIEFER;
+                            else if (p < 0.05 * faktor) baumArt = BAUM_WEIDE;
+                            else if (p < 0.06 * faktor) baumArt = BAUM_FICHTE;
+                            if (baumArt.length() > 0) cell.setMesoBaum(mx, my, baumArt);
+
                         }
 
                         // --- SCHRITT B: UNTERHOLZ (STRAUCH-PLATZIERUNG AUF MIKRO 1m) ---
                         // Dank deiner HashMap koschtet uns das Erzeugen der Schablone erst bei einem 
                         // Treffer RAM. Wir streuen Farne und Beeren in schattige Waldgebiete.
-                        if (currentTerrain.equals("FOREST_FLOOR") || currentTerrain.equals("SWAMP")) {
-                            
+                        double pTerrain2Brush = rand.nextDouble();
+                        if ((currentGround == GroundMaterial.grass && pTerrain2Brush < 0.1) ||
+                        	(currentGround == GroundMaterial.moss && pTerrain2Brush < 0.4) || 
+                        	(currentGround == GroundMaterial.mud && pTerrain2Brush < 0.1)) {
+                         	double faktor = rand.nextDouble();
+                            	  
                             // Wir prüfen das feine 9x9 Mikro-Gitter innerhalb dieser Meso-Kachel
                             for (int lx = 0; lx < 9; lx++) {
                                 for (int ly = 0; ly < 9; ly++) {
-                                    
+                                    double p = rand.nextDouble();
+                                    String strauchArt = "";
                                     // Chance für Farne im tiefen feuchten Wald
-                                    if (rand.nextDouble() < 0.15) {
-                                        cell.setMesoStrauchInMischung(mx, my, lx, ly, STRAUCH_FARN);
-                                    } 
+                                    if (p < 0.15 * faktor) strauchArt = STRAUCH_FARN;
                                     // Chance für Beerensträucher
-                                    else if (rand.nextDouble() < 0.05) {
-                                        cell.setMesoStrauchInMischung(mx, my, lx, ly, STRAUCH_BEERE);
-                                    }
+                                    else if (p < 0.2 * faktor) strauchArt = STRAUCH_BEERE;
+                                    else if (p < 0.25 * faktor) strauchArt = STRAUCH_ZIERSTRAUCH;
+                                    
+                                    if (strauchArt.length() > 0) cell.setMesoStrauchInMischung(mx, my, lx, ly, strauchArt);
+
                                 }
                             }
                         } 
-                        else if (currentTerrain.equals("WASTELAND") || currentTerrain.equals("GRAVEL")) {
+                        else if (currentGround == GroundMaterial.ash || currentGround == GroundMaterial.crushedrock) {
                             // Im Ödland / Schotter wachsen keine saftigen Beeren, sondern Dornensträucher
-                            for (int lx = 0; lx < 9; lx++) {
-                                for (int ly = 0; ly < 9; ly++) {
-                                    if (rand.nextDouble() < 0.02) { // Sehr spärlich
-                                        cell.setMesoStrauchInMischung(mx, my, lx, ly, STRAUCH_DORNEN);
+                            pTerrain2Brush = rand.nextDouble();
+                            if (pTerrain2Brush < 0.2) {
+                            	for (int lx = 0; lx < 9; lx++) {
+                                    for (int ly = 0; ly < 9; ly++) {
+                                        if (rand.nextDouble() < 0.05) { // Sehr spärlich
+                                            cell.setMesoStrauchInMischung(mx, my, lx, ly, STRAUCH_BROMBEERE);
+                                        }
                                     }
                                 }
+                          	
                             }
                         }
 

@@ -100,16 +100,16 @@ public class GlobalTerrainGenerator {
         // =========================================================================
         // prozedurale Nacharbeiten auf Mikro- und Meso-Ebene im RAM
         // =========================================================================
-        
-        // 6.1: Kronendach (Meso) und Unterholz (Mikro) mit Pflanzen befüllen
-        TerrainProcessingDetail.populateVegetation(finalMap);
-
-        // 6.2 NEU: Mikro-Grenzfluss-Filter zur Auflockerung der Kanten im 1m-Raster
+  
+        // 6.1: Mikro-Grenzfluss-Filter zur Auflockerung der Kanten im 1m-Raster
         TerrainProcessingDetail.applyMicroBoundaryFlow(finalMap);
 
-        // 6.3: Zukünftige Mikro-Features (z.B. Pfade, Flüsse oder Erosion)
+        // 6.2: Zukünftige Mikro-Features (z.B. Pfade, Flüsse oder Erosion)
         TerrainProcessingDetail.carveMicroFeatures(finalMap);
         
+        // 6.3: Kronendach (Meso) und Unterholz (Mikro) mit Pflanzen befüllen
+        TerrainProcessingDetail.populateVegetation(finalMap);
+
         // 7. Finale, voll ausgestattete Map zurückgeben
         return finalMap;
     }
