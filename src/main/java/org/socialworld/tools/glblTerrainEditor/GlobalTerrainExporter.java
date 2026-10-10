@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.attributes.GroundMaterial;
+import org.socialworld.attributes.VegetationBush;
+import org.socialworld.attributes.VegetationTree;
 
 public class GlobalTerrainExporter {
 
@@ -33,8 +35,10 @@ public class GlobalTerrainExporter {
                     for (int my = 0; my < 81; my++) {
                         for (int mx = 0; mx < 81; mx++) {
                             String terrain = GroundMaterial.getAbbreviation(GroundMaterial.fromName(cell.getMesoTerrain(mx, my)).getGteId());
-                            String baum = cell.getMesoBaum(mx, my).substring(0, 2);
-                            allMesoTokens.add(terrain + "-" + baum);
+                            int baumId = cell.getMesoBaum(mx, my);
+                            String baumKuerzel = VegetationTree.getAbbreviation(baumId);
+
+                            allMesoTokens.add(terrain + "-" + baumKuerzel);
                         }
                     }
                     writer.write("    " + compressTokenList(allMesoTokens) + "\n");
@@ -50,8 +54,10 @@ public class GlobalTerrainExporter {
                             List<String> shrubTokens = new ArrayList<>();
                             for (int ly = 0; ly < 9; ly++) {
                                 for (int lx = 0; lx < 9; lx++) {
-                                    String strauch = cell.getMesoStrauchAusMischung(mx, my, lx, ly);
-                                    shrubTokens.add("S_" + strauch.substring(0, 2));
+                                	int strauchId = cell.getMesoStrauchAusMischung(mx, my, lx, ly);
+                                	String strauchKuerzel = VegetationBush.getAbbreviation(strauchId);
+
+                                	shrubTokens.add("S_" + strauchKuerzel);
                                 }
                             }
                             writer.write(compressTokenList(shrubTokens) + ")\n");

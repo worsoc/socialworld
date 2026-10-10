@@ -1,9 +1,29 @@
+/*
+ * Social World
+ * Copyright (C) 2026  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ *
+ */
 package org.socialworld.tools.glblTerrainEditor;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import org.socialworld.attributes.GroundMaterial;
+import org.socialworld.attributes.VegetationBush;
+import org.socialworld.attributes.VegetationTree;
 
 /**
  * Diese Klasse führt prozedurale Nacharbeiten auf der fertig initialisierten MacroMap aus.
@@ -56,7 +76,7 @@ public class TerrainProcessingDetail {
                         GroundMaterial currentGround = GroundMaterial.fromName(currentTerrain);
                         
                         // Falls es ein Sand oder Gewässer ist, überspringen wir die Vegetation
-                        if (currentGround == GroundMaterial.sand || currentGround == GroundMaterial.saltwater || currentGround == GroundMaterial.water ) {
+                        if (currentGround == GroundMaterial.sand || currentGround == GroundMaterial.saltwater || currentGround == GroundMaterial.water) {
                             continue;
                         }
 
@@ -65,47 +85,52 @@ public class TerrainProcessingDetail {
                         if (currentGround == GroundMaterial.moss) {
                             // Dichter, dunkler Nadel-/Mischwald (Hohe Dichte)
                             if (rand.nextDouble() < 0.75) {
-                                String baumArt = (rand.nextDouble() < 0.80) ? BAUM_KIEFER : BAUM_EICHE;
-                                cell.setMesoBaum(mx, my, baumArt);
+                                int baumId = (rand.nextDouble() < 0.80) ? VegetationTree.kiefer.getGteId() : VegetationTree.eiche.getGteId();
+                                cell.setMesoBaum(mx, my, baumId);
                             }
                         } 
                         else if (currentGround == GroundMaterial.foliage) {
                             // Lichter Laubwald / Birkenhaine
                             if (rand.nextDouble() < 0.40) {
-                            	double p = rand.nextDouble();
-                            	String baumArt = "";
-                                if (p < 0.35) baumArt = BAUM_BUCHE;
-                                else if (p < 0.5) baumArt = BAUM_EICHE;
-                                else if (p < 0.65) baumArt = BAUM_BIRKE;
-                                else if (p < 0.75) baumArt = BAUM_WEIDE;
-                                else if (p < 0.85) baumArt = BAUM_FICHTE;
-                                else baumArt = BAUM_KIEFER;
-                                cell.setMesoBaum(mx, my, baumArt);
+                                double p = rand.nextDouble();
+                                int baumId;
+                                if (p < 0.35) baumId = VegetationTree.buche.getGteId();
+                                else if (p < 0.5) baumId = VegetationTree.eiche.getGteId();
+                                else if (p < 0.65) baumId = VegetationTree.birke.getGteId();
+                                else if (p < 0.75) baumId = VegetationTree.weide.getGteId();
+                                else if (p < 0.85) baumId = VegetationTree.fichte.getGteId();
+                                else baumId = VegetationTree.kiefer.getGteId();
+                                cell.setMesoBaum(mx, my, baumId);
                             }
                         }
                         else if (currentGround == GroundMaterial.brushwood) {
                             // Savanne / Steppe: Nur sehr vereinzelte Bäume
-                           double p = rand.nextDouble();
-                       		String baumArt = "";
-                           if (p < 0.015) baumArt = BAUM_EICHE;
-                           else if (p < 0.03) baumArt = BAUM_BUCHE;
-                           else if (p < 0.045) baumArt = BAUM_WEIDE;
-                           else if (p < 0.06) baumArt = BAUM_BIRKE;
-                           if (baumArt.length() > 0)      cell.setMesoBaum(mx, my, baumArt);
+                            double p = rand.nextDouble();
+                            int baumId = -1;
+                            if (p < 0.015) baumId = VegetationTree.eiche.getGteId();
+                            else if (p < 0.03) baumId = VegetationTree.buche.getGteId();
+                            else if (p < 0.045) baumId = VegetationTree.weide.getGteId();
+                            else if (p < 0.06) baumId = VegetationTree.birke.getGteId();
+                            
+                            if (baumId != -1) {
+                                cell.setMesoBaum(mx, my, baumId);
+                            }
                         }
                         else if (currentGround == GroundMaterial.grass) {
                             // Gras: Nur sehr vereinzelte Bäume
-                        	double p = rand.nextDouble();
-                        	double faktor = rand.nextDouble() * 2;
-                        	String baumArt = "";
-                            if (p < 0.01 * faktor) baumArt = BAUM_EICHE;
-                            else if (p < 0.02 * faktor) baumArt = BAUM_BIRKE;
-                            else if (p < 0.03 * faktor) baumArt = BAUM_BUCHE;
-                            else if (p < 0.04 * faktor) baumArt = BAUM_KIEFER;
-                            else if (p < 0.05 * faktor) baumArt = BAUM_WEIDE;
-                            else if (p < 0.06 * faktor) baumArt = BAUM_FICHTE;
-                            if (baumArt.length() > 0) cell.setMesoBaum(mx, my, baumArt);
-
+                            double p = rand.nextDouble();
+                            double faktor = rand.nextDouble() * 2;
+                            int baumId = -1;
+                            if (p < 0.01 * faktor) baumId = VegetationTree.eiche.getGteId();
+                            else if (p < 0.02 * faktor) baumId = VegetationTree.birke.getGteId();
+                            else if (p < 0.03 * faktor) baumId = VegetationTree.buche.getGteId();
+                            else if (p < 0.04 * faktor) baumId = VegetationTree.kiefer.getGteId();
+                            else if (p < 0.05 * faktor) baumId = VegetationTree.weide.getGteId();
+                            else if (p < 0.06 * faktor) baumId = VegetationTree.fichte.getGteId();
+                            
+                            if (baumId != -1) {
+                                cell.setMesoBaum(mx, my, baumId);
+                            }
                         }
 
                         // --- SCHRITT B: UNTERHOLZ (STRAUCH-PLATZIERUNG AUF MIKRO 1m) ---
@@ -113,23 +138,24 @@ public class TerrainProcessingDetail {
                         // Treffer RAM. Wir streuen Farne und Beeren in schattige Waldgebiete.
                         double pTerrain2Brush = rand.nextDouble();
                         if ((currentGround == GroundMaterial.grass && pTerrain2Brush < 0.1) ||
-                        	(currentGround == GroundMaterial.moss && pTerrain2Brush < 0.4) || 
-                        	(currentGround == GroundMaterial.mud && pTerrain2Brush < 0.1)) {
-                         	double faktor = rand.nextDouble();
-                            	  
+                            (currentGround == GroundMaterial.moss && pTerrain2Brush < 0.4) || 
+                            (currentGround == GroundMaterial.mud && pTerrain2Brush < 0.1)) {
+                            double faktor = rand.nextDouble();
+                                  
                             // Wir prüfen das feine 9x9 Mikro-Gitter innerhalb dieser Meso-Kachel
                             for (int lx = 0; lx < 9; lx++) {
                                 for (int ly = 0; ly < 9; ly++) {
                                     double p = rand.nextDouble();
-                                    String strauchArt = "";
+                                    int strauchId = -1;
                                     // Chance für Farne im tiefen feuchten Wald
-                                    if (p < 0.15 * faktor) strauchArt = STRAUCH_FARN;
+                                    if (p < 0.15 * faktor) strauchId = VegetationBush.farne.getGteId();
                                     // Chance für Beerensträucher
-                                    else if (p < 0.2 * faktor) strauchArt = STRAUCH_BEERE;
-                                    else if (p < 0.25 * faktor) strauchArt = STRAUCH_ZIERSTRAUCH;
+                                    else if (p < 0.2 * faktor) strauchId = VegetationBush.beerenstrauch.getGteId();
+                                    else if (p < 0.25 * faktor) strauchId = VegetationBush.zierstrauch.getGteId();
                                     
-                                    if (strauchArt.length() > 0) cell.setMesoStrauchInMischung(mx, my, lx, ly, strauchArt);
-
+                                    if (strauchId != -1) {
+                                        cell.setMesoStrauchInMischung(mx, my, lx, ly, strauchId);
+                                    }
                                 }
                             }
                         } 
@@ -137,14 +163,13 @@ public class TerrainProcessingDetail {
                             // Im Ödland / Schotter wachsen keine saftigen Beeren, sondern Dornensträucher
                             pTerrain2Brush = rand.nextDouble();
                             if (pTerrain2Brush < 0.2) {
-                            	for (int lx = 0; lx < 9; lx++) {
+                                for (int lx = 0; lx < 9; lx++) {
                                     for (int ly = 0; ly < 9; ly++) {
                                         if (rand.nextDouble() < 0.05) { // Sehr spärlich
-                                            cell.setMesoStrauchInMischung(mx, my, lx, ly, STRAUCH_BROMBEERE);
+                                            cell.setMesoStrauchInMischung(mx, my, lx, ly, VegetationBush.brombeere.getGteId());
                                         }
                                     }
                                 }
-                          	
                             }
                         }
 

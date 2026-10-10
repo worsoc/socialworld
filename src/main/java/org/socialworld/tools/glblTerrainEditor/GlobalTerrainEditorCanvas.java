@@ -28,8 +28,8 @@ public class GlobalTerrainEditorCanvas extends JPanel {
     private String currentMode = "ZOOM"; 
     private double currentBrushElevation = 100.0;
     private String currentBrushTerrain = GTERenderColorPalette.getTerrainNameFromCode((byte)0 /*saltwater*/);
-    private String currentBrushBaum = "KEIN_BAUM";
-    private String currentBrushStrauch = "KEIN_STRAUCH";
+    private int currentBrushBaum = 0;    // 0 entspricht VegetationTree.nothing
+    private int currentBrushStrauch = 0; // 0 entspricht VegetationBush.nothing
     private int currentBrushRadius = 1; 
 
     // Die neuen, spezialisierten GTE-Module
@@ -94,10 +94,10 @@ public class GlobalTerrainEditorCanvas extends JPanel {
     public void setBrushElevation(double elevation) { this.currentBrushElevation = elevation; }
     public String getCurrentBrushTerrain() { return currentBrushTerrain; }
     public void setBrushTerrain(String terrain) { this.currentBrushTerrain = terrain; }
-    public String getCurrentBrushBaum() { return currentBrushBaum; }
-    public void setBrushBaum(String baum) { this.currentBrushBaum = baum; }
-    public String getCurrentBrushStrauch() { return currentBrushStrauch; }
-    public void setBrushStrauch(String strauch) { this.currentBrushStrauch = strauch; }
+    public int getCurrentBrushBaum() { return currentBrushBaum; }
+    public void setBrushBaum(int baumGteId) { this.currentBrushBaum = baumGteId; }
+    public int getCurrentBrushStrauch() { return currentBrushStrauch; }
+    public void setBrushStrauch(int strauchGteId) { this.currentBrushStrauch = strauchGteId; }
     public int getCurrentBrushRadius() { return currentBrushRadius; }
     public void setBrushRadius(int radius) { this.currentBrushRadius = radius; }
 

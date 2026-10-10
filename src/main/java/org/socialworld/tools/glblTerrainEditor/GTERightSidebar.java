@@ -110,6 +110,13 @@ public class GTERightSidebar extends JPanel {
         JComboBox<String> strauchBox = new JComboBox<>(new String[]{"KEIN_STRAUCH", "FARNE", "ZIERSTRAUCH", "BEERENSTRAUCH", "BROMBEERE", "HEIDEKRAUT", "GINSTER"});
         panelStrauch.add(strauchBox);
 
+/*
+ * // Direktes Laden der Großbuchstaben-Namen aus den Enums
+JComboBox<String> baumBox = new JComboBox<>(org.socialworld.attributes.VegetationTree.getUpperCaseNames());
+JComboBox<String> strauchBox = new JComboBox<>(org.socialworld.attributes.VegetationBush.getUpperCaseNames());
+        
+ */
+        
         contextPanel.add(panelZoom, "ZOOM"); contextPanel.add(panelElevation, "HÖHE"); contextPanel.add(panelTerrain, "TERRAIN"); contextPanel.add(panelBaum, "BAUM"); contextPanel.add(panelStrauch, "STRAUCH");
         add(contextPanel);
 
@@ -122,8 +129,17 @@ public class GTERightSidebar extends JPanel {
 
         elevationSlider.addChangeListener(e -> canvas.setBrushElevation(elevationSlider.getValue()));
         terrainBox.addActionListener(e -> canvas.setBrushTerrain((String) terrainBox.getSelectedItem()));
-        baumBox.addActionListener(e -> canvas.setBrushBaum((String) baumBox.getSelectedItem()));
-        strauchBox.addActionListener(e -> canvas.setBrushStrauch((String) strauchBox.getSelectedItem()));
+        baumBox.addActionListener(e -> {
+            String selected = (String) baumBox.getSelectedItem();
+            var tree = org.socialworld.attributes.VegetationTree.fromName(selected);
+            canvas.setBrushBaum(tree != null ? tree.getGteId() : 0);
+        });
+
+        strauchBox.addActionListener(e -> {
+            String selected = (String) strauchBox.getSelectedItem();
+            var bush = org.socialworld.attributes.VegetationBush.fromName(selected);
+            canvas.setBrushStrauch(bush != null ? bush.getGteId() : 0);
+        });
 
         // 4. Makro-Quadrant Steuerung
         add(Box.createVerticalStrut(15));

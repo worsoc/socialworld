@@ -2,6 +2,9 @@ package org.socialworld.tools.glblTerrainEditor;
 
 import java.awt.*;
 
+import org.socialworld.attributes.VegetationBush;
+import org.socialworld.attributes.VegetationTree;
+
 /**
  * Zeichen-Manager für den Editor.
  * Rendert alle Straucharten formgetreu auf dem Monitor.
@@ -71,7 +74,7 @@ public class GTECanvasRenderer {
                 g2.setColor(GTERenderColorPalette.getTerrainColor(terrain));
                 g2.fillRect(startX + px, startY + py, 1, 1);
 
-                if (!hatVegetation && (!cell.getMesoBaum(mx, my).equals("KEIN_BAUM") || cell.hatStrauchMischung(mx, my))) {
+                if (!hatVegetation && (cell.getMesoBaum(mx, my) != VegetationTree.nothing.getGteId() || cell.hatStrauchMischung(mx, my))) {
                     hatVegetation = true;
                 }
             }
@@ -99,9 +102,9 @@ public class GTECanvasRenderer {
                 g2.setColor(GTERenderColorPalette.getTerrainColor(selectedCell.getMesoTerrain(mx, my)));
                 g2.fillRect(mx * mesoCellPixels, my * mesoCellPixels, mesoCellPixels, mesoCellPixels);
 
-                String baum = selectedCell.getMesoBaum(mx, my);
-                if (!baum.equals("KEIN_BAUM")) {
-                    g2.setColor(GTERenderColorPalette.getBaumColor(baum));
+                int baumId = selectedCell.getMesoBaum(mx, my);
+                if (baumId != VegetationTree.nothing.getGteId()) {
+                    g2.setColor(GTERenderColorPalette.getBaumColor(baumId));
                     g2.fillRect(mx * mesoCellPixels + 2, my * mesoCellPixels + 2, mesoCellPixels - 4, mesoCellPixels - 4);
                 } else if (selectedCell.hatStrauchMischung(mx, my)) {
                     g2.setColor(GTERenderColorPalette.getDominantShrubColor(selectedCell, mx, my));
@@ -149,41 +152,58 @@ public class GTECanvasRenderer {
                 g2.setColor(new Color(255, 255, 255, 25));
                 g2.drawRect(lx * mikroCellPixels, ly * mikroCellPixels, mikroCellPixels, mikroCellPixels);
 
-                String strauch = selectedCell.getMesoStrauchAusMischung(mx, my, lx, ly);
-                if (!strauch.equals("KEIN_STRAUCH")) {
-                    g2.setColor(GTERenderColorPalette.getStrauchColor(strauch));
+                int strauchId = selectedCell.getMesoStrauchAusMischung(mx, my, lx, ly);
+                if (strauchId != VegetationBush.nothing.getGteId()) {
+                    // Hole die passende Enum-Konstante anhand der ID
+                    VegetationBush bushType = VegetationBush.fromGteId(strauchId);
+
+                    // 1. FARBE SETZEN (Übergabe der ID an die Farbpalette)
+                    g2.setColor(GTERenderColorPalette.getStrauchColor(strauchId));
                     
-                    if (strauch.equals("FARNE")) {
-                        g2.fillRect(lx * mikroCellPixels + 32, ly * mikroCellPixels + 12, 16, 56);
-                        g2.fillRect(lx * mikroCellPixels + 12, ly * mikroCellPixels + 32, 56, 16);
-                    } else if (strauch.equals("GINSTER") || strauch.equals("HEIDEKRAUT")) {
-                        int cx = lx * mikroCellPixels + 40;
-                        int cy = ly * mikroCellPixels + 40;
-                        g2.fillOval(cx - 20, cy - 20, 40, 40);
-                        g2.fillOval(cx - 30, cy - 5, 60, 10);
-                        g2.fillOval(cx - 5, cy - 30, 10, 60);
-                    } else {
-                        g2.fillOval(lx * mikroCellPixels + 15, ly * mikroCellPixels + 15, 52, 52);
+                    // 2. FORM FÜLLEN (Füll-Logik via Switch)
+                    switch (bushType) {
+                        case farne -> {
+                            g2.fillRect(lx * mikroCellPixels + 32, ly * mikroCellPixels + 12, 16, 56);
+                            g2.fillRect(lx * mikroCellPixels + 12, ly * mikroCellPixels + 32, 56, 16);
+                        }
+                        case ginster, heidekraut -> {
+                            int cx = lx * mikroCellPixels + 40;
+                            int cy = ly * mikroCellPixels + 40;
+                            g2.fillOval(cx - 20, cy - 20, 40, 40);
+                            g2.fillOval(cx - 30, cy - 5, 60, 10);
+                            g2.fillOval(cx - 5, cy - 30, 10, 60);
+                        }
+                        default -> {
+                            // zierstrauch, beerenstrauch, brombeere
+                            g2.fillOval(lx * mikroCellPixels + 15, ly * mikroCellPixels + 15, 52, 52);
+                        }
                     }
 
+                    // 3. KONTUREN ZEICHNEN (Outline-Logik via Switch)
                     g2.setColor(new Color(0, 0, 0, 120));
                     g2.setStroke(new BasicStroke(1.5f));
-                    if (strauch.equals("FARNE")) {
-                        g2.drawRect(lx * mikroCellPixels + 32, ly * mikroCellPixels + 12, 16, 56);
-                        g2.drawRect(lx * mikroCellPixels + 12, ly * mikroCellPixels + 32, 56, 16);
-                    } else if (strauch.equals("GINSTER") || strauch.equals("HEIDEKRAUT")) {
-                        g2.drawOval(lx * mikroCellPixels + 20, ly * mikroCellPixels + 20, 40, 40);
-                    } else {
-                        g2.drawOval(lx * mikroCellPixels + 15, ly * mikroCellPixels + 15, 52, 52);
+                    
+                    switch (bushType) {
+                        case farne -> {
+                            g2.drawRect(lx * mikroCellPixels + 32, ly * mikroCellPixels + 12, 16, 56);
+                            g2.drawRect(lx * mikroCellPixels + 12, ly * mikroCellPixels + 32, 56, 16);
+                        }
+                        case ginster, heidekraut -> {
+                            g2.drawOval(lx * mikroCellPixels + 20, ly * mikroCellPixels + 20, 40, 40);
+                        }
+                        default -> {
+                            // zierstrauch, beerenstrauch, brombeere
+                            g2.drawOval(lx * mikroCellPixels + 15, ly * mikroCellPixels + 15, 52, 52);
+                        }
                     }
                     g2.setStroke(new BasicStroke(1.0f));
                 }
-            }
+           }
         }
 
-        String baum = selectedCell.getMesoBaum(mx, my);
-        if (!baum.equals("KEIN_BAUM")) {
-            Color baumFarbe = GTERenderColorPalette.getBaumColor(baum);
+        int baumId = selectedCell.getMesoBaum(mx, my);
+        if (baumId != VegetationTree.nothing.getGteId()) {
+            Color baumFarbe = GTERenderColorPalette.getBaumColor(baumId);
             g2.setColor(new Color(baumFarbe.getRed(), baumFarbe.getGreen(), baumFarbe.getBlue(), 75));
             g2.setStroke(new BasicStroke(2.0f)); 
             for (int i = 0; i < totalSizePixels * 2; i += 12) {

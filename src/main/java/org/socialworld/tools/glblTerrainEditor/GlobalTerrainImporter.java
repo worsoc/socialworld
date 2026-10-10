@@ -1,3 +1,21 @@
+/*
+ * Social World
+ * Copyright (C) 2026  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ *
+ */
 package org.socialworld.tools.glblTerrainEditor;
 
 
@@ -7,6 +25,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.socialworld.attributes.VegetationBush;
+import org.socialworld.attributes.VegetationTree;
 
 /**
  * Version 2.8 (Final) - Korrigiert den Array-Übergabefehler beim Laden des Meso-Geländes.
@@ -96,7 +117,7 @@ public class GlobalTerrainImporter {
                             for (int ly = 0; ly < 9; ly++) {
                                 for (int lx = 0; lx < 9; lx++) {
                                     if (tokenIndex < decompressedShrubs.size()) {
-                                        String shrubType = decodeStrauchToken(decompressedShrubs.get(tokenIndex++));
+                                        int shrubType = decodeStrauchToken(decompressedShrubs.get(tokenIndex++));
                                         currentCell.setMesoStrauchInMischung(mx, my, lx, ly, shrubType);
                                     }
                                 }
@@ -171,28 +192,28 @@ public class GlobalTerrainImporter {
         };
     }
 
-    private static String decodeBaumToken(String code) {
+    private static int decodeBaumToken(String code) {
         return switch (code) {
-            case "EI" -> "EICHE";
-            case "KI" -> "KIEFER";
-            case "BI" -> "BIRKE";
-            case "BU" -> "BUCHE";
-            case "FI" -> "FICHTE";
-            case "WE" -> "WEIDE";
-            default   -> "KEIN_BAUM";
+            case "EI" -> VegetationTree.eiche.getGteId();
+            case "KI" -> VegetationTree.kiefer.getGteId();
+            case "FI" -> VegetationTree.fichte.getGteId();
+            case "BI" -> VegetationTree.birke.getGteId();
+            case "BU" -> VegetationTree.buche.getGteId();
+            case "WE" -> VegetationTree.weide.getGteId();
+            default   -> VegetationTree.nothing.getGteId();
         };
     }
 
-    private static String decodeStrauchToken(String token) {
+    private static int decodeStrauchToken(String token) {
         String code = token.replace("S_", "");
         return switch (code) {
-            case "ZI" -> "ZIERSTRAUCH";
-            case "BE" -> "BEERENSTRAUCH";
-            case "FA" -> "FARNE";
-            case "BR" -> "BROMBEERE";
-            case "HE" -> "HEIDEKRAUT";
-            case "GI" -> "GINSTER";
-            default   -> "KEIN_STRAUCH";
+            case "ZI" -> VegetationBush.zierstrauch.getGteId();
+            case "FA" -> VegetationBush.farne.getGteId();
+            case "BE" -> VegetationBush.beerenstrauch.getGteId();
+            case "BR" -> VegetationBush.brombeere.getGteId();
+            case "HE" -> VegetationBush.heidekraut.getGteId();
+            case "GI" -> VegetationBush.ginster.getGteId();
+            default   -> VegetationBush.nothing.getGteId();
         };
     }
 }

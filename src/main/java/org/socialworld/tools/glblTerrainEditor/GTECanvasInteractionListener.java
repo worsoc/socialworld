@@ -39,7 +39,6 @@ public class GTECanvasInteractionListener extends MouseAdapter {
         int cellSize = canvas.getCellSizeInPixels();
 
         if (canvas.getCurrentZoom() == GlobalTerrainEditorCanvas.ZoomLevel.MACRO) {
-            // ANPASSUNG: Berechnete lokale Zellenkoordinate um den aktiven Quadranten-Offset erweitern
             int localCellX = mouseX / cellSize;
             int localCellY = mouseY / cellSize;
             
@@ -83,7 +82,6 @@ public class GTECanvasInteractionListener extends MouseAdapter {
 
         switch (canvas.getCurrentZoom()) {
             case MACRO -> {
-                // ANPASSUNG: Auch hier beim Malen auf der Weltkarte den Quadranten-Offset einrechnen
                 int localCellX = mouseX / cellSize;
                 int localCellY = mouseY / cellSize;
                 
@@ -154,12 +152,14 @@ public class GTECanvasInteractionListener extends MouseAdapter {
         if (canvas.getCurrentMode().equals("TERRAIN")) {
             selectedCell.setMesoTerrain(mx, my, canvas.getCurrentBrushTerrain());
         } else if (canvas.getCurrentMode().equals("BAUM")) {
+            // NEU: Reicht direkt die int-ID aus dem Canvas an die Cell weiter
             selectedCell.setMesoBaum(mx, my, canvas.getCurrentBrushBaum());
         } else if (canvas.getCurrentMode().equals("STRAUCH")) {
-            String gewaehlterStrauch = canvas.getCurrentBrushStrauch();
+            // NEU: Holt die int-ID und befüllt die 9x9 Schablone speicheroptimiert
+            int gewaehlterStrauchId = canvas.getCurrentBrushStrauch();
             for (int lx = 0; lx < 9; lx++) {
                 for (int ly = 0; ly < 9; ly++) {
-                    selectedCell.setMesoStrauchInMischung(mx, my, lx, ly, gewaehlterStrauch);
+                    selectedCell.setMesoStrauchInMischung(mx, my, lx, ly, gewaehlterStrauchId);
                 }
             }
         }
@@ -187,6 +187,7 @@ public class GTECanvasInteractionListener extends MouseAdapter {
                             byte code = (byte)GroundMaterial.fromName(canvas.getCurrentBrushTerrain()).getGteId();
                             selectedCell.setMikroTerrainDelta(globalMikroX, globalMikroY, code);
                         } else if (canvas.getCurrentMode().equals("STRAUCH")) {
+                            // NEU: Übergibt die int-ID im feinen 1m Gitter
                             selectedCell.setMesoStrauchInMischung(mx, my, lx, ly, canvas.getCurrentBrushStrauch());
                         }
                     }
