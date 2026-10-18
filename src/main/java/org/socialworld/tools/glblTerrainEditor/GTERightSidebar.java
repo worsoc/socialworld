@@ -93,29 +93,17 @@ public class GTERightSidebar extends JPanel {
         });
         panelTerrain.add(terrainBox);
  
- /*       
-        JPanel panelTerrain = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panelTerrain.add(new JLabel("Boden-Typ:"));
-        String[] terrainElems = GroundMaterial.getUpperCaseNames();
-        JComboBox<String> terrainBox = new JComboBox<>(terrainElems);
-        panelTerrain.add(terrainBox);
-*/        
+         // Direktes Laden der Großbuchstaben-Namen aus den Enums
         JPanel panelBaum = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panelBaum.add(new JLabel("Baumart:"));
-        JComboBox<String> baumBox = new JComboBox<>(new String[]{"KEIN_BAUM", "EICHE", "KIEFER", "BIRKE", "BUCHE", "FICHTE", "WEIDE"});
+        JComboBox<String> baumBox = new JComboBox<>(org.socialworld.attributes.VegetationTree.getUpperCaseNames());
         panelBaum.add(baumBox);
 
         JPanel panelStrauch = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panelStrauch.add(new JLabel("Strauchart:"));
-        JComboBox<String> strauchBox = new JComboBox<>(new String[]{"KEIN_STRAUCH", "FARNE", "ZIERSTRAUCH", "BEERENSTRAUCH", "BROMBEERE", "HEIDEKRAUT", "GINSTER"});
+        JComboBox<String> strauchBox = new JComboBox<>(org.socialworld.attributes.VegetationBush.getUpperCaseNames());
         panelStrauch.add(strauchBox);
 
-/*
- * // Direktes Laden der Großbuchstaben-Namen aus den Enums
-JComboBox<String> baumBox = new JComboBox<>(org.socialworld.attributes.VegetationTree.getUpperCaseNames());
-JComboBox<String> strauchBox = new JComboBox<>(org.socialworld.attributes.VegetationBush.getUpperCaseNames());
-        
- */
         
         contextPanel.add(panelZoom, "ZOOM"); contextPanel.add(panelElevation, "HÖHE"); contextPanel.add(panelTerrain, "TERRAIN"); contextPanel.add(panelBaum, "BAUM"); contextPanel.add(panelStrauch, "STRAUCH");
         add(contextPanel);
