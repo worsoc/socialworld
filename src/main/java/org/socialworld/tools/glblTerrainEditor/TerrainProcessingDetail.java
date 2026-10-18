@@ -31,25 +31,7 @@ import org.socialworld.attributes.VegetationTree;
  */
 public class TerrainProcessingDetail {
 
-    // Beispielhafte Klartext-Namen für deine Render-Engine
-    private static final String BAUM_EICHE      = "EICHE";
-    private static final String BAUM_KIEFER     = "KIEFER";
-    private static final String BAUM_FICHTE  	= "FICHTE";
-    private static final String BAUM_BIRKE      = "BIRKE";
-    private static final String BAUM_BUCHE      = "BUCHE";
-    private static final String BAUM_WEIDE      = "WEIDE";
-   
-	private static final String STRAUCH_ZIERSTRAUCH    = "ZIERSTRAUCH";
-    private static final String STRAUCH_FARN    = "FARNE";
-    private static final String STRAUCH_BEERE   = "BEERENSTRAUCH";
-    private static final String STRAUCH_BROMBEERE  = "BROMBEERE";
-    private static final String STRAUCH_HEIDEKRAUT  = "HEIDEKRAUT";
-    private static final String STRAUCH_GINSTER  = "GINSTER";
-/*
-    private static final String STRAUCH_FARN    = "WALDFARN";
-    private static final String STRAUCH_BEERE   = "BEERENSTRAUCH";
-    private static final String STRAUCH_DORNEN  = "DORNENGEBUESCH";
-*/
+ 
     /**
      * Methode 1: Befüllt das Kronendach (Meso-Ebene) und das Unterholz (Mikro-Ebene)
      * basierend auf dem geerbten Gesteins- oder Bodentyp der jeweiligen Zelle.
@@ -181,12 +163,50 @@ public class TerrainProcessingDetail {
     }
 
     /**
-     * Methode 2: Ein Platzhalter für deine zukünftige Fluss- oder Pfad-Einkerbung.
-     * Nutzt das mikroTerrainDelta im 1m-Raster (729x729), um feine Strukturen einzustanzen.
+     * Methode 2: Führt prozedurale Einkerbungen (Bäche und Pfade) auf der MacroMap aus.
+     * Nutzt das globale 1m-Raster (729x729 bei 81x81 Meso-Kacheln), um feine Strukturen einzustanzen.
+     * 
+     * @param map Die Referenz auf die zu bearbeitende MacroMap
      */
     public static void carveMicroFeatures(MacroMap map) {
-        // Hier wird später z.B. ein A*-Pfadsucher oder Erosions-Algorithmus implementiert,
-        // welcher cell.setMikroTerrainDelta(gmx, gmy, (byte) code) aufruft.
+        Random rand = new Random();
+        int mesoSize = MacroMapCell.MESO_GRID_SIZE; // 81
+        int maxGlobalCoord = map.getWidth() * mesoSize * 9; // 9 Mikro-Kacheln pro Meso
+
+        System.out.println("====== STARTE CARVE-MICRO-FEATURES ======");
+        System.out.println("Globale Kartengröße im 1m-Raster: " + maxGlobalCoord + "x" + maxGlobalCoord + " Pixel.");
+
+        // --- BEISPIEL A: EIN BACHLAUF VON NORDEN NACH SÜDEN ---
+        int startX = rand.nextInt(maxGlobalCoord);
+        int startY = 0;
+        int endX = rand.nextInt(maxGlobalCoord);
+        int endY = maxGlobalCoord - 1;
+
+        System.out.println("[INFO] Plane Bachlauf von global (X: " + startX + ", Y: " + startY + ") nach (X: " + endX + ", Y: " + endY + ")");
+
+        List<int[]> splinePoints = generatePathPoints(startX, startY, endX, endY, rand);
+        List<int[]> riverCore = rasterizePath(splinePoints, 1);
+        List<int[]> riverBorders = rasterizePath(splinePoints, 3);
+
+        System.out.println("[INFO] Bachlauf berechnet. Stanze Ränder (" + riverBorders.size() + " Pixel) und Kern (" + riverCore.size() + " Pixel)...");
+        applyMicroFeatureDelta(map, riverBorders, GroundMaterial.stones);
+        applyMicroFeatureDelta(map, riverCore, GroundMaterial.water);
+
+        // --- BEISPIEL B: EIN TRAMPELPFAD (WILDWECHSEL) ---
+        int pathStartX = 0;
+        int pathStartY = rand.nextInt(maxGlobalCoord);
+        int pathEndX = maxGlobalCoord - 1;
+        int pathEndY = rand.nextInt(maxGlobalCoord);
+
+        System.out.println("[INFO] Plane Trampelpfad von global (X: " + pathStartX + ", Y: " + pathStartY + ") nach (X: " + pathEndX + ", Y: " + pathEndY + ")");
+
+        List<int[]> pathPoints = generatePathPoints(pathStartX, pathStartY, pathEndX, pathEndY, rand);
+        List<int[]> pathRaster = rasterizePath(pathPoints, 1);
+
+        System.out.println("[INFO] Trampelpfad berechnet. Stanze Pfad-Pixel (" + pathRaster.size() + " Pixel)...");
+        applyMicroFeatureDelta(map, pathRaster, GroundMaterial.crushedrock);
+        
+        System.out.println("====== BEENDET CARVE-MICRO-FEATURES ======");
     }
     
 
@@ -353,6 +373,167 @@ public class TerrainProcessingDetail {
         }
     }
 
+    
+    /**
+     * Generiert eine Liste von verketteten Wegpunkten im globalen 1m-Raster zwischen Start und Ziel.
+     * Nutzt interpolierte Zwischenschritte für einen organischen, geschwungenen Verlauf.
+     */
+    private static List<int[]> generatePathPoints(int startX, int startY, int endX, int endY, Random rand) {
+        List<int[]> points = new ArrayList<>();
+        
+        // Wir starten am Ausgangspunkt
+        int currentX = startX;
+        int currentY = startY;
+        points.add(new int[]{currentX, currentY});
+
+        // Schrittweise Annäherung an das Ziel mit zufälligem "Schlängeln" (Random Walk mit Tendenz)
+        while (currentX != endX || currentY != endY) {
+            // Richtung zum Ziel ermitteln (-1, 0 oder 1)
+            int dirX = Integer.compare(endX, currentX);
+            int dirY = Integer.compare(endY, currentY);
+
+            // Mit einer gewissen Wahrscheinlichkeit weichen wir vom direkten Kurs ab (organischer Look)
+            if (rand.nextDouble() < 0.35) {
+                if (dirX != 0 && rand.nextBoolean()) currentX += dirX;
+                else currentX += (rand.nextBoolean() ? 1 : -1);
+            } else {
+                currentX += dirX;
+            }
+
+            if (rand.nextDouble() < 0.35) {
+                if (dirY != 0 && rand.nextBoolean()) currentY += dirY;
+                else currentY += (rand.nextBoolean() ? 1 : -1);
+            } else {
+                currentY += dirY;
+            }
+
+            // Koordinaten absichern (Verhindert Endlosschleifen außerhalb des Wertebereichs)
+            if (currentX < 0) currentX = 0;
+            if (currentY < 0) currentY = 0;
+
+            points.add(new int[]{currentX, currentY});
+            
+            // Sicherheitsbremse falls Start und Ziel kollidieren
+            if (points.size() > 5000) {
+                break; 
+            }
+        }
+        
+        return points;
+    }
+
+    /**
+     * Rastert die mathematischen Punkte und erweitert sie um einen Radius (Breite).
+     * Gibt eine Liste einzigartiger, globaler 1m-Koordinaten zurück.
+     */
+    private static List<List<Integer>> cachedRasterCoordinates = new ArrayList<>(); // Optionaler Filter-Cache analog zu containsCoord
+
+    private static List<int[]> rasterizePath(List<int[]> pathPoints, int radius) {
+        List<int[]> rasterized = new ArrayList<>();
+        // Hilfsstruktur zur schnellen Duplikatprüfung im lokalen Scope
+        java.util.Set<String> uniqueCoords = new java.util.HashSet<>();
+
+        for (int[] point : pathPoints) {
+            int px = point[0];
+            int py = point[1];
+
+            // Kreis-Formel (Bounding Box um den Punkt im Radius abtasten)
+            for (int dx = -radius; dx <= radius; dx++) {
+                for (int dy = -radius; dy <= radius; dy++) {
+                    // Satz des Pythagoras: Prüfen ob der Pixel im echten Kreisradius liegt
+                    if (dx * dx + dy * dy <= radius * radius) {
+                        int gx = px + dx;
+                        int gy = py + dy;
+                        
+                        String key = gx + "_" + gy;
+                        if (!uniqueCoords.contains(key) && gx >= 0 && gy >= 0) {
+                            uniqueCoords.add(key);
+                            rasterized.add(new int[]{gx, gy});
+                        }
+                    }
+                }
+            }
+        }
+        return rasterized;
+    }
+
+    /**
+     * Rechnet globale 1m-Koordinaten in die Ziel-Meso-Kacheln und lokalen Mikro-Indizes um.
+     * Prüft das bestehende Terrain und verhindert das Zeichnen in Ozeanen/Wasserflächen.
+     */
+    private static void applyMicroFeatureDelta(MacroMap map, List<int[]> globalCoordinates, GroundMaterial material) {
+        int mesoSize = MacroMapCell.MESO_GRID_SIZE; // 81
+        byte gteId = (byte) material.getGteId();
+        
+        java.util.Map<String, java.util.Map<String, Integer>> hierarchicalStats = new java.util.LinkedHashMap<>();
+        int oceanSkippedCount = 0; // Zähler für die Konsole
+
+        for (int[] coord : globalCoordinates) {
+            int gx = coord[0];
+            int gy = coord[1];
+
+            int globalMX = gx / 9;
+            int globalMY = gy / 9;
+
+            if (globalMX >= map.getWidth() * mesoSize || globalMY >= map.getHeight() * mesoSize) {
+                continue;
+            }
+
+            MacroMapCell cell = map.getCellByMesoCoord(globalMX, globalMY);
+            if (cell == null) {
+                continue;
+            }
+
+            int mx = globalMX % mesoSize;
+            int my = globalMY % mesoSize;
+
+            // =========================================================================
+            // 🔥 DER OZEAN-SCHUTZ-FILTER (Gelände-Berücksichtigung)
+            // =========================================================================
+            // Wir holen den aktuellen Typ der Meso-Zelle (Entweder als String oder ID).
+            // HINWEIS: Falls dein Refactoring durch ist, hier einfach auf .getMesoTerrain(mx, my) umstellen!
+            String currentMaterial = cell.getMesoTerrain(mx, my).toLowerCase(); 
+            
+            // Wenn die Meso-Zelle tiefe Gewässer oder Ozean ist, überspringen wir das Stanzen.
+            if (currentMaterial.contains("water") ) {
+                oceanSkippedCount++;
+                continue; // Pixel wird nicht gezeichnet!
+            }
+            // =========================================================================
+
+            int lx = gx % 9;
+            int ly = gy % 9;
+
+            cell.setMikroTerrainDelta(mx, my, lx, ly, gteId);
+            
+            // Statistik füttern
+            int macroX = globalMX / mesoSize;
+            int macroY = globalMY / mesoSize;
+            String macroKey = "Makro-Kachel [" + macroX + ", " + macroY + "]";
+            String mesoKey = "Meso-Zelle (relativ X: " + mx + ", Y: " + my + ")";
+            
+            hierarchicalStats.putIfAbsent(macroKey, new java.util.TreeMap<>());
+            hierarchicalStats.get(macroKey).put(mesoKey, hierarchicalStats.get(macroKey).getOrDefault(mesoKey, 0) + 1);
+        }
+
+        // Konsolen-Ausgabe inklusive der ignorierten Wasser-Pixel
+        if (oceanSkippedCount > 0) {
+            System.out.println("   -> [INFO] " + oceanSkippedCount + " Mikro-Pixel wurden ignoriert, weil sie im Ozean gelandet wären.");
+        }
+
+        if (!hierarchicalStats.isEmpty()) {
+            System.out.println("   -> Details für Material [" + material.name() + "]:");
+            for (java.util.Map.Entry<String, java.util.Map<String, Integer>> macroEntry : hierarchicalStats.entrySet()) {
+                System.out.println("      * " + macroEntry.getKey());
+                for (java.util.Map.Entry<String, Integer> mesoEntry : macroEntry.getValue().entrySet()) {
+                    System.out.println("        |- " + mesoEntry.getKey() + " -> " + mesoEntry.getValue() + " Mikro-Pixel modifiziert.");
+                    // nur die die erste Meso-Zelle loggen
+                    break;
+                }
+            }
+        }
+    }
+    
     /**
      * Kleiner Helfer, um das Mikro-Terrain einer Meso-Kachel zu manipulieren.
      * Mappt die textuellen Meso-Terrains auf die numerischen GTE-IDs deines GroundMaterial-Enums.
