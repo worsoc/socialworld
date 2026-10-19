@@ -95,31 +95,70 @@ public class GTECanvasRenderer {
     private void renderMesoLevel(Graphics2D g2) {
         MacroMapCell selectedCell = canvas.getSelectedMacroCell();
         if (selectedCell == null) return;
-        int mesoCellPixels = 9;
+        int mesoCellPixels = 9; // Jedes Meso-Feld ist 9x9 Pixel groß
 
+        // --- SCHRITT 1: PIXELGENAUES TERRAIN (INKLUSIVE MIKRO-DELTA) ZEICHNEN ---
         for (int mx = 0; mx < 81; mx++) {
             for (int my = 0; my < 81; my++) {
-                g2.setColor(GTERenderColorPalette.getTerrainColor(selectedCell.getMesoTerrain(mx, my)));
-                g2.fillRect(mx * mesoCellPixels, my * mesoCellPixels, mesoCellPixels, mesoCellPixels);
+                
+                // Wir berechnen den Startpunkt dieses 9x9-Feldes auf dem Bildschirm
+                int fieldStartX = mx * mesoCellPixels;
+                int fieldStartY = my * mesoCellPixels;
 
-                int baumId = selectedCell.getMesoBaum(mx, my);
-                if (baumId != VegetationTree.nothing.getGteId()) {
-                    g2.setColor(GTERenderColorPalette.getBaumColor(baumId));
-                    g2.fillRect(mx * mesoCellPixels + 2, my * mesoCellPixels + 2, mesoCellPixels - 4, mesoCellPixels - 4);
-                } else if (selectedCell.hatStrauchMischung(mx, my)) {
-                    g2.setColor(GTERenderColorPalette.getDominantShrubColor(selectedCell, mx, my));
-                    g2.fillRect(mx * mesoCellPixels + 3, my * mesoCellPixels + 3, mesoCellPixels - 6, mesoCellPixels - 6);
+                // Da 1 Bildschirm-Pixel = 1 Mikro-Zelle, tasten wir das innere 9x9-Gitter ab
+                for (int lx = 0; lx < 9; lx++) {
+                    int globalMikroX = mx * 9 + lx; // Globale Mikro-X-Koordinate
+                    
+                    for (int ly = 0; ly < 9; ly++) {
+                        int globalMikroY = my * 9 + ly; // Globale Mikro-Y-Koordinate
+
+                        // Delta abfragen und den korrekten Terrain-Namen ermitteln
+                        byte deltaCode = selectedCell.getMikroTerrainDelta(globalMikroX, globalMikroY);
+                        String terrain = (deltaCode == 99) 
+                            ? selectedCell.getMesoTerrain(mx, my)
+                            : GTERenderColorPalette.getTerrainNameFromCode(deltaCode);
+                        
+                        // Farbe setzen und exakt DIESEN einen Bildschirm-Pixel einfärben
+                        g2.setColor(GTERenderColorPalette.getTerrainColor(terrain));
+                        g2.fillRect(fieldStartX + lx, fieldStartY + ly, 1, 1);
+                    }
                 }
             }
         }
 
-        g2.setColor(new Color(0, 0, 0, 35)); 
+        // --- SCHRITT 2: VEGETATION (BÄUME & STRÄUCHER) DARÜBER ZEICHNEN ---
+        for (int mx = 0; mx < 81; mx++) {
+            for (int my = 0; my < 81; my++) {
+                int fieldStartX = mx * mesoCellPixels;
+                int fieldStartY = my * mesoCellPixels;
+
+                // 2a. Bäume prüfen und zeichnen
+                int baumId = selectedCell.getMesoBaum(mx, my);
+                if (baumId != VegetationTree.nothing.getGteId()) {
+                    g2.setColor(GTERenderColorPalette.getBaumColor(baumId));
+                    // Zentriertes Quadrat für den Baum
+                    g2.fillRect(fieldStartX + 2, fieldStartY + 2, mesoCellPixels - 4, mesoCellPixels - 4);
+                
+                // 2b. Sträucher prüfen und zeichnen (nur wenn kein Baum im Weg steht)
+                } else if (selectedCell.hatStrauchMischung(mx, my)) {
+                    g2.setColor(GTERenderColorPalette.getDominantShrubColor(selectedCell, mx, my));
+                    // Etwas kleineres Quadrat für den Busch
+                    g2.fillRect(fieldStartX + 3, fieldStartY + 3, mesoCellPixels - 6, mesoCellPixels - 6);
+                }
+            }
+        }
+
+        // --- SCHRITT 3: RASTER UND BLOCK-GRENZEN ZEICHNEN ---
+        // Feines 1x1-Meso-Raster (schwach sichtbar)
+        g2.setColor(new Color(0, 0, 0, 35));
         for (int mx = 0; mx < 81; mx++) {
             for (int my = 0; my < 81; my++) {
                 g2.drawRect(mx * mesoCellPixels, my * mesoCellPixels, mesoCellPixels, mesoCellPixels);
             }
         }
-        g2.setColor(new Color(255, 255, 255, 110)); 
+        
+        // Dickeres 9x9-Block-Raster (stärker sichtbar)
+        g2.setColor(new Color(255, 255, 255, 110));
         g2.setStroke(new BasicStroke(1.5f));       
         for (int bx = 0; bx < 81; bx += 9) {
             for (int by = 0; by < 81; by += 9) {
