@@ -20,10 +20,11 @@ package org.socialworld.tools.glblTerrainEditor;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.socialworld.attributes.GroundMaterial;
 
 /**
  * Speicheroptimierte Version der MacroMapCell.
- * Nutzt eine HashMap für die Strauch-Mischungen (Sparse Storage).
+ * Nutzt primitive int-Arrays für Terrain und Bäume sowie eine HashMap für Strauch-Mischungen.
  */
 public class MacroMapCell {
     private final int gridX;
@@ -33,11 +34,11 @@ public class MacroMapCell {
     
     public static final int MESO_GRID_SIZE = 81; 
     
-    // 1. TERRAIN-LAYER
-    private final String[][] mesoTerrain; 
+    // 1. TERRAIN-LAYER (Umgestellt von String auf int für die gteId)
+    private final int[][] mesoTerrain; 
     private final byte[][] mikroTerrainDelta; 
 
-    // 2. VEGETATIONS-LAYER (Umgestellt von String auf int für die gteId)
+    // 2. VEGETATIONS-LAYER 
     private final int[][] mesoBaum; 
     
     // Key ist ein komprimierter Integer-Index aus mx und my.
@@ -50,17 +51,21 @@ public class MacroMapCell {
         this.referenceElevation = initialElevation;
         this.coverType = coverType;
         
-        this.mesoTerrain = new String[MESO_GRID_SIZE][MESO_GRID_SIZE];
+        this.mesoTerrain = new int[MESO_GRID_SIZE][MESO_GRID_SIZE];
         this.mesoBaum = new int[MESO_GRID_SIZE][MESO_GRID_SIZE];
         this.mikroTerrainDelta = new byte[MESO_GRID_SIZE * 9][MESO_GRID_SIZE * 9];
         
         // Initialisiere die leere Map – verbraucht nahezu 0 RAM für unbewachsene Kacheln!
         this.mesoStrauchMap = new HashMap<>();
         
-        // Initialisierung des Basis-Geländes
+        // ID des Basis-Geländes aus dem Cover-String auflösen (Fallback auf Wiese/Grass = 8, falls ungültig)
+        GroundMaterial baseMaterial = GroundMaterial.fromName(coverType);
+        int initialTerrainId = (baseMaterial != null) ? baseMaterial.getGteId() : 8;
+        
+        // Initialisierung des Basis-Geländes via IDs
         for (int x = 0; x < MESO_GRID_SIZE; x++) {
             for (int y = 0; y < MESO_GRID_SIZE; y++) {
-                mesoTerrain[x][y] = coverType;
+                mesoTerrain[x][y] = initialTerrainId;
                 mesoBaum[x][y] = 0; // 0 entspricht der gteId für nothing (kein Baum)
              }
         }
@@ -83,8 +88,36 @@ public class MacroMapCell {
 
     // --- GETTER & SETTER FÜR DIE STRUKTUR ---
 
-    public String getMesoTerrain(int mx, int my) { return mesoTerrain[mx][my]; }
-    public void setMesoTerrain(int mx, int my, String type) { this.mesoTerrain[mx][my] = type; }
+    /**
+     * NEU: Holt direkt die numerische GTE-ID des Terrains (0-13). Maximum an Performance!
+     */
+    public int getMesoTerrainId(int mx, int my) { 
+        return mesoTerrain[mx][my]; 
+    }
+
+    /**
+     * NEU: Setzt das Terrain direkt über seine numerische GTE-ID.
+     */
+    public void setMesoTerrainId(int mx, int my, int terrainId) { 
+        this.mesoTerrain[mx][my] = terrainId; 
+    }
+
+    /**
+     * Beibehalten für alte String-Aufrufe. Holt den Namen aus dem Enum via ID.
+     */
+    public String getMesoTerrain(int mx, int my) { 
+        return GroundMaterial.fromGteId(mesoTerrain[mx][my]).toString().toUpperCase(); 
+    }
+    
+    /**
+     * Beibehalten für alte String-Aufrufe. Löst den String in eine ID auf.
+     */
+    public void setMesoTerrain(int mx, int my, String type) { 
+        GroundMaterial material = GroundMaterial.fromName(type);
+        if (material != null) {
+            this.mesoTerrain[mx][my] = material.getGteId();
+        }
+    }
 
     public int getMesoBaum(int mx, int my) { return mesoBaum[mx][my]; }
     public void setMesoBaum(int mx, int my, int gteId) { this.mesoBaum[mx][my] = gteId; }

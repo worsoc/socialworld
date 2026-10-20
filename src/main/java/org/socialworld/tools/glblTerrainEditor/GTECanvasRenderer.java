@@ -69,9 +69,9 @@ public class GTECanvasRenderer {
                 int my = (py * 81) / cellSize;
 
                 byte deltaCode = cell.getMikroTerrainDelta(mx * 9, my * 9);
-                String terrain = (deltaCode == 99) ? cell.getMesoTerrain(mx, my) : GTERenderColorPalette.getTerrainNameFromCode(deltaCode);
-                
-                g2.setColor(GTERenderColorPalette.getTerrainColor(terrain));
+                int terrainId = (deltaCode == 99) ? cell.getMesoTerrainId(mx, my) : (int) deltaCode;
+
+                g2.setColor(GTERenderColorPalette.getTerrainColor(terrainId));
                 g2.fillRect(startX + px, startY + py, 1, 1);
 
                 if (!hatVegetation && (cell.getMesoBaum(mx, my) != VegetationTree.nothing.getGteId() || cell.hatStrauchMischung(mx, my))) {
@@ -114,12 +114,10 @@ public class GTECanvasRenderer {
 
                         // Delta abfragen und den korrekten Terrain-Namen ermitteln
                         byte deltaCode = selectedCell.getMikroTerrainDelta(globalMikroX, globalMikroY);
-                        String terrain = (deltaCode == 99) 
-                            ? selectedCell.getMesoTerrain(mx, my)
-                            : GTERenderColorPalette.getTerrainNameFromCode(deltaCode);
-                        
+                        int terrainId = (deltaCode == 99) ? selectedCell.getMesoTerrainId(mx, my) : (int) deltaCode;
+
                         // Farbe setzen und exakt DIESEN einen Bildschirm-Pixel einfärben
-                        g2.setColor(GTERenderColorPalette.getTerrainColor(terrain));
+                        g2.setColor(GTERenderColorPalette.getTerrainColor(terrainId));
                         g2.fillRect(fieldStartX + lx, fieldStartY + ly, 1, 1);
                     }
                 }
@@ -183,9 +181,9 @@ public class GTECanvasRenderer {
                 int globalMikroY = my * 9 + ly;
 
                 byte deltaCode = selectedCell.getMikroTerrainDelta(globalMikroX, globalMikroY);
-                String terrain = (deltaCode == 99) ? selectedCell.getMesoTerrain(mx, my) : GTERenderColorPalette.getTerrainNameFromCode(deltaCode);
-                
-                g2.setColor(GTERenderColorPalette.getTerrainColor(terrain));
+                int terrainId = (deltaCode == 99) ? selectedCell.getMesoTerrainId(mx, my) : (int) deltaCode;
+
+                g2.setColor(GTERenderColorPalette.getTerrainColor(terrainId));
                 g2.fillRect(lx * mikroCellPixels, ly * mikroCellPixels, mikroCellPixels, mikroCellPixels);
 
                 g2.setColor(new Color(255, 255, 255, 25));
