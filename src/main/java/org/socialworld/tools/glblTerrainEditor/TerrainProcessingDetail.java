@@ -53,9 +53,9 @@ public class TerrainProcessingDetail {
                 for (int mx = 0; mx < mesoGridSize; mx++) {
                     for (int my = 0; my < mesoGridSize; my++) {
                         
-                        // Welches Terrain liegt hier vor? (z.B. "WOODLAND", "FOREST_FLOOR")
-                        String currentTerrain = cell.getMesoTerrain(mx, my);
-                        GroundMaterial currentGround = GroundMaterial.fromName(currentTerrain);
+                        // PERFORMANCE-UPDATE: Direkt über int-IDs abfragen statt Strings
+                        int currentTerrainId = cell.getMesoTerrainId(mx, my);
+                        GroundMaterial currentGround = GroundMaterial.fromGteId(currentTerrainId);
                         
                         // Falls es ein Sand oder Gewässer ist, überspringen wir die Vegetation
                         if (currentGround == GroundMaterial.sand || currentGround == GroundMaterial.saltwater || currentGround == GroundMaterial.water) {
@@ -116,8 +116,6 @@ public class TerrainProcessingDetail {
                         }
 
                         // --- SCHRITT B: UNTERHOLZ (STRAUCH-PLATZIERUNG AUF MIKRO 1m) ---
-                        // Dank deiner HashMap koschtet uns das Erzeugen der Schablone erst bei einem 
-                        // Treffer RAM. Wir streuen Farne und Beeren in schattige Waldgebiete.
                         double pTerrain2Brush = rand.nextDouble();
                         if ((currentGround == GroundMaterial.grass && pTerrain2Brush < 0.1) ||
                             (currentGround == GroundMaterial.moss && pTerrain2Brush < 0.4) || 
@@ -127,6 +125,17 @@ public class TerrainProcessingDetail {
                             // Wir prüfen das feine 9x9 Mikro-Gitter innerhalb dieser Meso-Kachel
                             for (int lx = 0; lx < 9; lx++) {
                                 for (int ly = 0; ly < 9; ly++) {
+                                    
+                                    // MIKRO-SPERRE: Prüfen, was das Mikro-Terrain-Delta hier vorschreibt
+                                    int globalMikroX = (mx * 9) + lx;
+                                    int globalMikroY = (my * 9) + ly;
+                                    byte deltaCode = cell.getMikroTerrainDelta(globalMikroX, globalMikroY);
+                                    
+                                    // Wenn hier ein Delta liegt (ungleich 99) und es Wasser (1) oder Steine (5) ist -> Überspringen!
+                                    if (deltaCode != 99 && (deltaCode == 1 || deltaCode == 5)) {
+                                        continue;
+                                    }
+
                                     double p = rand.nextDouble();
                                     int strauchId = -1;
                                     // Chance für Farne im tiefen feuchten Wald
