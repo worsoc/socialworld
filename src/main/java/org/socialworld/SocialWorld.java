@@ -73,11 +73,11 @@ public class SocialWorld  {
 //		test();
 		
 //		fillTestData();
-/*		
+		
 		simulation.startSimulation();
 		visualize = true;
 		simulation.stopSimulation();
-*/		
+		
 	}
 	
 	
