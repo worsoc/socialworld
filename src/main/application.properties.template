@@ -1,0 +1,4 @@
+db.url=jdbc:mariadb://localhost:3306/sw1?sslMode=disable
+db.user=dein_lokaler_user
+db.password=dein_lokales_passwort
+

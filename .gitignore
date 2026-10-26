@@ -22,5 +22,8 @@ bin
 # Ignore lib folder
 lib/
 
+# Ignore local config file
+src/main/resources/application.properties
+
 tileterm*.txt
 onlyLs*.txt
