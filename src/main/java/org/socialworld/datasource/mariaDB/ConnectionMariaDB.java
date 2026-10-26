@@ -22,6 +22,8 @@
 package org.socialworld.datasource.mariaDB;
 
 import java.sql.*;
+import java.io.InputStream;
+import java.util.Properties;
 
 
 /**
@@ -53,12 +55,11 @@ public class ConnectionMariaDB {
 
 	private ConnectionMariaDB() {
 		
-		try {		
-	// vor Upgrade auf 4.0.0:		connection = DriverManager.getConnection("jdbc:mariadb://localhost:3306/sw1", "sw", "sw");	
-			connection = DriverManager.getConnection("jdbc:mariadb://localhost:3306/sw1?sslMode=disable", "sw", "sw");
+		try {	
+			connection = getConnection();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			e.printStackTrace();	
 			return;	
 		}
 	
@@ -73,6 +74,33 @@ public class ConnectionMariaDB {
 
 	}
 	
+    private Connection getConnection() {
+        if (connection == null) {
+            try (InputStream input = ConnectionMariaDB.class.getClassLoader().getResourceAsStream("application.properties")) {
+                Properties prop = new Properties();
+                
+                if (input == null) {
+                    throw new RuntimeException("Sorry, application.properties not found!");
+                }
+
+                // Properties laden
+                prop.load(input);
+
+                // Werte auslesen
+                String url = prop.getProperty("db.url");
+                String user = prop.getProperty("db.user");
+                String password = prop.getProperty("db.password");
+
+                // Verbindung aufbauen
+                connection = DriverManager.getConnection(url, user, password);
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return connection;
+    }
+
 	public void close() {
 		
 		try 		{
