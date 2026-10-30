@@ -169,20 +169,20 @@ public class GlobalTerrainGenerator {
         for (int cy = 0; cy < h; cy++) {
             for (int cx = 0; cx < w; cx++) {
                 MacroMapCell cell = finalMap.getCell(cx, cy); int type = finalMacro[cy][cx];
-                if (type == TerrainProcessingCore.TYPE_SALTWATER)    { cell.setReferenceElevation(0.0);    cell.setCoverType("SALTWATER"); }
-                else if (type == TerrainProcessingCore.TYPE_WATER)    { cell.setReferenceElevation(115.0);  cell.setCoverType("WATER"); }
-                else if (type == TerrainProcessingCore.TYPE_COAST)    { cell.setReferenceElevation(15.0);   cell.setCoverType("SAND"); }
-                else if (type == TerrainProcessingCore.TYPE_PLAINS)   { cell.setReferenceElevation(120.0);  cell.setCoverType("GRASS"); }
-                else if (type == TerrainProcessingCore.TYPE_MOUNTAIN) { cell.setReferenceElevation(850.0);  cell.setCoverType("ROCK"); }
-                else if (type == TerrainProcessingCore.TYPE_SWAMP)    { cell.setReferenceElevation(90.0);   cell.setCoverType("MUD"); }
-                else if (type == TerrainProcessingCore.TYPE_GRAVEL)   { cell.setReferenceElevation(250.0);  cell.setCoverType("CRUSHEDROCK"); }
-                else if (type == TerrainProcessingCore.TYPE_SCREE)    { cell.setReferenceElevation(550.0);  cell.setCoverType("STONES"); }
-                else if (type == TerrainProcessingCore.TYPE_FOREST_FLOOR) { cell.setReferenceElevation(130.0); cell.setCoverType("MOSS"); }
-                else if (type == TerrainProcessingCore.TYPE_WOODLAND) { cell.setReferenceElevation(140.0);  cell.setCoverType("FOLIAGE"); }
-                else if (type == TerrainProcessingCore.TYPE_SHRUBLAND){ cell.setReferenceElevation(135.0);  cell.setCoverType("BRUSHWOOD"); }
-                else if (type == TerrainProcessingCore.TYPE_WASTELAND){ cell.setReferenceElevation(110.0);  cell.setCoverType("ASH"); }
-                else if (type == TerrainProcessingCore.TYPE_SNOW)     { cell.setReferenceElevation(950.0);  cell.setCoverType("SNOW"); }
-                else if (type == TerrainProcessingCore.TYPE_ICE)      { cell.setReferenceElevation(1050.0); cell.setCoverType("ICE"); }
+                if (type == TerrainProcessingCore.TYPE_SALTWATER)    { cell.setCoverType("SALTWATER"); }
+                else if (type == TerrainProcessingCore.TYPE_WATER)    { cell.setCoverType("WATER"); }
+                else if (type == TerrainProcessingCore.TYPE_COAST)    { cell.setCoverType("SAND"); }
+                else if (type == TerrainProcessingCore.TYPE_PLAINS)   { cell.setCoverType("GRASS"); }
+                else if (type == TerrainProcessingCore.TYPE_MOUNTAIN) { cell.setCoverType("ROCK"); }
+                else if (type == TerrainProcessingCore.TYPE_SWAMP)    { cell.setCoverType("MUD"); }
+                else if (type == TerrainProcessingCore.TYPE_GRAVEL)   { cell.setCoverType("CRUSHEDROCK"); }
+                else if (type == TerrainProcessingCore.TYPE_SCREE)    { cell.setCoverType("STONES"); }
+                else if (type == TerrainProcessingCore.TYPE_FOREST_FLOOR) { cell.setCoverType("MOSS"); }
+                else if (type == TerrainProcessingCore.TYPE_WOODLAND) { cell.setCoverType("FOLIAGE"); }
+                else if (type == TerrainProcessingCore.TYPE_SHRUBLAND){ cell.setCoverType("BRUSHWOOD"); }
+                else if (type == TerrainProcessingCore.TYPE_WASTELAND){ cell.setCoverType("ASH"); }
+                else if (type == TerrainProcessingCore.TYPE_SNOW)     { cell.setCoverType("SNOW"); }
+                else if (type == TerrainProcessingCore.TYPE_ICE)      { cell.setCoverType("ICE"); }
 
                 for (int my = 0; my < 81; my++) {
                     for (int mx = 0; mx < 81; mx++) {
@@ -196,7 +196,6 @@ public class GlobalTerrainGenerator {
         }
         return finalMap;
     }
-
     
     
 }

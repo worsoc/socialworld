@@ -68,10 +68,6 @@ public class GlobalTerrainImporter {
 
                 if (currentCell == null) continue;
 
-                if (line.startsWith("ELEVATION:")) {
-                    currentCell.setReferenceElevation(Double.parseDouble(line.substring(10)));
-                    continue;
-                }
                 if (line.startsWith("BASE_COVER:")) {
                     currentCell.setCoverType(line.substring(11));
                     continue;

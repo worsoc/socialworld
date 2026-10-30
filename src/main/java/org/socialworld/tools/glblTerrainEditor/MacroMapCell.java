@@ -29,7 +29,6 @@ import org.socialworld.attributes.GroundMaterial;
 public class MacroMapCell {
     private final int gridX;
     private final int gridY;
-    private double referenceElevation; 
     private String coverType;           
     
     public static final int MESO_GRID_SIZE = 81; 
@@ -45,10 +44,9 @@ public class MacroMapCell {
     // Value wird erst erzeugt, wenn tatsächlich ein Strauch gezeichnet wird.
     private final Map<Integer, int[][]> mesoStrauchMap;
 
-    public MacroMapCell(int gridX, int gridY, double initialElevation, String coverType) {
+    public MacroMapCell(int gridX, int gridY, String coverType) {
         this.gridX = gridX;
         this.gridY = gridY;
-        this.referenceElevation = initialElevation;
         this.coverType = coverType;
         
         this.mesoTerrain = new int[MESO_GRID_SIZE][MESO_GRID_SIZE];
@@ -189,8 +187,6 @@ public class MacroMapCell {
     public byte getMikroTerrainDelta(int gmx, int gmy) { return mikroTerrainDelta[gmx][gmy]; }
     public void setMikroTerrainDelta(int gmx, int gmy, byte terrainCode) { this.mikroTerrainDelta[gmx][gmy] = terrainCode; }
 
-    public double getReferenceElevation() { return referenceElevation; }
-    public void setReferenceElevation(double elevation) { this.referenceElevation = elevation; }
     public String getCoverType() { return coverType; }
     public void setCoverType(String coverType) { this.coverType = coverType; }
     public int getGridX() { return gridX; }
@@ -215,8 +211,6 @@ public class MacroMapCell {
         int lx = globalMikroX % 9;
         int ly = globalMikroY % 9;
 
-        double hoehe = this.getReferenceElevation();
-
         byte deltaCode = this.getMikroTerrainDelta(globalMikroX, globalMikroY);
         String terrain = (deltaCode == 99) ? this.getMesoTerrain(mx, my) : GTERenderColorPalette.getTerrainNameFromCode(deltaCode);
 
@@ -226,12 +220,11 @@ public class MacroMapCell {
 
         return String.format(
             "Kachel-Info bei 1m-Position [%d, %d]:\n" +
-            "  -> Makro-Höhe: %.2fm\n" +
             "  -> Befindet sich in Meso-Zelle (9m): [%d, %d]\n" +
             "  -> Echtes Terrain: %s %s\n" +
             "  -> Kronendach (Baum ID): %d\n" +
             "  -> Unterholz (Strauch ID): %d",
-            globalMikroX, globalMikroY, hoehe, mx, my, terrain, 
+            globalMikroX, globalMikroY, mx, my, terrain, 
             (deltaCode != 99 ? "(Generiert via TERRAIN_DELTA)" : "(Geerbt von Meso)"),
             baumId, strauchId
         );

@@ -30,14 +30,13 @@ public class GTERightSidebar extends JPanel {
         
         JRadioButton modeZoom = new JRadioButton("Zoom / Navigation", true); 
         editor.rbZoom = modeZoom;
-        JRadioButton modeElevation = new JRadioButton("Höhe bearbeiten");
         JRadioButton modeTerrain = new JRadioButton("Terrain zuweisen");
         JRadioButton modeBaum = new JRadioButton("Baum platzieren");   
         JRadioButton modeStrauch = new JRadioButton("Strauch platzieren"); 
         
         ButtonGroup modeGroup = new ButtonGroup();
-        modeGroup.add(modeZoom); modeGroup.add(modeElevation); modeGroup.add(modeTerrain); modeGroup.add(modeBaum); modeGroup.add(modeStrauch);
-        add(modeZoom); add(modeElevation); add(modeTerrain); add(modeBaum); add(modeStrauch);
+        modeGroup.add(modeZoom); modeGroup.add(modeTerrain); modeGroup.add(modeBaum); modeGroup.add(modeStrauch);
+        add(modeZoom); add(modeTerrain); add(modeBaum); add(modeStrauch);
 
         add(Box.createVerticalStrut(15));
         add(new JLabel("Pinsel-Größe (Radius):"));
@@ -52,11 +51,6 @@ public class GTERightSidebar extends JPanel {
         JPanel panelZoom = new JPanel(new BorderLayout());
         panelZoom.add(new JLabel("<html>Klicke links zum Hineinzoomen.<br>Klicke rechts zum Herauszoomen.</html>"), BorderLayout.NORTH);
         
-        JPanel panelElevation = new JPanel(new BorderLayout());
-        panelElevation.add(new JLabel("Ziel-Höhe (Meter):"), BorderLayout.NORTH);
-        JSlider elevationSlider = new JSlider(0, 2000, 100);
-        elevationSlider.setMajorTickSpacing(500); elevationSlider.setPaintTicks(true); elevationSlider.setPaintLabels(true);
-        panelElevation.add(elevationSlider, BorderLayout.CENTER);
         
         // --- SUCHE DIESE STELLE IN GTERightSidebar.java ---
         JPanel panelTerrain = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -105,17 +99,15 @@ public class GTERightSidebar extends JPanel {
         panelStrauch.add(strauchBox);
 
         
-        contextPanel.add(panelZoom, "ZOOM"); contextPanel.add(panelElevation, "HÖHE"); contextPanel.add(panelTerrain, "TERRAIN"); contextPanel.add(panelBaum, "BAUM"); contextPanel.add(panelStrauch, "STRAUCH");
+        contextPanel.add(panelZoom, "ZOOM"); contextPanel.add(panelTerrain, "TERRAIN"); contextPanel.add(panelBaum, "BAUM"); contextPanel.add(panelStrauch, "STRAUCH");
         add(contextPanel);
 
         CardLayout cl = (CardLayout) contextPanel.getLayout();
         modeZoom.addActionListener(e -> { canvas.setEditorMode("ZOOM"); cl.show(contextPanel, "ZOOM"); editor.updateStatusBarText(); });
-        modeElevation.addActionListener(e -> { canvas.setEditorMode("HÖHE"); cl.show(contextPanel, "HÖHE"); editor.updateStatusBarText(); });
         modeTerrain.addActionListener(e -> { canvas.setEditorMode("TERRAIN"); cl.show(contextPanel, "TERRAIN"); editor.updateStatusBarText(); });
         modeBaum.addActionListener(e -> { canvas.setEditorMode("BAUM"); cl.show(contextPanel, "BAUM"); editor.updateStatusBarText(); });
         modeStrauch.addActionListener(e -> { canvas.setEditorMode("STRAUCH"); cl.show(contextPanel, "STRAUCH"); editor.updateStatusBarText(); });
 
-        elevationSlider.addChangeListener(e -> canvas.setBrushElevation(elevationSlider.getValue()));
         terrainBox.addActionListener(e -> canvas.setBrushTerrain((String) terrainBox.getSelectedItem()));
         baumBox.addActionListener(e -> {
             String selected = (String) baumBox.getSelectedItem();

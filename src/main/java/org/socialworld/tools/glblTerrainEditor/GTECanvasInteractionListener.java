@@ -133,9 +133,7 @@ public class GTECanvasInteractionListener extends MouseAdapter {
     private void applyMacroPaint(int tx, int ty) {
         MacroMap macroMap = canvas.getMacroMap();
         MacroMapCell cell = macroMap.getCell(tx, ty);
-        if (canvas.getCurrentMode().equals("HÖHE")) {
-            macroMap.updateCellElevation(tx, ty, canvas.getCurrentBrushElevation());
-        } else if (canvas.getCurrentMode().equals("TERRAIN")) {
+        if (canvas.getCurrentMode().equals("TERRAIN")) {
             cell.setCoverType(canvas.getCurrentBrushTerrain());
             for (int mx = 0; mx < 81; mx++) {
                 for (int my = 0; my < 81; my++) {

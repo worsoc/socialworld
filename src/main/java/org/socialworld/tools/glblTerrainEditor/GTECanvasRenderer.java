@@ -55,7 +55,6 @@ public class GTECanvasRenderer {
                 
                 g2.setColor(new Color(255, 255, 255, 180));
                 g2.setFont(new Font("Arial", Font.PLAIN, 9));
-                g2.drawString((int)cell.getReferenceElevation() + "m", startX + 4, startY + 24);
             }
         }
     }

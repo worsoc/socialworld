@@ -26,7 +26,6 @@ public class GlobalTerrainExporter {
                     MacroMapCell cell = map.getCell(x, y);
                     
                     writer.write("MACRO_CELL[" + x + "," + y + "] {\n");
-                    writer.write("  ELEVATION:" + cell.getReferenceElevation() + "\n");
                     writer.write("  BASE_COVER:" + cell.getCoverType() + "\n");
                     
                     // --- EBENE A: MESO-LAYER ---
