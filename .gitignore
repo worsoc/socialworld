@@ -22,6 +22,9 @@ bin
 # Ignore lib folder
 lib/
 
+# Ignore claude config
+.claude/
+
 # Ignore local config file
 src/main/resources/application.properties
 
