@@ -17,7 +17,7 @@ public class GlobalTerrainExporter {
     public static void exportMap(MacroMap map, File targetFile) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(targetFile))) {
             
-            writer.write("# GlobalTerrain Max-Compressed Export File - Format Version 2.6\n");
+            writer.write("# GlobalTerrain Max-Compressed Export File - Format Version 2.7\n");
             writer.write("# Extended 13 Materials support (including snow & ice)\n");
             writer.write("DIMENSIONS_" + map.getWidth() + "_" + map.getHeight() + "\n\n");
 
@@ -27,7 +27,16 @@ public class GlobalTerrainExporter {
                     
                     writer.write("MACRO_CELL[" + x + "," + y + "] {\n");
                     writer.write("  BASE_COVER:" + cell.getCoverType() + "\n");
-                    
+
+                    // --- HÖHENRASTER AUS DEM MAPCREATIONTOOL (optional) ---
+                    if (cell.hasHeightRaster()) {
+                        writer.write("  HEIGHT_RASTER {\n");
+                        writer.write("    SOURCE:" + cell.getHeightRasterSource() + "\n");
+                        writer.write("    OFFSET:" + cell.getHeightRasterOffset() + "\n");
+                        writer.write("    TILES:" + String.join(",", cell.getHeightRaster().toTokens()) + "\n");
+                        writer.write("  }\n");
+                    }
+
                     // --- EBENE A: MESO-LAYER ---
                     writer.write("  MESO_LAYER {\n");
                     List<String> allMesoTokens = new ArrayList<>();

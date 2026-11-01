@@ -15,6 +15,9 @@ public class GlobalTerrainEditorCanvas extends JPanel {
 
     // Zoom-Zustand und Fokus-Punkte
     public enum ZoomLevel { MACRO, MESO, MIKRO }
+
+    public static final String MODE_HEIGHT_RASTER = "HOEHENRASTER";
+
     private ZoomLevel currentZoom = ZoomLevel.MACRO;
     private MacroMapCell selectedMacroCell = null;
     private int selectedMesoChunkX = 0;

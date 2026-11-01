@@ -28,6 +28,7 @@ import java.util.List;
 
 import org.socialworld.attributes.VegetationBush;
 import org.socialworld.attributes.VegetationTree;
+import org.socialworld.tools.mct.LTileRaster;
 
 /**
  * Version 2.8 (Final) - Korrigiert den Array-Übergabefehler beim Laden des Meso-Geländes.
@@ -39,6 +40,9 @@ public class GlobalTerrainImporter {
         MacroMapCell currentCell = null;
         String currentSection = "";
         int mesoRowIndex = 0;
+        String rasterSource = null;
+        String rasterOffset = null;
+        String rasterTiles = null;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(sourceFile))) {
             String line;
@@ -73,13 +77,27 @@ public class GlobalTerrainImporter {
                     continue;
                 }
 
-                if (line.startsWith("MESO_LAYER {") || line.startsWith("SHRUB_SCHABLONE {") || line.startsWith("TERRAIN_DELTA {")) {
+                if (line.startsWith("MESO_LAYER {") || line.startsWith("SHRUB_SCHABLONE {") || line.startsWith("TERRAIN_DELTA {") || line.startsWith("HEIGHT_RASTER {")) {
                     currentSection = line.substring(0, line.indexOf(" {")).trim();
+                    rasterSource = null;
+                    rasterOffset = null;
+                    rasterTiles = null;
                     continue;
                 }
-                if (line.equals("}")) { currentSection = ""; continue; }
+                if (line.equals("}")) {
+                    if (currentSection.equals("HEIGHT_RASTER")) {
+                        applyHeightRaster(currentCell, rasterSource, rasterOffset, rasterTiles);
+                    }
+                    currentSection = "";
+                    continue;
+                }
 
                 switch (currentSection) {
+                    case "HEIGHT_RASTER" -> {
+                        if (line.startsWith("SOURCE:")) rasterSource = line.substring(7);
+                        else if (line.startsWith("OFFSET:")) rasterOffset = line.substring(7);
+                        else if (line.startsWith("TILES:")) rasterTiles = line.substring(6);
+                    }
                     case "MESO_LAYER" -> {
                         List<String> decompressedMeso = unpackRLEStream(line);
                         int tokenIndex = 0;
@@ -148,6 +166,22 @@ public class GlobalTerrainImporter {
             }
         }
         return map;
+    }
+
+    /**
+     * Prüft einen eingelesenen HEIGHT_RASTER-Block und überträgt ihn in die Zelle.
+     * Ein fehlerhafter Block bricht das Laden ab, damit kein Raster unbemerkt verloren geht.
+     */
+    private static void applyHeightRaster(MacroMapCell cell, String source, String offset, String tiles) throws IOException {
+        String cellName = "MACRO_CELL[" + cell.getGridX() + "," + cell.getGridY() + "]";
+        if (source == null || offset == null || tiles == null) {
+            throw new IOException(cellName + ": HEIGHT_RASTER braucht SOURCE, OFFSET und TILES.");
+        }
+        try {
+            cell.setHeightRaster(LTileRaster.parse(tiles), source, Integer.parseInt(offset.trim()));
+        } catch (IllegalArgumentException e) {
+            throw new IOException(cellName + ": ungültiges HEIGHT_RASTER: " + e.getMessage(), e);
+        }
     }
 
     private static List<String> unpackRLEStream(String stream) {

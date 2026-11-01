@@ -32,11 +32,12 @@ public class GTERightSidebar extends JPanel {
         editor.rbZoom = modeZoom;
         JRadioButton modeTerrain = new JRadioButton("Terrain zuweisen");
         JRadioButton modeBaum = new JRadioButton("Baum platzieren");   
-        JRadioButton modeStrauch = new JRadioButton("Strauch platzieren"); 
-        
+        JRadioButton modeStrauch = new JRadioButton("Strauch platzieren");
+        JRadioButton modeHeightRaster = new JRadioButton("Höhenraster zuordnen");
+
         ButtonGroup modeGroup = new ButtonGroup();
-        modeGroup.add(modeZoom); modeGroup.add(modeTerrain); modeGroup.add(modeBaum); modeGroup.add(modeStrauch);
-        add(modeZoom); add(modeTerrain); add(modeBaum); add(modeStrauch);
+        modeGroup.add(modeZoom); modeGroup.add(modeTerrain); modeGroup.add(modeBaum); modeGroup.add(modeStrauch); modeGroup.add(modeHeightRaster);
+        add(modeZoom); add(modeTerrain); add(modeBaum); add(modeStrauch); add(modeHeightRaster);
 
         add(Box.createVerticalStrut(15));
         add(new JLabel("Pinsel-Größe (Radius):"));
@@ -99,7 +100,10 @@ public class GTERightSidebar extends JPanel {
         panelStrauch.add(strauchBox);
 
         
-        contextPanel.add(panelZoom, "ZOOM"); contextPanel.add(panelTerrain, "TERRAIN"); contextPanel.add(panelBaum, "BAUM"); contextPanel.add(panelStrauch, "STRAUCH");
+        JPanel panelHeightRaster = new JPanel(new BorderLayout());
+        panelHeightRaster.add(new JLabel("<html>Klicke auf der Weltkarte auf eine Zelle.</html>"), BorderLayout.NORTH);
+
+        contextPanel.add(panelZoom, "ZOOM"); contextPanel.add(panelTerrain, "TERRAIN"); contextPanel.add(panelBaum, "BAUM"); contextPanel.add(panelStrauch, "STRAUCH"); contextPanel.add(panelHeightRaster, GlobalTerrainEditorCanvas.MODE_HEIGHT_RASTER);
         add(contextPanel);
 
         CardLayout cl = (CardLayout) contextPanel.getLayout();
@@ -107,6 +111,7 @@ public class GTERightSidebar extends JPanel {
         modeTerrain.addActionListener(e -> { canvas.setEditorMode("TERRAIN"); cl.show(contextPanel, "TERRAIN"); editor.updateStatusBarText(); });
         modeBaum.addActionListener(e -> { canvas.setEditorMode("BAUM"); cl.show(contextPanel, "BAUM"); editor.updateStatusBarText(); });
         modeStrauch.addActionListener(e -> { canvas.setEditorMode("STRAUCH"); cl.show(contextPanel, "STRAUCH"); editor.updateStatusBarText(); });
+        modeHeightRaster.addActionListener(e -> { canvas.setEditorMode(GlobalTerrainEditorCanvas.MODE_HEIGHT_RASTER); cl.show(contextPanel, GlobalTerrainEditorCanvas.MODE_HEIGHT_RASTER); editor.updateStatusBarText(); });
 
         terrainBox.addActionListener(e -> canvas.setBrushTerrain((String) terrainBox.getSelectedItem()));
         baumBox.addActionListener(e -> {

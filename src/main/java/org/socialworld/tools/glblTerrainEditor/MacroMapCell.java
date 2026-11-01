@@ -21,6 +21,7 @@ package org.socialworld.tools.glblTerrainEditor;
 import java.util.HashMap;
 import java.util.Map;
 import org.socialworld.attributes.GroundMaterial;
+import org.socialworld.tools.mct.LTileRaster;
 
 /**
  * Speicheroptimierte Version der MacroMapCell.
@@ -43,6 +44,11 @@ public class MacroMapCell {
     // Key ist ein komprimierter Integer-Index aus mx und my.
     // Value wird erst erzeugt, wenn tatsächlich ein Strauch gezeichnet wird.
     private final Map<Integer, int[][]> mesoStrauchMap;
+
+    // 3. HÖHENRASTER AUS DEM MAPCREATIONTOOL (optional, null = kein Raster zugeordnet)
+    private LTileRaster heightRaster;
+    private String heightRasterSource;
+    private int heightRasterOffset;
 
     public MacroMapCell(int gridX, int gridY, String coverType) {
         this.gridX = gridX;
@@ -191,7 +197,32 @@ public class MacroMapCell {
     public void setCoverType(String coverType) { this.coverType = coverType; }
     public int getGridX() { return gridX; }
     public int getGridY() { return gridY; }
-    
+
+    // --- HÖHENRASTER ---
+
+    public boolean hasHeightRaster() { return heightRaster != null; }
+    public LTileRaster getHeightRaster() { return heightRaster; }
+    public String getHeightRasterSource() { return heightRasterSource; }
+    public int getHeightRasterOffset() { return heightRasterOffset; }
+
+    /**
+     * Ordnet der Zelle ein Raster zu.
+     *
+     * @param raster der Rasterinhalt
+     * @param source Name der Quelldatei, dient nur als Herkunftsangabe
+     * @param offset Höhenversatz der Zelle gegenüber den relativen Höhen des Rasters
+     */
+    public void setHeightRaster(LTileRaster raster, String source, int offset) {
+        this.heightRaster = raster;
+        this.heightRasterSource = source;
+        this.heightRasterOffset = offset;
+    }
+
+    public void clearHeightRaster() {
+        setHeightRaster(null, null, 0);
+    }
+
+
     /**
      * Rechnet strukturierte Meso- und Mikro-Koordinaten in das flache, 
      * zweidimensionale 729x729 Mikro-Delta-Gitter der Zelle um.

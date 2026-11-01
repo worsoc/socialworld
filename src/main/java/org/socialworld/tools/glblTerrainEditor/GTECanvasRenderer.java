@@ -52,11 +52,29 @@ public class GTECanvasRenderer {
                 int startY = localY * cellSize;
                 
                 renderPixelPerfectMacroCell(g2, cell, startX, startY, cellSize);
-                
+
+                if (cell.hasHeightRaster()) {
+                    renderHeightRasterMarker(g2, startX, startY, cellSize);
+                }
+
                 g2.setColor(new Color(255, 255, 255, 180));
                 g2.setFont(new Font("Arial", Font.PLAIN, 9));
             }
         }
+    }
+
+    /**
+     * Markiert eine Zelle mit zugeordnetem Höhenraster durch ein Dreieck in der Ecke oben rechts.
+     */
+    private void renderHeightRasterMarker(Graphics2D g2, int startX, int startY, int cellSize) {
+        int markerSize = cellSize / 3;
+        int right = startX + cellSize;
+        int[] xPoints = { right - markerSize, right, right };
+        int[] yPoints = { startY, startY, startY + markerSize };
+        g2.setColor(new Color(255, 140, 0));
+        g2.fillPolygon(xPoints, yPoints, 3);
+        g2.setColor(Color.BLACK);
+        g2.drawPolygon(xPoints, yPoints, 3);
     }
 
     private void renderPixelPerfectMacroCell(Graphics2D g2, MacroMapCell cell, int startX, int startY, int cellSize) {

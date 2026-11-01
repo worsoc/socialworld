@@ -2,13 +2,17 @@ package org.socialworld.tools.glblTerrainEditor;
 
 import javax.swing.*;
 import org.socialworld.attributes.GroundMaterial;
+import org.socialworld.tools.mct.LTileRaster;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
 
 public class GTECanvasInteractionListener extends MouseAdapter {
     private final GlobalTerrainEditorCanvas canvas;
     private final GlobalTerrainEditor editor;
-    	
+    private File lastRasterDirectory;
+
     public GTECanvasInteractionListener(GlobalTerrainEditorCanvas canvas, GlobalTerrainEditor editor) {
         this.canvas = canvas;
         this.editor = editor;
@@ -22,6 +26,8 @@ public class GTECanvasInteractionListener extends MouseAdapter {
         }
         if (canvas.getCurrentMode().equals("ZOOM")) {
             handleZoomIn(e.getX(), e.getY());
+        } else if (canvas.getCurrentMode().equals(GlobalTerrainEditorCanvas.MODE_HEIGHT_RASTER)) {
+            handleHeightRasterClick(e.getX(), e.getY());
         } else {
             handleMousePaint(e.getX(), e.getY());
         }
@@ -29,7 +35,9 @@ public class GTECanvasInteractionListener extends MouseAdapter {
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        if (!canvas.getCurrentMode().equals("ZOOM") && SwingUtilities.isLeftMouseButton(e)) {
+        if (!canvas.getCurrentMode().equals("ZOOM")
+                && !canvas.getCurrentMode().equals(GlobalTerrainEditorCanvas.MODE_HEIGHT_RASTER)
+                && SwingUtilities.isLeftMouseButton(e)) {
             handleMousePaint(e.getX(), e.getY());
         }
     }
@@ -60,6 +68,50 @@ public class GTECanvasInteractionListener extends MouseAdapter {
                 canvas.setCurrentZoom(GlobalTerrainEditorCanvas.ZoomLevel.MIKRO);
                 canvas.repaint();
             }
+        }
+    }
+
+    /**
+     * Ordnet der angeklickten Makro-Zelle ein Raster zu oder ersetzt bzw. entfernt ein vorhandenes.
+     * Die Zuordnung gilt nur auf der Makro-Ebene.
+     */
+    private void handleHeightRasterClick(int mouseX, int mouseY) {
+        if (canvas.getCurrentZoom() != GlobalTerrainEditorCanvas.ZoomLevel.MACRO) return;
+
+        MacroMap macroMap = canvas.getMacroMap();
+        int cellSize = canvas.getCellSizeInPixels();
+        int cellX = GTEQuadrant.toGlobal(mouseX / cellSize, canvas.getCurrentMacroOffsetX());
+        int cellY = GTEQuadrant.toGlobal(mouseY / cellSize, canvas.getCurrentMacroOffsetY());
+        if (cellX < 0 || cellX >= macroMap.getWidth() || cellY < 0 || cellY >= macroMap.getHeight()) return;
+
+        MacroMapCell cell = macroMap.getCell(cellX, cellY);
+
+        if (cell.hasHeightRaster()) {
+            String[] options = { "Ersetzen", "Entfernen", "Abbrechen" };
+            int choice = JOptionPane.showOptionDialog(canvas,
+                    "Zelle [" + cellX + "," + cellY + "] hat bereits ein Raster:\n" + cell.getHeightRasterSource(),
+                    "Höhenraster", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
+            if (choice == 1) {
+                cell.clearHeightRaster();
+                canvas.repaint();
+                return;
+            }
+            if (choice != 0) return;
+        }
+
+        JFileChooser chooser = (lastRasterDirectory != null) ? new JFileChooser(lastRasterDirectory) : new JFileChooser();
+        chooser.setDialogTitle("onlyLs-Datei für Zelle [" + cellX + "," + cellY + "] auswählen");
+        chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Textdateien (*.txt)", "txt"));
+        if (chooser.showOpenDialog(canvas) != JFileChooser.APPROVE_OPTION) return;
+
+        File file = chooser.getSelectedFile();
+        lastRasterDirectory = file.getParentFile();
+        try {
+            cell.setHeightRaster(LTileRaster.fromFile(file), file.getName(), 0);
+            canvas.repaint();
+        } catch (IOException | IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(canvas, file.getName() + " wurde nicht zugeordnet:\n" + ex.getMessage(),
+                    "Ungültiges Raster", JOptionPane.ERROR_MESSAGE);
         }
     }
 
