@@ -28,9 +28,43 @@ public final class LTileRaster {
 	private final int[] types;
 	private final int[] baseHeights;
 
+	private final int[] north;
+	private final int[] east;
+	private final int[] south;
+	private final int[] west;
+
 	private LTileRaster(int[] types, int[] baseHeights) {
 		this.types = types;
 		this.baseHeights = baseHeights;
+
+		List<VisualTile> grid = new ArrayList<>(TILE_COUNT);
+		for (int i = 0; i < TILE_COUNT; i++) {
+			grid.add(new VisualTile(types[i], baseHeights[i]));
+		}
+		this.north = BorderCalculator.calculateNorth(grid);
+		this.east = BorderCalculator.calculateEast(grid);
+		this.south = BorderCalculator.calculateSouth(grid);
+		this.west = BorderCalculator.calculateWest(grid);
+	}
+
+	/** Eckhöhen des Nordrands von West nach Ost (10 Werte). */
+	public int[] getNorthEdge() { return north.clone(); }
+	/** Eckhöhen des Ostrands von Nord nach Süd (10 Werte). */
+	public int[] getEastEdge() { return east.clone(); }
+	/** Eckhöhen des Südrands von West nach Ost (10 Werte). */
+	public int[] getSouthEdge() { return south.clone(); }
+	/** Eckhöhen des Westrands von Nord nach Süd (10 Werte). */
+	public int[] getWestEdge() { return west.clone(); }
+
+	/**
+	 * Liefert das Raster als 9x9-Grid [Reihe][Spalte] für die Darstellung, zum Beispiel in MapPanel.
+	 */
+	public VisualTile[][] toGrid() {
+		VisualTile[][] grid = new VisualTile[9][9];
+		for (int i = 0; i < TILE_COUNT; i++) {
+			grid[i / 9][i % 9] = new VisualTile(types[i], baseHeights[i]);
+		}
+		return grid;
 	}
 
 	public static LTileRaster fromFile(File file) throws IOException {

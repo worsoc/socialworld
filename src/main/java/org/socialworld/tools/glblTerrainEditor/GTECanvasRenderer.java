@@ -54,7 +54,7 @@ public class GTECanvasRenderer {
                 renderPixelPerfectMacroCell(g2, cell, startX, startY, cellSize);
 
                 if (cell.hasHeightRaster()) {
-                    renderHeightRasterMarker(g2, startX, startY, cellSize);
+                    renderHeightRasterMarker(g2, startX, startY, cellSize, HeightRasterPlacement.hasConflict(macroMap, x, y));
                 }
 
                 g2.setColor(new Color(255, 255, 255, 180));
@@ -64,14 +64,15 @@ public class GTECanvasRenderer {
     }
 
     /**
-     * Markiert eine Zelle mit zugeordnetem Höhenraster durch ein Dreieck in der Ecke oben rechts.
+     * Markiert eine Zelle mit zugeordnetem Höhenraster durch ein Dreieck in der Ecke oben rechts:
+     * orange, wenn das Raster zu den Nachbarn passt, rot bei einem Konflikt.
      */
-    private void renderHeightRasterMarker(Graphics2D g2, int startX, int startY, int cellSize) {
+    private void renderHeightRasterMarker(Graphics2D g2, int startX, int startY, int cellSize, boolean conflict) {
         int markerSize = cellSize / 3;
         int right = startX + cellSize;
         int[] xPoints = { right - markerSize, right, right };
         int[] yPoints = { startY, startY, startY + markerSize };
-        g2.setColor(new Color(255, 140, 0));
+        g2.setColor(conflict ? Color.RED : new Color(255, 140, 0));
         g2.fillPolygon(xPoints, yPoints, 3);
         g2.setColor(Color.BLACK);
         g2.drawPolygon(xPoints, yPoints, 3);

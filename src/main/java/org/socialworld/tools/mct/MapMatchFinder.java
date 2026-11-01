@@ -46,27 +46,6 @@ public class MapMatchFinder {
         
     }
 
-    /**
-     * Normiert eine Höhenlinie, sodass sie immer bei 0 beginnt.
-     */
-    private static int[] normalize(int[] profile) {
-        if (profile == null || profile.length == 0) return null;
-        int[] normalized = new int[profile.length];
-        int baseValue = profile[0];
-        for (int i = 0; i < profile.length; i++) {
-            normalized[i] = profile[i] - baseValue;
-        }
-        return normalized;
-    }
-
-    /**
-     * Prüft, ob zwei Profile nach der Normierung exakt übereinstimmen.
-     */
-    private static boolean matches(int[] profileA, int[] profileB) {
-        if (profileA == null || profileB == null) return false;
-        return Arrays.equals(normalize(profileA), normalize(profileB));
-    }
-
     public static void main(String[] args) {
         // 1. Dateiauswahl-Dialog initialisieren
         JFileChooser fileChooser = new JFileChooser();
@@ -165,22 +144,22 @@ public class MapMatchFinder {
 	                if (tileA == tileB) continue; 
 	
 	                // Nord -> Süd Match (Wenn tileA NÖRDLICH von tileB platziert wird)
-	                if (matches(tileA.south, tileB.north)) {
+	                if (EdgeProfile.matches(tileA.south, tileB.north)) {
 	                    connections.add("  -> SÜDLICH anlegbar: " + tileB.name + " (an deren NORD-Kante)");
 	                }
 	                
 	                // Süd -> Nord Match (Wenn tileA SÜDLICH von tileB platziert wird)
-	                if (matches(tileA.north, tileB.south)) {
+	                if (EdgeProfile.matches(tileA.north, tileB.south)) {
 	                    connections.add("  -> NÖRDLICH anlegbar: " + tileB.name + " (an deren SÜD-Kante)");
 	                }
 	
 	                // Ost -> West Match (Wenn tileA WESTLICH von tileB platziert wird)
-	                if (matches(tileA.east, tileB.west)) {
+	                if (EdgeProfile.matches(tileA.east, tileB.west)) {
 	                    connections.add("  -> ÖSTLICH anlegbar: " + tileB.name + " (an deren WEST-Kante)");
 	                }
 	
 	                // West -> Ost Match (Wenn tileA ÖSTLICH von tileB platziert wird)
-	                if (matches(tileA.west, tileB.east)) {
+	                if (EdgeProfile.matches(tileA.west, tileB.east)) {
 	                    connections.add("  -> WESTLICH anlegbar: " + tileB.name + " (an deren OST-Kante)");
 	                }
 	            }
@@ -387,19 +366,19 @@ public class MapMatchFinder {
 
                 // Anforderungen abrufen (Kanten-Mapping)
                 if (r > 0 && incompleteGrid[r - 1][c] != null) {
-                    requiredNorth = normalize(incompleteGrid[r - 1][c].south);
+                    requiredNorth = EdgeProfile.normalize(incompleteGrid[r - 1][c].south);
                     System.out.println("  -> Nordrand (von '" + incompleteGrid[r - 1][c].name + "'): " + Arrays.toString(requiredNorth));
                 }
                 if (c < 2 && incompleteGrid[r][c + 1] != null) {
-                    requiredEast = normalize(incompleteGrid[r][c + 1].west);
+                    requiredEast = EdgeProfile.normalize(incompleteGrid[r][c + 1].west);
                     System.out.println("  -> Ostrand  (von '" + incompleteGrid[r][c + 1].name + "'): " + Arrays.toString(requiredEast));
                 }
                 if (r < 2 && incompleteGrid[r + 1][c] != null) {
-                    requiredSouth = normalize(incompleteGrid[r + 1][c].north);
+                    requiredSouth = EdgeProfile.normalize(incompleteGrid[r + 1][c].north);
                     System.out.println("  -> Südrand  (von '" + incompleteGrid[r + 1][c].name + "'): " + Arrays.toString(requiredSouth));
                 }
                 if (c > 0 && incompleteGrid[r][c - 1] != null) {
-                    requiredWest = normalize(incompleteGrid[r][c - 1].east);
+                    requiredWest = EdgeProfile.normalize(incompleteGrid[r][c - 1].east);
                     System.out.println("  -> Westrand (von '" + incompleteGrid[r][c - 1].name + "'): " + Arrays.toString(requiredWest));
                 }
 
@@ -578,11 +557,11 @@ public class MapMatchFinder {
                 
                 // Validierung nach oben (Nord-Kante trifft Süd-Kante des oberen Nachbarn)
                 if (r > 0 && grid[r-1][c] != null) {
-                    if (!matches(tile.north, grid[r-1][c].south)) continue;
+                    if (!EdgeProfile.matches(tile.north, grid[r-1][c].south)) continue;
                 }
                 // Validierung nach links (West-Kante trifft Ost-Kante des linken Nachbarn)
                 if (c > 0 && grid[r][c-1] != null) {
-                    if (!matches(tile.west, grid[r][c-1].east)) continue;
+                    if (!EdgeProfile.matches(tile.west, grid[r][c-1].east)) continue;
                 }
                 
                 // Schritt vorwärts

@@ -2,16 +2,14 @@ package org.socialworld.tools.glblTerrainEditor;
 
 import javax.swing.*;
 import org.socialworld.attributes.GroundMaterial;
-import org.socialworld.tools.mct.LTileRaster;
+import org.socialworld.tools.mct.LTileRasterLibrary;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
-import java.io.IOException;
 
 public class GTECanvasInteractionListener extends MouseAdapter {
     private final GlobalTerrainEditorCanvas canvas;
     private final GlobalTerrainEditor editor;
-    private File lastRasterDirectory;
+    private final LTileRasterLibrary rasterLibrary = new LTileRasterLibrary();
 
     public GTECanvasInteractionListener(GlobalTerrainEditorCanvas canvas, GlobalTerrainEditor editor) {
         this.canvas = canvas;
@@ -84,35 +82,8 @@ public class GTECanvasInteractionListener extends MouseAdapter {
         int cellY = GTEQuadrant.toGlobal(mouseY / cellSize, canvas.getCurrentMacroOffsetY());
         if (cellX < 0 || cellX >= macroMap.getWidth() || cellY < 0 || cellY >= macroMap.getHeight()) return;
 
-        MacroMapCell cell = macroMap.getCell(cellX, cellY);
-
-        if (cell.hasHeightRaster()) {
-            String[] options = { "Ersetzen", "Entfernen", "Abbrechen" };
-            int choice = JOptionPane.showOptionDialog(canvas,
-                    "Zelle [" + cellX + "," + cellY + "] hat bereits ein Raster:\n" + cell.getHeightRasterSource(),
-                    "Höhenraster", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
-            if (choice == 1) {
-                cell.clearHeightRaster();
-                canvas.repaint();
-                return;
-            }
-            if (choice != 0) return;
-        }
-
-        JFileChooser chooser = (lastRasterDirectory != null) ? new JFileChooser(lastRasterDirectory) : new JFileChooser();
-        chooser.setDialogTitle("onlyLs-Datei für Zelle [" + cellX + "," + cellY + "] auswählen");
-        chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Textdateien (*.txt)", "txt"));
-        if (chooser.showOpenDialog(canvas) != JFileChooser.APPROVE_OPTION) return;
-
-        File file = chooser.getSelectedFile();
-        lastRasterDirectory = file.getParentFile();
-        try {
-            cell.setHeightRaster(LTileRaster.fromFile(file), file.getName(), 0);
-            canvas.repaint();
-        } catch (IOException | IllegalArgumentException ex) {
-            JOptionPane.showMessageDialog(canvas, file.getName() + " wurde nicht zugeordnet:\n" + ex.getMessage(),
-                    "Ungültiges Raster", JOptionPane.ERROR_MESSAGE);
-        }
+        new GTEHeightRasterDialog(editor, macroMap, cellX, cellY, rasterLibrary).open();
+        canvas.repaint();
     }
 
     private void handleZoomOut() {

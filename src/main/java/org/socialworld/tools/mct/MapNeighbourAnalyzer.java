@@ -80,21 +80,15 @@ public class MapNeighbourAnalyzer {
 
         for (File file : files) {
             try {
-                String content = Files.readString(file.toPath());
-                List<VisualTile> grid = parseGrid(content);
-
-                if (grid.size() != 81) {
-                    System.err.println("Warnung: " + file.getName() + " übersprungen (Kachelanzahl " + grid.size() + " != 81).");
-                    continue;
-                }
+                LTileRaster raster = LTileRaster.fromFile(file);
 
                 String fileName = file.getName();
 
-                // Ränder berechnen und als String-Key formatieren
-                String northKey = Arrays.toString(BorderCalculator.calculateNorth(grid));
-                String eastKey  = Arrays.toString(BorderCalculator.calculateEast(grid));
-                String southKey = Arrays.toString(BorderCalculator.calculateSouth(grid));
-                String westKey  = Arrays.toString(BorderCalculator.calculateWest(grid));
+                // Ränder als String-Key formatieren
+                String northKey = Arrays.toString(raster.getNorthEdge());
+                String eastKey  = Arrays.toString(raster.getEastEdge());
+                String southKey = Arrays.toString(raster.getSouthEdge());
+                String westKey  = Arrays.toString(raster.getWestEdge());
 
                 // Dateinamen in die jeweiligen Maps einsortieren
                 northBorders.computeIfAbsent(northKey, k -> new ArrayList<>()).add(fileName);
@@ -103,7 +97,7 @@ public class MapNeighbourAnalyzer {
                 westBorders.computeIfAbsent(westKey, k -> new ArrayList<>()).add(fileName);
 
             } catch (Exception e) {
-                System.err.println("Fehler bei Datei " + file.getName() + ": " + e.getMessage());
+                System.err.println("Datei " + file.getName() + " übersprungen: " + e.getMessage());
             }
         }
 
@@ -131,18 +125,6 @@ public class MapNeighbourAnalyzer {
         }
         writer.newLine();
     }
-    
-    private static List<VisualTile> parseGrid(String content) {
-        List<VisualTile> tiles = new ArrayList<>();
-        Matcher m = Pattern.compile("L_(-?\\d+)_(-?\\d+)").matcher(content);
-        while (m.find()) {
-            int type = Integer.parseInt(m.group(1));
-            int baseHeight = Integer.parseInt(m.group(2));
-            tiles.add(new VisualTile(type, baseHeight));
-        }
-        return tiles;
-    }
-
     
  
  

@@ -14,7 +14,7 @@ public class MapVisualizer extends JFrame {
     private MapPanel mapPanel;
     private final MapFileManager fileManager = new MapFileManager();
     
-    private JButton prevButton, nextButton, acceptButton, rejectButton;
+    private JButton prevButton, nextButton, acceptButton, rejectButton, acceptAllButton;
 
     public MapVisualizer() {
         setTitle("3D Map Visualizer");
@@ -57,6 +57,10 @@ public class MapVisualizer extends JFrame {
         rejectButton = new JButton("✕ Verwerfen");
         rejectButton.addActionListener(e -> handleRatingAction("tileterm_deletable_"));
         toolBar.add(rejectButton);
+
+        acceptAllButton = new JButton("✓✓ Alle übernehmen");
+        acceptAllButton.addActionListener(e -> handleAcceptAll());
+        toolBar.add(acceptAllButton);
 
         // --- NEU: RadioButtons für die Modus-Auswahl ---
         JRadioButton rbSingle = new JRadioButton("Einzelansicht (9x9)");
@@ -125,6 +129,29 @@ public class MapVisualizer extends JFrame {
             }
         } else {
             JOptionPane.showMessageDialog(this, "Datei blockiert.", "Fehler", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void handleAcceptAll() {
+        int fileCount = fileManager.getMapFiles().size();
+        int choice = JOptionPane.showConfirmDialog(this,
+                fileCount + " Dateien übernehmen?\n"
+                        + fileManager.getHiddenInvalidCount() + " ausgeblendete Dateien (ungültig oder unlesbar) bleiben unverändert.",
+                "Alle übernehmen", JOptionPane.YES_NO_OPTION);
+        if (choice != JOptionPane.YES_OPTION) return;
+
+        int renamedCount = fileManager.renameAndRemoveAll("onlyLs_");
+
+        if (fileManager.getMapFiles().isEmpty()) {
+            setTitle("3D Map Visualizer - Keine weiteren Maps");
+            updateButtons();
+            JOptionPane.showMessageDialog(this, renamedCount + " Dateien übernommen.", "Fertig", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            refreshUI();
+            JOptionPane.showMessageDialog(this,
+                    renamedCount + " Dateien übernommen, " + fileManager.getMapFiles().size()
+                            + " nicht (blockiert oder Zieldatei existiert bereits).",
+                    "Nicht alle übernommen", JOptionPane.WARNING_MESSAGE);
         }
     }
 
@@ -303,6 +330,7 @@ public class MapVisualizer extends JFrame {
         nextButton.setEnabled(hasFiles && index < size - 1);
         acceptButton.setEnabled(hasFiles && fileManager.isRatingMode());
         rejectButton.setEnabled(hasFiles && fileManager.isRatingMode());
+        acceptAllButton.setEnabled(hasFiles && fileManager.isRatingMode());
     }
 
     public static void main(String[] args) {
