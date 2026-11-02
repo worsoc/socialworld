@@ -18,6 +18,7 @@ public class GlobalTerrainEditorCanvas extends JPanel {
     public enum ZoomLevel { MACRO, MESO, MIKRO }
 
     public static final String MODE_HEIGHT_RASTER = "HOEHENRASTER";
+    public static final String MODE_GENERATE_RASTER = "RASTER_ERZEUGEN";
 
     private ZoomLevel currentZoom = ZoomLevel.MACRO;
     private MacroMapCell selectedMacroCell = null;

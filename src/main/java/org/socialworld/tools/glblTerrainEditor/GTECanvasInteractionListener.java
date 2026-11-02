@@ -33,6 +33,8 @@ public class GTECanvasInteractionListener extends MouseAdapter {
             handleZoomIn(e.getX(), e.getY());
         } else if (canvas.getCurrentMode().equals(GlobalTerrainEditorCanvas.MODE_HEIGHT_RASTER)) {
             handleHeightRasterClick(e.getX(), e.getY());
+        } else if (canvas.getCurrentMode().equals(GlobalTerrainEditorCanvas.MODE_GENERATE_RASTER)) {
+            handleGenerateRasterClick(e.getX(), e.getY());
         } else {
             handleMousePaint(e.getX(), e.getY());
         }
@@ -43,6 +45,7 @@ public class GTECanvasInteractionListener extends MouseAdapter {
         if (!isHeightViewOpen()
                 && !canvas.getCurrentMode().equals("ZOOM")
                 && !canvas.getCurrentMode().equals(GlobalTerrainEditorCanvas.MODE_HEIGHT_RASTER)
+                && !canvas.getCurrentMode().equals(GlobalTerrainEditorCanvas.MODE_GENERATE_RASTER)
                 && SwingUtilities.isLeftMouseButton(e)) {
             handleMousePaint(e.getX(), e.getY());
         }
@@ -128,6 +131,18 @@ public class GTECanvasInteractionListener extends MouseAdapter {
         new GTEHeightRasterDialog(editor, macroMap, cellX, cellY, canvas.getRasterLibrary()).open();
         canvas.repaint();
         if (canvas.getHeightView() != null) canvas.getHeightView().refresh();
+    }
+
+    /**
+     * Erzeugt für die angeklickte Makro-Zelle ein Raster, das zu ihren belegten Nachbarn passt.
+     * Ein vorhandenes Raster der Zelle wird dabei ersetzt.
+     */
+    private void handleGenerateRasterClick(int mouseX, int mouseY) {
+        int[] cell = macroCellAt(mouseX, mouseY);
+        if (cell == null) return;
+
+        new GTEHeightRasterGenerationDialog(editor, canvas.getMacroMap(), cell[0], cell[1]).generate();
+        canvas.repaint();
     }
 
     private void handleZoomOut() {

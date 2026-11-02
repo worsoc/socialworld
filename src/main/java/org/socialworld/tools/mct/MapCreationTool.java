@@ -2201,14 +2201,36 @@ public class MapCreationTool {
 
     // Globale Zähler für die Status-Anzeige und die Reißleine
     private static int backtrackSteps = 0;
+
+    // Zeitpunkt, ab dem der Solver aufgibt (siehe fillSkeleton mit Zeitlimit)
+    private static volatile long solverDeadlineMillis = Long.MAX_VALUE;
     
     // --- DIE REISSLEINE ---
     // Wenn ein Sektor nach 5.000.000 Schritten nicht gelöst ist, brechen wir ab!
     private static final int MAX_BACKTRACK_STEPS = 500000000; 
 
  
+    /**
+     * Wie fillSkeleton, gibt aber spätestens nach timeoutMillis auf.
+     */
+    public static boolean fillSkeleton(String skeleton, String targetFilename, long timeoutMillis) {
+    	solverDeadlineMillis = System.currentTimeMillis() + timeoutMillis;
+    	try {
+    		return fillSkeleton(skeleton, targetFilename);
+    	} finally {
+    		solverDeadlineMillis = Long.MAX_VALUE;
+    	}
+    }
+
+    /**
+     * Lässt einen laufenden fillSkeleton-Aufruf mit Zeitlimit sofort aufgeben.
+     */
+    public static void cancelFillSkeleton() {
+    	solverDeadlineMillis = 0;
+    }
+
     public static boolean fillSkeleton(String skeleton, String targetFilename) {
-    	
+
     	boolean success = false;;
         MapCreationTool localTool = new MapCreationTool(skeleton);
          
@@ -2340,6 +2362,8 @@ public class MapCreationTool {
 
         // Innerhalb deiner Hauptschleife (Schritt 3 - Iteration über alle generierten Muster):
         for (int[] muster : valideReihe4Muster) { // Der Generator liefert jetzt int[] statt List<Tile>
+        	if (System.currentTimeMillis() > solverDeadlineMillis) break;
+
         	versuch++;
 
             // Reihe 1 bis 4 säubern
@@ -2404,7 +2428,7 @@ public class MapCreationTool {
 	 // sortiert nach deiner gewünschten Heuristik (z.B. erst die 4 Innenecken, dann Innenkanten, etc.)
 	 private static boolean solveStaticOrder(int versuch, MapCreationTool localTool, List<Integer> staticOrder, int currentIndex) {
 	     // 1. REISSLEINE PRÜFEN
-	     if (backtrackSteps >= MAX_BACKTRACK_STEPS) {
+	     if (backtrackSteps >= MAX_BACKTRACK_STEPS || System.currentTimeMillis() > solverDeadlineMillis) {
 	         return false;
 	     }
 	

@@ -5,7 +5,6 @@ import org.socialworld.attributes.GroundMaterial;
 import org.socialworld.tools.mct.LTileRasterLibrary;
 import java.awt.*;
 import java.io.File;
-import java.util.Random;
 
 /**
  * Die bereinigte Sidebar. Bindet das GTEGeneratorPanel ein 
@@ -40,8 +39,9 @@ public class GTERightSidebar extends JPanel {
         JRadioButton modeHeightRaster = new JRadioButton("Höhenraster zuordnen");
 
         ButtonGroup modeGroup = new ButtonGroup();
-        modeGroup.add(modeZoom); modeGroup.add(modeTerrain); modeGroup.add(modeBaum); modeGroup.add(modeStrauch); modeGroup.add(modeHeightRaster);
-        add(modeZoom); add(modeTerrain); add(modeBaum); add(modeStrauch); add(modeHeightRaster);
+        JRadioButton modeGenerateRaster = new JRadioButton("Höhenraster erzeugen");
+        modeGroup.add(modeZoom); modeGroup.add(modeTerrain); modeGroup.add(modeBaum); modeGroup.add(modeStrauch); modeGroup.add(modeHeightRaster); modeGroup.add(modeGenerateRaster);
+        add(modeZoom); add(modeTerrain); add(modeBaum); add(modeStrauch); add(modeHeightRaster); add(modeGenerateRaster);
 
         add(Box.createVerticalStrut(15));
         add(new JLabel("Pinsel-Größe (Radius):"));
@@ -108,6 +108,9 @@ public class GTERightSidebar extends JPanel {
         panelHeightRaster.add(new JLabel("Klicke auf eine Zelle."), BorderLayout.NORTH);
 
         contextPanel.add(panelZoom, "ZOOM"); contextPanel.add(panelTerrain, "TERRAIN"); contextPanel.add(panelBaum, "BAUM"); contextPanel.add(panelStrauch, "STRAUCH"); contextPanel.add(panelHeightRaster, GlobalTerrainEditorCanvas.MODE_HEIGHT_RASTER);
+        JPanel panelGenerateRaster = new JPanel(new BorderLayout());
+        panelGenerateRaster.add(new JLabel("Klicke auf eine Zelle."), BorderLayout.NORTH);
+        contextPanel.add(panelGenerateRaster, GlobalTerrainEditorCanvas.MODE_GENERATE_RASTER);
         // Feste Höhe, damit frei bleibender Platz unten in der Leiste landet.
         contextPanel.setPreferredSize(new Dimension(210, CONTEXT_PANEL_HEIGHT));
         contextPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, CONTEXT_PANEL_HEIGHT));
@@ -118,6 +121,7 @@ public class GTERightSidebar extends JPanel {
         modeTerrain.addActionListener(e -> { canvas.setEditorMode("TERRAIN"); cl.show(contextPanel, "TERRAIN"); editor.updateStatusBarText(); });
         modeBaum.addActionListener(e -> { canvas.setEditorMode("BAUM"); cl.show(contextPanel, "BAUM"); editor.updateStatusBarText(); });
         modeStrauch.addActionListener(e -> { canvas.setEditorMode("STRAUCH"); cl.show(contextPanel, "STRAUCH"); editor.updateStatusBarText(); });
+        modeGenerateRaster.addActionListener(e -> { canvas.setEditorMode(GlobalTerrainEditorCanvas.MODE_GENERATE_RASTER); cl.show(contextPanel, GlobalTerrainEditorCanvas.MODE_GENERATE_RASTER); editor.updateStatusBarText(); });
         modeHeightRaster.addActionListener(e -> { canvas.setEditorMode(GlobalTerrainEditorCanvas.MODE_HEIGHT_RASTER); cl.show(contextPanel, GlobalTerrainEditorCanvas.MODE_HEIGHT_RASTER); editor.updateStatusBarText(); });
 
         terrainBox.addActionListener(e -> canvas.setBrushTerrain((String) terrainBox.getSelectedItem()));
@@ -255,8 +259,8 @@ public class GTERightSidebar extends JPanel {
      }
 
     /**
-     * Belegt jede zweite Zelle mit einem zufälligen Raster. Der Ordner wird bei jedem Aufruf neu gelesen,
-     * damit neue Dateien sofort berücksichtigt werden.
+     * Belegt das Schachbrett mit Rastern aus dem Ordner und erzeugt danach die freien Zellen. Der Ordner
+     * wird bei jedem Aufruf neu gelesen, damit neue Dateien sofort berücksichtigt werden.
      */
     private void setHeightModel(GlobalTerrainEditorCanvas canvas) {
         LTileRasterLibrary library = canvas.getRasterLibrary();
@@ -280,18 +284,15 @@ public class GTERightSidebar extends JPanel {
         int occupiedFreeCells = HeightModelFiller.countOccupiedFreeCells(map);
         if (occupiedFreeCells > 0) {
             int choice = JOptionPane.showConfirmDialog(this,
-                    occupiedFreeCells + " belegte Zellen außerhalb des Schachbretts passen danach nicht mehr und werden geleert.\nFortfahren?",
+                    occupiedFreeCells + " belegte Zellen außerhalb des Schachbretts werden geleert und neu erzeugt.\nFortfahren?",
                     "Höhenmodell setzen", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
             if (choice != JOptionPane.YES_OPTION) return;
         }
 
-        HeightModelFiller.Result result = HeightModelFiller.fill(map, library.getEntries(), new Random());
+        String message = new GTEHeightModelDialog(SwingUtilities.getWindowAncestor(this), map, library).run();
 
         canvas.repaint();
         if (canvas.getHeightView() != null) canvas.getHeightView().refresh();
-        JOptionPane.showMessageDialog(this,
-                result.getFilledCells() + " von " + result.getPatternCells() + " Zellen des Schachbretts belegt, "
-                        + library.getEntries().size() + " Raster aus " + library.getDirectory().getName() + ".",
-                "Höhenmodell setzen", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, message, "Höhenmodell setzen", JOptionPane.INFORMATION_MESSAGE);
     }
 }
