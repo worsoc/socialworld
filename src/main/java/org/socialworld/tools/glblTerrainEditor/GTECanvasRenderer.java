@@ -53,7 +53,7 @@ public class GTECanvasRenderer {
                 
                 renderPixelPerfectMacroCell(g2, cell, startX, startY, cellSize);
 
-                if (cell.hasHeightRaster()) {
+                if (canvas.isHeightRasterMarkersVisible() && cell.hasHeightRaster()) {
                     renderHeightRasterMarker(g2, startX, startY, cellSize, HeightRasterPlacement.hasConflict(macroMap, x, y));
                 }
 

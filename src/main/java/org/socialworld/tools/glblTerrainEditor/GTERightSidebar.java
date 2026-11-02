@@ -152,6 +152,15 @@ public class GTERightSidebar extends JPanel {
         quadGridPanel.add(btnSW); quadGridPanel.add(btnSO);
         add(quadGridPanel);
 
+        add(Box.createVerticalStrut(5));
+        JCheckBox showHeightRasterMarkers = new JCheckBox("Höhenraster-Dreiecke zeigen", canvas.isHeightRasterMarkersVisible());
+        showHeightRasterMarkers.setAlignmentX(Component.LEFT_ALIGNMENT);
+        showHeightRasterMarkers.addActionListener(e -> {
+            canvas.setHeightRasterMarkersVisible(showHeightRasterMarkers.isSelected());
+            canvas.repaint();
+        });
+        add(showHeightRasterMarkers);
+
         // 5. Datei-Operationen (Save / Load)
         JButton saveButton = new JButton("save map ...");
         saveButton.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -206,5 +215,13 @@ public class GTERightSidebar extends JPanel {
         add(Box.createVerticalStrut(20));
         double realSizeKm = (32 * 729.0) / 1000.0;
         add(new JLabel(String.format("Weltgröße: %.2f km x %.2f km", realSizeKm, realSizeKm)));
+
+        saveButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, saveButton.getPreferredSize().height));
+        loadButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, loadButton.getPreferredSize().height));
+
+        // BoxLayout richtet Elemente nur dann bündig aus, wenn alle dieselbe Ausrichtung haben.
+        for (Component component : getComponents()) {
+            ((JComponent) component).setAlignmentX(Component.LEFT_ALIGNMENT);
+        }
      }
 }

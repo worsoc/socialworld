@@ -33,7 +33,9 @@ public class GlobalTerrainEditorCanvas extends JPanel {
     private String currentBrushTerrain = GTERenderColorPalette.getTerrainNameFromCode((byte)0 /*saltwater*/);
     private int currentBrushBaum = 0;    // 0 entspricht VegetationTree.nothing
     private int currentBrushStrauch = 0; // 0 entspricht VegetationBush.nothing
-    private int currentBrushRadius = 1; 
+    private int currentBrushRadius = 1;
+
+    private boolean heightRasterMarkersVisible = true;
 
     // Die neuen, spezialisierten GTE-Module
     private final GTECanvasRenderer renderer;
@@ -103,6 +105,8 @@ public class GlobalTerrainEditorCanvas extends JPanel {
     public void setBrushStrauch(int strauchGteId) { this.currentBrushStrauch = strauchGteId; }
     public int getCurrentBrushRadius() { return currentBrushRadius; }
     public void setBrushRadius(int radius) { this.currentBrushRadius = radius; }
+    public boolean isHeightRasterMarkersVisible() { return heightRasterMarkersVisible; }
+    public void setHeightRasterMarkersVisible(boolean visible) { this.heightRasterMarkersVisible = visible; }
 
     /**
      * Erzeugt den Text für die Statusbar des Hauptfensters.
