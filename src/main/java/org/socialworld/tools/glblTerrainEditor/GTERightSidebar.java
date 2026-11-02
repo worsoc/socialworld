@@ -2,8 +2,10 @@ package org.socialworld.tools.glblTerrainEditor;
 
 import javax.swing.*;
 import org.socialworld.attributes.GroundMaterial;
+import org.socialworld.tools.mct.LTileRasterLibrary;
 import java.awt.*;
 import java.io.File;
+import java.util.Random;
 
 /**
  * Die bereinigte Sidebar. Bindet das GTEGeneratorPanel ein 
@@ -161,6 +163,32 @@ public class GTERightSidebar extends JPanel {
         });
         add(showHeightRasterMarkers);
 
+        GTEHeightViewWindow heightView = new GTEHeightViewWindow(editor, canvas);
+        canvas.setHeightView(heightView);
+        JCheckBox showHeightView = new JCheckBox("Höhenansicht");
+        showHeightView.addActionListener(e -> heightView.setVisible(showHeightView.isSelected()));
+        heightView.addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
+            public void componentHidden(java.awt.event.ComponentEvent e) {
+                showHeightView.setSelected(false);
+            }
+        });
+        // Die Höhenansicht gibt es nur auf der Weltkarte.
+        canvas.setZoomChangeListener(() -> {
+            boolean onWorldMap = canvas.getCurrentZoom() == GlobalTerrainEditorCanvas.ZoomLevel.MACRO;
+            showHeightView.setEnabled(onWorldMap);
+            if (!onWorldMap) heightView.setVisible(false);
+        });
+        add(showHeightView);
+
+        add(Box.createVerticalStrut(5));
+        JButton heightModelButton = new JButton("Höhenmodell setzen");
+        heightModelButton.setBackground(new Color(110, 50, 140));
+        heightModelButton.setForeground(Color.WHITE);
+        heightModelButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, heightModelButton.getPreferredSize().height));
+        heightModelButton.addActionListener(e -> setHeightModel(canvas));
+        add(heightModelButton);
+
         // 5. Datei-Operationen (Save / Load)
         JButton saveButton = new JButton("save map ...");
         saveButton.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -224,4 +252,45 @@ public class GTERightSidebar extends JPanel {
             ((JComponent) component).setAlignmentX(Component.LEFT_ALIGNMENT);
         }
      }
+
+    /**
+     * Belegt jede zweite Zelle mit einem zufälligen Raster. Der Ordner wird bei jedem Aufruf neu gelesen,
+     * damit neue Dateien sofort berücksichtigt werden.
+     */
+    private void setHeightModel(GlobalTerrainEditorCanvas canvas) {
+        LTileRasterLibrary library = canvas.getRasterLibrary();
+        if (library.isLoaded()) {
+            library.load(library.getDirectory());
+        } else {
+            JFileChooser chooser = new JFileChooser();
+            chooser.setDialogTitle("Ordner mit den Rastern auswählen");
+            chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            if (chooser.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) return;
+            library.load(chooser.getSelectedFile());
+        }
+
+        if (library.getEntries().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Der Ordner " + library.getDirectory().getName() + " enthält keine gültigen Raster.",
+                    "Höhenmodell setzen", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        MacroMap map = canvas.getMacroMap();
+        int occupiedFreeCells = HeightModelFiller.countOccupiedFreeCells(map);
+        if (occupiedFreeCells > 0) {
+            int choice = JOptionPane.showConfirmDialog(this,
+                    occupiedFreeCells + " belegte Zellen außerhalb des Schachbretts passen danach nicht mehr und werden geleert.\nFortfahren?",
+                    "Höhenmodell setzen", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+            if (choice != JOptionPane.YES_OPTION) return;
+        }
+
+        HeightModelFiller.Result result = HeightModelFiller.fill(map, library.getEntries(), new Random());
+
+        canvas.repaint();
+        if (canvas.getHeightView() != null) canvas.getHeightView().refresh();
+        JOptionPane.showMessageDialog(this,
+                result.getFilledCells() + " von " + result.getPatternCells() + " Zellen des Schachbretts belegt, "
+                        + library.getEntries().size() + " Raster aus " + library.getDirectory().getName() + ".",
+                "Höhenmodell setzen", JOptionPane.INFORMATION_MESSAGE);
+    }
 }

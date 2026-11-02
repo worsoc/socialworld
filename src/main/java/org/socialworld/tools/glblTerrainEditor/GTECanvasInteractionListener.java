@@ -2,14 +2,12 @@ package org.socialworld.tools.glblTerrainEditor;
 
 import javax.swing.*;
 import org.socialworld.attributes.GroundMaterial;
-import org.socialworld.tools.mct.LTileRasterLibrary;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class GTECanvasInteractionListener extends MouseAdapter {
     private final GlobalTerrainEditorCanvas canvas;
     private final GlobalTerrainEditor editor;
-    private final LTileRasterLibrary rasterLibrary = new LTileRasterLibrary();
 
     public GTECanvasInteractionListener(GlobalTerrainEditorCanvas canvas, GlobalTerrainEditor editor) {
         this.canvas = canvas;
@@ -18,6 +16,15 @@ public class GTECanvasInteractionListener extends MouseAdapter {
 
     @Override
     public void mousePressed(MouseEvent e) {
+        // Solange die Höhenansicht offen ist, wird nur geschaut: kein Zoom und kein Bearbeiten.
+        if (isHeightViewOpen()) {
+            int[] cell = macroCellAt(e.getX(), e.getY());
+            if (cell != null && SwingUtilities.isLeftMouseButton(e)) {
+                canvas.getHeightView().showCellNow(cell[0], cell[1]);
+            }
+            return;
+        }
+
         if (SwingUtilities.isRightMouseButton(e)) {
             handleZoomOut();
             return;
@@ -33,11 +40,47 @@ public class GTECanvasInteractionListener extends MouseAdapter {
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        if (!canvas.getCurrentMode().equals("ZOOM")
+        if (!isHeightViewOpen()
+                && !canvas.getCurrentMode().equals("ZOOM")
                 && !canvas.getCurrentMode().equals(GlobalTerrainEditorCanvas.MODE_HEIGHT_RASTER)
                 && SwingUtilities.isLeftMouseButton(e)) {
             handleMousePaint(e.getX(), e.getY());
         }
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        if (!isHeightViewOpen()) return;
+
+        int[] cell = macroCellAt(e.getX(), e.getY());
+        if (cell != null) {
+            canvas.getHeightView().requestCell(cell[0], cell[1]);
+        } else {
+            canvas.getHeightView().cancelRequest();
+        }
+    }
+
+    private boolean isHeightViewOpen() {
+        return canvas.getHeightView() != null && canvas.getHeightView().isVisible();
+    }
+
+    /**
+     * @return die Koordinaten {x, y} der Makro-Zelle an dieser Mausposition oder null, wenn dort keine Zelle liegt
+     */
+    private int[] macroCellAt(int mouseX, int mouseY) {
+        if (canvas.getCurrentZoom() != GlobalTerrainEditorCanvas.ZoomLevel.MACRO) return null;
+
+        MacroMap macroMap = canvas.getMacroMap();
+        int cellSize = canvas.getCellSizeInPixels();
+        int cellX = GTEQuadrant.toGlobal(mouseX / cellSize, canvas.getCurrentMacroOffsetX());
+        int cellY = GTEQuadrant.toGlobal(mouseY / cellSize, canvas.getCurrentMacroOffsetY());
+        boolean onMap = cellX >= 0 && cellX < macroMap.getWidth() && cellY >= 0 && cellY < macroMap.getHeight();
+        return onMap ? new int[] {cellX, cellY} : null;
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        if (canvas.getHeightView() != null) canvas.getHeightView().cancelRequest();
     }
 
     private void handleZoomIn(int mouseX, int mouseY) {
@@ -82,8 +125,9 @@ public class GTECanvasInteractionListener extends MouseAdapter {
         int cellY = GTEQuadrant.toGlobal(mouseY / cellSize, canvas.getCurrentMacroOffsetY());
         if (cellX < 0 || cellX >= macroMap.getWidth() || cellY < 0 || cellY >= macroMap.getHeight()) return;
 
-        new GTEHeightRasterDialog(editor, macroMap, cellX, cellY, rasterLibrary).open();
+        new GTEHeightRasterDialog(editor, macroMap, cellX, cellY, canvas.getRasterLibrary()).open();
         canvas.repaint();
+        if (canvas.getHeightView() != null) canvas.getHeightView().refresh();
     }
 
     private void handleZoomOut() {

@@ -1,6 +1,7 @@
 package org.socialworld.tools.glblTerrainEditor;
 
 import javax.swing.*;
+import org.socialworld.tools.mct.LTileRasterLibrary;
 import java.awt.*;
 
 /**
@@ -36,6 +37,9 @@ public class GlobalTerrainEditorCanvas extends JPanel {
     private int currentBrushRadius = 1;
 
     private boolean heightRasterMarkersVisible = true;
+    private GTEHeightViewWindow heightView;
+    private Runnable zoomChangeListener;
+    private final LTileRasterLibrary rasterLibrary = new LTileRasterLibrary();
 
     // Die neuen, spezialisierten GTE-Module
     private final GTECanvasRenderer renderer;
@@ -67,11 +71,13 @@ public class GlobalTerrainEditorCanvas extends JPanel {
         this.macroMap = newMap; 
         
         // Setze den Zoom und den Quadranten sicherheitshalber auf den Standard zurück
-        this.currentZoom = ZoomLevel.MACRO;
+        setCurrentZoom(ZoomLevel.MACRO);
         this.selectedMacroCell = null;
         this.currentMacroOffsetX = 0;
         this.currentMacroOffsetY = 0;
-        
+
+        if (heightView != null) heightView.clear();
+
         // Erzwinge ein sofortiges Neuzeichnen der neuen Karte
         this.repaint();
     }
@@ -86,7 +92,11 @@ public class GlobalTerrainEditorCanvas extends JPanel {
     public MacroMap getMacroMap() { return macroMap; }
     public int getCellSizeInPixels() { return cellSizeInPixels; }
     public ZoomLevel getCurrentZoom() { return currentZoom; }
-    public void setCurrentZoom(ZoomLevel zoom) { this.currentZoom = zoom; }
+    public void setCurrentZoom(ZoomLevel zoom) {
+        this.currentZoom = zoom;
+        if (zoomChangeListener != null) zoomChangeListener.run();
+    }
+    public void setZoomChangeListener(Runnable listener) { this.zoomChangeListener = listener; }
     public MacroMapCell getSelectedMacroCell() { return selectedMacroCell; }
     public void setSelectedMacroCell(MacroMapCell cell) { this.selectedMacroCell = cell; }
     public int getSelectedMesoChunkX() { return selectedMesoChunkX; }
@@ -107,6 +117,9 @@ public class GlobalTerrainEditorCanvas extends JPanel {
     public void setBrushRadius(int radius) { this.currentBrushRadius = radius; }
     public boolean isHeightRasterMarkersVisible() { return heightRasterMarkersVisible; }
     public void setHeightRasterMarkersVisible(boolean visible) { this.heightRasterMarkersVisible = visible; }
+    public LTileRasterLibrary getRasterLibrary() { return rasterLibrary; }
+    public GTEHeightViewWindow getHeightView() { return heightView; }
+    public void setHeightView(GTEHeightViewWindow heightView) { this.heightView = heightView; }
 
     /**
      * Erzeugt den Text für die Statusbar des Hauptfensters.

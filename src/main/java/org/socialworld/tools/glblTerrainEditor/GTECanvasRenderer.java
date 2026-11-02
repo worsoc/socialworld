@@ -61,6 +61,24 @@ public class GTECanvasRenderer {
                 g2.setFont(new Font("Arial", Font.PLAIN, 9));
             }
         }
+
+        renderHeightViewFrame(g2, offsetX, offsetY, cellSize);
+    }
+
+    /**
+     * Rahmt die Zelle ein, die gerade in der Höhenansicht zu sehen ist.
+     */
+    private void renderHeightViewFrame(Graphics2D g2, int offsetX, int offsetY, int cellSize) {
+        GTEHeightViewWindow heightView = canvas.getHeightView();
+        if (heightView == null || !heightView.isVisible() || heightView.getShownCellX() < 0) return;
+        if (!GTEQuadrant.isVisible(heightView.getShownCellX(), offsetX) || !GTEQuadrant.isVisible(heightView.getShownCellY(), offsetY)) return;
+
+        int startX = GTEQuadrant.toLocal(heightView.getShownCellX(), offsetX) * cellSize;
+        int startY = GTEQuadrant.toLocal(heightView.getShownCellY(), offsetY) * cellSize;
+        g2.setColor(Color.BLACK);
+        g2.drawRect(startX, startY, cellSize - 1, cellSize - 1);
+        g2.setColor(Color.WHITE);
+        g2.drawRect(startX + 1, startY + 1, cellSize - 3, cellSize - 3);
     }
 
     /**
