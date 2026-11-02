@@ -53,8 +53,14 @@ public class GlobalTerrainEditor extends JFrame {
      */
     public void updateStatusBarText() {
         if (canvas != null) {
-            setTitle(baseTitle + " | " + canvas.getStatusText().trim());
+            setTitle(baseTitle + " " + getWorldSizeText() + " | " + canvas.getStatusText().trim());
         }
+    }
+
+    private String getWorldSizeText() {
+        MacroMap map = canvas.getMacroMap();
+        double cellSizeKm = (MacroMapCell.MESO_GRID_SIZE * 9) / 1000.0;
+        return String.format("Welt %.2f km x %.2f km", map.getWidth() * cellSizeKm, map.getHeight() * cellSizeKm);
     }
 
     public static void main(String[] args) {

@@ -12,7 +12,9 @@ import java.util.Random;
  * und verwaltet die Werkzeuge sowie Speicher-Funktionen.
  */
 public class GTERightSidebar extends JPanel {
-    
+
+    private static final int CONTEXT_PANEL_HEIGHT = 40;
+
     public GTERightSidebar(GlobalTerrainEditorCanvas canvas, GlobalTerrainEditor editor) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
@@ -20,16 +22,16 @@ public class GTERightSidebar extends JPanel {
 
         // 1. Das ausgelagerte Generator-Panel ganz oben einfügen
         GTEGeneratorPanel generatorPanel = new GTEGeneratorPanel(canvas, editor);
+        generatorPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, generatorPanel.getPreferredSize().height));
         add(generatorPanel);
         
         add(Box.createVerticalStrut(15));
-        add(new JSeparator(JSeparator.HORIZONTAL));
+        JSeparator separator = new JSeparator(JSeparator.HORIZONTAL);
+        separator.setMaximumSize(new Dimension(Integer.MAX_VALUE, separator.getPreferredSize().height));
+        add(separator);
         add(Box.createVerticalStrut(15));
 
         // 2. Editier-Modus Selektion
-        add(new JLabel("<html><b>EDITIER-MODUS SELEKTION</b></html>"));
-        add(Box.createVerticalStrut(8));
-        
         JRadioButton modeZoom = new JRadioButton("Zoom / Navigation", true); 
         editor.rbZoom = modeZoom;
         JRadioButton modeTerrain = new JRadioButton("Terrain zuweisen");
@@ -103,9 +105,12 @@ public class GTERightSidebar extends JPanel {
 
         
         JPanel panelHeightRaster = new JPanel(new BorderLayout());
-        panelHeightRaster.add(new JLabel("<html>Klicke auf der Weltkarte auf eine Zelle.</html>"), BorderLayout.NORTH);
+        panelHeightRaster.add(new JLabel("Klicke auf eine Zelle."), BorderLayout.NORTH);
 
         contextPanel.add(panelZoom, "ZOOM"); contextPanel.add(panelTerrain, "TERRAIN"); contextPanel.add(panelBaum, "BAUM"); contextPanel.add(panelStrauch, "STRAUCH"); contextPanel.add(panelHeightRaster, GlobalTerrainEditorCanvas.MODE_HEIGHT_RASTER);
+        // Feste Höhe, damit frei bleibender Platz unten in der Leiste landet.
+        contextPanel.setPreferredSize(new Dimension(210, CONTEXT_PANEL_HEIGHT));
+        contextPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, CONTEXT_PANEL_HEIGHT));
         add(contextPanel);
 
         CardLayout cl = (CardLayout) contextPanel.getLayout();
@@ -239,10 +244,6 @@ public class GTERightSidebar extends JPanel {
 
         add(Box.createVerticalStrut(15));
         add(saveButton); add(Box.createVerticalStrut(5)); add(loadButton);
-
-        add(Box.createVerticalStrut(20));
-        double realSizeKm = (32 * 729.0) / 1000.0;
-        add(new JLabel(String.format("Weltgröße: %.2f km x %.2f km", realSizeKm, realSizeKm)));
 
         saveButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, saveButton.getPreferredSize().height));
         loadButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, loadButton.getPreferredSize().height));

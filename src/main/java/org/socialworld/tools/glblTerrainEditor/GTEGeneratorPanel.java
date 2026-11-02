@@ -13,9 +13,6 @@ public class GTEGeneratorPanel extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        add(new JLabel("<html><b>WELT GENERIEREN</b></html>"));
-        add(Box.createVerticalStrut(5));
-        
         // JComboBox mit den 4 Profil-Katalogen aus dem Enum füttern
         JComboBox<GTEWorldProfile> profileBox = new JComboBox<>(GTEWorldProfile.values());
         profileBox.setMaximumSize(new Dimension(210, 26));
