@@ -195,7 +195,7 @@ public class GTERightSidebar extends JPanel {
         heightModelButton.setBackground(new Color(110, 50, 140));
         heightModelButton.setForeground(Color.WHITE);
         heightModelButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, heightModelButton.getPreferredSize().height));
-        heightModelButton.addActionListener(e -> setHeightModel(canvas));
+        heightModelButton.addActionListener(e -> setHeightModel(canvas, editor));
         add(heightModelButton);
 
         // 5. Datei-Operationen (Save / Load)
@@ -259,10 +259,10 @@ public class GTERightSidebar extends JPanel {
      }
 
     /**
-     * Belegt das Schachbrett mit Rastern aus dem Ordner und erzeugt danach die freien Zellen. Der Ordner
-     * wird bei jedem Aufruf neu gelesen, damit neue Dateien sofort berücksichtigt werden.
+     * Belegt die Karte von Nordwest nach Südost neu, zuerst mit Rastern aus dem Ordner, sonst mit erzeugten.
+     * Der Ordner wird bei jedem Aufruf neu gelesen, damit neue Dateien sofort berücksichtigt werden.
      */
-    private void setHeightModel(GlobalTerrainEditorCanvas canvas) {
+    private void setHeightModel(GlobalTerrainEditorCanvas canvas, GlobalTerrainEditor editor) {
         LTileRasterLibrary library = canvas.getRasterLibrary();
         if (library.isLoaded()) {
             library.load(library.getDirectory());
@@ -281,18 +281,30 @@ public class GTERightSidebar extends JPanel {
         }
 
         MacroMap map = canvas.getMacroMap();
-        int occupiedFreeCells = HeightModelFiller.countOccupiedFreeCells(map);
-        if (occupiedFreeCells > 0) {
+        int occupiedCells = HeightModelFiller.countOccupiedCells(map);
+        if (occupiedCells > 0) {
             int choice = JOptionPane.showConfirmDialog(this,
-                    occupiedFreeCells + " belegte Zellen außerhalb des Schachbretts werden geleert und neu erzeugt.\nFortfahren?",
+                    occupiedCells + " belegte Zellen werden geleert und neu belegt.\nFortfahren?",
                     "Höhenmodell setzen", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
             if (choice != JOptionPane.YES_OPTION) return;
         }
 
-        String message = new GTEHeightModelDialog(SwingUtilities.getWindowAncestor(this), map, library).run();
+        String message = new GTEHeightModelDialog(SwingUtilities.getWindowAncestor(this), map, library,
+                (x, y) -> showCellDuringFill(canvas, editor, x, y)).run();
 
         canvas.repaint();
         if (canvas.getHeightView() != null) canvas.getHeightView().refresh();
         JOptionPane.showMessageDialog(this, message, "Höhenmodell setzen", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    /** Stellt auf der Weltkarte den Quadranten der gerade bearbeiteten Zelle ein und zeichnet neu. */
+    private void showCellDuringFill(GlobalTerrainEditorCanvas canvas, GlobalTerrainEditor editor, int cellX, int cellY) {
+        if (canvas.getCurrentZoom() == GlobalTerrainEditorCanvas.ZoomLevel.MACRO) {
+            int quadrantSize = GTEQuadrant.QUADRANT_SIZE;
+            canvas.setCurrentMacroOffsetX(cellX / quadrantSize * quadrantSize);
+            canvas.setCurrentMacroOffsetY(cellY / quadrantSize * quadrantSize);
+            editor.updateStatusBarText();
+        }
+        canvas.repaint();
     }
 }

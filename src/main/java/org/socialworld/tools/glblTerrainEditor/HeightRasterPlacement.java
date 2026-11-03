@@ -376,7 +376,9 @@ public final class HeightRasterPlacement {
                 if (corners[corner] != null) continue;
                 Integer next = corners[(corner + 1) % 4];
                 Integer previous = corners[(corner + 3) % 4];
-                Integer known = (next != null) ? next : previous;
+                // Mit zwei bekannten Nachbarecken die Mitte nehmen, damit steile Hänge nicht weiterwandern.
+                Integer known = (next != null && previous != null) ? Integer.valueOf(Math.floorDiv(next + previous, 2))
+                        : (next != null) ? next : previous;
                 if (known != null) {
                     corners[corner] = known + random.nextInt(3) - 1;
                     changed = true;

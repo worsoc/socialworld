@@ -4,10 +4,10 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Window;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
@@ -23,31 +23,36 @@ import org.socialworld.tools.mct.LTileRasterGenerator;
 import org.socialworld.tools.mct.LTileRasterLibrary;
 
 /**
- * Setzt das ganze Höhenmodell im Hintergrund: erst das Schachbrett aus der Bibliothek, dann bis zu
- * drei Durchgänge für die freien Zellen. Das dauert viele Minuten und lässt sich abbrechen; die bis
- * dahin gesetzten Raster bleiben dann erhalten.
+ * Setzt das ganze Höhenmodell im Hintergrund: Die Karte wird geleert und von Nordwest nach Südost neu
+ * belegt, in bis zu drei Durchgängen. Das dauert viele Minuten und lässt sich abbrechen; die bis dahin
+ * gesetzten Raster bleiben dann erhalten.
  * Der Dialog ist modal, damit sich die Karte währenddessen nicht ändert.
  */
 public class GTEHeightModelDialog extends JDialog {
 
     private static final String TITLE = "Höhenmodell setzen";
     private static final long TIMEOUT_PER_CELL_MILLIS = 10000;
+    private static final long FIRST_ROUND_RETRY_MILLIS = 20000;
     private static final int ROUNDS = 3;
 
     private final MacroMap map;
     private final LTileRasterLibrary library;
-    private final JLabel statusLabel = new JLabel("Belege das Schachbrett ...");
+    private final BiConsumer<Integer, Integer> onCellFinished;
+    private final JLabel statusLabel = new JLabel("Starte im Nordwesten ...");
     private final JProgressBar progress = new JProgressBar();
 
     private volatile boolean cancelled = false;
-    private volatile HeightModelFiller.Result patternResult;
-    private volatile List<Integer> filledPerRound = new ArrayList<>();
+    private volatile HeightModelFiller.FillResult fillResult;
     private String message;
 
-    public GTEHeightModelDialog(Window owner, MacroMap map, LTileRasterLibrary library) {
+    /**
+     * @param onCellFinished läuft nach jeder bearbeiteten Zelle im Swing-Thread und erhält deren x und y
+     */
+    public GTEHeightModelDialog(Window owner, MacroMap map, LTileRasterLibrary library, BiConsumer<Integer, Integer> onCellFinished) {
         super(owner, TITLE, ModalityType.APPLICATION_MODAL);
         this.map = map;
         this.library = library;
+        this.onCellFinished = onCellFinished;
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
         progress.setIndeterminate(true);
@@ -90,8 +95,8 @@ public class GTEHeightModelDialog extends JDialog {
             @Override
             protected Void doInBackground() throws Exception {
                 Random random = new Random();
-                patternResult = HeightModelFiller.fill(map, library.getEntries(), random);
-                filledPerRound = HeightModelFiller.fillFreeCells(map, random, TIMEOUT_PER_CELL_MILLIS, ROUNDS,
+                HeightModelFiller.clearAll(map);
+                fillResult = HeightModelFiller.fillEmptyCells(map, library.getEntries(), random, TIMEOUT_PER_CELL_MILLIS, FIRST_ROUND_RETRY_MILLIS, ROUNDS,
                         new HeightModelFiller.FillListener() {
                             @Override
                             public boolean isCancelled() {
@@ -99,8 +104,8 @@ public class GTEHeightModelDialog extends JDialog {
                             }
 
                             @Override
-                            public void cellFinished(int round, int cellsDone, int cellsInRound) {
-                                publish(new int[] {round, cellsDone, cellsInRound, HeightModelFiller.countOccupiedCells(map)});
+                            public void cellFinished(int cellX, int cellY, int round, int cellsDone, int cellsInRound) {
+                                publish(new int[] {round, cellsDone, cellsInRound, HeightModelFiller.countOccupiedCells(map), cellX, cellY});
                             }
                         });
                 return null;
@@ -108,8 +113,9 @@ public class GTEHeightModelDialog extends JDialog {
 
             @Override
             protected void process(List<int[]> updates) {
-                if (cancelled) return;
                 int[] latest = updates.get(updates.size() - 1);
+                onCellFinished.accept(latest[4], latest[5]);
+                if (cancelled) return;
                 statusLabel.setText("Durchgang " + (latest[0] + 1) + " von " + ROUNDS + ": Zelle " + latest[1] + " von " + latest[2]
                         + ", belegt " + latest[3] + " von " + (map.getWidth() * map.getHeight()));
                 progress.setIndeterminate(false);
@@ -133,12 +139,10 @@ public class GTEHeightModelDialog extends JDialog {
         int cells = map.getWidth() * map.getHeight();
         int occupied = HeightModelFiller.countOccupiedCells(map);
         String summary = occupied + " von " + cells + " Zellen belegt, " + (cells - occupied) + " leer.";
-        if (patternResult != null) {
-            summary += "\nSchachbrett: " + patternResult.getFilledCells() + " von " + patternResult.getPatternCells()
-                    + " Zellen, " + library.getEntries().size() + " Raster aus " + library.getDirectory().getName() + ".";
-        }
-        if (!filledPerRound.isEmpty()) {
-            summary += "\nErzeugt je Durchgang: " + filledPerRound.stream().map(String::valueOf).collect(Collectors.joining(", ")) + ".";
+        if (fillResult != null) {
+            summary += "\nAus Datei: " + fillResult.getFromLibrary() + ", erzeugt: " + fillResult.getGenerated()
+                    + " (" + library.getEntries().size() + " Raster aus " + library.getDirectory().getName() + ").";
+            summary += "\nNeu je Durchgang: " + fillResult.getFilledPerRound().stream().map(String::valueOf).collect(Collectors.joining(", ")) + ".";
         }
 
         try {
