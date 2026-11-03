@@ -33,6 +33,11 @@ public final class LTileRaster {
 	private final int[] south;
 	private final int[] west;
 
+	/** Die vier Eckhöhen jeder Kachel: je Kachel NW, NO, SO, SW. */
+	private final int[] tileCorners;
+	private final int lowestHeight;
+	private final int highestHeight;
+
 	private LTileRaster(int[] types, int[] baseHeights) {
 		this.types = types;
 		this.baseHeights = baseHeights;
@@ -45,6 +50,55 @@ public final class LTileRaster {
 		this.east = BorderCalculator.calculateEast(grid);
 		this.south = BorderCalculator.calculateSouth(grid);
 		this.west = BorderCalculator.calculateWest(grid);
+
+		this.tileCorners = new int[TILE_COUNT * 4];
+		int lowest = Integer.MAX_VALUE;
+		int highest = Integer.MIN_VALUE;
+		String[] cornerNames = {"nw", "no", "so", "sw"};
+		for (int i = 0; i < TILE_COUNT; i++) {
+			for (int corner = 0; corner < 4; corner++) {
+				int height = baseHeights[i] + TileInfo.getOffset(types[i], cornerNames[corner]);
+				tileCorners[i * 4 + corner] = height;
+				lowest = Math.min(lowest, height);
+				highest = Math.max(highest, height);
+			}
+		}
+		this.lowestHeight = lowest;
+		this.highestHeight = highest;
+	}
+
+	public int getLowestHeight() { return lowestHeight; }
+	public int getHighestHeight() { return highestHeight; }
+
+	/**
+	 * Liefert die Höhe an einem Punkt der Fläche. Jede Kachel besteht aus zwei ebenen Dreiecken, die an
+	 * der Diagonale zwischen den beiden Ecken mit dem kleineren Höhenunterschied aneinanderstoßen.
+	 *
+	 * @param x von West nach Ost in Kachelbreiten, 0 bis 9
+	 * @param y von Nord nach Süd in Kachelbreiten, 0 bis 9
+	 */
+	public double heightAt(double x, double y) {
+		int col = Math.min((int) x, 8);
+		int row = Math.min((int) y, 8);
+		double u = x - col;
+		double v = y - row;
+
+		int first = (row * 9 + col) * 4;
+		int nw = tileCorners[first];
+		int no = tileCorners[first + 1];
+		int so = tileCorners[first + 2];
+		int sw = tileCorners[first + 3];
+
+		if (Math.abs(no - sw) <= Math.abs(nw - so)) {
+			if (u + v <= 1) {
+				return nw + u * (no - nw) + v * (sw - nw);
+			}
+			return so + (1 - u) * (sw - so) + (1 - v) * (no - so);
+		}
+		if (u >= v) {
+			return nw + u * (no - nw) + v * (so - no);
+		}
+		return nw + v * (sw - nw) + u * (so - sw);
 	}
 
 	/** Eckhöhen des Nordrands von West nach Ost (10 Werte). */

@@ -164,13 +164,12 @@ public class GTERightSidebar extends JPanel {
         add(quadGridPanel);
 
         add(Box.createVerticalStrut(5));
-        JCheckBox showHeightRasterMarkers = new JCheckBox("Höhenraster-Dreiecke zeigen", canvas.isHeightRasterMarkersVisible());
-        showHeightRasterMarkers.setAlignmentX(Component.LEFT_ALIGNMENT);
-        showHeightRasterMarkers.addActionListener(e -> {
-            canvas.setHeightRasterMarkersVisible(showHeightRasterMarkers.isSelected());
+        JCheckBox showHeightMap = new JCheckBox("Höhenkarte zeigen", canvas.isHeightMapVisible());
+        showHeightMap.addActionListener(e -> {
+            canvas.setHeightMapVisible(showHeightMap.isSelected());
             canvas.repaint();
         });
-        add(showHeightRasterMarkers);
+        add(showHeightMap);
 
         GTEHeightViewWindow heightView = new GTEHeightViewWindow(editor, canvas);
         canvas.setHeightView(heightView);

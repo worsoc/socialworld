@@ -32,6 +32,7 @@ public class GTECanvasRenderer {
         // Aktuelle Quadranten-Offsets aus dem Canvas holen
         int offsetX = canvas.getCurrentMacroOffsetX();
         int offsetY = canvas.getCurrentMacroOffsetY();
+        GTEHeightMapRenderer heightMap = canvas.isHeightMapVisible() ? new GTEHeightMapRenderer(macroMap) : null;
 
         // ANPASSUNG: Schleifen laufen nur noch über die 16 Zellen des aktiven Quadranten
         for (int x = offsetX; x < offsetX + GTEQuadrant.QUADRANT_SIZE; x++) {
@@ -51,10 +52,14 @@ public class GTECanvasRenderer {
                 int startX = localX * cellSize;
                 int startY = localY * cellSize;
                 
-                renderPixelPerfectMacroCell(g2, cell, startX, startY, cellSize);
+                if (heightMap != null) {
+                    heightMap.renderCell(g2, cell, startX, startY, cellSize);
+                } else {
+                    renderPixelPerfectMacroCell(g2, cell, startX, startY, cellSize);
+                }
 
-                if (canvas.isHeightRasterMarkersVisible() && cell.hasHeightRaster()) {
-                    renderHeightRasterMarker(g2, startX, startY, cellSize, HeightRasterPlacement.hasConflict(macroMap, x, y));
+                if (HeightRasterPlacement.hasConflict(macroMap, x, y)) {
+                    renderConflictMarker(g2, startX, startY, cellSize);
                 }
 
                 g2.setColor(new Color(255, 255, 255, 180));
@@ -63,6 +68,7 @@ public class GTECanvasRenderer {
         }
 
         renderHeightViewFrame(g2, offsetX, offsetY, cellSize);
+        if (heightMap != null) heightMap.renderLegend(g2, canvas.getHeight());
     }
 
     /**
@@ -82,15 +88,15 @@ public class GTECanvasRenderer {
     }
 
     /**
-     * Markiert eine Zelle mit zugeordnetem Höhenraster durch ein Dreieck in der Ecke oben rechts:
-     * orange, wenn das Raster zu den Nachbarn passt, rot bei einem Konflikt.
+     * Markiert eine Zelle, deren Höhenraster nicht zu den Nachbarn passt, durch ein rotes Dreieck in der
+     * Ecke oben rechts.
      */
-    private void renderHeightRasterMarker(Graphics2D g2, int startX, int startY, int cellSize, boolean conflict) {
+    private void renderConflictMarker(Graphics2D g2, int startX, int startY, int cellSize) {
         int markerSize = cellSize / 3;
         int right = startX + cellSize;
         int[] xPoints = { right - markerSize, right, right };
         int[] yPoints = { startY, startY, startY + markerSize };
-        g2.setColor(conflict ? Color.RED : new Color(255, 140, 0));
+        g2.setColor(Color.RED);
         g2.fillPolygon(xPoints, yPoints, 3);
         g2.setColor(Color.BLACK);
         g2.drawPolygon(xPoints, yPoints, 3);
@@ -132,6 +138,14 @@ public class GTECanvasRenderer {
         MacroMapCell selectedCell = canvas.getSelectedMacroCell();
         if (selectedCell == null) return;
         int mesoCellPixels = 9; // Jedes Meso-Feld ist 9x9 Pixel groß
+
+        if (canvas.isHeightMapVisible()) {
+            GTEHeightMapRenderer heightMap = new GTEHeightMapRenderer(canvas.getMacroMap());
+            heightMap.renderCell(g2, selectedCell, 0, 0, 81 * mesoCellPixels);
+            renderMesoBlockGrid(g2, mesoCellPixels);
+            heightMap.renderLegend(g2, canvas.getHeight());
+            return;
+        }
 
         // --- SCHRITT 1: PIXELGENAUES TERRAIN (INKLUSIVE MIKRO-DELTA) ZEICHNEN ---
         for (int mx = 0; mx < 81; mx++) {
@@ -191,7 +205,11 @@ public class GTECanvasRenderer {
             }
         }
         
-        // Dickeres 9x9-Block-Raster (stärker sichtbar)
+        renderMesoBlockGrid(g2, mesoCellPixels);
+    }
+
+    /** Dickeres 9x9-Block-Raster (stärker sichtbar). Ein Block entspricht einer L-Kachel. */
+    private void renderMesoBlockGrid(Graphics2D g2, int mesoCellPixels) {
         g2.setColor(new Color(255, 255, 255, 110));
         g2.setStroke(new BasicStroke(1.5f));       
         for (int bx = 0; bx < 81; bx += 9) {

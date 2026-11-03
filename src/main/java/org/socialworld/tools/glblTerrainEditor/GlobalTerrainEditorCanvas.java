@@ -37,7 +37,7 @@ public class GlobalTerrainEditorCanvas extends JPanel {
     private int currentBrushStrauch = 0; // 0 entspricht VegetationBush.nothing
     private int currentBrushRadius = 1;
 
-    private boolean heightRasterMarkersVisible = true;
+    private boolean heightMapVisible = false;
     private GTEHeightViewWindow heightView;
     private Runnable zoomChangeListener;
     private final LTileRasterLibrary rasterLibrary = new LTileRasterLibrary();
@@ -116,8 +116,8 @@ public class GlobalTerrainEditorCanvas extends JPanel {
     public void setBrushStrauch(int strauchGteId) { this.currentBrushStrauch = strauchGteId; }
     public int getCurrentBrushRadius() { return currentBrushRadius; }
     public void setBrushRadius(int radius) { this.currentBrushRadius = radius; }
-    public boolean isHeightRasterMarkersVisible() { return heightRasterMarkersVisible; }
-    public void setHeightRasterMarkersVisible(boolean visible) { this.heightRasterMarkersVisible = visible; }
+    public boolean isHeightMapVisible() { return heightMapVisible; }
+    public void setHeightMapVisible(boolean visible) { this.heightMapVisible = visible; }
     public LTileRasterLibrary getRasterLibrary() { return rasterLibrary; }
     public GTEHeightViewWindow getHeightView() { return heightView; }
     public void setHeightView(GTEHeightViewWindow heightView) { this.heightView = heightView; }
