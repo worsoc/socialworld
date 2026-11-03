@@ -154,7 +154,12 @@ final class CubeTileAnalysis {
 		Collections.sort(this.addresses);
 
 		int count = this.addresses.size();
-		this.addressesByDepth = new int[depth + 1];
+		// the ground is exact to 1 m, so its addresses can be longer than the chosen depth
+		int longestAddress = depth;
+		for (String address : this.addresses) {
+			longestAddress = Math.max(longestAddress, address.length());
+		}
+		this.addressesByDepth = new int[longestAddress + 1];
 		this.cubeX = new double[count];
 		this.cubeY = new double[count];
 		this.cubeZ = new double[count];

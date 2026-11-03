@@ -67,7 +67,14 @@ public class CubeTileDialog extends JDialog {
 	public CubeTileDialog() {
 		super((java.awt.Frame) null, "Kachel als Würfel", false);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		setContentPane(new ContentPanel());
+		ContentPanel content = new ContentPanel();
+		setContentPane(content);
+		addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
+			public void windowClosed(java.awt.event.WindowEvent event) {
+				content.closeFamilyWindow();
+			}
+		});
 		pack();
 		setLocationRelativeTo(null);
 	}
@@ -113,6 +120,7 @@ public class CubeTileDialog extends JDialog {
 		private final SectionView sectionView = new SectionView();
 
 		private CubeTileAnalysis analysis;
+		private CubeFamilyDialog familyWindow;
 
 		ContentPanel() {
 			super(new BorderLayout(10, 10));
@@ -304,19 +312,30 @@ public class CubeTileDialog extends JDialog {
 
 			this.startButton.setEnabled(false);
 			this.saveButton.setEnabled(false);
-			this.summary.setText("Wird berechnet ...");
+			boolean isAdapter = CubeTileAnalysis.isAdapterTile(tile);
+			this.summary.setText(isAdapter ? "Die 9 Kacheln der Familie werden berechnet ..." : "Wird berechnet ...");
 
-			new SwingWorker<CubeTileAnalysis, Void>() {
+			new SwingWorker<CubeFamilyAnalysis, Void>() {
+				private CubeTileAnalysis single;
+
 				@Override
-				protected CubeTileAnalysis doInBackground() {
-					return new CubeTileAnalysis(tile, size, height, depth);
+				protected CubeFamilyAnalysis doInBackground() {
+					if (isAdapter) {
+						CubeFamilyAnalysis family = new CubeFamilyAnalysis(tile, size, height, depth);
+						this.single = family.getTile(tile);
+						return family;
+					}
+					this.single = new CubeTileAnalysis(tile, size, height, depth);
+					return null;
 				}
 
 				@Override
 				protected void done() {
 					ContentPanel.this.startButton.setEnabled(true);
 					try {
-						showResult(get());
+						CubeFamilyAnalysis family = get();
+						showResult(this.single);
+						showFamily(family);
 					} catch (Exception exception) {
 						Throwable cause = exception.getCause() == null ? exception : exception.getCause();
 						ContentPanel.this.summary.setText(cause instanceof OutOfMemoryError
@@ -325,6 +344,25 @@ public class CubeTileDialog extends JDialog {
 					}
 				}
 			}.execute();
+		}
+
+		private void showFamily(CubeFamilyAnalysis family) {
+			if (family == null) {
+				closeFamilyWindow();
+				return;
+			}
+			if (this.familyWindow == null || !this.familyWindow.isDisplayable()) {
+				this.familyWindow = new CubeFamilyDialog();
+			}
+			this.familyWindow.setFamily(family);
+			this.familyWindow.setVisible(true);
+		}
+
+		void closeFamilyWindow() {
+			if (this.familyWindow != null) {
+				this.familyWindow.dispose();
+				this.familyWindow = null;
+			}
 		}
 
 		void showResult(CubeTileAnalysis result) {
@@ -404,8 +442,26 @@ public class CubeTileDialog extends JDialog {
 		}
 	}
 
+	static String columnToolTip(CubeTileAnalysis analysis, double x, double y) {
+		StringBuilder text = new StringBuilder("<html>");
+		text.append(String.format("%.2f m nach Ost, %.2f m nach Nord<br>Soll %.3f m", x, y, analysis.surfaceHeightAt(x, y)));
+
+		List<Integer> column = analysis.findCubesInColumn(x, y);
+		if (column.isEmpty()) {
+			return text.append("<br>kein Würfel</html>").toString();
+		}
+
+		text.append("<br><table cellspacing=0 cellpadding=1><tr><th align=left>Adresse&nbsp;&nbsp;</th><th align=left>Höhe von - bis</th></tr>");
+		for (int cube : column) {
+			text.append("<tr><td><tt>").append(analysis.addresses.get(cube)).append("</tt></td><td>")
+					.append(String.format("%.3f - %.3f m", analysis.cubeZ[cube], analysis.cubeZ[cube] + analysis.cubeEdge[cube]))
+					.append("</td></tr>");
+		}
+		return text.append("</table></html>").toString();
+	}
+
 	/** Light to dark in one hue, low to high. */
-	private static Color heightColor(double fraction) {
+	static Color heightColor(double fraction) {
 		float[] light = { 0.84f, 0.91f, 0.98f };
 		float[] dark = { 0.05f, 0.22f, 0.45f };
 		float f = (float) Math.max(0, Math.min(1, fraction));
@@ -413,11 +469,11 @@ public class CubeTileDialog extends JDialog {
 				light[2] + (dark[2] - light[2]) * f);
 	}
 
-	private static final Color CUBE_FILL = new Color(0.45f, 0.62f, 0.82f);
+	static final Color CUBE_FILL = new Color(0.45f, 0.62f, 0.82f);
 	private static final Color CUBE_GAP = Color.WHITE;
-	private static final Color SURFACE_LINE = new Color(0.72f, 0.20f, 0.10f);
-	private static final Color AXIS_TEXT = new Color(0.30f, 0.30f, 0.30f);
-	private static final Color GRID_LINE = new Color(0.88f, 0.88f, 0.88f);
+	static final Color SURFACE_LINE = new Color(0.72f, 0.20f, 0.10f);
+	static final Color AXIS_TEXT = new Color(0.30f, 0.30f, 0.30f);
+	static final Color GRID_LINE = new Color(0.88f, 0.88f, 0.88f);
 
 	private abstract static class View extends JPanel {
 		private static final long serialVersionUID = 1L;
@@ -542,23 +598,6 @@ public class CubeTileDialog extends JDialog {
 			return columnToolTip(this.analysis, x, y);
 		}
 
-		static String columnToolTip(CubeTileAnalysis analysis, double x, double y) {
-			StringBuilder text = new StringBuilder("<html>");
-			text.append(String.format("%.2f m nach Ost, %.2f m nach Nord<br>Soll %.3f m", x, y, analysis.surfaceHeightAt(x, y)));
-
-			List<Integer> column = analysis.findCubesInColumn(x, y);
-			if (column.isEmpty()) {
-				return text.append("<br>kein Würfel</html>").toString();
-			}
-
-			text.append("<br><table cellspacing=0 cellpadding=1><tr><th align=left>Adresse&nbsp;&nbsp;</th><th align=left>Höhe von - bis</th></tr>");
-			for (int cube : column) {
-				text.append("<tr><td><tt>").append(analysis.addresses.get(cube)).append("</tt></td><td>")
-						.append(String.format("%.3f - %.3f m", analysis.cubeZ[cube], analysis.cubeZ[cube] + analysis.cubeEdge[cube]))
-						.append("</td></tr>");
-			}
-			return text.append("</table></html>").toString();
-		}
 	}
 
 	private static final class SectionView extends View {

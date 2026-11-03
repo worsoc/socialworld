@@ -101,6 +101,49 @@ public class CubeTileAnalysisTest {
   }
 
   @Test
+  void familyTiles_fitTogetherAtTheirEdges_andRiseByOneLevel() {
+    for (int firstTile : CubeTileAnalysis.getAdapterTiles()) {
+      if (firstTile % 10 != 1) {
+        continue;
+      }
+      CubeFamilyAnalysis family = new CubeFamilyAnalysis(firstTile + 4, MEDIUM, (byte) 1, (byte) 1);
+      assertThat(family.getTile(firstTile + 4).tile).isEqualTo(firstTile + 4);
+
+      for (int position = 0; position < 8; position++) {
+        CubeTileAnalysis here = family.tilesByPosition[position];
+        CubeTileAnalysis next = family.tilesByPosition[position + 1];
+        for (double across = 0; across <= MEDIUM; across += 1.5) {
+          double endHere = family.isWestToEast ? here.surfaceHeightAt(MEDIUM, across) : here.surfaceHeightAt(across, MEDIUM);
+          double startNext = family.isWestToEast ? next.surfaceHeightAt(0, across) : next.surfaceHeightAt(across, 0);
+          assertThat(endHere).as("family of " + firstTile + " after position " + position).isCloseTo(startNext, within(1e-9));
+        }
+      }
+
+      // the rising edge goes from height 0 to 1 over the whole row, one way or the other
+      double first = Double.MAX_VALUE;
+      double last = Double.MIN_VALUE;
+      for (double across : new double[] { 0, MEDIUM }) {
+        double start = family.isWestToEast ? family.tilesByPosition[0].surfaceHeightAt(0, across)
+            : family.tilesByPosition[0].surfaceHeightAt(across, 0);
+        double end = family.isWestToEast ? family.tilesByPosition[8].surfaceHeightAt(MEDIUM, across)
+            : family.tilesByPosition[8].surfaceHeightAt(across, MEDIUM);
+        first = Math.min(first, Math.abs(start - end));
+        last = Math.max(last, Math.abs(start - end));
+      }
+      assertThat(first).as("the fixed edge of family " + firstTile).isCloseTo(0, within(1e-9));
+      assertThat(last).as("the rising edge of family " + firstTile).isCloseTo(1, within(1e-9));
+    }
+  }
+
+  @Test
+  void groundAddresses_canBeLongerThanTheDepth() {
+    CubeTileAnalysis analysis = new CubeTileAnalysis(3, MEDIUM, (byte) 1, (byte) 1);
+
+    assertThat(analysis.addressesByDepth.length).isGreaterThan(2);
+    assertThat(Arrays.stream(analysis.addressesByDepth).sum()).isEqualTo(analysis.addresses.size());
+  }
+
+  @Test
   void emptyTile_hasNoAddresses() {
     CubeTileAnalysis analysis = new CubeTileAnalysis(0, SMALL, (byte) 0, (byte) 4);
 

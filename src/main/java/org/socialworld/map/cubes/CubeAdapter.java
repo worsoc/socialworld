@@ -77,6 +77,18 @@ public class CubeAdapter extends Cube {
 				+ "/9, übrige Ecken auf Höhe " + (tileNumber / 100 == 1 ? 0 : 1);
 	}
 
+	/**
+	 * @return the direction {to the east, to the north} in which the tiles of the
+	 *         family of this tile follow each other, each with the value -1, 0 or 1
+	 */
+	static int[] getRowDirection(int tileNumber) {
+		Family family = FAMILIES[(tileNumber % 100) / 10];
+		int[][] cornerPositions = { { 1, 0 }, { 0, 0 }, { 1, 1 }, { 0, 1 } }; // SO, SW, NO, NW
+		int[] from = cornerPositions[family.risingFrom];
+		int[] to = cornerPositions[family.risingTo];
+		return new int[] { to[0] - from[0], to[1] - from[1] };
+	}
+
 	public CubeAdapter(byte size, byte heightOffset) {
 		this.size = size;
 		this.heightOffset = heightOffset;
