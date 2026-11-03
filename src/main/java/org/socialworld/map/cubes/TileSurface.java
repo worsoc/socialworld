@@ -76,6 +76,27 @@ class TileSurface {
 	}
 
 	/**
+	 * @return the height of the surface at the given position
+	 */
+	double heightAt(double x, double y) {
+		double height = heightOnPlane(this.firstPlane, x, y);
+
+		if (this.secondPlane == null) {
+			return height;
+		}
+
+		double heightOnSecondPlane = heightOnPlane(this.secondPlane, x, y);
+		return this.isRidge ? Math.min(height, heightOnSecondPlane) : Math.max(height, heightOnSecondPlane);
+	}
+
+	private static double heightOnPlane(Vector3[] plane, double x, double y) {
+		Vector3 fromFirstToSecond = new Vector3(plane[1].x - plane[0].x, plane[1].y - plane[0].y, plane[1].z - plane[0].z);
+		Vector3 fromFirstToThird = new Vector3(plane[2].x - plane[0].x, plane[2].y - plane[0].y, plane[2].z - plane[0].z);
+		Vector3 normal = Vector3.crossProduct(fromFirstToSecond, fromFirstToThird);
+		return plane[0].z - (normal.x * (x - plane[0].x) + normal.y * (y - plane[0].y)) / normal.z;
+	}
+
+	/**
 	 * @return 1 if the point is above the surface, -1 if it is below the surface
 	 *         and 0 if it is on the surface
 	 */

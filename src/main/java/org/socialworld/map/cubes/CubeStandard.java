@@ -309,6 +309,26 @@ public class CubeStandard extends Cube {
     	return planes;
     }
     
+    static String describeTile(int tileNumber) {
+    	switch (tileNumber) {
+    	case 0 : return "eben";
+    	case 15 : return "eben, ein Level höher";
+    	case 16 : return "steigt um 2 Level von SW nach NO";
+    	case 17 : return "steigt um 2 Level von NO nach SW";
+    	case 18 : return "steigt um 2 Level von NW nach SO";
+    	case 19 : return "steigt um 2 Level von SO nach NW";
+    	}
+    	
+    	String[] corners = { "SO", "SW", "NO", "NW" };
+    	StringBuilder raised = new StringBuilder();
+    	for (int bit = 0; bit < corners.length; bit++) {
+    		if (((tileNumber >> bit) & 1) == 1) {
+    			raised.append(raised.length() == 0 ? "" : ", ").append(corners[bit]);
+    		}
+    	}
+    	return "hoch: " + raised;
+    }
+    
     private boolean isTileWithTwoLevels(int tileNumber) {
     	return tileNumber >= 16 && tileNumber <= 19;
     }

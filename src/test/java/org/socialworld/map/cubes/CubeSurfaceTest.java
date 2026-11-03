@@ -123,6 +123,14 @@ public class CubeSurfaceTest {
   }
 
   @Test
+  void adapterTiles_unknownNumber() {
+    for (int tile : new int[] { 0, 16, 100, 110, 180, 201, 299, 300, 381, 401 }) {
+      assertThatThrownBy(() -> new CubeAdapter(SMALL, (byte) 0).splitCube(tile, (byte) 2, false))
+          .as("tile " + tile).isInstanceOf(IllegalArgumentException.class);
+    }
+  }
+
+  @Test
   void adapterTiles_small() {
     checkAdapterTiles(SMALL, (byte) 0, (byte) 4);
   }
@@ -137,16 +145,16 @@ public class CubeSurfaceTest {
   @Test
   void cubesOfDifferentSizes_doNotAffectEachOther() {
     Cube small = new CubeStandard(SMALL, (byte) 0);
-    Cube adapter = new CubeAdapterNorth(SMALL, (byte) 0);
+    Cube adapter = new CubeAdapter(SMALL, (byte) 0);
 
     new CubeStandard(LARGE, (byte) 30);
-    new CubeAdapterNorth(MEDIUM, (byte) 4);
+    new CubeAdapter(MEDIUM, (byte) 4);
 
     small.splitCube(7, (byte) 3, false);
     adapter.splitCube(105, (byte) 3, false);
 
     Cube freshSmall = new CubeStandard(SMALL, (byte) 0);
-    Cube freshAdapter = new CubeAdapterNorth(SMALL, (byte) 0);
+    Cube freshAdapter = new CubeAdapter(SMALL, (byte) 0);
     freshSmall.splitCube(7, (byte) 3, false);
     freshAdapter.splitCube(105, (byte) 3, false);
 
@@ -175,25 +183,25 @@ public class CubeSurfaceTest {
 
   private void checkAdapterTiles(byte size, byte ground, byte depth) {
     // in each family one edge rises by 1/9 per tile from the first to the second corner
-    checkFamily(() -> new CubeAdapterNorth(size, ground), 101, NW, NO, FOLD_SO_NW, 0, size, ground, depth);
-    checkFamily(() -> new CubeAdapterNorth(size, ground), 131, NO, NW, FOLD_SO_NW, 0, size, ground, depth);
-    checkFamily(() -> new CubeAdapterNorth(size, ground), 301, NW, NO, FOLD_SO_NW, 1, size, ground, depth);
-    checkFamily(() -> new CubeAdapterNorth(size, ground), 331, NO, NW, FOLD_SO_NW, 1, size, ground, depth);
+    checkFamily(() -> new CubeAdapter(size, ground), 101, NW, NO, FOLD_SO_NW, 0, size, ground, depth);
+    checkFamily(() -> new CubeAdapter(size, ground), 131, NO, NW, FOLD_SO_NW, 0, size, ground, depth);
+    checkFamily(() -> new CubeAdapter(size, ground), 301, NW, NO, FOLD_SO_NW, 1, size, ground, depth);
+    checkFamily(() -> new CubeAdapter(size, ground), 331, NO, NW, FOLD_SO_NW, 1, size, ground, depth);
 
-    checkFamily(() -> new CubeAdapterEast(size, ground), 111, NO, SO, FOLD_SW_NO, 0, size, ground, depth);
-    checkFamily(() -> new CubeAdapterEast(size, ground), 151, SO, NO, FOLD_SW_NO, 0, size, ground, depth);
-    checkFamily(() -> new CubeAdapterEast(size, ground), 311, NO, SO, FOLD_SW_NO, 1, size, ground, depth);
-    checkFamily(() -> new CubeAdapterEast(size, ground), 351, SO, NO, FOLD_SW_NO, 1, size, ground, depth);
+    checkFamily(() -> new CubeAdapter(size, ground), 111, NO, SO, FOLD_SW_NO, 0, size, ground, depth);
+    checkFamily(() -> new CubeAdapter(size, ground), 151, SO, NO, FOLD_SW_NO, 0, size, ground, depth);
+    checkFamily(() -> new CubeAdapter(size, ground), 311, NO, SO, FOLD_SW_NO, 1, size, ground, depth);
+    checkFamily(() -> new CubeAdapter(size, ground), 351, SO, NO, FOLD_SW_NO, 1, size, ground, depth);
 
-    checkFamily(() -> new CubeAdapterWest(size, ground), 121, NW, SW, FOLD_SO_NW, 0, size, ground, depth);
-    checkFamily(() -> new CubeAdapterWest(size, ground), 141, SW, NW, FOLD_SO_NW, 0, size, ground, depth);
-    checkFamily(() -> new CubeAdapterWest(size, ground), 321, NW, SW, FOLD_SO_NW, 1, size, ground, depth);
-    checkFamily(() -> new CubeAdapterWest(size, ground), 341, SW, NW, FOLD_SO_NW, 1, size, ground, depth);
+    checkFamily(() -> new CubeAdapter(size, ground), 121, NW, SW, FOLD_SO_NW, 0, size, ground, depth);
+    checkFamily(() -> new CubeAdapter(size, ground), 141, SW, NW, FOLD_SO_NW, 0, size, ground, depth);
+    checkFamily(() -> new CubeAdapter(size, ground), 321, NW, SW, FOLD_SO_NW, 1, size, ground, depth);
+    checkFamily(() -> new CubeAdapter(size, ground), 341, SW, NW, FOLD_SO_NW, 1, size, ground, depth);
 
-    checkFamily(() -> new CubeAdapterSouth(size, ground), 161, SW, SO, FOLD_SW_NO, 0, size, ground, depth);
-    checkFamily(() -> new CubeAdapterSouth(size, ground), 171, SO, SW, FOLD_SW_NO, 0, size, ground, depth);
-    checkFamily(() -> new CubeAdapterSouth(size, ground), 361, SW, SO, FOLD_SW_NO, 1, size, ground, depth);
-    checkFamily(() -> new CubeAdapterSouth(size, ground), 371, SO, SW, FOLD_SW_NO, 1, size, ground, depth);
+    checkFamily(() -> new CubeAdapter(size, ground), 161, SW, SO, FOLD_SW_NO, 0, size, ground, depth);
+    checkFamily(() -> new CubeAdapter(size, ground), 171, SO, SW, FOLD_SW_NO, 0, size, ground, depth);
+    checkFamily(() -> new CubeAdapter(size, ground), 361, SW, SO, FOLD_SW_NO, 1, size, ground, depth);
+    checkFamily(() -> new CubeAdapter(size, ground), 371, SO, SW, FOLD_SW_NO, 1, size, ground, depth);
   }
 
   private void checkFamily(Supplier<Cube> newCube, int firstTile, int risingFrom, int risingTo, int fold, double fixedEdgeHeight,

@@ -621,7 +621,7 @@ public abstract class Cube {
     	byte detailDepth = 3;
     	byte heightOffset = 0;
         Cube cube = new CubeStandard(CUBE_SIZE_TILE_SMALL, heightOffset);
-       // Cube cube = new CubeAdapterWest(CUBE_SIZE_TILE_SMALL, heightOffset);
+       // Cube cube = new CubeAdapter(CUBE_SIZE_TILE_SMALL, heightOffset);
 
         byte setFullyFilledMinDepth = 1;
         switch (cube.size) {
