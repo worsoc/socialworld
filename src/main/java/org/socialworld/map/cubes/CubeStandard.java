@@ -28,32 +28,39 @@ public class CubeStandard extends Cube {
 
 	
 	
-	private static List<Vector3[]> planes_bit0; 
-	private static List<Vector3[]> planes_bit1; 
-	private static List<Vector3[]> planes_bit2; 
-	private static List<Vector3[]> planes_bit3; 
+	private List<Vector3[]> planes_bit0; 
+	private List<Vector3[]> planes_bit1; 
+	private List<Vector3[]> planes_bit2; 
+	private List<Vector3[]> planes_bit3; 
 
-	private static List<Vector3[]> planes_noBit0; 
-	private static List<Vector3[]> planes_noBit1; 
-	private static List<Vector3[]> planes_noBit2; 
-	private static List<Vector3[]> planes_noBit3; 
+	private List<Vector3[]> planes_noBit0; 
+	private List<Vector3[]> planes_noBit1; 
+	private List<Vector3[]> planes_noBit2; 
+	private List<Vector3[]> planes_noBit3; 
 	
-	private static List<Vector3[]> planes_bits_01; 
-	private static List<Vector3[]> planes_bits_02; 
-	private static List<Vector3[]> planes_bits_13; 
-	private static List<Vector3[]> planes_bits_23; 
+	private List<Vector3[]> planes_bits_01; 
+	private List<Vector3[]> planes_bits_02; 
+	private List<Vector3[]> planes_bits_13; 
+	private List<Vector3[]> planes_bits_23;
+	private List<Vector3[]> planes_bits_12;
+	private List<Vector3[]> planes_bits_03;
+
+	private List<Vector3[]> planes_flat;
+	private List<Vector3[]> planes_flat_raised;
+
+	private List<Vector3[]> planes_sw_to_no_2_levels;
+	private List<Vector3[]> planes_no_to_sw_2_levels;
+	private List<Vector3[]> planes_nw_to_so_2_levels;
+	private List<Vector3[]> planes_so_to_nw_2_levels;
 
 	public CubeStandard( byte size, byte heightOffset) {
 		this.size = size;
 		this.heightOffset = heightOffset;
+		initPlanes();
 		
 		 
 	}
 	
-    protected Cube getNewInstance(byte size,  byte heightOffset) {
-    	return new CubeStandard(size, heightOffset);
-    }
-
     protected void initPlanes() {
     	
     	Vector3[] resultPoints_bit0; 
@@ -150,6 +157,7 @@ public class CubeStandard extends Cube {
 
        	planes_noBit0 = new ArrayList<Vector3[]> ();
        	planes_noBit0.add(resultPoints_noBit0);
+       	planes_noBit0.add(getFlatPlaneAtHeightOne((byte)1, (byte)2, (byte)3));
    	
     	resultPoints_noBit1 = new Vector3[3];
     	resultPoints_noBit1[0] = new Vector3(coordinatesOfBitsIndex((byte)0));
@@ -163,6 +171,7 @@ public class CubeStandard extends Cube {
 
        	planes_noBit1 = new ArrayList<Vector3[]> ();
        	planes_noBit1.add(resultPoints_noBit1);
+       	planes_noBit1.add(getFlatPlaneAtHeightOne((byte)0, (byte)3, (byte)2));
     	
     	resultPoints_noBit2 = new Vector3[3];
     	resultPoints_noBit2[0] = new Vector3(coordinatesOfBitsIndex((byte)0));
@@ -176,6 +185,7 @@ public class CubeStandard extends Cube {
 
        	planes_noBit2 = new ArrayList<Vector3[]> ();
        	planes_noBit2.add(resultPoints_noBit2);
+       	planes_noBit2.add(getFlatPlaneAtHeightOne((byte)0, (byte)3, (byte)1));
    	
     	resultPoints_noBit3 = new Vector3[3];
     	resultPoints_noBit3[0] = new Vector3(coordinatesOfBitsIndex((byte)1));
@@ -189,6 +199,7 @@ public class CubeStandard extends Cube {
 
        	planes_noBit3 = new ArrayList<Vector3[]> ();
        	planes_noBit3.add(resultPoints_noBit3);
+       	planes_noBit3.add(getFlatPlaneAtHeightOne((byte)1, (byte)2, (byte)0));
 
     	///////////
       	
@@ -252,13 +263,99 @@ public class CubeStandard extends Cube {
       	planes_bits_23 = new ArrayList<Vector3[]> ();
       	planes_bits_23.add(resultPoints_bits_23);
 
+
+      	// two opposite corners are raised: a valley along the other diagonal
+      	planes_bits_12 = new ArrayList<Vector3[]> ();
+      	planes_bits_12.add(resultPoints_bit1);
+      	planes_bits_12.add(resultPoints_bit2);
+
+      	planes_bits_03 = new ArrayList<Vector3[]> ();
+      	planes_bits_03.add(resultPoints_bit0);
+      	planes_bits_03.add(resultPoints_bit3);
+
+      	
+      	// the tiles 0 and 15 are flat
+      	planes_flat = getPlaneThroughCorners(0, 0, 0);
+      	planes_flat_raised = getPlaneThroughCorners(1, 1, 1);
+
+      	// the tiles 16 ... 19 rise by 2 levels along a diagonal
+      	planes_sw_to_no_2_levels = getPlaneThroughCorners(0, -1, 1);
+      	planes_no_to_sw_2_levels = getPlaneThroughCorners(0, 1, -1);
+      	planes_nw_to_so_2_levels = getPlaneThroughCorners(1, 0, 0);
+      	planes_so_to_nw_2_levels = getPlaneThroughCorners(-1, 0, 0);
+
+    }
+
+    /*
+     * With three raised corners the sloping plane would climb on to height 2 at the
+     * fourth corner. The height change of a tile is always 1, so this flat plane
+     * limits the surface there, independent of the tile size.
+     */
+    /*
+     * The heights are relative to the height offset, as in the MapCreationTool. The
+     * height of the corner of bit 3 (NW) follows, as all four corners are in one plane.
+     */
+    private List<Vector3[]> getPlaneThroughCorners(int heightBit0, int heightBit1, int heightBit2) {
+    	Vector3[] points = new Vector3[3];
+    	points[0] = new Vector3(coordinatesOfBitsIndex((byte)0));
+    	points[0].z = heightBit0 + this.heightOffset;
+    	points[1] = new Vector3(coordinatesOfBitsIndex((byte)1));
+    	points[1].z = heightBit1 + this.heightOffset;
+    	points[2] = new Vector3(coordinatesOfBitsIndex((byte)2));
+    	points[2].z = heightBit2 + this.heightOffset;
+    	
+    	List<Vector3[]> planes = new ArrayList<Vector3[]> ();
+    	planes.add(points);
+    	return planes;
     }
     
+    private boolean isTileWithTwoLevels(int tileNumber) {
+    	return tileNumber >= 16 && tileNumber <= 19;
+    }
+    
+    private void checkTileWithTwoLevelsIsPossible(int tileNumber) {
+    	if (this.size == CUBE_SIZE_TILE_SMALL) {
+    		throw new IllegalArgumentException("Tile " + tileNumber + " rises by 2 levels, which is impossible on a small tile.");
+    	}
+    	if (this.heightOffset < 1) {
+    		throw new IllegalArgumentException("Tile " + tileNumber + " reaches 1 level below the height offset, so the height offset must be at least 1.");
+    	}
+    }
+    
+    @Override
+    protected byte getGroundHeightForTile(int tileNumber) {
+    	if (isTileWithTwoLevels(tileNumber)) {
+    		checkTileWithTwoLevelsIsPossible(tileNumber);
+    		return (byte) (this.heightOffset - 1);
+    	}
+    	return this.heightOffset;
+    }
+    
+    private Vector3[] getFlatPlaneAtHeightOne(byte bitIndexA, byte bitIndexB, byte bitIndexC) {
+    	Vector3[] points = new Vector3[3];
+    	points[0] = new Vector3(coordinatesOfBitsIndex(bitIndexA));
+    	points[0].z = 1 + this.heightOffset;
+    	points[1] = new Vector3(coordinatesOfBitsIndex(bitIndexB));
+    	points[1].z = 1 + this.heightOffset;
+    	points[2] = new Vector3(coordinatesOfBitsIndex(bitIndexC));
+    	points[2].z = 1 + this.heightOffset;
+    	return points;
+    }
 
-    
- 
-    
     protected List<Vector3[]> getPlanesForTile(int bitsNumber) {
+    	
+    	if (bitsNumber == 0) return planes_flat;
+    	if (bitsNumber == 15) return planes_flat_raised;
+    	
+    	if (isTileWithTwoLevels(bitsNumber)) {
+    		checkTileWithTwoLevelsIsPossible(bitsNumber);
+    		switch (bitsNumber) {
+    		case 16 : return planes_sw_to_no_2_levels;
+    		case 17 : return planes_no_to_sw_2_levels;
+    		case 18 : return planes_nw_to_so_2_levels;
+    		default : return planes_so_to_nw_2_levels;
+    		}
+    	}
     	
         /* create bits from Number */
         
@@ -305,7 +402,11 @@ public class CubeStandard extends Cube {
             	return planes_bits_13;
             else if ((indices[0] == 2) && (indices[1] == 3))
             	return planes_bits_23;
-            
+            else if ((indices[0] == 1) && (indices[1] == 2))
+            	return planes_bits_12;
+            else if ((indices[0] == 0) && (indices[1] == 3))
+            	return planes_bits_03;
+            break;
         case 3:
             bit = findIndexBits(false, bits);
             

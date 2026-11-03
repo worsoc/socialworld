@@ -56,6 +56,27 @@ class Vector3 {
 
 public abstract class Cube {
 	
+	/*
+	 * A sub cube only holds its part of the tree. The planes belong to the outermost
+	 * cube, which hands the surface down when splitting.
+	 */
+	private static final class InnerCube extends Cube {
+		
+		InnerCube(byte size, byte heightOffset) {
+			this.size = size;
+			this.heightOffset = heightOffset;
+		}
+		
+		@Override
+		protected void initPlanes() {
+		}
+		
+		@Override
+		protected List<Vector3[]> getPlanesForTile(int bitsNumber) {
+			throw new UnsupportedOperationException("A sub cube has no planes of its own.");
+		}
+	}
+	
 	protected final static byte CUBE_SIZE_TILE_SMALL = 1;
 	protected final static byte CUBE_SIZE_TILE_MEDIUM = 9;
 	protected final static byte CUBE_SIZE_TILE_LARGE = 81;
@@ -94,14 +115,12 @@ public abstract class Cube {
 	private static byte DIMENSION = 3;
     public static double epsilon = 0.000001;
     private byte depth = 0;
-    private Cube innerCubes[][][] = new Cube[DIMENSION][DIMENSION][DIMENSION];
+    private Cube innerCubes[][][];
     private boolean hasChildren = false;
     private byte countValidChildren = 0;
     private boolean isFullyFilled = false;
     private boolean isValid = true;
     private String address = "";
-
-    protected abstract Cube getNewInstance(byte size,  byte heightOffset);
 
     protected abstract void initPlanes();
     
@@ -124,12 +143,13 @@ public abstract class Cube {
     }
   
     private void fillInnerCubes() {
+        this.innerCubes = new Cube[DIMENSION][DIMENSION][DIMENSION];
         this.hasChildren = true;
         this.isValid = true;  
          for (byte x = 0; x < 3; x++) {
             for (byte y = 0; y < 3; y++) {
                 for (byte z = 0; z < 3; z++) {
-                    this.innerCubes[x][y][z] = getNewInstance(size, heightOffset);
+                    this.innerCubes[x][y][z] = new InnerCube(size, heightOffset);
                     this.innerCubes[x][y][z].depth = (byte) (this.depth + 1);
                     this.innerCubes[x][y][z].address = this.address + getLetter(x, y, z);
                 }
@@ -292,38 +312,13 @@ public abstract class Cube {
         return corners;
     }
    
-    private boolean isBeingSplit(List<Vector3[]> planeList, double absoluteX,
+    private boolean isBeingSplit(TileSurface surface, double absoluteX,
             double absoluteY, double absoluteZ, byte depth) {
-        
-    	
-    	
+
     	if (depth == 0)
             return true;
 
-    	Vector3 pointA;
-    	Vector3 pointB;
-    	Vector3 pointC;
-    	     	
-        Vector3 cornerOffsets[] = getCornerOffsets(depth);
-        byte originDeltaSignum;
-         
-        for (Vector3[] plane : planeList) {
-        	pointA = plane[0];
-        	pointB = plane[1];
-        	pointC = plane[2];
-            originDeltaSignum = (byte) Math
-                    .signum(getDelta(pointA, pointB, pointC, new Vector3(absoluteX, absoluteY, absoluteZ)));
-
-            for (int i = 1; i < cornerOffsets.length; i++) {
-                if (Math.signum(getDelta(pointA, pointB, pointC, new Vector3(absoluteX + cornerOffsets[i].x,
-                        absoluteY + cornerOffsets[i].y, absoluteZ + cornerOffsets[i].z))) != originDeltaSignum) {
-                	return true;
-                }
-            }
-
-        }
-  
-        return false;
+    	return surface.isSplitting(absoluteX, absoluteY, absoluteZ, getMinimalStepForDepth(depth));
     }
 
     private boolean isBeingSplit(Vector3 pointA, Vector3 pointB, Vector3 pointC, double absoluteX,
@@ -399,33 +394,31 @@ public abstract class Cube {
         return count;
     }
 
-    public void splitCube(int tileNumber, byte detailDepth, boolean keepPositiveDelta) {
-        if (tileNumber == 6 || tileNumber == 9) {
-            // execute 2 splits
-        	if (tileNumber == 6) {
-                this.recursiveSplitting((byte)2, detailDepth, (double) 0, (double) 0, (double) 0, keepPositiveDelta);
-                this.recursiveSplitting((byte)4, detailDepth, (double) 0, (double) 0, (double) 0, keepPositiveDelta);
-        	}
-        	else if (tileNumber == 9) {
-                this.recursiveSplitting((byte)1, detailDepth, (double) 0, (double) 0, (double) 0, keepPositiveDelta);
-                this.recursiveSplitting((byte)8, detailDepth, (double) 0, (double) 0, (double) 0, keepPositiveDelta);
-        	}
-        }
-        else {
-            this.recursiveSplitting(tileNumber, detailDepth, (double) 0, (double) 0, (double) 0, keepPositiveDelta);
-        }
- 
+    /*
+     * The ground reaches up to the lowest corner of the tile. That is the height
+     * offset, unless a tile reaches below it.
+     */
+    protected byte getGroundHeightForTile(int tileNumber) {
+    	return this.heightOffset;
     }
 
-    private void recursiveSplitting(int tileNumber, byte detailDepth, double absX, double absY, double absZ,
+    public void createTile(int tileNumber, byte detailDepth, boolean keepPositiveDelta) {
+    	fillTheGround(getGroundHeightForTile(tileNumber));
+    	splitCube(tileNumber, detailDepth, keepPositiveDelta);
+    }
+
+    public void splitCube(int tileNumber, byte detailDepth, boolean keepPositiveDelta) {
+        TileSurface surface = new TileSurface(getPlanesForTile(tileNumber));
+        this.recursiveSplitting(surface, detailDepth, (double) 0, (double) 0, (double) 0, keepPositiveDelta);
+    }
+
+    private void recursiveSplitting(TileSurface surface, byte detailDepth, double absX, double absY, double absZ,
             boolean keepPositiveDelta) {
-    	
+
     	// Matze: the sub cube has already been visited and marked as fully filled
     	if (this.isFullyFilled ) return;
-    	
-        List<Vector3[]> planes = getPlanesForTile(tileNumber);
 
-         if (isBeingSplit(planes, absX, absY, absZ, this.depth)) {
+         if (isBeingSplit(surface, absX, absY, absZ, this.depth)) {
             if (this.depth < detailDepth) {
                 double minStep = getMinimalStepForDepth((byte)(this.depth + 1));
                 if (!this.hasChildren) { 
@@ -437,7 +430,7 @@ public abstract class Cube {
                 for (byte x = 0; x < 3; x++) {
                     for (byte y = 0; y < 3; y++) {
                         for (byte z = 0; z < 3; z++) {
-                            this.innerCubes[x][y][z].recursiveSplitting(tileNumber, detailDepth, absX + (minStep * x),
+                            this.innerCubes[x][y][z].recursiveSplitting(surface, detailDepth, absX + (minStep * x),
                                     absY + (minStep * y), absZ + (minStep * z), keepPositiveDelta);
                         }
                     }
@@ -445,28 +438,18 @@ public abstract class Cube {
             } 
 
         } else if (countValidChildren == 0){
-            double delta;
-            Vector3 pointA;
-            Vector3 pointB;
-            Vector3 pointC;
-            boolean existsCorrect = false;
-            for (Vector3[] plane : planes) {
-            	pointA = plane[0];
-            	pointB = plane[1];
-            	pointC = plane[2];
-
-            	delta = getDelta(pointA, pointB, pointC, new Vector3(absX, absY, absZ));
-	            if ((delta > 0 && !keepPositiveDelta) || (delta < 0 && keepPositiveDelta)) {
-	            }
-	            else {
-	            	existsCorrect = true;
-	            }
- 
-            }  
-            if (!existsCorrect) {
+            // the center, because a corner of a cube can be on the surface
+            double halfEdge = getMinimalStepForDepth(this.depth) / 2;
+            int side = surface.sideOf(absX + halfEdge, absY + halfEdge, absZ + halfEdge);
+            if ((side > 0 && !keepPositiveDelta) || (side < 0 && keepPositiveDelta)) {
 	            this.hasChildren = false;
 	            this.isFullyFilled = false;
 	            this.isValid = false;
+            }
+            else {
+	            // the ground may have marked this cube or parts of it as empty
+	            this.hasChildren = false;
+	            this.isValid = true;
             }
 
         }
@@ -501,6 +484,7 @@ public abstract class Cube {
     private void setFullyFilled(byte depth, byte threasholdChildren) {
         
     	if (this.depth < depth) {
+	    	if (this.innerCubes == null) return;
 	    	for (byte iterX = 0; iterX < 3; iterX++) {
 	            for (byte iterY = 0; iterY < 3; iterY++) {
 	                for (byte iterZ = 0; iterZ < 3; iterZ++) {
@@ -582,10 +566,11 @@ public abstract class Cube {
     	
  
 	       this.hasChildren = true;
+           this.innerCubes = new Cube[DIMENSION][DIMENSION][DIMENSION];
            for (byte x = 0; x < 3; x++) {
                 for (byte y = 0; y < 3; y++) {
                     for (byte z = 0; z < 3; z++) {
-                        this.innerCubes[x][y][z] = getNewInstance(size, this.heightOffset);
+                        this.innerCubes[x][y][z] = new InnerCube(size, this.heightOffset);
                         this.innerCubes[x][y][z].depth = (byte) (this.depth + 1);
                         this.innerCubes[x][y][z].address = this.address + getLetter(x, y, z);
                         this.innerCubes[x][y][z].isFullyFilled = true;
@@ -648,9 +633,7 @@ public abstract class Cube {
 			setFullyFilledMinDepth = setFullyFilledMinDepth_large; break;
 		}
 
-        cube.initPlanes();
-        cube.fillTheGround(heightOffset);
-        cube.splitCube( 14, detailDepth, false);
+        cube.createTile( 14, detailDepth, false);
 
  /*     
         cube.setFullyFilled( (byte) (detailDepth - 1), (byte) 14); 

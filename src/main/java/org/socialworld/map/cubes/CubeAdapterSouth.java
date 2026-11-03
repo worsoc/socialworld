@@ -28,61 +28,57 @@ public class CubeAdapterSouth extends Cube {
 
 	
 	// 161 ... 169
-	private static List<Vector3[]> planes_sw_to_se_00__1; 
-	private static List<Vector3[]> planes_sw_to_se_00__2; 
-	private static List<Vector3[]> planes_sw_to_se_00__3; 
-	private static List<Vector3[]> planes_sw_to_se_00__4; 
-	private static List<Vector3[]> planes_sw_to_se_00__5; 
-	private static List<Vector3[]> planes_sw_to_se_00__6; 
-	private static List<Vector3[]> planes_sw_to_se_00__7; 
-	private static List<Vector3[]> planes_sw_to_se_00__8; 
-	private static List<Vector3[]> planes_sw_to_se_00__9; 
+	private List<Vector3[]> planes_sw_to_se_00__1; 
+	private List<Vector3[]> planes_sw_to_se_00__2; 
+	private List<Vector3[]> planes_sw_to_se_00__3; 
+	private List<Vector3[]> planes_sw_to_se_00__4; 
+	private List<Vector3[]> planes_sw_to_se_00__5; 
+	private List<Vector3[]> planes_sw_to_se_00__6; 
+	private List<Vector3[]> planes_sw_to_se_00__7; 
+	private List<Vector3[]> planes_sw_to_se_00__8; 
+	private List<Vector3[]> planes_sw_to_se_00__9; 
 	
 	// 361 ... 369
-	private static List<Vector3[]> planes_sw_to_se_11__1; 
-	private static List<Vector3[]> planes_sw_to_se_11__2; 
-	private static List<Vector3[]> planes_sw_to_se_11__3; 
-	private static List<Vector3[]> planes_sw_to_se_11__4; 
-	private static List<Vector3[]> planes_sw_to_se_11__5; 
-	private static List<Vector3[]> planes_sw_to_se_11__6; 
-	private static List<Vector3[]> planes_sw_to_se_11__7; 
-	private static List<Vector3[]> planes_sw_to_se_11__8; 
-	private static List<Vector3[]> planes_sw_to_se_11__9; 
+	private List<Vector3[]> planes_sw_to_se_11__1; 
+	private List<Vector3[]> planes_sw_to_se_11__2; 
+	private List<Vector3[]> planes_sw_to_se_11__3; 
+	private List<Vector3[]> planes_sw_to_se_11__4; 
+	private List<Vector3[]> planes_sw_to_se_11__5; 
+	private List<Vector3[]> planes_sw_to_se_11__6; 
+	private List<Vector3[]> planes_sw_to_se_11__7; 
+	private List<Vector3[]> planes_sw_to_se_11__8; 
+	private List<Vector3[]> planes_sw_to_se_11__9; 
 
 	// 179 ... 171
-	private static List<Vector3[]> planes_se_to_sw_00__9; 
-	private static List<Vector3[]> planes_se_to_sw_00__8; 
-	private static List<Vector3[]> planes_se_to_sw_00__7; 
-	private static List<Vector3[]> planes_se_to_sw_00__6; 
-	private static List<Vector3[]> planes_se_to_sw_00__5; 
-	private static List<Vector3[]> planes_se_to_sw_00__4; 
-	private static List<Vector3[]> planes_se_to_sw_00__3; 
-	private static List<Vector3[]> planes_se_to_sw_00__2; 
-	private static List<Vector3[]> planes_se_to_sw_00__1; 
+	private List<Vector3[]> planes_se_to_sw_00__9; 
+	private List<Vector3[]> planes_se_to_sw_00__8; 
+	private List<Vector3[]> planes_se_to_sw_00__7; 
+	private List<Vector3[]> planes_se_to_sw_00__6; 
+	private List<Vector3[]> planes_se_to_sw_00__5; 
+	private List<Vector3[]> planes_se_to_sw_00__4; 
+	private List<Vector3[]> planes_se_to_sw_00__3; 
+	private List<Vector3[]> planes_se_to_sw_00__2; 
+	private List<Vector3[]> planes_se_to_sw_00__1; 
 	
 	// 379 ... 371
-	private static List<Vector3[]> planes_se_to_sw_11__9; 
-	private static List<Vector3[]> planes_se_to_sw_11__8; 
-	private static List<Vector3[]> planes_se_to_sw_11__7; 
-	private static List<Vector3[]> planes_se_to_sw_11__6; 
-	private static List<Vector3[]> planes_se_to_sw_11__5; 
-	private static List<Vector3[]> planes_se_to_sw_11__4; 
-	private static List<Vector3[]> planes_se_to_sw_11__3; 
-	private static List<Vector3[]> planes_se_to_sw_11__2; 
-	private static List<Vector3[]> planes_se_to_sw_11__1; 
+	private List<Vector3[]> planes_se_to_sw_11__9; 
+	private List<Vector3[]> planes_se_to_sw_11__8; 
+	private List<Vector3[]> planes_se_to_sw_11__7; 
+	private List<Vector3[]> planes_se_to_sw_11__6; 
+	private List<Vector3[]> planes_se_to_sw_11__5; 
+	private List<Vector3[]> planes_se_to_sw_11__4; 
+	private List<Vector3[]> planes_se_to_sw_11__3; 
+	private List<Vector3[]> planes_se_to_sw_11__2; 
+	private List<Vector3[]> planes_se_to_sw_11__1; 
 
 	
 	public CubeAdapterSouth( byte size, byte heightOffset) {
 		this.size = size;
 		this.heightOffset = heightOffset;
+		initPlanes();
 	}
 
 	
-	@Override
-	protected Cube getNewInstance(byte size, byte heightOffset) {
-    	return new CubeAdapterSouth(size, heightOffset);
-	}
-
 	@Override
 	protected void initPlanes() {
 
@@ -198,7 +194,7 @@ public class CubeAdapterSouth extends Cube {
 		resultPoints_sw_to_se_plane2[1].z = 0 + this.heightOffset;
 
 		resultPoints_sw_to_se_plane2[2] = new Vector3(coordinatesOfBitsIndex((byte)0));
-		resultPoints_sw_to_se_plane2[2].z = (1/9) + this.heightOffset;
+		resultPoints_sw_to_se_plane2[2].z = ((double)1/(double)9) + this.heightOffset;
 
 		
 		// TileNumber 161
@@ -386,7 +382,7 @@ public class CubeAdapterSouth extends Cube {
 		resultPoints_sw_to_se_plane2[1].z = 0 + this.heightOffset;
 
 		resultPoints_sw_to_se_plane2[2] = new Vector3(coordinatesOfBitsIndex((byte)0));
-		resultPoints_sw_to_se_plane2[2].z = (1/9) + this.heightOffset;
+		resultPoints_sw_to_se_plane2[2].z = ((double)1/(double)9) + this.heightOffset;
 	
 		
 		// TileNumber 361
@@ -565,14 +561,14 @@ public class CubeAdapterSouth extends Cube {
 		resultPoints_se_to_sw_plane1[1].z = 0 + this.heightOffset;
 
 		resultPoints_se_to_sw_plane1[2] = new Vector3(coordinatesOfBitsIndex((byte)1));
-		resultPoints_se_to_sw_plane1[2].z = (1/9) + this.heightOffset;
+		resultPoints_se_to_sw_plane1[2].z = ((double)1/(double)9) + this.heightOffset;
 
 		resultPoints_se_to_sw_plane2 = new Vector3[3];
 		resultPoints_se_to_sw_plane2[0] = new Vector3(coordinatesOfBitsIndex((byte)2));
 		resultPoints_se_to_sw_plane2[0].z = 0 + this.heightOffset;
 
 		resultPoints_se_to_sw_plane2[1] = new Vector3(coordinatesOfBitsIndex((byte)1));
-		resultPoints_se_to_sw_plane2[1].z = (1/9) + this.heightOffset;
+		resultPoints_se_to_sw_plane2[1].z = ((double)1/(double)9) + this.heightOffset;
 
 		resultPoints_se_to_sw_plane2[2] = new Vector3(coordinatesOfBitsIndex((byte)0));
 		resultPoints_se_to_sw_plane2[2].z = 0 + this.heightOffset;
@@ -755,14 +751,14 @@ public class CubeAdapterSouth extends Cube {
 		resultPoints_se_to_sw_plane1[1].z = 1 + this.heightOffset;
 
 		resultPoints_se_to_sw_plane1[2] = new Vector3(coordinatesOfBitsIndex((byte)1));
-		resultPoints_se_to_sw_plane1[2].z = (1/9) + this.heightOffset;
+		resultPoints_se_to_sw_plane1[2].z = ((double)1/(double)9) + this.heightOffset;
 
 		resultPoints_se_to_sw_plane2 = new Vector3[3];
 		resultPoints_se_to_sw_plane2[0] = new Vector3(coordinatesOfBitsIndex((byte)2));
 		resultPoints_se_to_sw_plane2[0].z = 1 + this.heightOffset;
 
 		resultPoints_se_to_sw_plane2[1] = new Vector3(coordinatesOfBitsIndex((byte)1));
-		resultPoints_se_to_sw_plane2[1].z = (1/9) + this.heightOffset;
+		resultPoints_se_to_sw_plane2[1].z = ((double)1/(double)9) + this.heightOffset;
 
 		resultPoints_se_to_sw_plane2[2] = new Vector3(coordinatesOfBitsIndex((byte)0));
 		resultPoints_se_to_sw_plane2[2].z = 0 + this.heightOffset;
