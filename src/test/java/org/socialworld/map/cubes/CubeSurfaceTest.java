@@ -170,7 +170,7 @@ public class CubeSurfaceTest {
 
     int fold;
     switch (tile) {
-      case 1: case 7: case 8: case 9: case 14:
+      case 1: case 6: case 7: case 8: case 14:
         fold = FOLD_SW_NO;
         break;
       default:

@@ -73,6 +73,8 @@ public final class LTileRaster {
 	/**
 	 * Liefert die Höhe an einem Punkt der Fläche. Jede Kachel besteht aus zwei ebenen Dreiecken, die an
 	 * der Diagonale zwischen den beiden Ecken mit dem kleineren Höhenunterschied aneinanderstoßen.
+	 * Sind beide Unterschiede gleich, ist es die höhere Diagonale: Bei zwei gegenüberliegenden
+	 * angehobenen Ecken (Kacheln 6 und 9) entsteht so ein Grat.
 	 *
 	 * @param x von West nach Ost in Kachelbreiten, 0 bis 9
 	 * @param y von Nord nach Süd in Kachelbreiten, 0 bis 9
@@ -89,7 +91,12 @@ public final class LTileRaster {
 		int so = tileCorners[first + 2];
 		int sw = tileCorners[first + 3];
 
-		if (Math.abs(no - sw) <= Math.abs(nw - so)) {
+		int differenceNoSw = Math.abs(no - sw);
+		int differenceNwSo = Math.abs(nw - so);
+		boolean foldFromNoToSw = differenceNoSw < differenceNwSo
+				|| (differenceNoSw == differenceNwSo && no + sw >= nw + so);
+
+		if (foldFromNoToSw) {
 			if (u + v <= 1) {
 				return nw + u * (no - nw) + v * (sw - nw);
 			}

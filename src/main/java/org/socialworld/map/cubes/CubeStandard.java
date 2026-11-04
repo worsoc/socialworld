@@ -264,14 +264,14 @@ public class CubeStandard extends Cube {
       	planes_bits_23.add(resultPoints_bits_23);
 
 
-      	// two opposite corners are raised: a valley along the other diagonal
+      	// two opposite corners are raised: a ridge along the diagonal between them
       	planes_bits_12 = new ArrayList<Vector3[]> ();
-      	planes_bits_12.add(resultPoints_bit1);
-      	planes_bits_12.add(resultPoints_bit2);
+      	planes_bits_12.add(resultPoints_noBit3);
+      	planes_bits_12.add(resultPoints_noBit0);
 
       	planes_bits_03 = new ArrayList<Vector3[]> ();
-      	planes_bits_03.add(resultPoints_bit0);
-      	planes_bits_03.add(resultPoints_bit3);
+      	planes_bits_03.add(resultPoints_noBit2);
+      	planes_bits_03.add(resultPoints_noBit1);
 
       	
       	// the tiles 0 and 15 are flat

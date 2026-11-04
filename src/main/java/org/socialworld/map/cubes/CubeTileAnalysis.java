@@ -36,7 +36,7 @@ final class CubeTileAnalysis {
 	static final int MAX_DEPTH = 6;
 	static final int TOP_VIEW_CELLS = 243;
 
-	private static final String LETTERS = "ABCDEFGHIJKLM#NOPQRSTUVWXYZ";
+	static final String LETTERS = "ABCDEFGHIJKLM#NOPQRSTUVWXYZ";
 	private static final int FIRST_ADAPTER_TILE = 100;
 
 	final int tile;

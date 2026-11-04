@@ -77,9 +77,9 @@ public abstract class Cube {
 		}
 	}
 	
-	protected final static byte CUBE_SIZE_TILE_SMALL = 1;
-	protected final static byte CUBE_SIZE_TILE_MEDIUM = 9;
-	protected final static byte CUBE_SIZE_TILE_LARGE = 81;
+	public final static byte CUBE_SIZE_TILE_SMALL = 1;
+	public final static byte CUBE_SIZE_TILE_MEDIUM = 9;
+	public final static byte CUBE_SIZE_TILE_LARGE = 81;
 
 	
 	protected static final Vector3[] coordinatesForBit_small = {
