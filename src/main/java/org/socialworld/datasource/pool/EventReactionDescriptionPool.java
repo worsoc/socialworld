@@ -328,10 +328,4 @@ public class EventReactionDescriptionPool extends DescriptionPool {
 
 	}
 
-
-	
-	private void initializeFromFile() {
-		
-	}
-
 }

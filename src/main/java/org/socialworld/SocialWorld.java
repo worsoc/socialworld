@@ -21,8 +21,6 @@ package org.socialworld;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.core.Simulation;
-import org.socialworld.data.FillWithTestData_ACM;
-import org.socialworld.data.FillWithTestData_Position;
 import org.socialworld.visualize.SimVisual;
 
 
@@ -72,8 +70,6 @@ public class SocialWorld  {
 		
 //		test();
 		
-//		fillTestData();
-		
 		simulation.startSimulation();
 		visualize = true;
 		simulation.stopSimulation();
@@ -122,24 +118,6 @@ public class SocialWorld  {
 	private static void test()	{
 		 
 		 TryItOut.tryItOut();
-	}
-	
-	
-	
-	private static void fillTestData() {
-	
-		
-		
-		FillWithTestData_ACM fillACM;
-		fillACM = new FillWithTestData_ACM();
-		
-		fillACM.fill(4);
-		
-		
-		FillWithTestData_Position fillPosition;
-		fillPosition = new FillWithTestData_Position();
-		fillPosition.fill();
-		
 	}
 }
 
