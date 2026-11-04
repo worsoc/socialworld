@@ -41,6 +41,10 @@ public class JsonExtractionStep {
     // Ein optionaler, benutzerdefinierter Name für das Ziel-Feld
     public String customLabel;
 
+    // Nur bei category "value": der Typ am Ende des Pfads (z. B. "SWType_31" oder "StateAppearance"), bisher nur abgelegt.
+    // Bei "property" ist der Typ implizit, das Feld fehlt dort.
+    public String resultType;
+
     // Der geordnete Pfad zur Laufzeit (Mix aus GETVal, GETProp, GETFctVal)
     public List<String> pathSteps;
 }

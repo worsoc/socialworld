@@ -1,249 +1,120 @@
 package org.socialworld.tools.pct;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.socialworld.calculation.Value;
-import org.socialworld.calculation.expressions.CreateKnowledgeElementExpression;
 import org.socialworld.calculation.expressions.GetValue;
-import org.socialworld.knowledge.KnowledgeFact_Type;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.GroupingOfSimulationObjects;
 import org.socialworld.tools.Generation;
 import org.socialworld.tools.SimulationMetaInformation;
 import org.socialworld.tools.StringTupel;
 
+/**
+ * Generates all paths along which a perception can read something from the subject of an event.
+ * The paths come from the meta information of the simulation classes.
+ */
 public class PerceptionGeneration extends Generation{
 
-	private static final int PERCEPTION_GENERATION_COUNT_VARIANTS = 4;
-	private static final int PERCEPTION_GENERATION_STOP_DOT_NOTATION_MODULO_DIVISOR = 4;
-	
-	private String pd_subject_causer;
-	private String pd_subject_target;
-
-	private String pd_source;
-
-	private String pd_value_praefix;
-	private String pd_property_praefix;
-	
-	private String placeholder_valueName = "PLACEHOLDER_VALUENAME";
-	private String placeholder_className = "PLACEHOLDER_CLASSNAME";
-	
 	public static final String CHAINED_NAME_SEPARATOR = ".";
 	
 	
 	private List<Integer> allGroupingNumbers; 
-
-	List<String> dotElementConcats;
 	
 	PerceptionGeneration() {
-		pd_subject_causer = CreateKnowledgeElementExpression.LABEL_SUBJECT + ":" +
-							GetValue.getValue(Value.VALUE_BY_NAME_EVENT_PARAMS) + "." +
-							GetValue.getValue(Value.VALUE_BY_NAME_EVENT_CAUSER) + ";";
-		
-		pd_subject_target = CreateKnowledgeElementExpression.LABEL_SUBJECT + ":" +
-							GetValue.getValue(Value.VALUE_BY_NAME_EVENT_PARAMS) + "." +
-							GetValue.getValue(Value.VALUE_BY_NAME_EVENT_TARGET) + ";";
-
-		pd_source = CreateKnowledgeElementExpression.LABEL_KNOWLEDGESOURCETYPE + ":1&" +	// always source type MYSELF
-					CreateKnowledgeElementExpression.LABEL_KNOWLEDGESOURCE + ":" +
-					GetValue.getValue(Value.VALUE_NAME_KNOWLEDGE_SOURCE_MYSELF) + ";" ;
-		
-		pd_value_praefix = CreateKnowledgeElementExpression.LABEL_KNOWLEDGEVALUE;
-		pd_property_praefix = CreateKnowledgeElementExpression.LABEL_KNOWLEDGEPROPERTY ;
-
-		
-
 		initArrayAllGroupingNumbers();
 	}
 	
 
-	public List<String> generateAllPerceptionKnowledgeAtomDescriptions() {
-
-		List<String> allDescriptions = new ArrayList<String>();
-		List<String> descriptionsKnowledgeValue;
-		List<String> descriptionsKnowledgeProperty;
+	/**
+	 * @param subjectValueName for example Value.VALUE_BY_NAME_EVENT_CAUSER
+	 */
+	public List<PerceptionPath> generateAllValuePaths(String subjectValueName) {
 		
-		for (KnowledgeFact_Type k_a_t : KnowledgeFact_Type.values()) {
-			
-			switch (k_a_t) {
-			case value: 
-				//descriptionsKnowledgeValue = generateAllPerceptionKnowledgeValueDescriptions();
-				//allDescriptions.addAll(descriptionsKnowledgeValue);
-				break;
-			case property: 
-				//descriptionsKnowledgeProperty = generateAllPerceptionKnowledgePropertyDescriptions();
-				//allDescriptions.addAll(descriptionsKnowledgeProperty);
-				break;
-			//default:
-			}
-		}
+		Set<PerceptionPath> paths = new LinkedHashSet<PerceptionPath>();
 		
-		return allDescriptions;
+		collectPathsForAllGroupings(subjectValueName, PerceptionPath.NO_CRITERION, paths);
 		
+		return new ArrayList<PerceptionPath>(paths);
 	}
 	
 	
-	private List<String> generateAllPerceptionKnowledgeValueDescriptions() {
+	/**
+	 * @param subjectValueName for example Value.VALUE_BY_NAME_EVENT_CAUSER
+	 */
+	public List<PerceptionPath> generateAllPropertyPaths(String subjectValueName) {
 		
-		List<String> allDescriptions = new ArrayList<String>();
-		
-		String lastClassName = "SimulationObject";
-		
-		int kfc = -1;
-		
-		String descriptionTemplate = "";
-
-		descriptionTemplate = pd_value_praefix + "(" + placeholder_className +  placeholder_valueName + "):";
-		descriptionTemplate += GetValue.getValue(Value.VALUE_BY_NAME_EVENT_PARAMS) + "." +
-				GetValue.getValue(Value.VALUE_BY_NAME_EVENT_CAUSER) + "#" + "<GETVALUE_GETISELEMENTOF_NUMBER>";
-		
-		String description;
-		String knowledgeAtomName = "";
-		List<String> ignoreNDEs = new ArrayList<String> ();
-		
-		for (int indexGN = 0; indexGN < allGroupingNumbers.size();  indexGN++ ) {
-			
-			dotElementConcats = new ArrayList<String>();
-			
-			lastClassName = GroupingOfSimulationObjects.PRAEFIX_SIMOBJECT_GROUPING_NUMBER + allGroupingNumbers.get(indexGN);
-			
-			description = descriptionTemplate.replaceFirst("<GETVALUE_GETISELEMENTOF_NUMBER>", 
-					GetValue.getIsElementOf(allGroupingNumbers.get(indexGN)));
-
-			knowledgeAtomName = "";
-			
-			getDotElementConcats(0, lastClassName, kfc, description, knowledgeAtomName, ignoreNDEs);
-			
-			allDescriptions.addAll(dotElementConcats);
-			
-		}
-		// "<GETVALUE_GETISELEMENTOF_NUMBER>" = GetValue.getIsElementOf(indexGroupingOfSimulationObjects)
-		
-		return allDescriptions;
-	}
-	
-	
-	private List<String> generateAllPerceptionKnowledgePropertyDescriptions() {
-		
-		List<String> allDescriptions = new ArrayList<String>();
-		
-		String lastClassName = "SimulationObject";
-		
-//		boolean newPropertyForKFC = false; // new property line for KFC
-//		List<Integer> usedKFCNumberSoFar = new ArrayList<Integer>();
-		
-		String descriptionTemplate = "";
-		String knowledgeAtomName = "";
-
+		Set<PerceptionPath> paths = new LinkedHashSet<PerceptionPath>();
 		
 		for (KnowledgeFact_Criterion criterion : KnowledgeFact_Criterion.values()) {
-		
-			int kfc = criterion.getIndex();
 			
-			descriptionTemplate =   pd_property_praefix + "(" + kfc +  placeholder_valueName + "):";
-			descriptionTemplate += GetValue.getValue(Value.VALUE_BY_NAME_EVENT_PARAMS) + "." +
-					GetValue.getValue(Value.VALUE_BY_NAME_EVENT_CAUSER) + "#" + "<GETVALUE_GETISELEMENTOF_NUMBER>";
-		
-			String description;
-			List<String> ignoreNDEs = new ArrayList<String> ();
+			// "nothing" is no criterion, and relations are no properties
+			if (criterion == KnowledgeFact_Criterion.nothing || criterion.isRelation()) continue;
 			
-			for (int indexGN = 0; indexGN < allGroupingNumbers.size();  indexGN++ ) {
-				
-				dotElementConcats = new ArrayList<String>();
-				
-				lastClassName = GroupingOfSimulationObjects.PRAEFIX_SIMOBJECT_GROUPING_NUMBER + allGroupingNumbers.get(indexGN);
-				
-				description = descriptionTemplate.replaceFirst("<GETVALUE_GETISELEMENTOF_NUMBER>", 
-						GetValue.getIsElementOf(allGroupingNumbers.get(indexGN)));
-				
-				knowledgeAtomName = "";
-				
-				getDotElementConcats(0, lastClassName, kfc, description, knowledgeAtomName, ignoreNDEs);
-				
-				allDescriptions.addAll(dotElementConcats);
-				
-			}
-		
+			collectPathsForAllGroupings(subjectValueName, criterion.getIndex(), paths);
 		}
-		// "<GETVALUE_GETISELEMENTOF_NUMBER>" = GetValue.getIsElementOf(indexGroupingOfSimulationObjects)
 		
-		return allDescriptions;
-		
+		return new ArrayList<PerceptionPath>(paths);
 	}
 	
 	
+	private void collectPathsForAllGroupings(String subjectValueName, int nrKFC, Set<PerceptionPath> paths) {
+		
+		for (int groupingNumber : allGroupingNumbers) {
+			
+			List<String> startSteps = new ArrayList<String>();
+			startSteps.add(GetValue.getValue(Value.VALUE_BY_NAME_EVENT_PARAMS));
+			startSteps.add(GetValue.getValue(subjectValueName) + "#" + GetValue.getIsElementOf(groupingNumber));
+			
+			String className = GroupingOfSimulationObjects.PRAEFIX_SIMOBJECT_GROUPING_NUMBER + groupingNumber;
+			
+			collectPaths(0, className, nrKFC, startSteps, "", new ArrayList<String>(), paths);
+		}
+	}
 	
-	private void getDotElementConcats(
-			int depth,  String lastClassName, int nrKFC, String dotElementConcat, String chainedName, List<String> ignoreNDEs) {
+	
+	private void collectPaths(
+			int depth,  String lastClassName, int nrKFC, List<String> steps, String chainedName, List<String> ignoreNDEs, Set<PerceptionPath> paths) {
 		
-		String nextDepthDotElementConcat;
-		String nextDepthChainedName;
-
-		List<NextDotElement> nextDotElements;
-		boolean ignore;
+		List<NextDotElement> nextDotElements = getNextDotElements(lastClassName, nrKFC);
 		
-		List<String> ignoreNDEsNextDepth;
+		if (nextDotElements.isEmpty()) {
+			// at depth 0 the path would only check the grouping, but read nothing
+			if (depth > 0) {
+				// the type of a property is implicit, only a value names its type
+				String resultType = (nrKFC == PerceptionPath.NO_CRITERION) ? lastClassName : "";
+				paths.add(new PerceptionPath(nrKFC, chainedName, resultType, steps));
+			}
+			return;
+		}
 		
-		nextDotElements = getNextDotElements(lastClassName, nrKFC);
-		
-		if (nextDotElements.size()  > 0)  {
+		for (NextDotElement nde :  nextDotElements) {
 			
+			if (ignoreNDEs.contains(nde.nextDotElement)) continue;
 			
-			for (NextDotElement nde :  nextDotElements) {
-				
-				// checking for ignoring next dot element
-				ignore = false;
-				for (String elem : ignoreNDEs) {
-					if (nde.nextDotElement.equals(elem)) {
-						ignore = true;
-					}
-				}
-				if (ignore) continue;
-				
-				nextDepthDotElementConcat = dotElementConcat + "." + nde.nextDotElement;
-				
-				if (nde.knowledgeAtomNamePart.isEmpty()) {
-					nextDepthChainedName = chainedName;
+			List<String> nextSteps = new ArrayList<String>(steps);
+			nextSteps.add(nde.nextDotElement);
+			
+			String nextChainedName = chainedName;
+			if (!nde.knowledgeAtomNamePart.isEmpty()) {
+				if (chainedName.isEmpty()) {
+					nextChainedName = nde.knowledgeAtomNamePart;
 				}
 				else {
-					if (chainedName.isEmpty()) {
-						nextDepthChainedName = nde.knowledgeAtomNamePart;
-					}
-					else {
-						nextDepthChainedName = chainedName + CHAINED_NAME_SEPARATOR + nde.knowledgeAtomNamePart;
-					}
+					nextChainedName = chainedName + CHAINED_NAME_SEPARATOR + nde.knowledgeAtomNamePart;
 				}
-				
-				ignoreNDEsNextDepth = new ArrayList<String>();
-				ignoreNDEsNextDepth.addAll(ignoreNDEs);
-				ignoreNDEsNextDepth.add(nde.nextDotElement);
-				
-				getDotElementConcats(depth + 1, nde.className, nrKFC, nextDepthDotElementConcat, nextDepthChainedName, ignoreNDEsNextDepth);
-				
 			}
-
+			
+			List<String> ignoreNDEsNextDepth = new ArrayList<String>(ignoreNDEs);
+			ignoreNDEsNextDepth.add(nde.nextDotElement);
+			
+			collectPaths(depth + 1, nde.className, nrKFC, nextSteps, nextChainedName, ignoreNDEsNextDepth, paths);
 		}
-		else {
-			
-			// add Type name to KVal
-			if (nrKFC == -1) {
-				dotElementConcat = dotElementConcat.replaceFirst(	placeholder_className,	lastClassName);
-			}
-	
-			if (chainedName.length() > 0) {
-				dotElementConcat = dotElementConcat.replaceFirst(	placeholder_valueName,	"," + 	chainedName);
-			}
-			else {
-				dotElementConcat = dotElementConcat.replaceFirst(	placeholder_valueName,	"");
-			}
-			
-			
-			//System.out.println(dotElementConcat);
-			dotElementConcats.add(dotElementConcat);
-		}
-		
 	}
+	
 	
 	private List<NextDotElement> getNextDotElements(String lastClassName, int nrKFC) {
 		
@@ -365,7 +236,8 @@ public class PerceptionGeneration extends Generation{
 				propertyClassName = selectedPropertyFromMethod.getLeft();
 				
 				if ( propertyClassName.equals(SimulationMetaInformation.CLASSNAME_ENUM_INDEX)) {
-					
+					// the path ends on the enum: KnowledgeProperty gets its lexem from the enum itself
+					addToResult = false;
 				}
 				else {
 					if (nrKFC >= 0) {
@@ -393,255 +265,6 @@ public class PerceptionGeneration extends Generation{
 
 		return nextDotElements;
 		
-	}
-	
-	
-	public String generatePerceptionDescription(String someCharacters) {
-		
-		String perceptionDescription = "";
-		int countChars = someCharacters.length();
-		if (countChars > 4) {
-
-			byte[] bytes;
-			bytes = someCharacters.getBytes();
-
-			NextDotElement nextDotElement = null;
-			String lastClassName = "SimulationObject";
-			int groupingNumber;
-			
-
-			boolean newKFCElement = false;  // new KFC number
-			
-			boolean newPropertyForKFC = false; // new property line for KFC
-			int kfc = -1;
-			List<Integer> usedKFCNumberSoFar = new ArrayList<Integer>();
-			
-			switch (bytes[0] % PERCEPTION_GENERATION_COUNT_VARIANTS) {
-				case 0:
-					// source myself, subject causer,  knowledge value
-					perceptionDescription = pd_source + pd_subject_causer + pd_value_praefix + ":";
-					perceptionDescription += GetValue.getValue(Value.VALUE_BY_NAME_EVENT_PARAMS) + "." +
-							GetValue.getValue(Value.VALUE_BY_NAME_EVENT_CAUSER) + "#" + GetValue.getIsElementOf(getGroupingNumberForIndex(bytes[0]));
-					for (int index = 1; index < bytes.length; index++) {
-							nextDotElement = getNextDotElement(lastClassName, bytes[index], kfc);
-							if (nextDotElement.nextDotElement.length() > 0) {
-								perceptionDescription += ".";
-								perceptionDescription += nextDotElement.nextDotElement;
-								lastClassName = nextDotElement.className;
-							}
-							else
-								break;
-					}
-					break;
-				case 1:
-					// source myself, subject target, knowledge value
-					perceptionDescription = pd_source + pd_subject_target +  pd_value_praefix + ":";
-					perceptionDescription += GetValue.getValue(Value.VALUE_BY_NAME_EVENT_PARAMS) + "." +
-							GetValue.getValue(Value.VALUE_BY_NAME_EVENT_TARGET) + "#" + GetValue.getIsElementOf(getGroupingNumberForIndex(bytes[0]));
-					for (int index = 1; index < bytes.length; index++) {
-							nextDotElement = getNextDotElement(lastClassName, bytes[index], kfc);
-							if (nextDotElement.nextDotElement.length() > 0) {
-								perceptionDescription += ".";
-								perceptionDescription += nextDotElement.nextDotElement;
-								lastClassName = nextDotElement.className;
-							}
-							else
-								break;
-					}
-					break;
-				case 2:
-					// source myself, subject causer,  knowledge property for kfc
-					perceptionDescription = pd_source + pd_subject_causer  ;
-					newKFCElement = true;
-					for (int index = 1; index < bytes.length; index++) {
-						if (newKFCElement == true ) {
-							kfc = getKFCNumber(index, bytes[index], usedKFCNumberSoFar);
-							if (kfc == -1) {
-								// try getKFCNumber for next index again
-								newKFCElement = true;
-								continue;
-							}
-							if (index > 1) {
-								// it's the beginning of a further KFC-block
-								// --> finish the last KFC-block
-								perceptionDescription += ";" ;
-							}
-							groupingNumber = getGroupingNumberForIndex(bytes[index]);
-							perceptionDescription +=  pd_property_praefix + "(" + kfc + ",devValueName_" + index + "):";
-							perceptionDescription += GetValue.getValue(Value.VALUE_BY_NAME_EVENT_PARAMS) + "." +
-									GetValue.getValue(Value.VALUE_BY_NAME_EVENT_CAUSER) + "#" + GetValue.getIsElementOf(groupingNumber);
-							lastClassName = GroupingOfSimulationObjects.PRAEFIX_SIMOBJECT_GROUPING_NUMBER + groupingNumber;
-							newPropertyForKFC = false;
-							newKFCElement = false;
-						}
-						else if (newPropertyForKFC == true ) {
-							groupingNumber = getGroupingNumberForIndex(bytes[index]);
-							perceptionDescription += "&" + pd_property_praefix + "(" + kfc + ",devValueName_" + index + "):";
-							perceptionDescription += GetValue.getValue(Value.VALUE_BY_NAME_EVENT_PARAMS) + "." +
-									GetValue.getValue(Value.VALUE_BY_NAME_EVENT_CAUSER) + "#" + GetValue.getIsElementOf(groupingNumber);
-							lastClassName = GroupingOfSimulationObjects.PRAEFIX_SIMOBJECT_GROUPING_NUMBER + groupingNumber;
-							newPropertyForKFC = false;
-						}
-						nextDotElement = getNextDotElement(lastClassName, bytes[index], kfc);
-						if (nextDotElement.nextDotElement.length() > 0) {
-							perceptionDescription += ".";
-							perceptionDescription += nextDotElement.nextDotElement;
-							lastClassName = nextDotElement.className;
-						}
-						else {
-							newPropertyForKFC = true;
-						}
-					}
-					break;
-				case 3:
-					// source myself, subject target, knowledge property for kfc
-					perceptionDescription = pd_source + pd_subject_target;
-					newKFCElement = true;
-					for (int index = 1; index < bytes.length; index++) {
-						if (newKFCElement == true) {
-							kfc = getKFCNumber(index, bytes[index], usedKFCNumberSoFar);
-							if (kfc == -1) {
-								// try getKFCNumber for next index again
-								newKFCElement = true;
-								continue;
-							}
-							if (index > 1) {
-								// it's the beginning of a further KFC-block
-								// --> finish the last KFC-block
-								perceptionDescription += ";" ;
-							}
-							groupingNumber = getGroupingNumberForIndex(bytes[index]);
-							perceptionDescription +=  pd_property_praefix + "(" + kfc + ",devValueName_" + index + "):";
-							perceptionDescription += GetValue.getValue(Value.VALUE_BY_NAME_EVENT_PARAMS) + "." +
-									GetValue.getValue(Value.VALUE_BY_NAME_EVENT_TARGET) + "#" + GetValue.getIsElementOf(groupingNumber);
-							lastClassName = GroupingOfSimulationObjects.PRAEFIX_SIMOBJECT_GROUPING_NUMBER + groupingNumber;
-							newPropertyForKFC = false;
-							newKFCElement = false;
-						}
-						else if (newPropertyForKFC == true) {
-							groupingNumber = getGroupingNumberForIndex(bytes[index]);
-							perceptionDescription += "&" + pd_property_praefix + "(" + kfc + ",devValueName_" + index + "):";
-							perceptionDescription += GetValue.getValue(Value.VALUE_BY_NAME_EVENT_PARAMS) + "." +
-									GetValue.getValue(Value.VALUE_BY_NAME_EVENT_TARGET) + "#" + GetValue.getIsElementOf(groupingNumber);
-							lastClassName = GroupingOfSimulationObjects.PRAEFIX_SIMOBJECT_GROUPING_NUMBER + groupingNumber;
-							newPropertyForKFC = false;
-						}
-						nextDotElement = getNextDotElement(lastClassName, bytes[index], kfc);
-						if (nextDotElement.nextDotElement.length() > 0) {
-							perceptionDescription += ".";
-							perceptionDescription += nextDotElement.nextDotElement;
-							lastClassName = nextDotElement.className;
-							
-						}
-						else {
-							newPropertyForKFC = true;
-						}
-					}
-					break;
-			}
-		}
-		return perceptionDescription;
-	}
-	
-
-	
-	private NextDotElement getNextDotElement(String lastClassName, int selection, int nrKFC) {
-		
-		NextDotElement result = new NextDotElement();
-		
-		StringTupel selectedProperty = new StringTupel("", "");
-		StringTupel selectedPropertyFromMethod = new StringTupel("", "");
-		
-		List<StringTupel> returnablePropertyTypes;
-		List<StringTupel> returnablePropertyFromMethodTypes;
-		
-		String propertyClassName;
-		
-		
-		returnablePropertyTypes = simulationMetaInformation.getPropertiesMetaInfosForClass(lastClassName);
-		returnablePropertyFromMethodTypes = simulationMetaInformation.getPropMethodsMetaInfosForClass(lastClassName);
-
-		int groupingNumber = getGroupingNumberForIndex(selection);
-
-		int index;
-		int maxIndex;
-		if (nrKFC >= 0) {
-			KnowledgeFact_Criterion kfc = KnowledgeFact_Criterion.getName(nrKFC);
-			maxIndex = returnablePropertyTypes.size() - 1;
-			for (index = maxIndex; index >= 0; index--) {
-				propertyClassName = returnablePropertyTypes.get(index).getLeft();
-				if (propertyClassName.equals(SimulationMetaInformation.CLASSNAME_SWT_SIMOBJECT)) {
-					propertyClassName = GroupingOfSimulationObjects.PRAEFIX_SIMOBJECT_GROUPING_NUMBER + groupingNumber;
-				}
-				if (simulationMetaInformation.checkClassForReturnableKFCs(propertyClassName, kfc) == false ) {
-					returnablePropertyTypes.remove(index);
-				};
-			}
-			maxIndex = returnablePropertyFromMethodTypes.size() - 1;
-			for (index = maxIndex; index >= 0; index--) {
-				propertyClassName = returnablePropertyFromMethodTypes.get(index).getLeft();
-				if (propertyClassName.equals(SimulationMetaInformation.CLASSNAME_SWT_SIMOBJECT)) {
-					propertyClassName = GroupingOfSimulationObjects.PRAEFIX_SIMOBJECT_GROUPING_NUMBER + groupingNumber;
-				}
-				if ( propertyClassName.equals(SimulationMetaInformation.CLASSNAME_ENUM_INDEX)) {
-					
-				}
-				else if (simulationMetaInformation.checkClassForReturnableKFCs(propertyClassName, kfc) == false ) {
-					returnablePropertyFromMethodTypes.remove(index);
-				};
-			}
-		}
-		
-		int selectProperty = -1;
-		if (returnablePropertyTypes.size() > 0) {
-			selectProperty = selection % returnablePropertyTypes.size();
-			selectedProperty = returnablePropertyTypes.get(selectProperty);
-		}
-		int selectPropertyFromMethod = -1;
-		if (returnablePropertyFromMethodTypes.size() > 0) {
-			selectPropertyFromMethod = selection % returnablePropertyFromMethodTypes.size();
-			selectedPropertyFromMethod = returnablePropertyFromMethodTypes.get(selectPropertyFromMethod);
-		}
-
-		if (selectProperty >= 0 && selectPropertyFromMethod >= 0) {
-			int choosePropVSPropFromMethod = selection % 2;
-			if (choosePropVSPropFromMethod == 0) {
-				result.className = selectedProperty.getLeft();
-				result.nextDotElement = GetValue.getProperty(selectedProperty.getRight());
-			}
-			else {
-				result.className = selectedPropertyFromMethod.getLeft();
-				result.nextDotElement = GetValue.getFctValue(selectedPropertyFromMethod.getRight());
-			}
-		}
-		else if (selectProperty >= 0) {
-			result.className = selectedProperty.getLeft();
-			result.nextDotElement = GetValue.getProperty(selectedProperty.getRight());
-		}
-		else if (selectPropertyFromMethod >= 0) {
-			result.className = selectedPropertyFromMethod.getLeft();
-			result.nextDotElement = GetValue.getFctValue(selectedPropertyFromMethod.getRight());
-		}
-		
-		if (result.className.equals(SimulationMetaInformation.CLASSNAME_SWT_SIMOBJECT)) {
-			result.className = GroupingOfSimulationObjects.PRAEFIX_SIMOBJECT_GROUPING_NUMBER + groupingNumber;
-			result.nextDotElement += "#" + GetValue.getIsElementOf(groupingNumber);
-		}
-
-		return result;
-	}
-	
-	private int getKFCNumber(int index, byte value, List<Integer> usedKFCNumberSoFar) {
-		int big = index * value;
-		int choose;
-		choose = big % KnowledgeFact_Criterion.NUMBER_OF_KNOWLEDGE_FACT_CRITERION;
-		if (usedKFCNumberSoFar.contains(choose)) {
-			return -1;
-		}
-		else {
-			usedKFCNumberSoFar.add(choose);
-			return choose;
-		}
 	}
 	
 	private class NextDotElement {
@@ -730,11 +353,6 @@ public class PerceptionGeneration extends Generation{
 		
 		
 
-	}
-
-	private int getGroupingNumberForIndex(int index) {
-		int indexModuloSize = index % allGroupingNumbers.size();
-		return allGroupingNumbers.get(indexModuloSize);
 	}
 	
 }

@@ -31,3 +31,4 @@ src/main/resources/application.properties
 onlyLs/
 tileterm*.txt
 onlyLs*.txt
+*.sql
