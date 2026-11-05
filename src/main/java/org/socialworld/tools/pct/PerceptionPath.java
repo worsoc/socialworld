@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * One way to read something from the subject of a perception:
@@ -12,6 +14,9 @@ import java.util.Objects;
 public final class PerceptionPath {
 
 	public static final int NO_CRITERION = -1;
+	public static final int NO_SUBJECT_GROUP = -1;
+
+	private static final Pattern SUBJECT_GROUP = Pattern.compile("#IsElem\\((\\d+)\\)");
 
 	private final int criterion;
 	private final String valueName;
@@ -35,6 +40,16 @@ public final class PerceptionPath {
 
 	public String getValueName() {
 		return valueName;
+	}
+
+	/**
+	 * The grouping the subject has to belong to, or NO_SUBJECT_GROUP if the path does not check it.
+	 */
+	public int getSubjectGroup() {
+		if (steps.size() < 2) return NO_SUBJECT_GROUP;
+
+		Matcher matcher = SUBJECT_GROUP.matcher(steps.get(1));
+		return matcher.find() ? Integer.parseInt(matcher.group(1)) : NO_SUBJECT_GROUP;
 	}
 
 	/**

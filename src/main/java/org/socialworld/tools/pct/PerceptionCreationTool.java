@@ -1,263 +1,545 @@
 package org.socialworld.tools.pct;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Consumer;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
+import javax.swing.JSplitPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
-import javax.swing.border.*;
+import org.socialworld.calculation.Value;
+import org.socialworld.core.EventType;
+import org.socialworld.datasource.pool.GaussPoolPerceptionType;
+import org.socialworld.knowledge.KnowledgeFact_Criterion;
 
+/**
+ * Assigns paths to an event type and a slot (perception type), also to several slots at once.
+ */
+public class PerceptionCreationTool extends JFrame {
 
+	private static final long serialVersionUID = 1L;
 
+	private static final int COUNT_SLOTS = GaussPoolPerceptionType.CAPACITY_GPPT_ARRAY;
 
-public class PerceptionCreationTool extends JFrame{
-	
-	JPanel mainPanelOben = new JPanel(new BorderLayout());		
-	JPanel mainPanelRight = new JPanel(new BorderLayout());	
-	JPanel mainPanelLinksUnten = new JPanel(new BorderLayout());
-	JPanel mainPanelMitte = new JPanel();
-	
-	ButtonGroup rbgroupMainOben = new ButtonGroup();
-	JPanel pnlSource = new JPanel();
-	JPanel pnlFactType = new JPanel();
-	JRadioButton rbSubject = new JRadioButton("subject");
-	JRadioButton rbSourceType = new JRadioButton("");
-	JRadioButton rbFactType = new JRadioButton("");
-    JComboBox cbSourceType; 
-    JComboBox cbFactType1;
-    JComboBox cbFactType2;
-    
-    JComboBox cbFunction;
-    JComboBox cbPropertyName;
-    JComboBox cbStaticName;
-	TextField tfInputValue = new TextField();
+	private static final String MARK_FILLED = "●";
+	private static final String MARK_EMPTY = "○";
+	private static final String MARK_NOT_EDITABLE = "\u25CF !";
 
-    
-	TextArea taOutput = new TextArea();
-	
-	JButton btnDot = new JButton ("Dot");
-	JButton btnBack = new JButton ("Back");
-	JButton btnAdd = new JButton ("Add");
-	JButton btnSave = new JButton ("SAVE");
+	private final transient PerceptionDescriptionStore store;
+	private final transient PerceptionPathCatalog catalog;
+	private final transient PerceptionEditor editor;
 
+	private transient PerceptionPathFilter filter = PerceptionPathFilter.NONE;
+	private String subject = Value.VALUE_BY_NAME_EVENT_CAUSER;
 
-	
-	/**
-	 * Writes the descriptions of all perceptions into a new SQL file.
-	 * The tool writes nothing into the database: check the file and import it yourself.
-	 */
-	public static void main(String args[]) throws IOException {
+	private final DefaultListModel<EventType> eventsModel = new DefaultListModel<EventType>();
+	private final JList<EventType> events = new JList<EventType>(eventsModel);
+	private final DefaultListModel<String> slotsModel = new DefaultListModel<String>();
+	private final JList<String> slots = new JList<String>(slotsModel);
 
-		if (args.length != 1) {
-			System.out.println("Usage: PerceptionCreationTool <new sql file>");
-			return;
-		}
+	private final JComboBox<Option<Integer>> groups = new JComboBox<Option<Integer>>();
+	private final PerceptionPathTableModel pathsModel;
+	private final JLabel countOfPaths = new JLabel();
 
-		Path file = Paths.get(args[0]);
-		if (Files.exists(file)) {
-			System.out.println("The file already exists and stays as it is: " + file);
-			return;
-		}
+	private final JTable pathsTable;
+	private final JRadioButton causer = new JRadioButton("causer", true);
+	private final JRadioButton target = new JRadioButton("target");
 
-		Files.write(file, PerceptionSqlFile.createContent().getBytes(StandardCharsets.UTF_8));
-		System.out.println("Written: " + file);
+	private final JLabel status = new JLabel();
+	private final DefaultListModel<PerceptionPath> selectedModel = new DefaultListModel<PerceptionPath>();
+	private final JList<PerceptionPath> selected = new JList<PerceptionPath>(selectedModel);
+	private final JSpinner threshold = new JSpinner(new SpinnerNumberModel(PerceptionEditor.DEFAULT_RELEVANCE_THRESHOLD, 1, Integer.MAX_VALUE, 1));
+	private final JTextField otherSlots = new JTextField();
+	private final JButton addButton = new JButton("Add selected paths \u2192");
+	private final JButton removeButton = new JButton("Remove");
+	private final JButton saveButton = new JButton("Save");
+	private final JTextArea selectionJson = readOnlyText();
 
-		for (PerceptionPath path : PerceptionTemplates.findPathsOutsideOfMetaInformation()) {
-			System.out.println("Not in the meta information: " + path);
-		}
-	}
-	
-	
-	public PerceptionCreationTool() {
-		//super();
-		//initGUI();	
-	}
+	// true while the program itself changes a selection, so that it is not taken for a choice of the user
+	private boolean updating;
 
-	
-	private void initGUI() {
-		
-		initPanelOben();
-		initPanelLinksUnten();
-		initPanelRight();
-		
-		this.getContentPane().add(mainPanelOben, BorderLayout.NORTH);
-		this.getContentPane().add(mainPanelLinksUnten, BorderLayout.CENTER);
-		this.getContentPane().add(mainPanelRight, BorderLayout.EAST);
+	public PerceptionCreationTool(PerceptionDescriptionStore store, PerceptionPathCatalog catalog) {
+		super("Perception Creation Tool - " + store.getDescription());
 
-		
-		this.setSize(new Dimension(168, 124));
-		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		this.setVisible(true);
-		
-	}
-	
-	
-	private void initPanelOben() {
-		
-		Border green = 
-		BorderFactory.createLineBorder(Color.green.darker().darker(),5);
-		
-		Border blue = 
-		BorderFactory.createLineBorder(Color.blue.darker().darker(),5);
-		
-		mainPanelOben.setBorder(green);
-		mainPanelOben.setBackground (new Color(200,235,200));
-		mainPanelOben.setPreferredSize(new Dimension(0, 100));
-		
-		mainPanelRight.setBorder(blue);
-		mainPanelRight.setBackground (new Color(200,235,200));
-		mainPanelRight.setPreferredSize(new Dimension(200, 0));
-		 
-        String SourceTypeListe[] = {"own experience", "heard of", "read about"};
-        cbSourceType = new JComboBox(SourceTypeListe);
+		this.store = store;
+		this.catalog = catalog;
+		this.editor = new PerceptionEditor(store);
+		this.pathsModel = new PerceptionPathTableModel(catalog);
+		this.pathsTable = new JTable(pathsModel);
 
-		cbFactType2 = new JComboBox();
-	    final String FactTypeListe2_1[] = {"colour", "material"};
-	    final String FactTypeListe2_2[] = {"unaer", "binaer", "trinaer"};
+		JSplitPane centerAndRight = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, createPathsPanel(), createSelectionPanel());
+		centerAndRight.setResizeWeight(0.65);
+		JSplitPane all = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, createEventsPanel(), centerAndRight);
 
-        
-        String FactTypeListe1[] = {"value", "relation", "property"};
-        cbFactType1 = new JComboBox(FactTypeListe1);
-        cbFactType1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {				  
-				switch ((String)((JComboBox) e.getSource()).getSelectedItem()) {
-				case "relation":
-					cbFactType2.removeAllItems();
-					cbFactType2.addItem(FactTypeListe2_2[0]);
-					cbFactType2.addItem(FactTypeListe2_2[1]);
-					cbFactType2.addItem(FactTypeListe2_2[2]);
-					break;
-				case "property":
-					cbFactType2.removeAllItems();
-					cbFactType2.addItem(FactTypeListe2_1[0]);
-					cbFactType2.addItem(FactTypeListe2_1[1]);
-					break;
-				case "value":
-					cbFactType2.removeAllItems();
-					break;
-				default: 
-					cbFactType2.removeAllItems();
+		getContentPane().add(all, BorderLayout.CENTER);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				if (changesMayBeLost()) {
+					dispose();
+					System.exit(0);
 				}
-			}															
+			}
 		});
- 
-        mainPanelOben.add(cbSourceType);
-        
-        pnlSource.setLayout(null);
-		rbSourceType.setBounds(5, 34, 20, 20);
-		cbSourceType.setBounds(40, 33, 300, 20);
-		pnlSource.add(rbSourceType);
-		pnlSource.add(cbSourceType);
-		
-		pnlFactType.setLayout(null);
-		rbFactType.setBounds(5, 34, 20, 20);
-		cbFactType1.setBounds(40, 15, 300, 20);
-		cbFactType2.setBounds(40, 55, 300, 20);
-		pnlFactType.add(rbFactType);
-		pnlFactType.add(cbFactType1);
-		pnlFactType.add(cbFactType2);
-		
-		mainPanelOben.setLayout(new GridLayout(1,3));
-		mainPanelOben.add(rbSubject);
-		mainPanelOben.add(pnlSource);
-		mainPanelOben.add(pnlFactType);
-		
-		rbgroupMainOben.add(rbSubject);
-		rbgroupMainOben.add(rbSourceType);
-		rbgroupMainOben.add(rbFactType);
-		
+		setSize(new Dimension(1500, 900));
+
+		fillEvents("");
+		fillGroups();
+		refreshPaths();
+		events.setSelectedValue(PerceptionSqlFile.EVENT_TYPE, true);
 	}
-	
-	private void initPanelLinksUnten() {
 
-		Border red = 
-		BorderFactory.createLineBorder(Color.red.darker().darker(),5);
+	public static void main(String args[]) {
+		SwingUtilities.invokeLater(() -> new PerceptionCreationTool(
+				InMemoryPerceptionDescriptionStore.withExampleData(), new PerceptionPathCatalog()).setVisible(true));
+	}
 
-		mainPanelLinksUnten.setBorder(red);
-		mainPanelLinksUnten.setBackground (new Color(255,135,100));
-		//mainPanelLinksUnten.setPreferredSize(new Dimension(200, 0));
-		
-		
-		
-		taOutput.setPreferredSize(new Dimension(0,200));
+	// ---------------------------------------------------------------------------
+	// event and slot
+	// ---------------------------------------------------------------------------
 
-		mainPanelLinksUnten.add(taOutput, BorderLayout.SOUTH);
-		
-		JPanel[] raster = new JPanel[6];
-		mainPanelMitte.setLayout(new GridLayout(3,2));	
-		
-		for (int i = 0; i < 6; i++) {
-			raster[i] = new JPanel();
-			raster[i].setBackground (new Color((i* 20),(Math.min(i*15, 250)),(Math.min(i*10, 200))));
-			raster[i].setForeground(Color.WHITE);
-			raster[i].setLayout(null);
-			mainPanelMitte.add(raster[i]);
+	private JPanel createEventsPanel() {
+
+		JTextField search = new JTextField();
+		search.setBorder(BorderFactory.createTitledBorder("Search event"));
+		onChange(search, this::fillEvents);
+
+		events.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		events.addListSelectionListener(e -> { if (!e.getValueIsAdjusting()) eventSelected(); });
+
+		slots.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		slots.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+		slots.addListSelectionListener(e -> { if (!e.getValueIsAdjusting()) slotSelected(); });
+
+		JScrollPane scrollEvents = new JScrollPane(events);
+		scrollEvents.setBorder(BorderFactory.createTitledBorder("Event"));
+		JScrollPane scrollSlots = new JScrollPane(slots);
+		scrollSlots.setBorder(BorderFactory.createTitledBorder("Slot (perception type)"));
+
+		JPanel lists = new JPanel(new GridLayout(2, 1));
+		lists.add(scrollEvents);
+		lists.add(scrollSlots);
+
+		JPanel panel = new JPanel(new BorderLayout());
+		panel.setPreferredSize(new Dimension(290, 0));
+		panel.add(search, BorderLayout.NORTH);
+		panel.add(lists, BorderLayout.CENTER);
+		return panel;
+	}
+
+	private void fillEvents(String text) {
+
+		EventType selected = events.getSelectedValue();
+		String searched = text.trim().toLowerCase();
+
+		eventsModel.clear();
+		for (EventType eventType : EventType.values()) {
+			if (eventType != EventType.nothing && eventType.name().toLowerCase().contains(searched)) {
+				eventsModel.addElement(eventType);
+			}
 		}
-		
-		mainPanelLinksUnten.add(mainPanelMitte, BorderLayout.CENTER);
-		
-		String A1 [] = {"GetVal", "GetProp", "GetFctVal"};
-		cbFunction = new JComboBox(A1);
-		
-		cbFunction.setBounds(10, 50, 300, 35);
-		raster[0].add(cbFunction);
-		
-		String A2 [] = {"1", "2", "3"};
-		cbPropertyName = new JComboBox(A2);
-		
-		cbPropertyName.setBounds(10, 50, 300, 35);
-		raster[1].add(cbPropertyName);
-		
-		String A3 [] = {"1", "2", "3"};
-		cbStaticName = new JComboBox(A3);
-		
-		cbStaticName.setBounds(10, 50, 300, 35);
-		raster[3].add(cbStaticName);
-			
-		raster[5].add(tfInputValue);
-		tfInputValue.setBounds(10, 50, 300, 35);
-	
-	
+		if (selected != null) {
+			events.setSelectedValue(selected, true);
+		}
 	}
-	
-	private void initPanelRight() {
-		
-//	absolute Positionierung
-		mainPanelRight.setLayout(null);
-		btnDot.setBounds(90, 400, 100, 20);
-		btnBack.setBounds(90,425,100,20);
-		btnAdd.setBounds(90,450,100,20);
-		btnSave.setBounds(90,505,100,20);  
-		mainPanelRight.add(btnDot);
-		mainPanelRight.add(btnBack);
-		mainPanelRight.add(btnAdd);
-		mainPanelRight.add(btnSave);
-		
-		btnDot.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				taOutput.append("Dot ");	
+
+	private void eventSelected() {
+
+		if (updating) return;
+
+		EventType eventType = events.getSelectedValue();
+		if (eventType == null) return;
+
+		if (!changesMayBeLost()) {
+			updating = true;
+			events.setSelectedValue(editor.getEventType(), true);
+			updating = false;
+			return;
+		}
+
+		openSlot(eventType, 0);
+	}
+
+	private void slotSelected() {
+
+		if (updating) return;
+
+		int slot = slots.getSelectedIndex();
+		if (slot < 0 || slot == editor.getSlot()) return;
+
+		if (!changesMayBeLost()) {
+			updating = true;
+			slots.setSelectedIndex(editor.getSlot());
+			updating = false;
+			return;
+		}
+
+		openSlot(editor.getEventType(), slot);
+	}
+
+	private void openSlot(EventType eventType, int slot) {
+
+		editor.open(eventType, slot, subject);
+
+		updating = true;
+		slotsModel.clear();
+		for (int index = 0; index < COUNT_SLOTS; index++) {
+			slotsModel.addElement(String.format("%2d %s", index, markOf(index)));
+		}
+		slots.setSelectedIndex(slot);
+		updating = false;
+
+		if (!editor.getSubject().equals(subject)) {
+			showSubject(editor.getSubject());
+			refreshGroupsAndPaths();
+		}
+		showPerception();
+	}
+
+	private String markOf(int slot) {
+		if (!editor.isFilled(slot)) return MARK_EMPTY;
+		return editor.isSlotEditable(slot) ? MARK_FILLED : MARK_NOT_EDITABLE;
+	}
+
+	/**
+	 * @return true if there is nothing to lose, or the user does not mind
+	 */
+	private boolean changesMayBeLost() {
+		return !editor.isChanged() || JOptionPane.showConfirmDialog(this,
+				"Slot " + editor.getSlot() + " is not saved yet. Discard the changes?",
+				"Not saved", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION;
+	}
+
+	// ---------------------------------------------------------------------------
+	// filters and paths
+	// ---------------------------------------------------------------------------
+
+	private JPanel createPathsPanel() {
+
+		pathsTable.setAutoCreateRowSorter(true);
+		pathsTable.getColumnModel().getColumn(0).setPreferredWidth(70);
+		pathsTable.getColumnModel().getColumn(1).setPreferredWidth(110);
+		pathsTable.getColumnModel().getColumn(2).setPreferredWidth(260);
+		pathsTable.getColumnModel().getColumn(3).setPreferredWidth(90);
+		pathsTable.getColumnModel().getColumn(4).setPreferredWidth(500);
+
+		addButton.addActionListener(e -> addPaths());
+
+		JPanel south = new JPanel(new BorderLayout());
+		south.add(countOfPaths, BorderLayout.WEST);
+		south.add(addButton, BorderLayout.EAST);
+
+		JPanel panel = new JPanel(new BorderLayout());
+		panel.add(createFilterPanel(), BorderLayout.NORTH);
+		panel.add(new JScrollPane(pathsTable), BorderLayout.CENTER);
+		panel.add(south, BorderLayout.SOUTH);
+		return panel;
+	}
+
+	private JPanel createFilterPanel() {
+
+		ButtonGroup subjects = new ButtonGroup();
+		subjects.add(causer);
+		subjects.add(target);
+		causer.addActionListener(e -> subjectSelected(Value.VALUE_BY_NAME_EVENT_CAUSER));
+		target.addActionListener(e -> subjectSelected(Value.VALUE_BY_NAME_EVENT_TARGET));
+		JPanel subjectButtons = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+		subjectButtons.add(causer);
+		subjectButtons.add(target);
+
+		JComboBox<PerceptionPathFilter.Kind> kinds = new JComboBox<PerceptionPathFilter.Kind>(PerceptionPathFilter.Kind.values());
+		kinds.addActionListener(e -> {
+			filter = filter.withKind((PerceptionPathFilter.Kind) kinds.getSelectedItem());
+			refreshPaths();
+		});
+
+		JComboBox<Option<Integer>> criteria = new JComboBox<Option<Integer>>();
+		criteria.addItem(new Option<Integer>("any", null));
+		for (KnowledgeFact_Criterion criterion : KnowledgeFact_Criterion.values()) {
+			if (criterion != KnowledgeFact_Criterion.nothing && !criterion.isRelation()) {
+				criteria.addItem(new Option<Integer>(criterion.name(), criterion.getIndex()));
+			}
+		}
+		criteria.addActionListener(e -> {
+			filter = filter.withCriterion(selected(criteria).value);
+			refreshPaths();
+		});
+
+		groups.addActionListener(e -> {
+			Option<Integer> group = selected(groups);
+			if (group != null) {
+				filter = filter.withSubjectGroup(group.value);
+				refreshPaths();
 			}
 		});
-		
-		btnBack.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				taOutput.append("Back ");	
+
+		JTextField text = new JTextField();
+		onChange(text, value -> {
+			filter = filter.withText(value);
+			refreshPaths();
+		});
+
+		JPanel panel = new JPanel(new GridBagLayout());
+		panel.setBorder(BorderFactory.createTitledBorder("Filter"));
+		addRow(panel, 0, "Subject", subjectButtons);
+		addRow(panel, 1, "Kind", kinds);
+		addRow(panel, 2, "Criterion", criteria);
+		addRow(panel, 3, "Subject group", groups);
+		addRow(panel, 4, "Text", text);
+		return panel;
+	}
+
+	private void addRow(JPanel panel, int row, String label, Component component) {
+		GridBagConstraints constraints = new GridBagConstraints();
+		constraints.gridy = row;
+		constraints.insets = new Insets(2, 4, 2, 4);
+		constraints.anchor = GridBagConstraints.WEST;
+		panel.add(new JLabel(label), constraints);
+		constraints.gridx = 1;
+		constraints.weightx = 1;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		panel.add(component, constraints);
+	}
+
+	private void subjectSelected(String subject) {
+
+		if (!editor.setSubject(subject)) {
+			showSubject(this.subject);
+			JOptionPane.showMessageDialog(this,
+					"All paths of a slot start at its subject. Remove the selected paths before you change the subject.");
+			return;
+		}
+		this.subject = subject;
+		refreshGroupsAndPaths();
+		showPerception();
+	}
+
+	private void showSubject(String subject) {
+		this.subject = subject;
+		causer.setSelected(subject.equals(Value.VALUE_BY_NAME_EVENT_CAUSER));
+		target.setSelected(subject.equals(Value.VALUE_BY_NAME_EVENT_TARGET));
+	}
+
+	private void refreshGroupsAndPaths() {
+		fillGroups();
+		refreshPaths();
+	}
+
+	private void fillGroups() {
+
+		Option<Integer> selected = selected(groups);
+
+		List<Option<Integer>> options = new ArrayList<Option<Integer>>();
+		options.add(new Option<Integer>("any", PerceptionPath.NO_SUBJECT_GROUP));
+		for (int group : catalog.getSubjectGroups(subject)) {
+			options.add(new Option<Integer>(catalog.getGroupName(group), group));
+		}
+
+		groups.removeAllItems();
+		for (Option<Integer> option : options) {
+			groups.addItem(option);
+			if (selected != null && selected.label.equals(option.label)) {
+				groups.setSelectedItem(option);
+			}
+		}
+	}
+
+	private void refreshPaths() {
+		List<PerceptionPath> found = catalog.find(subject, filter);
+		pathsModel.setPaths(found);
+		countOfPaths.setText(" " + found.size() + " of " + catalog.find(subject, PerceptionPathFilter.NONE).size() + " paths");
+	}
+
+	// ---------------------------------------------------------------------------
+	// the selected perception
+	// ---------------------------------------------------------------------------
+
+	private JPanel createSelectionPanel() {
+
+		selected.setCellRenderer(new DefaultListCellRenderer() {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean hasFocus) {
+				PerceptionPath path = (PerceptionPath) value;
+				String text = PerceptionSelectionText.formatPath(path, catalog.contains(editor.getSubject(), path));
+				return super.getListCellRendererComponent(list, text, index, isSelected, hasFocus);
 			}
 		});
-		
-		btnAdd.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				taOutput.append("Add ");	
+
+		removeButton.addActionListener(e -> {
+			editor.remove(selected.getSelectedValuesList());
+			showPerception();
+		});
+
+		threshold.addChangeListener(e -> {
+			if (!updating) {
+				editor.setRelevanceThreshold((Integer) threshold.getValue());
+				showPerception();
 			}
 		});
-		
-	}	
-			      
+
+		otherSlots.setToolTipText("For example 8, 13 or 0-39/5 for every fifth slot");
+		saveButton.addActionListener(e -> save());
+
+		JPanel settings = new JPanel(new GridBagLayout());
+		addRow(settings, 0, "Threshold", threshold);
+		addRow(settings, 1, "Also save to slots", otherSlots);
+
+		JPanel buttons = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		buttons.add(removeButton);
+		buttons.add(saveButton);
+
+		JPanel controls = new JPanel(new BorderLayout());
+		controls.add(settings, BorderLayout.NORTH);
+		controls.add(buttons, BorderLayout.SOUTH);
+
+		JScrollPane scrollSelected = new JScrollPane(selected);
+		scrollSelected.setBorder(BorderFactory.createTitledBorder("Perception of the slot"));
+		JScrollPane scrollJson = new JScrollPane(selectionJson);
+		scrollJson.setBorder(BorderFactory.createTitledBorder("JSON"));
+
+		selectionJson.setLineWrap(true);
+
+		JPanel upper = new JPanel(new BorderLayout());
+		upper.add(status, BorderLayout.NORTH);
+		upper.add(scrollSelected, BorderLayout.CENTER);
+		upper.add(controls, BorderLayout.SOUTH);
+
+		JPanel panel = new JPanel(new GridLayout(2, 1));
+		panel.setPreferredSize(new Dimension(460, 0));
+		panel.add(upper);
+		panel.add(scrollJson);
+		return panel;
+	}
+
+	private void showPerception() {
+
+		updating = true;
+		selectedModel.clear();
+		for (PerceptionPath path : editor.getPaths()) {
+			selectedModel.addElement(path);
+		}
+		threshold.setValue(editor.getRelevanceThreshold());
+		updating = false;
+
+		boolean editable = editor.isEditable();
+		threshold.setEnabled(editable);
+		otherSlots.setEnabled(editable);
+		addButton.setEnabled(editable);
+		removeButton.setEnabled(editable);
+		saveButton.setEnabled(editor.canSave());
+
+		status.setText(" " + PerceptionSelectionText.formatStatus(editor));
+
+		String json = editor.getJson();
+		selectionJson.setText(json != null ? json : "");
+		selectionJson.setCaretPosition(0);
+	}
+
+	private void addPaths() {
+
+		List<PerceptionPath> paths = new ArrayList<PerceptionPath>();
+		for (int row : pathsTable.getSelectedRows()) {
+			paths.add(pathsModel.getPath(pathsTable.convertRowIndexToModel(row)));
+		}
+		editor.add(paths);
+		showPerception();
+	}
+
+	private void save() {
+
+		Set<Integer> others;
+		try {
+			others = PerceptionSlotList.parse(otherSlots.getText(), COUNT_SLOTS);
+		} catch (IllegalArgumentException e) {
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Slots", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		List<Integer> filled = editor.findOtherFilledSlots(others);
+		if (!filled.isEmpty() && JOptionPane.showConfirmDialog(this,
+				"These slots are filled and would be overwritten: " + filled + ". Continue?",
+				"Overwrite", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
+			return;
+		}
+
+		Set<Integer> written = editor.save(others);
+		otherSlots.setText("");
+		openSlot(editor.getEventType(), editor.getSlot());
+		status.setText(" Saved to slots " + written + " (" + store.getDescription() + ")");
+	}
+
+	// ---------------------------------------------------------------------------
+	// helpers
+	// ---------------------------------------------------------------------------
+
+	private static JTextArea readOnlyText() {
+		JTextArea area = new JTextArea();
+		area.setEditable(false);
+		area.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+		return area;
+	}
+
+	@SuppressWarnings("unchecked")
+	private static <T> Option<T> selected(JComboBox<Option<T>> comboBox) {
+		return (Option<T>) comboBox.getSelectedItem();
+	}
+
+	private static void onChange(JTextField field, Consumer<String> consumer) {
+		field.getDocument().addDocumentListener(new DocumentListener() {
+			@Override public void insertUpdate(DocumentEvent e) { consumer.accept(field.getText()); }
+			@Override public void removeUpdate(DocumentEvent e) { consumer.accept(field.getText()); }
+			@Override public void changedUpdate(DocumentEvent e) { consumer.accept(field.getText()); }
+		});
+	}
+
+	private static final class Option<T> {
+		final String label;
+		final T value;
+
+		Option(String label, T value) {
+			this.label = label;
+			this.value = value;
+		}
+
+		@Override
+		public String toString() {
+			return label;
+		}
+	}
 }
-		

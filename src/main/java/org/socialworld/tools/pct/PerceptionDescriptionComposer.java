@@ -104,7 +104,7 @@ public final class PerceptionDescriptionComposer {
 		}
 		else {
 			step.category = CATEGORY_VALUE;
-			step.resultType = path.getResultType();
+			step.resultType = path.getResultType().isEmpty() ? null : path.getResultType();
 		}
 
 		return step;

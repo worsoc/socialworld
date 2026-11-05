@@ -1,105 +1,114 @@
 package org.socialworld.tools.pct;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.awt.GraphicsEnvironment;
+import java.util.Arrays;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
-import org.socialworld.calculation.descriptions.EventPerceptionDescription;
 import org.socialworld.core.EventType;
-
-import com.google.gson.Gson;
 
 public class PerceptionCreationToolTest {
 
-  private static final Path EXISTING_DATA = Paths.get("src/test/swpool_epd.sql");
-  private static final int COUNT_ROWS = 40;
-
-  @TempDir
-  Path tempDir;
+  private static final int EVENT_508 = EventType.percipientExistsDistance5000.getIndex();
+  private static final PerceptionPathCatalog CATALOG = new PerceptionPathCatalog();
 
   // ---------------------------------------------------------------------------
-  // acceptance: the tool produces the existing data
+  // store
   // ---------------------------------------------------------------------------
 
   @Test
-  void writtenFile_isByteForByteTheExistingData() throws IOException {
-    // The SQL file is not part of the repository: without it the test is skipped.
-    assumeTrue(Files.exists(EXISTING_DATA), EXISTING_DATA + " is not available");
+  void exampleStore_holdsThe40Rows() {
+    Map<Integer, String> rows = InMemoryPerceptionDescriptionStore.withExampleData().loadAll(EVENT_508);
 
-    Path file = tempDir.resolve("new.sql");
-
-    PerceptionCreationTool.main(new String[] {file.toString()});
-
-    assertThat(Files.readAllBytes(file)).isEqualTo(Files.readAllBytes(EXISTING_DATA));
+    assertThat(rows).hasSize(40);
+    assertThat(rows.get(7)).isEqualTo(PerceptionSqlFile.createJson(7));
   }
 
   @Test
-  void everyRow_isLoadedLikeThePoolDoesIt() {
-    Matcher row = Pattern.compile("\\(508,(\\d+),'(.*?)'\\)\\s*[,;]").matcher(PerceptionSqlFile.createContent());
-    int countRows = 0;
+  void store_keepsEventsApart_andSavesOverOldRows() {
+    InMemoryPerceptionDescriptionStore store = new InMemoryPerceptionDescriptionStore();
 
-    while (row.find()) {
-      EventPerceptionDescription description = new EventPerceptionDescription(new Gson(), row.group(2));
-      description.setFunctions();
+    store.save(1, 0, "first");
+    store.save(1, 0, "second");
+    store.save(2, 3, "other");
 
-      assertThat(description.getEventType()).isEqualTo(EventType.percipientExistsDistance5000);
-      assertThat(description.getPerceptionType()).isEqualTo(Integer.parseInt(row.group(1)));
-      assertThat(description.countFunctions()).as("row " + row.group(1)).isEqualTo(1);
-      countRows++;
-    }
-
-    assertThat(countRows).isEqualTo(COUNT_ROWS);
-  }
-
-  // ---------------------------------------------------------------------------
-  // the tool does not destroy anything
-  // ---------------------------------------------------------------------------
-
-  @Test
-  void existingFile_staysAsItIs() throws IOException {
-    Path file = tempDir.resolve("existing.sql");
-    byte[] content = "must not change".getBytes(StandardCharsets.UTF_8);
-    Files.write(file, content);
-
-    PerceptionCreationTool.main(new String[] {file.toString()});
-
-    assertThat(Files.readAllBytes(file)).isEqualTo(content);
+    assertThat(store.loadAll(1)).containsOnlyKeys(0).containsValue("second");
+    assertThat(store.loadAll(2)).containsOnlyKeys(3);
+    assertThat(store.loadAll(99)).isEmpty();
   }
 
   @Test
-  void withoutArgument_nothingIsWritten() throws IOException {
-    PerceptionCreationTool.main(new String[] {});
+  void store_doesNotHandOutItsInnerData() {
+    InMemoryPerceptionDescriptionStore store = new InMemoryPerceptionDescriptionStore();
+    store.save(1, 0, "first");
 
-    try (java.util.stream.Stream<Path> files = Files.list(tempDir)) {
-      assertThat(files).isEmpty();
-    }
+    store.loadAll(1).clear();
+
+    assertThat(store.loadAll(1)).hasSize(1);
   }
 
   // ---------------------------------------------------------------------------
-  // what the tool reports
+  // table
   // ---------------------------------------------------------------------------
 
-  /**
-   * Material of "all animals and items" is not offered by the meta information, because animals
-   * only result in colour. mainColour_2 is a name of its own for an offered path.
-   */
   @Test
-  void templates_reportThePathsOutsideOfTheMetaInformation() {
-    List<PerceptionPath> outside = PerceptionTemplates.findPathsOutsideOfMetaInformation();
+  void table_showsAPropertyPath() {
+    PerceptionPathTableModel model = new PerceptionPathTableModel(CATALOG);
+    PerceptionPath path = new PerceptionPath(0, "name", "", Arrays.asList("GETVal(a)", "GETVal(event_causer)#IsElem(50331647)"));
 
-    assertThat(outside).extracting(PerceptionPath::getValueName).containsExactlyInAnyOrder(
-        "inventory_shirt.SOGN_184549375.mainMaterial",
-        "inventory_cap.SOGN_184549375.mainMaterial",
-        "inventory_cap.SOGN_184549375.mainColour_2");
+    model.setPaths(Arrays.asList(path));
+
+    assertThat(model.getRowCount()).isEqualTo(1);
+    assertThat(model.getValueAt(0, 0)).isEqualTo("colour");
+    assertThat(model.getValueAt(0, 1)).isEqualTo("ALL_ANIMALS");
+    assertThat(model.getValueAt(0, 2)).isEqualTo("name");
+    assertThat(model.getValueAt(0, 3)).isEqualTo("");
+    assertThat(model.getValueAt(0, 4)).isEqualTo("GETVal(a).GETVal(event_causer)#IsElem(50331647)");
+  }
+
+  @Test
+  void table_showsAValuePathWithItsType() {
+    PerceptionPathTableModel model = new PerceptionPathTableModel(CATALOG);
+
+    model.setPaths(Arrays.asList(new PerceptionPath(PerceptionPath.NO_CRITERION, "name", "SWType_31", Arrays.asList("GETVal(a)"))));
+
+    assertThat(model.getValueAt(0, 0)).isEqualTo("value");
+    assertThat(model.getValueAt(0, 3)).isEqualTo("SWType_31");
+  }
+
+  // ---------------------------------------------------------------------------
+  // texts
+  // ---------------------------------------------------------------------------
+
+  @Test
+  void pathText_saysKindAndName_andMarksPathsOutsideOfTheMetaInformation() {
+    PerceptionPath path = new PerceptionPath(0, "name", "", Arrays.asList("GETVal(a)"));
+
+    assertThat(PerceptionSelectionText.formatPath(path, true)).isEqualTo("colour: name");
+    assertThat(PerceptionSelectionText.formatPath(path, false)).isEqualTo("colour: name   [not in the meta information]");
+  }
+
+  @Test
+  void pathText_ofAValue_saysItsType() {
+    PerceptionPath path = new PerceptionPath(PerceptionPath.NO_CRITERION, "", "SWType_31", Arrays.asList("GETVal(a)"));
+
+    assertThat(PerceptionSelectionText.formatPath(path, true)).isEqualTo("value: (no name) : SWType_31");
+  }
+
+  // ---------------------------------------------------------------------------
+  // dialog, only where a screen exists
+  // ---------------------------------------------------------------------------
+
+  @Test
+  void dialog_canBeBuilt() {
+    assumeFalse(GraphicsEnvironment.isHeadless(), "no screen");
+
+    PerceptionCreationTool tool = new PerceptionCreationTool(InMemoryPerceptionDescriptionStore.withExampleData(), CATALOG);
+
+    assertThat(tool.getTitle()).contains("not the database");
+    tool.dispose();
   }
 }

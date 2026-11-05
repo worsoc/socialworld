@@ -7,8 +7,8 @@ import org.socialworld.core.EventType;
  */
 final class PerceptionSqlFile {
 
-	private static final EventType EVENT_TYPE = EventType.percipientExistsDistance5000;
-	private static final int COUNT_PERCEPTION_TYPES = 40;
+	static final EventType EVENT_TYPE = EventType.percipientExistsDistance5000;
+	static final int COUNT_PERCEPTION_TYPES = 40;
 	private static final int RELEVANCE_THRESHOLD = 100;
 
 	private static final int ROWS_PER_INSERT = 10;
@@ -19,14 +19,11 @@ final class PerceptionSqlFile {
 
 	static String createContent() {
 
-		PerceptionDescriptionComposer composer = new PerceptionDescriptionComposer();
 		StringBuilder content = new StringBuilder();
 
 		for (int perceptionType = 0; perceptionType < COUNT_PERCEPTION_TYPES; perceptionType++) {
 
-			String json = composer.toJson(composer.compose(
-					EVENT_TYPE, perceptionType, RELEVANCE_THRESHOLD,
-					PerceptionTemplates.SUBJECT, PerceptionTemplates.getPaths(perceptionType)));
+			String json = createJson(perceptionType);
 
 			if (perceptionType % ROWS_PER_INSERT == 0) {
 				content.append(INSERT).append("\n");
@@ -41,5 +38,14 @@ final class PerceptionSqlFile {
 		}
 
 		return content.toString();
+	}
+
+	static String createJson(int perceptionType) {
+
+		PerceptionDescriptionComposer composer = new PerceptionDescriptionComposer();
+
+		return composer.toJson(composer.compose(
+				EVENT_TYPE, perceptionType, RELEVANCE_THRESHOLD,
+				PerceptionTemplates.SUBJECT, PerceptionTemplates.getPaths(perceptionType)));
 	}
 }
