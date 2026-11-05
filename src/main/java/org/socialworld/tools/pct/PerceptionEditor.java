@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.socialworld.calculation.Value;
 import org.socialworld.core.EventType;
 
 /**
@@ -17,6 +18,8 @@ import org.socialworld.core.EventType;
 final class PerceptionEditor {
 
 	static final int DEFAULT_RELEVANCE_THRESHOLD = 100;
+
+	private static final String PRAEFIX_PERCEPTION_EVENT = "percipientExists";
 
 	private final PerceptionDescriptionStore store;
 	private final PerceptionDescriptionComposer composer = new PerceptionDescriptionComposer();
@@ -42,7 +45,7 @@ final class PerceptionEditor {
 
 		this.eventType = eventType;
 		this.slot = slot;
-		this.subject = subjectIfEmpty;
+		this.subject = isSubjectAllowed(subjectIfEmpty) ? subjectIfEmpty : Value.VALUE_BY_NAME_EVENT_CAUSER;
 		this.relevanceThreshold = DEFAULT_RELEVANCE_THRESHOLD;
 		this.paths.clear();
 		this.reasonNotEditable = "";
@@ -71,7 +74,19 @@ final class PerceptionEditor {
 			return PerceptionSelection.notEditable("The JSON belongs to " + selection.getEventType()
 					+ " / slot " + selection.getPerceptionType() + ", but is stored at " + eventType + " / slot " + slot);
 		}
+		if (selection.isEditable() && !isSubjectAllowed(selection.getSubjectValueName())) {
+			return PerceptionSelection.notEditable("The subject of " + eventType
+					+ " can only be the causer, but is " + selection.getSubjectValueName());
+		}
 		return selection;
+	}
+
+	/**
+	 * A classic perception event is only about something being perceived: it has no target or the like,
+	 * so only its causer can be the subject.
+	 */
+	boolean isSubjectAllowed(String subject) {
+		return !eventType.name().startsWith(PRAEFIX_PERCEPTION_EVENT) || subject.equals(Value.VALUE_BY_NAME_EVENT_CAUSER);
 	}
 
 	boolean isEditable() {
@@ -168,7 +183,7 @@ final class PerceptionEditor {
 	 */
 	boolean setSubject(String subject) {
 		if (subject.equals(this.subject)) return true;
-		if (!isEditable() || !paths.isEmpty()) return false;
+		if (!isEditable() || !paths.isEmpty() || !isSubjectAllowed(subject)) return false;
 
 		this.subject = subject;
 		return true;
@@ -219,6 +234,19 @@ final class PerceptionEditor {
 
 		open(eventType, slot, subject);
 		return slots;
+	}
+
+	/**
+	 * Empties the opened slot, whatever it holds: this also removes a row that can only be looked at.
+	 */
+	void clearSlot() {
+
+		if (!isFilled(slot)) {
+			throw new IllegalStateException("The slot is already empty");
+		}
+
+		store.delete(eventType.getIndex(), slot);
+		open(eventType, slot, subject);
 	}
 
 	private String composeFor(int target) {

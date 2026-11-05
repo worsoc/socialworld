@@ -86,6 +86,7 @@ public class PerceptionCreationTool extends JFrame {
 	private final JButton addButton = new JButton("Add selected paths \u2192");
 	private final JButton removeButton = new JButton("Remove");
 	private final JButton saveButton = new JButton("Save");
+	private final JButton clearButton = new JButton("Clear slot");
 	private final JTextArea selectionJson = readOnlyText();
 
 	// true while the program itself changes a selection, so that it is not taken for a choice of the user
@@ -124,8 +125,15 @@ public class PerceptionCreationTool extends JFrame {
 	}
 
 	public static void main(String args[]) {
-		SwingUtilities.invokeLater(() -> new PerceptionCreationTool(
-				InMemoryPerceptionDescriptionStore.withExampleData(), new PerceptionPathCatalog()).setVisible(true));
+		SwingUtilities.invokeLater(() -> {
+			try {
+				new PerceptionCreationTool(new TablePoolPerceptionDescriptionStore(), new PerceptionPathCatalog()).setVisible(true);
+			} catch (RuntimeException e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, "The table swpool_epd cannot be read: " + e, "Database", JOptionPane.ERROR_MESSAGE);
+				System.exit(1);
+			}
+		});
 	}
 
 	// ---------------------------------------------------------------------------
@@ -415,6 +423,7 @@ public class PerceptionCreationTool extends JFrame {
 
 		otherSlots.setToolTipText("For example 8, 13 or 0-39/5 for every fifth slot");
 		saveButton.addActionListener(e -> save());
+		clearButton.addActionListener(e -> clearSlot());
 
 		JPanel settings = new JPanel(new GridBagLayout());
 		addRow(settings, 0, "Threshold", threshold);
@@ -423,6 +432,7 @@ public class PerceptionCreationTool extends JFrame {
 		JPanel buttons = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		buttons.add(removeButton);
 		buttons.add(saveButton);
+		buttons.add(clearButton);
 
 		JPanel controls = new JPanel(new BorderLayout());
 		controls.add(settings, BorderLayout.NORTH);
@@ -457,18 +467,41 @@ public class PerceptionCreationTool extends JFrame {
 		threshold.setValue(editor.getRelevanceThreshold());
 		updating = false;
 
+		target.setEnabled(editor.isSubjectAllowed(Value.VALUE_BY_NAME_EVENT_TARGET));
+
 		boolean editable = editor.isEditable();
 		threshold.setEnabled(editable);
 		otherSlots.setEnabled(editable);
 		addButton.setEnabled(editable);
 		removeButton.setEnabled(editable);
 		saveButton.setEnabled(editor.canSave());
+		clearButton.setEnabled(editor.isFilled(editor.getSlot()));
 
 		status.setText(" " + PerceptionSelectionText.formatStatus(editor));
 
 		String json = editor.getJson();
 		selectionJson.setText(json != null ? json : "");
 		selectionJson.setCaretPosition(0);
+	}
+
+	private void clearSlot() {
+
+		if (JOptionPane.showConfirmDialog(this,
+				"Clear slot " + editor.getSlot() + " of " + editor.getEventType() + "? This cannot be undone.",
+				"Clear slot", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
+			return;
+		}
+
+		int slot = editor.getSlot();
+		try {
+			editor.clearSlot();
+		} catch (IllegalStateException e) {
+			openSlot(editor.getEventType(), slot);
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Clear slot", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		openSlot(editor.getEventType(), slot);
+		status.setText(" Slot " + slot + " cleared (" + store.getDescription() + ")");
 	}
 
 	private void addPaths() {
@@ -498,7 +531,14 @@ public class PerceptionCreationTool extends JFrame {
 			return;
 		}
 
-		Set<Integer> written = editor.save(others);
+		Set<Integer> written;
+		try {
+			written = editor.save(others);
+		} catch (IllegalStateException e) {
+			openSlot(editor.getEventType(), editor.getSlot());
+			JOptionPane.showMessageDialog(this, e.getMessage() + ". Earlier slots may already be saved.", "Save", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
 		otherSlots.setText("");
 		openSlot(editor.getEventType(), editor.getSlot());
 		status.setText(" Saved to slots " + written + " (" + store.getDescription() + ")");

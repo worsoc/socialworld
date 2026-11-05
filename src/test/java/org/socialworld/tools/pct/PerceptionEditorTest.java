@@ -15,6 +15,7 @@ public class PerceptionEditorTest {
 
   private static final EventType EVENT = EventType.percipientExistsDistance5000;
   private static final EventType OTHER_EVENT = EventType.selfSleep;
+  private static final EventType EVENT_WITH_TARGET = EventType.candidatesMoveWalk;
   private static final int EVENT_INDEX = EVENT.getIndex();
   private static final String CAUSER = Value.VALUE_BY_NAME_EVENT_CAUSER;
   private static final String TARGET = Value.VALUE_BY_NAME_EVENT_TARGET;
@@ -39,7 +40,7 @@ public class PerceptionEditorTest {
 
   @Test
   void emptySlot_startsEmpty_withTheGivenSubject() {
-    editor.open(EVENT, 40, TARGET);
+    editor.open(EVENT_WITH_TARGET, 40, TARGET);
 
     assertThat(editor.isEditable()).isTrue();
     assertThat(editor.isChanged()).isFalse();
@@ -51,9 +52,9 @@ public class PerceptionEditorTest {
 
   @Test
   void filledSlot_opensWithItsContent() {
-    saveInto(3, TARGET, 80, COLOUR_CAP);
+    saveInto(EVENT_WITH_TARGET, 3, TARGET, 80, COLOUR_CAP);
 
-    editor.open(EVENT, 3, CAUSER);
+    editor.open(EVENT_WITH_TARGET, 3, CAUSER);
 
     assertThat(editor.getPaths()).containsExactly(COLOUR_CAP);
     assertThat(editor.getSubject()).isEqualTo(TARGET);
@@ -182,7 +183,7 @@ public class PerceptionEditorTest {
 
   @Test
   void subject_canOnlyChangeWhileNoPathIsSelected() {
-    editor.open(EVENT, 0, CAUSER);
+    editor.open(EVENT_WITH_TARGET, 0, CAUSER);
     assertThat(editor.setSubject(TARGET)).isTrue();
     assertThat(editor.getSubject()).isEqualTo(TARGET);
 
@@ -190,6 +191,69 @@ public class PerceptionEditorTest {
 
     assertThat(editor.setSubject(CAUSER)).isFalse();
     assertThat(editor.getSubject()).isEqualTo(TARGET);
+  }
+
+  // ---------------------------------------------------------------------------
+  // classic perception events: only the causer can be the subject
+  // ---------------------------------------------------------------------------
+
+  @Test
+  void perceptionEvent_allowsOnlyTheCauser() {
+    editor.open(EVENT, 0, CAUSER);
+
+    assertThat(editor.isSubjectAllowed(CAUSER)).isTrue();
+    assertThat(editor.isSubjectAllowed(TARGET)).isFalse();
+    assertThat(editor.setSubject(TARGET)).isFalse();
+    assertThat(editor.getSubject()).isEqualTo(CAUSER);
+  }
+
+  @Test
+  void allPerceptionEvents_allowOnlyTheCauser() {
+    for (EventType event : new EventType[] {EventType.percipientExistsDistance100000, EventType.percipientExistsDistance10000,
+        EventType.percipientExistsDistance5000, EventType.percipientExistsDistance2000,
+        EventType.percipientExistsDistance1000, EventType.percipientExistsDistance100}) {
+      editor.open(event, 0, CAUSER);
+
+      assertThat(editor.isSubjectAllowed(TARGET)).as(event.name()).isFalse();
+    }
+  }
+
+  /** Other percipient events are about somebody doing something. */
+  @Test
+  void otherPercipientEvent_allowsTheTarget() {
+    editor.open(EventType.percipientMoveWalk, 0, CAUSER);
+
+    assertThat(editor.isSubjectAllowed(TARGET)).isTrue();
+  }
+
+  @Test
+  void perceptionEvent_startsWithTheCauser_evenIfTargetWasSetBefore() {
+    editor.open(EVENT, 40, TARGET);
+
+    assertThat(editor.getSubject()).isEqualTo(CAUSER);
+    assertThat(editor.isEditable()).isTrue();
+  }
+
+  @Test
+  void otherEvent_allowsTheTarget() {
+    editor.open(EVENT_WITH_TARGET, 0, TARGET);
+
+    assertThat(editor.isSubjectAllowed(TARGET)).isTrue();
+    assertThat(editor.getSubject()).isEqualTo(TARGET);
+  }
+
+  @Test
+  void storedRowOfAPerceptionEventWithTarget_canOnlyBeLookedAt() {
+    PerceptionDescriptionComposer composer = new PerceptionDescriptionComposer();
+    String json = composer.toJson(composer.compose(EVENT, 2, 100, TARGET, Arrays.asList(COLOUR_CAP)));
+    store.save(EVENT_INDEX, 2, json);
+
+    editor.open(EVENT, 2, CAUSER);
+
+    assertThat(editor.isEditable()).isFalse();
+    assertThat(editor.getReasonNotEditable()).contains("causer");
+    assertThat(editor.getJson()).isEqualTo(json);
+    assertThat(editor.isSlotEditable(2)).isFalse();
   }
 
   // ---------------------------------------------------------------------------
@@ -252,12 +316,75 @@ public class PerceptionEditorTest {
   }
 
   // ---------------------------------------------------------------------------
+  // clearing
+  // ---------------------------------------------------------------------------
+
+  @Test
+  void clearSlot_emptiesOnlyTheOpenedSlot() {
+    saveInto(3, CAUSER, 100, COLOUR_CAP);
+    saveInto(8, CAUSER, 100, COLOUR_CAP);
+    editor.open(EVENT, 3, CAUSER);
+
+    editor.clearSlot();
+
+    assertThat(store.loadAll(EVENT_INDEX)).containsOnlyKeys(8);
+    assertThat(editor.isFilled(3)).isFalse();
+    assertThat(editor.getPaths()).isEmpty();
+    assertThat(editor.isChanged()).isFalse();
+  }
+
+  @Test
+  void clearSlot_removesARowThatCanOnlyBeLookedAt() {
+    store.save(EVENT_INDEX, 0, "{ no json");
+    editor.open(EVENT, 0, CAUSER);
+
+    editor.clearSlot();
+
+    assertThat(store.loadAll(EVENT_INDEX)).isEmpty();
+    assertThat(editor.isEditable()).isTrue();
+  }
+
+  @Test
+  void clearSlot_alsoDropsUnsavedChanges() {
+    saveInto(3, CAUSER, 100, COLOUR_CAP);
+    editor.open(EVENT, 3, CAUSER);
+    editor.add(Arrays.asList(COLOUR_SHIRT));
+
+    editor.clearSlot();
+
+    assertThat(editor.getPaths()).isEmpty();
+    assertThat(editor.isChanged()).isFalse();
+  }
+
+  @Test
+  void clearSlot_ofAnEmptySlot_isRefused() {
+    editor.open(EVENT, 3, CAUSER);
+
+    assertThatThrownBy(() -> editor.clearSlot()).isInstanceOf(IllegalStateException.class);
+  }
+
+  @Test
+  void clearSlot_keepsTheSameSlotOfOtherEvents() {
+    saveInto(3, CAUSER, 100, COLOUR_CAP);
+    saveInto(EVENT_WITH_TARGET, 3, CAUSER, 100, COLOUR_CAP);
+    editor.open(EVENT, 3, CAUSER);
+
+    editor.clearSlot();
+
+    assertThat(store.loadAll(EVENT_WITH_TARGET.getIndex())).containsOnlyKeys(3);
+  }
+
+  // ---------------------------------------------------------------------------
   // test data
   // ---------------------------------------------------------------------------
 
   private void saveInto(int slot, String subject, int threshold, PerceptionPath... paths) {
+    saveInto(EVENT, slot, subject, threshold, paths);
+  }
+
+  private void saveInto(EventType event, int slot, String subject, int threshold, PerceptionPath... paths) {
     PerceptionEditor other = new PerceptionEditor(store);
-    other.open(EVENT, slot, subject);
+    other.open(event, slot, subject);
     other.add(Arrays.asList(paths));
     other.setRelevanceThreshold(threshold);
     other.save(Collections.emptyList());

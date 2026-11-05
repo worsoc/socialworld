@@ -34,6 +34,14 @@ final class InMemoryPerceptionDescriptionStore implements PerceptionDescriptionS
 	}
 
 	@Override
+	public void delete(int eventType, int perceptionType) {
+		Map<Integer, String> descriptionsOfEvent = descriptions.get(eventType);
+		if (descriptionsOfEvent != null) {
+			descriptionsOfEvent.remove(perceptionType);
+		}
+	}
+
+	@Override
 	public String getDescription() {
 		return "example data in memory, not the database";
 	}

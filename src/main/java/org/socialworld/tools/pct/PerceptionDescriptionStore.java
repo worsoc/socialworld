@@ -15,6 +15,8 @@ public interface PerceptionDescriptionStore {
 
 	void save(int eventType, int perceptionType, String json);
 
+	void delete(int eventType, int perceptionType);
+
 	/**
 	 * @return where the data comes from, as it is shown to the user
 	 */
