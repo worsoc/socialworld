@@ -21,7 +21,13 @@ package org.socialworld.core;
 
 public class TickRandomCache {
 
- 
+    private static final TickRandomCache INSTANCE = new TickRandomCache(ObjectMaster.LIVING_SIM_OBJECTS_MAX_NUMBER);
+
+    public static TickRandomCache getInstance() {
+        return INSTANCE;
+    }
+
+
 
     private final double[] randomCache;
 
@@ -39,7 +45,7 @@ public class TickRandomCache {
 
      */
 
-    public TickRandomCache(int maxObjectId) {
+    TickRandomCache(int maxObjectId) {
 
         this.randomCache = new double[maxObjectId];
 

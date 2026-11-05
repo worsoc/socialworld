@@ -25,7 +25,7 @@ import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.expressions.Nothing;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.IAccessToken;
-import org.socialworld.core.Simulation;
+import org.socialworld.core.TickRandomCache;
 
 /**
  * The class is an implementation of an
@@ -73,7 +73,6 @@ public class Expression implements IObjectReceiver{
 	private boolean isValid;
 	private String debugName = "";
 	
-	protected static Simulation simulation = Simulation.getInstance();;
 	protected static Calculation calculation = Calculation.getInstance();
 	protected static Functions functions = Functions.getInstance();;
 
@@ -597,7 +596,7 @@ public class Expression implements IObjectReceiver{
 					float p = (float) expression1.evaluate(arguments).getObject(Type.floatingpoint);
 					tmp = arguments.getValue(Value.VALUE_BY_NAME_OBJECTID);
 					objectID = (int) tmp.getObject(Type.integer);
-					float r = simulation.getRandom(objectID);
+					float r = (float) TickRandomCache.getInstance().getRandom(objectID);
 					
 					if (r < p) {
 						return expression2.evaluate(arguments);

@@ -74,7 +74,6 @@ public class Simulation extends SocialWorldThread {
 	private boolean run = false;
 	private int sleepTime = 500;
 	
-	private TickRandomCache randomCache = new TickRandomCache(ObjectMaster.LIVING_SIM_OBJECTS_MAX_NUMBER);
     private TickObjectCooldown objectCooldown = new TickObjectCooldown(ObjectMaster.LIVING_SIM_OBJECTS_MAX_NUMBER);
 
 
@@ -284,7 +283,7 @@ public class Simulation extends SocialWorldThread {
 	private void nextTimeStep() {
 		Time actualTime = ActualTime.asTime();
 		System.out.println("Zeit: " + actualTime.toString());
-		randomCache.nextTick();
+		TickRandomCache.getInstance().nextTick();
 		objectCooldown.nextTick();
 		AttributeCalculator.getInstance().printInfluencedQueueCounts();
 		//KnowledgeCalculator.getInstance().printKnowledgeQueueCounts();
@@ -376,10 +375,6 @@ public class Simulation extends SocialWorldThread {
 		return this.objectMaster.getSimulationObject(objectID);
 	}
 	
-	public float getRandom(int objectID) {
-		return (float) randomCache.getRandom(objectID);
-	}
-
 	public boolean checkAndApplyCooldown(int objectId, int cooldownType, int cooldownInSeconds) {
         if (this.objectCooldown != null) {
             return this.objectCooldown.checkAndApplyCooldown(objectId, cooldownType, cooldownInSeconds);
