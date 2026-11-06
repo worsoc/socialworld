@@ -97,13 +97,13 @@ aside p { margin: 6px 0; font-size: 13px }
 .node { cursor: pointer }
 .node:hover rect.body, .node.sel rect.body { stroke: var(--accent); stroke-width: 2.2 }
 .node text { fill: var(--ink) }
-.t-name { font: 600 13px var(--sans) }
+.t-name { font: 600 15px var(--sans) }
 .t-name.abs { font-style: italic }
-.t-ster, .t-pkg { font: 11px var(--sans); fill: var(--muted) !important }
-.t-mem { font: 11px var(--mono) }
+.t-ster, .t-pkg { font: 12px var(--sans); fill: var(--muted) !important }
+.t-mem { font: 12.5px var(--mono) }
 .t-mem.st { text-decoration: underline }
-.t-more { font: italic 11px var(--sans); fill: var(--muted) !important }
-.t-flag { font: 600 10px var(--sans); fill: var(--warn) !important }
+.t-more { font: italic 12px var(--sans); fill: var(--muted) !important }
+.t-flag { font: 600 11px var(--sans); fill: var(--warn) !important }
 .missing .t-flag { fill: var(--bad) !important }
 .edge path { fill: none; stroke: var(--line); stroke-width: 1.2 }
 .edge.real path { stroke-dasharray: 6 4 }
@@ -122,7 +122,7 @@ aside p { margin: 6px 0; font-size: 13px }
 <div class="wrap">
   <header>
     <h1>Socialworld Klassendiagramme</h1>
-    <p class="sub">Aus den ObjectAid-Dateien in <code>documentation/*.ucls</code>, aktualisiert und um „Acquaintance &amp; Pfade“ ergänzt am 06.11.2026. Lage der Klassen wie in ObjectAid, Felder und Methoden aus dem aktuellen Quellcode <code>src/</code> (gelesen am 06.11.2026). Gelb markiert, was sich im Code inzwischen geändert hat.</p>
+    <p class="sub">Aus den ObjectAid-Dateien in <code>documentation/*.ucls</code>, aktualisiert und um „Acquaintance &amp; Pfade“ ergänzt am 06.11.2026. Anordnung der Klassen wie in ObjectAid, aber dicht gepackt; Felder und Methoden aus dem aktuellen Quellcode <code>src/</code> (gelesen am 06.11.2026). Gelb markiert, was sich im Code inzwischen geändert hat.</p>
   </header>
 
   <div class="bar">
@@ -169,7 +169,7 @@ const titleOf = f => {
 const slugOf = f => f.replace(/^sw_/, '').replace(/\.ucls$/, '').replace(/_/g, '-');
 
 const ctx = document.createElement('canvas').getContext('2d');
-const FONTS = { name: '600 13px "IBM Plex Sans", sans-serif', small: '11px "IBM Plex Sans", sans-serif', mono: '11px "IBM Plex Mono", monospace' };
+const FONTS = { name: '600 15px "IBM Plex Sans", sans-serif', small: '12px "IBM Plex Sans", sans-serif', mono: '12.5px "IBM Plex Mono", monospace' };
 const tw = (t, f) => { ctx.font = FONTS[f]; return ctx.measureText(t).width; };
 
 let cur = 0, mode = 'compact', sel = null, vb = null, layout = null;
@@ -235,11 +235,11 @@ function boxOf(n) {
   if (!n.exists) head.push({ t: 'NICHT IM CODE', c: 't-flag', f: 'small' });
   else if (n.moved) head.push({ t: 'VERSCHOBEN', c: 't-flag', f: 'small' });
   const comps = memberLines(n);
-  let w = 120;
-  for (const l of head) w = Math.max(w, tw(l.t, l.f) + 24);
-  for (const c of comps) for (const l of c) w = Math.max(w, tw(l.t, l.c.includes('mem') ? 'mono' : 'small') + 20);
-  w = Math.min(Math.ceil(w), 460);
-  const LH = 15, P = 7;
+  let w = 170;
+  for (const l of head) w = Math.max(w, tw(l.t, l.f) + 32);
+  for (const c of comps) for (const l of c) w = Math.max(w, tw(l.t, l.c.includes('mem') ? 'mono' : 'small') + 24);
+  w = Math.min(Math.ceil(w), 540);
+  const LH = 18, P = 9;
   let h = P + head.length * LH + P;
   const headH = h;
   for (const c of comps) h += P + Math.max(c.length, 0) * LH + (c.length ? P - 2 : 4);
@@ -247,10 +247,24 @@ function boxOf(n) {
 }
 
 function computeLayout(d) {
-  const nodes = d.nodes.map(n => ({ n, x: n.x, y: n.y, ...boxOf(n) }));
-  // Überlappungen nach unten auflösen, Reihenfolge bleibt erhalten
-  const order = [...nodes].sort((a, b) => a.y - b.y || a.x - b.x);
-  const placed = [], M = 26;
+  const nodes = d.nodes.map(n => ({ n, ox: n.x, oy: n.y, ...boxOf(n) }));
+  // ObjectAid-Positionen zu Spalten und Zeilen bündeln, dann dicht packen: Reihenfolge bleibt, Leerraum verschwindet
+  const cluster = (vals, thr) => {
+    const u = [...new Set(vals)].sort((a, b) => a - b), idx = new Map();
+    let k = -1, last = -Infinity;
+    for (const v of u) { if (v - last > thr) k++; idx.set(v, k); last = v; }
+    return idx;
+  };
+  const cx = cluster(nodes.map(b => b.ox), 150), cy = cluster(nodes.map(b => b.oy), 110);
+  nodes.forEach(b => { b.c = cx.get(b.ox); b.r = cy.get(b.oy); });
+  const GX = 64, GY = 54, colW = [], rowH = [];
+  for (const b of nodes) { colW[b.c] = Math.max(colW[b.c] || 0, b.w); rowH[b.r] = Math.max(rowH[b.r] || 0, b.h); }
+  const colX = [], rowY = [];
+  for (let i = 0, x = 0; i < colW.length; i++) { colX[i] = x; x += colW[i] ? colW[i] + GX : 0; }
+  for (let i = 0, y = 0; i < rowH.length; i++) { rowY[i] = y; y += rowH[i] ? rowH[i] + GY : 0; }
+  for (const b of nodes) { b.x = colX[b.c] + (colW[b.c] - b.w) / 2; b.y = rowY[b.r]; }
+  // falls zwei Kästen in derselben Zelle landen: nach unten schieben
+  const order = [...nodes].sort((a, b) => a.y - b.y || a.x - b.x), placed = [], M = 30;
   for (const b of order) {
     for (let guard = 0; guard < 60; guard++) {
       const hit = placed.find(p => b.x < p.x + p.w + M && p.x < b.x + b.w + M && b.y < p.y + p.h + M && p.y < b.y + b.h + M);
@@ -288,11 +302,11 @@ function edgeGeom(e, L, offset) {
     return { d: `M${x0},${s.y} L${x0},${y1} L${x1},${y1} L${x1},${y2} L${s.x + s.w},${y2}`, lx: x1 + 4, ly: y1 - 4, anchor: 'start' };
   }
   const sc = [s.x + s.w / 2, s.y + s.h / 2], tc = [t.x + t.w / 2, t.y + t.h / 2];
-  const pts = [sc, ...(e.bp || []), tc];
+  const pts = [sc, tc];
   let [ax, ay] = pts[0], [bx, by] = pts[1];
   const len = Math.hypot(bx - ax, by - ay) || 1;
   const ox = -(by - ay) / len * offset, oy = (bx - ax) / len * offset;
-  const P = pts.map(([x, y], i) => (e.bp ? (i === 0 || i === pts.length - 1 ? [x + ox, y + oy] : [x, y]) : [x + ox, y + oy]));
+  const P = pts.map(([x, y]) => [x + ox, y + oy]);
   const start = clip(s, P[0][0], P[0][1], P[1][0], P[1][1]);
   const n = P.length;
   const end = clip(t, P[n - 1][0], P[n - 1][1], P[n - 2][0], P[n - 2][1]);
@@ -332,7 +346,7 @@ function render() {
   let nodes = '';
   for (const b of L.nodes) {
     const n = b.n;
-    let y = b.y + b.P + 11;
+    let y = b.y + b.P + 13;
     let s = `<g class="node${!n.exists ? ' missing' : ''}${n.moved ? ' moved' : ''}${sel === n.id ? ' sel' : ''}" data-id="${n.id}" tabindex="0" role="button" aria-label="${esc(simple(n.name))}">` +
       `<rect class="body" x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" rx="3"/>` +
       `<rect class="head" x="${b.x + .6}" y="${b.y + .6}" width="${b.w - 1.2}" height="${b.headH - .6}" rx="2.5"/>`;
@@ -340,8 +354,8 @@ function render() {
     let cy = b.y + b.headH;
     for (const c of b.comps) {
       s += `<line x1="${b.x}" x2="${b.x + b.w}" y1="${cy}" y2="${cy}"/>`;
-      let ly = cy + b.P + 10;
-      for (const l of c) { s += `<text class="${l.c}" x="${b.x + 9}" y="${ly}">${esc(l.t)}</text>`; ly += b.LH; }
+      let ly = cy + b.P + 12;
+      for (const l of c) { s += `<text class="${l.c}" x="${b.x + 11}" y="${ly}">${esc(l.t)}</text>`; ly += b.LH; }
       cy += b.P + c.length * b.LH + (c.length ? b.P - 2 : 4);
     }
     nodes += s + '</g>';
@@ -499,3 +513,4 @@ const start = () => {
 };
 (document.fonts && document.fonts.ready ? Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 1500))]) : Promise.resolve()).then(start);
 </script>
+
