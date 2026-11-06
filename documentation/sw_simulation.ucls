@@ -2,7 +2,7 @@
 <class-diagram version="1.1.7" icons="true" automaticImage="JPEG" always-add-relationships="false" 
   generalizations="true" realizations="true" associations="true" dependencies="false" nesting-relationships="true">  
   <class id="1" language="java" name="org.socialworld.SocialWorld" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/SocialWorld.java" binary="false" corner="BOTTOM_RIGHT">    
+    file="/org.socialworld/src/main/java/org/socialworld/SocialWorld.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="574" y="85"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -11,7 +11,7 @@
     </display>  
   </class>  
   <class id="2" language="java" name="org.socialworld.core.Simulation" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/core/Simulation.java" binary="false" corner="BOTTOM_RIGHT">    
+    file="/org.socialworld/src/main/java/org/socialworld/core/Simulation.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="587" y="481"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -20,7 +20,7 @@
     </display>  
   </class>  
   <class id="3" language="java" name="org.socialworld.core.ObjectMaster" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/core/ObjectMaster.java" binary="false" corner="BOTTOM_RIGHT">    
+    file="/org.socialworld/src/main/java/org/socialworld/core/ObjectMaster.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="126" y="575"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -29,7 +29,7 @@
     </display>  
   </class>  
   <class id="4" language="java" name="org.socialworld.core.ActionMaster" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/core/ActionMaster.java" binary="false" corner="BOTTOM_RIGHT">    
+    file="/org.socialworld/src/main/java/org/socialworld/core/ActionMaster.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1018" y="420"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -38,7 +38,7 @@
     </display>  
   </class>  
   <class id="5" language="java" name="org.socialworld.collections.SimulationObjectArray" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/collections/SimulationObjectArray.java" binary="false" 
+    file="/org.socialworld/src/main/java/org/socialworld/collections/SimulationObjectArray.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="133" y="1005"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -48,7 +48,7 @@
     </display>  
   </class>  
   <class id="6" language="java" name="org.socialworld.objects.SimulationObject" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/objects/SimulationObject.java" binary="false" corner="BOTTOM_RIGHT">    
+    file="/org.socialworld/src/main/java/org/socialworld/objects/SimulationObject.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="469" y="773"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -57,7 +57,7 @@
     </display>  
   </class>  
   <class id="7" language="java" name="org.socialworld.core.EventMaster" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/core/EventMaster.java" binary="false" corner="BOTTOM_RIGHT">    
+    file="/org.socialworld/src/main/java/org/socialworld/core/EventMaster.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="639" y="1168"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -66,7 +66,7 @@
     </display>  
   </class>  
   <class id="8" language="java" name="org.socialworld.core.ActionHandler" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/core/ActionHandler.java" binary="false" corner="BOTTOM_RIGHT">    
+    file="/org.socialworld/src/main/java/org/socialworld/core/ActionHandler.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1017" y="870"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -75,7 +75,7 @@
     </display>  
   </class>  
   <class id="9" language="java" name="org.socialworld.core.Event" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/core/Event.java" binary="false" corner="BOTTOM_RIGHT">    
+    file="/org.socialworld/src/main/java/org/socialworld/core/Event.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="367" y="1038"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -84,7 +84,7 @@
     </display>  
   </class>  
   <class id="10" language="java" name="org.socialworld.actions.AbstractAction" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/actions/AbstractAction.java" binary="false" corner="BOTTOM_RIGHT">    
+    file="/org.socialworld/src/main/java/org/socialworld/actions/AbstractAction.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="925" y="1094"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -200,19 +200,6 @@
     <end type="TARGET" refId="1" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="38">    
-    <bendpoint x="1057" y="655"/>    
-    <end type="SOURCE" refId="4" navigable="false">      
-      <attribute id="39" name="actionHandlersNow">        
-        <position height="18" width="103" x="879" y="673"/>      
-      </attribute>      
-      <multiplicity id="40" minimum="0" maximum="2147483647">        
-        <position height="16" width="21" x="992" y="650"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="8" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
   <association id="41">    
     <end type="SOURCE" refId="7" navigable="false">      
       <attribute id="42" name="instance">        
@@ -279,18 +266,6 @@
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="2" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="59">    
-    <end type="SOURCE" refId="10" navigable="false">      
-      <attribute id="60" name="target">        
-        <position height="18" width="38" x="639" y="872"/>      
-      </attribute>      
-      <multiplicity id="61" minimum="0" maximum="1">        
-        <position height="16" width="23" x="659" y="884"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="6" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="62">    
@@ -391,13 +366,41 @@
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="86">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="87" name="simulation">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="88" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="96" name="newHandlersQueue"/>      
+      <multiplicity id="87" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="88">    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="97" name="reportedActionHandlers"/>      
+      <multiplicity id="89" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="90">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="98" name="percipients"/>      
+      <multiplicity id="91" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="92">    
+    <end type="SOURCE" refId="10" navigable="false">      
+      <attribute id="99" name="actor"/>      
+      <multiplicity id="93" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="94">    
+    <end type="SOURCE" refId="10" navigable="false">      
+      <attribute id="100" name="simulation"/>      
+      <multiplicity id="95" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="2" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  

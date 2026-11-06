@@ -1,227 +1,441 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class-diagram version="1.1.7" icons="true" automaticImage="JPEG" always-add-relationships="false" 
   generalizations="true" realizations="true" associations="true" dependencies="false" nesting-relationships="true">  
-  <class id="1" language="java" name="org.socialworld.knowledge.Knowledge" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/knowledge/Knowledge.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="500" y="111"/>    
+  <class id="1" language="java" name="org.socialworld.knowledge.KnowledgeItemNotes" project="org.socialworld" 
+    file="/org.socialworld/src/main/java/org/socialworld/knowledge/KnowledgeItemNotes.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="0" y="0"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="2" language="java" name="org.socialworld.knowledge.KnowledgeFact" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/knowledge/KnowledgeFact.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="171" width="214" x="54" y="-20"/>    
+  <class id="2" language="java" name="org.socialworld.knowledge.Knowledge" project="org.socialworld" 
+    file="/org.socialworld/src/main/java/org/socialworld/knowledge/Knowledge.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="425" y="0"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <enumeration id="3" language="java" name="org.socialworld.knowledge.KnowledgeFact_Criterion" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/knowledge/KnowledgeFact_Criterion.java" binary="false" 
-    corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="-89" y="309"/>    
+  <class id="3" language="java" name="org.socialworld.knowledge.KnowledgeElement" project="org.socialworld" 
+    file="/org.socialworld/src/main/java/org/socialworld/knowledge/KnowledgeElement.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1004" y="0"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="org.socialworld.knowledge.KnowledgeSource" project="org.socialworld" 
+    file="/org.socialworld/src/main/java/org/socialworld/knowledge/KnowledgeSource.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1499" y="0"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <enumeration id="5" language="java" name="org.socialworld.knowledge.KnowledgeSource_Type" project="org.socialworld" 
+    file="/org.socialworld/src/main/java/org/socialworld/knowledge/KnowledgeSource_Type.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2089" y="0"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </enumeration>  
-  <class id="4" language="java" name="org.socialworld.knowledge.KnowledgeFact_Value" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/knowledge/KnowledgeFact_Value.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="198" y="257"/>    
+  <class id="6" language="java" name="org.socialworld.knowledge.KnowledgeItemList" project="org.socialworld" 
+    file="/org.socialworld/src/main/java/org/socialworld/knowledge/KnowledgeItemList.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="425" y="657"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="5" language="java" name="org.socialworld.knowledge.KnowledgeFactList" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/knowledge/KnowledgeFactList.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="188" y="-105"/>    
+  <class id="7" language="java" name="org.socialworld.knowledge.KnowledgeFactPool" project="org.socialworld" 
+    file="/org.socialworld/src/main/java/org/socialworld/knowledge/KnowledgeFactPool.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1499" y="657"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="6" language="java" name="org.socialworld.knowledge.KnowledgeFactPool" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/knowledge/KnowledgeFactPool.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="-141" y="-106"/>    
+  <class id="8" language="java" name="org.socialworld.knowledge.KnowledgeValue" project="org.socialworld" 
+    file="/org.socialworld/src/main/java/org/socialworld/knowledge/KnowledgeValue.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="425" y="1416"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="7" language="java" name="org.socialworld.knowledge.KnowledgePool" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/knowledge/KnowledgePool.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="964" y="2"/>    
+  <class id="9" language="java" name="org.socialworld.knowledge.KnowledgeItem" project="org.socialworld" 
+    file="/org.socialworld/src/main/java/org/socialworld/knowledge/KnowledgeItem.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1004" y="1416"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="8" language="java" name="org.socialworld.knowledge.KnowledgeSource" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/knowledge/KnowledgeSource.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="860" y="317"/>    
+  <class id="10" language="java" name="org.socialworld.knowledge.NoKnowledgeItem" project="org.socialworld" 
+    file="/org.socialworld/src/main/java/org/socialworld/knowledge/NoKnowledgeItem.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1499" y="1416"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <enumeration id="9" language="java" name="org.socialworld.knowledge.KnowledgeSource_Type" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/knowledge/KnowledgeSource_Type.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1152" y="315"/>    
+  <interface id="11" language="java" name="org.socialworld.knowledge.IAnswer" project="org.socialworld" 
+    file="/org.socialworld/src/main/java/org/socialworld/knowledge/IAnswer.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2089" y="1416"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </interface>  
+  <enumeration id="12" language="java" name="org.socialworld.knowledge.KnowledgeFact_Criterion" project="org.socialworld" 
+    file="/org.socialworld/src/main/java/org/socialworld/knowledge/KnowledgeFact_Criterion.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="0" y="1767"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </enumeration>  
-  <class id="10" language="java" name="org.socialworld.knowledge.Answer" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/knowledge/Answer.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="222" y="582"/>    
+  <class id="13" language="java" name="org.socialworld.knowledge.KnowledgeProperty" project="org.socialworld" 
+    file="/org.socialworld/src/main/java/org/socialworld/knowledge/KnowledgeProperty.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="425" y="1767"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="11" language="java" name="org.socialworld.knowledge.Acquaintance" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/knowledge/Acquaintance.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="876" y="562"/>    
+  <class id="14" language="java" name="org.socialworld.knowledge.KnowledgeFact" project="org.socialworld" 
+    file="/org.socialworld/src/main/java/org/socialworld/knowledge/KnowledgeFact.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1004" y="1767"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="12" language="java" name="org.socialworld.knowledge.AcquaintancePool" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/knowledge/AcquaintancePool.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1306" y="564"/>    
+  <class id="15" language="java" name="org.socialworld.knowledge.KnowledgeRelation" project="org.socialworld" 
+    file="/org.socialworld/src/main/java/org/socialworld/knowledge/KnowledgeRelation.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1499" y="1767"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <enumeration id="13" language="java" name="org.socialworld.knowledge.Acquaintance_Attribute" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/knowledge/Acquaintance_Attribute.java" binary="false" 
-    corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="568" y="604"/>    
+  <class id="16" language="java" name="org.socialworld.knowledge.KnowledgeFact_Atoms" project="org.socialworld" 
+    file="/org.socialworld/src/main/java/org/socialworld/knowledge/KnowledgeFact_Atoms.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="425" y="2492"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="17" language="java" name="org.socialworld.knowledge.KnowledgeRelationUnaer" project="org.socialworld" 
+    file="/org.socialworld/src/main/java/org/socialworld/knowledge/KnowledgeRelationUnaer.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1004" y="2492"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="18" language="java" name="org.socialworld.knowledge.KnowledgeRelationBinaer" project="org.socialworld" 
+    file="/org.socialworld/src/main/java/org/socialworld/knowledge/KnowledgeRelationBinaer.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1499" y="2492"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="19" language="java" name="org.socialworld.knowledge.KnowledgeRelationTrinaer" project="org.socialworld" 
+    file="/org.socialworld/src/main/java/org/socialworld/knowledge/KnowledgeRelationTrinaer.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2089" y="2492"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <enumeration id="20" language="java" name="org.socialworld.knowledge.KnowledgeFactAtom_Type" project="org.socialworld" 
+    file="/org.socialworld/src/main/java/org/socialworld/knowledge/KnowledgeFactAtom_Type.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="0" y="2962"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </enumeration>  
-  <association id="14">    
-    <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="15" name="knowledgeList">        
-        <position height="18" width="78" x="645" y="26"/>      
-      </attribute>      
-      <multiplicity id="16" minimum="0" maximum="2147483647">        
-        <position height="16" width="21" x="649" y="44"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="17">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="18" name="value"/>      
-      <multiplicity id="19" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="4" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="20">    
-    <end type="SOURCE" refId="5" navigable="false">      
-      <attribute id="21" name="factSearchList">        
-        <position height="18" width="79" x="175" y="-43"/>      
-      </attribute>      
-      <multiplicity id="22" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="23">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="24" name="instance"/>      
-      <multiplicity id="25" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="6" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
+  <class id="21" language="java" name="org.socialworld.knowledge.KnowledgeFactAtom" project="org.socialworld" 
+    file="/org.socialworld/src/main/java/org/socialworld/knowledge/KnowledgeFactAtom.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="425" y="2962"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="22" language="java" name="org.socialworld.knowledge.AnswerProperty" project="org.socialworld" 
+    file="/org.socialworld/src/main/java/org/socialworld/knowledge/AnswerProperty.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="0" y="3415"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="23" language="java" name="org.socialworld.knowledge.AnswerRelationUnaer" project="org.socialworld" 
+    file="/org.socialworld/src/main/java/org/socialworld/knowledge/AnswerRelationUnaer.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1004" y="2962"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="24" language="java" name="org.socialworld.knowledge.AnswerRelationBinaer" project="org.socialworld" 
+    file="/org.socialworld/src/main/java/org/socialworld/knowledge/AnswerRelationBinaer.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1499" y="2962"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="25" language="java" name="org.socialworld.knowledge.AnswerRelationTrinaer" project="org.socialworld" 
+    file="/org.socialworld/src/main/java/org/socialworld/knowledge/AnswerRelationTrinaer.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="2089" y="2962"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
   <association id="26">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="27" name="facts"/>      
-      <multiplicity id="28" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="29">    
     <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="30" name="criterion"/>      
-      <multiplicity id="31" minimum="0" maximum="1">        
-        <position height="16" width="23" x="43" y="180"/>      
-      </multiplicity>    
+      <attribute id="27" name="knowledgeElementList"/>      
+      <multiplicity id="28" minimum="0" maximum="2147483647"/>    
     </end>    
     <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="32">    
-    <end type="SOURCE" refId="12" navigable="false">      
-      <attribute id="33" name="acquaintanceList"/>      
-      <multiplicity id="34" minimum="0" maximum="2147483647"/>    
+  <association id="29">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="30" name="source"/>      
+      <multiplicity id="31" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="11" navigable="true"/>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="32">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="33" name="knowledgeItemList"/>      
+      <multiplicity id="34" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="35">    
-    <end type="SOURCE" refId="8" navigable="false">      
-      <attribute id="36" name="origin"/>      
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="36" name="type"/>      
       <multiplicity id="37" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="11" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="38">    
-    <end type="SOURCE" refId="8" navigable="false">      
-      <attribute id="39" name="type"/>      
-      <multiplicity id="40" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="9" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="41">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="42" name="factListsByCriterion"/>      
-      <multiplicity id="43" minimum="0" maximum="2147483647"/>    
     </end>    
     <end type="TARGET" refId="5" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <generalization id="44">    
-    <end type="SOURCE" refId="10"/>    
-    <end type="TARGET" refId="1"/>  
-  </generalization>  
-  <association id="45">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="46" name="source">        
-        <position height="18" width="42" x="701" y="202"/>      
-      </attribute>      
-      <multiplicity id="47" minimum="0" maximum="2147483647">        
-        <position height="16" width="21" x="716" y="218"/>      
-      </multiplicity>    
+  <association id="38">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="39" name="itemNotes"/>      
+      <multiplicity id="40" minimum="0" maximum="2147483647"/>    
     </end>    
-    <end type="TARGET" refId="8" navigable="true"/>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="41">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="42" name="myParent"/>      
+      <multiplicity id="43" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="44">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="45" name="poolInstance"/>      
+      <multiplicity id="46" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="47">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="48" name="instance"/>      
+      <multiplicity id="49" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="50">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="51" name="propertyListsByCriterion"/>      
+      <multiplicity id="52" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="53">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="54" name="relationListsByCriterion"/>      
+      <multiplicity id="55" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="15" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="56">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="9"/>  
+  </generalization>  
+  <generalization id="57">    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="9"/>  
+  </generalization>  
+  <realization id="58">    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="11"/>  
+  </realization>  
+  <generalization id="59">    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="14"/>  
+  </generalization>  
+  <association id="60">    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="61" name="criterion"/>      
+      <multiplicity id="62" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="12" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="63">    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="64" name="atoms"/>      
+      <multiplicity id="65" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="16" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="66">    
+    <end type="SOURCE" refId="14"/>    
+    <end type="TARGET" refId="9"/>  
+  </generalization>  
+  <generalization id="67">    
+    <end type="SOURCE" refId="15"/>    
+    <end type="TARGET" refId="14"/>  
+  </generalization>  
+  <association id="68">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="69" name="atoms"/>      
+      <multiplicity id="70" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="21" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="71">    
+    <end type="SOURCE" refId="17"/>    
+    <end type="TARGET" refId="15"/>  
+  </generalization>  
+  <generalization id="72">    
+    <end type="SOURCE" refId="18"/>    
+    <end type="TARGET" refId="15"/>  
+  </generalization>  
+  <generalization id="73">    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="15"/>  
+  </generalization>  
+  <association id="74">    
+    <end type="SOURCE" refId="21" navigable="false">      
+      <attribute id="75" name="type"/>      
+      <multiplicity id="76" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="20" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="77">    
+    <end type="SOURCE" refId="22"/>    
+    <end type="TARGET" refId="13"/>  
+  </generalization>  
+  <realization id="78">    
+    <end type="SOURCE" refId="22"/>    
+    <end type="TARGET" refId="11"/>  
+  </realization>  
+  <association id="79">    
+    <end type="SOURCE" refId="22" navigable="false">      
+      <attribute id="80" name="originalProperty"/>      
+      <multiplicity id="81" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="82">    
+    <end type="SOURCE" refId="23"/>    
+    <end type="TARGET" refId="17"/>  
+  </generalization>  
+  <realization id="83">    
+    <end type="SOURCE" refId="23"/>    
+    <end type="TARGET" refId="11"/>  
+  </realization>  
+  <association id="84">    
+    <end type="SOURCE" refId="23" navigable="false">      
+      <attribute id="85" name="originalRelation"/>      
+      <multiplicity id="86" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="87">    
+    <end type="SOURCE" refId="24"/>    
+    <end type="TARGET" refId="18"/>  
+  </generalization>  
+  <realization id="88">    
+    <end type="SOURCE" refId="24"/>    
+    <end type="TARGET" refId="11"/>  
+  </realization>  
+  <association id="89">    
+    <end type="SOURCE" refId="24" navigable="false">      
+      <attribute id="90" name="originalRelation"/>      
+      <multiplicity id="91" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="18" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="92">    
+    <end type="SOURCE" refId="25"/>    
+    <end type="TARGET" refId="19"/>  
+  </generalization>  
+  <realization id="93">    
+    <end type="SOURCE" refId="25"/>    
+    <end type="TARGET" refId="11"/>  
+  </realization>  
+  <association id="94">    
+    <end type="SOURCE" refId="25" navigable="false">      
+      <attribute id="95" name="originalRelation"/>      
+      <multiplicity id="96" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="19" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 

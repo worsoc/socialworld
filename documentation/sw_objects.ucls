@@ -2,7 +2,7 @@
 <class-diagram version="1.1.7" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
   associations="true" dependencies="false" nesting-relationships="true">  
   <class id="1" language="java" name="org.socialworld.objects.Animal" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/objects/Animal.java" binary="false" corner="BOTTOM_RIGHT">    
+    file="/org.socialworld/src/main/java/org/socialworld/objects/Animal.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="830" y="-439"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -11,7 +11,7 @@
     </display>  
   </class>  
   <class id="2" language="java" name="org.socialworld.objects.Human" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/objects/Human.java" binary="false" corner="BOTTOM_RIGHT">    
+    file="/org.socialworld/src/main/java/org/socialworld/objects/Human.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1213" y="-311"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -20,7 +20,7 @@
     </display>  
   </class>  
   <class id="3" language="java" name="org.socialworld.objects.WriteAccessToAnimal" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/objects/WriteAccessToAnimal.java" binary="false" corner="BOTTOM_RIGHT">    
+    file="/org.socialworld/src/main/java/org/socialworld/objects/WriteAccessToAnimal.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="738" y="255"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -29,7 +29,7 @@
     </display>  
   </class>  
   <class id="4" language="java" name="org.socialworld.objects.WriteAccessToHuman" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/objects/WriteAccessToHuman.java" binary="false" corner="BOTTOM_RIGHT">    
+    file="/org.socialworld/src/main/java/org/socialworld/objects/WriteAccessToHuman.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1133" y="247"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -38,7 +38,7 @@
     </display>  
   </class>  
   <class id="5" language="java" name="org.socialworld.attributes.AttributeArray" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/attributes/AttributeArray.java" binary="false" corner="BOTTOM_RIGHT">    
+    file="/org.socialworld/src/main/java/org/socialworld/attributes/AttributeArray.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="660" y="62"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -46,8 +46,8 @@
       <operations public="false" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="6" language="java" name="org.socialworld.attributes.Inventory" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/attributes/Inventory.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="6" language="java" name="org.socialworld.actions.handle.Inventory" project="org.socialworld" 
+    file="/org.socialworld/src/main/java/org/socialworld/actions/handle/Inventory.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="987" y="81"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -56,7 +56,7 @@
     </display>  
   </class>  
   <class id="7" language="java" name="org.socialworld.objects.SimulationObject" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/objects/SimulationObject.java" binary="false" corner="BOTTOM_RIGHT">    
+    file="/org.socialworld/src/main/java/org/socialworld/objects/SimulationObject.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="437" y="-321"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -65,7 +65,7 @@
     </display>  
   </class>  
   <class id="8" language="java" name="org.socialworld.objects.WriteAccessToSimulationObject" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/objects/WriteAccessToSimulationObject.java" binary="false" 
+    file="/org.socialworld/src/main/java/org/socialworld/objects/WriteAccessToSimulationObject.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="409" y="248"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -75,7 +75,7 @@
     </display>  
   </class>  
   <class id="9" language="java" name="org.socialworld.attributes.Position" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/attributes/Position.java" binary="false" corner="BOTTOM_RIGHT">    
+    file="/org.socialworld/src/main/java/org/socialworld/attributes/Position.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="119" y="-429"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -99,30 +99,6 @@
     <end type="SOURCE" refId="3"/>    
     <end type="TARGET" refId="8"/>  
   </generalization>  
-  <association id="14">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="15" name="inventory">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="16" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="6" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="17">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="18" name="attributes">        
-        <position height="0" width="0" x="-253" y="219"/>      
-      </attribute>      
-      <multiplicity id="19" minimum="0" maximum="1">        
-        <position height="0" width="0" x="-253" y="219"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="5" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
   <generalization id="20">    
     <end type="SOURCE" refId="4"/>    
     <end type="TARGET" refId="3"/>  
@@ -179,18 +155,6 @@
     <end type="TARGET" refId="7" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="34">    
-    <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="35" name="position">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="36" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="9" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
   <association id="37">    
     <end type="SOURCE" refId="4" navigable="false">      
       <attribute id="38" name="human">        
@@ -201,6 +165,22 @@
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="2" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="40">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="44" name="mouth"/>      
+      <multiplicity id="41" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="42">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="45" name="parent"/>      
+      <multiplicity id="43" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 

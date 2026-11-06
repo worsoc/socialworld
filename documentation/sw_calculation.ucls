@@ -2,7 +2,7 @@
 <class-diagram version="1.1.7" icons="true" automaticImage="JPEG" always-add-relationships="false" 
   generalizations="true" realizations="true" associations="true" dependencies="false" nesting-relationships="true">  
   <class id="1" language="java" name="org.socialworld.calculation.FunctionBase" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/calculation/FunctionBase.java" binary="false" corner="BOTTOM_RIGHT">    
+    file="/org.socialworld/src/main/java/org/socialworld/calculation/FunctionBase.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="458" y="62"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -10,8 +10,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="2" language="java" name="org.socialworld.calculation.FunctionByExpression" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/calculation/FunctionByExpression.java" binary="false" 
+  <class id="2" language="java" name="org.socialworld.calculation.functions.FunctionByExpression" project="org.socialworld" 
+    file="/org.socialworld/src/main/java/org/socialworld/calculation/functions/FunctionByExpression.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="124" y="282"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -20,8 +20,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="3" language="java" name="org.socialworld.calculation.FunctionByMatrix" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/calculation/FunctionByMatrix.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="3" language="java" name="org.socialworld.calculation.functions.FunctionByMatrix" project="org.socialworld" 
+    file="/org.socialworld/src/main/java/org/socialworld/calculation/functions/FunctionByMatrix.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="444" y="309"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -29,8 +29,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="4" language="java" name="org.socialworld.calculation.FunctionByTable" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/calculation/FunctionByTable.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="4" language="java" name="org.socialworld.calculation.functions.FunctionByTable" project="org.socialworld" 
+    file="/org.socialworld/src/main/java/org/socialworld/calculation/functions/FunctionByTable.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="779" y="307"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -39,7 +39,7 @@
     </display>  
   </class>  
   <class id="5" language="java" name="org.socialworld.calculation.Expression" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/calculation/Expression.java" binary="false" corner="BOTTOM_RIGHT">    
+    file="/org.socialworld/src/main/java/org/socialworld/calculation/Expression.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="115" y="674"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -48,7 +48,7 @@
     </display>  
   </class>  
   <enumeration id="6" language="java" name="org.socialworld.calculation.Expression_Function" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/calculation/Expression_Function.java" binary="false" 
+    file="/org.socialworld/src/main/java/org/socialworld/calculation/Expression_Function.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="-181" y="674"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -67,7 +67,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </enumeration>  
-  <enumeration id="8" language="java" name="org.socialworld.calculation.FunctionByMatrix_InputType" 
+  <enumeration id="8" language="java" name="org.socialworld.calculation.functions.FunctionByMatrix_InputType" 
     project="org.socialworld" file="/org.socialworld/src/org/socialworld/calculation/FunctionByMatrix_InputType.java" 
     binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="478" y="1045"/>    
@@ -77,8 +77,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </enumeration>  
-  <class id="9" language="java" name="org.socialworld.calculation.FunctionByMatrix_Matrix" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/calculation/FunctionByMatrix_Matrix.java" binary="false" 
+  <class id="9" language="java" name="org.socialworld.calculation.functions.FunctionByMatrix_Matrix" project="org.socialworld" 
+    file="/org.socialworld/src/main/java/org/socialworld/calculation/functions/FunctionByMatrix_Matrix.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="472" y="684"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -87,8 +87,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <enumeration id="10" language="java" name="org.socialworld.calculation.FunctionByTable_Type" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/calculation/FunctionByTable_Type.java" binary="false" 
+  <enumeration id="10" language="java" name="org.socialworld.calculation.functions.FunctionByTable_Type" project="org.socialworld" 
+    file="/org.socialworld/src/main/java/org/socialworld/calculation/functions/FunctionByTable_Type.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="786" y="624"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -98,7 +98,7 @@
     </display>  
   </enumeration>  
   <class id="11" language="java" name="org.socialworld.calculation.Functions" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/calculation/Functions.java" binary="false" corner="BOTTOM_RIGHT">    
+    file="/org.socialworld/src/main/java/org/socialworld/calculation/Functions.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="140" y="62"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -107,7 +107,7 @@
     </display>  
   </class>  
   <class id="12" language="java" name="org.socialworld.calculation.Calculation" project="org.socialworld" 
-    file="/org.socialworld/src/org/socialworld/calculation/Calculation.java" binary="false" corner="BOTTOM_RIGHT">    
+    file="/org.socialworld/src/main/java/org/socialworld/calculation/Calculation.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="-190" y="276"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -270,6 +270,30 @@
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="5" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="52">    
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="58" name="operation"/>      
+      <multiplicity id="53" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="54">    
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="59" name="function"/>      
+      <multiplicity id="55" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="56">    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="60" name="instance"/>      
+      <multiplicity id="57" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="11" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
