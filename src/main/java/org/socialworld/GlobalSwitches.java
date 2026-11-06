@@ -34,7 +34,7 @@ public class GlobalSwitches {
 
 	public static boolean OUTPUT_MEMORY_TELEMETRY = true;
 	
-	public static boolean OUTPUT_KNOWLEDGE_ADDKNOWLEDGE = true;
+	public static boolean OUTPUT_KNOWLEDGE_ADDKNOWLEDGE = false;
 
 	public static boolean OUTPUT_DEBUG_VARIABLE_IS_NULL = false;
 	public static boolean OUTPUT_DEBUG_ACTIONCREATOR_VARIABLE_IS_NULL = false;
@@ -63,5 +63,7 @@ public class GlobalSwitches {
 	public static boolean OUTPUT_CALCULATE_ATTRIBUTE_BY_EVENT = false;
 
 	public static boolean OUTPUT_CAPACITY_QUEUE_IS_FULL = false;
+
+	public static boolean OUTPUT_TICK_RANDOM = false;
 
 }

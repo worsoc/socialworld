@@ -597,6 +597,9 @@ public class Expression implements IObjectReceiver{
 					tmp = arguments.getValue(Value.VALUE_BY_NAME_OBJECTID);
 					objectID = (int) tmp.getObject(Type.integer);
 					float r = (float) TickRandomCache.getInstance().getRandom(objectID);
+					if (GlobalSwitches.OUTPUT_TICK_RANDOM) {
+						System.out.println("Expression.evaluate.probability > objectID=" + objectID + " p=" + p + " r=" + r);
+					}
 					
 					if (r < p) {
 						return expression2.evaluate(arguments);
