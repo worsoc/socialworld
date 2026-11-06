@@ -61,3 +61,42 @@ This project is licensed under the **GNU General Public License v3.0 or later**.
    1. Select `master` as _base_ and your branch `my-new-feature-branch` as _compare_
    1. Add some meaningful description
 1. Assign someone to the PR for review.
+
+
+## Database
+
+Social World keeps its templates, descriptions and simulation state in a MariaDB database.
+
+### Requirements
+
+- A running **MariaDB** server
+- A database named **`sw1`**. This name is required; the code addresses the tables as `sw1.<table>`.
+- A database user of your choice with read and write access to `sw1`
+- The MariaDB JDBC driver (`org.mariadb.jdbc`), which Gradle pulls in
+
+### Creating and filling the database
+
+The SQL scripts that create the database and its tables and fill them with the base data live in a separate repository:
+
+**[worsoc/db_socialworld](https://github.com/worsoc/db_socialworld)**
+
+Run them against your MariaDB server before you start Social World or one of its tools.
+
+### Connection settings
+
+The connection is read from `src/main/resources/application.properties`. Git ignores this file, so after cloning, copy the template `src/main/resources/application.properties.template` to `application.properties` in the same folder and enter your database user and password:
+
+```bash
+cp src/main/resources/application.properties.template src/main/resources/application.properties
+```
+
+```properties
+db.url=jdbc:mariadb://localhost:3306/sw1?sslMode=disable
+db.user=<your user>
+db.password=<your password>
+```
+
+You can choose the user name and password freely. Only the database name `sw1` is fixed. Adjust host and port in `db.url` if your server does not run locally on port 3306.
+
+Without this file, the program stops with `application.properties not found!`.
+
