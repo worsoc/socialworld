@@ -1,0 +1,102 @@
+# no;name;sketch;mood;courage;morals;materialism;tiredness;curiosity;spirituality;hunger;power
+# levels: --- 0-10, -- 8-28, - 25-42, o 38-62, + 58-75, ++ 72-92, +++ 90-99, ~ 20-80
+1;farmer;middle-aged, steady and hard-working;~;o;o;o;~;o;o;~;+
+2;farmer's wife;mother of four, practical, always on her feet;~;o;+;o;+;o;o;~;o
+3;farmhand;strong, unambitious, likes his food;~;o;o;-;~;-;o;+;+
+4;maid;diligent, pious, quiet;~;-;+;-;+;o;+;~;o
+5;carpenter;reliable craftsman;~;o;o;o;~;o;o;~;+
+6;shopkeeper;good at sums, hears all the gossip;~;o;o;+;~;+;o;~;-
+7;fisherman;weather-beaten, makes offerings to the sea;~;+;o;o;~;o;+;~;+
+8;fisherman's wife;mends nets, waits on the shore;~;o;o;o;~;-;+;~;o
+9;shepherd;much alone, content;+;o;o;-;~;o;+;~;o
+10;miller;a little stingy, well fed;~;o;-;+;~;o;o;-;+
+11;baker;gets up at night, cheerful;+;o;o;o;+;o;o;-;o
+12;washerwoman;hard work, little time for anything else;~;o;o;-;+;-;o;~;o
+13;apprentice;young, curious, always hungry;~;o;o;o;~;+;-;+;o
+14;retired farmer;has handed over the farm, sits a lot;~;-;+;o;+;-;+;~;-
+15;grandmother;tells stories, frail;+;-;+;-;+;o;+;~;--
+16;barmaid;quick, hears a lot, believes little;+;o;o;o;+;+;-;~;-
+17;innkeeper;sociable, eats with the guests;+;o;o;+;~;+;-;-;o
+18;carter;often on the road, not easily scared;~;+;o;o;~;o;o;~;+
+19;weaver;patient, sits all day;~;-;o;o;~;o;o;~;-
+20;potter;likes to try new shapes;~;o;o;o;~;+;o;~;o
+21;shepherdess;young, sings while working;+;o;o;-;~;+;o;~;o
+22;woodcutter;bear of a man, taciturn;~;+;o;-;~;-;o;+;++
+23;tanner;smelly, grumpy, believes in nothing;-;o;o;o;~;-;-;~;+
+24;pedlar;talkative, not too strict with the truth;+;+;-;+;~;+;-;~;o
+25;widow;withdrawn, prays a lot;-;-;+;o;~;-;+;~;-
+26;beekeeper;calm, watches nature;+;o;+;o;~;+;+;~;o
+27;ropemaker;unremarkable in every way;~;o;o;o;~;o;o;~;o
+28;gardener;frugal, friendly;+;o;o;-;~;o;o;~;o
+29;stable boy;tired, hungry, cheeky;~;o;o;-;+;o;-;+;o
+30;midwife;has seen it all, fetches children at night;~;+;+;-;+;o;+;~;o
+31;village smith;strong, respected, big appetite;~;+;o;o;~;o;o;+;++
+32;seamstress;ambitious, wants to move to town;~;o;o;+;~;+;o;~;-
+33;cowherd girl;almost still a child, asks about everything;+;-;o;-;~;++;o;+;-
+34;day labourer;always on the move, always short of money;-;o;o;+;+;o;-;+;o
+35;tinker;travelling, resourceful, not quite honest;~;o;-;o;~;+;-;~;o
+36;brewer;business-minded, full of life;+;o;o;+;~;o;o;-;o
+37;charcoal burner;lives in the forest, taciturn, superstitious;-;+;o;-;+;-;+;~;+
+38;ferryman;takes anyone across who pays;~;o;o;+;~;-;+;~;+
+39;shoemaker;cautious, sticks to his last;~;-;o;o;~;o;o;~;o
+40;old goatherd;needs nothing, at peace with himself;+;o;o;--;~;-;+;~;-
+41;farmer's son;wants to leave and see the world;~;+;o;o;~;++;-;+;+
+42;farmer's daughter;newly engaged, in good spirits;+;o;+;o;~;o;o;~;o
+43;market woman;loud, bargains hard;+;+;o;+;~;+;-;~;o
+44;gatekeeper;bored, drowsy, waiting for his meal;-;o;o;o;+;-;o;+;+
+45;farmhand fond of the jug;drinks, sleeps badly;-;o;-;o;+;-;-;~;o
+46;village priest;strict in morals, needs little;~;o;++;--;~;o;++;~;-
+47;convent sister;humble, serves the sick;+;-;++;--;~;-;++;~;-
+48;rich merchant;well travelled, coolly calculating;~;o;-;++;~;+;-;-;-
+49;moneylender;suspicious, knows no mercy;-;-;--;++;~;o;-;-;-
+50;mercenary;fights for whoever pays;~;++;-;+;~;o;-;+;++
+51;knight;proud of his honour, god-fearing, strong;~;++;+;o;~;o;+;~;++
+52;pickpocket;quick, cheeky, hungry;+;+;--;+;~;+;-;+;-
+53;beggar;has lost everything, hopes for mercy;-;-;o;--;+;o;+;++;-
+54;scholar;grown grey over books, sleeps too little;~;-;+;-;+;++;o;~;--
+55;herb woman;knows about plants and spirits;~;o;+;-;~;++;++;~;-
+56;minstrel;merry, reckless, never full;++;+;-;-;~;++;-;+;-
+57;hunter;tireless, fearless in the forest;~;++;o;-;~;+;o;~;+
+58;treasure hunter;greedy for gold and adventure;+;++;-;++;~;++;-;~;+
+59;tax collector;hated, pedantic;-;o;-;++;~;-;-;-;o
+60;village mayor;self-confident, minds his own advantage;~;+;o;+;~;o;o;-;o
+61;stingy merchant's widow;counts every coin;-;-;o;++;~;-;o;-;--
+62;seafarer;has seen distant coasts;+;++;o;o;~;++;+;~;+
+63;scribe monk;copies texts by candlelight;~;-;++;--;+;+;++;~;--
+64;poacher;cunning, risks a lot for a roast;~;+;-;o;~;o;-;+;+
+65;juggler;jokes about everything, the gods included;++;+;o;-;~;+;--;~;o
+66;miner;toils underground, worn out and strong;-;+;o;o;++;-;+;+;++
+67;wandering preacher;travels in hardship, burns for his faith;+;+;+;--;+;o;++;+;-
+68;horse dealer;cunning, charming, lies without blinking;+;o;--;++;~;o;-;~;o
+69;wrestler;strong, cheerful, eats for three;+;+;o;o;~;-;-;++;++
+70;poet;melancholic, unworldly;--;-;+;--;+;++;+;~;--
+71;corrupt town guard;holds out his hand;~;o;--;+;~;-;-;~;+
+72;barber-surgeon;heals, cuts, sleeps little;~;+;+;o;+;+;o;~;o
+73;pilgrim woman;walks for weeks to the shrine;+;o;+;--;++;+;++;+;-
+74;legacy hunter;flatters the old;~;-;--;++;~;o;-;~;-
+75;wounded veteran;has seen too much;--;+;+;-;+;-;o;~;-
+76;young widow;runs the farm alone and does not give up;-;+;+;o;+;o;o;~;o
+77;estate steward;orderly, petty;~;o;o;+;~;-;o;-;-
+78;alchemist;seeks gold and forgets to sleep;~;+;o;+;++;++;-;~;-
+79;woodswoman;free, wild, owns nothing;+;++;o;--;~;+;+;~;+
+80;smuggler;out at night, fears nothing;~;++;--;+;+;o;-;~;o
+81;gambler;on top of the world, never enough;++;+;-;++;+;+;-;~;-
+82;hermit;lives on roots, prays;+;o;+;--;~;-;++;+;-
+83;orphan;neglected, hungry, wide awake;-;-;o;-;~;++;o;++;--
+84;spoilt young noble;well fed, well rested, bored;+;-;-;++;--;o;-;--;-
+85;zealous temple servant;knows only his god, hates questions;-;+;+;--;~;--;++;~;o
+86;ascetic;fasts, owns nothing, is held to be holy;+;o;+++;---;+;-;+++;++;--
+87;robber chief;ruthless, fearless, strong;~;+++;---;++;~;o;--;~;++
+88;giant;show fighter at the fair;+;+;o;-;~;-;-;++;+++
+89;paralysed old man;bedridden, tired, composed;-;--;+;-;++;o;+;~;---
+90;cowardly courtier;crawls upwards, flees every danger;~;---;--;++;~;+;-;-;--
+91;mad prophet;sees the end coming and stays awake at night;--;++;o;---;++;+;+++;+;-
+92;greedy prince;wants everything, gives nothing;~;o;--;+++;~;-;-;--;-
+93;freethinker;doubts every god, questions everything;+;+;+;o;~;+++;---;~;o
+94;daredevil;reckless, laughs in the face of danger;++;+++;-;o;~;++;-;~;+
+95;murderer;cold, without remorse;-;+;---;+;~;-;---;~;+
+96;sunny nature;always in good spirits, whatever happens;+++;+;+;-;-;+;o;~;o
+97;deeply melancholic woman;sees no sense in anything;---;-;+;-;++;--;o;-;-
+98;starving refugee;has been on the run for weeks;--;-;o;--;++;-;+;+++;--
+99;exhausted night watchman;third night without sleep;-;o;o;o;+++;-;o;+;o
+100;child prodigy;grasps everything, wants to know everything;+;+;+;-;~;+++;o;~;-

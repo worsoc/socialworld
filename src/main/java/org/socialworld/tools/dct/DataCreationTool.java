@@ -1,24 +1,20 @@
 /*
-* Social World
-* Copyright (C) 2018  Mathias Sikos & Damian Zapadka
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2018  Mathias Sikos & Damian Zapadka
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.tools.dct;
 import java.awt.EventQueue;
 
@@ -40,8 +36,12 @@ import java.awt.Button;
 import java.awt.TextField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+
+import org.socialworld.tools.dct.AttributeArrayGenerator.GeneratedArray;
 
 public class DataCreationTool {
 	
@@ -74,6 +74,9 @@ public class DataCreationTool {
 	JSlider slider_8 = new JSlider();
 	JSlider slider_9 = new JSlider();
 */	
+	TextField tfStartAaID = new TextField("1");
+	java.util.List<GeneratedArray> generatedArrays = new java.util.ArrayList<>();
+
 	TextField tfPathSave = new TextField();
 	TextField tfSaveAs = new TextField();
 	Button buttonSave = new Button("Speichern");
@@ -146,6 +149,15 @@ public class DataCreationTool {
 		});
 		buttonGenerate.setBounds(938, 30, 77, 26);
 		frame.getContentPane().add(buttonGenerate);
+
+		Button buttonLoadText = new Button("Text laden");
+		buttonLoadText.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				loadText();
+			}
+		});
+		buttonLoadText.setBounds(938, 62, 77, 26);
+		frame.getContentPane().add(buttonLoadText);
 		
 		lastMatrix.setBounds(1021, 31, 241, 203);
 		frame.getContentPane().add(lastMatrix);
@@ -155,7 +167,7 @@ public class DataCreationTool {
 
 		
 		JLabel lblAttribute = new JLabel("Attribute:");
-		lblAttribute.setBounds(370, 240, 100, 14);
+		lblAttribute.setBounds(370, 240, 60, 14);
 		frame.getContentPane().add(lblAttribute);
 
 		JLabel lblMood = new JLabel("mood");
@@ -258,48 +270,48 @@ public class DataCreationTool {
 		sliders4Attribs[8].setPaintTicks(true);
 		
 		
-		attributes.setBounds(370, 260, 175, 388);
+		attributes.setBounds(370, 260, 175, 355);
 		frame.getContentPane().add(attributes);
 		
-		Button buttonSliders2Attribs = new Button("-->");
-		buttonSliders2Attribs.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String entry = "";
-				for (int index = 0; index < ATTRIB_COUNT; index++  ) {
-					if (index > 0) {
-						entry = entry + ",";
-					}
-					entry = entry + Math.min(99, sliders4Attribs[index].getValue());
-				}
-				entry = "(" + entry + ")";
-				attributes.add(entry);
+		attributes.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) selectedAttribsToSliders();
 			}
 		});
-		buttonSliders2Attribs.setBounds(370, 657, 40, 26);
-		frame.getContentPane().add(buttonSliders2Attribs);
 		
-		Button buttonAttribs2Sliders = new Button("<--");
-		buttonAttribs2Sliders.addActionListener(new ActionListener() {
+		Button buttonCharacters = new Button("Charaktere");
+		buttonCharacters.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String entry = attributes.getSelectedItem();
-				entry = entry.substring(1, entry.length()-1);
-				String[] attribs =  entry.split(",");
-				for (int index = 0; index < attribs.length; index++  ) {
-					sliders4Attribs[index].setValue(Integer.parseInt(attribs[index]));
-				}
+				generateFromCharacters(textInput.getText());
 			}
 		});
-		buttonAttribs2Sliders.setBounds(420, 657, 40, 26);
-		frame.getContentPane().add(buttonAttribs2Sliders);
-		
-		Button buttonDeleteAttribsEntry = new Button("Löschen");
-		buttonDeleteAttribsEntry.addActionListener(new ActionListener() {
+		buttonCharacters.setBounds(430, 235, 80, 22);
+		frame.getContentPane().add(buttonCharacters);
+
+		Button buttonCharactersDB = new Button("In DB");
+		buttonCharactersDB.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				attributes.remove(	attributes.getSelectedIndex());	}
+				saveCharactersToDB();
+			}
 		});
-		buttonDeleteAttribsEntry.setBounds(450, 657, 75, 26);
-		frame.getContentPane().add(buttonDeleteAttribsEntry);
-		
+		buttonCharactersDB.setBounds(480, 657, 65, 26);
+		frame.getContentPane().add(buttonCharactersDB);
+
+		Button buttonSliders2Selected = new Button("Übernehmen");
+		buttonSliders2Selected.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				slidersToSelectedAttribs();
+			}
+		});
+		buttonSliders2Selected.setBounds(370, 622, 85, 26);
+		frame.getContentPane().add(buttonSliders2Selected);
+
+		JLabel lblStartAaID = new JLabel("aa_id ab:");
+		lblStartAaID.setBounds(370, 657, 60, 26);
+		frame.getContentPane().add(lblStartAaID);
+		tfStartAaID.setBounds(430, 657, 45, 26);
+		frame.getContentPane().add(tfStartAaID);
+
 		JLabel lblPositionen = new JLabel("Positionen:");
 		lblPositionen.setBounds(551, 240, 77, 14);
 		frame.getContentPane().add(lblPositionen);
@@ -739,12 +751,12 @@ public class DataCreationTool {
 			String str1 = Integer.toString(resultVektor[0]); 
 			String str2 = Integer.toString(resultVektor[1]);
 			String str3 = Integer.toString(resultVektor[2]);
-			String str4 = Integer.toString(resultVektor[0]); 
-			String str5 = Integer.toString(resultVektor[1]);
-			String str6 = Integer.toString(resultVektor[2]);
-			String str7 = Integer.toString(resultVektor[0]); 
-			String str8 = Integer.toString(resultVektor[1]);
-			String str9 = Integer.toString(resultVektor[2]);
+			String str4 = Integer.toString(resultVektor[3]); 
+			String str5 = Integer.toString(resultVektor[4]);
+			String str6 = Integer.toString(resultVektor[5]);
+			String str7 = Integer.toString(resultVektor[6]); 
+			String str8 = Integer.toString(resultVektor[7]);
+			String str9 = Integer.toString(resultVektor[8]);
 
 			attributes.add("(" + str1 + "," + str2 + "," + str3 + "," +str4 + "," + str5 + "," + str6 + "," + str7 + "," + str8 + "," +str9 +")");
 		}		    
@@ -752,6 +764,121 @@ public class DataCreationTool {
 	}
 	
 	
+	///////////////////////////////////////////////
+	//attribute arrays from characters and text  //
+	///////////////////////////////////////////////
+
+	private void loadText() {
+		JFileChooser chooser = new JFileChooser();
+		chooser.setCurrentDirectory(new File("."));
+		chooser.setDialogTitle("Text laden");
+		if (chooser.showOpenDialog(frame) != JFileChooser.APPROVE_OPTION) return;
+
+		String text;
+		try {
+			text = TextFile.read(chooser.getSelectedFile().toPath());
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(frame, "Fehler: " + e.getMessage());
+			return;
+		}
+		textInput.setText(text);
+
+		int countLetters = TextDie.onlyLetters(text).length();
+		int needed = AttributeArrayGenerator.countLettersNeeded(AttributeCharacterCatalog.load());
+		JOptionPane.showMessageDialog(frame, countLetters + " Buchstaben geladen, "
+				+ needed + " werden für 'Charaktere' gebraucht"
+				+ (countLetters < needed ? ".\nDer Text ist zu kurz." : "."));
+	}
+
+	private void generateFromCharacters(String input) {
+		AttributeCharacterCatalog catalog = AttributeCharacterCatalog.load();
+		int startAaID;
+
+		try {
+			startAaID = Integer.parseInt(tfStartAaID.getText().trim());
+			generatedArrays = AttributeArrayGenerator.generate(catalog, new TextDie(input), startAaID);
+		} catch (IllegalArgumentException e) {
+			JOptionPane.showMessageDialog(frame, e.getMessage() + "\n(at least "
+					+ AttributeArrayGenerator.countLettersNeeded(catalog) + " letters)");
+			return;
+		}
+
+		attributes.removeAll();
+		for (GeneratedArray array : generatedArrays) {
+			attributes.add(entryText(array));
+		}
+	}
+
+	private static String entryText(GeneratedArray array) {
+		return array.getCharacter().getNumber() + " " + array.getCharacter().getName()
+				+ " [" + array.getGaussIndex() + "] " + array.getTuple();
+	}
+
+	private void selectedAttribsToSliders() {
+		String entry = attributes.getSelectedItem();
+		if (entry == null) return;
+		entry = entry.substring(entry.lastIndexOf('(') + 1, entry.lastIndexOf(')'));
+		String[] attribs =  entry.split(",");
+		for (int index = 0; index < attribs.length; index++  ) {
+			sliders4Attribs[index].setValue(Integer.parseInt(attribs[index].trim()));
+		}
+	}
+
+	/**
+	 * Writes the slider values into the selected entry. For a generated entry the values
+	 * also replace those of its array, so "In DB" writes the adjusted values.
+	 */
+	private void slidersToSelectedAttribs() {
+		int index = attributes.getSelectedIndex();
+		if (index < 0) {
+			JOptionPane.showMessageDialog(frame, "Erst einen Eintrag in der Attributliste wählen");
+			return;
+		}
+
+		int[] values = new int[ATTRIB_COUNT];
+		for (int i = 0; i < ATTRIB_COUNT; i++) {
+			values[i] = Math.min(99, sliders4Attribs[i].getValue());
+		}
+
+		String entry;
+		if (index < generatedArrays.size()) {
+			GeneratedArray adjusted = generatedArrays.get(index).withValues(values);
+			generatedArrays.set(index, adjusted);
+			entry = entryText(adjusted);
+		} else {
+			StringBuilder tuple = new StringBuilder("(");
+			for (int i = 0; i < values.length; i++) {
+				if (i > 0) tuple.append(",");
+				tuple.append(values[i]);
+			}
+			entry = tuple.append(")").toString();
+		}
+		attributes.replaceItem(entry, index);
+		attributes.select(index);
+	}
+
+	private void saveCharactersToDB() {
+		if (generatedArrays.isEmpty()) {
+			JOptionPane.showMessageDialog(frame, "Erst mit 'Charaktere' generieren");
+			return;
+		}
+
+		int first = generatedArrays.get(0).getAaID();
+		int last = generatedArrays.get(generatedArrays.size() - 1).getAaID();
+		int answer = JOptionPane.showConfirmDialog(frame,
+				"aa_id " + first + " bis " + last + " und gauss_index -" + (generatedArrays.size() / 2) + " bis "
+						+ (generatedArrays.size() / 2) + " werden in swpool_attribute und swgauss_aa ersetzt.",
+				"In DB schreiben", JOptionPane.OK_CANCEL_OPTION);
+		if (answer != JOptionPane.OK_OPTION) return;
+
+		try {
+			AttributeArrayWriter.write(generatedArrays, new TablePoolAttributeArrayStore());
+			JOptionPane.showMessageDialog(frame, generatedArrays.size() + " Arrays geschrieben");
+		} catch (IllegalStateException e) {
+			JOptionPane.showMessageDialog(frame, "Fehler: " + e.getMessage());
+		}
+	}
+
 	///////////////////////////////
 	//save to file  //
 	///////////////////////////////
