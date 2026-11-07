@@ -1,3 +1,20 @@
+/*
+ * Social World
+ * Copyright (C) 2019  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.calculation.expressions;
 
 import org.socialworld.calculation.Expression;
@@ -211,10 +228,13 @@ public class Calculate extends Expression {
 		
 	}
 	
+	/**
+	 * @return the position of the first comma outside of all brackets, or -1.
+	 *         A comma inside a bracket (e.g. in "MUL(a,b),c") does not count.
+	 */
 	private int findHighestLevelComma(String source) {
 		
 		int countOpenBrackets = 0;
-		int positionComma = 0;
 		char[] arrayChars;
 		
 		arrayChars = source.toCharArray();
@@ -223,9 +243,7 @@ public class Calculate extends Expression {
 			
 			if (arrayChars[i] == '(')  countOpenBrackets++;
 			if (arrayChars[i] == ')')  countOpenBrackets--;
-			if (arrayChars[i] == ',')  positionComma = i;
-			
-			if (countOpenBrackets == 0 && positionComma > 0) return positionComma;
+			if (arrayChars[i] == ',' && countOpenBrackets == 0)  return i;
 		}
 		
 		return -1;

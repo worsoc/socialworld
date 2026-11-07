@@ -29,17 +29,16 @@ Three layers work together, and none of them aims at a uniform distribution:
 ### 2.1 Levels and Bands
 
 The bands overlap on purpose, so there are no hard edges.
+Values are attribute values 0..9999; the game shows them divided by 100 (0..99).
 
-| Level | Meaning | Band |
-|:-:|---|:-:|
-| `---` | extremely low | 0–10 |
-| `--` | very low | 8–28 |
-| `-` | low | 25–42 |
-| `o` | average | 38–62 |
-| `+` | high | 58–75 |
-| `++` | very high | 72–92 |
-| `+++` | extremely high | 90–99 |
-| `~` | open (a state; the text decides almost alone) | 20–80 |
+| `---` | extremely low | 0–1000 |
+| `--` | very low | 800–2800 |
+| `-` | low | 2500–4200 |
+| `o` | average | 3800–6200 |
+| `+` | high | 5800–7500 |
+| `++` | very high | 7200–9200 |
+| `+++` | extremely high | 9000–9999 |
+| `~` | open (a state; the text decides almost alone) | 2000–8000 |
 
 `~` is meant for mood, tiredness and hunger when the character says nothing special about them.
 

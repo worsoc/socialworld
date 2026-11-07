@@ -1,30 +1,28 @@
 /*
-* Social World
-* Copyright (C) 2019  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2019  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.datasource.pool;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.socialworld.attributes.Attribute;
+import org.socialworld.attributes.AttributeArray;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.descriptions.DescriptionBase;
 import org.socialworld.calculation.descriptions.EventInfluenceDescription;
@@ -153,11 +151,13 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 
 	            // 3. Mathematical Logic with Qualitative Bias
 	            int seed = type.ordinal() + influenceType;
-	            int min = 10 + (seed % 50);
-	            int max = min + 20;
+	            // thresholds and n in the attribute scale (0..9999), m does not depend on it
+	            int scale = AttributeArray.ATTRIBUTE_VALUE_SCALE;
+	            int min = (10 + (seed % 50)) * scale;
+	            int max = min + 20 * scale;
 
 	            double m = 0.5 + ((seed % 15) * 0.1);
-	            double n = -10.0 + (seed % 21);
+	            double n = (-10.0 + (seed % 21)) * scale;
 
 	            // Role-based scaling
 	            if (isSelf) {
@@ -168,7 +168,8 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 	                m *= 0.3; n *= 0.5; // Very subtle ripples for observers
 	            }
 
-	            String line = String.format(
+	            // Locale.ROOT: MX+N reads its numbers with a decimal point
+	            String line = String.format(Locale.ROOT,
 	                "WENN %s >= %d & %s < %d DANN <%s><MX+N>%d;%.2f;%.2f</MX+N></%s>",
 	                condAttr.toString(), min, condAttr.toString(), max, 
 	                targetTag, basisAttrIndex, m, n, targetTag

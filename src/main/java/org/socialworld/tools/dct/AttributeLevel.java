@@ -17,20 +17,23 @@
  */
 package org.socialworld.tools.dct;
 
+import org.socialworld.attributes.AttributeArray;
+
 /**
  * The level of an attribute in a character and the band of values it stands for.
  * The bands overlap on purpose. See documentation/attribute_charaktere.md.
  */
 public enum AttributeLevel {
 
-	extremelyLow("---", 0, 10, 1),
-	veryLow("--", 8, 28, 3),
-	low("-", 25, 42, 3),
-	average("o", 38, 62, 3),
-	high("+", 58, 75, 3),
-	veryHigh("++", 72, 92, 3),
-	extremelyHigh("+++", 90, 99, 1),
-	open("~", 20, 80, 3);
+	// bands in attribute values 0..9999 (displayed 0..99)
+	extremelyLow("---", 0, 1000, 1),
+	veryLow("--", 800, 2800, 3),
+	low("-", 2500, 4200, 3),
+	average("o", 3800, 6200, 3),
+	high("+", 5800, 7500, 3),
+	veryHigh("++", 7200, 9200, 3),
+	extremelyHigh("+++", 9000, AttributeArray.ATTRIBUTE_VALUE_MAX, 1),
+	open("~", 2000, 8000, 3);
 
 	private final String code;
 	private final int lowest;

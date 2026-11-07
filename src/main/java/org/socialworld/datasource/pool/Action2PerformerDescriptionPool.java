@@ -1,3 +1,20 @@
+/*
+ * Social World
+ * Copyright (C) 2019  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.datasource.pool;
 
 import java.util.ArrayList;
@@ -5,8 +22,10 @@ import java.util.List;
 
 import org.socialworld.actions.ActionMode;
 import org.socialworld.attributes.Attribute;
+import org.socialworld.attributes.AttributeArray;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.Expression;
+import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.descriptions.Action2PerformerDescription;
 import org.socialworld.calculation.descriptions.DescriptionBase;
@@ -14,6 +33,14 @@ import org.socialworld.calculation.expressions.Calculate;
 import org.socialworld.calculation.expressions.Nothing;
 
 public class Action2PerformerDescriptionPool extends DescriptionPool {
+
+	/**
+	 * The power is an attribute value (0..9999). Intensity times power is divided
+	 * by the attribute scale, so the event intensity keeps the size it had with 0..99.
+	 */
+	static final String CONST_ATTRIBUTE_VALUE_SCALE =
+			"CONST(" + Type.integer.getIndex() + " " + AttributeArray.ATTRIBUTE_VALUE_SCALE + ")";
+
 
 	
 	
@@ -158,10 +185,10 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				lines.add(0, 1, Value.VALUE_BY_NAME_ACTION_INTENSITY);
 	
 				// intensity
-				lines.add(0, 2, "MUL(" +
+				lines.add(0, 2, "DIV(MUL(" +
 									"GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_INTENSITY + "))" + "," +
 									"ATTR(" + Attribute.power.getIndex() + ")" +
-								")");
+								")," + CONST_ATTRIBUTE_VALUE_SCALE + ")");
 				lines.add(0, 2, Value.VALUE_BY_NAME_EVENT_INTENSITY);
 							
 				break;
@@ -182,10 +209,10 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				lines.add(0, 1, Value.VALUE_BY_NAME_ACTION_INTENSITY);
 
 				// intensity
-				lines.add(0, 2, "MUL(" +
+				lines.add(0, 2, "DIV(MUL(" +
 									"GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_INTENSITY + "))" + "," +
 									"ATTR(" + Attribute.power.getIndex() + ")" +
-								")");
+								")," + CONST_ATTRIBUTE_VALUE_SCALE + ")");
 				lines.add(0, 2, Value.VALUE_BY_NAME_EVENT_INTENSITY);
 				
 				// Item1
@@ -206,10 +233,10 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				lines.add(0, 1, Value.VALUE_BY_NAME_ACTION_INTENSITY);
 
 				// intensity
-				lines.add(0, 2, "MUL(" +
+				lines.add(0, 2, "DIV(MUL(" +
 									"GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_INTENSITY + "))" + "," +
 									"ATTR(" + Attribute.power.getIndex() + ")" +
-								")");
+								")," + CONST_ATTRIBUTE_VALUE_SCALE + ")");
 				lines.add(0, 2, Value.VALUE_BY_NAME_EVENT_INTENSITY);
 				
 				// Item1
@@ -231,10 +258,10 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				lines.add(0, 1, Value.VALUE_BY_NAME_ACTION_INTENSITY);
 
 				// intensity
-				lines.add(0, 2, "MUL(" +
+				lines.add(0, 2, "DIV(MUL(" +
 									"GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_INTENSITY + "))" + "," +
 									"ATTR(" + Attribute.power.getIndex() + ")" +
-								")");
+								")," + CONST_ATTRIBUTE_VALUE_SCALE + ")");
 				lines.add(0, 2, Value.VALUE_BY_NAME_EVENT_HANDLE_INTENSITY);
 				
 				// Item1
@@ -259,10 +286,10 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				lines.add(0, 1, Value.VALUE_BY_NAME_ACTION_INTENSITY);
 
 				// intensity
-				lines.add(0, 2, "MUL(" +
+				lines.add(0, 2, "DIV(MUL(" +
 									"GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_INTENSITY + "))" + "," +
 									"ATTR(" + Attribute.power.getIndex() + ")" +
-								")");
+								")," + CONST_ATTRIBUTE_VALUE_SCALE + ")");
 				lines.add(0, 2, Value.VALUE_BY_NAME_EVENT_PUNCH_INTENSITY);
 
 				// directionChest
@@ -286,10 +313,10 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				lines.add(0, 1, Value.VALUE_BY_NAME_ACTION_INTENSITY);
 
 				// intensity
-				lines.add(0, 2, "MUL(" +
+				lines.add(0, 2, "DIV(MUL(" +
 									"GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_INTENSITY + "))" + "," +
 									"ATTR(" + Attribute.power.getIndex() + ")" +
-								")");
+								")," + CONST_ATTRIBUTE_VALUE_SCALE + ")");
 				lines.add(0, 2, Value.VALUE_BY_NAME_EVENT_USEWEAPON_INTENSITY);
 
 				// weapon

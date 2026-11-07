@@ -1,24 +1,20 @@
 /*
-* Social World
-* Copyright (C) 2014  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2014  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.calculation.functions;
 
 
@@ -37,9 +33,25 @@ public class FunctionByTable extends FunctionBase {
 
 	private int maxValue;
 	
+	/**
+	 * The share of the range that the falling and the rising edge of u take each.
+	 */
+	static final double U_EDGE_SHARE = 0.18;
+	/**
+	 * The curvature of the edges of u: values fall like (1 - x/edge)^U_EXPONENT.
+	 */
+	static final double U_EXPONENT = 1.8;
+	
 	public FunctionByTable (FunctionByTable_Type type) {
+		this(type, AttributeArray.ATTRIBUTE_VALUE_MAX);
+	}
+	
+	/**
+	 * For tests: the same function for another range of values.
+	 */
+	FunctionByTable (FunctionByTable_Type type, int maxValue) {
 		this.type = type;
-		this.maxValue = AttributeArray.ATTRIBUTE_VALUE_MAX;
+		this.maxValue = maxValue;
 		initialize();
 	}
 	
@@ -62,7 +74,7 @@ public class FunctionByTable extends FunctionBase {
 	}
 
 
-	private int calculate(int inputValue) {
+	int calculate(int inputValue) {
 		int result;
 
 		if (inputValue > maxValue)
@@ -95,12 +107,12 @@ public class FunctionByTable extends FunctionBase {
 		switch (type) {
 		case positive_raise:
 			values = new int[maxValue + 1];
-		    for(int i=0; i < maxValue; i++)
+		    for(int i=0; i <= maxValue; i++)
 		    	values[i] =   i;  
 			break;
 		case negative_raise:
 			values = new int[maxValue + 1];
-		    for(int i=0; i < maxValue; i++)
+		    for(int i=0; i <= maxValue; i++)
 		    	values[i] =   (maxValue - i);  
 			break;
 		case v:
@@ -117,44 +129,38 @@ public class FunctionByTable extends FunctionBase {
 		    for(int i=(int)(maxValue/2 + 1); i <= maxValue; i++)
 		    	values[i] =   (2 * (maxValue - i) );  
 			break;
-		case u:			// assumption: maxValue = 100
-			values = new int[maxValue + 1];
-			values[0] = 99; values[1] = 89; values[2] = 80; values[3] = 71; values[4] = 63;
-			values[5] = 55; values[6] = 48; values[7] = 41; values[8] = 35; values[9] = 29;
-			values[10] = 24; values[11] = 19; values[12] = 15; values[13] = 11; values[14] = 8;
-			values[15] = 5; values[16] = 3; values[17] = 1; 
-
-		    for(int i=18; i <= 81; i++)
-		    	values[i] =  0;  
-			
-			values[99] = 99; values[98] = 89; values[97] = 80; values[96] = 71; values[95] = 63;
-			values[94] = 55; values[93] = 48; values[92] = 41; values[91] = 35; values[90] = 29;
-			values[89] = 24; values[88] = 19; values[87] = 15; values[86] = 11; values[85] = 8;
-			values[84] = 5; values[83] = 3; values[82] = 1; 
-
+		case u:
+			// high at both edges, 0 in the middle
+			values = createU();
 			break;
-		case u_mirrored:    // assumption: maxValue = 99
-			values = new int[maxValue+ 1];
-			values[0] = 0; values[1] = 10; values[2] = 19; values[3] = 28; values[4] = 36;
-			values[5] = 44; values[6] = 51; values[7] = 58; values[8] = 64; values[9] = 70;
-			values[10] = 75; values[11] = 80; values[12] = 84; values[13] = 88; values[14] = 91;
-			values[15] = 94; values[16] = 96; values[17] = 98; 
-
-		    for(int i=18; i <= 81; i++)
-		    	values[i] =  maxValue;  
-			
-			values[99] = 0; values[98] = 10; values[97] = 19; values[96] = 28; values[95] = 36;
-			values[94] = 44; values[93] = 51; values[92] = 58; values[91] = 64; values[90] = 70;
-			values[89] = 75; values[88] = 80; values[87] = 84; values[86] = 88; values[85] = 91;
-			values[84] = 94; values[83] = 96; values[82] = 98; 
-
+		case u_mirrored:
+			// 0 at both edges, high in the middle
+			values = createU();
+		    for(int i=0; i <= maxValue; i++)
+		    	values[i] =   (maxValue - values[i]);  
 			break;
-
 
 		default:
 			// no array filled
 			// for types identical, horizontal_min, horizontal_max
 		}		
+	}
+
+	/**
+	 * The table of u: it falls from maxValue at 0 to 0 at the edge (18 % of the range),
+	 * stays 0 in the middle and rises symmetrically to maxValue at maxValue.
+	 * For maxValue 99 this gives the former hand-written table within 1.
+	 */
+	private int[] createU() {
+		int table[] = new int[maxValue + 1];
+		int edge = (int) Math.round(maxValue * U_EDGE_SHARE);
+
+		for (int i = 0; i < edge; i++) {
+			int value = (int) Math.round(maxValue * Math.pow(1.0 - (double) i / edge, U_EXPONENT));
+			table[i] = value;
+			table[maxValue - i] = value;
+		}
+		return table;
 	}
 	
 

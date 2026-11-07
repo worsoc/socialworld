@@ -1,24 +1,20 @@
 /*
-* Social World
-* Copyright (C) 2014  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2014  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.attributes;
 
 import java.util.List;
@@ -31,8 +27,10 @@ import org.socialworld.tools.StringTupel;
 
 /**
  * The class implements an attribute array. It
- *         has an byte array for the value of every attribute and set and get
+ *         has an int array for the value of every attribute and set and get
  *         methods to manipulate and assign the values.
+ *         The values are stored and calculated from 0 to ATTRIBUTE_VALUE_MAX (9999);
+ *         the display shows them divided by ATTRIBUTE_VALUE_SCALE, that is from 0 to 99.
  *         There also is an array for the difference of every attribute's new value
  *         to its old value, that means how the attribute has changed by the last calculation
  * @author Mathias Sikos (MatWorsoc) 
@@ -42,10 +40,15 @@ public class AttributeArray extends SimProperty {
 	 * The constant holds the informations about the range of values. The range
 	 * of values is from 0 to the constant's value.
 	 */
-	public static final byte ATTRIBUTE_VALUE_MAX = 99;
-	// !!! if the constant ATTRIBUTE_RANGE is changed the following methods have to be conformed :
-	// - AttributeCalculatorFunctionTable.initialize()
-	public static final byte ATTRIBUTE_VALUE_MIDDLE = 50;
+	public static final int ATTRIBUTE_VALUE_MAX = 9999;
+	// !!! if the constant ATTRIBUTE_VALUE_MAX is changed the following methods have to be conformed :
+	// - FunctionByTable.initialize() (tables u and u_mirrored)
+	public static final int ATTRIBUTE_VALUE_MIDDLE = 5000;
+	/**
+	 * One displayed point is ATTRIBUTE_VALUE_SCALE internal steps:
+	 * the internal values 0..9999 are displayed as 0..99.
+	 */
+	public static final int ATTRIBUTE_VALUE_SCALE = 100;
 	
 	private int numberOfAttributes;
 
@@ -276,6 +279,28 @@ public class AttributeArray extends SimProperty {
 	public Value getAsValue(int attributeIndex) {
 		return new Value(Type.integer, get(attributeIndex));
 	}
+
+	/**
+	 * The method returns an attribute value as it is displayed: divided by
+	 * ATTRIBUTE_VALUE_SCALE and rounded down, so 0..9999 becomes 0..99.
+	 * 
+	 * @param attributeIndex
+	 *            attribute array index
+	 * @return displayed attribute value, or -1 for an invalid index
+	 */
+	public int getDisplayValue(int attributeIndex) {
+		int value = get(attributeIndex);
+		if (value < 0) return value;
+		return toDisplayValue(value);
+	}
+
+	/**
+	 * The method converts an internal attribute value to its displayed value
+	 * (divided by ATTRIBUTE_VALUE_SCALE, rounded down).
+	 */
+	public static int toDisplayValue(int value) {
+		return value / ATTRIBUTE_VALUE_SCALE;
+	}
 	
 	/**
 	 * The method returns an attribute's value difference. The attribute is addressed by the
@@ -308,6 +333,24 @@ public class AttributeArray extends SimProperty {
 		return true;
 	}
 	
+	/**
+	 * The attribute values as they are displayed (0..99), e.g. "(52, 39, 45, ...)".
+	 * toString() keeps the internal values (0..9999) for logs and debugging.
+	 */
+	public String toDisplayString() {
+		String returnValue = "("; 
+		
+		for (int i = 0; i < numberOfAttributes; i++ ) {
+			if (i > 0) {
+				returnValue = returnValue +  ", ";
+			}
+			returnValue = returnValue + toDisplayValue(attributes[i]);
+			
+		}
+		returnValue = returnValue  + ")";
+		return returnValue;
+	}
+
 	public String toString() {
 		String returnValue = "("; 
 		

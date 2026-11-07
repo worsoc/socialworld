@@ -41,6 +41,8 @@ import java.awt.event.ItemListener;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
+import org.socialworld.attributes.AttributeArray;
+
 import org.socialworld.tools.dct.AttributeArrayGenerator.GeneratedArray;
 
 public class DataCreationTool {
@@ -814,19 +816,27 @@ public class DataCreationTool {
 				+ " [" + array.getGaussIndex() + "] " + array.getTuple();
 	}
 
+	/**
+	 * Generated entries hold values 0..9999 and are shown on the sliders as 0..99;
+	 * other entries (from "Generieren") hold 0..99 and go to the sliders as they are.
+	 */
 	private void selectedAttribsToSliders() {
+		int selected = attributes.getSelectedIndex();
 		String entry = attributes.getSelectedItem();
 		if (entry == null) return;
 		entry = entry.substring(entry.lastIndexOf('(') + 1, entry.lastIndexOf(')'));
 		String[] attribs =  entry.split(",");
 		for (int index = 0; index < attribs.length; index++  ) {
-			sliders4Attribs[index].setValue(Integer.parseInt(attribs[index].trim()));
+			int value = Integer.parseInt(attribs[index].trim());
+			if (selected < generatedArrays.size()) value = AttributeArray.toDisplayValue(value);
+			sliders4Attribs[index].setValue(value);
 		}
 	}
 
 	/**
 	 * Writes the slider values into the selected entry. For a generated entry the values
-	 * also replace those of its array, so "In DB" writes the adjusted values.
+	 * also replace those of its array, so "In DB" writes the adjusted values: a slider
+	 * that was not moved keeps the value 0..9999, a moved one gives slider × 100.
 	 */
 	private void slidersToSelectedAttribs() {
 		int index = attributes.getSelectedIndex();
@@ -842,7 +852,7 @@ public class DataCreationTool {
 
 		String entry;
 		if (index < generatedArrays.size()) {
-			GeneratedArray adjusted = generatedArrays.get(index).withValues(values);
+			GeneratedArray adjusted = generatedArrays.get(index).withDisplayValues(values);
 			generatedArrays.set(index, adjusted);
 			entry = entryText(adjusted);
 		} else {

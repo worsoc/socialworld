@@ -20,6 +20,7 @@ package org.socialworld.tools.dct;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.socialworld.attributes.AttributeArray;
 import org.socialworld.datasource.pool.AttributeArrayPool;
 import org.socialworld.datasource.pool.GaussPoolAttributeArray;
 
@@ -57,6 +58,25 @@ public class AttributeArrayGenerator {
 
 		public int[] getValues() {
 			return values.clone();
+		}
+
+		/**
+		 * The same character, gauss_index and aa_id with values adjusted on the displayed
+		 * scale (0..99, e.g. by the sliders). A value whose displayed value did not change
+		 * stays exactly as it is; a changed one becomes displayed value × scale.
+		 */
+		GeneratedArray withDisplayValues(int[] displayValues) {
+			if (displayValues.length != values.length) {
+				throw new IllegalArgumentException(displayValues.length + " values instead of " + values.length);
+			}
+			int[] newValues = values.clone();
+			for (int i = 0; i < values.length; i++) {
+				if (displayValues[i] != AttributeArray.toDisplayValue(values[i])) {
+					newValues[i] = Math.min(AttributeArray.ATTRIBUTE_VALUE_MAX,
+							Math.max(0, displayValues[i] * AttributeArray.ATTRIBUTE_VALUE_SCALE));
+				}
+			}
+			return new GeneratedArray(character, gaussIndex, aaID, newValues);
 		}
 
 		/**

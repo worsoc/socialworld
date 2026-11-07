@@ -1,5 +1,5 @@
 # no;name;sketch;mood;courage;morals;materialism;tiredness;curiosity;spirituality;hunger;power
-# levels: --- 0-10, -- 8-28, - 25-42, o 38-62, + 58-75, ++ 72-92, +++ 90-99, ~ 20-80
+# levels (attribute values 0..9999, displayed 0..99): --- 0-1000, -- 800-2800, - 2500-4200, o 3800-6200, + 5800-7500, ++ 7200-9200, +++ 9000-9999, ~ 2000-8000
 1;farmer;middle-aged, steady and hard-working;~;o;o;o;~;o;o;~;+
 2;farmer's wife;mother of four, practical, always on her feet;~;o;+;o;+;o;o;~;o
 3;farmhand;strong, unambitious, likes his food;~;o;o;-;~;-;o;+;+

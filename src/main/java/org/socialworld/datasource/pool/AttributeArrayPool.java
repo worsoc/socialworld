@@ -103,12 +103,13 @@ public class AttributeArrayPool {
 		
 		int numberOfAttributes = 9;
 		
-		attributeTupels[0] = "(52,39,45,52,39,45,52,39,45)";
-		attributeTupels[1] = "(52,41,44,52,41,44,52,41,44)";
-		attributeTupels[2] = "(49,50,38,49,50,38,49,50,38)";
-		attributeTupels[3] = "(52,39,46,52,39,46,52,39,46)";
-		attributeTupels[4] = "(57,41,45,57,41,45,57,41,45)";
-		attributeTupels[5] = "(9,13,14,9,13,14,9,13,14)";
+		// attribute values 0..9999 (displayed 0..99)
+		attributeTupels[0] = "(5200,3900,4500,5200,3900,4500,5200,3900,4500)";
+		attributeTupels[1] = "(5200,4100,4400,5200,4100,4400,5200,4100,4400)";
+		attributeTupels[2] = "(4900,5000,3800,4900,5000,3800,4900,5000,3800)";
+		attributeTupels[3] = "(5200,3900,4600,5200,3900,4600,5200,3900,4600)";
+		attributeTupels[4] = "(5700,4100,4500,5700,4100,4500,5700,4100,4500)";
+		attributeTupels[5] = "(900,1300,1400,900,1300,1400,900,1300,1400)";
 
 		for (int i = 0; i <  tupelsCount; i++) {
 			

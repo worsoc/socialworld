@@ -74,8 +74,9 @@ public class AttributeArrayGeneratorTest {
 
   @Test
   void level_placesShareInsideItsBand() {
-    assertThat(AttributeLevel.average.valueFor(0.0)).isEqualTo(38);
-    assertThat(AttributeLevel.average.valueFor(1.0)).isEqualTo(62);
+    assertThat(AttributeLevel.average.valueFor(0.0)).isEqualTo(3800);
+    assertThat(AttributeLevel.average.valueFor(0.5)).isEqualTo(5000);
+    assertThat(AttributeLevel.average.valueFor(1.0)).isEqualTo(6200);
     assertThat(AttributeLevel.extremelyHigh.valueFor(1.0)).isEqualTo(AttributeArray.ATTRIBUTE_VALUE_MAX);
     assertThat(AttributeLevel.extremelyLow.valueFor(0.0)).isZero();
   }
@@ -203,6 +204,50 @@ public class AttributeArrayGeneratorTest {
     assertThat(changed.getValues()).containsExactly(1, 2, 3, 4, 5, 6, 7, 8, 99);
     assertThat(changed.getTuple()).isEqualTo("(1,2,3,4,5,6,7,8,99)");
     assertThatThrownBy(() -> array.withValues(new int[] {1, 2})).isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
+  void levels_lieInTheRangeOfAttributeValues() {
+    for (AttributeLevel level : AttributeLevel.values()) {
+      assertThat(level.getLowest()).as(level.getCode()).isBetween(0, AttributeArray.ATTRIBUTE_VALUE_MAX);
+      assertThat(level.getHighest()).as(level.getCode())
+          .isBetween(level.getLowest() + 1, AttributeArray.ATTRIBUTE_VALUE_MAX);
+    }
+    assertThat(AttributeLevel.extremelyHigh.getHighest()).isEqualTo(AttributeArray.ATTRIBUTE_VALUE_MAX);
+  }
+
+  @Test
+  void generatedValues_useTheFineScale() {
+    // with three letters per value there are 76 shares, so values are not only multiples of 100
+    long notMultiplesOf100 = generateAll().stream()
+        .flatMapToInt(array -> java.util.Arrays.stream(array.getValues()))
+        .filter(value -> value % 100 != 0)
+        .count();
+
+    assertThat(notMultiplesOf100).isGreaterThan(199 * 9 / 2);
+  }
+
+  @Test
+  void withDisplayValues_keepsUnmovedValues_andScalesMovedOnes() {
+    GeneratedArray array = generateAll().get(30).withValues(new int[] {5237, 6100, 4999, 0, 9999, 1250, 3333, 7777, 8888});
+
+    // only courage (61 → 70) and power (88 → 12) moved on the sliders
+    GeneratedArray adjusted = array.withDisplayValues(new int[] {52, 70, 49, 0, 99, 12, 33, 77, 12});
+
+    assertThat(adjusted.getValues()).containsExactly(5237, 7000, 4999, 0, 9999, 1250, 3333, 7777, 1200);
+    assertThat(adjusted.getGaussIndex()).isEqualTo(array.getGaussIndex());
+    assertThat(adjusted.getAaID()).isEqualTo(array.getAaID());
+  }
+
+  @Test
+  void withDisplayValues_limitsToTheRange() {
+    GeneratedArray array = generateAll().get(0).withValues(new int[] {5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000});
+
+    GeneratedArray adjusted = array.withDisplayValues(new int[] {100, -3, 50, 50, 50, 50, 50, 50, 50});
+
+    assertThat(adjusted.getValues()[0]).isEqualTo(AttributeArray.ATTRIBUTE_VALUE_MAX);
+    assertThat(adjusted.getValues()[1]).isZero();
+    assertThatThrownBy(() -> array.withDisplayValues(new int[] {1})).isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test

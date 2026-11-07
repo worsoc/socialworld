@@ -1,3 +1,20 @@
+/*
+ * Social World
+ * Copyright (C) 2025  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.tools.dct;
 
 import javax.swing.*;
@@ -11,6 +28,7 @@ import java.util.function.Consumer;
 
 import org.socialworld.core.EventType;
 import org.socialworld.attributes.Attribute;
+import org.socialworld.attributes.AttributeArray;
 import org.socialworld.calculation.FunctionArgType;
 import org.socialworld.calculation.descriptions.EventInfluenceDescription;
 import org.socialworld.calculation.Expression_Function;
@@ -30,13 +48,14 @@ public class CreationTool_EventInfluenceDescription extends JFrame {
     // --- State Variables ---
     private String currentConditionAttr = "mood";
     private String currentOperator = ">=";
-    private String currentThreshold = "50";
+    // attribute values 0..9999 (displayed 0..99)
+    private String currentThreshold = "5000";
     private String currentTargetAttr = "health";
     private String currentBasisAttr = "power";
     private String currentM = "1.0";
     private String currentN = "0.0";
     private boolean isConstantMode = false;
-    private String currentConstValue = "100";
+    private String currentConstValue = "9999";
     private String currentContext = "Select a Rule";
     private EventType currentEventType;
     private int currentInfluenceTypeNr = 0;
@@ -273,6 +292,22 @@ public class CreationTool_EventInfluenceDescription extends JFrame {
     
     
 
+    /**
+     * White text on a dark background. The system look and feel (GTK on Linux) paints
+     * its own light button background and ignores setBackground, but keeps the white
+     * foreground: the text becomes unreadable. BasicButtonUI paints the given colours.
+     */
+    private static void styleColoredButton(JButton button, Color background) {
+        button.setUI(new javax.swing.plaf.basic.BasicButtonUI());
+        button.setBackground(background);
+        button.setForeground(Color.WHITE);
+        button.setOpaque(true);
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(background.darker()),
+                BorderFactory.createEmptyBorder(6, 12, 6, 12)));
+    }
+
     private JsonFunctionArg createArg(int nr, FunctionArgType argType, org.socialworld.calculation.Type swType, String val) {
         JsonFunctionArg arg = new JsonFunctionArg();
         arg.faNr = nr;
@@ -368,7 +403,7 @@ public class CreationTool_EventInfluenceDescription extends JFrame {
         propertyInspector.add(Box.createVerticalGlue());
         JButton saveBtn = new JButton("SAVE TO DB");
         saveBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
-        saveBtn.setBackground(new Color(0, 80, 0)); saveBtn.setForeground(Color.WHITE);
+        styleColoredButton(saveBtn, new Color(0, 80, 0));
         saveBtn.setFont(new Font("SansSerif", Font.BOLD, 12));
         saveBtn.addActionListener(e -> btnSaveToDatabasePressed());
         propertyInspector.add(saveBtn);
@@ -382,8 +417,7 @@ public class CreationTool_EventInfluenceDescription extends JFrame {
         //  Den Button erstellen (wie im letzten Schritt besprochen)
         JButton batchBtn = new JButton("MASS GENERATE 19.300 RULES");
         batchBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40)); // Volle Breite
-        batchBtn.setBackground(new Color(139, 0, 0)); // Dunkelrot
-        batchBtn.setForeground(Color.WHITE);
+        styleColoredButton(batchBtn, new Color(139, 0, 0)); // Dunkelrot
         batchBtn.setFont(new Font("SansSerif", Font.BOLD, 11));
 
         batchBtn.addActionListener(e -> {
@@ -412,7 +446,8 @@ public class CreationTool_EventInfluenceDescription extends JFrame {
         n.setPreferredSize(new Dimension(180, 110));
         JLabel h = new JLabel(t, SwingConstants.CENTER); h.setOpaque(true);
         h.setBackground(gold ? new Color(218, 165, 32) : new Color(70, 140, 140));
-        h.setForeground(Color.WHITE);
+        // dark text on gold, white text on teal: both readable
+        h.setForeground(gold ? new Color(40, 30, 0) : Color.WHITE);
         JTextArea b = new JTextArea(co); b.setEditable(false); b.setBackground(new Color(245, 245, 245));
         b.setFont(new Font("Monospaced", Font.PLAIN, 10));
         n.add(h, BorderLayout.NORTH); n.add(b, BorderLayout.CENTER);
@@ -559,13 +594,13 @@ public class CreationTool_EventInfluenceDescription extends JFrame {
     private void resetToDefaultVariables() {
         this.currentConditionAttr = "mood";
         this.currentOperator = ">=";
-        this.currentThreshold = "50";
+        this.currentThreshold = "5000";
         this.currentTargetAttr = "health";
         this.currentBasisAttr = "power";
         this.currentM = "1.0";
         this.currentN = "0.0";
         this.isConstantMode = false;
-        this.currentConstValue = "100";
+        this.currentConstValue = "9999";
         // currentContext, currentEventType und currentInfluenceTypeNr 
         // werden im Tree-Listener gesetzt, daher hier kein Reset nötig.
     }
@@ -580,7 +615,7 @@ public class CreationTool_EventInfluenceDescription extends JFrame {
         // Wir nehmen "mood" als Standard-Bedingung für alle generierten Regeln
         String condAttr = "mood";
         String op = ">=";
-        String threshold = "50";
+        String threshold = "5000"; // attribute value 0..9999
 
         table.clear();
         
@@ -599,7 +634,8 @@ public class CreationTool_EventInfluenceDescription extends JFrame {
                 
                 // Mathematische Werte
                 float m = 0.5f + (float)((et.getIndex() * inflType) % 150) / 100.0f;
-                float n = (float)((et.getIndex() + inflType) % 200) / 10.0f;
+                // n in the attribute scale (0..9999), m does not depend on it
+                float n = (float)((et.getIndex() + inflType) % 200) / 10.0f * AttributeArray.ATTRIBUTE_VALUE_SCALE;
 
                 // --- JSON Struktur aufbauen ---
                 JsonEventInfluenceDescription root = new JsonEventInfluenceDescription();
@@ -624,7 +660,8 @@ public class CreationTool_EventInfluenceDescription extends JFrame {
                 JsonTerm t2 = new JsonTerm();
                 t2.termNr = 2; t2.function = "function"; t2.functionArgs = new ArrayList<>();
                 t2.functionArgs.add(createArg(1, FunctionArgType.Const, org.socialworld.calculation.Type.string, "MX+N"));
-                String formulaData = String.format("%s;%.2f;%.2f", basisAttr, m, n);
+                // Locale.ROOT: MX+N reads its numbers with a decimal point
+                String formulaData = String.format(java.util.Locale.ROOT, "%s;%.2f;%.2f", basisAttr, m, n);
                 t2.functionArgs.add(createArg(2, FunctionArgType.Const, org.socialworld.calculation.Type.string, formulaData));
 
                 attrDesc.term.add(t2);
