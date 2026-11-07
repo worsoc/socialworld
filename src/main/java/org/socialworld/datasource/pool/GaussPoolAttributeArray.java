@@ -1,3 +1,20 @@
+/*
+ * Social World
+ * Copyright (C) 2015  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.datasource.pool;
 
 
@@ -61,28 +78,43 @@ public class GaussPoolAttributeArray {
 		
 	}
 	
+	/**
+	 * Loads the mapping from the database. Every gauss index that stays empty
+	 * (no row, no connection, or an aa_id without attributes) gets a test array.
+	 */
 	private void initialize() {
 		
-		//loadFromDB();
-		loadTestData();
+		try {
+			loadFromDB();
+		}
+		catch (RuntimeException e) {
+			e.printStackTrace();
+		}
 		
-
+		fillGapsWithTestData();
 	}
 	
-	private void loadTestData() {
+	private void fillGapsWithTestData() {
 		
-		AttributeArray attribs = AttributeArray.getObjectNothing();
+		AttributeArray attribs;
+		int countGaps = 0;
 		
 		int j=0;
 		for (int i = -CAPACITY_GPAA_ARRAY + 1; i < CAPACITY_GPAA_ARRAY; i++) {
 			
-			attribs =  AttributeArrayPool.getInstance().getArray(j);
-			setArray(i, attribs);
-			
-			j++;
-			
-			if (j == AttributeArrayPool.COUNT_TEST_ENTRIES) j = 0;
+			attribs = getArray(i);
+			if (attribs == null || attribs.checkIsObjectNothing()) {
+				setArray(i, AttributeArrayPool.getInstance().getTestArray(j));
+				countGaps++;
+				
+				j++;
+				if (j == AttributeArrayPool.COUNT_TEST_ENTRIES) j = 0;
+			}
 
+		}
+		
+		if (countGaps > 0) {
+			System.out.println("GaussPoolAttributeArray: " + countGaps + " gauss indices without an array from the database get test data");
 		}
 	}
 	

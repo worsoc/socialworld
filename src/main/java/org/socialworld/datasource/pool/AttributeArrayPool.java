@@ -1,3 +1,20 @@
+/*
+ * Social World
+ * Copyright (C) 2012  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.datasource.pool;
 
 
@@ -14,12 +31,12 @@ public class AttributeArrayPool {
 	private static AttributeArrayPool instance;
 	
 	private static AttributeArray attributeArrays[];
+	private static AttributeArray testArrays[];
 	
 	private AttributeArrayPool () {
 		attributeArrays = new AttributeArray[CAPACITY_AAP_ARRAY];
 		
-		initializeWithTestData();
-		//initialize();
+		initialize();
 	}
 	
 	public static AttributeArrayPool getInstance() {
@@ -41,14 +58,46 @@ public class AttributeArrayPool {
 	   return AttributeArray.getObjectNothing();
 	}
 
+	/**
+	 * The test arrays, independent of the database. The gauss pool uses them
+	 * for every gauss index the database leaves empty.
+	 */
+	public AttributeArray getTestArray(int index) {
+		return testArrays[Math.abs(index) % COUNT_TEST_ENTRIES];
+	}
+
+	/**
+	 * Loads the arrays from the database. If nothing comes from there
+	 * (no rows or no connection), the test data is used instead.
+	 */
 	private void initialize() {
+		int countLoaded = 0;
 		
-		loadFromDB();
+		testArrays = createTestArrays();
 		
+		try {
+			countLoaded = loadFromDB();
+		}
+		catch (RuntimeException e) {
+			e.printStackTrace();
+		}
+		
+		if (countLoaded == 0) {
+			System.out.println("AttributeArrayPool: no attribute arrays from the database, the test data is used");
+			initializeWithTestData();
+		}
 	}
 	
 	private void initializeWithTestData() {
 		
+		for (int i = 0; i <  COUNT_TEST_ENTRIES; i++) {
+			setArray(i, testArrays[i]);
+		}
+	}
+	
+	private static AttributeArray[] createTestArrays() {
+		
+		AttributeArray arrays[] = new AttributeArray[COUNT_TEST_ENTRIES];
 		int 		tupelsCount = COUNT_TEST_ENTRIES;
 		String attributeTupels[] = new String[tupelsCount];
 		
@@ -63,13 +112,18 @@ public class AttributeArrayPool {
 
 		for (int i = 0; i <  tupelsCount; i++) {
 			
-			setArray(i, new AttributeArray(attributeTupels[i], numberOfAttributes));
+			arrays[i] = new AttributeArray(attributeTupels[i], numberOfAttributes);
 
 		}
 		
+		return arrays;
 	}
 	
-	private void loadFromDB() {
+	/**
+	 * @return how many arrays came from the database
+	 */
+	private int loadFromDB() {
+		int countLoaded = 0;
 		TablePoolAttribute table;
 		int rowCount;
 		int row;
@@ -109,10 +163,13 @@ public class AttributeArrayPool {
 				if (attribIndex == 0) {
 					array = new AttributeArray(values);
 					setArray(aa_id, array);
+					if (aa_id >= 0 && aa_id < CAPACITY_AAP_ARRAY) countLoaded++;
 				}
 
 			}
 		}
+		
+		return countLoaded;
 	}
 	
 		
