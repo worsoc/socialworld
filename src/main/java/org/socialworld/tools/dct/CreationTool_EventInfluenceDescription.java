@@ -272,7 +272,8 @@ public class CreationTool_EventInfluenceDescription extends JFrame {
         	t2.functionArgs.add(createArg(1, FunctionArgType.Const, org.socialworld.calculation.Type.string, "MX+N"));
 
         	// JETZT: Den Namen statt des Index verwenden
-        	String formulaData = String.format("%s;%s;%s", currentBasisAttr, currentM, currentN);
+        	// m and n come from separate fields, the separator between them is the semicolon
+        	String formulaData = String.format("%s;%s;%s", currentBasisAttr, withDecimalPoint(currentM), withDecimalPoint(currentN));
         	t2.functionArgs.add(createArg(2, FunctionArgType.Const, org.socialworld.calculation.Type.string, formulaData));
         }
         attrDesc.term.add(t2);
@@ -291,6 +292,13 @@ public class CreationTool_EventInfluenceDescription extends JFrame {
 
     
     
+
+    /**
+     * Rules always hold numbers with a decimal point, also if a comma was typed into a field.
+     */
+    static String withDecimalPoint(String number) {
+        return number.trim().replace(',', '.');
+    }
 
     /**
      * White text on a dark background. The system look and feel (GTK on Linux) paints

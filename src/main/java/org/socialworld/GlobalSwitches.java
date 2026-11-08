@@ -32,7 +32,7 @@ public class GlobalSwitches {
 	public static boolean STATE_ANIMAL_CALCULATE_EVENTINFLUENCE_ATTRIBUTES = true;
 	public static boolean STATE_ANIMAL_CALCULATE_EVENTINFLUENCE_PERCEPTION = true;
 
-	public static boolean OUTPUT_MEMORY_TELEMETRY = true;
+	public static boolean OUTPUT_MEMORY_TELEMETRY = false;
 	
 	public static boolean OUTPUT_KNOWLEDGE_ADDKNOWLEDGE = false;
 
@@ -60,7 +60,7 @@ public class GlobalSwitches {
 	public static boolean OUTPUT_CALCULATE_ACTION = false;
 	public static boolean OUTPUT_CALCULATE_REACTION = false;
 
-	public static boolean OUTPUT_CALCULATE_ATTRIBUTE_BY_EVENT = false;
+	public static boolean OUTPUT_CALCULATE_ATTRIBUTE_BY_EVENT = true;
 
 	public static boolean OUTPUT_CAPACITY_QUEUE_IS_FULL = false;
 

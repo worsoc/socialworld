@@ -18,6 +18,8 @@
 
 package org.socialworld.core;
 
+import java.util.Arrays;
+
 
 public class TickRandomCache {
 
@@ -50,6 +52,8 @@ public class TickRandomCache {
         this.randomCache = new double[maxObjectId];
 
         this.lastTickUsed = new long[maxObjectId];
+        // -1 = not calculated yet: tick 0, before the first nextTick(), is a real tick too
+        Arrays.fill(this.lastTickUsed, -1L);
 
     }
 
