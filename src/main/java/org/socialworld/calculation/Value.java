@@ -1,24 +1,20 @@
 /*
-* Social World
-* Copyright (C) 2014  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2014  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.calculation;
 
 import org.socialworld.GlobalSwitches;
@@ -160,12 +156,13 @@ public class Value {
 		    new Value(Type.bool, Boolean.TRUE)   // Index 1 für true
 		};
 
-	private static final Value[] INTEGER_CACHE = new Value[101]; // Cache für 0 bis 100
+	private static final int INTEGER_CACHE_MAX = AttributeArray.ATTRIBUTE_VALUE_MAX;
+	private static final Value[] INTEGER_CACHE = new Value[INTEGER_CACHE_MAX + 1]; // Cache für 0 bis INTEGER_CACHE_MAX
 
 	
 	// Statischer Initialisierungsblock: Befüllt den Cache komplett vorab beim Programmstart
 	static {
-		for (int value = 0; value <= 100; value++) {
+		for (int value = 0; value <= INTEGER_CACHE_MAX; value++) {
 			INTEGER_CACHE[value] = new Value(Type.integer, value);
 		}
 	}
@@ -177,7 +174,7 @@ public class Value {
 	public static Value getInteger(int value) {
 		// Da der Cache garantiert voll ist, fällt die null-Prüfung weg.
 		// Das spart bei jedem einzelnen Aufruf einen CPU-Verzweigungsschritt (Branch)!
-		if (value >= 0 && value <= 100) {
+		if (value >= 0 && value <= INTEGER_CACHE_MAX) {
 			return INTEGER_CACHE[value];
 		}
 		return new Value(Type.integer, value);
@@ -352,6 +349,11 @@ public class Value {
 	
 	void changeName(String name) {
 		this.name = name;
+	}
+
+	// a new immutable Value with the same type and content; for shared cached Values
+	Value withName(String name) {
+		return new Value(this.type, name, this.value);
 	}
 	
 	public boolean hasType(Type type) {

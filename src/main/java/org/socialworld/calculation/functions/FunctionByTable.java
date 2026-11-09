@@ -74,7 +74,7 @@ public class FunctionByTable extends FunctionBase {
 	}
 
 
-	public int calculate(int inputValue) {
+	int calculate(int inputValue) {
 		int result;
 
 		if (inputValue > maxValue)

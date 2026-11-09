@@ -277,7 +277,7 @@ public class FunctionPool {
 
 					matrix = createMatrix(anzCol, typeShare, typeOffset, shares, functions, offsets);
 					
-					setFunction(func_id, new FunctionByMatrix(ValueInterpreteAs.attributeValue, matrix));
+					setFunction(func_id, new FunctionByMatrix(matrix));
 				
 				}
 				

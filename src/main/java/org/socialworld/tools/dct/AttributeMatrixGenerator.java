@@ -29,6 +29,7 @@ import org.socialworld.calculation.Value;
 import org.socialworld.calculation.functions.FunctionByMatrix_Matrix;
 import org.socialworld.calculation.functions.FunctionByTable;
 import org.socialworld.calculation.functions.FunctionByTable_Type;
+import org.socialworld.collections.ValueArrayList;
 import org.socialworld.datasource.pool.GaussPoolAttributeCalculatorMatrix;
 
 /**
@@ -123,7 +124,9 @@ public final class AttributeMatrixGenerator {
 	}
 
 	private static int f(FunctionByTable_Type type, int x) {
-		return TABLES.computeIfAbsent(type, FunctionByTable::new).calculate(x);
+		ValueArrayList arguments = new ValueArrayList();
+		arguments.add(Value.getInteger(x));
+		return (int) TABLES.computeIfAbsent(type, FunctionByTable::new).calculate(arguments).getObject(Type.integer);
 	}
 
 	private static boolean isState(Attribute attribute) {
