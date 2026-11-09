@@ -44,6 +44,7 @@ import javax.swing.JOptionPane;
 import org.socialworld.attributes.AttributeArray;
 
 import org.socialworld.tools.dct.AttributeArrayGenerator.GeneratedArray;
+import org.socialworld.tools.dct.AttributeMatrixGenerator.GeneratedMatrix;
 
 public class DataCreationTool {
 	
@@ -78,6 +79,8 @@ public class DataCreationTool {
 */	
 	TextField tfStartAaID = new TextField("1");
 	java.util.List<GeneratedArray> generatedArrays = new java.util.ArrayList<>();
+	java.util.List<GeneratedMatrix> generatedMatrices = new java.util.ArrayList<>();
+	java.util.List<AttributeMatrixMapping.Entry> generatedMapping = new java.util.ArrayList<>();
 
 	TextField tfPathSave = new TextField();
 	TextField tfSaveAs = new TextField();
@@ -346,6 +349,24 @@ public class DataCreationTool {
 		});
 		buttonAnzeigeMatrix.setBounds(938, 132, 77, 26);
 		frame.getContentPane().add(buttonAnzeigeMatrix);
+
+		Button buttonCharacterMatrices = new Button("Matrizen");
+		buttonCharacterMatrices.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				generateCharacterMatrices(textInput.getText());
+			}
+		});
+		buttonCharacterMatrices.setBounds(938, 165, 77, 26);
+		frame.getContentPane().add(buttonCharacterMatrices);
+
+		Button buttonCharacterMatricesDB = new Button("Matr. DB");
+		buttonCharacterMatricesDB.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				saveCharacterMatricesToDB();
+			}
+		});
+		buttonCharacterMatricesDB.setBounds(938, 197, 77, 26);
+		frame.getContentPane().add(buttonCharacterMatricesDB);
 		
 		buttonSave.addActionListener(new ActionListener() 
 		{
@@ -865,6 +886,45 @@ public class DataCreationTool {
 		}
 		attributes.replaceItem(entry, index);
 		attributes.select(index);
+	}
+
+	private void generateCharacterMatrices(String input) {
+		try {
+			// passes 1 and 2: other letters than the attribute arrays, which use pass 0
+			generatedMatrices = AttributeMatrixGenerator.generate(AttributeCharacterCatalog.load(),
+					AttributeCouplingCatalog.load(), new TextDie(input, 1, 2));
+			generatedMapping = AttributeMatrixMapping.generate(generatedMatrices);
+		} catch (IllegalArgumentException e) {
+			JOptionPane.showMessageDialog(frame, e.getMessage());
+			return;
+		}
+
+		lastMatrix.removeAll();
+		for (GeneratedMatrix matrix : generatedMatrices) {
+			lastMatrix.add(matrix.getCharacter().getNumber() + " " + matrix.getCharacter().getName()
+					+ " v" + matrix.getVariant() + " [" + matrix.getGaussIndex() + "] func " + matrix.getFuncID());
+		}
+	}
+
+	private void saveCharacterMatricesToDB() {
+		if (generatedMatrices.isEmpty()) {
+			JOptionPane.showMessageDialog(frame, "Erst mit 'Matrizen' generieren");
+			return;
+		}
+
+		int answer = JOptionPane.showConfirmDialog(frame,
+				generatedMatrices.size() + " Matrizen und " + generatedMapping.size() + " Zuordnungen werden ersetzt"
+						+ " (swpool_matrix, swpool_matrix_rowcol, swgauss_acm, swgauss_aa_acm).\n"
+						+ "Das kann einige Minuten dauern.",
+				"In DB schreiben", JOptionPane.OK_CANCEL_OPTION);
+		if (answer != JOptionPane.OK_OPTION) return;
+
+		try {
+			AttributeMatrixWriter.write(generatedMatrices, generatedMapping, new TablePoolAttributeMatrixStore());
+			JOptionPane.showMessageDialog(frame, generatedMatrices.size() + " Matrizen und " + generatedMapping.size() + " Zuordnungen geschrieben");
+		} catch (IllegalStateException e) {
+			JOptionPane.showMessageDialog(frame, "Fehler: " + e.getMessage());
+		}
 	}
 
 	private void saveCharactersToDB() {

@@ -74,7 +74,7 @@ public class FunctionByTable extends FunctionBase {
 	}
 
 
-	int calculate(int inputValue) {
+	public int calculate(int inputValue) {
 		int result;
 
 		if (inputValue > maxValue)
@@ -139,11 +139,43 @@ public class FunctionByTable extends FunctionBase {
 		    for(int i=0; i <= maxValue; i++)
 		    	values[i] =   (maxValue - values[i]);  
 			break;
+		case hinge_high:
+			values = createHingeHigh();
+			break;
+		case hinge_low:
+			values = createHingeLow();
+			break;
 
 		default:
 			// no array filled
 			// for types identical, horizontal_min, horizontal_max
 		}		
+	}
+
+	/**
+	 * 0 up to 60 % of the range, then rising to maxValue: acts only when the source is high.
+	 */
+	private int[] createHingeHigh() {
+		int table[] = new int[maxValue + 1];
+		int threshold = (maxValue + 1) * 6 / 10;
+
+		for (int i = threshold + 1; i <= maxValue; i++) {
+			table[i] = (int) ((long) (i - threshold) * maxValue / (maxValue - threshold));
+		}
+		return table;
+	}
+
+	/**
+	 * maxValue at 0, falling to 0 at 40 % of the range: acts only when the source is low.
+	 */
+	private int[] createHingeLow() {
+		int table[] = new int[maxValue + 1];
+		int threshold = (maxValue + 1) * 4 / 10;
+
+		for (int i = 0; i < threshold; i++) {
+			table[i] = (int) ((long) (threshold - i) * maxValue / threshold);
+		}
+		return table;
 	}
 
 	/**

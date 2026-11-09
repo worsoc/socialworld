@@ -28,10 +28,22 @@ public class TextDie {
 
 	private final String letters;
 	private int position;
+	private int pass;
+	private final int lastPass;
 
 	public TextDie(String text) {
+		this(text, 0, 0);
+	}
+
+	/**
+	 * Reads the text in several passes: pass 0 takes letters 0, 3, 6 ..., pass 1 takes
+	 * letters 1, 4, 7 ... So the matrices can use other letters than the attribute arrays.
+	 */
+	public TextDie(String text, int firstPass, int lastPass) {
 		this.letters = onlyLetters(text);
-		this.position = 0;
+		this.pass = firstPass;
+		this.lastPass = lastPass;
+		this.position = firstPass;
 	}
 
 	/**
@@ -56,11 +68,18 @@ public class TextDie {
 	 * How many shares the text can still give.
 	 */
 	public int countRemaining() {
-		if (position >= letters.length()) return 0;
-		return (letters.length() - position + STEP - 1) / STEP;
+		int count = Math.max(0, (letters.length() - position + STEP - 1) / STEP);
+		for (int later = pass + 1; later <= lastPass; later++) {
+			count += Math.max(0, (letters.length() - later + STEP - 1) / STEP);
+		}
+		return count;
 	}
 
 	public double next() {
+		while (position >= letters.length() && pass < lastPass) {
+			pass++;
+			position = pass;
+		}
 		if (position >= letters.length()) {
 			throw new IllegalStateException("the text is used up");
 		}

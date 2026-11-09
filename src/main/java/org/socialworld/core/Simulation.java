@@ -382,6 +382,13 @@ public class Simulation extends SocialWorldThread {
         return true; // Fail-safe: Im Zweifel durchlassen
     }
 
+    public boolean checkAndApplyPeriod(int objectId, int cooldownType, int periodInSeconds) {
+        if (this.objectCooldown != null) {
+            return this.objectCooldown.checkAndApplyPeriod(objectId, cooldownType, periodInSeconds);
+        }
+        return true; // Fail-safe: Im Zweifel durchlassen
+    }
+
     public boolean checkAndApplyCooldown(int objectId, int cooldownType, int cooldownInSeconds, int currentThreshold) {
         if (this.objectCooldown != null) {
             return this.objectCooldown.checkAndApplyCooldown(objectId, cooldownType, cooldownInSeconds, currentThreshold);

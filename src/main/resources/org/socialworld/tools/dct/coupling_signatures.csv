@@ -1,0 +1,29 @@
+# no;coupling;set;strength  |  no;coupling;times;factor  |  no;coupling;new;source;target;function;strength
+# strength in displayed points per matrix step at full function value; see attribute_matrix_characters.md
+53;K3;times;0.5
+54;K5;times;0.3
+66;K2;times;0.6
+70;K9;times;1.5
+70;K10;set;0
+83;K3;times;0.6
+84;K3;times;2
+84;K4;times;1.5
+86;K3;set;0.15
+86;K7;set;0
+87;K15;new;hunger;courage;hinge_high;0.05
+88;K3;times;2
+90;K6;times;2
+91;K16;new;tiredness;spirituality;hinge_high;0.05
+92;K3;times;2
+94;K6;set;0
+94;K11;set;0
+96;K3;times;0.3
+96;K4;times;0.3
+96;K13;set;0
+97;K10;set;0
+97;K9;times;2
+98;K3;times;0.5
+98;K8;times;2
+99;K2;times;0.4
+99;K4;times;0.5
+100;K5;set;0

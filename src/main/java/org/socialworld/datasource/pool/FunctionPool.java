@@ -1,24 +1,20 @@
 /*
-* Social World
-* Copyright (C) 2015  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2015  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.datasource.pool;
 
 import org.socialworld.calculation.Expression;
@@ -56,6 +52,14 @@ public class FunctionPool {
 		
 		//initialize();
 		initializeWithTestData_FunctionByMatrix();
+		
+		// matrices from the database come on top of the test data (other func_ids)
+		try {
+			loadMatrixFromDB();
+		}
+		catch (RuntimeException e) {
+			e.printStackTrace();
+		}
 		
 	}
 
@@ -195,6 +199,27 @@ public class FunctionPool {
 
 	}
 	
+	/**
+	 * Builds a matrix from flat arrays, row after row.
+	 */
+	static FunctionByMatrix_Matrix createMatrix(int numberOfColumns, int typeShare, int typeOffset,
+			float shares[], int functions[], float offsets[]) {
+		
+		Value shareValues[] = new Value[shares.length];
+		Value offsetValues[] = new Value[offsets.length];
+		
+		for (int i = 0; i < shares.length; i++) {
+			shareValues[i] = new Value(Type.getName(typeShare), shares[i]);
+			offsetValues[i] = new Value(Type.getName(typeOffset), offsets[i]);
+		}
+		
+		FunctionByMatrix_Matrix matrix = new FunctionByMatrix_Matrix(numberOfColumns);
+		matrix.setFunctions(functions);
+		matrix.setShares(shareValues);
+		matrix.setOffsets(offsetValues);
+		return matrix;
+	}
+	
 	private void loadMatrixFromDB() {
 		TablePoolMatrixRowCol tableRowCol;
 		TablePoolMatrix tableMatrix;
@@ -202,15 +227,11 @@ public class FunctionPool {
 		int rowCount;
 		int row;
 		
-		int matrixRow;
-		int matrixCol;
-		float share;
 		int func_id;
-		float offset;
 		
 		int functions[];
-		Value shares[];
-		Value offsets[];
+		float shares[];
+		float offsets[];
 
 		int matrixIndex;
 		int rowMulCol;
@@ -240,37 +261,23 @@ public class FunctionPool {
 				
 				rowMulCol = anzRow * anzCol;
 				
-				tableRowCol.select(tableRowCol.SELECT_ALL_COLUMNS, "WHERE func_Id = " + func_id, "ORDER BY func_id, row, col");
+				tableRowCol.select(tableRowCol.SELECT_ALL_COLUMNS, "WHERE func_Id = " + func_id, "ORDER BY func_id, `row`, col");
 				if 	(tableRowCol.rowCount() == rowMulCol) {
 					
 					functions = new int[rowMulCol];
-					shares = new Value[rowMulCol];
-					offsets = new Value[rowMulCol];
-					matrixIndex = 0;
+					shares = new float[rowMulCol];
+					offsets = new float[rowMulCol];
 					
-					for (matrixRow = 0; matrixRow < anzRow; matrixRow++) {
-						for (matrixCol = 0; matrixCol < anzCol; matrixCol++) {
-							
-							share = tableRowCol.getShare(row);
-							shares[matrixIndex] = 	new Value (Type.getName(typeShare), share);
-
-							functions[matrixIndex] = tableRowCol.getFunction(row);
-
-							offset = tableRowCol.getOffset(row);
-							offsets[matrixIndex] = 	new Value (Type.getName(typeOffset), offset);
-
-							matrixIndex++;
-						
-						}
+					// the rows are sorted by matrix row and column, so row number = matrix index
+					for (matrixIndex = 0; matrixIndex < rowMulCol; matrixIndex++) {
+						shares[matrixIndex] = tableRowCol.getShare(matrixIndex);
+						functions[matrixIndex] = tableRowCol.getFunction(matrixIndex);
+						offsets[matrixIndex] = tableRowCol.getOffset(matrixIndex);
 					}
 
+					matrix = createMatrix(anzCol, typeShare, typeOffset, shares, functions, offsets);
 					
-					matrix = new FunctionByMatrix_Matrix(anzCol);
-					matrix.setFunctions( functions);
-					matrix.setShares( shares );
-					matrix.setOffsets( shares );
-					
-					setFunction(func_id, new FunctionByMatrix(matrix));
+					setFunction(func_id, new FunctionByMatrix(ValueInterpreteAs.attributeValue, matrix));
 				
 				}
 				

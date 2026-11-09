@@ -5,11 +5,11 @@ What the automated tests check, what they assume, and what they need to run.
 | | |
 |---|---|
 | **Framework** | JUnit 5 with AssertJ |
-| **Test classes** | 16 |
-| **Test methods** | 166 active, 1 commented out |
-| **Database** | no test reads from or writes to MariaDB |
+| **Test classes** | 30 |
+| **Test methods** | 261 active, 1 commented out |
+| **Database** | no test writes to MariaDB; one test reads from it and skips itself without it |
 | **Runs in CI** | yes, in a fresh clone without `application.properties` |
-| **Last updated** | 2026-11-06 |
+| **Last updated** | 2026-11-09 |
 
 > Keep this file up to date: every new or changed test changes this file in the same step.
 
@@ -20,13 +20,27 @@ What the automated tests check, what they assume, and what they need to run.
 | Area | Test class | Tests | Checks | Skipped when |
 |---|---|--:|---|---|
 | Start | `SocialWorldTest` | 1 | the main program exists as a singleton | – |
-| Core | `TickRandomCacheTest` | 8 | random value per object and tick | – |
+| Attributes | `AttributeArrayTest` | 5 | range 0..9999 and the display as 0..99 | – |
+| Core | `TickRandomCacheTest` | 10 | random value per object and tick | – |
+| Core | `TickObjectCooldownTest` | 6 | own step of the matrix with an offset per object | – |
 | Objects | `SimObjectsCompletelyImplemented` | 3 | lexeme mappings of the object enums | – |
 | Calculation | `KnowledgeElementLinesVsJsonTest` | 17 | line and JSON build the same knowledge | partly: no `swpool_epd.sql` |
+| Calculation | `FunctionByTableTest` | 11 | table functions at 0..9999 | – |
+| Calculation | `FunctionByMatrixSimpleTest` | 9 | SIMPLE mode of the real `FunctionByMatrix` | – |
+| Calculation | `ConstantTest` | 1 | steepness of the sigmoid | – |
+| Calculation | `BranchingProbabilityTest` | 3 | a single comparison is decided by the sigmoid | – |
+| Calculation | `EventInfluenceRulesFromDatabaseTest` | 1 | real rules with real arrays | no database or no data |
+| Data | `Action2PerformerDescriptionPoolTest` | 4 | intensity × power, expression parser | – |
+| Data | `FunctionPoolTest` | 2 | building a matrix from flat arrays | – |
+| Data | `GaussPoolAAACMMappingTest` | 4 | mapping of the two drawn indices | – |
 | Map | `CubeSurfaceTest` | 11 | cube addresses against a surface computed independently | – |
 | Map | `CubeTileAnalysisTest` | 10 | which tiles exist, their statistics and families | – |
 | Map | `CubeCatalogTest` | 11 | catalog equals `createTile`, `isFilled` | – |
 | MCT | `TileGridCubesTest` | 10 | map positions → cubes, against `LTileRaster` | – |
+| DCT | `AttributeArrayGeneratorTest` | 23 | attribute arrays from characters and text | – |
+| DCT | `AttributeMatrixGeneratorTest` | 19 | matrices for the characters and the mapping | – |
+| DCT | `TextFileTest` | 2 | reading a text file | – |
+| DCT | `CreationToolEventInfluenceDescriptionTest` | 3 | typed numbers get a decimal point | – |
 | PCT | `PerceptionGenerationTest` | 10 | generated perception paths | – |
 | PCT | `PerceptionPathCatalogTest` | 12 | filters of the path catalog | – |
 | PCT | `PerceptionDescriptionComposerTest` | 10 | paths → JSON | partly: no `swpool_epd.sql` |
@@ -40,7 +54,7 @@ What the automated tests check, what they assume, and what they need to run.
 
 ## Conditions for All Tests
 
-- **No database.** The PCT tests work on `InMemoryPerceptionDescriptionStore`, never on `swpool_epd` in MariaDB.
+- **No database.** The PCT tests work on `InMemoryPerceptionDescriptionStore`, never on `swpool_epd` in MariaDB. `EventInfluenceRulesFromDatabaseTest` is the only test that reads from MariaDB, it only reads and skips itself without a database or without data. No test writes to it; the DCT writers are tested with stores in memory.
 - **Test data outside git.** `src/test/swpool_epd.sql`, `src/test/swpool_parseinputs.sql` and `src/test/onlyLs/` are ignored by `.gitignore`. Tests that need `swpool_epd.sql` skip themselves with `assumeTrue` when the file is missing, which is the case in CI. No test reads `swpool_parseinputs.sql` or `onlyLs/`.
 - **Screen.** Only `PerceptionCreationToolTest.dialog_canBeBuilt` needs one; without a screen (headless) it is skipped.
 - **Directions on the map.** Corner bits are bit0 = SO, bit1 = SW, bit2 = NO, bit3 = NW. Inside a tile x points east and y points north. On the map, rows grow to the south.
@@ -56,6 +70,22 @@ What the automated tests check, what they assume, and what they need to run.
 
 - **Checks:** `SocialWorld.getCurrent()` does not return `null`.
 - **Assumes:** the singleton can be created without a database and without a screen.
+
+---
+
+## Attributes
+
+### `AttributeArrayTest`
+
+`src/test/java/org/socialworld/attributes/AttributeArrayTest.java`
+
+| Test | Checks |
+|---|---|
+| `range_isZeroTo9999_displayedAsZeroTo99` | maximum 9999, middle 5000, scale 100 |
+| `displayValue_isRoundedDown` | 99 → 0, 100 → 1, 9950 → 99, 9999 → 99 |
+| `set_limitsToTheInternalRange` | `set()` limits to 0..9999 |
+| `displayString_showsDisplayedValues_toStringKeepsInternalOnes` | `toDisplayString()` shows 0..99, `toString()` the internal values |
+| `displayValue_keepsMinusOneForAnInvalidIndex` | an invalid index stays −1 |
 
 ---
 
@@ -76,11 +106,25 @@ Works on its own instances with 10 objects (package-private constructor), not on
 | `objectsInTheSameTick_getDifferentValues` | two objects in the same tick get different values |
 | `value_dependsOnlyOnObjectAndTick_notOnEarlierCalls` | the value is deterministic and does not depend on earlier calls |
 | `setTick_isLikeReachingTheTickStepByStep` | `setTick(4)` gives the same result as four `nextTick()` calls |
+| `beforeTheFirstTick_theValueIsReallyCalculated` | before the first `nextTick()` the value lies in (0, 1) and differs per object |
+| `beforeTheFirstTick_isTheSameAsTickZero` | the value before the first tick equals that of `setTick(0)` |
 | `objectOutsideOfTheRange_getsZero` | an ID below 0 or ≥ the number of objects gives 0.0 |
 
 - **Assumes:** that a value is the same within a tick is intended behaviour. One consequence: several `probability` expressions of one object in the same tick share the same r.
-- **Not checked:** the value before the first tick. It is 0.0 there, so every `probability` takes its first branch during setup. Whether that is wanted is still open.
 - **Not checked:** how evenly the values spread. That was checked by hand on 2026-11-06, in the running simulation with `GlobalSwitches.OUTPUT_TICK_RANDOM`.
+
+### `TickObjectCooldownTest`
+
+`src/test/java/org/socialworld/core/TickObjectCooldownTest.java`
+
+| Test | Checks |
+|---|---|
+| `period_isOneMinute` | one matrix step is 60 seconds |
+| `objectGetsOneReleasePerPeriod_atItsOffset` | object 5 is released at 5, 65, 125, 185 |
+| `objects_areSpreadOverThePeriod` | the objects are spread by `objectId % 60` |
+| `aMissedSecond_isMadeUpInTheSamePeriod` | a missed second is made up, never a second release in a period |
+| `objectOutsideOfTheRange_isLetThrough` | an ID outside of the range is let through |
+| `otherCooldownTypes_areNotDisturbed` | other cooldown types are independent |
 
 ---
 
@@ -123,6 +167,103 @@ Compares the two constructors of `CreateKnowledgeElementExpression`, one from a 
 - **Assumes:** where line and JSON differ, the JSON is right. `orderNr` is only a technical index without meaning.
 - **Needs:** `swpool_epd.sql`, for the 5 tests based on the templates (`property_templates0To3`, `property_criterion…`, `property_template2…`, `property_template4_isOneAtom…`, `property_template4_lineWithListing…`). Without the file they are skipped; the other 12 always run.
 - **Technique:** reads private fields through reflection (`Value.value`) and writes trees as text.
+
+### `FunctionByTableTest`
+
+`src/test/java/org/socialworld/calculation/functions/FunctionByTableTest.java`
+
+| Group | Checks |
+|---|---|
+| `u` at 0..99 | the formula gives the former hand-written table within 1, symmetric, 0 from 18 to 81 |
+| `u` at 0..9999 | keeps its shape: max at both ends, edge of 18 %, 0 in the middle, 0.287 of max halfway down the edge |
+| `u_mirrored` | is max − `u` everywhere |
+| `v`, `v_mirrored` | max (or 0) at both ends, 0 (or max) in the middle |
+| `positive_raise`, `negative_raise` | correct at 0, in between and at 9999 |
+| `hinge_high`, `hinge_low` | 0 up to 6000 and rising to 9999; 9999 at 0 and falling to 0 at 4000; both monotone |
+| Input | values below 0 or above 9999 are limited; `horizontal_max` gives 9999 |
+
+### `FunctionByMatrixSimpleTest`
+
+`src/test/java/org/socialworld/calculation/functions/FunctionByMatrixSimpleTest.java`
+
+The SIMPLE mode of the real `FunctionByMatrix` with floating-point shares. No database.
+
+| Test | Checks |
+|---|---|
+| `identityMatrix_changesNothing` | a diagonal of 1.0 changes nothing |
+| `anchor_makesTheTargetTheFixedPoint` | a constant from `horizontal_max`: target 6000, rate 0.02: 3000 → 3060, 6000 stays, 8000 → 7960 |
+| `anchor_ignoresItsSource` | the source of the constant does not matter |
+| `negativeShare_lowersTheTarget` | 6000 − 0.003 · 8000 = 5976 |
+| `diagonalAboveOneWithConstant_letsHungerRise` | a diagonal slightly above 1 with a constant; from 0 only the constant acts |
+| `aChangeBelowHalfAStep_isRoundedAway` | factor 1.00001 leaves 5000 unchanged |
+| `result_isLimitedToTheRange` | results stay in 0..9999 |
+| `tableFunction_isAppliedToTheSource` | `v` is applied to the source |
+| `allCellsUseTheOldValues` | all cells use the values from before the step |
+
+- **Assumes:** a full matrix is built with `new FunctionByMatrix_Matrix(9)` and the setters. The constructor with three arrays means one row.
+
+### `ConstantTest`
+
+`src/test/java/org/socialworld/calculation/expressions/ConstantTest.java`
+
+- **Checks:** `SIGMOID_K_ATTRIBUTE` is 5 × the attribute scale (500). The value is a finished number, so this test notices a change of the scale.
+
+### `BranchingProbabilityTest`
+
+`src/test/java/org/socialworld/calculation/expressions/BranchingProbabilityTest.java`
+
+A single comparison of an attribute with a constant is decided with a probability. Evaluates real expressions for 20,000 objects.
+
+| Test | Checks |
+|---|---|
+| `greaterEqual_isLikelyWhenTheValueIsHigh` | THEN at 3000: 0.018, 4500: 0.269, 5500: 0.731, 7000: 0.982 |
+| `less_isLikelyWhenTheValueIsLow` | the same, mirrored |
+| `atTheThreshold_bothBranchesAreEquallyLikely` | 0.5 at the threshold |
+
+### `EventInfluenceRulesFromDatabaseTest`
+
+`src/test/java/org/socialworld/calculation/descriptions/EventInfluenceRulesFromDatabaseTest.java`
+
+Evaluates a sample of the real rules of `swpool_eid` (every 97th) with all real arrays of `swpool_attribute`.
+
+- **Checks:** the share of objects that change the target attribute follows the sigmoid of the condition attribute (k = 500), per 1000 steps of distance to the threshold, tolerance 0.03. A rule that fires writes m × basis + n (within 1, limited to 0..9999). Other attributes stay unchanged.
+- **Needs:** MariaDB with data, it only reads. Without them it is skipped.
+- **Prints:** the table of expected and observed shares as `RULECHECK` lines with `gradlew test -i`.
+
+---
+
+## Data
+
+### `Action2PerformerDescriptionPoolTest`
+
+`src/test/java/org/socialworld/datasource/pool/Action2PerformerDescriptionPoolTest.java`
+
+| Test | Checks |
+|---|---|
+| `scaleConstant_isTheAttributeScale` | the constant is `CONST(1 100)` |
+| `intensityTimesPower_isDividedByTheScale` | `DIV(MUL(30.0, 5000), 100)` gives 1500.0 as a float |
+| `commaInsideTheFirstOperand_isNotTheSeparator` | `SUB(MUL(6,7),2)` gives 40 |
+| `commaOnlyInTheSecondOperand_worksAsBefore` | `SUB(50,MUL(6,7))` gives 8 |
+
+### `FunctionPoolTest`
+
+`src/test/java/org/socialworld/datasource/pool/FunctionPoolTest.java`
+
+- **Checks:** `createMatrix` puts every share, function and offset of a flat array into its own cell, and offsets stay offsets. With floating-point shares the matrix does not divide by 100.
+- **Not checked:** reading from `swpool_matrix_rowcol`.
+
+### `GaussPoolAAACMMappingTest`
+
+`src/test/java/org/socialworld/datasource/pool/GaussPoolAAACMMappingTest.java`
+
+Only the empty mapping, nothing is read from the database.
+
+| Test | Checks |
+|---|---|
+| `withoutEntry_theDrawnIndexStays` | without an entry the drawn index is returned |
+| `entry_givesTheMatrixIndex_forExactlyThisPair` | an entry applies only to its own pair |
+| `allCornersAreReachable` | −99/−99 and 99/99 work |
+| `indexOfExactlyTheCapacity_countsAsTheOutermostPlace` | an index of exactly ±100 counts as ±99 |
 
 ---
 
@@ -214,6 +355,58 @@ The catalog holds one tree per tile type (1/9 m for S and M, 1/3 m for L). The m
 
 - **Assumes:** a map grid has 9 × 9 tiles. The map counts from the top left to the bottom right, and inside the tile y points north.
 - **Not checked yet:** a real map with M and S tiles, because the generators only make L maps so far.
+
+---
+
+## DCT: Data Creation Tool
+
+### `AttributeArrayGeneratorTest`
+
+`src/test/java/org/socialworld/tools/dct/AttributeArrayGeneratorTest.java`
+
+| Group | Checks |
+|---|---|
+| Text die | keeps only letters, folds ä/ö/ü/ß, reads every third letter as a share of the alphabet; with several passes it reads the other letters |
+| Levels | bands in 0..9999 (`o`: 3800, 5000, 6200 for shares 0, 0.5, 1; `+++` ends at 9999), found by their code, inside the range of attribute values |
+| Catalog | `characters.csv` holds 100 characters in order; a wrong number of levels is rejected |
+| Generator | 199 arrays, every `gauss_index` once, every value in its band, same text same values, too short a text and impossible `aa_id`s rejected, the counted letters are used up exactly |
+| Fine scale | more than half of the values are no multiples of 100 |
+| Adjusting by hand | `withValues` keeps character, index and id; `withDisplayValues` keeps unmoved values, moved ones become slider × 100, limited to 0..9999 |
+| Tuple | is read back by `AttributeArray` |
+| Writer (in memory) | keeps the order of the foreign key, all 1,791 values and 199 gauss indices arrive, existing records are replaced, others stay |
+| In-memory store | refuses a gauss index without attributes and deleting attributes still referred to |
+
+### `AttributeMatrixGeneratorTest`
+
+`src/test/java/org/socialworld/tools/dct/AttributeMatrixGeneratorTest.java`
+
+Generated matrices, partly calculated with the real `FunctionByMatrix`. Nothing is written to the database.
+
+| Group | Checks |
+|---|---|
+| Slots | all 199 places filled, every character has one, common characters more; every `gauss_index` once, own `func_id`s |
+| Text | too short is rejected; the same text gives the same matrices; variants of a character differ |
+| Targets | lie in the bands of the character |
+| At rest | the real matrix keeps a person within 2 of the targets for 60 steps |
+| Strain | hunger and tiredness press power and mood down |
+| Signature | hunger lifts the mood of the ascetic; wrong lines in the signatures file are rejected |
+| Anchor | exactly one constant cell per column, never on the diagonal |
+| Hunger, tiredness | reach their reference points (8 h > 5000, 12 h ≥ 9000; 16 h > 5000, 24 h ≥ 9000); hunger rises from 0 in the real matrix |
+| Writer (recording store) | order of the foreign keys: delete mapping, gauss rows, cells, matrices; insert matrices, cells, gauss rows, mapping; rows and columns from 1 |
+| Mapping | all 199 × 199 combinations once; always a matrix of the character of the array; all variants are reached; both signs of the drawn index give the same variant |
+
+### `TextFileTest`
+
+`src/test/java/org/socialworld/tools/dct/TextFileTest.java`
+
+- **Checks:** a file in UTF-8 is read with its umlauts; a file that is no valid UTF-8 is read as ISO-8859-1.
+- **Writes:** only into a temporary JUnit directory (`@TempDir`).
+
+### `CreationToolEventInfluenceDescriptionTest`
+
+`src/test/java/org/socialworld/tools/dct/CreationToolEventInfluenceDescriptionTest.java`
+
+- **Checks:** `withDecimalPoint` turns `1,5` into `1.5`, leaves `1.5` and `-20` as they are, and removes surrounding spaces.
 
 ---
 
@@ -346,8 +539,9 @@ The input field for several slots, with 100 slots (0–99).
 
 ## Not Covered
 
-- Simulation run, events, actions, attributes, conversation: no tests so far.
-- `Expression` as a whole: only indirectly, through `KnowledgeElementLinesVsJsonTest` and the composer.
-- Loading from MariaDB (`datasource`): no tests, on purpose, so that CI runs without a database.
+- Simulation run, events, actions, conversation: no tests so far.
+- `Expression` as a whole: only indirectly, through `KnowledgeElementLinesVsJsonTest`, the composer, `BranchingProbabilityTest` and the rule test.
+- Loading from MariaDB (`datasource`): no tests except the reading rule test, so that CI runs without a database. In particular reading matrices and the mapping, and the DCT writers against the real tables.
+- The lookup of the mapping in `CreateAnimal`: only one line, it would need the whole creation of objects.
 - MCT generators and `MapPanel`: no tests; `TileGridCubes` has no caller yet.
-- State2Action and Action2Performer: still on lines, no tests.
+- State2Action and Action2Performer: still on lines, only the arithmetic of the intensity is tested.

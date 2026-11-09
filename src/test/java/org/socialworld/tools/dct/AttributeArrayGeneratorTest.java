@@ -68,6 +68,18 @@ public class AttributeArrayGeneratorTest {
     assertThatThrownBy(die::next).isInstanceOf(IllegalStateException.class);
   }
 
+  @Test
+  void die_withSeveralPasses_readsTheOtherLetters() {
+    TextDie die = new TextDie("abcdefghi", 1, 2);
+
+    assertThat(die.countRemaining()).isEqualTo(6);
+    assertThat(die.next()).isEqualTo(1 / 25.0); // b, pass 1 starts at the second letter
+    assertThat(die.next()).isEqualTo(4 / 25.0); // e
+    assertThat(die.next()).isEqualTo(7 / 25.0); // h
+    assertThat(die.next()).isEqualTo(2 / 25.0); // c, pass 2
+    assertThat(die.countRemaining()).isEqualTo(2);
+  }
+
   // ---------------------------------------------------------------------------
   // levels
   // ---------------------------------------------------------------------------

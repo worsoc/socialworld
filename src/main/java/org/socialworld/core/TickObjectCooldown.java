@@ -27,6 +27,9 @@ public class TickObjectCooldown {
     public static final int MAX_ACTION_ELEMS    = 1; 
     public static final int MAX_KNOWLEDGE_ELEMS    = 10; 
 
+    /** Ein Rechenschritt der SIMPLE-Matrix dauert 1 simulierte Minute. */
+    public static final int ATTRIBUTE_MATRIX_STEP_SECONDS = 60;
+
     // 1. Definition der verschiedenen Cooldown-Typen als ID
     public static final int TYPE_PERCEPTION  = 0;
     public static final int TYPE_PERCEPTION_AMBIENT  = 1;
@@ -35,8 +38,9 @@ public class TickObjectCooldown {
     public static final int TYPE_ACTION      = 4;
     public static final int TYPE_REACTION      = 5;
     public static final int TYPE_KNOWLEDGE    = 6;
+    public static final int TYPE_REFRESH_ATTRIBUTES = 7; // eigener Takt der SIMPLE-Matrix
     
-    public static final int TYPE_COUNT       = 7; // Anzahl der registrierten Typen
+    public static final int TYPE_COUNT       = 8; // Anzahl der registrierten Typen
 
     // Allokationsfreies O(1)-Mapping für verknüpfte Typen.
     // Index = Auslösender Typ, Wert = Synchronisierter Ziel-Typ (-1 = Keiner)
@@ -127,6 +131,27 @@ public class TickObjectCooldown {
     }
  
  
+    /**
+     * Fester Takt mit Versatz je Objekt: In jeder Periode gibt es genau eine Freigabe,
+     * und zwar ab der Sekunde objectId % Periode. So verteilen sich die Objekte über die
+     * Periode, statt alle in derselben Sekunde zu rechnen. Kommt ein Objekt in seiner
+     * Sekunde nicht dran, holt es die Freigabe beim nächsten Versuch derselben Periode nach.
+     *
+     * @return true, wenn das Objekt in dieser Periode noch nicht dran war
+     */
+    public boolean checkAndApplyPeriod(int objectId, int cooldownType, int periodInSeconds) {
+        if (objectId < 0 || objectId >= cooldownMatrix.length || cooldownType < 0 || cooldownType >= TYPE_COUNT) {
+            return true;
+        }
+
+        long period = (currentTick + periodInSeconds - objectId % periodInSeconds) / periodInSeconds;
+        if (period > cooldownMatrix[objectId][cooldownType]) {
+            cooldownMatrix[objectId][cooldownType] = period;
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Ermittelt die maximale Obergrenze für den jeweiligen Typ (0 Allokation)
      */

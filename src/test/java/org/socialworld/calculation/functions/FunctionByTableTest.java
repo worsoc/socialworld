@@ -130,6 +130,41 @@ public class FunctionByTableTest {
     assertThat(function.calculate(MAX)).isZero();
   }
 
+  // ---------------------------------------------------------------------------
+  // hinge: acts only above or below a threshold
+  // ---------------------------------------------------------------------------
+
+  @Test
+  void hingeHigh_isZeroUpTo6000AndRisesToMax() {
+    FunctionByTable function = new FunctionByTable(FunctionByTable_Type.hinge_high);
+
+    assertThat(function.calculate(0)).isZero();
+    assertThat(function.calculate(6000)).isZero();
+    assertThat(function.calculate(8000)).isBetween(5000, 5001);
+    assertThat(function.calculate(MAX)).isEqualTo(MAX);
+  }
+
+  @Test
+  void hingeLow_fallsFromMaxToZeroAt4000() {
+    FunctionByTable function = new FunctionByTable(FunctionByTable_Type.hinge_low);
+
+    assertThat(function.calculate(0)).isEqualTo(MAX);
+    assertThat(function.calculate(2000)).isBetween(4999, 5000);
+    assertThat(function.calculate(4000)).isZero();
+    assertThat(function.calculate(MAX)).isZero();
+  }
+
+  @Test
+  void hinges_areMonotone() {
+    int[] high = table(FunctionByTable_Type.hinge_high, MAX);
+    int[] low = table(FunctionByTable_Type.hinge_low, MAX);
+
+    for (int x = 1; x <= MAX; x++) {
+      assertThat(high[x]).as("hinge_high at %d", x).isGreaterThanOrEqualTo(high[x - 1]);
+      assertThat(low[x]).as("hinge_low at %d", x).isLessThanOrEqualTo(low[x - 1]);
+    }
+  }
+
   @Test
   void input_isLimitedToTheRange() {
     FunctionByTable function = new FunctionByTable(FunctionByTable_Type.identical);
