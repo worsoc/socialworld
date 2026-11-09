@@ -377,10 +377,12 @@ public class Value {
 		switch (typeUsing) {
 		case integer:
 			
+			if (value == null) return NoObject.getNoObject(NoObjectReason.valueIsNull);
 			return (int) value;
 			
 		case longinteger:
 			
+			if (value == null) return NoObject.getNoObject(NoObjectReason.valueIsNull);
 			if (value instanceof Integer)	return ((Integer) value).longValue();
 			return (long) value;
 			

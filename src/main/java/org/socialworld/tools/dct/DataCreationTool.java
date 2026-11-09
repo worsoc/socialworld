@@ -367,6 +367,15 @@ public class DataCreationTool {
 		});
 		buttonCharacterMatricesDB.setBounds(938, 197, 77, 26);
 		frame.getContentPane().add(buttonCharacterMatricesDB);
+
+		Button buttonCharacterOverview = new Button("Übersicht");
+		buttonCharacterOverview.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				showCharacterOverview();
+			}
+		});
+		buttonCharacterOverview.setBounds(938, 229, 77, 26);
+		frame.getContentPane().add(buttonCharacterOverview);
 		
 		buttonSave.addActionListener(new ActionListener() 
 		{
@@ -903,6 +912,15 @@ public class DataCreationTool {
 		for (GeneratedMatrix matrix : generatedMatrices) {
 			lastMatrix.add(matrix.getCharacter().getNumber() + " " + matrix.getCharacter().getName()
 					+ " v" + matrix.getVariant() + " [" + matrix.getGaussIndex() + "] func " + matrix.getFuncID());
+		}
+	}
+
+	private void showCharacterOverview() {
+		try {
+			AttributeCharacterOverviewPanel.open(
+					AttributeCharacterOverview.read(AttributeCharacterCatalog.load(), new TablePoolAttributeDataReader()));
+		} catch (RuntimeException e) {
+			JOptionPane.showMessageDialog(frame, "Fehler: " + e.getMessage());
 		}
 	}
 
