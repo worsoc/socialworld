@@ -1,24 +1,20 @@
 /*
-* Social World
-* Copyright (C) 2014  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2014  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.objects;
 
 
@@ -34,6 +30,7 @@ import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.IObjectReceiver;
 import org.socialworld.calculation.IObjectSender;
 import org.socialworld.calculation.ObjectRequester;
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.application.Scheduler;
@@ -350,6 +347,20 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 		ValueProperty vp = getProperty(token, PropertyName.simobj_position);
 		position = getObjectRequester().requestPosition(token, vp, this);
 		return position;
+	}
+
+	/**
+	 * Puts the object at another place of the running simulation and updates the search by position.
+	 * Nothing is saved to the database. Only the Action Creation Tool may do this.
+	 * 
+	 * @param token the token of the caller
+	 * @param position the new position
+	 */
+	public final void relocate(IAccessToken token, Position position) {
+		if (token.isValid() && token.getSimulationCluster() == SimulationCluster.act) {
+			this.state.setPosition(position, this.guard);
+			Simulation.getInstance().changePosition(this);
+		}
 	}
 	
 

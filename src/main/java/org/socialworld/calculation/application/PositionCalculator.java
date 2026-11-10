@@ -1,24 +1,20 @@
 /*
-* Social World
-* Copyright (C) 2015  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2015  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.calculation.application;
 
 
@@ -30,7 +26,9 @@ import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.collections.CapacityQueue;
 import org.socialworld.core.Event;
 import org.socialworld.core.EventType;
+import org.socialworld.core.Simulation;
 import org.socialworld.core.SocialWorldThread;
+import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.StateSimulationObject;
 import org.socialworld.objects.WriteAccessToSimulationObject;
 import org.socialworld.objects.access.HiddenSimulationObject;
@@ -135,6 +133,26 @@ public class PositionCalculator extends SocialWorldThread {
 	}
 	
 	
+	/**
+	 * Lets the search by position follow a move. The sector trees hold an object only
+	 * down to its search level, so nothing has to be done as long as it stays within
+	 * the same sectors. An object without a position has never been added to the search.
+	 */
+	private void updateObjectSearch(SimulationObject object, Position oldPosition, Position newPosition) {
+		if (oldPosition.checkIsObjectNothing()) return;
+		if (isInSameSectors(oldPosition, newPosition, object.getLevelObjectSearchBase9(), object.getLevelObjectSearchBase25())) return;
+
+		Simulation.getInstance().changePosition(object);
+	}
+
+	static boolean isInSameSectors(Position a, Position b, int levelBase9, int levelBase25) {
+		int divisor = 1;
+		for (int level = levelBase9; level < b.LOCATIONBYBASEMAXLENGTH; level++) divisor *= Position.LOCATIONBASE9 + 1;
+
+		return a.getLocationByBase9() / divisor == b.getLocationByBase9() / divisor
+				&& a.getLocationByBase25().regionMatches(0, b.getLocationByBase25(), 0, levelBase25);
+	}
+
 	private final int calculatePositionChangedByEvent(CollectionElementSimObjInfluenced moved) {
 
 	    if (moved != null) {
@@ -220,6 +238,7 @@ public class PositionCalculator extends SocialWorldThread {
 	        
 	        returnSetPosition = hiddenWriteAccess.setPosition(newPosition);
 	        if (returnSetPosition != WriteAccessToSimulationObject.WRITE_ACCESS_RETURNS_SUCCESS) return returnSetPosition;
+	        updateObjectSearch(state.getObject(), positionOriginal, newPosition);
 	        
 	        // Verwendung des geschützten Arbeitsvektors für die finale Richtungsänderung
 	        returnSetMove = hiddenWriteAccess.setMove(new Direction(PropertyName.simobj_directionMove, workingVectorMove, resultingPowerMoveObject));

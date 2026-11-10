@@ -224,7 +224,7 @@ public class EventReactionDescriptionPool extends DescriptionPool {
 					"}";
 			jsons4EventType.set(reactionType, json);
 		}
-//		allJsons.add(jsons4EventType);
+		allJsons.add(jsons4EventType);
 		
 		jsons4EventType = new Jsons4EventType(EventType.percipientExistsDistance1000, rangeSecondIndex);
 		for ( reactionType = 0; reactionType < rangeSecondIndex; reactionType++) {

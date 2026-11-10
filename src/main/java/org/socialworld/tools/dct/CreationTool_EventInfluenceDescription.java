@@ -287,7 +287,7 @@ public class CreationTool_EventInfluenceDescription extends JFrame {
        System.out.println("Engine-Objekt erfolgreich erzeugt: " + eid.toString());
 
         // DB Insert/Update
-        new TablePoolEID().insert(currentEventType.ordinal(), currentInfluenceTypeNr, root.toString());
+        new TablePoolEID().insert(currentEventType.getIndex(), currentInfluenceTypeNr, root.toString());
     }
 
     
