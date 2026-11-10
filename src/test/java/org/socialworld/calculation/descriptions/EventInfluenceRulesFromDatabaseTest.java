@@ -34,6 +34,7 @@ import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.TickRandomCache;
+import org.socialworld.datasource.mariaDB.DatabaseAssumptions;
 import org.socialworld.datasource.parsing.Json;
 import org.socialworld.datasource.parsing.JsonEventInfluenceDescription;
 import org.socialworld.datasource.parsing.JsonEventInfluencesAttributeDescription;
@@ -165,17 +166,10 @@ public class EventInfluenceRulesFromDatabaseTest {
 
   @Test
   void conditionsOfTheRealRules_followTheSigmoidOfTheirAttribute() {
-    List<int[]> arrays;
-    List<Rule> rules;
-    try {
-      arrays = loadArrays();
-      rules = loadSampleOfRules();
-    } catch (RuntimeException | ExceptionInInitializerError e) {
-      assumeThat(false).as("no database available: " + e).isTrue();
-      return;
-    }
-    assumeThat(arrays).as("swpool_attribute").isNotEmpty();
-    assumeThat(rules).as("swpool_eid").isNotEmpty();
+    DatabaseAssumptions.assumeTablesAreFilled(TablePoolAttribute::new, TablePoolEID::new);
+    List<int[]> arrays = loadArrays();
+    List<Rule> rules = loadSampleOfRules();
+    assumeThat(rules).as("rules of swpool_eid with a single condition").isNotEmpty();
 
     Map<Integer, Bin> bins = new TreeMap<>();
     TickRandomCache.getInstance().setTick(5);

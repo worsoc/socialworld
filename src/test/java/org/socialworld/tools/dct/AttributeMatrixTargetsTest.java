@@ -19,13 +19,13 @@ package org.socialworld.tools.dct;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.Assumptions.assumeThat;
 
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.socialworld.attributes.Attribute;
 import org.socialworld.calculation.functions.FunctionByTable_Type;
+import org.socialworld.datasource.mariaDB.DatabaseAssumptions;
 import org.socialworld.tools.dct.AttributeCharacterOverview.Entry;
 import org.socialworld.tools.dct.AttributeDataReader.StoredMatrix;
 import org.socialworld.tools.dct.AttributeMatrixGenerator.GeneratedMatrix;
@@ -177,12 +177,8 @@ public class AttributeMatrixTargetsTest {
 
   @Test
   void compute_staysInTheBandsForTheRealTables() {
-    List<Entry> entries = null;
-    try {
-      entries = AttributeCharacterOverview.read(AttributeCharacterCatalog.load(), new TablePoolAttributeDataReader()).getEntries();
-    } catch (RuntimeException | LinkageError e) {
-      assumeThat(false).as("no database available or no data: " + e).isTrue();
-    }
+    DatabaseAssumptions.assumeAttributeTablesAreFilled();
+    List<Entry> entries = AttributeCharacterOverview.read(AttributeCharacterCatalog.load(), new TablePoolAttributeDataReader()).getEntries();
 
     for (Entry entry : entries) {
       AttributeCharacter character = entry.getCharacter();

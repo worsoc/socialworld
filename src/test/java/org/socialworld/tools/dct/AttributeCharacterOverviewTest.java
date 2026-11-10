@@ -19,7 +19,6 @@ package org.socialworld.tools.dct;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.Assumptions.assumeThat;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -30,6 +29,7 @@ import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 import org.socialworld.attributes.Attribute;
+import org.socialworld.datasource.mariaDB.DatabaseAssumptions;
 import org.socialworld.datasource.pool.GaussPoolAttributeArray;
 import org.socialworld.datasource.pool.GaussPoolAttributeCalculatorMatrix;
 import org.socialworld.tools.dct.AttributeCharacterOverview.Entry;
@@ -228,12 +228,8 @@ public class AttributeCharacterOverviewTest {
 
   @Test
   void read_fitsTheRealTables() {
-    AttributeCharacterOverview overview = null;
-    try {
-      overview = AttributeCharacterOverview.read(AttributeCharacterCatalog.load(), new TablePoolAttributeDataReader());
-    } catch (RuntimeException | LinkageError e) {
-      assumeThat(false).as("no database available or no data: " + e).isTrue();
-    }
+    DatabaseAssumptions.assumeAttributeTablesAreFilled();
+    AttributeCharacterOverview overview = AttributeCharacterOverview.read(AttributeCharacterCatalog.load(), new TablePoolAttributeDataReader());
 
     List<Entry> entries = overview.getEntries();
     assertThat(entries).hasSize(100);

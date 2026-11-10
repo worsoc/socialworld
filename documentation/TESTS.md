@@ -5,11 +5,11 @@ What the automated tests check, what they assume, and what they need to run.
 | | |
 |---|---|
 | **Framework** | JUnit 5 with AssertJ |
-| **Test classes** | 30 |
-| **Test methods** | 261 active, 1 commented out |
-| **Database** | no test writes to MariaDB; one test reads from it and skips itself without it |
+| **Test classes** | 41 |
+| **Test methods** | 397 active, 1 commented out |
+| **Database** | no test writes to MariaDB; a few tests read from it and skip themselves without it or with an empty table |
 | **Runs in CI** | yes, in a fresh clone without `application.properties` |
-| **Last updated** | 2026-11-09 |
+| **Last updated** | 2026-11-10 |
 
 > Keep this file up to date: every new or changed test changes this file in the same step.
 
@@ -29,10 +29,11 @@ What the automated tests check, what they assume, and what they need to run.
 | Calculation | `FunctionByMatrixSimpleTest` | 9 | SIMPLE mode of the real `FunctionByMatrix` | – |
 | Calculation | `ConstantTest` | 1 | steepness of the sigmoid | – |
 | Calculation | `BranchingProbabilityTest` | 3 | a single comparison is decided by the sigmoid | – |
-| Calculation | `EventInfluenceRulesFromDatabaseTest` | 1 | real rules with real arrays | no database or no data |
+| Calculation | `EventInfluenceRulesFromDatabaseTest` | 1 | real rules with real arrays | no database or empty table |
 | Data | `Action2PerformerDescriptionPoolTest` | 4 | intensity × power, expression parser | – |
 | Data | `FunctionPoolTest` | 2 | building a matrix from flat arrays | – |
 | Data | `GaussPoolAAACMMappingTest` | 4 | mapping of the two drawn indices | – |
+| Data | `DatabaseAssumptionsTest` | 1 | a test is skipped without a database | – |
 | Map | `CubeSurfaceTest` | 11 | cube addresses against a surface computed independently | – |
 | Map | `CubeTileAnalysisTest` | 10 | which tiles exist, their statistics and families | – |
 | Map | `CubeCatalogTest` | 11 | catalog equals `createTile`, `isFilled` | – |
@@ -41,6 +42,10 @@ What the automated tests check, what they assume, and what they need to run.
 | DCT | `AttributeMatrixGeneratorTest` | 19 | matrices for the characters and the mapping | – |
 | DCT | `TextFileTest` | 2 | reading a text file | – |
 | DCT | `CreationToolEventInfluenceDescriptionTest` | 3 | typed numbers get a decimal point | – |
+| DCT | `AttributeCharacterOverviewTest` | 11 | overview of arrays and matrices per character | partly: no database or empty table |
+| DCT | `AttributeMatrixCellTest` | 6 | text of a matrix cell | – |
+| DCT | `AttributeMatrixTargetsTest` | 8 | target values of a matrix | partly: no database or empty table |
+| DCT | `TablePoolAttributeDataReaderTest` | 5 | reading the real attribute tables | no database or empty table |
 | PCT | `PerceptionGenerationTest` | 10 | generated perception paths | – |
 | PCT | `PerceptionPathCatalogTest` | 12 | filters of the path catalog | – |
 | PCT | `PerceptionDescriptionComposerTest` | 10 | paths → JSON | partly: no `swpool_epd.sql` |
@@ -49,12 +54,18 @@ What the automated tests check, what they assume, and what they need to run.
 | PCT | `PerceptionSlotListTest` | 7 | slot input such as `3-18/5` | – |
 | PCT | `PerceptionSqlExportTest` | 5 | SQL export, nothing gets overwritten | partly: no `swpool_epd.sql` |
 | PCT | `PerceptionCreationToolTest` | 8 | store, table, texts, dialog | dialog: no screen |
+| Display | `VisualModelTest` | 19 | the model between the simulation threads and the display | – |
+| Display | `ActionGridTest` | 19 | action families, short names, fading, field under the mouse | – |
+| Display | `AttributeMatrixTest` | 23 | colour scale, sorting, the two blocks of 50, change mark | – |
+| Display | `ObjectDetailTest` | 20 | detail column, last actions, history of one human, selection by click | – |
+| Display | `PopulationHistoryTest` | 11 | history of all humans: families, mean, percentiles | – |
+| Display | `AutomaticSelectionTest` | 13 | the detail column follows the largest change | – |
 
 ---
 
 ## Conditions for All Tests
 
-- **No database.** The PCT tests work on `InMemoryPerceptionDescriptionStore`, never on `swpool_epd` in MariaDB. `EventInfluenceRulesFromDatabaseTest` is the only test that reads from MariaDB, it only reads and skips itself without a database or without data. No test writes to it; the DCT writers are tested with stores in memory.
+- **No database.** The PCT tests work on `InMemoryPerceptionDescriptionStore`, never on `swpool_epd` in MariaDB. `EventInfluenceRulesFromDatabaseTest`, `TablePoolAttributeDataReaderTest` and one test each in `AttributeCharacterOverviewTest` and `AttributeMatrixTargetsTest` read from MariaDB, they only read. They call `DatabaseAssumptions` first: without a database, with a missing table or with an empty table they are skipped. Errors caused by the data in a filled table let them fail. No test writes to it; the DCT writers are tested with stores in memory.
 - **Test data outside git.** `src/test/swpool_epd.sql`, `src/test/swpool_parseinputs.sql` and `src/test/onlyLs/` are ignored by `.gitignore`. Tests that need `swpool_epd.sql` skip themselves with `assumeTrue` when the file is missing, which is the case in CI. No test reads `swpool_parseinputs.sql` or `onlyLs/`.
 - **Screen.** Only `PerceptionCreationToolTest.dialog_canBeBuilt` needs one; without a screen (headless) it is skipped.
 - **Directions on the map.** Corner bits are bit0 = SO, bit1 = SW, bit2 = NO, bit3 = NW. Inside a tile x points east and y points north. On the map, rows grow to the south.
@@ -227,7 +238,7 @@ A single comparison of an attribute with a constant is decided with a probabilit
 Evaluates a sample of the real rules of `swpool_eid` (every 97th) with all real arrays of `swpool_attribute`.
 
 - **Checks:** the share of objects that change the target attribute follows the sigmoid of the condition attribute (k = 500), per 1000 steps of distance to the threshold, tolerance 0.03. A rule that fires writes m × basis + n (within 1, limited to 0..9999). Other attributes stay unchanged.
-- **Needs:** MariaDB with data, it only reads. Without them it is skipped.
+- **Needs:** MariaDB with data, it only reads. Without a database or with an empty table it is skipped, as well as when the sample has no rule of the checked form. Errors caused by the data let it fail.
 - **Prints:** the table of expected and observed shares as `RULECHECK` lines with `gradlew test -i`.
 
 ---
@@ -264,6 +275,12 @@ Only the empty mapping, nothing is read from the database.
 | `entry_givesTheMatrixIndex_forExactlyThisPair` | an entry applies only to its own pair |
 | `allCornersAreReachable` | −99/−99 and 99/99 work |
 | `indexOfExactlyTheCapacity_countsAsTheOutermostPlace` | an index of exactly ±100 counts as ±99 |
+
+### `DatabaseAssumptionsTest`
+
+`src/test/java/org/socialworld/datasource/mariaDB/DatabaseAssumptionsTest.java`
+
+- **Checks:** when the table cannot be reached, the calling test is aborted and counts as skipped.
 
 ---
 
@@ -408,6 +425,48 @@ Generated matrices, partly calculated with the real `FunctionByMatrix`. Nothing 
 
 - **Checks:** `withDecimalPoint` turns `1,5` into `1.5`, leaves `1.5` and `-20` as they are, and removes surrounding spaces.
 
+### `AttributeCharacterOverviewTest`
+
+`src/test/java/org/socialworld/tools/dct/AttributeCharacterOverviewTest.java`
+
+| Group | Checks |
+|---|---|
+| Content | every character gets its arrays, positive index first, and its matrices; matrices sorted by the smallest drawn distance; the variants of the generator from typical to unusual |
+| Errors | fails without an array or a matrix for a character, for a matrix of two characters, for a mapping to an unknown Gauss index, for a matrix without cells and for an array of an unknown character |
+| Real tables | `read_fitsTheRealTables` reads the database and is skipped without it or with an empty table; errors caused by the data let it fail |
+
+### `AttributeMatrixCellTest`
+
+`src/test/java/org/socialworld/tools/dct/AttributeMatrixCellTest.java`
+
+| Group | Checks |
+|---|---|
+| Diagonal | shows the return rate; above one it shows the growth |
+| Coupling | shows the points per step and the function; a `horizontalMax` outside the diagonal is a constant |
+| Edge cases | a share of zero is empty; an unknown function is shown by its number |
+
+### `AttributeMatrixTargetsTest`
+
+`src/test/java/org/socialworld/tools/dct/AttributeMatrixTargetsTest.java`
+
+| Group | Checks |
+|---|---|
+| Targets | the constant divided by the return rate; no target for hunger and tiredness; a coupling between attributes with targets counts, a coupling of rested hunger does not; finds the targets of the generator |
+| Errors | fails without a return rate and for an unknown function |
+| Real tables | `compute_staysInTheBandsForTheRealTables` reads the database and is skipped without it or with an empty table; errors caused by the data let it fail |
+
+### `TablePoolAttributeDataReaderTest`
+
+`src/test/java/org/socialworld/tools/dct/TablePoolAttributeDataReaderTest.java`
+
+| Group | Checks |
+|---|---|
+| Arrays | all arrays with all values in range |
+| Matrices | every matrix of the Gauss indices; the diagonal is `identical` for every attribute; the row is the source and the column the target |
+| Mapping | all combinations and only known matrices |
+
+- **Needs:** MariaDB with data, only read. Without a database or with an empty table all five tests are skipped, errors caused by the data let them fail.
+
 ---
 
 ## PCT: Perception Creation Tool
@@ -537,11 +596,90 @@ The input field for several slots, with 100 slots (0–99).
 
 ---
 
+## Display
+
+The display of the running simulation (`SimDashboard`). The panels are built but never shown, so no screen is needed. Mouse clicks are simulated by events sent to the panels.
+
+### `VisualModelTest`
+
+`src/test/java/org/socialworld/visualize/VisualModelTest.java`
+
+| Group | Checks |
+|---|---|
+| Actions | a repeated report of the same action is not new, another action is; IDs outside 1..100 are ignored |
+| End of an action | an ended action stays readable; an action that is not done counts as interrupted |
+| Attributes | the first report is no change; changes are calculated per attribute and survive reports without a change; values are copied; the nothing object is ignored |
+| Start values | do not count as a report and do not overwrite a reported value |
+| Threads | a snapshot does not change afterwards; reports from several threads all arrive |
+
+### `ActionGridTest`
+
+`src/test/java/org/socialworld/visualize/ActionGridTest.java`
+
+| Group | Checks |
+|---|---|
+| Families | every `ActionType` except `ignore` has a family; the colours differ from each other and from the idle gray |
+| Short names | every `ActionMode` except `ignore` has a unique name of at most 8 characters |
+| Field | a running action has the full colour, an ended one fades to gray; share of the remaining duration; black or white text by contrast |
+| Mouse | position to ID with IDs starting at 1, positions outside stay in range; tool tip text |
+| Rates | sum of the attribute changes; the rate per second is renewed once per second |
+
+### `AttributeMatrixTest`
+
+`src/test/java/org/socialworld/visualize/AttributeMatrixTest.java`
+
+| Group | Checks |
+|---|---|
+| Colours | three anchors: low, middle, high; values between them |
+| Column heads | two letters, unique, first letter of the attribute; `morals` is `mr` |
+| Sorting | high to low and back; unknown values last in both directions; equal values stay in the order of their IDs; a click cycles through high, low and IDs |
+| Two blocks | a click on the left selects from the first 50, on the right from the second 50; the column does not matter; the sorted list goes on at the top of the right block; a click on a head of the right block sorts, a click on the ID part of the head does not |
+| Change mark | fades over time; gets longer with the size of the change |
+| Tool tip | value, last change and its age; text for an unknown object |
+
+### `ObjectDetailTest`
+
+`src/test/java/org/socialworld/visualize/ObjectDetailTest.java`
+
+| Group | Checks |
+|---|---|
+| Last actions | newest first; the oldest drops out when full; ignored actions are left out; a snapshot does not change afterwards |
+| History of one human | unknown humans are skipped; one sample per interval; oldest first and forgets beyond its length |
+| Texts | current action or idle; change with arrow on the display scale; position in meters with a decimal point; age and interruption |
+| Graphics | share of the bar; the scale of the history follows the values and keeps a smallest span |
+| Selection | a press selects the right human in the grid and in the sorted matrix; a press on the head of the matrix selects nobody |
+
+### `PopulationHistoryTest`
+
+`src/test/java/org/socialworld/visualize/PopulationHistoryTest.java`
+
+| Group | Checks |
+|---|---|
+| Sampling | one sample per second; what is older than five minutes is forgotten |
+| Actions | running actions counted per family; ended and ignored actions left out |
+| Attributes | mean and percentiles only from humans with known attributes; no spread without any; percentiles of 100 values and of a single value |
+| Drawing | stacks add up; time and value to pixels |
+
+### `AutomaticSelectionTest`
+
+`src/test/java/org/socialworld/visualize/AutomaticSelectionTest.java`
+
+| Group | Checks |
+|---|---|
+| Off | the current human stays |
+| Start | changes of the last 5 seconds count at once, older ones do not |
+| Choice | the largest single change wins; a fall counts like a rise; one strong change beats several small ones |
+| Holding time | no switch during the holding time, a switch after it; without a new change the human stays; a change before the last switch does not count again |
+| Stop and texts | stop keeps the human and ends the reason; texts for waiting and for the reason |
+
+---
+
 ## Not Covered
 
 - Simulation run, events, actions, conversation: no tests so far.
+- `SimDashboard` as a whole: window, timer, buttons and reading the position of a human need a running program; only the model and the panels are tested.
 - `Expression` as a whole: only indirectly, through `KnowledgeElementLinesVsJsonTest`, the composer, `BranchingProbabilityTest` and the rule test.
-- Loading from MariaDB (`datasource`): no tests except the reading rule test, so that CI runs without a database. In particular reading matrices and the mapping, and the DCT writers against the real tables.
+- Loading from MariaDB (`datasource`): no tests except the reading tests named under the conditions, so that CI runs without a database. In particular the DCT writers against the real tables.
 - The lookup of the mapping in `CreateAnimal`: only one line, it would need the whole creation of objects.
 - MCT generators and `MapPanel`: no tests; `TileGridCubes` has no caller yet.
 - State2Action and Action2Performer: still on lines, only the arithmetic of the intensity is tested.

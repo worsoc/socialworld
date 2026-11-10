@@ -18,7 +18,6 @@
 package org.socialworld.tools.dct;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assumptions.assumeThat;
 
 import java.util.HashSet;
 import java.util.List;
@@ -28,13 +27,14 @@ import org.junit.jupiter.api.Test;
 import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.calculation.functions.FunctionByTable_Type;
+import org.socialworld.datasource.mariaDB.DatabaseAssumptions;
 import org.socialworld.datasource.pool.GaussPoolAttributeArray;
 import org.socialworld.datasource.pool.GaussPoolAttributeCalculatorMatrix;
 import org.socialworld.tools.dct.AttributeDataReader.MappingEntry;
 import org.socialworld.tools.dct.AttributeDataReader.StoredMatrix;
 
 /**
- * Reads the real tables. The database is only read. Without a database or without data the tests are skipped.
+ * Reads the real tables. The database is only read. Without a database or with an empty table the tests are skipped, errors caused by the data let them fail.
  */
 public class TablePoolAttributeDataReaderTest {
 
@@ -49,18 +49,13 @@ public class TablePoolAttributeDataReaderTest {
 
   private static void read() {
     if (arrays == null) {
-      try {
-        AttributeDataReader reader = new TablePoolAttributeDataReader();
-        mapping = reader.readMapping();
-        matrices = reader.readMatrices();
-        indices = reader.readMatrixIndices();
-        arrays = reader.readArrays();
-      } catch (RuntimeException | LinkageError e) {
-        assumeThat(false).as("no database available: " + e).isTrue();
-      }
+      DatabaseAssumptions.assumeAttributeTablesAreFilled();
+      AttributeDataReader reader = new TablePoolAttributeDataReader();
+      mapping = reader.readMapping();
+      matrices = reader.readMatrices();
+      indices = reader.readMatrixIndices();
+      arrays = reader.readArrays();
     }
-    assumeThat(arrays).as("swgauss_aa").isNotEmpty();
-    assumeThat(matrices).as("swpool_matrix_rowcol").isNotEmpty();
   }
 
   @Test

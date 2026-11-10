@@ -21,7 +21,8 @@ package org.socialworld;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.core.Simulation;
-import org.socialworld.visualize.SimVisual;
+import org.socialworld.visualize.ISimVisualization;
+import org.socialworld.visualize.SimDashboard;
 
 
 
@@ -39,7 +40,7 @@ public class SocialWorld  {
 	private static Simulation simulation;
 	
 	private static boolean  visualize = false;
-	private static SimVisual visualizeSimulation;
+	private static ISimVisualization visualizeSimulation;
 
 /*	private SocialWorld() {
 		super();
@@ -52,7 +53,7 @@ public class SocialWorld  {
 	{
 		//System.out.println("Headless: " + java.awt.GraphicsEnvironment.isHeadless());
 	
-		visualizeSimulation = new SimVisual();
+		visualizeSimulation = new SimDashboard();
 		visualizeSimulation.show();
 
 		
@@ -72,6 +73,7 @@ public class SocialWorld  {
 		
 		simulation.startSimulation();
 		visualize = true;
+		visualizeSimulation.simulationStarted();
 		simulation.stopSimulation();
 		
 	}
@@ -104,7 +106,7 @@ public class SocialWorld  {
 		return currentObject;
 	}
 
-	public static SimVisual getSimVisual() {
+	public static ISimVisualization getSimVisual() {
 		return visualizeSimulation;
 	}
 	
