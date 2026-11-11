@@ -52,7 +52,8 @@ import org.socialworld.propertyChange.ListenedMap;
 /**
  * A second window next to the dashboard: gives a chosen human an action into the
  * pipeline of the running simulation and shows who is within the range of its event.
- * It can also end the running action of a human, e.g. to wake a sleeping one.
+ * It can also end the running action of a human, e.g. to wake a sleeping one, and check
+ * whether the search by position finds every human at its real place.
  * Has to be opened after the simulation has created its objects.
  */
 public final class ActionCreationTool {
@@ -124,6 +125,8 @@ public final class ActionCreationTool {
 		buttonPerform.addActionListener(event -> perform());
 		JButton buttonStop = new JButton("Aktion beenden");
 		buttonStop.addActionListener(event -> stop());
+		JButton buttonCheck = new JButton("Suchbaum prüfen");
+		buttonCheck.addActionListener(event -> checkSearchTree());
 
 		JPanel fields = new JPanel(new GridLayout(0, 1, 0, 4));
 		fields.add(new JLabel("Verursacher (Klick), Versetzen (Ziehen)"));
@@ -139,6 +142,7 @@ public final class ActionCreationTool {
 		fields.add(labelRange);
 		fields.add(buttonPerform);
 		fields.add(buttonStop);
+		fields.add(buttonCheck);
 
 		JPanel controls = new JPanel(new BorderLayout());
 		controls.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
@@ -227,6 +231,27 @@ public final class ActionCreationTool {
 		}
 		else {
 			writeLog("Abgelehnt: " + problem);
+		}
+	}
+
+	private void checkSearchTree() {
+		SearchTreeCheck.Result result;
+		try {
+			result = SearchTreeCheck.checkHumans(HUMAN_COUNT);
+		}
+		catch (RuntimeException exception) {
+			exception.printStackTrace();
+			writeLog("Fehler: " + exception);
+			return;
+		}
+
+		String withoutPosition = result.withoutPosition > 0 ? ", " + result.withoutPosition + " ohne Position" : "";
+		if (result.notFound.isEmpty()) {
+			writeLog("Suchbaum: alle " + result.checked + " Menschen an ihrer Position gefunden" + withoutPosition);
+		}
+		else {
+			writeLog("Suchbaum: " + result.notFound.size() + " von " + result.checked
+					+ " nicht an ihrer Position gefunden: " + result.notFound + withoutPosition);
 		}
 	}
 

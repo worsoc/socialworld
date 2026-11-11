@@ -733,7 +733,7 @@ The picture sequence taken over from the former display `SimVisual`: a heart, th
 
 ## ACT: Action Creation Tool
 
-The tool in `workbench.act` gives a chosen human an action into the normal pipeline of the running simulation: the action is inserted into the human's action list and handled like any other action. Only a human without a running action may get one, and not the same action twice. The running action of a human can also be ended, e.g. to wake a sleeping one. So far only the say family: whisper, normal, scream. All tests run without a simulation, without a database and without a screen; positions are in millimetres.
+The tool in `workbench.act` gives a chosen human an action into the normal pipeline of the running simulation: the action is inserted into the human's action list and handled like any other action. Only a human without a running action may get one, and not the same action twice. The running action of a human can also be ended, e.g. to wake a sleeping one, and the tool can check whether the search by position finds every human at its real place. So far only the say family: whisper, normal, scream. All tests run without a simulation, without a database and without a screen; positions are in millimetres.
 
 ### `ActionRequestTest`
 
@@ -800,7 +800,7 @@ The scale of the range map, on a panel of 648 × 448 pixels.
 
 - Simulation run, events, actions, conversation: no tests so far.
 - `SimDashboard` as a whole: window, timer, buttons and reading the position of a human need a running program; only the model and the panels are tested.
-- ACT as a whole: the window, refusing a busy human or an action already planned, inserting the action into the pipeline, ending a running action and moving a human by drag need a running simulation; only the request, the properties, the range and the scale are tested. The direct perform of the first version was checked by hand on 2026-11-10, the pipeline on 2026-11-11 (busy message and the say shown in the dashboard).
+- ACT as a whole: the window, refusing a busy human or an action already planned, inserting the action into the pipeline, ending a running action, checking the search tree (`SearchTreeCheck`) and moving a human by drag need a running simulation; only the request, the properties, the range and the scale are tested. The direct perform of the first version was checked by hand on 2026-11-10, the pipeline on 2026-11-11 (busy message and the say shown in the dashboard), ending a running action and the search tree check on 2026-11-11 as well (a human dragged far away is found there, and its scream reaches nobody).
 - `Expression` as a whole: only indirectly, through `KnowledgeElementLinesVsJsonTest`, the composer, `BranchingProbabilityTest` and the rule test.
 - Loading from MariaDB (`datasource`): no tests except the reading tests named under the conditions, so that CI runs without a database. In particular the DCT writers against the real tables.
 - The lookup of the mapping in `CreateAnimal`: only one line, it would need the whole creation of objects.
