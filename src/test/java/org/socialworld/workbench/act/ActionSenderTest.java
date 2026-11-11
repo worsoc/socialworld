@@ -85,4 +85,10 @@ public class ActionSenderTest {
 		assertThat(ActionSender.send(new ActionRequest(ActionMode.sayNormal, 1, 10f, 100, -1)))
 				.isEqualTo(Problem.INVALID_DURATION);
 	}
+
+	@Test
+	void doesNotStopForAnInvalidCauser() {
+		assertThat(ActionSender.stop(0)).isEqualTo(Problem.INVALID_CAUSER);
+		assertThat(ActionSender.stop(-1)).isEqualTo(Problem.INVALID_CAUSER);
+	}
 }

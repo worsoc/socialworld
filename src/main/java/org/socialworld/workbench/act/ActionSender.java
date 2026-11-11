@@ -35,6 +35,8 @@ import org.socialworld.objects.Human;
  * Only actions that are going to be performed in principle are given: the human has
  * to exist, must not perform an action at the moment (sleeping included) and must not
  * have the same action planned already.
+ *
+ * The running action of a human can be ended as well, e.g. to wake a sleeping one.
  */
 public final class ActionSender {
 
@@ -62,6 +64,23 @@ public final class ActionSender {
 
 		ActionSay action = new ActionSay(createActionProperties(request, ActualTime.inMilliseconds()));
 		if (!causer.insertAction(token, action)) return ActionRequest.Problem.ALREADY_PLANNED;
+		return ActionRequest.Problem.NONE;
+	}
+
+	/**
+	 * Asks the action handler of the human to end the running action. It does so at its next
+	 * second, with one last calculation as for an interruption; then the human is free.
+	 * Only to be called after the simulation has created its objects.
+	 *
+	 * @return {@code Problem.NONE} if the end was requested, else the reason why not
+	 */
+	public static ActionRequest.Problem stop(int causerObjectId) {
+		if (causerObjectId <= 0) return ActionRequest.Problem.INVALID_CAUSER;
+
+		Human causer = Simulation.getInstance().getObjectMaster().getHumans().get(causerObjectId);
+		if (causer == null) return ActionRequest.Problem.UNKNOWN_CAUSER;
+
+		if (!causer.stopActualAction(AccessTokenAct.getValid())) return ActionRequest.Problem.NOTHING_RUNNING;
 		return ActionRequest.Problem.NONE;
 	}
 

@@ -39,4 +39,12 @@ public class ActionHandlerTest {
 		assertThat(handler.doActualAction((byte) 5)).isEqualTo(ActionHandler.ACTIONHANDLER_RETURN_NOACTION);
 		assertThat(handler.isActionRunning()).isFalse();
 	}
+
+	@Test
+	void newHandler_hasNothingToStop() {
+		ActionHandler handler = new ActionHandler(null);
+
+		assertThat(handler.requestStop()).isFalse();
+		assertThat(handler.doActualAction((byte) 5)).isEqualTo(ActionHandler.ACTIONHANDLER_RETURN_NOACTION);
+	}
 }

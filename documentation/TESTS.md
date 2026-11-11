@@ -6,7 +6,7 @@ What the automated tests check, what they assume, and what they need to run.
 |---|---|
 | **Framework** | JUnit 5 with AssertJ |
 | **Test classes** | 48 |
-| **Test methods** | 456 active, 1 commented out |
+| **Test methods** | 458 active, 1 commented out |
 | **Database** | no test writes to MariaDB; a few tests read from it and skip themselves without it or with an empty table |
 | **Runs in CI** | yes, in a fresh clone without `application.properties` |
 | **Last updated** | 2026-11-11 |
@@ -23,7 +23,7 @@ What the automated tests check, what they assume, and what they need to run.
 | Attributes | `AttributeArrayTest` | 5 | range 0..9999 and the display as 0..99 | – |
 | Core | `TickRandomCacheTest` | 10 | random value per object and tick | – |
 | Core | `TickObjectCooldownTest` | 6 | own step of the matrix with an offset per object | – |
-| Core | `ActionHandlerTest` | 2 | a new action handler has no running action | – |
+| Core | `ActionHandlerTest` | 3 | a new action handler has no running action and nothing to stop | – |
 | Objects | `SimObjectsCompletelyImplemented` | 3 | lexeme mappings of the object enums | – |
 | Calculation | `KnowledgeElementLinesVsJsonTest` | 17 | line and JSON build the same knowledge | partly: no `swpool_epd.sql` |
 | Calculation | `FunctionByTableTest` | 11 | table functions at 0..9999 | – |
@@ -64,7 +64,7 @@ What the automated tests check, what they assume, and what they need to run.
 | Display | `AutomaticSelectionTest` | 13 | the detail column follows the largest change | – |
 | Display | `PictureSequenceTest` | 9 | figures and timing of the picture sequence in the action grid | – |
 | ACT | `ActionRequestTest` | 9 | values and checks of an action request, duration included | – |
-| ACT | `ActionSenderTest` | 5 | properties of the action given into the pipeline, invalid requests are not given | – |
+| ACT | `ActionSenderTest` | 6 | properties of the action given into the pipeline, invalid requests are not given, no stop for an invalid causer | – |
 | ACT | `EventRangeTest` | 14 | say modes, their ranges and the humans within the range | – |
 | ACT | `ActionMapScaleTest` | 11 | world position ↔ pixel on the range map, finding a human under the mouse | – |
 
@@ -152,8 +152,9 @@ Works on its own instances with 10 objects (package-private constructor), not on
 |---|---|
 | `newHandler_hasNoRunningAction` | `isActionRunning()` is false for a new handler |
 | `newHandler_withoutAnAction_doesNothing` | without an action `doActualAction` returns `ACTIONHANDLER_RETURN_NOACTION` and nothing runs |
+| `newHandler_hasNothingToStop` | `requestStop()` is false without a running action, and the handler still does nothing |
 
-- **Not checked:** a running or finished action, because starting one needs a simulation object and the display.
+- **Not checked:** a running or finished action and ending one by `requestStop()`, because starting an action needs a simulation object and the display.
 
 ---
 
@@ -732,7 +733,7 @@ The picture sequence taken over from the former display `SimVisual`: a heart, th
 
 ## ACT: Action Creation Tool
 
-The tool in `workbench.act` gives a chosen human an action into the normal pipeline of the running simulation: the action is inserted into the human's action list and handled like any other action. Only a human without a running action may get one, and not the same action twice. So far only the say family: whisper, normal, scream. All tests run without a simulation, without a database and without a screen; positions are in millimetres.
+The tool in `workbench.act` gives a chosen human an action into the normal pipeline of the running simulation: the action is inserted into the human's action list and handled like any other action. Only a human without a running action may get one, and not the same action twice. The running action of a human can also be ended, e.g. to wake a sleeping one. So far only the say family: whisper, normal, scream. All tests run without a simulation, without a database and without a screen; positions are in millimetres.
 
 ### `ActionRequestTest`
 
@@ -763,6 +764,7 @@ Only what works without a running simulation: every action fetches the simulatio
 | `setsTimesAndDuration` | min time = now, max time = now + `START_WINDOW_IN_MILLISECONDS`, duration from the request |
 | `coversAllStandardPropertiesOfAnAction` | every name of `ActionType.getStandardPropertyNames()` has a valid value |
 | `doesNotSendAnInvalidRequest` | `send` returns the problem of the check for each of the five kinds and gives no action into the pipeline |
+| `doesNotStopForAnInvalidCauser` | `stop` with ID 0 or −1 returns `INVALID_CAUSER` |
 
 ### `EventRangeTest`
 
@@ -798,7 +800,7 @@ The scale of the range map, on a panel of 648 × 448 pixels.
 
 - Simulation run, events, actions, conversation: no tests so far.
 - `SimDashboard` as a whole: window, timer, buttons and reading the position of a human need a running program; only the model and the panels are tested.
-- ACT as a whole: the window, refusing a busy human or an action already planned, inserting the action into the pipeline and moving a human by drag need a running simulation; only the request, the properties, the range and the scale are tested. The direct perform of the first version was checked by hand on 2026-11-10, , the pipeline on 2026-11-11 (busy message and the say shown in the dashboard).
+- ACT as a whole: the window, refusing a busy human or an action already planned, inserting the action into the pipeline, ending a running action and moving a human by drag need a running simulation; only the request, the properties, the range and the scale are tested. The direct perform of the first version was checked by hand on 2026-11-10, the pipeline on 2026-11-11 (busy message and the say shown in the dashboard).
 - `Expression` as a whole: only indirectly, through `KnowledgeElementLinesVsJsonTest`, the composer, `BranchingProbabilityTest` and the rule test.
 - Loading from MariaDB (`datasource`): no tests except the reading tests named under the conditions, so that CI runs without a database. In particular the DCT writers against the real tables.
 - The lookup of the mapping in `CreateAnimal`: only one line, it would need the whole creation of objects.

@@ -52,6 +52,7 @@ import org.socialworld.propertyChange.ListenedMap;
 /**
  * A second window next to the dashboard: gives a chosen human an action into the
  * pipeline of the running simulation and shows who is within the range of its event.
+ * It can also end the running action of a human, e.g. to wake a sleeping one.
  * Has to be opened after the simulation has created its objects.
  */
 public final class ActionCreationTool {
@@ -121,6 +122,8 @@ public final class ActionCreationTool {
 	private JPanel createControls() {
 		JButton buttonPerform = new JButton("Ausführen");
 		buttonPerform.addActionListener(event -> perform());
+		JButton buttonStop = new JButton("Aktion beenden");
+		buttonStop.addActionListener(event -> stop());
 
 		JPanel fields = new JPanel(new GridLayout(0, 1, 0, 4));
 		fields.add(new JLabel("Verursacher (Klick), Versetzen (Ziehen)"));
@@ -135,6 +138,7 @@ public final class ActionCreationTool {
 		fields.add(spinnerDuration);
 		fields.add(labelRange);
 		fields.add(buttonPerform);
+		fields.add(buttonStop);
 
 		JPanel controls = new JPanel(new BorderLayout());
 		controls.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
@@ -199,6 +203,27 @@ public final class ActionCreationTool {
 			List<Integer> inRange = EventRange.getObjectsInRange(causer, EventRange.getRangeInMillimeters(mode), positions);
 			writeLog(String.format(Locale.ROOT, "Mensch %d eingereiht: %s, Intensität %.1f, Priorität %d, Dauer %.1f s, jetzt in Reichweite %s",
 					causer, mode, intensity, priority, duration / 1000.0, inRange));
+		}
+		else {
+			writeLog("Abgelehnt: " + problem);
+		}
+	}
+
+	private void stop() {
+		int causer = (Integer) spinnerCauser.getValue();
+
+		ActionRequest.Problem problem;
+		try {
+			problem = ActionSender.stop(causer);
+		}
+		catch (RuntimeException exception) {
+			exception.printStackTrace();
+			writeLog("Fehler: " + exception);
+			return;
+		}
+
+		if (problem == ActionRequest.Problem.NONE) {
+			writeLog("Mensch " + causer + ": Beenden der laufenden Aktion angefordert, wirkt mit der nächsten Sekunde");
 		}
 		else {
 			writeLog("Abgelehnt: " + problem);

@@ -83,6 +83,12 @@ public class ActionHandler  {
 	 * 
 	 */
 	private long latestExecutionTime;
+
+	/**
+	 * the running action that is to be ended from outside at the next calculation, null if none.
+	 * It is set by another thread, so it is volatile.
+	 */
+	private volatile AbstractAction actionToStop;
 	
 	protected boolean removeFromActionMasterContinueIterator = false;
 
@@ -165,12 +171,23 @@ public class ActionHandler  {
 		secondsSinceLastCalculation = secondsSinceLastCalculation + secondsPast;
 		this.secondOfTheActualMinute = actualSecond;
 
-		if (secondsTillNextCalculation <= 0 || interrupt) {
+		// a stop request only applies to the action that was running when it was made
+		AbstractAction toStop = this.actionToStop;
+		boolean stop = (toStop != null && toStop == this.actualAction && !toStop.isDone());
+		if (toStop != null && !stop) this.actionToStop = null;
+
+		if (secondsTillNextCalculation <= 0 || interrupt || stop) {
 			
 			SocialWorld.startAction(object.getObjectID(), this.actualAction);
 			this.object.doAction(this.actualAction, 1000 * secondsSinceLastCalculation, this);
 			
 			secondsSinceLastCalculation = 0;
+
+			// stopped from outside: the last calculation has been done, now the action ends like a finished one
+			if (stop) {
+				this.actualAction.setDone();
+				this.actionToStop = null;
+			}
 			
 			// if the actual action is executed completely or interrupted
 			// then assign it to the last executed action member
@@ -179,7 +196,7 @@ public class ActionHandler  {
 				SocialWorld.stopAction(object.getObjectID());
 				this.lastExecutedAction = this.actualAction;
 				secondsTillNextCalculation = 0;
-				if (interrupt) {
+				if (interrupt && !stop) {
 					System.out.println("ActionHandler.doActualAction(): interrupt " + this.actualAction.getActor().toString() + " " + action.toString());
 					this.actualAction.setLinkedAction(action);
 					if (this.actualAction.isInterruptable()) {
@@ -238,6 +255,20 @@ public class ActionHandler  {
 	public boolean isActionRunning() {
 		AbstractAction action = this.actualAction;
 		return action != null && !action.isDone();
+	}
+
+	/**
+	 * Asks to end the running action. The action handler does it in its own thread, at its next
+	 * second: one last calculation as for an interruption, then the action is done and leaves the list.
+	 * If the action ends on its own before, the request lapses and does not touch the next action.
+	 *
+	 * @return false if no action is running
+	 */
+	public boolean requestStop() {
+		AbstractAction action = this.actualAction;
+		if (action == null || action.isDone()) return false;
+		this.actionToStop = action;
+		return true;
 	}
 
 	/**

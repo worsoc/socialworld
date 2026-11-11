@@ -395,6 +395,21 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 		}
 		return false;
 	}
+
+	/**
+	 * Asks the object's action handler to end the running action, e.g. to wake a sleeping human.
+	 * The handler does it at its next second, with one last calculation as for an interruption.
+	 * Only the Action Creation Tool may do this.
+	 *
+	 * @param token the token of the caller
+	 * @return false if the caller may not stop or no action is running
+	 */
+	public final boolean stopActualAction(IAccessToken token) {
+		if (token.isValid() && token.getSimulationCluster() == SimulationCluster.act) {
+			return actionHandler.requestStop();
+		}
+		return false;
+	}
 	
 
 	
