@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://gnu.org>.
  */
-package org.socialworld.tools.act;
+package org.socialworld.workbench.act;
 
 import java.awt.Point;
 import java.util.Collection;

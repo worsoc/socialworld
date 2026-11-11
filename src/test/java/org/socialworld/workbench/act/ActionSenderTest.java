@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://gnu.org>.
  */
-package org.socialworld.tools.act;
+package org.socialworld.workbench.act;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,7 +25,7 @@ import org.socialworld.actions.ActionType;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
-import org.socialworld.tools.act.ActionRequest.Problem;
+import org.socialworld.workbench.act.ActionRequest.Problem;
 
 /**
  * Covers what works without a running simulation: creating an action needs one,

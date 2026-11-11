@@ -21,7 +21,7 @@ package org.socialworld;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.core.Simulation;
-import org.socialworld.tools.act.ActionCreationTool;
+import org.socialworld.workbench.act.ActionCreationTool;
 import org.socialworld.visualize.ISimVisualization;
 import org.socialworld.visualize.SimDashboard;
 

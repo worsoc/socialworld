@@ -15,13 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://gnu.org>.
  */
-package org.socialworld.tools.act;
+package org.socialworld.workbench.act;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.socialworld.actions.ActionMode;
-import org.socialworld.tools.act.ActionRequest.Problem;
+import org.socialworld.workbench.act.ActionRequest.Problem;
 
 public class ActionRequestTest {
 

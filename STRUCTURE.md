@@ -89,6 +89,7 @@ The arrows show the strongest import relationships, not all of them.
 | **`conversation`** | 2,377 | 2 % | `█` | Words, sentences, talks |
 | **`collections`** | 2,373 | 2 % | `█` | Search trees and lists, also by position |
 | **`visualize`** | 1,634 | 1 % | `█` | Display of the running simulation |
+| **`workbench`** | 816 | 1 % | `▏` | Developer tools that act on the running simulation from outside |
 | **Rest** | 855 | 1 % | `▏` | `propertyChange`, `data`, main program and constants |
 
 ---
@@ -155,6 +156,14 @@ flowchart LR
 ```
 
 The dashed connection is prepared but not called from anywhere yet. So far the generators only produce large tiles.
+
+## The Workbench
+
+Unlike the toolbox, the workbench does not run beforehand but inside the simulation process, to act on the running world from outside.
+
+| Tool | Package | Lines | Purpose |
+|---|---|--:|---|
+| **ACT**, Action Creation Tool | `workbench.act` | 816 | Lets a chosen human perform a real action; shows the range on a map |
 
 ---
 

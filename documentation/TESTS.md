@@ -5,11 +5,11 @@ What the automated tests check, what they assume, and what they need to run.
 | | |
 |---|---|
 | **Framework** | JUnit 5 with AssertJ |
-| **Test classes** | 41 |
-| **Test methods** | 397 active, 1 commented out |
+| **Test classes** | 47 |
+| **Test methods** | 453 active, 1 commented out |
 | **Database** | no test writes to MariaDB; a few tests read from it and skip themselves without it or with an empty table |
 | **Runs in CI** | yes, in a fresh clone without `application.properties` |
-| **Last updated** | 2026-11-10 |
+| **Last updated** | 2026-11-11 |
 
 > Keep this file up to date: every new or changed test changes this file in the same step.
 
@@ -30,6 +30,7 @@ What the automated tests check, what they assume, and what they need to run.
 | Calculation | `ConstantTest` | 1 | steepness of the sigmoid | – |
 | Calculation | `BranchingProbabilityTest` | 3 | a single comparison is decided by the sigmoid | – |
 | Calculation | `EventInfluenceRulesFromDatabaseTest` | 1 | real rules with real arrays | no database or empty table |
+| Calculation | `PositionCalculatorSectorsTest` | 9 | whether a new position stays in the same search sectors | – |
 | Data | `Action2PerformerDescriptionPoolTest` | 4 | intensity × power, expression parser | – |
 | Data | `FunctionPoolTest` | 2 | building a matrix from flat arrays | – |
 | Data | `GaussPoolAAACMMappingTest` | 4 | mapping of the two drawn indices | – |
@@ -60,6 +61,11 @@ What the automated tests check, what they assume, and what they need to run.
 | Display | `ObjectDetailTest` | 20 | detail column, last actions, history of one human, selection by click | – |
 | Display | `PopulationHistoryTest` | 11 | history of all humans: families, mean, percentiles | – |
 | Display | `AutomaticSelectionTest` | 13 | the detail column follows the largest change | – |
+| Display | `PictureSequenceTest` | 9 | figures and timing of the picture sequence in the action grid | – |
+| ACT | `ActionRequestTest` | 8 | values and checks of an action request | – |
+| ACT | `ActionSenderTest` | 5 | properties of the action to be sent, invalid requests are not sent | – |
+| ACT | `EventRangeTest` | 14 | say modes, their ranges and the humans within the range | – |
+| ACT | `ActionMapScaleTest` | 11 | world position ↔ pixel on the range map, finding a human under the mouse | – |
 
 ---
 
@@ -240,6 +246,27 @@ Evaluates a sample of the real rules of `swpool_eid` (every 97th) with all real 
 - **Checks:** the share of objects that change the target attribute follows the sigmoid of the condition attribute (k = 500), per 1000 steps of distance to the threshold, tolerance 0.03. A rule that fires writes m × basis + n (within 1, limited to 0..9999). Other attributes stay unchanged.
 - **Needs:** MariaDB with data, it only reads. Without a database or with an empty table it is skipped, as well as when the sample has no rule of the checked form. Errors caused by the data let it fail.
 - **Prints:** the table of expected and observed shares as `RULECHECK` lines with `gradlew test -i`.
+
+### `PositionCalculatorSectorsTest`
+
+`src/test/java/org/socialworld/calculation/application/PositionCalculatorSectorsTest.java`
+
+`isInSameSectors` decides whether a moved object has to be sorted anew into the object search (`Simulation.changePosition`). The tests use the search levels of a human: level 8 of the base 9 tree, level 5 of the base 25 tree.
+
+| Test | Checks |
+|---|---|
+| `thePlaceItselfIsInTheSameSectors` | the same position |
+| `aSmallStepStaysInTheSameSectors` | 0/0 → 100/100 |
+| `aChangeOfTheHeightStaysInTheSameSectors` | only z changes (0 → 900) |
+| `aStepAcrossABorderOfTheBase9TreeChangesTheSectors` | x 400 → 600 crosses the border at 500 (sectors of 1 m) |
+| `aStepAlongTheYAxisChangesTheSectorsToo` | the same along y |
+| `aLongWayChangesTheSectors` | −25000/−37000 → 76000/75000 |
+| `comparesOnlyDownToTheLevels` | 400 and 600 are the same at level 7 of base 9, different at level 8 |
+| `comparesTheBase25TreeAsWell` | 400 and 5000 differ in the base 25 tree at level 5, although base 9 at level 1 is the same |
+| `levelZeroAlwaysMeansTheSameSectors` | ±3,000,000 at levels 0/0 |
+
+- **Assumes:** positions are in millimetres, the height does not count.
+- **Not checked:** the re-sorting in `Simulation.changePosition` itself, it needs a running simulation.
 
 ---
 
@@ -672,12 +699,93 @@ The display of the running simulation (`SimDashboard`). The panels are built but
 | Holding time | no switch during the holding time, a switch after it; without a new change the human stays; a change before the last switch does not count again |
 | Stop and texts | stop keeps the human and ends the reason; texts for waiting and for the reason |
 
+### `PictureSequenceTest`
+
+`src/test/java/org/socialworld/visualize/PictureSequenceTest.java`
+
+The picture sequence taken over from the former display `SimVisual`: a heart, then MANU I LOVE U, shown in the action grid.
+
+| Test | Checks |
+|---|---|
+| `blank_hasNoFields` / `everyFigure_hasFields` | the blank figure is empty, every other figure has fields |
+| `heart_isRedAndLiesWhereItLayInTheOldDisplay` | red, 42 fields, e.g. 21 and 84 set, 0 and 24 not |
+| `letters_areBlack` | `M` and `E` are black |
+| `cycle_lastsSixtyTwoTicks` | one cycle is 62 ticks |
+| `figureAt_startsWithAPauseAndThenTheHeart` | ticks 0–4 blank, 5–6 heart, 7 blank |
+| `figureAt_repeatsAfterTheCycle` | after 62 ticks it starts again |
+| `figures_comeInTheOrderOfTheMessage` | heart, M, A, N, U, I, L, O, V, E, U |
+| `grid_hasNoToolTipWhileShowingAFigure` | the action grid shows no tool tip while a figure is on it |
+
+---
+
+## ACT: Action Creation Tool
+
+The tool in `workbench.act` that lets a chosen human perform a real action in the running simulation. So far only the say family: whisper, normal, scream. All tests run without a simulation, without a database and without a screen; positions are in millimetres.
+
+### `ActionRequestTest`
+
+`src/test/java/org/socialworld/workbench/act/ActionRequestTest.java`
+
+What the user entered in the window, before anything is sent.
+
+| Test | Checks |
+|---|---|
+| `keepsItsValues` | mode, causer, intensity and priority come back unchanged |
+| `acceptsAValidRequest` / `acceptsTheLimits` | `NONE` for a valid request, also for intensity 0 and priority 0 and 256 |
+| `rejectsAMissingMode` / `rejectsAModeOfAnotherFamily` | no mode or `walk` → `MODE_NOT_SUPPORTED` |
+| `rejectsAnInvalidCauser` | ID 0 or −1 → `INVALID_CAUSER` |
+| `rejectsAnInvalidIntensity` | negative, NaN, infinite → `INVALID_INTENSITY` |
+| `rejectsAnInvalidPriority` | −1 or 257 → `INVALID_PRIORITY` |
+
+### `ActionSenderTest`
+
+`src/test/java/org/socialworld/workbench/act/ActionSenderTest.java`
+
+Only what works without a running simulation: every action fetches the simulation in its constructor, so creating and performing it is not tested.
+
+| Test | Checks |
+|---|---|
+| `setsTypeAndMode` | type `say`, mode `sayScream` |
+| `setsIntensityAndPriority` | 60.0 and 120 |
+| `setsTimesAndDuration` | min time = now, max time = now + `DURATION_IN_MILLISECONDS`, duration the same |
+| `coversAllStandardPropertiesOfAnAction` | every name of `ActionType.getStandardPropertyNames()` has a valid value |
+| `doesNotSendAnInvalidRequest` | `send` returns the problem of the check for each of the four kinds and does not create an action |
+
+### `EventRangeTest`
+
+`src/test/java/org/socialworld/workbench/act/EventRangeTest.java`
+
+Which humans an action reaches, as drawn on the range map.
+
+| Group | Checks |
+|---|---|
+| Modes | whisper, normal, scream in this order; their events `candidatesSay…`; ranges 1000, 5000 and 10000 mm from the event type; all act in every direction (effect angle > 180°) |
+| Unsupported | `walk` and `null` are not supported, give `EventType.nothing` and range 0 |
+| Distance | exactly at the range counts, 1 mm beyond does not; measured in the plane (3000/4000 is 5000); also around a causer away from the origin; no overflow for `Integer.MIN_VALUE` and `MAX_VALUE` |
+| Result | never the causer, not a human on the very spot of the event, sorted by ID ascending, empty for an unknown causer |
+
+- **Assumes:** the event master sorts out the candidates the same way: at most the range away, and not on the very spot of the event.
+
+### `ActionMapScaleTest`
+
+`src/test/java/org/socialworld/workbench/act/ActionMapScaleTest.java`
+
+The scale of the range map, on a panel of 648 × 448 pixels.
+
+| Group | Checks |
+|---|---|
+| Fitting | all positions lie inside the map and are centred; the same scale on both axes; y grows upwards; a length is scaled like a position |
+| Edge cases | a single position, no position, a panel without a size yet |
+| Back to the world | pixel → position within one pixel, y upwards (for moving a human by drag) |
+| Mouse | the nearest human within the tolerance is found, beyond it `NO_OBJECT` |
+
 ---
 
 ## Not Covered
 
 - Simulation run, events, actions, conversation: no tests so far.
 - `SimDashboard` as a whole: window, timer, buttons and reading the position of a human need a running program; only the model and the panels are tested.
+- ACT as a whole: the window, creating and performing the action, and moving a human by drag need a running simulation; only the request, the properties, the range and the scale are tested. It was checked by hand in a real run on 2026-11-10.
 - `Expression` as a whole: only indirectly, through `KnowledgeElementLinesVsJsonTest`, the composer, `BranchingProbabilityTest` and the rule test.
 - Loading from MariaDB (`datasource`): no tests except the reading tests named under the conditions, so that CI runs without a database. In particular the DCT writers against the real tables.
 - The lookup of the mapping in `CreateAnimal`: only one line, it would need the whole creation of objects.
