@@ -28,19 +28,25 @@ public final class ActionRequest {
 
 	/** The result of a check. */
 	public enum Problem {
-		NONE, MODE_NOT_SUPPORTED, INVALID_CAUSER, UNKNOWN_CAUSER, INVALID_INTENSITY, INVALID_PRIORITY
+		NONE, MODE_NOT_SUPPORTED, INVALID_CAUSER, UNKNOWN_CAUSER, CAUSER_BUSY, ALREADY_PLANNED,
+		INVALID_INTENSITY, INVALID_PRIORITY, INVALID_DURATION
 	}
 
 	private final ActionMode mode;
 	private final int causerObjectId;
 	private final float intensity;
 	private final int priority;
+	private final int durationInMilliseconds;
 
-	public ActionRequest(ActionMode mode, int causerObjectId, float intensity, int priority) {
+	/** The longest duration the tool lets an action have: one hour. */
+	public static final int MAX_DURATION_IN_MILLISECONDS = 3600000;
+
+	public ActionRequest(ActionMode mode, int causerObjectId, float intensity, int priority, int durationInMilliseconds) {
 		this.mode = mode;
 		this.causerObjectId = causerObjectId;
 		this.intensity = intensity;
 		this.priority = priority;
+		this.durationInMilliseconds = durationInMilliseconds;
 	}
 
 	public ActionMode getMode() {
@@ -59,15 +65,22 @@ public final class ActionRequest {
 		return priority;
 	}
 
+	/** A duration of 0 lets the action be performed once and makes it not interruptable. */
+	public int getDurationInMilliseconds() {
+		return durationInMilliseconds;
+	}
+
 	/**
 	 * @return the first problem of this request, {@link Problem#NONE} if there is none.
-	 *         Whether the causer really exists can only be told by a running simulation.
+	 *         Whether the causer really exists and is free, and whether the same action is already
+	 *         planned, can only be told by a running simulation.
 	 */
 	public Problem check() {
 		if (!EventRange.isSupported(mode)) return Problem.MODE_NOT_SUPPORTED;
 		if (causerObjectId <= 0) return Problem.INVALID_CAUSER;
 		if (Float.isNaN(intensity) || Float.isInfinite(intensity) || intensity < 0) return Problem.INVALID_INTENSITY;
 		if (priority < 0 || priority > AbstractAction.MAX_ACTION_PRIORITY) return Problem.INVALID_PRIORITY;
+		if (durationInMilliseconds < 0 || durationInMilliseconds > MAX_DURATION_IN_MILLISECONDS) return Problem.INVALID_DURATION;
 		return Problem.NONE;
 	}
 }

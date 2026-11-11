@@ -36,7 +36,7 @@ public class ActionSenderTest {
 	private static final long NOW = 1234567L;
 
 	private static ValueArrayList properties() {
-		return ActionSender.createActionProperties(new ActionRequest(ActionMode.sayScream, 7, 60f, 120), NOW);
+		return ActionSender.createActionProperties(new ActionRequest(ActionMode.sayScream, 7, 60f, 120, 2500), NOW);
 	}
 
 	private static Object read(String name, Type type) {
@@ -59,9 +59,8 @@ public class ActionSenderTest {
 	void setsTimesAndDuration() {
 		assertThat(read(Value.VALUE_BY_NAME_ACTION_MINTIME, Type.longinteger)).isEqualTo(NOW);
 		assertThat(read(Value.VALUE_BY_NAME_ACTION_MAXTIME, Type.longinteger))
-				.isEqualTo(NOW + ActionSender.DURATION_IN_MILLISECONDS);
-		assertThat(read(Value.VALUE_BY_NAME_ACTION_DURATION, Type.integer))
-				.isEqualTo(ActionSender.DURATION_IN_MILLISECONDS);
+				.isEqualTo(NOW + ActionSender.START_WINDOW_IN_MILLISECONDS);
+		assertThat(read(Value.VALUE_BY_NAME_ACTION_DURATION, Type.integer)).isEqualTo(2500);
 	}
 
 	@Test
@@ -75,13 +74,15 @@ public class ActionSenderTest {
 
 	@Test
 	void doesNotSendAnInvalidRequest() {
-		assertThat(ActionSender.send(new ActionRequest(ActionMode.walk, 1, 10f, 100)))
+		assertThat(ActionSender.send(new ActionRequest(ActionMode.walk, 1, 10f, 100, 1000)))
 				.isEqualTo(Problem.MODE_NOT_SUPPORTED);
-		assertThat(ActionSender.send(new ActionRequest(ActionMode.sayNormal, 0, 10f, 100)))
+		assertThat(ActionSender.send(new ActionRequest(ActionMode.sayNormal, 0, 10f, 100, 1000)))
 				.isEqualTo(Problem.INVALID_CAUSER);
-		assertThat(ActionSender.send(new ActionRequest(ActionMode.sayNormal, 1, -1f, 100)))
+		assertThat(ActionSender.send(new ActionRequest(ActionMode.sayNormal, 1, -1f, 100, 1000)))
 				.isEqualTo(Problem.INVALID_INTENSITY);
-		assertThat(ActionSender.send(new ActionRequest(ActionMode.sayNormal, 1, 10f, 999)))
+		assertThat(ActionSender.send(new ActionRequest(ActionMode.sayNormal, 1, 10f, 999, 1000)))
 				.isEqualTo(Problem.INVALID_PRIORITY);
+		assertThat(ActionSender.send(new ActionRequest(ActionMode.sayNormal, 1, 10f, 100, -1)))
+				.isEqualTo(Problem.INVALID_DURATION);
 	}
 }

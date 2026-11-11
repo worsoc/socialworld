@@ -50,8 +50,8 @@ import org.socialworld.objects.Human;
 import org.socialworld.propertyChange.ListenedMap;
 
 /**
- * A second window next to the dashboard: lets a chosen human perform an action in
- * the running simulation and shows who is within the range of its event.
+ * A second window next to the dashboard: gives a chosen human an action into the
+ * pipeline of the running simulation and shows who is within the range of its event.
  * Has to be opened after the simulation has created its objects.
  */
 public final class ActionCreationTool {
@@ -60,6 +60,7 @@ public final class ActionCreationTool {
 	private static final int HUMAN_COUNT = 100;
 	private static final float DEFAULT_INTENSITY = 60f;
 	private static final int DEFAULT_PRIORITY = 100;
+	private static final double DEFAULT_DURATION_IN_SECONDS = 1;
 
 	private static final AccessTokenAct token = AccessTokenAct.getValid();
 
@@ -68,6 +69,8 @@ public final class ActionCreationTool {
 	private final JComboBox<ActionMode> comboMode = new JComboBox<ActionMode>(EventRange.getSupportedModes().toArray(new ActionMode[0]));
 	private final JSpinner spinnerIntensity = new JSpinner(new SpinnerNumberModel(DEFAULT_INTENSITY, 0d, 9999d, 1d));
 	private final JSpinner spinnerPriority = new JSpinner(new SpinnerNumberModel(DEFAULT_PRIORITY, 0, 256, 1));
+	private final JSpinner spinnerDuration = new JSpinner(new SpinnerNumberModel(DEFAULT_DURATION_IN_SECONDS, 0d,
+			ActionRequest.MAX_DURATION_IN_MILLISECONDS / 1000d, 0.5d));
 	private final JLabel labelRange = new JLabel(" ");
 	private final JTextArea log = new JTextArea(9, 40);
 
@@ -128,6 +131,8 @@ public final class ActionCreationTool {
 		fields.add(spinnerIntensity);
 		fields.add(new JLabel("Priorität"));
 		fields.add(spinnerPriority);
+		fields.add(new JLabel("Dauer in s (0: einmal, nicht unterbrechbar)"));
+		fields.add(spinnerDuration);
 		fields.add(labelRange);
 		fields.add(buttonPerform);
 
@@ -177,10 +182,12 @@ public final class ActionCreationTool {
 		int causer = (Integer) spinnerCauser.getValue();
 		float intensity = ((Number) spinnerIntensity.getValue()).floatValue();
 		int priority = (Integer) spinnerPriority.getValue();
+		double durationInSeconds = ((Number) spinnerDuration.getValue()).doubleValue();
+		int duration = (int) Math.round(durationInSeconds * 1000);
 
 		ActionRequest.Problem problem;
 		try {
-			problem = ActionSender.send(new ActionRequest(mode, causer, intensity, priority));
+			problem = ActionSender.send(new ActionRequest(mode, causer, intensity, priority, duration));
 		}
 		catch (RuntimeException exception) {
 			exception.printStackTrace();
@@ -190,7 +197,8 @@ public final class ActionCreationTool {
 
 		if (problem == ActionRequest.Problem.NONE) {
 			List<Integer> inRange = EventRange.getObjectsInRange(causer, EventRange.getRangeInMillimeters(mode), positions);
-			writeLog("Mensch " + causer + ": " + mode + ", Intensität " + intensity + ", in Reichweite " + inRange);
+			writeLog(String.format(Locale.ROOT, "Mensch %d eingereiht: %s, Intensität %.1f, Priorität %d, Dauer %.1f s, jetzt in Reichweite %s",
+					causer, mode, intensity, priority, duration / 1000.0, inRange));
 		}
 		else {
 			writeLog("Abgelehnt: " + problem);

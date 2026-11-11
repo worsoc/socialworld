@@ -362,6 +362,39 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 			Simulation.getInstance().changePosition(this);
 		}
 	}
+
+	/**
+	 * Tells whether the object performs an action at the moment, sleeping included.
+	 * Only the Action Creation Tool may ask, for any other caller the answer is false.
+	 *
+	 * @param token the token of the caller
+	 * @return true while an action has been started and is not done yet
+	 */
+	public final boolean isActing(IAccessToken token) {
+		if (token.isValid() && token.getSimulationCluster() == SimulationCluster.act) {
+			return actionHandler.isActionRunning();
+		}
+		return false;
+	}
+
+	/**
+	 * Inserts an action from outside into the object's action list, the same way as
+	 * {@link #setAction(AbstractAction, WriteAccessToSimulationObject)} does for the simulation.
+	 * From there it is handled like any other action. Only the Action Creation Tool may do this.
+	 *
+	 * @param token the token of the caller
+	 * @param newAction the action to insert
+	 * @return false if the caller may not insert or the same action is in the list already
+	 */
+	public final boolean insertAction(IAccessToken token, AbstractAction newAction) {
+		if (token.isValid() && token.getSimulationCluster() == SimulationCluster.act) {
+			if (actionHandler.findAction(new SearchActionDescription(newAction)) == ActionNothing.getInstance()) {
+				actionHandler.insertAction(newAction);
+				return true;
+			}
+		}
+		return false;
+	}
 	
 
 	

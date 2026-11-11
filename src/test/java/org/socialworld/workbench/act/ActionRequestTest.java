@@ -25,18 +25,25 @@ import org.socialworld.workbench.act.ActionRequest.Problem;
 
 public class ActionRequestTest {
 
+	private static final int DURATION = 1000;
+
 	private static Problem check(ActionMode mode, int causer, float intensity, int priority) {
-		return new ActionRequest(mode, causer, intensity, priority).check();
+		return check(mode, causer, intensity, priority, DURATION);
+	}
+
+	private static Problem check(ActionMode mode, int causer, float intensity, int priority, int duration) {
+		return new ActionRequest(mode, causer, intensity, priority, duration).check();
 	}
 
 	@Test
 	void keepsItsValues() {
-		ActionRequest request = new ActionRequest(ActionMode.sayScream, 12, 60f, 100);
+		ActionRequest request = new ActionRequest(ActionMode.sayScream, 12, 60f, 100, 2500);
 
 		assertThat(request.getMode()).isEqualTo(ActionMode.sayScream);
 		assertThat(request.getCauserObjectId()).isEqualTo(12);
 		assertThat(request.getIntensity()).isEqualTo(60f);
 		assertThat(request.getPriority()).isEqualTo(100);
+		assertThat(request.getDurationInMilliseconds()).isEqualTo(2500);
 	}
 
 	@Test
@@ -48,6 +55,8 @@ public class ActionRequestTest {
 	void acceptsTheLimits() {
 		assertThat(check(ActionMode.sayNormal, 1, 0f, 0)).isEqualTo(Problem.NONE);
 		assertThat(check(ActionMode.sayNormal, 1, 0f, 256)).isEqualTo(Problem.NONE);
+		assertThat(check(ActionMode.sayNormal, 1, 10f, 100, 0)).isEqualTo(Problem.NONE);
+		assertThat(check(ActionMode.sayNormal, 1, 10f, 100, ActionRequest.MAX_DURATION_IN_MILLISECONDS)).isEqualTo(Problem.NONE);
 	}
 
 	@Test
@@ -77,5 +86,12 @@ public class ActionRequestTest {
 	void rejectsAnInvalidPriority() {
 		assertThat(check(ActionMode.sayNormal, 1, 10f, -1)).isEqualTo(Problem.INVALID_PRIORITY);
 		assertThat(check(ActionMode.sayNormal, 1, 10f, 257)).isEqualTo(Problem.INVALID_PRIORITY);
+	}
+
+	@Test
+	void rejectsAnInvalidDuration() {
+		assertThat(check(ActionMode.sayNormal, 1, 10f, 100, -1)).isEqualTo(Problem.INVALID_DURATION);
+		assertThat(check(ActionMode.sayNormal, 1, 10f, 100, ActionRequest.MAX_DURATION_IN_MILLISECONDS + 1))
+				.isEqualTo(Problem.INVALID_DURATION);
 	}
 }

@@ -5,8 +5,8 @@ What the automated tests check, what they assume, and what they need to run.
 | | |
 |---|---|
 | **Framework** | JUnit 5 with AssertJ |
-| **Test classes** | 47 |
-| **Test methods** | 453 active, 1 commented out |
+| **Test classes** | 48 |
+| **Test methods** | 456 active, 1 commented out |
 | **Database** | no test writes to MariaDB; a few tests read from it and skip themselves without it or with an empty table |
 | **Runs in CI** | yes, in a fresh clone without `application.properties` |
 | **Last updated** | 2026-11-11 |
@@ -23,6 +23,7 @@ What the automated tests check, what they assume, and what they need to run.
 | Attributes | `AttributeArrayTest` | 5 | range 0..9999 and the display as 0..99 | – |
 | Core | `TickRandomCacheTest` | 10 | random value per object and tick | – |
 | Core | `TickObjectCooldownTest` | 6 | own step of the matrix with an offset per object | – |
+| Core | `ActionHandlerTest` | 2 | a new action handler has no running action | – |
 | Objects | `SimObjectsCompletelyImplemented` | 3 | lexeme mappings of the object enums | – |
 | Calculation | `KnowledgeElementLinesVsJsonTest` | 17 | line and JSON build the same knowledge | partly: no `swpool_epd.sql` |
 | Calculation | `FunctionByTableTest` | 11 | table functions at 0..9999 | – |
@@ -62,8 +63,8 @@ What the automated tests check, what they assume, and what they need to run.
 | Display | `PopulationHistoryTest` | 11 | history of all humans: families, mean, percentiles | – |
 | Display | `AutomaticSelectionTest` | 13 | the detail column follows the largest change | – |
 | Display | `PictureSequenceTest` | 9 | figures and timing of the picture sequence in the action grid | – |
-| ACT | `ActionRequestTest` | 8 | values and checks of an action request | – |
-| ACT | `ActionSenderTest` | 5 | properties of the action to be sent, invalid requests are not sent | – |
+| ACT | `ActionRequestTest` | 9 | values and checks of an action request, duration included | – |
+| ACT | `ActionSenderTest` | 5 | properties of the action given into the pipeline, invalid requests are not given | – |
 | ACT | `EventRangeTest` | 14 | say modes, their ranges and the humans within the range | – |
 | ACT | `ActionMapScaleTest` | 11 | world position ↔ pixel on the range map, finding a human under the mouse | – |
 
@@ -142,6 +143,17 @@ Works on its own instances with 10 objects (package-private constructor), not on
 | `aMissedSecond_isMadeUpInTheSamePeriod` | a missed second is made up, never a second release in a period |
 | `objectOutsideOfTheRange_isLetThrough` | an ID outside of the range is let through |
 | `otherCooldownTypes_areNotDisturbed` | other cooldown types are independent |
+
+### `ActionHandlerTest`
+
+`src/test/java/org/socialworld/core/ActionHandlerTest.java`
+
+| Test | Checks |
+|---|---|
+| `newHandler_hasNoRunningAction` | `isActionRunning()` is false for a new handler |
+| `newHandler_withoutAnAction_doesNothing` | without an action `doActualAction` returns `ACTIONHANDLER_RETURN_NOACTION` and nothing runs |
+
+- **Not checked:** a running or finished action, because starting one needs a simulation object and the display.
 
 ---
 
@@ -720,7 +732,7 @@ The picture sequence taken over from the former display `SimVisual`: a heart, th
 
 ## ACT: Action Creation Tool
 
-The tool in `workbench.act` that lets a chosen human perform a real action in the running simulation. So far only the say family: whisper, normal, scream. All tests run without a simulation, without a database and without a screen; positions are in millimetres.
+The tool in `workbench.act` gives a chosen human an action into the normal pipeline of the running simulation: the action is inserted into the human's action list and handled like any other action. Only a human without a running action may get one, and not the same action twice. So far only the say family: whisper, normal, scream. All tests run without a simulation, without a database and without a screen; positions are in millimetres.
 
 ### `ActionRequestTest`
 
@@ -730,26 +742,27 @@ What the user entered in the window, before anything is sent.
 
 | Test | Checks |
 |---|---|
-| `keepsItsValues` | mode, causer, intensity and priority come back unchanged |
-| `acceptsAValidRequest` / `acceptsTheLimits` | `NONE` for a valid request, also for intensity 0 and priority 0 and 256 |
+| `keepsItsValues` | mode, causer, intensity, priority and duration come back unchanged |
+| `acceptsAValidRequest` / `acceptsTheLimits` | `NONE` for a valid request, also for intensity 0, priority 0 and 256, duration 0 and one hour |
 | `rejectsAMissingMode` / `rejectsAModeOfAnotherFamily` | no mode or `walk` → `MODE_NOT_SUPPORTED` |
 | `rejectsAnInvalidCauser` | ID 0 or −1 → `INVALID_CAUSER` |
 | `rejectsAnInvalidIntensity` | negative, NaN, infinite → `INVALID_INTENSITY` |
 | `rejectsAnInvalidPriority` | −1 or 257 → `INVALID_PRIORITY` |
+| `rejectsAnInvalidDuration` | −1 ms or more than one hour → `INVALID_DURATION` |
 
 ### `ActionSenderTest`
 
 `src/test/java/org/socialworld/workbench/act/ActionSenderTest.java`
 
-Only what works without a running simulation: every action fetches the simulation in its constructor, so creating and performing it is not tested.
+Only what works without a running simulation: every action fetches the simulation in its constructor, so creating the action and inserting it into the action list are not tested.
 
 | Test | Checks |
 |---|---|
 | `setsTypeAndMode` | type `say`, mode `sayScream` |
 | `setsIntensityAndPriority` | 60.0 and 120 |
-| `setsTimesAndDuration` | min time = now, max time = now + `DURATION_IN_MILLISECONDS`, duration the same |
+| `setsTimesAndDuration` | min time = now, max time = now + `START_WINDOW_IN_MILLISECONDS`, duration from the request |
 | `coversAllStandardPropertiesOfAnAction` | every name of `ActionType.getStandardPropertyNames()` has a valid value |
-| `doesNotSendAnInvalidRequest` | `send` returns the problem of the check for each of the four kinds and does not create an action |
+| `doesNotSendAnInvalidRequest` | `send` returns the problem of the check for each of the five kinds and gives no action into the pipeline |
 
 ### `EventRangeTest`
 
@@ -785,7 +798,7 @@ The scale of the range map, on a panel of 648 × 448 pixels.
 
 - Simulation run, events, actions, conversation: no tests so far.
 - `SimDashboard` as a whole: window, timer, buttons and reading the position of a human need a running program; only the model and the panels are tested.
-- ACT as a whole: the window, creating and performing the action, and moving a human by drag need a running simulation; only the request, the properties, the range and the scale are tested. It was checked by hand in a real run on 2026-11-10.
+- ACT as a whole: the window, refusing a busy human or an action already planned, inserting the action into the pipeline and moving a human by drag need a running simulation; only the request, the properties, the range and the scale are tested. The direct perform of the first version was checked by hand on 2026-11-10, , the pipeline on 2026-11-11 (busy message and the say shown in the dashboard).
 - `Expression` as a whole: only indirectly, through `KnowledgeElementLinesVsJsonTest`, the composer, `BranchingProbabilityTest` and the rule test.
 - Loading from MariaDB (`datasource`): no tests except the reading tests named under the conditions, so that CI runs without a database. In particular the DCT writers against the real tables.
 - The lookup of the mapping in `CreateAnimal`: only one line, it would need the whole creation of objects.
