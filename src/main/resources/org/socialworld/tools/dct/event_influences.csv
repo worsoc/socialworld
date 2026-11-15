@@ -1,0 +1,440 @@
+# Event influences per character and situation.
+# Source for the mass generation in CreationTool_EventInfluenceDescription (influence type = character number - 1).
+# Concept: ~/worsoc/concept/eid_regeln_konzept.md, sections 6 to 8.
+#
+# character;situation;sentence;attribute;below;lowerHalf;upperHalf;above
+#
+# character  number in characters.csv (1..100)
+# situation  number of the situation (1..25), see the situation list in the concept
+# sentence   what the situation means to this character, in plain words
+# attribute  attribute that changes, one line per attribute
+# below .. above  step per event (integer) depending on the current value,
+#            measured at the character's band [low, high] for this attribute:
+#            below = value < low, lowerHalf = low <= value < middle,
+#            upperHalf = middle <= value < high, above = value >= high
+#            all four steps of a line have the same sign (or 0)
+# A line with an empty attribute only records the sentence: the situation changes nothing for this character.
+#
+# 1 farmer: middle-aged, steady and hard-working
+1;1;After a long day in the fields the farmer sleeps deeply. He wakes up rested, in a fair mood, ready for breakfast and with his strength back.;tiredness;-5;-35;-50;-60
+1;1;After a long day in the fields the farmer sleeps deeply. He wakes up rested, in a fair mood, ready for breakfast and with his strength back.;hunger;15;15;10;2
+1;1;After a long day in the fields the farmer sleeps deeply. He wakes up rested, in a fair mood, ready for breakfast and with his strength back.;mood;5;5;3;1
+1;1;After a long day in the fields the farmer sleeps deeply. He wakes up rested, in a fair mood, ready for breakfast and with his strength back.;power;3;3;2;0
+1;2;A drink of water quenches the farmer's thirst and refreshes him a little for his work.;hunger;-10;-60;-100;-100
+1;2;A drink of water quenches the farmer's thirst and refreshes him a little for his work.;tiredness;-2;-10;-20;-20
+1;3;The farmer eats plain, solid food. It fills him, pleases him in a modest way and makes him a little sluggish.;hunger;-3;-20;-30;-35
+1;3;The farmer eats plain, solid food. It fills him, pleases him in a modest way and makes him a little sluggish.;mood;6;6;3;1
+1;3;The farmer eats plain, solid food. It fills him, pleases him in a modest way and makes him a little sluggish.;tiredness;4;4;2;1
+1;4;Relieving himself is nothing special for the farmer. Afterwards he feels a little lighter.;mood;80;60;30;5
+1;5;Walking is the farmer's daily business. Being strong, he tires only slowly, but over time he gets hungry.;tiredness;8;6;4;1
+1;5;Walking is the farmer's daily business. Being strong, he tires only slowly, but over time he gets hungry.;hunger;3;3;2;1
+1;6;The farmer examines things only as far as his work needs it. What he finds out does not change how he feels.;;;;;
+1;7;Touching something is part of the farmer's work and leaves him as he is.;;;;;
+1;8;Taking something for himself pleases the farmer a little, no more than is reasonable.;mood;20;20;10;2
+1;9;Putting things down or away is plain routine for the farmer and does not touch him.;;;;;
+1;10;Working with tools is what the farmer does all day. It tires him slowly but steadily and makes him hungry.;tiredness;3;2;2;0
+1;10;Working with tools is what the farmer does all day. It tires him slowly but steadily and makes him hungry.;hunger;1;1;1;0
+1;11;The farmer is no fighter. Striking out costs him an effort, and his conscience leaves him uneasy, even though he dared it.;tiredness;40;30;20;5
+1;11;The farmer is no fighter. Striking out costs him an effort, and his conscience leaves him uneasy, even though he dared it.;mood;-5;-30;-50;-50
+1;11;The farmer is no fighter. Striking out costs him an effort, and his conscience leaves him uneasy, even though he dared it.;courage;20;20;10;2
+1;12;The farmer listens patiently. What he hears may tell him something, but it does not stir him.;;;;;
+1;13;Being told what to do is normal for the farmer as long as it makes sense. He takes it with a little grumbling.;mood;-2;-10;-15;-15
+1;14;When the farmer finally understands something, he is satisfied.;mood;20;20;10;2
+1;15;The farmer speaks plainly and only when there is something to say. Talking costs him nothing and does him a little good.;mood;10;10;5;1
+1;16;The farmer is glad to be asked. It shows that people value his experience.;mood;30;30;15;2
+1;17;An answer settles the matter for the farmer, and that contents him.;mood;10;10;5;1
+1;18;Being shouted at puts the farmer off. He gets annoyed but stays steady.;mood;-10;-60;-100;-100
+1;19;Someone moving close to him makes the farmer watchful, but a steady man like him is not easily unsettled.;;;;;
+1;20;A blow with a weapon frightens and hurts the farmer. He is shaken, but his steady nature keeps him from panic.;mood;-30;-300;-500;-500
+1;20;A blow with a weapon frightens and hurts the farmer. He is shaken, but his steady nature keeps him from panic.;courage;-20;-150;-250;-250
+1;20;A blow with a weapon frightens and hurts the farmer. He is shaken, but his steady nature keeps him from panic.;power;-20;-100;-150;-150
+1;21;A punch makes the strong farmer angry rather than afraid. It hurts, but he can take it.;mood;-10;-100;-200;-200
+1;21;A punch makes the strong farmer angry rather than afraid. It hurts, but he can take it.;courage;20;20;10;2
+1;21;A punch makes the strong farmer angry rather than afraid. It hurts, but he can take it.;power;-2;-10;-20;-20
+1;22;Talk nearby is none of the farmer's business and leaves him as he is.;;;;;
+1;23;A scream nearby startles the farmer for a moment.;mood;-2;-20;-30;-30
+1;23;A scream nearby startles the farmer for a moment.;courage;-2;-10;-20;-20
+1;24;The presence of others is everyday life for the farmer and does not change him.;;;;;
+1;25;Seeing people walk about is everyday life for the farmer. Only someone running or sneaking makes him a little uneasy.;mood;-1;-5;-10;-10
+#
+# 2 farmer's wife: mother of four, practical, always on her feet
+2;1;With four children in the house the farmer's wife sleeps lightly. The night helps, but she never quite catches up.;tiredness;-4;-25;-40;-50
+2;1;With four children in the house the farmer's wife sleeps lightly. The night helps, but she never quite catches up.;hunger;10;10;5;1
+2;1;With four children in the house the farmer's wife sleeps lightly. The night helps, but she never quite catches up.;mood;3;3;2;1
+2;1;With four children in the house the farmer's wife sleeps lightly. The night helps, but she never quite catches up.;power;3;3;2;0
+2;2;A quick drink between two chores quenches her thirst and refreshes her a little.;hunger;-10;-60;-100;-100
+2;2;A quick drink between two chores quenches her thirst and refreshes her a little.;tiredness;-2;-10;-20;-20
+2;3;She eats quickly between her chores. It fills her and does her good, but there is no time to get sluggish.;hunger;-3;-20;-30;-35
+2;3;She eats quickly between her chores. It fills her and does her good, but there is no time to get sluggish.;mood;4;4;2;1
+2;3;She eats quickly between her chores. It fills her and does her good, but there is no time to get sluggish.;tiredness;2;2;1;0
+2;4;Relieving herself is a short break she hardly has time for.;mood;50;40;20;3
+2;5;She is on her feet all day and used to it. Walking tires her only slowly.;tiredness;5;4;3;1
+2;5;She is on her feet all day and used to it. Walking tires her only slowly.;hunger;2;2;1;1
+2;6;She looks at things only to see whether they are fit for use. It does not change how she feels.;;;;;
+2;7;Touching things is part of her housework and leaves her as she is.;;;;;
+2;8;Taking something useful for the household pleases her a little.;mood;10;10;5;1
+2;9;Putting things away is plain housework for her.;;;;;
+2;10;Housework with tools and pots never ends. It tires her steadily and makes her hungry.;tiredness;3;3;2;0
+2;10;Housework with tools and pots never ends. It tires her steadily and makes her hungry.;hunger;1;1;1;0
+2;11;She is no fighter, and her strong sense of right and wrong weighs heavily on her when she strikes out.;tiredness;40;30;20;5
+2;11;She is no fighter, and her strong sense of right and wrong weighs heavily on her when she strikes out.;mood;-10;-60;-100;-100
+2;11;She is no fighter, and her strong sense of right and wrong weighs heavily on her when she strikes out.;courage;10;10;5;1
+2;12;She listens with half an ear while she works. It does not stir her.;;;;;
+2;13;She does what is necessary, but in her own house she does not like to be told what to do.;mood;-5;-20;-30;-30
+2;14;Understanding something is a small relief in her busy day.;mood;15;15;8;2
+2;15;Talking to people is part of her life, and it does her good.;mood;15;15;8;2
+2;16;Being asked for advice pleases her. She knows how to run a household.;mood;30;30;15;2
+2;17;An answer settles a question and saves her time.;mood;10;10;5;1
+2;18;Being shouted at hurts her, but she holds her ground.;mood;-10;-80;-120;-120
+2;19;Someone coming close makes the mother watchful, thinking of her children.;mood;0;-1;-1;-1
+2;20;A blow with a weapon terrifies and hurts her. She is badly shaken.;mood;-40;-350;-550;-550
+2;20;A blow with a weapon terrifies and hurts her. She is badly shaken.;courage;-30;-200;-300;-300
+2;20;A blow with a weapon terrifies and hurts her. She is badly shaken.;power;-20;-100;-150;-150
+2;21;A punch frightens and hurts her. She is not used to violence.;mood;-20;-150;-250;-250
+2;21;A punch frightens and hurts her. She is not used to violence.;courage;-10;-50;-80;-80
+2;21;A punch frightens and hurts her. She is not used to violence.;power;-5;-20;-40;-40
+2;22;Talk nearby is not her business while there is work to do.;;;;;
+2;23;A scream nearby goes right through the mother, she fears for her children.;mood;-5;-40;-60;-60
+2;23;A scream nearby goes right through the mother, she fears for her children.;courage;-2;-10;-20;-20
+2;24;The presence of others is everyday life for her.;;;;;
+2;25;People walking about are no concern to her. Someone running or sneaking worries her because of the children.;mood;-2;-10;-15;-15
+#
+# 3 farmhand: strong, unambitious, likes his food
+3;1;The farmhand sleeps like a log. He wakes up rested, strong and hungry.;tiredness;-6;-40;-60;-70
+3;1;The farmhand sleeps like a log. He wakes up rested, strong and hungry.;hunger;20;20;15;3
+3;1;The farmhand sleeps like a log. He wakes up rested, strong and hungry.;mood;5;5;3;1
+3;1;The farmhand sleeps like a log. He wakes up rested, strong and hungry.;power;3;3;2;0
+3;2;A drink quenches his thirst and refreshes him a little.;hunger;-10;-60;-100;-100
+3;2;A drink quenches his thirst and refreshes him a little.;tiredness;-2;-10;-20;-20
+3;3;Eating is the best part of the farmhand's day. A good meal makes him really happy and pleasantly sluggish.;hunger;-3;-20;-30;-35
+3;3;Eating is the best part of the farmhand's day. A good meal makes him really happy and pleasantly sluggish.;mood;12;12;6;2
+3;3;Eating is the best part of the farmhand's day. A good meal makes him really happy and pleasantly sluggish.;tiredness;6;6;3;1
+3;4;Relieving himself is nothing special for him. Afterwards he feels a little lighter.;mood;80;60;30;5
+3;5;Strong as he is, walking hardly tires him, but it makes him hungry.;tiredness;6;5;3;1
+3;5;Strong as he is, walking hardly tires him, but it makes him hungry.;hunger;4;4;3;1
+3;6;He looks at things without much interest. It does not change how he feels.;;;;;
+3;7;Touching something tells him what he needs to know and leaves him as he is.;;;;;
+3;8;Owning things means little to him. Taking something pleases him only a bit.;mood;5;5;2;0
+3;9;Putting things down is nothing to him.;;;;;
+3;10;Hard work with tools is easy for the strong farmhand, but it makes him hungry.;tiredness;2;2;1;0
+3;10;Hard work with tools is easy for the strong farmhand, but it makes him hungry.;hunger;2;2;1;0
+3;11;Striking out does not cost the strong farmhand much. It bothers him a little and makes him bolder.;tiredness;20;15;10;2
+3;11;Striking out does not cost the strong farmhand much. It bothers him a little and makes him bolder.;mood;-2;-10;-20;-20
+3;11;Striking out does not cost the strong farmhand much. It bothers him a little and makes him bolder.;courage;30;30;15;3
+3;12;He listens without much thought. It does not stir him.;;;;;
+3;13;Being told what to do is his daily lot. He does it without a thought.;;;;;
+3;14;Understanding something pleases him only a little.;mood;5;5;2;1
+3;15;He is a man of few words. Talking does him a little good.;mood;5;5;2;1
+3;16;He is rarely asked anything. When he is, he is a little proud.;mood;20;20;10;2
+3;17;An answer is fine with him, whatever it is.;;;;;
+3;18;He is used to being shouted at. It annoys him a little.;mood;-5;-30;-50;-50
+3;19;Someone coming close does not bother the strong farmhand.;;;;;
+3;20;A blow with a weapon hurts and shocks even the strong farmhand.;mood;-20;-250;-400;-400
+3;20;A blow with a weapon hurts and shocks even the strong farmhand.;courage;-10;-80;-150;-150
+3;20;A blow with a weapon hurts and shocks even the strong farmhand.;power;-15;-80;-120;-120
+3;21;A punch makes the farmhand angry. He is strong enough to take it and would rather hit back.;mood;-5;-60;-120;-120
+3;21;A punch makes the farmhand angry. He is strong enough to take it and would rather hit back.;courage;30;30;15;3
+3;21;A punch makes the farmhand angry. He is strong enough to take it and would rather hit back.;power;-1;-5;-10;-10
+3;22;Talk nearby does not interest him.;;;;;
+3;23;A scream nearby makes him look up, nothing more.;mood;-1;-10;-20;-20
+3;24;Others around him do not change him.;;;;;
+3;25;Whether people walk, run or sneak, he hardly notices.;;;;;
+#
+# 4 maid: diligent, pious, quiet
+4;1;The maid works late and gets up early. Her short night helps her, but not enough.;tiredness;-4;-30;-45;-55
+4;1;The maid works late and gets up early. Her short night helps her, but not enough.;hunger;10;10;5;1
+4;1;The maid works late and gets up early. Her short night helps her, but not enough.;mood;5;5;3;1
+4;1;The maid works late and gets up early. Her short night helps her, but not enough.;power;2;2;1;0
+4;2;A drink of water refreshes her a little.;hunger;-10;-60;-100;-100
+4;2;A drink of water refreshes her a little.;tiredness;-2;-10;-20;-20
+4;3;She eats modestly and is grateful for it.;hunger;-3;-20;-30;-35
+4;3;She eats modestly and is grateful for it.;mood;4;4;2;1
+4;3;She eats modestly and is grateful for it.;tiredness;2;2;1;0
+4;4;Relieving herself is a quick, discreet matter.;mood;50;40;20;3
+4;5;She walks many errands every day. It tires her a little.;tiredness;6;5;3;1
+4;5;She walks many errands every day. It tires her a little.;hunger;2;2;1;1
+4;6;She looks at things carefully because she wants to do her work well. It does not change how she feels.;;;;;
+4;7;Touching things is part of her work.;;;;;
+4;8;She seldom takes anything for herself. It pleases her only a little.;mood;5;5;2;0
+4;9;Putting things in order is her duty.;;;;;
+4;10;She works diligently with broom and bucket. It tires her steadily.;tiredness;3;3;2;0
+4;10;She works diligently with broom and bucket. It tires her steadily.;hunger;1;1;1;0
+4;11;Striking out is a sin to the pious, timid maid. She is shocked at herself.;tiredness;50;40;25;5
+4;11;Striking out is a sin to the pious, timid maid. She is shocked at herself.;mood;-20;-100;-150;-150
+4;11;Striking out is a sin to the pious, timid maid. She is shocked at herself.;courage;-10;-30;-50;-50
+4;12;She listens quietly. It does not stir her.;;;;;
+4;13;Serving is her place. Being told what to do gives her a quiet satisfaction.;mood;5;5;2;0
+4;14;Understanding something pleases her quietly.;mood;10;10;5;1
+4;15;Speaking up costs the quiet maid a little.;mood;-1;-5;-10;-10
+4;16;Being asked makes her shy, but secretly she is pleased.;mood;20;20;10;2
+4;17;An answer helps her to do things right.;mood;5;5;2;1
+4;18;Being shouted at frightens the timid maid deeply.;mood;-20;-120;-180;-180
+4;18;Being shouted at frightens the timid maid deeply.;courage;-10;-60;-100;-100
+4;19;Someone coming close makes the timid maid uneasy.;mood;0;-1;-2;-2
+4;19;Someone coming close makes the timid maid uneasy.;courage;0;-1;-1;-1
+4;20;A blow with a weapon is a nightmare for her. She is terrified.;mood;-50;-400;-600;-600
+4;20;A blow with a weapon is a nightmare for her. She is terrified.;courage;-40;-250;-350;-350
+4;20;A blow with a weapon is a nightmare for her. She is terrified.;power;-20;-100;-150;-150
+4;21;A punch frightens her deeply and hurts.;mood;-30;-200;-300;-300
+4;21;A punch frightens her deeply and hurts.;courage;-20;-120;-200;-200
+4;21;A punch frightens her deeply and hurts.;power;-5;-20;-40;-40
+4;22;Talk nearby is none of her business.;;;;;
+4;23;A scream nearby frightens her.;mood;-5;-40;-60;-60
+4;23;A scream nearby frightens her.;courage;-5;-30;-50;-50
+4;24;Others around her are part of her day.;;;;;
+4;25;People walking about do not trouble her. Someone running or sneaking makes her anxious.;mood;-2;-10;-15;-15
+4;25;People walking about do not trouble her. Someone running or sneaking makes her anxious.;courage;-1;-5;-10;-10
+#
+# 5 carpenter: reliable craftsman
+5;1;After a day in the workshop the carpenter sleeps soundly and wakes up rested and strong.;tiredness;-5;-35;-50;-60
+5;1;After a day in the workshop the carpenter sleeps soundly and wakes up rested and strong.;hunger;15;15;10;2
+5;1;After a day in the workshop the carpenter sleeps soundly and wakes up rested and strong.;mood;5;5;3;1
+5;1;After a day in the workshop the carpenter sleeps soundly and wakes up rested and strong.;power;3;3;2;0
+5;2;A drink quenches his thirst and refreshes him a little.;hunger;-10;-60;-100;-100
+5;2;A drink quenches his thirst and refreshes him a little.;tiredness;-2;-10;-20;-20
+5;3;He eats a solid meal. It fills him and makes him a little sluggish.;hunger;-3;-20;-30;-35
+5;3;He eats a solid meal. It fills him and makes him a little sluggish.;mood;6;6;3;1
+5;3;He eats a solid meal. It fills him and makes him a little sluggish.;tiredness;4;4;2;1
+5;4;Relieving himself is nothing special. Afterwards he feels a little lighter.;mood;80;60;30;5
+5;5;Walking tires the strong carpenter only slowly and makes him hungry over time.;tiredness;8;6;4;1
+5;5;Walking tires the strong carpenter only slowly and makes him hungry over time.;hunger;3;3;2;1
+5;6;He examines wood with an expert eye. It does not change how he feels.;;;;;
+5;7;Touching wood tells him what he needs to know.;;;;;
+5;8;A good tool in his hand pleases him a little.;mood;10;10;5;1
+5;9;Putting tools away is part of his order.;;;;;
+5;10;Working with his tools is his craft. It tires him only slowly and gives him quiet satisfaction.;tiredness;2;2;1;0
+5;10;Working with his tools is his craft. It tires him only slowly and gives him quiet satisfaction.;hunger;1;1;1;0
+5;10;Working with his tools is his craft. It tires him only slowly and gives him quiet satisfaction.;mood;1;1;1;0
+5;11;The carpenter is no fighter. Striking out leaves him uneasy, even though he dared it.;tiredness;30;25;15;3
+5;11;The carpenter is no fighter. Striking out leaves him uneasy, even though he dared it.;mood;-5;-30;-50;-50
+5;11;The carpenter is no fighter. Striking out leaves him uneasy, even though he dared it.;courage;20;20;10;2
+5;12;He listens patiently. It does not stir him.;;;;;
+5;13;As a master of his trade he does not like being told how to work.;mood;-5;-20;-30;-30
+5;14;Understanding something satisfies him.;mood;20;20;10;2
+5;15;He speaks plainly. Talking does him a little good.;mood;10;10;5;1
+5;16;Being asked for advice about his craft makes him proud.;mood;40;40;20;3
+5;17;An answer settles the matter for him.;mood;10;10;5;1
+5;18;Being shouted at puts him off. He gets annoyed but stays calm.;mood;-10;-60;-100;-100
+5;19;Someone coming close does not unsettle the steady carpenter.;;;;;
+5;20;A blow with a weapon frightens and hurts him. He is shaken, but does not panic.;mood;-30;-300;-500;-500
+5;20;A blow with a weapon frightens and hurts him. He is shaken, but does not panic.;courage;-20;-150;-250;-250
+5;20;A blow with a weapon frightens and hurts him. He is shaken, but does not panic.;power;-20;-100;-150;-150
+5;21;A punch makes the strong carpenter angry rather than afraid.;mood;-10;-100;-200;-200
+5;21;A punch makes the strong carpenter angry rather than afraid.;courage;20;20;10;2
+5;21;A punch makes the strong carpenter angry rather than afraid.;power;-2;-10;-20;-20
+5;22;Talk nearby does not concern him.;;;;;
+5;23;A scream nearby startles him for a moment.;mood;-2;-20;-30;-30
+5;23;A scream nearby startles him for a moment.;courage;-2;-10;-20;-20
+5;24;Others around him do not change him.;;;;;
+5;25;People walking about are normal. Someone running or sneaking makes him a little uneasy.;mood;-1;-5;-10;-10
+#
+# 6 shopkeeper: good at sums, hears all the gossip
+6;1;The shopkeeper sleeps well once the till is counted.;tiredness;-5;-35;-50;-60
+6;1;The shopkeeper sleeps well once the till is counted.;hunger;10;10;5;1
+6;1;The shopkeeper sleeps well once the till is counted.;mood;5;5;3;1
+6;1;The shopkeeper sleeps well once the till is counted.;power;2;2;1;0
+6;2;A drink quenches his thirst and refreshes him a little.;hunger;-10;-60;-100;-100
+6;2;A drink quenches his thirst and refreshes him a little.;tiredness;-2;-10;-20;-20
+6;3;He likes a good meal. It fills him and pleases him.;hunger;-3;-20;-30;-35
+6;3;He likes a good meal. It fills him and pleases him.;mood;6;6;3;1
+6;3;He likes a good meal. It fills him and pleases him.;tiredness;3;3;2;1
+6;4;Relieving himself is a short break from the shop.;mood;60;50;25;5
+6;5;The shopkeeper is not used to walking far. It tires him quickly.;tiredness;10;8;5;1
+6;5;The shopkeeper is not used to walking far. It tires him quickly.;hunger;3;3;2;1
+6;6;He examines goods with a sharp eye for their price. It does not change how he feels.;;;;;
+6;7;Touching goods tells him their quality.;;;;;
+6;8;Gaining something gives the shopkeeper real pleasure.;mood;40;40;20;3
+6;9;Putting goods in order is part of his shop.;;;;;
+6;10;Heavy work with tools is not his thing. It tires him.;tiredness;4;3;2;0
+6;10;Heavy work with tools is not his thing. It tires him.;hunger;1;1;1;0
+6;11;The shopkeeper is weak and no fighter. Striking out exhausts him.;tiredness;50;40;25;5
+6;11;The shopkeeper is weak and no fighter. Striking out exhausts him.;mood;-5;-30;-50;-50
+6;11;The shopkeeper is weak and no fighter. Striking out exhausts him.;courage;10;10;5;1
+6;12;He listens eagerly and stores everything he hears. It does not change how he feels.;;;;;
+6;13;He is his own master and does not like being told what to do.;mood;-5;-20;-30;-30
+6;14;The curious shopkeeper loves to understand things. It gives him real satisfaction.;mood;40;40;20;3
+6;15;He loves to talk. It does him good.;mood;25;25;12;2
+6;16;Being asked is a welcome chance for the shopkeeper to tell what he knows.;mood;40;40;20;3
+6;17;An answer satisfies his curiosity.;mood;25;25;12;2
+6;18;Being shouted at is bad for business and frightens him a little.;mood;-10;-60;-100;-100
+6;18;Being shouted at is bad for business and frightens him a little.;courage;-2;-10;-20;-20
+6;19;Someone coming close is probably a customer.;;;;;
+6;20;A blow with a weapon is terrible for the weak shopkeeper. He is badly hurt and frightened.;mood;-40;-350;-550;-550
+6;20;A blow with a weapon is terrible for the weak shopkeeper. He is badly hurt and frightened.;courage;-30;-200;-300;-300
+6;20;A blow with a weapon is terrible for the weak shopkeeper. He is badly hurt and frightened.;power;-30;-150;-200;-200
+6;21;A punch hurts and frightens the weak shopkeeper.;mood;-20;-150;-250;-250
+6;21;A punch hurts and frightens the weak shopkeeper.;courage;-10;-60;-100;-100
+6;21;A punch hurts and frightens the weak shopkeeper.;power;-10;-40;-60;-60
+6;22;Talk nearby makes him prick up his ears. It does not change how he feels.;;;;;
+6;23;A scream nearby startles him for a moment.;mood;-2;-20;-30;-30
+6;23;A scream nearby startles him for a moment.;courage;-2;-10;-20;-20
+6;24;People around are his customers.;;;;;
+6;25;People walking about are normal. Someone running or sneaking makes him think of thieves.;mood;-1;-5;-10;-10
+#
+# 7 fisherman: weather-beaten, makes offerings to the sea
+7;1;The fisherman sleeps soundly after a day at sea and wakes up rested and strong.;tiredness;-5;-35;-50;-60
+7;1;The fisherman sleeps soundly after a day at sea and wakes up rested and strong.;hunger;15;15;10;2
+7;1;The fisherman sleeps soundly after a day at sea and wakes up rested and strong.;mood;5;5;3;1
+7;1;The fisherman sleeps soundly after a day at sea and wakes up rested and strong.;power;3;3;2;0
+7;2;A drink of fresh water does him good after the salt of the sea.;hunger;-10;-60;-100;-100
+7;2;A drink of fresh water does him good after the salt of the sea.;tiredness;-2;-10;-20;-20
+7;3;He eats plain food. It fills him and makes him a little sluggish.;hunger;-3;-20;-30;-35
+7;3;He eats plain food. It fills him and makes him a little sluggish.;mood;6;6;3;1
+7;3;He eats plain food. It fills him and makes him a little sluggish.;tiredness;4;4;2;1
+7;4;Relieving himself is nothing special for him.;mood;80;60;30;5
+7;5;Walking and swimming tire the strong fisherman only slowly.;tiredness;8;6;4;1
+7;5;Walking and swimming tire the strong fisherman only slowly.;hunger;3;3;2;1
+7;6;He looks at things with the calm of a man who knows the sea. It does not change how he feels.;;;;;
+7;7;Touching things tells him what he needs to know.;;;;;
+7;8;Taking something useful pleases him a little.;mood;15;15;8;1
+7;9;Putting things away is routine.;;;;;
+7;10;Working with nets and oars is his life. It tires him only slowly.;tiredness;2;2;1;0
+7;10;Working with nets and oars is his life. It tires him only slowly.;hunger;1;1;1;0
+7;11;The fisherman is tough. Striking out costs him little and makes him bolder.;tiredness;30;20;15;3
+7;11;The fisherman is tough. Striking out costs him little and makes him bolder.;mood;-2;-15;-25;-25
+7;11;The fisherman is tough. Striking out costs him little and makes him bolder.;courage;30;30;15;3
+7;12;He listens calmly. It does not stir him.;;;;;
+7;13;A free man of the sea does not like orders.;mood;-5;-30;-40;-40
+7;14;Understanding something pleases him.;mood;15;15;8;2
+7;15;He talks plainly. It does him a little good.;mood;10;10;5;1
+7;16;Being asked about the sea and the weather pleases him.;mood;30;30;15;2
+7;17;An answer settles the matter.;mood;10;10;5;1
+7;18;He has weathered worse storms than a shouting man.;mood;-5;-30;-50;-50
+7;19;Someone coming close does not unsettle the brave fisherman.;;;;;
+7;20;A blow with a weapon hurts him, but the brave fisherman is defiant rather than afraid.;mood;-25;-250;-400;-400
+7;20;A blow with a weapon hurts him, but the brave fisherman is defiant rather than afraid.;courage;20;20;10;2
+7;20;A blow with a weapon hurts him, but the brave fisherman is defiant rather than afraid.;power;-15;-80;-120;-120
+7;21;A punch makes him angry and bolder. He can take it.;mood;-5;-60;-120;-120
+7;21;A punch makes him angry and bolder. He can take it.;courage;30;30;15;3
+7;21;A punch makes him angry and bolder. He can take it.;power;-1;-5;-10;-10
+7;22;Talk nearby does not concern him.;;;;;
+7;23;A scream nearby hardly impresses the weather-beaten fisherman.;mood;-1;-10;-15;-15
+7;24;Others around him do not change him.;;;;;
+7;25;Whether people walk, run or sneak, it does not worry him.;;;;;
+#
+# 8 fisherman's wife: mends nets, waits on the shore
+8;1;While her husband is at sea the fisherman's wife sleeps restlessly.;tiredness;-4;-25;-40;-50
+8;1;While her husband is at sea the fisherman's wife sleeps restlessly.;hunger;10;10;5;1
+8;1;While her husband is at sea the fisherman's wife sleeps restlessly.;mood;2;2;1;0
+8;1;While her husband is at sea the fisherman's wife sleeps restlessly.;power;2;2;1;0
+8;2;A drink refreshes her a little.;hunger;-10;-60;-100;-100
+8;2;A drink refreshes her a little.;tiredness;-2;-10;-20;-20
+8;3;She eats simple food. It fills her.;hunger;-3;-20;-30;-35
+8;3;She eats simple food. It fills her.;mood;4;4;2;1
+8;3;She eats simple food. It fills her.;tiredness;3;3;2;1
+8;4;Relieving herself is nothing special.;mood;60;50;25;5
+8;5;Walking along the shore tires her a little.;tiredness;8;6;4;1
+8;5;Walking along the shore tires her a little.;hunger;3;3;2;1
+8;6;She looks at things without much curiosity. It does not change how she feels.;;;;;
+8;7;Touching things is part of her work.;;;;;
+8;8;Taking something useful pleases her a little.;mood;10;10;5;1
+8;9;Putting things away is routine.;;;;;
+8;10;Mending nets is her patient daily work. It tires her only slowly.;tiredness;2;2;1;0
+8;10;Mending nets is her patient daily work. It tires her only slowly.;hunger;1;1;1;0
+8;11;She is no fighter. Striking out upsets her.;tiredness;40;30;20;5
+8;11;She is no fighter. Striking out upsets her.;mood;-10;-60;-100;-100
+8;11;She is no fighter. Striking out upsets her.;courage;10;10;5;1
+8;12;She listens. It does not stir her.;;;;;
+8;13;Being told what to do is all right with her.;mood;-2;-10;-15;-15
+8;14;Understanding something pleases her a little.;mood;10;10;5;1
+8;15;Talking does her a little good.;mood;10;10;5;1
+8;16;Being asked pleases her.;mood;20;20;10;2
+8;17;She is always waiting for news. An answer relieves her.;mood;20;20;10;2
+8;18;Being shouted at hurts her.;mood;-10;-80;-120;-120
+8;18;Being shouted at hurts her.;courage;-2;-10;-20;-20
+8;19;Someone coming close does not unsettle her.;;;;;
+8;20;A blow with a weapon terrifies and hurts her.;mood;-40;-350;-550;-550
+8;20;A blow with a weapon terrifies and hurts her.;courage;-30;-200;-300;-300
+8;20;A blow with a weapon terrifies and hurts her.;power;-20;-100;-150;-150
+8;21;A punch frightens and hurts her.;mood;-20;-150;-250;-250
+8;21;A punch frightens and hurts her.;courage;-10;-60;-100;-100
+8;21;A punch frightens and hurts her.;power;-5;-20;-40;-40
+8;22;Talk nearby does not concern her.;;;;;
+8;23;A scream makes her fear bad news from the sea.;mood;-5;-50;-80;-80
+8;23;A scream makes her fear bad news from the sea.;courage;-2;-10;-20;-20
+8;24;Others around her do not change her.;;;;;
+8;25;Someone running might bring bad news from the sea. It worries her.;mood;-3;-15;-20;-20
+#
+# 9 shepherd: much alone, content
+9;1;The shepherd sleeps under the stars, content with the world.;tiredness;-5;-35;-50;-60
+9;1;The shepherd sleeps under the stars, content with the world.;hunger;15;15;10;2
+9;1;The shepherd sleeps under the stars, content with the world.;mood;5;5;3;1
+9;1;The shepherd sleeps under the stars, content with the world.;power;2;2;1;0
+9;2;A drink from the spring refreshes him.;hunger;-10;-60;-100;-100
+9;2;A drink from the spring refreshes him.;tiredness;-2;-10;-20;-20
+9;3;Bread and cheese are all he needs. They fill and please him.;hunger;-3;-20;-30;-35
+9;3;Bread and cheese are all he needs. They fill and please him.;mood;6;6;3;1
+9;3;Bread and cheese are all he needs. They fill and please him.;tiredness;3;3;2;1
+9;4;Out in the fields relieving himself is nothing at all.;mood;60;50;25;5
+9;5;Walking with his sheep all day, he hardly tires.;tiredness;6;5;3;1
+9;5;Walking with his sheep all day, he hardly tires.;hunger;3;3;2;1
+9;6;He looks at things calmly. It does not change how he feels.;;;;;
+9;7;Touching things tells him what he needs to know.;;;;;
+9;8;He needs little. Taking something means nothing to him.;;;;;
+9;9;Putting things down is nothing to him.;;;;;
+9;10;Working with tools tires him a little.;tiredness;3;2;2;0
+9;10;Working with tools tires him a little.;hunger;1;1;1;0
+9;11;The peaceful shepherd hardly ever strikes out. When he does, it upsets him.;tiredness;40;30;20;5
+9;11;The peaceful shepherd hardly ever strikes out. When he does, it upsets him.;mood;-10;-60;-100;-100
+9;11;The peaceful shepherd hardly ever strikes out. When he does, it upsets him.;courage;10;10;5;1
+9;12;He listens quietly. It does not stir him.;;;;;
+9;13;He is not used to orders, but he takes them calmly.;mood;-2;-10;-15;-15
+9;14;Understanding something pleases him.;mood;15;15;8;2
+9;15;He is much alone. Talking to someone does him good.;mood;20;20;10;2
+9;16;Being asked is a rare pleasure for him.;mood;20;20;10;2
+9;17;An answer settles the matter.;mood;10;10;5;1
+9;18;He is not used to noise. Being shouted at upsets him.;mood;-10;-80;-120;-120
+9;18;He is not used to noise. Being shouted at upsets him.;courage;-2;-10;-20;-20
+9;19;Used to solitude, he feels a little uneasy when someone comes close.;mood;0;-1;-1;-1
+9;20;A blow with a weapon frightens and hurts him.;mood;-30;-300;-500;-500
+9;20;A blow with a weapon frightens and hurts him.;courage;-20;-150;-250;-250
+9;20;A blow with a weapon frightens and hurts him.;power;-20;-100;-150;-150
+9;21;A punch hurts and upsets the peaceful shepherd.;mood;-10;-120;-200;-200
+9;21;A punch hurts and upsets the peaceful shepherd.;courage;-5;-30;-50;-50
+9;21;A punch hurts and upsets the peaceful shepherd.;power;-5;-20;-40;-40
+9;22;Talk nearby does not concern him.;;;;;
+9;23;A scream disturbs the shepherd's peace.;mood;-2;-30;-50;-50
+9;23;A scream disturbs the shepherd's peace.;courage;-2;-10;-20;-20
+9;24;Others around him do not change him.;;;;;
+9;25;People walking are fine. Someone running or sneaking makes him watchful, as if a wolf were near the flock.;mood;-1;-5;-10;-10
+#
+# 10 miller: a little stingy, well fed
+10;1;The well-fed miller sleeps soundly and wakes up rested. He is rarely hungry.;tiredness;-5;-35;-50;-60
+10;1;The well-fed miller sleeps soundly and wakes up rested. He is rarely hungry.;hunger;8;8;5;1
+10;1;The well-fed miller sleeps soundly and wakes up rested. He is rarely hungry.;mood;5;5;3;1
+10;1;The well-fed miller sleeps soundly and wakes up rested. He is rarely hungry.;power;3;3;2;0
+10;2;A drink refreshes him a little.;hunger;-10;-60;-100;-100
+10;2;A drink refreshes him a little.;tiredness;-2;-10;-20;-20
+10;3;The miller enjoys a rich meal. It pleases him and makes him sluggish.;hunger;-3;-20;-30;-35
+10;3;The miller enjoys a rich meal. It pleases him and makes him sluggish.;mood;8;8;4;1
+10;3;The miller enjoys a rich meal. It pleases him and makes him sluggish.;tiredness;5;5;3;1
+10;4;Relieving himself is nothing special.;mood;80;60;30;5
+10;5;Walking tires the strong miller only slowly.;tiredness;8;6;4;1
+10;5;Walking tires the strong miller only slowly.;hunger;2;2;1;1
+10;6;He examines things for their value. It does not change how he feels.;;;;;
+10;7;Touching something tells him what he wants to know.;;;;;
+10;8;Gaining something gives the stingy miller real pleasure.;mood;40;40;20;3
+10;9;As long as nothing is lost, putting things away leaves him as he is.;;;;;
+10;10;The work at the mill tires him only slowly.;tiredness;2;2;1;0
+10;10;The work at the mill tires him only slowly.;hunger;1;1;1;0
+10;11;Striking out does not trouble the miller's conscience much. It makes him bolder.;tiredness;30;20;15;3
+10;11;Striking out does not trouble the miller's conscience much. It makes him bolder.;courage;20;20;10;2
+10;12;He listens. It does not stir him.;;;;;
+10;13;He does not like being told what to do.;mood;-5;-20;-30;-30
+10;14;Understanding something pleases him.;mood;15;15;8;2
+10;15;Talking does him a little good.;mood;10;10;5;1
+10;16;Being asked makes him wonder what the other wants, but it pleases him a little.;mood;10;10;5;1
+10;17;An answer settles the matter.;mood;10;10;5;1
+10;18;Being shouted at annoys him.;mood;-10;-60;-100;-100
+10;19;Someone coming close does not unsettle him.;;;;;
+10;20;A blow with a weapon frightens and hurts him.;mood;-30;-300;-500;-500
+10;20;A blow with a weapon frightens and hurts him.;courage;-20;-150;-250;-250
+10;20;A blow with a weapon frightens and hurts him.;power;-15;-80;-120;-120
+10;21;A punch makes the strong miller angry rather than afraid.;mood;-10;-100;-200;-200
+10;21;A punch makes the strong miller angry rather than afraid.;courage;20;20;10;2
+10;21;A punch makes the strong miller angry rather than afraid.;power;-2;-10;-20;-20
+10;22;Talk nearby does not concern him.;;;;;
+10;23;A scream nearby startles him for a moment.;mood;-2;-20;-30;-30
+10;23;A scream nearby startles him for a moment.;courage;-2;-10;-20;-20
+10;24;Others around him do not change him.;;;;;
+10;25;Someone running or sneaking might be after his flour. It makes him uneasy.;mood;-2;-10;-15;-15
