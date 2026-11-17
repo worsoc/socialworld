@@ -43,10 +43,30 @@ import org.socialworld.datasource.parsing.JsonValue;
  * If the attribute falls, the entries run from the lowest tier up, if it rises from the
  * highest tier down, so a value changed in one tier only reaches tiers already checked.
  * Steps of 0 and empty tiers give no entry. A rule without entries changes nothing.
+ *
+ * The need of the character (concept section 13.4) scales the steps of sleeping and eating:
+ * tiredness while sleeping × 8 / sleepHours, hunger and tiredness while eating × 3 / mealsPerDay.
+ * Who sleeps and eats as much as it needs then has the daily course of the reference (8 h, 3 meals).
  */
 public final class EventInfluenceRuleBuilder {
 
+	/** Situations of event_situations.csv whose steps follow the need of the character. */
+	static final int SITUATION_SLEEP = 1;
+	static final int SITUATION_EAT = 3;
+
 	private EventInfluenceRuleBuilder() {
+	}
+
+	/** The factor from the need of sleep or food of the character, 1 for all other lines. */
+	static float needFactor(EventInfluenceCatalog.Line line, AttributeCharacter character) {
+		Attribute attribute = line.getAttribute();
+		if (line.getSituation() == SITUATION_SLEEP && attribute == Attribute.tiredness) {
+			return AttributeCharacter.DEFAULT_SLEEP_HOURS / character.getSleepHours();
+		}
+		if (line.getSituation() == SITUATION_EAT && (attribute == Attribute.hunger || attribute == Attribute.tiredness)) {
+			return (float) AttributeCharacter.DEFAULT_MEALS_PER_DAY / character.getMealsPerDay();
+		}
+		return 1f;
 	}
 
 	/** Rounds half away from zero: 7.5 → 8, −7.5 → −8. */
@@ -73,6 +93,7 @@ public final class EventInfluenceRuleBuilder {
 			if (attribute == null) continue;
 
 			AttributeLevel level = character.getLevel(attribute.getIndex());
+			float lineFactor = factor * needFactor(line, character);
 			int low = level.getLowest();
 			int high = level.getHighest();
 			int middle = (low + high) / 2;
@@ -86,7 +107,7 @@ public final class EventInfluenceRuleBuilder {
 
 			for (int i = 0; i < EventInfluenceCatalog.COUNT_STEPS; i++) {
 				int tier = rises ? EventInfluenceCatalog.COUNT_STEPS - 1 - i : i;
-				int step = roundSymmetric(line.getStep(tier) * factor);
+				int step = roundSymmetric(line.getStep(tier) * lineFactor);
 				if (step == 0) continue;
 
 				boolean top = tier == EventInfluenceCatalog.COUNT_STEPS - 1;

@@ -227,3 +227,103 @@ Counted over all 900 entries (100 characters × 9 attributes):
 | `+++` and `---` | 21 | 2 % |
 
 Because `+` (58–75) and `-` (25–42) overlap with `o`, most values still lie between 30 and 70. The Gaussian weighting (section 2.3) makes the extreme characters even rarer in the simulation. Nobody has 0 everywhere or 99 everywhere.
+
+## 5. Need of Sleep and Food
+
+Added 2026-11-17. Two more columns per character (proposal; built with A11 of `eid_regeln_konzept.md`, section 13):
+
+| Column | Meaning | Values | Default |
+|---|---|---|---|
+| `sleepHours` | hours of sleep the character needs | 6.0 to 10.0 in half hours | 8.0 |
+| `mealsPerDay` | meals the character needs | 1 to 5 | 3 |
+
+**Need, not way of life.** The columns describe what the body needs, not what the character gets. The scholar sleeps too little, the beggar starves, the night watchman is in his third night without sleep: their need is ordinary, they only get too little. That already shows in their levels (`ti +`, `hu ++`) and later in how long they really sleep and how often they eat (State2Action).
+
+**Effect.** The generator of the event rules multiplies the sleep steps (tiredness, situation sleep) by 8 / sleepHours and the eating steps (hunger and tiredness, situation eat) by 3 / mealsPerDay. A character who sleeps and eats as much as it needs then has the same daily course as the reference (farmer, 8 h, 3 meals). Who gets less settles at a higher, stable level. Derivation: `eid_regeln_konzept.md` 13.4 and `attribute_matrix_characters.md` 4b.4.
+
+| sleepHours | 6.0 | 6.5 | 7.0 | 7.5 | 8.0 | 8.5 | 9.0 | 9.5 | 10.0 |
+|---|--:|--:|--:|--:|--:|--:|--:|--:|--:|
+| factor on sleep | 1.333 | 1.231 | 1.143 | 1.067 | 1 | 0.941 | 0.889 | 0.842 | 0.8 |
+| characters | 2 | 1 | 14 | 18 | 41 | 8 | 10 | 3 | 3 |
+
+| mealsPerDay | 1 | 2 | 3 | 4 | 5 |
+|---|--:|--:|--:|--:|--:|
+| factor on eating | 3 | 1.5 | 1 | 0.75 | 0.6 |
+| characters | 2 | 17 | 59 | 19 | 3 |
+
+Characters that differ from the default (all others: 8.0 hours, 3 meals):
+
+| No | Character | sleepHours | mealsPerDay | Why |
+|--:|---|--:|--:|---|
+| 3 | farmhand | 8.5 | 4 | strong, likes his food |
+| 6 | shopkeeper | 7.5 | 3 |  |
+| 7 | fisherman | 7.5 | 3 | out early, tough |
+| 9 | shepherd | 8.0 | 2 | frugal |
+| 10 | miller | 8.0 | 4 | well fed |
+| 11 | baker | 7.0 | 3 | used to short nights |
+| 13 | apprentice | 9.0 | 4 | young, still growing |
+| 14 | retired farmer | 7.0 | 3 | sleeps less in old age |
+| 15 | grandmother | 7.0 | 2 | old, eats little |
+| 16 | barmaid | 7.5 | 3 |  |
+| 17 | innkeeper | 8.0 | 4 | eats with the guests |
+| 21 | shepherdess | 8.5 | 3 | young |
+| 22 | woodcutter | 9.0 | 4 | big and heavy |
+| 24 | pedlar | 7.5 | 3 |  |
+| 25 | widow | 8.0 | 2 | withdrawn |
+| 28 | gardener | 8.0 | 2 | frugal |
+| 29 | stable boy | 9.0 | 4 | young |
+| 30 | midwife | 7.0 | 3 | used to nights |
+| 31 | village smith | 8.5 | 4 | big appetite |
+| 33 | cowherd girl | 9.5 | 3 | almost still a child |
+| 35 | tinker | 7.5 | 3 |  |
+| 36 | brewer | 8.0 | 4 | full of life |
+| 40 | old goatherd | 7.0 | 2 | needs nothing |
+| 41 | farmer's son | 8.5 | 4 | young |
+| 42 | farmer's daughter | 8.5 | 3 | young |
+| 43 | market woman | 7.5 | 3 |  |
+| 44 | gatekeeper | 9.0 | 4 | drowsy, waits for his meal |
+| 45 | farmhand fond of the jug | 8.5 | 3 | sleeps badly, needs more |
+| 46 | village priest | 7.0 | 2 | needs little |
+| 47 | convent sister | 7.0 | 2 | humble |
+| 48 | rich merchant | 8.0 | 4 | rich table |
+| 49 | moneylender | 7.0 | 3 |  |
+| 50 | mercenary | 8.0 | 4 | strong |
+| 51 | knight | 8.0 | 4 | strong |
+| 52 | pickpocket | 7.5 | 3 | hunger from want |
+| 55 | herb woman | 7.5 | 2 |  |
+| 56 | minstrel | 8.0 | 4 | "never full" |
+| 57 | hunter | 7.5 | 3 | tireless |
+| 58 | treasure hunter | 7.5 | 3 |  |
+| 60 | village mayor | 8.0 | 4 | well fed |
+| 61 | stingy merchant's widow | 7.5 | 2 | saves on food too |
+| 62 | seafarer | 7.5 | 3 | used to night watches |
+| 63 | scribe monk | 8.0 | 2 |  |
+| 64 | poacher | 7.5 | 3 |  |
+| 66 | miner | 9.0 | 4 | heavy work |
+| 67 | wandering preacher | 7.0 | 2 | hardship |
+| 68 | horse dealer | 7.5 | 3 |  |
+| 69 | wrestler | 9.0 | 5 | "eats for three" |
+| 70 | poet | 9.0 | 2 | melancholic |
+| 72 | barber-surgeon | 7.0 | 3 | gets by with little |
+| 73 | pilgrim woman | 8.5 | 3 | worn out by walking |
+| 75 | wounded veteran | 9.0 | 3 | still healing |
+| 76 | young widow | 7.5 | 3 |  |
+| 79 | woodswoman | 8.0 | 2 |  |
+| 80 | smuggler | 7.0 | 3 | out at night |
+| 81 | gambler | 7.0 | 3 |  |
+| 82 | hermit | 6.5 | 1 | lives on roots |
+| 83 | orphan | 9.5 | 3 | a child; hunger from want |
+| 84 | spoilt young noble | 10.0 | 4 | spoilt |
+| 85 | zealous temple servant | 7.0 | 2 |  |
+| 86 | ascetic | 6.0 | 1 | fasts |
+| 87 | robber chief | 7.5 | 4 |  |
+| 88 | giant | 9.5 | 5 | a giant |
+| 89 | paralysed old man | 10.0 | 2 | bedridden |
+| 90 | cowardly courtier | 8.5 | 4 | court, well fed |
+| 91 | mad prophet | 6.0 | 2 | keeps watch, hardly needs sleep |
+| 92 | greedy prince | 9.0 | 5 | "wants everything" |
+| 94 | daredevil | 7.5 | 3 |  |
+| 95 | murderer | 7.0 | 3 |  |
+| 96 | sunny nature | 7.5 | 3 | rested |
+| 97 | deeply melancholic woman | 10.0 | 2 | sleeps a lot, eats little |
+| 100 | child prodigy | 9.0 | 3 | a child |

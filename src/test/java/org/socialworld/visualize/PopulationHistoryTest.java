@@ -32,7 +32,7 @@ public class PopulationHistoryTest {
 	private final PopulationHistory history = new PopulationHistory();
 
 	private void act(int objID, ActionType type, ActionMode mode) {
-		model.startAction(objID, new Object(), type, mode, 62f, 10000, 4000, 120);
+		model.startAction(objID, new Object(), type, mode, 62f, 10000, 4000, 120, 0);
 	}
 
 	private void report(int objID, int value) {

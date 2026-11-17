@@ -55,6 +55,8 @@ public class VisualModel {
 		float intensity;
 		long duration;
 		long remainedDuration;
+		// when the action handler reported remainedDuration
+		long remainedReportedMillis;
 		int priority;
 		long actionEndedMillis;
 		boolean endedEarly;
@@ -77,6 +79,7 @@ public class VisualModel {
 			copy.intensity = intensity;
 			copy.duration = duration;
 			copy.remainedDuration = remainedDuration;
+			copy.remainedReportedMillis = remainedReportedMillis;
 			copy.priority = priority;
 			copy.actionEndedMillis = actionEndedMillis;
 			copy.endedEarly = endedEarly;
@@ -89,6 +92,16 @@ public class VisualModel {
 			copy.changeCount = changeCount;
 			copy.reportCount = reportCount;
 			return copy;
+		}
+
+		/**
+		 * The action handler reports the remaining duration only with its calculations, a sleep
+		 * e.g. every 300 s (fixed intervals, EID concept 7.1). In between the display counts down
+		 * itself from the time of the last report, never below 0.
+		 */
+		long remainedDurationAt(long nowMillis) {
+			long passed = Math.max(0, nowMillis - remainedReportedMillis);
+			return Math.max(0, remainedDuration - passed);
 		}
 	}
 
@@ -149,9 +162,11 @@ public class VisualModel {
 	 *
 	 * @param action
 	 *            only used to tell whether it is the same action as before
+	 * @param nowMillis
+	 *            the time of the report; the display counts the remaining duration down from it
 	 */
 	public synchronized void startAction(int objID, Object action, ActionType type, ActionMode mode,
-			float intensity, long duration, long remainedDuration, int priority) {
+			float intensity, long duration, long remainedDuration, int priority, long nowMillis) {
 		if (!isShown(objID)) return;
 
 		ObjectState state = states[objID - 1];
@@ -166,6 +181,7 @@ public class VisualModel {
 		state.intensity = intensity;
 		state.duration = duration;
 		state.remainedDuration = remainedDuration;
+		state.remainedReportedMillis = nowMillis;
 		state.priority = priority;
 		state.endedEarly = false;
 	}

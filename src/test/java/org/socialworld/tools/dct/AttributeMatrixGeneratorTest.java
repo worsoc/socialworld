@@ -231,15 +231,31 @@ public class AttributeMatrixGeneratorTest {
   }
 
   @Test
-  void hunger_reachesItsReferencePoints() {
-    assertThat(afterSteps(AttributeMatrixGenerator.HUNGER_DRIVE, 8 * 60)).isGreaterThan(5000);
-    assertThat(afterSteps(AttributeMatrixGenerator.HUNGER_DRIVE, 12 * 60)).isGreaterThanOrEqualTo(9000);
+  void hungerAndTiredness_riseLinearly() {
+    assertThat(AttributeMatrixGenerator.HUNGER_DRIVE.growth).isEqualTo(1f);
+    assertThat(AttributeMatrixGenerator.TIREDNESS_DRIVE.growth).isEqualTo(1f);
+    // median person: 4 and 3 per minute, so 240 and 180 per hour (2.4 and 1.8 displayed points)
+    assertThat(afterSteps(AttributeMatrixGenerator.HUNGER_DRIVE, 60)).isEqualTo(240);
+    assertThat(afterSteps(AttributeMatrixGenerator.TIREDNESS_DRIVE, 60)).isEqualTo(180);
   }
 
   @Test
-  void tiredness_reachesItsReferencePoints() {
-    assertThat(afterSteps(AttributeMatrixGenerator.TIREDNESS_DRIVE, 16 * 60)).isGreaterThan(5000);
-    assertThat(afterSteps(AttributeMatrixGenerator.TIREDNESS_DRIVE, 24 * 60)).isGreaterThanOrEqualTo(9000);
+  void hungerRisesByAWholeStepInEveryRealMatrix_independentOfTheValue() {
+    for (GeneratedMatrix generated : generateAll()) {
+      int[] low = atRest(generated);
+      low[HUNGER] = 1000;
+      low[TIREDNESS] = 1000;
+      int[] high = atRest(generated);
+      high[HUNGER] = 8000;
+      high[TIREDNESS] = 8000;
+
+      int[] afterLow = step(generated.toMatrix(), low);
+      int[] afterHigh = step(generated.toMatrix(), high);
+
+      // the die spreads the constant 4 to 3..5; linear: the same rise at 10 and at 80.
+      // tiredness is left out here: the coupling K14 (extreme mood) also flows into it
+      assertThat(afterLow[HUNGER] - 1000).isBetween(3, 5).isEqualTo(afterHigh[HUNGER] - 8000);
+    }
   }
 
   @Test

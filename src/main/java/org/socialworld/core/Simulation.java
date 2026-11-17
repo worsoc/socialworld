@@ -171,6 +171,14 @@ public class Simulation extends SocialWorldThread {
 	
 		System.out.println("Start Erstellen Objekte Inventar "+ ActualTime.asTime().toString());
 
+		// Interim until State2Action is in the database (EID concept 13.4): every human has an apple in the
+		// mouth, so that the eating rule of the test data finds something eatable. It is ONE apple for all
+		// mouths: eating does not use it up, and items have only 799 start positions (swgauss_position),
+		// of which the clothes and the loose apples already take 775.
+		incompleteObject = createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.eatable.fruits.Apple");
+		Item mouthApple = (Item) incompleteObject.getObject();
+		if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Apple for all mouths(" + mouthApple.getObjectID() + "):" + mouthApple.getPosition(tokenCore).toString());
+
 		for (int i = 0; i < 100; i++ ) {
 			Human human = humans.get(i);
 			Position positionParentHuman = human.getPosition(tokenCore);
@@ -248,6 +256,9 @@ public class Simulation extends SocialWorldThread {
 			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Trousers(" + myItem.getObjectID() + "):" + myItem.getPosition(tokenCore).toString());
 	
 			inventory.setTrousers((Trousers) myItem) ;
+
+			// the one apple shared by all mouths, see above
+			inventory.setMouth(mouthApple);
 			
 //			inventory.setLeftHand(leftHand);
 //			inventory.setRightHand(rightHand);

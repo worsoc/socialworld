@@ -19,6 +19,8 @@ package org.socialworld.tools.dct;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.socialworld.attributes.Attribute;
@@ -115,6 +117,57 @@ public class EventInfluenceGeneratorTest {
 
     assertThat(club).contains("mood;1.00;-45.00").contains("mood;1.00;-450.00").contains("mood;1.00;-750.00");
     assertThat(stab).contains("mood;1.00;-30.00").contains("mood;1.00;-300.00").contains("mood;1.00;-500.00");
+  }
+
+  @Test
+  void needOfSleep_scalesTheSleepSteps() {
+    // tiredness while sleeping, CSV -9 / -60 / -85 / -102 for farmer and shopkeeper
+    String farmer = generator.buildRule(EventType.selfSleep, 0).toString();
+    String shopkeeper = generator.buildRule(EventType.selfSleep, 5).toString();
+
+    // farmer needs 8 h: factor 1
+    assertThat(farmer).contains("tiredness;1.00;-9.00").contains("tiredness;1.00;-60.00")
+        .contains("tiredness;1.00;-85.00").contains("tiredness;1.00;-102.00");
+    // shopkeeper needs 7.5 h: factor 8 / 7.5, so he recovers a little faster per event
+    assertThat(shopkeeper).contains("tiredness;1.00;-10.00").contains("tiredness;1.00;-64.00")
+        .contains("tiredness;1.00;-91.00").contains("tiredness;1.00;-109.00");
+  }
+
+  @Test
+  void needOfFood_scalesHungerAndTirednessWhileEating() {
+    // CSV hunger -2 / -16 / -23 / -27, tiredness +3 / +3 / +2 / +1 for the shepherd
+    String shepherd = generator.buildRule(EventType.selfEat, 8).toString();
+    // shepherd needs 2 meals: factor 3 / 2, a meal fills for longer
+    assertThat(shepherd).contains("hunger;1.00;-3.00").contains("hunger;1.00;-24.00")
+        .contains("hunger;1.00;-35.00").contains("hunger;1.00;-41.00");
+    assertThat(shepherd).contains("tiredness;1.00;5.00").contains("tiredness;1.00;3.00").contains("tiredness;1.00;2.00");
+
+    // farmhand needs 4 meals (factor 3 / 4) and 8.5 h of sleep (factor 8 / 8.5)
+    assertThat(generator.buildRule(EventType.selfEat, 2).toString())
+        .contains("hunger;1.00;-12.00").contains("hunger;1.00;-17.00").contains("hunger;1.00;-20.00");
+    assertThat(generator.buildRule(EventType.selfSleep, 2).toString())
+        .contains("tiredness;1.00;-64.00").contains("tiredness;1.00;-96.00").contains("tiredness;1.00;-112.00");
+  }
+
+  @Test
+  void needFactor_isOneOutsideSleepingAndEating() {
+    AttributeCharacter ascetic = new AttributeCharacter(86, "ascetic", "fasts", levels(), 6f, 1);
+    EventInfluenceCatalog catalog = EventInfluenceCatalog.parse(
+        "86;1;s;tiredness;-1;-1;-1;-1\n86;3;s;hunger;-1;-1;-1;-1\n86;3;s;mood;1;1;1;1\n86;5;s;tiredness;1;1;1;1\n");
+    List<EventInfluenceCatalog.Line> sleep = catalog.getLines(86, 1);
+    List<EventInfluenceCatalog.Line> eat = catalog.getLines(86, 3);
+    List<EventInfluenceCatalog.Line> walk = catalog.getLines(86, 5);
+
+    assertThat(EventInfluenceRuleBuilder.needFactor(sleep.get(0), ascetic)).isEqualTo(8f / 6f);
+    assertThat(EventInfluenceRuleBuilder.needFactor(eat.get(0), ascetic)).as("hunger while eating").isEqualTo(3f);
+    assertThat(EventInfluenceRuleBuilder.needFactor(eat.get(1), ascetic)).as("mood while eating").isEqualTo(1f);
+    assertThat(EventInfluenceRuleBuilder.needFactor(walk.get(0), ascetic)).as("walking").isEqualTo(1f);
+  }
+
+  private static AttributeLevel[] levels() {
+    AttributeLevel[] levels = new AttributeLevel[Attribute.NUMBER_OF_ATTRIBUTES];
+    java.util.Arrays.fill(levels, AttributeLevel.fromCode("o"));
+    return levels;
   }
 
   @Test

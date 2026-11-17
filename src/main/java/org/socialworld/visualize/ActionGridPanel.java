@@ -148,7 +148,7 @@ class ActionGridPanel extends JPanel {
 		}
 
 		if (state.acting) {
-			int barWidth = (int) (remainingShare(state) * width);
+			int barWidth = (int) (remainingShare(state, nowMillis) * width);
 			g.setColor(text);
 			g.fillRect(x, y + height - BAR_HEIGHT, barWidth, BAR_HEIGHT);
 		}
@@ -175,7 +175,7 @@ class ActionGridPanel extends JPanel {
 		if (figure != null || snapshot == null || getWidth() <= 0 || getHeight() <= 0) return null;
 
 		int objID = objIdAt(event.getX(), event.getY(), getWidth(), getHeight());
-		return describe(objID, snapshot.get(objID));
+		return describe(objID, snapshot.get(objID), nowMillis);
 	}
 
 	/**
@@ -196,9 +196,9 @@ class ActionGridPanel extends JPanel {
 		return blend(ActionFamily.of(state.actionType).getColor(), COLOR_IDLE, fadedShare(state, nowMillis));
 	}
 
-	static float remainingShare(VisualModel.ObjectState state) {
+	static float remainingShare(VisualModel.ObjectState state, long nowMillis) {
 		if (state.duration <= 0) return 0f;
-		return Math.max(0f, Math.min(1f, (float) state.remainedDuration / state.duration));
+		return Math.max(0f, Math.min(1f, (float) state.remainedDurationAt(nowMillis) / state.duration));
 	}
 
 	static Color blend(Color from, Color to, float share) {
@@ -232,14 +232,14 @@ class ActionGridPanel extends JPanel {
 		return row * COLUMNS + column + 1;
 	}
 
-	static String describe(int objID, VisualModel.ObjectState state) {
+	static String describe(int objID, VisualModel.ObjectState state, long nowMillis) {
 		if (state.actionType == null) return "Objekt " + objID + ": noch keine Aktion";
 
 		StringBuilder text = new StringBuilder("Objekt " + objID + ": ");
 		text.append(state.actionMode).append(" (").append(state.actionType).append(")");
 		text.append(", Intensit\u00E4t ").append((int) state.intensity);
 		if (state.acting) {
-			text.append(", Rest ").append(state.remainedDuration / 1000);
+			text.append(", Rest ").append(state.remainedDurationAt(nowMillis) / 1000);
 			text.append(" s von ").append(state.duration / 1000).append(" s");
 		}
 		text.append(", Priorit\u00E4t ").append(state.priority);

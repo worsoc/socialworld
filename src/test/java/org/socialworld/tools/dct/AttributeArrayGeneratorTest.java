@@ -119,6 +119,40 @@ public class AttributeArrayGeneratorTest {
   }
 
   @Test
+  void catalog_readsTheNeedOfSleepAndFood() {
+    AttributeCharacterCatalog catalog = AttributeCharacterCatalog.load();
+    for (AttributeCharacter character : catalog.getCharacters()) {
+      assertThat(character.getSleepHours()).as(character.getName()).isBetween(6f, 10f);
+      assertThat(character.getMealsPerDay()).as(character.getName()).isBetween(1, 5);
+    }
+    assertThat(catalog.getCharacters().get(0).getSleepHours()).as("farmer").isEqualTo(8f);
+    assertThat(catalog.getCharacters().get(0).getMealsPerDay()).as("farmer").isEqualTo(3);
+    assertThat(catalog.getCharacters().get(85).getSleepHours()).as("ascetic").isEqualTo(6f);
+    assertThat(catalog.getCharacters().get(85).getMealsPerDay()).as("ascetic").isEqualTo(1);
+    assertThat(catalog.getCharacters().get(68).getMealsPerDay()).as("wrestler").isEqualTo(5);
+  }
+
+  @Test
+  void catalog_withoutNeedColumns_givesTheDefaultNeed() {
+    AttributeCharacter character = AttributeCharacterCatalog.parse("1;a;b;o;o;o;o;o;o;o;o;o\n").getCharacters().get(0);
+    assertThat(character.getSleepHours()).isEqualTo(AttributeCharacter.DEFAULT_SLEEP_HOURS);
+    assertThat(character.getMealsPerDay()).isEqualTo(AttributeCharacter.DEFAULT_MEALS_PER_DAY);
+    assertThat(AttributeCharacterCatalog.parse("1;a;b;o;o;o;o;o;o;o;o;o;7.5;2\n").getCharacters().get(0).getSleepHours()).isEqualTo(7.5f);
+  }
+
+  @Test
+  void catalog_rejectsANeedOutsideItsRange() {
+    assertThatThrownBy(() -> AttributeCharacterCatalog.parse("1;a;b;o;o;o;o;o;o;o;o;o;7.3;3\n"))
+        .as("not a half hour").isInstanceOf(IllegalArgumentException.class);
+    assertThatThrownBy(() -> AttributeCharacterCatalog.parse("1;a;b;o;o;o;o;o;o;o;o;o;10.5;3\n"))
+        .isInstanceOf(IllegalArgumentException.class);
+    assertThatThrownBy(() -> AttributeCharacterCatalog.parse("1;a;b;o;o;o;o;o;o;o;o;o;8.0;0\n"))
+        .isInstanceOf(IllegalArgumentException.class);
+    assertThatThrownBy(() -> AttributeCharacterCatalog.parse("1;a;b;o;o;o;o;o;o;o;o;o;8.0;6\n"))
+        .isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
   void catalog_rejectsWrongNumberOfLevels() {
     assertThatThrownBy(() -> AttributeCharacterCatalog.parse("1;farmer;sketch;o;o;o"))
         .isInstanceOf(IllegalArgumentException.class);

@@ -115,10 +115,10 @@ public class ObjectMaster {
 	        int idx = type.getIndex();
 	        
 	        // Jedes Band startet exklusiv 
-	        int startID = (idx - 1) * RANGE_SIZE;
+	        int startID = rangeStart(type);
 	        
 	        this.typeStartIDs[idx] = startID;
-	        this.typeEndIDs[idx] = startID + RANGE_SIZE - 1;
+	        this.typeEndIDs[idx] = rangeEnd(type);
 	        
 	        // Cursor direkt auf den Startwert des jeweiligen Nummernkreises setzen
 	        this.typeIdCursors[idx] = startID;
@@ -129,6 +129,37 @@ public class ObjectMaster {
 
 	}	
 	
+	/** The first ID of the band of a type; it is never given out, the first object gets startID + 1. */
+	static int rangeStart(SimulationObject_Type type) {
+		return (type.getIndex() - 1) * RANGE_SIZE;
+	}
+
+	/** The last ID of the band of a type. */
+	static int rangeEnd(SimulationObject_Type type) {
+		return rangeStart(type) + RANGE_SIZE - 1;
+	}
+
+	/**
+	 * Every type has its own band of IDs. An ID beyond the band would land in the band of the next
+	 * type (e.g. items in the band of magic) and mix up the objects, so the simulation stops here.
+	 *
+	 * @throws IllegalStateException if the ID lies outside the band of the type
+	 */
+	static void checkIdInRange(SimulationObject_Type type, int objectID) {
+		int start = rangeStart(type);
+		int end = rangeEnd(type);
+		if (objectID > start && objectID <= end) return;
+
+		SimulationObject_Type intruded = SimulationObject_Type.getSimulationObjectType(objectID / RANGE_SIZE + 1);
+		String message = "ObjectMaster: the ID " + objectID + " of a " + type + " lies outside its band "
+				+ (start + 1) + ".." + end
+				+ (intruded != SimulationObject_Type.noObject && intruded != type ? ", in the band of " + intruded : "")
+				+ ". At most " + (RANGE_SIZE - 1) + " objects per type; raise RANGE_SIZE or create fewer objects.";
+		log.error(message);
+		System.err.println(message);
+		throw new IllegalStateException(message);
+	}
+
 	public static ObjectMaster getInstance() {
 		if (instance == null) {
 			instance = new ObjectMaster();
@@ -174,6 +205,7 @@ public class ObjectMaster {
 				case magic: fullClassName = "org.socialworld.objects.concrete.spells.Lightning"; break;
 				default: continue;
 			}
+			checkIdInRange(simObjType, objectID);
 			this.loaders[type].createObject(objectID, fullClassName);
 		}
 		
@@ -198,6 +230,7 @@ public class ObjectMaster {
 		int incompleteObjectIndex;
 
 		objectID = typeMaxIDs[simulationObjectType.getIndex()] + 1;
+		checkIdInRange(simulationObjectType, objectID);
 
 		incompleteObject = creators[simulationObjectType.getIndex()].getObject(objectID, fullClassName);
 		

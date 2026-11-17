@@ -32,7 +32,7 @@ public class ActionGridTest {
 	private final VisualModel model = new VisualModel();
 
 	private void startWalking() {
-		model.startAction(1, new Object(), ActionType.move, ActionMode.walk, 62f, 10000, 4000, 120);
+		model.startAction(1, new Object(), ActionType.move, ActionMode.walk, 62f, 10000, 4000, 120, 0);
 	}
 
 	private VisualModel.ObjectState state() {
@@ -105,7 +105,7 @@ public class ActionGridTest {
 
 	@Test
 	void ignoredActionType_staysIdle() {
-		model.startAction(1, new Object(), ActionType.ignore, ActionMode.ignore, 0f, 0, 0, 0);
+		model.startAction(1, new Object(), ActionType.ignore, ActionMode.ignore, 0f, 0, 0, 0, 0);
 
 		assertThat(ActionGridPanel.fillColor(state(), 5000)).isEqualTo(ActionGridPanel.COLOR_IDLE);
 	}
@@ -128,14 +128,22 @@ public class ActionGridTest {
 	void remainingShare_isTheRemainedPartOfTheDuration() {
 		startWalking();
 
-		assertThat(ActionGridPanel.remainingShare(state())).isEqualTo(0.4f);
+		assertThat(ActionGridPanel.remainingShare(state(), 0)).isEqualTo(0.4f);
+	}
+
+	@Test
+	void remainingShare_countsDownBetweenTwoReports() {
+		startWalking();
+
+		assertThat(ActionGridPanel.remainingShare(state(), 2000)).isEqualTo(0.2f);
+		assertThat(ActionGridPanel.remainingShare(state(), 9000)).isZero();
 	}
 
 	@Test
 	void remainingShare_ofAnActionWithoutDurationIsZero() {
-		model.startAction(1, new Object(), ActionType.move, ActionMode.walk, 62f, 0, 0, 120);
+		model.startAction(1, new Object(), ActionType.move, ActionMode.walk, 62f, 0, 0, 120, 0);
 
-		assertThat(ActionGridPanel.remainingShare(state())).isZero();
+		assertThat(ActionGridPanel.remainingShare(state(), 0)).isZero();
 	}
 
 	@Test
@@ -164,7 +172,7 @@ public class ActionGridTest {
 	void describe_tellsTheAction() {
 		startWalking();
 
-		assertThat(ActionGridPanel.describe(1, state()))
+		assertThat(ActionGridPanel.describe(1, state(), 0))
 				.contains("Objekt 1", "walk", "move", "62", "Rest 4 s von 10 s", "120");
 	}
 
@@ -173,12 +181,12 @@ public class ActionGridTest {
 		startWalking();
 		model.stopAction(1, false, 1000);
 
-		assertThat(ActionGridPanel.describe(1, state())).contains("unterbrochen");
+		assertThat(ActionGridPanel.describe(1, state(), 1000)).contains("unterbrochen");
 	}
 
 	@Test
 	void describe_ofAnObjectWithoutAction() {
-		assertThat(ActionGridPanel.describe(7, state())).contains("noch keine Aktion");
+		assertThat(ActionGridPanel.describe(7, state(), 0)).contains("noch keine Aktion");
 	}
 
 	@Test

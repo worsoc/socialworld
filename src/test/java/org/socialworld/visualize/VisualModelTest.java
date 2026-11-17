@@ -29,7 +29,7 @@ public class VisualModelTest {
 	private final VisualModel model = new VisualModel();
 
 	private void startWalking(int objID, Object action) {
-		model.startAction(objID, action, ActionType.move, ActionMode.walk, 62f, 10000, 4000, 120);
+		model.startAction(objID, action, ActionType.move, ActionMode.walk, 62f, 10000, 4000, 120, 0);
 	}
 
 	private static AttributeArray values(int... values) {
@@ -48,6 +48,27 @@ public class VisualModelTest {
 		assertThat(state.duration).isEqualTo(10000);
 		assertThat(state.remainedDuration).isEqualTo(4000);
 		assertThat(state.priority).isEqualTo(120);
+	}
+
+	@Test
+	void remainedDurationAt_countsDownFromTheReport_notBelowZero() {
+		model.startAction(37, new Object(), ActionType.bodilyFunction, ActionMode.sleep, 62f, 610000, 310000, 120, 300000);
+
+		VisualModel.ObjectState state = model.snapshot().get(37);
+		assertThat(state.remainedDurationAt(300000)).isEqualTo(310000);
+		assertThat(state.remainedDurationAt(450000)).isEqualTo(160000);
+		assertThat(state.remainedDurationAt(700000)).isZero();
+		// a time before the report (clock not yet advanced) does not raise the value
+		assertThat(state.remainedDurationAt(299000)).isEqualTo(310000);
+	}
+
+	@Test
+	void remainedDurationAt_startsAgainWithEachReport() {
+		Object action = new Object();
+		model.startAction(37, action, ActionType.bodilyFunction, ActionMode.sleep, 62f, 610000, 610000, 120, 0);
+		model.startAction(37, action, ActionType.bodilyFunction, ActionMode.sleep, 62f, 610000, 310000, 120, 300000);
+
+		assertThat(model.snapshot().get(37).remainedDurationAt(400000)).isEqualTo(210000);
 	}
 
 	@Test

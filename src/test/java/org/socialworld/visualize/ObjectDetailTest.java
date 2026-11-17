@@ -34,7 +34,7 @@ public class ObjectDetailTest {
 	private final VisualModel model = new VisualModel();
 
 	private void act(int objID, ActionType type, ActionMode mode) {
-		model.startAction(objID, new Object(), type, mode, 62f, 10000, 4000, 120);
+		model.startAction(objID, new Object(), type, mode, 62f, 10000, 4000, 120, 0);
 	}
 
 	private void report(int objID, int value, long nowMillis) {
@@ -142,8 +142,15 @@ public class ObjectDetailTest {
 	void actionLines_tellTheRunningAction() {
 		act(1, ActionType.move, ActionMode.walk);
 
-		assertThat(String.join("|", ObjectDetailPanel.actionLines(model.snapshot().get(1))))
+		assertThat(String.join("|", ObjectDetailPanel.actionLines(model.snapshot().get(1), 0)))
 				.contains("walk (move)", "62", "120", "Rest 4 s von 10 s");
+	}
+
+	@Test
+	void actionLines_countTheRemainingTimeDown() {
+		act(1, ActionType.move, ActionMode.walk);
+
+		assertThat(ObjectDetailPanel.actionLines(model.snapshot().get(1), 3000)[2]).isEqualTo("Rest 1 s von 10 s");
 	}
 
 	@Test
@@ -151,7 +158,7 @@ public class ObjectDetailTest {
 		act(1, ActionType.move, ActionMode.walk);
 		model.stopAction(1, true, 100);
 
-		assertThat(ObjectDetailPanel.actionLines(model.snapshot().get(1))[0]).isEqualTo("Unt\u00E4tig");
+		assertThat(ObjectDetailPanel.actionLines(model.snapshot().get(1), 100)[0]).isEqualTo("Unt\u00E4tig");
 	}
 
 	@Test

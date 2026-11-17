@@ -48,10 +48,17 @@ public final class AttributeMatrixGenerator {
 	/** About a standard deviation of the Gaussian index, see CreateSimulationObjects.mapGaussToIndex. */
 	private static final double INDEX_PER_SIGMA = 25.0;
 
-	static final Drive HUNGER_DRIVE = Drive.through(480, 5150, 720, 9150);
-	static final Drive TIREDNESS_DRIVE = Drive.through(960, 5150, 1440, 9150);
+	/**
+	 * Rise per matrix step (1 simulated minute) for the median person, linear: the diagonal is 1.0.
+	 * With the diagonal 1.0 the matrix rounds the increment to a whole number, so these are integers;
+	 * the die (0.8 to 1.2) spreads people of a character to 3..5 and 2..4 per step.
+	 * The daily balance with eating and sleeping is in the event rules (EID concept section 13,
+	 * matrix concept section 4b); until 2026-11-17 the drive was exponential (diagonal above 1).
+	 */
+	static final Drive HUNGER_DRIVE = Drive.linear(4);
+	static final Drive TIREDNESS_DRIVE = Drive.linear(3);
 
-	/** x -> x * growth + constant, through two points reached from 0. */
+	/** x -> x * growth + constant per step. */
 	static final class Drive {
 		final float constant;
 		final float growth;
@@ -61,17 +68,8 @@ public final class AttributeMatrixGenerator {
 			this.growth = growth;
 		}
 
-		static Drive through(int step1, double value1, int step2, double value2) {
-			double ratio = value2 / value1;
-			double low = 1e-7;
-			double high = 0.1;
-			for (int i = 0; i < 200; i++) {
-				double g = (low + high) / 2;
-				if ((Math.exp(g * step2) - 1) / (Math.exp(g * step1) - 1) < ratio) low = g;
-				else high = g;
-			}
-			double g = (low + high) / 2;
-			return new Drive((float) (value1 * g / (Math.exp(g * step1) - 1)), (float) (1 + g));
+		static Drive linear(int perStep) {
+			return new Drive(perStep, 1f);
 		}
 	}
 

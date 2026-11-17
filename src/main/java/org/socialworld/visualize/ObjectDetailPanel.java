@@ -114,7 +114,7 @@ class ObjectDetailPanel extends JPanel {
 			textX += CHIP_SIZE + 5;
 		}
 
-		String[] lines = actionLines(state);
+		String[] lines = actionLines(state, nowMillis);
 		for (int i = 0; i < lines.length; i++) {
 			g.setFont(i == 0 ? FONT_HEADING : FONT_TEXT);
 			g.drawString(lines[i], textX, y);
@@ -216,14 +216,14 @@ class ObjectDetailPanel extends JPanel {
 	/**
 	 * @return the lines about the current action, the first one is the most important
 	 */
-	static String[] actionLines(VisualModel.ObjectState state) {
+	static String[] actionLines(VisualModel.ObjectState state, long nowMillis) {
 		if (!state.acting || ActionFamily.of(state.actionType) == null) {
 			return new String[] {"Unt\u00E4tig", " ", " "};
 		}
 		return new String[] {
 				state.actionMode + " (" + state.actionType + ")",
 				"Intensit\u00E4t " + (int) state.intensity + ", Priorit\u00E4t " + state.priority,
-				"Rest " + state.remainedDuration / 1000 + " s von " + state.duration / 1000 + " s"};
+				"Rest " + state.remainedDurationAt(nowMillis) / 1000 + " s von " + state.duration / 1000 + " s"};
 	}
 
 	static String attributeText(int value, int lastChange) {

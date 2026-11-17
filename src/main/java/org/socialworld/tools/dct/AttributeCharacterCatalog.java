@@ -31,7 +31,8 @@ import org.socialworld.attributes.Attribute;
 
 /**
  * The characters, sorted from the most ordinary (no. 1) to the rarest.
- * Read from characters.csv: no;name;sketch;9 level codes. Lines starting with # are comments.
+ * Read from characters.csv: no;name;sketch;9 level codes;sleepHours;mealsPerDay. Lines starting with # are comments.
+ * The last two fields may be left out, then the character has the default need (8 hours, 3 meals).
  */
 public class AttributeCharacterCatalog {
 
@@ -54,7 +55,8 @@ public class AttributeCharacterCatalog {
 
 	public static AttributeCharacterCatalog parse(String content) {
 		List<AttributeCharacter> characters = new ArrayList<>();
-		int expectedFields = 3 + Attribute.NUMBER_OF_ATTRIBUTES;
+		int fieldsWithoutNeed = 3 + Attribute.NUMBER_OF_ATTRIBUTES;
+		int fieldsWithNeed = fieldsWithoutNeed + 2;
 
 		try (BufferedReader reader = new BufferedReader(new java.io.StringReader(content))) {
 			String line;
@@ -63,8 +65,8 @@ public class AttributeCharacterCatalog {
 				if (line.isEmpty() || line.startsWith("#")) continue;
 
 				String[] fields = line.split(";", -1);
-				if (fields.length != expectedFields) {
-					throw new IllegalArgumentException("expected " + expectedFields + " fields: " + line);
+				if (fields.length != fieldsWithoutNeed && fields.length != fieldsWithNeed) {
+					throw new IllegalArgumentException("expected " + fieldsWithoutNeed + " or " + fieldsWithNeed + " fields: " + line);
 				}
 
 				int number = Integer.parseInt(fields[0].trim());
@@ -76,7 +78,14 @@ public class AttributeCharacterCatalog {
 				for (int i = 0; i < levels.length; i++) {
 					levels[i] = AttributeLevel.fromCode(fields[3 + i].trim());
 				}
-				characters.add(new AttributeCharacter(number, fields[1].trim(), fields[2].trim(), levels));
+				float sleepHours = AttributeCharacter.DEFAULT_SLEEP_HOURS;
+				int mealsPerDay = AttributeCharacter.DEFAULT_MEALS_PER_DAY;
+				if (fields.length == fieldsWithNeed) {
+					// decimal point, as everywhere in the rules
+					sleepHours = Float.parseFloat(fields[fieldsWithoutNeed].trim());
+					mealsPerDay = Integer.parseInt(fields[fieldsWithoutNeed + 1].trim());
+				}
+				characters.add(new AttributeCharacter(number, fields[1].trim(), fields[2].trim(), levels, sleepHours, mealsPerDay));
 			}
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);

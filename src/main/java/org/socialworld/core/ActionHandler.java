@@ -190,8 +190,9 @@ public class ActionHandler  {
 				this.actualAction.lowerRemainedDuration(1000 * secondsSinceLastCalculation);
 			}
 			else {
-				SocialWorld.startAction(object.getObjectID(), this.actualAction);
 				this.object.doAction(this.actualAction, 1000 * secondsSinceLastCalculation, this);
+				// after doAction: it lowers the remaining time, the display gets the new value
+				SocialWorld.startAction(object.getObjectID(), this.actualAction);
 			}
 			
 			secondsSinceLastCalculation = 0;

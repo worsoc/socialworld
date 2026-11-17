@@ -92,7 +92,7 @@ public class SimDashboard implements ISimVisualization, IObjectReceiver {
 
 		lastActions[objID - 1] = action;
 		model.startAction(objID, action, action.getType(), action.getMode(), action.getIntensity(),
-				action.getDuration(), action.getRemainedDuration(), action.getPriority());
+				action.getDuration(), action.getRemainedDuration(), action.getPriority(), ActualTime.inMilliseconds());
 	}
 
 	@Override

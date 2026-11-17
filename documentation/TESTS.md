@@ -5,8 +5,8 @@ What the automated tests check, what they assume, and what they need to run.
 | | |
 |---|---|
 | **Framework** | JUnit 5 with AssertJ |
-| **Test classes** | 55 |
-| **Test methods** | 496 active, 1 commented out |
+| **Test classes** | 57 |
+| **Test methods** | 511 active, 1 commented out |
 | **Database** | no test writes to MariaDB; a few tests read from it and skip themselves without it or with an empty table |
 | **Runs in CI** | yes, in a fresh clone without `application.properties` |
 | **Last updated** | 2026-11-17 |
@@ -26,6 +26,8 @@ What the automated tests check, what they assume, and what they need to run.
 | Core | `ActionHandlerTest` | 3 | a new action handler has no running action and nothing to stop | – |
 | Core | `EventTypeDistancesTest` | 3 | reach of seeing someone move, who can be moved by an event | – |
 | Core | `ActionEventTimingTest` | 9 | fixed intervals between the events of a running action, one event for single actions | – |
+| Core | `ObjectMasterIdRangeTest` | 4 | every type keeps to its band of 1000 IDs; beyond it the simulation stops | – |
+| Actions | `InventoryMouthTest` | 1 | the inventory gives the item in the mouth as property (eating, drinking) | – |
 | Objects | `SimObjectsCompletelyImplemented` | 3 | lexeme mappings of the object enums | – |
 | Calculation | `KnowledgeElementLinesVsJsonTest` | 17 | line and JSON build the same knowledge | partly: no `swpool_epd.sql` |
 | Calculation | `FunctionByTableTest` | 11 | table functions at 0..9999 | – |
@@ -45,12 +47,12 @@ What the automated tests check, what they assume, and what they need to run.
 | Map | `CubeTileAnalysisTest` | 10 | which tiles exist, their statistics and families | – |
 | Map | `CubeCatalogTest` | 11 | catalog equals `createTile`, `isFilled` | – |
 | MCT | `TileGridCubesTest` | 10 | map positions → cubes, against `LTileRaster` | – |
-| DCT | `AttributeArrayGeneratorTest` | 23 | attribute arrays from characters and text | – |
+| DCT | `AttributeArrayGeneratorTest` | 26 | attribute arrays from characters and text | – |
 | DCT | `AttributeMatrixGeneratorTest` | 19 | matrices for the characters and the mapping | – |
 | DCT | `TextFileTest` | 2 | reading a text file | – |
 | DCT | `CreationToolEventInfluenceDescriptionTest` | 3 | typed numbers get a decimal point | – |
 | DCT | `EventInfluenceCatalogTest` | 6 | reading event_situations.csv and event_influences.csv | – |
-| DCT | `EventInfluenceGeneratorTest` | 6 | generated event influence rules: tiers, order, factor, repetition, neutral rule | – |
+| DCT | `EventInfluenceGeneratorTest` | 9 | generated event influence rules: tiers, order, factor, repetition, neutral rule, need of sleep and food per character | – |
 | DCT | `AttributeCharacterOverviewTest` | 11 | overview of arrays and matrices per character | partly: no database or empty table |
 | DCT | `AttributeMatrixCellTest` | 6 | text of a matrix cell | – |
 | DCT | `AttributeMatrixTargetsTest` | 8 | target values of a matrix | partly: no database or empty table |
@@ -63,10 +65,10 @@ What the automated tests check, what they assume, and what they need to run.
 | PCT | `PerceptionSlotListTest` | 7 | slot input such as `3-18/5` | – |
 | PCT | `PerceptionSqlExportTest` | 5 | SQL export, nothing gets overwritten | partly: no `swpool_epd.sql` |
 | PCT | `PerceptionCreationToolTest` | 8 | store, table, texts, dialog | dialog: no screen |
-| Display | `VisualModelTest` | 19 | the model between the simulation threads and the display | – |
-| Display | `ActionGridTest` | 19 | action families, short names, fading, field under the mouse | – |
+| Display | `VisualModelTest` | 21 | the model between the simulation threads and the display, remaining duration counted down between two reports | – |
+| Display | `ActionGridTest` | 20 | action families, short names, fading, field under the mouse | – |
 | Display | `AttributeMatrixTest` | 23 | colour scale, sorting, the two blocks of 50, change mark | – |
-| Display | `ObjectDetailTest` | 20 | detail column, last actions, history of one human, selection by click | – |
+| Display | `ObjectDetailTest` | 21 | detail column, last actions, history of one human, selection by click | – |
 | Display | `PopulationHistoryTest` | 11 | history of all humans: families, mean, percentiles | – |
 | Display | `AutomaticSelectionTest` | 13 | the detail column follows the largest change | – |
 | Display | `PictureSequenceTest` | 9 | figures and timing of the picture sequence in the action grid | – |
@@ -189,6 +191,22 @@ Distances of `EventType`: how far an event reaches (`getEffectDistance`) and how
 
 - **Not checked:** `ActionHandler` itself; it needs a simulation object and the display. Interrupting and stopping still call `perform()` as before.
 
+### `ObjectMasterIdRangeTest`
+
+`src/test/java/org/socialworld/core/ObjectMasterIdRangeTest.java`
+
+`ObjectMaster` gives every type of simulation object a band of 1000 IDs: (index − 1) × 1000 to + 999, the first object gets the start + 1. Since 2026-11-17 `checkIdInRange` stops creating and loading with an `IllegalStateException` (also on the log and `System.err`) when an ID lies outside the band of its type. Before, the 1000th item would silently have got an ID in the band of magic.
+
+| Test | Checks |
+|---|---|
+| `bands_areOneThousandWide_andFollowTheTypeIndex` | humans 0..999, items 3000..3999, magic from 4000 |
+| `idsInsideTheBand_areAccepted` | human 1, items 3001 and 3999 |
+| `theThousandthItem_wouldLandInTheBandOfMagic_andStopsTheSimulation` | item 4000 is refused; the message names the ID, the type, its band 3001..3999 and the band of magic it would land in |
+| `theStartOfTheBand_isNeverGivenOut` | human 0 is refused; magic 5000 is refused without naming a band (no type above magic) |
+
+- **Assumes:** only the static check is tested, without creating objects; the running simulation creates 776 items (7 clothes for each of the 100 humans, 75 loose apples, one apple shared by all mouths). Items are also limited by their 799 start positions (`swgauss_position`); since 2026-11-17 `CreateSimulationObjects.initState` stops with an `IllegalStateException` when they are used up instead of drawing for ever (not tested: the drawing is random and inside the creator).
+- **Needs:** no database.
+
 ### `ActionHandlerTest`
 
 `src/test/java/org/socialworld/core/ActionHandlerTest.java`
@@ -202,6 +220,16 @@ Distances of `EventType`: how far an event reaches (`getEffectDistance`) and how
 - **Not checked:** a running or finished action and ending one by `requestStop()`, because starting an action needs a simulation object and the display.
 
 ---
+
+## Actions
+
+### `InventoryMouthTest`
+
+`src/test/java/org/socialworld/actions/handle/InventoryMouthTest.java`
+
+- **Checks:** an inventory with an apple in the mouth answers `inventory_mouth` with a valid property of type `simulationObject`, not with `ValueProperty.getInvalid()` as before 2026-11-17. `ActionBodilyFunction` takes the item for eating and drinking from there, so nobody could eat or drink before.
+- **Limit:** the apple itself is protected and only comes out of the property with a permitted token, as in `ActionBodilyFunction` through the `ObjectRequester`; that needs the running simulation. `StateInventory`, which passes the property on, is not tested.
+- **Needs:** no database.
 
 ## Objects
 
@@ -516,7 +544,7 @@ The catalog holds one tree per tile type (1/9 m for S and M, 1/3 m for L). The m
 |---|---|
 | Text die | keeps only letters, folds ä/ö/ü/ß, reads every third letter as a share of the alphabet; with several passes it reads the other letters |
 | Levels | bands in 0..9999 (`o`: 3800, 5000, 6200 for shares 0, 0.5, 1; `+++` ends at 9999), found by their code, inside the range of attribute values |
-| Catalog | `characters.csv` holds 100 characters in order; a wrong number of levels is rejected |
+| Catalog | `characters.csv` holds 100 characters in order; a wrong number of levels is rejected; every character has a need of sleep (6 to 10 h) and food (1 to 5 meals), farmer 8 h and 3, ascetic 6 h and 1, wrestler 5 meals; without the two columns the default need (8 h, 3) applies; 7.3 h, 10.5 h, 0 and 6 meals are rejected |
 | Generator | 199 arrays, every `gauss_index` once, every value in its band, same text same values, too short a text and impossible `aa_id`s rejected, the counted letters are used up exactly |
 | Fine scale | more than half of the values are no multiples of 100 |
 | Adjusting by hand | `withValues` keeps character, index and id; `withDisplayValues` keeps unmoved values, moved ones become slider × 100, limited to 0..9999 |
@@ -539,7 +567,7 @@ Generated matrices, partly calculated with the real `FunctionByMatrix`. Nothing 
 | Strain | hunger and tiredness press power and mood down |
 | Signature | hunger lifts the mood of the ascetic; wrong lines in the signatures file are rejected |
 | Anchor | exactly one constant cell per column, never on the diagonal |
-| Hunger, tiredness | reach their reference points (8 h > 5000, 12 h ≥ 9000; 16 h > 5000, 24 h ≥ 9000); hunger rises from 0 in the real matrix |
+| Hunger, tiredness | rise linearly (diagonal 1.0): 240 and 180 per hour for the median person; in every real matrix hunger rises by 3 to 5 per step, the same at 1000 and at 8000; hunger rises from 0 in the real matrix. Until 2026-11-17 the rise was exponential with reference points (8 h > 5000, 12 h ≥ 9000) |
 | Writer (recording store) | order of the foreign keys: delete mapping, gauss rows, cells, matrices; insert matrices, cells, gauss rows, mapping; rows and columns from 1 |
 | Mapping | all 199 × 199 combinations once; always a matrix of the character of the array; all variants are reached; both signs of the drawn index give the same variant |
 
@@ -587,6 +615,9 @@ The two sources of the generated event influence rules: `event_situations.csv` (
 | `factorOfTheEventType_isAppliedAndRounded` | farmer hit by the club (factor 1.5): mood −45 / −450 / −750 / −750, by a stab: −30 / −300 / −500 / −500 |
 | `generate_writesOneRulePerEventTypeAndInfluenceType_andRepeatsTheTenCharacters` | 193 × 100 rules; with 10 characters influence types 0, 10, …, 90 get the farmer's rule, 1 the farmer's wife's |
 | `eventTypeWithoutSituation_andSituationWithoutEffect_getANeutralRuleThatChangesNothing` | `targetEat` (no situation) and `selfExamineByLook` (no effect for the farmer) get an empty rule; evaluated, it gives the attribute array back unchanged |
+| `needOfSleep_scalesTheSleepSteps` | tiredness while sleeping × 8 / sleepHours: farmer (8 h) −9 / −60 / −85 / −102 unchanged, shopkeeper (7.5 h) −10 / −64 / −91 / −109 |
+| `needOfFood_scalesHungerAndTirednessWhileEating` | × 3 / mealsPerDay on hunger and tiredness while eating: shepherd (2 meals) hunger −3 / −24 / −35 / −41, tiredness +5 / +3 / +2; farmhand (4 meals, 8.5 h) hunger −12 / −17 / −20, sleep −64 / −96 / −112 |
+| `needFactor_isOneOutsideSleepingAndEating` | ascetic (6 h, 1 meal): 8 / 6 for sleep, 3 for hunger while eating, 1 for mood while eating and for walking |
 
 - **Assumes:** the resource files as they are in git (values of the farmer).
 - **Needs:** no database.
@@ -776,6 +807,7 @@ The display of the running simulation (`SimDashboard`). The panels are built but
 | End of an action | an ended action stays readable; an action that is not done counts as interrupted |
 | Attributes | the first report is no change; changes are calculated per attribute and survive reports without a change; values are copied; the nothing object is ignored |
 | Start values | do not count as a report and do not overwrite a reported value |
+| Remaining duration | counted down from the time of the last report, never below 0 and not raised by a time before the report; each report of the action handler starts again from its value (a sleep reports only every 300 s, EID concept 7.1) |
 | Threads | a snapshot does not change afterwards; reports from several threads all arrive |
 
 ### `ActionGridTest`
@@ -786,7 +818,7 @@ The display of the running simulation (`SimDashboard`). The panels are built but
 |---|---|
 | Families | every `ActionType` except `ignore` has a family; the colours differ from each other and from the idle gray |
 | Short names | every `ActionMode` except `ignore` has a unique name of at most 8 characters |
-| Field | a running action has the full colour, an ended one fades to gray; share of the remaining duration; black or white text by contrast |
+| Field | a running action has the full colour, an ended one fades to gray; share of the remaining duration, counted down between two reports; black or white text by contrast |
 | Mouse | position to ID with IDs starting at 1, positions outside stay in range; tool tip text |
 | Rates | sum of the attribute changes; the rate per second is renewed once per second |
 
@@ -811,7 +843,7 @@ The display of the running simulation (`SimDashboard`). The panels are built but
 |---|---|
 | Last actions | newest first; the oldest drops out when full; ignored actions are left out; a snapshot does not change afterwards |
 | History of one human | unknown humans are skipped; one sample per interval; oldest first and forgets beyond its length |
-| Texts | current action or idle; change with arrow on the display scale; position in meters with a decimal point; age and interruption |
+| Texts | current action or idle, its remaining time counted down between two reports; change with arrow on the display scale; position in meters with a decimal point; age and interruption |
 | Graphics | share of the bar; the scale of the history follows the values and keeps a smallest span |
 | Selection | a press selects the right human in the grid and in the sorted matrix; a press on the head of the matrix selects nobody |
 

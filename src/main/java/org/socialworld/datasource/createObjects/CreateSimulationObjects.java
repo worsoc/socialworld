@@ -1,24 +1,20 @@
 /*
-* Social World
-* Copyright (C) 2015  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2015  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.datasource.createObjects;
 
 import java.lang.reflect.InvocationTargetException;
@@ -143,6 +139,17 @@ public abstract class CreateSimulationObjects {
 		indexGPPT = mapGaussToIndex(gauss_value, GaussPoolPerceptionType.CAPACITY_GPPT_ARRAY);
 		hiddenObject.setPerceptionTypes(GaussPoolPerceptionType.getInstance().getPerceptionTypes(indexGPPT));
 		
+        // Every object of a kind gets its own start position. The drawn index lies in
+        // -(CAPACITY - 1) .. CAPACITY - 1, so there are 2 * CAPACITY - 1 of them. When they are used up,
+        // the loop below would draw for ever (seen 2026-11-17 with 800 items), so stop here instead.
+        int countPositions = 2 * GaussPoolPosition.CAPACITY_GPPos_ARRAY - 1;
+        if (usedPositionIndex.size() >= countPositions) {
+            String message = getClass().getSimpleName() + ": all " + countPositions
+                    + " start positions of GaussPoolPosition (swgauss_position) are used up, no position for one more object."
+                    + " Create fewer objects of this kind or add positions (CAPACITY_GPPos_ARRAY and the table).";
+            System.err.println(message);
+            throw new IllegalStateException(message);
+        }
         do {
             indexPosition = random.nextInt(GaussPoolPosition.CAPACITY_GPPos_ARRAY);
             if (random.nextBoolean() == false) indexPosition = indexPosition * -1;
