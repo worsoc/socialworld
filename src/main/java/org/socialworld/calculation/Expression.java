@@ -74,7 +74,6 @@ public class Expression implements IObjectReceiver{
 	private String debugName = "";
 	
 	protected static Calculation calculation = Calculation.getInstance();
-	protected static Functions functions = Functions.getInstance();;
 
 	
 	private static AccessTokenExpression token = AccessTokenExpression.getValid();

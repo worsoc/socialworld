@@ -32,7 +32,6 @@ import org.socialworld.calculation.functions.FunctionByMatrix_Matrix;
 import org.socialworld.collections.CapacityQueue;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.Event;
-import org.socialworld.core.EventPriority;
 import org.socialworld.core.EventType;
 import org.socialworld.core.Simulation;
 import org.socialworld.core.SocialWorldThread;
@@ -52,11 +51,14 @@ public  class AttributeCalculator extends SocialWorldThread {
 	// Die regulären "Alles-Ok-aber-keine-Änderung"-Zähler
 	private long counterWithChanges_Event = 0;
 	private long counterNoChanges_Event = 0;
+	private long counterWithChanges_SimpleMatrix = 0;
 	private long counterNoChanges_SimpleMatrix = 0;
 	private long counterNoChanges_ComplexMatrix = 0;
 
 	// Die technischen Fehler-Zähler für fehlerhafte DSL/JSON-Regeln
 	private long counterErrors_Event = 0;
+	// no rule for the pair of event type and influence type (not an error of a rule)
+	private long counterNoRule_Event = 0;
 	private long counterErrors_SimpleMatrix = 0;
 	private long counterErrors_ComplexMatrix = 0;
 	
@@ -263,27 +265,15 @@ public  class AttributeCalculator extends SocialWorldThread {
 			EventType type = event.getEventType();
 			int objectID = stateAnimal.getObjectID();
 
-			// 1. Priorisierte Einlass-Drosselung für Wahrnehmungen
-			if (type.isEventToPercipient()) { 
-				EventPriority priority = type.getPriority();
-
-				// Nur gedrosselte Stufen (DYNAMIC & AMBIENT) rufen das Singleton an.
-				// CRITICAL (Gesehene Angriffe, Schreie) überspringt diesen Block komplett!
-				if (priority.isThrottleable()) {
-
-					// Prüfen, ob das Tier in diesem Tick (oder den letzten X Sekunden) 
-					// bereits ein Event in die Queue gedrückt hat. Hier mit 1 Sekunde Cooldown.
-		            if (priority == EventPriority.AMBIENT) {
-		                // Rigorose Drosselung
-		                if (!this.simulation.checkAndApplyCooldown(objectID, TickObjectCooldown.TYPE_PERCEPTION_AMBIENT, 1)) {
-		                    return; // Abgelehnt! Verworfen ohne Allokation
-		                }
-		            } else {
-		                // Moderate Drosselung 
-		                if (!this.simulation.checkAndApplyCooldown(objectID, TickObjectCooldown.TYPE_PERCEPTION, 1)) {
-		                    return; // Abgelehnt! Verworfen ohne Allokation
-		                }
-		            }
+			// 1. Drosselung der Wirkung auf die Attribute nach Kritikalität: Stufe am EventType
+			//    (Konzept EID 7.2 und 7.3). Stufe 0 wird nie gedrosselt. Ein abgelehntes Event wird
+			//    nur für die Attribute verworfen, Wahrnehmung und Reaktion laufen getrennt davon.
+			int level = type.getAttributeCooldownLevel();
+			if (level > 0) {
+				if (!this.simulation.checkAndApplyCooldown(objectID,
+						TickObjectCooldown.getAttributesCooldownType(level),
+						TickObjectCooldown.getAttributesCooldownSeconds(level))) {
+					return; // Abgelehnt! Verworfen ohne Allokation
 				}
 			}
 			
@@ -363,7 +353,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 			
 			if (resultAttributeArray.isValid()) {
 				if (resultAttributeArray.getTransferCode() == ValueTransferCode.noChanges) {
-					counterNoChanges_Event++;
+					// counted in getAttributesChangedByEvent (no change, no rule or rule error)
 					return ATTRIBUTE_CALCULATOR_RETURNS_NO_CHANGES;
 				}
 				else {
@@ -406,9 +396,11 @@ public  class AttributeCalculator extends SocialWorldThread {
 			EventInfluenceAssignment.getInstance().getEventInfluenceDescription(
 				eventType, eventInfluenceType);
 
-		// GEGEN NULL ABSICHERN (Falls im JSON-Regelwerk die Beschreibung fehlt)
-		if (eventInfluenceDescription == null) {
-			this.counterErrors_Event++;
+		// GEGEN NULL ABSICHERN (Falls im JSON-Regelwerk die Beschreibung fehlt).
+		// The pool gives a placeholder without functions for a missing rule, not null.
+		// A neutral rule from the database has one function and counts as "ohne Änderung".
+		if (eventInfluenceDescription == null || eventInfluenceDescription.countFunctions() == 0) {
+			this.counterNoRule_Event++;
 			oldAttributes = stateAnimal.getProperty(token, PropertyName.simobj_attributeArray);
 			oldAttributes.setTransferCode(ValueTransferCode.noChanges);
 			return oldAttributes;
@@ -500,7 +492,7 @@ public  class AttributeCalculator extends SocialWorldThread {
 			
 			if (resultAttributeArray.isValid()) {
 				if (resultAttributeArray.getTransferCode() == ValueTransferCode.noChanges) {
-					counterNoChanges_ComplexMatrix++;
+					// counted in getAttributesChangedByComplexMatrix (no change or error)
 					return ATTRIBUTE_CALCULATOR_RETURNS_NO_CHANGES;
 				}
 				return hiddenWriteAccess.setAttributes(resultAttributeArray);
@@ -588,9 +580,10 @@ public  class AttributeCalculator extends SocialWorldThread {
 			
 			if (resultAttributeArray.isValid()) {
 				if (resultAttributeArray.getTransferCode() == ValueTransferCode.noChanges) {
-					counterNoChanges_SimpleMatrix++;
+					// counted in getAttributesChangedBySimpleMatrix (no change or error)
 					return ATTRIBUTE_CALCULATOR_RETURNS_NO_CHANGES;
 				}
+				counterWithChanges_SimpleMatrix++;
 				return hiddenWriteAccess.setAttributes(resultAttributeArray);
 			}
 			else {
@@ -667,20 +660,24 @@ public  class AttributeCalculator extends SocialWorldThread {
 		System.out.printf("[TELEMETRIE] Physisches CPU-Slice-Limit: max. %d kontinuierliche Polls/Slice (Schwelle: 2.00 ms)%n", 
 			    this.maxPollsRecordedInCpuSlice);
 		System.out.println("--- AttributeCalculator-Detaillast ---");
-		System.out.println("Regulär MIT Änderung (Event)         : " + this.counterWithChanges_Event);
+		System.out.println("Regulär MIT Änderung (Event)          : " + this.counterWithChanges_Event);
 		System.out.println("Regulär ohne Änderung (Event)         : " + this.counterNoChanges_Event);
+		System.out.println("Regulär MIT Änderung (Simple Matrix)  : " + this.counterWithChanges_SimpleMatrix);
 		System.out.println("Regulär ohne Änderung (Simple Matrix) : " + this.counterNoChanges_SimpleMatrix);
 //		System.out.println("Regulär ohne Änderung (Complex Matrix): " + this.counterNoChanges_ComplexMatrix);
-//		System.out.println("-> DSL/Regel-Fehler (Event)   : " + this.counterErrors_Event);
-//		System.out.println("-> DSL/Regel-Fehler (Simple Matrix)   : " + this.counterErrors_SimpleMatrix);
+		System.out.println("Ohne Regel (Event)                    : " + this.counterNoRule_Event);
+		System.out.println("-> DSL/Regel-Fehler (Event)           : " + this.counterErrors_Event);
+		System.out.println("-> DSL/Regel-Fehler (Simple Matrix)   : " + this.counterErrors_SimpleMatrix);
 //		System.out.println("-> DSL/Regel-Fehler (Complex Matrix)  : " + this.counterErrors_ComplexMatrix);
 
 		// Allokationsfreier Reset für den nächsten Zyklus
 		this.counterWithChanges_Event = 0;
 		this.counterNoChanges_Event = 0;
+		this.counterWithChanges_SimpleMatrix = 0;
 		this.counterNoChanges_SimpleMatrix = 0;
 		this.counterNoChanges_ComplexMatrix = 0;
 		this.counterErrors_Event = 0;
+		this.counterNoRule_Event = 0;
 		this.counterErrors_SimpleMatrix = 0;
 		this.counterErrors_ComplexMatrix = 0;
 	}

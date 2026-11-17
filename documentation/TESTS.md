@@ -5,11 +5,11 @@ What the automated tests check, what they assume, and what they need to run.
 | | |
 |---|---|
 | **Framework** | JUnit 5 with AssertJ |
-| **Test classes** | 48 |
-| **Test methods** | 458 active, 1 commented out |
+| **Test classes** | 55 |
+| **Test methods** | 496 active, 1 commented out |
 | **Database** | no test writes to MariaDB; a few tests read from it and skip themselves without it or with an empty table |
 | **Runs in CI** | yes, in a fresh clone without `application.properties` |
-| **Last updated** | 2026-11-11 |
+| **Last updated** | 2026-11-17 |
 
 > Keep this file up to date: every new or changed test changes this file in the same step.
 
@@ -22,18 +22,23 @@ What the automated tests check, what they assume, and what they need to run.
 | Start | `SocialWorldTest` | 1 | the main program exists as a singleton | – |
 | Attributes | `AttributeArrayTest` | 5 | range 0..9999 and the display as 0..99 | – |
 | Core | `TickRandomCacheTest` | 10 | random value per object and tick | – |
-| Core | `TickObjectCooldownTest` | 6 | own step of the matrix with an offset per object | – |
+| Core | `TickObjectCooldownTest` | 10 | own step of the matrix with an offset per object, cooldown of the effect on the attributes by criticality stage | – |
 | Core | `ActionHandlerTest` | 3 | a new action handler has no running action and nothing to stop | – |
+| Core | `EventTypeDistancesTest` | 3 | reach of seeing someone move, who can be moved by an event | – |
+| Core | `ActionEventTimingTest` | 9 | fixed intervals between the events of a running action, one event for single actions | – |
 | Objects | `SimObjectsCompletelyImplemented` | 3 | lexeme mappings of the object enums | – |
 | Calculation | `KnowledgeElementLinesVsJsonTest` | 17 | line and JSON build the same knowledge | partly: no `swpool_epd.sql` |
 | Calculation | `FunctionByTableTest` | 11 | table functions at 0..9999 | – |
 | Calculation | `FunctionByMatrixSimpleTest` | 9 | SIMPLE mode of the real `FunctionByMatrix` | – |
 | Calculation | `ConstantTest` | 1 | steepness of the sigmoid | – |
 | Calculation | `BranchingProbabilityTest` | 3 | a single comparison is decided by the sigmoid | – |
+| Calculation | `MXPlusNTest` | 1 | many MX+N expressions are all valid and share the func_id of the same function | – |
+| Calculation | `ChangeAttributeConditionTest` | 4 | condition term of an event influence rule: several comparisons are strict, one stays soft | – |
+| Calculation | `SequenceTest` | 2 | every expression of a sequence runs exactly once and in order, for 1 to 15 expressions | – |
 | Calculation | `EventInfluenceRulesFromDatabaseTest` | 1 | real rules with real arrays | no database or empty table |
 | Calculation | `PositionCalculatorSectorsTest` | 9 | whether a new position stays in the same search sectors | – |
 | Data | `Action2PerformerDescriptionPoolTest` | 4 | intensity × power, expression parser | – |
-| Data | `FunctionPoolTest` | 2 | building a matrix from flat arrays | – |
+| Data | `FunctionPoolTest` | 5 | building a matrix from flat arrays, table functions under func_id 0..10, func_ids for functions created at runtime | – |
 | Data | `GaussPoolAAACMMappingTest` | 4 | mapping of the two drawn indices | – |
 | Data | `DatabaseAssumptionsTest` | 1 | a test is skipped without a database | – |
 | Map | `CubeSurfaceTest` | 11 | cube addresses against a surface computed independently | – |
@@ -44,6 +49,8 @@ What the automated tests check, what they assume, and what they need to run.
 | DCT | `AttributeMatrixGeneratorTest` | 19 | matrices for the characters and the mapping | – |
 | DCT | `TextFileTest` | 2 | reading a text file | – |
 | DCT | `CreationToolEventInfluenceDescriptionTest` | 3 | typed numbers get a decimal point | – |
+| DCT | `EventInfluenceCatalogTest` | 6 | reading event_situations.csv and event_influences.csv | – |
+| DCT | `EventInfluenceGeneratorTest` | 6 | generated event influence rules: tiers, order, factor, repetition, neutral rule | – |
 | DCT | `AttributeCharacterOverviewTest` | 11 | overview of arrays and matrices per character | partly: no database or empty table |
 | DCT | `AttributeMatrixCellTest` | 6 | text of a matrix cell | – |
 | DCT | `AttributeMatrixTargetsTest` | 8 | target values of a matrix | partly: no database or empty table |
@@ -143,6 +150,44 @@ Works on its own instances with 10 objects (package-private constructor), not on
 | `aMissedSecond_isMadeUpInTheSamePeriod` | a missed second is made up, never a second release in a period |
 | `objectOutsideOfTheRange_isLetThrough` | an ID outside of the range is let through |
 | `otherCooldownTypes_areNotDisturbed` | other cooldown types are independent |
+| `attributesCooldown_typesAndWindowsOfTheStages` | stages 1 to 4 have the types `TYPE_ATTRIBUTES_HIGH` … `TYPE_ATTRIBUTES_BACKGROUND` and the windows 5, 10, 30, 60 s; stage 0 has no cooldown |
+| `attributesCooldown_letsOneEventThroughPerWindow` | stage 3: the first event passes, a second one in the same second or within 30 s not, the next window again; another object is independent |
+| `attributesCooldown_stagesDoNotBlockEachOther` | walking (stage 3) does not block running (stage 1), running passes again after 5 s |
+| `attributeCooldownLevels_ofTheEventTypes` | stages of some event types (e.g. `percipientMoveRun` 1, `percipientExistsDistance5000` 4, `selfMoveWalk` 3, `selfSleep` and `candidatesMoveWalk` 0); of the percipient types exactly the `CRITICAL` ones have stage 0 |
+
+### `EventTypeDistancesTest`
+
+`src/test/java/org/socialworld/core/EventTypeDistancesTest.java`
+
+Distances of `EventType`: how far an event reaches (`getEffectDistance`) and how close a candidate must be to be moved by it (`getPositionChangeDistance`, checked in `PositionCalculator`).
+
+| Test | Checks |
+|---|---|
+| `seeingSomeoneMove_reachesFartherThanBeingReallyClose` | percipientMove… reach 20, 30, 10, 20, 20, 50 m (walk, run, sneak, jump, swim, fly), each farther than its candidatesMove… |
+| `positionChangeDistance_onlyForTheCandidatesThatCanBeMoved` | candidatesMove… 500, candidatesWeapon… and candidatesPunch… their effect distance, all others 0; only candidates events relevant for changing the position have one |
+| `relevantForChangingPosition_onlyTheListedRanges` | `isRelevantForChangingPosition` holds for moving, weapon and punch events, not for sleep, talking, presence or seeing someone move (before 2026-11-16 it held for every event) |
+
+- **Not checked:** `ActionMove` creating the percipientMove events and who sees them; that needs a running simulation.
+
+### `ActionEventTimingTest`
+
+`src/test/java/org/socialworld/core/ActionEventTimingTest.java`
+
+`ActionEventTiming` decides when a running action is calculated again: `perform()` (and so its events) at t = 0, a, 2a, … with the interval a of its `ActionMode` (`getEventIntervalSeconds()`), once for the interval 0, and at the end of the duration only the remaining time passes without `perform()`. The test runs actions through these calculations the way `ActionHandler` does.
+
+| Test | Checks |
+|---|---|
+| `drinkingTenSeconds_givesFiveEvents` | drink (2 s), 10 s: 5 events, done after 10 s |
+| `drinkingFiveSeconds_givesEventsAt0_2_4` | drink, 5 s: 3 events, done after 5 s |
+| `eatingFifteenMinutes_gives90Events` | eat (10 s), 15 min: 90 events |
+| `sleepingEightHours_gives96Events` | sleep (300 s), 8 h: 96 events |
+| `walkingThirtySeconds_givesOneEventPerSecond` | walk (1 s), 30 s: 30 events |
+| `aPunchWithADuration_givesOneEvent_andEndsAfterItsDuration` | a punch with 3 s: 1 event, done after 3 s |
+| `anActionWithoutDuration_givesOneEvent` | duration 0: 1 event |
+| `aDurationWithMilliseconds_endsAtTheNextFullSecond` | look (5 s), 7.3 s: 2 events, done after 8 s |
+| `intervals_ofTheActionModes` | the intervals of a few action modes |
+
+- **Not checked:** `ActionHandler` itself; it needs a simulation object and the display. Interrupting and stopping still call `perform()` as before.
 
 ### `ActionHandlerTest`
 
@@ -250,6 +295,43 @@ A single comparison of an attribute with a constant is decided with a probabilit
 | `less_isLikelyWhenTheValueIsLow` | the same, mirrored |
 | `atTheThreshold_bothBranchesAreEquallyLikely` | 0.5 at the threshold |
 
+### `MXPlusNTest`
+
+`src/test/java/org/socialworld/calculation/expressions/MXPlusNTest.java`
+
+- **Checks:** 20,000 `MXPlusN` expressions with 10 different functions (`tiredness;1.00;-50.00` … `-41.00`) are all valid. Each gets a func_id from `FunctionPool.FIRST_RUNTIME_FUNCTION_ID` on; the same function always the same func_id, different functions different ones. Before 2026-11-16 every expression took its own slot in the class `Functions`, which was limited to 10000..99999.
+- **Assumes:** like the new tests of `FunctionPoolTest`, it builds the singleton `FunctionPool`.
+
+### `ChangeAttributeConditionTest`
+
+`src/test/java/org/socialworld/calculation/expressions/ChangeAttributeConditionTest.java`
+
+The condition term of an event influence rule (`ChangeAttribute.createConditionExpression`) holds comparisons of three arguments each: attribute, operator, value. One comparison stays a single attribute comparison and is decided by the sigmoid. Two or more are joined by AND and decided strictly. Builds real rules from JSON objects ("then mood + 100") and evaluates them for 200 objects.
+
+| Test | Checks |
+|---|---|
+| `twoComparisons_areStrictAtBothBounds` | `mood >= 3800` and `mood < 5000`: 3799 and 5000 never change mood, 3800 and 4999 always do |
+| `threeComparisons_allMustHold` | adds `courage < 6000`: the rule applies only if all three hold |
+| `oneComparison_staysSoftAtTheThreshold` | `mood >= 5000` at 5000: 25 % to 75 % of the objects change mood |
+| `argumentsThatAreNoMultipleOfThree_changeNothing` | four arguments make the condition invalid, mood stays unchanged |
+
+- **Assumes:** the random tick is fixed (`TickRandomCache.setTick(5)`), so the soft case is the same in every run.
+- **Needs:** no database.
+
+### `SequenceTest`
+
+`src/test/java/org/socialworld/calculation/expressions/SequenceTest.java`
+
+`Sequence` has exactly three parts, so it splits a longer list into a tree of groups of three: over 6 expressions it takes [0..2] and [3..5] and passes the rest one level down, 4 to 6 become [0..2], [rest] and `Nothing`, 1 to 3 are the parts themselves. `ChangeAttributes` builds the entries of an event influence rule this way. Each test expression writes its number into a list when it is evaluated.
+
+| Test | Checks |
+|---|---|
+| `everyExpressionRunsOnceInOrder_forCounts1To15` | for 1 to 15 expressions the list is exactly 0, 1, …, n−1. Before the fix of 2026-11-17, 4, 5, 10 and 11 expressions threw `ArrayIndexOutOfBoundsException`, and 6 and 12 lost three expressions and ran three others twice |
+| `emptySequenceRunsNothing` | an empty sequence runs nothing |
+
+- **Assumes:** `Sequence` skips a third part with the operation `nothing` (`Expression.evaluate`, `case sequence`). A new `Expression` has that operation, so the test expressions get the operation `value`, like real entries (`Branching`).
+- **Needs:** no database.
+
 ### `EventInfluenceRulesFromDatabaseTest`
 
 `src/test/java/org/socialworld/calculation/descriptions/EventInfluenceRulesFromDatabaseTest.java`
@@ -258,6 +340,7 @@ Evaluates a sample of the real rules of `swpool_eid` (every 97th) with all real 
 
 - **Checks:** the share of objects that change the target attribute follows the sigmoid of the condition attribute (k = 500), per 1000 steps of distance to the threshold, tolerance 0.03. A rule that fires writes m × basis + n (within 1, limited to 0..9999). Other attributes stay unchanged.
 - **Needs:** MariaDB with data, it only reads. Without a database or with an empty table it is skipped, as well as when the sample has no rule of the checked form. Errors caused by the data let it fail.
+- **Note:** it checks the old form of rule (one comparison, MX+N with another attribute). The rules generated from `event_influences.csv` (since 2026-11-16) have two comparisons or none, so once they are in `swpool_eid` this test skips itself.
 - **Prints:** the table of expected and observed shares as `RULECHECK` lines with `gradlew test -i`.
 
 ### `PositionCalculatorSectorsTest`
@@ -300,7 +383,15 @@ Evaluates a sample of the real rules of `swpool_eid` (every 97th) with all real 
 
 `src/test/java/org/socialworld/datasource/pool/FunctionPoolTest.java`
 
-- **Checks:** `createMatrix` puts every share, function and offset of a flat array into its own cell, and offsets stay offsets. With floating-point shares the matrix does not divide by 100.
+| Test | Checks |
+|---|---|
+| `createMatrix_putsEveryCellInItsPlace` | `createMatrix` puts every share, function and offset of a flat array into its own cell, and offsets stay offsets |
+| `createMatrix_withFloatingPointShares_doesNotDivideBy100` | with floating-point shares the matrix does not divide by 100 |
+| `tableFunctions_haveTheIndexOfTheirTypeAsFuncID` | func_id 0..10 hold the table function of the `FunctionByTable_Type` with that index; they compute the same as a new `FunctionByTable` of the type at 0, 1111, …, 9999 |
+| `register_givesEachFunctionObjectOneFuncIDFromTheRuntimeRange` | `register` gives a function a func_id from `FIRST_RUNTIME_FUNCTION_ID` (10000) on, the same object always the same func_id, another object another one; `getFunction` finds them |
+| `getFunction_beyondTheRegisteredRuntimeFunctions_isNothing` | an unknown func_id gives `FunctionNothing` |
+
+- **Assumes:** the three new tests use the singleton `FunctionPool`. Building it tries to read the matrices from the database (only reading); without a database it prints the caught exception and goes on with the test data.
 - **Not checked:** reading from `swpool_matrix_rowcol`.
 
 ### `GaussPoolAAACMMappingTest`
@@ -464,6 +555,41 @@ Generated matrices, partly calculated with the real `FunctionByMatrix`. Nothing 
 `src/test/java/org/socialworld/tools/dct/CreationToolEventInfluenceDescriptionTest.java`
 
 - **Checks:** `withDecimalPoint` turns `1,5` into `1.5`, leaves `1.5` and `-20` as they are, and removes surrounding spaces.
+
+### `EventInfluenceCatalogTest`
+
+`src/test/java/org/socialworld/tools/dct/EventInfluenceCatalogTest.java`
+
+The two sources of the generated event influence rules: `event_situations.csv` (situation, event type, factor) and `event_influences.csv` (character, situation, sentence, attribute, four steps).
+
+| Test | Checks |
+|---|---|
+| `situations_fromTheResource_coverTheRelevantEventTypesOnce` | 91 event types; e.g. `selfSleep` is situation 1, `candidatesWeaponClub` situation 20 with factor 1.5, `percipientMoveWalk` factor 0; `targetEat` has no situation |
+| `situations_rejectAnUnknownEventTypeAndAnEventTypeTwice` | an unknown event type or one listed twice is refused |
+| `catalog_fromTheResource_hasTheCharacters1To10WithAll25Situations` | the file has the characters 1 to 10, each with lines in all 25 situations |
+| `catalog_lineWithoutAttribute_onlyRecordsTheSentence` | farmer, situation 9: one line with a sentence and no attribute |
+| `catalog_readsTheFourSteps` | attribute and the four steps of a line |
+| `catalog_rejectsStepsWithBothSignsAndUnknownAttributes` | steps with both signs in one line and an unknown attribute are refused |
+
+- **Assumes:** the resource files as they are in git; the counts change when situations or characters are added.
+
+### `EventInfluenceGeneratorTest`
+
+`src/test/java/org/socialworld/tools/dct/EventInfluenceGeneratorTest.java`
+
+`EventInfluenceGenerator` and `EventInfluenceRuleBuilder` build the rules from the two files and `characters.csv`. The built rules are parsed and evaluated like in the simulation (`EventInfluenceDescription`). Writes into `InMemoryEventInfluenceStore`.
+
+| Test | Checks |
+|---|---|
+| `roundSymmetric_roundsHalfAwayFromZero` | 7.5 → 8, −7.5 → −8, 0.4 → 0, −0.5 → −1 |
+| `farmerPunched_eachTierOfTheBandHasItsStep` | farmer, punched: mood 1500 / 3000 / 6000 / 8500 lose 10 / 100 / 200 / 200 (band 2000..8000, middle 5000) |
+| `farmerPunched_onlyOneTierApplies_inBothDirections` | falling mood 2050 → 1950 (no second step below the band), rising courage 6195 → 6205 (no second step above the band) |
+| `factorOfTheEventType_isAppliedAndRounded` | farmer hit by the club (factor 1.5): mood −45 / −450 / −750 / −750, by a stab: −30 / −300 / −500 / −500 |
+| `generate_writesOneRulePerEventTypeAndInfluenceType_andRepeatsTheTenCharacters` | 193 × 100 rules; with 10 characters influence types 0, 10, …, 90 get the farmer's rule, 1 the farmer's wife's |
+| `eventTypeWithoutSituation_andSituationWithoutEffect_getANeutralRuleThatChangesNothing` | `targetEat` (no situation) and `selfExamineByLook` (no effect for the farmer) get an empty rule; evaluated, it gives the attribute array back unchanged |
+
+- **Assumes:** the resource files as they are in git (values of the farmer).
+- **Needs:** no database.
 
 ### `AttributeCharacterOverviewTest`
 
@@ -801,7 +927,7 @@ The scale of the range map, on a panel of 648 × 448 pixels.
 - Simulation run, events, actions, conversation: no tests so far.
 - `SimDashboard` as a whole: window, timer, buttons and reading the position of a human need a running program; only the model and the panels are tested.
 - ACT as a whole: the window, refusing a busy human or an action already planned, inserting the action into the pipeline, ending a running action, checking the search tree (`SearchTreeCheck`) and moving a human by drag need a running simulation; only the request, the properties, the range and the scale are tested. The direct perform of the first version was checked by hand on 2026-11-10, the pipeline on 2026-11-11 (busy message and the say shown in the dashboard), ending a running action and the search tree check on 2026-11-11 as well (a human dragged far away is found there, and its scream reaches nobody).
-- `Expression` as a whole: only indirectly, through `KnowledgeElementLinesVsJsonTest`, the composer, `BranchingProbabilityTest` and the rule test.
+- `Expression` as a whole: only indirectly, through `KnowledgeElementLinesVsJsonTest`, the composer, `BranchingProbabilityTest`, the rule test and `SequenceTest`.
 - Loading from MariaDB (`datasource`): no tests except the reading tests named under the conditions, so that CI runs without a database. In particular the DCT writers against the real tables.
 - The lookup of the mapping in `CreateAnimal`: only one line, it would need the whole creation of objects.
 - MCT generators and `MapPanel`: no tests; `TileGridCubes` has no caller yet.

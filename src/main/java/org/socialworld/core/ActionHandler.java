@@ -76,6 +76,10 @@ public class ActionHandler  {
 	private byte secondOfTheActualMinute = MAX_ACTION_WAIT_SECONDS;
 	
 	private int secondsTillNextCalculation = 0;
+	/**
+	 * true if the next calculation of the actual action only finishes it, without perform() (see ActionEventTiming)
+	 */
+	private boolean finishingOnly = false;
 	private int secondsSinceLastCalculation = 0;
 	
 	/**
@@ -178,10 +182,20 @@ public class ActionHandler  {
 
 		if (secondsTillNextCalculation <= 0 || interrupt || stop) {
 			
-			SocialWorld.startAction(object.getObjectID(), this.actualAction);
-			this.object.doAction(this.actualAction, 1000 * secondsSinceLastCalculation, this);
+			if (finishingOnly && !interrupt && !stop) {
+				// A4 of the EID concept (2026-11-16): the last calculation of an action only lets its
+				// remaining time pass and does NOT call perform() any more. Before, every action ended
+				// with one more perform() and so with one more event (e.g. one more step of a move,
+				// one more selfSleep). If something looks odd at the end of actions, look here first.
+				this.actualAction.lowerRemainedDuration(1000 * secondsSinceLastCalculation);
+			}
+			else {
+				SocialWorld.startAction(object.getObjectID(), this.actualAction);
+				this.object.doAction(this.actualAction, 1000 * secondsSinceLastCalculation, this);
+			}
 			
 			secondsSinceLastCalculation = 0;
+			finishingOnly = false;
 
 			// stopped from outside: the last calculation has been done, now the action ends like a finished one
 			if (stop) {
@@ -213,7 +227,9 @@ public class ActionHandler  {
 				}
 			}
 			else {
-				secondsTillNextCalculation = getSecondsTillNextCalculation();
+				long remained = this.actualAction.getRemainedDuration();
+				secondsTillNextCalculation = ActionEventTiming.secondsTillNextCalculation(this.actualAction.getMode(), remained);
+				finishingOnly = ActionEventTiming.isFinishingOnly(this.actualAction.getMode(), remained);
 				return ACTIONHANDLER_RETURN_ACTIONISGOINGON;
 			}
 		}
@@ -222,20 +238,6 @@ public class ActionHandler  {
 
 	}
 
-	
-	private int getSecondsTillNextCalculation() {
-		
-		int secondsTillNextCalculation = 0;
-		long remainedDurationInSeconds = this.actualAction.getRemainedDuration() / 1000;
-		
-		if (remainedDurationInSeconds > 60)	{
-			secondsTillNextCalculation = (int) Math.sqrt(remainedDurationInSeconds);
-			if (remainedDurationInSeconds < 600) {
-				secondsTillNextCalculation = (int) Math.sqrt(secondsTillNextCalculation);
-			}
-		}
-		return secondsTillNextCalculation;
-	}
 	
 	/**
 	 * The method resets the state of the action handler.

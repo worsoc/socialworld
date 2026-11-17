@@ -17,6 +17,11 @@
  */
 package org.socialworld.datasource.pool;
 
+import java.util.ArrayList;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.FunctionBase;
 import org.socialworld.calculation.Type;
@@ -26,6 +31,8 @@ import org.socialworld.calculation.functions.FunctionNothing;
 import org.socialworld.calculation.functions.FunctionByExpression;
 import org.socialworld.calculation.functions.FunctionByMatrix;
 import org.socialworld.calculation.functions.FunctionByMatrix_Matrix;
+import org.socialworld.calculation.functions.FunctionByTable;
+import org.socialworld.calculation.functions.FunctionByTable_Type;
 import org.socialworld.datasource.tablesPool.TablePoolFunctionExpression;
 import org.socialworld.datasource.tablesPool.TablePoolMatrix;
 import org.socialworld.datasource.tablesPool.TablePoolMatrixRowCol;
@@ -42,6 +49,17 @@ public class FunctionPool {
 	public static final int CAPACITY_FP_ARRAY = 1000;
 
 	public static final int OFFSET_FUNCTIONID_GET_LEXEM = 900;
+
+	// func_ids of the pool:
+	//     0 ..    10  table functions, func_id = index of FunctionByTable_Type
+	//   100 ..   154  test matrices
+	//   200 ..   899  matrices from the database (DCT starts at AttributeMatrixGenerator.FIRST_FUNC_ID)
+	//   900 ..   999  lexemes (OFFSET_FUNCTIONID_GET_LEXEM)
+	// 10000 ..        functions created at runtime from rules (MX+N, table lookup, ...), see register()
+	public static final int FIRST_RUNTIME_FUNCTION_ID = 10000;
+
+	private final List<FunctionBase> runtimeFunctions = new ArrayList<FunctionBase>();
+	private final Map<FunctionBase, Integer> runtimeFunctionIDs = new IdentityHashMap<FunctionBase, Integer>();
 	
 	private static FunctionPool instance;
 	
@@ -49,6 +67,8 @@ public class FunctionPool {
 
 	private FunctionPool () {
 		functions = new FunctionBase[CAPACITY_FP_ARRAY];
+
+		initializeTableFunctions();
 		
 		//initialize();
 		initializeWithTestData_FunctionByMatrix();
@@ -77,12 +97,46 @@ public class FunctionPool {
 	}
 	
 	public FunctionBase getFunction(int index) {
+		if (index >= FIRST_RUNTIME_FUNCTION_ID) return getRuntimeFunction(index);
 		if (index >= 0)
 			if (CAPACITY_FP_ARRAY > index ) {
 //			     System.out.println("FunctonPool.getFunction: Index " + index);
 				 return functions[index];
 			}
 	   return FunctionNothing.getInstance();
+	}
+
+	/**
+	 * Gives a function that is created at runtime (e.g. by MXPlusN from a rule) its func_id.
+	 * The same function object always gets the same func_id, a new one the next free func_id
+	 * from FIRST_RUNTIME_FUNCTION_ID on. The func_ids depend on the order of creation.
+	 *
+	 * @return the func_id under which getFunction finds the function
+	 */
+	public synchronized int register(FunctionBase function) {
+		Integer id = runtimeFunctionIDs.get(function);
+		if (id == null) {
+			id = FIRST_RUNTIME_FUNCTION_ID + runtimeFunctions.size();
+			runtimeFunctions.add(function);
+			runtimeFunctionIDs.put(function, id);
+		}
+		return id;
+	}
+
+	private synchronized FunctionBase getRuntimeFunction(int index) {
+		int listIndex = index - FIRST_RUNTIME_FUNCTION_ID;
+		if (listIndex < runtimeFunctions.size()) return runtimeFunctions.get(listIndex);
+		return FunctionNothing.getInstance();
+	}
+
+	/**
+	 * The table functions keep the func_id they always had: the index of their FunctionByTable_Type.
+	 * Matrix cells refer to them by this number.
+	 */
+	private void initializeTableFunctions() {
+		for (FunctionByTable_Type type : FunctionByTable_Type.values()) {
+			setFunction(type.getIndex(), new FunctionByTable(type));
+		}
 	}
 
 	private void initializeWithTestData_FunctionByMatrix() {

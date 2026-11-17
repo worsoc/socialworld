@@ -1,24 +1,20 @@
 /*
-* Social World
-* Copyright (C) 2014  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2014  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.actions.move;
 
 
@@ -34,6 +30,7 @@ import org.socialworld.collections.ValueArrayList;
 import org.socialworld.core.Event;
 import org.socialworld.core.EventToCandidates;
 import org.socialworld.core.EventToCauser;
+import org.socialworld.core.EventToPercipient;
 import org.socialworld.core.EventType;
 import org.socialworld.core.IEventParam;
 import org.socialworld.objects.Animal;
@@ -174,6 +171,14 @@ public class ActionMove extends AbstractAction {
 			addEvent(event);
 		}
 
+		// seeing someone move (concept EID 7.2): the percipients in reach who look that way
+		eventType = getEventToPercipientType(mode);
+		if (eventType != EventType.nothing) {
+			event = new EventToPercipient( eventType.getIndex(),    actor /* as causer*/,  ActualTime.asTime(),
+						actor.getPosition(token),  move /* as performer */);	
+			addEvent(event);
+		}
+
 	}
 
 	private EventType getEventToCauserType(ActionMode mode) {
@@ -195,6 +200,25 @@ public class ActionMove extends AbstractAction {
 		}
 	}
 	
+	private EventType getEventToPercipientType(ActionMode mode) {
+		switch (mode) {
+		case walk:
+			return EventType.percipientMoveWalk;
+		case run:
+			return EventType.percipientMoveRun;
+		case sneak:
+			return EventType.percipientMoveSneak;
+		case jump:
+			return EventType.percipientMoveJump;
+		case swim:
+			return EventType.percipientMoveSwim;
+		case fly: 
+			return EventType.percipientMoveFly;
+		default:
+			return EventType.nothing;
+		}
+	}
+
 	private EventType getEventToCandidatesType(ActionMode mode) {
 		switch (mode) {
 		case walk:

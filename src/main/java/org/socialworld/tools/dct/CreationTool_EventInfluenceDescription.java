@@ -423,14 +423,18 @@ public class CreationTool_EventInfluenceDescription extends JFrame {
         propertyInspector.add(Box.createVerticalStrut(10));
 
         //  Den Button erstellen (wie im letzten Schritt besprochen)
-        JButton batchBtn = new JButton("MASS GENERATE 19.300 RULES");
+        // short text like "SAVE TO DB"; source, count and the clearing of the table are in the tooltip
+        JButton batchBtn = new JButton("GENERATE ALL RULES");
+        batchBtn.setToolTipText("<html>Builds " + EventInfluenceGenerator.countRules() + " rules from "
+                + EventInfluenceCatalog.RESOURCE + ".<br>All rules in swpool_eid are replaced.</html>");
         batchBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40)); // Volle Breite
         styleColoredButton(batchBtn, new Color(139, 0, 0)); // Dunkelrot
         batchBtn.setFont(new Font("SansSerif", Font.BOLD, 11));
 
         batchBtn.addActionListener(e -> {
             int confirm = JOptionPane.showConfirmDialog(this, 
-                "Sollen wirklich 19.300 initiale Regeln in der DB erzeugt werden?", 
+                "Alle Regeln in swpool_eid werden gelöscht und " + EventInfluenceGenerator.countRules()
+                        + " Regeln aus " + EventInfluenceCatalog.RESOURCE + " neu geschrieben. Fortfahren?", 
                 "Datenbank-Initialisierung", JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) {
                 // Starte in einem Thread, damit die GUI nicht einfriert
@@ -615,85 +619,23 @@ public class CreationTool_EventInfluenceDescription extends JFrame {
     
     
  
-    // 2. Die Generierungs-Logik
+    // 2. Die Generierungs-Logik: the rules come from event_influences.csv and event_situations.csv
     private void runMassGeneration() {
-        TablePoolEID table = new TablePoolEID();
-        int totalGenerated = 0;
-        
-        // Wir nehmen "mood" als Standard-Bedingung für alle generierten Regeln
-        String condAttr = "mood";
-        String op = ">=";
-        String threshold = "5000"; // attribute value 0..9999
-
-        table.clear();
-        
-        for (EventType et : EventType.values()) {
-            if (et == EventType.nothing) continue;
- 
-            for (int inflType = 0; inflType < 100; inflType++) {
-
-                // Ziel-Attribut (Y)
-                int targetIdx = (et.getIndex() + inflType) % Attribute.NUMBER_OF_ATTRIBUTES;
-                String targetAttr = Attribute.getAttributeName(targetIdx).toString();
-                
-                // Basis-Attribut (X)
-                int basisIdx = (targetIdx + 5) % Attribute.NUMBER_OF_ATTRIBUTES;
-                String basisAttr = Attribute.getAttributeName(basisIdx).toString();
-                
-                // Mathematische Werte
-                float m = 0.5f + (float)((et.getIndex() * inflType) % 150) / 100.0f;
-                // n in the attribute scale (0..9999), m does not depend on it
-                float n = (float)((et.getIndex() + inflType) % 200) / 10.0f * AttributeArray.ATTRIBUTE_VALUE_SCALE;
-
-                // --- JSON Struktur aufbauen ---
-                JsonEventInfluenceDescription root = new JsonEventInfluenceDescription();
-                root.eventType = et.name();
-                root.influenceType = inflType;
-                root.attributeChanges = new ArrayList<>();
-
-                JsonEventInfluencesAttributeDescription attrDesc = new JsonEventInfluencesAttributeDescription();
-                attrDesc.attribute = targetAttr;
-                attrDesc.orderNr = 0;
-                attrDesc.term = new ArrayList<>();
-
-                // Term 1: Condition
-                JsonTerm t1 = new JsonTerm();
-                t1.termNr = 1; t1.function = "condition"; t1.functionArgs = new ArrayList<>();
-                t1.functionArgs.add(createArg(1, FunctionArgType.Attribute, org.socialworld.calculation.Type.string, condAttr));
-                t1.functionArgs.add(createArg(2, FunctionArgType.Const, org.socialworld.calculation.Type.string, op));
-                t1.functionArgs.add(createArg(3, FunctionArgType.Const, org.socialworld.calculation.Type.integer, threshold));
-                attrDesc.term.add(t1);
-
-                // Term 2: Action (MX+N)
-                JsonTerm t2 = new JsonTerm();
-                t2.termNr = 2; t2.function = "function"; t2.functionArgs = new ArrayList<>();
-                t2.functionArgs.add(createArg(1, FunctionArgType.Const, org.socialworld.calculation.Type.string, "MX+N"));
-                // Locale.ROOT: MX+N reads its numbers with a decimal point
-                String formulaData = String.format(java.util.Locale.ROOT, "%s;%.2f;%.2f", basisAttr, m, n);
-                t2.functionArgs.add(createArg(2, FunctionArgType.Const, org.socialworld.calculation.Type.string, formulaData));
-
-                attrDesc.term.add(t2);
-                root.attributeChanges.add(attrDesc);
-
-                // In DB schreiben
-                table.insert(et.getIndex(), inflType, root.toString());
-                totalGenerated++;
-            }
-            System.out.println("Generated rules for " + et.name());
+        try {
+            EventInfluenceGenerator generator = EventInfluenceGenerator.fromResources();
+            EventInfluenceStore store = new TablePoolEventInfluenceStore();
+            EventInfluenceGenerator.Result result = generator.generate(store);
+            System.out.println("Generated event influence rules: " + result);
+            SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(this,
+                    "Finished! " + result + ".\nWritten to " + store.getDescription() + "."));
         }
-        JOptionPane.showMessageDialog(this, "Finished! " + totalGenerated + " rules written to MariaDB.");
+        catch (RuntimeException e) {
+            e.printStackTrace();
+            SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(this,
+                    "Generation failed: " + e.getMessage(), "Event influence rules", JOptionPane.ERROR_MESSAGE));
+        }
     }
-   
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
     public static void main(String[] args) { SwingUtilities.invokeLater(CreationTool_EventInfluenceDescription::new); }
 }
 

@@ -22,6 +22,7 @@ import org.socialworld.GlobalSwitches;
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
+import org.socialworld.calculation.Type;
 import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.collections.CapacityQueue;
 import org.socialworld.core.Event;
@@ -153,6 +154,23 @@ public class PositionCalculator extends SocialWorldThread {
 				&& a.getLocationByBase25().regionMatches(0, b.getLocationByBase25(), 0, levelBase25);
 	}
 
+	/**
+	 * A candidate is moved by an event only within the event type's position change distance.
+	 * 
+	 * @return true if the candidate is farther away from the event than that distance
+	 *         or if one of the positions is missing
+	 */
+	private boolean isBeyondPositionChangeDistance(Event event, EventType eventType, Position candidatePosition) {
+		float maxDistance = eventType.getPositionChangeDistance();
+		if (maxDistance <= 0) return true;
+		if (candidatePosition.checkIsObjectNothing()) return true;
+		
+		Object o = event.getPosition().getObject(Type.eventProp);
+		if (!(o instanceof Position)) return true;
+		
+		return candidatePosition.getDirectionFrom((Position) o).length() > maxDistance;
+	}
+	
 	private final int calculatePositionChangedByEvent(CollectionElementSimObjInfluenced moved) {
 
 	    if (moved != null) {
@@ -198,6 +216,12 @@ public class PositionCalculator extends SocialWorldThread {
 	            
 	        eventType = event.getEventType();
 	        positionOriginal = getObjectRequester().requestPosition(token, state.getProperty(token, PropertyName.simobj_position), this);
+	        
+	        // candidates are moved only if they are close enough to the event, self and target events are not checked
+	        if (eventType.isEventToCandidates() && isBeyondPositionChangeDistance(event, eventType, positionOriginal)) {
+	            return POSITION_CALCULATOR_RETURNS_NO_CHANGE;
+	        }
+	        
 	        position = new Vector(positionOriginal.getVector(token));
 	        
 	        directionMoveObject = getObjectRequester().requestDirection(token, state.getProperty(token, PropertyName.simobj_directionMove), this);

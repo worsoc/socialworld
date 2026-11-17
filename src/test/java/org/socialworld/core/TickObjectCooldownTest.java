@@ -89,4 +89,70 @@ public class TickObjectCooldownTest {
     assertThat(cooldown.checkAndApplyPeriod(5, TYPE, PERIOD)).isTrue();
     assertThat(cooldown.checkAndApplyCooldown(5, TickObjectCooldown.TYPE_REFRESH, 1)).isTrue();
   }
+
+  private static boolean attributes(TickObjectCooldown cooldown, int objectId, int level) {
+    return cooldown.checkAndApplyCooldown(objectId, TickObjectCooldown.getAttributesCooldownType(level),
+        TickObjectCooldown.getAttributesCooldownSeconds(level));
+  }
+
+  @Test
+  void attributesCooldown_typesAndWindowsOfTheStages() {
+    assertThat(TickObjectCooldown.getAttributesCooldownType(1)).isEqualTo(TickObjectCooldown.TYPE_ATTRIBUTES_HIGH);
+    assertThat(TickObjectCooldown.getAttributesCooldownType(2)).isEqualTo(TickObjectCooldown.TYPE_ATTRIBUTES_MEDIUM);
+    assertThat(TickObjectCooldown.getAttributesCooldownType(3)).isEqualTo(TickObjectCooldown.TYPE_ATTRIBUTES_LOW);
+    assertThat(TickObjectCooldown.getAttributesCooldownType(4)).isEqualTo(TickObjectCooldown.TYPE_ATTRIBUTES_BACKGROUND);
+    assertThat(TickObjectCooldown.getAttributesCooldownType(0)).as("stage 0 has no cooldown").isEqualTo(-1);
+
+    assertThat(new int[] {
+        TickObjectCooldown.getAttributesCooldownSeconds(1), TickObjectCooldown.getAttributesCooldownSeconds(2),
+        TickObjectCooldown.getAttributesCooldownSeconds(3), TickObjectCooldown.getAttributesCooldownSeconds(4)})
+        .containsExactly(5, 10, 30, 60);
+  }
+
+  @Test
+  void attributesCooldown_letsOneEventThroughPerWindow() {
+    TickObjectCooldown cooldown = new TickObjectCooldown(OBJECTS);
+
+    cooldown.setTick(100);
+    assertThat(attributes(cooldown, 7, 3)).as("first event").isTrue();
+    assertThat(attributes(cooldown, 7, 3)).as("second event in the same second").isFalse();
+    cooldown.setTick(129);
+    assertThat(attributes(cooldown, 7, 3)).as("still in the window of 30 s").isFalse();
+    cooldown.setTick(130);
+    assertThat(attributes(cooldown, 7, 3)).as("the next window").isTrue();
+    assertThat(attributes(cooldown, 8, 3)).as("another object").isTrue();
+  }
+
+  @Test
+  void attributesCooldown_stagesDoNotBlockEachOther() {
+    TickObjectCooldown cooldown = new TickObjectCooldown(OBJECTS);
+
+    cooldown.setTick(0);
+    assertThat(attributes(cooldown, 7, 3)).as("someone walks").isTrue();
+    assertThat(attributes(cooldown, 7, 1)).as("now runs: another stage").isTrue();
+    cooldown.setTick(5);
+    assertThat(attributes(cooldown, 7, 1)).as("runs on after 5 s").isTrue();
+    assertThat(attributes(cooldown, 7, 3)).as("walking is still in its window").isFalse();
+  }
+
+  @Test
+  void attributeCooldownLevels_ofTheEventTypes() {
+    assertThat(EventType.percipientMoveRun.getAttributeCooldownLevel()).isEqualTo(1);
+    assertThat(EventType.percipientMoveJump.getAttributeCooldownLevel()).isEqualTo(2);
+    assertThat(EventType.percipientExistsDistance1000.getAttributeCooldownLevel()).isEqualTo(3);
+    assertThat(EventType.percipientExistsDistance5000.getAttributeCooldownLevel()).isEqualTo(4);
+    assertThat(EventType.percipientWeaponClub.getAttributeCooldownLevel()).isZero();
+    assertThat(EventType.selfMoveWalk.getAttributeCooldownLevel()).isEqualTo(3);
+    assertThat(EventType.selfHandleItemPush.getAttributeCooldownLevel()).isEqualTo(3);
+    assertThat(EventType.selfMoveJump.getAttributeCooldownLevel()).isZero();
+    assertThat(EventType.selfSleep.getAttributeCooldownLevel()).isZero();
+    assertThat(EventType.candidatesMoveWalk.getAttributeCooldownLevel()).as("really close: every second").isZero();
+
+    for (EventType type : EventType.values()) {
+      if (!type.isEventToPercipient()) continue;
+      assertThat(type.getAttributeCooldownLevel() == 0)
+          .as("%s: stage 0 exactly for the critical ones", type)
+          .isEqualTo(type.getPriority() == EventPriority.CRITICAL);
+    }
+  }
 }

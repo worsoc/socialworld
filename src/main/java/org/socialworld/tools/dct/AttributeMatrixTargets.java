@@ -18,11 +18,11 @@
 package org.socialworld.tools.dct;
 
 import org.socialworld.attributes.Attribute;
-import org.socialworld.calculation.Functions;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.collections.ValueArrayList;
 import org.socialworld.tools.dct.AttributeDataReader.StoredMatrix;
+import org.socialworld.datasource.pool.FunctionPool;
 
 /**
  * Calculates the target values of a stored matrix, which are not stored themselves.
@@ -105,7 +105,7 @@ public final class AttributeMatrixTargets {
 	private static int function(int functionIndex, double input, int funcID) {
 		ValueArrayList arguments = new ValueArrayList();
 		arguments.add(Value.getInteger((int) Math.round(input)));
-		Value result = Functions.getInstance().get(functionIndex).calculate(arguments);
+		Value result = FunctionPool.getInstance().getFunction(functionIndex).calculate(arguments);
 		if (result.isInvalidOrNothing()) {
 			throw new IllegalStateException("func_id " + funcID + " uses the unknown function " + functionIndex);
 		}

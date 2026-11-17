@@ -20,8 +20,7 @@ package org.socialworld.core;
 public class TickObjectCooldown {
 
     // Konfigurierbare Obergrenze: Wie viele Elemente dürfen pro Phase/Tick maximal durch?
-    public static final int MAX_PERCEPTION_ELEMS = 5; // Hohe sensorische Varianz
-    public static final int MAX_PERCEPTION_AMBIENT_ELEMS = 1; 
+    public static final int MAX_ATTRIBUTES_ELEMS = 1; // one event per window of its criticality stage
     public static final int MAX_REFRESH_ELEMS    = 1; // Strikt gedeckelt,
     public static final int MAX_REACTION_ELEMS    = 3; 
     public static final int MAX_ACTION_ELEMS    = 1; 
@@ -31,16 +30,20 @@ public class TickObjectCooldown {
     public static final int ATTRIBUTE_MATRIX_STEP_SECONDS = 60;
 
     // 1. Definition der verschiedenen Cooldown-Typen als ID
-    public static final int TYPE_PERCEPTION  = 0;
-    public static final int TYPE_PERCEPTION_AMBIENT  = 1;
-    public static final int TYPE_REFRESH  = 2;
-    public static final int TYPE_REFRESH_ACTION  = 3;
-    public static final int TYPE_ACTION      = 4;
-    public static final int TYPE_REACTION      = 5;
-    public static final int TYPE_KNOWLEDGE    = 6;
-    public static final int TYPE_REFRESH_ATTRIBUTES = 7; // eigener Takt der SIMPLE-Matrix
+    // the effect of an event on the attributes, by the criticality stage of its event type
+    // (EventType.getAttributeCooldownLevel(), concept EID 7.2 and 7.3); they replace TYPE_PERCEPTION(_AMBIENT)
+    public static final int TYPE_ATTRIBUTES_HIGH  = 0;        // stage 1, window  5 s
+    public static final int TYPE_ATTRIBUTES_MEDIUM  = 1;      // stage 2, window 10 s
+    public static final int TYPE_ATTRIBUTES_LOW  = 2;         // stage 3, window 30 s
+    public static final int TYPE_ATTRIBUTES_BACKGROUND  = 3;  // stage 4, window 60 s
+    public static final int TYPE_REFRESH  = 4;
+    public static final int TYPE_REFRESH_ACTION  = 5;
+    public static final int TYPE_ACTION      = 6;
+    public static final int TYPE_REACTION      = 7;
+    public static final int TYPE_KNOWLEDGE    = 8;
+    public static final int TYPE_REFRESH_ATTRIBUTES = 9; // eigener Takt der SIMPLE-Matrix
     
-    public static final int TYPE_COUNT       = 8; // Anzahl der registrierten Typen
+    public static final int TYPE_COUNT       = 10; // Anzahl der registrierten Typen
 
     // Allokationsfreies O(1)-Mapping für verknüpfte Typen.
     // Index = Auslösender Typ, Wert = Synchronisierter Ziel-Typ (-1 = Keiner)
@@ -155,12 +158,41 @@ public class TickObjectCooldown {
     /**
      * Ermittelt die maximale Obergrenze für den jeweiligen Typ (0 Allokation)
      */
+    /**
+     * @param level the criticality stage of an event type (EventType.getAttributeCooldownLevel()), 1 to 4
+     * @return the cooldown type of the stage, -1 for stage 0 (no cooldown)
+     */
+    public static int getAttributesCooldownType(int level) {
+        switch (level) {
+            case 1: return TYPE_ATTRIBUTES_HIGH;
+            case 2: return TYPE_ATTRIBUTES_MEDIUM;
+            case 3: return TYPE_ATTRIBUTES_LOW;
+            case 4: return TYPE_ATTRIBUTES_BACKGROUND;
+            default: return -1;
+        }
+    }
+
+    /**
+     * @param level the criticality stage of an event type (EventType.getAttributeCooldownLevel()), 1 to 4
+     * @return the window of the stage in seconds, 0 for stage 0 (no cooldown)
+     */
+    public static int getAttributesCooldownSeconds(int level) {
+        switch (level) {
+            case 1: return 5;
+            case 2: return 10;
+            case 3: return 30;
+            case 4: return 60;
+            default: return 0;
+        }
+    }
+
     private int getMaxAllowedForType(int cooldownType) {
         switch (cooldownType) {
-            case TYPE_PERCEPTION:
-                return MAX_PERCEPTION_ELEMS; 
-            case TYPE_PERCEPTION_AMBIENT:
-                return MAX_PERCEPTION_AMBIENT_ELEMS; 
+            case TYPE_ATTRIBUTES_HIGH:
+            case TYPE_ATTRIBUTES_MEDIUM:
+            case TYPE_ATTRIBUTES_LOW:
+            case TYPE_ATTRIBUTES_BACKGROUND:
+                return MAX_ATTRIBUTES_ELEMS; 
             case TYPE_REFRESH:
                 return MAX_REFRESH_ELEMS;  
             case TYPE_REFRESH_ACTION:

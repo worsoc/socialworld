@@ -1,3 +1,20 @@
+/*
+ * Social World
+ * Copyright (C) 2019  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.core;
 
 import org.socialworld.actions.ActionPerformer;
@@ -25,6 +42,7 @@ public class EventToPercipient extends Event implements IPerceptible {
 		
 		super(eventType,   causer,  time,  position,  performer);
 		this.percipience = new Percipience(PercipienceType.event, 1000);
+		setPositionOfPercipience(position);
 
 		
 	}
@@ -33,10 +51,21 @@ public class EventToPercipient extends Event implements IPerceptible {
 
 		super(eventType,   causer,    priority,	  position);
 		this.percipience = new Percipience(PercipienceType.event, 1000);
+		setPositionOfPercipience(position);
 
 
 	}
 	
+	/**
+	 * Whether an event can be seen is checked from its position (Percipience.checkMaySeeingEvent),
+	 * so its percipience must know where it happens. Without it nobody sees the event (A5 of the EID concept).
+	 */
+	private void setPositionOfPercipience(Position position) {
+		if (position != null && !position.checkIsObjectNothing()) {
+			this.percipience.setPosition(position);
+		}
+	}
+
 	public void setPercipience(float maxDistance, float maxSee, float maxHear, float maxSmell, float maxFeel ) {
 		this.percipience  = new Percipience( PercipienceType.event, maxDistance,  maxSee,  maxHear,  maxSmell,  maxFeel );
 	}

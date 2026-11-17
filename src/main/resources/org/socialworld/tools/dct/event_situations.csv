@@ -1,0 +1,123 @@
+# Situations of the event influences: which event types belong to a situation and with which factor.
+# The steps in event_influences.csv are multiplied by the factor of the event type and rounded.
+# Event types without a line get a neutral rule (no change).
+# Concept: ~/worsoc/concept/eid_regeln_konzept.md, section 7.
+#
+# situation;eventType;factor
+#
+# 1 schlafen (sleep)
+1;selfSleep;1.0
+# 2 trinken (drink)
+2;selfDrink;1.0
+# 3 essen (eat)
+3;selfEat;1.0
+# 4 ausscheiden (piss, shit)
+4;selfPiss;1.0
+4;selfShit;1.0
+# 5 sich bewegen (move)
+5;selfMoveWalk;1.0
+5;selfMoveSneak;1.2
+5;selfMoveJump;1.5
+5;selfMoveFly;1.5
+5;selfMoveRun;2.0
+5;selfMoveSwim;2.0
+# 6 untersuchen (examine)
+6;selfExamineByLook;1.0
+6;selfExamineBySmell;1.0
+6;selfExamineByTaste;1.0
+6;selfExamineByTouch;1.0
+# 7 beruehren (touch)
+7;selfTouchByHand;1.0
+7;selfTouchByFoot;1.0
+# 8 etwas an sich nehmen (take, get)
+8;selfInventoryTake;1.0
+8;selfInventoryGet;1.0
+# 9 etwas ablegen oder umraeumen (drop, switch, set)
+9;selfInventoryDrop;1.0
+9;selfInventorySwitch;0.5
+9;selfInventorySet;0.5
+# 10 Gegenstand benutzen (handle item)
+10;selfHandleItemUse2;1.0
+10;selfHandleItemUseLeft;1.0
+10;selfHandleItemUseRight;1.0
+10;selfHandleItemAddRtoL;1.0
+10;selfHandleItemAddLtoR;1.0
+10;selfHandleItemPull;1.5
+10;selfHandleItemPush;1.5
+# 11 angreifen (attack)
+11;selfWeaponLeftStab;1.0
+11;selfWeaponLeftStroke;1.0
+11;selfWeaponLeftBackhand;0.8
+11;selfWeaponRightStab;1.0
+11;selfWeaponRightStroke;1.0
+11;selfWeaponRightBackhand;0.8
+11;selfWeaponClub;1.5
+11;selfPunchLeftFistStraight;0.6
+11;selfPunchLeftFistSideways;0.6
+11;selfPunchLeftFistUpward;0.6
+11;selfPunchRightFistStraight;0.6
+11;selfPunchRightFistSideways;0.6
+11;selfPunchRightFistUpward;0.6
+# 12 zuhoeren (listen)
+12;selfListenToStatement;1.0
+12;selfListenToQuestion;1.0
+# 13 eine Anweisung hoeren (instruction)
+13;selfListenToInstruction;1.0
+# 14 verstehen (understand)
+14;selfUnderstand;1.0
+# 15 selbst sprechen (ask, answer, say)
+15;selfAskNormal;1.0
+15;selfAskScream;1.5
+15;selfAskWhisper;0.5
+15;selfAnswerNormal;1.0
+15;selfAnswerScream;1.5
+15;selfAnswerWhisper;0.5
+15;selfSayNormal;1.0
+15;selfSayScream;1.5
+15;selfSayWhisper;0.5
+# 16 gefragt werden (being asked)
+16;targetAskNormal;1.0
+16;targetAskWhisper;0.5
+# 17 eine Antwort bekommen (getting an answer)
+17;targetAnswerNormal;1.0
+17;targetAnswerWhisper;0.5
+# 18 angeschrien werden (being shouted at)
+18;targetAskScream;1.0
+18;targetAnswerScream;1.0
+# 19 jemand bewegt sich wirklich nah (someone moves really close)
+19;candidatesMoveWalk;1.0
+19;candidatesMoveSneak;1.5
+19;candidatesMoveJump;1.0
+19;candidatesMoveFly;1.5
+19;candidatesMoveRun;1.5
+19;candidatesMoveSwim;1.0
+# 20 von einer Waffe getroffen werden (hit by a weapon)
+20;candidatesWeaponLeftStab;1.0
+20;candidatesWeaponLeftStroke;1.0
+20;candidatesWeaponLeftBackhand;0.8
+20;candidatesWeaponRightStab;1.0
+20;candidatesWeaponRightStroke;1.0
+20;candidatesWeaponRightBackhand;0.8
+20;candidatesWeaponClub;1.5
+# 21 geschlagen werden (punched)
+21;candidatesPunchLeftFistStraight;1.0
+21;candidatesPunchLeftFistSideways;1.0
+21;candidatesPunchLeftFistUpward;1.0
+21;candidatesPunchRightFistStraight;1.0
+21;candidatesPunchRightFistSideways;1.0
+21;candidatesPunchRightFistUpward;1.0
+# 22 jemand spricht in der Naehe (someone talks nearby)
+22;candidatesSayNormal;1.0
+22;candidatesSayWhisper;0.5
+# 23 jemand schreit in der Naehe (someone screams nearby)
+23;candidatesSayScream;1.0
+# 24 jemand ist da (someone is there)
+24;percipientExistsDistance5000;1.0
+24;percipientExistsDistance1000;1.0
+# 25 sieht jemanden sich bewegen (sees someone move)
+25;percipientMoveWalk;0.0
+25;percipientMoveSneak;1.0
+25;percipientMoveJump;0.0
+25;percipientMoveFly;0.0
+25;percipientMoveRun;1.0
+25;percipientMoveSwim;0.0

@@ -25,6 +25,7 @@ import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.Calculation;
 import org.socialworld.calculation.Expression;
 import org.socialworld.calculation.Expression_ConditionOperator;
+import org.socialworld.calculation.Expression_Function;
 import org.socialworld.calculation.PropertyUsingAs;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
@@ -72,6 +73,11 @@ public class ChangeAttribute {
 
 		// 1. Bedingung (WENN) -> expression1
 	    if (terms.size() >= 2) {
+	    	// the first term is the condition; for now another function there is only reported
+	    	if (terms.get(0).getFunction() != Expression_Function.condition) {
+	    		System.out.println("ChangeAttribute.initFromJson(): attribute " + entry.attribute
+	    				+ ", the first term is used as condition but its function is " + terms.get(0).getFunction());
+	    	}
 	    	exp1 = createConditionExpression(terms.get(0));
 	    } else {
 	        // Falls nur ein Term (keine Bedingung), setzen wir die Bedingung auf TRUE (Constant 1)
@@ -116,30 +122,58 @@ public class ChangeAttribute {
 
 	
 	
+	/**
+	 * The condition term holds one or more comparisons, three arguments each:
+	 * attribute, operator, value (e.g. "mood", ">=", "3800").
+	 * One comparison stays a single attribute comparison, which Branching decides softly (sigmoid).
+	 * Two or more comparisons are joined by AND and decided strictly.
+	 * A number of arguments that is not a multiple of three makes the condition invalid (Nothing).
+	 */
 	private  static Expression createConditionExpression(Term term) {
-	    // faNr 1: Attribut (z.B. "mood")
-	    String attrName = term.getArgValueAsString(0); 
-	    
-	    // faNr 2: Operator-String (z.B. ">=")
-	    String operatorStr = term.getArgValueAsString(1); 
-	    
-	    // faNr 3: Vergleichswert (z.B. "50")
-	    String valueStr = term.getArgValueAsString(2); 
-    
-	    // 1. Attribut-Index auflösen
+		int countArgs = 0;
+		String arg = term.getArgValueAsString(countArgs);
+		while (arg != null && !arg.isEmpty()) {
+			countArgs++;
+			arg = term.getArgValueAsString(countArgs);
+		}
+
+		if (countArgs == 0 || countArgs % 3 != 0) {
+			System.out.println("ChangeAttribute.createConditionExpression(): " + countArgs
+					+ " arguments, a condition needs a multiple of three (attribute, operator, value)");
+			return Nothing.getInstance();
+		}
+
+		int countComparisons = countArgs / 3;
+		if (countComparisons == 1) {
+			return createComparison(term, 0);
+		}
+
+		Expression[] comparisons = new Expression[countComparisons];
+		for (int i = 0; i < countComparisons; i++) {
+			comparisons[i] = createComparison(term, i * 3);
+		}
+		return new Junction(Expression_ConditionOperator.and, comparisons);
+	}
+
+	/**
+	 * One comparison of an attribute with a constant, read from three arguments
+	 * starting at firstArg: attribute (e.g. "mood"), operator (e.g. ">="), value (e.g. "50").
+	 */
+	private static Expression createComparison(Term term, int firstArg) {
+	    String attrName = term.getArgValueAsString(firstArg);
+	    String operatorStr = term.getArgValueAsString(firstArg + 1);
+	    String valueStr = term.getArgValueAsString(firstArg + 2);
+
 	    Attribute attr = Attribute.fromName(attrName);
 	    int attrIndex = (attr != null) ? attr.getIndex() : Attribute.ignore.getIndex();
-	    
-	    // 2. Operator-Enum auflösen 
+
 	    Expression_ConditionOperator operator = Expression_ConditionOperator.fromName(operatorStr);
 
-	    // 3. Comparison-Instanz erstellen
 	    return new Comparison(
 	        operator,
 	        GetAttributeValue.getInstance(attrIndex),
 	        new Constant(new Value(Type.integer, Integer.parseInt(valueStr.trim())))
 	    );
-
 	}
 	
 	private static Expression createActionExpression(Term term) {

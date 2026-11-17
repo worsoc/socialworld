@@ -1,24 +1,20 @@
 /*
-* Social World
-* Copyright (C) 2014  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2014  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.calculation.functions;
 
 
@@ -27,12 +23,12 @@ import org.socialworld.GlobalSwitches;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.calculation.Calculation;
 import org.socialworld.calculation.FunctionBase;
-import org.socialworld.calculation.Functions;
 import org.socialworld.calculation.NoObject;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.ValueInterpreteAs;
 import org.socialworld.collections.ValueArrayList;
+import org.socialworld.datasource.pool.FunctionPool;
 
 public class FunctionByMatrix extends FunctionBase{
 
@@ -164,7 +160,7 @@ public class FunctionByMatrix extends FunctionBase{
 
 		int     length;
 		
-		Functions functions = Functions.getInstance();
+		FunctionPool functions = FunctionPool.getInstance();
 		FunctionBase function;
 		ValueArrayList arguments;
 
@@ -182,7 +178,7 @@ public class FunctionByMatrix extends FunctionBase{
 			share = this.matrix.getShare(0, column);
 			offset =  this.matrix.getOffset(0, column);
 
-			function = functions.get(functionIndex);
+			function = functions.getFunction(functionIndex);
 			inputValue = attributes.getAsValue(column);
 
 			arguments.set(0, inputValue);
@@ -228,7 +224,7 @@ public class FunctionByMatrix extends FunctionBase{
 		Value 	share;
 		int 	functionIndex;
 		FunctionBase function;
-		Functions functions = Functions.getInstance();
+		FunctionPool functions = FunctionPool.getInstance();
 		
 		Value change;
 
@@ -256,7 +252,7 @@ public class FunctionByMatrix extends FunctionBase{
 
 				functionIndex = this.matrix.getFunction(row, column);
 				share =   this.matrix.getShare(row, column);
-				function = functions.get(functionIndex);
+				function = functions.getFunction(functionIndex);
 
 				arguments.set(0,   attributeValue);
 
@@ -326,7 +322,7 @@ public class FunctionByMatrix extends FunctionBase{
 		Value 	offset;
 		FunctionByMatrix_InputType 		inputType;
 
-		Functions functions = Functions.getInstance();
+		FunctionPool functions = FunctionPool.getInstance();
 		
 		int     length;
 		
@@ -355,7 +351,7 @@ public class FunctionByMatrix extends FunctionBase{
 				share = this.matrix.getShare(row, column);
 				if (withOffset) offset =  this.matrix.getOffset(row, column);
 
-				function = functions.get(functionIndex);
+				function = functions.getFunction(functionIndex);
 				inputValue = getInputValue(inputType, attributeValue, attributeChangeValue);
 
 				arguments.set(0,  inputValue);

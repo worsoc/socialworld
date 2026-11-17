@@ -1,24 +1,20 @@
 /*
-* Social World
-* Copyright (C) 2015  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2015  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.core;
 
 import java.util.ArrayList;
@@ -288,6 +284,16 @@ public enum EventType {
 		}
 	}
 	
+	public boolean isEventToCandidates() {
+		
+		if (this.index > 256  && this.index < 384) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
 	public boolean isEventToPercipient() {
 		
 		if (this.index > 384  && this.index < MAX_EVENT_TYPE) {
@@ -301,36 +307,152 @@ public enum EventType {
 	public boolean isRelevantForChangingPosition() {
 		
 		// selfMoveWalk(8), selfMoveRun(9), selfMoveSneak(10), selfMoveJump(11), selfMoveSwim(12), selfMoveFly(13),
-		if (this.index >= 8 || this.index <= 13) return true;
+		if (this.index >= 8 && this.index <= 13) return true;
 		
 		// targetInventoryTake(160), targetInventoryDrop(161), targetInventorySwitch(162), targetInventorySet(163), targetInventoryGet(164),
-		if (this.index >= 160 || this.index <= 164) return true;
+		if (this.index >= 160 && this.index <= 164) return true;
 		
 		// targetHandleItemUse2(168), targetHandleItemUseLeft(169), targetHandleItemUseRight(170), targetHandleItemAddRtoL(171), targetHandleItemAddLtoR(172), targetHandleItemPull(173),targetHandleItemPush(174),
-		if (this.index >= 168 || this.index <= 174) return true;
+		if (this.index >= 168 && this.index <= 174) return true;
 		
 		// targetWeaponLeftStab(176), targetWeaponLeftStroke(177), targetWeaponLeftBackhand(178), targetWeaponRightStab(179), targetWeaponRightStroke(180), targetWeaponRightBackhand(181), targetWeaponClub(182),
-		if (this.index >= 176 || this.index <= 182) return true;
+		if (this.index >= 176 && this.index <= 182) return true;
 
 		// targetPunchLeftFistStraight(184),  targetPunchLeftFistSideways(185), targetPunchLeftFistUpward(186), targetPunchRightFistStraight(187),  targetPunchRightFistSideways(188), targetPunchRightFistUpward(189),
-		if (this.index >= 184 || this.index <= 189) return true;
+		if (this.index >= 184 && this.index <= 189) return true;
 
 		
 		
 		// candidatesMoveWalk(264), candidatesMoveRun(265), candidatesMoveSneak(266), candidatesMoveJump(267), candidatesMoveSwim(268), candidatesMoveFly(269),
-		if (this.index >= 264 || this.index <= 269) return true;
+		if (this.index >= 264 && this.index <= 269) return true;
 
 		// candidatesWeaponLeftStab(304), candidatesWeaponLeftStroke(305), candidatesWeaponLeftBackhand(306), candidatesWeaponRightStab(307), candidatesWeaponRightStroke(308), candidatesWeaponRightBackhand(309), candidatesWeaponClub(310),
-		if (this.index >= 304 || this.index <= 310) return true;
+		if (this.index >= 304 && this.index <= 310) return true;
 		
 		// candidatesPunchLeftFistStraight(312),  candidatesPunchLeftFistSideways(313), candidatesPunchLeftFistUpward(314), candidatesPunchRightFistStraight(315),  candidatesPunchRightFistSideways(316), candidatesPunchRightFistUpward(317),
-		if (this.index >= 312 || this.index <= 317) return true;
+		if (this.index >= 312 && this.index <= 317) return true;
 		
 				
 		return false;
 	}
 	
 
+	/**
+	 * How close (in mm) a candidate must be to the event to be moved by it.
+	 * Only candidates events that are relevant for changing the position have a distance,
+	 * all other event types return 0. Self and target events are not checked against it.
+	 */
+	public float getPositionChangeDistance() {
+		
+		switch (this) {
+		case candidatesMoveWalk:
+		case candidatesMoveRun:
+		case candidatesMoveSneak:
+		case candidatesMoveJump:
+		case candidatesMoveSwim:
+		case candidatesMoveFly:
+			return 500.0F;
+			
+		// who is hit is pushed: the whole effect distance
+		case candidatesWeaponLeftStab:
+		case candidatesWeaponLeftStroke:
+		case candidatesWeaponLeftBackhand:
+		case candidatesWeaponRightStab:
+		case candidatesWeaponRightStroke:
+		case candidatesWeaponRightBackhand:
+		case candidatesWeaponClub:
+		case candidatesPunchLeftFistStraight:
+		case candidatesPunchLeftFistSideways:
+		case candidatesPunchLeftFistUpward:
+		case candidatesPunchRightFistStraight:
+		case candidatesPunchRightFistSideways:
+		case candidatesPunchRightFistUpward:
+			return getEffectDistance();
+			
+		default:
+			return 0.0F;
+		}
+	}
+	
+	/**
+	 * How critical the effect of an event of this type on the attributes is (concept EID 7.2 and 7.3).
+	 * The stage gives the window of the cooldown in AttributeCalculator (TickObjectCooldown.getAttributesCooldownType()):
+	 * 0 no cooldown, 1 high (5 s), 2 medium (10 s), 3 low (30 s), 4 background (60 s), one event per window.
+	 * The priority is not used for this any more, it only serves the EventMaster.
+	 */
+	public int getAttributeCooldownLevel() {
+		
+		switch (this) {
+		// seeing someone run or sneak: something may happen at once
+		case percipientMoveRun:
+		case percipientMoveSneak:
+			return 1;
+			
+		// jumping, flying, touching, taking, pulling, pushing, a conversation, a presence very close
+		case percipientMoveJump:
+		case percipientMoveFly:
+		case percipientTouchByHand:
+		case percipientTouchByFoot:
+		case percipientInventoryTake:
+		case percipientInventoryGet:
+		case percipientHandleItemPull:
+		case percipientHandleItemPush:
+		case percipientAskNormal:
+		case percipientAskWhisper:
+		case percipientAnswerNormal:
+		case percipientAnswerWhisper:
+		case percipientExistsDistance100:
+			return 2;
+			
+		// everyday things seen, a presence nearby
+		case percipientDrink:
+		case percipientEat:
+		case percipientMoveWalk:
+		case percipientMoveSwim:
+		case percipientExamineByLook:
+		case percipientExamineBySmell:
+		case percipientExamineByTaste:
+		case percipientExamineByTouch:
+		case percipientInventoryDrop:
+		case percipientInventorySwitch:
+		case percipientInventorySet:
+		case percipientHandleItemUse2:
+		case percipientHandleItemUseLeft:
+		case percipientHandleItemUseRight:
+		case percipientHandleItemAddRtoL:
+		case percipientHandleItemAddLtoR:
+		case percipientExistsDistance2000:
+		case percipientExistsDistance1000:
+		// own moving and handling: their events come every 1 or 2 seconds, even the smallest step would be too much
+		case selfMoveWalk:
+		case selfMoveRun:
+		case selfMoveSneak:
+		case selfMoveSwim:
+		case selfMoveFly:
+		case selfHandleItemUse2:
+		case selfHandleItemUseLeft:
+		case selfHandleItemUseRight:
+		case selfHandleItemAddRtoL:
+		case selfHandleItemAddLtoR:
+		case selfHandleItemPull:
+		case selfHandleItemPush:
+			return 3;
+			
+		// rest, bodily functions and a presence farther away
+		case percipientSleep:
+		case percipientPiss:
+		case percipientShit:
+		case percipientExistsDistance100000:
+		case percipientExistsDistance10000:
+		case percipientExistsDistance5000:
+			return 4;
+			
+		default:
+			// all other events, among them the critical ones seen (weapon, punch, screams)
+			return 0;
+		}
+	}
+	
 	public boolean isRelevantForEffectiveCheck() {
 		
 		// pull and push with effective check
@@ -418,6 +540,14 @@ public enum EventType {
 		case candidatesSayNormal: return 5000.0F; 
 		case candidatesSayScream: return 10000.0F; 
 		case candidatesSayWhisper: return 1000.0F; 
+
+		// seeing someone move reaches farther than being really close (candidatesMove…), concept EID 7.2
+		case percipientMoveWalk: return 20000.0F;
+		case percipientMoveRun: return 30000.0F;
+		case percipientMoveSneak: return 10000.0F;
+		case percipientMoveJump: return 20000.0F;
+		case percipientMoveSwim: return 20000.0F;
+		case percipientMoveFly: return 50000.0F;
 
 		case percipientExistsDistance100000: return 100000.0F;
 		case percipientExistsDistance10000: return 10000.0F;

@@ -20,8 +20,15 @@ package org.socialworld.datasource.pool;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
+import org.socialworld.calculation.FunctionBase;
 import org.socialworld.calculation.Type;
+import org.socialworld.calculation.Value;
 import org.socialworld.calculation.functions.FunctionByMatrix_Matrix;
+import org.socialworld.calculation.functions.FunctionByTable;
+import org.socialworld.calculation.functions.FunctionByTable_Type;
+import org.socialworld.calculation.functions.FunctionMXplusN;
+import org.socialworld.calculation.functions.FunctionNothing;
+import org.socialworld.collections.ValueArrayList;
 
 public class FunctionPoolTest {
 
@@ -53,5 +60,47 @@ public class FunctionPoolTest {
         new float[] {1f}, new int[] {1}, new float[] {0f});
 
     assertThat(matrix.isWithDiv100()).isFalse();
+  }
+
+  private static int tableValue(FunctionBase function, int x) {
+    ValueArrayList arguments = new ValueArrayList();
+    arguments.add(new Value(Type.integer, x));
+    return ((Number) function.calculate(arguments).getObject(Type.integer)).intValue();
+  }
+
+  @Test
+  void tableFunctions_haveTheIndexOfTheirTypeAsFuncID() {
+    FunctionPool pool = FunctionPool.getInstance();
+
+    for (FunctionByTable_Type type : FunctionByTable_Type.values()) {
+      FunctionBase function = pool.getFunction(type.getIndex());
+      assertThat(function).as("func_id %d", type.getIndex()).isInstanceOf(FunctionByTable.class);
+
+      FunctionByTable expected = new FunctionByTable(type);
+      for (int x = 0; x <= 9999; x += 1111) {
+        assertThat(tableValue(function, x)).as("%s at %d", type, x).isEqualTo(tableValue(expected, x));
+      }
+    }
+  }
+
+  @Test
+  void register_givesEachFunctionObjectOneFuncIDFromTheRuntimeRange() {
+    FunctionPool pool = FunctionPool.getInstance();
+    FunctionBase first = FunctionMXplusN.getInstance(Type.integer, 1.0f, -12345.0f, 0f, 9999f);
+    FunctionBase second = FunctionMXplusN.getInstance(Type.integer, 1.0f, -12346.0f, 0f, 9999f);
+
+    int idFirst = pool.register(first);
+    int idSecond = pool.register(second);
+
+    assertThat(idFirst).isGreaterThanOrEqualTo(FunctionPool.FIRST_RUNTIME_FUNCTION_ID);
+    assertThat(pool.register(first)).as("the same function again").isEqualTo(idFirst);
+    assertThat(idSecond).as("another function").isNotEqualTo(idFirst);
+    assertThat(pool.getFunction(idFirst)).isSameAs(first);
+    assertThat(pool.getFunction(idSecond)).isSameAs(second);
+  }
+
+  @Test
+  void getFunction_beyondTheRegisteredRuntimeFunctions_isNothing() {
+    assertThat(FunctionPool.getInstance().getFunction(Integer.MAX_VALUE)).isInstanceOf(FunctionNothing.class);
   }
 }

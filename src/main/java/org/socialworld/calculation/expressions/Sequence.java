@@ -1,24 +1,20 @@
 /*
-* Social World
-* Copyright (C) 2019  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2019  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.calculation.expressions;
 
 import java.util.List;
@@ -75,19 +71,21 @@ public class Sequence extends Expression {
 		}
 		else if (count > 3) {
 			
-			expressionsB = new Expression[3];
-			expressionsB[0] = expressions[3];
-			expressionsB[1] = expressions[4];
-			expressionsB[2] = expressions[5];
+			// 4 to 6 expressions: the first three as one sequence, the rest (1 to 3)
+			// as a second one; the third part stays empty (evaluate skips Nothing)
+			expressionsA = new Expression[3];
+			expressionsA[0] = expressions[0];
+			expressionsA[1] = expressions[1];
+			expressionsA[2] = expressions[2];
 			
-			expressionsC = new Expression[count - 3];
+			expressionsB = new Expression[count - 3];
 			for (index = 0; index < count - 3; index++ ) {
-				expressionsC[index] = expressions[index + 3];
+				expressionsB[index] = expressions[index + 3];
 			}
 			
-			setExpression1(Nothing.getInstance());
+			setExpression1(new Sequence(expressionsA));
 			setExpression2(new Sequence(expressionsB));
-			setExpression3(new Sequence(expressionsC));
+			setExpression3(Nothing.getInstance());
 			
 		}
 		else {

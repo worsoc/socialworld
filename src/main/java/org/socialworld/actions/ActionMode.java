@@ -157,4 +157,44 @@ public enum ActionMode {
 	public static int maxIndex() {
 		return 103;
 	}
+
+	/**
+	 * How many seconds lie between two calculations (and so two events) of a running action
+	 * of this mode (concept EID, section 7.1). 0 means the action creates its events once, at its start.
+	 * See ActionEventTiming.
+	 */
+	public int getEventIntervalSeconds() {
+		switch (this) {
+		case sleep:
+			return 300;
+		case drink:
+			return 2;
+		case eat:
+			return 10;
+		case walk:
+		case run:
+		case sneak:
+		case swim:
+		case fly:
+			// the position calculator moves the object per event, so the interval sets the speed
+			return 1;
+		case look:
+		case smell:
+		case taste:
+		case touch:
+			return 5;
+		case useTwoItems:
+		case useItemLeftHand:
+		case useItemRightHand:
+		case combineItems_AddRightToLeft:
+		case combineItems_AddLeftToRight:
+		case pull:
+		case push:
+			return 2;
+		default:
+			// piss, shit, jump, touching by hand or foot, inventory, weapons, punches, listening, talking:
+			// once; several blows are several actions
+			return 0;
+		}
+	}
 }
