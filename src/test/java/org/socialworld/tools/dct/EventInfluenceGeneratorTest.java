@@ -34,7 +34,7 @@ import org.socialworld.core.EventType;
 import org.socialworld.core.TickRandomCache;
 
 /**
- * The generator of the event influence rules: tiers at the band, their order, the factor,
+ * The generator of the event influence rules: tiers at the band (for hunger and tiredness at the ideal), their order, the factor,
  * the repetition of the characters and the neutral rule. The rules are evaluated for real.
  * Everything is written into a store in memory, no database is used.
  */
@@ -77,6 +77,45 @@ public class EventInfluenceGeneratorTest {
     int[] newValues = new int[values.length];
     for (int i = 0; i < values.length; i++) newValues[i] = ((AttributeArray) array).get(i);
     return newValues;
+  }
+
+  /** @return the value of one attribute after the rule, all other attributes at 5000 */
+  private static int after(EventInfluenceDescription rule, Attribute attribute, int value) {
+    int[] values = new int[Attribute.NUMBER_OF_ATTRIBUTES];
+    for (int i = 0; i < values.length; i++) values[i] = 5000;
+    values[attribute.getIndex()] = value;
+
+    ValueArrayList arguments = new ValueArrayList();
+    arguments.add(new Value(Type.integer, Value.VALUE_BY_NAME_OBJECTID, 1));
+    arguments.add(new Value(Type.attributeArray, PropertyName.simobj_attributeArray.toString(), new AttributeArray(values)));
+    arguments.add(new Value(Type.valueList, Value.VALUE_BY_NAME_EVENT_PARAMS, new ValueArrayList()));
+
+    Value result = rule.getFunction(0).calculate(arguments);
+    return ((AttributeArray) result.getObject(Type.attributeArray)).get(attribute.getIndex());
+  }
+
+  @Test
+  void maidSleeps_theTiersOfTirednessSitAtHerIdeal_notAtTheBandOfHerLevel() {
+    // maid: tiredness + (band 5800..7500), ideal 30/85 -> tiers at 3000 / 5750 / 8500,
+    // sleep steps -7 / -51 / -77 / -94, she needs 8 h (factor 1)
+    EventInfluenceDescription rule = description(EventType.selfSleep, 3);
+
+    assertThat(after(rule, Attribute.tiredness, 2500)).as("below the ideal").isEqualTo(2493);
+    assertThat(after(rule, Attribute.tiredness, 5000)).as("lower half, below her band").isEqualTo(4949);
+    assertThat(after(rule, Attribute.tiredness, 7000)).as("upper half").isEqualTo(6923);
+    assertThat(after(rule, Attribute.tiredness, 9000)).as("above the ideal").isEqualTo(8906);
+  }
+
+  @Test
+  void millerEats_theTiersOfHungerSitAtHisIdeal() {
+    // miller: hunger - (band 2500..4200), ideal 25/40 -> tiers at 2500 / 3250 / 4000,
+    // eat steps -2 / -16 / -23 / -27 times 3 / 4 meals -> -2 / -12 / -17 / -20
+    EventInfluenceDescription rule = description(EventType.selfEat, 9);
+
+    assertThat(after(rule, Attribute.hunger, 2000)).as("below the ideal").isEqualTo(1998);
+    assertThat(after(rule, Attribute.hunger, 3000)).as("lower half").isEqualTo(2988);
+    assertThat(after(rule, Attribute.hunger, 3500)).as("upper half").isEqualTo(3483);
+    assertThat(after(rule, Attribute.hunger, 4100)).as("above the ideal, still inside his band").isEqualTo(4080);
   }
 
   @Test
@@ -171,22 +210,23 @@ public class EventInfluenceGeneratorTest {
   }
 
   @Test
-  void generate_writesOneRulePerEventTypeAndInfluenceType_andRepeatsTheTenCharacters() {
+  void generate_writesOneRulePerEventTypeAndInfluenceType_andRepeatsTheTwentyCharacters() {
     InMemoryEventInfluenceStore store = new InMemoryEventInfluenceStore();
     EventInfluenceGenerator.Result result = generator.generate(store);
 
     assertThat(store.size()).isEqualTo(EventInfluenceGenerator.countRules());
     assertThat(result.getCountRules()).isEqualTo(store.size());
-    assertThat(result.getCountCharacters()).isEqualTo(10);
+    assertThat(result.getCountCharacters()).isEqualTo(20);
     assertThat(result.isRepeated()).isTrue();
 
     int punch = EventType.candidatesPunchLeftFistStraight.getIndex();
-    for (int influenceType = 10; influenceType < 100; influenceType += 10) {
+    for (int influenceType = 20; influenceType < 100; influenceType += 20) {
       assertThat(store.get(punch, influenceType).replace("\"influenceType\":" + influenceType, ""))
           .as("influence type %d is the farmer", influenceType)
           .isEqualTo(store.get(punch, 0).replace("\"influenceType\":0", ""));
     }
     assertThat(store.get(punch, 1)).as("influence type 1 is the farmer's wife").isNotEqualTo(store.get(punch, 0));
+    assertThat(store.get(punch, 10)).as("influence type 10 is the baker").isNotEqualTo(store.get(punch, 0));
   }
 
   @Test

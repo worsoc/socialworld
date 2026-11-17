@@ -6,7 +6,7 @@ What the automated tests check, what they assume, and what they need to run.
 |---|---|
 | **Framework** | JUnit 5 with AssertJ |
 | **Test classes** | 57 |
-| **Test methods** | 511 active, 1 commented out |
+| **Test methods** | 517 active, 1 commented out |
 | **Database** | no test writes to MariaDB; a few tests read from it and skip themselves without it or with an empty table |
 | **Runs in CI** | yes, in a fresh clone without `application.properties` |
 | **Last updated** | 2026-11-17 |
@@ -47,12 +47,12 @@ What the automated tests check, what they assume, and what they need to run.
 | Map | `CubeTileAnalysisTest` | 10 | which tiles exist, their statistics and families | – |
 | Map | `CubeCatalogTest` | 11 | catalog equals `createTile`, `isFilled` | – |
 | MCT | `TileGridCubesTest` | 10 | map positions → cubes, against `LTileRaster` | – |
-| DCT | `AttributeArrayGeneratorTest` | 26 | attribute arrays from characters and text | – |
+| DCT | `AttributeArrayGeneratorTest` | 30 | attribute arrays from characters and text, need and ideal of the characters | – |
 | DCT | `AttributeMatrixGeneratorTest` | 19 | matrices for the characters and the mapping | – |
 | DCT | `TextFileTest` | 2 | reading a text file | – |
 | DCT | `CreationToolEventInfluenceDescriptionTest` | 3 | typed numbers get a decimal point | – |
 | DCT | `EventInfluenceCatalogTest` | 6 | reading event_situations.csv and event_influences.csv | – |
-| DCT | `EventInfluenceGeneratorTest` | 9 | generated event influence rules: tiers, order, factor, repetition, neutral rule, need of sleep and food per character | – |
+| DCT | `EventInfluenceGeneratorTest` | 11 | generated event influence rules: tiers (hunger and tiredness at the ideal), order, factor, repetition, neutral rule, need of sleep and food per character | – |
 | DCT | `AttributeCharacterOverviewTest` | 11 | overview of arrays and matrices per character | partly: no database or empty table |
 | DCT | `AttributeMatrixCellTest` | 6 | text of a matrix cell | – |
 | DCT | `AttributeMatrixTargetsTest` | 8 | target values of a matrix | partly: no database or empty table |
@@ -545,6 +545,7 @@ The catalog holds one tree per tile type (1/9 m for S and M, 1/3 m for L). The m
 | Text die | keeps only letters, folds ä/ö/ü/ß, reads every third letter as a share of the alphabet; with several passes it reads the other letters |
 | Levels | bands in 0..9999 (`o`: 3800, 5000, 6200 for shares 0, 0.5, 1; `+++` ends at 9999), found by their code, inside the range of attribute values |
 | Catalog | `characters.csv` holds 100 characters in order; a wrong number of levels is rejected; every character has a need of sleep (6 to 10 h) and food (1 to 5 meals), farmer 8 h and 3, ascetic 6 h and 1, wrestler 5 meals; without the two columns the default need (8 h, 3) applies; 7.3 h, 10.5 h, 0 and 6 meals are rejected |
+| Ideal | characters 1 to 20 have the ideal columns (maid tiredness 3000 / 8500, miller hunger 2500 / 4000), character 21 gets the farmer's 20/70 and 40/60; 18 fields are read, 16 rejected; lower end not below the upper one or above 99 is rejected; only hunger and tiredness have an ideal, asking for mood is refused |
 | Generator | 199 arrays, every `gauss_index` once, every value in its band, same text same values, too short a text and impossible `aa_id`s rejected, the counted letters are used up exactly |
 | Fine scale | more than half of the values are no multiples of 100 |
 | Adjusting by hand | `withValues` keeps character, index and id; `withDisplayValues` keeps unmoved values, moved ones become slider × 100, limited to 0..9999 |
@@ -594,7 +595,7 @@ The two sources of the generated event influence rules: `event_situations.csv` (
 |---|---|
 | `situations_fromTheResource_coverTheRelevantEventTypesOnce` | 91 event types; e.g. `selfSleep` is situation 1, `candidatesWeaponClub` situation 20 with factor 1.5, `percipientMoveWalk` factor 0; `targetEat` has no situation |
 | `situations_rejectAnUnknownEventTypeAndAnEventTypeTwice` | an unknown event type or one listed twice is refused |
-| `catalog_fromTheResource_hasTheCharacters1To10WithAll25Situations` | the file has the characters 1 to 10, each with lines in all 25 situations |
+| `catalog_fromTheResource_hasTheCharacters1To20WithAll25Situations` | the file has the characters 1 to 20, each with lines in all 25 situations |
 | `catalog_lineWithoutAttribute_onlyRecordsTheSentence` | farmer, situation 9: one line with a sentence and no attribute |
 | `catalog_readsTheFourSteps` | attribute and the four steps of a line |
 | `catalog_rejectsStepsWithBothSignsAndUnknownAttributes` | steps with both signs in one line and an unknown attribute are refused |
@@ -605,7 +606,7 @@ The two sources of the generated event influence rules: `event_situations.csv` (
 
 `src/test/java/org/socialworld/tools/dct/EventInfluenceGeneratorTest.java`
 
-`EventInfluenceGenerator` and `EventInfluenceRuleBuilder` build the rules from the two files and `characters.csv`. The built rules are parsed and evaluated like in the simulation (`EventInfluenceDescription`). Writes into `InMemoryEventInfluenceStore`.
+`EventInfluenceGenerator` and `EventInfluenceRuleBuilder` build the rules from the two files and `characters.csv`. The tiers of hunger and tiredness sit at the ideal of the character, those of the other attributes at the band of its level. The built rules are parsed and evaluated like in the simulation (`EventInfluenceDescription`). Writes into `InMemoryEventInfluenceStore`.
 
 | Test | Checks |
 |---|---|
@@ -613,13 +614,15 @@ The two sources of the generated event influence rules: `event_situations.csv` (
 | `farmerPunched_eachTierOfTheBandHasItsStep` | farmer, punched: mood 1500 / 3000 / 6000 / 8500 lose 10 / 100 / 200 / 200 (band 2000..8000, middle 5000) |
 | `farmerPunched_onlyOneTierApplies_inBothDirections` | falling mood 2050 → 1950 (no second step below the band), rising courage 6195 → 6205 (no second step above the band) |
 | `factorOfTheEventType_isAppliedAndRounded` | farmer hit by the club (factor 1.5): mood −45 / −450 / −750 / −750, by a stab: −30 / −300 / −500 / −500 |
-| `generate_writesOneRulePerEventTypeAndInfluenceType_andRepeatsTheTenCharacters` | 193 × 100 rules; with 10 characters influence types 0, 10, …, 90 get the farmer's rule, 1 the farmer's wife's |
+| `generate_writesOneRulePerEventTypeAndInfluenceType_andRepeatsTheTwentyCharacters` | 193 × 100 rules; with 20 characters influence types 0, 20, …, 80 get the farmer's rule, 1 the farmer's wife's, 10 the baker's |
 | `eventTypeWithoutSituation_andSituationWithoutEffect_getANeutralRuleThatChangesNothing` | `targetEat` (no situation) and `selfExamineByLook` (no effect for the farmer) get an empty rule; evaluated, it gives the attribute array back unchanged |
+| `maidSleeps_theTiersOfTirednessSitAtHerIdeal_notAtTheBandOfHerLevel` | maid sleeping (ideal 30/85, band of `+` 5800..7500): tiredness 2500 / 5000 / 7000 / 9000 lose 7 / 51 / 77 / 94; 5000 lies below her band but in the lower half of her ideal |
+| `millerEats_theTiersOfHungerSitAtHisIdeal` | miller eating (ideal 25/40, 4 meals): hunger 2000 / 3000 / 3500 / 4100 lose 2 / 12 / 17 / 20; 4100 lies inside his band but above his ideal |
 | `needOfSleep_scalesTheSleepSteps` | tiredness while sleeping × 8 / sleepHours: farmer (8 h) −9 / −60 / −85 / −102 unchanged, shopkeeper (7.5 h) −10 / −64 / −91 / −109 |
 | `needOfFood_scalesHungerAndTirednessWhileEating` | × 3 / mealsPerDay on hunger and tiredness while eating: shepherd (2 meals) hunger −3 / −24 / −35 / −41, tiredness +5 / +3 / +2; farmhand (4 meals, 8.5 h) hunger −12 / −17 / −20, sleep −64 / −96 / −112 |
 | `needFactor_isOneOutsideSleepingAndEating` | ascetic (6 h, 1 meal): 8 / 6 for sleep, 3 for hunger while eating, 1 for mood while eating and for walking |
 
-- **Assumes:** the resource files as they are in git (values of the farmer).
+- **Assumes:** the resource files as they are in git (values of the farmer, maid and miller).
 - **Needs:** no database.
 
 ### `AttributeCharacterOverviewTest`

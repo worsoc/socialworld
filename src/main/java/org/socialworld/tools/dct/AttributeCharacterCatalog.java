@@ -57,6 +57,7 @@ public class AttributeCharacterCatalog {
 		List<AttributeCharacter> characters = new ArrayList<>();
 		int fieldsWithoutNeed = 3 + Attribute.NUMBER_OF_ATTRIBUTES;
 		int fieldsWithNeed = fieldsWithoutNeed + 2;
+		int fieldsWithIdeal = fieldsWithNeed + 4;
 
 		try (BufferedReader reader = new BufferedReader(new java.io.StringReader(content))) {
 			String line;
@@ -65,8 +66,9 @@ public class AttributeCharacterCatalog {
 				if (line.isEmpty() || line.startsWith("#")) continue;
 
 				String[] fields = line.split(";", -1);
-				if (fields.length != fieldsWithoutNeed && fields.length != fieldsWithNeed) {
-					throw new IllegalArgumentException("expected " + fieldsWithoutNeed + " or " + fieldsWithNeed + " fields: " + line);
+				if (fields.length != fieldsWithoutNeed && fields.length != fieldsWithNeed && fields.length != fieldsWithIdeal) {
+					throw new IllegalArgumentException("expected " + fieldsWithoutNeed + ", " + fieldsWithNeed + " or "
+							+ fieldsWithIdeal + " fields: " + line);
 				}
 
 				int number = Integer.parseInt(fields[0].trim());
@@ -80,12 +82,20 @@ public class AttributeCharacterCatalog {
 				}
 				float sleepHours = AttributeCharacter.DEFAULT_SLEEP_HOURS;
 				int mealsPerDay = AttributeCharacter.DEFAULT_MEALS_PER_DAY;
-				if (fields.length == fieldsWithNeed) {
+				if (fields.length >= fieldsWithNeed) {
 					// decimal point, as everywhere in the rules
 					sleepHours = Float.parseFloat(fields[fieldsWithoutNeed].trim());
 					mealsPerDay = Integer.parseInt(fields[fieldsWithoutNeed + 1].trim());
 				}
-				characters.add(new AttributeCharacter(number, fields[1].trim(), fields[2].trim(), levels, sleepHours, mealsPerDay));
+				int[] ideal = {AttributeCharacter.DEFAULT_TIRED_WAKE, AttributeCharacter.DEFAULT_TIRED_BED,
+						AttributeCharacter.DEFAULT_HUNGER_FULL, AttributeCharacter.DEFAULT_HUNGER_EAT};
+				if (fields.length == fieldsWithIdeal) {
+					for (int i = 0; i < ideal.length; i++) {
+						ideal[i] = Integer.parseInt(fields[fieldsWithNeed + i].trim());
+					}
+				}
+				characters.add(new AttributeCharacter(number, fields[1].trim(), fields[2].trim(), levels, sleepHours, mealsPerDay,
+						ideal[0], ideal[1], ideal[2], ideal[3]));
 			}
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);

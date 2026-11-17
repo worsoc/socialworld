@@ -141,6 +141,56 @@ public class AttributeArrayGeneratorTest {
   }
 
   @Test
+  void catalog_readsTheIdealOfTirednessAndHunger() {
+    List<AttributeCharacter> characters = AttributeCharacterCatalog.load().getCharacters();
+    AttributeCharacter maid = characters.get(3);
+    AttributeCharacter miller = characters.get(9);
+    AttributeCharacter character21 = characters.get(20);
+
+    assertThat(maid.getIdealLowest(Attribute.tiredness)).as("maid after sleep").isEqualTo(3000);
+    assertThat(maid.getIdealHighest(Attribute.tiredness)).as("maid at bedtime").isEqualTo(8500);
+    assertThat(miller.getIdealLowest(Attribute.hunger)).as("miller after a meal").isEqualTo(2500);
+    assertThat(miller.getIdealHighest(Attribute.hunger)).as("miller when going to eat").isEqualTo(4000);
+    // characters without the ideal columns get the ideal of the farmer
+    assertThat(character21.getIdealLowest(Attribute.tiredness)).isEqualTo(AttributeCharacter.DEFAULT_TIRED_WAKE * 100);
+    assertThat(character21.getIdealHighest(Attribute.tiredness)).isEqualTo(AttributeCharacter.DEFAULT_TIRED_BED * 100);
+    assertThat(character21.getIdealLowest(Attribute.hunger)).isEqualTo(AttributeCharacter.DEFAULT_HUNGER_FULL * 100);
+    assertThat(character21.getIdealHighest(Attribute.hunger)).isEqualTo(AttributeCharacter.DEFAULT_HUNGER_EAT * 100);
+  }
+
+  @Test
+  void catalog_readsTheIdealColumns_andRejectsAWrongNumberOfFields() {
+    AttributeCharacter character = AttributeCharacterCatalog.parse("1;a;b;o;o;o;o;o;o;o;o;o;8.0;3;15;80;30;55\n")
+        .getCharacters().get(0);
+    assertThat(character.getIdealLowest(Attribute.tiredness)).isEqualTo(1500);
+    assertThat(character.getIdealHighest(Attribute.tiredness)).isEqualTo(8000);
+    assertThat(character.getIdealLowest(Attribute.hunger)).isEqualTo(3000);
+    assertThat(character.getIdealHighest(Attribute.hunger)).isEqualTo(5500);
+
+    assertThatThrownBy(() -> AttributeCharacterCatalog.parse("1;a;b;o;o;o;o;o;o;o;o;o;8.0;3;15;80\n"))
+        .isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
+  void catalog_rejectsAnIdealOutOfOrderOrOutOfRange() {
+    assertThatThrownBy(() -> AttributeCharacterCatalog.parse("1;a;b;o;o;o;o;o;o;o;o;o;8.0;3;70;70;40;60\n"))
+        .as("tiredWake not below tiredBed").isInstanceOf(IllegalArgumentException.class);
+    assertThatThrownBy(() -> AttributeCharacterCatalog.parse("1;a;b;o;o;o;o;o;o;o;o;o;8.0;3;20;70;60;40\n"))
+        .as("hungerFull above hungerEat").isInstanceOf(IllegalArgumentException.class);
+    assertThatThrownBy(() -> AttributeCharacterCatalog.parse("1;a;b;o;o;o;o;o;o;o;o;o;8.0;3;20;100;40;60\n"))
+        .as("above 99").isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
+  void ideal_onlyForTirednessAndHunger() {
+    assertThat(AttributeCharacter.hasIdeal(Attribute.tiredness)).isTrue();
+    assertThat(AttributeCharacter.hasIdeal(Attribute.hunger)).isTrue();
+    assertThat(AttributeCharacter.hasIdeal(Attribute.mood)).isFalse();
+    AttributeCharacter farmer = AttributeCharacterCatalog.load().getCharacters().get(0);
+    assertThatThrownBy(() -> farmer.getIdealLowest(Attribute.mood)).isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
   void catalog_rejectsANeedOutsideItsRange() {
     assertThatThrownBy(() -> AttributeCharacterCatalog.parse("1;a;b;o;o;o;o;o;o;o;o;o;7.3;3\n"))
         .as("not a half hour").isInstanceOf(IllegalArgumentException.class);

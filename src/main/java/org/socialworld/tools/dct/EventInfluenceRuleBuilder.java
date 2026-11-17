@@ -44,6 +44,10 @@ import org.socialworld.datasource.parsing.JsonValue;
  * highest tier down, so a value changed in one tier only reaches tiers already checked.
  * Steps of 0 and empty tiers give no entry. A rule without entries changes nothing.
  *
+ * For hunger and tiredness the tiers sit at the ideal of the character instead of the band of its
+ * level (concept section 14): tiredness [after sleep, at bedtime], hunger [after a meal, when going to eat].
+ * Both have no target in the attribute matrix and swing every day further than a narrow band reaches.
+ *
  * The need of the character (concept section 13.4) scales the steps of sleeping and eating:
  * tiredness while sleeping × 8 / sleepHours, hunger and tiredness while eating × 3 / mealsPerDay.
  * Who sleeps and eats as much as it needs then has the daily course of the reference (8 h, 3 meals).
@@ -76,7 +80,7 @@ public final class EventInfluenceRuleBuilder {
 	}
 
 	/**
-	 * @param character the character whose bands give the tiers
+	 * @param character the character whose bands (for hunger and tiredness its ideal) give the tiers
 	 * @param lines the lines of the character in the situation of the event type, may be empty
 	 * @param factor the factor of the event type in its situation
 	 */
@@ -92,10 +96,17 @@ public final class EventInfluenceRuleBuilder {
 			Attribute attribute = line.getAttribute();
 			if (attribute == null) continue;
 
-			AttributeLevel level = character.getLevel(attribute.getIndex());
 			float lineFactor = factor * needFactor(line, character);
-			int low = level.getLowest();
-			int high = level.getHighest();
+			int low;
+			int high;
+			if (AttributeCharacter.hasIdeal(attribute)) {
+				low = character.getIdealLowest(attribute);
+				high = character.getIdealHighest(attribute);
+			} else {
+				AttributeLevel level = character.getLevel(attribute.getIndex());
+				low = level.getLowest();
+				high = level.getHighest();
+			}
 			int middle = (low + high) / 2;
 			int[] lowerBounds = {0, low, middle, high};
 			int[] upperBounds = {low, middle, high, AttributeArray.ATTRIBUTE_VALUE_MAX};

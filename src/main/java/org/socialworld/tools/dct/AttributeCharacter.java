@@ -30,6 +30,10 @@ public class AttributeCharacter {
 	private final AttributeLevel[] levels;
 	private final float sleepHours;
 	private final int mealsPerDay;
+	private final int tiredWake;
+	private final int tiredBed;
+	private final int hungerFull;
+	private final int hungerEat;
 
 	/** The need of the reference character (farmer): 8 hours of sleep, 3 meals (EID concept 13.4). */
 	public static final float DEFAULT_SLEEP_HOURS = 8f;
@@ -38,6 +42,18 @@ public class AttributeCharacter {
 	public static final float MAX_SLEEP_HOURS = 10f;
 	public static final int MIN_MEALS_PER_DAY = 1;
 	public static final int MAX_MEALS_PER_DAY = 5;
+
+	/**
+	 * The ideal of the reference character (farmer), displayed values 0..99 (EID concept 14):
+	 * tiredness 20 after his sleep and 70 when he goes to bed, hunger 40 after a meal and 60 when he goes to eat.
+	 */
+	public static final int DEFAULT_TIRED_WAKE = 20;
+	public static final int DEFAULT_TIRED_BED = 70;
+	public static final int DEFAULT_HUNGER_FULL = 40;
+	public static final int DEFAULT_HUNGER_EAT = 60;
+	public static final int MAX_IDEAL = 99;
+	/** Displayed value 0..99 times this is the attribute value 0..9999. */
+	private static final int IDEAL_SCALE = 100;
 
 	public AttributeCharacter(int number, String name, String sketch, AttributeLevel[] levels) {
 		this(number, name, sketch, levels, DEFAULT_SLEEP_HOURS, DEFAULT_MEALS_PER_DAY);
@@ -49,6 +65,20 @@ public class AttributeCharacter {
 	 */
 	public AttributeCharacter(int number, String name, String sketch, AttributeLevel[] levels,
 			float sleepHours, int mealsPerDay) {
+		this(number, name, sketch, levels, sleepHours, mealsPerDay,
+				DEFAULT_TIRED_WAKE, DEFAULT_TIRED_BED, DEFAULT_HUNGER_FULL, DEFAULT_HUNGER_EAT);
+	}
+
+	/**
+	 * @param sleepHours hours of sleep the character needs, 6.0 to 10.0 in half hours
+	 * @param mealsPerDay meals the character needs, 1 to 5
+	 * @param tiredWake ideal tiredness after sleeping sleepHours, displayed 0..99
+	 * @param tiredBed ideal tiredness when going to bed, displayed 0..99, above tiredWake
+	 * @param hungerFull ideal hunger after a meal, displayed 0..99
+	 * @param hungerEat ideal hunger when going to eat, displayed 0..99, above hungerFull
+	 */
+	public AttributeCharacter(int number, String name, String sketch, AttributeLevel[] levels,
+			float sleepHours, int mealsPerDay, int tiredWake, int tiredBed, int hungerFull, int hungerEat) {
 		if (levels.length != Attribute.NUMBER_OF_ATTRIBUTES) {
 			throw new IllegalArgumentException("character " + number + " has " + levels.length
 					+ " levels instead of " + Attribute.NUMBER_OF_ATTRIBUTES);
@@ -61,12 +91,47 @@ public class AttributeCharacter {
 			throw new IllegalArgumentException("character " + number + ": mealsPerDay " + mealsPerDay
 					+ " is not between " + MIN_MEALS_PER_DAY + " and " + MAX_MEALS_PER_DAY);
 		}
+		checkIdeal(number, "tiredness", tiredWake, tiredBed);
+		checkIdeal(number, "hunger", hungerFull, hungerEat);
 		this.number = number;
 		this.name = name;
 		this.sketch = sketch;
 		this.levels = levels.clone();
 		this.sleepHours = sleepHours;
 		this.mealsPerDay = mealsPerDay;
+		this.tiredWake = tiredWake;
+		this.tiredBed = tiredBed;
+		this.hungerFull = hungerFull;
+		this.hungerEat = hungerEat;
+	}
+
+	private static void checkIdeal(int number, String attribute, int low, int high) {
+		if (low < 0 || high > MAX_IDEAL || low >= high) {
+			throw new IllegalArgumentException("character " + number + ": ideal of " + attribute + " " + low + "/" + high
+					+ " is not 0 <= low < high <= " + MAX_IDEAL);
+		}
+	}
+
+	/**
+	 * Hunger and tiredness have no target in the attribute matrix, they rise with time. For them the
+	 * ideal of the character takes the place of the band of its level (EID concept 14.5, 14.8).
+	 */
+	public static boolean hasIdeal(Attribute attribute) {
+		return attribute == Attribute.tiredness || attribute == Attribute.hunger;
+	}
+
+	/** @return the lower end of the ideal as attribute value 0..9999: tiredness after sleep, hunger after a meal */
+	public int getIdealLowest(Attribute attribute) {
+		if (attribute == Attribute.tiredness) return tiredWake * IDEAL_SCALE;
+		if (attribute == Attribute.hunger) return hungerFull * IDEAL_SCALE;
+		throw new IllegalArgumentException(attribute + " has no ideal");
+	}
+
+	/** @return the upper end of the ideal as attribute value 0..9999: tiredness at bedtime, hunger when going to eat */
+	public int getIdealHighest(Attribute attribute) {
+		if (attribute == Attribute.tiredness) return tiredBed * IDEAL_SCALE;
+		if (attribute == Attribute.hunger) return hungerEat * IDEAL_SCALE;
+		throw new IllegalArgumentException(attribute + " has no ideal");
 	}
 
 	/** Hours of sleep the character needs (the body's need, not how it lives). */

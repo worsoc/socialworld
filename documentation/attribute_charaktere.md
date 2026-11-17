@@ -239,7 +239,7 @@ Added 2026-11-17. Two more columns per character (proposal; built with A11 of `e
 
 **Need, not way of life.** The columns describe what the body needs, not what the character gets. The scholar sleeps too little, the beggar starves, the night watchman is in his third night without sleep: their need is ordinary, they only get too little. That already shows in their levels (`ti +`, `hu ++`) and later in how long they really sleep and how often they eat (State2Action).
 
-**Effect.** The generator of the event rules multiplies the sleep steps (tiredness, situation sleep) by 8 / sleepHours and the eating steps (hunger and tiredness, situation eat) by 3 / mealsPerDay. A character who sleeps and eats as much as it needs then has the same daily course as the reference (farmer, 8 h, 3 meals). Who gets less settles at a higher, stable level. Derivation: `eid_regeln_konzept.md` 13.4 and `attribute_matrix_characters.md` 4b.4.
+**Effect.** The generator of the event rules multiplies the sleep steps (tiredness, situation sleep) by 8 / sleepHours and the eating steps (hunger and tiredness, situation eat) by 3 / mealsPerDay. A character who sleeps and eats as much as it needs then has the same daily course as the reference (farmer, 8 h, 3 meals). Who gets less settles at a higher, stable level. Since section 6 (2026-11-17) the tiers of these rules sit at the ideal of the character, no longer at the band of its level. Derivation: `eid_regeln_konzept.md` 13.4 and `attribute_matrix_characters.md` 4b.4.
 
 | sleepHours | 6.0 | 6.5 | 7.0 | 7.5 | 8.0 | 8.5 | 9.0 | 9.5 | 10.0 |
 |---|--:|--:|--:|--:|--:|--:|--:|--:|--:|
@@ -327,3 +327,53 @@ Characters that differ from the default (all others: 8.0 hours, 3 meals):
 | 96 | sunny nature | 7.5 | 3 | rested |
 | 97 | deeply melancholic woman | 10.0 | 2 | sleeps a lot, eats little |
 | 100 | child prodigy | 9.0 | 3 | a child |
+
+## 6. Ideal of Tiredness and Hunger
+
+Added 2026-11-17, built with A14 and A15 of `eid_regeln_konzept.md`, section 14. Four more columns per character:
+
+| Column | Meaning | Values | Default |
+|---|---|---|---|
+| `tiredWake` | tiredness after sleeping `sleepHours` | 0 to 99 (displayed) | 20 |
+| `tiredBed` | tiredness when going to bed | above `tiredWake`, up to 99 | 70 |
+| `hungerFull` | hunger after a meal | 0 to 99 (displayed) | 40 |
+| `hungerEat` | hunger when going to eat | above `hungerFull`, up to 99 | 60 |
+
+The default is the farmer. Characters 1 to 20 have the columns so far; the others follow with their blocks of event rules and get the default until then.
+
+**Why not the band.** All other attributes have a target in the attribute matrix, the middle of their band, and are pulled back to it. Hunger and tiredness have none: they only rise with time and fall by eating and sleeping, so they swing every day by 35 to 50 points. A narrow band such as `+` (58–75, 17 points wide) cannot hold that swing. With the four tiers of the event rules at the band, sleep stopped at the lower edge (about 58) and the day pushed on to 93–99. The rules keep only four intervals, so for these two attributes the tiers sit at the ideal instead of the band: [tiredWake, tiredBed] and [hungerFull, hungerEat]. In principle a band could reach further than the ideal (after a sleepless night, after oversleeping); the rules do not show that on purpose. The level still sets the start value of the attribute array (section 2).
+
+**An ideal, not a rule.** On a reference day (work, ways, meals) a character who sleeps `sleepHours` goes to bed at `tiredBed` and wakes up at `tiredWake`, and eats `mealsPerDay` times between `hungerEat` and `hungerFull`. A different day gives different values.
+
+**What the ideal expresses.**
+- A wider swing (e.g. 20/85) means: tires faster. The day must bring more strain, sleep more recovery.
+- A shifted ideal (e.g. 35/85) means: never fully rested.
+- Sleeping lightly shows in a higher `tiredWake`, not in smaller sleep steps.
+- Hungry often (`hu +`): a higher `hungerFull`; well fed (`hu -`): a lower one.
+
+**Limits.** The attribute matrix adds 1.8 displayed points of tiredness and 2.4 of hunger per hour. Therefore `tiredBed − tiredWake ≥ 1.8 · (24 − sleepHours)` (29 at 8 h), and the swing of hunger per meal is about 60 / `mealsPerDay`, at least about 48 / `mealsPerDay` (16 at 3 meals).
+
+| No | Character | ti | sleepHours | tiredWake / tiredBed | hu | mealsPerDay | hungerFull / hungerEat | Why |
+|--:|---|---|--:|---|---|--:|---|---|
+| 1 | farmer | ~ | 8.0 | 20 / 70 | ~ | 3 | 40 / 60 | reference |
+| 2 | farmer's wife | + | 8.0 | 30 / 85 | ~ | 3 | 40 / 60 | tires faster, never quite catches up |
+| 3 | farmhand | ~ | 8.5 | 20 / 70 | + | 4 | 50 / 65 | likes his food, never full for long |
+| 4 | maid | + | 8.0 | 30 / 85 | ~ | 3 | 40 / 60 | like the farmer's wife |
+| 5 | carpenter | ~ | 8.0 | 20 / 70 | ~ | 3 | 40 / 60 | |
+| 6 | shopkeeper | ~ | 7.5 | 20 / 70 | ~ | 3 | 40 / 60 | |
+| 7 | fisherman | ~ | 7.5 | 20 / 70 | ~ | 3 | 40 / 60 | |
+| 8 | fisherman's wife | ~ | 8.0 | 30 / 75 | ~ | 3 | 40 / 60 | sleeps restlessly, only shifted |
+| 9 | shepherd | ~ | 8.0 | 20 / 65 | ~ | 2 | 35 / 65 | quiet life, two big meals |
+| 10 | miller | ~ | 8.0 | 20 / 70 | - | 4 | 25 / 40 | well fed |
+| 11 | baker | + | 7.0 | 25 / 80 | - | 3 | 30 / 50 | night work, short nights |
+| 12 | washerwoman | + | 8.0 | 25 / 85 | ~ | 3 | 40 / 60 | hard work, largest swing |
+| 13 | apprentice | ~ | 9.0 | 15 / 70 | + | 4 | 50 / 65 | young, sleeps deeply, always hungry |
+| 14 | retired farmer | + | 7.0 | 35 / 80 | ~ | 3 | 40 / 60 | sits a lot, never fully rested |
+| 15 | grandmother | + | 7.0 | 40 / 85 | ~ | 2 | 35 / 65 | frail, sleeps lightly, eats little |
+| 16 | barmaid | + | 7.5 | 25 / 80 | ~ | 3 | 40 / 60 | late evenings, much on her feet |
+| 17 | innkeeper | ~ | 8.0 | 20 / 70 | - | 4 | 25 / 40 | eats with the guests |
+| 18 | carter | ~ | 8.0 | 20 / 70 | ~ | 3 | 40 / 60 | |
+| 19 | weaver | ~ | 8.0 | 20 / 65 | ~ | 3 | 40 / 60 | sits all day |
+| 20 | potter | ~ | 8.0 | 20 / 70 | ~ | 3 | 40 / 60 | |
+
+**Open.** The meaning of `ti +` is now "tires faster, needs more sleep". 12 of the 32 characters with `ti +` or `++` have a need below 8 hours (among them baker, grandmother and retired farmer with 7 h, ascetic and mad prophet with 6 h). This is checked when their ideal is set.

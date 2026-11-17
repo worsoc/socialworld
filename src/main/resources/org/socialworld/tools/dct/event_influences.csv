@@ -13,6 +13,8 @@
 #            below = value < low, lowerHalf = low <= value < middle,
 #            upperHalf = middle <= value < high, above = value >= high
 #            all four steps of a line have the same sign (or 0)
+#            for tiredness and hunger the ideal of the character takes the place of the band (characters.csv,
+#            EID concept 14): tiredness [tiredWake, tiredBed], hunger [hungerFull, hungerEat]
 # A line with an empty attribute only records the sentence: the situation changes nothing for this character.
 # Scaled once on 2026-11-17 for the daily balance with the linear rise of the attribute matrix
 #            (EID concept section 13.3): eat (3) hunger x0.775, sleep (1) tiredness x1.7,
@@ -63,7 +65,7 @@
 1;25;Seeing people walk about is everyday life for the farmer. Only someone running or sneaking makes him a little uneasy.;mood;-1;-5;-10;-10
 #
 # 2 farmer's wife: mother of four, practical, always on her feet
-2;1;With four children in the house the farmer's wife sleeps lightly. The night helps, but she never quite catches up.;tiredness;-7;-43;-68;-85
+2;1;With four children in the house the farmer's wife sleeps lightly. The night helps, but she never quite catches up.;tiredness;-9;-60;-85;-102
 2;1;With four children in the house the farmer's wife sleeps lightly. The night helps, but she never quite catches up.;hunger;0;0;0;0
 2;1;With four children in the house the farmer's wife sleeps lightly. The night helps, but she never quite catches up.;mood;3;3;2;1
 2;1;With four children in the house the farmer's wife sleeps lightly. The night helps, but she never quite catches up.;power;3;3;2;0
@@ -443,3 +445,427 @@
 10;23;A scream nearby startles him for a moment.;courage;-2;-10;-20;-20
 10;24;Others around him do not change him.;;;;;
 10;25;Someone running or sneaking might be after his flour. It makes him uneasy.;mood;-2;-10;-15;-15
+#
+# 11 baker: gets up at night, cheerful
+11;1;The baker goes to bed early and sleeps soundly but short. He gets up in the middle of the night in good spirits.;tiredness;-9;-60;-85;-102
+11;1;The baker goes to bed early and sleeps soundly but short. He gets up in the middle of the night in good spirits.;hunger;0;0;0;0
+11;1;The baker goes to bed early and sleeps soundly but short. He gets up in the middle of the night in good spirits.;mood;6;6;3;1
+11;1;The baker goes to bed early and sleeps soundly but short. He gets up in the middle of the night in good spirits.;power;3;3;2;0
+11;2;A drink of water between two batches refreshes the baker.;hunger;-10;-60;-100;-100
+11;2;A drink of water between two batches refreshes the baker.;tiredness;-2;-10;-20;-20
+11;3;The baker knows good bread when he eats it. A meal pleases him and makes him a little sluggish.;hunger;-2;-16;-23;-27
+11;3;The baker knows good bread when he eats it. A meal pleases him and makes him a little sluggish.;mood;8;8;4;1
+11;3;The baker knows good bread when he eats it. A meal pleases him and makes him a little sluggish.;tiredness;4;4;2;1
+11;4;Relieving himself is nothing special for the baker. Afterwards he feels a little lighter.;mood;80;60;30;5
+11;5;Walking is no effort for the baker, but over time it makes him hungry.;tiredness;3;2;1;0
+11;5;Walking is no effort for the baker, but over time it makes him hungry.;hunger;3;3;2;1
+11;6;He looks at things to see whether they are good enough. It does not change how he feels.;;;;;
+11;7;Touching dough and flour is his daily work and leaves him as he is.;;;;;
+11;8;Taking something for himself pleases the baker a little.;mood;20;20;10;2
+11;9;Putting things away is routine in the bakehouse.;;;;;
+11;10;Kneading and shaping dough is his craft. It tires him slowly, makes him hungry and he enjoys it.;tiredness;1;1;1;0
+11;10;Kneading and shaping dough is his craft. It tires him slowly, makes him hungry and he enjoys it.;hunger;1;1;1;0
+11;10;Kneading and shaping dough is his craft. It tires him slowly, makes him hungry and he enjoys it.;mood;1;1;0;0
+11;11;The cheerful baker does not like to strike out. It costs him an effort, and afterwards he is sorry.;tiredness;40;30;20;5
+11;11;The cheerful baker does not like to strike out. It costs him an effort, and afterwards he is sorry.;mood;-10;-50;-80;-80
+11;11;The cheerful baker does not like to strike out. It costs him an effort, and afterwards he is sorry.;courage;10;10;5;1
+11;12;He listens while he works. It does not stir him.;;;;;
+11;13;Being told what to do is fine with him as long as it makes sense.;mood;-2;-10;-15;-15
+11;14;When the baker understands something, he is pleased.;mood;20;20;10;2
+11;15;He chats with his customers. Talking cheers him up.;mood;20;20;10;2
+11;16;Being asked pleases him. He likes to help.;mood;30;30;15;2
+11;17;An answer settles the matter and contents him.;mood;10;10;5;1
+11;18;Being shouted at dampens his cheerfulness, but not for long.;mood;-10;-60;-100;-100
+11;19;Someone coming close does not unsettle the friendly baker.;;;;;
+11;20;A blow with a weapon frightens and hurts the baker. He is badly shaken.;mood;-30;-300;-500;-500
+11;20;A blow with a weapon frightens and hurts the baker. He is badly shaken.;courage;-20;-150;-250;-250
+11;20;A blow with a weapon frightens and hurts the baker. He is badly shaken.;power;-20;-100;-150;-150
+11;21;A punch hurts and upsets him. He is a baker, not a brawler.;mood;-15;-120;-200;-200
+11;21;A punch hurts and upsets him. He is a baker, not a brawler.;courage;-5;-30;-50;-50
+11;21;A punch hurts and upsets him. He is a baker, not a brawler.;power;-5;-20;-40;-40
+11;22;Talk nearby is none of his business.;;;;;
+11;23;A scream nearby startles the baker for a moment.;mood;-2;-20;-30;-30
+11;23;A scream nearby startles the baker for a moment.;courage;-2;-10;-20;-20
+11;24;The presence of others is everyday life for him.;;;;;
+11;25;Only someone running or sneaking makes him a little uneasy.;mood;-1;-5;-10;-10
+#
+# 12 washerwoman: hard work, little time for anything else
+12;1;After a day at the washtub the washerwoman falls into bed exhausted. The night is never quite long enough.;tiredness;-7;-51;-77;-94
+12;1;After a day at the washtub the washerwoman falls into bed exhausted. The night is never quite long enough.;hunger;0;0;0;0
+12;1;After a day at the washtub the washerwoman falls into bed exhausted. The night is never quite long enough.;mood;3;3;2;1
+12;1;After a day at the washtub the washerwoman falls into bed exhausted. The night is never quite long enough.;power;3;3;2;0
+12;2;A drink between two baskets quenches her thirst.;hunger;-10;-60;-100;-100
+12;2;A drink between two baskets quenches her thirst.;tiredness;-2;-10;-20;-20
+12;3;She eats quickly, whatever there is. It fills her and does her a little good.;hunger;-2;-16;-23;-27
+12;3;She eats quickly, whatever there is. It fills her and does her a little good.;mood;4;4;2;1
+12;3;She eats quickly, whatever there is. It fills her and does her a little good.;tiredness;3;3;2;1
+12;4;Relieving herself is a short break she hardly has time for.;mood;50;40;20;3
+12;5;She carries heavy baskets wherever she goes. Walking tires her and makes her hungry.;tiredness;3;2;1;0
+12;5;She carries heavy baskets wherever she goes. Walking tires her and makes her hungry.;hunger;3;3;2;1
+12;6;She looks at the laundry only to see whether it is clean. It does not change how she feels.;;;;;
+12;7;Touching wet cloth all day leaves her as she is.;;;;;
+12;8;Things mean little to her. Taking something leaves her almost as she is.;mood;5;5;2;0
+12;9;Putting things away is part of the work.;;;;;
+12;10;Scrubbing and wringing is hard work. It tires her steadily and makes her hungry.;tiredness;2;1;1;0
+12;10;Scrubbing and wringing is hard work. It tires her steadily and makes her hungry.;hunger;2;2;1;0
+12;11;She has strong arms but no wish to fight. Striking out leaves her uneasy.;tiredness;30;25;15;3
+12;11;She has strong arms but no wish to fight. Striking out leaves her uneasy.;mood;-5;-30;-50;-50
+12;11;She has strong arms but no wish to fight. Striking out leaves her uneasy.;courage;10;10;5;1
+12;12;She listens with half an ear while she works.;;;;;
+12;13;She is used to being told what to do and does it without a word.;mood;-1;-5;-10;-10
+12;14;She has no time to puzzle over things. Understanding something pleases her only a little.;mood;5;5;2;1
+12;15;A chat at the washing place is her one pleasure.;mood;15;15;8;2
+12;16;Being asked is a welcome break from the work.;mood;15;15;8;2
+12;17;An answer settles the question, that is all.;mood;5;5;2;1
+12;18;Being shouted at annoys her, but she has heard it before.;mood;-10;-60;-100;-100
+12;19;Someone coming close does not distract her from her work.;;;;;
+12;20;A blow with a weapon frightens and hurts her. She is badly shaken.;mood;-30;-300;-500;-500
+12;20;A blow with a weapon frightens and hurts her. She is badly shaken.;courage;-20;-150;-250;-250
+12;20;A blow with a weapon frightens and hurts her. She is badly shaken.;power;-20;-100;-150;-150
+12;21;A punch frightens and hurts her, though her work has made her tough.;mood;-15;-120;-200;-200
+12;21;A punch frightens and hurts her, though her work has made her tough.;courage;-5;-30;-50;-50
+12;21;A punch frightens and hurts her, though her work has made her tough.;power;-3;-15;-30;-30
+12;22;Talk nearby goes past her, she is busy.;;;;;
+12;23;A scream nearby startles her for a moment.;mood;-2;-20;-30;-30
+12;23;A scream nearby startles her for a moment.;courage;-2;-10;-20;-20
+12;24;The presence of others is everyday life for her.;;;;;
+12;25;Only someone running or sneaking makes her a little uneasy.;mood;-1;-5;-10;-10
+#
+# 13 apprentice: young, curious, always hungry
+13;1;The young apprentice sleeps long and deep. He wakes up rested, and at once hungry.;tiredness;-10;-68;-102;-119
+13;1;The young apprentice sleeps long and deep. He wakes up rested, and at once hungry.;hunger;0;0;0;0
+13;1;The young apprentice sleeps long and deep. He wakes up rested, and at once hungry.;mood;5;5;3;1
+13;1;The young apprentice sleeps long and deep. He wakes up rested, and at once hungry.;power;3;3;2;0
+13;2;A drink quenches his thirst and refreshes him a little.;hunger;-10;-60;-100;-100
+13;2;A drink quenches his thirst and refreshes him a little.;tiredness;-2;-10;-20;-20
+13;3;Food is never enough for the growing apprentice. Every meal pleases him.;hunger;-2;-16;-23;-27
+13;3;Food is never enough for the growing apprentice. Every meal pleases him.;mood;10;10;5;1
+13;3;Food is never enough for the growing apprentice. Every meal pleases him.;tiredness;3;3;2;1
+13;4;Relieving himself is nothing special for him.;mood;80;60;30;5
+13;5;He is young and tires slowly when walking, but it makes him hungry quickly.;tiredness;2;2;1;0
+13;5;He is young and tires slowly when walking, but it makes him hungry quickly.;hunger;4;4;3;1
+13;6;He examines everything. What he finds out is knowledge, it does not change how he feels.;;;;;
+13;7;Touching things is how he learns. It leaves him as he is.;;;;;
+13;8;Taking something for himself pleases the apprentice.;mood;20;20;10;2
+13;9;Putting things away is a chore he is often told to do.;;;;;
+13;10;Learning the trade tires him and makes him hungry. Still clumsy, he spends more strength than needed.;tiredness;1;1;1;0
+13;10;Learning the trade tires him and makes him hungry. Still clumsy, he spends more strength than needed.;hunger;2;2;1;0
+13;11;Striking out makes the boy feel bold, and a little guilty.;tiredness;30;20;15;3
+13;11;Striking out makes the boy feel bold, and a little guilty.;mood;-5;-20;-30;-30
+13;11;Striking out makes the boy feel bold, and a little guilty.;courage;20;20;10;2
+13;12;He listens eagerly. What he hears is knowledge, the feeling comes when he understands.;;;;;
+13;13;An apprentice is told what to do all day. He grumbles a little, but he learns.;mood;-2;-10;-15;-15
+13;14;Understanding something new is the best moment of his day.;mood;40;40;20;3
+13;15;He talks a lot and likes it.;mood;15;15;8;2
+13;16;Being asked makes the apprentice proud. Somebody thinks he knows something.;mood;40;40;20;3
+13;17;An answer is what he was waiting for. He wants to know everything.;mood;25;25;12;2
+13;18;Being shouted at is part of an apprentice's life. It hurts, but he gets over it quickly.;mood;-10;-60;-100;-100
+13;18;Being shouted at is part of an apprentice's life. It hurts, but he gets over it quickly.;courage;-2;-10;-20;-20
+13;19;Someone coming close makes him curious, not uneasy.;;;;;
+13;20;A blow with a weapon terrifies and hurts the young apprentice.;mood;-40;-350;-550;-550
+13;20;A blow with a weapon terrifies and hurts the young apprentice.;courage;-30;-200;-300;-300
+13;20;A blow with a weapon terrifies and hurts the young apprentice.;power;-20;-100;-150;-150
+13;21;A punch scares and hurts the young apprentice.;mood;-15;-150;-250;-250
+13;21;A punch scares and hurts the young apprentice.;courage;-10;-50;-80;-80
+13;21;A punch scares and hurts the young apprentice.;power;-5;-20;-40;-40
+13;22;Talk nearby is what he listens to anyway. It does not change how he feels.;;;;;
+13;23;A scream nearby startles him for a moment.;mood;-2;-20;-30;-30
+13;23;A scream nearby startles him for a moment.;courage;-2;-10;-20;-20
+13;24;The presence of others is everyday life for him.;;;;;
+13;25;Someone running catches his eye. He would like to know why, and it does not frighten him.;;;;;
+#
+# 14 retired farmer: has handed over the farm, sits a lot
+14;1;The old farmer sleeps lightly and wakes up early. He is seldom fully rested.;tiredness;-9;-60;-85;-102
+14;1;The old farmer sleeps lightly and wakes up early. He is seldom fully rested.;hunger;0;0;0;0
+14;1;The old farmer sleeps lightly and wakes up early. He is seldom fully rested.;mood;3;3;2;1
+14;1;The old farmer sleeps lightly and wakes up early. He is seldom fully rested.;power;2;2;1;0
+14;2;A drink quenches his thirst and refreshes him a little.;hunger;-10;-60;-100;-100
+14;2;A drink quenches his thirst and refreshes him a little.;tiredness;-2;-10;-20;-20
+14;3;He eats what he always ate. A meal is a fixed point of his day and makes him drowsy.;hunger;-2;-16;-23;-27
+14;3;He eats what he always ate. A meal is a fixed point of his day and makes him drowsy.;mood;6;6;3;1
+14;3;He eats what he always ate. A meal is a fixed point of his day and makes him drowsy.;tiredness;4;4;2;1
+14;4;At his age relieving himself is a relief indeed.;mood;60;50;25;5
+14;5;His legs are no longer what they were. Walking tires him quickly.;tiredness;4;3;2;1
+14;5;His legs are no longer what they were. Walking tires him quickly.;hunger;2;2;1;1
+14;6;He looks at things as he always did. It does not change how he feels.;;;;;
+14;7;Touching things leaves him as he is.;;;;;
+14;8;Taking something pleases him a little, he has all he needs.;mood;10;10;5;1
+14;9;Putting things away is a slow routine for him.;;;;;
+14;10;Working with tools again tires him quickly, but it pleases him to be useful.;tiredness;2;1;1;0
+14;10;Working with tools again tires him quickly, but it pleases him to be useful.;hunger;1;1;1;0
+14;10;Working with tools again tires him quickly, but it pleases him to be useful.;mood;1;1;0;0
+14;11;Striking out goes against everything the old man believes. It shames and exhausts him.;tiredness;50;40;25;5
+14;11;Striking out goes against everything the old man believes. It shames and exhausts him.;mood;-15;-80;-120;-120
+14;11;Striking out goes against everything the old man believes. It shames and exhausts him.;courage;5;5;2;0
+14;12;He listens patiently. It does not stir him.;;;;;
+14;13;Being told what to do by the young ones hurts his pride.;mood;-5;-30;-50;-50
+14;14;When he understands something, he is satisfied.;mood;10;10;5;1
+14;15;He likes to talk about the old days.;mood;20;20;10;2
+14;16;Being asked for advice is what he lives for now. It makes him feel needed.;mood;50;50;25;3
+14;17;An answer settles the matter for him.;mood;10;10;5;1
+14;18;Being shouted at by somebody younger wounds the old man.;mood;-15;-100;-150;-150
+14;18;Being shouted at by somebody younger wounds the old man.;courage;-5;-20;-40;-40
+14;19;Someone coming close makes the old man a little anxious.;mood;0;-1;-1;-1
+14;20;A blow with a weapon is terrible for the old man. He is badly hurt and afraid.;mood;-40;-400;-600;-600
+14;20;A blow with a weapon is terrible for the old man. He is badly hurt and afraid.;courage;-30;-200;-300;-300
+14;20;A blow with a weapon is terrible for the old man. He is badly hurt and afraid.;power;-30;-150;-200;-200
+14;21;A punch hurts and frightens the old man. He can no longer defend himself.;mood;-20;-150;-250;-250
+14;21;A punch hurts and frightens the old man. He can no longer defend himself.;courage;-15;-80;-120;-120
+14;21;A punch hurts and frightens the old man. He can no longer defend himself.;power;-10;-40;-60;-60
+14;22;Talk nearby is none of his business.;;;;;
+14;23;A scream nearby frightens the old man.;mood;-3;-30;-50;-50
+14;23;A scream nearby frightens the old man.;courage;-3;-15;-25;-25
+14;24;The presence of others does not change him.;;;;;
+14;25;Someone running or sneaking makes him wonder what has happened.;mood;-2;-10;-15;-15
+#
+# 15 grandmother: tells stories, frail
+15;1;Grandmother sleeps lightly and wakes up often. She is content all the same.;tiredness;-9;-60;-85;-102
+15;1;Grandmother sleeps lightly and wakes up often. She is content all the same.;hunger;0;0;0;0
+15;1;Grandmother sleeps lightly and wakes up often. She is content all the same.;mood;5;5;3;1
+15;1;Grandmother sleeps lightly and wakes up often. She is content all the same.;power;2;2;1;0
+15;2;A sip of water refreshes her a little.;hunger;-10;-60;-100;-100
+15;2;A sip of water refreshes her a little.;tiredness;-2;-10;-20;-20
+15;3;She eats little and slowly. It pleases her, and afterwards she likes to nod off.;hunger;-2;-16;-23;-27
+15;3;She eats little and slowly. It pleases her, and afterwards she likes to nod off.;mood;6;6;3;1
+15;3;She eats little and slowly. It pleases her, and afterwards she likes to nod off.;tiredness;5;5;3;1
+15;4;Relieving herself is a small relief.;mood;60;50;25;5
+15;5;Every step is an effort for her frail body.;tiredness;5;4;3;1
+15;5;Every step is an effort for her frail body.;hunger;2;2;1;1
+15;6;She looks at things with old eyes. It does not change how she feels.;;;;;
+15;7;Touching things leaves her as she is.;;;;;
+15;8;Things mean little to her. Taking something leaves her almost as she is.;mood;3;3;1;0
+15;9;Putting things away is a slow routine for her.;;;;;
+15;10;Handling things tires her quickly.;tiredness;2;2;1;0
+15;10;Handling things tires her quickly.;hunger;1;1;1;0
+15;11;Grandmother striking out is almost unthinkable. If it happens, it shames and exhausts her.;tiredness;60;50;30;5
+15;11;Grandmother striking out is almost unthinkable. If it happens, it shames and exhausts her.;mood;-20;-100;-150;-150
+15;12;She listens kindly. It does not stir her.;;;;;
+15;13;She does what she is asked, kindly.;mood;-1;-5;-10;-10
+15;14;Understanding something pleases her.;mood;15;15;8;2
+15;15;Telling stories is her joy. Every time she speaks, she lights up.;mood;30;30;15;2
+15;16;Being asked, above all by the children, makes her glad.;mood;40;40;20;3
+15;17;An answer pleases her.;mood;15;15;8;2
+15;18;Being shouted at frightens and saddens the old woman.;mood;-20;-120;-180;-180
+15;18;Being shouted at frightens and saddens the old woman.;courage;-5;-30;-50;-50
+15;19;Someone coming close is company for her. It does not change how she feels.;;;;;
+15;20;A blow with a weapon could kill the frail old woman. She is terrified.;mood;-50;-450;-700;-700
+15;20;A blow with a weapon could kill the frail old woman. She is terrified.;courage;-40;-250;-350;-350
+15;20;A blow with a weapon could kill the frail old woman. She is terrified.;power;-40;-200;-300;-300
+15;21;A punch hurts the frail old woman badly and frightens her.;mood;-30;-200;-300;-300
+15;21;A punch hurts the frail old woman badly and frightens her.;courage;-20;-100;-150;-150
+15;21;A punch hurts the frail old woman badly and frightens her.;power;-20;-80;-120;-120
+15;22;Talk nearby does not concern her.;;;;;
+15;23;A scream nearby frightens the old woman.;mood;-3;-30;-50;-50
+15;23;A scream nearby frightens the old woman.;courage;-3;-15;-25;-25
+15;24;The presence of others does not change her.;;;;;
+15;25;Someone running or sneaking makes her worry.;mood;-2;-10;-15;-15
+#
+# 16 barmaid: quick, hears a lot, believes little
+16;1;The barmaid goes to bed late and sleeps fast and deep, but the nights are short.;tiredness;-9;-60;-85;-102
+16;1;The barmaid goes to bed late and sleeps fast and deep, but the nights are short.;hunger;0;0;0;0
+16;1;The barmaid goes to bed late and sleeps fast and deep, but the nights are short.;mood;5;5;3;1
+16;1;The barmaid goes to bed late and sleeps fast and deep, but the nights are short.;power;2;2;1;0
+16;2;A quick drink between two orders refreshes her.;hunger;-10;-60;-100;-100
+16;2;A quick drink between two orders refreshes her.;tiredness;-2;-10;-20;-20
+16;3;She eats on the run between two orders. It fills her, there is no time to get sluggish.;hunger;-2;-16;-23;-27
+16;3;She eats on the run between two orders. It fills her, there is no time to get sluggish.;mood;5;5;2;1
+16;3;She eats on the run between two orders. It fills her, there is no time to get sluggish.;tiredness;2;2;1;0
+16;4;Relieving herself is a short break she hardly has time for.;mood;50;40;20;3
+16;5;She is quick on her feet and used to running about, but it makes her hungry.;tiredness;3;2;1;0
+16;5;She is quick on her feet and used to running about, but it makes her hungry.;hunger;3;3;2;1
+16;6;She looks at things quickly. It does not change how she feels.;;;;;
+16;7;Touching things leaves her as she is.;;;;;
+16;8;A tip or a small gain pleases her.;mood;20;20;10;2
+16;9;Putting things away is routine behind the bar.;;;;;
+16;10;Carrying and pouring tires her slowly and makes her hungry.;tiredness;1;1;1;0
+16;10;Carrying and pouring tires her slowly and makes her hungry.;hunger;1;1;1;0
+16;11;When she strikes out, someone deserved it. It costs her an effort, but no sleep.;tiredness;40;30;20;5
+16;11;When she strikes out, someone deserved it. It costs her an effort, but no sleep.;mood;-2;-10;-20;-20
+16;11;When she strikes out, someone deserved it. It costs her an effort, but no sleep.;courage;15;15;8;1
+16;12;She hears a lot. It does not stir her.;;;;;
+16;13;Orders are her daily bread and leave her as she is.;;;;;
+16;14;When she sees through something, it pleases her.;mood;20;20;10;2
+16;15;Talking is half her work, and she is good at it.;mood;15;15;8;2
+16;16;She is asked a lot. It pleases her, though she wonders what is behind it.;mood;15;15;8;2
+16;17;She hears the answer and believes half of it.;mood;5;5;2;1
+16;18;A shouting guest is nothing new to her. It annoys her, it does not frighten her.;mood;-5;-40;-70;-70
+16;19;Someone coming close is everyday life in the inn.;;;;;
+16;20;A blow with a weapon frightens and hurts the barmaid badly.;mood;-40;-350;-550;-550
+16;20;A blow with a weapon frightens and hurts the barmaid badly.;courage;-30;-200;-300;-300
+16;20;A blow with a weapon frightens and hurts the barmaid badly.;power;-25;-120;-180;-180
+16;21;A punch hurts her, but she has seen brawls in the inn before.;mood;-15;-120;-200;-200
+16;21;A punch hurts her, but she has seen brawls in the inn before.;courage;-5;-30;-50;-50
+16;21;A punch hurts her, but she has seen brawls in the inn before.;power;-8;-30;-50;-50
+16;22;Talk nearby is what she hears all day. It does not change how she feels.;;;;;
+16;23;A scream from outside makes her look up, nothing more.;mood;-1;-10;-20;-20
+16;24;The presence of others is everyday life for her.;;;;;
+16;25;Someone running past makes her curious rather than uneasy.;;;;;
+#
+# 17 innkeeper: sociable, eats with the guests
+17;1;The innkeeper sleeps well after a long evening with his guests.;tiredness;-9;-60;-85;-102
+17;1;The innkeeper sleeps well after a long evening with his guests.;hunger;0;0;0;0
+17;1;The innkeeper sleeps well after a long evening with his guests.;mood;5;5;3;1
+17;1;The innkeeper sleeps well after a long evening with his guests.;power;3;3;2;0
+17;2;A drink refreshes him a little.;hunger;-10;-60;-100;-100
+17;2;A drink refreshes him a little.;tiredness;-2;-10;-20;-20
+17;3;He eats with his guests and enjoys every meal in good company.;hunger;-2;-16;-23;-27
+17;3;He eats with his guests and enjoys every meal in good company.;mood;10;10;5;1
+17;3;He eats with his guests and enjoys every meal in good company.;tiredness;4;4;2;1
+17;4;Relieving himself is nothing special for him.;mood;80;60;30;5
+17;5;Walking tires the innkeeper only slowly, but it makes him hungry.;tiredness;3;2;1;0
+17;5;Walking tires the innkeeper only slowly, but it makes him hungry.;hunger;3;3;2;1
+17;6;He looks at things to see what they are worth. It does not change how he feels.;;;;;
+17;7;Touching things leaves him as he is.;;;;;
+17;8;Gaining something pleases the innkeeper. Business is business.;mood;40;40;20;3
+17;9;Putting things away is routine in the inn.;;;;;
+17;10;Work in the inn tires him slowly and makes him hungry.;tiredness;1;1;1;0
+17;10;Work in the inn tires him slowly and makes him hungry.;hunger;1;1;1;0
+17;11;He throws a troublemaker out when he must. It costs an effort, and it is bad for business.;tiredness;40;30;20;5
+17;11;He throws a troublemaker out when he must. It costs an effort, and it is bad for business.;mood;-5;-30;-50;-50
+17;11;He throws a troublemaker out when he must. It costs an effort, and it is bad for business.;courage;20;20;10;2
+17;12;He listens to everybody. What he hears is news, it does not stir him.;;;;;
+17;13;In his own inn he gives the orders. Being told what to do annoys him.;mood;-5;-20;-30;-30
+17;14;When he understands something, he is pleased.;mood;20;20;10;2
+17;15;Talking to his guests is his life.;mood;25;25;12;2
+17;16;Being asked pleases him. A good host knows the answer.;mood;40;40;20;3
+17;17;An answer is fresh news for the sociable innkeeper.;mood;25;25;12;2
+17;18;Being shouted at annoys him, but he has dealt with worse guests.;mood;-10;-60;-100;-100
+17;19;Someone coming close is a guest, maybe. It does not unsettle him.;;;;;
+17;20;A blow with a weapon frightens and hurts him. He is shaken.;mood;-30;-300;-500;-500
+17;20;A blow with a weapon frightens and hurts him. He is shaken.;courage;-20;-150;-250;-250
+17;20;A blow with a weapon frightens and hurts him. He is shaken.;power;-20;-100;-150;-150
+17;21;A punch in his own inn makes him angry rather than afraid.;mood;-10;-100;-200;-200
+17;21;A punch in his own inn makes him angry rather than afraid.;courage;10;10;5;1
+17;21;A punch in his own inn makes him angry rather than afraid.;power;-2;-10;-20;-20
+17;22;Talk nearby is everyday life in the inn.;;;;;
+17;23;A scream nearby startles him for a moment.;mood;-2;-20;-30;-30
+17;23;A scream nearby startles him for a moment.;courage;-2;-10;-20;-20
+17;24;The presence of others is what he likes.;;;;;
+17;25;Someone running off might not have paid. It makes him a little uneasy.;mood;-1;-5;-10;-10
+#
+# 18 carter: often on the road, not easily scared
+18;1;After a long day on the road the carter sleeps deeply and wakes up with his strength back.;tiredness;-9;-60;-85;-102
+18;1;After a long day on the road the carter sleeps deeply and wakes up with his strength back.;hunger;0;0;0;0
+18;1;After a long day on the road the carter sleeps deeply and wakes up with his strength back.;mood;5;5;3;1
+18;1;After a long day on the road the carter sleeps deeply and wakes up with his strength back.;power;3;3;2;0
+18;2;A drink from his flask quenches his thirst.;hunger;-10;-60;-100;-100
+18;2;A drink from his flask quenches his thirst.;tiredness;-2;-10;-20;-20
+18;3;He eats whatever the road offers, plain and filling.;hunger;-2;-16;-23;-27
+18;3;He eats whatever the road offers, plain and filling.;mood;6;6;3;1
+18;3;He eats whatever the road offers, plain and filling.;tiredness;4;4;2;1
+18;4;Relieving himself by the roadside is nothing special.;mood;80;60;30;5
+18;5;Walking beside his cart is his daily business. It tires him only slowly.;tiredness;2;2;1;0
+18;5;Walking beside his cart is his daily business. It tires him only slowly.;hunger;3;3;2;1
+18;6;He looks at things to see whether they are fit for the road. It does not change how he feels.;;;;;
+18;7;Touching things leaves him as he is.;;;;;
+18;8;Taking something pleases him a little.;mood;20;20;10;2
+18;9;Putting things away is plain routine.;;;;;
+18;10;Loading and unloading is heavy work, but he is strong.;tiredness;1;1;1;0
+18;10;Loading and unloading is heavy work, but he is strong.;hunger;1;1;1;0
+18;11;On the road he has had to defend himself before. Striking out makes him bolder.;tiredness;30;20;15;3
+18;11;On the road he has had to defend himself before. Striking out makes him bolder.;mood;-2;-10;-20;-20
+18;11;On the road he has had to defend himself before. Striking out makes him bolder.;courage;30;30;15;3
+18;12;He listens. It does not stir him.;;;;;
+18;13;Being told what to do is fine with him as long as it makes sense.;mood;-2;-10;-15;-15
+18;14;When he understands something, he is satisfied.;mood;15;15;8;2
+18;15;He brings news from the road and likes telling it.;mood;15;15;8;2
+18;16;Being asked about the road pleases him.;mood;20;20;10;2
+18;17;An answer settles the matter.;mood;10;10;5;1
+18;18;Shouting does not impress the carter.;mood;-5;-30;-50;-50
+18;19;Someone coming close does not unsettle him.;;;;;
+18;20;A blow with a weapon hurts him, but he does not panic easily.;mood;-20;-250;-400;-400
+18;20;A blow with a weapon hurts him, but he does not panic easily.;courage;-10;-80;-150;-150
+18;20;A blow with a weapon hurts him, but he does not panic easily.;power;-15;-80;-120;-120
+18;21;A punch makes the carter angry, not afraid.;mood;-5;-60;-120;-120
+18;21;A punch makes the carter angry, not afraid.;courage;30;30;15;3
+18;21;A punch makes the carter angry, not afraid.;power;-1;-5;-10;-10
+18;22;Talk nearby does not concern him.;;;;;
+18;23;A scream makes him look round, no more.;mood;-1;-10;-20;-20
+18;24;The presence of others does not change him.;;;;;
+18;25;Someone running or sneaking does not worry him.;;;;;
+#
+# 19 weaver: patient, sits all day
+19;1;After a quiet day at the loom the weaver sleeps well.;tiredness;-9;-60;-85;-102
+19;1;After a quiet day at the loom the weaver sleeps well.;hunger;0;0;0;0
+19;1;After a quiet day at the loom the weaver sleeps well.;mood;5;5;3;1
+19;1;After a quiet day at the loom the weaver sleeps well.;power;2;2;1;0
+19;2;A drink refreshes him a little.;hunger;-10;-60;-100;-100
+19;2;A drink refreshes him a little.;tiredness;-2;-10;-20;-20
+19;3;He eats calmly. A meal fills him and pleases him in a modest way.;hunger;-2;-16;-23;-27
+19;3;He eats calmly. A meal fills him and pleases him in a modest way.;mood;6;6;3;1
+19;3;He eats calmly. A meal fills him and pleases him in a modest way.;tiredness;3;3;2;1
+19;4;Relieving himself is a welcome break from sitting.;mood;60;50;25;5
+19;5;He sits all day. Walking tires him more than others.;tiredness;4;3;2;1
+19;5;He sits all day. Walking tires him more than others.;hunger;3;3;2;1
+19;6;He examines the thread carefully. It does not change how he feels.;;;;;
+19;7;Touching cloth is his daily work and leaves him as he is.;;;;;
+19;8;Taking something pleases him a little.;mood;20;20;10;2
+19;9;Putting things in order is part of his patient work.;;;;;
+19;10;Weaving is patient work that tires him only slowly.;tiredness;1;1;0;0
+19;10;Weaving is patient work that tires him only slowly.;hunger;1;1;1;0
+19;11;He is no fighter. Striking out frightens him almost as much as the other.;tiredness;50;40;25;5
+19;11;He is no fighter. Striking out frightens him almost as much as the other.;mood;-10;-50;-80;-80
+19;11;He is no fighter. Striking out frightens him almost as much as the other.;courage;5;5;2;0
+19;12;He listens patiently. It does not stir him.;;;;;
+19;13;He does what he is told, patiently.;mood;-1;-5;-10;-10
+19;14;Understanding something pleases him quietly.;mood;15;15;8;2
+19;15;He speaks little. It does him a little good.;mood;10;10;5;1
+19;16;Being asked pleases the quiet weaver.;mood;20;20;10;2
+19;17;An answer settles the matter.;mood;10;10;5;1
+19;18;Being shouted at frightens the quiet weaver.;mood;-15;-100;-150;-150
+19;18;Being shouted at frightens the quiet weaver.;courage;-5;-20;-40;-40
+19;19;Someone coming close makes the timid weaver a little uneasy.;mood;0;-1;-1;-1
+19;20;A blow with a weapon terrifies and hurts the weak weaver.;mood;-40;-400;-600;-600
+19;20;A blow with a weapon terrifies and hurts the weak weaver.;courage;-30;-200;-300;-300
+19;20;A blow with a weapon terrifies and hurts the weak weaver.;power;-30;-150;-200;-200
+19;21;A punch hurts and frightens him. He cannot defend himself.;mood;-20;-150;-250;-250
+19;21;A punch hurts and frightens him. He cannot defend himself.;courage;-15;-80;-120;-120
+19;21;A punch hurts and frightens him. He cannot defend himself.;power;-10;-40;-60;-60
+19;22;Talk nearby does not concern him.;;;;;
+19;23;A scream nearby frightens the timid weaver.;mood;-3;-30;-50;-50
+19;23;A scream nearby frightens the timid weaver.;courage;-3;-15;-25;-25
+19;24;The presence of others does not change him.;;;;;
+19;25;Someone running or sneaking makes him uneasy.;mood;-2;-10;-15;-15
+#
+# 20 potter: likes to try new shapes
+20;1;After a day at the wheel the potter sleeps deeply and wakes up rested.;tiredness;-9;-60;-85;-102
+20;1;After a day at the wheel the potter sleeps deeply and wakes up rested.;hunger;0;0;0;0
+20;1;After a day at the wheel the potter sleeps deeply and wakes up rested.;mood;5;5;3;1
+20;1;After a day at the wheel the potter sleeps deeply and wakes up rested.;power;3;3;2;0
+20;2;A drink quenches his thirst and refreshes him a little.;hunger;-10;-60;-100;-100
+20;2;A drink quenches his thirst and refreshes him a little.;tiredness;-2;-10;-20;-20
+20;3;He eats plain food. It fills him, pleases him in a modest way and makes him a little sluggish.;hunger;-2;-16;-23;-27
+20;3;He eats plain food. It fills him, pleases him in a modest way and makes him a little sluggish.;mood;6;6;3;1
+20;3;He eats plain food. It fills him, pleases him in a modest way and makes him a little sluggish.;tiredness;4;4;2;1
+20;4;Relieving himself is nothing special for him.;mood;80;60;30;5
+20;5;Walking tires him only slowly, but over time he gets hungry.;tiredness;3;2;1;0
+20;5;Walking tires him only slowly, but over time he gets hungry.;hunger;3;3;2;1
+20;6;He looks closely at shapes. What he finds out gives him ideas, it does not change how he feels.;;;;;
+20;7;Touching clay is his daily work and leaves him as he is.;;;;;
+20;8;Taking something pleases him a little.;mood;20;20;10;2
+20;9;Putting things away is plain routine.;;;;;
+20;10;Shaping clay is his joy. The work tires him slowly and pleases him.;tiredness;1;1;1;0
+20;10;Shaping clay is his joy. The work tires him slowly and pleases him.;hunger;1;1;1;0
+20;10;Shaping clay is his joy. The work tires him slowly and pleases him.;mood;1;1;0;0
+20;11;The potter is no fighter. Striking out costs him an effort and leaves him uneasy.;tiredness;40;30;20;5
+20;11;The potter is no fighter. Striking out costs him an effort and leaves him uneasy.;mood;-5;-30;-50;-50
+20;11;The potter is no fighter. Striking out costs him an effort and leaves him uneasy.;courage;20;20;10;2
+20;12;He listens. What he hears may give him ideas, it does not stir him.;;;;;
+20;13;He does not like being told how to do his work.;mood;-5;-20;-30;-30
+20;14;Understanding something new gives him ideas. It pleases him a lot.;mood;40;40;20;3
+20;15;Talking does him a little good.;mood;10;10;5;1
+20;16;Being asked about his work pleases him.;mood;30;30;15;2
+20;17;An answer may give him a new idea.;mood;20;20;10;2
+20;18;Being shouted at annoys him.;mood;-10;-60;-100;-100
+20;19;Someone coming close does not unsettle him.;;;;;
+20;20;A blow with a weapon frightens and hurts the potter.;mood;-30;-300;-500;-500
+20;20;A blow with a weapon frightens and hurts the potter.;courage;-20;-150;-250;-250
+20;20;A blow with a weapon frightens and hurts the potter.;power;-20;-100;-150;-150
+20;21;A punch makes the potter angry and hurts him.;mood;-10;-100;-200;-200
+20;21;A punch makes the potter angry and hurts him.;courage;10;10;5;1
+20;21;A punch makes the potter angry and hurts him.;power;-2;-10;-20;-20
+20;22;Talk nearby does not concern him.;;;;;
+20;23;A scream nearby startles him for a moment.;mood;-2;-20;-30;-30
+20;23;A scream nearby startles him for a moment.;courage;-2;-10;-20;-20
+20;24;The presence of others does not change him.;;;;;
+20;25;Only someone running or sneaking makes him a little uneasy.;mood;-1;-5;-10;-10

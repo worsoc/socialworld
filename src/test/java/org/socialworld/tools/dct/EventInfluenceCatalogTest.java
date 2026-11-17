@@ -52,11 +52,11 @@ public class EventInfluenceCatalogTest {
   }
 
   @Test
-  void catalog_fromTheResource_hasTheCharacters1To10WithAll25Situations() {
+  void catalog_fromTheResource_hasTheCharacters1To20WithAll25Situations() {
     EventInfluenceCatalog catalog = EventInfluenceCatalog.load();
 
-    assertThat(catalog.getCharacters()).containsExactly(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
-    for (int character = 1; character <= 10; character++) {
+    assertThat(catalog.getCharacters()).containsExactly(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
+    for (int character = 1; character <= 20; character++) {
       for (int situation = 1; situation <= 25; situation++) {
         assertThat(catalog.getLines(character, situation)).as("character %d, situation %d", character, situation).isNotEmpty();
       }

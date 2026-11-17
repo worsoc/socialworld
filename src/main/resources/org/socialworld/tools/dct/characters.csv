@@ -1,26 +1,29 @@
-# no;name;sketch;mood;courage;morals;materialism;tiredness;curiosity;spirituality;hunger;power;sleepHours;mealsPerDay
+# no;name;sketch;mood;courage;morals;materialism;tiredness;curiosity;spirituality;hunger;power;sleepHours;mealsPerDay;tiredWake;tiredBed;hungerFull;hungerEat
+# tiredWake/tiredBed (tiredness after the needed sleep / when going to bed) and hungerFull/hungerEat (hunger after a meal /
+#   when going to eat): the ideal, displayed values 0..99; the tiers of the event rules for tiredness and hunger sit there
+#   instead of at the band of the level (EID concept 14). Missing: 20;70;40;60 (farmer). Characters 1..20 have it so far.
 # sleepHours (6.0..10.0 in half hours) and mealsPerDay (1..5): the body's need, not how the character lives (EID concept 13.4)
 # levels (attribute values 0..9999, displayed 0..99): --- 0-1000, -- 800-2800, - 2500-4200, o 3800-6200, + 5800-7500, ++ 7200-9200, +++ 9000-9999, ~ 2000-8000
-1;farmer;middle-aged, steady and hard-working;~;o;o;o;~;o;o;~;+;8.0;3
-2;farmer's wife;mother of four, practical, always on her feet;~;o;+;o;+;o;o;~;o;8.0;3
-3;farmhand;strong, unambitious, likes his food;~;o;o;-;~;-;o;+;+;8.5;4
-4;maid;diligent, pious, quiet;~;-;+;-;+;o;+;~;o;8.0;3
-5;carpenter;reliable craftsman;~;o;o;o;~;o;o;~;+;8.0;3
-6;shopkeeper;good at sums, hears all the gossip;~;o;o;+;~;+;o;~;-;7.5;3
-7;fisherman;weather-beaten, makes offerings to the sea;~;+;o;o;~;o;+;~;+;7.5;3
-8;fisherman's wife;mends nets, waits on the shore;~;o;o;o;~;-;+;~;o;8.0;3
-9;shepherd;much alone, content;+;o;o;-;~;o;+;~;o;8.0;2
-10;miller;a little stingy, well fed;~;o;-;+;~;o;o;-;+;8.0;4
-11;baker;gets up at night, cheerful;+;o;o;o;+;o;o;-;o;7.0;3
-12;washerwoman;hard work, little time for anything else;~;o;o;-;+;-;o;~;o;8.0;3
-13;apprentice;young, curious, always hungry;~;o;o;o;~;+;-;+;o;9.0;4
-14;retired farmer;has handed over the farm, sits a lot;~;-;+;o;+;-;+;~;-;7.0;3
-15;grandmother;tells stories, frail;+;-;+;-;+;o;+;~;--;7.0;2
-16;barmaid;quick, hears a lot, believes little;+;o;o;o;+;+;-;~;-;7.5;3
-17;innkeeper;sociable, eats with the guests;+;o;o;+;~;+;-;-;o;8.0;4
-18;carter;often on the road, not easily scared;~;+;o;o;~;o;o;~;+;8.0;3
-19;weaver;patient, sits all day;~;-;o;o;~;o;o;~;-;8.0;3
-20;potter;likes to try new shapes;~;o;o;o;~;+;o;~;o;8.0;3
+1;farmer;middle-aged, steady and hard-working;~;o;o;o;~;o;o;~;+;8.0;3;20;70;40;60
+2;farmer's wife;mother of four, practical, always on her feet;~;o;+;o;+;o;o;~;o;8.0;3;30;85;40;60
+3;farmhand;strong, unambitious, likes his food;~;o;o;-;~;-;o;+;+;8.5;4;20;70;50;65
+4;maid;diligent, pious, quiet;~;-;+;-;+;o;+;~;o;8.0;3;30;85;40;60
+5;carpenter;reliable craftsman;~;o;o;o;~;o;o;~;+;8.0;3;20;70;40;60
+6;shopkeeper;good at sums, hears all the gossip;~;o;o;+;~;+;o;~;-;7.5;3;20;70;40;60
+7;fisherman;weather-beaten, makes offerings to the sea;~;+;o;o;~;o;+;~;+;7.5;3;20;70;40;60
+8;fisherman's wife;mends nets, waits on the shore;~;o;o;o;~;-;+;~;o;8.0;3;30;75;40;60
+9;shepherd;much alone, content;+;o;o;-;~;o;+;~;o;8.0;2;20;65;35;65
+10;miller;a little stingy, well fed;~;o;-;+;~;o;o;-;+;8.0;4;20;70;25;40
+11;baker;gets up at night, cheerful;+;o;o;o;+;o;o;-;o;7.0;3;25;80;30;50
+12;washerwoman;hard work, little time for anything else;~;o;o;-;+;-;o;~;o;8.0;3;25;85;40;60
+13;apprentice;young, curious, always hungry;~;o;o;o;~;+;-;+;o;9.0;4;15;70;50;65
+14;retired farmer;has handed over the farm, sits a lot;~;-;+;o;+;-;+;~;-;7.0;3;35;80;40;60
+15;grandmother;tells stories, frail;+;-;+;-;+;o;+;~;--;7.0;2;40;85;35;65
+16;barmaid;quick, hears a lot, believes little;+;o;o;o;+;+;-;~;-;7.5;3;25;80;40;60
+17;innkeeper;sociable, eats with the guests;+;o;o;+;~;+;-;-;o;8.0;4;20;70;25;40
+18;carter;often on the road, not easily scared;~;+;o;o;~;o;o;~;+;8.0;3;20;70;40;60
+19;weaver;patient, sits all day;~;-;o;o;~;o;o;~;-;8.0;3;20;65;40;60
+20;potter;likes to try new shapes;~;o;o;o;~;+;o;~;o;8.0;3;20;70;40;60
 21;shepherdess;young, sings while working;+;o;o;-;~;+;o;~;o;8.5;3
 22;woodcutter;bear of a man, taciturn;~;+;o;-;~;-;o;+;++;9.0;4
 23;tanner;smelly, grumpy, believes in nothing;-;o;o;o;~;-;-;~;+;8.0;3
