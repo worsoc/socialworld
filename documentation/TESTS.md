@@ -42,6 +42,7 @@ What the automated tests check, what they assume, and what they need to run.
 | Data | `Action2PerformerDescriptionPoolTest` | 4 | intensity × power, expression parser | – |
 | Data | `FunctionPoolTest` | 5 | building a matrix from flat arrays, table functions under func_id 0..10, func_ids for functions created at runtime | – |
 | Data | `GaussPoolAAACMMappingTest` | 4 | mapping of the two drawn indices | – |
+| Data | `CreateAnimalInfluenceTypeTest` | 4 | the influence type is the character of the attribute array, the same for every event type | – |
 | Data | `DatabaseAssumptionsTest` | 1 | a test is skipped without a database | – |
 | Map | `CubeSurfaceTest` | 11 | cube addresses against a surface computed independently | – |
 | Map | `CubeTileAnalysisTest` | 10 | which tiles exist, their statistics and families | – |
@@ -52,7 +53,7 @@ What the automated tests check, what they assume, and what they need to run.
 | DCT | `TextFileTest` | 2 | reading a text file | – |
 | DCT | `CreationToolEventInfluenceDescriptionTest` | 3 | typed numbers get a decimal point | – |
 | DCT | `EventInfluenceCatalogTest` | 6 | reading event_situations.csv and event_influences.csv | – |
-| DCT | `EventInfluenceGeneratorTest` | 11 | generated event influence rules: tiers (hunger and tiredness at the ideal), order, factor, repetition, neutral rule, need of sleep and food per character | – |
+| DCT | `EventInfluenceGeneratorTest` | 11 | generated event influence rules: tiers (hunger and tiredness at the ideal), order, factor, one character per influence type, neutral rule, need of sleep and food per character | – |
 | DCT | `AttributeCharacterOverviewTest` | 11 | overview of arrays and matrices per character | partly: no database or empty table |
 | DCT | `AttributeMatrixCellTest` | 6 | text of a matrix cell | – |
 | DCT | `AttributeMatrixTargetsTest` | 8 | target values of a matrix | partly: no database or empty table |
@@ -68,10 +69,11 @@ What the automated tests check, what they assume, and what they need to run.
 | Display | `VisualModelTest` | 21 | the model between the simulation threads and the display, remaining duration counted down between two reports | – |
 | Display | `ActionGridTest` | 20 | action families, short names, fading, field under the mouse | – |
 | Display | `AttributeMatrixTest` | 23 | colour scale, sorting, the two blocks of 50, change mark | – |
-| Display | `ObjectDetailTest` | 21 | detail column, last actions, history of one human, selection by click | – |
+| Display | `ObjectDetailTest` | 22 | detail column, type of the human, last actions, history of one human, selection by click | – |
 | Display | `PopulationHistoryTest` | 11 | history of all humans: families, mean, percentiles | – |
 | Display | `AutomaticSelectionTest` | 13 | the detail column follows the largest change | – |
 | Display | `PictureSequenceTest` | 9 | figures and timing of the picture sequence in the action grid | – |
+| Display | `TypeOverviewTest` | 5 | overview of the types: which human has which type, number of humans per type | – |
 | ACT | `ActionRequestTest` | 9 | values and checks of an action request, duration included | – |
 | ACT | `ActionSenderTest` | 6 | properties of the action given into the pipeline, invalid requests are not given, no stop for an invalid causer | – |
 | ACT | `EventRangeTest` | 14 | say modes, their ranges and the humans within the range | – |
@@ -434,6 +436,22 @@ Only the empty mapping, nothing is read from the database.
 | `entry_givesTheMatrixIndex_forExactlyThisPair` | an entry applies only to its own pair |
 | `allCornersAreReachable` | −99/−99 and 99/99 work |
 | `indexOfExactlyTheCapacity_countsAsTheOutermostPlace` | an index of exactly ±100 counts as ±99 |
+
+### `CreateAnimalInfluenceTypeTest`
+
+`src/test/java/org/socialworld/datasource/createObjects/CreateAnimalInfluenceTypeTest.java`
+
+A human or an animal gets the influence type of the character of its attribute array, the same for every event type (EID concept A7, since 2026-11-18). Before, `CreateSimulationObjects.initState` drew an independent influence type per event type from `GaussPoolInfluenceType`; that stays for all other objects. Without database.
+
+| Test | Checks |
+|---|---|
+| `gaussIndexZero_isTheFarmer_forEveryEventType` | gauss index 0 gives influence type 0 (farmer) in all 512 places |
+| `bothSidesOfTheGaussPool_leadToTheSameCharacter` | +3 and −3 both give 3 (maid), +99 and −99 both give 99 (child prodigy) |
+| `sleepAndPunch_getTheSameInfluenceType` | gauss index −68: `selfSleep` and `candidatesPunchLeftFistStraight` both get 68 (wrestler) |
+| `gaussIndexOutsideThePool_staysAtTheLastInfluenceType` | ±100 (only for a gauss value of exactly 4.0) gives 99 |
+
+- **Assumes:** the gauss index of an attribute array is ±(character number − 1) (`AttributeArrayGenerator`) and the influence type of the event influence rules is character number − 1 (generator).
+- **Not checked:** that `CreateAnimal.initState` really calls it; that needs the whole creation of objects (see "Not Covered").
 
 ### `DatabaseAssumptionsTest`
 
@@ -846,7 +864,7 @@ The display of the running simulation (`SimDashboard`). The panels are built but
 |---|---|
 | Last actions | newest first; the oldest drops out when full; ignored actions are left out; a snapshot does not change afterwards |
 | History of one human | unknown humans are skipped; one sample per interval; oldest first and forgets beyond its length |
-| Texts | current action or idle, its remaining time counted down between two reports; change with arrow on the display scale; position in meters with a decimal point; age and interruption |
+| Texts | current action or idle, its remaining time counted down between two reports; change with arrow on the display scale; type of the human as character number and influence type (`Typ 4 (InfluenceType 3)`, since 2026-11-18); position in meters with a decimal point; age and interruption |
 | Graphics | share of the bar; the scale of the history follows the values and keeps a smallest span |
 | Selection | a press selects the right human in the grid and in the sorted matrix; a press on the head of the matrix selects nobody |
 
@@ -889,6 +907,20 @@ The picture sequence taken over from the former display `SimVisual`: a heart, th
 | `figureAt_repeatsAfterTheCycle` | after 62 ticks it starts again |
 | `figures_comeInTheOrderOfTheMessage` | heart, M, A, N, U, I, L, O, V, E, U |
 | `grid_hasNoToolTipWhileShowingAFigure` | the action grid shows no tool tip while a figure is on it |
+
+### `TypeOverviewTest`
+
+`src/test/java/org/socialworld/visualize/TypeOverviewTest.java`
+
+The extra window behind the button "Typen" of the dashboard (since 2026-11-18): which human has which type, and with the toggle "Anzahl pro Typ" how many humans each type has. The type is the character number, influence type + 1 (EID concept A7). Only the data and the table models, without a window.
+
+| Test | Checks |
+|---|---|
+| `assignments_areOrderedByHuman_andTheTypeIsTheInfluenceTypePlusOne` | humans ordered by object ID; influence type 3 is type 4 (maid); a type without a name gets "?" |
+| `counts_haveOnlyTheTypesThatOccur_orderedByType` | only the types that occur, ordered by type, with the number of their humans; number of humans and of types |
+| `button_namesTheOtherView` | the button says "Anzahl pro Typ" in the list of humans and "Menschen einzeln" in the counts |
+| `withoutHumans_bothListsAreEmpty` | without humans both lists are empty, the empty table has no number column |
+| `tables_keepNumbersAsNumbers_soThatSortingIsNumeric` | column heads; numbers stay `Integer` (sorting by a column puts 2 before 10), names stay `String`; nothing can be edited |
 
 ---
 
@@ -960,10 +992,10 @@ The scale of the range map, on a panel of 648 × 448 pixels.
 ## Not Covered
 
 - Simulation run, events, actions, conversation: no tests so far.
-- `SimDashboard` as a whole: window, timer, buttons and reading the position of a human need a running program; only the model and the panels are tested.
+- `SimDashboard` as a whole: window, timer, buttons and reading the position and the type of a human need a running program; only the model and the panels are tested. The same holds for the window of the types (`TypeOverviewWindow.show`) and reading the names from `characters.csv` there.
 - ACT as a whole: the window, refusing a busy human or an action already planned, inserting the action into the pipeline, ending a running action, checking the search tree (`SearchTreeCheck`) and moving a human by drag need a running simulation; only the request, the properties, the range and the scale are tested. The direct perform of the first version was checked by hand on 2026-11-10, the pipeline on 2026-11-11 (busy message and the say shown in the dashboard), ending a running action and the search tree check on 2026-11-11 as well (a human dragged far away is found there, and its scream reaches nobody).
 - `Expression` as a whole: only indirectly, through `KnowledgeElementLinesVsJsonTest`, the composer, `BranchingProbabilityTest`, the rule test and `SequenceTest`.
 - Loading from MariaDB (`datasource`): no tests except the reading tests named under the conditions, so that CI runs without a database. In particular the DCT writers against the real tables.
-- The lookup of the mapping in `CreateAnimal`: only one line, it would need the whole creation of objects.
+- The lookup of the mapping in `CreateAnimal` and setting the influence types there (A7): one line each, they would need the whole creation of objects; only `influenceTypesOfCharacter` is tested.
 - MCT generators and `MapPanel`: no tests; `TileGridCubes` has no caller yet.
 - State2Action and Action2Performer: still on lines, only the arithmetic of the intensity is tested.

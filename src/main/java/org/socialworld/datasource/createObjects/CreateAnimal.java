@@ -17,13 +17,17 @@
  */
 package org.socialworld.datasource.createObjects;
 
+import java.util.Arrays;
+
 import org.socialworld.GlobalSwitches;
 import org.socialworld.actions.handle.Inventory;
 import org.socialworld.attributes.ActualTime;
+import org.socialworld.core.EventType;
 import org.socialworld.core.IncompleteSimulationObject;
 import org.socialworld.datasource.pool.GaussPoolAAACMMapping;
 import org.socialworld.datasource.pool.GaussPoolAttributeArray;
 import org.socialworld.datasource.pool.GaussPoolAttributeCalculatorMatrix;
+import org.socialworld.datasource.pool.GaussPoolInfluenceType;
 import org.socialworld.objects.Animal;
 import org.socialworld.objects.StateAnimal;
 import org.socialworld.objects.WriteAccessToAnimal;
@@ -102,6 +106,9 @@ public class CreateAnimal extends CreateSimulationObjects {
 		indexGPAA = mapGaussToIndex(gauss_value, GaussPoolAttributeArray.CAPACITY_GPAA_ARRAY);
 		hiddenAnimal.setAttributes(
 				GaussPoolAttributeArray.getInstance().getArrayAsValue(indexGPAA));
+		// the event influence rules follow the character of the attribute array (EID concept 6.1, A7);
+		// this replaces the influence types drawn per event type in CreateSimulationObjects.initState
+		hiddenAnimal.setInfluenceTypes(influenceTypesOfCharacter(indexGPAA));
 		
 		gauss_value = random.nextGaussian();
 		while ((gauss_value > THRESHOLD_RANDOM_GAUSSIAN_VALUE) || (gauss_value < -THRESHOLD_RANDOM_GAUSSIAN_VALUE))
@@ -117,6 +124,23 @@ public class CreateAnimal extends CreateSimulationObjects {
 
 		if (GlobalSwitches.OUTPUT_CREATE_OBJECT_HUMANS) System.out.println("CreateAnimal.initState() Ende " +  ActualTime.asTime().toString());
 
+	}
+
+	/**
+	 * The influence types of a human or an animal whose attribute array has the given gauss index.
+	 * The gauss index of an attribute array is +-(character number - 1) (AttributeArrayGenerator),
+	 * the influence type of the event influence rules is character number - 1 (CreationTool_EventInfluenceDescription),
+	 * so both sides of the gauss pool lead to the same character. The type is the same for every event type.
+	 * Animals get the rules of the human characters as well.
+	 *
+	 * @param gaussIndexAttributeArray the gauss index the attribute array was taken from
+	 * @return one influence type per event type, all equal to |gaussIndexAttributeArray|, at most 99
+	 */
+	static int[] influenceTypesOfCharacter(int gaussIndexAttributeArray) {
+		int influenceType = Math.min(Math.abs(gaussIndexAttributeArray), GaussPoolInfluenceType.CAPACITY_GPIT_ARRAY - 1);
+		int[] influenceTypes = new int[EventType.MAX_EVENT_TYPE];
+		Arrays.fill(influenceTypes, influenceType);
+		return influenceTypes;
 	}
 
 }

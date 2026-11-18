@@ -55,18 +55,20 @@ class ObjectDetailPanel extends JPanel {
 	private long nowMillis;
 	private int selectedObject = VisualModel.NO_OBJECT;
 	private String position = "";
+	private String type = "";
 	private String selectionReason = "";
 
 	ObjectDetailPanel() {
 		setBackground(Color.WHITE);
 	}
 
-	void setState(VisualModel.Snapshot snapshot, AttributeHistory history, long nowMillis, int selectedObject, String position, String selectionReason) {
+	void setState(VisualModel.Snapshot snapshot, AttributeHistory history, long nowMillis, int selectedObject, String position, String type, String selectionReason) {
 		this.snapshot = snapshot;
 		this.history = history;
 		this.nowMillis = nowMillis;
 		this.selectedObject = selectedObject;
 		this.position = position;
+		this.type = type;
 		this.selectionReason = selectionReason;
 		repaint();
 	}
@@ -97,7 +99,7 @@ class ObjectDetailPanel extends JPanel {
 	private int paintTitle(Graphics2D g) {
 		int y = MARGIN + LINE_HEIGHT;
 		g.setFont(FONT_TITLE);
-		g.drawString("Mensch " + selectedObject, MARGIN, y);
+		g.drawString("Mensch " + selectedObject + (type.isEmpty() ? "" : "   " + type), MARGIN, y);
 		y += LINE_HEIGHT;
 		g.setFont(FONT_TEXT);
 		g.drawString(position, MARGIN, y);
@@ -261,6 +263,13 @@ class ObjectDetailPanel extends JPanel {
 			high = low + SMALLEST_HISTORY_SPAN;
 		}
 		return new int[] {low, high};
+	}
+
+	/**
+	 * The type of a human is its character number, the influence type of the event influence rules is that number - 1.
+	 */
+	static String typeText(int influenceType) {
+		return "Typ " + (influenceType + 1) + " (InfluenceType " + influenceType + ")";
 	}
 
 	/**

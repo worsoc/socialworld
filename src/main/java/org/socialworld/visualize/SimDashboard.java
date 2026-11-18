@@ -24,10 +24,13 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
@@ -41,9 +44,12 @@ import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.IObjectReceiver;
 import org.socialworld.calculation.ObjectRequester;
 import org.socialworld.calculation.Value;
+import org.socialworld.core.EventType;
 import org.socialworld.core.Simulation;
 import org.socialworld.objects.Human;
 import org.socialworld.propertyChange.ListenedMap;
+import org.socialworld.tools.dct.AttributeCharacter;
+import org.socialworld.tools.dct.AttributeCharacterCatalog;
 
 /**
  * The display of the running simulation.
@@ -74,6 +80,7 @@ public class SimDashboard implements ISimVisualization, IObjectReceiver {
 	private final PopulationHistory population = new PopulationHistory();
 	private final AutomaticSelection automatic = new AutomaticSelection();
 	private final JToggleButton automaticButton = new JToggleButton("Automatik");
+	private final JButton typesButton = new JButton("Typen");
 	private int selectedObject = VisualModel.NO_OBJECT;
 	private boolean pictureMode;
 	private int pictureTick;
@@ -147,6 +154,7 @@ public class SimDashboard implements ISimVisualization, IObjectReceiver {
 	private void startPictures() {
 		pictureMode = true;
 		automaticButton.setEnabled(false);
+		typesButton.setEnabled(false);
 		showNextPicture();
 		new Timer(PictureSequence.TICK_MILLIS, event -> showNextPicture()).start();
 	}
@@ -187,10 +195,16 @@ public class SimDashboard implements ISimVisualization, IObjectReceiver {
 		automaticButton.setToolTipText("Zeigt rechts den Menschen mit der gr\u00F6\u00DFten \u00C4nderung, jeden mindestens "
 				+ AutomaticSelection.HOLD_MILLIS / 1000 + " s lang. Ein Klick in Raster oder Matrix schaltet sie aus.");
 		automaticButton.addActionListener(event -> switchAutomatic());
+		typesButton.setToolTipText("Zeigt in einem eigenen Fenster, welcher Mensch welchen Typ hat, oder die Anzahl pro Typ.");
+		typesButton.addActionListener(event -> showTypes());
+
+		JPanel buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 6, 0));
+		buttons.add(typesButton);
+		buttons.add(automaticButton);
 
 		JPanel header = new JPanel(new BorderLayout());
 		header.add(labelHeader, BorderLayout.CENTER);
-		header.add(automaticButton, BorderLayout.EAST);
+		header.add(buttons, BorderLayout.EAST);
 		return header;
 	}
 
@@ -263,7 +277,7 @@ public class SimDashboard implements ISimVisualization, IObjectReceiver {
 		history.record(snapshot, nowMillis);
 		population.record(snapshot, nowMillis);
 		populationPanel.setState(population.samples(), nowMillis);
-		detail.setState(snapshot, history, nowMillis, selectedObject, readSelectedPosition(),
+		detail.setState(snapshot, history, nowMillis, selectedObject, readSelectedPosition(), readSelectedType(),
 				pictureMode ? "Bildfolge l\u00E4uft, Klicks sind abgeschaltet" : automatic.describe(nowMillis));
 	}
 
@@ -303,5 +317,35 @@ public class SimDashboard implements ISimVisualization, IObjectReceiver {
 		if (position.checkIsObjectNothing()) return "Position unbekannt";
 
 		return ObjectDetailPanel.positionText(position.getX(token), position.getY(token), position.getZ(token));
+	}
+
+	/**
+	 * Reads the type of every human once; the types do not change while the simulation runs.
+	 * The names of the types come from characters.csv.
+	 */
+	private void showTypes() {
+		Map<Integer, Integer> influenceTypeByHuman = new HashMap<>();
+		Simulation.getInstance().getObjectMaster().getHumans().forEach(
+				(objID, human) -> influenceTypeByHuman.put(objID, human.getInfluenceType(EventType.selfSleep.getIndex())));
+
+		Map<Integer, String> nameByType = new HashMap<>();
+		for (AttributeCharacter character : AttributeCharacterCatalog.load().getCharacters()) {
+			nameByType.put(character.getNumber(), character.getName());
+		}
+
+		new TypeOverviewWindow(new TypeOverview(influenceTypeByHuman, nameByType)).show();
+	}
+
+	/**
+	 * Since A7 of the EID concept a human has the same influence type for every event type,
+	 * the one of the character of its attribute array; one event type is enough to read it.
+	 */
+	private String readSelectedType() {
+		if (selectedObject == VisualModel.NO_OBJECT) return "";
+
+		Human human = Simulation.getInstance().getObjectMaster().getHumans().get(selectedObject);
+		if (human == null) return "";
+
+		return ObjectDetailPanel.typeText(human.getInfluenceType(EventType.selfSleep.getIndex()));
 	}
 }

@@ -194,6 +194,13 @@ public class ObjectDetailTest {
 	}
 
 	@Test
+	void typeText_isTheCharacterNumber_andTheInfluenceType() {
+		assertThat(ObjectDetailPanel.typeText(3)).isEqualTo("Typ 4 (InfluenceType 3)");
+		assertThat(ObjectDetailPanel.typeText(0)).isEqualTo("Typ 1 (InfluenceType 0)");
+		assertThat(ObjectDetailPanel.typeText(99)).isEqualTo("Typ 100 (InfluenceType 99)");
+	}
+
+	@Test
 	void positionText_isInMetersWithADecimalPoint() {
 		assertThat(ObjectDetailPanel.positionText(12300, -500, 0)).isEqualTo("Position x 12.3 m, y -0.5 m, z 0.0 m");
 	}
