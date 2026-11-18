@@ -330,7 +330,7 @@ Characters that differ from the default (all others: 8.0 hours, 3 meals):
 
 ## 6. Ideal of Tiredness and Hunger
 
-Added 2026-11-17, built with A14 and A15 of `eid_regeln_konzept.md`, section 14. Four more columns per character:
+Added 2026-11-17, built with A14 and A15 of `eid_regeln_konzept.md`, section 14; characters 21 to 100 added 2026-11-18 (section 15 there). Four more columns per character:
 
 | Column | Meaning | Values | Default |
 |---|---|---|---|
@@ -339,7 +339,7 @@ Added 2026-11-17, built with A14 and A15 of `eid_regeln_konzept.md`, section 14.
 | `hungerFull` | hunger after a meal | 0 to 99 (displayed) | 40 |
 | `hungerEat` | hunger when going to eat | above `hungerFull`, up to 99 | 60 |
 
-The default is the farmer. Characters 1 to 20 have the columns so far; the others follow with their blocks of event rules and get the default until then.
+The default is the farmer. Since 2026-11-18 all 100 characters have the columns; the default only applies to a line without them.
 
 **Why not the band.** All other attributes have a target in the attribute matrix, the middle of their band, and are pulled back to it. Hunger and tiredness have none: they only rise with time and fall by eating and sleeping, so they swing every day by 35 to 50 points. A narrow band such as `+` (58–75, 17 points wide) cannot hold that swing. With the four tiers of the event rules at the band, sleep stopped at the lower edge (about 58) and the day pushed on to 93–99. The rules keep only four intervals, so for these two attributes the tiers sit at the ideal instead of the band: [tiredWake, tiredBed] and [hungerFull, hungerEat]. In principle a band could reach further than the ideal (after a sleepless night, after oversleeping); the rules do not show that on purpose. The level still sets the start value of the attribute array (section 2).
 
@@ -375,5 +375,85 @@ The default is the farmer. Characters 1 to 20 have the columns so far; the other
 | 18 | carter | ~ | 8.0 | 20 / 70 | ~ | 3 | 40 / 60 | |
 | 19 | weaver | ~ | 8.0 | 20 / 65 | ~ | 3 | 40 / 60 | sits all day |
 | 20 | potter | ~ | 8.0 | 20 / 70 | ~ | 3 | 40 / 60 | |
+| 21 | shepherdess | ~ | 8.5 | 20 / 70 | ~ | 3 | 40 / 60 | |
+| 22 | woodcutter | ~ | 9.0 | 20 / 70 | + | 4 | 50 / 65 | like the farmhand |
+| 23 | tanner | ~ | 8.0 | 20 / 70 | ~ | 3 | 40 / 60 | |
+| 24 | pedlar | ~ | 7.5 | 20 / 70 | ~ | 3 | 40 / 60 | used to walking |
+| 25 | widow | ~ | 8.0 | 20 / 70 | ~ | 2 | 35 / 65 | weak, tires a little faster when walking |
+| 26 | beekeeper | ~ | 8.0 | 20 / 65 | ~ | 3 | 40 / 60 | calm |
+| 27 | ropemaker | ~ | 8.0 | 20 / 70 | ~ | 3 | 40 / 60 | reference |
+| 28 | gardener | ~ | 8.0 | 20 / 70 | ~ | 2 | 35 / 65 | frugal |
+| 29 | stable boy | + | 9.0 | 25 / 80 | + | 4 | 50 / 65 | tires fast, always hungry |
+| 30 | midwife | + | 7.0 | 30 / 85 | ~ | 3 | 40 / 60 | called out at night, never quite catches up |
+| 31 | village smith | ~ | 8.5 | 20 / 70 | + | 4 | 50 / 65 | big appetite, like the farmhand |
+| 32 | seamstress | ~ | 8.0 | 20 / 65 | ~ | 3 | 40 / 60 | sits at her sewing |
+| 33 | cowherd girl | ~ | 9.5 | 15 / 65 | + | 3 | 45 / 65 | almost a child, sleeps long and deep; hungry often with 3 meals: swing 20, at least 16 needed |
+| 34 | day labourer | + | 8.0 | 25 / 85 | + | 3 | 45 / 65 | always on the move, hard work, like the washerwoman |
+| 35 | tinker | ~ | 7.5 | 20 / 70 | ~ | 3 | 40 / 60 | |
+| 36 | brewer | ~ | 8.0 | 20 / 70 | - | 4 | 25 / 40 | well fed, like the innkeeper |
+| 37 | charcoal burner | + | 8.0 | 25 / 85 | ~ | 3 | 40 / 60 | watches the kiln, hard work |
+| 38 | ferryman | ~ | 8.0 | 20 / 65 | ~ | 3 | 40 / 60 | strong, tires slowly |
+| 39 | shoemaker | ~ | 8.0 | 20 / 65 | ~ | 3 | 40 / 60 | sits all day, like the weaver |
+| 40 | old goatherd | ~ | 7.0 | 25 / 75 | ~ | 2 | 35 / 65 | old, sleeps lightly, climbing tires him |
+| 41 | farmer's son | ~ | 8.5 | 20 / 70 | + | 4 | 50 / 65 | young and strong, like the farmhand |
+| 42 | farmer's daughter | ~ | 8.5 | 20 / 70 | ~ | 3 | 40 / 60 | |
+| 43 | market woman | ~ | 7.5 | 20 / 70 | ~ | 3 | 40 / 60 | |
+| 44 | gatekeeper | + | 9.0 | 30 / 75 | + | 4 | 50 / 65 | drowsy: never quite awake, shifted rather than a wider swing; waits for his meal |
+| 45 | farmhand fond of the jug | + | 8.5 | 35 / 85 | ~ | 3 | 40 / 60 | drinks, sleeps badly, never rested |
+| 46 | village priest | ~ | 7.0 | 25 / 75 | ~ | 2 | 35 / 65 | short nights (prayer), weak, needs little |
+| 47 | convent sister | ~ | 7.0 | 25 / 75 | ~ | 2 | 35 / 65 | rises at night to pray and for the sick |
+| 48 | rich merchant | ~ | 8.0 | 20 / 65 | - | 4 | 25 / 40 | does not work with his hands, well fed |
+| 49 | moneylender | ~ | 7.0 | 25 / 70 | - | 3 | 30 / 50 | sleeps lightly, money under the bed; well fed like the baker |
+| 50 | mercenary | ~ | 8.0 | 20 / 70 | + | 4 | 50 / 65 | a soldier eats when he can |
+| 51 | knight | ~ | 8.0 | 20 / 70 | ~ | 4 | 45 / 60 | four meals with hunger `~`: swing 15 (at least 12), placed like the reference |
+| 52 | pickpocket | ~ | 7.5 | 20 / 70 | + | 3 | 45 / 65 | hungry, like the cowherd girl |
+| 53 | beggar | + | 8.0 | 30 / 85 | ++ | 3 | 55 / 75 | always hungry, never rested (sleeps outside); ordinary need, the ideal is the position |
+| 54 | scholar | + | 8.0 | 35 / 85 | ~ | 3 | 40 / 60 | sleeps too little and badly: shifted |
+| 55 | herb woman | ~ | 7.5 | 20 / 70 | ~ | 2 | 35 / 65 | |
+| 56 | minstrel | ~ | 8.0 | 20 / 70 | + | 4 | 50 / 65 | never full |
+| 57 | hunter | ~ | 7.5 | 20 / 65 | ~ | 3 | 40 / 60 | tireless |
+| 58 | treasure hunter | ~ | 7.5 | 20 / 70 | ~ | 3 | 40 / 60 | |
+| 59 | tax collector | ~ | 8.0 | 20 / 70 | - | 3 | 30 / 50 | well fed, like the baker |
+| 60 | village mayor | ~ | 8.0 | 20 / 70 | - | 4 | 25 / 40 | eats at every invitation, like the innkeeper |
+| 61 | stingy merchant's widow | ~ | 7.5 | 25 / 75 | - | 2 | 25 / 50 | frail; well fed with 2 meals (swing at least 24) |
+| 62 | seafarer | ~ | 7.5 | 20 / 70 | ~ | 3 | 40 / 60 | |
+| 63 | scribe monk | + | 8.0 | 35 / 85 | ~ | 2 | 35 / 65 | copies late at night, rises early to pray: shifted |
+| 64 | poacher | ~ | 7.5 | 20 / 70 | + | 3 | 45 / 65 | |
+| 65 | juggler | ~ | 8.0 | 20 / 70 | ~ | 3 | 40 / 60 | |
+| 66 | miner | ++ | 9.0 | 30 / 90 | + | 4 | 50 / 65 | toils underground: largest swing so far (60) |
+| 67 | wandering preacher | + | 7.0 | 30 / 85 | + | 2 | 45 / 70 | travels in hardship, often hungry; swing 25 with 2 meals |
+| 68 | horse dealer | ~ | 7.5 | 20 / 70 | ~ | 3 | 40 / 60 | |
+| 69 | wrestler | ~ | 9.0 | 20 / 65 | ++ | 5 | 60 / 72 | strong, tires slowly; eats for three: 5 meals, swing 12 (at least 10) |
+| 70 | poet | + | 9.0 | 30 / 80 | ~ | 2 | 35 / 65 | sleeps long and restlessly, wakes up tired |
+| 71 | corrupt town guard | ~ | 8.0 | 20 / 70 | ~ | 3 | 40 / 60 | |
+| 72 | barber-surgeon | + | 7.0 | 30 / 85 | ~ | 3 | 40 / 60 | called out at all hours, like the midwife |
+| 73 | pilgrim woman | ++ | 8.5 | 25 / 90 | + | 3 | 45 / 65 | walks for weeks, her body worn out: large swing (65) |
+| 74 | legacy hunter | ~ | 8.0 | 20 / 70 | ~ | 3 | 40 / 60 | |
+| 75 | wounded veteran | + | 9.0 | 35 / 85 | ~ | 3 | 40 / 60 | nightmares: sleeps long but badly, shifted |
+| 76 | young widow | + | 7.5 | 25 / 85 | ~ | 3 | 40 / 60 | runs the farm alone, work for two, like the washerwoman |
+| 77 | estate steward | ~ | 8.0 | 20 / 65 | - | 3 | 30 / 50 | desk work, well fed |
+| 78 | alchemist | ++ | 8.0 | 40 / 90 | ~ | 3 | 40 / 60 | forgets to sleep: never rested, shifted most (tiredWake 40) |
+| 79 | woodswoman | ~ | 8.0 | 20 / 70 | ~ | 2 | 35 / 65 | |
+| 80 | smuggler | + | 7.0 | 30 / 85 | ~ | 3 | 40 / 60 | out at night, short days in bed |
+| 81 | gambler | + | 7.0 | 30 / 85 | ~ | 3 | 40 / 60 | plays until dawn |
+| 82 | hermit | ~ | 6.5 | 20 / 70 | + | 1 | 35 / 85 | one meal: swing 50 (at least 48) |
+| 83 | orphan | ~ | 9.5 | 15 / 65 | ++ | 3 | 55 / 75 | wide awake, sleeps long like the cowherd girl; always hungry |
+| 84 | spoilt young noble | -- | 10.0 | 10 / 45 | -- | 4 | 10 / 25 | well fed and well rested: the only one low; swing 35 (at least 25 at 10 h) |
+| 85 | zealous temple servant | ~ | 7.0 | 25 / 75 | ~ | 2 | 35 / 65 | short nights, like the priest |
+| 86 | ascetic | + | 6.0 | 30 / 85 | ++ | 1 | 45 / 95 | fasts: one meal, swing 50, very hungry |
+| 87 | robber chief | ~ | 7.5 | 20 / 70 | ~ | 4 | 45 / 60 | like the knight |
+| 88 | giant | ~ | 9.5 | 20 / 60 | ++ | 5 | 60 / 72 | hardly tires; eats for five, like the wrestler |
+| 89 | paralysed old man | ++ | 10.0 | 50 / 90 | ~ | 2 | 35 / 65 | bedridden: never rested, placed highest (tiredWake 50) |
+| 90 | cowardly courtier | ~ | 8.5 | 20 / 70 | - | 4 | 25 / 40 | well fed at court |
+| 91 | mad prophet | ++ | 6.0 | 40 / 90 | + | 2 | 45 / 70 | stays awake at night: never rested, shifted |
+| 92 | greedy prince | ~ | 9.0 | 20 / 65 | -- | 5 | 10 / 22 | is carried; five meals, swing 12 (at least 10) |
+| 93 | freethinker | ~ | 8.0 | 20 / 70 | ~ | 3 | 40 / 60 | |
+| 94 | daredevil | ~ | 7.5 | 20 / 70 | ~ | 3 | 40 / 60 | |
+| 95 | murderer | ~ | 7.0 | 20 / 70 | ~ | 3 | 40 / 60 | sleeps well, nothing troubles him |
+| 96 | sunny nature | - | 7.5 | 15 / 60 | ~ | 3 | 40 / 60 | always in good spirits, tires slowly |
+| 97 | deeply melancholic woman | ++ | 10.0 | 45 / 85 | - | 2 | 25 / 50 | sleeps long and wakes up tired; eats little, swing 25 (at least 24) |
+| 98 | starving refugee | ++ | 8.0 | 40 / 90 | +++ | 3 | 75 / 95 | weeks on the run: never rested, starving, placed highest |
+| 99 | exhausted night watchman | +++ | 8.0 | 50 / 95 | + | 3 | 45 / 65 | third night without sleep: placed highest for tiredness |
+| 100 | child prodigy | ~ | 9.0 | 15 / 65 | ~ | 3 | 40 / 60 | a child, sleeps long and deep, like the cowherd girl |
 
-**Open.** The meaning of `ti +` is now "tires faster, needs more sleep". 12 of the 32 characters with `ti +` or `++` have a need below 8 hours (among them baker, grandmother and retired farmer with 7 h, ascetic and mad prophet with 6 h). This is checked when their ideal is set.
+**Open.** The meaning of `ti +` is now "tires faster, needs more sleep". 12 of the 32 characters with `ti +` or `++` have a need below 8 hours (among them baker, grandmother and retired farmer with 7 h, ascetic and mad prophet with 6 h). Done 2026-11-18 with the ideals of all 100: `sleepHours` stayed as it was; a short need together with `ti +` or `++` shows in a shifted or wider ideal (e.g. baker 25 / 80, retired farmer 35 / 80, grandmother 40 / 85, ascetic 30 / 85, mad prophet 40 / 90).

@@ -9,7 +9,7 @@ What the automated tests check, what they assume, and what they need to run.
 | **Test methods** | 517 active, 1 commented out |
 | **Database** | no test writes to MariaDB; a few tests read from it and skip themselves without it or with an empty table |
 | **Runs in CI** | yes, in a fresh clone without `application.properties` |
-| **Last updated** | 2026-11-17 |
+| **Last updated** | 2026-11-18 |
 
 > Keep this file up to date: every new or changed test changes this file in the same step.
 
@@ -545,7 +545,7 @@ The catalog holds one tree per tile type (1/9 m for S and M, 1/3 m for L). The m
 | Text die | keeps only letters, folds ä/ö/ü/ß, reads every third letter as a share of the alphabet; with several passes it reads the other letters |
 | Levels | bands in 0..9999 (`o`: 3800, 5000, 6200 for shares 0, 0.5, 1; `+++` ends at 9999), found by their code, inside the range of attribute values |
 | Catalog | `characters.csv` holds 100 characters in order; a wrong number of levels is rejected; every character has a need of sleep (6 to 10 h) and food (1 to 5 meals), farmer 8 h and 3, ascetic 6 h and 1, wrestler 5 meals; without the two columns the default need (8 h, 3) applies; 7.3 h, 10.5 h, 0 and 6 meals are rejected |
-| Ideal | characters 1 to 20 have the ideal columns (maid tiredness 3000 / 8500, miller hunger 2500 / 4000), character 21 gets the farmer's 20/70 and 40/60; 18 fields are read, 16 rejected; lower end not below the upper one or above 99 is rejected; only hunger and tiredness have an ideal, asking for mood is refused |
+| Ideal | all 100 characters have the ideal columns (maid tiredness 3000 / 8500, miller hunger 2500 / 4000, stable boy tiredness 2500 / 8000 and hunger after a meal 5000), a line without them gets the farmer's 20/70 and 40/60; 18 fields are read, 16 rejected; lower end not below the upper one or above 99 is rejected; only hunger and tiredness have an ideal, asking for mood is refused |
 | Generator | 199 arrays, every `gauss_index` once, every value in its band, same text same values, too short a text and impossible `aa_id`s rejected, the counted letters are used up exactly |
 | Fine scale | more than half of the values are no multiples of 100 |
 | Adjusting by hand | `withValues` keeps character, index and id; `withDisplayValues` keeps unmoved values, moved ones become slider × 100, limited to 0..9999 |
@@ -595,7 +595,7 @@ The two sources of the generated event influence rules: `event_situations.csv` (
 |---|---|
 | `situations_fromTheResource_coverTheRelevantEventTypesOnce` | 91 event types; e.g. `selfSleep` is situation 1, `candidatesWeaponClub` situation 20 with factor 1.5, `percipientMoveWalk` factor 0; `targetEat` has no situation |
 | `situations_rejectAnUnknownEventTypeAndAnEventTypeTwice` | an unknown event type or one listed twice is refused |
-| `catalog_fromTheResource_hasTheCharacters1To20WithAll25Situations` | the file has the characters 1 to 20, each with lines in all 25 situations |
+| `catalog_fromTheResource_hasTheCharacters1To100WithAll25Situations` | the file has the characters 1 to 100, each with lines in all 25 situations |
 | `catalog_lineWithoutAttribute_onlyRecordsTheSentence` | farmer, situation 9: one line with a sentence and no attribute |
 | `catalog_readsTheFourSteps` | attribute and the four steps of a line |
 | `catalog_rejectsStepsWithBothSignsAndUnknownAttributes` | steps with both signs in one line and an unknown attribute are refused |
@@ -614,7 +614,7 @@ The two sources of the generated event influence rules: `event_situations.csv` (
 | `farmerPunched_eachTierOfTheBandHasItsStep` | farmer, punched: mood 1500 / 3000 / 6000 / 8500 lose 10 / 100 / 200 / 200 (band 2000..8000, middle 5000) |
 | `farmerPunched_onlyOneTierApplies_inBothDirections` | falling mood 2050 → 1950 (no second step below the band), rising courage 6195 → 6205 (no second step above the band) |
 | `factorOfTheEventType_isAppliedAndRounded` | farmer hit by the club (factor 1.5): mood −45 / −450 / −750 / −750, by a stab: −30 / −300 / −500 / −500 |
-| `generate_writesOneRulePerEventTypeAndInfluenceType_andRepeatsTheTwentyCharacters` | 193 × 100 rules; with 20 characters influence types 0, 20, …, 80 get the farmer's rule, 1 the farmer's wife's, 10 the baker's |
+| `generate_writesOneRulePerEventTypeAndInfluenceType_oneCharacterEach` | 193 × 100 rules; 100 characters for the 100 influence types, nothing repeated (`isRepeated()` false); influence types 1 (farmer's wife), 10 (baker), 21 (woodcutter), 30 (village smith), 49 (mercenary), 50 (knight), 68 (wrestler), 74 (wounded veteran), 87 (giant) and 99 (child prodigy) differ from the farmer's rule |
 | `eventTypeWithoutSituation_andSituationWithoutEffect_getANeutralRuleThatChangesNothing` | `targetEat` (no situation) and `selfExamineByLook` (no effect for the farmer) get an empty rule; evaluated, it gives the attribute array back unchanged |
 | `maidSleeps_theTiersOfTirednessSitAtHerIdeal_notAtTheBandOfHerLevel` | maid sleeping (ideal 30/85, band of `+` 5800..7500): tiredness 2500 / 5000 / 7000 / 9000 lose 7 / 51 / 77 / 94; 5000 lies below her band but in the lower half of her ideal |
 | `millerEats_theTiersOfHungerSitAtHisIdeal` | miller eating (ideal 25/40, 4 meals): hunger 2000 / 3000 / 3500 / 4100 lose 2 / 12 / 17 / 20; 4100 lies inside his band but above his ideal |

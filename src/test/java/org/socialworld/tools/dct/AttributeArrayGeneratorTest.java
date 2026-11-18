@@ -145,17 +145,21 @@ public class AttributeArrayGeneratorTest {
     List<AttributeCharacter> characters = AttributeCharacterCatalog.load().getCharacters();
     AttributeCharacter maid = characters.get(3);
     AttributeCharacter miller = characters.get(9);
-    AttributeCharacter character21 = characters.get(20);
+    AttributeCharacter stableBoy = characters.get(28);
+    AttributeCharacter withoutIdeal = AttributeCharacterCatalog.parse("1;a;b;o;o;o;o;o;o;o;o;o;8.0;3\n").getCharacters().get(0);
 
     assertThat(maid.getIdealLowest(Attribute.tiredness)).as("maid after sleep").isEqualTo(3000);
     assertThat(maid.getIdealHighest(Attribute.tiredness)).as("maid at bedtime").isEqualTo(8500);
     assertThat(miller.getIdealLowest(Attribute.hunger)).as("miller after a meal").isEqualTo(2500);
     assertThat(miller.getIdealHighest(Attribute.hunger)).as("miller when going to eat").isEqualTo(4000);
-    // characters without the ideal columns get the ideal of the farmer
-    assertThat(character21.getIdealLowest(Attribute.tiredness)).isEqualTo(AttributeCharacter.DEFAULT_TIRED_WAKE * 100);
-    assertThat(character21.getIdealHighest(Attribute.tiredness)).isEqualTo(AttributeCharacter.DEFAULT_TIRED_BED * 100);
-    assertThat(character21.getIdealLowest(Attribute.hunger)).isEqualTo(AttributeCharacter.DEFAULT_HUNGER_FULL * 100);
-    assertThat(character21.getIdealHighest(Attribute.hunger)).isEqualTo(AttributeCharacter.DEFAULT_HUNGER_EAT * 100);
+    assertThat(stableBoy.getIdealLowest(Attribute.tiredness)).as("stable boy after sleep").isEqualTo(2500);
+    assertThat(stableBoy.getIdealHighest(Attribute.tiredness)).as("stable boy at bedtime").isEqualTo(8000);
+    assertThat(stableBoy.getIdealLowest(Attribute.hunger)).as("stable boy after a meal").isEqualTo(5000);
+    // since 2026-11-18 all 100 characters have the ideal columns; a line without them gets the ideal of the farmer
+    assertThat(withoutIdeal.getIdealLowest(Attribute.tiredness)).isEqualTo(AttributeCharacter.DEFAULT_TIRED_WAKE * 100);
+    assertThat(withoutIdeal.getIdealHighest(Attribute.tiredness)).isEqualTo(AttributeCharacter.DEFAULT_TIRED_BED * 100);
+    assertThat(withoutIdeal.getIdealLowest(Attribute.hunger)).isEqualTo(AttributeCharacter.DEFAULT_HUNGER_FULL * 100);
+    assertThat(withoutIdeal.getIdealHighest(Attribute.hunger)).isEqualTo(AttributeCharacter.DEFAULT_HUNGER_EAT * 100);
   }
 
   @Test

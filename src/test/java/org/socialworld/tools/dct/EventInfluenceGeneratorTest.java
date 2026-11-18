@@ -210,23 +210,28 @@ public class EventInfluenceGeneratorTest {
   }
 
   @Test
-  void generate_writesOneRulePerEventTypeAndInfluenceType_andRepeatsTheTwentyCharacters() {
+  void generate_writesOneRulePerEventTypeAndInfluenceType_oneCharacterEach() {
     InMemoryEventInfluenceStore store = new InMemoryEventInfluenceStore();
     EventInfluenceGenerator.Result result = generator.generate(store);
 
     assertThat(store.size()).isEqualTo(EventInfluenceGenerator.countRules());
     assertThat(result.getCountRules()).isEqualTo(store.size());
-    assertThat(result.getCountCharacters()).isEqualTo(20);
-    assertThat(result.isRepeated()).isTrue();
+    assertThat(result.getCountCharacters()).isEqualTo(100);
+    assertThat(result.isRepeated()).as("100 characters for 100 influence types").isFalse();
 
     int punch = EventType.candidatesPunchLeftFistStraight.getIndex();
-    for (int influenceType = 20; influenceType < 100; influenceType += 20) {
-      assertThat(store.get(punch, influenceType).replace("\"influenceType\":" + influenceType, ""))
-          .as("influence type %d is the farmer", influenceType)
-          .isEqualTo(store.get(punch, 0).replace("\"influenceType\":0", ""));
-    }
     assertThat(store.get(punch, 1)).as("influence type 1 is the farmer's wife").isNotEqualTo(store.get(punch, 0));
     assertThat(store.get(punch, 10)).as("influence type 10 is the baker").isNotEqualTo(store.get(punch, 0));
+    assertThat(store.get(punch, 21)).as("influence type 21 is the woodcutter").isNotEqualTo(store.get(punch, 0));
+    assertThat(store.get(punch, 30)).as("influence type 30 is the village smith").isNotEqualTo(store.get(punch, 0));
+    assertThat(store.get(punch, 49)).as("influence type 49 is the mercenary").isNotEqualTo(store.get(punch, 0));
+    assertThat(store.get(punch, 50)).as("influence type 50 is the knight").isNotEqualTo(store.get(punch, 0));
+    assertThat(store.get(punch, 68)).as("influence type 68 is the wrestler").isNotEqualTo(store.get(punch, 0));
+    assertThat(store.get(punch, 74)).as("influence type 74 is the wounded veteran").isNotEqualTo(store.get(punch, 0));
+    assertThat(store.get(punch, 87)).as("influence type 87 is the giant").isNotEqualTo(store.get(punch, 0));
+    assertThat(store.get(punch, 99).replace("\"influenceType\":99", ""))
+        .as("influence type 99 is the child prodigy, not a repeated farmer")
+        .isNotEqualTo(store.get(punch, 0).replace("\"influenceType\":0", ""));
   }
 
   @Test
