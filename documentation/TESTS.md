@@ -5,8 +5,8 @@ What the automated tests check, what they assume, and what they need to run.
 | | |
 |---|---|
 | **Framework** | JUnit 5 with AssertJ |
-| **Test classes** | 57 |
-| **Test methods** | 517 active, 1 commented out |
+| **Test classes** | 64 |
+| **Test methods** | 560 active, 1 commented out |
 | **Database** | no test writes to MariaDB; a few tests read from it and skip themselves without it or with an empty table |
 | **Runs in CI** | yes, in a fresh clone without `application.properties` |
 | **Last updated** | 2026-11-18 |
@@ -37,12 +37,16 @@ What the automated tests check, what they assume, and what they need to run.
 | Calculation | `MXPlusNTest` | 1 | many MX+N expressions are all valid and share the func_id of the same function | – |
 | Calculation | `ChangeAttributeConditionTest` | 4 | condition term of an event influence rule: several comparisons are strict, one stays soft | – |
 | Calculation | `SequenceTest` | 2 | every expression of a sequence runs exactly once and in order, for 1 to 15 expressions | – |
+| Calculation | `State2ActionDescriptionTest` | 4 | state-to-action rules from JSON as one chain, no event parameter; the reaction entry keeps the common fields | – |
+| Calculation | `EventReactionDescriptionTest` | 4 | reaction rules as JSON for swpool_erd: readable tags, pair and one function, unknown event type | – |
 | Calculation | `EventInfluenceRulesFromDatabaseTest` | 1 | real rules with real arrays | no database or empty table |
 | Calculation | `PositionCalculatorSectorsTest` | 9 | whether a new position stays in the same search sectors | – |
 | Data | `Action2PerformerDescriptionPoolTest` | 4 | intensity × power, expression parser | – |
 | Data | `FunctionPoolTest` | 5 | building a matrix from flat arrays, table functions under func_id 0..10, func_ids for functions created at runtime | – |
 | Data | `GaussPoolAAACMMappingTest` | 4 | mapping of the two drawn indices | – |
 | Data | `CreateAnimalInfluenceTypeTest` | 4 | the influence type is the character of the attribute array, the same for every event type | – |
+| Data | `CreateAnimalState2ActionTypeTest` | 3 | the state-to-action type is the character of the attribute array, equal to the influence type | – |
+| Data | `EventReactionFamilyTest` | 4 | 116 reaction types, drawn per event family, other event types keep 1 | – |
 | Data | `DatabaseAssumptionsTest` | 1 | a test is skipped without a database | – |
 | Map | `CubeSurfaceTest` | 11 | cube addresses against a surface computed independently | – |
 | Map | `CubeTileAnalysisTest` | 10 | which tiles exist, their statistics and families | – |
@@ -54,6 +58,8 @@ What the automated tests check, what they assume, and what they need to run.
 | DCT | `CreationToolEventInfluenceDescriptionTest` | 3 | typed numbers get a decimal point | – |
 | DCT | `EventInfluenceCatalogTest` | 6 | reading event_situations.csv and event_influences.csv | – |
 | DCT | `EventInfluenceGeneratorTest` | 11 | generated event influence rules: tiers (hunger and tiredness at the ideal), order, factor, one character per influence type, neutral rule, need of sleep and food per character | – |
+| DCT | `State2ActionGeneratorTest` | 12 | state-to-action rules per character: sleep and eat at the ideal, sleep for sleepHours, own rules from the most pronounced levels, fallback | – |
+| DCT | `EventReactionGeneratorTest` | 13 | reaction rules: 7 styles × 16 variants + 4 former types per family, 540 rules | – |
 | DCT | `AttributeCharacterOverviewTest` | 11 | overview of arrays and matrices per character | partly: no database or empty table |
 | DCT | `AttributeMatrixCellTest` | 6 | text of a matrix cell | – |
 | DCT | `AttributeMatrixTargetsTest` | 8 | target values of a matrix | partly: no database or empty table |
@@ -77,6 +83,7 @@ What the automated tests check, what they assume, and what they need to run.
 | ACT | `ActionRequestTest` | 9 | values and checks of an action request, duration included | – |
 | ACT | `ActionSenderTest` | 6 | properties of the action given into the pipeline, invalid requests are not given, no stop for an invalid causer | – |
 | ACT | `EventRangeTest` | 14 | say modes, their ranges and the humans within the range | – |
+| ACT | `NeedsResetTest` | 3 | the dashboard intervention ends only sleep and eat, sets tiredness and hunger to 2000 | – |
 | ACT | `ActionMapScaleTest` | 11 | world position ↔ pixel on the range map, finding a human under the mouse | – |
 
 ---
@@ -362,6 +369,36 @@ The condition term of an event influence rule (`ChangeAttribute.createConditionE
 - **Assumes:** `Sequence` skips a third part with the operation `nothing` (`Expression.evaluate`, `case sequence`). A new `Expression` has that operation, so the test expressions get the operation `value`, like real entries (`Branching`).
 - **Needs:** no database.
 
+### `State2ActionDescriptionTest`
+
+`src/test/java/org/socialworld/calculation/descriptions/State2ActionDescriptionTest.java`
+
+The state-to-action rules are JSON since 2026-11-18 (`swpool_s2a`, `JsonState2ActionDescription`). Their entries and those of the event reactions share the abstract class `ActionDescriptionEntry`. Without database.
+
+| Test | Checks |
+|---|---|
+| `entries_areReadFromJson_andGiveOneFunction` | type 7 with the sleep entry: one entry, one function (the WENN/SONST chain of `CreateActionExpression`) |
+| `withoutEntries_thereIsNoFunction` | a rule without `entrys` gives no function, so no action |
+| `anEventParameter_isRejected` | an entry with `<GetEvParm>` throws `IllegalArgumentException` naming the type; there is no event behind a state-to-action rule |
+| `theReactionEntry_getsTheFieldsOfTheCommonEntryClass` | Gson fills `conditions`, `actionType`, `target` of `ActionDescriptionEntry` and `relevanceThreshold` of `EventReactionDescriptionEntry` |
+
+- **Not checked:** evaluating the chain into an action; that needs `ActionCreator` and a running simulation.
+
+### `EventReactionDescriptionTest`
+
+`src/test/java/org/socialworld/calculation/descriptions/EventReactionDescriptionTest.java`
+
+The event reaction rules come from `swpool_erd` since 2026-11-18 (`TablePoolERD`, `EventReactionDescriptionPool`, `erd_regeln_konzept.md` E1 to E3); the test data in code are gone. Without database.
+
+| Test | Checks |
+|---|---|
+| `theJson_keepsTheTagsReadable` | `JsonEventReactionDescription.toString()`: `<GetEvParm>event_causer</GetEvParm>` and `say_loudness > 50` unescaped, no `null` |
+| `aRuleFromTheDatabase_namesItsPair_andGivesOneFunction` | the scream rule: `candidatesSayScream` (337), reaction type 1, one function, relevance threshold 100 without a value |
+| `anUnknownEventType_becomesNothing_soThePoolIgnoresTheRow` | an unknown name gives `EventType.nothing`; the pool then ignores the row because the pair does not match |
+| `aNewJsonHolder_isAJson` | `JsonEventReactionDescription` extends `Json` |
+
+- **Not checked:** loading `swpool_erd` in the pool (needs the database).
+
 ### `EventInfluenceRulesFromDatabaseTest`
 
 `src/test/java/org/socialworld/calculation/descriptions/EventInfluenceRulesFromDatabaseTest.java`
@@ -452,6 +489,35 @@ A human or an animal gets the influence type of the character of its attribute a
 
 - **Assumes:** the gauss index of an attribute array is ±(character number − 1) (`AttributeArrayGenerator`) and the influence type of the event influence rules is character number − 1 (generator).
 - **Not checked:** that `CreateAnimal.initState` really calls it; that needs the whole creation of objects (see "Not Covered").
+
+### `CreateAnimalState2ActionTypeTest`
+
+`src/test/java/org/socialworld/datasource/createObjects/CreateAnimalState2ActionTypeTest.java`
+
+A human or an animal gets the state-to-action type of the character of its attribute array, character number − 1, like the influence type (A7, since 2026-11-18). Before, every object got type 1 from `GaussPoolState2ActionType`; that stays for all other objects. Without database.
+
+| Test | Checks |
+|---|---|
+| `bothSidesOfTheGaussPool_leadToTheSameCharacter` | 0 → 0, +3 and −3 → 3, −99 → 99 |
+| `theTypeIsTheInfluenceType` | for every gauss index −99..99 the same as `influenceTypesOfCharacter` |
+| `gaussIndexOutsideThePool_staysAtTheLastType` | ±100 gives 99 |
+
+- **Not checked:** that `CreateAnimal.initState` really calls it (see "Not Covered").
+
+### `EventReactionFamilyTest`
+
+`src/test/java/org/socialworld/datasource/pool/EventReactionFamilyTest.java`
+
+The reaction type does not follow the character: `CreateAnimal.initState` draws one type per event family (`EventReactionFamily`: scream, say, whisper heard, looked at, touched), uniformly from 0 to 115 (`erd_regeln_konzept.md` E4, since 2026-11-18). Without database.
+
+| Test | Checks |
+|---|---|
+| `thereAre116ReactionTypes` | `CAPACITY_GPRT_ARRAY` is 116 (7 × 16 + 4) |
+| `everyFamilyGetsADrawnType_theOtherEventTypesKeepType1` | the families get 0..115, `selfSleep` and `candidatesMoveWalk` keep 1 |
+| `theFamiliesAreDrawnSeparately_andAllTypesOccur` | 2000 draws: scream and looked-at differ at least once, all 116 types occur |
+| `drawingDoesNotChangeTheGaussPool` | the drawn array is a copy |
+
+- **Not checked:** that `CreateAnimal.initState` calls it (see "Not Covered").
 
 ### `DatabaseAssumptionsTest`
 
@@ -642,6 +708,56 @@ The two sources of the generated event influence rules: `event_situations.csv` (
 
 - **Assumes:** the resource files as they are in git (values of the farmer, maid and miller).
 - **Needs:** no database.
+
+### `State2ActionGeneratorTest`
+
+`src/test/java/org/socialworld/tools/dct/State2ActionGeneratorTest.java`
+
+`State2ActionGenerator` writes one rule per state-to-action type from `characters.csv` (DCT button "S2A DB" → `swpool_s2a`, `state2action_konzept.md` section 7). Type t gets character t + 1. The chain: sleep, eat, then up to three own rules from the most pronounced levels (hunger and tiredness left out); a character without one gets the former curiosity rule. Writes into `InMemoryState2ActionStore`.
+
+| Test | Checks |
+|---|---|
+| `generate_writesOneRulePerType_andClearsTheStoreFirst` | 100 rules with 474 entries, 1 fallback, each with its own type; an old entry is gone |
+| `typeT_getsCharacterTPlusOne` | type 0 farmer, 77 character 78, 98 night watchman |
+| `sleepAndEat_comeFirst_atTheIdealOfTheCharacter` | farmer `tiredness >= 7000`, `hunger >= 6000` (as before); alchemist `tiredness >= 9000`; starving refugee `hunger >= 9500`; modes sleep 1, eat 3 |
+| `sleepLasts_theSleepHoursOfTheCharacter_eatingStays18Minutes` | farmer 8 h, mad prophet 6 h, paralysed old man 10 h; eating 1080000 for all |
+| `farmer_powerHigh_runs_inHisDirection` | power `+` → `power >= 6650`, run (move 12, 5 s), direction `(5.00,0.00,0)` |
+| `maid_fourPronouncedLevels_theFirstThreeInTheOrderOfTheAttributes` | courage `-` → sneak, morals `+` → sayNormal (no direction), materialism `-` → sayWhisper; spirituality `+` is the fourth and left out |
+| `nightWatchman_hungerAndTirednessGiveNoOwnRule` | sleep at 9500; mood `-` → sayScream, curiosity `-` → sneak; tiredness `+++` and hunger `+` give no own rule |
+| `theMostPronouncedLevel_comesFirst` | alchemist: curiosity `++` before courage `+` and materialism `+` |
+| `ropemaker_withoutAPronouncedLevel_getsTheFormerCuriosityRule` | ropemaker (only `o` and `~`): the curiosity rule with `(2,7,0)` |
+| `middleOfTheBand_roundedUp` | 6650, 8200, 9500, 3350, 1800, 500 |
+| `direction_dependsOnTheNumber_withADecimalPoint_andWithoutMinusZero` | maid `(4.91,0.94,0)`, alchemist `(0.63,-4.96,0)`, 90° and 270° without `-0.00` |
+| `everyRule_becomesOneChain_withoutEventParameters` | all 100: no `GetEvParm`, no escaping, no `null`, no `'`; read back as `State2ActionDescription`: 3 to 5 entries, 1 function |
+
+- **Assumes:** `characters.csv` as it is in git (values of the named characters).
+- **Needs:** no database.
+- **Not checked:** that sneak, sayNormal and sayWhisper run through the pipeline; that needs a run.
+
+### `EventReactionGeneratorTest`
+
+`src/test/java/org/socialworld/tools/dct/EventReactionGeneratorTest.java`
+
+`EventReactionGenerator` writes the reaction rules (DCT button "ERD DB" → `swpool_erd`, `erd_regeln_konzept.md` section 4). Type t < 112: style t / 16 (observer, toucher, fearful, turning away, echo, indifferent, brawler), variant t mod 16 = c + 4 e + 8 k (condition, fallback, length). Types 112..115: look, else hand as before. Writes into `InMemoryEventReactionStore`.
+
+| Test | Checks |
+|---|---|
+| `generate_writes540Rules_40PairsStayWithoutReaction` | 5 × 116 pairs, 540 rules with 800 entries, 40 without a reaction (indifferent without fallback); the old row is replaced |
+| `theTypeGivesStyleAndVariant` | 112 former types from, 116 types; 0 observer, 52 turning away, 111 brawler; 46 is c 2, e 1, k 1 |
+| `observer0_looksShortlyInAGoodMood_otherwiseNothing` | `mood >= 5000` → look at the causer, 5 s |
+| `observer5_looksInABadMood_touchesInAGoodOne` | `mood < 5000` look, else hand at the causer |
+| `fearful46_sneaksLongWhenBrave_otherwiseWalksAwayLong` | `courage >= 5000` sneak 6 s in the direction of the type, else walk 15 s |
+| `turningAway52_walksAway_otherwiseScreamsBack` | walk 5 s, else sayScream |
+| `echo68_screamsBack_otherwisePunches` | sayScream, else punch (7 / 74) at the causer |
+| `echo_answersInTheMannerOfTheFamily` | scream 102, say 101, whisper 103, looked at 101, touched 102 |
+| `indifferent_withoutFallbackNothing_withFallbackALookUnderTheOppositeCondition` | 80: no rule; 85: `mood >= 5000` → look |
+| `brawler_punchesShort_andTakesTheClubForOneBlowWhenLong` | 96 punch 2 s, 104 club (6 / 67) 1 s, not stretched |
+| `formerTypes_lookElseHand_withTheLoudnessOnlyForTheScream` | 112 with `say_loudness > 50` / `> 30`, hand now with the causer as target; 115 looked at without loudness |
+| `direction_dependsOnTheType_withoutMinusZero` | 0 `(5.00,0.00,0)`, 29 `(0.00,5.00,0)`, 87 `(0.00,-5.00,0)` |
+| `everyRule_namesItsPair_andBecomesOneChain` | all 540 read back as `EventReactionDescription`: event type and reaction type match, one function, no escaping, no `null`, no `'` |
+
+- **Needs:** no database.
+- **Not checked:** the reactions in a run, ping-pong.
 
 ### `AttributeCharacterOverviewTest`
 
@@ -974,6 +1090,20 @@ Which humans an action reaches, as drawn on the range map.
 
 - **Assumes:** the event master sorts out the candidates the same way: at most the range away, and not on the very spot of the event.
 
+### `NeedsResetTest`
+
+`src/test/java/org/socialworld/workbench/act/NeedsResetTest.java`
+
+The dashboard button "Wecken & Sättigen" (since 2026-11-18) calls `NeedsReset.endSleepingAndEating()`: every human whose running action is sleep or eat gets it ended (`stopActualAction`) and its tiredness and hunger set to 2000 (`setAttributeFromOutside`, cluster act only, without an event). The logic is in the workbench because of the token; `SocialWorld` hands it to `SimDashboard.setNeedsReset`. Without database.
+
+| Test | Checks |
+|---|---|
+| `onlySleepingAndEatingAreEnded` | sleep and eat yes; drink, walk, sayScream and no action no |
+| `tirednessAndHungerGoTo2000` | both values |
+| `theResultSaysHowManyWereWokenAndFetched` | "12 geweckt, 5 vom Essen geholt" |
+
+- **Not checked:** ending the actions and setting the attributes in a running simulation.
+
 ### `ActionMapScaleTest`
 
 `src/test/java/org/socialworld/workbench/act/ActionMapScaleTest.java`
@@ -996,6 +1126,8 @@ The scale of the range map, on a panel of 648 × 448 pixels.
 - ACT as a whole: the window, refusing a busy human or an action already planned, inserting the action into the pipeline, ending a running action, checking the search tree (`SearchTreeCheck`) and moving a human by drag need a running simulation; only the request, the properties, the range and the scale are tested. The direct perform of the first version was checked by hand on 2026-11-10, the pipeline on 2026-11-11 (busy message and the say shown in the dashboard), ending a running action and the search tree check on 2026-11-11 as well (a human dragged far away is found there, and its scream reaches nobody).
 - `Expression` as a whole: only indirectly, through `KnowledgeElementLinesVsJsonTest`, the composer, `BranchingProbabilityTest`, the rule test and `SequenceTest`.
 - Loading from MariaDB (`datasource`): no tests except the reading tests named under the conditions, so that CI runs without a database. In particular the DCT writers against the real tables.
-- The lookup of the mapping in `CreateAnimal` and setting the influence types there (A7): one line each, they would need the whole creation of objects; only `influenceTypesOfCharacter` is tested.
+- The lookup of the mapping in `CreateAnimal` and setting the influence types, the state-to-action type and the reaction types there (A7, E4): one line each, they would need the whole creation of objects; only `influenceTypesOfCharacter`, `state2ActionTypeOfCharacter` and `EventReactionFamily.drawReactionTypes` are tested.
 - MCT generators and `MapPanel`: no tests; `TileGridCubes` has no caller yet.
-- State2Action and Action2Performer: still on lines, only the arithmetic of the intensity is tested.
+- State2Action: loading `swpool_s2a` in `State2ActionDescriptionPool` and the action that a rule gives in a run; only JSON, chain, generator and type are tested.
+- Event reactions: loading `swpool_erd` in `EventReactionDescriptionPool` and the reaction in a run; the target events of look (X1) and of attacks without a weapon (X3) need a running simulation.
+- Action2Performer: still on lines, only the arithmetic of the intensity is tested.

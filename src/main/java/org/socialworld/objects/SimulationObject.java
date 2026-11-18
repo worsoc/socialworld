@@ -24,7 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.socialworld.actions.AbstractAction;
+import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionNothing;
+import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.IObjectReceiver;
@@ -407,6 +409,38 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 	public final boolean stopActualAction(IAccessToken token) {
 		if (token.isValid() && token.getSimulationCluster() == SimulationCluster.act) {
 			return actionHandler.requestStop();
+		}
+		return false;
+	}
+
+	/**
+	 * Tells the mode of the running action, e.g. whether the human sleeps or eats.
+	 * Only the workbench (cluster act) may ask, for any other caller the answer is null.
+	 *
+	 * @param token the token of the caller
+	 * @return the mode of the running action, null if none runs or the caller may not ask
+	 */
+	public final ActionMode getRunningActionMode(IAccessToken token) {
+		if (token.isValid() && token.getSimulationCluster() == SimulationCluster.act) {
+			return actionHandler.getRunningActionMode();
+		}
+		return null;
+	}
+
+	/**
+	 * Sets one attribute of an animal or a human from outside, a divine intervention without an event.
+	 * Only the workbench (cluster act) may do this; for objects without attributes it does nothing.
+	 * The attribute calculator may overwrite it if it is just writing a result for this object.
+	 *
+	 * @param token the token of the caller
+	 * @param attribute the attribute to set
+	 * @param value the new value, 0..9999
+	 * @return false if the caller may not set it or the object has no attributes
+	 */
+	public final boolean setAttributeFromOutside(IAccessToken token, Attribute attribute, int value) {
+		if (token.isValid() && token.getSimulationCluster() == SimulationCluster.act && this.state instanceof StateAnimal) {
+			((StateAnimal) this.state).setAttributeFromOutside(attribute, value);
+			return true;
 		}
 		return false;
 	}

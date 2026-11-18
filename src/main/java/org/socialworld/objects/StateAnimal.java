@@ -200,6 +200,15 @@ public class StateAnimal extends StateSimulationObject {
 		}
 	}
 	
+	/**
+	 * Sets one attribute from outside (SimulationObject.setAttributeFromOutside), without an event,
+	 * and shows the change like a calculated one.
+	 */
+	final void setAttributeFromOutside(Attribute attribute, int value) {
+		this.attributes.set(attribute, value);
+		SocialWorld.showAttributeChanges(getObject().getObjectID(), this.attributes);
+	}
+
 	final int getAttribute(Attribute attributeName) {
 		return this.attributes.get(attributeName);
 	}

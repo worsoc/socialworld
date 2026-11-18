@@ -376,6 +376,24 @@ public class DataCreationTool {
 		});
 		buttonCharacterOverview.setBounds(938, 229, 77, 26);
 		frame.getContentPane().add(buttonCharacterOverview);
+
+		Button buttonState2ActionDB = new Button("S2A DB");
+		buttonState2ActionDB.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				saveState2ActionRulesToDB();
+			}
+		});
+		buttonState2ActionDB.setBounds(938, 261, 77, 26);
+		frame.getContentPane().add(buttonState2ActionDB);
+
+		Button buttonEventReactionDB = new Button("ERD DB");
+		buttonEventReactionDB.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				saveEventReactionRulesToDB();
+			}
+		});
+		buttonEventReactionDB.setBounds(938, 293, 77, 26);
+		frame.getContentPane().add(buttonEventReactionDB);
 		
 		buttonSave.addActionListener(new ActionListener() 
 		{
@@ -963,6 +981,42 @@ public class DataCreationTool {
 			AttributeArrayWriter.write(generatedArrays, new TablePoolAttributeArrayStore());
 			JOptionPane.showMessageDialog(frame, generatedArrays.size() + " Arrays geschrieben");
 		} catch (IllegalStateException e) {
+			JOptionPane.showMessageDialog(frame, "Fehler: " + e.getMessage());
+		}
+	}
+
+	private void saveEventReactionRulesToDB() {
+		int answer = JOptionPane.showConfirmDialog(frame,
+				"Alle Regeln in swpool_erd werden gelöscht und " + EventReactionGenerator.countRules()
+						+ " Reaktionsregeln neu geschrieben (7 Stile × 16 Ausprägungen + 4 bisherige, je Event-Familie).",
+				"In DB schreiben", JOptionPane.OK_CANCEL_OPTION);
+		if (answer != JOptionPane.OK_OPTION) return;
+
+		try {
+			EventReactionStore store = new TablePoolEventReactionStore();
+			EventReactionGenerator.Result result = new EventReactionGenerator().generate(store);
+			System.out.println("Generated event reaction rules: " + result);
+			JOptionPane.showMessageDialog(frame, result + " geschrieben nach " + store.getDescription());
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(frame, "Fehler: " + e.getMessage());
+		}
+	}
+
+	private void saveState2ActionRulesToDB() {
+		int answer = JOptionPane.showConfirmDialog(frame,
+				"Alle Regeln in swpool_s2a werden gelöscht und " + State2ActionGenerator.countRules()
+						+ " State2Action-Regeln aus " + AttributeCharacterCatalog.RESOURCE + " neu geschrieben (eine je Charakter).",
+				"In DB schreiben", JOptionPane.OK_CANCEL_OPTION);
+		if (answer != JOptionPane.OK_OPTION) return;
+
+		try {
+			State2ActionStore store = new TablePoolState2ActionStore();
+			State2ActionGenerator.Result result = State2ActionGenerator.fromResources().generate(store);
+			System.out.println("Generated state-to-action rules: " + result);
+			JOptionPane.showMessageDialog(frame, result + " geschrieben nach " + store.getDescription());
+		} catch (RuntimeException e) {
+			e.printStackTrace();
 			JOptionPane.showMessageDialog(frame, "Fehler: " + e.getMessage());
 		}
 	}

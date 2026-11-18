@@ -75,6 +75,7 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 		switch (modus) {
 		case lines: 
 			initializeWithTestData_Lines();
+			break;
 		
 		default:
 			// do nothing

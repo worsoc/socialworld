@@ -28,6 +28,7 @@ import java.lang.Math;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.SocialWorld;
 import org.socialworld.actions.AbstractAction;
+import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionNothing;
 
 /**
@@ -267,6 +268,15 @@ public class ActionHandler  {
 	 *
 	 * @return false if no action is running
 	 */
+	/**
+	 * @return the mode of the running action (started and not done), null if none runs
+	 */
+	public ActionMode getRunningActionMode() {
+		AbstractAction action = this.actualAction;
+		if (action == null || action.isDone()) return null;
+		return action.getMode();
+	}
+
 	public boolean requestStop() {
 		AbstractAction action = this.actualAction;
 		if (action == null || action.isDone()) return false;

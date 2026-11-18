@@ -103,7 +103,7 @@ What `target` is for the single families:
 | Eat, Drink | the item (`ActionBodilyFunction.getItem`) | of no meaning |
 | Inventory | the item (`Equip.getTargets`) | of no meaning |
 | HandleItem, Touch | items 1 and 2 (`Handle.getTargets`) | of no meaning |
-| Weapon | the **weapon** (`Attack.getTargets`), not the victim | of no meaning |
+| Weapon | the attacked object (ActionAttack.target) | **counts** |
 | Punch | probably empty without a weapon | of no meaning |
 | Examine | empty (`Examine.getTargets`) | of no meaning |
 | Ask, Answer | the human addressed (`Ask.getTargets`) | **counts** |
@@ -190,12 +190,6 @@ Decided and built 2026-11-16 (A3, B1):
 - `AttributeCalculator` counts "without rule" apart from "rule error". Because the pools return a placeholder instead of `null` for a missing rule, a rule without a function also counts as "without rule".
 - With all 100 characters 12,784 of the 19,300 rules are neutral (in the database, 2026-11-18).
 
-### 5.5 Side Findings (not part of this concept)
-
-- `EventType.isRelevantForChangingPosition()` always returned `true`. The queries had `||` instead of `&&`, e.g. `index >= 8 || index <= 13`.
-- `Attack.getTargets()` returns the weapon instead of `ActionAttack.target`. Whether that is intended is open.
-
-Both are summed up with further side findings in section 12.3.
 
 ## 6. Influence Type and Characters
 
@@ -697,7 +691,6 @@ Built: C1, A1 to A11, A13 to A23 and A7. A12 (State2Action) is a project of its 
 | No. | What | Where | Consequence |
 |---|---|---|---|
 | C1 | The queries used `\|\|` instead of `&&`, e.g. `index >= 8 \|\| index <= 13`. So the method **always** returned `true` | `EventType.isRelevantForChangingPosition()` | Probably **every** event to an animal or human also went through `PositionCalculator`, which moved the object by its own movement and by the strength of the event. Fixed 2026-11-16 (12.5) |
-| C2 | Returns the weapon instead of `ActionAttack.target` | `Attack.getTargets()` | `targetWeapon…` reaches only the item. The victim gets the event only as candidate if it stands in the angle. Whether intended is open |
 | C3 | Integer results are cut off instead of rounded | `Calculation.createValue(Type.integer, …)` with `intValue()` | Caught by A3, because the generator rounds to integers. Alternatively `Math.round` in the code. That affects all functions, though, so it would change semantics |
 | C4 | The bystanders get the same `target` type as the one addressed for Ask, Answer, Touch, Pull and Push | `EventType.isRelevantForEffectiveCheck()` with `EventMaster` | A question acts on bystanders as on the one asked. Accepted for the first step (5.3) |
 | C5 | In constant mode the editor writes `function: "value"` with a constant, but `createActionExpression` knows only `"MX+N"` | `CreationTool_EventInfluenceDescription.btnSaveToDatabasePressed`, `ChangeAttribute.createActionExpression` | A rule saved that way becomes `Nothing`, it is invalid. Affects only the editor, not the generator |

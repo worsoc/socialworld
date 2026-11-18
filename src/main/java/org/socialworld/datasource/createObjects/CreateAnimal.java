@@ -24,10 +24,12 @@ import org.socialworld.actions.handle.Inventory;
 import org.socialworld.attributes.ActualTime;
 import org.socialworld.core.EventType;
 import org.socialworld.core.IncompleteSimulationObject;
+import org.socialworld.datasource.pool.EventReactionFamily;
 import org.socialworld.datasource.pool.GaussPoolAAACMMapping;
 import org.socialworld.datasource.pool.GaussPoolAttributeArray;
 import org.socialworld.datasource.pool.GaussPoolAttributeCalculatorMatrix;
 import org.socialworld.datasource.pool.GaussPoolInfluenceType;
+import org.socialworld.datasource.pool.GaussPoolState2ActionType;
 import org.socialworld.objects.Animal;
 import org.socialworld.objects.StateAnimal;
 import org.socialworld.objects.WriteAccessToAnimal;
@@ -109,6 +111,12 @@ public class CreateAnimal extends CreateSimulationObjects {
 		// the event influence rules follow the character of the attribute array (EID concept 6.1, A7);
 		// this replaces the influence types drawn per event type in CreateSimulationObjects.initState
 		hiddenAnimal.setInfluenceTypes(influenceTypesOfCharacter(indexGPAA));
+		// the state-to-action rules follow the character as well (State2Action, like A7);
+		// this replaces the type drawn in CreateSimulationObjects.initState
+		hiddenAnimal.setState2ActionType(state2ActionTypeOfCharacter(indexGPAA));
+		// the reaction types do not follow the character: one drawn type per event family (erd_regeln_konzept.md, E4);
+		// this replaces the types drawn in CreateSimulationObjects.initState
+		hiddenAnimal.setReactionTypes(EventReactionFamily.drawReactionTypes(random));
 		
 		gauss_value = random.nextGaussian();
 		while ((gauss_value > THRESHOLD_RANDOM_GAUSSIAN_VALUE) || (gauss_value < -THRESHOLD_RANDOM_GAUSSIAN_VALUE))
@@ -141,6 +149,17 @@ public class CreateAnimal extends CreateSimulationObjects {
 		int[] influenceTypes = new int[EventType.MAX_EVENT_TYPE];
 		Arrays.fill(influenceTypes, influenceType);
 		return influenceTypes;
+	}
+
+	/**
+	 * The state-to-action type of a human or an animal whose attribute array has the given gauss index:
+	 * the character number - 1, as for the influence types (see influenceTypesOfCharacter).
+	 *
+	 * @param gaussIndexAttributeArray the gauss index the attribute array was taken from
+	 * @return |gaussIndexAttributeArray|, at most 99
+	 */
+	static int state2ActionTypeOfCharacter(int gaussIndexAttributeArray) {
+		return Math.min(Math.abs(gaussIndexAttributeArray), GaussPoolState2ActionType.CAPACITY_GPS2A_ARRAY - 1);
 	}
 
 }

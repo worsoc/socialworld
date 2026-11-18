@@ -1,24 +1,20 @@
 /*
-* Social World
-* Copyright (C) 2015  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2015  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.actions.attack;
 
 
@@ -212,8 +208,9 @@ public class Attack extends ActionPerformer {
     	List<SimulationObject> targets = new ArrayList<SimulationObject>();
     	SimulationObject target;
     	
-    	target = (SimulationObject) ((ActionAttack) this.getOriginalActionObject()).getWeapon();
-    	if (target.isSimulationObject()) {
+    	// the attacked object, not the weapon (C2 of the EID concept, since 2026-11-18)
+    	target = ((ActionAttack) this.getOriginalActionObject()).getTarget();
+    	if (target != null && target.isSimulationObject()) {
     		targets.add(target);
     	}
     	

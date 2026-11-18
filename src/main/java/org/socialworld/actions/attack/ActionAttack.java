@@ -1,24 +1,20 @@
 /*
-* Social World
-* Copyright (C) 2015  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2015  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.actions.attack;
 
 
@@ -37,6 +33,7 @@ import org.socialworld.core.EventToCauser;
 import org.socialworld.core.EventToTarget;
 import org.socialworld.core.EventType;
 import org.socialworld.core.IEventParam;
+import org.socialworld.objects.NoSimulationObject;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.properties.IWeapon;
 import org.socialworld.objects.Animal;
@@ -75,7 +72,7 @@ import org.socialworld.objects.Animal;
 public class ActionAttack extends AbstractAction {
 	private Attack attack;
 	private IWeapon weapon;
-	SimulationObject target;
+	SimulationObject target = NoSimulationObject.getObjectNothing();
 	
 	private static AccessTokenActionAttack token = AccessTokenActionAttack.getValid();
 	
@@ -183,7 +180,7 @@ public class ActionAttack extends AbstractAction {
 			case punchRightFistStraight:
 			case punchRightFistSideways:
 			case punchRightFistUpward:
-				// TODO there must not be a weapon in the fist
+				// a weapon in the fist is not necessary (the attack takes place without one)
 				vp = ((Animal) actor).getStateProperty(token, PropertyName.stateInventory, PropertyName.inventory_rightHand, PropertyName.inventory_rightHand.toString());
 				itemRight = getObjectRequester().requestSimulationObject(token, vp, this);
 				if (itemRight instanceof IWeapon) {
@@ -205,8 +202,8 @@ public class ActionAttack extends AbstractAction {
 		
    		this.weapon = weapon;
    		
-   		// if no weapon --> no attack --> break 
-   		if (weapon.isObjectNothing()) return;
+   		// without a weapon the attack takes place as well (since 2026-11-18): a punch is done by the fist,
+   		// and useWeapon is seen more relaxed; the weapon stays IWeapon.getObjectNothing()
    		
       	this.attack = new Attack( this);
       				

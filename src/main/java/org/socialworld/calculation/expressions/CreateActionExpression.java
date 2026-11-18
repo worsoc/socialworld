@@ -1,24 +1,20 @@
 /*
-* Social World
-* Copyright (C) 2019  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2019  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.calculation.expressions;
 
 import java.util.List;
@@ -31,7 +27,7 @@ import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.geometry.Vector;
 
-import org.socialworld.calculation.descriptions.EventReactionDescriptionEntry;
+import org.socialworld.calculation.descriptions.ActionDescriptionEntry;
 
 import org.socialworld.datasource.parsing.ParseExpressionStrings;
 
@@ -43,13 +39,13 @@ public class CreateActionExpression  {
 	private static Calculation calculation = Calculation.getInstance();
 	private static AccessTokenExpressions4Action token = AccessTokenExpressions4Action.getValid();
 	
-	public static Expression createActionExpression(List<EventReactionDescriptionEntry> descEntrys, boolean dummy) {
+	public static Expression createActionExpression(List<? extends ActionDescriptionEntry> descEntrys, boolean dummy) {
 		
 		
 		if (descEntrys.size() > 0)
 		{
 
-			EventReactionDescriptionEntry entry;
+			ActionDescriptionEntry entry;
 			
 			Expression exp1;  // WENN
 			Expression exp2;  // DANN
@@ -110,9 +106,9 @@ public class CreateActionExpression  {
 	}
 
 	
-	private static Expression parseFurtherEntrys(int index, List<EventReactionDescriptionEntry> descEntrys) {
+	private static Expression parseFurtherEntrys(int index, List<? extends ActionDescriptionEntry> descEntrys) {
 		
-		EventReactionDescriptionEntry entry;
+		ActionDescriptionEntry entry;
 		
 		Expression wenn;
 		Expression dann;
@@ -154,7 +150,7 @@ public class CreateActionExpression  {
 	}
 	
 	
-	private static Expression parseDann(EventReactionDescriptionEntry descEntry) {
+	private static Expression parseDann(ActionDescriptionEntry descEntry) {
 		
 		
 		Expression actionValue;
@@ -212,7 +208,7 @@ public class CreateActionExpression  {
 		return createAction;
 	}
 
-	private static String getTagValue(EventReactionDescriptionEntry descEntry, String propertyName) {
+	private static String getTagValue(ActionDescriptionEntry descEntry, String propertyName) {
 		
 		switch (propertyName) {
 			case Value.VALUE_BY_NAME_ACTION_TYPE:

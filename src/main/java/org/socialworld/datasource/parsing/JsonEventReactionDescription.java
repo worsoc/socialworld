@@ -20,7 +20,11 @@ package org.socialworld.datasource.parsing;
 import java.util.List;
 import org.socialworld.calculation.descriptions.EventReactionDescriptionEntry;
 
-public class JsonEventReactionDescription {
+/**
+ * The JSON form of an event reaction description, as it is stored in swpool_erd.jsonERD.
+ * The entries are in the order of their precedence.
+ */
+public class JsonEventReactionDescription extends Json {
 	public String eventType;
 	public int  reactionType;
 	public List<EventReactionDescriptionEntry>   entrys;

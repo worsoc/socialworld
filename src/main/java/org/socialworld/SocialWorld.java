@@ -22,6 +22,7 @@ import org.socialworld.actions.AbstractAction;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.core.Simulation;
 import org.socialworld.workbench.act.ActionCreationTool;
+import org.socialworld.workbench.act.NeedsReset;
 import org.socialworld.visualize.ISimVisualization;
 import org.socialworld.visualize.SimDashboard;
 
@@ -54,7 +55,10 @@ public class SocialWorld  {
 	{
 		//System.out.println("Headless: " + java.awt.GraphicsEnvironment.isHeadless());
 	
-		visualizeSimulation = new SimDashboard();
+		SimDashboard dashboard = new SimDashboard();
+		// the divine intervention lives in the workbench, the dashboard only offers the button
+		dashboard.setNeedsReset(() -> NeedsReset.endSleepingAndEating().toString());
+		visualizeSimulation = dashboard;
 		visualizeSimulation.show();
 
 		

@@ -26,10 +26,12 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
@@ -81,6 +83,9 @@ public class SimDashboard implements ISimVisualization, IObjectReceiver {
 	private final AutomaticSelection automatic = new AutomaticSelection();
 	private final JToggleButton automaticButton = new JToggleButton("Automatik");
 	private final JButton typesButton = new JButton("Typen");
+	private final JButton needsButton = new JButton("Wecken & S\u00E4ttigen");
+	// set from outside (SocialWorld), so that the display does not depend on the workbench; null: no button
+	private Supplier<String> needsReset;
 	private int selectedObject = VisualModel.NO_OBJECT;
 	private boolean pictureMode;
 	private int pictureTick;
@@ -198,7 +203,13 @@ public class SimDashboard implements ISimVisualization, IObjectReceiver {
 		typesButton.setToolTipText("Zeigt in einem eigenen Fenster, welcher Mensch welchen Typ hat, oder die Anzahl pro Typ.");
 		typesButton.addActionListener(event -> showTypes());
 
+		needsButton.setToolTipText("Beendet bei allen Schlafenden und Essenden die Aktion und setzt tiredness und hunger auf 20."
+				+ " Ein g\u00F6ttlicher Eingriff, um Aktionen und Reaktionen zu sehen.");
+		needsButton.addActionListener(event -> resetNeeds());
+		needsButton.setVisible(needsReset != null);
+
 		JPanel buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 6, 0));
+		buttons.add(needsButton);
 		buttons.add(typesButton);
 		buttons.add(automaticButton);
 
@@ -206,6 +217,27 @@ public class SimDashboard implements ISimVisualization, IObjectReceiver {
 		header.add(labelHeader, BorderLayout.CENTER);
 		header.add(buttons, BorderLayout.EAST);
 		return header;
+	}
+
+	/**
+	 * Lets the button "Wecken & S\u00E4ttigen" call the intervention; it returns the text shown afterwards.
+	 * Without it the button is not shown. To be called before show().
+	 */
+	public void setNeedsReset(Supplier<String> needsReset) {
+		this.needsReset = needsReset;
+	}
+
+	private void resetNeeds() {
+		if (needsReset == null) return;
+		String result;
+		try {
+			result = needsReset.get();
+		}
+		catch (RuntimeException e) {
+			e.printStackTrace();
+			result = "Fehler: " + e.getMessage();
+		}
+		JOptionPane.showMessageDialog(null, result, "Wecken & S\u00E4ttigen", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	private JPanel createBottomArea() {

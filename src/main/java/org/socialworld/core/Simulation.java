@@ -46,6 +46,8 @@ import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.collections.ObjectByPositionSearch;
 
 import org.socialworld.datasource.pool.EventInfluenceDescriptionPool;
+import org.socialworld.datasource.pool.EventReactionDescriptionPool;
+import org.socialworld.datasource.pool.State2ActionDescriptionPool;
 
 /**
  * The class Simulation holds all simulation objects and runs the simulation
@@ -278,6 +280,10 @@ public class Simulation extends SocialWorldThread {
 		System.out.println("Ende Erstellen Objekte "+ ActualTime.asTime().toString());
 
 		EventInfluenceDescriptionPool.getInstance();
+		// load the state-to-action rules (swpool_s2a) here as well, not only when the first human acts
+		State2ActionDescriptionPool.getInstance();
+		// and the reaction rules (swpool_erd), not only at the first event that asks for a reaction
+		EventReactionDescriptionPool.getInstance();
 	}
 	
 	public void stopSimulation() {

@@ -77,8 +77,10 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 		switch (modus) {
 		case lines: 
 			initializeWithTestData_Lines();
+			break;
 		case json: 
 			initializeWithTestData_Json();
+			break;
 		
 		default:
 			// do nothing

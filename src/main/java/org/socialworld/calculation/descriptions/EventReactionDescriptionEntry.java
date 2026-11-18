@@ -17,26 +17,11 @@
  */
 package org.socialworld.calculation.descriptions;
 
+/**
+ * One rule of an event reaction description. The fields of the action are in ActionDescriptionEntry.
+ */
+public class EventReactionDescriptionEntry extends ActionDescriptionEntry {
 
-public class EventReactionDescriptionEntry {
-	
-	
-	public String conditions;
-	
-	public String actionType;
-	public String actionMode;
-	public String minTime;
-	public String maxTime;
-	public String priority;
-	public String intensity;
-	public String duration;
-	public String direction;
-	public String target;
-	public String item;
-	public String inventoryPlace;
-	public String endPosition;
-	
-	public String relevanceThreshold; 
+	public String relevanceThreshold;
 
 }
-
