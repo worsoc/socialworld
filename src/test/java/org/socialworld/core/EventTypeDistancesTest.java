@@ -73,7 +73,9 @@ public class EventTypeDistancesTest {
     assertThat(EventType.selfMoveWalk.isRelevantForChangingPosition()).isTrue();
     assertThat(EventType.candidatesMoveWalk.isRelevantForChangingPosition()).isTrue();
     assertThat(EventType.candidatesWeaponClub.isRelevantForChangingPosition()).isTrue();
-    assertThat(EventType.selfSleep.isRelevantForChangingPosition()).isFalse();
+    // since the movement concept (2026-11-19, G4): sleeping sets both velocities to 0
+    assertThat(EventType.selfSleep.isRelevantForChangingPosition()).isTrue();
+    assertThat(EventType.selfEat.isRelevantForChangingPosition()).isFalse();
     assertThat(EventType.candidatesSayScream.isRelevantForChangingPosition()).isFalse();
     assertThat(EventType.percipientExistsDistance5000.isRelevantForChangingPosition()).isFalse();
     assertThat(EventType.percipientMoveWalk.isRelevantForChangingPosition()).as("seeing moves nobody").isFalse();

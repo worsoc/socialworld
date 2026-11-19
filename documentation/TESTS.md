@@ -5,8 +5,8 @@ What the automated tests check, what they assume, and what they need to run.
 | | |
 |---|---|
 | **Framework** | JUnit 5 with AssertJ |
-| **Test classes** | 69 |
-| **Test methods** | 609 active, 1 commented out |
+| **Test classes** | 72 |
+| **Test methods** | 624 active, 1 commented out |
 | **Database** | no test writes to MariaDB; a few tests read from it and skip themselves without it or with an empty table |
 | **Runs in CI** | yes, in a fresh clone without `application.properties` |
 | **Last updated** | 2026-11-19 |
@@ -21,6 +21,7 @@ What the automated tests check, what they assume, and what they need to run.
 |---|---|--:|---|---|
 | Start | `SocialWorldTest` | 1 | the main program exists as a singleton | – |
 | Attributes | `AttributeArrayTest` | 5 | range 0..9999 and the display as 0..99 | – |
+| Attributes | `PropertyNameVelocityTest` | 2 | active and passive velocity as properties of the simulation object | – |
 | Core | `TickRandomCacheTest` | 10 | random value per object and tick | – |
 | Core | `TickObjectCooldownTest` | 10 | own step of the matrix with an offset per object, cooldown of the effect on the attributes by criticality stage | – |
 | Core | `ActionHandlerTest` | 3 | a new action handler has no running action and nothing to stop | – |
@@ -28,6 +29,7 @@ What the automated tests check, what they assume, and what they need to run.
 | Core | `ActionEventTimingTest` | 9 | fixed intervals between the events of a running action, one event for single actions | – |
 | Core | `ObjectMasterIdRangeTest` | 4 | every type keeps to its band of 1000 IDs; beyond it the simulation stops | – |
 | Actions | `InventoryMouthTest` | 1 | the inventory gives the item in the mouth as property (eating, drinking) | – |
+| Actions | `ActionMoveVelocityTest` | 4 | velocity of a move action from event to event: uniform, accelerated, braking | – |
 | Objects | `SimObjectsCompletelyImplemented` | 3 | lexeme mappings of the object enums | – |
 | Calculation | `KnowledgeElementLinesVsJsonTest` | 17 | line and JSON build the same knowledge | partly: no `swpool_epd.sql` |
 | Calculation | `FunctionByTableTest` | 11 | table functions at 0..9999 | – |
@@ -41,10 +43,11 @@ What the automated tests check, what they assume, and what they need to run.
 | Calculation | `EventReactionDescriptionTest` | 4 | reaction rules as JSON for swpool_erd: readable tags, pair and one function, unknown event type | – |
 | Calculation | `EventInfluenceRulesFromDatabaseTest` | 1 | real rules with real arrays | no database or empty table |
 | Calculation | `PositionCalculatorSectorsTest` | 9 | whether a new position stays in the same search sectors | – |
+| Calculation | `PositionMovementTest` | 8 | technical position movement: impulse, friction, time step, technical event types, no self-push | – |
 | Calculation | `CalculationVectorTest` | 11 | vector operations in `Calculation`: add, subtract, negate, scale, component product, normalize, length | – |
 | Calculation | `DirectionToReferenceTest` | 10 | tag `ActionDir`: direction to or away from a reference position, height weight, offset, fallback | – |
 | Calculation | `VectorTest` | 7 | `Vector`: normalizing (the zero vector has length 0) and the component product | – |
-| Data | `Action2PerformerDescriptionPoolTest` | 6 | intensity × power, expression parser, constant intensity of the moves | – |
+| Data | `Action2PerformerDescriptionPoolTest` | 7 | intensity × power, expression parser, constant intensity of the moves, move velocity without double acceleration | – |
 | Data | `FunctionPoolTest` | 5 | building a matrix from flat arrays, table functions under func_id 0..10, func_ids for functions created at runtime | – |
 | Data | `GaussPoolAAACMMappingTest` | 4 | mapping of the two drawn indices | – |
 | Data | `CreateAnimalInfluenceTypeTest` | 4 | the influence type is the character of the attribute array, the same for every event type | – |
@@ -126,6 +129,19 @@ What the automated tests check, what they assume, and what they need to run.
 | `displayString_showsDisplayedValues_toStringKeepsInternalOnes` | `toDisplayString()` shows 0..99, `toString()` the internal values |
 | `displayValue_keepsMinusOneForAnInvalidIndex` | an invalid index stays −1 |
 
+### `PropertyNameVelocityTest`
+
+`src/test/java/org/socialworld/attributes/PropertyNameVelocityTest.java`
+
+The two velocities of the technical position movement (movement concept G1, step M1).
+
+| Test | Checks |
+|---|---|
+| `velocities_arePropertiesOfTheSimulationObject` | `simobj_velocityActive` and `simobj_velocityPassive` have the type `simObjProp`; `toType(simObjProp)` keeps them and does not map them to `simobj_directionMove` |
+| `velocities_haveTheirOwnIndexes` | indexes 1001024 and 1001025; no index occurs twice in the block 1001xxx |
+
+- **Not checked:** writing the velocities (needs a running simulation), comes with M2.
+
 ---
 
 ## Core
@@ -179,7 +195,7 @@ Distances of `EventType`: how far an event reaches (`getEffectDistance`) and how
 |---|---|
 | `seeingSomeoneMove_reachesFartherThanBeingReallyClose` | percipientMove… reach 20, 30, 10, 20, 20, 50 m (walk, run, sneak, jump, swim, fly), each farther than its candidatesMove… |
 | `positionChangeDistance_onlyForTheCandidatesThatCanBeMoved` | candidatesMove… 500, candidatesWeapon… and candidatesPunch… their effect distance, all others 0; only candidates events relevant for changing the position have one |
-| `relevantForChangingPosition_onlyTheListedRanges` | `isRelevantForChangingPosition` holds for moving, weapon and punch events, not for sleep, talking, presence or seeing someone move (before 2026-11-16 it held for every event) |
+| `relevantForChangingPosition_onlyTheListedRanges` | `isRelevantForChangingPosition` holds for moving, weapon and punch events and, since 2026-11-19, for sleep (it sets both velocities to 0); not for eating, talking, presence or seeing someone move (before 2026-11-16 it held for every event) |
 
 - **Not checked:** `ActionMove` creating the percipientMove events and who sees them; that needs a running simulation.
 
@@ -242,6 +258,21 @@ Distances of `EventType`: how far an event reaches (`getEffectDistance`) and how
 - **Checks:** an inventory with an apple in the mouth answers `inventory_mouth` with a valid property of type `simulationObject`, not with `ValueProperty.getInvalid()` as before 2026-11-17. `ActionBodilyFunction` takes the item for eating and drinking from there, so nobody could eat or drink before.
 - **Limit:** the apple itself is protected and only comes out of the property with a permitted token, as in `ActionBodilyFunction` through the `ObjectRequester`; that needs the running simulation. `StateInventory`, which passes the property on, is not tested.
 - **Needs:** no database.
+
+### `ActionMoveVelocityTest`
+
+`src/test/java/org/socialworld/actions/move/ActionMoveVelocityTest.java`
+
+The move action keeps its velocity and gives every event a new `Move` with the current value (movement concept G2, step M5): v = v + a × Δt.
+
+| Test | Checks |
+|---|---|
+| `uniformMove_keepsItsVelocity` | without acceleration the velocity stays 100 mm/s over 5 events |
+| `acceleratedMove_growsByAccelerationTimesInterval` | 1400 with a = 1400 per second becomes 2800, then 4200 |
+| `braking_isANegativeAcceleration` | 1000 with a = −250 over 2 s becomes 500 |
+| `startSpeed_isThePlaceholder` | the start speed is 100 mm/s (placeholder) |
+
+- **Not checked:** `ActionMove.perform` itself (a new `Move` per event, the event carrying `move_velocity`), it needs a running simulation.
 
 ## Objects
 
@@ -434,6 +465,25 @@ Evaluates a sample of the real rules of `swpool_eid` (every 97th) with all real 
 - **Assumes:** positions are in millimetres, the height does not count.
 - **Not checked:** the re-sorting in `Simulation.changePosition` itself, it needs a running simulation.
 
+### `PositionMovementTest`
+
+`src/test/java/org/socialworld/calculation/application/PositionMovementTest.java`
+
+The technical position movement (movement concept 2026-11-19, steps M2 and M3): events change only the active and the passive velocity, the position changes only in the time step `positionStep`, once per second. Only the vector arithmetic and the event types, without simulation.
+
+| Test | Checks |
+|---|---|
+| `unit_hasLengthOne_andTheZeroVectorStaysZero` | the unit direction of (3,4,0) is (0.6,0.8,0); the zero vector stays zero with length 0 |
+| `impulse_isAddedOnce_toThePassiveVelocity` | passive (100,0,0) plus an impulse of 200 in direction (0,2,0) gives (100,200,0); the starting vector is not changed |
+| `impulseWithoutDirection_changesNothing` | an impulse without direction leaves the passive velocity as it is |
+| `friction_halvesThePassiveVelocityPerSecond_andEndsInRest` | friction 0.5 per second (placeholder): 400 becomes 200; after 20 more seconds it is rest (below `MIN_SPEED`) |
+| `stepMovesBySumTimesOneSecond` | the step is (active + passive) × 1 s |
+| `technicalEventTypes_lieOutsideAllCategories` | `positionStep` (128) and `activeMoveStop` (256) are technical, belong to no category and do not pass the gate of the EventMaster route |
+| `eventKinds_selfMove_candidatesMove_andSleepThroughTheGate` | `isSelfMove` for selfMoveWalk…Fly, `isCandidatesMove` for candidatesMoveWalk…Fly; selfSleep passes the gate |
+| `ownCandidatesMove_isIgnored_bystandersAreStillPushed` | a candidatesMove that reaches its own causer is ignored for the velocity (the mover counts only its selfMove; seen in a run 2026-11-19: every mover pushed itself by 200 mm/s); bystanders are still pushed; candidates punches of the causer are not covered by this rule |
+
+- **Not checked:** the processing in `PositionCalculator` (it reads and writes the state of an object), the list of moving objects, the time step from `Simulation.nextTimeStep` and the stop at the end of a move in `ActionHandler`; they need a running simulation.
+
 ### `CalculationVectorTest`
 
 `src/test/java/org/socialworld/calculation/CalculationVectorTest.java`
@@ -498,7 +548,8 @@ The expression of the tag `<ActionDir>L;kz;(ox,oy,oz);(fx,fy,fz)</ActionDir>` (E
 | `commaInsideTheFirstOperand_isNotTheSeparator` | `SUB(MUL(6,7),2)` gives 40 |
 | `commaOnlyInTheSecondOperand_worksAsBefore` | `SUB(50,MUL(6,7))` gives 8 |
 | `moveIntensityConstant_isTheFloatingPointHundred` | `CONST_MOVE_EVENT_INTENSITY` gives 100.0 as a float (100 mm = 0.1 m per move event) |
-| `everyMoveMode_givesTheEventAnIntensity` | walk, run, sneak, jump, swim and fly have 4 functions, the fourth gives `event_intensity` = `MOVE_EVENT_INTENSITY` (quick solution 2026-11-19, so that moves really move) |
+| `everyMoveMode_givesTheEventAnIntensity` | walk, run, sneak, jump, swim and fly have 4 functions, the fourth gives `event_intensity` = `MOVE_EVENT_INTENSITY` (quick solution 2026-11-19; since M5 the position follows `move_velocity`) |
+| `moveVelocity_isTakenAsItIs_theAccelerationIsNotAddedTwice` | the event velocity is the `move_velocity` of the action (100), the acceleration (50) is not added again; the move action already integrated it (movement concept G2) |
 
 ### `FunctionPoolTest`
 

@@ -42,6 +42,7 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 			"CONST(" + Type.integer.getIndex() + " " + AttributeArray.ATTRIBUTE_VALUE_SCALE + ")";
 
 	/**
+	 * Since M5 of the movement concept the position follows move_velocity, not this intensity.
 	 * Quick solution 2026-11-19 (ERD X2 test): the moves had no event intensity, so PositionCalculator
 	 * multiplied their direction by strength 0 and nobody moved. A constant for now: 100 mm = 0.1 m
 	 * per move event, so that moves can be seen in the dashboard; the real intensity of a move
@@ -167,11 +168,9 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				lines.add(0, 1, "GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_MOVE_ACCELERATION + "))");
 				lines.add(0, 1, Value.VALUE_BY_NAME_EVENT_MOVE_ACCELERATION);
 
-				// velocity
-				lines.add(0, 2, "ADD(" +
-									"GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_MOVE_VELOCITY + "))" + "," +
-									"GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_MOVE_ACCELERATION + "))" +
-								")" ); 
+				// velocity: the move action has already added the acceleration (movement concept G2),
+				// adding it here again would count it twice
+				lines.add(0, 2, "GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_MOVE_VELOCITY + "))"); 
 				lines.add(0, 2, Value.VALUE_BY_NAME_EVENT_MOVE_VELOCITY);
 				
 				// intensity: constant for now, see MOVE_EVENT_INTENSITY

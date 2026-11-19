@@ -67,6 +67,13 @@ public enum EventType {
 	selfSayNormal(80), selfSayScream(81), selfSayWhisper(82),
 
 //////////////////////////////////////////////////////////////////////
+//technical events (movement concept 2026-11-19): outside all categories, never through the EventMaster,
+//only for the PositionCalculator (bypass); 128 and 256 lie between causer, target and candidates
+//////////////////////////////////////////////////////////////////////
+
+	positionStep(128),
+
+//////////////////////////////////////////////////////////////////////
 //EventToTargets	(event with influence to explicit involved objects (targets, items ...)
 //////////////////////////////////////////////////////////////////////
 	
@@ -91,6 +98,8 @@ public enum EventType {
 	targetAskNormal(200), targetAskScream(201), targetAskWhisper(202), targetAnswerNormal(203), targetAnswerScream(204), targetAnswerWhisper(205),
 	
 	/*targetSayNormal(208), targetSayScream(209), targetSayWhisper(210),*/
+
+	activeMoveStop(256),
 
 //////////////////////////
 //EventToCandidates	
@@ -304,7 +313,28 @@ public enum EventType {
 		}
 	}
 
+	/**
+	 * Technical event types (movement concept 2026-11-19) have no meaning in the simulation:
+	 * no event influence, no reaction, no perception. They only drive the PositionCalculator.
+	 */
+	public boolean isTechnical() {
+		return this == positionStep || this == activeMoveStop;
+	}
+
+	/** The own move of the causer: selfMoveWalk(8) ... selfMoveFly(13). */
+	public boolean isSelfMove() {
+		return this.index >= 8 && this.index <= 13;
+	}
+
+	/** A move seen by the candidates nearby: candidatesMoveWalk(264) ... candidatesMoveFly(269). */
+	public boolean isCandidatesMove() {
+		return this.index >= 264 && this.index <= 269;
+	}
+
 	public boolean isRelevantForChangingPosition() {
+		
+		// selfSleep(1): sleeping sets both velocities to 0 (movement concept G4)
+		if (this.index == 1) return true;
 		
 		// selfMoveWalk(8), selfMoveRun(9), selfMoveSneak(10), selfMoveJump(11), selfMoveSwim(12), selfMoveFly(13),
 		if (this.index >= 8 && this.index <= 13) return true;

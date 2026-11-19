@@ -18,6 +18,9 @@
 package org.socialworld.calculation.application;
 
 
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.socialworld.GlobalSwitches;
 import org.socialworld.attributes.Direction;
 import org.socialworld.attributes.Position;
@@ -57,8 +60,16 @@ public class PositionCalculator extends SocialWorldThread {
 	private final Vector zeroVector = Vector.get0Vector();
 	
 
-	private final ThreadLocal<Vector> localVectorEvent = ThreadLocal.withInitial(() -> Vector.getMutable());
-	private final ThreadLocal<Vector> localVectorMove = ThreadLocal.withInitial(() -> Vector.getMutable());
+	// movement concept (2026-11-19): events change only the velocities, the position changes only in the
+	// time step positionStep, once per second for every object whose velocity sum is not zero
+	static final float STEP_SECONDS = 1.0f;
+	// placeholders, the numbers are not settled yet
+	static final float FRICTION_PER_SECOND = 0.5f;
+	static final float BYSTANDER_PUSH_STRENGTH = 200.0f;
+	// below this speed (mm/s) the passive velocity counts as rest
+	static final float MIN_SPEED = 1.0f;
+
+	private final Set<SimulationObject> movingObjects = ConcurrentHashMap.newKeySet();
 
 
 	/**
@@ -113,7 +124,22 @@ public class PositionCalculator extends SocialWorldThread {
 	    }
 	}
 	
-	final void calculatePositionChangedByEvent(final Event event, final StateSimulationObject state, final HiddenSimulationObject hiddenWriteAccess) {
+	/**
+	 * Called at the end of every simulation second: every object that moves gets its time step.
+	 * The object hands in its own write access (SimulationObject.stepPosition), the step does not
+	 * go through the EventMaster (technical event, bypass).
+	 */
+	final void sendPositionSteps() {
+		for (SimulationObject object : movingObjects) {
+			object.stepPosition();
+		}
+	}
+
+	final int countMovingObjects() {
+		return movingObjects.size();
+	}
+
+	final synchronized void calculatePositionChangedByEvent(final Event event, final StateSimulationObject state, final HiddenSimulationObject hiddenWriteAccess) {
 
 		if (event != null && state != null && hiddenWriteAccess != null) {
 			// Bitmasken-Recycling statt 'new'
@@ -173,119 +199,174 @@ public class PositionCalculator extends SocialWorldThread {
 	
 	private final int calculatePositionChangedByEvent(CollectionElementSimObjInfluenced moved) {
 
-	    if (moved != null) {
+		if (moved == null) {
+			System.out.println("PositionCalculator.calculatePositionChangedByEvent(): moved is null");
+			return POSITION_CALCULATOR_RETURNS_EMPTY_LISTS;
+		}
 
-	        Event event = moved.getEvent();
-	        StateSimulationObject state  =  moved.getState();
-	        HiddenSimulationObject hiddenWriteAccess =   moved.getHidden();
+		Event event = moved.getEvent();
+		StateSimulationObject state = moved.getState();
+		HiddenSimulationObject hiddenWriteAccess = moved.getHidden();
 
-	        if (event == null || state == null || hiddenWriteAccess == null) {
-	            if (GlobalSwitches.OUTPUT_DEBUG_POSITIONCALCULATOR_VARIABLE_IS_NULL) {
-	                System.out.println("PositionCalculator.calculatePositionChangedByEvent(): Inner elements are null (Already processed)");
-	            }
-	            return POSITION_CALCULATOR_RETURNS_NO_CHANGE; // Blitzschneller, sicherer Abbruch
-	        }
-	    
-	        // ====================================================================
-	        // THREAD-ISOLIERUNG (SANDBOX): Eigene Vektoren für diesen Thread holen
-	        // ====================================================================
-	        Vector workingVectorEvent = this.localVectorEvent.get();
-	        Vector workingVectorMove = this.localVectorMove.get();
-	        
-	        // Defensives Zurücksetzen gegen Restwerte aus alten Berechnungen
-	        workingVectorEvent.set(zeroVector);
-	        workingVectorMove.set(zeroVector);
-	        // ====================================================================
-
-	        int returnSetPosition;
-	        int returnSetMove;
-	        
-	        EventType eventType;
-	        
-	        Position positionOriginal = Position.getObjectNothing();
-	        Vector position;
-	        Position newPosition = Position.getObjectNothing();
-	        
-	        Direction directionMoveObject;
-	        float powerMoveObject;
-
-	        Direction directionEvent;
-	        float powerEvent;
-	        
-	        float resultingPowerMoveObject;
-	            
-	        eventType = event.getEventType();
-	        positionOriginal = getObjectRequester().requestPosition(token, state.getProperty(token, PropertyName.simobj_position), this);
-	        
-	        // candidates are moved only if they are close enough to the event, self and target events are not checked
-	        if (eventType.isEventToCandidates() && isBeyondPositionChangeDistance(event, eventType, positionOriginal)) {
-	            return POSITION_CALCULATOR_RETURNS_NO_CHANGE;
-	        }
-	        
-	        position = new Vector(positionOriginal.getVector(token));
-	        
-	        directionMoveObject = getObjectRequester().requestDirection(token, state.getProperty(token, PropertyName.simobj_directionMove), this);
-	        workingVectorMove.set(directionMoveObject.getVector(token)); 
-	        powerMoveObject = directionMoveObject.getPower();
-	        
-	        directionEvent = getObjectRequester().requestDirection(token, event.getDirection(), this);
-	        if (directionEvent != null) {
-	            workingVectorEvent.set(directionEvent.getVector(token));
-	        }
-	        else {
-	            workingVectorEvent.set(zeroVector);
-	        }
-	        powerEvent = event.getStrength();
-	        
-	        if (!workingVectorEvent.isNormalized()) workingVectorEvent.normalize();
-	        if (!workingVectorMove.isNormalized()) workingVectorMove.normalize();
-	        
-	        switch (eventType) {
-	        case selfSleep:
-	            workingVectorEvent.set(zeroVector);
-	            powerMoveObject = 0;
-	            break;
-	        default:
-	        	break;
+		if (event == null || state == null || hiddenWriteAccess == null) {
+			if (GlobalSwitches.OUTPUT_DEBUG_POSITIONCALCULATOR_VARIABLE_IS_NULL) {
+				System.out.println("PositionCalculator.calculatePositionChangedByEvent(): Inner elements are null (Already processed)");
 			}
-	        
-	        // Berechnung der resultierenden Bewegung (In-Place auf dem isolierten Vektor)
-	        workingVectorMove.mul(powerMoveObject);
-	        workingVectorEvent.mul(powerEvent);
-	        workingVectorMove.add(workingVectorEvent);
-	        
-	        resultingPowerMoveObject = workingVectorMove.length();
-	        position.add(workingVectorMove);
-	        workingVectorMove.normalize();
-	        
-	        newPosition = new Position(PropertyName.simobj_position, position);
-	        
-	        returnSetPosition = hiddenWriteAccess.setPosition(newPosition);
-	        if (returnSetPosition != WriteAccessToSimulationObject.WRITE_ACCESS_RETURNS_SUCCESS) return returnSetPosition;
-	        updateObjectSearch(state.getObject(), positionOriginal, newPosition);
-	        
-	        if (GlobalSwitches.OUTPUT_DEBUG_MOVE_DIRECTION && eventType.isRelevantForChangingPosition()
-	        		&& eventType.name().startsWith("selfMove")) {
-	        	System.out.println("MOVEDIR 3 position obj " + state.getObjectID() + " " + eventType
-	        			+ " event direction " + (directionEvent == null ? "null" : String.valueOf(directionEvent.getVector(token)))
-	        			+ " strength " + powerEvent + " old power " + powerMoveObject
-	        			+ " new move " + workingVectorMove + " power " + resultingPowerMoveObject
-	        			+ " position " + position);
-	        }
-	        
-	        // Verwendung des geschützten Arbeitsvektors für die finale Richtungsänderung
-	        returnSetMove = hiddenWriteAccess.setMove(new Direction(PropertyName.simobj_directionMove, workingVectorMove, resultingPowerMoveObject));
-	        if (returnSetMove != WriteAccessToSimulationObject.WRITE_ACCESS_RETURNS_SUCCESS) return returnSetMove;
+			return POSITION_CALCULATOR_RETURNS_NO_CHANGE;
+		}
 
-	        if (workingVectorMove.equals(zeroVector))
-	            return POSITION_CALCULATOR_RETURNS_NO_CHANGE;
-	        else
-	            return POSITION_CALCULATOR_RETURNS_CHANGE;
-	    }   
-	    else {
-	        System.out.println("PositionCalculator.calculatePositionChangedByEvent(): moved is null");
-	        return POSITION_CALCULATOR_RETURNS_EMPTY_LISTS;
-	    }
+		EventType eventType = event.getEventType();
+
+		if (eventType == EventType.positionStep) {
+			return stepPosition(state, hiddenWriteAccess);
+		}
+
+		Vector active = readVelocity(state, PropertyName.simobj_velocityActive);
+		Vector passive = readVelocity(state, PropertyName.simobj_velocityPassive);
+
+		if (eventType == EventType.activeMoveStop) {
+			active = Vector.get0Vector();
+		}
+		else if (eventType == EventType.selfSleep) {
+			// sleeping means rest
+			active = Vector.get0Vector();
+			passive = Vector.get0Vector();
+		}
+		else if (eventType.isSelfMove()) {
+			// the own move SETS the active velocity: direction × the current velocity of the move action
+			active = scaled(eventDirection(event), event.getMoveVelocity());
+		}
+		else {
+			// the mover is a candidate of its own move event as well; for it only selfMove changes the
+			// velocity, its own candidatesMove would count the move twice (user, 2026-11-19)
+			if (isOwnMoveSeenAsCandidate(eventType, event.getCauser() == state.getObject())) return POSITION_CALCULATOR_RETURNS_NO_CHANGE;
+
+			// a push or a blow ADDS an impulse to the passive velocity
+			if (eventType.isEventToCandidates()) {
+				Position candidatePosition = getObjectRequester().requestPosition(token, state.getProperty(token, PropertyName.simobj_position), this);
+				if (isBeyondPositionChangeDistance(event, eventType, candidatePosition)) return POSITION_CALCULATOR_RETURNS_NO_CHANGE;
+			}
+			float strength = eventType.isCandidatesMove() ? BYSTANDER_PUSH_STRENGTH : event.getStrength();
+			passive = addImpulse(passive, eventDirection(event), strength);
+		}
+
+		int result = writeVelocities(state, hiddenWriteAccess, active, passive);
+
+		if (GlobalSwitches.OUTPUT_DEBUG_MOVE_DIRECTION) {
+			System.out.println("MOVEDIR 3 velocity obj " + state.getObjectID() + " " + eventType
+					+ " strength " + event.getStrength() + " velocity " + event.getMoveVelocity()
+					+ " active " + active + " passive " + passive);
+		}
+		return result;
 	}
-	
+
+	/** The time step (positionStep): position += (active + passive) × 1 s, then the passive velocity is damped. */
+	private int stepPosition(StateSimulationObject state, HiddenSimulationObject hiddenWriteAccess) {
+		Vector active = readVelocity(state, PropertyName.simobj_velocityActive);
+		Vector passive = readVelocity(state, PropertyName.simobj_velocityPassive);
+		Vector sum = sumOf(active, passive);
+
+		if (sum.is000()) {
+			movingObjects.remove(state.getObject());
+			return POSITION_CALCULATOR_RETURNS_NO_CHANGE;
+		}
+
+		Position positionOriginal = getObjectRequester().requestPosition(token, state.getProperty(token, PropertyName.simobj_position), this);
+		if (positionOriginal.checkIsObjectNothing()) return POSITION_CALCULATOR_RETURNS_NO_CHANGE;
+
+		Vector position = new Vector(positionOriginal.getVector(token));
+		position.add(scaled(sum, STEP_SECONDS));
+		Position newPosition = new Position(PropertyName.simobj_position, position);
+
+		int returnSetPosition = hiddenWriteAccess.setPosition(newPosition);
+		if (returnSetPosition != WriteAccessToSimulationObject.WRITE_ACCESS_RETURNS_SUCCESS) return returnSetPosition;
+		updateObjectSearch(state.getObject(), positionOriginal, newPosition);
+
+		int result = writeVelocities(state, hiddenWriteAccess, active, damped(passive));
+
+		if (GlobalSwitches.OUTPUT_DEBUG_MOVE_DIRECTION) {
+			System.out.println("MOVEDIR 4 step obj " + state.getObjectID() + " sum " + sum + " position " + position);
+		}
+		if (result != WriteAccessToSimulationObject.WRITE_ACCESS_RETURNS_SUCCESS) return result;
+		return POSITION_CALCULATOR_RETURNS_CHANGE;
+	}
+
+	/** Writes both velocities and keeps the list of moving objects up to date. */
+	private int writeVelocities(StateSimulationObject state, HiddenSimulationObject hiddenWriteAccess, Vector active, Vector passive) {
+		int returnActive = hiddenWriteAccess.setVelocityActive(asDirection(PropertyName.simobj_velocityActive, active));
+		if (returnActive != WriteAccessToSimulationObject.WRITE_ACCESS_RETURNS_SUCCESS) return returnActive;
+		int returnPassive = hiddenWriteAccess.setVelocityPassive(asDirection(PropertyName.simobj_velocityPassive, passive));
+		if (returnPassive != WriteAccessToSimulationObject.WRITE_ACCESS_RETURNS_SUCCESS) return returnPassive;
+
+		if (sumOf(active, passive).is000()) movingObjects.remove(state.getObject());
+		else movingObjects.add(state.getObject());
+
+		return WriteAccessToSimulationObject.WRITE_ACCESS_RETURNS_SUCCESS;
+	}
+
+	/** @return the velocity in mm/s (unit direction × speed), the zero vector if there is none */
+	private Vector readVelocity(StateSimulationObject state, PropertyName prop) {
+		Direction direction = getObjectRequester().requestDirection(token, state.getProperty(token, prop), this);
+		if (direction == null || direction.checkIsObjectNothing()) return Vector.get0Vector();
+		Vector unit = direction.getVector(token);
+		if (unit == null || unit.checkIsObjectNothing()) return Vector.get0Vector();
+		return scaled(unit, direction.getPower());
+	}
+
+	/** @return the unit direction of the event, the zero vector if it has none */
+	private Vector eventDirection(Event event) {
+		Direction direction = getObjectRequester().requestDirection(token, event.getDirection(), this);
+		if (direction == null || direction.checkIsObjectNothing()) return Vector.get0Vector();
+		Vector vector = direction.getVector(token);
+		if (vector == null || vector.checkIsObjectNothing()) return Vector.get0Vector();
+		return unit(vector);
+	}
+
+	private static Direction asDirection(PropertyName prop, Vector velocity) {
+		return new Direction(prop, unit(velocity), length(velocity));
+	}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////  vector arithmetic of the movement (testable)  ///////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	/** @return a new vector of length 1 in the same direction, the zero vector for the zero vector */
+	static Vector unit(Vector v) {
+		Vector work = new Vector(v);
+		work.normalize();
+		return new Vector(work.getX(), work.getY(), work.getZ());
+	}
+
+	static float length(Vector v) {
+		return new Vector(v.getX(), v.getY(), v.getZ()).length();
+	}
+
+	static Vector scaled(Vector v, float factor) {
+		return new Vector(v.getX() * factor, v.getY() * factor, v.getZ() * factor);
+	}
+
+	static Vector sumOf(Vector a, Vector b) {
+		return new Vector(a.getX() + b.getX(), a.getY() + b.getY(), a.getZ() + b.getZ());
+	}
+
+	/**
+	 * @return true for a candidatesMove event that reaches its own causer: it is ignored for the
+	 *         velocity, the causer's move is already its selfMove; bystanders are still pushed
+	 */
+	static boolean isOwnMoveSeenAsCandidate(EventType eventType, boolean causerIsTheObject) {
+		return causerIsTheObject && eventType.isCandidatesMove();
+	}
+
+	/** An impulse changes the passive velocity once: passive + unit direction × strength. */
+	static Vector addImpulse(Vector passive, Vector direction, float strength) {
+		return sumOf(passive, scaled(unit(direction), strength));
+	}
+
+	/** Friction per second: the passive velocity × FRICTION_PER_SECOND, below MIN_SPEED it is rest. */
+	static Vector damped(Vector passive) {
+		Vector result = scaled(passive, FRICTION_PER_SECOND);
+		if (length(result) < MIN_SPEED) return Vector.get0Vector();
+		return result;
+	}
+
 }

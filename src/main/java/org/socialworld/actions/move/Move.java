@@ -1,24 +1,20 @@
 /*
-* Social World
-* Copyright (C) 2014  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2014  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.actions.move;
 
 import java.util.ArrayList;
@@ -66,8 +62,10 @@ public class Move extends ActionPerformer {
 	public Move (   ActionMove action ) {
 		super(action);
 		
-		this.acceleration = action.getIntensity();
-		this.velocity = 0;
+		// movement concept G2 (2026-11-19): velocity and acceleration come from the move action,
+		// which already integrated them (v = v + a × Δt); a Move belongs to exactly one event
+		this.acceleration = action.getAcceleration();
+		this.velocity = action.getVelocity();
 		this.remainedDistance = action.getSectionLength();
 
 	}
@@ -144,7 +142,6 @@ public class Move extends ActionPerformer {
 					System.out.println("Move.perform > acceleration: o (getObject(Type.floatingpoint)) is NoObject " + ((NoObject)o).getReason().toString() + " instead of float");
 				}
 				this.acceleration = 0;
-				return;
 			}
 			else {
 				this.acceleration = (Float) o ;
@@ -161,7 +158,7 @@ public class Move extends ActionPerformer {
 				if (GlobalSwitches.OUTPUT_DEBUG_GETOBJECT) {
 					System.out.println("Move.perform > velocity: o (getObject(Type.floatingpoint)) is NoObject " + ((NoObject)o).getReason().toString() + " instead of float");
 				}
-				this.velocity = this.velocity + this.acceleration;
+				// keep the velocity of the move action, it is already integrated
 				setParam( new Value(Type.floatingpoint, Value.VALUE_BY_NAME_ACTION_MOVE_VELOCITY, this.velocity));
 			}
 			else {
@@ -169,7 +166,6 @@ public class Move extends ActionPerformer {
 			}
 		}
 		else {
-			this.velocity = this.velocity + this.acceleration;
 			setParam( new Value(Type.floatingpoint, Value.VALUE_BY_NAME_ACTION_MOVE_VELOCITY, this.velocity));
 		}
 				

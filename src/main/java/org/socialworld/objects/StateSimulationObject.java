@@ -1,24 +1,20 @@
 /*
-* Social World
-* Copyright (C) 2015  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2015  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.objects;
 
 import java.lang.reflect.InvocationTargetException;
@@ -38,6 +34,7 @@ import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.core.IAccessToken;
 import org.socialworld.core.Event;
+import org.socialworld.core.TechnicalEvent;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenSimulationObject;
 import org.socialworld.objects.connections.Connection;
@@ -60,6 +57,10 @@ public abstract class StateSimulationObject extends ListenedBase implements IObj
 	
 	private 	Position 		position = Position.getObjectNothing();
 	private		Direction	 directionMove;
+	// technical position movement (movement concept G1): unit direction and speed in mm/s as power;
+	// active = the object's own move, passive = pushes and blows
+	private		Direction	 velocityActive;
+	private		Direction	 velocityPassive;
 	
 	private ConnectionList connections;
 
@@ -82,6 +83,8 @@ public abstract class StateSimulationObject extends ListenedBase implements IObj
 	private static StringTupel[] propertiesMetaInfos = new StringTupel[]{
 		new StringTupel(new String[] {"Position", PropertyName.simobj_position.name(), PropertyName.simobj_position.toString()}),
 		new StringTupel(new String[] {"Direction", PropertyName.simobj_directionMove.name(), PropertyName.simobj_directionMove.toString()}),
+		new StringTupel(new String[] {"Direction", PropertyName.simobj_velocityActive.name(), PropertyName.simobj_velocityActive.toString()}),
+		new StringTupel(new String[] {"Direction", PropertyName.simobj_velocityPassive.name(), PropertyName.simobj_velocityPassive.toString()}),
 		} ;
 	
 	protected StateSimulationObject(Generation calledFromGeneration) {
@@ -107,13 +110,17 @@ public abstract class StateSimulationObject extends ListenedBase implements IObj
 		
 		
 		
-		grantAccessToPropertyPosition = new GrantedAccessToProperty[1];
+		// the position calculator writes the position and the two velocities (movement concept G1)
+		grantAccessToPropertyPosition = new GrantedAccessToProperty[2];
 		grantAccessToPropertyPosition[0] = GrantedAccessToProperty.position;
+		grantAccessToPropertyPosition[1] = GrantedAccessToProperty.velocity;
 
 		grantAccessToPropertyAction = new GrantedAccessToProperty[1];
 		grantAccessToPropertyAction[0] = GrantedAccessToProperty.action;
 		
 		this.directionMove = new Direction(PropertyName.simobj_directionMove);
+		this.velocityActive = new Direction(PropertyName.simobj_velocityActive);
+		this.velocityPassive = new Direction(PropertyName.simobj_velocityPassive);
 		//stateAddOns = new ArrayList<State>();
 		
 	}
@@ -191,6 +198,10 @@ public abstract class StateSimulationObject extends ListenedBase implements IObj
 			result = this.position.getAsValue(token, name); break;
 		case simobj_directionMove:
 			result = this.directionMove.getAsValue(token, name); break;
+		case simobj_velocityActive:
+			result = this.velocityActive.getAsValue(token, name); break;
+		case simobj_velocityPassive:
+			result = this.velocityPassive.getAsValue(token, name); break;
 		default:
 			
 			parentStatePropName = getParentStatePropertyName ( token, prop,  name);
@@ -229,6 +240,18 @@ public abstract class StateSimulationObject extends ListenedBase implements IObj
 			this.directionMove =  direction;
 		}
 		
+	}
+	
+	final void setVelocityActive(Direction velocity, WriteAccessToSimulationObject guard) {
+		if (checkGuard(guard)) {
+			this.velocityActive = velocity;
+		}
+	}
+	
+	final void setVelocityPassive(Direction velocity, WriteAccessToSimulationObject guard) {
+		if (checkGuard(guard)) {
+			this.velocityPassive = velocity;
+		}
 	}
 	
 	final void setInfluenceTypes (int types[], WriteAccessToSimulationObject guard) {
@@ -276,6 +299,11 @@ public abstract class StateSimulationObject extends ListenedBase implements IObj
 		
 	}
 	
+	/** Technical events (positionStep, activeMoveStop) go only to the PositionCalculator (bypass). */
+	final void calculateTechnicalPositionEvent(TechnicalEvent event) {
+		Scheduler.getInstance().calculateTechnicalPositionEvent(event, getMeReadableOnly(), getMeWritableButHidden(grantAccessToPropertyPosition));
+	}
+
 	void calculateEventInfluence(Event event) {
 		
 		Scheduler.getInstance().calculatePositionChangedByEvent(event, getMeReadableOnly(), getMeWritableButHidden(grantAccessToPropertyPosition));

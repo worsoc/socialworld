@@ -308,6 +308,8 @@ public class Simulation extends SocialWorldThread {
 		if (GlobalSwitches.OUTPUT_MEMORY_TELEMETRY)		printMemoryTelemetry();
 		//if (GlobalSwitches.OUTPUT_MEMORY_TELEMETRY)  Calculation.getInstance().printStatistics();
 		actionMaster.nextSecond(actualTime);
+		// at the end, so that the processes changing velocities have run (movement concept G5)
+		Scheduler.getInstance().sendPositionSteps();
 	}
 
 	private static void printMemoryTelemetry() {

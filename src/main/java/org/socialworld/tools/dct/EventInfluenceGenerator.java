@@ -113,7 +113,16 @@ public class EventInfluenceGenerator {
 
 	/** @return the number of rules that generate() writes */
 	public static int countRules() {
-		return (EventType.values().length - 1) * COUNT_INFLUENCE_TYPES;
+		return countMeaningfulEventTypes() * COUNT_INFLUENCE_TYPES;
+	}
+
+	/** @return the event types that get rules: all except nothing and the technical ones (movement concept P4) */
+	static int countMeaningfulEventTypes() {
+		int count = 0;
+		for (EventType eventType : EventType.values()) {
+			if (eventType != EventType.nothing && !eventType.isTechnical()) count++;
+		}
+		return count;
 	}
 
 	public JsonEventInfluenceDescription buildRule(EventType eventType, int influenceType) {
@@ -138,6 +147,7 @@ public class EventInfluenceGenerator {
 		store.clear();
 		for (EventType eventType : EventType.values()) {
 			if (eventType == EventType.nothing) continue;
+			if (eventType.isTechnical()) continue;
 
 			for (int influenceType = 0; influenceType < COUNT_INFLUENCE_TYPES; influenceType++) {
 				JsonEventInfluenceDescription rule = buildRule(eventType, influenceType);

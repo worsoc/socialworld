@@ -95,4 +95,18 @@ public class Action2PerformerDescriptionPoolTest {
           .isEqualTo(Action2PerformerDescriptionPool.MOVE_EVENT_INTENSITY);
     }
   }
+
+  @Test
+  void moveVelocity_isTakenAsItIs_theAccelerationIsNotAddedTwice() {
+    Action2PerformerDescription description = Action2PerformerAssignment.getInstance().getAction2PerformerDescription(ActionMode.walk);
+    ValueArrayList properties = new ValueArrayList();
+    properties.add(new Value(Type.floatingpoint, Value.VALUE_BY_NAME_ACTION_MOVE_VELOCITY, 100f));
+    properties.add(new Value(Type.floatingpoint, Value.VALUE_BY_NAME_ACTION_MOVE_ACCELERATION, 50f));
+
+    // function 2 is the velocity (direction, acceleration, velocity, intensity)
+    Value velocity = description.getFunction(2).calculate(properties);
+
+    assertThat(velocity.getName()).isEqualTo(Value.VALUE_BY_NAME_EVENT_MOVE_VELOCITY);
+    assertThat(((Number) velocity.getObject(Type.floatingpoint)).floatValue()).isEqualTo(100f);
+  }
 }

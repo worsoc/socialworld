@@ -1,24 +1,20 @@
 /*
-* Social World
-* Copyright (C) 2014  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2014  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.core;
 
 import org.socialworld.calculation.IObjectReceiver;
@@ -305,6 +301,19 @@ public abstract class Event implements Comparable<Event>, IObjectReceiver {
 		return 0;
 	}
 
+
+	/**
+	 * @return the velocity of a move event (move_velocity, mm/s), 0 if the event has none
+	 *         (movement concept G2, 2026-11-19)
+	 */
+	public float getMoveVelocity() {
+		if (!hasOptionalParam()) return 0;
+		Value velocity = optionalParam.getParam(Value.VALUE_BY_NAME_EVENT_MOVE_VELOCITY);
+		if (velocity == null || !velocity.isValid()) return 0;
+		Object o = velocity.getObject(Type.floatingpoint);
+		if (o instanceof Number) return ((Number) o).floatValue();
+		return 0;
+	}
 
 	/**
 	 * @return the effectDistance

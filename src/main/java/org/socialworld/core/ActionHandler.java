@@ -29,6 +29,7 @@ import org.socialworld.objects.SimulationObject;
 import org.socialworld.SocialWorld;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
+import org.socialworld.actions.ActionType;
 import org.socialworld.actions.ActionNothing;
 
 /**
@@ -210,6 +211,8 @@ public class ActionHandler  {
 			// and remove it from the list
 			if (this.actualAction.isDone() || interrupt) {
 				SocialWorld.stopAction(object.getObjectID());
+				// the own move ends: the active velocity becomes 0 (movement concept G4)
+				if (this.actualAction.getType() == ActionType.move) object.stopActiveMove();
 				this.lastExecutedAction = this.actualAction;
 				secondsTillNextCalculation = 0;
 				if (interrupt && !stop) {

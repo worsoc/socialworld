@@ -1,24 +1,20 @@
 /*
-* Social World
-* Copyright (C) 2020  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2020  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.attributes;
 
 import java.util.List;
@@ -42,6 +38,9 @@ public enum PropertyName {
 	simobj_position(1001001),
 	simobj_attributeArray(1001011),
 	simobj_directionMove(1001021), simobj_directionChest(1001022), simobj_directionActiveMove(1001023),
+	// active and passive velocity of the technical position movement (movement concept G1, 2026-11-19);
+	// not the same as simobj_directionActiveMove, the move direction of an animal loaded from the database
+	simobj_velocityActive(1001024), simobj_velocityPassive(1001025),
 	simobj_knowledge(1001041),
 
 	stateSeer(1101000),
@@ -216,6 +215,8 @@ public enum PropertyName {
 			case simobj_directionChest: 
 			case stateSeer_directionView: 
 			case simobj_directionActiveMove: 
+			case simobj_velocityActive: 
+			case simobj_velocityPassive: 
 			case stateAppearance: 
 			case stateInventory: 
 			case stateSeer: 

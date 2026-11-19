@@ -89,6 +89,13 @@ public class ActionMove extends AbstractAction {
 	
 	private Vector directionForSection;
 	
+	// movement concept G2 (2026-11-19): the move action keeps its velocity itself (mm/s) and gives
+	// a new Move with the current velocity to every event; v = v + a × Δt from event to event.
+	// Placeholders: start speed 100 mm/s for every mode, no acceleration (numbers not settled yet).
+	static final float INITIAL_SPEED = 100.0f;
+	private float velocity = INITIAL_SPEED;
+	private float acceleration = 0.0f;
+	
 	private static AccessTokenActionMove token = AccessTokenActionMove.getValid();
 	
 	public ActionMove(ValueArrayList actionProperties) {
@@ -152,7 +159,12 @@ public class ActionMove extends AbstractAction {
 		}
 		
 		
+		// from the second event on the velocity changes by the acceleration over the event interval
+		if (!this.firstStep) this.velocity = nextVelocity(this.velocity, this.acceleration, mode.getEventIntervalSeconds());
+		
 		if (moveCompleted || this.firstStep) 			createMove();
+		// a new Move for every event: a Move is evaluated only once, so each event needs its own
+		else 											this.move = new Move(this);
 		
 		if (GlobalSwitches.OUTPUT_DEBUG_MOVE_DIRECTION) {
 			System.out.println("MOVEDIR 2 perform obj " + actor.getObjectID() + " mode " + mode
@@ -308,6 +320,19 @@ public class ActionMove extends AbstractAction {
 		return this.firstStep;
 	}
 	
+	/** v = v + a × Δt (movement concept G2) */
+	static float nextVelocity(float velocity, float acceleration, float seconds) {
+		return velocity + acceleration * seconds;
+	}
+
+	float getVelocity() {
+		return this.velocity;
+	}
+
+	float getAcceleration() {
+		return this.acceleration;
+	}
+
 	float getSectionLength() {
 		return this.directionForSection.length();
 	}

@@ -118,6 +118,8 @@ public class EventInfluenceDescriptionPool extends DescriptionPool {
 
 	    for (EventType type : EventType.values()) {
 	        if (type == EventType.nothing) continue;
+	        // technical event types have no event influence (movement concept P4)
+	        if (type.isTechnical()) continue;
 
 	        lines4EventType = new Lines4EventType(type, rangeSecondIndex);
 	        String typeName = type.name();

@@ -42,6 +42,7 @@ import org.socialworld.core.IAccessToken;
 import org.socialworld.core.ActionHandler;
 import org.socialworld.core.AllWords;
 import org.socialworld.core.Event;
+import org.socialworld.core.TechnicalEvent;
 import org.socialworld.core.EventToPercipient;
 import org.socialworld.core.EventType;
 import org.socialworld.core.IEventParam;
@@ -641,6 +642,20 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 	 */
 	public final void changeByEvent(final Event simulationEvent) {
 		this.state.calculateEventInfluence(simulationEvent);
+	}
+
+	/**
+	 * The time step of the technical position movement (movement concept 2026-11-19): called once
+	 * per second by the PositionCalculator for every object with a velocity; the object hands in its
+	 * own write access, the step does not go through the EventMaster.
+	 */
+	public final void stepPosition() {
+		this.state.calculateTechnicalPositionEvent(TechnicalEvent.POSITION_STEP);
+	}
+
+	/** The own move action has ended or was interrupted: the active velocity becomes 0 (concept G4). */
+	public final void stopActiveMove() {
+		this.state.calculateTechnicalPositionEvent(TechnicalEvent.ACTIVE_MOVE_STOP);
 	}
 
 	/**
