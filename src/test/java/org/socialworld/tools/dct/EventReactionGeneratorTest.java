@@ -22,6 +22,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.socialworld.actions.ActionMode;
+import org.socialworld.actions.ActionType;
 import org.socialworld.calculation.descriptions.EventReactionDescription;
 import org.socialworld.calculation.descriptions.EventReactionDescriptionEntry;
 import org.socialworld.core.EventType;
@@ -107,10 +109,11 @@ public class EventReactionGeneratorTest {
     assertThat(entries.get(0).conditions).isEqualTo("courage >= 5000");
     assertThat(entries.get(0).actionMode).isEqualTo("<Const>13</Const>");
     assertThat(entries.get(0).duration).isEqualTo("<Const>6000</Const>");
-    assertThat(entries.get(0).direction).isEqualTo("<Const>" + EventReactionGenerator.direction(46) + "</Const>");
+    assertThat(entries.get(0).direction).isEqualTo(EventReactionGenerator.awayFromEvent(46));
     assertThat(entries.get(1).conditions).isEqualTo("courage < 5000");
     assertThat(entries.get(1).actionMode).isEqualTo("<Const>11</Const>");
     assertThat(entries.get(1).duration).isEqualTo("<Const>15000</Const>");
+    assertThat(entries.get(1).direction).isEqualTo(EventReactionGenerator.awayFromEvent(46));
   }
 
   @Test
@@ -175,6 +178,80 @@ public class EventReactionGeneratorTest {
     assertThat(scream.get(1).target).isEqualTo(CAUSER);
 
     assertThat(entries(EventReactionFamily.lookedAt, 115).get(0).conditions).isEqualTo("mood >= 2000 & mood < 5500");
+  }
+
+  @Test
+  void awayFromEvent_isTheTagActionDir_withTheTypeDirectionAsFallback() {
+    String tag = EventReactionGenerator.awayFromEvent(0);
+
+    assertThat(tag).isEqualTo("<ActionDir>-5;0;(0,0,0);(5.00,0.00,0)</ActionDir>");
+    assertThat(EventReactionGenerator.awayFromEvent(87)).isEqualTo("<ActionDir>-5;0;(0,0,0);(0.00,-5.00,0)</ActionDir>");
+
+    String formula = tag.substring("<ActionDir>".length(), tag.length() - "</ActionDir>".length());
+    assertThat(new org.socialworld.calculation.expressions.DirectionToReference(formula).isValid()).isTrue();
+  }
+
+  @Test
+  void onlyMoves_haveADirection_andItIsAlwaysAwayFromTheEvent() {
+    for (EventReactionFamily family : EventReactionFamily.values()) {
+      for (int t = 0; t < EventReactionGenerator.COUNT_REACTION_TYPES; t++) {
+        List<EventReactionDescriptionEntry> rule = entries(family, t);
+        if (rule == null) continue; // pair without reaction
+        for (EventReactionDescriptionEntry entry : rule) {
+          boolean isMove = entry.actionType.equals("<Const>" + ActionType.move.getIndex() + "</Const>");
+          if (isMove) {
+            assertThat(entry.direction).as("%s type %d", family, t).isEqualTo(EventReactionGenerator.awayFromEvent(t));
+          }
+          else {
+            assertThat(entry.direction).as("%s type %d", family, t).isNull();
+          }
+        }
+      }
+    }
+  }
+
+  @Test
+  void testFly_letsTheFearfulFlyAwayAndUp_everythingElseStays() {
+    EventReactionGenerator testGenerator = new EventReactionGenerator(true);
+    assertThat(testGenerator.isTestFly()).isTrue();
+    assertThat(GENERATOR.isTestFly()).isFalse();
+
+    for (EventReactionFamily family : EventReactionFamily.values()) {
+      EventType eventType = family.getEventTypes().get(0);
+      for (int t = 0; t < EventReactionGenerator.COUNT_REACTION_TYPES; t++) {
+        JsonEventReactionDescription normalRule = GENERATOR.buildRule(family, eventType, t);
+        JsonEventReactionDescription testRule = testGenerator.buildRule(family, eventType, t);
+        if (normalRule == null) {
+          assertThat(testRule).isNull();
+          continue;
+        }
+        assertThat(testRule.entrys).hasSameSizeAs(normalRule.entrys);
+        for (int i = 0; i < normalRule.entrys.size(); i++) {
+          EventReactionDescriptionEntry normal = normalRule.entrys.get(i);
+          EventReactionDescriptionEntry test = testRule.entrys.get(i);
+          boolean sneak = normal.actionMode.equals("<Const>" + ActionMode.sneak.getIndex() + "</Const>");
+          if (sneak) {
+            assertThat(test.actionMode).isEqualTo("<Const>" + ActionMode.fly.getIndex() + "</Const>");
+            assertThat(test.direction).isEqualTo(EventReactionGenerator.flyAwayFromEvent(t));
+            assertThat(test.conditions).isEqualTo(normal.conditions);
+            assertThat(test.duration).isEqualTo(normal.duration);
+          }
+          else {
+            assertThat(test.actionMode).as("%s type %d", family, t).isEqualTo(normal.actionMode);
+            assertThat(test.direction).as("%s type %d", family, t).isEqualTo(normal.direction);
+          }
+        }
+      }
+    }
+  }
+
+  @Test
+  void flyAwayFromEvent_isSpatialWithAnUpwardOffset() {
+    String tag = EventReactionGenerator.flyAwayFromEvent(0);
+
+    assertThat(tag).isEqualTo("<ActionDir>-5;1;(0,0,3);(5.00,0.00,0)</ActionDir>");
+    String formula = tag.substring("<ActionDir>".length(), tag.length() - "</ActionDir>".length());
+    assertThat(new org.socialworld.calculation.expressions.DirectionToReference(formula).isValid()).isTrue();
   }
 
   @Test

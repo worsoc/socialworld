@@ -158,7 +158,7 @@ public class CreateActionExpression  {
 		Expression[] sequence = new Expression[2];
 		Expression createAction;
 		
-		String[] functionTags = {"Const", "Table", "VSPE", "MX+N","MLogX+N", "MExpX+N","Now+N", "GetEvParm"};
+		String[] functionTags = {"Const", "Table", "VSPE", "MX+N","MLogX+N", "MExpX+N","Now+N", "GetEvParm", "ActionDir"};
 		String[] function;
 		
 		
@@ -248,7 +248,7 @@ public class CreateActionExpression  {
 		Expression[] sequence = new Expression[2];
 		Expression createAction;
 		
-		String[] functionTags = {"Const", "Table", "VSPE", "MX+N","MLogX+N", "MExpX+N","Now+N", "GetEvParm"};
+		String[] functionTags = {"Const", "Table", "VSPE", "MX+N","MLogX+N", "MExpX+N","Now+N", "GetEvParm", "ActionDir"};
 		String[] function;
 		
 		int posDann = line.indexOf("DANN");
@@ -377,6 +377,7 @@ public class CreateActionExpression  {
 			case "MExpX+N":		result = new MExpXPlusN(function[1]);  break;
 			case "Now+N":		result = new CreateValue(Type.longinteger, property, new Constant(calculation.createValue(Type.integer,  Integer.parseInt(function[1] )))); break;
 			case "GetEvParm":	result = new GetValueFromValueList(Value.VALUE_BY_NAME_EVENT_PARAMS, function[1]);  break;
+			case "ActionDir":	result = new DirectionToReference(function[1]);  break;
 			}
 		}
 		return result;

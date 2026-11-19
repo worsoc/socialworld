@@ -5,11 +5,11 @@ What the automated tests check, what they assume, and what they need to run.
 | | |
 |---|---|
 | **Framework** | JUnit 5 with AssertJ |
-| **Test classes** | 64 |
-| **Test methods** | 560 active, 1 commented out |
+| **Test classes** | 69 |
+| **Test methods** | 609 active, 1 commented out |
 | **Database** | no test writes to MariaDB; a few tests read from it and skip themselves without it or with an empty table |
 | **Runs in CI** | yes, in a fresh clone without `application.properties` |
-| **Last updated** | 2026-11-18 |
+| **Last updated** | 2026-11-19 |
 
 > Keep this file up to date: every new or changed test changes this file in the same step.
 
@@ -41,7 +41,10 @@ What the automated tests check, what they assume, and what they need to run.
 | Calculation | `EventReactionDescriptionTest` | 4 | reaction rules as JSON for swpool_erd: readable tags, pair and one function, unknown event type | – |
 | Calculation | `EventInfluenceRulesFromDatabaseTest` | 1 | real rules with real arrays | no database or empty table |
 | Calculation | `PositionCalculatorSectorsTest` | 9 | whether a new position stays in the same search sectors | – |
-| Data | `Action2PerformerDescriptionPoolTest` | 4 | intensity × power, expression parser | – |
+| Calculation | `CalculationVectorTest` | 11 | vector operations in `Calculation`: add, subtract, negate, scale, component product, normalize, length | – |
+| Calculation | `DirectionToReferenceTest` | 10 | tag `ActionDir`: direction to or away from a reference position, height weight, offset, fallback | – |
+| Calculation | `VectorTest` | 7 | `Vector`: normalizing (the zero vector has length 0) and the component product | – |
+| Data | `Action2PerformerDescriptionPoolTest` | 6 | intensity × power, expression parser, constant intensity of the moves | – |
 | Data | `FunctionPoolTest` | 5 | building a matrix from flat arrays, table functions under func_id 0..10, func_ids for functions created at runtime | – |
 | Data | `GaussPoolAAACMMappingTest` | 4 | mapping of the two drawn indices | – |
 | Data | `CreateAnimalInfluenceTypeTest` | 4 | the influence type is the character of the attribute array, the same for every event type | – |
@@ -59,7 +62,7 @@ What the automated tests check, what they assume, and what they need to run.
 | DCT | `EventInfluenceCatalogTest` | 6 | reading event_situations.csv and event_influences.csv | – |
 | DCT | `EventInfluenceGeneratorTest` | 11 | generated event influence rules: tiers (hunger and tiredness at the ideal), order, factor, one character per influence type, neutral rule, need of sleep and food per character | – |
 | DCT | `State2ActionGeneratorTest` | 12 | state-to-action rules per character: sleep and eat at the ideal, sleep for sleepHours, own rules from the most pronounced levels, fallback | – |
-| DCT | `EventReactionGeneratorTest` | 13 | reaction rules: 7 styles × 16 variants + 4 former types per family, 540 rules | – |
+| DCT | `EventReactionGeneratorTest` | 17 | reaction rules: 7 styles × 16 variants + 4 former types per family, 540 rules; moves go away from the event (`ActionDir`); test flight | – |
 | DCT | `AttributeCharacterOverviewTest` | 11 | overview of arrays and matrices per character | partly: no database or empty table |
 | DCT | `AttributeMatrixCellTest` | 6 | text of a matrix cell | – |
 | DCT | `AttributeMatrixTargetsTest` | 8 | target values of a matrix | partly: no database or empty table |
@@ -73,9 +76,9 @@ What the automated tests check, what they assume, and what they need to run.
 | PCT | `PerceptionSqlExportTest` | 5 | SQL export, nothing gets overwritten | partly: no `swpool_epd.sql` |
 | PCT | `PerceptionCreationToolTest` | 8 | store, table, texts, dialog | dialog: no screen |
 | Display | `VisualModelTest` | 21 | the model between the simulation threads and the display, remaining duration counted down between two reports | – |
-| Display | `ActionGridTest` | 20 | action families, short names, fading, field under the mouse | – |
+| Display | `ActionGridTest` | 22 | action families, short names, fading, field under the mouse, own colour for fly | – |
 | Display | `AttributeMatrixTest` | 23 | colour scale, sorting, the two blocks of 50, change mark | – |
-| Display | `ObjectDetailTest` | 22 | detail column, type of the human, last actions, history of one human, selection by click | – |
+| Display | `ObjectDetailTest` | 25 | detail column, type of the human, direction of the running move, last actions, history of one human, selection by click | – |
 | Display | `PopulationHistoryTest` | 11 | history of all humans: families, mean, percentiles | – |
 | Display | `AutomaticSelectionTest` | 13 | the detail column follows the largest change | – |
 | Display | `PictureSequenceTest` | 9 | figures and timing of the picture sequence in the action grid | – |
@@ -431,6 +434,55 @@ Evaluates a sample of the real rules of `swpool_eid` (every 97th) with all real 
 - **Assumes:** positions are in millimetres, the height does not count.
 - **Not checked:** the re-sorting in `Simulation.changePosition` itself, it needs a running simulation.
 
+### `CalculationVectorTest`
+
+`src/test/java/org/socialworld/calculation/CalculationVectorTest.java`
+
+Vector operations in `Calculation`, added for the reaction direction `ActionDir` (ERD X2, step X2.1a). The arithmetic itself is done by `Vector`.
+
+| Group | Tests | Checks |
+|---|---|---|
+| Arithmetic | `addition_addsVectors`, `subtraction_subtractsVectors`, `negate_turnsVectorAround`, `multiplication_vectorTimesNumber_bothOrders` | vector + vector, vector − vector, −vector, vector × number and number × vector with integer and float |
+| Component product | `multiplyComponents_isComponentWise_notCrossProduct` | (x1·x2, y1·y2, z1·z2), not the cross product |
+| Normalize and length | `normalize_givesLengthOne`, `normalize_zeroVector_staysZero_withLengthZero`, `length_ofVector` | length 1 in the same direction; the zero vector stays (0,0,0) with length 0; lengths 5 and 7 |
+| No side effects | `results_areUnchangeable_andOperandsStayUnchanged` | results are new unchangeable vectors; the operand keeps its values and is not marked normalized |
+| Wrong operands | `mixedOrMissingOperands_giveNothing` | vector with number in addition, vector × vector in multiplication, Nothing and non-vectors give Nothing |
+| Comparison | `compareEqual_worksForVectorsNow` | `compareEqual` and `compareNotEqual` work for vectors, since subtraction of vectors works now |
+
+- **Assumes:** only values of type `vector` count as vectors; a `Direction` value (from position − position) is not accepted.
+
+### `DirectionToReferenceTest`
+
+`src/test/java/org/socialworld/calculation/expressions/DirectionToReferenceTest.java`
+
+The expression of the tag `<ActionDir>L;kz;(ox,oy,oz);(fx,fy,fz)</ActionDir>` (ERD X2, step X2.1b), evaluated only through an argument list with `referencePosition` and `actorPosition`, without simulation.
+
+| Group | Tests | Checks |
+|---|---|---|
+| To or away | `negativeLength_pointsAwayFromTheReference`, `positiveLength_pointsToTheReference` | reference (0,0,0), actor (3000,4000,0): L = −5 gives (3,4,0), L = +5 gives (−3,−4,0) |
+| Height | `kzZero_ignoresTheHeight_andKeepsTheLength`, `kzOne_isSpatial_andTheOffsetIsAddedAfterwards` | kz = 0 drops the height difference and keeps length L; kz = 1 normalizes in space, the offset comes on top |
+| Fallback | `samePlace_givesTheFallbackPlusOffset`, `belowMinimalDistance_givesTheFallback`, `missingPosition_givesTheFallback` | same place, distance below 100 mm = 0.1 m (also when only the height differs and kz = 0), or a missing position give the fallback, plus the offset |
+| Optional parts | `missingParts_meanNoOffsetAndNoFallback` | without offset and fallback both are (0,0,0) |
+| Formula | `wrongFormulas_giveAnInvalidExpression` | too few or too many parts, no number, no vector of three numbers: the expression is invalid |
+| Sharing | `sameParameters_shareTheFuncID` | equal parameters (blanks do not matter) share one function and its func_id |
+
+- **Assumes:** both positions are values of type `vector` in millimetres; what the reference is, is decided by the place that evaluates the rule (ERD: the event position, from X2.2 on).
+- **Not checked:** the tag inside `CreateActionExpression` (building a whole action needs the simulation); that comes with X2.2 and the run.
+
+### `VectorTest`
+
+`src/test/java/org/socialworld/calculation/geometry/VectorTest.java`
+
+| Test | Checks |
+|---|---|
+| `normalize_nonZero_isNormalizedWithLengthOne` | (3,4,0) becomes (0.6,0.8,0), is marked normalized, length 1 |
+| `normalize_zeroVector_isNotNormalized_andHasLengthZero` | the zero vector stays (0,0,0), is not marked normalized, length 0 (before 2026-11-19 it was marked and `length()` gave 1) |
+| `normalize_tinyVector_becomesZeroVector_withLengthZero` | a vector shorter than 0.00001 becomes the zero vector with length 0 |
+| `mulComponents_multipliesInPlace_componentByComponent` | (2,3,4) · (−1,0.5,0) = (−2,1.5,0), in place |
+| `mulComponents_resetsNormalizedFlag` | after the product the length is calculated again |
+| `mulComponents_onUnchangeableVector_throws` | an unchangeable vector refuses the change |
+| `mulComponents_onNothing_staysNothing` | the Nothing vector stays unchanged |
+
 ---
 
 ## Data
@@ -445,6 +497,8 @@ Evaluates a sample of the real rules of `swpool_eid` (every 97th) with all real 
 | `intensityTimesPower_isDividedByTheScale` | `DIV(MUL(30.0, 5000), 100)` gives 1500.0 as a float |
 | `commaInsideTheFirstOperand_isNotTheSeparator` | `SUB(MUL(6,7),2)` gives 40 |
 | `commaOnlyInTheSecondOperand_worksAsBefore` | `SUB(50,MUL(6,7))` gives 8 |
+| `moveIntensityConstant_isTheFloatingPointHundred` | `CONST_MOVE_EVENT_INTENSITY` gives 100.0 as a float (100 mm = 0.1 m per move event) |
+| `everyMoveMode_givesTheEventAnIntensity` | walk, run, sneak, jump, swim and fly have 4 functions, the fourth gives `event_intensity` = `MOVE_EVENT_INTENSITY` (quick solution 2026-11-19, so that moves really move) |
 
 ### `FunctionPoolTest`
 
@@ -746,14 +800,18 @@ The two sources of the generated event influence rules: `event_situations.csv` (
 | `theTypeGivesStyleAndVariant` | 112 former types from, 116 types; 0 observer, 52 turning away, 111 brawler; 46 is c 2, e 1, k 1 |
 | `observer0_looksShortlyInAGoodMood_otherwiseNothing` | `mood >= 5000` → look at the causer, 5 s |
 | `observer5_looksInABadMood_touchesInAGoodOne` | `mood < 5000` look, else hand at the causer |
-| `fearful46_sneaksLongWhenBrave_otherwiseWalksAwayLong` | `courage >= 5000` sneak 6 s in the direction of the type, else walk 15 s |
+| `fearful46_sneaksLongWhenBrave_otherwiseWalksAwayLong` | `courage >= 5000` sneak 6 s, else walk 15 s, both away from the event (`ActionDir`) |
 | `turningAway52_walksAway_otherwiseScreamsBack` | walk 5 s, else sayScream |
 | `echo68_screamsBack_otherwisePunches` | sayScream, else punch (7 / 74) at the causer |
 | `echo_answersInTheMannerOfTheFamily` | scream 102, say 101, whisper 103, looked at 101, touched 102 |
 | `indifferent_withoutFallbackNothing_withFallbackALookUnderTheOppositeCondition` | 80: no rule; 85: `mood >= 5000` → look |
 | `brawler_punchesShort_andTakesTheClubForOneBlowWhenLong` | 96 punch 2 s, 104 club (6 / 67) 1 s, not stretched |
 | `formerTypes_lookElseHand_withTheLoudnessOnlyForTheScream` | 112 with `say_loudness > 50` / `> 30`, hand now with the causer as target; 115 looked at without loudness |
-| `direction_dependsOnTheType_withoutMinusZero` | 0 `(5.00,0.00,0)`, 29 `(0.00,5.00,0)`, 87 `(0.00,-5.00,0)` |
+| `awayFromEvent_isTheTagActionDir_withTheTypeDirectionAsFallback` | `<ActionDir>-5;0;(0,0,0);(5.00,0.00,0)</ActionDir>` for type 0, the formula gives a valid `DirectionToReference` |
+| `onlyMoves_haveADirection_andItIsAlwaysAwayFromTheEvent` | in all rules of all families only move entries (fearful, turning away, also as fallback) have a direction, always `awayFromEvent` of their type |
+| `testFly_letsTheFearfulFlyAwayAndUp_everythingElseStays` | with the test switch (DCT "Test: fly") every sneak becomes fly with `flyAwayFromEvent`, same conditions and duration; all other entries stay as without the switch |
+| `flyAwayFromEvent_isSpatialWithAnUpwardOffset` | `<ActionDir>-5;1;(0,0,3);(5.00,0.00,0)</ActionDir>` for type 0, a valid `DirectionToReference` |
+| `direction_dependsOnTheType_withoutMinusZero` | the fallback direction: 0 `(5.00,0.00,0)`, 29 `(0.00,5.00,0)`, 87 `(0.00,-5.00,0)` |
 | `everyRule_namesItsPair_andBecomesOneChain` | all 540 read back as `EventReactionDescription`: event type and reaction type match, one function, no escaping, no `null`, no `'` |
 
 - **Needs:** no database.
@@ -954,6 +1012,7 @@ The display of the running simulation (`SimDashboard`). The panels are built but
 | Group | Checks |
 |---|---|
 | Families | every `ActionType` except `ignore` has a family; the colours differ from each other and from the idle gray |
+| Fly | `runningFly_hasTheConspicuousFlyColor_otherMovesKeepTheFamilyColor`, `flyColor_differsFromAllFamilyColorsAndTheIdleColor`: a running fly has `COLOR_FLY` (test flight, ERD X2 T2), other moves keep the family colour, no type no colour; `COLOR_FLY` differs from all family colours and the idle gray |
 | Short names | every `ActionMode` except `ignore` has a unique name of at most 8 characters |
 | Field | a running action has the full colour, an ended one fades to gray; share of the remaining duration, counted down between two reports; black or white text by contrast |
 | Mouse | position to ID with IDs starting at 1, positions outside stay in range; tool tip text |
@@ -980,7 +1039,7 @@ The display of the running simulation (`SimDashboard`). The panels are built but
 |---|---|
 | Last actions | newest first; the oldest drops out when full; ignored actions are left out; a snapshot does not change afterwards |
 | History of one human | unknown humans are skipped; one sample per interval; oldest first and forgets beyond its length |
-| Texts | current action or idle, its remaining time counted down between two reports; change with arrow on the display scale; type of the human as character number and influence type (`Typ 4 (InfluenceType 3)`, since 2026-11-18); position in meters with a decimal point; age and interruption |
+| Texts | current action or idle, its remaining time counted down between two reports; change with arrow on the display scale; type of the human as character number and influence type (`Typ 4 (InfluenceType 3)`, since 2026-11-18); position in meters with a decimal point; direction of the running move action (`Bewegungsrichtung x 3.54, y 3.54, z 3.01`, `Bewegungsrichtung keine` without a running move, since 2026-11-19), the model keeps the action reported last; age and interruption |
 | Graphics | share of the bar; the scale of the history follows the values and keeps a smallest span |
 | Selection | a press selects the right human in the grid and in the sorted matrix; a press on the head of the matrix selects nobody |
 

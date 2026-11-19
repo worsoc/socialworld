@@ -128,6 +128,27 @@ public class EventReactionGenerator {
 		return reactionType % COUNT_VARIANTS / 8 == 1;
 	}
 
+	/** Upward part of the test flight: away from the event and clearly up. */
+	static final String FLY_OFFSET = "(0,0,3)";
+
+	private final boolean testFly;
+
+	public EventReactionGenerator() {
+		this(false);
+	}
+
+	/**
+	 * @param testFly true for the test rules: the fearful style flies away from the event and up
+	 *                instead of sneaking (concept ERD X2, test T1); to undo, generate again without it
+	 */
+	public EventReactionGenerator(boolean testFly) {
+		this.testFly = testFly;
+	}
+
+	public boolean isTestFly() {
+		return testFly;
+	}
+
 	/** Removes all rules of the store and writes one rule for every family and reaction type that reacts. */
 	public Result generate(EventReactionStore store) {
 		int countRules = 0;
@@ -154,7 +175,7 @@ public class EventReactionGenerator {
 
 	/** @return the rule of the pair, null if this reaction type does not react to the family */
 	public JsonEventReactionDescription buildRule(EventReactionFamily family, EventType eventType, int reactionType) {
-		List<EventReactionDescriptionEntry> entries = entries(family, reactionType);
+		List<EventReactionDescriptionEntry> entries = entries(family, reactionType, testFly);
 		if (entries.isEmpty()) return null;
 
 		JsonEventReactionDescription rule = new JsonEventReactionDescription();
@@ -165,6 +186,10 @@ public class EventReactionGenerator {
 	}
 
 	static List<EventReactionDescriptionEntry> entries(EventReactionFamily family, int reactionType) {
+		return entries(family, reactionType, false);
+	}
+
+	static List<EventReactionDescriptionEntry> entries(EventReactionFamily family, int reactionType, boolean testFly) {
 		List<EventReactionDescriptionEntry> entries = new ArrayList<EventReactionDescriptionEntry>();
 
 		if (reactionType >= FIRST_FORMER_TYPE) {
@@ -180,14 +205,14 @@ public class EventReactionGenerator {
 		if (style == Style.indifferent) {
 			// no own action; with fallback it reacts as an observer when its condition does not hold
 			if (hasFallback(reactionType)) {
-				entries.add(action(Style.observer, family, reactionType, longer, OPPOSITE_CONDITIONS[c]));
+				entries.add(action(Style.observer, family, reactionType, longer, OPPOSITE_CONDITIONS[c], testFly));
 			}
 			return entries;
 		}
 
-		entries.add(action(style, family, reactionType, longer, CONDITIONS[c]));
+		entries.add(action(style, family, reactionType, longer, CONDITIONS[c], testFly));
 		if (hasFallback(reactionType)) {
-			entries.add(action(style.fallback(), family, reactionType, longer, OPPOSITE_CONDITIONS[c]));
+			entries.add(action(style.fallback(), family, reactionType, longer, OPPOSITE_CONDITIONS[c], testFly));
 		}
 		return entries;
 	}
@@ -195,17 +220,26 @@ public class EventReactionGenerator {
 	/** The action of a style for a family (table 4.1), with the values of table 4.3. */
 	static EventReactionDescriptionEntry action(Style style, EventReactionFamily family, int reactionType, boolean longer,
 			String condition) {
+		return action(style, family, reactionType, longer, condition, false);
+	}
+
+	static EventReactionDescriptionEntry action(Style style, EventReactionFamily family, int reactionType, boolean longer,
+			String condition, boolean testFly) {
 		switch (style) {
 		case observer:
 			return entry(condition, ActionType.examine, ActionMode.look, 60, "<MX+N>8;0.015;0</MX+N>", 5000, longer, CAUSER, null);
 		case toucher:
 			return entry(condition, ActionType.touch, ActionMode.hand, 58, "<MX+N>8;0.013;23</MX+N>", 2000, longer, CAUSER, null);
 		case fearful:
+			if (testFly) {
+				return entry(condition, ActionType.move, ActionMode.fly, 50, "<MX+N>8;0.015;23</MX+N>", 2000, longer, null,
+						flyAwayFromEvent(reactionType));
+			}
 			return entry(condition, ActionType.move, ActionMode.sneak, 50, "<MX+N>8;0.015;23</MX+N>", 2000, longer, null,
-					direction(reactionType));
+					awayFromEvent(reactionType));
 		case turningAway:
 			return entry(condition, ActionType.move, ActionMode.walk, 50, "<MX+N>8;0.015;23</MX+N>", 5000, longer, null,
-					direction(reactionType));
+					awayFromEvent(reactionType));
 		case echo:
 			return entry(condition, ActionType.say, echoMode(family), 70, "<MX+N>8;0.03;0</MX+N>", 1000, longer, null, null);
 		case brawler:
@@ -243,6 +277,23 @@ public class EventReactionGenerator {
 		return entry(condition, ActionType.touch, ActionMode.hand, 58, "<MX+N>8;0.013;23</MX+N>", 2000, false, CAUSER, null);
 	}
 
+	/**
+	 * Away from the event, horizontally, length 5 (concept ERD X2): the tag ActionDir with the fixed direction
+	 * of the type as fallback, for when the event gives no direction (same place, no position).
+	 */
+	static String awayFromEvent(int reactionType) {
+		return String.format(Locale.ROOT, "<ActionDir>%.0f;0;(0,0,0);%s</ActionDir>", -DIRECTION_LENGTH, direction(reactionType));
+	}
+
+	/**
+	 * Test flight (T1): away from the event in space (kz = 1) and up by FLY_OFFSET; the fallback
+	 * is the fixed direction of the type, the offset comes on top of it as well.
+	 */
+	static String flyAwayFromEvent(int reactionType) {
+		return String.format(Locale.ROOT, "<ActionDir>%.0f;1;%s;%s</ActionDir>", -DIRECTION_LENGTH, FLY_OFFSET,
+				direction(reactionType));
+	}
+
 	/** @return the fixed direction of a reaction type: angle t × 360° / 116, length 5, two decimals */
 	static String direction(int reactionType) {
 		double angle = Math.toRadians(reactionType * 360.0 / COUNT_REACTION_TYPES);
@@ -264,7 +315,7 @@ public class EventReactionGenerator {
 		entry.intensity = intensity;
 		entry.duration = constant(Integer.toString(longer ? duration * LONG_FACTOR : duration));
 		if (target != null) entry.target = target;
-		if (direction != null) entry.direction = constant(direction);
+		if (direction != null) entry.direction = direction;
 		return entry;
 	}
 

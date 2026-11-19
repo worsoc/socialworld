@@ -39,6 +39,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import org.socialworld.actions.AbstractAction;
+import org.socialworld.actions.move.ActionMove;
 import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.attributes.Position;
@@ -46,6 +47,7 @@ import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.IObjectReceiver;
 import org.socialworld.calculation.ObjectRequester;
 import org.socialworld.calculation.Value;
+import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.core.EventType;
 import org.socialworld.core.Simulation;
 import org.socialworld.objects.Human;
@@ -278,6 +280,7 @@ public class SimDashboard implements ISimVisualization, IObjectReceiver {
 		for (ActionFamily family : ActionFamily.values()) {
 			legend.add(createLegendEntry(family.getLabel(), family.getColor()));
 		}
+		legend.add(createLegendEntry("fly (Test)", ActionFamily.COLOR_FLY));
 		legend.add(createLegendEntry("Unt\u00E4tig", ActionGridPanel.COLOR_IDLE));
 		legend.add(new JLabel("Zahl oben rechts: Intensit\u00E4t.  Balken: Restdauer.  Roter Rahmen: unterbrochen."));
 		return legend;
@@ -309,7 +312,7 @@ public class SimDashboard implements ISimVisualization, IObjectReceiver {
 		history.record(snapshot, nowMillis);
 		population.record(snapshot, nowMillis);
 		populationPanel.setState(population.samples(), nowMillis);
-		detail.setState(snapshot, history, nowMillis, selectedObject, readSelectedPosition(), readSelectedType(),
+		detail.setState(snapshot, history, nowMillis, selectedObject, readSelectedPosition(), readSelectedMove(snapshot), readSelectedType(),
 				pictureMode ? "Bildfolge l\u00E4uft, Klicks sind abgeschaltet" : automatic.describe(nowMillis));
 	}
 
@@ -349,6 +352,24 @@ public class SimDashboard implements ISimVisualization, IObjectReceiver {
 		if (position.checkIsObjectNothing()) return "Position unbekannt";
 
 		return ObjectDetailPanel.positionText(position.getX(token), position.getY(token), position.getZ(token));
+	}
+
+	/**
+	 * The direction of the running move action of the selected human. simobj_directionMove is not
+	 * used: PositionCalculator has no grant to write it (2026-11-19), it always stays (0,0,0).
+	 */
+	private String readSelectedMove(VisualModel.Snapshot snapshot) {
+		if (selectedObject == VisualModel.NO_OBJECT) return "";
+		return moveTextOf(model.getLastAction(selectedObject), snapshot.get(selectedObject).acting);
+	}
+
+	static String moveTextOf(Object action, boolean acting) {
+		if (!acting || !(action instanceof ActionMove)) return ObjectDetailPanel.moveText(0f, 0f, 0f);
+
+		Vector direction = ((ActionMove) action).getDirection();
+		if (direction == null || direction.checkIsObjectNothing()) return ObjectDetailPanel.moveText(0f, 0f, 0f);
+
+		return ObjectDetailPanel.moveText(direction.getX(), direction.getY(), direction.getZ());
 	}
 
 	/**

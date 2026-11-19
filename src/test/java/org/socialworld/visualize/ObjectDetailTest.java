@@ -206,6 +206,30 @@ public class ObjectDetailTest {
 	}
 
 	@Test
+	void moveText_showsTheDirection_withADecimalPoint() {
+		assertThat(ObjectDetailPanel.moveText(3.5355f, 3.5355f, 3.0071f)).isEqualTo("Bewegungsrichtung x 3.54, y 3.54, z 3.01");
+		assertThat(ObjectDetailPanel.moveText(0f, 0f, 0f)).isEqualTo("Bewegungsrichtung keine");
+	}
+
+	@Test
+	void moveTextOf_onlyForARunningMove() {
+		assertThat(SimDashboard.moveTextOf(null, true)).isEqualTo("Bewegungsrichtung keine");
+		assertThat(SimDashboard.moveTextOf(new Object(), true)).isEqualTo("Bewegungsrichtung keine");
+	}
+
+	@Test
+	void lastAction_isTheObjectReportedLast() {
+		VisualModel visual = new VisualModel();
+		Object first = new Object();
+		Object second = new Object();
+
+		assertThat(visual.getLastAction(1)).isNull();
+		visual.startAction(1, first, ActionType.move, ActionMode.fly, 50f, 2000, 2000, 50, 0);
+		visual.startAction(1, second, ActionType.move, ActionMode.walk, 50f, 2000, 2000, 50, 0);
+		assertThat(visual.getLastAction(1)).isSameAs(second);
+	}
+
+	@Test
 	void describe_tellsAgeAndInterruption() {
 		act(1, ActionType.talk, ActionMode.askScream);
 		model.stopAction(1, false, 1000);

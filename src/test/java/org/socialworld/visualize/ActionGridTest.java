@@ -104,6 +104,23 @@ public class ActionGridTest {
 	}
 
 	@Test
+	void runningFly_hasTheConspicuousFlyColor_otherMovesKeepTheFamilyColor() {
+		model.startAction(1, new Object(), ActionType.move, ActionMode.fly, 62f, 10000, 4000, 120, 0);
+
+		assertThat(ActionGridPanel.fillColor(state(), 99999)).isEqualTo(ActionFamily.COLOR_FLY);
+		assertThat(ActionFamily.colorOf(ActionType.move, ActionMode.sneak)).isEqualTo(ActionFamily.MOVEMENT.getColor());
+		assertThat(ActionFamily.colorOf(null, ActionMode.fly)).isNull();
+	}
+
+	@Test
+	void flyColor_differsFromAllFamilyColorsAndTheIdleColor() {
+		for (ActionFamily family : ActionFamily.values()) {
+			assertThat(ActionFamily.COLOR_FLY).as(family.name()).isNotEqualTo(family.getColor());
+		}
+		assertThat(ActionFamily.COLOR_FLY).isNotEqualTo(ActionGridPanel.COLOR_IDLE);
+	}
+
+	@Test
 	void ignoredActionType_staysIdle() {
 		model.startAction(1, new Object(), ActionType.ignore, ActionMode.ignore, 0f, 0, 0, 0, 0);
 

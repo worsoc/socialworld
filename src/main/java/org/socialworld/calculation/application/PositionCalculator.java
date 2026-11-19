@@ -264,6 +264,15 @@ public class PositionCalculator extends SocialWorldThread {
 	        if (returnSetPosition != WriteAccessToSimulationObject.WRITE_ACCESS_RETURNS_SUCCESS) return returnSetPosition;
 	        updateObjectSearch(state.getObject(), positionOriginal, newPosition);
 	        
+	        if (GlobalSwitches.OUTPUT_DEBUG_MOVE_DIRECTION && eventType.isRelevantForChangingPosition()
+	        		&& eventType.name().startsWith("selfMove")) {
+	        	System.out.println("MOVEDIR 3 position obj " + state.getObjectID() + " " + eventType
+	        			+ " event direction " + (directionEvent == null ? "null" : String.valueOf(directionEvent.getVector(token)))
+	        			+ " strength " + powerEvent + " old power " + powerMoveObject
+	        			+ " new move " + workingVectorMove + " power " + resultingPowerMoveObject
+	        			+ " position " + position);
+	        }
+	        
 	        // Verwendung des geschützten Arbeitsvektors für die finale Richtungsänderung
 	        returnSetMove = hiddenWriteAccess.setMove(new Direction(PropertyName.simobj_directionMove, workingVectorMove, resultingPowerMoveObject));
 	        if (returnSetMove != WriteAccessToSimulationObject.WRITE_ACCESS_RETURNS_SUCCESS) return returnSetMove;

@@ -1,24 +1,20 @@
 /*
-* Social World
-* Copyright (C) 2014  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2014  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.calculation.geometry;
 
 import org.socialworld.calculation.IObjectReceiver;
@@ -157,13 +153,16 @@ public class Vector implements IObjectSender{
 	        this.x = this.x / length;
 	        this.y = this.y / length;
 	        this.z = this.z / length;
+	        this.normalized = true;
 	    } else {
-	        // Ein Nullvektor bleibt ein sauberer Nullvektor und ist mathematisch "fertig"
+	        // Ein Nullvektor bleibt ein sauberer Nullvektor und ist mathematisch "fertig".
+	        // Er hat keine Richtung und die Länge 0, gilt also nicht als normiert
+	        // (sonst gäbe length() fälschlich 1 zurueck).
 	        this.x = 0.0f;
 	        this.y = 0.0f;
 	        this.z = 0.0f;
+	        this.normalized = false;
 	    }
-        this.normalized = true; 
 
 	}	
 	
@@ -317,6 +316,27 @@ public class Vector implements IObjectSender{
 		} else {
 			// Schutz vor unerlaubter Modifikation auf unveränderlichen Instanzen
 			throw new UnsupportedOperationException("Direkte Multiplikation auf unmodifizierbarem Vektor verboten.");
+		}
+	}
+	
+	/**
+	 * The method multiplies component by component with a second vector:
+	 * (x1*x2, y1*y2, z1*z2). This is not the cross product (see crossProduct).
+	 * 
+	 * @param xyz
+	 */
+	public void mulComponents (Vector xyz) {
+		// Barriere: Das "Nichts" multipliziert mit irgendetwas bleibt "Nichts"
+		if (this == objectNothing) return;
+
+		if (this.isMutable) {
+			this.x = this.x * xyz.getX();
+			this.y = this.y * xyz.getY();
+			this.z = this.z * xyz.getZ();
+			this.normalized = false;
+		} else {
+			// Schutz vor unerlaubter Modifikation auf unveränderlichen Instanzen
+			throw new UnsupportedOperationException("Direkte komponentenweise Multiplikation auf unmodifizierbarem Vektor verboten.");
 		}
 	}
 	

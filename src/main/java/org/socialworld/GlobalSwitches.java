@@ -63,4 +63,8 @@ public class GlobalSwitches {
 
 	public static boolean OUTPUT_TICK_RANDOM = false;
 
+	// diagnosis of the move direction (ERD X2, 2026-11-19): lines "MOVEDIR 1" (reaction created),
+	// "MOVEDIR 2" (ActionMove performs), "MOVEDIR 3" (PositionCalculator after a selfMove event)
+	public static boolean OUTPUT_DEBUG_MOVE_DIRECTION = false;
+
 }

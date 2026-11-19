@@ -165,6 +165,14 @@ public class VisualModel {
 	 * @param nowMillis
 	 *            the time of the report; the display counts the remaining duration down from it
 	 */
+	/**
+	 * @return the action reported last for the object (running or ended), null if none or not shown
+	 */
+	public synchronized Object getLastAction(int objID) {
+		if (!isShown(objID)) return null;
+		return lastActions[objID - 1];
+	}
+
 	public synchronized void startAction(int objID, Object action, ActionType type, ActionMode mode,
 			float intensity, long duration, long remainedDuration, int priority, long nowMillis) {
 		if (!isShown(objID)) return;

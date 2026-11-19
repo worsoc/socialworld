@@ -20,6 +20,9 @@ package org.socialworld.datasource.pool;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
+import org.socialworld.actions.ActionMode;
+import org.socialworld.calculation.descriptions.Action2PerformerAssignment;
+import org.socialworld.calculation.descriptions.Action2PerformerDescription;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.expressions.Calculate;
@@ -65,5 +68,31 @@ public class Action2PerformerDescriptionPoolTest {
     assertThat(expression.isValid()).isTrue();
     assertThat(result.getType()).isEqualTo(Type.floatingpoint);
     assertThat(((Number) result.getObject(Type.floatingpoint)).floatValue()).isEqualTo(1500.0f);
+  }
+
+  @Test
+  void moveIntensityConstant_isTheFloatingPointHundred() {
+    Calculate expression = new Calculate(Action2PerformerDescriptionPool.CONST_MOVE_EVENT_INTENSITY, "intensity");
+    Value result = expression.evaluate(new ValueArrayList());
+
+    assertThat(expression.isValid()).isTrue();
+    assertThat(result.getType()).isEqualTo(Type.floatingpoint);
+    assertThat(((Number) result.getObject(Type.floatingpoint)).floatValue()).isEqualTo(100.0f);
+  }
+
+  @Test
+  void everyMoveMode_givesTheEventAnIntensity() {
+    ActionMode[] moves = { ActionMode.walk, ActionMode.run, ActionMode.sneak, ActionMode.jump, ActionMode.swim, ActionMode.fly };
+
+    for (ActionMode mode : moves) {
+      Action2PerformerDescription description = Action2PerformerAssignment.getInstance().getAction2PerformerDescription(mode);
+
+      // direction, acceleration, velocity, intensity
+      assertThat(description.countFunctions()).as(mode.name()).isEqualTo(4);
+      Value intensity = description.getFunction(3).calculate(new ValueArrayList());
+      assertThat(intensity.getName()).as(mode.name()).isEqualTo(Value.VALUE_BY_NAME_EVENT_INTENSITY);
+      assertThat(((Number) intensity.getObject(Type.floatingpoint)).floatValue()).as(mode.name())
+          .isEqualTo(Action2PerformerDescriptionPool.MOVE_EVENT_INTENSITY);
+    }
   }
 }

@@ -54,6 +54,22 @@ enum ActionFamily {
 	/**
 	 * @return the family of the action type, null if the type is null or ignore
 	 */
+	/**
+	 * Conspicuous colour of the test flight (ERD X2, T2): fly stands out from all family colours,
+	 * so that a reaction with the new direction can be found at a glance.
+	 */
+	static final Color COLOR_FLY = new Color(57, 255, 20);
+
+	/**
+	 * @return the colour of an action: COLOR_FLY for fly, else the colour of its family, null without family
+	 */
+	static Color colorOf(ActionType type, ActionMode mode) {
+		ActionFamily family = of(type);
+		if (family == null) return null;
+		if (mode == ActionMode.fly) return COLOR_FLY;
+		return family.getColor();
+	}
+
 	static ActionFamily of(ActionType type) {
 		if (type == null) return null;
 

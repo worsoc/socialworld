@@ -18,6 +18,7 @@
 package org.socialworld.actions.move;
 
 
+import org.socialworld.GlobalSwitches;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.attributes.ActualTime;
@@ -152,6 +153,13 @@ public class ActionMove extends AbstractAction {
 		
 		
 		if (moveCompleted || this.firstStep) 			createMove();
+		
+		if (GlobalSwitches.OUTPUT_DEBUG_MOVE_DIRECTION) {
+			System.out.println("MOVEDIR 2 perform obj " + actor.getObjectID() + " mode " + mode
+					+ " direction " + (direction == null ? "null" : direction.toString())
+					+ " section " + (directionForSection == null ? "null" : directionForSection.toString())
+					+ " first " + firstStep);
+		}
 		this.firstPerforming = false;
 		
 		Event event;

@@ -344,6 +344,9 @@ public class Calculation implements IObjectReceiver{
 				default:
 					return nothing;
 				}
+			case vector:
+				if (op2.getType() == Type.vector) return addVectors(op1, op2);
+				return nothing;
 			default:
 				return nothing;
 			}
@@ -385,6 +388,8 @@ public class Calculation implements IObjectReceiver{
 					return createValue(Type.integer, (int) op1.getObject(Type.integer) * (int) op2.getObject(Type.integer) );
 				case floatingpoint:
 					return createValue(Type.floatingpoint, (int) op1.getObject(Type.integer) * (float) op2.getObject(Type.floatingpoint) );
+				case vector:
+					return scaleVector(op2, numberAsFloat(op1));
 				default:
 					return nothing;
 				}
@@ -394,6 +399,16 @@ public class Calculation implements IObjectReceiver{
 					return createValue(Type.floatingpoint, (float) op1.getObject(Type.floatingpoint) * (int) op2.getObject(Type.integer) );
 				case floatingpoint:
 					return createValue(Type.floatingpoint, (float) op1.getObject(Type.floatingpoint) * (float) op2.getObject(Type.floatingpoint) );
+				case vector:
+					return scaleVector(op2, numberAsFloat(op1));
+				default:
+					return nothing;
+				}
+			case vector:
+				switch (op2.getType() ) {
+				case integer:
+				case floatingpoint:
+					return scaleVector(op1, numberAsFloat(op2));
 				default:
 					return nothing;
 				}
@@ -444,11 +459,90 @@ public class Calculation implements IObjectReceiver{
 					return createValue(Type.integer, (int) op1.getObject(Type.integer) * (-1) );
 			case floatingpoint:
 				return createValue(Type.floatingpoint, (float) op1.getObject(Type.floatingpoint) * (-1F) );
+			case vector:
+				return scaleVector(op1, -1F);
 			default:
 				return nothing;
 			}
 		}
 		return nothing;
+	}
+
+	/**
+	 * Multiplies two vectors component by component: (x1*x2, y1*y2, z1*z2).
+	 * This is not the cross product (see Vector.crossProduct).
+	 *
+	 * @return a vector value, or nothing if an operand is no valid vector
+	 */
+	public Value multiplyComponents(Value op1, Value op2) {
+		Vector v1 = validVector(op1);
+		Vector v2 = validVector(op2);
+		if (v1 == null || v2 == null) return nothing;
+
+		Vector work = new Vector(v1);
+		work.mulComponents(v2);
+		return vectorValue(work.getX(), work.getY(), work.getZ());
+	}
+
+	/**
+	 * @return the vector with length 1 and the same direction, (0,0,0) for the zero vector,
+	 *         or nothing if the operand is no valid vector
+	 */
+	public Value normalize(Value op1) {
+		Vector v1 = validVector(op1);
+		if (v1 == null) return nothing;
+
+		Vector work = new Vector(v1);
+		work.normalize();
+		return vectorValue(work.getX(), work.getY(), work.getZ());
+	}
+
+	/**
+	 * @return the length of a vector as floating point value, or nothing if the operand is no valid vector
+	 */
+	public Value length(Value op1) {
+		Vector v1 = validVector(op1);
+		if (v1 == null) return nothing;
+
+		return createValue(Type.floatingpoint, v1.length());
+	}
+
+	private Value addVectors(Value op1, Value op2) {
+		Vector v1 = validVector(op1);
+		Vector v2 = validVector(op2);
+		if (v1 == null || v2 == null) return nothing;
+
+		Vector work = new Vector(v1);
+		work.add(v2);
+		return vectorValue(work.getX(), work.getY(), work.getZ());
+	}
+
+	private Value scaleVector(Value vector, float scalar) {
+		Vector v1 = validVector(vector);
+		if (v1 == null) return nothing;
+
+		Vector work = new Vector(v1);
+		work.mul(scalar);
+		return vectorValue(work.getX(), work.getY(), work.getZ());
+	}
+
+	/** @return the vector of a value of type vector, or null if there is none */
+	private Vector validVector(Value value) {
+		if (value == null || !value.isValid() || value.getType() != Type.vector) return null;
+
+		Vector vector = getObjectRequester().requestVector(token, value, this);
+		if (vector == null || vector.checkIsObjectNothing()) return null;
+		return vector;
+	}
+
+	/** The result is a new unchangeable vector, so no caller can change it in place. */
+	private Value vectorValue(float x, float y, float z) {
+		return createValue(Type.vector, new Vector(x, y, z));
+	}
+
+	private float numberAsFloat(Value number) {
+		if (number.getType() == Type.integer) return (int) number.getObject(Type.integer);
+		return (float) number.getObject(Type.floatingpoint);
 	}
 	
 	

@@ -33,6 +33,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.awt.List;
 import java.awt.Button;
+import java.awt.Checkbox;
 import java.awt.TextField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -89,6 +90,7 @@ public class DataCreationTool {
 	double matrixT[][];
 	private final JLabel lblMatrizen = new JLabel("Matrizen:");
 	private final JLabel lblAnzeigeMatrix = new JLabel("Anzeige Matrix:");
+	private final Checkbox checkboxEventReactionTestFly = new Checkbox("Test: fly", false);
 
 	/**
 	 * Launch the application.
@@ -394,6 +396,10 @@ public class DataCreationTool {
 		});
 		buttonEventReactionDB.setBounds(938, 293, 77, 26);
 		frame.getContentPane().add(buttonEventReactionDB);
+
+		// test of the reaction direction (ERD X2, T1): the fearful style flies away and up
+		checkboxEventReactionTestFly.setBounds(1021, 293, 100, 26);
+		frame.getContentPane().add(checkboxEventReactionTestFly);
 		
 		buttonSave.addActionListener(new ActionListener() 
 		{
@@ -986,15 +992,17 @@ public class DataCreationTool {
 	}
 
 	private void saveEventReactionRulesToDB() {
+		boolean testFly = checkboxEventReactionTestFly.getState();
 		int answer = JOptionPane.showConfirmDialog(frame,
 				"Alle Regeln in swpool_erd werden gelöscht und " + EventReactionGenerator.countRules()
-						+ " Reaktionsregeln neu geschrieben (7 Stile × 16 Ausprägungen + 4 bisherige, je Event-Familie).",
+						+ " Reaktionsregeln neu geschrieben (7 Stile × 16 Ausprägungen + 4 bisherige, je Event-Familie)."
+						+ (testFly ? "\nTEST: der Ängstliche fliegt (fly) weg und nach oben statt zu schleichen." : ""),
 				"In DB schreiben", JOptionPane.OK_CANCEL_OPTION);
 		if (answer != JOptionPane.OK_OPTION) return;
 
 		try {
 			EventReactionStore store = new TablePoolEventReactionStore();
-			EventReactionGenerator.Result result = new EventReactionGenerator().generate(store);
+			EventReactionGenerator.Result result = new EventReactionGenerator(testFly).generate(store);
 			System.out.println("Generated event reaction rules: " + result);
 			JOptionPane.showMessageDialog(frame, result + " geschrieben nach " + store.getDescription());
 		} catch (RuntimeException e) {

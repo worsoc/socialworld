@@ -32,11 +32,13 @@ import org.socialworld.actions.handle.ActionHandle;
 import org.socialworld.actions.hear.ActionHear;
 import org.socialworld.actions.move.ActionMove;
 import org.socialworld.actions.say.ActionSay;
+import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.NoObject;
 import org.socialworld.calculation.descriptions.EventReactionAssignment;
+import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.calculation.descriptions.EventReactionDescription;
 import org.socialworld.calculation.descriptions.State2ActionAssignment;
 import org.socialworld.calculation.descriptions.State2ActionDescription;
@@ -395,16 +397,55 @@ public class ActionCreator extends SocialWorldThread {
 	    
 	    localArgs.add(new Value(Type.simulationObject, Value.VALUE_BY_NAME_SIMOBJECT, stateReactor.getObject()));
 	    
+	    // positions for the tag ActionDir (concept ERD X2): the reference of a reaction is the event position
+	    addPositionAsVector(localArgs, Value.VALUE_BY_NAME_ACTION_REFERENCE_POSITION,
+	    		getObjectRequester().requestPosition(token, event.getPosition(), this));
+	    addPositionAsVector(localArgs, Value.VALUE_BY_NAME_ACTION_ACTOR_POSITION,
+	    		getObjectRequester().requestPosition(token, stateReactor.getProperty(token, PropertyName.simobj_position), this));
+	    
 	    // 3. BERECHNUNG
 	    Value result = f_CreateReaction.calculate(localArgs);
+	    
+	    String debugPositions = null;
+	    if (GlobalSwitches.OUTPUT_DEBUG_MOVE_DIRECTION) {
+	    	debugPositions = "ref " + debugVector(localArgs.getValue(Value.VALUE_BY_NAME_ACTION_REFERENCE_POSITION))
+	    			+ " actor " + debugVector(localArgs.getValue(Value.VALUE_BY_NAME_ACTION_ACTOR_POSITION));
+	    }
 	    
 	    // 4. SPEICHERHYGIENE
 	    // Kappt alle Objekt-Referenzen im Puffer sofort nach der Auswertung gegen Memory Loitering
 	    localArgs.clear();
 
-	    return getObjectRequester().requestAction(token, result, this);
+	    AbstractAction reaction = getObjectRequester().requestAction(token, result, this);
+	    
+	    if (GlobalSwitches.OUTPUT_DEBUG_MOVE_DIRECTION && reaction instanceof ActionMove) {
+	    	Vector direction = ((ActionMove) reaction).getDirection();
+	    	System.out.println("MOVEDIR 1 reaction obj " + reactorsObjectID + " to " + event.getEventType()
+	    			+ " mode " + reaction.getMode() + " " + debugPositions
+	    			+ " action direction " + (direction == null ? "null" : direction.toString()));
+	    }
+	    
+	    return reaction;
 	}
 
+	private String debugVector(Value value) {
+		if (value == null || !value.isValid()) return "missing";
+		return String.valueOf(value.getObject(Type.vector));
+	}
+
+
+	/**
+	 * Adds a position as plain vector value with the given name (for the tag ActionDir).
+	 * A missing position is not added; then the tag uses its fallback.
+	 */
+	private void addPositionAsVector(ValueArrayList arguments, String name, Position position) {
+		if (position == null || position.checkIsObjectNothing()) return;
+		
+		Vector vector = position.getVector(token);
+		if (vector == null || vector.checkIsObjectNothing()) return;
+		
+		arguments.add(new Value(Type.vector, name, new Vector(vector.getX(), vector.getY(), vector.getZ())));
+	}
 
 	/**
 	 * The method creates a new action as a reaction to an event.

@@ -55,6 +55,7 @@ class ObjectDetailPanel extends JPanel {
 	private long nowMillis;
 	private int selectedObject = VisualModel.NO_OBJECT;
 	private String position = "";
+	private String move = "";
 	private String type = "";
 	private String selectionReason = "";
 
@@ -62,12 +63,13 @@ class ObjectDetailPanel extends JPanel {
 		setBackground(Color.WHITE);
 	}
 
-	void setState(VisualModel.Snapshot snapshot, AttributeHistory history, long nowMillis, int selectedObject, String position, String type, String selectionReason) {
+	void setState(VisualModel.Snapshot snapshot, AttributeHistory history, long nowMillis, int selectedObject, String position, String move, String type, String selectionReason) {
 		this.snapshot = snapshot;
 		this.history = history;
 		this.nowMillis = nowMillis;
 		this.selectedObject = selectedObject;
 		this.position = position;
+		this.move = move;
 		this.type = type;
 		this.selectionReason = selectionReason;
 		repaint();
@@ -104,6 +106,8 @@ class ObjectDetailPanel extends JPanel {
 		g.setFont(FONT_TEXT);
 		g.drawString(position, MARGIN, y);
 		y += LINE_HEIGHT;
+		g.drawString(move, MARGIN, y);
+		y += LINE_HEIGHT;
 		// the line stays free without a reason, so that the column does not jump
 		g.drawString(selectionReason, MARGIN, y);
 		return y + LINE_HEIGHT + 4;
@@ -112,7 +116,7 @@ class ObjectDetailPanel extends JPanel {
 	private int paintAction(Graphics2D g, VisualModel.ObjectState state, int y) {
 		int textX = MARGIN;
 		if (state.acting && ActionFamily.of(state.actionType) != null) {
-			paintChip(g, ActionFamily.of(state.actionType).getColor(), MARGIN, y);
+			paintChip(g, ActionFamily.colorOf(state.actionType, state.actionMode), MARGIN, y);
 			textX += CHIP_SIZE + 5;
 		}
 
@@ -209,7 +213,8 @@ class ObjectDetailPanel extends JPanel {
 
 		for (VisualModel.FinishedAction action : state.recentActions) {
 			if (action == null) return;
-			paintChip(g, ActionFamily.of(action.type).getColor(), MARGIN, y);
+			Color chip = ActionFamily.colorOf(action.type, action.mode);
+			if (chip != null) paintChip(g, chip, MARGIN, y);
 			g.drawString(describe(action, nowMillis), MARGIN + CHIP_SIZE + 5, y);
 			y += LINE_HEIGHT;
 		}
@@ -277,6 +282,14 @@ class ObjectDetailPanel extends JPanel {
 	 */
 	static String positionText(int x, int y, int z) {
 		return String.format(Locale.ROOT, "Position x %.1f m, y %.1f m, z %.1f m", x / 1000.0, y / 1000.0, z / 1000.0);
+	}
+
+	/**
+	 * The direction of the running move action, as the reaction rule gave it (e.g. by the tag ActionDir).
+	 */
+	static String moveText(float x, float y, float z) {
+		if (x == 0f && y == 0f && z == 0f) return "Bewegungsrichtung keine";
+		return String.format(Locale.ROOT, "Bewegungsrichtung x %.2f, y %.2f, z %.2f", x, y, z);
 	}
 
 	static String describe(VisualModel.FinishedAction action, long nowMillis) {

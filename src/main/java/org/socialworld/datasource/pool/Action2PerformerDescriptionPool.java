@@ -41,6 +41,16 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 	static final String CONST_ATTRIBUTE_VALUE_SCALE =
 			"CONST(" + Type.integer.getIndex() + " " + AttributeArray.ATTRIBUTE_VALUE_SCALE + ")";
 
+	/**
+	 * Quick solution 2026-11-19 (ERD X2 test): the moves had no event intensity, so PositionCalculator
+	 * multiplied their direction by strength 0 and nobody moved. A constant for now: 100 mm = 0.1 m
+	 * per move event, so that moves can be seen in the dashboard; the real intensity of a move
+	 * (damping, scale, pushed bystanders, ground) needs its own concept.
+	 */
+	static final float MOVE_EVENT_INTENSITY = 100.0f;
+	static final String CONST_MOVE_EVENT_INTENSITY =
+			"CONST(" + Type.floatingpoint.getIndex() + " " + MOVE_EVENT_INTENSITY + ")";
+
 
 	
 	
@@ -163,6 +173,10 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 									"GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_MOVE_ACCELERATION + "))" +
 								")" ); 
 				lines.add(0, 2, Value.VALUE_BY_NAME_EVENT_MOVE_VELOCITY);
+				
+				// intensity: constant for now, see MOVE_EVENT_INTENSITY
+				lines.add(0, 3, CONST_MOVE_EVENT_INTENSITY);
+				lines.add(0, 3, Value.VALUE_BY_NAME_EVENT_INTENSITY);
 				
 				break;
 		

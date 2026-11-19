@@ -65,6 +65,11 @@ public class Value {
 	public static final String VALUE_BY_NAME_ACTION_SENTENCE = PRAEFIX_ACTION + "sentence";
 	public static final String VALUE_BY_NAME_ACTION_SENTENCETYPE = PRAEFIX_ACTION + "sentenceType";
 	public static final String VALUE_BY_NAME_ACTION_ANSWERS = PRAEFIX_ACTION + "answers";
+
+	// positions for the tag ActionDir (DirectionToReference); the place that evaluates the rule
+	// decides what the reference is (ERD: the event position)
+	public static final String VALUE_BY_NAME_ACTION_REFERENCE_POSITION = "referencePosition";
+	public static final String VALUE_BY_NAME_ACTION_ACTOR_POSITION = "actorPosition";
 	
 	public static final String VALUE_BY_NAME_ACTION_MOVE_ACCELERATION = "move_acceleration";
 	public static final String VALUE_BY_NAME_ACTION_MOVE_VELOCITY = "move_velocity";

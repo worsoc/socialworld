@@ -193,7 +193,7 @@ class ActionGridPanel extends JPanel {
 
 	static Color fillColor(VisualModel.ObjectState state, long nowMillis) {
 		if (!isVisible(state, nowMillis)) return COLOR_IDLE;
-		return blend(ActionFamily.of(state.actionType).getColor(), COLOR_IDLE, fadedShare(state, nowMillis));
+		return blend(ActionFamily.colorOf(state.actionType, state.actionMode), COLOR_IDLE, fadedShare(state, nowMillis));
 	}
 
 	static float remainingShare(VisualModel.ObjectState state, long nowMillis) {
