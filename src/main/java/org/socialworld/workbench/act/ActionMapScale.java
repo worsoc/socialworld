@@ -23,13 +23,14 @@ import java.util.Map;
 
 /**
  * Maps positions in millimeters to the pixels of the map: the same scale for x
- * and y, all positions visible and centered, y growing upwards.
+ * and y, y growing upwards. Either all positions visible and centered (fitted)
+ * or a fixed area with a fixed scale (see ActionMapFrame, the scrollable map).
  */
 final class ActionMapScale {
 
 	static final int NO_OBJECT = 0;
 
-	private static final int MARGIN = 24;
+	static final int MARGIN = 24;
 	private static final double MINIMUM_SPAN = 20000;
 
 	private final double scale;
@@ -68,6 +69,25 @@ final class ActionMapScale {
 		this.middleY = ((double) minY + maxY) / 2;
 		this.pixelMiddleX = width / 2;
 		this.pixelMiddleY = height / 2;
+	}
+
+	private ActionMapScale(double scale, double middleX, double middleY, int pixelMiddleX, int pixelMiddleY) {
+		this.scale = scale;
+		this.middleX = middleX;
+		this.middleY = middleY;
+		this.pixelMiddleX = pixelMiddleX;
+		this.pixelMiddleY = pixelMiddleY;
+	}
+
+	/** The area from min to max in millimeters fills a panel of the given pixel size at the given scale. */
+	static ActionMapScale forArea(double scale, double minX, double minY, double maxX, double maxY,
+			int pixelWidth, int pixelHeight) {
+		return new ActionMapScale(scale, (minX + maxX) / 2, (minY + maxY) / 2, pixelWidth / 2, pixelHeight / 2);
+	}
+
+	/** pixels per millimeter */
+	double getScale() {
+		return scale;
 	}
 
 	int toPixelX(int x) {

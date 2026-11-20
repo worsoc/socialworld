@@ -77,6 +77,7 @@ public final class ActionCreationTool {
 	private final JTextArea log = new JTextArea(9, 40);
 
 	private Map<Integer, Point> positions = new HashMap<Integer, Point>();
+	private Map<Integer, ActionMode> running = new HashMap<Integer, ActionMode>();
 
 	public void show() {
 		SwingUtilities.invokeLater(this::createAndShowFrame);
@@ -114,7 +115,11 @@ public final class ActionCreationTool {
 		comboMode.addActionListener(event -> showMap());
 
 		JPanel content = new JPanel(new BorderLayout());
-		content.add(map, BorderLayout.CENTER);
+		// fixed scale, the map grows and scrolls instead of zooming out (2026-11-20)
+		JScrollPane scrollMap = new JScrollPane(map);
+		scrollMap.getVerticalScrollBar().setUnitIncrement(16);
+		scrollMap.getHorizontalScrollBar().setUnitIncrement(16);
+		content.add(scrollMap, BorderLayout.CENTER);
 		content.add(createControls(), BorderLayout.EAST);
 		content.add(new JScrollPane(log), BorderLayout.SOUTH);
 		return content;
@@ -127,6 +132,8 @@ public final class ActionCreationTool {
 		buttonStop.addActionListener(event -> stop());
 		JButton buttonCheck = new JButton("Suchbaum prüfen");
 		buttonCheck.addActionListener(event -> checkSearchTree());
+		JButton buttonFit = new JButton("Karte einpassen");
+		buttonFit.addActionListener(event -> map.fitToHumans());
 
 		JPanel fields = new JPanel(new GridLayout(0, 1, 0, 4));
 		fields.add(new JLabel("Verursacher (Klick), Versetzen (Ziehen)"));
@@ -143,6 +150,7 @@ public final class ActionCreationTool {
 		fields.add(buttonPerform);
 		fields.add(buttonStop);
 		fields.add(buttonCheck);
+		fields.add(buttonFit);
 
 		JPanel controls = new JPanel(new BorderLayout());
 		controls.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
@@ -153,6 +161,7 @@ public final class ActionCreationTool {
 
 	private void refresh() {
 		positions = readPositions();
+		running = readRunning();
 		showMap();
 	}
 
@@ -172,13 +181,28 @@ public final class ActionCreationTool {
 		return result;
 	}
 
+	/** the mode of the running action of every human that acts now, for the colours of the map */
+	private Map<Integer, ActionMode> readRunning() {
+		Map<Integer, ActionMode> result = new HashMap<Integer, ActionMode>();
+		ListenedMap<Human> humans = Simulation.getInstance().getObjectMaster().getHumans();
+
+		for (Integer id : positions.keySet()) {
+			Human human = humans.get(id);
+			if (human == null) continue;
+
+			ActionMode mode = human.getRunningActionMode(token);
+			if (mode != null && mode != ActionMode.ignore) result.put(id, mode);
+		}
+		return result;
+	}
+
 	private void showMap() {
 		int causer = (Integer) spinnerCauser.getValue();
 		float range = EventRange.getRangeInMillimeters(selectedMode());
 		List<Integer> inRange = EventRange.getObjectsInRange(causer, range, positions);
 
 		labelRange.setText("Reichweite " + (int) (range / 1000) + " m, " + inRange.size() + " in Reichweite");
-		map.show(positions, causer, range, inRange);
+		map.show(positions, running, causer, range, inRange);
 	}
 
 	private ActionMode selectedMode() {

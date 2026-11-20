@@ -91,9 +91,12 @@ public class ActionMove extends AbstractAction {
 	
 	// movement concept G2 (2026-11-19): the move action keeps its velocity itself (mm/s) and gives
 	// a new Move with the current velocity to every event; v = v + a × Δt from event to event.
-	// Placeholders: start speed 100 mm/s for every mode, no acceleration (numbers not settled yet).
-	static final float INITIAL_SPEED = 100.0f;
-	private float velocity = INITIAL_SPEED;
+	// Numbers V2/V3 (2026-11-20): the start velocity is the base speed of the mode times a tempo factor
+	// intensity / 100, limited to 0.5..1.5 so that the modes stay apart; no acceleration for now.
+	static final float NORMAL_INTENSITY = 100.0f;
+	static final float MIN_TEMPO_FACTOR = 0.5f;
+	static final float MAX_TEMPO_FACTOR = 1.5f;
+	private float velocity = 0.0f;
 	private float acceleration = 0.0f;
 	
 	private static AccessTokenActionMove token = AccessTokenActionMove.getValid();
@@ -160,7 +163,8 @@ public class ActionMove extends AbstractAction {
 		
 		
 		// from the second event on the velocity changes by the acceleration over the event interval
-		if (!this.firstStep) this.velocity = nextVelocity(this.velocity, this.acceleration, mode.getEventIntervalSeconds());
+		if (this.firstStep) this.velocity = startVelocity(mode, this.intensity);
+		else 				this.velocity = nextVelocity(this.velocity, this.acceleration, mode.getEventIntervalSeconds());
 		
 		if (moveCompleted || this.firstStep) 			createMove();
 		// a new Move for every event: a Move is evaluated only once, so each event needs its own
@@ -320,6 +324,13 @@ public class ActionMove extends AbstractAction {
 		return this.firstStep;
 	}
 	
+	/** start velocity = base speed of the mode × intensity / 100, the factor limited to 0.5..1.5 (numbers V2) */
+	static float startVelocity(ActionMode mode, float intensity) {
+		float factor = Float.isNaN(intensity) ? 1.0f : intensity / NORMAL_INTENSITY;
+		factor = Math.max(MIN_TEMPO_FACTOR, Math.min(MAX_TEMPO_FACTOR, factor));
+		return mode.getBaseSpeed() * factor;
+	}
+
 	/** v = v + a × Δt (movement concept G2) */
 	static float nextVelocity(float velocity, float acceleration, float seconds) {
 		return velocity + acceleration * seconds;

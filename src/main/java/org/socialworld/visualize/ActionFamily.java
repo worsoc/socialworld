@@ -25,8 +25,9 @@ import org.socialworld.actions.ActionType;
 /**
  * The action types grouped into few families, so that the colour of a field can be read without a table.
  * The mode is told by a short text: capitals with ! for screaming, brackets for whispering.
+ * Public since 2026-11-20: the one source of the family colours, also for the map of the ACT.
  */
-enum ActionFamily {
+public enum ActionFamily {
 	BODY("K\u00F6rper", SimColorConstants.COLOR_SIENNA),
 	MOVEMENT("Bewegung", SimColorConstants.COLOR_DODGERBLUE),
 	PERCEPTION("Wahrnehmen", SimColorConstants.COLOR_SLATEGRAY),
@@ -43,34 +44,58 @@ enum ActionFamily {
 		this.color = color;
 	}
 
-	String getLabel() {
+	public String getLabel() {
 		return label;
 	}
 
-	Color getColor() {
+	public Color getColor() {
 		return color;
 	}
 
 	/**
-	 * @return the family of the action type, null if the type is null or ignore
-	 */
-	/**
 	 * Conspicuous colour of the test flight (ERD X2, T2): fly stands out from all family colours,
 	 * so that a reaction with the new direction can be found at a glance.
 	 */
-	static final Color COLOR_FLY = new Color(57, 255, 20);
+	public static final Color COLOR_FLY = new Color(57, 255, 20);
 
 	/**
 	 * @return the colour of an action: COLOR_FLY for fly, else the colour of its family, null without family
 	 */
-	static Color colorOf(ActionType type, ActionMode mode) {
+	public static Color colorOf(ActionType type, ActionMode mode) {
 		ActionFamily family = of(type);
 		if (family == null) return null;
 		if (mode == ActionMode.fly) return COLOR_FLY;
 		return family.getColor();
 	}
 
-	static ActionFamily of(ActionType type) {
+	/**
+	 * @return the colour of an action known only by its mode, as {@link #colorOf(ActionType, ActionMode)}
+	 */
+	public static Color colorOfMode(ActionMode mode) {
+		return colorOf(typeOf(mode), mode);
+	}
+
+	/**
+	 * @return the family of an action known only by its mode, null if the mode is null or ignore
+	 */
+	public static ActionFamily ofMode(ActionMode mode) {
+		return of(typeOf(mode));
+	}
+
+	/**
+	 * The modes are numbered by their type: mode index / 10 is the type index
+	 * (sleep 1 .. shit 5 bodilyFunction 0, walk 11 .. fly 16 move 1, .., sayNormal 101 .. sayWhisper 103 say 10).
+	 * @return the type of the mode, null for null and ignore
+	 */
+	static ActionType typeOf(ActionMode mode) {
+		if (mode == null || mode == ActionMode.ignore) return null;
+		return ActionType.getName(mode.getIndex() / 10);
+	}
+
+	/**
+	 * @return the family of the action type, null if the type is null or ignore
+	 */
+	public static ActionFamily of(ActionType type) {
 		if (type == null) return null;
 
 		switch (type) {

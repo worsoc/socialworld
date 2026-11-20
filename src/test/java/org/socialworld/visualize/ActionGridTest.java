@@ -57,6 +57,45 @@ public class ActionGridTest {
 	}
 
 	@Test
+	void typeOfMode_followsTheNumbering() {
+		assertThat(ActionFamily.typeOf(ActionMode.sleep)).isEqualTo(ActionType.bodilyFunction);
+		assertThat(ActionFamily.typeOf(ActionMode.shit)).isEqualTo(ActionType.bodilyFunction);
+		assertThat(ActionFamily.typeOf(ActionMode.walk)).isEqualTo(ActionType.move);
+		assertThat(ActionFamily.typeOf(ActionMode.fly)).isEqualTo(ActionType.move);
+		assertThat(ActionFamily.typeOf(ActionMode.look)).isEqualTo(ActionType.examine);
+		assertThat(ActionFamily.typeOf(ActionMode.hand)).isEqualTo(ActionType.touch);
+		assertThat(ActionFamily.typeOf(ActionMode.takeItem)).isEqualTo(ActionType.equip);
+		assertThat(ActionFamily.typeOf(ActionMode.push)).isEqualTo(ActionType.handleItem);
+		assertThat(ActionFamily.typeOf(ActionMode.weaponClub)).isEqualTo(ActionType.useWeapon);
+		assertThat(ActionFamily.typeOf(ActionMode.punchRightFistUpward)).isEqualTo(ActionType.punch);
+		assertThat(ActionFamily.typeOf(ActionMode.understand)).isEqualTo(ActionType.hear);
+		assertThat(ActionFamily.typeOf(ActionMode.askWhisper)).isEqualTo(ActionType.talk);
+		assertThat(ActionFamily.typeOf(ActionMode.sayScream)).isEqualTo(ActionType.say);
+		assertThat(ActionFamily.typeOf(ActionMode.ignore)).isNull();
+		assertThat(ActionFamily.typeOf(null)).isNull();
+	}
+
+	@Test
+	void everyActionModeHasAFamily_exceptIgnore() {
+		for (ActionMode mode : ActionMode.values()) {
+			if (mode == ActionMode.ignore) {
+				assertThat(ActionFamily.ofMode(mode)).isNull();
+			}
+			else {
+				assertThat(ActionFamily.ofMode(mode)).as(mode.name()).isNotNull();
+			}
+		}
+	}
+
+	@Test
+	void colorOfMode_isTheColorOfTypeAndMode() {
+		assertThat(ActionFamily.colorOfMode(ActionMode.sleep)).isEqualTo(ActionFamily.colorOf(ActionType.bodilyFunction, ActionMode.sleep));
+		assertThat(ActionFamily.colorOfMode(ActionMode.sayNormal)).isEqualTo(ActionFamily.SPEECH.getColor());
+		assertThat(ActionFamily.colorOfMode(ActionMode.fly)).isEqualTo(ActionFamily.COLOR_FLY);
+		assertThat(ActionFamily.colorOfMode(ActionMode.ignore)).isNull();
+	}
+
+	@Test
 	void familyColors_areDistinctAndNotTheIdleColor() {
 		Set<Color> colors = new HashSet<Color>();
 		for (ActionFamily family : ActionFamily.values()) {

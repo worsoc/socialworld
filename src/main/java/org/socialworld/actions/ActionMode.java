@@ -159,6 +159,28 @@ public enum ActionMode {
 	}
 
 	/**
+	 * Base speed in mm/s of a move mode at normal tempo (movement concept, numbers V1, 2026-11-20).
+	 * Placeholders in the order of magnitude of humans. jump is left out (it belongs to blows and
+	 * ground); every other mode has 0. The move action scales it by its intensity (see ActionMove).
+	 */
+	public float getBaseSpeed() {
+		switch (this) {
+		case sneak:
+			return 500.0f;
+		case walk:
+			return 1400.0f;
+		case run:
+			return 4000.0f;
+		case swim:
+			return 700.0f;
+		case fly:
+			return 3000.0f;
+		default:
+			return 0.0f;
+		}
+	}
+
+	/**
 	 * How many seconds lie between two calculations (and so two events) of a running action
 	 * of this mode (concept EID, section 7.1). 0 means the action creates its events once, at its start.
 	 * See ActionEventTiming.
