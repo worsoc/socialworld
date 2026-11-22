@@ -491,6 +491,8 @@ public class CreationTool_EventInfluenceDescription extends JFrame {
         DefaultMutableTreeNode r = new DefaultMutableTreeNode("Rules");
         for (EventType et : EventType.values()) {
             if (et == EventType.nothing) continue;
+            // technical event types have no event influence (and no place in the pools)
+            if (et.isTechnical()) continue;
             
             DefaultMutableTreeNode n = new DefaultMutableTreeNode(et.name());
             

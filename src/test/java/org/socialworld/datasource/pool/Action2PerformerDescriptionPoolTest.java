@@ -21,11 +21,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.socialworld.actions.ActionMode;
+import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.descriptions.Action2PerformerAssignment;
 import org.socialworld.calculation.descriptions.Action2PerformerDescription;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
 import org.socialworld.calculation.expressions.Calculate;
+import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.collections.ValueArrayList;
 
 public class Action2PerformerDescriptionPoolTest {
@@ -71,29 +73,47 @@ public class Action2PerformerDescriptionPoolTest {
   }
 
   @Test
-  void moveIntensityConstant_isTheFloatingPointHundred() {
-    Calculate expression = new Calculate(Action2PerformerDescriptionPool.CONST_MOVE_EVENT_INTENSITY, "intensity");
-    Value result = expression.evaluate(new ValueArrayList());
-
-    assertThat(expression.isValid()).isTrue();
-    assertThat(result.getType()).isEqualTo(Type.floatingpoint);
-    assertThat(((Number) result.getObject(Type.floatingpoint)).floatValue()).isEqualTo(100.0f);
-  }
-
-  @Test
-  void everyMoveMode_givesTheEventAnIntensity() {
+  void everyMoveMode_givesTheEventTheIntensityOfTheAction() {
     ActionMode[] moves = { ActionMode.walk, ActionMode.run, ActionMode.sneak, ActionMode.jump, ActionMode.swim, ActionMode.fly };
+    ValueArrayList properties = new ValueArrayList();
+    properties.add(new Value(Type.floatingpoint, Value.VALUE_BY_NAME_ACTION_INTENSITY, 120f));
 
     for (ActionMode mode : moves) {
       Action2PerformerDescription description = Action2PerformerAssignment.getInstance().getAction2PerformerDescription(mode);
 
       // direction, acceleration, velocity, intensity
       assertThat(description.countFunctions()).as(mode.name()).isEqualTo(4);
-      Value intensity = description.getFunction(3).calculate(new ValueArrayList());
+      Value intensity = description.getFunction(3).calculate(properties);
       assertThat(intensity.getName()).as(mode.name()).isEqualTo(Value.VALUE_BY_NAME_EVENT_INTENSITY);
-      assertThat(((Number) intensity.getObject(Type.floatingpoint)).floatValue()).as(mode.name())
-          .isEqualTo(Action2PerformerDescriptionPool.MOVE_EVENT_INTENSITY);
+      // taken as it is, not multiplied by the power (the rules already derive it from the power)
+      assertThat(((Number) intensity.getObject(Type.floatingpoint)).floatValue()).as(mode.name()).isEqualTo(120f);
     }
+  }
+
+  @Test
+  void everyBlow_hasADescription_withTheGeneralEventNames() {
+    ActionMode[] punches = { ActionMode.punchLeftFistStraight, ActionMode.punchLeftFistSideways, ActionMode.punchLeftFistUpward,
+        ActionMode.punchRightFistStraight, ActionMode.punchRightFistSideways, ActionMode.punchRightFistUpward };
+    ActionMode[] weapons = { ActionMode.weaponLeftStab, ActionMode.weaponLeftStroke, ActionMode.weaponLeftBackhand,
+        ActionMode.weaponRightStab, ActionMode.weaponRightStroke, ActionMode.weaponRightBackhand, ActionMode.weaponClub };
+    ValueArrayList properties = new ValueArrayList();
+    properties.add(new Value(Type.floatingpoint, Value.VALUE_BY_NAME_ACTION_INTENSITY, 80f));
+    properties.add(new Value(Type.vector, PropertyName.stateSeer_directionView.toString(), new Vector(1, 0, 0)));
+
+    for (ActionMode mode : punches) assertBlowDescription(mode, 5, properties);
+    for (ActionMode mode : weapons) assertBlowDescription(mode, 6, properties);
+  }
+
+  private static void assertBlowDescription(ActionMode mode, int functions, ValueArrayList properties) {
+    Action2PerformerDescription description = Action2PerformerAssignment.getInstance().getAction2PerformerDescription(mode);
+    // direction, actor's intensity, event intensity, (weapon,) chest, view
+    assertThat(description.countFunctions()).as(mode.name()).isEqualTo(functions);
+    assertThat(description.getFunction(0).calculate(properties).getName()).as(mode.name()).isEqualTo(Value.VALUE_BY_NAME_EVENT_DIRECTION);
+    Value actorsIntensity = description.getFunction(1).calculate(properties);
+    assertThat(actorsIntensity.getName()).as(mode.name()).isEqualTo(Value.VALUE_BY_NAME_ACTION_INTENSITY);
+    assertThat(((Number) actorsIntensity.getObject(Type.floatingpoint)).floatValue()).as(mode.name()).isEqualTo(80f);
+    // function 2 (event_intensity) needs ATTR(power) of a real actor; its arithmetic is checked by
+    // intensityTimesPower_isDividedByTheScale
   }
 
   @Test

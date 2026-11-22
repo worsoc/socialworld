@@ -63,11 +63,17 @@ public class PositionCalculator extends SocialWorldThread {
 	// movement concept (2026-11-19): events change only the velocities, the position changes only in the
 	// time step positionStep, once per second for every object whose velocity sum is not zero
 	static final float STEP_SECONDS = 1.0f;
-	// placeholders, the numbers are not settled yet
+	// numbers N1-N3 (2026-11-20): the passive velocity halves per second (the ground may change it later);
+	// a bystander gets 0.2 × the velocity of the mover as impulse; below 50 mm/s the passive velocity
+	// counts as rest, so that a push does not creep on for seconds with millimetre steps
 	static final float FRICTION_PER_SECOND = 0.5f;
-	static final float BYSTANDER_PUSH_STRENGTH = 200.0f;
-	// below this speed (mm/s) the passive velocity counts as rest
-	static final float MIN_SPEED = 1.0f;
+	static final float BYSTANDER_PUSH_SHARE = 0.2f;
+	static final float MIN_SPEED = 50.0f;
+	// blows P3 (2026-11-20): the impulse is a share of the event intensity (intensity × power / scale),
+	// fists 0.1, weapons 0.15, at most 3000 mm/s; it pushes away from the hitter
+	static final float BLOW_IMPULSE_SHARE_FIST = 0.1f;
+	static final float BLOW_IMPULSE_SHARE_WEAPON = 0.15f;
+	static final float MAX_BLOW_IMPULSE = 3000.0f;
 
 	private final Set<SimulationObject> movingObjects = ConcurrentHashMap.newKeySet();
 
@@ -196,6 +202,30 @@ public class PositionCalculator extends SocialWorldThread {
 		
 		return candidatePosition.getDirectionFrom((Position) o).length() > maxDistance;
 	}
+
+	/** @return the vector from the event position (the causer) to the candidate, the zero vector if one is missing */
+	private Vector directionFromEvent(Event event, Position candidatePosition) {
+		if (candidatePosition.checkIsObjectNothing()) return Vector.get0Vector();
+		Object o = event.getPosition().getObject(Type.eventProp);
+		if (!(o instanceof Position)) return Vector.get0Vector();
+		return candidatePosition.getDirectionFrom((Position) o);
+	}
+
+	/**
+	 * Direction of the push of a blow: away from the hitter. If the candidate stands where the hitter stood,
+	 * the direction of the blow is taken.
+	 */
+	static Vector awayFromCauser(Vector causerToCandidate, Vector blowDirection) {
+		if (causerToCandidate == null || causerToCandidate.is000()) return unit(blowDirection);
+		return unit(causerToCandidate);
+	}
+
+	/** The impulse of a blow: share × event intensity (fist 0.1, weapon 0.15), between 0 and MAX_BLOW_IMPULSE (B3). */
+	static float blowImpulse(EventType eventType, float eventIntensity) {
+		float share = eventType.isCandidatesWeapon() ? BLOW_IMPULSE_SHARE_WEAPON : BLOW_IMPULSE_SHARE_FIST;
+		if (Float.isNaN(eventIntensity)) return 0f;
+		return Math.max(0f, Math.min(MAX_BLOW_IMPULSE, share * eventIntensity));
+	}
 	
 	private final int calculatePositionChangedByEvent(CollectionElementSimObjInfluenced moved) {
 
@@ -237,17 +267,32 @@ public class PositionCalculator extends SocialWorldThread {
 			active = scaled(eventDirection(event), event.getMoveVelocity());
 		}
 		else {
-			// the mover is a candidate of its own move event as well; for it only selfMove changes the
-			// velocity, its own candidatesMove would count the move twice (user, 2026-11-19)
-			if (isOwnMoveSeenAsCandidate(eventType, event.getCauser() == state.getObject())) return POSITION_CALCULATOR_RETURNS_NO_CHANGE;
+			// the causer is a candidate of its own move or blow as well; for a mover only selfMove changes the
+			// velocity (user, 2026-11-19), a hitter does not push itself (P3, B5)
+			if (isOwnEventSeenAsCandidate(eventType, event.getCauser() == state.getObject())) return POSITION_CALCULATOR_RETURNS_NO_CHANGE;
 
 			// a push or a blow ADDS an impulse to the passive velocity
+			Vector causerToCandidate = Vector.get0Vector();
 			if (eventType.isEventToCandidates()) {
 				Position candidatePosition = getObjectRequester().requestPosition(token, state.getProperty(token, PropertyName.simobj_position), this);
 				if (isBeyondPositionChangeDistance(event, eventType, candidatePosition)) return POSITION_CALCULATOR_RETURNS_NO_CHANGE;
+				causerToCandidate = directionFromEvent(event, candidatePosition);
 			}
-			float strength = eventType.isCandidatesMove() ? BYSTANDER_PUSH_STRENGTH : event.getStrength();
-			passive = addImpulse(passive, eventDirection(event), strength);
+
+			Vector direction = eventDirection(event);
+			float strength;
+			if (eventType.isCandidatesMove()) {
+				strength = bystanderPush(event.getMoveVelocity());
+			}
+			else if (eventType.isCandidatesBlow()) {
+				// who is hit is pushed away from the hitter (B2), the view only chose the cone
+				direction = awayFromCauser(causerToCandidate, direction);
+				strength = blowImpulse(eventType, event.getStrength());
+			}
+			else {
+				strength = event.getStrength();
+			}
+			passive = addImpulse(passive, direction, strength);
 		}
 
 		int result = writeVelocities(state, hiddenWriteAccess, active, passive);
@@ -350,16 +395,22 @@ public class PositionCalculator extends SocialWorldThread {
 	}
 
 	/**
-	 * @return true for a candidatesMove event that reaches its own causer: it is ignored for the
-	 *         velocity, the causer's move is already its selfMove; bystanders are still pushed
+	 * @return true for a candidatesMove or a candidates blow that reaches its own causer: it is ignored for
+	 *         the velocity (the causer's move is already its selfMove, a hitter does not push itself);
+	 *         bystanders and those hit are still pushed. Only here, the candidates search stays as it is.
 	 */
-	static boolean isOwnMoveSeenAsCandidate(EventType eventType, boolean causerIsTheObject) {
-		return causerIsTheObject && eventType.isCandidatesMove();
+	static boolean isOwnEventSeenAsCandidate(EventType eventType, boolean causerIsTheObject) {
+		return causerIsTheObject && (eventType.isCandidatesMove() || eventType.isCandidatesBlow());
 	}
 
 	/** An impulse changes the passive velocity once: passive + unit direction × strength. */
 	static Vector addImpulse(Vector passive, Vector direction, float strength) {
 		return sumOf(passive, scaled(unit(direction), strength));
+	}
+
+	/** The impulse a bystander gets from a mover nearby: BYSTANDER_PUSH_SHARE × the velocity of the mover (N1). */
+	static float bystanderPush(float moverVelocity) {
+		return BYSTANDER_PUSH_SHARE * moverVelocity;
 	}
 
 	/** Friction per second: the passive velocity × FRICTION_PER_SECOND, below MIN_SPEED it is rest. */

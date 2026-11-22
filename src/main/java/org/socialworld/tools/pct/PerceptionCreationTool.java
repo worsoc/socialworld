@@ -176,7 +176,8 @@ public class PerceptionCreationTool extends JFrame {
 
 		eventsModel.clear();
 		for (EventType eventType : EventType.values()) {
-			if (eventType != EventType.nothing && eventType.name().toLowerCase().contains(searched)) {
+			// technical event types have no perception (and no place in the pools)
+			if (eventType != EventType.nothing && !eventType.isTechnical() && eventType.name().toLowerCase().contains(searched)) {
 				eventsModel.addElement(eventType);
 			}
 		}

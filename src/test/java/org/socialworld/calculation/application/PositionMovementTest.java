@@ -78,6 +78,23 @@ public class PositionMovementTest {
   }
 
   @Test
+  void friction_restBelowFiftyMillimetersPerSecond() {
+    assertThat(PositionCalculator.MIN_SPEED).isEqualTo(50f);
+    // 120 halves to 60: still moving; 60 halves to 30: rest
+    Vector passive = PositionCalculator.damped(new Vector(120, 0, 0));
+    assertVector(passive, 60, 0, 0);
+    assertThat(PositionCalculator.damped(passive).is000()).isTrue();
+  }
+
+  @Test
+  void bystanderPush_isAFifthOfTheVelocityOfTheMover() {
+    assertThat(PositionCalculator.bystanderPush(500f)).isEqualTo(100f);
+    assertThat(PositionCalculator.bystanderPush(1400f)).isEqualTo(280f);
+    assertThat(PositionCalculator.bystanderPush(4000f)).isEqualTo(800f);
+    assertThat(PositionCalculator.bystanderPush(0f)).isEqualTo(0f);
+  }
+
+  @Test
   void stepMovesBySumTimesOneSecond() {
     Vector active = new Vector(100, 0, 0);
     Vector passive = new Vector(0, 50, 0);
@@ -98,9 +115,26 @@ public class PositionMovementTest {
       // they never pass the gate of the EventMaster route, they use the bypass
       assertThat(type.isRelevantForChangingPosition()).as(type.name()).isFalse();
     }
-    assertThat(EventType.positionStep.getIndex()).isEqualTo(128);
-    assertThat(EventType.activeMoveStop.getIndex()).isEqualTo(256);
+    assertThat(EventType.positionStep.getIndex()).isEqualTo(512);
+    assertThat(EventType.activeMoveStop.getIndex()).isEqualTo(513);
     assertThat(EventType.selfMoveWalk.isTechnical()).isFalse();
+  }
+
+  @Test
+  void technicalEventTypes_haveTheirOwnBlockBehindAllCategories() {
+    assertThat(EventType.TECHNICAL_FIRST).isEqualTo(EventType.MAX_EVENT_TYPE);
+    assertThat(EventType.TECHNICAL_END).isEqualTo(528);
+    for (EventType type : EventType.values()) {
+      boolean inBlock = type.getIndex() >= EventType.TECHNICAL_FIRST && type.getIndex() < EventType.TECHNICAL_END;
+      // technical exactly in the block, and every other type fits into the pools (index < MAX_EVENT_TYPE)
+      assertThat(type.isTechnical()).as(type.name()).isEqualTo(inBlock);
+      if (!type.isTechnical()) assertThat(type.getIndex()).as(type.name()).isLessThan(EventType.MAX_EVENT_TYPE);
+    }
+    // the first places of the blocks are empty again, as 0 (nothing) and 384
+    for (int index : new int[] { 128, 256, 384 }) {
+      assertThat(EventType.getEventType(index)).as("index " + index).isIn(EventType.nothing, null);
+    }
+    assertThat(EventType.getEventType(512)).isEqualTo(EventType.positionStep);
   }
 
   @Test
@@ -119,12 +153,71 @@ public class PositionMovementTest {
   @Test
   void ownCandidatesMove_isIgnored_bystandersAreStillPushed() {
     // the mover itself: only its selfMove counts
-    assertThat(PositionCalculator.isOwnMoveSeenAsCandidate(EventType.candidatesMoveWalk, true)).isTrue();
-    assertThat(PositionCalculator.isOwnMoveSeenAsCandidate(EventType.candidatesMoveFly, true)).isTrue();
+    assertThat(PositionCalculator.isOwnEventSeenAsCandidate(EventType.candidatesMoveWalk, true)).isTrue();
+    assertThat(PositionCalculator.isOwnEventSeenAsCandidate(EventType.candidatesMoveFly, true)).isTrue();
     // a bystander is pushed
-    assertThat(PositionCalculator.isOwnMoveSeenAsCandidate(EventType.candidatesMoveWalk, false)).isFalse();
-    // other candidate events of the causer are not affected by this rule
-    assertThat(PositionCalculator.isOwnMoveSeenAsCandidate(EventType.candidatesPunchRightFistStraight, true)).isFalse();
-    assertThat(PositionCalculator.isOwnMoveSeenAsCandidate(EventType.selfMoveWalk, true)).isFalse();
+    assertThat(PositionCalculator.isOwnEventSeenAsCandidate(EventType.candidatesMoveWalk, false)).isFalse();
+    // the own selfMove is not affected by this rule
+    assertThat(PositionCalculator.isOwnEventSeenAsCandidate(EventType.selfMoveWalk, true)).isFalse();
+  }
+
+  @Test
+  void ownCandidatesBlow_isIgnored_whoIsHitIsPushed() {
+    // the hitter does not push itself (P3, B5)
+    assertThat(PositionCalculator.isOwnEventSeenAsCandidate(EventType.candidatesPunchRightFistStraight, true)).isTrue();
+    assertThat(PositionCalculator.isOwnEventSeenAsCandidate(EventType.candidatesWeaponClub, true)).isTrue();
+    // who is hit is pushed
+    assertThat(PositionCalculator.isOwnEventSeenAsCandidate(EventType.candidatesPunchLeftFistUpward, false)).isFalse();
+    assertThat(PositionCalculator.isOwnEventSeenAsCandidate(EventType.candidatesWeaponLeftStab, false)).isFalse();
+    // other candidate events of the causer, e.g. its scream, are not affected
+    assertThat(PositionCalculator.isOwnEventSeenAsCandidate(EventType.candidatesSayScream, true)).isFalse();
+  }
+
+  @Test
+  void blowEventKinds_candidatesBlowAndWeapon() {
+    for (int index = 304; index <= 310; index++) {
+      EventType type = EventType.getEventType(index);
+      assertThat(type.isCandidatesBlow()).as(type.name()).isTrue();
+      assertThat(type.isCandidatesWeapon()).as(type.name()).isTrue();
+    }
+    for (int index = 312; index <= 317; index++) {
+      EventType type = EventType.getEventType(index);
+      assertThat(type.isCandidatesBlow()).as(type.name()).isTrue();
+      assertThat(type.isCandidatesWeapon()).as(type.name()).isFalse();
+    }
+    assertThat(EventType.candidatesMoveRun.isCandidatesBlow()).isFalse();
+    assertThat(EventType.targetPunchRightFistStraight.isCandidatesBlow()).isFalse();
+  }
+
+  @Test
+  void onlyTheCandidatesEventOfABlowPushes_notTheTargetEvent() {
+    // B4: else a target in the cone would be pushed twice
+    for (int index = 176; index <= 189; index++) {
+      EventType type = EventType.getEventType(index);
+      if (type == EventType.nothing) continue;
+      assertThat(type.isRelevantForChangingPosition()).as(type.name()).isFalse();
+    }
+    assertThat(EventType.candidatesPunchRightFistStraight.isRelevantForChangingPosition()).isTrue();
+    assertThat(EventType.candidatesWeaponClub.isRelevantForChangingPosition()).isTrue();
+  }
+
+  @Test
+  void blowImpulse_isAShareOfTheEventIntensity_withAnUpperLimit() {
+    // intensity 100, power 5000: event intensity 5000
+    assertThat(PositionCalculator.blowImpulse(EventType.candidatesPunchRightFistStraight, 5000f)).isEqualTo(500f);
+    assertThat(PositionCalculator.blowImpulse(EventType.candidatesWeaponClub, 5000f)).isEqualTo(750f);
+    // at most 3000 mm/s, never negative, nothing for no intensity
+    assertThat(PositionCalculator.blowImpulse(EventType.candidatesWeaponClub, 1000000f)).isEqualTo(3000f);
+    assertThat(PositionCalculator.blowImpulse(EventType.candidatesPunchLeftFistUpward, -100f)).isEqualTo(0f);
+    assertThat(PositionCalculator.blowImpulse(EventType.candidatesPunchLeftFistUpward, Float.NaN)).isEqualTo(0f);
+  }
+
+  @Test
+  void blowPushesAwayFromTheHitter_notAlongItsView() {
+    // the hitter looks east (1,0,0), the one hit stands north-east of it: pushed north-east
+    Vector away = PositionCalculator.awayFromCauser(new Vector(300, 300, 0), new Vector(1, 0, 0));
+    assertVector(away, 0.70710677f, 0.70710677f, 0);
+    // standing where the hitter stood: along the blow
+    assertVector(PositionCalculator.awayFromCauser(new Vector(0, 0, 0), new Vector(2, 0, 0)), 1, 0, 0);
   }
 }

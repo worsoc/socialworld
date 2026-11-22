@@ -101,10 +101,7 @@ public class Value {
 	public static final String VALUE_BY_NAME_EVENT_HANDLE_INTENSITY = ActionType.handleItem.getPraefix() + "intensity";
 	public static final String VALUE_BY_NAME_EVENT_HANDLE_ITEM1 = ActionType.handleItem.getPraefix() + "item1";
 	public static final String VALUE_BY_NAME_EVENT_HANDLE_ITEM2 = ActionType.handleItem.getPraefix() + "item2";
-	public static final String VALUE_BY_NAME_EVENT_USEWEAPON_DIRECTION = ActionType.useWeapon.getPraefix() + "direction";
-	public static final String VALUE_BY_NAME_EVENT_USEWEAPON_INTENSITY = ActionType.useWeapon.getPraefix() + "intensity";
-	public static final String VALUE_BY_NAME_EVENT_PUNCH_DIRECTION = ActionType.punch.getPraefix() + "direction";
-	public static final String VALUE_BY_NAME_EVENT_PUNCH_INTENSITY = ActionType.punch.getPraefix() + "intensity";
+	// blows use event_direction and event_intensity since 2026-11-20 (P3), the punch_/useWeapon_ names are gone
 	public static final String VALUE_BY_NAME_EVENT_SAY_LOUDNESS = ActionType.say.getPraefix() + "loudness";
 	public static final String VALUE_BY_NAME_EVENT_BF_ITEMDRINK = ActionType.bodilyFunction.getPraefix() + "itemDrink";
 	public static final String VALUE_BY_NAME_EVENT_BF_ITEMEAT = ActionType.bodilyFunction.getPraefix() + "itemEat";

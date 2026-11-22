@@ -74,9 +74,9 @@ public class Attack extends ActionPerformer {
 		case punchRightFistSideways:
 		case punchLeftFistUpward:
 		case punchRightFistUpward:
-	 		result.add(Value.VALUE_BY_NAME_EVENT_PUNCH_DIRECTION);
+	 		result.add(Value.VALUE_BY_NAME_EVENT_DIRECTION);
 			result.add(Value.VALUE_BY_NAME_ACTION_INTENSITY);
-			result.add(Value.VALUE_BY_NAME_EVENT_PUNCH_INTENSITY);
+			result.add(Value.VALUE_BY_NAME_EVENT_INTENSITY);
 			result.add(PropertyName.simobj_directionChest.toString());
 			result.add(PropertyName.stateSeer_directionView.toString());
 			break;
@@ -87,9 +87,9 @@ public class Attack extends ActionPerformer {
 		case weaponLeftBackhand:
 		case weaponRightBackhand:
 		case weaponClub:
-	 		result.add(Value.VALUE_BY_NAME_EVENT_USEWEAPON_DIRECTION);
+	 		result.add(Value.VALUE_BY_NAME_EVENT_DIRECTION);
 			result.add(Value.VALUE_BY_NAME_ACTION_INTENSITY);
-			result.add(Value.VALUE_BY_NAME_EVENT_USEWEAPON_INTENSITY);
+			result.add(Value.VALUE_BY_NAME_EVENT_INTENSITY);
 			result.add(Value.VALUE_BY_NAME_EVENT_WEAPON);
 			result.add(PropertyName.simobj_directionChest.toString());
 			result.add(PropertyName.stateSeer_directionView.toString());
@@ -109,7 +109,7 @@ public class Attack extends ActionPerformer {
 		case punchLeftFistUpward:
 		case punchRightFistUpward:
 			result.add(Value.VALUE_BY_NAME_ACTION_INTENSITY);
-			result.add(Value.VALUE_BY_NAME_EVENT_PUNCH_INTENSITY);
+			result.add(Value.VALUE_BY_NAME_EVENT_INTENSITY);
 			break;
 		case weaponLeftStab:
 		case weaponRightStab:
@@ -119,7 +119,7 @@ public class Attack extends ActionPerformer {
 		case weaponRightBackhand:
 		case weaponClub:
 			result.add(Value.VALUE_BY_NAME_ACTION_INTENSITY);
-			result.add(Value.VALUE_BY_NAME_EVENT_USEWEAPON_INTENSITY);
+			result.add(Value.VALUE_BY_NAME_EVENT_INTENSITY);
 	 		result.addAll(ListOperations.addPrefixToElements(
 	 				Value.VALUE_BY_NAME_EVENT_WEAPON +  "." ,
 	 				MaterialSet.getTotalPortionValueNames(MaterialSet.getSetsPropertyName())));

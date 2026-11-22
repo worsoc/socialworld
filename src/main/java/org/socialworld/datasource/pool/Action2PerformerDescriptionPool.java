@@ -41,16 +41,6 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 	static final String CONST_ATTRIBUTE_VALUE_SCALE =
 			"CONST(" + Type.integer.getIndex() + " " + AttributeArray.ATTRIBUTE_VALUE_SCALE + ")";
 
-	/**
-	 * Since M5 of the movement concept the position follows move_velocity, not this intensity.
-	 * Quick solution 2026-11-19 (ERD X2 test): the moves had no event intensity, so PositionCalculator
-	 * multiplied their direction by strength 0 and nobody moved. A constant for now: 100 mm = 0.1 m
-	 * per move event, so that moves can be seen in the dashboard; the real intensity of a move
-	 * (damping, scale, pushed bystanders, ground) needs its own concept.
-	 */
-	static final float MOVE_EVENT_INTENSITY = 100.0f;
-	static final String CONST_MOVE_EVENT_INTENSITY =
-			"CONST(" + Type.floatingpoint.getIndex() + " " + MOVE_EVENT_INTENSITY + ")";
 
 
 	
@@ -173,8 +163,9 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				lines.add(0, 2, "GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_MOVE_VELOCITY + "))"); 
 				lines.add(0, 2, Value.VALUE_BY_NAME_EVENT_MOVE_VELOCITY);
 				
-				// intensity: constant for now, see MOVE_EVENT_INTENSITY
-				lines.add(0, 3, CONST_MOVE_EVENT_INTENSITY);
+				// intensity (numbers N4, 2026-11-20): the intensity of the action as it is, the power is already
+				// in it (the rules derive it from power); the position follows move_velocity, not this value
+				lines.add(0, 3, "GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_INTENSITY + "))");
 				lines.add(0, 3, Value.VALUE_BY_NAME_EVENT_INTENSITY);
 				
 				break;
@@ -288,65 +279,31 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 
 				break;
 				
+			// blows (P3, 2026-11-20): all six punches and all seven weapon modes, with the general names
+			// event_direction and event_intensity, so that the EventMaster finds the candidates in the cone of
+			// the view and the PositionCalculator gets the strength of the blow (before: punch_/useWeapon_ names,
+			// read by nobody, and only punchRightFistStraight and weaponClub had a description)
+			case punchLeftFistStraight:
+			case punchLeftFistSideways:
+			case punchLeftFistUpward:
 			case punchRightFistStraight:
-				
-				
-				// directionHit
-				lines.add(0, 0, "GET(GETVal(" + PropertyName.stateSeer_directionView.toString() + "))");
-				lines.add(0, 0, Value.VALUE_BY_NAME_EVENT_PUNCH_DIRECTION);
+			case punchRightFistSideways:
+			case punchRightFistUpward:
 
-				// actorsIntensity
-				lines.add(0, 1, "GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_INTENSITY + "))");
-				lines.add(0, 1, Value.VALUE_BY_NAME_ACTION_INTENSITY);
-
-				// intensity
-				lines.add(0, 2, "DIV(MUL(" +
-									"GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_INTENSITY + "))" + "," +
-									"ATTR(" + Attribute.power.getIndex() + ")" +
-								")," + CONST_ATTRIBUTE_VALUE_SCALE + ")");
-				lines.add(0, 2, Value.VALUE_BY_NAME_EVENT_PUNCH_INTENSITY);
-
-				// directionChest
-				lines.add(0, 3, "GET(GETVal(" + PropertyName.simobj_directionChest.toString() + "))");
-				lines.add(0, 3, PropertyName.simobj_directionChest.toString());
-
-				// directionView
-				lines.add(0, 4, "GET(GETVal(" + PropertyName.stateSeer_directionView.toString() + "))");
-				lines.add(0, 4, PropertyName.stateSeer_directionView.toString());
-				
+				addBlowLines(lines, false);
 				break;
-				
+
+			case weaponLeftStab:
+			case weaponLeftStroke:
+			case weaponLeftBackhand:
+			case weaponRightStab:
+			case weaponRightStroke:
+			case weaponRightBackhand:
 			case weaponClub:
-				
-				// directionHit
-				lines.add(0, 0, "GET(GETVal(" + PropertyName.stateSeer_directionView.toString() + "))");
-				lines.add(0, 0, Value.VALUE_BY_NAME_EVENT_USEWEAPON_DIRECTION);
 
-				// actorsIntensity
-				lines.add(0, 1, "GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_INTENSITY  + "))");
-				lines.add(0, 1, Value.VALUE_BY_NAME_ACTION_INTENSITY);
-
-				// intensity
-				lines.add(0, 2, "DIV(MUL(" +
-									"GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_INTENSITY + "))" + "," +
-									"ATTR(" + Attribute.power.getIndex() + ")" +
-								")," + CONST_ATTRIBUTE_VALUE_SCALE + ")");
-				lines.add(0, 2, Value.VALUE_BY_NAME_EVENT_USEWEAPON_INTENSITY);
-
-				// weapon
-				lines.add(0, 3, "GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_WEAPON  + "))");
-				lines.add(0, 3, Value.VALUE_BY_NAME_EVENT_WEAPON);
-
-				// directionChest
-				lines.add(0, 4, "GET(GETVal(" + PropertyName.simobj_directionChest.toString()  + "))");
-				lines.add(0, 4, PropertyName.simobj_directionChest.toString());
-
-				// directionView
-				lines.add(0, 5, "GET(GETVal(" + PropertyName.stateSeer_directionView.toString()  + "))");
-				lines.add(0, 5, PropertyName.stateSeer_directionView.toString());
-				
+				addBlowLines(lines, true);
 				break;
-				
+
 			case listenToStatement:
 			case listenToQuestion:
 			case listenToInstruction:
@@ -537,4 +494,41 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 
 
 	
+	/**
+	 * The lines of a blow (punch or weapon): direction of the hit = the view of the hitter (event_direction),
+	 * the actor's intensity, the event intensity = intensity × power / scale (event_intensity),
+	 * for weapons the weapon, then the directions of chest and view.
+	 */
+	private static void addBlowLines(Lines lines, boolean withWeapon) {
+		int i = 0;
+
+		// directionHit
+		lines.add(0, i, "GET(GETVal(" + PropertyName.stateSeer_directionView.toString() + "))");
+		lines.add(0, i++, Value.VALUE_BY_NAME_EVENT_DIRECTION);
+
+		// actorsIntensity
+		lines.add(0, i, "GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_INTENSITY + "))");
+		lines.add(0, i++, Value.VALUE_BY_NAME_ACTION_INTENSITY);
+
+		// intensity
+		lines.add(0, i, "DIV(MUL(" +
+							"GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_INTENSITY + "))" + "," +
+							"ATTR(" + Attribute.power.getIndex() + ")" +
+						")," + CONST_ATTRIBUTE_VALUE_SCALE + ")");
+		lines.add(0, i++, Value.VALUE_BY_NAME_EVENT_INTENSITY);
+
+		if (withWeapon) {
+			lines.add(0, i, "GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_WEAPON + "))");
+			lines.add(0, i++, Value.VALUE_BY_NAME_EVENT_WEAPON);
+		}
+
+		// directionChest
+		lines.add(0, i, "GET(GETVal(" + PropertyName.simobj_directionChest.toString() + "))");
+		lines.add(0, i++, PropertyName.simobj_directionChest.toString());
+
+		// directionView
+		lines.add(0, i, "GET(GETVal(" + PropertyName.stateSeer_directionView.toString() + "))");
+		lines.add(0, i++, PropertyName.stateSeer_directionView.toString());
+	}
+
 }

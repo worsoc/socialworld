@@ -67,13 +67,6 @@ public enum EventType {
 	selfSayNormal(80), selfSayScream(81), selfSayWhisper(82),
 
 //////////////////////////////////////////////////////////////////////
-//technical events (movement concept 2026-11-19): outside all categories, never through the EventMaster,
-//only for the PositionCalculator (bypass); 128 and 256 lie between causer, target and candidates
-//////////////////////////////////////////////////////////////////////
-
-	positionStep(128),
-
-//////////////////////////////////////////////////////////////////////
 //EventToTargets	(event with influence to explicit involved objects (targets, items ...)
 //////////////////////////////////////////////////////////////////////
 	
@@ -98,8 +91,6 @@ public enum EventType {
 	targetAskNormal(200), targetAskScream(201), targetAskWhisper(202), targetAnswerNormal(203), targetAnswerScream(204), targetAnswerWhisper(205),
 	
 	/*targetSayNormal(208), targetSayScream(209), targetSayWhisper(210),*/
-
-	activeMoveStop(256),
 
 //////////////////////////
 //EventToCandidates	
@@ -193,12 +184,26 @@ public enum EventType {
 	    percipientExistsDistance5000(508, EventPriority.AMBIENT),
 	    percipientExistsDistance2000(509, EventPriority.AMBIENT),
 	    percipientExistsDistance1000(510, EventPriority.AMBIENT),
-	    percipientExistsDistance100(511, EventPriority.AMBIENT);
+	    percipientExistsDistance100(511, EventPriority.AMBIENT),
+
+//////////////////////////////////////////////////////////////////////
+//technical events (movement concept 2026-11-19, own block 512..527 since 2026-11-20): outside all
+//categories and outside MAX_EVENT_TYPE (no event influence, reaction or perception, so no entry in the
+//pools), never through the EventMaster, only for the PositionCalculator (bypass)
+//////////////////////////////////////////////////////////////////////
+
+	positionStep(512),
+	activeMoveStop(513);
 
 	
 	
 	
+	/** end of the event types of the simulation (the four categories); the pools have this size */
 	public static final int MAX_EVENT_TYPE =  512;
+	/** first index of the technical event types (2026-11-20) */
+	public static final int TECHNICAL_FIRST = 512;
+	/** end (exclusive) of the technical event types: 16 places, 512..527 */
+	public static final int TECHNICAL_END = 528;
 
 	private static final java.util.Map<String, EventType> NAME_CACHE;
 	private static final java.util.Map<Integer, EventType> INDEX_CACHE;
@@ -316,9 +321,10 @@ public enum EventType {
 	/**
 	 * Technical event types (movement concept 2026-11-19) have no meaning in the simulation:
 	 * no event influence, no reaction, no perception. They only drive the PositionCalculator.
+	 * They have their own block 512..527 (TECHNICAL_FIRST .. TECHNICAL_END), outside MAX_EVENT_TYPE.
 	 */
 	public boolean isTechnical() {
-		return this == positionStep || this == activeMoveStop;
+		return this.index >= TECHNICAL_FIRST && this.index < TECHNICAL_END;
 	}
 
 	/** The own move of the causer: selfMoveWalk(8) ... selfMoveFly(13). */
@@ -329,6 +335,16 @@ public enum EventType {
 	/** A move seen by the candidates nearby: candidatesMoveWalk(264) ... candidatesMoveFly(269). */
 	public boolean isCandidatesMove() {
 		return this.index >= 264 && this.index <= 269;
+	}
+
+	/** A blow that reaches the candidates in its cone: candidatesWeapon…(304-310), candidatesPunch…(312-317). */
+	public boolean isCandidatesBlow() {
+		return isCandidatesWeapon() || (this.index >= 312 && this.index <= 317);
+	}
+
+	/** A weapon blow that reaches the candidates: candidatesWeaponLeftStab(304) ... candidatesWeaponClub(310). */
+	public boolean isCandidatesWeapon() {
+		return this.index >= 304 && this.index <= 310;
 	}
 
 	public boolean isRelevantForChangingPosition() {
@@ -345,11 +361,8 @@ public enum EventType {
 		// targetHandleItemUse2(168), targetHandleItemUseLeft(169), targetHandleItemUseRight(170), targetHandleItemAddRtoL(171), targetHandleItemAddLtoR(172), targetHandleItemPull(173),targetHandleItemPush(174),
 		if (this.index >= 168 && this.index <= 174) return true;
 		
-		// targetWeaponLeftStab(176), targetWeaponLeftStroke(177), targetWeaponLeftBackhand(178), targetWeaponRightStab(179), targetWeaponRightStroke(180), targetWeaponRightBackhand(181), targetWeaponClub(182),
-		if (this.index >= 176 && this.index <= 182) return true;
-
-		// targetPunchLeftFistStraight(184),  targetPunchLeftFistSideways(185), targetPunchLeftFistUpward(186), targetPunchRightFistStraight(187),  targetPunchRightFistSideways(188), targetPunchRightFistUpward(189),
-		if (this.index >= 184 && this.index <= 189) return true;
+		// targetWeapon…(176-182) and targetPunch…(184-189) do not push since 2026-11-20 (P3, B4): only the
+		// candidates event of a blow pushes, else a target in the cone would be pushed twice
 
 		
 		
