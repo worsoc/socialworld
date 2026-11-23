@@ -17,6 +17,7 @@
  */
 package org.socialworld.objects.concrete.weapons;
 
+import org.socialworld.actions.handle.InventoryPlace;
 import org.socialworld.attributes.properties.WeaponProperty;
 import org.socialworld.calculation.functions.FunctionMXplusN;
 import org.socialworld.objects.concrete.weapons.Weapon;
@@ -59,5 +60,11 @@ public class LongSword extends Weapon implements IWeapon, ICutting, IValuable {
 	public float getSharpness() {return 80; }
 	public float getBladeLength() {return 900; }
 	public float getValue() {return 70; }
+
+	/** large, but worn at the belt in its scabbard as well */
+	public boolean fitsPlace(InventoryPlace place) {
+		if (place.isBelt()) return true;
+		return super.fitsPlace(place);
+	}
 
 }

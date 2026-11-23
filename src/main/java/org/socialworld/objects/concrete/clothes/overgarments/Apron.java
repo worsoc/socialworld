@@ -17,6 +17,7 @@
  */
 package org.socialworld.objects.concrete.clothes.overgarments;
 
+import org.socialworld.actions.handle.InventoryPlace;
 import org.socialworld.objects.concrete.clothes.Overgarment;
 import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.IBurnable;
@@ -35,5 +36,7 @@ public class Apron extends Overgarment implements IBurnable {
 		belongsTo = EnumHumanCrafted.Apron;
 		setLevelObjectSearch(8 /* base 9: 0.6 meters */ , 5 /* base 25: 1.3 meters */);
 	}
+
+	public InventoryPlace getOvergarmentPlace() {return InventoryPlace.overgarmentFront; }
 
 }

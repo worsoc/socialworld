@@ -17,6 +17,7 @@
  */
 package org.socialworld.actions.handle;
 
+import java.util.EnumMap;
 import java.util.List;
 
 import org.socialworld.attributes.PropertyName;
@@ -27,9 +28,11 @@ import org.socialworld.calculation.ValueProperty;
 import org.socialworld.core.IAccessToken;
 import org.socialworld.core.ObjectMaster;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
+import org.socialworld.objects.NoSimulationObject;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.SimulationObject_Type;
 import org.socialworld.objects.concrete.clothes.Cap;
+import org.socialworld.objects.concrete.clothes.Overgarment;
 import org.socialworld.objects.concrete.clothes.Shirt;
 import org.socialworld.objects.concrete.clothes.Shoe;
 import org.socialworld.objects.concrete.clothes.Sock;
@@ -40,7 +43,11 @@ import org.socialworld.objects.concrete.clothes.shoes.TestShoeLeft;
 import org.socialworld.objects.concrete.clothes.shoes.TestShoeRight;
 import org.socialworld.objects.concrete.clothes.socks.TestSockLeft;
 import org.socialworld.objects.concrete.clothes.socks.TestSockRight;
+import org.socialworld.objects.properties.ICarryable;
+import org.socialworld.objects.properties.IDrinkable;
+import org.socialworld.objects.properties.IEatable;
 import org.socialworld.objects.properties.IWeapon;
+import org.socialworld.objects.properties.IWearable;
 import org.socialworld.tools.StringTupel;
 
 /**
@@ -58,12 +65,10 @@ public class Inventory extends SimProperty {
 
 	public static Inventory getTestInventory(SimulationObject_Type objectType) {
 		Inventory inventory = new Inventory(objectType);
-		inventory.cap = new TestCap();
-		inventory.shirt = new TestShirt();
-		inventory.leftFootShoe = new TestShoeLeft();
-		inventory.rightFootShoe = new TestShoeRight();
-		inventory.leftFootSock = new TestSockLeft();
-		inventory.rightFootSock = new TestSockRight();
+		inventory.setCap(new TestCap());
+		inventory.setShirt(new TestShirt());
+		inventory.setShoes(new TestShoeLeft(), new TestShoeRight());
+		inventory.setSocks(new TestSockLeft(), new TestSockRight());
 		return inventory;
 	}
 
@@ -71,17 +76,9 @@ public class Inventory extends SimProperty {
 ////////////////// inventory properties   ///////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
-	protected SimulationObject leftHand;
-	protected SimulationObject rightHand;
-	protected SimulationObject mouth;
-
-	protected Shirt shirt;
-	protected Trousers trousers;
-	protected Shoe leftFootShoe;
-	protected Shoe rightFootShoe;
-	protected Sock leftFootSock;
-	protected Sock rightFootSock;
-	protected Cap cap;
+	// one object per place (inventory concept V1, 2026-11-23; before, one typed field per place).
+	// An empty place is not in the map and is answered with NoSimulationObject, no longer with null (F4).
+	private final EnumMap<InventoryPlace, SimulationObject> places = new EnumMap<>(InventoryPlace.class);
 
 	private int leftHandID;
 	private int rightHandID;
@@ -182,16 +179,7 @@ public class Inventory extends SimProperty {
 
 	private Inventory(Inventory original, PropertyProtection protectionOriginal, IAccessToken token) {
 		super(protectionOriginal, token);
-		this.cap = original.cap;
-		this.leftFootShoe = original.leftFootShoe;
-		this.rightFootShoe = original.rightFootShoe;
-		this.leftFootSock = original.leftFootSock;
-		this.rightFootSock = original.rightFootSock;
-		this.leftHand = original.leftHand;
-		this.rightHand = original.rightHand;
-		this.mouth = original.mouth;
-		this.shirt = original.shirt;
-		this.trousers = original.trousers;
+		this.places.putAll(original.places);
 	}
 	
 	public void setParentObject(SimulationObject parent) {
@@ -206,47 +194,131 @@ public class Inventory extends SimProperty {
 	public SimProperty copyForProperty(IAccessToken token) {
 		return new Inventory(this, getPropertyProtection(), token);
 	}
-	
+
 	public  ValueProperty getProperty(IAccessToken token, PropertyName prop, String valueName) {
-		switch (prop) {
-  		case inventory_shirt:
-			return new ValueProperty(Type.simulationObject, valueName, this.shirt);
-		case inventory_trousers:
-			return new ValueProperty(Type.simulationObject, valueName, this.trousers);
-		case inventory_leftShoe:
-			return new ValueProperty(Type.simulationObject, valueName, this.leftFootShoe);
-		case inventory_rightShoe:
-			return new ValueProperty(Type.simulationObject, valueName, this.rightFootShoe);
-		case inventory_leftSock:
-			return new ValueProperty(Type.simulationObject, valueName, this.leftFootSock);
-		case inventory_rightSock:
-			return new ValueProperty(Type.simulationObject, valueName, this.rightFootSock);
-		case inventory_cap:
-			return new ValueProperty(Type.simulationObject, valueName, this.cap);
-		case inventory_leftHand:
-			return new ValueProperty(Type.simulationObject, valueName, this.leftHand);
-		case inventory_rightHand:
-			return new ValueProperty(Type.simulationObject, valueName, this.rightHand);
-		case inventory_mouth:
-			return new ValueProperty(Type.simulationObject, valueName, this.mouth);
-
-		default:
-			return ValueProperty.getInvalid();
-		}
-
+		InventoryPlace place = placeOf(prop);
+		if (place == InventoryPlace.noWhere) return ValueProperty.getInvalid();
+		return new ValueProperty(Type.simulationObject, valueName, get(place));
 	}
 
+	/**
+	 * @return the place of an inventory property name, noWhere for every other property name
+	 */
+	static InventoryPlace placeOf(PropertyName prop) {
+		switch (prop) {
+		case inventory_shirt:		return InventoryPlace.upperBody;
+		case inventory_trousers:	return InventoryPlace.legs;
+		case inventory_cap:			return InventoryPlace.head;
+		case inventory_leftShoe:	return InventoryPlace.leftFootShoe;
+		case inventory_rightShoe:	return InventoryPlace.rightFootShoe;
+		case inventory_leftSock:	return InventoryPlace.leftFootSock;
+		case inventory_rightSock:	return InventoryPlace.rightFootSock;
+		case inventory_leftHand:	return InventoryPlace.leftHand;
+		case inventory_rightHand:	return InventoryPlace.rightHand;
+		case inventory_mouth:		return InventoryPlace.mouth;
+		default:					return InventoryPlace.noWhere;
+		}
+	}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    places  ///////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * @return the object on the place, NoSimulationObject if the place is empty
+	 */
+	public SimulationObject get(InventoryPlace place) {
+		SimulationObject object = this.places.get(place);
+		return (object != null) ? object : NoSimulationObject.getObjectNothing();
+	}
+
+	public boolean isFree(InventoryPlace place) {
+		return !this.places.containsKey(place);
+	}
+
+	/**
+	 * Whether the item may be put on the place now: it fits there (fits) and the place is free.
+	 * A dress needs the upper body and the legs free; while a dress is worn, both are taken.
+	 */
+	public boolean canPut(InventoryPlace place, SimulationObject item) {
+		if (!fits(place, item)) return false;
+		if (!isFree(place)) return false;
+		switch (place) {
+		case dress:
+			return isFree(InventoryPlace.upperBody) && isFree(InventoryPlace.legs);
+		case upperBody:
+		case legs:
+			return isFree(InventoryPlace.dress);
+		default:
+			return true;
+		}
+	}
+
+	/**
+	 * Puts the item on the place if canPut allows it.
+	 *
+	 * @return true if the item is on the place now
+	 */
+	public boolean put(InventoryPlace place, SimulationObject item) {
+		if (!canPut(place, item)) return false;
+		this.places.put(place, item);
+		return true;
+	}
+
+	/**
+	 * Takes the object off the place.
+	 *
+	 * @return the object that was there, NoSimulationObject if the place was empty
+	 */
+	public SimulationObject remove(InventoryPlace place) {
+		SimulationObject object = this.places.remove(place);
+		return (object != null) ? object : NoSimulationObject.getObjectNothing();
+	}
+
+	/**
+	 * Whether the item is of a kind that belongs on the place, regardless of whether the place is free:
+	 * clothes and jewellery by IWearable (and the overgarment by its own place), the mouth by IEatable or
+	 * IDrinkable, hands, belt and back by ICarryable. A liquid is not ICarryable: it is carried in a container.
+	 */
+	public static boolean fits(InventoryPlace place, SimulationObject item) {
+		if (item == null || !item.isSimulationObject()) return false;
+
+		IWearable wearable = (item instanceof IWearable) ? (IWearable) item : null;
+		switch (place) {
+		case head:				return wearable != null && wearable.isCap();
+		case upperBody:			return wearable != null && wearable.isShirt();
+		case legs:				return wearable != null && wearable.isTrousers();
+		case dress:				return wearable != null && wearable.isDress();
+		case overgarmentFront:
+		case overgarmentArmour:
+		case overgarmentCloak:	return item instanceof Overgarment && ((Overgarment) item).getOvergarmentPlace() == place;
+		case leftFootShoe:		return wearable != null && wearable.isLeftFootShoe();
+		case rightFootShoe:		return wearable != null && wearable.isRightFootShoe();
+		case leftFootSock:		return wearable != null && wearable.isLeftFootSock();
+		case rightFootSock:		return wearable != null && wearable.isRightFootSock();
+		case leftHandGlove:		return wearable != null && wearable.isLeftHandGlove();
+		case rightHandGlove:	return wearable != null && wearable.isRightHandGlove();
+		case neck:				return wearable != null && wearable.isNecklace();
+		case finger:			return wearable != null && wearable.isRing();
+		case bag:				return wearable != null && wearable.isBag();
+		case mouth:				return item instanceof IEatable || item instanceof IDrinkable;
+		case leftHand:
+		case rightHand:
+		case belt1:
+		case belt2:
+		case belt3:
+		case back:				return item instanceof ICarryable && ((ICarryable) item).fitsPlace(place);
+		default:				return false;
+		}
+	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    Inventory  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	
 	public void complete() {
 		if (!complete) {
-			
 // TODO getting the objects	according to the ids	
-			
 			if (leftHandID > 0) {
 				setLeftHand(ObjectMaster.getInstance().getSimulationObject(leftHandID));
 			}
@@ -256,62 +328,50 @@ public class Inventory extends SimProperty {
 			if (mouthID > 0) {
 				setMouth(ObjectMaster.getInstance().getSimulationObject(mouthID));
 			}
-			
 			complete = true;
 		}
 	}
-	
-	/**
-	 * @return the leftHand
-	 */
+
+	// The setters below are the old way (start of the simulation, loading, StateInventory): they set the place
+	// without the checks of put, as before. An object that is no simulation object (null, nothing) empties the place.
+
+	private void set(InventoryPlace place, SimulationObject object) {
+		if (object == null || !object.isSimulationObject()) this.places.remove(place);
+		else this.places.put(place, object);
+	}
+
 	public SimulationObject getLeftHand() {
-		return this.leftHand;
+		return get(InventoryPlace.leftHand);
 	}
 
-	
-	/**
-	 * @param leftHand
-	 *            the leftHand to set
-	 */
 	public void setLeftHand(final SimulationObject leftHand) {
-		this.leftHand = leftHand;
+		set(InventoryPlace.leftHand, leftHand);
 	}
 
-	/**
-	 * @return the rightHand
-	 */
 	public SimulationObject getRightHand() {
-		return this.rightHand;
+		return get(InventoryPlace.rightHand);
 	}
 
-	/**
-	 * @param rightHand
-	 *            the rightHand to set
-	 */
 	public void setRightHand(final SimulationObject rightHand) {
-		this.rightHand = rightHand;
+		set(InventoryPlace.rightHand, rightHand);
 	}
 
-	/**
-	 * @return the mouth item
-	 */
 	public SimulationObject getMouth() {
-		return this.mouth;
+		return get(InventoryPlace.mouth);
 	}
-	
-	
+
 	/**
 	 * The method returns the left hand item iff it is an instance of IWeapon
 	 * 
 	 * @return the leftHand
 	 */
 	public IWeapon getLeftHandWeapon() {
-		if (this.leftHand instanceof IWeapon) {
-			return (IWeapon) this.leftHand;
+		SimulationObject leftHand = getLeftHand();
+		if (leftHand instanceof IWeapon) {
+			return (IWeapon) leftHand;
 		} else {
 			return IWeapon.getObjectNothing();
 		}
-		
 	}
 
 	/**
@@ -320,75 +380,62 @@ public class Inventory extends SimProperty {
 	 * @return the rightHand
 	 */
 	public IWeapon getRightHandWeapon() {
-		if (this.rightHand instanceof IWeapon) {
-			return (IWeapon) this.rightHand;
+		SimulationObject rightHand = getRightHand();
+		if (rightHand instanceof IWeapon) {
+			return (IWeapon) rightHand;
 		} else {
 			return IWeapon.getObjectNothing();
 		}
 	}
 
-	
 	public void setShirt(final Shirt shirt) {
-		this.shirt = shirt;
+		set(InventoryPlace.upperBody, shirt);
 	}
 
 	public void setTrousers(final Trousers trousers) {
-		this.trousers = trousers;
+		set(InventoryPlace.legs, trousers);
 	}
 
 	public void setShoes(final Shoe leftShoe, final Shoe rightShoe) {
-		this.leftFootShoe = leftShoe;
-		this.rightFootShoe = rightShoe;
+		setLeftShoe(leftShoe);
+		setRightShoe(rightShoe);
 	}
 
 	public void setLeftShoe(final Shoe shoe) {
-		this.leftFootShoe = shoe;
+		set(InventoryPlace.leftFootShoe, shoe);
 	}
 
 	public void setRightShoe(final Shoe shoe) {
-		this.rightFootShoe = shoe;
+		set(InventoryPlace.rightFootShoe, shoe);
 	}
 
 	public void setSocks(final Sock leftSock, final Sock rightSock) {
-		this.leftFootSock = leftSock;
-		this.rightFootSock = rightSock;
+		setLeftSock(leftSock);
+		setRightSock(rightSock);
 	}
 
 	public void setLeftSock(final Sock sock) {
-		this.leftFootSock = sock;
+		set(InventoryPlace.leftFootSock, sock);
 	}
 
 	public void setRightSock(final Sock sock) {
-		this.rightFootSock = sock;
+		set(InventoryPlace.rightFootSock, sock);
 	}
 
 	public void setCap(final Cap cap) {
-		this.cap = cap;
+		set(InventoryPlace.head, cap);
 	}
 
-	/**
-	 * @param mouth
-	 *            the mouth input (eating, drinking...) to set
-	 */
 	public void setMouth(final SimulationObject mouth) {
-		this.mouth = mouth;
+		set(InventoryPlace.mouth, mouth);
 	}
 
-	/**
-	 * @param leftHandID
-	 *            the leftHandID to set
-	 */
 	public void setLeftHandID(int  leftHandID) {
 		if (!complete) this.leftHandID = leftHandID;
 	}
-	
-	/**
-	 * @param rightHandID
-	 *            the rightHandID to set
-	 */
+
 	public void setRightHandID(int  rightHandID) {
 		if (!complete) this.rightHandID = rightHandID;
 	}
-	
-		
+
 }

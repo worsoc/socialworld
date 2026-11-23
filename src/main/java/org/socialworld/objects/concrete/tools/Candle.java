@@ -17,6 +17,7 @@
  */
 package org.socialworld.objects.concrete.tools;
 
+import org.socialworld.objects.properties.CarrySize;
 import org.socialworld.objects.concrete.tools.Tool;
 import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.IBurnable;
@@ -43,5 +44,8 @@ public class Candle extends Tool implements ILightSource, IBurnable {
 
 	public float getLightRange() {return 3000; }
 	public float getBrightness() {return 30; }
+
+	/** small enough for the belt */
+	public CarrySize getCarrySize() {return CarrySize.small; }
 
 }

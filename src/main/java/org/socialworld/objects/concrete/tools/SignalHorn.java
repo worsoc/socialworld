@@ -17,6 +17,7 @@
  */
 package org.socialworld.objects.concrete.tools;
 
+import org.socialworld.objects.properties.CarrySize;
 import org.socialworld.objects.concrete.tools.Tool;
 import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.IPlayable;
@@ -42,5 +43,8 @@ public class SignalHorn extends Tool implements IPlayable {
 
 	public float getLoudness() {return 90; }
 	public float getPitch() {return 30; }
+
+	/** small enough for the belt */
+	public CarrySize getCarrySize() {return CarrySize.small; }
 
 }

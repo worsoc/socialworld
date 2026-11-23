@@ -17,6 +17,7 @@
  */
 package org.socialworld.objects.concrete.pastime;
 
+import org.socialworld.actions.handle.InventoryPlace;
 import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.IPlayable;
 import org.socialworld.objects.properties.IValuable;
@@ -43,5 +44,11 @@ public class Lute extends Pastime implements IValuable, IPlayable {
 	public float getValue() {return 40; }
 	public float getLoudness() {return 40; }
 	public float getPitch() {return 60; }
+
+	/** medium, but carried on the back as well */
+	public boolean fitsPlace(InventoryPlace place) {
+		if (place == InventoryPlace.back) return true;
+		return super.fitsPlace(place);
+	}
 
 }

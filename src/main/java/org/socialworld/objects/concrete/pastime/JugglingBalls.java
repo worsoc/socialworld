@@ -17,6 +17,7 @@
  */
 package org.socialworld.objects.concrete.pastime;
 
+import org.socialworld.objects.properties.CarrySize;
 import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.IThrowable;
 
@@ -43,5 +44,8 @@ public class JugglingBalls extends Pastime implements IThrowable {
 	public float getMass() {return 100; }
 	public float getVolume() {return 150; }
 	public float getForm() {return 100; }
+
+	/** small enough for the belt */
+	public CarrySize getCarrySize() {return CarrySize.small; }
 
 }

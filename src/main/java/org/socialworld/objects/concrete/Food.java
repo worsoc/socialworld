@@ -17,6 +17,8 @@
  */
 package org.socialworld.objects.concrete;
 
+import org.socialworld.objects.properties.CarrySize;
+import org.socialworld.objects.properties.ICarryable;
 import java.util.List;
 
 import org.socialworld.attributes.PropertyName;
@@ -30,7 +32,7 @@ import org.socialworld.objects.properties.IEatable;
 import org.socialworld.objects.statics.Mapping_Food2LexemIDLowerPart;
 import org.socialworld.tools.StringTupel;
 
-public abstract class Food extends Item implements IEatable {
+public abstract class Food extends Item implements IEatable, ICarryable {
 
 	protected EnumFood belongsTo;
 	private StateEatable stateEatable;
@@ -140,5 +142,8 @@ public abstract class Food extends Item implements IEatable {
 		return getObjectRequester().requestTasteSet(token, this.stateEatable.getPropertyFromMethod(token, StateEatable.METHODNAME_GET_TASTE_SET, StateEatable.VALUENAME_TASTE_SET), this);
 	}
 
+
+	/** carried: small by default for the whole group (inventory concept, D5); exceptions override it */
+	public CarrySize getCarrySize() {return CarrySize.small; }
 
 }

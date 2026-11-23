@@ -17,6 +17,8 @@
  */
 package org.socialworld.objects.concrete.solids;
 
+import org.socialworld.objects.properties.CarrySize;
+import org.socialworld.objects.properties.ICarryable;
 import org.socialworld.objects.Item;
 import org.socialworld.objects.State;
 import org.socialworld.objects.concrete.StateAppearance;
@@ -30,7 +32,7 @@ import org.socialworld.objects.statics.Mapping_Solid2LexemIDLowerPart;
  * A lifeless solid thing of nature: a stone, charcoal, ore.
  * The class shows the main property only; other abilities come from interfaces (e.g. IThrowable).
  */
-public abstract class Solid extends Item {
+public abstract class Solid extends Item implements ICarryable {
 
 	protected EnumSolid belongsTo;
 
@@ -69,5 +71,8 @@ public abstract class Solid extends Item {
 
 		return initState;
 	}
+
+	/** carried: small by default for the whole group (inventory concept, D5); exceptions override it */
+	public CarrySize getCarrySize() {return CarrySize.small; }
 
 }

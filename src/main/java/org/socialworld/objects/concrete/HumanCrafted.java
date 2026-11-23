@@ -17,13 +17,15 @@
  */
 package org.socialworld.objects.concrete;
 
+import org.socialworld.objects.properties.CarrySize;
+import org.socialworld.objects.properties.ICarryable;
 import org.socialworld.objects.Item;
 import org.socialworld.objects.State;
 import org.socialworld.objects.enums.EnumBaseSimObj;
 import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.statics.Mapping_HumanCrafted2LexemIDLowerPart;
 
-public abstract class HumanCrafted extends Item {
+public abstract class HumanCrafted extends Item implements ICarryable {
 
 	protected EnumHumanCrafted belongsTo;
 	
@@ -62,5 +64,8 @@ public abstract class HumanCrafted extends Item {
 
 		return initState;
 	}
+
+	/** carried: medium by default for the whole group (inventory concept, D5); exceptions override it */
+	public CarrySize getCarrySize() {return CarrySize.medium; }
 
 }

@@ -17,6 +17,7 @@
  */
 package org.socialworld.objects.concrete.pastime;
 
+import org.socialworld.objects.properties.CarrySize;
 import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.IPlayable;
 
@@ -41,5 +42,8 @@ public class Flute extends Pastime implements IPlayable {
 
 	public float getLoudness() {return 50; }
 	public float getPitch() {return 80; }
+
+	/** small enough for the belt */
+	public CarrySize getCarrySize() {return CarrySize.small; }
 
 }

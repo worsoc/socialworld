@@ -17,6 +17,7 @@
  */
 package org.socialworld.objects.concrete.animalparts;
 
+import org.socialworld.objects.properties.CarrySize;
 import org.socialworld.objects.enums.EnumAnimalPart;
 import org.socialworld.objects.properties.IBurnable;
 import org.socialworld.objects.properties.IValuable;
@@ -41,5 +42,8 @@ public class Hide extends AnimalPart implements IValuable, IBurnable {
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 	public float getValue() {return 30; }
+
+	/** too big for the belt, too small to need the back */
+	public CarrySize getCarrySize() {return CarrySize.medium; }
 
 }

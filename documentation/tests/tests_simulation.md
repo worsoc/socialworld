@@ -2,7 +2,7 @@
 
 Part of the [test overview](TESTS.md): the running simulation core: start, attributes, core, actions, objects.
 
-**17 test classes, 91 tests.**
+**18 test classes, 103 tests.**
 
 ## Overview
 
@@ -18,6 +18,7 @@ Part of the [test overview](TESTS.md): the running simulation core: start, attri
 | Core | `ActionEventTimingTest` | 9 | fixed intervals between the events of a running action, one event for single actions | – |
 | Core | `ObjectMasterIdRangeTest` | 11 | every type keeps to its band of 10000 IDs; beyond it the simulation stops; the perception jumps from band to band; the highest given ID counts only types with objects | – |
 | Actions | `InventoryMouthTest` | 1 | the inventory gives the item in the mouth as property (eating, drinking) | – |
+| Actions | `InventoryPlacesTest` | 12 | the places of the inventory: empty places give NoSimulationObject, what fits where (IWearable, mouth, ICarryable with its size), dress and overgarment places, old setters | – |
 | Actions | `ActionMoveVelocityTest` | 8 | velocity of a move action: start velocity per mode and intensity, then from event to event (uniform, accelerated, braking) | – |
 | Objects | `SimObjectsCompletelyImplemented` | 3 | lexeme mappings of the object enums | – |
 | Objects | `ClothesCatalogTest` | 5 | the 26 concrete clothes: created without database, one place each, lexeme value, side as property, abilities | – |
@@ -189,6 +190,31 @@ Distances of `EventType`: how far an event reaches (`getEffectDistance`) and how
 
 - **Checks:** an inventory with an apple in the mouth answers `inventory_mouth` with a valid property of type `simulationObject`, not with `ValueProperty.getInvalid()` as before 2026-11-17. `ActionBodilyFunction` takes the item for eating and drinking from there, so nobody could eat or drink before.
 - **Limit:** the apple itself is protected and only comes out of the property with a permitted token, as in `ActionBodilyFunction` through the `ObjectRequester`; that needs the running simulation. `StateInventory`, which passes the property on, is not tested.
+- **Needs:** no database.
+
+### `InventoryPlacesTest`
+
+`src/test/java/org/socialworld/actions/handle/InventoryPlacesTest.java`
+
+The inventory keeps one object per place since 2026-11-23 (inventory concept V1), on the places of `InventoryPlace`: hands, mouth, gloves, socks, shoes (the old indices 1..16 stay), head, upper body, legs, dress, three overgarment places (front, armour, cloak), neck, finger, three belt places, back and bag. `Inventory.fits` says what belongs on a place: clothes and jewellery by `IWearable` (the overgarment by its own place), the mouth by `IEatable` or `IDrinkable`, hands, belt and back by `ICarryable` and its `CarrySize`. `canPut` adds that the place is free and the dress rule; `put` and `remove` change the place.
+
+| Test | Checks |
+|---|---|
+| `emptyPlaces_answerNoSimulationObject_notNull` | every empty place gives `NoSimulationObject` (F4; before, the hands were `null`), also as a valid property |
+| `oldPlaceIndices_stayAsTheyWere` | left hand 1, right hand 2, mouth 3, glove 11, shoe 16; the highest index is 45 |
+| `clothes_fitTheirPlaceOnly` | straw hat on the head, shirt on the upper body, trousers on the legs, dress on the dress place; nothing on a wrong place |
+| `theSide_decidesLeftOrRight` | a shoe and a glove fit the side they are set to |
+| `threeOvergarmentPlaces_apronMailAndCloakTogether` | apron, chain mail and cloak are worn at the same time; an apron is no cloak |
+| `jewellery_ringAtTheFinger_amuletAndRosaryAtTheNeck` | ring at the finger, amulet and rosary at the neck, satchel as bag |
+| `aDress_needsUpperBodyAndLegsFree_andBlocksThem` | no dress over a shirt; with a dress no shirt and no trousers |
+| `aTakenPlace_takesNoSecondItem_untilRemoved` | a second item on a taken hand is refused; `remove` gives the item and then `NoSimulationObject` |
+| `hands_takeEverythingCarryable_liquidsNeedAContainer` | knife, pitchfork, bread, stone and a shirt fit the hand; beer is not `ICarryable` and fits the mouth only; a knife does not fit the mouth |
+| `belt_takesSmallThings_back_takesLargeOnes` | knife, purse and dagger at the belt, the (medium) hammer not; pitchfork, sack and shield on the back, the knife not |
+| `exceptions_luteOnTheBack_swordAtTheBelt` | the medium lute on the back but not at the belt; the long sword at the belt and on the back |
+| `theOldSetters_keepWorking` | the test inventory (cap, shirt, shoes, socks) lands on the new places; `setLeftHand(null)` empties the hand |
+
+- **Assumes:** the carry sizes of the item hierarchy (small by default: food, valuables, devotional and writing goods, parts of nature; medium: human crafted; large: weapons; exceptions in the classes).
+- **Not checked:** `copyForProperty` (it needs a property protection from the running simulation); who puts items on the places (start equipment V3, InventoryCalculator V4).
 - **Needs:** no database.
 
 ### `ActionMoveVelocityTest`

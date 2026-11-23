@@ -17,6 +17,7 @@
  */
 package org.socialworld.objects.concrete.valuables;
 
+import org.socialworld.objects.properties.CarrySize;
 import org.socialworld.objects.concrete.HumanCrafted;
 import org.socialworld.objects.enums.EnumHumanCrafted;
 
@@ -30,5 +31,8 @@ public abstract class Valuable extends HumanCrafted {
 		super();
 		belongsTo = EnumHumanCrafted.Valuable;
 	}
+
+	/** small by default (at the belt, in a bag) */
+	public CarrySize getCarrySize() {return CarrySize.small; }
 
 }

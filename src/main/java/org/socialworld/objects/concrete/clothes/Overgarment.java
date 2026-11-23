@@ -17,6 +17,7 @@
  */
 package org.socialworld.objects.concrete.clothes;
 
+import org.socialworld.actions.handle.InventoryPlace;
 import org.socialworld.objects.enums.EnumHumanCrafted;
 
 /**
@@ -42,5 +43,10 @@ public abstract class Overgarment extends Clothes {
 	public boolean isTrousers() {return false; }
 	public boolean isCap() {return false; }
 	public boolean isOvergarment() {return true; }
+
+	/**
+	 * @return the overgarment place it is worn on: overgarmentFront, overgarmentArmour or overgarmentCloak
+	 */
+	public abstract InventoryPlace getOvergarmentPlace();
 
 }

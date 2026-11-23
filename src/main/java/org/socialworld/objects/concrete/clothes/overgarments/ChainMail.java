@@ -17,6 +17,7 @@
  */
 package org.socialworld.objects.concrete.clothes.overgarments;
 
+import org.socialworld.actions.handle.InventoryPlace;
 import org.socialworld.objects.concrete.clothes.Overgarment;
 import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.IProtective;
@@ -46,5 +47,7 @@ public class ChainMail extends Overgarment implements IProtective, IValuable {
 	public float getProtectionAgainstStroke() {return 80; }
 	public float getProtectionAgainstBackhand() {return 60; }
 	public float getValue() {return 50; }
+
+	public InventoryPlace getOvergarmentPlace() {return InventoryPlace.overgarmentArmour; }
 
 }

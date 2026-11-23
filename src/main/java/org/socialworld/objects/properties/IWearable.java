@@ -39,6 +39,9 @@ public interface IWearable {
 	public default boolean isDress() {return false; }
 	public default boolean isOvergarment() {return false; }
 	public default boolean isJewellery() {return false; }
+	// the place of jewellery: necklaces at the neck (amulet, rosary), rings at the finger
+	public default boolean isNecklace() {return false; }
+	public default boolean isRing() {return false; }
 	public default boolean isBag() {return false; }
 
 }

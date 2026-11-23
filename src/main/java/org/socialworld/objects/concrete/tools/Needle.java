@@ -17,6 +17,7 @@
  */
 package org.socialworld.objects.concrete.tools;
 
+import org.socialworld.objects.properties.CarrySize;
 import org.socialworld.objects.concrete.tools.Tool;
 import org.socialworld.objects.enums.EnumHumanCrafted;
 
@@ -34,5 +35,8 @@ public class Needle extends Tool {
 		belongsTo = EnumHumanCrafted.Needle;
 		setLevelObjectSearch(9 /* base 9: 0.2 meters */ , 6 /* base 25: 0.26 meters */);
 	}
+
+	/** small enough for the belt */
+	public CarrySize getCarrySize() {return CarrySize.small; }
 
 }

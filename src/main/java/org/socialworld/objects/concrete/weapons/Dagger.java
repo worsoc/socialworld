@@ -17,6 +17,7 @@
  */
 package org.socialworld.objects.concrete.weapons;
 
+import org.socialworld.objects.properties.CarrySize;
 import org.socialworld.attributes.properties.WeaponProperty;
 import org.socialworld.calculation.functions.FunctionMXplusN;
 import org.socialworld.objects.concrete.weapons.Weapon;
@@ -62,5 +63,8 @@ public class Dagger extends Weapon implements IWeapon, ICutting, IThrowable {
 	public float getMass() {return 300; }
 	public float getVolume() {return 80; }
 	public float getForm() {return 40; }
+
+	/** a dagger is carried at the belt */
+	public CarrySize getCarrySize() {return CarrySize.small; }
 
 }

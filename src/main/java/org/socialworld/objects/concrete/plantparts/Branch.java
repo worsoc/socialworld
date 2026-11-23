@@ -17,6 +17,7 @@
  */
 package org.socialworld.objects.concrete.plantparts;
 
+import org.socialworld.objects.properties.CarrySize;
 import org.socialworld.attributes.properties.WeaponProperty;
 import org.socialworld.calculation.functions.FunctionMXplusN;
 import org.socialworld.objects.enums.EnumPlantPart;
@@ -57,5 +58,8 @@ public class Branch extends PlantPart implements IWeapon, IThrowable, IBurnable,
 	public float getMass() {return 600; }
 	public float getVolume() {return 700; }
 	public float getForm() {return 20; }
+
+	/** too big for the belt, too small to need the back */
+	public CarrySize getCarrySize() {return CarrySize.medium; }
 
 }

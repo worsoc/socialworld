@@ -52,6 +52,7 @@ public class Amulet extends Devotional implements IWearable, ISacred {
 	public boolean isTrousers() {return false; }
 	public boolean isCap() {return false; }
 	public boolean isJewellery() {return true; }
+	public boolean isNecklace() {return true; }
 
 	public float getHoliness() {return 40; }
 

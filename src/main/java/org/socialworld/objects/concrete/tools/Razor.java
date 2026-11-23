@@ -17,6 +17,7 @@
  */
 package org.socialworld.objects.concrete.tools;
 
+import org.socialworld.objects.properties.CarrySize;
 import org.socialworld.attributes.properties.WeaponProperty;
 import org.socialworld.calculation.functions.FunctionMXplusN;
 import org.socialworld.objects.concrete.tools.Tool;
@@ -57,5 +58,8 @@ public class Razor extends Tool implements IWeapon, ICutting {
 
 	public float getSharpness() {return 90; }
 	public float getBladeLength() {return 80; }
+
+	/** small enough for the belt */
+	public CarrySize getCarrySize() {return CarrySize.small; }
 
 }

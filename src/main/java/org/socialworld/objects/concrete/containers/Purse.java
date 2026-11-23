@@ -17,6 +17,7 @@
  */
 package org.socialworld.objects.concrete.containers;
 
+import org.socialworld.objects.properties.CarrySize;
 import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.IContainer;
 
@@ -41,5 +42,8 @@ public class Purse extends Container implements IContainer {
 
 	public float getCapacity() {return 300; }
 	public boolean isForLiquids() {return false; }
+
+	/** small enough for the belt */
+	public CarrySize getCarrySize() {return CarrySize.small; }
 
 }

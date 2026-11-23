@@ -17,6 +17,7 @@
  */
 package org.socialworld.objects.concrete.containers;
 
+import org.socialworld.objects.properties.CarrySize;
 import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.IBurnable;
 import org.socialworld.objects.properties.IContainer;
@@ -42,5 +43,8 @@ public class Sack extends Container implements IContainer, IBurnable {
 
 	public float getCapacity() {return 50000; }
 	public boolean isForLiquids() {return false; }
+
+	/** large: in the hands or on the back */
+	public CarrySize getCarrySize() {return CarrySize.large; }
 
 }

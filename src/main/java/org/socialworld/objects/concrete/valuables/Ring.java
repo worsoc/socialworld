@@ -52,6 +52,7 @@ public class Ring extends Valuable implements IWearable, IValuable {
 	public boolean isTrousers() {return false; }
 	public boolean isCap() {return false; }
 	public boolean isJewellery() {return true; }
+	public boolean isRing() {return true; }
 
 	public float getValue() {return 50; }
 

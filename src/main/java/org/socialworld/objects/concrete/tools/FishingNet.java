@@ -17,6 +17,7 @@
  */
 package org.socialworld.objects.concrete.tools;
 
+import org.socialworld.objects.properties.CarrySize;
 import org.socialworld.objects.concrete.tools.Tool;
 import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.IBurnable;
@@ -36,5 +37,8 @@ public class FishingNet extends Tool implements IBurnable, ISwimable {
 		belongsTo = EnumHumanCrafted.FishingNet;
 		setLevelObjectSearch(8 /* base 9: 0.6 meters */ , 5 /* base 25: 1.3 meters */);
 	}
+
+	/** large: in the hands or on the back */
+	public CarrySize getCarrySize() {return CarrySize.large; }
 
 }

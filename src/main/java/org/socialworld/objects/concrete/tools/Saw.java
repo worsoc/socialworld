@@ -17,6 +17,7 @@
  */
 package org.socialworld.objects.concrete.tools;
 
+import org.socialworld.objects.properties.CarrySize;
 import org.socialworld.objects.concrete.tools.Tool;
 import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.IBurnable;
@@ -43,5 +44,8 @@ public class Saw extends Tool implements ICutting, IBurnable {
 
 	public float getSharpness() {return 50; }
 	public float getBladeLength() {return 600; }
+
+	/** large: in the hands or on the back */
+	public CarrySize getCarrySize() {return CarrySize.large; }
 
 }

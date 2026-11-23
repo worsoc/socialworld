@@ -17,6 +17,7 @@
  */
 package org.socialworld.objects.concrete.clothes.overgarments;
 
+import org.socialworld.actions.handle.InventoryPlace;
 import org.socialworld.objects.concrete.clothes.Overgarment;
 import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.IBurnable;
@@ -42,5 +43,7 @@ public class FurCloak extends Overgarment implements IBurnable, IValuable {
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 	public float getValue() {return 60; }
+
+	public InventoryPlace getOvergarmentPlace() {return InventoryPlace.overgarmentCloak; }
 
 }

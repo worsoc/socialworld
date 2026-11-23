@@ -17,6 +17,7 @@
  */
 package org.socialworld.objects.concrete.tools;
 
+import org.socialworld.objects.properties.CarrySize;
 import org.socialworld.attributes.properties.WeaponProperty;
 import org.socialworld.calculation.functions.FunctionMXplusN;
 import org.socialworld.objects.concrete.tools.Tool;
@@ -55,5 +56,8 @@ public class Pitchfork extends Tool implements IWeapon, IBurnable {
 	public WeaponProperty getStrokeProperties() {return STROKE; }
 	public WeaponProperty getBackhandProperties() {return BACKHAND; }
 
+
+	/** large: in the hands or on the back */
+	public CarrySize getCarrySize() {return CarrySize.large; }
 
 }

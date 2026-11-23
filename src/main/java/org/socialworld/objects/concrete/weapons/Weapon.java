@@ -17,6 +17,7 @@
  */
 package org.socialworld.objects.concrete.weapons;
 
+import org.socialworld.objects.properties.CarrySize;
 import org.socialworld.objects.concrete.HumanCrafted;
 import org.socialworld.objects.enums.EnumHumanCrafted;
 
@@ -30,5 +31,8 @@ public abstract class Weapon extends HumanCrafted {
 		super();
 		belongsTo = EnumHumanCrafted.Weapon;
 	}
+
+	/** weapons are large by default (on the back or in the hands) */
+	public CarrySize getCarrySize() {return CarrySize.large; }
 
 }
