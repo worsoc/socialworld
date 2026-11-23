@@ -75,7 +75,7 @@ public final class ActionCreationTool {
 	private final JComboBox<ActionMode> comboMode = new JComboBox<ActionMode>(offeredModes());
 	// taking and dropping (inventory concept V4): the item and the hand
 	private final JSpinner spinnerItem = new JSpinner(new SpinnerNumberModel(0, 0, 99999, 1));
-	private final JComboBox<InventoryPlace> comboHand = new JComboBox<InventoryPlace>(ItemReach.HANDS);
+	private final JComboBox<InventoryPlace> comboHand = new JComboBox<InventoryPlace>(ItemReach.PLACES);
 	private final JSpinner spinnerIntensity = new JSpinner(new SpinnerNumberModel(DEFAULT_INTENSITY, 0d, 9999d, 1d));
 	private final JSpinner spinnerPriority = new JSpinner(new SpinnerNumberModel(DEFAULT_PRIORITY, 0, 256, 1));
 	private final JSpinner spinnerDuration = new JSpinner(new SpinnerNumberModel(DEFAULT_DURATION_IN_SECONDS, 0d,
@@ -148,7 +148,7 @@ public final class ActionCreationTool {
 		buttonCheck.addActionListener(event -> checkSearchTree());
 		JButton buttonFit = new JButton("Karte einpassen");
 		buttonFit.addActionListener(event -> map.fitToHumans());
-		JButton buttonItems = new JButton("Items in Reichweite");
+		JButton buttonItems = new JButton("Items und Inventar");
 		buttonItems.addActionListener(event -> showItems());
 
 		JPanel fields = new JPanel(new GridLayout(0, 1, 0, 4));
@@ -162,7 +162,7 @@ public final class ActionCreationTool {
 		fields.add(spinnerPriority);
 		fields.add(new JLabel("Dauer in s (0: einmal, nicht unterbrechbar)"));
 		fields.add(spinnerDuration);
-		fields.add(new JLabel("Item-ID (Aufheben) und Hand"));
+		fields.add(new JLabel("Item-ID und Hand oder Platz"));
 		fields.add(spinnerItem);
 		fields.add(comboHand);
 		fields.add(labelRange);
@@ -346,9 +346,17 @@ public final class ActionCreationTool {
 			List<String> listed = new ArrayList<String>();
 			for (Integer id : inReach) listed.add(id + " " + names.get(id));
 			writeLog("Mensch " + causerId + ": freie Items in Reichweite (1 m): " + (listed.isEmpty() ? "keine" : listed));
-			writeLog("Mensch " + causerId + ": rechte Hand " + describe(causer.getInventoryItem(token, InventoryPlace.rightHand))
-					+ ", linke Hand " + describe(causer.getInventoryItem(token, InventoryPlace.leftHand))
-					+ ", Mund " + describe(causer.getInventoryItem(token, InventoryPlace.mouth)));
+			List<String> taken = new ArrayList<String>();
+			for (InventoryPlace place : InventoryPlace.values()) {
+				SimulationObject object = causer.getInventoryItem(token, place);
+				if (!object.isSimulationObject()) continue;
+				String entry = place + " " + describe(object);
+				List<String> inside = new ArrayList<String>();
+				for (SimulationObject content : object.getContents()) inside.add(describe(content));
+				if (!inside.isEmpty()) entry += " mit " + inside;
+				taken.add(entry);
+			}
+			writeLog("Mensch " + causerId + ": Inventar " + (taken.isEmpty() ? "leer" : taken));
 		}
 		catch (RuntimeException exception) {
 			exception.printStackTrace();

@@ -433,6 +433,8 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				
 			case takeItem:
 			case dropItem:
+			case switchItemToOtherHand:
+			case getItemFromInventory:
 
 				// equip item
 				lines.add(0, 0, "GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_EQUIP_ITEM + "))");
@@ -453,6 +455,12 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				// itemIsEatable
 				lines.add(0, 1, "GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_EQUIP_ITEM + ").IsA(IEatable))");
 				lines.add(0, 1, Value.VALUE_BY_NAME_EVENT_EQUIP_ITEMISEATABLE);
+
+				// the item and the place to set it to (inventory concept V5)
+				lines.add(0, 2, "GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_EQUIP_ITEM + "))");
+				lines.add(0, 2, Value.VALUE_BY_NAME_EVENT_EQUIP_ITEM);
+				lines.add(0, 3, "GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_EQUIP_PLACE + "))");
+				lines.add(0, 3, Value.VALUE_BY_NAME_EVENT_EQUIP_PLACE);
 
 				break;
 				

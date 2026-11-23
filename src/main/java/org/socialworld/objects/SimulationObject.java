@@ -705,6 +705,38 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 		carried.followCarrier();
 	}
 
+	/**
+	 * Puts the content into this object (a container), connection inside: it follows the container at its place
+	 * (offset 0). Whether it fits (capacity, liquids) is checked by the caller (ContainerContent).
+	 *
+	 * @return false if the content is carried or inside something already, or is this object
+	 */
+	final public boolean putInside(SimulationObject content) {
+		if (content == null || !content.isSimulationObject() || content == this) return false;
+		if (content.isCarried()) return false;
+		this.state.connectAsMasterTo(content, ConnectionType.inside, Vector.get0Vector(), this.guard);
+		content.followCarrier();
+		return true;
+	}
+
+	/** Takes the content out of this object; it stays where it is. */
+	final public boolean takeOut(SimulationObject content) {
+		if (content == null || content.getCarrier() != this || !content.isInside()) return false;
+		this.state.releaseConnectionTo(content, this.guard);
+		return true;
+	}
+
+	final public boolean isInside() {
+		return this.state != null && this.state.isInside();
+	}
+
+	/**
+	 * @return what lies inside this object (empty for anything that is no container)
+	 */
+	final public List<SimulationObject> getContents() {
+		return (this.state != null) ? this.state.getContents() : new ArrayList<SimulationObject>();
+	}
+
 	/** This object does not carry the other one any longer; it stays where it is. */
 	final public void releaseCarried(SimulationObject carried) {
 		if (carried == null || carried.getCarrier() != this) return;

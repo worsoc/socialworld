@@ -2,7 +2,7 @@
 
 Part of the [test overview](TESTS.md): expressions, functions, knowledge, positions and vectors.
 
-**18 test classes, 120 tests.**
+**18 test classes, 121 tests.**
 
 ## Overview
 
@@ -22,7 +22,7 @@ Part of the [test overview](TESTS.md): expressions, functions, knowledge, positi
 | Calculation | `PositionCalculatorSectorsTest` | 9 | whether a new position stays in the same search sectors | – |
 | Calculation | `PositionMovementTest` | 16 | technical position movement: impulse, friction and rest at 50 mm/s, bystander push 0.2 × v, blows (share of the intensity, away from the hitter, only the candidates event), time step, technical event types in their own block 512..527, no self-push | – |
 | Calculation | `CarriedFollowTest` | 5 | carried objects take carrier + offset per place without drift, ignore every event but followCarrier, followCarrier is technical (514) | – |
-| Calculation | `InventoryCalculatorTest` | 5 | taking and dropping: the hand (requested, else right, else left), the reach of 1 m on the ground, the self inventory events | – |
+| Calculation | `InventoryCalculatorTest` | 6 | taking, dropping and switching: the hand (requested, else right, else left), the other hand, the reach of 1 m on the ground, the self inventory events | – |
 | Calculation | `CalculationVectorTest` | 11 | vector operations in `Calculation`: add, subtract, negate, scale, component product, normalize, length | – |
 | Calculation | `DirectionToReferenceTest` | 10 | tag `ActionDir`: direction to or away from a reference position, height weight, offset, fallback | – |
 | Calculation | `VectorTest` | 7 | `Vector`: normalizing (the zero vector has length 0) and the component product | – |
@@ -309,8 +309,10 @@ The InventoryCalculator (inventory concept V4, 2026-11-23) changes the own inven
 | `drop_theRequestedHand_ifItHoldsSomething_elseRightThenLeft` | the requested hand if it holds something; without one right, then left; empty hands give none |
 | `reach_isOneMetreOnTheGround` | 1 m exactly is in reach, 1.001 m is not; the height does not count |
 | `theInventoryEvents_areTheSelfInventoryEvents` | take, drop, get are self inventory events; the target event and a move are not |
+| `switch_goesToTheOtherHand` | left ↔ right; no other hand for a belt place |
 
-- **Not checked:** the calculator with a real event, holder and item (it needs the running simulation); switch, set and get (V5).
+- **V5 (2026-11-23):** switch (into the other, free hand), set (from a hand onto a place, else into the container there, `ContainerContent`), get (an item on a place or in a container of the holder, or the object on a place, into a free hand).
+- **Not checked:** the calculator with a real event, holder and item (it needs the running simulation).
 
 ## Not Covered
 

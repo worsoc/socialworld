@@ -28,19 +28,31 @@ import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.handle.InventoryPlace;
 
 /**
- * Taking and dropping in the tool (inventory concept V4, 2026-11-23): the modes, the reach of a human (as in the
+ * Taking, dropping, switching, setting and getting in the tool (inventory concept V4 and V5, 2026-11-23): the modes, the reach of a human (as in the
  * InventoryCalculator: 1 m on the ground) and the free items within it.
  */
 public final class ItemReach {
 
 	private static final List<ActionMode> ITEM_MODES = Collections.unmodifiableList(
-			Arrays.asList(ActionMode.takeItem, ActionMode.dropItem));
+			Arrays.asList(ActionMode.takeItem, ActionMode.dropItem, ActionMode.switchItemToOtherHand,
+					ActionMode.setItemToInventory, ActionMode.getItemFromInventory));
 
 	/** how far a human reaches to take something, in mm, as InventoryCalculator.REACH */
 	public static final float REACH_IN_MILLIMETERS = 1000f;
 
-	/** the places the tool offers: no hand given (right, else left), or one hand */
-	public static final InventoryPlace[] HANDS = {InventoryPlace.noWhere, InventoryPlace.rightHand, InventoryPlace.leftHand};
+	/** the places the tool offers: none given, the hands first, then every other place (for set and get, V5) */
+	public static final InventoryPlace[] PLACES = places();
+
+	private static InventoryPlace[] places() {
+		List<InventoryPlace> places = new ArrayList<InventoryPlace>();
+		places.add(InventoryPlace.noWhere);
+		places.add(InventoryPlace.rightHand);
+		places.add(InventoryPlace.leftHand);
+		for (InventoryPlace place : InventoryPlace.values()) {
+			if (!places.contains(place)) places.add(place);
+		}
+		return places.toArray(new InventoryPlace[0]);
+	}
 
 	private ItemReach() {
 	}

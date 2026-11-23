@@ -70,4 +70,11 @@ class InventoryCalculatorTest {
 		assertThat(EventType.targetInventoryTake.isSelfInventory()).isFalse();
 		assertThat(EventType.selfMoveWalk.isSelfInventory()).isFalse();
 	}
+
+	@Test
+	void switch_goesToTheOtherHand() {
+		assertThat(InventoryCalculator.otherHand(InventoryPlace.leftHand)).isEqualTo(InventoryPlace.rightHand);
+		assertThat(InventoryCalculator.otherHand(InventoryPlace.rightHand)).isEqualTo(InventoryPlace.leftHand);
+		assertThat(InventoryCalculator.otherHand(InventoryPlace.belt1)).isEqualTo(InventoryPlace.noWhere);
+	}
 }

@@ -17,9 +17,15 @@
  */
 package org.socialworld.actions.handle;
 
+import java.util.List;
+import java.util.Map;
+
 import org.socialworld.objects.SimulationObject;
+import org.socialworld.objects.concrete.containers.Purse;
+import org.socialworld.objects.concrete.valuables.Valuable;
 import org.socialworld.objects.properties.CarrySize;
 import org.socialworld.objects.properties.ICarryable;
+import org.socialworld.objects.properties.IContainer;
 import org.socialworld.objects.properties.IEatable;
 
 /**
@@ -48,6 +54,64 @@ public final class StartEquipment {
 	};
 
 	private StartEquipment() {
+	}
+
+	/** Where an item of the start equipment goes: a place, or into a container (then place is noWhere). */
+	public static final class Decision {
+		public final InventoryPlace place;
+		public final SimulationObject container;
+		Decision(InventoryPlace place, SimulationObject container) {
+			this.place = place;
+			this.container = container;
+		}
+		public boolean isInContainer() {
+			return container != null;
+		}
+		public boolean isNowhere() {
+			return container == null && place == InventoryPlace.noWhere;
+		}
+	}
+
+	/**
+	 * The decision for an item (inventory concept V5): the first food into the mouth, then the worn places, then a
+	 * liquid into a container for liquids, a valuable into the purse, more food into a basket, bag or sack, and
+	 * everything else by its size.
+	 *
+	 * @param containers the containers placed so far, in the order they were placed
+	 * @param contents what is in each of them so far
+	 */
+	public static Decision decide(Inventory inventory, List<SimulationObject> containers,
+			Map<SimulationObject, List<SimulationObject>> contents, SimulationObject item) {
+		if (item instanceof IEatable && inventory.canPut(InventoryPlace.mouth, item)) {
+			return new Decision(InventoryPlace.mouth, null);
+		}
+		InventoryPlace worn = chooseWornPlace(inventory, item);
+		if (worn != InventoryPlace.noWhere) return new Decision(worn, null);
+
+		SimulationObject container = chooseContainer(containers, contents, item);
+		if (container != null) return new Decision(InventoryPlace.noWhere, container);
+
+		return new Decision(choosePlace(inventory, item, false), null);
+	}
+
+	/**
+	 * The container for an item, null if there is none: a liquid into the first container for liquids that holds it,
+	 * a valuable into a purse, food into the first basket, bag or sack that has room (not into the purse, not into
+	 * a container for liquids).
+	 */
+	static SimulationObject chooseContainer(List<SimulationObject> containers,
+			Map<SimulationObject, List<SimulationObject>> contents, SimulationObject item) {
+		boolean liquid = ContainerContent.isLiquid(item);
+		boolean valuable = item instanceof Valuable;
+		boolean food = item instanceof IEatable;
+		if (!liquid && !valuable && !food) return null;
+		for (SimulationObject container : containers) {
+			if (valuable && !(container instanceof Purse)) continue;
+			// food goes into a basket, bag or sack: not into the purse and not into a container for liquids
+			if (food && !liquid && (container instanceof Purse || ((IContainer) container).isForLiquids())) continue;
+			if (ContainerContent.canHold(container, contents.get(container), item)) return container;
+		}
+		return null;
 	}
 
 	/**

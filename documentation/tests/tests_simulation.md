@@ -2,7 +2,7 @@
 
 Part of the [test overview](TESTS.md): the running simulation core: start, attributes, core, actions, objects.
 
-**20 test classes, 111 tests.**
+**22 test classes, 118 tests.**
 
 ## Overview
 
@@ -19,13 +19,15 @@ Part of the [test overview](TESTS.md): the running simulation core: start, attri
 | Core | `ObjectMasterIdRangeTest` | 11 | every type keeps to its band of 10000 IDs; beyond it the simulation stops; the perception jumps from band to band; the highest given ID counts only types with objects | – |
 | Actions | `InventoryMouthTest` | 1 | the inventory gives the item in the mouth as property (eating, drinking) | – |
 | Actions | `InventoryPlacesTest` | 12 | the places of the inventory: empty places give NoSimulationObject, what fits where (IWearable, mouth, ICarryable with its size), dress and overgarment places, old setters | – |
-| Actions | `StartEquipmentTest` | 5 | where a piece of the start equipment goes: worn places, more clothes first, first food into the mouth, small to the belt, medium and large to hands and back | – |
+| Actions | `StartEquipmentTest` | 7 | where a piece of the start equipment goes: worn places, more clothes first, first food into the mouth, small to the belt, medium and large to hands and back, liquids, coins and food into their containers | – |
+| Actions | `ContainerContentTest` | 4 | what fits into a container: one liquid in an empty container for liquids, space by carry size within the capacity, no things with a liquid | – |
 | Actions | `ActionMoveVelocityTest` | 8 | velocity of a move action: start velocity per mode and intensity, then from event to event (uniform, accelerated, braking) | – |
 | Objects | `SimObjectsCompletelyImplemented` | 3 | lexeme mappings of the object enums | – |
 | Objects | `ClothesCatalogTest` | 5 | the 26 concrete clothes: created without database, one place each, lexeme value, side as property, abilities | – |
 | Objects | `ToolsAndWeaponsCatalogTest` | 5 | the 29 tools and 7 weapons: created without database, lexeme value in its level, weapon properties, abilities | – |
 | Objects | `FoodAndDrinksCatalogTest` | 5 | the 11 kinds of food and 2 new drinks: created without database, eatable or drinkable, lexeme value, food values, perishable, abilities | – |
 | Objects | `NatureCatalogTest` | 5 | the 7 things of nature (parts of plants and animals, solids): created without database, lexeme value in its own base group, abilities | – |
+| Objects | `LiquidStatesTest` | 1 | a liquid gets the three states of every item (before NoState, so no liquid could be created) | – |
 | Objects | `CarriedConnectionTest` | 3 | the connection carried: offset (0 by default, a copy), carrier and carried find each other in their lists | – |
 | Objects | `ContainersAndGoodsCatalogTest` | 5 | the 10 containers and 12 valuables, devotional, writing and pastime goods: created without database, lexeme value, capacity, jewellery and bag, abilities | – |
 
@@ -231,7 +233,24 @@ Where a piece of the start equipment goes (inventory concept V3, 2026-11-23): cl
 | `moreClothesFirst_thenTheKitPieceForTheSamePlace_findsNoWornPlace` | after the fur cloak the cloak finds no worn place (with `choosePlace` it would go into a hand); after the hood the straw hat finds none |
 | `theFirstFood_goesIntoTheMouth_theNextToTheBelt` | bread into the mouth, cheese to the belt |
 | `smallToTheBelt_mediumToTheHands_largeToHandsAndBack` | smith: hammer and tongs in the hands, knife at the belt, a second hammer finds no place; knight: sword and shield in the hands, a second sword on the back |
-| `jewelleryAndBag_toTheirPlace_purseAndCoinsToTheBelt` | ring at the finger, satchel as bag, purse and coins at the belt |
+| `jewelleryAndBag_toTheirPlace_purseAndCoinsToTheBelt` | ring at the finger, satchel as bag, purse and coins at the belt (with `choosePlace`, without containers) |
+| `decide_liquidIntoItsContainer_coinsIntoThePurse_foodNotIntoThePurse` | `decide` (V5): beer into the jug, coins into the purse, a turnip into the basket (not into the jug or the purse) |
+| `decide_withoutContainers_asBefore` | the first cake into the mouth; with only a purse the second cake goes to the belt; beer without a container finds nothing |
+
+- **Needs:** no database.
+
+### `ContainerContentTest`
+
+`src/test/java/org/socialworld/actions/handle/ContainerContentTest.java`
+
+What fits into a container (inventory concept V5, 2026-11-23). The content lies inside its container (connection `inside`) and follows it, as carried objects follow their carrier. A liquid (drinkable, not carryable) fills an empty container for liquids; other things need `ICarryable` and take space by their carry size: small 300 ml, medium 2 l, large 15 l, together within the capacity, never together with a liquid.
+
+| Test | Checks |
+|---|---|
+| `aLiquid_fillsAnEmptyContainerForLiquids_only` | beer into an empty jug, not into a jug with wine, water not into a sack |
+| `noThingsTogetherWithALiquid` | no coins into a jug of beer |
+| `space_bySize_withinTheCapacity` | space 300, 2000, 15000, 0 for a liquid; the purse holds one handful of coins, not two; the basket holds a hammer and bread, not a pitchfork on top of three hammers |
+| `noContainer_notItself_notTwice` | a hammer holds nothing, the basket not itself, the same bread not twice |
 
 - **Needs:** no database.
 
@@ -320,6 +339,16 @@ The connections of `objects/connections` (from 2023, unused until 2026-11-23) ca
 
 - **Assumes:** objects without a state; the connection is put into both lists by hand, as `connectAsMasterTo` does through `addConnection`.
 - **Not checked:** `SimulationObject.carry`, `releaseCarried` and the connecting by the inventory (they need states and write access).
+
+### `LiquidStatesTest`
+
+`src/test/java/org/socialworld/objects/concrete/eatable/LiquidStatesTest.java`
+
+| Test | Checks |
+|---|---|
+| `water_givesTheThreeStates` | `Liquid.getInitState` gives StatePerceptible, StateAppearance and StateComposition (2026-11-23; before NoState, which `SimulationObject.createAddOnStates` cannot cast, so creating water, beer or wine failed) |
+
+- **Needs:** no database (the states are only constructed, not initialised).
 
 ### `ContainersAndGoodsCatalogTest`
 

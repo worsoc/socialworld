@@ -20,7 +20,9 @@ package org.socialworld.datasource.createObjects;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.socialworld.actions.handle.Inventory;
@@ -35,6 +37,7 @@ import org.socialworld.objects.concrete.clothes.Glove;
 import org.socialworld.objects.concrete.clothes.Shoe;
 import org.socialworld.objects.concrete.clothes.Sock;
 import org.socialworld.objects.concrete.eatable.bakery.Bread;
+import org.socialworld.objects.properties.IContainer;
 
 /**
  * The whole start equipment of the 100 characters, distributed as Simulation.equip does it, but on objects without
@@ -52,9 +55,10 @@ class StartEquipmentDistributionTest {
 	}
 
 	@Test
-	void all100_areEquipped_nothingFallsToTheFeet() throws Exception {
+	void all100_areEquipped_nothingFallsToTheFeet_liquidsAreInTheirContainers() throws Exception {
 		StartEquipmentCatalog catalog = StartEquipmentCatalog.load();
-		int placed = 0, leftOut = 0, dropped = 0, breads = 0;
+		int placed = 0, leftOut = 0, dropped = 0, breads = 0, inContainers = 0, liquidsIn = 0;
+		List<String> liquidsWithout = new ArrayList<>();
 		List<String> droppedNames = new ArrayList<>();
 		for (int no = 1; no <= 100; no++) {
 			Entry entry = catalog.get(no);
@@ -66,12 +70,34 @@ class StartEquipmentDistributionTest {
 				assertThat(inventory.put(place, item)).isTrue();
 				placed++;
 			}
+			List<SimulationObject> containers = new ArrayList<>();
+			Map<SimulationObject, List<SimulationObject>> contents = new HashMap<>();
 			for (String className : entry.items) {
 				SimulationObject item = create(className, Side.none);
-				InventoryPlace place = StartEquipment.choosePlace(inventory, item, true);
-				if (place == InventoryPlace.noWhere) { dropped++; droppedNames.add(no + ":" + item.getClass().getSimpleName()); continue; }
-				assertThat(inventory.put(place, item)).isTrue();
-				placed++;
+				StartEquipment.Decision decision = StartEquipment.decide(inventory, containers, contents, item);
+				if (decision.isInContainer()) {
+					contents.get(decision.container).add(item);
+					inContainers++;
+				} else if (decision.isNowhere()) {
+					dropped++; droppedNames.add(no + ":" + item.getClass().getSimpleName());
+				} else {
+					assertThat(inventory.put(decision.place, item)).isTrue();
+					placed++;
+				}
+				if (item instanceof IContainer) {
+					containers.add(item);
+					contents.put(item, new ArrayList<>());
+				}
+			}
+			for (String className : entry.contents) {
+				SimulationObject liquid = create(className, Side.none);
+				StartEquipment.Decision decision = StartEquipment.decide(inventory, containers, contents, liquid);
+				if (decision.isInContainer()) {
+					contents.get(decision.container).add(liquid);
+					liquidsIn++;
+				} else {
+					liquidsWithout.add(no + ":" + liquid.getClass().getSimpleName());
+				}
 			}
 			if (inventory.isFree(InventoryPlace.mouth)) {
 				assertThat(inventory.put(InventoryPlace.mouth, new Bread())).isTrue();
@@ -80,9 +106,11 @@ class StartEquipmentDistributionTest {
 			// every human has something to wear on the upper body (shirt, dress or rags)
 			assertThat(inventory.isFree(InventoryPlace.upperBody) && inventory.isFree(InventoryPlace.dress)).as("character " + no).isFalse();
 		}
-		System.out.println("StartEquipmentDistributionTest: placed " + placed + ", left out " + leftOut + ", dropped " + dropped
+		System.out.println("StartEquipmentDistributionTest: placed " + placed + ", in containers " + inContainers
+				+ ", liquids in containers " + liquidsIn + " " + liquidsWithout + ", left out " + leftOut + ", dropped " + dropped
 				+ " " + droppedNames + ", breads " + breads);
 		assertThat(droppedNames).isEmpty();
+		assertThat(liquidsWithout).isEmpty();
 		// the more clothes that replace a kit piece: fur cloak (48), hood (26) and helmet (66)
 		assertThat(leftOut).isEqualTo(3);
 	}

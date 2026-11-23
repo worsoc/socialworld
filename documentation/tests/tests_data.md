@@ -12,7 +12,7 @@ Part of the [test overview](TESTS.md): pools and tables, and the Data Creation T
 | Data | `FunctionPoolTest` | 5 | building a matrix from flat arrays, table functions under func_id 0..10, func_ids for functions created at runtime | – |
 | Data | `GaussPoolAAACMMappingTest` | 4 | mapping of the two drawn indices | – |
 | Data | `StartEquipmentCatalogTest` | 7 | equipment.csv: all 100 characters, kits as pieces with pairs, more clothes first, barefoot, container and content apart, class names, totals | – |
-| Data | `StartEquipmentDistributionTest` | 1 | the whole start equipment distributed as at the start of the simulation: nothing at the feet, 3 kit pieces left out | – |
+| Data | `StartEquipmentDistributionTest` | 1 | the whole start equipment distributed as at the start of the simulation: nothing at the feet, every liquid in its container, 3 kit pieces left out | – |
 | Data | `CreateAnimalInfluenceTypeTest` | 4 | the influence type is the character of the attribute array, the same for every event type | – |
 | Data | `CreateAnimalState2ActionTypeTest` | 3 | the state-to-action type is the character of the attribute array, equal to the influence type | – |
 | Data | `EventReactionFamilyTest` | 4 | 116 reaction types, drawn per event family, other event types keep 1 | – |
@@ -155,7 +155,7 @@ Distributes the whole start equipment as `Simulation.equip` does it (`StartEquip
 
 | Test | Checks |
 |---|---|
-| `all100_areEquipped_nothingFallsToTheFeet` | every piece gets a place (915 on 2026-11-23), nothing is put down at the feet, exactly 3 kit pieces are left out (the fur cloak, the hood and the helmet take their place), every human wears something on the upper body; prints the counts and the breads (69) |
+| `all100_areEquipped_nothingFallsToTheFeet_liquidsAreInTheirContainers` | every piece gets a place or a container (908 + 7 on 2026-11-23, V5: `StartEquipment.decide`), every one of the 10 liquids is in its container, nothing is put down at the feet, exactly 3 kit pieces are left out (the fur cloak, the hood and the helmet take their place), every human wears something on the upper body; prints the counts and the breads (69) |
 
 - **Not checked:** the creating of the objects and the carrying in the running simulation (they need the database).
 

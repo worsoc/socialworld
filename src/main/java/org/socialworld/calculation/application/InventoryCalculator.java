@@ -18,6 +18,7 @@
 package org.socialworld.calculation.application;
 
 import org.socialworld.GlobalSwitches;
+import org.socialworld.actions.handle.ContainerContent;
 import org.socialworld.actions.handle.InventoryPlace;
 import org.socialworld.attributes.Position;
 import org.socialworld.calculation.IObjectReceiver;
@@ -42,6 +43,9 @@ import org.socialworld.objects.access.HiddenAnimal;
  *           it goes into the hand given by the place, else into the right hand if it is free, else into the left.
  * dropItem: the hand given by the place (else the right one if it holds something, else the left) is emptied;
  *           the item stays where it is, at the place of the hand.
+ * switch (V5):  the item of a hand goes into the other, free hand.
+ * set (V5):     an item of a hand goes to a place: onto it if it fits and is free, else into the container there.
+ * get (V5):     an item on a place or in a container of the holder (or the object on a place) goes into a free hand.
  * If a condition is not met, nothing happens (debug line with OUTPUT_DEBUG_INVENTORY).
  */
 public final class InventoryCalculator implements IObjectReceiver {
@@ -69,7 +73,9 @@ public final class InventoryCalculator implements IObjectReceiver {
 		EventType eventType = event.getEventType();
 		if (eventType == EventType.selfInventoryTake) return take(event, state, hiddenWriteAccess);
 		if (eventType == EventType.selfInventoryDrop) return drop(event, state, hiddenWriteAccess);
-		// switch, set and get come with V5
+		if (eventType == EventType.selfInventorySwitch) return switchHands(event, state, hiddenWriteAccess);
+		if (eventType == EventType.selfInventorySet) return set(event, state, hiddenWriteAccess);
+		if (eventType == EventType.selfInventoryGet) return get(event, state, hiddenWriteAccess);
 		return INVENTORY_CALCULATOR_RETURNS_NO_CHANGE;
 	}
 
@@ -107,6 +113,132 @@ public final class InventoryCalculator implements IObjectReceiver {
 		if (!dropped.isSimulationObject()) return noChange("drop: nothing in " + hand, holder);
 		debug("drop: " + holder.getObjectID() + " drops " + dropped.getObjectID() + " from " + hand);
 		return INVENTORY_CALCULATOR_RETURNS_CHANGED;
+	}
+
+	/** switch: the item in the hand (the given one, else right, else left) goes into the other hand, which has to be free. */
+	private int switchHands(Event event, StateAnimal state, HiddenAnimal hiddenWriteAccess) {
+		SimulationObject holder = state.getObject();
+		InventoryPlace from = handForDrop(readPlace(event),
+				state.getInventoryItem(InventoryPlace.leftHand).isSimulationObject(),
+				state.getInventoryItem(InventoryPlace.rightHand).isSimulationObject());
+		if (from == InventoryPlace.noWhere) return noChange("switch: the hands are empty", holder);
+		InventoryPlace to = otherHand(from);
+		SimulationObject item = state.getInventoryItem(from);
+		if (!state.canPutToInventory(to, item)) return noChange("switch: " + to + " is not free", holder);
+
+		hiddenWriteAccess.removeFromInventory(from);
+		if (!hiddenWriteAccess.putToInventory(to, item)) {
+			hiddenWriteAccess.putToInventory(from, item);
+			return noChange("switch: put refused", holder);
+		}
+		debug("switch: " + holder.getObjectID() + " moves " + item.getObjectID() + " from " + from + " to " + to);
+		return INVENTORY_CALCULATOR_RETURNS_CHANGED;
+	}
+
+	/**
+	 * set: an item in a hand (the given item if it is in a hand, else the right hand, else the left) goes to the
+	 * given place: onto it if it fits and is free, else into the container on that place if it has room.
+	 */
+	private int set(Event event, StateAnimal state, HiddenAnimal hiddenWriteAccess) {
+		SimulationObject holder = state.getObject();
+		InventoryPlace target = readPlace(event);
+		if (target == InventoryPlace.noWhere || target.isHand()) return noChange("set: no place given (or a hand)", holder);
+
+		InventoryPlace from = handOf(state, readItem(event));
+		if (from == InventoryPlace.noWhere) return noChange("set: nothing in the hands", holder);
+		SimulationObject item = state.getInventoryItem(from);
+
+		if (state.canPutToInventory(target, item)) {
+			hiddenWriteAccess.removeFromInventory(from);
+			if (hiddenWriteAccess.putToInventory(target, item)) {
+				debug("set: " + holder.getObjectID() + " puts " + item.getObjectID() + " from " + from + " to " + target);
+				return INVENTORY_CALCULATOR_RETURNS_CHANGED;
+			}
+			hiddenWriteAccess.putToInventory(from, item);
+			return noChange("set: put refused", holder);
+		}
+
+		SimulationObject container = state.getInventoryItem(target);
+		if (!ContainerContent.canHold(container, container.getContents(), item)) {
+			return noChange("set: " + item.getObjectID() + " fits neither on " + target + " nor into what is there", holder);
+		}
+		hiddenWriteAccess.removeFromInventory(from);
+		if (!container.putInside(item)) {
+			hiddenWriteAccess.putToInventory(from, item);
+			return noChange("set: the container refused", holder);
+		}
+		debug("set: " + holder.getObjectID() + " puts " + item.getObjectID() + " into " + container.getObjectID() + " on " + target);
+		return INVENTORY_CALCULATOR_RETURNS_CHANGED;
+	}
+
+	/**
+	 * get: into a free hand (the given one, else right, else left) comes the given item, if it is on a place of the
+	 * holder or inside a container there; without an item, the object on the given place.
+	 */
+	private int get(Event event, StateAnimal state, HiddenAnimal hiddenWriteAccess) {
+		SimulationObject holder = state.getObject();
+		SimulationObject item = readItem(event);
+		InventoryPlace placeOfItem = InventoryPlace.noWhere;
+		SimulationObject container = NoSimulationObject.getObjectNothing();
+
+		if (item.isSimulationObject()) {
+			placeOfItem = placeOf(state, item);
+			if (placeOfItem == InventoryPlace.noWhere) {
+				container = item.getCarrier();
+				if (!item.isInside() || placeOf(state, container) == InventoryPlace.noWhere) {
+					return noChange("get: item " + item.getObjectID() + " is neither on a place nor in a container of the holder", holder);
+				}
+			}
+		} else {
+			placeOfItem = readPlace(event);
+			if (placeOfItem == InventoryPlace.noWhere || placeOfItem.isHand()) return noChange("get: neither item nor place given", holder);
+			item = state.getInventoryItem(placeOfItem);
+			if (!item.isSimulationObject()) return noChange("get: " + placeOfItem + " is empty", holder);
+		}
+		if (placeOfItem.isHand()) return noChange("get: item " + item.getObjectID() + " is in a hand already", holder);
+
+		InventoryPlace hand = handForTake(placeOfItem.isHand() ? InventoryPlace.noWhere : readHand(event),
+				state.canPutToInventory(InventoryPlace.leftHand, item), state.canPutToInventory(InventoryPlace.rightHand, item));
+		if (hand == InventoryPlace.noWhere) return noChange("get: no free hand for item " + item.getObjectID(), holder);
+
+		if (container.isSimulationObject()) container.takeOut(item);
+		else hiddenWriteAccess.removeFromInventory(placeOfItem);
+		if (!hiddenWriteAccess.putToInventory(hand, item)) return noChange("get: put refused", holder);
+		debug("get: " + holder.getObjectID() + " takes " + item.getObjectID() + " into " + hand);
+		return INVENTORY_CALCULATOR_RETURNS_CHANGED;
+	}
+
+	/** the hand that holds the item, or (no item given) the right hand if it holds something, else the left */
+	private static InventoryPlace handOf(StateAnimal state, SimulationObject item) {
+		if (item.isSimulationObject()) {
+			if (state.getInventoryItem(InventoryPlace.rightHand) == item) return InventoryPlace.rightHand;
+			if (state.getInventoryItem(InventoryPlace.leftHand) == item) return InventoryPlace.leftHand;
+			return InventoryPlace.noWhere;
+		}
+		return handForDrop(InventoryPlace.noWhere,
+				state.getInventoryItem(InventoryPlace.leftHand).isSimulationObject(),
+				state.getInventoryItem(InventoryPlace.rightHand).isSimulationObject());
+	}
+
+	/** the place of the holder the item is on, noWhere if it is on none */
+	private static InventoryPlace placeOf(StateAnimal state, SimulationObject item) {
+		if (!item.isSimulationObject()) return InventoryPlace.noWhere;
+		for (InventoryPlace place : InventoryPlace.values()) {
+			if (place != InventoryPlace.noWhere && state.getInventoryItem(place) == item) return place;
+		}
+		return InventoryPlace.noWhere;
+	}
+
+	/** for get with an item: the given place counts as the hand to take it into, if it is a hand */
+	private InventoryPlace readHand(Event event) {
+		InventoryPlace place = readPlace(event);
+		return place.isHand() ? place : InventoryPlace.noWhere;
+	}
+
+	static InventoryPlace otherHand(InventoryPlace hand) {
+		if (hand == InventoryPlace.leftHand) return InventoryPlace.rightHand;
+		if (hand == InventoryPlace.rightHand) return InventoryPlace.leftHand;
+		return InventoryPlace.noWhere;
 	}
 
 	/**

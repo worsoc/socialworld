@@ -19,6 +19,11 @@ package org.socialworld.actions.handle;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.junit.jupiter.api.Test;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.SimulationObject_Type;
@@ -27,7 +32,12 @@ import org.socialworld.objects.concrete.clothes.caps.StrawHat;
 import org.socialworld.objects.concrete.clothes.overgarments.Cloak;
 import org.socialworld.objects.concrete.clothes.overgarments.FurCloak;
 import org.socialworld.objects.concrete.clothes.shoes.LeatherShoe;
+import org.socialworld.objects.concrete.containers.Basket;
+import org.socialworld.objects.concrete.containers.Jug;
 import org.socialworld.objects.concrete.containers.Purse;
+import org.socialworld.objects.concrete.eatable.liquids.Beer;
+import org.socialworld.objects.concrete.eatable.veggies.Turnip;
+import org.socialworld.objects.concrete.eatable.bakery.Cake;
 import org.socialworld.objects.concrete.containers.Satchel;
 import org.socialworld.objects.concrete.eatable.bakery.Bread;
 import org.socialworld.objects.concrete.eatable.dairy.Cheese;
@@ -100,5 +110,43 @@ class StartEquipmentTest {
 		assertThat(placeAndPut(merchant, new Satchel(), true)).isEqualTo(InventoryPlace.bag);
 		assertThat(placeAndPut(merchant, new Purse(), true)).isEqualTo(InventoryPlace.belt1);
 		assertThat(placeAndPut(merchant, new Coins(), true)).isEqualTo(InventoryPlace.belt2);
+	}
+
+	@Test
+	void decide_liquidIntoItsContainer_coinsIntoThePurse_foodNotIntoThePurse() {
+		Inventory inventory = new Inventory(SimulationObject_Type.human);
+		List<SimulationObject> containers = new ArrayList<>();
+		Map<SimulationObject, List<SimulationObject>> contents = new HashMap<>();
+		inventory.put(InventoryPlace.mouth, new Bread());	// the mouth is taken
+
+		Jug jug = new Jug();
+		Purse purse = new Purse();
+		Basket basket = new Basket();
+		for (SimulationObject c : new SimulationObject[] {jug, purse, basket}) {
+			containers.add(c);
+			contents.put(c, new ArrayList<>());
+		}
+		assertThat(StartEquipment.decide(inventory, containers, contents, new Beer()).container).isSameAs(jug);
+		assertThat(StartEquipment.decide(inventory, containers, contents, new Coins()).container).isSameAs(purse);
+		assertThat(StartEquipment.decide(inventory, containers, contents, new Turnip()).container).isSameAs(basket);
+	}
+
+	@Test
+	void decide_withoutContainers_asBefore() {
+		Inventory noble = new Inventory(SimulationObject_Type.human);
+		List<SimulationObject> containers = new ArrayList<>();
+		Map<SimulationObject, List<SimulationObject>> contents = new HashMap<>();
+		StartEquipment.Decision cake = StartEquipment.decide(noble, containers, contents, new Cake());
+		assertThat(cake.place).isEqualTo(InventoryPlace.mouth);
+		assertThat(cake.isInContainer()).isFalse();
+		noble.put(InventoryPlace.mouth, new Cake());
+		// only a purse there: the food does not go into it but to the belt
+		Purse purse = new Purse();
+		containers.add(purse);
+		contents.put(purse, new ArrayList<>());
+		StartEquipment.Decision second = StartEquipment.decide(noble, containers, contents, new Cake());
+		assertThat(second.isInContainer()).isFalse();
+		assertThat(second.place).isEqualTo(InventoryPlace.belt1);
+		assertThat(StartEquipment.decide(noble, containers, contents, new Beer()).isNowhere()).isTrue();
 	}
 }

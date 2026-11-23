@@ -34,10 +34,12 @@ import org.socialworld.workbench.act.ActionRequest.Problem;
 class ItemReachTest {
 
 	@Test
-	void offersTakeAndDrop_andTheHands() {
-		assertThat(ItemReach.getItemModes()).containsExactly(ActionMode.takeItem, ActionMode.dropItem);
+	void offersTheFiveItemModes_andAllPlacesHandsFirst() {
+		assertThat(ItemReach.getItemModes()).containsExactly(ActionMode.takeItem, ActionMode.dropItem,
+				ActionMode.switchItemToOtherHand, ActionMode.setItemToInventory, ActionMode.getItemFromInventory);
 		assertThat(ItemReach.isItemMode(ActionMode.sayScream)).isFalse();
-		assertThat(ItemReach.HANDS).containsExactly(InventoryPlace.noWhere, InventoryPlace.rightHand, InventoryPlace.leftHand);
+		assertThat(ItemReach.PLACES).startsWith(InventoryPlace.noWhere, InventoryPlace.rightHand, InventoryPlace.leftHand);
+		assertThat(ItemReach.PLACES).hasSize(InventoryPlace.values().length).doesNotHaveDuplicates();
 	}
 
 	@Test

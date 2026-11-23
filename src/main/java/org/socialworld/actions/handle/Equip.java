@@ -47,12 +47,18 @@ public class Equip extends ActionPerformer {
 	 		result.add(Value.VALUE_BY_NAME_EVENT_EQUIP_PLACE);
 			break;
 		case switchItemToOtherHand:
+	 		result.add(Value.VALUE_BY_NAME_EVENT_EQUIP_ITEM);
+	 		result.add(Value.VALUE_BY_NAME_EVENT_EQUIP_PLACE);
 			break;
 		case setItemToInventory:
 	 		result.add(Value.VALUE_BY_NAME_EVENT_EQUIP_ITEMISDRINKABLE);
 	 		result.add(Value.VALUE_BY_NAME_EVENT_EQUIP_ITEMISEATABLE);
+	 		result.add(Value.VALUE_BY_NAME_EVENT_EQUIP_ITEM);
+	 		result.add(Value.VALUE_BY_NAME_EVENT_EQUIP_PLACE);
 	 		break;
 		case getItemFromInventory:
+	 		result.add(Value.VALUE_BY_NAME_EVENT_EQUIP_ITEM);
+	 		result.add(Value.VALUE_BY_NAME_EVENT_EQUIP_PLACE);
 			break;
 		}
  		return result;

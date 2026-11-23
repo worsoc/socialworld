@@ -17,6 +17,9 @@
  */
 package org.socialworld.core;
 
+import org.socialworld.objects.properties.IContainer;
+import java.util.Map;
+import java.util.HashMap;
 import org.socialworld.GlobalSwitches;
 import org.socialworld.objects.*;
 import org.socialworld.objects.access.HiddenHuman;
@@ -186,7 +189,7 @@ public class Simulation extends SocialWorldThread {
 			equip(humans.get(i), inventory, catalog.get(humans.get(i).getCharacterNumber()), counts);
 		}
 		System.out.println("Start equipment: " + counts[0] + " items placed, " + counts[1] + " put down at the feet, "
-				+ counts[2] + " liquids left out (V5), " + counts[3] + " breads for those without food");
+				+ counts[2] + " liquids without container, " + counts[3] + " breads for those without food");
 
 		System.out.println("Start Erstellen Aepfel "+ ActualTime.asTime().toString());
 
@@ -283,15 +286,40 @@ public class Simulation extends SocialWorldThread {
 				Item item = createCarried(piece.className, piece.side, at);
 				if (item != null && inventory.put(place, item)) counts[0]++;
 			}
+			// containers and what they hold so far (inventory concept V5)
+			List<SimulationObject> containers = new ArrayList<SimulationObject>();
+			Map<SimulationObject, List<SimulationObject>> contents = new HashMap<SimulationObject, List<SimulationObject>>();
 			for (String className : entry.items) {
 				SimulationObject prototype = prototype(className, StartEquipmentCatalog.Side.none);
-				InventoryPlace place = StartEquipment.choosePlace(inventory, prototype, true);
+				StartEquipment.Decision decision = StartEquipment.decide(inventory, containers, contents, prototype);
 				Item item = createCarried(className, StartEquipmentCatalog.Side.none, at);
 				if (item == null) continue;
-				if (place != InventoryPlace.noWhere && inventory.put(place, item)) counts[0]++;
+				if (decision.isInContainer()) {
+					if (decision.container.putInside(item)) {
+						contents.get(decision.container).add(item);
+						counts[0]++;
+					}
+					else counts[1]++;
+				}
+				else if (!decision.isNowhere() && inventory.put(decision.place, item)) counts[0]++;
 				else counts[1]++;	// it stays where it was created: at the feet of the human
+				if (item instanceof IContainer) {
+					containers.add(item);
+					contents.put(item, new ArrayList<SimulationObject>());
+				}
 			}
-			counts[2] += entry.contents.size();
+			// the liquids into their containers (a jug of beer, a waterskin of water)
+			for (String className : entry.contents) {
+				SimulationObject prototype = prototype(className, StartEquipmentCatalog.Side.none);
+				StartEquipment.Decision decision = StartEquipment.decide(inventory, containers, contents, prototype);
+				if (!decision.isInContainer()) { counts[2]++; continue; }
+				Item liquid = createCarried(className, StartEquipmentCatalog.Side.none, at);
+				if (liquid != null && decision.container.putInside(liquid)) {
+					contents.get(decision.container).add(liquid);
+					counts[0]++;
+				}
+				else counts[2]++;
+			}
 		}
 		if (inventory.isFree(InventoryPlace.mouth)) {
 			Item bread = createCarried("org.socialworld.objects.concrete.eatable.bakery.Bread", StartEquipmentCatalog.Side.none, at);

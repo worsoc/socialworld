@@ -350,15 +350,38 @@ public abstract class StateSimulationObject extends ListenedBase implements IObj
 	 * @return the object that carries this one (connection carried), NoSimulationObject if none does
 	 */
 	public final SimulationObject getCarrier() {
-		Connection con = (this.connections != null) ? this.connections.getConnectionToMaster(ConnectionType.carried) : null;
+		Connection con = connectionToCarrier();
 		return (con != null) ? con.getObject1() : NoSimulationObject.getObjectNothing();
+	}
+
+	// the connection to what this object follows: its carrier (carried) or its container (inside, inventory V5)
+	private Connection connectionToCarrier() {
+		if (this.connections == null) return null;
+		Connection con = this.connections.getConnectionToMaster(ConnectionType.carried);
+		if (con == null) con = this.connections.getConnectionToMaster(ConnectionType.inside);
+		return con;
+	}
+
+	/**
+	 * @return true if this object lies inside a container (connection inside)
+	 */
+	public final boolean isInside() {
+		return this.connections != null && this.connections.getConnectionToMaster(ConnectionType.inside) != null;
+	}
+
+	/**
+	 * @return what lies inside this object (connection inside), e.g. the coins in a purse
+	 */
+	public final List<SimulationObject> getContents() {
+		if (this.connections == null) return new ArrayList<SimulationObject>();
+		return this.connections.getSlaves(ConnectionType.inside);
 	}
 
 	/**
 	 * @return the offset of this object to its carrier, the 0 vector if it is not carried
 	 */
 	public final Vector getCarriedOffset() {
-		Connection con = (this.connections != null) ? this.connections.getConnectionToMaster(ConnectionType.carried) : null;
+		Connection con = connectionToCarrier();
 		return (con != null) ? con.getOffset() : Vector.get0Vector();
 	}
 
@@ -367,7 +390,9 @@ public abstract class StateSimulationObject extends ListenedBase implements IObj
 	 */
 	public final List<SimulationObject> getCarriedObjects() {
 		if (this.connections == null) return new ArrayList<SimulationObject>();
-		return this.connections.getSlaves(ConnectionType.carried);
+		List<SimulationObject> result = this.connections.getSlaves(ConnectionType.carried);
+		result.addAll(this.connections.getSlaves(ConnectionType.inside));
+		return result;
 	}
 
 	final void addConnection(Connection connection, SimulationObject connectedObject, WriteAccessToSimulationObject guard) {
