@@ -2,7 +2,7 @@
 
 Part of the [test overview](TESTS.md): expressions, functions, knowledge, positions and vectors.
 
-**17 test classes, 115 tests.**
+**18 test classes, 120 tests.**
 
 ## Overview
 
@@ -22,6 +22,7 @@ Part of the [test overview](TESTS.md): expressions, functions, knowledge, positi
 | Calculation | `PositionCalculatorSectorsTest` | 9 | whether a new position stays in the same search sectors | – |
 | Calculation | `PositionMovementTest` | 16 | technical position movement: impulse, friction and rest at 50 mm/s, bystander push 0.2 × v, blows (share of the intensity, away from the hitter, only the candidates event), time step, technical event types in their own block 512..527, no self-push | – |
 | Calculation | `CarriedFollowTest` | 5 | carried objects take carrier + offset per place without drift, ignore every event but followCarrier, followCarrier is technical (514) | – |
+| Calculation | `InventoryCalculatorTest` | 5 | taking and dropping: the hand (requested, else right, else left), the reach of 1 m on the ground, the self inventory events | – |
 | Calculation | `CalculationVectorTest` | 11 | vector operations in `Calculation`: add, subtract, negate, scale, component product, normalize, length | – |
 | Calculation | `DirectionToReferenceTest` | 10 | tag `ActionDir`: direction to or away from a reference position, height weight, offset, fallback | – |
 | Calculation | `VectorTest` | 7 | `Vector`: normalizing (the zero vector has length 0) and the component product | – |
@@ -294,6 +295,22 @@ A carried object (connection `carried`, inventory concept V2, 2026-11-23) has it
 | `offsetsPerPlace_asAtTheStartOfTheSimulation` | head z + 800, upper body + 300, legs − 400, left sock x + 150, right shoe x − 150, right hand x − 300, back y − 200, mouth and belt 0 |
 
 - **Not checked:** `followCarrier` and `letCarriedFollow` in the running PositionCalculator (they need states and write access); the offset does not turn with the carrier.
+
+### `InventoryCalculatorTest`
+
+`src/test/java/org/socialworld/calculation/application/InventoryCalculatorTest.java`
+
+The InventoryCalculator (inventory concept V4, 2026-11-23) changes the own inventory by `selfInventoryTake` and `selfInventoryDrop`, at once in the thread of the event, with the write access of the holder (grant `inventory`). Take: the item is free, at most 1 m away on the ground, and goes into a free hand; putting it on the place lets the holder carry it. Drop: a hand is emptied, the item stays where it is. ActionEquip passes the item and the place (`equip_item`, `equip_inventoryPlace`) as event parameters.
+
+| Test | Checks |
+|---|---|
+| `take_theRequestedHand_ifItIsFree` | a requested hand is taken if it is free, else nothing |
+| `take_withoutAHand_theRightOne_elseTheLeftOne` | without a hand the right one, else the left one, else none; another place counts as none given |
+| `drop_theRequestedHand_ifItHoldsSomething_elseRightThenLeft` | the requested hand if it holds something; without one right, then left; empty hands give none |
+| `reach_isOneMetreOnTheGround` | 1 m exactly is in reach, 1.001 m is not; the height does not count |
+| `theInventoryEvents_areTheSelfInventoryEvents` | take, drop, get are self inventory events; the target event and a move are not |
+
+- **Not checked:** the calculator with a real event, holder and item (it needs the running simulation); switch, set and get (V5).
 
 ## Not Covered
 

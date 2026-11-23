@@ -114,6 +114,8 @@ public class CreateAnimal extends CreateSimulationObjects {
 		// the state-to-action rules follow the character as well (State2Action, like A7);
 		// this replaces the type drawn in CreateSimulationObjects.initState
 		hiddenAnimal.setState2ActionType(state2ActionTypeOfCharacter(indexGPAA));
+		// and the character itself is kept, e.g. for the start equipment (inventory concept V3)
+		hiddenAnimal.setCharacterNumber(characterNumberOf(indexGPAA));
 		// the reaction types do not follow the character: one drawn type per event family (erd_regeln_konzept.md, E4);
 		// this replaces the types drawn in CreateSimulationObjects.initState
 		hiddenAnimal.setReactionTypes(EventReactionFamily.drawReactionTypes(random));
@@ -158,6 +160,11 @@ public class CreateAnimal extends CreateSimulationObjects {
 	 * @param gaussIndexAttributeArray the gauss index the attribute array was taken from
 	 * @return |gaussIndexAttributeArray|, at most 99
 	 */
+	static int characterNumberOf(int gaussIndexAttributeArray) {
+		// |gauss index| = character number - 1 (see influenceTypesOfCharacter); characters 1 .. 100
+		return Math.min(Math.abs(gaussIndexAttributeArray), GaussPoolState2ActionType.CAPACITY_GPS2A_ARRAY - 1) + 1;
+	}
+
 	static int state2ActionTypeOfCharacter(int gaussIndexAttributeArray) {
 		return Math.min(Math.abs(gaussIndexAttributeArray), GaussPoolState2ActionType.CAPACITY_GPS2A_ARRAY - 1);
 	}

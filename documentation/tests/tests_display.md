@@ -2,7 +2,7 @@
 
 Part of the [test overview](TESTS.md): the dashboard and the Action Creation Tool: what shows or nudges the running simulation.
 
-**15 test classes, 197 tests.**
+**16 test classes, 201 tests.**
 
 ## Overview
 
@@ -19,6 +19,7 @@ Part of the [test overview](TESTS.md): the dashboard and the Action Creation Too
 | ACT | `ActionRequestTest` | 9 | values and checks of an action request, duration included | – |
 | ACT | `ActionSenderTest` | 6 | properties of the action given into the pipeline, invalid requests are not given, no stop for an invalid causer | – |
 | ACT | `EventRangeTest` | 14 | say modes, their ranges and the humans within the range | – |
+| ACT | `ItemReachTest` | 4 | taking and dropping in the tool: modes and hands, free items within 1 m, a take needs an item, the properties of ActionEquip | – |
 | ACT | `NeedsResetTest` | 3 | the dashboard intervention ends only sleep and eat, sets tiredness and hunger to 2000 | – |
 | ACT | `ActionMapScaleTest` | 11 | world position ↔ pixel on the range map, finding a human under the mouse | – |
 | ACT | `ActionMapFrameTest` | 9 | scrollable range map: scale fitted once and kept, area only grows, shift of the seen part | – |
@@ -172,6 +173,21 @@ Only what works without a running simulation: every action fetches the simulatio
 | `coversAllStandardPropertiesOfAnAction` | every name of `ActionType.getStandardPropertyNames()` has a valid value |
 | `doesNotSendAnInvalidRequest` | `send` returns the problem of the check for each of the five kinds and gives no action into the pipeline |
 | `doesNotStopForAnInvalidCauser` | `stop` with ID 0 or −1 returns `INVALID_CAUSER` |
+
+### `ItemReachTest`
+
+`src/test/java/org/socialworld/workbench/act/ItemReachTest.java`
+
+Since 2026-11-23 (inventory concept V4) the tool offers `takeItem` and `dropItem` besides the say modes, with an item id and a hand (none given, right, left). The button "Items in Reichweite" lists the free items within 1 m of the causer and what its hands and mouth hold (`Animal.getInventoryItem`, only for the tool). The action is an `ActionEquip` with the item as simulation object and the hand as index of `InventoryPlace`.
+
+| Test | Checks |
+|---|---|
+| `offersTakeAndDrop_andTheHands` | the item modes are take and drop; the hands are none, right, left |
+| `itemsInReach_withinOneMetre_sorted` | an item exactly 1 m away and one on the spot are in reach, one 1.001 m away is not; sorted by id |
+| `takingNeedsAnItem_droppingDoesNot` | take without item: `INVALID_ITEM`; take with item and drop without item are fine; walk is still not supported |
+| `theItemActionProperties_nameTypeEquip_theItemAndTheHand` | type equip, the hand as index (left 1), a valid item value |
+
+- **Not checked:** the window itself and the listing of the items (it needs the running simulation).
 
 ### `EventRangeTest`
 

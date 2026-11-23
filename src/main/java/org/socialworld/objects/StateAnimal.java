@@ -17,6 +17,7 @@
  */
 package org.socialworld.objects;
 
+import org.socialworld.actions.handle.InventoryPlace;
 import org.socialworld.GlobalSwitches;
 import org.socialworld.SocialWorld;
 import org.socialworld.actions.handle.Inventory;
@@ -53,6 +54,9 @@ public class StateAnimal extends StateSimulationObject {
 	private final AttributeArray attributes;
 	private FunctionByMatrix attributeCalculatorMatrix;
 
+	// the character (number in characters.csv, 1 .. 100) the attribute array was made from; 0 = unknown
+	private int characterNumber = 0;
+
 	private Direction directionChest = Direction.getObjectNothing();
 	private Direction directionActiveMove = Direction.getObjectNothing();
 
@@ -62,6 +66,10 @@ public class StateAnimal extends StateSimulationObject {
 
 	
 	private GrantedAccessToProperty grantAccessToPropertyAttributes[];
+	private GrantedAccessToProperty grantAccessToPropertyInventory[];
+
+	// the inventory, also kept in StateInventory; set by setInventory
+	private Inventory inventory = null;
 	private GrantedAccessToProperty grantAccessToPropertyAction[];
 	private GrantedAccessToProperty grantAccessToPropertyKnowledge[];
 	
@@ -109,6 +117,8 @@ public class StateAnimal extends StateSimulationObject {
 		
 		grantAccessToPropertyAttributes = new GrantedAccessToProperty[1];
 		grantAccessToPropertyAttributes[0] = GrantedAccessToProperty.attributes;
+		grantAccessToPropertyInventory = new GrantedAccessToProperty[1];
+		grantAccessToPropertyInventory[0] = GrantedAccessToProperty.inventory;
 
 		grantAccessToPropertyAction = new GrantedAccessToProperty[1];
 		grantAccessToPropertyAction[0] = GrantedAccessToProperty.action;
@@ -177,6 +187,9 @@ public class StateAnimal extends StateSimulationObject {
 			Scheduler.getInstance().calculateAttributesChangedByEvent(event, (StateAnimal)getMeReadableOnly(), (HiddenAnimal)getMeWritableButHidden(grantAccessToPropertyAttributes) );
 		if (GlobalSwitches.STATE_ANIMAL_CALCULATE_EVENTINFLUENCE_PERCEPTION == true)
 			Scheduler.getInstance().calculatePerception(event, (StateAnimal)getMeReadableOnly(), (HiddenAnimal)getMeWritableButHidden(grantAccessToPropertyKnowledge) );
+		// taking and dropping change the own inventory (inventory concept V4)
+		if (event.getEventType().isSelfInventory())
+			Scheduler.getInstance().calculateInventoryChangedByEvent(event, (StateAnimal)getMeReadableOnly(), (HiddenAnimal)getMeWritableButHidden(grantAccessToPropertyInventory) );
 		
 	}
 
@@ -230,6 +243,16 @@ public class StateAnimal extends StateSimulationObject {
 	
 	final public FunctionByMatrix getMatrix() {
 		return this.attributeCalculatorMatrix;
+	}
+
+	final void setCharacterNumber(int characterNumber, WriteAccessToAnimal guard) {
+		if (checkGuard(guard)) {
+			this.characterNumber = characterNumber;
+		}
+	}
+
+	final public int getCharacterNumber() {
+		return this.characterNumber;
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -308,7 +331,31 @@ public class StateAnimal extends StateSimulationObject {
 	final void setInventory(Inventory inventory, WriteAccessToAnimal guard) {
 		if (checkGuard(guard)) {
 			setStateProperty(PropertyName.stateInventory, PropertyName.stateInventory_inventory, new ValueProperty(Type.simObjProp, PropertyName.stateInventory_inventory.name(), inventory), guard);
+			// the same object as in StateInventory, for the changes by the InventoryCalculator (inventory concept V4)
+			this.inventory = inventory;
 		}
+	}
+
+	final boolean putToInventory(InventoryPlace place, SimulationObject item, WriteAccessToAnimal guard) {
+		if (!checkGuard(guard) || this.inventory == null) return false;
+		return this.inventory.put(place, item);
+	}
+
+	final SimulationObject removeFromInventory(InventoryPlace place, WriteAccessToAnimal guard) {
+		if (!checkGuard(guard) || this.inventory == null) return NoSimulationObject.getObjectNothing();
+		return this.inventory.remove(place);
+	}
+
+	/**
+	 * @return the object on the place of the inventory, NoSimulationObject if it is empty or there is no inventory
+	 */
+	final public SimulationObject getInventoryItem(InventoryPlace place) {
+		if (this.inventory == null) return NoSimulationObject.getObjectNothing();
+		return this.inventory.get(place);
+	}
+
+	final public boolean canPutToInventory(InventoryPlace place, SimulationObject item) {
+		return this.inventory != null && this.inventory.canPut(place, item);
 	}
 
 /*	

@@ -122,6 +122,11 @@ public class Scheduler{
 
 	}
 	
+	/** Taking and dropping (inventory concept V4): done at once, in the thread of the event. */
+	public void calculateInventoryChangedByEvent(final Event event, final StateAnimal stateAnimal, final HiddenAnimal hiddenWriteAccess) {
+		InventoryCalculator.getInstance().calculateInventoryChangedByEvent(event, stateAnimal, hiddenWriteAccess);
+	}
+
 	public void calculateTalkChangedByEvent(final Event event, final StateHuman stateHuman, final HiddenHuman hiddenWriteAccess) {
 		
 		threadTalkCalculator.calculateTalkInfluencedByEvent(event,  stateHuman,  hiddenWriteAccess);

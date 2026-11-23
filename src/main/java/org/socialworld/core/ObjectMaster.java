@@ -19,6 +19,7 @@ package org.socialworld.core;
 
 
 
+import org.socialworld.attributes.Position;
 import org.socialworld.objects.*;
 import org.socialworld.propertyChange.ListenedMap;
 import org.socialworld.datasource.createObjects.CreateAnimal;
@@ -223,6 +224,20 @@ public class ObjectMaster {
 	}
 	
 	
+	/**
+	 * As createSimulationObject, but the object starts at the given position instead of one drawn from the
+	 * start positions (swgauss_position): for carried items, which take the position of their carrier.
+	 */
+	int createSimulationObject(SimulationObject_Type simulationObjectType, String fullClassName, Position startPosition) {
+		CreateSimulationObjects creator = creators[simulationObjectType.getIndex()];
+		creator.setPresetStartPosition(startPosition);
+		try {
+			return createSimulationObject(simulationObjectType, fullClassName);
+		} finally {
+			creator.setPresetStartPosition(null);
+		}
+	}
+
 	int createSimulationObject(
 			SimulationObject_Type simulationObjectType, String fullClassName) {
 		

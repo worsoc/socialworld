@@ -23,6 +23,7 @@ import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -42,11 +43,14 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import org.socialworld.actions.ActionMode;
+import org.socialworld.actions.handle.InventoryPlace;
 import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.core.Simulation;
 import org.socialworld.objects.Human;
+import org.socialworld.objects.Item;
+import org.socialworld.objects.SimulationObject;
 import org.socialworld.propertyChange.ListenedMap;
 
 /**
@@ -68,7 +72,10 @@ public final class ActionCreationTool {
 
 	private final ActionMapPanel map = new ActionMapPanel();
 	private final JSpinner spinnerCauser = new JSpinner(new SpinnerNumberModel(1, 1, HUMAN_COUNT, 1));
-	private final JComboBox<ActionMode> comboMode = new JComboBox<ActionMode>(EventRange.getSupportedModes().toArray(new ActionMode[0]));
+	private final JComboBox<ActionMode> comboMode = new JComboBox<ActionMode>(offeredModes());
+	// taking and dropping (inventory concept V4): the item and the hand
+	private final JSpinner spinnerItem = new JSpinner(new SpinnerNumberModel(0, 0, 99999, 1));
+	private final JComboBox<InventoryPlace> comboHand = new JComboBox<InventoryPlace>(ItemReach.HANDS);
 	private final JSpinner spinnerIntensity = new JSpinner(new SpinnerNumberModel(DEFAULT_INTENSITY, 0d, 9999d, 1d));
 	private final JSpinner spinnerPriority = new JSpinner(new SpinnerNumberModel(DEFAULT_PRIORITY, 0, 256, 1));
 	private final JSpinner spinnerDuration = new JSpinner(new SpinnerNumberModel(DEFAULT_DURATION_IN_SECONDS, 0d,
@@ -78,6 +85,13 @@ public final class ActionCreationTool {
 
 	private Map<Integer, Point> positions = new HashMap<Integer, Point>();
 	private Map<Integer, ActionMode> running = new HashMap<Integer, ActionMode>();
+
+	/** the say modes (by range) and then taking and dropping */
+	private static ActionMode[] offeredModes() {
+		List<ActionMode> modes = new ArrayList<ActionMode>(EventRange.getSupportedModes());
+		modes.addAll(ItemReach.getItemModes());
+		return modes.toArray(new ActionMode[0]);
+	}
 
 	public void show() {
 		SwingUtilities.invokeLater(this::createAndShowFrame);
@@ -134,6 +148,8 @@ public final class ActionCreationTool {
 		buttonCheck.addActionListener(event -> checkSearchTree());
 		JButton buttonFit = new JButton("Karte einpassen");
 		buttonFit.addActionListener(event -> map.fitToHumans());
+		JButton buttonItems = new JButton("Items in Reichweite");
+		buttonItems.addActionListener(event -> showItems());
 
 		JPanel fields = new JPanel(new GridLayout(0, 1, 0, 4));
 		fields.add(new JLabel("Verursacher (Klick), Versetzen (Ziehen)"));
@@ -146,11 +162,15 @@ public final class ActionCreationTool {
 		fields.add(spinnerPriority);
 		fields.add(new JLabel("Dauer in s (0: einmal, nicht unterbrechbar)"));
 		fields.add(spinnerDuration);
+		fields.add(new JLabel("Item-ID (Aufheben) und Hand"));
+		fields.add(spinnerItem);
+		fields.add(comboHand);
 		fields.add(labelRange);
 		fields.add(buttonPerform);
 		fields.add(buttonStop);
 		fields.add(buttonCheck);
 		fields.add(buttonFit);
+		fields.add(buttonItems);
 
 		JPanel controls = new JPanel(new BorderLayout());
 		controls.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
@@ -198,7 +218,7 @@ public final class ActionCreationTool {
 
 	private void showMap() {
 		int causer = (Integer) spinnerCauser.getValue();
-		float range = EventRange.getRangeInMillimeters(selectedMode());
+		float range = ItemReach.isItemMode(selectedMode()) ? ItemReach.REACH_IN_MILLIMETERS : EventRange.getRangeInMillimeters(selectedMode());
 		List<Integer> inRange = EventRange.getObjectsInRange(causer, range, positions);
 
 		labelRange.setText("Reichweite " + (int) (range / 1000) + " m, " + inRange.size() + " in Reichweite");
@@ -219,7 +239,8 @@ public final class ActionCreationTool {
 
 		ActionRequest.Problem problem;
 		try {
-			problem = ActionSender.send(new ActionRequest(mode, causer, intensity, priority, duration));
+			problem = ActionSender.send(new ActionRequest(mode, causer, intensity, priority, duration,
+					(Integer) spinnerItem.getValue(), (InventoryPlace) comboHand.getSelectedItem()));
 		}
 		catch (RuntimeException exception) {
 			exception.printStackTrace();
@@ -227,7 +248,11 @@ public final class ActionCreationTool {
 			return;
 		}
 
-		if (problem == ActionRequest.Problem.NONE) {
+		if (problem == ActionRequest.Problem.NONE && ItemReach.isItemMode(mode)) {
+			writeLog(String.format(Locale.ROOT, "Mensch %d eingereiht: %s, Item %d, Hand %s (Wirkung mit GlobalSwitches.OUTPUT_DEBUG_INVENTORY)",
+					causer, mode, (Integer) spinnerItem.getValue(), comboHand.getSelectedItem()));
+		}
+		else if (problem == ActionRequest.Problem.NONE) {
 			List<Integer> inRange = EventRange.getObjectsInRange(causer, EventRange.getRangeInMillimeters(mode), positions);
 			writeLog(String.format(Locale.ROOT, "Mensch %d eingereiht: %s, Intensität %.1f, Priorität %d, Dauer %.1f s, jetzt in Reichweite %s",
 					causer, mode, intensity, priority, duration / 1000.0, inRange));
@@ -296,6 +321,43 @@ public final class ActionCreationTool {
 
 		writeLog(String.format(Locale.ROOT, "Mensch %d versetzt nach x %.1f m, y %.1f m", id, target.x / 1000.0, target.y / 1000.0));
 		refresh();
+	}
+
+	/** Lists the free items within reach of the causer and what it holds in its hands (inventory concept V4). */
+	private void showItems() {
+		int causerId = (Integer) spinnerCauser.getValue();
+		try {
+			Human causer = Simulation.getInstance().getObjectMaster().getHumans().get(causerId);
+			if (causer == null) {
+				writeLog("Mensch " + causerId + " gibt es nicht");
+				return;
+			}
+			Map<Integer, Point> freeItems = new HashMap<Integer, Point>();
+			Map<Integer, String> names = new HashMap<Integer, String>();
+			Simulation.getInstance().getObjectMaster().getItems().forEach((int id, Item item) -> {
+				if (item == null || item.isCarried()) return;
+				Position position = item.getPosition(token);
+				if (position.checkIsObjectNothing()) return;
+				freeItems.put(id, new Point(position.getX(token), position.getY(token)));
+				names.put(id, item.getClass().getSimpleName());
+			});
+			Position at = causer.getPosition(token);
+			List<Integer> inReach = ItemReach.getItemsInReach(new Point(at.getX(token), at.getY(token)), freeItems);
+			List<String> listed = new ArrayList<String>();
+			for (Integer id : inReach) listed.add(id + " " + names.get(id));
+			writeLog("Mensch " + causerId + ": freie Items in Reichweite (1 m): " + (listed.isEmpty() ? "keine" : listed));
+			writeLog("Mensch " + causerId + ": rechte Hand " + describe(causer.getInventoryItem(token, InventoryPlace.rightHand))
+					+ ", linke Hand " + describe(causer.getInventoryItem(token, InventoryPlace.leftHand))
+					+ ", Mund " + describe(causer.getInventoryItem(token, InventoryPlace.mouth)));
+		}
+		catch (RuntimeException exception) {
+			exception.printStackTrace();
+			writeLog("Fehler: " + exception);
+		}
+	}
+
+	private static String describe(SimulationObject object) {
+		return object.isSimulationObject() ? object.getObjectID() + " " + object.getClass().getSimpleName() : "leer";
 	}
 
 	private void writeLog(String line) {

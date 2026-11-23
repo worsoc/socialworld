@@ -17,6 +17,7 @@
  */
 package org.socialworld.objects.concrete.containers;
 
+import org.socialworld.objects.properties.CarrySize;
 import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.IContainer;
 import org.socialworld.objects.properties.ISwimable;
@@ -42,5 +43,8 @@ public class Waterskin extends Container implements IContainer, ISwimable {
 
 	public float getCapacity() {return 2000; }
 	public boolean isForLiquids() {return true; }
+
+	/** hangs on a strap: small enough for the belt */
+	public CarrySize getCarrySize() {return CarrySize.small; }
 
 }

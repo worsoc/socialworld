@@ -2,7 +2,7 @@
 
 Part of the [test overview](TESTS.md): pools and tables, and the Data Creation Tool that fills them.
 
-**19 test classes, 158 tests.**
+**21 test classes, 166 tests.**
 
 ## Overview
 
@@ -11,6 +11,8 @@ Part of the [test overview](TESTS.md): pools and tables, and the Data Creation T
 | Data | `Action2PerformerDescriptionPoolTest` | 7 | intensity × power, expression parser, the moves take the intensity of the action, move velocity without double acceleration, a description for every blow | – |
 | Data | `FunctionPoolTest` | 5 | building a matrix from flat arrays, table functions under func_id 0..10, func_ids for functions created at runtime | – |
 | Data | `GaussPoolAAACMMappingTest` | 4 | mapping of the two drawn indices | – |
+| Data | `StartEquipmentCatalogTest` | 7 | equipment.csv: all 100 characters, kits as pieces with pairs, more clothes first, barefoot, container and content apart, class names, totals | – |
+| Data | `StartEquipmentDistributionTest` | 1 | the whole start equipment distributed as at the start of the simulation: nothing at the feet, 3 kit pieces left out | – |
 | Data | `CreateAnimalInfluenceTypeTest` | 4 | the influence type is the character of the attribute array, the same for every event type | – |
 | Data | `CreateAnimalState2ActionTypeTest` | 3 | the state-to-action type is the character of the attribute array, equal to the influence type | – |
 | Data | `EventReactionFamilyTest` | 4 | 116 reaction types, drawn per event family, other event types keep 1 | – |
@@ -126,6 +128,36 @@ The reaction type does not follow the character: `CreateAnimal.initState` draws 
 - **Checks:** when the table cannot be reached, the calling test is aborted and counts as skipped.
 
 ---
+
+### `StartEquipmentCatalogTest`
+
+`src/test/java/org/socialworld/datasource/createObjects/StartEquipmentCatalogTest.java`
+
+The start equipment of the 100 characters (inventory concept V3, 2026-11-23) is read from `src/main/resources/org/socialworld/tools/dct/equipment.csv`: kit lines (`kit;<name>;<clothes>`) and one line per character (`<no>;<kit>;<more clothes>;<items>;<flags>`). Shoes, socks and gloves stand for a pair; `Container(Liquid)` gives the container and its content apart; the flag `barefoot` leaves out shoes and socks; the more clothes come before the kit.
+
+| Test | Checks |
+|---|---|
+| `theFile_hasAll100Characters_andNoProblems` | every character 1..100 has an entry, no unknown kit or class |
+| `theFarmer_getsKitK1AsPieces_shoesAndSocksAsPairs` | character 1: shirt, trousers, shoe left and right, sock left and right, straw hat; pitchfork and bread |
+| `moreClothes_comeFirst` | character 48: the fur cloak before the cloak of the kit |
+| `barefoot_leavesOutShoesAndSocks` | character 33 has no shoes and socks, but dress, apron and headscarf |
+| `aContainerWithContent_isTheContainer_andTheContentApart` | the barmaid's jug and its beer; the shepherd's waterskin with water |
+| `classNames_areFoundInTheirPackages_unknownOnesAreProblems` | Helmet and Stone are found in their packages; an unknown class and an unknown kit are listed as problems |
+| `totals_asCountedInTheConcept` | 697 pieces of clothing (before replacing), 231 items with the contents |
+
+- **Needs:** the file on the class path (it is in `src/main/resources`), no database.
+
+### `StartEquipmentDistributionTest`
+
+`src/test/java/org/socialworld/datasource/createObjects/StartEquipmentDistributionTest.java`
+
+Distributes the whole start equipment as `Simulation.equip` does it (`StartEquipment.chooseWornPlace` for the clothes, `choosePlace` with the first food into the mouth for the items, a bread into an empty mouth), on objects without state.
+
+| Test | Checks |
+|---|---|
+| `all100_areEquipped_nothingFallsToTheFeet` | every piece gets a place (915 on 2026-11-23), nothing is put down at the feet, exactly 3 kit pieces are left out (the fur cloak, the hood and the helmet take their place), every human wears something on the upper body; prints the counts and the breads (69) |
+
+- **Not checked:** the creating of the objects and the carrying in the running simulation (they need the database).
 
 ## DCT: Data Creation Tool
 

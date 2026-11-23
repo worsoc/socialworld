@@ -1,24 +1,20 @@
 /*
-* Social World
-* Copyright (C) 2023  Mathias Sikos 
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2023  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.tools.dct;
 import java.awt.EventQueue;
 
@@ -48,6 +44,15 @@ import org.socialworld.datasource.tablesSimulation.states.TableStateEatable;
 
 
 public class PropertySetCreationTool {
+
+	// the objects that get states with sets ("States mit Sets füllen"), along the ID bands of the ObjectMaster
+	// (10.000 IDs per type since 2026-11-23): 100 humans today, about 1.060 items (start equipment of the
+	// characters, loose apples) with room to spare
+	static final int FIRST_HUMAN_ID = 1;
+	static final int HUMAN_STATE_IDS = 200;
+	static final int FIRST_ITEM_ID = 30001;
+	static final int ITEM_STATE_IDS = 2000;
+
 	
 	
 	private CreatePropertySet propertySets;
@@ -141,17 +146,19 @@ public class PropertySetCreationTool {
 		{
 			public void actionPerformed(ActionEvent e) 
 			{
-			    // 1. Array für die nicht-fortlaufenden IDs dynamisch erstellen
-			    int totalIds = 100 + (3775 - 3001 + 1); // 100 + 775 = 875 IDs
+			    // 1. Array für die nicht-fortlaufenden IDs dynamisch erstellen.
+			    // Die IDs folgen den Bändern des ObjectMaster (10.000 je Typ seit 2026-11-23): Menschen ab 1,
+			    // Items ab 30.001. Bis dahin standen hier 1..100 und 3001..3775 (Bänder von 1.000).
+			    int totalIds = HUMAN_STATE_IDS + ITEM_STATE_IDS;
 			    int[] activeIds = new int[totalIds];
 			    int index = 0;
 			    
-			    // Bereich 1 bis 100 befüllen
-			    for (int id = 1; id <= 100; id++) {
+			    // Menschen: 1 .. HUMAN_STATE_IDS
+			    for (int id = FIRST_HUMAN_ID; id < FIRST_HUMAN_ID + HUMAN_STATE_IDS; id++) {
 			        activeIds[index++] = id;
 			    }
-			    // Bereich 3001 bis 3775 befüllen
-			    for (int id = 3001; id <= 3775; id++) {
+			    // Items: 30001 .. 30000 + ITEM_STATE_IDS
+			    for (int id = FIRST_ITEM_ID; id < FIRST_ITEM_ID + ITEM_STATE_IDS; id++) {
 			        activeIds[index++] = id;
 			    }
 

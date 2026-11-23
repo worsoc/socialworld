@@ -330,6 +330,12 @@ public enum EventType {
 	}
 
 	/** The own move of the causer: selfMoveWalk(8) ... selfMoveFly(13). */
+	/** @return true for the events of the own inventory: take, drop, switch, set, get (inventory concept V4) */
+	public boolean isSelfInventory() {
+		return this == selfInventoryTake || this == selfInventoryDrop || this == selfInventorySwitch
+				|| this == selfInventorySet || this == selfInventoryGet;
+	}
+
 	public boolean isSelfMove() {
 		return this.index >= 8 && this.index <= 13;
 	}

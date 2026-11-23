@@ -1,24 +1,20 @@
 /*
-* Social World
-* Copyright (C) 2019  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2019  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.actions.handle;
 
 import org.socialworld.GlobalSwitches;
@@ -36,15 +32,17 @@ import org.socialworld.core.EventToCauser;
 import org.socialworld.core.EventToTarget;
 import org.socialworld.core.EventType;
 import org.socialworld.core.IEventParam;
+import org.socialworld.objects.NoSimulationObject;
 import org.socialworld.objects.SimulationObject;
 
 public class ActionEquip extends AbstractAction {
 
 	private Equip equip;
 	
-    private SimulationObject item;
+    // default (inventory concept V4): without an item in the rule the event names none, instead of null
+    private SimulationObject item = NoSimulationObject.getObjectNothing();
     
-    private InventoryPlace inventoryPlace;
+    private InventoryPlace inventoryPlace = InventoryPlace.noWhere;
 
 	private static AccessTokenActionHandle token = AccessTokenActionHandle.getValid();
   
@@ -215,6 +213,8 @@ public class ActionEquip extends AbstractAction {
 		ValueArrayList propertiesAsValueList = new ValueArrayList();
 		
 		propertiesAsValueList.add(getItemAsValue(Value.VALUE_BY_NAME_ACTION_EQUIP_ITEM));
+		// the place (hand) to take into or to drop from (inventory concept V4)
+		propertiesAsValueList.add(getInventoryPlaceAsValue(Value.VALUE_BY_NAME_ACTION_EQUIP_PLACE));
 		paramObject.answerPropertiesRequest(propertiesAsValueList);
 		
 	}

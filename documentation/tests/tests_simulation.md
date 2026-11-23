@@ -2,7 +2,7 @@
 
 Part of the [test overview](TESTS.md): the running simulation core: start, attributes, core, actions, objects.
 
-**19 test classes, 106 tests.**
+**20 test classes, 111 tests.**
 
 ## Overview
 
@@ -19,6 +19,7 @@ Part of the [test overview](TESTS.md): the running simulation core: start, attri
 | Core | `ObjectMasterIdRangeTest` | 11 | every type keeps to its band of 10000 IDs; beyond it the simulation stops; the perception jumps from band to band; the highest given ID counts only types with objects | – |
 | Actions | `InventoryMouthTest` | 1 | the inventory gives the item in the mouth as property (eating, drinking) | – |
 | Actions | `InventoryPlacesTest` | 12 | the places of the inventory: empty places give NoSimulationObject, what fits where (IWearable, mouth, ICarryable with its size), dress and overgarment places, old setters | – |
+| Actions | `StartEquipmentTest` | 5 | where a piece of the start equipment goes: worn places, more clothes first, first food into the mouth, small to the belt, medium and large to hands and back | – |
 | Actions | `ActionMoveVelocityTest` | 8 | velocity of a move action: start velocity per mode and intensity, then from event to event (uniform, accelerated, braking) | – |
 | Objects | `SimObjectsCompletelyImplemented` | 3 | lexeme mappings of the object enums | – |
 | Objects | `ClothesCatalogTest` | 5 | the 26 concrete clothes: created without database, one place each, lexeme value, side as property, abilities | – |
@@ -216,6 +217,22 @@ The inventory keeps one object per place since 2026-11-23 (inventory concept V1)
 
 - **Assumes:** the carry sizes of the item hierarchy (small by default: food, valuables, devotional and writing goods, parts of nature; medium: human crafted; large: weapons; exceptions in the classes).
 - **Not checked:** `copyForProperty` (it needs a property protection from the running simulation); who puts items on the places (start equipment V3, InventoryCalculator V4).
+- **Needs:** no database.
+
+### `StartEquipmentTest`
+
+`src/test/java/org/socialworld/actions/handle/StartEquipmentTest.java`
+
+Where a piece of the start equipment goes (inventory concept V3, 2026-11-23): clothes, jewellery and the bag to their worn place (`chooseWornPlace`); items (`choosePlace`): the first food into the mouth, then by size: small to the belt and then the hands, medium to the hands, large to the hands and then the back.
+
+| Test | Checks |
+|---|---|
+| `clothes_goToTheirPlace_theRightShoeToTheRightFoot` | the straw hat on the head, the shoe set to the right side on the right foot, the other on the left |
+| `moreClothesFirst_thenTheKitPieceForTheSamePlace_findsNoWornPlace` | after the fur cloak the cloak finds no worn place (with `choosePlace` it would go into a hand); after the hood the straw hat finds none |
+| `theFirstFood_goesIntoTheMouth_theNextToTheBelt` | bread into the mouth, cheese to the belt |
+| `smallToTheBelt_mediumToTheHands_largeToHandsAndBack` | smith: hammer and tongs in the hands, knife at the belt, a second hammer finds no place; knight: sword and shield in the hands, a second sword on the back |
+| `jewelleryAndBag_toTheirPlace_purseAndCoinsToTheBelt` | ring at the finger, satchel as bag, purse and coins at the belt |
+
 - **Needs:** no database.
 
 ### `ActionMoveVelocityTest`

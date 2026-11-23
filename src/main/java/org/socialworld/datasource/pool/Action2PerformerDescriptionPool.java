@@ -432,10 +432,15 @@ public class Action2PerformerDescriptionPool extends DescriptionPool {
 				break;
 				
 			case takeItem:
+			case dropItem:
 
 				// equip item
 				lines.add(0, 0, "GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_EQUIP_ITEM + "))");
 				lines.add(0, 0, Value.VALUE_BY_NAME_EVENT_EQUIP_ITEM);
+
+				// the place (hand) to take into or to drop from (inventory concept V4)
+				lines.add(0, 1, "GET(GETVal(" + Value.VALUE_BY_NAME_ACTION_EQUIP_PLACE + "))");
+				lines.add(0, 1, Value.VALUE_BY_NAME_EVENT_EQUIP_PLACE);
 
 				break;
 				

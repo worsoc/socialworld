@@ -48,6 +48,10 @@ public abstract class CreateSimulationObjects {
 	protected Random random;
 
     private Set<Integer> usedPositionIndex;
+
+    // a start position given by the caller (e.g. the carrier of a carried item, inventory concept V3): then no
+    // start position is drawn from GaussPoolPosition. Set and cleared by ObjectMaster around one creation.
+    private Position presetStartPosition = null;
 	
 	CreateSimulationObjects() {
 		random = new Random();
@@ -104,6 +108,10 @@ public abstract class CreateSimulationObjects {
 	}
 	
 
+	public final void setPresetStartPosition(Position position) {
+		this.presetStartPosition = position;
+	}
+
 	protected void initState(HiddenSimulationObject hiddenObject) {
 		int indexPosition;
 
@@ -139,6 +147,12 @@ public abstract class CreateSimulationObjects {
 		indexGPPT = mapGaussToIndex(gauss_value, GaussPoolPerceptionType.CAPACITY_GPPT_ARRAY);
 		hiddenObject.setPerceptionTypes(GaussPoolPerceptionType.getInstance().getPerceptionTypes(indexGPPT));
 		
+        if (this.presetStartPosition != null && !this.presetStartPosition.checkIsObjectNothing()) {
+            Position preset = this.presetStartPosition.getCopy(PropertyName.simobj_position, 0, 0, 0);
+            hiddenObject.setPosition(preset);
+            return;
+        }
+
         // Every object of a kind gets its own start position. The drawn index lies in
         // -(CAPACITY - 1) .. CAPACITY - 1, so there are 2 * CAPACITY - 1 of them. When they are used up,
         // the loop below would draw for ever (seen 2026-11-17 with 800 items), so stop here instead.

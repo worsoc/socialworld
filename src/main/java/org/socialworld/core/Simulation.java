@@ -21,11 +21,9 @@ import org.socialworld.GlobalSwitches;
 import org.socialworld.objects.*;
 import org.socialworld.objects.access.HiddenHuman;
 import org.socialworld.objects.access.HiddenItem;
-import org.socialworld.objects.concrete.clothes.Cap;
-import org.socialworld.objects.concrete.clothes.Shirt;
+import org.socialworld.objects.concrete.clothes.Glove;
 import org.socialworld.objects.concrete.clothes.Shoe;
 import org.socialworld.objects.concrete.clothes.Sock;
-import org.socialworld.objects.concrete.clothes.Trousers;
 import org.socialworld.propertyChange.ChangedProperty;
 
 import java.lang.reflect.InvocationTargetException;
@@ -35,6 +33,9 @@ import java.util.List;
 
 import org.socialworld.SocialWorld;
 import org.socialworld.actions.handle.Inventory;
+import org.socialworld.actions.handle.InventoryPlace;
+import org.socialworld.actions.handle.StartEquipment;
+import org.socialworld.datasource.createObjects.StartEquipmentCatalog;
 import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
@@ -173,100 +174,19 @@ public class Simulation extends SocialWorldThread {
 	
 		System.out.println("Start Erstellen Objekte Inventar "+ ActualTime.asTime().toString());
 
-		// Interim until State2Action is in the database (EID concept 13.4): every human has an apple in the
-		// mouth, so that the eating rule of the test data finds something eatable. It is ONE apple for all
-		// mouths: eating does not use it up, and items have only 799 start positions (swgauss_position),
-		// of which the clothes and the loose apples already take 775.
-		incompleteObject = createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.eatable.fruits.Apple");
-		Item mouthApple = (Item) incompleteObject.getObject();
-		if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Apple for all mouths(" + mouthApple.getObjectID() + "):" + mouthApple.getPosition(tokenCore).toString());
-
-		for (int i = 0; i < 100; i++ ) {
-			Human human = humans.get(i);
-			Position positionParentHuman = human.getPosition(tokenCore);
-			
+		// The start equipment of the characters (inventory concept V3, 2026-11-23): clothes and items from
+		// equipment.csv; they are carried by their human (connection carried) and draw no start position.
+		// Replaces the test clothes and the one apple shared by all mouths.
+		StartEquipmentCatalog catalog = StartEquipmentCatalog.getInstance();
+		for (String problem : catalog.getProblems()) System.err.println("StartEquipmentCatalog: " + problem);
+		int[] counts = new int[4];	// placed, put down at the feet, liquids left for V5, breads (D7)
+		for (int i = 0; i < humans.size(); i++ ) {
 			Inventory inventory = new Inventory(SimulationObject_Type.human);
 			hiddenHumans.get(i).setInventory(inventory);
-
-			incompleteObject = createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.caps.TestCap");
-			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
-			myItem = (Item) incompleteObject.getObject();
-			// set the human's position (with added 800 mm to z) to the inventory item
-			myHiddenItem.setPosition(positionParentHuman.getCopy(PropertyName.simobj_position, 0, 0, 800 ));
-			changePosition(myItem);
-			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Cap(" + myItem.getObjectID() + "):" + myItem.getPosition(tokenCore).toString());
-			
-			inventory.setCap( (Cap) myItem) ;
-
-			
-			incompleteObject =  createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.shirts.TestShirt");
-			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
-			myItem = (Item) incompleteObject.getObject();
-			// set the human's position (with added 300 mm to z) to the inventory item
-			myHiddenItem.setPosition(positionParentHuman.getCopy(PropertyName.simobj_position, 0, 0, 300 ));
-			changePosition(myItem);
-			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Shirt(" + myItem.getObjectID() + "):" + myItem.getPosition(tokenCore).toString());
-
-			inventory.setShirt((Shirt) myItem);
-			
-			Shoe shoeLeft;
-			incompleteObject =  createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.shoes.TestShoeLeft");
-			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
-			shoeLeft = (Shoe) incompleteObject.getObject();
-			// set the human's position (with added -800 mm to z) to the inventory item
-			myHiddenItem.setPosition(positionParentHuman.getCopy(PropertyName.simobj_position, 150, 0, -800 ));
-			changePosition(shoeLeft);
-			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Shoe(" + shoeLeft.getObjectID() + "):" + shoeLeft.getPosition(tokenCore).toString());
-			
-			Shoe shoeRight;
-			incompleteObject = createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.shoes.TestShoeRight");
-			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
-			shoeRight = (Shoe) incompleteObject.getObject();
-			// set the human's position (with added -800 mm to z) to the inventory item
-			myHiddenItem.setPosition(positionParentHuman.getCopy(PropertyName.simobj_position, -150, 0, -800 ));
-			changePosition(shoeRight);
-			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Shoe(" + shoeRight.getObjectID() + "):" + shoeRight.getPosition(tokenCore).toString());
-
-			inventory.setShoes(shoeLeft, shoeRight);
-
-			Sock sockLeft;
-			incompleteObject = createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.socks.TestSockLeft");
-			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
-			sockLeft = (Sock) incompleteObject.getObject();
-			// set the human's position (with added -800 mm to z) to the inventory item
-			myHiddenItem.setPosition(positionParentHuman.getCopy(PropertyName.simobj_position, 150, 0, -800 ));
-			changePosition(sockLeft);
-			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Sock(" + sockLeft.getObjectID() + "):" + sockLeft.getPosition(tokenCore).toString());
-			
-			Sock sockRight;
-			incompleteObject = createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.socks.TestSockRight");
-			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
-			sockRight = (Sock) incompleteObject.getObject();
-			// set the human's position (with added -800 mm to z) to the inventory item
-			myHiddenItem.setPosition(positionParentHuman.getCopy(PropertyName.simobj_position, -150, 0, -800 ));
-			changePosition(sockRight);
-			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Sock(" + sockRight.getObjectID() + "):" + sockRight.getPosition(tokenCore).toString());
-
-			inventory.setSocks(sockLeft, sockRight);
-
-			incompleteObject = createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.trousers.TestTrousers");
-			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
-			myItem = (Item) incompleteObject.getObject();
-			// set the human's position (with added -400 mm to z) to the inventory item
-			myHiddenItem.setPosition(positionParentHuman.getCopy(PropertyName.simobj_position, 0, 0, -400 ));
-			changePosition(myItem);
-			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Trousers(" + myItem.getObjectID() + "):" + myItem.getPosition(tokenCore).toString());
-	
-			inventory.setTrousers((Trousers) myItem) ;
-
-			// the one apple shared by all mouths, see above
-			inventory.setMouth(mouthApple);
-			
-//			inventory.setLeftHand(leftHand);
-//			inventory.setRightHand(rightHand);
-			
-
+			equip(humans.get(i), inventory, catalog.get(humans.get(i).getCharacterNumber()), counts);
 		}
+		System.out.println("Start equipment: " + counts[0] + " items placed, " + counts[1] + " put down at the feet, "
+				+ counts[2] + " liquids left out (V5), " + counts[3] + " breads for those without food");
 
 		System.out.println("Start Erstellen Aepfel "+ ActualTime.asTime().toString());
 
@@ -348,9 +268,75 @@ public class Simulation extends SocialWorldThread {
 		return this.objectMaster;
 	}
 	
+	/**
+	 * Equips one human from its entry of the start equipment: first the clothes (more clothes before the kit, so
+	 * they take the place), then the items (the first food into the mouth), then a bread into an empty mouth (D7).
+	 * A piece is only created when it has a place, except an item without place, which is put down at the feet.
+	 */
+	private void equip(Human human, Inventory inventory, StartEquipmentCatalog.Entry entry, int[] counts) {
+		Position at = human.getPosition(tokenCore);
+		if (entry != null) {
+			for (StartEquipmentCatalog.Piece piece : entry.clothes) {
+				SimulationObject prototype = prototype(piece.className, piece.side);
+				InventoryPlace place = StartEquipment.chooseWornPlace(inventory, prototype);
+				if (place == InventoryPlace.noWhere) continue;	// the place is taken by the more clothes
+				Item item = createCarried(piece.className, piece.side, at);
+				if (item != null && inventory.put(place, item)) counts[0]++;
+			}
+			for (String className : entry.items) {
+				SimulationObject prototype = prototype(className, StartEquipmentCatalog.Side.none);
+				InventoryPlace place = StartEquipment.choosePlace(inventory, prototype, true);
+				Item item = createCarried(className, StartEquipmentCatalog.Side.none, at);
+				if (item == null) continue;
+				if (place != InventoryPlace.noWhere && inventory.put(place, item)) counts[0]++;
+				else counts[1]++;	// it stays where it was created: at the feet of the human
+			}
+			counts[2] += entry.contents.size();
+		}
+		if (inventory.isFree(InventoryPlace.mouth)) {
+			Item bread = createCarried("org.socialworld.objects.concrete.eatable.bakery.Bread", StartEquipmentCatalog.Side.none, at);
+			if (bread != null && inventory.put(InventoryPlace.mouth, bread)) counts[3]++;
+		}
+	}
+
+	/** An object of the class without state, only to see where it fits (or null). */
+	private static SimulationObject prototype(String className, StartEquipmentCatalog.Side side) {
+		try {
+			SimulationObject object = (SimulationObject) Class.forName(className).getDeclaredConstructor().newInstance();
+			setSide(object, side);
+			return object;
+		} catch (ReflectiveOperationException | ClassCastException e) {
+			return NoSimulationObject.getObjectNothing();
+		}
+	}
+
+	private static void setSide(SimulationObject object, StartEquipmentCatalog.Side side) {
+		if (side == StartEquipmentCatalog.Side.none) return;
+		boolean left = (side == StartEquipmentCatalog.Side.left);
+		if (object instanceof Shoe) ((Shoe) object).setLeftSide(left);
+		else if (object instanceof Sock) ((Sock) object).setLeftSide(left);
+		else if (object instanceof Glove) ((Glove) object).setLeftSide(left);
+	}
+
+	/** Creates an item at the position of its carrier, without drawing a start position. */
+	private Item createCarried(String className, StartEquipmentCatalog.Side side, Position at) {
+		IncompleteSimulationObject incomplete = createSimulationObject(SimulationObject_Type.item, className, at);
+		SimulationObject object = incomplete.getObject();
+		if (!(object instanceof Item)) return null;
+		setSide(object, side);
+		if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Equipment " + object.getClass().getSimpleName() + "(" + object.getObjectID() + ")");
+		return (Item) object;
+	}
+
 	private IncompleteSimulationObject createSimulationObject(
 			SimulationObject_Type simulationObjectType,
 			String fullClassName) {
+		return createSimulationObject(simulationObjectType, fullClassName, null);
+	}
+
+	private IncompleteSimulationObject createSimulationObject(
+			SimulationObject_Type simulationObjectType,
+			String fullClassName, Position startPosition) {
 		
 		int incompleteObjectIndex;
 		int objectID;
@@ -360,7 +346,9 @@ public class Simulation extends SocialWorldThread {
 		SimulationObject createdObject = NoSimulationObject.getObjectNothing() ;
 	
 		if (GlobalSwitches.OUTPUT_CREATE_OBJECT_DETAILS) System.out.println("Erstellen SimObj > this.objectMaster.createSimulationObject: " + ActualTime.asTime().toString());
-		incompleteObjectIndex = this.objectMaster.createSimulationObject(simulationObjectType, fullClassName);
+		incompleteObjectIndex = (startPosition == null)
+				? this.objectMaster.createSimulationObject(simulationObjectType, fullClassName)
+				: this.objectMaster.createSimulationObject(simulationObjectType, fullClassName, startPosition);
 		if (incompleteObjectIndex >= 0) {
 		//	if (GlobalSwitches.OUTPUT_CREATE_OBJECT_DETAILS) System.out.println("Erstellen SimObj > getObjectIDForIncompleteObjectIndex: " + ActualTime.asTime().toString());
 			objectID = this.objectMaster.getObjectIDForIncompleteObjectIndex(incompleteObjectIndex);

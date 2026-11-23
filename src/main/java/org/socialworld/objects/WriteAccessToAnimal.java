@@ -1,25 +1,22 @@
 /*
-* Social World
-* Copyright (C) 2014  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2014  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.objects;
+import org.socialworld.actions.handle.InventoryPlace;
 import org.socialworld.actions.handle.Inventory;
 import org.socialworld.actions.move.Path;
 import org.socialworld.attributes.PropertyName;
@@ -70,6 +67,33 @@ public class WriteAccessToAnimal extends WriteAccessToSimulationObject {
 				animalState.setInventory(inventory, this);
 				// set parent object to inventory
 				inventory.setParentObject(this.getObject());
+				return WRITE_ACCESS_RETURNS_SUCCESS;
+			}
+			else
+				return WRITE_ACCESS_RETURNS_NO_GRANT_FOR_PROPERTY;
+		else
+			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
+	}
+
+	public boolean putToInventory(InventoryPlace place, SimulationObject item, HiddenSimulationObject caller) {
+		if (checkCaller(caller) && checkAccessToPropertyGranted(caller, GrantedAccessToProperty.inventory)) {
+			return animalState.putToInventory(place, item, this);
+		}
+		return false;
+	}
+
+	public SimulationObject removeFromInventory(InventoryPlace place, HiddenSimulationObject caller) {
+		if (checkCaller(caller) && checkAccessToPropertyGranted(caller, GrantedAccessToProperty.inventory)) {
+			return animalState.removeFromInventory(place, this);
+		}
+		return NoSimulationObject.getObjectNothing();
+	}
+
+	/** The character belongs to the attributes: the same grant. */
+	public int setCharacterNumber(int characterNumber, HiddenSimulationObject caller) {
+		if (checkCaller(caller)) 
+			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.attributes)) {
+				animalState.setCharacterNumber(characterNumber, this);
 				return WRITE_ACCESS_RETURNS_SUCCESS;
 			}
 			else
