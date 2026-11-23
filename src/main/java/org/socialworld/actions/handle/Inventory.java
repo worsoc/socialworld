@@ -25,6 +25,7 @@ import org.socialworld.attributes.PropertyProtection;
 import org.socialworld.attributes.SimProperty;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.ValueProperty;
+import org.socialworld.calculation.geometry.Vector;
 import org.socialworld.core.IAccessToken;
 import org.socialworld.core.ObjectMaster;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
@@ -262,6 +263,7 @@ public class Inventory extends SimProperty {
 	public boolean put(InventoryPlace place, SimulationObject item) {
 		if (!canPut(place, item)) return false;
 		this.places.put(place, item);
+		letParentCarry(place, item);
 		return true;
 	}
 
@@ -272,7 +274,57 @@ public class Inventory extends SimProperty {
 	 */
 	public SimulationObject remove(InventoryPlace place) {
 		SimulationObject object = this.places.remove(place);
-		return (object != null) ? object : NoSimulationObject.getObjectNothing();
+		if (object == null) return NoSimulationObject.getObjectNothing();
+		letParentRelease(object);
+		return object;
+	}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    carrying  ////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * The offset of an item on the place to its carrier, in mm (inventory concept V2, as the offsets at the start
+	 * of the simulation). It is fixed in x, y and z and does not turn with the carrier.
+	 */
+	public static Vector offsetOf(InventoryPlace place) {
+		switch (place) {
+		case head:				return new Vector(0, 0, 800);
+		case upperBody:
+		case dress:
+		case overgarmentFront:
+		case overgarmentArmour:
+		case overgarmentCloak:	return new Vector(0, 0, 300);
+		case neck:				return new Vector(0, 0, 500);
+		case legs:				return new Vector(0, 0, -400);
+		case leftFootShoe:
+		case leftFootSock:		return new Vector(150, 0, -800);
+		case rightFootShoe:
+		case rightFootSock:		return new Vector(-150, 0, -800);
+		case leftHand:
+		case leftHandGlove:
+		case finger:			return new Vector(300, 0, 0);
+		case rightHand:
+		case rightHandGlove:	return new Vector(-300, 0, 0);
+		case back:				return new Vector(0, -200, 0);
+		default:				return Vector.get0Vector();	// mouth, belt, bag
+		}
+	}
+
+	// The holder of the inventory carries what lies on its places (connection carried): the item follows it.
+	// Only with a holder (setParentObject) and only real simulation objects; an item carried by someone else
+	// already (e.g. the one apple shared by all mouths) stays with its first carrier.
+	private void letParentCarry(InventoryPlace place, SimulationObject item) {
+		if (this.parent == null || !this.parent.isSimulationObject()) return;
+		if (item == null || !item.isSimulationObject()) return;
+		this.parent.carry(item, offsetOf(place));
+	}
+
+	private void letParentRelease(SimulationObject item) {
+		if (this.parent == null || !this.parent.isSimulationObject()) return;
+		if (item == null || !item.isSimulationObject()) return;
+		if (this.places.containsValue(item)) return;	// still on another place
+		this.parent.releaseCarried(item);
 	}
 
 	/**
@@ -336,8 +388,11 @@ public class Inventory extends SimProperty {
 	// without the checks of put, as before. An object that is no simulation object (null, nothing) empties the place.
 
 	private void set(InventoryPlace place, SimulationObject object) {
-		if (object == null || !object.isSimulationObject()) this.places.remove(place);
-		else this.places.put(place, object);
+		SimulationObject before = this.places.remove(place);
+		if (before != null && before != object) letParentRelease(before);
+		if (object == null || !object.isSimulationObject()) return;
+		this.places.put(place, object);
+		letParentCarry(place, object);
 	}
 
 	public SimulationObject getLeftHand() {

@@ -18,6 +18,7 @@
 package org.socialworld.objects;
 
 
+import org.socialworld.calculation.geometry.Vector;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -363,6 +364,7 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 		if (token.isValid() && token.getSimulationCluster() == SimulationCluster.act) {
 			this.state.setPosition(position, this.guard);
 			Simulation.getInstance().changePosition(this);
+			letCarriedFollow();
 		}
 	}
 
@@ -689,6 +691,46 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 
 	final public void connectAsSlaveTo(SimulationObject object, ConnectionType type) {
 		this.state.connectAsSlaveTo(object, type, this.guard);
+	}
+
+	/**
+	 * This object carries the other one with the offset (in mm, relative to this object's position): the carried
+	 * object follows at once and then after every own position step or relocation of this object (2026-11-23).
+	 * An object is carried by one carrier at a time; if it is carried already, nothing happens.
+	 */
+	final public void carry(SimulationObject carried, Vector offset) {
+		if (carried == null || !carried.isSimulationObject() || carried == this) return;
+		if (carried.isCarried()) return;
+		this.state.connectAsMasterTo(carried, ConnectionType.carried, offset, this.guard);
+		carried.followCarrier();
+	}
+
+	/** This object does not carry the other one any longer; it stays where it is. */
+	final public void releaseCarried(SimulationObject carried) {
+		if (carried == null || carried.getCarrier() != this) return;
+		this.state.releaseConnectionTo(carried, this.guard);
+	}
+
+	final public boolean isCarried() {
+		return this.state != null && this.state.getCarrier().isSimulationObject();
+	}
+
+	/**
+	 * @return the object that carries this one, NoSimulationObject if none does
+	 */
+	final public SimulationObject getCarrier() {
+		return (this.state != null) ? this.state.getCarrier() : NoSimulationObject.getObjectNothing();
+	}
+
+	/** The carried objects take this object's position plus their offset (technical event, bypass). */
+	final public void letCarriedFollow() {
+		if (this.state == null) return;
+		for (SimulationObject carried : this.state.getCarriedObjects()) carried.followCarrier();
+	}
+
+	/** This object takes the position of its carrier plus its offset (technical event, bypass). */
+	final public void followCarrier() {
+		this.state.calculateTechnicalPositionEvent(TechnicalEvent.FOLLOW_CARRIER);
 	}
 
 	final public void addConnection(Connection connection,  SimulationObject connectedObject) {

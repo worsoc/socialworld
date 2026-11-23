@@ -30,6 +30,7 @@ public final class TechnicalEvent extends Event {
 
 	public static final TechnicalEvent POSITION_STEP = new TechnicalEvent(EventType.positionStep);
 	public static final TechnicalEvent ACTIVE_MOVE_STOP = new TechnicalEvent(EventType.activeMoveStop);
+	public static final TechnicalEvent FOLLOW_CARRIER = new TechnicalEvent(EventType.followCarrier);
 
 	private TechnicalEvent(EventType eventType) {
 		super(eventType, null /* no causer */, LOWEST_EVENT_PRIORITY, Position.getObjectNothing());

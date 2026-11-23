@@ -193,7 +193,9 @@ public enum EventType {
 //////////////////////////////////////////////////////////////////////
 
 	positionStep(512),
-	activeMoveStop(513);
+	activeMoveStop(513),
+	// a carried object takes the position of its carrier plus the offset (connection carried, 2026-11-23)
+	followCarrier(514);
 
 	
 	

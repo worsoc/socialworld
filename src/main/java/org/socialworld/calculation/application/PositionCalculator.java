@@ -247,6 +247,14 @@ public class PositionCalculator extends SocialWorldThread {
 
 		EventType eventType = event.getEventType();
 
+		if (eventType == EventType.followCarrier) {
+			return followCarrier(state, hiddenWriteAccess);
+		}
+		// a carried object does not move by itself: no step, no push, no blow (inventory concept D1)
+		if (isIgnoredWhileCarried(eventType, state.getCarrier().isSimulationObject())) {
+			return POSITION_CALCULATOR_RETURNS_NO_CHANGE;
+		}
+
 		if (eventType == EventType.positionStep) {
 			return stepPosition(state, hiddenWriteAccess);
 		}
@@ -305,6 +313,45 @@ public class PositionCalculator extends SocialWorldThread {
 		return result;
 	}
 
+	/**
+	 * followCarrier: the carried object takes the position of its carrier plus its offset. The positions stay
+	 * absolute (there are no relative positions yet); the offset keeps the place, e.g. z + 800 for a cap.
+	 */
+	private int followCarrier(StateSimulationObject state, HiddenSimulationObject hiddenWriteAccess) {
+		SimulationObject carrier = state.getCarrier();
+		if (!carrier.isSimulationObject()) return POSITION_CALCULATOR_RETURNS_NO_CHANGE;
+
+		Position carrierPosition = carrier.getPosition(token);
+		if (carrierPosition.checkIsObjectNothing()) return POSITION_CALCULATOR_RETURNS_NO_CHANGE;
+
+		Position positionOriginal = getObjectRequester().requestPosition(token, state.getProperty(token, PropertyName.simobj_position), this);
+		Position newPosition = new Position(PropertyName.simobj_position,
+				followPosition(carrierPosition.getVector(token), state.getCarriedOffset()));
+
+		int returnSetPosition = hiddenWriteAccess.setPosition(newPosition);
+		if (returnSetPosition != WriteAccessToSimulationObject.WRITE_ACCESS_RETURNS_SUCCESS) return returnSetPosition;
+		if (positionOriginal.checkIsObjectNothing()) Simulation.getInstance().changePosition(state.getObject());
+		else updateObjectSearch(state.getObject(), positionOriginal, newPosition);
+		// and what it carries itself
+		state.getObject().letCarriedFollow();
+		return returnSetPosition;
+	}
+
+	/** The position of a carried object: carrier + offset. */
+	static Vector followPosition(Vector carrierPosition, Vector offset) {
+		Vector position = new Vector(carrierPosition);
+		position.add(offset);
+		return position;
+	}
+
+	/**
+	 * @return true if the event is ignored because the object is carried: everything except followCarrier
+	 *         (a carried object has no own step, is not pushed and not hit away)
+	 */
+	static boolean isIgnoredWhileCarried(EventType eventType, boolean carried) {
+		return carried && eventType != EventType.followCarrier;
+	}
+
 	/** The time step (positionStep): position += (active + passive) × 1 s, then the passive velocity is damped. */
 	private int stepPosition(StateSimulationObject state, HiddenSimulationObject hiddenWriteAccess) {
 		Vector active = readVelocity(state, PropertyName.simobj_velocityActive);
@@ -326,6 +373,8 @@ public class PositionCalculator extends SocialWorldThread {
 		int returnSetPosition = hiddenWriteAccess.setPosition(newPosition);
 		if (returnSetPosition != WriteAccessToSimulationObject.WRITE_ACCESS_RETURNS_SUCCESS) return returnSetPosition;
 		updateObjectSearch(state.getObject(), positionOriginal, newPosition);
+		// what it carries goes with it
+		state.getObject().letCarriedFollow();
 
 		int result = writeVelocities(state, hiddenWriteAccess, active, damped(passive));
 

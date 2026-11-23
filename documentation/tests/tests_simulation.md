@@ -2,7 +2,7 @@
 
 Part of the [test overview](TESTS.md): the running simulation core: start, attributes, core, actions, objects.
 
-**18 test classes, 103 tests.**
+**19 test classes, 106 tests.**
 
 ## Overview
 
@@ -25,6 +25,7 @@ Part of the [test overview](TESTS.md): the running simulation core: start, attri
 | Objects | `ToolsAndWeaponsCatalogTest` | 5 | the 29 tools and 7 weapons: created without database, lexeme value in its level, weapon properties, abilities | – |
 | Objects | `FoodAndDrinksCatalogTest` | 5 | the 11 kinds of food and 2 new drinks: created without database, eatable or drinkable, lexeme value, food values, perishable, abilities | – |
 | Objects | `NatureCatalogTest` | 5 | the 7 things of nature (parts of plants and animals, solids): created without database, lexeme value in its own base group, abilities | – |
+| Objects | `CarriedConnectionTest` | 3 | the connection carried: offset (0 by default, a copy), carrier and carried find each other in their lists | – |
 | Objects | `ContainersAndGoodsCatalogTest` | 5 | the 10 containers and 12 valuables, devotional, writing and pastime goods: created without database, lexeme value, capacity, jewellery and bag, abilities | – |
 
 ---
@@ -287,6 +288,21 @@ The 29 tools and 7 weapons of the item hierarchy (2026-11-23). Tools have purpos
 
 - **Assumes:** the catalogue of the item hierarchy concept; the ability values are constants in the classes.
 - **Not checked:** using a weapon in `ActionAttack` (needs the inventory and the running simulation).
+
+### `CarriedConnectionTest`
+
+`src/test/java/org/socialworld/objects/connections/CarriedConnectionTest.java`
+
+The connections of `objects/connections` (from 2023, unused until 2026-11-23) carry the relation carrier → carried: a master/slave connection of the new type `carried` with the offset of the carried object. Each side keeps the connection in its `ConnectionList` (since 2026-11-23 a `CopyOnWriteArrayList`, read by the PositionCalculator while connections are made).
+
+| Test | Checks |
+|---|---|
+| `aConnectionWithoutOffset_hasTheZeroVector` | a new connection has the 0 vector as offset |
+| `theOffset_isACopy` | changing the vector afterwards does not change the offset |
+| `theCarried_findsItsCarrier_theCarrierFindsWhatItCarries` | the carried finds the connection to its master, the carrier finds the carried as slave, other types give nothing; after release the carried has no carrier |
+
+- **Assumes:** objects without a state; the connection is put into both lists by hand, as `connectAsMasterTo` does through `addConnection`.
+- **Not checked:** `SimulationObject.carry`, `releaseCarried` and the connecting by the inventory (they need states and write access).
 
 ### `ContainersAndGoodsCatalogTest`
 

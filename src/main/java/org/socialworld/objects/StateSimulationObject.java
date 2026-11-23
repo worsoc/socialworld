@@ -17,6 +17,7 @@
  */
 package org.socialworld.objects;
 
+import org.socialworld.calculation.geometry.Vector;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -330,6 +331,43 @@ public abstract class StateSimulationObject extends ListenedBase implements IObj
 		if (checkGuard(guard)) {
 			this.connections.connectAsSlaveTo(object, type);
 		}
+	}
+
+	final void connectAsMasterTo(SimulationObject object, ConnectionType type, Vector offset, WriteAccessToSimulationObject guard) {
+		if (checkGuard(guard)) {
+			this.connections.connectAsMasterTo(object, type, offset);
+		}
+	}
+
+	/** Releases the connection to the object on both sides. */
+	final void releaseConnectionTo(SimulationObject object, WriteAccessToSimulationObject guard) {
+		if (checkGuard(guard)) {
+			this.connections.releaseConnection(object);
+		}
+	}
+
+	/**
+	 * @return the object that carries this one (connection carried), NoSimulationObject if none does
+	 */
+	public final SimulationObject getCarrier() {
+		Connection con = (this.connections != null) ? this.connections.getConnectionToMaster(ConnectionType.carried) : null;
+		return (con != null) ? con.getObject1() : NoSimulationObject.getObjectNothing();
+	}
+
+	/**
+	 * @return the offset of this object to its carrier, the 0 vector if it is not carried
+	 */
+	public final Vector getCarriedOffset() {
+		Connection con = (this.connections != null) ? this.connections.getConnectionToMaster(ConnectionType.carried) : null;
+		return (con != null) ? con.getOffset() : Vector.get0Vector();
+	}
+
+	/**
+	 * @return the objects this one carries (connection carried)
+	 */
+	public final List<SimulationObject> getCarriedObjects() {
+		if (this.connections == null) return new ArrayList<SimulationObject>();
+		return this.connections.getSlaves(ConnectionType.carried);
 	}
 
 	final void addConnection(Connection connection, SimulationObject connectedObject, WriteAccessToSimulationObject guard) {
