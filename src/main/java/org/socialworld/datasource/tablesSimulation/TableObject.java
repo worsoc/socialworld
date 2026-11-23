@@ -1,24 +1,20 @@
 /*
-* Social World
-* Copyright (C) 2015  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2015  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.datasource.tablesSimulation;
 
 import java.sql.ResultSet;
@@ -166,6 +162,16 @@ public class TableObject extends Table {
 					id + ", " + type + ", " + position + ", " + state2act + ", " + locBase9 + ", '" + locBase25 + "')";
 			
 			insert(statement);
+		}
+	}
+
+	/**
+	 * Inserts the object only if there is no row with this id yet (INSERT IGNORE): for filling up the ID bands
+	 * without deleting what is there (PropertySetCreationTool, FillObject, 2026-11-23).
+	 */
+	public void insertIfMissing(int id, int type) {
+		if ((id > 0) & (type > 0)) {
+			insert("INSERT IGNORE INTO sw_object (id, type) VALUES (" + id + ", " + type + ")");
 		}
 	}
 

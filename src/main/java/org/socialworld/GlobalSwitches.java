@@ -67,8 +67,8 @@ public class GlobalSwitches {
 	// "MOVEDIR 2" (ActionMove performs), "MOVEDIR 3" (PositionCalculator after a selfMove event)
 	public static boolean OUTPUT_DEBUG_MOVE_DIRECTION = false;
 	// taking and dropping in the InventoryCalculator (inventory concept V4): what happens and why not
-	public static boolean OUTPUT_DEBUG_INVENTORY = false;
+	public static boolean OUTPUT_DEBUG_INVENTORY = true;
 	// the weapon of a useWeapon action (inventory concept V7): line "WEAPON <actor> <mode> with <weapon>"
-	public static boolean OUTPUT_DEBUG_WEAPON = false;
+	public static boolean OUTPUT_DEBUG_WEAPON = true;
 
 }

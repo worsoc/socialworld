@@ -19,7 +19,9 @@ package org.socialworld.workbench.act;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
+import java.awt.Rectangle;
 import java.awt.Point;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -30,6 +32,8 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JComponent;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -100,9 +104,9 @@ public final class ActionCreationTool {
 
 	private void createAndShowFrame() {
 		JFrame frame = new JFrame("Action Creation Tool");
-		frame.setBounds(120, 60, 1000, 760);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setContentPane(createContent());
+		frame.setBounds(frameBounds());
 
 		Timer timer = new Timer(REFRESH_MILLIS, event -> refresh());
 		frame.addWindowListener(new WindowAdapter() {
@@ -116,6 +120,17 @@ public final class ActionCreationTool {
 		frame.setVisible(true);
 		refresh();
 		timer.start();
+	}
+
+	/**
+	 * The window: wide and high enough for the map, the whole control column and the log, but never larger than the
+	 * usable part of the screen (2026-11-23: before a fixed 1000 × 760, which cut off the column on the right).
+	 */
+	private static Rectangle frameBounds() {
+		Rectangle screen = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+		int width = Math.min(1200, screen.width - 40);
+		int height = Math.min(860, screen.height - 40);
+		return new Rectangle(screen.x + Math.min(120, screen.width - width), screen.y + Math.min(40, screen.height - height), width, height);
 	}
 
 	private JPanel createContent() {
@@ -135,7 +150,15 @@ public final class ActionCreationTool {
 		scrollMap.getVerticalScrollBar().setUnitIncrement(16);
 		scrollMap.getHorizontalScrollBar().setUnitIncrement(16);
 		content.add(scrollMap, BorderLayout.CENTER);
-		content.add(createControls(), BorderLayout.EAST);
+		// the column is as wide as its widest element, plus room for the vertical scroll bar: nothing is cut off on
+		// the right; if the window is too low, the column scrolls
+		JPanel controls = createControls();
+		JScrollPane scrollControls = new JScrollPane(controls,
+				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollControls.getVerticalScrollBar().setUnitIncrement(16);
+		int scrollBarWidth = scrollControls.getVerticalScrollBar().getPreferredSize().width;
+		scrollControls.setPreferredSize(new Dimension(controls.getPreferredSize().width + scrollBarWidth + 4, 0));
+		content.add(scrollControls, BorderLayout.EAST);
 		content.add(new JScrollPane(log), BorderLayout.SOUTH);
 		return content;
 	}
@@ -152,8 +175,10 @@ public final class ActionCreationTool {
 		JButton buttonItems = new JButton("Items und Inventar");
 		buttonItems.addActionListener(event -> showItems());
 
-		JPanel fields = new JPanel(new GridLayout(0, 1, 0, 4));
-		fields.add(new JLabel("Verursacher (Klick), Versetzen (Ziehen)"));
+		// one element per row, each as high as it needs (two-line labels); GridLayout would make all rows equally high
+		JPanel fields = new JPanel();
+		fields.setLayout(new BoxLayout(fields, BoxLayout.Y_AXIS));
+		fields.add(new JLabel("<html>Verursacher (Klick auf der Karte),<br>Versetzen (Ziehen)</html>"));
 		fields.add(spinnerCauser);
 		fields.add(new JLabel("Aktion"));
 		fields.add(comboMode);
@@ -161,23 +186,48 @@ public final class ActionCreationTool {
 		fields.add(spinnerIntensity);
 		fields.add(new JLabel("Priorität"));
 		fields.add(spinnerPriority);
-		fields.add(new JLabel("Dauer in s (0: einmal, nicht unterbrechbar)"));
+		fields.add(new JLabel("<html>Dauer in s<br>(0: einmal, nicht unterbrechbar)</html>"));
 		fields.add(spinnerDuration);
-		fields.add(new JLabel("Item-ID (Schlag: Ziel-ID) und Hand oder Platz"));
+		fields.add(new JLabel("<html>Item-ID (beim Schlag: Ziel-ID)<br>und Hand oder Platz</html>"));
 		fields.add(spinnerItem);
 		fields.add(comboHand);
 		fields.add(labelRange);
-		fields.add(buttonPerform);
-		fields.add(buttonStop);
-		fields.add(buttonCheck);
-		fields.add(buttonFit);
-		fields.add(buttonItems);
+		arrangeColumn(fields);
+
+		// the buttons in two columns, so that the column stays short enough (2026-11-23: with the item fields of
+		// inventory V4 the last button, "Items und Inventar", was cut off at the bottom of the window)
+		JPanel buttons = new JPanel(new GridLayout(0, 2, 4, 4));
+		buttons.add(buttonPerform);
+		buttons.add(buttonStop);
+		buttons.add(buttonItems);
+		buttons.add(buttonCheck);
+		buttons.add(buttonFit);
+
+		JPanel column = new JPanel(new BorderLayout(0, 8));
+		column.add(fields, BorderLayout.NORTH);
+		column.add(buttons, BorderLayout.CENTER);
 
 		JPanel controls = new JPanel(new BorderLayout());
 		controls.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
-		controls.setPreferredSize(new Dimension(260, 0));
-		controls.add(fields, BorderLayout.NORTH);
+		controls.add(column, BorderLayout.NORTH);
 		return controls;
+	}
+
+	/**
+	 * Every element of the column: left-aligned, as wide as the column but only as high as it needs, with a small
+	 * gap in between (for the BoxLayout of the column).
+	 */
+	private static void arrangeColumn(JPanel fields) {
+		java.awt.Component[] elements = fields.getComponents();
+		fields.removeAll();
+		for (int i = 0; i < elements.length; i++) {
+			JComponent element = (JComponent) elements[i];
+			element.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+			element.setMaximumSize(new Dimension(Integer.MAX_VALUE, element.getPreferredSize().height));
+			// a little more space above a label, as it begins a new field
+			if (i > 0) fields.add(javax.swing.Box.createVerticalStrut(element instanceof JLabel ? 8 : 2));
+			fields.add(element);
+		}
 	}
 
 	private void refresh() {

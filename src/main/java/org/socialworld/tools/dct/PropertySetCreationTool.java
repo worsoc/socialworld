@@ -16,6 +16,7 @@
  * along with this program.  If not, see <https://gnu.org>.
  */
 package org.socialworld.tools.dct;
+import org.socialworld.datasource.mariaDB.Table;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -78,6 +79,28 @@ public class PropertySetCreationTool {
 	/**
 	 * Launch the application.
 	 */
+	/**
+	 * Counts in the table what is really there (not what the loop tried): the rows of the humans and of the items.
+	 * A refused insert (e.g. no row in sw_object for the foreign key) shows as a missing row and a warning.
+	 */
+	private static void reportRows(String what, Table table) {
+		int humans = countIds(table, FIRST_HUMAN_ID, HUMAN_STATE_IDS);
+		int items = countIds(table, FIRST_ITEM_ID, ITEM_STATE_IDS);
+		System.out.println(what + ": " + humans + " of " + HUMAN_STATE_IDS + " humans, " + items + " of " + ITEM_STATE_IDS + " items in the table");
+		if (humans < HUMAN_STATE_IDS || items < ITEM_STATE_IDS) {
+			System.out.println(what + ": WARNING, rows are missing (for the states: does sw_object have them? press FillObject first)");
+		}
+	}
+
+	private static int countIds(Table table, int first, int count) {
+		table.select(1, "WHERE id BETWEEN " + first + " AND " + (first + count - 1), "");
+		return table.rowCount();
+	}
+
+	private static long secondsSince(long startMillis) {
+		return (System.currentTimeMillis() - startMillis) / 1000;
+	}
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -180,6 +203,10 @@ public class PropertySetCreationTool {
 			    int setID_14;
 			    int setID_15;
 			    
+			    // feedback on the console (2026-11-23): the button works in the Swing thread, the window waits until the end
+			    long start = System.currentTimeMillis();
+			    System.out.println("FillStates: start, " + totalIds + " IDs (humans from " + FIRST_HUMAN_ID + ", items from " + FIRST_ITEM_ID + ")");
+
 			    TableStateAppearance tableAppearance = TableStateAppearance.getInstance();
 			    tableAppearance.clear();
 			    maxSetID_1 = tableAppearance.getNewID("swset_colour", "colour_set_id") - 1;
@@ -219,6 +246,8 @@ public class PropertySetCreationTool {
 			        tableAppearance.updateColourSetID(id,  15, setID_15);
 			    }
 			    
+			    reportRows("FillStates: swstate_appearance (" + secondsSince(start) + " s)", tableAppearance);
+
 			    TableStateComposition tableComposition = new TableStateComposition();
 			    tableComposition.clear();
 			    maxSetID_1 = tableComposition.getNewID("swset_material", "material_set_id") - 1;
@@ -228,6 +257,8 @@ public class PropertySetCreationTool {
 			        setID_1 = (id % maxSetID_1);
 			        tableComposition.insert(id, setID_1);
 			    }
+
+			    reportRows("FillStates: swstate_composition (" + secondsSince(start) + " s)", tableComposition);
 
 			    TableStateEatable tableEatable = new TableStateEatable();
 			    tableEatable.clear();
@@ -240,6 +271,8 @@ public class PropertySetCreationTool {
 			        setID_2 = (id % maxSetID_2);
 			        tableEatable.insert(id, setID_1, setID_2);
 			    }
+			    reportRows("FillStates: swstate_eatable (" + secondsSince(start) + " s)", tableEatable);
+			    System.out.println("FillStates: finished after " + secondsSince(start) + " s");
 			}
 		});
 		buttonFillStatesWithSets.setBounds(938, 230, 77, 26);
@@ -249,18 +282,18 @@ public class PropertySetCreationTool {
 		{
 			public void actionPerformed(ActionEvent e) 
 			{
+			    // 2026-11-23: no clear any more (many tables refer to sw_object by foreign key, and the rows of the old
+			    // bands stay); only the missing rows of the new bands are added: humans 1.., items 30001.. (type 1, 4)
 			    TableObject table = new TableObject();
-			    table.clear();
-			    
-			    // Bereich 1 bis 100 befüllen mit Wert 1 für Human
-			    for (int id = 1; id <= 100; id++) {
-			        table.insert(id, 1);
+			    System.out.println("FillObject: start, humans " + FIRST_HUMAN_ID + ".." + (FIRST_HUMAN_ID + HUMAN_STATE_IDS - 1)
+			    		+ ", items " + FIRST_ITEM_ID + ".." + (FIRST_ITEM_ID + ITEM_STATE_IDS - 1));
+			    for (int id = FIRST_HUMAN_ID; id < FIRST_HUMAN_ID + HUMAN_STATE_IDS; id++) {
+			        table.insertIfMissing(id, 1);
 			    }
-			    
-			    // Bereich 3001 bis 3775 befüllen mit Wert 4 für Item
-			    for (int id = 3001; id <= 3775; id++) {
-			        table.insert(id, 4);
+			    for (int id = FIRST_ITEM_ID; id < FIRST_ITEM_ID + ITEM_STATE_IDS; id++) {
+			        table.insertIfMissing(id, 4);
 			    }
+			    reportRows("FillObject: sw_object", table);
 			}
 		});
 		buttonFillObjectWithDummy.setBounds(938, 430, 77, 26);
