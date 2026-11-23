@@ -17,6 +17,7 @@
  */
 package org.socialworld.objects;
 
+import org.socialworld.core.TechnicalEvent;
 import org.socialworld.actions.handle.InventoryPlace;
 import org.socialworld.GlobalSwitches;
 import org.socialworld.SocialWorld;
@@ -334,6 +335,11 @@ public class StateAnimal extends StateSimulationObject {
 			// the same object as in StateInventory, for the changes by the InventoryCalculator (inventory concept V4)
 			this.inventory = inventory;
 		}
+	}
+
+	/** A technical event of the own inventory (eatUp, inventory concept V6): no EventMaster, at once. */
+	final void calculateTechnicalInventoryEvent(TechnicalEvent event) {
+		Scheduler.getInstance().calculateInventoryChangedByEvent(event, (StateAnimal)getMeReadableOnly(), (HiddenAnimal)getMeWritableButHidden(grantAccessToPropertyInventory) );
 	}
 
 	final boolean putToInventory(InventoryPlace place, SimulationObject item, WriteAccessToAnimal guard) {

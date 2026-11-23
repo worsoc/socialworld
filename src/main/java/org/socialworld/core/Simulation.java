@@ -17,6 +17,7 @@
  */
 package org.socialworld.core;
 
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.objects.properties.IContainer;
 import java.util.Map;
 import java.util.HashMap;
@@ -432,6 +433,17 @@ public class Simulation extends SocialWorldThread {
     }
     
  
+	/**
+	 * Takes an object out of the running simulation: out of the search by position and out of the object master
+	 * (inventory concept V6: an item that is eaten up). Only the calculators of the cluster position may do this.
+	 */
+	public void removeSimulationObject(IAccessToken token, SimulationObject object) {
+		if (token == null || !token.isValid() || token.getSimulationCluster() != SimulationCluster.position) return;
+		if (object == null || !object.isSimulationObject()) return;
+		this.searchByPosition.remove(object);
+		this.objectMaster.removeSimulationObject(object);
+	}
+
 	public void changePosition(SimulationObject objectWithNewPosition) {
 		this.searchByPosition.changePosition(objectWithNewPosition);
 	}

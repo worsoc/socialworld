@@ -2,7 +2,7 @@
 
 Part of the [test overview](TESTS.md): expressions, functions, knowledge, positions and vectors.
 
-**18 test classes, 121 tests.**
+**19 test classes, 124 tests.**
 
 ## Overview
 
@@ -23,6 +23,7 @@ Part of the [test overview](TESTS.md): expressions, functions, knowledge, positi
 | Calculation | `PositionMovementTest` | 16 | technical position movement: impulse, friction and rest at 50 mm/s, bystander push 0.2 × v, blows (share of the intensity, away from the hitter, only the candidates event), time step, technical event types in their own block 512..527, no self-push | – |
 | Calculation | `CarriedFollowTest` | 5 | carried objects take carrier + offset per place without drift, ignore every event but followCarrier, followCarrier is technical (514) | – |
 | Calculation | `InventoryCalculatorTest` | 6 | taking, dropping and switching: the hand (requested, else right, else left), the other hand, the reach of 1 m on the ground, the self inventory events | – |
+| Calculation | `EatUpTest` | 3 | a meal that is over eats up what is eatable in the mouth: the technical event eatUp, what counts as eatable, removing from the search | – |
 | Calculation | `CalculationVectorTest` | 11 | vector operations in `Calculation`: add, subtract, negate, scale, component product, normalize, length | – |
 | Calculation | `DirectionToReferenceTest` | 10 | tag `ActionDir`: direction to or away from a reference position, height weight, offset, fallback | – |
 | Calculation | `VectorTest` | 7 | `Vector`: normalizing (the zero vector has length 0) and the component product | – |
@@ -313,6 +314,20 @@ The InventoryCalculator (inventory concept V4, 2026-11-23) changes the own inven
 
 - **V5 (2026-11-23):** switch (into the other, free hand), set (from a hand onto a place, else into the container there, `ContainerContent`), get (an item on a place or in a container of the holder, or the object on a place, into a free hand).
 - **Not checked:** the calculator with a real event, holder and item (it needs the running simulation).
+
+### `EatUpTest`
+
+`src/test/java/org/socialworld/calculation/application/EatUpTest.java`
+
+When an eat action is done (not when it is only interrupted), the ActionHandler calls `Animal.eatUp`; the technical event `eatUp` (515) goes at once to the InventoryCalculator, which takes what is eatable out of the mouth and out of the simulation (`Simulation.removeSimulationObject`, only for the cluster position: out of the search by position and out of the object master). It is eaten up as a whole (inventory concept V6, D3, 2026-11-23).
+
+| Test | Checks |
+|---|---|
+| `eatUp_isATechnicalEvent` | eatUp lies in the technical block (515) |
+| `whatIsEatable_isEatenUp_nothingElse` | bread and herb are eaten up; beer (drinking), a knife, nothing and null are not |
+| `anObjectThatWasNeverInTheSearch_canBeRemoved_withoutHarm` | `ObjectByPositionSearch.remove` leaves an object alone that was never added |
+
+- **Not checked:** the eat action ending in the ActionHandler and the removing from the object master (they need the running simulation).
 
 ## Not Covered
 

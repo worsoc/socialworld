@@ -195,7 +195,9 @@ public enum EventType {
 	positionStep(512),
 	activeMoveStop(513),
 	// a carried object takes the position of its carrier plus the offset (connection carried, 2026-11-23)
-	followCarrier(514);
+	followCarrier(514),
+	// a meal is over: what is in the mouth is eaten up (inventory concept V6, 2026-11-23)
+	eatUp(515);
 
 	
 	

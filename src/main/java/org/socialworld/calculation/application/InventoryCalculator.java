@@ -17,6 +17,8 @@
  */
 package org.socialworld.calculation.application;
 
+import org.socialworld.objects.properties.IEatable;
+import org.socialworld.core.Simulation;
 import org.socialworld.GlobalSwitches;
 import org.socialworld.actions.handle.ContainerContent;
 import org.socialworld.actions.handle.InventoryPlace;
@@ -76,6 +78,7 @@ public final class InventoryCalculator implements IObjectReceiver {
 		if (eventType == EventType.selfInventorySwitch) return switchHands(event, state, hiddenWriteAccess);
 		if (eventType == EventType.selfInventorySet) return set(event, state, hiddenWriteAccess);
 		if (eventType == EventType.selfInventoryGet) return get(event, state, hiddenWriteAccess);
+		if (eventType == EventType.eatUp) return eatUp(state, hiddenWriteAccess);
 		return INVENTORY_CALCULATOR_RETURNS_NO_CHANGE;
 	}
 
@@ -113,6 +116,26 @@ public final class InventoryCalculator implements IObjectReceiver {
 		if (!dropped.isSimulationObject()) return noChange("drop: nothing in " + hand, holder);
 		debug("drop: " + holder.getObjectID() + " drops " + dropped.getObjectID() + " from " + hand);
 		return INVENTORY_CALCULATOR_RETURNS_CHANGED;
+	}
+
+	/**
+	 * eatUp (V6): the meal is over, what is eatable in the mouth is eaten up: it leaves the mouth and the simulation.
+	 * Something that is not eatable stays in the mouth.
+	 */
+	private int eatUp(StateAnimal state, HiddenAnimal hiddenWriteAccess) {
+		SimulationObject holder = state.getObject();
+		SimulationObject food = state.getInventoryItem(InventoryPlace.mouth);
+		if (!isEatenUp(food)) return noChange("eatUp: nothing eatable in the mouth", holder);
+		SimulationObject removed = hiddenWriteAccess.removeFromInventory(InventoryPlace.mouth);
+		if (removed != food) return noChange("eatUp: remove refused", holder);
+		Simulation.getInstance().removeSimulationObject(token, food);
+		debug("eatUp: " + holder.getObjectID() + " has eaten " + food.getObjectID() + " " + food.getClass().getSimpleName());
+		return INVENTORY_CALCULATOR_RETURNS_CHANGED;
+	}
+
+	/** what is eaten up at the end of a meal: an eatable simulation object (whole, D3) */
+	static boolean isEatenUp(SimulationObject inTheMouth) {
+		return inTheMouth != null && inTheMouth.isSimulationObject() && inTheMouth instanceof IEatable;
 	}
 
 	/** switch: the item in the hand (the given one, else right, else left) goes into the other hand, which has to be free. */

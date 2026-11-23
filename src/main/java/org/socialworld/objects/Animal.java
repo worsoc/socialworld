@@ -17,6 +17,7 @@
  */
 package org.socialworld.objects;
 
+import org.socialworld.core.TechnicalEvent;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.actions.handle.InventoryPlace;
 import java.util.List;
@@ -222,6 +223,14 @@ public abstract class Animal extends SimulationObject implements ISeer, IRunning
 /////////////////////////////    ATTRIBUTES  //////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
+	/**
+	 * A meal is over (the eat action is done): what is in the mouth is eaten up and leaves the simulation
+	 * (inventory concept V6, D3: whole, not in bites). Called by the ActionHandler.
+	 */
+	final public void eatUp() {
+		this.state.calculateTechnicalInventoryEvent(TechnicalEvent.EAT_UP);
+	}
+
 	/**
 	 * The object on a place of the inventory. Only the Action Creation Tool may ask (inventory concept V4),
 	 * for any other caller the answer is NoSimulationObject.

@@ -399,6 +399,24 @@ public class ObjectMaster {
 
 	}
 
+	/**
+	 * Takes an object out of the simulation: out of the list of its type and out of the array of all objects
+	 * (inventory concept V6: an item that is eaten up). Its ID is not given out again.
+	 */
+	void removeSimulationObject(SimulationObject object) {
+		int objectID = object.getObjectID();
+		if (this.simulationObjects.get(objectID) != object) return;
+		switch (SimulationObject_Type.getSimulationObjectType(objectID / RANGE_SIZE + 1)) {
+		case animal:	this.animals.remove(objectID); break;
+		case human:		this.humans.remove(objectID); break;
+		case god:		this.gods.remove(objectID); break;
+		case item:		this.items.remove(objectID); break;
+		case magic:		this.magics.remove(objectID); break;
+		default:		return;
+		}
+		this.simulationObjects.delete(objectID);
+	}
+
 	private void addObjectToList(SimulationObject_Type simulationObjectType, SimulationObject object) {
 
 		// TODO (MatWorsoc) weitere Objekttypen hinzufuegen
