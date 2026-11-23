@@ -49,12 +49,15 @@ public class ObjectMaster {
     // Logger-Instanz SLF4J für die Klasse registrieren
 	private static final Logger log = LoggerFactory.getLogger(ObjectMaster.class);
 
-	// Jeder Typ erhält ein exklusives ID-Band von 1.000 IDs
-	private static final int RANGE_SIZE = 1000;
+	// Jeder Typ erhält ein exklusives ID-Band von 10.000 IDs (bis 2026-11-23: 1.000; zu wenig für die
+	// Ausstattung der 100 Charaktere mit Items). Die größte ID (magic, 49.999) bleibt unter
+	// LIVING_SIM_OBJECTS_MAX_NUMBER, nach dem TickRandomCache und TickObjectCooldown bemessen sind.
+	private static final int RANGE_SIZE = 10000;
 
 	static final int LIVING_SIM_OBJECTS_MAX_NUMBER = 100000;
 
-	private static final int SIMULATION_OBJECTS_START_CAPACITY = 10000;
+	// so large that the bands of all five types fit without growing the array (items start at 30.001)
+	private static final int SIMULATION_OBJECTS_START_CAPACITY = 50000;
 	
 	private static ObjectMaster instance;
 	
@@ -258,11 +261,49 @@ public class ObjectMaster {
 			theNextOne.letBePerceived();
 		}
 
-		this.nextIndexForPerceive++;
-		if (this.nextIndexForPerceive > this.maxObjectID) {
-			this.nextIndexForPerceive = 0;
+		// jump from band to band over the unused IDs (2026-11-23): every empty ID cost a pass
+		// with Thread.yield() in the PercipienceMaster
+		this.nextIndexForPerceive = nextIdForPerceive(this.nextIndexForPerceive, this.typeStartIDs, this.typeMaxIDs);
+
+	}
+
+	/**
+	 * The ID the perception visits after the given one: the next ID in the same band as long as it is given
+	 * out, else the first ID of the next band that has objects, after the last such band the first one again.
+	 * A band has objects when its highest given ID lies above its start (the start itself is never given out).
+	 *
+	 * @param currentID the ID visited last (0 at the beginning)
+	 * @param startIDs the start of the band per type index
+	 * @param maxIDs the highest given ID per type index (the start of the band while there is none)
+	 * @return the next ID to visit, or 0 if there is no object at all
+	 */
+	static int nextIdForPerceive(int currentID, int[] startIDs, int[] maxIDs) {
+		int next = currentID + 1;
+		int typeIndex = next / RANGE_SIZE + 1;
+
+		if (typeIndex < maxIDs.length && maxIDs[typeIndex] > startIDs[typeIndex] && next <= maxIDs[typeIndex]) {
+			return next;
 		}
-		
+		for (int i = typeIndex + 1; i < maxIDs.length; i++) {
+			if (maxIDs[i] > startIDs[i]) return startIDs[i] + 1;
+		}
+		for (int i = 1; i <= Math.min(typeIndex, maxIDs.length - 1); i++) {
+			if (maxIDs[i] > startIDs[i]) return startIDs[i] + 1;
+		}
+		return 0;
+	}
+
+	/**
+	 * The highest given ID over all types, 0 if there is none. Only types with objects count: a type's
+	 * highest ID starts at the start of its band (2026-11-23; before, an empty band counted with its start, and the
+	 * last line compared magic but took the item value).
+	 */
+	static int maxGivenObjectId(int[] startIDs, int[] maxIDs) {
+		int result = 0;
+		for (int i = 1; i < maxIDs.length; i++) {
+			if (maxIDs[i] > startIDs[i] && maxIDs[i] > result) result = maxIDs[i];
+		}
+		return result;
 	}
 	
 	public int refreshNextObjectsState(SimulationObject_Type simObjType) {
@@ -374,15 +415,7 @@ public class ObjectMaster {
 	}
 	
 	private int getMaxObjectId() {
-		int maxObjectID = 0;
-//		if (maxObjectID < typeMaxIDs[0]) maxObjectID = typeMaxIDs[0];
-		if (maxObjectID < typeMaxIDs[1]) maxObjectID = typeMaxIDs[1];
-		if (maxObjectID < typeMaxIDs[2]) maxObjectID = typeMaxIDs[2];
-		if (maxObjectID < typeMaxIDs[3]) maxObjectID = typeMaxIDs[3];
-		if (maxObjectID < typeMaxIDs[4]) maxObjectID = typeMaxIDs[4];
-		if (maxObjectID < typeMaxIDs[5]) maxObjectID = typeMaxIDs[4];
-		
-		return maxObjectID;
+		return maxGivenObjectId(this.typeStartIDs, this.typeMaxIDs);
 	}
 	
 	

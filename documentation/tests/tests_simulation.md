@@ -2,7 +2,7 @@
 
 Part of the [test overview](TESTS.md): the running simulation core: start, attributes, core, actions, objects.
 
-**17 test classes, 84 tests.**
+**17 test classes, 91 tests.**
 
 ## Overview
 
@@ -16,7 +16,7 @@ Part of the [test overview](TESTS.md): the running simulation core: start, attri
 | Core | `ActionHandlerTest` | 3 | a new action handler has no running action and nothing to stop | – |
 | Core | `EventTypeDistancesTest` | 3 | reach of seeing someone move, who can be moved by an event | – |
 | Core | `ActionEventTimingTest` | 9 | fixed intervals between the events of a running action, one event for single actions | – |
-| Core | `ObjectMasterIdRangeTest` | 4 | every type keeps to its band of 1000 IDs; beyond it the simulation stops | – |
+| Core | `ObjectMasterIdRangeTest` | 11 | every type keeps to its band of 10000 IDs; beyond it the simulation stops; the perception jumps from band to band; the highest given ID counts only types with objects | – |
 | Actions | `InventoryMouthTest` | 1 | the inventory gives the item in the mouth as property (eating, drinking) | – |
 | Actions | `ActionMoveVelocityTest` | 8 | velocity of a move action: start velocity per mode and intensity, then from event to event (uniform, accelerated, braking) | – |
 | Objects | `SimObjectsCompletelyImplemented` | 3 | lexeme mappings of the object enums | – |
@@ -147,16 +147,24 @@ Distances of `EventType`: how far an event reaches (`getEffectDistance`) and how
 
 `src/test/java/org/socialworld/core/ObjectMasterIdRangeTest.java`
 
-`ObjectMaster` gives every type of simulation object a band of 1000 IDs: (index − 1) × 1000 to + 999, the first object gets the start + 1. Since 2026-11-17 `checkIdInRange` stops creating and loading with an `IllegalStateException` (also on the log and `System.err`) when an ID lies outside the band of its type. Before, the 1000th item would silently have got an ID in the band of magic.
+`ObjectMaster` gives every type of simulation object a band of 10000 IDs (1000 until 2026-11-23): (index − 1) × 10000 to + 9999, the first object gets the start + 1. So humans 1..9999, animals 10001.., gods 20001.., items 30001..39999, magic 40001..49999. Since 2026-11-17 `checkIdInRange` stops creating and loading with an `IllegalStateException` (also on the log and `System.err`) when an ID lies outside the band of its type. Since 2026-11-23 the perception (`perceiveNextObject`) jumps from band to band over the unused IDs (`nextIdForPerceive`); before, it went through every ID up to the highest, and every empty one cost a pass with `Thread.yield()` in the `PercipienceMaster`.
 
 | Test | Checks |
 |---|---|
-| `bands_areOneThousandWide_andFollowTheTypeIndex` | humans 0..999, items 3000..3999, magic from 4000 |
-| `idsInsideTheBand_areAccepted` | human 1, items 3001 and 3999 |
-| `theThousandthItem_wouldLandInTheBandOfMagic_andStopsTheSimulation` | item 4000 is refused; the message names the ID, the type, its band 3001..3999 and the band of magic it would land in |
-| `theStartOfTheBand_isNeverGivenOut` | human 0 is refused; magic 5000 is refused without naming a band (no type above magic) |
+| `bands_areTenThousandWide_andFollowTheTypeIndex` | humans 0..9999, items 30000..39999, magic from 40000; the highest ID stays below `LIVING_SIM_OBJECTS_MAX_NUMBER`, the size of `TickRandomCache` and `TickObjectCooldown` |
+| `idsInsideTheBand_areAccepted` | human 1, items 30001 and 39999 |
+| `theTenThousandthItem_wouldLandInTheBandOfMagic_andStopsTheSimulation` | item 40000 is refused; the message names the ID, the type, its band 30001..39999 and the band of magic it would land in |
+| `theStartOfTheBand_isNeverGivenOut` | human 0 is refused; magic 50000 is refused without naming a band (no type above magic) |
+| `perception_goesOnInsideTheBand` | the next ID inside an occupied band (0 → 1, 57 → 58, 30001 → 30002) |
+| `perception_jumpsOverEmptyBands_toTheNextBandWithObjects` | after human 100 comes item 30001 when animals and gods have no objects |
+| `perception_afterTheLastBandWithObjects_beginsAgain` | after the last item, and from an ID behind all bands, it begins with 1 |
+| `perception_oneRound_visitsExactlyTheGivenIds` | one round with 100 humans and 776 items visits 876 IDs (3777 before) |
+| `perception_withoutAnyObject_staysAtZero` | without any object the next ID is 0 |
+| `perception_onlyMagic_wrapsInsideItsBand` | with only magic it goes 40001 .. 40003 and back to 40001 |
+| `maxGivenObjectId_countsOnlyTypesWithObjects` | empty bands do not count with their start (the old `getMaxObjectId` did, and compared magic but took the item value); magic counts when it is highest; no object gives 0 |
 
-- **Assumes:** only the static check is tested, without creating objects; the running simulation creates 776 items (7 clothes for each of the 100 humans, 75 loose apples, one apple shared by all mouths). Items are also limited by their 799 start positions (`swgauss_position`); since 2026-11-17 `CreateSimulationObjects.initState` stops with an `IllegalStateException` when they are used up instead of drawing for ever (not tested: the drawing is random and inside the creator).
+- **Assumes:** only the static calculations are tested (`checkIdInRange`, `nextIdForPerceive`, `maxGivenObjectId`), without creating objects; the running simulation creates 776 items (7 clothes for each of the 100 humans, 75 loose apples, one apple shared by all mouths). Items are also limited by their 799 start positions (`swgauss_position`, which point to only 200 places in `swpool_position`, each 4 times); since 2026-11-17 `CreateSimulationObjects.initState` stops with an `IllegalStateException` when they are used up instead of drawing for ever (not tested: the drawing is random and inside the creator).
+- **Not checked:** `perceiveNextObject` itself in the running `PercipienceMaster`.
 - **Needs:** no database.
 
 ### `ActionHandlerTest`
