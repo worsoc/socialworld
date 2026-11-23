@@ -65,6 +65,20 @@ public final class ItemReach {
 		return ITEM_MODES.contains(mode);
 	}
 
+	// the blows with a weapon (inventory concept V7); the item id of the tool names the target (0: none)
+	private static final List<ActionMode> WEAPON_MODES = Collections.unmodifiableList(
+			Arrays.asList(ActionMode.weaponClub, ActionMode.weaponRightStab, ActionMode.weaponRightStroke,
+					ActionMode.weaponRightBackhand, ActionMode.weaponLeftStab, ActionMode.weaponLeftStroke,
+					ActionMode.weaponLeftBackhand));
+
+	public static List<ActionMode> getWeaponModes() {
+		return WEAPON_MODES;
+	}
+
+	public static boolean isWeaponMode(ActionMode mode) {
+		return WEAPON_MODES.contains(mode);
+	}
+
 	/**
 	 * @param causer the x and y of the human in mm
 	 * @param freeItems the x and y of the free (not carried) items in mm, by object id

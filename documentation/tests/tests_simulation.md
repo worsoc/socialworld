@@ -2,7 +2,7 @@
 
 Part of the [test overview](TESTS.md): the running simulation core: start, attributes, core, actions, objects.
 
-**22 test classes, 118 tests.**
+**23 test classes, 120 tests.**
 
 ## Overview
 
@@ -21,6 +21,7 @@ Part of the [test overview](TESTS.md): the running simulation core: start, attri
 | Actions | `InventoryPlacesTest` | 12 | the places of the inventory: empty places give NoSimulationObject, what fits where (IWearable, mouth, ICarryable with its size), dress and overgarment places, old setters | – |
 | Actions | `StartEquipmentTest` | 7 | where a piece of the start equipment goes: worn places, more clothes first, first food into the mouth, small to the belt, medium and large to hands and back, liquids, coins and food into their containers | – |
 | Actions | `ContainerContentTest` | 4 | what fits into a container: one liquid in an empty container for liquids, space by carry size within the capacity, no things with a liquid | – |
+| Actions | `WeaponInHandTest` | 2 | a blow with the weapon in the hand: a club blow takes the right hand, else the left; F1 (a real weapon is not nothing) | – |
 | Actions | `ActionMoveVelocityTest` | 8 | velocity of a move action: start velocity per mode and intensity, then from event to event (uniform, accelerated, braking) | – |
 | Objects | `SimObjectsCompletelyImplemented` | 3 | lexeme mappings of the object enums | – |
 | Objects | `ClothesCatalogTest` | 5 | the 26 concrete clothes: created without database, one place each, lexeme value, side as property, abilities | – |
@@ -252,6 +253,20 @@ What fits into a container (inventory concept V5, 2026-11-23). The content lies 
 | `space_bySize_withinTheCapacity` | space 300, 2000, 15000, 0 for a liquid; the purse holds one handful of coins, not two; the basket holds a hammer and bread, not a pitchfork on top of three hammers |
 | `noContainer_notItself_notTwice` | a hammer holds nothing, the basket not itself, the same bread not twice |
 
+- **Needs:** no database.
+
+### `WeaponInHandTest`
+
+`src/test/java/org/socialworld/actions/attack/WeaponInHandTest.java`
+
+Since the start equipment (inventory V3) the hands hold tools and weapons, so `ActionAttack` (useWeapon) finds a real `IWeapon` in the hand and passes it as `event_weapon` (inventory concept V7, 2026-11-23). The blow itself (push, P3) is unchanged.
+
+| Test | Checks |
+|---|---|
+| `f1_aRealWeapon_isNotNothing_NoIWeapon_is` | cudgel and knife are not nothing, `IWeapon.getObjectNothing()` is (F1: before the wrong way round) |
+| `aClubBlow_takesTheRightHand_elseTheLeft` | the cudgel in the right hand before the knife in the left; the knife if the right hand holds bread; nothing if neither hand holds a weapon (before only the left hand was looked at) |
+
+- **Not checked:** `ActionAttack.perform` with the hands of a real human (it needs the running simulation); the debug line `WEAPON` (`GlobalSwitches.OUTPUT_DEBUG_WEAPON`).
 - **Needs:** no database.
 
 ### `ActionMoveVelocityTest`

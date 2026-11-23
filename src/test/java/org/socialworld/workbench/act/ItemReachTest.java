@@ -74,4 +74,17 @@ class ItemReachTest {
 				.isEqualTo(InventoryPlace.leftHand.getIndex());
 		assertThat(properties.getValue(org.socialworld.calculation.Value.VALUE_BY_NAME_ACTION_EQUIP_ITEM).isValid()).isTrue();
 	}
+
+	@Test
+	void offersTheWeaponBlows_withAnOptionalTarget() {
+		assertThat(ItemReach.getWeaponModes()).hasSize(7).contains(ActionMode.weaponClub, ActionMode.weaponRightStab);
+		assertThat(ItemReach.isWeaponMode(ActionMode.takeItem)).isFalse();
+		assertThat(new ActionRequest(ActionMode.weaponClub, 1, 60f, 100, 0, 0, InventoryPlace.noWhere).check()).isEqualTo(Problem.NONE);
+		org.socialworld.collections.ValueArrayList properties = ActionSender.createWeaponActionProperties(
+				new ActionRequest(ActionMode.weaponRightStab, 7, 60f, 120, 0, 0, InventoryPlace.noWhere), 1000L);
+		assertThat(properties.getValue(org.socialworld.calculation.Value.VALUE_BY_NAME_ACTION_TYPE).getObject(org.socialworld.calculation.Type.actionType))
+				.isEqualTo(org.socialworld.actions.ActionType.useWeapon);
+		// without target id no target value: the blow reaches the candidates in front
+		assertThat(properties.getValue(org.socialworld.calculation.Value.VALUE_BY_NAME_ACTION_TARGET).isValid()).isFalse();
+	}
 }

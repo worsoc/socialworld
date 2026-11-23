@@ -68,5 +68,7 @@ public class GlobalSwitches {
 	public static boolean OUTPUT_DEBUG_MOVE_DIRECTION = false;
 	// taking and dropping in the InventoryCalculator (inventory concept V4): what happens and why not
 	public static boolean OUTPUT_DEBUG_INVENTORY = false;
+	// the weapon of a useWeapon action (inventory concept V7): line "WEAPON <actor> <mode> with <weapon>"
+	public static boolean OUTPUT_DEBUG_WEAPON = false;
 
 }

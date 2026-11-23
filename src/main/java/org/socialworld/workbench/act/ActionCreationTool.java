@@ -90,6 +90,7 @@ public final class ActionCreationTool {
 	private static ActionMode[] offeredModes() {
 		List<ActionMode> modes = new ArrayList<ActionMode>(EventRange.getSupportedModes());
 		modes.addAll(ItemReach.getItemModes());
+		modes.addAll(ItemReach.getWeaponModes());
 		return modes.toArray(new ActionMode[0]);
 	}
 
@@ -162,7 +163,7 @@ public final class ActionCreationTool {
 		fields.add(spinnerPriority);
 		fields.add(new JLabel("Dauer in s (0: einmal, nicht unterbrechbar)"));
 		fields.add(spinnerDuration);
-		fields.add(new JLabel("Item-ID und Hand oder Platz"));
+		fields.add(new JLabel("Item-ID (Schlag: Ziel-ID) und Hand oder Platz"));
 		fields.add(spinnerItem);
 		fields.add(comboHand);
 		fields.add(labelRange);
@@ -248,7 +249,11 @@ public final class ActionCreationTool {
 			return;
 		}
 
-		if (problem == ActionRequest.Problem.NONE && ItemReach.isItemMode(mode)) {
+		if (problem == ActionRequest.Problem.NONE && ItemReach.isWeaponMode(mode)) {
+			writeLog(String.format(Locale.ROOT, "Mensch %d eingereiht: %s, Ziel %d (Waffe mit GlobalSwitches.OUTPUT_DEBUG_WEAPON)",
+					causer, mode, (Integer) spinnerItem.getValue()));
+		}
+		else if (problem == ActionRequest.Problem.NONE && ItemReach.isItemMode(mode)) {
 			writeLog(String.format(Locale.ROOT, "Mensch %d eingereiht: %s, Item %d, Hand %s (Wirkung mit GlobalSwitches.OUTPUT_DEBUG_INVENTORY)",
 					causer, mode, (Integer) spinnerItem.getValue(), comboHand.getSelectedItem()));
 		}

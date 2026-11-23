@@ -18,6 +18,7 @@
 package org.socialworld.actions.attack;
 
 
+import org.socialworld.GlobalSwitches;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
 import org.socialworld.actions.ActionType;
@@ -149,15 +150,9 @@ public class ActionAttack extends AbstractAction {
 				itemLeft = getObjectRequester().requestSimulationObject(token, vp, this);
 				vp = ((Animal) actor).getStateProperty(token, PropertyName.stateInventory, PropertyName.inventory_rightHand, PropertyName.inventory_rightHand.toString());
 				itemRight = getObjectRequester().requestSimulationObject(token, vp, this);
-				if (itemLeft != null && itemRight != null && !itemLeft.equals(itemRight)) {
-					weapon = IWeapon.getObjectNothing();
-				}
-				if (itemLeft instanceof IWeapon) {
-					weapon = (IWeapon) itemLeft;
-				}
-				else {
-					weapon = IWeapon.getObjectNothing();
-				}
+				// inventory concept V7 (2026-11-23): the weapon of the right hand, else of the left one (before only the
+				// left one was looked at, so the cudgel in the right hand was never used)
+				weapon = clubWeapon(itemLeft, itemRight);
 		  		break;
 			default:
 				weapon = IWeapon.getObjectNothing();
@@ -201,6 +196,11 @@ public class ActionAttack extends AbstractAction {
 		
 		
    		this.weapon = weapon;
+   		if (GlobalSwitches.OUTPUT_DEBUG_WEAPON && type == ActionType.useWeapon) {
+   			System.out.println("WEAPON " + actor.getObjectID() + " " + mode + " with "
+   					+ (weapon instanceof SimulationObject && ((SimulationObject) weapon).isSimulationObject()
+   						? ((SimulationObject) weapon).getObjectID() + " " + weapon.getClass().getSimpleName() : "no weapon"));
+   		}
    		
    		// without a weapon the attack takes place as well (since 2026-11-18): a punch is done by the fist,
    		// and useWeapon is seen more relaxed; the weapon stays IWeapon.getObjectNothing()
@@ -448,6 +448,13 @@ public class ActionAttack extends AbstractAction {
 	  	return eventType;
 	}
 	
+	/** The weapon of a club blow: the one in the right hand, else the one in the left, else none. */
+	static IWeapon clubWeapon(Object itemLeft, Object itemRight) {
+		if (itemRight instanceof IWeapon) return (IWeapon) itemRight;
+		if (itemLeft instanceof IWeapon) return (IWeapon) itemLeft;
+		return IWeapon.getObjectNothing();
+	}
+
 	public Value getWeaponAsValue(String valueName) {
 		return new Value(Type.simulationObject, valueName, this.weapon);
 	}

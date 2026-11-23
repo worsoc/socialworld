@@ -95,7 +95,7 @@ public final class ActionRequest {
 	 *         planned, can only be told by a running simulation.
 	 */
 	public Problem check() {
-		if (!EventRange.isSupported(mode) && !ItemReach.isItemMode(mode)) return Problem.MODE_NOT_SUPPORTED;
+		if (!EventRange.isSupported(mode) && !ItemReach.isItemMode(mode) && !ItemReach.isWeaponMode(mode)) return Problem.MODE_NOT_SUPPORTED;
 		if (mode == ActionMode.takeItem && itemObjectId <= 0) return Problem.INVALID_ITEM;
 		if (causerObjectId <= 0) return Problem.INVALID_CAUSER;
 		if (Float.isNaN(intensity) || Float.isInfinite(intensity) || intensity < 0) return Problem.INVALID_INTENSITY;

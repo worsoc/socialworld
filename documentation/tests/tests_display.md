@@ -2,7 +2,7 @@
 
 Part of the [test overview](TESTS.md): the dashboard and the Action Creation Tool: what shows or nudges the running simulation.
 
-**16 test classes, 201 tests.**
+**16 test classes, 202 tests.**
 
 ## Overview
 
@@ -19,7 +19,7 @@ Part of the [test overview](TESTS.md): the dashboard and the Action Creation Too
 | ACT | `ActionRequestTest` | 9 | values and checks of an action request, duration included | – |
 | ACT | `ActionSenderTest` | 6 | properties of the action given into the pipeline, invalid requests are not given, no stop for an invalid causer | – |
 | ACT | `EventRangeTest` | 14 | say modes, their ranges and the humans within the range | – |
-| ACT | `ItemReachTest` | 4 | taking, dropping, switching, setting and getting in the tool: modes and places, free items within 1 m, a take needs an item, the properties of ActionEquip | – |
+| ACT | `ItemReachTest` | 5 | taking, dropping, switching, setting and getting in the tool, and the blows with a weapon: modes and places, free items within 1 m, a take needs an item, the properties of ActionEquip and ActionAttack | – |
 | ACT | `NeedsResetTest` | 3 | the dashboard intervention ends only sleep and eat, sets tiredness and hunger to 2000 | – |
 | ACT | `ActionMapScaleTest` | 11 | world position ↔ pixel on the range map, finding a human under the mouse | – |
 | ACT | `ActionMapFrameTest` | 9 | scrollable range map: scale fitted once and kept, area only grows, shift of the seen part | – |
@@ -186,6 +186,7 @@ Since 2026-11-23 (inventory concept V4) the tool offers `takeItem` and `dropItem
 | `itemsInReach_withinOneMetre_sorted` | an item exactly 1 m away and one on the spot are in reach, one 1.001 m away is not; sorted by id |
 | `takingNeedsAnItem_droppingDoesNot` | take without item: `INVALID_ITEM`; take with item and drop without item are fine; walk is still not supported |
 | `theItemActionProperties_nameTypeEquip_theItemAndTheHand` | type equip, the hand as index (left 1), a valid item value |
+| `offersTheWeaponBlows_withAnOptionalTarget` | the 7 weapon blows (V7) are offered and accepted; their properties have type useWeapon and, without a target id, no target |
 
 - **Not checked:** the window itself and the listing of the items (it needs the running simulation).
 
