@@ -5,11 +5,11 @@ What the automated tests check, what they assume, and what they need to run.
 | | |
 |---|---|
 | **Framework** | JUnit 5 with AssertJ |
-| **Test classes** | 74 |
-| **Test methods** | 661 active, 1 commented out |
+| **Test classes** | 79 |
+| **Test methods** | 686 active, 1 commented out |
 | **Database** | no test writes to MariaDB; a few tests read from it and skip themselves without it or with an empty table |
 | **Runs in CI** | yes, in a fresh clone without `application.properties` |
-| **Last updated** | 2026-11-20 |
+| **Last updated** | 2026-11-23 |
 
 > Keep these files up to date: every new or changed test changes its part in the same step, and the counts here.
 
@@ -19,13 +19,13 @@ What the automated tests check, what they assume, and what they need to run.
 
 | Part | Areas | Test classes | Tests |
 |---|---|--:|--:|
-| [Simulation](tests_simulation.md) | Start, Attributes, Core, Actions, Objects | 12 | 59 |
+| [Simulation](tests_simulation.md) | Start, Attributes, Core, Actions, Objects | 17 | 84 |
 | [Calculation](tests_calculation.md) | Calculation | 16 | 110 |
 | [Data and DCT](tests_data.md) | Data, DCT | 19 | 158 |
 | [Perception (PCT)](tests_perception.md) | PCT | 8 | 95 |
 | [Map and MCT](tests_map.md) | Map, MCT | 4 | 42 |
 | [Display and ACT](tests_display.md) | Display, ACT | 15 | 197 |
-| **Total** | | **74** | **661** |
+| **Total** | | **79** | **686** |
 
 Each part has its own overview table, one section per test class and its own list of what is not covered.
 

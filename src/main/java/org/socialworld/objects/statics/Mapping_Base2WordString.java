@@ -1,3 +1,20 @@
+/*
+ * Social World
+ * Copyright (C) 2023  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.objects.statics;
 
 import java.util.EnumMap;
@@ -34,6 +51,9 @@ public class Mapping_Base2WordString {
 		mapping.put(EnumBaseSimObj.Liquid, "liquid");
 		mapping.put(EnumBaseSimObj.Food, "food");
 		mapping.put(EnumBaseSimObj.HumanCrafted, "humanCrafted");
+		mapping.put(EnumBaseSimObj.Solid, "solid");
+		mapping.put(EnumBaseSimObj.AnimalPart, "animalPart");
+		mapping.put(EnumBaseSimObj.PlantPart, "plantPart");
 		mapping.put(EnumBaseSimObj.Bird, "bird");
 		mapping.put(EnumBaseSimObj.Mammal, "mammal");
 		mapping.put(EnumBaseSimObj.Sea, "sea");

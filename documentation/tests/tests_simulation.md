@@ -2,7 +2,7 @@
 
 Part of the [test overview](TESTS.md): the running simulation core: start, attributes, core, actions, objects.
 
-**12 test classes, 59 tests.**
+**17 test classes, 84 tests.**
 
 ## Overview
 
@@ -20,6 +20,11 @@ Part of the [test overview](TESTS.md): the running simulation core: start, attri
 | Actions | `InventoryMouthTest` | 1 | the inventory gives the item in the mouth as property (eating, drinking) | – |
 | Actions | `ActionMoveVelocityTest` | 8 | velocity of a move action: start velocity per mode and intensity, then from event to event (uniform, accelerated, braking) | – |
 | Objects | `SimObjectsCompletelyImplemented` | 3 | lexeme mappings of the object enums | – |
+| Objects | `ClothesCatalogTest` | 5 | the 26 concrete clothes: created without database, one place each, lexeme value, side as property, abilities | – |
+| Objects | `ToolsAndWeaponsCatalogTest` | 5 | the 29 tools and 7 weapons: created without database, lexeme value in its level, weapon properties, abilities | – |
+| Objects | `FoodAndDrinksCatalogTest` | 5 | the 11 kinds of food and 2 new drinks: created without database, eatable or drinkable, lexeme value, food values, perishable, abilities | – |
+| Objects | `NatureCatalogTest` | 5 | the 7 things of nature (parts of plants and animals, solids): created without database, lexeme value in its own base group, abilities | – |
+| Objects | `ContainersAndGoodsCatalogTest` | 5 | the 10 containers and 12 valuables, devotional, writing and pastime goods: created without database, lexeme value, capacity, jewellery and bag, abilities | – |
 
 ---
 
@@ -208,12 +213,97 @@ The move action keeps its velocity and gives every event a new `Move` with the c
 | Test | Checks |
 |---|---|
 | `existsMappingToLexemIDHigherPart` | every `EnumBaseSimObj` has an entry in `Mapping_Base2LexemIDHigherPart` |
-| `existsMappingToLexemIDLowerPart` | every element of `EnumMammal`, `EnumBird`, `EnumFood`, `EnumLiquid` and `EnumHumanCrafted` has an entry in its lower-part mapping |
+| `existsMappingToLexemIDLowerPart` | every element of `EnumMammal`, `EnumBird`, `EnumFood`, `EnumLiquid`, `EnumSolid`, `EnumAnimalPart`, `EnumPlantPart` (since 2026-11-23) and `EnumHumanCrafted` has an entry in its lower-part mapping |
 | `generatedLexemID_isUnique` | no two subclasses of `SimulationObject` get the same lexeme ID |
 
 - **Assumes:** the lexeme ID is `OFFSET_LEXEMID_NOUN_SIMOBJ + higher × RANGE_FOR_LOWER_VALUE + lower`. Classes without a mapping, and classes where both parts are 0, are left out of the uniqueness check.
 - **Note:** `generatedLexemID_isUnique` scans the classpath with ClassGraph. On failure the details go to the console, and the assertion only says `false`.
 - **Commented out:** `everySimObjClass_HasEnumElem` would check that every class of a simulation object has an enum entry.
+
+### `ClothesCatalogTest`
+
+`src/test/java/org/socialworld/objects/concrete/clothes/ClothesCatalogTest.java`
+
+The concrete clothes of the item hierarchy (2026-11-23): 7 caps, 4 shirts, 2 trousers, 3 dresses, 5 overgarments, 3 shoes, 1 sock, 1 glove.
+
+| Test | Checks |
+|---|---|
+| `all26_areCreatedWithoutDatabase` | every class has a constructor without arguments and is `IWearable` |
+| `eachOne_saysExactlyOnePlace` | of cap, shirt, trousers, dress, overgarment, shoe, sock, glove, jewellery and bag exactly one is true |
+| `lexemLowerValue_isUniqueAndJustAboveItsKind` | `GetLexemIDLowerPartFromMapping` gives kind + 1 .. 15 (e.g. cap 272, straw hat 273), no value twice |
+| `side_isAProperty_leftUntilSet` | shoe, sock and glove are left until `setLeftSide(false)`, then right |
+| `abilities_asInTheCatalogue` | helmet and chain mail `IProtective`, fur cloak and chain mail `IValuable`, habit `ISacred`, linen shirt none of them |
+
+- **Assumes:** the catalogue of the item hierarchy concept; the ability values are constants in the classes.
+- **Not checked:** creating clothes in the running simulation (states, position), it needs the database.
+
+### `ToolsAndWeaponsCatalogTest`
+
+`src/test/java/org/socialworld/objects/concrete/tools/ToolsAndWeaponsCatalogTest.java`
+
+The 29 tools and 7 weapons of the item hierarchy (2026-11-23). Tools have purpose levels of + 16 below `TOOL` 512 (field 528, craft 544, textile 560, herding 576, household 592, light 608, travel 624), only as numbers; each tool is its level + 1, + 2, .... Each weapon is `WEAPON` 1024 + 16, + 32, ....
+
+| Test | Checks |
+|---|---|
+| `all36_areCreatedWithoutDatabase` | every class has a constructor without arguments; tools are `Tool`, weapons are `Weapon` |
+| `lexemLowerValue_isUniqueAndInItsLevel` | the lower lexeme value lies in its level, no value twice |
+| `everyWeaponIsAnIWeapon_andToolsCanBeOneToo` | every `Weapon` is `IWeapon`; the knife is `IWeapon` without being a `Weapon`; the axe also cuts and can be thrown; the needle is no weapon |
+| `weaponProperties_existForAllFourBlows_andCuttersHaveAnEdge` | every `IWeapon` gives stab, club, stroke and backhand properties with mass > 0, hardness and sharpness 0..100; cutting ones have a sharp edge for the stroke |
+| `otherAbilities_asInTheCatalogue` | shovel and pickaxe dig, lantern and candle give light (the candle less far), the horn can be played, the shield protects, the long sword is worth more than the short one |
+
+- **Assumes:** the catalogue of the item hierarchy concept; the ability values are constants in the classes.
+- **Not checked:** using a weapon in `ActionAttack` (needs the inventory and the running simulation).
+
+### `ContainersAndGoodsCatalogTest`
+
+`src/test/java/org/socialworld/objects/concrete/containers/ContainersAndGoodsCatalogTest.java`
+
+The 10 containers and the 12 other human crafted goods of the item hierarchy (2026-11-23): 2 valuables, 3 devotional, 3 writing, 4 pastime. Each class is its group + 16, + 32, ... (container 2048, valuable 4096, devotional 8192, writing 16384, pastime 32768).
+
+| Test | Checks |
+|---|---|
+| `all22_areCreatedWithoutDatabase` | every class has a constructor without arguments |
+| `lexemLowerValue_isUniqueAndInItsGroup` | the lower lexeme value is its group + 16 .. 240 on a level of 16, no value twice |
+| `everyContainer_holdsSomething` | every `Container` has a capacity > 0; jug and waterskin hold liquids, sack and purse do not |
+| `jewelleryAndBag_areWornWithoutAClothesPlace` | ring, rosary and amulet are jewellery and no clothes place, the satchel is a bag, the relic is not worn |
+| `abilities_asInTheCatalogue` | coins valuable and countable, relic holier than the amulet, book readable and longer than the scroll, quill writes, lute and flute can be played, dice and jug can be thrown |
+
+- **Assumes:** the catalogue of the item hierarchy concept; the ability values are constants in the classes.
+- **Not checked:** what a container holds, it comes with the inventory.
+
+### `FoodAndDrinksCatalogTest`
+
+`src/test/java/org/socialworld/objects/concrete/eatable/FoodAndDrinksCatalogTest.java`
+
+The 11 kinds of food and the 2 new drinks of the item hierarchy (2026-11-23): berries (fruit), turnip, onion, root (veggie), sausage, ham (meat), dried fish (fish), bread, cake (bakery), cheese (dairy), honey (sweets); beer and wine (liquid, in `eatable/liquids/`). Each class is its group + 16, + 32, ... (fruit 256 after apple and banana, veggie 512, meat 1024, fish 2048, bakery 4096, dairy 8192, sweets 16384; liquid 256 after water).
+
+| Test | Checks |
+|---|---|
+| `all13_areCreatedWithoutDatabase_foodIsEatable_drinksAreDrinkable` | every class has a constructor without arguments; food is `Food` and `IEatable`, drinks are `IDrinkable` and no `Food` |
+| `lexemLowerValue_isUniqueAndInItsGroup` | the lower lexeme value is its group + 16 .. 240 on a level of 16; unique together with the higher part (berries and wine both have 304, in food 45 and liquid 41) |
+| `foodValues_areInRange` | consistence and firmness of every food lie in 0..100 |
+| `perishable_allFoodButHoney` | every food except honey is `IPerishable` with a shelf life > 0; bread keeps shorter than dried fish |
+| `otherAbilities_asInTheCatalogue` | berries countable, turnip throwable, honey healing and valuable, wine valuable, beer perishable |
+
+- **Assumes:** the catalogue of the item hierarchy concept; the ability values are constants in the classes.
+- **Not checked:** nutrient and taste set (they come from `StateEatable`, i.e. from the database; the drinks give `null` as water does).
+
+### `NatureCatalogTest`
+
+`src/test/java/org/socialworld/objects/concrete/plantparts/NatureCatalogTest.java`
+
+The 7 things of nature of the item hierarchy (2026-11-23): branch, herb, flower (`PlantPart`, higher lexeme value 44), hide (`AnimalPart`, 43), stone, charcoal, ore (`Solid`, 42). Each is + 16, + 32, ... in its group (as the liquids: 272, 288, 304).
+
+| Test | Checks |
+|---|---|
+| `all7_areCreatedWithoutDatabase_inTheirGroup` | every class has a constructor without arguments and belongs to its group |
+| `lexemId_higherPartIsTheGroup_lowerPartUniqueInIt` | the higher part is the group's value, the lower part 272..496 on a level of 16, unique together with the higher part |
+| `branchAndStone_canBeWeaponsAndThrown_onlyTheBranchFloats` | branch and stone are `IWeapon` (blunt: sharpness 0) and `IThrowable`; the branch floats and burns, the stone does not float |
+| `herb_isEatableWithoutBeingFood` | the herb is `IEatable` but no `Food`, it heals and wilts |
+| `otherAbilities_asInTheCatalogue` | flower wilts, hide valuable and burns, charcoal burns and is countable, ore valuable and countable |
+
+- **Assumes:** the catalogue of the item hierarchy concept; the ability values are constants in the classes.
+- **Not checked:** nutrient and taste set of the herb (`null`, it has no eatable state).
 
 ---
 

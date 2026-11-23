@@ -1,24 +1,20 @@
 /*
-* Social World
-* Copyright (C) 2023  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2023  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.objects;
 
 import org.socialworld.conversation.Lexem;
@@ -282,6 +278,20 @@ public final class GroupingOfSimulationObjects {
 	public static final int LEXEMID_LOWERVALUE_FRUIT		 			= 0b0000000100000000; // 	256
 	public static final int LEXEMID_LOWERVALUE_VEGGIE	 				= 0b0000001000000000; // 	512
 	public static final int LEXEMID_LOWERVALUE_MEAT	 					= 0b0000010000000000; // 	1024
+	public static final int LEXEMID_LOWERVALUE_FISH	 					= 0b0000100000000000; // 	2048
+	public static final int LEXEMID_LOWERVALUE_BAKERY	 				= 0b0001000000000000; // 	4096
+	public static final int LEXEMID_LOWERVALUE_DAIRY	 				= 0b0010000000000000; // 	8192
+	public static final int LEXEMID_LOWERVALUE_SWEETS	 				= 0b0100000000000000; // 	16384
+
+	// groups of human crafted items (2026-11-23); clothes is the group of cap, shirt, ... below
+	public static final int LEXEMID_LOWERVALUE_CLOTHES		 			= 0b0000000100000000; // 	256
+	public static final int LEXEMID_LOWERVALUE_TOOL			 			= 0b0000001000000000; // 	512
+	public static final int LEXEMID_LOWERVALUE_WEAPON		 			= 0b0000010000000000; // 	1024
+	public static final int LEXEMID_LOWERVALUE_CONTAINER	 			= 0b0000100000000000; // 	2048
+	public static final int LEXEMID_LOWERVALUE_VALUABLE		 			= 0b0001000000000000; // 	4096
+	public static final int LEXEMID_LOWERVALUE_DEVOTIONAL	 			= 0b0010000000000000; // 	8192
+	public static final int LEXEMID_LOWERVALUE_WRITING		 			= 0b0100000000000000; // 	16384
+	public static final int LEXEMID_LOWERVALUE_PASTIME		 			= 0b1000000000000000; // 	32768
 
 	
 	public static final int LEXEMID_LOWERVALUE_CAP		 	 			= 0b0000000100010000; // 	272
@@ -290,11 +300,146 @@ public final class GroupingOfSimulationObjects {
 	public static final int LEXEMID_LOWERVALUE_SHOE		 	 			= 0b0000000101000000; // 	320
 	public static final int LEXEMID_LOWERVALUE_SOCK		 	 			= 0b0000000101010000; // 	336
 	public static final int LEXEMID_LOWERVALUE_GLOVE	 	 			= 0b0000000101100000; // 	352
+	public static final int LEXEMID_LOWERVALUE_DRESS	 	 			= 0b0000000101110000; // 	368
+	public static final int LEXEMID_LOWERVALUE_OVERGARMENT	 			= 0b0000000110000000; // 	384
+
+	// concrete clothes (2026-11-23): kind + 1, + 2, ...
+	public static final int LEXEMID_LOWERVALUE_STRAW_HAT = 0b0000000100010001; // 	273
+	public static final int LEXEMID_LOWERVALUE_WOOL_CAP = 0b0000000100010010; // 	274
+	public static final int LEXEMID_LOWERVALUE_HEADSCARF = 0b0000000100010011; // 	275
+	public static final int LEXEMID_LOWERVALUE_FELT_HAT = 0b0000000100010100; // 	276
+	public static final int LEXEMID_LOWERVALUE_BERET = 0b0000000100010101; // 	277
+	public static final int LEXEMID_LOWERVALUE_HOOD = 0b0000000100010110; // 	278
+	public static final int LEXEMID_LOWERVALUE_HELMET = 0b0000000100010111; // 	279
+	public static final int LEXEMID_LOWERVALUE_LINEN_SHIRT = 0b0000000100100001; // 	289
+	public static final int LEXEMID_LOWERVALUE_WOOL_TUNIC = 0b0000000100100010; // 	290
+	public static final int LEXEMID_LOWERVALUE_SILK_SHIRT = 0b0000000100100011; // 	291
+	public static final int LEXEMID_LOWERVALUE_RAGS = 0b0000000100100100; // 	292
+	public static final int LEXEMID_LOWERVALUE_WORK_TROUSERS = 0b0000000100110001; // 	305
+	public static final int LEXEMID_LOWERVALUE_HOSE = 0b0000000100110010; // 	306
+	public static final int LEXEMID_LOWERVALUE_LINEN_DRESS = 0b0000000101110001; // 	369
+	public static final int LEXEMID_LOWERVALUE_FINE_DRESS = 0b0000000101110010; // 	370
+	public static final int LEXEMID_LOWERVALUE_HABIT = 0b0000000101110011; // 	371
+	public static final int LEXEMID_LOWERVALUE_APRON = 0b0000000110000001; // 	385
+	public static final int LEXEMID_LOWERVALUE_LEATHER_APRON = 0b0000000110000010; // 	386
+	public static final int LEXEMID_LOWERVALUE_CLOAK = 0b0000000110000011; // 	387
+	public static final int LEXEMID_LOWERVALUE_FUR_CLOAK = 0b0000000110000100; // 	388
+	public static final int LEXEMID_LOWERVALUE_CHAIN_MAIL = 0b0000000110000101; // 	389
+	public static final int LEXEMID_LOWERVALUE_LEATHER_SHOE = 0b0000000101000001; // 	321
+	public static final int LEXEMID_LOWERVALUE_BOOT = 0b0000000101000010; // 	322
+	public static final int LEXEMID_LOWERVALUE_SANDAL = 0b0000000101000011; // 	323
+	public static final int LEXEMID_LOWERVALUE_WOOL_SOCK = 0b0000000101010001; // 	337
+	public static final int LEXEMID_LOWERVALUE_LEATHER_GLOVE = 0b0000000101100001; // 	353
+
+	// tools (2026-11-23): purpose levels of + 16 (numbers only, no classes), each tool + 1
+	public static final int LEXEMID_LOWERVALUE_TOOL_FIELD = 0b0000001000010000; // 	528
+	public static final int LEXEMID_LOWERVALUE_PITCHFORK = 0b0000001000010001; // 	529
+	public static final int LEXEMID_LOWERVALUE_FLAIL = 0b0000001000010010; // 	530
+	public static final int LEXEMID_LOWERVALUE_SICKLE = 0b0000001000010011; // 	531
+	public static final int LEXEMID_LOWERVALUE_HOE = 0b0000001000010100; // 	532
+	public static final int LEXEMID_LOWERVALUE_SHOVEL = 0b0000001000010101; // 	533
+	public static final int LEXEMID_LOWERVALUE_PICKAXE = 0b0000001000010110; // 	534
+	public static final int LEXEMID_LOWERVALUE_TOOL_CRAFT = 0b0000001000100000; // 	544
+	public static final int LEXEMID_LOWERVALUE_AXE = 0b0000001000100001; // 	545
+	public static final int LEXEMID_LOWERVALUE_HAMMER = 0b0000001000100010; // 	546
+	public static final int LEXEMID_LOWERVALUE_SAW = 0b0000001000100011; // 	547
+	public static final int LEXEMID_LOWERVALUE_TONGS = 0b0000001000100100; // 	548
+	public static final int LEXEMID_LOWERVALUE_AWL = 0b0000001000100101; // 	549
+	public static final int LEXEMID_LOWERVALUE_KNIFE = 0b0000001000100110; // 	550
+	public static final int LEXEMID_LOWERVALUE_TOOL_TEXTILE = 0b0000001000110000; // 	560
+	public static final int LEXEMID_LOWERVALUE_NEEDLE = 0b0000001000110001; // 	561
+	public static final int LEXEMID_LOWERVALUE_SPINDLE = 0b0000001000110010; // 	562
+	public static final int LEXEMID_LOWERVALUE_SHEARS = 0b0000001000110011; // 	563
+	public static final int LEXEMID_LOWERVALUE_TOOL_HERDING = 0b0000001001000000; // 	576
+	public static final int LEXEMID_LOWERVALUE_CROOK = 0b0000001001000001; // 	577
+	public static final int LEXEMID_LOWERVALUE_FISHING_NET = 0b0000001001000010; // 	578
+	public static final int LEXEMID_LOWERVALUE_OAR = 0b0000001001000011; // 	579
+	public static final int LEXEMID_LOWERVALUE_WHIP = 0b0000001001000100; // 	580
+	public static final int LEXEMID_LOWERVALUE_CURRYCOMB = 0b0000001001000101; // 	581
+	public static final int LEXEMID_LOWERVALUE_TOOL_HOUSEHOLD = 0b0000001001010000; // 	592
+	public static final int LEXEMID_LOWERVALUE_ROPE = 0b0000001001010001; // 	593
+	public static final int LEXEMID_LOWERVALUE_SCALES = 0b0000001001010010; // 	594
+	public static final int LEXEMID_LOWERVALUE_MORTAR = 0b0000001001010011; // 	595
+	public static final int LEXEMID_LOWERVALUE_RAZOR = 0b0000001001010100; // 	596
+	public static final int LEXEMID_LOWERVALUE_KEY = 0b0000001001010101; // 	597
+	public static final int LEXEMID_LOWERVALUE_TOOL_LIGHT = 0b0000001001100000; // 	608
+	public static final int LEXEMID_LOWERVALUE_LANTERN = 0b0000001001100001; // 	609
+	public static final int LEXEMID_LOWERVALUE_CANDLE = 0b0000001001100010; // 	610
+	public static final int LEXEMID_LOWERVALUE_SIGNAL_HORN = 0b0000001001100011; // 	611
+	public static final int LEXEMID_LOWERVALUE_TOOL_TRAVEL = 0b0000001001110000; // 	624
+	public static final int LEXEMID_LOWERVALUE_STAFF = 0b0000001001110001; // 	625
+
+	// weapons (2026-11-23): weapon + 16 each
+	public static final int LEXEMID_LOWERVALUE_CUDGEL = 0b0000010000010000; // 	1040
+	public static final int LEXEMID_LOWERVALUE_DAGGER = 0b0000010000100000; // 	1056
+	public static final int LEXEMID_LOWERVALUE_SHORT_SWORD = 0b0000010000110000; // 	1072
+	public static final int LEXEMID_LOWERVALUE_LONG_SWORD = 0b0000010001000000; // 	1088
+	public static final int LEXEMID_LOWERVALUE_SPEAR = 0b0000010001010000; // 	1104
+	public static final int LEXEMID_LOWERVALUE_BOW = 0b0000010001100000; // 	1120
+	public static final int LEXEMID_LOWERVALUE_SHIELD = 0b0000010001110000; // 	1136
+
+	// containers (2026-11-23): container + 16 each
+	public static final int LEXEMID_LOWERVALUE_SACK = 0b0000100000010000; // 	2064
+	public static final int LEXEMID_LOWERVALUE_BASKET = 0b0000100000100000; // 	2080
+	public static final int LEXEMID_LOWERVALUE_JUG = 0b0000100000110000; // 	2096
+	public static final int LEXEMID_LOWERVALUE_WATERSKIN = 0b0000100001000000; // 	2112
+	public static final int LEXEMID_LOWERVALUE_BUCKET = 0b0000100001010000; // 	2128
+	public static final int LEXEMID_LOWERVALUE_PURSE = 0b0000100001100000; // 	2144
+	public static final int LEXEMID_LOWERVALUE_SATCHEL = 0b0000100001110000; // 	2160
+	public static final int LEXEMID_LOWERVALUE_BOWL = 0b0000100010000000; // 	2176
+	public static final int LEXEMID_LOWERVALUE_POT = 0b0000100010010000; // 	2192
+	public static final int LEXEMID_LOWERVALUE_FLASK = 0b0000100010100000; // 	2208
+
+	// valuables (2026-11-23): valuable + 16 each
+	public static final int LEXEMID_LOWERVALUE_COINS = 0b0001000000010000; // 	4112
+	public static final int LEXEMID_LOWERVALUE_RING = 0b0001000000100000; // 	4128
+
+	// devotional (2026-11-23): devotional + 16 each
+	public static final int LEXEMID_LOWERVALUE_ROSARY = 0b0010000000010000; // 	8208
+	public static final int LEXEMID_LOWERVALUE_AMULET = 0b0010000000100000; // 	8224
+	public static final int LEXEMID_LOWERVALUE_RELIC = 0b0010000000110000; // 	8240
+
+	// writing (2026-11-23): writing + 16 each
+	public static final int LEXEMID_LOWERVALUE_BOOK = 0b0100000000010000; // 	16400
+	public static final int LEXEMID_LOWERVALUE_SCROLL = 0b0100000000100000; // 	16416
+	public static final int LEXEMID_LOWERVALUE_QUILL = 0b0100000000110000; // 	16432
+
+	// pastime (2026-11-23): pastime + 16 each
+	public static final int LEXEMID_LOWERVALUE_LUTE = 0b1000000000010000; // 	32784
+	public static final int LEXEMID_LOWERVALUE_FLUTE = 0b1000000000100000; // 	32800
+	public static final int LEXEMID_LOWERVALUE_DICE = 0b1000000000110000; // 	32816
+	public static final int LEXEMID_LOWERVALUE_JUGGLING_BALLS = 0b1000000001000000; // 	32832
 	
 	public static final int LEXEMID_LOWERVALUE_APPLE		 			= 0b0000000100010000; // 	272
 	public static final int LEXEMID_LOWERVALUE_BANANA		 			= 0b0000000100100000; // 	288
 
+	// concrete food (2026-11-23): group + 16 each
+	public static final int LEXEMID_LOWERVALUE_BERRIES = 0b0000000100110000; // 	304
+	public static final int LEXEMID_LOWERVALUE_TURNIP = 0b0000001000010000; // 	528
+	public static final int LEXEMID_LOWERVALUE_ONION = 0b0000001000100000; // 	544
+	public static final int LEXEMID_LOWERVALUE_ROOT = 0b0000001000110000; // 	560
+	public static final int LEXEMID_LOWERVALUE_SAUSAGE = 0b0000010000010000; // 	1040
+	public static final int LEXEMID_LOWERVALUE_HAM = 0b0000010000100000; // 	1056
+	public static final int LEXEMID_LOWERVALUE_DRIED_FISH = 0b0000100000010000; // 	2064
+	public static final int LEXEMID_LOWERVALUE_BREAD = 0b0001000000010000; // 	4112
+	public static final int LEXEMID_LOWERVALUE_CAKE = 0b0001000000100000; // 	4128
+	public static final int LEXEMID_LOWERVALUE_CHEESE = 0b0010000000010000; // 	8208
+	public static final int LEXEMID_LOWERVALUE_HONEY = 0b0100000000010000; // 	16400
+
 	public static final int LEXEMID_LOWERVALUE_WATER		 			= 0b0000000100010000; // 	272
+
+	// liquids (2026-11-23): + 16 each after water
+	public static final int LEXEMID_LOWERVALUE_BEER = 0b0000000100100000; // 	288
+	public static final int LEXEMID_LOWERVALUE_WINE = 0b0000000100110000; // 	304
+
+	// parts of plants and animals, solids (2026-11-23): + 16 each (as liquids: water 272)
+	public static final int LEXEMID_LOWERVALUE_BRANCH = 0b0000000100010000; // 	272
+	public static final int LEXEMID_LOWERVALUE_HERB = 0b0000000100100000; // 	288
+	public static final int LEXEMID_LOWERVALUE_FLOWER = 0b0000000100110000; // 	304
+	public static final int LEXEMID_LOWERVALUE_HIDE = 0b0000000100010000; // 	272
+	public static final int LEXEMID_LOWERVALUE_STONE = 0b0000000100010000; // 	272
+	public static final int LEXEMID_LOWERVALUE_CHARCOAL = 0b0000000100100000; // 	288
+	public static final int LEXEMID_LOWERVALUE_ORE = 0b0000000100110000; // 	304
 
 	public static final int LEXEMID_LOWERVALUE_HUSKY				 	= 0b0001000000010001; // 	4113
 	public static final int LEXEMID_LOWERVALUE_CHIHUAHUA			 	= 0b0001000000010010; // 	4114
