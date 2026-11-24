@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,6 +34,7 @@ import org.socialworld.objects.concrete.clothes.overgarments.ChainMail;
 import org.socialworld.objects.concrete.clothes.overgarments.Cloak;
 import org.socialworld.objects.concrete.clothes.shirts.LinenShirt;
 import org.socialworld.objects.concrete.clothes.shoes.LeatherShoe;
+import org.socialworld.objects.concrete.clothes.socks.WoolSock;
 import org.socialworld.objects.enums.EnumSide;
 import org.socialworld.objects.concrete.clothes.trousers.WorkTrousers;
 import org.socialworld.objects.concrete.containers.Purse;
@@ -186,7 +188,12 @@ class InventoryPlacesTest {
 
 	@Test
 	void theOldSetters_keepWorking() {
-		Inventory inventory = Inventory.getTestInventory(SimulationObject_Type.human);
+		// with the clothes of the item hierarchy (the test clothes are gone, 2026-11-24)
+		Inventory inventory = new Inventory(SimulationObject_Type.human);
+		inventory.setCap(new StrawHat());
+		inventory.setShirt(new LinenShirt());
+		inventory.setShoes(new LeatherShoe(), new LeatherShoe());
+		inventory.setSocks(new WoolSock(), new WoolSock());
 		assertThat(inventory.get(InventoryPlace.head).isSimulationObject()).isTrue();
 		assertThat(inventory.get(InventoryPlace.upperBody).isSimulationObject()).isTrue();
 		assertThat(inventory.get(InventoryPlace.leftFootShoe)).isNotSameAs(inventory.get(InventoryPlace.rightFootShoe));

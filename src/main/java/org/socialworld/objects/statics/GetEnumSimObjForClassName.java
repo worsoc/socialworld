@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2023  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +27,6 @@ import org.socialworld.objects.enums.EnumMammal;
 import org.socialworld.objects.enums.EnumSolid;
 import org.socialworld.objects.enums.EnumAnimalPart;
 import org.socialworld.objects.enums.EnumPlantPart;
-import org.socialworld.objects.enums.EnumTestSimObj;
 
 public class GetEnumSimObjForClassName {
 
@@ -83,12 +83,6 @@ public class GetEnumSimObjForClassName {
 		{
 			EnumPlantPart key = EnumPlantPart.getName(className);
 			if (key != EnumPlantPart.ignore) {
-				return key;
-			}
-		}
-		{
-			EnumTestSimObj key = EnumTestSimObj.getName(className);
-			if (key != EnumTestSimObj.ignore) {
 				return key;
 			}
 		}

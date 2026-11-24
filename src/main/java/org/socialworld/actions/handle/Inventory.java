@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2014  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,12 +39,6 @@ import org.socialworld.objects.concrete.clothes.Shirt;
 import org.socialworld.objects.concrete.clothes.Shoe;
 import org.socialworld.objects.concrete.clothes.Sock;
 import org.socialworld.objects.concrete.clothes.Trousers;
-import org.socialworld.objects.concrete.clothes.caps.TestCap;
-import org.socialworld.objects.concrete.clothes.shirts.TestShirt;
-import org.socialworld.objects.concrete.clothes.shoes.TestShoeLeft;
-import org.socialworld.objects.concrete.clothes.shoes.TestShoeRight;
-import org.socialworld.objects.concrete.clothes.socks.TestSockLeft;
-import org.socialworld.objects.concrete.clothes.socks.TestSockRight;
 import org.socialworld.objects.properties.ICarryable;
 import org.socialworld.objects.properties.IDrinkable;
 import org.socialworld.objects.properties.IEatable;
@@ -59,19 +54,6 @@ import org.socialworld.tools.StringTupel;
  * @author Mathias Sikos (MatWorsoc)
  */
 public class Inventory extends SimProperty {
-
-///////////////////////////////////////////////////////////////////////////////////////////
-////////////////// static method for creating test instances   ///////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////
-
-	public static Inventory getTestInventory(SimulationObject_Type objectType) {
-		Inventory inventory = new Inventory(objectType);
-		inventory.setCap(new TestCap());
-		inventory.setShirt(new TestShirt());
-		inventory.setShoes(new TestShoeLeft(), new TestShoeRight());
-		inventory.setSocks(new TestSockLeft(), new TestSockRight());
-		return inventory;
-	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 ////////////////// inventory properties   ///////////////////////////////

@@ -238,7 +238,7 @@ The inventory keeps one object per place since 2026-11-23 (inventory concept V1)
 | `hands_takeEverythingCarryable_liquidsNeedAContainer` | knife, pitchfork, bread, stone and a shirt fit the hand; beer is not `ICarryable` and fits the mouth only; a knife does not fit the mouth |
 | `belt_takesSmallThings_back_takesLargeOnes` | knife, purse and dagger at the belt, the (medium) hammer not; pitchfork, sack and shield on the back, the knife not |
 | `exceptions_luteOnTheBack_swordAtTheBelt` | the medium lute on the back but not at the belt; the long sword at the belt and on the back |
-| `theOldSetters_keepWorking` | the test inventory (cap, shirt, shoes, socks) lands on the new places; `setLeftHand(null)` empties the hand |
+| `theOldSetters_keepWorking` | straw hat, linen shirt, leather shoes and wool socks set with the old setters land on the new places (the test clothes are gone since 2026-11-24); `setLeftHand(null)` empties the hand |
 | `holds_saysWhetherTheObjectLiesOnAPlace` | a knife is held after `put` and no longer after `remove`; `null` is never held |
 
 - **Assumes:** the carry sizes of the item hierarchy (small by default: food, valuables, devotional and writing goods, parts of nature; medium: human crafted; large: weapons; exceptions in the classes).
@@ -401,7 +401,7 @@ Every concrete item gets its initial states (2026-11-24). Most classes do not ov
 
 | Test | Checks |
 |---|---|
-| `allConcreteItems_areFound_atLeastThe104OfTheHierarchy` | the search finds at least the 104 classes of the item hierarchy (without the test clothes); guards against an empty search that would let the other two pass |
+| `allConcreteItems_areFound_atLeastThe104OfTheHierarchy` | the search finds at least the 104 classes of the item hierarchy (classes named Test… are not counted; the test clothes are gone since 2026-11-24); guards against an empty search that would let the other two pass |
 | `everyConcreteItem_givesTheThreeStates_andFoodTheEatableToo` | StatePerceptible, StateAppearance, StateComposition for every class, StateEatable for food |
 | `everyConcreteItem_canBeCreatedWithItsState` | `new WriteAccessToItem(item, new StateItem())` as in `CreateItem`, without exception |
 
