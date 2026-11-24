@@ -342,14 +342,25 @@ public class StateAnimal extends StateSimulationObject {
 		Scheduler.getInstance().calculateInventoryChangedByEvent(event, (StateAnimal)getMeReadableOnly(), (HiddenAnimal)getMeWritableButHidden(grantAccessToPropertyInventory) );
 	}
 
+	/**
+	 * Puts the item on the place; the holder carries it then (connection carried, with the offset of the place).
+	 * Since 2026-11-24 the carrying is done here, under the guard, no longer by the Inventory (protection concept S2).
+	 */
 	final boolean putToInventory(InventoryPlace place, SimulationObject item, WriteAccessToAnimal guard) {
 		if (!checkGuard(guard) || this.inventory == null) return false;
-		return this.inventory.put(place, item);
+		if (!this.inventory.put(place, item)) return false;
+		getObject().carry(item, Inventory.offsetOf(place));
+		return true;
 	}
 
+	/**
+	 * Takes the object off the place; the holder does not carry it any longer, unless it lies on another place.
+	 */
 	final SimulationObject removeFromInventory(InventoryPlace place, WriteAccessToAnimal guard) {
 		if (!checkGuard(guard) || this.inventory == null) return NoSimulationObject.getObjectNothing();
-		return this.inventory.remove(place);
+		SimulationObject removed = this.inventory.remove(place);
+		if (removed.isSimulationObject() && !this.inventory.holds(removed)) getObject().releaseCarried(removed);
+		return removed;
 	}
 
 	/**

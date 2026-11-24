@@ -21,6 +21,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.socialworld.actions.handle.InventoryPlace;
+import org.socialworld.calculation.PropertyUsingAs;
+import org.socialworld.calculation.SimulationCluster;
+import org.socialworld.core.IAccessToken;
+import org.socialworld.objects.concrete.containers.Sack;
+import org.socialworld.objects.concrete.tools.Knife;
 import org.socialworld.core.EventType;
 
 /**
@@ -76,5 +81,47 @@ class InventoryCalculatorTest {
 		assertThat(InventoryCalculator.otherHand(InventoryPlace.leftHand)).isEqualTo(InventoryPlace.rightHand);
 		assertThat(InventoryCalculator.otherHand(InventoryPlace.rightHand)).isEqualTo(InventoryPlace.leftHand);
 		assertThat(InventoryCalculator.otherHand(InventoryPlace.belt1)).isEqualTo(InventoryPlace.noWhere);
+	}
+
+	// ---- own rail (protection concept S1, 2026-11-24) ----
+
+	@Test
+	void theToken_belongsToTheClusterInventory_notToPosition() {
+		AccessTokenInventoryCalculator token = AccessTokenInventoryCalculator.getValid();
+		assertThat(token.isValid()).isTrue();
+		assertThat(token.getSimulationCluster()).isEqualTo(SimulationCluster.inventory);
+		assertThat(SimulationCluster.inventory.getIndex()).isEqualTo(81);
+	}
+
+	@Test
+	void theClusterInventory_readsObjectAndPosition() {
+		assertThat(SimulationCluster.inventory.getPossibleUsingAs())
+				.containsExactlyInAnyOrder(PropertyUsingAs.object, PropertyUsingAs.pathToPosition, PropertyUsingAs.position);
+	}
+
+	// ---- start equipment through the rail (protection concept S2, E7, 2026-11-24) ----
+
+	private static IAccessToken token(boolean valid, SimulationCluster cluster) {
+		return new IAccessToken() {
+			public boolean isValid() { return valid; }
+			public SimulationCluster getSimulationCluster() { return cluster; }
+		};
+	}
+
+	@Test
+	void theStartEquipment_onlyWithAValidTokenOfTheClusterCore() {
+		assertThat(InventoryCalculator.isCoreToken(token(true, SimulationCluster.core))).isTrue();
+		assertThat(InventoryCalculator.isCoreToken(token(false, SimulationCluster.core))).isFalse();
+		assertThat(InventoryCalculator.isCoreToken(token(true, SimulationCluster.inventory))).isFalse();
+		assertThat(InventoryCalculator.isCoreToken(token(true, SimulationCluster.attributeArray))).isFalse();
+		assertThat(InventoryCalculator.isCoreToken(null)).isFalse();
+	}
+
+	@Test
+	void theStartEquipment_withAnotherToken_changesNothing() {
+		InventoryCalculator rail = InventoryCalculator.getInstance();
+		IAccessToken attributes = token(true, SimulationCluster.attributeArray);
+		assertThat(rail.startPutToInventory(attributes, null, InventoryPlace.rightHand, new Knife())).isFalse();
+		assertThat(rail.startPutIntoContainer(attributes, new Sack(), new Knife())).isFalse();
 	}
 }

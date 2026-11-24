@@ -697,8 +697,10 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 	 * This object carries the other one with the offset (in mm, relative to this object's position): the carried
 	 * object follows at once and then after every own position step or relocation of this object (2026-11-23).
 	 * An object is carried by one carrier at a time; if it is carried already, nothing happens.
+	 * Package-private since 2026-11-24 (protection concept S2): only the state of the carrier calls it, after it has
+	 * checked the guard of the write access (grant inventory).
 	 */
-	final public void carry(SimulationObject carried, Vector offset) {
+	final void carry(SimulationObject carried, Vector offset) {
 		if (carried == null || !carried.isSimulationObject() || carried == this) return;
 		if (carried.isCarried()) return;
 		this.state.connectAsMasterTo(carried, ConnectionType.carried, offset, this.guard);
@@ -708,10 +710,14 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 	/**
 	 * Puts the content into this object (a container), connection inside: it follows the container at its place
 	 * (offset 0). Whether it fits (capacity, liquids) is checked by the caller (ContainerContent).
+	 * Only the rail inventory may fill a container: a valid token of the cluster inventory (protection concept S2,
+	 * 2026-11-24). Where the container lies (carried, on the ground, in reach) is decided by the caller.
 	 *
-	 * @return false if the content is carried or inside something already, or is this object
+	 * @return false without a valid token of the cluster inventory, if the content is carried or inside something
+	 *         already, or is this object
 	 */
-	final public boolean putInside(SimulationObject content) {
+	final public boolean putInside(IAccessToken token, SimulationObject content) {
+		if (!isInventoryToken(token)) return false;
 		if (content == null || !content.isSimulationObject() || content == this) return false;
 		if (content.isCarried()) return false;
 		this.state.connectAsMasterTo(content, ConnectionType.inside, Vector.get0Vector(), this.guard);
@@ -719,8 +725,9 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 		return true;
 	}
 
-	/** Takes the content out of this object; it stays where it is. */
-	final public boolean takeOut(SimulationObject content) {
+	/** Takes the content out of this object; it stays where it is. Only with a valid token of the cluster inventory. */
+	final public boolean takeOut(IAccessToken token, SimulationObject content) {
+		if (!isInventoryToken(token)) return false;
 		if (content == null || content.getCarrier() != this || !content.isInside()) return false;
 		this.state.releaseConnectionTo(content, this.guard);
 		return true;
@@ -737,8 +744,16 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 		return (this.state != null) ? this.state.getContents() : new ArrayList<SimulationObject>();
 	}
 
-	/** This object does not carry the other one any longer; it stays where it is. */
-	final public void releaseCarried(SimulationObject carried) {
+	// only the rail inventory writes the contents of containers (protection concept S2, 2026-11-24)
+	private static boolean isInventoryToken(IAccessToken token) {
+		return token != null && token.isValid() && token.getSimulationCluster() == SimulationCluster.inventory;
+	}
+
+	/**
+	 * This object does not carry the other one any longer; it stays where it is.
+	 * Package-private since 2026-11-24 (protection concept S2): only the state of the carrier calls it.
+	 */
+	final void releaseCarried(SimulationObject carried) {
 		if (carried == null || carried.getCarrier() != this) return;
 		this.state.releaseConnectionTo(carried, this.guard);
 	}
@@ -754,14 +769,18 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 		return (this.state != null) ? this.state.getCarrier() : NoSimulationObject.getObjectNothing();
 	}
 
-	/** The carried objects take this object's position plus their offset (technical event, bypass). */
-	final public void letCarriedFollow() {
+	/**
+	 * The carried objects take this object's position plus their offset (technical event, bypass).
+	 * Package-private since 2026-11-24 (protection concept S2): from outside only through the write access of this
+	 * object with the grant position (HiddenSimulationObject.letCarriedFollow).
+	 */
+	final void letCarriedFollow() {
 		if (this.state == null) return;
 		for (SimulationObject carried : this.state.getCarriedObjects()) carried.followCarrier();
 	}
 
-	/** This object takes the position of its carrier plus its offset (technical event, bypass). */
-	final public void followCarrier() {
+	/** This object takes the position of its carrier plus its offset (technical event, bypass). Package-private. */
+	final void followCarrier() {
 		this.state.calculateTechnicalPositionEvent(TechnicalEvent.FOLLOW_CARRIER);
 	}
 

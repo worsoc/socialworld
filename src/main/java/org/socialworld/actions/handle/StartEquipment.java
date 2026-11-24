@@ -21,8 +21,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.socialworld.objects.SimulationObject;
+import org.socialworld.objects.concrete.clothes.Glove;
+import org.socialworld.objects.concrete.clothes.Shoe;
+import org.socialworld.objects.concrete.clothes.Sock;
 import org.socialworld.objects.concrete.containers.Purse;
 import org.socialworld.objects.concrete.valuables.Valuable;
+import org.socialworld.objects.enums.EnumSide;
 import org.socialworld.objects.properties.CarrySize;
 import org.socialworld.objects.properties.ICarryable;
 import org.socialworld.objects.properties.IContainer;
@@ -85,7 +89,7 @@ public final class StartEquipment {
 		if (item instanceof IEatable && inventory.canPut(InventoryPlace.mouth, item)) {
 			return new Decision(InventoryPlace.mouth, null);
 		}
-		InventoryPlace worn = chooseWornPlace(inventory, item);
+		InventoryPlace worn = chooseWornPlace(inventory, item, EnumSide.none);
 		if (worn != InventoryPlace.noWhere) return new Decision(worn, null);
 
 		SimulationObject container = chooseContainer(containers, contents, item);
@@ -123,11 +127,26 @@ public final class StartEquipment {
 	/**
 	 * For the clothes of the kits: only the places where it is worn. A piece whose place is taken (by the more
 	 * clothes, e.g. the fur cloak instead of the cloak) gets noWhere and is left out, not carried in the hand.
+	 * The side comes as a parameter (protection concept S3): the prototype has no state and so no side; a shoe,
+	 * sock or glove with a side goes to its place on that side if it is free.
 	 */
-	public static InventoryPlace chooseWornPlace(Inventory inventory, SimulationObject item) {
+	public static InventoryPlace chooseWornPlace(Inventory inventory, SimulationObject item, EnumSide side) {
+		if (side != null && side != EnumSide.none) {
+			InventoryPlace place = sidedPlace(item, side);
+			return (place != InventoryPlace.noWhere && inventory.isFree(place)) ? place : InventoryPlace.noWhere;
+		}
 		for (InventoryPlace place : WORN) {
 			if (inventory.canPut(place, item)) return place;
 		}
+		return InventoryPlace.noWhere;
+	}
+
+	/** The place of a shoe, sock or glove on the side; noWhere for every other piece. */
+	static InventoryPlace sidedPlace(SimulationObject item, EnumSide side) {
+		boolean left = (side == EnumSide.left);
+		if (item instanceof Shoe) return left ? InventoryPlace.leftFootShoe : InventoryPlace.rightFootShoe;
+		if (item instanceof Sock) return left ? InventoryPlace.leftFootSock : InventoryPlace.rightFootSock;
+		if (item instanceof Glove) return left ? InventoryPlace.leftHandGlove : InventoryPlace.rightHandGlove;
 		return InventoryPlace.noWhere;
 	}
 

@@ -18,6 +18,7 @@
 package org.socialworld.objects.concrete.clothes;
 
 import org.socialworld.objects.enums.EnumHumanCrafted;
+import org.socialworld.objects.enums.EnumSide;
 
 /**
  * A glove. One class per kind; whether it is worn on the left or on the right hand is a property of the object.
@@ -29,20 +30,11 @@ public abstract class Glove extends Clothes {
 		belongsTo = EnumHumanCrafted.Glove;
 	}
 
-	// the side (left or right) is a property of the object, not a class of its own (2026-11-23);
-	// it is left until it is set; who sets it comes with the inventory
-	private boolean leftSide = true;
-
-	public final void setLeftSide(boolean leftSide) {
-		this.leftSide = leftSide;
-	}
-
-	public final boolean isLeftSide() {
-		return this.leftSide;
-	}
-
-	public boolean isLeftHandGlove() {return this.leftSide; }
-	public boolean isRightHandGlove() {return !this.leftSide; }
+	// the side (left or right) is a property of the object, not a class of its own (2026-11-23); it lies in the
+	// state of the item and is set once at the creation (protection concept S3, 2026-11-24); without a side
+	// (none, or a prototype without state) the piece fits on neither side
+	public boolean isLeftHandGlove() {return getSide() == EnumSide.left; }
+	public boolean isRightHandGlove() {return getSide() == EnumSide.right; }
 
 	public boolean isLeftFootSock() {return false; }
 	public boolean isRightFootSock() {return false; }

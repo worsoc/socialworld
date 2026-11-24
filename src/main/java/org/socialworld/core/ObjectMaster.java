@@ -20,6 +20,7 @@ package org.socialworld.core;
 
 
 import org.socialworld.attributes.Position;
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.objects.*;
 import org.socialworld.propertyChange.ListenedMap;
 import org.socialworld.datasource.createObjects.CreateAnimal;
@@ -400,10 +401,31 @@ public class ObjectMaster {
 	}
 
 	/**
-	 * Takes an object out of the simulation: out of the list of its type and out of the array of all objects
-	 * (inventory concept V6: an item that is eaten up). Its ID is not given out again.
+	 * Takes an object out of the simulation: out of the search by position, out of the list of its type and out of
+	 * the array of all objects. Its ID is not given out again.
+	 * Only a valid token of an allowed cluster may do this; for now that is the cluster inventory (eating up,
+	 * protection concept S1, 2026-11-24). Carried objects are not refused; the caller releases the connections
+	 * before (open point O1: clean up on removal).
+	 *
+	 * @return true if the object was taken out
 	 */
-	void removeSimulationObject(SimulationObject object) {
+	public boolean removeSimulationObject(IAccessToken token, SimulationObject object) {
+		if (!mayRemove(token)) return false;
+		if (object == null || !object.isSimulationObject()) return false;
+		if (this.simulationObjects.get(object.getObjectID()) != object) return false;
+		Simulation.getInstance().removeFromPositionSearch(object);
+		removeFromLists(object);
+		return true;
+	}
+
+	/**
+	 * @return true if the token may take objects out of the simulation (for now only the cluster inventory)
+	 */
+	static boolean mayRemove(IAccessToken token) {
+		return token != null && token.isValid() && token.getSimulationCluster() == SimulationCluster.inventory;
+	}
+
+	private void removeFromLists(SimulationObject object) {
 		int objectID = object.getObjectID();
 		if (this.simulationObjects.get(objectID) != object) return;
 		switch (SimulationObject_Type.getSimulationObjectType(objectID / RANGE_SIZE + 1)) {

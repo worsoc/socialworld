@@ -17,7 +17,6 @@
  */
 package org.socialworld.core;
 
-import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.objects.properties.IContainer;
 import java.util.Map;
 import java.util.HashMap;
@@ -25,9 +24,8 @@ import org.socialworld.GlobalSwitches;
 import org.socialworld.objects.*;
 import org.socialworld.objects.access.HiddenHuman;
 import org.socialworld.objects.access.HiddenItem;
-import org.socialworld.objects.concrete.clothes.Glove;
-import org.socialworld.objects.concrete.clothes.Shoe;
-import org.socialworld.objects.concrete.clothes.Sock;
+import org.socialworld.objects.access.HiddenSimulationObject;
+import org.socialworld.objects.enums.EnumSide;
 import org.socialworld.propertyChange.ChangedProperty;
 
 import java.lang.reflect.InvocationTargetException;
@@ -46,6 +44,7 @@ import org.socialworld.attributes.PropertyName;
 import org.socialworld.attributes.Time;
 import org.socialworld.calculation.Calculation;
 import org.socialworld.calculation.application.AttributeCalculator;
+import org.socialworld.calculation.application.InventoryCalculator;
 import org.socialworld.calculation.application.KnowledgeCalculator;
 import org.socialworld.calculation.application.Scheduler;
 import org.socialworld.collections.ObjectByPositionSearch;
@@ -187,7 +186,7 @@ public class Simulation extends SocialWorldThread {
 		for (int i = 0; i < humans.size(); i++ ) {
 			Inventory inventory = new Inventory(SimulationObject_Type.human);
 			hiddenHumans.get(i).setInventory(inventory);
-			equip(humans.get(i), inventory, catalog.get(humans.get(i).getCharacterNumber()), counts);
+			equip(humans.get(i), hiddenHumans.get(i), inventory, catalog.get(humans.get(i).getCharacterNumber()), counts);
 		}
 		System.out.println("Start equipment: " + counts[0] + " items placed, " + counts[1] + " put down at the feet, "
 				+ counts[2] + " liquids without container, " + counts[3] + " breads for those without food");
@@ -276,33 +275,36 @@ public class Simulation extends SocialWorldThread {
 	 * Equips one human from its entry of the start equipment: first the clothes (more clothes before the kit, so
 	 * they take the place), then the items (the first food into the mouth), then a bread into an empty mouth (D7).
 	 * A piece is only created when it has a place, except an item without place, which is put down at the feet.
+	 * The pieces are put on their places and into the containers by the rail inventory (InventoryCalculator, with
+	 * the token core, protection concept S2, E7); the inventory itself is only read here, for the decisions.
 	 */
-	private void equip(Human human, Inventory inventory, StartEquipmentCatalog.Entry entry, int[] counts) {
+	private void equip(Human human, HiddenHuman hiddenHuman, Inventory inventory, StartEquipmentCatalog.Entry entry, int[] counts) {
+		InventoryCalculator rail = InventoryCalculator.getInstance();
 		Position at = human.getPosition(tokenCore);
 		if (entry != null) {
 			for (StartEquipmentCatalog.Piece piece : entry.clothes) {
-				SimulationObject prototype = prototype(piece.className, piece.side);
-				InventoryPlace place = StartEquipment.chooseWornPlace(inventory, prototype);
+				SimulationObject prototype = prototype(piece.className);
+				InventoryPlace place = StartEquipment.chooseWornPlace(inventory, prototype, sideOf(piece.side));
 				if (place == InventoryPlace.noWhere) continue;	// the place is taken by the more clothes
 				Item item = createCarried(piece.className, piece.side, at);
-				if (item != null && inventory.put(place, item)) counts[0]++;
+				if (item != null && rail.startPutToInventory(tokenCore, hiddenHuman, place, item)) counts[0]++;
 			}
 			// containers and what they hold so far (inventory concept V5)
 			List<SimulationObject> containers = new ArrayList<SimulationObject>();
 			Map<SimulationObject, List<SimulationObject>> contents = new HashMap<SimulationObject, List<SimulationObject>>();
 			for (String className : entry.items) {
-				SimulationObject prototype = prototype(className, StartEquipmentCatalog.Side.none);
+				SimulationObject prototype = prototype(className);
 				StartEquipment.Decision decision = StartEquipment.decide(inventory, containers, contents, prototype);
 				Item item = createCarried(className, StartEquipmentCatalog.Side.none, at);
 				if (item == null) continue;
 				if (decision.isInContainer()) {
-					if (decision.container.putInside(item)) {
+					if (rail.startPutIntoContainer(tokenCore, decision.container, item)) {
 						contents.get(decision.container).add(item);
 						counts[0]++;
 					}
 					else counts[1]++;
 				}
-				else if (!decision.isNowhere() && inventory.put(decision.place, item)) counts[0]++;
+				else if (!decision.isNowhere() && rail.startPutToInventory(tokenCore, hiddenHuman, decision.place, item)) counts[0]++;
 				else counts[1]++;	// it stays where it was created: at the feet of the human
 				if (item instanceof IContainer) {
 					containers.add(item);
@@ -311,11 +313,11 @@ public class Simulation extends SocialWorldThread {
 			}
 			// the liquids into their containers (a jug of beer, a waterskin of water)
 			for (String className : entry.contents) {
-				SimulationObject prototype = prototype(className, StartEquipmentCatalog.Side.none);
+				SimulationObject prototype = prototype(className);
 				StartEquipment.Decision decision = StartEquipment.decide(inventory, containers, contents, prototype);
 				if (!decision.isInContainer()) { counts[2]++; continue; }
 				Item liquid = createCarried(className, StartEquipmentCatalog.Side.none, at);
-				if (liquid != null && decision.container.putInside(liquid)) {
+				if (liquid != null && rail.startPutIntoContainer(tokenCore, decision.container, liquid)) {
 					contents.get(decision.container).add(liquid);
 					counts[0]++;
 				}
@@ -324,35 +326,38 @@ public class Simulation extends SocialWorldThread {
 		}
 		if (inventory.isFree(InventoryPlace.mouth)) {
 			Item bread = createCarried("org.socialworld.objects.concrete.eatable.bakery.Bread", StartEquipmentCatalog.Side.none, at);
-			if (bread != null && inventory.put(InventoryPlace.mouth, bread)) counts[3]++;
+			if (bread != null && rail.startPutToInventory(tokenCore, hiddenHuman, InventoryPlace.mouth, bread)) counts[3]++;
 		}
 	}
 
-	/** An object of the class without state, only to see where it fits (or null). */
-	private static SimulationObject prototype(String className, StartEquipmentCatalog.Side side) {
+	/** An object of the class without state (and so without side), only to see where it fits (or nothing). */
+	private static SimulationObject prototype(String className) {
 		try {
-			SimulationObject object = (SimulationObject) Class.forName(className).getDeclaredConstructor().newInstance();
-			setSide(object, side);
-			return object;
+			return (SimulationObject) Class.forName(className).getDeclaredConstructor().newInstance();
 		} catch (ReflectiveOperationException | ClassCastException e) {
 			return NoSimulationObject.getObjectNothing();
 		}
 	}
 
-	private static void setSide(SimulationObject object, StartEquipmentCatalog.Side side) {
-		if (side == StartEquipmentCatalog.Side.none) return;
-		boolean left = (side == StartEquipmentCatalog.Side.left);
-		if (object instanceof Shoe) ((Shoe) object).setLeftSide(left);
-		else if (object instanceof Sock) ((Sock) object).setLeftSide(left);
-		else if (object instanceof Glove) ((Glove) object).setLeftSide(left);
+	private static EnumSide sideOf(StartEquipmentCatalog.Side side) {
+		if (side == StartEquipmentCatalog.Side.left) return EnumSide.left;
+		if (side == StartEquipmentCatalog.Side.right) return EnumSide.right;
+		return EnumSide.none;
 	}
 
-	/** Creates an item at the position of its carrier, without drawing a start position. */
+	/**
+	 * Creates an item at the position of its carrier, without drawing a start position. The side goes into the
+	 * item's state through its hidden object, once at the creation (protection concept S3).
+	 */
 	private Item createCarried(String className, StartEquipmentCatalog.Side side, Position at) {
 		IncompleteSimulationObject incomplete = createSimulationObject(SimulationObject_Type.item, className, at);
 		SimulationObject object = incomplete.getObject();
 		if (!(object instanceof Item)) return null;
-		setSide(object, side);
+		EnumSide itemSide = sideOf(side);
+		if (itemSide != EnumSide.none) {
+			HiddenSimulationObject hidden = incomplete.getHiddenObject();
+			if (hidden instanceof HiddenItem) ((HiddenItem) hidden).setSide(itemSide);
+		}
 		if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Equipment " + object.getClass().getSimpleName() + "(" + object.getObjectID() + ")");
 		return (Item) object;
 	}
@@ -434,14 +439,11 @@ public class Simulation extends SocialWorldThread {
     
  
 	/**
-	 * Takes an object out of the running simulation: out of the search by position and out of the object master
-	 * (inventory concept V6: an item that is eaten up). Only the calculators of the cluster position may do this.
+	 * Takes an object out of the search by position. Only the ObjectMaster calls this, when it takes the object out of
+	 * the simulation (protection concept S1, 2026-11-24: removing belongs to the ObjectMaster).
 	 */
-	public void removeSimulationObject(IAccessToken token, SimulationObject object) {
-		if (token == null || !token.isValid() || token.getSimulationCluster() != SimulationCluster.position) return;
-		if (object == null || !object.isSimulationObject()) return;
+	void removeFromPositionSearch(SimulationObject object) {
 		this.searchByPosition.remove(object);
-		this.objectMaster.removeSimulationObject(object);
 	}
 
 	public void changePosition(SimulationObject objectWithNewPosition) {

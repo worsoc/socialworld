@@ -142,6 +142,22 @@ public class WriteAccessToSimulationObject {
 			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
 	}
 
+	/**
+	 * What this object carries takes its position plus the offset (protection concept S2, 2026-11-24): a consequence
+	 * of the own write access to the position, so it needs the grant position.
+	 */
+	public int letCarriedFollow(HiddenSimulationObject caller) {
+		if (checkCaller(caller)) 
+			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.position)) {
+				object.letCarriedFollow();
+				return WRITE_ACCESS_RETURNS_SUCCESS;
+			}
+			else
+				return WRITE_ACCESS_RETURNS_NO_GRANT_FOR_PROPERTY;
+		else
+			return WRITE_ACCESS_RETURNS_INVALID_CALLER;
+	}
+
 	public int setMove(Direction direction, HiddenSimulationObject caller) {
 		if (checkCaller(caller)) 
 			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.directionMove) & 

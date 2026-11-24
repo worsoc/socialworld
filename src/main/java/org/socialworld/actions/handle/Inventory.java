@@ -96,8 +96,6 @@ public class Inventory extends SimProperty {
 	private boolean complete;
 	private boolean isHumanInventory;
 	
-	private SimulationObject parent = null;
-	
 ///////////////////////////////////////////////////////////////////////////////////////////
 //////////////////  static instance for meta information    ///////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -183,10 +181,6 @@ public class Inventory extends SimProperty {
 		this.places.putAll(original.places);
 	}
 	
-	public void setParentObject(SimulationObject parent) {
-		this.parent = parent;
-	}
-	
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    ISavedValue  ///////////////////////////////////////////////
@@ -263,7 +257,6 @@ public class Inventory extends SimProperty {
 	public boolean put(InventoryPlace place, SimulationObject item) {
 		if (!canPut(place, item)) return false;
 		this.places.put(place, item);
-		letParentCarry(place, item);
 		return true;
 	}
 
@@ -275,8 +268,14 @@ public class Inventory extends SimProperty {
 	public SimulationObject remove(InventoryPlace place) {
 		SimulationObject object = this.places.remove(place);
 		if (object == null) return NoSimulationObject.getObjectNothing();
-		letParentRelease(object);
 		return object;
+	}
+
+	/**
+	 * @return true if the object lies on one of the places
+	 */
+	public boolean holds(SimulationObject object) {
+		return object != null && this.places.containsValue(object);
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -311,21 +310,9 @@ public class Inventory extends SimProperty {
 		}
 	}
 
-	// The holder of the inventory carries what lies on its places (connection carried): the item follows it.
-	// Only with a holder (setParentObject) and only real simulation objects; an item carried by someone else
-	// already (e.g. the one apple shared by all mouths) stays with its first carrier.
-	private void letParentCarry(InventoryPlace place, SimulationObject item) {
-		if (this.parent == null || !this.parent.isSimulationObject()) return;
-		if (item == null || !item.isSimulationObject()) return;
-		this.parent.carry(item, offsetOf(place));
-	}
-
-	private void letParentRelease(SimulationObject item) {
-		if (this.parent == null || !this.parent.isSimulationObject()) return;
-		if (item == null || !item.isSimulationObject()) return;
-		if (this.places.containsValue(item)) return;	// still on another place
-		this.parent.releaseCarried(item);
-	}
+	// The holder carries what lies on its places (connection carried). Since 2026-11-24 the state of the holder does
+	// that, under the guard of its write access (StateAnimal.putToInventory, protection concept S2); the Inventory
+	// only keeps the places and no longer changes any connection.
 
 	/**
 	 * Whether the item is of a kind that belongs on the place, regardless of whether the place is free:
@@ -388,11 +375,9 @@ public class Inventory extends SimProperty {
 	// without the checks of put, as before. An object that is no simulation object (null, nothing) empties the place.
 
 	private void set(InventoryPlace place, SimulationObject object) {
-		SimulationObject before = this.places.remove(place);
-		if (before != null && before != object) letParentRelease(before);
+		this.places.remove(place);
 		if (object == null || !object.isSimulationObject()) return;
 		this.places.put(place, object);
-		letParentCarry(place, object);
 	}
 
 	public SimulationObject getLeftHand() {

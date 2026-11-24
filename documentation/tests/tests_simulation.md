@@ -2,7 +2,7 @@
 
 Part of the [test overview](TESTS.md): the running simulation core: start, attributes, core, actions, objects.
 
-**23 test classes, 120 tests.**
+**26 test classes, 131 tests.**
 
 ## Overview
 
@@ -16,17 +16,20 @@ Part of the [test overview](TESTS.md): the running simulation core: start, attri
 | Core | `ActionHandlerTest` | 3 | a new action handler has no running action and nothing to stop | – |
 | Core | `EventTypeDistancesTest` | 3 | reach of seeing someone move, who can be moved by an event | – |
 | Core | `ActionEventTimingTest` | 9 | fixed intervals between the events of a running action, one event for single actions | – |
+| Core | `ObjectMasterRemoveTest` | 3 | only a valid token of the cluster inventory may take objects out of the simulation | – |
 | Core | `ObjectMasterIdRangeTest` | 11 | every type keeps to its band of 10000 IDs; beyond it the simulation stops; the perception jumps from band to band; the highest given ID counts only types with objects | – |
 | Actions | `InventoryMouthTest` | 1 | the inventory gives the item in the mouth as property (eating, drinking) | – |
-| Actions | `InventoryPlacesTest` | 12 | the places of the inventory: empty places give NoSimulationObject, what fits where (IWearable, mouth, ICarryable with its size), dress and overgarment places, old setters | – |
-| Actions | `StartEquipmentTest` | 7 | where a piece of the start equipment goes: worn places, more clothes first, first food into the mouth, small to the belt, medium and large to hands and back, liquids, coins and food into their containers | – |
+| Actions | `InventoryPlacesTest` | 13 | the places of the inventory: empty places give NoSimulationObject, what fits where (IWearable, mouth, ICarryable with its size), dress and overgarment places, old setters; `holds` | – |
+| Actions | `StartEquipmentTest` | 8 | where a piece of the start equipment goes: worn places (the side as parameter for a prototype), more clothes first, first food into the mouth, small to the belt, medium and large to hands and back, liquids, coins and food into their containers | – |
 | Actions | `ContainerContentTest` | 4 | what fits into a container: one liquid in an empty container for liquids, space by carry size within the capacity, no things with a liquid | – |
 | Actions | `WeaponInHandTest` | 2 | a blow with the weapon in the hand: a club blow takes the right hand, else the left; F1 (a real weapon is not nothing) | – |
 | Actions | `ActionMoveVelocityTest` | 8 | velocity of a move action: start velocity per mode and intensity, then from event to event (uniform, accelerated, braking) | – |
 | Objects | `SimObjectsCompletelyImplemented` | 3 | lexeme mappings of the object enums | – |
-| Objects | `ClothesCatalogTest` | 5 | the 26 concrete clothes: created without database, one place each, lexeme value, side as property, abilities | – |
+| Objects | `ClothesCatalogTest` | 5 | the 26 concrete clothes: created without database, one place each, lexeme value, side from the state, abilities | – |
 | Objects | `ToolsAndWeaponsCatalogTest` | 5 | the 29 tools and 7 weapons: created without database, lexeme value in its level, weapon properties, abilities | – |
 | Objects | `FoodAndDrinksCatalogTest` | 5 | the 11 kinds of food and 2 new drinks: created without database, eatable or drinkable, lexeme value, food values, perishable, abilities | – |
+| Objects | `ContainerAccessTest` | 2 | only a valid token of the cluster inventory may put into or take out of a container | – |
+| Objects | `ItemSideTest` | 4 | the side of an item lies in its state, written only through HiddenItem and WriteAccessToItem with the grant side (or all) | – |
 | Objects | `NatureCatalogTest` | 5 | the 7 things of nature (parts of plants and animals, solids): created without database, lexeme value in its own base group, abilities | – |
 | Objects | `LiquidStatesTest` | 1 | a liquid gets the three states of every item (before NoState, so no liquid could be created) | no database |
 | Objects | `CarriedConnectionTest` | 3 | the connection carried: offset (0 by default, a copy), carrier and carried find each other in their lists | – |
@@ -149,6 +152,21 @@ Distances of `EventType`: how far an event reaches (`getEffectDistance`) and how
 
 - **Not checked:** `ActionHandler` itself; it needs a simulation object and the display. Interrupting and stopping still call `perform()` as before.
 
+### `ObjectMasterRemoveTest`
+
+`src/test/java/org/socialworld/core/ObjectMasterRemoveTest.java`
+
+Taking an object out of the simulation belongs to the `ObjectMaster` since 2026-11-24 (protection concept S1): `removeSimulationObject(token, object)` takes it out of the search by position (through the package-private `Simulation.removeFromPositionSearch`), out of the list of its type and out of the array of all objects. For now only a valid token of the cluster `inventory` may do it (eating up); before, `Simulation.removeSimulationObject` allowed the cluster `position`. Carried objects are not refused; the caller releases the connections before (open point O1).
+
+| Test | Checks |
+|---|---|
+| `theClusterInventory_mayRemove` | a valid token of the cluster inventory may remove |
+| `otherClusters_mayNotRemove` | position, attributeArray, core and act may not |
+| `anInvalidToken_orNone_mayNotRemove` | an invalid token of the cluster inventory and no token may not |
+
+- **Assumes:** only the check `mayRemove` is tested, with tokens made in the test; the removal itself needs `ObjectMaster.getInstance()` and the running simulation.
+- **Needs:** no database.
+
 ### `ObjectMasterIdRangeTest`
 
 `src/test/java/org/socialworld/core/ObjectMasterIdRangeTest.java`
@@ -208,7 +226,7 @@ The inventory keeps one object per place since 2026-11-23 (inventory concept V1)
 | `emptyPlaces_answerNoSimulationObject_notNull` | every empty place gives `NoSimulationObject` (F4; before, the hands were `null`), also as a valid property |
 | `oldPlaceIndices_stayAsTheyWere` | left hand 1, right hand 2, mouth 3, glove 11, shoe 16; the highest index is 45 |
 | `clothes_fitTheirPlaceOnly` | straw hat on the head, shirt on the upper body, trousers on the legs, dress on the dress place; nothing on a wrong place |
-| `theSide_decidesLeftOrRight` | a shoe and a glove fit the side they are set to |
+| `theSide_decidesLeftOrRight` | a shoe and a glove with a state fit the side set in it (`ItemSides.withSide`), not the other |
 | `threeOvergarmentPlaces_apronMailAndCloakTogether` | apron, chain mail and cloak are worn at the same time; an apron is no cloak |
 | `jewellery_ringAtTheFinger_amuletAndRosaryAtTheNeck` | ring at the finger, amulet and rosary at the neck, satchel as bag |
 | `aDress_needsUpperBodyAndLegsFree_andBlocksThem` | no dress over a shirt; with a dress no shirt and no trousers |
@@ -217,9 +235,11 @@ The inventory keeps one object per place since 2026-11-23 (inventory concept V1)
 | `belt_takesSmallThings_back_takesLargeOnes` | knife, purse and dagger at the belt, the (medium) hammer not; pitchfork, sack and shield on the back, the knife not |
 | `exceptions_luteOnTheBack_swordAtTheBelt` | the medium lute on the back but not at the belt; the long sword at the belt and on the back |
 | `theOldSetters_keepWorking` | the test inventory (cap, shirt, shoes, socks) lands on the new places; `setLeftHand(null)` empties the hand |
+| `holds_saysWhetherTheObjectLiesOnAPlace` | a knife is held after `put` and no longer after `remove`; `null` is never held |
 
 - **Assumes:** the carry sizes of the item hierarchy (small by default: food, valuables, devotional and writing goods, parts of nature; medium: human crafted; large: weapons; exceptions in the classes).
-- **Not checked:** `copyForProperty` (it needs a property protection from the running simulation); who puts items on the places (start equipment V3, InventoryCalculator V4).
+- **Carrying (protection concept S2, 2026-11-24):** since then the state of the holder carries what lies on its places (`StateAnimal.putToInventory` and `removeFromInventory`, under the guard of the write access with the grant `inventory`); the Inventory only keeps the places. The old setters (`setCap` and so on) only set the place and carry nothing either.
+- **Not checked:** `copyForProperty` (it needs a property protection from the running simulation); who puts items on the places (start equipment V3, InventoryCalculator V4); carrying by the state (it needs a holder with state and write access).
 - **Needs:** no database.
 
 ### `StartEquipmentTest`
@@ -230,7 +250,8 @@ Where a piece of the start equipment goes (inventory concept V3, 2026-11-23): cl
 
 | Test | Checks |
 |---|---|
-| `clothes_goToTheirPlace_theRightShoeToTheRightFoot` | the straw hat on the head, the shoe set to the right side on the right foot, the other on the left |
+| `clothes_goToTheirPlace_theRightShoeToTheRightFoot` | the straw hat on the head, the shoe with the side right in its state on the right foot, the left one on the left |
+| `chooseWornPlace_aPrototypeWithoutState_goesByTheGivenSide` | protection concept S3: a shoe, sock or glove without state goes to the place of the given side; without a side it finds none; a taken place gives noWhere |
 | `moreClothesFirst_thenTheKitPieceForTheSamePlace_findsNoWornPlace` | after the fur cloak the cloak finds no worn place (with `choosePlace` it would go into a hand); after the hood the straw hat finds none |
 | `theFirstFood_goesIntoTheMouth_theNextToTheBelt` | bread into the mouth, cheese to the belt |
 | `smallToTheBelt_mediumToTheHands_largeToHandsAndBack` | smith: hammer and tongs in the hands, knife at the belt, a second hammer finds no place; knight: sword and shield in the hands, a second sword on the back |
@@ -315,9 +336,9 @@ The concrete clothes of the item hierarchy (2026-11-23): 7 caps, 4 shirts, 2 tro
 | Test | Checks |
 |---|---|
 | `all26_areCreatedWithoutDatabase` | every class has a constructor without arguments and is `IWearable` |
-| `eachOne_saysExactlyOnePlace` | of cap, shirt, trousers, dress, overgarment, shoe, sock, glove, jewellery and bag exactly one is true |
+| `eachOne_saysExactlyOnePlace` | of cap, shirt, trousers, dress, overgarment, shoe, sock, glove, jewellery and bag exactly one is true (each piece with a state and the side left) |
 | `lexemLowerValue_isUniqueAndJustAboveItsKind` | `GetLexemIDLowerPartFromMapping` gives kind + 1 .. 15 (e.g. cap 272, straw hat 273), no value twice |
-| `side_isAProperty_leftUntilSet` | shoe, sock and glove are left until `setLeftSide(false)`, then right |
+| `side_isAPropertyOfTheState_noneUntilSet` | without state shoe, sock and glove are neither left nor right; with the side in the state (S3) they are on that side |
 | `abilities_asInTheCatalogue` | helmet and chain mail `IProtective`, fur cloak and chain mail `IValuable`, habit `ISacred`, linen shirt none of them |
 
 - **Assumes:** the catalogue of the item hierarchy concept; the ability values are constants in the classes.
@@ -398,6 +419,36 @@ The 11 kinds of food and the 2 new drinks of the item hierarchy (2026-11-23): be
 
 - **Assumes:** the catalogue of the item hierarchy concept; the ability values are constants in the classes.
 - **Not checked:** nutrient and taste set (they come from `StateEatable`, i.e. from the database; the drinks give `null` as water does).
+
+### `ContainerAccessTest`
+
+`src/test/java/org/socialworld/objects/ContainerAccessTest.java`
+
+Only the rail inventory writes the contents of a container (protection concept S2, 2026-11-24): `SimulationObject.putInside(token, content)` and `takeOut(token, content)` need a valid token of the cluster `inventory`. Where the container lies (carried, on the ground, in reach) is decided by the InventoryCalculator, not by the protection. The objects in the test have no state; the check of the token comes first.
+
+| Test | Checks |
+|---|---|
+| `putInside_withoutATokenOfTheClusterInventory_isRefused` | no token, attributeArray, position, core and an invalid inventory token: nothing goes into the sack |
+| `takeOut_withoutATokenOfTheClusterInventory_isRefused` | no token, attributeArray and an invalid inventory token: nothing comes out |
+
+- **Not checked:** putting in and taking out with the valid token (it needs objects with state and connections, see `ContainerContentTest` for what fits).
+- **Needs:** no database.
+
+### `ItemSideTest`
+
+`src/test/java/org/socialworld/objects/ItemSideTest.java`
+
+The side (none, left, right) of an item lies in `StateItem` (protection concept S3, 2026-11-24). It is written only through `HiddenItem.setSide`, `WriteAccessToItem.setSide` with the grant `side` (or `all`, as the creator gives it) and `StateItem.setSide` with the guard. Shoe, sock and glove read it; without state they are on neither side. The helper `ItemSides.withSide` (test sources) gives an item a state and sets the side on this route.
+
+| Test | Checks |
+|---|---|
+| `withoutStateOrSide_aPairPieceIsNeitherLeftNorRight` | a shoe without state, and one with the side none, is neither left nor right |
+| `theSide_fromTheState` | shoe right, sock left, glove right: as set in the state |
+| `theGrantAll_mayWriteTheSide_asTheCreatorGivesIt` | with the grant all `setSide` succeeds |
+| `withoutTheGrantSide_theSideStays` | with the grants position and inventory `setSide` gives NO_GRANT_FOR_PROPERTY, the shoe stays without side |
+
+- **Not checked:** setting the side in `Simulation.createCarried` (it needs the database).
+- **Needs:** no database.
 
 ### `NatureCatalogTest`
 

@@ -21,8 +21,8 @@ import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.core.IAccessToken;
 
 /**
- * The token of the InventoryCalculator (inventory concept V4, 2026-11-23). It belongs to the cluster position:
- * taking and dropping change where an item is, and it reads positions as the PositionCalculator does.
+ * The token of the InventoryCalculator (inventory concept V4, 2026-11-23). Since 2026-11-24 it belongs to its own
+ * cluster inventory (protection concept S1), no longer to the cluster position: the inventory is a rail of its own.
  */
 public final class AccessTokenInventoryCalculator implements IAccessToken
 {
@@ -32,7 +32,7 @@ public final class AccessTokenInventoryCalculator implements IAccessToken
 	static AccessTokenInventoryCalculator getValid() {
 		if (valid == null) {
 			valid = new AccessTokenInventoryCalculator();
-			SimulationCluster.position.addToken(valid);
+			SimulationCluster.inventory.addToken(valid);
 		}
 		return valid;
 	}
@@ -42,7 +42,7 @@ public final class AccessTokenInventoryCalculator implements IAccessToken
 	}
 	
 	public SimulationCluster getSimulationCluster() {
-		return SimulationCluster.position;
+		return SimulationCluster.inventory;
 	}
 	
 }

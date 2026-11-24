@@ -152,7 +152,7 @@ The start equipment of the 100 characters (inventory concept V3, 2026-11-23) is 
 
 `src/test/java/org/socialworld/datasource/createObjects/StartEquipmentDistributionTest.java`
 
-Distributes the whole start equipment as `Simulation.equip` does it (`StartEquipment.chooseWornPlace` for the clothes, `choosePlace` with the first food into the mouth for the items, a bread into an empty mouth), on objects without state.
+Distributes the whole start equipment as `Simulation.equip` does it (`StartEquipment.chooseWornPlace` for the clothes, `choosePlace` with the first food into the mouth for the items, a bread into an empty mouth). As in the simulation the worn place is chosen with a prototype without state and the side of the catalog; the piece put there has a state with that side (protection concept S3, `ItemSides.withSide`).
 
 | Test | Checks |
 |---|---|

@@ -25,6 +25,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
+import org.socialworld.objects.ItemSides;
+import org.socialworld.objects.enums.EnumSide;
 import org.socialworld.objects.concrete.clothes.caps.*;
 import org.socialworld.objects.concrete.clothes.dresses.*;
 import org.socialworld.objects.concrete.clothes.gloves.*;
@@ -77,7 +79,8 @@ class ClothesCatalogTest {
 	@Test
 	void eachOne_saysExactlyOnePlace() throws Exception {
 		for (Class<? extends Clothes> k : catalog().keySet()) {
-			IWearable w = create(k);
+			// with a state and a side: a pair piece without side fits on neither side (protection concept S3)
+			IWearable w = (IWearable) ItemSides.withSide(create(k), EnumSide.left);
 			boolean[] places = {w.isCap(), w.isShirt(), w.isTrousers(), w.isDress(), w.isOvergarment(),
 					w.isLeftFootShoe() || w.isRightFootShoe(), w.isLeftFootSock() || w.isRightFootSock(),
 					w.isLeftHandGlove() || w.isRightHandGlove(), w.isJewellery(), w.isBag()};
@@ -98,22 +101,20 @@ class ClothesCatalogTest {
 	}
 
 	@Test
-	void side_isAProperty_leftUntilSet() {
+	void side_isAPropertyOfTheState_noneUntilSet() {
 		LeatherShoe shoe = new LeatherShoe();
-		assertThat(shoe.isLeftFootShoe()).isTrue();
+		assertThat(shoe.isLeftFootShoe()).isFalse();
 		assertThat(shoe.isRightFootShoe()).isFalse();
-		shoe.setLeftSide(false);
+		shoe = ItemSides.withSide(new LeatherShoe(), EnumSide.right);
 		assertThat(shoe.isLeftFootShoe()).isFalse();
 		assertThat(shoe.isRightFootShoe()).isTrue();
 
-		WoolSock sock = new WoolSock();
-		sock.setLeftSide(false);
+		WoolSock sock = ItemSides.withSide(new WoolSock(), EnumSide.right);
 		assertThat(sock.isRightFootSock()).isTrue();
 
-		LeatherGlove glove = new LeatherGlove();
+		LeatherGlove glove = ItemSides.withSide(new LeatherGlove(), EnumSide.left);
 		assertThat(glove.isLeftHandGlove()).isTrue();
-		glove.setLeftSide(false);
-		assertThat(glove.isRightHandGlove()).isTrue();
+		assertThat(glove.isRightHandGlove()).isFalse();
 	}
 
 	@Test

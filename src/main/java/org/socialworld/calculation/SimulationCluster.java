@@ -36,6 +36,7 @@ public enum SimulationCluster {
 	action(51),
 	_event(61),
 	simulationObject(71),
+	inventory(81),
 	objectMaster(1001),
 	expressionEvaluate(2001),
 	expressionCalculate(2002),

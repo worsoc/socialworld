@@ -18,7 +18,7 @@
 package org.socialworld.calculation.application;
 
 import org.socialworld.objects.properties.IEatable;
-import org.socialworld.core.Simulation;
+import org.socialworld.core.ObjectMaster;
 import org.socialworld.GlobalSwitches;
 import org.socialworld.actions.handle.ContainerContent;
 import org.socialworld.actions.handle.InventoryPlace;
@@ -27,7 +27,9 @@ import org.socialworld.calculation.IObjectReceiver;
 import org.socialworld.calculation.ObjectRequester;
 import org.socialworld.calculation.Type;
 import org.socialworld.calculation.Value;
+import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.core.Event;
+import org.socialworld.core.IAccessToken;
 import org.socialworld.core.EventType;
 import org.socialworld.core.IEventParam;
 import org.socialworld.objects.NoSimulationObject;
@@ -82,6 +84,32 @@ public final class InventoryCalculator implements IObjectReceiver {
 		return INVENTORY_CALCULATOR_RETURNS_NO_CHANGE;
 	}
 
+	/**
+	 * Start equipment (protection concept S2, E7, 2026-11-24): while the Simulation builds the world, it puts an item
+	 * on a place of a human through this rail. Only with a valid token of the cluster core.
+	 *
+	 * @return true if the item is on the place now (and carried by the holder)
+	 */
+	public synchronized boolean startPutToInventory(IAccessToken callerToken, HiddenAnimal holder, InventoryPlace place, SimulationObject item) {
+		if (!isCoreToken(callerToken) || holder == null) return false;
+		return holder.putToInventory(place, item);
+	}
+
+	/**
+	 * Start equipment (E7): an item into a container, with the token of this calculator. Only with a valid token of
+	 * the cluster core. Whether it fits is decided by the caller (StartEquipment).
+	 *
+	 * @return true if the item lies inside the container now
+	 */
+	public synchronized boolean startPutIntoContainer(IAccessToken callerToken, SimulationObject container, SimulationObject item) {
+		if (!isCoreToken(callerToken) || container == null) return false;
+		return container.putInside(token, item);
+	}
+
+	static boolean isCoreToken(IAccessToken callerToken) {
+		return callerToken != null && callerToken.isValid() && callerToken.getSimulationCluster() == SimulationCluster.core;
+	}
+
 	private int take(Event event, StateAnimal state, HiddenAnimal hiddenWriteAccess) {
 		SimulationObject holder = state.getObject();
 		SimulationObject item = readItem(event);
@@ -128,7 +156,7 @@ public final class InventoryCalculator implements IObjectReceiver {
 		if (!isEatenUp(food)) return noChange("eatUp: nothing eatable in the mouth", holder);
 		SimulationObject removed = hiddenWriteAccess.removeFromInventory(InventoryPlace.mouth);
 		if (removed != food) return noChange("eatUp: remove refused", holder);
-		Simulation.getInstance().removeSimulationObject(token, food);
+		ObjectMaster.getInstance().removeSimulationObject(token, food);
 		debug("eatUp: " + holder.getObjectID() + " has eaten " + food.getObjectID() + " " + food.getClass().getSimpleName());
 		return INVENTORY_CALCULATOR_RETURNS_CHANGED;
 	}
@@ -186,7 +214,7 @@ public final class InventoryCalculator implements IObjectReceiver {
 			return noChange("set: " + item.getObjectID() + " fits neither on " + target + " nor into what is there", holder);
 		}
 		hiddenWriteAccess.removeFromInventory(from);
-		if (!container.putInside(item)) {
+		if (!container.putInside(token, item)) {
 			hiddenWriteAccess.putToInventory(from, item);
 			return noChange("set: the container refused", holder);
 		}
@@ -224,7 +252,7 @@ public final class InventoryCalculator implements IObjectReceiver {
 				state.canPutToInventory(InventoryPlace.leftHand, item), state.canPutToInventory(InventoryPlace.rightHand, item));
 		if (hand == InventoryPlace.noWhere) return noChange("get: no free hand for item " + item.getObjectID(), holder);
 
-		if (container.isSimulationObject()) container.takeOut(item);
+		if (container.isSimulationObject()) container.takeOut(token, item);
 		else hiddenWriteAccess.removeFromInventory(placeOfItem);
 		if (!hiddenWriteAccess.putToInventory(hand, item)) return noChange("get: put refused", holder);
 		debug("get: " + holder.getObjectID() + " takes " + item.getObjectID() + " into " + hand);

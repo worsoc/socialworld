@@ -31,27 +31,27 @@ import org.socialworld.actions.handle.StartEquipment;
 import org.socialworld.datasource.createObjects.StartEquipmentCatalog.Entry;
 import org.socialworld.datasource.createObjects.StartEquipmentCatalog.Piece;
 import org.socialworld.datasource.createObjects.StartEquipmentCatalog.Side;
+import org.socialworld.objects.Item;
+import org.socialworld.objects.ItemSides;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.SimulationObject_Type;
-import org.socialworld.objects.concrete.clothes.Glove;
-import org.socialworld.objects.concrete.clothes.Shoe;
-import org.socialworld.objects.concrete.clothes.Sock;
 import org.socialworld.objects.concrete.eatable.bakery.Bread;
+import org.socialworld.objects.enums.EnumSide;
 import org.socialworld.objects.properties.IContainer;
 
 /**
- * The whole start equipment of the 100 characters, distributed as Simulation.equip does it, but on objects without
- * state and without the database (inventory concept V3, 2026-11-23).
+ * The whole start equipment of the 100 characters, distributed as Simulation.equip does it, but without the
+ * database (inventory concept V3, 2026-11-23). As in Simulation the worn place is chosen with a prototype without
+ * state and the side of the catalog; the piece put there has a state with that side (protection concept S3).
  */
 class StartEquipmentDistributionTest {
 
-	private static SimulationObject create(String className, Side side) throws Exception {
-		SimulationObject object = (SimulationObject) Class.forName(className).getDeclaredConstructor().newInstance();
-		boolean left = side != Side.right;
-		if (object instanceof Shoe) ((Shoe) object).setLeftSide(left);
-		if (object instanceof Sock) ((Sock) object).setLeftSide(left);
-		if (object instanceof Glove) ((Glove) object).setLeftSide(left);
-		return object;
+	private static SimulationObject create(String className) throws Exception {
+		return (SimulationObject) Class.forName(className).getDeclaredConstructor().newInstance();
+	}
+
+	private static EnumSide sideOf(Side side) {
+		return (side == Side.left) ? EnumSide.left : (side == Side.right) ? EnumSide.right : EnumSide.none;
 	}
 
 	@Test
@@ -64,16 +64,17 @@ class StartEquipmentDistributionTest {
 			Entry entry = catalog.get(no);
 			Inventory inventory = new Inventory(SimulationObject_Type.human);
 			for (Piece piece : entry.clothes) {
-				SimulationObject item = create(piece.className, piece.side);
-				InventoryPlace place = StartEquipment.chooseWornPlace(inventory, item);
+				SimulationObject prototype = create(piece.className);
+				InventoryPlace place = StartEquipment.chooseWornPlace(inventory, prototype, sideOf(piece.side));
 				if (place == InventoryPlace.noWhere) { leftOut++; continue; }
+				SimulationObject item = ItemSides.withSide((Item) create(piece.className), sideOf(piece.side));
 				assertThat(inventory.put(place, item)).isTrue();
 				placed++;
 			}
 			List<SimulationObject> containers = new ArrayList<>();
 			Map<SimulationObject, List<SimulationObject>> contents = new HashMap<>();
 			for (String className : entry.items) {
-				SimulationObject item = create(className, Side.none);
+				SimulationObject item = create(className);
 				StartEquipment.Decision decision = StartEquipment.decide(inventory, containers, contents, item);
 				if (decision.isInContainer()) {
 					contents.get(decision.container).add(item);
@@ -90,7 +91,7 @@ class StartEquipmentDistributionTest {
 				}
 			}
 			for (String className : entry.contents) {
-				SimulationObject liquid = create(className, Side.none);
+				SimulationObject liquid = create(className);
 				StartEquipment.Decision decision = StartEquipment.decide(inventory, containers, contents, liquid);
 				if (decision.isInContainer()) {
 					contents.get(decision.container).add(liquid);

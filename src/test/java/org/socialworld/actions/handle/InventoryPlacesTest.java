@@ -22,6 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.ValueProperty;
+import org.socialworld.objects.ItemSides;
 import org.socialworld.objects.NoSimulationObject;
 import org.socialworld.objects.SimulationObject_Type;
 import org.socialworld.objects.concrete.clothes.caps.StrawHat;
@@ -32,6 +33,7 @@ import org.socialworld.objects.concrete.clothes.overgarments.ChainMail;
 import org.socialworld.objects.concrete.clothes.overgarments.Cloak;
 import org.socialworld.objects.concrete.clothes.shirts.LinenShirt;
 import org.socialworld.objects.concrete.clothes.shoes.LeatherShoe;
+import org.socialworld.objects.enums.EnumSide;
 import org.socialworld.objects.concrete.clothes.trousers.WorkTrousers;
 import org.socialworld.objects.concrete.containers.Purse;
 import org.socialworld.objects.concrete.containers.Sack;
@@ -96,13 +98,13 @@ class InventoryPlacesTest {
 
 	@Test
 	void theSide_decidesLeftOrRight() {
-		LeatherShoe shoe = new LeatherShoe();
+		LeatherShoe shoe = ItemSides.withSide(new LeatherShoe(), EnumSide.left);
 		assertThat(Inventory.fits(InventoryPlace.leftFootShoe, shoe)).isTrue();
 		assertThat(Inventory.fits(InventoryPlace.rightFootShoe, shoe)).isFalse();
-		shoe.setLeftSide(false);
-		assertThat(Inventory.fits(InventoryPlace.rightFootShoe, shoe)).isTrue();
-		LeatherGlove glove = new LeatherGlove();
-		glove.setLeftSide(false);
+		LeatherShoe right = ItemSides.withSide(new LeatherShoe(), EnumSide.right);
+		assertThat(Inventory.fits(InventoryPlace.rightFootShoe, right)).isTrue();
+		assertThat(Inventory.fits(InventoryPlace.leftFootShoe, right)).isFalse();
+		LeatherGlove glove = ItemSides.withSide(new LeatherGlove(), EnumSide.right);
 		assertThat(Inventory.fits(InventoryPlace.rightHandGlove, glove)).isTrue();
 		assertThat(Inventory.fits(InventoryPlace.leftHandGlove, glove)).isFalse();
 	}
@@ -191,5 +193,17 @@ class InventoryPlacesTest {
 		// null (as LoadHuman passes it for an empty hand) empties the place
 		inventory.setLeftHand(null);
 		assertThat(inventory.isFree(InventoryPlace.leftHand)).isTrue();
+	}
+
+	@Test
+	void holds_saysWhetherTheObjectLiesOnAPlace() {
+		Inventory inventory = new Inventory(SimulationObject_Type.human);
+		Knife knife = new Knife();
+		assertThat(inventory.holds(knife)).isFalse();
+		assertThat(inventory.put(InventoryPlace.rightHand, knife)).isTrue();
+		assertThat(inventory.holds(knife)).isTrue();
+		inventory.remove(InventoryPlace.rightHand);
+		assertThat(inventory.holds(knife)).isFalse();
+		assertThat(inventory.holds(null)).isFalse();
 	}
 }

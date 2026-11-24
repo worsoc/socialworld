@@ -18,6 +18,7 @@
 package org.socialworld.objects.concrete.clothes;
 
 import org.socialworld.objects.enums.EnumHumanCrafted;
+import org.socialworld.objects.enums.EnumSide;
 import org.socialworld.objects.properties.IWearable;
 
 public abstract class Shoe extends Clothes implements IWearable {
@@ -34,20 +35,11 @@ public abstract class Shoe extends Clothes implements IWearable {
 	
 
 
-	// the side (left or right) is a property of the object, not a class of its own (2026-11-23);
-	// it is left until it is set; who sets it comes with the inventory
-	private boolean leftSide = true;
-
-	public final void setLeftSide(boolean leftSide) {
-		this.leftSide = leftSide;
-	}
-
-	public final boolean isLeftSide() {
-		return this.leftSide;
-	}
-
-	public boolean isLeftFootShoe() {return this.leftSide; }
-	public boolean isRightFootShoe() {return !this.leftSide; }
+	// the side (left or right) is a property of the object, not a class of its own (2026-11-23); it lies in the
+	// state of the item and is set once at the creation (protection concept S3, 2026-11-24); without a side
+	// (none, or a prototype without state) the piece fits on neither side
+	public boolean isLeftFootShoe() {return getSide() == EnumSide.left; }
+	public boolean isRightFootShoe() {return getSide() == EnumSide.right; }
 
 	public boolean isLeftHandGlove() {return false; }
 	public boolean isRightHandGlove() {return false; }

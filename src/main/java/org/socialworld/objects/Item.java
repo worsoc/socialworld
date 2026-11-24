@@ -1,24 +1,20 @@
 /*
-* Social World
-* Copyright (C) 2014  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2014  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.objects;
 
 import java.util.List;
@@ -29,6 +25,7 @@ import org.socialworld.core.IAccessToken;
 import org.socialworld.core.IEventParam;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
 import org.socialworld.objects.enums.EnumBaseSimObj;
+import org.socialworld.objects.enums.EnumSide;
 import org.socialworld.tools.StringTupel;
 
 /**
@@ -108,8 +105,11 @@ public abstract class Item extends SimulationObject {
 		}
 	}
 
+	// the item's own state, for the side (protection concept S3, 2026-11-24); null for an object without state
+	private StateItem state;
+
 	protected void assignState(StateSimulationObject state) {
-		//if (checkIsMyState(state) ) this.state = (StateItem) state;
+		if (checkIsMyState(state) && state instanceof StateItem) this.state = (StateItem) state;
 	}
 	
 
@@ -131,6 +131,11 @@ public abstract class Item extends SimulationObject {
 	
 	public byte[] getStateAppearanceMainColourCalculationColourSetsShares() {
 		return stateAppearanceMainColourCalculationColourSetsShares;
+	}
+
+	/** The side from the state; none for an object without state (a prototype). */
+	protected final EnumSide getSide() {
+		return (this.state == null) ? EnumSide.none : this.state.getSide();
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////

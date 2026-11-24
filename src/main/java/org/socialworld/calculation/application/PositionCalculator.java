@@ -332,8 +332,8 @@ public class PositionCalculator extends SocialWorldThread {
 		if (returnSetPosition != WriteAccessToSimulationObject.WRITE_ACCESS_RETURNS_SUCCESS) return returnSetPosition;
 		if (positionOriginal.checkIsObjectNothing()) Simulation.getInstance().changePosition(state.getObject());
 		else updateObjectSearch(state.getObject(), positionOriginal, newPosition);
-		// and what it carries itself
-		state.getObject().letCarriedFollow();
+		// and what it carries itself (through the own write access, grant position)
+		hiddenWriteAccess.letCarriedFollow();
 		return returnSetPosition;
 	}
 
@@ -373,8 +373,8 @@ public class PositionCalculator extends SocialWorldThread {
 		int returnSetPosition = hiddenWriteAccess.setPosition(newPosition);
 		if (returnSetPosition != WriteAccessToSimulationObject.WRITE_ACCESS_RETURNS_SUCCESS) return returnSetPosition;
 		updateObjectSearch(state.getObject(), positionOriginal, newPosition);
-		// what it carries goes with it
-		state.getObject().letCarriedFollow();
+		// what it carries goes with it (through the own write access, grant position)
+		hiddenWriteAccess.letCarriedFollow();
 
 		int result = writeVelocities(state, hiddenWriteAccess, active, damped(passive));
 

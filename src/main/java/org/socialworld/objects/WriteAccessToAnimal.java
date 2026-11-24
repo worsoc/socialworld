@@ -65,8 +65,6 @@ public class WriteAccessToAnimal extends WriteAccessToSimulationObject {
 			if	(checkAccessToPropertyGranted(caller, GrantedAccessToProperty.inventory)) {
 				// set inventory to the animal's (human's) state
 				animalState.setInventory(inventory, this);
-				// set parent object to inventory
-				inventory.setParentObject(this.getObject());
 				return WRITE_ACCESS_RETURNS_SUCCESS;
 			}
 			else
