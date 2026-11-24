@@ -23,7 +23,7 @@ Part of the [test overview](TESTS.md): expressions, functions, knowledge, positi
 | Calculation | `PositionMovementTest` | 16 | technical position movement: impulse, friction and rest at 50 mm/s, bystander push 0.2 × v, blows (share of the intensity, away from the hitter, only the candidates event), time step, technical event types in their own block 512..527, no self-push | – |
 | Calculation | `CarriedFollowTest` | 5 | carried objects take carrier + offset per place without drift, ignore every event but followCarrier, followCarrier is technical (514) | – |
 | Calculation | `InventoryCalculatorTest` | 6 | taking, dropping and switching: the hand (requested, else right, else left), the other hand, the reach of 1 m on the ground, the self inventory events | – |
-| Calculation | `EatUpTest` | 3 | a meal that is over eats up what is eatable in the mouth: the technical event eatUp, what counts as eatable, removing from the search | – |
+| Calculation | `EatUpTest` | 3 | a meal that is over eats up what is eatable in the mouth: the technical event eatUp, what counts as eatable, removing from the search | partly: no database |
 | Calculation | `CalculationVectorTest` | 11 | vector operations in `Calculation`: add, subtract, negate, scale, component product, normalize, length | – |
 | Calculation | `DirectionToReferenceTest` | 10 | tag `ActionDir`: direction to or away from a reference position, height weight, offset, fallback | – |
 | Calculation | `VectorTest` | 7 | `Vector`: normalizing (the zero vector has length 0) and the component product | – |
@@ -326,6 +326,8 @@ When an eat action is done (not when it is only interrupted), the ActionHandler 
 | `eatUp_isATechnicalEvent` | eatUp lies in the technical block (515) |
 | `whatIsEatable_isEatenUp_nothingElse` | bread and herb are eaten up; beer (drinking), a knife, nothing and null are not |
 | `anObjectThatWasNeverInTheSearch_canBeRemoved_withoutHarm` | `ObjectByPositionSearch.remove` leaves an object alone that was never added |
+
+- **Needs:** for `anObjectThatWasNeverInTheSearch_canBeRemoved_withoutHarm` a reachable database, it only reads: the nodes of the search get `ObjectMaster.getInstance()`, whose loaders and creators reach MariaDB. Without a database it is skipped (`DatabaseAssumptions.assumeDatabaseIsAvailable`, 2026-11-24, after it failed on GitHub CI). The other two tests need no database.
 
 - **Not checked:** the eat action ending in the ActionHandler and the removing from the object master (they need the running simulation).
 

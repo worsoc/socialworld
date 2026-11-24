@@ -126,6 +126,7 @@ The reaction type does not follow the character: `CreateAnimal.initState` draws 
 `src/test/java/org/socialworld/datasource/mariaDB/DatabaseAssumptionsTest.java`
 
 - **Checks:** when the table cannot be reached, the calling test is aborted and counts as skipped.
+- **Not checked:** `assumeDatabaseIsAvailable` (2026-11-24), for tests that read no table themselves but create objects that reach the database; without `application.properties` or a running database `ConnectionMariaDB.getInstance()` throws, and the calling test is skipped.
 
 ---
 

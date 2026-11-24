@@ -20,6 +20,7 @@ package org.socialworld.objects.concrete.eatable;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
+import org.socialworld.datasource.mariaDB.DatabaseAssumptions;
 import org.socialworld.objects.concrete.StateAppearance;
 import org.socialworld.objects.concrete.StateComposition;
 import org.socialworld.objects.concrete.StatePerceptible;
@@ -32,6 +33,7 @@ class LiquidStatesTest {
 
 	@Test
 	void water_givesTheThreeStates() {
+		DatabaseAssumptions.assumeDatabaseIsAvailable();	// the states read their CacheTableState... from the database
 		Water water = new Water();
 		assertThat(water.getInitState(StatePerceptible.class.getName())).isInstanceOf(StatePerceptible.class);
 		assertThat(water.getInitState(StateAppearance.class.getName())).isInstanceOf(StateAppearance.class);

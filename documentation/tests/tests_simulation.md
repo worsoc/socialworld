@@ -28,7 +28,7 @@ Part of the [test overview](TESTS.md): the running simulation core: start, attri
 | Objects | `ToolsAndWeaponsCatalogTest` | 5 | the 29 tools and 7 weapons: created without database, lexeme value in its level, weapon properties, abilities | – |
 | Objects | `FoodAndDrinksCatalogTest` | 5 | the 11 kinds of food and 2 new drinks: created without database, eatable or drinkable, lexeme value, food values, perishable, abilities | – |
 | Objects | `NatureCatalogTest` | 5 | the 7 things of nature (parts of plants and animals, solids): created without database, lexeme value in its own base group, abilities | – |
-| Objects | `LiquidStatesTest` | 1 | a liquid gets the three states of every item (before NoState, so no liquid could be created) | – |
+| Objects | `LiquidStatesTest` | 1 | a liquid gets the three states of every item (before NoState, so no liquid could be created) | no database |
 | Objects | `CarriedConnectionTest` | 3 | the connection carried: offset (0 by default, a copy), carrier and carried find each other in their lists | – |
 | Objects | `ContainersAndGoodsCatalogTest` | 5 | the 10 containers and 12 valuables, devotional, writing and pastime goods: created without database, lexeme value, capacity, jewellery and bag, abilities | – |
 
@@ -363,7 +363,7 @@ The connections of `objects/connections` (from 2023, unused until 2026-11-23) ca
 |---|---|
 | `water_givesTheThreeStates` | `Liquid.getInitState` gives StatePerceptible, StateAppearance and StateComposition (2026-11-23; before NoState, which `SimulationObject.createAddOnStates` cannot cast, so creating water, beer or wine failed) |
 
-- **Needs:** no database (the states are only constructed, not initialised).
+- **Needs:** a reachable database, it only reads: the base constructor calls `init()`, and `StateAppearance.init` loads `CacheTableStateAppearance` from MariaDB. Without a database it is skipped (`DatabaseAssumptions.assumeDatabaseIsAvailable`, 2026-11-24, after it failed on GitHub CI with a NullPointerException).
 
 ### `ContainersAndGoodsCatalogTest`
 

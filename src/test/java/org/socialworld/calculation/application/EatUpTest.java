@@ -23,6 +23,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import org.junit.jupiter.api.Test;
 import org.socialworld.collections.ObjectByPositionSearch;
 import org.socialworld.core.EventType;
+import org.socialworld.datasource.mariaDB.DatabaseAssumptions;
 import org.socialworld.objects.NoSimulationObject;
 import org.socialworld.objects.concrete.eatable.bakery.Bread;
 import org.socialworld.objects.concrete.eatable.liquids.Beer;
@@ -53,6 +54,7 @@ class EatUpTest {
 
 	@Test
 	void anObjectThatWasNeverInTheSearch_canBeRemoved_withoutHarm() {
+		DatabaseAssumptions.assumeDatabaseIsAvailable();	// the search's nodes reach the database via ObjectMaster
 		ObjectByPositionSearch search = new ObjectByPositionSearch(1);
 		assertThatCode(() -> search.remove(new Bread())).doesNotThrowAnyException();
 	}
