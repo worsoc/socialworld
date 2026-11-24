@@ -769,15 +769,41 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 		this.state.releaseConnectionTo(held, this.guard);
 	}
 
-	final public boolean isInside() {
+	/**
+	 * @return true if this object lies inside a container; false as well for a token that may not ask (P5:
+	 *         only the cluster inventory)
+	 */
+	public final boolean isInside(IAccessToken token) {
+		return mayReadConnections(token, false) && isInside();
+	}
+
+	/** Package-private since 2026-11-24 (P5): from outside only with a token. */
+	final boolean isInside() {
 		return this.state != null && this.state.isInside();
 	}
 
 	/**
-	 * @return what lies inside this object (empty for anything that is no container)
+	 * @return what lies inside this object (empty for anything that is no container, and for a token that may not
+	 *         ask; P5: the clusters inventory and act)
 	 */
-	final public List<SimulationObject> getContents() {
+	public final List<SimulationObject> getContents(IAccessToken token) {
+		return mayReadConnections(token, true) ? getContents() : new ArrayList<SimulationObject>();
+	}
+
+	/** Package-private since 2026-11-24 (P5): from outside only with a token. */
+	final List<SimulationObject> getContents() {
 		return (this.state != null) ? this.state.getContents() : new ArrayList<SimulationObject>();
+	}
+
+	/**
+	 * Who may read what this object carries, holds or is carried by (P5, 2026-11-24): the cluster inventory
+	 * always, the cluster act (Action Creation Tool) only where it shows something (whether an item is free,
+	 * what is inside a container).
+	 */
+	private static boolean mayReadConnections(IAccessToken token, boolean alsoAct) {
+		if (token == null || !token.isValid()) return false;
+		SimulationCluster cluster = token.getSimulationCluster();
+		return cluster == SimulationCluster.inventory || (alsoAct && cluster == SimulationCluster.act);
 	}
 
 	// only the rail inventory writes the contents of containers (protection concept S2, 2026-11-24)
@@ -794,14 +820,29 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 		this.state.releaseConnectionTo(carried, this.guard);
 	}
 
-	final public boolean isCarried() {
+	/**
+	 * @return true if this object is carried (or lies inside a container); false as well for a token that may not
+	 *         ask (P5: the clusters inventory and act)
+	 */
+	public final boolean isCarried(IAccessToken token) {
+		return mayReadConnections(token, true) && isCarried();
+	}
+
+	/** Package-private since 2026-11-24 (P5): from outside only with a token. */
+	final boolean isCarried() {
 		return this.state != null && this.state.getCarrier().isSimulationObject();
 	}
 
 	/**
-	 * @return the object that carries this one, NoSimulationObject if none does
+	 * @return the object that carries this one (or the container it lies in), NoSimulationObject if none does and
+	 *         for a token that may not ask (P5: only the cluster inventory)
 	 */
-	final public SimulationObject getCarrier() {
+	public final SimulationObject getCarrier(IAccessToken token) {
+		return mayReadConnections(token, false) ? getCarrier() : NoSimulationObject.getObjectNothing();
+	}
+
+	/** Package-private since 2026-11-24 (P5): from outside only with a token. */
+	final SimulationObject getCarrier() {
 		return (this.state != null) ? this.state.getCarrier() : NoSimulationObject.getObjectNothing();
 	}
 

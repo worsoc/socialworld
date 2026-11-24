@@ -2,7 +2,7 @@
 
 Part of the [test overview](TESTS.md): the running simulation core: start, attributes, core, actions, objects.
 
-**28 test classes, 137 tests.**
+**29 test classes, 141 tests.**
 
 ## Overview
 
@@ -29,6 +29,7 @@ Part of the [test overview](TESTS.md): the running simulation core: start, attri
 | Objects | `ToolsAndWeaponsCatalogTest` | 5 | the 29 tools and 7 weapons: created without database, lexeme value in its level, weapon properties, abilities | – |
 | Objects | `FoodAndDrinksCatalogTest` | 5 | the 11 kinds of food and 2 new drinks: created without database, eatable or drinkable, lexeme value, food values, perishable, abilities | – |
 | Objects | `ContainerAccessTest` | 2 | only a valid token of the cluster inventory may put into or take out of a container | – |
+| Objects | `ReadConnectionsTest` | 4 | isCarried, getCarrier, isInside and getContents only with a token: inventory all four, act two, others the neutral answer | – |
 | Objects | `OwnActionHandlerTest` | 2 | only the own action handler may end the meal (eatUp) or stop the active move, as in doAction | – |
 | Objects | `LeaveSimulationTest` | 4 | an object leaving the simulation lets go of everything and everything lets go of it: container, content, carrier's place; only with the right to remove | – |
 | Objects | `ItemSideTest` | 4 | the side of an item lies in its state, written only through HiddenItem and WriteAccessToItem with the grant side (or all) | – |
@@ -434,6 +435,22 @@ Only the rail inventory writes the contents of a container (protection concept S
 | `takeOut_withoutATokenOfTheClusterInventory_isRefused` | no token, attributeArray and an invalid inventory token: nothing comes out |
 
 - **Not checked:** putting in and taking out with the valid token (it needs objects with state and connections, see `ContainerContentTest` for what fits).
+- **Needs:** no database.
+
+### `ReadConnectionsTest`
+
+`src/test/java/org/socialworld/objects/ReadConnectionsTest.java`
+
+P5 (2026-11-24): what an object carries, holds or is carried by is read only with a token: `isCarried(token)`, `getCarrier(token)`, `isInside(token)`, `getContents(token)` on `SimulationObject`. The cluster `inventory` gets all four answers, the cluster `act` (Action Creation Tool) only `isCarried` and `getContents`; any other token, an invalid one or none gets false, NoSimulationObject or an empty list. The versions without token are package-private for `SimulationObject` itself. A sack and a bread get a state through their write access, the bread is put inside.
+
+| Test | Checks |
+|---|---|
+| `theClusterInventory_getsAllFourAnswers` | the bread is carried, its carrier is the sack, it is inside, the sack contains it |
+| `theClusterAct_seesWhetherItIsFree_andWhatIsInside_notMore` | act gets isCarried and getContents; getCarrier and isInside give the neutral answer |
+| `anotherCluster_anInvalidToken_orNone_getTheNeutralAnswer` | position, an invalid inventory token and null: false, nothing, empty |
+| `theListOfContents_isACopy` | clearing the returned list changes nothing in the sack |
+
+- **Not checked:** the callers with their real tokens (InventoryCalculator, ACT); a wrong token would show as wrong behaviour in a run (e.g. `take` taking a carried item).
 - **Needs:** no database.
 
 ### `OwnActionHandlerTest`

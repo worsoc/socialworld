@@ -372,14 +372,14 @@ public abstract class StateSimulationObject extends ListenedBase implements IObj
 	/**
 	 * @return true if this object lies inside a container (connection inside)
 	 */
-	public final boolean isInside() {
+	final boolean isInside() {
 		return this.connections != null && this.connections.getConnectionToMaster(ConnectionType.inside) != null;
 	}
 
 	/**
 	 * @return what lies inside this object (connection inside), e.g. the coins in a purse
 	 */
-	public final List<SimulationObject> getContents() {
+	final List<SimulationObject> getContents() {
 		if (this.connections == null) return new ArrayList<SimulationObject>();
 		return this.connections.getSlaves(ConnectionType.inside);
 	}
@@ -395,7 +395,7 @@ public abstract class StateSimulationObject extends ListenedBase implements IObj
 	/**
 	 * @return the objects this one carries (connection carried)
 	 */
-	public final List<SimulationObject> getCarriedObjects() {
+	final List<SimulationObject> getCarriedObjects() {
 		if (this.connections == null) return new ArrayList<SimulationObject>();
 		List<SimulationObject> result = this.connections.getSlaves(ConnectionType.carried);
 		result.addAll(this.connections.getSlaves(ConnectionType.inside));

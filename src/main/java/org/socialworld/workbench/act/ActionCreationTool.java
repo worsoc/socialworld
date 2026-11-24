@@ -390,7 +390,7 @@ public final class ActionCreationTool {
 			Map<Integer, Point> freeItems = new HashMap<Integer, Point>();
 			Map<Integer, String> names = new HashMap<Integer, String>();
 			Simulation.getInstance().getObjectMaster().getItems().forEach((int id, Item item) -> {
-				if (item == null || item.isCarried()) return;
+				if (item == null || item.isCarried(token)) return;
 				Position position = item.getPosition(token);
 				if (position.checkIsObjectNothing()) return;
 				freeItems.put(id, new Point(position.getX(token), position.getY(token)));
@@ -407,7 +407,7 @@ public final class ActionCreationTool {
 				if (!object.isSimulationObject()) continue;
 				String entry = place + " " + describe(object);
 				List<String> inside = new ArrayList<String>();
-				for (SimulationObject content : object.getContents()) inside.add(describe(content));
+				for (SimulationObject content : object.getContents(token)) inside.add(describe(content));
 				if (!inside.isEmpty()) entry += " mit " + inside;
 				taken.add(entry);
 			}

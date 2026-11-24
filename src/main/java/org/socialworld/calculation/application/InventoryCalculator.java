@@ -115,7 +115,7 @@ public final class InventoryCalculator implements IObjectReceiver {
 		SimulationObject item = readItem(event);
 		if (!item.isSimulationObject()) return noChange("take: no item", holder);
 		if (item == holder) return noChange("take: itself", holder);
-		if (item.isCarried()) return noChange("take: item " + item.getObjectID() + " is carried by " + item.getCarrier().getObjectID(), holder);
+		if (item.isCarried(token)) return noChange("take: item " + item.getObjectID() + " is carried by " + item.getCarrier(token).getObjectID(), holder);
 
 		Position holderPosition = holder.getPosition(token);
 		Position itemPosition = item.getPosition(token);
@@ -210,7 +210,7 @@ public final class InventoryCalculator implements IObjectReceiver {
 		}
 
 		SimulationObject container = state.getInventoryItem(target);
-		if (!ContainerContent.canHold(container, container.getContents(), item)) {
+		if (!ContainerContent.canHold(container, container.getContents(token), item)) {
 			return noChange("set: " + item.getObjectID() + " fits neither on " + target + " nor into what is there", holder);
 		}
 		hiddenWriteAccess.removeFromInventory(from);
@@ -235,8 +235,8 @@ public final class InventoryCalculator implements IObjectReceiver {
 		if (item.isSimulationObject()) {
 			placeOfItem = placeOf(state, item);
 			if (placeOfItem == InventoryPlace.noWhere) {
-				container = item.getCarrier();
-				if (!item.isInside() || placeOf(state, container) == InventoryPlace.noWhere) {
+				container = item.getCarrier(token);
+				if (!item.isInside(token) || placeOf(state, container) == InventoryPlace.noWhere) {
 					return noChange("get: item " + item.getObjectID() + " is neither on a place nor in a container of the holder", holder);
 				}
 			}

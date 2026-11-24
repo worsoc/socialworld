@@ -56,11 +56,11 @@ class LeaveSimulationTest {
 		Sack sack = withState(new Sack());
 		Bread bread = withState(new Bread());
 		assertThat(sack.putInside(INVENTORY, bread)).isTrue();
-		assertThat(sack.getContents()).containsExactly(bread);
+		assertThat(sack.getContents(INVENTORY)).containsExactly(bread);
 
 		assertThat(bread.leaveSimulation(INVENTORY)).isTrue();
-		assertThat(sack.getContents()).isEmpty();
-		assertThat(bread.isInside()).isFalse();
+		assertThat(sack.getContents(INVENTORY)).isEmpty();
+		assertThat(bread.isInside(INVENTORY)).isFalse();
 	}
 
 	@Test
@@ -70,9 +70,9 @@ class LeaveSimulationTest {
 		sack.putInside(INVENTORY, bread);
 
 		assertThat(sack.leaveSimulation(INVENTORY)).isTrue();
-		assertThat(bread.isInside()).isFalse();
-		assertThat(bread.getCarrier().isSimulationObject()).isFalse();
-		assertThat(sack.getContents()).isEmpty();
+		assertThat(bread.isInside(INVENTORY)).isFalse();
+		assertThat(bread.getCarrier(INVENTORY).isSimulationObject()).isFalse();
+		assertThat(sack.getContents(INVENTORY)).isEmpty();
 	}
 
 	@Test
@@ -83,10 +83,10 @@ class LeaveSimulationTest {
 		hidden.setInventory(new Inventory(SimulationObject_Type.human));
 		Knife knife = withState(new Knife());
 		assertThat(hidden.putToInventory(InventoryPlace.rightHand, knife)).isTrue();
-		assertThat(knife.getCarrier()).isSameAs(human);
+		assertThat(knife.getCarrier(INVENTORY)).isSameAs(human);
 
 		assertThat(knife.leaveSimulation(INVENTORY)).isTrue();
-		assertThat(knife.isCarried()).isFalse();
+		assertThat(knife.isCarried(INVENTORY)).isFalse();
 		assertThat(hidden.putToInventory(InventoryPlace.rightHand, withState(new Knife()))).isTrue();
 	}
 
@@ -99,6 +99,6 @@ class LeaveSimulationTest {
 		assertThat(bread.leaveSimulation(null)).isFalse();
 		assertThat(bread.leaveSimulation(token(true, SimulationCluster.position))).isFalse();
 		assertThat(bread.leaveSimulation(token(false, SimulationCluster.inventory))).isFalse();
-		assertThat(sack.getContents()).containsExactly(bread);
+		assertThat(sack.getContents(INVENTORY)).containsExactly(bread);
 	}
 }
