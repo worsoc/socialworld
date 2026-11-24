@@ -89,6 +89,14 @@ public class ConnectionList {
 		master.addConnection(newConnection, listOwner);
 	}
 	
+	/** Releases every connection of the owner of the list, on both sides (O1: the owner leaves the simulation). */
+	public void releaseAll() {
+		for (Connection con : connections) {
+			SimulationObject other = (con.getObject1() == this.listOwner) ? con.getObject2() : con.getObject1();
+			releaseConnection(other);
+		}
+	}
+
 	public void releaseConnection(SimulationObject object) {
 		// the iterator of the CopyOnWriteArrayList cannot remove, so remove the found connection directly
 		for (Connection con : connections) {

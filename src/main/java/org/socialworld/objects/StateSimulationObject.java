@@ -339,6 +339,13 @@ public abstract class StateSimulationObject extends ListenedBase implements IObj
 		}
 	}
 
+	/** Releases every connection of the object on both sides (O1: the object leaves the simulation). */
+	final void releaseAllConnections(WriteAccessToSimulationObject guard) {
+		if (checkGuard(guard)) {
+			this.connections.releaseAll();
+		}
+	}
+
 	/** Releases the connection to the object on both sides. */
 	final void releaseConnectionTo(SimulationObject object, WriteAccessToSimulationObject guard) {
 		if (checkGuard(guard)) {

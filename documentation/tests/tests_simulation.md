@@ -2,7 +2,7 @@
 
 Part of the [test overview](TESTS.md): the running simulation core: start, attributes, core, actions, objects.
 
-**26 test classes, 131 tests.**
+**27 test classes, 135 tests.**
 
 ## Overview
 
@@ -29,6 +29,7 @@ Part of the [test overview](TESTS.md): the running simulation core: start, attri
 | Objects | `ToolsAndWeaponsCatalogTest` | 5 | the 29 tools and 7 weapons: created without database, lexeme value in its level, weapon properties, abilities | – |
 | Objects | `FoodAndDrinksCatalogTest` | 5 | the 11 kinds of food and 2 new drinks: created without database, eatable or drinkable, lexeme value, food values, perishable, abilities | – |
 | Objects | `ContainerAccessTest` | 2 | only a valid token of the cluster inventory may put into or take out of a container | – |
+| Objects | `LeaveSimulationTest` | 4 | an object leaving the simulation lets go of everything and everything lets go of it: container, content, carrier's place; only with the right to remove | – |
 | Objects | `ItemSideTest` | 4 | the side of an item lies in its state, written only through HiddenItem and WriteAccessToItem with the grant side (or all) | – |
 | Objects | `NatureCatalogTest` | 5 | the 7 things of nature (parts of plants and animals, solids): created without database, lexeme value in its own base group, abilities | – |
 | Objects | `LiquidStatesTest` | 1 | a liquid gets the three states of every item (before NoState, so no liquid could be created) | no database |
@@ -432,6 +433,22 @@ Only the rail inventory writes the contents of a container (protection concept S
 | `takeOut_withoutATokenOfTheClusterInventory_isRefused` | no token, attributeArray and an invalid inventory token: nothing comes out |
 
 - **Not checked:** putting in and taking out with the valid token (it needs objects with state and connections, see `ContainerContentTest` for what fits).
+- **Needs:** no database.
+
+### `LeaveSimulationTest`
+
+`src/test/java/org/socialworld/objects/LeaveSimulationTest.java`
+
+O1 (2026-11-24): `SimulationObject.leaveSimulation(token)`, called by `ObjectMaster.removeSimulationObject` before the object leaves the lists. The carrier or container lets go of the object (`letGoOf`, with its own guard; an animal frees the inventory places it lies on), and the object releases all its own connections; what it carries or holds stays where it is. Only with the right to remove (for now a valid token of the cluster inventory). The objects get a state through their write access, without the database.
+
+| Test | Checks |
+|---|---|
+| `theContentLeaves_theContainerForgetsIt` | bread inside a sack leaves: the sack has no contents, the bread is not inside |
+| `theContainerLeaves_theContentStaysAndIsFree` | the sack leaves: the bread is no longer inside and has no carrier |
+| `aCarriedItemLeaves_thePlaceOfTheCarrierIsFree` | a knife in the right hand of a human leaves: it is not carried, the right hand takes another knife |
+| `withoutTheRightToRemove_nothingChanges` | no token, position, an invalid inventory token: refused, the bread stays in the sack |
+
+- **Not checked:** the ObjectMaster part (lists, position search), it needs the running simulation; the carrier's list of carried objects directly (not readable from outside, the free place shows it).
 - **Needs:** no database.
 
 ### `ItemSideTest`

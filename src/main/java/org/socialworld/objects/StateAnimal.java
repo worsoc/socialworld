@@ -215,6 +215,18 @@ public class StateAnimal extends StateSimulationObject {
 	 * Sets one attribute from outside (SimulationObject.setAttributeFromOutside), without an event,
 	 * and shows the change like a calculated one.
 	 */
+	/**
+	 * Frees every place on which the item lies (O1, 2026-11-24): the item leaves the simulation. Called by the own
+	 * object (SimulationObject.letGoOf) with its guard; the place mirrors the connection carried, which is released
+	 * by the caller.
+	 */
+	final void freeInventoryPlacesOf(SimulationObject item, WriteAccessToSimulationObject guard) {
+		if (!checkGuard(guard) || this.inventory == null || item == null || !item.isSimulationObject()) return;
+		for (InventoryPlace place : InventoryPlace.values()) {
+			if (this.inventory.get(place) == item) this.inventory.remove(place);
+		}
+	}
+
 	final void setAttributeFromOutside(Attribute attribute, int value) {
 		this.attributes.set(attribute, value);
 		SocialWorld.showAttributeChanges(getObject().getObjectID(), this.attributes);

@@ -413,6 +413,8 @@ public class ObjectMaster {
 		if (!mayRemove(token)) return false;
 		if (object == null || !object.isSimulationObject()) return false;
 		if (this.simulationObjects.get(object.getObjectID()) != object) return false;
+		// first everything lets go of the object and it lets go of everything (O1), then it leaves the lists
+		if (!object.leaveSimulation(token)) return false;
 		Simulation.getInstance().removeFromPositionSearch(object);
 		removeFromLists(object);
 		return true;

@@ -733,6 +733,33 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 		return true;
 	}
 
+	/**
+	 * The object leaves the simulation (O1, 2026-11-24): its carrier or container lets go of it (and frees the
+	 * inventory place), and it lets go of everything it carries or holds; those stay where they are. Only with the
+	 * right to remove objects, for now a valid token of the cluster inventory (as ObjectMaster.mayRemove; the
+	 * ObjectMaster calls it before it takes the object out of its lists).
+	 *
+	 * @return false without the right to remove
+	 */
+	public final boolean leaveSimulation(IAccessToken token) {
+		if (!isInventoryToken(token)) return false;
+		if (this.state == null) return true;
+		SimulationObject carrier = this.state.getCarrier();
+		if (carrier.isSimulationObject()) carrier.letGoOf(this);
+		this.state.releaseAllConnections(this.guard);
+		return true;
+	}
+
+	/**
+	 * This object (carrier or container) lets go of the held one, which leaves the simulation: the inventory places
+	 * it lies on become free, then the connection is released. Package-private: only leaveSimulation calls it.
+	 */
+	final void letGoOf(SimulationObject held) {
+		if (held == null || held.getCarrier() != this) return;
+		if (this.state instanceof StateAnimal) ((StateAnimal) this.state).freeInventoryPlacesOf(held, this.guard);
+		this.state.releaseConnectionTo(held, this.guard);
+	}
+
 	final public boolean isInside() {
 		return this.state != null && this.state.isInside();
 	}
