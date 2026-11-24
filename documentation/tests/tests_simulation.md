@@ -2,7 +2,7 @@
 
 Part of the [test overview](TESTS.md): the running simulation core: start, attributes, core, actions, objects.
 
-**29 test classes, 141 tests.**
+**29 test classes, 142 tests.**
 
 ## Overview
 
@@ -29,7 +29,7 @@ Part of the [test overview](TESTS.md): the running simulation core: start, attri
 | Objects | `ToolsAndWeaponsCatalogTest` | 5 | the 29 tools and 7 weapons: created without database, lexeme value in its level, weapon properties, abilities | – |
 | Objects | `FoodAndDrinksCatalogTest` | 5 | the 11 kinds of food and 2 new drinks: created without database, eatable or drinkable, lexeme value, food values, perishable, abilities | – |
 | Objects | `ContainerAccessTest` | 2 | only a valid token of the cluster inventory may put into or take out of a container | – |
-| Objects | `ReadConnectionsTest` | 4 | isCarried, getCarrier, isInside and getContents only with a token: inventory all four, act two, others the neutral answer | – |
+| Objects | `ReadConnectionsTest` | 5 | isCarried, getCarrier, isInside and getContents only with a token: inventory all four, act two, visualize getContents, others the neutral answer | – |
 | Objects | `OwnActionHandlerTest` | 2 | only the own action handler may end the meal (eatUp) or stop the active move, as in doAction | – |
 | Objects | `LeaveSimulationTest` | 4 | an object leaving the simulation lets go of everything and everything lets go of it: container, content, carrier's place; only with the right to remove | – |
 | Objects | `ItemSideTest` | 4 | the side of an item lies in its state, written only through HiddenItem and WriteAccessToItem with the grant side (or all) | – |
@@ -447,6 +447,7 @@ P5 (2026-11-24): what an object carries, holds or is carried by is read only wit
 |---|---|
 | `theClusterInventory_getsAllFourAnswers` | the bread is carried, its carrier is the sack, it is inside, the sack contains it |
 | `theClusterAct_seesWhetherItIsFree_andWhatIsInside_notMore` | act gets isCarried and getContents; getCarrier and isInside give the neutral answer |
+| `theClusterVisualize_seesOnlyWhatIsInside` | since the inventory window (2026-11-24) visualize gets getContents; isCarried, getCarrier and isInside give the neutral answer |
 | `anotherCluster_anInvalidToken_orNone_getTheNeutralAnswer` | position, an invalid inventory token and null: false, nothing, empty |
 | `theListOfContents_isACopy` | clearing the returned list changes nothing in the sack |
 

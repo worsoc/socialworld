@@ -774,7 +774,7 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 	 *         only the cluster inventory)
 	 */
 	public final boolean isInside(IAccessToken token) {
-		return mayReadConnections(token, false) && isInside();
+		return mayReadConnections(token) && isInside();
 	}
 
 	/** Package-private since 2026-11-24 (P5): from outside only with a token. */
@@ -784,10 +784,10 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 
 	/**
 	 * @return what lies inside this object (empty for anything that is no container, and for a token that may not
-	 *         ask; P5: the clusters inventory and act)
+	 *         ask; P5: the clusters inventory and act, since the inventory window 2026-11-24 also visualize)
 	 */
 	public final List<SimulationObject> getContents(IAccessToken token) {
-		return mayReadConnections(token, true) ? getContents() : new ArrayList<SimulationObject>();
+		return mayReadConnections(token, SimulationCluster.act, SimulationCluster.visualize) ? getContents() : new ArrayList<SimulationObject>();
 	}
 
 	/** Package-private since 2026-11-24 (P5): from outside only with a token. */
@@ -797,13 +797,19 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 
 	/**
 	 * Who may read what this object carries, holds or is carried by (P5, 2026-11-24): the cluster inventory
-	 * always, the cluster act (Action Creation Tool) only where it shows something (whether an item is free,
-	 * what is inside a container).
+	 * always, the displays only where they show something: act (Action Creation Tool) whether an item is free and
+	 * what is inside a container, visualize (inventory window) what is inside a container.
+	 *
+	 * @param alsoAllowed the clusters that may ask besides the cluster inventory
 	 */
-	private static boolean mayReadConnections(IAccessToken token, boolean alsoAct) {
+	private static boolean mayReadConnections(IAccessToken token, SimulationCluster... alsoAllowed) {
 		if (token == null || !token.isValid()) return false;
 		SimulationCluster cluster = token.getSimulationCluster();
-		return cluster == SimulationCluster.inventory || (alsoAct && cluster == SimulationCluster.act);
+		if (cluster == SimulationCluster.inventory) return true;
+		for (SimulationCluster allowed : alsoAllowed) {
+			if (cluster == allowed) return true;
+		}
+		return false;
 	}
 
 	// only the rail inventory writes the contents of containers (protection concept S2, 2026-11-24)
@@ -825,7 +831,7 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 	 *         ask (P5: the clusters inventory and act)
 	 */
 	public final boolean isCarried(IAccessToken token) {
-		return mayReadConnections(token, true) && isCarried();
+		return mayReadConnections(token, SimulationCluster.act) && isCarried();
 	}
 
 	/** Package-private since 2026-11-24 (P5): from outside only with a token. */
@@ -838,7 +844,7 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 	 *         for a token that may not ask (P5: only the cluster inventory)
 	 */
 	public final SimulationObject getCarrier(IAccessToken token) {
-		return mayReadConnections(token, false) ? getCarrier() : NoSimulationObject.getObjectNothing();
+		return mayReadConnections(token) ? getCarrier() : NoSimulationObject.getObjectNothing();
 	}
 
 	/** Package-private since 2026-11-24 (P5): from outside only with a token. */

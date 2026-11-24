@@ -2,7 +2,7 @@
 
 Part of the [test overview](TESTS.md): the dashboard and the Action Creation Tool: what shows or nudges the running simulation.
 
-**16 test classes, 202 tests.**
+**18 test classes, 210 tests.**
 
 ## Overview
 
@@ -16,6 +16,8 @@ Part of the [test overview](TESTS.md): the dashboard and the Action Creation Too
 | Display | `AutomaticSelectionTest` | 13 | the detail column follows the largest change | – |
 | Display | `PictureSequenceTest` | 9 | figures and timing of the picture sequence in the action grid | – |
 | Display | `TypeOverviewTest` | 5 | overview of the types: which human has which type, number of humans per type | – |
+| Display | `InventoryViewTest` | 5 | the data of the inventory window: slot texts, counts, contents of containers, dress, reading with the token of the display | – |
+| Display | `InventorySlotLayoutTest` | 3 | the slots of the inventory window: one per place inside the panel, no overlap, own labels, figure looks at the viewer | – |
 | ACT | `ActionRequestTest` | 9 | values and checks of an action request, duration included | – |
 | ACT | `ActionSenderTest` | 6 | properties of the action given into the pipeline, invalid requests are not given, no stop for an invalid causer | – |
 | ACT | `EventRangeTest` | 14 | say modes, their ranges and the humans within the range | – |
@@ -136,6 +138,37 @@ The extra window behind the button "Typen" of the dashboard (since 2026-11-18): 
 | `button_namesTheOtherView` | the button says "Anzahl pro Typ" in the list of humans and "Menschen einzeln" in the counts |
 | `withoutHumans_bothListsAreEmpty` | without humans both lists are empty, the empty table has no number column |
 | `tables_keepNumbersAsNumbers_soThatSortingIsNumeric` | column heads; numbers stay `Integer` (sorting by a column puts 2 before 10), names stay `String`; nothing can be edited |
+
+### `InventoryViewTest`
+
+`src/test/java/org/socialworld/visualize/InventoryViewTest.java`
+
+The data of the inventory window behind the button "Inventar" of the dashboard (2026-11-24): per place of the selected human the item as "ID class name" and, for a container, what lies inside (nested containers indented). It is read with the token of the display (cluster visualize), which since the inventory window may read the places (`Animal.getInventoryItem`) and the contents of containers (`getContents`).
+
+| Test | Checks |
+|---|---|
+| `withoutHuman_aMessage_andNothingOccupied` | no human selected and a human that does not exist give their message, nothing is occupied |
+| `aContainer_showsTheNumberOfItsContents_atTheFirstLevel` | a purse with coins and a sack (with bread) says "(2)"; counts, summary "2 von 23 Plätzen belegt, 3 Items in Behältern", title, the list of contents |
+| `aDress_coversUpperBodyAndLegs_whenTheyAreEmpty` | with a dress the empty upper body and legs count as covered, the head does not |
+| `read_withTheTokenOfTheDisplay_seesThePlacesAndTheContents` | a human with state: knife in the right hand, purse with coins at the belt, bread in the mouth; read with the visualize token sees the three places and the coins |
+| `read_withAnotherToken_seesNothing` | with a token of the cluster position nothing is occupied |
+
+- **Not checked:** the window and the painting (Swing); following the selection in the running dashboard.
+- **Needs:** no database, no screen.
+
+### `InventorySlotLayoutTest`
+
+`src/test/java/org/socialworld/visualize/InventorySlotLayoutTest.java`
+
+Where the 23 slots of the inventory window lie, as fractions of the panel: three columns (right side of the human, body, left side), the figure looks at the viewer (I2).
+
+| Test | Checks |
+|---|---|
+| `everyPlace_hasASlotInsideThePanel_andALabelOfItsOwn` | every place except noWhere has a slot within 0..1 and a label no other place has |
+| `noTwoSlots_overlap` | no two slots intersect |
+| `theFigureLooksAtTheViewer_theRightHandIsLeftInThePicture` | right hand, right shoe and the anchor of the right hand lie left of their left counterparts |
+
+- **Needs:** no database, no screen.
 
 ---
 

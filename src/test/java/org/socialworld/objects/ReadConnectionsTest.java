@@ -27,7 +27,8 @@ import org.socialworld.objects.concrete.eatable.bakery.Bread;
 
 /**
  * What an object carries, holds or is carried by is read only with a token (P5, 2026-11-24): the cluster inventory
- * for all four questions, the cluster act (Action Creation Tool) for isCarried and getContents. Any other token,
+ * for all four questions, the cluster act (Action Creation Tool) for isCarried and getContents, the cluster visualize
+ * (inventory window, 2026-11-24) for getContents. Any other token,
  * an invalid one or none gets the neutral answer: false, nothing, an empty list.
  */
 class ReadConnectionsTest {
@@ -41,6 +42,7 @@ class ReadConnectionsTest {
 
 	private static final IAccessToken INVENTORY = token(true, SimulationCluster.inventory);
 	private static final IAccessToken ACT = token(true, SimulationCluster.act);
+	private static final IAccessToken VISUALIZE = token(true, SimulationCluster.visualize);
 	private static final IAccessToken POSITION = token(true, SimulationCluster.position);
 	private static final IAccessToken INVALID = token(false, SimulationCluster.inventory);
 
@@ -67,6 +69,14 @@ class ReadConnectionsTest {
 		assertThat(sack.getContents(ACT)).containsExactly(bread);
 		assertThat(bread.getCarrier(ACT).isSimulationObject()).isFalse();
 		assertThat(bread.isInside(ACT)).isFalse();
+	}
+
+	@Test
+	void theClusterVisualize_seesOnlyWhatIsInside() {
+		assertThat(sack.getContents(VISUALIZE)).containsExactly(bread);
+		assertThat(bread.isCarried(VISUALIZE)).isFalse();
+		assertThat(bread.getCarrier(VISUALIZE).isSimulationObject()).isFalse();
+		assertThat(bread.isInside(VISUALIZE)).isFalse();
 	}
 
 	@Test

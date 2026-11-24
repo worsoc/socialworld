@@ -235,11 +235,12 @@ public abstract class Animal extends SimulationObject implements ISeer, IRunning
 	}
 
 	/**
-	 * The object on a place of the inventory. Only the Action Creation Tool may ask (inventory concept V4),
-	 * for any other caller the answer is NoSimulationObject.
+	 * The object on a place of the inventory. Only the Action Creation Tool (inventory concept V4) and the display
+	 * (cluster visualize, inventory window 2026-11-24) may ask, for any other caller the answer is NoSimulationObject.
 	 */
 	final public SimulationObject getInventoryItem(IAccessToken token, InventoryPlace place) {
-		if (token.isValid() && token.getSimulationCluster() == SimulationCluster.act) {
+		if (token != null && token.isValid()
+				&& (token.getSimulationCluster() == SimulationCluster.act || token.getSimulationCluster() == SimulationCluster.visualize)) {
 			return this.state.getInventoryItem(place);
 		}
 		return NoSimulationObject.getObjectNothing();
