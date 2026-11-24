@@ -20,6 +20,7 @@ package org.socialworld.objects;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
+import org.socialworld.datasource.mariaDB.DatabaseAssumptions;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenItem;
 import org.socialworld.objects.concrete.clothes.gloves.LeatherGlove;
@@ -53,6 +54,7 @@ class ItemSideTest {
 
 	@Test
 	void theGrantAll_mayWriteTheSide_asTheCreatorGivesIt() {
+		DatabaseAssumptions.assumeDatabaseIsAvailable();	// a state reads its CacheTableState... from the database
 		LeatherShoe shoe = new LeatherShoe();
 		HiddenItem hidden = new WriteAccessToItem(shoe, new StateItem())
 				.getMeHidden(new GrantedAccessToProperty[] {GrantedAccessToProperty.all});
@@ -62,6 +64,7 @@ class ItemSideTest {
 
 	@Test
 	void withoutTheGrantSide_theSideStays() {
+		DatabaseAssumptions.assumeDatabaseIsAvailable();	// a state reads its CacheTableState... from the database
 		LeatherShoe shoe = new LeatherShoe();
 		HiddenItem hidden = new WriteAccessToItem(shoe, new StateItem())
 				.getMeHidden(new GrantedAccessToProperty[] {GrantedAccessToProperty.position, GrantedAccessToProperty.inventory});

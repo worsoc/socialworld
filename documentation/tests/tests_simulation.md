@@ -2,7 +2,7 @@
 
 Part of the [test overview](TESTS.md): the running simulation core: start, attributes, core, actions, objects.
 
-**29 test classes, 142 tests.**
+**30 test classes, 145 tests.**
 
 ## Overview
 
@@ -19,22 +19,23 @@ Part of the [test overview](TESTS.md): the running simulation core: start, attri
 | Core | `ObjectMasterRemoveTest` | 3 | only a valid token of the cluster inventory may take objects out of the simulation | – |
 | Core | `ObjectMasterIdRangeTest` | 11 | every type keeps to its band of 10000 IDs; beyond it the simulation stops; the perception jumps from band to band; the highest given ID counts only types with objects | – |
 | Actions | `InventoryMouthTest` | 1 | the inventory gives the item in the mouth as property (eating, drinking) | – |
-| Actions | `InventoryPlacesTest` | 13 | the places of the inventory: empty places give NoSimulationObject, what fits where (IWearable, mouth, ICarryable with its size), dress and overgarment places, old setters; `holds` | – |
-| Actions | `StartEquipmentTest` | 8 | where a piece of the start equipment goes: worn places (the side as parameter for a prototype), more clothes first, first food into the mouth, small to the belt, medium and large to hands and back, liquids, coins and food into their containers | – |
+| Actions | `InventoryPlacesTest` | 13 | the places of the inventory: empty places give NoSimulationObject, what fits where (IWearable, mouth, ICarryable with its size), dress and overgarment places, old setters; `holds` | no database (the test with sides) |
+| Actions | `StartEquipmentTest` | 8 | where a piece of the start equipment goes: worn places (the side as parameter for a prototype), more clothes first, first food into the mouth, small to the belt, medium and large to hands and back, liquids, coins and food into their containers | no database (the tests with sides) |
 | Actions | `ContainerContentTest` | 4 | what fits into a container: one liquid in an empty container for liquids, space by carry size within the capacity, no things with a liquid | – |
 | Actions | `WeaponInHandTest` | 2 | a blow with the weapon in the hand: a club blow takes the right hand, else the left; F1 (a real weapon is not nothing) | – |
 | Actions | `ActionMoveVelocityTest` | 8 | velocity of a move action: start velocity per mode and intensity, then from event to event (uniform, accelerated, braking) | – |
 | Objects | `SimObjectsCompletelyImplemented` | 3 | lexeme mappings of the object enums | – |
-| Objects | `ClothesCatalogTest` | 5 | the 26 concrete clothes: created without database, one place each, lexeme value, side from the state, abilities | – |
+| Objects | `ClothesCatalogTest` | 5 | the 26 concrete clothes: created without database, one place each, lexeme value, side from the state, abilities | no database (the tests with states) |
 | Objects | `ToolsAndWeaponsCatalogTest` | 5 | the 29 tools and 7 weapons: created without database, lexeme value in its level, weapon properties, abilities | – |
 | Objects | `FoodAndDrinksCatalogTest` | 5 | the 11 kinds of food and 2 new drinks: created without database, eatable or drinkable, lexeme value, food values, perishable, abilities | – |
 | Objects | `ContainerAccessTest` | 2 | only a valid token of the cluster inventory may put into or take out of a container | – |
-| Objects | `ReadConnectionsTest` | 5 | isCarried, getCarrier, isInside and getContents only with a token: inventory all four, act two, visualize getContents, others the neutral answer | – |
-| Objects | `OwnActionHandlerTest` | 2 | only the own action handler may end the meal (eatUp) or stop the active move, as in doAction | – |
-| Objects | `LeaveSimulationTest` | 4 | an object leaving the simulation lets go of everything and everything lets go of it: container, content, carrier's place; only with the right to remove | – |
-| Objects | `ItemSideTest` | 4 | the side of an item lies in its state, written only through HiddenItem and WriteAccessToItem with the grant side (or all) | – |
+| Objects | `ReadConnectionsTest` | 5 | isCarried, getCarrier, isInside and getContents only with a token: inventory all four, act two, visualize getContents, others the neutral answer | no database |
+| Objects | `OwnActionHandlerTest` | 2 | only the own action handler may end the meal (eatUp) or stop the active move, as in doAction | no database (eatUp test) |
+| Objects | `LeaveSimulationTest` | 4 | an object leaving the simulation lets go of everything and everything lets go of it: container, content, carrier's place; only with the right to remove | no database |
+| Objects | `ItemSideTest` | 4 | the side of an item lies in its state, written only through HiddenItem and WriteAccessToItem with the grant side (or all) | no database (tests with states) |
 | Objects | `NatureCatalogTest` | 5 | the 7 things of nature (parts of plants and animals, solids): created without database, lexeme value in its own base group, abilities | – |
 | Objects | `LiquidStatesTest` | 1 | a liquid gets the three states of every item (before NoState, so no liquid could be created) | no database |
+| Objects | `AllItemsInitStateTest` | 3 | every concrete item (found in the package) gets its states, food the eatable too, and can be created with its state | no database (the last two) |
 | Objects | `CarriedConnectionTest` | 3 | the connection carried: offset (0 by default, a copy), carrier and carried find each other in their lists | – |
 | Objects | `ContainersAndGoodsCatalogTest` | 5 | the 10 containers and 12 valuables, devotional, writing and pastime goods: created without database, lexeme value, capacity, jewellery and bag, abilities | – |
 
@@ -243,7 +244,7 @@ The inventory keeps one object per place since 2026-11-23 (inventory concept V1)
 - **Assumes:** the carry sizes of the item hierarchy (small by default: food, valuables, devotional and writing goods, parts of nature; medium: human crafted; large: weapons; exceptions in the classes).
 - **Carrying (protection concept S2, 2026-11-24):** since then the state of the holder carries what lies on its places (`StateAnimal.putToInventory` and `removeFromInventory`, under the guard of the write access with the grant `inventory`); the Inventory only keeps the places. The old setters (`setCap` and so on) only set the place and carry nothing either.
 - **Not checked:** `copyForProperty` (it needs a property protection from the running simulation); who puts items on the places (start equipment V3, InventoryCalculator V4); carrying by the state (it needs a holder with state and write access).
-- **Needs:** no database.
+- **Needs:** the database for the tests that create objects with a state (a state reads its `CacheTableState…` when it is created); without it they skip themselves (`DatabaseAssumptions.assumeDatabaseIsAvailable`, 2026-11-24).
 
 ### `StartEquipmentTest`
 
@@ -262,7 +263,7 @@ Where a piece of the start equipment goes (inventory concept V3, 2026-11-23): cl
 | `decide_liquidIntoItsContainer_coinsIntoThePurse_foodNotIntoThePurse` | `decide` (V5): beer into the jug, coins into the purse, a turnip into the basket (not into the jug or the purse) |
 | `decide_withoutContainers_asBefore` | the first cake into the mouth; with only a purse the second cake goes to the belt; beer without a container finds nothing |
 
-- **Needs:** no database.
+- **Needs:** the database for the tests that create objects with a state (a state reads its `CacheTableState…` when it is created); without it they skip themselves (`DatabaseAssumptions.assumeDatabaseIsAvailable`, 2026-11-24).
 
 ### `ContainerContentTest`
 
@@ -346,6 +347,8 @@ The concrete clothes of the item hierarchy (2026-11-23): 7 caps, 4 shirts, 2 tro
 
 - **Assumes:** the catalogue of the item hierarchy concept; the ability values are constants in the classes.
 - **Not checked:** creating clothes in the running simulation (states, position), it needs the database.
+- **Needs:** the database for the tests that create objects with a state (a state reads its `CacheTableState…` when it is created); without it they skip themselves (`DatabaseAssumptions.assumeDatabaseIsAvailable`, 2026-11-24).
+
 
 ### `ToolsAndWeaponsCatalogTest`
 
@@ -389,6 +392,21 @@ The connections of `objects/connections` (from 2023, unused until 2026-11-23) ca
 
 - **Needs:** a reachable database, it only reads: the base constructor calls `init()`, and `StateAppearance.init` loads `CacheTableStateAppearance` from MariaDB. Without a database it is skipped (`DatabaseAssumptions.assumeDatabaseIsAvailable`, 2026-11-24, after it failed on GitHub CI with a NullPointerException).
 
+
+### `AllItemsInitStateTest`
+
+`src/test/java/org/socialworld/objects/concrete/AllItemsInitStateTest.java`
+
+Every concrete item gets its initial states (2026-11-24). Most classes do not override `getInitState`, they take it from their group (`HumanCrafted`, `Food`, `Liquid`, `Solid`, `PlantPart`, `AnimalPart`). `SimulationObject.createAddOnStates` casts what `getInitState` gives, so a class that gave NoState would throw a ClassCastException when it is created. The classes are found in the package `objects.concrete` (in every class directory of it), so a new class is checked without being listed.
+
+| Test | Checks |
+|---|---|
+| `allConcreteItems_areFound_atLeastThe104OfTheHierarchy` | the search finds at least the 104 classes of the item hierarchy (without the test clothes); guards against an empty search that would let the other two pass |
+| `everyConcreteItem_givesTheThreeStates_andFoodTheEatableToo` | StatePerceptible, StateAppearance, StateComposition for every class, StateEatable for food |
+| `everyConcreteItem_canBeCreatedWithItsState` | `new WriteAccessToItem(item, new StateItem())` as in `CreateItem`, without exception |
+
+- **Found 2026-11-24:** `Banana` had its own `getInitState` (TODO stub from 2023) that gave NoState; the override was removed, Banana takes the states of `Food` now.
+- **Needs:** the database for the last two (the states read their `CacheTableState…`); without it they skip themselves.
 ### `ContainersAndGoodsCatalogTest`
 
 `src/test/java/org/socialworld/objects/concrete/containers/ContainersAndGoodsCatalogTest.java`
@@ -452,7 +470,7 @@ P5 (2026-11-24): what an object carries, holds or is carried by is read only wit
 | `theListOfContents_isACopy` | clearing the returned list changes nothing in the sack |
 
 - **Not checked:** the callers with their real tokens (InventoryCalculator, ACT); a wrong token would show as wrong behaviour in a run (e.g. `take` taking a carried item).
-- **Needs:** no database.
+- **Needs:** the database for the tests that create objects with a state (a state reads its `CacheTableState…` when it is created); without it they skip themselves (`DatabaseAssumptions.assumeDatabaseIsAvailable`, 2026-11-24).
 
 ### `OwnActionHandlerTest`
 
@@ -466,7 +484,7 @@ P2 (2026-11-24): `Animal.eatUp(ActionHandler)` and `SimulationObject.stopActiveM
 | `eatUp_withoutTheOwnHandler_leavesTheBreadInTheMouth` | `eatUp(null)` and `eatUp` with a foreign handler: the bread stays in the mouth |
 
 - **Not checked:** `eatUp` and `stopActiveMove` with the own handler (it is private to the object; the ActionHandler calls them in the running simulation).
-- **Needs:** no database.
+- **Needs:** the database for the tests that create objects with a state (a state reads its `CacheTableState…` when it is created); without it they skip themselves (`DatabaseAssumptions.assumeDatabaseIsAvailable`, 2026-11-24).
 
 ### `LeaveSimulationTest`
 
@@ -482,7 +500,7 @@ O1 (2026-11-24): `SimulationObject.leaveSimulation(token)`, called by `ObjectMas
 | `withoutTheRightToRemove_nothingChanges` | no token, position, an invalid inventory token: refused, the bread stays in the sack |
 
 - **Not checked:** the ObjectMaster part (lists, position search), it needs the running simulation; the carrier's list of carried objects directly (not readable from outside, the free place shows it).
-- **Needs:** no database.
+- **Needs:** the database for the tests that create objects with a state (a state reads its `CacheTableState…` when it is created); without it they skip themselves (`DatabaseAssumptions.assumeDatabaseIsAvailable`, 2026-11-24).
 
 ### `ItemSideTest`
 
@@ -498,7 +516,7 @@ The side (none, left, right) of an item lies in `StateItem` (protection concept 
 | `withoutTheGrantSide_theSideStays` | with the grants position and inventory `setSide` gives NO_GRANT_FOR_PROPERTY, the shoe stays without side |
 
 - **Not checked:** setting the side in `Simulation.createCarried` (it needs the database).
-- **Needs:** no database.
+- **Needs:** the database for the tests that create objects with a state (a state reads its `CacheTableState…` when it is created); without it they skip themselves (`DatabaseAssumptions.assumeDatabaseIsAvailable`, 2026-11-24).
 
 ### `NatureCatalogTest`
 

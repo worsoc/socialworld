@@ -16,7 +16,7 @@ Part of the [test overview](TESTS.md): the dashboard and the Action Creation Too
 | Display | `AutomaticSelectionTest` | 13 | the detail column follows the largest change | – |
 | Display | `PictureSequenceTest` | 9 | figures and timing of the picture sequence in the action grid | – |
 | Display | `TypeOverviewTest` | 5 | overview of the types: which human has which type, number of humans per type | – |
-| Display | `InventoryViewTest` | 5 | the data of the inventory window: slot texts, counts, contents of containers, dress, reading with the token of the display | – |
+| Display | `InventoryViewTest` | 5 | the data of the inventory window: slot texts, counts, contents of containers, dress, reading with the token of the display | no database (the 2 read tests) |
 | Display | `InventorySlotLayoutTest` | 3 | the slots of the inventory window: one per place inside the panel, no overlap, own labels, figure looks at the viewer | – |
 | ACT | `ActionRequestTest` | 9 | values and checks of an action request, duration included | – |
 | ACT | `ActionSenderTest` | 6 | properties of the action given into the pipeline, invalid requests are not given, no stop for an invalid causer | – |
@@ -154,7 +154,7 @@ The data of the inventory window behind the button "Inventar" of the dashboard (
 | `read_withAnotherToken_seesNothing` | with a token of the cluster position nothing is occupied |
 
 - **Not checked:** the window and the painting (Swing); following the selection in the running dashboard.
-- **Needs:** no database, no screen.
+- **Needs:** the database for the tests that create objects with a state (a state reads its `CacheTableState…` when it is created); without it they skip themselves (`DatabaseAssumptions.assumeDatabaseIsAvailable`, 2026-11-24). No screen.
 
 ### `InventorySlotLayoutTest`
 

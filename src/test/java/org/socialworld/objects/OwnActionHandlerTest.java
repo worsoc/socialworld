@@ -25,6 +25,7 @@ import org.socialworld.actions.handle.InventoryPlace;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.core.ActionHandler;
 import org.socialworld.core.IAccessToken;
+import org.socialworld.datasource.mariaDB.DatabaseAssumptions;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenHuman;
 import org.socialworld.objects.concrete.eatable.bakery.Bread;
@@ -49,6 +50,7 @@ class OwnActionHandlerTest {
 
 	@Test
 	void eatUp_withoutTheOwnHandler_leavesTheBreadInTheMouth() {
+		DatabaseAssumptions.assumeDatabaseIsAvailable();	// a state reads its CacheTableState... from the database
 		Human human = new Human();
 		HiddenHuman hidden = new WriteAccessToHuman(human, new StateHuman())
 				.getMeHidden(new GrantedAccessToProperty[] {GrantedAccessToProperty.inventory});

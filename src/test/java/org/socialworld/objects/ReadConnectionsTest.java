@@ -19,9 +19,11 @@ package org.socialworld.objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.socialworld.calculation.SimulationCluster;
 import org.socialworld.core.IAccessToken;
+import org.socialworld.datasource.mariaDB.DatabaseAssumptions;
 import org.socialworld.objects.concrete.containers.Sack;
 import org.socialworld.objects.concrete.eatable.bakery.Bread;
 
@@ -49,7 +51,9 @@ class ReadConnectionsTest {
 	private final Sack sack = new Sack();
 	private final Bread bread = new Bread();
 
-	ReadConnectionsTest() {
+	@BeforeEach
+	void putTheBreadIntoTheSack() {
+		DatabaseAssumptions.assumeDatabaseIsAvailable();	// a state reads its CacheTableState... from the database
 		new WriteAccessToItem(sack, new StateItem());
 		new WriteAccessToItem(bread, new StateItem());
 		sack.putInside(INVENTORY, bread);
