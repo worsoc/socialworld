@@ -80,10 +80,10 @@ public class CreateAnimal extends CreateSimulationObjects {
 		propertiesToInit[0] = GrantedAccessToProperty.all;
 		hiddenAnimal = wa.getMeHidden(propertiesToInit);
 
-		initState(hiddenAnimal);
+		int characterNumber = initState(hiddenAnimal);
 		initObject(hiddenAnimal);	
 		
-		return new IncompleteSimulationObject(createdAnimal, hiddenAnimal);
+		return new IncompleteSimulationObject(createdAnimal, hiddenAnimal, characterNumber);
 	}
 
 	protected void initObject(HiddenAnimal hiddenAnimal) {
@@ -94,7 +94,11 @@ public class CreateAnimal extends CreateSimulationObjects {
 	}
 
 	
-	protected void initState(HiddenAnimal hiddenAnimal) {
+	/**
+	 * @return the character (number in characters.csv, 1 .. 100) the attribute array was taken from; it goes with the
+	 *         incomplete object to the simulation (e.g. for the start equipment), not into the state
+	 */
+	protected int initState(HiddenAnimal hiddenAnimal) {
 
 		super.initState(hiddenAnimal);		
 
@@ -114,8 +118,6 @@ public class CreateAnimal extends CreateSimulationObjects {
 		// the state-to-action rules follow the character as well (State2Action, like A7);
 		// this replaces the type drawn in CreateSimulationObjects.initState
 		hiddenAnimal.setState2ActionType(state2ActionTypeOfCharacter(indexGPAA));
-		// and the character itself is kept, e.g. for the start equipment (inventory concept V3)
-		hiddenAnimal.setCharacterNumber(characterNumberOf(indexGPAA));
 		// the reaction types do not follow the character: one drawn type per event family (erd_regeln_konzept.md, E4);
 		// this replaces the types drawn in CreateSimulationObjects.initState
 		hiddenAnimal.setReactionTypes(EventReactionFamily.drawReactionTypes(random));
@@ -134,6 +136,7 @@ public class CreateAnimal extends CreateSimulationObjects {
 
 		if (GlobalSwitches.OUTPUT_CREATE_OBJECT_HUMANS) System.out.println("CreateAnimal.initState() Ende " +  ActualTime.asTime().toString());
 
+		return characterNumberOf(indexGPAA);
 	}
 
 	/**

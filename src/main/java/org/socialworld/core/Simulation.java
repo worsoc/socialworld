@@ -155,6 +155,7 @@ public class Simulation extends SocialWorldThread {
 
 		List<HiddenHuman> hiddenHumans= new ArrayList<HiddenHuman>();
 		List<Human> humans= new ArrayList<Human>();
+		List<Integer> characterNumbers = new ArrayList<Integer>();	// from the creation, for the start equipment
 
 		System.out.println("Start Erstellen Objekte "+ ActualTime.asTime().toString());
 		
@@ -171,6 +172,7 @@ public class Simulation extends SocialWorldThread {
 			
 			hiddenHumans.add(myHiddenHuman);
 			humans.add(myHuman);
+			characterNumbers.add(incompleteObject.getCharacterNumber());
 			
 			if (GlobalSwitches.OUTPUT_CREATE_OBJECT_HUMANS) System.out.println("Human(" + myHuman.getObjectID() + "): " + myHuman.getPosition(tokenCore).toString() + " " +  ActualTime.asTime().toString());
 		}
@@ -186,7 +188,7 @@ public class Simulation extends SocialWorldThread {
 		for (int i = 0; i < humans.size(); i++ ) {
 			Inventory inventory = new Inventory(SimulationObject_Type.human);
 			hiddenHumans.get(i).setInventory(inventory);
-			equip(humans.get(i), hiddenHumans.get(i), inventory, catalog.get(humans.get(i).getCharacterNumber()), counts);
+			equip(humans.get(i), hiddenHumans.get(i), inventory, catalog.get(characterNumbers.get(i)), counts);
 		}
 		System.out.println("Start equipment: " + counts[0] + " items placed, " + counts[1] + " put down at the feet, "
 				+ counts[2] + " liquids without container, " + counts[3] + " breads for those without food");

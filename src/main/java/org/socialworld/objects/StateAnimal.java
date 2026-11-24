@@ -55,9 +55,6 @@ public class StateAnimal extends StateSimulationObject {
 	private final AttributeArray attributes;
 	private FunctionByMatrix attributeCalculatorMatrix;
 
-	// the character (number in characters.csv, 1 .. 100) the attribute array was made from; 0 = unknown
-	private int characterNumber = 0;
-
 	private Direction directionChest = Direction.getObjectNothing();
 	private Direction directionActiveMove = Direction.getObjectNothing();
 
@@ -244,16 +241,6 @@ public class StateAnimal extends StateSimulationObject {
 	
 	final public FunctionByMatrix getMatrix() {
 		return this.attributeCalculatorMatrix;
-	}
-
-	final void setCharacterNumber(int characterNumber, WriteAccessToAnimal guard) {
-		if (checkGuard(guard)) {
-			this.characterNumber = characterNumber;
-		}
-	}
-
-	final public int getCharacterNumber() {
-		return this.characterNumber;
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////

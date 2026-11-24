@@ -57,10 +57,6 @@ public class HiddenAnimal extends HiddenSimulationObject {
 		return wa.removeFromInventory(place, this);
 	}
 
-	public int setCharacterNumber(int characterNumber) {
-		return wa.setCharacterNumber(characterNumber, this);
-	}
-
 	public int setMatrix(FunctionByMatrix matrix) {
 		return wa.setMatrix(matrix, this);
 	}

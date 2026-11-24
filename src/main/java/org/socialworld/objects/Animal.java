@@ -242,13 +242,6 @@ public abstract class Animal extends SimulationObject implements ISeer, IRunning
 		return NoSimulationObject.getObjectNothing();
 	}
 
-	/**
-	 * @return the character (number in characters.csv, 1 .. 100) the attribute array was made from, 0 if unknown
-	 */
-	final public int getCharacterNumber() {
-		return this.state.getCharacterNumber();
-	}
-
 	final public FunctionByMatrix getMatrix() {
 		return this.state.getMatrix();
 	}

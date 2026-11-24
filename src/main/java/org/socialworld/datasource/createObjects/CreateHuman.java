@@ -70,13 +70,13 @@ public class CreateHuman extends CreateAnimal {
 		hiddenHuman = wa.getMeHidden(propertiesToInit);
 		
 		if (GlobalSwitches.OUTPUT_CREATE_OBJECT_HUMANS) System.out.println("vor initState CreateHuman.getObject() " +  ActualTime.asTime().toString());
-		initState(hiddenHuman);
+		int characterNumber = initState(hiddenHuman);
 		if (GlobalSwitches.OUTPUT_CREATE_OBJECT_HUMANS) System.out.println("nach initState CreateHuman.getObject() " +  ActualTime.asTime().toString());
 		initObject(hiddenHuman);	
 
 		if (GlobalSwitches.OUTPUT_CREATE_OBJECT_HUMANS) System.out.println("Ende CreateHuman.getObject() " +  ActualTime.asTime().toString());
 
-		return new IncompleteSimulationObject(createdHuman, hiddenHuman);
+		return new IncompleteSimulationObject(createdHuman, hiddenHuman, characterNumber);
 	}
 
 
