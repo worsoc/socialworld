@@ -32,6 +32,7 @@ import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.functions.FunctionByMatrix;
 import org.socialworld.collections.ValueArrayList;
+import org.socialworld.core.ActionHandler;
 import org.socialworld.core.IAccessToken;
 import org.socialworld.core.IEventParam;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
@@ -225,9 +226,11 @@ public abstract class Animal extends SimulationObject implements ISeer, IRunning
 	
 	/**
 	 * A meal is over (the eat action is done): what is in the mouth is eaten up and leaves the simulation
-	 * (inventory concept V6, D3: whole, not in bites). Called by the ActionHandler.
+	 * (inventory concept V6, D3: whole, not in bites). Only the own action handler may call it (P2, 2026-11-24,
+	 * as doAction); any other caller changes nothing.
 	 */
-	final public void eatUp() {
+	final public void eatUp(ActionHandler myActionHandler) {
+		if (!isMyActionHandler(myActionHandler)) return;
 		this.state.calculateTechnicalInventoryEvent(TechnicalEvent.EAT_UP);
 	}
 

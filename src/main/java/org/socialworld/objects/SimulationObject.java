@@ -655,9 +655,18 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 		this.state.calculateTechnicalPositionEvent(TechnicalEvent.POSITION_STEP);
 	}
 
-	/** The own move action has ended or was interrupted: the active velocity becomes 0 (concept G4). */
-	public final void stopActiveMove() {
+	/**
+	 * The own move action has ended or was interrupted: the active velocity becomes 0 (concept G4).
+	 * Only the own action handler may call it (P2, G2, 2026-11-24, as doAction); any other caller changes nothing.
+	 */
+	public final void stopActiveMove(ActionHandler myActionHandler) {
+		if (!isMyActionHandler(myActionHandler)) return;
 		this.state.calculateTechnicalPositionEvent(TechnicalEvent.ACTIVE_MOVE_STOP);
+	}
+
+	/** true if the handler is the own action handler of this object (the check of doAction, P2). */
+	final boolean isMyActionHandler(ActionHandler handler) {
+		return handler != null && this.actionHandler == handler;
 	}
 
 	/**

@@ -2,7 +2,7 @@
 
 Part of the [test overview](TESTS.md): the running simulation core: start, attributes, core, actions, objects.
 
-**27 test classes, 135 tests.**
+**28 test classes, 137 tests.**
 
 ## Overview
 
@@ -29,6 +29,7 @@ Part of the [test overview](TESTS.md): the running simulation core: start, attri
 | Objects | `ToolsAndWeaponsCatalogTest` | 5 | the 29 tools and 7 weapons: created without database, lexeme value in its level, weapon properties, abilities | – |
 | Objects | `FoodAndDrinksCatalogTest` | 5 | the 11 kinds of food and 2 new drinks: created without database, eatable or drinkable, lexeme value, food values, perishable, abilities | – |
 | Objects | `ContainerAccessTest` | 2 | only a valid token of the cluster inventory may put into or take out of a container | – |
+| Objects | `OwnActionHandlerTest` | 2 | only the own action handler may end the meal (eatUp) or stop the active move, as in doAction | – |
 | Objects | `LeaveSimulationTest` | 4 | an object leaving the simulation lets go of everything and everything lets go of it: container, content, carrier's place; only with the right to remove | – |
 | Objects | `ItemSideTest` | 4 | the side of an item lies in its state, written only through HiddenItem and WriteAccessToItem with the grant side (or all) | – |
 | Objects | `NatureCatalogTest` | 5 | the 7 things of nature (parts of plants and animals, solids): created without database, lexeme value in its own base group, abilities | – |
@@ -433,6 +434,20 @@ Only the rail inventory writes the contents of a container (protection concept S
 | `takeOut_withoutATokenOfTheClusterInventory_isRefused` | no token, attributeArray and an invalid inventory token: nothing comes out |
 
 - **Not checked:** putting in and taking out with the valid token (it needs objects with state and connections, see `ContainerContentTest` for what fits).
+- **Needs:** no database.
+
+### `OwnActionHandlerTest`
+
+`src/test/java/org/socialworld/objects/OwnActionHandlerTest.java`
+
+P2 (2026-11-24): `Animal.eatUp(ActionHandler)` and `SimulationObject.stopActiveMove(ActionHandler)` work only with the own action handler of the object (`isMyActionHandler`, the check `doAction` makes since 2019). The ActionHandler hands in itself.
+
+| Test | Checks |
+|---|---|
+| `noHandler_orAForeignOne_isNotTheOwn` | `null` and the handler of another human are not the own handler |
+| `eatUp_withoutTheOwnHandler_leavesTheBreadInTheMouth` | `eatUp(null)` and `eatUp` with a foreign handler: the bread stays in the mouth |
+
+- **Not checked:** `eatUp` and `stopActiveMove` with the own handler (it is private to the object; the ActionHandler calls them in the running simulation).
 - **Needs:** no database.
 
 ### `LeaveSimulationTest`
