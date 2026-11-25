@@ -84,6 +84,25 @@ public final class CompositionAssignment {
 		return setID(found, objectID);
 	}
 
+	/**
+	 * The two pieces of a pair (shoes, socks, gloves) are made of the same: the right one takes the set of the left
+	 * one (2026-11-25; until then the consecutive object IDs gave the two pieces different variants, a woollen left
+	 * and a linen right sock).
+	 *
+	 * @param partnerSetID the set of the other piece of the pair, NO_SET if there is none
+	 * @return the partner's set if it is one of the template's variants, otherwise as
+	 *         {@link #setID(int[], int, Material, IntFunction)}
+	 */
+	public static int setID(int[] variantSetIDs, int objectID, Material wanted, IntFunction<Material> mainMaterialOf,
+			int partnerSetID) {
+		if (partnerSetID != NO_SET && variantSetIDs != null) {
+			for (int id : variantSetIDs) {
+				if (id == partnerSetID) return partnerSetID;
+			}
+		}
+		return setID(variantSetIDs, objectID, wanted, mainMaterialOf);
+	}
+
 	/** @return the simple name of a full class name (the part after the last dot) */
 	public static String simpleName(String fullClassName) {
 		return fullClassName.substring(fullClassName.lastIndexOf('.') + 1);

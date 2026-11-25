@@ -2,7 +2,7 @@
 
 Part of the [test overview](TESTS.md): pools and tables, and the Data Creation Tool that fills them.
 
-**26 test classes, 195 tests.**
+**26 test classes, 196 tests.**
 
 ## Overview
 
@@ -16,7 +16,7 @@ Part of the [test overview](TESTS.md): pools and tables, and the Data Creation T
 | Data | `CompositionVariantsTest` | 5 | five variants per class: add up to 100, within the spread, alternatives take turns, the same catalog gives the same sets | – |
 | Data | `CompositionSetsTest` | 6 | what "Material-Sets aus Katalog" writes: five sets per class from ID 100 without gaps, each adds up to 100, the coupling class + variant -> set, the humans after all items, every name accepted by swkind_materialset | – |
 | Data | `BodyBuildCatalogTest` | 3 | the body builds of characters.csv for the running simulation: all 100 read, the same as the DCT reads, default and problems | – |
-| Data | `CompositionAssignmentTest` | 6 | which set a new instance gets from swkind_materialset: item by class, human by its build, variant objectID % n, with a material only its variants, no template no set; the private setter the simulation calls | – |
+| Data | `CompositionAssignmentTest` | 7 | which set a new instance gets from swkind_materialset: item by class, human by its build, variant objectID % n, with a material only its variants, the right piece of a pair the set of the left, no template no set; the private setter the simulation calls | – |
 | Data | `StartEquipmentDistributionTest` | 1 | the whole start equipment distributed as at the start of the simulation: nothing at the feet, every liquid in its container, 24 kit pieces left out | no database |
 | Data | `CreateAnimalInfluenceTypeTest` | 4 | the influence type is the character of the attribute array, the same for every event type | – |
 | Data | `CreateAnimalState2ActionTypeTest` | 3 | the state-to-action type is the character of the attribute array, equal to the influence type | – |
@@ -211,11 +211,12 @@ Which material set a new instance gets when `swstate_composition` was empty at t
 | `anItem_takesItsClass_aHuman_theTemplateOfItsBuild` | Beret stays Beret, a sturdy human is `Human.sturdy`; the simple name of a full class name |
 | `theVariant_isObjectIDModuloTheNumberOfVariants` | 30000 → first set, 30017 → third, 4 → fifth; with two alternatives 3 → second |
 | `withAMaterial_onlyTheVariantsOfThatMainMaterialCount` | of five hats felt, straw, felt, straw, felt: straw for 30017 is the second straw, felt for 4 the second felt, gold none, without material as before |
+| `thePieceOfAPair_takesTheSetOfItsPartner_ifTheTemplateHasIt` | the right sock with its own variant 217 takes the left sock's 216; a set of another template and `NO_SET` change nothing (2026-11-25: before, consecutive IDs gave a woollen left and a linen right sock) |
 | `withoutTemplate_thereIsNoSet` | an empty or missing list gives `NO_SET` |
 | `theStateComposition_hasThePrivateSetter_thatTheSimulationCalls` | `StateComposition` has exactly one method of the name `METHODNAME_SET_MATERIAL_SET`, private, with a `MaterialSet` (`setSomething` would say nothing if it were missing) |
 | `theSetter_leavesTheSharedObjectNothingAlone` | the setter does not change the object nothing that all objects without a composition share |
 
-- **Not checked:** the start switch and the writing into `swstate_composition` in `Simulation` (they need the database, and tests do not write into it).
+- **Not checked:** the start switch in `Simulation`, the pairs and the writing into `swstate_composition` in `StartCreation` (they need the database, and tests do not write into it).
 - **Needs:** no database.
 
 ### `StartEquipmentCatalogTest`

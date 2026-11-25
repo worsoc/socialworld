@@ -67,6 +67,19 @@ class CompositionAssignmentTest {
 				.isEqualTo(CompositionAssignment.setID(hats, 4));
 	}
 
+	// 2026-11-25: the right piece of a pair takes the set of the left one, not the variant of its own object ID
+	@Test
+	void thePieceOfAPair_takesTheSetOfItsPartner_ifTheTemplateHasIt() {
+		int[] socks = {215, 216, 217, 218, 219};	// wool, linen, wool, linen, wool
+		java.util.function.IntFunction<Material> main = id -> (id % 2 == 1) ? Material.wool : Material.linen;
+		assertThat(CompositionAssignment.setID(socks, 30002, Material.nothing, main)).as("own variant").isEqualTo(217);
+		assertThat(CompositionAssignment.setID(socks, 30002, Material.nothing, main, 216)).as("the left sock's").isEqualTo(216);
+		assertThat(CompositionAssignment.setID(socks, 30002, Material.nothing, main, 999)).as("a set of another template")
+				.isEqualTo(217);
+		assertThat(CompositionAssignment.setID(socks, 30002, Material.nothing, main, CompositionAssignment.NO_SET))
+				.isEqualTo(217);
+	}
+
 	@Test
 	void withoutTemplate_thereIsNoSet() {
 		assertThat(CompositionAssignment.setID(new int[0], 1)).isEqualTo(CompositionAssignment.NO_SET);
