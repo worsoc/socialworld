@@ -2,7 +2,7 @@
 
 Part of the [test overview](TESTS.md): pools and tables, and the Data Creation Tool that fills them.
 
-**26 test classes, 193 tests.**
+**26 test classes, 195 tests.**
 
 ## Overview
 
@@ -11,13 +11,13 @@ Part of the [test overview](TESTS.md): pools and tables, and the Data Creation T
 | Data | `Action2PerformerDescriptionPoolTest` | 7 | intensity × power, expression parser, the moves take the intensity of the action, move velocity without double acceleration, a description for every blow | – |
 | Data | `FunctionPoolTest` | 5 | building a matrix from flat arrays, table functions under func_id 0..10, func_ids for functions created at runtime | – |
 | Data | `GaussPoolAAACMMappingTest` | 4 | mapping of the two drawn indices | – |
-| Data | `StartEquipmentCatalogTest` | 7 | equipment.csv: all 100 characters, kits as pieces with pairs, more clothes first, barefoot, container and content apart, class names, totals | – |
+| Data | `StartEquipmentCatalogTest` | 8 | equipment.csv: all 100 characters, kits as pieces with pairs, the material in brackets, more clothes first, barefoot, container and content apart, class names, totals | – |
 | Data | `CompositionCatalogTest` | 6 | composition.csv: every concrete item class and every body build of the humans has its composition, every recipe adds up to 100 with known materials, alternatives and spreads, mistakes named | – |
 | Data | `CompositionVariantsTest` | 5 | five variants per class: add up to 100, within the spread, alternatives take turns, the same catalog gives the same sets | – |
 | Data | `CompositionSetsTest` | 6 | what "Material-Sets aus Katalog" writes: five sets per class from ID 100 without gaps, each adds up to 100, the coupling class + variant -> set, the humans after all items, every name accepted by swkind_materialset | – |
 | Data | `BodyBuildCatalogTest` | 3 | the body builds of characters.csv for the running simulation: all 100 read, the same as the DCT reads, default and problems | – |
-| Data | `CompositionAssignmentTest` | 5 | which set a new instance gets from swkind_materialset: item by class, human by its build, variant objectID % n, no template no set; the private setter the simulation calls | – |
-| Data | `StartEquipmentDistributionTest` | 1 | the whole start equipment distributed as at the start of the simulation: nothing at the feet, every liquid in its container, 3 kit pieces left out | no database |
+| Data | `CompositionAssignmentTest` | 6 | which set a new instance gets from swkind_materialset: item by class, human by its build, variant objectID % n, with a material only its variants, no template no set; the private setter the simulation calls | – |
+| Data | `StartEquipmentDistributionTest` | 1 | the whole start equipment distributed as at the start of the simulation: nothing at the feet, every liquid in its container, 24 kit pieces left out | no database |
 | Data | `CreateAnimalInfluenceTypeTest` | 4 | the influence type is the character of the attribute array, the same for every event type | – |
 | Data | `CreateAnimalState2ActionTypeTest` | 3 | the state-to-action type is the character of the attribute array, equal to the influence type | – |
 | Data | `EventReactionFamilyTest` | 4 | 116 reaction types, drawn per event family, other event types keep 1 | – |
@@ -144,7 +144,7 @@ The typical composition of the item classes (composition concept Z2, 2026-11-24)
 | Test | Checks |
 |---|---|
 | `theCatalog_isReadWithoutProblems` | composition.csv has no line with a mistake |
-| `everyConcreteItemClass_hasItsComposition_andTheCatalogNoOther` | every concrete item class has a line, the catalog names no other item class, at least 107 (the `Human.` lines left aside) |
+| `everyConcreteItemClass_hasItsComposition_andTheCatalogNoOther` | every concrete item class has a line, the catalog names no other item class, exactly as many as there are concrete item classes (the `Human.` lines left aside; until 2026-11-25 a fixed "at least 107") |
 | `everyBodyBuild_hasItsRecipe_andNoOtherHumanIsThere` | exactly the 5 lines `Human.<build>`, one per `BodyBuild`; `humanKey(stout)` is `Human.stout`; the main material of a human is meat |
 | `everyRecipe_addsUpTo100_withKnownMaterials` | every material is known, no spread larger than its share, every recipe adds up to 100 |
 | `alternatives_andSpreads_areRead` | comments and empty lines are skipped; `Bowl` has two alternatives; `linen:7±3` (also written `+-`) gives share 7 and spread 3; the main part is the largest |
@@ -210,6 +210,7 @@ Which material set a new instance gets when `swstate_composition` was empty at t
 |---|---|
 | `anItem_takesItsClass_aHuman_theTemplateOfItsBuild` | Beret stays Beret, a sturdy human is `Human.sturdy`; the simple name of a full class name |
 | `theVariant_isObjectIDModuloTheNumberOfVariants` | 30000 → first set, 30017 → third, 4 → fifth; with two alternatives 3 → second |
+| `withAMaterial_onlyTheVariantsOfThatMainMaterialCount` | of five hats felt, straw, felt, straw, felt: straw for 30017 is the second straw, felt for 4 the second felt, gold none, without material as before |
 | `withoutTemplate_thereIsNoSet` | an empty or missing list gives `NO_SET` |
 | `theStateComposition_hasThePrivateSetter_thatTheSimulationCalls` | `StateComposition` has exactly one method of the name `METHODNAME_SET_MATERIAL_SET`, private, with a `MaterialSet` (`setSomething` would say nothing if it were missing) |
 | `theSetter_leavesTheSharedObjectNothingAlone` | the setter does not change the object nothing that all objects without a composition share |
@@ -221,17 +222,18 @@ Which material set a new instance gets when `swstate_composition` was empty at t
 
 `src/test/java/org/socialworld/datasource/createObjects/StartEquipmentCatalogTest.java`
 
-The start equipment of the 100 characters (inventory concept V3, 2026-11-23) is read from `src/main/resources/org/socialworld/tools/dct/equipment.csv`: kit lines (`kit;<name>;<clothes>`) and one line per character (`<no>;<kit>;<more clothes>;<items>;<flags>`). Shoes, socks and gloves stand for a pair; `Container(Liquid)` gives the container and its content apart; the flag `barefoot` leaves out shoes and socks; the more clothes come before the kit.
+The start equipment of the 100 characters (inventory concept V3, 2026-11-23) is read from `src/main/resources/org/socialworld/tools/dct/equipment.csv`: kit lines (`kit;<name>;<clothes>`) and one line per character (`<no>;<kit>;<more clothes>;<items>;<flags>`). Shoes, socks and gloves stand for a pair; `Container(Liquid)` gives the container and its content apart; the flag `barefoot` leaves out shoes and socks; the more clothes come before the kit. Since 2026-11-25 (item class or composition, step 2) a piece of clothing may name its material in brackets, `Hat[straw]`; composition.csv must have an alternative with that main material.
 
 | Test | Checks |
 |---|---|
 | `theFile_hasAll100Characters_andNoProblems` | every character 1..100 has an entry, no unknown kit or class |
-| `theFarmer_getsKitK1AsPieces_shoesAndSocksAsPairs` | character 1: shirt, trousers, shoe left and right, sock left and right, straw hat; pitchfork and bread |
-| `moreClothes_comeFirst` | character 48: the fur cloak before the cloak of the kit |
-| `barefoot_leavesOutShoesAndSocks` | character 33 has no shoes and socks, but dress, apron and headscarf |
+| `theFarmer_getsKitK1AsPieces_shoesAndSocksAsPairs` | character 1: his clogs left and right first, then `Shirt[linen]`, trousers, shoe left and right, sock left and right, `Hat[straw]`; pitchfork and bread |
+| `aPiece_namesItsMaterial_inBrackets_andItIsChecked` | the smith's gloves are `Glove[leather]` on both sides; a piece without brackets has `Material.nothing`; `Hat[gold]` (no such alternative) and `Hat[unobtainium]` (no such material) are problems and left out, `Hat[felt]` and `Cap` stay |
+| `moreClothes_comeFirst` | character 48: `Cloak[fur]` before the `Cloak[wool]` of the kit |
+| `barefoot_leavesOutShoesAndSocks` | character 33 has no shoes and socks, but `Dress[linen]`, apron and headscarf |
 | `aContainerWithContent_isTheContainer_andTheContentApart` | the barmaid's jug and its beer; the shepherd's waterskin with water |
 | `classNames_areFoundInTheirPackages_unknownOnesAreProblems` | Helmet and Stone are found in their packages; an unknown class and an unknown kit are listed as problems |
-| `totals_asCountedInTheConcept` | 697 pieces of clothing (before replacing), 231 items with the contents |
+| `totals_asCountedInTheConcept` | 731 pieces of clothing (before replacing; 697 until the 34 new pieces of 2026-11-25), 235 items with the contents (231 until 2 signet rings and 2 quivers came) |
 
 - **Needs:** the file on the class path (it is in `src/main/resources`), no database.
 
@@ -243,7 +245,7 @@ Distributes the whole start equipment as `Simulation.equip` does it (`StartEquip
 
 | Test | Checks |
 |---|---|
-| `all100_areEquipped_nothingFallsToTheFeet_liquidsAreInTheirContainers` | every piece gets a place or a container (908 + 7 on 2026-11-23, V5: `StartEquipment.decide`), every one of the 10 liquids is in its container, nothing is put down at the feet, exactly 3 kit pieces are left out (the fur cloak, the hood and the helmet take their place), every human wears something on the upper body; prints the counts and the breads (69) |
+| `all100_areEquipped_nothingFallsToTheFeet_liquidsAreInTheirContainers` | every piece gets a place or a container (908 + 7 on 2026-11-23, V5: `StartEquipment.decide`), every one of the 10 liquids is in its container, nothing is put down at the feet, exactly 24 kit pieces are left out (the fur cloak, the hood and the helmet take their place; since 2026-11-25 also clogs for 5 shoe pairs, coif 4, doublet 4, wreath 2, crown 1; a quiver may go on the back), every human wears something on the upper body; prints the counts and the breads (69) |
 
 - **Not checked:** the creating of the objects and the carrying in the running simulation (they need the database).
 

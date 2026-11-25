@@ -28,6 +28,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.socialworld.attributes.BodyBuild;
+import org.socialworld.attributes.properties.Material;
 import org.socialworld.attributes.properties.MaterialSet;
 import org.socialworld.objects.concrete.StateComposition;
 
@@ -52,6 +53,18 @@ class CompositionAssignmentTest {
 		assertThat(CompositionAssignment.setID(sets, 30017)).isEqualTo(102);
 		assertThat(CompositionAssignment.setID(sets, 4)).isEqualTo(104);
 		assertThat(CompositionAssignment.setID(new int[] {7, 8}, 3)).as("two alternatives only").isEqualTo(8);
+	}
+
+	// item class or composition, step 2 (2026-11-25): Hat[straw] takes only the variants whose main material is straw
+	@Test
+	void withAMaterial_onlyTheVariantsOfThatMainMaterialCount() {
+		int[] hats = {10, 11, 12, 13, 14};	// the alternatives take turns: felt, straw, felt, straw, felt
+		java.util.function.IntFunction<Material> main = id -> (id % 2 == 0) ? Material.felt : Material.straw;
+		assertThat(CompositionAssignment.setID(hats, 30017, Material.straw, main)).as("30017 % 2 of 11, 13").isEqualTo(13);
+		assertThat(CompositionAssignment.setID(hats, 4, Material.felt, main)).as("4 % 3 of 10, 12, 14").isEqualTo(12);
+		assertThat(CompositionAssignment.setID(hats, 4, Material.gold, main)).isEqualTo(CompositionAssignment.NO_SET);
+		assertThat(CompositionAssignment.setID(hats, 4, Material.nothing, main)).as("without material as before")
+				.isEqualTo(CompositionAssignment.setID(hats, 4));
 	}
 
 	@Test

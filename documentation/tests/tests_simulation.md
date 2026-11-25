@@ -26,7 +26,7 @@ Part of the [test overview](TESTS.md): the running simulation core: start, attri
 | Actions | `WeaponInHandTest` | 2 | a blow with the weapon in the hand: a club blow takes the right hand, else the left; F1 (a real weapon is not nothing) | – |
 | Actions | `ActionMoveVelocityTest` | 8 | velocity of a move action: start velocity per mode and intensity, then from event to event (uniform, accelerated, braking) | – |
 | Objects | `SimObjectsCompletelyImplemented` | 3 | lexeme mappings of the object enums | – |
-| Objects | `ClothesCatalogTest` | 5 | the 26 concrete clothes: created without database, one place each, lexeme value, side from the state, abilities | no database (the tests with states) |
+| Objects | `ClothesCatalogTest` | 5 | the 30 concrete clothes: created without database, one place each, lexeme value, side from the state, abilities | no database (the tests with states) |
 | Objects | `ToolsAndWeaponsCatalogTest` | 5 | the 29 tools and 7 weapons: created without database, lexeme value in its level, weapon properties, abilities | – |
 | Objects | `FoodAndDrinksCatalogTest` | 5 | the 11 kinds of food and 2 new drinks: created without database, eatable or drinkable, lexeme value, food values, perishable, abilities | – |
 | Objects | `ContainerAccessTest` | 2 | only a valid token of the cluster inventory may put into or take out of a container | – |
@@ -38,7 +38,7 @@ Part of the [test overview](TESTS.md): the running simulation core: start, attri
 | Objects | `LiquidStatesTest` | 1 | a liquid gets the three states of every item (before NoState, so no liquid could be created) | no database |
 | Objects | `AllItemsInitStateTest` | 3 | every concrete item (found in the package) gets its states, food the eatable too, and can be created with its state | no database (the last two) |
 | Objects | `CarriedConnectionTest` | 3 | the connection carried: offset (0 by default, a copy), carrier and carried find each other in their lists | – |
-| Objects | `ContainersAndGoodsCatalogTest` | 5 | the 10 containers and 12 valuables, devotional, writing and pastime goods: created without database, lexeme value, capacity, jewellery and bag, abilities | – |
+| Objects | `ContainersAndGoodsCatalogTest` | 5 | the 11 containers and 13 valuables, devotional, writing and pastime goods: created without database, lexeme value, capacity, jewellery and bag, abilities | – |
 
 ---
 
@@ -352,15 +352,15 @@ The move action keeps its velocity and gives every event a new `Move` with the c
 
 `src/test/java/org/socialworld/objects/concrete/clothes/ClothesCatalogTest.java`
 
-The concrete clothes of the item hierarchy (2026-11-23): 7 caps, 4 shirts, 2 trousers, 3 dresses, 5 overgarments, 3 shoes, 1 sock, 1 glove.
+The concrete clothes of the item hierarchy (2026-11-23): 9 caps, 4 shirts, 2 trousers, 2 dresses, 5 overgarments, 4 shoes, 1 sock, 2 gloves, 1 neckerchief. Since 2026-11-25 (item class or composition, step 1) Cap, Shirt, Shoe, Sock, Glove and Dress are concrete themselves and stand for the ordinary piece; WoolCap, LinenShirt, LinenDress, LeatherShoe, WoolSock and LeatherGlove are gone, WoolTunic is called Tunic. In step 2 StrawHat and FeltHat became Hat, in step 3 SilkShirt, FineDress, LeatherApron and FurCloak became Shirt, Dress, Apron and Cloak of that material (their value and protection are gone until they come from the material). The material comes from the composition. In step 4 nine new clothes came: coif, crown and wreath (caps), doublet (shirt), gambeson and tabard (overgarments), gauntlet (glove), clogs (shoe) and the neckerchief, a kind of its own (lexeme 400) worn at the neck.
 
 | Test | Checks |
 |---|---|
-| `all26_areCreatedWithoutDatabase` | every class has a constructor without arguments and is `IWearable` |
-| `eachOne_saysExactlyOnePlace` | of cap, shirt, trousers, dress, overgarment, shoe, sock, glove, jewellery and bag exactly one is true (each piece with a state and the side left) |
-| `lexemLowerValue_isUniqueAndJustAboveItsKind` | `GetLexemIDLowerPartFromMapping` gives kind + 1 .. 15 (e.g. cap 272, straw hat 273), no value twice |
+| `all30_areCreatedWithoutDatabase` | every class has a constructor without arguments and is `IWearable` |
+| `eachOne_saysExactlyOnePlace` | of cap, shirt, trousers, dress, overgarment, shoe, sock, glove, neck, finger and bag exactly one is true (neck and finger instead of "jewellery" since 2026-11-25: the neckerchief is at the neck but no jewellery) (each piece with a state and the side left) |
+| `lexemLowerValue_isUniqueAndJustAboveItsKind` | `GetLexemIDLowerPartFromMapping` gives kind + 1 .. 15 (e.g. straw hat 273), the six concrete kinds exactly their kind (cap 272, shirt 288, shoe 320, sock 336, glove 352, dress 368), no value twice |
 | `side_isAPropertyOfTheState_noneUntilSet` | without state shoe, sock and glove are neither left nor right; with the side in the state (S3) they are on that side |
-| `abilities_asInTheCatalogue` | helmet and chain mail `IProtective`, fur cloak and chain mail `IValuable`, habit `ISacred`, linen shirt none of them |
+| `abilities_asInTheCatalogue` | helmet, chain mail and glove `IProtective`, beret and chain mail `IValuable`, the cloak no longer, habit `ISacred`, shirt none of them; cap and glove are not `IBurnable` (a helmet is a cap, a gauntlet a glove); crown `IValuable` and not burnable, gauntlet protects more than the glove and is not burnable, gambeson `IProtective` and burnable, the neckerchief no jewellery |
 
 - **Assumes:** the catalogue of the item hierarchy concept; the ability values are constants in the classes.
 - **Not checked:** creating clothes in the running simulation (states, position), it needs the database.
@@ -418,7 +418,7 @@ Every concrete item gets its initial states (2026-11-24). Most classes do not ov
 
 | Test | Checks |
 |---|---|
-| `allConcreteItems_areFound_atLeastThe104OfTheHierarchy` | the search finds at least the 104 classes of the item hierarchy (classes named Test… are not counted; the test clothes are gone since 2026-11-24); guards against an empty search that would let the other two pass |
+| `allConcreteItems_areFound_asManyAsCompositionCsvNames` | the search finds exactly as many classes as composition.csv names item classes (by hand), more than 90; classes named Test… are not counted. guards against an empty search that would let the other two pass. Until 2026-11-25 a fixed "at least 104", which the merges of the clothes changed |
 | `everyConcreteItem_givesTheThreeStates_andFoodTheEatableToo` | StatePerceptible, StateAppearance, StateComposition for every class, StateEatable for food |
 | `everyConcreteItem_canBeCreatedWithItsState` | `new WriteAccessToItem(item, new StateItem())` as in `CreateItem`, without exception |
 
@@ -428,14 +428,14 @@ Every concrete item gets its initial states (2026-11-24). Most classes do not ov
 
 `src/test/java/org/socialworld/objects/concrete/containers/ContainersAndGoodsCatalogTest.java`
 
-The 10 containers and the 12 other human crafted goods of the item hierarchy (2026-11-23): 2 valuables, 3 devotional, 3 writing, 4 pastime. Each class is its group + 16, + 32, ... (container 2048, valuable 4096, devotional 8192, writing 16384, pastime 32768).
+The 11 containers and the 13 other human crafted goods of the item hierarchy (2026-11-23; quiver and signet ring since 2026-11-25): 3 valuables, 3 devotional, 3 writing, 4 pastime. Each class is its group + 16, + 32, ... (container 2048, valuable 4096, devotional 8192, writing 16384, pastime 32768).
 
 | Test | Checks |
 |---|---|
-| `all22_areCreatedWithoutDatabase` | every class has a constructor without arguments |
+| `all24_areCreatedWithoutDatabase` | every class has a constructor without arguments |
 | `lexemLowerValue_isUniqueAndInItsGroup` | the lower lexeme value is its group + 16 .. 240 on a level of 16, no value twice |
-| `everyContainer_holdsSomething` | every `Container` has a capacity > 0; jug and waterskin hold liquids, sack and purse do not |
-| `jewelleryAndBag_areWornWithoutAClothesPlace` | ring, rosary and amulet are jewellery and no clothes place, the satchel is a bag, the relic is not worn |
+| `everyContainer_holdsSomething` | every `Container` has a capacity > 0; jug and waterskin hold liquids, sack, purse and quiver do not; the quiver may go on the back like the lute |
+| `jewelleryAndBag_areWornWithoutAClothesPlace` | ring, signet ring, rosary and amulet are jewellery and no clothes place, the satchel is a bag, the relic is not worn |
 | `abilities_asInTheCatalogue` | coins valuable and countable, relic holier than the amulet, book readable and longer than the scroll, quill writes, lute and flute can be played, dice and jug can be thrown |
 
 - **Assumes:** the catalogue of the item hierarchy concept; the ability values are constants in the classes.

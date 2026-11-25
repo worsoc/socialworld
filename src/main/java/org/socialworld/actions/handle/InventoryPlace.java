@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2019  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,9 +48,9 @@ public enum InventoryPlace {
 	upperBody(22),
 	legs(23),
 	dress(24),				// a dress covers upperBody and legs: it needs both free, and blocks both
-	overgarmentFront(25),	// apron, leather apron
+	overgarmentFront(25),	// apron (of linen or leather)
 	overgarmentArmour(26),	// chain mail
-	overgarmentCloak(27),	// cloak, fur cloak
+	overgarmentCloak(27),	// cloak (of wool or fur)
 
 	// jewellery
 	neck(31),				// amulet, rosary

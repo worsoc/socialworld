@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,25 +16,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://gnu.org>.
  */
-package org.socialworld.objects.concrete.clothes.caps;
+package org.socialworld.objects.concrete.clothes.shirts;
 
-import org.socialworld.objects.concrete.clothes.Cap;
+import org.socialworld.objects.concrete.clothes.Shirt;
 import org.socialworld.objects.enums.EnumHumanCrafted;
-import org.socialworld.objects.properties.IBurnable;
 
 /**
- * A straw hat against the sun.
+ * A doublet: the fitted, finer garment of townsmen and nobles, worn instead of a shirt (of wool or silk).
+ * New with the item class or composition overview, step 4 (2026-11-25).
  */
-public class StrawHat extends Cap implements IBurnable {
+public class Doublet extends Shirt {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	public StrawHat() {
+	public Doublet() {
 		super();
-		belongsTo = EnumHumanCrafted.StrawHat;
-		setLevelObjectSearch(9 /* base 9: 0.2 meters */ , 6 /* base 25: 0.26 meters */);
+		belongsTo = EnumHumanCrafted.Doublet;
+		setLevelObjectSearch(8 /* base 9: 0.6 meters */ , 5 /* base 25: 1.3 meters */);
 	}
 
 }

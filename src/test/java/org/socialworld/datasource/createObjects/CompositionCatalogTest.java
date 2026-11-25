@@ -58,7 +58,8 @@ class CompositionCatalogTest {
 			if (!CompositionCatalog.isHumanKey(name)) itemNames.add(name);
 		}
 		assertThat(classes).containsAll(itemNames);
-		assertThat(itemNames).hasSizeGreaterThanOrEqualTo(107);
+		// exactly the concrete item classes (until 2026-11-25 a fixed "at least 107", which the merges of the clothes change)
+		assertThat(itemNames).hasSameSizeAs(classes);
 	}
 
 	// body build concept B2 (2026-11-25): the humans are in the catalog as Human.<build>
@@ -98,15 +99,15 @@ class CompositionCatalogTest {
 		CompositionCatalog catalog = CompositionCatalog.parse(Arrays.asList(
 				"# a comment", "",
 				"Bowl;wood:100|clay:100",
-				"LeatherShoe;leather:93+-3,linen:7±3"));
+				"Shoe;leather:93+-3,linen:7±3"));
 		assertThat(catalog.getProblems()).isEmpty();
 		assertThat(catalog.get("Bowl")).hasSize(2);
 		assertThat(catalog.get("Bowl").get(1).parts.get(0).material).isSameAs(Material.clay);
-		Part linen = catalog.get("LeatherShoe").get(0).parts.get(1);
+		Part linen = catalog.get("Shoe").get(0).parts.get(1);
 		assertThat(linen.material).isSameAs(Material.linen);
 		assertThat(linen.share).isEqualTo(7);
 		assertThat(linen.spread).isEqualTo(3);
-		assertThat(catalog.get("LeatherShoe").get(0).indexOfMain()).isZero();
+		assertThat(catalog.get("Shoe").get(0).indexOfMain()).isZero();
 		assertThat(catalog.get("Unknown")).isEmpty();
 	}
 

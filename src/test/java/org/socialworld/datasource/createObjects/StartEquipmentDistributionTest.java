@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -112,7 +113,10 @@ class StartEquipmentDistributionTest {
 				+ " " + droppedNames + ", breads " + breads);
 		assertThat(droppedNames).isEmpty();
 		assertThat(liquidsWithout).isEmpty();
-		// the more clothes that replace a kit piece: fur cloak (48), hood (26) and helmet (66)
-		assertThat(leftOut).isEqualTo(3);
+		// the more clothes that replace a kit piece: fur cloak (48), hood (26) and helmet (66); since 2026-11-25 (item
+		// class or composition, step 4) also clogs for the shoes (5 pairs, 10), coif for headscarf or hood (4), doublet
+		// for tunic or shirt (4), wreath for headscarf (2) and crown for beret (1); gambeson, tabard, gauntlet and
+		// neckerchief take places the kits leave free
+		assertThat(leftOut).isEqualTo(24);
 	}
 }

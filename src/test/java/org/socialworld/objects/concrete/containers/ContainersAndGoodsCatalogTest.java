@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,8 +44,8 @@ import org.socialworld.objects.properties.IWritingTool;
 import org.socialworld.objects.statics.GetLexemIDLowerPartFromMapping;
 
 /**
- * The 10 containers and the 12 other human crafted goods (valuables, devotional, writing, pastime) of the item
- * hierarchy (2026-11-23).
+ * The 11 containers and the 13 other human crafted goods (valuables, devotional, writing, pastime) of the item
+ * hierarchy (2026-11-23; quiver and signet ring since 2026-11-25, item class or composition step 4).
  */
 class ContainersAndGoodsCatalogTest {
 
@@ -52,8 +53,8 @@ class ContainersAndGoodsCatalogTest {
 	private static Map<Class<? extends HumanCrafted>, Integer> catalog() {
 		Map<Class<? extends HumanCrafted>, Integer> c = new LinkedHashMap<>();
 		List.of(Sack.class, Basket.class, Jug.class, Waterskin.class, Bucket.class, Purse.class, Satchel.class,
-				Bowl.class, Pot.class, Flask.class).forEach(k -> c.put(k, 2048));
-		List.of(Coins.class, Ring.class).forEach(k -> c.put(k, 4096));
+				Bowl.class, Pot.class, Flask.class, Quiver.class).forEach(k -> c.put(k, 2048));
+		List.of(Coins.class, Ring.class, SignetRing.class).forEach(k -> c.put(k, 4096));
 		List.of(Rosary.class, Amulet.class, Relic.class).forEach(k -> c.put(k, 8192));
 		List.of(Book.class, Scroll.class, Quill.class).forEach(k -> c.put(k, 16384));
 		List.of(Lute.class, Flute.class, Dice.class, JugglingBalls.class).forEach(k -> c.put(k, 32768));
@@ -65,8 +66,8 @@ class ContainersAndGoodsCatalogTest {
 	}
 
 	@Test
-	void all22_areCreatedWithoutDatabase() throws Exception {
-		assertThat(catalog()).hasSize(22);
+	void all24_areCreatedWithoutDatabase() throws Exception {
+		assertThat(catalog()).hasSize(24);
 		for (Class<? extends HumanCrafted> k : catalog().keySet()) {
 			assertThat(create(k)).as(k.getSimpleName()).isNotNull();
 		}
@@ -94,11 +95,13 @@ class ContainersAndGoodsCatalogTest {
 		assertThat(new Waterskin().isForLiquids()).isTrue();
 		assertThat(new Sack().isForLiquids()).isFalse();
 		assertThat(new Purse().isForLiquids()).isFalse();
+		assertThat(new Quiver().isForLiquids()).isFalse();
+		assertThat(new Quiver().fitsPlace(org.socialworld.actions.handle.InventoryPlace.back)).as("on the back like the lute").isTrue();
 	}
 
 	@Test
 	void jewelleryAndBag_areWornWithoutAClothesPlace() {
-		for (IWearable w : List.<IWearable>of(new Ring(), new Rosary(), new Amulet())) {
+		for (IWearable w : List.<IWearable>of(new Ring(), new SignetRing(), new Rosary(), new Amulet())) {
 			assertThat(w.isJewellery()).as(w.getClass().getSimpleName()).isTrue();
 			assertThat(w.isBag() || w.isCap() || w.isShirt() || w.isTrousers() || w.isDress() || w.isOvergarment())
 					.as(w.getClass().getSimpleName()).isFalse();

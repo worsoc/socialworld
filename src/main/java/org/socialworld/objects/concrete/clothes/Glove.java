@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,16 +19,23 @@
 package org.socialworld.objects.concrete.clothes;
 
 import org.socialworld.objects.enums.EnumHumanCrafted;
+import org.socialworld.objects.properties.IProtective;
 import org.socialworld.objects.enums.EnumSide;
 
 /**
  * A glove. One class per kind; whether it is worn on the left or on the right hand is a property of the object.
+ *
+ * Since 2026-11-25 concrete (item class or composition, step 1): the glove. The material comes from the
+ * composition (composition.csv), no longer from the class; formerly LeatherGlove. Its protection stays here until
+ * value and protection come from the material. Not IBurnable here, because the iron Gauntlet is a Glove as well
+ * (step 4).
  */
-public abstract class Glove extends Clothes {
+public class Glove extends Clothes implements IProtective {
 
 	public Glove() {
 		super();
 		belongsTo = EnumHumanCrafted.Glove;
+		setLevelObjectSearch(9 /* base 9: 0.2 meters */ , 6 /* base 25: 0.26 meters */);
 	}
 
 	// the side (left or right) is a property of the object, not a class of its own (2026-11-23); it lies in the
@@ -46,4 +54,10 @@ public abstract class Glove extends Clothes {
 	public boolean isTrousers() {return false; }
 	public boolean isCap() {return false; }
 
+
+	// protection of the former LeatherGlove (constant values for now)
+	public float getProtectionAgainstStab() {return 15; }
+	public float getProtectionAgainstClub() {return 10; }
+	public float getProtectionAgainstStroke() {return 20; }
+	public float getProtectionAgainstBackhand() {return 10; }
 }

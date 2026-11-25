@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2023  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -303,33 +304,35 @@ public final class GroupingOfSimulationObjects {
 	public static final int LEXEMID_LOWERVALUE_DRESS	 	 			= 0b0000000101110000; // 	368
 	public static final int LEXEMID_LOWERVALUE_OVERGARMENT	 			= 0b0000000110000000; // 	384
 
-	// concrete clothes (2026-11-23): kind + 1, + 2, ...
-	public static final int LEXEMID_LOWERVALUE_STRAW_HAT = 0b0000000100010001; // 	273
-	public static final int LEXEMID_LOWERVALUE_WOOL_CAP = 0b0000000100010010; // 	274
+	// concrete clothes (2026-11-23): kind + 1, + 2, ...; since 2026-11-25 (item class or composition) Cap, Shirt, Shoe,
+	// Sock, Glove and Dress are concrete themselves and use the value of their kind, and the classes with a material
+	// in the name are gone (the material comes from the composition). Free since then: 291, 337, 369, 370; the other
+	// freed values went to the new clothes of step 4 (see below the sandal)
+	public static final int LEXEMID_LOWERVALUE_HAT = 0b0000000100010001; // 	273 (until 2026-11-25 StrawHat)
 	public static final int LEXEMID_LOWERVALUE_HEADSCARF = 0b0000000100010011; // 	275
-	public static final int LEXEMID_LOWERVALUE_FELT_HAT = 0b0000000100010100; // 	276
 	public static final int LEXEMID_LOWERVALUE_BERET = 0b0000000100010101; // 	277
 	public static final int LEXEMID_LOWERVALUE_HOOD = 0b0000000100010110; // 	278
 	public static final int LEXEMID_LOWERVALUE_HELMET = 0b0000000100010111; // 	279
-	public static final int LEXEMID_LOWERVALUE_LINEN_SHIRT = 0b0000000100100001; // 	289
-	public static final int LEXEMID_LOWERVALUE_WOOL_TUNIC = 0b0000000100100010; // 	290
-	public static final int LEXEMID_LOWERVALUE_SILK_SHIRT = 0b0000000100100011; // 	291
+	public static final int LEXEMID_LOWERVALUE_TUNIC = 0b0000000100100010; // 	290 (until 2026-11-25 WoolTunic)
 	public static final int LEXEMID_LOWERVALUE_RAGS = 0b0000000100100100; // 	292
 	public static final int LEXEMID_LOWERVALUE_WORK_TROUSERS = 0b0000000100110001; // 	305
 	public static final int LEXEMID_LOWERVALUE_HOSE = 0b0000000100110010; // 	306
-	public static final int LEXEMID_LOWERVALUE_LINEN_DRESS = 0b0000000101110001; // 	369
-	public static final int LEXEMID_LOWERVALUE_FINE_DRESS = 0b0000000101110010; // 	370
 	public static final int LEXEMID_LOWERVALUE_HABIT = 0b0000000101110011; // 	371
 	public static final int LEXEMID_LOWERVALUE_APRON = 0b0000000110000001; // 	385
-	public static final int LEXEMID_LOWERVALUE_LEATHER_APRON = 0b0000000110000010; // 	386
 	public static final int LEXEMID_LOWERVALUE_CLOAK = 0b0000000110000011; // 	387
-	public static final int LEXEMID_LOWERVALUE_FUR_CLOAK = 0b0000000110000100; // 	388
 	public static final int LEXEMID_LOWERVALUE_CHAIN_MAIL = 0b0000000110000101; // 	389
-	public static final int LEXEMID_LOWERVALUE_LEATHER_SHOE = 0b0000000101000001; // 	321
 	public static final int LEXEMID_LOWERVALUE_BOOT = 0b0000000101000010; // 	322
 	public static final int LEXEMID_LOWERVALUE_SANDAL = 0b0000000101000011; // 	323
-	public static final int LEXEMID_LOWERVALUE_WOOL_SOCK = 0b0000000101010001; // 	337
-	public static final int LEXEMID_LOWERVALUE_LEATHER_GLOVE = 0b0000000101100001; // 	353
+	// new clothes of step 4 (item class or composition, 2026-11-25) on free values; the neckerchief is a kind of its own
+	public static final int LEXEMID_LOWERVALUE_COIF = 0b0000000100010010; // 	274
+	public static final int LEXEMID_LOWERVALUE_CROWN = 0b0000000100010100; // 	276
+	public static final int LEXEMID_LOWERVALUE_WREATH = 0b0000000100011000; // 	280
+	public static final int LEXEMID_LOWERVALUE_DOUBLET = 0b0000000100100001; // 	289
+	public static final int LEXEMID_LOWERVALUE_GAMBESON = 0b0000000110000010; // 	386
+	public static final int LEXEMID_LOWERVALUE_TABARD = 0b0000000110000100; // 	388
+	public static final int LEXEMID_LOWERVALUE_GAUNTLET = 0b0000000101100001; // 	353
+	public static final int LEXEMID_LOWERVALUE_CLOGS = 0b0000000101000001; // 	321
+	public static final int LEXEMID_LOWERVALUE_NECKERCHIEF = 0b0000000110010000; // 	400
 
 	// tools (2026-11-23): purpose levels of + 16 (numbers only, no classes), each tool + 1
 	public static final int LEXEMID_LOWERVALUE_TOOL_FIELD = 0b0000001000010000; // 	528
@@ -389,10 +392,12 @@ public final class GroupingOfSimulationObjects {
 	public static final int LEXEMID_LOWERVALUE_BOWL = 0b0000100010000000; // 	2176
 	public static final int LEXEMID_LOWERVALUE_POT = 0b0000100010010000; // 	2192
 	public static final int LEXEMID_LOWERVALUE_FLASK = 0b0000100010100000; // 	2208
+	public static final int LEXEMID_LOWERVALUE_QUIVER = 0b0000100010110000; // 	2224 (step 4, 2026-11-25)
 
 	// valuables (2026-11-23): valuable + 16 each
 	public static final int LEXEMID_LOWERVALUE_COINS = 0b0001000000010000; // 	4112
 	public static final int LEXEMID_LOWERVALUE_RING = 0b0001000000100000; // 	4128
+	public static final int LEXEMID_LOWERVALUE_SIGNET_RING = 0b0001000000110000; // 	4144 (step 4, 2026-11-25)
 
 	// devotional (2026-11-23): devotional + 16 each
 	public static final int LEXEMID_LOWERVALUE_ROSARY = 0b0010000000010000; // 	8208

@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,32 +16,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://gnu.org>.
  */
-package org.socialworld.objects.concrete.clothes.dresses;
+package org.socialworld.objects.concrete.clothes.caps;
 
-import org.socialworld.objects.concrete.clothes.Dress;
+import org.socialworld.objects.concrete.clothes.Cap;
 import org.socialworld.objects.enums.EnumHumanCrafted;
-import org.socialworld.objects.properties.IBurnable;
 import org.socialworld.objects.properties.IValuable;
 
 /**
- * A fine dress of good cloth.
+ * A crown of gold or silver, the sign of a ruler. Not burnable.
+ * New with the item class or composition overview, step 4 (2026-11-25).
  */
-public class FineDress extends Dress implements IBurnable, IValuable {
+public class Crown extends Cap implements IValuable {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	public FineDress() {
+	public Crown() {
 		super();
-		belongsTo = EnumHumanCrafted.FineDress;
-		setLevelObjectSearch(8 /* base 9: 0.6 meters */ , 5 /* base 25: 1.3 meters */);
+		belongsTo = EnumHumanCrafted.Crown;
+		setLevelObjectSearch(9 /* base 9: 0.2 meters */ , 6 /* base 25: 0.26 meters */);
 	}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    abilities (constant values for now)   ///////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	public float getValue() {return 45; }
+	public float getValue() {return 90; }
 
 }

@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2023  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -59,32 +60,30 @@ public class Mapping_HumanCrafted2WordString {
 		mapping.put(EnumHumanCrafted.Dress, "dress");
 		mapping.put(EnumHumanCrafted.Overgarment, "overgarment");
 		mapping.put(EnumHumanCrafted.Glove, "glove");
-		mapping.put(EnumHumanCrafted.StrawHat, "strawHat");
-		mapping.put(EnumHumanCrafted.WoolCap, "woolCap");
+		mapping.put(EnumHumanCrafted.Hat, "hat");
 		mapping.put(EnumHumanCrafted.Headscarf, "headscarf");
-		mapping.put(EnumHumanCrafted.FeltHat, "feltHat");
 		mapping.put(EnumHumanCrafted.Beret, "beret");
 		mapping.put(EnumHumanCrafted.Hood, "hood");
 		mapping.put(EnumHumanCrafted.Helmet, "helmet");
-		mapping.put(EnumHumanCrafted.LinenShirt, "linenShirt");
-		mapping.put(EnumHumanCrafted.WoolTunic, "woolTunic");
-		mapping.put(EnumHumanCrafted.SilkShirt, "silkShirt");
+		mapping.put(EnumHumanCrafted.Tunic, "tunic");
 		mapping.put(EnumHumanCrafted.Rags, "rags");
 		mapping.put(EnumHumanCrafted.WorkTrousers, "workTrousers");
 		mapping.put(EnumHumanCrafted.Hose, "hose");
-		mapping.put(EnumHumanCrafted.LinenDress, "linenDress");
-		mapping.put(EnumHumanCrafted.FineDress, "fineDress");
 		mapping.put(EnumHumanCrafted.Habit, "habit");
 		mapping.put(EnumHumanCrafted.Apron, "apron");
-		mapping.put(EnumHumanCrafted.LeatherApron, "leatherApron");
 		mapping.put(EnumHumanCrafted.Cloak, "cloak");
-		mapping.put(EnumHumanCrafted.FurCloak, "furCloak");
 		mapping.put(EnumHumanCrafted.ChainMail, "chainMail");
-		mapping.put(EnumHumanCrafted.LeatherShoe, "leatherShoe");
 		mapping.put(EnumHumanCrafted.Boot, "boot");
 		mapping.put(EnumHumanCrafted.Sandal, "sandal");
-		mapping.put(EnumHumanCrafted.WoolSock, "woolSock");
-		mapping.put(EnumHumanCrafted.LeatherGlove, "leatherGlove");
+		mapping.put(EnumHumanCrafted.Coif, "coif");
+		mapping.put(EnumHumanCrafted.Crown, "crown");
+		mapping.put(EnumHumanCrafted.Wreath, "wreath");
+		mapping.put(EnumHumanCrafted.Doublet, "doublet");
+		mapping.put(EnumHumanCrafted.Gambeson, "gambeson");
+		mapping.put(EnumHumanCrafted.Tabard, "tabard");
+		mapping.put(EnumHumanCrafted.Gauntlet, "gauntlet");
+		mapping.put(EnumHumanCrafted.Clogs, "clogs");
+		mapping.put(EnumHumanCrafted.Neckerchief, "neckerchief");
 		mapping.put(EnumHumanCrafted.Pitchfork, "pitchfork");
 		mapping.put(EnumHumanCrafted.Flail, "flail");
 		mapping.put(EnumHumanCrafted.Sickle, "sickle");
@@ -131,8 +130,10 @@ public class Mapping_HumanCrafted2WordString {
 		mapping.put(EnumHumanCrafted.Bowl, "bowl");
 		mapping.put(EnumHumanCrafted.Pot, "pot");
 		mapping.put(EnumHumanCrafted.Flask, "flask");
+		mapping.put(EnumHumanCrafted.Quiver, "quiver");
 		mapping.put(EnumHumanCrafted.Coins, "coins");
 		mapping.put(EnumHumanCrafted.Ring, "ring");
+		mapping.put(EnumHumanCrafted.SignetRing, "signetRing");
 		mapping.put(EnumHumanCrafted.Rosary, "rosary");
 		mapping.put(EnumHumanCrafted.Amulet, "amulet");
 		mapping.put(EnumHumanCrafted.Relic, "relic");

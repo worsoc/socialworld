@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,20 +20,20 @@ package org.socialworld.objects.concrete.clothes.shoes;
 
 import org.socialworld.objects.concrete.clothes.Shoe;
 import org.socialworld.objects.enums.EnumHumanCrafted;
-import org.socialworld.objects.properties.IBurnable;
 
 /**
- * A leather shoe.
+ * Clogs carved from one piece of wood, for farmers and fishers.
+ * New with the item class or composition overview, step 4 (2026-11-25).
  */
-public class LeatherShoe extends Shoe implements IBurnable {
+public class Clogs extends Shoe {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	public LeatherShoe() {
+	public Clogs() {
 		super();
-		belongsTo = EnumHumanCrafted.LeatherShoe;
+		belongsTo = EnumHumanCrafted.Clogs;
 		setLevelObjectSearch(9 /* base 9: 0.2 meters */ , 6 /* base 25: 0.26 meters */);
 	}
 

@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,25 +16,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://gnu.org>.
  */
-package org.socialworld.objects.concrete.clothes.socks;
+package org.socialworld.objects.concrete.clothes.overgarments;
 
-import org.socialworld.objects.concrete.clothes.Sock;
+import org.socialworld.actions.handle.InventoryPlace;
+import org.socialworld.objects.concrete.clothes.Overgarment;
 import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.IBurnable;
 
 /**
- * A woollen sock.
+ * A tabard: the open coat of a knight, herald or guard, worn in front over the armour.
+ * New with the item class or composition overview, step 4 (2026-11-25).
  */
-public class WoolSock extends Sock implements IBurnable {
+public class Tabard extends Overgarment implements IBurnable {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	public WoolSock() {
+	public Tabard() {
 		super();
-		belongsTo = EnumHumanCrafted.WoolSock;
-		setLevelObjectSearch(9 /* base 9: 0.2 meters */ , 6 /* base 25: 0.26 meters */);
+		belongsTo = EnumHumanCrafted.Tabard;
+		setLevelObjectSearch(8 /* base 9: 0.6 meters */ , 5 /* base 25: 1.3 meters */);
 	}
+
+	public InventoryPlace getOvergarmentPlace() {return InventoryPlace.overgarmentFront; }
 
 }

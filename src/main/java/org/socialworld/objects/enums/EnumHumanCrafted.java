@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2023  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,32 +39,31 @@ public enum EnumHumanCrafted {
 	Glove("org.socialworld.objects.concrete.clothes.Glove"),
 
 	/* concrete clothes */
-	StrawHat("org.socialworld.objects.concrete.clothes.caps.StrawHat"),
-	WoolCap("org.socialworld.objects.concrete.clothes.caps.WoolCap"),
+	Hat("org.socialworld.objects.concrete.clothes.caps.Hat"),
 	Headscarf("org.socialworld.objects.concrete.clothes.caps.Headscarf"),
-	FeltHat("org.socialworld.objects.concrete.clothes.caps.FeltHat"),
 	Beret("org.socialworld.objects.concrete.clothes.caps.Beret"),
 	Hood("org.socialworld.objects.concrete.clothes.caps.Hood"),
 	Helmet("org.socialworld.objects.concrete.clothes.caps.Helmet"),
-	LinenShirt("org.socialworld.objects.concrete.clothes.shirts.LinenShirt"),
-	WoolTunic("org.socialworld.objects.concrete.clothes.shirts.WoolTunic"),
-	SilkShirt("org.socialworld.objects.concrete.clothes.shirts.SilkShirt"),
+	Tunic("org.socialworld.objects.concrete.clothes.shirts.Tunic"),
 	Rags("org.socialworld.objects.concrete.clothes.shirts.Rags"),
 	WorkTrousers("org.socialworld.objects.concrete.clothes.trousers.WorkTrousers"),
 	Hose("org.socialworld.objects.concrete.clothes.trousers.Hose"),
-	LinenDress("org.socialworld.objects.concrete.clothes.dresses.LinenDress"),
-	FineDress("org.socialworld.objects.concrete.clothes.dresses.FineDress"),
 	Habit("org.socialworld.objects.concrete.clothes.dresses.Habit"),
 	Apron("org.socialworld.objects.concrete.clothes.overgarments.Apron"),
-	LeatherApron("org.socialworld.objects.concrete.clothes.overgarments.LeatherApron"),
 	Cloak("org.socialworld.objects.concrete.clothes.overgarments.Cloak"),
-	FurCloak("org.socialworld.objects.concrete.clothes.overgarments.FurCloak"),
 	ChainMail("org.socialworld.objects.concrete.clothes.overgarments.ChainMail"),
-	LeatherShoe("org.socialworld.objects.concrete.clothes.shoes.LeatherShoe"),
 	Boot("org.socialworld.objects.concrete.clothes.shoes.Boot"),
 	Sandal("org.socialworld.objects.concrete.clothes.shoes.Sandal"),
-	WoolSock("org.socialworld.objects.concrete.clothes.socks.WoolSock"),
-	LeatherGlove("org.socialworld.objects.concrete.clothes.gloves.LeatherGlove"),
+	// new clothes of step 4 (item class or composition, 2026-11-25)
+	Coif("org.socialworld.objects.concrete.clothes.caps.Coif"),
+	Crown("org.socialworld.objects.concrete.clothes.caps.Crown"),
+	Wreath("org.socialworld.objects.concrete.clothes.caps.Wreath"),
+	Doublet("org.socialworld.objects.concrete.clothes.shirts.Doublet"),
+	Gambeson("org.socialworld.objects.concrete.clothes.overgarments.Gambeson"),
+	Tabard("org.socialworld.objects.concrete.clothes.overgarments.Tabard"),
+	Gauntlet("org.socialworld.objects.concrete.clothes.gloves.Gauntlet"),
+	Clogs("org.socialworld.objects.concrete.clothes.shoes.Clogs"),
+	Neckerchief("org.socialworld.objects.concrete.clothes.Neckerchief"),
 
 	/* tools */
 	Pitchfork("org.socialworld.objects.concrete.tools.Pitchfork"),
@@ -116,10 +116,12 @@ public enum EnumHumanCrafted {
 	Bowl("org.socialworld.objects.concrete.containers.Bowl"),
 	Pot("org.socialworld.objects.concrete.containers.Pot"),
 	Flask("org.socialworld.objects.concrete.containers.Flask"),
+	Quiver("org.socialworld.objects.concrete.containers.Quiver"),
 
 	/* valuables */
 	Coins("org.socialworld.objects.concrete.valuables.Coins"),
 	Ring("org.socialworld.objects.concrete.valuables.Ring"),
+	SignetRing("org.socialworld.objects.concrete.valuables.SignetRing"),
 
 	/* devotional */
 	Rosary("org.socialworld.objects.concrete.devotional.Rosary"),

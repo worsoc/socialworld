@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.socialworld.attributes.properties.Material;
 import org.socialworld.objects.concrete.clothes.Glove;
 import org.socialworld.objects.concrete.clothes.Shoe;
 import org.socialworld.objects.concrete.clothes.Sock;
@@ -42,6 +44,8 @@ import org.socialworld.objects.concrete.clothes.Sock;
  * </ul>
  * The more clothes come first: they take their place, and a piece of the kit for the same place is left out
  * (a fur cloak instead of the cloak of the kit). Names are the simple names of the item classes.
+ * A piece of clothing may name its material in brackets, {@code Apron[leather]} (item class or composition, step 2,
+ * 2026-11-25): it gets a variant whose main material that is; composition.csv must have such an alternative.
  */
 public final class StartEquipmentCatalog {
 
@@ -50,7 +54,8 @@ public final class StartEquipmentCatalog {
 	private static final String BASE = "org.socialworld.objects.concrete.";
 	private static final String[] PACKAGES = {
 		"clothes.caps", "clothes.shirts", "clothes.trousers", "clothes.dresses", "clothes.overgarments",
-		"clothes.shoes", "clothes.socks", "clothes.gloves",
+		"clothes.shoes", "clothes.gloves",
+		"clothes",	// since 2026-11-25 Cap, Shirt, Shoe, Sock, Glove and Dress are concrete themselves
 		"tools", "weapons", "containers", "valuables", "devotional", "writing", "pastime",
 		"eatable.fruits", "eatable.veggies", "eatable.meat", "eatable.fish", "eatable.bakery", "eatable.dairy",
 		"eatable.sweets", "eatable.liquids", "eatable",
@@ -59,17 +64,22 @@ public final class StartEquipmentCatalog {
 
 	public enum Side { none, left, right }
 
-	/** One piece of clothing with its side (left and right for the pairs). */
+	/** One piece of clothing with its side (left and right for the pairs) and the material asked for, if any. */
 	public static final class Piece {
 		public final String className;
 		public final Side side;
-		Piece(String className, Side side) {
+		/** the main material of the variant, Material.nothing if the piece does not name one */
+		public final Material material;
+		Piece(String className, Side side, Material material) {
 			this.className = className;
 			this.side = side;
+			this.material = material;
 		}
 		@Override
 		public String toString() {
-			return className.substring(className.lastIndexOf('.') + 1) + (side == Side.none ? "" : "(" + side + ")");
+			return className.substring(className.lastIndexOf('.') + 1)
+					+ (material == Material.nothing ? "" : "[" + material.name() + "]")
+					+ (side == Side.none ? "" : "(" + side + ")");
 		}
 	}
 
@@ -176,6 +186,21 @@ public final class StartEquipmentCatalog {
 	}
 
 	private void addPieces(List<Piece> clothes, String name, boolean barefoot, int number) {
+		Material material = Material.nothing;
+		int open = name.indexOf('[');
+		if (open > 0 && name.endsWith("]")) {
+			String materialName = name.substring(open + 1, name.length() - 1).trim();
+			name = name.substring(0, open).trim();
+			material = Material.fromName(materialName);
+			if (material == Material.nothing) {
+				problems.add("character " + number + ": unknown material '" + materialName + "' for " + name);
+				return;
+			}
+			if (!hasAlternativeOf(name, material)) {
+				problems.add("character " + number + ": composition.csv has no alternative of " + name + " made of " + materialName);
+				return;
+			}
+		}
 		String className = resolve(name, number);
 		if (className == null) return;
 		Class<?> c = classOf(className);
@@ -183,11 +208,19 @@ public final class StartEquipmentCatalog {
 		boolean foot = Shoe.class.isAssignableFrom(c) || Sock.class.isAssignableFrom(c);
 		if (barefoot && foot) return;
 		if (pair) {
-			clothes.add(new Piece(className, Side.left));
-			clothes.add(new Piece(className, Side.right));
+			clothes.add(new Piece(className, Side.left, material));
+			clothes.add(new Piece(className, Side.right, material));
 		} else {
-			clothes.add(new Piece(className, Side.none));
+			clothes.add(new Piece(className, Side.none, material));
 		}
+	}
+
+	/** @return whether one of the alternatives of the class in composition.csv has this main material */
+	private static boolean hasAlternativeOf(String simpleName, Material material) {
+		for (CompositionCatalog.Recipe recipe : CompositionCatalog.getInstance().get(simpleName)) {
+			if (recipe.parts.get(recipe.indexOfMain()).material == material) return true;
+		}
+		return false;
 	}
 
 	private String resolve(String simpleName, int number) {

@@ -18,7 +18,10 @@
  */
 package org.socialworld.datasource.createObjects;
 
+import java.util.function.IntFunction;
+
 import org.socialworld.attributes.BodyBuild;
+import org.socialworld.attributes.properties.Material;
 
 /**
  * Which material set a new instance gets (body build concept B3, 2026-11-25), derived from the template
@@ -26,7 +29,8 @@ import org.socialworld.attributes.BodyBuild;
  * <ul>
  * <li>an item by its class (simple name)</li>
  * <li>a human by "Human." + the body build of its character</li>
- * <li>the variant is objectID % number of variants</li>
+ * <li>the variant is objectID % number of variants; with a material asked for (equipment.csv {@code Apron[leather]},
+ * item class or composition step 2) only the variants whose main material it is count</li>
  * </ul>
  * The simulation saves the result per instance in swstate_composition.
  */
@@ -56,6 +60,28 @@ public final class CompositionAssignment {
 	public static int setID(int[] variantSetIDs, int objectID) {
 		if (variantSetIDs == null || variantSetIDs.length == 0 || objectID < 0) return NO_SET;
 		return variantSetIDs[objectID % variantSetIDs.length];
+	}
+
+	/**
+	 * @param variantSetIDs the set IDs of the variants of the template, in the order of the variants
+	 * @param objectID the ID of the instance
+	 * @param wanted the main material asked for; Material.nothing for none
+	 * @param mainMaterialOf the main material (largest share) of a set ID
+	 * @return among the variants with that main material the one of objectID % their number; without a material as
+	 *         {@link #setID(int[], int)}; NO_SET if no variant has the material
+	 */
+	public static int setID(int[] variantSetIDs, int objectID, Material wanted, IntFunction<Material> mainMaterialOf) {
+		if (wanted == null || wanted == Material.nothing) return setID(variantSetIDs, objectID);
+		if (variantSetIDs == null) return NO_SET;
+		int count = 0;
+		int[] matching = new int[variantSetIDs.length];
+		for (int id : variantSetIDs) {
+			if (mainMaterialOf.apply(id) == wanted) matching[count++] = id;
+		}
+		if (count == 0) return NO_SET;
+		int[] found = new int[count];
+		System.arraycopy(matching, 0, found, 0, count);
+		return setID(found, objectID);
 	}
 
 	/** @return the simple name of a full class name (the part after the last dot) */

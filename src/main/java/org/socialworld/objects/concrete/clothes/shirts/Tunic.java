@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,35 +16,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://gnu.org>.
  */
-package org.socialworld.objects.concrete.clothes.overgarments;
+package org.socialworld.objects.concrete.clothes.shirts;
 
-import org.socialworld.actions.handle.InventoryPlace;
-import org.socialworld.objects.concrete.clothes.Overgarment;
+import org.socialworld.objects.concrete.clothes.Shirt;
 import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.IBurnable;
-import org.socialworld.objects.properties.IValuable;
 
 /**
- * A cloak lined with fur.
+ * A tunic: long and belted, worn instead of a shirt. Until 2026-11-25 WoolTunic; the material comes from the
+ * composition (wool or linen).
  */
-public class FurCloak extends Overgarment implements IBurnable, IValuable {
+public class Tunic extends Shirt implements IBurnable {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	public FurCloak() {
+	public Tunic() {
 		super();
-		belongsTo = EnumHumanCrafted.FurCloak;
+		belongsTo = EnumHumanCrafted.Tunic;
 		setLevelObjectSearch(8 /* base 9: 0.6 meters */ , 5 /* base 25: 1.3 meters */);
 	}
-
-///////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////    abilities (constant values for now)   ///////////////////
-///////////////////////////////////////////////////////////////////////////////////////////
-
-	public float getValue() {return 60; }
-
-	public InventoryPlace getOvergarmentPlace() {return InventoryPlace.overgarmentCloak; }
 
 }

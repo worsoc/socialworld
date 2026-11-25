@@ -9,29 +9,24 @@
 
 # clothes
 Beret;wool:90+-5,linen:10+-5
-FeltHat;felt:95+-3,linen:5+-3
+Hat;felt:95+-3,linen:5+-3|straw:95+-3,linen:5+-3
 Headscarf;linen:100|cotton:100
 Helmet;iron:85+-5,leather:15+-5
 Hood;wool:85+-10,linen:15+-10
-StrawHat;straw:95+-3,linen:5+-3
-WoolCap;wool:100
-FineDress;silk:60+-15,linen:40+-15
+Cap;wool:100|felt:100
 Habit;wool:95+-5,linen:5+-5
-LinenDress;linen:95+-5,cotton:5+-5
-LeatherGlove;leather:95+-3,linen:5+-3
-Apron;linen:90+-5,hemp:10+-5
+Dress;linen:95+-5,cotton:5+-5|wool:90+-5,linen:10+-5|silk:60+-15,linen:40+-15
+Glove;leather:95+-3,linen:5+-3|wool:100
+Apron;linen:90+-5,hemp:10+-5|leather:95+-3,linen:5+-3
 ChainMail;iron:95+-3,leather:5+-3
-Cloak;wool:90+-5,linen:10+-5
-FurCloak;fur:70+-10,wool:25+-10,leather:5+-3
-LeatherApron;leather:95+-3,linen:5+-3
-LinenShirt;linen:90+-10,cotton:10+-10
+Cloak;wool:90+-5,linen:10+-5|fur:70+-10,wool:25+-10,leather:5+-3
+Shirt;linen:90+-10,cotton:10+-10|silk:95+-5,linen:5+-5
 Rags;linen:50+-20,wool:30+-15,hemp:20+-10
-SilkShirt;silk:95+-5,linen:5+-5
-WoolTunic;wool:95+-5,linen:5+-5
+Tunic;wool:95+-5,linen:5+-5|linen:95+-5,wool:5+-5
 Boot;leather:90+-5,wood:5+-3,iron:5+-3
-LeatherShoe;leather:93+-3,linen:7+-3
+Shoe;leather:93+-3,linen:7+-3
 Sandal;leather:80+-10,wood:20+-10
-WoolSock;wool:100
+Sock;wool:100|linen:100
 Hose;wool:70+-15,linen:30+-15
 WorkTrousers;linen:60+-15,hemp:30+-10,leather:10+-5
 
@@ -127,6 +122,19 @@ Hide;leather:70+-15,fur:30+-15
 Charcoal;coal:100
 Ore;ore:85+-10,stone:15+-10
 Stone;stone:100
+
+# new items of step 4 (item class or composition, 2026-11-25)
+Coif;linen:100|cotton:100
+Crown;gold:100|silver:100
+Wreath;plant:100
+Doublet;wool:70+-10,linen:30+-10|silk:60+-10,linen:40+-10
+Gambeson;linen:70+-10,wool:20+-10,hemp:10+-5
+Tabard;wool:90+-5,linen:10+-5
+Gauntlet;iron:80+-5,leather:20+-5
+Clogs;wood:100
+Neckerchief;linen:100|cotton:100|wool:100
+SignetRing;gold:100|silver:100|bronze:100
+Quiver;leather:90+-5,wood:10+-5
 
 # humans, one line per body build (at the end, so that the set IDs of the items stay):
 #   meat = muscles, organs and skin; water = blood and body fluids; gut = guts and sinews

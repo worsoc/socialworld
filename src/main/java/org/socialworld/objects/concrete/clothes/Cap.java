@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2022  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +21,12 @@ package org.socialworld.objects.concrete.clothes;
 import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.IWearable;
 
-public abstract class Cap extends Clothes implements IWearable {
+/**
+ * Since 2026-11-25 concrete (item class or composition, step 1): the ordinary cap. The material comes from the
+ * composition (composition.csv), no longer from the class; formerly WoolCap. Not IBurnable here, because the
+ * Helmet is a Cap as well.
+ */
+public class Cap extends Clothes implements IWearable {
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -30,6 +36,7 @@ public abstract class Cap extends Clothes implements IWearable {
 	public Cap() {
 		super();
 		belongsTo = EnumHumanCrafted.Cap;
+		setLevelObjectSearch(9 /* base 9: 0.2 meters */ , 6 /* base 25: 0.26 meters */);
 	}
 
 

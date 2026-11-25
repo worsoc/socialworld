@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,12 +30,11 @@ import org.socialworld.objects.ItemSides;
 import org.socialworld.objects.SimulationObject;
 import org.socialworld.objects.SimulationObject_Type;
 import org.socialworld.objects.concrete.clothes.caps.Hood;
-import org.socialworld.objects.concrete.clothes.caps.StrawHat;
+import org.socialworld.objects.concrete.clothes.caps.Hat;
 import org.socialworld.objects.concrete.clothes.overgarments.Cloak;
-import org.socialworld.objects.concrete.clothes.overgarments.FurCloak;
-import org.socialworld.objects.concrete.clothes.gloves.LeatherGlove;
-import org.socialworld.objects.concrete.clothes.shoes.LeatherShoe;
-import org.socialworld.objects.concrete.clothes.socks.WoolSock;
+import org.socialworld.objects.concrete.clothes.Glove;
+import org.socialworld.objects.concrete.clothes.Shoe;
+import org.socialworld.objects.concrete.clothes.Sock;
 import org.socialworld.objects.enums.EnumSide;
 import org.socialworld.objects.concrete.containers.Basket;
 import org.socialworld.objects.concrete.containers.Jug;
@@ -67,34 +67,35 @@ class StartEquipmentTest {
 	@Test
 	void clothes_goToTheirPlace_theRightShoeToTheRightFoot() {
 		Inventory inventory = new Inventory(SimulationObject_Type.human);
-		assertThat(placeAndPut(inventory, new StrawHat(), false)).isEqualTo(InventoryPlace.head);
-		LeatherShoe right = ItemSides.withSide(new LeatherShoe(), EnumSide.right);
+		assertThat(placeAndPut(inventory, new Hat(), false)).isEqualTo(InventoryPlace.head);
+		Shoe right = ItemSides.withSide(new Shoe(), EnumSide.right);
 		assertThat(placeAndPut(inventory, right, false)).isEqualTo(InventoryPlace.rightFootShoe);
-		assertThat(placeAndPut(inventory, ItemSides.withSide(new LeatherShoe(), EnumSide.left), false)).isEqualTo(InventoryPlace.leftFootShoe);
+		assertThat(placeAndPut(inventory, ItemSides.withSide(new Shoe(), EnumSide.left), false)).isEqualTo(InventoryPlace.leftFootShoe);
 	}
 
 	@Test
 	void chooseWornPlace_aPrototypeWithoutState_goesByTheGivenSide() {
 		Inventory inventory = new Inventory(SimulationObject_Type.human);
-		assertThat(StartEquipment.chooseWornPlace(inventory, new LeatherShoe(), EnumSide.right)).isEqualTo(InventoryPlace.rightFootShoe);
-		assertThat(StartEquipment.chooseWornPlace(inventory, new WoolSock(), EnumSide.left)).isEqualTo(InventoryPlace.leftFootSock);
-		assertThat(StartEquipment.chooseWornPlace(inventory, new LeatherGlove(), EnumSide.left)).isEqualTo(InventoryPlace.leftHandGlove);
+		assertThat(StartEquipment.chooseWornPlace(inventory, new Shoe(), EnumSide.right)).isEqualTo(InventoryPlace.rightFootShoe);
+		assertThat(StartEquipment.chooseWornPlace(inventory, new Sock(), EnumSide.left)).isEqualTo(InventoryPlace.leftFootSock);
+		assertThat(StartEquipment.chooseWornPlace(inventory, new Glove(), EnumSide.left)).isEqualTo(InventoryPlace.leftHandGlove);
 		// without a side the prototype fits on neither foot
-		assertThat(StartEquipment.chooseWornPlace(inventory, new LeatherShoe(), EnumSide.none)).isEqualTo(InventoryPlace.noWhere);
-		assertThat(inventory.put(InventoryPlace.rightFootShoe, ItemSides.withSide(new LeatherShoe(), EnumSide.right))).isTrue();
-		assertThat(StartEquipment.chooseWornPlace(inventory, new LeatherShoe(), EnumSide.right)).isEqualTo(InventoryPlace.noWhere);
+		assertThat(StartEquipment.chooseWornPlace(inventory, new Shoe(), EnumSide.none)).isEqualTo(InventoryPlace.noWhere);
+		assertThat(inventory.put(InventoryPlace.rightFootShoe, ItemSides.withSide(new Shoe(), EnumSide.right))).isTrue();
+		assertThat(StartEquipment.chooseWornPlace(inventory, new Shoe(), EnumSide.right)).isEqualTo(InventoryPlace.noWhere);
 	}
 
 	@Test
 	void moreClothesFirst_thenTheKitPieceForTheSamePlace_findsNoWornPlace() {
 		Inventory merchant = new Inventory(SimulationObject_Type.human);
-		assertThat(placeAndPut(merchant, new FurCloak(), false)).isEqualTo(InventoryPlace.overgarmentCloak);
+		// the merchant's Cloak[fur] first (since 2026-11-25 a Cloak of fur, no FurCloak class any more)
+		assertThat(placeAndPut(merchant, new Cloak(), false)).isEqualTo(InventoryPlace.overgarmentCloak);
 		assertThat(StartEquipment.chooseWornPlace(merchant, new Cloak(), EnumSide.none)).isEqualTo(InventoryPlace.noWhere);
 		// with choosePlace it would go into a hand
 		assertThat(StartEquipment.choosePlace(merchant, new Cloak(), false)).isEqualTo(InventoryPlace.rightHand);
 		Inventory beekeeper = new Inventory(SimulationObject_Type.human);
 		assertThat(placeAndPut(beekeeper, new Hood(), false)).isEqualTo(InventoryPlace.head);
-		assertThat(StartEquipment.chooseWornPlace(beekeeper, new StrawHat(), EnumSide.none)).isEqualTo(InventoryPlace.noWhere);
+		assertThat(StartEquipment.chooseWornPlace(beekeeper, new Hat(), EnumSide.none)).isEqualTo(InventoryPlace.noWhere);
 	}
 
 	@Test

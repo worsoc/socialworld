@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.socialworld.calculation.geometry.Vector;
-import org.socialworld.objects.concrete.clothes.caps.StrawHat;
+import org.socialworld.objects.concrete.clothes.caps.Hat;
 import org.socialworld.objects.concrete.tools.Pitchfork;
 
 /**
@@ -33,14 +34,14 @@ class CarriedConnectionTest {
 
 	@Test
 	void aConnectionWithoutOffset_hasTheZeroVector() {
-		Connection con = new Connection(new Pitchfork(), new StrawHat(), ConnectionType.carried);
+		Connection con = new Connection(new Pitchfork(), new Hat(), ConnectionType.carried);
 		assertThat(con.getOffset().is000()).isTrue();
 	}
 
 	@Test
 	void theOffset_isACopy() {
 		Vector offset = new Vector(new Vector(0, 0, 800));	// a copy is mutable
-		Connection con = new Connection(new Pitchfork(), new StrawHat(), ConnectionType.carried);
+		Connection con = new Connection(new Pitchfork(), new Hat(), ConnectionType.carried);
 		con.setOffset(offset);
 		offset.add(new Vector(0, 0, 100));
 		assertThat(con.getOffset().getZ()).isEqualTo(800f);
@@ -49,7 +50,7 @@ class CarriedConnectionTest {
 	@Test
 	void theCarried_findsItsCarrier_theCarrierFindsWhatItCarries() {
 		Pitchfork carrier = new Pitchfork();
-		StrawHat carried = new StrawHat();
+		Hat carried = new Hat();
 		Connection con = new Connection(carrier, carried, ConnectionType.carried);
 		con.setAsMasterSlaveConnection();
 

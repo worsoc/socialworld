@@ -26,15 +26,15 @@ import org.socialworld.calculation.ValueProperty;
 import org.socialworld.objects.ItemSides;
 import org.socialworld.objects.NoSimulationObject;
 import org.socialworld.objects.SimulationObject_Type;
-import org.socialworld.objects.concrete.clothes.caps.StrawHat;
-import org.socialworld.objects.concrete.clothes.dresses.LinenDress;
-import org.socialworld.objects.concrete.clothes.gloves.LeatherGlove;
+import org.socialworld.objects.concrete.clothes.caps.Hat;
+import org.socialworld.objects.concrete.clothes.Dress;
+import org.socialworld.objects.concrete.clothes.Glove;
 import org.socialworld.objects.concrete.clothes.overgarments.Apron;
 import org.socialworld.objects.concrete.clothes.overgarments.ChainMail;
 import org.socialworld.objects.concrete.clothes.overgarments.Cloak;
-import org.socialworld.objects.concrete.clothes.shirts.LinenShirt;
-import org.socialworld.objects.concrete.clothes.shoes.LeatherShoe;
-import org.socialworld.objects.concrete.clothes.socks.WoolSock;
+import org.socialworld.objects.concrete.clothes.Shirt;
+import org.socialworld.objects.concrete.clothes.Shoe;
+import org.socialworld.objects.concrete.clothes.Sock;
 import org.socialworld.objects.enums.EnumSide;
 import org.socialworld.objects.concrete.clothes.trousers.WorkTrousers;
 import org.socialworld.objects.concrete.containers.Purse;
@@ -90,23 +90,23 @@ class InventoryPlacesTest {
 
 	@Test
 	void clothes_fitTheirPlaceOnly() {
-		assertThat(Inventory.fits(InventoryPlace.head, new StrawHat())).isTrue();
-		assertThat(Inventory.fits(InventoryPlace.upperBody, new LinenShirt())).isTrue();
+		assertThat(Inventory.fits(InventoryPlace.head, new Hat())).isTrue();
+		assertThat(Inventory.fits(InventoryPlace.upperBody, new Shirt())).isTrue();
 		assertThat(Inventory.fits(InventoryPlace.legs, new WorkTrousers())).isTrue();
-		assertThat(Inventory.fits(InventoryPlace.dress, new LinenDress())).isTrue();
-		assertThat(Inventory.fits(InventoryPlace.head, new LinenShirt())).isFalse();
-		assertThat(Inventory.fits(InventoryPlace.upperBody, new LinenDress())).isFalse();
+		assertThat(Inventory.fits(InventoryPlace.dress, new Dress())).isTrue();
+		assertThat(Inventory.fits(InventoryPlace.head, new Shirt())).isFalse();
+		assertThat(Inventory.fits(InventoryPlace.upperBody, new Dress())).isFalse();
 	}
 
 	@Test
 	void theSide_decidesLeftOrRight() {
-		LeatherShoe shoe = ItemSides.withSide(new LeatherShoe(), EnumSide.left);
+		Shoe shoe = ItemSides.withSide(new Shoe(), EnumSide.left);
 		assertThat(Inventory.fits(InventoryPlace.leftFootShoe, shoe)).isTrue();
 		assertThat(Inventory.fits(InventoryPlace.rightFootShoe, shoe)).isFalse();
-		LeatherShoe right = ItemSides.withSide(new LeatherShoe(), EnumSide.right);
+		Shoe right = ItemSides.withSide(new Shoe(), EnumSide.right);
 		assertThat(Inventory.fits(InventoryPlace.rightFootShoe, right)).isTrue();
 		assertThat(Inventory.fits(InventoryPlace.leftFootShoe, right)).isFalse();
-		LeatherGlove glove = ItemSides.withSide(new LeatherGlove(), EnumSide.right);
+		Glove glove = ItemSides.withSide(new Glove(), EnumSide.right);
 		assertThat(Inventory.fits(InventoryPlace.rightHandGlove, glove)).isTrue();
 		assertThat(Inventory.fits(InventoryPlace.leftHandGlove, glove)).isFalse();
 	}
@@ -132,12 +132,12 @@ class InventoryPlacesTest {
 	@Test
 	void aDress_needsUpperBodyAndLegsFree_andBlocksThem() {
 		Inventory inventory = inventory();
-		assertThat(inventory.put(InventoryPlace.upperBody, new LinenShirt())).isTrue();
-		assertThat(inventory.canPut(InventoryPlace.dress, new LinenDress())).isFalse();
+		assertThat(inventory.put(InventoryPlace.upperBody, new Shirt())).isTrue();
+		assertThat(inventory.canPut(InventoryPlace.dress, new Dress())).isFalse();
 
 		Inventory other = inventory();
-		assertThat(other.put(InventoryPlace.dress, new LinenDress())).isTrue();
-		assertThat(other.canPut(InventoryPlace.upperBody, new LinenShirt())).isFalse();
+		assertThat(other.put(InventoryPlace.dress, new Dress())).isTrue();
+		assertThat(other.canPut(InventoryPlace.upperBody, new Shirt())).isFalse();
 		assertThat(other.canPut(InventoryPlace.legs, new WorkTrousers())).isFalse();
 	}
 
@@ -154,7 +154,7 @@ class InventoryPlacesTest {
 
 	@Test
 	void hands_takeEverythingCarryable_liquidsNeedAContainer() {
-		for (ICarryable c : new ICarryable[] {new Knife(), new Pitchfork(), new Bread(), new Stone(), new LinenShirt()}) {
+		for (ICarryable c : new ICarryable[] {new Knife(), new Pitchfork(), new Bread(), new Stone(), new Shirt()}) {
 			assertThat(Inventory.fits(InventoryPlace.rightHand, (org.socialworld.objects.SimulationObject) c)).as(c.getClass().getSimpleName()).isTrue();
 		}
 		assertThat(new Beer()).isNotInstanceOf(ICarryable.class);
@@ -190,10 +190,10 @@ class InventoryPlacesTest {
 	void theOldSetters_keepWorking() {
 		// with the clothes of the item hierarchy (the test clothes are gone, 2026-11-24)
 		Inventory inventory = new Inventory(SimulationObject_Type.human);
-		inventory.setCap(new StrawHat());
-		inventory.setShirt(new LinenShirt());
-		inventory.setShoes(new LeatherShoe(), new LeatherShoe());
-		inventory.setSocks(new WoolSock(), new WoolSock());
+		inventory.setCap(new Hat());
+		inventory.setShirt(new Shirt());
+		inventory.setShoes(new Shoe(), new Shoe());
+		inventory.setSocks(new Sock(), new Sock());
 		assertThat(inventory.get(InventoryPlace.head).isSimulationObject()).isTrue();
 		assertThat(inventory.get(InventoryPlace.upperBody).isSimulationObject()).isTrue();
 		assertThat(inventory.get(InventoryPlace.leftFootShoe)).isNotSameAs(inventory.get(InventoryPlace.rightFootShoe));

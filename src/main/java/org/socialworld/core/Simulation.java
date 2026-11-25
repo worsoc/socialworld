@@ -46,6 +46,8 @@ import org.socialworld.datasource.tablesSimulation.propertySets.TableMaterialSet
 import org.socialworld.datasource.tablesSimulation.states.CacheTableStateComposition;
 import org.socialworld.datasource.tablesSimulation.states.TableStateComposition;
 import org.socialworld.objects.concrete.StateComposition;
+import org.socialworld.attributes.properties.Material;
+import org.socialworld.attributes.properties.MaterialSet;
 import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
@@ -98,6 +100,7 @@ public class Simulation extends SocialWorldThread {
 	private boolean deriveComposition = false;
 	private final List<int[]> compositionRows = new ArrayList<int[]>();
 	private int compositionsWithoutSet = 0;
+	private int compositionsWithoutMaterial = 0;	// a piece asked for a material that no variant has (step 2)
 
 	private Simulation() {
 		
@@ -245,21 +248,32 @@ public class Simulation extends SocialWorldThread {
 	 * The composition of a new instance (body build concept B3, 2026-11-25): the set of its template in
 	 * swkind_materialset, variant objectID % number of variants; a human takes the template of the body build of
 	 * its character. The set goes into the state at once, the row is saved after the creation (saveCompositions).
+	 * A piece of the start equipment may ask for a material (equipment.csv Apron[leather], item class or composition
+	 * step 2): then only the variants with that main material count.
 	 */
 	private void deriveComposition(IncompleteSimulationObject incompleteObject, SimulationObject_Type type,
-			String fullClassName) {
+			String fullClassName, Material material) {
 		int objectID = incompleteObject.getObject().getObjectID();
 		boolean isHuman = (type == SimulationObject_Type.human);
 		String template = CompositionAssignment.templateName(CompositionAssignment.simpleName(fullClassName), isHuman,
 				isHuman ? BodyBuildCatalog.getInstance().get(incompleteObject.getCharacterNumber()) : null);
-		int setID = CompositionAssignment.setID(TableKindMaterialSet.getInstance().getMaterialSetIDs(template), objectID);
+		int[] variants = TableKindMaterialSet.getInstance().getMaterialSetIDs(template);
+		int setID = CompositionAssignment.setID(variants, objectID, material, Simulation::mainMaterialOf);
 		if (setID == CompositionAssignment.NO_SET) {
-			compositionsWithoutSet++;
+			if (variants.length > 0) compositionsWithoutMaterial++;
+			else compositionsWithoutSet++;
 			return;
 		}
 		incompleteObject.getHiddenObject().setSomething(StateComposition.class.getName(),
 				StateComposition.METHODNAME_SET_MATERIAL_SET, TableMaterialSet.getInstance().getMaterialSet(setID));
 		compositionRows.add(new int[] {objectID, setID});
+	}
+
+	/** @return the main material (largest share) of a material set, Material.nothing if it has none */
+	private static Material mainMaterialOf(int setID) {
+		MaterialSet set = TableMaterialSet.getInstance().getMaterialSet(setID);
+		Object main = set.getMain();
+		return (main instanceof Material) ? (Material) main : Material.nothing;
 	}
 
 	/** Writes the derived compositions into swstate_composition, one row per instance, and says how many arrived. */
@@ -271,7 +285,8 @@ public class Simulation extends SocialWorldThread {
 		table.select(1, "", "");
 		int saved = table.rowCount();
 		System.out.println("Composition: derived from swkind_materialset and saved, " + saved + " of " + compositionRows.size()
-				+ " rows in swstate_composition, " + compositionsWithoutSet + " objects without template ("
+				+ " rows in swstate_composition, " + compositionsWithoutSet + " objects without template, "
+				+ compositionsWithoutMaterial + " without a variant of the material asked for ("
 				+ (System.currentTimeMillis() - start) / 1000 + " s)");
 		if (saved < compositionRows.size()) {
 			System.out.println("Composition: WARNING, rows are missing (no row in sw_object for the ID? press FillObject)");
@@ -355,7 +370,7 @@ public class Simulation extends SocialWorldThread {
 				SimulationObject prototype = prototype(piece.className);
 				InventoryPlace place = StartEquipment.chooseWornPlace(inventory, prototype, sideOf(piece.side));
 				if (place == InventoryPlace.noWhere) continue;	// the place is taken by the more clothes
-				Item item = createCarried(piece.className, piece.side, at);
+				Item item = createCarried(piece.className, piece.side, at, piece.material);
 				if (item != null && rail.startPutToInventory(tokenCore, hiddenHuman, place, item)) counts[0]++;
 			}
 			// containers and what they hold so far (inventory concept V5)
@@ -364,7 +379,7 @@ public class Simulation extends SocialWorldThread {
 			for (String className : entry.items) {
 				SimulationObject prototype = prototype(className);
 				StartEquipment.Decision decision = StartEquipment.decide(inventory, containers, contents, prototype);
-				Item item = createCarried(className, StartEquipmentCatalog.Side.none, at);
+				Item item = createCarried(className, StartEquipmentCatalog.Side.none, at, Material.nothing);
 				if (item == null) continue;
 				if (decision.isInContainer()) {
 					if (rail.startPutIntoContainer(tokenCore, decision.container, item)) {
@@ -385,7 +400,7 @@ public class Simulation extends SocialWorldThread {
 				SimulationObject prototype = prototype(className);
 				StartEquipment.Decision decision = StartEquipment.decide(inventory, containers, contents, prototype);
 				if (!decision.isInContainer()) { counts[2]++; continue; }
-				Item liquid = createCarried(className, StartEquipmentCatalog.Side.none, at);
+				Item liquid = createCarried(className, StartEquipmentCatalog.Side.none, at, Material.nothing);
 				if (liquid != null && rail.startPutIntoContainer(tokenCore, decision.container, liquid)) {
 					contents.get(decision.container).add(liquid);
 					counts[0]++;
@@ -394,7 +409,8 @@ public class Simulation extends SocialWorldThread {
 			}
 		}
 		if (inventory.isFree(InventoryPlace.mouth)) {
-			Item bread = createCarried("org.socialworld.objects.concrete.eatable.bakery.Bread", StartEquipmentCatalog.Side.none, at);
+			Item bread = createCarried("org.socialworld.objects.concrete.eatable.bakery.Bread", StartEquipmentCatalog.Side.none, at,
+					Material.nothing);
 			if (bread != null && rail.startPutToInventory(tokenCore, hiddenHuman, InventoryPlace.mouth, bread)) counts[3]++;
 		}
 	}
@@ -418,8 +434,8 @@ public class Simulation extends SocialWorldThread {
 	 * Creates an item at the position of its carrier, without drawing a start position. The side goes into the
 	 * item's state through its hidden object, once at the creation (protection concept S3).
 	 */
-	private Item createCarried(String className, StartEquipmentCatalog.Side side, Position at) {
-		IncompleteSimulationObject incomplete = createSimulationObject(SimulationObject_Type.item, className, at);
+	private Item createCarried(String className, StartEquipmentCatalog.Side side, Position at, Material material) {
+		IncompleteSimulationObject incomplete = createSimulationObject(SimulationObject_Type.item, className, at, material);
 		SimulationObject object = incomplete.getObject();
 		if (!(object instanceof Item)) return null;
 		EnumSide itemSide = sideOf(side);
@@ -434,12 +450,16 @@ public class Simulation extends SocialWorldThread {
 	private IncompleteSimulationObject createSimulationObject(
 			SimulationObject_Type simulationObjectType,
 			String fullClassName) {
-		return createSimulationObject(simulationObjectType, fullClassName, null);
+		return createSimulationObject(simulationObjectType, fullClassName, null, Material.nothing);
 	}
 
+	/**
+	 * @param material the main material asked for (start equipment, item class or composition step 2),
+	 *                 Material.nothing for none
+	 */
 	private IncompleteSimulationObject createSimulationObject(
 			SimulationObject_Type simulationObjectType,
-			String fullClassName, Position startPosition) {
+			String fullClassName, Position startPosition, Material material) {
 		
 		int incompleteObjectIndex;
 		int objectID;
@@ -460,7 +480,7 @@ public class Simulation extends SocialWorldThread {
 				incompleteObject = this.objectMaster.getIncompleteObject(incompleteObjectIndex, objectID);
 				createdObject = incompleteObject.getObject();
 				if (deriveComposition && createdObject.isSimulationObject()) {
-					deriveComposition(incompleteObject, simulationObjectType, fullClassName);
+					deriveComposition(incompleteObject, simulationObjectType, fullClassName, material);
 				}
 				if (createdObject.isSimulationObject()) {
 					//	if (GlobalSwitches.OUTPUT_CREATE_OBJECT_DETAILS) System.out.println("Erstellen SimObj > this.searchByPosition.addObject: " + ActualTime.asTime().toString());

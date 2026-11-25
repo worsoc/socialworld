@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2023  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -61,32 +62,30 @@ public class Mapping_HumanCrafted2LexemIDLowerPart {
 		mapping.put(EnumHumanCrafted.Dress, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_DRESS);
 		mapping.put(EnumHumanCrafted.Overgarment, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_OVERGARMENT);
 		mapping.put(EnumHumanCrafted.Glove, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_GLOVE);
-		mapping.put(EnumHumanCrafted.StrawHat, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_STRAW_HAT);
-		mapping.put(EnumHumanCrafted.WoolCap, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_WOOL_CAP);
+		mapping.put(EnumHumanCrafted.Hat, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_HAT);
 		mapping.put(EnumHumanCrafted.Headscarf, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_HEADSCARF);
-		mapping.put(EnumHumanCrafted.FeltHat, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_FELT_HAT);
 		mapping.put(EnumHumanCrafted.Beret, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_BERET);
 		mapping.put(EnumHumanCrafted.Hood, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_HOOD);
 		mapping.put(EnumHumanCrafted.Helmet, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_HELMET);
-		mapping.put(EnumHumanCrafted.LinenShirt, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_LINEN_SHIRT);
-		mapping.put(EnumHumanCrafted.WoolTunic, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_WOOL_TUNIC);
-		mapping.put(EnumHumanCrafted.SilkShirt, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_SILK_SHIRT);
+		mapping.put(EnumHumanCrafted.Tunic, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_TUNIC);
 		mapping.put(EnumHumanCrafted.Rags, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_RAGS);
 		mapping.put(EnumHumanCrafted.WorkTrousers, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_WORK_TROUSERS);
 		mapping.put(EnumHumanCrafted.Hose, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_HOSE);
-		mapping.put(EnumHumanCrafted.LinenDress, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_LINEN_DRESS);
-		mapping.put(EnumHumanCrafted.FineDress, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_FINE_DRESS);
 		mapping.put(EnumHumanCrafted.Habit, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_HABIT);
 		mapping.put(EnumHumanCrafted.Apron, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_APRON);
-		mapping.put(EnumHumanCrafted.LeatherApron, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_LEATHER_APRON);
 		mapping.put(EnumHumanCrafted.Cloak, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_CLOAK);
-		mapping.put(EnumHumanCrafted.FurCloak, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_FUR_CLOAK);
 		mapping.put(EnumHumanCrafted.ChainMail, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_CHAIN_MAIL);
-		mapping.put(EnumHumanCrafted.LeatherShoe, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_LEATHER_SHOE);
 		mapping.put(EnumHumanCrafted.Boot, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_BOOT);
 		mapping.put(EnumHumanCrafted.Sandal, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_SANDAL);
-		mapping.put(EnumHumanCrafted.WoolSock, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_WOOL_SOCK);
-		mapping.put(EnumHumanCrafted.LeatherGlove, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_LEATHER_GLOVE);
+		mapping.put(EnumHumanCrafted.Coif, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_COIF);
+		mapping.put(EnumHumanCrafted.Crown, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_CROWN);
+		mapping.put(EnumHumanCrafted.Wreath, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_WREATH);
+		mapping.put(EnumHumanCrafted.Doublet, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_DOUBLET);
+		mapping.put(EnumHumanCrafted.Gambeson, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_GAMBESON);
+		mapping.put(EnumHumanCrafted.Tabard, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_TABARD);
+		mapping.put(EnumHumanCrafted.Gauntlet, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_GAUNTLET);
+		mapping.put(EnumHumanCrafted.Clogs, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_CLOGS);
+		mapping.put(EnumHumanCrafted.Neckerchief, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_NECKERCHIEF);
 		mapping.put(EnumHumanCrafted.Pitchfork, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_PITCHFORK);
 		mapping.put(EnumHumanCrafted.Flail, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_FLAIL);
 		mapping.put(EnumHumanCrafted.Sickle, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_SICKLE);
@@ -133,8 +132,10 @@ public class Mapping_HumanCrafted2LexemIDLowerPart {
 		mapping.put(EnumHumanCrafted.Bowl, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_BOWL);
 		mapping.put(EnumHumanCrafted.Pot, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_POT);
 		mapping.put(EnumHumanCrafted.Flask, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_FLASK);
+		mapping.put(EnumHumanCrafted.Quiver, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_QUIVER);
 		mapping.put(EnumHumanCrafted.Coins, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_COINS);
 		mapping.put(EnumHumanCrafted.Ring, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_RING);
+		mapping.put(EnumHumanCrafted.SignetRing, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_SIGNET_RING);
 		mapping.put(EnumHumanCrafted.Rosary, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_ROSARY);
 		mapping.put(EnumHumanCrafted.Amulet, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_AMULET);
 		mapping.put(EnumHumanCrafted.Relic, GroupingOfSimulationObjects.LEXEMID_LOWERVALUE_RELIC);

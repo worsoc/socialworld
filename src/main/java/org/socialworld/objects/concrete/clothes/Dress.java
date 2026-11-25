@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,15 +19,21 @@
 package org.socialworld.objects.concrete.clothes;
 
 import org.socialworld.objects.enums.EnumHumanCrafted;
+import org.socialworld.objects.properties.IBurnable;
 
 /**
  * Clothes that cover the upper and the lower body at once: a dress, a habit.
+ *
+ * Since 2026-11-25 concrete (item class or composition, step 1): the ordinary dress; Habit is its other form. Since
+ * step 3 the former FineDress is Dress[silk]. The material comes from the
+ * composition (composition.csv), no longer from the class; formerly LinenDress.
  */
-public abstract class Dress extends Clothes {
+public class Dress extends Clothes implements IBurnable {
 
 	public Dress() {
 		super();
 		belongsTo = EnumHumanCrafted.Dress;
+		setLevelObjectSearch(8 /* base 9: 0.6 meters */ , 5 /* base 25: 1.3 meters */);
 	}
 
 	public boolean isLeftHandGlove() {return false; }

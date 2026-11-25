@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.socialworld.datasource.createObjects.CompositionCatalog;
 import org.socialworld.datasource.mariaDB.DatabaseAssumptions;
 import org.socialworld.objects.Item;
 import org.socialworld.objects.State;
@@ -59,11 +60,15 @@ class AllItemsInitStateTest {
 		return (State) method.invoke(item, stateClass.getName());
 	}
 
+	// until 2026-11-25 "at least the 104 of the hierarchy"; the merges of the clothes (item class or composition)
+	// change the number, so the search is compared with composition.csv, which names every item class by hand
 	@Test
-	void allConcreteItems_areFound_atLeastThe104OfTheHierarchy() throws Exception {
+	void allConcreteItems_areFound_asManyAsCompositionCsvNames() throws Exception {
 		List<Class<? extends Item>> items = concreteItems();
 		long withoutTestClasses = items.stream().filter(type -> !type.getSimpleName().startsWith("Test")).count();
-		assertThat(withoutTestClasses).isGreaterThanOrEqualTo(104);
+		long inTheCatalog = CompositionCatalog.getInstance().classNames().stream()
+				.filter(name -> !CompositionCatalog.isHumanKey(name)).count();
+		assertThat(withoutTestClasses).isEqualTo(inTheCatalog).isGreaterThan(90);
 	}
 
 	@Test

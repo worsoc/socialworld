@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2022  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,10 +19,16 @@
 package org.socialworld.objects.concrete.clothes;
 
 import org.socialworld.objects.enums.EnumHumanCrafted;
+import org.socialworld.objects.properties.IBurnable;
 import org.socialworld.objects.enums.EnumSide;
 import org.socialworld.objects.properties.IWearable;
 
-public abstract class Shoe extends Clothes implements IWearable {
+/**
+ * Since 2026-11-25 concrete (item class or composition, step 1): the ordinary shoe; Boot and Sandal are its other
+ * forms. The material comes from the
+ * composition (composition.csv), no longer from the class; formerly LeatherShoe.
+ */
+public class Shoe extends Clothes implements IWearable, IBurnable {
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -31,6 +38,7 @@ public abstract class Shoe extends Clothes implements IWearable {
 	public Shoe() {
 		super();
 		belongsTo = EnumHumanCrafted.Shoe;
+		setLevelObjectSearch(9 /* base 9: 0.2 meters */ , 6 /* base 25: 0.26 meters */);
 	}
 	
 

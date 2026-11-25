@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,21 +20,20 @@ package org.socialworld.objects.concrete.clothes.gloves;
 
 import org.socialworld.objects.concrete.clothes.Glove;
 import org.socialworld.objects.enums.EnumHumanCrafted;
-import org.socialworld.objects.properties.IBurnable;
-import org.socialworld.objects.properties.IProtective;
 
 /**
- * A leather glove.
+ * A gauntlet of iron and leather: the glove of a knight, more protection than the glove.
+ * New with the item class or composition overview, step 4 (2026-11-25).
  */
-public class LeatherGlove extends Glove implements IBurnable, IProtective {
+public class Gauntlet extends Glove {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	public LeatherGlove() {
+	public Gauntlet() {
 		super();
-		belongsTo = EnumHumanCrafted.LeatherGlove;
+		belongsTo = EnumHumanCrafted.Gauntlet;
 		setLevelObjectSearch(9 /* base 9: 0.2 meters */ , 6 /* base 25: 0.26 meters */);
 	}
 
@@ -41,9 +41,9 @@ public class LeatherGlove extends Glove implements IBurnable, IProtective {
 /////////////////////////////    abilities (constant values for now)   ///////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	public float getProtectionAgainstStab() {return 15; }
-	public float getProtectionAgainstClub() {return 10; }
-	public float getProtectionAgainstStroke() {return 20; }
-	public float getProtectionAgainstBackhand() {return 10; }
+	public float getProtectionAgainstStab() {return 45; }
+	public float getProtectionAgainstClub() {return 40; }
+	public float getProtectionAgainstStroke() {return 50; }
+	public float getProtectionAgainstBackhand() {return 35; }
 
 }
