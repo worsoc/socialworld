@@ -1,3 +1,21 @@
+/*
+ * Social World
+ * Copyright (C) 2020  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.objects.concrete;
 
 
@@ -21,6 +39,9 @@ public class StateComposition extends State {
 	public static final String VALUENAME_MAIN_MATERIAL = "mainMaterial";
 
 	public static final String METHODNAME_GET_MAIN_MATERIAL = "getMainMaterial";
+
+	/** For HiddenSimulationObject.setSomething: the simulation sets the derived set of a new instance (body build concept B3). */
+	public static final String METHODNAME_SET_MATERIAL_SET = "setMaterialSet";
 	
 	private MaterialSet materialSet;
 
@@ -105,6 +126,17 @@ public class StateComposition extends State {
 			materialSet = tableState.getMaterialSetFromRow(rowTable);
 		}
 		return returnFromInit(tableState, rowTable);
+	}
+
+	/**
+	 * Called by reflection through HiddenSimulationObject.setSomething (METHODNAME_SET_MATERIAL_SET), with the write
+	 * guard of the object: the simulation sets the set derived from swkind_materialset when swstate_composition was
+	 * empty at the start (body build concept B3, 2026-11-25). Private, so that no other class sets it directly.
+	 * The object nothing is shared by all objects without a composition and is never changed.
+	 */
+	private void setMaterialSet(MaterialSet materialSet) {
+		if (checkIsObjectNothing() || materialSet == null) return;
+		this.materialSet = materialSet;
 	}
 
 	private StateComposition( StateComposition original, PropertyProtection protectionOriginal, IAccessToken token) {

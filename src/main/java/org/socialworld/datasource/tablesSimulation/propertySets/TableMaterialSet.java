@@ -1,24 +1,21 @@
 /*
-* Social World
-* Copyright (C) 2022  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2022  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.datasource.tablesSimulation.propertySets;
 
 import java.sql.ResultSet;
@@ -157,6 +154,11 @@ public class TableMaterialSet extends TableSet {
 		}
 	}
 
+	/** Deletes the sets from the ID on (the button "Material-Sets aus Katalog" writes them anew, 2026-11-24). */
+	public void deleteFromSetID(int firstSetID) {
+		delete("DELETE FROM " + getTableName() + " WHERE material_set_id >= " + firstSetID);
+	}
+
 	public int getMaterial(int index) {
 		return material[index];
 	}
@@ -176,7 +178,8 @@ public class TableMaterialSet extends TableSet {
 	}
 */
 	public MaterialSet getMaterialSet(int material_set_id) {
-		if (material_set_id >= 0 && material_set_id <= materialSets.length) {
+		// < since 2026-11-24 (with <= the ID 1000 would have been out of the array)
+		if (material_set_id >= 0 && material_set_id < materialSets.length) {
 			return materialSets[material_set_id];
 		}
 		return MaterialSet.getObjectNothing();

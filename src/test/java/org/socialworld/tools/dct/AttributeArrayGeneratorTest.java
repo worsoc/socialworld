@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,6 +27,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.socialworld.attributes.Attribute;
+import org.socialworld.attributes.BodyBuild;
 import org.socialworld.attributes.AttributeArray;
 import org.socialworld.tools.dct.AttributeArrayGenerator.GeneratedArray;
 
@@ -210,6 +212,38 @@ public class AttributeArrayGeneratorTest {
   void catalog_rejectsWrongNumberOfLevels() {
     assertThatThrownBy(() -> AttributeCharacterCatalog.parse("1;farmer;sketch;o;o;o"))
         .isInstanceOf(IllegalArgumentException.class);
+  }
+
+  // body build concept B1 (2026-11-25): the column build chooses the composition of a human
+  @Test
+  void catalog_readsTheBodyBuild_ofAllCharacters() {
+    List<AttributeCharacter> characters = AttributeCharacterCatalog.load().getCharacters();
+    Set<BodyBuild> used = new HashSet<>();
+    for (AttributeCharacter character : characters) {
+      assertThat(character.getBuild()).as(character.getName()).isNotNull();
+      used.add(character.getBuild());
+    }
+    assertThat(used).as("every build is used").containsExactlyInAnyOrder(BodyBuild.values());
+    assertThat(characters.get(30).getBuild()).as("village smith").isEqualTo(BodyBuild.sturdy);
+    assertThat(characters.get(85).getBuild()).as("ascetic").isEqualTo(BodyBuild.gaunt);
+    assertThat(characters.get(16).getBuild()).as("innkeeper").isEqualTo(BodyBuild.stout);
+  }
+
+  @Test
+  void catalog_buildColumn_isOptional_andChecked() {
+    AttributeCharacter withBuild = AttributeCharacterCatalog.parse("1;a;b;o;o;o;o;o;o;o;o;o;8.0;3;20;70;40;60;stout\n")
+        .getCharacters().get(0);
+    AttributeCharacter withoutBuild = AttributeCharacterCatalog.parse("1;a;b;o;o;o;o;o;o;o;o;o;8.0;3;20;70;40;60\n")
+        .getCharacters().get(0);
+    AttributeCharacter onlyLevels = AttributeCharacterCatalog.parse("1;a;b;o;o;o;o;o;o;o;o;o\n").getCharacters().get(0);
+
+    assertThat(withBuild.getBuild()).isEqualTo(BodyBuild.stout);
+    assertThat(withoutBuild.getBuild()).isEqualTo(BodyBuild.DEFAULT).isEqualTo(BodyBuild.average);
+    assertThat(onlyLevels.getBuild()).isEqualTo(BodyBuild.average);
+    assertThatThrownBy(() -> AttributeCharacterCatalog.parse("1;a;b;o;o;o;o;o;o;o;o;o;8.0;3;20;70;40;60;fat\n"))
+        .as("unknown build").isInstanceOf(IllegalArgumentException.class);
+    assertThatThrownBy(() -> AttributeCharacterCatalog.parse("1;a;b;o;o;o;o;o;o;o;o;o;8.0;3;20;70;40;60;stout;x\n"))
+        .as("20 fields").isInstanceOf(IllegalArgumentException.class);
   }
 
   // ---------------------------------------------------------------------------

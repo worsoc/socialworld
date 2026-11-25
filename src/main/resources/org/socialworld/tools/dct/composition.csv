@@ -1,0 +1,137 @@
+# Composition of the items (composition concept Z2, 2026-11-24) and of the humans (body build concept B2, 2026-11-25);
+# read by CompositionCatalog.
+# <class>;<recipe>|<recipe>...   class = simple name of the item class, or Human.<build> with a name of the enum
+#                                 BodyBuild (column build of characters.csv)
+# recipe = <material>:<share>+-<spread>,...   shares in percent, the shares of a recipe add up to 100;
+#          the spread is how far a variant may differ (0 or left out: always the same share)
+# | separates alternatives: the thing is made of the one OR the other (a bowl of wood or of clay)
+# materials are the names of the enum Material
+
+# clothes
+Beret;wool:90+-5,linen:10+-5
+FeltHat;felt:95+-3,linen:5+-3
+Headscarf;linen:100|cotton:100
+Helmet;iron:85+-5,leather:15+-5
+Hood;wool:85+-10,linen:15+-10
+StrawHat;straw:95+-3,linen:5+-3
+WoolCap;wool:100
+FineDress;silk:60+-15,linen:40+-15
+Habit;wool:95+-5,linen:5+-5
+LinenDress;linen:95+-5,cotton:5+-5
+LeatherGlove;leather:95+-3,linen:5+-3
+Apron;linen:90+-5,hemp:10+-5
+ChainMail;iron:95+-3,leather:5+-3
+Cloak;wool:90+-5,linen:10+-5
+FurCloak;fur:70+-10,wool:25+-10,leather:5+-3
+LeatherApron;leather:95+-3,linen:5+-3
+LinenShirt;linen:90+-10,cotton:10+-10
+Rags;linen:50+-20,wool:30+-15,hemp:20+-10
+SilkShirt;silk:95+-5,linen:5+-5
+WoolTunic;wool:95+-5,linen:5+-5
+Boot;leather:90+-5,wood:5+-3,iron:5+-3
+LeatherShoe;leather:93+-3,linen:7+-3
+Sandal;leather:80+-10,wood:20+-10
+WoolSock;wool:100
+Hose;wool:70+-15,linen:30+-15
+WorkTrousers;linen:60+-15,hemp:30+-10,leather:10+-5
+
+# containers
+Basket;wood:90+-5,hemp:10+-5
+Bowl;wood:100|clay:100
+Bucket;wood:85+-5,iron:15+-5
+Flask;clay:95+-3,wax:5+-3|glas:90+-5,wax:5+-3,leather:5+-3
+Jug;clay:100
+Pot;iron:100|clay:100|bronze:100
+Purse;leather:95+-3,linen:5+-3
+Sack;hemp:90+-5,linen:10+-5
+Satchel;leather:90+-5,linen:10+-5
+Waterskin;leather:90+-5,wax:5+-3,hemp:5+-3
+
+# devotional, valuables, writing, pastime
+Amulet;silver:80+-10,leather:20+-10|bronze:80+-10,leather:20+-10|bone:70+-10,leather:30+-10
+Relic;bone:60+-20,silver:25+-10,wood:15+-10
+Rosary;wood:85+-5,hemp:15+-5|bone:85+-5,hemp:15+-5
+Coins;silver:90+-5,copper:10+-5|copper:100|gold:90+-5,silver:10+-5
+Ring;gold:100|silver:100|bronze:100|copper:100
+Book;parchment:70+-10,leather:20+-5,wood:10+-5|paper:70+-10,leather:20+-5,wood:10+-5
+Quill;feather:100
+Scroll;parchment:95+-3,wood:5+-3|paper:95+-3,wood:5+-3
+Dice;bone:100|wood:100
+Flute;wood:100|bone:100
+JugglingBalls;leather:50+-15,straw:50+-15
+Lute;wood:90+-5,gut:8+-3,bone:2+-1
+
+# tools
+Awl;iron:60+-10,wood:40+-10
+Axe;iron:55+-10,wood:45+-10
+Candle;wax:95+-3,linen:5+-3|fat:95+-3,linen:5+-3
+Crook;wood:100
+Currycomb;iron:70+-10,wood:30+-10
+FishingNet;hemp:90+-5,stone:10+-5
+Flail;wood:90+-5,leather:10+-5
+Hammer;iron:60+-10,wood:40+-10
+Hoe;wood:60+-10,iron:40+-10
+Key;iron:100|bronze:100
+Knife;steel:60+-10,wood:40+-10|steel:60+-10,bone:40+-10
+Lantern;iron:70+-10,horn:30+-10|iron:60+-10,glas:40+-10
+Mortar;stone:100|wood:100
+Needle;iron:100|bone:100
+Oar;wood:100
+Pickaxe;iron:55+-10,wood:45+-10
+Pitchfork;wood:80+-10,iron:20+-10
+Razor;steel:70+-10,horn:30+-10|steel:70+-10,bone:30+-10
+Rope;hemp:100
+Saw;steel:70+-10,wood:30+-10
+Scales;bronze:70+-10,iron:20+-10,hemp:10+-5
+Shears;iron:100|steel:100
+Shovel;wood:70+-10,iron:30+-10
+Sickle;iron:60+-10,wood:40+-10
+SignalHorn;horn:95+-3,leather:5+-3
+Spindle;wood:90+-5,stone:10+-5|wood:90+-5,clay:10+-5
+Staff;wood:100
+Tongs;iron:100
+Whip;leather:90+-5,wood:10+-5
+
+# weapons
+Bow;wood:90+-3,hemp:7+-2,horn:3+-2
+Cudgel;wood:100|wood:90+-5,iron:10+-5
+Dagger;steel:75+-5,wood:15+-5,leather:10+-5
+LongSword;steel:85+-5,leather:8+-3,wood:7+-3
+Shield;wood:75+-10,iron:15+-5,leather:10+-5
+ShortSword;steel:80+-5,leather:10+-5,wood:10+-5
+Spear;wood:80+-5,steel:20+-5
+
+# food and drink
+Water;water:100
+Beer;water:90+-3,malt:10+-3
+Wine;water:85+-3,fruit:15+-3
+Bread;grain:66+-6,water:31+-5,salt:3+-1
+Cake;grain:45+-8,honey:20+-8,milk:20+-5,fat:10+-5,fruit:5+-5
+Cheese;milk:95+-3,salt:5+-3
+DriedFish;fish:90+-5,salt:10+-5
+Apple;fruit:100
+Banana;fruit:100
+Berries;fruit:100
+Ham;meat:80+-5,fat:15+-5,salt:5+-2
+Sausage;meat:70+-10,fat:20+-8,salt:3+-1,plant:7+-5
+Honey;honey:100
+Onion;vegetable:100
+Root;vegetable:100
+Turnip;vegetable:100
+
+# nature
+Branch;wood:100
+Flower;plant:100
+Herb;plant:100
+Hide;leather:70+-15,fur:30+-15
+Charcoal;coal:100
+Ore;ore:85+-10,stone:15+-10
+Stone;stone:100
+
+# humans, one line per body build (at the end, so that the set IDs of the items stay):
+#   meat = muscles, organs and skin; water = blood and body fluids; gut = guts and sinews
+Human.gaunt;meat:60+-4,fat:8+-3,bone:18+-2,water:9+-1,gut:5+-1
+Human.wiry;meat:63+-4,fat:10+-3,bone:15+-2,water:8+-1,gut:4+-1
+Human.average;meat:52+-4,fat:20+-3,bone:15+-2,water:8+-1,gut:5+-1
+Human.sturdy;meat:55+-4,fat:22+-3,bone:13+-2,water:6+-1,gut:4+-1
+Human.stout;meat:42+-4,fat:36+-3,bone:12+-2,water:6+-1,gut:4+-1

@@ -1,106 +1,109 @@
-# no;name;sketch;mood;courage;morals;materialism;tiredness;curiosity;spirituality;hunger;power;sleepHours;mealsPerDay;tiredWake;tiredBed;hungerFull;hungerEat
+# no;name;sketch;mood;courage;morals;materialism;tiredness;curiosity;spirituality;hunger;power;sleepHours;mealsPerDay;tiredWake;tiredBed;hungerFull;hungerEat;build
 # tiredWake/tiredBed (tiredness after the needed sleep / when going to bed) and hungerFull/hungerEat (hunger after a meal /
 #   when going to eat): the ideal, displayed values 0..99; the tiers of the event rules for tiredness and hunger sit there
 #   instead of at the band of the level (EID concept 14). Missing: 20;70;40;60 (farmer). All 100 characters have it since 2026-11-18.
 # sleepHours (6.0..10.0 in half hours) and mealsPerDay (1..5): the body's need, not how the character lives (EID concept 13.4)
 # levels (attribute values 0..9999, displayed 0..99): --- 0-1000, -- 800-2800, - 2500-4200, o 3800-6200, + 5800-7500, ++ 7200-9200, +++ 9000-9999, ~ 2000-8000
-1;farmer;middle-aged, steady and hard-working;~;o;o;o;~;o;o;~;+;8.0;3;20;70;40;60
-2;farmer's wife;mother of four, practical, always on her feet;~;o;+;o;+;o;o;~;o;8.0;3;30;85;40;60
-3;farmhand;strong, unambitious, likes his food;~;o;o;-;~;-;o;+;+;8.5;4;20;70;50;65
-4;maid;diligent, pious, quiet;~;-;+;-;+;o;+;~;o;8.0;3;30;85;40;60
-5;carpenter;reliable craftsman;~;o;o;o;~;o;o;~;+;8.0;3;20;70;40;60
-6;shopkeeper;good at sums, hears all the gossip;~;o;o;+;~;+;o;~;-;7.5;3;20;70;40;60
-7;fisherman;weather-beaten, makes offerings to the sea;~;+;o;o;~;o;+;~;+;7.5;3;20;70;40;60
-8;fisherman's wife;mends nets, waits on the shore;~;o;o;o;~;-;+;~;o;8.0;3;30;75;40;60
-9;shepherd;much alone, content;+;o;o;-;~;o;+;~;o;8.0;2;20;65;35;65
-10;miller;a little stingy, well fed;~;o;-;+;~;o;o;-;+;8.0;4;20;70;25;40
-11;baker;gets up at night, cheerful;+;o;o;o;+;o;o;-;o;7.0;3;25;80;30;50
-12;washerwoman;hard work, little time for anything else;~;o;o;-;+;-;o;~;o;8.0;3;25;85;40;60
-13;apprentice;young, curious, always hungry;~;o;o;o;~;+;-;+;o;9.0;4;15;70;50;65
-14;retired farmer;has handed over the farm, sits a lot;~;-;+;o;+;-;+;~;-;7.0;3;35;80;40;60
-15;grandmother;tells stories, frail;+;-;+;-;+;o;+;~;--;7.0;2;40;85;35;65
-16;barmaid;quick, hears a lot, believes little;+;o;o;o;+;+;-;~;-;7.5;3;25;80;40;60
-17;innkeeper;sociable, eats with the guests;+;o;o;+;~;+;-;-;o;8.0;4;20;70;25;40
-18;carter;often on the road, not easily scared;~;+;o;o;~;o;o;~;+;8.0;3;20;70;40;60
-19;weaver;patient, sits all day;~;-;o;o;~;o;o;~;-;8.0;3;20;65;40;60
-20;potter;likes to try new shapes;~;o;o;o;~;+;o;~;o;8.0;3;20;70;40;60
-21;shepherdess;young, sings while working;+;o;o;-;~;+;o;~;o;8.5;3;20;70;40;60
-22;woodcutter;bear of a man, taciturn;~;+;o;-;~;-;o;+;++;9.0;4;20;70;50;65
-23;tanner;smelly, grumpy, believes in nothing;-;o;o;o;~;-;-;~;+;8.0;3;20;70;40;60
-24;pedlar;talkative, not too strict with the truth;+;+;-;+;~;+;-;~;o;7.5;3;20;70;40;60
-25;widow;withdrawn, prays a lot;-;-;+;o;~;-;+;~;-;8.0;2;20;70;35;65
-26;beekeeper;calm, watches nature;+;o;+;o;~;+;+;~;o;8.0;3;20;65;40;60
-27;ropemaker;unremarkable in every way;~;o;o;o;~;o;o;~;o;8.0;3;20;70;40;60
-28;gardener;frugal, friendly;+;o;o;-;~;o;o;~;o;8.0;2;20;70;35;65
-29;stable boy;tired, hungry, cheeky;~;o;o;-;+;o;-;+;o;9.0;4;25;80;50;65
-30;midwife;has seen it all, fetches children at night;~;+;+;-;+;o;+;~;o;7.0;3;30;85;40;60
-31;village smith;strong, respected, big appetite;~;+;o;o;~;o;o;+;++;8.5;4;20;70;50;65
-32;seamstress;ambitious, wants to move to town;~;o;o;+;~;+;o;~;-;8.0;3;20;65;40;60
-33;cowherd girl;almost still a child, asks about everything;+;-;o;-;~;++;o;+;-;9.5;3;15;65;45;65
-34;day labourer;always on the move, always short of money;-;o;o;+;+;o;-;+;o;8.0;3;25;85;45;65
-35;tinker;travelling, resourceful, not quite honest;~;o;-;o;~;+;-;~;o;7.5;3;20;70;40;60
-36;brewer;business-minded, full of life;+;o;o;+;~;o;o;-;o;8.0;4;20;70;25;40
-37;charcoal burner;lives in the forest, taciturn, superstitious;-;+;o;-;+;-;+;~;+;8.0;3;25;85;40;60
-38;ferryman;takes anyone across who pays;~;o;o;+;~;-;+;~;+;8.0;3;20;65;40;60
-39;shoemaker;cautious, sticks to his last;~;-;o;o;~;o;o;~;o;8.0;3;20;65;40;60
-40;old goatherd;needs nothing, at peace with himself;+;o;o;--;~;-;+;~;-;7.0;2;25;75;35;65
-41;farmer's son;wants to leave and see the world;~;+;o;o;~;++;-;+;+;8.5;4;20;70;50;65
-42;farmer's daughter;newly engaged, in good spirits;+;o;+;o;~;o;o;~;o;8.5;3;20;70;40;60
-43;market woman;loud, bargains hard;+;+;o;+;~;+;-;~;o;7.5;3;20;70;40;60
-44;gatekeeper;bored, drowsy, waiting for his meal;-;o;o;o;+;-;o;+;+;9.0;4;30;75;50;65
-45;farmhand fond of the jug;drinks, sleeps badly;-;o;-;o;+;-;-;~;o;8.5;3;35;85;40;60
-46;village priest;strict in morals, needs little;~;o;++;--;~;o;++;~;-;7.0;2;25;75;35;65
-47;convent sister;humble, serves the sick;+;-;++;--;~;-;++;~;-;7.0;2;25;75;35;65
-48;rich merchant;well travelled, coolly calculating;~;o;-;++;~;+;-;-;-;8.0;4;20;65;25;40
-49;moneylender;suspicious, knows no mercy;-;-;--;++;~;o;-;-;-;7.0;3;25;70;30;50
-50;mercenary;fights for whoever pays;~;++;-;+;~;o;-;+;++;8.0;4;20;70;50;65
-51;knight;proud of his honour, god-fearing, strong;~;++;+;o;~;o;+;~;++;8.0;4;20;70;45;60
-52;pickpocket;quick, cheeky, hungry;+;+;--;+;~;+;-;+;-;7.5;3;20;70;45;65
-53;beggar;has lost everything, hopes for mercy;-;-;o;--;+;o;+;++;-;8.0;3;30;85;55;75
-54;scholar;grown grey over books, sleeps too little;~;-;+;-;+;++;o;~;--;8.0;3;35;85;40;60
-55;herb woman;knows about plants and spirits;~;o;+;-;~;++;++;~;-;7.5;2;20;70;35;65
-56;minstrel;merry, reckless, never full;++;+;-;-;~;++;-;+;-;8.0;4;20;70;50;65
-57;hunter;tireless, fearless in the forest;~;++;o;-;~;+;o;~;+;7.5;3;20;65;40;60
-58;treasure hunter;greedy for gold and adventure;+;++;-;++;~;++;-;~;+;7.5;3;20;70;40;60
-59;tax collector;hated, pedantic;-;o;-;++;~;-;-;-;o;8.0;3;20;70;30;50
-60;village mayor;self-confident, minds his own advantage;~;+;o;+;~;o;o;-;o;8.0;4;20;70;25;40
-61;stingy merchant's widow;counts every coin;-;-;o;++;~;-;o;-;--;7.5;2;25;75;25;50
-62;seafarer;has seen distant coasts;+;++;o;o;~;++;+;~;+;7.5;3;20;70;40;60
-63;scribe monk;copies texts by candlelight;~;-;++;--;+;+;++;~;--;8.0;2;35;85;35;65
-64;poacher;cunning, risks a lot for a roast;~;+;-;o;~;o;-;+;+;7.5;3;20;70;45;65
-65;juggler;jokes about everything, the gods included;++;+;o;-;~;+;--;~;o;8.0;3;20;70;40;60
-66;miner;toils underground, worn out and strong;-;+;o;o;++;-;+;+;++;9.0;4;30;90;50;65
-67;wandering preacher;travels in hardship, burns for his faith;+;+;+;--;+;o;++;+;-;7.0;2;30;85;45;70
-68;horse dealer;cunning, charming, lies without blinking;+;o;--;++;~;o;-;~;o;7.5;3;20;70;40;60
-69;wrestler;strong, cheerful, eats for three;+;+;o;o;~;-;-;++;++;9.0;5;20;65;60;72
-70;poet;melancholic, unworldly;--;-;+;--;+;++;+;~;--;9.0;2;30;80;35;65
-71;corrupt town guard;holds out his hand;~;o;--;+;~;-;-;~;+;8.0;3;20;70;40;60
-72;barber-surgeon;heals, cuts, sleeps little;~;+;+;o;+;+;o;~;o;7.0;3;30;85;40;60
-73;pilgrim woman;walks for weeks to the shrine;+;o;+;--;++;+;++;+;-;8.5;3;25;90;45;65
-74;legacy hunter;flatters the old;~;-;--;++;~;o;-;~;-;8.0;3;20;70;40;60
-75;wounded veteran;has seen too much;--;+;+;-;+;-;o;~;-;9.0;3;35;85;40;60
-76;young widow;runs the farm alone and does not give up;-;+;+;o;+;o;o;~;o;7.5;3;25;85;40;60
-77;estate steward;orderly, petty;~;o;o;+;~;-;o;-;-;8.0;3;20;65;30;50
-78;alchemist;seeks gold and forgets to sleep;~;+;o;+;++;++;-;~;-;8.0;3;40;90;40;60
-79;woodswoman;free, wild, owns nothing;+;++;o;--;~;+;+;~;+;8.0;2;20;70;35;65
-80;smuggler;out at night, fears nothing;~;++;--;+;+;o;-;~;o;7.0;3;30;85;40;60
-81;gambler;on top of the world, never enough;++;+;-;++;+;+;-;~;-;7.0;3;30;85;40;60
-82;hermit;lives on roots, prays;+;o;+;--;~;-;++;+;-;6.5;1;20;70;35;85
-83;orphan;neglected, hungry, wide awake;-;-;o;-;~;++;o;++;--;9.5;3;15;65;55;75
-84;spoilt young noble;well fed, well rested, bored;+;-;-;++;--;o;-;--;-;10.0;4;10;45;10;25
-85;zealous temple servant;knows only his god, hates questions;-;+;+;--;~;--;++;~;o;7.0;2;25;75;35;65
-86;ascetic;fasts, owns nothing, is held to be holy;+;o;+++;---;+;-;+++;++;--;6.0;1;30;85;45;95
-87;robber chief;ruthless, fearless, strong;~;+++;---;++;~;o;--;~;++;7.5;4;20;70;45;60
-88;giant;show fighter at the fair;+;+;o;-;~;-;-;++;+++;9.5;5;20;60;60;72
-89;paralysed old man;bedridden, tired, composed;-;--;+;-;++;o;+;~;---;10.0;2;50;90;35;65
-90;cowardly courtier;crawls upwards, flees every danger;~;---;--;++;~;+;-;-;--;8.5;4;20;70;25;40
-91;mad prophet;sees the end coming and stays awake at night;--;++;o;---;++;+;+++;+;-;6.0;2;40;90;45;70
-92;greedy prince;wants everything, gives nothing;~;o;--;+++;~;-;-;--;-;9.0;5;20;65;10;22
-93;freethinker;doubts every god, questions everything;+;+;+;o;~;+++;---;~;o;8.0;3;20;70;40;60
-94;daredevil;reckless, laughs in the face of danger;++;+++;-;o;~;++;-;~;+;7.5;3;20;70;40;60
-95;murderer;cold, without remorse;-;+;---;+;~;-;---;~;+;7.0;3;20;70;40;60
-96;sunny nature;always in good spirits, whatever happens;+++;+;+;-;-;+;o;~;o;7.5;3;15;60;40;60
-97;deeply melancholic woman;sees no sense in anything;---;-;+;-;++;--;o;-;-;10.0;2;45;85;25;50
-98;starving refugee;has been on the run for weeks;--;-;o;--;++;-;+;+++;--;8.0;3;40;90;75;95
-99;exhausted night watchman;third night without sleep;-;o;o;o;+++;-;o;+;o;8.0;3;50;95;45;65
-100;child prodigy;grasps everything, wants to know everything;+;+;+;-;~;+++;o;~;-;9.0;3;15;65;40;60
+# build (gaunt, wiry, average, sturdy, stout): the body build, it chooses the composition of a human (recipes Human.<build>
+#   in composition.csv, body build concept). Missing: average. Prefilled 2026-11-25 by a rule from power, mealsPerDay and
+#   hunger (muscle from power, fat from mealsPerDay, one step thinner at hunger ++ or more), to be corrected by hand.
+1;farmer;middle-aged, steady and hard-working;~;o;o;o;~;o;o;~;+;8.0;3;20;70;40;60;wiry
+2;farmer's wife;mother of four, practical, always on her feet;~;o;+;o;+;o;o;~;o;8.0;3;30;85;40;60;average
+3;farmhand;strong, unambitious, likes his food;~;o;o;-;~;-;o;+;+;8.5;4;20;70;50;65;sturdy
+4;maid;diligent, pious, quiet;~;-;+;-;+;o;+;~;o;8.0;3;30;85;40;60;average
+5;carpenter;reliable craftsman;~;o;o;o;~;o;o;~;+;8.0;3;20;70;40;60;wiry
+6;shopkeeper;good at sums, hears all the gossip;~;o;o;+;~;+;o;~;-;7.5;3;20;70;40;60;average
+7;fisherman;weather-beaten, makes offerings to the sea;~;+;o;o;~;o;+;~;+;7.5;3;20;70;40;60;wiry
+8;fisherman's wife;mends nets, waits on the shore;~;o;o;o;~;-;+;~;o;8.0;3;30;75;40;60;average
+9;shepherd;much alone, content;+;o;o;-;~;o;+;~;o;8.0;2;20;65;35;65;gaunt
+10;miller;a little stingy, well fed;~;o;-;+;~;o;o;-;+;8.0;4;20;70;25;40;sturdy
+11;baker;gets up at night, cheerful;+;o;o;o;+;o;o;-;o;7.0;3;25;80;30;50;average
+12;washerwoman;hard work, little time for anything else;~;o;o;-;+;-;o;~;o;8.0;3;25;85;40;60;average
+13;apprentice;young, curious, always hungry;~;o;o;o;~;+;-;+;o;9.0;4;15;70;50;65;stout
+14;retired farmer;has handed over the farm, sits a lot;~;-;+;o;+;-;+;~;-;7.0;3;35;80;40;60;average
+15;grandmother;tells stories, frail;+;-;+;-;+;o;+;~;--;7.0;2;40;85;35;65;gaunt
+16;barmaid;quick, hears a lot, believes little;+;o;o;o;+;+;-;~;-;7.5;3;25;80;40;60;average
+17;innkeeper;sociable, eats with the guests;+;o;o;+;~;+;-;-;o;8.0;4;20;70;25;40;stout
+18;carter;often on the road, not easily scared;~;+;o;o;~;o;o;~;+;8.0;3;20;70;40;60;wiry
+19;weaver;patient, sits all day;~;-;o;o;~;o;o;~;-;8.0;3;20;65;40;60;average
+20;potter;likes to try new shapes;~;o;o;o;~;+;o;~;o;8.0;3;20;70;40;60;average
+21;shepherdess;young, sings while working;+;o;o;-;~;+;o;~;o;8.5;3;20;70;40;60;average
+22;woodcutter;bear of a man, taciturn;~;+;o;-;~;-;o;+;++;9.0;4;20;70;50;65;sturdy
+23;tanner;smelly, grumpy, believes in nothing;-;o;o;o;~;-;-;~;+;8.0;3;20;70;40;60;wiry
+24;pedlar;talkative, not too strict with the truth;+;+;-;+;~;+;-;~;o;7.5;3;20;70;40;60;average
+25;widow;withdrawn, prays a lot;-;-;+;o;~;-;+;~;-;8.0;2;20;70;35;65;gaunt
+26;beekeeper;calm, watches nature;+;o;+;o;~;+;+;~;o;8.0;3;20;65;40;60;average
+27;ropemaker;unremarkable in every way;~;o;o;o;~;o;o;~;o;8.0;3;20;70;40;60;average
+28;gardener;frugal, friendly;+;o;o;-;~;o;o;~;o;8.0;2;20;70;35;65;gaunt
+29;stable boy;tired, hungry, cheeky;~;o;o;-;+;o;-;+;o;9.0;4;25;80;50;65;stout
+30;midwife;has seen it all, fetches children at night;~;+;+;-;+;o;+;~;o;7.0;3;30;85;40;60;average
+31;village smith;strong, respected, big appetite;~;+;o;o;~;o;o;+;++;8.5;4;20;70;50;65;sturdy
+32;seamstress;ambitious, wants to move to town;~;o;o;+;~;+;o;~;-;8.0;3;20;65;40;60;average
+33;cowherd girl;almost still a child, asks about everything;+;-;o;-;~;++;o;+;-;9.5;3;15;65;45;65;average
+34;day labourer;always on the move, always short of money;-;o;o;+;+;o;-;+;o;8.0;3;25;85;45;65;average
+35;tinker;travelling, resourceful, not quite honest;~;o;-;o;~;+;-;~;o;7.5;3;20;70;40;60;average
+36;brewer;business-minded, full of life;+;o;o;+;~;o;o;-;o;8.0;4;20;70;25;40;stout
+37;charcoal burner;lives in the forest, taciturn, superstitious;-;+;o;-;+;-;+;~;+;8.0;3;25;85;40;60;wiry
+38;ferryman;takes anyone across who pays;~;o;o;+;~;-;+;~;+;8.0;3;20;65;40;60;wiry
+39;shoemaker;cautious, sticks to his last;~;-;o;o;~;o;o;~;o;8.0;3;20;65;40;60;average
+40;old goatherd;needs nothing, at peace with himself;+;o;o;--;~;-;+;~;-;7.0;2;25;75;35;65;gaunt
+41;farmer's son;wants to leave and see the world;~;+;o;o;~;++;-;+;+;8.5;4;20;70;50;65;sturdy
+42;farmer's daughter;newly engaged, in good spirits;+;o;+;o;~;o;o;~;o;8.5;3;20;70;40;60;average
+43;market woman;loud, bargains hard;+;+;o;+;~;+;-;~;o;7.5;3;20;70;40;60;average
+44;gatekeeper;bored, drowsy, waiting for his meal;-;o;o;o;+;-;o;+;+;9.0;4;30;75;50;65;sturdy
+45;farmhand fond of the jug;drinks, sleeps badly;-;o;-;o;+;-;-;~;o;8.5;3;35;85;40;60;average
+46;village priest;strict in morals, needs little;~;o;++;--;~;o;++;~;-;7.0;2;25;75;35;65;gaunt
+47;convent sister;humble, serves the sick;+;-;++;--;~;-;++;~;-;7.0;2;25;75;35;65;gaunt
+48;rich merchant;well travelled, coolly calculating;~;o;-;++;~;+;-;-;-;8.0;4;20;65;25;40;stout
+49;moneylender;suspicious, knows no mercy;-;-;--;++;~;o;-;-;-;7.0;3;25;70;30;50;average
+50;mercenary;fights for whoever pays;~;++;-;+;~;o;-;+;++;8.0;4;20;70;50;65;sturdy
+51;knight;proud of his honour, god-fearing, strong;~;++;+;o;~;o;+;~;++;8.0;4;20;70;45;60;sturdy
+52;pickpocket;quick, cheeky, hungry;+;+;--;+;~;+;-;+;-;7.5;3;20;70;45;65;average
+53;beggar;has lost everything, hopes for mercy;-;-;o;--;+;o;+;++;-;8.0;3;30;85;55;75;gaunt
+54;scholar;grown grey over books, sleeps too little;~;-;+;-;+;++;o;~;--;8.0;3;35;85;40;60;average
+55;herb woman;knows about plants and spirits;~;o;+;-;~;++;++;~;-;7.5;2;20;70;35;65;gaunt
+56;minstrel;merry, reckless, never full;++;+;-;-;~;++;-;+;-;8.0;4;20;70;50;65;stout
+57;hunter;tireless, fearless in the forest;~;++;o;-;~;+;o;~;+;7.5;3;20;65;40;60;wiry
+58;treasure hunter;greedy for gold and adventure;+;++;-;++;~;++;-;~;+;7.5;3;20;70;40;60;wiry
+59;tax collector;hated, pedantic;-;o;-;++;~;-;-;-;o;8.0;3;20;70;30;50;average
+60;village mayor;self-confident, minds his own advantage;~;+;o;+;~;o;o;-;o;8.0;4;20;70;25;40;stout
+61;stingy merchant's widow;counts every coin;-;-;o;++;~;-;o;-;--;7.5;2;25;75;25;50;gaunt
+62;seafarer;has seen distant coasts;+;++;o;o;~;++;+;~;+;7.5;3;20;70;40;60;wiry
+63;scribe monk;copies texts by candlelight;~;-;++;--;+;+;++;~;--;8.0;2;35;85;35;65;gaunt
+64;poacher;cunning, risks a lot for a roast;~;+;-;o;~;o;-;+;+;7.5;3;20;70;45;65;wiry
+65;juggler;jokes about everything, the gods included;++;+;o;-;~;+;--;~;o;8.0;3;20;70;40;60;average
+66;miner;toils underground, worn out and strong;-;+;o;o;++;-;+;+;++;9.0;4;30;90;50;65;sturdy
+67;wandering preacher;travels in hardship, burns for his faith;+;+;+;--;+;o;++;+;-;7.0;2;30;85;45;70;gaunt
+68;horse dealer;cunning, charming, lies without blinking;+;o;--;++;~;o;-;~;o;7.5;3;20;70;40;60;average
+69;wrestler;strong, cheerful, eats for three;+;+;o;o;~;-;-;++;++;9.0;5;20;65;60;72;wiry
+70;poet;melancholic, unworldly;--;-;+;--;+;++;+;~;--;9.0;2;30;80;35;65;gaunt
+71;corrupt town guard;holds out his hand;~;o;--;+;~;-;-;~;+;8.0;3;20;70;40;60;wiry
+72;barber-surgeon;heals, cuts, sleeps little;~;+;+;o;+;+;o;~;o;7.0;3;30;85;40;60;average
+73;pilgrim woman;walks for weeks to the shrine;+;o;+;--;++;+;++;+;-;8.5;3;25;90;45;65;average
+74;legacy hunter;flatters the old;~;-;--;++;~;o;-;~;-;8.0;3;20;70;40;60;average
+75;wounded veteran;has seen too much;--;+;+;-;+;-;o;~;-;9.0;3;35;85;40;60;average
+76;young widow;runs the farm alone and does not give up;-;+;+;o;+;o;o;~;o;7.5;3;25;85;40;60;average
+77;estate steward;orderly, petty;~;o;o;+;~;-;o;-;-;8.0;3;20;65;30;50;average
+78;alchemist;seeks gold and forgets to sleep;~;+;o;+;++;++;-;~;-;8.0;3;40;90;40;60;average
+79;woodswoman;free, wild, owns nothing;+;++;o;--;~;+;+;~;+;8.0;2;20;70;35;65;wiry
+80;smuggler;out at night, fears nothing;~;++;--;+;+;o;-;~;o;7.0;3;30;85;40;60;average
+81;gambler;on top of the world, never enough;++;+;-;++;+;+;-;~;-;7.0;3;30;85;40;60;average
+82;hermit;lives on roots, prays;+;o;+;--;~;-;++;+;-;6.5;1;20;70;35;85;gaunt
+83;orphan;neglected, hungry, wide awake;-;-;o;-;~;++;o;++;--;9.5;3;15;65;55;75;gaunt
+84;spoilt young noble;well fed, well rested, bored;+;-;-;++;--;o;-;--;-;10.0;4;10;45;10;25;stout
+85;zealous temple servant;knows only his god, hates questions;-;+;+;--;~;--;++;~;o;7.0;2;25;75;35;65;gaunt
+86;ascetic;fasts, owns nothing, is held to be holy;+;o;+++;---;+;-;+++;++;--;6.0;1;30;85;45;95;gaunt
+87;robber chief;ruthless, fearless, strong;~;+++;---;++;~;o;--;~;++;7.5;4;20;70;45;60;sturdy
+88;giant;show fighter at the fair;+;+;o;-;~;-;-;++;+++;9.5;5;20;60;60;72;wiry
+89;paralysed old man;bedridden, tired, composed;-;--;+;-;++;o;+;~;---;10.0;2;50;90;35;65;gaunt
+90;cowardly courtier;crawls upwards, flees every danger;~;---;--;++;~;+;-;-;--;8.5;4;20;70;25;40;stout
+91;mad prophet;sees the end coming and stays awake at night;--;++;o;---;++;+;+++;+;-;6.0;2;40;90;45;70;gaunt
+92;greedy prince;wants everything, gives nothing;~;o;--;+++;~;-;-;--;-;9.0;5;20;65;10;22;stout
+93;freethinker;doubts every god, questions everything;+;+;+;o;~;+++;---;~;o;8.0;3;20;70;40;60;average
+94;daredevil;reckless, laughs in the face of danger;++;+++;-;o;~;++;-;~;+;7.5;3;20;70;40;60;wiry
+95;murderer;cold, without remorse;-;+;---;+;~;-;---;~;+;7.0;3;20;70;40;60;wiry
+96;sunny nature;always in good spirits, whatever happens;+++;+;+;-;-;+;o;~;o;7.5;3;15;60;40;60;average
+97;deeply melancholic woman;sees no sense in anything;---;-;+;-;++;--;o;-;-;10.0;2;45;85;25;50;gaunt
+98;starving refugee;has been on the run for weeks;--;-;o;--;++;-;+;+++;--;8.0;3;40;90;75;95;gaunt
+99;exhausted night watchman;third night without sleep;-;o;o;o;+++;-;o;+;o;8.0;3;50;95;45;65;average
+100;child prodigy;grasps everything, wants to know everything;+;+;+;-;~;+++;o;~;-;9.0;3;15;65;40;60;average

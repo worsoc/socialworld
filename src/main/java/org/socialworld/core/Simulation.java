@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2014  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,6 +39,13 @@ import org.socialworld.actions.handle.Inventory;
 import org.socialworld.actions.handle.InventoryPlace;
 import org.socialworld.actions.handle.StartEquipment;
 import org.socialworld.datasource.createObjects.StartEquipmentCatalog;
+import org.socialworld.datasource.createObjects.BodyBuildCatalog;
+import org.socialworld.datasource.createObjects.CompositionAssignment;
+import org.socialworld.datasource.tablesSimulation.propertySets.TableKindMaterialSet;
+import org.socialworld.datasource.tablesSimulation.propertySets.TableMaterialSet;
+import org.socialworld.datasource.tablesSimulation.states.CacheTableStateComposition;
+import org.socialworld.datasource.tablesSimulation.states.TableStateComposition;
+import org.socialworld.objects.concrete.StateComposition;
 import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
@@ -84,6 +92,12 @@ public class Simulation extends SocialWorldThread {
 
 
 	private static AccessTokenCore tokenCore = AccessTokenCore.getValid();
+
+	// body build concept B3 (2026-11-25): swstate_composition was empty at the start, so every new instance gets
+	// its set derived from swkind_materialset, and the rows (objectID, setID) are saved after the creation
+	private boolean deriveComposition = false;
+	private final List<int[]> compositionRows = new ArrayList<int[]>();
+	private int compositionsWithoutSet = 0;
 
 	private Simulation() {
 		
@@ -132,9 +146,22 @@ public class Simulation extends SocialWorldThread {
 		}
 	}	
 	
-	public void startSimulation() {
-	
-		
+	/**
+	 * @return false if the simulation did not start: swstate_composition is filled, and loading is not ready yet
+	 */
+	public boolean startSimulation() {
+
+		// body build concept 9.1 (2026-11-25): the composition is the first state the simulation saves itself.
+		// Filled means loading, which is not promising yet, so for now the start is refused.
+		int compositionRows = CacheTableStateComposition.getInstance().rowCount();
+		if (compositionRows > 0) {
+			System.out.println("Start refused: swstate_composition is not empty (" + compositionRows + " rows). "
+					+ "Loading the states is not ready yet. Press \"Zusammensetzung leeren\" in the "
+					+ "PropertySetCreationTool and start again.");
+			return false;
+		}
+		this.deriveComposition = true;
+
 		Scheduler myCalcScheduler;
 		myCalcScheduler = Scheduler.getInstance();
 		myCalcScheduler.startThreads();
@@ -204,11 +231,51 @@ public class Simulation extends SocialWorldThread {
 		
 		System.out.println("Ende Erstellen Objekte "+ ActualTime.asTime().toString());
 
+		saveCompositions();
+
 		EventInfluenceDescriptionPool.getInstance();
 		// load the state-to-action rules (swpool_s2a) here as well, not only when the first human acts
 		State2ActionDescriptionPool.getInstance();
 		// and the reaction rules (swpool_erd), not only at the first event that asks for a reaction
 		EventReactionDescriptionPool.getInstance();
+		return true;
+	}
+
+	/**
+	 * The composition of a new instance (body build concept B3, 2026-11-25): the set of its template in
+	 * swkind_materialset, variant objectID % number of variants; a human takes the template of the body build of
+	 * its character. The set goes into the state at once, the row is saved after the creation (saveCompositions).
+	 */
+	private void deriveComposition(IncompleteSimulationObject incompleteObject, SimulationObject_Type type,
+			String fullClassName) {
+		int objectID = incompleteObject.getObject().getObjectID();
+		boolean isHuman = (type == SimulationObject_Type.human);
+		String template = CompositionAssignment.templateName(CompositionAssignment.simpleName(fullClassName), isHuman,
+				isHuman ? BodyBuildCatalog.getInstance().get(incompleteObject.getCharacterNumber()) : null);
+		int setID = CompositionAssignment.setID(TableKindMaterialSet.getInstance().getMaterialSetIDs(template), objectID);
+		if (setID == CompositionAssignment.NO_SET) {
+			compositionsWithoutSet++;
+			return;
+		}
+		incompleteObject.getHiddenObject().setSomething(StateComposition.class.getName(),
+				StateComposition.METHODNAME_SET_MATERIAL_SET, TableMaterialSet.getInstance().getMaterialSet(setID));
+		compositionRows.add(new int[] {objectID, setID});
+	}
+
+	/** Writes the derived compositions into swstate_composition, one row per instance, and says how many arrived. */
+	private void saveCompositions() {
+		if (!deriveComposition) return;
+		long start = System.currentTimeMillis();
+		TableStateComposition table = new TableStateComposition();
+		for (int[] row : compositionRows) table.insert(row[0], row[1]);
+		table.select(1, "", "");
+		int saved = table.rowCount();
+		System.out.println("Composition: derived from swkind_materialset and saved, " + saved + " of " + compositionRows.size()
+				+ " rows in swstate_composition, " + compositionsWithoutSet + " objects without template ("
+				+ (System.currentTimeMillis() - start) / 1000 + " s)");
+		if (saved < compositionRows.size()) {
+			System.out.println("Composition: WARNING, rows are missing (no row in sw_object for the ID? press FillObject)");
+		}
 	}
 	
 	public void stopSimulation() {
@@ -392,6 +459,9 @@ public class Simulation extends SocialWorldThread {
 				//	if (GlobalSwitches.OUTPUT_CREATE_OBJECT_DETAILS) System.out.println("Erstellen SimObj > this.objectMaster.getIncompleteObject: " + ActualTime.asTime().toString());
 				incompleteObject = this.objectMaster.getIncompleteObject(incompleteObjectIndex, objectID);
 				createdObject = incompleteObject.getObject();
+				if (deriveComposition && createdObject.isSimulationObject()) {
+					deriveComposition(incompleteObject, simulationObjectType, fullClassName);
+				}
 				if (createdObject.isSimulationObject()) {
 					//	if (GlobalSwitches.OUTPUT_CREATE_OBJECT_DETAILS) System.out.println("Erstellen SimObj > this.searchByPosition.addObject: " + ActualTime.asTime().toString());
 					this.searchByPosition.addObject(createdObject);

@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2023  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,18 +24,24 @@ import javax.swing.JFrame;
 import java.awt.TextArea;
 
 import java.awt.List;
-import java.awt.Button;
+import java.awt.Insets;
+import javax.swing.JButton;
+import javax.swing.ToolTipManager;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 
 import org.socialworld.attributes.properties.Colour;
 import org.socialworld.attributes.properties.Material;
 import org.socialworld.attributes.properties.Nutrient;
 import org.socialworld.attributes.properties.Taste;
 import org.socialworld.datasource.tablesSimulation.TableObject;
+import org.socialworld.datasource.createObjects.CompositionCatalog;
+import org.socialworld.datasource.createObjects.CompositionSets;
 import org.socialworld.datasource.tablesSimulation.propertySets.TableColourSet;
+import org.socialworld.datasource.tablesSimulation.propertySets.TableKindMaterialSet;
 import org.socialworld.datasource.tablesSimulation.propertySets.TableMaterialSet;
 import org.socialworld.datasource.tablesSimulation.propertySets.TableNutrientSet;
 import org.socialworld.datasource.tablesSimulation.propertySets.TableSet;
@@ -62,11 +69,14 @@ public class PropertySetCreationTool {
 	
 	
 	TextArea textInput = new TextArea();
-	Button buttonGenerate = new Button("Generieren");
+	JButton buttonGenerate = button("Generieren", "Erzeugt aus dem Text neue Sets der oben gewählten Art (Colour, Material, Nutrient, Taste)", "und hängt sie hinten an swset_colour / _material / _nutrient / _taste an.", "Material: neue Sets landen hinter den Katalog-Sets und werden", "vom nächsten „Material-Sets aus Katalog“ wieder gelöscht.");
 
-	Button buttonFillStatesWithSets = new Button("FillStates");
+	JButton buttonFillStatesWithSets = button("FillStates", "Vergibt pro Objekt-ID (Menschen ab 1, Items ab 30001) reihum Sets und leert die Tabellen vorher:", "swstate_appearance (15 Farb-Sets) und swstate_eatable (Nährstoff, Geschmack) für alle,", "swstate_composition leert es nur (die füllt die Simulation beim Start). Vorher FillObject.");
 
-	Button buttonFillObjectWithDummy = new Button("FillObject");
+	JButton buttonFillObjectWithDummy = button("FillObject", "Legt in sw_object die fehlenden Zeilen an (Menschen ab 1, Items ab 30001).", "Löscht nichts. Nötig vor FillStates.");
+
+	JButton buttonClearComposition = button("Zusammensetzung leeren", "Leert swstate_composition (fragt vorher).", "Nötig vor jedem Lauf: Ist die Tabelle gefüllt, bricht der Start der Simulation ab,", "denn das Laden der States ist noch nicht fertig. Ist sie leer, leitet die Simulation", "die Zusammensetzung jeder Instanz aus swkind_materialset ab und speichert sie hier.");
+	JButton buttonMaterialSetsFromCatalog = button("Material-Sets aus Katalog", "Liest composition.csv und schreibt 5 Varianten pro Klasse:", "die Sets ab 100 in swset_material und die Zuordnung Klasse + Variante → Set in swkind_materialset.", "Löscht vorher die Sets ab 100 und alle Zuordnungen; die Sets unter 100 bleiben.");
 
 	private String[] comboBoxSetsEntrys = {
 			    "Colour", "Material", "Nutrient", "Taste"  };
@@ -101,6 +111,17 @@ public class PropertySetCreationTool {
 		return (System.currentTimeMillis() - startMillis) / 1000;
 	}
 
+	/**
+	 * A button with a tooltip that says what it does (2026-11-25). Swing instead of AWT, because an AWT button has no
+	 * tooltip; the small margin keeps the texts readable at the old widths.
+	 */
+	private static JButton button(String text, String... tooltipLines) {
+		JButton button = new JButton(text);
+		button.setMargin(new Insets(1, 2, 1, 2));
+		button.setToolTipText("<html>" + String.join("<br>", tooltipLines) + "</html>");
+		return button;
+	}
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -130,6 +151,7 @@ public class PropertySetCreationTool {
 		frame.setBounds(50, 50, 1300, 750);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
+		ToolTipManager.sharedInstance().setDismissDelay(20000);	// long enough to read the tooltips of the buttons
 		
 		JLabel lblTexteingabe = new JLabel("Texteingabe:");
 		lblTexteingabe.setBounds(10, 10, 177, 14);
@@ -248,17 +270,12 @@ public class PropertySetCreationTool {
 			    
 			    reportRows("FillStates: swstate_appearance (" + secondsSince(start) + " s)", tableAppearance);
 
+			    // no composition any more (body build concept B4, 2026-11-25): swstate_composition belongs to the
+			    // simulation, which derives it per instance from swkind_materialset at its start (humans too) and
+			    // saves it; FillStates only empties it (user 2026-11-25), like the button "Zusammensetzung leeren"
 			    TableStateComposition tableComposition = new TableStateComposition();
 			    tableComposition.clear();
-			    maxSetID_1 = tableComposition.getNewID("swset_material", "material_set_id") - 1;
-			    
-			    // Für jede ID aus dem Array ausführen
-			    for (int id : activeIds) {
-			        setID_1 = (id % maxSetID_1);
-			        tableComposition.insert(id, setID_1);
-			    }
-
-			    reportRows("FillStates: swstate_composition (" + secondsSince(start) + " s)", tableComposition);
+			    System.out.println("FillStates: swstate_composition emptied (" + secondsSince(start) + " s); the simulation fills it at its start");
 
 			    TableStateEatable tableEatable = new TableStateEatable();
 			    tableEatable.clear();
@@ -298,6 +315,14 @@ public class PropertySetCreationTool {
 		});
 		buttonFillObjectWithDummy.setBounds(938, 430, 77, 26);
 		frame.getContentPane().add(buttonFillObjectWithDummy);
+
+		buttonMaterialSetsFromCatalog.addActionListener(event -> writeMaterialSetsFromCatalog());
+		buttonMaterialSetsFromCatalog.setBounds(938, 330, 177, 26);
+		frame.getContentPane().add(buttonMaterialSetsFromCatalog);
+
+		buttonClearComposition.addActionListener(event -> clearComposition());
+		buttonClearComposition.setBounds(938, 380, 177, 26);
+		frame.getContentPane().add(buttonClearComposition);
 		
 		JLabel lblPropertySets = new JLabel("PropertySets:");
 		lblPropertySets.setBounds(10, 240, 77, 14);
@@ -316,6 +341,74 @@ public class PropertySetCreationTool {
 	
 	
 	
+	///////////////////////////////
+	// empty swstate_composition (body build concept B4, 2026-11-25)
+	///////////////////////////////
+
+	/**
+	 * Empties swstate_composition after asking. The simulation refuses to start while the table is filled (loading
+	 * the states is not ready yet); with an empty table it derives the composition of every instance and saves it.
+	 */
+	private void clearComposition() {
+		TableStateComposition table = new TableStateComposition();
+		table.select(1, "", "");
+		int rows = table.rowCount();
+		int answer = JOptionPane.showConfirmDialog(frame,
+				"swstate_composition wird geleert (" + rows + " Zeilen).", "Zusammensetzung leeren", JOptionPane.OK_CANCEL_OPTION);
+		if (answer != JOptionPane.OK_OPTION) return;
+		table.clear();
+		table.select(1, "", "");
+		System.out.println("Zusammensetzung leeren: " + rows + " rows before, " + table.rowCount() + " now in swstate_composition");
+	}
+
+	///////////////////////////////
+	// composition.csv -> material sets (composition concept Z3, 2026-11-24)
+	///////////////////////////////
+
+	/**
+	 * Writes the variants of every class of composition.csv as material sets from CompositionSets.FIRST_SET_ID on and
+	 * the coupling class + variant -> set into swkind_materialset. Deletes before only these sets and all couplings;
+	 * the sets below FIRST_SET_ID stay. Nothing is written if the catalog has a problem.
+	 */
+	private void writeMaterialSetsFromCatalog() {
+		long start = System.currentTimeMillis();
+		CompositionCatalog catalog = CompositionCatalog.getInstance();
+		if (!catalog.getProblems().isEmpty()) {
+			for (String problem : catalog.getProblems()) System.out.println("Material-Sets: " + problem);
+			System.out.println("Material-Sets: nothing written, composition.csv has " + catalog.getProblems().size() + " problems");
+			return;
+		}
+		CompositionSets plan = CompositionSets.plan(catalog);
+		if (!plan.fits()) {
+			System.out.println("Material-Sets: nothing written, the last set " + plan.lastSetID + " does not fit below " + CompositionSets.MAX_SET_ID);
+			return;
+		}
+
+		TableMaterialSet tableMaterialSet = TableMaterialSet.getInstance();
+		TableKindMaterialSet tableKinds = new TableKindMaterialSet();
+		tableMaterialSet.deleteFromSetID(CompositionSets.FIRST_SET_ID);
+		tableKinds.clear();
+		for (CompositionSets.SetRow row : plan.sets) {
+			tableMaterialSet.insert(row.setID, row.lfdNr, row.material, row.share);
+		}
+		for (CompositionSets.KindRow row : plan.kinds) {
+			tableKinds.insert(row.className, row.variant, row.setID);
+		}
+
+		sets.removeAll();
+		java.util.Map<Integer, String> texts = new java.util.HashMap<>();
+		for (CompositionSets.SetRow row : plan.sets) {
+			String part = Material.getName(row.material).name() + " " + row.share;
+			texts.merge(row.setID, part, (a, b) -> a + ", " + b);
+		}
+		for (CompositionSets.KindRow row : plan.kinds) {
+			sets.add(row.className + " " + row.variant + " (" + row.setID + "): " + texts.get(row.setID));
+		}
+		System.out.println("Material-Sets: " + catalog.classNames().size() + " classes, " + plan.kinds.size() + " sets ("
+				+ CompositionSets.FIRST_SET_ID + " .. " + plan.lastSetID + "), " + plan.sets.size() + " rows in swset_material ("
+				+ secondsSince(start) + " s)");
+	}
+
 	///////////////////////////////
 	//Input -> generate property set  //
 	///////////////////////////////

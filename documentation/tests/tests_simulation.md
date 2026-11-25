@@ -2,7 +2,7 @@
 
 Part of the [test overview](TESTS.md): the running simulation core: start, attributes, core, actions, objects.
 
-**30 test classes, 145 tests.**
+**31 test classes, 150 tests.**
 
 ## Overview
 
@@ -10,6 +10,7 @@ Part of the [test overview](TESTS.md): the running simulation core: start, attri
 |---|---|--:|---|---|
 | Start | `SocialWorldTest` | 1 | the main program exists as a singleton | – |
 | Attributes | `AttributeArrayTest` | 5 | range 0..9999 and the display as 0..99 | – |
+| Attributes | `MaterialTest` | 5 | the 43 materials (nothing 0, then sorted by groups, no gaps), the portion of a material in a set, the bound of the table of sets | no database (the table test) |
 | Attributes | `PropertyNameVelocityTest` | 2 | active and passive velocity as properties of the simulation object | – |
 | Core | `TickRandomCacheTest` | 10 | random value per object and tick | – |
 | Core | `TickObjectCooldownTest` | 10 | own step of the matrix with an offset per object, cooldown of the effect on the attributes by criticality stage | – |
@@ -66,6 +67,22 @@ Part of the [test overview](TESTS.md): the running simulation core: start, attri
 | `displayString_showsDisplayedValues_toStringKeepsInternalOnes` | `toDisplayString()` shows 0..99, `toString()` the internal values |
 | `displayValue_keepsMinusOneForAnInvalidIndex` | an invalid index stays −1 |
 
+
+### `MaterialTest`
+
+`src/test/java/org/socialworld/attributes/properties/MaterialTest.java`
+
+The materials for the composition of the items (composition concept Z1, 2026-11-24): `Material` has 43 values, nothing 0, then sorted by groups (wood and metals 1 .. 8, textiles 9 .. 18, earth and stone 19 .. 21, from animals and writing 22 .. 28, raw materials 29 .. 31, food 32 .. 42); the old numbers had no meaning yet, the words in sw_word have to be made again. Two bugs fixed with it: `PropPortionSet.getNumericValueProperty` fell through every case of its switch to Taste (no portion was ever found), `TableMaterialSet.getMaterialSet` checked `<=` instead of `<`.
+
+| Test | Checks |
+|---|---|
+| `nothingIsZero_andTheGroupsFollowEachOther` | nothing 0, the first and last of the groups (wood 1, gold 8, linen 9, wax 18, clay 19, bone 22, coal 29, grain 32, fat 42), the order of the enum is the order of the numbers |
+| `indices_runFrom0To42_withoutGaps_andGoBackAndForth` | 43 values, every index once, 0 .. 42 without gaps, `getName` and `fromName` give the same material back, unknown ones give nothing |
+| `theLexemIDs_stayInTheRangeOfTheMaterials` | every lexem ID lies in 11000 .. 11999 |
+| `thePortionOfAMaterial_isFound_andTheMainMaterialIsTheLargest` | a set steel 85, leather 8, wood 7: `portion_Material_steel` gives 85, wood 7, gold nothing; the main material is steel |
+| `theTableOfSets_givesNothingBehindItsLastPlace_insteadOfAnException` | `getMaterialSet(1000)` and `(-1)` give the nothing set |
+
+- **Needs:** the database for the last test (the table loads swset_material when it is created); without it the test skips itself.
 ### `PropertyNameVelocityTest`
 
 `src/test/java/org/socialworld/attributes/PropertyNameVelocityTest.java`
@@ -397,7 +414,7 @@ The connections of `objects/connections` (from 2023, unused until 2026-11-23) ca
 
 `src/test/java/org/socialworld/objects/concrete/AllItemsInitStateTest.java`
 
-Every concrete item gets its initial states (2026-11-24). Most classes do not override `getInitState`, they take it from their group (`HumanCrafted`, `Food`, `Liquid`, `Solid`, `PlantPart`, `AnimalPart`). `SimulationObject.createAddOnStates` casts what `getInitState` gives, so a class that gave NoState would throw a ClassCastException when it is created. The classes are found in the package `objects.concrete` (in every class directory of it), so a new class is checked without being listed.
+Every concrete item gets its initial states (2026-11-24). Most classes do not override `getInitState`, they take it from their group (`HumanCrafted`, `Food`, `Liquid`, `Solid`, `PlantPart`, `AnimalPart`). `SimulationObject.createAddOnStates` casts what `getInitState` gives, so a class that gave NoState would throw a ClassCastException when it is created. The classes are found in the package `objects.concrete` (in every class directory of it, by the helper `ConcreteItemClasses` in the test sources), so a new class is checked without being listed.
 
 | Test | Checks |
 |---|---|

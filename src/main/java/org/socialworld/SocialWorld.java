@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2014  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -76,7 +77,10 @@ public class SocialWorld  {
 		
 //		test();
 		
-		simulation.startSimulation();
+		if (!simulation.startSimulation()) {
+			// refused at the start (e.g. swstate_composition not empty, body build concept 9.1); the reason is in the console
+			System.exit(1);
+		}
 		visualize = true;
 		visualizeSimulation.simulationStarted();
 		if (GlobalSwitches.SHOW_ACTION_CREATION_TOOL) {

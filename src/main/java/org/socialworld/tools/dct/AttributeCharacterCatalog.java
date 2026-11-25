@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,11 +29,13 @@ import java.util.Collections;
 import java.util.List;
 
 import org.socialworld.attributes.Attribute;
+import org.socialworld.attributes.BodyBuild;
 
 /**
  * The characters, sorted from the most ordinary (no. 1) to the rarest.
- * Read from characters.csv: no;name;sketch;9 level codes;sleepHours;mealsPerDay. Lines starting with # are comments.
- * The last two fields may be left out, then the character has the default need (8 hours, 3 meals).
+ * Read from characters.csv: no;name;sketch;9 level codes;sleepHours;mealsPerDay;tiredWake;tiredBed;hungerFull;hungerEat;build.
+ * Lines starting with # are comments. The fields may end after the levels (default need 8 hours, 3 meals), after the
+ * need (ideal of the farmer) or after the ideal (body build average, BodyBuild.DEFAULT).
  */
 public class AttributeCharacterCatalog {
 
@@ -58,6 +61,7 @@ public class AttributeCharacterCatalog {
 		int fieldsWithoutNeed = 3 + Attribute.NUMBER_OF_ATTRIBUTES;
 		int fieldsWithNeed = fieldsWithoutNeed + 2;
 		int fieldsWithIdeal = fieldsWithNeed + 4;
+		int fieldsWithBuild = fieldsWithIdeal + 1;	// body build concept B1, 2026-11-25
 
 		try (BufferedReader reader = new BufferedReader(new java.io.StringReader(content))) {
 			String line;
@@ -66,9 +70,10 @@ public class AttributeCharacterCatalog {
 				if (line.isEmpty() || line.startsWith("#")) continue;
 
 				String[] fields = line.split(";", -1);
-				if (fields.length != fieldsWithoutNeed && fields.length != fieldsWithNeed && fields.length != fieldsWithIdeal) {
-					throw new IllegalArgumentException("expected " + fieldsWithoutNeed + ", " + fieldsWithNeed + " or "
-							+ fieldsWithIdeal + " fields: " + line);
+				if (fields.length != fieldsWithoutNeed && fields.length != fieldsWithNeed && fields.length != fieldsWithIdeal
+						&& fields.length != fieldsWithBuild) {
+					throw new IllegalArgumentException("expected " + fieldsWithoutNeed + ", " + fieldsWithNeed + ", "
+							+ fieldsWithIdeal + " or " + fieldsWithBuild + " fields: " + line);
 				}
 
 				int number = Integer.parseInt(fields[0].trim());
@@ -89,13 +94,17 @@ public class AttributeCharacterCatalog {
 				}
 				int[] ideal = {AttributeCharacter.DEFAULT_TIRED_WAKE, AttributeCharacter.DEFAULT_TIRED_BED,
 						AttributeCharacter.DEFAULT_HUNGER_FULL, AttributeCharacter.DEFAULT_HUNGER_EAT};
-				if (fields.length == fieldsWithIdeal) {
+				if (fields.length >= fieldsWithIdeal) {
 					for (int i = 0; i < ideal.length; i++) {
 						ideal[i] = Integer.parseInt(fields[fieldsWithNeed + i].trim());
 					}
 				}
+				BodyBuild build = BodyBuild.DEFAULT;
+				if (fields.length == fieldsWithBuild) {
+					build = BodyBuild.fromName(fields[fieldsWithIdeal].trim());
+				}
 				characters.add(new AttributeCharacter(number, fields[1].trim(), fields[2].trim(), levels, sleepHours, mealsPerDay,
-						ideal[0], ideal[1], ideal[2], ideal[3]));
+						ideal[0], ideal[1], ideal[2], ideal[3], build));
 			}
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);
