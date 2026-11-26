@@ -10,7 +10,7 @@ Part of the [test overview](TESTS.md): the running simulation core: start, attri
 |---|---|--:|---|---|
 | Start | `SocialWorldTest` | 1 | the main program exists as a singleton | – |
 | Attributes | `AttributeArrayTest` | 5 | range 0..9999 and the display as 0..99 | – |
-| Attributes | `MaterialTest` | 5 | the 43 materials (nothing 0, then sorted by groups, no gaps), the portion of a material in a set, the bound of the table of sets | no database (the table test) |
+| Attributes | `MaterialTest` | 9 | the 43 materials (nothing 0, then sorted by groups, no gaps), their base values (density, value per kg, protection, also per `BlowKind`, ignition temperature), the portion of a material in a set, the bound of the table of sets | no database (the table test) |
 | Attributes | `PropertyNameVelocityTest` | 2 | active and passive velocity as properties of the simulation object | – |
 | Core | `TickRandomCacheTest` | 10 | random value per object and tick | – |
 | Core | `TickObjectCooldownTest` | 10 | own step of the matrix with an offset per object, cooldown of the effect on the attributes by criticality stage | – |
@@ -39,6 +39,8 @@ Part of the [test overview](TESTS.md): the running simulation core: start, attri
 | Objects | `AllItemsInitStateTest` | 3 | every concrete item (found in the package) gets its states, food the eatable too, and can be created with its state | no database (the last two) |
 | Objects | `CarriedConnectionTest` | 3 | the connection carried: offset (0 by default, a copy), carrier and carried find each other in their lists | – |
 | Objects | `ContainersAndGoodsCatalogTest` | 5 | the 11 containers and 13 valuables, devotional, writing and pastime goods: created without database, lexeme value, capacity, jewellery and bag, abilities | – |
+| Objects | `SimulationObjectMaterialSharesTest` | 2 | the protected getters for the material shares of an instance: empty without composition, the shares of the set, an unmodifiable copy | no database (the test with a set) |
+| Objects | `ItemMaterialFormulasTest` | 5 | the overridable formulas of `Item`: value = material x craft factor, protection = material x form factor per kind of blow (cut at 100), the S curve of igniting and its weighting over shares and time | no database (the three tests with a set) |
 
 ---
 
@@ -72,7 +74,7 @@ Part of the [test overview](TESTS.md): the running simulation core: start, attri
 
 `src/test/java/org/socialworld/attributes/properties/MaterialTest.java`
 
-The materials for the composition of the items (composition concept Z1, 2026-11-24): `Material` has 43 values, nothing 0, then sorted by groups (wood and metals 1 .. 8, textiles 9 .. 18, earth and stone 19 .. 21, from animals and writing 22 .. 28, raw materials 29 .. 31, food 32 .. 42); the old numbers had no meaning yet, the words in sw_word have to be made again. Two bugs fixed with it: `PropPortionSet.getNumericValueProperty` fell through every case of its switch to Taste (no portion was ever found), `TableMaterialSet.getMaterialSet` checked `<=` instead of `<`.
+The materials for the composition of the items (composition concept Z1, 2026-11-24): `Material` has 43 values, nothing 0, then sorted by groups (wood and metals 1 .. 8, textiles 9 .. 18, earth and stone 19 .. 21, from animals and writing 22 .. 28, raw materials 29 .. 31, food 32 .. 42); the old numbers had no meaning yet, the words in sw_word have to be made again. Two bugs fixed with it: `PropPortionSet.getNumericValueProperty` fell through every case of its switch to Taste (no portion was ever found), `TableMaterialSet.getMaterialSet` checked `<=` instead of `<`. Since 2026-11-26 (concept value and protection from the material, step 1) every material carries base values: density in g/cm³ of the stuff itself, value per kg (relative, iron = 10, open to the top), protection against stab, club, stroke and backhand (0 .. 100) and the ignition temperature in °C; `NEVER_IGNITES` (positive infinity) for what does not burn, asked with `canBurn()`.
 
 | Test | Checks |
 |---|---|
@@ -81,6 +83,10 @@ The materials for the composition of the items (composition concept Z1, 2026-11-
 | `theLexemIDs_stayInTheRangeOfTheMaterials` | every lexem ID lies in 11000 .. 11999 |
 | `thePortionOfAMaterial_isFound_andTheMainMaterialIsTheLargest` | a set steel 85, leather 8, wood 7: `portion_Material_steel` gives 85, wood 7, gold nothing; the main material is steel |
 | `theTableOfSets_givesNothingBehindItsLastPlace_insteadOfAnException` | `getMaterialSet(1000)` and `(-1)` give the nothing set |
+| `everyMaterialButNothing_hasADensity_andTheBaseValuesStayInTheirRanges` | every material but nothing: density above 0, value not negative, the four protections in 0 .. 100, an ignition temperature in 100 .. 1000 °C if it burns; nothing has density 0, value 0 and does not burn |
+| `theBaseValues_keepTheOrderOfTheStuffs` | value gold > silver > iron > straw, gold to silver 10 .. 15; protection steel > iron > leather > wool; gold heavier than silver, wood lighter than water; straw ignites before wood, wood before wool |
+| `theProtectionPerKindOfBlow_isTheSameAsTheFourGetters` | `getProtectionAgainst(BlowKind)` gives for every material what the four getters give; `BlowKind` has stab, club, stroke, backhand in this order |
+| `whatDoesNotBurn_neverIgnites_andTheFormulaNeedsNoSpecialCase` | iron, gold, stone, glas, water, salt, ore and clay never ignite, wood, straw, linen, leather, paper and fat can burn; the S curve gives exactly 0 (not NaN) for `NEVER_IGNITES` |
 
 - **Needs:** the database for the last test (the table loads swset_material when it is created); without it the test skips itself.
 ### `PropertyNameVelocityTest`
@@ -551,6 +557,41 @@ The 7 things of nature of the item hierarchy (2026-11-23): branch, herb, flower 
 
 - **Assumes:** the catalogue of the item hierarchy concept; the ability values are constants in the classes.
 - **Not checked:** nutrient and taste set of the herb (`null`, it has no eatable state).
+
+### `SimulationObjectMaterialSharesTest`
+
+`src/test/java/org/socialworld/objects/SimulationObjectMaterialSharesTest.java`
+
+The protected getters of `SimulationObject` for the material shares (concept value and protection from the material, step 2, 2026-11-26): `getMaterialShares()` gives an unmodifiable map material → share of the mass in percent (only shares above 0), `getMaterialShare(Material)` one share, 0 if the material is not in it. They read the set over the existing route `StateComposition.getProperty(token, stateComposition_materialSet, …)` with the token of the simulation object; the composition state and the material set themselves are not handed out. The test lies in the package `org.socialworld.objects`, so it may call the protected methods.
+
+| Test | Checks |
+|---|---|
+| `withoutAComposition_theSharesAreEmpty_andEveryShareIsZero` | a ring without states: no shares, gold 0, nothing 0 |
+| `theSharesOfTheInstance_areGiven_andCannotBeChanged` | a ring gets the set steel 85, leather 8, wood 7 as `StartCreation` does it (`HiddenSimulationObject.setSomething` with `METHODNAME_SET_MATERIAL_SET`): exactly these three, the sum is 100, gold 0, `put` on the map throws `UnsupportedOperationException` |
+
+- **Needs:** the database for the second test (a state reads its `CacheTableState…` when it is created); without it the test skips itself (`DatabaseAssumptions.assumeDatabaseIsAvailable`).
+
+### `ItemMaterialFormulasTest`
+
+`src/test/java/org/socialworld/objects/ItemMaterialFormulasTest.java`
+
+The formulas of `Item` for value, protection and burning (concept value and protection from the material, step 3, 2026-11-26). The material gives the base values, the class its factors; every method is protected and may be overridden:
+- value: `getMaterialValuePerKg()` (sum of share / 100 × value per kg) × `getCraftFactor()` (1) = `calculateValue()`, open to the top;
+- protection: `getMaterialProtection(BlowKind)` × `getFormFactor(BlowKind)` (by default `getFormFactor()`, 1) = `calculateProtection(BlowKind)`, cut to 0 .. 100;
+- burning: `getIgnitionProbabilityPerSecond(Material, T)` = 1 / (1 + e^(−(T − Tz) / B)) with B = `getIgnitionCurveWidth()` (10 °C), 0 below Tz − `getIgnitionCutoff()` (50 °C) and for what does not burn; `calculateIgnitionProbability(T, seconds)` = sum of share / 100 × (1 − (1 − p)^seconds), within 0 .. 1.
+
+The test subclasses of `Ring` override one factor each: craft factor 3, a form factor per kind of blow as chain mail (0.74 / 0.57 / 1.03 / 1.03), a form factor 2 for every blow, a curve width of 20.
+
+| Test | Checks |
+|---|---|
+| `theSCurve_givesTheValuesOfTheConcept_andNothingBelowTheCutoff` | wood (Tz 300): 0.5 at Tz, 0.269 at Tz − 10, 0.047 at Tz − 30, 0.0067 at Tz − 50, 0 below, 0.881 at Tz + 20; iron 0 even at 5000 °C; width 20 gives 0.378 at Tz − 10 |
+| `withoutAComposition_valueProtectionAndBurningAreZero` | a ring without states: value, the four protections and the ignition probability are 0 |
+| `theValue_isMaterialTimesCraft_andOpenToTheTop` | gold 100: 10000; silver 90 / copper 10: 722; with craft factor 3: 30000 |
+| `theProtection_isMaterialTimesForm_perKindOfBlow_andCutAt100` | iron 95 / leather 5: 67.75 / 53.25 / 77.5 / 58; with the chain mail factors 50.1 / 30.4 / 79.8 / 59.7; with factor 2 club and stroke 100; wool below leather |
+| `burning_isWeightedByTheShares_andGrowsWithTheTime` | straw 50 / iron 50 at 230 °C for 1 s: 0.25; 0 s: 0; wood at 270 °C: 0.047 in 1 s, above 0.9 in 60 s; straw hat before felt hat at 300 °C |
+
+- **Needs:** the database for the three tests with a material set (a state reads its `CacheTableState…` when it is created); without it they skip themselves. The curve and the case without composition run without database.
+- **Not checked:** the item classes themselves; they still give their constants until steps 4 to 6.
 
 ---
 

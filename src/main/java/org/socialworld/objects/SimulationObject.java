@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2014  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +23,10 @@ import org.socialworld.calculation.geometry.Vector;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
@@ -30,6 +34,8 @@ import org.socialworld.actions.ActionNothing;
 import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
+import org.socialworld.attributes.properties.Material;
+import org.socialworld.attributes.properties.MaterialSet;
 import org.socialworld.calculation.IObjectReceiver;
 import org.socialworld.calculation.IObjectSender;
 import org.socialworld.calculation.ObjectRequester;
@@ -339,6 +345,45 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 		else
 			return null;
 		
+	}
+
+	///////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////    material shares    //////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
+	// For the formulas of the subclasses (value, protection, burning; concept value and protection from the
+	// material, step 2, 2026-11-26): only the shares, never the composition state or its material set itself.
+
+	/**
+	 * The method returns the materials of this instance with their shares of the mass in percent.
+	 * Materials with share 0 are not in it. Without a composition the map is empty.
+	 *
+	 * @return an unmodifiable map material -> share of the mass in percent (0 .. 100)
+	 */
+	protected final Map<Material, Integer> getMaterialShares() {
+		Map<Material, Integer> shares = new EnumMap<Material, Integer>(Material.class);
+		ValueProperty vpSet = this.stateComposition.getProperty(token, PropertyName.stateComposition_materialSet,
+				PropertyName.stateComposition_materialSet.name());
+		Object set = vpSet.getObject(token, Type.simObjProp);
+		if (set instanceof MaterialSet) {
+			for (Material material : Material.values()) {
+				if (material == Material.nothing) continue;
+				ValueProperty vpShare = ((MaterialSet) set).getProperty(token, PropertyName.event_property_numeric_value,
+						"portion_Material_" + material.name());
+				if (!vpShare.isValid()) continue;
+				Object share = vpShare.getObject(token, Type.integer);
+				if (share instanceof Integer && (Integer) share > 0) shares.put(material, (Integer) share);
+			}
+		}
+		return Collections.unmodifiableMap(shares);
+	}
+
+	/**
+	 * @param material the material asked for
+	 * @return its share of the mass of this instance in percent (0 .. 100), 0 if it is not in the composition
+	 */
+	protected final int getMaterialShare(Material material) {
+		Integer share = getMaterialShares().get(material);
+		return (share != null) ? share : 0;
 	}
 
 	/**
