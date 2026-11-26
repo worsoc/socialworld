@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,15 +18,17 @@
  */
 package org.socialworld.objects.concrete.clothes.overgarments;
 
+import org.socialworld.attributes.properties.BlowKind;
 import org.socialworld.actions.handle.InventoryPlace;
 import org.socialworld.objects.concrete.clothes.Overgarment;
 import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.IBurnable;
+import org.socialworld.objects.properties.IProtective;
 
 /**
  * A cloth apron.
  */
-public class Apron extends Overgarment implements IBurnable {
+public class Apron extends Overgarment implements IBurnable, IProtective {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////
@@ -38,5 +41,12 @@ public class Apron extends Overgarment implements IBurnable {
 	}
 
 	public InventoryPlace getOvergarmentPlace() {return InventoryPlace.overgarmentFront; }
+
+	// protection from the material (concept value and protection from the material, step 5, 2026-11-26): a working apron, covers the front
+	protected float getFormFactor() {return 0.8f; }
+	public float getProtectionAgainstStab() {return calculateProtection(BlowKind.stab); }
+	public float getProtectionAgainstClub() {return calculateProtection(BlowKind.club); }
+	public float getProtectionAgainstStroke() {return calculateProtection(BlowKind.stroke); }
+	public float getProtectionAgainstBackhand() {return calculateProtection(BlowKind.backhand); }
 
 }

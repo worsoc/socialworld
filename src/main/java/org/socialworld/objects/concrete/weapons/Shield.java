@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +18,7 @@
  */
 package org.socialworld.objects.concrete.weapons;
 
+import org.socialworld.attributes.properties.BlowKind;
 import org.socialworld.attributes.properties.WeaponProperty;
 import org.socialworld.calculation.functions.FunctionMXplusN;
 import org.socialworld.objects.concrete.weapons.Weapon;
@@ -56,9 +58,11 @@ public class Shield extends Weapon implements IWeapon, IProtective, IBurnable {
 	public WeaponProperty getStrokeProperties() {return STROKE; }
 	public WeaponProperty getBackhandProperties() {return BACKHAND; }
 
-	public float getProtectionAgainstStab() {return 60; }
-	public float getProtectionAgainstClub() {return 70; }
-	public float getProtectionAgainstStroke() {return 70; }
-	public float getProtectionAgainstBackhand() {return 50; }
+	// protection from the material (concept value and protection from the material, step 5, 2026-11-26): thick, a large area, held against the blow
+	protected float getFormFactor() {return 1.5f; }
+	public float getProtectionAgainstStab() {return calculateProtection(BlowKind.stab); }
+	public float getProtectionAgainstClub() {return calculateProtection(BlowKind.club); }
+	public float getProtectionAgainstStroke() {return calculateProtection(BlowKind.stroke); }
+	public float getProtectionAgainstBackhand() {return calculateProtection(BlowKind.backhand); }
 
 }

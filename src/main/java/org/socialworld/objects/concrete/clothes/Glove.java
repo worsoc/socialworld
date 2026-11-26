@@ -18,6 +18,7 @@
  */
 package org.socialworld.objects.concrete.clothes;
 
+import org.socialworld.attributes.properties.BlowKind;
 import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.IProtective;
 import org.socialworld.objects.enums.EnumSide;
@@ -56,8 +57,10 @@ public class Glove extends Clothes implements IProtective {
 
 
 	// protection of the former LeatherGlove (constant values for now)
-	public float getProtectionAgainstStab() {return 15; }
-	public float getProtectionAgainstClub() {return 10; }
-	public float getProtectionAgainstStroke() {return 20; }
-	public float getProtectionAgainstBackhand() {return 10; }
+	// protection from the material (concept value and protection from the material, step 5, 2026-11-26): thin
+	protected float getFormFactor() {return 0.6f; }
+	public float getProtectionAgainstStab() {return calculateProtection(BlowKind.stab); }
+	public float getProtectionAgainstClub() {return calculateProtection(BlowKind.club); }
+	public float getProtectionAgainstStroke() {return calculateProtection(BlowKind.stroke); }
+	public float getProtectionAgainstBackhand() {return calculateProtection(BlowKind.backhand); }
 }

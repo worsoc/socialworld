@@ -18,6 +18,7 @@
  */
 package org.socialworld.objects.concrete.clothes.overgarments;
 
+import org.socialworld.attributes.properties.BlowKind;
 import org.socialworld.actions.handle.InventoryPlace;
 import org.socialworld.objects.concrete.clothes.Overgarment;
 import org.socialworld.objects.enums.EnumHumanCrafted;
@@ -43,10 +44,20 @@ public class ChainMail extends Overgarment implements IProtective, IValuable {
 /////////////////////////////    abilities (constant values for now)   ///////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	public float getProtectionAgainstStab() {return 50; }
-	public float getProtectionAgainstClub() {return 30; }
-	public float getProtectionAgainstStroke() {return 80; }
-	public float getProtectionAgainstBackhand() {return 60; }
+	// protection from the material (concept value and protection from the material, step 5, 2026-11-26): the rings stop the edge, but give way to the club
+	protected float getFormFactor(BlowKind blow) {
+		switch (blow) {
+		case stab: return 0.74f;
+		case club: return 0.57f;
+		case stroke: return 1.03f;
+		case backhand: return 1.03f;
+		default: return getFormFactor();
+		}
+	}
+	public float getProtectionAgainstStab() {return calculateProtection(BlowKind.stab); }
+	public float getProtectionAgainstClub() {return calculateProtection(BlowKind.club); }
+	public float getProtectionAgainstStroke() {return calculateProtection(BlowKind.stroke); }
+	public float getProtectionAgainstBackhand() {return calculateProtection(BlowKind.backhand); }
 	// value from the material (concept value and protection from the material, step 4, 2026-11-26): thousands of rings, a lot of work
 	protected float getCraftFactor() {return 30; }
 	public float getValue() {return calculateValue(); }

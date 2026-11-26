@@ -18,6 +18,7 @@
  */
 package org.socialworld.objects.concrete.clothes.gloves;
 
+import org.socialworld.attributes.properties.BlowKind;
 import org.socialworld.objects.concrete.clothes.Glove;
 import org.socialworld.objects.enums.EnumHumanCrafted;
 
@@ -41,9 +42,7 @@ public class Gauntlet extends Glove {
 /////////////////////////////    abilities (constant values for now)   ///////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	public float getProtectionAgainstStab() {return 45; }
-	public float getProtectionAgainstClub() {return 40; }
-	public float getProtectionAgainstStroke() {return 50; }
-	public float getProtectionAgainstBackhand() {return 35; }
+	// protection from the material (concept value and protection from the material, step 5, 2026-11-26): plates with joints between them
+	protected float getFormFactor() {return 0.7f; }
 
 }

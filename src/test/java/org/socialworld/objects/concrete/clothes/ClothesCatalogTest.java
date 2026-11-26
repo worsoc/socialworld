@@ -141,7 +141,9 @@ class ClothesCatalogTest {
 		// the new clothes of step 4
 		assertThat(new Crown()).isInstanceOf(IValuable.class).isNotInstanceOf(org.socialworld.objects.properties.IBurnable.class);
 		assertThat(new Gauntlet()).isInstanceOf(IProtective.class).isNotInstanceOf(org.socialworld.objects.properties.IBurnable.class);
-		assertThat(new Gauntlet().getProtectionAgainstStroke()).isGreaterThan(new Glove().getProtectionAgainstStroke());
+		// since 2026-11-26 the protection comes from the material: without a composition it is 0; that the gauntlet
+		// protects more than the glove is checked in ItemProtectionFromMaterialTest
+		assertThat(new Gauntlet().getProtectionAgainstStroke()).isZero();
 		assertThat(new Gambeson()).isInstanceOf(IProtective.class).isInstanceOf(org.socialworld.objects.properties.IBurnable.class);
 		assertThat(new Neckerchief().isJewellery()).as("at the neck, but no jewellery").isFalse();
 		assertThat(new Glove()).as("a gauntlet is a glove too").isNotInstanceOf(org.socialworld.objects.properties.IBurnable.class);

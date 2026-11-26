@@ -18,6 +18,7 @@
  */
 package org.socialworld.objects.concrete.clothes.overgarments;
 
+import org.socialworld.attributes.properties.BlowKind;
 import org.socialworld.actions.handle.InventoryPlace;
 import org.socialworld.objects.concrete.clothes.Overgarment;
 import org.socialworld.objects.enums.EnumHumanCrafted;
@@ -44,10 +45,20 @@ public class Gambeson extends Overgarment implements IBurnable, IProtective {
 /////////////////////////////    abilities (constant values for now)   ///////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	public float getProtectionAgainstStab() {return 25; }
-	public float getProtectionAgainstClub() {return 35; }
-	public float getProtectionAgainstStroke() {return 30; }
-	public float getProtectionAgainstBackhand() {return 30; }
+	// protection from the material (concept value and protection from the material, step 5, 2026-11-26): many layers; the padding takes the club best
+	protected float getFormFactor(BlowKind blow) {
+		switch (blow) {
+		case stab: return 2.5f;
+		case club: return 3.2f;
+		case stroke: return 2.5f;
+		case backhand: return 2.5f;
+		default: return getFormFactor();
+		}
+	}
+	public float getProtectionAgainstStab() {return calculateProtection(BlowKind.stab); }
+	public float getProtectionAgainstClub() {return calculateProtection(BlowKind.club); }
+	public float getProtectionAgainstStroke() {return calculateProtection(BlowKind.stroke); }
+	public float getProtectionAgainstBackhand() {return calculateProtection(BlowKind.backhand); }
 
 	public InventoryPlace getOvergarmentPlace() {return InventoryPlace.overgarmentArmour; }
 

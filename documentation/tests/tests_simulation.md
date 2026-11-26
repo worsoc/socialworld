@@ -42,6 +42,7 @@ Part of the [test overview](TESTS.md): the running simulation core: start, attri
 | Objects | `SimulationObjectMaterialSharesTest` | 2 | the protected getters for the material shares of an instance: empty without composition, the shares of the set, an unmodifiable copy | no database (the test with a set) |
 | Objects | `ItemMaterialFormulasTest` | 5 | the overridable formulas of `Item`: value = material x craft factor, protection = material x form factor per kind of blow (cut at 100), the S curve of igniting and its weighting over shares and time | no database (the three tests with a set) |
 | Objects | `ItemValueFromMaterialTest` | 2 | the 20 valuable items take their value from the material: craft factor of the table, 0 without composition, silk and fur above linen and wool, gold ring above gold coins, long sword above short sword, relic through its silver | no database (the test with sets) |
+| Objects | `ItemProtectionFromMaterialTest` | 2 | the 8 protective items take their protection from the material: form factors of the table (gambeson and chain mail per kind of blow), 0 without composition, chain mail profile, wool glove below leather glove below gauntlet, leather apron back | no database (the test with sets) |
 
 ---
 
@@ -367,7 +368,7 @@ The concrete clothes of the item hierarchy (2026-11-23): 9 caps, 4 shirts, 2 tro
 | `eachOne_saysExactlyOnePlace` | of cap, shirt, trousers, dress, overgarment, shoe, sock, glove, neck, finger and bag exactly one is true (neck and finger instead of "jewellery" since 2026-11-25: the neckerchief is at the neck but no jewellery) (each piece with a state and the side left) |
 | `lexemLowerValue_isUniqueAndJustAboveItsKind` | `GetLexemIDLowerPartFromMapping` gives kind + 1 .. 15 (e.g. straw hat 273), the six concrete kinds exactly their kind (cap 272, shirt 288, shoe 320, sock 336, glove 352, dress 368), no value twice |
 | `side_isAPropertyOfTheState_noneUntilSet` | without state shoe, sock and glove are neither left nor right; with the side in the state (S3) they are on that side |
-| `abilities_asInTheCatalogue` | helmet, chain mail and glove `IProtective`, beret and chain mail `IValuable`, since 2026-11-26 also cloak, dress and shirt (the value comes from the material), habit `ISacred`, shirt not `IProtective`; cap and glove are not `IBurnable` (a helmet is a cap, a gauntlet a glove); crown `IValuable` and not burnable, gauntlet protects more than the glove and is not burnable, gambeson `IProtective` and burnable, the neckerchief no jewellery |
+| `abilities_asInTheCatalogue` | helmet, chain mail and glove `IProtective`, beret and chain mail `IValuable`, since 2026-11-26 also cloak, dress and shirt (the value comes from the material), habit `ISacred`, shirt not `IProtective`; cap and glove are not `IBurnable` (a helmet is a cap, a gauntlet a glove); crown `IValuable` and not burnable, gauntlet not burnable and without composition protecting 0 (since 2026-11-26 the protection comes from the material; gauntlet above glove is in `ItemProtectionFromMaterialTest`), gambeson `IProtective` and burnable, the neckerchief no jewellery |
 
 - **Assumes:** the catalogue of the item hierarchy concept; the ability values are constants in the classes.
 - **Not checked:** creating clothes in the running simulation (states, position), it needs the database.
@@ -604,6 +605,19 @@ The valuable items take their value from the material (concept value and protect
 |---|---|
 | `everyValuableItem_hasTheCraftFactorOfTheTable_andIsWorth0WithoutMaterial` | the 20 classes are `IValuable`, have the craft factor of the table and are worth 0 without composition |
 | `theValue_followsTheMaterialOfTheInstance` | linen shirt 78, silk shirt 1144; fur cloak above wool cloak, silk dress above linen dress; gold ring 20000, gold signet ring above it, gold coins below it; long sword above short sword of the same steel; relic bone 60 / silver 25 / wood 15: 4030 |
+
+- **Needs:** the database for the second test (a state reads its `CacheTableState…` when it is created); without it the test skips itself.
+
+### `ItemProtectionFromMaterialTest`
+
+`src/test/java/org/socialworld/objects/ItemProtectionFromMaterialTest.java`
+
+The protective items take their protection from the material (concept value and protection from the material, step 5, 2026-11-26): `getProtectionAgainst…()` gives `calculateProtection(BlowKind)`, i.e. protection of the material × form factor of the class, within 0 .. 100. Form factors: helmet 0.9, gauntlet 0.7, glove 0.6, boot 0.45, shield 1.5, apron 0.8 for every blow; gambeson 2.5 / 3.2 / 2.5 / 2.5 and chain mail 0.74 / 0.57 / 1.03 / 1.03 (stab / club / stroke / backhand) in an overridden `getFormFactor(BlowKind)`. The apron is `IProtective` since then; the gauntlet takes the getters of the glove and only its own form factor. `getFormFactor(BlowKind)` is protected in `Item`, so the test calls it through the type `Item`.
+
+| Test | Checks |
+|---|---|
+| `everyProtectiveItem_hasTheFormFactorsOfTheTable_andProtects0WithoutMaterial` | the 8 classes are `IProtective`, have the form factors of the table per kind of blow and protect 0 without composition |
+| `theProtection_followsTheMaterialAndTheForm` | chain mail iron 95 / leather 5: 50.1 / 30.4 / 79.8 / 59.7; gambeson best against the club; wool glove below leather glove below gauntlet; leather apron 23.3 against strokes, linen apron above 0 and below it; shield above helmet above boot against the club, all within 0 .. 100 |
 
 - **Needs:** the database for the second test (a state reads its `CacheTableState…` when it is created); without it the test skips itself.
 
