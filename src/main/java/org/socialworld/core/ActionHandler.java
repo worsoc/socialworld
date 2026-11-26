@@ -18,6 +18,7 @@
 package org.socialworld.core;
 
 
+import org.socialworld.objects.Animal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
@@ -212,7 +213,11 @@ public class ActionHandler  {
 			if (this.actualAction.isDone() || interrupt) {
 				SocialWorld.stopAction(object.getObjectID());
 				// the own move ends: the active velocity becomes 0 (movement concept G4)
-				if (this.actualAction.getType() == ActionType.move) object.stopActiveMove();
+				if (this.actualAction.getType() == ActionType.move) object.stopActiveMove(this);
+				// a meal that is over (not one that is only interrupted) eats up what is in the mouth (inventory concept V6)
+				if (this.actualAction.isDone() && this.actualAction.getMode() == ActionMode.eat && object instanceof Animal) {
+					((Animal) object).eatUp(this);
+				}
 				this.lastExecutedAction = this.actualAction;
 				secondsTillNextCalculation = 0;
 				if (interrupt && !stop) {

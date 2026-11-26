@@ -1,0 +1,74 @@
+/*
+ * Social World
+ * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
+package org.socialworld.objects.concrete.weapons;
+
+import org.socialworld.actions.handle.InventoryPlace;
+import org.socialworld.attributes.properties.WeaponProperty;
+import org.socialworld.calculation.functions.FunctionMXplusN;
+import org.socialworld.objects.concrete.weapons.Weapon;
+import org.socialworld.objects.enums.EnumHumanCrafted;
+import org.socialworld.objects.properties.ICutting;
+import org.socialworld.objects.properties.IValuable;
+import org.socialworld.objects.properties.IWeapon;
+import org.socialworld.objects.properties.IBurnable;
+
+/**
+ * A long sword.
+ */
+public class LongSword extends Weapon implements IWeapon, ICutting, IValuable, IBurnable {
+
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////    creating instance for simulation    //////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	public LongSword() {
+		super();
+		belongsTo = EnumHumanCrafted.LongSword;
+		setLevelObjectSearch(8 /* base 9: 0.6 meters */ , 5 /* base 25: 1.3 meters */);
+	}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    abilities (constant values for now)   ///////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+	// as a weapon: mass in grams, hardness and sharpness 0 .. 100; stab uses the point, stroke the edge
+	private static final FunctionMXplusN OVERCOME_PROTECTION = new FunctionMXplusN(1.0F, 0.0F);
+	private static final WeaponProperty STAB = new WeaponProperty(1500F, 90F, 80F, OVERCOME_PROTECTION);
+	private static final WeaponProperty CLUB = new WeaponProperty(1500F, 90F, 0F, OVERCOME_PROTECTION);
+	private static final WeaponProperty STROKE = new WeaponProperty(1500F, 90F, 85F, OVERCOME_PROTECTION);
+	private static final WeaponProperty BACKHAND = new WeaponProperty(1500F, 90F, 0F, OVERCOME_PROTECTION);
+
+	public WeaponProperty getStabProperties() {return STAB; }
+	public WeaponProperty getClubProperties() {return CLUB; }
+	public WeaponProperty getStrokeProperties() {return STROKE; }
+	public WeaponProperty getBackhandProperties() {return BACKHAND; }
+
+	public float getSharpness() {return 80; }
+	public float getBladeLength() {return 900; }
+	// value from the material (concept value and protection from the material, step 4, 2026-11-26): more of it than a short sword
+	protected float getCraftFactor() {return 20; }
+	public float getValue() {return calculateValue(); }
+
+	/** large, but worn at the belt in its scabbard as well */
+	public boolean fitsPlace(InventoryPlace place) {
+		if (place.isBelt()) return true;
+		return super.fitsPlace(place);
+	}
+
+}

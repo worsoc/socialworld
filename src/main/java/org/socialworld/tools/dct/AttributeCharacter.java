@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +19,7 @@
 package org.socialworld.tools.dct;
 
 import org.socialworld.attributes.Attribute;
+import org.socialworld.attributes.BodyBuild;
 
 /**
  * A sketched character: one level per attribute, in the order of the enum Attribute.
@@ -34,6 +36,7 @@ public class AttributeCharacter {
 	private final int tiredBed;
 	private final int hungerFull;
 	private final int hungerEat;
+	private final BodyBuild build;
 
 	/** The need of the reference character (farmer): 8 hours of sleep, 3 meals (EID concept 13.4). */
 	public static final float DEFAULT_SLEEP_HOURS = 8f;
@@ -79,6 +82,18 @@ public class AttributeCharacter {
 	 */
 	public AttributeCharacter(int number, String name, String sketch, AttributeLevel[] levels,
 			float sleepHours, int mealsPerDay, int tiredWake, int tiredBed, int hungerFull, int hungerEat) {
+		this(number, name, sketch, levels, sleepHours, mealsPerDay, tiredWake, tiredBed, hungerFull, hungerEat,
+				BodyBuild.DEFAULT);
+	}
+
+	/**
+	 * @param build the body build, which chooses the composition of a human (body build concept B1)
+	 * @see #AttributeCharacter(int, String, String, AttributeLevel[], float, int, int, int, int, int)
+	 */
+	public AttributeCharacter(int number, String name, String sketch, AttributeLevel[] levels,
+			float sleepHours, int mealsPerDay, int tiredWake, int tiredBed, int hungerFull, int hungerEat,
+			BodyBuild build) {
+		if (build == null) throw new IllegalArgumentException("character " + number + " has no body build");
 		if (levels.length != Attribute.NUMBER_OF_ATTRIBUTES) {
 			throw new IllegalArgumentException("character " + number + " has " + levels.length
 					+ " levels instead of " + Attribute.NUMBER_OF_ATTRIBUTES);
@@ -103,6 +118,7 @@ public class AttributeCharacter {
 		this.tiredBed = tiredBed;
 		this.hungerFull = hungerFull;
 		this.hungerEat = hungerEat;
+		this.build = build;
 	}
 
 	private static void checkIdeal(int number, String attribute, int low, int high) {
@@ -142,6 +158,11 @@ public class AttributeCharacter {
 	/** Meals the character needs per day (the body's need, not how it lives). */
 	public int getMealsPerDay() {
 		return mealsPerDay;
+	}
+
+	/** The body build (column build of characters.csv); it chooses the composition of a human. */
+	public BodyBuild getBuild() {
+		return build;
 	}
 
 	public int getNumber() {

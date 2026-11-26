@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2020  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -126,7 +127,9 @@ public class StateInventory extends State {
 	}
 
 	protected  ReturnCode init() {
-		this.inventory = Inventory.getTestInventory(SimulationObject_Type.human);
+		// an empty inventory; StateAnimal.setInventory puts the real one in its place (2026-11-24, before: the test
+		// clothes, which are gone since the item hierarchy has real clothes)
+		this.inventory = new Inventory(SimulationObject_Type.human);
 		return ReturnCode.todo;
 		
 	}

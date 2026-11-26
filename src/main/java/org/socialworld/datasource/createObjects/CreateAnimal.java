@@ -80,10 +80,10 @@ public class CreateAnimal extends CreateSimulationObjects {
 		propertiesToInit[0] = GrantedAccessToProperty.all;
 		hiddenAnimal = wa.getMeHidden(propertiesToInit);
 
-		initState(hiddenAnimal);
+		int characterNumber = initState(hiddenAnimal);
 		initObject(hiddenAnimal);	
 		
-		return new IncompleteSimulationObject(createdAnimal, hiddenAnimal);
+		return new IncompleteSimulationObject(createdAnimal, hiddenAnimal, characterNumber);
 	}
 
 	protected void initObject(HiddenAnimal hiddenAnimal) {
@@ -94,7 +94,11 @@ public class CreateAnimal extends CreateSimulationObjects {
 	}
 
 	
-	protected void initState(HiddenAnimal hiddenAnimal) {
+	/**
+	 * @return the character (number in characters.csv, 1 .. 100) the attribute array was taken from; it goes with the
+	 *         incomplete object to the simulation (e.g. for the start equipment), not into the state
+	 */
+	protected int initState(HiddenAnimal hiddenAnimal) {
 
 		super.initState(hiddenAnimal);		
 
@@ -132,6 +136,7 @@ public class CreateAnimal extends CreateSimulationObjects {
 
 		if (GlobalSwitches.OUTPUT_CREATE_OBJECT_HUMANS) System.out.println("CreateAnimal.initState() Ende " +  ActualTime.asTime().toString());
 
+		return characterNumberOf(indexGPAA);
 	}
 
 	/**
@@ -158,6 +163,11 @@ public class CreateAnimal extends CreateSimulationObjects {
 	 * @param gaussIndexAttributeArray the gauss index the attribute array was taken from
 	 * @return |gaussIndexAttributeArray|, at most 99
 	 */
+	static int characterNumberOf(int gaussIndexAttributeArray) {
+		// |gauss index| = character number - 1 (see influenceTypesOfCharacter); characters 1 .. 100
+		return Math.min(Math.abs(gaussIndexAttributeArray), GaussPoolState2ActionType.CAPACITY_GPS2A_ARRAY - 1) + 1;
+	}
+
 	static int state2ActionTypeOfCharacter(int gaussIndexAttributeArray) {
 		return Math.min(Math.abs(gaussIndexAttributeArray), GaussPoolState2ActionType.CAPACITY_GPS2A_ARRAY - 1);
 	}

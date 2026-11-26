@@ -193,7 +193,11 @@ public enum EventType {
 //////////////////////////////////////////////////////////////////////
 
 	positionStep(512),
-	activeMoveStop(513);
+	activeMoveStop(513),
+	// a carried object takes the position of its carrier plus the offset (connection carried, 2026-11-23)
+	followCarrier(514),
+	// a meal is over: what is in the mouth is eaten up (inventory concept V6, 2026-11-23)
+	eatUp(515);
 
 	
 	
@@ -328,6 +332,12 @@ public enum EventType {
 	}
 
 	/** The own move of the causer: selfMoveWalk(8) ... selfMoveFly(13). */
+	/** @return true for the events of the own inventory: take, drop, switch, set, get (inventory concept V4) */
+	public boolean isSelfInventory() {
+		return this == selfInventoryTake || this == selfInventoryDrop || this == selfInventorySwitch
+				|| this == selfInventorySet || this == selfInventoryGet;
+	}
+
 	public boolean isSelfMove() {
 		return this.index >= 8 && this.index <= 13;
 	}

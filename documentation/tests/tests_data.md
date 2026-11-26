@@ -2,7 +2,7 @@
 
 Part of the [test overview](TESTS.md): pools and tables, and the Data Creation Tool that fills them.
 
-**19 test classes, 158 tests.**
+**26 test classes, 196 tests.**
 
 ## Overview
 
@@ -11,11 +11,18 @@ Part of the [test overview](TESTS.md): pools and tables, and the Data Creation T
 | Data | `Action2PerformerDescriptionPoolTest` | 7 | intensity × power, expression parser, the moves take the intensity of the action, move velocity without double acceleration, a description for every blow | – |
 | Data | `FunctionPoolTest` | 5 | building a matrix from flat arrays, table functions under func_id 0..10, func_ids for functions created at runtime | – |
 | Data | `GaussPoolAAACMMappingTest` | 4 | mapping of the two drawn indices | – |
+| Data | `StartEquipmentCatalogTest` | 8 | equipment.csv: all 100 characters, kits as pieces with pairs, the material in brackets, more clothes first, barefoot, container and content apart, class names, totals | – |
+| Data | `CompositionCatalogTest` | 6 | composition.csv: every concrete item class and every body build of the humans has its composition, every recipe adds up to 100 with known materials, alternatives and spreads, mistakes named | – |
+| Data | `CompositionVariantsTest` | 5 | five variants per class: add up to 100, within the spread, alternatives take turns, the same catalog gives the same sets | – |
+| Data | `CompositionSetsTest` | 6 | what "Material-Sets aus Katalog" writes: five sets per class from ID 100 without gaps, each adds up to 100, the coupling class + variant -> set, the humans after all items, every name accepted by swkind_materialset | – |
+| Data | `BodyBuildCatalogTest` | 3 | the body builds of characters.csv for the running simulation: all 100 read, the same as the DCT reads, default and problems | – |
+| Data | `CompositionAssignmentTest` | 7 | which set a new instance gets from swkind_materialset: item by class, human by its build, variant objectID % n, with a material only its variants, the right piece of a pair the set of the left, no template no set; the private setter the simulation calls | – |
+| Data | `StartEquipmentDistributionTest` | 1 | the whole start equipment distributed as at the start of the simulation: nothing at the feet, every liquid in its container, 24 kit pieces left out | no database |
 | Data | `CreateAnimalInfluenceTypeTest` | 4 | the influence type is the character of the attribute array, the same for every event type | – |
 | Data | `CreateAnimalState2ActionTypeTest` | 3 | the state-to-action type is the character of the attribute array, equal to the influence type | – |
 | Data | `EventReactionFamilyTest` | 4 | 116 reaction types, drawn per event family, other event types keep 1 | – |
 | Data | `DatabaseAssumptionsTest` | 1 | a test is skipped without a database | – |
-| DCT | `AttributeArrayGeneratorTest` | 30 | attribute arrays from characters and text, need and ideal of the characters | – |
+| DCT | `AttributeArrayGeneratorTest` | 32 | attribute arrays from characters and text, need, ideal and body build of the characters | – |
 | DCT | `AttributeMatrixGeneratorTest` | 19 | matrices for the characters and the mapping | – |
 | DCT | `TextFileTest` | 2 | reading a text file | – |
 | DCT | `CreationToolEventInfluenceDescriptionTest` | 3 | typed numbers get a decimal point | – |
@@ -124,10 +131,128 @@ The reaction type does not follow the character: `CreateAnimal.initState` draws 
 `src/test/java/org/socialworld/datasource/mariaDB/DatabaseAssumptionsTest.java`
 
 - **Checks:** when the table cannot be reached, the calling test is aborted and counts as skipped.
+- **Not checked:** `assumeDatabaseIsAvailable` (2026-11-24), for tests that read no table themselves but create objects that reach the database; without `application.properties` or a running database `ConnectionMariaDB.getInstance()` throws, and the calling test is skipped.
 
 ---
 
+### `CompositionCatalogTest`
+
+`src/test/java/org/socialworld/datasource/createObjects/CompositionCatalogTest.java`
+
+The typical composition of the item classes (composition concept Z2, 2026-11-24), read by `CompositionCatalog` from composition.csv next to equipment.csv: `<class>;<material>:<share>+-<spread>,...|<alternative>`. Since 2026-11-25 (body build concept B2) the humans are in it too, one line `Human.<build>` per body build (enum `BodyBuild`). The shares of a recipe add up to 100; `|` separates alternatives (a bowl of wood or of clay). The item classes are found by `ConcreteItemClasses` (test sources), the same search as in `AllItemsInitStateTest`.
+
+| Test | Checks |
+|---|---|
+| `theCatalog_isReadWithoutProblems` | composition.csv has no line with a mistake |
+| `everyConcreteItemClass_hasItsComposition_andTheCatalogNoOther` | every concrete item class has a line, the catalog names no other item class, exactly as many as there are concrete item classes (the `Human.` lines left aside; until 2026-11-25 a fixed "at least 107") |
+| `everyBodyBuild_hasItsRecipe_andNoOtherHumanIsThere` | exactly the 5 lines `Human.<build>`, one per `BodyBuild`; `humanKey(stout)` is `Human.stout`; the main material of a human is meat |
+| `everyRecipe_addsUpTo100_withKnownMaterials` | every material is known, no spread larger than its share, every recipe adds up to 100 |
+| `alternatives_andSpreads_areRead` | comments and empty lines are skipped; `Bowl` has two alternatives; `linen:7±3` (also written `+-`) gives share 7 and spread 3; the main part is the largest |
+| `linesWithAMistake_areLeftOut_andNamed` | unknown class, unknown material, sum 90, share no number, missing field, a class twice, a material twice, unknown body build `Human.giant`: 8 problems, only the correct lines (`Oar`, `Human.wiry`) stay |
+
+- **Needs:** no database.
+
+### `CompositionVariantsTest`
+
+`src/test/java/org/socialworld/datasource/createObjects/CompositionVariantsTest.java`
+
+The five variants of the composition of every class (composition concept Z2, K3), made by `CompositionVariants`: the alternatives take turns; every share except the main one is drawn in its spread, the main material takes the rest to 100 and has to stay in its own spread (otherwise the draw is repeated). The random numbers start from the class name and the number of the variant.
+
+| Test | Checks |
+|---|---|
+| `everyClass_getsFiveVariants_thatAddUpTo100_withinTheSpread` | for all classes: 5 variants, the materials of the recipe in its order, every share at least 1 and within its spread, sum 100 |
+| `theSameCatalog_givesTheSameSets` | two runs give the same variants |
+| `alternatives_takeTurns` | the ring: gold, silver, bronze, copper, gold |
+| `withASpread_theInstancesDiffer_withoutOne_theyDoNot` | rags give more than one variant, rope always hemp 100 |
+| `aClassWithoutRecipe_hasNoVariants` | an unknown class gives none |
+
+- **Needs:** no database.
+
+### `CompositionSetsTest`
+
+`src/test/java/org/socialworld/datasource/createObjects/CompositionSetsTest.java`
+
+What the button "Material-Sets aus Katalog" of the PropertySetCreationTool writes (composition concept Z3, 2026-11-24), planned by `CompositionSets` without the database: the variants of every class of composition.csv as material sets from ID 100 on (swset_material) and the coupling class + variant -> set (swkind_materialset). The sets below 100 stay free (old sets). Since 2026-11-25 the humans (`Human.<build>`) are planned like a class, at the end of the file.
+
+| Test | Checks |
+|---|---|
+| `theSets_startAt100_withoutGaps_andFitIntoTheTable` | 5 sets per class, IDs from 100 on without gaps, the last below 1000 |
+| `everySet_addsUpTo100_withLfdNrFrom1_andKnownMaterials` | lfd_nr counts from 1 per set, every material is known, every set adds up to 100 |
+| `everyClass_isCoupledToFiveSetsOfItsOwn` | every class of the catalog has 5 sets, no set belongs to two variants, variants 0 .. 4 |
+| `theFirstClassOfTheFile_isTheBeret_withItsFirstVariantInSet100` | the order of the file: Beret variant 0 is set 100, wool first |
+| `theHumans_comeAfterAllItems` | the 25 sets of the humans come after all item sets, starting with `Human.gaunt`, so the item sets keep their IDs |
+| `everyNameOfThePlan_isAcceptedBySwkindMaterialset` | `TableKindMaterialSet.isValidClassName` accepts every name of the plan, also `Human.<build>` with its dot (until 2026-11-25 the humans were left out without a word); a name with a quote and `null` are refused |
+
+- **Not checked:** the writing itself (it needs the database, and tests do not write into it).
+- **Needs:** no database.
+
+### `BodyBuildCatalogTest`
+
+`src/test/java/org/socialworld/datasource/createObjects/BodyBuildCatalogTest.java`
+
+The body build of the characters for the running simulation (body build concept B3, 2026-11-25). `BodyBuildCatalog` reads only the number and the column `build` (field 19) of characters.csv, because the simulation does not use the `AttributeCharacterCatalog` of the DCT.
+
+| Test | Checks |
+|---|---|
+| `theCatalog_isReadWithoutProblems_andHasAll100Characters` | no problems, 100 characters |
+| `everyCharacter_hasTheBuildThatTheDctReads` | for all 100 the same build as `AttributeCharacterCatalog` |
+| `withoutTheColumn_orForAnUnknownNumber_theDefault_andAnUnknownBuildIsNamed` | a line with `stout` gives stout; without the column, for a left-out line and for an unknown number `average`; an unknown build and a line without number are 2 problems |
+
+- **Needs:** no database.
+
+### `CompositionAssignmentTest`
+
+`src/test/java/org/socialworld/datasource/createObjects/CompositionAssignmentTest.java`
+
+Which material set a new instance gets when `swstate_composition` was empty at the start of the simulation (body build concept B3, 2026-11-25). The simulation takes the template from swkind_materialset: an item by its class, a human by `Human.<build>` of its character, the variant objectID % number of variants. It sets the state through `HiddenSimulationObject.setSomething` and saves the row per instance.
+
+| Test | Checks |
+|---|---|
+| `anItem_takesItsClass_aHuman_theTemplateOfItsBuild` | Beret stays Beret, a sturdy human is `Human.sturdy`; the simple name of a full class name |
+| `theVariant_isObjectIDModuloTheNumberOfVariants` | 30000 → first set, 30017 → third, 4 → fifth; with two alternatives 3 → second |
+| `withAMaterial_onlyTheVariantsOfThatMainMaterialCount` | of five hats felt, straw, felt, straw, felt: straw for 30017 is the second straw, felt for 4 the second felt, gold none, without material as before |
+| `thePieceOfAPair_takesTheSetOfItsPartner_ifTheTemplateHasIt` | the right sock with its own variant 217 takes the left sock's 216; a set of another template and `NO_SET` change nothing (2026-11-25: before, consecutive IDs gave a woollen left and a linen right sock) |
+| `withoutTemplate_thereIsNoSet` | an empty or missing list gives `NO_SET` |
+| `theStateComposition_hasThePrivateSetter_thatTheSimulationCalls` | `StateComposition` has exactly one method of the name `METHODNAME_SET_MATERIAL_SET`, private, with a `MaterialSet` (`setSomething` would say nothing if it were missing) |
+| `theSetter_leavesTheSharedObjectNothingAlone` | the setter does not change the object nothing that all objects without a composition share |
+
+- **Not checked:** the start switch in `Simulation`, the pairs and the writing into `swstate_composition` in `StartCreation` (they need the database, and tests do not write into it).
+- **Needs:** no database.
+
+### `StartEquipmentCatalogTest`
+
+`src/test/java/org/socialworld/datasource/createObjects/StartEquipmentCatalogTest.java`
+
+The start equipment of the 100 characters (inventory concept V3, 2026-11-23) is read from `src/main/resources/org/socialworld/tools/dct/equipment.csv`: kit lines (`kit;<name>;<clothes>`) and one line per character (`<no>;<kit>;<more clothes>;<items>;<flags>`). Shoes, socks and gloves stand for a pair; `Container(Liquid)` gives the container and its content apart; the flag `barefoot` leaves out shoes and socks; the more clothes come before the kit. Since 2026-11-25 (item class or composition, step 2) a piece of clothing may name its material in brackets, `Hat[straw]`; composition.csv must have an alternative with that main material.
+
+| Test | Checks |
+|---|---|
+| `theFile_hasAll100Characters_andNoProblems` | every character 1..100 has an entry, no unknown kit or class |
+| `theFarmer_getsKitK1AsPieces_shoesAndSocksAsPairs` | character 1: his clogs left and right first, then `Shirt[linen]`, trousers, shoe left and right, sock left and right, `Hat[straw]`; pitchfork and bread |
+| `aPiece_namesItsMaterial_inBrackets_andItIsChecked` | the smith's gloves are `Glove[leather]` on both sides; a piece without brackets has `Material.nothing`; `Hat[gold]` (no such alternative) and `Hat[unobtainium]` (no such material) are problems and left out, `Hat[felt]` and `Cap` stay |
+| `moreClothes_comeFirst` | character 48: `Cloak[fur]` before the `Cloak[wool]` of the kit |
+| `barefoot_leavesOutShoesAndSocks` | character 33 has no shoes and socks, but `Dress[linen]`, apron and headscarf |
+| `aContainerWithContent_isTheContainer_andTheContentApart` | the barmaid's jug and its beer; the shepherd's waterskin with water |
+| `classNames_areFoundInTheirPackages_unknownOnesAreProblems` | Helmet and Stone are found in their packages; an unknown class and an unknown kit are listed as problems |
+| `totals_asCountedInTheConcept` | 731 pieces of clothing (before replacing; 697 until the 34 new pieces of 2026-11-25), 235 items with the contents (231 until 2 signet rings and 2 quivers came) |
+
+- **Needs:** the file on the class path (it is in `src/main/resources`), no database.
+
+### `StartEquipmentDistributionTest`
+
+`src/test/java/org/socialworld/datasource/createObjects/StartEquipmentDistributionTest.java`
+
+Distributes the whole start equipment as `Simulation.equip` does it (`StartEquipment.chooseWornPlace` for the clothes, `choosePlace` with the first food into the mouth for the items, a bread into an empty mouth). As in the simulation the worn place is chosen with a prototype without state and the side of the catalog; the piece put there has a state with that side (protection concept S3, `ItemSides.withSide`).
+
+| Test | Checks |
+|---|---|
+| `all100_areEquipped_nothingFallsToTheFeet_liquidsAreInTheirContainers` | every piece gets a place or a container (908 + 7 on 2026-11-23, V5: `StartEquipment.decide`), every one of the 10 liquids is in its container, nothing is put down at the feet, exactly 24 kit pieces are left out (the fur cloak, the hood and the helmet take their place; since 2026-11-25 also clogs for 5 shoe pairs, coif 4, doublet 4, wreath 2, crown 1; a quiver may go on the back), every human wears something on the upper body; prints the counts and the breads (69) |
+
+- **Not checked:** the creating of the objects and the carrying in the running simulation (they need the database).
+
 ## DCT: Data Creation Tool
+- **Needs:** the database for the tests that create objects with a state (a state reads its `CacheTableState…` when it is created); without it they skip themselves (`DatabaseAssumptions.assumeDatabaseIsAvailable`, 2026-11-24).
+
 
 ### `AttributeArrayGeneratorTest`
 
@@ -139,6 +264,7 @@ The reaction type does not follow the character: `CreateAnimal.initState` draws 
 | Levels | bands in 0..9999 (`o`: 3800, 5000, 6200 for shares 0, 0.5, 1; `+++` ends at 9999), found by their code, inside the range of attribute values |
 | Catalog | `characters.csv` holds 100 characters in order; a wrong number of levels is rejected; every character has a need of sleep (6 to 10 h) and food (1 to 5 meals), farmer 8 h and 3, ascetic 6 h and 1, wrestler 5 meals; without the two columns the default need (8 h, 3) applies; 7.3 h, 10.5 h, 0 and 6 meals are rejected |
 | Ideal | all 100 characters have the ideal columns (maid tiredness 3000 / 8500, miller hunger 2500 / 4000, stable boy tiredness 2500 / 8000 and hunger after a meal 5000), a line without them gets the farmer's 20/70 and 40/60; 18 fields are read, 16 rejected; lower end not below the upper one or above 99 is rejected; only hunger and tiredness have an ideal, asking for mood is refused |
+| Body build | every character has a build and every build is used (village smith sturdy, ascetic gaunt, innkeeper stout); a line without the column gets `average`; an unknown build and 20 fields are rejected |
 | Generator | 199 arrays, every `gauss_index` once, every value in its band, same text same values, too short a text and impossible `aa_id`s rejected, the counted letters are used up exactly |
 | Fine scale | more than half of the values are no multiples of 100 |
 | Adjusting by hand | `withValues` keeps character, index and id; `withDisplayValues` keeps unmoved values, moved ones become slider × 100, limited to 0..9999 |

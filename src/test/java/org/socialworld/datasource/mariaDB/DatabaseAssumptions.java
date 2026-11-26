@@ -45,6 +45,19 @@ public final class DatabaseAssumptions {
 				TablePoolMatrixRowCol::new, TableGaussAAACM::new);
 	}
 
+	/**
+	 * For tests that do not read a table themselves but create objects whose constructors reach the database
+	 * (e.g. ObjectMaster, CacheTableState...). Without application.properties or without a running database
+	 * ConnectionMariaDB.getInstance() throws a NullPointerException, as on GitHub CI.
+	 */
+	public static void assumeDatabaseIsAvailable() {
+		try {
+			ConnectionMariaDB.getInstance();
+		} catch (RuntimeException e) {
+			assumeThat(false).as("no database available: " + e).isTrue();
+		}
+	}
+
 	@SafeVarargs
 	public static void assumeTablesAreFilled(Supplier<? extends Table>... tables) {
 		for (Supplier<? extends Table> table : tables) {

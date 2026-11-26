@@ -98,6 +98,8 @@ The arrows show the strongest import relationships, not all of them.
 
 **`core`** holds everything together. The names `Simulation`, `ObjectMaster`, `EventMaster` and `ActionMaster` show its three pillars: objects, events and actions.
 
+At the start, `Simulation` hands the creation of the humans, their start equipment and the apples to `StartCreation`, which also derives the composition of every new instance and saves it into `swstate_composition`; the reference is dropped once the creation is over.
+
 **`objects`** describes the inhabitants of the world:
 
 - **Animals:** down to bird orders and single species such as `Stork`, `Ostrich` or `Husky`

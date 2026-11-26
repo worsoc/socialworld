@@ -1,24 +1,20 @@
 /*
-* Social World
-* Copyright (C) 2025  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2025  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.calculation;
 
 import java.util.List;
@@ -81,6 +77,13 @@ class GetSimulationClustersPropUsingAs {
 		};
 	private static List<PropertyUsingAs> listPossibleUsingAs4ClusterObjectMaster = Arrays.asList(possibleUsingAs4ClusterObjectMaster);
 
+	// the InventoryCalculator reads the item (object) and the positions for the reach; it writes only by the
+	// write access of the holder (grant inventory) and by the containers (token of this cluster)
+	private static PropertyUsingAs[] possibleUsingAs4ClusterInventory = 
+		{PropertyUsingAs.object, PropertyUsingAs.pathToPosition, PropertyUsingAs.position
+		};
+	private static List<PropertyUsingAs> listPossibleUsingAs4ClusterInventory = Arrays.asList(possibleUsingAs4ClusterInventory);
+
 	private static List<PropertyUsingAs> listPossibleUsingAs4ClusterExpressionOrFunction;
 	
 	private static List<PropertyUsingAs> listPossibleUsingAs4ClusterCore;
@@ -118,6 +121,9 @@ class GetSimulationClustersPropUsingAs {
 			break;
 		case objectMaster:
 			result = listPossibleUsingAs4ClusterObjectMaster;
+			break;
+		case inventory:
+			result = listPossibleUsingAs4ClusterInventory;
 			break;
 		case expressionEvaluate:
 			if (listPossibleUsingAs4ClusterExpressionOrFunction == null) {

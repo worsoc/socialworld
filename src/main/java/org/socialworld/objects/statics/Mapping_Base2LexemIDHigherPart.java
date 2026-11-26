@@ -1,3 +1,20 @@
+/*
+ * Social World
+ * Copyright (C) 2023  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.objects.statics;
 
 import java.util.EnumMap;
@@ -36,6 +53,9 @@ public class Mapping_Base2LexemIDHigherPart {
 		mapping.put(EnumBaseSimObj.Liquid, GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_LIQUID);
 		mapping.put(EnumBaseSimObj.Food, GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_FOOD);
 		mapping.put(EnumBaseSimObj.HumanCrafted, GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_HUMANCRAFTED);
+		mapping.put(EnumBaseSimObj.Solid, GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_SOLID);
+		mapping.put(EnumBaseSimObj.AnimalPart, GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_ANIMALPART);
+		mapping.put(EnumBaseSimObj.PlantPart, GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_PLANTPART);
 		mapping.put(EnumBaseSimObj.Bird, GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_BIRD);
 		mapping.put(EnumBaseSimObj.Mammal, GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_MAMMAL);
 		mapping.put(EnumBaseSimObj.Sea, GroupingOfSimulationObjects.LEXEMID_HIGHERVALUE_SEA);

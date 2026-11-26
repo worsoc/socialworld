@@ -85,6 +85,8 @@ public class SimDashboard implements ISimVisualization, IObjectReceiver {
 	private final AutomaticSelection automatic = new AutomaticSelection();
 	private final JToggleButton automaticButton = new JToggleButton("Automatik");
 	private final JButton typesButton = new JButton("Typen");
+	private final JButton inventoryButton = new JButton("Inventar");
+	private final InventoryWindow inventoryWindow = new InventoryWindow();
 	private final JButton needsButton = new JButton("Wecken & S\u00E4ttigen");
 	// set from outside (SocialWorld), so that the display does not depend on the workbench; null: no button
 	private Supplier<String> needsReset;
@@ -162,6 +164,7 @@ public class SimDashboard implements ISimVisualization, IObjectReceiver {
 		pictureMode = true;
 		automaticButton.setEnabled(false);
 		typesButton.setEnabled(false);
+		inventoryButton.setEnabled(false);
 		showNextPicture();
 		new Timer(PictureSequence.TICK_MILLIS, event -> showNextPicture()).start();
 	}
@@ -204,6 +207,9 @@ public class SimDashboard implements ISimVisualization, IObjectReceiver {
 		automaticButton.addActionListener(event -> switchAutomatic());
 		typesButton.setToolTipText("Zeigt in einem eigenen Fenster, welcher Mensch welchen Typ hat, oder die Anzahl pro Typ.");
 		typesButton.addActionListener(event -> showTypes());
+		inventoryButton.setToolTipText("Zeigt in einem eigenen Fenster das Inventar des ausgew\u00E4hlten Menschen."
+				+ " Das Fenster folgt der Auswahl.");
+		inventoryButton.addActionListener(event -> showInventory());
 
 		needsButton.setToolTipText("Beendet bei allen Schlafenden und Essenden die Aktion und setzt tiredness und hunger auf 20."
 				+ " Ein g\u00F6ttlicher Eingriff, um Aktionen und Reaktionen zu sehen.");
@@ -212,6 +218,7 @@ public class SimDashboard implements ISimVisualization, IObjectReceiver {
 
 		JPanel buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 6, 0));
 		buttons.add(needsButton);
+		buttons.add(inventoryButton);
 		buttons.add(typesButton);
 		buttons.add(automaticButton);
 
@@ -314,6 +321,22 @@ public class SimDashboard implements ISimVisualization, IObjectReceiver {
 		populationPanel.setState(population.samples(), nowMillis);
 		detail.setState(snapshot, history, nowMillis, selectedObject, readSelectedPosition(), readSelectedMove(snapshot), readSelectedType(),
 				pictureMode ? "Bildfolge l\u00E4uft, Klicks sind abgeschaltet" : automatic.describe(nowMillis));
+		if (inventoryWindow.isOpen()) inventoryWindow.show(readSelectedInventory());
+	}
+
+	private void showInventory() {
+		inventoryWindow.open();
+		inventoryWindow.show(readSelectedInventory());
+	}
+
+	/** The inventory of the selected human, read with the token of the display (cluster visualize). */
+	private InventoryView readSelectedInventory() {
+		if (selectedObject == VisualModel.NO_OBJECT) return InventoryView.none();
+
+		Human human = Simulation.getInstance().getObjectMaster().getHumans().get(selectedObject);
+		if (human == null) return InventoryView.missing(selectedObject);
+
+		return InventoryView.read(selectedObject, human, token);
 	}
 
 	private void selectByClick(int objID) {

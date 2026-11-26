@@ -1,24 +1,20 @@
 /*
-* Social World
-* Copyright (C) 2023  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2023  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,6 +31,9 @@ import org.socialworld.objects.enums.EnumFood;
 import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.enums.EnumLiquid;
 import org.socialworld.objects.enums.EnumMammal;
+import org.socialworld.objects.enums.EnumSolid;
+import org.socialworld.objects.enums.EnumAnimalPart;
+import org.socialworld.objects.enums.EnumPlantPart;
 import org.socialworld.objects.statics.GetEnumSimObjForClassName;
 import org.socialworld.objects.statics.GetLexemIDHigherPartFromMapping;
 import org.socialworld.objects.statics.GetLexemIDLowerPartFromMapping;
@@ -44,6 +43,9 @@ import org.socialworld.objects.statics.Mapping_Food2LexemIDLowerPart;
 import org.socialworld.objects.statics.Mapping_HumanCrafted2LexemIDLowerPart;
 import org.socialworld.objects.statics.Mapping_Liquid2LexemIDLowerPart;
 import org.socialworld.objects.statics.Mapping_Mammal2LexemIDLowerPart;
+import org.socialworld.objects.statics.Mapping_Solid2LexemIDLowerPart;
+import org.socialworld.objects.statics.Mapping_AnimalPart2LexemIDLowerPart;
+import org.socialworld.objects.statics.Mapping_PlantPart2LexemIDLowerPart;
 
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfoList;
@@ -139,6 +141,33 @@ public class SimObjectsCompletelyImplemented {
 				if (lexemIDlowerPart == Constants.MAPPING_NO_ENTRY_FOR_KEY) {
      				resultCheck = false; 
      				System.out.println(elem.toString() + ": no mapping in Mapping_Liquid2LexemIDLowerPart");
+				}
+			}
+			
+			for (EnumSolid elem : EnumSolid.values()) {
+				lexemIDlowerPart = Mapping_Solid2LexemIDLowerPart.getInstance().get(elem);
+				
+				if (lexemIDlowerPart == Constants.MAPPING_NO_ENTRY_FOR_KEY) {
+     				resultCheck = false; 
+     				System.out.println(elem.toString() + ": no mapping in Mapping_Solid2LexemIDLowerPart");
+				}
+			}
+			
+			for (EnumAnimalPart elem : EnumAnimalPart.values()) {
+				lexemIDlowerPart = Mapping_AnimalPart2LexemIDLowerPart.getInstance().get(elem);
+				
+				if (lexemIDlowerPart == Constants.MAPPING_NO_ENTRY_FOR_KEY) {
+     				resultCheck = false; 
+     				System.out.println(elem.toString() + ": no mapping in Mapping_AnimalPart2LexemIDLowerPart");
+				}
+			}
+			
+			for (EnumPlantPart elem : EnumPlantPart.values()) {
+				lexemIDlowerPart = Mapping_PlantPart2LexemIDLowerPart.getInstance().get(elem);
+				
+				if (lexemIDlowerPart == Constants.MAPPING_NO_ENTRY_FOR_KEY) {
+     				resultCheck = false; 
+     				System.out.println(elem.toString() + ": no mapping in Mapping_PlantPart2LexemIDLowerPart");
 				}
 			}
 			

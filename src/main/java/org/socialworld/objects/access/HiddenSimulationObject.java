@@ -114,6 +114,11 @@ public class HiddenSimulationObject {
 		return wa.setPosition(pos, this);
 	}
 	
+	/** What this object carries follows it (grant position, protection concept S2). */
+	public int letCarriedFollow() {
+		return wa.letCarriedFollow(this);
+	}
+
 	public int setMove(Direction direction) {
 		return wa.setMove(direction, this);
 	}

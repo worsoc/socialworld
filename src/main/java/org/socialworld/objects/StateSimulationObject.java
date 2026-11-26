@@ -17,6 +17,7 @@
  */
 package org.socialworld.objects;
 
+import org.socialworld.calculation.geometry.Vector;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -330,6 +331,75 @@ public abstract class StateSimulationObject extends ListenedBase implements IObj
 		if (checkGuard(guard)) {
 			this.connections.connectAsSlaveTo(object, type);
 		}
+	}
+
+	final void connectAsMasterTo(SimulationObject object, ConnectionType type, Vector offset, WriteAccessToSimulationObject guard) {
+		if (checkGuard(guard)) {
+			this.connections.connectAsMasterTo(object, type, offset);
+		}
+	}
+
+	/** Releases every connection of the object on both sides (O1: the object leaves the simulation). */
+	final void releaseAllConnections(WriteAccessToSimulationObject guard) {
+		if (checkGuard(guard)) {
+			this.connections.releaseAll();
+		}
+	}
+
+	/** Releases the connection to the object on both sides. */
+	final void releaseConnectionTo(SimulationObject object, WriteAccessToSimulationObject guard) {
+		if (checkGuard(guard)) {
+			this.connections.releaseConnection(object);
+		}
+	}
+
+	/**
+	 * @return the object that carries this one (connection carried), NoSimulationObject if none does
+	 */
+	public final SimulationObject getCarrier() {
+		Connection con = connectionToCarrier();
+		return (con != null) ? con.getObject1() : NoSimulationObject.getObjectNothing();
+	}
+
+	// the connection to what this object follows: its carrier (carried) or its container (inside, inventory V5)
+	private Connection connectionToCarrier() {
+		if (this.connections == null) return null;
+		Connection con = this.connections.getConnectionToMaster(ConnectionType.carried);
+		if (con == null) con = this.connections.getConnectionToMaster(ConnectionType.inside);
+		return con;
+	}
+
+	/**
+	 * @return true if this object lies inside a container (connection inside)
+	 */
+	final boolean isInside() {
+		return this.connections != null && this.connections.getConnectionToMaster(ConnectionType.inside) != null;
+	}
+
+	/**
+	 * @return what lies inside this object (connection inside), e.g. the coins in a purse
+	 */
+	final List<SimulationObject> getContents() {
+		if (this.connections == null) return new ArrayList<SimulationObject>();
+		return this.connections.getSlaves(ConnectionType.inside);
+	}
+
+	/**
+	 * @return the offset of this object to its carrier, the 0 vector if it is not carried
+	 */
+	public final Vector getCarriedOffset() {
+		Connection con = connectionToCarrier();
+		return (con != null) ? con.getOffset() : Vector.get0Vector();
+	}
+
+	/**
+	 * @return the objects this one carries (connection carried)
+	 */
+	final List<SimulationObject> getCarriedObjects() {
+		if (this.connections == null) return new ArrayList<SimulationObject>();
+		List<SimulationObject> result = this.connections.getSlaves(ConnectionType.carried);
+		result.addAll(this.connections.getSlaves(ConnectionType.inside));
+		return result;
 	}
 
 	final void addConnection(Connection connection, SimulationObject connectedObject, WriteAccessToSimulationObject guard) {

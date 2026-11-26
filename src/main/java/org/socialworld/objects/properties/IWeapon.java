@@ -1,24 +1,20 @@
 /*
-* Social World
-* Copyright (C) 2015  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2015  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.objects.properties;
 
 import org.socialworld.attributes.properties.WeaponProperty;
@@ -50,7 +46,8 @@ public interface IWeapon {
 	public abstract WeaponProperty getStrokeProperties();
 	public abstract WeaponProperty getBackhandProperties();
 	
-	public default boolean isObjectNothing() {return true;}
+	// F1 (2026-11-23): a real weapon is not nothing; only NoIWeapon is (before, both were the wrong way round)
+	public default boolean isObjectNothing() {return false;}
 	
 	static final IWeapon objectNothing = new NoIWeapon();
 
@@ -61,7 +58,7 @@ public interface IWeapon {
 	static class NoIWeapon extends NoSimulationObject implements IWeapon {
 		
 		public boolean isObjectNothing() {
-			return false;
+			return true;
 		}
 		public WeaponProperty getStabProperties() {
 			return null;

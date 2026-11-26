@@ -66,5 +66,9 @@ public class GlobalSwitches {
 	// diagnosis of the move direction (ERD X2, 2026-11-19): lines "MOVEDIR 1" (reaction created),
 	// "MOVEDIR 2" (ActionMove performs), "MOVEDIR 3" (PositionCalculator after a selfMove event)
 	public static boolean OUTPUT_DEBUG_MOVE_DIRECTION = false;
+	// taking and dropping in the InventoryCalculator (inventory concept V4): what happens and why not
+	public static boolean OUTPUT_DEBUG_INVENTORY = true;
+	// the weapon of a useWeapon action (inventory concept V7): line "WEAPON <actor> <mode> with <weapon>"
+	public static boolean OUTPUT_DEBUG_WEAPON = true;
 
 }

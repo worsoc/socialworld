@@ -17,6 +17,7 @@
  */
 package org.socialworld.workbench.act;
 
+import org.socialworld.actions.handle.InventoryPlace;
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
 
@@ -29,7 +30,7 @@ public final class ActionRequest {
 	/** The result of a check. */
 	public enum Problem {
 		NONE, MODE_NOT_SUPPORTED, INVALID_CAUSER, UNKNOWN_CAUSER, CAUSER_BUSY, ALREADY_PLANNED, NOTHING_RUNNING,
-		INVALID_INTENSITY, INVALID_PRIORITY, INVALID_DURATION
+		INVALID_INTENSITY, INVALID_PRIORITY, INVALID_DURATION, INVALID_ITEM
 	}
 
 	private final ActionMode mode;
@@ -37,11 +38,21 @@ public final class ActionRequest {
 	private final float intensity;
 	private final int priority;
 	private final int durationInMilliseconds;
+	// for taking and dropping (inventory concept V4): the item (0 = none) and the hand (noWhere = not given)
+	private final int itemObjectId;
+	private final InventoryPlace place;
 
 	/** The longest duration the tool lets an action have: one hour. */
 	public static final int MAX_DURATION_IN_MILLISECONDS = 3600000;
 
 	public ActionRequest(ActionMode mode, int causerObjectId, float intensity, int priority, int durationInMilliseconds) {
+		this(mode, causerObjectId, intensity, priority, durationInMilliseconds, 0, InventoryPlace.noWhere);
+	}
+
+	public ActionRequest(ActionMode mode, int causerObjectId, float intensity, int priority, int durationInMilliseconds,
+			int itemObjectId, InventoryPlace place) {
+		this.itemObjectId = itemObjectId;
+		this.place = (place != null) ? place : InventoryPlace.noWhere;
 		this.mode = mode;
 		this.causerObjectId = causerObjectId;
 		this.intensity = intensity;
@@ -51,6 +62,14 @@ public final class ActionRequest {
 
 	public ActionMode getMode() {
 		return mode;
+	}
+
+	public int getItemObjectId() {
+		return itemObjectId;
+	}
+
+	public InventoryPlace getPlace() {
+		return place;
 	}
 
 	public int getCauserObjectId() {
@@ -76,7 +95,8 @@ public final class ActionRequest {
 	 *         planned, can only be told by a running simulation.
 	 */
 	public Problem check() {
-		if (!EventRange.isSupported(mode)) return Problem.MODE_NOT_SUPPORTED;
+		if (!EventRange.isSupported(mode) && !ItemReach.isItemMode(mode) && !ItemReach.isWeaponMode(mode)) return Problem.MODE_NOT_SUPPORTED;
+		if (mode == ActionMode.takeItem && itemObjectId <= 0) return Problem.INVALID_ITEM;
 		if (causerObjectId <= 0) return Problem.INVALID_CAUSER;
 		if (Float.isNaN(intensity) || Float.isInfinite(intensity) || intensity < 0) return Problem.INVALID_INTENSITY;
 		if (priority < 0 || priority > AbstractAction.MAX_ACTION_PRIORITY) return Problem.INVALID_PRIORITY;

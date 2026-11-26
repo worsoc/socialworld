@@ -215,6 +215,17 @@ public class ObjectByPositionSearch {
 		}
 	}
 	
+	/**
+	 * Takes the object out of the search, e.g. an item that is eaten up (inventory concept V6, 2026-11-23).
+	 * An object that was never added is left alone.
+	 */
+	public synchronized void remove(SimulationObject object) {
+		int objectID = object.getObjectID();
+		if (objectID < 0 || objectID >= size || objectID >= allNodesByObjectID.size() || allNodesByObjectID.get(objectID) == null) return;
+		removeObject(object);
+		allNodesByObjectID.set(objectID, null);
+	}
+
 	public synchronized void addObject(SimulationObject object ) {
 		ObjectByPositionSearch_Nodes nodes;
 

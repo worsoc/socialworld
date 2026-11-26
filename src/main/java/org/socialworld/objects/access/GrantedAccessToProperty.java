@@ -31,9 +31,10 @@ public enum GrantedAccessToProperty {
 	attributes, matrix, path, knowledge, directionChest, directionView, directionActiveMove,
 	
 	// human
-	inventory, sentence, factsFromSentence, answer, talks,  acquaintance, lastSaidSentence
+	inventory, sentence, factsFromSentence, answer, talks,  acquaintance, lastSaidSentence,
 	
 	// item
+	side
 	
 	// magic
 	

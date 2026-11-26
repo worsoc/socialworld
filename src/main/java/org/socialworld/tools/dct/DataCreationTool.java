@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2018  Mathias Sikos & Damian Zapadka
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,7 +33,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.awt.List;
-import java.awt.Button;
+import java.awt.Insets;
+import javax.swing.JButton;
+import javax.swing.ToolTipManager;
 import java.awt.Checkbox;
 import java.awt.TextField;
 import java.awt.event.ActionListener;
@@ -60,7 +63,7 @@ public class DataCreationTool {
 	JFileChooser jfc;
 	
 	TextArea textInput = new TextArea();
-	Button buttonGenerate = new Button("Generieren");
+	JButton buttonGenerate = button("Generieren", "Alte Erzeugung: Matrizen, Positionen und Attribute aus dem Text oben,", "nur in die Listen. Schreibt nichts in die DB.");
 	
 	List lastMatrix = new List();
 	List matrices = new List();
@@ -85,12 +88,23 @@ public class DataCreationTool {
 
 	TextField tfPathSave = new TextField();
 	TextField tfSaveAs = new TextField();
-	Button buttonSave = new Button("Speichern");
+	JButton buttonSave = button("Speichern", "Hängt die Listen Matrizen, Attribute und Positionen an Textdateien an", "(matrices_/attributes_/positions_&lt;Name&gt;.txt im Pfad links). Schreibt nichts in die DB.");
 	
 	double matrixT[][];
 	private final JLabel lblMatrizen = new JLabel("Matrizen:");
 	private final JLabel lblAnzeigeMatrix = new JLabel("Anzeige Matrix:");
 	private final Checkbox checkboxEventReactionTestFly = new Checkbox("Test: fly", false);
+
+	/**
+	 * A button with a tooltip that says what it does (2026-11-25). Swing instead of AWT, because an AWT button has no
+	 * tooltip; the small margin keeps the texts readable at the old widths.
+	 */
+	private static JButton button(String text, String... tooltipLines) {
+		JButton button = new JButton(text);
+		button.setMargin(new Insets(1, 2, 1, 2));
+		button.setToolTipText("<html>" + String.join("<br>", tooltipLines) + "</html>");
+		return button;
+	}
 
 	/**
 	 * Launch the application.
@@ -124,6 +138,7 @@ public class DataCreationTool {
 		frame.setBounds(50, 50, 1300, 750);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
+		ToolTipManager.sharedInstance().setDismissDelay(20000);	// long enough to read the tooltips of the buttons
 		
 		JLabel lblTexteingabe = new JLabel("Texteingabe:");
 		lblTexteingabe.setBounds(10, 10, 100, 14);
@@ -157,7 +172,7 @@ public class DataCreationTool {
 		buttonGenerate.setBounds(938, 30, 77, 26);
 		frame.getContentPane().add(buttonGenerate);
 
-		Button buttonLoadText = new Button("Text laden");
+		JButton buttonLoadText = button("Text laden", "Lädt einen Text aus einer Datei ins Textfeld", "und meldet, ob er für „Charaktere“ reicht.");
 		buttonLoadText.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				loadText();
@@ -286,7 +301,7 @@ public class DataCreationTool {
 			}
 		});
 		
-		Button buttonCharacters = new Button("Charaktere");
+		JButton buttonCharacters = button("Charaktere", "Zieht aus characters.csv und dem Text die Attribut-Arrays (ab aa_id)", "in die Attributliste. Schreibt noch nichts in die DB.");
 		buttonCharacters.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				generateFromCharacters(textInput.getText());
@@ -295,7 +310,7 @@ public class DataCreationTool {
 		buttonCharacters.setBounds(430, 235, 80, 22);
 		frame.getContentPane().add(buttonCharacters);
 
-		Button buttonCharactersDB = new Button("In DB");
+		JButton buttonCharactersDB = button("In DB", "Schreibt die mit „Charaktere“ gezogenen Arrays in die DB:", "swpool_attribute und swgauss_aa werden ersetzt (fragt vorher).");
 		buttonCharactersDB.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveCharactersToDB();
@@ -304,7 +319,7 @@ public class DataCreationTool {
 		buttonCharactersDB.setBounds(480, 657, 65, 26);
 		frame.getContentPane().add(buttonCharactersDB);
 
-		Button buttonSliders2Selected = new Button("Übernehmen");
+		JButton buttonSliders2Selected = button("Übernehmen", "Übernimmt die Schieberegler in den gewählten Eintrag der Attributliste.", "„In DB“ schreibt danach diese Werte.");
 		buttonSliders2Selected.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				slidersToSelectedAttribs();
@@ -332,7 +347,7 @@ public class DataCreationTool {
 		//"Matrizen" Button//
 		/////////////////////
 		
-		Button buttonAnzeigeMatrix = new Button("Anzeige");
+		JButton buttonAnzeigeMatrix = button("Anzeige", "Zeigt die in der Liste „Matrizen“ gewählte Matrix rechts oben an.");
 		buttonAnzeigeMatrix.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent arg0) 
@@ -352,7 +367,7 @@ public class DataCreationTool {
 		buttonAnzeigeMatrix.setBounds(938, 132, 77, 26);
 		frame.getContentPane().add(buttonAnzeigeMatrix);
 
-		Button buttonCharacterMatrices = new Button("Matrizen");
+		JButton buttonCharacterMatrices = button("Matrizen", "Erzeugt aus characters.csv, den Kopplungen und dem Text", "die Attribut-Matrizen der Charaktere (nur in die Liste rechts).");
 		buttonCharacterMatrices.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				generateCharacterMatrices(textInput.getText());
@@ -361,7 +376,7 @@ public class DataCreationTool {
 		buttonCharacterMatrices.setBounds(938, 165, 77, 26);
 		frame.getContentPane().add(buttonCharacterMatrices);
 
-		Button buttonCharacterMatricesDB = new Button("Matr. DB");
+		JButton buttonCharacterMatricesDB = button("Matr. DB", "Schreibt die mit „Matrizen“ erzeugten Matrizen und Zuordnungen in die DB:", "swpool_matrix, swpool_matrix_rowcol, swgauss_acm, swgauss_aa_acm werden ersetzt", "(fragt vorher, dauert einige Minuten).");
 		buttonCharacterMatricesDB.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveCharacterMatricesToDB();
@@ -370,7 +385,7 @@ public class DataCreationTool {
 		buttonCharacterMatricesDB.setBounds(938, 197, 77, 26);
 		frame.getContentPane().add(buttonCharacterMatricesDB);
 
-		Button buttonCharacterOverview = new Button("Übersicht");
+		JButton buttonCharacterOverview = button("Übersicht", "Öffnet die Übersicht der Charaktere mit ihren Arrays und Matrizen aus der DB.", "Liest nur.");
 		buttonCharacterOverview.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				showCharacterOverview();
@@ -379,7 +394,7 @@ public class DataCreationTool {
 		buttonCharacterOverview.setBounds(938, 229, 77, 26);
 		frame.getContentPane().add(buttonCharacterOverview);
 
-		Button buttonState2ActionDB = new Button("S2A DB");
+		JButton buttonState2ActionDB = button("S2A DB", "Löscht alle Regeln in swpool_s2a und schreibt je Charakter", "eine State2Action-Regel aus characters.csv neu (fragt vorher).");
 		buttonState2ActionDB.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveState2ActionRulesToDB();
@@ -388,7 +403,7 @@ public class DataCreationTool {
 		buttonState2ActionDB.setBounds(938, 261, 77, 26);
 		frame.getContentPane().add(buttonState2ActionDB);
 
-		Button buttonEventReactionDB = new Button("ERD DB");
+		JButton buttonEventReactionDB = button("ERD DB", "Löscht alle Regeln in swpool_erd und schreibt die Reaktionsregeln neu (fragt vorher).", "Mit „Test: fly“ fliegt der Ängstliche weg und nach oben.");
 		buttonEventReactionDB.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveEventReactionRulesToDB();
@@ -421,7 +436,7 @@ public class DataCreationTool {
 		//Open JFileChooser//
 		/////////////////////
 		
-		Button ButtonPath = new Button("Pfad \u00E4ndern");
+		JButton ButtonPath = button("Pfad \u00E4ndern", "Wählt den Ordner für „Speichern“.");
 		ButtonPath.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
@@ -452,7 +467,7 @@ public class DataCreationTool {
 		frame.getContentPane().add(ButtonPath);
 		
 		
-		Button buttonFillTablesForProperties = new Button("Fill 4 Props");
+		JButton buttonFillTablesForProperties = button("Fill 4 Props", "Schreibt die Wörter der Eigenschaften neu in sw_lexem und sw_word:", "Colour 10000.., Material 11000.., Nutrient 12000.., Taste 13000.. (löscht die Bereiche vorher).", "Nach Änderungen an diesen Enums drücken, mit frischem Build.");
 		buttonFillTablesForProperties.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
@@ -470,7 +485,7 @@ public class DataCreationTool {
 		buttonFillTablesForProperties.setBounds(815, 557, 96, 26);
 		frame.getContentPane().add(buttonFillTablesForProperties);
 
-		Button buttonFillTablesForRelations = new Button("Fill 4 Rels");
+		JButton buttonFillTablesForRelations = button("Fill 4 Rels", "Schreibt sw_relation und die Wörter der Relationen in sw_lexem und sw_word neu", "(löscht sie vorher).");
 		buttonFillTablesForRelations.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
@@ -490,7 +505,7 @@ public class DataCreationTool {
 		buttonFillTablesForRelations.setBounds(815, 607, 96, 26);
 		frame.getContentPane().add(buttonFillTablesForRelations);
 
-		Button buttonFillTablesForSimObjects = new Button("Fill 4 SimObjs");
+		JButton buttonFillTablesForSimObjects = button("Fill 4 SimObjs", "Schreibt die Nomen aller Klassen der Simulationsobjekte neu in sw_lexem und sw_word", "(löscht den Bereich vorher). Nach neuen Objektklassen drücken, mit frischem Build.");
 		buttonFillTablesForSimObjects.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{

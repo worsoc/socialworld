@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2014  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,10 +19,14 @@
 package org.socialworld.objects;
 
 
+import org.socialworld.calculation.geometry.Vector;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionMode;
@@ -29,6 +34,8 @@ import org.socialworld.actions.ActionNothing;
 import org.socialworld.attributes.Attribute;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
+import org.socialworld.attributes.properties.Material;
+import org.socialworld.attributes.properties.MaterialSet;
 import org.socialworld.calculation.IObjectReceiver;
 import org.socialworld.calculation.IObjectSender;
 import org.socialworld.calculation.ObjectRequester;
@@ -340,6 +347,45 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 		
 	}
 
+	///////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////    material shares    //////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
+	// For the formulas of the subclasses (value, protection, burning; concept value and protection from the
+	// material, step 2, 2026-11-26): only the shares, never the composition state or its material set itself.
+
+	/**
+	 * The method returns the materials of this instance with their shares of the mass in percent.
+	 * Materials with share 0 are not in it. Without a composition the map is empty.
+	 *
+	 * @return an unmodifiable map material -> share of the mass in percent (0 .. 100)
+	 */
+	protected final Map<Material, Integer> getMaterialShares() {
+		Map<Material, Integer> shares = new EnumMap<Material, Integer>(Material.class);
+		ValueProperty vpSet = this.stateComposition.getProperty(token, PropertyName.stateComposition_materialSet,
+				PropertyName.stateComposition_materialSet.name());
+		Object set = vpSet.getObject(token, Type.simObjProp);
+		if (set instanceof MaterialSet) {
+			for (Material material : Material.values()) {
+				if (material == Material.nothing) continue;
+				ValueProperty vpShare = ((MaterialSet) set).getProperty(token, PropertyName.event_property_numeric_value,
+						"portion_Material_" + material.name());
+				if (!vpShare.isValid()) continue;
+				Object share = vpShare.getObject(token, Type.integer);
+				if (share instanceof Integer && (Integer) share > 0) shares.put(material, (Integer) share);
+			}
+		}
+		return Collections.unmodifiableMap(shares);
+	}
+
+	/**
+	 * @param material the material asked for
+	 * @return its share of the mass of this instance in percent (0 .. 100), 0 if it is not in the composition
+	 */
+	protected final int getMaterialShare(Material material) {
+		Integer share = getMaterialShares().get(material);
+		return (share != null) ? share : 0;
+	}
+
 	/**
 	 * The method returns the object's position.
 	 * 
@@ -363,6 +409,7 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 		if (token.isValid() && token.getSimulationCluster() == SimulationCluster.act) {
 			this.state.setPosition(position, this.guard);
 			Simulation.getInstance().changePosition(this);
+			letCarriedFollow();
 		}
 	}
 
@@ -653,9 +700,18 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 		this.state.calculateTechnicalPositionEvent(TechnicalEvent.POSITION_STEP);
 	}
 
-	/** The own move action has ended or was interrupted: the active velocity becomes 0 (concept G4). */
-	public final void stopActiveMove() {
+	/**
+	 * The own move action has ended or was interrupted: the active velocity becomes 0 (concept G4).
+	 * Only the own action handler may call it (P2, G2, 2026-11-24, as doAction); any other caller changes nothing.
+	 */
+	public final void stopActiveMove(ActionHandler myActionHandler) {
+		if (!isMyActionHandler(myActionHandler)) return;
 		this.state.calculateTechnicalPositionEvent(TechnicalEvent.ACTIVE_MOVE_STOP);
+	}
+
+	/** true if the handler is the own action handler of this object (the check of doAction, P2). */
+	final boolean isMyActionHandler(ActionHandler handler) {
+		return handler != null && this.actionHandler == handler;
 	}
 
 	/**
@@ -689,6 +745,171 @@ public abstract class SimulationObject implements IObjectSender, IObjectReceiver
 
 	final public void connectAsSlaveTo(SimulationObject object, ConnectionType type) {
 		this.state.connectAsSlaveTo(object, type, this.guard);
+	}
+
+	/**
+	 * This object carries the other one with the offset (in mm, relative to this object's position): the carried
+	 * object follows at once and then after every own position step or relocation of this object (2026-11-23).
+	 * An object is carried by one carrier at a time; if it is carried already, nothing happens.
+	 * Package-private since 2026-11-24 (protection concept S2): only the state of the carrier calls it, after it has
+	 * checked the guard of the write access (grant inventory).
+	 */
+	final void carry(SimulationObject carried, Vector offset) {
+		if (carried == null || !carried.isSimulationObject() || carried == this) return;
+		if (carried.isCarried()) return;
+		this.state.connectAsMasterTo(carried, ConnectionType.carried, offset, this.guard);
+		carried.followCarrier();
+	}
+
+	/**
+	 * Puts the content into this object (a container), connection inside: it follows the container at its place
+	 * (offset 0). Whether it fits (capacity, liquids) is checked by the caller (ContainerContent).
+	 * Only the rail inventory may fill a container: a valid token of the cluster inventory (protection concept S2,
+	 * 2026-11-24). Where the container lies (carried, on the ground, in reach) is decided by the caller.
+	 *
+	 * @return false without a valid token of the cluster inventory, if the content is carried or inside something
+	 *         already, or is this object
+	 */
+	final public boolean putInside(IAccessToken token, SimulationObject content) {
+		if (!isInventoryToken(token)) return false;
+		if (content == null || !content.isSimulationObject() || content == this) return false;
+		if (content.isCarried()) return false;
+		this.state.connectAsMasterTo(content, ConnectionType.inside, Vector.get0Vector(), this.guard);
+		content.followCarrier();
+		return true;
+	}
+
+	/** Takes the content out of this object; it stays where it is. Only with a valid token of the cluster inventory. */
+	final public boolean takeOut(IAccessToken token, SimulationObject content) {
+		if (!isInventoryToken(token)) return false;
+		if (content == null || content.getCarrier() != this || !content.isInside()) return false;
+		this.state.releaseConnectionTo(content, this.guard);
+		return true;
+	}
+
+	/**
+	 * The object leaves the simulation (O1, 2026-11-24): its carrier or container lets go of it (and frees the
+	 * inventory place), and it lets go of everything it carries or holds; those stay where they are. Only with the
+	 * right to remove objects, for now a valid token of the cluster inventory (as ObjectMaster.mayRemove; the
+	 * ObjectMaster calls it before it takes the object out of its lists).
+	 *
+	 * @return false without the right to remove
+	 */
+	public final boolean leaveSimulation(IAccessToken token) {
+		if (!isInventoryToken(token)) return false;
+		if (this.state == null) return true;
+		SimulationObject carrier = this.state.getCarrier();
+		if (carrier.isSimulationObject()) carrier.letGoOf(this);
+		this.state.releaseAllConnections(this.guard);
+		return true;
+	}
+
+	/**
+	 * This object (carrier or container) lets go of the held one, which leaves the simulation: the inventory places
+	 * it lies on become free, then the connection is released. Package-private: only leaveSimulation calls it.
+	 */
+	final void letGoOf(SimulationObject held) {
+		if (held == null || held.getCarrier() != this) return;
+		if (this.state instanceof StateAnimal) ((StateAnimal) this.state).freeInventoryPlacesOf(held, this.guard);
+		this.state.releaseConnectionTo(held, this.guard);
+	}
+
+	/**
+	 * @return true if this object lies inside a container; false as well for a token that may not ask (P5:
+	 *         only the cluster inventory)
+	 */
+	public final boolean isInside(IAccessToken token) {
+		return mayReadConnections(token) && isInside();
+	}
+
+	/** Package-private since 2026-11-24 (P5): from outside only with a token. */
+	final boolean isInside() {
+		return this.state != null && this.state.isInside();
+	}
+
+	/**
+	 * @return what lies inside this object (empty for anything that is no container, and for a token that may not
+	 *         ask; P5: the clusters inventory and act, since the inventory window 2026-11-24 also visualize)
+	 */
+	public final List<SimulationObject> getContents(IAccessToken token) {
+		return mayReadConnections(token, SimulationCluster.act, SimulationCluster.visualize) ? getContents() : new ArrayList<SimulationObject>();
+	}
+
+	/** Package-private since 2026-11-24 (P5): from outside only with a token. */
+	final List<SimulationObject> getContents() {
+		return (this.state != null) ? this.state.getContents() : new ArrayList<SimulationObject>();
+	}
+
+	/**
+	 * Who may read what this object carries, holds or is carried by (P5, 2026-11-24): the cluster inventory
+	 * always, the displays only where they show something: act (Action Creation Tool) whether an item is free and
+	 * what is inside a container, visualize (inventory window) what is inside a container.
+	 *
+	 * @param alsoAllowed the clusters that may ask besides the cluster inventory
+	 */
+	private static boolean mayReadConnections(IAccessToken token, SimulationCluster... alsoAllowed) {
+		if (token == null || !token.isValid()) return false;
+		SimulationCluster cluster = token.getSimulationCluster();
+		if (cluster == SimulationCluster.inventory) return true;
+		for (SimulationCluster allowed : alsoAllowed) {
+			if (cluster == allowed) return true;
+		}
+		return false;
+	}
+
+	// only the rail inventory writes the contents of containers (protection concept S2, 2026-11-24)
+	private static boolean isInventoryToken(IAccessToken token) {
+		return token != null && token.isValid() && token.getSimulationCluster() == SimulationCluster.inventory;
+	}
+
+	/**
+	 * This object does not carry the other one any longer; it stays where it is.
+	 * Package-private since 2026-11-24 (protection concept S2): only the state of the carrier calls it.
+	 */
+	final void releaseCarried(SimulationObject carried) {
+		if (carried == null || carried.getCarrier() != this) return;
+		this.state.releaseConnectionTo(carried, this.guard);
+	}
+
+	/**
+	 * @return true if this object is carried (or lies inside a container); false as well for a token that may not
+	 *         ask (P5: the clusters inventory and act)
+	 */
+	public final boolean isCarried(IAccessToken token) {
+		return mayReadConnections(token, SimulationCluster.act) && isCarried();
+	}
+
+	/** Package-private since 2026-11-24 (P5): from outside only with a token. */
+	final boolean isCarried() {
+		return this.state != null && this.state.getCarrier().isSimulationObject();
+	}
+
+	/**
+	 * @return the object that carries this one (or the container it lies in), NoSimulationObject if none does and
+	 *         for a token that may not ask (P5: only the cluster inventory)
+	 */
+	public final SimulationObject getCarrier(IAccessToken token) {
+		return mayReadConnections(token) ? getCarrier() : NoSimulationObject.getObjectNothing();
+	}
+
+	/** Package-private since 2026-11-24 (P5): from outside only with a token. */
+	final SimulationObject getCarrier() {
+		return (this.state != null) ? this.state.getCarrier() : NoSimulationObject.getObjectNothing();
+	}
+
+	/**
+	 * The carried objects take this object's position plus their offset (technical event, bypass).
+	 * Package-private since 2026-11-24 (protection concept S2): from outside only through the write access of this
+	 * object with the grant position (HiddenSimulationObject.letCarriedFollow).
+	 */
+	final void letCarriedFollow() {
+		if (this.state == null) return;
+		for (SimulationObject carried : this.state.getCarriedObjects()) carried.followCarrier();
+	}
+
+	/** This object takes the position of its carrier plus its offset (technical event, bypass). Package-private. */
+	final void followCarrier() {
+		this.state.calculateTechnicalPositionEvent(TechnicalEvent.FOLLOW_CARRIER);
 	}
 
 	final public void addConnection(Connection connection,  SimulationObject connectedObject) {

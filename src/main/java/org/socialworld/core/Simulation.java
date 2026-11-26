@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2014  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,22 +20,12 @@ package org.socialworld.core;
 
 import org.socialworld.GlobalSwitches;
 import org.socialworld.objects.*;
-import org.socialworld.objects.access.HiddenHuman;
-import org.socialworld.objects.access.HiddenItem;
-import org.socialworld.objects.concrete.clothes.Cap;
-import org.socialworld.objects.concrete.clothes.Shirt;
-import org.socialworld.objects.concrete.clothes.Shoe;
-import org.socialworld.objects.concrete.clothes.Sock;
-import org.socialworld.objects.concrete.clothes.Trousers;
 import org.socialworld.propertyChange.ChangedProperty;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.socialworld.SocialWorld;
-import org.socialworld.actions.handle.Inventory;
 import org.socialworld.attributes.ActualTime;
 import org.socialworld.attributes.Position;
 import org.socialworld.attributes.PropertyName;
@@ -80,6 +71,9 @@ public class Simulation extends SocialWorldThread {
 
 
 	private static AccessTokenCore tokenCore = AccessTokenCore.getValid();
+
+	// the creation of the objects at the start (2026-11-25): only until it is over, then null
+	private StartCreation startCreation;
 
 	private Simulation() {
 		
@@ -128,9 +122,27 @@ public class Simulation extends SocialWorldThread {
 		}
 	}	
 	
-	public void startSimulation() {
-	
-		
+	/**
+	 * @return false if the simulation did not start: swstate_composition is filled, and loading is not ready yet
+	 */
+	public boolean startSimulation() {
+
+		this.startCreation = new StartCreation(this.objectMaster, this.searchByPosition);
+		// body build concept 9.1 (2026-11-25): the composition is the first state the simulation saves itself.
+		// Filled means loading, which is not promising yet. Since 2026-11-26 the start empties the table itself
+		// instead of refusing, so every run derives the composition anew.
+		int clearedRows = this.startCreation.clearCompositionTable();
+		if (clearedRows > 0) System.out.println("swstate_composition emptied at the start (" + clearedRows
+				+ " rows of the last run); the composition is derived anew.");
+		// still refused if the cache of the states had been read before the table was emptied
+		int compositionRows = this.startCreation.rowsInCompositionTable();
+		if (compositionRows > 0) {
+			System.out.println("Start refused: the cache of swstate_composition still holds " + compositionRows
+					+ " rows (read before the table was emptied). Start again.");
+			this.startCreation = null;
+			return false;
+		}
+
 		Scheduler myCalcScheduler;
 		myCalcScheduler = Scheduler.getInstance();
 		myCalcScheduler.startThreads();
@@ -140,150 +152,17 @@ public class Simulation extends SocialWorldThread {
 
 	
 		this.startThread();
-		
-		IncompleteSimulationObject incompleteObject;
-		
-		HiddenHuman myHiddenHuman; 
-		Human myHuman;
-		
-		HiddenItem myHiddenItem;
-		Item myItem;
 
-		List<HiddenHuman> hiddenHumans= new ArrayList<HiddenHuman>();
-		List<Human> humans= new ArrayList<Human>();
-
-		System.out.println("Start Erstellen Objekte "+ ActualTime.asTime().toString());
-		
-	//	ValueProperty propInventory[] = new ValueProperty[3];
-
-		for (int i = 0; i < 100; i++ ) {
-	//		if (GlobalSwitches.OUTPUT_CREATE_OBJECT_HUMANS) System.out.println("Start createSimulationObject Human " + i + " " +  ActualTime.asTime().toString());
-			incompleteObject = createSimulationObject(SimulationObject_Type.human, "org.socialworld.objects.Human");
-//			if (GlobalSwitches.OUTPUT_CREATE_OBJECT_HUMANS) System.out.println("Ende createSimulationObject Human " + i + " " +  ActualTime.asTime().toString());
-			
-			myHiddenHuman = (HiddenHuman) incompleteObject.getHiddenObject();
-			myHuman = (Human) incompleteObject.getObject();
-			
-			
-			hiddenHumans.add(myHiddenHuman);
-			humans.add(myHuman);
-			
-			if (GlobalSwitches.OUTPUT_CREATE_OBJECT_HUMANS) System.out.println("Human(" + myHuman.getObjectID() + "): " + myHuman.getPosition(tokenCore).toString() + " " +  ActualTime.asTime().toString());
-		}
-	
-		System.out.println("Start Erstellen Objekte Inventar "+ ActualTime.asTime().toString());
-
-		// Interim until State2Action is in the database (EID concept 13.4): every human has an apple in the
-		// mouth, so that the eating rule of the test data finds something eatable. It is ONE apple for all
-		// mouths: eating does not use it up, and items have only 799 start positions (swgauss_position),
-		// of which the clothes and the loose apples already take 775.
-		incompleteObject = createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.eatable.fruits.Apple");
-		Item mouthApple = (Item) incompleteObject.getObject();
-		if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Apple for all mouths(" + mouthApple.getObjectID() + "):" + mouthApple.getPosition(tokenCore).toString());
-
-		for (int i = 0; i < 100; i++ ) {
-			Human human = humans.get(i);
-			Position positionParentHuman = human.getPosition(tokenCore);
-			
-			Inventory inventory = new Inventory(SimulationObject_Type.human);
-			hiddenHumans.get(i).setInventory(inventory);
-
-			incompleteObject = createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.caps.TestCap");
-			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
-			myItem = (Item) incompleteObject.getObject();
-			// set the human's position (with added 800 mm to z) to the inventory item
-			myHiddenItem.setPosition(positionParentHuman.getCopy(PropertyName.simobj_position, 0, 0, 800 ));
-			changePosition(myItem);
-			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Cap(" + myItem.getObjectID() + "):" + myItem.getPosition(tokenCore).toString());
-			
-			inventory.setCap( (Cap) myItem) ;
-
-			
-			incompleteObject =  createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.shirts.TestShirt");
-			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
-			myItem = (Item) incompleteObject.getObject();
-			// set the human's position (with added 300 mm to z) to the inventory item
-			myHiddenItem.setPosition(positionParentHuman.getCopy(PropertyName.simobj_position, 0, 0, 300 ));
-			changePosition(myItem);
-			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Shirt(" + myItem.getObjectID() + "):" + myItem.getPosition(tokenCore).toString());
-
-			inventory.setShirt((Shirt) myItem);
-			
-			Shoe shoeLeft;
-			incompleteObject =  createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.shoes.TestShoeLeft");
-			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
-			shoeLeft = (Shoe) incompleteObject.getObject();
-			// set the human's position (with added -800 mm to z) to the inventory item
-			myHiddenItem.setPosition(positionParentHuman.getCopy(PropertyName.simobj_position, 150, 0, -800 ));
-			changePosition(shoeLeft);
-			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Shoe(" + shoeLeft.getObjectID() + "):" + shoeLeft.getPosition(tokenCore).toString());
-			
-			Shoe shoeRight;
-			incompleteObject = createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.shoes.TestShoeRight");
-			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
-			shoeRight = (Shoe) incompleteObject.getObject();
-			// set the human's position (with added -800 mm to z) to the inventory item
-			myHiddenItem.setPosition(positionParentHuman.getCopy(PropertyName.simobj_position, -150, 0, -800 ));
-			changePosition(shoeRight);
-			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Shoe(" + shoeRight.getObjectID() + "):" + shoeRight.getPosition(tokenCore).toString());
-
-			inventory.setShoes(shoeLeft, shoeRight);
-
-			Sock sockLeft;
-			incompleteObject = createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.socks.TestSockLeft");
-			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
-			sockLeft = (Sock) incompleteObject.getObject();
-			// set the human's position (with added -800 mm to z) to the inventory item
-			myHiddenItem.setPosition(positionParentHuman.getCopy(PropertyName.simobj_position, 150, 0, -800 ));
-			changePosition(sockLeft);
-			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Sock(" + sockLeft.getObjectID() + "):" + sockLeft.getPosition(tokenCore).toString());
-			
-			Sock sockRight;
-			incompleteObject = createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.socks.TestSockRight");
-			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
-			sockRight = (Sock) incompleteObject.getObject();
-			// set the human's position (with added -800 mm to z) to the inventory item
-			myHiddenItem.setPosition(positionParentHuman.getCopy(PropertyName.simobj_position, -150, 0, -800 ));
-			changePosition(sockRight);
-			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Sock(" + sockRight.getObjectID() + "):" + sockRight.getPosition(tokenCore).toString());
-
-			inventory.setSocks(sockLeft, sockRight);
-
-			incompleteObject = createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.clothes.trousers.TestTrousers");
-			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
-			myItem = (Item) incompleteObject.getObject();
-			// set the human's position (with added -400 mm to z) to the inventory item
-			myHiddenItem.setPosition(positionParentHuman.getCopy(PropertyName.simobj_position, 0, 0, -400 ));
-			changePosition(myItem);
-			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Trousers(" + myItem.getObjectID() + "):" + myItem.getPosition(tokenCore).toString());
-	
-			inventory.setTrousers((Trousers) myItem) ;
-
-			// the one apple shared by all mouths, see above
-			inventory.setMouth(mouthApple);
-			
-//			inventory.setLeftHand(leftHand);
-//			inventory.setRightHand(rightHand);
-			
-
-		}
-
-		System.out.println("Start Erstellen Aepfel "+ ActualTime.asTime().toString());
-
-		for (int i = 0; i < 75; i++ ) {
-			incompleteObject = createSimulationObject(SimulationObject_Type.item, "org.socialworld.objects.concrete.eatable.fruits.Apple");
-			myHiddenItem = (HiddenItem) incompleteObject.getHiddenObject();
-			myItem = (Item) incompleteObject.getObject();
-			if (GlobalSwitches.OUTPUT_CREATE_OBJECT) System.out.println("Apple(" + myItem.getObjectID() + "):" + myItem.getPosition(tokenCore).toString());
-		}
-		
-		System.out.println("Ende Erstellen Objekte "+ ActualTime.asTime().toString());
+		// the humans, their start equipment, the apples and their composition (StartCreation, 2026-11-25)
+		this.startCreation.createObjects();
+		this.startCreation = null;
 
 		EventInfluenceDescriptionPool.getInstance();
 		// load the state-to-action rules (swpool_s2a) here as well, not only when the first human acts
 		State2ActionDescriptionPool.getInstance();
 		// and the reaction rules (swpool_erd), not only at the first event that asks for a reaction
 		EventReactionDescriptionPool.getInstance();
+		return true;
 	}
 	
 	public void stopSimulation() {
@@ -348,37 +227,6 @@ public class Simulation extends SocialWorldThread {
 		return this.objectMaster;
 	}
 	
-	private IncompleteSimulationObject createSimulationObject(
-			SimulationObject_Type simulationObjectType,
-			String fullClassName) {
-		
-		int incompleteObjectIndex;
-		int objectID;
-		
-		IncompleteSimulationObject incompleteObject = new IncompleteSimulationObject();
-//		HiddenSimulationObject hiddenObject = NoHiddenSimulationObject.getObjectNothing();
-		SimulationObject createdObject = NoSimulationObject.getObjectNothing() ;
-	
-		if (GlobalSwitches.OUTPUT_CREATE_OBJECT_DETAILS) System.out.println("Erstellen SimObj > this.objectMaster.createSimulationObject: " + ActualTime.asTime().toString());
-		incompleteObjectIndex = this.objectMaster.createSimulationObject(simulationObjectType, fullClassName);
-		if (incompleteObjectIndex >= 0) {
-		//	if (GlobalSwitches.OUTPUT_CREATE_OBJECT_DETAILS) System.out.println("Erstellen SimObj > getObjectIDForIncompleteObjectIndex: " + ActualTime.asTime().toString());
-			objectID = this.objectMaster.getObjectIDForIncompleteObjectIndex(incompleteObjectIndex);
-			if (objectID > 0) {
-				//	if (GlobalSwitches.OUTPUT_CREATE_OBJECT_DETAILS) System.out.println("Erstellen SimObj > this.objectMaster.getIncompleteObject: " + ActualTime.asTime().toString());
-				incompleteObject = this.objectMaster.getIncompleteObject(incompleteObjectIndex, objectID);
-				createdObject = incompleteObject.getObject();
-				if (createdObject.isSimulationObject()) {
-					//	if (GlobalSwitches.OUTPUT_CREATE_OBJECT_DETAILS) System.out.println("Erstellen SimObj > this.searchByPosition.addObject: " + ActualTime.asTime().toString());
-					this.searchByPosition.addObject(createdObject);
-				}
-//				hiddenObject = incompleteObject.getHiddenObject();
-			}
-		}
-		
-		return incompleteObject; 
-	}
-
 	public ObjectByPositionSearch getObjectSearch() {
 		return this.searchByPosition;
 	}
@@ -416,6 +264,14 @@ public class Simulation extends SocialWorldThread {
     }
     
  
+	/**
+	 * Takes an object out of the search by position. Only the ObjectMaster calls this, when it takes the object out of
+	 * the simulation (protection concept S1, 2026-11-24: removing belongs to the ObjectMaster).
+	 */
+	void removeFromPositionSearch(SimulationObject object) {
+		this.searchByPosition.remove(object);
+	}
+
 	public void changePosition(SimulationObject objectWithNewPosition) {
 		this.searchByPosition.changePosition(objectWithNewPosition);
 	}

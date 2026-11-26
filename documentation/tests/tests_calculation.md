@@ -2,7 +2,7 @@
 
 Part of the [test overview](TESTS.md): expressions, functions, knowledge, positions and vectors.
 
-**16 test classes, 110 tests.**
+**19 test classes, 128 tests.**
 
 ## Overview
 
@@ -21,6 +21,9 @@ Part of the [test overview](TESTS.md): expressions, functions, knowledge, positi
 | Calculation | `EventInfluenceRulesFromDatabaseTest` | 1 | real rules with real arrays | no database or empty table |
 | Calculation | `PositionCalculatorSectorsTest` | 9 | whether a new position stays in the same search sectors | – |
 | Calculation | `PositionMovementTest` | 16 | technical position movement: impulse, friction and rest at 50 mm/s, bystander push 0.2 × v, blows (share of the intensity, away from the hitter, only the candidates event), time step, technical event types in their own block 512..527, no self-push | – |
+| Calculation | `CarriedFollowTest` | 5 | carried objects take carrier + offset per place without drift, ignore every event but followCarrier, followCarrier is technical (514) | – |
+| Calculation | `InventoryCalculatorTest` | 10 | taking, dropping and switching: the hand (requested, else right, else left), the other hand, the reach of 1 m on the ground, the self inventory events; the own cluster inventory and what it may read; the start equipment only with the token core | – |
+| Calculation | `EatUpTest` | 3 | a meal that is over eats up what is eatable in the mouth: the technical event eatUp, what counts as eatable, removing from the search | partly: no database |
 | Calculation | `CalculationVectorTest` | 11 | vector operations in `Calculation`: add, subtract, negate, scale, component product, normalize, length | – |
 | Calculation | `DirectionToReferenceTest` | 10 | tag `ActionDir`: direction to or away from a reference position, height weight, offset, fallback | – |
 | Calculation | `VectorTest` | 7 | `Vector`: normalizing (the zero vector has length 0) and the component product | – |
@@ -277,6 +280,63 @@ The expression of the tag `<ActionDir>L;kz;(ox,oy,oz);(fx,fy,fz)</ActionDir>` (E
 | `mulComponents_onNothing_staysNothing` | the Nothing vector stays unchanged |
 
 ---
+
+### `CarriedFollowTest`
+
+`src/test/java/org/socialworld/calculation/application/CarriedFollowTest.java`
+
+A carried object (connection `carried`, inventory concept V2, 2026-11-23) has its own absolute position: the position of its carrier plus a fixed offset per place (`Inventory.offsetOf`). After every position step and every relocation of the carrier, the carried objects get the technical event `followCarrier` (514); the PositionCalculator sets their position and lets the search by position follow. A carried object ignores every other event: no own step, no push, no blow.
+
+| Test | Checks |
+|---|---|
+| `followPosition_isCarrierPlusOffset_andLeavesBothAlone` | carrier (1000, 2000, 0) + offset (0, 0, 800) gives (1000, 2000, 800); carrier and offset stay as they were |
+| `followPosition_afterAStep_keepsThePlace_noDrift` | over 1000 steps the left shoe stays at x + 150, z − 800 of its carrier (within 0.01 mm: the offset is added anew each time) |
+| `aCarriedObject_ignoresEverythingButFollowCarrier` | carried: position step, push and active move stop are ignored, followCarrier is not; free objects as before |
+| `followCarrier_isATechnicalEvent` | followCarrier lies in the technical block (514) |
+| `offsetsPerPlace_asAtTheStartOfTheSimulation` | head z + 800, upper body + 300, legs − 400, left sock x + 150, right shoe x − 150, right hand x − 300, back y − 200, mouth and belt 0 |
+
+- **Since 2026-11-24 (protection concept S2):** `followCarrier` and `letCarriedFollow` are package-private in `SimulationObject`; the PositionCalculator lets the carried objects follow through the write access of the carrier (`HiddenSimulationObject.letCarriedFollow`, grant `position`).
+- **Not checked:** `followCarrier` and `letCarriedFollow` in the running PositionCalculator (they need states and write access); the offset does not turn with the carrier.
+
+### `InventoryCalculatorTest`
+
+`src/test/java/org/socialworld/calculation/application/InventoryCalculatorTest.java`
+
+The InventoryCalculator (inventory concept V4, 2026-11-23) changes the own inventory by `selfInventoryTake` and `selfInventoryDrop`, at once in the thread of the event, with the write access of the holder (grant `inventory`). Take: the item is free, at most 1 m away on the ground, and goes into a free hand; putting it on the place lets the holder carry it. Drop: a hand is emptied, the item stays where it is. ActionEquip passes the item and the place (`equip_item`, `equip_inventoryPlace`) as event parameters.
+
+| Test | Checks |
+|---|---|
+| `take_theRequestedHand_ifItIsFree` | a requested hand is taken if it is free, else nothing |
+| `take_withoutAHand_theRightOne_elseTheLeftOne` | without a hand the right one, else the left one, else none; another place counts as none given |
+| `drop_theRequestedHand_ifItHoldsSomething_elseRightThenLeft` | the requested hand if it holds something; without one right, then left; empty hands give none |
+| `reach_isOneMetreOnTheGround` | 1 m exactly is in reach, 1.001 m is not; the height does not count |
+| `theInventoryEvents_areTheSelfInventoryEvents` | take, drop, get are self inventory events; the target event and a move are not |
+| `switch_goesToTheOtherHand` | left ↔ right; no other hand for a belt place |
+| `theToken_belongsToTheClusterInventory_notToPosition` | the token of the calculator is valid and belongs to the cluster `inventory` (81), no longer to `position` |
+| `theClusterInventory_readsObjectAndPosition` | the cluster `inventory` may use exactly `object`, `pathToPosition` and `position` |
+| `theStartEquipment_onlyWithAValidTokenOfTheClusterCore` | `isCoreToken`: a valid core token yes; an invalid one, inventory, attributeArray and none no |
+| `theStartEquipment_withAnotherToken_changesNothing` | `startPutToInventory` and `startPutIntoContainer` with an attributeArray token give false |
+
+- **Own rail (protection concept S1, 2026-11-24):** the calculator has its own cluster `inventory` (81) instead of `position`; it reads the item and the positions (reach) and writes only by the write access of the holder. `PropertyProtection.checkHasUseAsPermission` still answers true for every use (TEMP_SOLUTION), so the list of the cluster is not yet enforced.
+- **Start equipment (protection concept S2, E7, 2026-11-24):** `Simulation.equip` puts the pieces on their places and into the containers through `startPutToInventory` (the HiddenHuman of the holder, grant `inventory`) and `startPutIntoContainer` (`putInside` with the token of the calculator); both only with the token `core`. Containers are filled by `putInside(token, item)` and emptied by `takeOut(token, item)`, only with the token of the cluster inventory.
+- **V5 (2026-11-23):** switch (into the other, free hand), set (from a hand onto a place, else into the container there, `ContainerContent`), get (an item on a place or in a container of the holder, or the object on a place, into a free hand).
+- **Not checked:** the calculator with a real event, holder and item (it needs the running simulation).
+
+### `EatUpTest`
+
+`src/test/java/org/socialworld/calculation/application/EatUpTest.java`
+
+When an eat action is done (not when it is only interrupted), the ActionHandler calls `Animal.eatUp`; the technical event `eatUp` (515) goes at once to the InventoryCalculator, which takes what is eatable out of the mouth and out of the simulation (`ObjectMaster.removeSimulationObject` with the token of the cluster inventory since 2026-11-24: out of the search by position and out of the object master; before, `Simulation.removeSimulationObject` for the cluster position). It is eaten up as a whole (inventory concept V6, D3, 2026-11-23).
+
+| Test | Checks |
+|---|---|
+| `eatUp_isATechnicalEvent` | eatUp lies in the technical block (515) |
+| `whatIsEatable_isEatenUp_nothingElse` | bread and herb are eaten up; beer (drinking), a knife, nothing and null are not |
+| `anObjectThatWasNeverInTheSearch_canBeRemoved_withoutHarm` | `ObjectByPositionSearch.remove` leaves an object alone that was never added |
+
+- **Needs:** for `anObjectThatWasNeverInTheSearch_canBeRemoved_withoutHarm` a reachable database, it only reads: the nodes of the search get `ObjectMaster.getInstance()`, whose loaders and creators reach MariaDB. Without a database it is skipped (`DatabaseAssumptions.assumeDatabaseIsAvailable`, 2026-11-24, after it failed on GitHub CI). The other two tests need no database.
+
+- **Not checked:** the eat action ending in the ActionHandler and the removing from the object master (they need the running simulation).
 
 ## Not Covered
 

@@ -1,26 +1,25 @@
 /*
-* Social World
-* Copyright (C) 2014  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2014  Mathias Sikos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.objects;
 
+import org.socialworld.core.TechnicalEvent;
+import org.socialworld.calculation.SimulationCluster;
+import org.socialworld.actions.handle.InventoryPlace;
 import java.util.List;
 
 import org.socialworld.actions.AbstractAction;
@@ -33,6 +32,7 @@ import org.socialworld.attributes.PropertyName;
 import org.socialworld.calculation.ValueProperty;
 import org.socialworld.calculation.functions.FunctionByMatrix;
 import org.socialworld.collections.ValueArrayList;
+import org.socialworld.core.ActionHandler;
 import org.socialworld.core.IAccessToken;
 import org.socialworld.core.IEventParam;
 import org.socialworld.knowledge.KnowledgeFact_Criterion;
@@ -224,6 +224,28 @@ public abstract class Animal extends SimulationObject implements ISeer, IRunning
 /////////////////////////////    ATTRIBUTES  //////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 	
+	/**
+	 * A meal is over (the eat action is done): what is in the mouth is eaten up and leaves the simulation
+	 * (inventory concept V6, D3: whole, not in bites). Only the own action handler may call it (P2, 2026-11-24,
+	 * as doAction); any other caller changes nothing.
+	 */
+	final public void eatUp(ActionHandler myActionHandler) {
+		if (!isMyActionHandler(myActionHandler)) return;
+		this.state.calculateTechnicalInventoryEvent(TechnicalEvent.EAT_UP);
+	}
+
+	/**
+	 * The object on a place of the inventory. Only the Action Creation Tool (inventory concept V4) and the display
+	 * (cluster visualize, inventory window 2026-11-24) may ask, for any other caller the answer is NoSimulationObject.
+	 */
+	final public SimulationObject getInventoryItem(IAccessToken token, InventoryPlace place) {
+		if (token != null && token.isValid()
+				&& (token.getSimulationCluster() == SimulationCluster.act || token.getSimulationCluster() == SimulationCluster.visualize)) {
+			return this.state.getInventoryItem(place);
+		}
+		return NoSimulationObject.getObjectNothing();
+	}
+
 	final public FunctionByMatrix getMatrix() {
 		return this.state.getMatrix();
 	}

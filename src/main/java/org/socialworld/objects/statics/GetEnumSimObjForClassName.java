@@ -1,24 +1,21 @@
 /*
-* Social World
-* Copyright (C) 2023  Mathias Sikos
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.  
-*
-* or see http://www.gnu.org/licenses/gpl-2.0.html
-*
-*/
+ * Social World
+ * Copyright (C) 2023  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://gnu.org>.
+ */
 package org.socialworld.objects.statics;
 
 import org.socialworld.objects.enums.EnumBaseSimObj;
@@ -27,7 +24,9 @@ import org.socialworld.objects.enums.EnumFood;
 import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.enums.EnumLiquid;
 import org.socialworld.objects.enums.EnumMammal;
-import org.socialworld.objects.enums.EnumTestSimObj;
+import org.socialworld.objects.enums.EnumSolid;
+import org.socialworld.objects.enums.EnumAnimalPart;
+import org.socialworld.objects.enums.EnumPlantPart;
 
 public class GetEnumSimObjForClassName {
 
@@ -70,8 +69,20 @@ public class GetEnumSimObjForClassName {
 			}
 		}
 		{
-			EnumTestSimObj key = EnumTestSimObj.getName(className);
-			if (key != EnumTestSimObj.ignore) {
+			EnumSolid key = EnumSolid.getName(className);
+			if (key != EnumSolid.ignore) {
+				return key;
+			}
+		}
+		{
+			EnumAnimalPart key = EnumAnimalPart.getName(className);
+			if (key != EnumAnimalPart.ignore) {
+				return key;
+			}
+		}
+		{
+			EnumPlantPart key = EnumPlantPart.getName(className);
+			if (key != EnumPlantPart.ignore) {
 				return key;
 			}
 		}

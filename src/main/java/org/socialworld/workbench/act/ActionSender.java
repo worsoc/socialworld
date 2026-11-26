@@ -17,6 +17,11 @@
  */
 package org.socialworld.workbench.act;
 
+import org.socialworld.actions.attack.ActionAttack;
+import org.socialworld.objects.SimulationObject;
+import org.socialworld.objects.NoSimulationObject;
+import org.socialworld.actions.handle.ActionEquip;
+import org.socialworld.actions.AbstractAction;
 import org.socialworld.actions.ActionType;
 import org.socialworld.actions.say.ActionSay;
 import org.socialworld.attributes.ActualTime;
@@ -62,7 +67,10 @@ public final class ActionSender {
 		AccessTokenAct token = AccessTokenAct.getValid();
 		if (causer.isActing(token)) return ActionRequest.Problem.CAUSER_BUSY;
 
-		ActionSay action = new ActionSay(createActionProperties(request, ActualTime.inMilliseconds()));
+		AbstractAction action;
+		if (ItemReach.isItemMode(request.getMode())) action = new ActionEquip(createItemActionProperties(request, ActualTime.inMilliseconds()));
+		else if (ItemReach.isWeaponMode(request.getMode())) action = new ActionAttack(createWeaponActionProperties(request, ActualTime.inMilliseconds()));
+		else action = new ActionSay(createActionProperties(request, ActualTime.inMilliseconds()));
 		if (!causer.insertAction(token, action)) return ActionRequest.Problem.ALREADY_PLANNED;
 		return ActionRequest.Problem.NONE;
 	}
@@ -82,6 +90,35 @@ public final class ActionSender {
 
 		if (!causer.stopActualAction(AccessTokenAct.getValid())) return ActionRequest.Problem.NOTHING_RUNNING;
 		return ActionRequest.Problem.NONE;
+	}
+
+	/**
+	 * The properties of taking and dropping (inventory concept V4): type equip, the item as simulation object and
+	 * the hand as index of InventoryPlace, under the names ActionEquip expects.
+	 */
+	static ValueArrayList createItemActionProperties(ActionRequest request, long nowInMilliseconds) {
+		ValueArrayList properties = createActionProperties(request, nowInMilliseconds);
+		properties.set(0, new Value(Type.actionType, Value.VALUE_BY_NAME_ACTION_TYPE, ActionType.equip));
+		SimulationObject item = request.getItemObjectId() > 0
+				? Simulation.getInstance().getObjectMaster().getSimulationObject(request.getItemObjectId())
+				: NoSimulationObject.getObjectNothing();
+		properties.add(new Value(Type.simulationObject, Value.VALUE_BY_NAME_ACTION_EQUIP_ITEM, item));
+		properties.add(new Value(Type.integer, Value.VALUE_BY_NAME_ACTION_EQUIP_PLACE, request.getPlace().getIndex()));
+		return properties;
+	}
+
+	/**
+	 * The properties of a blow with a weapon (inventory concept V7): type useWeapon, and the target if the item id
+	 * names one (else no target: the blow still reaches the candidates in front).
+	 */
+	static ValueArrayList createWeaponActionProperties(ActionRequest request, long nowInMilliseconds) {
+		ValueArrayList properties = createActionProperties(request, nowInMilliseconds);
+		properties.set(0, new Value(Type.actionType, Value.VALUE_BY_NAME_ACTION_TYPE, ActionType.useWeapon));
+		if (request.getItemObjectId() > 0) {
+			SimulationObject target = Simulation.getInstance().getObjectMaster().getSimulationObject(request.getItemObjectId());
+			properties.add(new Value(Type.simulationObject, Value.VALUE_BY_NAME_ACTION_TARGET, target));
+		}
+		return properties;
 	}
 
 	/** Builds the properties under the names and with the types the actions expect. */

@@ -2,7 +2,7 @@
 
 Part of the [test overview](TESTS.md): the running simulation core: start, attributes, core, actions, objects.
 
-**12 test classes, 59 tests.**
+**31 test classes, 150 tests.**
 
 ## Overview
 
@@ -10,16 +10,40 @@ Part of the [test overview](TESTS.md): the running simulation core: start, attri
 |---|---|--:|---|---|
 | Start | `SocialWorldTest` | 1 | the main program exists as a singleton | – |
 | Attributes | `AttributeArrayTest` | 5 | range 0..9999 and the display as 0..99 | – |
+| Attributes | `MaterialTest` | 9 | the 43 materials (nothing 0, then sorted by groups, no gaps), their base values (density, value per kg, protection, also per `BlowKind`, ignition temperature), the portion of a material in a set, the bound of the table of sets | no database (the table test) |
 | Attributes | `PropertyNameVelocityTest` | 2 | active and passive velocity as properties of the simulation object | – |
 | Core | `TickRandomCacheTest` | 10 | random value per object and tick | – |
 | Core | `TickObjectCooldownTest` | 10 | own step of the matrix with an offset per object, cooldown of the effect on the attributes by criticality stage | – |
 | Core | `ActionHandlerTest` | 3 | a new action handler has no running action and nothing to stop | – |
 | Core | `EventTypeDistancesTest` | 3 | reach of seeing someone move, who can be moved by an event | – |
 | Core | `ActionEventTimingTest` | 9 | fixed intervals between the events of a running action, one event for single actions | – |
-| Core | `ObjectMasterIdRangeTest` | 4 | every type keeps to its band of 1000 IDs; beyond it the simulation stops | – |
+| Core | `ObjectMasterRemoveTest` | 3 | only a valid token of the cluster inventory may take objects out of the simulation | – |
+| Core | `ObjectMasterIdRangeTest` | 11 | every type keeps to its band of 10000 IDs; beyond it the simulation stops; the perception jumps from band to band; the highest given ID counts only types with objects | – |
 | Actions | `InventoryMouthTest` | 1 | the inventory gives the item in the mouth as property (eating, drinking) | – |
+| Actions | `InventoryPlacesTest` | 13 | the places of the inventory: empty places give NoSimulationObject, what fits where (IWearable, mouth, ICarryable with its size), dress and overgarment places, old setters; `holds` | no database (the test with sides) |
+| Actions | `StartEquipmentTest` | 8 | where a piece of the start equipment goes: worn places (the side as parameter for a prototype), more clothes first, first food into the mouth, small to the belt, medium and large to hands and back, liquids, coins and food into their containers | no database (the tests with sides) |
+| Actions | `ContainerContentTest` | 4 | what fits into a container: one liquid in an empty container for liquids, space by carry size within the capacity, no things with a liquid | – |
+| Actions | `WeaponInHandTest` | 2 | a blow with the weapon in the hand: a club blow takes the right hand, else the left; F1 (a real weapon is not nothing) | – |
 | Actions | `ActionMoveVelocityTest` | 8 | velocity of a move action: start velocity per mode and intensity, then from event to event (uniform, accelerated, braking) | – |
 | Objects | `SimObjectsCompletelyImplemented` | 3 | lexeme mappings of the object enums | – |
+| Objects | `ClothesCatalogTest` | 5 | the 30 concrete clothes: created without database, one place each, lexeme value, side from the state, abilities | no database (the tests with states) |
+| Objects | `ToolsAndWeaponsCatalogTest` | 5 | the 29 tools and 7 weapons: created without database, lexeme value in its level, weapon properties, abilities | – |
+| Objects | `FoodAndDrinksCatalogTest` | 5 | the 11 kinds of food and 2 new drinks: created without database, eatable or drinkable, lexeme value, food values, perishable, abilities | – |
+| Objects | `ContainerAccessTest` | 2 | only a valid token of the cluster inventory may put into or take out of a container | – |
+| Objects | `ReadConnectionsTest` | 5 | isCarried, getCarrier, isInside and getContents only with a token: inventory all four, act two, visualize getContents, others the neutral answer | no database |
+| Objects | `OwnActionHandlerTest` | 2 | only the own action handler may end the meal (eatUp) or stop the active move, as in doAction | no database (eatUp test) |
+| Objects | `LeaveSimulationTest` | 4 | an object leaving the simulation lets go of everything and everything lets go of it: container, content, carrier's place; only with the right to remove | no database |
+| Objects | `ItemSideTest` | 4 | the side of an item lies in its state, written only through HiddenItem and WriteAccessToItem with the grant side (or all) | no database (tests with states) |
+| Objects | `NatureCatalogTest` | 5 | the 7 things of nature (parts of plants and animals, solids): created without database, lexeme value in its own base group, abilities | – |
+| Objects | `LiquidStatesTest` | 1 | a liquid gets the three states of every item (before NoState, so no liquid could be created) | no database |
+| Objects | `AllItemsInitStateTest` | 3 | every concrete item (found in the package) gets its states, food the eatable too, and can be created with its state | no database (the last two) |
+| Objects | `CarriedConnectionTest` | 3 | the connection carried: offset (0 by default, a copy), carrier and carried find each other in their lists | – |
+| Objects | `ContainersAndGoodsCatalogTest` | 5 | the 11 containers and 13 valuables, devotional, writing and pastime goods: created without database, lexeme value, capacity, jewellery and bag, abilities | – |
+| Objects | `SimulationObjectMaterialSharesTest` | 2 | the protected getters for the material shares of an instance: empty without composition, the shares of the set, an unmodifiable copy | no database (the test with a set) |
+| Objects | `ItemMaterialFormulasTest` | 5 | the overridable formulas of `Item`: value = material x craft factor, protection = material x form factor per kind of blow (cut at 100), the S curve of igniting and its weighting over shares and time | no database (the three tests with a set) |
+| Objects | `ItemValueFromMaterialTest` | 2 | the 20 valuable items take their value from the material: craft factor of the table, 0 without composition, silk and fur above linen and wool, gold ring above gold coins, long sword above short sword, relic through its silver | no database (the test with sets) |
+| Objects | `ItemProtectionFromMaterialTest` | 2 | the 8 protective items take their protection from the material: form factors of the table (gambeson and chain mail per kind of blow), 0 without composition, chain mail profile, wool glove below leather glove below gauntlet, leather apron back | no database (the test with sets) |
+| Objects | `ItemBurningFromMaterialTest` | 3 | `IBurnable` from the material: every item class with a burnable material in its recipe implements it, nothing burns without composition, gold crown never, straw hat before felt hat, sword and chain mail only up to their burnable share, bread through its grain | no database (the test with sets) |
 
 ---
 
@@ -48,6 +72,26 @@ Part of the [test overview](TESTS.md): the running simulation core: start, attri
 | `displayString_showsDisplayedValues_toStringKeepsInternalOnes` | `toDisplayString()` shows 0..99, `toString()` the internal values |
 | `displayValue_keepsMinusOneForAnInvalidIndex` | an invalid index stays −1 |
 
+
+### `MaterialTest`
+
+`src/test/java/org/socialworld/attributes/properties/MaterialTest.java`
+
+The materials for the composition of the items (composition concept Z1, 2026-11-24): `Material` has 43 values, nothing 0, then sorted by groups (wood and metals 1 .. 8, textiles 9 .. 18, earth and stone 19 .. 21, from animals and writing 22 .. 28, raw materials 29 .. 31, food 32 .. 42); the old numbers had no meaning yet, the words in sw_word have to be made again. Two bugs fixed with it: `PropPortionSet.getNumericValueProperty` fell through every case of its switch to Taste (no portion was ever found), `TableMaterialSet.getMaterialSet` checked `<=` instead of `<`. Since 2026-11-26 (concept value and protection from the material, step 1) every material carries base values: density in g/cm³ of the stuff itself, value per kg (relative, iron = 10, open to the top), protection against stab, club, stroke and backhand (0 .. 100) and the ignition temperature in °C; `NEVER_IGNITES` (positive infinity) for what does not burn, asked with `canBurn()`.
+
+| Test | Checks |
+|---|---|
+| `nothingIsZero_andTheGroupsFollowEachOther` | nothing 0, the first and last of the groups (wood 1, gold 8, linen 9, wax 18, clay 19, bone 22, coal 29, grain 32, fat 42), the order of the enum is the order of the numbers |
+| `indices_runFrom0To42_withoutGaps_andGoBackAndForth` | 43 values, every index once, 0 .. 42 without gaps, `getName` and `fromName` give the same material back, unknown ones give nothing |
+| `theLexemIDs_stayInTheRangeOfTheMaterials` | every lexem ID lies in 11000 .. 11999 |
+| `thePortionOfAMaterial_isFound_andTheMainMaterialIsTheLargest` | a set steel 85, leather 8, wood 7: `portion_Material_steel` gives 85, wood 7, gold nothing; the main material is steel |
+| `theTableOfSets_givesNothingBehindItsLastPlace_insteadOfAnException` | `getMaterialSet(1000)` and `(-1)` give the nothing set |
+| `everyMaterialButNothing_hasADensity_andTheBaseValuesStayInTheirRanges` | every material but nothing: density above 0, value not negative, the four protections in 0 .. 100, an ignition temperature in 100 .. 1000 °C if it burns; nothing has density 0, value 0 and does not burn |
+| `theBaseValues_keepTheOrderOfTheStuffs` | value gold > silver > iron > straw, gold to silver 10 .. 15; protection steel > iron > leather > wool; gold heavier than silver, wood lighter than water; straw ignites before wood, wood before wool |
+| `theProtectionPerKindOfBlow_isTheSameAsTheFourGetters` | `getProtectionAgainst(BlowKind)` gives for every material what the four getters give; `BlowKind` has stab, club, stroke, backhand in this order |
+| `whatDoesNotBurn_neverIgnites_andTheFormulaNeedsNoSpecialCase` | iron, gold, stone, glas, water, salt, ore and clay never ignite, wood, straw, linen, leather, paper and fat can burn; the S curve gives exactly 0 (not NaN) for `NEVER_IGNITES` |
+
+- **Needs:** the database for the last test (the table loads swset_material when it is created); without it the test skips itself.
 ### `PropertyNameVelocityTest`
 
 `src/test/java/org/socialworld/attributes/PropertyNameVelocityTest.java`
@@ -138,20 +182,43 @@ Distances of `EventType`: how far an event reaches (`getEffectDistance`) and how
 
 - **Not checked:** `ActionHandler` itself; it needs a simulation object and the display. Interrupting and stopping still call `perform()` as before.
 
+### `ObjectMasterRemoveTest`
+
+`src/test/java/org/socialworld/core/ObjectMasterRemoveTest.java`
+
+Taking an object out of the simulation belongs to the `ObjectMaster` since 2026-11-24 (protection concept S1): `removeSimulationObject(token, object)` takes it out of the search by position (through the package-private `Simulation.removeFromPositionSearch`), out of the list of its type and out of the array of all objects. For now only a valid token of the cluster `inventory` may do it (eating up); before, `Simulation.removeSimulationObject` allowed the cluster `position`. Carried objects are not refused; the caller releases the connections before (open point O1).
+
+| Test | Checks |
+|---|---|
+| `theClusterInventory_mayRemove` | a valid token of the cluster inventory may remove |
+| `otherClusters_mayNotRemove` | position, attributeArray, core and act may not |
+| `anInvalidToken_orNone_mayNotRemove` | an invalid token of the cluster inventory and no token may not |
+
+- **Assumes:** only the check `mayRemove` is tested, with tokens made in the test; the removal itself needs `ObjectMaster.getInstance()` and the running simulation.
+- **Needs:** no database.
+
 ### `ObjectMasterIdRangeTest`
 
 `src/test/java/org/socialworld/core/ObjectMasterIdRangeTest.java`
 
-`ObjectMaster` gives every type of simulation object a band of 1000 IDs: (index − 1) × 1000 to + 999, the first object gets the start + 1. Since 2026-11-17 `checkIdInRange` stops creating and loading with an `IllegalStateException` (also on the log and `System.err`) when an ID lies outside the band of its type. Before, the 1000th item would silently have got an ID in the band of magic.
+`ObjectMaster` gives every type of simulation object a band of 10000 IDs (1000 until 2026-11-23): (index − 1) × 10000 to + 9999, the first object gets the start + 1. So humans 1..9999, animals 10001.., gods 20001.., items 30001..39999, magic 40001..49999. Since 2026-11-17 `checkIdInRange` stops creating and loading with an `IllegalStateException` (also on the log and `System.err`) when an ID lies outside the band of its type. Since 2026-11-23 the perception (`perceiveNextObject`) jumps from band to band over the unused IDs (`nextIdForPerceive`); before, it went through every ID up to the highest, and every empty one cost a pass with `Thread.yield()` in the `PercipienceMaster`.
 
 | Test | Checks |
 |---|---|
-| `bands_areOneThousandWide_andFollowTheTypeIndex` | humans 0..999, items 3000..3999, magic from 4000 |
-| `idsInsideTheBand_areAccepted` | human 1, items 3001 and 3999 |
-| `theThousandthItem_wouldLandInTheBandOfMagic_andStopsTheSimulation` | item 4000 is refused; the message names the ID, the type, its band 3001..3999 and the band of magic it would land in |
-| `theStartOfTheBand_isNeverGivenOut` | human 0 is refused; magic 5000 is refused without naming a band (no type above magic) |
+| `bands_areTenThousandWide_andFollowTheTypeIndex` | humans 0..9999, items 30000..39999, magic from 40000; the highest ID stays below `LIVING_SIM_OBJECTS_MAX_NUMBER`, the size of `TickRandomCache` and `TickObjectCooldown` |
+| `idsInsideTheBand_areAccepted` | human 1, items 30001 and 39999 |
+| `theTenThousandthItem_wouldLandInTheBandOfMagic_andStopsTheSimulation` | item 40000 is refused; the message names the ID, the type, its band 30001..39999 and the band of magic it would land in |
+| `theStartOfTheBand_isNeverGivenOut` | human 0 is refused; magic 50000 is refused without naming a band (no type above magic) |
+| `perception_goesOnInsideTheBand` | the next ID inside an occupied band (0 → 1, 57 → 58, 30001 → 30002) |
+| `perception_jumpsOverEmptyBands_toTheNextBandWithObjects` | after human 100 comes item 30001 when animals and gods have no objects |
+| `perception_afterTheLastBandWithObjects_beginsAgain` | after the last item, and from an ID behind all bands, it begins with 1 |
+| `perception_oneRound_visitsExactlyTheGivenIds` | one round with 100 humans and 776 items visits 876 IDs (3777 before) |
+| `perception_withoutAnyObject_staysAtZero` | without any object the next ID is 0 |
+| `perception_onlyMagic_wrapsInsideItsBand` | with only magic it goes 40001 .. 40003 and back to 40001 |
+| `maxGivenObjectId_countsOnlyTypesWithObjects` | empty bands do not count with their start (the old `getMaxObjectId` did, and compared magic but took the item value); magic counts when it is highest; no object gives 0 |
 
-- **Assumes:** only the static check is tested, without creating objects; the running simulation creates 776 items (7 clothes for each of the 100 humans, 75 loose apples, one apple shared by all mouths). Items are also limited by their 799 start positions (`swgauss_position`); since 2026-11-17 `CreateSimulationObjects.initState` stops with an `IllegalStateException` when they are used up instead of drawing for ever (not tested: the drawing is random and inside the creator).
+- **Assumes:** only the static calculations are tested (`checkIdInRange`, `nextIdForPerceive`, `maxGivenObjectId`), without creating objects; the running simulation creates 776 items (7 clothes for each of the 100 humans, 75 loose apples, one apple shared by all mouths). Items are also limited by their 799 start positions (`swgauss_position`, which point to only 200 places in `swpool_position`, each 4 times); since 2026-11-17 `CreateSimulationObjects.initState` stops with an `IllegalStateException` when they are used up instead of drawing for ever (not tested: the drawing is random and inside the creator).
+- **Not checked:** `perceiveNextObject` itself in the running `PercipienceMaster`.
 - **Needs:** no database.
 
 ### `ActionHandlerTest`
@@ -176,6 +243,81 @@ Distances of `EventType`: how far an event reaches (`getEffectDistance`) and how
 
 - **Checks:** an inventory with an apple in the mouth answers `inventory_mouth` with a valid property of type `simulationObject`, not with `ValueProperty.getInvalid()` as before 2026-11-17. `ActionBodilyFunction` takes the item for eating and drinking from there, so nobody could eat or drink before.
 - **Limit:** the apple itself is protected and only comes out of the property with a permitted token, as in `ActionBodilyFunction` through the `ObjectRequester`; that needs the running simulation. `StateInventory`, which passes the property on, is not tested.
+- **Needs:** no database.
+
+### `InventoryPlacesTest`
+
+`src/test/java/org/socialworld/actions/handle/InventoryPlacesTest.java`
+
+The inventory keeps one object per place since 2026-11-23 (inventory concept V1), on the places of `InventoryPlace`: hands, mouth, gloves, socks, shoes (the old indices 1..16 stay), head, upper body, legs, dress, three overgarment places (front, armour, cloak), neck, finger, three belt places, back and bag. `Inventory.fits` says what belongs on a place: clothes and jewellery by `IWearable` (the overgarment by its own place), the mouth by `IEatable` or `IDrinkable`, hands, belt and back by `ICarryable` and its `CarrySize`. `canPut` adds that the place is free and the dress rule; `put` and `remove` change the place.
+
+| Test | Checks |
+|---|---|
+| `emptyPlaces_answerNoSimulationObject_notNull` | every empty place gives `NoSimulationObject` (F4; before, the hands were `null`), also as a valid property |
+| `oldPlaceIndices_stayAsTheyWere` | left hand 1, right hand 2, mouth 3, glove 11, shoe 16; the highest index is 45 |
+| `clothes_fitTheirPlaceOnly` | straw hat on the head, shirt on the upper body, trousers on the legs, dress on the dress place; nothing on a wrong place |
+| `theSide_decidesLeftOrRight` | a shoe and a glove with a state fit the side set in it (`ItemSides.withSide`), not the other |
+| `threeOvergarmentPlaces_apronMailAndCloakTogether` | apron, chain mail and cloak are worn at the same time; an apron is no cloak |
+| `jewellery_ringAtTheFinger_amuletAndRosaryAtTheNeck` | ring at the finger, amulet and rosary at the neck, satchel as bag |
+| `aDress_needsUpperBodyAndLegsFree_andBlocksThem` | no dress over a shirt; with a dress no shirt and no trousers |
+| `aTakenPlace_takesNoSecondItem_untilRemoved` | a second item on a taken hand is refused; `remove` gives the item and then `NoSimulationObject` |
+| `hands_takeEverythingCarryable_liquidsNeedAContainer` | knife, pitchfork, bread, stone and a shirt fit the hand; beer is not `ICarryable` and fits the mouth only; a knife does not fit the mouth |
+| `belt_takesSmallThings_back_takesLargeOnes` | knife, purse and dagger at the belt, the (medium) hammer not; pitchfork, sack and shield on the back, the knife not |
+| `exceptions_luteOnTheBack_swordAtTheBelt` | the medium lute on the back but not at the belt; the long sword at the belt and on the back |
+| `theOldSetters_keepWorking` | straw hat, linen shirt, leather shoes and wool socks set with the old setters land on the new places (the test clothes are gone since 2026-11-24); `setLeftHand(null)` empties the hand |
+| `holds_saysWhetherTheObjectLiesOnAPlace` | a knife is held after `put` and no longer after `remove`; `null` is never held |
+
+- **Assumes:** the carry sizes of the item hierarchy (small by default: food, valuables, devotional and writing goods, parts of nature; medium: human crafted; large: weapons; exceptions in the classes).
+- **Carrying (protection concept S2, 2026-11-24):** since then the state of the holder carries what lies on its places (`StateAnimal.putToInventory` and `removeFromInventory`, under the guard of the write access with the grant `inventory`); the Inventory only keeps the places. The old setters (`setCap` and so on) only set the place and carry nothing either.
+- **Not checked:** `copyForProperty` (it needs a property protection from the running simulation); who puts items on the places (start equipment V3, InventoryCalculator V4); carrying by the state (it needs a holder with state and write access).
+- **Needs:** the database for the tests that create objects with a state (a state reads its `CacheTableState…` when it is created); without it they skip themselves (`DatabaseAssumptions.assumeDatabaseIsAvailable`, 2026-11-24).
+
+### `StartEquipmentTest`
+
+`src/test/java/org/socialworld/actions/handle/StartEquipmentTest.java`
+
+Where a piece of the start equipment goes (inventory concept V3, 2026-11-23): clothes, jewellery and the bag to their worn place (`chooseWornPlace`); items (`choosePlace`): the first food into the mouth, then by size: small to the belt and then the hands, medium to the hands, large to the hands and then the back.
+
+| Test | Checks |
+|---|---|
+| `clothes_goToTheirPlace_theRightShoeToTheRightFoot` | the straw hat on the head, the shoe with the side right in its state on the right foot, the left one on the left |
+| `chooseWornPlace_aPrototypeWithoutState_goesByTheGivenSide` | protection concept S3: a shoe, sock or glove without state goes to the place of the given side; without a side it finds none; a taken place gives noWhere |
+| `moreClothesFirst_thenTheKitPieceForTheSamePlace_findsNoWornPlace` | after the fur cloak the cloak finds no worn place (with `choosePlace` it would go into a hand); after the hood the straw hat finds none |
+| `theFirstFood_goesIntoTheMouth_theNextToTheBelt` | bread into the mouth, cheese to the belt |
+| `smallToTheBelt_mediumToTheHands_largeToHandsAndBack` | smith: hammer and tongs in the hands, knife at the belt, a second hammer finds no place; knight: sword and shield in the hands, a second sword on the back |
+| `jewelleryAndBag_toTheirPlace_purseAndCoinsToTheBelt` | ring at the finger, satchel as bag, purse and coins at the belt (with `choosePlace`, without containers) |
+| `decide_liquidIntoItsContainer_coinsIntoThePurse_foodNotIntoThePurse` | `decide` (V5): beer into the jug, coins into the purse, a turnip into the basket (not into the jug or the purse) |
+| `decide_withoutContainers_asBefore` | the first cake into the mouth; with only a purse the second cake goes to the belt; beer without a container finds nothing |
+
+- **Needs:** the database for the tests that create objects with a state (a state reads its `CacheTableState…` when it is created); without it they skip themselves (`DatabaseAssumptions.assumeDatabaseIsAvailable`, 2026-11-24).
+
+### `ContainerContentTest`
+
+`src/test/java/org/socialworld/actions/handle/ContainerContentTest.java`
+
+What fits into a container (inventory concept V5, 2026-11-23). The content lies inside its container (connection `inside`) and follows it, as carried objects follow their carrier. A liquid (drinkable, not carryable) fills an empty container for liquids; other things need `ICarryable` and take space by their carry size: small 300 ml, medium 2 l, large 15 l, together within the capacity, never together with a liquid.
+
+| Test | Checks |
+|---|---|
+| `aLiquid_fillsAnEmptyContainerForLiquids_only` | beer into an empty jug, not into a jug with wine, water not into a sack |
+| `noThingsTogetherWithALiquid` | no coins into a jug of beer |
+| `space_bySize_withinTheCapacity` | space 300, 2000, 15000, 0 for a liquid; the purse holds one handful of coins, not two; the basket holds a hammer and bread, not a pitchfork on top of three hammers |
+| `noContainer_notItself_notTwice` | a hammer holds nothing, the basket not itself, the same bread not twice |
+
+- **Needs:** no database.
+
+### `WeaponInHandTest`
+
+`src/test/java/org/socialworld/actions/attack/WeaponInHandTest.java`
+
+Since the start equipment (inventory V3) the hands hold tools and weapons, so `ActionAttack` (useWeapon) finds a real `IWeapon` in the hand and passes it as `event_weapon` (inventory concept V7, 2026-11-23). The blow itself (push, P3) is unchanged.
+
+| Test | Checks |
+|---|---|
+| `f1_aRealWeapon_isNotNothing_NoIWeapon_is` | cudgel and knife are not nothing, `IWeapon.getObjectNothing()` is (F1: before the wrong way round) |
+| `aClubBlow_takesTheRightHand_elseTheLeft` | the cudgel in the right hand before the knife in the left; the knife if the right hand holds bread; nothing if neither hand holds a weapon (before only the left hand was looked at) |
+
+- **Not checked:** `ActionAttack.perform` with the hands of a real human (it needs the running simulation); the debug line `WEAPON` (`GlobalSwitches.OUTPUT_DEBUG_WEAPON`).
 - **Needs:** no database.
 
 ### `ActionMoveVelocityTest`
@@ -208,12 +350,292 @@ The move action keeps its velocity and gives every event a new `Move` with the c
 | Test | Checks |
 |---|---|
 | `existsMappingToLexemIDHigherPart` | every `EnumBaseSimObj` has an entry in `Mapping_Base2LexemIDHigherPart` |
-| `existsMappingToLexemIDLowerPart` | every element of `EnumMammal`, `EnumBird`, `EnumFood`, `EnumLiquid` and `EnumHumanCrafted` has an entry in its lower-part mapping |
+| `existsMappingToLexemIDLowerPart` | every element of `EnumMammal`, `EnumBird`, `EnumFood`, `EnumLiquid`, `EnumSolid`, `EnumAnimalPart`, `EnumPlantPart` (since 2026-11-23) and `EnumHumanCrafted` has an entry in its lower-part mapping |
 | `generatedLexemID_isUnique` | no two subclasses of `SimulationObject` get the same lexeme ID |
 
 - **Assumes:** the lexeme ID is `OFFSET_LEXEMID_NOUN_SIMOBJ + higher × RANGE_FOR_LOWER_VALUE + lower`. Classes without a mapping, and classes where both parts are 0, are left out of the uniqueness check.
 - **Note:** `generatedLexemID_isUnique` scans the classpath with ClassGraph. On failure the details go to the console, and the assertion only says `false`.
 - **Commented out:** `everySimObjClass_HasEnumElem` would check that every class of a simulation object has an enum entry.
+
+### `ClothesCatalogTest`
+
+`src/test/java/org/socialworld/objects/concrete/clothes/ClothesCatalogTest.java`
+
+The concrete clothes of the item hierarchy (2026-11-23): 9 caps, 4 shirts, 2 trousers, 2 dresses, 5 overgarments, 4 shoes, 1 sock, 2 gloves, 1 neckerchief. Since 2026-11-25 (item class or composition, step 1) Cap, Shirt, Shoe, Sock, Glove and Dress are concrete themselves and stand for the ordinary piece; WoolCap, LinenShirt, LinenDress, LeatherShoe, WoolSock and LeatherGlove are gone, WoolTunic is called Tunic. In step 2 StrawHat and FeltHat became Hat, in step 3 SilkShirt, FineDress, LeatherApron and FurCloak became Shirt, Dress, Apron and Cloak of that material (their value and protection are gone until they come from the material). The material comes from the composition. In step 4 nine new clothes came: coif, crown and wreath (caps), doublet (shirt), gambeson and tabard (overgarments), gauntlet (glove), clogs (shoe) and the neckerchief, a kind of its own (lexeme 400) worn at the neck.
+
+| Test | Checks |
+|---|---|
+| `all30_areCreatedWithoutDatabase` | every class has a constructor without arguments and is `IWearable` |
+| `eachOne_saysExactlyOnePlace` | of cap, shirt, trousers, dress, overgarment, shoe, sock, glove, neck, finger and bag exactly one is true (neck and finger instead of "jewellery" since 2026-11-25: the neckerchief is at the neck but no jewellery) (each piece with a state and the side left) |
+| `lexemLowerValue_isUniqueAndJustAboveItsKind` | `GetLexemIDLowerPartFromMapping` gives kind + 1 .. 15 (e.g. straw hat 273), the six concrete kinds exactly their kind (cap 272, shirt 288, shoe 320, sock 336, glove 352, dress 368), no value twice |
+| `side_isAPropertyOfTheState_noneUntilSet` | without state shoe, sock and glove are neither left nor right; with the side in the state (S3) they are on that side |
+| `abilities_asInTheCatalogue` | helmet, chain mail and glove `IProtective`, beret and chain mail `IValuable`, since 2026-11-26 also cloak, dress and shirt (the value comes from the material), habit `ISacred`, shirt not `IProtective`; since 2026-11-26 cap, glove, crown and gauntlet are `IBurnable` (whether they burn comes from the material, see `ItemBurningFromMaterialTest`); crown `IValuable`, gauntlet without composition protecting 0 (since 2026-11-26 the protection comes from the material; gauntlet above glove is in `ItemProtectionFromMaterialTest`), gambeson `IProtective` and burnable, the neckerchief no jewellery |
+
+- **Assumes:** the catalogue of the item hierarchy concept; the ability values are constants in the classes.
+- **Not checked:** creating clothes in the running simulation (states, position), it needs the database.
+- **Needs:** the database for the tests that create objects with a state (a state reads its `CacheTableState…` when it is created); without it they skip themselves (`DatabaseAssumptions.assumeDatabaseIsAvailable`, 2026-11-24).
+
+
+### `ToolsAndWeaponsCatalogTest`
+
+`src/test/java/org/socialworld/objects/concrete/tools/ToolsAndWeaponsCatalogTest.java`
+
+The 29 tools and 7 weapons of the item hierarchy (2026-11-23). Tools have purpose levels of + 16 below `TOOL` 512 (field 528, craft 544, textile 560, herding 576, household 592, light 608, travel 624), only as numbers; each tool is its level + 1, + 2, .... Each weapon is `WEAPON` 1024 + 16, + 32, ....
+
+| Test | Checks |
+|---|---|
+| `all36_areCreatedWithoutDatabase` | every class has a constructor without arguments; tools are `Tool`, weapons are `Weapon` |
+| `lexemLowerValue_isUniqueAndInItsLevel` | the lower lexeme value lies in its level, no value twice |
+| `everyWeaponIsAnIWeapon_andToolsCanBeOneToo` | every `Weapon` is `IWeapon`; the knife is `IWeapon` without being a `Weapon`; the axe also cuts and can be thrown; the needle is no weapon |
+| `weaponProperties_existForAllFourBlows_andCuttersHaveAnEdge` | every `IWeapon` gives stab, club, stroke and backhand properties with mass > 0, hardness and sharpness 0..100; cutting ones have a sharp edge for the stroke |
+| `otherAbilities_asInTheCatalogue` | shovel and pickaxe dig, lantern and candle give light (the candle less far), the horn can be played, the shield protects, both swords are worth 0 without a composition (the value comes from the material since 2026-11-26; the order of the swords is in `ItemValueFromMaterialTest`) |
+
+- **Assumes:** the catalogue of the item hierarchy concept; the ability values are constants in the classes.
+- **Not checked:** using a weapon in `ActionAttack` (needs the inventory and the running simulation).
+
+### `CarriedConnectionTest`
+
+`src/test/java/org/socialworld/objects/connections/CarriedConnectionTest.java`
+
+The connections of `objects/connections` (from 2023, unused until 2026-11-23) carry the relation carrier → carried: a master/slave connection of the new type `carried` with the offset of the carried object. Each side keeps the connection in its `ConnectionList` (since 2026-11-23 a `CopyOnWriteArrayList`, read by the PositionCalculator while connections are made).
+
+| Test | Checks |
+|---|---|
+| `aConnectionWithoutOffset_hasTheZeroVector` | a new connection has the 0 vector as offset |
+| `theOffset_isACopy` | changing the vector afterwards does not change the offset |
+| `theCarried_findsItsCarrier_theCarrierFindsWhatItCarries` | the carried finds the connection to its master, the carrier finds the carried as slave, other types give nothing; after release the carried has no carrier |
+
+- **Assumes:** objects without a state; the connection is put into both lists by hand, as `connectAsMasterTo` does through `addConnection`.
+- **Not checked:** `SimulationObject.carry`, `releaseCarried` and the connecting by the inventory (they need states and write access).
+
+### `LiquidStatesTest`
+
+`src/test/java/org/socialworld/objects/concrete/eatable/LiquidStatesTest.java`
+
+| Test | Checks |
+|---|---|
+| `water_givesTheThreeStates` | `Liquid.getInitState` gives StatePerceptible, StateAppearance and StateComposition (2026-11-23; before NoState, which `SimulationObject.createAddOnStates` cannot cast, so creating water, beer or wine failed) |
+
+- **Needs:** a reachable database, it only reads: the base constructor calls `init()`, and `StateAppearance.init` loads `CacheTableStateAppearance` from MariaDB. Without a database it is skipped (`DatabaseAssumptions.assumeDatabaseIsAvailable`, 2026-11-24, after it failed on GitHub CI with a NullPointerException).
+
+
+### `AllItemsInitStateTest`
+
+`src/test/java/org/socialworld/objects/concrete/AllItemsInitStateTest.java`
+
+Every concrete item gets its initial states (2026-11-24). Most classes do not override `getInitState`, they take it from their group (`HumanCrafted`, `Food`, `Liquid`, `Solid`, `PlantPart`, `AnimalPart`). `SimulationObject.createAddOnStates` casts what `getInitState` gives, so a class that gave NoState would throw a ClassCastException when it is created. The classes are found in the package `objects.concrete` (in every class directory of it, by the helper `ConcreteItemClasses` in the test sources), so a new class is checked without being listed.
+
+| Test | Checks |
+|---|---|
+| `allConcreteItems_areFound_asManyAsCompositionCsvNames` | the search finds exactly as many classes as composition.csv names item classes (by hand), more than 90; classes named Test… are not counted. guards against an empty search that would let the other two pass. Until 2026-11-25 a fixed "at least 104", which the merges of the clothes changed |
+| `everyConcreteItem_givesTheThreeStates_andFoodTheEatableToo` | StatePerceptible, StateAppearance, StateComposition for every class, StateEatable for food |
+| `everyConcreteItem_canBeCreatedWithItsState` | `new WriteAccessToItem(item, new StateItem())` as in `CreateItem`, without exception |
+
+- **Found 2026-11-24:** `Banana` had its own `getInitState` (TODO stub from 2023) that gave NoState; the override was removed, Banana takes the states of `Food` now.
+- **Needs:** the database for the last two (the states read their `CacheTableState…`); without it they skip themselves.
+### `ContainersAndGoodsCatalogTest`
+
+`src/test/java/org/socialworld/objects/concrete/containers/ContainersAndGoodsCatalogTest.java`
+
+The 11 containers and the 13 other human crafted goods of the item hierarchy (2026-11-23; quiver and signet ring since 2026-11-25): 3 valuables, 3 devotional, 3 writing, 4 pastime. Each class is its group + 16, + 32, ... (container 2048, valuable 4096, devotional 8192, writing 16384, pastime 32768).
+
+| Test | Checks |
+|---|---|
+| `all24_areCreatedWithoutDatabase` | every class has a constructor without arguments |
+| `lexemLowerValue_isUniqueAndInItsGroup` | the lower lexeme value is its group + 16 .. 240 on a level of 16, no value twice |
+| `everyContainer_holdsSomething` | every `Container` has a capacity > 0; jug and waterskin hold liquids, sack, purse and quiver do not; the quiver may go on the back like the lute |
+| `jewelleryAndBag_areWornWithoutAClothesPlace` | ring, signet ring, rosary and amulet are jewellery and no clothes place, the satchel is a bag, the relic is not worn |
+| `abilities_asInTheCatalogue` | coins valuable and countable, relic holier than the amulet, book readable and longer than the scroll, quill writes, lute and flute can be played, dice and jug can be thrown |
+
+- **Assumes:** the catalogue of the item hierarchy concept; the ability values are constants in the classes.
+- **Not checked:** what a container holds, it comes with the inventory.
+
+### `FoodAndDrinksCatalogTest`
+
+`src/test/java/org/socialworld/objects/concrete/eatable/FoodAndDrinksCatalogTest.java`
+
+The 11 kinds of food and the 2 new drinks of the item hierarchy (2026-11-23): berries (fruit), turnip, onion, root (veggie), sausage, ham (meat), dried fish (fish), bread, cake (bakery), cheese (dairy), honey (sweets); beer and wine (liquid, in `eatable/liquids/`). Each class is its group + 16, + 32, ... (fruit 256 after apple and banana, veggie 512, meat 1024, fish 2048, bakery 4096, dairy 8192, sweets 16384; liquid 256 after water).
+
+| Test | Checks |
+|---|---|
+| `all13_areCreatedWithoutDatabase_foodIsEatable_drinksAreDrinkable` | every class has a constructor without arguments; food is `Food` and `IEatable`, drinks are `IDrinkable` and no `Food` |
+| `lexemLowerValue_isUniqueAndInItsGroup` | the lower lexeme value is its group + 16 .. 240 on a level of 16; unique together with the higher part (berries and wine both have 304, in food 45 and liquid 41) |
+| `foodValues_areInRange` | consistence and firmness of every food lie in 0..100 |
+| `perishable_allFoodButHoney` | every food except honey is `IPerishable` with a shelf life > 0; bread keeps shorter than dried fish |
+| `otherAbilities_asInTheCatalogue` | berries countable, turnip throwable, honey healing and valuable, wine valuable, beer perishable |
+
+- **Assumes:** the catalogue of the item hierarchy concept; the ability values are constants in the classes.
+- **Not checked:** nutrient and taste set (they come from `StateEatable`, i.e. from the database; the drinks give `null` as water does).
+
+### `ContainerAccessTest`
+
+`src/test/java/org/socialworld/objects/ContainerAccessTest.java`
+
+Only the rail inventory writes the contents of a container (protection concept S2, 2026-11-24): `SimulationObject.putInside(token, content)` and `takeOut(token, content)` need a valid token of the cluster `inventory`. Where the container lies (carried, on the ground, in reach) is decided by the InventoryCalculator, not by the protection. The objects in the test have no state; the check of the token comes first.
+
+| Test | Checks |
+|---|---|
+| `putInside_withoutATokenOfTheClusterInventory_isRefused` | no token, attributeArray, position, core and an invalid inventory token: nothing goes into the sack |
+| `takeOut_withoutATokenOfTheClusterInventory_isRefused` | no token, attributeArray and an invalid inventory token: nothing comes out |
+
+- **Not checked:** putting in and taking out with the valid token (it needs objects with state and connections, see `ContainerContentTest` for what fits).
+- **Needs:** no database.
+
+### `ReadConnectionsTest`
+
+`src/test/java/org/socialworld/objects/ReadConnectionsTest.java`
+
+P5 (2026-11-24): what an object carries, holds or is carried by is read only with a token: `isCarried(token)`, `getCarrier(token)`, `isInside(token)`, `getContents(token)` on `SimulationObject`. The cluster `inventory` gets all four answers, the cluster `act` (Action Creation Tool) only `isCarried` and `getContents`; any other token, an invalid one or none gets false, NoSimulationObject or an empty list. The versions without token are package-private for `SimulationObject` itself. A sack and a bread get a state through their write access, the bread is put inside.
+
+| Test | Checks |
+|---|---|
+| `theClusterInventory_getsAllFourAnswers` | the bread is carried, its carrier is the sack, it is inside, the sack contains it |
+| `theClusterAct_seesWhetherItIsFree_andWhatIsInside_notMore` | act gets isCarried and getContents; getCarrier and isInside give the neutral answer |
+| `theClusterVisualize_seesOnlyWhatIsInside` | since the inventory window (2026-11-24) visualize gets getContents; isCarried, getCarrier and isInside give the neutral answer |
+| `anotherCluster_anInvalidToken_orNone_getTheNeutralAnswer` | position, an invalid inventory token and null: false, nothing, empty |
+| `theListOfContents_isACopy` | clearing the returned list changes nothing in the sack |
+
+- **Not checked:** the callers with their real tokens (InventoryCalculator, ACT); a wrong token would show as wrong behaviour in a run (e.g. `take` taking a carried item).
+- **Needs:** the database for the tests that create objects with a state (a state reads its `CacheTableState…` when it is created); without it they skip themselves (`DatabaseAssumptions.assumeDatabaseIsAvailable`, 2026-11-24).
+
+### `OwnActionHandlerTest`
+
+`src/test/java/org/socialworld/objects/OwnActionHandlerTest.java`
+
+P2 (2026-11-24): `Animal.eatUp(ActionHandler)` and `SimulationObject.stopActiveMove(ActionHandler)` work only with the own action handler of the object (`isMyActionHandler`, the check `doAction` makes since 2019). The ActionHandler hands in itself.
+
+| Test | Checks |
+|---|---|
+| `noHandler_orAForeignOne_isNotTheOwn` | `null` and the handler of another human are not the own handler |
+| `eatUp_withoutTheOwnHandler_leavesTheBreadInTheMouth` | `eatUp(null)` and `eatUp` with a foreign handler: the bread stays in the mouth |
+
+- **Not checked:** `eatUp` and `stopActiveMove` with the own handler (it is private to the object; the ActionHandler calls them in the running simulation).
+- **Needs:** the database for the tests that create objects with a state (a state reads its `CacheTableState…` when it is created); without it they skip themselves (`DatabaseAssumptions.assumeDatabaseIsAvailable`, 2026-11-24).
+
+### `LeaveSimulationTest`
+
+`src/test/java/org/socialworld/objects/LeaveSimulationTest.java`
+
+O1 (2026-11-24): `SimulationObject.leaveSimulation(token)`, called by `ObjectMaster.removeSimulationObject` before the object leaves the lists. The carrier or container lets go of the object (`letGoOf`, with its own guard; an animal frees the inventory places it lies on), and the object releases all its own connections; what it carries or holds stays where it is. Only with the right to remove (for now a valid token of the cluster inventory). The objects get a state through their write access, without the database.
+
+| Test | Checks |
+|---|---|
+| `theContentLeaves_theContainerForgetsIt` | bread inside a sack leaves: the sack has no contents, the bread is not inside |
+| `theContainerLeaves_theContentStaysAndIsFree` | the sack leaves: the bread is no longer inside and has no carrier |
+| `aCarriedItemLeaves_thePlaceOfTheCarrierIsFree` | a knife in the right hand of a human leaves: it is not carried, the right hand takes another knife |
+| `withoutTheRightToRemove_nothingChanges` | no token, position, an invalid inventory token: refused, the bread stays in the sack |
+
+- **Not checked:** the ObjectMaster part (lists, position search), it needs the running simulation; the carrier's list of carried objects directly (not readable from outside, the free place shows it).
+- **Needs:** the database for the tests that create objects with a state (a state reads its `CacheTableState…` when it is created); without it they skip themselves (`DatabaseAssumptions.assumeDatabaseIsAvailable`, 2026-11-24).
+
+### `ItemSideTest`
+
+`src/test/java/org/socialworld/objects/ItemSideTest.java`
+
+The side (none, left, right) of an item lies in `StateItem` (protection concept S3, 2026-11-24). It is written only through `HiddenItem.setSide`, `WriteAccessToItem.setSide` with the grant `side` (or `all`, as the creator gives it) and `StateItem.setSide` with the guard. Shoe, sock and glove read it; without state they are on neither side. The helper `ItemSides.withSide` (test sources) gives an item a state and sets the side on this route.
+
+| Test | Checks |
+|---|---|
+| `withoutStateOrSide_aPairPieceIsNeitherLeftNorRight` | a shoe without state, and one with the side none, is neither left nor right |
+| `theSide_fromTheState` | shoe right, sock left, glove right: as set in the state |
+| `theGrantAll_mayWriteTheSide_asTheCreatorGivesIt` | with the grant all `setSide` succeeds |
+| `withoutTheGrantSide_theSideStays` | with the grants position and inventory `setSide` gives NO_GRANT_FOR_PROPERTY, the shoe stays without side |
+
+- **Not checked:** setting the side in `Simulation.createCarried` (it needs the database).
+- **Needs:** the database for the tests that create objects with a state (a state reads its `CacheTableState…` when it is created); without it they skip themselves (`DatabaseAssumptions.assumeDatabaseIsAvailable`, 2026-11-24).
+
+### `NatureCatalogTest`
+
+`src/test/java/org/socialworld/objects/concrete/plantparts/NatureCatalogTest.java`
+
+The 7 things of nature of the item hierarchy (2026-11-23): branch, herb, flower (`PlantPart`, higher lexeme value 44), hide (`AnimalPart`, 43), stone, charcoal, ore (`Solid`, 42). Each is + 16, + 32, ... in its group (as the liquids: 272, 288, 304).
+
+| Test | Checks |
+|---|---|
+| `all7_areCreatedWithoutDatabase_inTheirGroup` | every class has a constructor without arguments and belongs to its group |
+| `lexemId_higherPartIsTheGroup_lowerPartUniqueInIt` | the higher part is the group's value, the lower part 272..496 on a level of 16, unique together with the higher part |
+| `branchAndStone_canBeWeaponsAndThrown_onlyTheBranchFloats` | branch and stone are `IWeapon` (blunt: sharpness 0) and `IThrowable`; the branch floats and burns, the stone does not float |
+| `herb_isEatableWithoutBeingFood` | the herb is `IEatable` but no `Food`, it heals and wilts |
+| `otherAbilities_asInTheCatalogue` | flower wilts, hide valuable and burns, charcoal burns and is countable, ore valuable and countable |
+
+- **Assumes:** the catalogue of the item hierarchy concept; the ability values are constants in the classes.
+- **Not checked:** nutrient and taste set of the herb (`null`, it has no eatable state).
+
+### `SimulationObjectMaterialSharesTest`
+
+`src/test/java/org/socialworld/objects/SimulationObjectMaterialSharesTest.java`
+
+The protected getters of `SimulationObject` for the material shares (concept value and protection from the material, step 2, 2026-11-26): `getMaterialShares()` gives an unmodifiable map material → share of the mass in percent (only shares above 0), `getMaterialShare(Material)` one share, 0 if the material is not in it. They read the set over the existing route `StateComposition.getProperty(token, stateComposition_materialSet, …)` with the token of the simulation object; the composition state and the material set themselves are not handed out. The test lies in the package `org.socialworld.objects`, so it may call the protected methods.
+
+| Test | Checks |
+|---|---|
+| `withoutAComposition_theSharesAreEmpty_andEveryShareIsZero` | a ring without states: no shares, gold 0, nothing 0 |
+| `theSharesOfTheInstance_areGiven_andCannotBeChanged` | a ring gets the set steel 85, leather 8, wood 7 as `StartCreation` does it (`HiddenSimulationObject.setSomething` with `METHODNAME_SET_MATERIAL_SET`): exactly these three, the sum is 100, gold 0, `put` on the map throws `UnsupportedOperationException` |
+
+- **Needs:** the database for the second test (a state reads its `CacheTableState…` when it is created); without it the test skips itself (`DatabaseAssumptions.assumeDatabaseIsAvailable`).
+
+### `ItemMaterialFormulasTest`
+
+`src/test/java/org/socialworld/objects/ItemMaterialFormulasTest.java`
+
+The formulas of `Item` for value, protection and burning (concept value and protection from the material, step 3, 2026-11-26). The material gives the base values, the class its factors; every method is protected and may be overridden:
+- value: `getMaterialValuePerKg()` (sum of share / 100 × value per kg) × `getCraftFactor()` (1) = `calculateValue()`, open to the top;
+- protection: `getMaterialProtection(BlowKind)` × `getFormFactor(BlowKind)` (by default `getFormFactor()`, 1) = `calculateProtection(BlowKind)`, cut to 0 .. 100;
+- burning: `getIgnitionProbabilityPerSecond(Material, T)` = 1 / (1 + e^(−(T − Tz) / B)) with B = `getIgnitionCurveWidth()` (10 °C), 0 below Tz − `getIgnitionCutoff()` (50 °C) and for what does not burn; `calculateIgnitionProbability(T, seconds)` = sum of share / 100 × (1 − (1 − p)^seconds), within 0 .. 1.
+
+The test subclasses of `Ring` override one factor each: craft factor 3 (instead of the ring's 2), a form factor per kind of blow as chain mail (0.74 / 0.57 / 1.03 / 1.03), a form factor 2 for every blow, a curve width of 20.
+
+| Test | Checks |
+|---|---|
+| `theSCurve_givesTheValuesOfTheConcept_andNothingBelowTheCutoff` | wood (Tz 300): 0.5 at Tz, 0.269 at Tz − 10, 0.047 at Tz − 30, 0.0067 at Tz − 50, 0 below, 0.881 at Tz + 20; iron 0 even at 5000 °C; width 20 gives 0.378 at Tz − 10 |
+| `withoutAComposition_valueProtectionAndBurningAreZero` | a ring without states: value, the four protections and the ignition probability are 0 |
+| `theValue_isMaterialTimesCraft_andOpenToTheTop` | gold 100: material 10000 per kg, the ring (craft factor 2 since step 4) 20000; silver 90 / copper 10: material 722; with craft factor 3: 30000 |
+| `theProtection_isMaterialTimesForm_perKindOfBlow_andCutAt100` | iron 95 / leather 5: 67.75 / 53.25 / 77.5 / 58; with the chain mail factors 50.1 / 30.4 / 79.8 / 59.7; with factor 2 club and stroke 100; wool below leather |
+| `burning_isWeightedByTheShares_andGrowsWithTheTime` | straw 50 / iron 50 at 230 °C for 1 s: 0.25; 0 s: 0; wood at 270 °C: 0.047 in 1 s, above 0.9 in 60 s; straw hat before felt hat at 300 °C |
+
+- **Needs:** the database for the three tests with a material set (a state reads its `CacheTableState…` when it is created); without it they skip themselves. The curve and the case without composition run without database.
+- **Not checked:** the item classes themselves; they still give their constants until steps 4 to 6.
+
+### `ItemValueFromMaterialTest`
+
+`src/test/java/org/socialworld/objects/ItemValueFromMaterialTest.java`
+
+The valuable items take their value from the material (concept value and protection from the material, step 4, 2026-11-26): `getValue()` gives `calculateValue()`, i.e. value per kg of the material × craft factor of the class, open to the top and per kg until the mass comes. Shirt, dress, cloak and amulet are `IValuable` since then; the values of SilkShirt, FineDress and FurCloak come back through the silk and fur variants. Craft factors: ore, hide, honey, coins 1; beret, shirt, cloak, ring 2; dress, signet ring, amulet 3; crown 4; scales 5; book 10; short sword 15; long sword and relic 20; chain mail 30; wine and lute 50. `getCraftFactor()` is protected in `Item`, so the test calls it through the type `Item`. The helper `withMaterials` comes from `ItemMaterialFormulasTest`.
+
+| Test | Checks |
+|---|---|
+| `everyValuableItem_hasTheCraftFactorOfTheTable_andIsWorth0WithoutMaterial` | the 20 classes are `IValuable`, have the craft factor of the table and are worth 0 without composition |
+| `theValue_followsTheMaterialOfTheInstance` | linen shirt 78, silk shirt 1144; fur cloak above wool cloak, silk dress above linen dress; gold ring 20000, gold signet ring above it, gold coins below it; long sword above short sword of the same steel; relic bone 60 / silver 25 / wood 15: 4030 |
+
+- **Needs:** the database for the second test (a state reads its `CacheTableState…` when it is created); without it the test skips itself.
+
+### `ItemProtectionFromMaterialTest`
+
+`src/test/java/org/socialworld/objects/ItemProtectionFromMaterialTest.java`
+
+The protective items take their protection from the material (concept value and protection from the material, step 5, 2026-11-26): `getProtectionAgainst…()` gives `calculateProtection(BlowKind)`, i.e. protection of the material × form factor of the class, within 0 .. 100. Form factors: helmet 0.9, gauntlet 0.7, glove 0.6, boot 0.45, shield 1.5, apron 0.8 for every blow; gambeson 2.5 / 3.2 / 2.5 / 2.5 and chain mail 0.74 / 0.57 / 1.03 / 1.03 (stab / club / stroke / backhand) in an overridden `getFormFactor(BlowKind)`. The apron is `IProtective` since then; the gauntlet takes the getters of the glove and only its own form factor. `getFormFactor(BlowKind)` is protected in `Item`, so the test calls it through the type `Item`.
+
+| Test | Checks |
+|---|---|
+| `everyProtectiveItem_hasTheFormFactorsOfTheTable_andProtects0WithoutMaterial` | the 8 classes are `IProtective`, have the form factors of the table per kind of blow and protect 0 without composition |
+| `theProtection_followsTheMaterialAndTheForm` | chain mail iron 95 / leather 5: 50.1 / 30.4 / 79.8 / 59.7; gambeson best against the club; wool glove below leather glove below gauntlet; leather apron 23.3 against strokes, linen apron above 0 and below it; shield above helmet above boot against the club, all within 0 .. 100 |
+
+- **Needs:** the database for the second test (a state reads its `CacheTableState…` when it is created); without it the test skips itself.
+
+### `ItemBurningFromMaterialTest`
+
+`src/test/java/org/socialworld/objects/ItemBurningFromMaterialTest.java`
+
+`IBurnable` is no marker any more (concept value and protection from the material, step 6, 2026-11-26): it requires `getIgnitionProbability(temperature, seconds)` and `canBurn()`, and `Item` answers both from the materials of the instance (the S curve of `ItemMaterialFormulasTest`; `canBurn` is true if at least one material can burn). Every item class whose recipe in `composition.csv` contains a burnable material implements it: 39 classes were added (among them cap, glove, chain mail, the swords, bread, honey), so helmet, crown and gauntlet are burnable as cap and glove, and a crown of metal never ignites.
+
+| Test | Checks |
+|---|---|
+| `everyItemClassWithABurnableMaterialInItsRecipe_isBurnable` | every concrete item class of `composition.csv` with a burnable material in one of its recipes is `IBurnable` |
+| `withoutAComposition_nothingBurns` | a hat without states: `canBurn` false, probability 0 |
+| `whetherAndHowEasilyItBurns_followsTheMaterialOfTheInstance` | gold crown: cannot burn, 0 at 1000 °C; straw hat before felt hat at 300 °C; long sword at 2000 °C for an hour: 0.15 (leather 8 + wood 7), chain mail 0.05; bread 0.66 (its grain) |
+
+- **Needs:** the database for the third test (a state reads its `CacheTableState…` when it is created); without it the test skips itself.
+- **Not checked:** who calls it; there is no fire in the simulation yet (concept E14).
 
 ---
 
