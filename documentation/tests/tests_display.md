@@ -16,7 +16,7 @@ Part of the [test overview](TESTS.md): the dashboard and the Action Creation Too
 | Display | `AutomaticSelectionTest` | 13 | the detail column follows the largest change | – |
 | Display | `PictureSequenceTest` | 9 | figures and timing of the picture sequence in the action grid | – |
 | Display | `TypeOverviewTest` | 5 | overview of the types: which human has which type, number of humans per type | – |
-| Display | `InventoryViewTest` | 5 | the data of the inventory window: slot texts, counts, contents of containers, dress, reading with the token of the display | no database (the 2 read tests) |
+| Display | `InventoryViewTest` | 9 | the data of the inventory window: slot texts, counts, contents of containers, dress, reading with the token of the display, the properties of an item in the tooltip | no database (the 4 tests with states) |
 | Display | `InventorySlotLayoutTest` | 3 | the slots of the inventory window: one per place inside the panel, no overlap, own labels, figure looks at the viewer | – |
 | ACT | `ActionRequestTest` | 9 | values and checks of an action request, duration included | – |
 | ACT | `ActionSenderTest` | 6 | properties of the action given into the pipeline, invalid requests are not given, no stop for an invalid causer | – |
@@ -143,7 +143,7 @@ The extra window behind the button "Typen" of the dashboard (since 2026-11-18): 
 
 `src/test/java/org/socialworld/visualize/InventoryViewTest.java`
 
-The data of the inventory window behind the button "Inventar" of the dashboard (2026-11-24): per place of the selected human the item as "ID class name" and, for a container, what lies inside (nested containers indented). It is read with the token of the display (cluster visualize), which since the inventory window may read the places (`Animal.getInventoryItem`) and the contents of containers (`getContents`).
+The data of the inventory window behind the button "Inventar" of the dashboard (2026-11-24): per place of the selected human the item as "ID class name" and, for a container, what lies inside (nested containers indented). It is read with the token of the display (cluster visualize), which since the inventory window may read the places (`Animal.getInventoryItem`) and the contents of containers (`getContents`). Since 2026-11-26 the tooltip of a slot shows the properties of the item between the item and the contents (concept value and protection from the material): the material shares, read with the same token over the public route `getStateProperty(token, stateComposition, stateComposition_materialSet, …)` (user decision 1a), largest first and with the English names of `Material`; value (`IValuable`, per kg), protection (`IProtective`, four kinds of blow) and burning (`IBurnable`, at 300 °C for 10 s, there is no real temperature yet). A line is left out if the item has nothing of it.
 
 | Test | Checks |
 |---|---|
@@ -152,6 +152,10 @@ The data of the inventory window behind the button "Inventar" of the dashboard (
 | `aDress_coversUpperBodyAndLegs_whenTheyAreEmpty` | with a dress the empty upper body and legs count as covered, the head does not |
 | `read_withTheTokenOfTheDisplay_seesThePlacesAndTheContents` | a human with state: knife in the right hand, purse with coins at the belt, bread in the mouth; read with the visualize token sees the three places and the coins |
 | `read_withAnotherToken_seesNothing` | with a token of the cluster position nothing is occupied |
+| `theTooltip_showsThePropertiesBetweenTheItemAndTheContents` | the property lines stand after the item and before the contents; a slot without properties has no such lines |
+| `aProbability_isShownInWholePercent` | 0 → "0 %", 0.001 → "<1 %", 0.2997 → "30 %", 1 → "100 %" |
+| `read_givesThePropertiesOfTheItem_withTheTokenOfTheDisplay` | a knife of steel 70 / wood 30 in the right hand: exactly "Material: steel 70 %, wood 30 %" and "Brennt: ja · 300 °C, 10 s: 30 %" (no value, no protection) |
+| `theProperties_ofAValuableProtectiveItem_andOfMetalThatDoesNotBurn` | chain mail iron 95 / leather 5: material, value 345, protection 50 / 30 / 80 / 60, burns 0 %; gold coins: material and value 10000, no burning line (coins are not `IBurnable`) |
 
 - **Not checked:** the window and the painting (Swing); following the selection in the running dashboard.
 - **Needs:** the database for the tests that create objects with a state (a state reads its `CacheTableState…` when it is created); without it they skip themselves (`DatabaseAssumptions.assumeDatabaseIsAvailable`, 2026-11-24). No screen.

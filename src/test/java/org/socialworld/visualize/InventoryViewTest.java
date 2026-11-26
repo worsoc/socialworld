@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,6 +38,11 @@ import org.socialworld.objects.WriteAccessToHuman;
 import org.socialworld.objects.WriteAccessToItem;
 import org.socialworld.objects.access.GrantedAccessToProperty;
 import org.socialworld.objects.access.HiddenHuman;
+import org.socialworld.objects.access.HiddenSimulationObject;
+import org.socialworld.attributes.properties.Material;
+import org.socialworld.attributes.properties.MaterialSet;
+import org.socialworld.objects.concrete.StateComposition;
+import org.socialworld.objects.concrete.clothes.overgarments.ChainMail;
 import org.socialworld.objects.concrete.containers.Purse;
 import org.socialworld.objects.concrete.eatable.bakery.Bread;
 import org.socialworld.objects.concrete.tools.Knife;
@@ -45,7 +51,8 @@ import org.socialworld.objects.concrete.valuables.Coins;
 /**
  * The data of the inventory window (2026-11-24): what is shown per place, the counts and the contents of the
  * containers. read() goes through the token of the display (cluster visualize), which may read the places and
- * the contents since the inventory window.
+ * the contents since the inventory window. Since 2026-11-26 the tooltip of a slot shows the properties of the item
+ * as well: material shares (read with the same token), value, protection and burning.
  */
 class InventoryViewTest {
 
@@ -56,6 +63,17 @@ class InventoryViewTest {
 
 	private static <T extends org.socialworld.objects.Item> T withState(T item) {
 		new WriteAccessToItem(item, new StateItem());
+		return item;
+	}
+
+	/** A state and a material set, as StartCreation gives them to a new instance. */
+	private static <T extends org.socialworld.objects.Item> T withMaterials(T item, Object... materialsAndShares) {
+		WriteAccessToItem wa = new WriteAccessToItem(item, new StateItem());
+		MaterialSet set = new MaterialSet();
+		for (int i = 0; i < materialsAndShares.length; i += 2)
+			set.add((Material) materialsAndShares[i], (Integer) materialsAndShares[i + 1]);
+		new HiddenSimulationObject(wa, new GrantedAccessToProperty[] {GrantedAccessToProperty.all})
+				.setSomething(StateComposition.class.getName(), StateComposition.METHODNAME_SET_MATERIAL_SET, set);
 		return item;
 	}
 
@@ -134,5 +152,57 @@ class InventoryViewTest {
 			public SimulationCluster getSimulationCluster() { return SimulationCluster.position; }
 		};
 		assertThat(InventoryView.read(5, human, position).countOccupied()).isZero();
+	}
+
+	@Test
+	void theTooltip_showsThePropertiesBetweenTheItemAndTheContents() {
+		InventoryView.Slot slot = new InventoryView.Slot("30200 Purse",
+				Arrays.asList("Material: leather 95 %, linen 5 %", "Brennt: ja \u00B7 300 \u00B0C, 10 s: 0 %"),
+				Arrays.asList("30201 Coins"));
+		String tooltip = InventoryFigurePanel.tooltipOf(InventoryPlace.belt1, slot);
+
+		assertThat(tooltip).contains("30200 Purse<br>Material: leather 95 %, linen 5 %<br>Brennt: ja");
+		assertThat(tooltip.indexOf("Brennt")).isLessThan(tooltip.indexOf("30201 Coins"));
+		// a slot without properties stays as before
+		assertThat(InventoryFigurePanel.tooltipOf(InventoryPlace.belt1, new InventoryView.Slot("30300 Hammer", null)))
+				.doesNotContain("Material").doesNotContain("Brennt");
+	}
+
+	@Test
+	void aProbability_isShownInWholePercent() {
+		assertThat(InventoryView.percent(0)).isEqualTo("0 %");
+		assertThat(InventoryView.percent(0.001)).isEqualTo("<1 %");
+		assertThat(InventoryView.percent(0.2997)).isEqualTo("30 %");
+		assertThat(InventoryView.percent(1)).isEqualTo("100 %");
+	}
+
+	@Test
+	void read_givesThePropertiesOfTheItem_withTheTokenOfTheDisplay() {
+		DatabaseAssumptions.assumeDatabaseIsAvailable();	// a state reads its CacheTableState... from the database
+		Human human = new Human();
+		HiddenHuman hidden = new WriteAccessToHuman(human, new StateHuman())
+				.getMeHidden(new GrantedAccessToProperty[] {GrantedAccessToProperty.inventory});
+		hidden.setInventory(new Inventory(SimulationObject_Type.human));
+		assertThat(hidden.putToInventory(InventoryPlace.rightHand, withMaterials(new Knife(), Material.steel, 70, Material.wood, 30))).isTrue();
+
+		InventoryView view = InventoryView.read(5, human, AccessTokenVisualize.getValid());
+		// the knife is burnable, not valuable and not protective: material and burning, no value, no protection
+		// wood at its ignition temperature for 10 s: 1 - 0.5^10, times the share 30
+		assertThat(view.slot(InventoryPlace.rightHand).properties)
+				.containsExactly("Material: steel 70 %, wood 30 %", "Brennt: ja \u00B7 300 \u00B0C, 10 s: 30 %");
+	}
+
+	@Test
+	void theProperties_ofAValuableProtectiveItem_andOfMetalThatDoesNotBurn() {
+		DatabaseAssumptions.assumeDatabaseIsAvailable();
+		ChainMail chainMail = withMaterials(new ChainMail(), Material.iron, 95, Material.leather, 5);
+		assertThat(InventoryView.properties(chainMail, AccessTokenVisualize.getValid())).containsExactly(
+				"Material: iron 95 %, leather 5 %",
+				"Wert: 345 (pro kg)",
+				"Schutz: Stich 50 \u00B7 Keule 30 \u00B7 Hieb 80 \u00B7 R\u00FCckhand 60",
+				"Brennt: ja \u00B7 300 \u00B0C, 10 s: 0 %");
+		Coins gold = withMaterials(new Coins(), Material.gold, 100);
+		assertThat(InventoryView.properties(gold, AccessTokenVisualize.getValid()))
+				.containsExactly("Material: gold 100 %", "Wert: 10000 (pro kg)");
 	}
 }

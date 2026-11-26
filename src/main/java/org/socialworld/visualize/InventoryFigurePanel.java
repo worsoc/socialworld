@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -169,6 +170,7 @@ final class InventoryFigurePanel extends JPanel {
 	static String tooltipOf(InventoryPlace place, InventoryView.Slot slot) {
 		StringBuilder text = new StringBuilder("<html><b>").append(InventorySlotLayout.label(place)).append("</b><br>");
 		text.append(slot.isEmpty() ? "leer" : escape(slot.item));
+		for (String property : slot.properties) text.append("<br>").append(escape(property));
 		for (String content : slot.contents) {
 			text.append("<br>&nbsp;&nbsp;").append(escape(content).replace("  ", "&nbsp;&nbsp;"));
 		}

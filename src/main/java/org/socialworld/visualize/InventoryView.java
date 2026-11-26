@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,15 +19,25 @@
 package org.socialworld.visualize;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.socialworld.actions.handle.InventoryPlace;
+import org.socialworld.attributes.PropertyName;
+import org.socialworld.attributes.properties.Material;
+import org.socialworld.attributes.properties.MaterialSet;
+import org.socialworld.calculation.Type;
+import org.socialworld.calculation.ValueProperty;
 import org.socialworld.core.IAccessToken;
 import org.socialworld.objects.Animal;
 import org.socialworld.objects.SimulationObject;
+import org.socialworld.objects.properties.IBurnable;
+import org.socialworld.objects.properties.IProtective;
+import org.socialworld.objects.properties.IValuable;
 
 /**
  * What the inventory window shows of one human (2026-11-24): per place the item as text and, for a container, what
@@ -40,13 +51,26 @@ final class InventoryView {
 	static final String INDENT = "  ";
 	static final String EMPTY = "\u2013";
 
-	/** One place: the item as text (null if the place is empty) and the contents of a container. */
+	/** The reference for the burning line of the tooltip: there is no real temperature in the simulation yet. */
+	static final float BURN_TEMPERATURE = 300f;
+	static final float BURN_SECONDS = 10f;
+
+	/**
+	 * One place: the item as text (null if the place is empty), the lines of its properties for the tooltip
+	 * (material, value, protection, burning; 2026-11-26) and the contents of a container.
+	 */
 	static final class Slot {
 		final String item;
+		final List<String> properties;
 		final List<String> contents;
 
 		Slot(String item, List<String> contents) {
+			this(item, null, contents);
+		}
+
+		Slot(String item, List<String> properties, List<String> contents) {
 			this.item = item;
+			this.properties = (properties == null) ? Collections.<String>emptyList() : Collections.unmodifiableList(properties);
 			this.contents = (contents == null) ? Collections.<String>emptyList() : Collections.unmodifiableList(contents);
 		}
 
@@ -98,7 +122,7 @@ final class InventoryView {
 			if (!object.isSimulationObject()) continue;
 			List<String> contents = new ArrayList<String>();
 			addContents(object, token, "", 1, contents);
-			slots.put(place, new Slot(describe(object), contents));
+			slots.put(place, new Slot(describe(object), properties(object, token), contents));
 		}
 		return new InventoryView(humanID, null, slots);
 	}
@@ -109,6 +133,66 @@ final class InventoryView {
 			lines.add(indent + describe(content));
 			addContents(content, token, indent + INDENT, depth + 1, lines);
 		}
+	}
+
+	/**
+	 * The properties of an item for the tooltip (2026-11-26, concept value and protection from the material): the
+	 * material shares, read with the token of the display over the public route of the composition state, and what
+	 * the interfaces IValuable, IProtective and IBurnable give. A line is left out if the item has nothing of it.
+	 */
+	static List<String> properties(SimulationObject object, IAccessToken token) {
+		List<String> lines = new ArrayList<String>();
+		String materials = materialLine(object, token);
+		if (materials != null) lines.add(materials);
+		if (object instanceof IValuable)
+			lines.add("Wert: " + Math.round(((IValuable) object).getValue()) + " (pro kg)");
+		if (object instanceof IProtective) {
+			IProtective protective = (IProtective) object;
+			lines.add("Schutz: Stich " + Math.round(protective.getProtectionAgainstStab())
+					+ " \u00B7 Keule " + Math.round(protective.getProtectionAgainstClub())
+					+ " \u00B7 Hieb " + Math.round(protective.getProtectionAgainstStroke())
+					+ " \u00B7 R\u00FCckhand " + Math.round(protective.getProtectionAgainstBackhand()));
+		}
+		if (object instanceof IBurnable) {
+			IBurnable burnable = (IBurnable) object;
+			lines.add(burnable.canBurn()
+					? "Brennt: ja \u00B7 " + Math.round(BURN_TEMPERATURE) + " \u00B0C, " + Math.round(BURN_SECONDS) + " s: "
+							+ percent(burnable.getIgnitionProbability(BURN_TEMPERATURE, BURN_SECONDS))
+					: "Brennt: nein");
+		}
+		return lines;
+	}
+
+	/** "Material: steel 92 %, wood 5 %, leather 3 %", largest share first; null without a composition. */
+	static String materialLine(SimulationObject object, IAccessToken token) {
+		ValueProperty vpSet = object.getStateProperty(token, PropertyName.stateComposition,
+				PropertyName.stateComposition_materialSet, PropertyName.stateComposition_materialSet.name());
+		Object set = vpSet.getObject(token, Type.simObjProp);
+		if (!(set instanceof MaterialSet)) return null;
+		List<Object[]> shares = new ArrayList<Object[]>();
+		for (Material material : Material.values()) {
+			if (material == Material.nothing) continue;
+			ValueProperty vpShare = ((MaterialSet) set).getProperty(token, PropertyName.event_property_numeric_value,
+					"portion_Material_" + material.name());
+			if (!vpShare.isValid()) continue;
+			Object share = vpShare.getObject(token, Type.integer);
+			if (share instanceof Integer && (Integer) share > 0) shares.add(new Object[] {material, share});
+		}
+		if (shares.isEmpty()) return null;
+		shares.sort(Comparator.comparingInt((Object[] pair) -> (Integer) pair[1]).reversed());
+		StringBuilder line = new StringBuilder("Material: ");
+		for (int i = 0; i < shares.size(); i++) {
+			if (i > 0) line.append(", ");
+			line.append(((Material) shares.get(i)[0]).name()).append(' ').append(shares.get(i)[1]).append(" %");
+		}
+		return line.toString();
+	}
+
+	/** A probability as percent: whole numbers, "<1 %" for a small one above 0. */
+	static String percent(double probability) {
+		if (probability <= 0) return "0 %";
+		if (probability < 0.005) return "<1 %";
+		return String.format(Locale.ROOT, "%d %%", Math.round(probability * 100));
 	}
 
 	/** The item as in the Action Creation Tool: ID and class name. */
