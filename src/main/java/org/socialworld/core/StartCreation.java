@@ -77,10 +77,26 @@ final class StartCreation {
 	}
 
 	/**
-	 * Body build concept 9.1 (2026-11-25): the composition is the first state the simulation saves itself. Filled
-	 * means loading, which is not promising yet, so for now the start is refused.
+	 * Since 2026-11-26 the start empties swstate_composition itself (before, the start was refused and the table had
+	 * to be emptied by hand in the PropertySetCreationTool). Loading the states is not ready yet, so every run
+	 * derives the composition anew. The table is emptied directly, before the cache of the states is read.
 	 *
-	 * @return the rows in swstate_composition at the start; more than 0 means the start is refused
+	 * @return the rows that were in swstate_composition, 0 if it was empty already
+	 */
+	int clearCompositionTable() {
+		TableStateComposition table = new TableStateComposition();
+		table.select(1, "", "");
+		int rowsBefore = table.rowCount();
+		if (rowsBefore > 0) table.clear();
+		return rowsBefore;
+	}
+
+	/**
+	 * Body build concept 9.1 (2026-11-25): the composition is the first state the simulation saves itself. Filled
+	 * means loading, which is not promising yet. Since 2026-11-26 it is asked after clearCompositionTable(): more
+	 * than 0 means the cache had been read before the table was emptied.
+	 *
+	 * @return the rows in the cache of swstate_composition; more than 0 means the start is refused
 	 */
 	int rowsInCompositionTable() {
 		return CacheTableStateComposition.getInstance().rowCount();

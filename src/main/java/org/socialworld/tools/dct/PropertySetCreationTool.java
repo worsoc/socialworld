@@ -75,7 +75,7 @@ public class PropertySetCreationTool {
 
 	JButton buttonFillObjectWithDummy = button("FillObject", "Legt in sw_object die fehlenden Zeilen an (Menschen ab 1, Items ab 30001).", "Löscht nichts. Nötig vor FillStates.");
 
-	JButton buttonClearComposition = button("Zusammensetzung leeren", "Leert swstate_composition (fragt vorher).", "Nötig vor jedem Lauf: Ist die Tabelle gefüllt, bricht der Start der Simulation ab,", "denn das Laden der States ist noch nicht fertig. Ist sie leer, leitet die Simulation", "die Zusammensetzung jeder Instanz aus swkind_materialset ab und speichert sie hier.");
+	JButton buttonClearComposition = button("Zusammensetzung leeren", "Leert swstate_composition (fragt vorher).", "Nicht mehr nötig vor einem Lauf: Seit 2026-11-26 leert der Start der Simulation die Tabelle selbst,", "denn das Laden der States ist noch nicht fertig. Danach leitet die Simulation", "die Zusammensetzung jeder Instanz aus swkind_materialset ab und speichert sie hier.");
 	JButton buttonMaterialSetsFromCatalog = button("Material-Sets aus Katalog", "Liest composition.csv und schreibt 5 Varianten pro Klasse:", "die Sets ab 100 in swset_material und die Zuordnung Klasse + Variante → Set in swkind_materialset.", "Löscht vorher die Sets ab 100 und alle Zuordnungen; die Sets unter 100 bleiben.");
 
 	private String[] comboBoxSetsEntrys = {
@@ -346,8 +346,9 @@ public class PropertySetCreationTool {
 	///////////////////////////////
 
 	/**
-	 * Empties swstate_composition after asking. The simulation refuses to start while the table is filled (loading
-	 * the states is not ready yet); with an empty table it derives the composition of every instance and saves it.
+	 * Empties swstate_composition after asking. Since 2026-11-26 the start of the simulation does it itself (loading
+	 * the states is not ready yet), so the button is only for emptying by hand; then the simulation derives the
+	 * composition of every instance and saves it.
 	 */
 	private void clearComposition() {
 		TableStateComposition table = new TableStateComposition();

@@ -78,7 +78,8 @@ public class SocialWorld  {
 //		test();
 		
 		if (!simulation.startSimulation()) {
-			// refused at the start (e.g. swstate_composition not empty, body build concept 9.1); the reason is in the console
+			// refused at the start (e.g. the cache of swstate_composition was read before the start emptied the table,
+			// body build concept 9.1); the reason is in the console
 			System.exit(1);
 		}
 		visualize = true;

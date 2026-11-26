@@ -129,12 +129,16 @@ public class Simulation extends SocialWorldThread {
 
 		this.startCreation = new StartCreation(this.objectMaster, this.searchByPosition);
 		// body build concept 9.1 (2026-11-25): the composition is the first state the simulation saves itself.
-		// Filled means loading, which is not promising yet, so for now the start is refused.
+		// Filled means loading, which is not promising yet. Since 2026-11-26 the start empties the table itself
+		// instead of refusing, so every run derives the composition anew.
+		int clearedRows = this.startCreation.clearCompositionTable();
+		if (clearedRows > 0) System.out.println("swstate_composition emptied at the start (" + clearedRows
+				+ " rows of the last run); the composition is derived anew.");
+		// still refused if the cache of the states had been read before the table was emptied
 		int compositionRows = this.startCreation.rowsInCompositionTable();
 		if (compositionRows > 0) {
-			System.out.println("Start refused: swstate_composition is not empty (" + compositionRows + " rows). "
-					+ "Loading the states is not ready yet. Press \"Zusammensetzung leeren\" in the "
-					+ "PropertySetCreationTool and start again.");
+			System.out.println("Start refused: the cache of swstate_composition still holds " + compositionRows
+					+ " rows (read before the table was emptied). Start again.");
 			this.startCreation = null;
 			return false;
 		}
