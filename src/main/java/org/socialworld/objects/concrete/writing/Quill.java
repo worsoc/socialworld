@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,11 +20,12 @@ package org.socialworld.objects.concrete.writing;
 
 import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.IWritingTool;
+import org.socialworld.objects.properties.IBurnable;
 
 /**
  * A quill for writing.
  */
-public class Quill extends Writing implements IWritingTool {
+public class Quill extends Writing implements IWritingTool, IBurnable {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////

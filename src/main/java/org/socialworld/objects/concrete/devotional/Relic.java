@@ -21,11 +21,12 @@ package org.socialworld.objects.concrete.devotional;
 import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.ISacred;
 import org.socialworld.objects.properties.IValuable;
+import org.socialworld.objects.properties.IBurnable;
 
 /**
  * A relic of a saint.
  */
-public class Relic extends Devotional implements IValuable, ISacred {
+public class Relic extends Devotional implements IValuable, ISacred, IBurnable {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////

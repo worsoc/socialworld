@@ -139,17 +139,19 @@ class ClothesCatalogTest {
 		assertThat(new Cloak()).isInstanceOf(IValuable.class);
 		assertThat(new Dress()).isInstanceOf(IValuable.class);
 		// the new clothes of step 4
-		assertThat(new Crown()).isInstanceOf(IValuable.class).isNotInstanceOf(org.socialworld.objects.properties.IBurnable.class);
-		assertThat(new Gauntlet()).isInstanceOf(IProtective.class).isNotInstanceOf(org.socialworld.objects.properties.IBurnable.class);
+		// since 2026-11-26 (V2 step 6) whether something burns comes from the material: Crown, Gauntlet, Glove and
+		// Cap are IBurnable, a crown of metal never ignites (ItemBurningFromMaterialTest)
+		assertThat(new Crown()).isInstanceOf(IValuable.class).isInstanceOf(org.socialworld.objects.properties.IBurnable.class);
+		assertThat(new Gauntlet()).isInstanceOf(IProtective.class).isInstanceOf(org.socialworld.objects.properties.IBurnable.class);
 		// since 2026-11-26 the protection comes from the material: without a composition it is 0; that the gauntlet
 		// protects more than the glove is checked in ItemProtectionFromMaterialTest
 		assertThat(new Gauntlet().getProtectionAgainstStroke()).isZero();
 		assertThat(new Gambeson()).isInstanceOf(IProtective.class).isInstanceOf(org.socialworld.objects.properties.IBurnable.class);
 		assertThat(new Neckerchief().isJewellery()).as("at the neck, but no jewellery").isFalse();
-		assertThat(new Glove()).as("a gauntlet is a glove too").isNotInstanceOf(org.socialworld.objects.properties.IBurnable.class);
+		assertThat(new Glove()).isInstanceOf(org.socialworld.objects.properties.IBurnable.class);
 		assertThat(new Habit()).isInstanceOf(ISacred.class);
 		assertThat(new Glove()).as("the protection of the former LeatherGlove").isInstanceOf(IProtective.class);
-		assertThat(new Cap()).as("a Helmet is a Cap too").isNotInstanceOf(org.socialworld.objects.properties.IBurnable.class);
+		assertThat(new Cap()).isInstanceOf(org.socialworld.objects.properties.IBurnable.class);
 		assertThat(new Shirt()).isNotInstanceOf(IProtective.class).isInstanceOf(IValuable.class);
 		assertThat(new Helmet().getProtectionAgainstStab()).isBetween(0f, 100f);
 	}

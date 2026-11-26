@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,11 +24,12 @@ import org.socialworld.objects.concrete.eatable.Liquid;
 import org.socialworld.objects.enums.EnumLiquid;
 import org.socialworld.objects.properties.IDrinkable;
 import org.socialworld.objects.properties.IPerishable;
+import org.socialworld.objects.properties.IBurnable;
 
 /**
  * Beer. A liquid is carried in a container (a jug, a waterskin).
  */
-public class Beer extends Liquid implements IDrinkable, IPerishable {
+public class Beer extends Liquid implements IDrinkable, IPerishable, IBurnable {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////

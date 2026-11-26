@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,11 +21,12 @@ package org.socialworld.objects.concrete.pastime;
 import org.socialworld.objects.properties.CarrySize;
 import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.IThrowable;
+import org.socialworld.objects.properties.IBurnable;
 
 /**
  * A pair of dice.
  */
-public class Dice extends Pastime implements IThrowable {
+public class Dice extends Pastime implements IThrowable, IBurnable {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////

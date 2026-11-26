@@ -20,13 +20,15 @@ package org.socialworld.objects.concrete.clothes;
 
 import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.IWearable;
+import org.socialworld.objects.properties.IBurnable;
 
 /**
  * Since 2026-11-25 concrete (item class or composition, step 1): the ordinary cap. The material comes from the
- * composition (composition.csv), no longer from the class; formerly WoolCap. Not IBurnable here, because the
- * Helmet is a Cap as well.
+ * composition (composition.csv), no longer from the class; formerly WoolCap. IBurnable again since 2026-11-26:
+ * whether it burns comes from the material, so the Helmet and the Crown, which are Caps as well, hardly ever or
+ * never ignite.
  */
-public class Cap extends Clothes implements IWearable {
+public class Cap extends Clothes implements IWearable, IBurnable {
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////

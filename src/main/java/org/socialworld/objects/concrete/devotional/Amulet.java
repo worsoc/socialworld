@@ -22,11 +22,12 @@ import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.ISacred;
 import org.socialworld.objects.properties.IValuable;
 import org.socialworld.objects.properties.IWearable;
+import org.socialworld.objects.properties.IBurnable;
 
 /**
  * An amulet against misfortune.
  */
-public class Amulet extends Devotional implements IWearable, ISacred, IValuable {
+public class Amulet extends Devotional implements IWearable, ISacred, IValuable, IBurnable {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////

@@ -43,6 +43,7 @@ Part of the [test overview](TESTS.md): the running simulation core: start, attri
 | Objects | `ItemMaterialFormulasTest` | 5 | the overridable formulas of `Item`: value = material x craft factor, protection = material x form factor per kind of blow (cut at 100), the S curve of igniting and its weighting over shares and time | no database (the three tests with a set) |
 | Objects | `ItemValueFromMaterialTest` | 2 | the 20 valuable items take their value from the material: craft factor of the table, 0 without composition, silk and fur above linen and wool, gold ring above gold coins, long sword above short sword, relic through its silver | no database (the test with sets) |
 | Objects | `ItemProtectionFromMaterialTest` | 2 | the 8 protective items take their protection from the material: form factors of the table (gambeson and chain mail per kind of blow), 0 without composition, chain mail profile, wool glove below leather glove below gauntlet, leather apron back | no database (the test with sets) |
+| Objects | `ItemBurningFromMaterialTest` | 3 | `IBurnable` from the material: every item class with a burnable material in its recipe implements it, nothing burns without composition, gold crown never, straw hat before felt hat, sword and chain mail only up to their burnable share, bread through its grain | no database (the test with sets) |
 
 ---
 
@@ -368,7 +369,7 @@ The concrete clothes of the item hierarchy (2026-11-23): 9 caps, 4 shirts, 2 tro
 | `eachOne_saysExactlyOnePlace` | of cap, shirt, trousers, dress, overgarment, shoe, sock, glove, neck, finger and bag exactly one is true (neck and finger instead of "jewellery" since 2026-11-25: the neckerchief is at the neck but no jewellery) (each piece with a state and the side left) |
 | `lexemLowerValue_isUniqueAndJustAboveItsKind` | `GetLexemIDLowerPartFromMapping` gives kind + 1 .. 15 (e.g. straw hat 273), the six concrete kinds exactly their kind (cap 272, shirt 288, shoe 320, sock 336, glove 352, dress 368), no value twice |
 | `side_isAPropertyOfTheState_noneUntilSet` | without state shoe, sock and glove are neither left nor right; with the side in the state (S3) they are on that side |
-| `abilities_asInTheCatalogue` | helmet, chain mail and glove `IProtective`, beret and chain mail `IValuable`, since 2026-11-26 also cloak, dress and shirt (the value comes from the material), habit `ISacred`, shirt not `IProtective`; cap and glove are not `IBurnable` (a helmet is a cap, a gauntlet a glove); crown `IValuable` and not burnable, gauntlet not burnable and without composition protecting 0 (since 2026-11-26 the protection comes from the material; gauntlet above glove is in `ItemProtectionFromMaterialTest`), gambeson `IProtective` and burnable, the neckerchief no jewellery |
+| `abilities_asInTheCatalogue` | helmet, chain mail and glove `IProtective`, beret and chain mail `IValuable`, since 2026-11-26 also cloak, dress and shirt (the value comes from the material), habit `ISacred`, shirt not `IProtective`; since 2026-11-26 cap, glove, crown and gauntlet are `IBurnable` (whether they burn comes from the material, see `ItemBurningFromMaterialTest`); crown `IValuable`, gauntlet without composition protecting 0 (since 2026-11-26 the protection comes from the material; gauntlet above glove is in `ItemProtectionFromMaterialTest`), gambeson `IProtective` and burnable, the neckerchief no jewellery |
 
 - **Assumes:** the catalogue of the item hierarchy concept; the ability values are constants in the classes.
 - **Not checked:** creating clothes in the running simulation (states, position), it needs the database.
@@ -620,6 +621,21 @@ The protective items take their protection from the material (concept value and 
 | `theProtection_followsTheMaterialAndTheForm` | chain mail iron 95 / leather 5: 50.1 / 30.4 / 79.8 / 59.7; gambeson best against the club; wool glove below leather glove below gauntlet; leather apron 23.3 against strokes, linen apron above 0 and below it; shield above helmet above boot against the club, all within 0 .. 100 |
 
 - **Needs:** the database for the second test (a state reads its `CacheTableState…` when it is created); without it the test skips itself.
+
+### `ItemBurningFromMaterialTest`
+
+`src/test/java/org/socialworld/objects/ItemBurningFromMaterialTest.java`
+
+`IBurnable` is no marker any more (concept value and protection from the material, step 6, 2026-11-26): it requires `getIgnitionProbability(temperature, seconds)` and `canBurn()`, and `Item` answers both from the materials of the instance (the S curve of `ItemMaterialFormulasTest`; `canBurn` is true if at least one material can burn). Every item class whose recipe in `composition.csv` contains a burnable material implements it: 39 classes were added (among them cap, glove, chain mail, the swords, bread, honey), so helmet, crown and gauntlet are burnable as cap and glove, and a crown of metal never ignites.
+
+| Test | Checks |
+|---|---|
+| `everyItemClassWithABurnableMaterialInItsRecipe_isBurnable` | every concrete item class of `composition.csv` with a burnable material in one of its recipes is `IBurnable` |
+| `withoutAComposition_nothingBurns` | a hat without states: `canBurn` false, probability 0 |
+| `whetherAndHowEasilyItBurns_followsTheMaterialOfTheInstance` | gold crown: cannot burn, 0 at 1000 °C; straw hat before felt hat at 300 °C; long sword at 2000 °C for an hour: 0.15 (leather 8 + wood 7), chain mail 0.05; bread 0.66 (its grain) |
+
+- **Needs:** the database for the third test (a state reads its `CacheTableState…` when it is created); without it the test skips itself.
+- **Not checked:** who calls it; there is no fire in the simulation yet (concept E14).
 
 ---
 

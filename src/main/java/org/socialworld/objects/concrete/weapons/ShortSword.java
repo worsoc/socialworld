@@ -26,11 +26,12 @@ import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.ICutting;
 import org.socialworld.objects.properties.IValuable;
 import org.socialworld.objects.properties.IWeapon;
+import org.socialworld.objects.properties.IBurnable;
 
 /**
  * A short sword.
  */
-public class ShortSword extends Weapon implements IWeapon, ICutting, IValuable {
+public class ShortSword extends Weapon implements IWeapon, ICutting, IValuable, IBurnable {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////

@@ -22,16 +22,17 @@ import org.socialworld.attributes.properties.BlowKind;
 import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.IProtective;
 import org.socialworld.objects.enums.EnumSide;
+import org.socialworld.objects.properties.IBurnable;
 
 /**
  * A glove. One class per kind; whether it is worn on the left or on the right hand is a property of the object.
  *
  * Since 2026-11-25 concrete (item class or composition, step 1): the glove. The material comes from the
- * composition (composition.csv), no longer from the class; formerly LeatherGlove. Its protection stays here until
- * value and protection come from the material. Not IBurnable here, because the iron Gauntlet is a Glove as well
- * (step 4).
+ * composition (composition.csv), no longer from the class; formerly LeatherGlove. Since 2026-11-26 its
+ * protection comes from the material (form factor 0.6), and it is IBurnable again: whether it burns comes from
+ * the material too, so the iron Gauntlet, which is a Glove as well, hardly ever ignites.
  */
-public class Glove extends Clothes implements IProtective {
+public class Glove extends Clothes implements IProtective, IBurnable {
 
 	public Glove() {
 		super();

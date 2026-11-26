@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,11 +21,12 @@ package org.socialworld.objects.concrete.eatable.meat;
 import org.socialworld.objects.concrete.eatable.Meat;
 import org.socialworld.objects.enums.EnumFood;
 import org.socialworld.objects.properties.IPerishable;
+import org.socialworld.objects.properties.IBurnable;
 
 /**
  * A smoked ham.
  */
-public class Ham extends Meat implements IPerishable {
+public class Ham extends Meat implements IPerishable, IBurnable {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////

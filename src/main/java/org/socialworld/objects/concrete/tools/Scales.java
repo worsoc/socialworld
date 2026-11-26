@@ -21,11 +21,12 @@ package org.socialworld.objects.concrete.tools;
 import org.socialworld.objects.concrete.tools.Tool;
 import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.IValuable;
+import org.socialworld.objects.properties.IBurnable;
 
 /**
  * Scales for weighing goods.
  */
-public class Scales extends Tool implements IValuable {
+public class Scales extends Tool implements IValuable, IBurnable {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////

@@ -26,11 +26,12 @@ import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.ICutting;
 import org.socialworld.objects.properties.IValuable;
 import org.socialworld.objects.properties.IWeapon;
+import org.socialworld.objects.properties.IBurnable;
 
 /**
  * A long sword.
  */
-public class LongSword extends Weapon implements IWeapon, ICutting, IValuable {
+public class LongSword extends Weapon implements IWeapon, ICutting, IValuable, IBurnable {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////

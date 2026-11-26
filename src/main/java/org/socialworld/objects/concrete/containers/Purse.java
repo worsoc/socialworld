@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,11 +21,12 @@ package org.socialworld.objects.concrete.containers;
 import org.socialworld.objects.properties.CarrySize;
 import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.IContainer;
+import org.socialworld.objects.properties.IBurnable;
 
 /**
  * A purse for coins.
  */
-public class Purse extends Container implements IContainer {
+public class Purse extends Container implements IContainer, IBurnable {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////

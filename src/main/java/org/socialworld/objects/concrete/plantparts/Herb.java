@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,11 +24,12 @@ import org.socialworld.objects.enums.EnumPlantPart;
 import org.socialworld.objects.properties.IEatable;
 import org.socialworld.objects.properties.IHealing;
 import org.socialworld.objects.properties.IPerishable;
+import org.socialworld.objects.properties.IBurnable;
 
 /**
  * A herb, for the kitchen and for healing.
  */
-public class Herb extends PlantPart implements IEatable, IHealing, IPerishable {
+public class Herb extends PlantPart implements IEatable, IHealing, IPerishable, IBurnable {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////

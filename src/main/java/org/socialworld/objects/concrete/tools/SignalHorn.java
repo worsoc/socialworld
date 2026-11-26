@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,11 +22,12 @@ import org.socialworld.objects.properties.CarrySize;
 import org.socialworld.objects.concrete.tools.Tool;
 import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.IPlayable;
+import org.socialworld.objects.properties.IBurnable;
 
 /**
  * A horn for signals.
  */
-public class SignalHorn extends Tool implements IPlayable {
+public class SignalHorn extends Tool implements IPlayable, IBurnable {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////

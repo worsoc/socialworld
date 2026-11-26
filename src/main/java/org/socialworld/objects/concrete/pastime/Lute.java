@@ -22,11 +22,12 @@ import org.socialworld.actions.handle.InventoryPlace;
 import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.IPlayable;
 import org.socialworld.objects.properties.IValuable;
+import org.socialworld.objects.properties.IBurnable;
 
 /**
  * A lute.
  */
-public class Lute extends Pastime implements IValuable, IPlayable {
+public class Lute extends Pastime implements IValuable, IPlayable, IBurnable {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////

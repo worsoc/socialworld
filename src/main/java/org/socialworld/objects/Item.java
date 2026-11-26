@@ -269,6 +269,28 @@ public abstract class Item extends SimulationObject {
 		return Math.max(0.0, Math.min(1.0, sum));
 	}
 
+	/**
+	 * For IBurnable (step 6): the classes that can burn declare the interface and take this.
+	 *
+	 * @param temperature the temperature in degrees Celsius
+	 * @param seconds how long the instance is exposed to it
+	 * @return the probability that this instance catches fire, 0 .. 1
+	 */
+	public double getIgnitionProbability(float temperature, float seconds) {
+		return calculateIgnitionProbability(temperature, seconds);
+	}
+
+	/**
+	 * For IBurnable (step 6).
+	 *
+	 * @return whether at least one material of this instance can burn
+	 */
+	public boolean canBurn() {
+		for (Material material : getMaterialShares().keySet())
+			if (material.canBurn()) return true;
+		return false;
+	}
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////    PROPERTY LIST  ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////

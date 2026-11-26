@@ -24,11 +24,12 @@ import org.socialworld.objects.concrete.clothes.Overgarment;
 import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.IProtective;
 import org.socialworld.objects.properties.IValuable;
+import org.socialworld.objects.properties.IBurnable;
 
 /**
  * A shirt of chain mail.
  */
-public class ChainMail extends Overgarment implements IProtective, IValuable {
+public class ChainMail extends Overgarment implements IProtective, IValuable, IBurnable {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////

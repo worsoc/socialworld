@@ -23,7 +23,7 @@ import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.IValuable;
 
 /**
- * A crown of gold or silver, the sign of a ruler. Not burnable.
+ * A crown of gold or silver, the sign of a ruler. IBurnable as a Cap, but of metal only, so it never ignites.
  * New with the item class or composition overview, step 4 (2026-11-25).
  */
 public class Crown extends Cap implements IValuable {

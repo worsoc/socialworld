@@ -22,11 +22,12 @@ import org.socialworld.objects.concrete.eatable.Sweets;
 import org.socialworld.objects.enums.EnumFood;
 import org.socialworld.objects.properties.IHealing;
 import org.socialworld.objects.properties.IValuable;
+import org.socialworld.objects.properties.IBurnable;
 
 /**
  * A pot of honey.
  */
-public class Honey extends Sweets implements IHealing, IValuable {
+public class Honey extends Sweets implements IHealing, IValuable, IBurnable {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////

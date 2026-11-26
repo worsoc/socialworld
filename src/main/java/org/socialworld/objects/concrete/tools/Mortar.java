@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,11 +20,12 @@ package org.socialworld.objects.concrete.tools;
 
 import org.socialworld.objects.concrete.tools.Tool;
 import org.socialworld.objects.enums.EnumHumanCrafted;
+import org.socialworld.objects.properties.IBurnable;
 
 /**
  * A mortar with pestle.
  */
-public class Mortar extends Tool {
+public class Mortar extends Tool implements IBurnable {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////
