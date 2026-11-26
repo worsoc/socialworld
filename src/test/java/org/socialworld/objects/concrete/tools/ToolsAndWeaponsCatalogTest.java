@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -130,6 +131,9 @@ class ToolsAndWeaponsCatalogTest {
 		assertThat(new Candle().getLightRange()).isLessThan(new Lantern().getLightRange());
 		assertThat(new SignalHorn()).isInstanceOf(IPlayable.class);
 		assertThat(new Shield()).isInstanceOf(IProtective.class);
-		assertThat(new LongSword().getValue()).isGreaterThan(new ShortSword().getValue());
+		// since 2026-11-26 the value comes from the material: without a composition both swords are worth 0;
+		// that the long sword is worth more is checked in ItemValueFromMaterialTest
+		assertThat(new LongSword().getValue()).isZero();
+		assertThat(new ShortSword().getValue()).isZero();
 	}
 }

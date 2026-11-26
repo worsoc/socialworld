@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +26,10 @@ public interface IValuable {
 	public static final String NAME = "IValuable";
 
 	/**
-	 * @return the value, 0 .. 100
+	 * Since 2026-11-26 from the material (Item.calculateValue: value per kg of the material x craft factor of the
+	 * class); until the mass comes it is a value per kg.
+	 *
+	 * @return the value, 0 and open to the top
 	 */
 	public abstract float getValue();
 

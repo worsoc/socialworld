@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,6 +51,8 @@ public class Wine extends Liquid implements IDrinkable, IValuable {
 	public NutrientSet getNutrientSet() {return null; }
 	public TasteSet getTasteSet() {return null; }
 
-	public float getValue() {return 40; }
+	// value from the material (concept value and protection from the material, step 4, 2026-11-26): pressing and fermenting make the value, not the stuff
+	protected float getCraftFactor() {return 50; }
+	public float getValue() {return calculateValue(); }
 
 }

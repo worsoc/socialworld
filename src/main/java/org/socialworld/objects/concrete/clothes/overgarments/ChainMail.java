@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,7 +47,9 @@ public class ChainMail extends Overgarment implements IProtective, IValuable {
 	public float getProtectionAgainstClub() {return 30; }
 	public float getProtectionAgainstStroke() {return 80; }
 	public float getProtectionAgainstBackhand() {return 60; }
-	public float getValue() {return 50; }
+	// value from the material (concept value and protection from the material, step 4, 2026-11-26): thousands of rings, a lot of work
+	protected float getCraftFactor() {return 30; }
+	public float getValue() {return calculateValue(); }
 
 	public InventoryPlace getOvergarmentPlace() {return InventoryPlace.overgarmentArmour; }
 

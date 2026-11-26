@@ -40,6 +40,7 @@ public class SignetRing extends Ring {
 /////////////////////////////    abilities (constant values for now)   ///////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	public float getValue() {return 60; }
+	// value from the material (concept value and protection from the material, step 4, 2026-11-26): a ring and its engraving
+	protected float getCraftFactor() {return 3; }
 
 }

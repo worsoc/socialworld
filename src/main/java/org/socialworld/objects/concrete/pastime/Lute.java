@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,7 +42,9 @@ public class Lute extends Pastime implements IValuable, IPlayable {
 /////////////////////////////    abilities (constant values for now)   ///////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	public float getValue() {return 40; }
+	// value from the material (concept value and protection from the material, step 4, 2026-11-26): the instrument maker's work; the wood is worth almost nothing
+	protected float getCraftFactor() {return 50; }
+	public float getValue() {return calculateValue(); }
 	public float getLoudness() {return 40; }
 	public float getPitch() {return 60; }
 

@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,12 +20,13 @@ package org.socialworld.objects.concrete.devotional;
 
 import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.ISacred;
+import org.socialworld.objects.properties.IValuable;
 import org.socialworld.objects.properties.IWearable;
 
 /**
  * An amulet against misfortune.
  */
-public class Amulet extends Devotional implements IWearable, ISacred {
+public class Amulet extends Devotional implements IWearable, ISacred, IValuable {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////
@@ -55,5 +57,9 @@ public class Amulet extends Devotional implements IWearable, ISacred {
 	public boolean isNecklace() {return true; }
 
 	public float getHoliness() {return 40; }
+
+	// value from the material (concept value and protection from the material, step 4, 2026-11-26): a small piece of jewellery
+	protected float getCraftFactor() {return 3; }
+	public float getValue() {return calculateValue(); }
 
 }

@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,11 +22,12 @@ import org.socialworld.actions.handle.InventoryPlace;
 import org.socialworld.objects.concrete.clothes.Overgarment;
 import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.IBurnable;
+import org.socialworld.objects.properties.IValuable;
 
 /**
  * A woollen cloak.
  */
-public class Cloak extends Overgarment implements IBurnable {
+public class Cloak extends Overgarment implements IBurnable, IValuable {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////    creating instance for simulation    //////////////////////////
@@ -38,5 +40,9 @@ public class Cloak extends Overgarment implements IBurnable {
 	}
 
 	public InventoryPlace getOvergarmentPlace() {return InventoryPlace.overgarmentCloak; }
+
+	// value from the material (concept value and protection from the material, step 4, 2026-11-26): sewing; a fur cloak is worth more through its material
+	protected float getCraftFactor() {return 2; }
+	public float getValue() {return calculateValue(); }
 
 }

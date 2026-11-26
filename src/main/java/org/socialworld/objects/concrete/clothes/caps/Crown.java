@@ -42,6 +42,8 @@ public class Crown extends Cap implements IValuable {
 /////////////////////////////    abilities (constant values for now)   ///////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-	public float getValue() {return 90; }
+	// value from the material (concept value and protection from the material, step 4, 2026-11-26): the most elaborate smithing
+	protected float getCraftFactor() {return 4; }
+	public float getValue() {return calculateValue(); }
 
 }

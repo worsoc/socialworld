@@ -134,9 +134,10 @@ class ClothesCatalogTest {
 		assertThat(new Helmet()).isInstanceOf(IProtective.class);
 		assertThat(new ChainMail()).isInstanceOf(IProtective.class).isInstanceOf(IValuable.class);
 		assertThat(new Beret()).isInstanceOf(IValuable.class);
-		// the value of SilkShirt, FineDress and FurCloak and the protection of LeatherApron are gone until value and
-		// protection come from the material (V2)
-		assertThat(new Cloak()).isNotInstanceOf(IValuable.class);
+		// the value of SilkShirt, FineDress and FurCloak comes back from the material since 2026-11-26 (V2 step 4):
+		// shirt, dress and cloak are valuable, the silk and fur variants more than the others
+		assertThat(new Cloak()).isInstanceOf(IValuable.class);
+		assertThat(new Dress()).isInstanceOf(IValuable.class);
 		// the new clothes of step 4
 		assertThat(new Crown()).isInstanceOf(IValuable.class).isNotInstanceOf(org.socialworld.objects.properties.IBurnable.class);
 		assertThat(new Gauntlet()).isInstanceOf(IProtective.class).isNotInstanceOf(org.socialworld.objects.properties.IBurnable.class);
@@ -147,7 +148,7 @@ class ClothesCatalogTest {
 		assertThat(new Habit()).isInstanceOf(ISacred.class);
 		assertThat(new Glove()).as("the protection of the former LeatherGlove").isInstanceOf(IProtective.class);
 		assertThat(new Cap()).as("a Helmet is a Cap too").isNotInstanceOf(org.socialworld.objects.properties.IBurnable.class);
-		assertThat(new Shirt()).isNotInstanceOf(IProtective.class).isNotInstanceOf(IValuable.class);
+		assertThat(new Shirt()).isNotInstanceOf(IProtective.class).isInstanceOf(IValuable.class);
 		assertThat(new Helmet().getProtectionAgainstStab()).isBetween(0f, 100f);
 	}
 }

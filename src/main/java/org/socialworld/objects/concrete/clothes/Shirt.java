@@ -20,13 +20,14 @@ package org.socialworld.objects.concrete.clothes;
 
 import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.IBurnable;
+import org.socialworld.objects.properties.IValuable;
 import org.socialworld.objects.properties.IWearable;
 
 /**
  * Since 2026-11-25 concrete (item class or composition, step 1): the ordinary shirt. The material comes from the
  * composition (composition.csv), no longer from the class; formerly LinenShirt and (step 3) SilkShirt, now Shirt[silk].
  */
-public class Shirt extends Clothes implements IWearable, IBurnable {
+public class Shirt extends Clothes implements IWearable, IBurnable, IValuable {
 
 	
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -54,5 +55,8 @@ public class Shirt extends Clothes implements IWearable, IBurnable {
 	public boolean isTrousers() {return false; }
 	public boolean isCap() {return false; }
 
+	// value from the material (concept value and protection from the material, step 4, 2026-11-26): sewing; a silk shirt is worth more through its material
+	protected float getCraftFactor() {return 2; }
+	public float getValue() {return calculateValue(); }
 
 }

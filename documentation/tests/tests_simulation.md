@@ -41,6 +41,7 @@ Part of the [test overview](TESTS.md): the running simulation core: start, attri
 | Objects | `ContainersAndGoodsCatalogTest` | 5 | the 11 containers and 13 valuables, devotional, writing and pastime goods: created without database, lexeme value, capacity, jewellery and bag, abilities | – |
 | Objects | `SimulationObjectMaterialSharesTest` | 2 | the protected getters for the material shares of an instance: empty without composition, the shares of the set, an unmodifiable copy | no database (the test with a set) |
 | Objects | `ItemMaterialFormulasTest` | 5 | the overridable formulas of `Item`: value = material x craft factor, protection = material x form factor per kind of blow (cut at 100), the S curve of igniting and its weighting over shares and time | no database (the three tests with a set) |
+| Objects | `ItemValueFromMaterialTest` | 2 | the 20 valuable items take their value from the material: craft factor of the table, 0 without composition, silk and fur above linen and wool, gold ring above gold coins, long sword above short sword, relic through its silver | no database (the test with sets) |
 
 ---
 
@@ -366,7 +367,7 @@ The concrete clothes of the item hierarchy (2026-11-23): 9 caps, 4 shirts, 2 tro
 | `eachOne_saysExactlyOnePlace` | of cap, shirt, trousers, dress, overgarment, shoe, sock, glove, neck, finger and bag exactly one is true (neck and finger instead of "jewellery" since 2026-11-25: the neckerchief is at the neck but no jewellery) (each piece with a state and the side left) |
 | `lexemLowerValue_isUniqueAndJustAboveItsKind` | `GetLexemIDLowerPartFromMapping` gives kind + 1 .. 15 (e.g. straw hat 273), the six concrete kinds exactly their kind (cap 272, shirt 288, shoe 320, sock 336, glove 352, dress 368), no value twice |
 | `side_isAPropertyOfTheState_noneUntilSet` | without state shoe, sock and glove are neither left nor right; with the side in the state (S3) they are on that side |
-| `abilities_asInTheCatalogue` | helmet, chain mail and glove `IProtective`, beret and chain mail `IValuable`, the cloak no longer, habit `ISacred`, shirt none of them; cap and glove are not `IBurnable` (a helmet is a cap, a gauntlet a glove); crown `IValuable` and not burnable, gauntlet protects more than the glove and is not burnable, gambeson `IProtective` and burnable, the neckerchief no jewellery |
+| `abilities_asInTheCatalogue` | helmet, chain mail and glove `IProtective`, beret and chain mail `IValuable`, since 2026-11-26 also cloak, dress and shirt (the value comes from the material), habit `ISacred`, shirt not `IProtective`; cap and glove are not `IBurnable` (a helmet is a cap, a gauntlet a glove); crown `IValuable` and not burnable, gauntlet protects more than the glove and is not burnable, gambeson `IProtective` and burnable, the neckerchief no jewellery |
 
 - **Assumes:** the catalogue of the item hierarchy concept; the ability values are constants in the classes.
 - **Not checked:** creating clothes in the running simulation (states, position), it needs the database.
@@ -385,7 +386,7 @@ The 29 tools and 7 weapons of the item hierarchy (2026-11-23). Tools have purpos
 | `lexemLowerValue_isUniqueAndInItsLevel` | the lower lexeme value lies in its level, no value twice |
 | `everyWeaponIsAnIWeapon_andToolsCanBeOneToo` | every `Weapon` is `IWeapon`; the knife is `IWeapon` without being a `Weapon`; the axe also cuts and can be thrown; the needle is no weapon |
 | `weaponProperties_existForAllFourBlows_andCuttersHaveAnEdge` | every `IWeapon` gives stab, club, stroke and backhand properties with mass > 0, hardness and sharpness 0..100; cutting ones have a sharp edge for the stroke |
-| `otherAbilities_asInTheCatalogue` | shovel and pickaxe dig, lantern and candle give light (the candle less far), the horn can be played, the shield protects, the long sword is worth more than the short one |
+| `otherAbilities_asInTheCatalogue` | shovel and pickaxe dig, lantern and candle give light (the candle less far), the horn can be played, the shield protects, both swords are worth 0 without a composition (the value comes from the material since 2026-11-26; the order of the swords is in `ItemValueFromMaterialTest`) |
 
 - **Assumes:** the catalogue of the item hierarchy concept; the ability values are constants in the classes.
 - **Not checked:** using a weapon in `ActionAttack` (needs the inventory and the running simulation).
@@ -580,18 +581,31 @@ The formulas of `Item` for value, protection and burning (concept value and prot
 - protection: `getMaterialProtection(BlowKind)` × `getFormFactor(BlowKind)` (by default `getFormFactor()`, 1) = `calculateProtection(BlowKind)`, cut to 0 .. 100;
 - burning: `getIgnitionProbabilityPerSecond(Material, T)` = 1 / (1 + e^(−(T − Tz) / B)) with B = `getIgnitionCurveWidth()` (10 °C), 0 below Tz − `getIgnitionCutoff()` (50 °C) and for what does not burn; `calculateIgnitionProbability(T, seconds)` = sum of share / 100 × (1 − (1 − p)^seconds), within 0 .. 1.
 
-The test subclasses of `Ring` override one factor each: craft factor 3, a form factor per kind of blow as chain mail (0.74 / 0.57 / 1.03 / 1.03), a form factor 2 for every blow, a curve width of 20.
+The test subclasses of `Ring` override one factor each: craft factor 3 (instead of the ring's 2), a form factor per kind of blow as chain mail (0.74 / 0.57 / 1.03 / 1.03), a form factor 2 for every blow, a curve width of 20.
 
 | Test | Checks |
 |---|---|
 | `theSCurve_givesTheValuesOfTheConcept_andNothingBelowTheCutoff` | wood (Tz 300): 0.5 at Tz, 0.269 at Tz − 10, 0.047 at Tz − 30, 0.0067 at Tz − 50, 0 below, 0.881 at Tz + 20; iron 0 even at 5000 °C; width 20 gives 0.378 at Tz − 10 |
 | `withoutAComposition_valueProtectionAndBurningAreZero` | a ring without states: value, the four protections and the ignition probability are 0 |
-| `theValue_isMaterialTimesCraft_andOpenToTheTop` | gold 100: 10000; silver 90 / copper 10: 722; with craft factor 3: 30000 |
+| `theValue_isMaterialTimesCraft_andOpenToTheTop` | gold 100: material 10000 per kg, the ring (craft factor 2 since step 4) 20000; silver 90 / copper 10: material 722; with craft factor 3: 30000 |
 | `theProtection_isMaterialTimesForm_perKindOfBlow_andCutAt100` | iron 95 / leather 5: 67.75 / 53.25 / 77.5 / 58; with the chain mail factors 50.1 / 30.4 / 79.8 / 59.7; with factor 2 club and stroke 100; wool below leather |
 | `burning_isWeightedByTheShares_andGrowsWithTheTime` | straw 50 / iron 50 at 230 °C for 1 s: 0.25; 0 s: 0; wood at 270 °C: 0.047 in 1 s, above 0.9 in 60 s; straw hat before felt hat at 300 °C |
 
 - **Needs:** the database for the three tests with a material set (a state reads its `CacheTableState…` when it is created); without it they skip themselves. The curve and the case without composition run without database.
 - **Not checked:** the item classes themselves; they still give their constants until steps 4 to 6.
+
+### `ItemValueFromMaterialTest`
+
+`src/test/java/org/socialworld/objects/ItemValueFromMaterialTest.java`
+
+The valuable items take their value from the material (concept value and protection from the material, step 4, 2026-11-26): `getValue()` gives `calculateValue()`, i.e. value per kg of the material × craft factor of the class, open to the top and per kg until the mass comes. Shirt, dress, cloak and amulet are `IValuable` since then; the values of SilkShirt, FineDress and FurCloak come back through the silk and fur variants. Craft factors: ore, hide, honey, coins 1; beret, shirt, cloak, ring 2; dress, signet ring, amulet 3; crown 4; scales 5; book 10; short sword 15; long sword and relic 20; chain mail 30; wine and lute 50. `getCraftFactor()` is protected in `Item`, so the test calls it through the type `Item`. The helper `withMaterials` comes from `ItemMaterialFormulasTest`.
+
+| Test | Checks |
+|---|---|
+| `everyValuableItem_hasTheCraftFactorOfTheTable_andIsWorth0WithoutMaterial` | the 20 classes are `IValuable`, have the craft factor of the table and are worth 0 without composition |
+| `theValue_followsTheMaterialOfTheInstance` | linen shirt 78, silk shirt 1144; fur cloak above wool cloak, silk dress above linen dress; gold ring 20000, gold signet ring above it, gold coins below it; long sword above short sword of the same steel; relic bone 60 / silver 25 / wood 15: 4030 |
+
+- **Needs:** the database for the second test (a state reads its `CacheTableState…` when it is created); without it the test skips itself.
 
 ---
 

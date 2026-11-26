@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,6 +48,8 @@ public class Honey extends Sweets implements IHealing, IValuable {
 	public float getFirmness() {return 10; }
 
 	public float getHealingPower() {return 30; }
-	public float getValue() {return 30; }
+	// value from the material (concept value and protection from the material, step 4, 2026-11-26): as it was gathered
+	protected float getCraftFactor() {return 1; }
+	public float getValue() {return calculateValue(); }
 
 }

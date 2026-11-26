@@ -20,6 +20,7 @@ package org.socialworld.objects.concrete.clothes;
 
 import org.socialworld.objects.enums.EnumHumanCrafted;
 import org.socialworld.objects.properties.IBurnable;
+import org.socialworld.objects.properties.IValuable;
 
 /**
  * Clothes that cover the upper and the lower body at once: a dress, a habit.
@@ -28,7 +29,7 @@ import org.socialworld.objects.properties.IBurnable;
  * step 3 the former FineDress is Dress[silk]. The material comes from the
  * composition (composition.csv), no longer from the class; formerly LinenDress.
  */
-public class Dress extends Clothes implements IBurnable {
+public class Dress extends Clothes implements IBurnable, IValuable {
 
 	public Dress() {
 		super();
@@ -49,5 +50,9 @@ public class Dress extends Clothes implements IBurnable {
 	public boolean isTrousers() {return false; }
 	public boolean isCap() {return false; }
 	public boolean isDress() {return true; }
+
+	// value from the material (concept value and protection from the material, step 4, 2026-11-26): more cutting than a shirt
+	protected float getCraftFactor() {return 3; }
+	public float getValue() {return calculateValue(); }
 
 }

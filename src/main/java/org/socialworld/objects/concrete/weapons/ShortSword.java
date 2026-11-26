@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -59,7 +60,9 @@ public class ShortSword extends Weapon implements IWeapon, ICutting, IValuable {
 
 	public float getSharpness() {return 75; }
 	public float getBladeLength() {return 500; }
-	public float getValue() {return 40; }
+	// value from the material (concept value and protection from the material, step 4, 2026-11-26): forging, hardening, grinding
+	protected float getCraftFactor() {return 15; }
+	public float getValue() {return calculateValue(); }
 
 	/** large, but worn at the belt in its scabbard as well */
 	public boolean fitsPlace(InventoryPlace place) {

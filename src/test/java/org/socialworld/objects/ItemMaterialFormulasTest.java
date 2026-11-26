@@ -38,7 +38,7 @@ import org.socialworld.objects.concrete.valuables.Ring;
  */
 class ItemMaterialFormulasTest {
 
-	/** A ring with its craft factor 3. */
+	/** A ring with the craft factor 3 instead of its own 2. */
 	static class CraftedRing extends Ring {
 		@Override
 		protected float getCraftFactor() { return 3f; }
@@ -69,7 +69,7 @@ class ItemMaterialFormulasTest {
 	}
 
 	/** Gives the item a state and the material set, as StartCreation does it for a new instance. */
-	private static <T extends Item> T withMaterials(T item, Object... materialsAndShares) {
+	static <T extends Item> T withMaterials(T item, Object... materialsAndShares) {
 		WriteAccessToItem wa = new WriteAccessToItem(item, new StateItem());
 		MaterialSet set = new MaterialSet();
 		for (int i = 0; i < materialsAndShares.length; i += 2)
@@ -111,8 +111,10 @@ class ItemMaterialFormulasTest {
 		Ring gold = withMaterials(new Ring(), Material.gold, 100);
 		Ring mixed = withMaterials(new Ring(), Material.silver, 90, Material.copper, 10);
 
-		assertThat(gold.calculateValue()).isCloseTo(10000f, within(0.01f));
-		assertThat(mixed.calculateValue()).isCloseTo(0.9f * 800 + 0.1f * 20, within(0.01f));
+		// the ring has its own craft factor 2 since step 4
+		assertThat(gold.getMaterialValuePerKg()).isCloseTo(10000f, within(0.01f));
+		assertThat(gold.calculateValue()).isCloseTo(20000f, within(0.01f));
+		assertThat(mixed.getMaterialValuePerKg()).isCloseTo(0.9f * 800 + 0.1f * 20, within(0.01f));
 		assertThat(withMaterials(new CraftedRing(), Material.gold, 100).calculateValue()).isCloseTo(30000f, within(0.01f));
 	}
 

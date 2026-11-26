@@ -1,6 +1,7 @@
 /*
  * Social World
  * Copyright (C) 2026  Mathias Sikos
+ * Written with the assistance of Claude (Anthropic), 2026
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,6 +55,8 @@ public class Ring extends Valuable implements IWearable, IValuable {
 	public boolean isJewellery() {return true; }
 	public boolean isRing() {return true; }
 
-	public float getValue() {return 50; }
+	// value from the material (concept value and protection from the material, step 4, 2026-11-26): a goldsmith's work
+	protected float getCraftFactor() {return 2; }
+	public float getValue() {return calculateValue(); }
 
 }
